@@ -1,9 +1,9 @@
+import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { Suspense } from 'react'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import EmissionFactors from '../emissionFactor/EmissionFactors'
-import { Environment } from '@prisma/client'
 
 interface Props {
   userOrganizationId?: string

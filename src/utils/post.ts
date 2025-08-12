@@ -44,7 +44,9 @@ export const isPost = (post: Post | SubPost | 'total'): post is Post => {
 }
 
 export const getPostValues = (environment: Environment | undefined, type?: ResultType) => {
-  if (!environment) return BCPost
+  if (!environment) {
+    return BCPost
+  }
 
   switch (environment) {
     case Environment.TILT:

@@ -91,7 +91,9 @@ export const filterEmissionFactorsBySubPostAndEnv = <T extends Pick<EmissionFact
   subPosts: SubPost[],
   environment?: Environment,
 ) => {
-  let filterSubPostList = environment === Environment.TILT ? getTiltSubPostList(subPosts) : subPosts
+  const filterSubPostList = environment === Environment.TILT ? getTiltSubPostList(subPosts) : subPosts
 
-  return emissionFactors.filter((emissionFactor) => emissionFactor.subPosts.some((efSubPost) => filterSubPostList.includes(efSubPost)))
+  return emissionFactors.filter((emissionFactor) =>
+    emissionFactor.subPosts.some((efSubPost) => filterSubPostList.includes(efSubPost)),
+  )
 }

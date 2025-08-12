@@ -1,10 +1,10 @@
 'use server'
 
 import { getEmissionFactorSources } from '@/db/emissionFactors'
+import { environmentSubPostsMapping, Post } from '@/services/posts'
 import { getEmissionFactors } from '@/services/serverFunctions/emissionFactor'
 import { EmissionFactorImportVersion, Environment, Import } from '@prisma/client'
 import EmissionFactorsTable from './Table'
-import { environmentSubPostsMapping, Post } from '@/services/posts'
 
 interface Props {
   userOrganizationId?: string
@@ -27,7 +27,6 @@ const EmissionFactors = async ({ userOrganizationId, manualOnly, environment }: 
               .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0].id,
     )
     .map((importVersion) => importVersion.id)
-
 
   const subPostsByPost = environmentSubPostsMapping[environment]
   const initialSelectedSubPosts = Object.values(subPostsByPost).flatMap((subPosts) => subPosts)

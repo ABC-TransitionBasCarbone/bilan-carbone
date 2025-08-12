@@ -1,8 +1,7 @@
 import { FullStudy } from '@/db/study'
-import { BCPost, CutPost, environmentPostMapping, Post, TiltPost } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import { filterWithDependencies } from '@/services/results/utils'
-import { AdditionalResultTypes, ResultType } from '@/services/study'
+import { ResultType } from '@/services/study'
 import { formatNumber } from '@/utils/number'
 import { getPostValues } from '@/utils/post'
 import { Environment, SubPost } from '@prisma/client'
@@ -24,7 +23,7 @@ export const useChartComputations = ({
   validatedOnly = false,
   environment,
   withDep,
-  type
+  type,
 }: UseChartComputationsParams) => {
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('study.results.units')

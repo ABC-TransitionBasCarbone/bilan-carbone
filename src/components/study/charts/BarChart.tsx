@@ -8,11 +8,10 @@ import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import styles from './BarChart.module.css'
 
-import { BCPost, CutPost, TiltPost } from '@/services/posts'
+import { ResultType } from '@/services/study'
 import { isPost } from '@/utils/post'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { Environment } from '@prisma/client'
-import { AdditionalResultTypes, ResultType } from '@/services/study'
 
 const BAR_CHART_CONSTANTS = {
   TICK_ANGLE: -20,

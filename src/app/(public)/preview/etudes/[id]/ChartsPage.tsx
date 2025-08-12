@@ -1,7 +1,6 @@
 import BarChart from '@/components/study/charts/BarChart'
 import PieChart from '@/components/study/charts/PieChart'
 import { FullStudy } from '@/db/study'
-import { BCPost, CutPost } from '@/services/posts'
 import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 

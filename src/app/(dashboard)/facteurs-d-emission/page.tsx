@@ -19,7 +19,13 @@ const EmissionFactors = async ({ user, searchParams }: Props) => {
     return <NotFound />
   }
 
-  return <EmissionsFactorsPage userOrganizationId={userOrganizationVersion?.organizationId} manualOnly={manualOnly} environment={user.environment} />
+  return (
+    <EmissionsFactorsPage
+      userOrganizationId={userOrganizationVersion?.organizationId}
+      manualOnly={manualOnly}
+      environment={user.environment}
+    />
+  )
 }
 
 export default withAuth(EmissionFactors)

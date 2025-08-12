@@ -1,3 +1,4 @@
+import { environmentSubPostsMapping, Post } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { getStudyEmissionFactorImportVersions } from '@/services/serverFunctions/study'
 import { useAppContextStore } from '@/store/AppContext'
@@ -6,7 +7,6 @@ import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import EmissionFactorsTable from '../emissionFactor/Table'
 import Modal from '../modals/Modal'
-import { environmentSubPostsMapping, Post } from '@/services/posts'
 
 interface Props {
   close: () => void
@@ -17,7 +17,14 @@ interface Props {
   environment: Environment
 }
 
-const EmissionSourceFactorModal = ({ close, open, emissionFactors, subPost, selectEmissionFactor, environment }: Props) => {
+const EmissionSourceFactorModal = ({
+  close,
+  open,
+  emissionFactors,
+  subPost,
+  selectEmissionFactor,
+  environment,
+}: Props) => {
   const t = useTranslations('emissionSource.emissionFactorDialog')
   const [emissionFactorVersions, setEmissionFactorVersions] = useState<EmissionFactorImportVersion[] | undefined>(
     undefined,

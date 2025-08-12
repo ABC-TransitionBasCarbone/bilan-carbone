@@ -30,7 +30,14 @@ import {
   Switch,
   TextField,
 } from '@mui/material'
-import { EmissionFactorImportVersion, EmissionFactorStatus, Environment, Import, StudyResultUnit, SubPost } from '@prisma/client'
+import {
+  EmissionFactorImportVersion,
+  EmissionFactorStatus,
+  Environment,
+  Import,
+  StudyResultUnit,
+  SubPost,
+} from '@prisma/client'
 import {
   ColumnDef,
   flexRender,
@@ -105,7 +112,7 @@ const EmissionFactorsTable = ({
   initialSelectedSources,
   initialSelectedSubPosts,
   environment,
-  envPosts
+  envPosts,
 }: Props) => {
   const t = useTranslations('emissionFactors.table')
   const tUnits = useTranslations('units')
@@ -319,26 +326,21 @@ const EmissionFactorsTable = ({
     return searchResults
   }, [emissionFactors, filter, locationFilter])
 
-  const data = useMemo(
-    () => {
-      const emissionFactorsAllSubposts = searchedEmissionFactors
-        .filter(
-          (emissionFactor) => {
-            const isInRightSources = (emissionFactor.version && filteredSources.includes(emissionFactor.version.id)) ||
-            (!emissionFactor.version && filteredSources.includes(Import.Manual))
+  const data = useMemo(() => {
+    const emissionFactorsAllSubposts = searchedEmissionFactors.filter((emissionFactor) => {
+      const isInRightSources =
+        (emissionFactor.version && filteredSources.includes(emissionFactor.version.id)) ||
+        (!emissionFactor.version && filteredSources.includes(Import.Manual))
 
-            const isWithGoodUnit = filteredUnits.includes(emissionFactor.unit || '')
+      const isWithGoodUnit = filteredUnits.includes(emissionFactor.unit || '')
 
-            const isWithGoodArchivedStatus = displayArchived || emissionFactor.status !== EmissionFactorStatus.Archived
+      const isWithGoodArchivedStatus = displayArchived || emissionFactor.status !== EmissionFactorStatus.Archived
 
-            return isInRightSources && isWithGoodUnit && isWithGoodArchivedStatus
-          }
-        )
+      return isInRightSources && isWithGoodUnit && isWithGoodArchivedStatus
+    })
 
-      return filterEmissionFactorsBySubPostAndEnv(emissionFactorsAllSubposts, filteredSubPosts, environment)
-    },
-    [searchedEmissionFactors, filteredSources, filteredUnits, filteredSubPosts, displayArchived],
-  )
+    return filterEmissionFactorsBySubPostAndEnv(emissionFactorsAllSubposts, filteredSubPosts, environment)
+  }, [searchedEmissionFactors, filteredSources, filteredUnits, filteredSubPosts, displayArchived])
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
 

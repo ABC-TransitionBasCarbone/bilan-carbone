@@ -2,7 +2,6 @@
 
 import { FullStudy } from '@/db/study'
 import { useChartComputations } from '@/hooks/useChartComputations'
-import { BCPost, CutPost, Post } from '@/services/posts'
 import { isPost } from '@/utils/post'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { Typography, useTheme } from '@mui/material'

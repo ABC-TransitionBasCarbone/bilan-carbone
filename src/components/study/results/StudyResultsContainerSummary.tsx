@@ -6,21 +6,20 @@ import HelpIcon from '@/components/base/HelpIcon'
 import StyledChip from '@/components/base/StyledChip'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
-import { BCPost, CutPost, environmentPostMapping, Post, subPostsByPost, TiltPost } from '@/services/posts'
+import { environmentPostMapping } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
-import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { AdditionalResultTypes, ResultType } from '@/services/study'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import SpaIcon from '@mui/icons-material/Spa'
-import { Environment, SubPost } from '@prisma/client'
+import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import BarChart from '../charts/BarChart'
 import styles from './ResultsContainer.module.css'
-import { AdditionalResultTypes, ResultType } from '@/services/study'
 
 interface Props {
   study: FullStudy
@@ -31,7 +30,14 @@ interface Props {
   type?: ResultType
 }
 
-const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOnly, withDependencies, type = AdditionalResultTypes.ENV_SPECIFIC_EXPORT }: Props) => {
+const StudyResultsContainerSummary = ({
+  study,
+  studySite,
+  showTitle,
+  validatedOnly,
+  withDependencies,
+  type = AdditionalResultTypes.ENV_SPECIFIC_EXPORT,
+}: Props) => {
   const t = useTranslations('study')
   const tPost = useTranslations('emissionFactors.post')
   const tResultUnits = useTranslations('study.results.units')
@@ -65,7 +71,10 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
     const monetaryTotal = computedResultsWithDep.find((result) => result.post === 'total')?.monetaryValue || 0
 
     const formatedTotal = formatNumber(total / STUDY_UNIT_VALUES[study.resultsUnit])
-    const formatedDiff = formatNumber(((computedResultsWithoutDep.find((result) => result.post === 'total')?.value || 0) / STUDY_UNIT_VALUES[study.resultsUnit]))
+    const formatedDiff = formatNumber(
+      (computedResultsWithoutDep.find((result) => result.post === 'total')?.value || 0) /
+        STUDY_UNIT_VALUES[study.resultsUnit],
+    )
     const formatedMonetaryRatio = formatNumber((monetaryTotal / total) * 100, 2)
 
     return [formatedTotal, formatedDiff, formatedMonetaryRatio]
