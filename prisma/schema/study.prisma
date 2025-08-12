@@ -72,6 +72,18 @@ model OpeningHours {
   @@map("opening_hours")
 }
 
+model EmissionSourceTagFamily {
+  id String @id @default(uuid())
+
+  name String
+
+  studyId String @map("study_id")
+  study   Study  @relation(fields: [studyId], references: [id])
+
+  @@unique([name, studyId])
+  @@map("emission_source_tag_families")
+}
+
 model EmissionSourceTag {
   id String @id @default(uuid())
 
@@ -82,9 +94,27 @@ model EmissionSourceTag {
   study               Study                 @relation(fields: [studyId], references: [id])
   StudyEmissionSource StudyEmissionSource[] @relation("TagToEmissionSource")
 
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
   @@unique([name, studyId])
   @@map("emission_source_tag")
 }
+
+// model EmissionSourceTag {
+//   id String @id @default(uuid())
+
+//   name  String
+//   color String?
+
+// 	familyId String @map("family_id")
+// 	family EmissionSourceTagFamily @relation(fields: [familyId], references: [id])
+
+//   StudyEmissionSource StudyEmissionSource[] @relation("TagToEmissionSource")
+
+//   @@unique([name, familyId])
+//   @@map("emission_source_tag")
+// }
 
 model Study {
   id      String  @id @default(uuid())
@@ -114,7 +144,8 @@ model Study {
 
   emissionFactorVersions StudyEmissionFactorVersion[]
 
-  emissionSourceTags EmissionSourceTag[]
+  emissionSourceTags        EmissionSourceTag[]
+  emissionSourceTagFamilies EmissionSourceTagFamily[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
