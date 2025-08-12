@@ -154,7 +154,7 @@ const EmissionSourceForm = ({
   const getEmissionSourceTags = async () => {
     const response = await getEmissionSourceTagsByStudyId(studyId)
     if (response.success && response.data) {
-      setTags(response.data)
+      setTags(response.data.reduce((tags, family) => tags.concat(family.emissionSourceTags), [] as EmissionSourceTag[]))
     }
   }
 

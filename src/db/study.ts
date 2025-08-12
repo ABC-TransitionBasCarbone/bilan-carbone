@@ -6,11 +6,26 @@ import { checkLevel, getAllowedLevels } from '@/services/study'
 import { isAdminOnOrga } from '@/utils/organization'
 import { getUserRoleOnPublicStudy } from '@/utils/study'
 import { isAdmin } from '@/utils/user'
-import { ControlMode, Environment, Export, Import, Level, StudyRole, SubPost, type Prisma } from '@prisma/client'
+import {
+  ControlMode,
+  EmissionSourceTag,
+  EmissionSourceTagFamily,
+  Environment,
+  Export,
+  Import,
+  Level,
+  StudyRole,
+  SubPost,
+  type Prisma,
+} from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { getAccountOrganizationVersions } from './account'
 import { prismaClient } from './client'
 import { getOrganizationVersionById, OrganizationVersionWithOrganization } from './organization'
+
+export type EmissionSourceTagFamilyWithTags = Omit<EmissionSourceTagFamily, 'createdAt' | 'updatedAt'> & {
+  emissionSourceTags: Omit<EmissionSourceTag, 'familyId'>[]
+}
 
 export const createStudy = async (data: Prisma.StudyCreateInput, environment: Environment) => {
   const dbStudy = await prismaClient.study.create({ data })
@@ -195,11 +210,14 @@ const fullStudyInclude = {
       studyId: true,
       emissionSourceTags: {
         select: {
+          id: true,
+          familyId: true,
           name: true,
           color: true,
         },
       },
     },
+    orderBy: [{ name: 'asc' }, { createdAt: 'asc' }],
   },
 } satisfies Prisma.StudyInclude
 
@@ -686,3 +704,16 @@ export const createEmissionSourceTagFamily = async (studyId: string, name: strin
   }
   return prismaClient.emissionSourceTagFamily.create({ data: { studyId, name } })
 }
+
+export const getEmissionSourceTagFamilyById = async (familyId: string) =>
+  prismaClient.emissionSourceTagFamily.findUnique({ where: { id: familyId } })
+
+export const upsertEmissionSourceTagFamilyById = async (studyId: string, name: string, familyId?: string) =>
+  familyId
+    ? prismaClient.emissionSourceTagFamily.update({
+        where: { id: familyId },
+        data: { name },
+      })
+    : prismaClient.emissionSourceTagFamily.create({
+        data: { name, studyId },
+      })

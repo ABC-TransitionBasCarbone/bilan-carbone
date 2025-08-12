@@ -3,8 +3,12 @@
 import Block from '@/components/base/Block'
 import Button from '@/components/base/Button'
 import Form from '@/components/base/Form'
+import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
 import { emissionSourceTagColors } from '@/constants/emissionSourceTags'
+import { EmissionSourceTagFamilyWithTags } from '@/db/study'
+import AddIcon from '@mui/icons-material/Add'
+
 import {
   createEmissionSourceTag,
   deleteEmissionSourceTag,
@@ -15,12 +19,15 @@ import {
   NewEmissionSourceTagCommandValidation,
 } from '@/services/serverFunctions/emissionSource.command'
 import { zodResolver } from '@hookform/resolvers/zod'
+import EditIcon from '@mui/icons-material/Edit'
 import { Box, Chip, FormControl, MenuItem, Select } from '@mui/material'
-import { EmissionSourceTag } from '@prisma/client'
+import { EmissionSourceTagFamily } from '@prisma/client'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import styles from './EmissionSourceTag.module.css'
+import EmissionTagFamilyModal from './EmissionTagFamilyModal'
 
 interface Props {
   studyId: string
@@ -29,7 +36,8 @@ interface Props {
 const EmissionSourceTags = ({ studyId }: Props) => {
   const t = useTranslations('study.perimeter')
 
-  const [tags, setTags] = useState<EmissionSourceTag[]>([])
+  const [tags, setTags] = useState<EmissionSourceTagFamilyWithTags[]>([])
+  const [editingFamily, setEditingFamily] = useState<Partial<EmissionSourceTagFamily> | null | undefined>(null)
 
   useEffect(() => {
     getEmissionSourceTags()
@@ -47,7 +55,6 @@ const EmissionSourceTags = ({ studyId }: Props) => {
     mode: 'onSubmit',
     reValidateMode: 'onChange',
     defaultValues: {
-      studyId,
       color: emissionSourceTagColors.GREY,
     },
   })
@@ -55,8 +62,16 @@ const EmissionSourceTags = ({ studyId }: Props) => {
   const onSubmit = async () => {
     const createTag = await createEmissionSourceTag(getValues())
     if (createTag.success) {
-      setTags((prevTags) => [...prevTags, createTag.data])
+      const targetedFamily: EmissionSourceTagFamilyWithTags | undefined = tags.find(
+        (tag) => tag.id === getValues().familyId,
+      )
+      if (targetedFamily) {
+        targetedFamily?.emissionSourceTags.push(createTag.data)
+        const newTags = tags.filter((tag) => tag.id !== getValues().familyId).concat([targetedFamily])
+        setTags(newTags)
+      }
       setValue('name', '')
+      setValue('familyId', '')
     }
   }
 
@@ -70,22 +85,48 @@ const EmissionSourceTags = ({ studyId }: Props) => {
   return (
     <Block title={t('emissionSourceTags')}>
       {tags.length > 0 && (
-        <div className={styles.tags}>
-          {tags.map((tag) => (
-            <Chip
-              className={styles.tag}
-              onDelete={() => onDelete(tag.id)}
-              sx={{ bgcolor: tag.color }}
-              key={tag.id}
-              label={tag.name}
-            />
-          ))}
+        <div className={classNames(styles.gapped, 'flex')}>
+          <>
+            {tags.map((family) => (
+              <div key={family.id} className="flex-col">
+                <div className={classNames(styles.gapped, 'flex')}>
+                  <span className={classNames(styles.familyName, styles.gapped, 'flex bold pb-2')}>{family.name}</span>
+                  <Button
+                    className={styles.familyNameButton}
+                    onClick={() => setEditingFamily(family)}
+                    title={t('family.edit')}
+                  >
+                    <EditIcon />
+                  </Button>
+                </div>
+                {family.emissionSourceTags.map((tag) => (
+                  <div key={tag.id} className={classNames(styles.tags)}>
+                    <Chip
+                      className={styles.tag}
+                      onDelete={() => onDelete(tag.id)}
+                      sx={{ bgcolor: tag.color }}
+                      label={tag.name}
+                    />
+                  </div>
+                ))}
+              </div>
+            ))}
+            <div className="ml2">
+              <Button
+                className={styles.familyNameButton}
+                onClick={() => setEditingFamily(undefined)}
+                title={t('family.new')}
+              >
+                <AddIcon />
+              </Button>
+            </div>
+          </>
         </div>
       )}
 
       <Form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
         <FormControl>
-          <div className={styles.container}>
+          <div className={classNames(styles.gapped, 'justify-between my-2')}>
             <Controller
               control={control}
               name="color"
@@ -119,6 +160,23 @@ const EmissionSourceTags = ({ studyId }: Props) => {
                 </FormControl>
               )}
             />
+            <div className={styles.selector}>
+              <FormSelect
+                control={control}
+                translation={t}
+                name="familyId"
+                label={t('emissionSourceTagFamily')}
+                data-testid="create-emission-source-tag-family"
+                fullWidth
+              >
+                {tags.map((tag) => (
+                  <MenuItem key={tag.id} value={tag.id}>
+                    {tag.name}
+                  </MenuItem>
+                ))}
+              </FormSelect>
+            </div>
+
             <FormTextField
               control={control}
               translation={t}
@@ -133,6 +191,16 @@ const EmissionSourceTags = ({ studyId }: Props) => {
           </Button>
         </FormControl>
       </Form>
+      {editingFamily !== null && (
+        <EmissionTagFamilyModal
+          studyId={studyId}
+          family={editingFamily}
+          onClose={() => {
+            setEditingFamily(null)
+            getEmissionSourceTags()
+          }}
+        />
+      )}
     </Block>
   )
 }

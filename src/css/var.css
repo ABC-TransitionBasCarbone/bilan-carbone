@@ -104,6 +104,10 @@
   padding-bottom: 2rem;
 }
 
+.pb-2 {
+  padding-bottom: 0.5rem;
+}
+
 .px1 {
   padding-left: 1rem;
   padding-right: 1rem;

@@ -579,6 +579,7 @@
       },
       "exports": "Exports",
       "control": "Mode de contrôle",
+      "emissionSourceTagFamily": "Famille",
       "emissionSourceTags": "Tags",
       "emissionSourceTagLabel": "Libellé",
       "color": "Couleur",
@@ -603,6 +604,14 @@
         "description": "Vous êtes sur le point d'activer l'export BEGES règlementaire. Lorsque cet export est activé, vous devez renseigner un champ supplémentaire \"Caractérisation\" dans certaines sources d'émissions. En conséquence, <warning>l'activation de cet export dévalidera les sources d'émission concernées</warning>. Voulez-vous continuer ?",
         "continue": "Continuer",
         "cancel": "Annuler"
+      },
+      "family": {
+        "name": "Libellé",
+        "edit": "Renommer la famille",
+        "new": "Nouvelle famille",
+        "content": "Quel nom voulez vous donner à cette famille ?",
+        "cancel": "Annuler",
+        "confirm": "Confirmer"
       }
     },
     "results": {

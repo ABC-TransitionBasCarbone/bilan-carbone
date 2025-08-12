@@ -11,7 +11,7 @@ import {
   getEmissionSourceById,
   updateEmissionSourceOnStudy,
 } from '@/db/emissionSource'
-import { getStudyById } from '@/db/study'
+import { getEmissionSourceTagFamilyById, getStudyById } from '@/db/study'
 import { withServerResponse } from '@/utils/serverResponse'
 import { EmissionSourceTag, Import, SubPost, UserChecklist } from '@prisma/client'
 import { auth } from '../auth'
@@ -199,7 +199,7 @@ export const getEmissionSourcesByStudyId = async (studyId: string) =>
     return study.emissionSources
   })
 
-export const createEmissionSourceTag = async ({ studyId, name, color }: NewEmissionSourceTagCommand) =>
+export const createEmissionSourceTag = async ({ familyId, name, color }: NewEmissionSourceTagCommand) =>
   withServerResponse('createEmissionSourceTag', async () => {
     const session = await auth()
     if (!session || !session.user) {
@@ -215,14 +215,20 @@ export const createEmissionSourceTag = async ({ studyId, name, color }: NewEmiss
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const study = await getStudyById(studyId, account.organizationVersionId)
+    const tagFamily = await getEmissionSourceTagFamilyById(familyId)
+
+    if (!tagFamily) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(tagFamily.studyId, account.organizationVersionId)
 
     if (!study) {
       throw new Error(NOT_AUTHORIZED)
     }
 
     return await createEmissionSourceTagOnStudy({
-      study: { connect: { id: studyId } },
+      family: { connect: { id: familyId } },
       name,
       color,
     })
@@ -264,7 +270,7 @@ export const getEmissionSourceTagsByStudyId = async (studyId: string) =>
       return []
     }
 
-    return study.emissionSourceTags
+    return study.emissionSourceTagFamilies
   })
 
 const getDefaultEmissionSourceTags = async (subPost: SubPost, studyId: string) =>
@@ -291,7 +297,12 @@ const getDefaultEmissionSourceTags = async (subPost: SubPost, studyId: string) =
     if (!tagObj) {
       return []
     }
-    const studyTags = study.emissionSourceTags || ([] as EmissionSourceTag[])
+    const studyTags =
+      study.emissionSourceTagFamilies.reduce(
+        (tags, family) => tags.concat(family.emissionSourceTags),
+        [] as EmissionSourceTag[],
+      ) || ([] as EmissionSourceTag[])
+
     const defaultTags = []
     for (const tag of Object.keys(tagObj)) {
       if (tagObj[tag as DefaultEmissionSourceTag]?.includes(subPost)) {
