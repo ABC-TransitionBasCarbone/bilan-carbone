@@ -92,7 +92,7 @@ const fullStudyInclude = {
           id: true,
           name: true,
           color: true,
-          studyId: true,
+          familyId: true,
         },
       },
     },
@@ -188,12 +188,17 @@ const fullStudyInclude = {
       },
     },
   },
-  emissionSourceTags: {
+  emissionSourceTagFamilies: {
     select: {
       id: true,
       name: true,
-      color: true,
       studyId: true,
+      emissionSourceTags: {
+        select: {
+          name: true,
+          color: true,
+        },
+      },
     },
   },
 } satisfies Prisma.StudyInclude
@@ -672,4 +677,12 @@ export const deleteStudyMemberFromOrganization = async (accountId: string, organ
   return prismaClient.userOnStudy.deleteMany({
     where: { accountId, studyId: { in: studies.map((study) => study.id) } },
   })
+}
+
+export const createEmissionSourceTagFamily = async (studyId: string, name: string) => {
+  const study = await prismaClient.study.findUnique({ select: { id: true }, where: { id: studyId } })
+  if (!study) {
+    return null
+  }
+  return prismaClient.emissionSourceTagFamily.create({ data: { studyId, name } })
 }
