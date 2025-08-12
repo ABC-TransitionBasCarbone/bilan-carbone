@@ -34,6 +34,7 @@ const StudyResultsContainerSummaryCut = ({ study }: Props) => {
           showLegend={false}
           showLabelsOnBars={false}
           validatedOnly={false}
+          withDep
           environment={Environment.CUT}
         />
       </div>

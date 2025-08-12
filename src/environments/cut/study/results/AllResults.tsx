@@ -155,6 +155,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
               showLabelsOnBars={true}
               validatedOnly={validatedOnly}
               environment={Environment.CUT}
+              withDep
             />
           </TabPanel>
           <TabPanel value={value} index={2}>
@@ -166,6 +167,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
               showLabelsOnPie={true}
               validatedOnly={validatedOnly}
               environment={Environment.CUT}
+              withDep
             />
           </TabPanel>
         </Box>
