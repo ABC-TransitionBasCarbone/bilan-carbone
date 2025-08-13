@@ -68,9 +68,15 @@ const EmissionSourceTags = ({ studyId }: Props) => {
         (family) => family.id === getValues().familyId,
       )
       if (targetedFamily) {
-        targetedFamily?.emissionSourceTags.push(createdTag.data)
-        const newTags = tagFamilies.filter((tag) => tag.id !== getValues().familyId).concat([targetedFamily])
-        setTagFamilies(newTags)
+        setTagFamilies((prevTags) =>
+          prevTags.map((family) => ({
+            ...family,
+            emissionSourceTags:
+              family.id === getValues().familyId
+                ? family.emissionSourceTags.concat(createdTag.data)
+                : family.emissionSourceTags,
+          })),
+        )
       }
       setValue('name', '')
       setValue('familyId', '')
