@@ -1,7 +1,8 @@
+import { environmentSubPostsMapping, Post } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { getStudyEmissionFactorImportVersions } from '@/services/serverFunctions/study'
 import { useAppContextStore } from '@/store/AppContext'
-import { EmissionFactorImportVersion, Import, SubPost } from '@prisma/client'
+import { EmissionFactorImportVersion, Environment, Import, SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import EmissionFactorsTable from '../emissionFactor/Table'
@@ -11,11 +12,19 @@ interface Props {
   close: () => void
   open: boolean
   emissionFactors: EmissionFactorWithMetaData[]
-  subPost?: SubPost
+  subPost: SubPost
   selectEmissionFactor: (emissionFactor: EmissionFactorWithMetaData) => void
+  environment: Environment
 }
 
-const EmissionSourceFactorModal = ({ close, open, emissionFactors, subPost, selectEmissionFactor }: Props) => {
+const EmissionSourceFactorModal = ({
+  close,
+  open,
+  emissionFactors,
+  subPost,
+  selectEmissionFactor,
+  environment,
+}: Props) => {
   const t = useTranslations('emissionSource.emissionFactorDialog')
   const [emissionFactorVersions, setEmissionFactorVersions] = useState<EmissionFactorImportVersion[] | undefined>(
     undefined,
@@ -37,6 +46,9 @@ const EmissionSourceFactorModal = ({ close, open, emissionFactors, subPost, sele
     .map((importVersion) => importVersion.id)
     .concat([Import.Manual])
 
+  const subPostsByPost = environmentSubPostsMapping[environment]
+  const posts = Object.keys(subPostsByPost) as Post[]
+
   return emissionFactorVersions ? (
     <Modal
       open={open}
@@ -48,10 +60,12 @@ const EmissionSourceFactorModal = ({ close, open, emissionFactors, subPost, sele
     >
       <EmissionFactorsTable
         emissionFactors={emissionFactors}
-        subPost={subPost}
         selectEmissionFactor={selectEmissionFactor}
         importVersions={emissionFactorVersions.concat(manualImport)}
         initialSelectedSources={initialSelectedSources}
+        initialSelectedSubPosts={[subPost]}
+        environment={environment}
+        envPosts={posts}
       />
     </Modal>
   ) : (

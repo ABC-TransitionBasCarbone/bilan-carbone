@@ -8,7 +8,7 @@ import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import styles from './BarChart.module.css'
 
-import { BCPost, CutPost } from '@/services/posts'
+import { ResultType } from '@/services/study'
 import { isPost } from '@/utils/post'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { Environment } from '@prisma/client'
@@ -28,10 +28,11 @@ interface Props {
   showLegend?: boolean
   showLabelsOnBars?: boolean
   validatedOnly?: boolean
-  postValues: typeof CutPost | typeof BCPost
   fixedColor?: boolean
-  environment: Environment | undefined
+  environment: Environment
   skipAnimation?: boolean
+  withDep: boolean
+  type?: ResultType
 }
 
 const BarChart = ({
@@ -43,10 +44,11 @@ const BarChart = ({
   showLegend = true,
   showLabelsOnBars = true,
   validatedOnly = false,
-  postValues,
   fixedColor,
   environment,
   skipAnimation = false,
+  withDep,
+  type,
 }: Props) => {
   const tResults = useTranslations('study.results')
   const theme = useTheme()
@@ -55,8 +57,9 @@ const BarChart = ({
     study,
     studySite,
     validatedOnly,
-    postValues,
     environment,
+    withDep,
+    type,
   })
 
   const barData = useMemo(

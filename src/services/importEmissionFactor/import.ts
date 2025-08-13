@@ -267,8 +267,6 @@ export const mapEmissionFactors = (
   unit: getUnit(emissionFactor.Unité_français),
   isMonetary: isMonetaryEmissionFactor({
     unit: getUnit(emissionFactor.Unité_français),
-    customUnit: '',
-    isMonetary: false,
   }),
   subPosts: getSubPost(emissionFactor),
   metaData: {

@@ -1,4 +1,5 @@
-import { CutPost, Post, subPostsByPost } from '@/services/posts'
+import { BCPost, CutPost, Post, subPostsByPost, TiltPost } from '@/services/posts'
+import { AdditionalResultTypes, ResultType } from '@/services/study'
 import { Environment, SubPost } from '@prisma/client'
 
 export const getPost = (subPost?: SubPost) =>
@@ -42,30 +43,18 @@ export const isPost = (post: Post | SubPost | 'total'): post is Post => {
   return post in Post
 }
 
-export const getPostByEnvironment = (environment: Environment | undefined): Post[] => {
+export const getPostValues = (environment: Environment | undefined, type?: ResultType) => {
+  if (!environment) {
+    return BCPost
+  }
+
   switch (environment) {
+    case Environment.TILT:
+      return type === AdditionalResultTypes.ENV_SPECIFIC_EXPORT ? TiltPost : BCPost
     case Environment.CUT:
-      return [
-        CutPost.Dechets,
-        CutPost.BilletterieEtCommunication,
-        CutPost.ConfiseriesEtBoissons,
-        CutPost.Fonctionnement,
-        CutPost.MobiliteSpectateurs,
-        CutPost.SallesEtCabines,
-        CutPost.TourneesAvantPremieres,
-      ]
+      return CutPost
+    case Environment.BC:
     default:
-      return [
-        Post.Energies,
-        Post.DechetsDirects,
-        Post.IntrantsBiensEtMatieres,
-        Post.IntrantsServices,
-        Post.AutresEmissionsNonEnergetiques,
-        Post.Fret,
-        Post.Deplacements,
-        Post.Immobilisations,
-        Post.UtilisationEtDependance,
-        Post.FinDeVie,
-      ]
+      return BCPost
   }
 }

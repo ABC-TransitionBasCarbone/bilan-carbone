@@ -22,6 +22,7 @@ const ConsolidatedResults = ({ study, studySite, withDependencies, validatedOnly
           studySite={studySite}
           withDependencies={withDependencies}
           validatedOnly={validatedOnly}
+          type={type}
         />
       </div>
       <ConsolidatedResultsTable

@@ -2,7 +2,6 @@
 
 import { FullStudy } from '@/db/study'
 import { useChartComputations } from '@/hooks/useChartComputations'
-import { BCPost, CutPost, Post } from '@/services/posts'
 import { isPost } from '@/utils/post'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { Typography, useTheme } from '@mui/material'
@@ -26,9 +25,9 @@ interface Props {
   showTitle?: boolean
   showLabelsOnPie?: boolean
   validatedOnly?: boolean
-  postValues: typeof Post | typeof CutPost | typeof BCPost
-  environment: Environment | undefined
+  environment: Environment
   skipAnimation?: boolean
+  withDep: boolean
 }
 
 const PieChart = ({
@@ -39,9 +38,9 @@ const PieChart = ({
   showTitle = true,
   showLabelsOnPie = true,
   validatedOnly = false,
-  postValues,
   environment,
   skipAnimation = false,
+  withDep,
 }: Props) => {
   const theme = useTheme()
 
@@ -49,8 +48,8 @@ const PieChart = ({
     study,
     studySite,
     validatedOnly,
-    postValues,
     environment,
+    withDep,
   })
 
   const pieData = useMemo(

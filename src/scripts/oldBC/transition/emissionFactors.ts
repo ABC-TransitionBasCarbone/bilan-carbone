@@ -51,7 +51,7 @@ export const uploadEmissionFactors = async (
       })
 
       const unit = unitsMatrix[getStringValue(row.Unité_Nom)]
-      const isMonetary = isMonetaryEmissionFactor({ unit, customUnit: '', isMonetary: false })
+      const isMonetary = isMonetaryEmissionFactor({ unit })
 
       return {
         id,

@@ -103,13 +103,13 @@ const EmissionSourceFactor = ({
     setValue(selectedFactor?.metaData?.title || '')
   }, [selectedFactor])
 
-  const subPostEmissionFactors = useMemo(
-    () => filterEmissionFactorsBySubPostAndEnv(emissionFactors, subPost, environment),
+  const emissionFactorsFilteredBySubPosts = useMemo(
+    () => filterEmissionFactorsBySubPostAndEnv(emissionFactors, [subPost], environment),
     [emissionFactors, subPost, environment],
   )
   const fuse = useMemo(() => {
     return new Fuse(
-      subPostEmissionFactors.filter((emissionFactor) => emissionFactor.metaData),
+      emissionFactorsFilteredBySubPosts.filter((emissionFactor) => emissionFactor.metaData),
       fuseOptions,
     )
   }, [emissionFactors])
@@ -127,6 +127,10 @@ const EmissionSourceFactor = ({
         : [],
     )
   }, [fuse, value])
+
+  if (!environment) {
+    return null
+  }
 
   return (
     <div ref={containerRef}>
@@ -201,13 +205,14 @@ const EmissionSourceFactor = ({
         <EmissionSourceFactorModal
           open={advancedSearch}
           close={() => setAdvancedSearch(false)}
-          emissionFactors={emissionFactors}
+          emissionFactors={emissionFactorsFilteredBySubPosts}
           subPost={subPost}
           selectEmissionFactor={(emissionFactor) => {
             update('emissionFactorId', emissionFactor.id)
             setDisplay(false)
             setAdvancedSearch(false)
           }}
+          environment={environment}
         />
       )}
       <Modal

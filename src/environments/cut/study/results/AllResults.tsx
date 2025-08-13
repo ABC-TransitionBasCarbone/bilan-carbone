@@ -20,7 +20,6 @@ import LoadingButton from '@/components/base/LoadingButton'
 import BarChart from '@/components/study/charts/BarChart'
 import PieChart from '@/components/study/charts/PieChart'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { CutPost } from '@/services/posts'
 import { generateStudySummaryPDF } from '@/services/serverFunctions/pdf'
 import classNames from 'classnames'
 import Link from 'next/link'
@@ -155,8 +154,8 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
               showLegend={true}
               showLabelsOnBars={true}
               validatedOnly={validatedOnly}
-              postValues={CutPost}
               environment={Environment.CUT}
+              withDep
             />
           </TabPanel>
           <TabPanel value={value} index={2}>
@@ -167,8 +166,8 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
               showTitle={false}
               showLabelsOnPie={true}
               validatedOnly={validatedOnly}
-              postValues={CutPost}
               environment={Environment.CUT}
+              withDep
             />
           </TabPanel>
         </Box>

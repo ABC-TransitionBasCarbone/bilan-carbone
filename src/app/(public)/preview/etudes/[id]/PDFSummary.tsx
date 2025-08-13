@@ -178,15 +178,7 @@ const PDFSummary = ({ study, environment }: Props) => {
           </div>
         </div>
 
-        <ChartsPage
-          study={study}
-          studySite="all"
-          siteName=""
-          tPdf={tPdf}
-          isAll={true}
-          postValues={CutPost}
-          environment={environment}
-        />
+        <ChartsPage study={study} studySite="all" siteName="" tPdf={tPdf} isAll environment={environment} />
 
         <div className="pdf-content page-break-before pdf-page-content">
           <div className="pdf-section">
@@ -240,7 +232,6 @@ const PDFSummary = ({ study, environment }: Props) => {
               siteName={site.fullName}
               tPdf={tPdf}
               isAll={false}
-              postValues={CutPost}
               environment={environment}
             />
           </React.Fragment>

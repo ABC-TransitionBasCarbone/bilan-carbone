@@ -6,14 +6,14 @@ import HelpIcon from '@/components/base/HelpIcon'
 import StyledChip from '@/components/base/StyledChip'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
-import { BCPost, CutPost, environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
+import { environmentPostMapping } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
-import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { AdditionalResultTypes, ResultType } from '@/services/study'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import SpaIcon from '@mui/icons-material/Spa'
-import { Environment, SubPost } from '@prisma/client'
+import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -27,44 +27,54 @@ interface Props {
   showTitle?: boolean
   validatedOnly?: boolean
   withDependencies?: boolean
+  type?: ResultType
 }
 
-const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOnly, withDependencies }: Props) => {
+const StudyResultsContainerSummary = ({
+  study,
+  studySite,
+  showTitle,
+  validatedOnly,
+  withDependencies,
+  type = AdditionalResultTypes.ENV_SPECIFIC_EXPORT,
+}: Props) => {
   const t = useTranslations('study')
   const tPost = useTranslations('emissionFactors.post')
   const tResultUnits = useTranslations('study.results.units')
   const [glossary, setGlossary] = useState('')
   const [withDep, setWithDependencies] = useState(!!withDependencies)
-  const { environment } = useAppEnvironmentStore()
+  const environment = study.organizationVersion.environment
 
   const isCut = useMemo(() => environment === Environment.CUT, [environment])
 
   const [withDepValue, withoutDepValue, monetaryRatio] = useMemo(() => {
-    const computedResults = computeResultsByPost(
+    const computedResultsWithDep = computeResultsByPost(
       study,
       tPost,
       studySite,
       true,
       validatedOnly,
-      environmentPostMapping[environment || Environment.BC],
+      environmentPostMapping[environment],
       environment,
     )
-    const total = computedResults.find((result) => result.post === 'total')?.value || 0
-    const monetaryTotal = computedResults.find((result) => result.post === 'total')?.monetaryValue || 0
-
-    const dependenciesSubPost = SubPost.UtilisationEnDependance
-
-    const dependenciesPost = Object.keys(subPostsByPost).find((key) =>
-      subPostsByPost[key as Post].includes(dependenciesSubPost),
+    const computedResultsWithoutDep = computeResultsByPost(
+      study,
+      tPost,
+      studySite,
+      false,
+      validatedOnly,
+      environmentPostMapping[environment],
+      environment,
     )
 
-    const dependenciesValue =
-      computedResults
-        .find((result) => result.post === dependenciesPost)
-        ?.subPosts.find((subPost) => subPost.post === dependenciesSubPost)?.value || 0
+    const total = computedResultsWithDep.find((result) => result.post === 'total')?.value || 0
+    const monetaryTotal = computedResultsWithDep.find((result) => result.post === 'total')?.monetaryValue || 0
 
     const formatedTotal = formatNumber(total / STUDY_UNIT_VALUES[study.resultsUnit])
-    const formatedDiff = formatNumber((total - dependenciesValue) / STUDY_UNIT_VALUES[study.resultsUnit])
+    const formatedDiff = formatNumber(
+      (computedResultsWithoutDep.find((result) => result.post === 'total')?.value || 0) /
+        STUDY_UNIT_VALUES[study.resultsUnit],
+    )
     const formatedMonetaryRatio = formatNumber((monetaryTotal / total) * 100, 2)
 
     return [formatedTotal, formatedDiff, formatedMonetaryRatio]
@@ -159,9 +169,10 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
             showLegend={false}
             showLabelsOnBars={false}
             validatedOnly={validatedOnly}
-            postValues={isCut ? CutPost : BCPost}
             fixedColor={isCut ? false : true}
             environment={environment}
+            type={type}
+            withDep={withDep}
           />
         </div>
       </div>

@@ -1,9 +1,9 @@
 import { FullStudy } from '@/db/study'
-import { BCPost, CutPost, Post } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import { filterWithDependencies } from '@/services/results/utils'
+import { ResultType } from '@/services/study'
 import { formatNumber } from '@/utils/number'
-import { getPostByEnvironment } from '@/utils/post'
+import { getPostValues } from '@/utils/post'
 import { Environment, SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo } from 'react'
@@ -12,23 +12,27 @@ interface UseChartComputationsParams {
   study: FullStudy
   studySite: string
   validatedOnly?: boolean
-  postValues: typeof Post | typeof CutPost | typeof BCPost
-  environment: Environment | undefined
+  environment: Environment
+  withDep: boolean
+  type?: ResultType
 }
 
 export const useChartComputations = ({
   study,
   studySite,
   validatedOnly = false,
-  postValues,
   environment,
+  withDep,
+  type,
 }: UseChartComputationsParams) => {
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('study.results.units')
 
+  const postValues = useMemo(() => getPostValues(environment, type), [environment, type])
+
   const resultsByPost = useMemo(
-    () => computeResultsByPost(study, tPost, studySite, true, validatedOnly, postValues, environment),
-    [study, studySite, tPost, validatedOnly, postValues, environment],
+    () => computeResultsByPost(study, tPost, studySite, withDep, validatedOnly, postValues, environment, type),
+    [study, studySite, tPost, validatedOnly, postValues, environment, withDep],
   )
 
   const chartFormatter = useCallback(
@@ -40,23 +44,19 @@ export const useChartComputations = ({
     [study.resultsUnit, tUnits],
   )
 
-  const posts = getPostByEnvironment(environment)
-
   const computeResults = useMemo(() => {
-    const validPosts = new Set(Object.values(posts))
-
     return resultsByPost
       .map((post) => {
         const filteredSubPosts = post.subPosts.filter((subPost) =>
-          filterWithDependencies(subPost.post as SubPost, false),
+          filterWithDependencies(subPost.post as SubPost, withDep),
         )
         const value = filteredSubPosts.reduce((res, subPost) => res + subPost.value, 0)
 
         return { ...post, subPosts: filteredSubPosts, value }
       })
-      .filter((post) => validPosts.has(post.post as Post))
+      .filter((post) => post.post !== 'total')
       .map((post) => ({ ...post, label: tPost(post.post) }))
-  }, [posts, resultsByPost, tPost])
+  }, [resultsByPost, tPost])
 
   return {
     resultsByPost,

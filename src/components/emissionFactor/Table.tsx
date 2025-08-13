@@ -1,11 +1,10 @@
 'use client'
 
 import { canEditEmissionFactor } from '@/services/permissions/emissionFactor'
-import { BCPost, subPostsByPost } from '@/services/posts'
+import { Post, subPostsByPost } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { BCUnit } from '@/services/unit'
-import { useAppEnvironmentStore } from '@/store/AppEnvironment'
-import { getEmissionFactorValue } from '@/utils/emissionFactors'
+import { filterEmissionFactorsBySubPostAndEnv, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import DeleteIcon from '@mui/icons-material/Cancel'
 import CheckIcon from '@mui/icons-material/Check'
@@ -31,7 +30,14 @@ import {
   Switch,
   TextField,
 } from '@mui/material'
-import { EmissionFactorImportVersion, EmissionFactorStatus, Import, StudyResultUnit, SubPost } from '@prisma/client'
+import {
+  EmissionFactorImportVersion,
+  EmissionFactorStatus,
+  Environment,
+  Import,
+  StudyResultUnit,
+  SubPost,
+} from '@prisma/client'
 import {
   ColumnDef,
   flexRender,
@@ -87,25 +93,27 @@ const locationFuseOptions = {
 
 interface Props {
   emissionFactors: EmissionFactorWithMetaData[]
-  subPost?: SubPost
   selectEmissionFactor?: (emissionFactor: EmissionFactorWithMetaData) => void
   importVersions: EmissionFactorImportVersion[]
   initialSelectedSources: string[]
   userOrganizationId?: string | null
+  initialSelectedSubPosts: SubPost[]
+  environment: Environment
+  envPosts: Post[]
 }
 
 const initialSelectedUnits: (BCUnit | string)[] = [...['all'], ...Object.values(BCUnit)]
-const initialSelectedSubPosts: SubPost[] = Object.values(subPostsByPost).flatMap((subPosts) => subPosts)
 
 const EmissionFactorsTable = ({
   emissionFactors,
-  subPost,
   selectEmissionFactor,
   userOrganizationId,
   importVersions,
   initialSelectedSources,
+  initialSelectedSubPosts,
+  environment,
+  envPosts,
 }: Props) => {
-  const { environment } = useAppEnvironmentStore()
   const t = useTranslations('emissionFactors.table')
   const tUnits = useTranslations('units')
   const tPosts = useTranslations('emissionFactors.post')
@@ -122,6 +130,13 @@ const EmissionFactorsTable = ({
   const [displayFilters, setDisplayFilters] = useState(true)
   const filtersRef = useRef<HTMLDivElement>(null)
   const fromModal = !!selectEmissionFactor
+
+  const envSubPosts = useMemo(() => {
+    return envPosts.reduce((acc, post) => {
+      const subPosts = subPostsByPost[post] || []
+      return acc.concat(subPosts)
+    }, [] as SubPost[])
+  }, [envPosts])
 
   useEffect(() => {
     const checkWrappedRows = () => {
@@ -142,12 +157,6 @@ const EmissionFactorsTable = ({
     window.addEventListener('resize', checkWrappedRows)
     return () => window.removeEventListener('resize', checkWrappedRows)
   }, [])
-
-  useEffect(() => {
-    if (subPost) {
-      setFilteredSubPosts([subPost])
-    }
-  }, [subPost])
 
   const getLocationLabel = (row: EmissionFactorWithMetaData) =>
     `${row.location || t('noLocation')}${row.metaData?.location ? ` - ${row.metaData.location}` : ''}`
@@ -324,19 +333,21 @@ const EmissionFactorsTable = ({
     return searchResults
   }, [emissionFactors, filter, locationFilter])
 
-  const data = useMemo(
-    () =>
-      searchedEmissionFactors
-        .filter(
-          (emissionFactor) =>
-            (emissionFactor.version && filteredSources.includes(emissionFactor.version.id)) ||
-            (!emissionFactor.version && filteredSources.includes(Import.Manual)),
-        )
-        .filter((emissionFactor) => filteredUnits.includes(emissionFactor.unit || ''))
-        .filter((emissionFactor) => emissionFactor.subPosts.some((subPost) => filteredSubPosts.includes(subPost)))
-        .filter((emissionFactor) => displayArchived || emissionFactor.status !== EmissionFactorStatus.Archived),
-    [searchedEmissionFactors, filteredSources, filteredUnits, filteredSubPosts, displayArchived],
-  )
+  const data = useMemo(() => {
+    const emissionFactorsAllSubposts = searchedEmissionFactors.filter((emissionFactor) => {
+      const isInRightSources =
+        (emissionFactor.version && filteredSources.includes(emissionFactor.version.id)) ||
+        (!emissionFactor.version && filteredSources.includes(Import.Manual))
+
+      const isWithGoodUnit = filteredUnits.includes(emissionFactor.unit || '')
+
+      const isWithGoodArchivedStatus = displayArchived || emissionFactor.status !== EmissionFactorStatus.Archived
+
+      return isInRightSources && isWithGoodUnit && isWithGoodArchivedStatus
+    })
+
+    return filterEmissionFactorsBySubPostAndEnv(emissionFactorsAllSubposts, filteredSubPosts, environment)
+  }, [searchedEmissionFactors, filteredSources, filteredUnits, filteredSubPosts, displayArchived])
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
 
@@ -408,8 +419,8 @@ const EmissionFactorsTable = ({
         : filteredUnits.map((unit) => tUnits(unit)).join(', ')
 
   const allSelectedSubPosts = useMemo(
-    () => filteredSubPosts.length === initialSelectedSubPosts.length,
-    [filteredSubPosts],
+    () => filteredSubPosts.length === envSubPosts.length,
+    [filteredSubPosts, envSubPosts],
   )
 
   const subPostsSelectorRenderValue = () =>
@@ -419,11 +430,11 @@ const EmissionFactorsTable = ({
         ? tPosts('none')
         : filteredSubPosts.map((subPosts) => tPosts(subPosts)).join(', ')
 
-  const areAllSelected = (post: BCPost) => !subPostsByPost[post].some((subPost) => !filteredSubPosts.includes(subPost))
+  const areAllSelected = (post: Post) => !subPostsByPost[post].some((subPost) => !filteredSubPosts.includes(subPost))
 
-  const selectAllSubPosts = () => setFilteredSubPosts(allSelectedSubPosts ? [] : initialSelectedSubPosts)
+  const selectAllSubPosts = () => setFilteredSubPosts(allSelectedSubPosts ? [] : envSubPosts)
 
-  const selectPost = (post: BCPost) => {
+  const selectPost = (post: Post) => {
     const newValue = areAllSelected(post)
       ? filteredSubPosts.filter((filteredSubPost) => !subPostsByPost[post].includes(filteredSubPost))
       : filteredSubPosts.concat(subPostsByPost[post].filter((a) => !filteredSubPosts.includes(a)))
@@ -540,7 +551,7 @@ const EmissionFactorsTable = ({
                   <Checkbox checked={allSelectedSubPosts} />
                   <ListItemText primary={tPosts(allSelectedSubPosts ? 'unselectAll' : 'selectAll')} />
                 </MenuItem>
-                {Object.values(BCPost).map((post) => (
+                {Object.values(envPosts).map((post) => (
                   <div key={`subpostGroup-${post}`}>
                     <MenuItem key={`subpost-${post}`} selected={areAllSelected(post)} onClick={() => selectPost(post)}>
                       <Checkbox checked={areAllSelected(post)} />
