@@ -62,13 +62,13 @@ const EmissionSourceTags = ({ studyId }: Props) => {
   })
 
   const onSubmit = async () => {
-    const createTag = await createEmissionSourceTag(getValues())
-    if (createTag.success) {
+    const createdTag = await createEmissionSourceTag(getValues())
+    if (createdTag.success) {
       const targetedFamily: EmissionSourceTagFamilyWithTags | undefined = tagFamilies.find(
-        (tag) => tag.id === getValues().familyId,
+        (family) => family.id === getValues().familyId,
       )
       if (targetedFamily) {
-        targetedFamily?.emissionSourceTags.push(createTag.data)
+        targetedFamily?.emissionSourceTags.push(createdTag.data)
         const newTags = tagFamilies.filter((tag) => tag.id !== getValues().familyId).concat([targetedFamily])
         setTagFamilies(newTags)
       }

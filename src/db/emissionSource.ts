@@ -40,7 +40,6 @@ export const upsertEmissionSourceTagFamilyById = async (studyId: string, name: s
       })
 
 export const removeSourceTagFamilyById = async (familyId: string) => {
-  const tags = await prismaClient.emissionSourceTag.findMany({ where: { familyId } })
-  await prismaClient.emissionSourceTag.deleteMany({ where: { id: { in: tags.map((tag) => tag.id) } } })
+  await prismaClient.emissionSourceTag.deleteMany({ where: { familyId } })
   return prismaClient.emissionSourceTagFamily.delete({ where: { id: familyId } })
 }

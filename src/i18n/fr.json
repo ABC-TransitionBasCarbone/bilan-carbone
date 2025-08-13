@@ -609,7 +609,7 @@
         "name": "Libellé",
         "edit": "Renommer la famille",
         "delete": "Supprimer la famille",
-        "deleteContent": "Voulez vous vraiment supprimer la famille de tags \"{name}\" ? Tous ses tags associés seront supprimés de façon permanente.",
+        "deleteContent": "Voulez vous vraiment supprimer la famille de tags \"{name}\" ? <red>Tous ses tags associés seront supprimés de façon permanente.</red>",
         "new": "Nouvelle famille",
         "content": "Quel nom voulez vous donner à cette famille ?",
         "cancel": "Annuler",

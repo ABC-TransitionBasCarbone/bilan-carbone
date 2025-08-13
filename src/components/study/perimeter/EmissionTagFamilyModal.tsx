@@ -53,7 +53,7 @@ const EmissionTagFamilyModal = ({ action, studyId, family, onClose }: Props) => 
       <Form onSubmit={handleSubmit(onSumbit)}>
         <DialogTitle id="emission-tag-family-modal-title">{t(title)}</DialogTitle>
         <DialogContent id="emission-tag-family-modal-content">
-          {t(content, { name: family?.name || '' })}
+          {t.rich(content, { name: family?.name || '', red: (children) => <span className="error">{children}</span> })}
           {action === 'edit' && (
             <div className="flex mt1">
               <FormTextField

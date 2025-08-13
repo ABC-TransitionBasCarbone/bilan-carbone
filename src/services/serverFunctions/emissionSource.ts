@@ -231,6 +231,11 @@ export const createEmissionSourceTag = async ({ familyId, name, color }: NewEmis
       throw new Error(NOT_AUTHORIZED)
     }
 
+    const role = getAccountRoleOnStudy(session.user, study)
+    if (!role || !hasEditionRights(role)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
     return await createEmissionSourceTagOnStudy({
       family: { connect: { id: familyId } },
       name,
