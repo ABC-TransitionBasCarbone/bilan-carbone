@@ -393,7 +393,9 @@ const EmissionSourceForm = ({
           multiple
           disabled={!canEdit}
           data-testid="emission-source-tag"
-          options={tags.map((tag) => ({ label: tag.name, value: tag.id, color: tag.color }))}
+          options={tags
+            .filter((tag) => !emissionSource.emissionSourceTags.some((sourceTag) => tag.id === sourceTag.id))
+            .map((tag) => ({ label: tag.name, value: tag.id, color: tag.color }))}
           value={emissionSource.emissionSourceTags.map((tag) => ({ label: tag.name, value: tag.id, color: tag.color }))}
           onChange={(_, options: Option[]) => {
             update(
