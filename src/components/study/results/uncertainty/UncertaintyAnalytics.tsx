@@ -9,6 +9,7 @@ import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import ConfidenceIntervalCharts from './ConfidenceIntervalChart'
 import UncertaintyGauge from './Gauge'
+import MostUncertainPostsChart from './MostUncertainPostsChart'
 
 interface Props {
   study: FullStudy
@@ -36,10 +37,11 @@ const UncertaintyAnalytics = ({ study, studySite, withDependencies, validatedOnl
     study,
     tPost,
     studySite,
-    true,
+    withDependencies,
     validatedOnly,
     environmentPostMapping[environment || Environment.BC],
     environment,
+    type,
   )
 
   const total = computedResults?.find((post) => post.post === 'total')?.value ?? 1
@@ -55,8 +57,13 @@ const UncertaintyAnalytics = ({ study, studySite, withDependencies, validatedOnl
             percent={percent}
           />
         </div>
-        <div className="grow2">
-          <UncertaintyGauge percent={percent} />
+        <div className="grow2 flex flex-row">
+          <div className="grow">
+            <UncertaintyGauge percent={percent} />
+          </div>
+          <div className="grow">
+            <MostUncertainPostsChart computedResults={computedResults} />
+          </div>
         </div>
       </div>
     </Block>

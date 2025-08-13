@@ -11,7 +11,7 @@ const UncertaintyGauge = ({ percent }: Props) => {
   const t = useTranslations('study.results.uncertainties')
 
   return (
-    <>
+    <div>
       <GaugeCharts
         id="uncertainty-gauge"
         percent={percent}
@@ -24,7 +24,7 @@ const UncertaintyGauge = ({ percent }: Props) => {
         <p className="bold">{t('veryWeak')}</p>
         <p className="bold">{t('veryStrong')}</p>
       </div>
-    </>
+    </div>
   )
 }
 

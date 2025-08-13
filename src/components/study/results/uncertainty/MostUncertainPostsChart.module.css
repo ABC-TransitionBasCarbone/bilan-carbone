@@ -1,0 +1,47 @@
+.container {
+  height: auto;
+  color: white
+}
+.secondContainer {
+  height: auto;
+}
+
+.first {
+  background-color: red;
+  width: 100%;
+}
+
+.second {
+  background-color: blue;
+  width: 100%;
+}
+
+.third {
+  background-color: green;
+  width: 100%;
+}
+
+.green {
+  background-color: var(--post-green-dark);
+}
+
+.darkBlue {
+  background-color: var(--post-darkBlue-dark);
+}
+
+.blue {
+  background-color: var(--post-blue-dark);
+}
+
+.orange {
+  background-color: var(--post-orange-dark);
+}
+
+.icon {
+  width: auto;
+  height: 1.5rem;
+
+  @media screen and (max-width: 50rem) {
+    display: none;
+  }
+}
