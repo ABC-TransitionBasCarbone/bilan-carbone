@@ -131,6 +131,13 @@ const EmissionFactorsTable = ({
   const filtersRef = useRef<HTMLDivElement>(null)
   const fromModal = !!selectEmissionFactor
 
+  const envSubPosts = useMemo(() => {
+    return envPosts.reduce((acc, post) => {
+      const subPosts = subPostsByPost[post] || []
+      return acc.concat(subPosts)
+    }, [] as SubPost[])
+  }, [envPosts])
+
   useEffect(() => {
     const checkWrappedRows = () => {
       if (filtersRef.current) {
@@ -412,8 +419,8 @@ const EmissionFactorsTable = ({
         : filteredUnits.map((unit) => tUnits(unit)).join(', ')
 
   const allSelectedSubPosts = useMemo(
-    () => filteredSubPosts.length === initialSelectedSubPosts.length,
-    [filteredSubPosts],
+    () => filteredSubPosts.length === envSubPosts.length,
+    [filteredSubPosts, envSubPosts],
   )
 
   const subPostsSelectorRenderValue = () =>
@@ -425,7 +432,7 @@ const EmissionFactorsTable = ({
 
   const areAllSelected = (post: Post) => !subPostsByPost[post].some((subPost) => !filteredSubPosts.includes(subPost))
 
-  const selectAllSubPosts = () => setFilteredSubPosts(allSelectedSubPosts ? [] : initialSelectedSubPosts)
+  const selectAllSubPosts = () => setFilteredSubPosts(allSelectedSubPosts ? [] : envSubPosts)
 
   const selectPost = (post: Post) => {
     const newValue = areAllSelected(post)
