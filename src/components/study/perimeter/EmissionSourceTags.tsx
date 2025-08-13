@@ -80,7 +80,12 @@ const EmissionSourceTags = ({ studyId }: Props) => {
   const onDelete = async (tagId: string) => {
     const deleteTag = await deleteEmissionSourceTag(tagId)
     if (deleteTag.success) {
-      setTagFamilies((prevTags) => prevTags.filter((tag) => tag.id !== tagId))
+      setTagFamilies((prevTags) =>
+        prevTags.map((family) => ({
+          ...family,
+          emissionSourceTags: family.emissionSourceTags.filter((tag) => tag.id !== tagId),
+        })),
+      )
     }
   }
 
