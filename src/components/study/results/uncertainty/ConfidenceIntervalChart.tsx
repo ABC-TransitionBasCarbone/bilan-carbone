@@ -1,4 +1,3 @@
-import Title from '@/components/base/Title'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { StudyResultUnit } from '@prisma/client'
@@ -25,13 +24,15 @@ const ConfidenceIntervalCharts = ({ confidenceInterval, totalCo2, unit }: Props)
     return realPercent
   }, [confidenceInterval])
 
-  console.log(progressStyles[`w${percent.toFixed(0)}`], `w${percent.toFixed(0)}`)
-
   return (
     <>
-      <Title as="h6" title={t('confidenceInterval')} />
       <div className="flex flex-row">
         <div className="grow flex-col">
+          <div className={classNames(styles.titleContainer, 'mb1')}>
+            <div className={styles.title}>
+              <p className="bold">{t('confidenceInterval')}</p>
+            </div>
+          </div>
           <div className={classNames(styles.container, 'flex grow justify-end ml-4')}>
             <div className={classNames(styles.bar, progressStyles[`w${percent.toFixed(0)}`])} />
           </div>
