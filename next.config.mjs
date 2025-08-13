@@ -19,6 +19,7 @@ const nextConfig = {
   experimental: {
     serverActions: { bodySizeLimit: '5mb' },
   },
+  transpilePackages: ['mui-color-input'],
   reactStrictMode: true,
   headers: async () => [
     {

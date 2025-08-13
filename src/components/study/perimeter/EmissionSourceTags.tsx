@@ -3,6 +3,7 @@
 import Block from '@/components/base/Block'
 import Box from '@/components/base/Box'
 import Button from '@/components/base/Button'
+import ColorPicker from '@/components/base/ColorPicker'
 import Form from '@/components/base/Form'
 import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
@@ -21,12 +22,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Cancel'
 import EditIcon from '@mui/icons-material/Edit'
-import { Chip, FormControl, MenuItem, Box as MuiBox, Button as MuiButton, Select } from '@mui/material'
+import { Chip, FormControl, MenuItem, Button as MuiButton } from '@mui/material'
 import { EmissionSourceTagFamily } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import styles from './EmissionSourceTag.module.css'
 import EmissionTagFamilyModal from './EmissionTagFamilyModal'
 
@@ -52,14 +53,16 @@ const EmissionSourceTags = ({ studyId }: Props) => {
     }
   }
 
-  const { getValues, control, handleSubmit, setValue } = useForm<NewEmissionSourceTagCommand>({
+  const { control, formState, getValues, handleSubmit, setValue, watch } = useForm<NewEmissionSourceTagCommand>({
     resolver: zodResolver(NewEmissionSourceTagCommandValidation),
     mode: 'onSubmit',
     reValidateMode: 'onChange',
     defaultValues: {
-      color: emissionSourceTagColors.GREY,
+      color: emissionSourceTagColors.DEFAULT,
     },
   })
+
+  const color = watch('color')
 
   const onSubmit = async () => {
     const createdTag = await createEmissionSourceTag(getValues())
@@ -80,6 +83,7 @@ const EmissionSourceTags = ({ studyId }: Props) => {
       }
       setValue('name', '')
       setValue('familyId', '')
+      setValue('color', emissionSourceTagColors.DEFAULT)
     }
   }
 
@@ -97,7 +101,7 @@ const EmissionSourceTags = ({ studyId }: Props) => {
 
   return (
     <Block title={t('emissionSourceTags')}>
-      <div className={classNames(styles.families, 'mb1')}>
+      <div className={classNames(styles.families, 'mb2')}>
         {tagFamilies.map((family) => (
           <Box key={family.id}>
             <div className="flex-col">
@@ -143,39 +147,12 @@ const EmissionSourceTags = ({ studyId }: Props) => {
       <Form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
         <FormControl>
           <div className={classNames(styles.gapped, 'justify-between my-2')}>
-            <Controller
-              control={control}
-              name="color"
-              defaultValue={emissionSourceTagColors.GREY}
-              render={({ field }) => (
-                <FormControl className="inputContainer">
-                  <div className="mb-2">
-                    <span className="inputLabel bold">{t('color')}</span>
-                  </div>
-                  <Select
-                    className={styles.colorInput}
-                    {...field}
-                    displayEmpty
-                    data-testid="create-emission-source-tag-color"
-                  >
-                    {Object.values(emissionSourceTagColors).map((color) => (
-                      <MenuItem key={color} value={color}>
-                        <MuiBox
-                          sx={{
-                            width: 18,
-                            height: 18,
-                            margin: '2px',
-                            borderRadius: '50%',
-                            backgroundColor: color,
-                            border: '1px solid #ccc',
-                          }}
-                        />
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              )}
-            />
+            <div className="flex-col">
+              <div className="mb-2">
+                <span className="inputLabel bold">{t('color')}</span>
+              </div>
+              <ColorPicker color={color} onChange={(value) => setValue('color', value)} />
+            </div>
             <div className={styles.selector}>
               <FormSelect
                 control={control}
@@ -201,7 +178,7 @@ const EmissionSourceTags = ({ studyId }: Props) => {
               data-testid="create-emission-source-tagFamilies"
             />
           </div>
-          <Button data-testid="submit-button" type="submit" disabled={!tagFamilies.length}>
+          <Button data-testid="submit-button" type="submit" disabled={!tagFamilies.length || !formState.isValid}>
             {t('createEmissionSourceTag')}
           </Button>
         </FormControl>
