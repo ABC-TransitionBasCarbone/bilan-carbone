@@ -646,7 +646,9 @@
       "info": "",
       "uncertainties": {
         "title": "Uncertainties analytics",
-        "confidenceInterval": "95% confidence interval"
+        "confidenceInterval": "95% confidence interval",
+        "veryWeak": "Very weak",
+        "veryStrong": "Very strong"
       }
     },
     "pdf": {

@@ -3,26 +3,18 @@ import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { StudyResultUnit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
 import progressStyles from '../../../base/ProgressBar.module.css'
 import styles from './ConfidenceIntervalChart.module.css'
 interface Props {
   confidenceInterval: number[]
   totalCo2: number
   unit: StudyResultUnit
+  percent: number
 }
 
-const ConfidenceIntervalCharts = ({ confidenceInterval, totalCo2, unit }: Props) => {
+const ConfidenceIntervalCharts = ({ confidenceInterval, totalCo2, unit, percent }: Props) => {
   const t = useTranslations('study.results.uncertainties')
   const tResultUnits = useTranslations('study.results.units')
-
-  const percent = useMemo(() => {
-    const [min, max] = confidenceInterval
-
-    const realPercent = ((max - min) / max) * 100
-
-    return realPercent
-  }, [confidenceInterval])
 
   return (
     <>

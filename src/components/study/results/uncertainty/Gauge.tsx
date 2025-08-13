@@ -1,12 +1,30 @@
-import { GaugeContainer, GaugePointer, GaugeReferenceArc, GaugeValueArc } from '@mui/x-charts'
+import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
+import GaugeCharts from 'react-gauge-chart'
+import styles from './Gauge.module.css'
 
-const UncertaintyGauge = () => {
+interface Props {
+  percent: number
+}
+
+const UncertaintyGauge = ({ percent }: Props) => {
+  const t = useTranslations('study.results.uncertainties')
+
   return (
-    <GaugeContainer startAngle={-90} endAngle={90} value={0}>
-      <GaugeReferenceArc />
-      <GaugeValueArc />
-      <GaugePointer />
-    </GaugeContainer>
+    <>
+      <GaugeCharts
+        id="uncertainty-gauge"
+        percent={percent}
+        arcsLength={[1.1199, 1.2621, 1.6361, 2.5164, 3]}
+        colors={['#adc5f8', '#709af3', '#346fef', '#244da7', '#142c5f']}
+        animate={false}
+        arcPadding={0.02}
+      />
+      <div className={classNames(styles.labelContainer, 'flex flex-row justify-between')}>
+        <p className="bold">{t('veryWeak')}</p>
+        <p className="bold">{t('veryStrong')}</p>
+      </div>
+    </>
   )
 }
 

@@ -646,7 +646,9 @@
       "noData": "Aucune donnée à afficher",
       "uncertainties": {
         "title": "Analyse des incertitudes",
-        "confidenceInterval": "Intervalle de confiance à 95%"
+        "confidenceInterval": "Intervalle de confiance à 95%",
+        "veryWeak": "Très faible",
+        "veryStrong": "Très fort"
       }
     },
     "pdf": {

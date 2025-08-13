@@ -41,6 +41,7 @@
     "@mui/x-date-pickers": "^8.10.0",
     "@prisma/client": "^6.13.0",
     "@tanstack/react-table": "^8.21.3",
+    "@types/react-gauge-chart": "^0.4.3",
     "axios": "^1.11.0",
     "basic-ftp": "^5.0.5",
     "bcryptjs": "^3.0.2",
@@ -70,6 +71,7 @@
     "react": "19.1.1",
     "react-countdown": "^2.3.6",
     "react-dom": "19.1.1",
+    "react-gauge-chart": "^0.5.1",
     "react-hook-form": "^7.62.0",
     "react-player": "^3.3.1",
     "ts-node": "^10.9.2",
@@ -111,9 +113,9 @@
     "jest-environment-jsdom": "^30.0.5",
     "prettier": "^3.6.2",
     "prettier-plugin-organize-imports": "^4.2.0",
+    "tmp": "^0.2.4",
     "ts-jest": "^29.4.1",
-    "typescript": "^5.9.2",
-    "tmp": "^0.2.4"
+    "typescript": "^5.9.2"
   },
   "resolutions": {
     "brace-expansion": "^2.0.2"
