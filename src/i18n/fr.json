@@ -606,6 +606,7 @@
         "cancel": "Annuler"
       },
       "family": {
+        "add": "Ajouter un nouveau tag dans une famille",
         "name": "Libellé",
         "edit": "Renommer la famille",
         "delete": "Supprimer la famille",

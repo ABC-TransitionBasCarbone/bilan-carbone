@@ -1,14 +1,13 @@
 'use client'
 
 import Block from '@/components/base/Block'
+import Box from '@/components/base/Box'
 import Button from '@/components/base/Button'
 import Form from '@/components/base/Form'
 import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
 import { emissionSourceTagColors } from '@/constants/emissionSourceTags'
 import { EmissionSourceTagFamilyWithTags } from '@/db/study'
-import AddIcon from '@mui/icons-material/Add'
-
 import {
   createEmissionSourceTag,
   deleteEmissionSourceTag,
@@ -19,9 +18,10 @@ import {
   NewEmissionSourceTagCommandValidation,
 } from '@/services/serverFunctions/emissionSource.command'
 import { zodResolver } from '@hookform/resolvers/zod'
+import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Cancel'
 import EditIcon from '@mui/icons-material/Edit'
-import { Box, Chip, FormControl, MenuItem, Button as MuiButton, Select } from '@mui/material'
+import { Chip, FormControl, MenuItem, Box as MuiBox, Button as MuiButton, Select } from '@mui/material'
 import { EmissionSourceTagFamily } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -97,62 +97,49 @@ const EmissionSourceTags = ({ studyId }: Props) => {
 
   return (
     <Block title={t('emissionSourceTags')}>
-      {tagFamilies.length > 0 && (
-        <div className={classNames(styles.gapped, 'flex')}>
-          <>
-            {tagFamilies.map((family) => (
-              <div key={family.id} className={classNames(styles.gapped, 'flex')}>
-                <div className="flex-col">
-                  <div className={classNames(styles.gapped, 'flex')}>
-                    <span className={classNames(styles.familyName, styles.gapped, 'flex bold pb-2')}>
-                      {family.name}
-                    </span>
-                    <div>
-                      <MuiButton
-                        className={styles.familyNameButton}
-                        onClick={() => setEditingFamily(family)}
-                        title={t('family.edit')}
-                      >
-                        <EditIcon />
-                      </MuiButton>
-                      <Button
-                        className={styles.familyNameButton}
-                        title={t('family.delete')}
-                        onClick={() => setDeletingFamily(family)}
-                        color="error"
-                        variant="text"
-                      >
-                        <DeleteIcon />
-                      </Button>
-                    </div>
-                  </div>
-                  {family.emissionSourceTags.map((tag) => (
-                    <div key={tag.id} className={classNames(styles.tags)}>
-                      <Chip
-                        className={styles.tag}
-                        onDelete={() => onDelete(tag.id)}
-                        sx={{ bgcolor: tag.color }}
-                        label={tag.name}
-                      />
-                    </div>
-                  ))}
+      <div className={classNames(styles.families, 'mb1')}>
+        {tagFamilies.map((family) => (
+          <Box key={family.id}>
+            <div className="flex-col">
+              <div className={classNames(styles.gapped, 'flex')}>
+                <span className={classNames(styles.familyName, styles.gapped, 'flex bold pb-2')}>{family.name}</span>
+                <div className="flex">
+                  <MuiButton
+                    className={styles.familyNameButton}
+                    onClick={() => setEditingFamily(family)}
+                    title={t('family.edit')}
+                  >
+                    <EditIcon />
+                  </MuiButton>
+                  <Button
+                    className={styles.familyNameButton}
+                    title={t('family.delete')}
+                    onClick={() => setDeletingFamily(family)}
+                    color="error"
+                    variant="text"
+                  >
+                    <DeleteIcon />
+                  </Button>
                 </div>
-                <div className={classNames(styles.separator, 'h100')} />
               </div>
-            ))}
-            <div className="ml2">
-              <Button
-                className={styles.familyNameButton}
-                onClick={() => setEditingFamily(undefined)}
-                title={t('family.new')}
-              >
-                <AddIcon />
-              </Button>
+              {family.emissionSourceTags.map((tag) => (
+                <div key={tag.id} className={classNames(styles.tags)}>
+                  <Chip
+                    className={styles.tag}
+                    onDelete={() => onDelete(tag.id)}
+                    sx={{ bgcolor: tag.color }}
+                    label={tag.name}
+                  />
+                </div>
+              ))}
             </div>
-          </>
-        </div>
-      )}
-
+          </Box>
+        ))}
+        <Button className={styles.addFamilyButton} onClick={() => setEditingFamily(undefined)} title={t('family.new')}>
+          <AddIcon />
+        </Button>
+      </div>
+      <h3 className="mb-2">{t('family.add')}</h3>
       <Form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
         <FormControl>
           <div className={classNames(styles.gapped, 'justify-between my-2')}>
@@ -173,7 +160,7 @@ const EmissionSourceTags = ({ studyId }: Props) => {
                   >
                     {Object.values(emissionSourceTagColors).map((color) => (
                       <MenuItem key={color} value={color}>
-                        <Box
+                        <MuiBox
                           sx={{
                             width: 18,
                             height: 18,
@@ -205,7 +192,6 @@ const EmissionSourceTags = ({ studyId }: Props) => {
                 ))}
               </FormSelect>
             </div>
-
             <FormTextField
               control={control}
               translation={t}
@@ -215,7 +201,7 @@ const EmissionSourceTags = ({ studyId }: Props) => {
               data-testid="create-emission-source-tagFamilies"
             />
           </div>
-          <Button data-testid="submit-button" type="submit">
+          <Button data-testid="submit-button" type="submit" disabled={!tagFamilies.length}>
             {t('createEmissionSourceTag')}
           </Button>
         </FormControl>
