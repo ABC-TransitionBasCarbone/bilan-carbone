@@ -1,11 +1,10 @@
 import { Button, ButtonProps, Typography } from '@mui/material'
 import classNames from 'classnames'
-
 import { ReactNode } from 'react'
 import styles from './Block.module.css'
-import IconLabel from './IconLabel'
 import LinkButton from './LinkButton'
 import LoadingButton, { Props as LoadingButtonProps } from './LoadingButton'
+import Title from './Title'
 
 export type Action =
   | (ButtonProps & { actionType: 'button'; 'data-testid'?: string })
@@ -18,7 +17,7 @@ export interface Props {
   icon?: ReactNode
   expIcon?: boolean
   iconPosition?: 'before' | 'after'
-  as?: 'h1' | 'h2' | 'h3' | 'h4'
+  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
   id?: string
   ['data-testid']?: string
   description?: ReactNode
@@ -44,16 +43,16 @@ const Block = ({
   descriptionColor,
   ...rest
 }: Props) => {
-  const Title = as || 'h2'
-  const iconDiv = icon ? (
-    <div className={classNames(as === 'h1' ? styles.bigIcon : styles.icon, { [styles.exp]: expIcon })}>{icon}</div>
-  ) : null
   const titleDiv = (
-    <IconLabel icon={iconDiv} iconPosition={iconPosition} className={styles.title}>
-      <Title id={id} data-testid={dataTestId}>
-        {title}
-      </Title>
-    </IconLabel>
+    <Title
+      title={title}
+      icon={icon}
+      expIcon={expIcon}
+      iconPosition={iconPosition}
+      as={as}
+      id={id}
+      data-testid={dataTestId}
+    />
   )
 
   return (

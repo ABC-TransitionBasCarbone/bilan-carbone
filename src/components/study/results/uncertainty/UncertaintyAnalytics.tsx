@@ -3,10 +3,10 @@ import { FullStudy } from '@/db/study'
 import { environmentPostMapping } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import { ResultType } from '@/services/study'
-import { Environment } from '@prisma/client'
-import { useTranslations } from "next-intl"
-import ConfidenceIntervalCharts from './ConfidenceIntervalChart'
 import { getEmissionSourcesGlobalUncertainty } from '@/services/uncertainty'
+import { Environment } from '@prisma/client'
+import { useTranslations } from 'next-intl'
+import ConfidenceIntervalCharts from './ConfidenceIntervalChart'
 
 interface Props {
   study: FullStudy
@@ -18,25 +18,33 @@ interface Props {
 }
 
 const UncertaintyAnalytics = ({ study, studySite, withDependencies, validatedOnly, environment, type }: Props) => {
-    const t = useTranslations('study.results.uncertainties')
-    const tPost = useTranslations('emissionFactors.post')
+  const t = useTranslations('study.results.uncertainties')
+  const tPost = useTranslations('emissionFactors.post')
 
-    const confidenceInterval = getEmissionSourcesGlobalUncertainty(study.emissionSources, environment)
-    const computedResults = computeResultsByPost(
-      study,
-      tPost,
-      studySite,
-      true,
-      validatedOnly,
-      environmentPostMapping[environment || Environment.BC],
-      environment,
-    )
+  const confidenceInterval = getEmissionSourcesGlobalUncertainty(study.emissionSources, environment)
+  const computedResults = computeResultsByPost(
+    study,
+    tPost,
+    studySite,
+    true,
+    validatedOnly,
+    environmentPostMapping[environment || Environment.BC],
+    environment,
+  )
 
-    const total = computedResults?.find((post) => post.post === 'total')?.value ?? 1
+  const total = computedResults?.find((post) => post.post === 'total')?.value ?? 1
 
-    return <Block title={t('title')} as='h4'>
-      <ConfidenceIntervalCharts confidenceInterval={confidenceInterval} totalCo2={total} />
+  return (
+    <Block title={t('title')} as="h4">
+      <div className="flex flex-row">
+        <div className="grow">
+          <ConfidenceIntervalCharts confidenceInterval={confidenceInterval} totalCo2={total} unit={study.resultsUnit} />
+        </div>
+        <div className="grow" />
+        <div className="grow" />
+      </div>
     </Block>
+  )
 }
 
 export default UncertaintyAnalytics

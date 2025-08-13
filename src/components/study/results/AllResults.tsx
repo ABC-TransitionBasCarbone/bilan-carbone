@@ -60,7 +60,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
   }, [environment, exports])
 
   if (!environment) {
-    return null;
+    return null
   }
 
   return (

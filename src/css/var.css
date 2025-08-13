@@ -88,12 +88,20 @@
   padding: 0.5rem;
 }
 
+.p-0 {
+  padding: 0rem !important;
+}
+
 .pr1 {
   padding-right: 1rem;
 }
 
 .pt1 {
   padding-top: 1rem;
+}
+
+.pl1 {
+  padding-left: 1rem;
 }
 
 .pb1 {
