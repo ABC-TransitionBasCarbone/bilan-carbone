@@ -7,6 +7,7 @@ import { getEmissionSourcesGlobalUncertainty } from '@/services/uncertainty'
 import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import ConfidenceIntervalCharts from './ConfidenceIntervalChart'
+import UncertaintyGauge from './Gauge'
 
 interface Props {
   study: FullStudy
@@ -40,8 +41,9 @@ const UncertaintyAnalytics = ({ study, studySite, withDependencies, validatedOnl
         <div className="grow">
           <ConfidenceIntervalCharts confidenceInterval={confidenceInterval} totalCo2={total} unit={study.resultsUnit} />
         </div>
-        <div className="grow" />
-        <div className="grow" />
+        <div className="grow2">
+          <UncertaintyGauge />
+        </div>
       </div>
     </Block>
   )
