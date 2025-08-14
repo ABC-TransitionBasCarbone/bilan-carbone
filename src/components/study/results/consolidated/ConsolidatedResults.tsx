@@ -1,7 +1,6 @@
 import { FullStudy } from '@/db/study'
 import { ResultType } from '@/services/study'
 import { Environment } from '@prisma/client'
-import StudyResultsContainerSummary from '../StudyResultsContainerSummary'
 import ConsolidatedResultsTable from './ConsolidatedResultsTable'
 
 interface Props {
@@ -16,7 +15,7 @@ interface Props {
 const ConsolidatedResults = ({ study, studySite, withDependencies, validatedOnly, environment, type }: Props) => {
   return (
     <>
-      <div className="mb1">
+      {/* <div className="mb1">
         <StudyResultsContainerSummary
           study={study}
           studySite={studySite}
@@ -24,7 +23,7 @@ const ConsolidatedResults = ({ study, studySite, withDependencies, validatedOnly
           validatedOnly={validatedOnly}
           type={type}
         />
-      </div>
+      </div> */}
       <ConsolidatedResultsTable
         study={study}
         studySite={studySite}

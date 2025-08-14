@@ -19,73 +19,72 @@ describe('Real use case: BC V8_10', () => {
     cy.getByTestId('results-monetary-ratio').scrollIntoView().invoke('text').should('contain', '36,99') // 36.99251508579199
     cy.getByTestId('results-non-spe-monetary-ratio').scrollIntoView().invoke('text').should('contain', '36,99')
 
-    // #1597 new results view. Keep old tests to save theorical results
-    // cy.getByTestId('consolidated-results-table-row')
-    //   .eq(0)
-    //   .within(() => {
-    //     cy.get('td').eq(0).should('have.text', 'Autres émissions directes')
-    //     cy.get('td').eq(2).should('have.text', '17') // 16.66
-    //   })
-    // cy.getByTestId('consolidated-results-table-row')
-    //   .eq(1)
-    //   .within(() => {
-    //     cy.get('td').eq(0).should('have.text', 'Déchets directs')
-    //     cy.get('td').eq(2).should('have.text', '0') // 0.18
-    //   })
-    // cy.getByTestId('consolidated-results-table-row')
-    //   .eq(2)
-    //   .within(() => {
-    //     cy.get('td').eq(0).should('have.text', 'Déplacements')
-    //     cy.get('td').eq(2).should('have.text', '105') // 105.37
-    //   })
-    // cy.getByTestId('consolidated-results-table-row')
-    //   .eq(3)
-    //   .within(() => {
-    //     cy.get('td').eq(0).should('have.text', 'Énergie')
-    //     cy.get('td').eq(2).should('have.text', '16') // 15.79
-    //   })
-    // cy.getByTestId('consolidated-results-table-row')
-    //   .eq(4)
-    //   .within(() => {
-    //     cy.get('td').eq(0).should('have.text', 'Fin de vie')
-    //     cy.get('td').eq(2).should('have.text', '6') // 6.28
-    //   })
-    // cy.getByTestId('consolidated-results-table-row')
-    //   .eq(5)
-    //   .within(() => {
-    //     cy.get('td').eq(0).should('have.text', 'Fret')
-    //     cy.get('td').eq(2).should('have.text', '4') // 4.33
-    //   })
-    // cy.getByTestId('consolidated-results-table-row')
-    //   .eq(6)
-    //   .within(() => {
-    //     cy.get('td').eq(0).should('have.text', 'Immobilisations')
-    //     cy.get('td').eq(2).should('have.text', '12') // 11.55
-    //   })
-    // cy.getByTestId('consolidated-results-table-row')
-    //   .eq(7)
-    //   .within(() => {
-    //     cy.get('td').eq(0).should('have.text', 'Intrants biens et matières')
-    //     cy.get('td').eq(2).should('have.text', '17') // 16.54
-    //   })
-    // cy.getByTestId('consolidated-results-table-row')
-    //   .eq(8)
-    //   .within(() => {
-    //     cy.get('td').eq(0).should('have.text', 'Intrants services')
-    //     cy.get('td').eq(2).should('have.text', '104') // 103.74
-    //   })
-    // cy.getByTestId('consolidated-results-table-row')
-    //   .eq(9)
-    //   .within(() => {
-    //     cy.get('td').eq(0).should('have.text', 'Utilisation et dépendance')
-    //     cy.get('td').eq(2).should('have.text', '0') // 0
-    //   })
-    // cy.getByTestId('consolidated-results-table-row')
-    //   .eq(10)
-    //   .within(() => {
-    //     cy.get('td').eq(0).should('have.text', 'Total')
-    //     cy.get('td').eq(2).should('have.text', '280') // 280.45
-    //   })
+    cy.getByTestId('consolidated-results-table-row')
+      .eq(0)
+      .within(() => {
+        cy.get('td').eq(0).should('have.text', 'Autres émissions directes')
+        cy.get('td').eq(2).should('have.text', '17') // 16.66
+      })
+    cy.getByTestId('consolidated-results-table-row')
+      .eq(1)
+      .within(() => {
+        cy.get('td').eq(0).should('have.text', 'Déchets directs')
+        cy.get('td').eq(2).should('have.text', '0') // 0.18
+      })
+    cy.getByTestId('consolidated-results-table-row')
+      .eq(2)
+      .within(() => {
+        cy.get('td').eq(0).should('have.text', 'Déplacements')
+        cy.get('td').eq(2).should('have.text', '105') // 105.37
+      })
+    cy.getByTestId('consolidated-results-table-row')
+      .eq(3)
+      .within(() => {
+        cy.get('td').eq(0).should('have.text', 'Énergie')
+        cy.get('td').eq(2).should('have.text', '16') // 15.79
+      })
+    cy.getByTestId('consolidated-results-table-row')
+      .eq(4)
+      .within(() => {
+        cy.get('td').eq(0).should('have.text', 'Fin de vie')
+        cy.get('td').eq(2).should('have.text', '6') // 6.28
+      })
+    cy.getByTestId('consolidated-results-table-row')
+      .eq(5)
+      .within(() => {
+        cy.get('td').eq(0).should('have.text', 'Fret')
+        cy.get('td').eq(2).should('have.text', '4') // 4.33
+      })
+    cy.getByTestId('consolidated-results-table-row')
+      .eq(6)
+      .within(() => {
+        cy.get('td').eq(0).should('have.text', 'Immobilisations')
+        cy.get('td').eq(2).should('have.text', '12') // 11.55
+      })
+    cy.getByTestId('consolidated-results-table-row')
+      .eq(7)
+      .within(() => {
+        cy.get('td').eq(0).should('have.text', 'Intrants biens et matières')
+        cy.get('td').eq(2).should('have.text', '17') // 16.54
+      })
+    cy.getByTestId('consolidated-results-table-row')
+      .eq(8)
+      .within(() => {
+        cy.get('td').eq(0).should('have.text', 'Intrants services')
+        cy.get('td').eq(2).should('have.text', '104') // 103.74
+      })
+    cy.getByTestId('consolidated-results-table-row')
+      .eq(9)
+      .within(() => {
+        cy.get('td').eq(0).should('have.text', 'Utilisation et dépendance')
+        cy.get('td').eq(2).should('have.text', '0') // 0
+      })
+    cy.getByTestId('consolidated-results-table-row')
+      .eq(10)
+      .within(() => {
+        cy.get('td').eq(0).should('have.text', 'Total')
+        cy.get('td').eq(2).should('have.text', '280') // 280.45
+      })
 
     cy.getByTestId('result-type-select').click()
     cy.get('[data-value="Beges"]').click()

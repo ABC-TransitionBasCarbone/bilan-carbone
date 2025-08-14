@@ -15,6 +15,7 @@ import SelectStudySite from '../site/SelectStudySite'
 import useStudySite from '../site/useStudySite'
 import BegesResultsTable from './beges/BegesResultsTable'
 import ConsolatedBEGESDifference from './ConsolatedBEGESDifference'
+import ConsolidatedResults from './consolidated/ConsolidatedResults'
 import EmissionsAnalysis from './consolidated/EmissionsAnalysis'
 import UncertaintyAnalytics from './uncertainty/UncertaintyAnalytics'
 
@@ -135,23 +136,25 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       </div>
       <div className="mt1">
         {type !== Export.Beges && (
-          // <ConsolidatedResults
-          //   study={study}
-          //   studySite={studySite}
-          //   withDependencies
-          //   validatedOnly={validatedOnly}
-          //   environment={environment}
-          //   type={type}
-          // />
-          <EmissionsAnalysis
-            study={study}
-            studySite={studySite}
-            withDepValue={withDepValue}
-            withoutDepValue={withoutDepValue}
-            monetaryRatio={monetaryRatio}
-            nonSpecificMonetaryRatio={nonSpecificMonetaryRatio}
-            caUnit={caUnit}
-          />
+          <>
+            <EmissionsAnalysis
+              study={study}
+              studySite={studySite}
+              withDepValue={withDepValue}
+              withoutDepValue={withoutDepValue}
+              monetaryRatio={monetaryRatio}
+              nonSpecificMonetaryRatio={nonSpecificMonetaryRatio}
+              caUnit={caUnit}
+            />
+            <ConsolidatedResults
+              study={study}
+              studySite={studySite}
+              withDependencies
+              validatedOnly={validatedOnly}
+              environment={environment}
+              type={type}
+            />
+          </>
         )}
         {type === Export.Beges && (
           <BegesResultsTable
