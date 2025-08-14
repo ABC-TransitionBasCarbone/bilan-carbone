@@ -580,3 +580,42 @@ export const getStudyParentOrganizationVersionId = async (
 
   return study.organizationVersion.parentId || study.organizationVersion.id
 }
+
+export const getResultsValues = (
+  study: FullStudy,
+  tPost: ReturnType<typeof useTranslations>,
+  studySite: string,
+  validatedOnly: boolean,
+  environment: Environment,
+) => {
+  const computedResultsWithDep = computeResultsByPost(
+    study,
+    tPost,
+    studySite,
+    true,
+    validatedOnly,
+    environmentPostMapping[environment],
+    environment,
+  )
+  const computedResultsWithoutDep = computeResultsByPost(
+    study,
+    tPost,
+    studySite,
+    false,
+    validatedOnly,
+    environmentPostMapping[environment],
+    environment,
+  )
+
+  const total = computedResultsWithDep.find((result) => result.post === 'total')?.value || 0
+  const monetaryTotal = computedResultsWithDep.find((result) => result.post === 'total')?.monetaryValue || 0
+
+  const formatedTotal = total / STUDY_UNIT_VALUES[study.resultsUnit]
+  const formatedDiff =
+    (computedResultsWithoutDep.find((result) => result.post === 'total')?.value || 0) /
+    STUDY_UNIT_VALUES[study.resultsUnit]
+
+  const formatedMonetaryRatio = (monetaryTotal / total) * 100
+
+  return [formatedTotal, formatedDiff, formatedMonetaryRatio]
+}

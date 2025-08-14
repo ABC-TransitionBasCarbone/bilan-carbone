@@ -8,14 +8,14 @@ import { AdditionalResultTypes, downloadStudyResults, ResultType } from '@/servi
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import DownloadIcon from '@mui/icons-material/Download'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
-import { ControlMode, Environment, Export, ExportRule } from '@prisma/client'
+import { ControlMode, Environment, Export, ExportRule, SiteCAUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
 import SelectStudySite from '../site/SelectStudySite'
 import useStudySite from '../site/useStudySite'
 import BegesResultsTable from './beges/BegesResultsTable'
 import ConsolatedBEGESDifference from './ConsolatedBEGESDifference'
-import ConsolidatedResults from './consolidated/ConsolidatedResults'
+import EmissionsAnalysis from './consolidated/EmissionsAnalysis'
 import UncertaintyAnalytics from './uncertainty/UncertaintyAnalytics'
 
 interface Props {
@@ -23,9 +23,10 @@ interface Props {
   rules: ExportRule[]
   emissionFactorsWithParts: EmissionFactorWithParts[]
   validatedOnly: boolean
+  caUnit?: SiteCAUnit
 }
 
-const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: Props) => {
+const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caUnit }: Props) => {
   const t = useTranslations('study.results')
   const tOrga = useTranslations('study.organization')
   const tPost = useTranslations('emissionFactors.post')
@@ -129,13 +130,20 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
       </div>
       <div className="mt1">
         {type !== Export.Beges && (
-          <ConsolidatedResults
+          // <ConsolidatedResults
+          //   study={study}
+          //   studySite={studySite}
+          //   withDependencies
+          //   validatedOnly={validatedOnly}
+          //   environment={environment}
+          //   type={type}
+          // />
+          <EmissionsAnalysis
             study={study}
             studySite={studySite}
             withDependencies
             validatedOnly={validatedOnly}
-            environment={environment}
-            type={type}
+            caUnit={caUnit}
           />
         )}
         {type === Export.Beges && (

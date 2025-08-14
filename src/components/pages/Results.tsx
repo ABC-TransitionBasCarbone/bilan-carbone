@@ -2,7 +2,7 @@ import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import DynamicAllResults from '@/environments/core/study/results/DynamicAllResults'
 import { addUserChecklistItem } from '@/services/serverFunctions/user'
-import { ExportRule, UserChecklist } from '@prisma/client'
+import { ExportRule, SiteCAUnit, UserChecklist } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 interface Props {
@@ -10,9 +10,10 @@ interface Props {
   rules: ExportRule[]
   emissionFactorsWithParts: EmissionFactorWithParts[]
   validatedOnly: boolean
+  caUnit?: SiteCAUnit
 }
 
-const ResultsPage = ({ study, rules, emissionFactorsWithParts, validatedOnly }: Props) => {
+const ResultsPage = ({ study, rules, emissionFactorsWithParts, validatedOnly, caUnit }: Props) => {
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
 
@@ -38,6 +39,7 @@ const ResultsPage = ({ study, rules, emissionFactorsWithParts, validatedOnly }: 
         rules={rules}
         study={study}
         validatedOnly={validatedOnly}
+        caUnit={caUnit}
       />
     </>
   )

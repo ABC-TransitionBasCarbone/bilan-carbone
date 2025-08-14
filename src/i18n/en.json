@@ -318,6 +318,8 @@
     "validatedOnlyDescription": "For each Bilan Carbone®, one or more validators can be defined. These validators are responsible for validating the sources of emissions once they have been entered by the study's contributors and editors. By default, only validated emissions appear in your results, but you can change this behaviour via the \"Settings\" menu.",
     "withDependenciesDescription": "The new Bilan Carbone® method introduces the concept of responsibility and dependency. It is strongly recommended that the results of the Bilan Carbone® are presented with and without the \"Use in dependence\" sub-post, as the organization is generally not in a position to act easily on this sub-post. On the other hand, this sub-component remains crucial for understanding the risks to which the organization is exposed, particularly if it is dependent on high-carbon sectors or activities. The final result should include dependency. For more information on these new concepts, please consult <link>this page</link>.",
     "monetaryRatioDescription": "It is strongly discouraged to use emission factors in monetary ratio when an alternative is possible. You can find more information on the <monetaryLink>methodology</monetaryLink>.",
+    "dependencyIntensityDescription": "",
+    "responsabilityIntensityDescription": "",
     "close": "Close",
     "selectSite": "Before filling in the details, choose a site",
     "see": "See my Bilan Carbone®",
@@ -627,12 +629,15 @@
       "uncertainty": "Uncertainty",
       "withDependencies": "With dependencies",
       "withoutDependencies": "Without dependencies",
+      "dependencyIntensity": "Carbon intensities in dependency",
+      "responsabilityIntensity": "Carbon intensity in responsibility",
       "monetaryRatio": "Monetary ratio",
       "coming": "coming",
       "units": {
         "K": "kgCO₂e",
         "T": "tCO₂e"
       },
+      "info": "",
       "difference": {
         "button": "Explanation of the differences between Bilan Carbone® and Beges export",
         "modalTitle": "Explanation of the difference between the results",
@@ -655,12 +660,20 @@
         "close": "Close"
       },
       "noData": "No data to display",
-      "info": "",
       "uncertainties": {
         "title": "Uncertainties analytics",
         "confidenceInterval": "95% confidence interval",
         "veryWeak": "Very weak",
         "veryStrong": "Very strong"
+      },
+      "analysis": "Emissions analysis",
+      "total": "Emissions total",
+      "close": "Close",
+      "intensities": {
+        "budget": "budget",
+        "etp": "employee",
+        "volunteer": "volunteer",
+        "beneficiary": "beneficiary"
       }
     },
     "pdf": {

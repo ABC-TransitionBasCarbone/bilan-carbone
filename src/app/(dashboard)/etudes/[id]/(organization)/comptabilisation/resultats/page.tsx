@@ -28,6 +28,7 @@ const ResultatsPages = async ({ study }: StudyProps) => {
       rules={rules}
       emissionFactorsWithParts={emissionFactorsWithParts}
       validatedOnly={!!userSettings?.data?.validatedEmissionSourcesOnly}
+      caUnit={userSettings.data?.caUnit}
     />
   )
 }
