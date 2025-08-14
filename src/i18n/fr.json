@@ -627,7 +627,12 @@
       "uncertainty": "Incertitude",
       "withDependencies": "Avec le sous-poste 'Utilisation en dépendance'",
       "withoutDependencies": "Sans le sous-poste 'Utilisation en dépendance'",
-      "monetaryRatio": "Ratio monétaire",
+      "dependencyIntensity": "Intensités carbone en dépendance",
+      "responsabilityIntensity": "Intensités carbone en responsabilité",
+      "monetaryRatio": "Ratios monétaires",
+      "monetaryRatioEmissions": "d'émissions issues de ratios monétaires",
+      "nonSpeMonetaryRatioEmissions": "issues de ratios monétaires non spécifiques",
+      "ofWhich": "dont",
       "coming": "à venir",
       "units": {
         "K": "kgCO₂e",
@@ -661,6 +666,15 @@
         "confidenceInterval": "Intervalle de confiance à 95%",
         "veryWeak": "Très faible",
         "veryStrong": "Très fort"
+      },
+      "analysis": "Analyse des émissions",
+      "total": "Total des émissions",
+      "close": "Fermer",
+      "intensities": {
+        "budget": "budget",
+        "etp": "salarié",
+        "volunteer": "volontaire",
+        "beneficiary": "bénéficiaire"
       }
     },
     "pdf": {

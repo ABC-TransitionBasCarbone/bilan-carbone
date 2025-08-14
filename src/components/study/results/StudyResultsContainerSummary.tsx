@@ -6,11 +6,8 @@ import HelpIcon from '@/components/base/HelpIcon'
 import StyledChip from '@/components/base/StyledChip'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
-import { environmentPostMapping } from '@/services/posts'
-import { computeResultsByPost } from '@/services/results/consolidated'
-import { AdditionalResultTypes, ResultType } from '@/services/study'
+import { AdditionalResultTypes, getResultsValues, ResultType } from '@/services/study'
 import { formatNumber } from '@/utils/number'
-import { STUDY_UNIT_VALUES } from '@/utils/study'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import SpaIcon from '@mui/icons-material/Spa'
 import { Environment } from '@prisma/client'
@@ -48,36 +45,8 @@ const StudyResultsContainerSummary = ({
   const isCut = useMemo(() => environment === Environment.CUT, [environment])
 
   const [withDepValue, withoutDepValue, monetaryRatio] = useMemo(() => {
-    const computedResultsWithDep = computeResultsByPost(
-      study,
-      tPost,
-      studySite,
-      true,
-      validatedOnly,
-      environmentPostMapping[environment],
-      environment,
-    )
-    const computedResultsWithoutDep = computeResultsByPost(
-      study,
-      tPost,
-      studySite,
-      false,
-      validatedOnly,
-      environmentPostMapping[environment],
-      environment,
-    )
-
-    const total = computedResultsWithDep.find((result) => result.post === 'total')?.value || 0
-    const monetaryTotal = computedResultsWithDep.find((result) => result.post === 'total')?.monetaryValue || 0
-
-    const formatedTotal = formatNumber(total / STUDY_UNIT_VALUES[study.resultsUnit])
-    const formatedDiff = formatNumber(
-      (computedResultsWithoutDep.find((result) => result.post === 'total')?.value || 0) /
-        STUDY_UNIT_VALUES[study.resultsUnit],
-    )
-    const formatedMonetaryRatio = formatNumber((monetaryTotal / total) * 100, 2)
-
-    return [formatedTotal, formatedDiff, formatedMonetaryRatio]
+    const [withDep, withoutDep, monetary] = getResultsValues(study, tPost, studySite, !!validatedOnly, environment)
+    return [formatNumber(withDep), formatNumber(withoutDep), formatNumber(monetary, 2)]
   }, [environment, study, studySite, tPost, validatedOnly])
 
   return (

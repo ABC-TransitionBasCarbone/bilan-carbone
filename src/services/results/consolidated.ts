@@ -13,6 +13,7 @@ export type ResultsByPost = {
   post: Post | SubPost | 'total'
   value: number
   monetaryValue: number
+  nonSpecificMonetaryValue: number
   numberOfEmissionSource: number
   numberOfValidatedEmissionSource: number
   uncertainty?: number
@@ -71,6 +72,10 @@ export const computeResultsByPost = (
             monetaryValue: getEmissionSourcesTotalMonetaryCo2(
               validatedOnly ? validatedEmissionSources : emissionSources,
             ),
+            nonSpecificMonetaryValue: getEmissionSourcesTotalMonetaryCo2(
+              validatedOnly ? validatedEmissionSources : emissionSources,
+              false,
+            ),
             numberOfEmissionSource: emissionSources.length,
             numberOfValidatedEmissionSource: validatedEmissionSources.length,
             uncertainty: sumEmissionSourcesUncertainty(validatedEmissionSources),
@@ -82,11 +87,15 @@ export const computeResultsByPost = (
       const monetaryValue = subPosts
         .flatMap((subPost) => subPost)
         .reduce((acc, subPost) => acc + subPost.monetaryValue, 0)
+      const nonSpecificMonetaryValue = subPosts
+        .flatMap((subPost) => subPost)
+        .reduce((acc, subPost) => acc + subPost.nonSpecificMonetaryValue, 0)
 
       return {
         post,
         value,
         monetaryValue,
+        nonSpecificMonetaryValue,
         uncertainty: subPosts.length > 0 ? computeUncertainty(subPosts, value) : undefined,
         subPosts: subPosts.sort((a, b) => tPost(a.post).localeCompare(tPost(b.post))),
         numberOfEmissionSource: subPosts.reduce((acc, subPost) => acc + subPost.numberOfEmissionSource, 0),
@@ -104,6 +113,7 @@ export const computeResultsByPost = (
       post: 'total',
       value,
       monetaryValue: postInfos.reduce((acc, post) => acc + post.monetaryValue, 0),
+      nonSpecificMonetaryValue: postInfos.reduce((acc, post) => acc + post.nonSpecificMonetaryValue, 0),
       subPosts: [],
       uncertainty: computeUncertainty(postInfos, value),
       numberOfEmissionSource: postInfos.reduce((acc, post) => acc + post.numberOfEmissionSource, 0),

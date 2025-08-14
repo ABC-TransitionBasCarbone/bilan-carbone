@@ -4,17 +4,18 @@ import AllResults from '@/components/study/results/AllResults'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import { default as AllResultsCUT } from '@/environments/cut/study/results/AllResults'
-import { Environment, ExportRule } from '@prisma/client'
+import AllResultsCUT from '@/environments/cut/study/results/AllResults'
+import { Environment, ExportRule, SiteCAUnit } from '@prisma/client'
 
 interface Props {
   study: FullStudy
   rules: ExportRule[]
   emissionFactorsWithParts: EmissionFactorWithParts[]
   validatedOnly: boolean
+  caUnit?: SiteCAUnit
 }
 
-const DynamicAllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: Props) => {
+const DynamicAllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caUnit }: Props) => {
   return (
     <DynamicComponent
       environmentComponents={{
@@ -32,6 +33,7 @@ const DynamicAllResults = ({ study, rules, emissionFactorsWithParts, validatedOn
           rules={rules}
           emissionFactorsWithParts={emissionFactorsWithParts}
           validatedOnly={validatedOnly}
+          caUnit={caUnit}
         />
       }
     />
