@@ -318,8 +318,6 @@
     "validatedOnlyDescription": "For each Bilan Carbone®, one or more validators can be defined. These validators are responsible for validating the sources of emissions once they have been entered by the study's contributors and editors. By default, only validated emissions appear in your results, but you can change this behaviour via the \"Settings\" menu.",
     "withDependenciesDescription": "The new Bilan Carbone® method introduces the concept of responsibility and dependency. It is strongly recommended that the results of the Bilan Carbone® are presented with and without the \"Use in dependence\" sub-post, as the organization is generally not in a position to act easily on this sub-post. On the other hand, this sub-component remains crucial for understanding the risks to which the organization is exposed, particularly if it is dependent on high-carbon sectors or activities. The final result should include dependency. For more information on these new concepts, please consult <link>this page</link>.",
     "monetaryRatioDescription": "It is strongly discouraged to use emission factors in monetary ratio when an alternative is possible. You can find more information on the <monetaryLink>methodology</monetaryLink>.",
-    "dependencyIntensityDescription": "",
-    "responsabilityIntensityDescription": "",
     "close": "Close",
     "selectSite": "Before filling in the details, choose a site",
     "see": "See my Bilan Carbone®",

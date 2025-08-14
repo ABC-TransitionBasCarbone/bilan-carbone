@@ -1,10 +1,8 @@
 import { FullStudy } from '@/db/study'
 import { CA_UNIT_VALUES } from '@/utils/number'
-import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import { Environment, SiteCAUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
-import styles from '../ResultsContainer.module.css'
 import CarbonIntensity from './CarbonIntensity'
 
 interface Props {
@@ -51,27 +49,13 @@ const CarbonIntensities = ({ study, studySite, withDep, withoutDep, caUnit, setG
   }
 
   return (
-    <div className="flex-col mt1">
+    <div className="flex-col mt3">
       <div className="flex grow">
         <div className="grow justify-center">
-          <span className="text-center align-center bold">
-            {t('dependencyIntensity')}
-            <HelpOutlineOutlinedIcon
-              color="secondary"
-              className={`ml-4 ${styles.helpIcon}`}
-              onClick={() => setGlossary('dependencyIntensity')}
-            />
-          </span>
+          <span className="text-center bold">{t('dependencyIntensity')}</span>
         </div>
         <div className="grow justify-center">
-          <span className="text-center align-center bold">
-            {t('responsabilityIntensity')}
-            <HelpOutlineOutlinedIcon
-              color="secondary"
-              className={`ml-4 ${styles.helpIcon}`}
-              onClick={() => setGlossary('responsabilityIntensity')}
-            />
-          </span>
+          <span className="text-center bold">{t('responsabilityIntensity')}</span>
         </div>
       </div>
       <CarbonIntensity
