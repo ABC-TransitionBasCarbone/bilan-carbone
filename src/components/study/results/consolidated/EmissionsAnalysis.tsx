@@ -1,14 +1,13 @@
 import Block from '@/components/base/Block'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
-import { getResultsValues } from '@/services/study'
 import { formatNumber } from '@/utils/number'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import { SiteCAUnit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import styles from '../ResultsContainer.module.css'
 import CarbonIntensities from './CarbonIntensities'
 import Data from './Data'
@@ -16,30 +15,33 @@ import Data from './Data'
 interface Props {
   study: FullStudy
   studySite: string
-  withDependencies: boolean
-  validatedOnly: boolean
+  withDepValue: number
+  withoutDepValue: number
+  monetaryRatio: number
+  nonSpecificMonetaryRatio: number
   caUnit?: SiteCAUnit
 }
 
-const EmissionsAnalysis = ({ study, studySite, validatedOnly, caUnit = SiteCAUnit.K }: Props) => {
+const EmissionsAnalysis = ({
+  study,
+  studySite,
+  withDepValue,
+  withoutDepValue,
+  monetaryRatio,
+  nonSpecificMonetaryRatio,
+  caUnit = SiteCAUnit.K,
+}: Props) => {
   const t = useTranslations('study.results')
   const tGlossary = useTranslations('study')
-  const tPost = useTranslations('emissionFactors.post')
   const tResultUnits = useTranslations('study.results.units')
   const [glossary, setGlossary] = useState('')
-  const environment = study.organizationVersion.environment
-
-  const [withDepValue, withoutDepValue, monetaryRatio, nonSpecificMonetaryRatio] = useMemo(
-    () => getResultsValues(study, tPost, studySite, !!validatedOnly, environment),
-    [environment, study, studySite, tPost, validatedOnly],
-  )
 
   return (
     <Block title={t('analysis')}>
       <div className={classNames(styles.analysisContainer, 'flex')}>
         <div className="flex-col grow">
           <h3 className="text-center mb2">{t('total')}</h3>
-          <div className={classNames(styles.gapped, 'flex grow')}>
+          <div className={classNames(styles.gapped, 'justify-center grow')}>
             <div className="flex-col align-center">
               <Data value={formatNumber(withDepValue)} label={tResultUnits(study.resultsUnit)} />
               <span className="align-center text-center">

@@ -4,7 +4,7 @@ import Button from '@/components/base/Button'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { hasAccessToBcExport } from '@/services/permissions/environment'
-import { AdditionalResultTypes, downloadStudyResults, ResultType } from '@/services/study'
+import { AdditionalResultTypes, downloadStudyResults, getResultsValues, ResultType } from '@/services/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import DownloadIcon from '@mui/icons-material/Download'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
@@ -59,6 +59,11 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     }
     return false
   }, [environment, exports])
+
+  const [withDepValue, withoutDepValue, monetaryRatio, nonSpecificMonetaryRatio] = useMemo(
+    () => getResultsValues(study, tPost, studySite, !!validatedOnly, study.organizationVersion.environment),
+    [study, studySite, validatedOnly],
+  )
 
   if (!environment) {
     return null
@@ -141,8 +146,10 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
           <EmissionsAnalysis
             study={study}
             studySite={studySite}
-            withDependencies
-            validatedOnly={validatedOnly}
+            withDepValue={withDepValue}
+            withoutDepValue={withoutDepValue}
+            monetaryRatio={monetaryRatio}
+            nonSpecificMonetaryRatio={nonSpecificMonetaryRatio}
             caUnit={caUnit}
           />
         )}
