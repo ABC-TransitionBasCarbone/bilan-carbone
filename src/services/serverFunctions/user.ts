@@ -332,7 +332,7 @@ export const activateEmail = async (email: string, userEnv: Environment | undefi
   withServerResponse('activateEmail', async () => {
     const env = userEnv || Environment.BC
 
-    const user = await getUserByEmail(email)
+    const user = await getUserByEmail(email.toLowerCase())
     const account = (await getAccountById(
       user?.accounts.find((a) => a.environment === env)?.id || '',
     )) as AccountWithUser
