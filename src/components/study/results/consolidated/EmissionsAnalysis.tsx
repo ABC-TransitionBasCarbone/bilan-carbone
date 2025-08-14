@@ -43,7 +43,11 @@ const EmissionsAnalysis = ({
           <h3 className="text-center mb2">{t('total')}</h3>
           <div className={classNames(styles.gapped, 'justify-center grow')}>
             <div className="flex-col align-center">
-              <Data value={formatNumber(withDepValue)} label={tResultUnits(study.resultsUnit)} />
+              <Data
+                value={formatNumber(withDepValue)}
+                label={tResultUnits(study.resultsUnit)}
+                testId="withDep-total-result"
+              />
               <span className="align-center text-center">
                 {t('withDependencies')}
                 <HelpOutlineOutlinedIcon
@@ -54,7 +58,11 @@ const EmissionsAnalysis = ({
               </span>
             </div>
             <div className="flex-col align-center">
-              <Data value={formatNumber(withoutDepValue)} label={tResultUnits(study.resultsUnit)} />
+              <Data
+                value={formatNumber(withoutDepValue)}
+                label={tResultUnits(study.resultsUnit)}
+                testId="withoutDep-total-result"
+              />
               <span className="text-center">{t('withoutDependencies')}</span>
             </div>
           </div>
@@ -70,9 +78,17 @@ const EmissionsAnalysis = ({
         <div className="flex-col grow">
           <h3 className="text-center mb2">{t('monetaryRatio')}</h3>
           <div className={classNames('flex')}>
-            <Data value={`${formatNumber(monetaryRatio, 2)}%`} label={t('monetaryRatioEmissions')} />
+            <Data
+              value={`${formatNumber(monetaryRatio, 2)}%`}
+              label={t('monetaryRatioEmissions')}
+              testId="results-monetary-ratio"
+            />
             <span>{t('ofWhich')}</span>
-            <Data value={`${formatNumber(nonSpecificMonetaryRatio, 2)}%`} label={t('nonSpeMonetaryRatioEmissions')} />
+            <Data
+              value={`${formatNumber(nonSpecificMonetaryRatio, 2)}%`}
+              label={t('nonSpeMonetaryRatioEmissions')}
+              testId="results-non-spe-monetary-ratio"
+            />
           </div>
         </div>
       </div>

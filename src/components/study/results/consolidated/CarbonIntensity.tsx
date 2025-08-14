@@ -8,15 +8,23 @@ interface Props {
   divider: number
   resultsUnit: string
   label: string
+  testId: string
 }
 
-const CarbonIntensity = ({ withDep, withoutDep, divider, resultsUnit, label }: Props) => {
+const CarbonIntensity = ({ withDep, withoutDep, divider, resultsUnit, label, testId }: Props) => {
   const tResultUnits = useTranslations('study.results.units')
   return (
     <div className="flex grow mt1">
-      {[withDep, withoutDep].map((emission, i) => (
-        <Data key={i} value={formatNumber(emission / divider)} label={`${tResultUnits(resultsUnit)}/${label}`} />
-      ))}
+      <Data
+        value={formatNumber(withDep / divider)}
+        label={`${tResultUnits(resultsUnit)}/${label}`}
+        testId={`dependency-${testId}`}
+      />
+      <Data
+        value={formatNumber(withoutDep / divider)}
+        label={`${tResultUnits(resultsUnit)}/${label}`}
+        testId={`responsability-${testId}`}
+      />
     </div>
   )
 }
