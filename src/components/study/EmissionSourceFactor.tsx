@@ -205,7 +205,7 @@ const EmissionSourceFactor = ({
         <EmissionSourceFactorModal
           open={advancedSearch}
           close={() => setAdvancedSearch(false)}
-          emissionFactors={emissionFactorsFilteredBySubPosts}
+          emissionFactors={emissionFactors}
           subPost={subPost}
           selectEmissionFactor={(emissionFactor) => {
             update('emissionFactorId', emissionFactor.id)
