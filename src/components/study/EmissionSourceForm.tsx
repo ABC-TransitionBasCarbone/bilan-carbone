@@ -389,40 +389,50 @@ const EmissionSourceForm = ({
 
       <p className={classNames(styles.subTitle, 'mt1 mb-2')}>{t('optionalFields')}</p>
       <div className={classNames(styles.row, 'flex', expandedQuality || !canShrink ? 'flex-col' : '')}>
-        <Autocomplete
-          multiple
-          disabled={!canEdit}
-          data-testid="emission-source-tag"
-          options={tags
-            .filter((tag) => !emissionSource.emissionSourceTags.some((sourceTag) => tag.id === sourceTag.id))
-            .map((tag) => ({ label: tag.name, value: tag.id, color: tag.color }))}
-          value={emissionSource.emissionSourceTags.map((tag) => ({ label: tag.name, value: tag.id, color: tag.color }))}
-          onChange={(_, options: Option[]) => {
-            update(
-              'emissionSourceTags',
-              options.map((tag) => tag.value),
-            )
-          }}
-          renderOption={(props, option) => {
-            const { key, ...optionProps } = props
-
-            return (
-              <li key={key} {...optionProps}>
-                <Chip label={option.label} size="small" sx={{ bgcolor: option.color }} />
-              </li>
-            )
-          }}
-          renderInput={(params) => <TextField {...params} label={t('form.tag')} />}
-          renderValue={(value: Option[], getItemProps) =>
-            value.map((option: Option, index: number) => {
-              const { key, ...itemProps } = getItemProps({ index })
-              return (
-                <Chip variant="outlined" label={option.label} key={key} sx={{ bgcolor: option.color }} {...itemProps} />
-              )
-            })
-          }
-        />
         <div className={classNames(styles.gapped, styles.optionnalFields, 'grow flex')}>
+          <Autocomplete
+            multiple
+            disabled={!canEdit}
+            data-testid="emission-source-tag"
+            options={tags
+              .filter((tag) => !emissionSource.emissionSourceTags.some((sourceTag) => tag.id === sourceTag.id))
+              .map((tag) => ({ label: tag.name, value: tag.id, color: tag.color }))}
+            value={emissionSource.emissionSourceTags.map((tag) => ({
+              label: tag.name,
+              value: tag.id,
+              color: tag.color,
+            }))}
+            onChange={(_, options: Option[]) => {
+              update(
+                'emissionSourceTags',
+                options.map((tag) => tag.value),
+              )
+            }}
+            renderOption={(props, option) => {
+              const { key, ...optionProps } = props
+
+              return (
+                <li key={key} {...optionProps}>
+                  <Chip label={option.label} size="small" sx={{ bgcolor: option.color }} />
+                </li>
+              )
+            }}
+            renderInput={(params) => <TextField {...params} label={t('form.tag')} />}
+            renderValue={(value: Option[], getItemProps) =>
+              value.map((option: Option, index: number) => {
+                const { key, ...itemProps } = getItemProps({ index })
+                return (
+                  <Chip
+                    variant="outlined"
+                    label={option.label}
+                    key={key}
+                    sx={{ bgcolor: option.color }}
+                    {...itemProps}
+                  />
+                )
+              })
+            }
+          />
           <TextField
             className="grow"
             disabled={!canEdit}
