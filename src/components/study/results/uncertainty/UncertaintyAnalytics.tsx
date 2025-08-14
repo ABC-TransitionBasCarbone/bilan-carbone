@@ -28,6 +28,9 @@ const UncertaintyAnalytics = ({ study, studySite, withDependencies, validatedOnl
   const percent = useMemo(() => {
     const [min, max] = confidenceInterval
 
+    if (min === 0 && max === 0) {
+      return 0
+    }
     const realPercent = ((max - min) / max) * 100
 
     return realPercent
