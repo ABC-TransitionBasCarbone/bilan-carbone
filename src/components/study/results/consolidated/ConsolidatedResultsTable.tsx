@@ -65,11 +65,7 @@ const ConsolidatedResultsTable = ({
           if (hideExpandIcons) {
             const isSubpost = row.depth > 0
             return (
-              <p
-                className={classNames('align-center', isSubpost ? styles.notExpandable : styles.expandable, {
-                  [styles.subPost]: isSubpost,
-                })}
-              >
+              <p className={classNames('align-center', isSubpost ? `${styles.notExpandable} pl1` : styles.expandable)}>
                 {getValue<string>()}
               </p>
             )
@@ -85,7 +81,7 @@ const ConsolidatedResultsTable = ({
               {getValue<string>()}
             </button>
           ) : (
-            <p className={classNames('align-center', styles.notExpandable, { [styles.subPost]: row.depth > 0 })}>
+            <p className={classNames('align-center', styles.notExpandable, { pl1: row.depth > 0 })}>
               {getValue<string>()}
             </p>
           )

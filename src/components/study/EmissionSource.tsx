@@ -284,7 +284,7 @@ const EmissionSource = ({
           </p>
         )}
       </button>
-      <div id={detailId} className={classNames(styles.detail, { [styles.displayed]: display })} ref={ref}>
+      <div id={detailId} className={classNames(styles.detail, { [styles.displayed]: display }, 'px1')} ref={ref}>
         {display && (
           <div className={styles.detailContent}>
             {error && (

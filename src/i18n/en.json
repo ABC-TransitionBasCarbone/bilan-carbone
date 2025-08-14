@@ -655,7 +655,13 @@
         "close": "Close"
       },
       "noData": "No data to display",
-      "info": ""
+      "info": "",
+      "uncertainties": {
+        "title": "Uncertainties analytics",
+        "confidenceInterval": "95% confidence interval",
+        "veryWeak": "Very weak",
+        "veryStrong": "Very strong"
+      }
     },
     "pdf": {
       "loading": "Loading data...",

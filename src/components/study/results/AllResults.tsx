@@ -16,6 +16,7 @@ import useStudySite from '../site/useStudySite'
 import BegesResultsTable from './beges/BegesResultsTable'
 import ConsolatedBEGESDifference from './ConsolatedBEGESDifference'
 import ConsolidatedResults from './consolidated/ConsolidatedResults'
+import UncertaintyAnalytics from './uncertainty/UncertaintyAnalytics'
 
 interface Props {
   study: FullStudy
@@ -57,6 +58,10 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
     }
     return false
   }, [environment, exports])
+
+  if (!environment) {
+    return null
+  }
 
   return (
     <Block title={tStudyNav('results')} as="h1">
@@ -143,6 +148,13 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
           />
         )}
       </div>
+      <UncertaintyAnalytics
+        study={study}
+        studySite={studySite}
+        withDependencies
+        validatedOnly={validatedOnly}
+        environment={environment}
+      />
     </Block>
   )
 }

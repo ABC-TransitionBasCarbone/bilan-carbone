@@ -655,7 +655,13 @@
         "additionalMissing": "+ {count, plural,  =1 {1 autre source} other {# autres sources}} d'émission",
         "close": "Fermer"
       },
-      "noData": "Aucune donnée à afficher"
+      "noData": "Aucune donnée à afficher",
+      "uncertainties": {
+        "title": "Analyse des incertitudes",
+        "confidenceInterval": "Intervalle de confiance à 95%",
+        "veryWeak": "Très faible",
+        "veryStrong": "Très fort"
+      }
     },
     "pdf": {
       "loading": "Chargement des données...",

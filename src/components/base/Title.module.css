@@ -1,0 +1,24 @@
+.title {
+  color: var(--neutral-900);
+  gap: 1rem;
+}
+
+.icon {
+  height: 1.5rem;
+  svg {
+    height: 1.5rem;
+    width: auto;
+  }
+}
+
+.bigIcon {
+  min-height: 2rem;
+  svg {
+    height: 2rem;
+    width: auto;
+  }
+}
+
+.exp {
+  align-self: flex-start;
+}

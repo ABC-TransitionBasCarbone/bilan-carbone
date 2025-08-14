@@ -11,11 +11,11 @@ const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
 
 const QCUInput = ({ question, value, onChange, onBlur, errorMessage, disabled }: BaseInputProps) => {
   return (
-    <FormControl className="flex flex-row m2 gapped1" error={!!errorMessage} disabled={disabled}>
+    <FormControl className="flex-row m2 gapped1" error={!!errorMessage} disabled={disabled}>
       {question.possibleAnswers.map((option, index) => (
         <StyledFormControlLabel
           key={`box-${index}`}
-          className="p-2 pr1 flex flex-row align-center mb1"
+          className="p-2 pr1 flex-row align-center mb1"
           label={formatOption(option)}
           control={
             <Radio

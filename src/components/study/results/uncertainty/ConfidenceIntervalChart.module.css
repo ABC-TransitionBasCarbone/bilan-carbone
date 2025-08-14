@@ -1,0 +1,37 @@
+.container {
+  background-color: var(--mui-palette-grey-200);
+  height: 3rem;
+}
+
+.title {
+  width: 12rem;
+  text-align: center;
+}
+
+.titleContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bar {
+  height: 3rem;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--mui-palette-primary-light),
+    var(--mui-palette-primary-light) 5px,
+    var(--mui-palette-secondary-main) 5px,
+    var(--mui-palette-secondary-main) 10px
+  );
+}
+
+.min {
+  position: relative;
+  right: 0.5rem;
+}
+
+.max {
+  align-self: end;
+  position: relative;
+  right: 0.5rem;
+}
