@@ -25,16 +25,18 @@ const MostUncertainPostsChart = ({ computedResults }: Props) => {
     .slice(0, 3)
     .map((result) => {
       return {
+        icon: result.post as Post,
         post: t(result.post),
         color: postColors[result.post as Post],
         uncertainty: tQuality(getStandardDeviationRating(result.uncertainty ?? 1).toString()),
       }
     })
 
-  const PostInfo = ({ post }: { post: { post: string; color: string; uncertainty: string } }) => (
-    <div className={classNames(styles[post.color], 'w100')}>
+  const PostInfo = ({ post }: { post: { post: string; color: string; uncertainty: string; icon: Post } }) => (
+    <div className={classNames(styles[post.color], styles.postContainer, 'w100 grow justify-around align-center px-2')}>
+      <PostIcon post={post.icon as Post} className={classNames(styles.icon, 'mr-4')} />
       <p>
-        <PostIcon post={post.post as Post} className={styles.icon} />
+        {' '}
         {post.post} : {post.uncertainty}
       </p>
     </div>
@@ -43,7 +45,7 @@ const MostUncertainPostsChart = ({ computedResults }: Props) => {
   return (
     <div className={classNames(styles.container, 'flex flex-col grow')}>
       <PostInfo post={threeMostUncertainPosts[0]} />
-      <div className={classNames(styles.secondContainer, 'flex flex-row')}>
+      <div className="flex flex-row grow">
         <PostInfo post={threeMostUncertainPosts[1]} />
         <PostInfo post={threeMostUncertainPosts[2]} />
       </div>
