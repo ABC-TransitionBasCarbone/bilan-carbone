@@ -11,6 +11,7 @@ import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import styles from '../ResultsContainer.module.css'
 import CarbonIntensities from './CarbonIntensities'
+import Data from './Data'
 
 interface Props {
   study: FullStudy
@@ -28,7 +29,7 @@ const EmissionsAnalysis = ({ study, studySite, validatedOnly, caUnit = SiteCAUni
   const [glossary, setGlossary] = useState('')
   const environment = study.organizationVersion.environment
 
-  const [withDepValue, withoutDepValue] = useMemo(
+  const [withDepValue, withoutDepValue, monetaryRatio, nonSpecificMonetaryRatio] = useMemo(
     () => getResultsValues(study, tPost, studySite, !!validatedOnly, environment),
     [environment, study, studySite, tPost, validatedOnly],
   )
@@ -39,9 +40,8 @@ const EmissionsAnalysis = ({ study, studySite, validatedOnly, caUnit = SiteCAUni
         <div className="flex-col grow">
           <h3 className="text-center mb2">{t('total')}</h3>
           <div className={classNames(styles.gapped, 'flex grow')}>
-            <div>
-              <h1 className="text-center">{formatNumber(withDepValue)}</h1>
-              <h3 className="text-center">{tResultUnits(study.resultsUnit)}</h3>
+            <div className="flex-col align-center">
+              <Data value={formatNumber(withDepValue)} label={tResultUnits(study.resultsUnit)} />
               <span className="align-center text-center">
                 {t('withDependencies')}
                 <HelpOutlineOutlinedIcon
@@ -51,9 +51,8 @@ const EmissionsAnalysis = ({ study, studySite, validatedOnly, caUnit = SiteCAUni
                 />
               </span>
             </div>
-            <div>
-              <h1 className="text-center">{formatNumber(withoutDepValue)}</h1>
-              <h3 className="text-center">{tResultUnits(study.resultsUnit)}</h3>
+            <div className="flex-col align-center">
+              <Data value={formatNumber(withoutDepValue)} label={tResultUnits(study.resultsUnit)} />
               <span className="text-center">{t('withoutDependencies')}</span>
             </div>
           </div>
@@ -66,7 +65,14 @@ const EmissionsAnalysis = ({ study, studySite, validatedOnly, caUnit = SiteCAUni
             setGlossary={setGlossary}
           />
         </div>
-        <div className="grow">ratio monétaire</div>
+        <div className="flex-col grow">
+          <h3 className="text-center mb2">{t('monetaryRatio')}</h3>
+          <div className={classNames('flex')}>
+            <Data value={`${formatNumber(monetaryRatio, 2)}%`} label={t('monetaryRatioEmissions')} />
+            <span>{t('ofWhich')}</span>
+            <Data value={`${formatNumber(nonSpecificMonetaryRatio, 2)}%`} label={t('nonSpeMonetaryRatioEmissions')} />
+          </div>
+        </div>
       </div>
       {glossary && (
         <GlossaryModal glossary={glossary} label="results-analysis" t={t} onClose={() => setGlossary('')}>

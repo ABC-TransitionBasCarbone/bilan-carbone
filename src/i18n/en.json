@@ -631,7 +631,10 @@
       "withoutDependencies": "Without dependencies",
       "dependencyIntensity": "Carbon intensities in dependency",
       "responsabilityIntensity": "Carbon intensity in responsibility",
-      "monetaryRatio": "Monetary ratio",
+      "monetaryRatio": "Monetary ratios",
+      "monetaryRatioEmissions": "emissions from monetary ratios",
+      "nonSpeMonetaryRatioEmissions": "resulting from unspecific monetary ratios",
+      "ofWhich": "of which",
       "coming": "coming",
       "units": {
         "K": "kgCO₂e",

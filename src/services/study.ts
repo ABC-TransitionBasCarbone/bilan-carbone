@@ -609,13 +609,16 @@ export const getResultsValues = (
 
   const total = computedResultsWithDep.find((result) => result.post === 'total')?.value || 0
   const monetaryTotal = computedResultsWithDep.find((result) => result.post === 'total')?.monetaryValue || 0
+  const nonSpecificMonetaryTotal =
+    computedResultsWithDep.find((result) => result.post === 'total')?.nonSpecificMonetaryValue || 0
 
   const formatedTotal = total / STUDY_UNIT_VALUES[study.resultsUnit]
   const formatedDiff =
     (computedResultsWithoutDep.find((result) => result.post === 'total')?.value || 0) /
     STUDY_UNIT_VALUES[study.resultsUnit]
 
-  const formatedMonetaryRatio = (monetaryTotal / total) * 100
+  const monetaryRatio = (monetaryTotal / total) * 100
+  const nonSpecificMonetaryRatio = (nonSpecificMonetaryTotal / total) * 100
 
-  return [formatedTotal, formatedDiff, formatedMonetaryRatio]
+  return [formatedTotal, formatedDiff, monetaryRatio, nonSpecificMonetaryRatio]
 }

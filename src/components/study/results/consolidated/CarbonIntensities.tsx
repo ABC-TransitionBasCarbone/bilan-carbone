@@ -26,22 +26,26 @@ const CarbonIntensities = ({ study, studySite, withDep, withoutDep, caUnit, setG
   return (
     <div className="flex-col mt1">
       <div className="flex grow">
-        <span className="text-center align-center grow bold">
-          {t('dependencyIntensity')}
-          <HelpOutlineOutlinedIcon
-            color="secondary"
-            className={`ml-4 ${styles.helpIcon}`}
-            onClick={() => setGlossary('dependencyIntensity')}
-          />
-        </span>
-        <span className="text-center align-center grow bold">
-          {t('responsabilityIntensity')}
-          <HelpOutlineOutlinedIcon
-            color="secondary"
-            className={`ml-4 ${styles.helpIcon}`}
-            onClick={() => setGlossary('responsabilityIntensity')}
-          />
-        </span>
+        <div className="grow justify-center">
+          <span className="text-center align-center bold">
+            {t('dependencyIntensity')}
+            <HelpOutlineOutlinedIcon
+              color="secondary"
+              className={`ml-4 ${styles.helpIcon}`}
+              onClick={() => setGlossary('dependencyIntensity')}
+            />
+          </span>
+        </div>
+        <div className="grow justify-center">
+          <span className="text-center align-center bold">
+            {t('responsabilityIntensity')}
+            <HelpOutlineOutlinedIcon
+              color="secondary"
+              className={`ml-4 ${styles.helpIcon}`}
+              onClick={() => setGlossary('responsabilityIntensity')}
+            />
+          </span>
+        </div>
       </div>
       <CarbonIntensity
         withDep={withDep}

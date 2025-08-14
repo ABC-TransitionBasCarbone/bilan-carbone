@@ -631,7 +631,10 @@
       "withoutDependencies": "Sans le sous-poste 'Utilisation en dépendance'",
       "dependencyIntensity": "Intensités carbone en dépendance",
       "responsabilityIntensity": "Intensités carbone en responsabilité",
-      "monetaryRatio": "Ratio monétaire",
+      "monetaryRatio": "Ratios monétaires",
+      "monetaryRatioEmissions": "d'émissions issues de ratios monétaires",
+      "nonSpeMonetaryRatioEmissions": "issues de ratios monétaires non spécifiques",
+      "ofWhich": "dont",
       "coming": "à venir",
       "units": {
         "K": "kgCO₂e",

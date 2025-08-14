@@ -1,5 +1,6 @@
 import { formatNumber } from '@/utils/number'
 import { useTranslations } from 'next-intl'
+import Data from './Data'
 
 interface Props {
   withDep: number
@@ -14,12 +15,7 @@ const CarbonIntensity = ({ withDep, withoutDep, divider, resultsUnit, label }: P
   return (
     <div className="flex grow mt1">
       {[withDep, withoutDep].map((emission, i) => (
-        <div key={i} className="grow">
-          <h2 className="text-center">{formatNumber(emission / divider)}</h2>
-          <h4 className="text-center">
-            {tResultUnits(resultsUnit)}/{label}
-          </h4>
-        </div>
+        <Data key={i} value={formatNumber(emission / divider)} label={`${tResultUnits(resultsUnit)}/${label}`} />
       ))}
     </div>
   )
