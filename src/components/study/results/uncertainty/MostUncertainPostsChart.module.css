@@ -6,7 +6,7 @@
 }
 
 .postContainer {
-  border: 2px solid black;
+  border: 2px solid var(--mui-palette-grey-900);
 }
 
 .green {

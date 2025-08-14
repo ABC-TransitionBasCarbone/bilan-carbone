@@ -20,7 +20,7 @@ const UncertaintyGauge = ({ percent }: Props) => {
         animate={false}
         arcPadding={0.02}
       />
-      <div className={classNames(styles.labelContainer, 'flex flex-row justify-between')}>
+      <div className={classNames(styles.labelContainer, 'flex-row justify-between')}>
         <p className="bold">{t('veryWeak')}</p>
         <p className="bold">{t('veryStrong')}</p>
       </div>

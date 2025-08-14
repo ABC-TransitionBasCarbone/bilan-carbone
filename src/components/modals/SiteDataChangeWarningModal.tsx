@@ -64,7 +64,7 @@ const SiteDataChangeWarningModal = ({ isOpen, onClose, onConfirm, questionsBySub
                   {Object.entries(filteredQuestionsBySubPost).map(([subPost, questions]) => (
                     <li key={subPost}>
                       <strong>{tPost(subPost)}</strong>
-                      <ul className="mt-2 ml1">
+                      <ul className="mt-2 ml1 pl1">
                         {questions.map((question) => (
                           <li key={question.id} className="mb-2">
                             {question.label}

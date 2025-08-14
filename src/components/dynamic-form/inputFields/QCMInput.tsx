@@ -19,11 +19,11 @@ export const QCMInput = ({ question, value, onChange, onBlur, errorMessage, disa
   }
 
   return (
-    <FormControl className="flex flex-col m2" error={!!errorMessage} disabled={disabled}>
+    <FormControl className="flex-col m2" error={!!errorMessage} disabled={disabled}>
       {question.possibleAnswers?.map((option, index) => (
         <StyledFormControlLabel
           key={`box-${index}`}
-          className="p-2 pr1 flex flex-row align-center mb1"
+          className="p-2 pr1 flex-row align-center mb1"
           control={
             <Checkbox
               onBlur={onBlur}

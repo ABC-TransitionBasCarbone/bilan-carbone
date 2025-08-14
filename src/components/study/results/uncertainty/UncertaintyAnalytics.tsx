@@ -47,20 +47,17 @@ const UncertaintyAnalytics = ({ study, studySite, withDependencies, validatedOnl
     type,
   )
 
-  const total = computedResults?.find((post) => post.post === 'total')?.value ?? 1
-
   return (
-    <Block title={t('title')} as="h4">
-      <div className="flex flex-row">
+    <Block title={t('title')} as="h4" className="flex-col my2">
+      <div className="flex-row">
         <div className="grow">
           <ConfidenceIntervalCharts
             confidenceInterval={confidenceInterval}
-            totalCo2={total}
             unit={study.resultsUnit}
             percent={percent}
           />
         </div>
-        <div className="grow2 flex flex-row">
+        <div className="grow2 flex-row">
           <div className="grow">
             <UncertaintyGauge percent={percent} />
           </div>

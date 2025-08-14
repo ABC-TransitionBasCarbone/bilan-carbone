@@ -36,16 +36,15 @@ const MostUncertainPostsChart = ({ computedResults }: Props) => {
     <div className={classNames(styles[post.color], styles.postContainer, 'w100 grow justify-around align-center px-2')}>
       <PostIcon post={post.icon as Post} className={classNames(styles.icon, 'mr-4')} />
       <p>
-        {' '}
         {post.post} : {post.uncertainty}
       </p>
     </div>
   )
 
   return (
-    <div className={classNames(styles.container, 'flex flex-col grow')}>
+    <div className={classNames(styles.container, 'flex-col grow')}>
       <PostInfo post={threeMostUncertainPosts[0]} />
-      <div className="flex flex-row grow">
+      <div className="flex-row grow">
         <PostInfo post={threeMostUncertainPosts[1]} />
         <PostInfo post={threeMostUncertainPosts[2]} />
       </div>

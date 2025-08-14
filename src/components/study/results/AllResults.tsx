@@ -157,15 +157,13 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
           />
         )}
       </div>
-      <div className="flex mt2 mb2">
-        <UncertaintyAnalytics
-          study={study}
-          studySite={studySite}
-          withDependencies
-          validatedOnly={validatedOnly}
-          environment={environment}
-        />
-      </div>
+      <UncertaintyAnalytics
+        study={study}
+        studySite={studySite}
+        withDependencies
+        validatedOnly={validatedOnly}
+        environment={environment}
+      />
     </Block>
   )
 }

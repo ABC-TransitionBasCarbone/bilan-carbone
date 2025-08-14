@@ -7,27 +7,26 @@ import progressStyles from '../../../base/ProgressBar.module.css'
 import styles from './ConfidenceIntervalChart.module.css'
 interface Props {
   confidenceInterval: number[]
-  totalCo2: number
   unit: StudyResultUnit
   percent: number
 }
 
-const ConfidenceIntervalCharts = ({ confidenceInterval, totalCo2, unit, percent }: Props) => {
+const ConfidenceIntervalCharts = ({ confidenceInterval, unit, percent }: Props) => {
   const t = useTranslations('study.results.uncertainties')
   const tResultUnits = useTranslations('study.results.units')
 
   return (
-    <div className="flex flex-row">
+    <div className="flex-row">
       <div className="grow flex-col">
         <div className={classNames(styles.titleContainer, 'mb1')}>
           <div className={styles.title}>
             <p className="bold">{t('confidenceInterval')}</p>
           </div>
         </div>
-        <div className={classNames(styles.container, 'flex grow justify-end ml-4')}>
+        <div className={classNames(styles.container, 'grow justify-end ml-4')}>
           <div className={classNames(styles.bar, progressStyles[`w${percent.toFixed(0)}`])} />
         </div>
-        <div className="flex flex-row justify-between">
+        <div className="flex-row justify-between">
           <p className="bold">0</p>
           <p className={classNames(styles.min, progressStyles[`w${percent.toFixed(0)}`], 'bold')}>
             {formatNumber(confidenceInterval[0] / STUDY_UNIT_VALUES[unit])}
