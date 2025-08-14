@@ -48,6 +48,9 @@ const users = async () => {
   await prisma.emissionFactorMetaData.deleteMany()
   await prisma.emissionFactor.deleteMany()
 
+  await prisma.emissionSourceTag.deleteMany()
+  await prisma.emissionSourceTagFamily.deleteMany()
+
   await prisma.userOnStudy.deleteMany()
   await prisma.studyExport.deleteMany()
   await prisma.studyEmissionSource.deleteMany()

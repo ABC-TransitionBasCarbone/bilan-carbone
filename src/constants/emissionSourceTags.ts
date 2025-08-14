@@ -15,7 +15,7 @@ type DefaultEmissionSourceTags = {
 }
 
 export enum emissionSourceTagColors {
-  GREY = '#9fbff3',
+  DEFAULT = '#ffffff',
   GREEN = '#94EBBF',
   RED = '#e04949',
   ORANGE = '#fc8514',

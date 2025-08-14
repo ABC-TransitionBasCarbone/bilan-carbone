@@ -55,6 +55,7 @@
     "file-type": "^21.0.0",
     "fuse.js": "^7.0.0",
     "jsonwebtoken": "^9.0.2",
+    "mui-color-input": "^7.0.0",
     "next": "15.3.3",
     "next-auth": "^4.24.11",
     "next-intl": "^4.3.4",
@@ -111,11 +112,12 @@
     "jest-environment-jsdom": "^30.0.5",
     "prettier": "^3.6.2",
     "prettier-plugin-organize-imports": "^4.2.0",
+    "tmp": "^0.2.4",
     "ts-jest": "^29.4.1",
-    "typescript": "^5.9.2",
-    "tmp": "^0.2.4"
+    "typescript": "^5.9.2"
   },
   "resolutions": {
-    "brace-expansion": "^2.0.2"
+    "brace-expansion": "^2.0.2",
+    "tmp": "^0.2.4"
   }
 }

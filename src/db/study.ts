@@ -6,11 +6,26 @@ import { checkLevel, getAllowedLevels } from '@/services/study'
 import { isAdminOnOrga } from '@/utils/organization'
 import { getUserRoleOnPublicStudy } from '@/utils/study'
 import { isAdmin } from '@/utils/user'
-import { ControlMode, Environment, Export, Import, Level, StudyRole, SubPost, type Prisma } from '@prisma/client'
+import {
+  ControlMode,
+  EmissionSourceTag,
+  EmissionSourceTagFamily,
+  Environment,
+  Export,
+  Import,
+  Level,
+  StudyRole,
+  SubPost,
+  type Prisma,
+} from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { getAccountOrganizationVersions } from './account'
 import { prismaClient } from './client'
 import { getOrganizationVersionById, OrganizationVersionWithOrganization } from './organization'
+
+export type EmissionSourceTagFamilyWithTags = Omit<EmissionSourceTagFamily, 'createdAt' | 'updatedAt'> & {
+  emissionSourceTags: Omit<EmissionSourceTag, 'familyId'>[]
+}
 
 export const createStudy = async (data: Prisma.StudyCreateInput, environment: Environment) => {
   const dbStudy = await prismaClient.study.create({ data })
@@ -92,7 +107,7 @@ const fullStudyInclude = {
           id: true,
           name: true,
           color: true,
-          studyId: true,
+          familyId: true,
         },
       },
     },
@@ -188,13 +203,21 @@ const fullStudyInclude = {
       },
     },
   },
-  emissionSourceTags: {
+  emissionSourceTagFamilies: {
     select: {
       id: true,
       name: true,
-      color: true,
       studyId: true,
+      emissionSourceTags: {
+        select: {
+          id: true,
+          familyId: true,
+          name: true,
+          color: true,
+        },
+      },
     },
+    orderBy: [{ name: 'asc' }, { createdAt: 'asc' }],
   },
 } satisfies Prisma.StudyInclude
 

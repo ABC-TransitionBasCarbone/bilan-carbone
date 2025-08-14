@@ -225,13 +225,19 @@ export const createStudyCommand = async (
     const userCAUnit = (await getUserApplicationSettings(session.user.accountId))?.caUnit
     const caUnit = CA_UNIT_VALUES[userCAUnit || defaultCAUnit]
 
-    const emissionSourceTags = {
-      createMany: {
-        data:
-          session.user.environment in defaultEmissionSourceTags
-            ? defaultEmissionSourceTags[session.user.environment as keyof typeof defaultEmissionSourceTags] || []
-            : [],
-      },
+    const environmentTags =
+      defaultEmissionSourceTags[session.user.environment as keyof typeof defaultEmissionSourceTags]
+    const emissionSourceTagFamilies: Prisma.EmissionSourceTagFamilyCreateNestedManyWithoutStudyInput = {
+      create: [
+        {
+          name: 'défaut',
+          emissionSourceTags: environmentTags
+            ? {
+                create: environmentTags.map((tag) => ({ name: tag.name, color: tag.color })),
+              }
+            : undefined,
+        },
+      ],
     }
 
     const study = {
@@ -274,7 +280,7 @@ export const createStudyCommand = async (
             .filter((site) => site !== undefined),
         },
       },
-      emissionSourceTags,
+      emissionSourceTagFamilies,
     } satisfies Prisma.StudyCreateInput
 
     if (!(await canCreateSpecificStudy(session.user, study, organizationVersionId))) {

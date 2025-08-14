@@ -579,6 +579,7 @@
       },
       "exports": "Exports",
       "control": "Control mode",
+      "emissionSourceTagFamily": "Family",
       "emissionSourceTags": "Tags",
       "emissionSourceTagLabel": "Label",
       "color": "Color",
@@ -603,6 +604,17 @@
         "description": "You are about to activate the regulatory BEGES export. When this export is enabled, you must fill in an additional \"Characterization\" field in certain emission sources. As a result, <warning>activating this export will invalidate the affected emission sources</warning>. Do you want to continue?",
         "continue": "Continue",
         "cancel": "Cancel"
+      },
+      "family": {
+        "add": "Ajouter un nouveau tag dans une famille",
+        "name": "Label",
+        "edit": "Rename family",
+        "delete": "Delete family",
+        "deleteContent": "Do you really want to delete the \"{name}\" tag family ? <red>All its tags will be permanently deleted.</red>",
+        "new": "New family",
+        "content": "Which name do you want to give to you family ?",
+        "cancel": "Cancel",
+        "confirm": "Confirm"
       }
     },
     "results": {
