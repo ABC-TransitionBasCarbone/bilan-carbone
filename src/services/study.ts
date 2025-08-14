@@ -607,18 +607,18 @@ export const getResultsValues = (
     environment,
   )
 
-  const total = computedResultsWithDep.find((result) => result.post === 'total')?.value || 0
-  const monetaryTotal = computedResultsWithDep.find((result) => result.post === 'total')?.monetaryValue || 0
-  const nonSpecificMonetaryTotal =
-    computedResultsWithDep.find((result) => result.post === 'total')?.nonSpecificMonetaryValue || 0
+  const totalResult = computedResultsWithDep.find((result) => result.post === 'total')
+  const total = totalResult?.value || 0
+  const monetaryTotal = totalResult?.monetaryValue || 0
+  const nonSpecificMonetaryTotal = totalResult?.nonSpecificMonetaryValue || 0
 
   const formatedTotal = total / STUDY_UNIT_VALUES[study.resultsUnit]
-  const formatedDiff =
+  const formatedTotalWithoutDep =
     (computedResultsWithoutDep.find((result) => result.post === 'total')?.value || 0) /
     STUDY_UNIT_VALUES[study.resultsUnit]
 
   const monetaryRatio = (monetaryTotal / total) * 100
   const nonSpecificMonetaryRatio = (nonSpecificMonetaryTotal / total) * 100
 
-  return [formatedTotal, formatedDiff, monetaryRatio, nonSpecificMonetaryRatio]
+  return [formatedTotal, formatedTotalWithoutDep, monetaryRatio, nonSpecificMonetaryRatio]
 }
