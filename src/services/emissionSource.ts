@@ -406,22 +406,16 @@ export const financialCaracterisations: CaracterisationsBySubPost = {
   [SubPost.DeplacementsDomicileTravail]: [
     EmissionSourceCaracterisation.Held,
     EmissionSourceCaracterisation.NotHeldSimpleRent,
-    EmissionSourceCaracterisation.NotHeldSupported,
-    EmissionSourceCaracterisation.NotHeldNotSupported,
     EmissionSourceCaracterisation.NotHeldOther,
   ],
   [SubPost.DeplacementsProfessionnels]: [
     EmissionSourceCaracterisation.Held,
     EmissionSourceCaracterisation.NotHeldSimpleRent,
-    EmissionSourceCaracterisation.NotHeldSupported,
-    EmissionSourceCaracterisation.NotHeldNotSupported,
     EmissionSourceCaracterisation.NotHeldOther,
   ],
   [SubPost.DeplacementsVisiteurs]: [
     EmissionSourceCaracterisation.Held,
     EmissionSourceCaracterisation.NotHeldSimpleRent,
-    EmissionSourceCaracterisation.NotHeldSupported,
-    EmissionSourceCaracterisation.NotHeldNotSupported,
     EmissionSourceCaracterisation.NotHeldOther,
   ],
   [SubPost.Batiments]: [EmissionSourceCaracterisation.Held],
@@ -431,7 +425,6 @@ export const financialCaracterisations: CaracterisationsBySubPost = {
   [SubPost.UtilisationEnResponsabilite]: [
     EmissionSourceCaracterisation.Rented,
     EmissionSourceCaracterisation.FinalClient,
-    EmissionSourceCaracterisation.UsedByIntermediary,
   ],
   [SubPost.UtilisationEnDependance]: [],
   [SubPost.InvestissementsFinanciersRealises]: [EmissionSourceCaracterisation.Held],
