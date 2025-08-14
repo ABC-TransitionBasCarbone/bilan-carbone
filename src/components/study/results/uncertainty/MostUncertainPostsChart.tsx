@@ -23,17 +23,15 @@ const MostUncertainPostsChart = ({ computedResults }: Props) => {
       return b.uncertainty - a.uncertainty
     })
     .slice(0, 3)
-    .map((result) => {
-      return {
-        icon: result.post as Post,
-        post: t(result.post),
-        color: postColors[result.post as Post],
-        uncertainty: tQuality(getStandardDeviationRating(result.uncertainty ?? 1).toString()),
-      }
-    })
+    .map((result) => ({
+      icon: result.post as Post,
+      post: t(result.post),
+      color: postColors[result.post as Post],
+      uncertainty: tQuality(getStandardDeviationRating(result.uncertainty ?? 1).toString()),
+    }))
 
   const PostInfo = ({ post }: { post: { post: string; color: string; uncertainty: string; icon: Post } }) => (
-    <div className={classNames(styles[post.color], styles.postContainer, 'w100 grow justify-around align-center px-2')}>
+    <div className={classNames(styles[post.color], styles.postContainer, 'grow justify-around align-center px-2')}>
       <PostIcon post={post.icon as Post} className={classNames(styles.icon, 'mr-4')} />
       <p>
         {post.post} : {post.uncertainty}
