@@ -135,17 +135,17 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
         )}
       </div>
       <div className="mt1">
+        <EmissionsAnalysis
+          study={study}
+          studySite={studySite}
+          withDepValue={withDepValue}
+          withoutDepValue={withoutDepValue}
+          monetaryRatio={monetaryRatio}
+          nonSpecificMonetaryRatio={nonSpecificMonetaryRatio}
+          caUnit={caUnit}
+        />
         {type !== Export.Beges && (
           <>
-            <EmissionsAnalysis
-              study={study}
-              studySite={studySite}
-              withDepValue={withDepValue}
-              withoutDepValue={withoutDepValue}
-              monetaryRatio={monetaryRatio}
-              nonSpecificMonetaryRatio={nonSpecificMonetaryRatio}
-              caUnit={caUnit}
-            />
             <ConsolidatedResults
               study={study}
               studySite={studySite}

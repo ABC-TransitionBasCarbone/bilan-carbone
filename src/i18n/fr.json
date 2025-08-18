@@ -675,7 +675,11 @@
         "etp": "salarié",
         "volunteer": "volontaire",
         "beneficiary": "bénéficiaire"
-      }
+      },
+      "table": "Tableau",
+      "barChart": "Graphique",
+      "pieChart": "Camembert",
+      "tagPieChartTitle": "Emissions, par tag"
     },
     "pdf": {
       "loading": "Chargement des données...",

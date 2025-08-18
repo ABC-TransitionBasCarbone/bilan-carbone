@@ -675,7 +675,11 @@
         "etp": "employee",
         "volunteer": "volunteer",
         "beneficiary": "beneficiary"
-      }
+      },
+      "table": "Table",
+      "barChart": "Bar Chart",
+      "pieChart": "Pie Chart",
+      "tagPieChartTitle": "Emissions, by tag"
     },
     "pdf": {
       "loading": "Loading data...",

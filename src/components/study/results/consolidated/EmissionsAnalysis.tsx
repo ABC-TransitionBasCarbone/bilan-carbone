@@ -9,6 +9,7 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useState } from 'react'
 import styles from '../ResultsContainer.module.css'
+import ResultsTableAndGraphs, { TabsPossibilities } from '../ResultsTableAndGraphs'
 import CarbonIntensities from './CarbonIntensities'
 import Data from './Data'
 
@@ -90,6 +91,7 @@ const EmissionsAnalysis = ({
               testId="results-non-spe-monetary-ratio"
             />
           </div>
+          <ResultsTableAndGraphs activeTabs={[TabsPossibilities.pieChart]} />
         </div>
       </div>
       {glossary && (
