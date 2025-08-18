@@ -1,12 +1,12 @@
 'use client'
 
-import { FullStudy } from '@/db/study'
-import { useChartComputations } from '@/hooks/useChartComputations'
+import { formatValueAndUnit } from '@/utils/charts'
 import { isPost } from '@/utils/post'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { Typography, useTheme } from '@mui/material'
-import { PieChart as MuiPieChart } from '@mui/x-charts'
-import { Environment } from '@prisma/client'
+import { PieChart as MuiPieChart, PieChartProps } from '@mui/x-charts'
+import { StudyResultUnit } from '@prisma/client'
+import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import styles from './PieChart.module.css'
 
@@ -17,54 +17,42 @@ const PIE_CHART_CONSTANTS = {
   PIE_INNER_RADIUS: 0,
 } as const
 
-interface Props {
-  study: FullStudy
-  studySite?: string
+interface Props<T> extends Omit<PieChartProps, 'series'> {
+  resultsUnit: StudyResultUnit
+  results: T[]
   title?: string
   height?: number
   showTitle?: boolean
   showLabelsOnPie?: boolean
-  validatedOnly?: boolean
-  environment: Environment
-  skipAnimation?: boolean
-  withDep: boolean
 }
 
-const PieChart = ({
-  study,
-  studySite = 'all',
+const PieChart = <T extends { value: number; label: string }>({
+  resultsUnit,
+  results,
   title,
   height = 400,
   showTitle = true,
   showLabelsOnPie = true,
-  validatedOnly = false,
-  environment,
-  skipAnimation = false,
-  withDep,
-}: Props) => {
-  const theme = useTheme()
+  ...pieChartProps
+}: Props<T>) => {
+  const tPost = useTranslations('emissionFactors.post')
+  const tUnits = useTranslations('study.results.units')
 
-  const { chartFormatter, computeResults } = useChartComputations({
-    study,
-    studySite,
-    validatedOnly,
-    environment,
-    withDep,
-  })
+  const theme = useTheme()
 
   const pieData = useMemo(
     () =>
-      computeResults
-        .map(({ label, value, post }) => {
-          const convertedValue = value / STUDY_UNIT_VALUES[study.resultsUnit]
+      results
+        .map(({ value, label }) => {
+          const convertedValue = value / STUDY_UNIT_VALUES[resultsUnit]
           return {
-            label: `${label} - ${chartFormatter(convertedValue)}`,
+            label: `${tPost(label)} - ${formatValueAndUnit(convertedValue, tUnits(resultsUnit))}`,
             value: convertedValue,
-            color: isPost(post) ? theme.custom.postColors[post].light : theme.palette.primary.light,
+            color: isPost(label) ? theme.custom.postColors[label].light : theme.palette.primary.light,
           }
         })
         .filter((computeResult) => computeResult.value > 0),
-    [computeResults, theme, chartFormatter, study.resultsUnit],
+    [results, resultsUnit, tPost, tUnits, theme.custom.postColors, theme.palette.primary.light],
   )
 
   return (
@@ -73,7 +61,7 @@ const PieChart = ({
         series={[
           {
             data: pieData,
-            arcLabel: showLabelsOnPie ? (item) => chartFormatter(item.value, false) : undefined,
+            arcLabel: showLabelsOnPie ? (item) => formatValueAndUnit(item.value) : undefined,
             arcLabelMinAngle: PIE_CHART_CONSTANTS.ARC_LABEL_MIN_ANGLE,
             arcLabelRadius: PIE_CHART_CONSTANTS.ARC_LABEL_RADIUS,
             innerRadius: PIE_CHART_CONSTANTS.PIE_INNER_RADIUS,
@@ -81,7 +69,7 @@ const PieChart = ({
           },
         ]}
         height={height}
-        skipAnimation={skipAnimation}
+        {...pieChartProps}
       />
       {showTitle && (
         <Typography variant="h6" align="center" className={styles.chartTitle}>

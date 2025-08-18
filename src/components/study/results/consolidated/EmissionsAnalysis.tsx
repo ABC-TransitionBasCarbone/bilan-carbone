@@ -1,6 +1,8 @@
 import Block from '@/components/base/Block'
+import Box from '@/components/base/Box'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
+import { ResultsByTag } from '@/services/results/consolidated'
 import { formatNumber } from '@/utils/number'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import { SiteCAUnit } from '@prisma/client'
@@ -13,25 +15,33 @@ import ResultsTableAndGraphs, { TabsPossibilities } from '../ResultsTableAndGrap
 import CarbonIntensities from './CarbonIntensities'
 import Data from './Data'
 
-interface Props {
+interface Props<T> {
   study: FullStudy
   studySite: string
   withDepValue: number
   withoutDepValue: number
+  computedResults: T[]
+  displayValueWithDep: boolean
+  setDisplayValueWithDep: (displayValueWithDep: boolean) => void
   monetaryRatio: number
   nonSpecificMonetaryRatio: number
   caUnit?: SiteCAUnit
+  computedResultsByTag: ResultsByTag[]
 }
 
-const EmissionsAnalysis = ({
+const EmissionsAnalysis = <T extends { value: number; label: string }>({
   study,
   studySite,
   withDepValue,
   withoutDepValue,
+  computedResults,
+  displayValueWithDep,
+  setDisplayValueWithDep,
   monetaryRatio,
   nonSpecificMonetaryRatio,
   caUnit = SiteCAUnit.K,
-}: Props) => {
+  computedResultsByTag,
+}: Props<T>) => {
   const t = useTranslations('study.results')
   const tGlossary = useTranslations('study')
   const tResultUnits = useTranslations('study.results.units')
@@ -42,30 +52,38 @@ const EmissionsAnalysis = ({
       <div className={classNames(styles.analysisContainer, 'flex')}>
         <div className="flex-col grow">
           <h3 className="text-center mb2">{t('total')}</h3>
-          <div className={classNames(styles.gapped, 'justify-center grow')}>
-            <div className="flex-col align-center">
+          <div className={classNames(styles.gapped, 'justify-center')}>
+            <Box
+              className="pointer align-center flex-col relative"
+              color="secondary"
+              selected={displayValueWithDep}
+              onClick={() => setDisplayValueWithDep(true)}
+            >
+              <HelpOutlineOutlinedIcon
+                color="secondary"
+                className={`ml-4 ${styles.helpIcon} absolute r1`}
+                onClick={() => setGlossary('withDependencies')}
+              />
               <Data
                 value={formatNumber(withDepValue)}
                 label={tResultUnits(study.resultsUnit)}
                 testId="withDep-total-result"
               />
-              <span className="align-center text-center">
-                {t('withDependencies')}
-                <HelpOutlineOutlinedIcon
-                  color="secondary"
-                  className={`ml-4 ${styles.helpIcon}`}
-                  onClick={() => setGlossary('withDependencies')}
-                />
-              </span>
-            </div>
-            <div className="flex-col align-center">
+              <span className="align-center text-center">{t('withDependencies')}</span>
+            </Box>
+            <Box
+              className="pointer align-center flex-col"
+              color="secondary"
+              selected={!displayValueWithDep}
+              onClick={() => setDisplayValueWithDep(false)}
+            >
               <Data
                 value={formatNumber(withoutDepValue)}
                 label={tResultUnits(study.resultsUnit)}
                 testId="withoutDep-total-result"
               />
               <span className="text-center">{t('withoutDependencies')}</span>
-            </div>
+            </Box>
           </div>
           <CarbonIntensities
             study={study}
@@ -91,7 +109,11 @@ const EmissionsAnalysis = ({
               testId="results-non-spe-monetary-ratio"
             />
           </div>
-          <ResultsTableAndGraphs activeTabs={[TabsPossibilities.pieChart]} />
+          <ResultsTableAndGraphs
+            activeTabs={[TabsPossibilities.pieChart]}
+            computedResults={computedResultsByTag}
+            resultsUnit={study.resultsUnit}
+          />
         </div>
       </div>
       {glossary && (

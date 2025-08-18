@@ -45,8 +45,14 @@ const StudyResultsContainerSummary = ({
   const isCut = useMemo(() => environment === Environment.CUT, [environment])
 
   const [withDepValue, withoutDepValue, monetaryRatio] = useMemo(() => {
-    const [withDep, withoutDep, monetary] = getResultsValues(study, tPost, studySite, !!validatedOnly, environment)
-    return [formatNumber(withDep), formatNumber(withoutDep), formatNumber(monetary, 2)]
+    const { withDepValue, withoutDepValue, monetaryRatio } = getResultsValues(
+      study,
+      tPost,
+      studySite,
+      !!validatedOnly,
+      environment,
+    )
+    return [formatNumber(withDepValue), formatNumber(withoutDepValue), formatNumber(monetaryRatio, 2)]
   }, [environment, study, studySite, tPost, validatedOnly])
 
   return (

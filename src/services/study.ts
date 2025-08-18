@@ -11,7 +11,7 @@ import { download } from './file'
 import { StudyWithoutDetail } from './permissions/study'
 import { environmentPostMapping, Post, subPostsByPost } from './posts'
 import { computeBegesResult } from './results/beges'
-import { computeResultsByPost } from './results/consolidated'
+import { computeResultsByPost, computeResultsByTag } from './results/consolidated'
 import { EmissionFactorWithMetaData, getEmissionFactorsByIds } from './serverFunctions/emissionFactor'
 import { prepareExcel } from './serverFunctions/file'
 import { getUserSettings } from './serverFunctions/user'
@@ -587,6 +587,7 @@ export const getResultsValues = (
   studySite: string,
   validatedOnly: boolean,
   environment: Environment,
+  withDependencies: boolean = true,
 ) => {
   const computedResultsWithDep = computeResultsByPost(
     study,
@@ -607,18 +608,28 @@ export const getResultsValues = (
     environment,
   )
 
+  const computedResultsByTag = computeResultsByTag(study, studySite, withDependencies, validatedOnly, environment)
+
   const totalResult = computedResultsWithDep.find((result) => result.post === 'total')
   const total = totalResult?.value || 0
   const monetaryTotal = totalResult?.monetaryValue || 0
   const nonSpecificMonetaryTotal = totalResult?.nonSpecificMonetaryValue || 0
 
-  const formatedTotal = total / STUDY_UNIT_VALUES[study.resultsUnit]
-  const formatedTotalWithoutDep =
+  const withDepValue = total / STUDY_UNIT_VALUES[study.resultsUnit]
+  const withoutDepValue =
     (computedResultsWithoutDep.find((result) => result.post === 'total')?.value || 0) /
     STUDY_UNIT_VALUES[study.resultsUnit]
 
   const monetaryRatio = (monetaryTotal / total) * 100
   const nonSpecificMonetaryRatio = (nonSpecificMonetaryTotal / total) * 100
 
-  return [formatedTotal, formatedTotalWithoutDep, monetaryRatio, nonSpecificMonetaryRatio]
+  return {
+    computedResultsWithDep,
+    computedResultsWithoutDep,
+    withDepValue,
+    withoutDepValue,
+    monetaryRatio,
+    nonSpecificMonetaryRatio,
+    computedResultsByTag,
+  }
 }

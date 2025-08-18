@@ -1,8 +1,10 @@
 import Title from '@/components/base/Title'
 import { TuneOutlined } from '@mui/icons-material'
 import { Box, Tab, Tabs } from '@mui/material'
+import { StudyResultUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
+import PieChart from '../charts/PieChart'
 
 export enum TabsPossibilities {
   table = 'table',
@@ -10,14 +12,18 @@ export enum TabsPossibilities {
   barChart = 'barChart',
 }
 
-interface Props {
+interface Props<T> {
   activeTabs?: TabsPossibilities[]
   defaultTab?: TabsPossibilities
+  computedResults: T[]
+  resultsUnit?: StudyResultUnit
 }
-const ResultsTableAndGraphs = ({
+const ResultsTableAndGraphs = <T extends { value: number; label: string }>({
   activeTabs = Object.values(TabsPossibilities),
   defaultTab = activeTabs[0],
-}: Props) => {
+  computedResults,
+  resultsUnit,
+}: Props<T>) => {
   const [tabSelected, setTabSelected] = useState(defaultTab)
   const t = useTranslations('study.results')
 
@@ -26,7 +32,7 @@ const ResultsTableAndGraphs = ({
       case TabsPossibilities.table:
         return <div>{t('table')}</div>
       case TabsPossibilities.pieChart:
-        return <div>{t('pieChart')}</div>
+        return <PieChart results={computedResults} resultsUnit={resultsUnit ?? StudyResultUnit.T} hideLegend />
       case TabsPossibilities.barChart:
         return <div>{t('barChart')}</div>
       default:

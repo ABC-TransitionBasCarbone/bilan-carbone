@@ -215,6 +215,23 @@ table {
 }
 
 .cardContainer {
-  border: 1px solid var(--border);
-  box-shadow: 0px 3px 1px 0px rgba(0, 0, 0, 0.04);
+  gap: 1rem;
+  padding-right: 3rem;
+  padding-left: 3rem;
+
+  &.selected {
+    border-color: var(--primary-500);
+  }
+
+  &.disabled {
+    background-color: var(--grayscale-100);
+  }
+}
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
 }

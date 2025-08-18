@@ -7,12 +7,12 @@ import DownloadIcon from '@mui/icons-material/Download'
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
 import { Box, Button, Tab, Tabs, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import { SyntheticEvent, useState } from 'react'
+import { SyntheticEvent, useMemo, useState } from 'react'
 
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import TabPanel from '@/components/tabPanel/tabPanel'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
-import { downloadStudyResults } from '@/services/study'
+import { downloadStudyResults, getResultsValues } from '@/services/study'
 import { Environment } from '@prisma/client'
 
 import Block from '@/components/base/Block'
@@ -76,6 +76,11 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
     })
     setPdfLoading(false)
   }
+
+  const { computedResultsWithDep } = useMemo(
+    () => getResultsValues(study, tPost, studySite, !!validatedOnly, study.organizationVersion.environment),
+    [study, studySite, validatedOnly],
+  )
 
   return (
     <Block title={study.name} as="h1" description={tStudyNav('results')} bold descriptionColor="primary">
@@ -160,14 +165,11 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
           </TabPanel>
           <TabPanel value={value} index={2}>
             <PieChart
-              study={study}
-              studySite={studySite}
+              resultsUnit={study.resultsUnit}
               height={400}
               showTitle={false}
               showLabelsOnPie={true}
-              validatedOnly={validatedOnly}
-              environment={Environment.CUT}
-              withDep
+              results={computedResultsWithDep.map((r) => ({ label: r.post, value: r.value }))}
             />
           </TabPanel>
         </Box>
