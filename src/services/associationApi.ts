@@ -24,3 +24,14 @@ export const isValidAssociationSiret = async (siret: string) => {
 
   return true
 }
+
+export const getCompanyName = async (siret: string) => {
+  const trimmedSiret = siret.trim()
+  if (!trimmedSiret || trimmedSiret.length !== 14) {
+    return null
+  }
+
+  const result = await axios.get(`${apiUrl}/${trimmedSiret}`)
+
+  return result.data.identite?.nom as string
+}

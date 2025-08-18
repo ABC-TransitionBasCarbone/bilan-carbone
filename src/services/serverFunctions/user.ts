@@ -56,7 +56,7 @@ import { accountWithUserToUserSession, userSessionToDbUser } from '@/utils/userA
 import { DeactivatableFeature, Environment, Organization, Role, User, UserChecklist, UserStatus } from '@prisma/client'
 import jwt from 'jsonwebtoken'
 import { UserSession } from 'next-auth'
-import { isValidAssociationSiret } from '../associationApi'
+import { getCompanyName, isValidAssociationSiret } from '../associationApi'
 import { auth, dbActualizedAuth } from '../auth'
 import { getUserCheckList } from '../checklist'
 import {
@@ -582,10 +582,21 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
       if (environment === Environment.TILT && !(await isValidAssociationSiret(siretOrCNC))) {
         throw new Error(NOT_ASSOCIATION_SIRET)
       }
+
       organization = await getRawOrganizationBySiret(siretOrCNC)
+      let companyName = ''
+      if (environment === Environment.CUT && !organization?.id) {
+        companyName = (await getCompanyName(siretOrCNC)) || ''
+        if (companyName === '') {
+          throw new Error(UNKNOWN_CNC)
+        }
+      }
       organizationVersion = organization?.id
         ? await getOrganizationVersionByOrganizationIdAndEnvironment(organization.id, environment)
-        : await createOrganizationWithVersion({ wordpressId: siretOrCNC, name: '' }, { environment: environment })
+        : await createOrganizationWithVersion(
+            { wordpressId: siretOrCNC, name: companyName },
+            { environment: environment },
+          )
     } else {
       organization = await getRawOrganizationBySiteCNC(siretOrCNC)
       organizationVersion = organization?.id
