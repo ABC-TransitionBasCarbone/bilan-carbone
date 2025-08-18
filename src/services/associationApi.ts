@@ -31,7 +31,11 @@ export const getCompanyName = async (siret: string) => {
     return null
   }
 
-  const result = await axios.get(`${apiUrl}/${trimmedSiret}`)
+  const result = await axios.get(`${process.env.INSEE_SERVICE_URL}/${trimmedSiret}`, {
+    headers: {
+      'X-INSEE-Api-Key-Integration': process.env.INSEE_API_SECRET,
+    },
+  })
 
-  return result.data.identite?.nom as string
+  return result.data.etablissement?.uniteLegale?.denominationUniteLegale as string
 }
