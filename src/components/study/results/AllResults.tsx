@@ -4,11 +4,11 @@ import Button from '@/components/base/Button'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { hasAccessToBcExport } from '@/services/permissions/environment'
-import { AdditionalResultTypes, downloadStudyResults, ResultType } from '@/services/study'
+import { AdditionalResultTypes, downloadStudyResults, getResultsValues, ResultType } from '@/services/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import DownloadIcon from '@mui/icons-material/Download'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
-import { ControlMode, Environment, Export, ExportRule } from '@prisma/client'
+import { ControlMode, Environment, Export, ExportRule, SiteCAUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
 import SelectStudySite from '../site/SelectStudySite'
@@ -16,6 +16,7 @@ import useStudySite from '../site/useStudySite'
 import BegesResultsTable from './beges/BegesResultsTable'
 import ConsolatedBEGESDifference from './ConsolatedBEGESDifference'
 import ConsolidatedResults from './consolidated/ConsolidatedResults'
+import EmissionsAnalysis from './consolidated/EmissionsAnalysis'
 import UncertaintyAnalytics from './uncertainty/UncertaintyAnalytics'
 
 interface Props {
@@ -23,9 +24,10 @@ interface Props {
   rules: ExportRule[]
   emissionFactorsWithParts: EmissionFactorWithParts[]
   validatedOnly: boolean
+  caUnit?: SiteCAUnit
 }
 
-const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: Props) => {
+const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caUnit }: Props) => {
   const t = useTranslations('study.results')
   const tOrga = useTranslations('study.organization')
   const tPost = useTranslations('emissionFactors.post')
@@ -58,6 +60,11 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
     }
     return false
   }, [environment, exports])
+
+  const [withDepValue, withoutDepValue, monetaryRatio, nonSpecificMonetaryRatio] = useMemo(
+    () => getResultsValues(study, tPost, studySite, !!validatedOnly, study.organizationVersion.environment),
+    [study, studySite, validatedOnly],
+  )
 
   if (!environment) {
     return null
@@ -129,14 +136,25 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
       </div>
       <div className="mt1">
         {type !== Export.Beges && (
-          <ConsolidatedResults
-            study={study}
-            studySite={studySite}
-            withDependencies
-            validatedOnly={validatedOnly}
-            environment={environment}
-            type={type}
-          />
+          <>
+            <EmissionsAnalysis
+              study={study}
+              studySite={studySite}
+              withDepValue={withDepValue}
+              withoutDepValue={withoutDepValue}
+              monetaryRatio={monetaryRatio}
+              nonSpecificMonetaryRatio={nonSpecificMonetaryRatio}
+              caUnit={caUnit}
+            />
+            <ConsolidatedResults
+              study={study}
+              studySite={studySite}
+              withDependencies
+              validatedOnly={validatedOnly}
+              environment={environment}
+              type={type}
+            />
+          </>
         )}
         {type === Export.Beges && (
           <BegesResultsTable
