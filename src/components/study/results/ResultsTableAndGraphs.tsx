@@ -1,6 +1,8 @@
+import Box from '@/components/base/Box'
 import Title from '@/components/base/Title'
+import BarChartIcon from '@mui/icons-material/BarChart'
 import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined'
-import { Box, Tab, Tabs } from '@mui/material'
+import { Tab, Tabs } from '@mui/material'
 import { StudyResultUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
@@ -47,7 +49,7 @@ const ResultsTableAndGraphs = <
   }, [tabSelected, t, filteredResults, resultsUnit])
 
   return (
-    <Box className="cardContainer mt2">
+    <Box>
       <Title as="h6" title={t('tagPieChartTitle')} />
       <div className="flex flex-row justify-between align-center">
         {activeTabs.length > 1 ? (
@@ -60,7 +62,7 @@ const ResultsTableAndGraphs = <
           <div />
         )}
         <div onClick={() => setDisplayFilter(!displayFilter)} className="pointer">
-          <TuneOutlinedIcon className="flex-end" />
+          {displayFilter ? <BarChartIcon className="flex-end" /> : <TuneOutlinedIcon className="flex-end" />}
         </div>
       </div>
       <Filters setFilteredResults={setFilteredResults} results={computedResults} type="tag" display={displayFilter} />

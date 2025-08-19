@@ -1,5 +1,6 @@
 import Block from '@/components/base/Block'
 import Box from '@/components/base/Box'
+import Title from '@/components/base/Title'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
 import { ResultsByTag } from '@/services/results/consolidated'
@@ -51,40 +52,42 @@ const EmissionsAnalysis = <T extends { value: number; label: string }>({
     <Block title={t('analysis')}>
       <div className={classNames(styles.analysisContainer, 'flex')}>
         <div className="flex-col grow">
-          <h3 className="text-center mb2">{t('total')}</h3>
-          <div className={classNames(styles.gapped, 'justify-center')}>
-            <Box
-              className="pointer align-center flex-col relative"
-              color="secondary"
-              selected={displayValueWithDep}
-              onClick={() => setDisplayValueWithDep(true)}
-            >
-              <HelpOutlineOutlinedIcon
+          <Box className={classNames(styles.gapped, 'justify-center flex-col')}>
+            <Title as="h6" title={t('total')} />
+            <div className="flex-row">
+              <Box
+                className="pointer align-center flex-col relative mr1"
                 color="secondary"
-                className={`ml-4 ${styles.helpIcon} absolute r1`}
-                onClick={() => setGlossary('withDependencies')}
-              />
-              <Data
-                value={formatNumber(withDepValue)}
-                label={tResultUnits(study.resultsUnit)}
-                testId="withDep-total-result"
-              />
-              <span className="align-center text-center">{t('withDependencies')}</span>
-            </Box>
-            <Box
-              className="pointer align-center flex-col"
-              color="secondary"
-              selected={!displayValueWithDep}
-              onClick={() => setDisplayValueWithDep(false)}
-            >
-              <Data
-                value={formatNumber(withoutDepValue)}
-                label={tResultUnits(study.resultsUnit)}
-                testId="withoutDep-total-result"
-              />
-              <span className="text-center">{t('withoutDependencies')}</span>
-            </Box>
-          </div>
+                selected={displayValueWithDep}
+                onClick={() => setDisplayValueWithDep(true)}
+              >
+                <HelpOutlineOutlinedIcon
+                  color="secondary"
+                  className={`ml-4 ${styles.helpIcon} absolute r1`}
+                  onClick={() => setGlossary('withDependencies')}
+                />
+                <Data
+                  value={formatNumber(withDepValue)}
+                  label={tResultUnits(study.resultsUnit)}
+                  testId="withDep-total-result"
+                />
+                <span className="align-center text-center">{t('withDependencies')}</span>
+              </Box>
+              <Box
+                className="pointer align-center flex-col"
+                color="secondary"
+                selected={!displayValueWithDep}
+                onClick={() => setDisplayValueWithDep(false)}
+              >
+                <Data
+                  value={formatNumber(withoutDepValue)}
+                  label={tResultUnits(study.resultsUnit)}
+                  testId="withoutDep-total-result"
+                />
+                <span className="text-center">{t('withoutDependencies')}</span>
+              </Box>
+            </div>
+          </Box>
           <CarbonIntensities
             study={study}
             studySite={studySite}
@@ -95,20 +98,22 @@ const EmissionsAnalysis = <T extends { value: number; label: string }>({
           />
         </div>
         <div className="flex-col grow">
-          <h3 className="text-center mb2">{t('monetaryRatio')}</h3>
-          <div className={classNames('flex')}>
-            <Data
-              value={`${formatNumber(monetaryRatio, 2)}%`}
-              label={t('monetaryRatioEmissions')}
-              testId="results-monetary-ratio"
-            />
-            <span>{t('ofWhich')}</span>
-            <Data
-              value={`${formatNumber(nonSpecificMonetaryRatio, 2)}%`}
-              label={t('nonSpeMonetaryRatioEmissions')}
-              testId="results-non-spe-monetary-ratio"
-            />
-          </div>
+          <Box className="mb2">
+            <Title as="h6" title={t('monetaryRatio')} />
+            <div className={classNames('flex')}>
+              <Data
+                value={`${formatNumber(monetaryRatio, 2)}%`}
+                label={t('monetaryRatioEmissions')}
+                testId="results-monetary-ratio"
+              />
+              <span>{t('ofWhich')}</span>
+              <Data
+                value={`${formatNumber(nonSpecificMonetaryRatio, 2)}%`}
+                label={t('nonSpeMonetaryRatioEmissions')}
+                testId="results-non-spe-monetary-ratio"
+              />
+            </div>
+          </Box>
           <ResultsTableAndGraphs
             activeTabs={[TabsPossibilities.pieChart]}
             computedResults={computedResultsByTag}
