@@ -1,10 +1,11 @@
 import Title from '@/components/base/Title'
-import { TuneOutlined } from '@mui/icons-material'
+import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined'
 import { Box, Tab, Tabs } from '@mui/material'
 import { StudyResultUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import PieChart from '../charts/PieChart'
+import Filters from './Filters'
 
 export enum TabsPossibilities {
   table = 'table',
@@ -18,13 +19,18 @@ interface Props<T> {
   computedResults: T[]
   resultsUnit?: StudyResultUnit
 }
-const ResultsTableAndGraphs = <T extends { value: number; label: string }>({
+const ResultsTableAndGraphs = <
+  T extends { value: number; label: string; post?: string; tagFamily?: { id: string; name: string } },
+>({
   activeTabs = Object.values(TabsPossibilities),
   defaultTab = activeTabs[0],
   computedResults,
   resultsUnit,
 }: Props<T>) => {
   const [tabSelected, setTabSelected] = useState(defaultTab)
+  const [displayFilter, setDisplayFilter] = useState(false)
+  const [filteredResults, setFilteredResults] = useState(computedResults)
+
   const t = useTranslations('study.results')
 
   const TabComponent = useMemo(() => {
@@ -32,13 +38,13 @@ const ResultsTableAndGraphs = <T extends { value: number; label: string }>({
       case TabsPossibilities.table:
         return <div>{t('table')}</div>
       case TabsPossibilities.pieChart:
-        return <PieChart results={computedResults} resultsUnit={resultsUnit ?? StudyResultUnit.T} hideLegend />
+        return <PieChart results={filteredResults} resultsUnit={resultsUnit ?? StudyResultUnit.T} hideLegend />
       case TabsPossibilities.barChart:
         return <div>{t('barChart')}</div>
       default:
         return null
     }
-  }, [tabSelected, t, computedResults, resultsUnit])
+  }, [tabSelected, t, filteredResults, resultsUnit])
 
   return (
     <Box className="cardContainer mt2">
@@ -53,9 +59,12 @@ const ResultsTableAndGraphs = <T extends { value: number; label: string }>({
         ) : (
           <div />
         )}
-        <TuneOutlined className="flex-end" />
+        <div onClick={() => setDisplayFilter(!displayFilter)} className="pointer">
+          <TuneOutlinedIcon className="flex-end" />
+        </div>
       </div>
-      {TabComponent}
+      <Filters setFilteredResults={setFilteredResults} results={computedResults} type="tag" display={displayFilter} />
+      {!displayFilter && TabComponent}
     </Box>
   )
 }

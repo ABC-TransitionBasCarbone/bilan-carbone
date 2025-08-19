@@ -151,7 +151,13 @@ const EmissionSourceTags = ({ studyId }: Props) => {
               <div className="mb-2">
                 <span className="inputLabel bold">{t('color')}</span>
               </div>
-              <ColorPicker color={color} onChange={(value) => setValue('color', value)} />
+              <ColorPicker
+                color={color}
+                onChange={(value) => {
+                  console.log(value)
+                  setValue('color', value)
+                }}
+              />
             </div>
             <div className={styles.selector}>
               <FormSelect
