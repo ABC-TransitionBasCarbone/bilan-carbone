@@ -70,6 +70,7 @@ const PieChart = <T extends { value: number; label?: string; post?: string; colo
   const pieData = useMemo(
     () =>
       results
+        .filter((result) => result.post !== 'total' && result.label !== 'total')
         .map(({ value, label, post, color }) => {
           const convertedValue = value / STUDY_UNIT_VALUES[resultsUnit]
 
