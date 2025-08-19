@@ -125,6 +125,11 @@
   padding-right: 1rem;
 }
 
+.px2 {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
 .px-2 {
   padding-left: 0.5rem;
   padding-right: 0.5rem;

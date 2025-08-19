@@ -167,6 +167,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
             emissionFactorsWithParts={emissionFactorsWithParts}
             studySite={studySite}
             withDependencies={false}
+            withDepValue={withDepValue}
           />
         )}
       </div>

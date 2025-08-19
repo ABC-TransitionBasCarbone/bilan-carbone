@@ -11,6 +11,7 @@ import { ExportRule } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
+import TotalCarbonBeges from '../consolidated/TotalCarbonBeges'
 import styles from './BegesResultsTable.module.css'
 
 interface Props {
@@ -19,9 +20,17 @@ interface Props {
   emissionFactorsWithParts: EmissionFactorWithParts[]
   studySite: string
   withDependencies: boolean
+  withDepValue: number
 }
 
-const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, studySite, withDependencies }: Props) => {
+const BegesResultsTable = ({
+  study,
+  rules,
+  emissionFactorsWithParts,
+  studySite,
+  withDependencies,
+  withDepValue,
+}: Props) => {
   const t = useTranslations('beges')
   const tQuality = useTranslations('quality')
   const tUnits = useTranslations('study.results.units')
@@ -118,6 +127,11 @@ const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, studySite, 
 
   return (
     <>
+      <TotalCarbonBeges
+        resultUnit={study.resultsUnit}
+        totalBeges={(data.find((d) => d.rule === 'total')?.total ?? 0) / STUDY_UNIT_VALUES[study.resultsUnit]}
+        totalCarbon={withDepValue}
+      />
       <table className={styles.begesTable} aria-labelledby="study-rights-table-title">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
