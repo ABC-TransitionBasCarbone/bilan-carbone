@@ -23,25 +23,27 @@ describe('Register cut', () => {
     })
   })
 
-  // it('does create new cut user and organization with SIRET', () => {
-  //   cy.signupCut('cut-siret@yopmail.com', '55204944776279')
+  it('does create new cut user and organization with SIRET', () => {
+    cy.signupCut('cut-siret@yopmail.com', '55204944776279').as('signupCut')
 
-  //   cy.getByTestId('activation-form-message').should('be.visible')
-  //   cy.getByTestId('activation-form-message')
-  //     .invoke('text')
-  //     .should('include', "Vous allez recevoir un mail pour finaliser l'activation de votre compte.")
+    cy.wait('@signupCut')
 
-  //   cy.visit('http://localhost:1080')
-  //   cy.origin('http://localhost:1080', () => {
-  //     cy.get('.email-item-link')
-  //       .first()
-  //       .within(() => {
-  //         cy.get('.title')
-  //           .invoke('text')
-  //           .should('match', /Vous avez activé votre compte sur Count/)
-  //       })
-  //   })
-  // })
+    cy.getByTestId('activation-form-message').should('be.visible')
+    cy.getByTestId('activation-form-message')
+      .invoke('text')
+      .should('include', "Vous allez recevoir un mail pour finaliser l'activation de votre compte.")
+
+    cy.visit('http://localhost:1080')
+    cy.origin('http://localhost:1080', () => {
+      cy.get('.email-item-link')
+        .first()
+        .within(() => {
+          cy.get('.title')
+            .invoke('text')
+            .should('match', /Vous avez activé votre compte sur Count/)
+        })
+    })
+  })
 
   // it('does not create new user and organization when user already in environment ', () => {
   //   cy.signupCut('cut-siret@yopmail.com', '0')
