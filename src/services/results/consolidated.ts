@@ -130,7 +130,20 @@ export type ResultsByTag = {
 }
 
 export const computeResultsByTag = (
-  study: FullStudy,
+  study: {
+    emissionSources: Pick<
+      FullStudy['emissionSources'][number],
+      | 'studySite'
+      | 'validated'
+      | 'subPost'
+      | 'emissionSourceTags'
+      | 'emissionFactor'
+      | 'value'
+      | 'subPost'
+      | 'depreciationPeriod'
+    >[]
+    emissionSourceTagFamilies: FullStudy['emissionSourceTagFamilies']
+  },
   studySite: string,
   withDependencies: boolean,
   validatedOnly: boolean = true,

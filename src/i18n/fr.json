@@ -679,7 +679,7 @@
       "table": "Tableau",
       "barChart": "Graphique",
       "pieChart": "Camembert",
-      "tagPieChartTitle": "Emissions, par tag",
+      "tagPieChartTitle": "Émissions, par tag",
       "other": "Sans tag"
     },
     "pdf": {

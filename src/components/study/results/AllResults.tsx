@@ -62,15 +62,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     return false
   }, [environment, exports])
 
-  const {
-    computedResultsWithDep,
-    computedResultsWithoutDep,
-    withDepValue,
-    withoutDepValue,
-    monetaryRatio,
-    nonSpecificMonetaryRatio,
-    computedResultsByTag,
-  } = useMemo(
+  const { withDepValue, withoutDepValue, monetaryRatio, nonSpecificMonetaryRatio, computedResultsByTag } = useMemo(
     () => getResultsValues(study, tPost, studySite, !!validatedOnly, study.organizationVersion.environment),
     [study, studySite, tPost, validatedOnly],
   )
@@ -144,20 +136,20 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
         )}
       </div>
       <div className="mt1">
-        <EmissionsAnalysis
-          study={study}
-          studySite={studySite}
-          withDepValue={withDepValue}
-          withoutDepValue={withoutDepValue}
-          displayValueWithDep={displayValueWithDep}
-          setDisplayValueWithDep={setDisplayValueWithDep}
-          monetaryRatio={monetaryRatio}
-          nonSpecificMonetaryRatio={nonSpecificMonetaryRatio}
-          caUnit={caUnit}
-          computedResultsByTag={computedResultsByTag}
-        />
         {type !== Export.Beges && (
           <>
+            <EmissionsAnalysis
+              study={study}
+              studySite={studySite}
+              withDepValue={withDepValue}
+              withoutDepValue={withoutDepValue}
+              displayValueWithDep={displayValueWithDep}
+              setDisplayValueWithDep={setDisplayValueWithDep}
+              monetaryRatio={monetaryRatio}
+              nonSpecificMonetaryRatio={nonSpecificMonetaryRatio}
+              caUnit={caUnit}
+              computedResultsByTag={computedResultsByTag}
+            />
             <ConsolidatedResults
               study={study}
               studySite={studySite}
@@ -178,13 +170,15 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
           />
         )}
       </div>
-      <UncertaintyAnalytics
-        study={study}
-        studySite={studySite}
-        withDependencies
-        validatedOnly={validatedOnly}
-        environment={environment}
-      />
+      {type !== Export.Beges && (
+        <UncertaintyAnalytics
+          study={study}
+          studySite={studySite}
+          withDependencies
+          validatedOnly={validatedOnly}
+          environment={environment}
+        />
+      )}
     </Block>
   )
 }

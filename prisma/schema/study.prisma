@@ -198,7 +198,6 @@ model StudyEmissionSource {
 
   subPost         SubPost                        @map("sub_post")
   name            String
-  tag             String?
   caracterisation EmissionSourceCaracterisation?
 
   emissionFactorId String?         @map("emission_factor_id")

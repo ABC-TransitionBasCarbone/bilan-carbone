@@ -52,7 +52,7 @@ const EmissionsAnalysis = ({
         <div className="flex-col grow">
           <Box className={classNames(styles.gapped, 'justify-center flex-col')}>
             <Title as="h6" title={t('total')} />
-            <div className="flex-row">
+            <div className="flex-row justify-around">
               <Box
                 className="pointer align-center flex-col relative mr1"
                 color="secondary"

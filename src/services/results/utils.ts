@@ -1,7 +1,10 @@
 import { FullStudy } from '@/db/study'
 import { SubPost } from '@prisma/client'
 
-export const getSiteEmissionSources = (emissionSources: FullStudy['emissionSources'], studySite: string) =>
+export const getSiteEmissionSources = <T extends Pick<FullStudy['emissionSources'][number], 'studySite'>>(
+  emissionSources: T[],
+  studySite: string,
+): T[] =>
   studySite === 'all'
     ? emissionSources
     : emissionSources.filter((emissionSource) => emissionSource.studySite.id === studySite)
