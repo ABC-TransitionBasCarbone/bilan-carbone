@@ -147,10 +147,6 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
         <EmissionsAnalysis
           study={study}
           studySite={studySite}
-          computedResults={(displayValueWithDep ? computedResultsWithDep : computedResultsWithoutDep).map((result) => ({
-            label: result.post,
-            value: result.value,
-          }))}
           withDepValue={withDepValue}
           withoutDepValue={withoutDepValue}
           displayValueWithDep={displayValueWithDep}

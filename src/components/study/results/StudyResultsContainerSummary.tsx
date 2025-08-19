@@ -44,7 +44,7 @@ const StudyResultsContainerSummary = ({
 
   const isCut = useMemo(() => environment === Environment.CUT, [environment])
 
-  const [withDepValue, withoutDepValue, monetaryRatio] = useMemo(() => {
+  const [formattedWithDepValue, formattedWithoutDepValue, formattedMonetaryRatio] = useMemo(() => {
     const { withDepValue, withoutDepValue, monetaryRatio } = getResultsValues(
       study,
       tPost,
@@ -89,7 +89,7 @@ const StudyResultsContainerSummary = ({
               />
               <Box selected={withDep} color="secondary" className={classNames(styles.card, 'flex-col flex-cc pointer')}>
                 <h3 className="text-center">
-                  {withDepValue} {tResultUnits(study.resultsUnit)}
+                  {formattedWithDepValue} {tResultUnits(study.resultsUnit)}
                 </h3>
                 <span className="align-center text-center">
                   {t('results.withDependencies')}
@@ -116,13 +116,13 @@ const StudyResultsContainerSummary = ({
                 className={classNames(styles.card, 'flex-col flex-cc pointer')}
               >
                 <h3 className="text-center">
-                  {withoutDepValue} {tResultUnits(study.resultsUnit)}
+                  {formattedWithoutDepValue} {tResultUnits(study.resultsUnit)}
                 </h3>
                 <span className="text-center">{t('results.withoutDependencies')}</span>
               </Box>
             </label>
             <Box className={classNames(styles.card, styles.disabled, 'flex-col flex-cc')}>
-              <h3 className="text-center">{monetaryRatio} %</h3>
+              <h3 className="text-center">{formattedMonetaryRatio} %</h3>
               <span className="text-center align-center">
                 {t('results.monetaryRatio')}
                 <HelpIcon

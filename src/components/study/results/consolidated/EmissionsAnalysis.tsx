@@ -16,12 +16,11 @@ import ResultsTableAndGraphs, { TabsPossibilities } from '../ResultsTableAndGrap
 import CarbonIntensities from './CarbonIntensities'
 import Data from './Data'
 
-interface Props<T> {
+interface Props {
   study: FullStudy
   studySite: string
   withDepValue: number
   withoutDepValue: number
-  computedResults: T[]
   displayValueWithDep: boolean
   setDisplayValueWithDep: (displayValueWithDep: boolean) => void
   monetaryRatio: number
@@ -30,19 +29,18 @@ interface Props<T> {
   computedResultsByTag: ResultsByTag[]
 }
 
-const EmissionsAnalysis = <T extends { value: number; label: string }>({
+const EmissionsAnalysis = ({
   study,
   studySite,
   withDepValue,
   withoutDepValue,
-  computedResults,
   displayValueWithDep,
   setDisplayValueWithDep,
   monetaryRatio,
   nonSpecificMonetaryRatio,
   caUnit = SiteCAUnit.K,
   computedResultsByTag,
-}: Props<T>) => {
+}: Props) => {
   const t = useTranslations('study.results')
   const tGlossary = useTranslations('study')
   const tResultUnits = useTranslations('study.results.units')
