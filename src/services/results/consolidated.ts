@@ -135,7 +135,7 @@ export const computeResultsByTag = (
   environment: Environment,
 ): ResultsByTag[] => {
   const siteEmissionSources = getSiteEmissionSources(study.emissionSources, studySite)
-  const tags = study.emissionSourceTagFamilies
+  const tags = study.emissionSourceTagFamilies.flatMap((tagFamily) => tagFamily.emissionSourceTags)
 
   const emissionSourcesByTag = siteEmissionSources
     .filter((emissionSource) => !validatedOnly || emissionSource.validated)
@@ -161,13 +161,14 @@ export const computeResultsByTag = (
       {} as Record<string, typeof siteEmissionSources>,
     )
 
-  return [...tags, { id: 'other', name: 'other' }]
+  return [...tags, { id: 'other', name: 'other', color: '' }]
     .map((tag) => {
       const emissionSources = emissionSourcesByTag[tag.id] || []
 
       return {
         label: tag.name,
         value: getEmissionSourcesTotalCo2(emissionSources, environment),
+        color: tag.color,
       }
     })
     .filter((tag) => tag.value > 0)

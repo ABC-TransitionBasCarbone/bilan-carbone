@@ -51,7 +51,7 @@ export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll, environmen
           title={isAll ? tPdf('charts.allEmissions') : tPdf('charts.siteEmissions', { site: siteName })}
           showLabelsOnPie={true}
           skipAnimation={true}
-          results={computedResultsWithDep.map((r) => ({ label: r.post, value: r.value }))}
+          results={computedResultsWithDep}
         />
       </div>
     </div>

@@ -38,7 +38,7 @@ const ResultsTableAndGraphs = <T extends { value: number; label: string }>({
       default:
         return null
     }
-  }, [tabSelected, t])
+  }, [tabSelected, t, computedResults, resultsUnit])
 
   return (
     <Box className="cardContainer mt2">

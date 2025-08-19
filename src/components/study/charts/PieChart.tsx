@@ -7,7 +7,7 @@ import { Typography, useTheme } from '@mui/material'
 import { PieChart as MuiPieChart, PieChartProps } from '@mui/x-charts'
 import { StudyResultUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import styles from './PieChart.module.css'
 
 const PIE_CHART_CONSTANTS = {
@@ -26,7 +26,7 @@ interface Props<T> extends Omit<PieChartProps, 'series'> {
   showLabelsOnPie?: boolean
 }
 
-const PieChart = <T extends { value: number; label: string }>({
+const PieChart = <T extends { value: number; label?: string; post?: string; color?: string }>({
   resultsUnit,
   results,
   title,
@@ -40,19 +40,47 @@ const PieChart = <T extends { value: number; label: string }>({
 
   const theme = useTheme()
 
+  const getColor = useCallback(
+    (post?: string, color?: string) => {
+      if (color) {
+        return color
+      }
+      if (post && isPost(post)) {
+        return theme.custom.postColors[post].light
+      }
+      return theme.palette.primary.light
+    },
+    [theme.custom.postColors, theme.palette.primary.light],
+  )
+
+  const getLabel = useCallback(
+    (convertedValue: number, label?: string, post?: string) => {
+      let formattedLabel = ''
+      if (label) {
+        formattedLabel = label
+      } else if (post && isPost(post)) {
+        formattedLabel = tPost(post)
+      }
+
+      return `${formattedLabel} - ${formatValueAndUnit(convertedValue, tUnits(resultsUnit))}`
+    },
+    [resultsUnit, tPost, tUnits],
+  )
+
   const pieData = useMemo(
     () =>
       results
-        .map(({ value, label }) => {
+        .map(({ value, label, post, color }) => {
           const convertedValue = value / STUDY_UNIT_VALUES[resultsUnit]
+
           return {
-            label: `${tPost(label)} - ${formatValueAndUnit(convertedValue, tUnits(resultsUnit))}`,
+            label: getLabel(convertedValue, label, post),
             value: convertedValue,
-            color: isPost(label) ? theme.custom.postColors[label].light : theme.palette.primary.light,
+            color: getColor(post, color),
           }
         })
         .filter((computeResult) => computeResult.value > 0),
-    [results, resultsUnit, tPost, tUnits, theme.custom.postColors, theme.palette.primary.light],
+    [getColor, getLabel, results, resultsUnit],
   )
 
   return (

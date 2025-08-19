@@ -169,7 +169,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
               height={400}
               showTitle={false}
               showLabelsOnPie={true}
-              results={computedResultsWithDep.map((r) => ({ label: r.post, value: r.value }))}
+              results={computedResultsWithDep}
             />
           </TabPanel>
         </Box>

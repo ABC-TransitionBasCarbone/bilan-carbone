@@ -679,7 +679,8 @@
       "table": "Table",
       "barChart": "Bar Chart",
       "pieChart": "Pie Chart",
-      "tagPieChartTitle": "Emissions, by tag"
+      "tagPieChartTitle": "Emissions, by tag",
+      "other": "No tag"
     },
     "pdf": {
       "loading": "Loading data...",
