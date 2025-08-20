@@ -235,7 +235,7 @@ export const getMockeFullStudy = (overrides = {}) => ({
         site: { id: TEST_IDS.site, name: 'Test Site' },
       },
       emissionFactor: {
-        id: 'test',
+        id: TEST_IDS.emissionFactor,
         importedFrom: Import.Manual,
         status: EmissionFactorStatus.Valid,
         totalCo2: 81,

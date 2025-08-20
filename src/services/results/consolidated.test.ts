@@ -77,7 +77,6 @@ describe('consolidated function', () => {
       const study = getMockeFullStudy({ emissionSources, emissionSourceTagFamilies })
 
       const result = computeResultsByTag(study, studySite.id, false, true, Environment.BC)
-      console.log(result)
 
       expect(result).toEqual([
         {
@@ -156,7 +155,6 @@ describe('consolidated function', () => {
       const study = getMockeFullStudy({ emissionSources, emissionSourceTagFamilies })
 
       const result = computeResultsByTag(study, studySite.id, true, false, Environment.BC)
-      console.log(result)
 
       expect(result).toEqual([
         {
@@ -198,7 +196,6 @@ describe('consolidated function', () => {
       const study = getMockeFullStudy({ emissionSources, emissionSourceTagFamilies })
 
       const result = computeResultsByTag(study, studySite.id, true, false, Environment.BC)
-      console.log(result)
 
       expect(result).toEqual([])
     })
