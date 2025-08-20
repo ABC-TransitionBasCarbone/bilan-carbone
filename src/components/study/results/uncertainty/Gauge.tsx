@@ -10,7 +10,6 @@ interface Props {
 
 const UncertaintyGauge = ({ uncertainty }: Props) => {
   const t = useTranslations('study.results.uncertainties')
-  console.log(uncertainty)
 
   return (
     <>

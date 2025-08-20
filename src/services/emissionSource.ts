@@ -5,9 +5,9 @@ import {
   EmissionSourceCaracterisation,
   Environment,
   Export,
+  Import,
   StudyEmissionSource,
   SubPost,
-  Unit,
 } from '@prisma/client'
 import { StudyWithoutDetail } from './permissions/study'
 import { convertTiltSubPostToBCSubPost, Post, subPostsByPost } from './posts'
@@ -128,11 +128,11 @@ const getEmissionSourceEmission = (
 
 const getEmissionSourceMonetaryEmission = (
   emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
-  withCustom: boolean,
+  excludeManualFE: boolean,
   environment?: Environment,
 ) => {
-  const filterCustom = emissionSource?.emissionFactor?.unit === Unit.CUSTOM && !withCustom
-  if (!emissionSource.emissionFactor || !emissionSource.emissionFactor.isMonetary || filterCustom) {
+  const isSpecific = excludeManualFE && emissionSource.emissionFactor?.importedFrom === Import.Manual
+  if (!emissionSource.emissionFactor || !emissionSource.emissionFactor.isMonetary || isSpecific) {
     return null
   }
   return getEmissionSourceEmission(emissionSource, environment)
@@ -202,11 +202,12 @@ export const getEmissionSourcesTotalCo2 = (
 
 export const getEmissionSourcesTotalMonetaryCo2 = (
   emissionSources: FullStudy['emissionSources'],
-  withCustom = true,
+  excludeManualFE: boolean,
   environment?: Environment,
 ) =>
   emissionSources.reduce(
-    (sum, emissionSource) => sum + (getEmissionSourceMonetaryEmission(emissionSource, withCustom, environment) || 0),
+    (sum, emissionSource) =>
+      sum + (getEmissionSourceMonetaryEmission(emissionSource, excludeManualFE, environment) || 0),
     0,
   )
 
