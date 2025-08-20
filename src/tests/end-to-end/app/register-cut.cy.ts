@@ -6,6 +6,9 @@ describe('Register cut', () => {
   it('does create new cut user and organization with CNC', () => {
     cy.signupCut('cut-cnc@yopmail.com', '321')
 
+    cy.wait('@signupCut')
+
+
     cy.getByTestId('activation-form-message').should('be.visible')
     cy.getByTestId('activation-form-message')
       .invoke('text')
@@ -24,7 +27,7 @@ describe('Register cut', () => {
   })
 
   it('does create new cut user and organization with SIRET', () => {
-    cy.signupCut('cut-siret@yopmail.com', '55204944776279').as('signupCut')
+    cy.signupCut('cut-siret@yopmail.com', '55204944776279')
 
     cy.wait('@signupCut')
 
@@ -45,14 +48,14 @@ describe('Register cut', () => {
     })
   })
 
-  // it('does not create new user and organization when user already in environment ', () => {
-  //   cy.signupCut('cut-siret@yopmail.com', '0')
+  it('does not create new user and organization when user already in environment ', () => {
+    cy.signupCut('cut-siret@yopmail.com', '0')
 
-  //   cy.getByTestId('activation-form-message').should('be.visible')
-  //   cy.getByTestId('activation-form-message')
-  //     .invoke('text')
-  //     .should('include', 'Cet email est déjà inscrit avec un compte CUT')
-  // })
+    cy.getByTestId('activation-form-message').should('be.visible')
+    cy.getByTestId('activation-form-message')
+      .invoke('text')
+      .should('include', 'Cet email est déjà inscrit avec un compte CUT')
+  })
 
   it('does not create new cut user with wrong CNC', () => {
     cy.signupCut('cut-wrong-cnc@yopmail.com', '0')
