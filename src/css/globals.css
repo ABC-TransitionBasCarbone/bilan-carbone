@@ -235,3 +235,7 @@ table {
 .absolute {
   position: absolute;
 }
+
+.fit-content {
+  width: fit-content
+}

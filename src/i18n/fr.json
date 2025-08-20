@@ -606,15 +606,19 @@
         "cancel": "Annuler"
       },
       "family": {
+        "title": "Famille de tags",
         "add": "Ajouter un nouveau tag dans une famille",
         "name": "Libellé",
         "edit": "Renommer la famille",
         "delete": "Supprimer la famille",
         "deleteContent": "Voulez vous vraiment supprimer la famille de tags \"{name}\" ? <red>Tous ses tags associés seront supprimés de façon permanente.</red>",
-        "new": "Nouvelle famille",
+        "new": "Ajouter une famille de tag",
         "content": "Quel nom voulez vous donner à cette famille ?",
         "cancel": "Annuler",
-        "confirm": "Confirmer"
+        "confirm": "Confirmer",
+        "glossary": "Famille de tags",
+        "close": "Fermer",
+        "glossaryDescription": "Les tags et familles de tags servent à identifier vos sources d'émissions dans le but de visualiser certains résultats par la suite. <br></br>Une fois vos tags créés, vous pourrez les associer à des sources d'émissions au sein de la page \"Saisie des données\". Puis, dans la page \"Résultats\", vous pourrez visualiser les émissions dues à une famille de tags ou à un tag en particulier, mais vous ne pourrez pas visualiser les émissions de deux familles de tags en parallèle, car des double-comptes peuvent être faits entre ces deux familles de tags. <br></br>Pour donner un exemple concret, admettons qu'il existe deux familles de tags : \"Produits vendus\" et \"Publics ciblés\". Ces deux familles et les tags y appartenant vous permettrons de visualiser quelle est la répartition des émissions de votre organisation en fonction des produits vendus, et de même pour les publics ciblés"
       }
     },
     "results": {

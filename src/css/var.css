@@ -40,6 +40,10 @@
   margin-right: 1rem;
 }
 
+.mr2 {
+  margin-right: 2rem;
+}
+
 .mt-2 {
   margin-top: 0.5rem;
 }
@@ -118,6 +122,11 @@
 
 .pb-2 {
   padding-bottom: 0.5rem;
+}
+
+.px2 {
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 
 .px1 {

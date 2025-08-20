@@ -5,8 +5,11 @@ import Box from '@/components/base/Box'
 import Button from '@/components/base/Button'
 import ColorPicker from '@/components/base/ColorPicker'
 import Form from '@/components/base/Form'
+import HelpIcon from '@/components/base/HelpIcon'
+import Title from '@/components/base/Title'
 import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
+import GlossaryModal from '@/components/modals/GlossaryModal'
 import { emissionSourceTagColors } from '@/constants/emissionSourceTags'
 import { EmissionSourceTagFamilyWithTags } from '@/db/study'
 import {
@@ -19,7 +22,6 @@ import {
   NewEmissionSourceTagCommandValidation,
 } from '@/services/serverFunctions/emissionSource.command'
 import { zodResolver } from '@hookform/resolvers/zod'
-import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Cancel'
 import EditIcon from '@mui/icons-material/Edit'
 import { Chip, FormControl, MenuItem, Button as MuiButton } from '@mui/material'
@@ -41,6 +43,7 @@ const EmissionSourceTags = ({ studyId }: Props) => {
   const [tagFamilies, setTagFamilies] = useState<EmissionSourceTagFamilyWithTags[]>([])
   const [editingFamily, setEditingFamily] = useState<Partial<EmissionSourceTagFamily> | null | undefined>(null)
   const [deletingFamily, setDeletingFamily] = useState<Partial<EmissionSourceTagFamily> | null>(null)
+  const [glossary, setGlossary] = useState('')
 
   useEffect(() => {
     getEmissionSourceTags()
@@ -100,13 +103,21 @@ const EmissionSourceTags = ({ studyId }: Props) => {
   }
 
   return (
-    <Block title={t('emissionSourceTags')}>
-      <div className={classNames(styles.families, 'mb2')}>
+    <Block
+      title={
+        <>
+          {t('emissionSourceTags')}{' '}
+          {<HelpIcon label={t('family.glossary')} onClick={() => setGlossary('family.glossary')} />}
+        </>
+      }
+    >
+      <Title as="h5" className="mb-2" title={t('family.title')} />
+      <div className={classNames(styles.families, 'mb1')}>
         {tagFamilies.map((family) => (
-          <Box key={family.id}>
+          <Box key={family.id} className="fit-content mr2 px1">
             <div className="flex-col">
-              <div className={classNames(styles.gapped, 'flex')}>
-                <span className={classNames(styles.familyName, styles.gapped, 'flex bold pb-2')}>{family.name}</span>
+              <div className={classNames(styles.gapped, 'flex space-between')}>
+                <Title as="h6" className={classNames(styles.gapped, 'flex')} title={family.name} />
                 <div className="flex">
                   <MuiButton
                     className={styles.familyNameButton}
@@ -139,11 +150,11 @@ const EmissionSourceTags = ({ studyId }: Props) => {
             </div>
           </Box>
         ))}
-        <Button className={styles.addFamilyButton} onClick={() => setEditingFamily(undefined)} title={t('family.new')}>
-          <AddIcon />
-        </Button>
       </div>
-      <h3 className="mb-2">{t('family.add')}</h3>
+      <Button className={classNames(styles.addFamilyButton, 'mb2')} onClick={() => setEditingFamily(undefined)}>
+        {t('family.new')}
+      </Button>
+      <Title as="h5" className="mb-2" title={t('family.add')} />
       <Form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
         <FormControl>
           <div className={classNames(styles.gapped, 'justify-between my-2')}>
@@ -204,6 +215,11 @@ const EmissionSourceTags = ({ studyId }: Props) => {
             getEmissionSourceTags()
           }}
         />
+      )}
+      {glossary && (
+        <GlossaryModal glossary={glossary} label="post-glossary" t={t} onClose={() => setGlossary('')}>
+          {t.rich('family.glossaryDescription', { br: () => <br /> })}
+        </GlossaryModal>
       )}
     </Block>
   )

@@ -25,7 +25,7 @@ export interface Props {
   className?: string
   bold?: boolean
   descriptionColor?: string
-  fullSize: boolean
+  fullSize?: boolean
 }
 
 const Block = ({
