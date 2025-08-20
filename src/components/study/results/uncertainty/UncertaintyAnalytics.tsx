@@ -1,4 +1,4 @@
-import Block from '@/components/base/Block'
+import Title from '@/components/base/Title'
 import { FullStudy } from '@/db/study'
 import { environmentPostMapping } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
@@ -48,25 +48,26 @@ const UncertaintyAnalytics = ({ study, studySite, withDependencies, validatedOnl
   )
 
   return (
-    <Block title={t('title')} as="h4" className="flex-col my2">
+    <div className="my2">
+      <Title title={t('title')} as="h4" />
       <div className="flex-row">
-        <div className="grow">
+        <div className="grow justify-center align-center">
           <ConfidenceIntervalCharts
             confidenceInterval={confidenceInterval}
             unit={study.resultsUnit}
             percent={percent}
           />
         </div>
-        <div className="grow2 flex-row">
+        <div className="grow2 flex-row justify-center align-center">
           <div className="grow">
-            <UncertaintyGauge percent={percent} />
+            <UncertaintyGauge uncertainty={computedResults.find((res) => res.post === 'total')?.uncertainty} />
           </div>
-          <div className="grow">
+          <div className="grow justify-center align-center">
             <MostUncertainPostsChart computedResults={computedResults} />
           </div>
         </div>
       </div>
-    </Block>
+    </div>
   )
 }
 

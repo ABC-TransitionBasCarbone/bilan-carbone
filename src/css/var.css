@@ -155,3 +155,7 @@
 .r1 {
   right: 1rem;
 }
+
+.relative {
+  position: relative;
+}

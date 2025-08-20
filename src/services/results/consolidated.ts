@@ -71,10 +71,11 @@ export const computeResultsByPost = (
             ),
             monetaryValue: getEmissionSourcesTotalMonetaryCo2(
               validatedOnly ? validatedEmissionSources : emissionSources,
+              false,
             ),
             nonSpecificMonetaryValue: getEmissionSourcesTotalMonetaryCo2(
               validatedOnly ? validatedEmissionSources : emissionSources,
-              false,
+              true,
             ),
             numberOfEmissionSource: emissionSources.length,
             numberOfValidatedEmissionSource: validatedEmissionSources.length,

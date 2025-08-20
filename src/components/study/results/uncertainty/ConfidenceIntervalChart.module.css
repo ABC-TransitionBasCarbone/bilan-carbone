@@ -3,26 +3,9 @@
   height: 3rem;
 }
 
-.title {
-  width: 12rem;
-  text-align: center;
-}
-
-.titleContainer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .bar {
   height: 3rem;
-  background: repeating-linear-gradient(
-    45deg,
-    var(--mui-palette-primary-light),
-    var(--mui-palette-primary-light) 5px,
-    var(--mui-palette-secondary-main) 5px,
-    var(--mui-palette-secondary-main) 10px
-  );
+  background: repeating-linear-gradient(var(--mui-palette-secondary-main));
 }
 
 .min {
@@ -33,5 +16,5 @@
 .max {
   align-self: end;
   position: relative;
-  right: 0.5rem;
+  right: 1rem;
 }

@@ -665,7 +665,9 @@
       "noData": "No data to display",
       "uncertainties": {
         "title": "Uncertainties analytics",
-        "confidenceInterval": "95% confidence interval",
+        "confidenceIntervalTitle": "95% confidence interval",
+        "gaugeTitle": "qualitative uncertainty gauge",
+        "uncertainPostsTitle": "Posts with the greatest uncertainties within the Bilan Carbone®",
         "veryWeak": "Very weak",
         "veryStrong": "Very strong"
       },
