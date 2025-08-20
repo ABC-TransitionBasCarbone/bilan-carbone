@@ -18,5 +18,16 @@
       "contributorInvitation": "Demande de contribution sur l'étude {studyName}",
       "addedUsersByFile": "Autorisation pour l'ajout d'utilisateurs"
     }
+  },
+  "organization": {
+    "sites": {
+      "ca": "Budget ({unit})",
+      "glossary": {
+        "ca": "Budget ({unit})"
+      },
+      "validation": {
+        "ca": "Budget ({unit})"
+      }
+    }
   }
 }

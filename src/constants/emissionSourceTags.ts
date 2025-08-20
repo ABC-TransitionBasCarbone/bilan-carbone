@@ -83,12 +83,16 @@ export const emissionSourceTagMap: EmissionSourceTagMap = {
       SubPost.UsagesNumeriques,
       SubPost.ServicesEnApprocheMonetaire,
 
-      SubPost.Equipements,
-      SubPost.Informatique,
+      SubPost.EquipementsDesSalaries,
+      SubPost.ParcInformatiqueDesSalaries,
+      SubPost.EquipementsDesBenevoles,
+      SubPost.ParcInformatiqueDesBenevoles,
 
       SubPost.InvestissementsFinanciersRealises,
 
       SubPost.TeletravailSalaries,
+
+      SubPost.FroidEtClim,
     ],
     [DefaultEmissionSourceTag.PERIMETRE_BENEVOLES]: [
       SubPost.DeplacementsDomicileTravailBenevoles,

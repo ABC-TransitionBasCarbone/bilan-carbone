@@ -34,8 +34,8 @@ const SelectAccount = ({ user, userWithAccountsAndOrganizations }: Props) => {
   }
 
   return (
-    <div className="grow justify-center">
-      <Block title={t('selectAccount')} data-testid="select-account">
+    <div className="justify-center">
+      <Block title={t('selectAccount')} data-testid="select-account" fullSize={false}>
         <List>
           {userWithAccountsAndOrganizations?.accounts.map((account) => (
             <ListItem disablePadding key={account.id}>
