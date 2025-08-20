@@ -20,7 +20,7 @@ const Title = ({ title, icon, iconPosition, as, id, 'data-testid': dataTestId, e
   ) : null
 
   return (
-    <IconLabel icon={iconDiv} iconPosition={iconPosition} className={styles.title}>
+    <IconLabel icon={iconDiv} iconPosition={iconPosition} className={classNames(styles.title, 'justify-center mb1')}>
       <Title id={id} data-testid={dataTestId}>
         {title}
       </Title>

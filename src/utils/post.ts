@@ -39,7 +39,7 @@ const withInfobulleList: (Post | SubPost)[] = [
 
 export const withInfobulle = (post: Post | SubPost) => withInfobulleList.includes(post)
 
-export const isPost = (post: Post | SubPost | 'total'): post is Post => {
+export const isPost = (post: string): post is Post => {
   return post in Post
 }
 

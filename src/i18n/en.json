@@ -625,6 +625,8 @@
       "value": "Emissions ({unit})",
       "emissions": "Emissions",
       "uncertainty": "Uncertainty",
+      "bilanCarbone": "Résultats Bilan Carbone®",
+      "beges": "Résultats BEGES",
       "withDependencies": "With dependencies",
       "withoutDependencies": "Without dependencies",
       "dependencyIntensity": "Carbon intensities in dependency",
@@ -675,7 +677,12 @@
         "etp": "employee",
         "volunteer": "volunteer",
         "beneficiary": "beneficiary"
-      }
+      },
+      "table": "Table",
+      "barChart": "Bar Chart",
+      "pieChart": "Pie Chart",
+      "tagPieChartTitle": "Emissions, by tag",
+      "other": "No tag"
     },
     "pdf": {
       "loading": "Loading data...",

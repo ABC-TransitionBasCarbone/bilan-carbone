@@ -1,5 +1,17 @@
 import { FullStudy } from '@/db/study'
-import { ControlMode, Export, Import, Level, Prisma, Study, StudyResultUnit, StudyRole } from '@prisma/client'
+import {
+  ControlMode,
+  EmissionFactorStatus,
+  Export,
+  Import,
+  Level,
+  Prisma,
+  Study,
+  StudyResultUnit,
+  StudyRole,
+  SubPost,
+  Unit,
+} from '@prisma/client'
 import { mockedOrganizationVersion, mockedOrganizationVersionId } from './organization'
 import { mockedAccountId, mockedUser } from './user'
 
@@ -222,7 +234,26 @@ export const getMockeFullStudy = (overrides = {}) => ({
         id: TEST_IDS.studySite,
         site: { id: TEST_IDS.site, name: 'Test Site' },
       },
-      emissionFactor: { id: TEST_IDS.emissionFactor },
+      emissionFactor: {
+        id: TEST_IDS.emissionFactor,
+        importedFrom: Import.Manual,
+        status: EmissionFactorStatus.Valid,
+        totalCo2: 81,
+        geographicRepresentativeness: 5,
+        completeness: 5,
+        reliability: 5,
+        technicalRepresentativeness: 5,
+        temporalRepresentativeness: 5,
+        importedId: '4',
+        unit: Unit.GWH,
+        isMonetary: false,
+        source: 'Magic',
+        subPosts: [SubPost.Electricite],
+      },
+      emissionSourceTags: [],
+      validated: true,
+      subPost: SubPost.Achats,
+      depreciationPeriod: 5,
     },
   ],
   allowedUsers: [
@@ -239,5 +270,6 @@ export const getMockeFullStudy = (overrides = {}) => ({
       subPost: 'test-subpost',
     },
   ],
+  emissionSourceTagFamilies: [],
   ...overrides,
 })

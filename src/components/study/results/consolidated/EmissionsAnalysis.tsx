@@ -1,6 +1,9 @@
 import Block from '@/components/base/Block'
+import Box from '@/components/base/Box'
+import Title from '@/components/base/Title'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
+import { ResultsByTag } from '@/services/results/consolidated'
 import { formatNumber } from '@/utils/number'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import { SiteCAUnit } from '@prisma/client'
@@ -9,6 +12,7 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useState } from 'react'
 import styles from '../ResultsContainer.module.css'
+import ResultsTableAndGraphs, { TabsPossibilities } from '../ResultsTableAndGraphs'
 import CarbonIntensities from './CarbonIntensities'
 import Data from './Data'
 
@@ -17,9 +21,12 @@ interface Props {
   studySite: string
   withDepValue: number
   withoutDepValue: number
+  displayValueWithDep: boolean
+  setDisplayValueWithDep: (displayValueWithDep: boolean) => void
   monetaryRatio: number
   nonSpecificMonetaryRatio: number
   caUnit?: SiteCAUnit
+  computedResultsByTag: ResultsByTag[]
 }
 
 const EmissionsAnalysis = ({
@@ -27,9 +34,12 @@ const EmissionsAnalysis = ({
   studySite,
   withDepValue,
   withoutDepValue,
+  displayValueWithDep,
+  setDisplayValueWithDep,
   monetaryRatio,
   nonSpecificMonetaryRatio,
   caUnit = SiteCAUnit.K,
+  computedResultsByTag,
 }: Props) => {
   const t = useTranslations('study.results')
   const tGlossary = useTranslations('study')
@@ -40,32 +50,42 @@ const EmissionsAnalysis = ({
     <Block title={t('analysis')}>
       <div className={classNames(styles.analysisContainer, 'flex')}>
         <div className="flex-col grow">
-          <h3 className="text-center mb2">{t('total')}</h3>
-          <div className={classNames(styles.gapped, 'justify-center grow')}>
-            <div className="flex-col align-center">
-              <Data
-                value={formatNumber(withDepValue)}
-                label={tResultUnits(study.resultsUnit)}
-                testId="withDep-total-result"
-              />
-              <span className="align-center text-center">
-                {t('withDependencies')}
+          <Box className={classNames(styles.gapped, 'justify-center flex-col')}>
+            <Title as="h6" title={t('total')} />
+            <div className="flex-row justify-around">
+              <Box
+                className="pointer align-center flex-col relative mr1"
+                color="secondary"
+                selected={displayValueWithDep}
+                onClick={() => setDisplayValueWithDep(true)}
+              >
                 <HelpOutlineOutlinedIcon
                   color="secondary"
-                  className={`ml-4 ${styles.helpIcon}`}
+                  className={`ml-4 ${styles.helpIcon} absolute r1`}
                   onClick={() => setGlossary('withDependencies')}
                 />
-              </span>
+                <Data
+                  value={formatNumber(withDepValue)}
+                  label={tResultUnits(study.resultsUnit)}
+                  testId="withDep-total-result"
+                />
+                <span className="align-center text-center">{t('withDependencies')}</span>
+              </Box>
+              <Box
+                className="pointer align-center flex-col"
+                color="secondary"
+                selected={!displayValueWithDep}
+                onClick={() => setDisplayValueWithDep(false)}
+              >
+                <Data
+                  value={formatNumber(withoutDepValue)}
+                  label={tResultUnits(study.resultsUnit)}
+                  testId="withoutDep-total-result"
+                />
+                <span className="text-center">{t('withoutDependencies')}</span>
+              </Box>
             </div>
-            <div className="flex-col align-center">
-              <Data
-                value={formatNumber(withoutDepValue)}
-                label={tResultUnits(study.resultsUnit)}
-                testId="withoutDep-total-result"
-              />
-              <span className="text-center">{t('withoutDependencies')}</span>
-            </div>
-          </div>
+          </Box>
           <CarbonIntensities
             study={study}
             studySite={studySite}
@@ -76,20 +96,27 @@ const EmissionsAnalysis = ({
           />
         </div>
         <div className="flex-col grow">
-          <h3 className="text-center mb2">{t('monetaryRatio')}</h3>
-          <div className={classNames('flex')}>
-            <Data
-              value={`${formatNumber(monetaryRatio, 2)}%`}
-              label={t('monetaryRatioEmissions')}
-              testId="results-monetary-ratio"
-            />
-            <span>{t('ofWhich')}</span>
-            <Data
-              value={`${formatNumber(nonSpecificMonetaryRatio, 2)}%`}
-              label={t('nonSpeMonetaryRatioEmissions')}
-              testId="results-non-spe-monetary-ratio"
-            />
-          </div>
+          <Box className="mb2">
+            <Title as="h6" title={t('monetaryRatio')} />
+            <div className={classNames('flex')}>
+              <Data
+                value={`${formatNumber(monetaryRatio, 2)}%`}
+                label={t('monetaryRatioEmissions')}
+                testId="results-monetary-ratio"
+              />
+              <span>{t('ofWhich')}</span>
+              <Data
+                value={`${formatNumber(nonSpecificMonetaryRatio, 2)}%`}
+                label={t('nonSpeMonetaryRatioEmissions')}
+                testId="results-non-spe-monetary-ratio"
+              />
+            </div>
+          </Box>
+          <ResultsTableAndGraphs
+            activeTabs={[TabsPossibilities.pieChart]}
+            computedResults={computedResultsByTag}
+            resultsUnit={study.resultsUnit}
+          />
         </div>
       </div>
       {glossary && (

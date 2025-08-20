@@ -625,6 +625,8 @@
       "value": "Émissions ({unit})",
       "emissions": "Émissions",
       "uncertainty": "Incertitude",
+      "bilanCarbone": "Résultats Bilan Carbone®",
+      "beges": "Résultats BEGES",
       "withDependencies": "Avec le sous-poste 'Utilisation en dépendance'",
       "withoutDependencies": "Sans le sous-poste 'Utilisation en dépendance'",
       "dependencyIntensity": "Intensités carbone en dépendance",
@@ -675,7 +677,12 @@
         "etp": "salarié",
         "volunteer": "volontaire",
         "beneficiary": "bénéficiaire"
-      }
+      },
+      "table": "Tableau",
+      "barChart": "Graphique",
+      "pieChart": "Camembert",
+      "tagPieChartTitle": "Émissions, par tag",
+      "other": "Sans tag"
     },
     "pdf": {
       "loading": "Chargement des données...",

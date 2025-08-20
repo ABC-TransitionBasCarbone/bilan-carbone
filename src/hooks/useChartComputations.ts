@@ -2,7 +2,7 @@ import { FullStudy } from '@/db/study'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import { filterWithDependencies } from '@/services/results/utils'
 import { ResultType } from '@/services/study'
-import { formatNumber } from '@/utils/number'
+import { formatValueAndUnit } from '@/utils/charts'
 import { getPostValues } from '@/utils/post'
 import { Environment, SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -37,9 +37,7 @@ export const useChartComputations = ({
 
   const chartFormatter = useCallback(
     (value: number | null, showUnit = true) => {
-      const safeValue = value ?? 0
-      const unit = showUnit ? tUnits(study.resultsUnit) : ''
-      return `${formatNumber(safeValue, 2)} ${unit}`
+      return formatValueAndUnit(value, showUnit ? tUnits(study.resultsUnit) : '')
     },
     [study.resultsUnit, tUnits],
   )

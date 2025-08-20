@@ -1,3 +1,4 @@
+import Box from '@/components/base/Box'
 import { FullStudy } from '@/db/study'
 import { CA_UNIT_VALUES } from '@/utils/number'
 import { Environment, SiteCAUnit } from '@prisma/client'
@@ -49,7 +50,7 @@ const CarbonIntensities = ({ study, studySite, withDep, withoutDep, caUnit, setG
   }
 
   return (
-    <div className="flex-col mt3">
+    <Box className="flex-col mt3">
       <div className="flex grow">
         <div className="grow justify-center">
           <span className="text-center bold">{t('dependencyIntensity')}</span>
@@ -99,7 +100,7 @@ const CarbonIntensities = ({ study, studySite, withDep, withoutDep, caUnit, setG
           )}
         </>
       )}
-    </div>
+    </Box>
   )
 }
 

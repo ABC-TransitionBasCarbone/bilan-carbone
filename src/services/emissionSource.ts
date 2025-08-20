@@ -103,7 +103,10 @@ const getAlpha = (emission: number | null, confidenceInterval: number[] | null) 
 }
 
 const getEmissionSourceEmission = (
-  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
+  emissionSource: Pick<
+    (FullStudy | StudyWithoutDetail)['emissionSources'][number],
+    'emissionFactor' | 'value' | 'subPost' | 'depreciationPeriod'
+  >,
   environment?: Environment,
 ) => {
   if (!emissionSource.emissionFactor || emissionSource.value === null) {
@@ -186,7 +189,10 @@ export const sumEmissionSourcesUncertainty = (
 }
 
 export const getEmissionSourcesTotalCo2 = (
-  emissionSources: FullStudy['emissionSources'],
+  emissionSources: Pick<
+    FullStudy['emissionSources'][number],
+    'emissionFactor' | 'value' | 'subPost' | 'depreciationPeriod'
+  >[],
   environment: Environment | undefined,
 ) =>
   emissionSources.reduce(

@@ -43,7 +43,7 @@ export const computeResultsByPost = (
   postValues: typeof Post | typeof CutPost | typeof BCPost | typeof TiltPost = BCPost,
   environment: Environment | undefined,
   type?: ResultType,
-) => {
+): ResultsByPost[] => {
   const siteEmissionSources = getSiteEmissionSources(study.emissionSources, studySite)
   const convertToBc = type === AdditionalResultTypes.CONSOLIDATED && environment !== Environment.BC
   const convertedSiteEmissionSources = convertToBc
@@ -120,4 +120,74 @@ export const computeResultsByPost = (
       numberOfValidatedEmissionSource: postInfos.reduce((acc, post) => acc + post.numberOfValidatedEmissionSource, 0),
     } as ResultsByPost,
   ]
+}
+
+export type ResultsByTag = {
+  label: string
+  value: number
+  tagFamily: { id: string; name: string }
+  color: string
+}
+
+export const computeResultsByTag = (
+  study: {
+    emissionSources: Pick<
+      FullStudy['emissionSources'][number],
+      | 'studySite'
+      | 'validated'
+      | 'subPost'
+      | 'emissionSourceTags'
+      | 'emissionFactor'
+      | 'value'
+      | 'subPost'
+      | 'depreciationPeriod'
+    >[]
+    emissionSourceTagFamilies: FullStudy['emissionSourceTagFamilies']
+  },
+  studySite: string,
+  withDependencies: boolean,
+  validatedOnly: boolean = true,
+  environment: Environment,
+): ResultsByTag[] => {
+  const siteEmissionSources = getSiteEmissionSources(study.emissionSources, studySite)
+  const tags = study.emissionSourceTagFamilies.flatMap((tagFamily) =>
+    tagFamily.emissionSourceTags.map((tag) => ({ ...tag, tagFamily: { id: tagFamily.id, name: tagFamily.name } })),
+  )
+
+  const emissionSourcesByTag = siteEmissionSources
+    .filter((emissionSource) => !validatedOnly || emissionSource.validated)
+    .filter((emissionSource) => filterWithDependencies(emissionSource.subPost, withDependencies))
+    .reduce(
+      (acc, emissionSource) => {
+        if (!emissionSource.emissionSourceTags || emissionSource.emissionSourceTags.length === 0) {
+          if (!acc['other']) {
+            acc['other'] = []
+          }
+          acc['other'].push(emissionSource)
+          return acc
+        }
+
+        emissionSource.emissionSourceTags.forEach((tag) => {
+          if (!acc[tag.id]) {
+            acc[tag.id] = []
+          }
+          acc[tag.id].push(emissionSource)
+        })
+        return acc
+      },
+      {} as Record<string, typeof siteEmissionSources>,
+    )
+
+  return [...tags, { id: 'other', name: 'other', color: null, tagFamily: { name: 'other', id: 'other' } }]
+    .map((tag) => {
+      const emissionSources = emissionSourcesByTag[tag.id] || []
+
+      return {
+        label: tag.name,
+        tagFamily: tag.tagFamily,
+        value: getEmissionSourcesTotalCo2(emissionSources, environment),
+        color: tag.color ?? '',
+      }
+    })
+    .filter((tag) => tag.value > 0)
 }
