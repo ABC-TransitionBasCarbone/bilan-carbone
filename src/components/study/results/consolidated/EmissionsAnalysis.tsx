@@ -51,7 +51,7 @@ const EmissionsAnalysis = ({
       <div className={classNames(styles.analysisContainer, 'flex')}>
         <div className="flex-col grow">
           <Box className={classNames(styles.gapped, 'justify-center flex-col')}>
-            <Title as="h6" title={t('total')} />
+            <Title as="h6" title={t('total')} className="justify-center" />
             <div className="flex-row justify-around">
               <Box
                 className="pointer align-center flex-col relative mr1"
@@ -97,7 +97,7 @@ const EmissionsAnalysis = ({
         </div>
         <div className="flex-col grow">
           <Box className="mb2">
-            <Title as="h6" title={t('monetaryRatio')} />
+            <Title as="h6" title={t('monetaryRatio')} className="justify-center" />
             <div className={classNames('flex')}>
               <Data
                 value={`${formatNumber(monetaryRatio, 2)}%`}

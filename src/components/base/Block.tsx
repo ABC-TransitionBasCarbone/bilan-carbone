@@ -25,6 +25,7 @@ export interface Props {
   className?: string
   bold?: boolean
   descriptionColor?: string
+  fullSize?: boolean
 }
 
 const Block = ({
@@ -41,6 +42,7 @@ const Block = ({
   className,
   bold,
   descriptionColor,
+  fullSize = true,
   ...rest
 }: Props) => {
   const titleDiv = (
@@ -56,7 +58,7 @@ const Block = ({
   )
 
   return (
-    <div className={classNames('main-container grow', styles.block)} {...rest}>
+    <div className={classNames('main-container', styles.block, { grow: fullSize })} {...rest}>
       <div className={classNames(styles.content, className)}>
         {actions ? (
           <div className={classNames(styles.header, 'align-center justify-between', bold && 'bold')}>

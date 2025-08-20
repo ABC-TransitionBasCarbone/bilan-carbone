@@ -1,12 +1,5 @@
 .families {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-  align-items: stretch;
-  gap: 1rem;
-}
-
-.familyName {
-  font-size: 2rem;
+  display: flex;
 }
 
 .familyNameButton {
@@ -16,7 +9,6 @@
 
 .addFamilyButton {
   height: 2.5rem;
-  max-width: 3rem;
 }
 
 .tags {
