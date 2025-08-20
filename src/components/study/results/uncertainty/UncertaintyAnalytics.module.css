@@ -1,0 +1,15 @@
+
+.title {
+  width: 12rem;
+  text-align: center;
+  color: var(--mui-palette-text-primary);
+}
+
+.titleContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  bottom: 3rem;
+  width: 33.33%;
+}

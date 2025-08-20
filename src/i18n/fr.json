@@ -665,9 +665,11 @@
       "noData": "Aucune donnée à afficher",
       "uncertainties": {
         "title": "Analyse des incertitudes",
-        "confidenceInterval": "Intervalle de confiance à 95%",
+        "confidenceIntervalTitle": "Intervalle de confiance à 95%",
+        "gaugeTitle": "Jauge d'incertitude qualitative",
+        "uncertainPostsTitle": "Postes ayant les plus grandes incertitudes",
         "veryWeak": "Très faible",
-        "veryStrong": "Très fort"
+        "veryStrong": "Très forte"
       },
       "analysis": "Analyse des émissions",
       "total": "Total des émissions",

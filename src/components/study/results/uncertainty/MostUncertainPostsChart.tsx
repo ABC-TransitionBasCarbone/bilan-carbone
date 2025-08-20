@@ -6,6 +6,7 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import PostIcon from '../../infography/icons/PostIcon'
 import styles from './MostUncertainPostsChart.module.css'
+import commonStyles from './UncertaintyAnalytics.module.css'
 
 interface Props {
   computedResults: ResultsByPost[]
@@ -14,10 +15,17 @@ interface Props {
 const MostUncertainPostsChart = ({ computedResults }: Props) => {
   const t = useTranslations('emissionFactors.post')
   const tQuality = useTranslations('quality')
+  const tUncertainties = useTranslations('study.results.uncertainties')
 
   const threeMostUncertainPosts = computedResults
     .sort((a, b) => {
       if (!a.uncertainty || !b.uncertainty) {
+        if (!a.uncertainty && b.uncertainty) {
+          return 1
+        }
+        if (a.uncertainty && !b.uncertainty) {
+          return -1
+        }
         return 0
       }
       return b.uncertainty - a.uncertainty
@@ -45,6 +53,11 @@ const MostUncertainPostsChart = ({ computedResults }: Props) => {
       <div className="flex-row grow">
         <PostInfo post={threeMostUncertainPosts[1]} />
         <PostInfo post={threeMostUncertainPosts[2]} />
+      </div>
+      <div className={classNames(commonStyles.titleContainer, 'mt1')}>
+        <div className={classNames(commonStyles.title, 'grow')}>
+          <p className="bold">{tUncertainties('uncertainPostsTitle')}</p>
+        </div>
       </div>
     </div>
   )
