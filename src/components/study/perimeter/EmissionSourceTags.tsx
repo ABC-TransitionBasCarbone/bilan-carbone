@@ -111,7 +111,7 @@ const EmissionSourceTags = ({ studyId }: Props) => {
         </>
       }
     >
-      <Title as="h5" className="mb-2" title={t('family.title')} />
+      <Title as="h5" className="mb-2 flex-start" title={t('family.title')} />
       <div className={classNames(styles.families, 'mb1')}>
         {tagFamilies.map((family) => (
           <Box key={family.id} className="fit-content mr2 px1">

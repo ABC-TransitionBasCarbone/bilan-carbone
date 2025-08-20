@@ -50,7 +50,7 @@ const ResultsTableAndGraphs = <
 
   return (
     <Box>
-      <Title as="h6" title={t('tagPieChartTitle')} />
+      <Title as="h6" title={t('tagPieChartTitle')} className="justify-center" />
       <div className="flex flex-row justify-between align-center">
         {activeTabs.length > 1 ? (
           <Tabs value={tabSelected} onChange={(_e, v) => setTabSelected(v)}>
