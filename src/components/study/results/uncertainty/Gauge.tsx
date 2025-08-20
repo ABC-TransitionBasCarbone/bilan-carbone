@@ -1,3 +1,4 @@
+import { uncertaintyValues } from '@/services/uncertainty'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import GaugeCharts from 'react-gauge-chart'
@@ -10,13 +11,14 @@ interface Props {
 
 const UncertaintyGauge = ({ uncertainty }: Props) => {
   const t = useTranslations('study.results.uncertainties')
+  const arcLength = [...uncertaintyValues, 3]
 
   return (
     <>
       <GaugeCharts
         id="uncertainty-gauge"
-        percent={(uncertainty ?? 0) / (1.1119 + 1.2621 + 1.6361 + 2.5164 + 3)}
-        arcsLength={[1.1199, 1.2621, 1.6361, 2.5164, 3]}
+        percent={(uncertainty ?? 0) / arcLength.reduce((acc, current) => acc + current, 0)}
+        arcsLength={arcLength}
         colors={['#adc5f8', '#709af3', '#346fef', '#244da7', '#142c5f']}
         animate={false}
         arcPadding={0.02}

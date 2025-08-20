@@ -79,14 +79,15 @@ export const getQualityStandardDeviation = (quality: Quality) => {
   return qualities.length > 0 ? sumQualities(qualities) : null
 }
 
+export const uncertaintyValues = [1.1199, 1.2621, 1.6361, 2.5164]
 export const getStandardDeviationRating = (standardDeviation: number) => {
-  if (standardDeviation < 1.1199) {
+  if (standardDeviation < uncertaintyValues[0]) {
     return 5
-  } else if (standardDeviation < 1.2621) {
+  } else if (standardDeviation < uncertaintyValues[1]) {
     return 4
-  } else if (standardDeviation < 1.6361) {
+  } else if (standardDeviation < uncertaintyValues[2]) {
     return 3
-  } else if (standardDeviation < 2.5164) {
+  } else if (standardDeviation < uncertaintyValues[3]) {
     return 2
   } else {
     return 1
