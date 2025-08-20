@@ -8,7 +8,6 @@ describe('Register cut', () => {
 
     cy.wait('@signupCut')
 
-
     cy.getByTestId('activation-form-message').should('be.visible')
     cy.getByTestId('activation-form-message')
       .invoke('text')
