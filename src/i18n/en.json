@@ -760,7 +760,7 @@
       "notAuthorized": "Action not authorized",
       "removeDocument": "Remove mapping",
       "Not authorized": "You are not allowed to do this action",
-      "info": "You can download a sample flow mapping to help you build your own. Afterwards, if you wish to submit your flow mapping so that other users can use it as an example and help other associations, please send it to <mail>methodologie@abc-transitionbascarbone.fr</mail>",
+      "info": "You can download a sample flow mapping to help you build your own. Afterwards, if you wish to submit your flow mapping so that other users can use it as an example and help other organizations, please send it to <mail>methodologie@abc-transitionbascarbone.fr</mail>",
       "downloadSample": "Download sample"
     },
     "dependencyMatrix": {
@@ -775,7 +775,7 @@
       "notAuthorized": "Action not authorized",
       "removeDocument": "Remove risk and dependency matrix",
       "Not authorized": "You are not allowed to do this action",
-      "info": "You can download a sample risk and dependency matrix to help you build your own. Afterwards, if you wish to submit your own matrix to help other associations by providing a working base, please send it to <mail>methodologie@abc-transitionbascarbone.fr</mail>",
+      "info": "You can download a sample risk and dependency matrix to help you build your own. Afterwards, if you wish to submit your own matrix to help other organizations by providing a working base, please send it to <mail>methodologie@abc-transitionbascarbone.fr</mail>",
       "downloadSample": "Download sample"
     },
     "delete": {
