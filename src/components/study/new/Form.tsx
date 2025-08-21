@@ -37,8 +37,10 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudy
     team: true,
     contributors: true,
   })
+  const [loading, setLoading] = useState(false)
 
   const onSubmit = async (command: CreateStudyCommand) => {
+    setLoading(true)
     const serverFunction = duplicateStudyId
       ? () => duplicateStudyCommand(duplicateStudyId, command, inviteOptions.team, inviteOptions.contributors)
       : () => createStudyCommand(command)
@@ -49,6 +51,7 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudy
         router.refresh()
       },
       getErrorMessage: (error) => tError(error),
+      onError: () => setLoading(false),
     })
   }
 
@@ -101,7 +104,7 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudy
             setInviteOptions={setInviteOptions}
           />
         )}
-        <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="new-study-create-button">
+        <LoadingButton type="submit" loading={loading} data-testid="new-study-create-button">
           {duplicateStudyId ? t('duplicate') : t('create')}
         </LoadingButton>
       </Form>

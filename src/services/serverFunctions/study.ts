@@ -24,7 +24,7 @@ import {
   getEmissionFactorVersionsBySource,
   getStudyEmissionFactorSources,
 } from '@/db/emissionFactors'
-import { createEmissionSourceTagFamilyAndRelatedTags } from '@/db/emissionSource'
+import { createEmissionSourceTagFamilyAndRelatedTags, getFamilyTagsForStudy } from '@/db/emissionSource'
 import {
   getOrganizationVersionById,
   getOrganizationWithSitesById,
@@ -1253,6 +1253,8 @@ export const duplicateStudyCommand = async (
       session.user.environment,
     )
 
+    const oldTagFamilies = await getFamilyTagsForStudy(sourceStudy.id)
+
     const sourceEmissionSources = sourceStudy.emissionSources
     for (const sourceEmissionSource of sourceEmissionSources) {
       const sourceSiteId = sourceEmissionSource.studySite.site.id
@@ -1290,9 +1292,10 @@ export const duplicateStudyCommand = async (
           validated: false,
           emissionSourceTags: {
             connect: sourceEmissionSource.emissionSourceTags
-              .map((emissionSourcetag) => {
-                const foundTagFamily = tagFamilies.find((tagFamily) => tagFamily.name === emissionSourcetag.name)
-                const foundTag = foundTagFamily?.emissionSourceTags.find((tag) => tag.name === emissionSourcetag.name)
+              .map((emissionSourceTag) => {
+                const oldTagFamily = oldTagFamilies.find((tagFamily) => tagFamily.id === emissionSourceTag.familyId)
+                const foundTagFamily = tagFamilies.find((tagFamily) => tagFamily.name === oldTagFamily?.name)
+                const foundTag = foundTagFamily?.emissionSourceTags.find((tag) => tag.name === emissionSourceTag.name)
 
                 if (!foundTag) {
                   return null

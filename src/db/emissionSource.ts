@@ -9,6 +9,12 @@ export const createEmissionSourceOnStudy = (emissionSource: Prisma.StudyEmission
     data: emissionSource,
   })
 
+export const getFamilyTagsForStudy = (studyId: string) =>
+  prismaClient.emissionSourceTagFamily.findMany({
+    where: { studyId },
+    select: { id: true, name: true, emissionSourceTags: { select: { id: true, name: true } } },
+  })
+
 export const updateEmissionSourceOnStudy = (
   id: string,
   emissionSource: Omit<Prisma.StudyEmissionSourceUpdateInput, 'id'>,
