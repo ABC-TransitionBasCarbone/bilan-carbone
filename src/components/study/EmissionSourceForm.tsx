@@ -184,7 +184,13 @@ const EmissionSourceForm = ({
       <p className={classNames(styles.subTitle, 'mt1 mb-2 justify-between')}>
         {t('mandartoryFields')}
         {hasEditionRights(userRoleOnStudy) && (
-          <Button onClick={() => setOpen(true)} title={t('duplicate')} aria-label={t('duplicate')} color="secondary">
+          <Button
+            onClick={() => setOpen(true)}
+            title={t('duplicate')}
+            aria-label={t('duplicate')}
+            color="secondary"
+            data-test-id="duplicate-emission-source"
+          >
             <CopyIcon />
           </Button>
         )}
@@ -536,7 +542,9 @@ const EmissionSourceForm = ({
         </div>
         <div className={classNames(styles.gapped, 'grow justify-end mt1')}>
           <Button onClick={() => setOpen(false)}>{t('duplicateDialog.cancel')}</Button>
-          <Button onClick={duplicateEmissionSource}>{t('duplicateDialog.confirm')}</Button>
+          <Button onClick={duplicateEmissionSource} data-test-id="duplicate-confirm">
+            {t('duplicateDialog.confirm')}
+          </Button>
         </div>
       </Modal>
     </>
