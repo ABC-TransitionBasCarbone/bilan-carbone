@@ -19,8 +19,8 @@ const TotalCarbonBeges = ({ totalCarbon, totalBeges, resultUnit }: Props) => {
   return (
     <div className={classNames(styles.gapped, 'justify-center flex-col mb2')}>
       <Title as="h6" title={t('total')} />
-      <div className="flex-row justify-around">
-        <Box className="px2 pointer align-center flex-col relative mr1" color="secondary">
+      <div className={classNames(styles.totalBegesGrid)}>
+        <Box className="px2 pointer align-center flex-col relative" color="secondary">
           <Data value={formatNumber(totalCarbon)} label={tResultUnits(resultUnit)} testId="withDep-total-result" />
           <span className="align-center text-center">{t('bilanCarbone')}</span>
         </Box>

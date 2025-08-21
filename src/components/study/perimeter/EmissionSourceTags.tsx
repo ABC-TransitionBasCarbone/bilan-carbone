@@ -116,8 +116,8 @@ const EmissionSourceTags = ({ studyId }: Props) => {
         {tagFamilies.map((family) => (
           <Box key={family.id} className="fit-content mr2 px1">
             <div className="flex-col">
-              <div className={classNames(styles.gapped, 'flex space-between')}>
-                <Title as="h6" className={classNames(styles.gapped, 'flex')} title={family.name} />
+              <div className="flex justify-between align-center mb1">
+                <Title as="h6" className="flex mb0" title={family.name} />
                 <div className="flex">
                   <MuiButton
                     className={styles.familyNameButton}
