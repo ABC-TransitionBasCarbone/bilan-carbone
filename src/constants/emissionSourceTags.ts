@@ -85,8 +85,6 @@ export const emissionSourceTagMap: EmissionSourceTagMap = {
 
       SubPost.EquipementsDesSalaries,
       SubPost.ParcInformatiqueDesSalaries,
-      SubPost.EquipementsDesBenevoles,
-      SubPost.ParcInformatiqueDesBenevoles,
 
       SubPost.InvestissementsFinanciersRealises,
 
@@ -99,6 +97,9 @@ export const emissionSourceTagMap: EmissionSourceTagMap = {
       SubPost.DeplacementsDansLeCadreDUneMissionAssociativeBenevoles,
       SubPost.RepasPrisParLesBenevoles,
       SubPost.TeletravailBenevoles,
+
+      SubPost.EquipementsDesBenevoles,
+      SubPost.ParcInformatiqueDesBenevoles,
     ],
     [DefaultEmissionSourceTag.PERIMETRE_BENEFICIAIRES]: [
       SubPost.DeplacementsDesBeneficiaires,

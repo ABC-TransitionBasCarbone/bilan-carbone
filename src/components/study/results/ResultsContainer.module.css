@@ -90,3 +90,10 @@
     flex-direction: column;
   }
 }
+
+.totalBegesGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 17rem);
+  gap: 2rem;
+  justify-content: center;
+}

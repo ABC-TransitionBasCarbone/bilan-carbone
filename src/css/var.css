@@ -24,6 +24,10 @@
   margin-bottom: 1rem;
 }
 
+.mb0 {
+  margin-bottom: 0rem;
+}
+
 .mb-2 {
   margin-bottom: 0.5rem;
 }
