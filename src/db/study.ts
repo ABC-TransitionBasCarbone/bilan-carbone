@@ -530,8 +530,24 @@ export const deleteStudy = async (id: string) => {
   return prismaClient.$transaction(async (transaction) => {
     const studySites = await getStudySites(id)
 
+    const tagFamilies = await transaction.emissionSourceTagFamily.findMany({
+      where: { studyId: id },
+      select: { id: true },
+    })
+
+    await Promise.all(
+      tagFamilies.map((tagFamily) => {
+        transaction.emissionSourceTagFamily.update({
+          where: { id: tagFamily.id },
+          data: { emissionSourceTags: undefined },
+        })
+      }),
+    )
+
     await Promise.all([
       transaction.userOnStudy.deleteMany({ where: { studyId: id } }),
+      transaction.emissionSourceTag.deleteMany({ where: { familyId: { in: tagFamilies.map((f) => f.id) } } }),
+      transaction.emissionSourceTagFamily.deleteMany({ where: { studyId: id } }),
       transaction.studyEmissionSource.deleteMany({ where: { studyId: id } }),
       transaction.contributors.deleteMany({ where: { studyId: id } }),
       transaction.studySite.deleteMany({ where: { studyId: id } }),
