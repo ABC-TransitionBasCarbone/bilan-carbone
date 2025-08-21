@@ -1,7 +1,7 @@
 {
   "login": {
     "form": {
-      "activate": "Créer mon compte"
+      "activate": "Create my account"
     }
   },
   "exports": {
@@ -9,10 +9,10 @@
   },
   "email": {
     "subject": {
-      "newUser": "Vous avez été invité sur Tilt",
-      "addedActiveUser": "Vous avez été invité sur un nouvel environnement Tilt",
-      "activation": "Vous avez activé votre compte sur Tilt",
-      "activationRequest": "Demande d'accès à votre organisation Tilt"
+      "newUser": "You have been invited on Tilt",
+      "addedActiveUser": "You have been invited on a new environment Tilt",
+      "activation": "You have activated you account on Tilt",
+      "activationRequest": "Access request to your Tilt organization"
     }
   },
   "organization": {

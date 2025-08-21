@@ -2,7 +2,9 @@
 // from the doc https://github.com/lo1tuma/eslint-plugin-mocha/blob/main/docs/rules/no-setup-in-describe.md
 // if you're using dynamically generated tests, you should disable this rule.
 import { expect } from '@jest/globals'
+import enTILT from './en-tilt.json'
 import en from './en.json'
+import frTILT from './fr-tilt.json'
 import fr from './fr.json'
 
 type Translation = { [k: string]: string | Translation }
@@ -24,4 +26,6 @@ const checkKeys = (translationA: Translation, translationB: Translation, path: s
 describe('Translations', () => {
   checkKeys(en, fr, [], 'fr')
   checkKeys(fr, en, [], 'en')
+  checkKeys(frTILT, enTILT, [], 'en-tilt')
+  checkKeys(enTILT, frTILT, [], 'fr-tilt')
 })
