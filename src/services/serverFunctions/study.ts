@@ -1413,6 +1413,7 @@ export const duplicateStudyEmissionSource = async (
       studySite: { connect: { id: studySite } },
       studySiteId: undefined,
       validated: false,
+      emissionSourceTags: { connect: emissionSource.emissionSourceTags.map((tag) => ({ id: tag.id })) },
     } as Prisma.StudyEmissionSourceCreateInput
 
     await createStudyEmissionSource(data)
