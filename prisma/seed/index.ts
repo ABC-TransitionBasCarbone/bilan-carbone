@@ -1,3 +1,4 @@
+import { defaultEmissionSourceTags } from '@/constants/emissionSourceTags'
 import { environmentsWithChecklist } from '@/constants/environments'
 import { reCreateBegesRules } from '@/db/beges'
 import { signPassword } from '@/services/auth'
@@ -832,6 +833,19 @@ const users = async () => {
             data: [{ role: StudyRole.Validator, accountId: defaultUserWithAccount.accounts[0].account.id }],
           },
         },
+        emissionSourceTagFamilies: {
+          create: [
+            {
+              name: 'défaut',
+              emissionSourceTags: {
+                create: (defaultEmissionSourceTags[Environment.TILT] ?? []).map((tag) => ({
+                  name: tag.name,
+                  color: tag.color,
+                })),
+              },
+            },
+          ],
+        },
       },
     }),
   )
@@ -873,7 +887,7 @@ program
   .option('-i, --import-factors <value>', 'Import BaseCarbone emission factors')
   .parse(process.argv)
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
   main(program.opts())
     .then(async () => {
       await prisma.$disconnect()
