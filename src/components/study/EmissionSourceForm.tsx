@@ -154,7 +154,12 @@ const EmissionSourceForm = ({
   const getEmissionSourceTags = async () => {
     const response = await getEmissionSourceTagsByStudyId(studyId)
     if (response.success && response.data) {
-      setTags(response.data.reduce((tags, family) => tags.concat(family.emissionSourceTags), [] as EmissionSourceTag[]))
+      setTags(
+        response.data.reduce(
+          (tags, family) => tags.concat(family.emissionSourceTags).sort((a, b) => a.name.localeCompare(b.name)),
+          [] as EmissionSourceTag[],
+        ),
+      )
     }
   }
 
@@ -189,7 +194,7 @@ const EmissionSourceForm = ({
             title={t('duplicate')}
             aria-label={t('duplicate')}
             color="secondary"
-            data-test-id="duplicate-emission-source"
+            data-testid="duplicate-emission-source"
           >
             <CopyIcon />
           </Button>
@@ -419,7 +424,7 @@ const EmissionSourceForm = ({
 
               return (
                 <li key={key} {...optionProps}>
-                  <Chip label={option.label} size="small" sx={{ bgcolor: option.color }} />
+                  <Chip label={option.label} size="small" sx={{ bgcolor: option.color }} data-testid="tag-option" />
                 </li>
               )
             }}
@@ -542,7 +547,7 @@ const EmissionSourceForm = ({
         </div>
         <div className={classNames(styles.gapped, 'grow justify-end mt1')}>
           <Button onClick={() => setOpen(false)}>{t('duplicateDialog.cancel')}</Button>
-          <Button onClick={duplicateEmissionSource} data-test-id="duplicate-confirm">
+          <Button onClick={duplicateEmissionSource} data-testid="duplicate-confirm">
             {t('duplicateDialog.confirm')}
           </Button>
         </div>

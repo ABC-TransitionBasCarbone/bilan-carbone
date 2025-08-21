@@ -798,6 +798,19 @@ const users = async () => {
         contributors: {
           create: { accountId: contributor.id, subPost: SubPost.MetauxPlastiquesEtVerre },
         },
+        emissionSourceTagFamilies: {
+          create: [
+            {
+              name: 'défaut',
+              emissionSourceTags: {
+                create: (defaultEmissionSourceTags[Environment.TILT] ?? []).map((tag) => ({
+                  name: tag.name,
+                  color: tag.color,
+                })),
+              },
+            },
+          ],
+        },
       },
     }),
   )
