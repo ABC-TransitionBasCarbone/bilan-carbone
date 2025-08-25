@@ -587,6 +587,7 @@ export const getResultsValues = (
   studySite: string,
   validatedOnly: boolean,
   environment: Environment,
+  tStudyResults: ReturnType<typeof useTranslations>,
   withDependencies: boolean = true,
 ) => {
   const computedResultsWithDep = computeResultsByPost(
@@ -608,7 +609,14 @@ export const getResultsValues = (
     environment,
   )
 
-  const computedResultsByTag = computeResultsByTag(study, studySite, withDependencies, validatedOnly, environment)
+  const computedResultsByTag = computeResultsByTag(
+    study,
+    studySite,
+    withDependencies,
+    validatedOnly,
+    environment,
+    tStudyResults,
+  )
 
   const totalResult = computedResultsWithDep.find((result) => result.post === 'total')
   const total = totalResult?.value || 0
