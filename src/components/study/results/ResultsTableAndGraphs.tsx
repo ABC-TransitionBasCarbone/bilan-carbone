@@ -8,6 +8,7 @@ import { useTranslations } from 'next-intl'
 import { ReactNode, useMemo, useState } from 'react'
 import PieChart from '../charts/PieChart'
 import Filters from './Filters'
+import styles from './ResultsTableAndGraphs.module.css'
 
 export enum TabsPossibilities {
   table = 'table',
@@ -57,7 +58,7 @@ const ResultsTableAndGraphs = <
   }, [tabSelected, TableComponent, filteredResults, resultsUnit, t])
 
   return (
-    <Box>
+    <Box className={styles.container}>
       <Title as="h6" title={t('tagPieChartTitle', { unit: tUnits(resultsUnit) })} className="justify-center" />
       <div className="flex flex-row justify-between align-center">
         {activeTabs.length > 1 ? (
