@@ -1,7 +1,6 @@
 'use client'
 
-import { formatValueAndUnit } from '@/utils/charts'
-import { isPost } from '@/utils/post'
+import { BasicTypeCharts, formatValueAndUnit, getColor, getLabel } from '@/utils/charts'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { Typography, useTheme } from '@mui/material'
 import { PieChart as MuiPieChart, PieChartProps } from '@mui/x-charts'
@@ -26,7 +25,7 @@ interface Props<T> extends Omit<PieChartProps, 'series'> {
   showLabelsOnPie?: boolean
 }
 
-const PieChart = <T extends { value: number; label?: string; post?: string; color?: string }>({
+const PieChart = <T extends BasicTypeCharts>({
   resultsUnit,
   results,
   title,
@@ -40,32 +39,9 @@ const PieChart = <T extends { value: number; label?: string; post?: string; colo
 
   const theme = useTheme()
 
-  const getColor = useCallback(
-    (post?: string, color?: string) => {
-      if (color) {
-        return color
-      }
-      if (post && isPost(post)) {
-        return theme.custom.postColors[post].light
-      }
-      return theme.palette.primary.light
-    },
-    [theme.custom.postColors, theme.palette.primary.light],
-  )
+  const getColorForPie = useCallback((post?: string, color?: string) => getColor(theme, post, color), [theme])
 
-  const getLabel = useCallback(
-    (convertedValue: number, label?: string, post?: string) => {
-      let formattedLabel = ''
-      if (label) {
-        formattedLabel = label
-      } else if (post && isPost(post)) {
-        formattedLabel = tPost(post)
-      }
-
-      return formattedLabel
-    },
-    [tPost],
-  )
+  const getLabelForPie = useCallback((label?: string, post?: string) => getLabel(label, post, tPost), [tPost])
 
   const pieData = useMemo(
     () =>
@@ -75,13 +51,13 @@ const PieChart = <T extends { value: number; label?: string; post?: string; colo
           const convertedValue = value / STUDY_UNIT_VALUES[resultsUnit]
 
           return {
-            label: getLabel(convertedValue, label, post),
+            label: getLabelForPie(label, post),
             value: convertedValue,
-            color: getColor(post, color),
+            color: getColorForPie(post, color),
           }
         })
         .filter((computeResult) => computeResult.value > 0),
-    [getColor, getLabel, results, resultsUnit],
+    [getColorForPie, getLabelForPie, results, resultsUnit],
   )
 
   return (
