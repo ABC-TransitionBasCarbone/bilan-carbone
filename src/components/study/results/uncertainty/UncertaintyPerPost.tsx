@@ -9,6 +9,7 @@ import { postColors, STUDY_UNIT_VALUES } from '@/utils/study'
 import { ScatterSeries } from '@mui/x-charts'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import ScatterChart from '../../charts/ScatterChart'
 import styles from './UncertaintyPerPost.module.css'
@@ -25,6 +26,8 @@ const UncertaintyPerPost = ({ study, computedResults }: Props) => {
   const [glossary, setGlossary] = useState(false)
   const [moreInfo, setMoreInfo] = useState(false)
 
+  const router = useRouter()
+
   const results = computedResults.filter((post) => post.post !== 'total')
   const [maxValue, maxUncertainty, maxSource] = results.reduce(
     (res, post) => [
@@ -38,6 +41,7 @@ const UncertaintyPerPost = ({ study, computedResults }: Props) => {
   const series: ScatterSeries[] = computedResults
     .filter((post) => !!post.uncertainty)
     .map((post) => ({
+      id: post.post,
       data: [{ id: post.post, x: post.value, y: post.uncertainty as number }],
       markerSize: 50 * (post.numberOfValidatedEmissionSource / maxSource),
       valueFormatter: () =>
@@ -46,10 +50,15 @@ const UncertaintyPerPost = ({ study, computedResults }: Props) => {
 
   const colors = series.map((post) => `var(--post-${postColors[post.id as Post] || 'green'}-dark)`)
 
+  const onClose = () => {
+    setMoreInfo(false)
+    setGlossary(false)
+  }
+
   return (
     <div className="my2">
       <Title title={t('uncertainties.perPost')} as="h4" className="flex-cc">
-        <HelpIcon className="pointer" onClick={() => setGlossary(true)} label={tGlossary('label')} />
+        <HelpIcon className="pointer" onClick={() => setGlossary(true)} label={tGlossary('title')} />
       </Title>
       <ScatterChart
         series={series}
@@ -58,15 +67,13 @@ const UncertaintyPerPost = ({ study, computedResults }: Props) => {
         maxY={maxUncertainty * 1.5}
         yLabel={`${t('uncertainty')} (%)`}
         xLabel={`${t('total')} (${t(`units.${study.resultsUnit}`)})`}
-        xValueFormatter={(value: number) => formatNumber(value / STUDY_UNIT_VALUES[study.resultsUnit])}
+        xValueFormatter={() => ''}
+        yValueFormatter={() => ''}
+        onClick={(post: string) => router.push(`/etudes/${study.id}/comptabilisation/saisie-des-donnees/${post}`)}
+        disableTicks
       />
       {glossary && (
-        <GlossaryModal
-          glossary="uncertaintyPerPost"
-          label="uncertaintyPerPost"
-          t={tGlossary}
-          onClose={() => setGlossary(false)}
-        >
+        <GlossaryModal glossary="uncertaintyPerPost" label="uncertaintyPerPost" t={tGlossary} onClose={onClose}>
           <div className={classNames(styles.gapped, 'flex-col')}>
             <p>{tGlossary('uncertaintyPerPostDescription')}</p>
             {moreInfo ? (
