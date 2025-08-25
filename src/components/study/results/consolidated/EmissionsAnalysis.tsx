@@ -1,4 +1,3 @@
-import Block from '@/components/base/Block'
 import Box from '@/components/base/Box'
 import Title from '@/components/base/Title'
 import GlossaryModal from '@/components/modals/GlossaryModal'
@@ -12,7 +11,8 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useState } from 'react'
 import styles from '../ResultsContainer.module.css'
-import ResultsTableAndGraphs, { TabsPossibilities } from '../ResultsTableAndGraphs'
+import ResultsTableAndGraphs from '../ResultsTableAndGraphs'
+import TagsResultsTable from '../tags/TagsResultsTable'
 import CarbonIntensities from './CarbonIntensities'
 import Data from './Data'
 
@@ -47,7 +47,8 @@ const EmissionsAnalysis = ({
   const [glossary, setGlossary] = useState('')
 
   return (
-    <Block title={t('analysis')}>
+    <div className="mb2">
+      <Title title={t('analysis')} as="h2" />
       <div className={classNames(styles.analysisContainer, 'flex')}>
         <div className="flex-col grow">
           <Box className={classNames(styles.gapped, 'justify-center flex-col')}>
@@ -113,9 +114,9 @@ const EmissionsAnalysis = ({
             </div>
           </Box>
           <ResultsTableAndGraphs
-            activeTabs={[TabsPossibilities.pieChart]}
             computedResults={computedResultsByTag}
             resultsUnit={study.resultsUnit}
+            TableComponent={TagsResultsTable}
           />
         </div>
       </div>
@@ -136,7 +137,7 @@ const EmissionsAnalysis = ({
           </span>
         </GlossaryModal>
       )}
-    </Block>
+    </div>
   )
 }
 
