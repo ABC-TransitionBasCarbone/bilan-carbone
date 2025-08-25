@@ -2,6 +2,7 @@ import { expect } from '@jest/globals'
 import { Import, StudyRole } from '@prisma/client'
 import * as accountModule from '../../db/account'
 import * as emissionFactorsModule from '../../db/emissionFactors'
+import * as emissionSourcesModule from '../../db/emissionSource'
 import * as organizationModule from '../../db/organization'
 import * as studyDbModule from '../../db/study'
 import * as userDbModule from '../../db/user'
@@ -80,6 +81,10 @@ jest.mock('../../utils/serverResponse', () => ({
 jest.mock('../../db/emissionFactors', () => ({
   getEmissionFactorsImportActiveVersion: jest.fn(),
 }))
+jest.mock('../../db/emissionSource', () => ({
+  createEmissionSourceTagFamilyAndRelatedTags: jest.fn(),
+  getFamilyTagsForStudy: jest.fn(),
+}))
 jest.mock('../../utils/user', () => ({
   isAdmin: jest.fn(),
 }))
@@ -117,9 +122,14 @@ const mockCanDuplicateStudy = studyPermissionsModule.canDuplicateStudy as jest.M
 const mockGetEmissionFactorsImportActiveVersion =
   emissionFactorsModule.getEmissionFactorsImportActiveVersion as jest.Mock
 const mockIsAdmin = userUtilsModule.isAdmin as unknown as jest.Mock
+const mockCreateEmissionSourceTagFamilyAndRelatedTags =
+  emissionSourcesModule.createEmissionSourceTagFamilyAndRelatedTags as jest.Mock
+const mockGetFamilyTagsForStudy = emissionSourcesModule.getFamilyTagsForStudy as jest.Mock
 
 describe('duplicateStudyCommand', () => {
   const setupSuccessfulDuplication = () => {
+    mockCreateEmissionSourceTagFamilyAndRelatedTags.mockResolvedValue([])
+    mockGetFamilyTagsForStudy.mockResolvedValue([])
     mockDbActualizedAuth.mockResolvedValue({ user: mockedAuthUser })
     mockCanDuplicateStudy.mockResolvedValue(true)
     mockGetAccountRoleOnStudy.mockReturnValue(StudyRole.Editor)

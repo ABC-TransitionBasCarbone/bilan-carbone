@@ -24,6 +24,7 @@ import {
   getEmissionFactorVersionsBySource,
   getStudyEmissionFactorSources,
 } from '@/db/emissionFactors'
+import { createEmissionSourceTagFamilyAndRelatedTags, getFamilyTagsForStudy } from '@/db/emissionSource'
 import {
   getOrganizationVersionById,
   getOrganizationWithSitesById,
@@ -1240,6 +1241,20 @@ export const duplicateStudyCommand = async (
 
     const shouldClearCaracterisations = Object.values(Export).some(hasControlModeChanged)
 
+    const tagFamilies = await createEmissionSourceTagFamilyAndRelatedTags(
+      createdStudyId,
+      sourceStudy.emissionSourceTagFamilies.map((tagFamily) => ({
+        familyName: tagFamily.name,
+        tags: tagFamily.emissionSourceTags.map((tag) => ({
+          name: tag.name,
+          color: tag.color ?? '',
+        })),
+      })),
+      session.user.environment,
+    )
+
+    const oldTagFamilies = await getFamilyTagsForStudy(sourceStudy.id)
+
     const sourceEmissionSources = sourceStudy.emissionSources
     for (const sourceEmissionSource of sourceEmissionSources) {
       const sourceSiteId = sourceEmissionSource.studySite.site.id
@@ -1275,7 +1290,21 @@ export const duplicateStudyCommand = async (
             : undefined,
           studySite: { connect: { id: targetStudySiteId } },
           validated: false,
-        } as Prisma.StudyEmissionSourceCreateInput
+          emissionSourceTags: {
+            connect: sourceEmissionSource.emissionSourceTags
+              .map((emissionSourceTag) => {
+                const oldTagFamily = oldTagFamilies.find((tagFamily) => tagFamily.id === emissionSourceTag.familyId)
+                const foundTagFamily = tagFamilies.find((tagFamily) => tagFamily.name === oldTagFamily?.name)
+                const foundTag = foundTagFamily?.emissionSourceTags.find((tag) => tag.name === emissionSourceTag.name)
+
+                if (!foundTag) {
+                  return null
+                }
+                return { id: foundTag?.id }
+              })
+              .filter((tag) => tag !== null),
+          },
+        }
 
         await createStudyEmissionSource(emissionSourceData)
       }
@@ -1384,6 +1413,7 @@ export const duplicateStudyEmissionSource = async (
       studySite: { connect: { id: studySite } },
       studySiteId: undefined,
       validated: false,
+      emissionSourceTags: { connect: emissionSource.emissionSourceTags.map((tag) => ({ id: tag.id })) },
     } as Prisma.StudyEmissionSourceCreateInput
 
     await createStudyEmissionSource(data)
