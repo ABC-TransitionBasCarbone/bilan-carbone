@@ -52,7 +52,6 @@ const BarChart = <T extends BasicTypeCharts>({
     }
   }, [results, tPost, resultsUnit, theme])
 
-  console.log('BarData:', barData)
   const getBarLabel = (item: { value: number | null }) =>
     showLabelsOnBars && item.value && item.value > 0 ? formatValueAndUnit(item.value) : ''
 

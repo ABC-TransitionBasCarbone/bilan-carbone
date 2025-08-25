@@ -4,7 +4,6 @@ import { getMockeFullStudy } from '@/tests/utils/models/study'
 import { translationMock } from '@/tests/utils/models/translationsMock'
 import { expect } from '@jest/globals'
 import { Environment, SubPost } from '@prisma/client'
-import { useTranslations } from 'next-intl'
 import { computeResultsByTag } from './consolidated'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
@@ -89,7 +88,7 @@ describe('consolidated function', () => {
         false,
         true,
         Environment.BC,
-        translationMock({ other: 'other' }) as ReturnType<typeof useTranslations>,
+        translationMock({ other: 'other' }),
       )
 
       expect(result).toEqual([
@@ -179,7 +178,7 @@ describe('consolidated function', () => {
         true,
         false,
         Environment.BC,
-        translationMock({ other: 'other' }) as ReturnType<typeof useTranslations>,
+        translationMock({ other: 'other' }),
       )
 
       expect(result).toEqual([
@@ -232,7 +231,7 @@ describe('consolidated function', () => {
         true,
         false,
         Environment.BC,
-        translationMock({ other: 'other' }) as ReturnType<typeof useTranslations>,
+        translationMock({ other: 'other' }),
       )
 
       expect(result).toEqual([])

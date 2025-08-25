@@ -20,9 +20,11 @@ export const getColor = (themeColors: Theme, post?: string, color?: string) => {
   if (color) {
     return color
   }
-  if (post && isPost(post)) {
+
+  if (post && isPost(post) && themeColors.custom.postColors[post]) {
     return themeColors.custom.postColors[post].light
   }
+
   return themeColors.palette.primary.light
 }
 
