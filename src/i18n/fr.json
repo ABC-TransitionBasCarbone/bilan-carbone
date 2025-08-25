@@ -624,6 +624,7 @@
     "results": {
       "type": "Type",
       "post": "Poste",
+      "tag": "Tag",
       "download": "Télécharger les résultats",
       "downloadPDF": "Télécharger la fiche récapitulative",
       "value": "Émissions ({unit})",
@@ -687,7 +688,7 @@
       "table": "Tableau",
       "barChart": "Graphique",
       "pieChart": "Camembert",
-      "tagPieChartTitle": "Émissions, par tag",
+      "tagPieChartTitle": "Émissions, par tag ({unit})",
       "other": "Sans tag"
     },
     "pdf": {

@@ -15,7 +15,7 @@ import { ColumnDef, flexRender, getCoreRowModel, getExpandedRowModel, useReactTa
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
-import styles from './ConsolidatedResultsTable.module.css'
+import commonStyles from '../commonTable.module.css'
 
 interface Props {
   study: FullStudy
@@ -65,23 +65,27 @@ const ConsolidatedResultsTable = ({
           if (hideExpandIcons) {
             const isSubpost = row.depth > 0
             return (
-              <p className={classNames('align-center', isSubpost ? `${styles.notExpandable} pl1` : styles.expandable)}>
+              <p
+                className={classNames(
+                  'align-center',
+                  isSubpost ? `${commonStyles.notExpandable} pl1` : commonStyles.expandable,
+                )}
+              >
                 {getValue<string>()}
               </p>
             )
           }
 
           return row.getCanExpand() ? (
-            <button onClick={row.getToggleExpandedHandler()} className={classNames('align-center', styles.expandable)}>
-              {row.getIsExpanded() ? (
-                <KeyboardArrowDownIcon className={styles.svg} />
-              ) : (
-                <KeyboardArrowRightIcon className={styles.svg} />
-              )}
+            <button
+              onClick={row.getToggleExpandedHandler()}
+              className={classNames('align-center', commonStyles.expandable)}
+            >
+              {row.getIsExpanded() ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
               {getValue<string>()}
             </button>
           ) : (
-            <p className={classNames('align-center', styles.notExpandable, { pl1: row.depth > 0 })}>
+            <p className={classNames('align-center', commonStyles.notExpandable, { pl1: row.depth > 0 })}>
               {getValue<string>()}
             </p>
           )
@@ -101,7 +105,7 @@ const ConsolidatedResultsTable = ({
       header: t('value', { unit: tUnits(study.resultsUnit) }),
       accessorKey: 'value',
       cell: ({ getValue }) => (
-        <p className={styles.number}>{formatNumber(getValue<number>() / STUDY_UNIT_VALUES[study.resultsUnit])}</p>
+        <p className={commonStyles.number}>{formatNumber(getValue<number>() / STUDY_UNIT_VALUES[study.resultsUnit])}</p>
       ),
     })
 
@@ -135,30 +139,28 @@ const ConsolidatedResultsTable = ({
   })
 
   return (
-    <>
-      <table aria-labelledby="study-rights-table-title">
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th key={header.id} className={styles.header}>
-                  {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} data-testid="consolidated-results-table-row">
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </>
+    <table aria-labelledby="study-rights-table-title">
+      <thead>
+        {table.getHeaderGroups().map((headerGroup) => (
+          <tr key={headerGroup.id}>
+            {headerGroup.headers.map((header) => (
+              <th key={header.id} className={commonStyles.header}>
+                {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody>
+        {table.getRowModel().rows.map((row) => (
+          <tr key={row.id} data-testid="consolidated-results-table-row">
+            {row.getVisibleCells().map((cell) => (
+              <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
   )
 }
 

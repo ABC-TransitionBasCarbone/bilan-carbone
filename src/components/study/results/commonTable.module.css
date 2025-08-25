@@ -1,3 +1,11 @@
+.number {
+  text-align: right;
+}
+
+.header:last-child {
+  text-align: right;
+}
+
 .expandable {
   cursor: pointer;
   width: 100%;
@@ -17,12 +25,4 @@
 .notExpandable {
   margin-left: 1.5rem;
   line-height: 1.5rem;
-}
-
-.number {
-  text-align: right;
-}
-
-.header:last-child {
-  text-align: right;
 }

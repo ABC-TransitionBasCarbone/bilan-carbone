@@ -5,7 +5,7 @@ import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined'
 import { Tab, Tabs } from '@mui/material'
 import { StudyResultUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import { useMemo, useState } from 'react'
+import { ReactNode, useMemo, useState } from 'react'
 import PieChart from '../charts/PieChart'
 import Filters from './Filters'
 
@@ -15,11 +15,17 @@ export enum TabsPossibilities {
   barChart = 'barChart',
 }
 
+interface ResultsTableProps<T> {
+  resultsUnit: StudyResultUnit
+  data: T[]
+}
+
 interface Props<T> {
   activeTabs?: TabsPossibilities[]
   defaultTab?: TabsPossibilities
   computedResults: T[]
-  resultsUnit?: StudyResultUnit
+  resultsUnit: StudyResultUnit
+  TableComponent?: (props: ResultsTableProps<T>) => ReactNode
 }
 const ResultsTableAndGraphs = <
   T extends { value: number; label: string; post?: string; tagFamily?: { id: string; name: string } },
@@ -28,17 +34,19 @@ const ResultsTableAndGraphs = <
   defaultTab = activeTabs[0],
   computedResults,
   resultsUnit,
+  TableComponent = () => <></>,
 }: Props<T>) => {
   const [tabSelected, setTabSelected] = useState(defaultTab)
   const [displayFilter, setDisplayFilter] = useState(false)
   const [filteredResults, setFilteredResults] = useState(computedResults)
+  const tUnits = useTranslations('study.results.units')
 
   const t = useTranslations('study.results')
 
   const TabComponent = useMemo(() => {
     switch (tabSelected) {
       case TabsPossibilities.table:
-        return <div>{t('table')}</div>
+        return <TableComponent resultsUnit={resultsUnit} data={filteredResults} />
       case TabsPossibilities.pieChart:
         return <PieChart results={filteredResults} resultsUnit={resultsUnit ?? StudyResultUnit.T} hideLegend />
       case TabsPossibilities.barChart:
@@ -46,11 +54,11 @@ const ResultsTableAndGraphs = <
       default:
         return null
     }
-  }, [tabSelected, t, filteredResults, resultsUnit])
+  }, [tabSelected, TableComponent, filteredResults, resultsUnit, t])
 
   return (
     <Box>
-      <Title as="h6" title={t('tagPieChartTitle')} className="justify-center" />
+      <Title as="h6" title={t('tagPieChartTitle', { unit: tUnits(resultsUnit) })} className="justify-center" />
       <div className="flex flex-row justify-between align-center">
         {activeTabs.length > 1 ? (
           <Tabs value={tabSelected} onChange={(_e, v) => setTabSelected(v)}>

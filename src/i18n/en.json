@@ -624,6 +624,7 @@
     "results": {
       "type": "Type",
       "post": "Post",
+      "tag": "Tag",
       "download": "Download results",
       "downloadPDF": "Download the summary",
       "value": "Emissions ({unit})",
@@ -687,7 +688,7 @@
       "table": "Table",
       "barChart": "Bar Chart",
       "pieChart": "Pie Chart",
-      "tagPieChartTitle": "Emissions, by tag",
+      "tagPieChartTitle": "Emissions, by tag ({unit})",
       "other": "No tag"
     },
     "pdf": {

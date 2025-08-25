@@ -129,21 +129,12 @@ export type ResultsByTag = {
   value: number
   tagFamily: { id: string; name: string }
   color: string
+  uncertainty: number
 }
 
 export const computeResultsByTag = (
   study: {
-    emissionSources: Pick<
-      FullStudy['emissionSources'][number],
-      | 'studySite'
-      | 'validated'
-      | 'subPost'
-      | 'emissionSourceTags'
-      | 'emissionFactor'
-      | 'value'
-      | 'subPost'
-      | 'depreciationPeriod'
-    >[]
+    emissionSources: FullStudy['emissionSources'][number][]
     emissionSourceTagFamilies: FullStudy['emissionSourceTagFamilies']
   },
   studySite: string,
@@ -190,6 +181,7 @@ export const computeResultsByTag = (
         tagFamily: tag.tagFamily,
         value: getEmissionSourcesTotalCo2(emissionSources, environment),
         color: tag.color ?? '',
+        uncertainty: sumEmissionSourcesUncertainty(emissionSources, environment),
       }
     })
     .filter((tag) => tag.value > 0)
