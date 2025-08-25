@@ -62,9 +62,9 @@ const PieChart = <T extends { value: number; label?: string; post?: string; colo
         formattedLabel = tPost(post)
       }
 
-      return `${formattedLabel} - ${formatValueAndUnit(convertedValue, tUnits(resultsUnit))}`
+      return formattedLabel
     },
-    [resultsUnit, tPost, tUnits],
+    [tPost],
   )
 
   const pieData = useMemo(
@@ -90,11 +90,12 @@ const PieChart = <T extends { value: number; label?: string; post?: string; colo
         series={[
           {
             data: pieData,
-            arcLabel: showLabelsOnPie ? (item) => formatValueAndUnit(item.value) : undefined,
+            arcLabel: showLabelsOnPie ? (item) => formatValueAndUnit(item.value, tUnits(resultsUnit)) : undefined,
             arcLabelMinAngle: PIE_CHART_CONSTANTS.ARC_LABEL_MIN_ANGLE,
             arcLabelRadius: PIE_CHART_CONSTANTS.ARC_LABEL_RADIUS,
             innerRadius: PIE_CHART_CONSTANTS.PIE_INNER_RADIUS,
             outerRadius: PIE_CHART_CONSTANTS.PIE_OUTER_RADIUS,
+            valueFormatter: (item) => formatValueAndUnit(item.value, tUnits(resultsUnit)),
           },
         ]}
         height={height}
