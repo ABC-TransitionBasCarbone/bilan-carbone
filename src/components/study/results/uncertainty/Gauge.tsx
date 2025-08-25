@@ -14,7 +14,7 @@ const UncertaintyGauge = ({ uncertainty }: Props) => {
   const arcLength = [...uncertaintyValues, 3]
 
   return (
-    <>
+    <div className="grow">
       <GaugeCharts
         id="uncertainty-gauge"
         percent={(uncertainty ?? 0) / arcLength.reduce((acc, current) => acc + current, 0)}
@@ -28,12 +28,12 @@ const UncertaintyGauge = ({ uncertainty }: Props) => {
         <p className="bold">{t('veryWeak')}</p>
         <p className="bold">{t('veryStrong')}</p>
       </div>
-      <div className={classNames(commonStyles.titleContainer, 'mt1')}>
+      <div className={classNames(commonStyles.titleContainer, 'flex-cc mt1')}>
         <div className={classNames(commonStyles.title, 'grow')}>
           <p className="bold">{t('gaugeTitle')}</p>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

@@ -5,11 +5,13 @@ import { computeResultsByPost } from '@/services/results/consolidated'
 import { ResultType } from '@/services/study'
 import { getEmissionSourcesGlobalUncertainty } from '@/services/uncertainty'
 import { Environment } from '@prisma/client'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import ConfidenceIntervalCharts from './ConfidenceIntervalChart'
 import UncertaintyGauge from './Gauge'
 import MostUncertainPostsChart from './MostUncertainPostsChart'
+import styles from './UncertaintyAnalytics.module.css'
 
 interface Props {
   study: FullStudy
@@ -50,21 +52,17 @@ const UncertaintyAnalytics = ({ study, studySite, withDependencies, validatedOnl
   return (
     <div className="my2">
       <Title title={t('title')} as="h4" />
-      <div className="flex-row">
-        <div className="grow justify-center align-center">
+      <div className={styles.container}>
+        <div className="grow flex-cc">
           <ConfidenceIntervalCharts
             confidenceInterval={confidenceInterval}
             unit={study.resultsUnit}
             percent={percent}
           />
         </div>
-        <div className="grow2 flex-row justify-center align-center">
-          <div className="grow">
-            <UncertaintyGauge uncertainty={computedResults.find((res) => res.post === 'total')?.uncertainty} />
-          </div>
-          <div className="grow justify-center align-center">
-            <MostUncertainPostsChart computedResults={computedResults} />
-          </div>
+        <div className={classNames(styles.container2, 'grow2 flex-cc')}>
+          <UncertaintyGauge uncertainty={computedResults.find((res) => res.post === 'total')?.uncertainty} />
+          <MostUncertainPostsChart computedResults={computedResults} />
         </div>
       </div>
     </div>
