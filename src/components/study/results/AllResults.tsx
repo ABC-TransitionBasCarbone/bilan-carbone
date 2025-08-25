@@ -4,6 +4,8 @@ import Button from '@/components/base/Button'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { hasAccessToBcExport } from '@/services/permissions/environment'
+import { environmentPostMapping } from '@/services/posts'
+import { computeResultsByPost } from '@/services/results/consolidated'
 import { AdditionalResultTypes, downloadStudyResults, getResultsValues, ResultType } from '@/services/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import DownloadIcon from '@mui/icons-material/Download'
@@ -18,6 +20,7 @@ import ConsolatedBEGESDifference from './ConsolatedBEGESDifference'
 import ConsolidatedResults from './consolidated/ConsolidatedResults'
 import EmissionsAnalysis from './consolidated/EmissionsAnalysis'
 import UncertaintyAnalytics from './uncertainty/UncertaintyAnalytics'
+import UncertaintyPerPost from './uncertainty/UncertaintyPerPost'
 
 interface Props {
   study: FullStudy
@@ -74,6 +77,21 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
         displayValueWithDep,
       ),
     [displayValueWithDep, study, studySite, t, tPost, validatedOnly],
+  )
+
+  const computedResults = useMemo(
+    () =>
+      computeResultsByPost(
+        study,
+        tPost,
+        studySite,
+        true,
+        validatedOnly,
+        environmentPostMapping[environment || Environment.BC],
+        environment,
+        type,
+      ),
+    [study, studySite, validatedOnly, environment, type],
   )
 
   if (!environment) {
@@ -181,14 +199,9 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
         )}
       </div>
       {type !== Export.Beges && (
-        <UncertaintyAnalytics
-          study={study}
-          studySite={studySite}
-          withDependencies
-          validatedOnly={validatedOnly}
-          environment={environment}
-        />
+        <UncertaintyAnalytics computedResults={computedResults} study={study} environment={environment} />
       )}
+      <UncertaintyPerPost study={study} computedResults={computedResults} />
     </Block>
   )
 }

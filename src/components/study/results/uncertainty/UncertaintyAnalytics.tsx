@@ -1,8 +1,6 @@
 import Title from '@/components/base/Title'
 import { FullStudy } from '@/db/study'
-import { environmentPostMapping } from '@/services/posts'
-import { computeResultsByPost } from '@/services/results/consolidated'
-import { ResultType } from '@/services/study'
+import { ResultsByPost } from '@/services/results/consolidated'
 import { getEmissionSourcesGlobalUncertainty } from '@/services/uncertainty'
 import { Environment } from '@prisma/client'
 import classNames from 'classnames'
@@ -15,16 +13,12 @@ import styles from './UncertaintyAnalytics.module.css'
 
 interface Props {
   study: FullStudy
-  studySite: string
-  withDependencies: boolean
-  validatedOnly: boolean
   environment: Environment
-  type?: ResultType
+  computedResults: ResultsByPost[]
 }
 
-const UncertaintyAnalytics = ({ study, studySite, withDependencies, validatedOnly, environment, type }: Props) => {
+const UncertaintyAnalytics = ({ study, environment, computedResults }: Props) => {
   const t = useTranslations('study.results.uncertainties')
-  const tPost = useTranslations('emissionFactors.post')
 
   const confidenceInterval = getEmissionSourcesGlobalUncertainty(study.emissionSources, environment)
   const percent = useMemo(() => {
@@ -37,17 +31,6 @@ const UncertaintyAnalytics = ({ study, studySite, withDependencies, validatedOnl
 
     return realPercent
   }, [confidenceInterval])
-
-  const computedResults = computeResultsByPost(
-    study,
-    tPost,
-    studySite,
-    withDependencies,
-    validatedOnly,
-    environmentPostMapping[environment || Environment.BC],
-    environment,
-    type,
-  )
 
   return (
     <div className="my2">

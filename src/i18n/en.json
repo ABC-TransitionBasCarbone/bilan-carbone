@@ -674,7 +674,8 @@
         "gaugeTitle": "qualitative uncertainty gauge",
         "uncertainPostsTitle": "Posts with the greatest uncertainties within the Bilan Carbone®",
         "veryWeak": "Very weak",
-        "veryStrong": "Very strong"
+        "veryStrong": "Very strong",
+        "perPost": "Uncertainties, per post"
       },
       "analysis": "Emissions analysis",
       "total": "Emissions total",
@@ -689,7 +690,15 @@
       "barChart": "Bar Chart",
       "pieChart": "Pie Chart",
       "tagPieChartTitle": "Emissions, by tag ({unit})",
-      "other": "No tag"
+      "other": "No tag",
+      "glossary": {
+        "title": "Glossary",
+        "close": "Close",
+        "more": "More information",
+        "uncertaintyPerPost": "Uncertainties per post",
+        "uncertaintyPerPostDescription": "Please note that the size of the circles on this graph is proportional to the number of emission sources that have been entered for the item, and not to the total emissions for the item (which can be seen on the x-axis). This allows you to see which items have been analysed in the greatest detail and to assess whether this is relevant in terms of the significance of the associated emissions, as it is generally more relevant to work in detail on the most significant emission items. The following graphs also illustrate this effect.",
+        "uncertaintyPerPostDescription2": "Furthermore, the greater the number of emission sources within a station, the less uncertainty there will be for that station. This is because two uncertainties cancel each other out, as it is generally uncertain whether the error will be made in the same direction. To give a concrete example, when measuring two strings, it is possible to overestimate the length of the first and underestimate the length of the second. Consequently, the uncertainty about the length of the sum of the two strings will be less than the sum of the two uncertainties taken separately."
+      }
     },
     "pdf": {
       "loading": "Loading data...",
