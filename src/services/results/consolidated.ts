@@ -134,7 +134,7 @@ export type ResultsByTag = {
 
 export const computeResultsByTag = (
   study: {
-    emissionSources: FullStudy['emissionSources'][number][]
+    emissionSources: FullStudy['emissionSources']
     emissionSourceTagFamilies: FullStudy['emissionSourceTagFamilies']
   },
   studySite: string,
