@@ -691,6 +691,7 @@
       "pieChart": "Pie Chart",
       "tagPieChartTitle": "Emissions, by tag ({unit})",
       "other": "No tag",
+      "prioritaryZone": "Priority area for improving collection",
       "glossary": {
         "title": "Glossary",
         "close": "Close",

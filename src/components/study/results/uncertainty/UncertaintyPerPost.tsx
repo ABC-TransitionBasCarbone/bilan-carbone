@@ -11,8 +11,21 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { DrawingProps, MultilineText } from '../../charts/DrawingArea'
 import ScatterChart from '../../charts/ScatterChart'
 import styles from './UncertaintyPerPost.module.css'
+
+const margin = 0.05
+const Rect = ({ left, top, width, height }: DrawingProps) => (
+  <rect
+    x={left + (width / 2) * (1 + margin)}
+    y={top + (height / 2) * margin}
+    width={(width / 2) * (1 - 2 * margin)}
+    height={(height / 2) * (1 - 2 * margin)}
+    fill="var(--error-50)"
+    opacity={0.3}
+  />
+)
 
 interface Props {
   study: FullStudy
@@ -55,6 +68,18 @@ const UncertaintyPerPost = ({ study, computedResults }: Props) => {
     setGlossary(false)
   }
 
+  const Text = ({ left, top, width, height }: DrawingProps) => (
+    <MultilineText
+      x={left + (width / 2) * (1 + margin)}
+      y={top + height * margin}
+      width={(width / 2) * (1 - margin * 2)}
+      height={height}
+      className="bold text-center"
+    >
+      {t('prioritaryZone')}
+    </MultilineText>
+  )
+
   return (
     <div className="my2">
       <Title title={t('uncertainties.perPost')} as="h4" className="flex-cc">
@@ -71,6 +96,8 @@ const UncertaintyPerPost = ({ study, computedResults }: Props) => {
         yValueFormatter={() => ''}
         onClick={(post: string) => router.push(`/etudes/${study.id}/comptabilisation/saisie-des-donnees/${post}`)}
         disableTicks
+        Rect={Rect}
+        Text={Text}
       />
       {glossary && (
         <GlossaryModal glossary="uncertaintyPerPost" label="uncertaintyPerPost" t={tGlossary} onClose={onClose}>
