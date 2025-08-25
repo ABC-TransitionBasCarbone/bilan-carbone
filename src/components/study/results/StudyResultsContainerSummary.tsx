@@ -38,6 +38,7 @@ const StudyResultsContainerSummary = ({
   const t = useTranslations('study')
   const tPost = useTranslations('emissionFactors.post')
   const tResultUnits = useTranslations('study.results.units')
+  const tResults = useTranslations('study.results')
   const [glossary, setGlossary] = useState('')
   const [withDep, setWithDependencies] = useState(!!withDependencies)
   const environment = study.organizationVersion.environment
@@ -51,9 +52,10 @@ const StudyResultsContainerSummary = ({
       studySite,
       !!validatedOnly,
       environment,
+      tResults,
     )
     return [formatNumber(withDepValue), formatNumber(withoutDepValue), formatNumber(monetaryRatio, 2)]
-  }, [environment, study, studySite, tPost, validatedOnly])
+  }, [environment, study, studySite, tPost, tResults, validatedOnly])
 
   return (
     <>

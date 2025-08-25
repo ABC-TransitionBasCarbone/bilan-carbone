@@ -1,8 +1,10 @@
 import { FullStudy } from '@/db/study'
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
 import { getMockeFullStudy } from '@/tests/utils/models/study'
+import { translationMock } from '@/tests/utils/models/translationsMock'
 import { expect } from '@jest/globals'
 import { Environment, SubPost } from '@prisma/client'
+import { useTranslations } from 'next-intl'
 import { computeResultsByTag } from './consolidated'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
@@ -76,7 +78,14 @@ describe('consolidated function', () => {
 
       const study = getMockeFullStudy({ emissionSources, emissionSourceTagFamilies })
 
-      const result = computeResultsByTag(study, studySite.id, false, true, Environment.BC)
+      const result = computeResultsByTag(
+        study,
+        studySite.id,
+        false,
+        true,
+        Environment.BC,
+        translationMock({ other: 'other' }) as ReturnType<typeof useTranslations>,
+      )
 
       expect(result).toEqual([
         {
@@ -154,7 +163,14 @@ describe('consolidated function', () => {
 
       const study = getMockeFullStudy({ emissionSources, emissionSourceTagFamilies })
 
-      const result = computeResultsByTag(study, studySite.id, true, false, Environment.BC)
+      const result = computeResultsByTag(
+        study,
+        studySite.id,
+        true,
+        false,
+        Environment.BC,
+        translationMock({ other: 'other' }) as ReturnType<typeof useTranslations>,
+      )
 
       expect(result).toEqual([
         {
@@ -195,7 +211,14 @@ describe('consolidated function', () => {
 
       const study = getMockeFullStudy({ emissionSources, emissionSourceTagFamilies })
 
-      const result = computeResultsByTag(study, studySite.id, true, false, Environment.BC)
+      const result = computeResultsByTag(
+        study,
+        studySite.id,
+        true,
+        false,
+        Environment.BC,
+        translationMock({ other: 'other' }) as ReturnType<typeof useTranslations>,
+      )
 
       expect(result).toEqual([])
     })

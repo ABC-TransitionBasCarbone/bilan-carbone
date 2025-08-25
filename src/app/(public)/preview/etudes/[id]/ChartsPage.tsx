@@ -17,10 +17,11 @@ interface Props {
 
 export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll, environment }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
+  const tStudyResults = useTranslations('study.results')
 
   const { computedResultsWithDep } = useMemo(
-    () => getResultsValues(study, tPost, studySite, false, study.organizationVersion.environment),
-    [study, studySite, tPost],
+    () => getResultsValues(study, tPost, studySite, false, study.organizationVersion.environment, tStudyResults),
+    [study, studySite, tPost, tStudyResults],
   )
 
   return (

@@ -1,5 +1,6 @@
 import { FullStudy } from '@/db/study'
 import { Environment, SubPost } from '@prisma/client'
+import { useTranslations } from 'next-intl'
 import {
   getEmissionSourcesTotalCo2,
   getEmissionSourcesTotalMonetaryCo2,
@@ -149,6 +150,7 @@ export const computeResultsByTag = (
   withDependencies: boolean,
   validatedOnly: boolean = true,
   environment: Environment,
+  t: ReturnType<typeof useTranslations>,
 ): ResultsByTag[] => {
   const siteEmissionSources = getSiteEmissionSources(study.emissionSources, studySite)
   const tags = study.emissionSourceTagFamilies.flatMap((tagFamily) =>
@@ -179,7 +181,7 @@ export const computeResultsByTag = (
       {} as Record<string, typeof siteEmissionSources>,
     )
 
-  return [...tags, { id: 'other', name: 'other', color: null, tagFamily: { name: 'other', id: 'other' } }]
+  return [...tags, { id: 'other', name: t('other'), color: null, tagFamily: { name: t('other'), id: 'other' } }]
     .map((tag) => {
       const emissionSources = emissionSourcesByTag[tag.id] || []
 

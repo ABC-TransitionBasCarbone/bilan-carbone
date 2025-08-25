@@ -63,8 +63,17 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   }, [environment, exports])
 
   const { withDepValue, withoutDepValue, monetaryRatio, nonSpecificMonetaryRatio, computedResultsByTag } = useMemo(
-    () => getResultsValues(study, tPost, studySite, !!validatedOnly, study.organizationVersion.environment),
-    [study, studySite, tPost, validatedOnly],
+    () =>
+      getResultsValues(
+        study,
+        tPost,
+        studySite,
+        !!validatedOnly,
+        study.organizationVersion.environment,
+        t,
+        displayValueWithDep,
+      ),
+    [study, studySite, t, tPost, validatedOnly],
   )
 
   if (!environment) {

@@ -78,8 +78,8 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
   }
 
   const { computedResultsWithDep } = useMemo(
-    () => getResultsValues(study, tPost, studySite, !!validatedOnly, study.organizationVersion.environment),
-    [study, studySite, validatedOnly],
+    () => getResultsValues(study, tPost, studySite, !!validatedOnly, study.organizationVersion.environment, tResults),
+    [study, studySite, tPost, tResults, validatedOnly],
   )
 
   return (
