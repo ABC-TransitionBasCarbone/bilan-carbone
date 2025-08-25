@@ -73,7 +73,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
         t,
         displayValueWithDep,
       ),
-    [study, studySite, t, tPost, validatedOnly],
+    [displayValueWithDep, study, studySite, t, tPost, validatedOnly],
   )
 
   if (!environment) {
