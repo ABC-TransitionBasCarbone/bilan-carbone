@@ -1,7 +1,6 @@
 import { FullStudy } from '@/db/study'
 import {
   ControlMode,
-  EmissionFactorStatus,
   Export,
   Import,
   Level,
@@ -213,7 +212,7 @@ export const getMockedDuplicateStudyCommand = (overrides = {}) => ({
   ...overrides,
 })
 
-export const getMockeFullStudy = (overrides = {}) => ({
+export const getMockeFullStudy = (overrides = {}): FullStudy => ({
   id: TEST_IDS.sourceStudy,
   name: 'Source Study',
   resultsUnit: StudyResultUnit.K,
@@ -223,6 +222,7 @@ export const getMockeFullStudy = (overrides = {}) => ({
     {
       source: Import.BaseEmpreinte,
       importVersionId: TEST_IDS.importVersion,
+      id: 'fe_version_id',
     },
   ],
   emissionSources: [
@@ -237,7 +237,6 @@ export const getMockeFullStudy = (overrides = {}) => ({
       emissionFactor: {
         id: TEST_IDS.emissionFactor,
         importedFrom: Import.Manual,
-        status: EmissionFactorStatus.Valid,
         totalCo2: 81,
         geographicRepresentativeness: 5,
         completeness: 5,
@@ -247,29 +246,73 @@ export const getMockeFullStudy = (overrides = {}) => ({
         importedId: '4',
         unit: Unit.GWH,
         isMonetary: false,
-        source: 'Magic',
-        subPosts: [SubPost.Electricite],
       },
       emissionSourceTags: [],
       validated: true,
       subPost: SubPost.Achats,
       depreciationPeriod: 5,
+      caracterisation: null,
+      emissionFactorId: null,
+      reliability: null,
+      technicalRepresentativeness: null,
+      geographicRepresentativeness: null,
+      temporalRepresentativeness: null,
+      completeness: null,
+      source: null,
+      type: null,
+      comment: null,
+      duration: null,
+      hectare: null,
+      feReliability: null,
+      feTechnicalRepresentativeness: null,
+      feGeographicRepresentativeness: null,
+      feTemporalRepresentativeness: null,
+      feCompleteness: null,
+      contributor: null,
     },
   ],
   allowedUsers: [
     {
-      id: TEST_IDS.userStudy,
-      account: { user: { email: TEST_EMAILS.teamMember } },
-      role: StudyRole.Editor,
+      account: {
+        id: TEST_IDS.account,
+        user: {
+          email: TEST_EMAILS.teamMember,
+          id: TEST_IDS.userStudy,
+          level: 'Initial',
+        },
+        organizationVersionId: TEST_IDS.orgVersion,
+        readerOnly: false,
+      },
+      role: StudyRole.Validator,
+      accountId: TEST_IDS.account,
     },
   ],
   contributors: [
     {
-      id: TEST_IDS.contributorStudy,
-      account: { user: { email: TEST_EMAILS.contributor } },
-      subPost: 'test-subpost',
+      accountId: 'contributor-account-id',
+      account: {
+        id: 'contributor-account-id',
+        user: {
+          email: TEST_EMAILS.contributor,
+          id: '',
+        },
+        organizationVersionId: TEST_IDS.orgVersion,
+      },
+      subPost: SubPost.Achats,
     },
   ],
   emissionSourceTagFamilies: [],
   ...overrides,
+  organizationVersion: mockedOrganizationVersion,
+  sites: [],
+  oldBCId: null,
+  createdById: TEST_IDS.userStudy,
+  isPublic: false,
+  startDate: new Date(),
+  endDate: new Date(),
+  realizationStartDate: null,
+  realizationEndDate: null,
+  level: 'Initial',
+  createdAt: new Date(),
+  updatedAt: new Date(),
 })
