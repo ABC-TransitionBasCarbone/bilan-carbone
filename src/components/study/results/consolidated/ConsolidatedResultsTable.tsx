@@ -3,7 +3,6 @@
 import { FullStudy } from '@/db/study'
 import { environmentPostMapping } from '@/services/posts'
 import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
-import { getUserSettings } from '@/services/serverFunctions/user'
 import { ResultType } from '@/services/study'
 import { getStandardDeviationRating } from '@/services/uncertainty'
 import { formatNumber } from '@/utils/number'
@@ -14,7 +13,7 @@ import { Environment } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, getExpandedRowModel, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import commonStyles from '../commonTable.module.css'
 
 interface Props {
@@ -26,6 +25,7 @@ interface Props {
   hideExpandIcons?: boolean
   type?: ResultType
   environment: Environment | undefined
+  validatedOnly: boolean
 }
 
 const ConsolidatedResultsTable = ({
@@ -37,24 +37,12 @@ const ConsolidatedResultsTable = ({
   hideExpandIcons,
   type,
   environment,
+  validatedOnly,
 }: Props) => {
   const t = useTranslations('study.results')
   const tQuality = useTranslations('quality')
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('study.results.units')
-  const [validatedOnly, setValidatedOnly] = useState(true)
-
-  useEffect(() => {
-    applyUserSettings()
-  }, [])
-
-  const applyUserSettings = async () => {
-    const userSettings = await getUserSettings()
-    const validatedOnlySetting = userSettings.success ? userSettings.data?.validatedEmissionSourcesOnly : undefined
-    if (validatedOnlySetting !== undefined) {
-      setValidatedOnly(validatedOnlySetting)
-    }
-  }
 
   const columns = useMemo(() => {
     const tmpColumns = [

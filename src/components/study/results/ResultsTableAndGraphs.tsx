@@ -6,6 +6,7 @@ import { Tab, Tabs } from '@mui/material'
 import { StudyResultUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useMemo, useState } from 'react'
+import BarChart from '../charts/BarChart'
 import PieChart from '../charts/PieChart'
 import Filters from './Filters'
 import styles from './ResultsTableAndGraphs.module.css'
@@ -51,11 +52,11 @@ const ResultsTableAndGraphs = <
       case TabsPossibilities.pieChart:
         return <PieChart results={filteredResults} resultsUnit={resultsUnit ?? StudyResultUnit.T} hideLegend />
       case TabsPossibilities.barChart:
-        return <div>{t('barChart')}</div>
+        return <BarChart results={filteredResults} resultsUnit={resultsUnit} />
       default:
         return null
     }
-  }, [tabSelected, TableComponent, filteredResults, resultsUnit, t])
+  }, [tabSelected, TableComponent, filteredResults, resultsUnit])
 
   return (
     <Box className={styles.container}>

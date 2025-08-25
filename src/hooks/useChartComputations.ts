@@ -2,11 +2,10 @@ import { FullStudy } from '@/db/study'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import { filterWithDependencies } from '@/services/results/utils'
 import { ResultType } from '@/services/study'
-import { formatValueAndUnit } from '@/utils/charts'
 import { getPostValues } from '@/utils/post'
 import { Environment, SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 
 interface UseChartComputationsParams {
   study: FullStudy
@@ -26,20 +25,12 @@ export const useChartComputations = ({
   type,
 }: UseChartComputationsParams) => {
   const tPost = useTranslations('emissionFactors.post')
-  const tUnits = useTranslations('study.results.units')
 
   const postValues = useMemo(() => getPostValues(environment, type), [environment, type])
 
   const resultsByPost = useMemo(
     () => computeResultsByPost(study, tPost, studySite, withDep, validatedOnly, postValues, environment, type),
-    [study, studySite, tPost, validatedOnly, postValues, environment, withDep],
-  )
-
-  const chartFormatter = useCallback(
-    (value: number | null, showUnit = true) => {
-      return formatValueAndUnit(value, showUnit ? tUnits(study.resultsUnit) : '')
-    },
-    [study.resultsUnit, tUnits],
+    [study, tPost, studySite, withDep, validatedOnly, postValues, environment, type],
   )
 
   const computeResults = useMemo(() => {
@@ -54,12 +45,10 @@ export const useChartComputations = ({
       })
       .filter((post) => post.post !== 'total')
       .map((post) => ({ ...post, label: tPost(post.post) }))
-  }, [resultsByPost, tPost])
+  }, [resultsByPost, tPost, withDep])
 
   return {
     resultsByPost,
-    chartFormatter,
     computeResults,
-    tUnits,
   }
 }

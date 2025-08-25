@@ -32,17 +32,14 @@ export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll, environmen
         </h2>
 
         <BarChart
-          study={study}
-          studySite={studySite}
+          resultsUnit={study.resultsUnit}
+          results={computedResultsWithDep}
           height={350}
           showTitle={true}
           title={isAll ? tPdf('charts.allEmissions') : tPdf('charts.siteEmissions', { site: siteName })}
           showLegend={false}
           showLabelsOnBars={true}
-          validatedOnly={false}
-          environment={environment}
           skipAnimation={true}
-          withDep
         />
 
         <PieChart
