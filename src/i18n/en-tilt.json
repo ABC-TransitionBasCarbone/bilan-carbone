@@ -25,5 +25,13 @@
         "ca": "Budget ({unit})"
       }
     }
+  },
+  "study": {
+    "flow": {
+      "info": "You can download a sample flow mapping to help you build your own. Afterwards, if you wish to submit your flow mapping so that other users can use it as an example and help other associations, please send it to <mail>methodologie@abc-transitionbascarbone.fr</mail>"
+    },
+    "dependencyMatrix": {
+      "info": "You can download a sample risk and dependency matrix to help you build your own. Afterwards, if you wish to submit your own matrix to help other associations by providing a working base, please send it to <mail>methodologie@abc-transitionbascarbone.fr</mail>"
+    }
   }
 }
