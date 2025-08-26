@@ -6,10 +6,6 @@
   height: 14.0625rem;
 }
 
-.gapped {
-  gap: 1rem;
-}
-
 .infoContainer {
   flex: 1;
   white-space: pre-line;

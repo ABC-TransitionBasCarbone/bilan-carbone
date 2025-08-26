@@ -71,7 +71,7 @@ const EmissionSourceContributorForm = ({
           isFromOldImport={isFromOldImport}
           currentBEVersion={currentBEVersion}
         />
-        <div className={classNames(styles.gapped, 'grow flex')}>
+        <div className="grow flex gapped">
           <div className={classNames(styles.inputWithUnit, 'flex grow')}>
             <TextField
               disabled={!!emissionSource.validated}

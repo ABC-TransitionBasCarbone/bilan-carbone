@@ -7,7 +7,6 @@ import { ResultsByPost } from '@/services/results/consolidated'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { postColors, STUDY_UNIT_VALUES } from '@/utils/study'
 import { ScatterSeries } from '@mui/x-charts'
-import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -44,13 +43,13 @@ const UncertaintyPerPost = ({ study, computedResults }: Props) => {
   const results = computedResults
     .filter((post) => post.post !== 'total')
     .sort((postA, postB) => postB.numberOfValidatedEmissionSource - postA.numberOfValidatedEmissionSource)
-  const [maxValue, maxUncertainty, maxSource] = results.reduce(
-    (res, post) => [
-      Math.max(res[0], post.value),
-      Math.max(res[1], post.uncertainty || 0),
-      Math.max(res[2], post.numberOfValidatedEmissionSource),
-    ],
-    [0, 0, 0],
+  const { maxValue, maxUncertainty, maxSource } = results.reduce(
+    (res, post) => ({
+      maxValue: Math.max(res.maxValue, post.value),
+      maxUncertainty: Math.max(res.maxUncertainty, post.uncertainty || 0),
+      maxSource: Math.max(res.maxSource, post.numberOfValidatedEmissionSource),
+    }),
+    { maxValue: 0, maxUncertainty: 0, maxSource: 0 },
   )
 
   const series: ScatterSeries[] = results
@@ -75,7 +74,7 @@ const UncertaintyPerPost = ({ study, computedResults }: Props) => {
       x={left + (width / 2) * (1 + margin)}
       y={top + height * margin}
       width={(width / 2) * (1 - margin * 2)}
-      height={height}
+      height={(height / 2) * (1 - 2 * margin)}
       className="bold text-center"
     >
       {t('prioritaryZone')}
@@ -103,7 +102,7 @@ const UncertaintyPerPost = ({ study, computedResults }: Props) => {
       />
       {glossary && (
         <GlossaryModal glossary="uncertaintyPerPost" label="uncertaintyPerPost" t={tGlossary} onClose={onClose}>
-          <div className={classNames(styles.gapped, 'flex-col')}>
+          <div className="flex-col gapped">
             <p>{tGlossary('uncertaintyPerPostDescription')}</p>
             {moreInfo ? (
               <p>{tGlossary('uncertaintyPerPostDescription2')}</p>

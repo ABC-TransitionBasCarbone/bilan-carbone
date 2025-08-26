@@ -79,3 +79,7 @@
 .grid {
   display: grid;
 }
+
+.gapped {
+  gap: 1rem;
+}

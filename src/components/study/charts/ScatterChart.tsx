@@ -39,6 +39,7 @@ const ScatterChart = ({
     series={series}
     colors={colors}
     sx={{ cursor: onClick ? 'pointer' : 'default' }}
+    disableVoronoi
   >
     <DrawingAreaBox Rect={Rect} Text={Text} />
     <ScatterPlot

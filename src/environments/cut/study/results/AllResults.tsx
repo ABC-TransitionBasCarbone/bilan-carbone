@@ -95,8 +95,8 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
           })}
         </Typography>
       </Box>
-      <Box component="section" className={classNames(styles.gapped, 'flex')}>
-        <div className={classNames(styles.gapped, 'flex-col')}>
+      <Box component="section" className="flex gapped">
+        <div className="flex-col gapped">
           <SelectStudySite study={study} allowAll studySite={studySite} setSite={setSite} />
           <Button
             variant="contained"

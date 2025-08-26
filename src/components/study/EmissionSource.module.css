@@ -155,10 +155,6 @@
   }
 }
 
-.gapped {
-  gap: 1rem;
-}
-
 .optionnalFields {
   flex: 2 !important;
 }

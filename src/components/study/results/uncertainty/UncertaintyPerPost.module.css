@@ -1,12 +1,8 @@
-.gapped {
-  gap: 1rem;
-}
-
 .moreInfoButton {
   cursor: pointer;
-  color: var(--primary-500);
+  color: var(--mui-palette-secondary-light);
   &:hover {
     text-decoration: underline;
-    color: var(--primary-800);
+    color: var(--mui-palette-secondary-dark);
   }
 }

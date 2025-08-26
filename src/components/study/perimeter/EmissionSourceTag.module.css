@@ -35,10 +35,6 @@
   max-height: fit-content;
 }
 
-.gapped {
-  gap: 1rem;
-}
-
 .selector {
   width: 10rem;
 }

@@ -4,8 +4,6 @@ import Button from '@/components/base/Button'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { hasAccessToBcExport } from '@/services/permissions/environment'
-import { environmentPostMapping } from '@/services/posts'
-import { computeResultsByPost } from '@/services/results/consolidated'
 import { AdditionalResultTypes, downloadStudyResults, getResultsValues, ResultType } from '@/services/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import DownloadIcon from '@mui/icons-material/Download'
@@ -65,7 +63,15 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     return false
   }, [environment, exports])
 
-  const { withDepValue, withoutDepValue, monetaryRatio, nonSpecificMonetaryRatio, computedResultsByTag } = useMemo(
+  const {
+    withDepValue,
+    withoutDepValue,
+    monetaryRatio,
+    nonSpecificMonetaryRatio,
+    computedResultsByTag,
+    computedResultsWithDep,
+    computedResultsWithoutDep,
+  } = useMemo(
     () =>
       getResultsValues(
         study,
@@ -77,21 +83,6 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
         displayValueWithDep,
       ),
     [displayValueWithDep, study, studySite, t, tPost, validatedOnly],
-  )
-
-  const computedResults = useMemo(
-    () =>
-      computeResultsByPost(
-        study,
-        tPost,
-        studySite,
-        true,
-        validatedOnly,
-        environmentPostMapping[environment || Environment.BC],
-        environment,
-        type,
-      ),
-    [study, studySite, validatedOnly, environment, type],
   )
 
   if (!environment) {
@@ -199,9 +190,16 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
         )}
       </div>
       {type !== Export.Beges && (
-        <UncertaintyAnalytics computedResults={computedResults} study={study} environment={environment} />
+        <UncertaintyAnalytics
+          computedResults={displayValueWithDep ? computedResultsWithDep : computedResultsWithoutDep}
+          study={study}
+          environment={environment}
+        />
       )}
-      <UncertaintyPerPost study={study} computedResults={computedResults} />
+      <UncertaintyPerPost
+        study={study}
+        computedResults={displayValueWithDep ? computedResultsWithDep : computedResultsWithoutDep}
+      />
     </Block>
   )
 }

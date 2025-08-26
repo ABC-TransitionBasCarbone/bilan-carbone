@@ -134,7 +134,7 @@ const EmissionSourceFactor = ({
 
   return (
     <div ref={containerRef}>
-      <div className={classNames(styles.gapped, 'align-center')}>
+      <div className="align-center gapped">
         <div className={classNames(styles.inputContainer, 'grow', { [styles.withSearch]: canEdit })}>
           <DebouncedInput
             disabled={!canEdit}
@@ -223,7 +223,7 @@ const EmissionSourceFactor = ({
       >
         <>
           {t('glossary.versionDescription', { bcVersion: currentBEVersion })}
-          <div className={classNames(styles.gapped, 'justify-end mt1')}>
+          <div className="justify-end mt1 gapped">
             <Button onClick={() => setOldFactorAction(undefined)}>{t('duplicateDialog.cancel')}</Button>
             <Button
               onClick={() => {

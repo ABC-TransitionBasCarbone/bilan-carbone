@@ -1,6 +1,7 @@
-import { styled } from '@mui/material'
 import { useDrawingArea } from '@mui/x-charts'
+import classNames from 'classnames'
 import { Fragment, ReactNode } from 'react'
+import styles from './DrawingArea.module.css'
 
 export interface DrawingProps {
   left: number
@@ -9,26 +10,7 @@ export interface DrawingProps {
   height: number
 }
 
-const StyledPath = styled('path')(({ theme }) => ({
-  fill: 'none',
-  stroke: theme.palette.text.primary,
-  shapeRendering: 'crispEdges',
-  strokeWidth: 1,
-  pointerEvents: 'none',
-}))
-
-export const StyledText = styled('text')(({ theme }) => ({
-  stroke: 'none',
-  fill: theme.palette.text.primary,
-  shapeRendering: 'crispEdges',
-}))
-
-export const StyledMultilineText = styled('div')(({ theme }) => ({
-  color: theme.palette.text.primary,
-  whiteSpace: 'normal',
-  wordWrap: 'break-word',
-  lineHeight: 1.2,
-}))
+const Path = (props: React.SVGProps<SVGPathElement>) => <path className={styles.path} {...props} />
 
 interface MultilineTextProps {
   x: number
@@ -41,7 +23,7 @@ interface MultilineTextProps {
 
 export const MultilineText = ({ x, y, width, height, className, children }: MultilineTextProps) => (
   <foreignObject x={x} y={y} width={width} height={height}>
-    <StyledMultilineText className={className}>{children}</StyledMultilineText>
+    <div className={classNames(styles.multilineText, className)}>{children}</div>
   </foreignObject>
 )
 
@@ -56,12 +38,8 @@ const DrawingAreaBox = ({ Rect, Text }: Props) => {
 
   return (
     <Fragment>
-      <StyledPath
-        d={`M ${left + width / 2} ${top + height * margin} L ${left + width / 2} ${top + height * (1 - margin)}`}
-      />
-      <StyledPath
-        d={`M ${left + width * margin} ${top + height / 2} L ${left + width * (1 - margin)} ${top + height / 2}`}
-      />
+      <Path d={`M ${left + width / 2} ${top + height * margin} L ${left + width / 2} ${top + height * (1 - margin)}`} />
+      <Path d={`M ${left + width * margin} ${top + height / 2} L ${left + width * (1 - margin)} ${top + height / 2}`} />
       {Rect && <Rect left={left} top={top} width={width} height={height} />}
       {Text && <Text left={left} top={top} width={width} height={height} />}
     </Fragment>

@@ -180,7 +180,7 @@ const EmissionSource = ({
         aria-controls={detailId}
         onClick={() => setDisplay((prevDisplay) => !prevDisplay)}
       >
-        <div className={classNames(styles.header, styles.gapped, 'grow justify-between')}>
+        <div className={classNames(styles.header, 'grow justify-between gapped')}>
           <div className="grow align-center">
             {emissionSource.validated || withoutDetail ? (
               <p data-testid="validated-emission-source-name" className={styles.emissionsSourceName}>
@@ -201,7 +201,7 @@ const EmissionSource = ({
               </>
             )}
           </div>
-          <div className={classNames(styles.gapped, 'grow align-center')}>
+          <div className="grow align-center gapped">
             {/* activity data */}
             <div className={classNames(styles.emissionSource, 'flex-col justify-center align-center text-center')}>
               {typeof emissionSource.value === 'number' && emissionSource.value !== 0 && (
