@@ -30,6 +30,7 @@ const ConsolidatedResults = ({ study, studySite, withDependencies, validatedOnly
         withDependencies={withDependencies}
         environment={environment}
         type={type}
+        validatedOnly={validatedOnly}
       />
     </>
   )

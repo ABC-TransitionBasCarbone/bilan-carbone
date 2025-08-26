@@ -1,17 +1,14 @@
 'use client'
 
-import { FullStudy } from '@/db/study'
-import { useChartComputations } from '@/hooks/useChartComputations'
 import { Typography, useTheme } from '@mui/material'
 import { BarChart as MuiBarChart } from '@mui/x-charts'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import styles from './BarChart.module.css'
 
-import { ResultType } from '@/services/study'
-import { isPost } from '@/utils/post'
+import { BasicTypeCharts, formatValueAndUnit, getColor, getLabel } from '@/utils/charts'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
-import { Environment } from '@prisma/client'
+import { StudyResultUnit } from '@prisma/client'
 
 const BAR_CHART_CONSTANTS = {
   TICK_ANGLE: -20,
@@ -19,73 +16,44 @@ const BAR_CHART_CONSTANTS = {
   AXIS_HEIGHT: 80,
 } as const
 
-interface Props {
-  study: FullStudy
-  studySite?: string
+interface Props<T> {
+  results: T[]
+  resultsUnit: StudyResultUnit
   title?: string
   height?: number
   showTitle?: boolean
   showLegend?: boolean
   showLabelsOnBars?: boolean
-  validatedOnly?: boolean
-  fixedColor?: boolean
-  environment: Environment
   skipAnimation?: boolean
-  withDep: boolean
-  type?: ResultType
 }
 
-const BarChart = ({
-  study,
-  studySite = 'all',
+const BarChart = <T extends BasicTypeCharts>({
+  results,
+  resultsUnit,
   title,
   height = 400,
   showTitle = true,
   showLegend = true,
   showLabelsOnBars = true,
-  validatedOnly = false,
-  fixedColor,
-  environment,
   skipAnimation = false,
-  withDep,
-  type,
-}: Props) => {
+}: Props<T>) => {
   const tResults = useTranslations('study.results')
+  const tUnits = useTranslations('study.results.units')
+  const tPost = useTranslations('emissionFactors.post')
+
   const theme = useTheme()
 
-  const { chartFormatter, computeResults, tUnits } = useChartComputations({
-    study,
-    studySite,
-    validatedOnly,
-    environment,
-    withDep,
-    type,
-  })
-
-  const barData = useMemo(
-    () => ({
-      labels: computeResults.map(({ label }) => label),
-      values: computeResults.map(({ value }) => value / STUDY_UNIT_VALUES[study.resultsUnit]),
-      colors: computeResults.map(({ post }) =>
-        fixedColor
-          ? theme.palette.secondary.main
-          : isPost(post)
-            ? theme.custom.postColors[post].light
-            : theme.palette.primary.light,
-      ),
-    }),
-    [
-      computeResults,
-      fixedColor,
-      theme.custom.postColors,
-      theme.palette.primary.light,
-      theme.palette.secondary.main,
-      study.resultsUnit,
-    ],
-  )
+  const barData = useMemo(() => {
+    const filteredData = results.filter((result) => result.post !== 'total' && result.label !== 'total')
+    return {
+      labels: filteredData.map(({ label, post }) => getLabel(label, post, tPost)),
+      values: filteredData.map(({ value }) => value / STUDY_UNIT_VALUES[resultsUnit]),
+      colors: filteredData.map(({ post, color }) => getColor(theme, post, color)),
+    }
+  }, [results, tPost, resultsUnit, theme])
 
   const getBarLabel = (item: { value: number | null }) =>
-    showLabelsOnBars && item.value && item.value > 0 ? chartFormatter(item.value) : ''
+    showLabelsOnBars && item.value && item.value > 0 ? formatValueAndUnit(item.value) : ''
 
   return (
     <div className={styles.barChart}>
@@ -113,14 +81,14 @@ const BarChart = ({
         series={[
           {
             data: barData.values,
-            valueFormatter: (value) => chartFormatter(value ?? 0, false),
+            valueFormatter: (value) => formatValueAndUnit(value ?? 0),
             label: showLegend ? tResults('emissions') : undefined,
           },
         ]}
         grid={{ horizontal: true }}
         yAxis={[
           {
-            label: tUnits(study.resultsUnit),
+            label: tUnits(resultsUnit),
           },
         ]}
         axisHighlight={{ x: 'none' }}

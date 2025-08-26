@@ -402,6 +402,7 @@ const EmissionSourceForm = ({
       <div className={classNames(styles.row, 'flex', expandedQuality || !canShrink ? 'flex-col' : '')}>
         <div className={classNames(styles.gapped, styles.optionnalFields, 'grow flex')}>
           <Autocomplete
+            className={styles.tagsContainer}
             multiple
             disabled={!canEdit}
             data-testid="emission-source-tag"

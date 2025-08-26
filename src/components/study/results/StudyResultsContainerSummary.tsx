@@ -6,7 +6,7 @@ import HelpIcon from '@/components/base/HelpIcon'
 import StyledChip from '@/components/base/StyledChip'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
-import { AdditionalResultTypes, getResultsValues, ResultType } from '@/services/study'
+import { getResultsValues } from '@/services/study'
 import { formatNumber } from '@/utils/number'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import SpaIcon from '@mui/icons-material/Spa'
@@ -24,36 +24,36 @@ interface Props {
   showTitle?: boolean
   validatedOnly?: boolean
   withDependencies?: boolean
-  type?: ResultType
 }
 
-const StudyResultsContainerSummary = ({
-  study,
-  studySite,
-  showTitle,
-  validatedOnly,
-  withDependencies,
-  type = AdditionalResultTypes.ENV_SPECIFIC_EXPORT,
-}: Props) => {
+const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOnly, withDependencies }: Props) => {
   const t = useTranslations('study')
   const tPost = useTranslations('emissionFactors.post')
   const tResultUnits = useTranslations('study.results.units')
+  const tResults = useTranslations('study.results')
   const [glossary, setGlossary] = useState('')
   const [withDep, setWithDependencies] = useState(!!withDependencies)
   const environment = study.organizationVersion.environment
 
   const isCut = useMemo(() => environment === Environment.CUT, [environment])
 
-  const [formattedWithDepValue, formattedWithoutDepValue, formattedMonetaryRatio] = useMemo(() => {
-    const { withDepValue, withoutDepValue, monetaryRatio } = getResultsValues(
-      study,
-      tPost,
-      studySite,
-      !!validatedOnly,
-      environment,
-    )
-    return [formatNumber(withDepValue), formatNumber(withoutDepValue), formatNumber(monetaryRatio, 2)]
-  }, [environment, study, studySite, tPost, validatedOnly])
+  const [
+    formattedWithDepValue,
+    formattedWithoutDepValue,
+    formattedMonetaryRatio,
+    computedResultsWithDep,
+    computedResultsWithoutDep,
+  ] = useMemo(() => {
+    const { withDepValue, withoutDepValue, monetaryRatio, computedResultsWithDep, computedResultsWithoutDep } =
+      getResultsValues(study, tPost, studySite, !!validatedOnly, environment, tResults)
+    return [
+      formatNumber(withDepValue),
+      formatNumber(withoutDepValue),
+      formatNumber(monetaryRatio, 2),
+      computedResultsWithDep,
+      computedResultsWithoutDep,
+    ]
+  }, [environment, study, studySite, tPost, tResults, validatedOnly])
 
   return (
     <>
@@ -137,17 +137,12 @@ const StudyResultsContainerSummary = ({
         )}
         <div className="grow">
           <BarChart
-            study={study}
-            studySite={studySite}
+            results={withDep ? computedResultsWithDep : computedResultsWithoutDep}
+            resultsUnit={study.resultsUnit}
             height={450}
             showTitle={false}
             showLegend={false}
             showLabelsOnBars={false}
-            validatedOnly={validatedOnly}
-            fixedColor={isCut ? false : true}
-            environment={environment}
-            type={type}
-            withDep={withDep}
           />
         </div>
       </div>

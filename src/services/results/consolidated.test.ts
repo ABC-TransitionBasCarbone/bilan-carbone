@@ -1,6 +1,7 @@
 import { FullStudy } from '@/db/study'
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
 import { getMockeFullStudy } from '@/tests/utils/models/study'
+import { translationMock } from '@/tests/utils/models/translationsMock'
 import { expect } from '@jest/globals'
 import { Environment, SubPost } from '@prisma/client'
 import { computeResultsByTag } from './consolidated'
@@ -46,6 +47,11 @@ describe('consolidated function', () => {
           studySite,
           emissionSourceTags: [tags[0], tags[4], tags[8]],
           value: 100,
+          reliability: 3,
+          technicalRepresentativeness: 3,
+          geographicRepresentativeness: 2,
+          temporalRepresentativeness: 5,
+          completeness: 4,
         }),
         getMockedFullStudyEmissionSource({ validated: true, studySite, emissionSourceTags: [tags[1]], value: 45 }),
         getMockedFullStudyEmissionSource({
@@ -76,7 +82,14 @@ describe('consolidated function', () => {
 
       const study = getMockeFullStudy({ emissionSources, emissionSourceTagFamilies })
 
-      const result = computeResultsByTag(study, studySite.id, false, true, Environment.BC)
+      const result = computeResultsByTag(
+        study,
+        studySite.id,
+        false,
+        true,
+        Environment.BC,
+        translationMock({ other: 'other' }),
+      )
 
       expect(result).toEqual([
         {
@@ -84,30 +97,35 @@ describe('consolidated function', () => {
           tagFamily: { id: 'familyTag1', name: 'Family Tag 1' },
           value: 1000,
           color: '#000000',
+          uncertainty: 1.2365959919080918,
         },
         {
           label: 'test2',
           tagFamily: { id: 'familyTag1', name: 'Family Tag 1' },
           value: 950,
           color: '#000000',
+          uncertainty: 1,
         },
         {
           label: 'test21',
           tagFamily: { id: 'familyTag2', name: 'Family Tag 2' },
           value: 1500,
           color: '#000000',
+          uncertainty: 1.1520868590878348,
         },
         {
           label: 'test31',
           tagFamily: { id: 'familyTag3', name: 'Family Tag 3' },
           value: 1000,
           color: '#000000',
+          uncertainty: 1.2365959919080918,
         },
         {
           label: 'other',
           tagFamily: { name: 'other', id: 'other' },
           value: 800,
           color: '',
+          uncertainty: 1,
         },
       ])
     })
@@ -154,7 +172,14 @@ describe('consolidated function', () => {
 
       const study = getMockeFullStudy({ emissionSources, emissionSourceTagFamilies })
 
-      const result = computeResultsByTag(study, studySite.id, true, false, Environment.BC)
+      const result = computeResultsByTag(
+        study,
+        studySite.id,
+        true,
+        false,
+        Environment.BC,
+        translationMock({ other: 'other' }),
+      )
 
       expect(result).toEqual([
         {
@@ -162,30 +187,35 @@ describe('consolidated function', () => {
           tagFamily: { id: 'familyTag1', name: 'Family Tag 1' },
           value: 1000,
           color: '#000000',
+          uncertainty: 1,
         },
         {
           label: 'test2',
           tagFamily: { id: 'familyTag1', name: 'Family Tag 1' },
           value: 1500,
           color: '#000000',
+          uncertainty: 1,
         },
         {
           label: 'test21',
           tagFamily: { id: 'familyTag2', name: 'Family Tag 2' },
           value: 1500,
           color: '#000000',
+          uncertainty: 1,
         },
         {
           label: 'test31',
           tagFamily: { id: 'familyTag3', name: 'Family Tag 3' },
           value: 1000,
           color: '#000000',
+          uncertainty: 1,
         },
         {
           label: 'other',
           tagFamily: { name: 'other', id: 'other' },
           value: 800,
           color: '',
+          uncertainty: 1,
         },
       ])
     })
@@ -195,7 +225,14 @@ describe('consolidated function', () => {
 
       const study = getMockeFullStudy({ emissionSources, emissionSourceTagFamilies })
 
-      const result = computeResultsByTag(study, studySite.id, true, false, Environment.BC)
+      const result = computeResultsByTag(
+        study,
+        studySite.id,
+        true,
+        false,
+        Environment.BC,
+        translationMock({ other: 'other' }),
+      )
 
       expect(result).toEqual([])
     })

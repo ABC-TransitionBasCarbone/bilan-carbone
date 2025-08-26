@@ -78,8 +78,8 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
   }
 
   const { computedResultsWithDep } = useMemo(
-    () => getResultsValues(study, tPost, studySite, !!validatedOnly, study.organizationVersion.environment),
-    [study, studySite, validatedOnly],
+    () => getResultsValues(study, tPost, studySite, !!validatedOnly, study.organizationVersion.environment, tResults),
+    [study, studySite, tPost, tResults, validatedOnly],
   )
 
   return (
@@ -148,19 +148,17 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
               withDependencies={false}
               hiddenUncertainty
               environment={Environment.CUT}
+              validatedOnly={validatedOnly}
             />
           </TabPanel>
           <TabPanel value={value} index={1}>
             <BarChart
-              study={study}
-              studySite={studySite}
+              results={computedResultsWithDep}
+              resultsUnit={study.resultsUnit}
               height={400}
               showTitle={false}
               showLegend={true}
               showLabelsOnBars={true}
-              validatedOnly={validatedOnly}
-              environment={Environment.CUT}
-              withDep
             />
           </TabPanel>
           <TabPanel value={value} index={2}>
