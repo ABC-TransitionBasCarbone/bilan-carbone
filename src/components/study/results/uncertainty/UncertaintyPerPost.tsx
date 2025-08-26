@@ -41,7 +41,9 @@ const UncertaintyPerPost = ({ study, computedResults }: Props) => {
 
   const router = useRouter()
 
-  const results = computedResults.filter((post) => post.post !== 'total')
+  const results = computedResults
+    .filter((post) => post.post !== 'total')
+    .sort((postA, postB) => postB.numberOfValidatedEmissionSource - postA.numberOfValidatedEmissionSource)
   const [maxValue, maxUncertainty, maxSource] = results.reduce(
     (res, post) => [
       Math.max(res[0], post.value),
@@ -51,7 +53,7 @@ const UncertaintyPerPost = ({ study, computedResults }: Props) => {
     [0, 0, 0],
   )
 
-  const series: ScatterSeries[] = computedResults
+  const series: ScatterSeries[] = results
     .filter((post) => !!post.uncertainty)
     .map((post) => ({
       id: post.post,
