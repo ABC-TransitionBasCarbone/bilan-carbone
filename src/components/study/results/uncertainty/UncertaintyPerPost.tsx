@@ -12,7 +12,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { DrawingProps, MultilineText } from '../../charts/DrawingArea'
 import ScatterChart from '../../charts/ScatterChart'
-import styles from './UncertaintyPerPost.module.css'
+import styles from './UncertaintyGraph.module.css'
 
 const margin = 0.05
 const Rect = ({ left, top, width, height }: DrawingProps) => (
