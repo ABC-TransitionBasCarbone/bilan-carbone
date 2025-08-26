@@ -4,7 +4,7 @@ import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { getEmissionSourcesTotalCo2 } from '@/services/emissionSource'
-import { Post, subPostsByPost } from '@/services/posts'
+import { getPostBySubPost, Post } from '@/services/posts'
 import { computeBegesResult, getBegesEmissionTotal } from '@/services/results/beges'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
@@ -39,7 +39,7 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
   const router = useRouter()
 
   const navigateToEmissionSource = (emissionSourceId: string, subPost: SubPost) => {
-    const post = Object.keys(subPostsByPost).find((key) => subPostsByPost[key as Post].includes(subPost)) as Post
+    const post = getPostBySubPost(subPost)
     if (post) {
       const url = `/etudes/${study.id}/comptabilisation/saisie-des-donnees/${post}#emission-source-${emissionSourceId}`
       router.push(url)
