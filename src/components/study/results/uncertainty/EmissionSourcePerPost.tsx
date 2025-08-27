@@ -7,30 +7,22 @@ import { defaultPostColor, postColors, STUDY_UNIT_VALUES } from '@/utils/study'
 import { ScatterMarkerProps, ScatterSeries } from '@mui/x-charts'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { DrawingProps, MultilineText } from '../../charts/DrawingArea'
+import {
+  BottomRightMultilineText,
+  BottomRightRect,
+  DrawingProps,
+  TopLeftMultilineText,
+  TopLeftRect,
+} from '../../charts/DrawingArea'
 import ScatterChart from '../../charts/ScatterChart'
 import PostIcon from '../../infography/icons/PostIcon'
 import styles from './UncertaintyGraph.module.css'
 
 const margin = 0.05
-const Rect = ({ left, top, width, height }: DrawingProps) => (
+const Rect = (props: DrawingProps) => (
   <>
-    <rect
-      x={left + (width / 2) * margin}
-      y={top + (height / 2) * margin}
-      width={(width / 2) * (1 - 2 * margin)}
-      height={(height / 2) * (1 - 2 * margin)}
-      fill="var(--error-50)"
-      opacity={0.3}
-    />
-    <rect
-      x={left + (width / 2) * (1 + margin)}
-      y={top + (height / 2) * (1 + margin)}
-      width={(width / 2) * (1 - 2 * margin)}
-      height={(height / 2) * (1 - 2 * margin)}
-      fill="var(--error-50)"
-      opacity={0.3}
-    />
+    <TopLeftRect margin={margin} color="var(--error-50)" {...props} />
+    <BottomRightRect margin={margin} color="var(--error-50)" {...props} />
   </>
 )
 
@@ -64,26 +56,14 @@ const EmissionSourcePerPost = ({ study, computedResults }: Props) => {
 
   const colors = series.map((post) => `var(--post-${postColors[post.id as Post] || defaultPostColor}-light)`)
 
-  const Text = ({ left, top, width, height }: DrawingProps) => (
+  const Text = (props: DrawingProps) => (
     <>
-      <MultilineText
-        x={left + (width / 2) * margin}
-        y={top + height * margin}
-        width={(width / 2) * (1 - margin * 2)}
-        height={(height / 2) * (1 - 2 * margin)}
-        className="bold text-center"
-      >
+      <TopLeftMultilineText {...props} margin={margin} className="bold text-center">
         {t('overExploredZone')}
-      </MultilineText>
-      <MultilineText
-        x={left + (width / 2) * (1 + margin)}
-        y={top + (height / 2) * (1 + 2 * margin)}
-        width={(width / 2) * (1 - margin * 2)}
-        height={(height / 2) * (1 - 2 * margin)}
-        className="bold text-center"
-      >
+      </TopLeftMultilineText>
+      <BottomRightMultilineText {...props} margin={margin} className="bold text-center">
         {t('prioritaryZone')}
-      </MultilineText>
+      </BottomRightMultilineText>
     </>
   )
 

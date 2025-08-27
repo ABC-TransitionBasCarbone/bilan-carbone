@@ -10,7 +10,7 @@ import { ScatterMarkerProps, ScatterSeries } from '@mui/x-charts'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useState } from 'react'
-import { DrawingProps, MultilineText, TopRightRect } from '../../charts/DrawingArea'
+import { DrawingProps, TopRightMultilineText, TopRightRect } from '../../charts/DrawingArea'
 import ScatterChart from '../../charts/ScatterChart'
 import PostIcon from '../../infography/icons/PostIcon'
 import styles from './UncertaintyGraph.module.css'
@@ -61,16 +61,10 @@ const UncertaintyPerPost = ({ study, computedResults }: Props) => {
     setGlossary(false)
   }
 
-  const Text = ({ left, top, width, height }: DrawingProps) => (
-    <MultilineText
-      x={left + (width / 2) * (1 + margin)}
-      y={top + height * margin}
-      width={(width / 2) * (1 - margin * 2)}
-      height={(height / 2) * (1 - 2 * margin)}
-      className="bold text-center"
-    >
+  const Text = (props: DrawingProps) => (
+    <TopRightMultilineText {...props} margin={margin} className="bold text-center">
       {t('prioritaryZone')}
-    </MultilineText>
+    </TopRightMultilineText>
   )
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
