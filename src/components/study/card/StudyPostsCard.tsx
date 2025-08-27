@@ -1,7 +1,7 @@
 import ProgressBar from '@/components/base/ProgressBar'
 import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
-import { postColors } from '@/utils/study'
+import { defaultPostColor, postColors } from '@/utils/study'
 import { StudyRole } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -25,7 +25,7 @@ const StudyPostsCard = ({ study, post, userRole, studySite, setSite, isCut }: Pr
   const tRole = useTranslations('study.role')
   const tPost = useTranslations('emissionFactors.post')
 
-  const postColor = useMemo(() => (post ? postColors[post] : 'green'), [post])
+  const postColor = useMemo(() => (post ? postColors[post] : defaultPostColor), [post])
 
   const emissionSources = study.emissionSources.filter(
     (emissionSource) =>

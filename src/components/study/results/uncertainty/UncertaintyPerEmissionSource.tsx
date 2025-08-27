@@ -4,7 +4,7 @@ import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
 import { getPostBySubPost, Post } from '@/services/posts'
 import { getQualityStandardDeviation, qualityKeys, specificFEQualityKeysLinks } from '@/services/uncertainty'
-import { postColors } from '@/utils/study'
+import { defaultPostColor, postColors } from '@/utils/study'
 import { ScatterSeries } from '@mui/x-charts'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -66,7 +66,7 @@ const UncertaintyPerEmissionSource = ({ study }: Props) => {
     }))
 
   const colors = series.map(
-    (emissionSource) => `var(--post-${postColors[emissionSource.post as Post] || 'green'}-light)`,
+    (emissionSource) => `var(--post-${postColors[emissionSource.post as Post] || defaultPostColor}-light)`,
   )
 
   const Text = ({ left, top, width, height }: DrawingProps) => (

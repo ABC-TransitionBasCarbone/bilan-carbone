@@ -5,7 +5,7 @@ import { FullStudy } from '@/db/study'
 import { Post } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
-import { postColors, STUDY_UNIT_VALUES } from '@/utils/study'
+import { defaultPostColor, postColors, STUDY_UNIT_VALUES } from '@/utils/study'
 import { ScatterMarkerProps, ScatterSeries } from '@mui/x-charts'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -60,7 +60,7 @@ const UncertaintyPerPost = ({ study, computedResults }: Props) => {
         `${tPost(post.post)} : ${t('total')} : ${formatEmissionFactorNumber(post.value / STUDY_UNIT_VALUES[study.resultsUnit])} ${t(`units.${study.resultsUnit}`)} - ${t('uncertainty')} : ${formatNumber(post.uncertainty, 2)}%`,
     }))
 
-  const colors = series.map((post) => `var(--post-${postColors[post.id as Post] || 'green'}-light)`)
+  const colors = series.map((post) => `var(--post-${postColors[post.id as Post] || defaultPostColor}-light)`)
 
   const onClose = () => {
     setMoreInfo(false)
