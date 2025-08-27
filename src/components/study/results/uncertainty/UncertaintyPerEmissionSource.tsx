@@ -9,21 +9,12 @@ import { ScatterSeries } from '@mui/x-charts'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
-import { DrawingProps, MultilineText } from '../../charts/DrawingArea'
+import { DrawingProps, MultilineText, TopRightRect } from '../../charts/DrawingArea'
 import ScatterChart from '../../charts/ScatterChart'
 import styles from './UncertaintyGraph.module.css'
 
 const margin = 0.05
-const Rect = ({ left, top, width, height }: DrawingProps) => (
-  <rect
-    x={left + (width / 2) * (1 + margin)}
-    y={top + (height / 2) * margin}
-    width={(width / 2) * (1 - 2 * margin)}
-    height={(height / 2) * (1 - 2 * margin)}
-    fill="var(--error-50)"
-    opacity={0.3}
-  />
-)
+const Rect = (props: DrawingProps) => <TopRightRect margin={margin} color="var(--error-50)" {...props} />
 
 interface Props {
   study: FullStudy
@@ -60,7 +51,7 @@ const UncertaintyPerEmissionSource = ({ study }: Props) => {
     .map((emissionSource) => ({
       id: emissionSource.id,
       data: [{ id: emissionSource.id, x: emissionSource.value as number, y: emissionSource.uncertainty as number }],
-      markerSize: 20,
+      markerSize: 10,
       post: emissionSource.post,
       valueFormatter: () => `${emissionSource.name}`,
     }))
