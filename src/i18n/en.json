@@ -630,6 +630,7 @@
       "value": "Emissions ({unit})",
       "emissions": "Emissions",
       "uncertainty": "Uncertainty",
+      "emissionSources": "Number of emission sources",
       "bilanCarbone": "Résultats Bilan Carbone®",
       "beges": "Résultats BEGES",
       "withDependencies": "With dependencies",
@@ -693,6 +694,8 @@
       "tagPieChartTitle": "Emissions, by tag ({unit})",
       "other": "No tag",
       "prioritaryZone": "Priority area for improving collection",
+      "overExploredZone": "Sufficiently (overly) explored area",
+      "postEmissionPerNumberOfSources": "Emissions by post based on the number of emission sources",
       "glossary": {
         "title": "Glossary",
         "close": "Close",

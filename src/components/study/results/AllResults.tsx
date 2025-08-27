@@ -17,6 +17,7 @@ import BegesResultsTable from './beges/BegesResultsTable'
 import ConsolatedBEGESDifference from './ConsolatedBEGESDifference'
 import ConsolidatedResults from './consolidated/ConsolidatedResults'
 import EmissionsAnalysis from './consolidated/EmissionsAnalysis'
+import EmissionSourcePerPost from './uncertainty/EmissionSourcePerPost'
 import UncertaintyAnalytics from './uncertainty/UncertaintyAnalytics'
 
 interface Props {
@@ -195,6 +196,10 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
           environment={environment}
         />
       )}
+      <EmissionSourcePerPost
+        study={study}
+        computedResults={displayValueWithDep ? computedResultsWithDep : computedResultsWithoutDep}
+      />
     </Block>
   )
 }
