@@ -1,6 +1,6 @@
 'use client'
 
-import { BasicTypeCharts, formatValueAndUnit, getColor, getLabel } from '@/utils/charts'
+import { BasicTypeCharts, formatValueAndUnit, getColor } from '@/utils/charts'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { Typography, useTheme } from '@mui/material'
 import { PieChart as MuiPieChart, PieChartProps } from '@mui/x-charts'
@@ -34,14 +34,12 @@ const PieChart = <T extends BasicTypeCharts>({
   showLabelsOnPie = true,
   ...pieChartProps
 }: Props<T>) => {
-  const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('study.results.units')
+  console.log('results', results)
 
   const theme = useTheme()
 
   const getColorForPie = useCallback((post?: string, color?: string) => getColor(theme, post, color), [theme])
-
-  const getLabelForPie = useCallback((label?: string, post?: string) => getLabel(label, post, tPost), [tPost])
 
   const pieData = useMemo(
     () =>
@@ -51,13 +49,13 @@ const PieChart = <T extends BasicTypeCharts>({
           const convertedValue = value / STUDY_UNIT_VALUES[resultsUnit]
 
           return {
-            label: getLabelForPie(label, post),
+            label,
             value: convertedValue,
             color: getColorForPie(post, color),
           }
         })
         .filter((computeResult) => computeResult.value > 0),
-    [getColorForPie, getLabelForPie, results, resultsUnit],
+    [getColorForPie, results, resultsUnit],
   )
 
   return (

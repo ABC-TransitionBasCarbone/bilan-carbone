@@ -692,6 +692,7 @@
       "barChart": "Graphique",
       "pieChart": "Camembert",
       "tagPieChartTitle": "Émissions, par tag ({unit})",
+      "consolidatedChartTitle": "Émissions, par poste ({unit})",
       "other": "Sans tag",
       "prioritaryZone": "Zone d'action prioritaire pour l'amélioration de la collecte",
       "overExploredZone": "Zone suffisamment (trop) explorée",

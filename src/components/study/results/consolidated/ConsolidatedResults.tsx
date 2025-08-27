@@ -1,37 +1,39 @@
-import { FullStudy } from '@/db/study'
-import { ResultType } from '@/services/study'
-import { Environment } from '@prisma/client'
+import { ResultsByPost } from '@/services/results/consolidated'
+import { StudyResultUnit } from '@prisma/client'
+import { useTranslations } from 'next-intl'
+import ResultsTableAndGraphs from '../ResultsTableAndGraphs'
 import ConsolidatedResultsTable from './ConsolidatedResultsTable'
 
 interface Props {
-  study: FullStudy
-  studySite: string
-  withDependencies: boolean
-  validatedOnly: boolean
-  environment: Environment | undefined
-  type?: ResultType
+  computedResults: ResultsByPost[]
+  resultsUnit: StudyResultUnit
 }
 
-const ConsolidatedResults = ({ study, studySite, withDependencies, validatedOnly, environment, type }: Props) => {
+const ConsolidatedResults = ({ computedResults, resultsUnit }: Props) => {
+  const t = useTranslations('study.results')
+  const tPost = useTranslations('emissionFactors.post')
+  const tResultUnits = useTranslations('study.results.units')
+
   return (
     <>
-      {/* <div className="mb1">
-        <StudyResultsContainerSummary
-          study={study}
-          studySite={studySite}
-          withDependencies={withDependencies}
-          validatedOnly={validatedOnly}
-          type={type}
-        />
-      </div> */}
-      <ConsolidatedResultsTable
+      <ResultsTableAndGraphs
+        computedResults={computedResults.map((result) => ({
+          ...result,
+          children: result.subPosts.map((subPost) => ({ ...subPost, label: tPost(subPost.post) })),
+        }))}
+        resultsUnit={resultsUnit}
+        title={t('consolidatedChartTitle', { unit: tResultUnits(resultsUnit) })}
+        type="post"
+        TableComponent={ConsolidatedResultsTable}
+      />
+      {/* <ConsolidatedResultsTable
         study={study}
         studySite={studySite}
         withDependencies={withDependencies}
         environment={environment}
         type={type}
         validatedOnly={validatedOnly}
-      />
+      /> */}
     </>
   )
 }

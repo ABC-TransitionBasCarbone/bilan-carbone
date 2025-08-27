@@ -102,7 +102,7 @@ const getAlpha = (emission: number | null, confidenceInterval: number[] | null) 
   return (confidenceInterval[1] - emission) / emission
 }
 
-const getEmissionSourceEmission = (
+export const getEmissionSourceEmission = (
   emissionSource: Pick<
     (FullStudy | StudyWithoutDetail)['emissionSources'][number],
     'emissionFactor' | 'value' | 'subPost' | 'depreciationPeriod'
@@ -127,15 +127,14 @@ const getEmissionSourceEmission = (
 }
 
 const getEmissionSourceMonetaryEmission = (
-  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][number],
+  emissionSource: Pick<FullStudy['emissionSources'][number], 'emissionFactor'> & { emissionValue: number },
   excludeManualFE: boolean,
-  environment?: Environment,
 ) => {
   const isSpecific = excludeManualFE && emissionSource.emissionFactor?.importedFrom === Import.Manual
   if (!emissionSource.emissionFactor || !emissionSource.emissionFactor.isMonetary || isSpecific) {
     return null
   }
-  return getEmissionSourceEmission(emissionSource, environment)
+  return emissionSource.emissionValue
 }
 
 export const getEmissionResults = (
@@ -144,7 +143,7 @@ export const getEmissionResults = (
 ) => {
   const emission = getEmissionSourceEmission(emissionSource, environment)
   if (emission === null) {
-    return null
+    return { emissionValue: 0, standardDeviation: null, confidenceInterval: null, alpha: null }
   }
 
   const standardDeviation = getStandardDeviation(emissionSource)
@@ -152,19 +151,19 @@ export const getEmissionResults = (
   const alpha = getAlpha(emission, confidenceInterval)
 
   return {
-    emission,
+    emissionValue: emission ?? 0,
     standardDeviation,
     confidenceInterval,
     alpha,
   }
 }
 
-export const sumStandardDeviations = (standardDeviations: { value: number; standardDeviation: number | null }[]) => {
-  const totalValue = standardDeviations.reduce((acc, { value }) => acc + value, 0)
+export const sumStandardDeviations = (results: { value: number; standardDeviation: number | null }[]) => {
+  const totalValue = results.reduce((acc, { value }) => acc + value, 0)
 
   return Math.exp(
     Math.sqrt(
-      standardDeviations.reduce((acc, { value, standardDeviation }) => {
+      results.reduce((acc, { value, standardDeviation }) => {
         const sensibility = value / totalValue
         const sd = Math.log(standardDeviation || 1)
         return acc + sensibility * sensibility * sd * sd
@@ -174,40 +173,25 @@ export const sumStandardDeviations = (standardDeviations: { value: number; stand
 }
 
 export const sumEmissionSourcesUncertainty = (
-  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'],
-  environment?: Environment,
+  emissionSources: { emissionValue: number; standardDeviation: number | null }[],
 ) => {
-  const results = emissionSource
-    .map((source) => getEmissionResults(source, environment))
-    .filter((result) => result !== null)
-    .map((result) => ({
-      value: result.emission,
-      standardDeviation: result.standardDeviation,
-    }))
+  const results = emissionSources.map((result) => ({
+    value: result.emissionValue,
+    standardDeviation: result.standardDeviation,
+  }))
 
   return sumStandardDeviations(results)
 }
 
-export const getEmissionSourcesTotalCo2 = (
-  emissionSources: Pick<
-    FullStudy['emissionSources'][number],
-    'emissionFactor' | 'value' | 'subPost' | 'depreciationPeriod'
-  >[],
-  environment: Environment | undefined,
-) =>
-  emissionSources.reduce(
-    (sum, emissionSource) => sum + (getEmissionSourceEmission(emissionSource, environment) || 0),
-    0,
-  )
+export const getEmissionSourcesTotalCo2 = (emissionSources: { emissionValue: number }[]) =>
+  emissionSources.reduce((sum, emissionSource) => sum + emissionSource.emissionValue, 0)
 
 export const getEmissionSourcesTotalMonetaryCo2 = (
-  emissionSources: FullStudy['emissionSources'],
+  emissionSources: (Pick<FullStudy['emissionSources'][number], 'emissionFactor'> & { emissionValue: number })[],
   excludeManualFE: boolean,
-  environment?: Environment,
 ) =>
   emissionSources.reduce(
-    (sum, emissionSource) =>
-      sum + (getEmissionSourceMonetaryEmission(emissionSource, excludeManualFE, environment) || 0),
+    (sum, emissionSource) => sum + (getEmissionSourceMonetaryEmission(emissionSource, excludeManualFE) || 0),
     0,
   )
 
@@ -216,8 +200,8 @@ export const getEmissionResultsCut = (
   environment?: Environment,
 ) => {
   const result = getEmissionResults(emissionSource, environment)
-  if (result?.emission && emissionSource.depreciationPeriod && emissionSource.depreciationPeriod < 5) {
-    result.emission = result.emission / 5
+  if (result?.emissionValue && emissionSource.depreciationPeriod && emissionSource.depreciationPeriod < 5) {
+    result.emissionValue = result.emissionValue / 5
   }
   return result
 }

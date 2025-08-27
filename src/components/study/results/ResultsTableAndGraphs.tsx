@@ -1,5 +1,6 @@
 import Box from '@/components/base/Box'
 import Title from '@/components/base/Title'
+import { BasicTypeCharts } from '@/utils/charts'
 import BarChartIcon from '@mui/icons-material/BarChart'
 import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined'
 import { Tab, Tabs } from '@mui/material'
@@ -28,27 +29,32 @@ interface Props<T> {
   computedResults: T[]
   resultsUnit: StudyResultUnit
   TableComponent?: (props: ResultsTableProps<T>) => ReactNode
+  title: string
+  type: 'tag' | 'post'
 }
-const ResultsTableAndGraphs = <
-  T extends { value: number; label: string; post?: string; tagFamily?: { id: string; name: string } },
->({
+const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: string; name: string } }>({
   activeTabs = Object.values(TabsPossibilities),
   defaultTab = activeTabs[0],
   computedResults,
   resultsUnit,
   TableComponent = () => <></>,
+  title,
+  type,
 }: Props<T>) => {
   const [tabSelected, setTabSelected] = useState(defaultTab)
   const [displayFilter, setDisplayFilter] = useState(false)
   const [filteredResults, setFilteredResults] = useState(computedResults)
-  const tUnits = useTranslations('study.results.units')
 
   const t = useTranslations('study.results')
 
   const TabComponent = useMemo(() => {
     switch (tabSelected) {
-      case TabsPossibilities.table:
+      case TabsPossibilities.table: {
+        if (!TableComponent) {
+          return null
+        }
         return <TableComponent resultsUnit={resultsUnit} data={filteredResults} />
+      }
       case TabsPossibilities.pieChart:
         return <PieChart results={filteredResults} resultsUnit={resultsUnit ?? StudyResultUnit.T} hideLegend />
       case TabsPossibilities.barChart:
@@ -60,7 +66,7 @@ const ResultsTableAndGraphs = <
 
   return (
     <Box className={styles.container}>
-      <Title as="h6" title={t('tagPieChartTitle', { unit: tUnits(resultsUnit) })} className="justify-center" />
+      <Title as="h6" title={title} className="justify-center" />
       <div className="flex flex-row justify-between align-center">
         {activeTabs.length > 1 ? (
           <Tabs value={tabSelected} onChange={(_e, v) => setTabSelected(v)}>
@@ -75,7 +81,7 @@ const ResultsTableAndGraphs = <
           {displayFilter ? <BarChartIcon className="flex-end" /> : <TuneOutlinedIcon className="flex-end" />}
         </div>
       </div>
-      <Filters setFilteredResults={setFilteredResults} results={computedResults} type="tag" display={displayFilter} />
+      <Filters setFilteredResults={setFilteredResults} results={computedResults} type={type} display={displayFilter} />
       {!displayFilter && TabComponent}
     </Box>
   )

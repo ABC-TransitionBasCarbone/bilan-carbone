@@ -2,7 +2,6 @@ import BarChart from '@/components/study/charts/BarChart'
 import PieChart from '@/components/study/charts/PieChart'
 import { FullStudy } from '@/db/study'
 import { getResultsValues } from '@/services/study'
-import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 
@@ -12,10 +11,9 @@ interface Props {
   siteName: string
   tPdf: ReturnType<typeof useTranslations>
   isAll: boolean
-  environment: Environment
 }
 
-export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll, environment }: Props) => {
+export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const tStudyResults = useTranslations('study.results')
 

@@ -7,7 +7,7 @@ import { isCAS, STUDY_UNIT_VALUES } from '@/utils/study'
 import { Environment, Export, ExportRule, Level, StudyResultUnit, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
-import { canBeValidated, getEmissionSourcesTotalCo2, getStandardDeviation } from './emissionSource'
+import { canBeValidated, getEmissionResults, getEmissionSourcesTotalCo2, getStandardDeviation } from './emissionSource'
 import { download } from './file'
 import { StudyWithoutDetail } from './permissions/study'
 import { environmentPostMapping, Post, subPostsByPost } from './posts'
@@ -228,14 +228,18 @@ const getEmissionSourcesCSVContent = (
   const emptyFieldsCount = type === 'Study' ? 4 : type === 'Post' ? 3 : 2
   const emptyFields = (count: number) => Array(count).fill('')
 
-  const totalEmissions = getEmissionSourcesTotalCo2(emissionSources, environment) / STUDY_UNIT_VALUES[resultsUnit]
+  const emissionSourcesWithEmission = emissionSources.map((emissionSource) => ({
+    ...emissionSource,
+    ...getEmissionResults(emissionSource, environment),
+  }))
+  const totalEmissions = getEmissionSourcesTotalCo2(emissionSourcesWithEmission) / STUDY_UNIT_VALUES[resultsUnit]
   const totalRow = [t('total'), ...emptyFields(emptyFieldsCount + 1), totalEmissions].join(';')
 
   const qualities = emissionSources.map((emissionSource) => getStandardDeviation(emissionSource))
   const quality = getQuality(getStandardDeviationRating(sumQualities(qualities)), tQuality)
   const qualityRow = [t('quality'), ...emptyFields(emptyFieldsCount + 1), quality].join(';')
 
-  const uncertainty = getEmissionSourcesGlobalUncertainty(emissionSources, environment)
+  const uncertainty = getEmissionSourcesGlobalUncertainty(emissionSourcesWithEmission)
   const uncertaintyRow = [
     t('uncertainty'),
     ...emptyFields(emptyFieldsCount),

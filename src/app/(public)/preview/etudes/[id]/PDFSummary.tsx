@@ -194,7 +194,7 @@ const PDFSummary = ({ study, environment }: Props) => {
           </div>
         </div>
 
-        <ChartsPage study={study} studySite="all" siteName="" tPdf={tPdf} isAll environment={environment} />
+        <ChartsPage study={study} studySite="all" siteName="" tPdf={tPdf} isAll />
 
         <div className="pdf-content page-break-before pdf-page-content">
           <div className="pdf-section">
@@ -243,14 +243,7 @@ const PDFSummary = ({ study, environment }: Props) => {
               </div>
             </div>
 
-            <ChartsPage
-              study={study}
-              studySite={site.id}
-              siteName={site.fullName}
-              tPdf={tPdf}
-              isAll={false}
-              environment={environment}
-            />
+            <ChartsPage study={study} studySite={site.id} siteName={site.fullName} tPdf={tPdf} isAll={false} />
           </React.Fragment>
         ))}
       </div>

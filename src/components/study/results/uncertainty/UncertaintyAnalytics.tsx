@@ -1,8 +1,7 @@
 import Title from '@/components/base/Title'
 import { FullStudy } from '@/db/study'
 import { ResultsByPost } from '@/services/results/consolidated'
-import { getEmissionSourcesGlobalUncertainty } from '@/services/uncertainty'
-import { Environment } from '@prisma/client'
+import { getConfidenceInterval } from '@/services/uncertainty'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
@@ -16,14 +15,14 @@ import UncertaintyPerPost from './UncertaintyPerPost'
 
 interface Props {
   study: FullStudy
-  environment: Environment
   computedResults: ResultsByPost[]
 }
 
-const UncertaintyAnalytics = ({ study, environment, computedResults }: Props) => {
+const UncertaintyAnalytics = ({ study, computedResults }: Props) => {
   const t = useTranslations('study.results.uncertainties')
 
-  const confidenceInterval = getEmissionSourcesGlobalUncertainty(study.emissionSources, environment)
+  const totalResults = computedResults.find((res) => res.post === 'total')
+  const confidenceInterval = getConfidenceInterval(totalResults?.value ?? 0, totalResults?.uncertainty ?? 1)
   const percent = useMemo(() => {
     const [min, max] = confidenceInterval
 

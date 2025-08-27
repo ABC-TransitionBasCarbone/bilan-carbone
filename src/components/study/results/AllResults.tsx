@@ -174,12 +174,8 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
               computedResultsByTag={computedResultsByTag}
             />
             <ConsolidatedResults
-              study={study}
-              studySite={studySite}
-              withDependencies
-              validatedOnly={validatedOnly}
-              environment={environment}
-              type={type}
+              computedResults={displayValueWithDep ? computedResultsWithDep : computedResultsWithoutDep}
+              resultsUnit={study.resultsUnit}
             />
           </>
         )}
@@ -191,7 +187,6 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
         <UncertaintyAnalytics
           computedResults={displayValueWithDep ? computedResultsWithDep : computedResultsWithoutDep}
           study={study}
-          environment={environment}
         />
       )}
     </Block>

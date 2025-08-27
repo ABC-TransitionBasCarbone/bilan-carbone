@@ -692,6 +692,7 @@
       "barChart": "Bar Chart",
       "pieChart": "Pie Chart",
       "tagPieChartTitle": "Emissions, by tag ({unit})",
+      "consolidatedChartTitle": "Émissions, by post ({unit})",
       "other": "No tag",
       "prioritaryZone": "Priority area for improving collection",
       "overExploredZone": "Sufficiently (overly) explored area",

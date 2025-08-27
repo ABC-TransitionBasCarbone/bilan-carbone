@@ -5,9 +5,10 @@ import { isPost } from './post'
 
 export interface BasicTypeCharts {
   value: number
-  label?: string
+  label: string
   post?: string
   color?: string
+  children: Omit<BasicTypeCharts, 'children'>[]
 }
 
 export const formatValueAndUnit = (value: number | null, unit?: string) => {
