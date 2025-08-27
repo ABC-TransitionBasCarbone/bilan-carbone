@@ -12,9 +12,20 @@ export interface Props {
   id?: string
   ['data-testid']?: string
   className?: string
+  children?: ReactNode
 }
 
-const Title = ({ title, icon, iconPosition, as, id, 'data-testid': dataTestId, expIcon, className }: Props) => {
+const Title = ({
+  title,
+  icon,
+  iconPosition,
+  as,
+  id,
+  'data-testid': dataTestId,
+  expIcon,
+  className,
+  children,
+}: Props) => {
   const Title = as || 'h2'
   const iconDiv = icon ? (
     <div className={classNames(as === 'h1' ? styles.bigIcon : styles.icon, { [styles.exp]: expIcon })}>{icon}</div>
@@ -25,6 +36,7 @@ const Title = ({ title, icon, iconPosition, as, id, 'data-testid': dataTestId, e
       <Title id={id} data-testid={dataTestId}>
         {title}
       </Title>
+      {children}
     </IconLabel>
   )
 }

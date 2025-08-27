@@ -48,13 +48,17 @@ const MostUncertainPostsChart = ({ computedResults }: Props) => {
   )
 
   return (
-    <div className={classNames(styles.container, 'flex-col grow')}>
-      <PostInfo post={threeMostUncertainPosts[0]} />
-      <div className="flex-row grow">
-        <PostInfo post={threeMostUncertainPosts[1]} />
-        <PostInfo post={threeMostUncertainPosts[2]} />
+    <div className={classNames(styles.container, 'grow flex-col h100')}>
+      <div className="grow align-center">
+        <div>
+          <PostInfo post={threeMostUncertainPosts[0]} />
+          <div className="flex-row grow">
+            <PostInfo post={threeMostUncertainPosts[1]} />
+            <PostInfo post={threeMostUncertainPosts[2]} />
+          </div>
+        </div>
       </div>
-      <div className={classNames(commonStyles.titleContainer, 'mt1')}>
+      <div className="flex-cc mt1">
         <div className={classNames(commonStyles.title, 'grow')}>
           <p className="bold">{tUncertainties('uncertainPostsTitle')}</p>
         </div>

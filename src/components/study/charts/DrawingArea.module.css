@@ -1,0 +1,14 @@
+.path {
+  fill: none;
+  stroke: var(--mui-palette-grey-500);
+  shape-rendering: crispEdges;
+  stroke-width: 1;
+  pointer-events: none;
+}
+
+.multilineText {
+  color: var(--mui-palette-grey-500);
+  white-space: normal;
+  word-wrap: break-word;
+  line-height: 1.2;
+}

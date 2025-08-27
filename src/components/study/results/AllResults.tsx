@@ -18,6 +18,7 @@ import ConsolatedBEGESDifference from './ConsolatedBEGESDifference'
 import ConsolidatedResults from './consolidated/ConsolidatedResults'
 import EmissionsAnalysis from './consolidated/EmissionsAnalysis'
 import UncertaintyAnalytics from './uncertainty/UncertaintyAnalytics'
+import UncertaintyPerPost from './uncertainty/UncertaintyPerPost'
 
 interface Props {
   study: FullStudy
@@ -62,7 +63,15 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     return false
   }, [environment, exports])
 
-  const { withDepValue, withoutDepValue, monetaryRatio, nonSpecificMonetaryRatio, computedResultsByTag } = useMemo(
+  const {
+    withDepValue,
+    withoutDepValue,
+    monetaryRatio,
+    nonSpecificMonetaryRatio,
+    computedResultsByTag,
+    computedResultsWithDep,
+    computedResultsWithoutDep,
+  } = useMemo(
     () =>
       getResultsValues(
         study,
@@ -182,13 +191,15 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       </div>
       {type !== Export.Beges && (
         <UncertaintyAnalytics
+          computedResults={displayValueWithDep ? computedResultsWithDep : computedResultsWithoutDep}
           study={study}
-          studySite={studySite}
-          withDependencies
-          validatedOnly={validatedOnly}
           environment={environment}
         />
       )}
+      <UncertaintyPerPost
+        study={study}
+        computedResults={displayValueWithDep ? computedResultsWithDep : computedResultsWithoutDep}
+      />
     </Block>
   )
 }

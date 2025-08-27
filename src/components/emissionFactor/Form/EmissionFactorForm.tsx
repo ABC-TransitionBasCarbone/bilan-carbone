@@ -17,7 +17,6 @@ import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { Control, UseFormReturn, UseFormSetValue, useWatch } from 'react-hook-form'
 import DetailedGES from './DetailedGES'
-import styles from './EmissionFactorForm.module.css'
 import MultiplePosts from './MultiplePosts'
 
 interface Props<T extends EmissionFactorCommand> {
@@ -98,7 +97,7 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         name="source"
         label={t('source')}
       />
-      <div className={classNames(styles.gapped, 'flex')}>
+      <div className="flex gapped">
         <div className="grow">
           <FormSelect
             data-testid="emission-factor-unit"

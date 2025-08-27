@@ -157,7 +157,7 @@ const EmissionSourceTags = ({ studyId }: Props) => {
       <Title as="h5" className="mb-2" title={t('family.add')} />
       <Form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
         <FormControl>
-          <div className={classNames(styles.gapped, 'justify-between my-2')}>
+          <div className="justify-between gapped my-2">
             <div className="flex-col">
               <div className="mb-2">
                 <span className="inputLabel bold">{t('color')}</span>

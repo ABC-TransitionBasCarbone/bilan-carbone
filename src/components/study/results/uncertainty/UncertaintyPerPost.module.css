@@ -1,0 +1,8 @@
+.moreInfoButton {
+  cursor: pointer;
+  color: var(--mui-palette-secondary-light);
+  &:hover {
+    text-decoration: underline;
+    color: var(--mui-palette-secondary-dark);
+  }
+}
