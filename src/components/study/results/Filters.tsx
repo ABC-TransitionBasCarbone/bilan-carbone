@@ -72,11 +72,6 @@ const Filters = <T extends FilterType>({ setFilteredResults, results, type, disp
   const [checkedItems, setCheckedItems] = useState(Object.values(initialFilters).flatMap((parent) => parent.id))
 
   useEffect(() => {
-    console.log(
-      results,
-      checkedItems,
-      results.filter((result) => checkedItems.includes(getResultId(result))),
-    )
     setFilteredResults(results.filter((result) => checkedItems.includes(getResultId(result))))
   }, [checkedItems, results, setFilteredResults])
 

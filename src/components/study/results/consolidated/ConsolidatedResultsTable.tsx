@@ -1,7 +1,6 @@
 'use client'
 
 import { getStandardDeviationRating } from '@/services/uncertainty'
-import { BasicTypeCharts } from '@/utils/charts'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
@@ -21,8 +20,22 @@ interface Props<T> {
   hideExpandIcons?: boolean
 }
 
+type tableDataType = {
+  label: string
+  value: number
+  uncertainty: number
+  post: string
+  children: tableDataType[]
+}
+
 const ConsolidatedResultsTable = <
-  T extends BasicTypeCharts & { uncertainty: number; post: string; children: Omit<T, 'children'>[] },
+  T extends {
+    value: number
+    label: string
+    uncertainty: number
+    post: string
+    children: { value: number; label: string; uncertainty: number; post: string }[]
+  },
 >({
   resultsUnit,
   data,
@@ -70,7 +83,7 @@ const ConsolidatedResultsTable = <
           )
         },
       },
-    ] as ColumnDef<T>[]
+    ] as ColumnDef<tableDataType>[]
 
     if (!hiddenUncertainty) {
       tmpColumns.push({
@@ -91,10 +104,28 @@ const ConsolidatedResultsTable = <
     return tmpColumns
   }, [hiddenUncertainty, hideExpandIcons, resultsUnit, t, tPost, tQuality, tUnits])
 
+  const tableData = useMemo(
+    () =>
+      data.map((d) => ({
+        label: d.label,
+        value: d.value,
+        uncertainty: d.uncertainty,
+        post: d.post,
+        children: d.children.map((child) => ({
+          label: child.label,
+          value: child.value,
+          uncertainty: child.uncertainty,
+          post: child.post,
+          children: [],
+        })),
+      })),
+    [data],
+  )
+
   const table = useReactTable({
     columns,
-    data: data,
-    // getSubRows: (row) => ({ ...row.children, children: [] as T[] }),
+    data: tableData,
+    getSubRows: (row) => row.children,
     getExpandedRowModel: getExpandedRowModel(),
     getCoreRowModel: getCoreRowModel(),
     initialState: expandAll ? { expanded: true } : undefined,

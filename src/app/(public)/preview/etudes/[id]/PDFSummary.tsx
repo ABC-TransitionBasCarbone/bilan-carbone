@@ -6,13 +6,14 @@ import cutTheme from '@/environments/cut/theme/theme'
 import { CutPost } from '@/services/posts'
 import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
 import { getUserSettings } from '@/services/serverFunctions/user'
+import { getResultsValues } from '@/services/study'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { ThemeProvider } from '@mui/material/styles'
 import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { ChartsPage } from './ChartsPage'
 import './pdf-summary.css'
 
@@ -53,6 +54,11 @@ const PDFSummary = ({ study, environment }: Props) => {
 
   const [sitesData, setSitesData] = useState<SiteData[]>([])
   const [isLoading, setIsLoading] = useState(true)
+
+  const { computedResultsWithDep } = useMemo(
+    () => getResultsValues(study, tPost, 'all', false, study.organizationVersion.environment, tStudy),
+    [study, tPost, tStudy],
+  )
 
   useEffect(() => {
     const loadData = async () => {
@@ -183,13 +189,10 @@ const PDFSummary = ({ study, environment }: Props) => {
             </div>
 
             <ConsolidatedResultsTable
-              study={study}
-              studySite="all"
-              withDependencies={false}
-              environment={environment}
+              resultsUnit={study.resultsUnit}
+              data={computedResultsWithDep}
               hiddenUncertainty
               hideExpandIcons
-              validatedOnly={validatedOnly}
             />
           </div>
         </div>
@@ -231,14 +234,11 @@ const PDFSummary = ({ study, environment }: Props) => {
                 </div>
 
                 <ConsolidatedResultsTable
-                  study={study}
-                  studySite={site.id}
-                  withDependencies={false}
-                  environment={environment}
+                  resultsUnit={study.resultsUnit}
+                  data={site.results}
                   hiddenUncertainty
                   expandAll
                   hideExpandIcons
-                  validatedOnly={validatedOnly}
                 />
               </div>
             </div>

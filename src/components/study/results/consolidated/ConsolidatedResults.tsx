@@ -26,14 +26,6 @@ const ConsolidatedResults = ({ computedResults, resultsUnit }: Props) => {
         type="post"
         TableComponent={ConsolidatedResultsTable}
       />
-      {/* <ConsolidatedResultsTable
-        study={study}
-        studySite={studySite}
-        withDependencies={withDependencies}
-        environment={environment}
-        type={type}
-        validatedOnly={validatedOnly}
-      /> */}
     </>
   )
 }
