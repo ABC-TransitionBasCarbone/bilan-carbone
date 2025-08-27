@@ -73,7 +73,8 @@ const UncertaintyPerPost = ({ study, computedResults }: Props) => {
     </MultilineText>
   )
 
-  const Marker = ({ size, x, y, seriesId, color, ...rest }: ScatterMarkerProps) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const Marker = ({ size, x, y, seriesId, color, isFaded, dataIndex, isHighlighted, ...rest }: ScatterMarkerProps) => {
     const iconSize = size * 0.75
     return (
       <Link href={`/etudes/${study.id}/comptabilisation/saisie-des-donnees/${seriesId}`}>
