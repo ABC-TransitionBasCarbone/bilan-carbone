@@ -1,5 +1,10 @@
 import { ScatterItemIdentifier } from '@mui/x-charts'
-import { ScatterChart as MuiScatterChart, ScatterPlot, ScatterSeries } from '@mui/x-charts/ScatterChart'
+import {
+  ScatterChart as MuiScatterChart,
+  ScatterMarkerProps,
+  ScatterPlot,
+  ScatterSeries,
+} from '@mui/x-charts/ScatterChart'
 import { ReactNode } from 'react'
 import DrawingAreaBox, { DrawingProps } from './DrawingArea'
 
@@ -16,6 +21,7 @@ interface Props {
   onClick?: (post: string) => void
   Rect?: (props: DrawingProps) => ReactNode
   Text?: (props: DrawingProps) => ReactNode
+  CustomMarker?: (props: ScatterMarkerProps) => ReactNode
 }
 
 const ScatterChart = ({
@@ -31,6 +37,7 @@ const ScatterChart = ({
   onClick,
   Rect,
   Text,
+  CustomMarker,
 }: Props) => (
   <MuiScatterChart
     height={400}
@@ -40,6 +47,7 @@ const ScatterChart = ({
     colors={colors}
     sx={{ cursor: onClick ? 'pointer' : 'default' }}
     disableVoronoi
+    slots={{ marker: () => <></> }}
   >
     <DrawingAreaBox Rect={Rect} Text={Text} />
     <ScatterPlot
@@ -49,6 +57,7 @@ const ScatterChart = ({
               onClick(params.seriesId as string)
           : undefined
       }
+      slots={{ marker: CustomMarker ?? undefined }}
     />
   </MuiScatterChart>
 )

@@ -6,9 +6,9 @@ import { Post } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { postColors, STUDY_UNIT_VALUES } from '@/utils/study'
-import { ScatterSeries } from '@mui/x-charts'
+import { ScatterMarkerProps, ScatterSeries } from '@mui/x-charts'
 import { useTranslations } from 'next-intl'
-import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { useState } from 'react'
 import { DrawingProps, MultilineText } from '../../charts/DrawingArea'
 import ScatterChart from '../../charts/ScatterChart'
@@ -37,8 +37,6 @@ const UncertaintyPerPost = ({ study, computedResults }: Props) => {
   const tGlossary = useTranslations('study.results.glossary')
   const [glossary, setGlossary] = useState(false)
   const [moreInfo, setMoreInfo] = useState(false)
-
-  const router = useRouter()
 
   const results = computedResults
     .filter((post) => post.post !== 'total')
@@ -81,6 +79,14 @@ const UncertaintyPerPost = ({ study, computedResults }: Props) => {
     </MultilineText>
   )
 
+  const Marker = ({ size, x, y, seriesId, color, ...rest }: ScatterMarkerProps) => (
+    <Link href={`/etudes/${study.id}/comptabilisation/saisie-des-donnees/${seriesId}`}>
+      <g x={0} y={0} transform={`translate(${x}, ${y})`} fill={color} opacity={1} {...rest}>
+        <circle r={size} cx={0} cy={0} />
+      </g>
+    </Link>
+  )
+
   return (
     <div className="my2">
       <Title title={t('uncertainties.perPost')} as="h4" className="flex-cc">
@@ -95,10 +101,10 @@ const UncertaintyPerPost = ({ study, computedResults }: Props) => {
         xLabel={`${t('total')} (${t(`units.${study.resultsUnit}`)})`}
         xValueFormatter={() => ''}
         yValueFormatter={() => ''}
-        onClick={(post: string) => router.push(`/etudes/${study.id}/comptabilisation/saisie-des-donnees/${post}`)}
         disableTicks
         Rect={Rect}
         Text={Text}
+        CustomMarker={Marker}
       />
       {glossary && (
         <GlossaryModal glossary="uncertaintyPerPost" label="uncertaintyPerPost" t={tGlossary} onClose={onClose}>
