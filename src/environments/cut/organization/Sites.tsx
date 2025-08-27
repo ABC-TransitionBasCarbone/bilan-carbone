@@ -8,6 +8,7 @@ import GlobalSites from '@/components/organization/Sites'
 import { getCncByNumeroAuto } from '@/services/serverFunctions/study'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import DeleteIcon from '@mui/icons-material/Delete'
+import { Environment } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo, useRef } from 'react'
@@ -250,7 +251,15 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
     return columns
   }, [t, form, withSelection, control, setCncData, setValue, getValues])
 
-  return <GlobalSites sites={sites} columns={columns} form={form} withSelection={withSelection} isCut={true} />
+  return (
+    <GlobalSites
+      sites={sites}
+      columns={columns}
+      form={form}
+      withSelection={withSelection}
+      environment={Environment.CUT}
+    />
+  )
 }
 
 export default Sites

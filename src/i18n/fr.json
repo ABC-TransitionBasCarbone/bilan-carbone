@@ -683,7 +683,7 @@
       "intensities": {
         "budget": "budget",
         "etp": "salarié",
-        "volunteer": "volontaire",
+        "volunteer": "bénévole",
         "beneficiary": "bénéficiaire"
       },
       "table": "Tableau",

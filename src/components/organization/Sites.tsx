@@ -2,7 +2,7 @@
 
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { defaultCAUnit } from '@/utils/number'
-import { SiteCAUnit } from '@prisma/client'
+import { Environment, SiteCAUnit } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
@@ -18,10 +18,10 @@ interface Props<T extends SitesCommand> {
   withSelection?: boolean
   columns: ColumnDef<SitesCommand['sites'][0]>[]
   caUnit?: SiteCAUnit
-  isCut?: boolean
+  environment: Environment
 }
 
-const Sites = <T extends SitesCommand>({ sites, form, withSelection, columns, caUnit, isCut }: Props<T>) => {
+const Sites = <T extends SitesCommand>({ sites, form, withSelection, columns, caUnit, environment }: Props<T>) => {
   const t = useTranslations('organization.sites')
   const tGlossary = useTranslations('organization.sites.glossary')
   const tUnit = useTranslations('settings.caUnit')
@@ -46,9 +46,15 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, columns, ca
       <div>
         <div className="justify-between align-center">
           <p className="title-h3">
-            {!isCut && t('title')}
-            {isCut || (
-              <Help className="ml-4" onClick={() => setShowGlossary(!showGlossary)} label={tGlossary('title')} />
+            {environment !== Environment.CUT && (
+              <>
+                {t('title')}
+                <Help
+                  className="ml-4 pointer"
+                  onClick={() => setShowGlossary(!showGlossary)}
+                  label={tGlossary('title')}
+                />
+              </>
             )}
           </p>
           {form && !withSelection && (
@@ -94,6 +100,11 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, columns, ca
         <p className="mb-2">
           <b>{tGlossary('ca', { unit: headerCAUnit })} :</b> {tGlossary('caDescription', { unit: headerCAUnit })}
         </p>
+        {environment === Environment.TILT && (
+          <p className="mb-2">
+            <b>{tGlossary('volunteer')} :</b> {tGlossary('volunteerDescription')}
+          </p>
+        )}
       </GlossaryModal>
     </div>
   )
