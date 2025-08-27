@@ -30,8 +30,10 @@ const UncertaintyPerPost = ({ study, computedResults }: Props) => {
   const [moreInfo, setMoreInfo] = useState(false)
 
   const results = computedResults
-    .filter((post) => post.post !== 'total')
+    .filter((post) => post.post !== 'total' && !!post.uncertainty)
+    .map((post) => ({ ...post, uncertainty: 100 * ((post.uncertainty as number) - 1) }))
     .sort((postA, postB) => postB.numberOfValidatedEmissionSource - postA.numberOfValidatedEmissionSource)
+
   const { maxValue, maxUncertainty, maxSource } = results.reduce(
     (res, post) => ({
       maxValue: Math.max(res.maxValue, post.value),

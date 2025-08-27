@@ -2,7 +2,7 @@ import Link from '@/components/base/Link'
 import Title from '@/components/base/Title'
 import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
-import { getStandardDeviation } from '@/services/emissionSource'
+import { getEmissionResults } from '@/services/emissionSource'
 import { Post } from '@/services/posts'
 import { qualityKeys, specificFEQualityKeysLinks } from '@/services/uncertainty'
 import { getPost } from '@/utils/post'
@@ -37,7 +37,7 @@ const UncertaintyPerEmissionSource = ({ study }: Props) => {
     name: emissionSource.name,
     value: emissionSource.value,
     post: getPost(emissionSource.subPost),
-    uncertainty: getStandardDeviation(emissionSource),
+    uncertainty: getEmissionResults(emissionSource)?.alpha,
   }))
 
   const { maxValue, maxUncertainty } = results.reduce(
