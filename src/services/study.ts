@@ -2,6 +2,7 @@ import { resultsExportHeadersBase, resultsExportHeadersCut } from '@/constants/e
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
+import { getPost } from '@/utils/post'
 import { isCAS, STUDY_UNIT_VALUES } from '@/utils/study'
 import { Environment, Export, ExportRule, Level, StudyResultUnit, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
@@ -9,7 +10,7 @@ import { useTranslations } from 'next-intl'
 import { canBeValidated, getEmissionSourcesTotalCo2, getStandardDeviation } from './emissionSource'
 import { download } from './file'
 import { StudyWithoutDetail } from './permissions/study'
-import { environmentPostMapping, getPostBySubPost, Post, subPostsByPost } from './posts'
+import { environmentPostMapping, Post, subPostsByPost } from './posts'
 import { computeBegesResult } from './results/beges'
 import { computeResultsByPost, computeResultsByTag } from './results/consolidated'
 import { EmissionFactorWithMetaData, getEmissionFactorsByIds } from './serverFunctions/emissionFactor'
@@ -139,7 +140,7 @@ const getEmissionSourcesRows = (
       if (type === 'Post') {
         initCols.push(tPost(emissionSource.subPost))
       } else if (type === 'Study') {
-        const post = getPostBySubPost(emissionSource.subPost)
+        const post = getPost(emissionSource.subPost)
         initCols.push(tPost(post || ''))
         initCols.push(tPost(emissionSource.subPost))
       }

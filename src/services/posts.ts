@@ -241,6 +241,3 @@ export const subPostBCToSubPostTiltMapping = getSubPostBCToSubPostTiltMapping()
 export const convertTiltSubPostToBCSubPost = (subPost: SubPost): SubPost => {
   return subPostTiltToBcSubPostMapping[subPost] ?? subPost
 }
-
-export const getPostBySubPost = (subPost: SubPost): Post =>
-  Object.keys(subPostsByPost).find((post: string) => subPostsByPost[post as Post].includes(subPost)) as Post

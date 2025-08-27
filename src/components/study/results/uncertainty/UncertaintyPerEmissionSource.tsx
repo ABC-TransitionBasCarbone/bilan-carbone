@@ -2,8 +2,9 @@ import Link from '@/components/base/Link'
 import Title from '@/components/base/Title'
 import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
-import { getPostBySubPost, Post } from '@/services/posts'
+import { Post } from '@/services/posts'
 import { getQualityStandardDeviation, qualityKeys, specificFEQualityKeysLinks } from '@/services/uncertainty'
+import { getPost } from '@/utils/post'
 import { defaultPostColor, postColors } from '@/utils/study'
 import { ScatterSeries } from '@mui/x-charts'
 import classNames from 'classnames'
@@ -34,7 +35,7 @@ const UncertaintyPerEmissionSource = ({ study }: Props) => {
     id: emissionSource.id,
     name: emissionSource.name,
     value: emissionSource.value,
-    post: getPostBySubPost(emissionSource.subPost),
+    post: getPost(emissionSource.subPost),
     uncertainty: getQualityStandardDeviation(emissionSource),
   }))
 
@@ -52,7 +53,7 @@ const UncertaintyPerEmissionSource = ({ study }: Props) => {
       id: emissionSource.id,
       data: [{ id: emissionSource.id, x: emissionSource.value as number, y: emissionSource.uncertainty as number }],
       markerSize: 10,
-      post: emissionSource.post,
+      post: emissionSource.post as Post,
       valueFormatter: () => `${emissionSource.name}`,
     }))
 
@@ -133,7 +134,7 @@ const UncertaintyPerEmissionSource = ({ study }: Props) => {
               </div>
             </div>
             <Link
-              href={`/etudes/${study.id}/comptabilisation/saisie-des-donnees/${getPostBySubPost(detailedSource.subPost)}#emission-source-${detailedSource.id}`}
+              href={`/etudes/${study.id}/comptabilisation/saisie-des-donnees/${getPost(detailedSource.subPost)}#emission-source-${detailedSource.id}`}
               className="justify-center"
             >
               {tCaract('see')}
