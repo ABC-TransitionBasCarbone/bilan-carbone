@@ -35,7 +35,6 @@ const PieChart = <T extends BasicTypeCharts>({
   ...pieChartProps
 }: Props<T>) => {
   const tUnits = useTranslations('study.results.units')
-  console.log('results', results)
 
   const theme = useTheme()
 

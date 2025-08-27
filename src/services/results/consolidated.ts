@@ -111,22 +111,24 @@ export const computeResultsByPost = (
       } as ResultsByPost
     })
 
+  return [...postInfos, computeTotalForPosts(postInfos, tPost)]
+}
+
+export const computeTotalForPosts = (postInfos: ResultsByPost[], tPost: (key: string) => string): ResultsByPost => {
   const value = postInfos.reduce((acc, post) => acc + post.value, 0)
-  return [
-    ...postInfos,
-    {
-      post: 'total',
-      label: tPost('total'),
-      value,
-      monetaryValue: postInfos.reduce((acc, post) => acc + post.monetaryValue, 0),
-      nonSpecificMonetaryValue: postInfos.reduce((acc, post) => acc + post.nonSpecificMonetaryValue, 0),
-      subPosts: [],
-      children: [],
-      uncertainty: computeUncertainty(postInfos, value),
-      numberOfEmissionSource: postInfos.reduce((acc, post) => acc + post.numberOfEmissionSource, 0),
-      numberOfValidatedEmissionSource: postInfos.reduce((acc, post) => acc + post.numberOfValidatedEmissionSource, 0),
-    } as ResultsByPost,
-  ]
+
+  return {
+    post: 'total',
+    label: tPost('total'),
+    value,
+    monetaryValue: postInfos.reduce((acc, post) => acc + post.monetaryValue, 0),
+    nonSpecificMonetaryValue: postInfos.reduce((acc, post) => acc + post.nonSpecificMonetaryValue, 0),
+    subPosts: [],
+    children: [],
+    uncertainty: computeUncertainty(postInfos, value),
+    numberOfEmissionSource: postInfos.reduce((acc, post) => acc + post.numberOfEmissionSource, 0),
+    numberOfValidatedEmissionSource: postInfos.reduce((acc, post) => acc + post.numberOfValidatedEmissionSource, 0),
+  }
 }
 
 export type ResultsByTag = {

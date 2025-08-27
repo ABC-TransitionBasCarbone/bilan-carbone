@@ -1,12 +1,13 @@
 import Box from '@/components/base/Box'
 import Title from '@/components/base/Title'
+import { computeTotalForPosts, ResultsByPost } from '@/services/results/consolidated'
 import { BasicTypeCharts } from '@/utils/charts'
 import BarChartIcon from '@mui/icons-material/BarChart'
 import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined'
 import { Tab, Tabs } from '@mui/material'
 import { StudyResultUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import { ReactNode, useMemo, useState } from 'react'
+import { ReactNode, useCallback, useMemo, useState } from 'react'
 import BarChart from '../charts/BarChart'
 import PieChart from '../charts/PieChart'
 import Filters from './Filters'
@@ -43,9 +44,10 @@ const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: s
 }: Props<T>) => {
   const [tabSelected, setTabSelected] = useState(defaultTab)
   const [displayFilter, setDisplayFilter] = useState(false)
-  const [filteredResults, setFilteredResults] = useState(computedResults)
+  const [filteredResultsWithTotal, setFilteredResultsWithTotal] = useState(computedResults)
 
   const t = useTranslations('study.results')
+  const tPost = useTranslations('emissionFactors.post')
 
   const TabComponent = useMemo(() => {
     switch (tabSelected) {
@@ -53,16 +55,31 @@ const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: s
         if (!TableComponent) {
           return null
         }
-        return <TableComponent resultsUnit={resultsUnit} data={filteredResults} />
+        return <TableComponent resultsUnit={resultsUnit} data={filteredResultsWithTotal} />
       }
       case TabsPossibilities.pieChart:
-        return <PieChart results={filteredResults} resultsUnit={resultsUnit ?? StudyResultUnit.T} hideLegend />
+        return <PieChart results={filteredResultsWithTotal} resultsUnit={resultsUnit ?? StudyResultUnit.T} hideLegend />
       case TabsPossibilities.barChart:
-        return <BarChart results={filteredResults} resultsUnit={resultsUnit} />
+        return <BarChart results={filteredResultsWithTotal} resultsUnit={resultsUnit} />
       default:
         return null
     }
-  }, [tabSelected, TableComponent, filteredResults, resultsUnit])
+  }, [tabSelected, TableComponent, filteredResultsWithTotal, resultsUnit])
+
+  const setFilteredResults = useCallback(
+    (results: T[]) => {
+      if (type === 'post') {
+        const total = computeTotalForPosts(
+          results.filter((post) => post.post !== 'total') as unknown as ResultsByPost[],
+          tPost,
+        ) as unknown as T
+        setFilteredResultsWithTotal([...results.filter((post) => post.post !== 'total'), total])
+      } else {
+        setFilteredResultsWithTotal(results)
+      }
+    },
+    [tPost, type],
+  )
 
   return (
     <Box className={styles.container}>
