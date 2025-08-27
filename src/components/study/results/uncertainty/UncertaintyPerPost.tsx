@@ -12,6 +12,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { DrawingProps, MultilineText, TopRightRect } from '../../charts/DrawingArea'
 import ScatterChart from '../../charts/ScatterChart'
+import PostIcon from '../../infography/icons/PostIcon'
 import styles from './UncertaintyGraph.module.css'
 
 const margin = 0.05
@@ -72,13 +73,21 @@ const UncertaintyPerPost = ({ study, computedResults }: Props) => {
     </MultilineText>
   )
 
-  const Marker = ({ size, x, y, seriesId, color, ...rest }: ScatterMarkerProps) => (
-    <Link href={`/etudes/${study.id}/comptabilisation/saisie-des-donnees/${seriesId}`}>
-      <g x={0} y={0} transform={`translate(${x}, ${y})`} fill={color} opacity={1} {...rest}>
-        <circle r={size} cx={0} cy={0} />
-      </g>
-    </Link>
-  )
+  const Marker = ({ size, x, y, seriesId, color, ...rest }: ScatterMarkerProps) => {
+    const iconSize = size * 0.75
+    return (
+      <Link href={`/etudes/${study.id}/comptabilisation/saisie-des-donnees/${seriesId}`}>
+        <g x={0} y={0} transform={`translate(${x}, ${y})`} fill={color} opacity={1} {...rest}>
+          <circle r={size} cx={0} cy={0} />
+          {size > 20 && (
+            <foreignObject x={-iconSize / 2} y={-iconSize / 2} width={2 * iconSize} height={2 * iconSize}>
+              <PostIcon post={seriesId as Post} className={styles.icon} />
+            </foreignObject>
+          )}
+        </g>
+      </Link>
+    )
+  }
 
   return (
     <div className="my2">
