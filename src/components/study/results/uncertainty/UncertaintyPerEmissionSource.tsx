@@ -2,8 +2,9 @@ import Link from '@/components/base/Link'
 import Title from '@/components/base/Title'
 import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
+import { getStandardDeviation } from '@/services/emissionSource'
 import { Post } from '@/services/posts'
-import { getQualityStandardDeviation, qualityKeys, specificFEQualityKeysLinks } from '@/services/uncertainty'
+import { qualityKeys, specificFEQualityKeysLinks } from '@/services/uncertainty'
 import { getPost } from '@/utils/post'
 import { defaultPostColor, postColors } from '@/utils/study'
 import { ScatterSeries } from '@mui/x-charts'
@@ -36,7 +37,7 @@ const UncertaintyPerEmissionSource = ({ study }: Props) => {
     name: emissionSource.name,
     value: emissionSource.value,
     post: getPost(emissionSource.subPost),
-    uncertainty: getQualityStandardDeviation(emissionSource),
+    uncertainty: getStandardDeviation(emissionSource),
   }))
 
   const { maxValue, maxUncertainty } = results.reduce(
@@ -52,7 +53,7 @@ const UncertaintyPerEmissionSource = ({ study }: Props) => {
     .map((emissionSource) => ({
       id: emissionSource.id,
       data: [{ id: emissionSource.id, x: emissionSource.value as number, y: emissionSource.uncertainty as number }],
-      markerSize: 10,
+      markerSize: 8,
       post: emissionSource.post as Post,
       valueFormatter: () => `${emissionSource.name}`,
     }))
