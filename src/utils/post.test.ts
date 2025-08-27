@@ -62,9 +62,7 @@ describe('PostUtils functions', () => {
     test('should return a post that includes the subPost', () => {
       Object.values(SubPost).forEach((subPost: SubPost) => {
         const res = getPost(subPost) as Post
-        if (!['AutresDechets'].includes(subPost)) {
-          expect(subPostsByPost[res]).toContain(subPost)
-        }
+        expect(subPostsByPost[res]).toContain(subPost)
       })
     })
   })
