@@ -66,7 +66,7 @@ const UncertaintyPerEmissionSource = ({ study }: Props) => {
     }))
 
   const colors = series.map(
-    (emissionSource) => `var(--post-${postColors[emissionSource.post as Post] || 'green'}-dark)`,
+    (emissionSource) => `var(--post-${postColors[emissionSource.post as Post] || 'green'}-light)`,
   )
 
   const Text = ({ left, top, width, height }: DrawingProps) => (
