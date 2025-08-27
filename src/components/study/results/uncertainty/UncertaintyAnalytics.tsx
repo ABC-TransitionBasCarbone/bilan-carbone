@@ -10,6 +10,8 @@ import ConfidenceIntervalCharts from './ConfidenceIntervalChart'
 import UncertaintyGauge from './Gauge'
 import MostUncertainPostsChart from './MostUncertainPostsChart'
 import styles from './UncertaintyAnalytics.module.css'
+import UncertaintyPerEmissionSource from './UncertaintyPerEmissionSource'
+import UncertaintyPerPost from './UncertaintyPerPost'
 
 interface Props {
   study: FullStudy
@@ -48,6 +50,8 @@ const UncertaintyAnalytics = ({ study, environment, computedResults }: Props) =>
           <MostUncertainPostsChart computedResults={computedResults} />
         </div>
       </div>
+      <UncertaintyPerPost study={study} computedResults={computedResults} />
+      <UncertaintyPerEmissionSource study={study} />
     </div>
   )
 }
