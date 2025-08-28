@@ -16,7 +16,7 @@ import PostIcon from '../../infography/icons/PostIcon'
 import styles from './UncertaintyGraph.module.css'
 
 const margin = 0.05
-const Rect = (props: DrawingProps) => <TopRightRect margin={margin} color="var(--error-50)" {...props} />
+const Rect = (props: DrawingProps) => <TopRightRect margin={0} color="var(--mui-palette-primary-light)" {...props} />
 
 interface Props {
   study: FullStudy

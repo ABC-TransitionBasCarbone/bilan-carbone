@@ -21,8 +21,8 @@ import styles from './UncertaintyGraph.module.css'
 const margin = 0.05
 const Rect = (props: DrawingProps) => (
   <>
-    <TopLeftRect margin={margin} color="var(--error-50)" {...props} />
-    <BottomRightRect margin={margin} color="var(--error-50)" {...props} />
+    <TopLeftRect margin={0.01} color="var(--mui-palette-primary-light)" {...props} />
+    <BottomRightRect margin={0.01} color="var(--mui-palette-primary-light)" {...props} />
   </>
 )
 

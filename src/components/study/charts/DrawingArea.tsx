@@ -43,7 +43,7 @@ const Rect = ({ x, y, height, width, color, margin = 0.1 }: { x: number; y: numb
     width={(width / 2) * (1 - 2 * margin)}
     height={(height / 2) * (1 - 2 * margin)}
     fill={color}
-    opacity={0.3}
+    opacity={1}
   />
 )
 
