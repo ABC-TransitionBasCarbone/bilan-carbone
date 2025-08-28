@@ -37,14 +37,7 @@ export const BottomRightRect = (props: RectDrawingProps) => (
   />
 )
 const Rect = ({ x, y, height, width, color, margin = 0.1 }: { x: number; y: number } & RectDrawingProps) => (
-  <rect
-    x={x}
-    y={y}
-    width={(width / 2) * (1 - 2 * margin)}
-    height={(height / 2) * (1 - 2 * margin)}
-    fill={color}
-    opacity={1}
-  />
+  <rect x={x} y={y} width={(width / 2) * (1 - 2 * margin)} height={(height / 2) * (1 - 2 * margin)} fill={color} />
 )
 
 const Path = (props: React.SVGProps<SVGPathElement>) => <path className={styles.path} {...props} />
@@ -123,13 +116,14 @@ interface Props {
 
 const DrawingAreaBox = ({ Rect, Text }: Props) => {
   const { left, top, width, height } = useDrawingArea()
+  const margin = 0.02
 
   return (
     <Fragment>
       <Arrow x1={left} y1={top + height} x2={left + width} y2={top + height} />
       <Arrow x1={left} y1={top + height} x2={left} y2={top} />
-      {/* <Path d={`M ${left + width / 2} ${top + height * margin} L ${left + width / 2} ${top + height * (1 - margin)}`} />
-      <Path d={`M ${left + width * margin} ${top + height / 2} L ${left + width * (1 - margin)} ${top + height / 2}`} /> */}
+      <Path d={`M ${left + width / 2} ${top + height * margin} L ${left + width / 2} ${top + height * (1 - margin)}`} />
+      <Path d={`M ${left + width * margin} ${top + height / 2} L ${left + width * (1 - margin)} ${top + height / 2}`} />
       {Rect && <Rect left={left} top={top} width={width} height={height} />}
       {Text && <Text left={left} top={top} width={width} height={height} />}
     </Fragment>

@@ -17,7 +17,7 @@ import ScatterChart from '../../charts/ScatterChart'
 import styles from './UncertaintyGraph.module.css'
 
 const margin = 0.05
-const Rect = (props: DrawingProps) => <TopRightRect margin={0} color="var(--mui-palette-primary-light)" {...props} />
+const Rect = (props: DrawingProps) => <TopRightRect margin={0.01} color="var(--mui-palette-primary-light)" {...props} />
 
 interface Props {
   study: FullStudy
