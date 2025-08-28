@@ -21,7 +21,7 @@ import AddIcon from '@mui/icons-material/Add'
 import CopyIcon from '@mui/icons-material/ContentCopy'
 import EditIcon from '@mui/icons-material/Edit'
 import HideIcon from '@mui/icons-material/VisibilityOff'
-import { Autocomplete, Chip, FormControl, InputLabel, MenuItem, TextField } from '@mui/material'
+import { Autocomplete, Chip, FormControl, InputLabel, MenuItem, Popper, TextField } from '@mui/material'
 import {
   EmissionSourceCaracterisation,
   EmissionSourceTag,
@@ -428,6 +428,9 @@ const EmissionSourceForm = ({
                   <Chip label={option.label} size="small" sx={{ bgcolor: option.color }} data-testid="tag-option" />
                 </li>
               )
+            }}
+            slots={{
+              popper: (props) => <Popper {...props} placement="bottom-start" className={styles.tagOptions} />,
             }}
             renderInput={(params) => <TextField {...params} label={t('form.tag')} />}
             renderValue={(value: Option[], getItemProps) =>
