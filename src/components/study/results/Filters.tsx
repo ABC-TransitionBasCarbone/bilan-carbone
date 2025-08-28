@@ -1,10 +1,9 @@
 import { BasicTypeCharts } from '@/utils/charts'
 import { Checkbox, FormControlLabel } from '@mui/material'
-import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
 
-type FilterType = BasicTypeCharts & { familyId?: string; subPosts?: { post: SubPost }[] }
+type FilterType = BasicTypeCharts & { familyId?: string }
 type ChildrenType = { id: string; label: string }
 
 const getTagFilters = <T extends FilterType>(results: T[]) => {
@@ -29,14 +28,17 @@ const getTagFilters = <T extends FilterType>(results: T[]) => {
 const getPostFilters = <T extends FilterType>(results: T[], tPost: ReturnType<typeof useTranslations>) => {
   return results.reduce(
     (acc, result) => {
-      if (!result.post || !result.subPosts) {
+      if (!result.post || !result.children) {
         return acc
       }
 
       acc[result.post] = {
         id: result.post,
         name: result.label,
-        children: result.subPosts.map((subPost) => ({ id: subPost.post, label: tPost(subPost.post) })),
+        children: result.children.map((subPost) => ({
+          id: subPost.post ?? '',
+          label: subPost.post ? tPost(subPost.post) : subPost.label,
+        })),
       }
       return acc
     },

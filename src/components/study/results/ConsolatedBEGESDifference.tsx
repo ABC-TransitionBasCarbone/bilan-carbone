@@ -64,7 +64,7 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
 
   const utilisationEnDependance = computedResults
     .find((result) => result.post === Post.UtilisationEtDependance)
-    ?.subPosts.find((subPost) => subPost.post === SubPost.UtilisationEnDependance)
+    ?.children.find((subPost) => subPost.post === SubPost.UtilisationEnDependance)
   const hasUtilisationEnDependance = !!utilisationEnDependance && utilisationEnDependance.value !== 0
   // BEGES doesn't include "Utilisation en dépendance", BC does, so BEGES - BC = negative
   const utilisationEnDependanceValue = utilisationEnDependance

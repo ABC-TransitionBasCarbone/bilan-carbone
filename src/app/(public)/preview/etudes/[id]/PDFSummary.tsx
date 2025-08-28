@@ -5,7 +5,6 @@ import { FullStudy } from '@/db/study'
 import cutTheme from '@/environments/cut/theme/theme'
 import { CutPost } from '@/services/posts'
 import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
-import { getUserSettings } from '@/services/serverFunctions/user'
 import { getResultsValues } from '@/services/study'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
@@ -38,20 +37,6 @@ const PDFSummary = ({ study, environment }: Props) => {
   const tStudy = useTranslations('study.results')
   const tPdf = useTranslations('study.pdf')
 
-  const [validatedOnly, setValidatedOnly] = useState(true)
-
-  useEffect(() => {
-    applyUserSettings()
-  }, [])
-
-  const applyUserSettings = async () => {
-    const userSettings = await getUserSettings()
-    const validatedOnlySetting = userSettings.success ? userSettings.data?.validatedEmissionSourcesOnly : undefined
-    if (validatedOnlySetting !== undefined) {
-      setValidatedOnly(validatedOnlySetting)
-    }
-  }
-
   const [sitesData, setSitesData] = useState<SiteData[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
@@ -83,7 +68,7 @@ const PDFSummary = ({ study, environment }: Props) => {
             .map((result) => ({
               ...result,
               value: result.value / STUDY_UNIT_VALUES[study.resultsUnit],
-              subPosts: result.subPosts
+              subPosts: result.children
                 .filter((subPost) => subPost.value > 0)
                 .map((subPost) => ({
                   ...subPost,

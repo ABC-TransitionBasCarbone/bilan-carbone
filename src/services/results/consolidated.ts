@@ -20,7 +20,6 @@ export type ResultsByPost = {
   numberOfEmissionSource: number
   numberOfValidatedEmissionSource: number
   uncertainty: number
-  subPosts: ResultsByPost[]
   children: ResultsByPost[]
 }
 
@@ -101,7 +100,6 @@ export const computeResultsByPost = (
         monetaryValue,
         nonSpecificMonetaryValue,
         uncertainty: subPosts.length > 0 ? computeUncertainty(subPosts, value) : undefined,
-        subPosts: subPosts.sort((a, b) => tPost(a.post).localeCompare(tPost(b.post))),
         children: subPosts.sort((a, b) => tPost(a.post).localeCompare(tPost(b.post))),
         numberOfEmissionSource: subPosts.reduce((acc, subPost) => acc + subPost.numberOfEmissionSource, 0),
         numberOfValidatedEmissionSource: subPosts.reduce(
@@ -123,7 +121,6 @@ export const computeTotalForPosts = (postInfos: ResultsByPost[], tPost: (key: st
     value,
     monetaryValue: postInfos.reduce((acc, post) => acc + post.monetaryValue, 0),
     nonSpecificMonetaryValue: postInfos.reduce((acc, post) => acc + post.nonSpecificMonetaryValue, 0),
-    subPosts: [],
     children: [],
     uncertainty: computeUncertainty(postInfos, value),
     numberOfEmissionSource: postInfos.reduce((acc, post) => acc + post.numberOfEmissionSource, 0),

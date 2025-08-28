@@ -11,16 +11,12 @@ interface Props {
 
 const ConsolidatedResults = ({ computedResults, resultsUnit }: Props) => {
   const t = useTranslations('study.results')
-  const tPost = useTranslations('emissionFactors.post')
   const tResultUnits = useTranslations('study.results.units')
 
   return (
     <>
       <ResultsTableAndGraphs
-        computedResults={computedResults.map((result) => ({
-          ...result,
-          children: result.subPosts.map((subPost) => ({ ...subPost, label: tPost(subPost.post) })),
-        }))}
+        computedResults={computedResults}
         resultsUnit={resultsUnit}
         title={t('consolidatedChartTitle', { unit: tResultUnits(resultsUnit) })}
         type="post"
