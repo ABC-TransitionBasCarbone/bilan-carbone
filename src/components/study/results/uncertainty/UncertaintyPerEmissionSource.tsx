@@ -5,7 +5,7 @@ import { FullStudy } from '@/db/study'
 import { getEmissionResults } from '@/services/emissionSource'
 import { Post } from '@/services/posts'
 import { qualityKeys, specificFEQualityKeysLinks } from '@/services/uncertainty'
-import { formatNumber } from '@/utils/number'
+import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { getPost } from '@/utils/post'
 import { defaultPostColor, postColors, STUDY_UNIT_VALUES } from '@/utils/study'
 import { ScatterSeries } from '@mui/x-charts'
@@ -58,7 +58,8 @@ const UncertaintyPerEmissionSource = ({ study }: Props) => {
       ],
       markerSize: 8,
       post: emissionSource.post as Post,
-      valueFormatter: () => `${emissionSource.name}`,
+      valueFormatter: () =>
+        `${emissionSource.name} : ${t('total')} : ${formatEmissionFactorNumber((emissionSource.value as number) / STUDY_UNIT_VALUES[study.resultsUnit])} ${t(`units.${study.resultsUnit}`)} - ${t('uncertainty')} : ${formatNumber((emissionSource.uncertainty as number) * 100, 2)}%`,
     }))
 
   const colors = series.map(
