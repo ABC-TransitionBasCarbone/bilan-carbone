@@ -32,18 +32,21 @@ const UncertaintyPerEmissionSource = ({ study }: Props) => {
   const tQuality = useTranslations('quality')
   const [details, setDetails] = useState('')
 
-  const results = study.emissionSources.map((emissionSource) => ({
-    id: emissionSource.id,
-    name: emissionSource.name,
-    value: emissionSource.value,
-    post: getPost(emissionSource.subPost),
-    uncertainty: getEmissionResults(emissionSource)?.alpha,
-  }))
+  const results = study.emissionSources.map((emissionSource) => {
+    const alpha = getEmissionResults(emissionSource)?.alpha
+    return {
+      id: emissionSource.id,
+      name: emissionSource.name,
+      value: emissionSource.value,
+      post: getPost(emissionSource.subPost),
+      uncertainty: alpha ? alpha * 100 : undefined,
+    }
+  })
 
   const { maxValue, maxUncertainty } = results.reduce(
     (res, emissionSource) => ({
       maxValue: Math.max(res.maxValue, emissionSource.value || 0),
-      maxUncertainty: Math.max(res.maxUncertainty, (emissionSource.uncertainty || 0) * 100),
+      maxUncertainty: Math.max(res.maxUncertainty, emissionSource.uncertainty || 0),
     }),
     { maxValue: 0, maxUncertainty: 0 },
   )
@@ -52,13 +55,11 @@ const UncertaintyPerEmissionSource = ({ study }: Props) => {
     .filter((emissionSource) => !!emissionSource.value && !!emissionSource.uncertainty)
     .map((emissionSource) => ({
       id: emissionSource.id,
-      data: [
-        { id: emissionSource.id, x: emissionSource.value as number, y: (emissionSource.uncertainty as number) * 100 },
-      ],
+      data: [{ id: emissionSource.id, x: emissionSource.value as number, y: emissionSource.uncertainty as number }],
       markerSize: 8,
       post: emissionSource.post as Post,
       valueFormatter: () =>
-        `${emissionSource.name} : ${t('total')} : ${formatEmissionFactorNumber((emissionSource.value as number) / STUDY_UNIT_VALUES[study.resultsUnit])} ${t(`units.${study.resultsUnit}`)} - ${t('uncertainty')} : ${formatNumber((emissionSource.uncertainty as number) * 100, 2)}%`,
+        `${emissionSource.name} : ${t('total')} : ${formatEmissionFactorNumber((emissionSource.value as number) / STUDY_UNIT_VALUES[study.resultsUnit])} ${t(`units.${study.resultsUnit}`)} - ${t('uncertainty')} : ${formatNumber(emissionSource.uncertainty as number, 2)}%`,
     }))
 
   const colors = series.map(
