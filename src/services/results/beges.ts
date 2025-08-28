@@ -49,7 +49,6 @@ export type BegesLine = {
   total: number
   co2b: number
   uncertainty: number | null
-  numberOfValidatedEmissionSource?: number
 }
 
 interface EmissionFactor {
@@ -122,10 +121,7 @@ export const getBegesEmissionValue = (emissionSource: EmissionSource): number =>
 export const getBegesEmissionTotal = (emissionSource: EmissionSource, emissionFactor: EmissionFactor) =>
   getBegesLine(getBegesEmissionValue(emissionSource), emissionFactor).total
 
-const getBegesLine = (
-  value: number,
-  emissionFactor: EmissionFactor,
-): Omit<BegesLine, 'rule' | 'uncertainty' | 'numberOfValidatedEmissionSource'> => {
+const getBegesLine = (value: number, emissionFactor: EmissionFactor): Omit<BegesLine, 'rule' | 'uncertainty'> => {
   const ch4 = emissionFactor.ch4f || 0
   const n2o = emissionFactor.n2o || 0
   const other =
@@ -243,7 +239,6 @@ export const computeBegesResult = (
 
   const lines: BegesLine[] = Object.entries(results).map(([rule, result]) => ({
     rule,
-    numberOfValidatedEmissionSource: result.length,
     ...sumLines(result),
   }))
   lines.push({ rule: 'total', ...sumLines(Object.values(lines)) })

@@ -1,7 +1,12 @@
 import Title from '@/components/base/Title'
+import { FullStudy } from '@/db/study'
+import { Post } from '@/services/posts'
+import { ResultsByPost } from '@/services/results/consolidated'
+import { formatEmissionFactorNumber } from '@/utils/number'
+import { defaultPostColor, postColors, STUDY_UNIT_VALUES } from '@/utils/study'
 import { ScatterMarkerProps, ScatterSeries } from '@mui/x-charts'
 import { useTranslations } from 'next-intl'
-import { ReactNode } from 'react'
+import Link from 'next/link'
 import {
   BottomRightMultilineText,
   BottomRightRect,
@@ -10,6 +15,8 @@ import {
   TopLeftRect,
 } from '../../charts/DrawingArea'
 import ScatterChart from '../../charts/ScatterChart'
+import PostIcon from '../../infography/icons/PostIcon'
+import styles from './UncertaintyGraph.module.css'
 
 const margin = 0.05
 const Rect = (props: DrawingProps) => (
@@ -20,16 +27,40 @@ const Rect = (props: DrawingProps) => (
 )
 
 interface Props {
-  series: ScatterSeries[]
-  colors: string[]
-  maxX: number
-  maxY: number
-  resultsUnit: string
-  Marker: (props: ScatterMarkerProps) => ReactNode
+  study: FullStudy
+  results: ResultsByPost[]
 }
 
-const EmissionSourcePerPost = ({ series, colors, maxX, maxY, resultsUnit, Marker }: Props) => {
+const EmissionSourcePerPost = ({ study, results }: Props) => {
   const t = useTranslations('study.results')
+  const tPost = useTranslations('emissionFactors.post')
+
+  const filteredResults = results.filter((post) => post.post !== 'total')
+  const { maxValue, maxSource } = filteredResults.reduce(
+    (res, post) => ({
+      maxValue: Math.max(res.maxValue, post.value),
+      maxSource: Math.max(res.maxSource, post.numberOfValidatedEmissionSource as number),
+    }),
+    { maxValue: 0, maxSource: 0 },
+  )
+
+  const series: ScatterSeries[] = filteredResults
+    .filter((post) => !!post.uncertainty || !!post.numberOfValidatedEmissionSource)
+    .map((post) => ({
+      id: post.post,
+      data: [
+        {
+          id: post.post,
+          x: post.value,
+          y: post.numberOfValidatedEmissionSource as number,
+        },
+      ],
+      markerSize: 30,
+      valueFormatter: () =>
+        `${tPost(post.post)} : ${t('total')} : ${formatEmissionFactorNumber(post.value / STUDY_UNIT_VALUES[study.resultsUnit])} ${t(`units.${study.resultsUnit}`)} - ${t('emissionSources')} : ${post.numberOfValidatedEmissionSource}`,
+    }))
+
+  const colors = series.map((post) => `var(--post-${postColors[post.id as Post] || defaultPostColor}-light)`)
 
   const Text = (props: DrawingProps) => (
     <>
@@ -42,16 +73,31 @@ const EmissionSourcePerPost = ({ series, colors, maxX, maxY, resultsUnit, Marker
     </>
   )
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const Marker = ({ size, x, y, seriesId, color, isFaded, dataIndex, isHighlighted, ...rest }: ScatterMarkerProps) => {
+    const iconSize = size * 0.75
+    return (
+      <Link href={`/etudes/${study.id}/comptabilisation/saisie-des-donnees/${seriesId}`}>
+        <g x={0} y={0} transform={`translate(${x}, ${y})`} fill={color} opacity={1} {...rest}>
+          <circle r={iconSize} cx={0} cy={0} />
+          <foreignObject x={-iconSize / 2} y={-iconSize / 2} width={2 * iconSize} height={2 * iconSize}>
+            <PostIcon post={seriesId as Post} className={styles.icon} />
+          </foreignObject>
+        </g>
+      </Link>
+    )
+  }
+
   return (
     <div className="my2">
       <Title title={t('postEmissionPerNumberOfSources')} as="h4" className="flex-cc" />
       <ScatterChart
         series={series}
         colors={colors}
-        maxX={maxX}
-        maxY={maxY}
+        maxX={maxValue * 1.2}
+        maxY={maxSource * 1.1}
         yLabel={t('emissionSources')}
-        xLabel={`${t('total')} (${t(`units.${resultsUnit}`)})`}
+        xLabel={`${t('total')} (${t(`units.${study.resultsUnit}`)})`}
         xValueFormatter={() => ''}
         yValueFormatter={() => ''}
         disableTicks
