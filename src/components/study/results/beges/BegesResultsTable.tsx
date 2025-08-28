@@ -1,7 +1,7 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
-import { BegesLine, rulesSpans } from '@/services/results/beges'
+import { BegesPostInfos, rulesSpans } from '@/services/results/beges'
 import { getStandardDeviationRating } from '@/services/uncertainty'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
@@ -14,7 +14,7 @@ import styles from './BegesResultsTable.module.css'
 interface Props {
   study: FullStudy
   withDepValue: number
-  data: BegesLine[]
+  data: BegesPostInfos[]
 }
 
 const BegesResultsTable = ({ study, withDepValue, data }: Props) => {
@@ -84,7 +84,7 @@ const BegesResultsTable = ({ study, withDepValue, data }: Props) => {
           accessorFn: ({ uncertainty }) =>
             uncertainty ? tQuality(getStandardDeviationRating(uncertainty).toString()) : '',
         },
-      ] as ColumnDef<BegesLine>[],
+      ] as ColumnDef<BegesPostInfos>[],
     [t, tQuality, tUnits, study.resultsUnit],
   )
 

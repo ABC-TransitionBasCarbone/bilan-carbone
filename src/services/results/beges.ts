@@ -40,7 +40,7 @@ export const rulesSpans: Record<string, number> = {
   total: 1,
 }
 
-export type BegesLine = {
+export type BegesPostInfos = {
   rule: string
   co2: number
   ch4: number
@@ -121,7 +121,7 @@ export const getBegesEmissionValue = (emissionSource: EmissionSource): number =>
 export const getBegesEmissionTotal = (emissionSource: EmissionSource, emissionFactor: EmissionFactor) =>
   getBegesLine(getBegesEmissionValue(emissionSource), emissionFactor).total
 
-const getBegesLine = (value: number, emissionFactor: EmissionFactor): Omit<BegesLine, 'rule' | 'uncertainty'> => {
+const getBegesLine = (value: number, emissionFactor: EmissionFactor): Omit<BegesPostInfos, 'rule' | 'uncertainty'> => {
   const ch4 = emissionFactor.ch4f || 0
   const n2o = emissionFactor.n2o || 0
   const other =
@@ -142,7 +142,7 @@ const getBegesLine = (value: number, emissionFactor: EmissionFactor): Omit<Beges
   }
 }
 
-const sumLines = (lines: Omit<BegesLine, 'rule'>[]) => {
+const sumLines = (lines: Omit<BegesPostInfos, 'rule'>[]) => {
   const total = lines.reduce((acc, line) => acc + line.total, 0)
   return {
     co2: lines.reduce((acc, line) => acc + line.co2, 0),
@@ -173,8 +173,8 @@ export const computeBegesResult = (
   studySite: string,
   withDependencies: boolean,
   validatedOnly: boolean = true,
-): BegesLine[] => {
-  const results: Record<string, Omit<BegesLine, 'rule' | 'BegesLine'>[]> = allRules.reduce(
+): BegesPostInfos[] => {
+  const results: Record<string, Omit<BegesPostInfos, 'rule' | 'BegesPostInfos'>[]> = allRules.reduce(
     (acc, rule) => ({ ...acc, [rule]: [] }),
     {},
   )
@@ -237,7 +237,7 @@ export const computeBegesResult = (
       }
     })
 
-  const lines: BegesLine[] = Object.entries(results).map(([rule, result]) => ({
+  const lines: BegesPostInfos[] = Object.entries(results).map(([rule, result]) => ({
     rule,
     ...sumLines(result),
   }))
