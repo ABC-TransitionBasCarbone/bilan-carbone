@@ -49,6 +49,7 @@ export type BegesLine = {
   total: number
   co2b: number
   uncertainty: number | null
+  numberOfValidatedEmissionSource?: number
 }
 
 interface EmissionFactor {
@@ -118,12 +119,13 @@ export const getBegesEmissionValue = (emissionSource: EmissionSource): number =>
   return value
 }
 
-export const getBegesEmissionTotal = (emissionSource: EmissionSource, emissionFactor: EmissionFactor) => {
-  const value = getBegesEmissionValue(emissionSource)
-  return getBegesLine(value, emissionFactor).total
-}
+export const getBegesEmissionTotal = (emissionSource: EmissionSource, emissionFactor: EmissionFactor) =>
+  getBegesLine(getBegesEmissionValue(emissionSource), emissionFactor).total
 
-const getBegesLine = (value: number, emissionFactor: EmissionFactor): Omit<BegesLine, 'rule' | 'uncertainty'> => {
+const getBegesLine = (
+  value: number,
+  emissionFactor: EmissionFactor,
+): Omit<BegesLine, 'rule' | 'uncertainty' | 'numberOfValidatedEmissionSource'> => {
   const ch4 = emissionFactor.ch4f || 0
   const n2o = emissionFactor.n2o || 0
   const other =
@@ -175,17 +177,15 @@ export const computeBegesResult = (
   studySite: string,
   withDependencies: boolean,
   validatedOnly: boolean = true,
-) => {
-  const results: Record<string, Omit<BegesLine, 'rule'>[]> = allRules.reduce(
+): BegesLine[] => {
+  const results: Record<string, Omit<BegesLine, 'rule' | 'BegesLine'>[]> = allRules.reduce(
     (acc, rule) => ({ ...acc, [rule]: [] }),
     {},
   )
   const siteEmissionSources = getSiteEmissionSources(study.emissionSources, studySite)
 
   siteEmissionSources
-    .map((emissionSource) => {
-      return { ...emissionSource, subPost: convertTiltSubPostToBCSubPost(emissionSource.subPost) }
-    })
+    .map((emissionSource) => ({ ...emissionSource, subPost: convertTiltSubPostToBCSubPost(emissionSource.subPost) }))
     .filter((emissionSource) => filterWithDependencies(emissionSource.subPost, withDependencies))
     .forEach((emissionSource) => {
       if (
@@ -221,10 +221,7 @@ export const computeBegesResult = (
         // Pas de decomposition => on ventile selon la regle par default
         const post = getDefaultRule(subPostRules, caracterisation)
         if (post) {
-          results[post].push({
-            ...getBegesLine(value, emissionFactor),
-            uncertainty: uncertainty,
-          })
+          results[post].push({ ...getBegesLine(value, emissionFactor), uncertainty })
         }
       } else {
         emissionFactor.emissionFactorParts.forEach((part) => {
@@ -238,20 +235,18 @@ export const computeBegesResult = (
 
           if (post) {
             // Et on ajoute la valeur selon la composante quoi qu'il arrive
-            results[post].push({
-              ...getBegesLine(value, part),
-              uncertainty: uncertainty,
-            })
+            results[post].push({ ...getBegesLine(value, part), uncertainty })
           }
         })
       }
     })
 
-  const lines = Object.entries(results).map(([rule, result]) => ({ rule, ...sumLines(result) }))
-  lines.push({
-    rule: 'total',
-    ...sumLines(Object.values(lines)),
-  })
+  const lines: BegesLine[] = Object.entries(results).map(([rule, result]) => ({
+    rule,
+    numberOfValidatedEmissionSource: result.length,
+    ...sumLines(result),
+  }))
+  lines.push({ rule: 'total', ...sumLines(Object.values(lines)) })
   Array.from({ length: 6 }).map((_, index) => {
     const rule = (index + 1).toString()
     lines.push({
