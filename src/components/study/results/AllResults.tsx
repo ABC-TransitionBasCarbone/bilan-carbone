@@ -86,8 +86,8 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   )
 
   const computedBegesData = useMemo(
-    () => computeBegesResult(study, rules, emissionFactorsWithParts, studySite, displayValueWithDep, validatedOnly),
-    [study, rules, emissionFactorsWithParts, studySite, displayValueWithDep, validatedOnly],
+    () => computeBegesResult(study, rules, emissionFactorsWithParts, studySite, false, validatedOnly),
+    [study, rules, emissionFactorsWithParts, studySite, validatedOnly],
   )
 
   if (!environment) {
