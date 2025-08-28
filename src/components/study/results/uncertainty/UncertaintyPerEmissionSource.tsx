@@ -5,8 +5,9 @@ import { FullStudy } from '@/db/study'
 import { getEmissionResults } from '@/services/emissionSource'
 import { Post } from '@/services/posts'
 import { qualityKeys, specificFEQualityKeysLinks } from '@/services/uncertainty'
+import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { getPost } from '@/utils/post'
-import { defaultPostColor, postColors } from '@/utils/study'
+import { defaultPostColor, postColors, STUDY_UNIT_VALUES } from '@/utils/study'
 import { ScatterSeries } from '@mui/x-charts'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -15,8 +16,7 @@ import { DrawingProps, TopRightMultilineText, TopRightRect } from '../../charts/
 import ScatterChart from '../../charts/ScatterChart'
 import styles from './UncertaintyGraph.module.css'
 
-const margin = 0.05
-const Rect = (props: DrawingProps) => <TopRightRect margin={margin} color="var(--error-50)" {...props} />
+const Rect = (props: DrawingProps) => <TopRightRect margin={0} color="var(--mui-palette-primary-light)" {...props} />
 
 interface Props {
   study: FullStudy
@@ -32,13 +32,16 @@ const UncertaintyPerEmissionSource = ({ study }: Props) => {
   const tQuality = useTranslations('quality')
   const [details, setDetails] = useState('')
 
-  const results = study.emissionSources.map((emissionSource) => ({
-    id: emissionSource.id,
-    name: emissionSource.name,
-    value: emissionSource.value,
-    post: getPost(emissionSource.subPost),
-    uncertainty: getEmissionResults(emissionSource)?.alpha,
-  }))
+  const results = study.emissionSources.map((emissionSource) => {
+    const alpha = getEmissionResults(emissionSource)?.alpha
+    return {
+      id: emissionSource.id,
+      name: emissionSource.name,
+      value: emissionSource.value,
+      post: getPost(emissionSource.subPost),
+      uncertainty: alpha ? alpha * 100 : undefined,
+    }
+  })
 
   const { maxValue, maxUncertainty } = results.reduce(
     (res, emissionSource) => ({
@@ -55,7 +58,8 @@ const UncertaintyPerEmissionSource = ({ study }: Props) => {
       data: [{ id: emissionSource.id, x: emissionSource.value as number, y: emissionSource.uncertainty as number }],
       markerSize: 8,
       post: emissionSource.post as Post,
-      valueFormatter: () => `${emissionSource.name}`,
+      valueFormatter: () =>
+        `${emissionSource.name} : ${t('total')} : ${formatEmissionFactorNumber((emissionSource.value as number) / STUDY_UNIT_VALUES[study.resultsUnit])} ${t(`units.${study.resultsUnit}`)} - ${t('uncertainty')} : ${formatNumber(emissionSource.uncertainty as number, 2)}%`,
     }))
 
   const colors = series.map(
@@ -63,7 +67,7 @@ const UncertaintyPerEmissionSource = ({ study }: Props) => {
   )
 
   const Text = (props: DrawingProps) => (
-    <TopRightMultilineText {...props} margin={margin} className="bold text-center">
+    <TopRightMultilineText {...props} margin={0.05} className="bold text-center">
       {t('prioritaryZone')}
     </TopRightMultilineText>
   )
@@ -83,10 +87,8 @@ const UncertaintyPerEmissionSource = ({ study }: Props) => {
         maxY={maxUncertainty * 1.5}
         yLabel={`${t('uncertainty')} (%)`}
         xLabel={`${t('total')} (${t(`units.${study.resultsUnit}`)})`}
-        xValueFormatter={() => ''}
-        yValueFormatter={() => ''}
+        xValueFormatter={(value) => formatNumber(value / STUDY_UNIT_VALUES[study.resultsUnit], 2)}
         onClick={(emissionSource: string) => setDetails(emissionSource)}
-        disableTicks
         Rect={Rect}
         Text={Text}
       />

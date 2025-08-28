@@ -1,7 +1,7 @@
 import Title from '@/components/base/Title'
 import { Post } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
-import { formatEmissionFactorNumber } from '@/utils/number'
+import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { defaultPostColor, postColors, STUDY_UNIT_VALUES } from '@/utils/study'
 import { ScatterMarkerProps, ScatterSeries } from '@mui/x-charts'
 import { StudyResultUnit } from '@prisma/client'
@@ -18,11 +18,10 @@ import ScatterChart from '../../charts/ScatterChart'
 import PostIcon from '../../infography/icons/PostIcon'
 import styles from './UncertaintyGraph.module.css'
 
-const margin = 0.05
 const Rect = (props: DrawingProps) => (
   <>
-    <TopLeftRect margin={margin} color="var(--error-50)" {...props} />
-    <BottomRightRect margin={margin} color="var(--error-50)" {...props} />
+    <TopLeftRect margin={0} color="var(--mui-palette-primary-light)" {...props} />
+    <BottomRightRect margin={0} color="var(--mui-palette-primary-light)" {...props} />
   </>
 )
 
@@ -65,10 +64,10 @@ const EmissionSourcePerPost = ({ studyId, resultsUnit, results }: Props) => {
 
   const Text = (props: DrawingProps) => (
     <>
-      <TopLeftMultilineText {...props} margin={margin} className="bold text-center">
+      <TopLeftMultilineText {...props} margin={0.05} className="bold text-center">
         {t('overExploredZone')}
       </TopLeftMultilineText>
-      <BottomRightMultilineText {...props} margin={margin} className="bold text-center">
+      <BottomRightMultilineText {...props} margin={0.05} className="bold text-center">
         {t('prioritaryZone')}
       </BottomRightMultilineText>
     </>
@@ -99,9 +98,7 @@ const EmissionSourcePerPost = ({ studyId, resultsUnit, results }: Props) => {
         maxY={maxSource * 1.1}
         yLabel={t('emissionSources')}
         xLabel={`${t('total')} (${t(`units.${resultsUnit}`)})`}
-        xValueFormatter={() => ''}
-        yValueFormatter={() => ''}
-        disableTicks
+        xValueFormatter={(value) => formatNumber(value / STUDY_UNIT_VALUES[resultsUnit], 2)}
         Rect={Rect}
         Text={Text}
         CustomMarker={Marker}
