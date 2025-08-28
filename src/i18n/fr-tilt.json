@@ -18,8 +18,14 @@
   "organization": {
     "sites": {
       "ca": "Budget ({unit})",
+      "etp": "Nombre de salariés",
       "glossary": {
-        "ca": "Budget ({unit})"
+        "etp": "Nombre de salariés",
+        "etpDescription": "Ces données sont utilisées pour calculer des intensités carbone (kgCO₂e/salarié).",
+        "ca": "Budget ({unit})",
+        "caDescription": "Ces données sont utilisées pour calculer des intensités carbone (kgCO₂e/{unit} CA). Attention, le budget est à renseigner en milliers d'euros (k€).",
+        "volunteer": "Nombre de bénévoles",
+        "volunteerDescription": "Le nombre de bénévoles renseigné ici servira simplement à calculer une intensité carbone par bénévole, en tCO₂e/bénévole. Vous pouvez y renseigner le nombre de bénévoles, le nombre de bénévoles actifs, compter ou non les membres du Conseil d'Administration ... Le plus important n'est pas le choix du mode de comptabilisation des bénévoles, mais l'utilisation de la même méthode pour vos futurs Bilans Carbone®, afin de pouvoir comparer l'évolution de vos émissions au regard des variations des activités de votre association."
       },
       "validation": {
         "ca": "Budget ({unit})"

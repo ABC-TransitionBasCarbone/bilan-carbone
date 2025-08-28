@@ -7,7 +7,7 @@ import GlobalSites from '@/components/organization/Sites'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { CA_UNIT_VALUES, displayCA, formatNumber } from '@/utils/number'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { SiteCAUnit } from '@prisma/client'
+import { Environment, SiteCAUnit } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
@@ -19,10 +19,18 @@ interface Props<T extends SitesCommand> {
   sites: SitesCommand['sites']
   withSelection?: boolean
   caUnit: SiteCAUnit
-  additionalColumns?: ColumnDef<SitesCommand['sites'][0]>[]
+  additionalColumns?: ColumnDef<SitesCommand['sites'][number]>[]
+  environment?: Environment
 }
 
-const Sites = <T extends SitesCommand>({ sites, form, withSelection, caUnit, additionalColumns = [] }: Props<T>) => {
+const Sites = <T extends SitesCommand>({
+  sites,
+  form,
+  withSelection,
+  caUnit,
+  additionalColumns = [],
+  environment = Environment.BC,
+}: Props<T>) => {
   const t = useTranslations('organization.sites')
   const tUnit = useTranslations('settings.caUnit')
 
@@ -146,7 +154,16 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, caUnit, add
     return columns
   }, [t, form, headerCAUnit])
 
-  return <GlobalSites sites={sites} columns={columns} form={form} withSelection={withSelection} caUnit={caUnit} />
+  return (
+    <GlobalSites
+      sites={sites}
+      columns={columns}
+      form={form}
+      withSelection={withSelection}
+      caUnit={caUnit}
+      environment={environment}
+    />
+  )
 }
 
 export default Sites

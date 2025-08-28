@@ -17,9 +17,15 @@
   },
   "organization": {
     "sites": {
+      "etp": "Number of employees",
       "ca": "Budget ({unit})",
       "glossary": {
-        "ca": "Budget ({unit})"
+        "etp": "Number of employees",
+        "etpDescription": "This data is used to calculate carbon intensities (kgCO₂e/employee).",
+        "ca": "Budget ({unit})",
+        "caDescription": "This data is used to calculate carbon intensities (kgCO₂e/{unit} CA). Please note that the budget must be entered in thousands of euros (k€).",
+        "volunteer": "Number of volunteers",
+        "volunteerDescription": "The number of volunteers entered here will simply be used to calculate the carbon intensity per volunteer, in tCO₂e/volunteer. You can enter the number of volunteers, the number of active volunteers, whether or not to count members of the Board of Directors, etc. The most important thing is not how you choose to count volunteers, but that you use the same method for your future Carbon Footprint® assessments so that you can compare changes in your emissions with changes in your organisation's activities."
       },
       "validation": {
         "ca": "Budget ({unit})"
