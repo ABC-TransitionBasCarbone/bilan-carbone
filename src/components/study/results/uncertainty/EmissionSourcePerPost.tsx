@@ -1,10 +1,10 @@
 import Title from '@/components/base/Title'
-import { FullStudy } from '@/db/study'
 import { Post } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import { defaultPostColor, postColors, STUDY_UNIT_VALUES } from '@/utils/study'
 import { ScatterMarkerProps, ScatterSeries } from '@mui/x-charts'
+import { StudyResultUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import {
@@ -27,11 +27,12 @@ const Rect = (props: DrawingProps) => (
 )
 
 interface Props {
-  study: FullStudy
+  studyId: string
+  resultsUnit: StudyResultUnit
   results: ResultsByPost[]
 }
 
-const EmissionSourcePerPost = ({ study, results }: Props) => {
+const EmissionSourcePerPost = ({ studyId, resultsUnit, results }: Props) => {
   const t = useTranslations('study.results')
   const tPost = useTranslations('emissionFactors.post')
 
@@ -57,7 +58,7 @@ const EmissionSourcePerPost = ({ study, results }: Props) => {
       ],
       markerSize: 30,
       valueFormatter: () =>
-        `${tPost(post.post)} : ${t('total')} : ${formatEmissionFactorNumber(post.value / STUDY_UNIT_VALUES[study.resultsUnit])} ${t(`units.${study.resultsUnit}`)} - ${t('emissionSources')} : ${post.numberOfValidatedEmissionSource}`,
+        `${tPost(post.post)} : ${t('total')} : ${formatEmissionFactorNumber(post.value / STUDY_UNIT_VALUES[resultsUnit])} ${t(`units.${resultsUnit}`)} - ${t('emissionSources')} : ${post.numberOfValidatedEmissionSource}`,
     }))
 
   const colors = series.map((post) => `var(--post-${postColors[post.id as Post] || defaultPostColor}-light)`)
@@ -77,7 +78,7 @@ const EmissionSourcePerPost = ({ study, results }: Props) => {
   const Marker = ({ size, x, y, seriesId, color, isFaded, dataIndex, isHighlighted, ...rest }: ScatterMarkerProps) => {
     const iconSize = size * 0.75
     return (
-      <Link href={`/etudes/${study.id}/comptabilisation/saisie-des-donnees/${seriesId}`}>
+      <Link href={`/etudes/${studyId}/comptabilisation/saisie-des-donnees/${seriesId}`}>
         <g x={0} y={0} transform={`translate(${x}, ${y})`} fill={color} opacity={1} {...rest}>
           <circle r={iconSize} cx={0} cy={0} />
           <foreignObject x={-iconSize / 2} y={-iconSize / 2} width={2 * iconSize} height={2 * iconSize}>
@@ -97,7 +98,7 @@ const EmissionSourcePerPost = ({ study, results }: Props) => {
         maxX={maxValue * 1.2}
         maxY={maxSource * 1.1}
         yLabel={t('emissionSources')}
-        xLabel={`${t('total')} (${t(`units.${study.resultsUnit}`)})`}
+        xLabel={`${t('total')} (${t(`units.${resultsUnit}`)})`}
         xValueFormatter={() => ''}
         yValueFormatter={() => ''}
         disableTicks

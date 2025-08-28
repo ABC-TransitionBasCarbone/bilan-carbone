@@ -53,7 +53,7 @@ const UncertaintyAnalytics = ({ study, environment, computedResults }: Props) =>
       </div>
       <UncertaintyPerPost study={study} computedResults={computedResults} />
       <UncertaintyPerEmissionSource study={study} />
-      <EmissionSourcePerPost study={study} results={computedResults} />
+      <EmissionSourcePerPost studyId={study.id} resultsUnit={study.resultsUnit} results={computedResults} />
     </div>
   )
 }
