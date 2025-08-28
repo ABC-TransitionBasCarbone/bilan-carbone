@@ -4,7 +4,7 @@ import { Environment, SubPost } from '@prisma/client'
 
 export const getPost = (subPost?: SubPost) =>
   subPost
-    ? (Object.keys(subPostsByPost).find((post) => subPostsByPost[post as Post].includes(subPost)) as Post)
+    ? (Object.keys(subPostsByPost).find((post: string) => subPostsByPost[post as Post].includes(subPost)) as Post)
     : undefined
 
 export const flattenSubposts = (subPosts: Record<Post, SubPost[]>) =>

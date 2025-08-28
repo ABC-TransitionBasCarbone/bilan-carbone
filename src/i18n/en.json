@@ -675,7 +675,8 @@
         "uncertainPostsTitle": "Posts with the greatest uncertainties within the Bilan Carbone®",
         "veryWeak": "Very weak",
         "veryStrong": "Very strong",
-        "perPost": "Uncertainties, per post"
+        "perPost": "Uncertainties, per post",
+        "perEmission": "Incertitudes, par emission source"
       },
       "analysis": "Emissions analysis",
       "total": "Emissions total",
@@ -1552,6 +1553,7 @@
       "name": "Name",
       "caracterisation": "Characterization",
       "emissionFactor": "Emission factor",
+      "activity": "Activity",
       "value": "Activity value",
       "sign": "Positive value only",
       "source": "Source",
@@ -1570,7 +1572,8 @@
       "shrink": "Shrink qualities",
       "comment": "Comments",
       "tag": "Tag",
-      "create": "Create {tag}"
+      "create": "Create {tag}",
+      "see": "See"
     },
     "cut": {
       "form": {

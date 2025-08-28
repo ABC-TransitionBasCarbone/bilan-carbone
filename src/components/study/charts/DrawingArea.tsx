@@ -10,6 +10,22 @@ export interface DrawingProps {
   height: number
 }
 
+interface RectDrawingProps extends DrawingProps {
+  color: string
+  margin?: number
+}
+
+export const TopRightRect = ({ left, top, width, height, color, margin = 0.1 }: RectDrawingProps) => (
+  <rect
+    x={left + (width / 2) * (1 + margin)}
+    y={top + (height / 2) * margin}
+    width={(width / 2) * (1 - 2 * margin)}
+    height={(height / 2) * (1 - 2 * margin)}
+    fill={color}
+    opacity={0.3}
+  />
+)
+
 const Path = (props: React.SVGProps<SVGPathElement>) => <path className={styles.path} {...props} />
 
 interface MultilineTextProps {

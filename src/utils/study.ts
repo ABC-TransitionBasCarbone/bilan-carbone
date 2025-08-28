@@ -56,6 +56,8 @@ export const getAllowedRolesFromDefaultRole = (role: StudyRole) => {
   }
 }
 
+export const defaultPostColor = 'blue'
+
 export const postColors: Record<Post, string> = {
   [Post.Energies]: 'darkBlue',
   [Post.AutresEmissionsNonEnergetiques]: 'darkBlue',

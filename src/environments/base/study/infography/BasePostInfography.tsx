@@ -1,7 +1,7 @@
 import { PostHeader } from '@/components/study/infography/PostHeader'
 import { SubPostInfography } from '@/components/study/infography/SubPostInfography'
 import { Post } from '@/services/posts'
-import { postColors } from '@/utils/study'
+import { defaultPostColor, postColors } from '@/utils/study'
 import { styled } from '@mui/material/styles'
 import { SubPost } from '@prisma/client'
 import Link from 'next/link'
@@ -44,7 +44,7 @@ export const BasePostInfography = ({ post, mainPost, subPosts, studyId, percent,
   const ref = useRef<HTMLDivElement>(null)
   const [displayChildren, setDisplayChildren] = useState(false)
   const displayTimeout = useRef<NodeJS.Timeout | null>(null)
-  const postColor = useMemo(() => (mainPost ? postColors[mainPost] : 'green'), [mainPost])
+  const postColor = useMemo(() => (mainPost ? postColors[mainPost] : defaultPostColor), [mainPost])
 
   useEffect(() => {
     if (ref.current) {

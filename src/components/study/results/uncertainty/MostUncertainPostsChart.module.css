@@ -9,19 +9,19 @@
 }
 
 .green {
-  background-color: var(--post-green-dark);
+  background-color: var(--post-green-light);
 }
 
 .darkBlue {
-  background-color: var(--post-darkBlue-dark);
+  background-color: var(--post-darkBlue-light);
 }
 
 .blue {
-  background-color: var(--post-blue-dark);
+  background-color: var(--post-blue-light);
 }
 
 .orange {
-  background-color: var(--post-orange-dark);
+  background-color: var(--post-orange-light);
 }
 
 .icon {

@@ -5,26 +5,17 @@ import { FullStudy } from '@/db/study'
 import { Post } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
-import { postColors, STUDY_UNIT_VALUES } from '@/utils/study'
+import { defaultPostColor, postColors, STUDY_UNIT_VALUES } from '@/utils/study'
 import { ScatterMarkerProps, ScatterSeries } from '@mui/x-charts'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useState } from 'react'
-import { DrawingProps, MultilineText } from '../../charts/DrawingArea'
+import { DrawingProps, MultilineText, TopRightRect } from '../../charts/DrawingArea'
 import ScatterChart from '../../charts/ScatterChart'
-import styles from './UncertaintyPerPost.module.css'
+import styles from './UncertaintyGraph.module.css'
 
 const margin = 0.05
-const Rect = ({ left, top, width, height }: DrawingProps) => (
-  <rect
-    x={left + (width / 2) * (1 + margin)}
-    y={top + (height / 2) * margin}
-    width={(width / 2) * (1 - 2 * margin)}
-    height={(height / 2) * (1 - 2 * margin)}
-    fill="var(--error-50)"
-    opacity={0.3}
-  />
-)
+const Rect = (props: DrawingProps) => <TopRightRect margin={margin} color="var(--error-50)" {...props} />
 
 interface Props {
   study: FullStudy
@@ -39,8 +30,10 @@ const UncertaintyPerPost = ({ study, computedResults }: Props) => {
   const [moreInfo, setMoreInfo] = useState(false)
 
   const results = computedResults
-    .filter((post) => post.post !== 'total')
+    .filter((post) => post.post !== 'total' && !!post.uncertainty)
+    .map((post) => ({ ...post, uncertainty: 100 * ((post.uncertainty as number) - 1) }))
     .sort((postA, postB) => postB.numberOfValidatedEmissionSource - postA.numberOfValidatedEmissionSource)
+
   const { maxValue, maxUncertainty, maxSource } = results.reduce(
     (res, post) => ({
       maxValue: Math.max(res.maxValue, post.value),
@@ -60,7 +53,7 @@ const UncertaintyPerPost = ({ study, computedResults }: Props) => {
         `${tPost(post.post)} : ${t('total')} : ${formatEmissionFactorNumber(post.value / STUDY_UNIT_VALUES[study.resultsUnit])} ${t(`units.${study.resultsUnit}`)} - ${t('uncertainty')} : ${formatNumber(post.uncertainty, 2)}%`,
     }))
 
-  const colors = series.map((post) => `var(--post-${postColors[post.id as Post] || 'green'}-dark)`)
+  const colors = series.map((post) => `var(--post-${postColors[post.id as Post] || defaultPostColor}-light)`)
 
   const onClose = () => {
     setMoreInfo(false)

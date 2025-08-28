@@ -29,7 +29,7 @@ export const getEmissionSourceCompletion = (
     | 'duration'
   >,
   study: FullStudy | StudyWithoutDetail,
-  emissionFactor: (FullStudy | StudyWithoutDetail)['emissionSources'][0]['emissionFactor'],
+  emissionFactor: (FullStudy | StudyWithoutDetail)['emissionSources'][number]['emissionFactor'],
   environment: Environment | undefined,
 ) => {
   const mandatoryFields = ['name', 'type', 'value', 'emissionFactorId'] as (keyof typeof emissionSource)[]
@@ -69,13 +69,13 @@ export const canBeValidated = (
     | 'duration'
   >,
   study: FullStudy | StudyWithoutDetail,
-  emissionFactor: (FullStudy | StudyWithoutDetail)['emissionSources'][0]['emissionFactor'],
+  emissionFactor: (FullStudy | StudyWithoutDetail)['emissionSources'][number]['emissionFactor'],
   environment: Environment | undefined,
 ) => {
   return getEmissionSourceCompletion(emissionSource, study, emissionFactor, environment) === 1
 }
 
-export const getStandardDeviation = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0]) => {
+export const getStandardDeviation = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][number]) => {
   if (!emissionSource.emissionFactor || emissionSource.value === null) {
     return null
   }
@@ -127,7 +127,7 @@ const getEmissionSourceEmission = (
 }
 
 const getEmissionSourceMonetaryEmission = (
-  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
+  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][number],
   excludeManualFE: boolean,
   environment?: Environment,
 ) => {
@@ -139,7 +139,7 @@ const getEmissionSourceMonetaryEmission = (
 }
 
 export const getEmissionResults = (
-  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
+  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][number],
   environment?: Environment,
 ) => {
   const emission = getEmissionSourceEmission(emissionSource, environment)
@@ -212,7 +212,7 @@ export const getEmissionSourcesTotalMonetaryCo2 = (
   )
 
 export const getEmissionResultsCut = (
-  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
+  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][number],
   environment?: Environment,
 ) => {
   const result = getEmissionResults(emissionSource, environment)

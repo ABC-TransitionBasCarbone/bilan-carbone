@@ -4,11 +4,12 @@ import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { getEmissionSourcesTotalCo2 } from '@/services/emissionSource'
-import { Post, subPostsByPost } from '@/services/posts'
+import { Post } from '@/services/posts'
 import { computeBegesResult, getBegesEmissionTotal } from '@/services/results/beges'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
+import { getPost } from '@/utils/post'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import LightbulbIcon from '@mui/icons-material/LightbulbOutlined'
 import TrendingUpIcon from '@mui/icons-material/TrendingUpOutlined'
@@ -39,7 +40,7 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
   const router = useRouter()
 
   const navigateToEmissionSource = (emissionSourceId: string, subPost: SubPost) => {
-    const post = Object.keys(subPostsByPost).find((key) => subPostsByPost[key as Post].includes(subPost)) as Post
+    const post = getPost(subPost)
     if (post) {
       const url = `/etudes/${study.id}/comptabilisation/saisie-des-donnees/${post}#emission-source-${emissionSourceId}`
       router.push(url)

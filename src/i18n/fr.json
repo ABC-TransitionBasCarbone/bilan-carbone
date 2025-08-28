@@ -675,7 +675,8 @@
         "uncertainPostsTitle": "Postes ayant les plus grandes incertitudes",
         "veryWeak": "Très faible",
         "veryStrong": "Très forte",
-        "perPost": "Incertitudes, par poste"
+        "perPost": "Incertitudes, par poste",
+        "perEmission": "Incertitudes, par source d'émission"
       },
       "analysis": "Analyse des émissions",
       "total": "Total des émissions",
@@ -1552,6 +1553,7 @@
       "name": "Nom",
       "caracterisation": "Caractérisation",
       "emissionFactor": "Facteur d'émission",
+      "activity": "Donnée d'activité",
       "value": "Valeur donnée d'activité",
       "sign": "Valeur uniquement positive",
       "source": "Source",
@@ -1570,7 +1572,8 @@
       "shrink": "Simplifier les qualités",
       "comment": "Commentaires",
       "tag": "Tag",
-      "create": "Créer {tag}"
+      "create": "Créer {tag}",
+      "see": "Voir"
     },
     "cut": {
       "form": {
