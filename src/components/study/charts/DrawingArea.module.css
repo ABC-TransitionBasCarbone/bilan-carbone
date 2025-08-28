@@ -1,9 +1,17 @@
-.path {
+.path,
+.arrowPath {
   fill: none;
-  stroke: var(--mui-palette-grey-500);
   shape-rendering: crispEdges;
   stroke-width: 1;
   pointer-events: none;
+}
+.path {
+  stroke: var(--grayscale-500);
+  stroke-dasharray: 4 2;
+}
+
+.arrowPath {
+  stroke: var(--mui-palette-grey-500);
 }
 
 .arrow {

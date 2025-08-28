@@ -105,7 +105,7 @@ const Arrow = ({ x1, y1, x2, y2 }: { x1: number; y1: number; x2: number; y2: num
         <path className={styles.arrow} d="M0,0 L8,4 L0,8 Z" fill="var(--mui-palette-grey-500)" />
       </marker>
     </defs>
-    <line className={styles.path} x1={x1} y1={y1} x2={x2} y2={y2} markerEnd="url(#arrowhead)" />
+    <line className={styles.arrowPath} x1={x1} y1={y1} x2={x2} y2={y2} markerEnd="url(#arrowhead)" />
   </>
 )
 
@@ -120,12 +120,12 @@ const DrawingAreaBox = ({ Rect, Text }: Props) => {
 
   return (
     <Fragment>
-      <Arrow x1={left} y1={top + height} x2={left + width} y2={top + height} />
-      <Arrow x1={left} y1={top + height} x2={left} y2={top} />
-      <Path d={`M ${left + width / 2} ${top + height * margin} L ${left + width / 2} ${top + height * (1 - margin)}`} />
-      <Path d={`M ${left + width * margin} ${top + height / 2} L ${left + width * (1 - margin)} ${top + height / 2}`} />
       {Rect && <Rect left={left} top={top} width={width} height={height} />}
       {Text && <Text left={left} top={top} width={width} height={height} />}
+      <Path d={`M ${left + width / 2} ${top + height * (1 - margin)} L ${left + width / 2} ${top + height * margin}`} />
+      <Path d={`M ${left + width * margin} ${top + height / 2} L ${left + width * (1 - margin)} ${top + height / 2}`} />
+      <Arrow x1={left} y1={top + height} x2={left + width} y2={top + height} />
+      <Arrow x1={left} y1={top + height} x2={left} y2={top} />
     </Fragment>
   )
 }
