@@ -54,7 +54,11 @@ const SubPost = ({
   const { environment } = useAppEnvironmentStore()
 
   const total = useMemo(
-    () => emissionSources.reduce((sum, emissionSource) => sum + (getEmissionResults(emissionSource)?.emission || 0), 0),
+    () =>
+      emissionSources.reduce(
+        (sum, emissionSource) => sum + (getEmissionResults(emissionSource)?.emissionValue || 0),
+        0,
+      ),
     [emissionSources],
   )
 

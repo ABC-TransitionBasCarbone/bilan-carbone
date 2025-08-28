@@ -3,7 +3,7 @@ import Modal from '@/components/modals/Modal'
 import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
-import { getEmissionSourcesTotalCo2 } from '@/services/emissionSource'
+import { getEmissionResults } from '@/services/emissionSource'
 import { Post } from '@/services/posts'
 import { computeBegesResult, getBegesEmissionTotal } from '@/services/results/beges'
 import { computeResultsByPost } from '@/services/results/consolidated'
@@ -97,7 +97,7 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
           return null
         }
 
-        const bcValue = Math.round(getEmissionSourcesTotalCo2([emissionSource], environment) / unitValue)
+        const bcValue = Math.round(getEmissionResults(emissionSource, environment).emissionValue / unitValue)
         const begesValue = Math.round(getBegesEmissionTotal(emissionSource, emissionFactor) / unitValue)
         const difference = begesValue - bcValue
 
@@ -146,7 +146,7 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
         return total
       }
 
-      const bcEmissionTotal = Math.round(getEmissionSourcesTotalCo2([emissionSource], environment) / unitValue)
+      const bcEmissionTotal = Math.round(getEmissionResults(emissionSource, environment).emissionValue / unitValue)
       return total - bcEmissionTotal
     }, 0)
   }, [missingCaract, emissionFactorsWithParts, unitValue, environment])

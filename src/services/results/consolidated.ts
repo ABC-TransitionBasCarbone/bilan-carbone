@@ -20,8 +20,8 @@ export type ResultsByPost = {
   numberOfEmissionSource: number
   numberOfValidatedEmissionSource: number
   uncertainty: number
-  subPosts: Omit<ResultsByPost, 'children' | 'subposts'>[]
-  children: Omit<ResultsByPost, 'children' | 'subposts'>[]
+  subPosts: ResultsByPost[]
+  children: ResultsByPost[]
 }
 
 const computeUncertainty = (uncertaintyToReduce: { value: number; uncertainty?: number }[], value: number) => {
