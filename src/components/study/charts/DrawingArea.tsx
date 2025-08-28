@@ -116,7 +116,7 @@ interface Props {
 
 const DrawingAreaBox = ({ Rect, Text }: Props) => {
   const { left, top, width, height } = useDrawingArea()
-  const margin = 0.02
+  const margin = 0
 
   return (
     <Fragment>

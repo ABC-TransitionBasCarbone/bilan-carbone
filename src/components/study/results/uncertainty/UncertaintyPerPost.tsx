@@ -15,8 +15,7 @@ import ScatterChart from '../../charts/ScatterChart'
 import PostIcon from '../../infography/icons/PostIcon'
 import styles from './UncertaintyGraph.module.css'
 
-const margin = 0.05
-const Rect = (props: DrawingProps) => <TopRightRect margin={0.01} color="var(--mui-palette-primary-light)" {...props} />
+const Rect = (props: DrawingProps) => <TopRightRect margin={0} color="var(--mui-palette-primary-light)" {...props} />
 
 interface Props {
   study: FullStudy
@@ -62,7 +61,7 @@ const UncertaintyPerPost = ({ study, computedResults }: Props) => {
   }
 
   const Text = (props: DrawingProps) => (
-    <TopRightMultilineText {...props} margin={margin} className="bold text-center">
+    <TopRightMultilineText {...props} margin={0.05} className="bold text-center">
       {t('prioritaryZone')}
     </TopRightMultilineText>
   )
