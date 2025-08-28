@@ -23,6 +23,7 @@ interface Props<T> extends Omit<PieChartProps, 'series'> {
   height?: number
   showTitle?: boolean
   showLabelsOnPie?: boolean
+  onlyChildren?: boolean
 }
 
 const PieChart = <T extends BasicTypeCharts>({
@@ -32,6 +33,7 @@ const PieChart = <T extends BasicTypeCharts>({
   height = 400,
   showTitle = true,
   showLabelsOnPie = true,
+  onlyChildren = false,
   ...pieChartProps
 }: Props<T>) => {
   const tUnits = useTranslations('study.results.units')
@@ -39,23 +41,31 @@ const PieChart = <T extends BasicTypeCharts>({
   const theme = useTheme()
 
   const getColorForPie = useCallback((post?: string, color?: string) => getColor(theme, post, color), [theme])
+  const formatData = useCallback(
+    ({ value, label, post, color }: Pick<T, 'value' | 'label' | 'post' | 'color'>) => {
+      const convertedValue = value / STUDY_UNIT_VALUES[resultsUnit]
 
-  const pieData = useMemo(
-    () =>
-      results
-        .filter((result) => result.post !== 'total' && result.label !== 'total')
-        .map(({ value, label, post, color }) => {
-          const convertedValue = value / STUDY_UNIT_VALUES[resultsUnit]
-
-          return {
-            label,
-            value: convertedValue,
-            color: getColorForPie(post, color),
-          }
-        })
-        .filter((computeResult) => computeResult.value > 0),
-    [getColorForPie, results, resultsUnit],
+      return {
+        label,
+        value: convertedValue,
+        color: getColorForPie(post, color),
+      }
+    },
+    [getColorForPie, resultsUnit],
   )
+
+  const pieData = useMemo(() => {
+    if (onlyChildren) {
+      return results
+        .flatMap((result) => result.children)
+        .map((result) => formatData(result))
+        .filter((computeResult) => computeResult.value > 0)
+    }
+    return results
+      .filter((result) => result.post !== 'total' && result.label !== 'total')
+      .map((result) => formatData(result))
+      .filter((computeResult) => computeResult.value > 0)
+  }, [formatData, onlyChildren, results])
 
   return (
     <div className={styles.pieChart}>

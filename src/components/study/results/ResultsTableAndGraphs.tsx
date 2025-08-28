@@ -58,13 +58,27 @@ const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: s
         return <TableComponent resultsUnit={resultsUnit} data={filteredResultsWithTotal} />
       }
       case TabsPossibilities.pieChart:
-        return <PieChart results={filteredResultsWithTotal} resultsUnit={resultsUnit ?? StudyResultUnit.T} hideLegend />
+        return (
+          <PieChart
+            results={filteredResultsWithTotal}
+            resultsUnit={resultsUnit ?? StudyResultUnit.T}
+            hideLegend
+            onlyChildren={type === 'tag'}
+          />
+        )
       case TabsPossibilities.barChart:
-        return <BarChart results={filteredResultsWithTotal} resultsUnit={resultsUnit} showLabelsOnBars={false} />
+        return (
+          <BarChart
+            results={filteredResultsWithTotal}
+            resultsUnit={resultsUnit}
+            showLabelsOnBars={false}
+            onlyChildren={type === 'tag'}
+          />
+        )
       default:
         return null
     }
-  }, [tabSelected, TableComponent, filteredResultsWithTotal, resultsUnit])
+  }, [tabSelected, filteredResultsWithTotal, resultsUnit, type, TableComponent])
 
   const setFilteredResults = useCallback(
     (results: T[]) => {

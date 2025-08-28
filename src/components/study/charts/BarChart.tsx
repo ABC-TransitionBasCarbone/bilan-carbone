@@ -25,6 +25,7 @@ interface Props<T> {
   showLegend?: boolean
   showLabelsOnBars?: boolean
   skipAnimation?: boolean
+  onlyChildren?: boolean
 }
 
 const BarChart = <T extends BasicTypeCharts>({
@@ -36,6 +37,7 @@ const BarChart = <T extends BasicTypeCharts>({
   showLegend = true,
   showLabelsOnBars = true,
   skipAnimation = false,
+  onlyChildren = false,
 }: Props<T>) => {
   const tResults = useTranslations('study.results')
   const tUnits = useTranslations('study.results.units')
@@ -45,12 +47,14 @@ const BarChart = <T extends BasicTypeCharts>({
 
   const barData = useMemo(() => {
     const filteredData = results.filter((result) => result.post !== 'total' && result.label !== 'total')
+
+    const dataToFormat = onlyChildren ? filteredData.flatMap((result) => result.children) : filteredData
     return {
-      labels: filteredData.map(({ label, post }) => getLabel(label, post, tPost)),
-      values: filteredData.map(({ value }) => value / STUDY_UNIT_VALUES[resultsUnit]),
-      colors: filteredData.map(({ post, color }) => getColor(theme, post, color)),
+      labels: dataToFormat.map(({ label, post }) => getLabel(label, post, tPost)),
+      values: dataToFormat.map(({ value }) => value / STUDY_UNIT_VALUES[resultsUnit]),
+      colors: dataToFormat.map(({ post, color }) => getColor(theme, post, color)),
     }
-  }, [results, tPost, resultsUnit, theme])
+  }, [results, onlyChildren, tPost, resultsUnit, theme])
 
   const getBarLabel = (item: { value: number | null }) =>
     showLabelsOnBars && item.value && item.value > 0 ? formatValueAndUnit(item.value) : ''
