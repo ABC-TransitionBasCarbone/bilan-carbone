@@ -233,22 +233,20 @@ const EmissionSource = ({
               </div>
             )}
             {/* result */}
-            {emissionResults && (
-              <div className={classNames(styles.result, 'flex-col flex-end align-end text-center grow')}>
-                <p className={styles.resultText} data-testid="emission-source-value">
-                  {`${formatNumber(emissionResults.emissionValue / STUDY_UNIT_VALUES[study.resultsUnit])} ${tResultstUnits(study.resultsUnit)}`}
+            <div className={classNames(styles.result, 'flex-col flex-end align-end text-center grow')}>
+              <p className={styles.resultText} data-testid="emission-source-value">
+                {`${formatNumber(emissionResults.emissionValue / STUDY_UNIT_VALUES[study.resultsUnit])} ${tResultstUnits(study.resultsUnit)}`}
+              </p>
+              {emissionResults.standardDeviation && (
+                <p
+                  className={classNames(styles.resultQuality, styles.resultText)}
+                  data-testid="emission-source-quality"
+                >
+                  {tQuality('name')}{' '}
+                  {tQuality(getStandardDeviationRating(emissionResults.standardDeviation).toString())}
                 </p>
-                {emissionResults.standardDeviation && (
-                  <p
-                    className={classNames(styles.resultQuality, styles.resultText)}
-                    data-testid="emission-source-quality"
-                  >
-                    {tQuality('name')}{' '}
-                    {tQuality(getStandardDeviationRating(emissionResults.standardDeviation).toString())}
-                  </p>
-                )}
-              </div>
-            )}
+              )}
+            </div>
           </div>
           <div className={classNames(styles.status, 'flex-cc')} data-testid="emission-source-status">
             {loading || saved ? (

@@ -107,17 +107,8 @@ const ConsolidatedResultsTable = <
   const tableData = useMemo(
     () =>
       data.map((d) => ({
-        label: d.label,
-        value: d.value,
-        uncertainty: d.uncertainty,
-        post: d.post,
-        children: d.children.map((child) => ({
-          label: child.label,
-          value: child.value,
-          uncertainty: child.uncertainty,
-          post: child.post,
-          children: [],
-        })),
+        ...d,
+        children: d.children.map((child) => ({ ...child, children: [] })),
       })),
     [data],
   )

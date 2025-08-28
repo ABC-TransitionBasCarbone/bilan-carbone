@@ -64,15 +64,8 @@ const TagsResultsTable = ({ resultsUnit, data }: Props) => {
   const tableData = useMemo(
     () =>
       data.map((d) => ({
-        label: d.label,
-        value: d.value,
-        uncertainty: d.uncertainty,
-        children: d.children.map((child) => ({
-          label: child.label,
-          value: child.value,
-          uncertainty: child.uncertainty,
-          children: [],
-        })),
+        ...d,
+        children: d.children.map((child) => ({ ...child, children: [] })),
       })),
     [data],
   )
