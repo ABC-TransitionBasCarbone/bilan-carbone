@@ -61,6 +61,7 @@ import {
 import { addUser, getUserApplicationSettings, getUserByEmail, getUserSourceById, UserWithAccounts } from '@/db/user'
 import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
+import { getNestedValue } from '@/utils/array'
 import { mapCncToStudySite } from '@/utils/cnc'
 import { calculateDistanceFromParis } from '@/utils/distance'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
@@ -1469,8 +1470,13 @@ export const getCncByCncCode = async (cncCode: string) =>
     return await findCncByCncCode(cncCode)
   })
 
+const mapStudyForReport = (study: FullStudy) => ({
+  ...study,
+  year: study.startDate.getFullYear(),
+})
+
 export const prepareReport = async (study: FullStudy) => {
-  const overrideFilePath = path.join(process.cwd(), 'src', 'first-report.docx')
+  const overrideFilePath = path.join(process.cwd(), 'src', 'report_template.docx')
   const content = fs.readFileSync(path.resolve(__dirname, overrideFilePath), 'binary')
 
   const zip = new PizZip(content)
@@ -1478,11 +1484,19 @@ export const prepareReport = async (study: FullStudy) => {
   const doc = new Docxtemplater(zip, {
     paragraphLoop: true,
     linebreaks: true,
+    parser: (tag: string) => ({
+      get(scope) {
+        if (tag.includes('.')) {
+          return getNestedValue(scope, tag)
+        }
+        return scope[tag]
+      },
+    }),
   })
 
   doc.render({
-    study_name: study.name,
-    date: study.startDate,
+    study: mapStudyForReport(study),
+    organization: study.organizationVersion.organization,
   })
   const buffer = doc.toBuffer()
   const arrayBuffer = new ArrayBuffer(buffer.length)
