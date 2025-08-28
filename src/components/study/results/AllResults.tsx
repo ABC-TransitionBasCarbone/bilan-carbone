@@ -4,6 +4,7 @@ import Button from '@/components/base/Button'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { hasAccessToBcExport } from '@/services/permissions/environment'
+import { computeBegesResult } from '@/services/results/beges'
 import { AdditionalResultTypes, downloadStudyResults, getResultsValues, ResultType } from '@/services/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import DownloadIcon from '@mui/icons-material/Download'
@@ -82,6 +83,11 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
         displayValueWithDep,
       ),
     [displayValueWithDep, study, studySite, t, tPost, validatedOnly],
+  )
+
+  const computedBegesData = useMemo(
+    () => computeBegesResult(study, rules, emissionFactorsWithParts, studySite, false, validatedOnly),
+    [study, rules, emissionFactorsWithParts, studySite, validatedOnly],
   )
 
   if (!environment) {
@@ -178,14 +184,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
           </>
         )}
         {type === Export.Beges && (
-          <BegesResultsTable
-            study={study}
-            rules={begesRules}
-            emissionFactorsWithParts={emissionFactorsWithParts}
-            studySite={studySite}
-            withDependencies={false}
-            withDepValue={withDepValue}
-          />
+          <BegesResultsTable study={study} withDepValue={withDepValue} data={computedBegesData} />
         )}
       </div>
       {type !== Export.Beges && (

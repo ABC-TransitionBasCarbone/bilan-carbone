@@ -11,7 +11,7 @@ import { ScatterSeries } from '@mui/x-charts'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
-import { DrawingProps, MultilineText, TopRightRect } from '../../charts/DrawingArea'
+import { DrawingProps, TopRightMultilineText, TopRightRect } from '../../charts/DrawingArea'
 import ScatterChart from '../../charts/ScatterChart'
 import styles from './UncertaintyGraph.module.css'
 
@@ -62,16 +62,10 @@ const UncertaintyPerEmissionSource = ({ study }: Props) => {
     (emissionSource) => `var(--post-${postColors[emissionSource.post as Post] || defaultPostColor}-light)`,
   )
 
-  const Text = ({ left, top, width, height }: DrawingProps) => (
-    <MultilineText
-      x={left + (width / 2) * (1 + margin)}
-      y={top + height * margin}
-      width={(width / 2) * (1 - margin * 2)}
-      height={height}
-      className="bold text-center"
-    >
+  const Text = (props: DrawingProps) => (
+    <TopRightMultilineText {...props} margin={margin} className="bold text-center">
       {t('prioritaryZone')}
-    </MultilineText>
+    </TopRightMultilineText>
   )
 
   const detailedSource = useMemo(

@@ -10,8 +10,9 @@ import { ScatterMarkerProps, ScatterSeries } from '@mui/x-charts'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useState } from 'react'
-import { DrawingProps, MultilineText, TopRightRect } from '../../charts/DrawingArea'
+import { DrawingProps, TopRightMultilineText, TopRightRect } from '../../charts/DrawingArea'
 import ScatterChart from '../../charts/ScatterChart'
+import PostIcon from '../../infography/icons/PostIcon'
 import styles from './UncertaintyGraph.module.css'
 
 const margin = 0.05
@@ -60,25 +61,28 @@ const UncertaintyPerPost = ({ study, computedResults }: Props) => {
     setGlossary(false)
   }
 
-  const Text = ({ left, top, width, height }: DrawingProps) => (
-    <MultilineText
-      x={left + (width / 2) * (1 + margin)}
-      y={top + height * margin}
-      width={(width / 2) * (1 - margin * 2)}
-      height={(height / 2) * (1 - 2 * margin)}
-      className="bold text-center"
-    >
+  const Text = (props: DrawingProps) => (
+    <TopRightMultilineText {...props} margin={margin} className="bold text-center">
       {t('prioritaryZone')}
-    </MultilineText>
+    </TopRightMultilineText>
   )
 
-  const Marker = ({ size, x, y, seriesId, color, ...rest }: ScatterMarkerProps) => (
-    <Link href={`/etudes/${study.id}/comptabilisation/saisie-des-donnees/${seriesId}`}>
-      <g x={0} y={0} transform={`translate(${x}, ${y})`} fill={color} opacity={1} {...rest}>
-        <circle r={size} cx={0} cy={0} />
-      </g>
-    </Link>
-  )
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const Marker = ({ size, x, y, seriesId, color, isFaded, dataIndex, isHighlighted, ...rest }: ScatterMarkerProps) => {
+    const iconSize = size * 0.75
+    return (
+      <Link href={`/etudes/${study.id}/comptabilisation/saisie-des-donnees/${seriesId}`}>
+        <g x={0} y={0} transform={`translate(${x}, ${y})`} fill={color} opacity={1} {...rest}>
+          <circle r={size} cx={0} cy={0} />
+          {size > 20 && (
+            <foreignObject x={-iconSize / 2} y={-iconSize / 2} width={2 * iconSize} height={2 * iconSize}>
+              <PostIcon post={seriesId as Post} className={styles.icon} />
+            </foreignObject>
+          )}
+        </g>
+      </Link>
+    )
+  }
 
   return (
     <div className="my2">

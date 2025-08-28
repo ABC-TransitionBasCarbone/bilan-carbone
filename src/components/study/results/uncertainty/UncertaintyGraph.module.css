@@ -6,3 +6,8 @@
     color: var(--mui-palette-secondary-dark);
   }
 }
+
+.icon {
+  width: auto;
+  height: 50%;
+}

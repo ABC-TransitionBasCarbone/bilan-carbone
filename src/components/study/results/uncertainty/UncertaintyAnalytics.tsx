@@ -7,6 +7,7 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import ConfidenceIntervalCharts from './ConfidenceIntervalChart'
+import EmissionSourcePerPost from './EmissionSourcePerPost'
 import UncertaintyGauge from './Gauge'
 import MostUncertainPostsChart from './MostUncertainPostsChart'
 import styles from './UncertaintyAnalytics.module.css'
@@ -52,6 +53,7 @@ const UncertaintyAnalytics = ({ study, environment, computedResults }: Props) =>
       </div>
       <UncertaintyPerPost study={study} computedResults={computedResults} />
       <UncertaintyPerEmissionSource study={study} />
+      <EmissionSourcePerPost studyId={study.id} resultsUnit={study.resultsUnit} results={computedResults} />
     </div>
   )
 }

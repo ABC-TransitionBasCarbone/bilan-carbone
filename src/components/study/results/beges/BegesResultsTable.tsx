@@ -1,52 +1,26 @@
 'use client'
 
-import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
-import { BegesLine, computeBegesResult, rulesSpans } from '@/services/results/beges'
-import { getUserSettings } from '@/services/serverFunctions/user'
+import { BegesPostInfos, rulesSpans } from '@/services/results/beges'
 import { getStandardDeviationRating } from '@/services/uncertainty'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
-import { ExportRule } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import TotalCarbonBeges from '../consolidated/TotalCarbonBeges'
 import styles from './BegesResultsTable.module.css'
 
 interface Props {
   study: FullStudy
-  rules: ExportRule[]
-  emissionFactorsWithParts: EmissionFactorWithParts[]
-  studySite: string
-  withDependencies: boolean
   withDepValue: number
+  data: BegesPostInfos[]
 }
 
-const BegesResultsTable = ({
-  study,
-  rules,
-  emissionFactorsWithParts,
-  studySite,
-  withDependencies,
-  withDepValue,
-}: Props) => {
+const BegesResultsTable = ({ study, withDepValue, data }: Props) => {
   const t = useTranslations('beges')
   const tQuality = useTranslations('quality')
   const tUnits = useTranslations('study.results.units')
-  const [validatedOnly, setValidatedOnly] = useState(true)
-
-  useEffect(() => {
-    applyUserSettings()
-  }, [])
-
-  const applyUserSettings = async () => {
-    const userSettings = await getUserSettings()
-    const validatedOnlySetting = userSettings.success ? userSettings.data?.validatedEmissionSourcesOnly : undefined
-    if (validatedOnlySetting !== undefined) {
-      setValidatedOnly(validatedOnlySetting)
-    }
-  }
 
   const columns = useMemo(
     () =>
@@ -110,13 +84,8 @@ const BegesResultsTable = ({
           accessorFn: ({ uncertainty }) =>
             uncertainty ? tQuality(getStandardDeviationRating(uncertainty).toString()) : '',
         },
-      ] as ColumnDef<BegesLine>[],
+      ] as ColumnDef<BegesPostInfos>[],
     [t, tQuality, tUnits, study.resultsUnit],
-  )
-
-  const data = useMemo(
-    () => computeBegesResult(study, rules, emissionFactorsWithParts, studySite, withDependencies, validatedOnly),
-    [study, rules, emissionFactorsWithParts, studySite, withDependencies, validatedOnly],
   )
 
   const table = useReactTable({
