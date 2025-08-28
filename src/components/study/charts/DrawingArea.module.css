@@ -6,6 +6,10 @@
   pointer-events: none;
 }
 
+.arrow {
+  fill: var(--mui-palette-grey-500);
+}
+
 .multilineText {
   color: var(--mui-palette-grey-500);
   white-space: normal;
