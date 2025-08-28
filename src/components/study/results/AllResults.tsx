@@ -5,7 +5,13 @@ import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { hasAccessToBcExport } from '@/services/permissions/environment'
 import { computeBegesResult } from '@/services/results/beges'
-import { AdditionalResultTypes, downloadStudyResults, getResultsValues, ResultType } from '@/services/study'
+import {
+  AdditionalResultTypes,
+  downloadStudyReport,
+  downloadStudyResults,
+  getResultsValues,
+  ResultType,
+} from '@/services/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import DownloadIcon from '@mui/icons-material/Download'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
@@ -146,6 +152,9 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
           }
           title={t('download')}
         >
+          <DownloadIcon />
+        </Button>
+        <Button onClick={() => downloadStudyReport(study)} title={t('downloadReport')}>
           <DownloadIcon />
         </Button>
         {exports.map((exportType) => exportType.type).includes(Export.Beges) && (

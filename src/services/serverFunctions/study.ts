@@ -91,8 +91,12 @@ import {
   UserChecklist,
   UserStatus,
 } from '@prisma/client'
+import Docxtemplater from 'docxtemplater'
+import fs from 'fs'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
+import path from 'path'
+import PizZip from 'pizzip'
 import { v4 as uuidv4 } from 'uuid'
 import { auth, dbActualizedAuth } from '../auth'
 import { getCaracterisationsBySubPost } from '../emissionSource'
@@ -1464,3 +1468,27 @@ export const getCncByCncCode = async (cncCode: string) =>
 
     return await findCncByCncCode(cncCode)
   })
+
+export const prepareReport = async (study: FullStudy) => {
+  const overrideFilePath = path.join(process.cwd(), 'src', 'first-report.docx')
+  const content = fs.readFileSync(path.resolve(__dirname, overrideFilePath), 'binary')
+
+  const zip = new PizZip(content)
+
+  const doc = new Docxtemplater(zip, {
+    paragraphLoop: true,
+    linebreaks: true,
+  })
+
+  doc.render({
+    study_name: study.name,
+    date: study.startDate,
+  })
+  const buffer = doc.toBuffer()
+  const arrayBuffer = new ArrayBuffer(buffer.length)
+  const view = new Uint8Array(arrayBuffer)
+  for (let i = 0; i < buffer.length; ++i) {
+    view[i] = buffer[i]
+  }
+  return arrayBuffer
+}
