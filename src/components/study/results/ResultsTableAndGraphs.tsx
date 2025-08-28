@@ -60,7 +60,7 @@ const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: s
       case TabsPossibilities.pieChart:
         return <PieChart results={filteredResultsWithTotal} resultsUnit={resultsUnit ?? StudyResultUnit.T} hideLegend />
       case TabsPossibilities.barChart:
-        return <BarChart results={filteredResultsWithTotal} resultsUnit={resultsUnit} />
+        return <BarChart results={filteredResultsWithTotal} resultsUnit={resultsUnit} showLabelsOnBars={false} />
       default:
         return null
     }

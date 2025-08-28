@@ -46,8 +46,8 @@ const getPostFilters = <T extends FilterType>(results: T[], tPost: ReturnType<ty
   )
 }
 
-const getResultId = <T extends FilterType>(result: T) => {
-  return (result.familyId ? result.familyId : result.post) ?? ''
+const getResultId = (result: BasicTypeCharts['children'][number]) => {
+  return (result.post ? result.post : result.label) ?? ''
 }
 
 interface Props<T> {
@@ -71,10 +71,19 @@ const Filters = <T extends FilterType>({ setFilteredResults, results, type, disp
     // We only want to compute the filters once when the component mounts
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  const [checkedItems, setCheckedItems] = useState(Object.values(initialFilters).flatMap((parent) => parent.id))
+  const [checkedItems, setCheckedItems] = useState(
+    Object.values(initialFilters).flatMap((parent) => parent.children.map((child) => child.id)),
+  )
 
   useEffect(() => {
-    setFilteredResults(results.filter((result) => checkedItems.includes(getResultId(result))))
+    setFilteredResults(
+      results
+        .map((result) => ({
+          ...result,
+          children: result.children.filter((child) => checkedItems.includes(getResultId(child))),
+        }))
+        .filter((result) => result.children.length > 0),
+    )
   }, [checkedItems, results, setFilteredResults])
 
   if (!display) {
@@ -85,77 +94,59 @@ const Filters = <T extends FilterType>({ setFilteredResults, results, type, disp
     <>
       {Object.entries(initialFilters).map(([parentId, familyInfo]) => {
         return (
-          <FormControlLabel
-            key={parentId}
-            label={familyInfo.name}
-            control={
-              <Checkbox
-                checked={checkedItems.includes(parentId)}
-                onChange={() =>
-                  setCheckedItems((prevCheckedItems) => {
-                    if (prevCheckedItems.includes(parentId)) {
-                      return prevCheckedItems.filter((ci) => ci !== parentId)
-                    }
+          <div className="flex flex-col" key={parentId}>
+            <FormControlLabel
+              label={familyInfo.name}
+              control={
+                <Checkbox
+                  checked={initialFilters[parentId].children.every((child) =>
+                    checkedItems.find((ci) => ci === child.id),
+                  )}
+                  onChange={() =>
+                    setCheckedItems((prevCheckedItems) => {
+                      if (
+                        initialFilters[parentId].children.every((child) =>
+                          prevCheckedItems.find((ci) => ci === child.id),
+                        )
+                      ) {
+                        return prevCheckedItems.filter(
+                          (ci) => !initialFilters[parentId].children.some((child) => child.id === ci),
+                        )
+                      }
 
-                    return [...prevCheckedItems, parentId]
-                  })
+                      const newCheckedItems = [...prevCheckedItems]
+                      for (const child of initialFilters[parentId].children) {
+                        if (!newCheckedItems.includes(child.id)) {
+                          newCheckedItems.push(child.id)
+                        }
+                      }
+                      return newCheckedItems
+                    })
+                  }
+                />
+              }
+            />
+            {familyInfo.children.map((child) => (
+              <FormControlLabel
+                className="ml2"
+                key={child.label}
+                label={child.label}
+                control={
+                  <Checkbox
+                    checked={checkedItems.some((el) => el === child.id)}
+                    onChange={() =>
+                      setCheckedItems((prevCheckedItems) => {
+                        if (prevCheckedItems.includes(child.id)) {
+                          return prevCheckedItems.filter((ci) => ci !== child.id)
+                        }
+                        return [...prevCheckedItems, child.id]
+                      })
+                    }
+                  />
                 }
               />
-            }
-          />
-          // <div className="flex flex-col" key={parentId}>
-          //   <FormControlLabel
-          //     label={familyInfo.name}
-          //     control={
-          //       <Checkbox
-          //         checked={initialFilters[parentId].children.every((child) =>
-          //           checkedItems.find((ci) => ci.label === child.label),
-          //         )}
-          //         onChange={() =>
-          //           setCheckedItems((prevCheckedItems) => {
-          //             if (
-          //               initialFilters[parentId].children.every((child) =>
-          //                 prevCheckedItems.find((ci) => ci.label === child.label),
-          //               )
-          //             ) {
-          //               return prevCheckedItems.filter(
-          //                 (ci) => !initialFilters[parentId].children.some((child) => child.label === ci.label),
-          //               )
-          //             }
-
-          //             const newCheckedItems = [...prevCheckedItems]
-          //             for (const child of initialFilters[parentId].children) {
-          //               if (!newCheckedItems.includes(child)) {
-          //                 newCheckedItems.push(child)
-          //               }
-          //             }
-          //             return newCheckedItems
-          //           })
-          //         }
-          //       />
-          //     }
-          //   />
-          //   {familyInfo.children.map((child) => (
-          //     <FormControlLabel
-          //       className="ml2"
-          //       key={child.label}
-          //       label={child.label}
-          //       control={
-          //         <Checkbox
-          //           checked={checkedItems.some((el) => el.label === child.label)}
-          //           onChange={() =>
-          //             setCheckedItems((prevCheckedItems) => {
-          //               if (prevCheckedItems.includes(child)) {
-          //                 return prevCheckedItems.filter((ci) => ci.label !== child.label)
-          //               }
-          //               return [...prevCheckedItems, child]
-          //             })
-          //           }
-          //         />
-          //       }
-          //     />
-          //   ))}
-          // </div>
+            ))}
+          </div>
         )
       })}
     </>
