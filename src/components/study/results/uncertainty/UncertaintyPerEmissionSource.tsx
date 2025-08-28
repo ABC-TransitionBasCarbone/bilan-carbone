@@ -5,8 +5,9 @@ import { FullStudy } from '@/db/study'
 import { getEmissionResults } from '@/services/emissionSource'
 import { Post } from '@/services/posts'
 import { qualityKeys, specificFEQualityKeysLinks } from '@/services/uncertainty'
+import { formatNumber } from '@/utils/number'
 import { getPost } from '@/utils/post'
-import { defaultPostColor, postColors } from '@/utils/study'
+import { defaultPostColor, postColors, STUDY_UNIT_VALUES } from '@/utils/study'
 import { ScatterSeries } from '@mui/x-charts'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -83,10 +84,8 @@ const UncertaintyPerEmissionSource = ({ study }: Props) => {
         maxY={maxUncertainty * 1.5}
         yLabel={`${t('uncertainty')} (%)`}
         xLabel={`${t('total')} (${t(`units.${study.resultsUnit}`)})`}
-        xValueFormatter={() => ''}
-        yValueFormatter={() => ''}
+        xValueFormatter={(value) => formatNumber(value / STUDY_UNIT_VALUES[study.resultsUnit], 2)}
         onClick={(emissionSource: string) => setDetails(emissionSource)}
-        disableTicks
         Rect={Rect}
         Text={Text}
       />

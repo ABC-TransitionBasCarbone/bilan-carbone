@@ -96,9 +96,7 @@ const UncertaintyPerPost = ({ study, computedResults }: Props) => {
         maxY={maxUncertainty * 1.5}
         yLabel={`${t('uncertainty')} (%)`}
         xLabel={`${t('total')} (${t(`units.${study.resultsUnit}`)})`}
-        xValueFormatter={() => ''}
-        yValueFormatter={() => ''}
-        disableTicks
+        xValueFormatter={(value) => formatNumber(value / STUDY_UNIT_VALUES[study.resultsUnit], 2)}
         Rect={Rect}
         Text={Text}
         CustomMarker={Marker}

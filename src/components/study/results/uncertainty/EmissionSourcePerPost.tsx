@@ -1,7 +1,7 @@
 import Title from '@/components/base/Title'
 import { Post } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
-import { formatEmissionFactorNumber } from '@/utils/number'
+import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { defaultPostColor, postColors, STUDY_UNIT_VALUES } from '@/utils/study'
 import { ScatterMarkerProps, ScatterSeries } from '@mui/x-charts'
 import { StudyResultUnit } from '@prisma/client'
@@ -99,9 +99,7 @@ const EmissionSourcePerPost = ({ studyId, resultsUnit, results }: Props) => {
         maxY={maxSource * 1.1}
         yLabel={t('emissionSources')}
         xLabel={`${t('total')} (${t(`units.${resultsUnit}`)})`}
-        xValueFormatter={() => ''}
-        yValueFormatter={() => ''}
-        disableTicks
+        xValueFormatter={(value) => formatNumber(value / STUDY_UNIT_VALUES[resultsUnit], 2)}
         Rect={Rect}
         Text={Text}
         CustomMarker={Marker}
