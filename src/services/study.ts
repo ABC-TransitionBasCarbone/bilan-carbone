@@ -16,6 +16,7 @@ import { computeBegesResult } from './results/beges'
 import { computeResultsByPost, computeResultsByTag, ResultsByPost } from './results/consolidated'
 import { EmissionFactorWithMetaData, getEmissionFactorsByIds } from './serverFunctions/emissionFactor'
 import { prepareExcel } from './serverFunctions/file'
+import { prepareReport } from './serverFunctions/study'
 import { getUserSettings } from './serverFunctions/user'
 import {
   getEmissionSourcesGlobalUncertainty,
@@ -196,7 +197,7 @@ const getFileName = (study: FullStudy, post?: string, subPost?: SubPost) => {
 
 const downloadCSV = (csvContent: string, fileName: string) => {
   // \ufeff  (Byte Order Mark) adds BOM to indicate UTF-8 encoding
-  return download(['\ufeff', csvContent], fileName, 'text/csv;charset=utf-8;')
+  return download(['\ufeff', csvContent], fileName, 'csv')
 }
 
 const getEmissionSourcesCSVContent = (
@@ -639,7 +640,12 @@ export const downloadStudyResults = async (
 
   const buffer = await prepareExcel(data)
 
-  download([buffer], `${study.name}_results.xlsx`, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+  download([buffer], `${study.name}_results.xlsx`, 'xlsx')
+}
+
+export const downloadStudyReport = async (study: FullStudy) => {
+  const buffer = await prepareReport(study)
+  download([buffer], `${study.name}_report.docx`, 'docx')
 }
 
 export const getStudyParentOrganizationVersionId = async (

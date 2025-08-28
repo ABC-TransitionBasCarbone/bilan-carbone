@@ -641,6 +641,7 @@
       "subPost": "Sub-post",
       "tag": "Tag",
       "download": "Download results",
+      "downloadReport": "Download report",
       "downloadPDF": "Download the summary",
       "downloadingPDF": "Downloading (at least 15 seconds)...",
       "value": "Emissions ({unit})",
