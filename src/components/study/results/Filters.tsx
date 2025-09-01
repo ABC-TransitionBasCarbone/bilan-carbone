@@ -77,12 +77,10 @@ const Filters = <T extends FilterType>({ setFilteredResults, results, type, disp
 
   useEffect(() => {
     setFilteredResults(
-      results
-        .map((result) => ({
-          ...result,
-          children: result.children.filter((child) => checkedItems.includes(getResultId(child))),
-        }))
-        .filter((result) => result.children.length > 0),
+      results.map((result) => ({
+        ...result,
+        children: result.children.filter((child) => checkedItems.includes(getResultId(child))),
+      })),
     )
   }, [checkedItems, results, setFilteredResults])
 

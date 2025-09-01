@@ -94,7 +94,7 @@ export const getStandardDeviation = (emissionSource: (FullStudy | StudyWithoutDe
   )
 }
 
-const getAlpha = (emission: number | null, confidenceInterval: number[] | null) => {
+export const getAlpha = (emission: number | null, confidenceInterval: number[] | null) => {
   if (emission === null || confidenceInterval === null || confidenceInterval[1] === undefined) {
     return null
   }

@@ -186,7 +186,9 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       {type !== Export.Beges && (
         <UncertaintyAnalytics
           computedResults={displayValueWithDep ? computedResultsWithDep : computedResultsWithoutDep}
-          study={study}
+          studyId={study.id}
+          resultsUnit={study.resultsUnit}
+          emissionSources={study.emissionSources}
         />
       )}
     </Block>

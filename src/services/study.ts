@@ -602,6 +602,7 @@ export const getResultsValues = (
     environmentPostMapping[environment],
     environment,
   )
+
   const computedResultsWithoutDep = computeResultsByPost(
     study,
     tPost,

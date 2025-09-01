@@ -2,6 +2,7 @@ import Title from '@/components/base/Title'
 import { FullStudy } from '@/db/study'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { getConfidenceInterval } from '@/services/uncertainty'
+import { StudyResultUnit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
@@ -14,11 +15,13 @@ import UncertaintyPerEmissionSource from './UncertaintyPerEmissionSource'
 import UncertaintyPerPost from './UncertaintyPerPost'
 
 interface Props {
-  study: FullStudy
+  studyId: string
+  resultsUnit: StudyResultUnit
   computedResults: ResultsByPost[]
+  emissionSources: FullStudy['emissionSources']
 }
 
-const UncertaintyAnalytics = ({ study, computedResults }: Props) => {
+const UncertaintyAnalytics = ({ studyId, resultsUnit, computedResults, emissionSources }: Props) => {
   const t = useTranslations('study.results.uncertainties')
 
   const totalResults = computedResults.find((res) => res.post === 'total')
@@ -39,20 +42,16 @@ const UncertaintyAnalytics = ({ study, computedResults }: Props) => {
       <Title title={t('title')} as="h4" />
       <div className={styles.container}>
         <div className="grow flex-cc">
-          <ConfidenceIntervalCharts
-            confidenceInterval={confidenceInterval}
-            unit={study.resultsUnit}
-            percent={percent}
-          />
+          <ConfidenceIntervalCharts confidenceInterval={confidenceInterval} unit={resultsUnit} percent={percent} />
         </div>
         <div className={classNames(styles.container2, 'grow2 flex-cc')}>
           <UncertaintyGauge uncertainty={computedResults.find((res) => res.post === 'total')?.uncertainty} />
           <MostUncertainPostsChart computedResults={computedResults} />
         </div>
       </div>
-      <UncertaintyPerPost study={study} computedResults={computedResults} />
-      <UncertaintyPerEmissionSource study={study} />
-      <EmissionSourcePerPost studyId={study.id} resultsUnit={study.resultsUnit} results={computedResults} />
+      <UncertaintyPerPost studyId={studyId} resultsUnit={resultsUnit} computedResults={computedResults} />
+      <UncertaintyPerEmissionSource emissionSources={emissionSources} studyId={studyId} resultsUnit={resultsUnit} />
+      <EmissionSourcePerPost studyId={studyId} resultsUnit={resultsUnit} results={computedResults} />
     </div>
   )
 }
