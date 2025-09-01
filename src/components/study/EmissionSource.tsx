@@ -151,7 +151,13 @@ const EmissionSource = ({
     () => getEmissionSourceStatus(study, emissionSource, environment),
     [study, emissionSource, environment],
   )
-  const emissionResults = useMemo(() => getEmissionResults(emissionSource, environment), [emissionSource, environment])
+  const emissionResults = useMemo(() => {
+    if (!environment) {
+      return { emissionValue: 0, standardDeviation: 0 }
+    }
+
+    return getEmissionResults(emissionSource, environment)
+  }, [emissionSource, environment])
 
   const isFromOldImport = useMemo(
     () =>
@@ -170,6 +176,10 @@ const EmissionSource = ({
       : ''
     return versionId ? emissionFactors.find((factor) => factor?.version?.id === versionId)?.version?.name || '' : ''
   }, [study.emissionFactorVersions, isFromOldImport, emissionFactors])
+
+  if (!environment) {
+    return null
+  }
 
   return (
     <div id={`emission-source-${emissionSource.id}`} className={styles.container}>

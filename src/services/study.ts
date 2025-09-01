@@ -208,8 +208,8 @@ const getEmissionSourcesCSVContent = (
   tQuality: ReturnType<typeof useTranslations>,
   tUnit: ReturnType<typeof useTranslations>,
   tResultUnits: ReturnType<typeof useTranslations>,
+  environment: Environment,
   type?: 'Post' | 'Study',
-  environment?: Environment,
 ) => {
   const { columns, rows } = getEmissionSourcesRows(
     emissionSources,
@@ -260,7 +260,7 @@ export const downloadStudyPost = async (
   tQuality: ReturnType<typeof useTranslations>,
   tUnit: ReturnType<typeof useTranslations>,
   tResultUnits: ReturnType<typeof useTranslations>,
-  environment?: Environment,
+  environment: Environment,
 ) => {
   const emissionFactorIds = emissionSources
     .map((emissionSource) => emissionSource.emissionFactor?.id)
@@ -279,8 +279,8 @@ export const downloadStudyPost = async (
     tQuality,
     tUnit,
     tResultUnits,
-    'Post',
     environment,
+    'Post',
   )
 
   downloadCSV(csvContent, fileName)
@@ -294,6 +294,7 @@ export const downloadStudyEmissionSources = async (
   tQuality: ReturnType<typeof useTranslations>,
   tUnit: ReturnType<typeof useTranslations>,
   tResultUnits: ReturnType<typeof useTranslations>,
+  environment: Environment,
 ) => {
   const emissionSources = [...study.emissionSources].sort((a, b) => a.subPost.localeCompare(b.subPost))
 
@@ -314,6 +315,7 @@ export const downloadStudyEmissionSources = async (
     tQuality,
     tUnit,
     tResultUnits,
+    environment,
     'Study',
   )
 

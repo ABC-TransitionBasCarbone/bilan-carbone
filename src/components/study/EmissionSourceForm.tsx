@@ -66,7 +66,7 @@ interface Props {
   subPost: SubPost
   selectedFactor?: EmissionFactorWithMetaData
   update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null | string[]) => void
-  environment: Environment | undefined
+  environment: Environment
   caracterisations: EmissionSourceCaracterisation[]
   mandatoryCaracterisation: boolean
   status: EmissionSourcesStatus
@@ -115,7 +115,7 @@ const EmissionSourceForm = ({
   const qualities = qualityKeys.map((column) => emissionSource[column])
   const specificFEQualities = specificFEQualityKeys.map((column) => emissionSource[column])
 
-  const emissionResults = useMemo(() => getEmissionResults(emissionSource), [emissionSource])
+  const emissionResults = useMemo(() => getEmissionResults(emissionSource, environment), [emissionSource, environment])
 
   const qualityRating = useMemo(
     () => (selectedFactor ? getQualityRating(getSpecificEmissionFactorQuality(emissionSource)) : null),

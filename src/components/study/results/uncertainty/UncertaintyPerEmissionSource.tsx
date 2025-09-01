@@ -9,7 +9,7 @@ import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { getPost } from '@/utils/post'
 import { defaultPostColor, postColors, STUDY_UNIT_VALUES } from '@/utils/study'
 import { ScatterSeries } from '@mui/x-charts'
-import { StudyResultUnit } from '@prisma/client'
+import { Environment, StudyResultUnit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
@@ -23,20 +23,21 @@ interface Props {
   emissionSources: FullStudy['emissionSources']
   studyId: string
   resultsUnit: StudyResultUnit
+  environment: Environment
 }
 
 type Serie = ScatterSeries & {
   post: Post
 }
 
-const UncertaintyPerEmissionSource = ({ emissionSources, studyId, resultsUnit }: Props) => {
+const UncertaintyPerEmissionSource = ({ emissionSources, studyId, resultsUnit, environment }: Props) => {
   const t = useTranslations('study.results')
   const tCaract = useTranslations('emissionSource.form')
   const tQuality = useTranslations('quality')
   const [details, setDetails] = useState('')
 
   const results = emissionSources.map((emissionSource) => {
-    const res = getEmissionResults(emissionSource)
+    const res = getEmissionResults(emissionSource, environment)
     const alpha = getAlpha(res.emissionValue, res.confidenceInterval)
 
     return {

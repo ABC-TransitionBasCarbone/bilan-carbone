@@ -2,10 +2,9 @@ import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import AllPostsInfographyCut from '@/environments/cut/study/infography/AllPostsInfography'
 import AllPostsInfographyTilt from '@/environments/tilt/study/infography/AllPostsInfography'
-import { BCPost, CutPost, TiltPost } from '@/services/posts'
+import { CutPost, TiltPost } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import { getUserSettings } from '@/services/serverFunctions/user'
-import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { Environment } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -21,7 +20,6 @@ interface Props {
 const AllPostsInfographyContainer = ({ study, studySite, user }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const [validatedOnly, setValidatedOnly] = useState(true)
-  const { environment } = useAppEnvironmentStore()
 
   useEffect(() => {
     applyUserSettings()
@@ -35,14 +33,7 @@ const AllPostsInfographyContainer = ({ study, studySite, user }: Props) => {
     }
   }
 
-  const post = useMemo(() => {
-    switch (study.organizationVersion.environment) {
-      case Environment.CUT:
-        return CutPost
-      default:
-        return BCPost
-    }
-  }, [study.organizationVersion.environment])
+  const environment = useMemo(() => study.organizationVersion.environment, [study])
 
   const data = useMemo(
     () =>

@@ -44,7 +44,7 @@ export const computeResultsByPost = (
   withDependencies: boolean,
   validatedOnly: boolean = true,
   postValues: typeof Post | typeof CutPost | typeof BCPost | typeof TiltPost = BCPost,
-  environment: Environment | undefined,
+  environment: Environment,
   type?: ResultType,
 ): ResultsByPost[] => {
   const siteEmissionSources = getSiteEmissionSources(study.emissionSources, studySite)

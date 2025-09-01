@@ -32,6 +32,10 @@ const StudyPostsBlock = ({ post, study, display, setDisplay, children, emissionS
   const tUnit = useTranslations('units')
   const tResultUnits = useTranslations('study.results.units')
 
+  if (!environment) {
+    return null
+  }
+
   return (
     <Block
       title={
