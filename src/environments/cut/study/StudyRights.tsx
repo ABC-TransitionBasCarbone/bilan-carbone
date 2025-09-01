@@ -1,9 +1,7 @@
 'use client'
 
 import Block from '@/components/base/Block'
-import LinkButton from '@/components/base/LinkButton'
 import { FormTextField } from '@/components/form/TextField'
-import WeekScheduleForm from '@/components/form/WeekScheduleForm'
 import StudyParams from '@/components/study/rights/StudyParams'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
 import useStudySite from '@/components/study/site/useStudySite'
@@ -17,9 +15,8 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { changeStudyCinema, getQuestionsGroupedBySubPost, getStudySite } from '@/services/serverFunctions/study'
 import { ChangeStudyCinemaCommand, ChangeStudyCinemaValidation } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Box, CircularProgress } from '@mui/material'
+import { CircularProgress } from '@mui/material'
 import { DayOfWeek, EmissionFactorImportVersion, OpeningHours } from '@prisma/client'
-import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
@@ -332,7 +329,7 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
               />
             </div>
           </Block>
-          <Block title={t('openingHours')}>
+          {/* <Block title={t('openingHours')}>
             <div className={classNames(styles.openingHoursContainer, 'flex-col')}>
               <WeekScheduleForm
                 label={t('openingHours')}
@@ -362,7 +359,7 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
                 Suivant
               </LinkButton>
             </Box>
-          </Block>
+          </Block> */}
         </>
       )}
       {showSiteDataWarning && pendingSiteChanges && (

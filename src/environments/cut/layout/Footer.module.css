@@ -1,8 +1,9 @@
 .container {
   bottom: 0;
   width: 100%;
-  min-height: 236px;
+  min-height: 150px;
   padding: 2rem 0;
+
   @media screen and (max-width: 75rem) {
     flex-wrap: wrap;
   }
