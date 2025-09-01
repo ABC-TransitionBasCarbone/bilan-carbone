@@ -68,20 +68,36 @@ const Filters = <T extends FilterType>({ setFilteredResults, results, type, disp
       default:
         return {} as Record<string, { id: string; name: string; children: ChildrenType[] }>
     }
-    // We only want to compute the filters once when the component mounts
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-  const [checkedItems, setCheckedItems] = useState(
+  }, [results, type, tPost])
+
+  const [checkedItems, setCheckedItems] = useState(() =>
     Object.values(initialFilters).flatMap((parent) => parent.children.map((child) => child.id)),
   )
 
   useEffect(() => {
-    setFilteredResults(
-      results.map((result) => ({
-        ...result,
-        children: result.children.filter((child) => checkedItems.includes(getResultId(child))),
-      })),
-    )
+    setCheckedItems(Object.values(initialFilters).flatMap((parent) => parent.children.map((child) => child.id)))
+  }, [initialFilters])
+
+  useEffect(() => {
+    const filtered = results
+      .map((result) => {
+        const filteredChildren = result.children.filter((child) => checkedItems.includes(getResultId(child)))
+
+        if (filteredChildren.length === 0) {
+          return null
+        }
+
+        const newTotal = filteredChildren.reduce((sum, child) => sum + child.value, 0)
+
+        return {
+          ...result,
+          value: newTotal,
+          children: filteredChildren,
+        }
+      })
+      .filter((result) => result !== null)
+
+    setFilteredResults(filtered)
   }, [checkedItems, results, setFilteredResults])
 
   if (!display) {
@@ -97,7 +113,7 @@ const Filters = <T extends FilterType>({ setFilteredResults, results, type, disp
               label={familyInfo.name}
               control={
                 <Checkbox
-                  checked={initialFilters[parentId].children.every((child) =>
+                  checked={initialFilters[parentId].children.some((child) =>
                     checkedItems.find((ci) => ci === child.id),
                   )}
                   onChange={() =>
