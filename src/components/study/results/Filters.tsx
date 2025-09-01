@@ -1,7 +1,9 @@
 import { BasicTypeCharts } from '@/utils/charts'
 import { Checkbox, FormControlLabel, Menu } from '@mui/material'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
+import styles from './Filters.module.css'
 
 type FilterType = BasicTypeCharts & { familyId?: string }
 type ChildrenType = { id: string; label: string }
@@ -120,7 +122,7 @@ const Filters = <T extends FilterType>({ setFilteredResults, results, type, anch
         horizontal: 'right',
       }}
     >
-      <div className="px1">
+      <div className={classNames(styles.filters, 'px1')}>
         {Object.entries(initialItems).map(([parentId, familyInfo]) => {
           return (
             <div className="flex flex-col" key={parentId}>
