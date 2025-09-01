@@ -65,7 +65,7 @@ const EmissionSourcePerPost = ({ studyId, resultsUnit, results }: Props) => {
   const Text = (props: DrawingProps) => (
     <>
       <TopLeftMultilineText {...props} margin={0.05} className="bold text-center">
-        {t('overExploredZone')}
+        {t('nonPrioritaryZone')}
       </TopLeftMultilineText>
       <BottomRightMultilineText {...props} margin={0.05} className="bold text-center">
         {t('prioritaryZone')}

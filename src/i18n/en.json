@@ -697,7 +697,7 @@
       "consolidatedChartTitle": "Émissions, by post ({unit})",
       "other": "No tag",
       "prioritaryZone": "Priority area for improving collection",
-      "overExploredZone": "Sufficiently (overly) explored area",
+      "nonPrioritaryZone": "Non-priority area",
       "postEmissionPerNumberOfSources": "Emissions by post based on the number of emission sources",
       "glossary": {
         "title": "Glossary",
