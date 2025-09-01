@@ -2,7 +2,7 @@
 name: Ticket de bugs
 about: Modèle pour créer de nouveaux tickets de bugs
 title: '[BUG]'
-labels: Bug, Tech
+labels: Bug
 assignees: ''
 ---
 
