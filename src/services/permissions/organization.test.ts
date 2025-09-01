@@ -169,7 +169,7 @@ describe('Organization permissions', () => {
       expect(mockCanEditOrganizationVersion).toHaveBeenCalledTimes(0)
     })
 
-    it('returns false if organization is not found', async () => {
+    it('returns false if parent organization is not found', async () => {
       const mockedOrganizationChildId = 'mocked-organization-child-id'
       mockGetAccountById.mockResolvedValue({ organizationId: mockedOrganizationId })
       mockIsInOrgaOrParent.mockResolvedValue(true)
@@ -185,7 +185,7 @@ describe('Organization permissions', () => {
       expect(result).toBe(false)
 
       expect(mockGetAccountById).toHaveBeenCalledTimes(1)
-      expect(mockGetOrganizationVersionById).toHaveBeenCalledTimes(2)
+      expect(mockGetOrganizationVersionById).toHaveBeenCalledTimes(3)
       expect(mockIsInOrgaOrParent).toHaveBeenCalledTimes(1)
       expect(mockCanEditOrganizationVersion).toHaveBeenCalledTimes(0)
     })

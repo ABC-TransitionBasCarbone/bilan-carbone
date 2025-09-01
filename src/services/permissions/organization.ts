@@ -62,7 +62,18 @@ export const canUpdateOrganizationVersion = async (account: UserSession, organiz
   }
 
   const organizationVersion = await getOrganizationVersionById(organizationVersionId)
-  if (!organizationVersion || !canEditOrganizationVersion(account, organizationVersion)) {
+  if (!organizationVersion) {
+    return false
+  }
+
+  if (organizationVersionId !== account.organizationVersionId) {
+    const accountOrganizationVersion = await getOrganizationVersionById(account.organizationVersionId)
+    if (!accountOrganizationVersion) {
+      return false
+    }
+  }
+
+  if (!canEditOrganizationVersion(account, organizationVersion)) {
     return false
   }
 
