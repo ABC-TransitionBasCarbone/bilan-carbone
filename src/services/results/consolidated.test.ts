@@ -149,7 +149,7 @@ describe('consolidated function', () => {
           familyId: 'otherFamily',
           value: 800,
           uncertainty: 1,
-          children: [],
+          children: [{ label: 'other', tagFamily: 'otherFamily', value: 800, color: '', uncertainty: 1 }],
         },
       ])
     })
@@ -263,7 +263,7 @@ describe('consolidated function', () => {
           familyId: 'otherFamily',
           value: 800,
           uncertainty: 1,
-          children: [],
+          children: [{ label: 'other', tagFamily: 'otherFamily', value: 800, color: '', uncertainty: 1 }],
         },
       ])
     })
