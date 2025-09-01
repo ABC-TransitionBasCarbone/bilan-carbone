@@ -160,18 +160,13 @@ export const computeResultsByTag = (
     {
       id: 'otherFamily',
       name: t('other'),
-      emissionSourceTags: [],
+      emissionSourceTags: [{ name: t('other'), id: 'other', color: '', familyId: 'otherFamily' }],
     },
   ]
 
   return tagFamiliesWithOthers
     .map((tagFamily) => {
-      const emissionSourceTags =
-        tagFamily.id === 'otherFamily'
-          ? [{ name: 'other', familyId: 'otherFamily', color: '', id: 'other' }]
-          : tagFamily.emissionSourceTags
-
-      const tagInfos = emissionSourceTags
+      const tagInfos = tagFamily.emissionSourceTags
         .map((tag) => {
           const emissionSourcesforTag = emissionSourceWithEmissionValue.filter((emissionSource) =>
             tagFamily.id === 'otherFamily'
@@ -197,7 +192,7 @@ export const computeResultsByTag = (
         familyId: tagFamily.id,
         label: tagFamily.name,
         value,
-        children: tagFamily.id === 'otherFamily' ? [] : tagInfos.filter((tag) => tag.value > 0),
+        children: tagInfos.filter((tag) => tag.value > 0),
         uncertainty: computeUncertainty(tagInfos, value),
       }
     })
