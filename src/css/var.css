@@ -165,6 +165,10 @@
   gap: 1rem;
 }
 
+.gapped2 {
+  gap: 2rem;
+}
+
 .r1 {
   right: 1rem;
 }

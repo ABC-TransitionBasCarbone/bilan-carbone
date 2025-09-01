@@ -158,40 +158,42 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
           />
         )}
       </div>
-      <div className="mt1">
+      <div className="flex-col gapped2">
+        <div className="mt1">
+          {type !== Export.Beges && (
+            <>
+              <EmissionsAnalysis
+                study={study}
+                studySite={studySite}
+                withDepValue={withDepValue}
+                withoutDepValue={withoutDepValue}
+                displayValueWithDep={displayValueWithDep}
+                setDisplayValueWithDep={setDisplayValueWithDep}
+                monetaryRatio={monetaryRatio}
+                nonSpecificMonetaryRatio={nonSpecificMonetaryRatio}
+                caUnit={caUnit}
+                computedResultsByTag={computedResultsByTag}
+              />
+              <ConsolidatedResults
+                computedResults={displayValueWithDep ? computedResultsWithDep : computedResultsWithoutDep}
+                resultsUnit={study.resultsUnit}
+              />
+            </>
+          )}
+          {type === Export.Beges && (
+            <BegesResultsTable study={study} withDepValue={withDepValue} data={computedBegesData} />
+          )}
+        </div>
         {type !== Export.Beges && (
-          <>
-            <EmissionsAnalysis
-              study={study}
-              studySite={studySite}
-              withDepValue={withDepValue}
-              withoutDepValue={withoutDepValue}
-              displayValueWithDep={displayValueWithDep}
-              setDisplayValueWithDep={setDisplayValueWithDep}
-              monetaryRatio={monetaryRatio}
-              nonSpecificMonetaryRatio={nonSpecificMonetaryRatio}
-              caUnit={caUnit}
-              computedResultsByTag={computedResultsByTag}
-            />
-            <ConsolidatedResults
-              computedResults={displayValueWithDep ? computedResultsWithDep : computedResultsWithoutDep}
-              resultsUnit={study.resultsUnit}
-            />
-          </>
-        )}
-        {type === Export.Beges && (
-          <BegesResultsTable study={study} withDepValue={withDepValue} data={computedBegesData} />
+          <UncertaintyAnalytics
+            computedResults={displayValueWithDep ? computedResultsWithDep : computedResultsWithoutDep}
+            studyId={study.id}
+            resultsUnit={study.resultsUnit}
+            emissionSources={study.emissionSources}
+            environment={environment}
+          />
         )}
       </div>
-      {type !== Export.Beges && (
-        <UncertaintyAnalytics
-          computedResults={displayValueWithDep ? computedResultsWithDep : computedResultsWithoutDep}
-          studyId={study.id}
-          resultsUnit={study.resultsUnit}
-          emissionSources={study.emissionSources}
-          environment={environment}
-        />
-      )}
     </Block>
   )
 }
