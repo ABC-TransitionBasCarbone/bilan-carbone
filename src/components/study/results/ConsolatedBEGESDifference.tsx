@@ -7,7 +7,6 @@ import { getEmissionResults } from '@/services/emissionSource'
 import { Post } from '@/services/posts'
 import { computeBegesResult, getBegesEmissionTotal } from '@/services/results/beges'
 import { computeResultsByPost } from '@/services/results/consolidated'
-import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
 import { getPost } from '@/utils/post'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
@@ -30,7 +29,6 @@ interface Props {
 }
 
 const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validatedOnly }: Props) => {
-  const { environment } = useAppEnvironmentStore()
   const t = useTranslations('study.results.difference')
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('study.results.units')
@@ -38,6 +36,8 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
   const unitValue = STUDY_UNIT_VALUES[study.resultsUnit]
   const [open, setOpen] = useState(false)
   const router = useRouter()
+
+  const environment = useMemo(() => study.organizationVersion.environment, [study])
 
   const navigateToEmissionSource = (emissionSourceId: string, subPost: SubPost) => {
     const post = getPost(subPost)
