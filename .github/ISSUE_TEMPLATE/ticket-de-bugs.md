@@ -1,9 +1,10 @@
 ---
 name: Ticket de bugs
 about: Modèle pour créer de nouveaux tickets de bugs
-title: '[BUG]'
-labels: Bug
+title: "[BUG]"
+labels: Bug, Tech
 assignees: ''
+
 ---
 
 **Description du bug**

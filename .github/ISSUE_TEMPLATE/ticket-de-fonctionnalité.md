@@ -4,6 +4,7 @@ about: Modèle pour créer de nouveaux tickets de fonctionnalités
 title: 'ETQ xx, '
 labels: ''
 assignees: ''
+
 ---
 
 ## Contexte
