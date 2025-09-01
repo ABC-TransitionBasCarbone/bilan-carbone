@@ -10,3 +10,5 @@ assignees: ''
 [ ] J'ai créé des tickets pour les plus compliqués
 [ ] J'ai résolu les erreurs dépendabots
 [ ] J'ai vérifié et mis à jour si besoin l'image docker des pdfs
+[ ] J'ai vérifié sur les différents environnements qu'il n'y avait pas d'effets de bord
+
