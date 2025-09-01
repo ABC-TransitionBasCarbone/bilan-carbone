@@ -17,7 +17,7 @@ const MostUncertainPostsChart = ({ computedResults }: Props) => {
   const tQuality = useTranslations('quality')
   const tUncertainties = useTranslations('study.results.uncertainties')
 
-  const threeMostUncertainPosts = computedResults
+  const threeMostUncertainPosts = [...computedResults]
     .sort((a, b) => {
       if (!a.uncertainty || !b.uncertainty) {
         if (!a.uncertainty && b.uncertainty) {

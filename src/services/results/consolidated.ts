@@ -61,7 +61,6 @@ export const computeResultsByPost = (
   }))
 
   const postInfos = Object.values(convertToBc ? BCPost : postValues)
-    .sort((a, b) => tPost(a).localeCompare(tPost(b)))
     .map((post: Post) => {
       const subPosts = subPostsByPost[post]
         .filter((subPost) => filterWithDependencies(subPost, withDependencies))
@@ -108,6 +107,7 @@ export const computeResultsByPost = (
         ),
       } as ResultsByPost
     })
+    .sort((a, b) => a.label.localeCompare(b.label))
 
   return [...postInfos, computeTotalForPosts(postInfos, tPost)]
 }

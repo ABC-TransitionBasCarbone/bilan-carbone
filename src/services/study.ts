@@ -132,7 +132,7 @@ const getEmissionSourcesRows = (
     .map((key) => t(key))
     .join(';')
 
-  const rows = emissionSources
+  const rows = [...emissionSources]
     .sort((a, b) => a.subPost.localeCompare(b.subPost))
     .map((emissionSource) => {
       const emissionFactor = emissionFactors.find((factor) => factor.id === emissionSource.emissionFactor?.id)
@@ -295,7 +295,7 @@ export const downloadStudyEmissionSources = async (
   tUnit: ReturnType<typeof useTranslations>,
   tResultUnits: ReturnType<typeof useTranslations>,
 ) => {
-  const emissionSources = study.emissionSources.sort((a, b) => a.subPost.localeCompare(b.subPost))
+  const emissionSources = [...study.emissionSources].sort((a, b) => a.subPost.localeCompare(b.subPost))
 
   const emissionFactorIds = emissionSources
     .map((emissionSource) => emissionSource.emissionFactor?.id)
