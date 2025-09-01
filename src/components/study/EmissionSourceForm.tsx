@@ -479,28 +479,26 @@ const EmissionSourceForm = ({
         />
       </div>
       <div className="flex-row justify-between">
-        {emissionResults && (
-          <div
-            className={classNames(styles.row, 'flex mr-2 grow justify-start align-end')}
-            data-testid="emission-source-result"
-          >
-            {emissionResults.confidenceInterval && (
-              <div className="flex-col">
-                <p>{t('results.confiance')}</p>
-                <p>
-                  [{formatNumber(emissionResults.confidenceInterval[0])};{' '}
-                  {formatNumber(emissionResults.confidenceInterval[1])}] ({t('in')} {tResultUnits(studyUnit)})
-                </p>
-              </div>
-            )}
-            {emissionResults.alpha !== null && (
-              <div className={styles.alpha}>
-                <p>{t('results.alpha')}</p>
-                <p>{formatNumber(emissionResults.alpha * 100, 2)}%</p>
-              </div>
-            )}
-          </div>
-        )}
+        <div
+          className={classNames(styles.row, 'flex mr-2 grow justify-start align-end')}
+          data-testid="emission-source-result"
+        >
+          {emissionResults.confidenceInterval && (
+            <div className="flex-col">
+              <p>{t('results.confiance')}</p>
+              <p>
+                [{formatNumber(emissionResults.confidenceInterval[0])};{' '}
+                {formatNumber(emissionResults.confidenceInterval[1])}] ({t('in')} {tResultUnits(studyUnit)})
+              </p>
+            </div>
+          )}
+          {emissionResults.alpha !== null && (
+            <div className={styles.alpha}>
+              <p>{t('results.alpha')}</p>
+              <p>{formatNumber(emissionResults.alpha * 100, 2)}%</p>
+            </div>
+          )}
+        </div>
         <div className={classNames(styles.button, 'grow justify-end mt1 gapped')}>
           {canEdit && <DeleteEmissionSource emissionSource={emissionSource} />}
           {canValidate && (

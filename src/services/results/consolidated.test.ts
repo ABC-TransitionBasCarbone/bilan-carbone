@@ -93,39 +93,63 @@ describe('consolidated function', () => {
 
       expect(result).toEqual([
         {
-          label: 'test',
-          tagFamily: { id: 'familyTag1', name: 'Family Tag 1' },
-          value: 1000,
-          color: '#000000',
-          uncertainty: 1.2365959919080918,
+          familyId: 'familyTag1',
+          label: 'Family Tag 1',
+          value: 1950,
+          uncertainty: 1.1150550922754328,
+          children: [
+            {
+              label: 'test',
+              tagFamily: 'familyTag1',
+              value: 1000,
+              color: '#000000',
+              uncertainty: 1.2365959919080918,
+            },
+            {
+              label: 'test2',
+              tagFamily: 'familyTag1',
+              value: 950,
+              color: '#000000',
+              uncertainty: 1,
+            },
+          ],
         },
         {
-          label: 'test2',
-          tagFamily: { id: 'familyTag1', name: 'Family Tag 1' },
-          value: 950,
-          color: '#000000',
-          uncertainty: 1,
-        },
-        {
-          label: 'test21',
-          tagFamily: { id: 'familyTag2', name: 'Family Tag 2' },
+          familyId: 'familyTag2',
+          label: 'Family Tag 2',
           value: 1500,
-          color: '#000000',
           uncertainty: 1.1520868590878348,
+          children: [
+            {
+              label: 'test21',
+              tagFamily: 'familyTag2',
+              value: 1500,
+              color: '#000000',
+              uncertainty: 1.1520868590878348,
+            },
+          ],
         },
         {
-          label: 'test31',
-          tagFamily: { id: 'familyTag3', name: 'Family Tag 3' },
+          familyId: 'familyTag3',
+          label: 'Family Tag 3',
           value: 1000,
-          color: '#000000',
           uncertainty: 1.2365959919080918,
+          children: [
+            {
+              label: 'test31',
+              tagFamily: 'familyTag3',
+              value: 1000,
+              color: '#000000',
+              uncertainty: 1.2365959919080918,
+            },
+          ],
         },
         {
           label: 'other',
-          tagFamily: { name: 'other', id: 'other' },
+          familyId: 'otherFamily',
           value: 800,
-          color: '',
           uncertainty: 1,
+          children: [{ label: 'other', tagFamily: 'otherFamily', value: 800, color: '', uncertainty: 1 }],
         },
       ])
     })
@@ -183,39 +207,63 @@ describe('consolidated function', () => {
 
       expect(result).toEqual([
         {
-          label: 'test',
-          tagFamily: { id: 'familyTag1', name: 'Family Tag 1' },
-          value: 1000,
-          color: '#000000',
+          familyId: 'familyTag1',
+          label: 'Family Tag 1',
+          value: 2500,
           uncertainty: 1,
+          children: [
+            {
+              label: 'test',
+              tagFamily: 'familyTag1',
+              value: 1000,
+              color: '#000000',
+              uncertainty: 1,
+            },
+            {
+              label: 'test2',
+              tagFamily: 'familyTag1',
+              value: 1500,
+              color: '#000000',
+              uncertainty: 1,
+            },
+          ],
         },
         {
-          label: 'test2',
-          tagFamily: { id: 'familyTag1', name: 'Family Tag 1' },
+          familyId: 'familyTag2',
+          label: 'Family Tag 2',
           value: 1500,
-          color: '#000000',
           uncertainty: 1,
+          children: [
+            {
+              label: 'test21',
+              tagFamily: 'familyTag2',
+              value: 1500,
+              color: '#000000',
+              uncertainty: 1,
+            },
+          ],
         },
         {
-          label: 'test21',
-          tagFamily: { id: 'familyTag2', name: 'Family Tag 2' },
-          value: 1500,
-          color: '#000000',
-          uncertainty: 1,
-        },
-        {
-          label: 'test31',
-          tagFamily: { id: 'familyTag3', name: 'Family Tag 3' },
+          familyId: 'familyTag3',
+          label: 'Family Tag 3',
           value: 1000,
-          color: '#000000',
           uncertainty: 1,
+          children: [
+            {
+              label: 'test31',
+              tagFamily: 'familyTag3',
+              value: 1000,
+              color: '#000000',
+              uncertainty: 1,
+            },
+          ],
         },
         {
           label: 'other',
-          tagFamily: { name: 'other', id: 'other' },
+          familyId: 'otherFamily',
           value: 800,
-          color: '',
           uncertainty: 1,
+          children: [{ label: 'other', tagFamily: 'otherFamily', value: 800, color: '', uncertainty: 1 }],
         },
       ])
     })

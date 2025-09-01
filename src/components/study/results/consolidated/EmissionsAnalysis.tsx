@@ -117,6 +117,8 @@ const EmissionsAnalysis = ({
             computedResults={computedResultsByTag}
             resultsUnit={study.resultsUnit}
             TableComponent={TagsResultsTable}
+            title={t('tagPieChartTitle', { unit: tResultUnits(study.resultsUnit) })}
+            type="tag"
           />
         </div>
       </div>

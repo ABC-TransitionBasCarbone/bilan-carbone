@@ -1,44 +1,48 @@
 'use client'
 
-import { FullStudy } from '@/db/study'
-import { environmentPostMapping } from '@/services/posts'
-import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
-import { ResultType } from '@/services/study'
 import { getStandardDeviationRating } from '@/services/uncertainty'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
-import { Environment } from '@prisma/client'
+import { StudyResultUnit } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, getExpandedRowModel, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import commonStyles from '../commonTable.module.css'
 
-interface Props {
-  study: FullStudy
-  studySite: string
-  withDependencies: boolean
+interface Props<T> {
+  resultsUnit: StudyResultUnit
+  data: T[]
   hiddenUncertainty?: boolean
   expandAll?: boolean
   hideExpandIcons?: boolean
-  type?: ResultType
-  environment: Environment | undefined
-  validatedOnly: boolean
 }
 
-const ConsolidatedResultsTable = ({
-  study,
-  studySite,
-  withDependencies,
+type tableDataType = {
+  label: string
+  value: number
+  uncertainty: number
+  post: string
+  children: tableDataType[]
+}
+
+const ConsolidatedResultsTable = <
+  T extends {
+    value: number
+    label: string
+    uncertainty: number
+    post: string
+    children: { value: number; label: string; uncertainty: number; post: string }[]
+  },
+>({
+  resultsUnit,
+  data,
   hiddenUncertainty,
   expandAll,
   hideExpandIcons,
-  type,
-  environment,
-  validatedOnly,
-}: Props) => {
+}: Props<T>) => {
   const t = useTranslations('study.results')
   const tQuality = useTranslations('quality')
   const tPost = useTranslations('emissionFactors.post')
@@ -79,7 +83,7 @@ const ConsolidatedResultsTable = ({
           )
         },
       },
-    ] as ColumnDef<ResultsByPost>[]
+    ] as ColumnDef<tableDataType>[]
 
     if (!hiddenUncertainty) {
       tmpColumns.push({
@@ -90,37 +94,29 @@ const ConsolidatedResultsTable = ({
     }
 
     tmpColumns.push({
-      header: t('value', { unit: tUnits(study.resultsUnit) }),
+      header: t('value', { unit: tUnits(resultsUnit) }),
       accessorKey: 'value',
       cell: ({ getValue }) => (
-        <p className={commonStyles.number}>{formatNumber(getValue<number>() / STUDY_UNIT_VALUES[study.resultsUnit])}</p>
+        <p className={commonStyles.number}>{formatNumber(getValue<number>() / STUDY_UNIT_VALUES[resultsUnit])}</p>
       ),
     })
 
     return tmpColumns
-  }, [hiddenUncertainty, hideExpandIcons, study.resultsUnit, t, tPost, tQuality, tUnits])
+  }, [hiddenUncertainty, hideExpandIcons, resultsUnit, t, tPost, tQuality, tUnits])
 
-  const data = useMemo(() => {
-    if (!environment) {
-      return []
-    }
-
-    return computeResultsByPost(
-      study,
-      tPost,
-      studySite,
-      withDependencies,
-      validatedOnly,
-      environmentPostMapping[environment],
-      environment,
-      type,
-    )
-  }, [environment, study, tPost, studySite, withDependencies, validatedOnly, type])
+  const tableData = useMemo(
+    () =>
+      data.map((d) => ({
+        ...d,
+        children: d.children.map((child) => ({ ...child, children: [] })),
+      })),
+    [data],
+  )
 
   const table = useReactTable({
     columns,
-    data,
-    getSubRows: (row) => row.subPosts,
+    data: tableData,
+    getSubRows: (row) => row.children,
     getExpandedRowModel: getExpandedRowModel(),
     getCoreRowModel: getCoreRowModel(),
     initialState: expandAll ? { expanded: true } : undefined,

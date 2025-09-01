@@ -2,13 +2,14 @@ import Link from '@/components/base/Link'
 import Title from '@/components/base/Title'
 import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
-import { getEmissionResults } from '@/services/emissionSource'
+import { getAlpha, getEmissionResults } from '@/services/emissionSource'
 import { Post } from '@/services/posts'
 import { qualityKeys, specificFEQualityKeysLinks } from '@/services/uncertainty'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { getPost } from '@/utils/post'
 import { defaultPostColor, postColors, STUDY_UNIT_VALUES } from '@/utils/study'
 import { ScatterSeries } from '@mui/x-charts'
+import { StudyResultUnit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
@@ -19,25 +20,29 @@ import styles from './UncertaintyGraph.module.css'
 const Rect = (props: DrawingProps) => <TopRightRect margin={0} color="var(--mui-palette-primary-light)" {...props} />
 
 interface Props {
-  study: FullStudy
+  emissionSources: FullStudy['emissionSources']
+  studyId: string
+  resultsUnit: StudyResultUnit
 }
 
 type Serie = ScatterSeries & {
   post: Post
 }
 
-const UncertaintyPerEmissionSource = ({ study }: Props) => {
+const UncertaintyPerEmissionSource = ({ emissionSources, studyId, resultsUnit }: Props) => {
   const t = useTranslations('study.results')
   const tCaract = useTranslations('emissionSource.form')
   const tQuality = useTranslations('quality')
   const [details, setDetails] = useState('')
 
-  const results = study.emissionSources.map((emissionSource) => {
-    const alpha = getEmissionResults(emissionSource)?.alpha
+  const results = emissionSources.map((emissionSource) => {
+    const res = getEmissionResults(emissionSource)
+    const alpha = getAlpha(res.emissionValue, res.confidenceInterval)
+
     return {
       id: emissionSource.id,
       name: emissionSource.name,
-      value: emissionSource.value,
+      value: res.emissionValue,
       post: getPost(emissionSource.subPost),
       uncertainty: alpha ? alpha * 100 : undefined,
     }
@@ -59,7 +64,7 @@ const UncertaintyPerEmissionSource = ({ study }: Props) => {
       markerSize: 8,
       post: emissionSource.post as Post,
       valueFormatter: () =>
-        `${emissionSource.name} : ${t('total')} : ${formatEmissionFactorNumber((emissionSource.value as number) / STUDY_UNIT_VALUES[study.resultsUnit])} ${t(`units.${study.resultsUnit}`)} - ${t('uncertainty')} : ${formatNumber(emissionSource.uncertainty as number, 2)}%`,
+        `${emissionSource.name} : ${t('total')} : ${formatEmissionFactorNumber((emissionSource.value as number) / STUDY_UNIT_VALUES[resultsUnit])} ${t(`units.${resultsUnit}`)} - ${t('uncertainty')} : ${formatNumber(emissionSource.uncertainty as number, 2)}%`,
     }))
 
   const colors = series.map(
@@ -73,8 +78,8 @@ const UncertaintyPerEmissionSource = ({ study }: Props) => {
   )
 
   const detailedSource = useMemo(
-    () => study.emissionSources.find((emissionSource) => emissionSource.id === details),
-    [details, study],
+    () => emissionSources.find((emissionSource) => emissionSource.id === details),
+    [details, emissionSources],
   )
 
   return (
@@ -86,8 +91,8 @@ const UncertaintyPerEmissionSource = ({ study }: Props) => {
         maxX={maxValue * 1.2}
         maxY={maxUncertainty * 1.5}
         yLabel={`${t('uncertainty')} (%)`}
-        xLabel={`${t('total')} (${t(`units.${study.resultsUnit}`)})`}
-        xValueFormatter={(value) => formatNumber(value / STUDY_UNIT_VALUES[study.resultsUnit], 2)}
+        xLabel={`${t('total')} (${t(`units.${resultsUnit}`)})`}
+        xValueFormatter={(value) => formatNumber(value / STUDY_UNIT_VALUES[resultsUnit], 2)}
         onClick={(emissionSource: string) => setDetails(emissionSource)}
         Rect={Rect}
         Text={Text}
@@ -131,7 +136,7 @@ const UncertaintyPerEmissionSource = ({ study }: Props) => {
               </div>
             </div>
             <Link
-              href={`/etudes/${study.id}/comptabilisation/saisie-des-donnees/${getPost(detailedSource.subPost)}#emission-source-${detailedSource.id}`}
+              href={`/etudes/${studyId}/comptabilisation/saisie-des-donnees/${getPost(detailedSource.subPost)}#emission-source-${detailedSource.id}`}
               className="justify-center"
             >
               {tCaract('see')}

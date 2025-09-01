@@ -21,13 +21,11 @@ describe('Create study emission source', () => {
     cy.getByTestId('emission-source-My new emission source').should('exist')
     cy.getByTestId('emission-source-My new emission source').within(() => {
       cy.getByTestId('emission-source-status').should('have.text', "En attente d'un·e contributeur·ice")
-      cy.getByTestId('emission-source-value').should('not.exist')
       cy.getByTestId('emission-source-quality').should('not.exist')
     })
 
     cy.getByTestId('emission-source-My new emission source').click()
 
-    cy.getByTestId('emission-source-result').should('not.exist')
     cy.getByTestId('emission-source-validate').should('be.disabled')
 
     cy.getByTestId('emission-source-My new emission source').within(() => {

@@ -1,7 +1,7 @@
 // Documentation : https://www.bilancarbone-methode.com/4-comptabilisation/4.4-methode-destimation-des-incertitudes/4.4.2-comment-les-determiner
 
 import { FullStudy } from '@/db/study'
-import { EmissionFactor, Environment } from '@prisma/client'
+import { EmissionFactor } from '@prisma/client'
 import { getEmissionSourcesTotalCo2, sumEmissionSourcesUncertainty } from './emissionSource'
 import { StudyWithoutDetail } from './permissions/study'
 
@@ -103,11 +103,13 @@ export const getQualityRating = (quality: Quality) => {
 }
 
 export const getEmissionSourcesGlobalUncertainty = (
-  emissionSources: FullStudy['emissionSources'],
-  environment?: Environment,
+  emissionSources: (Pick<FullStudy['emissionSources'][number], 'emissionFactor'> & {
+    emissionValue: number
+    standardDeviation: number | null
+  })[],
 ) => {
-  const totalEmissions = getEmissionSourcesTotalCo2(emissionSources, environment)
-  const gsd = sumEmissionSourcesUncertainty(emissionSources, environment)
+  const totalEmissions = getEmissionSourcesTotalCo2(emissionSources)
+  const gsd = sumEmissionSourcesUncertainty(emissionSources)
   return getConfidenceInterval(totalEmissions, gsd)
 }
 

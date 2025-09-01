@@ -50,19 +50,19 @@ describe('emissionSource Service', () => {
     it('should compute all values', () => {
       const result = getEmissionResults(defaultEmissionSource)
       expect(result).toEqual({
-        emission: 1200,
+        emissionValue: 1200,
         confidenceInterval: [516.2597423212065, 2789.2936093088983],
         alpha: 1.3244113410907485,
         standardDeviation: 2.3244113410907485,
       })
     })
 
-    it('should return null if value is not defined', () => {
+    it('should return null values is not defined', () => {
       const result = getEmissionResults({
         ...defaultEmissionSource,
         value: null,
       })
-      expect(result).toBe(null)
+      expect(result).toEqual({ emissionValue: 0, standardDeviation: null, confidenceInterval: null, alpha: null })
     })
 
     it('should return null if emission factor is not defined', () => {
@@ -70,7 +70,7 @@ describe('emissionSource Service', () => {
         ...defaultEmissionSource,
         emissionFactor: null,
       })
-      expect(result).toBe(null)
+      expect(result).toEqual({ emissionValue: 0, standardDeviation: null, confidenceInterval: null, alpha: null })
     })
   })
 })
