@@ -3,7 +3,6 @@ import Title from '@/components/base/Title'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { computeTotalForPosts, ResultsByPost } from '@/services/results/consolidated'
 import { BasicTypeCharts } from '@/utils/charts'
-import BarChartIcon from '@mui/icons-material/BarChart'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined'
 import { Tab, Tabs } from '@mui/material'
@@ -47,7 +46,7 @@ const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: s
   glossary,
 }: Props<T>) => {
   const [tabSelected, setTabSelected] = useState(defaultTab)
-  const [displayFilter, setDisplayFilter] = useState(false)
+  const [filterAnchorEl, setFilterAnchorEl] = useState<HTMLElement | null>(null)
   const [filteredResultsWithTotal, setFilteredResultsWithTotal] = useState(computedResults)
   const [openGlossary, setOpenGlossary] = useState(false)
 
@@ -118,17 +117,18 @@ const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: s
           ) : (
             <div />
           )}
-          <div onClick={() => setDisplayFilter(!displayFilter)} className="pointer">
-            {displayFilter ? <BarChartIcon className="flex-end" /> : <TuneOutlinedIcon className="flex-end" />}
+          <div onClick={(event) => setFilterAnchorEl(filterAnchorEl ? null : event.currentTarget)} className="pointer">
+            <TuneOutlinedIcon className="flex-end" />
           </div>
         </div>
         <Filters
           setFilteredResults={setFilteredResults}
           results={computedResults}
           type={type}
-          display={displayFilter}
+          anchorEl={filterAnchorEl}
+          onClose={() => setFilterAnchorEl(null)}
         />
-        {!displayFilter && TabComponent}
+        {TabComponent}
       </Box>
       <GlossaryModal
         glossary={openGlossary && glossary ? `${glossary}` : ''}
