@@ -139,7 +139,7 @@ const getEmissionSourceMonetaryEmission = (
 
 export const getEmissionResults = (
   emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][number],
-  environment?: Environment,
+  environment: Environment,
 ) => {
   const emission = getEmissionSourceEmission(emissionSource, environment)
   if (emission === null) {
@@ -194,17 +194,6 @@ export const getEmissionSourcesTotalMonetaryCo2 = (
     (sum, emissionSource) => sum + (getEmissionSourceMonetaryEmission(emissionSource, excludeManualFE) || 0),
     0,
   )
-
-export const getEmissionResultsCut = (
-  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][number],
-  environment?: Environment,
-) => {
-  const result = getEmissionResults(emissionSource, environment)
-  if (result?.emissionValue && emissionSource.depreciationPeriod && emissionSource.depreciationPeriod < 5) {
-    result.emissionValue = result.emissionValue / 5
-  }
-  return result
-}
 
 export const operationalCaracterisations: CaracterisationsBySubPost = {
   [SubPost.CombustiblesFossiles]: [EmissionSourceCaracterisation.Operated, EmissionSourceCaracterisation.NotOperated],

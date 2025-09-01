@@ -189,6 +189,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
           studyId={study.id}
           resultsUnit={study.resultsUnit}
           emissionSources={study.emissionSources}
+          environment={environment}
         />
       )}
     </Block>

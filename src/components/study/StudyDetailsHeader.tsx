@@ -12,6 +12,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import DownloadIcon from '@mui/icons-material/Download'
 import LockIcon from '@mui/icons-material/Lock'
 import LockOpenIcon from '@mui/icons-material/LockOpen'
+import { Environment } from '@prisma/client'
 import { useFormatter, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { Dispatch, SetStateAction, useState } from 'react'
@@ -29,6 +30,7 @@ interface Props {
   canDuplicateStudy?: boolean
   studySite: string
   setSite: Dispatch<SetStateAction<string>>
+  environment: Environment
 }
 
 const StudyDetailsHeader = ({
@@ -38,6 +40,7 @@ const StudyDetailsHeader = ({
   canDuplicateStudy,
   studySite,
   setSite,
+  environment,
 }: Props) => {
   const [deleting, setDeleting] = useState(false)
   const [duplicating, setDuplicating] = useState(false)
@@ -102,7 +105,16 @@ const StudyDetailsHeader = ({
         {
           actionType: 'button',
           onClick: () =>
-            downloadStudyEmissionSources(study, tStudyExport, tCaracterisations, tPost, tQuality, tUnit, tResultUnits),
+            downloadStudyEmissionSources(
+              study,
+              tStudyExport,
+              tCaracterisations,
+              tPost,
+              tQuality,
+              tUnit,
+              tResultUnits,
+              environment,
+            ),
           disabled: study.emissionSources.length === 0,
           variant: 'contained',
           color: 'secondary',

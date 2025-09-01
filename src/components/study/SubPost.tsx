@@ -53,14 +53,16 @@ const SubPost = ({
   const tUnits = useTranslations('study.results.units')
   const { environment } = useAppEnvironmentStore()
 
-  const total = useMemo(
-    () =>
-      emissionSources.reduce(
-        (sum, emissionSource) => sum + (getEmissionResults(emissionSource)?.emissionValue || 0),
-        0,
-      ),
-    [emissionSources],
-  )
+  const total = useMemo(() => {
+    if (!environment) {
+      return 0
+    }
+
+    return emissionSources.reduce(
+      (sum, emissionSource) => sum + (getEmissionResults(emissionSource, environment)?.emissionValue || 0),
+      0,
+    )
+  }, [emissionSources, environment])
 
   const contributors = useMemo(
     () =>

@@ -29,6 +29,7 @@ const StudyDetails = ({ canDeleteStudy, canDuplicateStudy, study, validatedOnly,
         canDuplicateStudy={canDuplicateStudy}
         studySite={studySite}
         setSite={setSite}
+        environment={study.organizationVersion.environment}
       />
       <Block>
         <DynamicComponent

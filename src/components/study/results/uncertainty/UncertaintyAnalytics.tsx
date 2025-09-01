@@ -2,7 +2,7 @@ import Title from '@/components/base/Title'
 import { FullStudy } from '@/db/study'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { getConfidenceInterval } from '@/services/uncertainty'
-import { StudyResultUnit } from '@prisma/client'
+import { Environment, StudyResultUnit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
@@ -19,9 +19,10 @@ interface Props {
   resultsUnit: StudyResultUnit
   computedResults: ResultsByPost[]
   emissionSources: FullStudy['emissionSources']
+  environment: Environment
 }
 
-const UncertaintyAnalytics = ({ studyId, resultsUnit, computedResults, emissionSources }: Props) => {
+const UncertaintyAnalytics = ({ studyId, resultsUnit, computedResults, emissionSources, environment }: Props) => {
   const t = useTranslations('study.results.uncertainties')
 
   const totalResults = computedResults.find((res) => res.post === 'total')
@@ -50,7 +51,12 @@ const UncertaintyAnalytics = ({ studyId, resultsUnit, computedResults, emissionS
         </div>
       </div>
       <UncertaintyPerPost studyId={studyId} resultsUnit={resultsUnit} computedResults={computedResults} />
-      <UncertaintyPerEmissionSource emissionSources={emissionSources} studyId={studyId} resultsUnit={resultsUnit} />
+      <UncertaintyPerEmissionSource
+        emissionSources={emissionSources}
+        studyId={studyId}
+        resultsUnit={resultsUnit}
+        environment={environment}
+      />
       <EmissionSourcePerPost studyId={studyId} resultsUnit={resultsUnit} results={computedResults} />
     </div>
   )
