@@ -1,8 +1,10 @@
 import Box from '@/components/base/Box'
 import Title from '@/components/base/Title'
+import GlossaryModal from '@/components/modals/GlossaryModal'
 import { computeTotalForPosts, ResultsByPost } from '@/services/results/consolidated'
 import { BasicTypeCharts } from '@/utils/charts'
 import BarChartIcon from '@mui/icons-material/BarChart'
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined'
 import { Tab, Tabs } from '@mui/material'
 import { StudyResultUnit } from '@prisma/client'
@@ -32,6 +34,7 @@ interface Props<T> {
   TableComponent?: (props: ResultsTableProps<T>) => ReactNode
   title: string
   type: 'tag' | 'post'
+  glossary?: string
 }
 const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: string; name: string } }>({
   activeTabs = Object.values(TabsPossibilities),
@@ -41,10 +44,12 @@ const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: s
   TableComponent = () => <></>,
   title,
   type,
+  glossary,
 }: Props<T>) => {
   const [tabSelected, setTabSelected] = useState(defaultTab)
   const [displayFilter, setDisplayFilter] = useState(false)
   const [filteredResultsWithTotal, setFilteredResultsWithTotal] = useState(computedResults)
+  const [openGlossary, setOpenGlossary] = useState(false)
 
   const t = useTranslations('study.results')
   const tPost = useTranslations('emissionFactors.post')
@@ -96,25 +101,44 @@ const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: s
   )
 
   return (
-    <Box className={styles.container}>
-      <Title as="h6" title={title} className="justify-center" />
-      <div className="flex flex-row justify-between align-center">
-        {activeTabs.length > 1 ? (
-          <Tabs value={tabSelected} onChange={(_e, v) => setTabSelected(v)}>
-            {activeTabs.map((tab) => (
-              <Tab key={tab} value={tab} label={t(tab)} />
-            ))}
-          </Tabs>
-        ) : (
-          <div />
-        )}
-        <div onClick={() => setDisplayFilter(!displayFilter)} className="pointer">
-          {displayFilter ? <BarChartIcon className="flex-end" /> : <TuneOutlinedIcon className="flex-end" />}
+    <>
+      <Box className={styles.container}>
+        <Title as="h6" title={title} className="justify-center">
+          {glossary && (
+            <HelpOutlineOutlinedIcon color="secondary" className="ml-4 pointer" onClick={() => setOpenGlossary(true)} />
+          )}
+        </Title>
+        <div className="flex flex-row justify-between align-center">
+          {activeTabs.length > 1 ? (
+            <Tabs value={tabSelected} onChange={(_e, v) => setTabSelected(v)}>
+              {activeTabs.map((tab) => (
+                <Tab key={tab} value={tab} label={t(tab)} />
+              ))}
+            </Tabs>
+          ) : (
+            <div />
+          )}
+          <div onClick={() => setDisplayFilter(!displayFilter)} className="pointer">
+            {displayFilter ? <BarChartIcon className="flex-end" /> : <TuneOutlinedIcon className="flex-end" />}
+          </div>
         </div>
-      </div>
-      <Filters setFilteredResults={setFilteredResults} results={computedResults} type={type} display={displayFilter} />
-      {!displayFilter && TabComponent}
-    </Box>
+        <Filters
+          setFilteredResults={setFilteredResults}
+          results={computedResults}
+          type={type}
+          display={displayFilter}
+        />
+        {!displayFilter && TabComponent}
+      </Box>
+      <GlossaryModal
+        glossary={openGlossary && glossary ? `${glossary}` : ''}
+        onClose={() => setOpenGlossary(false)}
+        label="results-table-and-graph-glossary"
+        t={t}
+      >
+        <span>{openGlossary && t(`${glossary}Description`)}</span>
+      </GlossaryModal>
+    </>
   )
 }
 
