@@ -1,3 +1,4 @@
+import { Alert } from '@mui/material'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
 import RessourceLinks from '../ressources/RessourceLinks'
@@ -38,6 +39,11 @@ const RessourcesPage = async () => {
 
   return (
     <Block title={t('title')} as="h1">
+      <Alert severity="info" sx={{ mb: 2 }}>
+        {t.rich('description', {
+          br: () => <br />,
+        })}
+      </Alert>
       <div className={styles.ressources}>
         {ressources.map(({ title, links }) => (
           <RessourceLinks key={title} title={title} links={links} />

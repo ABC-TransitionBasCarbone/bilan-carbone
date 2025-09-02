@@ -121,6 +121,7 @@
   },
   "ressources": {
     "title": "Ressources",
+    "description": "Le calculateur d’impact COUNT est homologué par l’ABC. Il a été construit sur la base de différentes sources de facteurs d’émission (Base Empreinte de l’ADEME, EcoInvent, Boavizta, CNC notamment). D’autres facteurs d’émission ont été spécifiquement construits dans le cadre de la construction de l’outil par Resilio (on pourra rajouter ici un lien avec la méthodo Resilio, on va vous envoyer).<br></br>Les hypothèses de calcul ont été construites à partir de :<br></br> - 15 bilans carbones complets réalisés en association avec le groupement de cinémas CINEO (ici on mettra un lien vers un dossier de presse)<br></br> - Multiples entretiens avec des parties prenantes de la salle de cinéma (fournisseurs, intégrateurs, exploitants indépendants, circuits d’exploitation etc.)\n - Visites de salles de cinéma aux typologies diverses.",
     "methodeAssociative": "Pour toutes les questions sur la méthode associative :",
     "sphereAssociative": "Sphère associative",
     "enSavoirPlusBilan": "Pour en savoir plus sur la méthode Bilan Carbone® :",
