@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from 'react'
 type FilterType = BasicTypeCharts & { familyId?: string }
 type ChildrenType = { id: string; label: string }
 
-const getTagFilters = <T extends FilterType>(results: T[]) => {
+const getTagItems = <T extends FilterType>(results: T[]) => {
   return results
     .filter((result) => result.post !== 'total')
     .reduce(
@@ -27,7 +27,7 @@ const getTagFilters = <T extends FilterType>(results: T[]) => {
     )
 }
 
-const getPostFilters = <T extends FilterType>(results: T[], tPost: ReturnType<typeof useTranslations>) => {
+const getPostItems = <T extends FilterType>(results: T[], tPost: ReturnType<typeof useTranslations>) => {
   return results
     .filter((result) => result.post !== 'total')
     .reduce(
@@ -39,12 +39,10 @@ const getPostFilters = <T extends FilterType>(results: T[], tPost: ReturnType<ty
         acc[result.post] = {
           id: result.post,
           name: result.label,
-          children: result.children
-            .filter((subPost) => subPost.value > 0)
-            .map((subPost) => ({
-              id: subPost.post ?? '',
-              label: subPost.post ? tPost(subPost.post) : subPost.label,
-            })),
+          children: result.children.map((subPost) => ({
+            id: subPost.post ?? '',
+            label: subPost.post ? tPost(subPost.post) : subPost.label,
+          })),
         }
         return acc
       },
@@ -65,35 +63,25 @@ interface Props<T> {
 const Filters = <T extends FilterType>({ setFilteredResults, results, type, display }: Props<T>) => {
   const tPost = useTranslations('emissionFactors.post')
 
-  const initialFilters = useMemo(() => {
+  const initialItems = useMemo(() => {
     switch (type) {
       case 'tag':
-        return getTagFilters(results)
+        return getTagItems(results)
       case 'post':
-        return getPostFilters(results, tPost)
+        return getPostItems(results, tPost)
       default:
         return {} as Record<string, { id: string; name: string; children: ChildrenType[] }>
     }
   }, [results, type, tPost])
 
-  const [checkedItems, setCheckedItems] = useState(() =>
-    Object.values(initialFilters).flatMap((parent) => parent.children.map((child) => child.id)),
-  )
+  const [checkedItems, setCheckedItems] = useState<string[]>([])
 
   useEffect(() => {
-    const newDefaultItems = Object.values(initialFilters).flatMap((parent) => parent.children.map((child) => child.id))
-
-    setCheckedItems((prevItems) => {
-      if (prevItems.length === 0) {
-        return newDefaultItems
-      }
-
-      const validExistingItems = prevItems.filter((item) => newDefaultItems.includes(item))
-      const newItems = newDefaultItems.filter((item) => !prevItems.includes(item))
-
-      return [...validExistingItems, ...newItems]
-    })
-  }, [initialFilters])
+    if (checkedItems.length === 0 && initialItems) {
+      const defaultItems = Object.values(initialItems).flatMap((parent) => parent.children.map((child) => child.id))
+      setCheckedItems(defaultItems)
+    }
+  }, [checkedItems.length, initialItems])
 
   useEffect(() => {
     const filtered = results
@@ -123,30 +111,26 @@ const Filters = <T extends FilterType>({ setFilteredResults, results, type, disp
 
   return (
     <>
-      {Object.entries(initialFilters).map(([parentId, familyInfo]) => {
+      {Object.entries(initialItems).map(([parentId, familyInfo]) => {
         return (
           <div className="flex flex-col" key={parentId}>
             <FormControlLabel
               label={familyInfo.name}
               control={
                 <Checkbox
-                  checked={initialFilters[parentId].children.some((child) =>
-                    checkedItems.find((ci) => ci === child.id),
-                  )}
+                  checked={initialItems[parentId].children.some((child) => checkedItems.includes(child.id))}
                   onChange={() =>
                     setCheckedItems((prevCheckedItems) => {
                       if (
-                        initialFilters[parentId].children.every((child) =>
-                          prevCheckedItems.find((ci) => ci === child.id),
-                        )
+                        initialItems[parentId].children.every((child) => prevCheckedItems.find((ci) => ci === child.id))
                       ) {
                         return prevCheckedItems.filter(
-                          (ci) => !initialFilters[parentId].children.some((child) => child.id === ci),
+                          (ci) => !initialItems[parentId].children.some((child) => child.id === ci),
                         )
                       }
 
                       const newCheckedItems = [...prevCheckedItems]
-                      for (const child of initialFilters[parentId].children) {
+                      for (const child of initialItems[parentId].children) {
                         if (!newCheckedItems.includes(child.id)) {
                           newCheckedItems.push(child.id)
                         }
