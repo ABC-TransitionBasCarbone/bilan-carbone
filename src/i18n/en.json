@@ -121,6 +121,7 @@
   },
   "ressources": {
     "title": "Resources",
+    "description": "The COUNT impact calculator is certified by the ABC. It was built using various emission factor sources (ADEME's Base Empreinte, EcoInvent, Boavizta, CNC, among others). Additional emission factors were specifically developed for the tool by Resilio (a link to the Resilio methodology can be added here; we will send it to you).<br></br>The calculation assumptions were based on:<br></br> - 15 comprehensive carbon assessments carried out in partnership with the CINEO cinema group (a press kit link will be added here)<br></br> - Multiple interviews with stakeholders in the cinema sector (suppliers, integrators, independent operators, exhibition circuits, etc.)\n - Visits to cinemas of various types.",
     "methodeAssociative": "For any questions about the associative method:",
     "sphereAssociative": "Associative Sphere",
     "enSavoirPlusBilan": "To learn more about the Bilan Carbone® method:",
