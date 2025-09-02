@@ -18,7 +18,7 @@ const getTagFilters = <T extends FilterType>(results: T[]) => {
         acc[result.familyId] = {
           id: result.familyId,
           name: result.label,
-          children: result.children.map((tag) => ({ id: tag.label, label: tag.label })),
+          children: result.children.filter((tag) => tag.value > 0).map((tag) => ({ id: tag.label, label: tag.label })),
         }
 
         return acc
@@ -39,10 +39,12 @@ const getPostFilters = <T extends FilterType>(results: T[], tPost: ReturnType<ty
         acc[result.post] = {
           id: result.post,
           name: result.label,
-          children: result.children.map((subPost) => ({
-            id: subPost.post ?? '',
-            label: subPost.post ? tPost(subPost.post) : subPost.label,
-          })),
+          children: result.children
+            .filter((subPost) => subPost.value > 0)
+            .map((subPost) => ({
+              id: subPost.post ?? '',
+              label: subPost.post ? tPost(subPost.post) : subPost.label,
+            })),
         }
         return acc
       },
@@ -94,16 +96,23 @@ const Filters = <T extends FilterType>({ setFilteredResults, results, type, disp
   }, [initialFilters])
 
   useEffect(() => {
-    const filtered = results.map((result) => {
-      const filteredChildren = result.children.filter((child) => checkedItems.includes(getResultId(child)))
-      const newTotal = filteredChildren.reduce((sum, child) => sum + child.value, 0)
+    const filtered = results
+      .map((result) => {
+        const filteredChildren = result.children.filter((child) => checkedItems.includes(getResultId(child)))
+        const newTotal = filteredChildren.reduce((sum, child) => sum + child.value, 0)
 
-      return {
-        ...result,
-        value: newTotal,
-        children: filteredChildren,
-      }
-    })
+        return {
+          ...result,
+          value: newTotal,
+          children: filteredChildren,
+        }
+      })
+      .filter((result) => {
+        if (result.post === 'total') {
+          return true
+        }
+        return result.children.some((child) => checkedItems.includes(getResultId(child)))
+      })
 
     setFilteredResults(filtered)
   }, [checkedItems, results, setFilteredResults])
