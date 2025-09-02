@@ -72,7 +72,7 @@ const OrganizationCard = ({ account, organizationVersions }: Props) => {
     }
 
     const userIsInOrgaOrParent = isInOrgaOrParent(account.organizationVersionId, organizationVersion)
-    const userCanEdit = userIsInOrgaOrParent && canEditOrganizationVersion(account, organizationVersion)
+    const userCanEdit = canEditOrganizationVersion(account, organizationVersion)
 
     return [userIsInOrgaOrParent, userCanEdit]
   }, [account, organizationVersion])
