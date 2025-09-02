@@ -9,6 +9,7 @@ import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import { canBeValidated, getEmissionResults, getEmissionSourcesTotalCo2, getStandardDeviation } from './emissionSource'
 import { download } from './file'
+import { hasAccessToBcExport } from './permissions/environment'
 import { StudyWithoutDetail } from './permissions/study'
 import { environmentPostMapping, Post, subPostsByPost } from './posts'
 import { computeBegesResult } from './results/beges'
@@ -519,23 +520,7 @@ export const downloadStudyResults = async (
     ? userSettings.data?.validatedEmissionSourcesOnly
     : undefined
 
-  const consolidatedResults = formatConsolidatedStudyResultsForExport(
-    study,
-    siteList,
-    tStudy,
-    tExport,
-    tPost,
-    tQuality,
-    tUnits,
-    validatedEmissionSourcesOnly,
-    environment,
-    AdditionalResultTypes.CONSOLIDATED,
-  )
-
-  if (environment === Environment.CUT) {
-    consolidatedResults.data.unshift([])
-    consolidatedResults.data.unshift([tExport('developmentFile')])
-  } else if (environment !== Environment.BC) {
+  if (environment !== Environment.BC) {
     const environmentResults = formatConsolidatedStudyResultsForExport(
       study,
       siteList,
@@ -548,10 +533,30 @@ export const downloadStudyResults = async (
       environment,
       AdditionalResultTypes.ENV_SPECIFIC_EXPORT,
     )
+
+    if (environment === Environment.CUT) {
+      environmentResults.data.unshift([])
+      environmentResults.data.unshift([tExport('developmentFile')])
+    }
+
     data.push(environmentResults)
   }
 
-  data.push(consolidatedResults)
+  if (hasAccessToBcExport(environment)) {
+    const consolidatedResults = formatConsolidatedStudyResultsForExport(
+      study,
+      siteList,
+      tStudy,
+      tExport,
+      tPost,
+      tQuality,
+      tUnits,
+      validatedEmissionSourcesOnly,
+      environment,
+      AdditionalResultTypes.CONSOLIDATED,
+    )
+    data.push(consolidatedResults)
+  }
 
   if (study.exports.some((exp) => exp.type === Export.Beges)) {
     data.push(
