@@ -7,43 +7,47 @@ type FilterType = BasicTypeCharts & { familyId?: string }
 type ChildrenType = { id: string; label: string }
 
 const getTagFilters = <T extends FilterType>(results: T[]) => {
-  return results.reduce(
-    (acc, result) => {
-      if (!result.familyId || !result.children) {
+  return results
+    .filter((result) => result.post !== 'total')
+    .reduce(
+      (acc, result) => {
+        if (!result.familyId || !result.children) {
+          return acc
+        }
+
+        acc[result.familyId] = {
+          id: result.familyId,
+          name: result.label,
+          children: result.children.map((tag) => ({ id: tag.label, label: tag.label })),
+        }
+
         return acc
-      }
-
-      acc[result.familyId] = {
-        id: result.familyId,
-        name: result.label,
-        children: result.children.map((tag) => ({ id: tag.label, label: tag.label })),
-      }
-
-      return acc
-    },
-    {} as Record<string, { id: string; name: string; children: ChildrenType[] }>,
-  )
+      },
+      {} as Record<string, { id: string; name: string; children: ChildrenType[] }>,
+    )
 }
 
 const getPostFilters = <T extends FilterType>(results: T[], tPost: ReturnType<typeof useTranslations>) => {
-  return results.reduce(
-    (acc, result) => {
-      if (!result.post || !result.children) {
-        return acc
-      }
+  return results
+    .filter((result) => result.post !== 'total')
+    .reduce(
+      (acc, result) => {
+        if (!result.post || !result.children) {
+          return acc
+        }
 
-      acc[result.post] = {
-        id: result.post,
-        name: result.label,
-        children: result.children.map((subPost) => ({
-          id: subPost.post ?? '',
-          label: subPost.post ? tPost(subPost.post) : subPost.label,
-        })),
-      }
-      return acc
-    },
-    {} as Record<string, { id: string; name: string; children: ChildrenType[] }>,
-  )
+        acc[result.post] = {
+          id: result.post,
+          name: result.label,
+          children: result.children.map((subPost) => ({
+            id: subPost.post ?? '',
+            label: subPost.post ? tPost(subPost.post) : subPost.label,
+          })),
+        }
+        return acc
+      },
+      {} as Record<string, { id: string; name: string; children: ChildrenType[] }>,
+    )
 }
 
 const getResultId = (result: BasicTypeCharts['children'][number]) => {
@@ -71,11 +75,26 @@ const Filters = <T extends FilterType>({ setFilteredResults, results, type, disp
   }, [results, type, tPost])
 
   const [checkedItems, setCheckedItems] = useState(() =>
-    Object.values(initialFilters).flatMap((parent) => parent.children.map((child) => child.id)),
+    Object.values(initialFilters).flatMap((parent) =>
+      parent.children.length === 0 ? [parent.id] : parent.children.map((child) => child.id),
+    ),
   )
 
   useEffect(() => {
-    setCheckedItems(Object.values(initialFilters).flatMap((parent) => parent.children.map((child) => child.id)))
+    const newDefaultItems = Object.values(initialFilters).flatMap((parent) =>
+      parent.children.length === 0 ? [parent.id] : parent.children.map((child) => child.id),
+    )
+
+    setCheckedItems((prevItems) => {
+      if (prevItems.length === 0) {
+        return newDefaultItems
+      }
+
+      const validExistingItems = prevItems.filter((item) => newDefaultItems.includes(item))
+      const newItems = newDefaultItems.filter((item) => !prevItems.includes(item))
+
+      return [...validExistingItems, ...newItems]
+    })
   }, [initialFilters])
 
   useEffect(() => {
@@ -83,8 +102,14 @@ const Filters = <T extends FilterType>({ setFilteredResults, results, type, disp
       .map((result) => {
         const filteredChildren = result.children.filter((child) => checkedItems.includes(getResultId(child)))
 
-        if (filteredChildren.length === 0) {
-          return null
+        if (result.children.length === 0) {
+          if (!checkedItems.includes(result.familyId ?? result.post ?? '')) {
+            return null
+          }
+        } else {
+          if (filteredChildren.length === 0) {
+            return null
+          }
         }
 
         const newTotal = filteredChildren.reduce((sum, child) => sum + child.value, 0)
@@ -113,11 +138,21 @@ const Filters = <T extends FilterType>({ setFilteredResults, results, type, disp
               label={familyInfo.name}
               control={
                 <Checkbox
-                  checked={initialFilters[parentId].children.some((child) =>
-                    checkedItems.find((ci) => ci === child.id),
-                  )}
+                  checked={
+                    initialFilters[parentId].children.length === 0
+                      ? checkedItems.includes(parentId)
+                      : initialFilters[parentId].children.some((child) => checkedItems.find((ci) => ci === child.id))
+                  }
                   onChange={() =>
                     setCheckedItems((prevCheckedItems) => {
+                      if (initialFilters[parentId].children.length === 0) {
+                        if (prevCheckedItems.includes(parentId)) {
+                          return prevCheckedItems.filter((ci) => ci !== parentId)
+                        } else {
+                          return [...prevCheckedItems, parentId]
+                        }
+                      }
+
                       if (
                         initialFilters[parentId].children.every((child) =>
                           prevCheckedItems.find((ci) => ci === child.id),
