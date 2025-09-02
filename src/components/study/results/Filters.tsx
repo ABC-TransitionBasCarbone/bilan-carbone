@@ -1,7 +1,9 @@
 import { BasicTypeCharts } from '@/utils/charts'
-import { Checkbox, FormControlLabel } from '@mui/material'
+import { Checkbox, FormControlLabel, Menu } from '@mui/material'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
+import styles from './Filters.module.css'
 
 type FilterType = BasicTypeCharts & { familyId?: string }
 type ChildrenType = { id: string; label: string }
@@ -58,9 +60,10 @@ interface Props<T> {
   setFilteredResults: (results: T[]) => void
   results: T[]
   type: 'tag' | 'post'
-  display: boolean
+  anchorEl: HTMLElement | null
+  onClose: () => void
 }
-const Filters = <T extends FilterType>({ setFilteredResults, results, type, display }: Props<T>) => {
+const Filters = <T extends FilterType>({ setFilteredResults, results, type, anchorEl, onClose }: Props<T>) => {
   const tPost = useTranslations('emissionFactors.post')
 
   const initialItems = useMemo(() => {
@@ -105,66 +108,78 @@ const Filters = <T extends FilterType>({ setFilteredResults, results, type, disp
     setFilteredResults(filtered)
   }, [checkedItems, results, setFilteredResults])
 
-  if (!display) {
-    return null
-  }
-
   return (
-    <>
-      {Object.entries(initialItems).map(([parentId, familyInfo]) => {
-        return (
-          <div className="flex flex-col" key={parentId}>
-            <FormControlLabel
-              label={familyInfo.name}
-              control={
-                <Checkbox
-                  checked={initialItems[parentId].children.some((child) => checkedItems.includes(child.id))}
-                  onChange={() =>
-                    setCheckedItems((prevCheckedItems) => {
-                      if (
-                        initialItems[parentId].children.every((child) => prevCheckedItems.find((ci) => ci === child.id))
-                      ) {
-                        return prevCheckedItems.filter(
-                          (ci) => !initialItems[parentId].children.some((child) => child.id === ci),
-                        )
-                      }
-
-                      const newCheckedItems = [...prevCheckedItems]
-                      for (const child of initialItems[parentId].children) {
-                        if (!newCheckedItems.includes(child.id)) {
-                          newCheckedItems.push(child.id)
-                        }
-                      }
-                      return newCheckedItems
-                    })
-                  }
-                />
-              }
-            />
-            {familyInfo.children.map((child) => (
+    <Menu
+      anchorEl={anchorEl}
+      open={Boolean(anchorEl)}
+      onClose={onClose}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'right',
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+    >
+      <div className={classNames(styles.filters, 'px1')}>
+        {Object.entries(initialItems).map(([parentId, familyInfo]) => {
+          return (
+            <div className="flex flex-col" key={parentId}>
               <FormControlLabel
-                className="ml2"
-                key={child.label}
-                label={child.label}
+                label={familyInfo.name}
                 control={
                   <Checkbox
-                    checked={checkedItems.some((el) => el === child.id)}
+                    checked={initialItems[parentId].children.some((child) => checkedItems.includes(child.id))}
                     onChange={() =>
                       setCheckedItems((prevCheckedItems) => {
-                        if (prevCheckedItems.includes(child.id)) {
-                          return prevCheckedItems.filter((ci) => ci !== child.id)
+                        if (
+                          initialItems[parentId].children.every((child) =>
+                            prevCheckedItems.find((ci) => ci === child.id),
+                          )
+                        ) {
+                          return prevCheckedItems.filter(
+                            (ci) => !initialItems[parentId].children.some((child) => child.id === ci),
+                          )
                         }
-                        return [...prevCheckedItems, child.id]
+
+                        const newCheckedItems = [...prevCheckedItems]
+                        for (const child of initialItems[parentId].children) {
+                          if (!newCheckedItems.includes(child.id)) {
+                            newCheckedItems.push(child.id)
+                          }
+                        }
+                        return newCheckedItems
                       })
                     }
                   />
                 }
               />
-            ))}
-          </div>
-        )
-      })}
-    </>
+              {familyInfo.children.map((child) => (
+                <FormControlLabel
+                  className="ml2"
+                  key={child.label}
+                  label={child.label}
+                  control={
+                    <Checkbox
+                      checked={checkedItems.some((el) => el === child.id)}
+                      onChange={() =>
+                        setCheckedItems((prevCheckedItems) => {
+                          if (prevCheckedItems.includes(child.id)) {
+                            return prevCheckedItems.filter((ci) => ci !== child.id)
+                          }
+                          return [...prevCheckedItems, child.id]
+                        })
+                      }
+                    />
+                  }
+                />
+              ))}
+            </div>
+          )
+        })}
+      </div>
+    </Menu>
   )
 }
 
