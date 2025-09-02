@@ -3,14 +3,14 @@
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { getStudyOrganizationVersion } from '@/services/serverFunctions/organization'
 import { ORGANIZATION, STUDY, useAppContextStore } from '@/store/AppContext'
-import { isAdmin } from '@/utils/user'
+import { canEditOrganizationVersion, isInOrgaOrParent } from '@/utils/organization'
 import HomeIcon from '@mui/icons-material/Home'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
 import { AppBar, Box, Button, styled, Toolbar, ToolbarProps, Typography } from '@mui/material'
-import { Environment, Role } from '@prisma/client'
+import { Environment } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 interface Props {
   account: UserSession
@@ -33,20 +33,21 @@ const OrganizationCard = ({ account, organizationVersions }: Props) => {
   const defaultOrganizationVersion = organizationVersions.find(
     (organizationVersion) => organizationVersion.id === account.organizationVersionId,
   ) as OrganizationVersionWithOrganization
-  const [organizationVersion, setOrganizationVersion] = useState<
-    Pick<OrganizationVersionWithOrganization, 'id' | 'organization'> | undefined
-  >(undefined)
-
-  const [hasAccess, hasEditionRole] = useMemo(
-    () =>
-      organizationVersion &&
-      organizationVersions.map((organizationVersion) => organizationVersion.id).includes(organizationVersion.id)
-        ? [true, isAdmin(account.role) || account.role === Role.GESTIONNAIRE || defaultOrganizationVersion.isCR]
-        : [false, false],
-    [account.role, organizationVersions, defaultOrganizationVersion, organizationVersion],
+  const [organizationVersion, setOrganizationVersion] = useState<OrganizationVersionWithOrganization | undefined>(
+    undefined,
   )
 
   const { context, contextId } = useAppContextStore()
+
+  const handleOrganizationContext = useCallback(
+    async (organizationVersionId: string) => {
+      const organizationVersion = organizationVersions.find(
+        (organizationVersion) => organizationVersion.id === organizationVersionId,
+      ) as OrganizationVersionWithOrganization
+      setOrganizationVersion(organizationVersion)
+    },
+    [organizationVersions],
+  )
 
   useEffect(() => {
     if (context === STUDY) {
@@ -56,7 +57,7 @@ const OrganizationCard = ({ account, organizationVersions }: Props) => {
     } else {
       setOrganizationVersion(defaultOrganizationVersion)
     }
-  }, [context, contextId])
+  }, [context, contextId, defaultOrganizationVersion, handleOrganizationContext])
 
   const handleStudyContext = async (studyId: string) => {
     const organizationVersion = await getStudyOrganizationVersion(studyId)
@@ -65,12 +66,16 @@ const OrganizationCard = ({ account, organizationVersions }: Props) => {
     }
   }
 
-  const handleOrganizationContext = async (organizationVersionId: string) => {
-    const organizationVersion = organizationVersions.find(
-      (organizationVersion) => organizationVersion.id === organizationVersionId,
-    ) as OrganizationVersionWithOrganization
-    setOrganizationVersion(organizationVersion)
-  }
+  const [hasAccess, hasEditionRole] = useMemo(() => {
+    if (!organizationVersion) {
+      return [false, false]
+    }
+
+    const userIsInOrgaOrParent = isInOrgaOrParent(account.organizationVersionId, organizationVersion)
+    const userCanEdit = canEditOrganizationVersion(account, organizationVersion)
+
+    return [userIsInOrgaOrParent, userCanEdit]
+  }, [account, organizationVersion])
 
   const organizationVersionLink = useMemo(() => {
     const targetOrganizationVersion = organizationVersion || defaultOrganizationVersion
