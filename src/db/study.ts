@@ -30,15 +30,28 @@ export type EmissionSourceTagFamilyWithTags = Omit<EmissionSourceTagFamily, 'cre
 
 export const createStudy = async (data: Prisma.StudyCreateInput, environment: Environment) => {
   const dbStudy = await prismaClient.study.create({ data })
-  const studyEmissionFactorVersions = []
-  for (const source of Object.values(Import).filter(
-    (source) => source !== Import.Manual && (environment === Environment.CUT || source !== Import.CUT),
-  )) {
-    const latestImportVersion = await getSourceLatestImportVersionId(source)
-    if (latestImportVersion) {
-      studyEmissionFactorVersions.push({ studyId: dbStudy.id, source, importVersionId: latestImportVersion.id })
+  let studyEmissionFactorVersions = []
+
+  if (environment === Environment.CUT) {
+    studyEmissionFactorVersions = (await getSourceCutImportVersionIds()).map((importVersion) => ({
+      studyId: dbStudy.id,
+      source: importVersion.source,
+      importVersionId: importVersion.id,
+    }))
+  } else {
+    for (const source of Object.values(Import).filter((source) => source !== Import.Manual && source !== Import.CUT)) {
+      const importVersion = await getSourceLatestImportVersionId(source)
+
+      if (importVersion) {
+        studyEmissionFactorVersions.push({
+          studyId: dbStudy.id,
+          source,
+          importVersionId: importVersion.id,
+        })
+      }
     }
   }
+
   await prismaClient.studyEmissionFactorVersion.createMany({ data: studyEmissionFactorVersions })
   return dbStudy
 }
@@ -681,6 +694,28 @@ export const getStudyValidatedEmissionsSources = async (studyId: string) => {
     validated: study.emissionSources.filter((emissionSource) => emissionSource.validated).length,
   }
 }
+
+/**
+ *
+ * TODO find a way to better handle imported version for CUT
+ */
+export const getSourceCutImportVersionIds = async (transaction?: Prisma.TransactionClient) =>
+  (transaction || prismaClient).emissionFactorImportVersion.findMany({
+    select: { id: true, source: true },
+    where: {
+      OR: [
+        {
+          name: {
+            in: ['2024', '1.0', '23.5'],
+          },
+        },
+        {
+          source: { in: ['CUT'] },
+        },
+      ],
+    },
+    orderBy: { createdAt: 'desc' },
+  })
 
 export const getSourceLatestImportVersionId = async (source: Import, transaction?: Prisma.TransactionClient) =>
   (transaction || prismaClient).emissionFactorImportVersion.findFirst({
