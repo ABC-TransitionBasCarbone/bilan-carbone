@@ -20,7 +20,7 @@ describe('Create study emission source', () => {
 
     cy.getByTestId('emission-source-My new emission source').should('exist')
     cy.getByTestId('emission-source-My new emission source').within(() => {
-      cy.getByTestId('emission-source-status').should('have.text', "En attente d'un·e contributeur·ice")
+      cy.getByTestId('emission-source-status').should('have.text', "En attente d'un·e contributeur·rice")
       cy.getByTestId('emission-source-quality').should('not.exist')
     })
 
@@ -50,7 +50,7 @@ describe('Create study emission source', () => {
     cy.getByTestId('emission-source-My emission source name').within(() => {
       cy.get('[data-testid="emission-source-status"] > div')
         .invoke('text')
-        .should('contain', "En attente d'un·e contributeur·ice")
+        .should('contain', "En attente d'un·e contributeur·rice")
     })
 
     cy.getByTestId('emission-source-source').type('My source')
