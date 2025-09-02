@@ -75,15 +75,11 @@ const Filters = <T extends FilterType>({ setFilteredResults, results, type, disp
   }, [results, type, tPost])
 
   const [checkedItems, setCheckedItems] = useState(() =>
-    Object.values(initialFilters).flatMap((parent) =>
-      parent.children.length === 0 ? [parent.id] : parent.children.map((child) => child.id),
-    ),
+    Object.values(initialFilters).flatMap((parent) => parent.children.map((child) => child.id)),
   )
 
   useEffect(() => {
-    const newDefaultItems = Object.values(initialFilters).flatMap((parent) =>
-      parent.children.length === 0 ? [parent.id] : parent.children.map((child) => child.id),
-    )
+    const newDefaultItems = Object.values(initialFilters).flatMap((parent) => parent.children.map((child) => child.id))
 
     setCheckedItems((prevItems) => {
       if (prevItems.length === 0) {
@@ -98,29 +94,16 @@ const Filters = <T extends FilterType>({ setFilteredResults, results, type, disp
   }, [initialFilters])
 
   useEffect(() => {
-    const filtered = results
-      .map((result) => {
-        const filteredChildren = result.children.filter((child) => checkedItems.includes(getResultId(child)))
+    const filtered = results.map((result) => {
+      const filteredChildren = result.children.filter((child) => checkedItems.includes(getResultId(child)))
+      const newTotal = filteredChildren.reduce((sum, child) => sum + child.value, 0)
 
-        if (result.children.length === 0) {
-          if (!checkedItems.includes(result.familyId ?? result.post ?? '')) {
-            return null
-          }
-        } else {
-          if (filteredChildren.length === 0) {
-            return null
-          }
-        }
-
-        const newTotal = filteredChildren.reduce((sum, child) => sum + child.value, 0)
-
-        return {
-          ...result,
-          value: newTotal,
-          children: filteredChildren,
-        }
-      })
-      .filter((result) => result !== null)
+      return {
+        ...result,
+        value: newTotal,
+        children: filteredChildren,
+      }
+    })
 
     setFilteredResults(filtered)
   }, [checkedItems, results, setFilteredResults])
@@ -138,21 +121,11 @@ const Filters = <T extends FilterType>({ setFilteredResults, results, type, disp
               label={familyInfo.name}
               control={
                 <Checkbox
-                  checked={
-                    initialFilters[parentId].children.length === 0
-                      ? checkedItems.includes(parentId)
-                      : initialFilters[parentId].children.some((child) => checkedItems.find((ci) => ci === child.id))
-                  }
+                  checked={initialFilters[parentId].children.some((child) =>
+                    checkedItems.find((ci) => ci === child.id),
+                  )}
                   onChange={() =>
                     setCheckedItems((prevCheckedItems) => {
-                      if (initialFilters[parentId].children.length === 0) {
-                        if (prevCheckedItems.includes(parentId)) {
-                          return prevCheckedItems.filter((ci) => ci !== parentId)
-                        } else {
-                          return [...prevCheckedItems, parentId]
-                        }
-                      }
-
                       if (
                         initialFilters[parentId].children.every((child) =>
                           prevCheckedItems.find((ci) => ci === child.id),
