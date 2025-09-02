@@ -117,7 +117,10 @@ const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: s
           ) : (
             <div />
           )}
-          <div onClick={(event) => setFilterAnchorEl(filterAnchorEl ? null : event.currentTarget)} className="pointer">
+          <div
+            onClick={(event) => setFilterAnchorEl((prev) => (prev ? null : event.currentTarget))}
+            className="pointer"
+          >
             <TuneOutlinedIcon className="flex-end" />
           </div>
         </div>
