@@ -6,44 +6,48 @@ import { useEffect, useMemo, useState } from 'react'
 type FilterType = BasicTypeCharts & { familyId?: string }
 type ChildrenType = { id: string; label: string }
 
-const getTagFilters = <T extends FilterType>(results: T[]) => {
-  return results.reduce(
-    (acc, result) => {
-      if (!result.familyId || !result.children) {
+const getTagItems = <T extends FilterType>(results: T[]) => {
+  return results
+    .filter((result) => result.post !== 'total')
+    .reduce(
+      (acc, result) => {
+        if (!result.familyId || !result.children) {
+          return acc
+        }
+
+        acc[result.familyId] = {
+          id: result.familyId,
+          name: result.label,
+          children: result.children.filter((tag) => tag.value > 0).map((tag) => ({ id: tag.label, label: tag.label })),
+        }
+
         return acc
-      }
-
-      acc[result.familyId] = {
-        id: result.familyId,
-        name: result.label,
-        children: result.children.map((tag) => ({ id: tag.label, label: tag.label })),
-      }
-
-      return acc
-    },
-    {} as Record<string, { id: string; name: string; children: ChildrenType[] }>,
-  )
+      },
+      {} as Record<string, { id: string; name: string; children: ChildrenType[] }>,
+    )
 }
 
-const getPostFilters = <T extends FilterType>(results: T[], tPost: ReturnType<typeof useTranslations>) => {
-  return results.reduce(
-    (acc, result) => {
-      if (!result.post || !result.children) {
-        return acc
-      }
+const getPostItems = <T extends FilterType>(results: T[], tPost: ReturnType<typeof useTranslations>) => {
+  return results
+    .filter((result) => result.post !== 'total')
+    .reduce(
+      (acc, result) => {
+        if (!result.post || !result.children) {
+          return acc
+        }
 
-      acc[result.post] = {
-        id: result.post,
-        name: result.label,
-        children: result.children.map((subPost) => ({
-          id: subPost.post ?? '',
-          label: subPost.post ? tPost(subPost.post) : subPost.label,
-        })),
-      }
-      return acc
-    },
-    {} as Record<string, { id: string; name: string; children: ChildrenType[] }>,
-  )
+        acc[result.post] = {
+          id: result.post,
+          name: result.label,
+          children: result.children.map((subPost) => ({
+            id: subPost.post ?? '',
+            label: subPost.post ? tPost(subPost.post) : subPost.label,
+          })),
+        }
+        return acc
+      },
+      {} as Record<string, { id: string; name: string; children: ChildrenType[] }>,
+    )
 }
 
 const getResultId = (result: BasicTypeCharts['children'][number]) => {
@@ -59,29 +63,46 @@ interface Props<T> {
 const Filters = <T extends FilterType>({ setFilteredResults, results, type, display }: Props<T>) => {
   const tPost = useTranslations('emissionFactors.post')
 
-  const initialFilters = useMemo(() => {
+  const initialItems = useMemo(() => {
     switch (type) {
       case 'tag':
-        return getTagFilters(results)
+        return getTagItems(results)
       case 'post':
-        return getPostFilters(results, tPost)
+        return getPostItems(results, tPost)
       default:
         return {} as Record<string, { id: string; name: string; children: ChildrenType[] }>
     }
-    // We only want to compute the filters once when the component mounts
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-  const [checkedItems, setCheckedItems] = useState(
-    Object.values(initialFilters).flatMap((parent) => parent.children.map((child) => child.id)),
-  )
+  }, [results, type, tPost])
+
+  const [checkedItems, setCheckedItems] = useState<string[]>([])
 
   useEffect(() => {
-    setFilteredResults(
-      results.map((result) => ({
-        ...result,
-        children: result.children.filter((child) => checkedItems.includes(getResultId(child))),
-      })),
-    )
+    if (checkedItems.length === 0 && initialItems) {
+      const defaultItems = Object.values(initialItems).flatMap((parent) => parent.children.map((child) => child.id))
+      setCheckedItems(defaultItems)
+    }
+  }, [checkedItems.length, initialItems])
+
+  useEffect(() => {
+    const filtered = results
+      .map((result) => {
+        const filteredChildren = result.children.filter((child) => checkedItems.includes(getResultId(child)))
+        const newTotal = filteredChildren.reduce((sum, child) => sum + child.value, 0)
+
+        return {
+          ...result,
+          value: newTotal,
+          children: filteredChildren,
+        }
+      })
+      .filter((result) => {
+        if (result.post === 'total') {
+          return true
+        }
+        return result.children.some((child) => checkedItems.includes(getResultId(child)))
+      })
+
+    setFilteredResults(filtered)
   }, [checkedItems, results, setFilteredResults])
 
   if (!display) {
@@ -90,30 +111,26 @@ const Filters = <T extends FilterType>({ setFilteredResults, results, type, disp
 
   return (
     <>
-      {Object.entries(initialFilters).map(([parentId, familyInfo]) => {
+      {Object.entries(initialItems).map(([parentId, familyInfo]) => {
         return (
           <div className="flex flex-col" key={parentId}>
             <FormControlLabel
               label={familyInfo.name}
               control={
                 <Checkbox
-                  checked={initialFilters[parentId].children.every((child) =>
-                    checkedItems.find((ci) => ci === child.id),
-                  )}
+                  checked={initialItems[parentId].children.some((child) => checkedItems.includes(child.id))}
                   onChange={() =>
                     setCheckedItems((prevCheckedItems) => {
                       if (
-                        initialFilters[parentId].children.every((child) =>
-                          prevCheckedItems.find((ci) => ci === child.id),
-                        )
+                        initialItems[parentId].children.every((child) => prevCheckedItems.find((ci) => ci === child.id))
                       ) {
                         return prevCheckedItems.filter(
-                          (ci) => !initialFilters[parentId].children.some((child) => child.id === ci),
+                          (ci) => !initialItems[parentId].children.some((child) => child.id === ci),
                         )
                       }
 
                       const newCheckedItems = [...prevCheckedItems]
-                      for (const child of initialFilters[parentId].children) {
+                      for (const child of initialItems[parentId].children) {
                         if (!newCheckedItems.includes(child.id)) {
                           newCheckedItems.push(child.id)
                         }

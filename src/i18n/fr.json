@@ -697,7 +697,7 @@
       "consolidatedChartTitle": "Émissions, par poste ({unit})",
       "other": "Sans tag",
       "prioritaryZone": "Zone d'action prioritaire pour l'amélioration de la collecte",
-      "overExploredZone": "Zone suffisamment (trop) explorée",
+      "nonPrioritaryZone": "Zone non prioritaire",
       "postEmissionPerNumberOfSources": "Émissions par poste en fonction du nombre de sources d'émission",
       "glossary": {
         "title": "Glossaire",

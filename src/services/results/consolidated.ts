@@ -82,7 +82,6 @@ export const computeResultsByPost = (
             uncertainty: sumEmissionSourcesUncertainty(emissionSourcesToUse),
           }
         })
-        .filter((subPost) => subPost.numberOfEmissionSource > 0)
 
       const value = subPosts.flatMap((subPost) => subPost).reduce((acc, subPost) => acc + subPost.value, 0)
       const monetaryValue = subPosts
