@@ -646,6 +646,8 @@
         "K": "kgCO₂e",
         "T": "tCO₂e"
       },
+      "tagGlossary": "Double count on charts by tags",
+      "tagGlossaryDescription": "Emission sources can have multiple tags, so these are counted in each tag on this graph. It is therefore normal that you have a larger total here than in your study.",
       "info": "",
       "difference": {
         "button": "Explanation of the differences between Bilan Carbone® and Beges export",
