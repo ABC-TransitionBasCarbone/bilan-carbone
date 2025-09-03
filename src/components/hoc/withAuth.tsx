@@ -1,4 +1,3 @@
-import NotFound from '@/components/pages/NotFound'
 import { auth } from '@/services/auth'
 import { UserSession } from 'next-auth'
 import { redirect } from 'next/navigation'
