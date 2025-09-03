@@ -14,7 +14,7 @@ const withAuth = (WrappedComponent: React.ComponentType<any & UserSessionProps>)
   const Component = async (props: any) => {
     const session = await auth()
     if (!session || !session.user) {
-      return <NotFound />
+      redirect('/')
     }
 
     if (session.user.needsAccountSelection) {
