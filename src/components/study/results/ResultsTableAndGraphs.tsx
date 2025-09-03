@@ -15,9 +15,9 @@ import Filters from './Filters'
 import styles from './ResultsTableAndGraphs.module.css'
 
 export enum TabsPossibilities {
-  table = 'table',
   pieChart = 'pieChart',
   barChart = 'barChart',
+  table = 'table',
 }
 
 interface ResultsTableProps<T> {
@@ -111,7 +111,7 @@ const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: s
           {activeTabs.length > 1 ? (
             <Tabs value={tabSelected} onChange={(_e, v) => setTabSelected(v)}>
               {activeTabs.map((tab) => (
-                <Tab key={tab} value={tab} label={t(tab)} />
+                <Tab key={tab} value={tab} label={t(tab)} data-testid={`${type}-${tab}`} />
               ))}
             </Tabs>
           ) : (
