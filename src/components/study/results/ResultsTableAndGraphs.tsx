@@ -15,8 +15,8 @@ import Filters from './Filters'
 import styles from './ResultsTableAndGraphs.module.css'
 
 export enum TabsPossibilities {
-  pieChart = 'pieChart',
   barChart = 'barChart',
+  pieChart = 'pieChart',
   table = 'table',
 }
 
