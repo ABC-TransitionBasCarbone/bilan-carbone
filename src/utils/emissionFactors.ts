@@ -57,7 +57,7 @@ export const ManualEmissionFactorUnitList: Unit[] = [
 ]
 
 export const isMonetaryEmissionFactor = (
-  emissionFactor: Pick<Prisma.EmissionFactorCreateInput, 'unit' | 'customUnit' | 'isMonetary'>,
+  emissionFactor: Partial<Pick<Prisma.EmissionFactorCreateInput, 'unit' | 'customUnit' | 'isMonetary'>>,
 ) => (emissionFactor.customUnit && emissionFactor.isMonetary) || monetaryUnits.includes(emissionFactor.unit as Unit)
 
 export const monetaryUnits: Unit[] = [
@@ -75,14 +75,25 @@ export const monetaryUnits: Unit[] = [
   Unit.FRANC_CFP,
 ]
 
-export const filterEmissionFactorsBySubPostAndEnv = (
-  emissionFactors: EmissionFactorWithMetaData[],
-  subPost: SubPost,
+const getTiltSubPostList = (subPosts: SubPost[]) => {
+  const result = []
+  for (const subPost of subPosts) {
+    const converted = convertTiltSubPostToBCSubPost(subPost)
+    if (converted) {
+      result.push(converted)
+    }
+  }
+  return result
+}
+
+export const filterEmissionFactorsBySubPostAndEnv = <T extends Pick<EmissionFactorWithMetaData, 'subPosts'>>(
+  emissionFactors: T[],
+  subPosts: SubPost[],
   environment?: Environment,
 ) => {
-  let filterSubPost = subPost
-  if (environment === Environment.TILT) {
-    filterSubPost = convertTiltSubPostToBCSubPost(subPost)
-  }
-  return emissionFactors.filter((emissionFactor) => emissionFactor.subPosts.includes(filterSubPost))
+  const filterSubPostList = environment === Environment.TILT ? getTiltSubPostList(subPosts) : subPosts
+
+  return emissionFactors.filter((emissionFactor) =>
+    emissionFactor.subPosts.some((efSubPost) => filterSubPostList.includes(efSubPost)),
+  )
 }

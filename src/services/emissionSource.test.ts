@@ -1,6 +1,6 @@
 import { FullStudy } from '@/db/study'
 import { expect } from '@jest/globals'
-import { SubPost, Unit } from '@prisma/client'
+import { Environment, SubPost, Unit } from '@prisma/client'
 import { getEmissionResults } from './emissionSource'
 
 const defaultEmissionSource = {
@@ -48,29 +48,35 @@ const defaultEmissionSource = {
 describe('emissionSource Service', () => {
   describe('getEmissionResults', () => {
     it('should compute all values', () => {
-      const result = getEmissionResults(defaultEmissionSource)
+      const result = getEmissionResults(defaultEmissionSource, Environment.BC)
       expect(result).toEqual({
-        emission: 1200,
+        emissionValue: 1200,
         confidenceInterval: [516.2597423212065, 2789.2936093088983],
         alpha: 1.3244113410907485,
         standardDeviation: 2.3244113410907485,
       })
     })
 
-    it('should return null if value is not defined', () => {
-      const result = getEmissionResults({
-        ...defaultEmissionSource,
-        value: null,
-      })
-      expect(result).toBe(null)
+    it('should return null values is not defined', () => {
+      const result = getEmissionResults(
+        {
+          ...defaultEmissionSource,
+          value: null,
+        },
+        Environment.BC,
+      )
+      expect(result).toEqual({ emissionValue: 0, standardDeviation: null, confidenceInterval: null, alpha: null })
     })
 
     it('should return null if emission factor is not defined', () => {
-      const result = getEmissionResults({
-        ...defaultEmissionSource,
-        emissionFactor: null,
-      })
-      expect(result).toBe(null)
+      const result = getEmissionResults(
+        {
+          ...defaultEmissionSource,
+          emissionFactor: null,
+        },
+        Environment.BC,
+      )
+      expect(result).toEqual({ emissionValue: 0, standardDeviation: null, confidenceInterval: null, alpha: null })
     })
   })
 })

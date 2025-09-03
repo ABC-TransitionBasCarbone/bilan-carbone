@@ -188,11 +188,11 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   '16-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {
     emissionFactors: {
       appartement: '100',
-      'hôtel 1*': '101',
-      'hôtel 2*': '102',
-      'hôtel 4*': '104',
-      'hôtel 5*': '105',
-      nuitée: '106',
+      'hôtel 1*': '102',
+      'hôtel 2*': '103',
+      'hôtel 3*': '104',
+      'hôtel 4*': '105',
+      'hôtel 5*': '106',
     },
   },
   '17-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},

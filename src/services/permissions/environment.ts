@@ -23,6 +23,12 @@ export const hasAccessToCreateEmissionSourceTag = async (environment: Environmen
   ([Environment.BC, Environment.TILT] as Environment[]).includes(environment)
 
 export const hasAccessToStudyFlowExample = (environment: Environment) =>
-  ([Environment.TILT] as Environment[]).includes(environment)
+  ([Environment.TILT, Environment.BC] as Environment[]).includes(environment)
 
 export const hasWasteImpact = (environment: Environment) => environment !== Environment.CUT
+
+export const hasAccessToBcExport = (environment: Environment) =>
+  ([Environment.TILT] as Environment[]).includes(environment)
+
+export const hasAccessToDependencyMatrix = (environment: Environment) =>
+  ([Environment.TILT] as Environment[]).includes(environment)

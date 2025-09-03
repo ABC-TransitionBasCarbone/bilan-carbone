@@ -147,8 +147,17 @@ const EmissionSource = ({
     }
   }, [emissionSource.emissionFactor, emissionFactors])
 
-  const status = useMemo(() => getEmissionSourceStatus(study, emissionSource), [study, emissionSource])
-  const emissionResults = useMemo(() => getEmissionResults(emissionSource, environment), [emissionSource, environment])
+  const status = useMemo(
+    () => getEmissionSourceStatus(study, emissionSource, environment),
+    [study, emissionSource, environment],
+  )
+  const emissionResults = useMemo(() => {
+    if (!environment) {
+      return { emissionValue: 0, standardDeviation: 0 }
+    }
+
+    return getEmissionResults(emissionSource, environment)
+  }, [emissionSource, environment])
 
   const isFromOldImport = useMemo(
     () =>
@@ -168,6 +177,10 @@ const EmissionSource = ({
     return versionId ? emissionFactors.find((factor) => factor?.version?.id === versionId)?.version?.name || '' : ''
   }, [study.emissionFactorVersions, isFromOldImport, emissionFactors])
 
+  if (!environment) {
+    return null
+  }
+
   return (
     <div id={`emission-source-${emissionSource.id}`} className={styles.container}>
       <button
@@ -177,7 +190,7 @@ const EmissionSource = ({
         aria-controls={detailId}
         onClick={() => setDisplay((prevDisplay) => !prevDisplay)}
       >
-        <div className={classNames(styles.header, styles.gapped, 'grow justify-between')}>
+        <div className={classNames(styles.header, 'grow justify-between gapped')}>
           <div className="grow align-center">
             {emissionSource.validated || withoutDetail ? (
               <p data-testid="validated-emission-source-name" className={styles.emissionsSourceName}>
@@ -198,7 +211,7 @@ const EmissionSource = ({
               </>
             )}
           </div>
-          <div className={classNames(styles.gapped, 'grow align-center')}>
+          <div className="grow align-center gapped">
             {/* activity data */}
             <div className={classNames(styles.emissionSource, 'flex-col justify-center align-center text-center')}>
               {typeof emissionSource.value === 'number' && emissionSource.value !== 0 && (
@@ -230,22 +243,20 @@ const EmissionSource = ({
               </div>
             )}
             {/* result */}
-            {emissionResults && (
-              <div className={classNames(styles.result, 'flex-col flex-end align-end text-center grow')}>
-                <p className={styles.resultText} data-testid="emission-source-value">
-                  {`${formatNumber(emissionResults.emission / STUDY_UNIT_VALUES[study.resultsUnit])} ${tResultstUnits(study.resultsUnit)}`}
+            <div className={classNames(styles.result, 'flex-col flex-end align-end text-center grow')}>
+              <p className={styles.resultText} data-testid="emission-source-value">
+                {`${formatNumber(emissionResults.emissionValue / STUDY_UNIT_VALUES[study.resultsUnit])} ${tResultstUnits(study.resultsUnit)}`}
+              </p>
+              {emissionResults.standardDeviation && (
+                <p
+                  className={classNames(styles.resultQuality, styles.resultText)}
+                  data-testid="emission-source-quality"
+                >
+                  {tQuality('name')}{' '}
+                  {tQuality(getStandardDeviationRating(emissionResults.standardDeviation).toString())}
                 </p>
-                {emissionResults.standardDeviation && (
-                  <p
-                    className={classNames(styles.resultQuality, styles.resultText)}
-                    data-testid="emission-source-quality"
-                  >
-                    {tQuality('name')}{' '}
-                    {tQuality(getStandardDeviationRating(emissionResults.standardDeviation).toString())}
-                  </p>
-                )}
-              </div>
-            )}
+              )}
+            </div>
           </div>
           <div className={classNames(styles.status, 'flex-cc')} data-testid="emission-source-status">
             {loading || saved ? (
@@ -281,7 +292,7 @@ const EmissionSource = ({
           </p>
         )}
       </button>
-      <div id={detailId} className={classNames(styles.detail, { [styles.displayed]: display })} ref={ref}>
+      <div id={detailId} className={classNames(styles.detail, { [styles.displayed]: display }, 'px1')} ref={ref}>
         {display && (
           <div className={styles.detailContent}>
             {error && (

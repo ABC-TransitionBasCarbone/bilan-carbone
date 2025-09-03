@@ -17,11 +17,12 @@
   },
   "exports": {
     "title": "Exports:",
-    "consolidated": "Carbon Assessment®",
+    "consolidated": "Bilan Carbone®",
     "Beges": "Regulatory GHG Assesment",
     "GHGP": "GHG Protocol",
     "ISO14069": "ISO 14069",
-    "developmentFile": "File under development"
+    "developmentFile": "File under development",
+    "env_specific_export": "Bilan Carbone®"
   },
   "categorisations": {
     "Operated": "Operated",
@@ -39,8 +40,7 @@
     "HeldFugitive": "Held, fugitive",
     "NotHeldSupported": "Not held, supported",
     "NotHeldNotSupported": "Not held, not supported",
-    "UsedByIntermediary": "Used by an intermediary",
-    "LandUse": "Land use, land-use change, and forestry (LULUCF)"
+    "UsedByIntermediary": "Used by an intermediary"
   },
   "beges": {
     "rule": "Rule",
@@ -118,6 +118,20 @@
     "noItems": "No news at the moment",
     "seeLess": "See less",
     "seeMore": "See more"
+  },
+  "ressources": {
+    "title": "Resources",
+    "description": "The COUNT impact calculator is certified by the ABC. It was built using various emission factor sources (ADEME's Base Empreinte, EcoInvent, Boavizta, CNC, among others). Additional emission factors were specifically developed for the tool by Resilio (a link to the Resilio methodology can be added here; we will send it to you).<br></br>The calculation assumptions were based on:<br></br> - 15 comprehensive carbon assessments carried out in partnership with the CINEO cinema group (a press kit link will be added here)<br></br> - Multiple interviews with stakeholders in the cinema sector (suppliers, integrators, independent operators, exhibition circuits, etc.)\n - Visits to cinemas of various types.",
+    "methodeAssociative": "For any questions about the associative method:",
+    "sphereAssociative": "Associative Sphere",
+    "enSavoirPlusBilan": "To learn more about the Bilan Carbone® method:",
+    "methodeBilanCarbone": "Bilan Carbone® Methodological Guide",
+    "questionMethodo": "For any methodological questions:",
+    "openCarbonPractice": "Open Carbon Practice",
+    "contacterViaFormulaire": "Contact the ABC directly via the form",
+    "questionTechnique": "For any technical questions or IT support needs:",
+    "lireLaFAQ": "Read the FAQ",
+    "ecrireMail": "Write directly to support@abc-transitionbascarbone.fr"
   },
   "legalNotices": {
     "profile": "Return to profile"
@@ -566,6 +580,7 @@
       },
       "exports": "Exports",
       "control": "Control mode",
+      "emissionSourceTagFamily": "Family",
       "emissionSourceTags": "Tags",
       "emissionSourceTagLabel": "Label",
       "color": "Color",
@@ -578,24 +593,63 @@
         "delete": "Delete",
         "description": "{count, plural, =1 {It contains} other {Some of them contain}} emission sources. <warning>All registered data will be definitively lost.</warning>",
         "title": "Are you sure you want to delete {count, plural, =1 {this site} other {these sites}} ?"
+      },
+      "controlModeWarning": {
+        "title": "Control Mode Change",
+        "description": "You are about to change the control mode from {currentMode} to {newMode}. <warning>This action will remove most existing characterizations and invalidate the associated emission sources</warning>, as they no longer correspond to the new control mode. Do you want to continue?",
+        "continue": "Continue",
+        "cancel": "Cancel"
+      },
+      "begesActivationWarning": {
+        "title": "BEGES Export Activation",
+        "description": "You are about to activate the regulatory BEGES export. When this export is enabled, you must fill in an additional \"Characterization\" field in certain emission sources. As a result, <warning>activating this export will invalidate the affected emission sources</warning>. Do you want to continue?",
+        "continue": "Continue",
+        "cancel": "Cancel"
+      },
+      "family": {
+        "title": "Tags family",
+        "add": "Ajouter un nouveau tag dans une famille",
+        "name": "Label",
+        "edit": "Rename family",
+        "delete": "Delete family",
+        "deleteContent": "Do you really want to delete the \"{name}\" tag family ? <red>All its tags will be permanently deleted.</red>",
+        "new": "Add a new tag family",
+        "content": "Which name do you want to give to you family ?",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "glossary": "Tags family",
+        "close": "Close",
+        "glossaryDescription": "Tags and tag families are used to identify your emission sources in order to visualize certain results later. <br></br>Once your tags are created, you can associate them with emission sources within the \"Data Entry\" page. Then, on the \"Results\" page, you can view the emissions due to a tag family or a specific tag, but you will not be able to view the emissions of two tag families simultaneously, because double counting can occur between these two tag families. <br></br>To give a concrete example, let's say there are two tag families: \"Products Sold\" and \"Target Audiences\". These two families and the tags belonging to them will allow you to visualize the distribution of your organization's emissions based on the products sold, and the same for the target audiences."
       }
     },
     "results": {
       "type": "Type",
       "post": "Post",
+      "tag": "Tag",
       "download": "Download results",
       "downloadPDF": "Download the summary",
       "value": "Emissions ({unit})",
       "emissions": "Emissions",
       "uncertainty": "Uncertainty",
+      "emissionSources": "Number of emission sources",
+      "bilanCarbone": "Résultats Bilan Carbone®",
+      "beges": "Résultats BEGES",
       "withDependencies": "With dependencies",
       "withoutDependencies": "Without dependencies",
-      "monetaryRatio": "Monetary ratio",
+      "dependencyIntensity": "Carbon intensities in dependency",
+      "responsabilityIntensity": "Carbon intensity in responsibility",
+      "monetaryRatio": "Monetary ratios",
+      "monetaryRatioEmissions": "emissions from monetary ratios",
+      "nonSpeMonetaryRatioEmissions": "resulting from unspecific monetary ratios",
+      "ofWhich": "of which",
       "coming": "coming",
       "units": {
         "K": "kgCO₂e",
         "T": "tCO₂e"
       },
+      "tagGlossary": "Double count on charts by tags",
+      "tagGlossaryDescription": "Emission sources can have multiple tags, so these are counted in each tag on this graph. It is therefore normal that you have a larger total here than in your study.",
+      "info": "",
       "difference": {
         "button": "Explanation of the differences between Bilan Carbone® and Beges export",
         "modalTitle": "Explanation of the difference between the results",
@@ -618,7 +672,42 @@
         "close": "Close"
       },
       "noData": "No data to display",
-      "info": ""
+      "uncertainties": {
+        "title": "Uncertainties analytics",
+        "confidenceIntervalTitle": "95% confidence interval",
+        "gaugeTitle": "qualitative uncertainty gauge",
+        "uncertainPostsTitle": "Posts with the greatest uncertainties within the Bilan Carbone®",
+        "veryWeak": "Very weak",
+        "veryStrong": "Very strong",
+        "perPost": "Uncertainties, per post",
+        "perEmission": "Incertitudes, par emission source"
+      },
+      "analysis": "Emissions analysis",
+      "total": "Emissions total",
+      "close": "Close",
+      "intensities": {
+        "budget": "budget",
+        "etp": "employee",
+        "volunteer": "volunteer",
+        "beneficiary": "beneficiary"
+      },
+      "table": "Table",
+      "barChart": "Bar Chart",
+      "pieChart": "Pie Chart",
+      "tagPieChartTitle": "Emissions, by tag ({unit})",
+      "consolidatedChartTitle": "Émissions, by post ({unit})",
+      "other": "No tag",
+      "prioritaryZone": "Priority area for improving collection",
+      "nonPrioritaryZone": "Non-priority area",
+      "postEmissionPerNumberOfSources": "Emissions by post based on the number of emission sources",
+      "glossary": {
+        "title": "Glossary",
+        "close": "Close",
+        "more": "More information",
+        "uncertaintyPerPost": "Uncertainties per post",
+        "uncertaintyPerPostDescription": "Please note that the size of the circles on this graph is proportional to the number of emission sources that have been entered for the item, and not to the total emissions for the item (which can be seen on the x-axis). This allows you to see which items have been analysed in the greatest detail and to assess whether this is relevant in terms of the significance of the associated emissions, as it is generally more relevant to work in detail on the most significant emission items. The following graphs also illustrate this effect.",
+        "uncertaintyPerPostDescription2": "Furthermore, the greater the number of emission sources within a station, the less uncertainty there will be for that station. This is because two uncertainties cancel each other out, as it is generally uncertain whether the error will be made in the same direction. To give a concrete example, when measuring two strings, it is possible to overestimate the length of the first and underestimate the length of the second. Consequently, the uncertainty about the length of the sum of the two strings will be less than the sum of the two uncertainties taken separately."
+      }
     },
     "pdf": {
       "loading": "Loading data...",
@@ -683,14 +772,29 @@
       "documentNotFound": "Document not found",
       "download": "Download flow",
       "flows": "Flows mapping",
-      "flowSelector": "Mapping to display",
+      "documentSelector": "Mapping to display",
       "invalidFileType": "Invalid file type",
       "newFlow": "Add a flow mapping",
-      "noFlows": "No mapping to display",
+      "noDocument": "No mapping to display",
       "notAuthorized": "Action not authorized",
-      "removeFlow": "Remove mapping",
+      "removeDocument": "Remove mapping",
       "Not authorized": "You are not allowed to do this action",
-      "info": "You can download a sample flow mapping to help you build your own. Afterwards, if you wish to submit your flow mapping so that other users can use it as an example and help other associations, please send it to <mail>methodologie@abc-transitionbascarbone.fr</mail>",
+      "info": "You can download a sample flow mapping to help you build your own. Afterwards, if you wish to submit your flow mapping so that other users can use it as an example and help other organizations, please send it to <mail>methodologie@abc-transitionbascarbone.fr</mail>",
+      "downloadSample": "Download sample"
+    },
+    "dependencyMatrix": {
+      "loading": "Loading document...",
+      "add": "Add a matrix",
+      "documentNotFound": "Document not found",
+      "download": "Download matrix",
+      "dependencyMatrices": "Risk and dependency matrices",
+      "documentSelector": "Risk and dependency matrix to display",
+      "invalidFileType": "Unsupported file type",
+      "noDocument": "No risk and dependency matrix to display",
+      "notAuthorized": "Action not authorized",
+      "removeDocument": "Remove risk and dependency matrix",
+      "Not authorized": "You are not allowed to do this action",
+      "info": "You can download a sample risk and dependency matrix to help you build your own. Afterwards, if you wish to submit your own matrix to help other organizations by providing a working base, please send it to <mail>methodologie@abc-transitionbascarbone.fr</mail>",
       "downloadSample": "Download sample"
     },
     "delete": {
@@ -809,12 +913,12 @@
       "DeplacementsDansLeCadreDUneMissionAssociativeSalaries": "Associative mission by employees travel",
       "DeplacementsDansLeCadreDUneMissionAssociativeBenevoles": "Associative mission by volunteers travel",
       "DeplacementsDesBeneficiaires": "Beneficiaries travel",
-      "DeplacementsFabricationDesVehicules": "Vehicle manufacturing travel",
+      "DeplacementsFabricationDesVehicules": "Vehicle manufacturing",
       "TransportDeMarchandises": "Goods travel",
       "Entrant": "Entering",
       "Sortant": "Exiting",
       "Interne": "Internal",
-      "TransportFabricationDesVehicules": "Vehicle manufacturing transport",
+      "TransportFabricationDesVehicules": "Vehicle manufacturing",
       "LocauxEtInfrastructures": "Premises and infrastructures",
       "ConstructionDesLocaux": "Construction of premises",
       "FroidEtClim": "Cooling and air conditioning",
@@ -1456,6 +1560,7 @@
       "name": "Name",
       "caracterisation": "Characterization",
       "emissionFactor": "Emission factor",
+      "activity": "Activity",
       "value": "Activity value",
       "sign": "Positive value only",
       "source": "Source",
@@ -1474,7 +1579,8 @@
       "shrink": "Shrink qualities",
       "comment": "Comments",
       "tag": "Tag",
-      "create": "Create {tag}"
+      "create": "Create {tag}",
+      "see": "See"
     },
     "cut": {
       "form": {
@@ -1614,6 +1720,18 @@
       "date": "Please enter a valid date (DD/MM/YYYY)",
       "phone": "Please enter a valid phone number",
       "required": "This field is required"
+    }
+  },
+  "email": {
+    "subject": {
+      "resetPassword": "Forgot password",
+      "newUser": "You have been invited to BC+",
+      "addedActiveUser": "You have been invited to a new environment on BC+",
+      "activation": "You have activated your account on BC+",
+      "activationRequest": "Access request to your BC+ organization",
+      "userOnStudyInvitation": "Added to the study {studyName}",
+      "contributorInvitation": "Contribution request on the study {studyName}",
+      "addedUsersByFile": "Authorization for user import"
     }
   }
 }

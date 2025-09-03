@@ -1,9 +1,10 @@
-import { Post, subPostsByPost } from '@/services/posts'
-import { SubPost } from '@prisma/client'
+import { BCPost, CutPost, Post, subPostsByPost, TiltPost } from '@/services/posts'
+import { AdditionalResultTypes, ResultType } from '@/services/study'
+import { Environment, SubPost } from '@prisma/client'
 
 export const getPost = (subPost?: SubPost) =>
   subPost
-    ? (Object.keys(subPostsByPost).find((post) => subPostsByPost[post as Post].includes(subPost)) as Post)
+    ? (Object.keys(subPostsByPost).find((post: string) => subPostsByPost[post as Post].includes(subPost)) as Post)
     : undefined
 
 export const flattenSubposts = (subPosts: Record<Post, SubPost[]>) =>
@@ -38,6 +39,22 @@ const withInfobulleList: (Post | SubPost)[] = [
 
 export const withInfobulle = (post: Post | SubPost) => withInfobulleList.includes(post)
 
-export const isPost = (post: Post | SubPost | 'total'): post is Post => {
+export const isPost = (post: string): post is Post => {
   return post in Post
+}
+
+export const getPostValues = (environment: Environment | undefined, type?: ResultType) => {
+  if (!environment) {
+    return BCPost
+  }
+
+  switch (environment) {
+    case Environment.TILT:
+      return type === AdditionalResultTypes.ENV_SPECIFIC_EXPORT ? TiltPost : BCPost
+    case Environment.CUT:
+      return CutPost
+    case Environment.BC:
+    default:
+      return BCPost
+  }
 }

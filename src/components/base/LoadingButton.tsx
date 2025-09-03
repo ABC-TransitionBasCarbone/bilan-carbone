@@ -13,12 +13,14 @@ export interface Props {
 
 const LoadingButton = ({ children, loading, disabled, iconButton, fullWidth, ...rest }: Props & ButtonProps) => {
   const t = useTranslations('spinner')
+  const endIcon = loading ? undefined : rest.endIcon
   return (
     <Button
       disabled={disabled || loading}
       className={!fullWidth ? styles.buttonFitContent : undefined}
       fullWidth={fullWidth}
       {...rest}
+      endIcon={endIcon}
     >
       {(!loading || !iconButton) && <>{children}</>}
       {loading && (

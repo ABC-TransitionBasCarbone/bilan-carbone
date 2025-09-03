@@ -1,26 +1,27 @@
-import { FullStudy } from '@/db/study'
-import StudyResultsContainerSummary from '../StudyResultsContainerSummary'
+import { ResultsByPost } from '@/services/results/consolidated'
+import { StudyResultUnit } from '@prisma/client'
+import { useTranslations } from 'next-intl'
+import ResultsTableAndGraphs from '../ResultsTableAndGraphs'
 import ConsolidatedResultsTable from './ConsolidatedResultsTable'
 
 interface Props {
-  study: FullStudy
-  studySite: string
-  withDependencies: boolean
-  validatedOnly: boolean
+  computedResults: ResultsByPost[]
+  resultsUnit: StudyResultUnit
 }
 
-const ConsolidatedResults = ({ study, studySite, withDependencies, validatedOnly }: Props) => {
+const ConsolidatedResults = ({ computedResults, resultsUnit }: Props) => {
+  const t = useTranslations('study.results')
+  const tResultUnits = useTranslations('study.results.units')
+
   return (
     <>
-      <div className="mb1">
-        <StudyResultsContainerSummary
-          study={study}
-          studySite={studySite}
-          withDependencies={withDependencies}
-          validatedOnly={validatedOnly}
-        />
-      </div>
-      <ConsolidatedResultsTable study={study} studySite={studySite} withDependencies={withDependencies} />
+      <ResultsTableAndGraphs
+        computedResults={computedResults}
+        resultsUnit={resultsUnit}
+        title={t('consolidatedChartTitle', { unit: tResultUnits(resultsUnit) })}
+        type="post"
+        TableComponent={ConsolidatedResultsTable}
+      />
     </>
   )
 }

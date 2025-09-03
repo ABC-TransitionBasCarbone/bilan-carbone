@@ -1,0 +1,21 @@
+<html>
+  <%- include('../partials/style'); %>
+  <body>
+    <div>
+      <p>Bonjour <span><%= userName %></span>,</p>
+      <br />
+      <p>
+        Vous avez été ajouté par <span><%= creatorName %></span> en tant que <span><%= role %></span> sur l'étude
+        <a href="<%= studyLink %>"><%= studyName %></a> pour l'organisation <span><%= organizationName %></span>.
+      </p>
+      <p>
+        Pour avoir acces à l'étude, vous pouvez vous connecter sur le BC+ comme habituellement sur
+        <a href="<%= link %>">ce lien</a>.
+      </p>
+      <br />
+      <p>Bonne journée,</p>
+      <p>Cordialement,</p>
+      <p>L'équipe BC+</p>
+    </div>
+  </body>
+</html>

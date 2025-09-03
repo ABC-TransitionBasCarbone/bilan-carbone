@@ -4,7 +4,8 @@ import LinkButton from '@/components/base/LinkButton'
 import StudyName from '@/components/study/card/StudyName'
 import BarChart from '@/components/study/charts/BarChart'
 import { FullStudy } from '@/db/study'
-import { CutPost } from '@/services/posts'
+import { getResultsValues } from '@/services/study'
+import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import styles from './ResultsContainer.module.css'
@@ -15,7 +16,12 @@ interface Props {
 
 const StudyResultsContainerSummaryCut = ({ study }: Props) => {
   const t = useTranslations('study')
+  const tPost = useTranslations('emissionFactors.post')
+  const tResults = useTranslations('study.results')
+
   const studySite = 'all'
+
+  const { computedResultsWithDep } = getResultsValues(study, tPost, studySite, false, Environment.CUT, tResults)
 
   return (
     <>
@@ -27,14 +33,12 @@ const StudyResultsContainerSummaryCut = ({ study }: Props) => {
       </div>
       <div className="grow">
         <BarChart
-          study={study}
-          studySite={studySite}
+          results={computedResultsWithDep}
+          resultsUnit={study.resultsUnit}
           height={450}
           showTitle={false}
           showLegend={false}
           showLabelsOnBars={false}
-          validatedOnly={false}
-          postValues={CutPost}
         />
       </div>
     </>

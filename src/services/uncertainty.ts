@@ -1,7 +1,7 @@
 // Documentation : https://www.bilancarbone-methode.com/4-comptabilisation/4.4-methode-destimation-des-incertitudes/4.4.2-comment-les-determiner
 
 import { FullStudy } from '@/db/study'
-import { EmissionFactor, Environment } from '@prisma/client'
+import { EmissionFactor } from '@prisma/client'
 import { getEmissionSourcesTotalCo2, sumEmissionSourcesUncertainty } from './emissionSource'
 import { StudyWithoutDetail } from './permissions/study'
 
@@ -79,14 +79,15 @@ export const getQualityStandardDeviation = (quality: Quality) => {
   return qualities.length > 0 ? sumQualities(qualities) : null
 }
 
+export const uncertaintyValues = [1.1199, 1.2621, 1.6361, 2.5164]
 export const getStandardDeviationRating = (standardDeviation: number) => {
-  if (standardDeviation < 1.1199) {
+  if (standardDeviation < uncertaintyValues[0]) {
     return 5
-  } else if (standardDeviation < 1.2621) {
+  } else if (standardDeviation < uncertaintyValues[1]) {
     return 4
-  } else if (standardDeviation < 1.6361) {
+  } else if (standardDeviation < uncertaintyValues[2]) {
     return 3
-  } else if (standardDeviation < 2.5164) {
+  } else if (standardDeviation < uncertaintyValues[3]) {
     return 2
   } else {
     return 1
@@ -102,11 +103,13 @@ export const getQualityRating = (quality: Quality) => {
 }
 
 export const getEmissionSourcesGlobalUncertainty = (
-  emissionSources: FullStudy['emissionSources'],
-  environment?: Environment,
+  emissionSources: (Pick<FullStudy['emissionSources'][number], 'emissionFactor'> & {
+    emissionValue: number
+    standardDeviation: number | null
+  })[],
 ) => {
-  const totalEmissions = getEmissionSourcesTotalCo2(emissionSources, environment)
-  const gsd = sumEmissionSourcesUncertainty(emissionSources, environment)
+  const totalEmissions = getEmissionSourcesTotalCo2(emissionSources)
+  const gsd = sumEmissionSourcesUncertainty(emissionSources)
   return getConfidenceInterval(totalEmissions, gsd)
 }
 

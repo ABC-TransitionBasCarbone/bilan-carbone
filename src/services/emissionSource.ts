@@ -1,9 +1,19 @@
 import { FullStudy } from '@/db/study'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
-import { EmissionSourceCaracterisation, Environment, StudyEmissionSource, SubPost } from '@prisma/client'
+import {
+  ControlMode,
+  EmissionSourceCaracterisation,
+  Environment,
+  Export,
+  Import,
+  StudyEmissionSource,
+  SubPost,
+} from '@prisma/client'
 import { StudyWithoutDetail } from './permissions/study'
 import { convertTiltSubPostToBCSubPost, Post, subPostsByPost } from './posts'
 import { getConfidenceInterval, getQualityStandardDeviation, getSpecificEmissionFactorQuality } from './uncertainty'
+
+type CaracterisationsBySubPost = Partial<Record<SubPost, EmissionSourceCaracterisation[]>>
 
 export const getEmissionSourceCompletion = (
   emissionSource: Pick<
@@ -19,10 +29,13 @@ export const getEmissionSourceCompletion = (
     | 'duration'
   >,
   study: FullStudy | StudyWithoutDetail,
-  emissionFactor: (FullStudy | StudyWithoutDetail)['emissionSources'][0]['emissionFactor'],
+  emissionFactor: (FullStudy | StudyWithoutDetail)['emissionSources'][number]['emissionFactor'],
+  environment: Environment | undefined,
 ) => {
   const mandatoryFields = ['name', 'type', 'value', 'emissionFactorId'] as (keyof typeof emissionSource)[]
-  const caracterisations = caracterisationsBySubPost[emissionSource.subPost]
+
+  const caracterisations = getCaracterisationsBySubPost(emissionSource.subPost, study.exports, environment)
+
   if (study.exports.length > 0 && caracterisations.length > 0) {
     mandatoryFields.push('caracterisation')
   }
@@ -56,12 +69,13 @@ export const canBeValidated = (
     | 'duration'
   >,
   study: FullStudy | StudyWithoutDetail,
-  emissionFactor: (FullStudy | StudyWithoutDetail)['emissionSources'][0]['emissionFactor'],
+  emissionFactor: (FullStudy | StudyWithoutDetail)['emissionSources'][number]['emissionFactor'],
+  environment: Environment | undefined,
 ) => {
-  return getEmissionSourceCompletion(emissionSource, study, emissionFactor) === 1
+  return getEmissionSourceCompletion(emissionSource, study, emissionFactor, environment) === 1
 }
 
-export const getStandardDeviation = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0]) => {
+export const getStandardDeviation = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][number]) => {
   if (!emissionSource.emissionFactor || emissionSource.value === null) {
     return null
   }
@@ -80,7 +94,7 @@ export const getStandardDeviation = (emissionSource: (FullStudy | StudyWithoutDe
   )
 }
 
-const getAlpha = (emission: number | null, confidenceInterval: number[] | null) => {
+export const getAlpha = (emission: number | null, confidenceInterval: number[] | null) => {
   if (emission === null || confidenceInterval === null || confidenceInterval[1] === undefined) {
     return null
   }
@@ -88,8 +102,11 @@ const getAlpha = (emission: number | null, confidenceInterval: number[] | null) 
   return (confidenceInterval[1] - emission) / emission
 }
 
-const getEmissionSourceEmission = (
-  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
+export const getEmissionSourceEmission = (
+  emissionSource: Pick<
+    (FullStudy | StudyWithoutDetail)['emissionSources'][number],
+    'emissionFactor' | 'value' | 'subPost' | 'depreciationPeriod'
+  >,
   environment?: Environment,
 ) => {
   if (!emissionSource.emissionFactor || emissionSource.value === null) {
@@ -110,22 +127,23 @@ const getEmissionSourceEmission = (
 }
 
 const getEmissionSourceMonetaryEmission = (
-  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
-  environment?: Environment,
+  emissionSource: Pick<FullStudy['emissionSources'][number], 'emissionFactor'> & { emissionValue: number },
+  excludeManualFE: boolean,
 ) => {
-  if (!emissionSource.emissionFactor || !emissionSource.emissionFactor.isMonetary) {
+  const isSpecific = excludeManualFE && emissionSource.emissionFactor?.importedFrom === Import.Manual
+  if (!emissionSource.emissionFactor || !emissionSource.emissionFactor.isMonetary || isSpecific) {
     return null
   }
-  return getEmissionSourceEmission(emissionSource, environment)
+  return emissionSource.emissionValue
 }
 
 export const getEmissionResults = (
-  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
-  environment?: Environment,
+  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][number],
+  environment: Environment,
 ) => {
   const emission = getEmissionSourceEmission(emissionSource, environment)
   if (emission === null) {
-    return null
+    return { emissionValue: 0, standardDeviation: null, confidenceInterval: null, alpha: null }
   }
 
   const standardDeviation = getStandardDeviation(emissionSource)
@@ -133,19 +151,19 @@ export const getEmissionResults = (
   const alpha = getAlpha(emission, confidenceInterval)
 
   return {
-    emission,
+    emissionValue: emission ?? 0,
     standardDeviation,
     confidenceInterval,
     alpha,
   }
 }
 
-export const sumStandardDeviations = (standardDeviations: { value: number; standardDeviation: number | null }[]) => {
-  const totalValue = standardDeviations.reduce((acc, { value }) => acc + value, 0)
+export const sumStandardDeviations = (results: { value: number; standardDeviation: number | null }[]) => {
+  const totalValue = results.reduce((acc, { value }) => acc + value, 0)
 
   return Math.exp(
     Math.sqrt(
-      standardDeviations.reduce((acc, { value, standardDeviation }) => {
+      results.reduce((acc, { value, standardDeviation }) => {
         const sensibility = value / totalValue
         const sd = Math.log(standardDeviation || 1)
         return acc + sensibility * sensibility * sd * sd
@@ -155,50 +173,29 @@ export const sumStandardDeviations = (standardDeviations: { value: number; stand
 }
 
 export const sumEmissionSourcesUncertainty = (
-  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'],
-  environment?: Environment,
+  emissionSources: { emissionValue: number; standardDeviation: number | null }[],
 ) => {
-  const results = emissionSource
-    .map((source) => getEmissionResults(source, environment))
-    .filter((result) => result !== null)
-    .map((result) => ({
-      value: result.emission,
-      standardDeviation: result.standardDeviation,
-    }))
+  const results = emissionSources.map((result) => ({
+    value: result.emissionValue,
+    standardDeviation: result.standardDeviation,
+  }))
 
   return sumStandardDeviations(results)
 }
 
-export const getEmissionSourcesTotalCo2 = (
-  emissionSources: FullStudy['emissionSources'],
-  environment: Environment | undefined,
-) =>
-  emissionSources.reduce(
-    (sum, emissionSource) => sum + (getEmissionSourceEmission(emissionSource, environment) || 0),
-    0,
-  )
+export const getEmissionSourcesTotalCo2 = (emissionSources: { emissionValue: number }[]) =>
+  emissionSources.reduce((sum, emissionSource) => sum + emissionSource.emissionValue, 0)
 
 export const getEmissionSourcesTotalMonetaryCo2 = (
-  emissionSources: FullStudy['emissionSources'],
-  environment?: Environment,
+  emissionSources: (Pick<FullStudy['emissionSources'][number], 'emissionFactor'> & { emissionValue: number })[],
+  excludeManualFE: boolean,
 ) =>
   emissionSources.reduce(
-    (sum, emissionSource) => sum + (getEmissionSourceMonetaryEmission(emissionSource, environment) || 0),
+    (sum, emissionSource) => sum + (getEmissionSourceMonetaryEmission(emissionSource, excludeManualFE) || 0),
     0,
   )
 
-export const getEmissionResultsCut = (
-  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
-  environment?: Environment,
-) => {
-  const result = getEmissionResults(emissionSource, environment)
-  if (result?.emission && emissionSource.depreciationPeriod && emissionSource.depreciationPeriod < 5) {
-    result.emission = result.emission / 5
-  }
-  return result
-}
-
-export const caracterisationsBySubPost: Record<SubPost, EmissionSourceCaracterisation[]> = {
+export const operationalCaracterisations: CaracterisationsBySubPost = {
   [SubPost.CombustiblesFossiles]: [EmissionSourceCaracterisation.Operated, EmissionSourceCaracterisation.NotOperated],
   [SubPost.CombustiblesOrganiques]: [EmissionSourceCaracterisation.Operated, EmissionSourceCaracterisation.NotOperated],
   [SubPost.ReseauxDeChaleurEtDeVapeur]: [
@@ -301,59 +298,168 @@ export const caracterisationsBySubPost: Record<SubPost, EmissionSourceCaracteris
     EmissionSourceCaracterisation.Rented,
     EmissionSourceCaracterisation.FinalClient,
   ],
-
-  [SubPost.ActivitesDeBureau]: [],
-  [SubPost.Equipe]: [],
-  [SubPost.Batiment]: [],
-  [SubPost.Fret]: [],
-  [SubPost.MobiliteSpectateurs]: [],
-  [SubPost.Energie]: [],
-  [SubPost.EquipesRecues]: [],
-  [SubPost.MaterielTechnique]: [],
-  [SubPost.AutreMateriel]: [],
-  [SubPost.Achats]: [],
-  [SubPost.Electromenager]: [],
-  [SubPost.DechetsOrdinaires]: [],
-  [SubPost.DechetsExceptionnels]: [],
-  [SubPost.MaterielDistributeurs]: [],
-  [SubPost.MaterielCinema]: [],
-  [SubPost.CommunicationDigitale]: [],
-  [SubPost.CaissesEtBornes]: [],
-  [SubPost.FroidEtClim]: [],
-  [SubPost.ActivitesAgricoles]: [],
-  [SubPost.ActivitesIndustrielles]: [],
-  [SubPost.DeplacementsDomicileTravailSalaries]: [],
-  [SubPost.DeplacementsDomicileTravailBenevoles]: [],
-  [SubPost.DeplacementsDansLeCadreDUneMissionAssociativeSalaries]: [],
-  [SubPost.DeplacementsDansLeCadreDUneMissionAssociativeBenevoles]: [],
-  [SubPost.DeplacementsDesBeneficiaires]: [],
-  [SubPost.DeplacementsFabricationDesVehicules]: [],
-  [SubPost.Entrant]: [],
-  [SubPost.Interne]: [],
-  [SubPost.Sortant]: [],
-  [SubPost.TransportFabricationDesVehicules]: [],
-  [SubPost.RepasPrisParLesSalaries]: [],
-  [SubPost.RepasPrisParLesBenevoles]: [],
-  [SubPost.EquipementsDesSalaries]: [],
-  [SubPost.ParcInformatiqueDesSalaries]: [],
-  [SubPost.EquipementsDesBenevoles]: [],
-  [SubPost.ParcInformatiqueDesBenevoles]: [],
-  [SubPost.UtilisationEnResponsabiliteConsommationDeBiens]: [],
-  [SubPost.UtilisationEnResponsabiliteConsommationNumerique]: [],
-  [SubPost.UtilisationEnResponsabiliteConsommationDEnergie]: [],
-  [SubPost.UtilisationEnResponsabiliteFuitesEtAutresConsommations]: [],
-  [SubPost.UtilisationEnDependanceConsommationDeBiens]: [],
-  [SubPost.UtilisationEnDependanceConsommationNumerique]: [],
-  [SubPost.UtilisationEnDependanceConsommationDEnergie]: [],
-  [SubPost.UtilisationEnDependanceFuitesEtAutresConsommations]: [],
-  [SubPost.TeletravailSalaries]: [],
-  [SubPost.TeletravailBenevoles]: [],
 }
 
-export const getCaracterisationBySubPostWithEnv = (subPost: SubPost, environment?: Environment) => {
+export const financialCaracterisations: CaracterisationsBySubPost = {
+  [SubPost.CombustiblesFossiles]: [
+    EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSimpleRent,
+    EmissionSourceCaracterisation.NotHeldOther,
+  ],
+  [SubPost.CombustiblesOrganiques]: [
+    EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSimpleRent,
+    EmissionSourceCaracterisation.NotHeldOther,
+  ],
+  [SubPost.ReseauxDeChaleurEtDeVapeur]: [
+    EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSimpleRent,
+    EmissionSourceCaracterisation.NotHeldOther,
+  ],
+  [SubPost.ReseauxDeFroid]: [
+    EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSimpleRent,
+    EmissionSourceCaracterisation.NotHeldOther,
+  ],
+  [SubPost.Electricite]: [
+    EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSimpleRent,
+    EmissionSourceCaracterisation.NotHeldOther,
+  ],
+  [SubPost.Agriculture]: [
+    EmissionSourceCaracterisation.HeldProcedeed,
+    EmissionSourceCaracterisation.HeldFugitive,
+    EmissionSourceCaracterisation.NotHeldSimpleRent,
+    EmissionSourceCaracterisation.NotHeldOther,
+  ],
+  [SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas]: [
+    EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSimpleRent,
+    EmissionSourceCaracterisation.NotHeldOther,
+  ],
+  [SubPost.EmissionsLieesALaProductionDeFroid]: [
+    EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSimpleRent,
+    EmissionSourceCaracterisation.NotHeldOther,
+  ],
+  [SubPost.EmissionsLieesAuxProcedesIndustriels]: [
+    EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSimpleRent,
+    EmissionSourceCaracterisation.NotHeldOther,
+  ],
+  [SubPost.AutresEmissionsNonEnergetiques]: [
+    EmissionSourceCaracterisation.HeldProcedeed,
+    EmissionSourceCaracterisation.HeldFugitive,
+    EmissionSourceCaracterisation.NotHeldSimpleRent,
+    EmissionSourceCaracterisation.NotHeldOther,
+  ],
+  [SubPost.MetauxPlastiquesEtVerre]: [EmissionSourceCaracterisation.Held],
+  [SubPost.PapiersCartons]: [EmissionSourceCaracterisation.Held],
+  [SubPost.MateriauxDeConstruction]: [EmissionSourceCaracterisation.Held],
+  [SubPost.ProduitsChimiquesEtHydrogene]: [EmissionSourceCaracterisation.Held],
+  [SubPost.NourritureRepasBoissons]: [EmissionSourceCaracterisation.Held],
+  [SubPost.MatiereDestineeAuxEmballages]: [EmissionSourceCaracterisation.Held],
+  [SubPost.AutresIntrants]: [EmissionSourceCaracterisation.Held],
+  [SubPost.BiensEtMatieresEnApprocheMonetaire]: [EmissionSourceCaracterisation.Held],
+  [SubPost.AchatsDeServices]: [EmissionSourceCaracterisation.Held],
+  [SubPost.UsagesNumeriques]: [EmissionSourceCaracterisation.Held],
+  [SubPost.ServicesEnApprocheMonetaire]: [EmissionSourceCaracterisation.Held],
+  [SubPost.DechetsDEmballagesEtPlastiques]: [EmissionSourceCaracterisation.Held],
+  [SubPost.DechetsOrganiques]: [EmissionSourceCaracterisation.Held],
+  [SubPost.DechetsOrduresMenageres]: [EmissionSourceCaracterisation.Held],
+  [SubPost.DechetsDangereux]: [EmissionSourceCaracterisation.Held],
+  [SubPost.DechetsBatiments]: [EmissionSourceCaracterisation.Held],
+  [SubPost.DechetsFuitesOuEmissionsNonEnergetiques]: [EmissionSourceCaracterisation.Held],
+  [SubPost.AutresDechets]: [EmissionSourceCaracterisation.Held],
+  [SubPost.EauxUsees]: [EmissionSourceCaracterisation.Held],
+  [SubPost.FretEntrant]: [
+    EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSupported,
+    EmissionSourceCaracterisation.NotHeldNotSupported,
+  ],
+  [SubPost.FretInterne]: [
+    EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSupported,
+    EmissionSourceCaracterisation.NotHeldNotSupported,
+  ],
+  [SubPost.FretSortant]: [
+    EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSupported,
+    EmissionSourceCaracterisation.NotHeldNotSupported,
+  ],
+  [SubPost.DeplacementsDomicileTravail]: [
+    EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSimpleRent,
+    EmissionSourceCaracterisation.NotHeldOther,
+  ],
+  [SubPost.DeplacementsProfessionnels]: [
+    EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSimpleRent,
+    EmissionSourceCaracterisation.NotHeldOther,
+  ],
+  [SubPost.DeplacementsVisiteurs]: [
+    EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSimpleRent,
+    EmissionSourceCaracterisation.NotHeldOther,
+  ],
+  [SubPost.Batiments]: [EmissionSourceCaracterisation.Held],
+  [SubPost.AutresInfrastructures]: [EmissionSourceCaracterisation.Held],
+  [SubPost.Equipements]: [EmissionSourceCaracterisation.Held],
+  [SubPost.Informatique]: [EmissionSourceCaracterisation.Held],
+  [SubPost.UtilisationEnResponsabilite]: [
+    EmissionSourceCaracterisation.Rented,
+    EmissionSourceCaracterisation.FinalClient,
+  ],
+  [SubPost.UtilisationEnDependance]: [],
+  [SubPost.InvestissementsFinanciersRealises]: [EmissionSourceCaracterisation.Held],
+  [SubPost.ConsommationDEnergieEnFinDeVie]: [
+    EmissionSourceCaracterisation.Rented,
+    EmissionSourceCaracterisation.FinalClient,
+  ],
+  [SubPost.TraitementDesDechetsEnFinDeVie]: [
+    EmissionSourceCaracterisation.Rented,
+    EmissionSourceCaracterisation.FinalClient,
+  ],
+  [SubPost.FuitesOuEmissionsNonEnergetiques]: [
+    EmissionSourceCaracterisation.Rented,
+    EmissionSourceCaracterisation.FinalClient,
+  ],
+  [SubPost.TraitementDesEmballagesEnFinDeVie]: [
+    EmissionSourceCaracterisation.Rented,
+    EmissionSourceCaracterisation.FinalClient,
+  ],
+}
+
+export const getAllCaracterisationsBySubPost = (controlMode: ControlMode): CaracterisationsBySubPost => {
+  switch (controlMode) {
+    case ControlMode.Financial:
+      return financialCaracterisations
+    case ControlMode.Operational:
+      return operationalCaracterisations
+    default:
+      return operationalCaracterisations
+  }
+}
+
+export const getCaracterisationsBySubPost = (
+  subPost: SubPost,
+  exports: FullStudy['exports'],
+  environment: Environment | undefined,
+) => {
+  let subPostToUse = subPost
   if (environment === Environment.TILT) {
     const bcSubpost = convertTiltSubPostToBCSubPost(subPost)
-    return caracterisationsBySubPost[bcSubpost]
+    subPostToUse = bcSubpost
   }
-  return caracterisationsBySubPost[subPost]
+
+  const begesExport = exports.find((exp) => exp.type === Export.Beges)
+  if (!begesExport) {
+    return []
+  }
+
+  const controlMode = begesExport.control || 'Operational'
+  const caracterisationMap = getAllCaracterisationsBySubPost(controlMode)
+  const caracterisations = caracterisationMap[subPostToUse]
+
+  return caracterisations || []
 }

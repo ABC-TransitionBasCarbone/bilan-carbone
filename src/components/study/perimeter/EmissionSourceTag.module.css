@@ -1,3 +1,16 @@
+.families {
+  display: flex;
+}
+
+.familyNameButton {
+  height: 2.5rem;
+  min-width: 0;
+}
+
+.addFamilyButton {
+  height: 2.5rem;
+}
+
 .tags {
   display: grid;
   grid-auto-flow: column;
@@ -5,28 +18,23 @@
   gap: 0.5rem;
   max-height: 8rem;
   overflow-x: auto;
-  padding-bottom: 0.5rem;
   width: max-content;
 }
 
 .tag {
-  max-width: 250px;
+  max-width: 16rem;
   width: fit-content;
+  border: 1px solid var(--neutral-500);
 }
 
 .form {
-  max-width: 300px;
+  max-width: 30rem;
 }
 
 .colorInput {
   max-height: fit-content;
 }
 
-.container {
-  display: flex;
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
-  justify-content: space-between;
-  width: max-content;
-  gap: 1rem;
+.selector {
+  width: 10rem;
 }

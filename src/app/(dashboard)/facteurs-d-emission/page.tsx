@@ -1,5 +1,5 @@
 import withAuth from '@/components/hoc/withAuth'
-import EmissionsFactorPage from '@/components/pages/EmissionFactors'
+import EmissionsFactorsPage from '@/components/pages/EmissionFactors'
 import NotFound from '@/components/pages/NotFound'
 import { getOrganizationVersionById } from '@/db/organization'
 import { hasAccessToEmissionFactor } from '@/services/permissions/environment'
@@ -19,7 +19,13 @@ const EmissionFactors = async ({ user, searchParams }: Props) => {
     return <NotFound />
   }
 
-  return <EmissionsFactorPage userOrganizationId={userOrganizationVersion?.organizationId} manualOnly={manualOnly} />
+  return (
+    <EmissionsFactorsPage
+      userOrganizationId={userOrganizationVersion?.organizationId}
+      manualOnly={manualOnly}
+      environment={user.environment}
+    />
+  )
 }
 
 export default withAuth(EmissionFactors)

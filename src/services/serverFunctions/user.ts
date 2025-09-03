@@ -56,7 +56,7 @@ import { accountWithUserToUserSession, userSessionToDbUser } from '@/utils/userA
 import { DeactivatableFeature, Environment, Organization, Role, User, UserChecklist, UserStatus } from '@prisma/client'
 import jwt from 'jsonwebtoken'
 import { UserSession } from 'next-auth'
-import { isValidAssociationSiret } from '../associationApi'
+import { getCompanyName, isValidAssociationSiret } from '../associationApi'
 import { auth, dbActualizedAuth } from '../auth'
 import { getUserCheckList } from '../checklist'
 import {
@@ -140,6 +140,7 @@ export const sendInvitation = async (
             `${creator.firstName} ${creator.lastName}`,
             existingAccount.user.firstName,
             roleOnStudy,
+            env,
           )
         : sendNewContributorInvitationEmail(
             email,
@@ -331,7 +332,7 @@ export const activateEmail = async (email: string, userEnv: Environment | undefi
   withServerResponse('activateEmail', async () => {
     const env = userEnv || Environment.BC
 
-    const user = await getUserByEmail(email)
+    const user = await getUserByEmail(email.toLowerCase())
     const account = (await getAccountById(
       user?.accounts.find((a) => a.environment === env)?.id || '',
     )) as AccountWithUser
@@ -432,9 +433,9 @@ export const addUserChecklistItem = async (step: UserChecklist) =>
     }
   })
 
-export const sendAddedUsersAndProccess = async (results: Record<string, string>[]) =>
+export const sendAddedUsersAndProccess = async (results: Record<string, string>[], env: Environment) =>
   withServerResponse('sendAddedUsersAndProccess', async () => {
-    sendAddedUsersByFile(results)
+    sendAddedUsersByFile(results, env)
     processUsers(results, new Date())
   })
 
@@ -581,10 +582,21 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
       if (environment === Environment.TILT && !(await isValidAssociationSiret(siretOrCNC))) {
         throw new Error(NOT_ASSOCIATION_SIRET)
       }
+
       organization = await getRawOrganizationBySiret(siretOrCNC)
+      let companyName = ''
+      if (environment === Environment.CUT && !organization?.id) {
+        companyName = (await getCompanyName(siretOrCNC)) || ''
+        if (companyName === '') {
+          throw new Error(UNKNOWN_CNC)
+        }
+      }
       organizationVersion = organization?.id
         ? await getOrganizationVersionByOrganizationIdAndEnvironment(organization.id, environment)
-        : await createOrganizationWithVersion({ wordpressId: siretOrCNC, name: '' }, { environment: environment })
+        : await createOrganizationWithVersion(
+            { wordpressId: siretOrCNC, name: companyName },
+            { environment: environment },
+          )
     } else {
       organization = await getRawOrganizationBySiteCNC(siretOrCNC)
       organizationVersion = organization?.id

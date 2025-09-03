@@ -7,7 +7,7 @@ export const allowedFlowFileTypes = ['application/pdf', 'image/png', 'image/jpeg
 
 export const maxAllowedFileSize = 5 * MB
 
-export const download = (fileContent: string[] | Buffer<ArrayBufferLike>[], fileName: string, fileType: string) => {
+export const download = (fileContent: string[] | ArrayBuffer[], fileName: string, fileType: string) => {
   const blob = new Blob(fileContent, { type: fileType })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
@@ -17,21 +17,14 @@ export const download = (fileContent: string[] | Buffer<ArrayBufferLike>[], file
   a.click()
 }
 
-export const downloadFromUrl = async (url: string, fileName: string) => {
-  const response = await fetch(url)
-  if (!response.ok) {
-    return response.statusText
-  }
-
-  const fileBlob = await response.blob()
-  const downloadUrl = window.URL.createObjectURL(fileBlob)
+export const downloadFromUrl = (url: string, fileName: string) => {
+  const proxyUrl = `/api/download?url=${encodeURIComponent(url)}&fileName=${encodeURIComponent(fileName)}`
   const a = document.createElement('a')
-  a.href = downloadUrl
+  a.href = proxyUrl
   a.download = fileName
   document.body.appendChild(a)
   a.click()
   document.body.removeChild(a)
-  window.URL.revokeObjectURL(downloadUrl)
 }
 
 export const isAllowedFileType = async (file: File, allowedTypes: string[]) => {

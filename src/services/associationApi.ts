@@ -18,9 +18,24 @@ export const isValidAssociationSiret = async (siret: string) => {
     return false
   }
 
-  if (result?.data?.identite?.lib_forme_juridique !== 'Association déclarée') {
+  if (!result?.data?.identite?.lib_forme_juridique?.includes('Association déclarée')) {
     return false
   }
 
   return true
+}
+
+export const getCompanyName = async (siret: string) => {
+  const trimmedSiret = siret.trim()
+  if (!trimmedSiret || trimmedSiret.length !== 14) {
+    return null
+  }
+
+  const result = await axios.get(`${process.env.INSEE_SERVICE_URL}/${trimmedSiret}`, {
+    headers: {
+      'X-INSEE-Api-Key-Integration': process.env.INSEE_API_SECRET,
+    },
+  })
+
+  return result.data.etablissement?.uniteLegale?.denominationUniteLegale as string
 }

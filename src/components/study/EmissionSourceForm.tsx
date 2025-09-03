@@ -21,7 +21,7 @@ import AddIcon from '@mui/icons-material/Add'
 import CopyIcon from '@mui/icons-material/ContentCopy'
 import EditIcon from '@mui/icons-material/Edit'
 import HideIcon from '@mui/icons-material/VisibilityOff'
-import { Autocomplete, Chip, FormControl, InputLabel, MenuItem, TextField } from '@mui/material'
+import { Autocomplete, Chip, FormControl, InputLabel, MenuItem, Popper, TextField } from '@mui/material'
 import {
   EmissionSourceCaracterisation,
   EmissionSourceTag,
@@ -66,7 +66,7 @@ interface Props {
   subPost: SubPost
   selectedFactor?: EmissionFactorWithMetaData
   update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null | string[]) => void
-  environment: Environment | undefined
+  environment: Environment
   caracterisations: EmissionSourceCaracterisation[]
   mandatoryCaracterisation: boolean
   status: EmissionSourcesStatus
@@ -115,7 +115,7 @@ const EmissionSourceForm = ({
   const qualities = qualityKeys.map((column) => emissionSource[column])
   const specificFEQualities = specificFEQualityKeys.map((column) => emissionSource[column])
 
-  const emissionResults = useMemo(() => getEmissionResults(emissionSource), [emissionSource])
+  const emissionResults = useMemo(() => getEmissionResults(emissionSource, environment), [emissionSource, environment])
 
   const qualityRating = useMemo(
     () => (selectedFactor ? getQualityRating(getSpecificEmissionFactorQuality(emissionSource)) : null),
@@ -154,7 +154,12 @@ const EmissionSourceForm = ({
   const getEmissionSourceTags = async () => {
     const response = await getEmissionSourceTagsByStudyId(studyId)
     if (response.success && response.data) {
-      setTags(response.data)
+      setTags(
+        response.data.reduce(
+          (tags, family) => tags.concat(family.emissionSourceTags).sort((a, b) => a.name.localeCompare(b.name)),
+          [] as EmissionSourceTag[],
+        ),
+      )
     }
   }
 
@@ -184,7 +189,13 @@ const EmissionSourceForm = ({
       <p className={classNames(styles.subTitle, 'mt1 mb-2 justify-between')}>
         {t('mandartoryFields')}
         {hasEditionRights(userRoleOnStudy) && (
-          <Button onClick={() => setOpen(true)} title={t('duplicate')} aria-label={t('duplicate')} color="secondary">
+          <Button
+            onClick={() => setOpen(true)}
+            title={t('duplicate')}
+            aria-label={t('duplicate')}
+            color="secondary"
+            data-testid="duplicate-emission-source"
+          >
             <CopyIcon />
           </Button>
         )}
@@ -389,38 +400,54 @@ const EmissionSourceForm = ({
 
       <p className={classNames(styles.subTitle, 'mt1 mb-2')}>{t('optionalFields')}</p>
       <div className={classNames(styles.row, 'flex', expandedQuality || !canShrink ? 'flex-col' : '')}>
-        <Autocomplete
-          multiple
-          disabled={!canEdit}
-          data-testid="emission-source-tag"
-          options={tags.map((tag) => ({ label: tag.name, value: tag.id, color: tag.color }))}
-          value={emissionSource.emissionSourceTags.map((tag) => ({ label: tag.name, value: tag.id, color: tag.color }))}
-          onChange={(_, options: Option[]) => {
-            update(
-              'emissionSourceTags',
-              options.map((tag) => tag.value),
-            )
-          }}
-          renderOption={(props, option) => {
-            const { key, ...optionProps } = props
-
-            return (
-              <li key={key} {...optionProps}>
-                <Chip label={option.label} size="small" sx={{ bgcolor: option.color }} />
-              </li>
-            )
-          }}
-          renderInput={(params) => <TextField {...params} label={t('form.tag')} />}
-          renderValue={(value: Option[], getItemProps) =>
-            value.map((option: Option, index: number) => {
-              const { key, ...itemProps } = getItemProps({ index })
-              return (
-                <Chip variant="outlined" label={option.label} key={key} sx={{ bgcolor: option.color }} {...itemProps} />
+        <div className={classNames(styles.optionnalFields, 'grow flex gapped')}>
+          <Autocomplete
+            className={styles.tagsContainer}
+            multiple
+            disabled={!canEdit}
+            data-testid="emission-source-tag"
+            options={tags
+              .filter((tag) => !emissionSource.emissionSourceTags.some((sourceTag) => tag.id === sourceTag.id))
+              .map((tag) => ({ label: tag.name, value: tag.id, color: tag.color }))}
+            value={emissionSource.emissionSourceTags.map((tag) => ({
+              label: tag.name,
+              value: tag.id,
+              color: tag.color,
+            }))}
+            onChange={(_, options: Option[]) => {
+              update(
+                'emissionSourceTags',
+                options.map((tag) => tag.value),
               )
-            })
-          }
-        />
-        <div className={classNames(styles.gapped, styles.optionnalFields, 'grow flex')}>
+            }}
+            renderOption={(props, option) => {
+              const { key, ...optionProps } = props
+
+              return (
+                <li key={key} {...optionProps}>
+                  <Chip label={option.label} size="small" sx={{ bgcolor: option.color }} data-testid="tag-option" />
+                </li>
+              )
+            }}
+            slots={{
+              popper: (props) => <Popper {...props} placement="bottom-start" className={styles.tagOptions} />,
+            }}
+            renderInput={(params) => <TextField {...params} label={t('form.tag')} />}
+            renderValue={(value: Option[], getItemProps) =>
+              value.map((option: Option, index: number) => {
+                const { key, ...itemProps } = getItemProps({ index })
+                return (
+                  <Chip
+                    variant="outlined"
+                    label={option.label}
+                    key={key}
+                    sx={{ bgcolor: option.color }}
+                    {...itemProps}
+                  />
+                )
+              })
+            }
+          />
           <TextField
             className="grow"
             disabled={!canEdit}
@@ -452,29 +479,27 @@ const EmissionSourceForm = ({
         />
       </div>
       <div className="flex-row justify-between">
-        {emissionResults && (
-          <div
-            className={classNames(styles.row, 'flex mr-2 grow justify-start align-end')}
-            data-testid="emission-source-result"
-          >
-            {emissionResults.confidenceInterval && (
-              <div className="flex-col">
-                <p>{t('results.confiance')}</p>
-                <p>
-                  [{formatNumber(emissionResults.confidenceInterval[0])};{' '}
-                  {formatNumber(emissionResults.confidenceInterval[1])}] ({t('in')} {tResultUnits(studyUnit)})
-                </p>
-              </div>
-            )}
-            {emissionResults.alpha !== null && (
-              <div className={styles.alpha}>
-                <p>{t('results.alpha')}</p>
-                <p>{formatNumber(emissionResults.alpha * 100, 2)}%</p>
-              </div>
-            )}
-          </div>
-        )}
-        <div className={classNames(styles.gapped, styles.button, 'grow justify-end mt1')}>
+        <div
+          className={classNames(styles.row, 'flex mr-2 grow justify-start align-end')}
+          data-testid="emission-source-result"
+        >
+          {emissionResults.confidenceInterval && (
+            <div className="flex-col">
+              <p>{t('results.confiance')}</p>
+              <p>
+                [{formatNumber(emissionResults.confidenceInterval[0])};{' '}
+                {formatNumber(emissionResults.confidenceInterval[1])}] ({t('in')} {tResultUnits(studyUnit)})
+              </p>
+            </div>
+          )}
+          {emissionResults.alpha !== null && (
+            <div className={styles.alpha}>
+              <p>{t('results.alpha')}</p>
+              <p>{formatNumber(emissionResults.alpha * 100, 2)}%</p>
+            </div>
+          )}
+        </div>
+        <div className={classNames(styles.button, 'grow justify-end mt1 gapped')}>
           {canEdit && <DeleteEmissionSource emissionSource={emissionSource} />}
           {canValidate && (
             <Button
@@ -522,9 +547,11 @@ const EmissionSourceForm = ({
             ))}
           </Select>
         </div>
-        <div className={classNames(styles.gapped, 'grow justify-end mt1')}>
+        <div className="grow justify-end mt1 gapped">
           <Button onClick={() => setOpen(false)}>{t('duplicateDialog.cancel')}</Button>
-          <Button onClick={duplicateEmissionSource}>{t('duplicateDialog.confirm')}</Button>
+          <Button onClick={duplicateEmissionSource} data-testid="duplicate-confirm">
+            {t('duplicateDialog.confirm')}
+          </Button>
         </div>
       </Modal>
     </>

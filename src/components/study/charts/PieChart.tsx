@@ -1,14 +1,12 @@
 'use client'
 
-import { FullStudy } from '@/db/study'
-import { useChartComputations } from '@/hooks/useChartComputations'
-import { BCPost, CutPost, Post } from '@/services/posts'
-import { isPost } from '@/utils/post'
+import { BasicTypeCharts, formatValueAndUnit, getColor } from '@/utils/charts'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { Typography, useTheme } from '@mui/material'
-import { PieChart as MuiPieChart } from '@mui/x-charts'
+import { PieChart as MuiPieChart, PieChartProps } from '@mui/x-charts'
+import { StudyResultUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import styles from './PieChart.module.css'
 
 const PIE_CHART_CONSTANTS = {
@@ -18,71 +16,74 @@ const PIE_CHART_CONSTANTS = {
   PIE_INNER_RADIUS: 0,
 } as const
 
-interface Props {
-  study: FullStudy
-  studySite?: string
+interface Props<T> extends Omit<PieChartProps, 'series'> {
+  resultsUnit: StudyResultUnit
+  results: T[]
   title?: string
   height?: number
   showTitle?: boolean
   showLabelsOnPie?: boolean
-  validatedOnly?: boolean
-  postValues: typeof Post | typeof CutPost | typeof BCPost
+  onlyChildren?: boolean
 }
 
-const PieChart = ({
-  study,
-  studySite = 'all',
+const PieChart = <T extends BasicTypeCharts>({
+  resultsUnit,
+  results,
   title,
   height = 400,
   showTitle = true,
   showLabelsOnPie = true,
-  validatedOnly = false,
-  postValues,
-}: Props) => {
-  const tResults = useTranslations('study.results')
+  onlyChildren = false,
+  ...pieChartProps
+}: Props<T>) => {
+  const tUnits = useTranslations('study.results.units')
+
   const theme = useTheme()
 
-  const { chartFormatter, computeResults } = useChartComputations({
-    study,
-    studySite,
-    validatedOnly,
-    postValues,
-  })
+  const getColorForPie = useCallback((post?: string, color?: string) => getColor(theme, post, color), [theme])
+  const formatData = useCallback(
+    ({ value, label, post, color }: Pick<T, 'value' | 'label' | 'post' | 'color'>) => {
+      const convertedValue = value / STUDY_UNIT_VALUES[resultsUnit]
 
-  const pieData = useMemo(
-    () =>
-      computeResults
-        .map(({ label, value, post }) => {
-          const convertedValue = value / STUDY_UNIT_VALUES[study.resultsUnit]
-          return {
-            label: `${label} - ${chartFormatter(convertedValue)}`,
-            value: convertedValue,
-            color: isPost(post) ? theme.custom.postColors[post].light : theme.palette.primary.light,
-          }
-        })
-        .filter((computeResult) => computeResult.value > 0),
-    [computeResults, theme, chartFormatter, study.resultsUnit],
+      return {
+        label,
+        value: convertedValue,
+        color: getColorForPie(post, color),
+      }
+    },
+    [getColorForPie, resultsUnit],
   )
+
+  const pieData = useMemo(() => {
+    if (onlyChildren) {
+      return results
+        .flatMap((result) => result.children)
+        .map((result) => formatData(result))
+        .filter((computeResult) => computeResult.value > 0)
+    }
+    return results
+      .filter((result) => result.post !== 'total' && result.label !== 'total')
+      .map((result) => formatData(result))
+      .filter((computeResult) => computeResult.value > 0)
+  }, [formatData, onlyChildren, results])
 
   return (
     <div className={styles.pieChart}>
-      {pieData.length > 0 ? (
-        <MuiPieChart
-          series={[
-            {
-              data: pieData,
-              arcLabel: showLabelsOnPie ? (item) => chartFormatter(item.value, false) : undefined,
-              arcLabelMinAngle: PIE_CHART_CONSTANTS.ARC_LABEL_MIN_ANGLE,
-              arcLabelRadius: PIE_CHART_CONSTANTS.ARC_LABEL_RADIUS,
-              innerRadius: PIE_CHART_CONSTANTS.PIE_INNER_RADIUS,
-              outerRadius: PIE_CHART_CONSTANTS.PIE_OUTER_RADIUS,
-            },
-          ]}
-          height={height}
-        />
-      ) : (
-        <Typography align="center">{tResults('noData')}</Typography>
-      )}
+      <MuiPieChart
+        series={[
+          {
+            data: pieData,
+            arcLabel: showLabelsOnPie ? (item) => formatValueAndUnit(item.value, tUnits(resultsUnit)) : undefined,
+            arcLabelMinAngle: PIE_CHART_CONSTANTS.ARC_LABEL_MIN_ANGLE,
+            arcLabelRadius: PIE_CHART_CONSTANTS.ARC_LABEL_RADIUS,
+            innerRadius: PIE_CHART_CONSTANTS.PIE_INNER_RADIUS,
+            outerRadius: PIE_CHART_CONSTANTS.PIE_OUTER_RADIUS,
+            valueFormatter: (item) => formatValueAndUnit(item.value, tUnits(resultsUnit)),
+          },
+        ]}
+        height={height}
+        {...pieChartProps}
+      />
       {showTitle && (
         <Typography variant="h6" align="center" className={styles.chartTitle}>
           {title}

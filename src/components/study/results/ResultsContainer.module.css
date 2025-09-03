@@ -78,3 +78,22 @@
     color: var(--primary-800);
   }
 }
+
+.gapped {
+  gap: 2rem;
+}
+
+.analysisContainer {
+  gap: 2rem;
+
+  @media screen and (max-width: 75rem) {
+    flex-direction: column;
+  }
+}
+
+.totalBegesGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 17rem);
+  gap: 2rem;
+  justify-content: center;
+}

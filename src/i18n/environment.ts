@@ -11,9 +11,6 @@ export const getEnvironment = async (): Promise<Environment> => {
 }
 
 export const switchEnvironment = async (value: Environment) => {
-  if (process.env.CI) {
-    return
-  }
   const cookies = await getCookies()
   cookies.set(COOKIE_NAME, value)
 }

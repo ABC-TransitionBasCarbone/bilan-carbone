@@ -34,7 +34,7 @@ import { ControlMode, Environment, Export, SiteCAUnit, StudyRole } from '@prisma
 import classNames from 'classnames'
 import { useFormatter, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm, UseFormReturn, useWatch } from 'react-hook-form'
 import DeleteStudySiteModal from './DeleteStudySiteModal'
 import StudyExportsForm from './StudyExportsForm'
@@ -177,16 +177,23 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit }:
     }
   }
 
+  const updateStudyExport = useCallback(
+    async (exportType: Export, control: ControlMode | false) => {
+      await callServerFunction(() => changeStudyExports(study.id, exportType, control))
+    },
+    [callServerFunction, study.id],
+  )
+
   useEffect(() => {
     if (exportsValues && exportsForm.getValues().exports) {
       Object.entries(exportsForm.getValues().exports).forEach(([exportType, value]) => {
         if (exportsValues[exportType as Export] !== value) {
-          changeStudyExports(study.id, exportType as Export, value)
+          updateStudyExport(exportType as Export, value)
         }
       })
     }
     setExportsValues(exportsForm.getValues().exports)
-  }, [exportsWatch])
+  }, [exportsForm, exportsValues, exportsWatch, updateStudyExport])
 
   useEffect(() => {
     onDateSubmit(form.getValues())
@@ -320,6 +327,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit }:
       )}
       <StudyExportsForm
         form={exportsForm}
+        study={study}
         showControl={showControl}
         setGlossary={setGlossary}
         t={t}

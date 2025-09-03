@@ -109,7 +109,13 @@ const NewStudyForm = ({ user, accounts, form, duplicateStudyId }: Props) => {
           <FormControlLabel value="true" control={<Radio />} label={t('public')} />
           <FormControlLabel value="false" control={<Radio />} label={t('private')} />
         </FormRadio>
-        <StudyExportsForm form={form} showControl={showControl} setGlossary={setGlossary} t={t} />
+        <StudyExportsForm
+          form={form}
+          showControl={showControl}
+          setGlossary={setGlossary}
+          t={t}
+          duplicateStudyId={duplicateStudyId}
+        />
       </GlobalNewStudyForm>
     </Block>
   )

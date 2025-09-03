@@ -14,6 +14,7 @@ import {
   getAccountByEmailAndOrganizationVersionId,
   getAccountsUserLevel,
 } from '@/db/account'
+import { prismaClient } from '@/db/client'
 import { findCncByNumeroAuto, updateNumberOfProgrammedFilms } from '@/db/cnc'
 import { createDocument, deleteDocument } from '@/db/document'
 import {
@@ -23,6 +24,7 @@ import {
   getEmissionFactorVersionsBySource,
   getStudyEmissionFactorSources,
 } from '@/db/emissionFactors'
+import { createEmissionSourceTagFamilyAndRelatedTags, getFamilyTagsForStudy } from '@/db/emissionSource'
 import {
   getOrganizationVersionById,
   getOrganizationWithSitesById,
@@ -35,7 +37,6 @@ import {
   createContributorOnStudy,
   createStudy,
   createStudyEmissionSource,
-  createStudyExport,
   createUserOnStudy,
   deleteAccountOnStudy,
   deleteContributor,
@@ -55,6 +56,7 @@ import {
   updateStudySiteData,
   updateStudySites,
   updateUserOnStudy,
+  upsertStudyExport,
 } from '@/db/study'
 import { addUser, getUserApplicationSettings, getUserByEmail, getUserSourceById, UserWithAccounts } from '@/db/user'
 import { LocaleType } from '@/i18n/config'
@@ -72,8 +74,10 @@ import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import {
   ControlMode,
   Document,
+  DocumentCategory,
   EmissionFactor,
   EmissionFactorImportVersion,
+  EmissionSourceCaracterisation,
   Export,
   Import,
   Prisma,
@@ -89,6 +93,7 @@ import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import { v4 as uuidv4 } from 'uuid'
 import { auth, dbActualizedAuth } from '../auth'
+import { getCaracterisationsBySubPost } from '../emissionSource'
 import { allowedFlowFileTypes, isAllowedFileType } from '../file'
 import { ALREADY_IN_STUDY, NOT_AUTHORIZED } from '../permissions/check'
 import { isInOrgaOrParentFromId } from '../permissions/organization'
@@ -221,13 +226,19 @@ export const createStudyCommand = async (
     const userCAUnit = (await getUserApplicationSettings(session.user.accountId))?.caUnit
     const caUnit = CA_UNIT_VALUES[userCAUnit || defaultCAUnit]
 
-    const emissionSourceTags = {
-      createMany: {
-        data:
-          session.user.environment in defaultEmissionSourceTags
-            ? defaultEmissionSourceTags[session.user.environment as keyof typeof defaultEmissionSourceTags] || []
-            : [],
-      },
+    const environmentTags =
+      defaultEmissionSourceTags[session.user.environment as keyof typeof defaultEmissionSourceTags]
+    const emissionSourceTagFamilies: Prisma.EmissionSourceTagFamilyCreateNestedManyWithoutStudyInput = {
+      create: [
+        {
+          name: 'défaut',
+          emissionSourceTags: environmentTags
+            ? {
+                create: environmentTags.map((tag) => ({ name: tag.name, color: tag.color })),
+              }
+            : undefined,
+        },
+      ],
     }
 
     const study = {
@@ -270,7 +281,7 @@ export const createStudyCommand = async (
             .filter((site) => site !== undefined),
         },
       },
-      emissionSourceTags,
+      emissionSourceTagFamilies,
     } satisfies Prisma.StudyCreateInput
 
     if (!(await canCreateSpecificStudy(session.user, study, organizationVersionId))) {
@@ -559,7 +570,67 @@ export const changeStudyExports = async (studyId: string, type: Export, control:
     if (control === false) {
       return deleteStudyExport(studyId, type)
     }
-    return createStudyExport(studyId, type, control)
+    return upsertStudyExport(studyId, type, control)
+  })
+
+export const updateCaracterisationsForControlMode = async (studyId: string, newControlMode: ControlMode) =>
+  withServerResponse('updateCaracterisationsForControlMode', async () => {
+    const [session, study] = await Promise.all([dbActualizedAuth(), getStudy(studyId)])
+    if (!session || !session.user || !study.success || !study.data) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    if (!hasEditionRights(getAccountRoleOnStudy(session.user, study.data))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const emissionSources = study.data.emissionSources
+    const exportsWithNewControlMode = study.data.exports.map((exp) => ({
+      ...exp,
+      control: newControlMode,
+    }))
+
+    await Promise.all(
+      emissionSources
+        .map((emissionSource) => {
+          if (!emissionSource.caracterisation && !emissionSource.validated) {
+            return null
+          }
+
+          const validCaracterisations = getCaracterisationsBySubPost(
+            emissionSource.subPost,
+            exportsWithNewControlMode || [],
+            session.user.environment,
+          )
+
+          const isValidForNewControlMode = validCaracterisations.includes(
+            emissionSource.caracterisation as EmissionSourceCaracterisation,
+          )
+
+          if (!isValidForNewControlMode) {
+            if (validCaracterisations.length === 1) {
+              const newCaracterisation = validCaracterisations[0]
+              const shouldKeepValidation = emissionSource.caracterisation && emissionSource.validated
+
+              return prismaClient.studyEmissionSource.update({
+                where: { id: emissionSource.id },
+                data: {
+                  caracterisation: newCaracterisation,
+                  validated: shouldKeepValidation,
+                },
+              })
+            } else {
+              return prismaClient.studyEmissionSource.update({
+                where: { id: emissionSource.id },
+                data: { caracterisation: null, validated: false },
+              })
+            }
+          }
+          return null
+        })
+        .filter(Boolean),
+    )
+
+    return
   })
 
 const getOrCreateUserAndSendStudyInvite = async (
@@ -834,8 +905,8 @@ export const deleteStudyCommand = async ({ id, name }: DeleteCommand) =>
     await deleteStudy(id)
   })
 
-export const addFlowToStudy = async (studyId: string, file: File) =>
-  withServerResponse('addFlowToStudy', async () => {
+export const addDocumentToStudy = async (studyId: string, file: File, documentCategory?: DocumentCategory) =>
+  withServerResponse('addDocumentToStudy', async () => {
     const session = await auth()
     const allowedType = await isAllowedFileType(file, allowedFlowFileTypes)
     if (!allowedType) {
@@ -854,12 +925,13 @@ export const addFlowToStudy = async (studyId: string, file: File) =>
         study: { connect: { id: studyId } },
         bucketKey: butcketUploadResult.data.key,
         bucketETag: butcketUploadResult.data.ETag || '',
+        documentCategory,
       })
     }
   })
 
-export const deleteFlowFromStudy = async (document: Document, studyId: string) =>
-  withServerResponse('deleteFlowFromStudy', async () => {
+export const deleteDocumentFromStudy = async (document: Document, studyId: string) =>
+  withServerResponse('deleteDocumentFromStudy', async () => {
     if (!(await canAccessFlowFromStudy(document.id, studyId)) || !(await canEditStudyFlows(studyId))) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -1152,6 +1224,37 @@ export const duplicateStudyCommand = async (
       await updateStudyEmissionFactorVersion(createdStudyId, sourceVersion.source, sourceVersion.importVersionId)
     }
 
+    // Check if control modes have changed to determine if we should clear characterizations
+    const sourceExportsByType = sourceStudy.exports.reduce(
+      (acc, exp) => {
+        acc[exp.type] = exp.control
+        return acc
+      },
+      {} as Record<Export, ControlMode>,
+    )
+
+    const hasControlModeChanged = (exportType: Export) => {
+      const sourceControl = sourceExportsByType[exportType]
+      const newControl = studyCommand.exports[exportType]
+      return sourceControl && newControl && sourceControl !== newControl
+    }
+
+    const shouldClearCaracterisations = Object.values(Export).some(hasControlModeChanged)
+
+    const tagFamilies = await createEmissionSourceTagFamilyAndRelatedTags(
+      createdStudyId,
+      sourceStudy.emissionSourceTagFamilies.map((tagFamily) => ({
+        familyName: tagFamily.name,
+        tags: tagFamily.emissionSourceTags.map((tag) => ({
+          name: tag.name,
+          color: tag.color ?? '',
+        })),
+      })),
+      session.user.environment,
+    )
+
+    const oldTagFamilies = await getFamilyTagsForStudy(sourceStudy.id)
+
     const sourceEmissionSources = sourceStudy.emissionSources
     for (const sourceEmissionSource of sourceEmissionSources) {
       const sourceSiteId = sourceEmissionSource.studySite.site.id
@@ -1179,14 +1282,29 @@ export const duplicateStudyCommand = async (
           feGeographicRepresentativeness: sourceEmissionSource.feGeographicRepresentativeness,
           feTemporalRepresentativeness: sourceEmissionSource.feTemporalRepresentativeness,
           feCompleteness: sourceEmissionSource.feCompleteness,
-          caracterisation: sourceEmissionSource.caracterisation,
+          // Clear characterization if control mode changed, otherwise keep it
+          caracterisation: shouldClearCaracterisations ? null : sourceEmissionSource.caracterisation,
           study: { connect: { id: createdStudyId } },
           emissionFactor: sourceEmissionSource.emissionFactor
             ? { connect: { id: sourceEmissionSource.emissionFactor.id } }
             : undefined,
           studySite: { connect: { id: targetStudySiteId } },
           validated: false,
-        } as Prisma.StudyEmissionSourceCreateInput
+          emissionSourceTags: {
+            connect: sourceEmissionSource.emissionSourceTags
+              .map((emissionSourceTag) => {
+                const oldTagFamily = oldTagFamilies.find((tagFamily) => tagFamily.id === emissionSourceTag.familyId)
+                const foundTagFamily = tagFamilies.find((tagFamily) => tagFamily.name === oldTagFamily?.name)
+                const foundTag = foundTagFamily?.emissionSourceTags.find((tag) => tag.name === emissionSourceTag.name)
+
+                if (!foundTag) {
+                  return null
+                }
+                return { id: foundTag?.id }
+              })
+              .filter((tag) => tag !== null),
+          },
+        }
 
         await createStudyEmissionSource(emissionSourceData)
       }
@@ -1295,6 +1413,7 @@ export const duplicateStudyEmissionSource = async (
       studySite: { connect: { id: studySite } },
       studySiteId: undefined,
       validated: false,
+      emissionSourceTags: { connect: emissionSource.emissionSourceTags.map((tag) => ({ id: tag.id })) },
     } as Prisma.StudyEmissionSourceCreateInput
 
     await createStudyEmissionSource(data)

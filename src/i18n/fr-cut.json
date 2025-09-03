@@ -1,14 +1,14 @@
 {
   "navigation": {
     "organizations": "Mes Empreintes",
-    "organization": "Mes Collaborateur·ices",
+    "organization": "Mes Collaborateur·rices",
     "information": "Mes Cinémas",
-    "team": "Mes Collaborateur·ices"
+    "team": "Mes Collaborateur·rices"
   },
   "home": {
     "navigation": {
       "collaborators": {
-        "title": "Mes Collaborateur·ices :",
+        "title": "Mes Collaborateur·rices :",
         "message": "Retrouvez ici la liste des personnes autorisées à intervenir sur vos différentes empreintes carbone"
       },
       "footprints": {
@@ -52,13 +52,13 @@
     "createFirstStudy": "Créer ma première empreinte",
     "see": "Voir mon empreinte",
     "validatedSources": "<data>{validated} / {total}</data> Questions répondues",
-    "validatedOnlyDescription": "Pour chaque empreinte, un ou plusieurs validateur·ices peuvent être définis. Ceux-ci ont la responsabilité de valider les sources d'émission lorsque celles-ci auront été renseignées par les contributeur·ices et éditeur·ices de l'étude. Par défaut, seules les émissions validées apparaissent au sein de vos résultats, mais vous pouvez changer ce comportement via le menu \"Paramètres\".",
+    "validatedOnlyDescription": "Pour chaque empreinte, un ou plusieurs validateur·rices peuvent être définis. Ceux-ci ont la responsabilité de valider les sources d'émission lorsque celles-ci auront été renseignées par les contributeur·rices et éditeur·rices de l'étude. Par défaut, seules les émissions validées apparaissent au sein de vos résultats, mais vous pouvez changer ce comportement via le menu \"Paramètres\".",
     "selectSite": "Avant de remplir les données, choisissez un cinéma",
     "lastStudyTitle": "Dernière empreinte en date",
     "navigation": {
       "framing": "Données générales",
       "organizations": "Mes cinémas",
-      "team": "Mes Collaborateur·ices",
+      "team": "Mes Collaborateur·rices",
       "accounting": "Mon Empreinte"
     },
     "new": {
@@ -78,7 +78,7 @@
       }
     },
     "export": {
-      "export": "Exporter mes cinémas"
+      "export": "Exporter mes résultats"
     },
     "results": {
       "info": "Cette empreinte carbone simplifiée vise à estimer les émissions de gaz à effet de serre de votre activité, et par conséquent votre contribution au dérèglement climatique ainsi que vos potentielles dépendance aux énergies fossiles qui sont des vulnérabilités. \n\nL'Union Européenne s'est engagée, en ratifiant l'Accord de Paris, à la neutralité carbone d'ici 2050. Pour contribuer à cet objectif, votre cinéma devrait réduire son impact de 5% par an. \n\nNous vous invitons donc à refaire cette empreinte carbone simplifiée l'année prochaine pour vérifier que vous êtes sur la bonne trajectoire !",
@@ -141,7 +141,7 @@
   "role": {
     "DEFAULT": "Collaborateur·rice",
     "ADMIN_description": "Un administrateur·rice possède tous les droits sur le compte de l'organisation ainsi que sur l'ensemble des études pour son organisation (qu'elles soient publiques ou privées).",
-    "DEFAULT_description": "Un collaborateur·ice peut modifier des études. Il n'a pas accès aux paramètres de l'organisation."
+    "DEFAULT_description": "Un collaborateur·rice peut modifier des études. Il n'a pas accès aux paramètres de l'organisation."
   },
   "login": {
     "welcome": "Bienvenue sur",
@@ -150,6 +150,18 @@
     "question": "Opération soutenue par l'État dans le cadre du dispositif « Soutenir les alternatives vertes 2 » de France 2030, opéré par la Banque des territoires (Caisse des Dépôts)",
     "form": {
       "activate": "Créer mon compte"
+    }
+  },
+  "email": {
+    "subject": {
+      "resetPassword": "Mot de passe oublié",
+      "newUser": "Vous avez été invité sur Count",
+      "addedActiveUser": "Vous avez été invité sur un nouvel environnement Count",
+      "activation": "Vous avez activé votre compte sur Count",
+      "activationRequest": "Demande d'accès à votre organisation Count",
+      "userOnStudyInvitation": "Ajout sur l'étude {studyName}",
+      "contributorInvitation": "Demande de contribution sur l'étude {studyName}",
+      "addedUsersByFile": "Autorisation pour l'ajout d'utilisateurs"
     }
   }
 }

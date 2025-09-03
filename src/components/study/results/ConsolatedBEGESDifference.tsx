@@ -3,12 +3,12 @@ import Modal from '@/components/modals/Modal'
 import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
-import { getEmissionSourcesTotalCo2 } from '@/services/emissionSource'
-import { Post, subPostsByPost } from '@/services/posts'
+import { getEmissionResults } from '@/services/emissionSource'
+import { Post } from '@/services/posts'
 import { computeBegesResult, getBegesEmissionTotal } from '@/services/results/beges'
 import { computeResultsByPost } from '@/services/results/consolidated'
-import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
+import { getPost } from '@/utils/post'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import LightbulbIcon from '@mui/icons-material/LightbulbOutlined'
 import TrendingUpIcon from '@mui/icons-material/TrendingUpOutlined'
@@ -29,7 +29,6 @@ interface Props {
 }
 
 const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validatedOnly }: Props) => {
-  const { environment } = useAppEnvironmentStore()
   const t = useTranslations('study.results.difference')
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('study.results.units')
@@ -38,8 +37,10 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
   const [open, setOpen] = useState(false)
   const router = useRouter()
 
+  const environment = useMemo(() => study.organizationVersion.environment, [study])
+
   const navigateToEmissionSource = (emissionSourceId: string, subPost: SubPost) => {
-    const post = Object.keys(subPostsByPost).find((key) => subPostsByPost[key as Post].includes(subPost)) as Post
+    const post = getPost(subPost)
     if (post) {
       const url = `/etudes/${study.id}/comptabilisation/saisie-des-donnees/${post}#emission-source-${emissionSourceId}`
       router.push(url)
@@ -63,7 +64,7 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
 
   const utilisationEnDependance = computedResults
     .find((result) => result.post === Post.UtilisationEtDependance)
-    ?.subPosts.find((subPost) => subPost.post === SubPost.UtilisationEnDependance)
+    ?.children.find((subPost) => subPost.post === SubPost.UtilisationEnDependance)
   const hasUtilisationEnDependance = !!utilisationEnDependance && utilisationEnDependance.value !== 0
   // BEGES doesn't include "Utilisation en dépendance", BC does, so BEGES - BC = negative
   const utilisationEnDependanceValue = utilisationEnDependance
@@ -96,7 +97,7 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
           return null
         }
 
-        const bcValue = Math.round(getEmissionSourcesTotalCo2([emissionSource], environment) / unitValue)
+        const bcValue = Math.round(getEmissionResults(emissionSource, environment).emissionValue / unitValue)
         const begesValue = Math.round(getBegesEmissionTotal(emissionSource, emissionFactor) / unitValue)
         const difference = begesValue - bcValue
 
@@ -117,12 +118,20 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
 
   const missingCaract = useMemo(
     () =>
-      study.emissionSources.filter(
-        (emissionSource) =>
-          (emissionSource.validated || !validatedOnly) &&
-          !emissionSource.caracterisation &&
-          emissionSource.subPost !== SubPost.UtilisationEnDependance,
-      ),
+      study.emissionSources.filter((emissionSource) => {
+        if (
+          (!emissionSource.validated && validatedOnly) ||
+          emissionSource.subPost === SubPost.UtilisationEnDependance
+        ) {
+          return false
+        }
+
+        if (!emissionSource.caracterisation) {
+          return true
+        }
+
+        return false
+      }),
     [study.emissionSources, validatedOnly],
   )
 
@@ -137,12 +146,12 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
         return total
       }
 
-      const bcEmissionTotal = Math.round(getEmissionSourcesTotalCo2([emissionSource], environment) / unitValue)
+      const bcEmissionTotal = Math.round(getEmissionResults(emissionSource, environment).emissionValue / unitValue)
       return total - bcEmissionTotal
     }, 0)
   }, [missingCaract, emissionFactorsWithParts, unitValue, environment])
 
-  const maxListedEmissionSources = 10
+  const maxButtonEmissionSources = 10
 
   return begesTotal !== computedTotal ? (
     <>
@@ -261,22 +270,23 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
                 </p>
                 <div className={classNames(styles.missingSourcesList, 'wrap')}>
                   {missingCaract
-                    .filter((_, i) => i < maxListedEmissionSources)
+                    .filter((_, i) => i < maxButtonEmissionSources)
                     .map((emissionSource) => (
                       <Button
                         key={`caract-emission-source-${emissionSource.id}`}
                         onClick={() => navigateToEmissionSource(emissionSource.id, emissionSource.subPost)}
                         color="secondary"
+                        variant="outlined"
                         size="small"
                         className={styles.missingSourceButton}
                       >
                         {emissionSource.name}
                       </Button>
                     ))}
-                  {missingCaract.length > maxListedEmissionSources && (
-                    <span className={styles.additionalCount}>
-                      +{missingCaract.length - maxListedEmissionSources} {t('additionalMissing')}
-                    </span>
+                  {missingCaract.length > maxButtonEmissionSources && (
+                    <div className={classNames(styles.additionalMissingSources, 'mt-2')}>
+                      {t('additionalMissing', { count: missingCaract.length - maxButtonEmissionSources })}
+                    </div>
                   )}
                 </div>
               </div>

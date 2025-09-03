@@ -6,11 +6,26 @@ import { checkLevel, getAllowedLevels } from '@/services/study'
 import { isAdminOnOrga } from '@/utils/organization'
 import { getUserRoleOnPublicStudy } from '@/utils/study'
 import { isAdmin } from '@/utils/user'
-import { ControlMode, Environment, Export, Import, Level, StudyRole, SubPost, type Prisma } from '@prisma/client'
+import {
+  ControlMode,
+  EmissionSourceTag,
+  EmissionSourceTagFamily,
+  Environment,
+  Export,
+  Import,
+  Level,
+  StudyRole,
+  SubPost,
+  type Prisma,
+} from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { getAccountOrganizationVersions } from './account'
 import { prismaClient } from './client'
 import { getOrganizationVersionById, OrganizationVersionWithOrganization } from './organization'
+
+export type EmissionSourceTagFamilyWithTags = Omit<EmissionSourceTagFamily, 'createdAt' | 'updatedAt'> & {
+  emissionSourceTags: Omit<EmissionSourceTag, 'familyId'>[]
+}
 
 export const createStudy = async (data: Prisma.StudyCreateInput, environment: Environment) => {
   const dbStudy = await prismaClient.study.create({ data })
@@ -92,7 +107,7 @@ const fullStudyInclude = {
           id: true,
           name: true,
           color: true,
-          studyId: true,
+          familyId: true,
         },
       },
     },
@@ -188,13 +203,21 @@ const fullStudyInclude = {
       },
     },
   },
-  emissionSourceTags: {
+  emissionSourceTagFamilies: {
     select: {
       id: true,
       name: true,
-      color: true,
       studyId: true,
+      emissionSourceTags: {
+        select: {
+          id: true,
+          familyId: true,
+          name: true,
+          color: true,
+        },
+      },
     },
+    orderBy: [{ name: 'asc' }, { createdAt: 'asc' }],
   },
 } satisfies Prisma.StudyInclude
 
@@ -507,8 +530,24 @@ export const deleteStudy = async (id: string) => {
   return prismaClient.$transaction(async (transaction) => {
     const studySites = await getStudySites(id)
 
+    const tagFamilies = await transaction.emissionSourceTagFamily.findMany({
+      where: { studyId: id },
+      select: { id: true },
+    })
+
+    await Promise.all(
+      tagFamilies.map((tagFamily) => {
+        transaction.emissionSourceTagFamily.update({
+          where: { id: tagFamily.id },
+          data: { emissionSourceTags: undefined },
+        })
+      }),
+    )
+
     await Promise.all([
       transaction.userOnStudy.deleteMany({ where: { studyId: id } }),
+      transaction.emissionSourceTag.deleteMany({ where: { familyId: { in: tagFamilies.map((f) => f.id) } } }),
+      transaction.emissionSourceTagFamily.deleteMany({ where: { studyId: id } }),
       transaction.studyEmissionSource.deleteMany({ where: { studyId: id } }),
       transaction.contributors.deleteMany({ where: { studyId: id } }),
       transaction.studySite.deleteMany({ where: { studyId: id } }),
@@ -607,8 +646,12 @@ export const getSourceLatestImportVersionId = async (source: Import, transaction
     orderBy: { createdAt: 'desc' },
   })
 
-export const createStudyExport = async (studyId: string, type: Export, control: ControlMode) =>
-  prismaClient.studyExport.create({ data: { studyId, type, control } })
+export const upsertStudyExport = async (studyId: string, type: Export, control: ControlMode) =>
+  prismaClient.studyExport.upsert({
+    where: { studyId_type: { studyId, type } },
+    update: { control },
+    create: { studyId, type, control },
+  })
 
 export const deleteStudyExport = async (studyId: string, type: Export) =>
   prismaClient.studyExport.delete({ where: { studyId_type: { studyId, type } } })

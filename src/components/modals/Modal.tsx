@@ -32,15 +32,14 @@ const Modal = ({ className, label, open, onClose, title, children, actions, big 
     aria-describedby={`${label}-modal-description`}
   >
     <Box className={classNames(styles.box, className, 'flex-col', { [styles.big]: big })}>
-      <div className="justify-end">
+      <div className="justify-between align-center mb2">
+        <Typography id={`${label}-modal-title`} variant="h6" sx={{ fontWeight: 'bold' }}>
+          {title}
+        </Typography>
         <IconButton color="primary" onClick={onClose}>
           <CloseIcon />
         </IconButton>
       </div>
-
-      <Typography id={`${label}-modal-title`} variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
-        {title}
-      </Typography>
 
       <div className={classNames(styles.content, 'flex-col grow mb1')} id={`${label}-modal-description`}>
         {children}

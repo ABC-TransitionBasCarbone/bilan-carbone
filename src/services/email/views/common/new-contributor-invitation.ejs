@@ -1,0 +1,29 @@
+<html>
+  <%- include('../partials/style'); %>
+  <body>
+    <div>
+      <p>Bonjour,</p>
+      <br />
+      <p>Bienvenue sur le BC+ !</p>
+      <p>
+        Vous avez été ajouté par <span><%= creatorName %></span> en tant que contributeur sur l'étude
+        <a href="<%= studyLink %>"><%= studyName %></a> pour l'organisation <span><%= organizationName %></span> sur le
+        BC+.
+      </p>
+      <p>
+        Afin de contributer, vous pouvez finaliser la création de votre compte sur <a href="<%= link %>">ce lien</a>.
+        Vous pourrez ensuite contributer à l'étude sur l'outil.
+      </p>
+      <br />
+      <p>
+        En cas de question vous pouvez consulter
+        <a href="https://association-pour-la-transition-1.gitbook.io/bc+">notre FAQ</a> ou nous envoyer un email à
+        <a href="mailto:<%= support %>"><%= support %></a>.
+      </p>
+      <br />
+      <p>Bonne journée,</p>
+      <p>Cordialement,</p>
+      <p>L'équipe BC+</p>
+    </div>
+  </body>
+</html>

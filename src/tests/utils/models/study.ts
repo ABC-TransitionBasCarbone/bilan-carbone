@@ -1,5 +1,16 @@
 import { FullStudy } from '@/db/study'
-import { Import, Level, Prisma, Study, StudyResultUnit, StudyRole } from '@prisma/client'
+import {
+  ControlMode,
+  Export,
+  Import,
+  Level,
+  Prisma,
+  Study,
+  StudyResultUnit,
+  StudyRole,
+  SubPost,
+  Unit,
+} from '@prisma/client'
 import { mockedOrganizationVersion, mockedOrganizationVersionId } from './organization'
 import { mockedAccountId, mockedUser } from './user'
 
@@ -34,7 +45,7 @@ export const mockedFullStudy = {
   emissionFactorVersions: [],
   exports: [],
   organizationVersion: mockedOrganizationVersion,
-  emissionSourceTags: [],
+  emissionSourceTagFamilies: [],
 }
 
 export const mockedStudySite = {
@@ -201,15 +212,17 @@ export const getMockedDuplicateStudyCommand = (overrides = {}) => ({
   ...overrides,
 })
 
-export const getMockeFullStudy = (overrides = {}) => ({
+export const getMockeFullStudy = (overrides = {}): FullStudy => ({
   id: TEST_IDS.sourceStudy,
   name: 'Source Study',
   resultsUnit: StudyResultUnit.K,
   organizationVersionId: TEST_IDS.orgVersion,
+  exports: [{ type: Export.Beges, control: ControlMode.Operational }],
   emissionFactorVersions: [
     {
       source: Import.BaseEmpreinte,
       importVersionId: TEST_IDS.importVersion,
+      id: 'fe_version_id',
     },
   ],
   emissionSources: [
@@ -221,22 +234,85 @@ export const getMockeFullStudy = (overrides = {}) => ({
         id: TEST_IDS.studySite,
         site: { id: TEST_IDS.site, name: 'Test Site' },
       },
-      emissionFactor: { id: TEST_IDS.emissionFactor },
+      emissionFactor: {
+        id: TEST_IDS.emissionFactor,
+        importedFrom: Import.Manual,
+        totalCo2: 81,
+        geographicRepresentativeness: 5,
+        completeness: 5,
+        reliability: 5,
+        technicalRepresentativeness: 5,
+        temporalRepresentativeness: 5,
+        importedId: '4',
+        unit: Unit.GWH,
+        isMonetary: false,
+      },
+      emissionSourceTags: [],
+      validated: true,
+      subPost: SubPost.Achats,
+      depreciationPeriod: 5,
+      caracterisation: null,
+      emissionFactorId: null,
+      reliability: null,
+      technicalRepresentativeness: null,
+      geographicRepresentativeness: null,
+      temporalRepresentativeness: null,
+      completeness: null,
+      source: null,
+      type: null,
+      comment: null,
+      duration: null,
+      hectare: null,
+      feReliability: null,
+      feTechnicalRepresentativeness: null,
+      feGeographicRepresentativeness: null,
+      feTemporalRepresentativeness: null,
+      feCompleteness: null,
+      contributor: null,
     },
   ],
   allowedUsers: [
     {
-      id: TEST_IDS.userStudy,
-      account: { user: { email: TEST_EMAILS.teamMember } },
-      role: StudyRole.Editor,
+      account: {
+        id: TEST_IDS.account,
+        user: {
+          email: TEST_EMAILS.teamMember,
+          id: TEST_IDS.userStudy,
+          level: 'Initial',
+        },
+        organizationVersionId: TEST_IDS.orgVersion,
+        readerOnly: false,
+      },
+      role: StudyRole.Validator,
+      accountId: TEST_IDS.account,
     },
   ],
   contributors: [
     {
-      id: TEST_IDS.contributorStudy,
-      account: { user: { email: TEST_EMAILS.contributor } },
-      subPost: 'test-subpost',
+      accountId: 'contributor-account-id',
+      account: {
+        id: 'contributor-account-id',
+        user: {
+          email: TEST_EMAILS.contributor,
+          id: '',
+        },
+        organizationVersionId: TEST_IDS.orgVersion,
+      },
+      subPost: SubPost.Achats,
     },
   ],
+  emissionSourceTagFamilies: [],
   ...overrides,
+  organizationVersion: mockedOrganizationVersion,
+  sites: [],
+  oldBCId: null,
+  createdById: TEST_IDS.userStudy,
+  isPublic: false,
+  startDate: new Date(),
+  endDate: new Date(),
+  realizationStartDate: null,
+  realizationEndDate: null,
+  level: 'Initial',
+  createdAt: new Date(),
+  updatedAt: new Date(),
 })

@@ -24,6 +24,10 @@
   margin-bottom: 1rem;
 }
 
+.mb0 {
+  margin-bottom: 0rem;
+}
+
 .mb-2 {
   margin-bottom: 0.5rem;
 }
@@ -40,6 +44,10 @@
   margin-right: 1rem;
 }
 
+.mr2 {
+  margin-right: 2rem;
+}
+
 .mt-2 {
   margin-top: 0.5rem;
 }
@@ -50,6 +58,10 @@
 
 .mt2 {
   margin-top: 2rem;
+}
+
+.mt3 {
+  margin-top: 3rem;
 }
 
 .ml2 {
@@ -88,12 +100,20 @@
   padding: 0.5rem;
 }
 
+.p0 {
+  padding: 0rem !important;
+}
+
 .pr1 {
   padding-right: 1rem;
 }
 
 .pt1 {
   padding-top: 1rem;
+}
+
+.pl1 {
+  padding-left: 1rem;
 }
 
 .pb1 {
@@ -104,9 +124,23 @@
   padding-bottom: 2rem;
 }
 
+.pb-2 {
+  padding-bottom: 0.5rem;
+}
+
+.px2 {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
 .px1 {
   padding-left: 1rem;
   padding-right: 1rem;
+}
+
+.px2 {
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 
 .px-2 {
@@ -129,4 +163,16 @@
 
 .gapped1 {
   gap: 1rem;
+}
+
+.gapped2 {
+  gap: 2rem;
+}
+
+.r1 {
+  right: 1rem;
+}
+
+.relative {
+  position: relative;
 }

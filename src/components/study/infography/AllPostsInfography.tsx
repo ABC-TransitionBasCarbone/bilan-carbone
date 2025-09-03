@@ -13,8 +13,8 @@ interface Props {
 
 const AllPostsInfography = ({ study, data }: Props) => {
   const findSubPost = (subPost: SubPost) => {
-    const post = data.find((post) => post.subPosts.find((sb) => sb.post === subPost))
-    const foundSubPost = post?.subPosts.find((sb) => sb.post === subPost)
+    const post = data.find((post) => post.children.find((sb) => sb.post === subPost))
+    const foundSubPost = post?.children.find((sb) => sb.post === subPost)
     return foundSubPost
   }
 

@@ -6,6 +6,21 @@ describe('Real use case: BC V8_10', () => {
   it('should correctly compute results', () => {
     cy.login()
     cy.visit('/etudes/91bb3826-2be7-4d56-bb9b-363f4d9af62f/comptabilisation/resultats')
+
+    // emissions
+    cy.getByTestId('withDep-total-result').invoke('text').should('contain', '280') // 280.45
+    cy.getByTestId('withoutDep-total-result').invoke('text').should('contain', '280')
+    cy.getByTestId('dependency-result-budget').scrollIntoView().invoke('text').should('contain', '0') // 0.28044686001857144
+    cy.getByTestId('responsability-result-budget').scrollIntoView().invoke('text').should('contain', '0')
+    cy.getByTestId('dependency-result-etp').scrollIntoView().invoke('text').should('contain', '8') // 8.012767429102041
+    cy.getByTestId('responsability-result-etp').scrollIntoView().invoke('text').should('contain', '8')
+
+    // monetary ratios
+    cy.getByTestId('results-monetary-ratio').scrollIntoView().invoke('text').should('contain', '36,99') // 36.99251508579199
+    cy.getByTestId('results-non-spe-monetary-ratio').scrollIntoView().invoke('text').should('contain', '36,99')
+
+    cy.getByTestId('post-table').click()
+
     cy.getByTestId('consolidated-results-table-row')
       .eq(0)
       .within(() => {

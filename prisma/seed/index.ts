@@ -1,3 +1,4 @@
+import { defaultEmissionSourceTags } from '@/constants/emissionSourceTags'
 import { environmentsWithChecklist } from '@/constants/environments'
 import { reCreateBegesRules } from '@/db/beges'
 import { signPassword } from '@/services/auth'
@@ -47,6 +48,9 @@ const users = async () => {
   await prisma.emissionFactorPart.deleteMany()
   await prisma.emissionFactorMetaData.deleteMany()
   await prisma.emissionFactor.deleteMany()
+
+  await prisma.emissionSourceTag.deleteMany()
+  await prisma.emissionSourceTagFamily.deleteMany()
 
   await prisma.userOnStudy.deleteMany()
   await prisma.studyExport.deleteMany()
@@ -794,6 +798,19 @@ const users = async () => {
         contributors: {
           create: { accountId: contributor.id, subPost: SubPost.MetauxPlastiquesEtVerre },
         },
+        emissionSourceTagFamilies: {
+          create: [
+            {
+              name: 'défaut',
+              emissionSourceTags: {
+                create: (defaultEmissionSourceTags[Environment.TILT] ?? []).map((tag) => ({
+                  name: tag.name,
+                  color: tag.color,
+                })),
+              },
+            },
+          ],
+        },
       },
     }),
   )
@@ -828,6 +845,19 @@ const users = async () => {
           createMany: {
             data: [{ role: StudyRole.Validator, accountId: defaultUserWithAccount.accounts[0].account.id }],
           },
+        },
+        emissionSourceTagFamilies: {
+          create: [
+            {
+              name: 'défaut',
+              emissionSourceTags: {
+                create: (defaultEmissionSourceTags[Environment.TILT] ?? []).map((tag) => ({
+                  name: tag.name,
+                  color: tag.color,
+                })),
+              },
+            },
+          ],
         },
       },
     }),
@@ -870,7 +900,7 @@ program
   .option('-i, --import-factors <value>', 'Import BaseCarbone emission factors')
   .parse(process.argv)
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
   main(program.opts())
     .then(async () => {
       await prisma.$disconnect()

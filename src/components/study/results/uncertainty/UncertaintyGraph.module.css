@@ -1,0 +1,14 @@
+.moreInfoButton {
+  cursor: pointer;
+  color: var(--mui-palette-secondary-light);
+  &:hover {
+    text-decoration: underline;
+    color: var(--mui-palette-secondary-dark);
+  }
+}
+
+.icon {
+  width: auto;
+  height: 50%;
+  color: white;
+}

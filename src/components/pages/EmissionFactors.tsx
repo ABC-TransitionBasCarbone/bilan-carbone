@@ -1,3 +1,4 @@
+import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { Suspense } from 'react'
 import Block from '../base/Block'
@@ -7,11 +8,13 @@ import EmissionFactors from '../emissionFactor/EmissionFactors'
 interface Props {
   userOrganizationId?: string
   manualOnly: boolean
+  environment: Environment
 }
 
-const EmissionFactorsPage = ({ userOrganizationId, manualOnly }: Props) => {
+const EmissionFactorsPage = ({ userOrganizationId, manualOnly, environment }: Props) => {
   const tNav = useTranslations('nav')
   const t = useTranslations('emissionFactors')
+
   return (
     <>
       <Breadcrumbs current={tNav('emissionFactors')} links={[{ label: tNav('home'), link: '/' }]} />
@@ -32,7 +35,7 @@ const EmissionFactorsPage = ({ userOrganizationId, manualOnly }: Props) => {
         }
       >
         <Suspense fallback={t('loading')}>
-          <EmissionFactors userOrganizationId={userOrganizationId} manualOnly={manualOnly} />
+          <EmissionFactors userOrganizationId={userOrganizationId} manualOnly={manualOnly} environment={environment} />
         </Suspense>
       </Block>
     </>

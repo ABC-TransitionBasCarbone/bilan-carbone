@@ -4,24 +4,23 @@ import SelectStudySite from '@/components/study/site/SelectStudySite'
 import useStudySite from '@/components/study/site/useStudySite'
 import { FullStudy } from '@/db/study'
 import DownloadIcon from '@mui/icons-material/Download'
-// import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
 import { Box, Button, Tab, Tabs, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import { SyntheticEvent, useState } from 'react'
+import { SyntheticEvent, useMemo, useState } from 'react'
 
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import TabPanel from '@/components/tabPanel/tabPanel'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
-import { downloadStudyResults } from '@/services/study'
+import { downloadStudyResults, getResultsValues } from '@/services/study'
 import { Environment } from '@prisma/client'
 
 import Block from '@/components/base/Block'
-// import LoadingButton from '@/components/base/LoadingButton'
+import LoadingButton from '@/components/base/LoadingButton'
 import BarChart from '@/components/study/charts/BarChart'
 import PieChart from '@/components/study/charts/PieChart'
-// import { useServerFunction } from '@/hooks/useServerFunction'
-import { CutPost } from '@/services/posts'
-// import { generateStudySummaryPDF } from '@/services/serverFunctions/pdf'
+import { useServerFunction } from '@/hooks/useServerFunction'
+import { generateStudySummaryPDF } from '@/services/serverFunctions/pdf'
 import classNames from 'classnames'
 import Link from 'next/link'
 import styles from './AllResults.module.css'
@@ -41,7 +40,7 @@ const a11yProps = (index: number) => {
 
 const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) => {
   const [value, setValue] = useState(0)
-  // const [pdfLoading, setPdfLoading] = useState(false)
+  const [pdfLoading, setPdfLoading] = useState(false)
   const handleChange = (_event: SyntheticEvent, newValue: number) => {
     setValue(newValue)
   }
@@ -54,29 +53,34 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
   const tUnits = useTranslations('study.results.units')
   const tExportButton = useTranslations('study.export')
   const tStudyNav = useTranslations('study.navigation')
-  // const { callServerFunction } = useServerFunction()
+  const { callServerFunction } = useServerFunction()
 
   const { studySite, setSite } = useStudySite(study, true)
 
-  // const handlePDFDownload = async () => {
-  //   setPdfLoading(true)
-  //   await callServerFunction(() => generateStudySummaryPDF(study.id, study.name, study.startDate.getFullYear()), {
-  //     onSuccess: (data) => {
-  //       const pdfBuffer = new Uint8Array(data.pdfBuffer)
-  //       const pdfBlob = new Blob([pdfBuffer], { type: data.contentType })
+  const handlePDFDownload = async () => {
+    setPdfLoading(true)
+    await callServerFunction(() => generateStudySummaryPDF(study.id, study.name, study.startDate.getFullYear()), {
+      onSuccess: (data) => {
+        const pdfBuffer = new Uint8Array(data.pdfBuffer)
+        const pdfBlob = new Blob([pdfBuffer], { type: data.contentType })
 
-  //       const url = URL.createObjectURL(pdfBlob)
-  //       const link = document.createElement('a')
-  //       link.href = url
-  //       link.download = data.filename
-  //       document.body.appendChild(link)
-  //       link.click()
-  //       document.body.removeChild(link)
-  //       URL.revokeObjectURL(url)
-  //     },
-  //   })
-  //   setPdfLoading(false)
-  // }
+        const url = URL.createObjectURL(pdfBlob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = data.filename
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        URL.revokeObjectURL(url)
+      },
+    })
+    setPdfLoading(false)
+  }
+
+  const { computedResultsWithDep } = useMemo(
+    () => getResultsValues(study, tPost, studySite, !!validatedOnly, study.organizationVersion.environment, tResults),
+    [study, studySite, tPost, tResults, validatedOnly],
+  )
 
   return (
     <Block title={study.name} as="h1" description={tStudyNav('results')} bold descriptionColor="primary">
@@ -91,8 +95,8 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
           })}
         </Typography>
       </Box>
-      <Box component="section" className={classNames(styles.gapped, 'flex')}>
-        <div className={classNames(styles.gapped, 'flex flex-col')}>
+      <Box component="section" className="flex gapped">
+        <div className="flex-col gapped">
           <SelectStudySite study={study} allowAll studySite={studySite} setSite={setSite} />
           <Button
             variant="contained"
@@ -117,7 +121,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
           >
             {tExportButton('export')}
           </Button>
-          {/* <LoadingButton
+          <LoadingButton
             variant="outlined"
             color="primary"
             size="large"
@@ -126,7 +130,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
             loading={pdfLoading}
           >
             {tResults('downloadPDF')}
-          </LoadingButton> */}
+          </LoadingButton>
         </div>
         <Typography className={classNames(styles.infoContainer, 'ml2')}>{tResults('info')}</Typography>
       </Box>
@@ -138,29 +142,25 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
         </Tabs>
         <Box component="section" sx={{ marginTop: '1rem' }}>
           <TabPanel value={value} index={0}>
-            <ConsolidatedResultsTable study={study} studySite={studySite} withDependencies={false} hiddenUncertainty />
+            <ConsolidatedResultsTable resultsUnit={study.resultsUnit} data={computedResultsWithDep} hiddenUncertainty />
           </TabPanel>
           <TabPanel value={value} index={1}>
             <BarChart
-              study={study}
-              studySite={studySite}
+              results={computedResultsWithDep}
+              resultsUnit={study.resultsUnit}
               height={400}
               showTitle={false}
               showLegend={true}
               showLabelsOnBars={true}
-              validatedOnly={validatedOnly}
-              postValues={CutPost}
             />
           </TabPanel>
           <TabPanel value={value} index={2}>
             <PieChart
-              study={study}
-              studySite={studySite}
+              resultsUnit={study.resultsUnit}
               height={400}
               showTitle={false}
               showLabelsOnPie={true}
-              validatedOnly={validatedOnly}
-              postValues={CutPost}
+              results={computedResultsWithDep}
             />
           </TabPanel>
         </Box>

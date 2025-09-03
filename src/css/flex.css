@@ -72,6 +72,14 @@
   flex: 1;
 }
 
+.grow2 {
+  flex: 2;
+}
+
 .grid {
   display: grid;
+}
+
+.gapped {
+  gap: 1rem;
 }

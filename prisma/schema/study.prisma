@@ -44,7 +44,6 @@ enum EmissionSourceCaracterisation {
   NotHeldSupported
   NotHeldNotSupported
   UsedByIntermediary
-  LandUse
 }
 
 enum DayOfWeek {
@@ -73,17 +72,35 @@ model OpeningHours {
   @@map("opening_hours")
 }
 
+model EmissionSourceTagFamily {
+  id String @id @default(uuid())
+
+  name String
+
+  studyId String @map("study_id")
+  study   Study  @relation(fields: [studyId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  emissionSourceTags EmissionSourceTag[]
+
+  @@unique([name, studyId])
+  @@map("emission_source_tag_families")
+}
+
 model EmissionSourceTag {
   id String @id @default(uuid())
 
   name  String
   color String?
 
-  studyId             String                @map("study_id")
-  study               Study                 @relation(fields: [studyId], references: [id])
+  familyId String                   @map("family_id")
+  family   EmissionSourceTagFamily  @relation(fields: [familyId], references: [id])
+
   StudyEmissionSource StudyEmissionSource[] @relation("TagToEmissionSource")
 
-  @@unique([name, studyId])
+  @@unique([name, familyId])
   @@map("emission_source_tag")
 }
 
@@ -115,7 +132,7 @@ model Study {
 
   emissionFactorVersions StudyEmissionFactorVersion[]
 
-  emissionSourceTags EmissionSourceTag[]
+  emissionSourceTagFamilies EmissionSourceTagFamily[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -181,7 +198,6 @@ model StudyEmissionSource {
 
   subPost         SubPost                        @map("sub_post")
   name            String
-  tag             String?
   caracterisation EmissionSourceCaracterisation?
 
   emissionFactorId String?         @map("emission_factor_id")
@@ -249,7 +265,6 @@ model ExportRule {
   notHeldSupported        String? @map("not_held_supported")
   notHeldNotSupported     String? @map("not_held_not_supported")
   usedByIntermediary      String? @map("used_by_intermediary")
-  landUse                 String? @map("land_use")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")

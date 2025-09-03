@@ -3,5 +3,41 @@
     "form": {
       "activate": "Créer mon compte"
     }
+  },
+  "exports": {
+    "env_specific_export": "Tilt"
+  },
+  "email": {
+    "subject": {
+      "newUser": "Vous avez été invité sur Tilt",
+      "addedActiveUser": "Vous avez été invité sur un nouvel environnement Tilt",
+      "activation": "Vous avez activé votre compte sur Tilt",
+      "activationRequest": "Demande d'accès à votre organisation Tilt"
+    }
+  },
+  "organization": {
+    "sites": {
+      "ca": "Budget ({unit})",
+      "etp": "Nombre de salariés",
+      "glossary": {
+        "etp": "Nombre de salariés",
+        "etpDescription": "Ces données sont utilisées pour calculer des intensités carbone (kgCO₂e/salarié).",
+        "ca": "Budget ({unit})",
+        "caDescription": "Ces données sont utilisées pour calculer des intensités carbone (kgCO₂e/{unit} CA). Attention, le budget est à renseigner en milliers d'euros (k€).",
+        "volunteer": "Nombre de bénévoles",
+        "volunteerDescription": "Le nombre de bénévoles renseigné ici servira simplement à calculer une intensité carbone par bénévole, en tCO₂e/bénévole. Vous pouvez y renseigner le nombre de bénévoles, le nombre de bénévoles actifs, compter ou non les membres du Conseil d'Administration ... Le plus important n'est pas le choix du mode de comptabilisation des bénévoles, mais l'utilisation de la même méthode pour vos futurs Bilans Carbone®, afin de pouvoir comparer l'évolution de vos émissions au regard des variations des activités de votre association."
+      },
+      "validation": {
+        "ca": "Budget ({unit})"
+      }
+    }
+  },
+  "study": {
+    "flow": {
+      "info": "Vous pouvez télécharger un exemple de cartographie des flux pour vous aider à construire la vôtre. Par la suite, si vous souhaitez soumettre votre propre cartographie des flux pour aider d'autres associations en leur fournissant une base de travail, merci de la soumettre à <mail>methodologie@abc-transitionbascarbone.fr</mail>"
+    },
+    "dependencyMatrix": {
+      "info": "Vous pouvez télécharger un exemple de matrice de risque et de dépendance pour vous aider à construire la vôtre. Par la suite, si vous souhaitez soumettre votre propre cartographie des flux pour aider d'autres associations en leur fournissant une base de travail, merci de la soumettre à <mail>methodologie@abc-transitionbascarbone.fr</mail>"
+    }
   }
 }

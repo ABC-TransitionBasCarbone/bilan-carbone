@@ -1,16 +1,14 @@
 'use client'
 
-import { FullStudy } from '@/db/study'
-import { useChartComputations } from '@/hooks/useChartComputations'
 import { Typography, useTheme } from '@mui/material'
 import { BarChart as MuiBarChart } from '@mui/x-charts'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import styles from './BarChart.module.css'
 
-import { BCPost, CutPost } from '@/services/posts'
-import { isPost } from '@/utils/post'
+import { BasicTypeCharts, formatValueAndUnit, getColor, getLabel } from '@/utils/charts'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
+import { StudyResultUnit } from '@prisma/client'
 
 const BAR_CHART_CONSTANTS = {
   TICK_ANGLE: -20,
@@ -18,112 +16,91 @@ const BAR_CHART_CONSTANTS = {
   AXIS_HEIGHT: 80,
 } as const
 
-interface Props {
-  study: FullStudy
-  studySite?: string
+interface Props<T> {
+  results: T[]
+  resultsUnit: StudyResultUnit
   title?: string
   height?: number
   showTitle?: boolean
   showLegend?: boolean
   showLabelsOnBars?: boolean
-  validatedOnly?: boolean
-  postValues: typeof CutPost | typeof BCPost
-  fixedColor?: boolean
+  skipAnimation?: boolean
+  onlyChildren?: boolean
 }
 
-const BarChart = ({
-  study,
-  studySite = 'all',
+const BarChart = <T extends BasicTypeCharts>({
+  results,
+  resultsUnit,
   title,
   height = 400,
   showTitle = true,
   showLegend = true,
   showLabelsOnBars = true,
-  validatedOnly = false,
-  postValues,
-  fixedColor,
-}: Props) => {
+  skipAnimation = false,
+  onlyChildren = false,
+}: Props<T>) => {
   const tResults = useTranslations('study.results')
+  const tUnits = useTranslations('study.results.units')
+  const tPost = useTranslations('emissionFactors.post')
+
   const theme = useTheme()
 
-  const { chartFormatter, computeResults, tUnits } = useChartComputations({
-    study,
-    studySite,
-    validatedOnly,
-    postValues,
-  })
+  const barData = useMemo(() => {
+    const filteredData = results.filter((result) => result.post !== 'total' && result.label !== 'total')
 
-  const barData = useMemo(
-    () => ({
-      labels: computeResults.map(({ label }) => label),
-      values: computeResults.map(({ value }) => value / STUDY_UNIT_VALUES[study.resultsUnit]),
-      colors: computeResults.map(({ post }) =>
-        fixedColor
-          ? theme.palette.secondary.main
-          : isPost(post)
-            ? theme.custom.postColors[post].light
-            : theme.palette.primary.light,
-      ),
-    }),
-    [
-      computeResults,
-      fixedColor,
-      theme.custom.postColors,
-      theme.palette.primary.light,
-      theme.palette.secondary.main,
-      study.resultsUnit,
-    ],
-  )
+    const dataToFormat = onlyChildren ? filteredData.flatMap((result) => result.children) : filteredData
+    return {
+      labels: dataToFormat.map(({ label, post }) => getLabel(label, post, tPost)),
+      values: dataToFormat.map(({ value }) => value / STUDY_UNIT_VALUES[resultsUnit]),
+      colors: dataToFormat.map(({ post, color }) => getColor(theme, post, color)),
+    }
+  }, [results, onlyChildren, tPost, resultsUnit, theme])
 
-  const hasBarData = barData.values.length > 0 && barData.values.some((v) => v !== 0)
   const getBarLabel = (item: { value: number | null }) =>
-    showLabelsOnBars && item.value && item.value > 0 ? chartFormatter(item.value) : ''
+    showLabelsOnBars && item.value && item.value > 0 ? formatValueAndUnit(item.value) : ''
 
   return (
     <div className={styles.barChart}>
-      {hasBarData ? (
-        <MuiBarChart
-          xAxis={[
-            {
-              data: barData.labels,
-              height: BAR_CHART_CONSTANTS.AXIS_HEIGHT,
-              scaleType: 'band',
-              tickLabelStyle: {
-                angle: BAR_CHART_CONSTANTS.TICK_ANGLE,
-                textAnchor: 'end',
-                fontSize: BAR_CHART_CONSTANTS.TICK_FONT_SIZE,
-              },
-              tickPlacement: 'extremities',
-              tickLabelPlacement: 'middle',
-              colorMap: {
-                type: 'ordinal',
-                values: barData.labels,
-                colors: barData.colors,
-              },
+      <MuiBarChart
+        skipAnimation={skipAnimation}
+        xAxis={[
+          {
+            data: barData.labels,
+            height: BAR_CHART_CONSTANTS.AXIS_HEIGHT,
+            scaleType: 'band',
+            tickLabelStyle: {
+              angle: BAR_CHART_CONSTANTS.TICK_ANGLE,
+              textAnchor: 'end',
+              fontSize: BAR_CHART_CONSTANTS.TICK_FONT_SIZE,
             },
-          ]}
-          series={[
-            {
-              data: barData.values,
-              valueFormatter: (value) => chartFormatter(value ?? 0, false),
-              label: showLegend ? tResults('emissions') : undefined,
+            tickPlacement: 'extremities',
+            tickLabelPlacement: 'middle',
+            colorMap: {
+              type: 'ordinal',
+              values: barData.labels,
+              colors: barData.colors,
             },
-          ]}
-          grid={{ horizontal: true }}
-          yAxis={[
-            {
-              label: tUnits(study.resultsUnit),
-            },
-          ]}
-          axisHighlight={{ x: 'none' }}
-          barLabel={showLabelsOnBars ? getBarLabel : undefined}
-          slots={showLegend ? undefined : { legend: () => null }}
-          height={height}
-          borderRadius={10}
-        />
-      ) : (
-        <Typography align="center">{tResults('noData')}</Typography>
-      )}
+          },
+        ]}
+        series={[
+          {
+            data: barData.values,
+            valueFormatter: (value) => formatValueAndUnit(value ?? 0),
+            label: showLegend ? tResults('emissions') : undefined,
+          },
+        ]}
+        grid={{ horizontal: true }}
+        yAxis={[
+          {
+            label: tUnits(resultsUnit),
+          },
+        ]}
+        axisHighlight={{ x: 'none' }}
+        barLabel={showLabelsOnBars ? getBarLabel : undefined}
+        slots={showLegend ? undefined : { legend: () => null }}
+        height={height}
+        borderRadius={10}
+      />
       {showTitle && (
         <Typography variant="h6" align="center" className={styles.chartTitle}>
           {title}

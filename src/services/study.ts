@@ -2,16 +2,18 @@ import { resultsExportHeadersBase, resultsExportHeadersCut } from '@/constants/e
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
+import { getPost } from '@/utils/post'
 import { isCAS, STUDY_UNIT_VALUES } from '@/utils/study'
 import { Environment, Export, ExportRule, Level, StudyResultUnit, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
-import { canBeValidated, getEmissionSourcesTotalCo2, getStandardDeviation } from './emissionSource'
+import { canBeValidated, getEmissionResults, getEmissionSourcesTotalCo2, getStandardDeviation } from './emissionSource'
 import { download } from './file'
+import { hasAccessToBcExport } from './permissions/environment'
 import { StudyWithoutDetail } from './permissions/study'
 import { environmentPostMapping, Post, subPostsByPost } from './posts'
 import { computeBegesResult } from './results/beges'
-import { computeResultsByPost } from './results/consolidated'
+import { computeResultsByPost, computeResultsByTag } from './results/consolidated'
 import { EmissionFactorWithMetaData, getEmissionFactorsByIds } from './serverFunctions/emissionFactor'
 import { prepareExcel } from './serverFunctions/file'
 import { getUserSettings } from './serverFunctions/user'
@@ -21,6 +23,12 @@ import {
   getStandardDeviationRating,
   sumQualities,
 } from './uncertainty'
+
+export enum AdditionalResultTypes {
+  CONSOLIDATED = 'consolidated',
+  ENV_SPECIFIC_EXPORT = 'env_specific_export',
+}
+export type ResultType = Export | AdditionalResultTypes
 
 const getQuality = (quality: ReturnType<typeof getQualityRating>, t: ReturnType<typeof useTranslations>) => {
   return quality === null ? t('unknown') : t(quality.toString())
@@ -52,12 +60,13 @@ export enum EmissionSourcesStatus {
 export const getEmissionSourceStatus = (
   study: FullStudy | StudyWithoutDetail,
   emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
+  environment: Environment | undefined,
 ) => {
   if (emissionSource.validated) {
     return EmissionSourcesStatus.Valid
   }
 
-  if (canBeValidated(emissionSource, study, emissionSource.emissionFactor)) {
+  if (canBeValidated(emissionSource, study, emissionSource.emissionFactor, environment)) {
     return EmissionSourcesStatus.ToVerify
   }
 
@@ -124,7 +133,7 @@ const getEmissionSourcesRows = (
     .map((key) => t(key))
     .join(';')
 
-  const rows = emissionSources
+  const rows = [...emissionSources]
     .sort((a, b) => a.subPost.localeCompare(b.subPost))
     .map((emissionSource) => {
       const emissionFactor = emissionFactors.find((factor) => factor.id === emissionSource.emissionFactor?.id)
@@ -132,14 +141,11 @@ const getEmissionSourcesRows = (
       if (type === 'Post') {
         initCols.push(tPost(emissionSource.subPost))
       } else if (type === 'Study') {
-        const post = Object.keys(subPostsByPost).find((post) =>
-          subPostsByPost[post as Post].includes(emissionSource.subPost),
-        )
+        const post = getPost(emissionSource.subPost)
         initCols.push(tPost(post || ''))
         initCols.push(tPost(emissionSource.subPost))
       }
       const emissionSourceSD = getStandardDeviation(emissionSource)
-      console.log('CONSOLE', emissionSourceSD)
 
       const withDeprecation = subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost)
 
@@ -203,8 +209,8 @@ const getEmissionSourcesCSVContent = (
   tQuality: ReturnType<typeof useTranslations>,
   tUnit: ReturnType<typeof useTranslations>,
   tResultUnits: ReturnType<typeof useTranslations>,
+  environment: Environment,
   type?: 'Post' | 'Study',
-  environment?: Environment,
 ) => {
   const { columns, rows } = getEmissionSourcesRows(
     emissionSources,
@@ -223,14 +229,18 @@ const getEmissionSourcesCSVContent = (
   const emptyFieldsCount = type === 'Study' ? 4 : type === 'Post' ? 3 : 2
   const emptyFields = (count: number) => Array(count).fill('')
 
-  const totalEmissions = getEmissionSourcesTotalCo2(emissionSources, environment) / STUDY_UNIT_VALUES[resultsUnit]
+  const emissionSourcesWithEmission = emissionSources.map((emissionSource) => ({
+    ...emissionSource,
+    ...getEmissionResults(emissionSource, environment),
+  }))
+  const totalEmissions = getEmissionSourcesTotalCo2(emissionSourcesWithEmission) / STUDY_UNIT_VALUES[resultsUnit]
   const totalRow = [t('total'), ...emptyFields(emptyFieldsCount + 1), totalEmissions].join(';')
 
   const qualities = emissionSources.map((emissionSource) => getStandardDeviation(emissionSource))
   const quality = getQuality(getStandardDeviationRating(sumQualities(qualities)), tQuality)
   const qualityRow = [t('quality'), ...emptyFields(emptyFieldsCount + 1), quality].join(';')
 
-  const uncertainty = getEmissionSourcesGlobalUncertainty(emissionSources, environment)
+  const uncertainty = getEmissionSourcesGlobalUncertainty(emissionSourcesWithEmission)
   const uncertaintyRow = [
     t('uncertainty'),
     ...emptyFields(emptyFieldsCount),
@@ -251,7 +261,7 @@ export const downloadStudyPost = async (
   tQuality: ReturnType<typeof useTranslations>,
   tUnit: ReturnType<typeof useTranslations>,
   tResultUnits: ReturnType<typeof useTranslations>,
-  environment?: Environment,
+  environment: Environment,
 ) => {
   const emissionFactorIds = emissionSources
     .map((emissionSource) => emissionSource.emissionFactor?.id)
@@ -270,8 +280,8 @@ export const downloadStudyPost = async (
     tQuality,
     tUnit,
     tResultUnits,
-    'Post',
     environment,
+    'Post',
   )
 
   downloadCSV(csvContent, fileName)
@@ -285,8 +295,9 @@ export const downloadStudyEmissionSources = async (
   tQuality: ReturnType<typeof useTranslations>,
   tUnit: ReturnType<typeof useTranslations>,
   tResultUnits: ReturnType<typeof useTranslations>,
+  environment: Environment,
 ) => {
-  const emissionSources = study.emissionSources.sort((a, b) => a.subPost.localeCompare(b.subPost))
+  const emissionSources = [...study.emissionSources].sort((a, b) => a.subPost.localeCompare(b.subPost))
 
   const emissionFactorIds = emissionSources
     .map((emissionSource) => emissionSource.emissionFactor?.id)
@@ -305,6 +316,7 @@ export const downloadStudyEmissionSources = async (
     tQuality,
     tUnit,
     tResultUnits,
+    environment,
     'Study',
   )
 
@@ -343,6 +355,7 @@ export const formatConsolidatedStudyResultsForExport = (
   tUnits: ReturnType<typeof useTranslations>,
   validatedEmissionSourcesOnly?: boolean,
   environment: Environment = Environment.BC,
+  type: ResultType = AdditionalResultTypes.CONSOLIDATED,
 ) => {
   const dataForExport = []
   const headersForEnv = getHeadersForEnv(environment)
@@ -356,9 +369,17 @@ export const formatConsolidatedStudyResultsForExport = (
       validatedEmissionSourcesOnly,
       environmentPostMapping[environment],
       environment,
+      type,
     )
     dataForExport.push([site.name])
-    dataForExport.push(getFormattedHeadersForEnv(environment, tStudy, tUnits, study.resultsUnit))
+    dataForExport.push(
+      getFormattedHeadersForEnv(
+        type === AdditionalResultTypes.ENV_SPECIFIC_EXPORT ? environment : Environment.BC,
+        tStudy,
+        tUnits,
+        study.resultsUnit,
+      ),
+    )
 
     for (const result of resultList) {
       const resultLine = [tPost(result.post) ?? '']
@@ -373,7 +394,7 @@ export const formatConsolidatedStudyResultsForExport = (
   }
 
   return {
-    name: tExport('consolidated'),
+    name: tExport(type),
     data: dataForExport,
     options: { '!cols': [{ wch: 30 }, { wch: 15 }, { wch: 20 }] },
   }
@@ -499,24 +520,43 @@ export const downloadStudyResults = async (
     ? userSettings.data?.validatedEmissionSourcesOnly
     : undefined
 
-  const consolidatedResults = formatConsolidatedStudyResultsForExport(
-    study,
-    siteList,
-    tStudy,
-    tExport,
-    tPost,
-    tQuality,
-    tUnits,
-    validatedEmissionSourcesOnly,
-    environment,
-  )
+  if (environment !== Environment.BC) {
+    const environmentResults = formatConsolidatedStudyResultsForExport(
+      study,
+      siteList,
+      tStudy,
+      tExport,
+      tPost,
+      tQuality,
+      tUnits,
+      validatedEmissionSourcesOnly,
+      environment,
+      AdditionalResultTypes.ENV_SPECIFIC_EXPORT,
+    )
 
-  if (environment === Environment.CUT) {
-    consolidatedResults.data.unshift([])
-    consolidatedResults.data.unshift([tExport('developmentFile')])
+    if (environment === Environment.CUT) {
+      environmentResults.data.unshift([])
+      environmentResults.data.unshift([tExport('developmentFile')])
+    }
+
+    data.push(environmentResults)
   }
 
-  data.push(consolidatedResults)
+  if (hasAccessToBcExport(environment) || environment === Environment.BC) {
+    const consolidatedResults = formatConsolidatedStudyResultsForExport(
+      study,
+      siteList,
+      tStudy,
+      tExport,
+      tPost,
+      tQuality,
+      tUnits,
+      validatedEmissionSourcesOnly,
+      environment,
+      AdditionalResultTypes.CONSOLIDATED,
+    )
+    data.push(consolidatedResults)
+  }
 
   if (study.exports.some((exp) => exp.type === Export.Beges)) {
     data.push(
@@ -549,4 +589,66 @@ export const getStudyParentOrganizationVersionId = async (
   }
 
   return study.organizationVersion.parentId || study.organizationVersion.id
+}
+
+export const getResultsValues = (
+  study: FullStudy,
+  tPost: ReturnType<typeof useTranslations>,
+  studySite: string,
+  validatedOnly: boolean,
+  environment: Environment,
+  tStudyResults: ReturnType<typeof useTranslations>,
+  withDependencies: boolean = true,
+) => {
+  const computedResultsWithDep = computeResultsByPost(
+    study,
+    tPost,
+    studySite,
+    true,
+    validatedOnly,
+    environmentPostMapping[environment],
+    environment,
+  )
+
+  const computedResultsWithoutDep = computeResultsByPost(
+    study,
+    tPost,
+    studySite,
+    false,
+    validatedOnly,
+    environmentPostMapping[environment],
+    environment,
+  )
+
+  const computedResultsByTag = computeResultsByTag(
+    study,
+    studySite,
+    withDependencies,
+    validatedOnly,
+    environment,
+    tStudyResults,
+  )
+
+  const totalResult = computedResultsWithDep.find((result) => result.post === 'total')
+  const total = totalResult?.value || 0
+  const monetaryTotal = totalResult?.monetaryValue || 0
+  const nonSpecificMonetaryTotal = totalResult?.nonSpecificMonetaryValue || 0
+
+  const withDepValue = total / STUDY_UNIT_VALUES[study.resultsUnit]
+  const withoutDepValue =
+    (computedResultsWithoutDep.find((result) => result.post === 'total')?.value || 0) /
+    STUDY_UNIT_VALUES[study.resultsUnit]
+
+  const monetaryRatio = (monetaryTotal / total) * 100
+  const nonSpecificMonetaryRatio = (nonSpecificMonetaryTotal / total) * 100
+
+  return {
+    computedResultsWithDep,
+    computedResultsWithoutDep,
+    withDepValue,
+    withoutDepValue,
+    monetaryRatio,
+    nonSpecificMonetaryRatio,
+    computedResultsByTag,
+  }
 }

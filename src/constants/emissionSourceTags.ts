@@ -15,7 +15,7 @@ type DefaultEmissionSourceTags = {
 }
 
 export enum emissionSourceTagColors {
-  GREY = '#9fbff3',
+  DEFAULT = '#ffffff',
   GREEN = '#94EBBF',
   RED = '#e04949',
   ORANGE = '#fc8514',
@@ -83,18 +83,23 @@ export const emissionSourceTagMap: EmissionSourceTagMap = {
       SubPost.UsagesNumeriques,
       SubPost.ServicesEnApprocheMonetaire,
 
-      SubPost.Equipements,
-      SubPost.Informatique,
+      SubPost.EquipementsDesSalaries,
+      SubPost.ParcInformatiqueDesSalaries,
 
       SubPost.InvestissementsFinanciersRealises,
 
       SubPost.TeletravailSalaries,
+
+      SubPost.FroidEtClim,
     ],
     [DefaultEmissionSourceTag.PERIMETRE_BENEVOLES]: [
       SubPost.DeplacementsDomicileTravailBenevoles,
       SubPost.DeplacementsDansLeCadreDUneMissionAssociativeBenevoles,
       SubPost.RepasPrisParLesBenevoles,
       SubPost.TeletravailBenevoles,
+
+      SubPost.EquipementsDesBenevoles,
+      SubPost.ParcInformatiqueDesBenevoles,
     ],
     [DefaultEmissionSourceTag.PERIMETRE_BENEFICIAIRES]: [
       SubPost.DeplacementsDesBeneficiaires,

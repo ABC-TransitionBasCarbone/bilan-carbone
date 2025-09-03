@@ -110,7 +110,7 @@ const canUpdateEmissionSourceBC = async (
 
     if (change.validated === true && emissionSource.emissionFactorId) {
       const emissionFactor = await getEmissionFactorById(emissionSource.emissionFactorId)
-      if (!canBeValidated({ ...emissionSource, ...change }, study, emissionFactor)) {
+      if (!canBeValidated({ ...emissionSource, ...change }, study, emissionFactor, account.environment)) {
         return false
       }
     }

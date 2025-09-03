@@ -20,14 +20,12 @@ describe('Create study emission source', () => {
 
     cy.getByTestId('emission-source-My new emission source').should('exist')
     cy.getByTestId('emission-source-My new emission source').within(() => {
-      cy.getByTestId('emission-source-status').should('have.text', "En attente d'un·e contributeur·ice")
-      cy.getByTestId('emission-source-value').should('not.exist')
+      cy.getByTestId('emission-source-status').should('have.text', "En attente d'un·e contributeur·rice")
       cy.getByTestId('emission-source-quality').should('not.exist')
     })
 
     cy.getByTestId('emission-source-My new emission source').click()
 
-    cy.getByTestId('emission-source-result').should('not.exist')
     cy.getByTestId('emission-source-validate').should('be.disabled')
 
     cy.getByTestId('emission-source-My new emission source').within(() => {
@@ -52,7 +50,7 @@ describe('Create study emission source', () => {
     cy.getByTestId('emission-source-My emission source name').within(() => {
       cy.get('[data-testid="emission-source-status"] > div')
         .invoke('text')
-        .should('contain', "En attente d'un·e contributeur·ice")
+        .should('contain', "En attente d'un·e contributeur·rice")
     })
 
     cy.getByTestId('emission-source-source').type('My source')
@@ -73,6 +71,10 @@ describe('Create study emission source', () => {
     cy.getByTestId('emission-source-reliability').click()
     cy.get('[data-value="4"]').click()
     cy.getByTestId('emission-source-status').invoke('text').should('contain', 'Enregistré')
+
+    cy.getByTestId('emission-source-tag').click()
+    cy.getByTestId('tag-option').first().click()
+    cy.getByTestId('emission-source-tag').should('contain', 'Numérique')
 
     cy.getByTestId('emission-source-My emission source name').within(() => {
       cy.getByTestId('emission-source-status').invoke('text').should('contain', 'À vérifier')
@@ -108,10 +110,19 @@ describe('Create study emission source', () => {
       cy.get('[data-testid="emission-source-name"] > .MuiInputBase-root > .MuiInputBase-input').should('not.exist')
       cy.getByTestId('validated-emission-source-name').should('have.text', 'My emission source name')
     })
-    cy.getByTestId('emission-source-validate').click()
-    cy.getByTestId('emission-source-status').invoke('text').should('contain', 'Enregistré')
 
-    cy.getByTestId('emission-source-status').invoke('text').should('contain', 'À vérifier')
+    cy.getByTestId('duplicate-emission-source').click()
+    cy.getByTestId('duplicate-confirm').click()
+
+    cy.getByTestId('emission-source-My emission source name')
+      .last()
+      .within(() => {
+        cy.getByTestId('emission-source-status').should('have.text', 'À vérifier')
+        cy.getByTestId('emission-source-status').last().click()
+        cy.getByTestId('emission-source-value').should('have.text', '1 008 tCO₂e')
+        cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Mauvaise')
+      })
+    cy.getByTestId('emission-source-tag').last().should('contain', 'Numérique')
 
     // Editor can add source, edit but not validate
     cy.logout()
@@ -121,25 +132,29 @@ describe('Create study emission source', () => {
     cy.getByTestId('subpost').first().scrollIntoView().click({ force: true })
     cy.getByTestId('new-emission-source').should('exist')
 
-    cy.getByTestId('emission-source-My emission source name').within(() => {
-      cy.getByTestId('emission-source-status').invoke('text').should('contain', 'À vérifier')
-      cy.getByTestId('emission-source-value').should('have.text', '1 008 tCO₂e')
-      cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Mauvaise')
-    })
-    cy.getByTestId('emission-source-My emission source name').click({ force: true })
-    cy.getByTestId('emission-source-My emission source name').within(() => {
-      cy.get('[data-testid="emission-source-name"] > .MuiInputBase-root > .MuiInputBase-input').should(
-        'have.value',
-        'My emission source name',
-      )
-      cy.get('[data-testid="emission-source-name"] > .MuiInputBase-root > .MuiInputBase-input').should(
-        'not.be.disabled',
-      )
-      cy.getByTestId('emission-source-name').scrollIntoView().clear()
-      cy.getByTestId('emission-source-name').type('My edited emission source name')
-      cy.get('[data-testid="emission-source-name"] > .MuiInputBase-root > .MuiInputBase-input').blur()
-      cy.getByTestId('emission-source-status').should('contain', 'Enregistré')
-    })
+    cy.getByTestId('emission-source-My emission source name')
+      .last()
+      .within(() => {
+        cy.getByTestId('emission-source-status').invoke('text').should('contain', 'À vérifier')
+        cy.getByTestId('emission-source-value').should('have.text', '1 008 tCO₂e')
+        cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Mauvaise')
+      })
+    cy.getByTestId('emission-source-My emission source name').first().click({ force: true })
+    cy.getByTestId('emission-source-My emission source name')
+      .last()
+      .within(() => {
+        cy.get('[data-testid="emission-source-name"] > .MuiInputBase-root > .MuiInputBase-input').should(
+          'have.value',
+          'My emission source name',
+        )
+        cy.get('[data-testid="emission-source-name"] > .MuiInputBase-root > .MuiInputBase-input').should(
+          'not.be.disabled',
+        )
+        cy.getByTestId('emission-source-name').scrollIntoView().clear()
+        cy.getByTestId('emission-source-name').type('My edited emission source name')
+        cy.get('[data-testid="emission-source-name"] > .MuiInputBase-root > .MuiInputBase-input').blur()
+        cy.getByTestId('emission-source-status').should('contain', 'Enregistré')
+      })
     cy.getByTestId('emission-source-validate').should('not.exist')
 
     // Reader can only read

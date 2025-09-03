@@ -10,7 +10,6 @@ import StudyDuplicationForm, { InviteOptions } from '@/components/study/duplicat
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { createStudyCommand, duplicateStudyCommand } from '@/services/serverFunctions/study'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
-import { Tooltip } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -33,14 +32,15 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudy
   const tError = useTranslations('study.new.error')
   const tGlossary = useTranslations('study.new.glossary')
   const tStudyNewSuggestion = useTranslations('study.new.suggestion')
-  const tStudyNewInfo = useTranslations('study.new.info')
   const { callServerFunction } = useServerFunction()
   const [inviteOptions, setInviteOptions] = useState<InviteOptions>({
     team: true,
     contributors: true,
   })
+  const [loading, setLoading] = useState(false)
 
   const onSubmit = async (command: CreateStudyCommand) => {
+    setLoading(true)
     const serverFunction = duplicateStudyId
       ? () => duplicateStudyCommand(duplicateStudyId, command, inviteOptions.team, inviteOptions.contributors)
       : () => createStudyCommand(command)
@@ -51,13 +51,12 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudy
         router.refresh()
       },
       getErrorMessage: (error) => tError(error),
+      onError: () => setLoading(false),
     })
   }
 
   const Help = (name: string) => (
-    <Tooltip placement="right" title={tStudyNewInfo('date')}>
-      <HelpIcon className="ml-4" onClick={() => setGlossary && setGlossary(name)} label={tGlossary('title')} />
-    </Tooltip>
+    <HelpIcon className="ml-4" onClick={() => setGlossary && setGlossary(name)} label={tGlossary('title')} />
   )
 
   const studyNamePlaceHolder = useMemo(
@@ -105,7 +104,7 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudy
             setInviteOptions={setInviteOptions}
           />
         )}
-        <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="new-study-create-button">
+        <LoadingButton type="submit" loading={loading} data-testid="new-study-create-button">
           {duplicateStudyId ? t('duplicate') : t('create')}
         </LoadingButton>
       </Form>

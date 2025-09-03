@@ -77,6 +77,7 @@ export const subPostsByPostBC: Record<BCPost, SubPost[]> = {
     SubPost.DechetsBatiments,
     SubPost.DechetsFuitesOuEmissionsNonEnergetiques,
     SubPost.EauxUsees,
+    SubPost.AutresDechets,
   ],
   [BCPost.Fret]: [SubPost.FretEntrant, SubPost.FretInterne, SubPost.FretSortant],
   [BCPost.Deplacements]: [
@@ -186,6 +187,12 @@ export const subPostsByPost: Record<Post, SubPost[]> = {
   ...subPostsByPostTILT,
 }
 
+export const environmentSubPostsMapping = {
+  [Environment.BC]: subPostsByPostBC,
+  [Environment.CUT]: subPostsByPostCUT,
+  [Environment.TILT]: subPostsByPostTILT,
+}
+
 export const subPostTiltToBcSubPostMapping: Partial<Record<SubPost, SubPost>> = {
   [SubPost.FroidEtClim]: SubPost.EmissionsLieesALaProductionDeFroid,
   [SubPost.ActivitesAgricoles]: SubPost.Agriculture,
@@ -206,10 +213,10 @@ export const subPostTiltToBcSubPostMapping: Partial<Record<SubPost, SubPost>> = 
   [SubPost.ParcInformatiqueDesSalaries]: SubPost.Informatique,
   [SubPost.EquipementsDesBenevoles]: SubPost.Equipements,
   [SubPost.ParcInformatiqueDesBenevoles]: SubPost.Informatique,
-  [SubPost.UtilisationEnResponsabiliteConsommationDeBiens]: SubPost.UtilisationEnDependance,
-  [SubPost.UtilisationEnResponsabiliteConsommationNumerique]: SubPost.UtilisationEnDependance,
-  [SubPost.UtilisationEnResponsabiliteConsommationDEnergie]: SubPost.UtilisationEnDependance,
-  [SubPost.UtilisationEnResponsabiliteFuitesEtAutresConsommations]: SubPost.UtilisationEnDependance,
+  [SubPost.UtilisationEnResponsabiliteConsommationDeBiens]: SubPost.UtilisationEnResponsabilite,
+  [SubPost.UtilisationEnResponsabiliteConsommationNumerique]: SubPost.UtilisationEnResponsabilite,
+  [SubPost.UtilisationEnResponsabiliteConsommationDEnergie]: SubPost.UtilisationEnResponsabilite,
+  [SubPost.UtilisationEnResponsabiliteFuitesEtAutresConsommations]: SubPost.UtilisationEnResponsabilite,
   [SubPost.UtilisationEnDependanceConsommationDeBiens]: SubPost.UtilisationEnDependance,
   [SubPost.UtilisationEnDependanceConsommationNumerique]: SubPost.UtilisationEnDependance,
   [SubPost.UtilisationEnDependanceConsommationDEnergie]: SubPost.UtilisationEnDependance,
@@ -217,6 +224,20 @@ export const subPostTiltToBcSubPostMapping: Partial<Record<SubPost, SubPost>> = 
   [SubPost.TeletravailSalaries]: SubPost.Electricite,
   [SubPost.TeletravailBenevoles]: SubPost.Electricite,
 }
+
+const getSubPostBCToSubPostTiltMapping = (): Partial<Record<SubPost, SubPost[]>> => {
+  const result = {} as Partial<Record<SubPost, SubPost[]>>
+  for (const [tiltSubPost, bcSubPost] of Object.entries(subPostTiltToBcSubPostMapping)) {
+    if (result[bcSubPost]) {
+      result[bcSubPost].push(tiltSubPost as SubPost)
+    } else {
+      result[bcSubPost] = [tiltSubPost as SubPost]
+    }
+  }
+  return result as Partial<Record<SubPost, SubPost[]>>
+}
+
+export const subPostBCToSubPostTiltMapping = getSubPostBCToSubPostTiltMapping()
 
 export const convertTiltSubPostToBCSubPost = (subPost: SubPost): SubPost => {
   return subPostTiltToBcSubPostMapping[subPost] ?? subPost

@@ -1,21 +1,26 @@
 import { FullStudy } from '@/db/study'
 import { Environment, SubPost } from '@prisma/client'
+import { useTranslations } from 'next-intl'
 import {
+  getEmissionResults,
   getEmissionSourcesTotalCo2,
   getEmissionSourcesTotalMonetaryCo2,
   sumEmissionSourcesUncertainty,
 } from '../emissionSource'
-import { BCPost, CutPost, Post, subPostsByPost, TiltPost } from '../posts'
+import { BCPost, convertTiltSubPostToBCSubPost, CutPost, Post, subPostsByPost, TiltPost } from '../posts'
+import { AdditionalResultTypes, ResultType } from '../study'
 import { filterWithDependencies, getSiteEmissionSources } from './utils'
 
 export type ResultsByPost = {
   post: Post | SubPost | 'total'
+  label: string
   value: number
   monetaryValue: number
+  nonSpecificMonetaryValue: number
   numberOfEmissionSource: number
   numberOfValidatedEmissionSource: number
-  uncertainty?: number
-  subPosts: ResultsByPost[]
+  uncertainty: number
+  children: ResultsByPost[]
 }
 
 const computeUncertainty = (uncertaintyToReduce: { value: number; uncertainty?: number }[], value: number) => {
@@ -39,43 +44,61 @@ export const computeResultsByPost = (
   withDependencies: boolean,
   validatedOnly: boolean = true,
   postValues: typeof Post | typeof CutPost | typeof BCPost | typeof TiltPost = BCPost,
-  environment: Environment | undefined,
-) => {
+  environment: Environment,
+  type?: ResultType,
+): ResultsByPost[] => {
   const siteEmissionSources = getSiteEmissionSources(study.emissionSources, studySite)
+  const convertToBc = type === AdditionalResultTypes.CONSOLIDATED && environment !== Environment.BC
+  const convertedSiteEmissionSources = convertToBc
+    ? siteEmissionSources.map((emissionSource) => {
+        return { ...emissionSource, subPost: convertTiltSubPostToBCSubPost(emissionSource.subPost) }
+      })
+    : siteEmissionSources
 
-  const postInfos = Object.values(postValues)
-    .sort((a, b) => tPost(a).localeCompare(tPost(b)))
+  const emissionSourceWithEmissionValue = convertedSiteEmissionSources.map((emissionSource) => ({
+    ...emissionSource,
+    ...getEmissionResults(emissionSource, environment),
+  }))
+
+  const postInfos = Object.values(convertToBc ? BCPost : postValues)
     .map((post: Post) => {
       const subPosts = subPostsByPost[post]
         .filter((subPost) => filterWithDependencies(subPost, withDependencies))
         .map((subPost) => {
-          const emissionSources = siteEmissionSources.filter((emissionSource) => emissionSource.subPost === subPost)
+          const emissionSources = emissionSourceWithEmissionValue.filter(
+            (emissionSource) => emissionSource.subPost === subPost,
+          )
           const validatedEmissionSources = emissionSources.filter((emissionSource) => emissionSource.validated)
+          const emissionSourcesToUse = validatedOnly ? validatedEmissionSources : emissionSources
 
           return {
             post: subPost,
-            value: getEmissionSourcesTotalCo2(validatedOnly ? validatedEmissionSources : emissionSources, environment),
-            monetaryValue: getEmissionSourcesTotalMonetaryCo2(
-              validatedOnly ? validatedEmissionSources : emissionSources,
-            ),
+            label: tPost(subPost),
+            value: getEmissionSourcesTotalCo2(emissionSourcesToUse),
+            monetaryValue: getEmissionSourcesTotalMonetaryCo2(emissionSourcesToUse, false),
+            nonSpecificMonetaryValue: getEmissionSourcesTotalMonetaryCo2(emissionSourcesToUse, true),
             numberOfEmissionSource: emissionSources.length,
             numberOfValidatedEmissionSource: validatedEmissionSources.length,
-            uncertainty: sumEmissionSourcesUncertainty(validatedEmissionSources),
+            uncertainty: sumEmissionSourcesUncertainty(emissionSourcesToUse),
           }
         })
-        .filter((subPost) => subPost.numberOfEmissionSource > 0)
 
       const value = subPosts.flatMap((subPost) => subPost).reduce((acc, subPost) => acc + subPost.value, 0)
       const monetaryValue = subPosts
         .flatMap((subPost) => subPost)
         .reduce((acc, subPost) => acc + subPost.monetaryValue, 0)
+      const nonSpecificMonetaryValue = subPosts
+        .flatMap((subPost) => subPost)
+        .reduce((acc, subPost) => acc + subPost.nonSpecificMonetaryValue, 0)
 
       return {
         post,
+        label: tPost(post),
         value,
         monetaryValue,
+        nonSpecificMonetaryValue,
         uncertainty: subPosts.length > 0 ? computeUncertainty(subPosts, value) : undefined,
-        subPosts: subPosts.sort((a, b) => tPost(a.post).localeCompare(tPost(b.post))),
+        children: subPosts.sort((a, b) => tPost(a.post).localeCompare(tPost(b.post))),
         numberOfEmissionSource: subPosts.reduce((acc, subPost) => acc + subPost.numberOfEmissionSource, 0),
         numberOfValidatedEmissionSource: subPosts.reduce(
           (acc, subPost) => acc + subPost.numberOfValidatedEmissionSource,
@@ -83,18 +106,94 @@ export const computeResultsByPost = (
         ),
       } as ResultsByPost
     })
+    .sort((a, b) => a.label.localeCompare(b.label))
 
+  return [...postInfos, computeTotalForPosts(postInfos, tPost)]
+}
+
+export const computeTotalForPosts = (postInfos: ResultsByPost[], tPost: (key: string) => string): ResultsByPost => {
   const value = postInfos.reduce((acc, post) => acc + post.value, 0)
-  return [
-    ...postInfos,
+
+  return {
+    post: 'total',
+    label: tPost('total'),
+    value,
+    monetaryValue: postInfos.reduce((acc, post) => acc + post.monetaryValue, 0),
+    nonSpecificMonetaryValue: postInfos.reduce((acc, post) => acc + post.nonSpecificMonetaryValue, 0),
+    children: [],
+    uncertainty: computeUncertainty(postInfos, value),
+    numberOfEmissionSource: postInfos.reduce((acc, post) => acc + post.numberOfEmissionSource, 0),
+    numberOfValidatedEmissionSource: postInfos.reduce((acc, post) => acc + post.numberOfValidatedEmissionSource, 0),
+  }
+}
+
+export type ResultsByTag = {
+  value: number
+  familyId: string
+  label: string
+  uncertainty: number
+  children: { label: string; value: number; color: string; uncertainty: number; tagFamily: string }[]
+}
+
+export const computeResultsByTag = (
+  study: {
+    emissionSources: FullStudy['emissionSources']
+    emissionSourceTagFamilies: FullStudy['emissionSourceTagFamilies']
+  },
+  studySite: string,
+  withDependencies: boolean,
+  validatedOnly: boolean = true,
+  environment: Environment,
+  t: ReturnType<typeof useTranslations>,
+): ResultsByTag[] => {
+  const siteEmissionSources = getSiteEmissionSources(study.emissionSources, studySite)
+  const emissionSourceWithEmissionValue = siteEmissionSources
+    .filter((emissionSource) => filterWithDependencies(emissionSource.subPost, withDependencies))
+    .map((emissionSource) => ({
+      ...emissionSource,
+      ...getEmissionResults(emissionSource, environment),
+    }))
+
+  const tagFamiliesWithOthers = [
+    ...study.emissionSourceTagFamilies,
     {
-      post: 'total',
-      value,
-      monetaryValue: postInfos.reduce((acc, post) => acc + post.monetaryValue, 0),
-      subPosts: [],
-      uncertainty: computeUncertainty(postInfos, value),
-      numberOfEmissionSource: postInfos.reduce((acc, post) => acc + post.numberOfEmissionSource, 0),
-      numberOfValidatedEmissionSource: postInfos.reduce((acc, post) => acc + post.numberOfValidatedEmissionSource, 0),
-    } as ResultsByPost,
+      id: 'otherFamily',
+      name: t('other'),
+      emissionSourceTags: [{ name: t('other'), id: 'other', color: '', familyId: 'otherFamily' }],
+    },
   ]
+
+  return tagFamiliesWithOthers
+    .map((tagFamily) => {
+      const tagInfos = tagFamily.emissionSourceTags
+        .map((tag) => {
+          const emissionSourcesforTag = emissionSourceWithEmissionValue.filter((emissionSource) =>
+            tagFamily.id === 'otherFamily'
+              ? emissionSource.emissionSourceTags.length === 0
+              : emissionSource.emissionSourceTags?.some((emissionSourceTag) => emissionSourceTag.id === tag.id),
+          )
+          const validatedEmissionSources = emissionSourcesforTag.filter((emissionSource) => emissionSource.validated)
+          const emissionSourcesToUse = validatedOnly ? validatedEmissionSources : emissionSourcesforTag
+
+          return {
+            label: tag.name,
+            tagFamily: tag.familyId,
+            value: getEmissionSourcesTotalCo2(emissionSourcesToUse),
+            color: tag.color ?? '',
+            uncertainty: sumEmissionSourcesUncertainty(emissionSourcesToUse),
+          }
+        })
+        .filter((tag) => tag.value > 0)
+
+      const value = tagInfos.reduce((acc, post) => acc + post.value, 0)
+
+      return {
+        familyId: tagFamily.id,
+        label: tagFamily.name,
+        value,
+        children: tagInfos.filter((tag) => tag.value > 0),
+        uncertainty: computeUncertainty(tagInfos, value),
+      }
+    })
+    .filter((family) => family.value > 0)
 }

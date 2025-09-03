@@ -103,13 +103,13 @@ const EmissionSourceFactor = ({
     setValue(selectedFactor?.metaData?.title || '')
   }, [selectedFactor])
 
-  const subPostEmissionFactors = useMemo(
-    () => filterEmissionFactorsBySubPostAndEnv(emissionFactors, subPost, environment),
+  const emissionFactorsFilteredBySubPosts = useMemo(
+    () => filterEmissionFactorsBySubPostAndEnv(emissionFactors, [subPost], environment),
     [emissionFactors, subPost, environment],
   )
   const fuse = useMemo(() => {
     return new Fuse(
-      subPostEmissionFactors.filter((emissionFactor) => emissionFactor.metaData),
+      emissionFactorsFilteredBySubPosts.filter((emissionFactor) => emissionFactor.metaData),
       fuseOptions,
     )
   }, [emissionFactors])
@@ -128,9 +128,13 @@ const EmissionSourceFactor = ({
     )
   }, [fuse, value])
 
+  if (!environment) {
+    return null
+  }
+
   return (
     <div ref={containerRef}>
-      <div className={classNames(styles.gapped, 'align-center')}>
+      <div className="align-center gapped">
         <div className={classNames(styles.inputContainer, 'grow', { [styles.withSearch]: canEdit })}>
           <DebouncedInput
             disabled={!canEdit}
@@ -208,6 +212,7 @@ const EmissionSourceFactor = ({
             setDisplay(false)
             setAdvancedSearch(false)
           }}
+          environment={environment}
         />
       )}
       <Modal
@@ -218,7 +223,7 @@ const EmissionSourceFactor = ({
       >
         <>
           {t('glossary.versionDescription', { bcVersion: currentBEVersion })}
-          <div className={classNames(styles.gapped, 'justify-end mt1')}>
+          <div className="justify-end mt1 gapped">
             <Button onClick={() => setOldFactorAction(undefined)}>{t('duplicateDialog.cancel')}</Button>
             <Button
               onClick={() => {
