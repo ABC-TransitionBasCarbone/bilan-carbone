@@ -12,17 +12,14 @@ interface Props {
 
 const UncertaintyGauge = ({ uncertainty }: Props) => {
   const t = useTranslations('study.results.uncertainties')
-  const refUncertainties = [1, ...uncertaintyValues, 3.4]
+  const refUncertainties = useMemo(() => [1, ...uncertaintyValues, 3.4], [])
   const arcLength = useMemo(() => {
     const res = []
     for (let i = 0; i <= refUncertainties.length - 2; i++) {
-      console.log(i, refUncertainties[i + 1], refUncertainties[i])
       res.push(refUncertainties[i + 1] - refUncertainties[i])
     }
     return res
-  }, [])
-
-  console.log({ uncertainty })
+  }, [refUncertainties])
 
   return (
     <div className="grow">

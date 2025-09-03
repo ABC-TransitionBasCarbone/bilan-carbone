@@ -542,7 +542,7 @@ export const downloadStudyResults = async (
     data.push(environmentResults)
   }
 
-  if (hasAccessToBcExport(environment)) {
+  if (hasAccessToBcExport(environment) || environment === Environment.BC) {
     const consolidatedResults = formatConsolidatedStudyResultsForExport(
       study,
       siteList,
