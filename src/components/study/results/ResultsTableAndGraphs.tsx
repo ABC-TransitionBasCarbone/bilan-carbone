@@ -111,7 +111,7 @@ const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: s
           {activeTabs.length > 1 ? (
             <Tabs value={tabSelected} onChange={(_e, v) => setTabSelected(v)}>
               {activeTabs.map((tab) => (
-                <Tab key={tab} value={tab} label={t(tab)} />
+                <Tab key={tab} value={tab} label={t(tab)} data-testid={`${type}-${tab}`} />
               ))}
             </Tabs>
           ) : (

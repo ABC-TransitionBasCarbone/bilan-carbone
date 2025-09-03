@@ -19,6 +19,8 @@ describe('Real use case: BC V8_10', () => {
     cy.getByTestId('results-monetary-ratio').scrollIntoView().invoke('text').should('contain', '36,99') // 36.99251508579199
     cy.getByTestId('results-non-spe-monetary-ratio').scrollIntoView().invoke('text').should('contain', '36,99')
 
+    cy.getByTestId('post-table').click()
+
     cy.getByTestId('consolidated-results-table-row')
       .eq(0)
       .within(() => {
