@@ -692,7 +692,7 @@
         "beneficiary": "bénéficiaire"
       },
       "table": "Tableau",
-      "barChart": "Graphique",
+      "barChart": "Histogramme",
       "pieChart": "Camembert",
       "tagPieChartTitle": "Émissions, par tag ({unit})",
       "consolidatedChartTitle": "Émissions, par poste ({unit})",
