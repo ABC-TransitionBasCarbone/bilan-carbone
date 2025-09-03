@@ -411,18 +411,17 @@ export const addSourceToStudies = async (source: Import, transaction: Prisma.Tra
     getSourceLatestImportVersionId(source, transaction),
   ])
 
-  if (studies)
-    if (studies.length && !!importVersion) {
-      const filteredStudies = studies.filter((study) => {
-        const environment = study.createdBy.environment
-        return environment === Environment.CUT ? source === Import.CUT : source !== Import.CUT
-      })
+  if (studies.length && !!importVersion) {
+    const filteredStudies = studies.filter((study) => {
+      const environment = study.createdBy.environment
+      return environment === Environment.CUT ? source === Import.CUT : source !== Import.CUT
+    })
 
-      if (filteredStudies.length > 0) {
-        await transaction.studyEmissionFactorVersion.createMany({
-          data: filteredStudies.map((study) => ({ studyId: study.id, source, importVersionId: importVersion.id })),
-          skipDuplicates: true,
-        })
-      }
+    if (filteredStudies.length > 0) {
+      await transaction.studyEmissionFactorVersion.createMany({
+        data: filteredStudies.map((study) => ({ studyId: study.id, source, importVersionId: importVersion.id })),
+        skipDuplicates: true,
+      })
     }
+  }
 }
