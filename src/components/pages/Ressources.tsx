@@ -1,22 +1,20 @@
+'use server'
+
 import { Alert } from '@mui/material'
+import { Environment } from '@prisma/client'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
 import RessourceLinks from '../ressources/RessourceLinks'
 import styles from './Ressources.module.css'
 
-const RessourcesPage = async () => {
+interface Props {
+  environment: Environment
+}
+
+const RessourcesPage = async ({ environment }: Props) => {
   const t = await getTranslations('ressources')
 
   const ressources = [
-    {
-      title: 'methodeAssociative',
-      links: [
-        {
-          title: 'sphereAssociative',
-          link: 'https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative',
-        },
-      ],
-    },
     {
       title: 'enSavoirPlusBilan',
       links: [{ title: 'methodeBilanCarbone', link: 'https://www.bilancarbone-methode.com' }],
@@ -37,13 +35,27 @@ const RessourcesPage = async () => {
     },
   ]
 
+  if (environment === Environment.TILT) {
+    ressources.unshift({
+      title: 'methodeAssociative',
+      links: [
+        {
+          title: 'sphereAssociative',
+          link: 'https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative',
+        },
+      ],
+    })
+  }
+
   return (
     <Block title={t('title')} as="h1">
-      <Alert severity="info" sx={{ mb: 2 }}>
-        {t.rich('description', {
-          br: () => <br />,
-        })}
-      </Alert>
+      {environment === Environment.CUT && (
+        <Alert severity="info" sx={{ mb: 2 }}>
+          {t.rich('description', {
+            br: () => <br />,
+          })}
+        </Alert>
+      )}
       <div className={styles.ressources}>
         {ressources.map(({ title, links }) => (
           <RessourceLinks key={title} title={title} links={links} />
