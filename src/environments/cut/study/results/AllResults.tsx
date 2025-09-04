@@ -129,7 +129,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
             onClick={handlePDFDownload}
             loading={pdfLoading}
           >
-            {tResults('downloadPDF')}
+            {pdfLoading ? tResults('downloadingPDF') : tResults('downloadPDF')}
           </LoadingButton>
         </div>
         <Typography className={classNames(styles.infoContainer, 'ml2')}>{tResults('info')}</Typography>

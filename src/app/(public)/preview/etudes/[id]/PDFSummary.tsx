@@ -217,17 +217,17 @@ const PDFSummary = ({ study, environment }: Props) => {
                     <div className="pdf-data-value">{formatNumber(site.generalData.sessions)}</div>
                   </div>
                 </div>
-
-                <ConsolidatedResultsTable
-                  resultsUnit={study.resultsUnit}
-                  data={site.results}
-                  hiddenUncertainty
-                  expandAll
-                  hideExpandIcons
-                />
               </div>
             </div>
-
+            <div style={{ marginTop: '10rem' }}>
+              <ConsolidatedResultsTable
+                resultsUnit={study.resultsUnit}
+                data={site.results}
+                hiddenUncertainty
+                expandAll
+                hideExpandIcons
+              />
+            </div>
             <ChartsPage study={study} studySite={site.id} siteName={site.fullName} tPdf={tPdf} isAll={false} />
           </React.Fragment>
         ))}
