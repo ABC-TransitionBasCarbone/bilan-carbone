@@ -968,6 +968,7 @@
         "actions": "Actions",
         "add": "Ajouter",
         "delete": "Supprimer",
+        "duplicate": "Dupliquer",
         "error": "Erreur lors de la mise à jour du champs",
         "next": "Sous-poste suivant",
         "previous": "Sous-poste précédent",

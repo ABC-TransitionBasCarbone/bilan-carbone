@@ -968,6 +968,7 @@
         "actions": "Actions",
         "add": "Add",
         "delete": "Delete",
+        "duplicate": "Duplicate",
         "error": "Error while updating the field",
         "next": "Next sub-post",
         "previous": "Previous sub-post",
