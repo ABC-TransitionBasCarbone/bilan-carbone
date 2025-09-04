@@ -6,6 +6,7 @@ import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next
 import { getServerSession, NextAuthOptions, Session } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import { signIn, signOut, SignOutParams } from 'next-auth/react'
+import { cookies } from 'next/headers'
 import { DAY } from '../utils/time'
 
 export const signPassword = async (password: string) => {
@@ -213,10 +214,14 @@ export const signOutEnv = async <P extends boolean = true>(
   env: Environment = Environment.BC,
   options?: SignOutParams<P>,
 ): Promise<P extends true ? void : { url: string }> => {
+  const cookieStore = await cookies()
+  cookieStore.getAll().forEach((cookie) => {
+    cookieStore.delete(cookie.name)
+  })
+
   const result = (await signOut({
     callbackUrl: `/signed-out?env=${env}`,
     ...options,
   })) as P extends true ? void : { url: string }
-
   return result
 }
