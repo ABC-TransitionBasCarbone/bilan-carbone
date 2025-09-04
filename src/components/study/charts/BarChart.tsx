@@ -6,9 +6,9 @@ import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import styles from './BarChart.module.css'
 
-import { BasicTypeCharts, formatValueAndUnit, getColor, getLabel } from '@/utils/charts'
+import { BasicTypeCharts, formatValueAndUnit, getLabel, getPostColor, getSubpostColor } from '@/utils/charts'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
-import { StudyResultUnit } from '@prisma/client'
+import { StudyResultUnit, SubPost } from '@prisma/client'
 
 const BAR_CHART_CONSTANTS = {
   TICK_ANGLE: -20,
@@ -26,6 +26,7 @@ interface Props<T> {
   showLabelsOnBars?: boolean
   skipAnimation?: boolean
   onlyChildren?: boolean
+  showSubLevel?: boolean
 }
 
 const BarChart = <T extends BasicTypeCharts>({
@@ -38,6 +39,7 @@ const BarChart = <T extends BasicTypeCharts>({
   showLabelsOnBars = true,
   skipAnimation = false,
   onlyChildren = false,
+  showSubLevel = false,
 }: Props<T>) => {
   const tResults = useTranslations('study.results')
   const tUnits = useTranslations('study.results.units')
@@ -45,16 +47,76 @@ const BarChart = <T extends BasicTypeCharts>({
 
   const theme = useTheme()
 
-  const barData = useMemo(() => {
+  const { barData, seriesData } = useMemo(() => {
     const filteredData = results.filter((result) => result.post !== 'total' && result.label !== 'total')
 
-    const dataToFormat = onlyChildren ? filteredData.flatMap((result) => result.children) : filteredData
-    return {
-      labels: dataToFormat.map(({ label, post }) => getLabel(label, post, tPost)),
-      values: dataToFormat.map(({ value }) => value / STUDY_UNIT_VALUES[resultsUnit]),
-      colors: dataToFormat.map(({ post, color }) => getColor(theme, post, color)),
+    if (onlyChildren) {
+      const childrenData = filteredData.flatMap((result) => result.children)
+      return {
+        barData: {
+          labels: childrenData.map(({ label, post }) => getLabel(label, post, tPost)),
+          values: childrenData.map(({ value }) => value / STUDY_UNIT_VALUES[resultsUnit]),
+          colors: childrenData.map(({ post, color }) => getPostColor(theme, post, color)),
+        },
+        seriesData: [],
+      }
     }
-  }, [results, onlyChildren, tPost, resultsUnit, theme])
+
+    if (!showSubLevel) {
+      return {
+        barData: {
+          labels: filteredData.map(({ label, post }) => getLabel(label, post, tPost)),
+          values: filteredData.map(({ value }) => value / STUDY_UNIT_VALUES[resultsUnit]),
+          colors: filteredData.map(({ post, color }) => getPostColor(theme, post, color)),
+        },
+        seriesData: [],
+      }
+    }
+
+    // Two-level stacked bars - simple approach
+    const postLabels = filteredData.map(({ label, post }) => getLabel(label, post, tPost))
+
+    // Collect all unique subpost labels across all posts
+    const allSubpostLabels = new Set<string>()
+    filteredData.forEach((post) => {
+      post.children.forEach((child) => {
+        if (child.value > 0) {
+          allSubpostLabels.add(child.label)
+        }
+      })
+    })
+
+    // Create one series per unique subpost label
+    const series: any[] = []
+    Array.from(allSubpostLabels).forEach((subpostLabel) => {
+      const data: number[] = []
+      let seriesColor = ''
+
+      filteredData.forEach((post) => {
+        const subpost = post.children.find((child) => child.label === subpostLabel)
+        if (subpost && subpost.value > 0) {
+          data.push(subpost.value / STUDY_UNIT_VALUES[resultsUnit])
+          if (!seriesColor) {
+            seriesColor = getSubpostColor(theme, subpost.post as SubPost)
+          }
+        } else {
+          data.push(0)
+        }
+      })
+
+      series.push({
+        label: subpostLabel,
+        data,
+        color: seriesColor,
+        stack: 'subposts',
+      })
+    })
+
+    return {
+      barData: { labels: postLabels, values: [], colors: [] },
+      seriesData: series,
+    }
+  }, [results, onlyChildren, showSubLevel, tPost, resultsUnit, theme])
 
   const getBarLabel = (item: { value: number | null }) =>
     showLabelsOnBars && item.value && item.value > 0 ? formatValueAndUnit(item.value) : ''
@@ -63,6 +125,7 @@ const BarChart = <T extends BasicTypeCharts>({
     <div className={styles.barChart}>
       <MuiBarChart
         skipAnimation={skipAnimation}
+        colors={seriesData.length > 0 ? seriesData.map((s) => s.color) : undefined}
         xAxis={[
           {
             data: barData.labels,
@@ -75,20 +138,34 @@ const BarChart = <T extends BasicTypeCharts>({
             },
             tickPlacement: 'extremities',
             tickLabelPlacement: 'middle',
-            colorMap: {
-              type: 'ordinal',
-              values: barData.labels,
-              colors: barData.colors,
-            },
+            colorMap:
+              seriesData.length === 0
+                ? {
+                    type: 'ordinal',
+                    values: barData.labels,
+                    colors: barData.colors,
+                  }
+                : undefined,
           },
         ]}
-        series={[
-          {
-            data: barData.values,
-            valueFormatter: (value) => formatValueAndUnit(value ?? 0),
-            label: showLegend ? tResults('emissions') : undefined,
-          },
-        ]}
+        series={
+          seriesData.length > 0
+            ? seriesData.map((series, index) => ({
+                data: series.data,
+                valueFormatter: (value) => (value && value > 0 ? formatValueAndUnit(value) : null),
+                label: series.label,
+                stack: series.stack,
+                color: series.color,
+                id: `series-${index}`,
+              }))
+            : [
+                {
+                  data: barData.values,
+                  valueFormatter: (value) => formatValueAndUnit(value ?? 0),
+                  label: showLegend ? tResults('emissions') : undefined,
+                },
+              ]
+        }
         grid={{ horizontal: true }}
         yAxis={[
           {
@@ -97,7 +174,7 @@ const BarChart = <T extends BasicTypeCharts>({
         ]}
         axisHighlight={{ x: 'none' }}
         barLabel={showLabelsOnBars ? getBarLabel : undefined}
-        slots={showLegend ? undefined : { legend: () => null }}
+        slots={showLegend && seriesData.length === 0 ? undefined : { legend: () => null }}
         height={height}
         borderRadius={10}
       />

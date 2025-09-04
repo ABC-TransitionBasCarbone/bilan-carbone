@@ -48,6 +48,7 @@ export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll }: Props) =
           showLabelsOnPie={true}
           skipAnimation={true}
           results={computedResultsWithDep}
+          showSubLevel={false}
         />
       </div>
     </div>

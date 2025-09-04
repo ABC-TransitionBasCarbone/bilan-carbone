@@ -1,5 +1,6 @@
 import { Post } from '@/services/posts'
 import { createTheme } from '@mui/material/styles'
+import { SubPost } from '@prisma/client'
 
 const base = createTheme({
   cssVariables: true,
@@ -206,6 +207,123 @@ const theme = createTheme(base, {
       [Post.Fret]: { light: '#79C7AB', dark: '#469478' },
       [Post.FinDeVie]: { light: '#FBBC6B', dark: '#C88938' },
       [Post.UtilisationEtDependance]: { light: '#FBBC6B', dark: '#C88938' },
+    },
+    subPostColors: {
+      // Energies subposts - variations of #3F5488
+      [SubPost.CombustiblesFossiles]: '#4A5F9A',
+      [SubPost.CombustiblesOrganiques]: '#566AAC',
+      [SubPost.ReseauxDeChaleurEtDeVapeur]: '#6275BE',
+      [SubPost.ReseauxDeFroid]: '#6E80D0',
+      [SubPost.Electricite]: '#7A8BE2',
+
+      // AutresEmissionsNonEnergetiques subposts - variations of #3F5488
+      [SubPost.Agriculture]: '#3D4F82',
+      [SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas]: '#49587C',
+      [SubPost.EmissionsLieesALaProductionDeFroid]: '#556176',
+      [SubPost.EmissionsLieesAuxProcedesIndustriels]: '#616A70',
+      [SubPost.AutresEmissionsNonEnergetiques]: '#6D736A',
+
+      // IntrantsBiensEtMatieres subposts - variations of #5E97CB
+      [SubPost.MetauxPlastiquesEtVerre]: '#68A2D0',
+      [SubPost.PapiersCartons]: '#72ADD5',
+      [SubPost.MateriauxDeConstruction]: '#7CB8DA',
+      [SubPost.ProduitsChimiquesEtHydrogene]: '#86C3DF',
+      [SubPost.NourritureRepasBoissons]: '#90CEE4',
+      [SubPost.MatiereDestineeAuxEmballages]: '#9AD9E9',
+      [SubPost.AutresIntrants]: '#A4E4EE',
+      [SubPost.BiensEtMatieresEnApprocheMonetaire]: '#AEEFF3',
+
+      // IntrantsServices subposts - variations of #5E97CB
+      [SubPost.AchatsDeServices]: '#5A92C6',
+      [SubPost.UsagesNumeriques]: '#668DC1',
+      [SubPost.ServicesEnApprocheMonetaire]: '#7288BC',
+
+      // DechetsDirects subposts - variations of #3F5488
+      [SubPost.DechetsDEmballagesEtPlastiques]: '#3B4F80',
+      [SubPost.DechetsOrganiques]: '#474A78',
+      [SubPost.DechetsOrduresMenageres]: '#534570',
+      [SubPost.DechetsDangereux]: '#5F4068',
+      [SubPost.DechetsBatiments]: '#6B3B60',
+      [SubPost.DechetsFuitesOuEmissionsNonEnergetiques]: '#773658',
+      [SubPost.EauxUsees]: '#833150',
+      [SubPost.AutresDechets]: '#8F2C48',
+
+      // Fret subposts - variations of #79C7AB
+      [SubPost.FretEntrant]: '#83D2B6',
+      [SubPost.FretInterne]: '#8DDDC1',
+      [SubPost.FretSortant]: '#97E8CC',
+
+      // Deplacements subposts - variations of #79C7AB
+      [SubPost.DeplacementsDomicileTravail]: '#75C2A6',
+      [SubPost.DeplacementsProfessionnels]: '#71BDA1',
+      [SubPost.DeplacementsVisiteurs]: '#6DB89C',
+
+      // Immobilisations subposts - variations of #3F5488
+      [SubPost.Batiments]: '#453A94',
+      [SubPost.AutresInfrastructures]: '#4B3FA0',
+      [SubPost.Equipements]: '#5144AC',
+      [SubPost.Informatique]: '#5749B8',
+
+      // UtilisationEtDependance subposts - variations of #FBBC6B
+      [SubPost.UtilisationEnResponsabilite]: '#FCC776',
+      [SubPost.UtilisationEnDependance]: '#FDD281',
+      [SubPost.InvestissementsFinanciersRealises]: '#FEDD8C',
+
+      // FinDeVie subposts - variations of #FBBC6B
+      [SubPost.ConsommationDEnergieEnFinDeVie]: '#FAB760',
+      [SubPost.TraitementDesDechetsEnFinDeVie]: '#F9B255',
+      [SubPost.FuitesOuEmissionsNonEnergetiques]: '#F8AD4A',
+      [SubPost.TraitementDesEmballagesEnFinDeVie]: '#F7A83F',
+
+      // CUT subposts - unique colors
+      [SubPost.Batiment]: '#8B5A3C',
+      [SubPost.Equipe]: '#A0522D',
+      [SubPost.Energie]: '#CD853F',
+      [SubPost.ActivitesDeBureau]: '#DEB887',
+      [SubPost.MobiliteSpectateurs]: '#F4A460',
+      [SubPost.EquipesRecues]: '#D2B48C',
+      [SubPost.MaterielTechnique]: '#BC8F8F',
+      [SubPost.AutreMateriel]: '#F5DEB3',
+      [SubPost.Achats]: '#FFE4B5',
+      [SubPost.Fret]: '#FFDEAD',
+      [SubPost.Electromenager]: '#F5DEB3',
+      [SubPost.DechetsOrdinaires]: '#DDA0DD',
+      [SubPost.DechetsExceptionnels]: '#DA70D6',
+      [SubPost.MaterielDistributeurs]: '#FF69B4',
+      [SubPost.MaterielCinema]: '#FF1493',
+      [SubPost.CommunicationDigitale]: '#DC143C',
+      [SubPost.CaissesEtBornes]: '#B22222',
+
+      // TILT subposts - unique colors
+      [SubPost.FroidEtClim]: '#87CEEB',
+      [SubPost.ActivitesAgricoles]: '#9ACD32',
+      [SubPost.ActivitesIndustrielles]: '#8FBC8F',
+      [SubPost.DeplacementsDomicileTravailSalaries]: '#20B2AA',
+      [SubPost.DeplacementsDomicileTravailBenevoles]: '#48D1CC',
+      [SubPost.DeplacementsDansLeCadreDUneMissionAssociativeSalaries]: '#00CED1',
+      [SubPost.DeplacementsDansLeCadreDUneMissionAssociativeBenevoles]: '#5F9EA0',
+      [SubPost.DeplacementsDesBeneficiaires]: '#4682B4',
+      [SubPost.DeplacementsFabricationDesVehicules]: '#6495ED',
+      [SubPost.Entrant]: '#7B68EE',
+      [SubPost.Interne]: '#9370DB',
+      [SubPost.Sortant]: '#8A2BE2',
+      [SubPost.TransportFabricationDesVehicules]: '#9932CC',
+      [SubPost.RepasPrisParLesSalaries]: '#FF6347',
+      [SubPost.RepasPrisParLesBenevoles]: '#FF7F50',
+      [SubPost.UtilisationEnResponsabiliteConsommationDeBiens]: '#FFA07A',
+      [SubPost.UtilisationEnResponsabiliteConsommationNumerique]: '#FA8072',
+      [SubPost.UtilisationEnResponsabiliteConsommationDEnergie]: '#F08080',
+      [SubPost.UtilisationEnResponsabiliteFuitesEtAutresConsommations]: '#CD5C5C',
+      [SubPost.UtilisationEnDependanceConsommationDeBiens]: '#DC143C',
+      [SubPost.UtilisationEnDependanceConsommationNumerique]: '#B22222',
+      [SubPost.UtilisationEnDependanceConsommationDEnergie]: '#A52A2A',
+      [SubPost.UtilisationEnDependanceFuitesEtAutresConsommations]: '#8B0000',
+      [SubPost.TeletravailSalaries]: '#FFD700',
+      [SubPost.TeletravailBenevoles]: '#FFA500',
+      [SubPost.EquipementsDesSalaries]: '#FF8C00',
+      [SubPost.ParcInformatiqueDesSalaries]: '#FF4500',
+      [SubPost.EquipementsDesBenevoles]: '#FF6347',
+      [SubPost.ParcInformatiqueDesBenevoles]: '#FF0000',
     },
   },
 })

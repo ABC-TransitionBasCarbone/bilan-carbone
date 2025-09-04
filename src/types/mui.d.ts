@@ -1,6 +1,7 @@
 import { CutPost, Post } from '@/services/posts'
 import '@mui/material/styles'
 import { CSSObject } from '@mui/material/styles'
+import { SubPost } from '@prisma/client'
 import { CSSProperties } from 'react'
 
 declare module '@mui/material/styles' {
@@ -14,6 +15,9 @@ declare module '@mui/material/styles' {
       box: CSSObject
       postColors: {
         [key in Post]: { light: string; dark?: string }
+      }
+      subPostColors: {
+        [key in SubPost]: string
       }
       roles: {
         validator: string
@@ -43,6 +47,9 @@ declare module '@mui/material/styles' {
       box: CSSObject
       postColors?: {
         [key in CutPost]: { light: string; dark?: string }
+      }
+      subPostColors?: {
+        [key in SubPost]: string
       }
       roles: {
         validator: string

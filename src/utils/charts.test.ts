@@ -2,7 +2,7 @@ import { Post } from '@/services/posts'
 import { translationMock } from '@/tests/utils/models/translationsMock'
 import { expect } from '@jest/globals'
 import { Theme } from '@mui/material'
-import { formatValueAndUnit, getColor, getLabel } from './charts'
+import { formatValueAndUnit, getLabel, getPostColor } from './charts'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('../services/file', () => ({ download: jest.fn() }))
@@ -35,7 +35,7 @@ describe('charts utils function', () => {
         palette: { primary: { light: '#0000FF' } },
         custom: { postColors: { Alimentation: { light: '#00FF00' } } },
       } as unknown as Theme
-      expect(getColor(themeColors, Post.Alimentation, '#FF0000')).toBe('#FF0000')
+      expect(getPostColor(themeColors, Post.Alimentation, '#FF0000')).toBe('#FF0000')
     })
 
     test('should return post color if post exists and color not provided', () => {
@@ -43,7 +43,7 @@ describe('charts utils function', () => {
         palette: { primary: { light: '#0000FF' } },
         custom: { postColors: { Alimentation: { light: '#00FF00' } } },
       } as unknown as Theme
-      expect(getColor(themeColors, Post.Alimentation)).toBe('#00FF00')
+      expect(getPostColor(themeColors, Post.Alimentation)).toBe('#00FF00')
     })
 
     test('should return default color if no post and no color', () => {
@@ -51,7 +51,7 @@ describe('charts utils function', () => {
         palette: { primary: { light: '#0000FF' } },
         custom: { postColors: { Alimentation: { light: '#00FF00' } } },
       } as unknown as Theme
-      expect(getColor(themeColors)).toBe('#0000FF')
+      expect(getPostColor(themeColors)).toBe('#0000FF')
     })
 
     test('should return default color if post does not exists and no color', () => {
@@ -59,7 +59,7 @@ describe('charts utils function', () => {
         palette: { primary: { light: '#0000FF' } },
         custom: { postColors: { Alimentation: { light: '#00FF00' } } },
       } as unknown as Theme
-      expect(getColor(themeColors, Post.Energies)).toBe('#0000FF')
+      expect(getPostColor(themeColors, Post.Energies)).toBe('#0000FF')
     })
 
     test('should return default color if post is not a post', () => {
@@ -67,7 +67,7 @@ describe('charts utils function', () => {
         palette: { primary: { light: '#0000FF' } },
         custom: { postColors: { Alimentation: { light: '#00FF00' } } },
       } as unknown as Theme
-      expect(getColor(themeColors, 'okok')).toBe('#0000FF')
+      expect(getPostColor(themeColors, 'okok')).toBe('#0000FF')
     })
   })
 

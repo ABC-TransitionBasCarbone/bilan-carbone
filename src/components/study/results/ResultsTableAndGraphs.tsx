@@ -66,8 +66,9 @@ const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: s
           <PieChart
             results={filteredResultsWithTotal}
             resultsUnit={resultsUnit ?? StudyResultUnit.T}
-            hideLegend
             onlyChildren={type === 'tag'}
+            showSubLevel={true}
+            showLabelsOnPie={true}
           />
         )
       case TabsPossibilities.barChart:
@@ -77,6 +78,7 @@ const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: s
             resultsUnit={resultsUnit}
             showLabelsOnBars={false}
             onlyChildren={type === 'tag'}
+            showSubLevel={true}
           />
         )
       default:

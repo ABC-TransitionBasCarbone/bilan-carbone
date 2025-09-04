@@ -1,4 +1,5 @@
 import { Theme } from '@mui/material'
+import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { formatNumber } from './number'
 import { isPost } from './post'
@@ -17,7 +18,7 @@ export const formatValueAndUnit = (value: number | null, unit?: string) => {
   return `${formatNumber(safeValue, 2)} ${unitToDisplay}`
 }
 
-export const getColor = (themeColors: Theme, post?: string, color?: string) => {
+export const getPostColor = (themeColors: Theme, post?: string, color?: string) => {
   if (color) {
     return color
   }
@@ -27,6 +28,13 @@ export const getColor = (themeColors: Theme, post?: string, color?: string) => {
   }
 
   return themeColors.palette.primary.light
+}
+
+export const getSubpostColor = (theme: Theme, subpost?: SubPost): string => {
+  if (subpost && theme.custom.subPostColors[subpost]) {
+    return theme.custom.subPostColors[subpost]
+  }
+  return theme.palette.primary.light
 }
 
 export const getLabel = (label?: string, post?: string, tPost?: ReturnType<typeof useTranslations>) => {

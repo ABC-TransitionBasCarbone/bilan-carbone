@@ -161,6 +161,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
               showTitle={false}
               showLabelsOnPie={true}
               results={computedResultsWithDep}
+              showSubLevel={false}
             />
           </TabPanel>
         </Box>
