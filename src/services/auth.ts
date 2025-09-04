@@ -7,7 +7,6 @@ import { getServerSession, NextAuthOptions, Session } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import { signIn, signOut, SignOutParams } from 'next-auth/react'
 import { DAY } from '../utils/time'
-import { clearCookies } from './serverFunctions/cookies'
 
 export const signPassword = async (password: string) => {
   const salt = await bcrypt.genSalt(10)
@@ -214,8 +213,6 @@ export const signOutEnv = async <P extends boolean = true>(
   env: Environment = Environment.BC,
   options?: SignOutParams<P>,
 ): Promise<P extends true ? void : { url: string }> => {
-  clearCookies()
-
   const result = (await signOut({
     callbackUrl: `/signed-out?env=${env}`,
     ...options,
