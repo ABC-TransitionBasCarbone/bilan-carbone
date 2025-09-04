@@ -5,8 +5,9 @@ import {
   getParentTableQuestion,
   getQuestionsFromIdIntern,
 } from '@/services/serverFunctions/question'
-import { addTableRow, createFixedTableRow, deleteTableRow, isTableAnswer } from '@/utils/tableInput'
-import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
+import { addTableRow, createFixedTableRow, deleteTableRow, duplicateTableRow, isTableAnswer } from '@/utils/tableInput'
+import { ContentCopy, Delete } from '@mui/icons-material'
+import { Box, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import { Prisma, QuestionType } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
@@ -86,6 +87,32 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
     }
   }, [isFixedTable, syncAllValuesToTableData, autoSave, question])
 
+  const populateFormFields = useCallback(
+    (tableAnswer: TableAnswer) => {
+      tableAnswer.rows.forEach((row) => {
+        questions.forEach((question) => {
+          const fieldName = `${question.idIntern}-${row.id}`
+          const value = row.data[question.idIntern] || ''
+          setValue(fieldName, value)
+        })
+      })
+    },
+    [questions, setValue],
+  )
+
+  const handleDuplicateRow = useCallback(
+    async (rowId: string) => {
+      const updatedTableAnswer = syncAllValuesToTableData()
+      const newTableAnswer = duplicateTableRow(updatedTableAnswer, rowId)
+      setTableAnswer(newTableAnswer)
+
+      populateFormFields(newTableAnswer)
+
+      autoSave.saveField(question, newTableAnswer as unknown as Prisma.InputJsonValue)
+    },
+    [syncAllValuesToTableData, populateFormFields, autoSave, question],
+  )
+
   const columns = useMemo<ColumnDef<TableRowData>[]>(() => {
     const col = questions.map((question, questionIndex) => ({
       id: question.idIntern,
@@ -115,24 +142,32 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
       },
     })) as ColumnDef<TableRowData>[]
 
-    // Only add delete column for non-fixed tables
+    // Only add actions column for non-fixed tables
     if (!isFixedTable) {
       col.push({
-        id: 'delete',
+        id: 'actions',
         header: tCutQuestions('actions'),
         accessorKey: 'id',
         cell: ({ row }) => {
           const tableRow = row.original as TableRowData
           return (
             <Box>
-              <Button
+              <IconButton
+                title={tCutQuestions('duplicate')}
+                aria-label="duplicate"
+                color="primary"
+                onClick={() => handleDuplicateRow(tableRow.id)}
+              >
+                <ContentCopy />
+              </IconButton>
+              <IconButton
                 title={tCutQuestions('delete')}
                 aria-label="delete"
                 color="error"
                 onClick={() => handleDeleteRow(tableRow.id)}
               >
-                Delete
-              </Button>
+                <Delete />
+              </IconButton>
             </Box>
           )
         },
@@ -148,23 +183,11 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
     formErrors,
     control,
     handleDeleteRow,
+    handleDuplicateRow,
     setValue,
     isFixedTable,
     handleTableFieldBlur,
   ])
-
-  const populateFormFields = useCallback(
-    (tableAnswer: TableAnswer) => {
-      tableAnswer.rows.forEach((row) => {
-        questions.forEach((question) => {
-          const fieldName = `${question.idIntern}-${row.id}`
-          const value = row.data[question.idIntern] || ''
-          setValue(fieldName, value)
-        })
-      })
-    },
-    [questions, setValue],
-  )
 
   const loadTableData = useCallback(async () => {
     if (questions.length === 0) {
