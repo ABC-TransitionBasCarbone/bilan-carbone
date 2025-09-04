@@ -59,19 +59,19 @@ export const authOptions: NextAuthOptions = {
 
         return dbAccount
           ? {
-              ...token,
-              id: dbAccount.user.id,
-              userId: dbAccount.user.id,
-              accountId: dbAccount.id,
-              firstName: dbAccount.user.firstName,
-              lastName: dbAccount.user.lastName,
-              role: dbAccount?.role,
-              organizationVersionId: dbAccount?.organizationVersionId,
-              organizationId: '',
-              level: dbAccount.user.level,
-              environment: dbAccount?.organizationVersion?.environment,
-              needsAccountSelection: false,
-            }
+            ...token,
+            id: dbAccount.user.id,
+            userId: dbAccount.user.id,
+            accountId: dbAccount.id,
+            firstName: dbAccount.user.firstName,
+            lastName: dbAccount.user.lastName,
+            role: dbAccount?.role,
+            organizationVersionId: dbAccount?.organizationVersionId,
+            organizationId: '',
+            level: dbAccount.user.level,
+            environment: dbAccount?.organizationVersion?.environment,
+            needsAccountSelection: false,
+          }
           : token
       }
 
@@ -217,5 +217,6 @@ export const signOutEnv = async <P extends boolean = true>(
     callbackUrl: `/signed-out?env=${env}`,
     ...options,
   })) as P extends true ? void : { url: string }
+
   return result
 }
