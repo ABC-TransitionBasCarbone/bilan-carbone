@@ -1,0 +1,13 @@
+.helpButton {
+  padding: 0;
+  min-width: auto;
+  background: none;
+  border: none;
+  cursor: help;
+  border-radius: 100%;
+}
+
+.helpButton:focus {
+  outline: 2px solid var(--mui-palette-primary-main);
+  outline-offset: 2px;
+}

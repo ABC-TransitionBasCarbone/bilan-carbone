@@ -156,6 +156,14 @@ const theme = createTheme(base, {
         },
       },
     },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          fontSize: '1rem',
+          lineHeight: 'normal',
+        },
+      },
+    },
   },
   custom: {
     palette: {

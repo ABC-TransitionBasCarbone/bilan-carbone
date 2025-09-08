@@ -53,6 +53,7 @@ export interface EmissionFactorInfo {
   relatedQuestions?: string[]
   conditionalRules?: ConditionalRule[]
   dependentFields?: SiteDependentField[]
+  helperText?: string
 }
 
 export const SITE_DEPENDENT_FIELDS = [
@@ -177,6 +178,10 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     emissionFactors: SHORT_DISTANCE_TRANSPORT_EMISSION_FACTORS,
   },
   // DeplacementsProfessionnels
+  '10-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {
+    helperText:
+      'Les déplacements professionnels de vos collaborateurs sont tous les déplacements autres que les déplacements domicile-travail, effectués dans le cadre du travail. Ceux-ci incluent par exemple les déplacements pour se rendre à des congrès, conventions, festivals, prévisionnages, etc.',
+  },
   '11-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
   '12-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
   '13-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
