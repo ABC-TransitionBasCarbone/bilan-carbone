@@ -4,7 +4,9 @@ import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import { Box, Tooltip, Typography } from '@mui/material'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
+import styles from './QuestionContainer.module.css'
 import {
   StyledEmissionResults,
   StyledQuestionContainer,
@@ -42,7 +44,14 @@ const QuestionContainer = ({ question, children, showResults, results, saveStatu
           <StyledQuestionTitle>{question.label}</StyledQuestionTitle>
           {helperText && (
             <Tooltip title={helperText} arrow placement="right">
-              <HelpOutlineIcon color="primary" />
+              <button
+                type="button"
+                className={classNames('flex-cc', styles.helpButton)}
+                aria-label="Aide - Informations supplémentaires"
+                tabIndex={0}
+              >
+                <HelpOutlineIcon color="primary" fontSize="small" />
+              </button>
             </Tooltip>
           )}
         </Box>
