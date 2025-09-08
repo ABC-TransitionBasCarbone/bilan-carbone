@@ -1,4 +1,3 @@
-import NotFound from '@/components/pages/NotFound'
 import { auth } from '@/services/auth'
 import { UserSession } from 'next-auth'
 import { redirect } from 'next/navigation'
@@ -14,7 +13,7 @@ const withAuth = (WrappedComponent: React.ComponentType<any & UserSessionProps>)
   const Component = async (props: any) => {
     const session = await auth()
     if (!session || !session.user) {
-      return <NotFound />
+      redirect('/login')
     }
 
     if (session.user.needsAccountSelection) {
