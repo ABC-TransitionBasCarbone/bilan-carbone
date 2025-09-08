@@ -996,7 +996,8 @@
         "retry": "Réessayer",
         "finish": "Terminer",
         "noQuestions": "Aucune question trouvée pour ce sous-poste",
-        "autoSaveError": "Certaines réponses n'ont pas pu être sauvegardées automatiquement. Veuillez vérifier votre connexion et réessayer."
+        "autoSaveError": "Certaines réponses n'ont pas pu être sauvegardées automatiquement. Veuillez vérifier votre connexion et réessayer.",
+        "helpAriaLabel": "Informations supplémentaires sur la question"
       }
     },
     "create": {

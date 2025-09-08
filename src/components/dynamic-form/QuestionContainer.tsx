@@ -21,6 +21,7 @@ import { FieldType } from './types/questionTypes'
 const QuestionContainer = ({ question, children, showResults, results, saveStatus }: QuestionContainerProps) => {
   const inTable = ID_INTERN_PREFIX_REGEX.test(question.idIntern) && question.type !== FieldType.TABLE
   const tResultsUnits = useTranslations('study.results.units')
+  const tQuestions = useTranslations('emissionFactors.post.cutQuestions')
   const helperText = emissionFactorMap[question.idIntern]?.helperText
 
   if (inTable) {
@@ -47,7 +48,7 @@ const QuestionContainer = ({ question, children, showResults, results, saveStatu
               <button
                 type="button"
                 className={classNames('flex-cc', styles.helpButton)}
-                aria-label="Aide - Informations supplémentaires"
+                aria-label={tQuestions('helpAriaLabel')}
                 tabIndex={0}
               >
                 <HelpOutlineIcon color="primary" fontSize="small" />
