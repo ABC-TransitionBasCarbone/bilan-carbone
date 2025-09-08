@@ -1,0 +1,7 @@
+.helpIcon {
+  cursor: pointer;
+}
+
+.helpIcon:hover {
+  color: var(--mui-palette-primary-dark);
+}
