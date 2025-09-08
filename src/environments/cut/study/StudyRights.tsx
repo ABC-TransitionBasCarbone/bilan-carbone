@@ -52,7 +52,6 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
     numberOfSessions: number
     numberOfTickets: number
     numberOfOpenDays: number
-    distanceToParis: number
     numberOfProgrammedFilms: number
   } | null>(null)
 
@@ -96,7 +95,6 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
       numberOfOpenDays: siteData?.numberOfOpenDays ?? 0,
       numberOfSessions: siteData?.numberOfSessions ?? 0,
       numberOfTickets: siteData?.numberOfTickets ?? 0,
-      distanceToParis: siteData?.distanceToParis ?? 0,
     },
   })
 
@@ -114,7 +112,6 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
             numberOfOpenDays: newSiteData.numberOfOpenDays ?? 0,
             numberOfSessions: newSiteData.numberOfSessions ?? 0,
             numberOfTickets: newSiteData.numberOfTickets ?? 0,
-            distanceToParis: newSiteData.distanceToParis ?? 0,
             numberOfProgrammedFilms: newSiteData.site.cnc?.numberOfProgrammedFilms ?? 0,
           }
 
@@ -183,7 +180,6 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
           numberOfSessions: data.numberOfSessions ?? 0,
           numberOfTickets: data.numberOfTickets ?? 0,
           numberOfOpenDays: data.numberOfOpenDays ?? 0,
-          distanceToParis: data.distanceToParis ?? 0,
           numberOfProgrammedFilms: data.numberOfProgrammedFilms ?? 0,
         })
       }
@@ -199,7 +195,6 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
         numberOfSessions: originalValues.numberOfSessions,
         numberOfTickets: originalValues.numberOfTickets,
         numberOfOpenDays: originalValues.numberOfOpenDays,
-        distanceToParis: originalValues.distanceToParis,
         numberOfProgrammedFilms: originalValues.numberOfProgrammedFilms,
       })
     }
@@ -215,7 +210,6 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
           numberOfSessions: pendingSiteChanges.pendingData.numberOfSessions ?? 0,
           numberOfTickets: pendingSiteChanges.pendingData.numberOfTickets ?? 0,
           numberOfOpenDays: pendingSiteChanges.pendingData.numberOfOpenDays ?? 0,
-          distanceToParis: pendingSiteChanges.pendingData.distanceToParis ?? 0,
           numberOfProgrammedFilms: pendingSiteChanges.pendingData.numberOfProgrammedFilms ?? 0,
         })
         setPendingSiteChanges(null)
@@ -302,16 +296,6 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
                 name="numberOfOpenDays"
                 data-testid="new-study-number-of-open-days"
                 label={labelWithYear('numberOfOpenDays')}
-                translation={t}
-                type="number"
-                className={styles.formTextField}
-                onBlur={onStudyCinemaUpdate}
-              />
-              <FormTextField
-                control={form.control}
-                name="distanceToParis"
-                data-testid="new-study-distance-to-paris"
-                label={t('distanceToParis')}
                 translation={t}
                 type="number"
                 className={styles.formTextField}

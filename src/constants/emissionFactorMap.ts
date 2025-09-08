@@ -59,7 +59,6 @@ export const SITE_DEPENDENT_FIELDS = [
   'numberOfSessions',
   'numberOfTickets',
   'numberOfOpenDays',
-  'distanceToParis',
   'numberOfProgrammedFilms',
 ] as const
 
@@ -242,7 +241,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   [SHORT_DISTANCE_QUESTION_ID]: {
     isSpecial: true,
     relatedQuestions: [LONG_DISTANCE_QUESTION_ID],
-    dependentFields: ['numberOfTickets', 'distanceToParis'],
+    dependentFields: ['numberOfTickets'],
     conditionalRules: [
       {
         idIntern: MOBILIY_SURVEY_QUESTION_ID,
@@ -310,7 +309,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   [LONG_DISTANCE_QUESTION_ID]: {
     isSpecial: true,
     relatedQuestions: [SHORT_DISTANCE_QUESTION_ID],
-    dependentFields: ['numberOfTickets', 'distanceToParis'],
+    dependentFields: ['numberOfTickets'],
     conditionalRules: [
       {
         idIntern: MOBILIY_SURVEY_QUESTION_ID,
@@ -344,7 +343,6 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   [MOVIE_TEAM_QUESTION_ID]: {
     emissionFactors: { transport: '43256', meal: '20682' },
     isSpecial: true,
-    dependentFields: ['distanceToParis'],
   },
   // Matériel technique
   '10-decrivez-les-differentes-salles-du-cinema': {},
@@ -388,7 +386,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   [MOVIE_DEMAT_QUESTION_ID]: {
     isSpecial: true,
     emissionFactorImportedId: '142',
-    dependentFields: ['distanceToParis', 'numberOfProgrammedFilms'],
+    dependentFields: ['numberOfProgrammedFilms'],
   },
   [MOVIE_DCP_QUESTION_ID]: { isSpecial: true, emissionFactorImportedId: '143' },
   'combien-de-donnees-stockez-vous-dans-un-cloud': { emissionFactorImportedId: '141' },

@@ -3,6 +3,7 @@ import { filterAllowedStudies } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { ChangeStudyCinemaCommand } from '@/services/serverFunctions/study.command'
 import { checkLevel, getAllowedLevels } from '@/services/study'
+import { mapCncToStudySite } from '@/utils/cnc'
 import { isAdminOnOrga } from '@/utils/organization'
 import { getUserRoleOnPublicStudy } from '@/utils/study'
 import { isAdmin } from '@/utils/user'
@@ -485,7 +486,32 @@ export const updateStudySites = async (
       promises.push(transaction.studySite.deleteMany({ where: { id: { in: deletedSiteIds }, studyId } }))
     }
     if (newStudySites.length) {
+      const siteIds = newStudySites.map((site) => site.siteId)
+      const sitesWithCNC = await transaction.site.findMany({
+        where: { id: { in: siteIds } },
+        include: {
+          cnc: {
+            select: {
+              seances: true,
+              entrees2023: true,
+              semainesActivite: true,
+              latitude: true,
+              longitude: true,
+            },
+          },
+        },
+      })
+
       newStudySites.forEach((studySite) => {
+        const siteWithCNC = sitesWithCNC.find((s) => s.id === studySite.siteId)
+        const cncData = siteWithCNC?.cnc
+
+        const enhancedStudySite = { ...studySite }
+
+        if (cncData) {
+          Object.assign(enhancedStudySite, mapCncToStudySite(cncData, enhancedStudySite))
+        }
+
         promises.push(
           transaction.studySite.upsert({
             where: { studyId_siteId: { studyId, siteId: studySite.siteId } },
@@ -495,7 +521,7 @@ export const updateStudySites = async (
               volunteerNumber: studySite.volunteerNumber,
               beneficiaryNumber: studySite.beneficiaryNumber,
             },
-            create: studySite,
+            create: enhancedStudySite,
           }),
         )
       })
@@ -617,6 +643,11 @@ export const getStudiesSitesFromIds = async (siteIds: string[]) =>
             select: {
               id: true,
               numberOfProgrammedFilms: true,
+              latitude: true,
+              longitude: true,
+              seances: true,
+              entrees2023: true,
+              semainesActivite: true,
             },
           },
         },

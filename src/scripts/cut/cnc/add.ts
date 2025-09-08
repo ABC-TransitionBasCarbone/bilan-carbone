@@ -5,6 +5,14 @@ import { parse } from 'csv-parse'
 import fs from 'fs'
 import { getEncoding } from '../../../utils/csv'
 
+const parseInteger = (value: string | number | undefined): number | undefined => {
+  return value ? parseInt(value.toString().replace(/\s+/g, ''), 10) : undefined
+}
+
+const parseDecimal = (value: string | number | undefined): number | undefined => {
+  return value ? parseFloat(value.toString().replace(/\s+/g, '')) : undefined
+}
+
 const addCNC = async (file: string) => {
   const cncs: Prisma.CncCreateInput[] = []
   await new Promise<void>((resolve, reject) => {
@@ -85,19 +93,19 @@ const addCNC = async (file: string) => {
             codeInsee: row.codeinsee,
             commune: row.commune,
             dep: row.dep,
-            ecrans: row.ecrans ? parseInt(row.ecrans.toString(), 10) : undefined,
-            fauteuils: row.fauteuils ? parseInt(row.fauteuils.toString(), 10) : undefined,
-            semainesActivite: row.semainesdactivite ? parseInt(row.semainesdactivite.toString(), 10) : undefined,
-            seances: row.seances ? parseInt(row.seances.toString(), 10) : undefined,
-            entrees2023: row.entrees2023 ? parseInt(row.entrees2023.toString(), 10) : undefined,
-            entrees2022: row.entrees2022 ? parseInt(row.entrees2022.toString(), 10) : undefined,
-            evolutionEntrees: row.evolutionentrees ? parseFloat(row.evolutionentrees.toString()) : undefined,
+            ecrans: parseInteger(row.ecrans),
+            fauteuils: parseInteger(row.fauteuils),
+            semainesActivite: parseInteger(row.semainesdactivite),
+            seances: parseInteger(row.seances),
+            entrees2023: parseInteger(row.entrees2023),
+            entrees2022: parseInteger(row.entrees2022),
+            evolutionEntrees: parseDecimal(row.evolutionentrees),
             trancheEntrees: row.tranchedentrees,
             genre: row.genre,
             multiplexe: row.multiplexe === 'OUI',
-            latitude: row.latitude ? parseFloat(row.latitude.toString()) : undefined,
-            longitude: row.longitude ? parseFloat(row.longitude.toString()) : undefined,
-            numberOfProgrammedFilms: row.nombredefilmsprogrammes ? Number(row.nombredefilmsprogrammes.toString()) : 0,
+            latitude: parseDecimal(row.latitude),
+            longitude: parseDecimal(row.longitude),
+            numberOfProgrammedFilms: parseInteger(row.nombredefilmsprogrammes) || 0,
           })
         },
       )
