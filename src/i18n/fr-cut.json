@@ -163,5 +163,8 @@
       "contributorInvitation": "Demande de contribution sur l'étude {studyName}",
       "addedUsersByFile": "Autorisation pour l'ajout d'utilisateurs"
     }
+  },
+  "ressources": {
+    "contacterViaFormulaire": "Écrire directement à {supportEmail}"
   }
 }

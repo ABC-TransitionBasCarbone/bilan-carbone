@@ -1,5 +1,6 @@
 'use server'
 
+import { EMAIL_CLIENT_CONFIGS } from '@/types/email'
 import { Alert } from '@mui/material'
 import { Environment } from '@prisma/client'
 import { getTranslations } from 'next-intl/server'
@@ -13,34 +14,44 @@ interface Props {
 
 const RessourcesPage = async ({ environment }: Props) => {
   const t = await getTranslations('ressources')
+  const config = EMAIL_CLIENT_CONFIGS[environment]
+  const supportEmail = config.supportEmail
 
   const ressources = [
     {
-      title: 'enSavoirPlusBilan',
-      links: [{ title: 'methodeBilanCarbone', link: 'https://www.bilancarbone-methode.com' }],
+      title: t('enSavoirPlusBilan'),
+      links: [{ title: t('methodeBilanCarbone'), link: 'https://www.bilancarbone-methode.com' }],
     },
     {
-      title: 'questionMethodo',
+      title: t('questionMethodo'),
       links: [
-        { title: 'openCarbonPractice', link: 'https://www.opencarbonpractice.com/rejoindre-la-communaute' },
-        { title: 'contacterViaFormulaire', link: 'https://abc-transitionbascarbone.fr/contact-et-hotline' },
+        { title: t('openCarbonPractice'), link: 'https://www.opencarbonpractice.com/rejoindre-la-communaute' },
+        {
+          title: t('contacterViaFormulaire', { supportEmail }),
+          link: config.contactFormUrl,
+          isTranslated: true,
+        },
       ],
     },
     {
-      title: 'questionTechnique',
+      title: t('questionTechnique'),
       links: [
-        { title: 'lireLaFAQ', link: 'https://association-pour-la-transition-1.gitbook.io/bc+' },
-        { title: 'ecrireMail', link: 'mailto:support@abc-transitionbascarbone.fr' },
+        { title: t('lireLaFAQ'), link: 'https://association-pour-la-transition-1.gitbook.io/bc+' },
+        {
+          title: t('ecrireMail', { supportEmail }),
+          link: `mailto:${supportEmail}`,
+          isTranslated: true,
+        },
       ],
     },
   ]
 
   if (environment === Environment.TILT) {
     ressources.unshift({
-      title: 'methodeAssociative',
+      title: t('methodeAssociative'),
       links: [
         {
-          title: 'sphereAssociative',
+          title: t('sphereAssociative'),
           link: 'https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative',
         },
       ],
