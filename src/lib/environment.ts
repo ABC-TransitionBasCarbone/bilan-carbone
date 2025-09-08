@@ -6,8 +6,8 @@ export const EmailConfigSchema = z.object({
   MAIL_PORT: z.coerce.number().int().positive(),
   MAIL_USER: z.string().email('MAIL_USER must be a valid email'),
   MAIL_PASSWORD: z.string().min(1, 'MAIL_PASSWORD is missing'),
-  CONTACT_FORM_URL: z.string().url('CONTACT_FORM_URL must be a valid URL').optional(),
-  SUPPORT_EMAIL: z.string().email('SUPPORT_EMAIL must be a valid email').optional(),
+  CONTACT_FORM_URL: z.string().min(1, 'CONTACT_FORM_URL is missing').optional(),
+  SUPPORT_EMAIL: z.string().min(1, 'SUPPORT_EMAIL is missing').optional(),
 })
 
 export const SharedEnvSchema = z.object({
