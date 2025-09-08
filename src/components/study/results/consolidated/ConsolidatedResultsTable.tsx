@@ -18,6 +18,7 @@ interface Props<T> {
   hiddenUncertainty?: boolean
   expandAll?: boolean
   hideExpandIcons?: boolean
+  isCompact?: boolean
 }
 
 type tableDataType = {
@@ -42,6 +43,7 @@ const ConsolidatedResultsTable = <
   hiddenUncertainty,
   expandAll,
   hideExpandIcons,
+  isCompact,
 }: Props<T>) => {
   const t = useTranslations('study.results')
   const tQuality = useTranslations('quality')
@@ -123,7 +125,7 @@ const ConsolidatedResultsTable = <
   })
 
   return (
-    <table aria-labelledby="study-rights-table-title">
+    <table aria-labelledby="study-rights-table-title" className={classNames({ [commonStyles.compact]: isCompact })}>
       <thead>
         {table.getHeaderGroups().map((headerGroup) => (
           <tr key={headerGroup.id}>

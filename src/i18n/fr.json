@@ -628,6 +628,7 @@
       "tag": "Tag",
       "download": "Télécharger les résultats",
       "downloadPDF": "Télécharger la fiche récapitulative",
+      "downloadingPDF": "Téléchargement (au moins 15 secondes)...",
       "value": "Émissions ({unit})",
       "emissions": "Émissions",
       "uncertainty": "Incertitude",

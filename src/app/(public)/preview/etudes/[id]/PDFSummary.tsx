@@ -63,18 +63,16 @@ const PDFSummary = ({ study, environment }: Props) => {
             environment,
           )
 
-          const siteResults = siteComputedResults
-            .filter((result) => result.post !== 'total')
-            .map((result) => ({
-              ...result,
-              value: result.value / STUDY_UNIT_VALUES[study.resultsUnit],
-              subPosts: result.children
-                .filter((subPost) => subPost.value > 0)
-                .map((subPost) => ({
-                  ...subPost,
-                  value: subPost.value / STUDY_UNIT_VALUES[study.resultsUnit],
-                })),
-            }))
+          const siteResults = siteComputedResults.map((result) => ({
+            ...result,
+            value: result.value / STUDY_UNIT_VALUES[study.resultsUnit],
+            subPosts: result.children
+              .filter((subPost) => subPost.value > 0)
+              .map((subPost) => ({
+                ...subPost,
+                value: subPost.value / STUDY_UNIT_VALUES[study.resultsUnit],
+              })),
+          }))
 
           sitesData.push({
             id: studySite.id,
@@ -224,10 +222,10 @@ const PDFSummary = ({ study, environment }: Props) => {
                   hiddenUncertainty
                   expandAll
                   hideExpandIcons
+                  isCompact
                 />
               </div>
             </div>
-
             <ChartsPage study={study} studySite={site.id} siteName={site.fullName} tPdf={tPdf} isAll={false} />
           </React.Fragment>
         ))}
