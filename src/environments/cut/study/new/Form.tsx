@@ -5,7 +5,7 @@ import GlobalNewStudyForm from '@/components/study/new/Form'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { Export, Level } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 
 interface Props {
@@ -15,6 +15,7 @@ interface Props {
 
 const NewStudyForm = ({ form, duplicateStudyId }: Props) => {
   const t = useTranslations('study.new')
+  const [glossary, setGlossary] = useState('')
 
   useEffect(() => {
     form.setValue('level', Level.Initial)
@@ -27,7 +28,13 @@ const NewStudyForm = ({ form, duplicateStudyId }: Props) => {
 
   return (
     <Block title={t('title')} as="h1">
-      <GlobalNewStudyForm form={form} t={t} duplicateStudyId={duplicateStudyId} />
+      <GlobalNewStudyForm
+        form={form}
+        t={t}
+        duplicateStudyId={duplicateStudyId}
+        glossary={glossary}
+        setGlossary={setGlossary}
+      />
     </Block>
   )
 }
