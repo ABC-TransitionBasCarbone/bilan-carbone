@@ -30,13 +30,13 @@ interface Props {
   error?: FieldError
   isLoading?: boolean
   disabled?: boolean
-  onCustomBlur?: () => void
   control: Control<FormValues>
   watch: UseFormWatch<FormValues>
   formErrors: FieldErrors<FormValues>
   autoSave: UseAutoSaveReturn
   setValue: UseFormSetValue<FormValues>
-  table?: boolean
+  isTable?: boolean
+  onTableFieldChange?: () => void
 }
 
 const FieldComponent = ({
@@ -47,23 +47,27 @@ const FieldComponent = ({
   error,
   isLoading,
   disabled,
-  onCustomBlur,
   watch,
   formErrors,
   autoSave,
   setValue,
-  table,
+  isTable,
+  onTableFieldChange,
 }: Props) => {
   const { callServerFunction } = useServerFunction()
 
   const tValidation = useTranslations('form.validation')
   const tFormat = useTranslations('emissionFactors.post.cutQuestions.format')
 
-  const isSavingOnBlur = useMemo(() => fieldType === FieldType.TEXT || fieldType === FieldType.NUMBER, [fieldType])
-
   const saveField = useCallback(
     async (value: unknown) => {
       if (!formErrors[fieldName]) {
+        // Specific saving logic for table fields
+        if (isTable && onTableFieldChange) {
+          onTableFieldChange()
+          return
+        }
+
         let finalValue = value
         let targetQuestion = question
 
@@ -138,19 +142,7 @@ const FieldComponent = ({
         autoSave.saveField(targetQuestion, finalValue as Prisma.InputJsonValue)
       }
     },
-    [formErrors, fieldName, question, autoSave, callServerFunction],
-  )
-
-  const handleBlur = useCallback(() => {
-    const currentValue = watch(fieldName)
-    saveField(currentValue)
-  }, [watch, fieldName, saveField])
-
-  const handleChange = useCallback(
-    (value: string | null) => {
-      saveField(value)
-    },
-    [saveField],
+    [formErrors, fieldName, question, autoSave, callServerFunction, isTable, onTableFieldChange],
   )
 
   const baseInputProps = useMemo(() => {
@@ -208,35 +200,23 @@ const FieldComponent = ({
         name={fieldName}
         control={control}
         render={({ field }) => {
-          const { ref, onBlur, onChange, ...fieldWithoutRef } = field
-          const handleFieldBlur = () => {
-            onBlur()
-            if (onCustomBlur) {
-              onCustomBlur()
-            } else if (isSavingOnBlur) {
-              handleBlur()
-            }
-          }
+          const { ref, onChange, ...fieldWithoutRef } = field
 
           const handleFieldChange = (value: string | null) => {
             onChange(value)
-            if (!isSavingOnBlur) {
-              handleChange(value)
-            }
+            saveField(value)
           }
 
           return (
             <InputComponent
               {...fieldWithoutRef}
               ref={ref}
-              onBlur={handleFieldBlur}
               onChange={handleFieldChange}
               value={field.value as string | null}
               question={baseInputProps.question}
               label={baseInputProps.label}
               errorMessage={baseInputProps.errorMessage}
               disabled={baseInputProps.disabled}
-              table={table}
             />
           )
         }}

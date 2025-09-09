@@ -1,6 +1,6 @@
 import { saveAnswerForQuestion } from '@/services/serverFunctions/question'
 import { Prisma, Question } from '@prisma/client'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 
 export interface FieldSaveStatus {
   status: 'idle' | 'saving' | 'saved' | 'error'
@@ -10,8 +10,11 @@ export interface FieldSaveStatus {
 
 export interface UseAutoSaveReturn {
   saveField: (question: Question, value: Prisma.InputJsonValue) => Promise<void>
+  saveTableField: (tableQuestion: Question, currentTableData: Prisma.InputJsonValue) => void
+  clearPendingTableSave: (questionId: string) => void
   getFieldStatus: (questionId: string) => FieldSaveStatus
   initializeFieldStatus: (questionId: string, status: FieldSaveStatus['status']) => void
+  setInitialValue: (questionId: string, value: Prisma.InputJsonValue) => void
   studySiteId: string
 }
 
@@ -27,6 +30,8 @@ interface SaveAnswerRequest {
  */
 export const useAutoSave = (studyId: string, studySiteId: string): UseAutoSaveReturn => {
   const [fieldStatuses, setFieldStatuses] = useState<Record<string, FieldSaveStatus>>({})
+  const tableDebounceTimers = useRef<Record<string, NodeJS.Timeout>>({})
+  const initialValues = useRef<Record<string, Prisma.InputJsonValue>>({})
 
   const saveAnswer = useCallback(
     async (request: SaveAnswerRequest) => {
@@ -45,9 +50,33 @@ export const useAutoSave = (studyId: string, studySiteId: string): UseAutoSaveRe
     }))
   }, [])
 
+  const valuesAreEqual = useCallback((value1: Prisma.InputJsonValue, value2: Prisma.InputJsonValue): boolean => {
+    if (value1 === value2) {
+      return true
+    }
+    if (!value1 && !value2) {
+      return true
+    }
+    if (!value1 || !value2) {
+      return false
+    }
+
+    const str1 = typeof value1 === 'string' ? value1 : JSON.stringify(value1)
+    const str2 = typeof value2 === 'string' ? value2 : JSON.stringify(value2)
+
+    return str1 === str2
+  }, [])
+
   const performSave = useCallback(
     async (question: Question, value: Prisma.InputJsonValue) => {
       try {
+        const initialValue = initialValues.current[question.id]
+        if (initialValue !== undefined && valuesAreEqual(value, initialValue)) {
+          // Value hasn't changed from initial, don't save
+          updateFieldStatus(question.id, { status: 'idle' })
+          return
+        }
+
         const request: SaveAnswerRequest = {
           question,
           studyId,
@@ -62,6 +91,8 @@ export const useAutoSave = (studyId: string, studySiteId: string): UseAutoSaveRe
             updateFieldStatus(question.id, { status: 'idle' })
             return
           }
+
+          initialValues.current[question.id] = value
 
           updateFieldStatus(question.id, {
             status: 'saved',
@@ -81,7 +112,7 @@ export const useAutoSave = (studyId: string, studySiteId: string): UseAutoSaveRe
         })
       }
     },
-    [studyId, studySiteId, saveAnswer, updateFieldStatus],
+    [studyId, studySiteId, saveAnswer, updateFieldStatus, valuesAreEqual],
   )
 
   const saveField = useCallback(
@@ -99,6 +130,32 @@ export const useAutoSave = (studyId: string, studySiteId: string): UseAutoSaveRe
     [fieldStatuses],
   )
 
+  const saveTableField = useCallback(
+    (tableQuestion: Question, currentTableData: Prisma.InputJsonValue) => {
+      const questionId = tableQuestion.id
+
+      if (tableDebounceTimers.current[questionId]) {
+        clearTimeout(tableDebounceTimers.current[questionId])
+      }
+
+      updateFieldStatus(questionId, { status: 'saving' })
+
+      tableDebounceTimers.current[questionId] = setTimeout(async () => {
+        try {
+          await performSave(tableQuestion, currentTableData)
+        } catch (error) {
+          updateFieldStatus(questionId, {
+            status: 'error',
+            error: error instanceof Error ? error.message : 'Unknown error',
+          })
+        } finally {
+          delete tableDebounceTimers.current[questionId]
+        }
+      }, 1000)
+    },
+    [updateFieldStatus, performSave],
+  )
+
   const initializeFieldStatus = useCallback(
     (questionId: string, status: FieldSaveStatus['status']) => {
       updateFieldStatus(questionId, { status })
@@ -106,14 +163,40 @@ export const useAutoSave = (studyId: string, studySiteId: string): UseAutoSaveRe
     [updateFieldStatus],
   )
 
+  const setInitialValue = useCallback((questionId: string, value: Prisma.InputJsonValue) => {
+    initialValues.current[questionId] = value
+  }, [])
+
+  const clearPendingTableSave = useCallback(
+    (questionId: string) => {
+      if (tableDebounceTimers.current[questionId]) {
+        clearTimeout(tableDebounceTimers.current[questionId])
+        delete tableDebounceTimers.current[questionId]
+        updateFieldStatus(questionId, { status: 'idle' })
+      }
+    },
+    [updateFieldStatus],
+  )
+
   return useMemo(
     () => ({
       saveField,
+      saveTableField,
+      clearPendingTableSave,
       getFieldStatus,
       initializeFieldStatus,
+      setInitialValue,
       studySiteId,
     }),
-    [saveField, getFieldStatus, initializeFieldStatus, studySiteId],
+    [
+      saveField,
+      saveTableField,
+      clearPendingTableSave,
+      getFieldStatus,
+      initializeFieldStatus,
+      setInitialValue,
+      studySiteId,
+    ],
   )
 }
 

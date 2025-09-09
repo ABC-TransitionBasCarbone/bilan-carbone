@@ -31,6 +31,8 @@ const DynamicForm = ({ questions, studyId, initialAnswers, isLoading = false, st
       initialAnswers.forEach((answer) => {
         if (answer.response) {
           autoSave.initializeFieldStatus(answer.questionId, 'saved')
+          // Set the initial value to compare against future changes
+          autoSave.setInitialValue(answer.questionId, answer.response)
         }
       })
       updateDefaultValues(initialAnswers)
