@@ -45,7 +45,7 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
     async (rowId: string) => {
       const newTableAnswer = deleteTableRow(tableAnswer, rowId)
       setTableAnswer(newTableAnswer)
-      autoSave.saveField(question, newTableAnswer as unknown as Prisma.InputJsonValue)
+      autoSave.saveTableField(question, newTableAnswer as unknown as Prisma.InputJsonValue)
     },
     [tableAnswer, autoSave, question],
   )
@@ -79,13 +79,11 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
     return updatedTableAnswer
   }, [tableAnswer, questions, watch, isFixedTable])
 
-  // Handle field changes for fixed tables to ensure pre-filled values are saved
-  const handleTableFieldBlur = useCallback(() => {
-    if (isFixedTable) {
-      const updatedTableAnswer = syncAllValuesToTableData()
-      autoSave.saveField(question, updatedTableAnswer as unknown as Prisma.InputJsonValue)
-    }
-  }, [isFixedTable, syncAllValuesToTableData, autoSave, question])
+  // Handle table field changes with debounced saving
+  const handleTableFieldChange = useCallback(() => {
+    const currentTableData = syncAllValuesToTableData()
+    autoSave.saveTableField(question, currentTableData)
+  }, [syncAllValuesToTableData, autoSave, question])
 
   const populateFormFields = useCallback(
     (tableAnswer: TableAnswer) => {
@@ -102,13 +100,16 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
 
   const handleDuplicateRow = useCallback(
     async (rowId: string) => {
+      autoSave.clearPendingTableSave(question.id)
+
+      // Force sync current form values to ensure we have the latest data
       const updatedTableAnswer = syncAllValuesToTableData()
       const newTableAnswer = duplicateTableRow(updatedTableAnswer, rowId)
       setTableAnswer(newTableAnswer)
 
       populateFormFields(newTableAnswer)
 
-      autoSave.saveField(question, newTableAnswer as unknown as Prisma.InputJsonValue)
+      autoSave.saveTableField(question, newTableAnswer as unknown as Prisma.InputJsonValue)
     },
     [syncAllValuesToTableData, populateFormFields, autoSave, question],
   )
@@ -135,8 +136,8 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
             control={control}
             setValue={setValue}
             disabled={isFirstColumnInFixedTable}
-            onCustomBlur={isFixedTable ? handleTableFieldBlur : undefined}
-            table={true}
+            isTable={true}
+            onTableFieldChange={handleTableFieldChange}
           />
         )
       },
@@ -186,7 +187,7 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
     handleDuplicateRow,
     setValue,
     isFixedTable,
-    handleTableFieldBlur,
+    handleTableFieldChange,
   ])
 
   const loadTableData = useCallback(async () => {
@@ -232,8 +233,11 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
 
     setTableAnswer(existingTableAnswer)
 
+    // Set initial value for the table question to prevent unnecessary saves on page load
+    autoSave.setInitialValue(question.id, existingTableAnswer as unknown as Prisma.InputJsonValue)
+
     populateFormFields(existingTableAnswer)
-  }, [questions, question.id, question.type, autoSave.studySiteId, populateFormFields, isFixedTable])
+  }, [questions, question.id, question.type, autoSave, populateFormFields, isFixedTable])
 
   const handleAddRow = useCallback(() => {
     const updatedTableAnswer = syncAllValuesToTableData()
@@ -242,7 +246,7 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
 
     populateFormFields(newTableAnswer)
 
-    autoSave.saveField(question, newTableAnswer as unknown as Prisma.InputJsonValue)
+    autoSave.saveTableField(question, newTableAnswer as unknown as Prisma.InputJsonValue)
   }, [syncAllValuesToTableData, questions, autoSave, question, populateFormFields])
 
   useEffect(() => {
