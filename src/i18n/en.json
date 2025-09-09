@@ -131,7 +131,7 @@
     "contacterViaFormulaire": "Contact the ABC directly via the form",
     "questionTechnique": "For any technical questions or IT support needs:",
     "lireLaFAQ": "Read the FAQ",
-    "ecrireMail": "Write directly to support@abc-transitionbascarbone.fr"
+    "ecrireMail": "Write directly to {supportEmail}"
   },
   "legalNotices": {
     "profile": "Return to profile"

@@ -131,7 +131,7 @@
     "contacterViaFormulaire": "Contacter directement l'ABC via le formulaire",
     "questionTechnique": "En cas de question technique ou de besoin d'un support informatique :",
     "lireLaFAQ": "Lire la FAQ",
-    "ecrireMail": "Écrire directement à support@abc-transitionbascarbone.fr"
+    "ecrireMail": "Écrire directement à {supportEmail}"
   },
   "legalNotices": {
     "profile": "Retour au profil"
