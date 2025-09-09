@@ -12,6 +12,7 @@ export interface UseAutoSaveReturn {
   saveField: (question: Question, value: Prisma.InputJsonValue) => Promise<void>
   saveTableField: (tableQuestion: Question, currentTableData: Prisma.InputJsonValue) => void
   clearPendingTableSave: (questionId: string) => void
+  hasUnsavedChanges: () => boolean
   getFieldStatus: (questionId: string) => FieldSaveStatus
   initializeFieldStatus: (questionId: string, status: FieldSaveStatus['status']) => void
   setInitialValue: (questionId: string, value: Prisma.InputJsonValue) => void
@@ -178,11 +179,19 @@ export const useAutoSave = (studyId: string, studySiteId: string): UseAutoSaveRe
     [updateFieldStatus],
   )
 
+  const hasUnsavedChanges = useCallback(() => {
+    const hasPendingTimers = Object.keys(tableDebounceTimers.current).length > 0
+    const hasSavingFields = Object.values(fieldStatuses).some((status) => status.status === 'saving')
+
+    return hasPendingTimers || hasSavingFields
+  }, [fieldStatuses])
+
   return useMemo(
     () => ({
       saveField,
       saveTableField,
       clearPendingTableSave,
+      hasUnsavedChanges,
       getFieldStatus,
       initializeFieldStatus,
       setInitialValue,
@@ -192,6 +201,7 @@ export const useAutoSave = (studyId: string, studySiteId: string): UseAutoSaveRe
       saveField,
       saveTableField,
       clearPendingTableSave,
+      hasUnsavedChanges,
       getFieldStatus,
       initializeFieldStatus,
       setInitialValue,
