@@ -212,7 +212,12 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   'quelle-est-votre-consommation-annuelle-de-diesel': { emissionFactorImportedId: '14015' },
   // ActivitesDeBureau
   'quel-montant-avez-vous-depense-en-petites-fournitures-de-bureau': { emissionFactorImportedId: '20556' },
-  [SERVICES_QUESTION_ID]: { emissionFactorImportedId: '43545', isSpecial: true },
+  [SERVICES_QUESTION_ID]: {
+    emissionFactorImportedId: '43545',
+    isSpecial: true,
+    helperText:
+      '25286€ est le forfait issue des Bilans Carbone® qui ont étés réalisées sur plusieurs cinémas français. Les services incluent par exemple les dépenses de ménage, sécurité, comptabilité, frais bancaires, etc. Une valeur par défaut est indiqué pour cette réponse. Cette valeur est issue des Bilans Carbone® qui ont étés réalisées sur plusieurs cinémas français. Si vous détenez une information plus précise pour votre cinéma, nous vous invitons à la modifier',
+  },
   '10-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer': {
     depreciationPeriod: 4,
     emissionFactors: {
@@ -392,6 +397,8 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     isSpecial: true,
     emissionFactorImportedId: '142',
     dependentFields: ['numberOfProgrammedFilms'],
+    helperText:
+      '0,9 fois le nombre de film reçus est la valeur issue des Bilans Carbone® qui ont étés réalisées sur plusieurs cinémas français. Si vous détenez une information plus précise pour votre cinéma, nous vous invitons à la modifier',
   },
   [MOVIE_DCP_QUESTION_ID]: { isSpecial: true, emissionFactorImportedId: '143' },
   'combien-de-donnees-stockez-vous-dans-un-cloud': { emissionFactorImportedId: '141' },
