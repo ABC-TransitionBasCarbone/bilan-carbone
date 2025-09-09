@@ -100,12 +100,11 @@ const LONG_DISTANCE_TRANSPORT_EMISSION_FACTORS = {
 }
 
 const contactMail = process.env.CUT_SUPPORT_EMAIL
-const contactMailSubject = 'enquête mobilité cinéma'
+const contactMailSubject = 'Enquête mobilité cinéma'
 const contactMailBody = `Bonjour,
 Je vous contacte car j'aimerais réaliser une enquête mobilité pour connaitre l'impact des déplacements des spectateurs de mon cinéma.
 Pouvez-vous me transmettre la proposition d'enquête mobilité ? `
 const mailto = `<a href={mailto:${contactMail}?subject=${contactMailSubject}&body=${contactMailBody}}>Vous pouvez nous contacter à ${contactMail} pour recevoir une proposition d'enquête mobilité.</a>`
-
 
 export const getQuestionsAffectedBySiteDataChange = (changedFields: SiteDependentField[]): string[] => {
   const affectedQuestions: string[] = []
@@ -258,6 +257,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     ],
   },
   [MOBILITY_DOWNLOAD_MODEL_QUESTION_ID]: {
+    helperText: `Cette fonctionnalité est en cours de développement et sera disponible prochainement. ${mailto}`,
     conditionalRules: [
       {
         idIntern: MOBILIY_SURVEY_QUESTION_ID,
