@@ -166,7 +166,7 @@
       "passwordSpecialChar": "Le mot de passe doit avoir au moins un caractère spécial",
       "passwordDigit": "Le mot de passe doit avoir au moins un chiffre",
       "forgotPassword": "Mot de passe oublié ?",
-      "reset": "Réinitialiser",
+      "reset": "Confirmer",
       "error": "Veuillez verifier votre email et votre mot de passe",
       "expired": "Ce lien de réinitialisation de mot de passe a expiré",
       "backToHome": "Retour a l'accueil",
