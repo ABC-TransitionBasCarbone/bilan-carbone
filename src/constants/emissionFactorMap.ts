@@ -216,7 +216,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     emissionFactorImportedId: '43545',
     isSpecial: true,
     helperText:
-      "Les services incluent par exemple les dépenses de ménage, sécurité, comptabilité, frais bancaires, etc. Vous pouvez utiliser une valeur par défaut pour cette réponse (25286€) qui est issue des Bilans Carbone® qui ont étés réalisées sur plusieurs cinémas français. Si vous détenez une information plus précise pour votre cinéma, nous vous invitons à l'utiliser plutôt que la valeur par défaut.",
+      "Les services incluent par exemple les dépenses de ménage, sécurité, comptabilité, frais bancaires, etc. Vous pouvez utiliser une valeur par défaut pour cette réponse (25286€) qui est issue des Bilans Carbone® qui ont étés réalisés sur plusieurs cinémas français. Si vous détenez une information plus précise pour votre cinéma, nous vous invitons à l'utiliser plutôt que la valeur par défaut.",
   },
   '10-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer': {
     depreciationPeriod: 4,
@@ -396,7 +396,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     emissionFactorImportedId: '142',
     dependentFields: ['numberOfProgrammedFilms'],
     helperText:
-      "Vous pouvez utiliser une valeur par défaut pour cette réponse (0,9 fois le nombre de film reçus) qui est la valeur issue des Bilans Carbone® qui ont étés réalisées sur plusieurs cinémas français. Si vous détenez une information plus précise pour votre cinéma, nous vous invitons à l'utiliser plutôt que la valeur par défaut.",
+      "Vous pouvez utiliser une valeur par défaut pour cette réponse (0,9 fois le nombre de film reçus) qui est la valeur issue des Bilans Carbone® qui ont étés réalisés sur plusieurs cinémas français. Si vous détenez une information plus précise pour votre cinéma, nous vous invitons à l'utiliser plutôt que la valeur par défaut.",
   },
   [MOVIE_DCP_QUESTION_ID]: { isSpecial: true, emissionFactorImportedId: '143' },
   'combien-de-donnees-stockez-vous-dans-un-cloud': { emissionFactorImportedId: '141' },
