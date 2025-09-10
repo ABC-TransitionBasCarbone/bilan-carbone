@@ -18,7 +18,6 @@ import { ChangeStudyCinemaCommand, ChangeStudyCinemaValidation } from '@/service
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Box, CircularProgress } from '@mui/material'
 import { DayOfWeek, EmissionFactorImportVersion, OpeningHours } from '@prisma/client'
-import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
@@ -265,10 +264,10 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
       <Block className="flex flex-col">
         <SelectStudySite study={study} studySite={studySite} setSite={setSite} />
         {loading ? (
-          <CircularProgress variant="indeterminate" color="primary" size={100} className="flex mt-2" />
+          <CircularProgress variant="indeterminate" color="primary" size={100} className="flex mt2" />
         ) : (
           <>
-            <div className="mb-2 mt-2">{t('cncInfo')}</div>
+            <div className="my2">{t('cncInfo')}</div>
             <div>
               <FormTextField
                 control={form.control}
@@ -311,7 +310,7 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
                 onBlur={onStudyCinemaUpdate}
               />
             </div>
-            <Box className={classNames('flex', 'justify-start')}>
+            <Box className="flex justify-start mt1">
               <LinkButton
                 color="primary"
                 variant="contained"
