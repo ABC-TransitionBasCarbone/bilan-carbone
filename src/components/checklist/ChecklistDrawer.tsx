@@ -1,6 +1,6 @@
 import { getEnvVar } from '@/lib/environment'
 import { getUserCheckList, mandatoryParentSteps } from '@/services/checklist'
-import { Environment, Level, OrganizationVersion, Role, UserChecklist } from '@prisma/client'
+import { Level, OrganizationVersion, Role, UserChecklist } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -10,7 +10,6 @@ import styles from './Checklist.module.css'
 import ChecklistItem from './ChecklistItem'
 
 interface Props {
-  environment: Environment
   setOpen: (open: boolean) => void
   getCheckList: () => void
   userChecklist: UserChecklist[]
@@ -22,7 +21,6 @@ interface Props {
 }
 
 const ChecklistDrawer = ({
-  environment,
   setOpen,
   getCheckList,
   userRole,
@@ -32,6 +30,7 @@ const ChecklistDrawer = ({
   userChecklist,
   studyId,
 }: Props) => {
+  const environment = accountOrganizationVersion.environment
   const faq = getEnvVar('FAQ_LINK', environment)
   const t = useTranslations('checklist')
   const steps = useMemo(

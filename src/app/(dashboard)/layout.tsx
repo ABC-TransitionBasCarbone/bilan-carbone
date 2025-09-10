@@ -61,7 +61,6 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
         </Box>
         {accountOrganizationVersion && environmentsWithChecklist.includes(accountOrganizationVersion.environment) && (
           <ChecklistButton
-            environment={environment}
             accountOrganizationVersion={accountOrganizationVersion}
             clientId={clientId}
             studyId={studyId}
