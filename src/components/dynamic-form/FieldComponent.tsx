@@ -1,4 +1,5 @@
 import { TableAnswer } from '@/components/dynamic-form/types/formTypes'
+import { MOBILITY_DOWNLOAD_MODEL_QUESTION_ID } from '@/constants/questions'
 import { ID_INTERN_PREFIX_REGEX } from '@/constants/utils'
 import { UseAutoSaveReturn } from '@/hooks/useAutoSave'
 import { useServerFunction } from '@/hooks/useServerFunction'
@@ -13,6 +14,7 @@ import { Prisma, Question, QuestionType } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo } from 'react'
 import { Control, Controller, FieldError, FieldErrors, UseFormSetValue, UseFormWatch } from 'react-hook-form'
+import { MobilityDownloadModelQuestion } from './custom/MobilityDownloadModelQuestion'
 import DatePickerInput from './inputFields/DatePickerInput'
 import QCMInput from './inputFields/QCMInput'
 import QCUInput from './inputFields/QCUInput'
@@ -37,6 +39,15 @@ interface Props {
   setValue: UseFormSetValue<FormValues>
   isTable?: boolean
   onTableFieldChange?: () => void
+}
+
+const getCustomQuestionComponent = (question: Question) => {
+  switch (question.idIntern) {
+    case MOBILITY_DOWNLOAD_MODEL_QUESTION_ID:
+      return MobilityDownloadModelQuestion
+    default:
+      return TextUnitInput
+  }
 }
 
 const FieldComponent = ({
@@ -171,6 +182,8 @@ const FieldComponent = ({
           return QCMInput
         case FieldType.QCU:
           return QCUInput
+        case FieldType.CUSTOM:
+          return getCustomQuestionComponent(question)
         default:
           console.warn(`Unsupported question type: ${question.type} (mapped to: ${fieldType})`)
           return TextUnitInput

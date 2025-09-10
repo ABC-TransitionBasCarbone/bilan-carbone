@@ -11,6 +11,7 @@ enum QuestionType {
   PHONE
   TEXT
   TITLE
+  CUSTOM
 }
 
 model Question {
