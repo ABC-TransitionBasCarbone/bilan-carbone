@@ -245,7 +245,7 @@ export const convertTiltSubPostToBCSubPost = (subPost: SubPost): SubPost => {
 
 export const convertCountToBilanCarbone = (
   results: { post: string; children: { post: string; value: number }[] }[],
-): { bilanCarboneCategory: string; value: number }[] => {
+): { [key: string]: number } => {
   const allPossibleCategories = new Set(Object.values(cutSubPostToBCPostMapping))
   const aggregatedResults: { [key: string]: number } = {}
 
@@ -261,15 +261,12 @@ export const convertCountToBilanCarbone = (
     result.children.forEach((child) => {
       const bilanCarbonePost = cutSubPostToBCPostMapping[child.post as keyof typeof cutSubPostToBCPostMapping]
       if (bilanCarbonePost) {
-        aggregatedResults[bilanCarbonePost] = (aggregatedResults[bilanCarbonePost] || 0) + child.value
+        aggregatedResults[bilanCarbonePost] = aggregatedResults[bilanCarbonePost] + child.value
       }
     })
   })
 
-  return Object.entries(aggregatedResults).map(([category, value]) => ({
-    bilanCarboneCategory: category,
-    value,
-  }))
+  return aggregatedResults
 }
 
 export const cutSubPostToBCPostMapping: Partial<Record<SubPost, BCPost>> = {

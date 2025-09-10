@@ -387,11 +387,8 @@ export const formatConsolidatedStudyResultsForExport = (
       if (headersForEnv.includes('uncertainty')) {
         resultLine.push(result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '')
       }
-      if (environment === Environment.CUT) {
-        dataForExport.push([...resultLine, Math.round((result.value ?? 0) / STUDY_UNIT_VALUES[study.resultsUnit])])
-      } else {
-        dataForExport.push([...resultLine, (result.value ?? 0) / STUDY_UNIT_VALUES[study.resultsUnit]])
-      }
+
+      dataForExport.push([...resultLine, Math.round((result.value ?? 0) / STUDY_UNIT_VALUES[study.resultsUnit])])
     }
 
     dataForExport.push([])
@@ -520,11 +517,11 @@ export const formatBCResultsForCutExport = (
     data.push([site.name])
     data.push([tExport('bc.category'), tExport('bc.emissions')])
 
-    if (bilanCarboneEquivalent.length > 0) {
+    if (Object.keys(bilanCarboneEquivalent).length > 0) {
       let siteTotal = 0
-      bilanCarboneEquivalent.forEach((result) => {
-        const roundedValue = Math.round(result.value / studyUnitValues[study.resultsUnit])
-        data.push([tPost(result.bilanCarboneCategory), roundedValue])
+      Object.entries(bilanCarboneEquivalent).forEach(([result, value]) => {
+        const roundedValue = Math.round(value / studyUnitValues[study.resultsUnit])
+        data.push([tPost(result), roundedValue])
         siteTotal += roundedValue
       })
       data.push(['Total', siteTotal])
