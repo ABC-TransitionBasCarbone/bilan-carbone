@@ -42,7 +42,7 @@ const PDFSummary = ({ study, environment }: Props) => {
   const createBilanCarboneTableData = (bilanCarboneEquivalent: Record<string, number>) => {
     return [
       ...Object.entries(bilanCarboneEquivalent).map(([result, value]) => ({
-        post: result as 'total',
+        post: result,
         label: result,
         value: value,
         monetaryValue: 0,

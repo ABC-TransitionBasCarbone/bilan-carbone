@@ -517,17 +517,13 @@ export const formatBCResultsForCutExport = (
     data.push([site.name])
     data.push([tExport('bc.category'), tExport('bc.emissions')])
 
-    if (Object.keys(bilanCarboneEquivalent).length > 0) {
-      let siteTotal = 0
-      Object.entries(bilanCarboneEquivalent).forEach(([result, value]) => {
-        const roundedValue = Math.round(value / studyUnitValues[study.resultsUnit])
-        data.push([tPost(result), roundedValue])
-        siteTotal += roundedValue
-      })
-      data.push(['Total', siteTotal])
-    }
-
-    data.push([])
+    let siteTotal = 0
+    Object.entries(bilanCarboneEquivalent).forEach(([result, value]) => {
+      const roundedValue = Math.round(value / studyUnitValues[study.resultsUnit])
+      data.push([tPost(result), roundedValue])
+      siteTotal += roundedValue
+    })
+    data.push(['Total', siteTotal])
   }
 
   return {
