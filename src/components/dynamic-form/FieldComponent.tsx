@@ -46,7 +46,7 @@ const getCustomQuestionComponent = (question: Question) => {
     case MOBILITY_DOWNLOAD_MODEL_QUESTION_ID:
       return MobilityDownloadModelQuestion
     default:
-      return TextUnitInput
+      return () => null
   }
 }
 
@@ -186,7 +186,7 @@ const FieldComponent = ({
           return getCustomQuestionComponent(question)
         default:
           console.warn(`Unsupported question type: ${question.type} (mapped to: ${fieldType})`)
-          return TextUnitInput
+          return () => null
       }
     }
 
