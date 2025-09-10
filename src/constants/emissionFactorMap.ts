@@ -464,12 +464,19 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     emissionFactors: {
       'Affiches 120x160': '125',
       'Affiches 40x60': '126',
-      'PLV comptoir': '127',
-      'PLV grand format': '128',
     },
     weights: {
       'Affiches 120x160': 0.22,
       'Affiches 40x60': 0.027,
+    },
+  },
+  '10-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-mois': {
+    isFixed: true,
+    emissionFactors: {
+      'PLV comptoir': '127',
+      'PLV grand format': '128',
+    },
+    weights: {
       'PLV comptoir': 0.5,
       'PLV grand format': 3.5,
     },

@@ -409,7 +409,52 @@ const calculateDistributorMaterials: TableEmissionCalculator = {
       if (materialEmissionFactor) {
         const value = quantityMaterial * materialWeight * WEEKS_PER_YEAR
         emissionSources.push({
-          name: `distributor material - ${typeMaterial}`,
+          name: `distributor material week - ${typeMaterial}`,
+          value: value,
+          emissionFactorId: materialEmissionFactor.id,
+        })
+      }
+    }
+
+    return {
+      emissionSources,
+    }
+  },
+}
+
+/**
+ * Calculator for question: 10-Quelle quantité de matériel distributeurs recevez-vous en moyenne par mois?
+ * Formula:
+ * - Material value: quantity * material_weight * MONTHS_PER_YEAR (12)
+ * - Converts monthly reception to annual weight in kg
+ */
+const calculateDistributorMaterialsByMonth: TableEmissionCalculator = {
+  calculate: async (row, study) => {
+    const typeMaterial = row.data['11-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-mois'] || ''
+    const quantityMaterial = parseFloat(
+      row.data['12-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-mois'] || '0',
+    )
+
+    if (!typeMaterial || !quantityMaterial || quantityMaterial <= 0) {
+      return { emissionSources: [] }
+    }
+
+    const emissionFactorInfo =
+      emissionFactorMap['10-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-mois']
+    const materialFeId = emissionFactorInfo.emissionFactors?.[typeMaterial]
+    const materialWeight = emissionFactorInfo.weights?.[typeMaterial] || 1
+    const emissionSources: EmissionSourceCalculation[] = []
+
+    if (materialFeId) {
+      const materialEmissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+        materialFeId,
+        study.emissionFactorVersions.map((v) => v.importVersionId),
+      )
+
+      if (materialEmissionFactor) {
+        const value = quantityMaterial * materialWeight * MONTHS_PER_YEAR
+        emissionSources.push({
+          name: `distributor material month - ${typeMaterial}`,
           value: value,
           emissionFactorId: materialEmissionFactor.id,
         })
@@ -553,6 +598,7 @@ const tableEmissionCalculators: Record<string, TableEmissionCalculator> = {
   [SPECTATOR_SHORT_DISTANCE_DETAILS_QUESTION_ID]: calculateSpectatorMobility,
   '10-quelle-quantite-de-materiel-produisez-vous-chaque-mois': calculateMaterials,
   '10-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine': calculateDistributorMaterials,
+  '10-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-mois': calculateDistributorMaterialsByMonth,
   '10-decrivez-les-differentes-salles-du-cinema': calculateRooms,
   '10-veuillez-renseigner-les-dechets-generes-par-semaine': calculateWaste,
 }
