@@ -45,19 +45,6 @@ const UserView = ({ account }: Props) => {
 
   return (
     <Box component="section" className={classNames(styles.container, 'flex-col')}>
-      <Alert severity="info" className="mb-2">
-        {t.rich('alert.info', {
-          link: (chunks) => (
-            <Link
-              href="https://www.guide-communication-climat.fr/definitions/approches-de-comptabilite-carbone"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {chunks}
-            </Link>
-          ),
-        })}
-      </Alert>
       <Typography data-testid="title" variant="h4">
         {title}
       </Typography>
@@ -120,6 +107,19 @@ const UserView = ({ account }: Props) => {
           </Box>
         </StyledLink>
       </Box>
+      <Alert severity="info" className="mb-2">
+        {t.rich('alert.info', {
+          link: (chunks) => (
+            <Link
+              href="https://www.guide-communication-climat.fr/definitions/approches-de-comptabilite-carbone"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {chunks}
+            </Link>
+          ),
+        })}
+      </Alert>
     </Box>
   )
 }
