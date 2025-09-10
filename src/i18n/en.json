@@ -22,7 +22,12 @@
     "GHGP": "GHG Protocol",
     "ISO14069": "ISO 14069",
     "developmentFile": "File under development",
-    "env_specific_export": "Bilan Carbone®"
+    "env_specific_export": "Bilan Carbone®",
+    "bc": {
+      "title": "Bilan Carbone® Equivalence",
+      "category": "Bilan Carbone® Category",
+      "emissions": "Emissions (tCO2e)"
+    }
   },
   "categorisations": {
     "Operated": "Operated",

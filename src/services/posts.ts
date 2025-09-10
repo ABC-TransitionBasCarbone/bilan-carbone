@@ -242,3 +242,50 @@ export const subPostBCToSubPostTiltMapping = getSubPostBCToSubPostTiltMapping()
 export const convertTiltSubPostToBCSubPost = (subPost: SubPost): SubPost => {
   return subPostTiltToBcSubPostMapping[subPost] ?? subPost
 }
+
+export const convertCountToBilanCarbone = (
+  results: { post: string; children: { post: string; value: number }[] }[],
+): { [key: string]: number } => {
+  const allPossibleCategories = new Set(Object.values(cutSubPostToBCPostMapping))
+  const aggregatedResults: { [key: string]: number } = {}
+
+  allPossibleCategories.forEach((category) => {
+    aggregatedResults[category] = 0
+  })
+
+  results.forEach((result) => {
+    if (result.post === 'total') {
+      return
+    }
+
+    result.children.forEach((child) => {
+      const bilanCarbonePost = cutSubPostToBCPostMapping[child.post as keyof typeof cutSubPostToBCPostMapping]
+      if (bilanCarbonePost) {
+        aggregatedResults[bilanCarbonePost] = aggregatedResults[bilanCarbonePost] + child.value
+      }
+    })
+  })
+
+  return aggregatedResults
+}
+
+export const cutSubPostToBCPostMapping: Partial<Record<SubPost, BCPost>> = {
+  [SubPost.Batiment]: BCPost.Immobilisations,
+  [SubPost.Equipe]: BCPost.Deplacements,
+  [SubPost.DeplacementsProfessionnels]: BCPost.Deplacements,
+  [SubPost.Energie]: BCPost.Energies,
+  [SubPost.ActivitesDeBureau]: BCPost.IntrantsServices,
+  [SubPost.MobiliteSpectateurs]: BCPost.Deplacements,
+  [SubPost.EquipesRecues]: BCPost.Deplacements,
+  [SubPost.MaterielTechnique]: BCPost.Immobilisations,
+  [SubPost.AutreMateriel]: BCPost.IntrantsBiensEtMatieres,
+  [SubPost.Achats]: BCPost.IntrantsBiensEtMatieres,
+  [SubPost.Electromenager]: BCPost.Immobilisations,
+  [SubPost.Fret]: BCPost.Fret,
+  [SubPost.DechetsOrdinaires]: BCPost.DechetsDirects,
+  [SubPost.DechetsExceptionnels]: BCPost.DechetsDirects,
+  [SubPost.MaterielDistributeurs]: BCPost.IntrantsBiensEtMatieres,
+  [SubPost.MaterielCinema]: BCPost.IntrantsBiensEtMatieres,
+  [SubPost.CommunicationDigitale]: BCPost.Immobilisations,
+  [SubPost.CaissesEtBornes]: BCPost.Immobilisations,
+}

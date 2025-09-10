@@ -3,7 +3,7 @@
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import { FullStudy } from '@/db/study'
 import cutTheme from '@/environments/cut/theme/theme'
-import { CutPost } from '@/services/posts'
+import { convertCountToBilanCarbone, CutPost } from '@/services/posts'
 import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
 import { getResultsValues } from '@/services/study'
 import { formatNumber } from '@/utils/number'
@@ -36,6 +36,35 @@ const PDFSummary = ({ study, environment }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const tStudy = useTranslations('study.results')
   const tPdf = useTranslations('study.pdf')
+  const tExports = useTranslations('exports')
+
+  // Helper function to create ConsolidatedResultsTable data from bilan carbone equivalent results
+  const createBilanCarboneTableData = (bilanCarboneEquivalent: Record<string, number>) => {
+    return [
+      ...Object.entries(bilanCarboneEquivalent).map(([result, value]) => ({
+        post: result,
+        label: result,
+        value: value,
+        monetaryValue: 0,
+        nonSpecificMonetaryValue: 0,
+        numberOfEmissionSource: 0,
+        numberOfValidatedEmissionSource: 0,
+        uncertainty: 1,
+        children: [],
+      })),
+      {
+        post: 'total' as const,
+        label: 'Total',
+        value: Object.values(bilanCarboneEquivalent).reduce((sum, result) => sum + result, 0),
+        monetaryValue: 0,
+        nonSpecificMonetaryValue: 0,
+        numberOfEmissionSource: 0,
+        numberOfValidatedEmissionSource: 0,
+        uncertainty: 1,
+        children: [],
+      },
+    ]
+  }
 
   const [sitesData, setSitesData] = useState<SiteData[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -44,6 +73,10 @@ const PDFSummary = ({ study, environment }: Props) => {
     () => getResultsValues(study, tPost, 'all', false, study.organizationVersion.environment, tStudy),
     [study, tPost, tStudy],
   )
+
+  const bilanCarboneEquivalent = useMemo(() => {
+    return convertCountToBilanCarbone(computedResultsWithDep)
+  }, [computedResultsWithDep])
 
   useEffect(() => {
     const loadData = async () => {
@@ -229,6 +262,80 @@ const PDFSummary = ({ study, environment }: Props) => {
             <ChartsPage study={study} studySite={site.id} siteName={site.fullName} tPdf={tPdf} isAll={false} />
           </React.Fragment>
         ))}
+
+        <div className="pdf-content page-break-before pdf-page-content">
+          <div className="pdf-section">
+            <h2 className="pdf-totals-header pdf-header-with-border">{tExports('bc.title')}</h2>
+
+            <div className="pdf-info-section" style={{ marginBottom: '1rem' }}>
+              <div className="pdf-info-text">
+                <p style={{ margin: '0 0 0.5rem 0' }}>
+                  Attention, les résultats que vous obtenez ici sont uniquement issus de l'empreinte carbone simplifiée
+                  Count, et ne doivent en aucun cas être utilisés comme des résultats Bilan Carbone®. La démarche que
+                  vous avez suivi via l'outil Count n'est PAS une démarche Bilan Carbone®.
+                </p>
+                <p style={{ margin: '0.5rem 0 0 0' }}>
+                  En revanche, cette empreinte carbone simplifiée est le premier pas vers une démarche plus complète
+                  comme le Bilan Carbone® ! Un Bilan Carbone® suit une{' '}
+                  <a href="https://www.bilancarbone-methode.com/" target="_blank">
+                    méthodologie bien précise
+                  </a>
+                  , et doit répondre à un certain nombre de critères objectifs. Par exemple, au cours d'un Bilan
+                  Carbone®, la direction doit être engagée, les différentes parties prenantes de l'organisation doivent
+                  être mobilisées, des incertitudes doivent être calculées et associées aux émissions, et surtout, un
+                  plan de transition solide doit être construit pour engager l'organisation dans une transition bas
+                  carbone. Si vous souhaitez vous lancer dans un Bilan Carbone® dans les années qui viennent, tout
+                  commence par{' '}
+                  <a href="https://abc-transitionbascarbone.fr/agir/se-former-au-bilan-carbone/" target="_blank">
+                    se faire former
+                  </a>
+                  , ou par se faire accompagner par un{' '}
+                  <a href="https://abc-transitionbascarbone.fr/les-acteurs/annuaire-des-prestataires/" target="_blank">
+                    prestataire externe
+                  </a>{' '}
+                  !
+                </p>
+              </div>
+            </div>
+
+            <h2 className="pdf-cinema-header pdf-header-with-border">Tous cinémas</h2>
+
+            <ConsolidatedResultsTable
+              resultsUnit={study.resultsUnit}
+              data={createBilanCarboneTableData(bilanCarboneEquivalent)}
+              hiddenUncertainty
+              hideExpandIcons
+            />
+          </div>
+        </div>
+
+        {sitesData.map((site) => {
+          const { computedResultsWithDep: siteResults } = getResultsValues(
+            study,
+            tPost,
+            site.id,
+            false,
+            environment,
+            tStudy,
+          )
+          const siteBilanCarboneEquivalent = convertCountToBilanCarbone(siteResults)
+          return (
+            <div key={`bilan-carbone-${site.id}`} className="pdf-content page-break-before pdf-page-content">
+              <div className="pdf-section">
+                <h2 className="pdf-totals-header pdf-header-with-border">
+                  {tExports('bc.title')} - {site.fullName}
+                </h2>
+
+                <ConsolidatedResultsTable
+                  resultsUnit={study.resultsUnit}
+                  data={createBilanCarboneTableData(siteBilanCarboneEquivalent)}
+                  hiddenUncertainty
+                  hideExpandIcons
+                />
+              </div>
+            </div>
+          )
+        })}
       </div>
     </ThemeProvider>
   )

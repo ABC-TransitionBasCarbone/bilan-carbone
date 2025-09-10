@@ -180,5 +180,11 @@
       "title": "Informations supplémentaires sur la question",
       "close": "Fermer"
     }
+  },
+  "exports": {
+    "env_specific_export": "Empreinte carbone simplifiée",
+    "bc": {
+      "disclaimerExcel": "Attention, les résultats que vous obtenez ici sont uniquement issus de l'empreinte carbone simplifiée Count, et ne doivent en aucun cas être utilisés comme des résultats Bilan Carbone®. La démarche que vous avez suivi via l'outil Count n'est PAS une démarche Bilan Carbone®.\n\nEn revanche, cette empreinte carbone simplifiée est le premier pas vers une démarche plus complète comme le Bilan Carbone® ! Un Bilan Carbone® suit une méthodologie bien précise, et doit répondre à un certain nombre de critères objectifs. Par exemple, au cours d'un Bilan Carbone®, la direction doit être engagée, les différentes parties prenantes de l'organisation doivent être mobilisées, des incertitudes doivent être calculées et associées aux émissions, et surtout, un plan de transition solide doit être construit pour engager l'organisation dans une transition bas carbone. Si vous souhaitez vous lancer dans un Bilan Carbone® dans les années qui viennent, tout commence par se faire former, ou par se faire accompagner par un prestataire externe !"
+    }
   }
 }
