@@ -2,11 +2,11 @@ import { emissionFactorMap } from '@/constants/emissionFactorMap'
 import { ID_INTERN_PREFIX_REGEX } from '@/constants/utils'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
-import { Box, Tooltip, Typography } from '@mui/material'
-import classNames from 'classnames'
+import { Box, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import styles from './QuestionContainer.module.css'
+import { useState } from 'react'
+import HelpIcon from '../base/HelpIcon'
+import GlossaryModal from '../modals/GlossaryModal'
 import {
   StyledEmissionResults,
   StyledQuestionContainer,
@@ -21,7 +21,8 @@ import { FieldType } from './types/questionTypes'
 const QuestionContainer = ({ question, children, showResults, results, saveStatus }: QuestionContainerProps) => {
   const inTable = ID_INTERN_PREFIX_REGEX.test(question.idIntern) && question.type !== FieldType.TABLE
   const tResultsUnits = useTranslations('study.results.units')
-  const tQuestions = useTranslations('emissionFactors.post.cutQuestions')
+  const tGlossary = useTranslations('questions.glossary')
+  const [glossary, setGlossary] = useState('')
   const helperText = emissionFactorMap[question.idIntern]?.helperText
 
   if (inTable) {
@@ -43,18 +44,7 @@ const QuestionContainer = ({ question, children, showResults, results, saveStatu
       <StyledQuestionHeader>
         <Box display="flex" alignItems="center" gap={1}>
           <StyledQuestionTitle>{question.label}</StyledQuestionTitle>
-          {helperText && (
-            <Tooltip title={helperText} arrow placement="right">
-              <button
-                type="button"
-                className={classNames('flex-cc', styles.helpButton)}
-                aria-label={tQuestions('helpAriaLabel')}
-                tabIndex={0}
-              >
-                <HelpOutlineIcon color="primary" fontSize="small" />
-              </button>
-            </Tooltip>
-          )}
+          {helperText && <HelpIcon className="ml-2" onClick={() => setGlossary('title')} label={tGlossary('title')} />}
         </Box>
         {saveStatus && <SaveStatusIndicator status={saveStatus} />}
       </StyledQuestionHeader>
@@ -68,6 +58,11 @@ const QuestionContainer = ({ question, children, showResults, results, saveStatu
           </StyledEmissionResults>
         )}
       </StyledQuestionContent>
+      {glossary && (
+        <GlossaryModal glossary="title" label="emission-factor-post" t={tGlossary} onClose={() => setGlossary('')}>
+          {helperText}
+        </GlossaryModal>
+      )}
     </StyledQuestionContainer>
   )
 }

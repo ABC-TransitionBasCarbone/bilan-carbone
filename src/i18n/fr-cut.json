@@ -166,5 +166,11 @@
   },
   "ressources": {
     "contacterViaFormulaire": "Écrire directement à {supportEmail}"
+  },
+  "questions": {
+    "glossary": {
+      "title": "Informations supplémentaires sur la question",
+      "close": "Fermer"
+    }
   }
 }

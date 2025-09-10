@@ -216,7 +216,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     emissionFactorImportedId: '43545',
     isSpecial: true,
     helperText:
-      '25286€ est le forfait issue des Bilans Carbone® qui ont étés réalisées sur plusieurs cinémas français. Les services incluent par exemple les dépenses de ménage, sécurité, comptabilité, frais bancaires, etc. Une valeur par défaut est indiqué pour cette réponse. Cette valeur est issue des Bilans Carbone® qui ont étés réalisées sur plusieurs cinémas français. Si vous détenez une information plus précise pour votre cinéma, nous vous invitons à la modifier',
+      "Les services incluent par exemple les dépenses de ménage, sécurité, comptabilité, frais bancaires, etc. Vous pouvez utiliser une valeur par défaut pour cette réponse (25286€) qui est issue des Bilans Carbone® qui ont étés réalisées sur plusieurs cinémas français. Si vous détenez une information plus précise pour votre cinéma, nous vous invitons à l'utiliser plutôt que la valeur par défaut.",
   },
   '10-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer': {
     depreciationPeriod: 4,
@@ -398,7 +398,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     emissionFactorImportedId: '142',
     dependentFields: ['numberOfProgrammedFilms'],
     helperText:
-      '0,9 fois le nombre de film reçus est la valeur issue des Bilans Carbone® qui ont étés réalisées sur plusieurs cinémas français. Si vous détenez une information plus précise pour votre cinéma, nous vous invitons à la modifier',
+      "Vous pouvez utiliser une valeur par défaut pour cette réponse (0,9 fois le nombre de film reçus) qui est la valeur issue des Bilans Carbone® qui ont étés réalisées sur plusieurs cinémas français. Si vous détenez une information plus précise pour votre cinéma, nous vous invitons à l'utiliser plutôt que la valeur par défaut.",
   },
   [MOVIE_DCP_QUESTION_ID]: { isSpecial: true, emissionFactorImportedId: '143' },
   'combien-de-donnees-stockez-vous-dans-un-cloud': { emissionFactorImportedId: '141' },
