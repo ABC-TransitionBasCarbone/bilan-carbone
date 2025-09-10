@@ -62,6 +62,8 @@
       "accounting": "Mon Empreinte"
     },
     "new": {
+      "title": "Informations sur la nouvelle empreinte",
+      "name": "Nom de l'empreinte",
       "studyDates": "Année de référence de l’empreinte",
       "suggestion": {
         "name": "Empreinte - {orga} {studyStartDate}",
@@ -69,6 +71,10 @@
       },
       "info": {
         "date": "Les estimations sont généralement faites sur une période de 12 mois"
+      },
+      "glossary": {
+        "studyDates": "Année de référence de l’empreinte",
+        "studyDatesDescription": "Veuillez renseigner la période de référence sur laquelle porte votre empreinte carbone. Idéalement, la période de référence doit être d'une année, si possible civile."
       }
     },
     "perimeter": {
