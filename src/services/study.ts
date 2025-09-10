@@ -387,7 +387,11 @@ export const formatConsolidatedStudyResultsForExport = (
       if (headersForEnv.includes('uncertainty')) {
         resultLine.push(result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '')
       }
-      dataForExport.push([...resultLine, Math.round((result.value ?? 0) / STUDY_UNIT_VALUES[study.resultsUnit])])
+      if (environment === Environment.CUT) {
+        dataForExport.push([...resultLine, Math.round((result.value ?? 0) / STUDY_UNIT_VALUES[study.resultsUnit])])
+      } else {
+        dataForExport.push([...resultLine, (result.value ?? 0) / STUDY_UNIT_VALUES[study.resultsUnit]])
+      }
     }
 
     dataForExport.push([])
