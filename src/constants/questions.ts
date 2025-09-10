@@ -7,6 +7,7 @@ export const SERVICES_QUESTION_ID = 'quel-montant-avez-vous-depense-en-services'
 export const SHARED_ACTIVITY_QUESTION_ID = 'le-batiment-est-il-partage-avec-une-autre-activite'
 export const RESEAU_CHALLEUR_QUESTION_ID = 'reseaux-urbains-chaleur'
 export const RESEAU_FROID_QUESTION_ID = 'reseaux-urbains-chaleurfroid'
+export const GENERATOR_QUESTION_ID = 'le-cinema-dispose-t-il-dun-ou-plusieurs-groupes-electrogenes'
 
 // Mobilité spectateurs
 export const MOBILIY_SURVEY_QUESTION_ID = 'avez-vous-deja-realise-une-enquete-mobilite-spectateurs'

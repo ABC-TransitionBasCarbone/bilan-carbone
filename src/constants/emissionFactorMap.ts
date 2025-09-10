@@ -2,6 +2,7 @@ import {
   CLIMATISATION_QUESTION_ID,
   CONFECTIONERY_QUESTION_ID,
   CONFECTIONERY_SELECT_QUESTION_ID,
+  GENERATOR_QUESTION_ID,
   INCREASE_SURFACE_QUESTION_ID,
   LONG_DISTANCE_QUESTION_ID,
   MOBILITY_DOWNLOAD_MODEL_QUESTION_ID,
@@ -208,8 +209,16 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   [RESEAU_FROID_QUESTION_ID]: { emissionFactorImportedId: '37090' },
   'bois-granules': { emissionFactorImportedId: '34942' },
   [CLIMATISATION_QUESTION_ID]: { emissionFactorImportedId: '145', isSpecial: true },
-  'le-cinema-dispose-t-il-d-un-ou-plusieurs-groupes-electrogenes': { emissionFactorImportedId: '20911' },
-  'quelle-est-votre-consommation-annuelle-de-diesel': { emissionFactorImportedId: '14015' },
+  [GENERATOR_QUESTION_ID]: { emissionFactorImportedId: '20911' },
+  'quelle-est-votre-consommation-annuelle-de-diesel': {
+    emissionFactorImportedId: '14015',
+    conditionalRules: [
+      {
+        idIntern: GENERATOR_QUESTION_ID,
+        expectedAnswers: ['11-Oui et je l’utilise plusieurs fois par an'],
+      },
+    ],
+  },
   // ActivitesDeBureau
   'quel-montant-avez-vous-depense-en-petites-fournitures-de-bureau': { emissionFactorImportedId: '20556' },
   [SERVICES_QUESTION_ID]: {
