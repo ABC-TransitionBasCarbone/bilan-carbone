@@ -262,16 +262,13 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
   return (
     <>
       <StudyParams user={user} study={study} disabled={editionDisabled} emissionFactorSources={emissionFactorSources} />
-      <Block>
+      <Block className="flex flex-col">
         <SelectStudySite study={study} studySite={studySite} setSite={setSite} />
-      </Block>
-      {loading ? (
-        <Block>
-          <CircularProgress variant="indeterminate" color="primary" size={100} />
-        </Block>
-      ) : (
-        <>
-          <Block>
+        {loading ? (
+          <CircularProgress variant="indeterminate" color="primary" size={100} className="flex mt-2" />
+        ) : (
+          <>
+            <div className="mb-2 mt-2">{t('cncInfo')}</div>
             <div>
               <FormTextField
                 control={form.control}
@@ -323,8 +320,7 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
                 {t('goToDataEntry')}
               </LinkButton>
             </Box>
-          </Block>
-          {/* <Block title={t('openingHours')}>
+            {/* <Block title={t('openingHours')}>
             <div className={classNames(styles.openingHoursContainer, 'flex-col')}>
               <WeekScheduleForm
                 label={t('openingHours')}
@@ -346,16 +342,17 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
               )}
             </div>
           </Block> */}
-        </>
-      )}
-      {showSiteDataWarning && pendingSiteChanges && (
-        <SiteDataChangeWarningModal
-          isOpen={showSiteDataWarning}
-          onClose={handleSiteDataWarningCancel}
-          onConfirm={handleSiteDataWarningConfirm}
-          questionsBySubPost={pendingSiteChanges.questionsBySubPost}
-        />
-      )}
+          </>
+        )}
+        {showSiteDataWarning && pendingSiteChanges && (
+          <SiteDataChangeWarningModal
+            isOpen={showSiteDataWarning}
+            onClose={handleSiteDataWarningCancel}
+            onConfirm={handleSiteDataWarningConfirm}
+            questionsBySubPost={pendingSiteChanges.questionsBySubPost}
+          />
+        )}
+      </Block>
     </>
   )
 }
