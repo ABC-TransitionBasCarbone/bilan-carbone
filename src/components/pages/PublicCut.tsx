@@ -2,7 +2,8 @@
 import { defaultLocale, Locale, LocaleType } from '@/i18n/config'
 import { switchEnvironment } from '@/i18n/environment'
 import { getLocale, switchLocale } from '@/i18n/locale'
-import { alpha, Box, Container, Divider, styled, Typography } from '@mui/material'
+import { getEnvVar } from '@/lib/environment'
+import { alpha, Box, Container, Divider, Link, styled, Typography } from '@mui/material'
 import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -31,6 +32,9 @@ interface Props {
   children: ReactNode
 }
 const PublicCutPage = ({ children }: Props) => {
+  const support = getEnvVar('SUPPORT_EMAIL', Environment.CUT)
+  const faq = getEnvVar('FAQ_LINK', Environment.CUT)
+
   const t = useTranslations('login')
   const tLocale = useTranslations('locale')
   const [locale, setLocale] = useState<LocaleType>(defaultLocale)
@@ -46,7 +50,7 @@ const PublicCutPage = ({ children }: Props) => {
     <PublicContainer>
       <StyledPublicCutPage className={classNames('grow text-center')}>
         <Box p="1.5rem" borderBottom="1px solid" borderColor="success.light">
-          <Box className="justify-around flex-col" minHeight="600px" px="2rem" py="5rem">
+          <Box className="justify-around flex-col" minHeight="500px" px="2rem" py="5rem">
             <Typography className="title-h2">{t('welcome')}</Typography>
             <Image
               src="/logos/cut/logo-filled.svg"
@@ -64,6 +68,20 @@ const PublicCutPage = ({ children }: Props) => {
             </Typography>
           </Box>
         </Box>
+        <p>
+          {t.rich('question', {
+            link: (children) => (
+              <Link href={faq} className={styles.linkCut} target="_blank" rel="noreferrer noopener">
+                {children}
+              </Link>
+            ),
+            support: (children) => (
+              <Link href={`mailto:${support}`} className={styles.linkCut}>
+                {children}
+              </Link>
+            ),
+          })}
+        </p>
         <Box className="justify-between" padding="2rem">
           <Image
             className={styles.france2030Logo}
@@ -73,10 +91,7 @@ const PublicCutPage = ({ children }: Props) => {
             height={198}
           />
           <Typography textAlign="justify" width="75%" fontSize="0.8rem">
-            {t.rich('question', {
-              link: () => '',
-              support: () => '',
-            })}
+            {t('explaination2')}
           </Typography>
         </Box>
       </StyledPublicCutPage>
