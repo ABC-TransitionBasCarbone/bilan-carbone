@@ -5,18 +5,13 @@
       <p>Bonjour,</p>
       <br />
       <p>
-        Bienvenue sur le BC+ ! Vous avez fait une demande de réinitialisation de mot de passe mais votre compte n'est pas encore activé.
-        Si vous souhaitez finaliser l'activation de celui-ci, veuillez cliquer sur <a href="<%= link %>">ce lien</a>.
+        Bienvenue sur le BC+ ! Vous avez fait une demande de réinitialisation de mot de passe mais votre compte n'est
+        pas encore activé. Si vous souhaitez finaliser l'activation de celui-ci, veuillez cliquer sur
+        <a href="<%= link %>">ce lien</a>.
       </p>
-      <p>
-        En cas de question vous pouvez consulter
-        <a href="https://association-pour-la-transition-1.gitbook.io/bc+">notre FAQ</a> ou nous envoyer un email à
-        <a href="mailto:<%= support %>"><%= support %></a>.
-      </p>
+      <%- include('./partials/faq'); %>
       <br />
-      <p>Bonne journée,</p>
-      <p>Cordialement,</p>
-      <p>L'équipe BC+</p>
+      <%- include('./partials/signature'); %>
     </div>
   </body>
 </html>

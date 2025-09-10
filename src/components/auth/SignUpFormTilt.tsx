@@ -1,5 +1,6 @@
 'use client'
 
+import { getEnvVar } from '@/lib/environment'
 import { getEnvRoute } from '@/services/email/utils'
 import { signUpWithSiretOrCNC } from '@/services/serverFunctions/user'
 import { SignUpTiltCommand, SignUpTiltCommandValidation } from '@/services/serverFunctions/user.command'
@@ -17,10 +18,10 @@ import LoadingButton from '../base/LoadingButton'
 import { FormTextField } from '../form/TextField'
 import authStyles from './Auth.module.css'
 
-const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
-const faq = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
-
 const SignUpFormTilt = () => {
+  const contactMail = getEnvVar('SUPPORT_EMAIL', Environment.TILT)
+  const faq = getEnvVar('FAQ_LINK', Environment.TILT)
+
   const t = useTranslations('signupTilt')
   const tForm = useTranslations('login.form')
   const [submitting, setSubmitting] = useState(false)

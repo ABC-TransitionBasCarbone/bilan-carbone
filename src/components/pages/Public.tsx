@@ -2,6 +2,7 @@
 import { defaultLocale, Locale, LocaleType } from '@/i18n/config'
 import { switchEnvironment } from '@/i18n/environment'
 import { getLocale, switchLocale } from '@/i18n/locale'
+import { getEnvVar } from '@/lib/environment'
 import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -14,10 +15,11 @@ import styles from './Public.module.css'
 interface Props {
   children: ReactNode
 }
-const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
-const faq = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
 
 const PublicPage = ({ children }: Props) => {
+  const support = getEnvVar('SUPPORT_EMAIL', Environment.BC)
+  const faq = getEnvVar('FAQ_LINK', Environment.BC)
+
   const t = useTranslations('login')
   const tLocale = useTranslations('locale')
   const [locale, setLocale] = useState<LocaleType>(defaultLocale)
@@ -52,7 +54,7 @@ const PublicPage = ({ children }: Props) => {
               </Link>
             ),
             support: (children) => (
-              <Link href={`mailto:${contactMail}`} className={styles.link}>
+              <Link href={`mailto:${support}`} className={styles.link}>
                 {children}
               </Link>
             ),
