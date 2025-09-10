@@ -1,6 +1,7 @@
 'use client'
 
 import Block from '@/components/base/Block'
+import LinkButton from '@/components/base/LinkButton'
 import { FormTextField } from '@/components/form/TextField'
 import StudyParams from '@/components/study/rights/StudyParams'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
@@ -15,12 +16,13 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { changeStudyCinema, getQuestionsGroupedBySubPost, getStudySite } from '@/services/serverFunctions/study'
 import { ChangeStudyCinemaCommand, ChangeStudyCinemaValidation } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { CircularProgress } from '@mui/material'
+import { Box, CircularProgress } from '@mui/material'
 import { DayOfWeek, EmissionFactorImportVersion, OpeningHours } from '@prisma/client'
+import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './StudyRights.module.css'
 
@@ -134,10 +136,10 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
   const openingHours = form.watch('openingHours')
   const openingHoursHoliday = form.watch('openingHoursHoliday')
 
-  const daysHoliday: DayOfWeek[] = useMemo(
-    () => Object.keys(openingHoursHoliday || {}) as DayOfWeek[],
-    [openingHoursHoliday],
-  )
+  // const daysHoliday: DayOfWeek[] = useMemo(
+  //   () => Object.keys(openingHoursHoliday || {}) as DayOfWeek[],
+  //   [openingHoursHoliday],
+  // )
 
   const handleStudyCinemaUpdate = useCallback(
     async (data: ChangeStudyCinemaCommand) => {
@@ -225,29 +227,29 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
     form.handleSubmit(handleStudyCinemaUpdate, (e) => console.log('invalid', e))()
   }, [form, handleStudyCinemaUpdate, studySite])
 
-  const handleCheckDay = useCallback(
-    (day: DayOfWeek) => {
-      const existingHolidayDay = day in (openingHoursHoliday || {})
-      if (existingHolidayDay) {
-        const updatedHolidays = { ...openingHoursHoliday }
-        delete updatedHolidays[day]
-        form.setValue('openingHoursHoliday', updatedHolidays)
-      } else {
-        form.setValue('openingHoursHoliday', {
-          ...(openingHoursHoliday || {}),
-          [day]: { day, openHour: '', closeHour: '', isHoliday: true },
-        })
-      }
-    },
-    [openingHoursHoliday, form],
-  )
+  // const handleCheckDay = useCallback(
+  //   (day: DayOfWeek) => {
+  //     const existingHolidayDay = day in (openingHoursHoliday || {})
+  //     if (existingHolidayDay) {
+  //       const updatedHolidays = { ...openingHoursHoliday }
+  //       delete updatedHolidays[day]
+  //       form.setValue('openingHoursHoliday', updatedHolidays)
+  //     } else {
+  //       form.setValue('openingHoursHoliday', {
+  //         ...(openingHoursHoliday || {}),
+  //         [day]: { day, openHour: '', closeHour: '', isHoliday: true },
+  //       })
+  //     }
+  //   },
+  //   [openingHoursHoliday, form],
+  // )
 
-  const isChecked = useCallback(
-    (day: DayOfWeek) => {
-      return day in (openingHoursHoliday || {})
-    },
-    [openingHoursHoliday],
-  )
+  // const isChecked = useCallback(
+  //   (day: DayOfWeek) => {
+  //     return day in (openingHoursHoliday || {})
+  //   },
+  //   [openingHoursHoliday],
+  // )
 
   const labelWithYear = (label: string) => t(label, { year: study.startDate.getFullYear() })
 
@@ -312,6 +314,15 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
                 onBlur={onStudyCinemaUpdate}
               />
             </div>
+            <Box className={classNames('flex', 'justify-start')}>
+              <LinkButton
+                color="primary"
+                variant="contained"
+                href={`/etudes/${study.id}/comptabilisation/saisie-des-donnees`}
+              >
+                {t('goToDataEntry')}
+              </LinkButton>
+            </Box>
           </Block>
           {/* <Block title={t('openingHours')}>
             <div className={classNames(styles.openingHoursContainer, 'flex-col')}>
@@ -334,15 +345,6 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
                 />
               )}
             </div>
-            <Box className={classNames('flex', 'justify-end')}>
-              <LinkButton
-                color="primary"
-                variant="contained"
-                href={`/etudes/${study.id}/comptabilisation/saisie-des-donnees`}
-              >
-                Suivant
-              </LinkButton>
-            </Box>
           </Block> */}
         </>
       )}
