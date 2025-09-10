@@ -526,6 +526,8 @@ export const formatBCResultsForCutExport = (
     data.push(['Total', siteTotal])
   }
 
+  data.push([])
+
   return {
     name: tExport('bc.title'),
     data,
