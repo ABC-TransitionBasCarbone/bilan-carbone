@@ -4,8 +4,9 @@ import GlossaryModal from '@/components/modals/GlossaryModal'
 import { computeTotalForPosts, ResultsByPost } from '@/services/results/consolidated'
 import { BasicTypeCharts } from '@/utils/charts'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
 import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined'
-import { Tab, Tabs } from '@mui/material'
+import { Checkbox, FormControlLabel, Menu, Tab, Tabs } from '@mui/material'
 import { StudyResultUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useCallback, useMemo, useState } from 'react'
@@ -47,8 +48,10 @@ const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: s
 }: Props<T>) => {
   const [tabSelected, setTabSelected] = useState(defaultTab)
   const [filterAnchorEl, setFilterAnchorEl] = useState<HTMLElement | null>(null)
+  const [settingsAnchorEl, setSettingsAnchorEl] = useState<HTMLElement | null>(null)
   const [filteredResultsWithTotal, setFilteredResultsWithTotal] = useState(computedResults)
   const [openGlossary, setOpenGlossary] = useState(false)
+  const [showSubLevel, setShowSubLevel] = useState(true)
 
   const t = useTranslations('study.results')
   const tPost = useTranslations('emissionFactors.post')
@@ -67,7 +70,7 @@ const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: s
             results={filteredResultsWithTotal}
             resultsUnit={resultsUnit ?? StudyResultUnit.T}
             onlyChildren={type === 'tag'}
-            showSubLevel={true}
+            showSubLevel={showSubLevel}
             showLabelsOnPie={true}
           />
         )
@@ -78,13 +81,13 @@ const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: s
             resultsUnit={resultsUnit}
             showLabelsOnBars={false}
             onlyChildren={type === 'tag'}
-            showSubLevel={true}
+            showSubLevel={showSubLevel}
           />
         )
       default:
         return null
     }
-  }, [tabSelected, filteredResultsWithTotal, resultsUnit, type, TableComponent])
+  }, [tabSelected, filteredResultsWithTotal, resultsUnit, type, TableComponent, showSubLevel])
 
   const setFilteredResults = useCallback(
     (results: T[]) => {
@@ -119,13 +122,41 @@ const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: s
           ) : (
             <div />
           )}
-          <div
-            onClick={(event) => setFilterAnchorEl((prev) => (prev ? null : event.currentTarget))}
-            className="pointer"
-          >
-            <TuneOutlinedIcon className="flex-end" />
+          <div className="flex gapped-2">
+            <div
+              onClick={(event) => setSettingsAnchorEl((prev) => (prev ? null : event.currentTarget))}
+              className="pointer ml-2"
+            >
+              <SettingsOutlinedIcon className="flex-end" color="primary" />
+            </div>
+            <div
+              onClick={(event) => setFilterAnchorEl((prev) => (prev ? null : event.currentTarget))}
+              className="pointer"
+            >
+              <TuneOutlinedIcon className="flex-end" color="primary" />
+            </div>
           </div>
         </div>
+        <Menu
+          anchorEl={settingsAnchorEl}
+          open={Boolean(settingsAnchorEl)}
+          onClose={() => setSettingsAnchorEl(null)}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+        >
+          <div className="px1">
+            <FormControlLabel
+              control={<Checkbox checked={showSubLevel} onChange={(e) => setShowSubLevel(e.target.checked)} />}
+              label={type === 'tag' ? t('showSubTags') : t('showSubPosts')}
+            />
+          </div>
+        </Menu>
         <Filters
           setFilteredResults={setFilteredResults}
           results={computedResults}

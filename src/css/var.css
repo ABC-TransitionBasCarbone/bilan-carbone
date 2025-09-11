@@ -179,6 +179,10 @@
   width: 100% !important;
 }
 
+.gapped-2 {
+  gap: 0.5rem;
+}
+
 .gapped1 {
   gap: 1rem;
 }

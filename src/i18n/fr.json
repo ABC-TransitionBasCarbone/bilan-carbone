@@ -704,6 +704,8 @@
       "table": "Tableau",
       "barChart": "Histogramme",
       "pieChart": "Camembert",
+      "showSubPosts": "Afficher les sous-postes",
+      "showSubTags": "Afficher les sous-tags",
       "tagPieChartTitle": "Émissions, par tag ({unit})",
       "consolidatedChartTitle": "Émissions, par poste ({unit})",
       "other": "Sans tag",

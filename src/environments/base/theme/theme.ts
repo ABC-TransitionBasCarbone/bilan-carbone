@@ -210,70 +210,70 @@ const theme = createTheme(base, {
     },
     subPostColors: {
       // Energies subposts - variations of #3F5488
-      [SubPost.CombustiblesFossiles]: '#4A5F9A',
-      [SubPost.CombustiblesOrganiques]: '#566AAC',
-      [SubPost.ReseauxDeChaleurEtDeVapeur]: '#6275BE',
-      [SubPost.ReseauxDeFroid]: '#6E80D0',
-      [SubPost.Electricite]: '#7A8BE2',
+      [SubPost.CombustiblesFossiles]: '#526594',
+      [SubPost.CombustiblesOrganiques]: '#6576a0',
+      [SubPost.ReseauxDeChaleurEtDeVapeur]: '#7987ac',
+      [SubPost.ReseauxDeFroid]: '#8c98b8',
+      [SubPost.Electricite]: '#9faac4',
 
       // AutresEmissionsNonEnergetiques subposts - variations of #3F5488
-      [SubPost.Agriculture]: '#3D4F82',
-      [SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas]: '#49587C',
-      [SubPost.EmissionsLieesALaProductionDeFroid]: '#556176',
-      [SubPost.EmissionsLieesAuxProcedesIndustriels]: '#616A70',
-      [SubPost.AutresEmissionsNonEnergetiques]: '#6D736A',
+      [SubPost.Agriculture]: '#526594',
+      [SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas]: '#6576a0',
+      [SubPost.EmissionsLieesALaProductionDeFroid]: '#7987ac',
+      [SubPost.EmissionsLieesAuxProcedesIndustriels]: '#8c98b8',
+      [SubPost.AutresEmissionsNonEnergetiques]: '#9faac4',
 
       // IntrantsBiensEtMatieres subposts - variations of #5E97CB
-      [SubPost.MetauxPlastiquesEtVerre]: '#68A2D0',
-      [SubPost.PapiersCartons]: '#72ADD5',
-      [SubPost.MateriauxDeConstruction]: '#7CB8DA',
-      [SubPost.ProduitsChimiquesEtHydrogene]: '#86C3DF',
-      [SubPost.NourritureRepasBoissons]: '#90CEE4',
-      [SubPost.MatiereDestineeAuxEmballages]: '#9AD9E9',
-      [SubPost.AutresIntrants]: '#A4E4EE',
-      [SubPost.BiensEtMatieresEnApprocheMonetaire]: '#AEEFF3',
+      [SubPost.MetauxPlastiquesEtVerre]: '#6ea1d0',
+      [SubPost.PapiersCartons]: '#7eacd5',
+      [SubPost.MateriauxDeConstruction]: '#8eb6db',
+      [SubPost.ProduitsChimiquesEtHydrogene]: '#9ec1e0',
+      [SubPost.NourritureRepasBoissons]: '#afcbe5',
+      [SubPost.MatiereDestineeAuxEmballages]: '#bfd5ea',
+      [SubPost.AutresIntrants]: '#cfe0ef',
+      [SubPost.BiensEtMatieresEnApprocheMonetaire]: '#dfeaf5',
 
       // IntrantsServices subposts - variations of #5E97CB
-      [SubPost.AchatsDeServices]: '#5A92C6',
-      [SubPost.UsagesNumeriques]: '#668DC1',
-      [SubPost.ServicesEnApprocheMonetaire]: '#7288BC',
+      [SubPost.AchatsDeServices]: '#5588b7',
+      [SubPost.UsagesNumeriques]: '#4b79a2',
+      [SubPost.ServicesEnApprocheMonetaire]: '#426a8e',
 
       // DechetsDirects subposts - variations of #3F5488
-      [SubPost.DechetsDEmballagesEtPlastiques]: '#3B4F80',
-      [SubPost.DechetsOrganiques]: '#474A78',
-      [SubPost.DechetsOrduresMenageres]: '#534570',
-      [SubPost.DechetsDangereux]: '#5F4068',
-      [SubPost.DechetsBatiments]: '#6B3B60',
-      [SubPost.DechetsFuitesOuEmissionsNonEnergetiques]: '#773658',
-      [SubPost.EauxUsees]: '#833150',
-      [SubPost.AutresDechets]: '#8F2C48',
+      [SubPost.DechetsDEmballagesEtPlastiques]: '#394c7a',
+      [SubPost.DechetsOrganiques]: '#32436d',
+      [SubPost.DechetsOrduresMenageres]: '#2c3b5f',
+      [SubPost.DechetsDangereux]: '#263252',
+      [SubPost.DechetsBatiments]: '#202a44',
+      [SubPost.DechetsFuitesOuEmissionsNonEnergetiques]: '#192236',
+      [SubPost.EauxUsees]: '#131929',
+      [SubPost.AutresDechets]: '#0d111b',
 
       // Fret subposts - variations of #79C7AB
-      [SubPost.FretEntrant]: '#83D2B6',
-      [SubPost.FretInterne]: '#8DDDC1',
-      [SubPost.FretSortant]: '#97E8CC',
+      [SubPost.FretEntrant]: '#94d2bc',
+      [SubPost.FretInterne]: '#afddcd',
+      [SubPost.FretSortant]: '#c9e9dd',
 
       // Deplacements subposts - variations of #79C7AB
-      [SubPost.DeplacementsDomicileTravail]: '#75C2A6',
-      [SubPost.DeplacementsProfessionnels]: '#71BDA1',
-      [SubPost.DeplacementsVisiteurs]: '#6DB89C',
+      [SubPost.DeplacementsDomicileTravail]: '#94d2bc',
+      [SubPost.DeplacementsProfessionnels]: '#afddcd',
+      [SubPost.DeplacementsVisiteurs]: '#c9e9dd',
 
       // Immobilisations subposts - variations of #3F5488
-      [SubPost.Batiments]: '#453A94',
-      [SubPost.AutresInfrastructures]: '#4B3FA0',
-      [SubPost.Equipements]: '#5144AC',
-      [SubPost.Informatique]: '#5749B8',
+      [SubPost.Batiments]: '#7987ac',
+      [SubPost.AutresInfrastructures]: '#8c98b8',
+      [SubPost.Equipements]: '#9faac4',
+      [SubPost.Informatique]: '#b2bbcf',
 
       // UtilisationEtDependance subposts - variations of #FBBC6B
-      [SubPost.UtilisationEnResponsabilite]: '#FCC776',
-      [SubPost.UtilisationEnDependance]: '#FDD281',
-      [SubPost.InvestissementsFinanciersRealises]: '#FEDD8C',
+      [SubPost.UtilisationEnResponsabilite]: '#fbc37a',
+      [SubPost.UtilisationEnDependance]: '#fcc989',
+      [SubPost.InvestissementsFinanciersRealises]: '#fcd097',
 
       // FinDeVie subposts - variations of #FBBC6B
-      [SubPost.ConsommationDEnergieEnFinDeVie]: '#FAB760',
-      [SubPost.TraitementDesDechetsEnFinDeVie]: '#F9B255',
-      [SubPost.FuitesOuEmissionsNonEnergetiques]: '#F8AD4A',
-      [SubPost.TraitementDesEmballagesEnFinDeVie]: '#F7A83F',
+      [SubPost.ConsommationDEnergieEnFinDeVie]: '#fbc37a',
+      [SubPost.TraitementDesDechetsEnFinDeVie]: '#fcc989',
+      [SubPost.FuitesOuEmissionsNonEnergetiques]: '#fcd097',
+      [SubPost.TraitementDesEmballagesEnFinDeVie]: '#fdd7a6',
 
       // CUT subposts - unique colors
       [SubPost.Batiment]: '#8B5A3C',
