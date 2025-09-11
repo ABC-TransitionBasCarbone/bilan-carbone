@@ -23,6 +23,7 @@ export enum FieldType {
   QCM = 'QCM',
   QCU = 'QCU',
   TABLE = 'TABLE',
+  CUSTOM = 'CUSTOM',
 }
 
 export const QUESTION_TYPE_FIELD_MAPPING: Record<QuestionType, FieldType> = {
@@ -38,4 +39,5 @@ export const QUESTION_TYPE_FIELD_MAPPING: Record<QuestionType, FieldType> = {
   [QuestionType.PHONE]: FieldType.TEXT,
   [QuestionType.SELECT_FE]: FieldType.SELECT_FE,
   [QuestionType.TITLE]: FieldType.TITLE,
+  [QuestionType.CUSTOM]: FieldType.CUSTOM,
 }
