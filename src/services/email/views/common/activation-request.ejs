@@ -5,21 +5,16 @@
       <p>Bonjour,</p>
       <br />
       <p>
-        Vous avez une demande d'accès au compte BC+ de votre organisation de la part de <span><%= userToActivate %></span> (mail: <span><%= emailToActivate %></span>).
-        Vous pouvez retrouver les demandes d'accès dans votre compte dans la page "Mon organisation > Mon équipe".
-        En acceptant sa demande d'accès, vous lui définirez un rôle sur votre organisation.
-        Il aura alors accès suivant son rôle aux informations et actions correspondantes de votre compte.
-        Si vous refusez, il n'aura pas accès au compte de votre organisation.
+        Vous avez une demande d'accès au compte BC+ de votre organisation de la part de
+        <span><%= userToActivate %></span> (mail: <span><%= emailToActivate %></span>). Vous pouvez retrouver les
+        demandes d'accès dans votre compte dans la page "Mon organisation > Mon équipe". En acceptant sa demande
+        d'accès, vous lui définirez un rôle sur votre organisation. Il aura alors accès suivant son rôle aux
+        informations et actions correspondantes de votre compte. Si vous refusez, il n'aura pas accès au compte de votre
+        organisation.
       </p>
-      <p>
-        En cas de question vous pouvez consulter
-        <a href="https://association-pour-la-transition-1.gitbook.io/bc+">notre FAQ</a> ou nous envoyer un email à
-        <a href="mailto:<%= support %>"><%= support %></a>.
-      </p>
+      <%- include('./partials/faq'); %>
       <br />
-      <p>Bonne journée,</p>
-      <p>Cordialement,</p>
-      <p>L'équipe BC+</p>
+      <%- include('./partials/signature'); %>
     </div>
   </body>
 </html>

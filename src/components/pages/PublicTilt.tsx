@@ -2,6 +2,7 @@
 import { defaultLocale, Locale, LocaleType } from '@/i18n/config'
 import { switchEnvironment } from '@/i18n/environment'
 import { getLocale, switchLocale } from '@/i18n/locale'
+import { getEnvVar } from '@/lib/environment'
 import { alpha, Box, Container, Divider, styled, Typography } from '@mui/material'
 import { Environment } from '@prisma/client'
 import classNames from 'classnames'
@@ -11,9 +12,6 @@ import { ReactNode, useEffect, useState } from 'react'
 import PublicContainer from '../base/PublicContainer'
 import Image from '../document/Image'
 import styles from './Public.module.css'
-
-const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
-const faq = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
 
 const StyledPublicTiltPage = styled(Box)(({ theme }) => ({
   background: theme.palette.primary.main,
@@ -35,6 +33,9 @@ interface Props {
   children: ReactNode
 }
 const PublicTiltPage = ({ children }: Props) => {
+  const contactMail = getEnvVar('SUPPORT_EMAIL', Environment.TILT)
+  const faq = getEnvVar('FAQ_LINK', Environment.TILT)
+
   const t = useTranslations('login')
   const tLocale = useTranslations('locale')
   const [locale, setLocale] = useState<LocaleType>(defaultLocale)

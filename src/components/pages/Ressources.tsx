@@ -1,6 +1,6 @@
 'use server'
 
-import { EMAIL_CLIENT_CONFIGS } from '@/types/email'
+import { getEnvVar } from '@/lib/environment'
 import { Alert } from '@mui/material'
 import { Environment } from '@prisma/client'
 import { getTranslations } from 'next-intl/server'
@@ -14,8 +14,9 @@ interface Props {
 
 const RessourcesPage = async ({ environment }: Props) => {
   const t = await getTranslations('ressources')
-  const config = EMAIL_CLIENT_CONFIGS[environment]
-  const supportEmail = config.supportEmail
+  const contactForm = getEnvVar('CONTACT_FORM_URL', environment)
+  const faq = getEnvVar('FAQ_LINK', environment)
+  const supportEmail = getEnvVar('SUPPORT_EMAIL', environment)
 
   const ressources = [
     {
@@ -28,7 +29,7 @@ const RessourcesPage = async ({ environment }: Props) => {
         { title: t('openCarbonPractice'), link: 'https://www.opencarbonpractice.com/rejoindre-la-communaute' },
         {
           title: t('contacterViaFormulaire', { supportEmail }),
-          link: config.contactFormUrl,
+          link: contactForm,
           isTranslated: true,
         },
       ],
@@ -36,7 +37,7 @@ const RessourcesPage = async ({ environment }: Props) => {
     {
       title: t('questionTechnique'),
       links: [
-        { title: t('lireLaFAQ'), link: 'https://association-pour-la-transition-1.gitbook.io/bc+' },
+        { title: t('lireLaFAQ'), link: faq },
         {
           title: t('ecrireMail', { supportEmail }),
           link: `mailto:${supportEmail}`,

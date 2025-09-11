@@ -1,4 +1,4 @@
-import { EMAIL_CLIENT_CONFIGS } from '@/types/email'
+import { getEnvVar } from '@/lib/environment'
 import { Environment } from '@prisma/client'
 import nodemailer from 'nodemailer'
 import SMTPTransport from 'nodemailer/lib/smtp-transport'
@@ -10,13 +10,17 @@ export const getTransporter = (env: Environment) => {
     return transposters.get(env)!
   }
 
-  const config = EMAIL_CLIENT_CONFIGS[env]
+  const host = getEnvVar('MAIL_HOST', env)
+  const port = getEnvVar('MAIL_PORT', env)
+  const user = getEnvVar('MAIL_USER', env)
+  const pass = getEnvVar('MAIL_PASSWORD', env)
+
   const transporter = nodemailer.createTransport({
-    host: config.mailHost,
-    port: config.mailPort,
+    host,
+    port: parseInt(port, 10),
     auth: {
-      user: config.mailUser,
-      pass: config.mailPassword,
+      user,
+      pass,
     },
   } as SMTPTransport.Options)
 

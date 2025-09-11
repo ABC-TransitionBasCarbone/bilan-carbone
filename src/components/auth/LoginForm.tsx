@@ -1,5 +1,6 @@
 'use client'
 
+import { getEnvVar } from '@/lib/environment'
 import { getEnvRoute } from '@/services/email/utils'
 import { LoginCommand, LoginCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -20,13 +21,12 @@ import { FormTextField } from '../form/TextField'
 import authStyles from './Auth.module.css'
 import styles from './LoginForm.module.css'
 
-const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
-
 interface Props {
   environment?: Environment
 }
 
 const LoginForm = ({ environment = Environment.BC }: Props) => {
+  const support = getEnvVar('SUPPORT_EMAIL', environment)
   const t = useTranslations('login.form')
   const router = useRouter()
   const [submitting, setSubmitting] = useState(false)
@@ -121,7 +121,7 @@ const LoginForm = ({ environment = Environment.BC }: Props) => {
         {errorMessage && (
           <p className="error">
             {t.rich(errorMessage, {
-              link: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
+              link: (children) => <Link href={`mailto:${support}`}>{children}</Link>,
             })}
           </p>
         )}

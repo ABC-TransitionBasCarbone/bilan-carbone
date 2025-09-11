@@ -58,6 +58,11 @@
   color: white;
 }
 
+.linkCut {
+  color: white;
+  font-weight: 600;
+}
+
 .image {
   height: auto;
 }
