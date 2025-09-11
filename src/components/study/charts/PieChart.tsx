@@ -1,11 +1,11 @@
 'use client'
 
-import { BasicTypeCharts, formatValueAndUnit, getPostColor, getSubpostColor } from '@/utils/charts'
+import { BasicTypeCharts, formatValueAndUnit, getChildColor, getParentColor } from '@/utils/charts'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
-import { Typography, useTheme } from '@mui/material'
+import { Typography, useMediaQuery, useTheme } from '@mui/material'
 import { PieChart as MuiPieChart, PieChartProps } from '@mui/x-charts'
-import { StudyResultUnit, SubPost } from '@prisma/client'
+import { StudyResultUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo } from 'react'
 import styles from './PieChart.module.css'
@@ -34,6 +34,7 @@ interface Props<T> extends Omit<PieChartProps, 'series'> {
   showLabelsOnPie?: boolean
   showSubLevel?: boolean
   onlyChildren?: boolean
+  type?: 'post' | 'tag'
 }
 
 const PieChart = <T extends BasicTypeCharts>({
@@ -45,39 +46,51 @@ const PieChart = <T extends BasicTypeCharts>({
   showLabelsOnPie = true,
   showSubLevel = false,
   onlyChildren = false,
+  type = 'post',
   ...pieChartProps
 }: Props<T>) => {
   const tUnits = useTranslations('study.results.units')
-
   const theme = useTheme()
+  const isMediumScreen = useMediaQuery(theme.breakpoints.between('lg', 'xl'))
 
-  const getColorForPie = useCallback((post?: string, color?: string) => getPostColor(theme, post, color), [theme])
-
-  const formatData = useCallback(
-    ({ value, label, post, color }: Pick<T, 'value' | 'label' | 'post' | 'color'>) => {
-      const convertedValue = value / STUDY_UNIT_VALUES[resultsUnit]
+  const formatParentData = useCallback(
+    (item: T, index?: number) => {
+      const convertedValue = item.value / STUDY_UNIT_VALUES[resultsUnit]
 
       return {
-        label,
+        label: item.label,
         value: convertedValue,
-        color: getColorForPie(post, color),
+        color: getParentColor(type, theme, item, index),
       }
     },
-    [getColorForPie, resultsUnit],
+    [theme, resultsUnit, type],
+  )
+
+  const formatChildData = useCallback(
+    (child: Omit<BasicTypeCharts, 'children'>) => {
+      const convertedValue = child.value / STUDY_UNIT_VALUES[resultsUnit]
+
+      return {
+        label: child.label,
+        value: convertedValue,
+        color: getChildColor(type, theme, child),
+      }
+    },
+    [theme, resultsUnit, type],
   )
 
   const { innerRingData, outerRingData } = useMemo(() => {
     if (onlyChildren) {
       const childrenData = results
         .flatMap((result) => result.children)
-        .map((result) => formatData(result))
+        .map((child) => formatChildData(child))
         .filter((computeResult) => computeResult.value > 0)
       return { innerRingData: childrenData, outerRingData: [] }
     }
 
     const filteredResults = results.filter((result) => result.post !== 'total' && result.label !== 'total')
     const innerData = filteredResults
-      .map((result) => formatData(result))
+      .map((result, index) => formatParentData(result, index))
       .filter((computeResult) => computeResult.value > 0)
 
     if (!showSubLevel) {
@@ -89,20 +102,16 @@ const PieChart = <T extends BasicTypeCharts>({
     filteredResults.forEach((result) => {
       if (result.children && result.children.length > 0) {
         result.children.forEach((child) => {
-          const convertedValue = child.value / STUDY_UNIT_VALUES[resultsUnit]
-          if (convertedValue > 0) {
-            outerData.push({
-              label: child.label,
-              value: convertedValue,
-              color: getSubpostColor(theme, child.post as SubPost),
-            })
+          const formattedChild = formatChildData(child)
+          if (formattedChild.value > 0) {
+            outerData.push(formattedChild)
           }
         })
       }
     })
 
     return { innerRingData: innerData, outerRingData: outerData }
-  }, [formatData, onlyChildren, results, showSubLevel, resultsUnit, theme])
+  }, [formatParentData, formatChildData, onlyChildren, results, showSubLevel])
 
   const series = useMemo(() => {
     const seriesArray = []
@@ -145,7 +154,7 @@ const PieChart = <T extends BasicTypeCharts>({
     <div className={styles.pieChart}>
       <div className={styles.chartContainer}>
         <MuiPieChart series={series} height={height} hideLegend {...pieChartProps} />
-        {legendData.length > 0 && (
+        {legendData.length > 0 && !isMediumScreen && (
           <div className={styles.legend}>
             {legendData.map((item, index) => (
               <div key={index} className={styles.legendItem}>

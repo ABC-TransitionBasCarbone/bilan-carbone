@@ -37,13 +37,46 @@ export const getSubpostColor = (theme: Theme, subpost?: SubPost): string => {
   return theme.palette.primary.light
 }
 
-export const getLabel = (label?: string, post?: string, tPost?: ReturnType<typeof useTranslations>) => {
-  let formattedLabel = ''
-  if (label) {
-    formattedLabel = label
-  } else if (post && tPost && isPost(post)) {
-    formattedLabel = tPost(post)
-  }
+export const getTagFamilyColor = (theme: Theme, index?: number): string => {
+  return theme.custom.tagFamilyColors[index ?? 0]
+}
 
-  return formattedLabel
+export const getParentColor = (
+  type: 'post' | 'tag',
+  theme: Theme,
+  item: Pick<BasicTypeCharts, 'post' | 'color'>,
+  index?: number,
+): string => {
+  if (type === 'tag') {
+    return getTagFamilyColor(theme, index)
+  }
+  return getPostColor(theme, item.post, item.color)
+}
+
+export const getChildColor = (type: 'post' | 'tag', theme: Theme, child: Omit<BasicTypeCharts, 'children'>): string => {
+  if (type === 'tag') {
+    return child.color || theme.palette.primary.light
+  }
+  return getSubpostColor(theme, child.post as SubPost)
+}
+
+export const getPostLabel = (label?: string, post?: string, tPost?: ReturnType<typeof useTranslations>) => {
+  if (label) {
+    return label
+  }
+  if (post && tPost && isPost(post)) {
+    return tPost(post)
+  }
+  return ''
+}
+
+export const getLabel = (
+  type: 'post' | 'tag',
+  item: Pick<BasicTypeCharts, 'post'> & { label?: string },
+  tPost?: ReturnType<typeof useTranslations>,
+): string => {
+  if (type === 'tag') {
+    return item.label || ''
+  }
+  return getPostLabel(item.label, item.post, tPost)
 }

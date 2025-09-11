@@ -6,9 +6,9 @@ import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import styles from './BarChart.module.css'
 
-import { BasicTypeCharts, formatValueAndUnit, getLabel, getPostColor, getSubpostColor } from '@/utils/charts'
+import { BasicTypeCharts, formatValueAndUnit, getChildColor, getLabel, getParentColor } from '@/utils/charts'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
-import { StudyResultUnit, SubPost } from '@prisma/client'
+import { StudyResultUnit } from '@prisma/client'
 
 const BAR_CHART_CONSTANTS = {
   TICK_ANGLE: -20,
@@ -27,6 +27,7 @@ interface Props<T> {
   skipAnimation?: boolean
   onlyChildren?: boolean
   showSubLevel?: boolean
+  type?: 'post' | 'tag'
 }
 
 const BarChart = <T extends BasicTypeCharts>({
@@ -40,6 +41,7 @@ const BarChart = <T extends BasicTypeCharts>({
   skipAnimation = false,
   onlyChildren = false,
   showSubLevel = false,
+  type = 'post',
 }: Props<T>) => {
   const tResults = useTranslations('study.results')
   const tUnits = useTranslations('study.results.units')
@@ -54,9 +56,11 @@ const BarChart = <T extends BasicTypeCharts>({
       const childrenData = filteredData.flatMap((result) => result.children)
       return {
         barData: {
-          labels: childrenData.map(({ label, post }) => getLabel(label, post, tPost)),
+          labels: childrenData.map((child) => {
+            return getLabel(type, child, tPost)
+          }),
           values: childrenData.map(({ value }) => value / STUDY_UNIT_VALUES[resultsUnit]),
-          colors: childrenData.map(({ post, color }) => getPostColor(theme, post, color)),
+          colors: childrenData.map((child) => getChildColor(type, theme, child)),
         },
         seriesData: [],
       }
@@ -65,58 +69,55 @@ const BarChart = <T extends BasicTypeCharts>({
     if (!showSubLevel) {
       return {
         barData: {
-          labels: filteredData.map(({ label, post }) => getLabel(label, post, tPost)),
+          labels: filteredData.map((item) => getLabel(type, item, tPost)),
           values: filteredData.map(({ value }) => value / STUDY_UNIT_VALUES[resultsUnit]),
-          colors: filteredData.map(({ post, color }) => getPostColor(theme, post, color)),
+          colors: filteredData.map((item, index) => getParentColor(type, theme, item, index)),
         },
         seriesData: [],
       }
     }
 
-    // Two-level stacked bars - simple approach
-    const postLabels = filteredData.map(({ label, post }) => getLabel(label, post, tPost))
+    const parentLabels = filteredData.map((item) => getLabel(type, item, tPost))
 
-    // Collect all unique subpost labels across all posts
-    const allSubpostLabels = new Set<string>()
-    filteredData.forEach((post) => {
-      post.children.forEach((child) => {
+    const childrenLabels = new Set<string>()
+    filteredData.forEach((parent) => {
+      parent.children.forEach((child) => {
         if (child.value > 0) {
-          allSubpostLabels.add(child.label)
+          childrenLabels.add(child.label)
         }
       })
     })
 
-    // Create one series per unique subpost label
-    const series: any[] = []
-    Array.from(allSubpostLabels).forEach((subpostLabel) => {
+    const seriesData: Array<{ label: string; data: number[]; color: string; stack: string }> = []
+    Array.from(childrenLabels).forEach((label) => {
       const data: number[] = []
       let seriesColor = ''
 
-      filteredData.forEach((post) => {
-        const subpost = post.children.find((child) => child.label === subpostLabel)
-        if (subpost && subpost.value > 0) {
-          data.push(subpost.value / STUDY_UNIT_VALUES[resultsUnit])
+      filteredData.forEach((parent) => {
+        const child = parent.children.find((child) => child.label === label)
+        if (child && child.value > 0) {
+          data.push(child.value / STUDY_UNIT_VALUES[resultsUnit])
           if (!seriesColor) {
-            seriesColor = getSubpostColor(theme, subpost.post as SubPost)
+            seriesColor = getChildColor(type, theme, child)
           }
         } else {
           data.push(0)
         }
       })
 
-      series.push({
-        label: subpostLabel,
+      seriesData.push({
+        label: label,
         data,
         color: seriesColor,
-        stack: 'subposts',
+        stack: 'sublevel',
       })
     })
 
     return {
-      barData: { labels: postLabels, values: [], colors: [] },
-      seriesData: series,
+      barData: { labels: parentLabels, values: [], colors: [] },
+      seriesData,
     }
-  }, [results, onlyChildren, showSubLevel, tPost, resultsUnit, theme])
+  }, [results, onlyChildren, showSubLevel, type, tPost, resultsUnit, theme])
 
   const getBarLabel = (item: { value: number | null }) =>
     showLabelsOnBars && item.value && item.value > 0 ? formatValueAndUnit(item.value) : ''

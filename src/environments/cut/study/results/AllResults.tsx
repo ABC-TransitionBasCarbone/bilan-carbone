@@ -152,6 +152,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
               showTitle={false}
               showLegend={true}
               showLabelsOnBars={true}
+              type="post"
             />
           </TabPanel>
           <TabPanel value={value} index={2}>
@@ -162,6 +163,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
               showLabelsOnPie={true}
               results={computedResultsWithDep}
               showSubLevel={false}
+              type="post"
             />
           </TabPanel>
         </Box>

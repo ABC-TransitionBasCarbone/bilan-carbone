@@ -3,9 +3,9 @@ import Title from '@/components/base/Title'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { computeTotalForPosts, ResultsByPost } from '@/services/results/consolidated'
 import { BasicTypeCharts } from '@/utils/charts'
+import FilterListIcon from '@mui/icons-material/FilterList'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
-import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined'
 import { Checkbox, FormControlLabel, Menu, Tab, Tabs } from '@mui/material'
 import { StudyResultUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -69,9 +69,10 @@ const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: s
           <PieChart
             results={filteredResultsWithTotal}
             resultsUnit={resultsUnit ?? StudyResultUnit.T}
-            onlyChildren={type === 'tag'}
+            onlyChildren={type === 'tag' && !showSubLevel}
             showSubLevel={showSubLevel}
             showLabelsOnPie={true}
+            type={type}
           />
         )
       case TabsPossibilities.barChart:
@@ -80,8 +81,9 @@ const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: s
             results={filteredResultsWithTotal}
             resultsUnit={resultsUnit}
             showLabelsOnBars={false}
-            onlyChildren={type === 'tag'}
+            onlyChildren={type === 'tag' && !showSubLevel}
             showSubLevel={showSubLevel}
+            type={type}
           />
         )
       default:
@@ -133,7 +135,7 @@ const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: s
               onClick={(event) => setFilterAnchorEl((prev) => (prev ? null : event.currentTarget))}
               className="pointer"
             >
-              <TuneOutlinedIcon className="flex-end" color="primary" />
+              <FilterListIcon className="flex-end" color="primary" />
             </div>
           </div>
         </div>

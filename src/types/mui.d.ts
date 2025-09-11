@@ -19,6 +19,7 @@ declare module '@mui/material/styles' {
       subPostColors: {
         [key in SubPost]: string
       }
+      tagFamilyColors: string[]
       roles: {
         validator: string
         editor: string

@@ -2,7 +2,7 @@ import { Post } from '@/services/posts'
 import { translationMock } from '@/tests/utils/models/translationsMock'
 import { expect } from '@jest/globals'
 import { Theme } from '@mui/material'
-import { formatValueAndUnit, getLabel, getPostColor } from './charts'
+import { formatValueAndUnit, getPostColor, getPostLabel } from './charts'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('../services/file', () => ({ download: jest.fn() }))
@@ -71,29 +71,29 @@ describe('charts utils function', () => {
     })
   })
 
-  describe('getLabel', () => {
+  describe('getPostLabel', () => {
     test('should return provided label if exists', () => {
-      expect(getLabel('My Label', Post.Alimentation, translationMock({ [Post.Alimentation]: 'Alimentation' }))).toBe(
-        'My Label',
-      )
+      expect(
+        getPostLabel('My Label', Post.Alimentation, translationMock({ [Post.Alimentation]: 'Alimentation' })),
+      ).toBe('My Label')
     })
 
     test('should return translated post if no label provided and post exists', () => {
-      expect(getLabel(undefined, Post.Alimentation, translationMock({ [Post.Alimentation]: 'Alimentation' }))).toBe(
+      expect(getPostLabel(undefined, Post.Alimentation, translationMock({ [Post.Alimentation]: 'Alimentation' }))).toBe(
         'Alimentation',
       )
     })
 
     test('should return empty string if no label and no post', () => {
-      expect(getLabel(undefined, undefined, translationMock({ [Post.Alimentation]: 'Alimentation' }))).toBe('')
+      expect(getPostLabel(undefined, undefined, translationMock({ [Post.Alimentation]: 'Alimentation' }))).toBe('')
     })
 
     test('should return empty string if no label and post is not a post', () => {
-      expect(getLabel(undefined, 'okok', translationMock({ [Post.Alimentation]: 'Alimentation' }))).toBe('')
+      expect(getPostLabel(undefined, 'okok', translationMock({ [Post.Alimentation]: 'Alimentation' }))).toBe('')
     })
 
     test('should return empty string if no label and post exists but no translation function provided', () => {
-      expect(getLabel(undefined, Post.Alimentation)).toBe('')
+      expect(getPostLabel(undefined, Post.Alimentation)).toBe('')
     })
   })
 })
