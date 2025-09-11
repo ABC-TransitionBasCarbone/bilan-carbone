@@ -743,3 +743,21 @@ export const deleteStudyMemberFromOrganization = async (accountId: string, organ
     where: { accountId, studyId: { in: studies.map((study) => study.id) } },
   })
 }
+
+export const getStudiesAffectedByQuestion = async (questionIdIntern: string) => {
+  return prismaClient.study.findMany({
+    where: {
+      sites: {
+        some: {
+          studyAnswers: {
+            some: {
+              question: { idIntern: questionIdIntern },
+            },
+          },
+        },
+      },
+    },
+    select: { id: true, name: true },
+    distinct: ['id'],
+  })
+}
