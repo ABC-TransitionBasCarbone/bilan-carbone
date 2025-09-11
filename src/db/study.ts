@@ -24,6 +24,9 @@ import { getAccountOrganizationVersions } from './account'
 import { prismaClient } from './client'
 import { getOrganizationVersionById, OrganizationVersionWithOrganization } from './organization'
 
+const cutFeLegifrance = process.env.CUT_FE_LEGIFRANCE_VERSION || ''
+const cutFeBaseEmpreinte = process.env.CUT_FE_BASE_EMPREINTE_VERSION || ''
+
 export type EmissionSourceTagFamilyWithTags = Omit<EmissionSourceTagFamily, 'createdAt' | 'updatedAt'> & {
   emissionSourceTags: Omit<EmissionSourceTag, 'familyId'>[]
 }
@@ -40,13 +43,13 @@ export const createStudy = async (data: Prisma.StudyCreateInput, environment: En
     }))
   } else {
     for (const source of Object.values(Import).filter((source) => source !== Import.Manual && source !== Import.CUT)) {
-      const importVersion = await getSourceLatestImportVersionId(source)
+      const latestImportVersion = await getSourceLatestImportVersionId(source)
 
-      if (importVersion) {
+      if (latestImportVersion) {
         studyEmissionFactorVersions.push({
           studyId: dbStudy.id,
           source,
-          importVersionId: importVersion.id,
+          importVersionId: latestImportVersion.id,
         })
       }
     }
@@ -695,23 +698,13 @@ export const getStudyValidatedEmissionsSources = async (studyId: string) => {
   }
 }
 
-/**
- *
- * TODO find a way to better handle imported version for CUT
- */
-export const getSourceCutImportVersionIds = async (transaction?: Prisma.TransactionClient) =>
-  (transaction || prismaClient).emissionFactorImportVersion.findMany({
+export const getSourceCutImportVersionIds = async () =>
+  prismaClient.emissionFactorImportVersion.findMany({
     select: { id: true, source: true },
     where: {
       OR: [
-        {
-          name: {
-            in: ['2024', '1.0', '23.5'],
-          },
-        },
-        {
-          source: { in: ['CUT'] },
-        },
+        { name: cutFeLegifrance, source: Import.Legifrance },
+        { name: cutFeBaseEmpreinte, source: Import.BaseEmpreinte },
       ],
     },
     orderBy: { createdAt: 'desc' },

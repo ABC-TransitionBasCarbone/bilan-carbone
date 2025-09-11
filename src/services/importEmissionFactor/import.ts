@@ -414,7 +414,7 @@ export const addSourceToStudies = async (source: Import, transaction: Prisma.Tra
   if (studies.length && !!importVersion) {
     const filteredStudies = studies.filter((study) => {
       const environment = study.createdBy.environment
-      return environment === Environment.CUT ? source === Import.CUT : source !== Import.CUT
+      return isSourceForEnv(environment).includes(source)
     })
 
     if (filteredStudies.length > 0) {
@@ -423,5 +423,13 @@ export const addSourceToStudies = async (source: Import, transaction: Prisma.Tra
         skipDuplicates: true,
       })
     }
+  }
+}
+
+const isSourceForEnv = (environment: Environment): Import[] => {
+  if (environment !== Environment.CUT) {
+    return [Import.BaseEmpreinte, Import.Legifrance, Import.NegaOctet, Import.Manual]
+  } else {
+    return [Import.CUT]
   }
 }
