@@ -77,7 +77,7 @@
         "studyDatesDescription": "Veuillez renseigner la période de référence sur laquelle porte votre empreinte carbone. Idéalement, la période de référence doit être d'une année, si possible civile."
       },
       "goToDataEntry": "Passer à la saisie des données",
-      "cncInfo": "Si vous avez renseigné un code CNC, ces données qui concernent votre cinéma sont directement importées ici. Vous pouvez les modifier si les informations liées à votre CNC ne sont pas à jour."
+      "cncInfo": "Si vous avez renseigné un code CNC, ces données qui concernent votre cinéma sont directement importées ici. Ce sont les données {year}, vous pouvez les modifier si les informations liées à votre CNC ne sont pas à jour."
     },
     "perimeter": {
       "editSites": "Modifier la liste de cinémas",
