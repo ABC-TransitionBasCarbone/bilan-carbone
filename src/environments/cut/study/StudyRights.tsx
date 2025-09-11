@@ -38,7 +38,7 @@ interface Props {
 }
 
 const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Props) => {
-  const cncYear = parseInt(process.env.NEXT_PUBLIC_CNC_YEAR ?? '2023')
+  const cncYear = 2023 // TODO: replace when ticket is done: https://github.com/ABC-TransitionBasCarbone/bilan-carbone/issues/1750
   const t = useTranslations('study.new')
   const { callServerFunction } = useServerFunction()
   const { studySite, setSite } = useStudySite(study)
