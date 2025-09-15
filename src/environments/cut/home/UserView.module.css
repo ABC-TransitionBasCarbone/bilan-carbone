@@ -1,13 +1,11 @@
-.container {
-  gap: 1rem;
+.block {
+  min-height: 650px;
+  height: calc(100vh - 204px); /* 54px for navbar height + 150px for footer height */
 }
 
-.title {
-  font-family: 'Gilroy-Regular', sans-serif;
-  font-weight: 400;
-  font-size: 1.5rem;
-  line-height: 1.2rem;
-  letter-spacing: 0%;
+.container {
+  gap: 1.5rem;
+  height: 100%;
 }
 
 .styledBoxContainer {
@@ -29,6 +27,37 @@
   }
 }
 
+.mainInfoBox {
+  height: auto;
+  padding: 2rem;
+  align-items: center;
+  > div:first-child {
+    > div {
+      > p {
+        line-height: 1.2rem;
+      }
+    }
+  }
+}
+
+.startButton {
+  border: none;
+  border-radius: 0.5rem;
+  padding: 1rem 2rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  min-width: 8rem;
+  background-color: var(--mui-palette-primary-main);
+}
+
+.startButton:hover {
+  background-color: var(--mui-palette-primary-dark);
+}
+
+.startButtonLink {
+  text-decoration: none !important;
+}
+
 .linkContainer {
   gap: 1rem;
   margin-top: 1rem;
@@ -40,6 +69,10 @@
   gap: 1rem;
   text-decoration: none;
   font-family: 'Gilroy-Regular', sans-serif;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: all 0.2s ease;
   > div {
     > p {
       font-weight: 700;
@@ -55,10 +88,36 @@
   }
 }
 
+.styledBoxLink:hover {
+  border-color: var(--mui-palette-primary-dark);
+  border-width: 0.25rem;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 .icon {
   font-size: 3rem;
 }
 
-.checkIcon {
-  opacity: 0.3;
+.startButtonText {
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+}
+
+.titleInBox {
+  margin-bottom: 2rem;
+}
+
+.bulletPoint {
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.bulletPoint:last-child {
+  margin-bottom: 0;
+}
+
+.leftContent {
+  flex: 1;
 }

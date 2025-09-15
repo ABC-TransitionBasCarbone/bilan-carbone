@@ -15,9 +15,14 @@ const Home = async ({ user: account }: UserSessionProps) => {
 
   return (
     <>
-      <Block>
-        {account.environment === Environment.CUT ? <CUTUserView account={account} /> : <UserView account={account} />}
-      </Block>
+      {account.environment === Environment.CUT ? (
+        <CUTUserView account={account} />
+      ) : (
+        <Block>
+          <UserView account={account} />
+        </Block>
+      )}
+
       {account.environment === Environment.CUT && <Footer />}
     </>
   )
