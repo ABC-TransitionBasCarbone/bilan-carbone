@@ -1,5 +1,6 @@
 import { emissionFactorMap } from '@/constants/emissionFactorMap'
 import { UseAutoSaveReturn } from '@/hooks/useAutoSave'
+import { formatDynamicLabel } from '@/services/interpolation'
 import {
   getAnswerByQuestionIdAndStudySiteId,
   getParentTableQuestion,
@@ -24,9 +25,10 @@ interface Props extends Omit<BaseInputProps, 'value' | 'onChange' | 'onBlur'> {
   watch: UseFormWatch<FormValues>
   formErrors: FieldErrors<FormValues>
   setValue: UseFormSetValue<FormValues>
+  studyStartDate: Date
 }
 
-const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }: Props) => {
+const TableInput = ({ question, control, autoSave, watch, formErrors, setValue, studyStartDate }: Props) => {
   const [questions, setQuestions] = useState<Prisma.QuestionGetPayload<{ include: { userAnswers: true } }>[]>([])
   const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
   const [tableAnswer, setTableAnswer] = useState<TableAnswer>({ rows: [] })
@@ -117,7 +119,7 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
   const columns = useMemo<ColumnDef<TableRowData>[]>(() => {
     const col = questions.map((question, questionIndex) => ({
       id: question.idIntern,
-      header: question.label,
+      header: formatDynamicLabel(question.label, { study: { startDate: new Date(studyStartDate) } }),
       accessorKey: question.idIntern,
       cell: ({ row }) => {
         const fieldType = getQuestionFieldType(question.type, question.unit)
@@ -138,6 +140,7 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
             disabled={isFirstColumnInFixedTable}
             isTable={true}
             onTableFieldChange={handleTableFieldChange}
+            studyStartDate={studyStartDate}
           />
         )
       },
@@ -178,16 +181,17 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
     return col
   }, [
     questions,
-    tCutQuestions,
+    isFixedTable,
+    studyStartDate,
     autoSave,
     watch,
     formErrors,
     control,
-    handleDeleteRow,
-    handleDuplicateRow,
     setValue,
-    isFixedTable,
     handleTableFieldChange,
+    tCutQuestions,
+    handleDuplicateRow,
+    handleDeleteRow,
   ])
 
   const loadTableData = useCallback(async () => {

@@ -13,6 +13,7 @@ interface DynamicFormFieldPropsWithAutoSave extends Omit<DynamicFormFieldProps, 
   watch: UseFormWatch<FormValues>
   formErrors: FieldErrors<FormValues>
   setValue: UseFormSetValue<FormValues>
+  studyStartDate: Date
 }
 
 const DynamicFormField = ({
@@ -24,6 +25,7 @@ const DynamicFormField = ({
   watch,
   formErrors,
   setValue,
+  studyStartDate,
 }: DynamicFormFieldPropsWithAutoSave) => {
   const fieldName = question.idIntern
   const fieldStatus = autoSave.getFieldStatus(question.id)
@@ -42,6 +44,7 @@ const DynamicFormField = ({
         formErrors={formErrors}
         autoSave={autoSave}
         setValue={setValue}
+        studyStartDate={studyStartDate}
       />
     </QuestionContainer>
   )

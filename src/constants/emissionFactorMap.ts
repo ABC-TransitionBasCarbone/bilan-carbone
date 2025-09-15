@@ -238,6 +238,8 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
       'Téléphones portables': '27010',
       Tablettes: '27007',
     },
+    helperText:
+      'Si l\'équipement concerné est acheté, merci de ne pas remplir le champ "Durée de location". Si l\'équipement concerné est loué de manière ponctuelle, merci de ne pas remplir le champ "Date d\'achat". Si vous louez un équipement pour de longues durées ou de manière continue, nous vous recommandons de le considéré comme acheté (à la date de la première année de location).',
   },
   [SPECTATOR_SHORT_DISTANCE_DETAILS_QUESTION_ID]: {
     isFixed: true,
@@ -444,6 +446,8 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
       'Distributeurs snacks / boisson': '26976',
     },
     depreciationPeriod: 5,
+    helperText:
+      'Si l\'équipement concerné est acheté, merci de ne pas remplir le champ "Durée de location". Si l\'équipement concerné est loué de manière ponctuelle, merci de ne pas remplir le champ "Date d\'achat". Si vous louez un équipement pour de longues durées ou de manière continue, nous vous recommandons de le considéré comme acheté (à la date de la première année de location).',
   },
   // DechetsOrdinaires
   '10-veuillez-renseigner-les-dechets-generes-par-semaine': {

@@ -39,6 +39,7 @@ interface Props {
   setValue: UseFormSetValue<FormValues>
   isTable?: boolean
   onTableFieldChange?: () => void
+  studyStartDate: Date
 }
 
 const getCustomQuestionComponent = (question: Question) => {
@@ -64,6 +65,7 @@ const FieldComponent = ({
   setValue,
   isTable,
   onTableFieldChange,
+  studyStartDate,
 }: Props) => {
   const { callServerFunction } = useServerFunction()
 
@@ -202,6 +204,7 @@ const FieldComponent = ({
           watch={watch}
           formErrors={formErrors}
           setValue={setValue}
+          studyStartDate={studyStartDate}
         />
       )
     }

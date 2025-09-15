@@ -12,7 +12,14 @@ import styles from './DynamicForm.module.css'
 import DynamicFormField from './DynamicFormField'
 import { DynamicFormProps } from './types/formTypes'
 
-const DynamicForm = ({ questions, studyId, initialAnswers, isLoading = false, studySiteId }: DynamicFormProps) => {
+const DynamicForm = ({
+  questions,
+  studyId,
+  initialAnswers,
+  isLoading = false,
+  studySiteId,
+  studyStartDate,
+}: DynamicFormProps) => {
   const tQuestions = useTranslations('emissionFactors.post.cutQuestions')
 
   const {
@@ -87,6 +94,7 @@ const DynamicForm = ({ questions, studyId, initialAnswers, isLoading = false, st
                 watch={watch}
                 formErrors={errors}
                 setValue={setValue}
+                studyStartDate={studyStartDate}
               />
             </Box>
           )

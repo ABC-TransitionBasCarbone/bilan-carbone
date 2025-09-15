@@ -94,6 +94,7 @@ const DynamicSubPostForm = ({ subPost, study, studySiteId }: Props) => {
         studySiteId={studySiteId}
         initialAnswers={answers}
         isLoading={isLoading}
+        studyStartDate={study.startDate}
       />
     </div>
   )
