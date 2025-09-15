@@ -238,6 +238,8 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
       'Téléphones portables': '27010',
       Tablettes: '27007',
     },
+    helperText:
+      'Si l\'équipement concerné est acheté, merci de ne pas remplir le champ "Durée de location". Si l\'équipement concerné est loué de manière ponctuelle, merci de ne pas remplir le champ "Date d\'achat". Si vous louez un équipement pour de longues durées ou de manière continue, nous vous recommandons de le considéré comme acheté (à la date de la première année de location).',
   },
   [SPECTATOR_SHORT_DISTANCE_DETAILS_QUESTION_ID]: {
     isFixed: true,
@@ -405,7 +407,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     emissionFactorImportedId: '142',
     dependentFields: ['numberOfProgrammedFilms'],
     helperText:
-      "Vous pouvez utiliser une valeur par défaut pour cette réponse (0,9 fois le nombre de film reçus) qui est la valeur issue des Bilans Carbone® qui ont étés réalisés sur plusieurs cinémas français. Si vous détenez une information plus précise pour votre cinéma, nous vous invitons à l'utiliser plutôt que la valeur par défaut.",
+      "Vous pouvez par défaut renseigner 90% des films programmés totaux (ce nombre de films est disponible dans vos données générales), qui est la valeur moyenne issue des Bilans Carbone® qui ont étés réalisés sur plusieurs cinémas français. Si vous détenez une information plus précise pour votre cinéma, nous vous invitons à l'utiliser plutôt que la valeur par défaut.",
   },
   [MOVIE_DCP_QUESTION_ID]: { isSpecial: true, emissionFactorImportedId: '143' },
   'combien-de-donnees-stockez-vous-dans-un-cloud': { emissionFactorImportedId: '141' },
@@ -444,6 +446,8 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
       'Distributeurs snacks / boisson': '26976',
     },
     depreciationPeriod: 5,
+    helperText:
+      'Si l\'équipement concerné est acheté, merci de ne pas remplir le champ "Durée de location". Si l\'équipement concerné est loué de manière ponctuelle, merci de ne pas remplir le champ "Date d\'achat". Si vous louez un équipement pour de longues durées ou de manière continue, nous vous recommandons de le considéré comme acheté (à la date de la première année de location).',
   },
   // DechetsOrdinaires
   '10-veuillez-renseigner-les-dechets-generes-par-semaine': {

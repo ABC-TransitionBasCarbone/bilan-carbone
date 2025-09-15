@@ -12,6 +12,7 @@ export interface DynamicFormProps {
   studySiteId: string
   initialAnswers?: Answer[]
   isLoading?: boolean
+  studyStartDate: Date
 }
 
 export interface QuestionContainerProps {
