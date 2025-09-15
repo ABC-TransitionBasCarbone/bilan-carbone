@@ -426,10 +426,15 @@ export const addSourceToStudies = async (source: Import, transaction: Prisma.Tra
   }
 }
 
-const isSourceForEnv = (environment: Environment): Import[] => {
-  if (environment !== Environment.CUT) {
-    return [Import.BaseEmpreinte, Import.Legifrance, Import.NegaOctet, Import.Manual]
-  } else {
-    return [Import.CUT]
+const isSourceForEnv = (envVar: Environment): Import[] => {
+  const value = process.env[envVar]
+  console.log(`Sources for env ${envVar}: ${value}`)
+
+  if (!value) {
+    return []
   }
+  return value
+    .split(',')
+    .map((name) => (Import as any)[name.trim()])
+    .filter((v): v is Import => !!v)
 }
