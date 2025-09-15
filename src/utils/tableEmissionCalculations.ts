@@ -251,14 +251,28 @@ const calculateElectromenager: TableEmissionCalculator = {
     const purchaseYear = parseInt(
       row.data['13-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner'] || '0',
     )
+    const rentedDays = parseInt(
+      row.data['14-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner'] || '0',
+    )
+
+    if (purchaseYear) {
+      return calculateEmissionSourcesDepreciation(
+        study,
+        '10-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
+        'electromenager',
+        equipmentType,
+        quantity,
+        purchaseYear,
+      )
+    }
 
     return calculateEmissionSourcesDepreciation(
       study,
       '10-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
-      'electromenager',
+      'electromenager-location',
       equipmentType,
-      quantity,
-      purchaseYear,
+      (quantity * rentedDays) / 365,
+      new Date(study.startDate).getFullYear(),
     )
   },
 }
