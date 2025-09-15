@@ -38,6 +38,7 @@ interface Props {
 }
 
 const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Props) => {
+  const cncYear = 2023 // TODO: replace when ticket is done: https://github.com/ABC-TransitionBasCarbone/bilan-carbone/issues/1750
   const t = useTranslations('study.new')
   const { callServerFunction } = useServerFunction()
   const { studySite, setSite } = useStudySite(study)
@@ -250,8 +251,6 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
   //   [openingHoursHoliday],
   // )
 
-  const labelWithYear = (label: string) => t(label, { year: study.startDate.getFullYear() })
-
   useEffect(() => {
     onStudyCinemaUpdate()
     // This effect is used to update the study cinema whenever the opening hours or holiday opening hours change.
@@ -267,13 +266,13 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
           <CircularProgress variant="indeterminate" color="primary" size={100} className="flex mt2" />
         ) : (
           <>
-            <div className="my2">{t('cncInfo')}</div>
+            <div className="my2">{t('cncInfo', { year: cncYear })}</div>
             <div>
               <FormTextField
                 control={form.control}
                 name="numberOfSessions"
                 data-testid="new-study-number-of-sessions"
-                label={labelWithYear('numberOfSessions')}
+                label={t('numberOfSessions')}
                 translation={t}
                 type="number"
                 className={styles.formTextField}
@@ -283,7 +282,7 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
                 control={form.control}
                 name="numberOfTickets"
                 data-testid="new-study-number-of-tickets"
-                label={labelWithYear('numberOfTickets')}
+                label={t('numberOfTickets')}
                 translation={t}
                 type="number"
                 className={styles.formTextField}
@@ -293,7 +292,7 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
                 control={form.control}
                 name="numberOfOpenDays"
                 data-testid="new-study-number-of-open-days"
-                label={labelWithYear('numberOfOpenDays')}
+                label={t('numberOfOpenDays')}
                 translation={t}
                 type="number"
                 className={styles.formTextField}
@@ -303,7 +302,7 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
                 control={form.control}
                 name="numberOfProgrammedFilms"
                 data-testid="new-study-number-of-programmed-films"
-                label={labelWithYear('numberOfProgrammedFilms')}
+                label={t('numberOfProgrammedFilms')}
                 translation={t}
                 type="number"
                 className={styles.formTextField}
