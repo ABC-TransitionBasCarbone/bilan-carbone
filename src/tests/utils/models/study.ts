@@ -46,6 +46,10 @@ export const mockedFullStudy = {
   exports: [],
   organizationVersion: mockedOrganizationVersion,
   emissionSourceTagFamilies: [],
+  cncVersion: {
+    id: '1',
+    year: 2023,
+  },
 }
 
 export const mockedStudySite = {
@@ -78,6 +82,7 @@ export const mockedDbFullStudySite = {
     city: null,
     cnc: null,
   },
+  cncVersion: null,
 }
 
 export const getMockedStudy = (
@@ -155,6 +160,10 @@ export const getMockedDetailedFullStudySite = (
         numberOfProgrammedFilms: 10,
         ecrans: 13,
       },
+    },
+    cncVersion: {
+      id: '1',
+      year: 2023,
     },
     ...overrides,
   }),
