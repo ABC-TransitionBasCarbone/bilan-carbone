@@ -216,7 +216,7 @@ const calculateEmissionSourcesDepreciation = async (
 
       const yearCount = currentYear - purchaseYear
 
-      // Calculate cumulative depreciation factor: each year adds 1/depreciationPeriod more
+      // Calculate depreciation factor
       // Year 1 - 5 : 1/5; Year 6+: 0 because already depreciated
       let depreciationFactor = 0
       if (yearCount < depreciationPeriod) {
@@ -273,15 +273,27 @@ const calculateInformatique: TableEmissionCalculator = {
   calculate: async (row, study) => {
     const equipmentType = row.data['11-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer'] || ''
     const purchaseYear = parseInt(row.data['12-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer'] || '0')
+    const rentedDays = parseInt(row.data['14-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer'] || '0')
     const quantity = parseInt(row.data['13-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer'] || '0')
+
+    if (purchaseYear) {
+      return calculateEmissionSourcesDepreciation(
+        study,
+        '10-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer',
+        'informatique',
+        equipmentType,
+        quantity,
+        purchaseYear,
+      )
+    }
 
     return calculateEmissionSourcesDepreciation(
       study,
       '10-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer',
-      'informatique',
+      'informatique-location',
       equipmentType,
-      quantity,
-      purchaseYear,
+      (quantity * rentedDays) / 365,
+      new Date(study.startDate).getFullYear(),
     )
   },
 }
