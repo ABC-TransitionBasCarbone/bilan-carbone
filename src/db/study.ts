@@ -349,27 +349,27 @@ export const getAllowedStudyIdByAccount = async (account: UserSession) => {
   return study?.id
 }
 
-export const getAllowedStudiesByUserAndOrganization = async (account: UserSession, organizationVersionId: string) => {
+export const getAllowedStudiesByUserAndOrganization = async (user: UserSession, organizationVersionId: string) => {
   const organizationVersion = await getOrganizationVersionById(organizationVersionId)
 
-  if (!account.organizationVersionId) {
+  if (!user.organizationVersionId) {
     return []
   }
   const childOrganizations = await prismaClient.organizationVersion.findMany({
-    where: { parentId: account.organizationVersionId },
+    where: { parentId: user.organizationVersionId },
     select: { id: true },
   })
 
   const studies = await prismaClient.study.findMany({
     where: {
       organizationVersionId,
-      ...(isAdminOnOrga(account, organizationVersion as OrganizationVersionWithOrganization)
+      ...(isAdminOnOrga(user, organizationVersion as OrganizationVersionWithOrganization)
         ? {}
         : {
             OR: [
-              { allowedUsers: { some: { accountId: account.id } } },
-              { contributors: { some: { accountId: account.id } } },
-              { isPublic: true, organizationVersionId: account.organizationVersionId as string },
+              { allowedUsers: { some: { accountId: user.accountId } } },
+              { contributors: { some: { accountId: user.accountId } } },
+              { isPublic: true, organizationVersionId: user.organizationVersionId as string },
               {
                 isPublic: true,
                 organizationVersionId: {
@@ -380,7 +380,7 @@ export const getAllowedStudiesByUserAndOrganization = async (account: UserSessio
           }),
     },
   })
-  return filterAllowedStudies(account, studies)
+  return filterAllowedStudies(user, studies)
 }
 
 export const getStudyById = async (id: string, organizationVersionId: string | null) => {
