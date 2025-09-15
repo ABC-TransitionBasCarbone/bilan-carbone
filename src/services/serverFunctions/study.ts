@@ -284,6 +284,7 @@ export const createStudyCommand = async (
 
               if (cncData) {
                 Object.assign(studySiteData, mapCncToStudySite(cncData))
+                studySiteData.cncVersionId = cncData.cncVersionId
               }
 
               return studySiteData

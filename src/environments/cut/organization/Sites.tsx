@@ -59,7 +59,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
         return
       }
 
-      if (!numeroAuto || numeroAuto.length < 2) {
+      if (!numeroAuto || numeroAuto.length < 1) {
         // Clear all fields if input is too short
         setValue(`sites.${index}.cncId`, '')
         setValue(`sites.${index}.name`, '')

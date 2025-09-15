@@ -300,6 +300,9 @@ model StudySite {
   siteId String @map("site_id")
   site   Site   @relation(fields: [siteId], references: [id])
 
+  cncVersionId String?     @map("cnc_version_id")
+  cncVersion   CncVersion? @relation(fields: [cncVersionId], references: [id])
+
   etp                 Int
   ca                  Float
   StudyEmissionSource StudyEmissionSource[]

@@ -38,7 +38,6 @@ interface Props {
 }
 
 const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Props) => {
-  const cncYear = 2023 // TODO: replace when ticket is done: https://github.com/ABC-TransitionBasCarbone/bilan-carbone/issues/1750
   const t = useTranslations('study.new')
   const { callServerFunction } = useServerFunction()
   const { studySite, setSite } = useStudySite(study)
@@ -266,7 +265,7 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
           <CircularProgress variant="indeterminate" color="primary" size={100} className="flex mt2" />
         ) : (
           <>
-            <div className="my2">{t('cncInfo', { year: cncYear })}</div>
+            <div className="my2">{t('cncInfo', { year: siteData?.cncVersion?.year ?? 2023 })}</div>
             <div>
               <FormTextField
                 control={form.control}
