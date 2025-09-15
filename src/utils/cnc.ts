@@ -9,6 +9,7 @@ export interface CncData {
   semainesActivite?: number | null
   latitude?: number | null
   longitude?: number | null
+  cncVersionId?: string | null
 }
 
 /**
@@ -19,6 +20,7 @@ export interface StudySiteData {
   numberOfTickets?: number | null
   numberOfOpenDays?: number | null
   distanceToParis?: number | null
+  cncVersionId?: string | null
 }
 
 /**
@@ -29,6 +31,7 @@ export interface CncToStudySiteMapping {
   numberOfTickets?: number
   numberOfOpenDays?: number
   distanceToParis?: number
+  cncVersionId?: string | null
 }
 
 const DEFAULT_STUDY_SITE_DATA: StudySiteData = {
@@ -68,6 +71,10 @@ export const mapCncToStudySite = (
       latitude: cncData.latitude,
       longitude: cncData.longitude,
     })
+  }
+
+  if (currentData.cncVersionId == null && cncData.cncVersionId != null) {
+    mapping.cncVersionId = cncData.cncVersionId
   }
 
   return mapping

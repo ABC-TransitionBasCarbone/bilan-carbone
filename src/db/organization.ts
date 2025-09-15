@@ -58,6 +58,7 @@ export const OrganizationVersionWithOrganizationSelect = {
               semainesActivite: true,
               latitude: true,
               longitude: true,
+              cncVersionId: true,
             },
           },
         },

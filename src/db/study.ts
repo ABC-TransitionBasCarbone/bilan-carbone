@@ -180,6 +180,12 @@ const fullStudyInclude = {
           },
         },
       },
+      cncVersion: {
+        select: {
+          id: true,
+          year: true,
+        },
+      },
     },
   },
   emissionFactorVersions: {
@@ -650,6 +656,12 @@ export const getStudiesSitesFromIds = async (siteIds: string[]) =>
               semainesActivite: true,
             },
           },
+        },
+      },
+      cncVersion: {
+        select: {
+          id: true,
+          year: true,
         },
       },
     },
