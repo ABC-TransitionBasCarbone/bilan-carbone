@@ -274,3 +274,11 @@ export const findAllAnswerEmissionSourcesByAnswer = async (answerId: string) => 
     },
   })
 }
+
+export const getAnswerCountByQuestionIdIntern = async (questionIdIntern: string): Promise<number> => {
+  return prismaClient.answer.count({
+    where: {
+      question: { idIntern: questionIdIntern },
+    },
+  })
+}
