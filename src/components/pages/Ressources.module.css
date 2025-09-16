@@ -1,7 +1,13 @@
 .ressources {
-  grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
   grid-auto-rows: 1fr;
   align-items: stretch;
-  gap: 1rem;
-  display: grid;
+}
+
+@media (max-width: 900px) {
+  .ressources {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
