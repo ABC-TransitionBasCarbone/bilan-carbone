@@ -3,6 +3,7 @@
 import { getEnvVar } from '@/lib/environment'
 import { Alert } from '@mui/material'
 import { Environment } from '@prisma/client'
+import classNames from 'classnames'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
 import RessourceLinks from '../ressources/RessourceLinks'
@@ -94,7 +95,7 @@ const RessourcesPage = async ({ environment }: Props) => {
           })}
         </Alert>
       )}
-      <div className={styles.ressources}>
+      <div className={classNames(styles.ressources, 'gapped1')}>
         {ressources.map(({ title, links }) => (
           <RessourceLinks key={title} title={title} links={links} />
         ))}

@@ -1,7 +1,6 @@
 .ressources {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-  gap: 1rem;
   grid-auto-rows: 1fr;
   align-items: stretch;
 }
