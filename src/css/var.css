@@ -116,6 +116,10 @@
   padding-left: 1rem;
 }
 
+.pl2 {
+  padding-left: 2rem;
+}
+
 .pb1 {
   padding-bottom: 1rem;
 }
@@ -153,8 +157,22 @@
   padding-bottom: 0;
 }
 
+.py1 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.py2 {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
 .h100 {
   height: 100%;
+}
+
+.hauto {
+  height: auto;
 }
 
 .w100 {
@@ -163,6 +181,10 @@
 
 .gapped1 {
   gap: 1rem;
+}
+
+.gapped15 {
+  gap: 1.5rem;
 }
 
 .gapped2 {

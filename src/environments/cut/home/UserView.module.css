@@ -1,23 +1,19 @@
 .block {
-  min-height: 650px;
-  height: calc(100vh - 204px); /* 54px for navbar height + 150px for footer height */
-}
-
-.container {
-  gap: 1.5rem;
-  height: 100%;
+  min-height: 600px;
+  height: calc(
+    100vh - 54px - 150px - 48px - 32px
+  ); /* 54px top bar + 150px footer + 48px padding top + 32px padding bottom */
 }
 
 .styledBoxContainer {
   border-style: solid;
   border-width: 0.125rem;
   border-radius: 0.313rem;
+  border-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-text-primary);
 }
 
 .styledBoxInfo {
-  padding-left: 2rem;
-  height: 5rem;
-  gap: 1rem;
   > p {
     font-family: 'Gilroy-Regular', sans-serif;
     font-weight: 400;
@@ -25,12 +21,6 @@
     line-height: 1.2rem;
     letter-spacing: 0%;
   }
-}
-
-.mainInfoBox {
-  height: auto;
-  padding: 2rem;
-  align-items: center;
   > div:first-child {
     > div {
       > p {
@@ -43,7 +33,6 @@
 .startButton {
   border: none;
   border-radius: 0.5rem;
-  padding: 1rem 2rem;
   cursor: pointer;
   transition: background-color 0.2s ease;
   min-width: 8rem;
@@ -58,19 +47,14 @@
   text-decoration: none !important;
 }
 
-.linkContainer {
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
 .styledBoxLink {
   width: 50%;
   height: 12rem;
-  gap: 1rem;
   text-decoration: none;
   font-family: 'Gilroy-Regular', sans-serif;
   border-radius: 0.5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  background-color: var(--mui-palette-primary-light);
   cursor: pointer;
   transition: all 0.2s ease;
   > div {
