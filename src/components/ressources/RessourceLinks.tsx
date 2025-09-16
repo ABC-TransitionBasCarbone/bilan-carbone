@@ -19,7 +19,9 @@ const RessourceLinks = ({ title, links }: Props) => {
         <div className={classNames(styles.cardLinks, 'text-center')}>
           {links.map(({ title, link }) => (
             <div className="mt-2 mb-2" key={link}>
-              <Link href={link}>{title}</Link>
+              <Link href={link} target="_blank" rel="noreferrer noopener">
+                {title}
+              </Link>
             </div>
           ))}
         </div>

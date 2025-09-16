@@ -17,11 +17,12 @@ const RessourcesPage = async ({ environment }: Props) => {
   const contactForm = getEnvVar('CONTACT_FORM_URL', environment)
   const faq = getEnvVar('FAQ_LINK', environment)
   const supportEmail = getEnvVar('SUPPORT_EMAIL', environment)
+  const methodeUrl = getEnvVar('METHODE_URL', environment)
 
   const ressources = [
     {
       title: t('enSavoirPlusBilan'),
-      links: [{ title: t('methodeBilanCarbone'), link: 'https://www.bilancarbone-methode.com' }],
+      links: [{ title: t('methodeBilanCarbone'), link: methodeUrl }],
     },
     {
       title: t('questionMethodo'),

@@ -144,6 +144,11 @@ const Navbar = ({ children, user, environment }: Props) => {
             <NavbarButton rel="noreferrer noopener" href={'/ressources'} aria-label={t('help')}>
               <HelpOutlineIcon />
             </NavbarButton>
+            {isCut && (
+              <NavbarButton rel="noreferrer noopener" href={'/ressources'} aria-label={t('help')}>
+                <MenuBookIcon />
+              </NavbarButton>
+            )}
             {!isCut && (
               <NavbarButton aria-label={t('settings')} href="/parametres">
                 <SettingsIcon />
