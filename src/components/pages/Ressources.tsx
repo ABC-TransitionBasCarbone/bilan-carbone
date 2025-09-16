@@ -22,11 +22,11 @@ const RessourcesPage = async ({ environment }: Props) => {
   const contactForm = getEnvVar('CONTACT_FORM_URL', environment)
   const faq = getEnvVar('FAQ_LINK', environment)
   const supportEmail = getEnvVar('SUPPORT_EMAIL', environment)
-  const methodeUrl = getEnvVar('METHODE_URL', environment)
+  const methodUrl = getEnvVar('METHOD_URL', environment)
 
   const methodBC = {
     title: t('enSavoirPlusBilan'),
-    links: [{ title: t('methodeBilanCarbone'), link: methodeUrl }],
+    links: [{ title: t('methodeBilanCarbone'), link: methodUrl }],
   }
 
   const otherResources: Ressource[] = [
