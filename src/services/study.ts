@@ -399,7 +399,11 @@ export const formatConsolidatedStudyResultsForExport = (
       dataForExport.push([result.label, '', ...handleLine(headersForEnv, result, tQuality, study.resultsUnit)])
 
       for (const subPostResult of result.children) {
-        dataForExport.push(['', subPostResult.label, ...handleLine(headersForEnv, result, tQuality, study.resultsUnit)])
+        dataForExport.push([
+          '',
+          subPostResult.label,
+          ...handleLine(headersForEnv, subPostResult, tQuality, study.resultsUnit),
+        ])
       }
     }
 
