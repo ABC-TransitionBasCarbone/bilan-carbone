@@ -11,7 +11,7 @@ import {
   getAccountFromUserOrganization,
   getAccountsFromUser,
 } from '@/db/account'
-import { findCncByNumeroAuto } from '@/db/cnc'
+import { findCncByCncCode } from '@/db/cnc'
 import { isFeatureActive } from '@/db/deactivableFeatures'
 import {
   createOrganizationWithVersion,
@@ -603,7 +603,7 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
         ? await getOrganizationVersionByOrganizationIdAndEnvironment(organization.id, environment)
         : null
       if (!organizationVersion) {
-        const CNC = await findCncByNumeroAuto(siretOrCNC)
+        const CNC = await findCncByCncCode(siretOrCNC)
         if (!CNC) {
           throw new Error(UNKNOWN_CNC)
         }

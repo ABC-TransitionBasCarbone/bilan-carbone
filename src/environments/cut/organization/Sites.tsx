@@ -5,7 +5,6 @@ import DebouncedInput from '@/components/base/DebouncedInput'
 import { FormCheckbox } from '@/components/form/Checkbox'
 import { FormTextField } from '@/components/form/TextField'
 import GlobalSites from '@/components/organization/Sites'
-import { getCncByNumeroAuto } from '@/services/serverFunctions/study'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Environment } from '@prisma/client'
@@ -30,16 +29,16 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
 
   // Track original site data to detect manual changes
   const originalSiteDataRef = useRef<
-    Record<number, { numeroAuto: string; name: string; postalCode: string; city: string; cncId: string }>
+    Record<number, { cncCode: string; name: string; postalCode: string; city: string; cncId: string }>
   >({})
 
   const setCncData = useCallback(
-    async (numeroAuto: string, index: number) => {
+    async (cncCode: string, index: number) => {
       // Initialize original values if not set
       if (!(index in originalSiteDataRef.current)) {
         const currentSite = sites[index]
         originalSiteDataRef.current[index] = {
-          numeroAuto: currentSite?.cncNumeroAuto || '',
+          cncCode: currentSite?.cncCode || '',
           name: currentSite?.name || '',
           postalCode: currentSite?.postalCode || '',
           city: currentSite?.city || '',
@@ -50,16 +49,16 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
       const originalData = originalSiteDataRef.current[index]
 
       // If going back to original value, restore original site data
-      if (numeroAuto === originalData.numeroAuto) {
+      if (cncCode === originalData.cncCode) {
         setValue(`sites.${index}.cncId`, originalData.cncId)
         setValue(`sites.${index}.name`, originalData.name)
         setValue(`sites.${index}.postalCode`, originalData.postalCode)
         setValue(`sites.${index}.city`, originalData.city)
-        setValue(`sites.${index}.cncNumeroAuto`, originalData.numeroAuto)
+        setValue(`sites.${index}.cncCode`, originalData.cncCode)
         return
       }
 
-      if (!numeroAuto || numeroAuto.length < 1) {
+      if (!cncCode || cncCode.length < 1) {
         // Clear all fields if input is too short
         setValue(`sites.${index}.cncId`, '')
         setValue(`sites.${index}.name`, '')
@@ -67,8 +66,8 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
         setValue(`sites.${index}.city`, '')
         return
       }
-      // Look up CNC by numeroAuto (what the user enters)
-      const response = await getCncByNumeroAuto(numeroAuto)
+      // Look up CNC by cncCode (what the user enters)
+      const response = await getCncByCncCode(cncCode)
       if (!response.success || !response.data) {
         // Clear all fields if CNC lookup fails
         setValue(`sites.${index}.cncId`, '')
@@ -78,13 +77,13 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
         return
       }
       const cnc = response.data
-      // Store the CNC's id (UUID) in the cncId field, not the numeroAuto
+      // Store the CNC's id (UUID) in the cncId field, not the cncCode
       if (cnc.id) {
         setValue(`sites.${index}.cncId`, cnc.id)
       }
-      // Store the cnc numeroAuto for display purposes only
-      if (cnc.numeroAuto) {
-        setValue(`sites.${index}.cncNumeroAuto`, cnc.numeroAuto)
+      // Store the cnc cncCode for display purposes only
+      if (cnc.cncCode) {
+        setValue(`sites.${index}.cncCode`, cnc.cncCode)
       }
       if (cnc.nom) {
         setValue(`sites.${index}.name`, cnc.nom)
@@ -116,14 +115,14 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
                     name={`sites.${row.index}.selected`}
                     data-testid="organization-sites-checkbox"
                   />
-                  {row.original.cncNumeroAuto || getValue<string>() || ''}
+                  {row.original.cncCode || getValue<string>() || ''}
                 </div>
               ) : (
                 <Controller
                   name={`sites.${row.index}.cncId`}
                   control={control}
                   render={() => {
-                    const displayValue = row.original.cncNumeroAuto || ''
+                    const displayValue = row.original.cncCode || ''
 
                     return (
                       <DebouncedInput

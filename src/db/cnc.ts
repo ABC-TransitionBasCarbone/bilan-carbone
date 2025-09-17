@@ -24,13 +24,13 @@ export const getLatestCncVersion = async () => {
 export const upsertCNC = async (data: (Prisma.CncCreateManyInput & { cncVersionId: string })[]) => {
   await Promise.all(
     data.map(async (entry) => {
-      if (!entry.numeroAuto) {
-        console.warn('CNC ignoré car numeroAuto est manquant :', entry)
+      if (!entry.cncCode) {
+        console.warn('CNC ignoré car cncCode est manquant :', entry)
         return
       }
 
       await prismaClient.cnc.upsert({
-        where: { numeroAuto: entry.numeroAuto },
+        where: { cncCode: entry.cncCode },
         create: entry,
         update: {
           ...entry,
@@ -40,9 +40,9 @@ export const upsertCNC = async (data: (Prisma.CncCreateManyInput & { cncVersionI
   )
 }
 
-export const findCncByNumeroAuto = async (numeroAuto: string) => {
+export const findCncByCncCode = async (cncCode: string) => {
   return prismaClient.cnc.findUnique({
-    where: { numeroAuto },
+    where: { cncCode },
     include: { cncVersion: true },
   })
 }
@@ -69,7 +69,7 @@ export const updateNumberOfProgrammedFilms = async ({
 export const getCNCs = async () =>
   await prismaClient.cnc.findMany({
     where: {
-      numeroAuto: {
+      cncCode: {
         not: null,
       },
     },

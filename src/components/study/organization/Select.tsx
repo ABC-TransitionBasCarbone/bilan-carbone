@@ -67,7 +67,7 @@ const SelectOrganization = ({
             postalCode: site.postalCode ?? '',
             city: site.city ?? '',
             cncId: site.cncId ?? '',
-            cncNumeroAuto: site.cnc?.numeroAuto || '',
+            cncCode: site.cnc?.cncCode || '',
           })),
         )
       }

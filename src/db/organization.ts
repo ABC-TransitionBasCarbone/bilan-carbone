@@ -8,7 +8,7 @@ export type OrganizationVersionWithOrganization = OrganizationVersion & {
   organization: Organization & {
     sites: (Site & {
       cnc: {
-        numeroAuto: string | null
+        cncCode: string | null
       } | null
     })[]
   }
@@ -52,7 +52,7 @@ export const OrganizationVersionWithOrganizationSelect = {
           cncId: true,
           cnc: {
             select: {
-              numeroAuto: true,
+              cncCode: true,
               seances: true,
               entrees2023: true,
               semainesActivite: true,
@@ -273,8 +273,8 @@ export const getRawOrganizationVersionById = (id: string | null) =>
 export const getRawOrganizationBySiret = (siret: string | null) =>
   siret ? prismaClient.organization.findFirst({ where: { wordpressId: { startsWith: siret } } }) : null
 
-export const getRawOrganizationBySiteCNC = (numeroAuto: string | null) =>
-  numeroAuto ? prismaClient.organization.findFirst({ where: { sites: { some: { cncId: numeroAuto } } } }) : null
+export const getRawOrganizationBySiteCNC = (cncCode: string | null) =>
+  cncCode ? prismaClient.organization.findFirst({ where: { sites: { some: { cncId: cncCode } } } }) : null
 
 export const getRawOrganizationById = (id: string | null) =>
   id ? prismaClient.organization.findUnique({ where: { id } }) : null
