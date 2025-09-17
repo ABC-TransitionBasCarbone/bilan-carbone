@@ -180,28 +180,23 @@ export const processBarChartData = <T extends BasicTypeCharts>(
 
   const parentLabels = filteredData.map((item) => getLabel(type, item, tPost))
 
-  const seriesData = filteredData.reduce((acc, parent, parentIndex) => {
+  const seriesData: BarChartSeriesData[] = []
+
+  filteredData.forEach((parent, parentIndex) => {
     parent.children.forEach((child) => {
       if (child.value > 0) {
-        const existingSeries = acc.find((series) => series.label === child.label)
-        const value = child.value / STUDY_UNIT_VALUES[resultsUnit]
+        const data = new Array(filteredData.length).fill(0)
+        data[parentIndex] = child.value / STUDY_UNIT_VALUES[resultsUnit]
 
-        if (existingSeries) {
-          existingSeries.data[parentIndex] = value
-        } else {
-          const data = new Array(filteredData.length).fill(0)
-          data[parentIndex] = value
-          acc.push({
-            label: child.label,
-            data,
-            color: getChildColor(type, theme, child),
-            stack: 'sublevel',
-          })
-        }
+        seriesData.push({
+          label: child.label,
+          data,
+          color: getChildColor(type, theme, child),
+          stack: 'sublevel',
+        })
       }
     })
-    return acc
-  }, [] as BarChartSeriesData[])
+  })
 
   return {
     barData: { labels: parentLabels, values: [], colors: [] },
