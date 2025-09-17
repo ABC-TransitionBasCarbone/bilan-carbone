@@ -50,7 +50,7 @@ const PublicCutPage = ({ children }: Props) => {
     <PublicContainer>
       <StyledPublicCutPage className={classNames('grow text-center')}>
         <Box p="1.5rem" borderBottom="1px solid" borderColor="success.light">
-          <Box className="justify-around flex-col" minHeight="500px" px="2rem" py="5rem">
+          <Box className="justify-around flex-col gapped1" minHeight="400px" px="1rem" py="2rem">
             <Typography className="title-h2">{t('welcome')}</Typography>
             <Image
               src="/logos/cut/logo-filled.svg"

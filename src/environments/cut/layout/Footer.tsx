@@ -13,7 +13,6 @@ const Footer = () => {
       container
       spacing={2}
       columnGap={2}
-      paddingY={2}
       bottom={0}
       bgcolor={palette.grey[500]}
     >
