@@ -15,7 +15,7 @@ import {
   getAccountsUserLevel,
 } from '@/db/account'
 import { prismaClient } from '@/db/client'
-import { updateNumberOfProgrammedFilms } from '@/db/cnc'
+import { findCncByCncCode, updateNumberOfProgrammedFilms } from '@/db/cnc'
 import { createDocument, deleteDocument } from '@/db/document'
 import {
   getEmissionFactorsByIdsAndSource,
