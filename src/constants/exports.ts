@@ -1,2 +1,2 @@
-export const resultsExportHeadersBase = ['post', 'uncertainty', 'value']
-export const resultsExportHeadersCut = ['post', 'value']
+export const resultsExportHeadersBase = ['post', 'subPost', 'uncertainty', 'value']
+export const resultsExportHeadersCut = ['post', 'subPost', 'value']

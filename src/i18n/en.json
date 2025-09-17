@@ -629,6 +629,7 @@
     "results": {
       "type": "Type",
       "post": "Post",
+      "subPost": "Sub-post",
       "tag": "Tag",
       "download": "Download results",
       "downloadPDF": "Download the summary",

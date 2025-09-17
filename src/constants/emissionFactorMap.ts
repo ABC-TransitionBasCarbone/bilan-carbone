@@ -228,7 +228,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
       "Les services incluent par exemple les dépenses de ménage, sécurité, comptabilité, frais bancaires, etc. Vous pouvez utiliser une valeur par défaut pour cette réponse (25286€) qui est issue des Bilans Carbone® qui ont étés réalisés sur plusieurs cinémas français. Si vous détenez une information plus précise pour votre cinéma, nous vous invitons à l'utiliser plutôt que la valeur par défaut.",
   },
   '10-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer': {
-    depreciationPeriod: 4,
+    depreciationPeriod: 5,
     emissionFactors: {
       'Ordinateurs fixes': '27003',
       'Ordinateurs portables': '27002',
@@ -239,7 +239,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
       Tablettes: '27007',
     },
     helperText:
-      'Si l\'équipement concerné est acheté, merci de ne pas remplir le champ "Durée de location". Si l\'équipement concerné est loué de manière ponctuelle, merci de ne pas remplir le champ "Date d\'achat". Si vous louez un équipement pour de longues durées ou de manière continue, nous vous recommandons de le considéré comme acheté (à la date de la première année de location).',
+      'Si l\'équipement concerné est acheté, merci de ne pas remplir le champ "Durée de location". \n\nSi l\'équipement concerné est loué de manière ponctuelle, merci de ne pas remplir le champ "Date d\'achat". \n\nSi vous louez un équipement pour de longues durées ou de manière continue, nous vous recommandons de le considéré comme acheté (à la date de la première année de location).',
   },
   [SPECTATOR_SHORT_DISTANCE_DETAILS_QUESTION_ID]: {
     isFixed: true,
@@ -413,7 +413,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   'combien-de-donnees-stockez-vous-dans-un-cloud': { emissionFactorImportedId: '141' },
   'de-combien-de-disques-durs-disposez-vous': {
     emissionFactorImportedId: '140',
-    depreciationPeriod: 4,
+    depreciationPeriod: 5,
     linkDepreciationQuestionId: 'NO_DATE_REQUIRED',
   },
   // Autre matériel
@@ -447,7 +447,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     },
     depreciationPeriod: 5,
     helperText:
-      'Si l\'équipement concerné est acheté, merci de ne pas remplir le champ "Durée de location". Si l\'équipement concerné est loué de manière ponctuelle, merci de ne pas remplir le champ "Date d\'achat". Si vous louez un équipement pour de longues durées ou de manière continue, nous vous recommandons de le considéré comme acheté (à la date de la première année de location).',
+      'Si l\'équipement concerné est acheté, merci de ne pas remplir le champ "Durée de location". \n\nSi l\'équipement concerné est loué de manière ponctuelle, merci de ne pas remplir le champ "Date d\'achat". \n\nSi vous louez un équipement pour de longues durées ou de manière continue, nous vous recommandons de le considéré comme acheté (à la date de la première année de location).',
   },
   // DechetsOrdinaires
   '10-veuillez-renseigner-les-dechets-generes-par-semaine': {

@@ -629,6 +629,7 @@
     "results": {
       "type": "Type",
       "post": "Poste",
+      "subPost": "Sous-poste",
       "tag": "Tag",
       "download": "Télécharger les résultats",
       "downloadPDF": "Télécharger la fiche récapitulative",

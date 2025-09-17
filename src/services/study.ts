@@ -13,7 +13,7 @@ import { hasAccessToBcExport } from './permissions/environment'
 import { StudyWithoutDetail } from './permissions/study'
 import { convertCountToBilanCarbone, environmentPostMapping, Post, subPostsByPost } from './posts'
 import { computeBegesResult } from './results/beges'
-import { computeResultsByPost, computeResultsByTag } from './results/consolidated'
+import { computeResultsByPost, computeResultsByTag, ResultsByPost } from './results/consolidated'
 import { EmissionFactorWithMetaData, getEmissionFactorsByIds } from './serverFunctions/emissionFactor'
 import { prepareExcel } from './serverFunctions/file'
 import { getUserSettings } from './serverFunctions/user'
@@ -345,6 +345,20 @@ const getFormattedHeadersForEnv = (
   )
 }
 
+const handleLine = (
+  headersForEnv: string[],
+  result: ResultsByPost,
+  tQuality: ReturnType<typeof useTranslations>,
+  resultsUnits: StudyResultUnit,
+) => {
+  const resultLine = []
+  if (headersForEnv.includes('uncertainty')) {
+    resultLine.push(result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '')
+  }
+
+  return [...resultLine, Math.round((result.value ?? 0) / STUDY_UNIT_VALUES[resultsUnits])]
+}
+
 export const formatConsolidatedStudyResultsForExport = (
   study: FullStudy,
   siteList: { name: string; id: string }[],
@@ -382,13 +396,15 @@ export const formatConsolidatedStudyResultsForExport = (
     )
 
     for (const result of resultList) {
-      const resultLine = [tPost(result.post) ?? '']
+      dataForExport.push([result.label, '', ...handleLine(headersForEnv, result, tQuality, study.resultsUnit)])
 
-      if (headersForEnv.includes('uncertainty')) {
-        resultLine.push(result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '')
+      for (const subPostResult of result.children) {
+        dataForExport.push([
+          '',
+          subPostResult.label,
+          ...handleLine(headersForEnv, subPostResult, tQuality, study.resultsUnit),
+        ])
       }
-
-      dataForExport.push([...resultLine, Math.round((result.value ?? 0) / STUDY_UNIT_VALUES[study.resultsUnit])])
     }
 
     dataForExport.push([])
