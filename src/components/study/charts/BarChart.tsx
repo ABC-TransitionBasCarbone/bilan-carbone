@@ -25,7 +25,6 @@ interface Props<T> {
   showLegend?: boolean
   showLabelsOnBars?: boolean
   skipAnimation?: boolean
-  onlyChildren?: boolean
   showSubLevel?: boolean
   type?: 'post' | 'tag'
 }
@@ -39,39 +38,28 @@ const BarChart = <T extends BasicTypeCharts>({
   showLegend = true,
   showLabelsOnBars = true,
   skipAnimation = false,
-  onlyChildren = false,
   showSubLevel = false,
   type = 'post',
 }: Props<T>) => {
   const tResults = useTranslations('study.results')
   const tUnits = useTranslations('study.results.units')
   const tPost = useTranslations('emissionFactors.post')
-
+  const isTag = type === 'tag'
   const theme = useTheme()
 
   const { barData, seriesData } = useMemo(() => {
     const filteredData = results.filter((result) => result.post !== 'total' && result.label !== 'total')
 
-    if (onlyChildren) {
-      const childrenData = filteredData.flatMap((result) => result.children)
-      return {
-        barData: {
-          labels: childrenData.map((child) => {
-            return getLabel(type, child, tPost)
-          }),
-          values: childrenData.map(({ value }) => value / STUDY_UNIT_VALUES[resultsUnit]),
-          colors: childrenData.map((child) => getChildColor(type, theme, child)),
-        },
-        seriesData: [],
-      }
-    }
-
     if (!showSubLevel) {
+      // For tags, if showSubLevel is false, we only show the children tags and not the tag parents
+      const data = isTag ? filteredData.flatMap((result) => result.children) : filteredData
       return {
         barData: {
-          labels: filteredData.map((item) => getLabel(type, item, tPost)),
-          values: filteredData.map(({ value }) => value / STUDY_UNIT_VALUES[resultsUnit]),
-          colors: filteredData.map((item, index) => getParentColor(type, theme, item, index)),
+          labels: data.map((item) => getLabel(type, item, tPost)),
+          values: data.map(({ value }) => value / STUDY_UNIT_VALUES[resultsUnit]),
+          colors: data.map((item, index) =>
+            isTag ? getChildColor(type, theme, item) : getParentColor(type, theme, item, index),
+          ),
         },
         seriesData: [],
       }
@@ -79,48 +67,39 @@ const BarChart = <T extends BasicTypeCharts>({
 
     const parentLabels = filteredData.map((item) => getLabel(type, item, tPost))
 
-    const childrenLabels = new Set<string>()
-    filteredData.forEach((parent) => {
-      parent.children.forEach((child) => {
-        if (child.value > 0) {
-          childrenLabels.add(child.label)
-        }
-      })
-    })
+    const seriesData = filteredData.reduce(
+      (acc, parent, parentIndex) => {
+        parent.children.forEach((child) => {
+          if (child.value > 0) {
+            const existingSeries = acc.find((series) => series.label === child.label)
+            const value = child.value / STUDY_UNIT_VALUES[resultsUnit]
 
-    const seriesData: Array<{ label: string; data: number[]; color: string; stack: string }> = []
-    Array.from(childrenLabels).forEach((label) => {
-      const data: number[] = []
-      let seriesColor = ''
-
-      filteredData.forEach((parent) => {
-        const child = parent.children.find((child) => child.label === label)
-        if (child && child.value > 0) {
-          data.push(child.value / STUDY_UNIT_VALUES[resultsUnit])
-          if (!seriesColor) {
-            seriesColor = getChildColor(type, theme, child)
+            if (existingSeries) {
+              existingSeries.data[parentIndex] = value
+            } else {
+              const data = new Array(filteredData.length).fill(0)
+              data[parentIndex] = value
+              acc.push({
+                label: child.label,
+                data,
+                color: getChildColor(type, theme, child),
+                stack: 'sublevel',
+              })
+            }
           }
-        } else {
-          data.push(0)
-        }
-      })
-
-      seriesData.push({
-        label: label,
-        data,
-        color: seriesColor,
-        stack: 'sublevel',
-      })
-    })
+        })
+        return acc
+      },
+      [] as Array<{ label: string; data: number[]; color: string; stack: string }>,
+    )
 
     return {
       barData: { labels: parentLabels, values: [], colors: [] },
       seriesData,
     }
-  }, [results, onlyChildren, showSubLevel, type, tPost, resultsUnit, theme])
+  }, [results, showSubLevel, isTag, type, tPost, resultsUnit, theme])
 
-  const getBarLabel = (item: { value: number | null }) =>
-    showLabelsOnBars && item.value && item.value > 0 ? formatValueAndUnit(item.value) : ''
+  const getBarLabel = (item: { value: number | null }) => (showLabelsOnBars ? formatValueAndUnit(item.value) : '')
 
   return (
     <div className={styles.barChart}>
@@ -153,7 +132,7 @@ const BarChart = <T extends BasicTypeCharts>({
           seriesData.length > 0
             ? seriesData.map((series, index) => ({
                 data: series.data,
-                valueFormatter: (value) => (value && value > 0 ? formatValueAndUnit(value) : null),
+                valueFormatter: (value) => formatValueAndUnit(value),
                 label: series.label,
                 stack: series.stack,
                 color: series.color,

@@ -33,7 +33,6 @@ interface Props<T> extends Omit<PieChartProps, 'series'> {
   showTitle?: boolean
   showLabelsOnPie?: boolean
   showSubLevel?: boolean
-  onlyChildren?: boolean
   type?: 'post' | 'tag'
 }
 
@@ -45,13 +44,12 @@ const PieChart = <T extends BasicTypeCharts>({
   showTitle = true,
   showLabelsOnPie = true,
   showSubLevel = false,
-  onlyChildren = false,
   type = 'post',
   ...pieChartProps
 }: Props<T>) => {
   const tUnits = useTranslations('study.results.units')
   const theme = useTheme()
-  const isMediumScreen = useMediaQuery(theme.breakpoints.between('lg', 'xl'))
+  const noSpaceForLegend = useMediaQuery(theme.breakpoints.between('lg', 'xl')) && type === 'tag'
 
   const formatParentData = useCallback(
     (item: T, index?: number) => {
@@ -80,7 +78,7 @@ const PieChart = <T extends BasicTypeCharts>({
   )
 
   const { innerRingData, outerRingData } = useMemo(() => {
-    if (onlyChildren) {
+    if (type === 'tag' && !showSubLevel) {
       const childrenData = results
         .flatMap((result) => result.children)
         .map((child) => formatChildData(child))
@@ -111,7 +109,7 @@ const PieChart = <T extends BasicTypeCharts>({
     })
 
     return { innerRingData: innerData, outerRingData: outerData }
-  }, [formatParentData, formatChildData, onlyChildren, results, showSubLevel])
+  }, [type, showSubLevel, results, formatChildData, formatParentData])
 
   const series = useMemo(() => {
     const seriesArray = []
@@ -154,7 +152,7 @@ const PieChart = <T extends BasicTypeCharts>({
     <div className={styles.pieChart}>
       <div className={styles.chartContainer}>
         <MuiPieChart series={series} height={height} hideLegend {...pieChartProps} />
-        {legendData.length > 0 && !isMediumScreen && (
+        {legendData.length > 0 && !noSpaceForLegend && (
           <div className={styles.legend}>
             {legendData.map((item, index) => (
               <div key={index} className={styles.legendItem}>

@@ -69,7 +69,6 @@ const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: s
           <PieChart
             results={filteredResultsWithTotal}
             resultsUnit={resultsUnit ?? StudyResultUnit.T}
-            onlyChildren={type === 'tag' && !showSubLevel}
             showSubLevel={showSubLevel}
             showLabelsOnPie={true}
             type={type}
@@ -81,8 +80,8 @@ const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: s
             results={filteredResultsWithTotal}
             resultsUnit={resultsUnit}
             showLabelsOnBars={false}
-            onlyChildren={type === 'tag' && !showSubLevel}
             showSubLevel={showSubLevel}
+            showLegend={false}
             type={type}
           />
         )
