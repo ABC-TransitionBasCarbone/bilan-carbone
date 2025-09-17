@@ -13,7 +13,7 @@
       },
       "footprints": {
         "title": "Mes Empreintes :",
-        "message": "Retrouvez ici la liste de vos empreintes carbone en cours ou closes"
+        "message": "Créer votre première empreinte ici. Vous pourrez ensuite consulter vos empreintes ou en créer de nouvelles à tout moment."
       },
       "movietheater": {
         "title": "Mes Cinémas :",
@@ -62,14 +62,22 @@
       "accounting": "Mon Empreinte"
     },
     "new": {
-      "studyDates": "Année de référence de l’Empreinte",
+      "title": "Informations sur la nouvelle empreinte",
+      "name": "Nom de l'empreinte",
+      "studyDates": "Année de référence de l’empreinte",
       "suggestion": {
         "name": "Empreinte - {orga} {studyStartDate}",
         "yourOrga": "Votre cinéma"
       },
       "info": {
         "date": "Les estimations sont généralement faites sur une période de 12 mois"
-      }
+      },
+      "glossary": {
+        "studyDates": "Année de référence de l’empreinte",
+        "studyDatesDescription": "Veuillez renseigner la période de référence sur laquelle porte votre empreinte carbone simplifiée. Idéalement, la période de référence doit être de douze mois."
+      },
+      "goToDataEntry": "Passer à la saisie des données",
+      "cncInfo": "Si vous avez renseigné un code CNC, ces données qui concernent votre cinéma sont directement importées ici. Ce sont les données {year}, vous pouvez les modifier si les informations liées à votre CNC ne sont pas à jour."
     },
     "perimeter": {
       "editSites": "Modifier la liste de cinémas",
@@ -82,7 +90,7 @@
     },
     "results": {
       "info": "Cette empreinte carbone simplifiée vise à estimer les émissions de gaz à effet de serre de votre activité, et par conséquent votre contribution au dérèglement climatique ainsi que vos potentielles dépendance aux énergies fossiles qui sont des vulnérabilités. \n\nL'Union Européenne s'est engagée, en ratifiant l'Accord de Paris, à la neutralité carbone d'ici 2050. Pour contribuer à cet objectif, votre cinéma devrait réduire son impact de 5% par an. \n\nNous vous invitons donc à refaire cette empreinte carbone simplifiée l'année prochaine pour vérifier que vous êtes sur la bonne trajectoire !",
-      "cutFeedback": "Vous venez d'utiliser la version test du calculateur Count. Nous sommes actuellement en train d'apporter des modifications pour gagner en clarté et en précision, ainsi que pour corriger d'éventuels bugs avant la sortie. Nous vous remercions de bien vouloir remplir <lien>ce questionnaire</lien>, afin de nous aider à améliorer l'outil pour sa sortie officielle (septembre 2025) !"
+      "cutFeedback": "Vous venez d'utiliser le calculateur Count. Nous vous remercions de bien vouloir remplir <lien>ce questionnaire</lien>, afin de nous aider à améliorer l'outil et à corriger d'éventuels bugs !"
     },
     "rights": {
       "title": "Données générales de l'étude : {name}"
@@ -147,7 +155,8 @@
     "welcome": "Bienvenue sur",
     "subtext": "Le premier calculateur d'impact écologique dédié aux salles de cinéma.",
     "explaination": "Cet outil a été développé par l'association <b>CUT ! Cinéma Uni pour la Transition,</b> en coopération avec <b>l'ABC, association pour la Transition bas carbone.</b>",
-    "question": "Opération soutenue par l'État dans le cadre du dispositif « Soutenir les alternatives vertes 2 » de France 2030, opéré par la Banque des territoires (Caisse des Dépôts)",
+    "question": "Une question ? Lisez la <link>FAQ</link> ou <support>contactez-nous</support> !",
+    "explaination2": "Opération soutenue par l'État dans le cadre du dispositif « Soutenir les alternatives vertes 2 » de France 2030, opéré par la Banque des territoires (Caisse des Dépôts)",
     "form": {
       "activate": "Créer mon compte"
     }
@@ -162,6 +171,22 @@
       "userOnStudyInvitation": "Ajout sur l'étude {studyName}",
       "contributorInvitation": "Demande de contribution sur l'étude {studyName}",
       "addedUsersByFile": "Autorisation pour l'ajout d'utilisateurs"
+    }
+  },
+  "ressources": {
+    "contacterViaFormulaire": "Écrire directement à {supportEmail}",
+    "enSavoirPlusBilan": "Pour aller plus loin que le calcul d'empreinte simplifiée proposé par Count :"
+  },
+  "questions": {
+    "glossary": {
+      "title": "Informations supplémentaires sur la question",
+      "close": "Fermer"
+    }
+  },
+  "exports": {
+    "env_specific_export": "Empreinte carbone simplifiée",
+    "bc": {
+      "disclaimerExcel": "Attention, les résultats que vous obtenez ici sont uniquement issus de l'empreinte carbone simplifiée Count, et ne doivent en aucun cas être utilisés comme des résultats Bilan Carbone®. La démarche que vous avez suivi via l'outil Count n'est PAS une démarche Bilan Carbone®.\n\nEn revanche, cette empreinte carbone simplifiée est le premier pas vers une démarche plus complète comme le Bilan Carbone® ! Un Bilan Carbone® suit une méthodologie bien précise, et doit répondre à un certain nombre de critères objectifs. Par exemple, au cours d'un Bilan Carbone®, la direction doit être engagée, les différentes parties prenantes de l'organisation doivent être mobilisées, des incertitudes doivent être calculées et associées aux émissions, et surtout, un plan de transition solide doit être construit pour engager l'organisation dans une transition bas carbone. Si vous souhaitez vous lancer dans un Bilan Carbone® dans les années qui viennent, tout commence par se faire former, ou par se faire accompagner par un prestataire externe !"
     }
   }
 }

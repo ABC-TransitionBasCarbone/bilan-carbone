@@ -2,6 +2,7 @@ import {
   CLIMATISATION_QUESTION_ID,
   CONFECTIONERY_QUESTION_ID,
   CONFECTIONERY_SELECT_QUESTION_ID,
+  GENERATOR_QUESTION_ID,
   INCREASE_SURFACE_QUESTION_ID,
   LONG_DISTANCE_QUESTION_ID,
   MOBILITY_DOWNLOAD_MODEL_QUESTION_ID,
@@ -53,13 +54,13 @@ export interface EmissionFactorInfo {
   relatedQuestions?: string[]
   conditionalRules?: ConditionalRule[]
   dependentFields?: SiteDependentField[]
+  helperText?: string
 }
 
 export const SITE_DEPENDENT_FIELDS = [
   'numberOfSessions',
   'numberOfTickets',
   'numberOfOpenDays',
-  'distanceToParis',
   'numberOfProgrammedFilms',
 ] as const
 
@@ -178,6 +179,10 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     emissionFactors: SHORT_DISTANCE_TRANSPORT_EMISSION_FACTORS,
   },
   // DeplacementsProfessionnels
+  '10-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {
+    helperText:
+      'Les déplacements professionnels de vos collaborateurs sont tous les déplacements autres que les déplacements domicile-travail, effectués dans le cadre du travail. Ceux-ci incluent par exemple les déplacements pour se rendre à des congrès, conventions, festivals, prévisionnages, etc.',
+  },
   '11-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
   '12-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
   '13-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
@@ -204,13 +209,26 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   [RESEAU_FROID_QUESTION_ID]: { emissionFactorImportedId: '37090' },
   'bois-granules': { emissionFactorImportedId: '34942' },
   [CLIMATISATION_QUESTION_ID]: { emissionFactorImportedId: '145', isSpecial: true },
-  'le-cinema-dispose-t-il-d-un-ou-plusieurs-groupes-electrogenes': { emissionFactorImportedId: '20911' },
-  'quelle-est-votre-consommation-annuelle-de-diesel': { emissionFactorImportedId: '14015' },
+  [GENERATOR_QUESTION_ID]: { emissionFactorImportedId: '20911' },
+  'quelle-est-votre-consommation-annuelle-de-diesel': {
+    emissionFactorImportedId: '14015',
+    conditionalRules: [
+      {
+        idIntern: GENERATOR_QUESTION_ID,
+        expectedAnswers: ['11-Oui et je l’utilise plusieurs fois par an'],
+      },
+    ],
+  },
   // ActivitesDeBureau
   'quel-montant-avez-vous-depense-en-petites-fournitures-de-bureau': { emissionFactorImportedId: '20556' },
-  [SERVICES_QUESTION_ID]: { emissionFactorImportedId: '43545', isSpecial: true },
+  [SERVICES_QUESTION_ID]: {
+    emissionFactorImportedId: '43545',
+    isSpecial: true,
+    helperText:
+      "Les services incluent par exemple les dépenses de ménage, sécurité, comptabilité, frais bancaires, etc. Vous pouvez utiliser une valeur par défaut pour cette réponse (25286€) qui est issue des Bilans Carbone® qui ont étés réalisés sur plusieurs cinémas français. Si vous détenez une information plus précise pour votre cinéma, nous vous invitons à l'utiliser plutôt que la valeur par défaut.",
+  },
   '10-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer': {
-    depreciationPeriod: 4,
+    depreciationPeriod: 5,
     emissionFactors: {
       'Ordinateurs fixes': '27003',
       'Ordinateurs portables': '27002',
@@ -220,6 +238,8 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
       'Téléphones portables': '27010',
       Tablettes: '27007',
     },
+    helperText:
+      'Si l\'équipement concerné est acheté, merci de ne pas remplir le champ "Durée de location". Si l\'équipement concerné est loué de manière ponctuelle, merci de ne pas remplir le champ "Date d\'achat". Si vous louez un équipement pour de longues durées ou de manière continue, nous vous recommandons de le considérer comme acheté (à la date de la première année de location).',
   },
   [SPECTATOR_SHORT_DISTANCE_DETAILS_QUESTION_ID]: {
     isFixed: true,
@@ -242,7 +262,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   [SHORT_DISTANCE_QUESTION_ID]: {
     isSpecial: true,
     relatedQuestions: [LONG_DISTANCE_QUESTION_ID],
-    dependentFields: ['numberOfTickets', 'distanceToParis'],
+    dependentFields: ['numberOfTickets'],
     conditionalRules: [
       {
         idIntern: MOBILIY_SURVEY_QUESTION_ID,
@@ -310,7 +330,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   [LONG_DISTANCE_QUESTION_ID]: {
     isSpecial: true,
     relatedQuestions: [SHORT_DISTANCE_QUESTION_ID],
-    dependentFields: ['numberOfTickets', 'distanceToParis'],
+    dependentFields: ['numberOfTickets'],
     conditionalRules: [
       {
         idIntern: MOBILIY_SURVEY_QUESTION_ID,
@@ -344,7 +364,6 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   [MOVIE_TEAM_QUESTION_ID]: {
     emissionFactors: { transport: '43256', meal: '20682' },
     isSpecial: true,
-    dependentFields: ['distanceToParis'],
   },
   // Matériel technique
   '10-decrivez-les-differentes-salles-du-cinema': {},
@@ -353,34 +372,32 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     emissionFactors: {
       'Projecteur Xénon': '107',
       'Projecteur Laser': '108',
-      'Projecteur 35 mm': '109',
     },
   },
   '104-decrivez-les-differentes-salles-du-cinema': {
     depreciationPeriod: 10,
     emissionFactors: {
-      'Ecran 2D': '110',
-      'Ecran 3D': '111',
+      'Ecran 2D': '109',
+      'Ecran 3D': '110',
     },
   },
   '107-decrivez-les-differentes-salles-du-cinema': {
     depreciationPeriod: 10,
     emissionFactors: {
-      'Fauteuils classiques': '112',
-      'Fauteuils 4DX': '113',
+      'Fauteuils classiques': '111',
+      'Fauteuils 4DX': '112',
     },
   },
   '110-decrivez-les-differentes-salles-du-cinema': {
     depreciationPeriod: 10,
     emissionFactors: {
-      'Son Stéréo': '114',
-      'Dolby 5.1': '115',
-      'Dolby 7.1': '116',
-      'Dolby Atmos': '117',
-      IMAX: '118',
-      'Auro 3D / Ice': '119',
-      'DTS : X': '120',
-      THX: '121',
+      'Son Stéréo': '113',
+      'Dolby 5.1': '114',
+      'Dolby 7.1': '115',
+      'Dolby Atmos': '116',
+      IMAX: '117',
+      'Auro 3D / Ice': '118',
+      'DTS : X': '119',
     },
   },
   '11-comment-stockez-vous-les-films': { emissionFactorImportedId: '20894' },
@@ -388,13 +405,15 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   [MOVIE_DEMAT_QUESTION_ID]: {
     isSpecial: true,
     emissionFactorImportedId: '142',
-    dependentFields: ['distanceToParis', 'numberOfProgrammedFilms'],
+    dependentFields: ['numberOfProgrammedFilms'],
+    helperText:
+      "Vous pouvez par défaut renseigner 90% des films programmés totaux (ce nombre de films est disponible dans vos données générales), qui est la valeur moyenne issue des Bilans Carbone® qui ont étés réalisés sur plusieurs cinémas français. Si vous détenez une information plus précise pour votre cinéma, nous vous invitons à l'utiliser plutôt que la valeur par défaut.",
   },
   [MOVIE_DCP_QUESTION_ID]: { isSpecial: true, emissionFactorImportedId: '143' },
   'combien-de-donnees-stockez-vous-dans-un-cloud': { emissionFactorImportedId: '141' },
   'de-combien-de-disques-durs-disposez-vous': {
     emissionFactorImportedId: '140',
-    depreciationPeriod: 4,
+    depreciationPeriod: 5,
     linkDepreciationQuestionId: 'NO_DATE_REQUIRED',
   },
   // Autre matériel
@@ -427,6 +446,8 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
       'Distributeurs snacks / boisson': '26976',
     },
     depreciationPeriod: 5,
+    helperText:
+      'Si l\'équipement concerné est acheté, merci de ne pas remplir le champ "Durée de location". Si l\'équipement concerné est loué de manière ponctuelle, merci de ne pas remplir le champ "Date d\'achat". Si vous louez un équipement pour de longues durées ou de manière continue, nous vous recommandons de le considérer comme acheté (à la date de la première année de location).',
   },
   // DechetsOrdinaires
   '10-veuillez-renseigner-les-dechets-generes-par-semaine': {
@@ -447,12 +468,19 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     emissionFactors: {
       'Affiches 120x160': '125',
       'Affiches 40x60': '126',
-      'PLV comptoir': '127',
-      'PLV grand format': '128',
     },
     weights: {
       'Affiches 120x160': 0.22,
       'Affiches 40x60': 0.027,
+    },
+  },
+  '10-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-mois': {
+    isFixed: true,
+    emissionFactors: {
+      'PLV comptoir': '127',
+      'PLV grand format': '128',
+    },
+    weights: {
       'PLV comptoir': 0.5,
       'PLV grand format': 3.5,
     },

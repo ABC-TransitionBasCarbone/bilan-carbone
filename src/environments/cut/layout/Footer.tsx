@@ -13,15 +13,13 @@ const Footer = () => {
       container
       spacing={2}
       columnGap={2}
-      paddingY={2}
       bottom={0}
       bgcolor={palette.grey[500]}
     >
       <Grid className="flex justify-center align-center" size={size}>
         <Box className="flex-col" gap={2}>
           <Box display="flex">
-            <Image width={86.23} height={55} src="/logos/cut/CUT.svg" alt="Cut Logo" />
-            <Image width={58.95} height={44.76} src="/logos/cut/CUT_Acronyme.svg" alt="Cinéma uni pour la transition" />
+            <Image width={150} height={95.7} src="/logos/cut/CUT.svg" alt="Cut Logo" />
           </Box>
         </Box>
       </Grid>

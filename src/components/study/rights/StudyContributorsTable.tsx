@@ -5,12 +5,14 @@ import HelpIcon from '@/components/base/HelpIcon'
 import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { getEnvVar } from '@/lib/environment'
 import { BCPost, Post, subPostsByPost } from '@/services/posts'
 import { deleteStudyContributor } from '@/services/serverFunctions/study'
 import DeleteIcon from '@mui/icons-material/Cancel'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Button, IconButton } from '@mui/material'
+import { Environment } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -48,11 +50,11 @@ export type StudyContributorTableRow =
       subPosts: string[]
     }
 
-const faq = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
 const PREVIEW_MAX_LINES = 2
 const SUBPOST_PREVIEW_LIMIT = 3
 
 const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
+  const faq = getEnvVar('FAQ_LINK', Environment.BC)
   const t = useTranslations('study.rights.contributorsTable')
   const tDeleting = useTranslations('study.rights.contributorsTable.deleting')
   const tRole = useTranslations('study.rights.contributorsTable.role')

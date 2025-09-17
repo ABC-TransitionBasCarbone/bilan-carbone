@@ -1,10 +1,11 @@
 'use client'
 
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { getEnvVar } from '@/lib/environment'
 import { getFormationFormStart, startFormationForm } from '@/services/serverFunctions/user'
 import { MIN, TIME_IN_MS } from '@/utils/time'
 import { Checkbox } from '@mui/material'
-import { Formation } from '@prisma/client'
+import { Environment, Formation } from '@prisma/client'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -22,10 +23,10 @@ interface Props {
   organizationName: string
 }
 
-const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
 const timer = Number(process.env.NEXT_PUBLIC_FORMATION_TYPEFORM_DURATION)
 
 const FormationView = ({ formations, user, organizationName }: Props) => {
+  const support = getEnvVar('SUPPORT_EMAIL', Environment.BC)
   const t = useTranslations('formation')
   const tLevel = useTranslations('level')
   const { callServerFunction } = useServerFunction()
@@ -72,7 +73,7 @@ const FormationView = ({ formations, user, organizationName }: Props) => {
           organization: organizationName,
           name: `${user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1).toLowerCase()} ${user.lastName.toUpperCase()}`,
           level: user.level ? tLevel(user.level) : '',
-          support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
+          support: (children) => <Link href={`mailto:${support}`}>{children}</Link>,
           error: (children) => <span className="error">{children}</span>,
           b: (children) => <span className="bold">{children}</span>,
           i: (children) => <span className="italic">{children}</span>,

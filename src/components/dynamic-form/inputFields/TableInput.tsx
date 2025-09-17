@@ -1,12 +1,14 @@
 import { emissionFactorMap } from '@/constants/emissionFactorMap'
 import { UseAutoSaveReturn } from '@/hooks/useAutoSave'
+import { formatDynamicLabel } from '@/services/interpolation'
 import {
   getAnswerByQuestionIdAndStudySiteId,
   getParentTableQuestion,
   getQuestionsFromIdIntern,
 } from '@/services/serverFunctions/question'
-import { addTableRow, createFixedTableRow, deleteTableRow, isTableAnswer } from '@/utils/tableInput'
-import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
+import { addTableRow, createFixedTableRow, deleteTableRow, duplicateTableRow, isTableAnswer } from '@/utils/tableInput'
+import { ContentCopy, Delete } from '@mui/icons-material'
+import { Box, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import { Prisma, QuestionType } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
@@ -23,9 +25,10 @@ interface Props extends Omit<BaseInputProps, 'value' | 'onChange' | 'onBlur'> {
   watch: UseFormWatch<FormValues>
   formErrors: FieldErrors<FormValues>
   setValue: UseFormSetValue<FormValues>
+  studyStartDate: Date
 }
 
-const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }: Props) => {
+const TableInput = ({ question, control, autoSave, watch, formErrors, setValue, studyStartDate }: Props) => {
   const [questions, setQuestions] = useState<Prisma.QuestionGetPayload<{ include: { userAnswers: true } }>[]>([])
   const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
   const [tableAnswer, setTableAnswer] = useState<TableAnswer>({ rows: [] })
@@ -44,7 +47,7 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
     async (rowId: string) => {
       const newTableAnswer = deleteTableRow(tableAnswer, rowId)
       setTableAnswer(newTableAnswer)
-      autoSave.saveField(question, newTableAnswer as unknown as Prisma.InputJsonValue)
+      autoSave.saveTableField(question, newTableAnswer as unknown as Prisma.InputJsonValue)
     },
     [tableAnswer, autoSave, question],
   )
@@ -78,18 +81,45 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
     return updatedTableAnswer
   }, [tableAnswer, questions, watch, isFixedTable])
 
-  // Handle field changes for fixed tables to ensure pre-filled values are saved
-  const handleTableFieldBlur = useCallback(() => {
-    if (isFixedTable) {
+  // Handle table field changes with debounced saving
+  const handleTableFieldChange = useCallback(() => {
+    const currentTableData = syncAllValuesToTableData()
+    autoSave.saveTableField(question, currentTableData)
+  }, [syncAllValuesToTableData, autoSave, question])
+
+  const populateFormFields = useCallback(
+    (tableAnswer: TableAnswer) => {
+      tableAnswer.rows.forEach((row) => {
+        questions.forEach((question) => {
+          const fieldName = `${question.idIntern}-${row.id}`
+          const value = row.data[question.idIntern] || ''
+          setValue(fieldName, value)
+        })
+      })
+    },
+    [questions, setValue],
+  )
+
+  const handleDuplicateRow = useCallback(
+    async (rowId: string) => {
+      autoSave.clearPendingTableSave(question.id)
+
+      // Force sync current form values to ensure we have the latest data
       const updatedTableAnswer = syncAllValuesToTableData()
-      autoSave.saveField(question, updatedTableAnswer as unknown as Prisma.InputJsonValue)
-    }
-  }, [isFixedTable, syncAllValuesToTableData, autoSave, question])
+      const newTableAnswer = duplicateTableRow(updatedTableAnswer, rowId)
+      setTableAnswer(newTableAnswer)
+
+      populateFormFields(newTableAnswer)
+
+      autoSave.saveTableField(question, newTableAnswer as unknown as Prisma.InputJsonValue)
+    },
+    [syncAllValuesToTableData, populateFormFields, autoSave, question],
+  )
 
   const columns = useMemo<ColumnDef<TableRowData>[]>(() => {
     const col = questions.map((question, questionIndex) => ({
       id: question.idIntern,
-      header: question.label,
+      header: formatDynamicLabel(question.label, { study: { startDate: new Date(studyStartDate) } }),
       accessorKey: question.idIntern,
       cell: ({ row }) => {
         const fieldType = getQuestionFieldType(question.type, question.unit)
@@ -108,31 +138,40 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
             control={control}
             setValue={setValue}
             disabled={isFirstColumnInFixedTable}
-            onCustomBlur={isFixedTable ? handleTableFieldBlur : undefined}
-            table={true}
+            isTable={true}
+            onTableFieldChange={handleTableFieldChange}
+            studyStartDate={studyStartDate}
           />
         )
       },
     })) as ColumnDef<TableRowData>[]
 
-    // Only add delete column for non-fixed tables
+    // Only add actions column for non-fixed tables
     if (!isFixedTable) {
       col.push({
-        id: 'delete',
+        id: 'actions',
         header: tCutQuestions('actions'),
         accessorKey: 'id',
         cell: ({ row }) => {
           const tableRow = row.original as TableRowData
           return (
             <Box>
-              <Button
+              <IconButton
+                title={tCutQuestions('duplicate')}
+                aria-label="duplicate"
+                color="primary"
+                onClick={() => handleDuplicateRow(tableRow.id)}
+              >
+                <ContentCopy />
+              </IconButton>
+              <IconButton
                 title={tCutQuestions('delete')}
                 aria-label="delete"
                 color="error"
                 onClick={() => handleDeleteRow(tableRow.id)}
               >
-                Delete
-              </Button>
+                <Delete />
+              </IconButton>
             </Box>
           )
         },
@@ -142,29 +181,18 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
     return col
   }, [
     questions,
-    tCutQuestions,
+    isFixedTable,
+    studyStartDate,
     autoSave,
     watch,
     formErrors,
     control,
-    handleDeleteRow,
     setValue,
-    isFixedTable,
-    handleTableFieldBlur,
+    handleTableFieldChange,
+    tCutQuestions,
+    handleDuplicateRow,
+    handleDeleteRow,
   ])
-
-  const populateFormFields = useCallback(
-    (tableAnswer: TableAnswer) => {
-      tableAnswer.rows.forEach((row) => {
-        questions.forEach((question) => {
-          const fieldName = `${question.idIntern}-${row.id}`
-          const value = row.data[question.idIntern] || ''
-          setValue(fieldName, value)
-        })
-      })
-    },
-    [questions, setValue],
-  )
 
   const loadTableData = useCallback(async () => {
     if (questions.length === 0) {
@@ -209,8 +237,11 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
 
     setTableAnswer(existingTableAnswer)
 
+    // Set initial value for the table question to prevent unnecessary saves on page load
+    autoSave.setInitialValue(question.id, existingTableAnswer as unknown as Prisma.InputJsonValue)
+
     populateFormFields(existingTableAnswer)
-  }, [questions, question.id, question.type, autoSave.studySiteId, populateFormFields, isFixedTable])
+  }, [questions, question.id, question.type, autoSave, populateFormFields, isFixedTable])
 
   const handleAddRow = useCallback(() => {
     const updatedTableAnswer = syncAllValuesToTableData()
@@ -219,7 +250,7 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
 
     populateFormFields(newTableAnswer)
 
-    autoSave.saveField(question, newTableAnswer as unknown as Prisma.InputJsonValue)
+    autoSave.saveTableField(question, newTableAnswer as unknown as Prisma.InputJsonValue)
   }, [syncAllValuesToTableData, questions, autoSave, question, populateFormFields])
 
   useEffect(() => {

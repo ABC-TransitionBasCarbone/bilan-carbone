@@ -1,12 +1,23 @@
-import { upsertCNC } from '@/db/cnc'
+import { getOrCreateCncVersion, upsertCNC } from '@/db/cnc'
 import { Prisma } from '@prisma/client'
 import { Command } from 'commander'
 import { parse } from 'csv-parse'
 import fs from 'fs'
 import { getEncoding } from '../../../utils/csv'
 
-const addCNC = async (file: string) => {
-  const cncs: Prisma.CncCreateInput[] = []
+const parseInteger = (value: string | number | undefined): number | undefined => {
+  return value ? parseInt(value.toString().replace(/\s+/g, ''), 10) : undefined
+}
+
+const parseDecimal = (value: string | number | undefined): number | undefined => {
+  return value ? parseFloat(value.toString().replace(/\s+/g, '')) : undefined
+}
+
+const addCNC = async (file: string, year: number) => {
+  const cncVersion = await getOrCreateCncVersion(year)
+  console.log(`Using CNC version ${cncVersion.id} for year ${year}`)
+
+  const cncs: (Prisma.CncCreateManyInput & { cncVersionId: string })[] = []
   await new Promise<void>((resolve, reject) => {
     fs.createReadStream(file)
       .pipe(
@@ -78,6 +89,7 @@ const addCNC = async (file: string) => {
           nombredefilmsprogrammes?: number
         }) => {
           cncs.push({
+            cncVersionId: cncVersion.id,
             regionCNC: row.regioncnc,
             numeroAuto: row.nauto,
             nom: row.nom,
@@ -85,26 +97,26 @@ const addCNC = async (file: string) => {
             codeInsee: row.codeinsee,
             commune: row.commune,
             dep: row.dep,
-            ecrans: row.ecrans ? parseInt(row.ecrans.toString(), 10) : undefined,
-            fauteuils: row.fauteuils ? parseInt(row.fauteuils.toString(), 10) : undefined,
-            semainesActivite: row.semainesdactivite ? parseInt(row.semainesdactivite.toString(), 10) : undefined,
-            seances: row.seances ? parseInt(row.seances.toString(), 10) : undefined,
-            entrees2023: row.entrees2023 ? parseInt(row.entrees2023.toString(), 10) : undefined,
-            entrees2022: row.entrees2022 ? parseInt(row.entrees2022.toString(), 10) : undefined,
-            evolutionEntrees: row.evolutionentrees ? parseFloat(row.evolutionentrees.toString()) : undefined,
+            ecrans: parseInteger(row.ecrans),
+            fauteuils: parseInteger(row.fauteuils),
+            semainesActivite: parseInteger(row.semainesdactivite),
+            seances: parseInteger(row.seances),
+            entrees2023: parseInteger(row.entrees2023),
+            entrees2022: parseInteger(row.entrees2022),
+            evolutionEntrees: parseDecimal(row.evolutionentrees),
             trancheEntrees: row.tranchedentrees,
             genre: row.genre,
             multiplexe: row.multiplexe === 'OUI',
-            latitude: row.latitude ? parseFloat(row.latitude.toString()) : undefined,
-            longitude: row.longitude ? parseFloat(row.longitude.toString()) : undefined,
-            numberOfProgrammedFilms: row.nombredefilmsprogrammes ? Number(row.nombredefilmsprogrammes.toString()) : 0,
+            latitude: parseDecimal(row.latitude),
+            longitude: parseDecimal(row.longitude),
+            numberOfProgrammedFilms: parseInteger(row.nombredefilmsprogrammes) || 0,
           })
         },
       )
       .on('end', async () => {
-        console.log(`Ajout de ${cncs.length} cnc...`)
+        console.log(`Upserting ${cncs.length} CNC records with ${year} data...`)
         await upsertCNC(cncs)
-        console.log('CNC créées')
+        console.log(`✅ Successfully upserted CNC data for year ${year}`)
         resolve()
       })
       .on('error', (error) => {
@@ -117,11 +129,15 @@ const program = new Command()
 
 program
   .name('add-cnc')
-  .description('Script pour ajouter des cnc')
+  .description('Script pour ajouter des cnc avec versioning par année')
   .version('1.0.0')
-  .requiredOption("-f, --file <value>', 'Fichier CSV avec les cnc")
+  .requiredOption('-f, --file <value>', 'Fichier CSV avec les cnc')
+  .requiredOption('-y, --year <value>', 'Année des données CNC', parseInt)
   .parse(process.argv)
 
-const params = program.opts()
+const params = program.opts<{
+  file: string
+  year: number
+}>()
 
-addCNC(params.file)
+addCNC(params.file, params.year)

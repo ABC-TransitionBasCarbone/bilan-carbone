@@ -1,6 +1,7 @@
 'use client'
 
 import Block from '@/components/base/Block'
+import LinkButton from '@/components/base/LinkButton'
 import { FormTextField } from '@/components/form/TextField'
 import StudyParams from '@/components/study/rights/StudyParams'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
@@ -15,12 +16,12 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { changeStudyCinema, getQuestionsGroupedBySubPost, getStudySite } from '@/services/serverFunctions/study'
 import { ChangeStudyCinemaCommand, ChangeStudyCinemaValidation } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { CircularProgress } from '@mui/material'
+import { Box, CircularProgress } from '@mui/material'
 import { DayOfWeek, EmissionFactorImportVersion, OpeningHours } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './StudyRights.module.css'
 
@@ -52,7 +53,6 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
     numberOfSessions: number
     numberOfTickets: number
     numberOfOpenDays: number
-    distanceToParis: number
     numberOfProgrammedFilms: number
   } | null>(null)
 
@@ -96,7 +96,6 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
       numberOfOpenDays: siteData?.numberOfOpenDays ?? 0,
       numberOfSessions: siteData?.numberOfSessions ?? 0,
       numberOfTickets: siteData?.numberOfTickets ?? 0,
-      distanceToParis: siteData?.distanceToParis ?? 0,
     },
   })
 
@@ -114,7 +113,6 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
             numberOfOpenDays: newSiteData.numberOfOpenDays ?? 0,
             numberOfSessions: newSiteData.numberOfSessions ?? 0,
             numberOfTickets: newSiteData.numberOfTickets ?? 0,
-            distanceToParis: newSiteData.distanceToParis ?? 0,
             numberOfProgrammedFilms: newSiteData.site.cnc?.numberOfProgrammedFilms ?? 0,
           }
 
@@ -137,10 +135,10 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
   const openingHours = form.watch('openingHours')
   const openingHoursHoliday = form.watch('openingHoursHoliday')
 
-  const daysHoliday: DayOfWeek[] = useMemo(
-    () => Object.keys(openingHoursHoliday || {}) as DayOfWeek[],
-    [openingHoursHoliday],
-  )
+  // const daysHoliday: DayOfWeek[] = useMemo(
+  //   () => Object.keys(openingHoursHoliday || {}) as DayOfWeek[],
+  //   [openingHoursHoliday],
+  // )
 
   const handleStudyCinemaUpdate = useCallback(
     async (data: ChangeStudyCinemaCommand) => {
@@ -183,7 +181,6 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
           numberOfSessions: data.numberOfSessions ?? 0,
           numberOfTickets: data.numberOfTickets ?? 0,
           numberOfOpenDays: data.numberOfOpenDays ?? 0,
-          distanceToParis: data.distanceToParis ?? 0,
           numberOfProgrammedFilms: data.numberOfProgrammedFilms ?? 0,
         })
       }
@@ -199,7 +196,6 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
         numberOfSessions: originalValues.numberOfSessions,
         numberOfTickets: originalValues.numberOfTickets,
         numberOfOpenDays: originalValues.numberOfOpenDays,
-        distanceToParis: originalValues.distanceToParis,
         numberOfProgrammedFilms: originalValues.numberOfProgrammedFilms,
       })
     }
@@ -215,7 +211,6 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
           numberOfSessions: pendingSiteChanges.pendingData.numberOfSessions ?? 0,
           numberOfTickets: pendingSiteChanges.pendingData.numberOfTickets ?? 0,
           numberOfOpenDays: pendingSiteChanges.pendingData.numberOfOpenDays ?? 0,
-          distanceToParis: pendingSiteChanges.pendingData.distanceToParis ?? 0,
           numberOfProgrammedFilms: pendingSiteChanges.pendingData.numberOfProgrammedFilms ?? 0,
         })
         setPendingSiteChanges(null)
@@ -231,31 +226,29 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
     form.handleSubmit(handleStudyCinemaUpdate, (e) => console.log('invalid', e))()
   }, [form, handleStudyCinemaUpdate, studySite])
 
-  const handleCheckDay = useCallback(
-    (day: DayOfWeek) => {
-      const existingHolidayDay = day in (openingHoursHoliday || {})
-      if (existingHolidayDay) {
-        const updatedHolidays = { ...openingHoursHoliday }
-        delete updatedHolidays[day]
-        form.setValue('openingHoursHoliday', updatedHolidays)
-      } else {
-        form.setValue('openingHoursHoliday', {
-          ...(openingHoursHoliday || {}),
-          [day]: { day, openHour: '', closeHour: '', isHoliday: true },
-        })
-      }
-    },
-    [openingHoursHoliday, form],
-  )
+  // const handleCheckDay = useCallback(
+  //   (day: DayOfWeek) => {
+  //     const existingHolidayDay = day in (openingHoursHoliday || {})
+  //     if (existingHolidayDay) {
+  //       const updatedHolidays = { ...openingHoursHoliday }
+  //       delete updatedHolidays[day]
+  //       form.setValue('openingHoursHoliday', updatedHolidays)
+  //     } else {
+  //       form.setValue('openingHoursHoliday', {
+  //         ...(openingHoursHoliday || {}),
+  //         [day]: { day, openHour: '', closeHour: '', isHoliday: true },
+  //       })
+  //     }
+  //   },
+  //   [openingHoursHoliday, form],
+  // )
 
-  const isChecked = useCallback(
-    (day: DayOfWeek) => {
-      return day in (openingHoursHoliday || {})
-    },
-    [openingHoursHoliday],
-  )
-
-  const labelWithYear = (label: string) => t(label, { year: study.startDate.getFullYear() })
+  // const isChecked = useCallback(
+  //   (day: DayOfWeek) => {
+  //     return day in (openingHoursHoliday || {})
+  //   },
+  //   [openingHoursHoliday],
+  // )
 
   useEffect(() => {
     onStudyCinemaUpdate()
@@ -266,22 +259,19 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
   return (
     <>
       <StudyParams user={user} study={study} disabled={editionDisabled} emissionFactorSources={emissionFactorSources} />
-      <Block>
+      <Block className="flex flex-col">
         <SelectStudySite study={study} studySite={studySite} setSite={setSite} />
-      </Block>
-      {loading ? (
-        <Block>
-          <CircularProgress variant="indeterminate" color="primary" size={100} />
-        </Block>
-      ) : (
-        <>
-          <Block>
+        {loading ? (
+          <CircularProgress variant="indeterminate" color="primary" size={100} className="flex mt2" />
+        ) : (
+          <>
+            <div className="my2">{t('cncInfo', { year: siteData?.cncVersion?.year ?? 2023 })}</div>
             <div>
               <FormTextField
                 control={form.control}
                 name="numberOfSessions"
                 data-testid="new-study-number-of-sessions"
-                label={labelWithYear('numberOfSessions')}
+                label={t('numberOfSessions')}
                 translation={t}
                 type="number"
                 className={styles.formTextField}
@@ -291,7 +281,7 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
                 control={form.control}
                 name="numberOfTickets"
                 data-testid="new-study-number-of-tickets"
-                label={labelWithYear('numberOfTickets')}
+                label={t('numberOfTickets')}
                 translation={t}
                 type="number"
                 className={styles.formTextField}
@@ -301,17 +291,7 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
                 control={form.control}
                 name="numberOfOpenDays"
                 data-testid="new-study-number-of-open-days"
-                label={labelWithYear('numberOfOpenDays')}
-                translation={t}
-                type="number"
-                className={styles.formTextField}
-                onBlur={onStudyCinemaUpdate}
-              />
-              <FormTextField
-                control={form.control}
-                name="distanceToParis"
-                data-testid="new-study-distance-to-paris"
-                label={t('distanceToParis')}
+                label={t('numberOfOpenDays')}
                 translation={t}
                 type="number"
                 className={styles.formTextField}
@@ -321,15 +301,23 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
                 control={form.control}
                 name="numberOfProgrammedFilms"
                 data-testid="new-study-number-of-programmed-films"
-                label={labelWithYear('numberOfProgrammedFilms')}
+                label={t('numberOfProgrammedFilms')}
                 translation={t}
                 type="number"
                 className={styles.formTextField}
                 onBlur={onStudyCinemaUpdate}
               />
             </div>
-          </Block>
-          {/* <Block title={t('openingHours')}>
+            <Box className="flex justify-start mt1">
+              <LinkButton
+                color="primary"
+                variant="contained"
+                href={`/etudes/${study.id}/comptabilisation/saisie-des-donnees`}
+              >
+                {t('goToDataEntry')}
+              </LinkButton>
+            </Box>
+            {/* <Block title={t('openingHours')}>
             <div className={classNames(styles.openingHoursContainer, 'flex-col')}>
               <WeekScheduleForm
                 label={t('openingHours')}
@@ -350,26 +338,18 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
                 />
               )}
             </div>
-            <Box className={classNames('flex', 'justify-end')}>
-              <LinkButton
-                color="primary"
-                variant="contained"
-                href={`/etudes/${study.id}/comptabilisation/saisie-des-donnees`}
-              >
-                Suivant
-              </LinkButton>
-            </Box>
           </Block> */}
-        </>
-      )}
-      {showSiteDataWarning && pendingSiteChanges && (
-        <SiteDataChangeWarningModal
-          isOpen={showSiteDataWarning}
-          onClose={handleSiteDataWarningCancel}
-          onConfirm={handleSiteDataWarningConfirm}
-          questionsBySubPost={pendingSiteChanges.questionsBySubPost}
-        />
-      )}
+          </>
+        )}
+        {showSiteDataWarning && pendingSiteChanges && (
+          <SiteDataChangeWarningModal
+            isOpen={showSiteDataWarning}
+            onClose={handleSiteDataWarningCancel}
+            onConfirm={handleSiteDataWarningConfirm}
+            questionsBySubPost={pendingSiteChanges.questionsBySubPost}
+          />
+        )}
+      </Block>
     </>
   )
 }

@@ -61,6 +61,8 @@ import {
 import { addUser, getUserApplicationSettings, getUserByEmail, getUserSourceById, UserWithAccounts } from '@/db/user'
 import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
+import { mapCncToStudySite } from '@/utils/cnc'
+import { calculateDistanceFromParis } from '@/utils/distance'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { withServerResponse } from '@/utils/serverResponse'
 import {
@@ -270,13 +272,22 @@ export const createStudyCommand = async (
               if (!organizationSite) {
                 return undefined
               }
-              return {
+
+              const cncData = organizationSite.cnc
+              const studySiteData: Prisma.StudySiteCreateManyStudyInput = {
                 siteId: site.id,
                 etp: site.etp || organizationSite.etp,
                 ca: site.ca ? site.ca * caUnit : organizationSite.ca,
                 volunteerNumber: site.volunteerNumber || organizationSite.volunteerNumber,
                 beneficiaryNumber: site.beneficiaryNumber || organizationSite.beneficiaryNumber,
               }
+
+              if (cncData) {
+                Object.assign(studySiteData, mapCncToStudySite(cncData))
+                studySiteData.cncVersionId = cncData.cncVersionId
+              }
+
+              return studySiteData
             })
             .filter((site) => site !== undefined),
         },
@@ -412,9 +423,19 @@ export const changeStudyCinema = async (studySiteId: string, cncId: string, data
       throw new Error(NOT_AUTHORIZED)
     }
 
-    // Detect changes in fields with dependencies
+    // Detect changes in fields with dependencies and calculate distanceToParis
     const currentSite = studySites[0]
     const changedFields: SiteDependentField[] = []
+    let calculatedDistanceToParis: number | undefined
+
+    // Calculate distanceToParis if CNC data with coordinates is available
+    const cncData = currentSite.site.cnc
+    if (cncData?.latitude && cncData?.longitude) {
+      calculatedDistanceToParis = calculateDistanceFromParis({
+        latitude: cncData.latitude,
+        longitude: cncData.longitude,
+      })
+    }
 
     for (const field of SITE_DEPENDENT_FIELDS) {
       if (field === 'numberOfProgrammedFilms') {
@@ -429,9 +450,24 @@ export const changeStudyCinema = async (studySiteId: string, cncId: string, data
       }
     }
 
+    // Prefill fields from CNC data if they are not already set
+    const enhancedUpdateData: Record<string, number | null | undefined> = { ...updateData }
+
+    if (cncData) {
+      // Calculate distance to Paris only if not already set (calculated once and remains fixed)
+      if (calculatedDistanceToParis !== undefined && currentSite.distanceToParis == null) {
+        enhancedUpdateData.distanceToParis = calculatedDistanceToParis
+      }
+
+      // Prefill other fields from CNC data only if they are null/undefined in current data
+      Object.assign(enhancedUpdateData, mapCncToStudySite(cncData, currentSite))
+    }
+
+    const finalUpdateData = enhancedUpdateData
+
     await updateNumberOfProgrammedFilms({ cncId, numberOfProgrammedFilms })
     await updateStudyOpeningHours(studySiteId, openingHours, openingHoursHoliday)
-    await updateStudySiteData(studySiteId, updateData)
+    await updateStudySiteData(studySiteId, finalUpdateData)
 
     // Recalculate emissions for affected emissions if dependent fields changed
     if (changedFields.length > 0 && informations.user.organizationVersionId) {

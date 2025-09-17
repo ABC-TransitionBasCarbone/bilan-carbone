@@ -1,11 +1,12 @@
 import Block from '@/components/base/Block'
+import { getEnvVar } from '@/lib/environment'
+import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import styles from './styles.module.css'
 
-const contactMail = process.env.ABC_CONTACT_MAIL
-
 const LegalNotices = () => {
+  const contactMail = getEnvVar('CONTACT_EMAIL', Environment.BC)
   const t = useTranslations('legalNotices')
   return (
     <Block>

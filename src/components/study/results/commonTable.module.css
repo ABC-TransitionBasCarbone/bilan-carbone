@@ -26,3 +26,35 @@
   margin-left: 1.5rem;
   line-height: 1.5rem;
 }
+
+.compact,
+.compact th,
+.compact td,
+.compact p {
+  font-size: 0.85rem !important;
+}
+
+.compact .expandable {
+  margin: -0.5rem;
+  padding: 0.5rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+}
+
+.compact .notExpandable {
+  line-height: 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 400;
+}
+
+.compact tbody tr:last-child .notExpandable {
+  font-weight: 600;
+}
+
+.compact td {
+  padding: 0.2rem 0.5rem;
+}
+
+.compact th {
+  padding: 0.25rem 0.5rem;
+}

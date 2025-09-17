@@ -53,6 +53,12 @@ export const OrganizationVersionWithOrganizationSelect = {
           cnc: {
             select: {
               numeroAuto: true,
+              seances: true,
+              entrees2023: true,
+              semainesActivite: true,
+              latitude: true,
+              longitude: true,
+              cncVersionId: true,
             },
           },
         },

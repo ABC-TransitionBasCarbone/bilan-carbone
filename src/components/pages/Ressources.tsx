@@ -1,54 +1,110 @@
+'use server'
+
+import { getEnvVar } from '@/lib/environment'
 import { Alert } from '@mui/material'
+import { Environment } from '@prisma/client'
+import classNames from 'classnames'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
 import RessourceLinks from '../ressources/RessourceLinks'
 import styles from './Ressources.module.css'
 
-const RessourcesPage = async () => {
-  const t = await getTranslations('ressources')
+interface Props {
+  environment: Environment
+}
 
-  const ressources = [
+interface Ressource {
+  title: string
+  links: { title: string; link?: string; downloadKey?: string; isTranslated?: boolean }[]
+}
+
+const RessourcesPage = async ({ environment }: Props) => {
+  const t = await getTranslations('ressources')
+  const contactForm = getEnvVar('CONTACT_FORM_URL', environment)
+  const faq = getEnvVar('FAQ_LINK', environment)
+  const supportEmail = getEnvVar('SUPPORT_EMAIL', environment)
+  const methodUrl = getEnvVar('METHOD_URL', environment)
+
+  const methodBC = {
+    title: t('enSavoirPlusBilan'),
+    links: [{ title: t('methodeBilanCarbone'), link: methodUrl }],
+  }
+
+  const otherResources: Ressource[] = [
     {
-      title: 'methodeAssociative',
+      title: t('questionMethodo'),
       links: [
+        { title: t('openCarbonPractice'), link: 'https://www.opencarbonpractice.com/rejoindre-la-communaute' },
         {
-          title: 'sphereAssociative',
-          link: 'https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative',
+          title: t('contacterViaFormulaire', { supportEmail }),
+          link: contactForm,
+          isTranslated: true,
         },
       ],
     },
     {
-      title: 'enSavoirPlusBilan',
-      links: [{ title: 'methodeBilanCarbone', link: 'https://www.bilancarbone-methode.com' }],
-    },
-    {
-      title: 'questionMethodo',
+      title: t('questionTechnique'),
       links: [
-        { title: 'openCarbonPractice', link: 'https://www.opencarbonpractice.com/rejoindre-la-communaute' },
-        { title: 'contacterViaFormulaire', link: 'https://abc-transitionbascarbone.fr/contact-et-hotline' },
-      ],
-    },
-    {
-      title: 'questionTechnique',
-      links: [
-        { title: 'lireLaFAQ', link: 'https://association-pour-la-transition-1.gitbook.io/bc+' },
-        { title: 'ecrireMail', link: 'mailto:support@abc-transitionbascarbone.fr' },
+        { title: t('lireLaFAQ'), link: faq },
+        {
+          title: t('ecrireMail', { supportEmail }),
+          link: `mailto:${supportEmail}`,
+          isTranslated: true,
+        },
       ],
     },
   ]
 
+  // Show BC method at the end for CUT
+  const ressources = environment === Environment.CUT ? [...otherResources, methodBC] : [methodBC, ...otherResources]
+
+  if (environment === Environment.TILT) {
+    ressources.unshift({
+      title: t('methodeAssociative'),
+      links: [
+        {
+          title: t('sphereAssociative'),
+          link: 'https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative',
+        },
+      ],
+    })
+  }
+
+  if (environment === Environment.CUT) {
+    ressources.unshift({
+      title: t('countMethods'),
+      links: [
+        {
+          title: t('countMethodLink'),
+          downloadKey: 'SCW_CUT_METHOD_KEY',
+        },
+        {
+          title: t('resilioMethodLink'),
+          downloadKey: 'SCW_RESILIO_METHOD_KEY',
+        },
+      ],
+    })
+  }
+
   return (
     <Block title={t('title')} as="h1">
-      <Alert severity="info" sx={{ mb: 2 }}>
-        {t.rich('description', {
-          br: () => <br />,
-        })}
-      </Alert>
-      <div className={styles.ressources}>
+      {environment === Environment.CUT && (
+        <Alert severity="info" className="mb2">
+          {t.rich('description', {
+            br: () => <br />,
+          })}
+        </Alert>
+      )}
+      <div className={classNames(styles.ressources, 'gapped1')}>
         {ressources.map(({ title, links }) => (
           <RessourceLinks key={title} title={title} links={links} />
         ))}
       </div>
+      {environment === Environment.CUT && (
+        <Alert severity="info" className="mt2">
+          {t('france2030')}
+        </Alert>
+      )}
     </Block>
   )
 }

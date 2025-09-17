@@ -68,6 +68,9 @@ Importer les actualités depuis un CSV :
 Importer les Donnée cartographie depuis un [CSV du CNC](https://www.cnc.fr/cinema/etudes-et-rapports/statistiques/geolocalisation-des-cinemas-actifs-en-france) :
 `npx tsx src/scripts/cnc/add.ts -f ${pathToCSVFileCNC}`
 
+Supprimer les réponses d'une question :
+`npx tsx src/scripts/questions/deleteAnswersWithCleanup.ts -q "question-intern-id-here"`
+
 ## Prisma Commands
 
 ```bash

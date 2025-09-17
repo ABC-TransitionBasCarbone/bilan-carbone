@@ -22,7 +22,12 @@
     "GHGP": "GHG Protocol",
     "ISO14069": "ISO 14069",
     "developmentFile": "⚠️ Fichier en cours de développement ⚠️",
-    "env_specific_export": "Bilan Carbone®"
+    "env_specific_export": "Bilan Carbone®",
+    "bc": {
+      "title": "Export au format Bilan Carbone®",
+      "category": "Catégorie Bilan Carbone®",
+      "emissions": "Émissions (tCO2e)"
+    }
   },
   "categorisations": {
     "Operated": "Opéré",
@@ -121,17 +126,21 @@
   },
   "ressources": {
     "title": "Ressources",
-    "description": "Le calculateur d’impact COUNT est homologué par l’ABC. Il a été construit sur la base de différentes sources de facteurs d’émission (Base Empreinte de l’ADEME, EcoInvent, Boavizta, CNC notamment). D’autres facteurs d’émission ont été spécifiquement construits dans le cadre de la construction de l’outil par Resilio (on pourra rajouter ici un lien avec la méthodo Resilio, on va vous envoyer).<br></br>Les hypothèses de calcul ont été construites à partir de :<br></br> - 15 bilans carbones complets réalisés en association avec le groupement de cinémas CINEO (ici on mettra un lien vers un dossier de presse)<br></br> - Multiples entretiens avec des parties prenantes de la salle de cinéma (fournisseurs, intégrateurs, exploitants indépendants, circuits d’exploitation etc.)\n - Visites de salles de cinéma aux typologies diverses.",
+    "description": "Le calculateur d’impact COUNT est homologué par l’ABC. Il a été construit sur la base de différentes sources de facteurs d’émission (Base Empreinte de l’ADEME, EcoInvent, Boavizta, CNC notamment). D’autres facteurs d’émission ont été spécifiquement construits dans le cadre de la construction de l’outil par Resilio.<br></br>Les hypothèses de calcul ont été construites à partir de :<br></br> - 15 bilans carbones complets réalisés en association avec le groupement de cinémas CINEO (ici on mettra un lien vers un dossier de presse)<br></br> - Multiples entretiens avec des parties prenantes de la salle de cinéma (fournisseurs, intégrateurs, exploitants indépendants, circuits d’exploitation etc.)<br></br> - Visites de salles de cinéma aux typologies diverses.",
+    "france2030": "Dans le cadre du Plan France 2030, le dispositif « Alternatives Vertes 2 », doté de 25 M€ sur 3 vagues, et opéré par la Banque des territoires (groupe Caisse des Dépôts) en lien avec le ministère de la Culture, le ministère de la Transition écologique, et le Secrétariat général pour l’investissement, vise à accélérer la transition écologique des entreprises culturelles afin d’en faire un secteur de référence en matière de responsabilité environnementale. Sur les 51 candidatures reçues pour la première vague d’« Alternatives Vertes 2 », 13 projets ont été sélectionnés dont le projet porté par CUT ! Le jury a notamment salué la forte ambition collective au service de la transition écologique du cinéma et de l’audiovisuel du projet, embrassant toute la chaîne de valeur du cinéma, avec le parrainage de personnalités charismatiques de la filière.",
     "methodeAssociative": "Pour toutes les questions sur la méthode associative :",
     "sphereAssociative": "Sphère associative",
     "enSavoirPlusBilan": "Pour en savoir plus sur la méthode Bilan Carbone® :",
     "methodeBilanCarbone": "Guide méthodologique du Bilan Carbone®",
+    "countMethods": "Pour en savoir plus sur les méthodologies de Count :",
+    "countMethodLink": "Méthodologie Count",
+    "resilioMethodLink": "Méthodologie Resilio",
     "questionMethodo": "En cas de question méthodologique :",
     "openCarbonPractice": "Open Carbon Practice",
     "contacterViaFormulaire": "Contacter directement l'ABC via le formulaire",
     "questionTechnique": "En cas de question technique ou de besoin d'un support informatique :",
     "lireLaFAQ": "Lire la FAQ",
-    "ecrireMail": "Écrire directement à support@abc-transitionbascarbone.fr"
+    "ecrireMail": "Écrire directement à {supportEmail}"
   },
   "legalNotices": {
     "profile": "Retour au profil"
@@ -166,7 +175,7 @@
       "passwordSpecialChar": "Le mot de passe doit avoir au moins un caractère spécial",
       "passwordDigit": "Le mot de passe doit avoir au moins un chiffre",
       "forgotPassword": "Mot de passe oublié ?",
-      "reset": "Réinitialiser",
+      "reset": "Confirmer",
       "error": "Veuillez verifier votre email et votre mot de passe",
       "expired": "Ce lien de réinitialisation de mot de passe a expiré",
       "backToHome": "Retour a l'accueil",
@@ -354,11 +363,10 @@
       "private": "Privée",
       "public": "Publique",
       "resultsUnit": "Unité des resultats de l'étude",
-      "numberOfSessions": "Nombre de séances (en {year})",
-      "numberOfTickets": "Nombre d'entrées (en {year})",
-      "distanceToParis": "Distance à Paris (km)",
-      "numberOfProgrammedFilms": "Nombre de films programmés (en {year})",
-      "numberOfOpenDays": "Nombre de jours d'ouverture (en {year})",
+      "numberOfSessions": "Nombre de séances",
+      "numberOfTickets": "Nombre d'entrées",
+      "numberOfProgrammedFilms": "Nombre de films programmés",
+      "numberOfOpenDays": "Nombre de jours d'ouverture",
       "openingHours": "Horaires d'ouverture",
       "openingHoursHoliday": "Horaires d'ouverture pendant les vacances scolaires",
       "clear": "Supprimer la valeur",
@@ -625,9 +633,11 @@
     "results": {
       "type": "Type",
       "post": "Poste",
+      "subPost": "Sous-poste",
       "tag": "Tag",
       "download": "Télécharger les résultats",
       "downloadPDF": "Télécharger la fiche récapitulative",
+      "downloadingPDF": "Téléchargement (au moins 15 secondes)...",
       "value": "Émissions ({unit})",
       "emissions": "Émissions",
       "uncertainty": "Incertitude",
@@ -968,6 +978,7 @@
         "actions": "Actions",
         "add": "Ajouter",
         "delete": "Supprimer",
+        "duplicate": "Dupliquer",
         "error": "Erreur lors de la mise à jour du champs",
         "next": "Sous-poste suivant",
         "previous": "Sous-poste précédent",

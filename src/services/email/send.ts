@@ -1,4 +1,4 @@
-import { EMAIL_CLIENT_CONFIGS } from '@/types/email'
+import { getEnvVar } from '@/lib/environment'
 import { Environment } from '@prisma/client'
 import ejs from 'ejs'
 import fs from 'fs'
@@ -39,12 +39,21 @@ export const sendEmail = async (
   template: string,
   templateData: Record<string, unknown>,
 ) => {
-  const config = EMAIL_CLIENT_CONFIGS[env]
+  const faq = getEnvVar('FAQ_LINK', env)
+  const support = getEnvVar('SUPPORT_EMAIL', env)
+  const from = getEnvVar('MAIL_USER', env)
+
+  const data = {
+    ...templateData,
+    faq,
+    support,
+  }
+
   const transporter = getTransporter(env)
-  const html = await getHtml({ file: template, data: templateData, env })
+  const html = await getHtml({ file: template, data, env })
   return transporter.sendMail({
     to: to.join(','),
-    from: config.mailUser,
+    from,
     subject,
     html,
     text: html.replace(/<(?:.|\n)*?>/gm, ''),

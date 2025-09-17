@@ -1,8 +1,12 @@
+import { emissionFactorMap } from '@/constants/emissionFactorMap'
 import { ID_INTERN_PREFIX_REGEX } from '@/constants/utils'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
-import { Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
+import { useState } from 'react'
+import HelpIcon from '../base/HelpIcon'
+import GlossaryModal from '../modals/GlossaryModal'
 import {
   StyledEmissionResults,
   StyledQuestionContainer,
@@ -17,6 +21,10 @@ import { FieldType } from './types/questionTypes'
 const QuestionContainer = ({ question, children, showResults, results, saveStatus }: QuestionContainerProps) => {
   const inTable = ID_INTERN_PREFIX_REGEX.test(question.idIntern) && question.type !== FieldType.TABLE
   const tResultsUnits = useTranslations('study.results.units')
+  const tGlossary = useTranslations('questions.glossary')
+  const [glossary, setGlossary] = useState('')
+  const helperText = emissionFactorMap[question.idIntern]?.helperText
+
   if (inTable) {
     return
   }
@@ -34,7 +42,10 @@ const QuestionContainer = ({ question, children, showResults, results, saveStatu
   return (
     <StyledQuestionContainer>
       <StyledQuestionHeader>
-        <StyledQuestionTitle>{question.label}</StyledQuestionTitle>
+        <Box display="flex" alignItems="center" gap={1}>
+          <StyledQuestionTitle>{question.label}</StyledQuestionTitle>
+          {helperText && <HelpIcon className="ml-2" onClick={() => setGlossary('title')} label={tGlossary('title')} />}
+        </Box>
         {saveStatus && <SaveStatusIndicator status={saveStatus} />}
       </StyledQuestionHeader>
 
@@ -47,6 +58,11 @@ const QuestionContainer = ({ question, children, showResults, results, saveStatu
           </StyledEmissionResults>
         )}
       </StyledQuestionContent>
+      {glossary && (
+        <GlossaryModal glossary="title" label="emission-factor-post" t={tGlossary} onClose={() => setGlossary('')}>
+          {helperText}
+        </GlossaryModal>
+      )}
     </StyledQuestionContainer>
   )
 }

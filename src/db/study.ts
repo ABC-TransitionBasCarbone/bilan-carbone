@@ -3,6 +3,7 @@ import { filterAllowedStudies } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { ChangeStudyCinemaCommand } from '@/services/serverFunctions/study.command'
 import { checkLevel, getAllowedLevels } from '@/services/study'
+import { mapCncToStudySite } from '@/utils/cnc'
 import { isAdminOnOrga } from '@/utils/organization'
 import { getUserRoleOnPublicStudy } from '@/utils/study'
 import { isAdmin } from '@/utils/user'
@@ -179,6 +180,12 @@ const fullStudyInclude = {
           },
         },
       },
+      cncVersion: {
+        select: {
+          id: true,
+          year: true,
+        },
+      },
     },
   },
   emissionFactorVersions: {
@@ -348,27 +355,27 @@ export const getAllowedStudyIdByAccount = async (account: UserSession) => {
   return study?.id
 }
 
-export const getAllowedStudiesByUserAndOrganization = async (account: UserSession, organizationVersionId: string) => {
+export const getAllowedStudiesByUserAndOrganization = async (user: UserSession, organizationVersionId: string) => {
   const organizationVersion = await getOrganizationVersionById(organizationVersionId)
 
-  if (!account.organizationVersionId) {
+  if (!user.organizationVersionId) {
     return []
   }
   const childOrganizations = await prismaClient.organizationVersion.findMany({
-    where: { parentId: account.organizationVersionId },
+    where: { parentId: user.organizationVersionId },
     select: { id: true },
   })
 
   const studies = await prismaClient.study.findMany({
     where: {
       organizationVersionId,
-      ...(isAdminOnOrga(account, organizationVersion as OrganizationVersionWithOrganization)
+      ...(isAdminOnOrga(user, organizationVersion as OrganizationVersionWithOrganization)
         ? {}
         : {
             OR: [
-              { allowedUsers: { some: { accountId: account.id } } },
-              { contributors: { some: { accountId: account.id } } },
-              { isPublic: true, organizationVersionId: account.organizationVersionId as string },
+              { allowedUsers: { some: { accountId: user.accountId } } },
+              { contributors: { some: { accountId: user.accountId } } },
+              { isPublic: true, organizationVersionId: user.organizationVersionId as string },
               {
                 isPublic: true,
                 organizationVersionId: {
@@ -379,7 +386,7 @@ export const getAllowedStudiesByUserAndOrganization = async (account: UserSessio
           }),
     },
   })
-  return filterAllowedStudies(account, studies)
+  return filterAllowedStudies(user, studies)
 }
 
 export const getStudyById = async (id: string, organizationVersionId: string | null) => {
@@ -485,7 +492,32 @@ export const updateStudySites = async (
       promises.push(transaction.studySite.deleteMany({ where: { id: { in: deletedSiteIds }, studyId } }))
     }
     if (newStudySites.length) {
+      const siteIds = newStudySites.map((site) => site.siteId)
+      const sitesWithCNC = await transaction.site.findMany({
+        where: { id: { in: siteIds } },
+        include: {
+          cnc: {
+            select: {
+              seances: true,
+              entrees2023: true,
+              semainesActivite: true,
+              latitude: true,
+              longitude: true,
+            },
+          },
+        },
+      })
+
       newStudySites.forEach((studySite) => {
+        const siteWithCNC = sitesWithCNC.find((s) => s.id === studySite.siteId)
+        const cncData = siteWithCNC?.cnc
+
+        const enhancedStudySite = { ...studySite }
+
+        if (cncData) {
+          Object.assign(enhancedStudySite, mapCncToStudySite(cncData, enhancedStudySite))
+        }
+
         promises.push(
           transaction.studySite.upsert({
             where: { studyId_siteId: { studyId, siteId: studySite.siteId } },
@@ -495,7 +527,7 @@ export const updateStudySites = async (
               volunteerNumber: studySite.volunteerNumber,
               beneficiaryNumber: studySite.beneficiaryNumber,
             },
-            create: studySite,
+            create: enhancedStudySite,
           }),
         )
       })
@@ -617,8 +649,19 @@ export const getStudiesSitesFromIds = async (siteIds: string[]) =>
             select: {
               id: true,
               numberOfProgrammedFilms: true,
+              latitude: true,
+              longitude: true,
+              seances: true,
+              entrees2023: true,
+              semainesActivite: true,
             },
           },
+        },
+      },
+      cncVersion: {
+        select: {
+          id: true,
+          year: true,
         },
       },
     },
@@ -710,5 +753,23 @@ export const deleteStudyMemberFromOrganization = async (accountId: string, organ
   const studies = await getAllowedStudiesByAccountIdAndOrganizationId(organizationVersionIds)
   return prismaClient.userOnStudy.deleteMany({
     where: { accountId, studyId: { in: studies.map((study) => study.id) } },
+  })
+}
+
+export const getStudiesAffectedByQuestion = async (questionIdIntern: string) => {
+  return prismaClient.study.findMany({
+    where: {
+      sites: {
+        some: {
+          studyAnswers: {
+            some: {
+              question: { idIntern: questionIdIntern },
+            },
+          },
+        },
+      },
+    },
+    select: { id: true, name: true },
+    distinct: ['id'],
   })
 }

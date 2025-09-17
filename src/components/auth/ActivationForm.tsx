@@ -1,5 +1,6 @@
 'use client'
 
+import { getEnvVar } from '@/lib/environment'
 import { activateEmail } from '@/services/serverFunctions/user'
 import { EmailCommand, EmailCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -16,14 +17,14 @@ import LoadingButton from '../base/LoadingButton'
 import { FormTextField } from '../form/TextField'
 import authStyles from './Auth.module.css'
 
-const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
-const faq = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
-
 interface Props {
   environment?: Environment
 }
 
 const ActivationForm = ({ environment = Environment.BC }: Props) => {
+  const contactMail = getEnvVar('SUPPORT_EMAIL', environment)
+  const faq = getEnvVar('FAQ_LINK', environment)
+
   const t = useTranslations('activation')
   const [submitting, setSubmitting] = useState(false)
   const [message, setMessage] = useState('')

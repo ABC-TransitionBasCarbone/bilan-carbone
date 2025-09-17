@@ -94,6 +94,27 @@ export const deleteTableRow = (tableAnswer: TableAnswer, rowId: string): TableAn
 }
 
 /**
+ * Duplicate an existing row in table
+ */
+export const duplicateTableRow = (tableAnswer: TableAnswer, rowId: string): TableAnswer => {
+  const rowToDuplicate = tableAnswer.rows.find((row) => row.id === rowId)
+
+  if (!rowToDuplicate) {
+    return tableAnswer
+  }
+
+  const duplicatedRow: TableRow = {
+    id: generateUniqueRowId(),
+    data: { ...rowToDuplicate.data },
+  }
+
+  return {
+    ...tableAnswer,
+    rows: [...tableAnswer.rows, duplicatedRow],
+  }
+}
+
+/**
  * Add a new row to table answer
  */
 export const addTableRow = (

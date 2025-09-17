@@ -216,7 +216,7 @@ const calculateEmissionSourcesDepreciation = async (
 
       const yearCount = currentYear - purchaseYear
 
-      // Calculate cumulative depreciation factor: each year adds 1/depreciationPeriod more
+      // Calculate depreciation factor
       // Year 1 - 5 : 1/5; Year 6+: 0 because already depreciated
       let depreciationFactor = 0
       if (yearCount < depreciationPeriod) {
@@ -251,14 +251,28 @@ const calculateElectromenager: TableEmissionCalculator = {
     const purchaseYear = parseInt(
       row.data['13-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner'] || '0',
     )
+    const rentedDays = parseInt(
+      row.data['14-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner'] || '0',
+    )
+
+    if (purchaseYear) {
+      return calculateEmissionSourcesDepreciation(
+        study,
+        '10-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
+        'electromenager',
+        equipmentType,
+        quantity,
+        purchaseYear,
+      )
+    }
 
     return calculateEmissionSourcesDepreciation(
       study,
       '10-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
-      'electromenager',
+      'electromenager-location',
       equipmentType,
-      quantity,
-      purchaseYear,
+      (quantity * rentedDays) / 365,
+      new Date(study.startDate).getFullYear(),
     )
   },
 }
@@ -273,15 +287,27 @@ const calculateInformatique: TableEmissionCalculator = {
   calculate: async (row, study) => {
     const equipmentType = row.data['11-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer'] || ''
     const purchaseYear = parseInt(row.data['12-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer'] || '0')
+    const rentedDays = parseInt(row.data['14-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer'] || '0')
     const quantity = parseInt(row.data['13-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer'] || '0')
+
+    if (purchaseYear) {
+      return calculateEmissionSourcesDepreciation(
+        study,
+        '10-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer',
+        'informatique',
+        equipmentType,
+        quantity,
+        purchaseYear,
+      )
+    }
 
     return calculateEmissionSourcesDepreciation(
       study,
       '10-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer',
-      'informatique',
+      'informatique-location',
       equipmentType,
-      quantity,
-      purchaseYear,
+      (quantity * rentedDays) / 365,
+      new Date(study.startDate).getFullYear(),
     )
   },
 }
@@ -409,7 +435,52 @@ const calculateDistributorMaterials: TableEmissionCalculator = {
       if (materialEmissionFactor) {
         const value = quantityMaterial * materialWeight * WEEKS_PER_YEAR
         emissionSources.push({
-          name: `distributor material - ${typeMaterial}`,
+          name: `distributor material week - ${typeMaterial}`,
+          value: value,
+          emissionFactorId: materialEmissionFactor.id,
+        })
+      }
+    }
+
+    return {
+      emissionSources,
+    }
+  },
+}
+
+/**
+ * Calculator for question: 10-Quelle quantité de matériel distributeurs recevez-vous en moyenne par mois?
+ * Formula:
+ * - Material value: quantity * material_weight * MONTHS_PER_YEAR (12)
+ * - Converts monthly reception to annual weight in kg
+ */
+const calculateDistributorMaterialsByMonth: TableEmissionCalculator = {
+  calculate: async (row, study) => {
+    const typeMaterial = row.data['11-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-mois'] || ''
+    const quantityMaterial = parseFloat(
+      row.data['12-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-mois'] || '0',
+    )
+
+    if (!typeMaterial || !quantityMaterial || quantityMaterial <= 0) {
+      return { emissionSources: [] }
+    }
+
+    const emissionFactorInfo =
+      emissionFactorMap['10-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-mois']
+    const materialFeId = emissionFactorInfo.emissionFactors?.[typeMaterial]
+    const materialWeight = emissionFactorInfo.weights?.[typeMaterial] || 1
+    const emissionSources: EmissionSourceCalculation[] = []
+
+    if (materialFeId) {
+      const materialEmissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+        materialFeId,
+        study.emissionFactorVersions.map((v) => v.importVersionId),
+      )
+
+      if (materialEmissionFactor) {
+        const value = quantityMaterial * materialWeight * MONTHS_PER_YEAR
+        emissionSources.push({
+          name: `distributor material month - ${typeMaterial}`,
           value: value,
           emissionFactorId: materialEmissionFactor.id,
         })
@@ -553,6 +624,7 @@ const tableEmissionCalculators: Record<string, TableEmissionCalculator> = {
   [SPECTATOR_SHORT_DISTANCE_DETAILS_QUESTION_ID]: calculateSpectatorMobility,
   '10-quelle-quantite-de-materiel-produisez-vous-chaque-mois': calculateMaterials,
   '10-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine': calculateDistributorMaterials,
+  '10-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-mois': calculateDistributorMaterialsByMonth,
   '10-decrivez-les-differentes-salles-du-cinema': calculateRooms,
   '10-veuillez-renseigner-les-dechets-generes-par-semaine': calculateWaste,
 }

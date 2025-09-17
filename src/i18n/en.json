@@ -22,7 +22,12 @@
     "GHGP": "GHG Protocol",
     "ISO14069": "ISO 14069",
     "developmentFile": "File under development",
-    "env_specific_export": "Bilan Carbone®"
+    "env_specific_export": "Bilan Carbone®",
+    "bc": {
+      "title": "Bilan Carbone® Equivalence",
+      "category": "Bilan Carbone® Category",
+      "emissions": "Emissions (tCO2e)"
+    }
   },
   "categorisations": {
     "Operated": "Operated",
@@ -122,16 +127,20 @@
   "ressources": {
     "title": "Resources",
     "description": "The COUNT impact calculator is certified by the ABC. It was built using various emission factor sources (ADEME's Base Empreinte, EcoInvent, Boavizta, CNC, among others). Additional emission factors were specifically developed for the tool by Resilio (a link to the Resilio methodology can be added here; we will send it to you).<br></br>The calculation assumptions were based on:<br></br> - 15 comprehensive carbon assessments carried out in partnership with the CINEO cinema group (a press kit link will be added here)<br></br> - Multiple interviews with stakeholders in the cinema sector (suppliers, integrators, independent operators, exhibition circuits, etc.)\n - Visits to cinemas of various types.",
+    "france2030": "As part of the France 2030 Plan, the 'Green Alternatives 2' initiative, endowed with €25 million over 3 waves and operated by the Banque des Territoires (Caisse des Dépôts group) in partnership with the Ministry of Culture, the Ministry of Ecological Transition, and the General Secretariat for Investment, aims to accelerate the ecological transition of cultural enterprises to make the sector a benchmark in environmental responsibility. Of the 51 applications received for the first wave of 'Green Alternatives 2', 13 projects were selected, including the one led by CUT! The jury particularly praised the strong collective ambition serving the ecological transition of cinema and audiovisual, embracing the entire value chain of cinema, with the sponsorship of charismatic personalities from the industry.",
     "methodeAssociative": "For any questions about the associative method:",
     "sphereAssociative": "Associative Sphere",
     "enSavoirPlusBilan": "To learn more about the Bilan Carbone® method:",
     "methodeBilanCarbone": "Bilan Carbone® Methodological Guide",
+    "countMethods": "For more information on Count methodologies:",
+    "countMethodLink": "Count Methodology",
+    "resilioMethodLink": "Resilio Methodology",
     "questionMethodo": "For any methodological questions:",
     "openCarbonPractice": "Open Carbon Practice",
     "contacterViaFormulaire": "Contact the ABC directly via the form",
     "questionTechnique": "For any technical questions or IT support needs:",
     "lireLaFAQ": "Read the FAQ",
-    "ecrireMail": "Write directly to support@abc-transitionbascarbone.fr"
+    "ecrireMail": "Write directly to {supportEmail}"
   },
   "legalNotices": {
     "profile": "Return to profile"
@@ -166,7 +175,7 @@
       "passwordSpecialChar": "Password should have at least one special character",
       "passwordDigit": "Password should have at least one digit",
       "forgotPassword": "Forgot password ?",
-      "reset": "Reset",
+      "reset": "Confirm",
       "error": "Please check your email and your password",
       "expired": "This password reset link has expired",
       "backToHome": "Back to home",
@@ -351,11 +360,10 @@
       "Financial": "Financial",
       "Operational": "Operational",
       "isPublicTitle": "Study visibility",
-      "numberOfSessions": "Number of sessions (in {year})",
-      "numberOfTickets": "Number of tickets (in {year})",
-      "distanceToParis": "Distance to Paris (km)",
-      "numberOfProgrammedFilms": "Number of scheduled films (in {year})",
-      "numberOfOpenDays": "Number of opening days (in {year})",
+      "numberOfSessions": "Number of sessions",
+      "numberOfTickets": "Number of tickets",
+      "numberOfProgrammedFilms": "Number of scheduled films",
+      "numberOfOpenDays": "Number of opening days",
       "openingHours": "Opening hours",
       "openingHoursHoliday": "Opening hours during school holidays",
       "clear": "Clear value",
@@ -625,9 +633,11 @@
     "results": {
       "type": "Type",
       "post": "Post",
+      "subPost": "Sub-post",
       "tag": "Tag",
       "download": "Download results",
       "downloadPDF": "Download the summary",
+      "downloadingPDF": "Downloading (at least 15 seconds)...",
       "value": "Emissions ({unit})",
       "emissions": "Emissions",
       "uncertainty": "Uncertainty",
@@ -968,6 +978,7 @@
         "actions": "Actions",
         "add": "Add",
         "delete": "Delete",
+        "duplicate": "Duplicate",
         "error": "Error while updating the field",
         "next": "Next sub-post",
         "previous": "Previous sub-post",

@@ -171,6 +171,11 @@
   text-align: justify;
 }
 
+.pdf-info-text a {
+  color: var(--mui-palette-primary-main);
+  text-decoration: underline;
+}
+
 .pdf-summary-stats {
   margin-top: 1.875rem;
   background-color: var(--mui-palette-primary-light);

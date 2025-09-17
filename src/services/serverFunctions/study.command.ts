@@ -171,7 +171,6 @@ export const ChangeStudyCinemaValidation = z.object({
   numberOfSessions: z.number({ invalid_type_error: 'invalidNumber' }).optional().nullable(),
   numberOfTickets: z.number({ invalid_type_error: 'invalidNumber' }).optional().nullable(),
   numberOfOpenDays: z.number({ invalid_type_error: 'invalidNumber' }).optional().nullable(),
-  distanceToParis: z.number({ invalid_type_error: 'invalidNumber' }).optional().nullable(),
   numberOfProgrammedFilms: z.number({ invalid_type_error: 'invalidNumber' }).optional().nullable(),
 })
 

@@ -1,9 +1,11 @@
 import { EnvironmentNames } from '@/constants/environments'
-import { sharedEmailEnv } from '@/lib/environment'
+import { getEnvVar } from '@/lib/environment'
 import { Environment } from '@prisma/client'
 import { getTranslations } from 'next-intl/server'
 import { sendEmail } from './send'
 import { getEnvResetLink } from './utils'
+
+const BASE_URL = process.env.NEXTAUTH_URL
 
 const tSubject = async (keys: string, object?: Record<string, string | number | Date>) =>
   (await getTranslations('email.subject'))(keys, object)
@@ -23,7 +25,6 @@ export const sendNewUserEmail = async (
 ) => {
   return sendEmail(env, [toEmail], await tSubject('newUser'), 'new-user', {
     link: getEnvResetLink('reset-password', token, env),
-    support: sharedEmailEnv.MAIL_USER,
     userName,
     creatorName,
   })
@@ -49,8 +50,7 @@ export const sendAddedActiveUserEmail = async (
   orga: string,
 ) => {
   return sendEmail(newEnv, [toEmail], await tSubject('addedActiveUser'), 'added-active-user', {
-    link: `${sharedEmailEnv.NEXTAUTH_URL}/login`,
-    support: sharedEmailEnv.MAIL_USER,
+    link: `${BASE_URL}/login`,
     userName,
     creatorName,
     newEnv: EnvironmentNames[newEnv],
@@ -71,7 +71,6 @@ export const sendActivationEmail = async (toEmail: string, token: string, fromRe
     fromReset ? 'activate-account-from-reset' : 'activate-account',
     {
       link: getEnvResetLink('reset-password', token, env),
-      support: sharedEmailEnv.MAIL_USER,
     },
   )
 }
@@ -83,7 +82,6 @@ export const sendActivationRequest = async (
   env: Environment = Environment.BC,
 ) => {
   return sendEmail(env, toEmailList, await tSubject('activationRequest'), 'activation-request', {
-    support: sharedEmailEnv.MAIL_USER,
     emailToActivate,
     userToActivate,
   })
@@ -100,11 +98,11 @@ export const sendUserOnStudyInvitationEmail = async (
   env: Environment,
 ) => {
   return sendEmail(env, [toEmail], await tSubject('userOnStudyInvitation', { studyName }), 'user-on-study-invitation', {
-    link: sharedEmailEnv.NEXTAUTH_URL,
+    link: BASE_URL,
     userName,
     studyName,
     studyId,
-    studyLink: `${sharedEmailEnv.NEXTAUTH_URL}/etudes/${studyId}`,
+    studyLink: `${BASE_URL}/etudes/${studyId}`,
     organizationName,
     creatorName,
     role: roleOnStudy,
@@ -130,10 +128,9 @@ export const sendNewUserOnStudyInvitationEmail = async (
       link: getEnvResetLink('reset-password', token, env),
       studyName,
       studyId,
-      studyLink: `${sharedEmailEnv.NEXTAUTH_URL}/etudes/${studyId}`,
+      studyLink: `${BASE_URL}/etudes/${studyId}`,
       organizationName,
       creatorName,
-      support: sharedEmailEnv.MAIL_USER,
       role: roleOnStudy,
     },
   )
@@ -149,11 +146,11 @@ export const sendContributorInvitationEmail = async (
   env: Environment,
 ) => {
   return sendEmail(env, [toEmail], await tSubject('contributorInvitation', { studyName }), 'contributor-invitation', {
-    link: sharedEmailEnv.NEXTAUTH_URL,
+    link: BASE_URL,
     userName,
     studyName,
     studyId,
-    studyLink: `${sharedEmailEnv.NEXTAUTH_URL}/etudes/${studyId}`,
+    studyLink: `${BASE_URL}/etudes/${studyId}`,
     organizationName,
     creatorName,
   })
@@ -177,16 +174,16 @@ export const sendNewContributorInvitationEmail = async (
       link: getEnvResetLink('reset-password', token, env),
       studyName,
       studyId,
-      studyLink: `${sharedEmailEnv.NEXTAUTH_URL}/etudes/${studyId}`,
+      studyLink: `${BASE_URL}/etudes/${studyId}`,
       organizationName,
       creatorName,
-      support: sharedEmailEnv.MAIL_USER,
     },
   )
 }
 
 export const sendAddedUsersByFile = async (results: Record<string, string>[], env: Environment) => {
-  return sendEmail(env, [sharedEmailEnv.MAIL_USER], await tSubject('addedUsersByFile'), 'authorization-import-users', {
+  const support = getEnvVar('SUPPORT_EMAIL', env)
+  return sendEmail(env, [support], await tSubject('addedUsersByFile'), 'authorization-import-users', {
     results,
   })
 }

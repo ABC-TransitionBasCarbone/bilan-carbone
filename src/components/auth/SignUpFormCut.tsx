@@ -1,6 +1,7 @@
 'use client'
 
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { getEnvVar } from '@/lib/environment'
 import { getEnvRoute } from '@/services/email/utils'
 import { getAllCNCs } from '@/services/serverFunctions/cnc'
 import { signUpWithSiretOrCNC } from '@/services/serverFunctions/user'
@@ -20,10 +21,10 @@ import { FormAutocomplete } from '../form/Autocomplete'
 import { FormTextField } from '../form/TextField'
 import authStyles from './Auth.module.css'
 
-const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
-const faq = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
-
 const SignUpFormCut = () => {
+  const contactMail = getEnvVar('SUPPORT_EMAIL', Environment.CUT)
+  const faq = getEnvVar('FAQ_LINK', Environment.CUT)
+
   const t = useTranslations('signupCut')
   const tForm = useTranslations('login.form')
   const [submitting, setSubmitting] = useState(false)

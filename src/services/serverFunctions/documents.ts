@@ -20,6 +20,18 @@ const getDependencyMatrixSampleDocumentUrl = async () =>
     return res.success ? res.data : ''
   })
 
+export const getDocumentUrl = async (documentKey: string) =>
+  withServerResponse('getDocumentUrl', async () => {
+    const key = process.env[documentKey]
+
+    if (!key) {
+      throw new Error('Document key not found')
+    }
+
+    const res = await getFileUrlFromBucket(key)
+    return res.success ? res.data : ''
+  })
+
 export const getDocumentSample = async (studyId: string, documentCategory?: DocumentCategory) =>
   withServerResponse('getDocumentSample', async () => {
     let res

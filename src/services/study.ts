@@ -11,9 +11,9 @@ import { canBeValidated, getEmissionResults, getEmissionSourcesTotalCo2, getStan
 import { download } from './file'
 import { hasAccessToBcExport } from './permissions/environment'
 import { StudyWithoutDetail } from './permissions/study'
-import { environmentPostMapping, Post, subPostsByPost } from './posts'
+import { convertCountToBilanCarbone, environmentPostMapping, Post, subPostsByPost } from './posts'
 import { computeBegesResult } from './results/beges'
-import { computeResultsByPost, computeResultsByTag } from './results/consolidated'
+import { computeResultsByPost, computeResultsByTag, ResultsByPost } from './results/consolidated'
 import { EmissionFactorWithMetaData, getEmissionFactorsByIds } from './serverFunctions/emissionFactor'
 import { prepareExcel } from './serverFunctions/file'
 import { getUserSettings } from './serverFunctions/user'
@@ -345,6 +345,20 @@ const getFormattedHeadersForEnv = (
   )
 }
 
+const handleLine = (
+  headersForEnv: string[],
+  result: ResultsByPost,
+  tQuality: ReturnType<typeof useTranslations>,
+  resultsUnits: StudyResultUnit,
+) => {
+  const resultLine = []
+  if (headersForEnv.includes('uncertainty')) {
+    resultLine.push(result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '')
+  }
+
+  return [...resultLine, Math.round((result.value ?? 0) / STUDY_UNIT_VALUES[resultsUnits])]
+}
+
 export const formatConsolidatedStudyResultsForExport = (
   study: FullStudy,
   siteList: { name: string; id: string }[],
@@ -382,12 +396,15 @@ export const formatConsolidatedStudyResultsForExport = (
     )
 
     for (const result of resultList) {
-      const resultLine = [tPost(result.post) ?? '']
+      dataForExport.push([result.label, '', ...handleLine(headersForEnv, result, tQuality, study.resultsUnit)])
 
-      if (headersForEnv.includes('uncertainty')) {
-        resultLine.push(result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '')
+      for (const subPostResult of result.children) {
+        dataForExport.push([
+          '',
+          subPostResult.label,
+          ...handleLine(headersForEnv, subPostResult, tQuality, study.resultsUnit),
+        ])
       }
-      dataForExport.push([...resultLine, (result.value ?? 0) / STUDY_UNIT_VALUES[study.resultsUnit]])
     }
 
     dataForExport.push([])
@@ -495,6 +512,45 @@ export const formatBegesStudyResultsForExport = (
   return { name: tExport('Beges'), data: dataForExport, options: sheetOptions }
 }
 
+export const formatBCResultsForCutExport = (
+  study: FullStudy,
+  siteList: { name: string; id: string }[],
+  tExport: ReturnType<typeof useTranslations>,
+  tPost: ReturnType<typeof useTranslations>,
+  tStudy: ReturnType<typeof useTranslations>,
+  studyUnitValues: Record<string, number>,
+  environment: Environment,
+) => {
+  const data: (string | number)[][] = []
+
+  data.push([tExport('bc.disclaimerExcel')])
+  data.push([])
+
+  for (const site of siteList) {
+    const { computedResultsWithDep } = getResultsValues(study, tPost, site.id, false, environment, tStudy)
+    const bilanCarboneEquivalent = convertCountToBilanCarbone(computedResultsWithDep)
+
+    data.push([site.name])
+    data.push([tExport('bc.category'), tExport('bc.emissions')])
+
+    let siteTotal = 0
+    Object.entries(bilanCarboneEquivalent).forEach(([result, value]) => {
+      const roundedValue = Math.round(value / studyUnitValues[study.resultsUnit])
+      data.push([tPost(result), roundedValue])
+      siteTotal += roundedValue
+    })
+    data.push(['Total', siteTotal])
+  }
+
+  data.push([])
+
+  return {
+    name: tExport('bc.title'),
+    data,
+    options: { '!cols': [{ wch: 35 }, { wch: 20 }] },
+  }
+}
+
 export const downloadStudyResults = async (
   study: FullStudy,
   rules: ExportRule[],
@@ -572,6 +628,10 @@ export const downloadStudyResults = async (
         validatedEmissionSourcesOnly,
       ),
     )
+  }
+
+  if (environment === Environment.CUT) {
+    data.push(formatBCResultsForCutExport(study, siteList, tExport, tPost, tStudy, STUDY_UNIT_VALUES, environment))
   }
 
   const buffer = await prepareExcel(data)

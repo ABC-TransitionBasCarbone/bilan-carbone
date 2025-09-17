@@ -5,13 +5,21 @@ import { useTranslations } from 'next-intl'
 import { useEffect, useMemo } from 'react'
 import { FieldError } from 'react-hook-form'
 import { useAutoSave } from '../../hooks/useAutoSave'
+import { useBeforeUnload } from '../../hooks/useBeforeUnload'
 import { useConditionalVisibility } from '../../hooks/useConditionalVisibility'
 import { useDynamicForm } from '../../hooks/useDynamicForm'
 import styles from './DynamicForm.module.css'
 import DynamicFormField from './DynamicFormField'
 import { DynamicFormProps } from './types/formTypes'
 
-const DynamicForm = ({ questions, studyId, initialAnswers, isLoading = false, studySiteId }: DynamicFormProps) => {
+const DynamicForm = ({
+  questions,
+  studyId,
+  initialAnswers,
+  isLoading = false,
+  studySiteId,
+  studyStartDate,
+}: DynamicFormProps) => {
   const tQuestions = useTranslations('emissionFactors.post.cutQuestions')
 
   const {
@@ -31,6 +39,8 @@ const DynamicForm = ({ questions, studyId, initialAnswers, isLoading = false, st
       initialAnswers.forEach((answer) => {
         if (answer.response) {
           autoSave.initializeFieldStatus(answer.questionId, 'saved')
+          // Set the initial value to compare against future changes
+          autoSave.setInitialValue(answer.questionId, answer.response)
         }
       })
       updateDefaultValues(initialAnswers)
@@ -48,6 +58,11 @@ const DynamicForm = ({ questions, studyId, initialAnswers, isLoading = false, st
   const hasAutoSaveErrors = useMemo(() => {
     return visibleQuestions.some((q) => autoSave.getFieldStatus(q.idIntern).status === 'error')
   }, [visibleQuestions, autoSave])
+
+  // Use native browser beforeunload warning for unsaved changes
+  useBeforeUnload({
+    when: autoSave.hasUnsavedChanges(),
+  })
 
   return (
     <Box className="dynamic-form">
@@ -79,6 +94,7 @@ const DynamicForm = ({ questions, studyId, initialAnswers, isLoading = false, st
                 watch={watch}
                 formErrors={errors}
                 setValue={setValue}
+                studyStartDate={studyStartDate}
               />
             </Box>
           )
