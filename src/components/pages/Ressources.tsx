@@ -100,6 +100,11 @@ const RessourcesPage = async ({ environment }: Props) => {
           <RessourceLinks key={title} title={title} links={links} />
         ))}
       </div>
+      {environment === Environment.CUT && (
+        <Alert severity="info" className="mt2">
+          {t('france2030')}
+        </Alert>
+      )}
     </Block>
   )
 }
