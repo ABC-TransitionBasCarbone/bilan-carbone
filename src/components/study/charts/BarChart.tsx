@@ -6,8 +6,7 @@ import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import styles from './BarChart.module.css'
 
-import { BasicTypeCharts, formatValueAndUnit, getChildColor, getLabel, getParentColor } from '@/utils/charts'
-import { STUDY_UNIT_VALUES } from '@/utils/study'
+import { BasicTypeCharts, formatValueAndUnit, processBarChartData } from '@/utils/charts'
 import { StudyResultUnit } from '@prisma/client'
 
 const BAR_CHART_CONSTANTS = {
@@ -44,60 +43,11 @@ const BarChart = <T extends BasicTypeCharts>({
   const tResults = useTranslations('study.results')
   const tUnits = useTranslations('study.results.units')
   const tPost = useTranslations('emissionFactors.post')
-  const isTag = type === 'tag'
   const theme = useTheme()
 
   const { barData, seriesData } = useMemo(() => {
-    const filteredData = results.filter((result) => result.post !== 'total' && result.label !== 'total')
-
-    if (!showSubLevel) {
-      // For tags, if showSubLevel is false, we only show the children tags and not the tag parents
-      const data = isTag ? filteredData.flatMap((result) => result.children) : filteredData
-      return {
-        barData: {
-          labels: data.map((item) => getLabel(type, item, tPost)),
-          values: data.map(({ value }) => value / STUDY_UNIT_VALUES[resultsUnit]),
-          colors: data.map((item, index) =>
-            isTag ? getChildColor(type, theme, item) : getParentColor(type, theme, item, index),
-          ),
-        },
-        seriesData: [],
-      }
-    }
-
-    const parentLabels = filteredData.map((item) => getLabel(type, item, tPost))
-
-    const seriesData = filteredData.reduce(
-      (acc, parent, parentIndex) => {
-        parent.children.forEach((child) => {
-          if (child.value > 0) {
-            const existingSeries = acc.find((series) => series.label === child.label)
-            const value = child.value / STUDY_UNIT_VALUES[resultsUnit]
-
-            if (existingSeries) {
-              existingSeries.data[parentIndex] = value
-            } else {
-              const data = new Array(filteredData.length).fill(0)
-              data[parentIndex] = value
-              acc.push({
-                label: child.label,
-                data,
-                color: getChildColor(type, theme, child),
-                stack: 'sublevel',
-              })
-            }
-          }
-        })
-        return acc
-      },
-      [] as Array<{ label: string; data: number[]; color: string; stack: string }>,
-    )
-
-    return {
-      barData: { labels: parentLabels, values: [], colors: [] },
-      seriesData,
-    }
-  }, [results, showSubLevel, isTag, type, tPost, resultsUnit, theme])
+    return processBarChartData(results, type, showSubLevel, theme, resultsUnit, tPost)
+  }, [results, type, showSubLevel, theme, resultsUnit, tPost])
 
   const getBarLabel = (item: { value: number | null }) => (showLabelsOnBars ? formatValueAndUnit(item.value) : '')
 

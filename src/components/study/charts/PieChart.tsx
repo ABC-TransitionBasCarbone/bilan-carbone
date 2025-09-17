@@ -1,14 +1,13 @@
 'use client'
 
-import { BasicTypeCharts, formatValueAndUnit, getChildColor, getParentColor } from '@/utils/charts'
+import { BasicTypeCharts, formatValueAndUnit, processPieChartData } from '@/utils/charts'
 import { formatNumber } from '@/utils/number'
-import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { Typography, useMediaQuery, useTheme } from '@mui/material'
 import { PieChart as MuiPieChart, PieChartProps } from '@mui/x-charts'
 import { StudyResultUnit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import styles from './PieChart.module.css'
 
 const PIE_CHART_CONSTANTS = {
@@ -52,40 +51,9 @@ const PieChart = <T extends BasicTypeCharts>({
   const theme = useTheme()
   const noSpaceForLegend = useMediaQuery(theme.breakpoints.between('lg', 'xl')) && type === 'tag'
 
-  const formatData = useCallback(
-    (item: Omit<BasicTypeCharts, 'children'>, isParent: boolean, index?: number) => {
-      const convertedValue = item.value / STUDY_UNIT_VALUES[resultsUnit]
-
-      return {
-        label: item.label,
-        value: convertedValue,
-        color: isParent ? getParentColor(type, theme, item, index) : getChildColor(type, theme, item),
-      }
-    },
-    [theme, resultsUnit, type],
-  )
-
   const { innerRingData, outerRingData } = useMemo(() => {
-    const childrenData = results
-      .flatMap((result) => result.children)
-      .map((child) => formatData(child, false))
-      .filter((computeResult) => computeResult.value > 0)
-
-    if (type === 'tag' && !showSubLevel) {
-      return { innerRingData: childrenData, outerRingData: [] }
-    }
-
-    const filteredResults = results.filter((result) => result.post !== 'total' && result.label !== 'total')
-    const innerData = filteredResults
-      .map((result, index) => formatData(result, true, index))
-      .filter((computeResult) => computeResult.value > 0)
-
-    if (!showSubLevel) {
-      return { innerRingData: innerData, outerRingData: [] }
-    }
-
-    return { innerRingData: innerData, outerRingData: childrenData }
-  }, [type, showSubLevel, results, formatData])
+    return processPieChartData(results, type, showSubLevel, theme, resultsUnit)
+  }, [type, showSubLevel, results, theme, resultsUnit])
 
   const series = useMemo(() => {
     const seriesArray = []
