@@ -14,25 +14,6 @@
   margin-bottom: 2rem !important;
 }
 
-.chartContainer {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-}
-
-.legend {
-  display: flex;
-  flex-direction: column;
-  padding-right: 2rem;
-}
-
-.legendItem {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.25rem 0;
-}
-
 .legendColor {
   width: 1rem;
   height: 1rem;

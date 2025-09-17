@@ -6,6 +6,7 @@ import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { Typography, useMediaQuery, useTheme } from '@mui/material'
 import { PieChart as MuiPieChart, PieChartProps } from '@mui/x-charts'
 import { StudyResultUnit } from '@prisma/client'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo } from 'react'
 import styles from './PieChart.module.css'
@@ -150,12 +151,12 @@ const PieChart = <T extends BasicTypeCharts>({
 
   return (
     <div className={styles.pieChart}>
-      <div className={styles.chartContainer}>
+      <div className={classNames('flex-cc', 'gapped2')}>
         <MuiPieChart series={series} height={height} hideLegend {...pieChartProps} />
         {legendData.length > 0 && !noSpaceForLegend && (
-          <div className={styles.legend}>
+          <div className={classNames('flex-col', 'pr2')}>
             {legendData.map((item, index) => (
-              <div key={index} className={styles.legendItem}>
+              <div key={index} className={classNames('align-center', 'gapped1', 'py025')}>
                 <div className={styles.legendColor} style={{ backgroundColor: item.color }} />
                 <Typography variant="body2" className={styles.legendLabel}>
                   {item.label}

@@ -132,7 +132,7 @@ const BarChart = <T extends BasicTypeCharts>({
           seriesData.length > 0
             ? seriesData.map((series, index) => ({
                 data: series.data,
-                valueFormatter: (value) => formatValueAndUnit(value),
+                valueFormatter: (value) => (value && value > 0 ? formatValueAndUnit(value) : null),
                 label: series.label,
                 stack: series.stack,
                 color: series.color,
