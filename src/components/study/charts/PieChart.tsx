@@ -52,65 +52,40 @@ const PieChart = <T extends BasicTypeCharts>({
   const theme = useTheme()
   const noSpaceForLegend = useMediaQuery(theme.breakpoints.between('lg', 'xl')) && type === 'tag'
 
-  const formatParentData = useCallback(
-    (item: T, index?: number) => {
+  const formatData = useCallback(
+    (item: Omit<BasicTypeCharts, 'children'>, isParent: boolean, index?: number) => {
       const convertedValue = item.value / STUDY_UNIT_VALUES[resultsUnit]
 
       return {
         label: item.label,
         value: convertedValue,
-        color: getParentColor(type, theme, item, index),
-      }
-    },
-    [theme, resultsUnit, type],
-  )
-
-  const formatChildData = useCallback(
-    (child: Omit<BasicTypeCharts, 'children'>) => {
-      const convertedValue = child.value / STUDY_UNIT_VALUES[resultsUnit]
-
-      return {
-        label: child.label,
-        value: convertedValue,
-        color: getChildColor(type, theme, child),
+        color: isParent ? getParentColor(type, theme, item, index) : getChildColor(type, theme, item),
       }
     },
     [theme, resultsUnit, type],
   )
 
   const { innerRingData, outerRingData } = useMemo(() => {
+    const childrenData = results
+      .flatMap((result) => result.children)
+      .map((child) => formatData(child, false))
+      .filter((computeResult) => computeResult.value > 0)
+
     if (type === 'tag' && !showSubLevel) {
-      const childrenData = results
-        .flatMap((result) => result.children)
-        .map((child) => formatChildData(child))
-        .filter((computeResult) => computeResult.value > 0)
       return { innerRingData: childrenData, outerRingData: [] }
     }
 
     const filteredResults = results.filter((result) => result.post !== 'total' && result.label !== 'total')
     const innerData = filteredResults
-      .map((result, index) => formatParentData(result, index))
+      .map((result, index) => formatData(result, true, index))
       .filter((computeResult) => computeResult.value > 0)
 
     if (!showSubLevel) {
       return { innerRingData: innerData, outerRingData: [] }
     }
 
-    const outerData: Array<{ label: string; value: number; color: string }> = []
-
-    filteredResults.forEach((result) => {
-      if (result.children && result.children.length > 0) {
-        result.children.forEach((child) => {
-          const formattedChild = formatChildData(child)
-          if (formattedChild.value > 0) {
-            outerData.push(formattedChild)
-          }
-        })
-      }
-    })
-
-    return { innerRingData: innerData, outerRingData: outerData }
-  }, [type, showSubLevel, results, formatChildData, formatParentData])
+    return { innerRingData: innerData, outerRingData: childrenData }
+  }, [type, showSubLevel, results, formatData])
 
   const series = useMemo(() => {
     const seriesArray = []
