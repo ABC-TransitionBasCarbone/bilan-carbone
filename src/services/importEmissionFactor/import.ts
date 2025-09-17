@@ -435,6 +435,9 @@ const isSourceForEnv = (envVar: Environment): Import[] => {
   }
   return value
     .split(',')
-    .map((name) => (Import as any)[name.trim()])
+    .map((name) => {
+      const key = name.trim() as keyof typeof Import
+      return Import[key]
+    })
     .filter((v): v is Import => !!v)
 }
