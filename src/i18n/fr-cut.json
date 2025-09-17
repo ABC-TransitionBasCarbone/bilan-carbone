@@ -174,7 +174,8 @@
     }
   },
   "ressources": {
-    "contacterViaFormulaire": "Écrire directement à {supportEmail}"
+    "contacterViaFormulaire": "Écrire directement à {supportEmail}",
+    "enSavoirPlusBilan": "Pour aller plus loin que le calcul d'empreinte simplifiée proposé par Count :"
   },
   "questions": {
     "glossary": {

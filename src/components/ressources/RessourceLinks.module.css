@@ -1,8 +1,6 @@
 .card {
   border: 2px solid var(--mui-palette-info-main);
   border-radius: 1rem;
-  width: 25rem;
-  margin: 0.3rem;
 }
 
 .cardContent {
@@ -15,6 +13,14 @@
 }
 
 .cardLinks {
-  height: 100%;
   padding: 0.7rem;
+}
+
+.linkButton {
+  background: none;
+  border: none;
+  color: #0000ee;
+  text-decoration: underline;
+  cursor: pointer;
+  font: inherit;
 }
