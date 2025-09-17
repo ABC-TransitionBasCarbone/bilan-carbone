@@ -101,7 +101,7 @@ const RessourcesPage = async ({ environment }: Props) => {
         ))}
       </div>
       {environment === Environment.CUT && (
-        <Alert severity="info" className="mb2">
+        <Alert severity="info" className="mt2">
           {t('france2030')}
         </Alert>
       )}
