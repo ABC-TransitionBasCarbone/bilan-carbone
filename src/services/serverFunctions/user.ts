@@ -578,7 +578,8 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
     }
 
     let organizationVersion = null
-    if (siretOrCNC.length > 6) {
+    if (siretOrCNC.length > 8) {
+      // A CNC number is 8 numbers max
       if (environment === Environment.TILT && !(await isValidAssociationSiret(siretOrCNC))) {
         throw new Error(NOT_ASSOCIATION_SIRET)
       }
@@ -588,6 +589,7 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
       if (environment === Environment.CUT && !organization?.id) {
         companyName = (await getCompanyName(siretOrCNC)) || ''
         if (companyName === '') {
+          console.error('Company name not found for siretOrCNC:', siretOrCNC)
           throw new Error(UNKNOWN_CNC)
         }
       }
@@ -605,6 +607,7 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
       if (!organizationVersion) {
         const CNC = await findCncByCncCode(siretOrCNC)
         if (!CNC) {
+          console.error('CNC code not found for siretOrCNC:', siretOrCNC)
           throw new Error(UNKNOWN_CNC)
         }
         organizationVersion = await createOrganizationWithVersion({ name: CNC.nom || '' }, { environment: environment })
