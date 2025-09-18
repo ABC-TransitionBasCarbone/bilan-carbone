@@ -76,7 +76,7 @@ import {
   NOT_ASSOCIATION_SIRET,
   NOT_AUTHORIZED,
   REQUEST_SENT,
-  UNKNOWN_CNC,
+  UNKNOWN_SIRET,
 } from '../permissions/check'
 import { canAddMember, canChangeRole, canDeleteMember, canEditSelfRole } from '../permissions/user'
 import { getDeactivableFeatureRestrictions } from './deactivableFeatures'
@@ -578,39 +578,17 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
     }
 
     let organizationVersion = null
-    if (siretOrCNC.length > 8) {
-      // A CNC number is 8 numbers max
-      if (environment === Environment.TILT && !(await isValidAssociationSiret(siretOrCNC))) {
-        throw new Error(NOT_ASSOCIATION_SIRET)
-      }
 
-      organization = await getRawOrganizationBySiret(siretOrCNC)
-      let companyName = ''
-      if (environment === Environment.CUT && !organization?.id) {
-        companyName = (await getCompanyName(siretOrCNC)) || ''
-        if (companyName === '') {
-          console.error('Company name not found for siretOrCNC:', siretOrCNC)
-          throw new Error(UNKNOWN_CNC)
-        }
-      }
-      organizationVersion = organization?.id
-        ? await getOrganizationVersionByOrganizationIdAndEnvironment(organization.id, environment)
-        : await createOrganizationWithVersion(
-            { wordpressId: siretOrCNC, name: companyName },
-            { environment: environment },
-          )
-    } else {
+    const CNC = await findCncByCncCode(siretOrCNC)
+    if (CNC && environment === Environment.CUT) {
       organization = await getRawOrganizationBySiteCNC(siretOrCNC)
       organizationVersion = organization?.id
         ? await getOrganizationVersionByOrganizationIdAndEnvironment(organization.id, environment)
         : null
+
       if (!organizationVersion) {
-        const CNC = await findCncByCncCode(siretOrCNC)
-        if (!CNC) {
-          console.error('CNC code not found for siretOrCNC:', siretOrCNC)
-          throw new Error(UNKNOWN_CNC)
-        }
         organizationVersion = await createOrganizationWithVersion({ name: CNC.nom || '' }, { environment: environment })
+
         await addSite({
           name: CNC.nom || '',
           postalCode: CNC.codeInsee || '',
@@ -626,6 +604,29 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
           organization: { connect: { id: organizationVersion.organizationId } },
         })
       }
+    } else {
+      if (environment === Environment.TILT && !(await isValidAssociationSiret(siretOrCNC))) {
+        throw new Error(NOT_ASSOCIATION_SIRET)
+      }
+
+      organization = await getRawOrganizationBySiret(siretOrCNC)
+
+      let companyName = ''
+      if (environment === Environment.CUT && !organization?.id) {
+        companyName = (await getCompanyName(siretOrCNC)) || ''
+
+        if (companyName === '') {
+          console.error('Company name not found for siretOrCNC:', siretOrCNC)
+          throw new Error(UNKNOWN_SIRET)
+        }
+      }
+
+      organizationVersion = organization?.id
+        ? await getOrganizationVersionByOrganizationIdAndEnvironment(organization.id, environment)
+        : await createOrganizationWithVersion(
+            { wordpressId: siretOrCNC, name: companyName },
+            { environment: environment },
+          )
     }
 
     if (!organizationVersion) {
@@ -636,15 +637,18 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
       role: organization?.id ? Role.DEFAULT : Role.ADMIN,
       organizationVersion: { connect: { id: organizationVersion.id } },
     })
+
     if (organization?.id) {
       const createdAccount = (await getAccountById(account.id || '')) as AccountWithUser
       const accounts = await getAccountFromUserOrganization(accountWithUserToUserSession(createdAccount))
+
       await sendActivationRequest(
         accounts.filter((a) => a.role === Role.GESTIONNAIRE || a.role === Role.ADMIN).map((a) => a.user.email),
         email.toLowerCase(),
         `${user.firstName} ${user.lastName}`,
         environment,
       )
+
       return REQUEST_SENT
     } else {
       await validateUser(account.id)

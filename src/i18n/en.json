@@ -214,6 +214,7 @@
     "validate": "Validate",
     "clear": "Clear value",
     "Unknown CNC": "The CNC number you entered is not recognized. Please check it and try again.",
+    "Unknown SIRET": "The Siret you entered is not recognized. Please check it and try again.",
     "Not authorized": "This email is already used for CUT or there's an issue with the account creation. Please see <link>the FAQ</link> or <support>contact support</support> if you think this is an error.",
     "Request sent": "A request has been sent to your colleagues",
     "Email sent": "You will receive an email to finish your account validation.",
