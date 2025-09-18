@@ -579,32 +579,46 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
 
     let organizationVersion = null
 
-    const CNC = await findCncByCncCode(siretOrCNC)
-    if (CNC && environment === Environment.CUT) {
-      organization = await getRawOrganizationBySiteCNC(siretOrCNC)
-      organizationVersion = organization?.id
-        ? await getOrganizationVersionByOrganizationIdAndEnvironment(organization.id, environment)
-        : null
+    if (environment === Environment.CUT) {
+      const CNC = await findCncByCncCode(siretOrCNC)
+      if (CNC) {
+        console.log('cnc', CNC)
 
-      if (!organizationVersion) {
-        organizationVersion = await createOrganizationWithVersion({ name: CNC.nom || '' }, { environment: environment })
+        organization = await getRawOrganizationBySiteCNC(siretOrCNC)
+        organizationVersion = organization?.id
+          ? await getOrganizationVersionByOrganizationIdAndEnvironment(organization.id, environment)
+          : null
 
-        await addSite({
-          name: CNC.nom || '',
-          postalCode: CNC.codeInsee || '',
-          city: CNC.commune || '',
-          cnc: {
-            connectOrCreate: {
-              create: {},
-              where: {
-                id: CNC.id,
+        if (!organizationVersion) {
+          organizationVersion = await createOrganizationWithVersion(
+            { name: CNC.nom || '' },
+            { environment: environment },
+          )
+
+          await addSite({
+            name: CNC.nom || '',
+            postalCode: CNC.codeInsee || '',
+            city: CNC.commune || '',
+            cnc: {
+              connectOrCreate: {
+                create: {},
+                where: {
+                  id: CNC.id,
+                },
               },
             },
-          },
-          organization: { connect: { id: organizationVersion.organizationId } },
-        })
+            organization: { connect: { id: organizationVersion.organizationId } },
+          })
+        }
       }
-    } else {
+    }
+
+    if (!organizationVersion && siretOrCNC.length < 9) {
+      // Too small to be a SIRET or even SIREN and not a CNC in our DB
+      throw new Error(UNKNOWN_SIRET_OR_CNC)
+    }
+
+    if (!organizationVersion) {
       if (environment === Environment.TILT && !(await isValidAssociationSiret(siretOrCNC))) {
         throw new Error(NOT_ASSOCIATION_SIRET)
       }
@@ -628,6 +642,9 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
             { environment: environment },
           )
     }
+
+    console.log('organizationVersion', organizationVersion)
+    console.log('organization', organization)
 
     if (!organizationVersion) {
       throw new Error(NOT_AUTHORIZED)
