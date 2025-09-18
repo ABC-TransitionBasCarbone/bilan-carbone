@@ -76,7 +76,7 @@ describe('charts utils function', () => {
     })
   })
 
-  describe('getColor', () => {
+  describe('getPostColor', () => {
     test('should return provided color if exists', () => {
       const themeColors = {
         palette: { primary: { light: '#0000FF' } },
@@ -325,6 +325,58 @@ describe('charts utils function', () => {
       expect(result.innerRingData[0].label).toBe('Tag Family')
       expect(result.outerRingData.map((item) => item.label)).toEqual(['Tag A', 'Tag B'])
     })
+
+    test('should process multiple posts without sublevel', () => {
+      const multiplePostsData = [
+        createPostData({
+          value: 2000,
+          label: 'Alimentation',
+          post: Post.Alimentation,
+        }),
+        createPostData({
+          value: 1500,
+          label: 'Transport',
+          post: Post.Deplacements,
+        }),
+      ]
+
+      const result = processPieChartData(multiplePostsData, 'post', false, theme, StudyResultUnit.K)
+
+      expect(result.innerRingData).toHaveLength(2)
+      expect(result.outerRingData).toHaveLength(0)
+      expect(result.innerRingData.map((item) => item.label)).toEqual(['Alimentation', 'Transport'])
+      expect(result.innerRingData.map((item) => item.value)).toEqual([2000, 1500])
+    })
+
+    test('should process multiple posts with sublevel', () => {
+      const multiplePostsData = [
+        createPostData({
+          value: 2000,
+          label: 'Alimentation',
+          post: Post.Alimentation,
+          children: [
+            { value: 1200, label: 'Fossile', post: SubPost.CombustiblesFossiles },
+            { value: 800, label: 'Organic' },
+          ],
+        }),
+        createPostData({
+          value: 1500,
+          label: 'Transport',
+          post: Post.Deplacements,
+          children: [
+            { value: 900, label: 'Car' },
+            { value: 600, label: 'Plane' },
+          ],
+        }),
+      ]
+
+      const result = processPieChartData(multiplePostsData, 'post', true, theme, StudyResultUnit.K)
+
+      expect(result.innerRingData).toHaveLength(2)
+      expect(result.outerRingData).toHaveLength(4)
+      expect(result.innerRingData.map((item) => item.label)).toEqual(['Alimentation', 'Transport'])
+      expect(result.outerRingData.map((item) => item.label)).toEqual(['Fossile', 'Organic', 'Car', 'Plane'])
+    })
   })
 
   describe('Two-level chart - processPieChartData for multiple tag families', () => {
@@ -372,6 +424,33 @@ describe('charts utils function', () => {
       expect(result.innerRingData.map((item) => item.label)).toEqual(['Tag Family 1', 'Tag Family 2'])
       expect(result.outerRingData.map((item) => item.label)).toEqual(['Tag 1A', 'Tag 1B', 'Tag 2A', 'Tag 2B'])
       expect(result.innerRingData.map((item) => item.color)).toEqual(['#FAMILY_0', '#FAMILY_1'])
+    })
+
+    test('should process multiple tag families for bar chart without sublevel', () => {
+      const tPost = translationMock({})
+      const result = processBarChartData(mockTagData, 'tag', false, theme, StudyResultUnit.K, tPost)
+
+      expect(result.barData.labels).toEqual(['Tag 1A', 'Tag 1B', 'Tag 2A', 'Tag 2B'])
+      expect(result.barData.values).toEqual([900, 600, 1000, 1500])
+      expect(result.barData.colors).toHaveLength(4)
+      expect(result.seriesData).toEqual([])
+    })
+
+    test('should process multiple tag families for bar chart with sublevel', () => {
+      const tPost = translationMock({})
+      const result = processBarChartData(mockTagData, 'tag', true, theme, StudyResultUnit.K, tPost)
+
+      expect(result.barData.labels).toEqual(['Tag Family 1', 'Tag Family 2'])
+      expect(result.barData.values).toEqual([])
+      expect(result.barData.colors).toEqual([])
+      expect(result.seriesData).toHaveLength(4)
+      expect(result.seriesData.map((s) => s.label)).toEqual(['Tag 1A', 'Tag 1B', 'Tag 2A', 'Tag 2B'])
+      expect(result.seriesData.map((s) => s.data)).toEqual([
+        [900, 0],
+        [600, 0],
+        [0, 1000],
+        [0, 1500],
+      ])
     })
   })
 
@@ -450,6 +529,114 @@ describe('charts utils function', () => {
       expect(result.seriesData[0].label).toBe('Tag A')
       expect(result.seriesData[0].data).toEqual([500])
       expect(result.seriesData[0].color).toBe('#TAG_A')
+    })
+
+    test('should process multiple posts without sublevel', () => {
+      const multiplePostsData = [
+        createPostData({ label: 'Alimentation', post: Post.Alimentation, value: 2000 }),
+        createPostData({ label: 'Transport', post: Post.Deplacements, value: 1500 }),
+      ]
+      const result = processBarChartData(multiplePostsData, 'post', false, theme, StudyResultUnit.K, tPost)
+
+      expect(result.barData.labels).toEqual(['Alimentation', 'Transport'])
+      expect(result.barData.values).toEqual([2000, 1500])
+      expect(result.barData.colors).toHaveLength(2)
+      expect(result.seriesData).toEqual([])
+    })
+
+    test('should process multiple posts with sublevel', () => {
+      const multiplePostsData = [
+        createPostData({
+          label: 'Alimentation',
+          post: Post.Alimentation,
+          value: 2000,
+          children: [
+            { value: 1200, label: 'Fossile', post: SubPost.CombustiblesFossiles },
+            { value: 800, label: 'Organic' },
+          ],
+        }),
+        createPostData({
+          label: 'Transport',
+          post: Post.Deplacements,
+          value: 1500,
+          children: [
+            { value: 900, label: 'Car' },
+            { value: 600, label: 'Plane' },
+          ],
+        }),
+      ]
+      const result = processBarChartData(multiplePostsData, 'post', true, theme, StudyResultUnit.K, tPost)
+
+      expect(result.barData.labels).toEqual(['Alimentation', 'Transport'])
+      expect(result.barData.values).toEqual([])
+      expect(result.barData.colors).toEqual([])
+      expect(result.seriesData).toHaveLength(4)
+      expect(result.seriesData.map((s) => s.label)).toEqual(['Fossile', 'Organic', 'Car', 'Plane'])
+      expect(result.seriesData.map((s) => s.data)).toEqual([
+        [1200, 0],
+        [800, 0],
+        [0, 900],
+        [0, 600],
+      ])
+    })
+
+    test('should process multiple tags without sublevel', () => {
+      const multipleTagsData = [
+        createTagData({
+          label: 'Tag Family 1',
+          children: [
+            { value: 500, label: 'Tag 1A', color: '#TAG_1A' },
+            { value: 300, label: 'Tag 1B', color: '#TAG_1B' },
+          ],
+        }),
+        createTagData({
+          label: 'Tag Family 2',
+          value: 2000,
+          children: [
+            { value: 800, label: 'Tag 2A', color: '#TAG_2A' },
+            { value: 1200, label: 'Tag 2B', color: '#TAG_2B' },
+          ],
+        }),
+      ]
+      const result = processBarChartData(multipleTagsData, 'tag', false, theme, StudyResultUnit.K, tPost)
+
+      expect(result.barData.labels).toEqual(['Tag 1A', 'Tag 1B', 'Tag 2A', 'Tag 2B'])
+      expect(result.barData.values).toEqual([500, 300, 800, 1200])
+      expect(result.barData.colors).toHaveLength(4)
+      expect(result.seriesData).toEqual([])
+    })
+
+    test('should process multiple tags with sublevel', () => {
+      const multipleTagsData = [
+        createTagData({
+          label: 'Tag Family 1',
+          children: [
+            { value: 500, label: 'Tag 1A', color: '#TAG_1A' },
+            { value: 300, label: 'Tag 1B', color: '#TAG_1B' },
+          ],
+        }),
+        createTagData({
+          label: 'Tag Family 2',
+          value: 2000,
+          children: [
+            { value: 800, label: 'Tag 2A', color: '#TAG_2A' },
+            { value: 1200, label: 'Tag 2B', color: '#TAG_2B' },
+          ],
+        }),
+      ]
+      const result = processBarChartData(multipleTagsData, 'tag', true, theme, StudyResultUnit.K, tPost)
+
+      expect(result.barData.labels).toEqual(['Tag Family 1', 'Tag Family 2'])
+      expect(result.barData.values).toEqual([])
+      expect(result.barData.colors).toEqual([])
+      expect(result.seriesData).toHaveLength(4)
+      expect(result.seriesData.map((s) => s.label)).toEqual(['Tag 1A', 'Tag 1B', 'Tag 2A', 'Tag 2B'])
+      expect(result.seriesData.map((s) => s.data)).toEqual([
+        [500, 0],
+        [300, 0],
+        [0, 800],
+        [0, 1200],
+      ])
     })
   })
 })

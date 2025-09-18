@@ -86,11 +86,12 @@ const PieChart = <T extends BasicTypeCharts>({
   }, [innerRingData, outerRingData, showLabelsOnPie, tUnits, resultsUnit])
 
   const legendData = useMemo(() => {
+    const maxLabelLength = type === 'tag' ? 20 : 50
     return innerRingData.map((item) => ({
-      label: item.label,
+      label: item.label.length > maxLabelLength ? item.label.substring(0, 20) + '...' : item.label,
       color: item.color,
     }))
-  }, [innerRingData])
+  }, [innerRingData, type])
 
   return (
     <div className={styles.pieChart}>
