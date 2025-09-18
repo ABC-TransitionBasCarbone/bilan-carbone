@@ -24,13 +24,16 @@ export const getLatestCncVersion = async () => {
 export const upsertCNC = async (data: (Prisma.CncCreateManyInput & { cncVersionId: string })[]) => {
   await Promise.all(
     data.map(async (entry) => {
-      if (!entry.cncCode) {
-        console.warn('CNC ignoré car cncCode est manquant :', entry)
+      if (!entry.numeroAuto) {
+        console.warn('CNC ignoré car numeroAuto manquant :', entry)
         return
       }
 
       await prismaClient.cnc.upsert({
-        where: { cncCode: entry.cncCode },
+        where: {
+          // We keep checking numeroAuto instead of cncCode because the table has a unique constraint on it
+          numeroAuto: entry.numeroAuto,
+        },
         create: entry,
         update: {
           ...entry,
