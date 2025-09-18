@@ -76,7 +76,7 @@ import {
   NOT_ASSOCIATION_SIRET,
   NOT_AUTHORIZED,
   REQUEST_SENT,
-  UNKNOWN_SIRET,
+  UNKNOWN_SIRET_OR_CNC,
 } from '../permissions/check'
 import { canAddMember, canChangeRole, canDeleteMember, canEditSelfRole } from '../permissions/user'
 import { getDeactivableFeatureRestrictions } from './deactivableFeatures'
@@ -617,7 +617,7 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
 
         if (companyName === '') {
           console.error('Company name not found for siretOrCNC:', siretOrCNC)
-          throw new Error(UNKNOWN_SIRET)
+          throw new Error(UNKNOWN_SIRET_OR_CNC)
         }
       }
 
