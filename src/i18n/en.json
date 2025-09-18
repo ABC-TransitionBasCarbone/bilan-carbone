@@ -704,6 +704,8 @@
       "table": "Table",
       "barChart": "Bar Chart",
       "pieChart": "Pie Chart",
+      "showSubPosts": "Show sub-posts",
+      "showSubTags": "Group by tag families",
       "tagPieChartTitle": "Emissions, by tag ({unit})",
       "consolidatedChartTitle": "Émissions, by post ({unit})",
       "other": "No tag",

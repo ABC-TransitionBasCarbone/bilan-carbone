@@ -5,11 +5,17 @@
 
 .pieChart :global(.MuiPieArcLabel-root) {
   font-size: 1rem !important;
-  font-weight: bold !important;
+  font-weight: 600 !important;
 }
 
 .chartTitle {
   font-size: 1rem !important;
   margin-top: -2rem !important;
   margin-bottom: 2rem !important;
+}
+
+.legendColor {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 100%;
 }

@@ -1,5 +1,6 @@
 import { Post } from '@/services/posts'
 import { createTheme } from '@mui/material/styles'
+import { SubPost } from '@prisma/client'
 
 const base = createTheme({
   cssVariables: true,
@@ -207,6 +208,125 @@ const theme = createTheme(base, {
       [Post.FinDeVie]: { light: '#FBBC6B', dark: '#C88938' },
       [Post.UtilisationEtDependance]: { light: '#FBBC6B', dark: '#C88938' },
     },
+    subPostColors: {
+      // Energies subposts - variations of #3F5488
+      [SubPost.CombustiblesFossiles]: '#526594',
+      [SubPost.CombustiblesOrganiques]: '#6576a0',
+      [SubPost.ReseauxDeChaleurEtDeVapeur]: '#7987ac',
+      [SubPost.ReseauxDeFroid]: '#8c98b8',
+      [SubPost.Electricite]: '#9faac4',
+
+      // AutresEmissionsNonEnergetiques subposts - variations of #3F5488
+      [SubPost.Agriculture]: '#526594',
+      [SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas]: '#6576a0',
+      [SubPost.EmissionsLieesALaProductionDeFroid]: '#7987ac',
+      [SubPost.EmissionsLieesAuxProcedesIndustriels]: '#8c98b8',
+      [SubPost.AutresEmissionsNonEnergetiques]: '#9faac4',
+
+      // IntrantsBiensEtMatieres subposts - variations of #5E97CB
+      [SubPost.MetauxPlastiquesEtVerre]: '#6ea1d0',
+      [SubPost.PapiersCartons]: '#7eacd5',
+      [SubPost.MateriauxDeConstruction]: '#8eb6db',
+      [SubPost.ProduitsChimiquesEtHydrogene]: '#9ec1e0',
+      [SubPost.NourritureRepasBoissons]: '#afcbe5',
+      [SubPost.MatiereDestineeAuxEmballages]: '#bfd5ea',
+      [SubPost.AutresIntrants]: '#cfe0ef',
+      [SubPost.BiensEtMatieresEnApprocheMonetaire]: '#dfeaf5',
+
+      // IntrantsServices subposts - variations of #5E97CB
+      [SubPost.AchatsDeServices]: '#5588b7',
+      [SubPost.UsagesNumeriques]: '#4b79a2',
+      [SubPost.ServicesEnApprocheMonetaire]: '#426a8e',
+
+      // DechetsDirects subposts - variations of #3F5488
+      [SubPost.DechetsDEmballagesEtPlastiques]: '#394c7a',
+      [SubPost.DechetsOrganiques]: '#32436d',
+      [SubPost.DechetsOrduresMenageres]: '#2c3b5f',
+      [SubPost.DechetsDangereux]: '#263252',
+      [SubPost.DechetsBatiments]: '#202a44',
+      [SubPost.DechetsFuitesOuEmissionsNonEnergetiques]: '#192236',
+      [SubPost.EauxUsees]: '#131929',
+      [SubPost.AutresDechets]: '#0d111b',
+
+      // Fret subposts - variations of #79C7AB
+      [SubPost.FretEntrant]: '#94d2bc',
+      [SubPost.FretInterne]: '#afddcd',
+      [SubPost.FretSortant]: '#c9e9dd',
+
+      // Deplacements subposts - variations of #79C7AB
+      [SubPost.DeplacementsDomicileTravail]: '#94d2bc',
+      [SubPost.DeplacementsProfessionnels]: '#afddcd',
+      [SubPost.DeplacementsVisiteurs]: '#c9e9dd',
+
+      // Immobilisations subposts - variations of #3F5488
+      [SubPost.Batiments]: '#7987ac',
+      [SubPost.AutresInfrastructures]: '#8c98b8',
+      [SubPost.Equipements]: '#9faac4',
+      [SubPost.Informatique]: '#b2bbcf',
+
+      // UtilisationEtDependance subposts - variations of #FBBC6B
+      [SubPost.UtilisationEnResponsabilite]: '#fbc37a',
+      [SubPost.UtilisationEnDependance]: '#fcc989',
+      [SubPost.InvestissementsFinanciersRealises]: '#fcd097',
+
+      // FinDeVie subposts - variations of #FBBC6B
+      [SubPost.ConsommationDEnergieEnFinDeVie]: '#fbc37a',
+      [SubPost.TraitementDesDechetsEnFinDeVie]: '#fcc989',
+      [SubPost.FuitesOuEmissionsNonEnergetiques]: '#fcd097',
+      [SubPost.TraitementDesEmballagesEnFinDeVie]: '#fdd7a6',
+
+      // CUT subposts - unique colors
+      [SubPost.Batiment]: '#8B5A3C',
+      [SubPost.Equipe]: '#A0522D',
+      [SubPost.Energie]: '#CD853F',
+      [SubPost.ActivitesDeBureau]: '#DEB887',
+      [SubPost.MobiliteSpectateurs]: '#F4A460',
+      [SubPost.EquipesRecues]: '#D2B48C',
+      [SubPost.MaterielTechnique]: '#BC8F8F',
+      [SubPost.AutreMateriel]: '#F5DEB3',
+      [SubPost.Achats]: '#FFE4B5',
+      [SubPost.Fret]: '#FFDEAD',
+      [SubPost.Electromenager]: '#F5DEB3',
+      [SubPost.DechetsOrdinaires]: '#DDA0DD',
+      [SubPost.DechetsExceptionnels]: '#DA70D6',
+      [SubPost.MaterielDistributeurs]: '#FF69B4',
+      [SubPost.MaterielCinema]: '#FF1493',
+      [SubPost.CommunicationDigitale]: '#DC143C',
+      [SubPost.CaissesEtBornes]: '#B22222',
+
+      // TILT subposts - unique colors
+      [SubPost.FroidEtClim]: '#87CEEB',
+      [SubPost.ActivitesAgricoles]: '#9ACD32',
+      [SubPost.ActivitesIndustrielles]: '#8FBC8F',
+      [SubPost.DeplacementsDomicileTravailSalaries]: '#20B2AA',
+      [SubPost.DeplacementsDomicileTravailBenevoles]: '#48D1CC',
+      [SubPost.DeplacementsDansLeCadreDUneMissionAssociativeSalaries]: '#00CED1',
+      [SubPost.DeplacementsDansLeCadreDUneMissionAssociativeBenevoles]: '#5F9EA0',
+      [SubPost.DeplacementsDesBeneficiaires]: '#4682B4',
+      [SubPost.DeplacementsFabricationDesVehicules]: '#6495ED',
+      [SubPost.Entrant]: '#7B68EE',
+      [SubPost.Interne]: '#9370DB',
+      [SubPost.Sortant]: '#8A2BE2',
+      [SubPost.TransportFabricationDesVehicules]: '#9932CC',
+      [SubPost.RepasPrisParLesSalaries]: '#FF6347',
+      [SubPost.RepasPrisParLesBenevoles]: '#FF7F50',
+      [SubPost.UtilisationEnResponsabiliteConsommationDeBiens]: '#FFA07A',
+      [SubPost.UtilisationEnResponsabiliteConsommationNumerique]: '#FA8072',
+      [SubPost.UtilisationEnResponsabiliteConsommationDEnergie]: '#F08080',
+      [SubPost.UtilisationEnResponsabiliteFuitesEtAutresConsommations]: '#CD5C5C',
+      [SubPost.UtilisationEnDependanceConsommationDeBiens]: '#DC143C',
+      [SubPost.UtilisationEnDependanceConsommationNumerique]: '#B22222',
+      [SubPost.UtilisationEnDependanceConsommationDEnergie]: '#A52A2A',
+      [SubPost.UtilisationEnDependanceFuitesEtAutresConsommations]: '#8B0000',
+      [SubPost.TeletravailSalaries]: '#FFD700',
+      [SubPost.TeletravailBenevoles]: '#FFA500',
+      [SubPost.EquipementsDesSalaries]: '#FF8C00',
+      [SubPost.ParcInformatiqueDesSalaries]: '#FF4500',
+      [SubPost.EquipementsDesBenevoles]: '#FF6347',
+      [SubPost.ParcInformatiqueDesBenevoles]: '#FF0000',
+    },
+    // Variants of secondary color
+    tagFamilyColors: ['#85a9f5', '#9ab7f7', '#aec5f9', '#c2d4fa', '#d6e2fc'],
   },
 })
 

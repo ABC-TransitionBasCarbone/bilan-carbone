@@ -6,8 +6,7 @@ import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import styles from './BarChart.module.css'
 
-import { BasicTypeCharts, formatValueAndUnit, getColor, getLabel } from '@/utils/charts'
-import { STUDY_UNIT_VALUES } from '@/utils/study'
+import { BasicTypeCharts, formatValueAndUnit, processBarChartData } from '@/utils/charts'
 import { StudyResultUnit } from '@prisma/client'
 
 const BAR_CHART_CONSTANTS = {
@@ -25,7 +24,8 @@ interface Props<T> {
   showLegend?: boolean
   showLabelsOnBars?: boolean
   skipAnimation?: boolean
-  onlyChildren?: boolean
+  showSubLevel?: boolean
+  type?: 'post' | 'tag'
 }
 
 const BarChart = <T extends BasicTypeCharts>({
@@ -37,32 +37,25 @@ const BarChart = <T extends BasicTypeCharts>({
   showLegend = true,
   showLabelsOnBars = true,
   skipAnimation = false,
-  onlyChildren = false,
+  showSubLevel = false,
+  type = 'post',
 }: Props<T>) => {
   const tResults = useTranslations('study.results')
   const tUnits = useTranslations('study.results.units')
   const tPost = useTranslations('emissionFactors.post')
-
   const theme = useTheme()
 
-  const barData = useMemo(() => {
-    const filteredData = results.filter((result) => result.post !== 'total' && result.label !== 'total')
+  const { barData, seriesData } = useMemo(() => {
+    return processBarChartData(results, type, showSubLevel, theme, resultsUnit, tPost)
+  }, [results, type, showSubLevel, theme, resultsUnit, tPost])
 
-    const dataToFormat = onlyChildren ? filteredData.flatMap((result) => result.children) : filteredData
-    return {
-      labels: dataToFormat.map(({ label, post }) => getLabel(label, post, tPost)),
-      values: dataToFormat.map(({ value }) => value / STUDY_UNIT_VALUES[resultsUnit]),
-      colors: dataToFormat.map(({ post, color }) => getColor(theme, post, color)),
-    }
-  }, [results, onlyChildren, tPost, resultsUnit, theme])
-
-  const getBarLabel = (item: { value: number | null }) =>
-    showLabelsOnBars && item.value && item.value > 0 ? formatValueAndUnit(item.value) : ''
+  const getBarLabel = (item: { value: number | null }) => (showLabelsOnBars ? formatValueAndUnit(item.value) : '')
 
   return (
     <div className={styles.barChart}>
       <MuiBarChart
         skipAnimation={skipAnimation}
+        colors={seriesData.length > 0 ? seriesData.map((s) => s.color) : undefined}
         xAxis={[
           {
             data: barData.labels,
@@ -75,20 +68,34 @@ const BarChart = <T extends BasicTypeCharts>({
             },
             tickPlacement: 'extremities',
             tickLabelPlacement: 'middle',
-            colorMap: {
-              type: 'ordinal',
-              values: barData.labels,
-              colors: barData.colors,
-            },
+            colorMap:
+              seriesData.length === 0
+                ? {
+                    type: 'ordinal',
+                    values: barData.labels,
+                    colors: barData.colors,
+                  }
+                : undefined,
           },
         ]}
-        series={[
-          {
-            data: barData.values,
-            valueFormatter: (value) => formatValueAndUnit(value ?? 0),
-            label: showLegend ? tResults('emissions') : undefined,
-          },
-        ]}
+        series={
+          seriesData.length > 0
+            ? seriesData.map((series, index) => ({
+                data: series.data,
+                valueFormatter: (value) => (value && value > 0 ? formatValueAndUnit(value) : null),
+                label: series.label,
+                stack: series.stack,
+                color: series.color,
+                id: `series-${index}`,
+              }))
+            : [
+                {
+                  data: barData.values,
+                  valueFormatter: (value) => formatValueAndUnit(value ?? 0),
+                  label: showLegend ? tResults('emissions') : undefined,
+                },
+              ]
+        }
         grid={{ horizontal: true }}
         yAxis={[
           {
@@ -97,7 +104,7 @@ const BarChart = <T extends BasicTypeCharts>({
         ]}
         axisHighlight={{ x: 'none' }}
         barLabel={showLabelsOnBars ? getBarLabel : undefined}
-        slots={showLegend ? undefined : { legend: () => null }}
+        slots={showLegend && seriesData.length === 0 ? undefined : { legend: () => null }}
         height={height}
         borderRadius={10}
       />
