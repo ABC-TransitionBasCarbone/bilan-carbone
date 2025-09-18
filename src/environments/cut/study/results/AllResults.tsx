@@ -53,6 +53,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
   const tUnits = useTranslations('study.results.units')
   const tExportButton = useTranslations('study.export')
   const tStudyNav = useTranslations('study.navigation')
+
   const { callServerFunction } = useServerFunction()
 
   const { studySite, setSite } = useStudySite(study, true)
@@ -87,7 +88,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
       <Box component="section" className="mb2">
         <Typography>
           {tResults.rich('cutFeedback', {
-            lien: (children) => (
+            questionnaire: (children) => (
               <Link href={process.env.NEXT_PUBLIC_CUT_FEEDBACK_TYPEFORM_LINK ?? ''} target="_blank">
                 <strong>{children}</strong>
               </Link>
@@ -132,7 +133,25 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
             {pdfLoading ? tResults('downloadingPDF') : tResults('downloadPDF')}
           </LoadingButton>
         </div>
-        <Typography className={classNames(styles.infoContainer, 'ml2')}>{tResults('info')}</Typography>
+        <Typography className={classNames(styles.infoContainer, 'ml2')}>
+          {tResults.rich('infoWithLinks', {
+            formation: (children) => (
+              <Link href={process.env.NEXT_PUBLIC_FORMATION_URL ?? ''} target="_blank">
+                <strong>{children}</strong>
+              </Link>
+            ),
+            email: (children) => (
+              <Link href={`mailto:${process.env.NEXT_PUBLIC_CUT_SUPPORT_EMAIL ?? ''}`} target="_blank">
+                <strong>{children}</strong>
+              </Link>
+            ),
+            prestataire: (children) => (
+              <Link href={process.env.NEXT_PUBLIC_ACTORS_URL ?? ''} target="_blank">
+                <strong>{children}</strong>
+              </Link>
+            ),
+          })}
+        </Typography>
       </Box>
       <Box component="section" sx={{ marginTop: '1rem' }}>
         <Tabs value={value} onChange={handleChange} indicatorColor="secondary" textColor="inherit" variant="fullWidth">
