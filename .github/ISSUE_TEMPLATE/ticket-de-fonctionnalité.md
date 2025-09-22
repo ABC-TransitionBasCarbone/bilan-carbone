@@ -10,7 +10,8 @@ assignees: ''
 
 ## Tests d'acceptance
 
-Les environnements impactés sont :  (Vérifier que la fonctionnalité fonctionne sur ceux cochés, vérifier que la fonctionnalité n'a pas d'impact sur ceux décochés)
+Les environnements impactés sont : (Vérifier que la fonctionnalité fonctionne sur ceux cochés, vérifier que la fonctionnalité n'a pas d'impact sur ceux décochés)
+
 - [ ] le BC+,
 - [ ] TILT,
 - [ ] CUT
