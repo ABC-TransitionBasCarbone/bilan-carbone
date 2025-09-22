@@ -582,8 +582,6 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
     if (environment === Environment.CUT) {
       const CNC = await findCncByCncCode(siretOrCNC)
       if (CNC) {
-        console.log('cnc', CNC)
-
         organization = await getRawOrganizationBySiteCNC(siretOrCNC)
         organizationVersion = organization?.id
           ? await getOrganizationVersionByOrganizationIdAndEnvironment(organization.id, environment)
@@ -642,9 +640,6 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
             { environment: environment },
           )
     }
-
-    console.log('organizationVersion', organizationVersion)
-    console.log('organization', organization)
 
     if (!organizationVersion) {
       throw new Error(NOT_AUTHORIZED)
