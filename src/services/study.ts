@@ -523,7 +523,12 @@ export const formatBCResultsForCutExport = (
 ) => {
   const data: (string | number)[][] = []
 
-  data.push([tExport('bc.disclaimerExcel')])
+  data.push([tExport('bc.disclaimerExcel1')])
+  data.push([tExport('bc.disclaimerExcel2')])
+  data.push([tExport('bc.disclaimerExcel3')])
+  data.push([tExport('bc.disclaimerExcel4')])
+  data.push([tExport('bc.disclaimerExcel5')])
+  data.push([tExport('bc.disclaimerExcel6')])
   data.push([])
 
   for (const site of siteList) {
@@ -547,7 +552,10 @@ export const formatBCResultsForCutExport = (
   return {
     name: tExport('bc.title'),
     data,
-    options: { '!cols': [{ wch: 35 }, { wch: 20 }] },
+    options: {
+      '!cols': [{ wch: 35 }, { wch: 20 }],
+      '!merges': [{ s: { c: 0, r: 0 }, e: { c: 20, r: 0 } }],
+    },
   }
 }
 
@@ -589,11 +597,6 @@ export const downloadStudyResults = async (
       environment,
       AdditionalResultTypes.ENV_SPECIFIC_EXPORT,
     )
-
-    if (environment === Environment.CUT) {
-      environmentResults.data.unshift([])
-      environmentResults.data.unshift([tExport('developmentFile')])
-    }
 
     data.push(environmentResults)
   }

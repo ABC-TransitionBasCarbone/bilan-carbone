@@ -21,7 +21,6 @@
     "Beges": "Regulatory GHG Assesment",
     "GHGP": "GHG Protocol",
     "ISO14069": "ISO 14069",
-    "developmentFile": "File under development",
     "env_specific_export": "Bilan Carbone®",
     "bc": {
       "title": "Bilan Carbone® Equivalence",
@@ -126,7 +125,7 @@
   },
   "ressources": {
     "title": "Resources",
-    "description": "The COUNT impact calculator is certified by the ABC. It was built using various emission factor sources (ADEME's Base Empreinte, EcoInvent, Boavizta, CNC, among others). Additional emission factors were specifically developed for the tool by Resilio (a link to the Resilio methodology can be added here; we will send it to you).<br></br>The calculation assumptions were based on:<br></br> - 15 comprehensive carbon assessments carried out in partnership with the CINEO cinema group (a press kit link will be added here)<br></br> - Multiple interviews with stakeholders in the cinema sector (suppliers, integrators, independent operators, exhibition circuits, etc.)\n - Visits to cinemas of various types.",
+    "description": "The COUNT impact calculator is certified by the ABC. It was built using various emission factor sources (ADEME's Base Empreinte, EcoInvent, Boavizta, CNC, among others). Additional emission factors were specifically developed for the tool by Resilio (a link to the Resilio methodology can be added here; we will send it to you).<br></br>The calculation assumptions were based on:<br></br> - 15 comprehensive carbon assessments carried out in partnership with the CINEO cinema group<br></br> - Multiple interviews with stakeholders in the cinema sector (suppliers, integrators, independent operators, exhibition circuits, etc.)\n - Visits to cinemas of various types",
     "france2030": "As part of the France 2030 Plan, the 'Green Alternatives 2' initiative, endowed with €25 million over 3 waves and operated by the Banque des Territoires (Caisse des Dépôts group) in partnership with the Ministry of Culture, the Ministry of Ecological Transition, and the General Secretariat for Investment, aims to accelerate the ecological transition of cultural enterprises to make the sector a benchmark in environmental responsibility. Of the 51 applications received for the first wave of 'Green Alternatives 2', 13 projects were selected, including the one led by CUT! The jury particularly praised the strong collective ambition serving the ecological transition of cinema and audiovisual, embracing the entire value chain of cinema, with the sponsorship of charismatic personalities from the industry.",
     "methodeAssociative": "For any questions about the associative method:",
     "sphereAssociative": "Associative Sphere",
@@ -214,6 +213,7 @@
     "validate": "Validate",
     "clear": "Clear value",
     "Unknown CNC": "The CNC number you entered is not recognized. Please check it and try again.",
+    "Unknown SIRET or CNC": "The Siret or CNC number you entered is not recognized. Please check it and try again.",
     "Not authorized": "This email is already used for CUT or there's an issue with the account creation. Please see <link>the FAQ</link> or <support>contact support</support> if you think this is an error.",
     "Request sent": "A request has been sent to your colleagues",
     "Email sent": "You will receive an email to finish your account validation.",
@@ -628,7 +628,8 @@
         "glossary": "Tags family",
         "close": "Close",
         "glossaryDescription": "Tags and tag families are used to identify your emission sources in order to visualize certain results later. <br></br>Once your tags are created, you can associate them with emission sources within the \"Data Entry\" page. Then, on the \"Results\" page, you can view the emissions due to a tag family or a specific tag, but you will not be able to view the emissions of two tag families simultaneously, because double counting can occur between these two tag families. <br></br>To give a concrete example, let's say there are two tag families: \"Products Sold\" and \"Target Audiences\". These two families and the tags belonging to them will allow you to visualize the distribution of your organization's emissions based on the products sold, and the same for the target audiences."
-      }
+      },
+      "information": "For more information on this section, you can refer to this documentation: "
     },
     "results": {
       "type": "Type",
@@ -704,6 +705,8 @@
       "table": "Table",
       "barChart": "Bar Chart",
       "pieChart": "Pie Chart",
+      "showSubPosts": "Show sub-posts",
+      "showSubTags": "Group by tag families",
       "tagPieChartTitle": "Emissions, by tag ({unit})",
       "consolidatedChartTitle": "Émissions, by post ({unit})",
       "other": "No tag",
@@ -782,6 +785,8 @@
       "documentNotFound": "Document not found",
       "download": "Download flow",
       "flows": "Flows mapping",
+      "information": "Information",
+      "close": "Close",
       "documentSelector": "Mapping to display",
       "invalidFileType": "Invalid file type",
       "newFlow": "Add a flow mapping",
@@ -798,6 +803,8 @@
       "documentNotFound": "Document not found",
       "download": "Download matrix",
       "dependencyMatrices": "Risk and dependency matrices",
+      "information": "Information",
+      "close": "Close",
       "documentSelector": "Risk and dependency matrix to display",
       "invalidFileType": "Unsupported file type",
       "noDocument": "No risk and dependency matrix to display",

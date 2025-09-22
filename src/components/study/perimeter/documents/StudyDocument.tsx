@@ -4,6 +4,7 @@ import Block from '@/components/base/Block'
 import Button from '@/components/base/Button'
 import LoadingButton from '@/components/base/LoadingButton'
 import { useToast } from '@/components/base/ToastProvider'
+import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { DEFAULT_SAMPLE_TITLE, SAMPLE_TITLES } from '@/services/documents'
@@ -21,7 +22,7 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import DocumentSelector from './DocumentSelector'
 import DocumentViewer from './DocumentViewer'
 import styles from './StudyFlow.module.css'
@@ -40,6 +41,7 @@ const StudyDocument = ({ title, t, study, documents, canUpload = true, documentC
   const { showErrorToast } = useToast()
   const router = useRouter()
   const tUpload = useTranslations('upload')
+  const tPerimeter = useTranslations('study.perimeter')
   const initialDocument = documents.length > 0 ? documents[0] : undefined
 
   const [uploading, setUploading] = useState(false)
@@ -104,9 +106,45 @@ const StudyDocument = ({ title, t, study, documents, canUpload = true, documentC
     setDownloading(false)
   }
 
+  const glossaryConfig = useMemo(() => {
+    if (documentCategory === DocumentCategory.DependencyMatrix) {
+      return {
+        glossaryTitleKey: 'dependencyMatrices',
+        label: 'study-dependency-matrices',
+        documentationUrl: process.env.NEXT_PUBLIC_DEPENDENCY_MATRIX_DOC_URL ?? '',
+      }
+    }
+
+    return {
+      glossaryTitleKey: 'flows',
+      label: 'study-flows',
+      documentationUrl: process.env.NEXT_PUBLIC_FLOW_DOC_URL ?? '',
+    }
+  }, [documentCategory])
+
+  const titleWithGlossary = (
+    <>
+      {title}
+      <GlossaryIconModal
+        title={glossaryConfig.glossaryTitleKey}
+        className="ml-2"
+        iconLabel="information"
+        label={glossaryConfig.label}
+        tModal={documentCategory === DocumentCategory.DependencyMatrix ? 'study.dependencyMatrix' : 'study.flow'}
+      >
+        <p>
+          {tPerimeter('information')}
+          <Link href={glossaryConfig.documentationUrl} target="_blank" rel="noopener noreferrer">
+            {glossaryConfig.documentationUrl}
+          </Link>
+        </p>
+      </GlossaryIconModal>
+    </>
+  )
+
   return (
     <Block
-      title={title}
+      title={titleWithGlossary}
       as="h1"
       actions={
         canUpload

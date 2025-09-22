@@ -38,6 +38,7 @@ export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll }: Props) =
           showLegend={false}
           showLabelsOnBars={true}
           skipAnimation={true}
+          type="post"
         />
 
         <PieChart
@@ -48,6 +49,8 @@ export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll }: Props) =
           showLabelsOnPie={true}
           skipAnimation={true}
           results={computedResultsWithDep}
+          showSubLevel={false}
+          type="post"
         />
       </div>
     </div>

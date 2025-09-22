@@ -21,7 +21,6 @@
     "Beges": "Bilan GES Réglementaire",
     "GHGP": "GHG Protocol",
     "ISO14069": "ISO 14069",
-    "developmentFile": "⚠️ Fichier en cours de développement ⚠️",
     "env_specific_export": "Bilan Carbone®",
     "bc": {
       "title": "Export au format Bilan Carbone®",
@@ -102,7 +101,7 @@
     "ges": "Émissions de GES ({unit})"
   },
   "nav": {
-    "backToHome": "Retour a l'accueil",
+    "backToHome": "Retour à l'accueil",
     "emissionFactors": "Facteurs d'émission",
     "home": "Accueil",
     "newOrganization": "Ajouter une nouvelle organisation",
@@ -126,7 +125,7 @@
   },
   "ressources": {
     "title": "Ressources",
-    "description": "Le calculateur d’impact COUNT est homologué par l’ABC. Il a été construit sur la base de différentes sources de facteurs d’émission (Base Empreinte de l’ADEME, EcoInvent, Boavizta, CNC notamment). D’autres facteurs d’émission ont été spécifiquement construits dans le cadre de la construction de l’outil par Resilio.<br></br>Les hypothèses de calcul ont été construites à partir de :<br></br> - 15 bilans carbones complets réalisés en association avec le groupement de cinémas CINEO (ici on mettra un lien vers un dossier de presse)<br></br> - Multiples entretiens avec des parties prenantes de la salle de cinéma (fournisseurs, intégrateurs, exploitants indépendants, circuits d’exploitation etc.)<br></br> - Visites de salles de cinéma aux typologies diverses.",
+    "description": "Le calculateur d’impact COUNT est homologué par l’ABC. Il a été construit sur la base de différentes sources de facteurs d’émission (Base Empreinte de l’ADEME, EcoInvent, Boavizta, CNC notamment). D’autres facteurs d’émission ont été spécifiquement construits dans le cadre de la construction de l’outil par Resilio.<br></br>Les hypothèses de calcul ont été construites à partir de :<br></br> - 15 bilans carbones complets réalisés en association avec le groupement de cinémas CINEO<br></br> - Multiples entretiens avec des parties prenantes de la salle de cinéma (fournisseurs, intégrateurs, exploitants indépendants, circuits d’exploitation etc.)<br></br> - Visites de salles de cinéma aux typologies diverses",
     "france2030": "Dans le cadre du Plan France 2030, le dispositif « Alternatives Vertes 2 », doté de 25 M€ sur 3 vagues, et opéré par la Banque des territoires (groupe Caisse des Dépôts) en lien avec le ministère de la Culture, le ministère de la Transition écologique, et le Secrétariat général pour l’investissement, vise à accélérer la transition écologique des entreprises culturelles afin d’en faire un secteur de référence en matière de responsabilité environnementale. Sur les 51 candidatures reçues pour la première vague d’« Alternatives Vertes 2 », 13 projets ont été sélectionnés dont le projet porté par CUT ! Le jury a notamment salué la forte ambition collective au service de la transition écologique du cinéma et de l’audiovisuel du projet, embrassant toute la chaîne de valeur du cinéma, avec le parrainage de personnalités charismatiques de la filière.",
     "methodeAssociative": "Pour toutes les questions sur la méthode associative :",
     "sphereAssociative": "Sphère associative",
@@ -178,7 +177,7 @@
       "reset": "Confirmer",
       "error": "Veuillez verifier votre email et votre mot de passe",
       "expired": "Ce lien de réinitialisation de mot de passe a expiré",
-      "backToHome": "Retour a l'accueil",
+      "backToHome": "Retour à l'accueil",
       "resetError": "Certaines informations ne sont pas bonnes. Si vous pensez avoir tout rempli correctement, contactez nous.",
       "emailRequired": "Veuillez entrer un email",
       "emailAndPasswordRequired": "Veuillez entrer un email et un mot de passe",
@@ -214,6 +213,7 @@
     "validate": "Valider",
     "clear": "Supprimer la valeur",
     "Unknown CNC": "Ce code CNC n'est pas reconnu. Veuillez vérifier votre saisie ou contacter le support si vous pensez qu'il s'agit d'une erreur.",
+    "Unknown SIRET or CNC": "Ce Siret ou code CNC n'est pas reconnu. Veuillez vérifier votre saisie ou contacter le support si vous pensez qu'il s'agit d'une erreur.",
     "Not authorized": "Cet email est déjà inscrit avec un compte CUT ou il y a eu un soucis lors de sa création. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
     "Request sent": "Une demande d'activation de votre compte a été envoyé à vos collègues",
     "Email sent": "Vous allez recevoir un mail pour finaliser l'activation de votre compte.",
@@ -628,7 +628,8 @@
         "glossary": "Famille de tags",
         "close": "Fermer",
         "glossaryDescription": "Les tags et familles de tags servent à identifier vos sources d'émissions dans le but de visualiser certains résultats par la suite. <br></br>Une fois vos tags créés, vous pourrez les associer à des sources d'émissions au sein de la page \"Saisie des données\". Puis, dans la page \"Résultats\", vous pourrez visualiser les émissions dues à une famille de tags ou à un tag en particulier, mais vous ne pourrez pas visualiser les émissions de deux familles de tags en parallèle, car des double-comptes peuvent être faits entre ces deux familles de tags. <br></br>Pour donner un exemple concret, admettons qu'il existe deux familles de tags : \"Produits vendus\" et \"Publics ciblés\". Ces deux familles et les tags y appartenant vous permettrons de visualiser quelle est la répartition des émissions de votre organisation en fonction des produits vendus, et de même pour les publics ciblés"
-      }
+      },
+      "information": "Pour plus d'information sur cette section, vous pouvez vous référer à cette documentation : "
     },
     "results": {
       "type": "Type",
@@ -704,6 +705,8 @@
       "table": "Tableau",
       "barChart": "Histogramme",
       "pieChart": "Camembert",
+      "showSubPosts": "Afficher les sous-postes",
+      "showSubTags": "Grouper par famille de tags",
       "tagPieChartTitle": "Émissions, par tag ({unit})",
       "consolidatedChartTitle": "Émissions, par poste ({unit})",
       "other": "Sans tag",
@@ -782,6 +785,8 @@
       "documentNotFound": "Document non trouvé",
       "download": "Télécharger le flux",
       "flows": "Cartographies des flux",
+      "information": "Information",
+      "close": "Fermer",
       "documentSelector": "Cartographie à afficher",
       "invalidFileType": "Type de fichier non supporté",
       "newFlow": "Ajouter une cartographie des flux",
@@ -798,6 +803,8 @@
       "documentNotFound": "Document non trouvé",
       "download": "Télécharger la matrice",
       "dependencyMatrices": "Matrices de risque et de dépendance",
+      "information": "Information",
+      "close": "Fermer",
       "documentSelector": "Matrice de risque et de dépendance à afficher",
       "invalidFileType": "Type de fichier non supporté",
       "noDocument": "Aucune matrice de risque et de dépendance à afficher",

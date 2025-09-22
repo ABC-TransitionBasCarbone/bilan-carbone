@@ -265,40 +265,42 @@ const PDFSummary = ({ study, environment }: Props) => {
 
         <div className="pdf-content page-break-before pdf-page-content">
           <div className="pdf-section">
-            <h2 className="pdf-totals-header pdf-header-with-border">{tExports('bc.title')}</h2>
+            <h2 className="pdf-totals-header pdf-header-with-border">{tExports('bc.title')} - Tous cinémas</h2>
 
-            <div className="pdf-info-section" style={{ marginBottom: '1rem' }}>
+            <div className="pdf-info-section" style={{ marginBottom: '2rem' }}>
               <div className="pdf-info-text">
                 <p style={{ margin: '0 0 0.5rem 0' }}>
                   Attention, les résultats que vous obtenez ici sont uniquement issus de l'empreinte carbone simplifiée
                   Count, et ne doivent en aucun cas être utilisés comme des résultats Bilan Carbone®. La démarche que
-                  vous avez suivi via l'outil Count n'est PAS une démarche Bilan Carbone®.
+                  vous avez suivi via l'outil Count n'est PAS une démarche Bilan Carbone®, même si les résultats
+                  obtenus peuvent déjà vous permettre de mieux comprendre comment réduire votre impact, en identifiant
+                  vos activités les plus émissives.
                 </p>
                 <p style={{ margin: '0.5rem 0 0 0' }}>
                   En revanche, cette empreinte carbone simplifiée est le premier pas vers une démarche plus complète
-                  comme le Bilan Carbone® ! Un Bilan Carbone® suit une{' '}
-                  <a href="https://www.bilancarbone-methode.com/" target="_blank">
-                    méthodologie bien précise
-                  </a>
-                  , et doit répondre à un certain nombre de critères objectifs. Par exemple, au cours d'un Bilan
-                  Carbone®, la direction doit être engagée, les différentes parties prenantes de l'organisation doivent
-                  être mobilisées, des incertitudes doivent être calculées et associées aux émissions, et surtout, un
-                  plan de transition solide doit être construit pour engager l'organisation dans une transition bas
-                  carbone. Si vous souhaitez vous lancer dans un Bilan Carbone® dans les années qui viennent, tout
-                  commence par{' '}
-                  <a href="https://abc-transitionbascarbone.fr/agir/se-former-au-bilan-carbone/" target="_blank">
+                  comme le Bilan Carbone® ! Pour les années suivantes, vous pouvez ainsi soit renouveler votre mesure
+                  d'empreinte carbone simplifiée avec l'outil Count, soit réaliser un Bilan Carbone®. Un Bilan
+                  Carbone® suit une méthodologie bien précise, et doit répondre à un certain nombre de critères
+                  objectifs. Par exemple, au cours d'un Bilan Carbone®, la direction doit être engagée, les différentes
+                  parties prenantes de l'organisation doivent être mobilisées, des incertitudes doivent être calculées
+                  et associées aux émissions, et surtout, un plan de transition solide doit être construit pour engager
+                  l'organisation dans une transition bas carbone. Si vous souhaitez vous lancer dans un Bilan Carbone®
+                  dans les années qui viennent, tout commence par{' '}
+                  <a href={process.env.NEXT_PUBLIC_FORMATION_URL ?? ''} target="_blank">
                     se faire former
+                  </a>{' '}
+                  à la méthode, ou par nous contacter à l'adresse{' '}
+                  <a href={`mailto:${process.env.NEXT_PUBLIC_CUT_SUPPORT_EMAIL ?? ''}`}>
+                    {process.env.NEXT_PUBLIC_CUT_SUPPORT_EMAIL ?? ''}
                   </a>
                   , ou par se faire accompagner par un{' '}
-                  <a href="https://abc-transitionbascarbone.fr/les-acteurs/annuaire-des-prestataires/" target="_blank">
-                    prestataire externe
+                  <a href={process.env.NEXT_PUBLIC_ACTORS_URL ?? ''} target="_blank">
+                    prestataire Bilan Carbone®
                   </a>{' '}
                   !
                 </p>
               </div>
             </div>
-
-            <h2 className="pdf-cinema-header pdf-header-with-border">Tous cinémas</h2>
 
             <ConsolidatedResultsTable
               resultsUnit={study.resultsUnit}

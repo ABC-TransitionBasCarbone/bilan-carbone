@@ -11,7 +11,7 @@ import {
   getAccountFromUserOrganization,
   getAccountsFromUser,
 } from '@/db/account'
-import { findCncByNumeroAuto } from '@/db/cnc'
+import { findCncByCncCode } from '@/db/cnc'
 import { isFeatureActive } from '@/db/deactivableFeatures'
 import {
   createOrganizationWithVersion,
@@ -76,7 +76,7 @@ import {
   NOT_ASSOCIATION_SIRET,
   NOT_AUTHORIZED,
   REQUEST_SENT,
-  UNKNOWN_CNC,
+  UNKNOWN_SIRET_OR_CNC,
 } from '../permissions/check'
 import { canAddMember, canChangeRole, canDeleteMember, canEditSelfRole } from '../permissions/user'
 import { getDeactivableFeatureRestrictions } from './deactivableFeatures'
@@ -578,51 +578,67 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
     }
 
     let organizationVersion = null
-    if (siretOrCNC.length > 6) {
+
+    if (environment === Environment.CUT) {
+      const CNC = await findCncByCncCode(siretOrCNC)
+      if (CNC) {
+        organization = await getRawOrganizationBySiteCNC(siretOrCNC)
+        organizationVersion = organization?.id
+          ? await getOrganizationVersionByOrganizationIdAndEnvironment(organization.id, environment)
+          : null
+
+        if (!organizationVersion) {
+          organizationVersion = await createOrganizationWithVersion(
+            { name: CNC.nom || '' },
+            { environment: environment },
+          )
+
+          await addSite({
+            name: CNC.nom || '',
+            postalCode: CNC.codeInsee || '',
+            city: CNC.commune || '',
+            cnc: {
+              connectOrCreate: {
+                create: {},
+                where: {
+                  id: CNC.id,
+                },
+              },
+            },
+            organization: { connect: { id: organizationVersion.organizationId } },
+          })
+        }
+      }
+    }
+
+    if (!organizationVersion && siretOrCNC.length < 9) {
+      // Too small to be a SIRET or even SIREN and not a CNC in our DB
+      throw new Error(UNKNOWN_SIRET_OR_CNC)
+    }
+
+    if (!organizationVersion) {
       if (environment === Environment.TILT && !(await isValidAssociationSiret(siretOrCNC))) {
         throw new Error(NOT_ASSOCIATION_SIRET)
       }
 
       organization = await getRawOrganizationBySiret(siretOrCNC)
+
       let companyName = ''
       if (environment === Environment.CUT && !organization?.id) {
         companyName = (await getCompanyName(siretOrCNC)) || ''
+
         if (companyName === '') {
-          throw new Error(UNKNOWN_CNC)
+          console.error('Company name not found for siretOrCNC:', siretOrCNC)
+          throw new Error(UNKNOWN_SIRET_OR_CNC)
         }
       }
+
       organizationVersion = organization?.id
         ? await getOrganizationVersionByOrganizationIdAndEnvironment(organization.id, environment)
         : await createOrganizationWithVersion(
             { wordpressId: siretOrCNC, name: companyName },
             { environment: environment },
           )
-    } else {
-      organization = await getRawOrganizationBySiteCNC(siretOrCNC)
-      organizationVersion = organization?.id
-        ? await getOrganizationVersionByOrganizationIdAndEnvironment(organization.id, environment)
-        : null
-      if (!organizationVersion) {
-        const CNC = await findCncByNumeroAuto(siretOrCNC)
-        if (!CNC) {
-          throw new Error(UNKNOWN_CNC)
-        }
-        organizationVersion = await createOrganizationWithVersion({ name: CNC.nom || '' }, { environment: environment })
-        await addSite({
-          name: CNC.nom || '',
-          postalCode: CNC.codeInsee || '',
-          city: CNC.commune || '',
-          cnc: {
-            connectOrCreate: {
-              create: {},
-              where: {
-                id: CNC.id,
-              },
-            },
-          },
-          organization: { connect: { id: organizationVersion.organizationId } },
-        })
-      }
     }
 
     if (!organizationVersion) {
@@ -633,15 +649,18 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
       role: organization?.id ? Role.DEFAULT : Role.ADMIN,
       organizationVersion: { connect: { id: organizationVersion.id } },
     })
+
     if (organization?.id) {
       const createdAccount = (await getAccountById(account.id || '')) as AccountWithUser
       const accounts = await getAccountFromUserOrganization(accountWithUserToUserSession(createdAccount))
+
       await sendActivationRequest(
         accounts.filter((a) => a.role === Role.GESTIONNAIRE || a.role === Role.ADMIN).map((a) => a.user.email),
         email.toLowerCase(),
         `${user.firstName} ${user.lastName}`,
         environment,
       )
+
       return REQUEST_SENT
     } else {
       await validateUser(account.id)

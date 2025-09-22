@@ -158,8 +158,8 @@
 }
 
 .pdf-info-section {
-  margin-top: 2.5rem;
-  padding: 1.25rem;
+  margin-top: 2rem;
+  padding: 0.5rem;
   background-color: #fff;
   border-radius: 0.3125rem;
   border: 1px solid var(--mui-palette-success-main);
