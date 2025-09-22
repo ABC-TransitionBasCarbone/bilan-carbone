@@ -19,6 +19,7 @@ describe('import Service', () => {
       const result = isSourceForEnv(Environment.BC)
       expect(result).toEqual([Import.BaseEmpreinte, Import.Legifrance, Import.NegaOctet, Import.Manual, Import.CUT])
     })
+
     it('should not retrieve sources when env has no import', () => {
       process.env.BC_FE_SOURCES_IMPORT = ''
       const result = isSourceForEnv(Environment.BC)
