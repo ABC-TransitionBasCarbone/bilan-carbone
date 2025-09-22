@@ -101,7 +101,7 @@
     "ges": "Émissions de GES ({unit})"
   },
   "nav": {
-    "backToHome": "Retour a l'accueil",
+    "backToHome": "Retour à l'accueil",
     "emissionFactors": "Facteurs d'émission",
     "home": "Accueil",
     "newOrganization": "Ajouter une nouvelle organisation",
@@ -177,7 +177,7 @@
       "reset": "Confirmer",
       "error": "Veuillez verifier votre email et votre mot de passe",
       "expired": "Ce lien de réinitialisation de mot de passe a expiré",
-      "backToHome": "Retour a l'accueil",
+      "backToHome": "Retour à l'accueil",
       "resetError": "Certaines informations ne sont pas bonnes. Si vous pensez avoir tout rempli correctement, contactez nous.",
       "emailRequired": "Veuillez entrer un email",
       "emailAndPasswordRequired": "Veuillez entrer un email et un mot de passe",
