@@ -84,14 +84,14 @@ model Site {
 }
 
 model CncVersion {
-  id        String @id @default(uuid())
-  year      Int    @unique
+  id        String   @id @default(uuid())
+  year      Int      @unique
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-  
+
   cncs       Cnc[]
   studySites StudySite[]
-  
+
   @@map("cnc_versions")
 }
 
@@ -100,6 +100,7 @@ model Cnc {
 
   cncVersionId String?     @map("cnc_version_id")
   cncVersion   CncVersion? @relation(fields: [cncVersionId], references: [id])
+  cncCode      String?     @unique @map("cnc_code")
 
   regionCNC               String?  @map("region_cnc")
   numeroAuto              String?  @unique @map("numero_auto")

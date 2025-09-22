@@ -101,8 +101,8 @@ const SignUpFormCut = () => {
           control={control}
           translation={t}
           options={cncs.map((cnc) => ({
-            label: `${cnc.nom} (Dep : ${cnc.dep} | Numéro CNC : ${cnc.numeroAuto})`,
-            value: cnc.numeroAuto ?? '',
+            label: `${cnc.nom} (Dep : ${cnc.dep} | Numéro CNC : ${cnc.cncCode})`,
+            value: cnc.cncCode ?? '',
           }))}
           name="siretOrCNC"
           label={t('siretOrCNC')}

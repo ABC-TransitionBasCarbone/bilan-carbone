@@ -80,7 +80,7 @@ const users = async () => {
 
   await prisma.cnc.create({
     data: {
-      numeroAuto: '321',
+      cncCode: '1321',
       nom: 'PATHE',
       codeInsee: '75102',
       commune: 'Paris 2e Arrondissement',
@@ -339,7 +339,7 @@ const users = async () => {
     })),
   })
 
-  const cncRecord = await prisma.cnc.findUnique({ where: { numeroAuto: '321' } })
+  const cncRecord = await prisma.cnc.findUnique({ where: { cncCode: '1321' } })
 
   const sites = await prisma.site.createManyAndReturn({
     data: [...organizations, ...childOrganizations].flatMap((organization) => {

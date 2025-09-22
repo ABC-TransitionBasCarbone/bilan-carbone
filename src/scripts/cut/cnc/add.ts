@@ -90,6 +90,7 @@ const addCNC = async (file: string, year: number) => {
         }) => {
           cncs.push({
             cncVersionId: cncVersion.id,
+            cncCode: `${row.regioncnc}${row.nauto}`,
             regionCNC: row.regioncnc,
             numeroAuto: row.nauto,
             nom: row.nom,

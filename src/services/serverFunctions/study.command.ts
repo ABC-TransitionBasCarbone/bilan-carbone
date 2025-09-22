@@ -9,7 +9,7 @@ export const SitesCommandValidation = z.object({
     z.object({
       id: z.string(),
       cncId: z.string().optional(),
-      cncNumeroAuto: z.string().optional(),
+      cncCode: z.string().optional(),
       name: z
         .string({
           required_error: 'name',
