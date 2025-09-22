@@ -49,7 +49,12 @@ const BarChart = <T extends BasicTypeCharts>({
     return processBarChartData(results, type, showSubLevel, theme, resultsUnit, tPost)
   }, [results, type, showSubLevel, theme, resultsUnit, tPost])
 
-  const getBarLabel = (item: { value: number | null }) => (showLabelsOnBars ? formatValueAndUnit(item.value) : '')
+  const getBarLabel = (item: { value: number | null }) => {
+    if (!showLabelsOnBars || !item.value || item.value === 0) {
+      return ''
+    }
+    return formatValueAndUnit(item.value)
+  }
 
   return (
     <div className={styles.barChart}>

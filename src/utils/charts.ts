@@ -24,7 +24,7 @@ export const getPostColor = (themeColors: Theme, post?: string, color?: string) 
     return color
   }
 
-  if (post && isPost(post) && themeColors.custom.postColors[post]) {
+  if (post && isPost(post) && themeColors.custom.postColors && themeColors.custom.postColors[post]) {
     return themeColors.custom.postColors[post].light
   }
 
@@ -32,14 +32,17 @@ export const getPostColor = (themeColors: Theme, post?: string, color?: string) 
 }
 
 export const getSubpostColor = (theme: Theme, subpost?: SubPost): string => {
-  if (subpost && theme.custom.subPostColors[subpost]) {
+  if (subpost && theme.custom.subPostColors && theme.custom.subPostColors[subpost]) {
     return theme.custom.subPostColors[subpost]
   }
   return theme.palette.primary.light
 }
 
 export const getTagFamilyColor = (theme: Theme, index?: number): string => {
-  return theme.custom.tagFamilyColors[index ?? 0]
+  if (theme.custom.tagFamilyColors && theme.custom.tagFamilyColors[index ?? 0]) {
+    return theme.custom.tagFamilyColors[index ?? 0]
+  }
+  return theme.palette.primary.light
 }
 
 export const getParentColor = (
