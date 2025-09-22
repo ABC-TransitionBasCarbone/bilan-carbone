@@ -20,5 +20,4 @@ Les environnements impactés sont : (Vérifier que la fonctionnalité fonctionne
 
 ## Stratégie technique
 
-- [ ] Ajout de tests unitaires
 - [ ] Ajout de tests cypress
