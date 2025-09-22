@@ -1,4 +1,5 @@
 import { getSourceLatestImportVersionId } from '@/db/study'
+import { getEnvVar } from '@/lib/environment'
 import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
 import {
   EmissionFactorPartType,
@@ -426,14 +427,15 @@ export const addSourceToStudies = async (source: Import, transaction: Prisma.Tra
   }
 }
 
-const isSourceForEnv = (envVar: Environment): Import[] => {
-  const value = process.env[envVar]
-  console.log(`Sources for env ${envVar}: ${value}`)
+export const isSourceForEnv = (env: Environment): Import[] => {
+  const envVar = getEnvVar('FE_SOURCES_IMPORT', env)
 
-  if (!value) {
+  console.log(`Sources for env ${env}: ${envVar}`)
+
+  if (!envVar) {
     return []
   }
-  return value
+  return envVar
     .split(',')
     .map((name) => {
       const key = name.trim() as keyof typeof Import
