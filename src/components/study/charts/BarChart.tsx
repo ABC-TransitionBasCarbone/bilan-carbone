@@ -50,7 +50,7 @@ const BarChart = <T extends BasicTypeCharts>({
   }, [results, type, showSubLevel, theme, resultsUnit, tPost])
 
   const getBarLabel = (item: { value: number | null }) => {
-    if (!showLabelsOnBars || !item.value || item.value === 0) {
+    if (!showLabelsOnBars || !item.value) {
       return ''
     }
     return formatValueAndUnit(item.value)
