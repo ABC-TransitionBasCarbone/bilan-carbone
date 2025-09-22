@@ -1,7 +1,9 @@
 'use client'
 
+import { FullStudy } from '@/db/study'
 import MenuIcon from '@mui/icons-material/Menu'
-import { Divider, Drawer, Fab } from '@mui/material'
+import MenuOpenIcon from '@mui/icons-material/MenuOpen'
+import { Drawer, Fab } from '@mui/material'
 import classNames from 'classnames'
 import { UUID } from 'crypto'
 import { useTranslations } from 'next-intl'
@@ -10,7 +12,7 @@ import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import styles from '../../../components/studyNavbar/StudyNavbar.module.css'
 
-const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
+const StudyNavbar = ({ studyId, study }: { studyId: UUID; study: FullStudy }) => {
   const pathName = usePathname()
 
   const t = useTranslations('study.navigation')
@@ -18,88 +20,74 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
 
   return (
     <>
-      <div className={styles.toolbarContainer}>
+      <div className={styles.toggleButtonContainer}>
         <Fab
           color="primary"
+          size="medium"
           data-testid="study-navbar-button"
-          className={styles.openDrawerButton}
+          className={styles.toggleButton}
           aria-label={t('menu')}
           title={t('menu')}
           onClick={() => setOpen((prev) => !prev)}
         >
-          <MenuIcon />
+          {open ? <MenuOpenIcon /> : <MenuIcon />}
         </Fab>
       </div>
       <Drawer
         className={open ? styles.opened : ''}
         open={open}
-        PaperProps={{ className: styles.studyNavbarContainer }}
+        slotProps={{
+          paper: {
+            className: styles.drawerContainer,
+          },
+        }}
         variant="persistent"
+        transitionDuration={0}
       >
         <Link
-          className={classNames(styles.link, { [styles.active]: pathName === `/etudes/${studyId}` })}
+          className={classNames(styles.studyTitle, { [styles.active]: pathName === `/etudes/${studyId}` })}
           href={`/etudes/${studyId}`}
         >
-          {t('homepage')}
+          🌱 {study.name}
         </Link>
-        <Divider />
-        <>
-          <Link
-            className={classNames(styles.link, { [styles.active]: pathName.includes('cadrage') })}
-            href={`/etudes/${studyId}/cadrage`}
-            data-testid="study-cadrage-link"
-          >
-            {t('framing')}
-          </Link>
-          <Divider />
-          <Link
-            className={classNames(styles.link, { [styles.active]: pathName.includes('perimetre') })}
-            href={`/etudes/${studyId}/perimetre`}
-            data-testid="study-perimetre-link"
-          >
-            {t('scope')}
-          </Link>
-          <Divider />
-          <button className={classNames(styles.link, styles.disabled)} onClick={() => setOpen(false)}>
-            {t('mobilisation')} (<em>{t('coming')}</em>)
-          </button>
-          <Divider />
-        </>
 
-        <div>
-          <div
-            className={classNames(
-              styles.section,
-              { [styles.active]: pathName.includes('comptabilisation') },
-              'align-center',
-            )}
-          >
-            {t('accounting')}
-          </div>
+        <div className={styles.sectionHeader}>{t('informationDefinition')}</div>
 
-          <Divider />
-          <Link
-            className={classNames(styles.link, { [styles.active]: pathName.includes('saisie') }, styles.childrenLink)}
-            href={`/etudes/${studyId}/comptabilisation/saisie-des-donnees`}
-          >
-            {t('dataEntry')}
-          </Link>
-          <Divider />
-          <Link
-            className={classNames(
-              styles.link,
-              { [styles.active]: pathName.includes('resultats') },
-              styles.childrenLink,
-            )}
-            href={`/etudes/${studyId}/comptabilisation/resultats`}
-          >
-            {t('results')}
-          </Link>
-        </div>
-        <Divider />
-        <button className={classNames(styles.button, styles.disabled)}>
-          {t('transitionPlan')} (<em>{t('coming')}</em>)
-        </button>
+        <Link
+          className={classNames(styles.link, { [styles.active]: pathName.includes('cadrage') })}
+          href={`/etudes/${studyId}/cadrage`}
+          data-testid="study-cadrage-link"
+        >
+          {t('framing')}
+        </Link>
+
+        <Link
+          className={classNames(styles.link, { [styles.active]: pathName.includes('perimetre') })}
+          href={`/etudes/${studyId}/perimetre`}
+          data-testid="study-perimetre-link"
+        >
+          {t('scope')}
+        </Link>
+
+        <div className={styles.sectionHeader}>{t('dataAccounting')}</div>
+
+        <Link
+          className={classNames(styles.link, { [styles.active]: pathName.includes('saisie') })}
+          href={`/etudes/${studyId}/comptabilisation/saisie-des-donnees`}
+        >
+          {t('dataEntry')}
+        </Link>
+
+        <Link
+          className={classNames(styles.link, { [styles.active]: pathName.includes('resultats') })}
+          href={`/etudes/${studyId}/comptabilisation/resultats`}
+        >
+          {t('results')}
+        </Link>
+
+        <div className={styles.sectionHeader}>{t('transitionPlan')}</div>
+
+        <button className={classNames(styles.link, styles.disabled)}>{t('commingSoon')}</button>
       </Drawer>
     </>
   )

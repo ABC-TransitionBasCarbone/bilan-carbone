@@ -1,5 +1,6 @@
 'use client'
 
+import { FullStudy } from '@/db/study'
 import MenuIcon from '@mui/icons-material/Menu'
 import { Divider, Drawer, Fab } from '@mui/material'
 import classNames from 'classnames'
@@ -11,7 +12,7 @@ import { useState } from 'react'
 import commonStyles from './../../../components/studyNavbar/StudyNavbar.module.css'
 import styles from './StudyNavbar.module.css'
 
-const StudyNavbarCut = ({ studyId }: { studyId: UUID }) => {
+const StudyNavbarCut = ({ studyId, study }: { studyId: UUID; study: FullStudy }) => {
   const pathName = usePathname()
 
   const t = useTranslations('study.navigation')

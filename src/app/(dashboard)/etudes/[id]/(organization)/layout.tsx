@@ -1,4 +1,5 @@
 import withAuth from '@/components/hoc/withAuth'
+import { StudyProps } from '@/components/hoc/withStudy'
 import WithStudyDetails from '@/components/hoc/withStudyDetails'
 import DynamicStudyNavBar from '@/components/studyNavbar/DynamicStudyNavBar'
 import { UUID } from 'crypto'
@@ -11,13 +12,13 @@ interface Props {
   }>
 }
 
-const NavLayout = async ({ children, params }: Props) => {
+const NavLayout = async ({ children, params, study }: Props & StudyProps) => {
   const { id } = await params
 
   return (
     <>
       <div className="flex">
-        <DynamicStudyNavBar studyId={id} />
+        <DynamicStudyNavBar studyId={id} study={study} />
         <div className={styles.children}>{children}</div>
       </div>
     </>
