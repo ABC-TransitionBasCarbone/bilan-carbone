@@ -1,12 +1,12 @@
-.toggleButtonContainer {
-  top: 4.5rem;
-  left: 1rem;
-  position: fixed;
-  z-index: 100;
-}
-
 .opened {
   width: 21rem;
+}
+
+.toggleButtonContainer {
+  top: 4.5rem;
+  left: 1.5rem;
+  position: fixed;
+  z-index: 100;
 }
 
 .toggleButton {
@@ -18,32 +18,31 @@
 
 .drawerContainer {
   z-index: 99;
-  margin-left: 0.5rem;
+  margin-left: 1rem;
   display: flex;
   top: 4rem !important;
   width: auto;
   height: auto;
   box-sizing: border-box;
   border-radius: 1.5rem;
-  border: 1px solid var(--mui-palette-primary-dark);
+  border: 1px solid var(--mui-palette-primary-main);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-  padding: 1rem 0rem;
-  padding-top: 4rem;
+  padding: 4rem 0rem 1rem 0rem;
 }
 
 .studyTitle {
-  padding: 1rem;
+  padding: 0rem 1rem 0.75rem 1rem;
   font-size: 1.25rem;
-  font-weight: 700;
+  font-weight: 800;
   line-height: 120%;
-  color: green;
+  color: var(--mui-palette-secondary-main);
   text-decoration: none;
   display: flex;
   align-items: center;
 }
 
 .sectionHeader {
-  padding: 1rem 1rem 0.5rem 1rem;
+  padding: 0rem 1rem 0.25rem 1rem;
   font-weight: 400;
   color: var(--mui-palette-text-secondary);
   text-transform: uppercase;

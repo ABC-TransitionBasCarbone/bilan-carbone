@@ -83,6 +83,7 @@ const ChecklistButton = ({ accountOrganizationVersion, clientId, studyId, userRo
     <div className={styles.checklistButton}>
       <Fab
         color="primary"
+        size="medium"
         data-testid="checklist-button"
         aria-label={t('title')}
         title={t('title')}

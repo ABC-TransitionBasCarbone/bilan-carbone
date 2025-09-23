@@ -1,5 +1,6 @@
 'use client'
 
+import StudyName from '@/components/study/card/StudyName'
 import { FullStudy } from '@/db/study'
 import MenuIcon from '@mui/icons-material/Menu'
 import MenuOpenIcon from '@mui/icons-material/MenuOpen'
@@ -44,50 +45,65 @@ const StudyNavbar = ({ studyId, study }: { studyId: UUID; study: FullStudy }) =>
         variant="persistent"
         transitionDuration={0}
       >
-        <Link
-          className={classNames(styles.studyTitle, { [styles.active]: pathName === `/etudes/${studyId}` })}
-          href={`/etudes/${studyId}`}
-        >
-          🌱 {study.name}
-        </Link>
+        <div className="flex-col gapped15 pt1">
+          <div className="flex-col">
+            <Link
+              className={classNames(styles.studyTitle, { [styles.active]: pathName === `/etudes/${studyId}` })}
+              href={`/etudes/${studyId}`}
+            >
+              <StudyName name={study.name} />
+            </Link>
+          </div>
 
-        <div className={styles.sectionHeader}>{t('informationDefinition')}</div>
+          <div className="flex-col">
+            <div className={styles.sectionHeader}>{t('informationDefinition')}</div>
 
-        <Link
-          className={classNames(styles.link, { [styles.active]: pathName.includes('cadrage') })}
-          href={`/etudes/${studyId}/cadrage`}
-          data-testid="study-cadrage-link"
-        >
-          {t('framing')}
-        </Link>
+            <Link
+              className={classNames(styles.link, { [styles.active]: pathName.includes('cadrage') })}
+              href={`/etudes/${studyId}/cadrage`}
+              data-testid="study-cadrage-link"
+            >
+              {t('framing')}
+            </Link>
 
-        <Link
-          className={classNames(styles.link, { [styles.active]: pathName.includes('perimetre') })}
-          href={`/etudes/${studyId}/perimetre`}
-          data-testid="study-perimetre-link"
-        >
-          {t('scope')}
-        </Link>
+            <Link
+              className={classNames(styles.link, { [styles.active]: pathName.includes('perimetre') })}
+              href={`/etudes/${studyId}/perimetre`}
+              data-testid="study-perimetre-link"
+            >
+              {t('scope')}
+            </Link>
+          </div>
 
-        <div className={styles.sectionHeader}>{t('dataAccounting')}</div>
+          <div className="flex-col">
+            <div className={styles.sectionHeader}>{t('dataAccounting')}</div>
 
-        <Link
-          className={classNames(styles.link, { [styles.active]: pathName.includes('saisie') })}
-          href={`/etudes/${studyId}/comptabilisation/saisie-des-donnees`}
-        >
-          {t('dataEntry')}
-        </Link>
+            <Link
+              className={classNames(styles.link, { [styles.active]: pathName.includes('saisie') })}
+              href={`/etudes/${studyId}/comptabilisation/saisie-des-donnees`}
+            >
+              {t('dataEntry')}
+            </Link>
 
-        <Link
-          className={classNames(styles.link, { [styles.active]: pathName.includes('resultats') })}
-          href={`/etudes/${studyId}/comptabilisation/resultats`}
-        >
-          {t('results')}
-        </Link>
+            <Link
+              className={classNames(styles.link, { [styles.active]: pathName.includes('resultats') })}
+              href={`/etudes/${studyId}/comptabilisation/resultats`}
+            >
+              {t('results')}
+            </Link>
+          </div>
 
-        <div className={styles.sectionHeader}>{t('transitionPlan')}</div>
+          <div className="flex-col">
+            <div className={styles.sectionHeader}>{t('transitionPlan')}</div>
 
-        <button className={classNames(styles.link, styles.disabled)}>{t('commingSoon')}</button>
+            <button className={classNames(styles.link, styles.disabled)}>{t('commingSoon')}</button>
+          </div>
+          <div className="flex-col">
+            <div className={styles.sectionHeader}>{t('mobilisation')}</div>
+
+            <button className={classNames(styles.link, styles.disabled)}>{t('commingSoon')}</button>
+          </div>
+        </div>
       </Drawer>
     </>
   )
