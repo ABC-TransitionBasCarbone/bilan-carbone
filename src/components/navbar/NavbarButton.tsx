@@ -8,7 +8,6 @@ const StyledNavbarButton = styled(Button)(({ theme }) => ({
   fontWeight: theme.custom.navbar.text.fontWeight,
   textTransform: theme.custom.navbar.text.textTransform,
   fontSize: theme.custom.navbar.text.fontSize,
-  paddingBottom: '0.625rem',
 }))
 
 const NavbarButton = (props: ButtonProps) => {

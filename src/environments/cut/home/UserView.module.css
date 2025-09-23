@@ -1,8 +1,8 @@
 .block {
   min-height: 600px;
   height: calc(
-    100vh - 54px - 150px - 48px - 32px
-  ); /* 54px top bar + 150px footer + 48px padding top + 32px padding bottom */
+    100vh - 48px - 150px - 48px - 32px
+  ); /* 48px top bar + 150px footer + 48px padding top + 32px padding bottom */
 }
 
 .styledBoxContainer {
