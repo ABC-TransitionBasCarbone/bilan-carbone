@@ -1,16 +1,9 @@
-:root {
-  @media screen and (min-width: 1280px) {
-    --navbar-width: 20rem;
-    --section-gap: 0.75rem;
-  }
-  @media screen and (max-width: 1279px) {
-    --navbar-width: 16rem;
-    --section-gap: 0.5rem;
-  }
-}
-
 .opened {
-  width: calc(var(--navbar-width) + 1rem);
+  width: 21rem;
+
+  @media screen and (max-width: 1279px) {
+    width: 17rem;
+  }
 }
 
 .toggleButtonContainer {
@@ -32,17 +25,21 @@
   margin-left: 1rem;
   display: flex;
   top: 4rem !important;
-  width: var(--navbar-width);
+  width: 20rem;
   height: auto;
   box-sizing: border-box;
   border-radius: 1.5rem;
   border: 1px solid var(--mui-palette-primary-main);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   padding: 4rem 0rem 1rem 0rem;
+
+  @media screen and (max-width: 1279px) {
+    width: 16rem;
+  }
 }
 
 .studyTitle {
-  padding: 0rem 1rem var(--section-gap) 1rem;
+  padding: 0rem 1rem 0.75rem 1rem;
   font-size: 1.25rem;
   font-weight: 800;
   line-height: 120%;
@@ -50,6 +47,10 @@
   text-decoration: none;
   display: flex;
   align-items: center;
+
+  @media screen and (max-width: 1279px) {
+    padding-bottom: 0.5rem !important;
+  }
 }
 
 .sectionHeader {
@@ -67,12 +68,16 @@
   width: 100%;
   border: none;
   color: var(--mui-palette-text-primary);
-  padding: var(--section-gap) 1rem;
+  padding: 0.75rem 1rem;
   text-decoration: none;
   font-weight: 600;
   text-align: left;
   font-size: 1rem;
   transition: background-color 0.2s ease;
+
+  @media screen and (max-width: 1279px) {
+    padding: 0.5rem 1rem;
+  }
 
   &.active {
     background-color: var(--mui-palette-primary-light);

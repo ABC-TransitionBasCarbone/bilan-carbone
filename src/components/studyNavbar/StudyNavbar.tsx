@@ -13,7 +13,7 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
-import styles from '../../../components/studyNavbar/StudyNavbar.module.css'
+import styles from './StudyNavbar.module.css'
 
 interface Props {
   environment: Environment
