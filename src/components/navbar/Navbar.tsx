@@ -174,6 +174,11 @@ const Navbar = ({ children, user, environment }: Props) => {
               <PowerSettingsNewIcon />
             </NavbarButton>
           </Box>
+          {environment === Environment.TILT && (
+            <NavbarLink href="/" aria-label={t('home')} title={t('home')}>
+              <Logo />
+            </NavbarLink>
+          )}
         </Container>
       </Toolbar>
       {children}

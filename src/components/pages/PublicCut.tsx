@@ -63,8 +63,8 @@ const PublicCutPage = ({ children }: Props) => {
             <div className="justify-center">
               <Divider sx={{ borderColor: 'primary.contrastText' }} className={styles.divider} />
             </div>
-            <Typography className={styles.explaination}>
-              {t.rich('explaination', { b: (children) => <b>{children}</b> })}
+            <Typography className={styles.explanation}>
+              {t.rich('explanation', { b: (children) => <b>{children}</b> })}
             </Typography>
           </Box>
         </Box>
@@ -91,7 +91,7 @@ const PublicCutPage = ({ children }: Props) => {
             height={198}
           />
           <Typography textAlign="justify" width="75%" fontSize="0.8rem">
-            {t('explaination2')}
+            {t('explanation2')}
           </Typography>
         </Box>
       </StyledPublicCutPage>
