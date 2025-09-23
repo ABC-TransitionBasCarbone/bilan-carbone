@@ -1,3 +1,4 @@
+import { Translations } from '@/types/translation'
 import { BasicTypeCharts } from '@/utils/charts'
 import { Checkbox, FormControlLabel, Menu } from '@mui/material'
 import classNames from 'classnames'
@@ -29,7 +30,7 @@ const getTagItems = <T extends FilterType>(results: T[]) => {
     )
 }
 
-const getPostItems = <T extends FilterType>(results: T[], tPost: ReturnType<typeof useTranslations>) => {
+const getPostItems = <T extends FilterType>(results: T[], tPost: Translations) => {
   return results
     .filter((result) => result.post !== 'total')
     .reduce(

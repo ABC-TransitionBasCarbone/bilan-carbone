@@ -17,6 +17,7 @@ import { getDocumentSample } from '@/services/serverFunctions/documents'
 import { getDocumentUrl } from '@/services/serverFunctions/file'
 import { addDocumentToStudy, deleteDocumentFromStudy } from '@/services/serverFunctions/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { Translations } from '@/types/translation'
 import DeleteIcon from '@mui/icons-material/Delete'
 import DownloadIcon from '@mui/icons-material/Download'
 import { Alert, InputLabel } from '@mui/material'
@@ -32,7 +33,7 @@ import styles from './StudyFlow.module.css'
 
 interface Props {
   title: string
-  t: ReturnType<typeof useTranslations>
+  t: Translations
   study: FullStudy
   documents: Document[]
   canUpload?: boolean

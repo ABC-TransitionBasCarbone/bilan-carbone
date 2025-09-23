@@ -1,10 +1,10 @@
+import { Translations } from '@/types/translation'
 import { Tabs as MuiTabs, Tab } from '@mui/material'
-import { useTranslations } from 'next-intl'
 import { ReactNode, useMemo, useState } from 'react'
 
 interface Props {
   tabs: string[]
-  t: ReturnType<typeof useTranslations>
+  t: Translations
   content: ReactNode[]
   activeTab?: number
   setActiveTab?: (n: number) => void

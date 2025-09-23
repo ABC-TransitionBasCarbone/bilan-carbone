@@ -1,5 +1,5 @@
-import { useTranslations } from 'next-intl'
+import { Translations } from '@/types/translation'
 
-export const handleWarningText = (t: ReturnType<typeof useTranslations>, text: string) => {
+export const handleWarningText = (t: Translations, text: string) => {
   return <span>{t.rich(text, { warning: (children) => <span className="userWarning">{children}</span> })}</span>
 }

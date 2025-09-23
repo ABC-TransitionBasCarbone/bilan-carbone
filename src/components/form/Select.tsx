@@ -1,5 +1,5 @@
+import { Translations } from '@/types/translation'
 import { FormControl, FormHelperText, SelectProps } from '@mui/material'
-import { useTranslations } from 'next-intl'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
 import { Select } from '../base/Select'
 import styles from './Form.module.css'
@@ -7,7 +7,7 @@ import styles from './Form.module.css'
 interface Props<T extends FieldValues> {
   name: FieldPath<T>
   control: Control<T>
-  translation: ReturnType<typeof useTranslations>
+  translation: Translations
   icon?: React.ReactNode
   iconPosition?: 'before' | 'after'
   clearable?: boolean

@@ -1,5 +1,5 @@
+import { Translations } from '@/types/translation'
 import { Checkbox, ListItemText, MenuItem, Select, SelectChangeEvent } from '@mui/material'
-import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 
 interface Props {
@@ -7,7 +7,7 @@ interface Props {
   renderValue: () => string
   value: string[]
   allValues: string[]
-  t: ReturnType<typeof useTranslations>
+  t: Translations
   setValues: (allValues: string[]) => void
 }
 

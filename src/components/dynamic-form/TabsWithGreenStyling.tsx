@@ -1,5 +1,5 @@
+import { Translations } from '@/types/translation'
 import { Box, Tabs as MuiTabs, Tab, styled } from '@mui/material'
-import { useTranslations } from 'next-intl'
 import { ReactNode, useMemo, useState } from 'react'
 
 const StyledTabs = styled(MuiTabs)(({ theme }) => ({
@@ -45,7 +45,7 @@ const StyledTabContent = styled(Box)(() => ({
 
 interface Props {
   tabs: string[]
-  t: ReturnType<typeof useTranslations>
+  t: Translations
   content: ReactNode[]
   activeTab?: number
   setActiveTab?: (n: number) => void
