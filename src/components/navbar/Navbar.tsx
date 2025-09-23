@@ -176,7 +176,7 @@ const Navbar = ({ children, user, environment }: Props) => {
           </Box>
           {environment === Environment.TILT && (
             <NavbarLink href="/" aria-label={t('home')} title={t('home')}>
-              <Logo environment={Environment.BC} />
+              <Logo />
             </NavbarLink>
           )}
         </Container>

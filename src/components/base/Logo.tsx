@@ -9,7 +9,7 @@ type LogoConfig = {
 }
 
 interface Props {
-  environment: Environment
+  environment?: Environment
 }
 
 export const Logo = ({ environment }: Props) => {
@@ -19,7 +19,7 @@ export const Logo = ({ environment }: Props) => {
       { src: '/logos/abc/logo_abc_base.png', alt: 'Logo ABC', width: 84, height: 28 },
       { src: '/logos/tilt/logo_tilt.svg', alt: 'Logo TILT', width: 82, height: 28 },
     ],
-    [Environment.BC]: [
+    DEFAULT: [
       {
         src: '/logos/logo_bc_2025_blanc_nospace.png',
         alt: 'Logo de bilan carbone 2025',
@@ -29,7 +29,7 @@ export const Logo = ({ environment }: Props) => {
     ],
   }
 
-  const logos = logosPerEnvironment[environment]
+  const logos = (environment && logosPerEnvironment[environment]) ?? logosPerEnvironment.DEFAULT
 
   return (
     <div className="h100 align-center gapped1">
