@@ -9,7 +9,10 @@ import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { DEFAULT_SAMPLE_TITLE, SAMPLE_TITLES } from '@/services/documents'
 import { allowedFlowFileTypes, downloadFromUrl, maxAllowedFileSize, MB } from '@/services/file'
-import { hasAccessToStudyFlowExample } from '@/services/permissions/environment'
+import {
+  hasAccessToDependencyMatrixExample as hasAccessToDependencyMatrixSample,
+  hasAccessToStudyFlowExample,
+} from '@/services/permissions/environment'
 import { getDocumentSample } from '@/services/serverFunctions/documents'
 import { getDocumentUrl } from '@/services/serverFunctions/file'
 import { addDocumentToStudy, deleteDocumentFromStudy } from '@/services/serverFunctions/study'
@@ -49,6 +52,17 @@ const StudyDocument = ({ title, t, study, documents, canUpload = true, documentC
   const [deleting, setDeleting] = useState(false)
   const [selectedDoc, setSelectedDoc] = useState<Document | undefined>(initialDocument)
   const { environment } = useAppEnvironmentStore()
+
+  const canDownloadSample = useMemo(() => {
+    if (!environment) {
+      return false
+    }
+
+    if (documentCategory === DocumentCategory.DependencyMatrix) {
+      return hasAccessToDependencyMatrixSample(environment)
+    }
+    return hasAccessToStudyFlowExample(environment)
+  }, [documentCategory, environment])
 
   useEffect(() => {
     setSelectedDoc(initialDocument)
@@ -172,7 +186,7 @@ const StudyDocument = ({ title, t, study, documents, canUpload = true, documentC
           : undefined
       }
     >
-      {environment && hasAccessToStudyFlowExample(environment) && (
+      {environment && canDownloadSample && (
         <div className="mb-2">
           <Alert severity="info" className="mb-2">
             {t.rich('info', {
