@@ -255,14 +255,14 @@ const normalizeAllowedUsers = (
     return organizationVersionId && allowedUser.account.organizationVersionId === organizationVersionId
       ? { ...allowedUser, account: { ...allowedUser.account, readerOnly } }
       : {
-        ...allowedUser,
-        account: {
-          ...allowedUser.account,
-          organizationVersionId: undefined,
-          level: undefined,
-          readerOnly,
-        },
-      }
+          ...allowedUser,
+          account: {
+            ...allowedUser.account,
+            organizationVersionId: undefined,
+            level: undefined,
+            readerOnly,
+          },
+        }
   })
 
 export const getOrganizationVersionStudiesOrderedByStartDate = async (organizationVersionId: string) => {
@@ -354,15 +354,15 @@ export const getAllowedStudyIdByAccount = async (account: UserSession) => {
         { allowedUsers: { some: { accountId: account.id, role: { notIn: [StudyRole.Reader] } } } },
         ...(isAllowedOnPublicStudies
           ? [
-            {
-              AND: [
-                { organizationVersionId: { in: organizationVersionIds } },
-                ...(isAdmin(account.role)
-                  ? []
-                  : [{ isPublic: true, level: { in: getAllowedLevels(account.level) } }]),
-              ],
-            },
-          ]
+              {
+                AND: [
+                  { organizationVersionId: { in: organizationVersionIds } },
+                  ...(isAdmin(account.role)
+                    ? []
+                    : [{ isPublic: true, level: { in: getAllowedLevels(account.level) } }]),
+                ],
+              },
+            ]
           : []),
       ],
     },
@@ -388,18 +388,18 @@ export const getAllowedStudiesByUserAndOrganization = async (user: UserSession, 
       ...(isAdminOnOrga(user, organizationVersion as OrganizationVersionWithOrganization)
         ? {}
         : {
-          OR: [
-            { allowedUsers: { some: { accountId: user.accountId } } },
-            { contributors: { some: { accountId: user.accountId } } },
-            { isPublic: true, organizationVersionId: user.organizationVersionId as string },
-            {
-              isPublic: true,
-              organizationVersionId: {
-                in: childOrganizations.map((organizationVersion) => organizationVersion.id),
+            OR: [
+              { allowedUsers: { some: { accountId: user.accountId } } },
+              { contributors: { some: { accountId: user.accountId } } },
+              { isPublic: true, organizationVersionId: user.organizationVersionId as string },
+              {
+                isPublic: true,
+                organizationVersionId: {
+                  in: childOrganizations.map((organizationVersion) => organizationVersion.id),
+                },
               },
-            },
-          ],
-        }),
+            ],
+          }),
     },
   })
   return filterAllowedStudies(user, studies)
