@@ -184,6 +184,10 @@
   width: 100% !important;
 }
 
+.w50 {
+  width: 50% !important;
+}
+
 .gapped-2 {
   gap: 0.5rem;
 }
@@ -198,6 +202,10 @@
 
 .gapped2 {
   gap: 2rem;
+}
+
+.gapped4 {
+  gap: 4rem;
 }
 
 .r1 {

@@ -31,6 +31,7 @@ const fillStudySiteDataFromCNC = async () => {
                 latitude: true,
                 longitude: true,
                 seances: true,
+                entrees2024: true,
                 entrees2023: true,
                 semainesActivite: true,
               },

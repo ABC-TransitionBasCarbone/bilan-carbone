@@ -1,6 +1,7 @@
 import HelpIcon from '@/components/base/HelpIcon'
 import { FullStudy } from '@/db/study'
 import { StudyExportsCommand } from '@/services/serverFunctions/study.command'
+import { Translations } from '@/types/translation'
 import { FormControl, FormGroup, FormLabel } from '@mui/material'
 import { Export } from '@prisma/client'
 import classNames from 'classnames'
@@ -15,7 +16,7 @@ interface Props<T extends StudyExportsCommand> {
   study?: FullStudy
   showControl: boolean
   setGlossary: (key: string) => void
-  t: ReturnType<typeof useTranslations>
+  t: Translations
   disabled?: boolean
   duplicateStudyId?: string | null
 }

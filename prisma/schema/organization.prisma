@@ -113,6 +113,7 @@ model Cnc {
   fauteuils               Int?     @map("fauteuils")
   semainesActivite        Int?     @map("semaines_activite")
   seances                 Int?     @map("seances")
+  entrees2024             Int?     @map("entrees2024")
   entrees2023             Int?     @map("entrees2023")
   entrees2022             Int?     @map("entrees2022")
   evolutionEntrees        Float?   @map("evolution_entrees")

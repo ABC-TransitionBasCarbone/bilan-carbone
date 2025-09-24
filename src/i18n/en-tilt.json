@@ -1,5 +1,7 @@
 {
   "login": {
+    "subtext": "Association specific version",
+    "explanation": "The tool dedicated to associations wishing to apply the Bilan Carbone® method and its sectoral variant for the associative sphere. It came into being thanks to the partnership between the Association for Low Carbon Transition, which is the holder of the Bilan Carbone® method, and Tilt, which accompanies all associations in their low-carbon transition. The tool is freely accessible for all French associations trained in the method.",
     "form": {
       "activate": "Create my account"
     }

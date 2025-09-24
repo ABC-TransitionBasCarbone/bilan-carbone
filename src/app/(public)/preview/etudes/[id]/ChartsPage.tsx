@@ -2,6 +2,7 @@ import BarChart from '@/components/study/charts/BarChart'
 import PieChart from '@/components/study/charts/PieChart'
 import { FullStudy } from '@/db/study'
 import { getResultsValues } from '@/services/study'
+import { Translations } from '@/types/translation'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 
@@ -9,7 +10,7 @@ interface Props {
   study: FullStudy
   studySite: string
   siteName: string
-  tPdf: ReturnType<typeof useTranslations>
+  tPdf: Translations
   isAll: boolean
 }
 

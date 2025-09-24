@@ -1,12 +1,12 @@
 import { resultsExportHeadersBase, resultsExportHeadersCut } from '@/constants/exports'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy, getStudyById } from '@/db/study'
+import { Translations } from '@/types/translation'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { getPost } from '@/utils/post'
 import { isCAS, STUDY_UNIT_VALUES } from '@/utils/study'
 import { Environment, Export, ExportRule, Level, StudyResultUnit, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
-import { useTranslations } from 'next-intl'
 import { canBeValidated, getEmissionResults, getEmissionSourcesTotalCo2, getStandardDeviation } from './emissionSource'
 import { download } from './file'
 import { hasAccessToBcExport } from './permissions/environment'
@@ -30,7 +30,7 @@ export enum AdditionalResultTypes {
 }
 export type ResultType = Export | AdditionalResultTypes
 
-const getQuality = (quality: ReturnType<typeof getQualityRating>, t: ReturnType<typeof useTranslations>) => {
+const getQuality = (quality: ReturnType<typeof getQualityRating>, t: Translations) => {
   return quality === null ? t('unknown') : t(quality.toString())
 }
 
@@ -92,12 +92,12 @@ const getEmissionSourcesRows = (
   emissionSources: FullStudy['emissionSources'],
   emissionFactors: EmissionFactorWithMetaData[],
   resultsUnit: StudyResultUnit,
-  t: ReturnType<typeof useTranslations>,
-  tCaracterisations: ReturnType<typeof useTranslations>,
-  tPost: ReturnType<typeof useTranslations>,
-  tQuality: ReturnType<typeof useTranslations>,
-  tUnit: ReturnType<typeof useTranslations>,
-  tResultUnits: ReturnType<typeof useTranslations>,
+  t: Translations,
+  tCaracterisations: Translations,
+  tPost: Translations,
+  tQuality: Translations,
+  tUnit: Translations,
+  tResultUnits: Translations,
   type?: 'Post' | 'Study',
   environment?: Environment,
 ) => {
@@ -203,12 +203,12 @@ const getEmissionSourcesCSVContent = (
   emissionSources: FullStudy['emissionSources'],
   emissionFactors: EmissionFactorWithMetaData[],
   resultsUnit: StudyResultUnit,
-  t: ReturnType<typeof useTranslations>,
-  tCaracterisations: ReturnType<typeof useTranslations>,
-  tPost: ReturnType<typeof useTranslations>,
-  tQuality: ReturnType<typeof useTranslations>,
-  tUnit: ReturnType<typeof useTranslations>,
-  tResultUnits: ReturnType<typeof useTranslations>,
+  t: Translations,
+  tCaracterisations: Translations,
+  tPost: Translations,
+  tQuality: Translations,
+  tUnit: Translations,
+  tResultUnits: Translations,
   environment: Environment,
   type?: 'Post' | 'Study',
 ) => {
@@ -255,12 +255,12 @@ export const downloadStudyPost = async (
   study: FullStudy,
   emissionSources: FullStudy['emissionSources'],
   post: Post | SubPost,
-  t: ReturnType<typeof useTranslations>,
-  tCaracterisations: ReturnType<typeof useTranslations>,
-  tPost: ReturnType<typeof useTranslations>,
-  tQuality: ReturnType<typeof useTranslations>,
-  tUnit: ReturnType<typeof useTranslations>,
-  tResultUnits: ReturnType<typeof useTranslations>,
+  t: Translations,
+  tCaracterisations: Translations,
+  tPost: Translations,
+  tQuality: Translations,
+  tUnit: Translations,
+  tResultUnits: Translations,
   environment: Environment,
 ) => {
   const emissionFactorIds = emissionSources
@@ -289,12 +289,12 @@ export const downloadStudyPost = async (
 
 export const downloadStudyEmissionSources = async (
   study: FullStudy,
-  t: ReturnType<typeof useTranslations>,
-  tCaracterisations: ReturnType<typeof useTranslations>,
-  tPost: ReturnType<typeof useTranslations>,
-  tQuality: ReturnType<typeof useTranslations>,
-  tUnit: ReturnType<typeof useTranslations>,
-  tResultUnits: ReturnType<typeof useTranslations>,
+  t: Translations,
+  tCaracterisations: Translations,
+  tPost: Translations,
+  tQuality: Translations,
+  tUnit: Translations,
+  tResultUnits: Translations,
   environment: Environment,
 ) => {
   const emissionSources = [...study.emissionSources].sort((a, b) => a.subPost.localeCompare(b.subPost))
@@ -334,8 +334,8 @@ const getHeadersForEnv = (environment: Environment) => {
 }
 const getFormattedHeadersForEnv = (
   environment: Environment,
-  traduction: ReturnType<typeof useTranslations>,
-  traductionUnit: ReturnType<typeof useTranslations>,
+  traduction: Translations,
+  traductionUnit: Translations,
   unit: StudyResultUnit,
 ) => {
   const headers = getHeadersForEnv(environment)
@@ -348,7 +348,7 @@ const getFormattedHeadersForEnv = (
 const handleLine = (
   headersForEnv: string[],
   result: ResultsByPost,
-  tQuality: ReturnType<typeof useTranslations>,
+  tQuality: Translations,
   resultsUnits: StudyResultUnit,
 ) => {
   const resultLine = []
@@ -362,11 +362,11 @@ const handleLine = (
 export const formatConsolidatedStudyResultsForExport = (
   study: FullStudy,
   siteList: { name: string; id: string }[],
-  tStudy: ReturnType<typeof useTranslations>,
-  tExport: ReturnType<typeof useTranslations>,
-  tPost: ReturnType<typeof useTranslations>,
-  tQuality: ReturnType<typeof useTranslations>,
-  tUnits: ReturnType<typeof useTranslations>,
+  tStudy: Translations,
+  tExport: Translations,
+  tPost: Translations,
+  tQuality: Translations,
+  tUnits: Translations,
   validatedEmissionSourcesOnly?: boolean,
   environment: Environment = Environment.BC,
   type: ResultType = AdditionalResultTypes.CONSOLIDATED,
@@ -422,10 +422,10 @@ export const formatBegesStudyResultsForExport = (
   rules: ExportRule[],
   emissionFactorsWithParts: EmissionFactorWithParts[],
   siteList: { name: string; id: string }[],
-  tExport: ReturnType<typeof useTranslations>,
-  tQuality: ReturnType<typeof useTranslations>,
-  tBeges: ReturnType<typeof useTranslations>,
-  tUnits: ReturnType<typeof useTranslations>,
+  tExport: Translations,
+  tQuality: Translations,
+  tBeges: Translations,
+  tUnits: Translations,
   validatedEmissionSourcesOnly?: boolean,
 ) => {
   const lengthOfBeges = 33
@@ -515,9 +515,9 @@ export const formatBegesStudyResultsForExport = (
 export const formatBCResultsForCutExport = (
   study: FullStudy,
   siteList: { name: string; id: string }[],
-  tExport: ReturnType<typeof useTranslations>,
-  tPost: ReturnType<typeof useTranslations>,
-  tStudy: ReturnType<typeof useTranslations>,
+  tExport: Translations,
+  tPost: Translations,
+  tStudy: Translations,
   studyUnitValues: Record<string, number>,
   environment: Environment,
 ) => {
@@ -563,13 +563,13 @@ export const downloadStudyResults = async (
   study: FullStudy,
   rules: ExportRule[],
   emissionFactorsWithParts: EmissionFactorWithParts[],
-  tStudy: ReturnType<typeof useTranslations>,
-  tExport: ReturnType<typeof useTranslations>,
-  tPost: ReturnType<typeof useTranslations>,
-  tOrga: ReturnType<typeof useTranslations>,
-  tQuality: ReturnType<typeof useTranslations>,
-  tBeges: ReturnType<typeof useTranslations>,
-  tUnits: ReturnType<typeof useTranslations>,
+  tStudy: Translations,
+  tExport: Translations,
+  tPost: Translations,
+  tOrga: Translations,
+  tQuality: Translations,
+  tBeges: Translations,
+  tUnits: Translations,
   environment: Environment = Environment.BC,
 ) => {
   const data = []
@@ -656,11 +656,11 @@ export const getStudyParentOrganizationVersionId = async (
 
 export const getResultsValues = (
   study: FullStudy,
-  tPost: ReturnType<typeof useTranslations>,
+  tPost: Translations,
   studySite: string,
   validatedOnly: boolean,
   environment: Environment,
-  tStudyResults: ReturnType<typeof useTranslations>,
+  tStudyResults: Translations,
   withDependencies: boolean = true,
 ) => {
   const computedResultsWithDep = computeResultsByPost(

@@ -152,7 +152,7 @@
   "login": {
     "welcome": "Bienvenue sur le Bilan Carbone® +",
     "subtext": "",
-    "explaination": "L'outil dédié à l'application de la méthode Bilan Carbone®, développé par l'Association pour la transition Bas Carbone (ABC), et accessible à l'ensemble de nos membres Conseil et Recherche, Entreprise, Association et Secteur Public",
+    "explanation": "L'outil dédié à l'application de la méthode Bilan Carbone®, développé par l'Association pour la transition Bas Carbone (ABC), et accessible à l'ensemble de nos membres Conseil et Recherche, Entreprise, Association et Secteur Public",
     "question": "Une question ? Lisez la <link>FAQ</link> ou <support>contactez-nous</support> !",
     "form": {
       "activate": "Activer mon compte",
@@ -343,7 +343,11 @@
       "menu": "Ouvrir le menu de navigation de l'étude",
       "coming": "à venir",
       "organizations": "Mon organisation",
-      "team": "Mon équipe"
+      "team": "Mon équipe",
+      "informationDefinition": "Définition des informations",
+      "dataAccounting": "Comptabilisation des données",
+      "reductionTrajectories": "Trajectoires de réduction",
+      "commingSoon": "À venir"
     },
     "new": {
       "title": "Informations sur la nouvelle étude",
@@ -1698,7 +1702,7 @@
   },
   "formation": {
     "title": "Formation",
-    "explaination": "Vous trouverez ci dessous la formation de mise à jour de la méthode Bilan Carbone®. Regardez les vidéos, répondez au questionnaire et recevez votre attestation de réussite ! <b>Le temps de visionnage des vidéos est d'environ 2h. Vous pouvez ensuite, quand vous le souhaitez, répondre au test qui dure {time} minutes maximum. Cette formation de mise à niveau est disponible toute l'année 2025.</b>",
+    "explanation": "Vous trouverez ci dessous la formation de mise à jour de la méthode Bilan Carbone®. Regardez les vidéos, répondez au questionnaire et recevez votre attestation de réussite ! <b>Le temps de visionnage des vidéos est d'environ 2h. Vous pouvez ensuite, quand vous le souhaitez, répondre au test qui dure {time} minutes maximum. Cette formation de mise à niveau est disponible toute l'année 2025.</b>",
     "warning": "Avertissement",
     "warningMessage": "<error>Veuillez vérifier sur votre compte BC+ le nom de votre organisation dans la page <i>Mon organisation > Informations générales</i>, ainsi que vos nom et prénom dans votre profil (en haut à droite). Ces informations seront utilisées pour générer votre attestation personnalisée.</error><br></br>Vous êtes actuellement connecté en tant que {name}, de l'organisation {organization} et êtes formé au niveau {level}. Si cette dernière information n'est pas correcte, merci d'envoyer votre attestation de formation à l'adresse <support>support</support>.<br></br><b>Rappel :</b> la formation doit être suivie avec <b>votre compte personnel</b> et <b>votre adresse e-mail nominative</b>, et non avec un compte générique de l'entreprise. Vous pouvez ajouter d'autres membres de votre organisation depuis le BC+ : page <i>Mon organisation > Mon équipe</i>.",
     "videos": "Vidéos",

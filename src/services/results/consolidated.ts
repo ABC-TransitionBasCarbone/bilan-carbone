@@ -1,6 +1,6 @@
 import { FullStudy } from '@/db/study'
+import { Translations } from '@/types/translation'
 import { Environment, SubPost } from '@prisma/client'
-import { useTranslations } from 'next-intl'
 import {
   getEmissionResults,
   getEmissionSourcesTotalCo2,
@@ -144,7 +144,7 @@ export const computeResultsByTag = (
   withDependencies: boolean,
   validatedOnly: boolean = true,
   environment: Environment,
-  t: ReturnType<typeof useTranslations>,
+  t: Translations,
 ): ResultsByTag[] => {
   const siteEmissionSources = getSiteEmissionSources(study.emissionSources, studySite)
   const emissionSourceWithEmissionValue = siteEmissionSources

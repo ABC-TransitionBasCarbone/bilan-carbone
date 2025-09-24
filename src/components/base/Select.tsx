@@ -1,13 +1,13 @@
+import { Translations } from '@/types/translation'
 import ClearIcon from '@mui/icons-material/Clear'
 import { IconButton, InputAdornment, Select as MUISelect, SelectChangeEvent, SelectProps } from '@mui/material'
-import { useTranslations } from 'next-intl'
 import IconLabel from './IconLabel'
 
 interface Props {
   icon?: React.ReactNode
   iconPosition?: 'before' | 'after'
   clearable?: boolean
-  t?: ReturnType<typeof useTranslations>
+  t?: Translations
   withLabel?: boolean
 }
 

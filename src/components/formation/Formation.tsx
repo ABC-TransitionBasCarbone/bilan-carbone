@@ -62,7 +62,7 @@ const FormationView = ({ formations, user, organizationName }: Props) => {
   return (
     <>
       <div className={classNames(styles.subTitle, 'mb2')}>
-        {t.rich('explaination', {
+        {t.rich('explanation', {
           b: (children) => <span className="bold">{children}</span>,
           time: timer / (MIN * TIME_IN_MS),
         })}

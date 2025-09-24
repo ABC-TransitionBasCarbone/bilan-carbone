@@ -38,7 +38,7 @@ const PublicPage = ({ children }: Props) => {
     <PublicContainer>
       <div className={classNames(styles.info, 'grow p2 text-center')}>
         <p className="title-h4 mb1">{t('welcome')}</p>
-        <p>{t.rich('explaination', { b: (children) => <b>{children}</b> })}</p>
+        <p>{t.rich('explanation', { b: (children) => <b>{children}</b> })}</p>
         <Image
           src="/logos/monogramme_BC_noir.png"
           alt="logo"

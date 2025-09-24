@@ -1,5 +1,7 @@
 {
   "login": {
+    "subtext": "Déclinaison pour la sphère associative",
+    "explanation": "L'outil dédié aux associations souhaitant appliquer la méthode Bilan Carbone® et sa déclinaison sectorielle pour la sphère associative. Il voit le jour grâce au partenariat entre l'Association pour la transition Bas Carbone, porteuse de la méthode Bilan Carbone®, et le Mouvement Tilt, qui accompagne l'ensemble des associations dans leur transition bas carbone. L'outil est accessible gratuitement pour l'ensemble des associations française formées à la méthode.",
     "form": {
       "activate": "Créer mon compte"
     }
