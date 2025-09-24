@@ -499,6 +499,7 @@ export const updateStudySites = async (
           cnc: {
             select: {
               seances: true,
+              entrees2024: true,
               entrees2023: true,
               semainesActivite: true,
               latitude: true,
@@ -652,6 +653,7 @@ export const getStudiesSitesFromIds = async (siteIds: string[]) =>
               latitude: true,
               longitude: true,
               seances: true,
+              entrees2024: true,
               entrees2023: true,
               semainesActivite: true,
             },
