@@ -5,15 +5,15 @@ import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { getEmissionResults } from '@/services/emissionSource'
 import { Post } from '@/services/posts'
-import { computeBegesResult, getBegesEmissionTotal } from '@/services/results/beges'
-import { computeResultsByPost } from '@/services/results/consolidated'
+import { BegesPostInfos, getBegesEmissionTotal } from '@/services/results/beges'
+import { ResultsByPost } from '@/services/results/consolidated'
 import { formatNumber } from '@/utils/number'
 import { getPost } from '@/utils/post'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import LightbulbIcon from '@mui/icons-material/LightbulbOutlined'
 import TrendingUpIcon from '@mui/icons-material/TrendingUpOutlined'
 import WarningAmberIcon from '@mui/icons-material/WarningAmberOutlined'
-import { Export, ExportRule, SubPost } from '@prisma/client'
+import { SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -22,13 +22,19 @@ import styles from './ConsolatedBEGESDifference.module.css'
 
 interface Props {
   study: FullStudy
-  rules: ExportRule[]
   emissionFactorsWithParts: EmissionFactorWithParts[]
-  studySite: string
   validatedOnly: boolean
+  results: ResultsByPost[]
+  begesResults: BegesPostInfos[]
 }
 
-const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validatedOnly }: Props) => {
+const ConsolatedBEGESDifference = ({
+  study,
+  emissionFactorsWithParts,
+  validatedOnly,
+  results,
+  begesResults,
+}: Props) => {
   const t = useTranslations('study.results.difference')
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('study.results.units')
@@ -47,22 +53,10 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
     }
   }
 
-  const begesRules = useMemo(() => rules.filter((rule) => rule.export === Export.Beges), [rules])
-  const beges = useMemo(
-    () => computeBegesResult(study, begesRules, emissionFactorsWithParts, studySite, true, validatedOnly),
-    [study, begesRules, emissionFactorsWithParts, studySite, validatedOnly],
-  )
-  const begesTotal = formatNumber((beges.find((result) => result.rule === 'total')?.total || 0) / unitValue, 0)
-  const computedResults = useMemo(
-    () => computeResultsByPost(study, tPost, studySite, true, validatedOnly, undefined, environment),
-    [study, studySite, tPost, validatedOnly, environment],
-  )
-  const computedTotal = formatNumber(
-    (computedResults.find((result) => result.post === 'total')?.value || 0) / unitValue,
-    0,
-  )
+  const begesTotal = formatNumber((begesResults.find((result) => result.rule === 'total')?.total || 0) / unitValue, 0)
+  const computedTotal = formatNumber((results.find((result) => result.post === 'total')?.value || 0) / unitValue, 0)
 
-  const utilisationEnDependance = computedResults
+  const utilisationEnDependance = results
     .find((result) => result.post === Post.UtilisationEtDependance)
     ?.children.find((subPost) => subPost.post === SubPost.UtilisationEnDependance)
   const hasUtilisationEnDependance = !!utilisationEnDependance && utilisationEnDependance.value !== 0
@@ -304,4 +298,4 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
   )
 }
 
-export default Difference
+export default ConsolatedBEGESDifference

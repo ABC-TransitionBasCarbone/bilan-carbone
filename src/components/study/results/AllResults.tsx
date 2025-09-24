@@ -151,10 +151,10 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
         {exports.map((exportType) => exportType.type).includes(Export.Beges) && (
           <ConsolatedBEGESDifference
             study={study}
-            rules={rules}
             emissionFactorsWithParts={emissionFactorsWithParts}
-            studySite={studySite}
             validatedOnly={validatedOnly}
+            results={computedResultsWithoutDep}
+            begesResults={computedBegesData}
           />
         )}
       </div>
