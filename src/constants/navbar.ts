@@ -87,7 +87,7 @@ export const getStudyNavbarMenu = (
         ],
       },
       {
-        header: t('transitionPlan'),
+        header: t('mobilisation'),
         links: [
           {
             href: '#',
@@ -97,7 +97,7 @@ export const getStudyNavbarMenu = (
         ],
       },
       {
-        header: t('mobilisation'),
+        header: t('transitionPlan'),
         links: [
           {
             href: '#',

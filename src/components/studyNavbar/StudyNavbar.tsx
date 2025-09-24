@@ -56,10 +56,7 @@ const StudyNavbar = ({ environment, studyId, study }: Props) => {
       >
         <div className={classNames('flex-col pt1', sections.length === 1 && !sections[0].header ? '' : 'gapped15')}>
           <div className="flex-col">
-            <Link
-              className={classNames(styles.studyTitle, { [styles.active]: pathName === `/etudes/${studyId}` })}
-              href={title.href}
-            >
+            <Link className={styles.studyTitle} href={title.href}>
               <StudyName name={title.label} />
             </Link>
           </div>
