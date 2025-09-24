@@ -36,30 +36,23 @@ export const createStudy = async (data: Prisma.StudyCreateInput, environment: En
   const dbStudy = await prismaClient.study.create({ data })
   let studyEmissionFactorVersions: Prisma.StudyEmissionFactorVersionCreateManyInput[] = []
 
-  console.log(`Creating study ${dbStudy.name} (${dbStudy.id}) in environment ${environment}`)
   if (environment === Environment.CUT) {
-
-    console.log('Using CUT sources versions', { cutFeLegifrance, cutFeBaseEmpreinte })
-
     studyEmissionFactorVersions = (await getSourceCutImportVersionIds()).map((importVersion) => ({
       studyId: dbStudy.id,
       source: importVersion.source,
       importVersionId: importVersion.id,
     }))
-    console.log(`Using CUT FE versions: ${studyEmissionFactorVersions.map((v) => `${v.source} (${v.importVersionId})`).join(', ')}`)
   } else {
     const sources = Object.values(Import).filter((source) => source !== Import.Manual && source !== Import.CUT)
 
     const latestVersions = await getSourcesLatestImportVersionId(sources)
     if (latestVersions) {
-      studyEmissionFactorVersions = latestVersions
-        .map((latestImportVersion) => ({
-          studyId: dbStudy.id,
-          source: latestImportVersion.source,
-          importVersionId: latestImportVersion.id,
-        }))
+      studyEmissionFactorVersions = latestVersions.map((latestImportVersion) => ({
+        studyId: dbStudy.id,
+        source: latestImportVersion.source,
+        importVersionId: latestImportVersion.id,
+      }))
     }
-    console.log(`Using latest FE versions: ${studyEmissionFactorVersions.map((v) => `${v.source} (${v.importVersionId})`).join(', ')}`)
   }
 
   await prismaClient.studyEmissionFactorVersion.createMany({ data: studyEmissionFactorVersions })
@@ -716,7 +709,7 @@ export const getSourceCutImportVersionIds = async () =>
       ],
     },
     orderBy: { createdAt: 'desc' },
-    take: 1,
+    distinct: ['source'],
   })
 
 export const getSourcesLatestImportVersionId = async (sources: Import[]) =>
@@ -724,7 +717,7 @@ export const getSourcesLatestImportVersionId = async (sources: Import[]) =>
     select: { id: true, source: true },
     where: { source: { in: sources } },
     orderBy: { createdAt: 'desc' },
-    take: 1,
+    distinct: ['source'],
   })
 
 export const getSourceLatestImportVersionId = async (source: Import, transaction?: Prisma.TransactionClient) =>
