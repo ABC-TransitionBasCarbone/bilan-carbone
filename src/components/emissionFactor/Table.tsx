@@ -50,6 +50,7 @@ import {
 import classNames from 'classnames'
 import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'
+import Image from 'next/image'
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react'
 import Button from '../base/Button'
 import DebouncedInput from '../base/DebouncedInput'
@@ -158,8 +159,11 @@ const EmissionFactorsTable = ({
     return () => window.removeEventListener('resize', checkWrappedRows)
   }, [])
 
-  const getLocationLabel = (row: EmissionFactorWithMetaData) =>
-    `${row.location || t('noLocation')}${row.metaData?.location ? ` - ${row.metaData.location}` : ''}`
+  const getLocationLabel = useMemo(
+    () => (row: EmissionFactorWithMetaData) =>
+      `${row.location || t('noLocation')}${row.metaData?.location ? ` - ${row.metaData.location}` : ''}`,
+    [t],
+  )
 
   const editEmissionFactor = async (emissionFactorId: string, action: 'edit' | 'delete') => {
     if (!(await canEditEmissionFactor(emissionFactorId))) {
@@ -227,9 +231,10 @@ const EmissionFactorsTable = ({
             case Import.BaseEmpreinte:
               return (
                 <div className="flex-cc">
-                  <img
+                  <Image
                     className={styles.importFrom}
                     src="https://base-empreinte.ademe.fr/assets/img/base-empreinte.svg"
+                    alt="Base empreinte"
                     title={t('importedFrom.baseEmpreinte')}
                   />
                 </div>
@@ -237,9 +242,10 @@ const EmissionFactorsTable = ({
             case Import.Legifrance:
               return (
                 <div className="flex-cc">
-                  <img
+                  <Image
                     className={styles.importFrom}
                     src="https://www.legifrance.gouv.fr/contenu/logo"
+                    alt="Legifrance"
                     title={t('importedFrom.legifrance')}
                   />
                 </div>
@@ -247,7 +253,12 @@ const EmissionFactorsTable = ({
             case Import.NegaOctet:
               return (
                 <div className="flex-cc">
-                  <img className={styles.importFrom} src="/logos/negaOctet.png" title={t('importedFrom.negaOctet')} />
+                  <Image
+                    className={styles.importFrom}
+                    src="/logos/negaOctet.png"
+                    title={t('importedFrom.negaOctet')}
+                    alt="Negaoctet"
+                  />
                 </div>
               )
             default:
@@ -310,7 +321,7 @@ const EmissionFactorsTable = ({
     }
 
     return columnsToReturn
-  }, [t, selectEmissionFactor])
+  }, [t, selectEmissionFactor, environment, tResultUnits, tUnits, getLocationLabel, userOrganizationId])
 
   const fuse = useMemo(() => {
     return new Fuse(emissionFactors, fuseOptions)
@@ -331,7 +342,7 @@ const EmissionFactorsTable = ({
       return locationFuse.search(locationFilter).map(({ item }) => item)
     }
     return searchResults
-  }, [emissionFactors, filter, locationFilter])
+  }, [emissionFactors, filter, fuse, getLocationLabel, locationFilter])
 
   const data = useMemo(() => {
     const emissionFactorsAllSubposts = searchedEmissionFactors.filter((emissionFactor) => {
@@ -347,7 +358,7 @@ const EmissionFactorsTable = ({
     })
 
     return filterEmissionFactorsBySubPostAndEnv(emissionFactorsAllSubposts, filteredSubPosts, environment)
-  }, [searchedEmissionFactors, filteredSources, filteredUnits, filteredSubPosts, displayArchived])
+  }, [searchedEmissionFactors, filteredSubPosts, environment, filteredSources, filteredUnits, displayArchived])
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
 
@@ -393,7 +404,7 @@ const EmissionFactorsTable = ({
           return initialSelectedSources.includes(a.id) ? -1 : 1
         }
       }),
-    [importVersions],
+    [importVersions, initialSelectedSources],
   )
 
   const statusSelectorRenderValue = () =>
@@ -455,7 +466,7 @@ const EmissionFactorsTable = ({
         .filter(
           (location, i) => data.map((emissionFactor) => getLocationLabel(emissionFactor)).indexOf(location) === i,
         ),
-    [data],
+    [data, getLocationLabel],
   )
 
   return (
