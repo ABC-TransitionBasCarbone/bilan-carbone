@@ -36,28 +36,30 @@ export const createStudy = async (data: Prisma.StudyCreateInput, environment: En
   const dbStudy = await prismaClient.study.create({ data })
   let studyEmissionFactorVersions: Prisma.StudyEmissionFactorVersionCreateManyInput[] = []
 
+  console.log(`Creating study ${dbStudy.name} (${dbStudy.id}) in environment ${environment}`)
   if (environment === Environment.CUT) {
+
+    console.log('Using CUT sources versions', { cutFeLegifrance, cutFeBaseEmpreinte })
+
     studyEmissionFactorVersions = (await getSourceCutImportVersionIds()).map((importVersion) => ({
       studyId: dbStudy.id,
       source: importVersion.source,
       importVersionId: importVersion.id,
     }))
+    console.log(`Using CUT FE versions: ${studyEmissionFactorVersions.map((v) => `${v.source} (${v.importVersionId})`).join(', ')}`)
   } else {
     const sources = Object.values(Import).filter((source) => source !== Import.Manual && source !== Import.CUT)
-    const latestVersions = await Promise.all(sources.map((source) => getSourceLatestImportVersionId(source)))
 
+    const latestVersions = await getSourcesLatestImportVersionId(sources)
     if (latestVersions) {
       studyEmissionFactorVersions = latestVersions
-        .filter(
-          (latestImportVersion): latestImportVersion is { source: Import; id: string } =>
-            !!latestImportVersion?.source && !!latestImportVersion?.id,
-        )
         .map((latestImportVersion) => ({
           studyId: dbStudy.id,
           source: latestImportVersion.source,
           importVersionId: latestImportVersion.id,
         }))
     }
+    console.log(`Using latest FE versions: ${studyEmissionFactorVersions.map((v) => `${v.source} (${v.importVersionId})`).join(', ')}`)
   }
 
   await prismaClient.studyEmissionFactorVersion.createMany({ data: studyEmissionFactorVersions })
@@ -260,14 +262,14 @@ const normalizeAllowedUsers = (
     return organizationVersionId && allowedUser.account.organizationVersionId === organizationVersionId
       ? { ...allowedUser, account: { ...allowedUser.account, readerOnly } }
       : {
-          ...allowedUser,
-          account: {
-            ...allowedUser.account,
-            organizationVersionId: undefined,
-            level: undefined,
-            readerOnly,
-          },
-        }
+        ...allowedUser,
+        account: {
+          ...allowedUser.account,
+          organizationVersionId: undefined,
+          level: undefined,
+          readerOnly,
+        },
+      }
   })
 
 export const getOrganizationVersionStudiesOrderedByStartDate = async (organizationVersionId: string) => {
@@ -359,15 +361,15 @@ export const getAllowedStudyIdByAccount = async (account: UserSession) => {
         { allowedUsers: { some: { accountId: account.id, role: { notIn: [StudyRole.Reader] } } } },
         ...(isAllowedOnPublicStudies
           ? [
-              {
-                AND: [
-                  { organizationVersionId: { in: organizationVersionIds } },
-                  ...(isAdmin(account.role)
-                    ? []
-                    : [{ isPublic: true, level: { in: getAllowedLevels(account.level) } }]),
-                ],
-              },
-            ]
+            {
+              AND: [
+                { organizationVersionId: { in: organizationVersionIds } },
+                ...(isAdmin(account.role)
+                  ? []
+                  : [{ isPublic: true, level: { in: getAllowedLevels(account.level) } }]),
+              ],
+            },
+          ]
           : []),
       ],
     },
@@ -393,18 +395,18 @@ export const getAllowedStudiesByUserAndOrganization = async (user: UserSession, 
       ...(isAdminOnOrga(user, organizationVersion as OrganizationVersionWithOrganization)
         ? {}
         : {
-            OR: [
-              { allowedUsers: { some: { accountId: user.accountId } } },
-              { contributors: { some: { accountId: user.accountId } } },
-              { isPublic: true, organizationVersionId: user.organizationVersionId as string },
-              {
-                isPublic: true,
-                organizationVersionId: {
-                  in: childOrganizations.map((organizationVersion) => organizationVersion.id),
-                },
+          OR: [
+            { allowedUsers: { some: { accountId: user.accountId } } },
+            { contributors: { some: { accountId: user.accountId } } },
+            { isPublic: true, organizationVersionId: user.organizationVersionId as string },
+            {
+              isPublic: true,
+              organizationVersionId: {
+                in: childOrganizations.map((organizationVersion) => organizationVersion.id),
               },
-            ],
-          }),
+            },
+          ],
+        }),
     },
   })
   return filterAllowedStudies(user, studies)
@@ -708,11 +710,21 @@ export const getSourceCutImportVersionIds = async () =>
     select: { id: true, source: true },
     where: {
       OR: [
+        { source: Import.CUT },
         { name: cutFeLegifrance, source: Import.Legifrance },
         { name: cutFeBaseEmpreinte, source: Import.BaseEmpreinte },
       ],
     },
     orderBy: { createdAt: 'desc' },
+    take: 1,
+  })
+
+export const getSourcesLatestImportVersionId = async (sources: Import[]) =>
+  prismaClient.emissionFactorImportVersion.findMany({
+    select: { id: true, source: true },
+    where: { source: { in: sources } },
+    orderBy: { createdAt: 'desc' },
+    take: 1,
   })
 
 export const getSourceLatestImportVersionId = async (source: Import, transaction?: Prisma.TransactionClient) =>
