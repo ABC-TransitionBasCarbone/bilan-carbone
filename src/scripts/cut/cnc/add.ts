@@ -87,12 +87,6 @@ const addCNC = async (file: string, year: number) => {
           longitude?: number
           nombredefilmsprogrammes?: number
         }) => {
-          /**
-           * TODO: change this logic in 2026
-           */
-          const entreeAnneeN = row.entrees2024 ?? row.entrees2023
-          const entreeAnneeNmoins1 = row.entrees2022 ?? row.entrees2023
-
           cncs.push({
             cncVersionId: cncVersion.id,
             cncCode: `${row.regioncnc}${row.nauto}`,
@@ -107,8 +101,9 @@ const addCNC = async (file: string, year: number) => {
             fauteuils: parseInteger(row.fauteuils),
             semainesActivite: parseInteger(row.semainesdactivite),
             seances: parseInteger(row.seances),
-            entrees2023: parseInteger(entreeAnneeN),
-            entrees2022: parseInteger(entreeAnneeNmoins1),
+            entrees2024: parseInteger(row.entrees2024),
+            entrees2023: parseInteger(row.entrees2023),
+            entrees2022: parseInteger(row.entrees2022),
             evolutionEntrees: parseDecimal(row.evolutionentrees),
             trancheEntrees: row.tranchedentrees,
             genre: row.genre,
