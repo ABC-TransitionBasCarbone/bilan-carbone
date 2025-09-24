@@ -430,8 +430,6 @@ export const addSourceToStudies = async (source: Import, transaction: Prisma.Tra
 export const isSourceForEnv = (env: Environment): Import[] => {
   const envVar = getEnvVar('FE_SOURCES_IMPORT', env)
 
-  console.log(`Sources for env ${env}: ${envVar}`)
-
   if (!envVar) {
     return []
   }
