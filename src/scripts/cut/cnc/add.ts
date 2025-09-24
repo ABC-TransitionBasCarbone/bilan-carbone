@@ -44,8 +44,6 @@ const addCNC = async (file: string, year: number) => {
               'fauteuils',
               'semainesdactivite',
               'seances',
-              'entrees2023',
-              'entrees2022',
               'evolutionentrees',
               'tranchedentrees',
               'genre',
@@ -78,6 +76,7 @@ const addCNC = async (file: string, year: number) => {
           fauteuils?: number
           semainesdactivite?: number
           seances?: number
+          entrees2024?: number
           entrees2023?: number
           entrees2022?: number
           evolutionentrees?: number
@@ -102,6 +101,7 @@ const addCNC = async (file: string, year: number) => {
             fauteuils: parseInteger(row.fauteuils),
             semainesActivite: parseInteger(row.semainesdactivite),
             seances: parseInteger(row.seances),
+            entrees2024: parseInteger(row.entrees2024),
             entrees2023: parseInteger(row.entrees2023),
             entrees2022: parseInteger(row.entrees2022),
             evolutionEntrees: parseDecimal(row.evolutionentrees),

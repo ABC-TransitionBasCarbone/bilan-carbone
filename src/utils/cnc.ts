@@ -5,6 +5,7 @@ import { calculateDistanceFromParis } from './distance'
  */
 export interface CncData {
   seances?: number | null
+  entrees2024?: number | null
   entrees2023?: number | null
   semainesActivite?: number | null
   latitude?: number | null
@@ -58,8 +59,8 @@ export const mapCncToStudySite = (
     mapping.numberOfSessions = cncData.seances
   }
 
-  if (currentData.numberOfTickets == null && cncData.entrees2023 != null) {
-    mapping.numberOfTickets = cncData.entrees2023
+  if (currentData.numberOfTickets == null && (cncData.entrees2024 != null || cncData.entrees2023 != null)) {
+    mapping.numberOfTickets = cncData.entrees2024 ?? cncData.entrees2023!
   }
 
   if (currentData.numberOfOpenDays == null && cncData.semainesActivite != null) {
