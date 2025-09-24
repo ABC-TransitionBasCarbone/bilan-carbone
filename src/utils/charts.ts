@@ -1,6 +1,6 @@
+import { Translations } from '@/types/translation'
 import { Theme } from '@mui/material'
 import { StudyResultUnit, SubPost } from '@prisma/client'
-import { useTranslations } from 'next-intl'
 import { formatNumber } from './number'
 import { isPost } from './post'
 import { STUDY_UNIT_VALUES } from './study'
@@ -64,7 +64,7 @@ export const getChildColor = (type: 'post' | 'tag', theme: Theme, child: Omit<Ba
   return getSubpostColor(theme, child.post as SubPost)
 }
 
-export const getPostLabel = (label?: string, post?: string, tPost?: ReturnType<typeof useTranslations>) => {
+export const getPostLabel = (label?: string, post?: string, tPost?: Translations) => {
   if (label) {
     return label
   }
@@ -77,7 +77,7 @@ export const getPostLabel = (label?: string, post?: string, tPost?: ReturnType<t
 export const getLabel = (
   type: 'post' | 'tag',
   item: Pick<BasicTypeCharts, 'post'> & { label?: string },
-  tPost?: ReturnType<typeof useTranslations>,
+  tPost?: Translations,
 ): string => {
   if (type === 'tag') {
     return item.label || ''
@@ -162,7 +162,7 @@ export const processBarChartData = <T extends BasicTypeCharts>(
   showSubLevel: boolean,
   theme: Theme,
   resultsUnit: StudyResultUnit,
-  tPost?: ReturnType<typeof useTranslations>,
+  tPost?: Translations,
 ): ProcessedBarChartData => {
   const filteredData = results.filter((result) => result.post !== 'total' && result.label !== 'total')
   const isTag = type === 'tag'

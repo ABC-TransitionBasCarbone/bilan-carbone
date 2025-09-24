@@ -343,7 +343,11 @@
       "menu": "Open the study navigation menu",
       "coming": "coming",
       "organizations": "My organization",
-      "team": "My team"
+      "team": "My team",
+      "informationDefinition": "Information definition",
+      "dataAccounting": "Accounting of data",
+      "reductionTrajectories": "Reduction trajectories",
+      "commingSoon": "Coming soon"
     },
     "new": {
       "title": "Information about the new study",

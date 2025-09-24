@@ -1,17 +1,3 @@
-.buttonContainer {
-  display: flex;
-  align-items: center;
-
-  &:nth-child(1) {
-    gap: 1rem;
-  }
-}
-
-.toolbarContainer {
-  display: flex;
-  justify-content: space-between;
-}
-
 .big {
   display: block;
 

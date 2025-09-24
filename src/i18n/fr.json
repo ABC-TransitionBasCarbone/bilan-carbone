@@ -343,7 +343,11 @@
       "menu": "Ouvrir le menu de navigation de l'étude",
       "coming": "à venir",
       "organizations": "Mon organisation",
-      "team": "Mon équipe"
+      "team": "Mon équipe",
+      "informationDefinition": "Définition des informations",
+      "dataAccounting": "Comptabilisation des données",
+      "reductionTrajectories": "Trajectoires de réduction",
+      "commingSoon": "À venir"
     },
     "new": {
       "title": "Informations sur la nouvelle étude",

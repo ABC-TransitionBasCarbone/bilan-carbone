@@ -1,7 +1,7 @@
 import { DeleteCommand } from '@/services/serverFunctions/study.command'
+import { Translations } from '@/types/translation'
 import { handleWarningText } from '@/utils/components'
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
-import { useTranslations } from 'next-intl'
 import { Control, UseFormReturn, useWatch } from 'react-hook-form'
 import Button from '../base/Button'
 import Form from '../base/Form'
@@ -13,7 +13,7 @@ interface Props<T extends DeleteCommand> {
   type: 'organization' | 'study'
   onDelete: () => void
   onClose: () => void
-  t: ReturnType<typeof useTranslations>
+  t: Translations
 }
 
 const DeletionModal = <T extends DeleteCommand>({ form, type, onDelete, onClose, t }: Props<T>) => {

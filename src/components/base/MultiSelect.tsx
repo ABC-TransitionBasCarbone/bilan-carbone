@@ -1,5 +1,5 @@
+import { Translations } from '@/types/translation'
 import { MenuItem, SelectChangeEvent, SelectProps } from '@mui/material'
-import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import { Select } from './Select'
 
@@ -9,7 +9,7 @@ interface MultiSelectProps {
   iconPosition?: 'before' | 'after'
   options: { label: string; value: string }[]
   onChange: (value: string[]) => void
-  translation: ReturnType<typeof useTranslations>
+  translation: Translations
   clearable?: boolean
 }
 

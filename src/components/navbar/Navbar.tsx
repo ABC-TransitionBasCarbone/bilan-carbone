@@ -21,6 +21,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
 import SettingsIcon from '@mui/icons-material/Settings'
+import classNames from 'classnames'
 
 interface Props {
   children?: ReactNode
@@ -60,8 +61,8 @@ const Navbar = ({ children, user, environment }: Props) => {
   return (
     <AppBar position="sticky" elevation={0}>
       <Toolbar variant="dense">
-        <Container maxWidth="lg" className={styles.toolbarContainer}>
-          <Box className={styles.buttonContainer}>
+        <Container maxWidth="lg" className="justify-between">
+          <Box className={classNames('flex-cc', 'gapped1')}>
             <NavbarLink href="/" aria-label={t('home')} title={t('home')}>
               <Logo environment={environment} />
             </NavbarLink>
@@ -133,52 +134,54 @@ const Navbar = ({ children, user, environment }: Props) => {
               </>
             )}
           </Box>
-          <Box className={styles.buttonContainer}>
-            {hasMultipleAccounts && (
-              <NavbarButton aria-label={t('selectAccount')} href="/selection-du-compte">
-                <SwapHorizIcon />
-              </NavbarButton>
-            )}
+          <div className="flex gapped1">
+            <Box>
+              {hasMultipleAccounts && (
+                <NavbarButton aria-label={t('selectAccount')} href="/selection-du-compte">
+                  <SwapHorizIcon />
+                </NavbarButton>
+              )}
 
-            {user.role === Role.SUPER_ADMIN && <NavbarLink href="/super-admin">{t('admin')}</NavbarLink>}
-            <NavbarButton rel="noreferrer noopener" href={'/ressources'} aria-label={t('help')}>
-              <HelpOutlineIcon />
-            </NavbarButton>
-            {isCut && (
+              {user.role === Role.SUPER_ADMIN && <NavbarLink href="/super-admin">{t('admin')}</NavbarLink>}
               <NavbarButton rel="noreferrer noopener" href={'/ressources'} aria-label={t('help')}>
-                <MenuBookIcon />
+                <HelpOutlineIcon />
               </NavbarButton>
-            )}
-            {!isCut && (
-              <NavbarButton aria-label={t('settings')} href="/parametres">
-                <SettingsIcon />
+              {isCut && (
+                <NavbarButton rel="noreferrer noopener" href={'/ressources'} aria-label={t('help')}>
+                  <MenuBookIcon />
+                </NavbarButton>
+              )}
+              {!isCut && (
+                <NavbarButton aria-label={t('settings')} href="/parametres">
+                  <SettingsIcon />
+                </NavbarButton>
+              )}
+              <NavbarButton aria-label={t('profile')} href="/profil">
+                <AccountCircleIcon />
               </NavbarButton>
-            )}
-            <NavbarButton aria-label={t('profile')} href="/profil">
-              <AccountCircleIcon />
-            </NavbarButton>
-            {!isCut && (
-              <NavbarButton
-                aria-label={t('methodology')}
-                rel="noreferrer noopener"
-                href={
-                  isTilt
-                    ? 'https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative'
-                    : 'https://www.bilancarbone-methode.com/'
-                }
-              >
-                <MenuBookIcon />
+              {!isCut && (
+                <NavbarButton
+                  aria-label={t('methodology')}
+                  rel="noreferrer noopener"
+                  href={
+                    isTilt
+                      ? 'https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative'
+                      : 'https://www.bilancarbone-methode.com/'
+                  }
+                >
+                  <MenuBookIcon />
+                </NavbarButton>
+              )}
+              <NavbarButton title={t('logout')} aria-label={t('logout')} onClick={() => signOutEnv(user.environment)}>
+                <PowerSettingsNewIcon />
               </NavbarButton>
+            </Box>
+            {environment === Environment.TILT && (
+              <NavbarLink href="/" aria-label={t('home')} title={t('home')}>
+                <Logo />
+              </NavbarLink>
             )}
-            <NavbarButton title={t('logout')} aria-label={t('logout')} onClick={() => signOutEnv(user.environment)}>
-              <PowerSettingsNewIcon />
-            </NavbarButton>
-          </Box>
-          {environment === Environment.TILT && (
-            <NavbarLink href="/" aria-label={t('home')} title={t('home')}>
-              <Logo />
-            </NavbarLink>
-          )}
+          </div>
         </Container>
       </Toolbar>
       {children}

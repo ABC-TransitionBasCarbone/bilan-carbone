@@ -1,10 +1,10 @@
-import { useTranslations } from 'next-intl'
+import { Translations } from '@/types/translation'
 import Modal from './Modal'
 
 interface Props {
   glossary: string
   label: string
-  t: ReturnType<typeof useTranslations>
+  t: Translations
   onClose: () => void
   children: React.ReactNode
 }
