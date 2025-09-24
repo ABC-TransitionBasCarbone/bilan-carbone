@@ -59,6 +59,16 @@ export const getStudyNavbarMenu = (
     },
     sections: [
       {
+        header: t('mobilisation'),
+        links: [
+          {
+            href: '#',
+            label: t('commingSoon'),
+            disabled: true,
+          },
+        ],
+      },
+      {
         header: t('informationDefinition'),
         links: [
           {
@@ -83,16 +93,6 @@ export const getStudyNavbarMenu = (
           {
             href: `/etudes/${studyId}/comptabilisation/resultats`,
             label: t('results'),
-          },
-        ],
-      },
-      {
-        header: t('mobilisation'),
-        links: [
-          {
-            href: '#',
-            label: t('commingSoon'),
-            disabled: true,
           },
         ],
       },
