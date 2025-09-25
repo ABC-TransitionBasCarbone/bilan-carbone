@@ -1,5 +1,6 @@
 'use client'
 
+import { duplicateStudyInOtherEnvironment } from '@/services/serverFunctions/study'
 import { MenuItem } from '@mui/material'
 import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -28,13 +29,20 @@ const DuplicateStudyModal = ({
   const t = useTranslations('study.duplicateDialog')
   const tEnv = useTranslations('environment')
   const [environment, setEnvironment] = useState<Environment>(environments[0])
+  const [duplicated, setDuplicated] = useState(false)
   const router = useRouter()
 
   const isOtherEnvironment = environments[0] !== sourceEnvironment
 
-  const handleDuplicate = () => {
+  const handleDuplicate = async () => {
     if (isOtherEnvironment) {
-      console.log('copy in another environment')
+      const res = await duplicateStudyInOtherEnvironment(studyId, environment)
+      if (res.success) {
+        setDuplicated(true)
+        setTimeout(() => {
+          onClose()
+        }, 5000)
+      }
     } else {
       if (organizationVersionId) {
         router.push(`/organisations/${organizationVersionId}/etudes/creer?duplicate=${studyId}`)
@@ -47,38 +55,48 @@ const DuplicateStudyModal = ({
   return (
     <Modal
       open={open}
-      title={t('title')}
+      title={t(duplicated ? 'duplicatedTitle' : 'title')}
       label="duplicate-study"
       onClose={onClose}
-      actions={[
-        { actionType: 'button', onClick: onClose, children: t('cancel') },
-        {
-          actionType: 'button',
-          onClick: handleDuplicate,
-          children: t('confirm'),
-          'data-testid': 'duplicate-study-confirm',
-        },
-      ]}
+      actions={
+        duplicated
+          ? []
+          : [
+              { actionType: 'button', onClick: onClose, children: t('cancel') },
+              {
+                actionType: 'button',
+                onClick: handleDuplicate,
+                children: t('confirm'),
+                'data-testid': 'duplicate-study-confirm',
+              },
+            ]
+      }
     >
-      {t.rich(isOtherEnvironment ? 'otherEnvironnment' : 'description', {
-        environment: tEnv(environment),
-        br: () => <br />,
-      })}
-      {environments.length > 1 && (
-        <div className="flex-col my1">
-          <span className="bold">{t('selectEnvironment')}</span>
-          <Select
-            id="environment-selector"
-            value={environment}
-            onChange={(event) => setEnvironment(event.target.value as Environment)}
-          >
-            {environments.map((environment) => (
-              <MenuItem key={`environment-${environment}`} value={environment}>
-                {tEnv(environment)}
-              </MenuItem>
-            ))}
-          </Select>
-        </div>
+      {duplicated ? (
+        <div>{t('duplicatedDescription', { environment: tEnv(environment) })}</div>
+      ) : (
+        <>
+          {t.rich(isOtherEnvironment ? 'otherEnvironnment' : 'description', {
+            environment: tEnv(environment),
+            br: () => <br />,
+          })}
+          {environments.length > 1 && (
+            <div className="flex-col my1">
+              <span className="bold">{t('selectEnvironment')}</span>
+              <Select
+                id="environment-selector"
+                value={environment}
+                onChange={(event) => setEnvironment(event.target.value as Environment)}
+              >
+                {environments.map((environment) => (
+                  <MenuItem key={`environment-${environment}`} value={environment}>
+                    {tEnv(environment)}
+                  </MenuItem>
+                ))}
+              </Select>
+            </div>
+          )}
+        </>
       )}
     </Modal>
   )

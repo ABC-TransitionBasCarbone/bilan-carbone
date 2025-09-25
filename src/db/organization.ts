@@ -117,7 +117,7 @@ export const getOrganizationVersionByOrganizationIdAndEnvironment = (
 export const getOrganizationVersionsByOrganizationId = (organizationId: string) =>
   prismaClient.organizationVersion.findMany({
     where: { organizationId },
-    select: { id: true },
+    select: { id: true, environment: true },
   })
 
 export const getOrganizationWithSitesById = (id: string) =>
@@ -134,6 +134,7 @@ export const getOrganizationWithSitesById = (id: string) =>
           city: true,
           volunteerNumber: true,
           beneficiaryNumber: true,
+          cnc: true,
         },
         orderBy: { createdAt: 'asc' },
       },

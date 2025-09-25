@@ -11,7 +11,13 @@ import { canBeValidated, getEmissionResults, getEmissionSourcesTotalCo2, getStan
 import { download } from './file'
 import { hasAccessToBcExport } from './permissions/environment'
 import { StudyWithoutDetail } from './permissions/study'
-import { convertCountToBilanCarbone, environmentPostMapping, Post, subPostsByPost } from './posts'
+import {
+  convertCountToBilanCarbone,
+  environmentPostMapping,
+  Post,
+  subPostBCToSubPostTiltMapping,
+  subPostsByPost,
+} from './posts'
 import { computeBegesResult } from './results/beges'
 import { computeResultsByPost, computeResultsByTag, ResultsByPost } from './results/consolidated'
 import { EmissionFactorWithMetaData, getEmissionFactorsByIds } from './serverFunctions/emissionFactor'
@@ -716,5 +722,26 @@ export const getResultsValues = (
     monetaryRatio,
     nonSpecificMonetaryRatio,
     computedResultsByTag,
+  }
+}
+
+export const getTransEnvironmentSubPost = (source: Environment, target: Environment, subPost: SubPost) => {
+  if (source === Environment.BC && target === Environment.TILT) {
+    switch (subPost) {
+      case SubPost.UtilisationEnResponsabilite:
+      case SubPost.UtilisationEnDependance:
+        return SubPost.UtilisationEnDependance
+      case SubPost.Batiment:
+        return SubPost.Batiment
+      default: {
+        const subPosts = subPostBCToSubPostTiltMapping[subPost]
+        if (!subPosts) {
+          return undefined
+        }
+        return subPosts[0]
+      }
+    }
+  } else {
+    return undefined
   }
 }
