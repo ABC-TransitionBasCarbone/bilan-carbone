@@ -31,6 +31,12 @@ export const createEmissionSourceTagOnStudy = (emissionSourceTag: Prisma.Emissio
     data: emissionSourceTag,
   })
 
+export const updateEmissionSourceTagOnStudy = (id: string, data: Prisma.EmissionSourceTagUpdateInput) =>
+  prismaClient.emissionSourceTag.update({
+    where: { id },
+    data,
+  })
+
 export const deleteEmissionSourceTagOnStudy = (id: string) => prismaClient.emissionSourceTag.delete({ where: { id } })
 
 export const getEmissionSourceTagFamilyById = async (familyId: string) =>
