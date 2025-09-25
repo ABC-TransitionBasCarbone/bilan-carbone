@@ -12,6 +12,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import DownloadIcon from '@mui/icons-material/Download'
 import LockIcon from '@mui/icons-material/Lock'
 import LockOpenIcon from '@mui/icons-material/LockOpen'
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz'
 import { Environment } from '@prisma/client'
 import { useFormatter, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -28,6 +29,7 @@ interface Props {
   organizationVersionId: string | null
   canDeleteStudy?: boolean
   canDuplicateStudy?: boolean
+  duplicableEnvironments: Environment[]
   studySite: string
   setSite: Dispatch<SetStateAction<string>>
   environment: Environment
@@ -38,14 +40,17 @@ const StudyDetailsHeader = ({
   organizationVersionId,
   canDeleteStudy,
   canDuplicateStudy,
+  duplicableEnvironments,
   studySite,
   setSite,
   environment,
 }: Props) => {
   const [deleting, setDeleting] = useState(false)
+  const [environmentDuplicating, setEnvironmentDuplicating] = useState(false)
   const [duplicating, setDuplicating] = useState(false)
   const { callServerFunction } = useServerFunction()
   const format = useFormatter()
+  const t = useTranslations('study')
   const tStudyDelete = useTranslations('study.delete')
   const tStudyExport = useTranslations('study.export')
   const tCaracterisations = useTranslations('categorisations')
@@ -82,6 +87,7 @@ const StudyDetailsHeader = ({
           'data-testid': 'delete-study',
           onClick: () => setDeleting(true),
           children: <DeleteIcon />,
+          title: t('deleteStudy'),
           variant: 'contained',
           color: 'error',
         },
@@ -94,6 +100,18 @@ const StudyDetailsHeader = ({
           actionType: 'button',
           onClick: () => setDuplicating(true),
           children: <CopyIcon />,
+          title: t('duplicate'),
+        },
+      ]
+    : []
+
+  const duplicateEnvironmentAction: BlockProps['actions'] = duplicableEnvironments.length
+    ? [
+        {
+          actionType: 'button',
+          onClick: () => setEnvironmentDuplicating(true),
+          children: <SwapHorizIcon />,
+          title: t('duplicateEnvironment'),
         },
       ]
     : []
@@ -133,7 +151,7 @@ const StudyDetailsHeader = ({
       title={study.name}
       as="h1"
       icon={study.isPublic ? <LockOpenIcon /> : <LockIcon />}
-      actions={[...duplicateAction, ...exportAction, ...deleteAction]}
+      actions={[...duplicateAction, ...duplicateEnvironmentAction, ...exportAction, ...deleteAction]}
       description={
         <div className={styles.studyInfo}>
           <p>
@@ -158,14 +176,22 @@ const StudyDetailsHeader = ({
           t={tStudyDelete}
         />
       )}
-      {duplicating && (
-        <DuplicateStudyModal
-          studyId={study.id}
-          organizationVersionId={organizationVersionId}
-          open={duplicating}
-          onClose={() => setDuplicating(false)}
-        />
-      )}
+      <DuplicateStudyModal
+        studyId={study.id}
+        organizationVersionId={organizationVersionId}
+        sourceEnvironment={study.organizationVersion.environment}
+        environments={duplicableEnvironments}
+        open={environmentDuplicating}
+        onClose={() => setEnvironmentDuplicating(false)}
+      />
+      <DuplicateStudyModal
+        studyId={study.id}
+        organizationVersionId={organizationVersionId}
+        sourceEnvironment={study.organizationVersion.environment}
+        environments={[study.organizationVersion.environment]}
+        open={duplicating}
+        onClose={() => setDuplicating(false)}
+      />
     </Block>
   )
 }

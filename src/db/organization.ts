@@ -114,6 +114,12 @@ export const getOrganizationVersionByOrganizationIdAndEnvironment = (
     select: OrganizationVersionWithOrganizationSelect,
   })
 
+export const getOrganizationVersionsByOrganizationId = (organizationId: string) =>
+  prismaClient.organizationVersion.findMany({
+    where: { organizationId },
+    select: { id: true },
+  })
+
 export const getOrganizationWithSitesById = (id: string) =>
   prismaClient.organization.findUnique({
     where: { id },

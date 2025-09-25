@@ -134,3 +134,14 @@ export const getEmissionValueString = (
   const safeValue = value ?? 0
   return `${formatNumber(safeValue / STUDY_UNIT_VALUES[resultsUnit], decimals)} ${unitLabel}`
 }
+
+export const getDuplicableEnvironments = (environment: Environment): Environment[] => {
+  switch (environment) {
+    case Environment.BC:
+      return [Environment.TILT]
+    case Environment.TILT:
+      return [Environment.BC]
+    default:
+      return []
+  }
+}
