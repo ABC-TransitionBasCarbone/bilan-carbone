@@ -48,3 +48,12 @@ export const getFileUrlFromBucket = async (fileKey: string) =>
   withServerResponse('getFileUrlFromBucket', async () => {
     return getSignedUrl(s3, new GetObjectCommand({ Bucket: bucketName, Key: fileKey }), { expiresIn: 3600 })
   })
+
+export const getFileFromBucket = async (fileKey: string) =>
+  withServerResponse('getFileFromBucket', async () => {
+    const response = await s3.send(new GetObjectCommand({ Bucket: bucketName, Key: fileKey }))
+    if (!response.Body) {
+      throw new Error('No file content received')
+    }
+    return Buffer.from(await response.Body.transformToByteArray())
+  })

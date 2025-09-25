@@ -196,7 +196,7 @@ const getFileName = (study: FullStudy, post?: string, subPost?: SubPost) => {
 
 const downloadCSV = (csvContent: string, fileName: string) => {
   // \ufeff  (Byte Order Mark) adds BOM to indicate UTF-8 encoding
-  return download(['\ufeff', csvContent], fileName, 'text/csv;charset=utf-8;')
+  return download(['\ufeff', csvContent], fileName, 'csv')
 }
 
 const getEmissionSourcesCSVContent = (
@@ -639,7 +639,7 @@ export const downloadStudyResults = async (
 
   const buffer = await prepareExcel(data)
 
-  download([buffer], `${study.name}_results.xlsx`, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+  download([buffer], `${study.name}_results.xlsx`, 'xlsx')
 }
 
 export const getStudyParentOrganizationVersionId = async (

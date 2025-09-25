@@ -288,12 +288,15 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
           email: TEST_EMAILS.teamMember,
           id: TEST_IDS.userStudy,
           level: 'Initial',
+          firstName: 'Team',
+          lastName: 'Member',
         },
         organizationVersionId: TEST_IDS.orgVersion,
         readerOnly: false,
       },
       role: StudyRole.Validator,
       accountId: TEST_IDS.account,
+      createdAt: new Date(),
     },
   ],
   contributors: [
@@ -304,6 +307,8 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
         user: {
           email: TEST_EMAILS.contributor,
           id: '',
+          firstName: 'Contributor',
+          lastName: 'Contributor',
         },
         organizationVersionId: TEST_IDS.orgVersion,
       },
@@ -311,7 +316,6 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
     },
   ],
   emissionSourceTagFamilies: [],
-  ...overrides,
   organizationVersion: mockedOrganizationVersion,
   sites: [],
   oldBCId: null,
@@ -324,4 +328,5 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
   level: 'Initial',
   createdAt: new Date(),
   updatedAt: new Date(),
+  ...overrides,
 })

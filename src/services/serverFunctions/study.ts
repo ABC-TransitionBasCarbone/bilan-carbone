@@ -61,6 +61,7 @@ import {
 import { addUser, getUserApplicationSettings, getUserByEmail, getUserSourceById, UserWithAccounts } from '@/db/user'
 import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
+import { getNestedValue } from '@/utils/array'
 import { mapCncToStudySite } from '@/utils/cnc'
 import { calculateDistanceFromParis } from '@/utils/distance'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
@@ -71,6 +72,7 @@ import {
   getUserRoleOnPublicStudy,
   hasEditionRights,
 } from '@/utils/study'
+import { formatDateFr } from '@/utils/time'
 import { isAdmin } from '@/utils/user'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import {
@@ -91,8 +93,10 @@ import {
   UserChecklist,
   UserStatus,
 } from '@prisma/client'
+import Docxtemplater from 'docxtemplater'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
+import PizZip from 'pizzip'
 import { v4 as uuidv4 } from 'uuid'
 import { auth, dbActualizedAuth } from '../auth'
 import { getCaracterisationsBySubPost } from '../emissionSource'
@@ -117,7 +121,9 @@ import {
   canUpgradeSourceVersion,
   isAdminOnStudyOrga,
 } from '../permissions/study'
-import { deleteFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
+import { environmentPostMapping } from '../posts'
+import { computeResultsByPost } from '../results/consolidated'
+import { deleteFileFromBucket, getFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
 import { checkLevel } from '../study'
 import { saveAnswerForQuestion } from './question'
 import {
@@ -1463,4 +1469,133 @@ export const getCncByCncCode = async (cncCode: string) =>
     }
 
     return await findCncByCncCode(cncCode)
+  })
+
+export const mapStudyForReport = async (study: FullStudy) => {
+  const isParentCR = !!study.organizationVersion.parentId
+
+  const allowedUsers = study.allowedUsers.map((user) => {
+    const { firstName, lastName } = user.account.user
+    return {
+      accountId: user.accountId,
+      name: `${firstName} ${lastName}`,
+      role: user.role,
+      createdAt: user.createdAt,
+      isInternal: user.account.organizationVersionId === study.organizationVersionId,
+    }
+  })
+
+  const contributors: { accountId: string; name: string; isInternal: boolean }[] = []
+  study.contributors.forEach((contributor) => {
+    if (!contributors.some((c) => c.accountId === contributor.accountId)) {
+      const { firstName, lastName } = contributor.account.user
+      contributors.push({
+        accountId: contributor.accountId,
+        name: `${firstName} ${lastName}`,
+        isInternal: isParentCR,
+      })
+    }
+  })
+
+  const admin =
+    allowedUsers
+      .filter((user) => user.role === StudyRole.Validator)
+      .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())[0] || null
+  const remainingMembers = allowedUsers.filter((user) => user.accountId !== admin?.accountId)
+  const internalTeam = [
+    ...remainingMembers.filter((user) => user.isInternal),
+    ...contributors.filter((contributor) => contributor.isInternal),
+  ]
+  const externalTeam = [
+    ...remainingMembers.filter((user) => !user.isInternal),
+    ...contributors.filter((contributor) => !contributor.isInternal),
+  ]
+
+  const sites = study.sites.map((studySite) => ({
+    id: studySite.id,
+    name: studySite.site.name,
+    city: studySite.site.city,
+    postalCode: studySite.site.postalCode,
+  }))
+
+  // Compute results to get monetary ratios
+  const tPost = await getTranslations('emissionFactors.post')
+  const computedResults = computeResultsByPost(
+    study,
+    tPost,
+    'all',
+    true,
+    false,
+    environmentPostMapping[study.organizationVersion.environment],
+    study.organizationVersion.environment,
+  )
+
+  const totalResult = computedResults.find((result) => result.post === 'total')
+  const total = totalResult?.value || 0
+  const monetaryTotal = totalResult?.monetaryValue || 0
+  const nonSpecificMonetaryTotal = totalResult?.nonSpecificMonetaryValue || 0
+  const specificMonetaryTotal = monetaryTotal - nonSpecificMonetaryTotal
+
+  const monetaryRatioPercentage = total > 0 ? Number(((monetaryTotal / total) * 100).toFixed(2)) : 0
+  const specificMonetaryRatioPercentage = total > 0 ? Number(((specificMonetaryTotal / total) * 100).toFixed(2)) : 0
+  const nonSpecificMonetaryRatioPercentage =
+    total > 0 ? Number(((nonSpecificMonetaryTotal / total) * 100).toFixed(2)) : 0
+
+  const tLevel = await getTranslations('level')
+
+  return {
+    ...study,
+    level: tLevel(study.level),
+    year: study.startDate.getFullYear(),
+    startDate: formatDateFr(study.startDate),
+    endDate: formatDateFr(study.endDate),
+    admin,
+    internalTeam,
+    externalTeam,
+    monetaryRatioPercentage: monetaryRatioPercentage,
+    specificMonetaryRatioPercentage: specificMonetaryRatioPercentage,
+    nonSpecificMonetaryRatioPercentage: nonSpecificMonetaryRatioPercentage,
+    sites,
+  }
+}
+
+export const prepareReport = async (study: FullStudy) =>
+  withServerResponse('prepareReport', async () => {
+    const templateKey = process.env.SCW_REPORT_TEMPLATE_KEY
+    if (!templateKey) {
+      throw new Error('Report template key not configured')
+    }
+
+    const contentResult = await getFileFromBucket(templateKey)
+    if (!contentResult.success) {
+      throw new Error('Failed to fetch report template from Scaleway')
+    }
+
+    const content = contentResult.data
+    const zip = new PizZip(content)
+
+    const doc = new Docxtemplater(zip, {
+      paragraphLoop: true,
+      linebreaks: true,
+      parser: (tag: string) => ({
+        get(scope) {
+          if (tag.includes('.')) {
+            return getNestedValue(scope, tag)
+          }
+          return scope[tag]
+        },
+      }),
+    })
+
+    doc.render({
+      study: await mapStudyForReport(study),
+      organization: study.organizationVersion.organization,
+    })
+    const buffer = doc.toBuffer()
+    const arrayBuffer = new ArrayBuffer(buffer.length)
+    const view = new Uint8Array(arrayBuffer)
+    for (let i = 0; i < buffer.length; ++i) {
+      view[i] = buffer[i]
+    }
+    return arrayBuffer
   })
