@@ -1153,7 +1153,7 @@
       "completeness": "Completeness:",
       "comment": "Other informations:",
       "GESDecomposition": "Breakdown of GHGs:",
-      "factorsPart": "Emission Factor Parts:",
+      "factorParts": "Emission Factor Parts:",
       "yes": "Yes"
     },
     "edit": {

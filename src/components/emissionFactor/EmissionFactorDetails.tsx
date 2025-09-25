@@ -135,7 +135,7 @@ const EmissionFactorDetails = ({ emissionFactor }: Props) => {
       )}
       {gases.length > 0 && (
         <div className={classNames(styles.info, 'flex')}>
-          <span className={classNames(styles.infoTitle, 'bold')}>{t('GESdecomposition')}&nbsp;</span>
+          <span className={classNames(styles.infoTitle, 'bold')}>{t('GESDecomposition')}&nbsp;</span>
           <div className="flex grow">
             {gases.map((gaz) => (
               <span key={gaz}>
