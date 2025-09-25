@@ -1136,7 +1136,7 @@
         "negaOctet": "Logo de NegaOctet",
         "manual": "Manuel"
       },
-      "post": "Postes :",
+      "post": "Postes",
       "co2f": "CO2f :",
       "ch4f": "CH4f :",
       "ch4b": "CH4b :",
@@ -1146,12 +1146,15 @@
       "hfc": "HFC :",
       "pfc": "PFC :",
       "otherGES": "Autres gaz :",
-      "qualityRating": "Qualité globale du Facteur d'Émission : ",
+      "qualityRating": "Qualité globale du Facteur d'Émission",
       "reliability": "Fiabilité :",
       "technicalRepresentativeness": "Représentativité technique :",
       "geographicRepresentativeness": "Représentativité géographique :",
       "temporalRepresentativeness": "Représentativité temporelle :",
-      "completeness": "Complétude :"
+      "completeness": "Complétude :",
+      "comment": "Autres informations : ",
+      "GESdecomposition": "Décomposition des GES : ",
+      "factorParts": "Composantes du facteur d'émission : "
     },
     "edit": {
       "title": "Modifier le facteur d'émissions ({name})",

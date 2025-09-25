@@ -1135,7 +1135,7 @@
         "negaOctet": "NegaOctet logo",
         "manual": "Manual"
       },
-      "post": "Posts:",
+      "post": "Posts",
       "co2f": "CO2f:",
       "ch4f": "CH4f:",
       "ch4b": "CH4b:",
@@ -1145,12 +1145,15 @@
       "hfc": "HFC:",
       "pfc": "PFC:",
       "otherGES": "Other gases:",
-      "qualityRating": "Overall quality of the Emission Factor:",
+      "qualityRating": "Overall quality of the Emission Factor",
       "reliability": "Reliability:",
       "technicalRepresentativeness": "Technical representativeness:",
       "geographicRepresentativeness": "Geographic representativeness:",
       "temporalRepresentativeness": "Temporal representativeness:",
       "completeness": "Completeness:",
+      "comment": "Other informations:",
+      "GESDecomposition": "Breakdown of GHGs:",
+      "factorsPart": "Emission Factor Parts:",
       "yes": "Yes"
     },
     "edit": {
