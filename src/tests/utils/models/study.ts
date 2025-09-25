@@ -316,7 +316,6 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
     },
   ],
   emissionSourceTagFamilies: [],
-  ...overrides,
   organizationVersion: mockedOrganizationVersion,
   sites: [],
   oldBCId: null,
@@ -329,4 +328,5 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
   level: 'Initial',
   createdAt: new Date(),
   updatedAt: new Date(),
+  ...overrides,
 })
