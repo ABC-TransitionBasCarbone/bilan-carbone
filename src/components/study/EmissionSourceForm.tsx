@@ -431,11 +431,11 @@ const EmissionSourceForm = ({
               )
             }}
             slots={{
-              popper: (props) => <Popper {...props} placement="bottom-start" className={styles.tagOptions} />,
+              popper: (props) => <Popper {...props} placement="bottom-start" />,
             }}
             renderInput={(params) => <TextField {...params} label={t('form.tag')} />}
             renderValue={(value: Option[], getItemProps) => (
-              <div className="flex wrap align-center gapped-2">
+              <div className={classNames('flex wrap align-center gapped-2', styles.tagOptions)}>
                 {value.map((option: Option, index: number) => {
                   const { key, ...itemProps } = getItemProps({ index })
                   return <TagChip name={option.label} color={option.color} key={key} {...itemProps} />
