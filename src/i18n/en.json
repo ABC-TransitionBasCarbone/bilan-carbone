@@ -598,6 +598,9 @@
       "color": "Color",
       "emissionSourceTagsPlaceholder": "Your tag",
       "createEmissionSourceTag": "Create my tag",
+      "editTagTitle": "Edit tag",
+      "updateTag": "Confirm",
+      "cancel": "Cancel",
       "validate": "Validate",
       "deleteDialog": {
         "accept": "Yes",

@@ -1,0 +1,31 @@
+.tag {
+  max-width: 16rem !important;
+  width: fit-content;
+  border: 1px solid var(--neutral-500);
+  background-color: var(--paper);
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--neutral-100);
+  }
+
+  :global(.MuiChip-label) {
+    padding: 0.5rem !important;
+    overflow: hidden;
+  }
+}
+
+.tagText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.colorCircle {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background-color: var(--neutral-200);
+}
