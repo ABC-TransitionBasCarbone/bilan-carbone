@@ -4,6 +4,7 @@ import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionF
 import { getQualityRating, qualityKeys } from '@/services/uncertainty'
 import { BCUnit } from '@/services/unit'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { formatNumber } from '@/utils/number'
 import ShrinkIcon from '@mui/icons-material/ZoomInMap'
 import ExpandIcon from '@mui/icons-material/ZoomOutMap'
 import { Environment, Import, StudyResultUnit, SubPost } from '@prisma/client'
@@ -24,6 +25,7 @@ const EmissionFactorDetails = ({ emissionFactor }: Props) => {
   const tQuality = useTranslations('quality')
   const [displayDetailedQuality, setDisplayDetailedQuality] = useState(false)
   const tResultUnits = useTranslations('study.results.units')
+  const tEmissionFactorType = useTranslations('emissionFactors.type')
 
   const gases = useMemo(() => gazKeys.filter((gaz) => emissionFactor[gaz]), [emissionFactor])
   const qualities = useMemo(() => qualityKeys.filter((quality) => emissionFactor[quality]), [emissionFactor])
@@ -148,11 +150,13 @@ const EmissionFactorDetails = ({ emissionFactor }: Props) => {
         <div className={classNames(styles.info, 'flex')}>
           <span className={classNames(styles.infoTitle, 'bold')}>{t('factorParts')}&nbsp;</span>
           <div className="flex grow">
-            {emissionFactor.emissionFactorParts.map((part) => (
-              <span key={part.type}>
-                {part.type}: {part.totalCo2},&nbsp;
-              </span>
-            ))}
+            {emissionFactor.emissionFactorParts
+              .map(
+                (part) =>
+                  `${tEmissionFactorType(part.type)}: ${formatNumber(part.totalCo2, 2)}
+                ${tResultUnits(StudyResultUnit.K)}`,
+              )
+              .join(', ')}
           </div>
         </div>
       )}

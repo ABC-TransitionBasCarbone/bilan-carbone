@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
 
 import { canEditEmissionFactor } from '@/services/permissions/emissionFactor'
@@ -50,7 +51,6 @@ import {
 import classNames from 'classnames'
 import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'
-import Image from 'next/image'
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react'
 import Button from '../base/Button'
 import DebouncedInput from '../base/DebouncedInput'
@@ -231,7 +231,7 @@ const EmissionFactorsTable = ({
             case Import.BaseEmpreinte:
               return (
                 <div className="flex-cc">
-                  <Image
+                  <img
                     className={styles.importFrom}
                     src="https://base-empreinte.ademe.fr/assets/img/base-empreinte.svg"
                     alt="Base empreinte"
@@ -242,7 +242,7 @@ const EmissionFactorsTable = ({
             case Import.Legifrance:
               return (
                 <div className="flex-cc">
-                  <Image
+                  <img
                     className={styles.importFrom}
                     src="https://www.legifrance.gouv.fr/contenu/logo"
                     alt="Legifrance"
@@ -253,7 +253,7 @@ const EmissionFactorsTable = ({
             case Import.NegaOctet:
               return (
                 <div className="flex-cc">
-                  <Image
+                  <img
                     className={styles.importFrom}
                     src="/logos/negaOctet.png"
                     title={t('importedFrom.negaOctet')}
