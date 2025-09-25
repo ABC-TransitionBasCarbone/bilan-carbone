@@ -1471,7 +1471,7 @@ export const getCncByCncCode = async (cncCode: string) =>
     return await findCncByCncCode(cncCode)
   })
 
-const mapStudyForReport = async (study: FullStudy) => {
+export const mapStudyForReport = async (study: FullStudy) => {
   const isParentCR = !!study.organizationVersion.parentId
 
   const allowedUsers = study.allowedUsers.map((user) => {
