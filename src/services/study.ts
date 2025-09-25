@@ -16,7 +16,6 @@ import { computeBegesResult } from './results/beges'
 import { computeResultsByPost, computeResultsByTag, ResultsByPost } from './results/consolidated'
 import { EmissionFactorWithMetaData, getEmissionFactorsByIds } from './serverFunctions/emissionFactor'
 import { prepareExcel } from './serverFunctions/file'
-import { prepareReport } from './serverFunctions/study'
 import { getUserSettings } from './serverFunctions/user'
 import {
   getEmissionSourcesGlobalUncertainty,
@@ -641,11 +640,6 @@ export const downloadStudyResults = async (
   const buffer = await prepareExcel(data)
 
   download([buffer], `${study.name}_results.xlsx`, 'xlsx')
-}
-
-export const downloadStudyReport = async (study: FullStudy) => {
-  const buffer = await prepareReport(study)
-  download([buffer], `${study.name}_report.docx`, 'docx')
 }
 
 export const getStudyParentOrganizationVersionId = async (
