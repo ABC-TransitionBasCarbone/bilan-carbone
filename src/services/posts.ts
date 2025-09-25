@@ -225,9 +225,15 @@ export const subPostTiltToBcSubPostMapping: Partial<Record<SubPost, SubPost>> = 
   [SubPost.TeletravailBenevoles]: SubPost.Electricite,
 }
 
+export const convertTiltSubPostToBCSubPost = (subPost: SubPost): SubPost => {
+  return subPostTiltToBcSubPostMapping[subPost] ?? subPost
+}
+
 const getSubPostBCToSubPostTiltMapping = (): Partial<Record<SubPost, SubPost[]>> => {
   const result = {} as Partial<Record<SubPost, SubPost[]>>
-  for (const [tiltSubPost, bcSubPost] of Object.entries(subPostTiltToBcSubPostMapping)) {
+  const tiltSubPostList = Object.values(subPostsByPostTILT).flat()
+  for (const tiltSubPost of tiltSubPostList) {
+    const bcSubPost = convertTiltSubPostToBCSubPost(tiltSubPost)
     if (result[bcSubPost]) {
       result[bcSubPost].push(tiltSubPost as SubPost)
     } else {
@@ -238,10 +244,6 @@ const getSubPostBCToSubPostTiltMapping = (): Partial<Record<SubPost, SubPost[]>>
 }
 
 export const subPostBCToSubPostTiltMapping = getSubPostBCToSubPostTiltMapping()
-
-export const convertTiltSubPostToBCSubPost = (subPost: SubPost): SubPost => {
-  return subPostTiltToBcSubPostMapping[subPost] ?? subPost
-}
 
 export const convertCountToBilanCarbone = (
   results: { post: string; children: { post: string; value: number }[] }[],

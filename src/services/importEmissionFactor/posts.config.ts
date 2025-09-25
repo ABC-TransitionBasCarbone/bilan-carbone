@@ -8688,7 +8688,6 @@ export const elementsBySubPost: Record<SubPost, string[]> = {
     '20637',
     '20638',
     '20557',
-    '20556',
     '20908',
     '20721',
     '20909',
@@ -9358,6 +9357,7 @@ export const elementsBySubPost: Record<SubPost, string[]> = {
     '32538',
   ],
   [SubPost.BiensEtMatieresEnApprocheMonetaire]: [
+    '20556',
     '25015',
     '25009',
     '25002',
