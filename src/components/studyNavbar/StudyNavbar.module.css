@@ -7,7 +7,7 @@
 }
 
 .toggleButtonContainer {
-  top: 4.5rem;
+  top: calc(var(--total-header-height) + 1.5rem);
   left: 1.5rem;
   position: fixed;
   z-index: 100;
@@ -24,7 +24,7 @@
   z-index: 99;
   margin-left: 1rem;
   display: flex;
-  top: 4rem !important;
+  top: calc(var(--total-header-height) + 1rem) !important;
   width: 20rem;
   height: auto;
   box-sizing: border-box;
