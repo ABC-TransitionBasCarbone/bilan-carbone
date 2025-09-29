@@ -1,9 +1,9 @@
 import { NOT_AUTHORIZED } from '@/services/permissions/check'
-import { getDeactivableFeatureRestrictions } from '@/services/serverFunctions/deactivableFeatures'
 import { findUserInfo } from '@/utils/user'
 import { Account, DeactivatableFeature, Environment, Prisma, Role, User } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { prismaClient } from './client'
+import { isFeatureActiveForEnvironment } from './deactivableFeatures'
 import { OrganizationVersionWithOrganizationSelect } from './organization'
 
 export type AccountWithUser = Account & {
@@ -108,11 +108,12 @@ export const getAccountFromUserOrganization = (user: UserSession) =>
 export type TeamMember = AsyncReturnType<typeof getAccountFromUserOrganization>[0]
 
 export const addAccount = async (account: Prisma.AccountCreateInput & { role: Exclude<Role, 'SUPER_ADMIN'> }) => {
-  const deactivatedFeaturesRestrictions = await getDeactivableFeatureRestrictions(DeactivatableFeature.Creation)
-  if (
-    deactivatedFeaturesRestrictions?.active &&
-    deactivatedFeaturesRestrictions.deactivatedEnvironments.includes(account.environment)
-  ) {
+  const isCreationFeatureActive = await isFeatureActiveForEnvironment(
+    DeactivatableFeature.Creation,
+    account.environment,
+  )
+
+  if (!isCreationFeatureActive) {
     throw new Error(NOT_AUTHORIZED)
   }
 

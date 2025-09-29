@@ -19,7 +19,6 @@ import {
 import { getMockedAuthUser } from '../../tests/utils/models/user'
 import * as studyUtilsModule from '../../utils/study'
 import * as userUtilsModule from '../../utils/user'
-import * as resultsModule from '../results/consolidated'
 import type { CreateStudyCommand } from './study.command'
 
 // TODO: ESM module issue with Jest. Remove these mocks when moving to Vitest
@@ -54,6 +53,7 @@ jest.mock('../../utils/study', () => ({
 }))
 jest.mock('../../db/organization', () => ({
   getOrganizationVersionById: jest.fn(),
+  isOrganizationVersionCR: jest.fn(),
 }))
 jest.mock('../../db/user', () => ({
   getUserByEmail: jest.fn(),
@@ -115,6 +115,14 @@ jest.mock('../results/consolidated', () => ({
 }))
 jest.mock('./study', () => ({}))
 
+const mockedMonetaryRatio = 40
+const mockedNonSpecificMonetaryRatio = 10
+
+const mockedResults = {
+  monetaryRatio: mockedMonetaryRatio,
+  nonSpecificMonetaryRatio: mockedNonSpecificMonetaryRatio,
+}
+
 const { duplicateStudyCommand, mapStudyForReport } = jest.requireActual('./study')
 
 const mockedAuthUser = getMockedAuthUser({ email: TEST_EMAILS.currentUser })
@@ -146,7 +154,7 @@ const mockIsAdmin = userUtilsModule.isAdmin as unknown as jest.Mock
 const mockCreateEmissionSourceTagFamilyAndRelatedTags =
   emissionSourcesModule.createEmissionSourceTagFamilyAndRelatedTags as jest.Mock
 const mockGetFamilyTagsForStudy = emissionSourcesModule.getFamilyTagsForStudy as jest.Mock
-const mockComputeResultsByPost = resultsModule.computeResultsByPost as jest.Mock
+const mockIsOrganizationVersionCR = organizationModule.isOrganizationVersionCR as jest.Mock
 
 describe('study', () => {
   describe('duplicateStudyCommand', () => {
@@ -316,22 +324,14 @@ describe('study', () => {
   })
 
   describe('mapStudyForReport', () => {
-    const mockComputedResults = [
-      {
-        post: 'total',
-        value: 1000,
-        monetaryValue: 400,
-        nonSpecificMonetaryValue: 100,
-      },
-    ]
-
     beforeEach(() => {
       jest.clearAllMocks()
-      mockComputeResultsByPost.mockReturnValue(mockComputedResults)
     })
 
     describe('team organization', () => {
       it('should correctly organize admin, internal team members, and contributors', async () => {
+        mockIsOrganizationVersionCR.mockResolvedValue(false)
+
         const mockedStudyWithTeam = getMockeFullStudy({
           organizationVersion: {
             ...mockedOrganizationVersion,
@@ -375,7 +375,7 @@ describe('study', () => {
           ],
         })
 
-        const result = await mapStudyForReport(mockedStudyWithTeam)
+        const result = await mapStudyForReport(mockedStudyWithTeam, mockedResults)
 
         expect(result.admin).toEqual({
           accountId: 'validator-account-id',
@@ -403,6 +403,8 @@ describe('study', () => {
       })
 
       it('should handle parent CR organization scenarios', async () => {
+        mockIsOrganizationVersionCR.mockResolvedValue(true)
+
         const mockedStudyWithParentCR = getMockeFullStudy({
           organizationVersion: {
             ...mockedOrganizationVersion,
@@ -453,7 +455,7 @@ describe('study', () => {
           ],
         })
 
-        const result = await mapStudyForReport(mockedStudyWithParentCR)
+        const result = await mapStudyForReport(mockedStudyWithParentCR, mockedResults)
 
         expect(result.admin).toEqual({
           accountId: 'parent-user-id',
@@ -514,7 +516,7 @@ describe('study', () => {
           ],
         })
 
-        const result = await mapStudyForReport(mockedStudyWithDuplicates)
+        const result = await mapStudyForReport(mockedStudyWithDuplicates, mockedResults)
 
         const contributorCount =
           result.internalTeam.filter((member: { accountId: string }) => member.accountId === 'duplicate-id').length +
@@ -528,11 +530,13 @@ describe('study', () => {
       it('should calculate monetary ratios correctly', async () => {
         const mockedStudyWithResults = getMockeFullStudy()
 
-        const result = await mapStudyForReport(mockedStudyWithResults)
+        const result = await mapStudyForReport(mockedStudyWithResults, mockedResults)
 
-        expect(result.monetaryRatioPercentage).toBe(40)
-        expect(result.specificMonetaryRatioPercentage).toBe(30)
-        expect(result.nonSpecificMonetaryRatioPercentage).toBe(10)
+        expect(result.monetaryRatioPercentage).toBe(mockedMonetaryRatio.toFixed(2))
+        expect(result.specificMonetaryRatioPercentage).toBe(
+          (mockedMonetaryRatio - mockedNonSpecificMonetaryRatio).toFixed(2),
+        )
+        expect(result.nonSpecificMonetaryRatioPercentage).toBe(mockedNonSpecificMonetaryRatio.toFixed(2))
       })
     })
 
@@ -551,7 +555,7 @@ describe('study', () => {
           ],
         })
 
-        const result = await mapStudyForReport(mockedStudyWithSites)
+        const result = await mapStudyForReport(mockedStudyWithSites, mockedResults)
 
         expect(result.sites).toEqual([
           {

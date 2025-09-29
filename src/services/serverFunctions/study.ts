@@ -28,6 +28,7 @@ import { createEmissionSourceTagFamilyAndRelatedTags, getFamilyTagsForStudy } fr
 import {
   getOrganizationVersionById,
   getOrganizationWithSitesById,
+  isOrganizationVersionCR,
   OrganizationVersionWithOrganization,
 } from '@/db/organization'
 import { getAnswerByQuestionId, getQuestionByIdIntern, getQuestionsByIdIntern } from '@/db/question'
@@ -1476,7 +1477,9 @@ export const mapStudyForReport = async (
     nonSpecificMonetaryRatio: number
   },
 ) => {
-  const isParentCR = !!study.organizationVersion.parentId
+  const isParentCR = !!(
+    study.organizationVersion.parentId && (await isOrganizationVersionCR(study.organizationVersion.parentId))
+  )
 
   const allowedUsers = study.allowedUsers.map((user) => {
     const { firstName, lastName } = user.account.user
@@ -1568,12 +1571,12 @@ export const prepareReport = async (
     const doc = new Docxtemplater(zip, {
       paragraphLoop: true,
       linebreaks: true,
-      parser: (tag: string) => ({
+      parser: (key: string) => ({
         get(scope) {
-          if (tag.includes('.')) {
-            return getNestedValue(scope, tag)
+          if (key.includes('.')) {
+            return getNestedValue(scope, key)
           }
-          return scope[tag]
+          return scope[key]
         },
       }),
     })
