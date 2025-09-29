@@ -26,7 +26,11 @@ import {
   getEmissionFactorVersionsBySource,
   getStudyEmissionFactorSources,
 } from '@/db/emissionFactors'
-import { createEmissionSourceTagFamilyAndRelatedTags, getFamilyTagsForStudy } from '@/db/emissionSource'
+import {
+  createEmissionSourceOnStudy,
+  createEmissionSourceTagFamilyAndRelatedTags,
+  getFamilyTagsForStudy,
+} from '@/db/emissionSource'
 import {
   getOrganizationVersionById,
   getOrganizationVersionsByOrganizationId,
@@ -1547,17 +1551,6 @@ export const duplicateStudyInOtherEnvironment = async (studyId: string, targetEn
       })
       .filter((site) => !!site)
 
-    // sources
-    const sources = study.emissionSources.map((emissionSource) => ({
-      ...emissionSource,
-      subPost: getTransEnvironmentSubPost(
-        study.organizationVersion.environment,
-        targetEnvironment,
-        emissionSource.subPost,
-      ),
-      studySite: {},
-    }))
-
     const { id, createdById, organizationVersionId, ...restStudy } = study
 
     const studyCommand: Prisma.StudyCreateInput = {
@@ -1596,6 +1589,73 @@ export const duplicateStudyInOtherEnvironment = async (studyId: string, targetEn
       },
     }
     const createdStudy = await createStudy(studyCommand, targetEnvironment, true)
+    const createdStudyWithSites = (await getStudyById(
+      createdStudy.id,
+      targetUserAccount.organizationVersionId,
+    )) as FullStudy
+
+    // sources
+    type Family = typeof study.emissionSourceTagFamilies
+    type SourceStudyTags = Family[number]['emissionSourceTags'][number] & {
+      familyName: string
+    }
+
+    const studyTags: SourceStudyTags[] = study.emissionSourceTagFamilies.reduce(
+      (res, tagFamily) =>
+        res.concat(
+          tagFamily.emissionSourceTags.map((emissionSourceTag) => ({
+            ...emissionSourceTag,
+            familyName: tagFamily.name,
+          })),
+        ),
+      [] as SourceStudyTags[],
+    )
+    const emissionSources: Prisma.StudyEmissionSourceCreateInput[] = study.emissionSources
+      .map((emissionSource) => {
+        const { id, emissionFactorId, ...restSource } = emissionSource
+        const studyId = createdStudy.id
+        const studySiteId = createdStudyWithSites.sites.find(
+          (studySite) => studySite.site.id === emissionSource.studySite.site.id,
+        )?.id as string
+        const subPost = getTransEnvironmentSubPost(
+          study.organizationVersion.environment,
+          targetEnvironment,
+          emissionSource.subPost,
+        )
+        if (!subPost) {
+          return undefined
+        }
+        const contributor = restSource.contributor?.id
+        const tags = restSource.emissionSourceTags
+          .map((emissionSourceTag) => {
+            const studyFamilyTag = study.emissionSourceTagFamilies.find(
+              (emissionSourceTagFamily) => emissionSourceTagFamily.id === emissionSourceTag.familyId,
+            )
+            if (!studyFamilyTag) {
+              return undefined
+            }
+            const tag = studyTags.find(
+              (studyTag) => studyTag.name === emissionSourceTag.name && studyTag.familyName === studyFamilyTag.name,
+            )
+            if (!tag) {
+              return undefined
+            }
+            const { familyName, ...restTag } = tag
+            return restTag
+          })
+          .filter((tag) => !!tag)
+        return {
+          ...restSource,
+          study: { connect: { id: studyId } },
+          studySite: { connect: { id: studySiteId } },
+          emissionFactor: emissionFactorId ? { connect: { id: emissionFactorId } } : undefined,
+          subPost,
+          contributor: contributor ? { connect: { id: contributor } } : undefined,
+          emissionSourceTags: { connect: tags.map(({ id, ...restTag }) => ({ id })) },
+        }
+      })
+      .filter((source) => !!source)
+    await Promise.all(emissionSources.map(createEmissionSourceOnStudy))
     return
   })
 

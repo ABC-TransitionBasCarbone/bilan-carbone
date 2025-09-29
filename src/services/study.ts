@@ -730,9 +730,11 @@ export const getTransEnvironmentSubPost = (source: Environment, target: Environm
     switch (subPost) {
       case SubPost.UtilisationEnResponsabilite:
       case SubPost.UtilisationEnDependance:
-        return SubPost.UtilisationEnDependance
-      case SubPost.Batiment:
-        return SubPost.Batiment
+        return SubPost.UtilisationEnDependanceConsommationDeBiens
+      case SubPost.Equipements:
+        return SubPost.EquipementsDesSalaries
+      case SubPost.Informatique:
+        return SubPost.ParcInformatiqueDesSalaries
       default: {
         const subPosts = subPostBCToSubPostTiltMapping[subPost]
         if (!subPosts) {
