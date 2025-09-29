@@ -11,7 +11,6 @@ import { DeactivatableFeature, Environment, Prisma, Role, UserChecklist, UserSta
 import { UserSession } from 'next-auth'
 import { addAccount, getAccountByEmailAndEnvironment, getAccountByEmailAndOrganizationVersionId } from './account'
 import { prismaClient } from './client'
-import { isFeatureActiveForEnvironment } from './deactivableFeatures'
 
 export const getUserByEmailWithSensibleInformations = (email: string) =>
   prismaClient.user.findUnique({
@@ -298,15 +297,18 @@ export const addUser = async (
     role?: Exclude<Role, 'SUPER_ADMIN'>
   },
 ) => {
-  const isCreationFeatureActive = await isFeatureActiveForEnvironment(
-    DeactivatableFeature.Creation,
-    newMember.accounts.create.environment,
-  )
+  const deactivatedFeaturesRestrictions = await getDeactivableFeatureRestrictions(DeactivatableFeature.Creation)
+  if (deactivatedFeaturesRestrictions?.active) {
+    const createAccount = newMember.accounts.create
 
-  if (!isCreationFeatureActive) {
-    throw new Error(NOT_AUTHORIZED)
+    const notAllowedEnvironments =
+      createAccount.environment === undefined ||
+      deactivatedFeaturesRestrictions.deactivatedEnvironments.includes(createAccount.environment)
+
+    if (notAllowedEnvironments) {
+      throw new Error(NOT_AUTHORIZED)
+    }
   }
-
   return prismaClient.user.create({
     data: newMember,
     select: {
