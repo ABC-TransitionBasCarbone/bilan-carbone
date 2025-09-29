@@ -28,7 +28,7 @@ const DuplicateStudyModal = ({
 }: Props) => {
   const t = useTranslations('study.duplicateDialog')
   const tEnv = useTranslations('environment')
-  const [environment, setEnvironment] = useState<Environment>(environments[0])
+  const [targetEnvironment, setTargetEnvironment] = useState<Environment>(environments[0])
   const [duplicated, setDuplicated] = useState(false)
   const router = useRouter()
 
@@ -36,7 +36,7 @@ const DuplicateStudyModal = ({
 
   const handleDuplicate = async () => {
     if (isOtherEnvironment) {
-      const res = await duplicateStudyInOtherEnvironment(studyId, environment)
+      const res = await duplicateStudyInOtherEnvironment(studyId, targetEnvironment)
       if (res.success) {
         setDuplicated(true)
         setTimeout(() => {
@@ -73,11 +73,11 @@ const DuplicateStudyModal = ({
       }
     >
       {duplicated ? (
-        <div>{t('duplicatedDescription', { environment: tEnv(environment) })}</div>
+        <div>{t('duplicatedDescription', { environment: tEnv(targetEnvironment) })}</div>
       ) : (
         <>
           {t.rich(isOtherEnvironment ? 'otherEnvironnment' : 'description', {
-            environment: tEnv(environment),
+            environment: tEnv(targetEnvironment),
             br: () => <br />,
           })}
           {environments.length > 1 && (
@@ -85,8 +85,8 @@ const DuplicateStudyModal = ({
               <span className="bold">{t('selectEnvironment')}</span>
               <Select
                 id="environment-selector"
-                value={environment}
-                onChange={(event) => setEnvironment(event.target.value as Environment)}
+                value={targetEnvironment}
+                onChange={(event) => setTargetEnvironment(event.target.value as Environment)}
               >
                 {environments.map((environment) => (
                   <MenuItem key={`environment-${environment}`} value={environment}>

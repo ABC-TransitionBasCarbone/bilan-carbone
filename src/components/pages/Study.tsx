@@ -3,7 +3,7 @@
 import { isOrganizationVersionCR } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import { getUserApplicationSettings } from '@/db/user'
-import { canDeleteStudy, canDuplicateStudy, canDuplicateStudyInOtherEnvironment } from '@/services/permissions/study'
+import { canDeleteStudy, canDuplicateStudy, getEnvironmentsForDuplication } from '@/services/permissions/study'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
@@ -19,7 +19,7 @@ const StudyPage = async ({ study, user }: Props) => {
   const [canDelete, canDuplicate, duplicableEnvironments, settings, userOrgIsCR] = await Promise.all([
     canDeleteStudy(study.id),
     canDuplicateStudy(study.id),
-    canDuplicateStudyInOtherEnvironment(study.id),
+    getEnvironmentsForDuplication(study.id),
     getUserApplicationSettings(user.accountId),
     isOrganizationVersionCR(user.organizationVersionId),
   ])

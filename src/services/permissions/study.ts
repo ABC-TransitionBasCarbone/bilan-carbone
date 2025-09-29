@@ -286,7 +286,7 @@ export const canDuplicateStudy = async (studyId: string) => {
   return true
 }
 
-export const canDuplicateStudyInOtherEnvironment = async (studyId: string) => {
+export const getEnvironmentsForDuplication = async (studyId: string) => {
   const [canDuplicate, session] = await Promise.all([canDuplicateStudy(studyId), dbActualizedAuth()])
   if (!canDuplicate || !session) {
     return []

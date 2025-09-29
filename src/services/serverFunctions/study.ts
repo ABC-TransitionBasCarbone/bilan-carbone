@@ -129,9 +129,9 @@ import {
   canCreateSpecificStudy,
   canDeleteStudy,
   canDuplicateStudy,
-  canDuplicateStudyInOtherEnvironment,
   canEditStudyFlows,
   canUpgradeSourceVersion,
+  getEnvironmentsForDuplication,
   isAdminOnStudyOrga,
 } from '../permissions/study'
 import { deleteFileFromBucket, getFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
@@ -1445,7 +1445,7 @@ export const duplicateStudyInOtherEnvironment = async (studyId: string, targetEn
 
     const [study, duplicableEnvironments] = await Promise.all([
       getStudyById(studyId, session.user.id),
-      canDuplicateStudyInOtherEnvironment(studyId),
+      getEnvironmentsForDuplication(studyId),
     ])
 
     if (
