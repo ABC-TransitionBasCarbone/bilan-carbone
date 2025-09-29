@@ -1,31 +1,58 @@
 'use client'
 
-import ColorPicker from '@/components/base/ColorPicker'
-import { TextField } from '@mui/material'
+import Form from '@/components/base/Form'
+import { EmissionSourceTagFamilyWithTags } from '@/db/study'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { FormControl } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 import Modal from '../../modals/Modal'
+import TagForm from './TagForm'
 
 interface Props {
   tagId: string
   currentName: string
   currentColor: string
-  onSave: (tagId: string, newName: string, newColor: string) => Promise<void>
+  currentFamilyId: string
+  families: EmissionSourceTagFamilyWithTags[]
+  onSave: (tagId: string, newName: string, newColor: string, newFamilyId: string) => Promise<void>
   onClose: () => void
 }
 
-const EditTagModal = ({ tagId, currentName, currentColor, onSave, onClose }: Props) => {
+const EditTagFormSchema = z.object({
+  name: z.string().min(1),
+  color: z.string().min(1),
+  familyId: z.string().min(1),
+})
+
+type EditTagFormData = z.infer<typeof EditTagFormSchema>
+
+const EditTagModal = ({ tagId, currentName, currentColor, currentFamilyId, families, onSave, onClose }: Props) => {
   const t = useTranslations('study.perimeter')
-  const [color, setColor] = useState(currentColor)
-  const [name, setName] = useState(currentName)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
 
-  const handleSave = async () => {
+  const { control, handleSubmit, setValue, watch, getValues } = useForm<EditTagFormData>({
+    resolver: zodResolver(EditTagFormSchema),
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
+    defaultValues: {
+      name: currentName,
+      color: currentColor,
+      familyId: currentFamilyId,
+    },
+  })
+
+  const color = watch('color')
+
+  const onSubmit = async () => {
     setIsLoading(true)
     try {
-      await onSave(tagId, name, color)
+      const values = getValues()
+      await onSave(tagId, values.name, values.color, values.familyId)
       onClose()
     } catch (error) {
       console.error('Failed to update tag:', error)
@@ -43,28 +70,21 @@ const EditTagModal = ({ tagId, currentName, currentColor, onSave, onClose }: Pro
       title={t('editTagTitle')}
       actions={[
         { actionType: 'button', children: t('cancel'), onClick: onClose },
-        { actionType: 'loadingButton', children: t('updateTag'), onClick: handleSave, loading: isLoading },
+        { actionType: 'loadingButton', children: t('updateTag'), onClick: handleSubmit(onSubmit), loading: isLoading },
       ]}
     >
-      <div className="align-start gapped2 mb1">
-        <div className="flex-cc gapped1">
-          <span className="inputLabel bold">{t('color')}</span>
-          <ColorPicker color={color} onChange={setColor} />
-        </div>
-        <div className="flex-cc gapped1">
-          <span className="inputLabel bold">{t('emissionSourceTagLabel')}</span>
-          <TextField
-            slotProps={{
-              input: {
-                sx: { borderRadius: '0.75rem' },
-              },
-            }}
-            name="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        <FormControl>
+          <TagForm
+            color={color}
+            families={families}
+            onColorChange={(value) => setValue('color', value)}
+            control={control}
+            translation={t}
+            data-testid="edit-tag"
           />
-        </div>
-      </div>
+        </FormControl>
+      </Form>
     </Modal>
   )
 }

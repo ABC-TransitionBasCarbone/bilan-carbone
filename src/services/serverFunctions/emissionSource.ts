@@ -244,7 +244,7 @@ export const createEmissionSourceTag = async ({ familyId, name, color }: NewEmis
     })
   })
 
-export const updateEmissionSourceTag = async (tagId: string, name: string, color: string) =>
+export const updateEmissionSourceTag = async (tagId: string, name: string, color: string, familyId: string) =>
   withServerResponse('updateEmissionSourceTag', async () => {
     const session = await auth()
     if (!session || !session.user) {
@@ -260,7 +260,12 @@ export const updateEmissionSourceTag = async (tagId: string, name: string, color
       throw new Error(NOT_AUTHORIZED)
     }
 
-    return updateEmissionSourceTagOnStudy(tagId, { name, color })
+    const updateData: { name: string; color: string; family?: { connect: { id: string } } } = { name, color }
+    if (familyId) {
+      updateData.family = { connect: { id: familyId } }
+    }
+
+    return updateEmissionSourceTagOnStudy(tagId, updateData)
   })
 
 export const deleteEmissionSourceTag = async (tagId: string) =>
