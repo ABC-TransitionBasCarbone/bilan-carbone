@@ -11,7 +11,13 @@ import { canBeValidated, getEmissionResults, getEmissionSourcesTotalCo2, getStan
 import { download } from './file'
 import { hasAccessToBcExport } from './permissions/environment'
 import { StudyWithoutDetail } from './permissions/study'
-import { convertCountToBilanCarbone, environmentPostMapping, Post, subPostBCToSubPostTiltMapping } from './posts'
+import {
+  convertCountToBilanCarbone,
+  convertTiltSubPostToBCSubPost,
+  environmentPostMapping,
+  Post,
+  subPostBCToSubPostTiltMapping,
+} from './posts'
 import { computeBegesResult } from './results/beges'
 import { computeResultsByPost, computeResultsByTag, ResultsByPost } from './results/consolidated'
 import { EmissionFactorWithMetaData, getEmissionFactorsByIds } from './serverFunctions/emissionFactor'
@@ -737,6 +743,8 @@ export const getTransEnvironmentSubPost = (source: Environment, target: Environm
         return subPosts[0]
       }
     }
+  } else if (source === Environment.TILT && target === Environment.BC) {
+    return convertTiltSubPostToBCSubPost(subPost)
   } else {
     return undefined
   }
