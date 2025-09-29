@@ -18,7 +18,6 @@ import {
 } from '../../tests/utils/models/study'
 import { getMockedAuthUser } from '../../tests/utils/models/user'
 import * as studyUtilsModule from '../../utils/study'
-import * as timeUtilsModule from '../../utils/time'
 import * as userUtilsModule from '../../utils/user'
 import * as resultsModule from '../results/consolidated'
 import type { CreateStudyCommand } from './study.command'
@@ -95,9 +94,6 @@ jest.mock('../../utils/number', () => ({
   CA_UNIT_VALUES: { K: 1000, M: 1000000 },
   defaultCAUnit: 'K',
 }))
-jest.mock('../../utils/time', () => ({
-  formatDateFr: jest.fn(),
-}))
 jest.mock('../posts', () => ({
   environmentPostMapping: { BC: 'bc-mapping', CUT: 'cut-mapping', TILT: 'tilt-mapping' },
   Post: {
@@ -150,7 +146,6 @@ const mockIsAdmin = userUtilsModule.isAdmin as unknown as jest.Mock
 const mockCreateEmissionSourceTagFamilyAndRelatedTags =
   emissionSourcesModule.createEmissionSourceTagFamilyAndRelatedTags as jest.Mock
 const mockGetFamilyTagsForStudy = emissionSourcesModule.getFamilyTagsForStudy as jest.Mock
-const mockFormatDateFr = timeUtilsModule.formatDateFr as jest.Mock
 const mockComputeResultsByPost = resultsModule.computeResultsByPost as jest.Mock
 
 describe('study', () => {
@@ -332,7 +327,6 @@ describe('study', () => {
 
     beforeEach(() => {
       jest.clearAllMocks()
-      mockFormatDateFr.mockReturnValue('01/01/2024')
       mockComputeResultsByPost.mockReturnValue(mockComputedResults)
     })
 

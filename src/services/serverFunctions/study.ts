@@ -121,8 +121,6 @@ import {
   canUpgradeSourceVersion,
   isAdminOnStudyOrga,
 } from '../permissions/study'
-import { environmentPostMapping } from '../posts'
-import { computeResultsByPost } from '../results/consolidated'
 import { deleteFileFromBucket, getFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
 import { checkLevel } from '../study'
 import { saveAnswerForQuestion } from './question'
@@ -1471,7 +1469,13 @@ export const getCncByCncCode = async (cncCode: string) =>
     return await findCncByCncCode(cncCode)
   })
 
-export const mapStudyForReport = async (study: FullStudy) => {
+export const mapStudyForReport = async (
+  study: FullStudy,
+  results: {
+    monetaryRatio: number
+    nonSpecificMonetaryRatio: number
+  },
+) => {
   const isParentCR = !!study.organizationVersion.parentId
 
   const allowedUsers = study.allowedUsers.map((user) => {
@@ -1518,28 +1522,9 @@ export const mapStudyForReport = async (study: FullStudy) => {
     postalCode: studySite.site.postalCode,
   }))
 
-  // Compute results to get monetary ratios
-  const tPost = await getTranslations('emissionFactors.post')
-  const computedResults = computeResultsByPost(
-    study,
-    tPost,
-    'all',
-    true,
-    false,
-    environmentPostMapping[study.organizationVersion.environment],
-    study.organizationVersion.environment,
-  )
-
-  const totalResult = computedResults.find((result) => result.post === 'total')
-  const total = totalResult?.value || 0
-  const monetaryTotal = totalResult?.monetaryValue || 0
-  const nonSpecificMonetaryTotal = totalResult?.nonSpecificMonetaryValue || 0
-  const specificMonetaryTotal = monetaryTotal - nonSpecificMonetaryTotal
-
-  const monetaryRatioPercentage = total > 0 ? Number(((monetaryTotal / total) * 100).toFixed(2)) : 0
-  const specificMonetaryRatioPercentage = total > 0 ? Number(((specificMonetaryTotal / total) * 100).toFixed(2)) : 0
-  const nonSpecificMonetaryRatioPercentage =
-    total > 0 ? Number(((nonSpecificMonetaryTotal / total) * 100).toFixed(2)) : 0
+  const monetaryRatioPercentage = results.monetaryRatio.toFixed(2)
+  const nonSpecificMonetaryRatioPercentage = results.nonSpecificMonetaryRatio.toFixed(2)
+  const specificMonetaryRatioPercentage = (results.monetaryRatio - results.nonSpecificMonetaryRatio).toFixed(2)
 
   const tLevel = await getTranslations('level')
 
@@ -1559,7 +1544,13 @@ export const mapStudyForReport = async (study: FullStudy) => {
   }
 }
 
-export const prepareReport = async (study: FullStudy) =>
+export const prepareReport = async (
+  study: FullStudy,
+  results: {
+    monetaryRatio: number
+    nonSpecificMonetaryRatio: number
+  },
+) =>
   withServerResponse('prepareReport', async () => {
     const templateKey = process.env.SCW_REPORT_TEMPLATE_KEY
     if (!templateKey) {
@@ -1588,7 +1579,7 @@ export const prepareReport = async (study: FullStudy) =>
     })
 
     doc.render({
-      study: await mapStudyForReport(study),
+      study: await mapStudyForReport(study, results),
       organization: study.organizationVersion.organization,
     })
     const buffer = doc.toBuffer()

@@ -7,13 +7,14 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { download } from '@/services/file'
 import { hasAccessToBcExport } from '@/services/permissions/environment'
 import { computeBegesResult } from '@/services/results/beges'
+import { isDeactivableFeatureActiveForEnvironment } from '@/services/serverFunctions/deactivableFeatures'
 import { prepareReport } from '@/services/serverFunctions/study'
 import { AdditionalResultTypes, downloadStudyResults, getResultsValues, ResultType } from '@/services/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import DownloadIcon from '@mui/icons-material/Download'
 import SummarizeIcon from '@mui/icons-material/Summarize'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
-import { ControlMode, Environment, Export, ExportRule, SiteCAUnit } from '@prisma/client'
+import { ControlMode, DeactivatableFeature, Environment, Export, ExportRule, SiteCAUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import SelectStudySite from '../site/SelectStudySite'
@@ -47,12 +48,29 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   const [type, setType] = useState<ResultType>(AdditionalResultTypes.CONSOLIDATED)
   const exports = useMemo(() => study.exports, [study.exports])
   const [displayValueWithDep, setDisplayValueWithDep] = useState(true)
+  const [isDownloadReportActive, setIsDownloadReportActive] = useState(false)
 
   useEffect(() => {
     if (environment && environment !== Environment.BC) {
       setType(AdditionalResultTypes.ENV_SPECIFIC_EXPORT)
     }
   }, [environment])
+
+  useEffect(() => {
+    const checkDownloadReportFeature = async () => {
+      if (environment) {
+        callServerFunction(
+          () => isDeactivableFeatureActiveForEnvironment(DeactivatableFeature.DownloadReport, environment),
+          {
+            onSuccess: (data) => {
+              setIsDownloadReportActive(data)
+            },
+          },
+        )
+      }
+    }
+    checkDownloadReportFeature()
+  }, [environment, callServerFunction])
 
   const { studySite, setSite } = useStudySite(study, true)
 
@@ -96,12 +114,12 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   )
 
   const downloadReport = useCallback(async () => {
-    callServerFunction(() => prepareReport(study), {
+    callServerFunction(() => prepareReport(study, { monetaryRatio, nonSpecificMonetaryRatio }), {
       onSuccess: (data) => {
         download([data], `${study.name}_report.docx`, 'docx')
       },
     })
-  }, [study, callServerFunction])
+  }, [study, monetaryRatio, nonSpecificMonetaryRatio, callServerFunction])
 
   if (!environment) {
     return null
@@ -161,9 +179,11 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
         >
           <DownloadIcon />
         </Button>
-        <Button onClick={downloadReport} title={t('downloadReport')}>
-          <SummarizeIcon />
-        </Button>
+        {isDownloadReportActive && (
+          <Button onClick={downloadReport} title={t('downloadReport')}>
+            <SummarizeIcon />
+          </Button>
+        )}
         {exports.map((exportType) => exportType.type).includes(Export.Beges) && (
           <ConsolatedBEGESDifference
             study={study}

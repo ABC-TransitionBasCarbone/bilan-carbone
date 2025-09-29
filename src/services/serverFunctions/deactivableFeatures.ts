@@ -6,6 +6,7 @@ import {
   getFeatureRestictions,
   getFeaturesRestictions,
   isFeatureActive,
+  isFeatureActiveForEnvironment,
   RestrictionsTypes,
   updateFeatureRestictions,
 } from '@/db/deactivableFeatures'
@@ -78,5 +79,18 @@ export const changeDeactivableFeatureRestriction = async (
   })
 
 export const isDeactivableFeatureActive = async (feature: DeactivatableFeature) => isFeatureActive(feature)
+
+export const isDeactivableFeatureActiveForEnvironment = async (
+  feature: DeactivatableFeature,
+  environment: Environment,
+) =>
+  withServerResponse('isDeactivableFeatureActiveForEnvironment', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return isFeatureActiveForEnvironment(feature, environment)
+  })
 
 export const getDeactivableFeatureRestrictions = async (feature: DeactivatableFeature) => getFeatureRestictions(feature)
