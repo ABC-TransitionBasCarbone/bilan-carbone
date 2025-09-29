@@ -87,7 +87,7 @@ const BarChart = <T extends BasicTypeCharts>({
           seriesData.length > 0
             ? seriesData.map((series, index) => ({
                 data: series.data,
-                valueFormatter: (value) => (value && value > 0 ? formatValueAndUnit(value) : null),
+                valueFormatter: (value) => (value && value > 0 ? formatValueAndUnit(value, undefined, 0) : null),
                 label: series.label,
                 stack: series.stack,
                 color: series.color,
@@ -96,17 +96,13 @@ const BarChart = <T extends BasicTypeCharts>({
             : [
                 {
                   data: barData.values,
-                  valueFormatter: (value) => formatValueAndUnit(value ?? 0),
+                  valueFormatter: (value) => formatValueAndUnit(value ?? 0, undefined, 0),
                   label: showLegend ? tResults('emissions') : undefined,
                 },
               ]
         }
         grid={{ horizontal: true }}
-        yAxis={[
-          {
-            label: tUnits(resultsUnit),
-          },
-        ]}
+        yAxis={[{ label: tUnits(resultsUnit) }]}
         axisHighlight={{ x: 'none' }}
         barLabel={showLabelsOnBars ? getBarLabel : undefined}
         slots={showLegend && seriesData.length === 0 ? undefined : { legend: () => null }}
