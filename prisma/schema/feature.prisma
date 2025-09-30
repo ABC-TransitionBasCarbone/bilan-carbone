@@ -21,3 +21,7 @@ model DeactivatableFeatureStatus {
 
   @@map("deactivable_features_statuses")
 }
+
+enum DuplicableStudy {
+  TrainingExercise
+}
