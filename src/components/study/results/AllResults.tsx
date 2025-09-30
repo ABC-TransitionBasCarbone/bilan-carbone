@@ -81,8 +81,9 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
         study.organizationVersion.environment,
         t,
         displayValueWithDep,
+        type,
       ),
-    [displayValueWithDep, study, studySite, t, tPost, validatedOnly],
+    [displayValueWithDep, study, studySite, t, tPost, type, validatedOnly],
   )
 
   const computedBegesData = useMemo(
@@ -177,6 +178,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
               <ConsolidatedResults
                 computedResults={displayValueWithDep ? computedResultsWithDep : computedResultsWithoutDep}
                 resultsUnit={study.resultsUnit}
+                exportType={type}
               />
             </>
           )}

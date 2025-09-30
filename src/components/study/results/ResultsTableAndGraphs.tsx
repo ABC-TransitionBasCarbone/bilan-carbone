@@ -35,6 +35,7 @@ interface Props<T> {
   title: string
   type: 'tag' | 'post'
   glossary?: string
+  exportType?: string
 }
 const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: string; name: string } }>({
   activeTabs = Object.values(TabsPossibilities),
@@ -45,6 +46,7 @@ const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: s
   title,
   type,
   glossary,
+  exportType,
 }: Props<T>) => {
   const [tabSelected, setTabSelected] = useState(defaultTab)
   const [filterAnchorEl, setFilterAnchorEl] = useState<HTMLElement | null>(null)
@@ -164,6 +166,7 @@ const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: s
           type={type}
           anchorEl={filterAnchorEl}
           onClose={() => setFilterAnchorEl(null)}
+          exportType={exportType}
         />
         {TabComponent}
       </Box>

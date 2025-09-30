@@ -63,9 +63,18 @@ interface Props<T> {
   type: 'tag' | 'post'
   anchorEl: HTMLElement | null
   onClose: () => void
+  exportType?: string
 }
-const Filters = <T extends FilterType>({ setFilteredResults, results, type, anchorEl, onClose }: Props<T>) => {
+const Filters = <T extends FilterType>({
+  setFilteredResults,
+  results,
+  type,
+  anchorEl,
+  onClose,
+  exportType,
+}: Props<T>) => {
   const tPost = useTranslations('emissionFactors.post')
+  const [previousExportType, setPreviousExportType] = useState<string | null>(null)
 
   const initialItems = useMemo(() => {
     switch (type) {
@@ -81,11 +90,12 @@ const Filters = <T extends FilterType>({ setFilteredResults, results, type, anch
   const [checkedItems, setCheckedItems] = useState<string[]>([])
 
   useEffect(() => {
-    if (checkedItems.length === 0 && initialItems) {
+    if (initialItems && previousExportType !== exportType) {
+      setPreviousExportType(exportType ?? null)
       const defaultItems = Object.values(initialItems).flatMap((parent) => parent.children.map((child) => child.id))
       setCheckedItems(defaultItems)
     }
-  }, [checkedItems.length, initialItems])
+  }, [checkedItems.length, initialItems, previousExportType, exportType])
 
   useEffect(() => {
     const filtered = results
