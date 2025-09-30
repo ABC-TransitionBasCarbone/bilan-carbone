@@ -3,6 +3,7 @@ enum DeactivatableFeature {
   Feedback
   Creation
   DownloadReport
+  FormationStudy
 }
 
 model DeactivatableFeatureStatus {
