@@ -41,5 +41,31 @@
     "dependencyMatrix": {
       "info": "You can download a sample risk and dependency matrix to help you build your own. Afterwards, if you wish to submit your own matrix to help other associations by providing a working base, please send it to <mail>methodologie@abc-transitionbascarbone.fr</mail>"
     }
+  },
+    "postInfographyInfo": {
+    "postInfo": "Information sur ce poste",
+    "close": "Fermer",
+    "IntrantsBiensEtMatieresTilt": "To obtain more info on how to handle this post, please see the <link>associative method</link>.",
+    "IntrantsBiensEtMatieresTiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/intrants-biens-et-services#intrants-biens-et-matieres",
+    "Alimentation": "To obtain more info on how to handle this post, please see the <link>associative method</link>.",
+    "AlimentationLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/alimentation",
+    "IntrantsServices": "To obtain more info on how to handle this post, please see the  <link>associative method</link>.",
+    "IntrantsServicesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/intrants-biens-et-services#intrants-services",
+    "EquipementsEtImmobilisations": "To obtain more info on how to handle this post, please see the  <link>associative method</link>.",
+    "EquipementsEtImmobilisationsLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/intrants-biens-et-services#equipements-et-immobilisations",
+    "ConstructionDesLocaux": "To obtain more info on how to handle this post, please see the  <link>associative method</link>.",
+    "ConstructionDesLocauxLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#construction-des-locaux",
+    "Energies": "To obtain more info on how to handle this post, please see the <link>Plan Carbone Général</link>.",
+    "EnergiesLink": "https://www.plancarbonegeneral.com/perimetre-collaborateurs/locaux/exploitation",
+    "DechetsDirects": "To obtain more info on how to handle this post, please see the  <link>Plan Carbone Général</link>.",
+    "DechetsDirectsLink": "https://www.plancarbonegeneral.com/perimetre-collaborateurs/locaux/exploitation",
+    "FroidEtClim": "To obtain more info on how to handle this post, please see the <link>Plan Carbone Général</link>.",
+    "FroidEtClimLink": "https://www.plancarbonegeneral.com/perimetre-collaborateurs/locaux/exploitation",
+    "Utilisation": "To obtain more info on how to handle this post, please see the <link>associative method</link>.",
+    "UtilisationLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/utilisation-et-fin-de-vie",
+    "FinDeVie": "To obtain more info on how to handle this post, please see the <link>associative method</link>.",
+    "FinDeVieLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/utilisation-et-fin-de-vie",
+    "Teletravail": "To obtain more info on how to handle this post, please see the <link>associative method</link>.",
+    "TeletravailLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/teletravail"
   }
 }

@@ -12,7 +12,6 @@ interface Props extends SvgIconProps {
 
 const HelpIcon = ({ className, onClick, label, ...props }: Props) => (
   <HelpOutlineIcon
-    color="primary"
     className={classNames(styles.helpIcon, className)}
     onClick={onClick}
     aria-label={label}

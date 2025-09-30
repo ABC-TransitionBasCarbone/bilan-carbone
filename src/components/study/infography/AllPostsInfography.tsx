@@ -1,7 +1,7 @@
 import { FullStudy } from '@/db/study'
 import { Post } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
-import { SubPost } from '@prisma/client'
+import { Environment, SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import styles from './AllPostsInfography.module.css'
 import PostInfography from './PostInfography'
@@ -22,18 +22,21 @@ const AllPostsInfography = ({ study, data }: Props) => {
     <div className={classNames(styles.infography, 'flex', 'justify-between', 'align-center')}>
       <div className={classNames(styles.column, 'flex-col')}>
         <PostInfography
+          environment={Environment.BC}
           studyId={study.id}
           data={data.find((d) => d.post === Post.IntrantsBiensEtMatieres)}
           post={Post.IntrantsBiensEtMatieres}
           resultsUnit={study.resultsUnit}
         />
         <PostInfography
+          environment={Environment.BC}
           studyId={study.id}
           data={data.find((d) => d.post === Post.IntrantsServices)}
           post={Post.IntrantsServices}
           resultsUnit={study.resultsUnit}
         />
         <PostInfography
+          environment={Environment.BC}
           studyId={study.id}
           data={data.find((d) => d.post === Post.Immobilisations)}
           post={Post.Immobilisations}
@@ -42,6 +45,7 @@ const AllPostsInfography = ({ study, data }: Props) => {
       </div>
       <div className={classNames(styles.column, 'flex-col')}>
         <PostInfography
+          environment={Environment.BC}
           studyId={study.id}
           data={findSubPost(SubPost.FretEntrant)}
           post={SubPost.FretEntrant}
@@ -50,6 +54,7 @@ const AllPostsInfography = ({ study, data }: Props) => {
       </div>
       <div className={classNames(styles.column, 'flex-col')}>
         <PostInfography
+          environment={Environment.BC}
           studyId={study.id}
           data={data.find((d) => d.post === Post.Deplacements)}
           post={Post.Deplacements}
@@ -57,18 +62,21 @@ const AllPostsInfography = ({ study, data }: Props) => {
         />
         <div className={classNames(styles.border, 'flex-col')}>
           <PostInfography
+            environment={Environment.BC}
             studyId={study.id}
             data={data.find((d) => d.post === Post.Energies)}
             post={Post.Energies}
             resultsUnit={study.resultsUnit}
           />
           <PostInfography
+            environment={Environment.BC}
             studyId={study.id}
             data={data.find((d) => d.post === Post.AutresEmissionsNonEnergetiques)}
             post={Post.AutresEmissionsNonEnergetiques}
             resultsUnit={study.resultsUnit}
           />
           <PostInfography
+            environment={Environment.BC}
             studyId={study.id}
             data={findSubPost(SubPost.FretInterne)}
             post={SubPost.FretInterne}
@@ -76,6 +84,7 @@ const AllPostsInfography = ({ study, data }: Props) => {
           />
         </div>
         <PostInfography
+          environment={Environment.BC}
           studyId={study.id}
           data={data.find((d) => d.post === Post.DechetsDirects)}
           post={Post.DechetsDirects}
@@ -84,6 +93,7 @@ const AllPostsInfography = ({ study, data }: Props) => {
       </div>
       <div className={classNames(styles.column, 'flex-col')}>
         <PostInfography
+          environment={Environment.BC}
           studyId={study.id}
           data={findSubPost(SubPost.FretSortant)}
           post={SubPost.FretSortant}
@@ -92,12 +102,14 @@ const AllPostsInfography = ({ study, data }: Props) => {
       </div>
       <div className={classNames(styles.column, 'flex-col')}>
         <PostInfography
+          environment={Environment.BC}
           studyId={study.id}
           data={data.find((d) => d.post === Post.FinDeVie)}
           post={Post.FinDeVie}
           resultsUnit={study.resultsUnit}
         />
         <PostInfography
+          environment={Environment.BC}
           studyId={study.id}
           data={data.find((d) => d.post === Post.UtilisationEtDependance)}
           post={Post.UtilisationEtDependance}

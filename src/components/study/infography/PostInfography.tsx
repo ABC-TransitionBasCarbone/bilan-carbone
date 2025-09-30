@@ -4,7 +4,7 @@ import { BasePostInfography } from '@/environments/base/study/infography/BasePos
 import { Post, subPostsByPost } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { getEmissionValueString, getValidationPercentage } from '@/utils/study'
-import { StudyResultUnit, SubPost } from '@prisma/client'
+import { Environment, StudyResultUnit, SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 
@@ -13,9 +13,10 @@ interface Props {
   data?: ResultsByPost
   studyId: string
   resultsUnit: StudyResultUnit
+  environment: Environment
 }
 
-const PostInfography = ({ post, data, studyId, resultsUnit }: Props) => {
+const PostInfography = ({ post, data, studyId, resultsUnit, environment }: Props) => {
   const tUnits = useTranslations('study.results.units')
 
   const mainPost = useMemo(() => {
@@ -50,6 +51,7 @@ const PostInfography = ({ post, data, studyId, resultsUnit }: Props) => {
         studyId={studyId}
         percent={percent}
         emissionValue={emissionValue}
+        environment={environment}
       />
     )
   )

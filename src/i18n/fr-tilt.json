@@ -41,5 +41,31 @@
     "dependencyMatrix": {
       "info": "Vous pouvez télécharger un exemple de matrice de risque et de dépendance pour vous aider à construire la vôtre. Par la suite, si vous souhaitez soumettre votre propre cartographie des flux pour aider d'autres associations en leur fournissant une base de travail, merci de la soumettre à <mail>methodologie@abc-transitionbascarbone.fr</mail>"
     }
+  },
+  "postInfographyInfo": {
+    "postInfo": "Information sur ce poste",
+    "close": "Fermer",
+    "IntrantsBiensEtMatieresTilt": "Pour obtenir plus d'informations sur les différentes manières de prendre en compte des Intrants, veuillez vous référer à la <link>méthode associative</link>.",
+    "IntrantsBiensEtMatieresTiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/intrants-biens-et-services#intrants-biens-et-matieres",
+    "Alimentation": "Pour obtenir plus d'informations sur la prise en compte de l'alimentation, pour les différentes parties prenantes des associations, veuillez vous référer à la <link>méthode associative</link>.",
+    "AlimentationLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/alimentation",
+    "IntrantsServices": "Pour obtenir plus d'informations sur les différentes manières de prendre en compte des Intrants, veuillez vous référer à la <link>méthode associative</link>.",
+    "IntrantsServicesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/intrants-biens-et-services#intrants-services",
+    "EquipementsEtImmobilisations": "Pour obtenir plus d'informations sur la manière de prendre en compte les équipements et autres immobilisations, veuillez vous référer à la <link>méthode associative</link>.",
+    "EquipementsEtImmobilisationsLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/intrants-biens-et-services#equipements-et-immobilisations",
+    "ConstructionDesLocaux": "Pour obtenir plus d'informations sur la prise en compte des locaux des associations, veuillez vous référer à la <link>méthode associative</link>.",
+    "ConstructionDesLocauxLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#construction-des-locaux",
+    "Energies": "Pour obtenir plus d'informations sur la prise en compte des consommations énergétiques d'une organisation, veuillez vous référer au <link>Plan Carbone Général</link>.",
+    "EnergiesLink": "https://www.plancarbonegeneral.com/perimetre-collaborateurs/locaux/exploitation",
+    "DechetsDirects": "Pour obtenir plus d'informations sur la prise en compte des déchets d'une organisation, veuillez vous référer au <link>Plan Carbone Général</link>.",
+    "DechetsDirectsLink": "https://www.plancarbonegeneral.com/perimetre-collaborateurs/locaux/exploitation",
+    "FroidEtClim": "Pour obtenir plus d'informations sur la prise en compte des climatisations et autres appareils consommateurs de fluides frigorigènes d'une organisation, veuillez vous référer au <link>Plan Carbone Général</link>.",
+    "FroidEtClimLink": "https://www.plancarbonegeneral.com/perimetre-collaborateurs/locaux/exploitation",
+    "Utilisation": "Pour obtenir plus d'informations sur la prise en compte de l'utilisation des produits distribués ou vendus et services rendus par les associations, veuillez vous référer à la <link>méthode associative</link>.",
+    "UtilisationLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/utilisation-et-fin-de-vie",
+    "FinDeVie": "Pour obtenir plus d'informations sur la prise en compte de la fin de vie des produits distribués ou vendus par les associations, veuillez vous référer à la <link>méthode associative</link>.",
+    "FinDeVieLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/utilisation-et-fin-de-vie",
+    "Teletravail": "Pour obtenir plus d'informations sur la prise en compte du télétravail, veuillez vous référer à la <link>méthode associative</link>.",
+    "TeletravailLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/teletravail"
   }
 }
