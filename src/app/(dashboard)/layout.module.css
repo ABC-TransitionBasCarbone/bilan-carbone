@@ -1,3 +1,7 @@
 .content {
   overflow-y: auto;
 }
+
+.withOrganizationCard {
+  --total-header-height: calc(var(--header-height) + var(--organization-height));
+}
