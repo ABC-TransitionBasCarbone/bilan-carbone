@@ -21,7 +21,7 @@ import AddIcon from '@mui/icons-material/Add'
 import CopyIcon from '@mui/icons-material/ContentCopy'
 import EditIcon from '@mui/icons-material/Edit'
 import HideIcon from '@mui/icons-material/VisibilityOff'
-import { Autocomplete, Chip, FormControl, InputLabel, MenuItem, Popper, TextField } from '@mui/material'
+import { Autocomplete, FormControl, InputLabel, MenuItem, Popper, TextField } from '@mui/material'
 import {
   EmissionSourceCaracterisation,
   EmissionSourceTag,
@@ -42,6 +42,7 @@ import Button from '../base/Button'
 import HelpIcon from '../base/HelpIcon'
 import LinkButton from '../base/LinkButton'
 import { Select } from '../base/Select'
+import TagChip from '../base/TagChip'
 import GlossaryModal from '../modals/GlossaryModal'
 import Modal from '../modals/Modal'
 import DeleteEmissionSource from './DeleteEmissionSource'
@@ -425,28 +426,22 @@ const EmissionSourceForm = ({
 
               return (
                 <li key={key} {...optionProps}>
-                  <Chip label={option.label} size="small" sx={{ bgcolor: option.color }} data-testid="tag-option" />
+                  <TagChip name={option.label} color={option.color} size="small" data-testid="tag-option" />
                 </li>
               )
             }}
             slots={{
-              popper: (props) => <Popper {...props} placement="bottom-start" className={styles.tagOptions} />,
+              popper: (props) => <Popper {...props} placement="bottom-start" />,
             }}
             renderInput={(params) => <TextField {...params} label={t('form.tag')} />}
-            renderValue={(value: Option[], getItemProps) =>
-              value.map((option: Option, index: number) => {
-                const { key, ...itemProps } = getItemProps({ index })
-                return (
-                  <Chip
-                    variant="outlined"
-                    label={option.label}
-                    key={key}
-                    sx={{ bgcolor: option.color }}
-                    {...itemProps}
-                  />
-                )
-              })
-            }
+            renderValue={(value: Option[], getItemProps) => (
+              <div className={classNames('flex wrap align-center gapped-2', styles.tagOptions)}>
+                {value.map((option: Option, index: number) => {
+                  const { key, ...itemProps } = getItemProps({ index })
+                  return <TagChip name={option.label} color={option.color} key={key} {...itemProps} />
+                })}
+              </div>
+            )}
           />
           <TextField
             className="grow"
