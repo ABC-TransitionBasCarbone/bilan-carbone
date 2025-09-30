@@ -96,6 +96,7 @@ const StudyDetailsHeader = ({
     ? [
         {
           actionType: 'button',
+          'data-testid': 'duplicate-study',
           onClick: () => setDuplicating(true),
           children: <CopyIcon />,
           title: t('duplicate'),

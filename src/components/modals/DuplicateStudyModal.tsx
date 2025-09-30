@@ -29,6 +29,7 @@ const DuplicateStudyModal = ({
   const t = useTranslations('study.duplicateDialog')
   const tEnv = useTranslations('environment')
   const [targetEnvironment, setTargetEnvironment] = useState<Environment>(environments[0])
+  const [duplicating, setDuplicating] = useState(false)
   const [duplicated, setDuplicated] = useState(false)
   const router = useRouter()
 
@@ -39,10 +40,12 @@ const DuplicateStudyModal = ({
 
   const handleDuplicate = async () => {
     if (isOtherEnvironment) {
+      setDuplicating(true)
       const res = await duplicateStudyInOtherEnvironment(studyId, targetEnvironment)
       if (res.success) {
         setDuplicated(true)
         setTimeout(() => {
+          setDuplicating(false)
           setDuplicated(false)
           onClose()
         }, 5000)
@@ -68,27 +71,33 @@ const DuplicateStudyModal = ({
           : [
               { actionType: 'button', onClick: onClose, children: t('cancel') },
               {
-                actionType: 'button',
+                actionType: 'loadingButton',
                 onClick: handleDuplicate,
                 children: t('confirm'),
                 'data-testid': 'duplicate-study-confirm',
+                loading: duplicating,
               },
             ]
       }
     >
       {duplicated ? (
-        <div>{t('duplicatedDescription', { environment: tEnv(targetEnvironment) })}</div>
+        <div data-testid="duplicated-description">
+          {t('duplicatedDescription', { environment: tEnv(targetEnvironment) })}
+        </div>
       ) : (
         <>
-          {t.rich(isOtherEnvironment ? 'otherEnvironnment' : 'description', {
-            environment: tEnv(targetEnvironment),
-            br: () => <br />,
-          })}
+          <span data-testid="duplication-modale-text">
+            {t.rich(isOtherEnvironment ? 'otherEnvironnment' : 'description', {
+              environment: tEnv(targetEnvironment),
+              br: () => <br />,
+            })}
+          </span>
           {environments.length > 1 && (
             <div className="flex-col my1">
               <span className="bold mb-2">{t('selectEnvironment')}</span>
               <Select
                 id="environment-selector"
+                data-testid="environment-selector"
                 value={targetEnvironment}
                 onChange={(event) => setTargetEnvironment(event.target.value as Environment)}
               >
