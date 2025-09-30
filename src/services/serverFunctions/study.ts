@@ -65,7 +65,7 @@ import { getLocale } from '@/i18n/locale'
 import { getNestedValue } from '@/utils/array'
 import { mapCncToStudySite } from '@/utils/cnc'
 import { calculateDistanceFromParis } from '@/utils/distance'
-import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
+import { CA_UNIT_VALUES, defaultCAUnit, formatNumber } from '@/utils/number'
 import { withServerResponse } from '@/utils/serverResponse'
 import {
   getAccountRoleOnStudy,
@@ -85,6 +85,7 @@ import {
   EmissionSourceCaracterisation,
   Export,
   Import,
+  Level,
   Prisma,
   Role,
   StudyEmissionSource,
@@ -1488,18 +1489,26 @@ export const mapStudyForReport = async (
       name: `${firstName} ${lastName}`,
       role: user.role,
       createdAt: user.createdAt,
-      isInternal: user.account.organizationVersionId === study.organizationVersionId,
+      isInternal: isParentCR
+        ? user.account.organizationVersionId !== study.organizationVersion.parentId // All members that are not in the parent CR
+        : user.account.organizationVersionId === study.organizationVersionId, // All members that are in the same organization as the study
+      isExternal: isParentCR
+        ? user.account.organizationVersionId === study.organizationVersion.parentId // All members that are in the parent CR
+        : user.account.organizationVersionId !== study.organizationVersionId, // All members that are not in the same organization as the study
     }
   })
 
-  const contributors: { accountId: string; name: string; isInternal: boolean }[] = []
+  const contributors: { accountId: string; name: string; isInternal: boolean; isExternal: boolean }[] = []
   study.contributors.forEach((contributor) => {
     if (!contributors.some((c) => c.accountId === contributor.accountId)) {
       const { firstName, lastName } = contributor.account.user
       contributors.push({
         accountId: contributor.accountId,
         name: `${firstName} ${lastName}`,
-        isInternal: isParentCR,
+        isInternal: isParentCR
+          ? contributor.account.organizationVersionId !== study.organizationVersion.parentId // All contributors that are not in the parent CR
+          : false, // No contributors can be internal in a regular organization scenario
+        isExternal: false, // No contributors can be external
       })
     }
   })
@@ -1514,8 +1523,8 @@ export const mapStudyForReport = async (
     ...contributors.filter((contributor) => contributor.isInternal),
   ]
   const externalTeam = [
-    ...remainingMembers.filter((user) => !user.isInternal),
-    ...contributors.filter((contributor) => !contributor.isInternal),
+    ...remainingMembers.filter((user) => user.isExternal),
+    ...contributors.filter((contributor) => contributor.isExternal),
   ]
 
   const sites = study.sites.map((studySite) => ({
@@ -1525,15 +1534,21 @@ export const mapStudyForReport = async (
     postalCode: studySite.site.postalCode,
   }))
 
-  const monetaryRatioPercentage = results.monetaryRatio.toFixed(2)
-  const nonSpecificMonetaryRatioPercentage = results.nonSpecificMonetaryRatio.toFixed(2)
-  const specificMonetaryRatioPercentage = (results.monetaryRatio - results.nonSpecificMonetaryRatio).toFixed(2)
+  const monetaryRatioPercentage = formatNumber(results.monetaryRatio, 2)
+  const nonSpecificMonetaryRatioPercentage = formatNumber(results.nonSpecificMonetaryRatio, 2)
+  const specificMonetaryRatioPercentage = formatNumber(results.monetaryRatio - results.nonSpecificMonetaryRatio, 2)
 
   const tLevel = await getTranslations('level')
 
   return {
     ...study,
     level: tLevel(study.level),
+    // We need all cases here because docxtemplater doesn't support logical operators in conditions
+    isInitialOrStandard: study.level === Level.Initial || study.level === Level.Standard,
+    isStandardOrAdvanced: study.level === Level.Standard || study.level === Level.Advanced,
+    isInitial: study.level === Level.Initial,
+    isStandard: study.level === Level.Standard,
+    isAdvanced: study.level === Level.Advanced,
     year: study.startDate.getFullYear(),
     startDate: formatDateFr(study.startDate),
     endDate: formatDateFr(study.endDate),
