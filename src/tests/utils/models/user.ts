@@ -1,5 +1,5 @@
 import { Account, Environment, Level, Prisma, Role, User, UserSource, UserStatus } from '@prisma/client'
-import { UserSession } from 'next-auth'
+import { Session, UserSession } from 'next-auth'
 import { mockedOrganizationId, mockedOrganizationVersionId } from './organization'
 
 export const mockedUserId = 'mocked-user-id'
@@ -64,6 +64,13 @@ export const mockedSession = {
   level: mockedUser.level,
   firstName: mockedUser.firstName,
   lastName: mockedUser.lastName,
+  user: {
+    email: mockedUser.email,
+    accountId: mockedAccountId,
+    organizationId: mockedOrganizationId,
+    environment: Environment.BC,
+    needsAccountSelection: false,
+  },
 }
 
 export const getMockedDbAccount = (
@@ -81,6 +88,26 @@ export const getMockedAuthUser = (props?: Partial<UserSession>): UserSession => 
   environment: Environment.BC,
   ...mockedDbAccount.user,
   ...props,
+})
+
+export const getMockedDbActualizedAuth = (
+  sessionProps?: Partial<Session>,
+  userProps?: Partial<UserSession>,
+): Session => ({
+  ...mockedSession,
+  expires: '3600',
+  user: {
+    ...mockedSession.user,
+    id: mockedUserId,
+    userId: mockedUserId,
+    firstName: 'mocked-first-name',
+    lastName: 'mocked-last-name',
+    role: Role.ADMIN,
+    organizationVersionId: mockedDbAccount.organizationVersionId,
+    level: Level.Advanced,
+    ...userProps,
+  },
+  ...sessionProps,
 })
 
 export const getMockedDbUser = (props?: Partial<User>): User => ({ ...mockedDbUser, ...props })
