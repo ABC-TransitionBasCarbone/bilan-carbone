@@ -8,6 +8,7 @@ import { ControlMode, Export } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { Dispatch, SetStateAction, useMemo, useState } from 'react'
 import BegesActivationWarningModal from './BegesActivationWarningModal'
+import BegesDeactivationWarningModal from './BegesDeactivationWarningModal'
 import styles from './ExportCheckbox.module.css'
 
 interface Props {
@@ -23,40 +24,51 @@ const ExportCheckbox = ({ id, study, values, setValues, disabled, duplicateStudy
   const t = useTranslations('study.new')
   const tExport = useTranslations('exports')
   const { callServerFunction } = useServerFunction()
-  const [showWarning, setShowWarning] = useState(false)
+  const [showControlModeWarning, setShowControlModeWarning] = useState(false)
   const [pendingControlMode, setPendingControlMode] = useState<ControlMode | null>(null)
-  const [showBegesWarning, setShowBegesWarning] = useState(false)
+  const [showBegesActivationWarning, setShowBegesActivationWarning] = useState(false)
   const [pendingBegesCheck, setPendingBegesCheck] = useState<boolean>(false)
+  const [showBegesDeactivationWarning, setShowBegesDeactivationWarning] = useState(false)
+  const [pendingBegesUncheck, setPendingBegesUncheck] = useState<boolean>(false)
+  const isNewStudy = !study && !duplicateStudyId
 
   const hasCaracterisations = useMemo(
-    () => study && study.emissionSources.some((source) => source.caracterisation !== null),
+    () => !!study && study.emissionSources.some((source) => source.caracterisation !== null),
+    [study],
+  )
+
+  const hasValidatedSources = useMemo(
+    () => !!study && study.emissionSources.some((source) => source.validated),
     [study],
   )
 
   const handleControlModeChange = (newControlMode: ControlMode) => {
     const currentControlMode = values[id] as ControlMode
 
-    const shouldShowWarning =
-      currentControlMode &&
-      currentControlMode !== newControlMode &&
-      ((hasCaracterisations && study) || duplicateStudyId)
+    const shouldShowControlModeChangeWarning =
+      currentControlMode && currentControlMode !== newControlMode && hasCaracterisations && !isNewStudy
 
-    if (shouldShowWarning) {
+    if (shouldShowControlModeChangeWarning) {
       setPendingControlMode(newControlMode)
-      setShowWarning(true)
+      setShowControlModeWarning(true)
     } else {
       setValues({ ...values, [id]: newControlMode })
     }
   }
 
   const closeControlModeChange = () => {
-    setShowWarning(false)
+    setShowControlModeWarning(false)
     setPendingControlMode(null)
   }
 
   const closeBegesActivation = () => {
-    setShowBegesWarning(false)
+    setShowBegesActivationWarning(false)
     setPendingBegesCheck(false)
+  }
+
+  const closeBegesDeactivation = () => {
+    setShowBegesDeactivationWarning(false)
+    setPendingBegesUncheck(false)
   }
 
   const confirmControlModeChange = async () => {
@@ -91,6 +103,13 @@ const ExportCheckbox = ({ id, study, values, setValues, disabled, duplicateStudy
     closeBegesActivation()
   }
 
+  const confirmBegesDeactivation = async () => {
+    if (pendingBegesUncheck) {
+      setValues({ ...values, [id]: false })
+    }
+    closeBegesDeactivation()
+  }
+
   return (
     <div className={styles.container}>
       <FormControlLabel
@@ -106,14 +125,24 @@ const ExportCheckbox = ({ id, study, values, setValues, disabled, duplicateStudy
         }
         value={!!values[id]}
         onChange={(_, checked) => {
+          const shouldShowBegesActivationWarning = hasValidatedSources && !isNewStudy
+          const shouldShowBegesDeactivationWarning = hasCaracterisations && !isNewStudy
+
           if (checked && id === Export.Beges && !values[id]) {
-            // Show warning when checking BEGES for the first time
-            const shouldShowWarning = (hasCaracterisations && study) || duplicateStudyId
-            if (shouldShowWarning) {
+            // Show warning when checking BEGES export
+            if (shouldShowBegesActivationWarning) {
               setPendingBegesCheck(true)
-              setShowBegesWarning(true)
+              setShowBegesActivationWarning(true)
             } else {
               setValues({ ...values, [id]: ControlMode.Operational })
+            }
+          } else if (!checked && id === Export.Beges && values[id]) {
+            // Show warning when unchecking BEGES export
+            if (shouldShowBegesDeactivationWarning) {
+              setPendingBegesUncheck(true)
+              setShowBegesDeactivationWarning(true)
+            } else {
+              setValues({ ...values, [id]: false })
             }
           } else {
             setValues({ ...values, [id]: checked ? ControlMode.Operational : false })
@@ -138,20 +167,27 @@ const ExportCheckbox = ({ id, study, values, setValues, disabled, duplicateStudy
           </FormControl>
         </div>
       )}
-      {showWarning && pendingControlMode && (
+      {showControlModeWarning && pendingControlMode && (
         <ControlModeChangeWarningModal
-          open={showWarning}
+          open={showControlModeWarning}
           currentMode={values[id] as ControlMode}
           newMode={pendingControlMode}
           onConfirm={confirmControlModeChange}
           onCancel={closeControlModeChange}
         />
       )}
-      {showBegesWarning && pendingBegesCheck && (
+      {showBegesActivationWarning && pendingBegesCheck && (
         <BegesActivationWarningModal
-          open={showBegesWarning}
+          open={showBegesActivationWarning}
           onConfirm={confirmBegesActivation}
           onCancel={closeBegesActivation}
+        />
+      )}
+      {showBegesDeactivationWarning && pendingBegesUncheck && (
+        <BegesDeactivationWarningModal
+          open={showBegesDeactivationWarning}
+          onConfirm={confirmBegesDeactivation}
+          onCancel={closeBegesDeactivation}
         />
       )}
     </div>

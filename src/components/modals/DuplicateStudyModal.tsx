@@ -39,7 +39,9 @@ const DuplicateStudyModal = ({ studyId, organizationVersionId, open, onClose }: 
         },
       ]}
     >
-      {t('description')}
+      {t.rich('description', {
+        br: () => <br />,
+      })}
     </Modal>
   )
 }
