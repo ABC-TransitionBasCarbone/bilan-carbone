@@ -5,7 +5,6 @@ import theme from '@/environments/tilt/theme/theme'
 import { TiltPost } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { Box } from '@mui/material'
-import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 
@@ -25,28 +24,24 @@ const AllPostsInfography = ({ study, data }: Props) => {
       >
         <div className={classNames(styles.postTitle)}>{t('IntrantsBiensEtServices')}</div>
         <PostInfography
-          environment={Environment.TILT}
           studyId={study.id}
           data={data.find((d) => d.post === TiltPost.IntrantsBiensEtMatieresTilt)}
           post={TiltPost.IntrantsBiensEtMatieresTilt}
           resultsUnit={study.resultsUnit}
         />
         <PostInfography
-          environment={Environment.TILT}
           studyId={study.id}
           data={data.find((d) => d.post === TiltPost.Alimentation)}
           post={TiltPost.Alimentation}
           resultsUnit={study.resultsUnit}
         />
         <PostInfography
-          environment={Environment.TILT}
           studyId={study.id}
           data={data.find((d) => d.post === TiltPost.IntrantsServices)}
           post={TiltPost.IntrantsServices}
           resultsUnit={study.resultsUnit}
         />
         <PostInfography
-          environment={Environment.TILT}
           studyId={study.id}
           data={data.find((d) => d.post === TiltPost.EquipementsEtImmobilisations)}
           post={TiltPost.EquipementsEtImmobilisations}
@@ -60,14 +55,12 @@ const AllPostsInfography = ({ study, data }: Props) => {
         >
           <div className={classNames(styles.postTitle)}>{t('Deplacements')}</div>
           <PostInfography
-            environment={Environment.TILT}
             studyId={study.id}
             data={data.find((d) => d.post === TiltPost.DeplacementsDePersonne)}
             post={TiltPost.DeplacementsDePersonne}
             resultsUnit={study.resultsUnit}
           />
           <PostInfography
-            environment={Environment.TILT}
             studyId={study.id}
             data={data.find((d) => d.post === TiltPost.TransportDeMarchandises)}
             post={TiltPost.TransportDeMarchandises}
@@ -80,35 +73,30 @@ const AllPostsInfography = ({ study, data }: Props) => {
         >
           <div className={classNames(styles.postTitle)}>{t('LocauxEtInfrastructures')}</div>
           <PostInfography
-            environment={Environment.TILT}
             studyId={study.id}
             data={data.find((d) => d.post === TiltPost.ConstructionDesLocaux)}
             post={TiltPost.ConstructionDesLocaux}
             resultsUnit={study.resultsUnit}
           />
           <PostInfography
-            environment={Environment.TILT}
             studyId={study.id}
             data={data.find((d) => d.post === TiltPost.Energies)}
             post={TiltPost.Energies}
             resultsUnit={study.resultsUnit}
           />
           <PostInfography
-            environment={Environment.TILT}
             studyId={study.id}
             data={data.find((d) => d.post === TiltPost.Déchets)}
             post={TiltPost.Déchets}
             resultsUnit={study.resultsUnit}
           />
           <PostInfography
-            environment={Environment.TILT}
             studyId={study.id}
             data={data.find((d) => d.post === TiltPost.FroidEtClim)}
             post={TiltPost.FroidEtClim}
             resultsUnit={study.resultsUnit}
           />
           <PostInfography
-            environment={Environment.TILT}
             studyId={study.id}
             data={data.find((d) => d.post === TiltPost.AutresEmissions)}
             post={TiltPost.AutresEmissions}
@@ -123,14 +111,12 @@ const AllPostsInfography = ({ study, data }: Props) => {
         >
           <div className={classNames(styles.postTitle)}>{t('UtilisationEtFinDeVie')}</div>
           <PostInfography
-            environment={Environment.TILT}
             studyId={study.id}
             data={data.find((d) => d.post === TiltPost.Utilisation)}
             post={TiltPost.Utilisation}
             resultsUnit={study.resultsUnit}
           />
           <PostInfography
-            environment={Environment.TILT}
             studyId={study.id}
             data={data.find((d) => d.post === TiltPost.FinDeVie)}
             post={TiltPost.FinDeVie}
@@ -139,7 +125,6 @@ const AllPostsInfography = ({ study, data }: Props) => {
         </Box>
         <div className={'flex-col mt2'}>
           <PostInfography
-            environment={Environment.TILT}
             studyId={study.id}
             data={data.find((d) => d.post === TiltPost.Teletravail)}
             post={TiltPost.Teletravail}

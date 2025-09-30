@@ -3,7 +3,7 @@ import { SubPostInfography } from '@/components/study/infography/SubPostInfograp
 import { Post } from '@/services/posts'
 import { defaultPostColor, postColors } from '@/utils/study'
 import { styled } from '@mui/material/styles'
-import { Environment, SubPost } from '@prisma/client'
+import { SubPost } from '@prisma/client'
 import Link from 'next/link'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
@@ -38,18 +38,9 @@ interface Props {
   studyId: string
   percent: number
   emissionValue: string
-  environment: Environment
 }
 
-export const BasePostInfography = ({
-  post,
-  mainPost,
-  subPosts,
-  studyId,
-  percent,
-  emissionValue,
-  environment,
-}: Props) => {
+export const BasePostInfography = ({ post, mainPost, subPosts, studyId, percent, emissionValue }: Props) => {
   const ref = useRef<HTMLDivElement>(null)
   const [displayChildren, setDisplayChildren] = useState(false)
   const displayTimeout = useRef<NodeJS.Timeout | null>(null)
@@ -80,15 +71,8 @@ export const BasePostInfography = ({
       }}
       href={`/etudes/${studyId}/comptabilisation/saisie-des-donnees/${mainPost}`}
     >
-      <PostHeader
-        environment={environment}
-        post={post}
-        mainPost={mainPost}
-        emissionValue={emissionValue}
-        percent={percent}
-        color={postColor}
-      />
-      <SubPostInfography subPosts={subPosts} ref={ref} environment={environment} />
+      <PostHeader post={post} mainPost={mainPost} emissionValue={emissionValue} percent={percent} color={postColor} />
+      <SubPostInfography subPosts={subPosts} ref={ref} />
     </StyledLink>
   )
 }

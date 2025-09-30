@@ -5,11 +5,13 @@ import { Post } from '@/services/posts'
 import { StudyRole } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import { useState } from 'react'
+import Link from 'next/link'
+import { useMemo, useState } from 'react'
 import GlossaryModal from '../modals/GlossaryModal'
 import SubPosts from '../study/SubPosts'
 import StudyPostsBlock from '../study/buttons/StudyPostsBlock'
 import StudyPostInfography from '../study/infography/StudyPostInfography'
+import styles from './StudyPostsPage.module.css'
 
 interface Props {
   post: Post
@@ -24,6 +26,22 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, use
   const [showInfography, setShowInfography] = useState(false)
   const tPost = useTranslations('emissionFactors.post')
   const [glossary, setGlossary] = useState('')
+
+  const glossaryDescription = useMemo(() => {
+    const textForGlossary = tPost.has(
+      `glossaryDescription.${glossary}${study.organizationVersion.environment.toLowerCase()}`,
+    )
+      ? `glossaryDescription.${glossary}${study.organizationVersion.environment.toLowerCase()}`
+      : `glossaryDescription.${glossary}`
+
+    return tPost.rich(textForGlossary, {
+      link: (children) => (
+        <Link className={styles.link} href={tPost(`${textForGlossary}Link`)} target="_blank">
+          {children}
+        </Link>
+      ),
+    })
+  }, [glossary, post, study.organizationVersion.environment, tPost])
 
   return (
     <>
@@ -48,7 +66,7 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, use
       </StudyPostsBlock>
       {glossary && (
         <GlossaryModal glossary={glossary} label="post-glossary" t={tPost} onClose={() => setGlossary('')}>
-          {tPost(`glossaryDescription.${glossary}`)}
+          {glossaryDescription}
         </GlossaryModal>
       )}
     </>
