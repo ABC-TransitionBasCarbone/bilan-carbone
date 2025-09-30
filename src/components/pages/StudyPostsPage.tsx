@@ -41,7 +41,7 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, use
         </Link>
       ),
     })
-  }, [glossary, post, study.organizationVersion.environment, tPost])
+  }, [glossary, study.organizationVersion.environment, tPost])
 
   return (
     <>
