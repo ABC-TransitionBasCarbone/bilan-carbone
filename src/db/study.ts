@@ -10,6 +10,7 @@ import { getUserRoleOnPublicStudy } from '@/utils/study'
 import { isAdmin } from '@/utils/user'
 import {
   ControlMode,
+  DuplicableStudy,
   EmissionSourceTag,
   EmissionSourceTagFamily,
   Environment,
@@ -821,3 +822,10 @@ export const getStudiesAffectedByQuestion = async (questionIdIntern: string) => 
     distinct: ['id'],
   })
 }
+
+export const upsertStudyKey = async (key: DuplicableStudy, environment: Environment, studyId: string) =>
+  prismaClient.keyStudy.upsert({
+    where: { environment_role: { environment, role: key } },
+    update: { studyId },
+    create: { environment, role: key, studyId },
+  })

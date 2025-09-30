@@ -64,6 +64,7 @@ import {
   updateStudySites,
   updateUserOnStudy,
   upsertStudyExport,
+  upsertStudyKey,
 } from '@/db/study'
 import { addUser, getUserApplicationSettings, getUserByEmail, getUserSourceById, UserWithAccounts } from '@/db/user'
 import { LocaleType } from '@/i18n/config'
@@ -87,6 +88,7 @@ import {
   ControlMode,
   Document,
   DocumentCategory,
+  DuplicableStudy,
   EmissionFactor,
   EmissionFactorImportVersion,
   EmissionSourceCaracterisation,
@@ -1851,3 +1853,18 @@ export const prepareReport = async (
     }
     return arrayBuffer
   })
+
+export const setKeyStudy = async (key: DuplicableStudy, environment: Environment, studyId: string) => {
+  const study = await getStudyById(studyId, null)
+  if (!study) {
+    return 'Study not found'
+  }
+  if (study.organizationVersion.environment !== environment) {
+    return `Study is not from the right environment (${study.organizationVersion.environment})`
+  }
+  if (study.organizationVersion.organization.id !== process.env.STUDY_KEY_ORGANIZATION_ID) {
+    return `Study is not from the right organization (${study.organizationVersion.organization.name})`
+  }
+  await upsertStudyKey(key, environment, studyId)
+  return 'Succès'
+}
