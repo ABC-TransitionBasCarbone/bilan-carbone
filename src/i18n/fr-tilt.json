@@ -43,8 +43,9 @@
     }
   },
   "postInfographyInfo": {
-    "postInfo": "Information sur ce poste",
+    "postInfo": "Informations sur ce poste",
     "close": "Fermer",
+    "informations": "informations sur ce poste",
     "IntrantsBiensEtMatieresTilt": "Pour obtenir plus d'informations sur les différentes manières de prendre en compte des Intrants, veuillez vous référer à la <link>méthode associative</link>.",
     "IntrantsBiensEtMatieresTiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/intrants-biens-et-services#intrants-biens-et-matieres",
     "Alimentation": "Pour obtenir plus d'informations sur la prise en compte de l'alimentation, pour les différentes parties prenantes des associations, veuillez vous référer à la <link>méthode associative</link>.",
@@ -66,6 +67,26 @@
     "FinDeVie": "Pour obtenir plus d'informations sur la prise en compte de la fin de vie des produits distribués ou vendus par les associations, veuillez vous référer à la <link>méthode associative</link>.",
     "FinDeVieLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/utilisation-et-fin-de-vie",
     "Teletravail": "Pour obtenir plus d'informations sur la prise en compte du télétravail, veuillez vous référer à la <link>méthode associative</link>.",
-    "TeletravailLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/teletravail"
+    "TeletravailLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/teletravail",
+    "DeplacementsFabricationDesVehicules": "La fabrication des véhicules peut déjà , dans certains cas, être prise en compte au sein des facteurs d'émission utilisés pour comptabiliser les déplacements. Pour plus d'information sur sa prise en compte, veuillez vous référer à la <link>méthode associative</link>.",
+    "DeplacementsFabricationDesVehiculesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#fabrication-des-vehicules",
+    "DeplacementsDomicileTravailSalaries": "Pour obtenir plus d'informations sur le type de déplacements devant être inclus dans cette catégorie, veuillez vous référer à la <link>méthode associative</link>.",
+    "DeplacementsDomicileTravailSalariesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-entre-le-domicile-et-lassociation",
+    "DeplacementsDomicileTravailBenevoles": "Pour obtenir plus d'informations sur le type de déplacements devant être inclus dans cette catégorie, veuillez vous référer à la <link>méthode associative</link>.",
+    "DeplacementsDomicileTravailBenevolesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-entre-le-domicile-et-lassociation",
+    "DeplacementsDansLeCadreDUneMissionAssociativeSalaries": "Pour obtenir plus d'informations sur le type de déplacements devant être inclus dans cette catégorie, veuillez vous référer à la <link>méthode associative</link>.",
+    "DeplacementsDansLeCadreDUneMissionAssociativeSalariesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-dans-le-cadre-dune-mission-associative",
+    "DeplacementsDansLeCadreDUneMissionAssociativeBenevoles": "Pour obtenir plus d'informations sur le type de déplacements devant être inclus dans cette catégorie, veuillez vous référer à la <link>méthode associative</link>.",
+    "DeplacementsDansLeCadreDUneMissionAssociativeBenevolesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-dans-le-cadre-dune-mission-associative",
+    "DeplacementsDesBeneficiaires": "Pour obtenir plus d'informations sur le type de déplacements devant être inclus dans cette catégorie, veuillez vous référer à la <link>méthode associative</link>.",
+    "DeplacementsDesBeneficiairesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-des-beneficiaires",
+    "Fret": "Pour obtenir plus d'informations sur les différentes méthodes de prise en compte du fret, veuillez vous référer à la <link>méthode associative</link>.",
+    "FretLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#transport-de-marchandises",
+    "TransportFabricationDesVehicules": "La fabrication des véhicules peut déjà , dans certains cas, être prise en compte au sein des facteurs d'émission utilisés pour comptabiliser les déplacements. Pour plus d'information sur sa prise en compte, veuillez vous référer à la <link>méthode associative</link>.",
+    "TransportFabricationDesVehiculesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#fabrication-des-vehicules",
+    "Agriculture": "Pour obtenir plus d'informations sur la prise en compte des émissions liées aux activités agricoles, veuillez vous référez à la <link>méthode associative</link>.",
+    "AgricultureLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
+    "ActivitesIndustrielles": "Pour obtenir plus d'informations sur la prise en compte des émissions liées aux éventuelles activités industrielles, veuillez vous référez à la <link>méthode associative</link>.",
+    "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux"
   }
 }

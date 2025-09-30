@@ -43,8 +43,9 @@
     }
   },
     "postInfographyInfo": {
-    "postInfo": "Information sur ce poste",
-    "close": "Fermer",
+    "postInfo": "Infos on this post",
+    "close": "Close",
+    "information": "Infos",
     "IntrantsBiensEtMatieresTilt": "To obtain more info on how to handle this post, please see the <link>associative method</link>.",
     "IntrantsBiensEtMatieresTiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/intrants-biens-et-services#intrants-biens-et-matieres",
     "Alimentation": "To obtain more info on how to handle this post, please see the <link>associative method</link>.",
@@ -66,6 +67,26 @@
     "FinDeVie": "To obtain more info on how to handle this post, please see the <link>associative method</link>.",
     "FinDeVieLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/utilisation-et-fin-de-vie",
     "Teletravail": "To obtain more info on how to handle this post, please see the <link>associative method</link>.",
-    "TeletravailLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/teletravail"
-  }
+    "TeletravailLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/teletravail",
+    "DeplacementsFabricationDesVehicules": "To obtain more info on how to handle this post, please see the <link>associative method</link>.",
+    "DeplacementsFabricationDesVehiculesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#fabrication-des-vehicules",
+    "DeplacementsDomicileTravailSalaries": "To obtain more info on how to handle this post, please see the <link>associative method</link>.",
+    "DeplacementsDomicileTravailSalariesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-entre-le-domicile-et-lassociation",
+    "DeplacementsDomicileTravailBenevoles": "To obtain more info on how to handle this post, please see the <link>associative method</link>.",
+    "DeplacementsDomicileTravailBenevolesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-entre-le-domicile-et-lassociation",
+    "DeplacementsDansLeCadreDUneMissionAssociativeSalaries": "To obtain more info on how to handle this post, please see the <link>associative method</link>.",
+    "DeplacementsDansLeCadreDUneMissionAssociativeSalariesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-dans-le-cadre-dune-mission-associative",
+    "DeplacementsDansLeCadreDUneMissionAssociativeBenevoles": "To obtain more info on how to handle this post, please see the <link>associative method</link>.",
+    "DeplacementsDansLeCadreDUneMissionAssociativeBenevolesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-dans-le-cadre-dune-mission-associative",
+    "DeplacementsDesBeneficiaires": "To obtain more info on how to handle this post, please see the <link>associative method</link>.",
+    "DeplacementsDesBeneficiairesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-des-beneficiaires",
+    "Fret": "To obtain more info on how to handle this post, please see the <link>associative method</link>.",
+    "FretLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#transport-de-marchandises",
+    "TransportFabricationDesVehicules": "To obtain more info on how to handle this post, please see the <link>associative method</link>.",
+    "TransportFabricationDesVehiculesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#fabrication-des-vehicules",
+    "Agriculture": "To obtain more info on how to handle this post, please see the <link>associative method</link>.",
+    "AgricultureLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
+    "ActivitesIndustrielles": "To obtain more info on how to handle this post, please see the <link>associative method</link>.",
+    "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux"
+    }
 }

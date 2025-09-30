@@ -88,7 +88,7 @@ export const BasePostInfography = ({
         percent={percent}
         color={postColor}
       />
-      <SubPostInfography subPosts={subPosts} ref={ref} />
+      <SubPostInfography subPosts={subPosts} ref={ref} environment={environment} />
     </StyledLink>
   )
 }
