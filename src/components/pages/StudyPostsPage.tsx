@@ -36,7 +36,7 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, use
 
     return tPost.rich(textForGlossary, {
       link: (children) => (
-        <Link className={styles.link} href={tPost(`${textForGlossary}Link`)} target="_blank">
+        <Link className={styles.link} href={tPost(`${textForGlossary}Link`)} target="_blank" rel="noreferrer noopener">
           {children}
         </Link>
       ),
