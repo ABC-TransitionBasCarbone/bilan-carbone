@@ -134,8 +134,9 @@ model Study {
 
   emissionSourceTagFamilies EmissionSourceTagFamily[]
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @default(now()) @updatedAt @map("updated_at")
+  KeyStudy  KeyStudy[]
 
   @@map("studies")
 }
@@ -322,4 +323,17 @@ model StudySite {
 
   @@unique([studyId, siteId])
   @@map("study_sites")
+}
+
+model KeyStudy {
+  id String @id @default(uuid())
+
+  studyId String @map("study_id")
+  study   Study  @relation(fields: [studyId], references: [id])
+
+  environment Environment
+  role        DuplicableStudy
+
+  @@unique([environment, role])
+  @@map("key_studies")
 }
