@@ -95,8 +95,8 @@ model EmissionSourceTag {
   name  String
   color String?
 
-  familyId String                   @map("family_id")
-  family   EmissionSourceTagFamily  @relation(fields: [familyId], references: [id])
+  familyId String                  @map("family_id")
+  family   EmissionSourceTagFamily @relation(fields: [familyId], references: [id])
 
   StudyEmissionSource StudyEmissionSource[] @relation("TagToEmissionSource")
 
