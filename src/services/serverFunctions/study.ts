@@ -1435,6 +1435,194 @@ export const duplicateStudyCommand = async (
     return { id: createdStudyId }
   })
 
+const getAllowedUsersForDuplication = async (
+  studyAllowedUsers: FullStudy['allowedUsers'],
+  environment: Environment,
+  userAccount: Account,
+) => {
+  const targetUsersAccounts = await getAccountsByUserIdsAndEnvironment(
+    studyAllowedUsers.map((user) => user.account.user.id),
+    environment,
+  )
+  return [
+    ...targetUsersAccounts
+      .filter((account) => account.id !== userAccount.id)
+      .map((account) => {
+        const sourceUser = studyAllowedUsers.find((studyUser) => studyUser.account.user.id === account.user.id)
+        if (!sourceUser) {
+          return undefined
+        }
+        return {
+          accountId: account.id,
+          role: sourceUser.role,
+        }
+      })
+      .filter((account) => !!account),
+    { accountId: userAccount.id, role: StudyRole.Validator },
+  ]
+}
+
+const getContributorsForDuplication = async (
+  contributors: FullStudy['contributors'],
+  sourceEnvironment: Environment,
+  targetEnvironment: Environment,
+) => {
+  const targetContributorsAccounts = await getAccountsByUserIdsAndEnvironment(
+    contributors.map((contributor) => contributor.account.user.id),
+    targetEnvironment,
+  )
+  return targetContributorsAccounts
+    .map((account) => {
+      const sourceContributor = contributors.find((contributor) => contributor.account.user.id === account.user.id)
+      if (!sourceContributor) {
+        return undefined
+      }
+      return {
+        accountId: account.id,
+        subPost: getTransEnvironmentSubPost(sourceEnvironment, targetEnvironment, sourceContributor.subPost),
+      }
+    })
+    .filter(
+      (contributor): contributor is { accountId: string; subPost: SubPost } => !!contributor && !!contributor.subPost,
+    )
+}
+
+const getSitesForDuplication = async (study: FullStudy) => {
+  const organization = await getOrganizationWithSitesById(study.organizationVersion.organization.id)
+  if (!organization) {
+    throw new Error(NOT_AUTHORIZED)
+  }
+  return study.sites
+    .map((studySite) => {
+      const organizationSite = organization.sites.find((organizationSite) => organizationSite.id === studySite.site.id)
+      if (!organizationSite) {
+        return undefined
+      }
+      const studySiteData: Prisma.StudySiteCreateManyStudyInput = {
+        siteId: studySite.site.id,
+        etp: studySite.etp || organizationSite.etp,
+        ca: studySite.ca ? studySite.ca : organizationSite.ca,
+        volunteerNumber: studySite.volunteerNumber || organizationSite.volunteerNumber,
+        beneficiaryNumber: studySite.beneficiaryNumber || organizationSite.beneficiaryNumber,
+      }
+      const cncData = organizationSite.cnc
+      if (cncData) {
+        Object.assign(studySiteData, mapCncToStudySite(cncData))
+        studySiteData.cncVersionId = cncData.cncVersionId
+      }
+
+      return studySiteData
+    })
+    .filter((site) => !!site)
+}
+
+const buildStudyForDuplication = (
+  study: Omit<FullStudy, 'id' | 'createdById' | 'organizationVersionId' | 'allowedUsers'>,
+  userAccountId: string,
+  organizationId: string,
+  users: AsyncReturnType<typeof getAllowedUsersForDuplication>,
+  contributors: AsyncReturnType<typeof getContributorsForDuplication>,
+  sites: AsyncReturnType<typeof getSitesForDuplication>,
+) => ({
+  ...study,
+  createdBy: { connect: { id: userAccountId } },
+  organizationVersion: { connect: { id: organizationId } },
+  allowedUsers: {
+    createMany: { data: users },
+  },
+  contributors: {
+    createMany: { data: contributors },
+  },
+  exports: {
+    createMany: { data: Object.values(study.exports) },
+  },
+  sites: {
+    createMany: { data: sites },
+  },
+  emissionSources: {
+    createMany: { data: [] },
+  },
+  emissionFactorVersions: {
+    createMany: {
+      data: study.emissionFactorVersions.map(({ id, ...emissionFactorVersion }) => emissionFactorVersion),
+    },
+  },
+  emissionSourceTagFamilies: {
+    create: study.emissionSourceTagFamilies.map((tagFamily) => ({
+      name: tagFamily.name,
+      emissionSourceTags: {
+        createMany: {
+          data: tagFamily.emissionSourceTags.map(({ id, familyId, ...emissionSourceTag }) => emissionSourceTag),
+        },
+      },
+    })),
+  },
+})
+
+type Families = FullStudy['emissionSourceTagFamilies']
+type SourceStudyTags = Families[number]['emissionSourceTags'][number] & {
+  familyName: string
+}
+const getStudyTags = (emissionSourceTagFamilies: Families): SourceStudyTags[] =>
+  emissionSourceTagFamilies.reduce(
+    (res, tagFamily) =>
+      res.concat(
+        tagFamily.emissionSourceTags.map((emissionSourceTag) => ({
+          ...emissionSourceTag,
+          familyName: tagFamily.name,
+        })),
+      ),
+    [] as SourceStudyTags[],
+  )
+const buildStudyEmissionSources = (
+  emissionSources: FullStudy['emissionSources'],
+  studyId: string,
+  studySites: FullStudy['sites'],
+  sourceEnvironment: Environment,
+  targetEnvironment: Environment,
+  emissionSourceTagFamilies: Families,
+  studyTags: SourceStudyTags[],
+): Prisma.StudyEmissionSourceCreateInput[] =>
+  emissionSources
+    .map((emissionSource) => {
+      const { id, emissionFactorId, ...restSource } = emissionSource
+      const studySiteId = studySites.find((studySite) => studySite.site.id === emissionSource.studySite.site.id)
+        ?.id as string
+      const subPost = getTransEnvironmentSubPost(sourceEnvironment, targetEnvironment, emissionSource.subPost)
+      if (!subPost) {
+        return undefined
+      }
+      const contributor = restSource.contributor?.id
+      const tags = restSource.emissionSourceTags
+        .map((emissionSourceTag) => {
+          const studyFamilyTag = emissionSourceTagFamilies.find(
+            (emissionSourceTagFamily) => emissionSourceTagFamily.id === emissionSourceTag.familyId,
+          )
+          if (!studyFamilyTag) {
+            return undefined
+          }
+          const tag = studyTags.find(
+            (studyTag) => studyTag.name === emissionSourceTag.name && studyTag.familyName === studyFamilyTag.name,
+          )
+          if (!tag) {
+            return undefined
+          }
+          const { familyName, ...restTag } = tag
+          return restTag
+        })
+        .filter((tag) => !!tag)
+      return {
+        ...restSource,
+        study: { connect: { id: studyId } },
+        studySite: { connect: { id: studySiteId } },
+        emissionFactor: emissionFactorId ? { connect: { id: emissionFactorId } } : undefined,
+        subPost,
+        contributor: contributor ? { connect: { id: contributor } } : undefined,
+        emissionSourceTags: { connect: tags.map(({ id, ...restTag }) => ({ id })) },
+      }
+    })
+    .filter((source) => !!source)
+
 export const duplicateStudyInOtherEnvironment = async (studyId: string, targetEnvironment: Environment) =>
   withServerResponse('duplicateStudyInOtherEnvironment', async () => {
     const session = await dbActualizedAuth()
@@ -1475,186 +1663,42 @@ export const duplicateStudyInOtherEnvironment = async (studyId: string, targetEn
     const targetUserAccount = usersAccounts.data.find((account) => account.environment === targetEnvironment) as Account
 
     // allowed users
-    const targetUsersAccounts = await getAccountsByUserIdsAndEnvironment(
-      study.allowedUsers.map((user) => user.account.user.id),
+    const allowedUsers = await getAllowedUsersForDuplication(study.allowedUsers, targetEnvironment, targetUserAccount)
+    const allowedContributors = await getContributorsForDuplication(
+      study.contributors,
+      study.organizationVersion.environment,
       targetEnvironment,
     )
-    const allowedUsers = [
-      ...targetUsersAccounts
-        .filter((account) => account.id !== targetUserAccount.id)
-        .map((account) => {
-          const sourceUser = study.allowedUsers.find((studyUser) => studyUser.account.user.id === account.user.id)
-          if (!sourceUser) {
-            return undefined
-          }
-          return {
-            accountId: account.id,
-            role: sourceUser.role,
-          }
-        })
-        .filter((account) => !!account),
-      { accountId: targetUserAccount.id, role: StudyRole.Validator },
-    ]
-
-    const targetContributorsAccounts = await getAccountsByUserIdsAndEnvironment(
-      study.contributors.map((contributor) => contributor.account.user.id),
-      targetEnvironment,
-    )
-    const allowedContributors = targetContributorsAccounts
-      .map((account) => {
-        const sourceContributor = study.contributors.find(
-          (contributor) => contributor.account.user.id === account.user.id,
-        )
-        if (!sourceContributor) {
-          return undefined
-        }
-        return {
-          accountId: account.id,
-          subPost: getTransEnvironmentSubPost(
-            study.organizationVersion.environment,
-            targetEnvironment,
-            sourceContributor.subPost,
-          ),
-        }
-      })
-      .filter(
-        (contributor): contributor is { accountId: string; subPost: SubPost } => !!contributor && !!contributor.subPost,
-      )
 
     // sites
-    const organization = await getOrganizationWithSitesById(study.organizationVersion.organization.id)
-    if (!organization) {
-      throw new Error(NOT_AUTHORIZED)
-    }
-    const sites = study.sites
-      .map((studySite) => {
-        const organizationSite = organization.sites.find(
-          (organizationSite) => organizationSite.id === studySite.site.id,
-        )
-        if (!organizationSite) {
-          return undefined
-        }
-        const studySiteData: Prisma.StudySiteCreateManyStudyInput = {
-          siteId: studySite.site.id,
-          etp: studySite.etp || organizationSite.etp,
-          ca: studySite.ca ? studySite.ca : organizationSite.ca,
-          volunteerNumber: studySite.volunteerNumber || organizationSite.volunteerNumber,
-          beneficiaryNumber: studySite.beneficiaryNumber || organizationSite.beneficiaryNumber,
-        }
-        const cncData = organizationSite.cnc
-        if (cncData) {
-          Object.assign(studySiteData, mapCncToStudySite(cncData))
-          studySiteData.cncVersionId = cncData.cncVersionId
-        }
-
-        return studySiteData
-      })
-      .filter((site) => !!site)
+    const sites = await getSitesForDuplication(study)
 
     const { id, createdById, organizationVersionId, ...restStudy } = study
-
-    const studyCommand: Prisma.StudyCreateInput = {
-      ...restStudy,
-      createdBy: { connect: { id: targetUserAccount.id } },
-      organizationVersion: { connect: { id: targetOrganizationVersion.id } },
-      allowedUsers: {
-        createMany: { data: allowedUsers },
-      },
-      contributors: {
-        createMany: { data: allowedContributors },
-      },
-      exports: {
-        createMany: { data: Object.values(restStudy.exports) },
-      },
-      sites: {
-        createMany: { data: sites },
-      },
-      emissionSources: {
-        createMany: { data: [] },
-      },
-      emissionFactorVersions: {
-        createMany: {
-          data: restStudy.emissionFactorVersions.map(({ id, ...emissionFactorVersion }) => emissionFactorVersion),
-        },
-      },
-      emissionSourceTagFamilies: {
-        create: restStudy.emissionSourceTagFamilies.map((tagFamily) => ({
-          name: tagFamily.name,
-          emissionSourceTags: {
-            createMany: {
-              data: tagFamily.emissionSourceTags.map(({ id, familyId, ...emissionSourceTag }) => emissionSourceTag),
-            },
-          },
-        })),
-      },
-    }
+    const studyCommand: Prisma.StudyCreateInput = buildStudyForDuplication(
+      restStudy,
+      targetUserAccount.id,
+      targetOrganizationVersion.id,
+      allowedUsers,
+      allowedContributors,
+      sites,
+    )
     const createdStudy = await createStudy(studyCommand, targetEnvironment, true)
     const createdStudyWithSites = (await getStudyById(
       createdStudy.id,
       targetUserAccount.organizationVersionId,
     )) as FullStudy
 
-    // sources
-    type Family = typeof study.emissionSourceTagFamilies
-    type SourceStudyTags = Family[number]['emissionSourceTags'][number] & {
-      familyName: string
-    }
-
-    const studyTags: SourceStudyTags[] = study.emissionSourceTagFamilies.reduce(
-      (res, tagFamily) =>
-        res.concat(
-          tagFamily.emissionSourceTags.map((emissionSourceTag) => ({
-            ...emissionSourceTag,
-            familyName: tagFamily.name,
-          })),
-        ),
-      [] as SourceStudyTags[],
+    // emission sources
+    const studyTags = getStudyTags(study.emissionSourceTagFamilies)
+    const emissionSources = buildStudyEmissionSources(
+      study.emissionSources,
+      createdStudy.id,
+      createdStudyWithSites.sites,
+      study.organizationVersion.environment,
+      targetEnvironment,
+      study.emissionSourceTagFamilies,
+      studyTags,
     )
-    const emissionSources: Prisma.StudyEmissionSourceCreateInput[] = study.emissionSources
-      .map((emissionSource) => {
-        const { id, emissionFactorId, ...restSource } = emissionSource
-        const studyId = createdStudy.id
-        const studySiteId = createdStudyWithSites.sites.find(
-          (studySite) => studySite.site.id === emissionSource.studySite.site.id,
-        )?.id as string
-        const subPost = getTransEnvironmentSubPost(
-          study.organizationVersion.environment,
-          targetEnvironment,
-          emissionSource.subPost,
-        )
-        if (!subPost) {
-          return undefined
-        }
-        const contributor = restSource.contributor?.id
-        const tags = restSource.emissionSourceTags
-          .map((emissionSourceTag) => {
-            const studyFamilyTag = study.emissionSourceTagFamilies.find(
-              (emissionSourceTagFamily) => emissionSourceTagFamily.id === emissionSourceTag.familyId,
-            )
-            if (!studyFamilyTag) {
-              return undefined
-            }
-            const tag = studyTags.find(
-              (studyTag) => studyTag.name === emissionSourceTag.name && studyTag.familyName === studyFamilyTag.name,
-            )
-            if (!tag) {
-              return undefined
-            }
-            const { familyName, ...restTag } = tag
-            return restTag
-          })
-          .filter((tag) => !!tag)
-        return {
-          ...restSource,
-          study: { connect: { id: studyId } },
-          studySite: { connect: { id: studySiteId } },
-          emissionFactor: emissionFactorId ? { connect: { id: emissionFactorId } } : undefined,
-          subPost,
-          contributor: contributor ? { connect: { id: contributor } } : undefined,
-          emissionSourceTags: { connect: tags.map(({ id, ...restTag }) => ({ id })) },
-        }
-      })
-      .filter((source) => !!source)
     await Promise.all(emissionSources.map(createEmissionSourceOnStudy))
     return
   })
