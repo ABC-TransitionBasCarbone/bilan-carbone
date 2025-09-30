@@ -8,6 +8,14 @@ export const isFeatureActive = async (feature: DeactivatableFeature) => {
   return !!featureStatus?.active
 }
 
+export const isFeatureActiveForEnvironment = async (feature: DeactivatableFeature, environment: Environment) => {
+  const featureStatus = await prismaClient.deactivatableFeatureStatus.findUnique({ where: { feature } })
+  if (!featureStatus?.active) {
+    return false
+  }
+  return !featureStatus.deactivatedEnvironments.includes(environment)
+}
+
 export const getFeaturesRestictions = async () =>
   prismaClient.deactivatableFeatureStatus.findMany({
     select: { feature: true, active: true, deactivatedSources: true, deactivatedEnvironments: true },

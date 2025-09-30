@@ -141,6 +141,8 @@ const fullStudyInclude = {
             select: {
               id: true,
               email: true,
+              firstName: true,
+              lastName: true,
             },
           },
         },
@@ -152,6 +154,7 @@ const fullStudyInclude = {
   allowedUsers: {
     select: {
       accountId: true,
+      createdAt: true,
       account: {
         select: {
           id: true,
@@ -160,6 +163,8 @@ const fullStudyInclude = {
             select: {
               id: true,
               email: true,
+              firstName: true,
+              lastName: true,
               level: true,
             },
           },

@@ -1,5 +1,5 @@
 import { expect } from '@jest/globals'
-import { Import, StudyRole } from '@prisma/client'
+import { Import, Level, StudyRole } from '@prisma/client'
 import * as accountModule from '../../db/account'
 import * as emissionFactorsModule from '../../db/emissionFactors'
 import * as emissionSourcesModule from '../../db/emissionSource'
@@ -9,6 +9,7 @@ import * as userDbModule from '../../db/user'
 import * as authModule from '../../services/auth'
 import * as studyPermissionsModule from '../../services/permissions/study'
 import * as userModule from '../../services/serverFunctions/user'
+import { mockedOrganizationVersion } from '../../tests/utils/models/organization'
 import {
   getMockedDuplicateStudyCommand,
   getMockeFullStudy,
@@ -52,6 +53,7 @@ jest.mock('../../utils/study', () => ({
 }))
 jest.mock('../../db/organization', () => ({
   getOrganizationVersionById: jest.fn(),
+  isOrganizationVersionCR: jest.fn(),
 }))
 jest.mock('../../db/user', () => ({
   getUserByEmail: jest.fn(),
@@ -91,10 +93,43 @@ jest.mock('../../utils/user', () => ({
 jest.mock('../../utils/number', () => ({
   CA_UNIT_VALUES: { K: 1000, M: 1000000 },
   defaultCAUnit: 'K',
+  formatNumber: jest.fn((value: number, decimals: number) => {
+    if (isNaN(value)) {
+      return '0'
+    }
+    return value.toFixed(decimals)
+  }),
+}))
+jest.mock('../posts', () => ({
+  environmentPostMapping: { BC: 'bc-mapping', CUT: 'cut-mapping', TILT: 'tilt-mapping' },
+  Post: {
+    DechetsDirects: 'DechetsDirects',
+    IntrantsBiensEtMatieres: 'IntrantsBiensEtMatieres',
+  },
+}))
+jest.mock('../../utils/post', () => ({
+  withInfobulle: jest.fn(),
+  getPost: jest.fn(),
+  flattenSubposts: jest.fn(),
+}))
+jest.mock('../../services/study', () => ({
+  AdditionalResultTypes: {},
+  ResultType: {},
+}))
+jest.mock('../results/consolidated', () => ({
+  computeResultsByPost: jest.fn(),
 }))
 jest.mock('./study', () => ({}))
 
-const { duplicateStudyCommand } = jest.requireActual('./study')
+const mockedMonetaryRatio = 40
+const mockedNonSpecificMonetaryRatio = 10
+
+const mockedResults = {
+  monetaryRatio: mockedMonetaryRatio,
+  nonSpecificMonetaryRatio: mockedNonSpecificMonetaryRatio,
+}
+
+const { duplicateStudyCommand, mapStudyForReport } = jest.requireActual('./study')
 
 const mockedAuthUser = getMockedAuthUser({ email: TEST_EMAILS.currentUser })
 const mockedSourceStudy = getMockeFullStudy()
@@ -125,169 +160,430 @@ const mockIsAdmin = userUtilsModule.isAdmin as unknown as jest.Mock
 const mockCreateEmissionSourceTagFamilyAndRelatedTags =
   emissionSourcesModule.createEmissionSourceTagFamilyAndRelatedTags as jest.Mock
 const mockGetFamilyTagsForStudy = emissionSourcesModule.getFamilyTagsForStudy as jest.Mock
+const mockIsOrganizationVersionCR = organizationModule.isOrganizationVersionCR as jest.Mock
 
-describe('duplicateStudyCommand', () => {
-  const setupSuccessfulDuplication = () => {
-    mockCreateEmissionSourceTagFamilyAndRelatedTags.mockResolvedValue([])
-    mockGetFamilyTagsForStudy.mockResolvedValue([])
-    mockDbActualizedAuth.mockResolvedValue({ user: mockedAuthUser })
-    mockCanDuplicateStudy.mockResolvedValue(true)
-    mockGetAccountRoleOnStudy.mockReturnValue(StudyRole.Editor)
-    mockGetAccountByEmailAndOrganizationVersionId.mockResolvedValue({ id: 'validator-account-id' })
-    mockGetOrganizationVersionById.mockImplementation(() =>
-      Promise.resolve({
-        id: TEST_IDS.orgVersion,
-        organization: {
-          id: 'organization-id',
-          sites: [{ id: TEST_IDS.site }],
-        },
-        environment: 'BC',
-      }),
-    )
-    mockGetUserApplicationSettings.mockResolvedValue({ caUnit: 'K' })
-    mockCanCreateSpecificStudy.mockResolvedValue(true)
-    mockGetEmissionFactorsImportActiveVersion.mockResolvedValue({ id: 'active-version-id' })
-    mockIsAdmin.mockReturnValue(false)
-    mockGetStudyById.mockImplementation((id: string) => {
-      if (id === TEST_IDS.sourceStudy) {
-        return Promise.resolve(mockedSourceStudy)
-      }
-      if (id === TEST_IDS.newStudy) {
-        return Promise.resolve({
-          ...mockedSourceStudy,
-          id: TEST_IDS.newStudy,
-          sites: [{ id: TEST_IDS.newStudySite, site: { id: TEST_IDS.site } }],
-        })
-      }
-      return Promise.resolve(null)
-    })
-    mockGetStudySites.mockResolvedValue([{ id: TEST_IDS.newStudySite }])
-    mockAddUserChecklistItem.mockResolvedValue(undefined)
-    mockUpdateStudyEmissionFactorVersion.mockResolvedValue(undefined)
-    mockCreateStudyEmissionSource.mockResolvedValue(undefined)
-    mockCreateStudy.mockResolvedValue({ id: TEST_IDS.newStudy })
-    mockCreateContributorOnStudy.mockResolvedValue(undefined)
-  }
-
-  const setupInvitationMocks = () => {
-    mockGetUserByEmail.mockResolvedValue({ id: 'existing-user-id' })
-    mockGetUserSourceById.mockResolvedValue({ source: 'BC' })
-    mockGetAccountByEmailAndEnvironment.mockResolvedValue({ id: 'account-by-email-env-id' })
-  }
-
-  beforeEach(() => {
-    jest.clearAllMocks()
-    setupSuccessfulDuplication()
-  })
-
-  it('should successfully duplicate a study with basic data', async () => {
-    const result = await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand)
-
-    expect(result).toEqual({ success: true, data: { id: TEST_IDS.newStudy } })
-    expect(mockAddUserChecklistItem).toHaveBeenCalled()
-    expect(mockCreateUserOnStudy).not.toHaveBeenCalled()
-    expect(mockCreateContributorOnStudy).not.toHaveBeenCalled()
-  })
-
-  describe('Authentication and Authorization', () => {
-    it('should return error when user is not authenticated', async () => {
-      mockDbActualizedAuth.mockResolvedValue(null)
-
-      const result = await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand)
-      expect(result).toEqual({ success: false, errorMessage: 'Not authorized' })
-    })
-
-    it('should return error when source study is not found', async () => {
-      mockGetStudyById.mockResolvedValue(null)
-
-      const result = await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand)
-      expect(result).toEqual({ success: false, errorMessage: 'Not authorized' })
-    })
-
-    it('should return error when user cannot duplicate source study', async () => {
-      mockCanDuplicateStudy.mockResolvedValue(false)
-
-      const result = await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand)
-      expect(result).toEqual({ success: false, errorMessage: 'Not authorized' })
-    })
-  })
-
-  describe('Data Duplication', () => {
-    it('should duplicate emission factor versions', async () => {
-      await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand)
-
-      expect(mockUpdateStudyEmissionFactorVersion).toHaveBeenCalledWith(
-        TEST_IDS.newStudy,
-        Import.BaseEmpreinte,
-        TEST_IDS.importVersion,
-      )
-    })
-
-    it('should duplicate emission sources with correct site mapping', async () => {
-      await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand)
-
-      expect(mockCreateStudyEmissionSource).toHaveBeenCalledWith(
-        expect.objectContaining({
-          name: 'Test Emission Source',
-          value: 100,
-          study: { connect: { id: TEST_IDS.newStudy } },
-          studySite: { connect: { id: TEST_IDS.newStudySite } },
-          emissionFactor: { connect: { id: TEST_IDS.emissionFactor } },
-          validated: false,
+describe('study', () => {
+  describe('duplicateStudyCommand', () => {
+    const setupSuccessfulDuplication = () => {
+      mockCreateEmissionSourceTagFamilyAndRelatedTags.mockResolvedValue([])
+      mockGetFamilyTagsForStudy.mockResolvedValue([])
+      mockDbActualizedAuth.mockResolvedValue({ user: mockedAuthUser })
+      mockCanDuplicateStudy.mockResolvedValue(true)
+      mockGetAccountRoleOnStudy.mockReturnValue(StudyRole.Editor)
+      mockGetAccountByEmailAndOrganizationVersionId.mockResolvedValue({ id: 'validator-account-id' })
+      mockGetOrganizationVersionById.mockImplementation(() =>
+        Promise.resolve({
+          id: TEST_IDS.orgVersion,
+          organization: {
+            id: 'organization-id',
+            sites: [{ id: TEST_IDS.site }],
+          },
+          environment: 'BC',
         }),
       )
-    })
-  })
-
-  describe('Team and Contributor Invitations', () => {
-    beforeEach(() => {
-      setupInvitationMocks()
-    })
-
-    it('should invite existing team members when flag is true', async () => {
-      const result = await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand, true, false)
-
-      expect(result).toEqual({ success: true, data: { id: TEST_IDS.newStudy } })
-      expect(mockCreateUserOnStudy).toHaveBeenCalled()
-      expect(mockCreateContributorOnStudy).not.toHaveBeenCalled()
-    })
-
-    it('should invite existing contributors when flag is true', async () => {
-      const result = await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand, false, true)
-
-      expect(result).toEqual({ success: true, data: { id: TEST_IDS.newStudy } })
-      expect(mockCreateContributorOnStudy).toHaveBeenCalled()
-      expect(mockCreateUserOnStudy).not.toHaveBeenCalled()
-    })
-
-    it('should skip current user when inviting team members', async () => {
-      const studyWithCurrentUser = getMockeFullStudy({
-        allowedUsers: [
-          {
-            id: 'current-user-study-id',
-            account: { user: { email: TEST_EMAILS.currentUser } },
-            role: StudyRole.Editor,
-          },
-        ],
-      })
+      mockGetUserApplicationSettings.mockResolvedValue({ caUnit: 'K' })
+      mockCanCreateSpecificStudy.mockResolvedValue(true)
+      mockGetEmissionFactorsImportActiveVersion.mockResolvedValue({ id: 'active-version-id' })
+      mockIsAdmin.mockReturnValue(false)
       mockGetStudyById.mockImplementation((id: string) => {
         if (id === TEST_IDS.sourceStudy) {
-          return Promise.resolve(studyWithCurrentUser)
+          return Promise.resolve(mockedSourceStudy)
         }
         if (id === TEST_IDS.newStudy) {
           return Promise.resolve({
-            ...studyWithCurrentUser,
+            ...mockedSourceStudy,
             id: TEST_IDS.newStudy,
             sites: [{ id: TEST_IDS.newStudySite, site: { id: TEST_IDS.site } }],
           })
         }
         return Promise.resolve(null)
       })
+      mockGetStudySites.mockResolvedValue([{ id: TEST_IDS.newStudySite }])
+      mockAddUserChecklistItem.mockResolvedValue(undefined)
+      mockUpdateStudyEmissionFactorVersion.mockResolvedValue(undefined)
+      mockCreateStudyEmissionSource.mockResolvedValue(undefined)
+      mockCreateStudy.mockResolvedValue({ id: TEST_IDS.newStudy })
+      mockCreateContributorOnStudy.mockResolvedValue(undefined)
+    }
 
-      const result = await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand, true, false)
+    const setupInvitationMocks = () => {
+      mockGetUserByEmail.mockResolvedValue({ id: 'existing-user-id' })
+      mockGetUserSourceById.mockResolvedValue({ source: 'BC' })
+      mockGetAccountByEmailAndEnvironment.mockResolvedValue({ id: 'account-by-email-env-id' })
+    }
+
+    beforeEach(() => {
+      jest.clearAllMocks()
+      setupSuccessfulDuplication()
+    })
+
+    it('should successfully duplicate a study with basic data', async () => {
+      const result = await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand)
 
       expect(result).toEqual({ success: true, data: { id: TEST_IDS.newStudy } })
+      expect(mockAddUserChecklistItem).toHaveBeenCalled()
       expect(mockCreateUserOnStudy).not.toHaveBeenCalled()
+      expect(mockCreateContributorOnStudy).not.toHaveBeenCalled()
+    })
+
+    describe('Authentication and Authorization', () => {
+      it('should return error when user is not authenticated', async () => {
+        mockDbActualizedAuth.mockResolvedValue(null)
+
+        const result = await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand)
+        expect(result).toEqual({ success: false, errorMessage: 'Not authorized' })
+      })
+
+      it('should return error when source study is not found', async () => {
+        mockGetStudyById.mockResolvedValue(null)
+
+        const result = await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand)
+        expect(result).toEqual({ success: false, errorMessage: 'Not authorized' })
+      })
+
+      it('should return error when user cannot duplicate source study', async () => {
+        mockCanDuplicateStudy.mockResolvedValue(false)
+
+        const result = await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand)
+        expect(result).toEqual({ success: false, errorMessage: 'Not authorized' })
+      })
+    })
+
+    describe('Data Duplication', () => {
+      it('should duplicate emission factor versions', async () => {
+        await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand)
+
+        expect(mockUpdateStudyEmissionFactorVersion).toHaveBeenCalledWith(
+          TEST_IDS.newStudy,
+          Import.BaseEmpreinte,
+          TEST_IDS.importVersion,
+        )
+      })
+
+      it('should duplicate emission sources with correct site mapping', async () => {
+        await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand)
+
+        expect(mockCreateStudyEmissionSource).toHaveBeenCalledWith(
+          expect.objectContaining({
+            name: 'Test Emission Source',
+            value: 100,
+            study: { connect: { id: TEST_IDS.newStudy } },
+            studySite: { connect: { id: TEST_IDS.newStudySite } },
+            emissionFactor: { connect: { id: TEST_IDS.emissionFactor } },
+            validated: false,
+          }),
+        )
+      })
+    })
+
+    describe('Team and Contributor Invitations', () => {
+      beforeEach(() => {
+        setupInvitationMocks()
+      })
+
+      it('should invite existing team members when flag is true', async () => {
+        const result = await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand, true, false)
+
+        expect(result).toEqual({ success: true, data: { id: TEST_IDS.newStudy } })
+        expect(mockCreateUserOnStudy).toHaveBeenCalled()
+        expect(mockCreateContributorOnStudy).not.toHaveBeenCalled()
+      })
+
+      it('should invite existing contributors when flag is true', async () => {
+        const result = await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand, false, true)
+
+        expect(result).toEqual({ success: true, data: { id: TEST_IDS.newStudy } })
+        expect(mockCreateContributorOnStudy).toHaveBeenCalled()
+        expect(mockCreateUserOnStudy).not.toHaveBeenCalled()
+      })
+
+      it('should skip current user when inviting team members', async () => {
+        const studyWithCurrentUser = getMockeFullStudy({
+          allowedUsers: [
+            {
+              id: 'current-user-study-id',
+              account: { user: { email: TEST_EMAILS.currentUser } },
+              role: StudyRole.Editor,
+            },
+          ],
+        })
+        mockGetStudyById.mockImplementation((id: string) => {
+          if (id === TEST_IDS.sourceStudy) {
+            return Promise.resolve(studyWithCurrentUser)
+          }
+          if (id === TEST_IDS.newStudy) {
+            return Promise.resolve({
+              ...studyWithCurrentUser,
+              id: TEST_IDS.newStudy,
+              sites: [{ id: TEST_IDS.newStudySite, site: { id: TEST_IDS.site } }],
+            })
+          }
+          return Promise.resolve(null)
+        })
+
+        const result = await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand, true, false)
+
+        expect(result).toEqual({ success: true, data: { id: TEST_IDS.newStudy } })
+        expect(mockCreateUserOnStudy).not.toHaveBeenCalled()
+      })
+    })
+  })
+
+  describe('mapStudyForReport', () => {
+    beforeEach(() => {
+      jest.clearAllMocks()
+    })
+
+    describe('team organization', () => {
+      it('should correctly organize admin, internal team members, and contributors', async () => {
+        mockIsOrganizationVersionCR.mockResolvedValue(false)
+
+        const mockedStudyWithTeam = getMockeFullStudy({
+          organizationVersion: {
+            ...mockedOrganizationVersion,
+            parentId: null, // Not a parent CR
+          },
+          allowedUsers: [
+            {
+              account: {
+                id: 'validator-account-id',
+                user: {
+                  id: 'validator-user-id',
+                  level: Level.Initial,
+                  email: 'validator@email.com',
+                  firstName: 'John',
+                  lastName: 'Validator',
+                },
+                organizationVersionId: TEST_IDS.orgVersion,
+                readerOnly: false,
+              },
+              role: StudyRole.Validator,
+              accountId: 'validator-account-id',
+              createdAt: new Date('2024-01-01'),
+            },
+            {
+              account: {
+                id: 'internal-editor-id',
+                user: {
+                  id: 'internal-editor-user-id',
+                  level: Level.Initial,
+                  email: 'jane@email.com',
+                  firstName: 'Jane',
+                  lastName: 'Editor',
+                },
+                organizationVersionId: TEST_IDS.orgVersion,
+                readerOnly: false,
+              },
+              role: StudyRole.Editor,
+              accountId: 'internal-editor-id',
+              createdAt: new Date('2024-01-02'),
+            },
+          ],
+        })
+
+        const result = await mapStudyForReport(mockedStudyWithTeam, mockedResults)
+
+        expect(result.admin).toEqual({
+          accountId: 'validator-account-id',
+          name: 'John Validator',
+          role: StudyRole.Validator,
+          createdAt: new Date('2024-01-01'),
+          isInternal: true,
+          isExternal: false,
+        })
+
+        expect(result.internalTeam).toHaveLength(1)
+        expect(result.internalTeam).toContainEqual({
+          accountId: 'internal-editor-id',
+          name: 'Jane Editor',
+          role: StudyRole.Editor,
+          createdAt: new Date('2024-01-02'),
+          isInternal: true,
+          isExternal: false,
+        })
+
+        expect(result.externalTeam).toHaveLength(0)
+      })
+
+      it('should handle parent CR organization scenarios', async () => {
+        mockIsOrganizationVersionCR.mockResolvedValue(true)
+
+        const mockedStudyWithParentCR = getMockeFullStudy({
+          organizationVersion: {
+            ...mockedOrganizationVersion,
+            parentId: 'parent-id',
+          },
+          allowedUsers: [
+            {
+              account: {
+                id: 'parent-user-id',
+                user: {
+                  id: 'parent-user-id',
+                  firstName: 'Parent',
+                  lastName: 'User',
+                },
+                organizationVersionId: 'parent-id',
+              },
+              role: StudyRole.Validator,
+              accountId: 'parent-user-id',
+              createdAt: new Date('2024-01-01'),
+            },
+            {
+              account: {
+                id: 'parent-user-id-2',
+                user: {
+                  id: 'parent-user-id-2',
+                  firstName: 'Parent 2',
+                  lastName: 'User',
+                },
+                organizationVersionId: 'parent-id',
+              },
+              role: StudyRole.Validator,
+              accountId: 'parent-user-id-2',
+              createdAt: new Date('2025-01-01'),
+            },
+          ],
+          contributors: [
+            {
+              accountId: 'contributor-account-id',
+              account: {
+                id: 'contributor-account-id',
+                user: {
+                  id: 'contributor-user-id',
+                  firstName: 'Contributor',
+                  lastName: 'Contributor',
+                },
+              },
+            },
+          ],
+        })
+
+        const result = await mapStudyForReport(mockedStudyWithParentCR, mockedResults)
+
+        expect(result.admin).toEqual({
+          accountId: 'parent-user-id',
+          name: 'Parent User',
+          role: StudyRole.Validator,
+          createdAt: new Date('2024-01-01'),
+          isInternal: false,
+          isExternal: true,
+        })
+
+        // Contributors should be internal when there's a parent CR
+        expect(result.internalTeam).toContainEqual({
+          accountId: 'contributor-account-id',
+          name: 'Contributor Contributor',
+          isInternal: true,
+          isExternal: false,
+        })
+
+        // Parent users should be external
+        expect(result.externalTeam).toContainEqual({
+          accountId: 'parent-user-id-2',
+          name: 'Parent 2 User',
+          role: StudyRole.Validator,
+          createdAt: new Date('2025-01-01'),
+          isInternal: false,
+          isExternal: true,
+        })
+      })
+
+      it('should deduplicate contributors in a CR scenario', async () => {
+        mockIsOrganizationVersionCR.mockResolvedValue(true)
+
+        const mockedStudyWithDuplicates = getMockeFullStudy({
+          organizationVersion: {
+            ...mockedOrganizationVersion,
+            parentId: 'parent-id',
+          },
+          contributors: [
+            {
+              accountId: 'duplicate-id',
+              account: {
+                id: 'duplicate-id',
+                user: {
+                  id: 'duplicate-user-id',
+                  firstName: 'Duplicate',
+                  lastName: 'User',
+                },
+                organizationVersionId: TEST_IDS.orgVersion,
+              },
+              subPost: 'Achats',
+            },
+            {
+              accountId: 'duplicate-id',
+              account: {
+                id: 'duplicate-id',
+                user: {
+                  id: 'duplicate-user-id',
+                  level: Level.Initial,
+                  email: 'duplicate@email.com',
+                  firstName: 'Duplicate',
+                  lastName: 'User',
+                },
+                organizationVersionId: TEST_IDS.orgVersion,
+              },
+              subPost: 'Déchets',
+            },
+          ],
+        })
+
+        const result = await mapStudyForReport(mockedStudyWithDuplicates, mockedResults)
+
+        const contributorCount =
+          result.internalTeam.filter((member: { accountId: string }) => member.accountId === 'duplicate-id').length +
+          result.externalTeam.filter((member: { accountId: string }) => member.accountId === 'duplicate-id').length
+
+        expect(contributorCount).toBe(1)
+      })
+    })
+
+    describe('monetary ratio calculations', () => {
+      it('should calculate monetary ratios correctly', async () => {
+        const mockedStudyWithResults = getMockeFullStudy()
+
+        const result = await mapStudyForReport(mockedStudyWithResults, mockedResults)
+
+        expect(result.monetaryRatioPercentage).toBe(mockedMonetaryRatio.toFixed(2))
+        expect(result.specificMonetaryRatioPercentage).toBe(
+          (mockedMonetaryRatio - mockedNonSpecificMonetaryRatio).toFixed(2),
+        )
+        expect(result.nonSpecificMonetaryRatioPercentage).toBe(mockedNonSpecificMonetaryRatio.toFixed(2))
+      })
+    })
+
+    describe('other fields', () => {
+      it('should map sites correctly', async () => {
+        const mockedStudyWithSites = getMockeFullStudy({
+          sites: [
+            {
+              id: 'study-site-1',
+              site: { id: 'site-1', name: 'Site One', city: 'Paris', postalCode: '75001' },
+            },
+            {
+              id: 'study-site-2',
+              site: { id: 'site-2', name: 'Site Two', city: 'Lyon', postalCode: '69001' },
+            },
+          ],
+        })
+
+        const result = await mapStudyForReport(mockedStudyWithSites, mockedResults)
+
+        expect(result.sites).toEqual([
+          {
+            id: 'study-site-1',
+            name: 'Site One',
+            city: 'Paris',
+            postalCode: '75001',
+          },
+          {
+            id: 'study-site-2',
+            name: 'Site Two',
+            city: 'Lyon',
+            postalCode: '69001',
+          },
+        ])
+      })
     })
   })
 })

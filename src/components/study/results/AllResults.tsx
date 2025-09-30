@@ -3,15 +3,20 @@ import Block from '@/components/base/Block'
 import Button from '@/components/base/Button'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
+import { useServerFunction } from '@/hooks/useServerFunction'
+import { download } from '@/services/file'
 import { hasAccessToBcExport } from '@/services/permissions/environment'
 import { computeBegesResult } from '@/services/results/beges'
+import { isDeactivableFeatureActiveForEnvironment } from '@/services/serverFunctions/deactivableFeatures'
+import { prepareReport } from '@/services/serverFunctions/study'
 import { AdditionalResultTypes, downloadStudyResults, getResultsValues, ResultType } from '@/services/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import DownloadIcon from '@mui/icons-material/Download'
+import SummarizeIcon from '@mui/icons-material/Summarize'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
-import { ControlMode, Environment, Export, ExportRule, SiteCAUnit } from '@prisma/client'
+import { ControlMode, DeactivatableFeature, Environment, Export, ExportRule, SiteCAUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import SelectStudySite from '../site/SelectStudySite'
 import useStudySite from '../site/useStudySite'
 import BegesResultsTable from './beges/BegesResultsTable'
@@ -30,6 +35,7 @@ interface Props {
 
 const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caUnit }: Props) => {
   const t = useTranslations('study.results')
+  const { callServerFunction } = useServerFunction()
   const tOrga = useTranslations('study.organization')
   const tPost = useTranslations('emissionFactors.post')
   const tExport = useTranslations('exports')
@@ -42,12 +48,29 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   const [type, setType] = useState<ResultType>(AdditionalResultTypes.CONSOLIDATED)
   const exports = useMemo(() => study.exports, [study.exports])
   const [displayValueWithDep, setDisplayValueWithDep] = useState(true)
+  const [isDownloadReportActive, setIsDownloadReportActive] = useState(false)
 
   useEffect(() => {
     if (environment && environment !== Environment.BC) {
       setType(AdditionalResultTypes.ENV_SPECIFIC_EXPORT)
     }
   }, [environment])
+
+  useEffect(() => {
+    const checkDownloadReportFeature = async () => {
+      if (environment) {
+        callServerFunction(
+          () => isDeactivableFeatureActiveForEnvironment(DeactivatableFeature.DownloadReport, environment),
+          {
+            onSuccess: (data) => {
+              setIsDownloadReportActive(data)
+            },
+          },
+        )
+      }
+    }
+    checkDownloadReportFeature()
+  }, [environment, callServerFunction])
 
   const { studySite, setSite } = useStudySite(study, true)
 
@@ -89,6 +112,14 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     () => computeBegesResult(study, begesRules, emissionFactorsWithParts, studySite, false, validatedOnly),
     [study, begesRules, emissionFactorsWithParts, studySite, validatedOnly],
   )
+
+  const downloadReport = useCallback(async () => {
+    callServerFunction(() => prepareReport(study, { monetaryRatio, nonSpecificMonetaryRatio }), {
+      onSuccess: (data) => {
+        download([data], `${study.name}_report.docx`, 'docx')
+      },
+    })
+  }, [study, monetaryRatio, nonSpecificMonetaryRatio, callServerFunction])
 
   if (!environment) {
     return null
@@ -148,6 +179,11 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
         >
           <DownloadIcon />
         </Button>
+        {isDownloadReportActive && (
+          <Button onClick={downloadReport} title={t('downloadReport')}>
+            <SummarizeIcon />
+          </Button>
+        )}
         {exports.map((exportType) => exportType.type).includes(Export.Beges) && (
           <ConsolatedBEGESDifference
             study={study}
