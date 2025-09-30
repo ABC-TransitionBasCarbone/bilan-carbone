@@ -12,7 +12,7 @@ import {
   getAccountsFromUser,
 } from '@/db/account'
 import { findCncByCncCode } from '@/db/cnc'
-import { isFeatureActive, isFeatureActiveForEnvironment } from '@/db/deactivableFeatures'
+import { isFeatureActive } from '@/db/deactivableFeatures'
 import {
   createOrganizationWithVersion,
   getOrganizationNameByOrganizationVersionId,
@@ -79,6 +79,7 @@ import {
   UNKNOWN_SIRET_OR_CNC,
 } from '../permissions/check'
 import { canAddMember, canChangeRole, canDeleteMember, canEditSelfRole } from '../permissions/user'
+import { getDeactivableFeatureRestrictions } from './deactivableFeatures'
 import { AddMemberCommand, EditProfileCommand, EditSettingsCommand } from './user.command'
 
 const updateUserResetToken = async (email: string, duration: number) => {
@@ -531,8 +532,11 @@ export const answerFeeback = async () =>
 
 export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, environment: Environment) =>
   withServerResponse('signUpWithSiretOrCNC', async () => {
-    const isCreationFeatureActive = await isFeatureActiveForEnvironment(DeactivatableFeature.Creation, environment)
-    if (!isCreationFeatureActive) {
+    const deactivatedFeaturesRestrictions = await getDeactivableFeatureRestrictions(DeactivatableFeature.Creation)
+    if (
+      deactivatedFeaturesRestrictions?.active &&
+      deactivatedFeaturesRestrictions.deactivatedEnvironments?.includes(environment)
+    ) {
       throw new Error(NOT_AUTHORIZED)
     }
 
