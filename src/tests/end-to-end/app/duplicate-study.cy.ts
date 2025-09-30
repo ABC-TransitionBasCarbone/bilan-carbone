@@ -34,8 +34,7 @@ describe('Delete study', () => {
     cy.getByTestId('duplication-modale-text').invoke('text').should('contain', 'Tilt')
     cy.getByTestId('duplicate-study-confirm').click()
 
-    cy.getByTestId('duplicated-description', { timeout: 15000 }).should('be.visible') // wait for duplication to be finished
-    cy.get('#duplicate-study-modal-title', { timeout: 6000 }).should('not.exist') // wait for modale to be close after 5 seconds
+    cy.get('#duplicate-study-modal-title', { timeout: 15000 }).should('not.exist') // wait for duplication to be finished
 
     cy.logout()
 
@@ -45,5 +44,14 @@ describe('Delete study', () => {
     cy.url({ timeout: 10000 }).should('eq', `${Cypress.config().baseUrl}/`)
 
     cy.getByTestId('study').contains('BC V8.10').scrollIntoView().should('be.visible')
+    cy.getByTestId('study')
+      .contains('BC V8.10')
+      .parents('[data-testid="study"]')
+      .within(() => {
+        cy.getByTestId('study-link').click()
+      })
+    cy.getByTestId('withDep-total-result').invoke('text').should('contain', '280') // 280.45
+    cy.getByTestId('withoutDep-total-result').invoke('text').should('contain', '280') // 280.45
+    cy.getByTestId('results-monetary-ratio').scrollIntoView().invoke('text').should('contain', '36,99') // 36.99251508579199
   })
 })

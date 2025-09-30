@@ -7,7 +7,11 @@ import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 import { Select } from '../base/Select'
+import Toast, { ToastColors } from '../base/Toast'
 import Modal from './Modal'
+
+const emptyToast = { text: '', color: 'info' } as const
+const toastPosition = { vertical: 'bottom', horizontal: 'left' } as const
 
 interface Props {
   studyId: string
@@ -29,8 +33,8 @@ const DuplicateStudyModal = ({
   const t = useTranslations('study.duplicateDialog')
   const tEnv = useTranslations('environment')
   const [targetEnvironment, setTargetEnvironment] = useState<Environment>(environments[0])
+  const [toast, setToast] = useState<{ text: string; color: ToastColors }>(emptyToast)
   const [duplicating, setDuplicating] = useState(false)
-  const [duplicated, setDuplicated] = useState(false)
   const router = useRouter()
 
   const isOtherEnvironment = useMemo(
@@ -43,12 +47,9 @@ const DuplicateStudyModal = ({
       setDuplicating(true)
       const res = await duplicateStudyInOtherEnvironment(studyId, targetEnvironment)
       if (res.success) {
-        setDuplicated(true)
-        setTimeout(() => {
-          setDuplicating(false)
-          setDuplicated(false)
-          onClose()
-        }, 5000)
+        setDuplicating(false)
+        onClose()
+        setToast({ text: t('duplicatedDescription', { environment: tEnv(targetEnvironment) }), color: 'success' })
       }
     } else {
       if (organizationVersionId) {
@@ -60,31 +61,23 @@ const DuplicateStudyModal = ({
   }
 
   return (
-    <Modal
-      open={open}
-      title={t(duplicated ? 'duplicatedTitle' : 'title')}
-      label="duplicate-study"
-      onClose={onClose}
-      actions={
-        duplicated
-          ? []
-          : [
-              { actionType: 'button', onClick: onClose, children: t('cancel') },
-              {
-                actionType: 'loadingButton',
-                onClick: handleDuplicate,
-                children: t('confirm'),
-                'data-testid': 'duplicate-study-confirm',
-                loading: duplicating,
-              },
-            ]
-      }
-    >
-      {duplicated ? (
-        <div data-testid="duplicated-description">
-          {t('duplicatedDescription', { environment: tEnv(targetEnvironment) })}
-        </div>
-      ) : (
+    <>
+      <Modal
+        open={open}
+        title={t('title')}
+        label="duplicate-study"
+        onClose={onClose}
+        actions={[
+          { actionType: 'button', onClick: onClose, children: t('cancel') },
+          {
+            actionType: 'loadingButton',
+            onClick: handleDuplicate,
+            children: t('confirm'),
+            'data-testid': 'duplicate-study-confirm',
+            loading: duplicating,
+          },
+        ]}
+      >
         <>
           <span data-testid="duplication-modale-text">
             {t.rich(isOtherEnvironment ? 'otherEnvironnment' : 'description', {
@@ -110,8 +103,18 @@ const DuplicateStudyModal = ({
             </div>
           )}
         </>
+      </Modal>
+      {toast.text && (
+        <Toast
+          position={toastPosition}
+          onClose={() => setToast(emptyToast)}
+          message={toast.text}
+          color={toast.color}
+          toastKey="duplicate-study-toast"
+          open
+        />
       )}
-    </Modal>
+    </>
   )
 }
 

@@ -88,7 +88,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
                 className={styles.hidden}
               />
               <Box selected={withDep} color="secondary" className={classNames(styles.card, 'flex-col flex-cc pointer')}>
-                <h3 className="text-center">
+                <h3 className="text-center" data-testid="withDep-total-result">
                   {formattedWithDepValue} {tResultUnits(study.resultsUnit)}
                 </h3>
                 <span className="align-center text-center">
@@ -115,14 +115,16 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
                 color="secondary"
                 className={classNames(styles.card, 'flex-col flex-cc pointer')}
               >
-                <h3 className="text-center">
+                <h3 className="text-center" data-testid="withoutDep-total-result">
                   {formattedWithoutDepValue} {tResultUnits(study.resultsUnit)}
                 </h3>
                 <span className="text-center">{t('results.withoutDependencies')}</span>
               </Box>
             </label>
             <Box className={classNames(styles.card, styles.disabled, 'flex-col flex-cc')}>
-              <h3 className="text-center">{formattedMonetaryRatio} %</h3>
+              <h3 className="text-center" data-testid="results-monetary-ratio">
+                {formattedMonetaryRatio} %
+              </h3>
               <span className="text-center align-center">
                 {t('results.monetaryRatio')}
                 <HelpIcon

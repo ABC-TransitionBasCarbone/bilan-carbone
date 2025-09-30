@@ -315,7 +315,6 @@
     "duplicateCopy": " - Copie",
     "duplicateDialog": {
       "title": "Duplication de l'étude",
-      "duplicatedTitle": "Étude dupliquée",
       "description": "Souhaitez-vous dupliquer cette étude ? Vous serez redirigé vers la page de création d'une étude, tous les champs seront pré-remplis avec les informations de l'étude que vous serez en mesure d'éditer, et une fois la création validée, toute l'étude et ses sources d'émissions seront dupliquées. Les documents attachés à l'étude originale ne seront pas dupliqués. Attention, après la duplication, les sources d'émission de la nouvelle étude créée devront être validées à nouveau afin d'apparaître dans les résultats. <br></br>Les études sont indépendantes après la duplication, toute modification faite dans l'une ne se reflètera pas dans l'autre.",
       "duplicatedDescription": "Vous étude a été dupliquée. Vous pouvez la retrouver dans votre environnement {environment}.",
       "otherEnvironnment": "Souhaitez vous dupliquer cette étude sur votre environnement {environment} ? Toutes les informations vont être copiées dans la nouvelle étude.",

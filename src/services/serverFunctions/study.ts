@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use server'
 
 import { StudyContributorDeleteParams } from '@/components/study/rights/StudyContributorsTable'
@@ -95,7 +94,6 @@ import {
   Export,
   Import,
   Level,
-  OrganizationVersion,
   Prisma,
   Role,
   StudyEmissionSource,
@@ -1544,6 +1542,7 @@ const buildStudyForDuplication = (
   },
   emissionFactorVersions: {
     createMany: {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       data: study.emissionFactorVersions.map(({ id, ...emissionFactorVersion }) => emissionFactorVersion),
     },
   },
@@ -1552,6 +1551,7 @@ const buildStudyForDuplication = (
       name: tagFamily.name,
       emissionSourceTags: {
         createMany: {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           data: tagFamily.emissionSourceTags.map(({ id, familyId, ...emissionSourceTag }) => emissionSourceTag),
         },
       },
@@ -1585,6 +1585,7 @@ const buildStudyEmissionSources = (
 ): Prisma.StudyEmissionSourceCreateInput[] =>
   emissionSources
     .map((emissionSource) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { id, emissionFactorId, ...restSource } = emissionSource
       const studySiteId = studySites.find((studySite) => studySite.site.id === emissionSource.studySite.site.id)
         ?.id as string
@@ -1607,6 +1608,7 @@ const buildStudyEmissionSources = (
           if (!tag) {
             return undefined
           }
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { familyName, ...restTag } = tag
           return restTag
         })
@@ -1618,15 +1620,18 @@ const buildStudyEmissionSources = (
         emissionFactor: emissionFactorId ? { connect: { id: emissionFactorId } } : undefined,
         subPost,
         contributor: contributor ? { connect: { id: contributor } } : undefined,
-        emissionSourceTags: { connect: tags.map(({ id, ...restTag }) => ({ id })) },
+        emissionSourceTags: { connect: tags.map(({ id }) => ({ id })) },
       }
     })
     .filter((source) => !!source)
 
 export const duplicateStudyInOtherEnvironment = async (studyId: string, targetEnvironment: Environment) =>
   withServerResponse('duplicateStudyInOtherEnvironment', async () => {
-    const session = await dbActualizedAuth()
+    if (!canDuplicateStudy(studyId)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
+    const session = await dbActualizedAuth()
     if (!session || !session.user) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -1648,19 +1653,17 @@ export const duplicateStudyInOtherEnvironment = async (studyId: string, targetEn
       getOrganizationVersionsByOrganizationId(study.organizationVersion.organization.id),
       getUserActiveAccounts(),
     ])
-    if (
-      !organizationVersions.length ||
-      !organizationVersions.find((organizationVersion) => organizationVersion.environment === targetEnvironment) ||
-      !usersAccounts.success ||
-      !usersAccounts.data.find((account) => account.environment === targetEnvironment)
-    ) {
-      throw new Error(NOT_AUTHORIZED)
-    }
 
     const targetOrganizationVersion = organizationVersions.find(
       (organizationVersion) => organizationVersion.environment === targetEnvironment,
-    ) as OrganizationVersion
-    const targetUserAccount = usersAccounts.data.find((account) => account.environment === targetEnvironment) as Account
+    )
+    const targetUserAccount = usersAccounts.success
+      ? usersAccounts.data.find((account) => account.environment === targetEnvironment)
+      : undefined
+
+    if (!targetOrganizationVersion || !targetUserAccount) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
     // allowed users
     const allowedUsers = await getAllowedUsersForDuplication(study.allowedUsers, targetEnvironment, targetUserAccount)
@@ -1673,6 +1676,7 @@ export const duplicateStudyInOtherEnvironment = async (studyId: string, targetEn
     // sites
     const sites = await getSitesForDuplication(study)
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, createdById, organizationVersionId, ...restStudy } = study
     const studyCommand: Prisma.StudyCreateInput = buildStudyForDuplication(
       restStudy,
@@ -1682,7 +1686,7 @@ export const duplicateStudyInOtherEnvironment = async (studyId: string, targetEn
       allowedContributors,
       sites,
     )
-    const createdStudy = await createStudy(studyCommand, targetEnvironment, true)
+    const createdStudy = await createStudy(studyCommand, targetEnvironment, false)
     const createdStudyWithSites = (await getStudyById(
       createdStudy.id,
       targetUserAccount.organizationVersionId,
