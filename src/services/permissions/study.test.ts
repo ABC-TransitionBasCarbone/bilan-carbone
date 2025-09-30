@@ -449,7 +449,7 @@ describe('Study permissions service', () => {
       expect(mockGetOrganizationVersionsByOrganizationId).toHaveBeenCalledTimes(0)
     })
 
-    it('Should return an empty array if user has only one account', async () => {
+    it('Should return an empty array if user has no account', async () => {
       // canDuplicateStudy response to true
       mockDBActualizedAuth.mockResolvedValue(
         getMockedDbActualizedAuth({}, { organizationVersionId: 'mocked-study-organization-id' }),
@@ -459,7 +459,7 @@ describe('Study permissions service', () => {
       mockGetAccountRoleOnStudy.mockReturnValue(StudyRole.Validator)
       // function mocks
       mockGetStudyById.mockResolvedValue(getMockedFullStudy({ organizationVersionId: 'mocked-study-organization-id' }))
-      mockGetUserActiveAccounts.mockResolvedValue({ success: true, data: ['mocked-data'] })
+      mockGetUserActiveAccounts.mockResolvedValue({ success: true, data: [] })
       const res = await getEnvironmentsForDuplication(mockedStudyId)
       expect(res).toHaveLength(0)
       expect(mockGetStudyById).toHaveBeenCalledTimes(2)

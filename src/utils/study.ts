@@ -136,12 +136,16 @@ export const getEmissionValueString = (
 }
 
 export const getDuplicableEnvironments = (environment: Environment): Environment[] => {
+  let compatibles: Environment[] = []
   switch (environment) {
     case Environment.BC:
-      return [Environment.TILT]
+      compatibles = [Environment.TILT]
+      break
     case Environment.TILT:
-      return [Environment.BC]
+      compatibles = [Environment.BC]
+      break
     default:
-      return []
+      break
   }
+  return [environment].concat(compatibles)
 }

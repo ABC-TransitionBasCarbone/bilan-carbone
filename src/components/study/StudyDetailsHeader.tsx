@@ -12,7 +12,6 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import DownloadIcon from '@mui/icons-material/Download'
 import LockIcon from '@mui/icons-material/Lock'
 import LockOpenIcon from '@mui/icons-material/LockOpen'
-import SwapHorizIcon from '@mui/icons-material/SwapHoriz'
 import { Environment } from '@prisma/client'
 import { useFormatter, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -46,7 +45,6 @@ const StudyDetailsHeader = ({
   environment,
 }: Props) => {
   const [deleting, setDeleting] = useState(false)
-  const [environmentDuplicating, setEnvironmentDuplicating] = useState(false)
   const [duplicating, setDuplicating] = useState(false)
   const { callServerFunction } = useServerFunction()
   const format = useFormatter()
@@ -105,17 +103,6 @@ const StudyDetailsHeader = ({
       ]
     : []
 
-  const duplicateEnvironmentAction: BlockProps['actions'] = duplicableEnvironments.length
-    ? [
-        {
-          actionType: 'button',
-          onClick: () => setEnvironmentDuplicating(true),
-          children: <SwapHorizIcon />,
-          title: t('duplicateEnvironment'),
-        },
-      ]
-    : []
-
   const exportAction: BlockProps['actions'] = hasAccessToDownloadStudyEmissionSourcesButton(
     study.organizationVersion.environment,
   )
@@ -151,7 +138,7 @@ const StudyDetailsHeader = ({
       title={study.name}
       as="h1"
       icon={study.isPublic ? <LockOpenIcon /> : <LockIcon />}
-      actions={[...duplicateAction, ...duplicateEnvironmentAction, ...exportAction, ...deleteAction]}
+      actions={[...duplicateAction, ...exportAction, ...deleteAction]}
       description={
         <div className={styles.studyInfo}>
           <p>
@@ -181,14 +168,6 @@ const StudyDetailsHeader = ({
         organizationVersionId={organizationVersionId}
         sourceEnvironment={study.organizationVersion.environment}
         environments={duplicableEnvironments}
-        open={environmentDuplicating}
-        onClose={() => setEnvironmentDuplicating(false)}
-      />
-      <DuplicateStudyModal
-        studyId={study.id}
-        organizationVersionId={organizationVersionId}
-        sourceEnvironment={study.organizationVersion.environment}
-        environments={[study.organizationVersion.environment]}
         open={duplicating}
         onClose={() => setDuplicating(false)}
       />

@@ -300,7 +300,7 @@ export const getEnvironmentsForDuplication = async (studyId: string) => {
     !study ||
     study.organizationVersionId !== session.user.organizationVersionId ||
     !userAccounts.success ||
-    userAccounts.data.length < 2
+    !userAccounts.data.length
   ) {
     return []
   }

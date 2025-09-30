@@ -5,7 +5,7 @@ import { MenuItem } from '@mui/material'
 import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Select } from '../base/Select'
 import Modal from './Modal'
 
@@ -32,7 +32,10 @@ const DuplicateStudyModal = ({
   const [duplicated, setDuplicated] = useState(false)
   const router = useRouter()
 
-  const isOtherEnvironment = environments[0] !== sourceEnvironment
+  const isOtherEnvironment = useMemo(
+    () => targetEnvironment !== sourceEnvironment,
+    [targetEnvironment, sourceEnvironment],
+  )
 
   const handleDuplicate = async () => {
     if (isOtherEnvironment) {
@@ -40,6 +43,7 @@ const DuplicateStudyModal = ({
       if (res.success) {
         setDuplicated(true)
         setTimeout(() => {
+          setDuplicated(false)
           onClose()
         }, 5000)
       }
@@ -82,7 +86,7 @@ const DuplicateStudyModal = ({
           })}
           {environments.length > 1 && (
             <div className="flex-col my1">
-              <span className="bold">{t('selectEnvironment')}</span>
+              <span className="bold mb-2">{t('selectEnvironment')}</span>
               <Select
                 id="environment-selector"
                 value={targetEnvironment}
