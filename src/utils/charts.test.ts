@@ -70,6 +70,12 @@ describe('charts utils function', () => {
     test('should handle null value', () => {
       expect(formatValueAndUnit(null, 'kg')).toBe('0 kg')
     })
+
+    test('default decimal number should be 2', () => {
+      expect(formatValueAndUnit(12.45687884, 'kg')).toBe('12,46 kg')
+      expect(formatValueAndUnit(12.45687884, 'kg', 5)).toBe('12,45688 kg')
+      expect(formatValueAndUnit(12.45687884, 'kg', 0)).toBe('12 kg')
+    })
   })
 
   describe('getPostColor', () => {
