@@ -93,6 +93,12 @@ jest.mock('../../utils/user', () => ({
 jest.mock('../../utils/number', () => ({
   CA_UNIT_VALUES: { K: 1000, M: 1000000 },
   defaultCAUnit: 'K',
+  formatNumber: jest.fn((value: number, decimals: number) => {
+    if (isNaN(value)) {
+      return '0'
+    }
+    return value.toFixed(decimals)
+  }),
 }))
 jest.mock('../posts', () => ({
   environmentPostMapping: { BC: 'bc-mapping', CUT: 'cut-mapping', TILT: 'tilt-mapping' },
@@ -383,6 +389,7 @@ describe('study', () => {
           role: StudyRole.Validator,
           createdAt: new Date('2024-01-01'),
           isInternal: true,
+          isExternal: false,
         })
 
         expect(result.internalTeam).toHaveLength(1)
@@ -392,14 +399,10 @@ describe('study', () => {
           role: StudyRole.Editor,
           createdAt: new Date('2024-01-02'),
           isInternal: true,
+          isExternal: false,
         })
 
-        expect(result.externalTeam).toHaveLength(1)
-        expect(result.externalTeam).toContainEqual({
-          accountId: 'contributor-account-id',
-          name: 'Contributor Contributor',
-          isInternal: false, // Contributors isInternal is based on isParentCR (false)
-        })
+        expect(result.externalTeam).toHaveLength(0)
       })
 
       it('should handle parent CR organization scenarios', async () => {
@@ -463,6 +466,7 @@ describe('study', () => {
           role: StudyRole.Validator,
           createdAt: new Date('2024-01-01'),
           isInternal: false,
+          isExternal: true,
         })
 
         // Contributors should be internal when there's a parent CR
@@ -470,6 +474,7 @@ describe('study', () => {
           accountId: 'contributor-account-id',
           name: 'Contributor Contributor',
           isInternal: true,
+          isExternal: false,
         })
 
         // Parent users should be external
@@ -479,11 +484,18 @@ describe('study', () => {
           role: StudyRole.Validator,
           createdAt: new Date('2025-01-01'),
           isInternal: false,
+          isExternal: true,
         })
       })
 
-      it('should deduplicate contributors', async () => {
+      it('should deduplicate contributors in a CR scenario', async () => {
+        mockIsOrganizationVersionCR.mockResolvedValue(true)
+
         const mockedStudyWithDuplicates = getMockeFullStudy({
+          organizationVersion: {
+            ...mockedOrganizationVersion,
+            parentId: 'parent-id',
+          },
           contributors: [
             {
               accountId: 'duplicate-id',
@@ -511,7 +523,7 @@ describe('study', () => {
                 },
                 organizationVersionId: TEST_IDS.orgVersion,
               },
-              subPost: 'Achats',
+              subPost: 'Déchets',
             },
           ],
         })
