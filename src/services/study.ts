@@ -662,6 +662,7 @@ export const getResultsValues = (
   environment: Environment,
   tStudyResults: Translations,
   withDependencies: boolean = true,
+  type?: ResultType,
 ) => {
   const computedResultsWithDep = computeResultsByPost(
     study,
@@ -671,6 +672,7 @@ export const getResultsValues = (
     validatedOnly,
     environmentPostMapping[environment],
     environment,
+    type,
   )
 
   const computedResultsWithoutDep = computeResultsByPost(
@@ -681,6 +683,7 @@ export const getResultsValues = (
     validatedOnly,
     environmentPostMapping[environment],
     environment,
+    type,
   )
 
   const computedResultsByTag = computeResultsByTag(

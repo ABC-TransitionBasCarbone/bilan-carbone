@@ -7,9 +7,10 @@ import ConsolidatedResultsTable from './ConsolidatedResultsTable'
 interface Props {
   computedResults: ResultsByPost[]
   resultsUnit: StudyResultUnit
+  exportType?: string
 }
 
-const ConsolidatedResults = ({ computedResults, resultsUnit }: Props) => {
+const ConsolidatedResults = ({ computedResults, resultsUnit, exportType }: Props) => {
   const t = useTranslations('study.results')
   const tResultUnits = useTranslations('study.results.units')
 
@@ -21,6 +22,7 @@ const ConsolidatedResults = ({ computedResults, resultsUnit }: Props) => {
         title={t('consolidatedChartTitle', { unit: tResultUnits(resultsUnit) })}
         type="post"
         TableComponent={ConsolidatedResultsTable}
+        exportType={exportType}
       />
     </>
   )
