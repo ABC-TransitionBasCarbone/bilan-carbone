@@ -23,6 +23,7 @@ export const useDuplicateStudy = ({ duplicateStudyId, form, user, caUnit }: UseD
   const tStudy = useTranslations('study')
   const { callServerFunction } = useServerFunction()
   const [isLoading, setIsLoading] = useState(true)
+  const [sourceStudy, setSourceStudy] = useState<FullStudy | null>(null)
 
   const getOriginalStudy = useCallback(async () => {
     if (!duplicateStudyId) {
@@ -34,6 +35,8 @@ export const useDuplicateStudy = ({ duplicateStudyId, form, user, caUnit }: UseD
         if (!sourceStudy) {
           return
         }
+
+        setSourceStudy(sourceStudy)
 
         const currentSites = form.getValues('sites')
         const updatedSites = updateSitesFromSourceStudy(currentSites, sourceStudy, caUnit)
@@ -50,10 +53,10 @@ export const useDuplicateStudy = ({ duplicateStudyId, form, user, caUnit }: UseD
   }, [getOriginalStudy])
 
   if (!duplicateStudyId) {
-    return { isLoading: false }
+    return { isLoading: false, sourceStudy: null }
   }
 
-  return { isLoading }
+  return { isLoading, sourceStudy }
 }
 
 export const updateSitesFromSourceStudy = (

@@ -84,7 +84,7 @@ const NewStudyPage = ({
     },
   })
 
-  const { isLoading } = useDuplicateStudy({ duplicateStudyId, form, user, caUnit })
+  const { isLoading, sourceStudy } = useDuplicateStudy({ duplicateStudyId, form, user, caUnit })
 
   if (isLoading) {
     return (
@@ -112,10 +112,16 @@ const NewStudyPage = ({
       {organizationVersion ? (
         <DynamicComponent
           environmentComponents={{
-            [Environment.CUT]: <NewStudyFormCut form={form} />,
+            [Environment.CUT]: <NewStudyFormCut form={form} duplicateStudyId={duplicateStudyId} />,
           }}
           defaultComponent={
-            <NewStudyForm user={user} accounts={accounts} form={form} duplicateStudyId={duplicateStudyId} />
+            <NewStudyForm
+              user={user}
+              accounts={accounts}
+              form={form}
+              duplicateStudyId={duplicateStudyId}
+              sourceStudy={sourceStudy}
+            />
           }
         />
       ) : (

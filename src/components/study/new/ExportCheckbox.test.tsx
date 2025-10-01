@@ -1,4 +1,3 @@
-import { FullStudy } from '@/db/study'
 import theme from '@/environments/base/theme/theme'
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
 import { getMockedFullStudy } from '@/tests/utils/models/study'
@@ -48,6 +47,58 @@ const defaultProps = {
   duplicateStudyId: null,
 }
 
+const getBegesCheckedValues = (): Record<Export, ControlMode | false> => ({
+  [Export.Beges]: ControlMode.Operational,
+  [Export.GHGP]: false as const,
+  [Export.ISO14069]: false as const,
+})
+
+const getStudyWithCaracterisations = () =>
+  getMockedFullStudy({
+    emissionSources: [
+      getMockedFullStudyEmissionSource({
+        id: 'source-1',
+        caracterisation: EmissionSourceCaracterisation.Operated,
+        validated: false,
+      }),
+    ],
+  })
+
+const getStudyWithoutCaracterisations = () =>
+  getMockedFullStudy({
+    emissionSources: [
+      getMockedFullStudyEmissionSource({
+        id: 'source-1',
+        caracterisation: null,
+        validated: false,
+      }),
+    ],
+  })
+
+const getStudyWithValidatedSources = () =>
+  getMockedFullStudy({
+    emissionSources: [
+      getMockedFullStudyEmissionSource({
+        id: 'source-1',
+        caracterisation: null,
+        validated: true,
+      }),
+    ],
+  })
+
+const changeControlModeToFinancial = async (user: ReturnType<typeof userEvent.setup>) => {
+  const select = screen.getByRole('combobox')
+  await user.click(select)
+
+  const financialOption = screen.getByRole('option', { name: /Financial/i })
+  await user.click(financialOption)
+}
+
+const clickBegesCheckbox = async (user: ReturnType<typeof userEvent.setup>) => {
+  const checkbox = screen.getByTestId(`export-checkbox-${Export.Beges}`)
+  await user.click(checkbox)
+}
+
 describe('ExportCheckbox', () => {
   beforeEach(() => {
     jest.clearAllMocks()
@@ -56,33 +107,11 @@ describe('ExportCheckbox', () => {
   describe('ControlModeChangeWarningModal', () => {
     it('should show warning when changing control mode with caracterisations on existing study', async () => {
       const user = userEvent.setup()
-      const study: FullStudy = getMockedFullStudy({
-        emissionSources: [
-          getMockedFullStudyEmissionSource({
-            id: 'source-1',
-            caracterisation: EmissionSourceCaracterisation.Operated,
-            validated: false,
-          }),
-        ],
-      })
+      const study = getStudyWithCaracterisations()
 
-      renderWithTheme(
-        <ExportCheckbox
-          {...defaultProps}
-          study={study}
-          values={{
-            [Export.Beges]: ControlMode.Operational,
-            [Export.GHGP]: false,
-            [Export.ISO14069]: false,
-          }}
-        />,
-      )
+      renderWithTheme(<ExportCheckbox {...defaultProps} study={study} values={getBegesCheckedValues()} />)
 
-      const select = screen.getByRole('combobox')
-      await user.click(select)
-
-      const financialOption = screen.getByRole('option', { name: /Financial/i })
-      await user.click(financialOption)
+      await changeControlModeToFinancial(user)
 
       await waitFor(() => {
         expect(screen.getByTestId('control-mode-change-warning-modal')).toBeInTheDocument()
@@ -91,33 +120,11 @@ describe('ExportCheckbox', () => {
 
     it('should not show warning when changing control mode without caracterisations', async () => {
       const user = userEvent.setup()
-      const study: FullStudy = getMockedFullStudy({
-        emissionSources: [
-          getMockedFullStudyEmissionSource({
-            id: 'source-1',
-            caracterisation: null,
-            validated: false,
-          }),
-        ],
-      })
+      const study = getStudyWithoutCaracterisations()
 
-      renderWithTheme(
-        <ExportCheckbox
-          {...defaultProps}
-          study={study}
-          values={{
-            [Export.Beges]: ControlMode.Operational,
-            [Export.GHGP]: false,
-            [Export.ISO14069]: false,
-          }}
-        />,
-      )
+      renderWithTheme(<ExportCheckbox {...defaultProps} study={study} values={getBegesCheckedValues()} />)
 
-      const select = screen.getByRole('combobox')
-      await user.click(select)
-
-      const financialOption = screen.getByRole('option', { name: /Financial/i })
-      await user.click(financialOption)
+      await changeControlModeToFinancial(user)
 
       await waitFor(() => {
         expect(mockSetValues).toHaveBeenCalledWith({
@@ -133,22 +140,9 @@ describe('ExportCheckbox', () => {
     it('should not show warning for new study', async () => {
       const user = userEvent.setup()
 
-      renderWithTheme(
-        <ExportCheckbox
-          {...defaultProps}
-          values={{
-            [Export.Beges]: ControlMode.Operational,
-            [Export.GHGP]: false,
-            [Export.ISO14069]: false,
-          }}
-        />,
-      )
+      renderWithTheme(<ExportCheckbox {...defaultProps} values={getBegesCheckedValues()} />)
 
-      const select = screen.getByRole('combobox')
-      await user.click(select)
-
-      const financialOption = screen.getByRole('option', { name: /Financial/i })
-      await user.click(financialOption)
+      await changeControlModeToFinancial(user)
 
       await waitFor(() => {
         expect(mockSetValues).toHaveBeenCalledWith({
@@ -160,25 +154,36 @@ describe('ExportCheckbox', () => {
 
       expect(screen.queryByTestId('control-mode-change-warning-modal')).not.toBeInTheDocument()
     })
+
+    it('should show warning when changing control mode with caracterisations on duplicate study', async () => {
+      const user = userEvent.setup()
+      const study = getStudyWithCaracterisations()
+
+      renderWithTheme(
+        <ExportCheckbox
+          {...defaultProps}
+          study={study}
+          values={getBegesCheckedValues()}
+          duplicateStudyId="duplicate-study-id"
+        />,
+      )
+
+      await changeControlModeToFinancial(user)
+
+      await waitFor(() => {
+        expect(screen.getByTestId('control-mode-change-warning-modal')).toBeInTheDocument()
+      })
+    })
   })
 
   describe('BegesActivationWarningModal', () => {
     it('should show warning when checking BEGES with validated sources on existing study', async () => {
       const user = userEvent.setup()
-      const study: FullStudy = getMockedFullStudy({
-        emissionSources: [
-          getMockedFullStudyEmissionSource({
-            id: 'source-1',
-            caracterisation: null,
-            validated: true,
-          }),
-        ],
-      })
+      const study = getStudyWithValidatedSources()
 
       renderWithTheme(<ExportCheckbox {...defaultProps} study={study} />)
 
-      const checkbox = screen.getByRole('checkbox')
-      await user.click(checkbox)
+      await clickBegesCheckbox(user)
 
       await waitFor(() => {
         expect(screen.getByTestId('beges-activation-warning-modal')).toBeInTheDocument()
@@ -187,20 +192,11 @@ describe('ExportCheckbox', () => {
 
     it('should not show warning when checking BEGES without validated sources', async () => {
       const user = userEvent.setup()
-      const study: FullStudy = getMockedFullStudy({
-        emissionSources: [
-          getMockedFullStudyEmissionSource({
-            id: 'source-1',
-            caracterisation: null,
-            validated: false,
-          }),
-        ],
-      })
+      const study = getStudyWithoutCaracterisations()
 
       renderWithTheme(<ExportCheckbox {...defaultProps} study={study} />)
 
-      const checkbox = screen.getByRole('checkbox')
-      await user.click(checkbox)
+      await clickBegesCheckbox(user)
 
       await waitFor(() => {
         expect(mockSetValues).toHaveBeenCalledWith({
@@ -218,8 +214,7 @@ describe('ExportCheckbox', () => {
 
       renderWithTheme(<ExportCheckbox {...defaultProps} />)
 
-      const checkbox = screen.getByRole('checkbox')
-      await user.click(checkbox)
+      await clickBegesCheckbox(user)
 
       await waitFor(() => {
         expect(mockSetValues).toHaveBeenCalledWith({
@@ -234,21 +229,11 @@ describe('ExportCheckbox', () => {
 
     it('should show warning when checking BEGES on duplicate study', async () => {
       const user = userEvent.setup()
-
-      const study: FullStudy = getMockedFullStudy({
-        emissionSources: [
-          getMockedFullStudyEmissionSource({
-            id: 'source-1',
-            caracterisation: null,
-            validated: true,
-          }),
-        ],
-      })
+      const study = getStudyWithValidatedSources()
 
       renderWithTheme(<ExportCheckbox {...defaultProps} duplicateStudyId="duplicate-study-id" study={study} />)
 
-      const checkbox = screen.getByRole('checkbox')
-      await user.click(checkbox)
+      await clickBegesCheckbox(user)
 
       await waitFor(() => {
         expect(screen.getByTestId('beges-activation-warning-modal')).toBeInTheDocument()
@@ -259,30 +244,11 @@ describe('ExportCheckbox', () => {
   describe('BegesDeactivationWarningModal', () => {
     it('should show warning when unchecking BEGES with caracterisations on existing study', async () => {
       const user = userEvent.setup()
-      const study: FullStudy = getMockedFullStudy({
-        emissionSources: [
-          getMockedFullStudyEmissionSource({
-            id: 'source-1',
-            caracterisation: EmissionSourceCaracterisation.Operated,
-            validated: false,
-          }),
-        ],
-      })
+      const study = getStudyWithCaracterisations()
 
-      renderWithTheme(
-        <ExportCheckbox
-          {...defaultProps}
-          study={study}
-          values={{
-            [Export.Beges]: ControlMode.Operational,
-            [Export.GHGP]: false,
-            [Export.ISO14069]: false,
-          }}
-        />,
-      )
+      renderWithTheme(<ExportCheckbox {...defaultProps} study={study} values={getBegesCheckedValues()} />)
 
-      const checkbox = screen.getByRole('checkbox')
-      await user.click(checkbox)
+      await clickBegesCheckbox(user)
 
       await waitFor(() => {
         expect(screen.getByTestId('beges-deactivation-warning-modal')).toBeInTheDocument()
@@ -291,30 +257,11 @@ describe('ExportCheckbox', () => {
 
     it('should not show warning when unchecking BEGES without caracterisations', async () => {
       const user = userEvent.setup()
-      const study: FullStudy = getMockedFullStudy({
-        emissionSources: [
-          getMockedFullStudyEmissionSource({
-            id: 'source-1',
-            caracterisation: null,
-            validated: false,
-          }),
-        ],
-      })
+      const study = getStudyWithoutCaracterisations()
 
-      renderWithTheme(
-        <ExportCheckbox
-          {...defaultProps}
-          study={study}
-          values={{
-            [Export.Beges]: ControlMode.Operational,
-            [Export.GHGP]: false,
-            [Export.ISO14069]: false,
-          }}
-        />,
-      )
+      renderWithTheme(<ExportCheckbox {...defaultProps} study={study} values={getBegesCheckedValues()} />)
 
-      const checkbox = screen.getByRole('checkbox')
-      await user.click(checkbox)
+      await clickBegesCheckbox(user)
 
       await waitFor(() => {
         expect(mockSetValues).toHaveBeenCalledWith({
@@ -330,19 +277,9 @@ describe('ExportCheckbox', () => {
     it('should not show warning when unchecking BEGES on new study', async () => {
       const user = userEvent.setup()
 
-      renderWithTheme(
-        <ExportCheckbox
-          {...defaultProps}
-          values={{
-            [Export.Beges]: ControlMode.Operational,
-            [Export.GHGP]: false,
-            [Export.ISO14069]: false,
-          }}
-        />,
-      )
+      renderWithTheme(<ExportCheckbox {...defaultProps} values={getBegesCheckedValues()} />)
 
-      const checkbox = screen.getByRole('checkbox')
-      await user.click(checkbox)
+      await clickBegesCheckbox(user)
 
       await waitFor(() => {
         expect(mockSetValues).toHaveBeenCalledWith({
@@ -353,6 +290,26 @@ describe('ExportCheckbox', () => {
       })
 
       expect(screen.queryByTestId('beges-deactivation-warning-modal')).not.toBeInTheDocument()
+    })
+
+    it('should show warning when unchecking BEGES with caracterisations on duplicate study', async () => {
+      const user = userEvent.setup()
+      const study = getStudyWithCaracterisations()
+
+      renderWithTheme(
+        <ExportCheckbox
+          {...defaultProps}
+          study={study}
+          values={getBegesCheckedValues()}
+          duplicateStudyId="duplicate-study-id"
+        />,
+      )
+
+      await clickBegesCheckbox(user)
+
+      await waitFor(() => {
+        expect(screen.getByTestId('beges-deactivation-warning-modal')).toBeInTheDocument()
+      })
     })
   })
 })

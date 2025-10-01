@@ -115,7 +115,12 @@ const ExportCheckbox = ({ id, study, values, setValues, disabled, duplicateStudy
       <FormControlLabel
         className={styles.field}
         control={
-          <Checkbox checked={!!values[id]} className={styles.checkbox} disabled={id !== Export.Beges || disabled} />
+          <Checkbox
+            checked={!!values[id]}
+            className={styles.checkbox}
+            disabled={id !== Export.Beges || disabled}
+            data-testid={`export-checkbox-${id}`}
+          />
         }
         label={
           <span>
