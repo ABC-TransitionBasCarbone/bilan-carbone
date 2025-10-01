@@ -286,7 +286,7 @@ const users = async () => {
   const organizationVersions = await prisma.organizationVersion.createManyAndReturn({
     data: organizations.map((organization, index) => ({
       organizationId: organization.id,
-      isCR: index > organizations.length / 2 - 1,
+      isCR: index % 2 === 1,
       onboarded: true,
       activatedLicence: true,
       environment: Environment.BC,
