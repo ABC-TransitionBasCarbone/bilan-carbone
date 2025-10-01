@@ -3,6 +3,11 @@ import { expect } from '@jest/globals'
 import { Environment, SubPost, Unit } from '@prisma/client'
 import { getEmissionResults } from './emissionSource'
 
+// TODO : remove these mocks. Should not be mocked but tests fail if not
+jest.mock('./file', () => ({ download: jest.fn() }))
+jest.mock('./permissions/study', () => ({ isAdminOnStudyOrga: jest.fn() }))
+jest.mock('./study', () => ({ checkLevel: jest.fn() }))
+
 const defaultEmissionSource = {
   id: 'random',
   caracterisation: null,
