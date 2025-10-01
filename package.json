@@ -91,6 +91,7 @@
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.6.4",
     "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/bcryptjs": "^3.0.0",
     "@types/big.js": "^6.2.2",
     "@types/ejs": "^3.1.5",

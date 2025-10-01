@@ -10,6 +10,7 @@ import { FormSelect } from '@/components/form/Select'
 import GlobalNewStudyForm from '@/components/study/new/Form'
 import StudyExportsForm from '@/components/study/perimeter/StudyExportsForm'
 import { getOrganizationVersionAccounts } from '@/db/organization'
+import { FullStudy } from '@/db/study'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { getAllowedLevels } from '@/services/study'
 import { FormControlLabel, MenuItem, Radio } from '@mui/material'
@@ -24,9 +25,10 @@ interface Props {
   accounts: Awaited<ReturnType<typeof getOrganizationVersionAccounts>>
   form: UseFormReturn<CreateStudyCommand>
   duplicateStudyId?: string | null
+  sourceStudy?: FullStudy | null
 }
 
-const NewStudyForm = ({ user, accounts, form, duplicateStudyId }: Props) => {
+const NewStudyForm = ({ user, accounts, form, duplicateStudyId, sourceStudy }: Props) => {
   const t = useTranslations('study.new')
   const tGlossary = useTranslations('study.new.glossary')
   const [glossary, setGlossary] = useState('')
@@ -115,6 +117,7 @@ const NewStudyForm = ({ user, accounts, form, duplicateStudyId }: Props) => {
           setGlossary={setGlossary}
           t={t}
           duplicateStudyId={duplicateStudyId}
+          study={sourceStudy ?? undefined}
         />
       </GlobalNewStudyForm>
     </Block>

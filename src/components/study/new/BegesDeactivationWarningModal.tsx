@@ -9,13 +9,13 @@ interface Props {
   onCancel: () => void
 }
 
-const BegesActivationWarningModal = ({ open, onConfirm, onCancel }: Props) => {
-  const t = useTranslations('study.perimeter.begesActivationWarning')
+const BegesDeactivationWarningModal = ({ open, onConfirm, onCancel }: Props) => {
+  const t = useTranslations('study.perimeter.begesDeactivationWarning')
 
   return (
     <Modal
       open={open}
-      label="beges-activation-warning"
+      label="beges-deactivation-warning"
       title={t('title')}
       onClose={onCancel}
       actions={[
@@ -23,13 +23,13 @@ const BegesActivationWarningModal = ({ open, onConfirm, onCancel }: Props) => {
           actionType: 'button',
           onClick: onCancel,
           children: t('cancel'),
-          ['data-testid']: 'beges-activation-cancel',
+          ['data-testid']: 'beges-deactivation-cancel',
         },
         {
           actionType: 'button',
           onClick: onConfirm,
           children: t('continue'),
-          ['data-testid']: 'beges-activation-confirm',
+          ['data-testid']: 'beges-deactivation-confirm',
           color: 'error',
         },
       ]}
@@ -43,4 +43,4 @@ const BegesActivationWarningModal = ({ open, onConfirm, onCancel }: Props) => {
   )
 }
 
-export default BegesActivationWarningModal
+export default BegesDeactivationWarningModal

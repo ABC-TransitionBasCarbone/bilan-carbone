@@ -313,7 +313,7 @@
     "duplicateCopy": " - Copie",
     "duplicateDialog": {
       "title": "Duplication de l'étude",
-      "description": "Souhaitez-vous dupliquer cette étude ? Vous serez redirigé vers la page de création d'une étude, tous les champs seront pré-remplis avec les informations de cette étude, et une fois validée, toute l'étude et ses sources d'émissions seront dupliquées. Les études seront alors indépendantes, toute modification faite dans l'une ne se reflètera pas dans l'autre une fois la duplication faite.",
+      "description": "Souhaitez-vous dupliquer cette étude ? Vous serez redirigé vers la page de création d'une étude, tous les champs seront pré-remplis avec les informations de l'étude que vous serez en mesure d'éditer, et une fois la création validée, toute l'étude et ses sources d'émissions seront dupliquées. Les documents attachés à l'étude originale ne seront pas dupliqués. Attention, après la duplication, les sources d'émission de la nouvelle étude créée devront être validées à nouveau afin d'apparaître dans les résultats. <br></br>Les études sont indépendantes après la duplication, toute modification faite dans l'une ne se reflètera pas dans l'autre.",
       "cancel": "Annuler",
       "confirm": "Dupliquer"
     },
@@ -618,6 +618,12 @@
       "begesActivationWarning": {
         "title": "Activation de l'export BEGES",
         "description": "Vous êtes sur le point d'activer l'export BEGES règlementaire. Lorsque cet export est activé, vous devez renseigner un champ supplémentaire \"Caractérisation\" dans certaines sources d'émissions. En conséquence, <warning>l'activation de cet export dévalidera les sources d'émission concernées</warning>. Voulez-vous continuer ?",
+        "continue": "Continuer",
+        "cancel": "Annuler"
+      },
+      "begesDeactivationWarning": {
+        "title": "Désactivation de l'export BEGES",
+        "description": "Vous êtes sur le point de désactiver l'export BEGES règlementaire. <warning>La désactivation de cet export entraînera la perte de toutes les caractérisations renseignées dans les sources d'émission</warning>. Voulez-vous continuer ?",
         "continue": "Continuer",
         "cancel": "Annuler"
       },

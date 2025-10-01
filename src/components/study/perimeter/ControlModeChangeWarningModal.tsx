@@ -23,7 +23,12 @@ const ControlModeChangeWarningModal = ({ open, currentMode, newMode, onConfirm, 
       title={t('title')}
       onClose={onCancel}
       actions={[
-        { actionType: 'button', onClick: onCancel, children: t('cancel') },
+        {
+          actionType: 'button',
+          onClick: onCancel,
+          children: t('cancel'),
+          ['data-testid']: 'control-mode-change-cancel',
+        },
         {
           actionType: 'button',
           onClick: onConfirm,
