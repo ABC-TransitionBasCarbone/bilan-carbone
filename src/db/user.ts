@@ -2,15 +2,25 @@ import { environmentsWithChecklist } from '@/constants/environments'
 import { signPassword } from '@/services/auth'
 import { NOT_AUTHORIZED } from '@/services/permissions/check'
 import { getDeactivableFeatureRestrictions } from '@/services/serverFunctions/deactivableFeatures'
+import { duplicateKeyStudyForAccount } from '@/services/serverFunctions/study'
 import { addUserChecklistItem, sendEmailToAddedUser } from '@/services/serverFunctions/user'
 import { AddMemberCommand } from '@/services/serverFunctions/user.command'
 import { AuthorizedInOrgaUserStatus } from '@/services/users'
 import { getRoleToSetForUntrained } from '@/utils/user'
 import { userSessionToDbUser } from '@/utils/userAccounts'
-import { DeactivatableFeature, Environment, Prisma, Role, UserChecklist, UserStatus } from '@prisma/client'
+import {
+  DeactivatableFeature,
+  DuplicableStudy,
+  Environment,
+  Prisma,
+  Role,
+  UserChecklist,
+  UserStatus,
+} from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { addAccount, getAccountByEmailAndEnvironment, getAccountByEmailAndOrganizationVersionId } from './account'
 import { prismaClient } from './client'
+import { getKeyStudy } from './study'
 
 export const getUserByEmailWithSensibleInformations = (email: string) =>
   prismaClient.user.findUnique({
@@ -204,6 +214,9 @@ export type UserWithAccounts = AsyncReturnType<typeof getUserByIdWithAccounts>
 export const getUserByEmail = (email: string) =>
   prismaClient.user.findUnique({ where: { email }, include: { accounts: true } })
 
+export const getUsersByEmail = (emails: string[]) =>
+  prismaClient.user.findMany({ where: { email: { in: emails } }, include: { accounts: true } })
+
 export const updateUser = (userId: string, data: Partial<Prisma.UserCreateInput>) =>
   prismaClient.user.update({
     where: { id: userId },
@@ -213,29 +226,47 @@ export const updateUser = (userId: string, data: Partial<Prisma.UserCreateInput>
 export const createUsersWithAccount = async (
   users: (Prisma.UserCreateManyInput & { account: Prisma.AccountCreateInput })[],
 ) => {
-  const deactivatedFeaturesRestrictions = await getDeactivableFeatureRestrictions(DeactivatableFeature.Creation)
+  const [creationFeature, formationStudyFeature] = await Promise.all([
+    getDeactivableFeatureRestrictions(DeactivatableFeature.Creation),
+    getDeactivableFeatureRestrictions(DeactivatableFeature.FormationStudy),
+  ])
   let filteredUsers = users
 
-  if (deactivatedFeaturesRestrictions?.active) {
+  if (creationFeature?.active) {
     const notAllowedEnvironments = users.some(({ account }) =>
-      deactivatedFeaturesRestrictions.deactivatedEnvironments.includes(account.environment),
+      creationFeature.deactivatedEnvironments.includes(account.environment),
     )
     filteredUsers = users.filter(
-      ({ account }) => !deactivatedFeaturesRestrictions.deactivatedEnvironments.includes(account.environment),
+      ({ account }) => !creationFeature.deactivatedEnvironments.includes(account.environment),
     )
     if (notAllowedEnvironments) {
-      console.log(
-        'Creation of users from these environments is not allowed: ',
-        deactivatedFeaturesRestrictions.deactivatedEnvironments,
-      )
+      console.log('Creation of users from these environments is not allowed: ', creationFeature.deactivatedEnvironments)
     }
   }
 
+  let formationStudyEnvironments: Environment[] = []
   const newUsers = await prismaClient.user.createMany({
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     data: filteredUsers.map(({ account, ...user }) => user),
     skipDuplicates: true,
   })
+
+  if (formationStudyFeature?.active) {
+    formationStudyEnvironments = Object.values(Environment).filter(
+      (environment) => !formationStudyFeature.deactivatedEnvironments.includes(environment),
+    )
+    const createdFilteredUsers = await getUsersByEmail(filteredUsers.map((filteredUser) => filteredUser.email))
+    createdFilteredUsers.forEach((user) => {
+      user.accounts.forEach(async (account) => {
+        if (formationStudyEnvironments.includes(account.environment)) {
+          const formationStudy = await getKeyStudy(DuplicableStudy.TrainingExercise, account.environment)
+          if (formationStudy) {
+            await duplicateKeyStudyForAccount(account.id, formationStudy.id)
+          }
+        }
+      })
+    })
+  }
 
   const emails = filteredUsers.map(({ email }) => email)
 
@@ -255,7 +286,7 @@ export const createUsersWithAccount = async (
       if (accoutAlreadyExists) {
         continue
       }
-      await prismaClient.account.create({
+      const newAccount = await prismaClient.account.create({
         data: {
           ...originalUser.account,
           user: {
@@ -263,6 +294,15 @@ export const createUsersWithAccount = async (
           },
         },
       })
+      if (formationStudyEnvironments.includes(newAccount.environment)) {
+        const formationStudy = await getKeyStudy(DuplicableStudy.TrainingExercise, newAccount.environment)
+        if (formationStudy && formationStudy.studyId) {
+          const formationStudy = await getKeyStudy(DuplicableStudy.TrainingExercise, newAccount.environment)
+          if (formationStudy) {
+            await duplicateKeyStudyForAccount(newAccount.id, formationStudy.id)
+          }
+        }
+      }
       newAccountCount++
     }
   }

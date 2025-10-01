@@ -829,3 +829,6 @@ export const upsertStudyKey = async (key: DuplicableStudy, environment: Environm
     update: { studyId },
     create: { environment, role: key, studyId },
   })
+
+export const getKeyStudy = async (key: DuplicableStudy, environment: Environment) =>
+  prismaClient.keyStudy.findUnique({ where: { environment_role: { environment, role: key } } })
