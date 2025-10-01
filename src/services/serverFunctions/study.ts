@@ -12,6 +12,7 @@ import {
   addAccount,
   getAccountByEmailAndEnvironment,
   getAccountByEmailAndOrganizationVersionId,
+  getAccountById,
   getAccountsByUserIdsAndEnvironment,
   getAccountsUserLevel,
 } from '@/db/account'
@@ -1868,3 +1869,38 @@ export const setKeyStudy = async (key: DuplicableStudy, environment: Environment
   await upsertStudyKey(key, environment, studyId)
   return 'Succès'
 }
+
+export const duplicateKeyStudyForAccount = async (accountId: string, studyId: string) =>
+  withServerResponse('duplicateKeyStudyForAccount', async () => {
+    const [study, account] = await Promise.all([getStudyById(studyId, null), getAccountById(accountId)])
+    if (!study || !account || study.organizationVersion.environment !== account.environment) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const environment = account.environment
+    const allowedUsers = [{ accountId, role: StudyRole.Validator }]
+    const sites = await getSitesForDuplication(study)
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, createdById, organizationVersionId, ...restStudy } = study
+    const studyCommand: Prisma.StudyCreateInput = buildStudyForDuplication(
+      restStudy,
+      accountId,
+      study.organizationVersion.id,
+      allowedUsers,
+      [],
+      sites,
+    )
+    const createdStudy = await createStudy(studyCommand, environment, false)
+    const createdStudyWithSites = (await getStudyById(createdStudy.id, organizationVersionId)) as FullStudy
+
+    // emission sources
+    const emissionSources = buildStudyEmissionSources(
+      study.emissionSources,
+      createdStudy.id,
+      createdStudyWithSites.sites,
+      study.organizationVersion.environment,
+      environment,
+    )
+
+    await createEmissionSourcesOnStudy(emissionSources)
+  })

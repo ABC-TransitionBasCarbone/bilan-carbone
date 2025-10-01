@@ -5,9 +5,10 @@ import { FullStudy, getStudyById } from '@/db/study'
 import { getAccountByIdWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
 import { canEditOrganizationVersion, isAdminOnOrga, isInOrgaOrParent } from '@/utils/organization'
 import { getAccountRoleOnStudy, getDuplicableEnvironments, hasEditionRights } from '@/utils/study'
-import { Environment, Level, Prisma, Study, StudyRole, User } from '@prisma/client'
+import { DeactivatableFeature, Environment, Level, Prisma, Study, StudyRole, User } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { dbActualizedAuth } from '../auth'
+import { isDeactivableFeatureActiveForEnvironment } from '../serverFunctions/deactivableFeatures'
 import { getUserActiveAccounts } from '../serverFunctions/user'
 import { checkLevel } from '../study'
 import { hasAccessToDuplicateStudy } from './environment'
@@ -437,4 +438,12 @@ export const canAccessFlowFromStudy = async (documentId: string, studyId: string
   }
 
   return true
+}
+
+export const hasAccessToFormationStudy = async (userAccount: Prisma.AccountCreateInput) => {
+  const isFormationStudyFeatureActive = await isDeactivableFeatureActiveForEnvironment(
+    DeactivatableFeature.FormationStudy,
+    userAccount.environment,
+  )
+  return isFormationStudyFeatureActive.success && isFormationStudyFeatureActive.data
 }
