@@ -1,5 +1,6 @@
 import { FullStudy } from '@/db/study'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
+import { hasDeprecationPeriod } from '@/utils/study'
 import {
   ControlMode,
   EmissionSourceCaracterisation,
@@ -10,7 +11,7 @@ import {
   SubPost,
 } from '@prisma/client'
 import { StudyWithoutDetail } from './permissions/study'
-import { convertTiltSubPostToBCSubPost, Post, subPostsByPost } from './posts'
+import { convertTiltSubPostToBCSubPost } from './posts'
 import { getConfidenceInterval, getQualityStandardDeviation, getSpecificEmissionFactorQuality } from './uncertainty'
 
 type CaracterisationsBySubPost = Partial<Record<SubPost, EmissionSourceCaracterisation[]>>
@@ -39,7 +40,7 @@ export const getEmissionSourceCompletion = (
   if (study.exports.length > 0 && caracterisations.length > 0) {
     mandatoryFields.push('caracterisation')
   }
-  if (subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost)) {
+  if (hasDeprecationPeriod(emissionSource.subPost)) {
     mandatoryFields.push('depreciationPeriod')
   }
 
@@ -114,15 +115,7 @@ export const getEmissionSourceEmission = (
   }
 
   let emission = getEmissionFactorValue(emissionSource.emissionFactor, environment) * emissionSource.value
-  if (
-    [
-      ...subPostsByPost[Post.Immobilisations],
-      ...subPostsByPost[Post.EquipementsEtImmobilisations],
-      SubPost.Electromenager,
-      SubPost.Batiment,
-    ].includes(emissionSource.subPost) &&
-    emissionSource.depreciationPeriod
-  ) {
+  if (hasDeprecationPeriod(emissionSource.subPost) && emissionSource.depreciationPeriod) {
     emission = emission / emissionSource.depreciationPeriod
   }
 
