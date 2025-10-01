@@ -26,7 +26,7 @@ import {
   getStudyEmissionFactorSources,
 } from '@/db/emissionFactors'
 import {
-  createEmissionSourceOnStudy,
+  createEmissionSourcesOnStudy,
   createEmissionSourceTagFamilyAndRelatedTags,
   getFamilyTagsForStudy,
 } from '@/db/emissionSource'
@@ -1520,7 +1520,7 @@ const buildStudyForDuplication = (
   organizationId: string,
   users: AsyncReturnType<typeof getAllowedUsersForDuplication>,
   contributors: AsyncReturnType<typeof getContributorsForDuplication>,
-  sites: AsyncReturnType<typeof getSitesForDuplication>,
+  sites: Prisma.StudySiteCreateManyStudyInput[],
 ) => ({
   ...study,
   createdBy: { connect: { id: userAccountId } },
@@ -1559,34 +1559,17 @@ const buildStudyForDuplication = (
   },
 })
 
-type Families = FullStudy['emissionSourceTagFamilies']
-type SourceStudyTags = Families[number]['emissionSourceTags'][number] & {
-  familyName: string
-}
-const getStudyTags = (emissionSourceTagFamilies: Families): SourceStudyTags[] =>
-  emissionSourceTagFamilies.reduce(
-    (res, tagFamily) =>
-      res.concat(
-        tagFamily.emissionSourceTags.map((emissionSourceTag) => ({
-          ...emissionSourceTag,
-          familyName: tagFamily.name,
-        })),
-      ),
-    [] as SourceStudyTags[],
-  )
 const buildStudyEmissionSources = (
   emissionSources: FullStudy['emissionSources'],
   studyId: string,
   studySites: FullStudy['sites'],
   sourceEnvironment: Environment,
   targetEnvironment: Environment,
-  emissionSourceTagFamilies: Families,
-  studyTags: SourceStudyTags[],
-): Prisma.StudyEmissionSourceCreateInput[] =>
+): Prisma.StudyEmissionSourceCreateManyInput[] =>
   emissionSources
     .map((emissionSource) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { id, emissionFactorId, ...restSource } = emissionSource
+      const { id, studySite, emissionFactor, emissionSourceTags, ...restSource } = emissionSource
       const studySiteId = studySites.find((studySite) => studySite.site.id === emissionSource.studySite.site.id)
         ?.id as string
       const subPost = getTransEnvironmentSubPost(sourceEnvironment, targetEnvironment, emissionSource.subPost)
@@ -1594,33 +1577,12 @@ const buildStudyEmissionSources = (
         return undefined
       }
       const contributor = restSource.contributor?.id
-      const tags = restSource.emissionSourceTags
-        .map((emissionSourceTag) => {
-          const studyFamilyTag = emissionSourceTagFamilies.find(
-            (emissionSourceTagFamily) => emissionSourceTagFamily.id === emissionSourceTag.familyId,
-          )
-          if (!studyFamilyTag) {
-            return undefined
-          }
-          const tag = studyTags.find(
-            (studyTag) => studyTag.name === emissionSourceTag.name && studyTag.familyName === studyFamilyTag.name,
-          )
-          if (!tag) {
-            return undefined
-          }
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { familyName, ...restTag } = tag
-          return restTag
-        })
-        .filter((tag) => !!tag)
       return {
         ...restSource,
-        study: { connect: { id: studyId } },
-        studySite: { connect: { id: studySiteId } },
-        emissionFactor: emissionFactorId ? { connect: { id: emissionFactorId } } : undefined,
+        studyId,
+        studySiteId,
         subPost,
         contributor: contributor ? { connect: { id: contributor } } : undefined,
-        emissionSourceTags: { connect: tags.map(({ id }) => ({ id })) },
       }
     })
     .filter((source) => !!source)
@@ -1693,17 +1655,15 @@ export const duplicateStudyInOtherEnvironment = async (studyId: string, targetEn
     )) as FullStudy
 
     // emission sources
-    const studyTags = getStudyTags(study.emissionSourceTagFamilies)
+    // TODO : Add tags that are not currently added to the duplicated study
     const emissionSources = buildStudyEmissionSources(
       study.emissionSources,
       createdStudy.id,
       createdStudyWithSites.sites,
       study.organizationVersion.environment,
       targetEnvironment,
-      study.emissionSourceTagFamilies,
-      studyTags,
     )
-    await Promise.all(emissionSources.map(createEmissionSourceOnStudy))
+    await createEmissionSourcesOnStudy(emissionSources)
     return
   })
 
