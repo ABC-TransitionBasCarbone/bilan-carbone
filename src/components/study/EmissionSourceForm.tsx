@@ -142,6 +142,14 @@ const EmissionSourceForm = ({
 
   const isCas = isCAS(emissionSource)
 
+  const withDeprecationPeriod = useMemo(
+    () =>
+      subPostsByPost[Post.Immobilisations]
+        .concat(subPostsByPost[Post.EquipementsEtImmobilisations])
+        .includes(emissionSource.subPost),
+    [subPostsByPost, emissionSource.subPost],
+  )
+
   useEffect(() => {
     if (isCas) {
       update('value', (emissionSource.hectare || 0) * (emissionSource.duration || 0))
@@ -264,7 +272,7 @@ const EmissionSourceForm = ({
                 </div>
               )}
             </div>
-            {subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost) && (
+            {withDeprecationPeriod && (
               <div className={classNames(styles.inputWithUnit, 'flex grow')}>
                 <TextField
                   className="grow"

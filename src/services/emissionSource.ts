@@ -115,9 +115,12 @@ export const getEmissionSourceEmission = (
 
   let emission = getEmissionFactorValue(emissionSource.emissionFactor, environment) * emissionSource.value
   if (
-    [...subPostsByPost[Post.Immobilisations], SubPost.Electromenager, SubPost.Batiment].includes(
-      emissionSource.subPost,
-    ) &&
+    [
+      ...subPostsByPost[Post.Immobilisations],
+      ...subPostsByPost[Post.EquipementsEtImmobilisations],
+      SubPost.Electromenager,
+      SubPost.Batiment,
+    ].includes(emissionSource.subPost) &&
     emissionSource.depreciationPeriod
   ) {
     emission = emission / emissionSource.depreciationPeriod
