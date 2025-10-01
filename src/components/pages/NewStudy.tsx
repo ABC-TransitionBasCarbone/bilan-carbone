@@ -112,7 +112,7 @@ const NewStudyPage = ({
       {organizationVersion ? (
         <DynamicComponent
           environmentComponents={{
-            [Environment.CUT]: <NewStudyFormCut form={form} duplicateStudyId={duplicateStudyId} />,
+            [Environment.CUT]: <NewStudyFormCut form={form} />,
           }}
           defaultComponent={
             <NewStudyForm
