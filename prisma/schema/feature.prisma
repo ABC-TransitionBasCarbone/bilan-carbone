@@ -24,4 +24,5 @@ model DeactivatableFeatureStatus {
 
 enum DuplicableStudy {
   TrainingExercise
+  TrainingCorrectionExercise
 }
