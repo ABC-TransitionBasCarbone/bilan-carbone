@@ -65,7 +65,7 @@ import {
   updateStudySites,
   updateUserOnStudy,
   upsertStudyExport,
-  upsertStudyKey,
+  upsertStudyTemplate,
 } from '@/db/study'
 import { addUser, getUserApplicationSettings, getUserByEmail, getUserSourceById, UserWithAccounts } from '@/db/user'
 import { LocaleType } from '@/i18n/config'
@@ -1855,7 +1855,7 @@ export const prepareReport = async (
     return arrayBuffer
   })
 
-export const setKeyStudy = async (key: DuplicableStudy, environment: Environment, studyId: string) => {
+export const setStudyTemplate = async (template: DuplicableStudy, environment: Environment, studyId: string) => {
   const study = await getStudyById(studyId, null)
   if (!study) {
     return 'Study not found'
@@ -1866,7 +1866,7 @@ export const setKeyStudy = async (key: DuplicableStudy, environment: Environment
   if (study.organizationVersion.organization.id !== process.env.STUDY_KEY_ORGANIZATION_ID) {
     return `Study is not from the right organization (${study.organizationVersion.organization.name})`
   }
-  await upsertStudyKey(key, environment, studyId)
+  await upsertStudyTemplate(template, environment, studyId)
   return 'Succès'
 }
 

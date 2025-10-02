@@ -823,12 +823,12 @@ export const getStudiesAffectedByQuestion = async (questionIdIntern: string) => 
   })
 }
 
-export const upsertStudyKey = async (key: DuplicableStudy, environment: Environment, studyId: string) =>
-  prismaClient.keyStudy.upsert({
-    where: { environment_role: { environment, role: key } },
+export const upsertStudyTemplate = async (template: DuplicableStudy, environment: Environment, studyId: string) =>
+  prismaClient.studyTemplate.upsert({
+    where: { environment_template: { environment, template } },
     update: { studyId },
-    create: { environment, role: key, studyId },
+    create: { environment, template, studyId },
   })
 
-export const getKeyStudy = async (key: DuplicableStudy, environment: Environment) =>
-  prismaClient.keyStudy.findUnique({ where: { environment_role: { environment, role: key } } })
+export const getStudyTemplate = async (template: DuplicableStudy, environment: Environment) =>
+  prismaClient.studyTemplate.findUnique({ where: { environment_template: { environment, template } } })
