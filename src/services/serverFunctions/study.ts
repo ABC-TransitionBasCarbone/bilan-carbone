@@ -1863,7 +1863,7 @@ export const setStudyTemplate = async (template: DuplicableStudy, environment: E
   if (study.organizationVersion.environment !== environment) {
     throw new Error(`Study is not from the right environment (${study.organizationVersion.environment})`)
   }
-  if (study.organizationVersion.organization.id !== process.env.STUDY_KEY_ORGANIZATION_ID) {
+  if (study.organizationVersion.organization.id !== process.env.STUDY_TEMPLATE_ORGANIZATION_ID) {
     throw new Error(`Study is not from the right organization (${study.organizationVersion.organization.name})`)
   }
   await upsertStudyTemplate(template, environment, studyId)
