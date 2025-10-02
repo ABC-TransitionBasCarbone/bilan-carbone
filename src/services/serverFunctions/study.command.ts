@@ -202,3 +202,14 @@ export const DeleteCommandValidation = z.object({
   name: z.string(),
 })
 export type DeleteCommand = z.infer<typeof DeleteCommandValidation>
+
+export const DuplicateSiteCommandValidation = z.object({
+  sourceSiteId: z.string().uuid(),
+  targetSiteIds: z.array(z.string().uuid()),
+  newSitesCount: z.number().int().min(0),
+  organizationId: z.string().uuid(),
+  studyId: z.string().uuid(),
+  fieldsToDuplicate: z.array(z.enum(['etp', 'ca', 'volunteerNumber', 'beneficiaryNumber', 'emissionSources'])),
+})
+
+export type DuplicateSiteCommand = z.infer<typeof DuplicateSiteCommandValidation>

@@ -16,9 +16,10 @@ interface Props<T extends SitesCommand> {
   sites: SitesCommand['sites']
   withSelection?: boolean
   caUnit: SiteCAUnit
+  onDuplicate?: (studySiteId: string) => void
 }
 
-const Sites = <T extends SitesCommand>({ sites, form, withSelection, caUnit }: Props<T>) => {
+const Sites = <T extends SitesCommand>({ sites, form, withSelection, caUnit, onDuplicate }: Props<T>) => {
   const t = useTranslations('organization.sites')
   const control = form?.control as Control<SitesCommand>
   const columns = useMemo(
@@ -84,6 +85,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, caUnit }: P
       withSelection={withSelection}
       caUnit={caUnit}
       environment={Environment.TILT}
+      onDuplicate={onDuplicate}
     />
   )
 }
