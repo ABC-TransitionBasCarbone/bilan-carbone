@@ -84,13 +84,13 @@ describe('Create study emission source', () => {
     cy.getByTestId('emission-source-quality-expand-button').should('not.exist')
     cy.getByTestId('emission-source-result').should(
       'have.text',
-      'Intervalle de confiance à 95% :[900 248; 1 129 132] (en tCO₂e)Alpha :11,99%',
+      'Intervalle de confiance à 95% :[900; 1 129] (en tCO₂e)Alpha :11,99%',
     )
     cy.getByTestId('emission-source-technicalRepresentativeness').click()
     cy.get('[data-value="1"]').click()
     cy.getByTestId('emission-source-result').should(
       'have.text',
-      'Intervalle de confiance à 95% :[499 495; 2 035 055] (en tCO₂e)Alpha :101,85%',
+      'Intervalle de confiance à 95% :[499; 2 035] (en tCO₂e)Alpha :101,85%',
     )
     cy.getByTestId('emission-source-geographicRepresentativeness').click()
     cy.get('[data-value="2"]').click()
