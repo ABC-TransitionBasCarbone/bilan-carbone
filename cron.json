@@ -5,12 +5,8 @@
       "description": "Import users from FTP server at midnight"
     },
     {
-      "command": "0 1 * * * npx tsx src/scripts/formationStudies/assignTrainingStudy.ts",
-      "description": "Create training studies for users who started a formation"
-    },
-    {
-      "command": "30 1 * * * npx tsx src/scripts/formationStudies/assignCorrectionTrainingStudy.ts",
-      "description": "Create training correction studies for users who ended their formation"
+      "command": "0 1 * * * npx tsx src/scripts/formationStudies/assignTrainingStudies.ts",
+      "description": "Create training studies for users who started or ended a formation"
     }
   ]
 }
