@@ -9,7 +9,7 @@ program
   .description("Script pour assigner une étude d'entrainement aux utilisateurs au début de leur formation")
   .version('1.0.0')
 
-const assignTainingStudy = async () => {
+const assignTrainingStudy = async () => {
   const res = await assignTrainingExerciseStudy()
   const date = new Date()
   console.log(
@@ -17,4 +17,4 @@ const assignTainingStudy = async () => {
   )
 }
 
-assignTainingStudy()
+assignTrainingStudy()

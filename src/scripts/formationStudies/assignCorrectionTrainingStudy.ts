@@ -8,9 +8,9 @@ program
   .description('Script pour assigner une étude de correction aux utilisateurs à la fin de leur formation')
   .version('1.0.0')
 
-const assignTainingStudy = async () => {
+const assignCorrectionTrainingStudy = async () => {
   const res = await assignTrainingCorrectionExerciseStudy()
   console.log(`Correction studies created for the following formations : ${res.join(', ')}`)
 }
 
-assignTainingStudy()
+assignCorrectionTrainingStudy()
