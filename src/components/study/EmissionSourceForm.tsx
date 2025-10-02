@@ -2,7 +2,7 @@
 
 import { FullStudy } from '@/db/study'
 import { getEmissionResults } from '@/services/emissionSource'
-import { Post, subPostsByPost } from '@/services/posts'
+import { subPostsByPost } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { getEmissionSourceTagsByStudyId } from '@/services/serverFunctions/emissionSource'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
@@ -16,7 +16,7 @@ import {
 } from '@/services/uncertainty'
 import { emissionFactorDefautQualityStar, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
-import { hasEditionRights, isCAS } from '@/utils/study'
+import { hasDeprecationPeriod, hasEditionRights, isCAS } from '@/utils/study'
 import AddIcon from '@mui/icons-material/Add'
 import CopyIcon from '@mui/icons-material/ContentCopy'
 import EditIcon from '@mui/icons-material/Edit'
@@ -142,6 +142,11 @@ const EmissionSourceForm = ({
 
   const isCas = isCAS(emissionSource)
 
+  const withDeprecationPeriod = useMemo(
+    () => hasDeprecationPeriod(emissionSource.subPost),
+    [subPostsByPost, emissionSource.subPost],
+  )
+
   useEffect(() => {
     if (isCas) {
       update('value', (emissionSource.hectare || 0) * (emissionSource.duration || 0))
@@ -264,7 +269,7 @@ const EmissionSourceForm = ({
                 </div>
               )}
             </div>
-            {subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost) && (
+            {withDeprecationPeriod && (
               <div className={classNames(styles.inputWithUnit, 'flex grow')}>
                 <TextField
                   className="grow"

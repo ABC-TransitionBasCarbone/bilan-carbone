@@ -32,7 +32,11 @@ export type EmissionSourceTagFamilyWithTags = Omit<EmissionSourceTagFamily, 'cre
   emissionSourceTags: Omit<EmissionSourceTag, 'familyId'>[]
 }
 
-export const createStudy = async (data: Prisma.StudyCreateInput, environment: Environment) => {
+export const createStudy = async (
+  data: Prisma.StudyCreateInput,
+  environment: Environment,
+  shouldCreateFEVersions = true,
+) => {
   const dbStudy = await prismaClient.study.create({ data })
   let studyEmissionFactorVersions: Prisma.StudyEmissionFactorVersionCreateManyInput[] = []
 
@@ -42,7 +46,7 @@ export const createStudy = async (data: Prisma.StudyCreateInput, environment: En
       source: importVersion.source,
       importVersionId: importVersion.id,
     }))
-  } else {
+  } else if (shouldCreateFEVersions) {
     const sources = Object.values(Import).filter((source) => source !== Import.Manual && source !== Import.CUT)
 
     const latestVersions = await getSourcesLatestImportVersionId(sources)
@@ -53,9 +57,8 @@ export const createStudy = async (data: Prisma.StudyCreateInput, environment: En
         importVersionId: latestImportVersion.id,
       }))
     }
+    await prismaClient.studyEmissionFactorVersion.createMany({ data: studyEmissionFactorVersions })
   }
-
-  await prismaClient.studyEmissionFactorVersion.createMany({ data: studyEmissionFactorVersions })
   return dbStudy
 }
 

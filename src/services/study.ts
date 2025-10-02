@@ -4,14 +4,14 @@ import { FullStudy, getStudyById } from '@/db/study'
 import { Translations } from '@/types/translation'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { getPost } from '@/utils/post'
-import { isCAS, STUDY_UNIT_VALUES } from '@/utils/study'
+import { hasDeprecationPeriod, isCAS, STUDY_UNIT_VALUES } from '@/utils/study'
 import { Environment, Export, ExportRule, Level, StudyResultUnit, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import { canBeValidated, getEmissionResults, getEmissionSourcesTotalCo2, getStandardDeviation } from './emissionSource'
 import { download } from './file'
 import { hasAccessToBcExport } from './permissions/environment'
 import { StudyWithoutDetail } from './permissions/study'
-import { convertCountToBilanCarbone, environmentPostMapping, Post, subPostsByPost } from './posts'
+import { convertCountToBilanCarbone, environmentPostMapping, Post, subPostBCToSubPostTiltMapping } from './posts'
 import { computeBegesResult } from './results/beges'
 import { computeResultsByPost, computeResultsByTag, ResultsByPost } from './results/consolidated'
 import { EmissionFactorWithMetaData, getEmissionFactorsByIds } from './serverFunctions/emissionFactor'
@@ -147,7 +147,7 @@ const getEmissionSourcesRows = (
       }
       const emissionSourceSD = getStandardDeviation(emissionSource)
 
-      const withDeprecation = subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost)
+      const withDeprecation = hasDeprecationPeriod(emissionSource.subPost)
 
       return initCols
         .concat([
@@ -716,5 +716,28 @@ export const getResultsValues = (
     monetaryRatio,
     nonSpecificMonetaryRatio,
     computedResultsByTag,
+  }
+}
+
+export const getTransEnvironmentSubPost = (source: Environment, target: Environment, subPost: SubPost) => {
+  if (source === Environment.BC && target === Environment.TILT) {
+    switch (subPost) {
+      case SubPost.UtilisationEnResponsabilite:
+      case SubPost.UtilisationEnDependance:
+        return SubPost.UtilisationEnDependanceConsommationDeBiens
+      case SubPost.Equipements:
+        return SubPost.EquipementsDesSalaries
+      case SubPost.Informatique:
+        return SubPost.ParcInformatiqueDesSalaries
+      default: {
+        const subPosts = subPostBCToSubPostTiltMapping[subPost]
+        if (!subPosts) {
+          return undefined
+        }
+        return subPosts[0]
+      }
+    }
+  } else {
+    return undefined
   }
 }

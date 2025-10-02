@@ -1,12 +1,12 @@
 'use client'
 
 import { StudyWithoutDetail } from '@/services/permissions/study'
-import { Post, subPostsByPost } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { qualityKeys } from '@/services/uncertainty'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
+import { hasDeprecationPeriod } from '@/utils/study'
 import AddIcon from '@mui/icons-material/Add'
 import { TextField } from '@mui/material'
 import { Environment, StudyResultUnit, SubPost, Unit } from '@prisma/client'
@@ -89,7 +89,7 @@ const EmissionSourceContributorForm = ({
               </div>
             )}
           </div>
-          {subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost) && (
+          {hasDeprecationPeriod(emissionSource.subPost) && (
             <div className={classNames(styles.inputWithUnit, 'flex grow')}>
               <TextField
                 disabled={!!emissionSource.validated}

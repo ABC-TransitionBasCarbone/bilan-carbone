@@ -28,6 +28,7 @@ interface Props {
   organizationVersionId: string | null
   canDeleteStudy?: boolean
   canDuplicateStudy?: boolean
+  duplicableEnvironments: Environment[]
   studySite: string
   setSite: Dispatch<SetStateAction<string>>
   environment: Environment
@@ -38,6 +39,7 @@ const StudyDetailsHeader = ({
   organizationVersionId,
   canDeleteStudy,
   canDuplicateStudy,
+  duplicableEnvironments,
   studySite,
   setSite,
   environment,
@@ -46,6 +48,7 @@ const StudyDetailsHeader = ({
   const [duplicating, setDuplicating] = useState(false)
   const { callServerFunction } = useServerFunction()
   const format = useFormatter()
+  const t = useTranslations('study')
   const tStudyDelete = useTranslations('study.delete')
   const tStudyExport = useTranslations('study.export')
   const tCaracterisations = useTranslations('categorisations')
@@ -82,6 +85,7 @@ const StudyDetailsHeader = ({
           'data-testid': 'delete-study',
           onClick: () => setDeleting(true),
           children: <DeleteIcon />,
+          title: t('deleteStudy'),
           variant: 'contained',
           color: 'error',
         },
@@ -92,8 +96,10 @@ const StudyDetailsHeader = ({
     ? [
         {
           actionType: 'button',
+          'data-testid': 'duplicate-study',
           onClick: () => setDuplicating(true),
           children: <CopyIcon />,
+          title: t('duplicate'),
         },
       ]
     : []
@@ -158,14 +164,14 @@ const StudyDetailsHeader = ({
           t={tStudyDelete}
         />
       )}
-      {duplicating && (
-        <DuplicateStudyModal
-          studyId={study.id}
-          organizationVersionId={organizationVersionId}
-          open={duplicating}
-          onClose={() => setDuplicating(false)}
-        />
-      )}
+      <DuplicateStudyModal
+        studyId={study.id}
+        organizationVersionId={organizationVersionId}
+        sourceEnvironment={study.organizationVersion.environment}
+        environments={duplicableEnvironments}
+        open={duplicating}
+        onClose={() => setDuplicating(false)}
+      />
     </Block>
   )
 }

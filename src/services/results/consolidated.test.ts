@@ -2,6 +2,7 @@ import { FullStudy } from '@/db/study'
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
 import { getMockeFullStudy } from '@/tests/utils/models/study'
 import { translationMock } from '@/tests/utils/models/translationsMock'
+import * as studyUtilsModule from '@/utils/study'
 import { expect } from '@jest/globals'
 import { Environment, SubPost } from '@prisma/client'
 import { computeResultsByTag } from './consolidated'
@@ -11,10 +12,11 @@ jest.mock('../file', () => ({ download: jest.fn() }))
 jest.mock('../auth', () => ({ auth: jest.fn() }))
 
 jest.mock('../permissions/study', () => ({ canReadStudy: jest.fn() }))
-jest.mock('../../utils/study', () => ({ getAccountRoleOnStudy: jest.fn() }))
+jest.mock('../../utils/study', () => ({ getAccountRoleOnStudy: jest.fn(), hasDeprecationPeriod: jest.fn() }))
 jest.mock('next-intl/server', () => ({
   getTranslations: jest.fn(() => (key: string) => key),
 }))
+const mockHasDeprecationPeriod = studyUtilsModule.hasDeprecationPeriod as jest.Mock
 
 const tags = [
   { id: 'test', name: 'test', familyId: 'familyTag1', color: '#000000' },
@@ -40,6 +42,10 @@ const studySite = { id: 'mocked-study-site-id', site: { name: 'Mocked Site', id:
 
 describe('consolidated function', () => {
   describe('computeResultsByTag', () => {
+    beforeEach(() => {
+      mockHasDeprecationPeriod.mockReturnValue(false)
+    })
+
     test('should format value and unit correctly', () => {
       const emissionSources = [
         getMockedFullStudyEmissionSource({

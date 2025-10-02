@@ -12,6 +12,7 @@ import {
   addAccount,
   getAccountByEmailAndEnvironment,
   getAccountByEmailAndOrganizationVersionId,
+  getAccountsByUserIdsAndEnvironment,
   getAccountsUserLevel,
 } from '@/db/account'
 import { prismaClient } from '@/db/client'
@@ -24,9 +25,14 @@ import {
   getEmissionFactorVersionsBySource,
   getStudyEmissionFactorSources,
 } from '@/db/emissionFactors'
-import { createEmissionSourceTagFamilyAndRelatedTags, getFamilyTagsForStudy } from '@/db/emissionSource'
+import {
+  createEmissionSourcesOnStudy,
+  createEmissionSourceTagFamilyAndRelatedTags,
+  getFamilyTagsForStudy,
+} from '@/db/emissionSource'
 import {
   getOrganizationVersionById,
+  getOrganizationVersionsByOrganizationId,
   getOrganizationWithSitesById,
   isOrganizationVersionCR,
   OrganizationVersionWithOrganization,
@@ -77,12 +83,14 @@ import { formatDateFr } from '@/utils/time'
 import { isAdmin } from '@/utils/user'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import {
+  Account,
   ControlMode,
   Document,
   DocumentCategory,
   EmissionFactor,
   EmissionFactorImportVersion,
   EmissionSourceCaracterisation,
+  Environment,
   Export,
   Import,
   Level,
@@ -121,10 +129,11 @@ import {
   canDuplicateStudy,
   canEditStudyFlows,
   canUpgradeSourceVersion,
+  getEnvironmentsForDuplication,
   isAdminOnStudyOrga,
 } from '../permissions/study'
 import { deleteFileFromBucket, getFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
-import { checkLevel } from '../study'
+import { checkLevel, getTransEnvironmentSubPost } from '../study'
 import { saveAnswerForQuestion } from './question'
 import {
   ChangeStudyCinemaCommand,
@@ -139,7 +148,7 @@ import {
   NewStudyContributorCommand,
   NewStudyRightCommand,
 } from './study.command'
-import { addUserChecklistItem, sendInvitation } from './user'
+import { addUserChecklistItem, getUserActiveAccounts, sendInvitation } from './user'
 
 export const getStudy = async (studyId: string) =>
   withServerResponse('getStudy', async () => {
@@ -1422,6 +1431,240 @@ export const duplicateStudyCommand = async (
 
     addUserChecklistItem(UserChecklist.CreateFirstStudy)
     return { id: createdStudyId }
+  })
+
+const getAllowedUsersForDuplication = async (
+  studyAllowedUsers: FullStudy['allowedUsers'],
+  environment: Environment,
+  userAccount: Account,
+) => {
+  const targetUsersAccounts = await getAccountsByUserIdsAndEnvironment(
+    studyAllowedUsers.map((user) => user.account.user.id),
+    environment,
+  )
+  return [
+    ...targetUsersAccounts
+      .filter((account) => account.id !== userAccount.id)
+      .map((account) => {
+        const sourceUser = studyAllowedUsers.find((studyUser) => studyUser.account.user.id === account.user.id)
+        if (!sourceUser) {
+          return undefined
+        }
+        return {
+          accountId: account.id,
+          role: sourceUser.role,
+        }
+      })
+      .filter((account) => !!account),
+    { accountId: userAccount.id, role: StudyRole.Validator },
+  ]
+}
+
+const getContributorsForDuplication = async (
+  contributors: FullStudy['contributors'],
+  sourceEnvironment: Environment,
+  targetEnvironment: Environment,
+) => {
+  const targetContributorsAccounts = await getAccountsByUserIdsAndEnvironment(
+    contributors.map((contributor) => contributor.account.user.id),
+    targetEnvironment,
+  )
+  return targetContributorsAccounts
+    .map((account) => {
+      const sourceContributor = contributors.find((contributor) => contributor.account.user.id === account.user.id)
+      if (!sourceContributor) {
+        return undefined
+      }
+      return {
+        accountId: account.id,
+        subPost: getTransEnvironmentSubPost(sourceEnvironment, targetEnvironment, sourceContributor.subPost),
+      }
+    })
+    .filter(
+      (contributor): contributor is { accountId: string; subPost: SubPost } => !!contributor && !!contributor.subPost,
+    )
+}
+
+const getSitesForDuplication = async (study: FullStudy) => {
+  const organization = await getOrganizationWithSitesById(study.organizationVersion.organization.id)
+  if (!organization) {
+    throw new Error(NOT_AUTHORIZED)
+  }
+  return study.sites
+    .map((studySite) => {
+      const organizationSite = organization.sites.find((organizationSite) => organizationSite.id === studySite.site.id)
+      if (!organizationSite) {
+        return undefined
+      }
+      const studySiteData: Prisma.StudySiteCreateManyStudyInput = {
+        siteId: studySite.site.id,
+        etp: studySite.etp || organizationSite.etp,
+        ca: studySite.ca ? studySite.ca : organizationSite.ca,
+        volunteerNumber: studySite.volunteerNumber || organizationSite.volunteerNumber,
+        beneficiaryNumber: studySite.beneficiaryNumber || organizationSite.beneficiaryNumber,
+      }
+      const cncData = organizationSite.cnc
+      if (cncData) {
+        Object.assign(studySiteData, mapCncToStudySite(cncData))
+        studySiteData.cncVersionId = cncData.cncVersionId
+      }
+
+      return studySiteData
+    })
+    .filter((site) => !!site)
+}
+
+const buildStudyForDuplication = (
+  study: Omit<FullStudy, 'id' | 'createdById' | 'organizationVersionId' | 'allowedUsers'>,
+  userAccountId: string,
+  organizationId: string,
+  users: AsyncReturnType<typeof getAllowedUsersForDuplication>,
+  contributors: AsyncReturnType<typeof getContributorsForDuplication>,
+  sites: Prisma.StudySiteCreateManyStudyInput[],
+) => ({
+  ...study,
+  createdBy: { connect: { id: userAccountId } },
+  organizationVersion: { connect: { id: organizationId } },
+  allowedUsers: {
+    createMany: { data: users },
+  },
+  contributors: {
+    createMany: { data: contributors },
+  },
+  exports: {
+    createMany: { data: Object.values(study.exports) },
+  },
+  sites: {
+    createMany: { data: sites },
+  },
+  emissionSources: {
+    createMany: { data: [] },
+  },
+  emissionFactorVersions: {
+    createMany: {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      data: study.emissionFactorVersions.map(({ id, ...emissionFactorVersion }) => emissionFactorVersion),
+    },
+  },
+  emissionSourceTagFamilies: {
+    create: study.emissionSourceTagFamilies.map((tagFamily) => ({
+      name: tagFamily.name,
+      emissionSourceTags: {
+        createMany: {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          data: tagFamily.emissionSourceTags.map(({ id, familyId, ...emissionSourceTag }) => emissionSourceTag),
+        },
+      },
+    })),
+  },
+})
+
+const buildStudyEmissionSources = (
+  emissionSources: FullStudy['emissionSources'],
+  studyId: string,
+  studySites: FullStudy['sites'],
+  sourceEnvironment: Environment,
+  targetEnvironment: Environment,
+): Prisma.StudyEmissionSourceCreateManyInput[] =>
+  emissionSources
+    .map((emissionSource) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { id, studySite, emissionFactor, emissionSourceTags, ...restSource } = emissionSource
+      const studySiteId = studySites.find((studySite) => studySite.site.id === emissionSource.studySite.site.id)
+        ?.id as string
+      const subPost = getTransEnvironmentSubPost(sourceEnvironment, targetEnvironment, emissionSource.subPost)
+      if (!subPost) {
+        return undefined
+      }
+      const contributor = restSource.contributor?.id
+      return {
+        ...restSource,
+        studyId,
+        studySiteId,
+        subPost,
+        contributor: contributor ? { connect: { id: contributor } } : undefined,
+      }
+    })
+    .filter((source) => !!source)
+
+export const duplicateStudyInOtherEnvironment = async (studyId: string, targetEnvironment: Environment) =>
+  withServerResponse('duplicateStudyInOtherEnvironment', async () => {
+    if (!canDuplicateStudy(studyId)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const [study, duplicableEnvironments] = await Promise.all([
+      getStudyById(studyId, session.user.id),
+      getEnvironmentsForDuplication(studyId),
+    ])
+
+    if (
+      !study ||
+      study.organizationVersion.environment === targetEnvironment ||
+      !duplicableEnvironments.includes(targetEnvironment)
+    ) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const [organizationVersions, usersAccounts] = await Promise.all([
+      getOrganizationVersionsByOrganizationId(study.organizationVersion.organization.id),
+      getUserActiveAccounts(),
+    ])
+
+    const targetOrganizationVersion = organizationVersions.find(
+      (organizationVersion) => organizationVersion.environment === targetEnvironment,
+    )
+    const targetUserAccount = usersAccounts.success
+      ? usersAccounts.data.find((account) => account.environment === targetEnvironment)
+      : undefined
+
+    if (!targetOrganizationVersion || !targetUserAccount) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    // allowed users
+    const allowedUsers = await getAllowedUsersForDuplication(study.allowedUsers, targetEnvironment, targetUserAccount)
+    const allowedContributors = await getContributorsForDuplication(
+      study.contributors,
+      study.organizationVersion.environment,
+      targetEnvironment,
+    )
+
+    // sites
+    const sites = await getSitesForDuplication(study)
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, createdById, organizationVersionId, ...restStudy } = study
+    const studyCommand: Prisma.StudyCreateInput = buildStudyForDuplication(
+      restStudy,
+      targetUserAccount.id,
+      targetOrganizationVersion.id,
+      allowedUsers,
+      allowedContributors,
+      sites,
+    )
+    const createdStudy = await createStudy(studyCommand, targetEnvironment, false)
+    const createdStudyWithSites = (await getStudyById(
+      createdStudy.id,
+      targetUserAccount.organizationVersionId,
+    )) as FullStudy
+
+    // emission sources
+    // TODO : Add tags that are not currently added to the duplicated study
+    const emissionSources = buildStudyEmissionSources(
+      study.emissionSources,
+      createdStudy.id,
+      createdStudyWithSites.sites,
+      study.organizationVersion.environment,
+      targetEnvironment,
+    )
+    await createEmissionSourcesOnStudy(emissionSources)
+    return
   })
 
 export const duplicateStudyEmissionSource = async (
