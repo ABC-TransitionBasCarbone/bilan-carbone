@@ -19,3 +19,13 @@ export const getNestedValue = <T extends object, R = unknown>(obj: T, path: stri
   }
   return undefined
 }
+
+export const groupBy = <T, K extends keyof T>(array: T[], attribute: K): Record<string, T[]> =>
+  array.reduce<Record<string, T[]>>((arr, el) => {
+    const value = String(el[attribute])
+    if (!arr[value]) {
+      arr[value] = []
+    }
+    arr[value].push(el)
+    return arr
+  }, {})
