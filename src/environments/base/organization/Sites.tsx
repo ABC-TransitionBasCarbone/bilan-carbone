@@ -6,6 +6,7 @@ import { FormTextField } from '@/components/form/TextField'
 import GlobalSites from '@/components/organization/Sites'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { CA_UNIT_VALUES, displayCA, formatNumber } from '@/utils/number'
+import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Environment, SiteCAUnit } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
@@ -21,6 +22,7 @@ interface Props<T extends SitesCommand> {
   caUnit: SiteCAUnit
   additionalColumns?: ColumnDef<SitesCommand['sites'][number]>[]
   environment?: Environment
+  onDuplicate?: (studySiteId: string) => void
 }
 
 const Sites = <T extends SitesCommand>({
@@ -30,6 +32,7 @@ const Sites = <T extends SitesCommand>({
   caUnit,
   additionalColumns = [],
   environment = Environment.BC,
+  onDuplicate,
 }: Props<T>) => {
   const t = useTranslations('organization.sites')
   const tUnit = useTranslations('settings.caUnit')
@@ -151,8 +154,31 @@ const Sites = <T extends SitesCommand>({
       })
     }
 
+    if (!form && onDuplicate) {
+      columns.push({
+        id: 'duplicate',
+        header: t('actions'),
+        accessorKey: 'id',
+        cell: ({ getValue }) => (
+          <div className="w100 flex-cc">
+            <Button
+              data-testid="duplicate-site-button"
+              aria-label={t('duplicate')}
+              variant="outlined"
+              onClick={() => {
+                const id = getValue<string>()
+                onDuplicate(id)
+              }}
+            >
+              <ContentCopyIcon />
+            </Button>
+          </div>
+        ),
+      })
+    }
+
     return columns
-  }, [t, form, headerCAUnit])
+  }, [t, headerCAUnit, additionalColumns, form, withSelection, onDuplicate, control, caUnit, setValue, getValues])
 
   return (
     <GlobalSites

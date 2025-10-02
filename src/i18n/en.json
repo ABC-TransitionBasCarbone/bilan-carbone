@@ -647,6 +647,23 @@
         "close": "Close",
         "glossaryDescription": "Tags and tag families are used to identify your emission sources in order to visualize certain results later. <br></br>Once your tags are created, you can associate them with emission sources within the \"Data Entry\" page. Then, on the \"Results\" page, you can view the emissions due to a tag family or a specific tag, but you will not be able to view the emissions of two tag families simultaneously, because double counting can occur between these two tag families. <br></br>To give a concrete example, let's say there are two tag families: \"Products Sold\" and \"Target Audiences\". These two families and the tags belonging to them will allow you to visualize the distribution of your organization's emissions based on the products sold, and the same for the target audiences."
       },
+      "duplicate": {
+        "title": "Duplicate site {name} and its emission sources",
+        "description": "You can duplicate a site and/or its emission sources to one or more sites in your study.",
+        "selectInfoTitle": "Choose information to duplicate",
+        "emissionSources": "Emission sources",
+        "selectSitesTitle": "Choose the site(s) to duplicate to",
+        "selectAll": "Select all",
+        "deselectAll": "Deselect all",
+        "selectSitesLabel": "Destination sites",
+        "selectSitesPlaceholder": "Select sites",
+        "noOtherSites": "No other sites available in this study",
+        "createSitesTitle": "Create sites and duplicate information to them",
+        "createSitesDescription": "You can also create new sites and duplicate the information to them. Please indicate the number of sites to create on which the information you selected will be duplicated.",
+        "numberOfSitesToCreate": "Number of sites to create",
+        "cancel": "Cancel",
+        "duplicate": "Duplicate"
+      },
       "information": "For more information on this section, you can refer to this documentation: "
     },
     "results": {
@@ -1483,6 +1500,7 @@
       "beneficiaryNumberPlaceholder": "Enter the number of beneficiaries for this site here",
       "actions": "Actions",
       "delete": "Delete",
+      "duplicate": "Duplicate",
       "add": "Add a site",
       "update": "Update list",
       "cnc": "Numéro CNC",

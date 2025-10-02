@@ -71,6 +71,7 @@ import { getNestedValue, groupBy } from '@/utils/array'
 import { mapCncToStudySite } from '@/utils/cnc'
 import { calculateDistanceFromParis } from '@/utils/distance'
 import { CA_UNIT_VALUES, defaultCAUnit, formatNumber } from '@/utils/number'
+import { canEditOrganizationVersion } from '@/utils/organization'
 import { withServerResponse } from '@/utils/serverResponse'
 import {
   getAccountRoleOnStudy,
@@ -145,6 +146,7 @@ import {
   ChangeStudySitesCommand,
   CreateStudyCommand,
   DeleteCommand,
+  DuplicateSiteCommand,
   NewStudyContributorCommand,
   NewStudyRightCommand,
 } from './study.command'
@@ -1435,6 +1437,39 @@ export const duplicateStudyCommand = async (
       true,
     )
 
+    const oldTagFamilies = await getFamilyTagsForStudy(sourceStudy.id)
+
+    const sourceEmissionSources = sourceStudy.emissionSources
+    for (const sourceEmissionSource of sourceEmissionSources) {
+      const sourceSiteId = sourceEmissionSource.studySite.site.id
+      const targetStudySite = createdStudyWithSites.sites.find((studySite) => studySite.site.id === sourceSiteId)
+      const targetStudySiteId = studySites.find((site) => targetStudySite && site.id === targetStudySite.id)?.id
+
+      if (targetStudySiteId) {
+        const targetTagIds = sourceEmissionSource.emissionSourceTags
+          .map((emissionSourceTag) => {
+            const oldTagFamily = oldTagFamilies.find((tagFamily) => tagFamily.id === emissionSourceTag.familyId)
+            const foundTagFamily = tagFamilies.find((tagFamily) => tagFamily.name === oldTagFamily?.name)
+            const foundTag = foundTagFamily?.emissionSourceTags.find((tag) => tag.name === emissionSourceTag.name)
+
+            if (!foundTag) {
+              return null
+            }
+            return { id: foundTag?.id }
+          })
+          .filter((tag) => tag !== null)
+
+        const emissionSourceData = duplicateEmissionSource(sourceEmissionSource, createdStudyId, targetStudySiteId, {
+          caracterisation: shouldClearCaracterisations ? null : sourceEmissionSource.caracterisation,
+          emissionSourceTags: {
+            connect: targetTagIds,
+          },
+        })
+
+        await createStudyEmissionSource(emissionSourceData)
+      }
+    }
+
     if (inviteExistingTeam) {
       const organizationVersion = await getOrganizationVersionById(createdStudy.organizationVersionId)
       if (organizationVersion) {
@@ -2025,3 +2060,222 @@ export const duplicateStudyTemplateForAccounts = async (
   )
   return
 }
+
+const duplicateEmissionSource = (
+  source: FullStudy['emissionSources'][number],
+  studyId: string,
+  targetStudySiteId: string,
+  overrides: Partial<Prisma.StudyEmissionSourceCreateInput>,
+): Prisma.StudyEmissionSourceCreateInput => {
+  return {
+    ...source,
+    study: { connect: { id: studyId } },
+    emissionFactor: source.emissionFactor ? { connect: { id: source.emissionFactor.id } } : undefined,
+    studySite: { connect: { id: targetStudySiteId } },
+    contributor: source.contributor ? { connect: { id: source.contributor.id } } : undefined,
+    validated: false,
+    emissionSourceTags: {},
+    ...overrides,
+  }
+}
+
+export const duplicateSiteAndEmissionSources = async (command: DuplicateSiteCommand) =>
+  withServerResponse('duplicateSiteAndEmissionSources', async () => {
+    const { sourceSiteId, targetSiteIds, newSitesCount, organizationId, studyId, fieldsToDuplicate } = command
+
+    const session = await dbActualizedAuth()
+
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const userEmail = session.user.email
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      console.error('Study not found', studyId)
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!(await canChangeSites(session.user, study))) {
+      console.error('User cannot change study sites', userEmail, study.id)
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const sourceSite = study.sites.find((site) => site.id === sourceSiteId)
+    if (!sourceSite) {
+      console.error('Source site not found', sourceSiteId)
+      throw new Error('Source site not found')
+    }
+
+    const organizationVersion = await getOrganizationVersionById(study.organizationVersionId)
+    if (!organizationVersion) {
+      console.error('Organization version not found', study.organizationVersionId)
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const canEditOrga = canEditOrganizationVersion(
+      session.user,
+      organizationVersion as OrganizationVersionWithOrganization,
+    )
+
+    if (!canEditOrga && newSitesCount > 0) {
+      console.error('User cannot create new sites for this organization', userEmail, organizationVersion.id)
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (targetSiteIds.length === 0 && newSitesCount === 0) {
+      console.error('No target sites selected', userEmail, studyId)
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (fieldsToDuplicate.length === 0) {
+      console.error('No data selected for duplication', studyId)
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return prismaClient.$transaction(async (tx) => {
+      const emissionSourcesToDuplicate = fieldsToDuplicate.includes('emissionSources')
+        ? study.emissionSources.filter((es) => es.studySite.id === sourceSite.id)
+        : []
+
+      const tagFamilies = await getFamilyTagsForStudy(study.id)
+      const tagMap = new Map<string, string>()
+      tagFamilies.forEach((family) => {
+        family.emissionSourceTags.forEach((tag) => {
+          tagMap.set(tag.id, tag.id)
+        })
+      })
+
+      const updateData: Prisma.StudySiteUpdateInput = {}
+      const simpleFieldUpdates = fieldsToDuplicate.filter((field) => field !== 'emissionSources')
+      for (const field of simpleFieldUpdates) {
+        updateData[field] = sourceSite[field] as never
+      }
+
+      const hasUpdateData = Object.keys(updateData).length > 0
+
+      if (hasUpdateData && targetSiteIds.length > 0) {
+        await tx.studySite.updateMany({
+          where: { id: { in: targetSiteIds } },
+          data: updateData,
+        })
+      }
+
+      type EmissionSourceToCreate = {
+        studySiteId: string
+        sourceEmissionSource: (typeof emissionSourcesToDuplicate)[0]
+        tagIds: string[]
+      }
+
+      const emissionSourcesToCreate: EmissionSourceToCreate[] = []
+
+      targetSiteIds.forEach((targetSiteId) => {
+        emissionSourcesToDuplicate.forEach((sourceEmissionSource) => {
+          const tagIds = sourceEmissionSource.emissionSourceTags
+            .map((tag) => tagMap.get(tag.id))
+            .filter((id): id is string => id !== undefined)
+
+          emissionSourcesToCreate.push({
+            studySiteId: targetSiteId,
+            sourceEmissionSource,
+            tagIds,
+          })
+        })
+      })
+
+      const allSitesInOrganization = organizationVersion.organization.sites
+      const existingSiteNames = allSitesInOrganization.map((s) => s.name)
+
+      const newSitePromises: Promise<{ siteId: string; studySiteId: string }>[] = []
+
+      for (let i = 0; i < newSitesCount; i++) {
+        let copyNumber = 1
+        let newSiteName = `${sourceSite.site.name} - Copie ${copyNumber}`
+
+        while (existingSiteNames.includes(newSiteName)) {
+          copyNumber++
+          newSiteName = `${sourceSite.site.name} - Copie ${copyNumber}`
+        }
+
+        existingSiteNames.push(newSiteName)
+
+        newSitePromises.push(
+          (async () => {
+            const newSite = await tx.site.create({
+              data: {
+                name: newSiteName,
+                etp: fieldsToDuplicate.includes('etp') ? sourceSite.etp : 0,
+                ca: command.fieldsToDuplicate.includes('ca') ? sourceSite.ca : 0,
+                organization: { connect: { id: organizationId } },
+                postalCode: sourceSite.site.postalCode,
+                city: sourceSite.site.city,
+                volunteerNumber: fieldsToDuplicate.includes('volunteerNumber') ? (sourceSite.volunteerNumber ?? 0) : 0,
+                beneficiaryNumber: fieldsToDuplicate.includes('beneficiaryNumber')
+                  ? (sourceSite.beneficiaryNumber ?? 0)
+                  : 0,
+              },
+            })
+
+            const newStudySiteData: Prisma.StudySiteCreateInput = {
+              study: { connect: { id: studyId } },
+              site: { connect: { id: newSite.id } },
+              etp: fieldsToDuplicate.includes('etp') ? sourceSite.etp : 0,
+              ca: fieldsToDuplicate.includes('ca') ? sourceSite.ca : 0,
+            }
+
+            if (fieldsToDuplicate.includes('volunteerNumber')) {
+              newStudySiteData.volunteerNumber = sourceSite.volunteerNumber
+            }
+            if (fieldsToDuplicate.includes('beneficiaryNumber')) {
+              newStudySiteData.beneficiaryNumber = sourceSite.beneficiaryNumber
+            }
+
+            const newStudySite = await tx.studySite.create({
+              data: newStudySiteData,
+            })
+
+            return { siteId: newSite.id, studySiteId: newStudySite.id }
+          })(),
+        )
+      }
+
+      const createdSites = await Promise.all(newSitePromises)
+
+      createdSites.forEach(({ studySiteId }) => {
+        emissionSourcesToDuplicate.forEach((sourceEmissionSource) => {
+          const tagIds = sourceEmissionSource.emissionSourceTags
+            .map((tag) => tagMap.get(tag.id))
+            .filter((id): id is string => id !== undefined)
+
+          emissionSourcesToCreate.push({
+            studySiteId,
+            sourceEmissionSource,
+            tagIds,
+          })
+        })
+      })
+
+      const BATCH_SIZE = 50
+      for (let i = 0; i < emissionSourcesToCreate.length; i += BATCH_SIZE) {
+        const batch = emissionSourcesToCreate.slice(i, i + BATCH_SIZE)
+        await Promise.all(
+          batch.map(({ studySiteId, sourceEmissionSource, tagIds }) => {
+            const emissionSourceData = duplicateEmissionSource(sourceEmissionSource, studyId, studySiteId, {
+              emissionSourceTags: {
+                connect: tagIds.map((id) => ({ id })),
+              },
+            })
+            return tx.studyEmissionSource.create({ data: emissionSourceData })
+          }),
+        )
+      }
+
+      return {
+        success: true,
+        duplicatedToSites: targetSiteIds.length,
+        createdSites: newSitesCount,
+        duplicatedEmissionSources: emissionSourcesToDuplicate.length,
+      }
+    })
+  })

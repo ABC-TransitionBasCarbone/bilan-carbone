@@ -64,6 +64,7 @@ const StudyPerimeterPage = async ({ study, organizationVersion, user }: Props) =
           organizationVersion={organizationVersion}
           userRoleOnStudy={userRoleOnStudy}
           caUnit={caUnit}
+          user={user}
         />
       </Block>
       <StudyTags studyId={study.id} />

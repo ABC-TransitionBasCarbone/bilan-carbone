@@ -1,0 +1,65 @@
+.modalContent {
+  overflow-y: auto;
+  padding-right: 1rem;
+}
+
+.section {
+  background: var(--background-50);
+  border: 1px solid var(--background-200);
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+}
+
+.sectionTitle {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.sectionDescription {
+  margin: 0 0 1rem 0;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.checkboxItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+
+.selectAllButton {
+  background: none;
+  border: none;
+  color: var(--primary-600);
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0;
+  text-decoration: underline;
+  margin-bottom: 0.5rem;
+}
+
+.selectAllButton:hover {
+  color: var(--primary-700);
+}
+
+.multiSelectWrapper > * {
+  width: 100%;
+  min-height: 3.5rem;
+}
+
+.numberInput {
+  max-width: 12rem;
+}
+
+.sectionDisabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.noSitesMessage {
+  font-size: 0.875rem;
+  font-style: italic;
+}
