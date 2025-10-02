@@ -1,14 +1,3 @@
-/*
-  Warnings:
-
-  - You are about to rename the table `emission_source_tag_families` to `study_tag_families`
-  - You are about to rename the table `emission_source_tag` to `study_tag`
-  - The implicit many-to-many table `_TagToEmissionSource` will be converted to explicit `tag_on_emission_source` junction table
-  - Metadata columns (created_at, updated_at) will be added to study_tag table
-  - Metadata columns (created_at, updated_at) will be added to junction table
-
-*/
-
 -- Step 1: Rename tables
 ALTER TABLE "emission_source_tag_families"
   RENAME TO "study_tag_families";
@@ -60,3 +49,24 @@ CREATE INDEX "tag_on_emission_source_emission_source_id_idx"
   ON "tag_on_emission_source"("emission_source_id");
 CREATE INDEX "tag_on_emission_source_tag_id_idx"
   ON "tag_on_emission_source"("tag_id");
+
+-- Step 9: Rename primary key constraints
+ALTER TABLE "study_tag"
+  RENAME CONSTRAINT "emission_source_tag_pkey" TO "study_tag_pkey";
+
+ALTER TABLE "study_tag_families"
+  RENAME CONSTRAINT "emission_source_tag_families_pkey" TO "study_tag_families_pkey";
+
+-- Step 10: Rename foreign key constraints
+ALTER TABLE "study_tag"
+  RENAME CONSTRAINT "emission_source_tag_family_id_fkey" TO "study_tag_family_id_fkey";
+
+ALTER TABLE "study_tag_families"
+  RENAME CONSTRAINT "emission_source_tag_families_study_id_fkey" TO "study_tag_families_study_id_fkey";
+
+-- Step 11: Rename unique indexes
+ALTER INDEX "emission_source_tag_name_family_id_key"
+  RENAME TO "study_tag_name_family_id_key";
+
+ALTER INDEX "emission_source_tag_families_name_study_id_key"
+  RENAME TO "study_tag_families_name_study_id_key";
