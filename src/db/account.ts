@@ -30,6 +30,9 @@ export const AccountWithUserSelect = {
     },
   },
   role: true,
+  formationName: true,
+  formationStartDate: true,
+  formationEndDate: true,
   user: {
     select: {
       id: true,

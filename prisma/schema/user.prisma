@@ -60,6 +60,10 @@ model Account {
   environment Environment
   status      UserStatus
 
+  formationName      String?   @map("formation_name")
+  formationStartDate DateTime? @map("formation_start_date")
+  formationEndDate   DateTime? @map("formation_end_date")
+
   @@unique([userId, environment])
   @@map("accounts")
 }
