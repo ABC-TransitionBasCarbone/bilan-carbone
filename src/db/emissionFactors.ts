@@ -112,6 +112,7 @@ export const getAllEmissionFactors = async (
 
     studyOldEmissionFactors = await getEmissionFactorsFromIdsExceptVersions(selectedEmissionFactors, versionIds)
   }
+
   const organizationEmissionFactor = organizationId
     ? await prismaClient.emissionFactor.findMany({
         where: { organizationId },
@@ -119,6 +120,8 @@ export const getAllEmissionFactors = async (
         orderBy: { createdAt: 'desc' },
       })
     : []
+
+  const latestVersionIds = await getEmissionFactorSourcesByOrganization(organizationId)
 
   const defaultEmissionFactors = await (process.env.NO_CACHE === 'true'
     ? getDefaultEmissionFactors(versionIds)
@@ -330,6 +333,37 @@ export const getEmissionFactorSources = async (withCut: boolean = false) => {
     return prismaClient.emissionFactorImportVersion.findMany()
   }
   return prismaClient.emissionFactorImportVersion.findMany({ where: { source: { not: Import.CUT } } })
+}
+
+export const getEmissionFactorSourcesByOrganization = async (organizationId: string | null) => {
+  if (!organizationId) {
+    return []
+  }
+  const studies = await prismaClient.study.findMany({
+    where: { organizationVersion: { organizationId } },
+    select: {
+      emissionFactorVersions: {
+        select: { importVersionId: true, source: true, updatedAt: true },
+      },
+    },
+  })
+  if (studies.length === 0) {
+    return []
+  }
+
+  // Flatten all importVersionIds and sources, then get distinct by source
+  const versions = studies
+    .flatMap((study) =>
+      study.emissionFactorVersions.map((version) => ({
+        importVersionId: version.importVersionId,
+        source: version.source,
+        updatedAt: version.updatedAt,
+      })),
+    )
+    .sort((a, b) => (b.updatedAt?.getTime() ?? 0) - (a.updatedAt?.getTime() ?? 0))
+  // Distinct by source
+  const distinctSources = Array.from(new Map(versions.map((v) => [v.source, v.importVersionId])).values())
+  return distinctSources
 }
 
 export const getStudyEmissionFactorSources = async (studyId: string, withCut: boolean = false) => {
