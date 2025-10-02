@@ -24,8 +24,12 @@ const setTemplate = async () => {
     console.log(`Environnement non valide. Liste des valeurs possible : `, Object.values(Environment).join(', '))
     return
   }
-  const res = await setStudyTemplate(params.template as DuplicableStudy, params.env as Environment, params.value)
-  console.log(res)
+  try {
+    await setStudyTemplate(params.template as DuplicableStudy, params.env as Environment, params.value)
+    console.log('Success')
+  } catch (e) {
+    console.log(e)
+  }
 }
 
 setTemplate()

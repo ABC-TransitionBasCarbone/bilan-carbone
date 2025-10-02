@@ -1858,16 +1858,15 @@ export const prepareReport = async (
 export const setStudyTemplate = async (template: DuplicableStudy, environment: Environment, studyId: string) => {
   const study = await getStudyById(studyId, null)
   if (!study) {
-    return 'Study not found'
+    throw new Error('Study not found')
   }
   if (study.organizationVersion.environment !== environment) {
-    return `Study is not from the right environment (${study.organizationVersion.environment})`
+    throw new Error(`Study is not from the right environment (${study.organizationVersion.environment})`)
   }
   if (study.organizationVersion.organization.id !== process.env.STUDY_KEY_ORGANIZATION_ID) {
-    return `Study is not from the right organization (${study.organizationVersion.organization.name})`
+    throw new Error(`Study is not from the right organization (${study.organizationVersion.organization.name})`)
   }
   await upsertStudyTemplate(template, environment, studyId)
-  return 'Succès'
 }
 
 export const assignTrainingExerciseStudy = async (): Promise<{ created: number; error: number }> => {
