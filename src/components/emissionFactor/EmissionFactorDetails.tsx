@@ -137,12 +137,12 @@ const EmissionFactorDetails = ({ emissionFactor }: Props) => {
         <div className={classNames(styles.info, 'flex')}>
           <span className={classNames(styles.infoTitle, 'bold')}>{t('GESDecomposition')}&nbsp;</span>
           <div className="flex grow">
-            {gases.map((gaz) => (
-              <span key={gaz}>
-                {t(gaz)} {emissionFactor[gaz]} {tResultUnits(StudyResultUnit.K)}/
-                {tUnits(emissionFactor.unit || BCUnit.KG)},&nbsp;
-              </span>
-            ))}
+            {gases
+              .map(
+                (gaz) =>
+                  `${t(gaz)} ${emissionFactor[gaz]} ${tResultUnits(StudyResultUnit.K)}/${tUnits(emissionFactor.unit || BCUnit.KG)}`,
+              )
+              .join(', ')}
           </div>
         </div>
       )}
@@ -154,7 +154,7 @@ const EmissionFactorDetails = ({ emissionFactor }: Props) => {
               .map(
                 (part) =>
                   `${tEmissionFactorType(part.type)}: ${formatNumber(part.totalCo2, 2)}
-                ${tResultUnits(StudyResultUnit.K)}`,
+                ${tResultUnits(StudyResultUnit.K)}/${tUnits(emissionFactor.unit || BCUnit.KG)}`,
               )
               .join(', ')}
           </div>
