@@ -726,6 +726,9 @@ export const getResultsValues = (
 }
 
 export const getTransEnvironmentSubPost = (source: Environment, target: Environment, subPost: SubPost) => {
+  if (source === target) {
+    return subPost
+  }
   if (source === Environment.BC && target === Environment.TILT) {
     switch (subPost) {
       case SubPost.UtilisationEnResponsabilite:

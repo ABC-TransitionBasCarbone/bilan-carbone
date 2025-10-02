@@ -10,6 +10,7 @@ import { getUserRoleOnPublicStudy } from '@/utils/study'
 import { isAdmin } from '@/utils/user'
 import {
   ControlMode,
+  DuplicableStudy,
   EmissionSourceTag,
   EmissionSourceTagFamily,
   Environment,
@@ -821,3 +822,13 @@ export const getStudiesAffectedByQuestion = async (questionIdIntern: string) => 
     distinct: ['id'],
   })
 }
+
+export const upsertStudyTemplate = async (template: DuplicableStudy, environment: Environment, studyId: string) =>
+  prismaClient.studyTemplate.upsert({
+    where: { environment_template: { environment, template } },
+    update: { studyId },
+    create: { environment, template, studyId },
+  })
+
+export const getStudyTemplate = async (template: DuplicableStudy, environment: Environment) =>
+  prismaClient.studyTemplate.findUnique({ where: { environment_template: { environment, template } } })
