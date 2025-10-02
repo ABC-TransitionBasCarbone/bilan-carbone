@@ -12,7 +12,6 @@ import {
   addAccount,
   getAccountByEmailAndEnvironment,
   getAccountByEmailAndOrganizationVersionId,
-  getAccountById,
   getAccountsByUserIdsAndEnvironment,
   getAccountsUserLevel,
 } from '@/db/account'
@@ -56,6 +55,7 @@ import {
   getStudyById,
   getStudyNameById,
   getStudySites,
+  getStudyTemplate,
   getUsersOnStudy,
   updateEmissionSourceEmissionFactor,
   updateStudy,
@@ -1870,37 +1870,78 @@ export const setStudyTemplate = async (template: DuplicableStudy, environment: E
   return 'Succès'
 }
 
-export const duplicateKeyStudyForAccount = async (accountId: string, studyId: string) =>
-  withServerResponse('duplicateKeyStudyForAccount', async () => {
-    const [study, account] = await Promise.all([getStudyById(studyId, null), getAccountById(accountId)])
-    if (!study || !account || study.organizationVersion.environment !== account.environment) {
-      throw new Error(NOT_AUTHORIZED)
-    }
-    const environment = account.environment
-    const allowedUsers = [{ accountId, role: StudyRole.Validator }]
-    const sites = await getSitesForDuplication(study)
+export const assignTrainingExerciseStudy = async (): Promise<{ created: number; error: number }> => {
+  let created = 0
+  let error = 0
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id, createdById, organizationVersionId, ...restStudy } = study
-    const studyCommand: Prisma.StudyCreateInput = buildStudyForDuplication(
-      restStudy,
-      accountId,
-      study.organizationVersion.id,
-      allowedUsers,
-      [],
-      sites,
-    )
-    const createdStudy = await createStudy(studyCommand, environment, false)
-    const createdStudyWithSites = (await getStudyById(createdStudy.id, organizationVersionId)) as FullStudy
+  const tomorrow = new Date(today)
+  tomorrow.setDate(today.getDate() + 1)
 
-    // emission sources
-    const emissionSources = buildStudyEmissionSources(
-      study.emissionSources,
-      createdStudy.id,
-      createdStudyWithSites.sites,
-      study.organizationVersion.environment,
-      environment,
-    )
-
-    await createEmissionSourcesOnStudy(emissionSources)
+  const targetAccounts = await prismaClient.account.findMany({
+    where: { formationStartDate: { gte: today, lt: tomorrow } },
+    select: { id: true, environment: true, user: { select: { firstName: true, lastName: true } } },
   })
+  for (const account of targetAccounts) {
+    const studyTemplate = await getStudyTemplate(DuplicableStudy.TrainingExercise, account.environment)
+    if (studyTemplate) {
+      try {
+        await duplicateStudyTemplateForAccount(
+          account,
+          studyTemplate.studyId,
+          ` - ${account.user.firstName} ${account.user.lastName}`,
+        )
+        created++
+      } catch (e) {
+        console.log(
+          `An error occured during the assignment of study ${studyTemplate.studyId} to account ${account.id} in the environment ${account.environment} : ${e}`,
+        )
+        error++
+      }
+    }
+  }
+  return { created, error }
+}
+
+export const duplicateStudyTemplateForAccount = async (
+  account: { id: string; environment: Environment },
+  studyId: string,
+  nameSuffix?: string,
+) => {
+  const study = await getStudyById(studyId, null)
+  if (!study || study.organizationVersion.environment !== account.environment) {
+    throw new Error(NOT_AUTHORIZED)
+  }
+  const environment = account.environment
+  const allowedUsers = [{ accountId: account.id, role: StudyRole.Validator }]
+  const sites = await getSitesForDuplication(study)
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { id, createdById, organizationVersionId, ...restStudy } = study
+  if (nameSuffix) {
+    restStudy.name = restStudy.name + nameSuffix
+  }
+  const studyCommand: Prisma.StudyCreateInput = buildStudyForDuplication(
+    restStudy,
+    account.id,
+    study.organizationVersion.id,
+    allowedUsers,
+    [],
+    sites,
+  )
+  const createdStudy = await createStudy(studyCommand, environment, false)
+  const createdStudyWithSites = (await getStudyById(createdStudy.id, organizationVersionId)) as FullStudy
+
+  // emission sources
+  const emissionSources = buildStudyEmissionSources(
+    study.emissionSources,
+    createdStudy.id,
+    createdStudyWithSites.sites,
+    study.organizationVersion.environment,
+    environment,
+  )
+
+  await createEmissionSourcesOnStudy(emissionSources)
+  return
+}

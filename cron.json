@@ -3,6 +3,10 @@
     {
       "command": "*/10 * * * * yarn user:import",
       "description": "Import users from FTP server at midnight"
+    },
+    {
+      "command": "0 1 * * * npx tsx src/scripts/keyStudies/assignTainingStudy.ts",
+      "description": "Create traning studies for users who start a formation"
     }
   ]
 }
