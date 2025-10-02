@@ -1528,7 +1528,7 @@
     }
   },
   "emissionSource": {
-    "in": "en",
+    "in": "en ",
     "emissionSource": "Donnée d'activité :",
     "emissionFactor": "Facteur d'émission :",
     "clear": "Supprimer la valeur",

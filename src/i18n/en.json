@@ -1528,7 +1528,7 @@
     }
   },
   "emissionSource": {
-    "in": "in",
+    "in": "in ",
     "emissionSource": "Activity data :",
     "emissionFactor": "Emission Factor :",
     "clear": "Clear value",
