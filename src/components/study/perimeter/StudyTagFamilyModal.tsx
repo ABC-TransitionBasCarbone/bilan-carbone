@@ -1,14 +1,11 @@
+import { createOrUpdateStudyTagFamily, deleteStudyTagFamily } from '@/services/serverFunctions/emissionSource'
 import {
-  createOrUpdateEmissionSourceTagFamily,
-  deleteEmissionSourceTagFamily,
-} from '@/services/serverFunctions/emissionSource'
-import {
-  NewEmissionSourceTagFamilyCommand,
-  NewEmissionSourceTagFamilyCommandValidation,
+  NewStudyTagFamilyCommand,
+  NewStudyTagFamilyCommandValidation,
 } from '@/services/serverFunctions/emissionSource.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
-import { EmissionSourceTagFamily } from '@prisma/client'
+import { StudyTagFamily } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useForm } from 'react-hook-form'
 import Button from '../../base/Button'
@@ -18,15 +15,15 @@ import { FormTextField } from '../../form/TextField'
 
 interface Props {
   studyId?: string
-  family: Partial<EmissionSourceTagFamily> | undefined
+  family: Partial<StudyTagFamily> | undefined
   onClose: () => void
   action: 'edit' | 'delete'
 }
 
 const EmissionTagFamilyModal = ({ action, studyId, family, onClose }: Props) => {
   const t = useTranslations('study.perimeter.family')
-  const { getValues, control, handleSubmit, formState } = useForm<NewEmissionSourceTagFamilyCommand>({
-    resolver: zodResolver(NewEmissionSourceTagFamilyCommandValidation),
+  const { getValues, control, handleSubmit, formState } = useForm<NewStudyTagFamilyCommand>({
+    resolver: zodResolver(NewStudyTagFamilyCommandValidation),
     mode: 'onSubmit',
     reValidateMode: 'onChange',
     defaultValues: {
@@ -38,9 +35,9 @@ const EmissionTagFamilyModal = ({ action, studyId, family, onClose }: Props) => 
   const onSumbit = async () => {
     if (action === 'edit' && studyId) {
       const values = getValues()
-      await createOrUpdateEmissionSourceTagFamily(studyId, values.name, family?.id)
+      await createOrUpdateStudyTagFamily(studyId, values.name, family?.id)
     } else if (action === 'delete' && family?.id && studyId) {
-      await deleteEmissionSourceTagFamily(studyId, family.id)
+      await deleteStudyTagFamily(studyId, family.id)
     }
     onClose()
   }

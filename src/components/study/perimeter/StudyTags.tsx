@@ -8,24 +8,16 @@ import HelpIcon from '@/components/base/HelpIcon'
 import TagChip from '@/components/base/TagChip'
 import Title from '@/components/base/Title'
 import GlossaryModal from '@/components/modals/GlossaryModal'
-import { emissionSourceTagColors } from '@/constants/emissionSourceTags'
-import { EmissionSourceTagFamilyWithTags } from '@/db/study'
+import { StudyTagColors } from '@/constants/studyTags'
+import { StudyTagFamilyWithTags } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import {
-  createEmissionSourceTag,
-  deleteEmissionSourceTag,
-  getEmissionSourceTagsByStudyId,
-  updateEmissionSourceTag,
-} from '@/services/serverFunctions/emissionSource'
-import {
-  NewEmissionSourceTagCommand,
-  NewEmissionSourceTagCommandValidation,
-} from '@/services/serverFunctions/emissionSource.command'
+import { createTag, deleteTag, getTagFamiliesByStudyId, updateTag } from '@/services/serverFunctions/emissionSource'
+import { NewStudyTagCommand, NewStudyTagCommandValidation } from '@/services/serverFunctions/emissionSource.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import DeleteIcon from '@mui/icons-material/Cancel'
 import EditIcon from '@mui/icons-material/Edit'
 import { FormControl, Button as MuiButton } from '@mui/material'
-import { EmissionSourceTagFamily } from '@prisma/client'
+import { StudyTagFamily } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useState } from 'react'
@@ -39,19 +31,19 @@ interface Props {
   studyId: string
 }
 
-const EmissionSourceTags = ({ studyId }: Props) => {
+const StudyTags = ({ studyId }: Props) => {
   const t = useTranslations('study.perimeter')
   const { callServerFunction } = useServerFunction()
-  const [tagFamilies, setTagFamilies] = useState<EmissionSourceTagFamilyWithTags[]>([])
-  const [editingFamily, setEditingFamily] = useState<Partial<EmissionSourceTagFamily> | null | undefined>(null)
-  const [deletingFamily, setDeletingFamily] = useState<Partial<EmissionSourceTagFamily> | null>(null)
+  const [tagFamilies, setTagFamilies] = useState<StudyTagFamilyWithTags[]>([])
+  const [editingFamily, setEditingFamily] = useState<Partial<StudyTagFamily> | null | undefined>(null)
+  const [deletingFamily, setDeletingFamily] = useState<Partial<StudyTagFamily> | null>(null)
   const [glossary, setGlossary] = useState('')
   const [editingTag, setEditingTag] = useState<{ id: string; name: string; color: string; familyId: string } | null>(
     null,
   )
 
   const getEmissionSourceTags = useCallback(async () => {
-    const response = await getEmissionSourceTagsByStudyId(studyId)
+    const response = await getTagFamiliesByStudyId(studyId)
     if (response.success && response.data) {
       setTagFamilies([...response.data])
     }
@@ -61,30 +53,30 @@ const EmissionSourceTags = ({ studyId }: Props) => {
     getEmissionSourceTags()
   }, [getEmissionSourceTags])
 
-  const { control, formState, getValues, handleSubmit, setValue, watch } = useForm<NewEmissionSourceTagCommand>({
-    resolver: zodResolver(NewEmissionSourceTagCommandValidation),
+  const { control, formState, getValues, handleSubmit, setValue, watch } = useForm<NewStudyTagCommand>({
+    resolver: zodResolver(NewStudyTagCommandValidation),
     mode: 'onSubmit',
     reValidateMode: 'onChange',
     defaultValues: {
-      color: emissionSourceTagColors.DEFAULT,
+      color: StudyTagColors.DEFAULT,
     },
   })
 
   const color = watch('color')
 
   const onSubmit = async () => {
-    await callServerFunction(() => createEmissionSourceTag(getValues()), {
+    await callServerFunction(() => createTag(getValues()), {
       onSuccess: () => {
         setValue('name', '')
         setValue('familyId', '')
-        setValue('color', emissionSourceTagColors.DEFAULT)
+        setValue('color', StudyTagColors.DEFAULT)
         getEmissionSourceTags()
       },
     })
   }
 
   const onUpdate = async (tagId: string, newName: string, newColor: string, newFamilyId: string) => {
-    await callServerFunction(() => updateEmissionSourceTag(tagId, newName, newColor, newFamilyId), {
+    await callServerFunction(() => updateTag(tagId, newName, newColor, newFamilyId), {
       onSuccess: () => {
         getEmissionSourceTags()
       },
@@ -92,7 +84,7 @@ const EmissionSourceTags = ({ studyId }: Props) => {
   }
 
   const onDelete = async (tagId: string) => {
-    await callServerFunction(() => deleteEmissionSourceTag(tagId), {
+    await callServerFunction(() => deleteTag(tagId), {
       onSuccess: () => {
         getEmissionSourceTags()
       },
@@ -103,7 +95,7 @@ const EmissionSourceTags = ({ studyId }: Props) => {
     setEditingTag({
       id: tag.id,
       name: tag.name,
-      color: tag.color || emissionSourceTagColors.DEFAULT,
+      color: tag.color || StudyTagColors.DEFAULT,
       familyId: tag.familyId,
     })
   }
@@ -144,7 +136,7 @@ const EmissionSourceTags = ({ studyId }: Props) => {
                 </div>
               </div>
               <div className={classNames(styles.tags)}>
-                {family.emissionSourceTags.map((tag) => (
+                {family.tags.map((tag) => (
                   <TagChip
                     key={tag.id}
                     id={tag.id}
@@ -221,4 +213,4 @@ const EmissionSourceTags = ({ studyId }: Props) => {
   )
 }
 
-export default EmissionSourceTags
+export default StudyTags

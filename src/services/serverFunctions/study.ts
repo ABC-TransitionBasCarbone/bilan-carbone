@@ -6,7 +6,7 @@ import {
   SITE_DEPENDENT_FIELDS,
   SiteDependentField,
 } from '@/constants/emissionFactorMap'
-import { defaultEmissionSourceTags } from '@/constants/emissionSourceTags'
+import { DefaultStudyTags } from '@/constants/studyTags'
 import {
   AccountWithUser,
   addAccount,
@@ -25,11 +25,7 @@ import {
   getEmissionFactorVersionsBySource,
   getStudyEmissionFactorSources,
 } from '@/db/emissionFactors'
-import {
-  createEmissionSourcesOnStudy,
-  createEmissionSourceTagFamilyAndRelatedTags,
-  getFamilyTagsForStudy,
-} from '@/db/emissionSource'
+import { createEmissionSourcesOnStudy, getFamilyTagsForStudy } from '@/db/emissionSource'
 import {
   getOrganizationVersionById,
   getOrganizationVersionsByOrganizationId,
@@ -191,6 +187,7 @@ export const getStudySite = async (studySiteId: string) =>
 export const createStudyCommand = async (
   { organizationVersionId, validator, sites, ...command }: CreateStudyCommand,
   resultsUnit?: StudyResultUnit,
+  sourceTagFamilies?: FullStudy['tagFamilies'],
 ) =>
   withServerResponse('createStudyCommand', async () => {
     const session = await dbActualizedAuth()
@@ -246,18 +243,25 @@ export const createStudyCommand = async (
     const userCAUnit = (await getUserApplicationSettings(session.user.accountId))?.caUnit
     const caUnit = CA_UNIT_VALUES[userCAUnit || defaultCAUnit]
 
-    const environmentTags =
-      defaultEmissionSourceTags[session.user.environment as keyof typeof defaultEmissionSourceTags]
-    const emissionSourceTagFamilies: Prisma.EmissionSourceTagFamilyCreateNestedManyWithoutStudyInput = {
+    const environmentTags = DefaultStudyTags[session.user.environment as keyof typeof DefaultStudyTags]
+    const tagFamilies: Prisma.StudyTagFamilyCreateNestedManyWithoutStudyInput = {
       create: [
         {
           name: 'défaut',
-          emissionSourceTags: environmentTags
+          tags: environmentTags
             ? {
                 create: environmentTags.map((tag) => ({ name: tag.name, color: tag.color })),
               }
             : undefined,
         },
+        ...(sourceTagFamilies
+          ? sourceTagFamilies.map((tagFamily) => ({
+              name: tagFamily.name,
+              tags: {
+                create: tagFamily.tags.map((tag) => ({ name: tag.name, color: tag.color })),
+              },
+            }))
+          : []),
       ],
     }
 
@@ -310,7 +314,7 @@ export const createStudyCommand = async (
             .filter((site) => site !== undefined),
         },
       },
-      emissionSourceTagFamilies,
+      tagFamilies,
     } satisfies Prisma.StudyCreateInput
 
     if (!(await canCreateSpecificStudy(session.user, study, organizationVersionId))) {
@@ -1260,7 +1264,7 @@ export const duplicateStudyCommand = async (
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const createResult = await createStudyCommand(studyCommand, sourceStudy.resultsUnit)
+    const createResult = await createStudyCommand(studyCommand, sourceStudy.resultsUnit, sourceStudy.tagFamilies)
     if (!createResult.success) {
       throw new Error(createResult.errorMessage || 'Failed to create study')
     }
@@ -1295,19 +1299,8 @@ export const duplicateStudyCommand = async (
 
     const shouldClearCaracterisations = Object.values(Export).some(hasControlModeChanged)
 
-    const tagFamilies = await createEmissionSourceTagFamilyAndRelatedTags(
-      createdStudyId,
-      sourceStudy.emissionSourceTagFamilies.map((tagFamily) => ({
-        familyName: tagFamily.name,
-        tags: tagFamily.emissionSourceTags.map((tag) => ({
-          name: tag.name,
-          color: tag.color ?? '',
-        })),
-      })),
-      session.user.environment,
-    )
-
-    const oldTagFamilies = await getFamilyTagsForStudy(sourceStudy.id)
+    const sourceTagFamilies = await getFamilyTagsForStudy(sourceStudy.id)
+    const targetTagFamilies = createdStudyWithSites.tagFamilies
 
     const sourceEmissionSources = sourceStudy.emissionSources
     for (const sourceEmissionSource of sourceEmissionSources) {
@@ -1316,6 +1309,23 @@ export const duplicateStudyCommand = async (
       const targetStudySiteId = studySites.find((site) => targetStudySite && site.id === targetStudySite.id)?.id
 
       if (targetStudySiteId) {
+        const tagIds = sourceEmissionSource.tagLinks
+          .map((tagLink) => {
+            const sourceTag = sourceTagFamilies
+              .flatMap((f) => f.tags.map((t) => ({ ...t, familyName: f.name })))
+              .find((t) => t.id === tagLink.tag.id)
+
+            if (!sourceTag) {
+              return null
+            }
+
+            const targetFamily = targetTagFamilies.find((f) => f.name === sourceTag.familyName)
+            const targetTag = targetFamily?.tags.find((t) => t.name === sourceTag.name)
+
+            return targetTag ? { tagId: targetTag.id } : null
+          })
+          .filter((t) => t !== null)
+
         const emissionSourceData = {
           name: sourceEmissionSource.name,
           value: sourceEmissionSource.value,
@@ -1336,7 +1346,6 @@ export const duplicateStudyCommand = async (
           feGeographicRepresentativeness: sourceEmissionSource.feGeographicRepresentativeness,
           feTemporalRepresentativeness: sourceEmissionSource.feTemporalRepresentativeness,
           feCompleteness: sourceEmissionSource.feCompleteness,
-          // Clear characterization if control mode changed, otherwise keep it
           caracterisation: shouldClearCaracterisations ? null : sourceEmissionSource.caracterisation,
           study: { connect: { id: createdStudyId } },
           emissionFactor: sourceEmissionSource.emissionFactor
@@ -1344,19 +1353,8 @@ export const duplicateStudyCommand = async (
             : undefined,
           studySite: { connect: { id: targetStudySiteId } },
           validated: false,
-          emissionSourceTags: {
-            connect: sourceEmissionSource.emissionSourceTags
-              .map((emissionSourceTag) => {
-                const oldTagFamily = oldTagFamilies.find((tagFamily) => tagFamily.id === emissionSourceTag.familyId)
-                const foundTagFamily = tagFamilies.find((tagFamily) => tagFamily.name === oldTagFamily?.name)
-                const foundTag = foundTagFamily?.emissionSourceTags.find((tag) => tag.name === emissionSourceTag.name)
-
-                if (!foundTag) {
-                  return null
-                }
-                return { id: foundTag?.id }
-              })
-              .filter((tag) => tag !== null),
+          tagLinks: {
+            create: tagIds,
           },
         }
 
@@ -1549,13 +1547,15 @@ const buildStudyForDuplication = (
       data: study.emissionFactorVersions.map(({ id, ...emissionFactorVersion }) => emissionFactorVersion),
     },
   },
-  emissionSourceTagFamilies: {
-    create: study.emissionSourceTagFamilies.map((tagFamily) => ({
+  tagFamilies: {
+    create: study.tagFamilies.map((tagFamily) => ({
       name: tagFamily.name,
-      emissionSourceTags: {
+      tags: {
         createMany: {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          data: tagFamily.emissionSourceTags.map(({ id, familyId, ...emissionSourceTag }) => emissionSourceTag),
+          data: tagFamily.tags.map((tag) => ({
+            name: tag.name,
+            color: tag.color,
+          })),
         },
       },
     })),
@@ -1572,7 +1572,7 @@ const buildStudyEmissionSources = (
   emissionSources
     .map((emissionSource) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { id, studySite, emissionFactor, emissionSourceTags, ...restSource } = emissionSource
+      const { id, studySite, emissionFactor, tagLinks, ...restSource } = emissionSource
       const studySiteId = studySites.find((studySite) => studySite.site.id === emissionSource.studySite.site.id)
         ?.id as string
       const subPost = getTransEnvironmentSubPost(sourceEnvironment, targetEnvironment, emissionSource.subPost)
@@ -1701,7 +1701,12 @@ export const duplicateStudyEmissionSource = async (
       studySite: { connect: { id: studySite } },
       studySiteId: undefined,
       validated: false,
-      emissionSourceTags: { connect: emissionSource.emissionSourceTags.map((tag) => ({ id: tag.id })) },
+      tagLinks: {
+        create: emissionSource.tagLinks.map((tagLink) => ({
+          tagId: tagLink.tag.id,
+          emissionSourceId: '',
+        })),
+      },
     } as Prisma.StudyEmissionSourceCreateInput
 
     await createStudyEmissionSource(data)

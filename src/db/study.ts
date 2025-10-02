@@ -11,13 +11,13 @@ import { isAdmin } from '@/utils/user'
 import {
   ControlMode,
   DuplicableStudy,
-  EmissionSourceTag,
-  EmissionSourceTagFamily,
   Environment,
   Export,
   Import,
   Level,
   StudyRole,
+  StudyTag,
+  StudyTagFamily,
   SubPost,
   type Prisma,
 } from '@prisma/client'
@@ -29,8 +29,8 @@ import { getOrganizationVersionById, OrganizationVersionWithOrganization } from 
 const cutFeLegifrance = getEnvVar('FE_LEGIFRANCE_VERSION', Environment.CUT) || ''
 const cutFeBaseEmpreinte = getEnvVar('FE_BASE_EMPREINTE_VERSION', Environment.CUT) || ''
 
-export type EmissionSourceTagFamilyWithTags = Omit<EmissionSourceTagFamily, 'createdAt' | 'updatedAt'> & {
-  emissionSourceTags: Omit<EmissionSourceTag, 'familyId'>[]
+export type StudyTagFamilyWithTags = Omit<StudyTagFamily, 'createdAt' | 'updatedAt'> & {
+  tags: Omit<StudyTag, 'familyId' | 'createdAt' | 'updatedAt'>[]
 }
 
 export const createStudy = async (
@@ -123,12 +123,18 @@ const fullStudyInclude = {
           },
         },
       },
-      emissionSourceTags: {
+      tagLinks: {
         select: {
-          id: true,
-          name: true,
-          color: true,
-          familyId: true,
+          tag: {
+            select: {
+              id: true,
+              name: true,
+              color: true,
+              familyId: true,
+              createdAt: true,
+              updatedAt: true,
+            },
+          },
         },
       },
     },
@@ -235,17 +241,21 @@ const fullStudyInclude = {
       },
     },
   },
-  emissionSourceTagFamilies: {
+  tagFamilies: {
     select: {
       id: true,
       name: true,
       studyId: true,
-      emissionSourceTags: {
+      createdAt: true,
+      updatedAt: true,
+      tags: {
         select: {
           id: true,
           familyId: true,
           name: true,
           color: true,
+          createdAt: true,
+          updatedAt: true,
         },
       },
     },
@@ -588,24 +598,24 @@ export const deleteStudy = async (id: string) => {
   return prismaClient.$transaction(async (transaction) => {
     const studySites = await getStudySites(id)
 
-    const tagFamilies = await transaction.emissionSourceTagFamily.findMany({
+    const tagFamilies = await transaction.studyTagFamily.findMany({
       where: { studyId: id },
       select: { id: true },
     })
 
     await Promise.all(
       tagFamilies.map((tagFamily) => {
-        transaction.emissionSourceTagFamily.update({
+        transaction.studyTagFamily.update({
           where: { id: tagFamily.id },
-          data: { emissionSourceTags: undefined },
+          data: { tags: undefined },
         })
       }),
     )
 
     await Promise.all([
       transaction.userOnStudy.deleteMany({ where: { studyId: id } }),
-      transaction.emissionSourceTag.deleteMany({ where: { familyId: { in: tagFamilies.map((f) => f.id) } } }),
-      transaction.emissionSourceTagFamily.deleteMany({ where: { studyId: id } }),
+      transaction.studyTag.deleteMany({ where: { familyId: { in: tagFamilies.map((f) => f.id) } } }),
+      transaction.studyTagFamily.deleteMany({ where: { studyId: id } }),
       transaction.studyEmissionSource.deleteMany({ where: { studyId: id } }),
       transaction.contributors.deleteMany({ where: { studyId: id } }),
       transaction.studySite.deleteMany({ where: { studyId: id } }),
