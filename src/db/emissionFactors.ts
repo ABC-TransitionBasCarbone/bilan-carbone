@@ -112,7 +112,6 @@ export const getAllEmissionFactors = async (
 
     studyOldEmissionFactors = await getEmissionFactorsFromIdsExceptVersions(selectedEmissionFactors, versionIds)
   }
-
   const organizationEmissionFactor = organizationId
     ? await prismaClient.emissionFactor.findMany({
         where: { organizationId },
@@ -120,8 +119,6 @@ export const getAllEmissionFactors = async (
         orderBy: { createdAt: 'desc' },
       })
     : []
-
-  const latestVersionIds = await getEmissionFactorSourcesByOrganization(organizationId)
 
   const defaultEmissionFactors = await (process.env.NO_CACHE === 'true'
     ? getDefaultEmissionFactors(versionIds)
