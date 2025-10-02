@@ -23,8 +23,8 @@ import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import EditTagModal from './EditTagModal'
-import styles from './EmissionSourceTag.module.css'
-import EmissionTagFamilyModal from './EmissionTagFamilyModal'
+import styles from './StudyTag.module.css'
+import StudyTagFamilyModal from './StudyTagFamilyModal'
 import TagForm from './TagForm'
 
 interface Props {
@@ -172,7 +172,7 @@ const StudyTags = ({ studyId }: Props) => {
         </FormControl>
       </Form>
       {editingFamily !== null && (
-        <EmissionTagFamilyModal
+        <StudyTagFamilyModal
           action="edit"
           studyId={studyId}
           family={editingFamily}
@@ -183,7 +183,7 @@ const StudyTags = ({ studyId }: Props) => {
         />
       )}
       {deletingFamily && (
-        <EmissionTagFamilyModal
+        <StudyTagFamilyModal
           action="delete"
           studyId={studyId}
           family={deletingFamily}

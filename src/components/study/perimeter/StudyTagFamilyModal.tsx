@@ -20,7 +20,7 @@ interface Props {
   action: 'edit' | 'delete'
 }
 
-const EmissionTagFamilyModal = ({ action, studyId, family, onClose }: Props) => {
+const StudyTagFamilyModal = ({ action, studyId, family, onClose }: Props) => {
   const t = useTranslations('study.perimeter.family')
   const { getValues, control, handleSubmit, formState } = useForm<NewStudyTagFamilyCommand>({
     resolver: zodResolver(NewStudyTagFamilyCommandValidation),
@@ -81,4 +81,4 @@ const EmissionTagFamilyModal = ({ action, studyId, family, onClose }: Props) => 
   )
 }
 
-export default EmissionTagFamilyModal
+export default StudyTagFamilyModal
