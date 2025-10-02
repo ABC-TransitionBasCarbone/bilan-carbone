@@ -1,7 +1,7 @@
 'use client'
 
 import Form from '@/components/base/Form'
-import { EmissionSourceTagFamilyWithTags } from '@/db/study'
+import { StudyTagFamilyWithTags } from '@/db/study'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
 import { useTranslations } from 'next-intl'
@@ -17,7 +17,7 @@ interface Props {
   currentName: string
   currentColor: string
   currentFamilyId: string
-  families: EmissionSourceTagFamilyWithTags[]
+  families: StudyTagFamilyWithTags[]
   onSave: (tagId: string, newName: string, newColor: string, newFamilyId: string) => Promise<void>
   onClose: () => void
 }

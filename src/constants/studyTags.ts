@@ -1,20 +1,20 @@
 import { Environment, SubPost } from '@prisma/client'
 
-export enum DefaultEmissionSourceTag {
+export enum DefaultStudyTagNames {
   PERIMETRE_INTERNE = 'Périmètre Interne',
   PERIMETRE_BENEVOLES = 'Périmètre Bénévoles',
   PERIMETRE_BENEFICIAIRES = 'Périmètre Bénéficiaires',
   NUMERIQUE = 'Numérique',
 }
 
-type DefaultEmissionSourceTags = {
+type DefaultStudyTags = {
   [key in Environment]?: {
     name: string
     color: string
   }[]
 }
 
-export enum emissionSourceTagColors {
+export enum StudyTagColors {
   DEFAULT = '#ffffff',
   GREEN = '#94EBBF',
   RED = '#e04949',
@@ -22,23 +22,23 @@ export enum emissionSourceTagColors {
   BLUE = '#606af5',
 }
 
-export const defaultEmissionSourceTags: DefaultEmissionSourceTags = {
+export const DefaultStudyTags: DefaultStudyTags = {
   [Environment.TILT]: [
-    { name: DefaultEmissionSourceTag.PERIMETRE_INTERNE, color: emissionSourceTagColors.GREEN },
-    { name: DefaultEmissionSourceTag.PERIMETRE_BENEVOLES, color: emissionSourceTagColors.RED },
-    { name: DefaultEmissionSourceTag.PERIMETRE_BENEFICIAIRES, color: emissionSourceTagColors.ORANGE },
-    { name: DefaultEmissionSourceTag.NUMERIQUE, color: emissionSourceTagColors.BLUE },
+    { name: DefaultStudyTagNames.PERIMETRE_INTERNE, color: StudyTagColors.GREEN },
+    { name: DefaultStudyTagNames.PERIMETRE_BENEVOLES, color: StudyTagColors.RED },
+    { name: DefaultStudyTagNames.PERIMETRE_BENEFICIAIRES, color: StudyTagColors.ORANGE },
+    { name: DefaultStudyTagNames.NUMERIQUE, color: StudyTagColors.BLUE },
   ],
 }
-type EmissionSourceTagMap = {
+type DefaultStudyTagMap = {
   [key in Environment]?: {
-    [key in DefaultEmissionSourceTag]?: SubPost[]
+    [key in DefaultStudyTagNames]?: SubPost[]
   }
 }
 
-export const emissionSourceTagMap: EmissionSourceTagMap = {
+export const DefaultStudyTagMap: DefaultStudyTagMap = {
   [Environment.TILT]: {
-    [DefaultEmissionSourceTag.PERIMETRE_INTERNE]: [
+    [DefaultStudyTagNames.PERIMETRE_INTERNE]: [
       SubPost.Batiment,
       SubPost.AutresInfrastructures,
       SubPost.CombustiblesFossiles,
@@ -92,7 +92,7 @@ export const emissionSourceTagMap: EmissionSourceTagMap = {
 
       SubPost.FroidEtClim,
     ],
-    [DefaultEmissionSourceTag.PERIMETRE_BENEVOLES]: [
+    [DefaultStudyTagNames.PERIMETRE_BENEVOLES]: [
       SubPost.DeplacementsDomicileTravailBenevoles,
       SubPost.DeplacementsDansLeCadreDUneMissionAssociativeBenevoles,
       SubPost.RepasPrisParLesBenevoles,
@@ -101,7 +101,7 @@ export const emissionSourceTagMap: EmissionSourceTagMap = {
       SubPost.EquipementsDesBenevoles,
       SubPost.ParcInformatiqueDesBenevoles,
     ],
-    [DefaultEmissionSourceTag.PERIMETRE_BENEFICIAIRES]: [
+    [DefaultStudyTagNames.PERIMETRE_BENEFICIAIRES]: [
       SubPost.DeplacementsDesBeneficiaires,
       SubPost.UtilisationEnResponsabiliteConsommationDeBiens,
       SubPost.UtilisationEnResponsabiliteConsommationNumerique,
@@ -117,7 +117,7 @@ export const emissionSourceTagMap: EmissionSourceTagMap = {
       SubPost.FuitesOuEmissionsNonEnergetiques,
       SubPost.TraitementDesEmballagesEnFinDeVie,
     ],
-    [DefaultEmissionSourceTag.NUMERIQUE]: [
+    [DefaultStudyTagNames.NUMERIQUE]: [
       SubPost.UtilisationEnResponsabiliteConsommationNumerique,
       SubPost.UtilisationEnDependanceConsommationNumerique,
     ],

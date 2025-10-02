@@ -38,19 +38,19 @@ export const UpdateEmissionSourceCommandValidation = z.object({
   feGeographicRepresentativeness: z.number().nullable().optional(),
   feTemporalRepresentativeness: z.number().nullable().optional(),
   feCompleteness: z.number().nullable().optional(),
-  emissionSourceTags: z.array(z.string()).optional(),
+  tagLinks: z.array(z.string()).optional(),
 })
 export type UpdateEmissionSourceCommand = z.infer<typeof UpdateEmissionSourceCommandValidation>
 
-export const NewEmissionSourceTagCommandValidation = z.object({
+export const NewStudyTagCommandValidation = z.object({
   familyId: z.string(),
   name: z.string(),
   color: z.string(),
 })
-export type NewEmissionSourceTagCommand = z.infer<typeof NewEmissionSourceTagCommandValidation>
+export type NewStudyTagCommand = z.infer<typeof NewStudyTagCommandValidation>
 
-export const NewEmissionSourceTagFamilyCommandValidation = z.object({
+export const NewStudyTagFamilyCommandValidation = z.object({
   id: z.string().optional(),
   name: z.string(),
 })
-export type NewEmissionSourceTagFamilyCommand = z.infer<typeof NewEmissionSourceTagFamilyCommandValidation>
+export type NewStudyTagFamilyCommand = z.infer<typeof NewStudyTagFamilyCommandValidation>

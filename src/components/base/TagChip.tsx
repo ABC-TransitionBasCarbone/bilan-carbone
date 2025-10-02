@@ -1,6 +1,6 @@
 'use client'
 
-import { emissionSourceTagColors } from '@/constants/emissionSourceTags'
+import { StudyTagColors } from '@/constants/studyTags'
 import { Chip, ChipProps } from '@mui/material'
 import classNames from 'classnames'
 import styles from './TagChip.module.css'
@@ -21,7 +21,7 @@ const TagChip = ({
   'data-testid': dataTestId,
   ...props
 }: Props & Omit<ChipProps, 'color'>) => {
-  const backgroundColor = color || emissionSourceTagColors.DEFAULT
+  const backgroundColor = color || StudyTagColors.DEFAULT
 
   return (
     <Chip

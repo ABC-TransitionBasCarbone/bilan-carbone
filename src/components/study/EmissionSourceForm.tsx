@@ -4,7 +4,7 @@ import { FullStudy } from '@/db/study'
 import { getEmissionResults } from '@/services/emissionSource'
 import { subPostsByPost } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
-import { getEmissionSourceTagsByStudyId } from '@/services/serverFunctions/emissionSource'
+import { getTagFamiliesByStudyId } from '@/services/serverFunctions/emissionSource'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { duplicateStudyEmissionSource } from '@/services/serverFunctions/study'
 import { EmissionSourcesStatus } from '@/services/study'
@@ -24,11 +24,11 @@ import HideIcon from '@mui/icons-material/VisibilityOff'
 import { Autocomplete, FormControl, InputLabel, MenuItem, Popper, TextField } from '@mui/material'
 import {
   EmissionSourceCaracterisation,
-  EmissionSourceTag,
   EmissionSourceType,
   Environment,
   StudyResultUnit,
   StudyRole,
+  StudyTag,
   SubPost,
   Unit,
 } from '@prisma/client'
@@ -110,7 +110,7 @@ const EmissionSourceForm = ({
   const [duplicationSite, setDuplicationSite] = useState(emissionSource.studySite.id)
   const [expandedQuality, setExpandedQuality] = useState(!!advanced)
   const [expandedFEQuality, setExpandedFEQuality] = useState(true)
-  const [tags, setTags] = useState<EmissionSourceTag[]>([])
+  const [tags, setTags] = useState<StudyTag[]>([])
   const router = useRouter()
 
   const qualities = qualityKeys.map((column) => emissionSource[column])
@@ -158,12 +158,12 @@ const EmissionSourceForm = ({
   }, [studyId, subPost])
 
   const getEmissionSourceTags = async () => {
-    const response = await getEmissionSourceTagsByStudyId(studyId)
+    const response = await getTagFamiliesByStudyId(studyId)
     if (response.success && response.data) {
       setTags(
         response.data.reduce(
-          (tags, family) => tags.concat(family.emissionSourceTags).sort((a, b) => a.name.localeCompare(b.name)),
-          [] as EmissionSourceTag[],
+          (tags, family) => tags.concat(family.tags).sort((a, b) => a.name.localeCompare(b.name)),
+          [] as StudyTag[],
         ),
       )
     }
@@ -413,16 +413,16 @@ const EmissionSourceForm = ({
             disabled={!canEdit}
             data-testid="emission-source-tag"
             options={tags
-              .filter((tag) => !emissionSource.emissionSourceTags.some((sourceTag) => tag.id === sourceTag.id))
+              .filter((tag) => !emissionSource.tagLinks.some((sourceTagLink) => tag.id === sourceTagLink.tag.id))
               .map((tag) => ({ label: tag.name, value: tag.id, color: tag.color }))}
-            value={emissionSource.emissionSourceTags.map((tag) => ({
-              label: tag.name,
-              value: tag.id,
-              color: tag.color,
+            value={emissionSource.tagLinks.map((tagLink) => ({
+              label: tagLink.tag.name,
+              value: tagLink.tag.id,
+              color: tagLink.tag.color,
             }))}
             onChange={(_, options: Option[]) => {
               update(
-                'emissionSourceTags',
+                'tagLinks',
                 options.map((tag) => tag.value),
               )
             }}

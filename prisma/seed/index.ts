@@ -1,5 +1,5 @@
-import { defaultEmissionSourceTags } from '@/constants/emissionSourceTags'
 import { environmentsWithChecklist } from '@/constants/environments'
+import { DefaultStudyTags } from '@/constants/studyTags'
 import { reCreateBegesRules } from '@/db/beges'
 import { signPassword } from '@/services/auth'
 import { getEmissionFactorsFromAPI } from '@/services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromAPI'
@@ -49,8 +49,9 @@ const users = async () => {
   await prisma.emissionFactorMetaData.deleteMany()
   await prisma.emissionFactor.deleteMany()
 
-  await prisma.emissionSourceTag.deleteMany()
-  await prisma.emissionSourceTagFamily.deleteMany()
+  await prisma.tagOnEmissionSource.deleteMany()
+  await prisma.studyTag.deleteMany()
+  await prisma.studyTagFamily.deleteMany()
 
   await prisma.userOnStudy.deleteMany()
   await prisma.studyExport.deleteMany()
@@ -798,12 +799,12 @@ const users = async () => {
         contributors: {
           create: { accountId: contributor.id, subPost: SubPost.MetauxPlastiquesEtVerre },
         },
-        emissionSourceTagFamilies: {
+        tagFamilies: {
           create: [
             {
               name: 'défaut',
-              emissionSourceTags: {
-                create: (defaultEmissionSourceTags[Environment.TILT] ?? []).map((tag) => ({
+              tags: {
+                create: (DefaultStudyTags[Environment.TILT] ?? []).map((tag) => ({
                   name: tag.name,
                   color: tag.color,
                 })),
@@ -846,12 +847,12 @@ const users = async () => {
             data: [{ role: StudyRole.Validator, accountId: defaultUserWithAccount.accounts[0].account.id }],
           },
         },
-        emissionSourceTagFamilies: {
+        tagFamilies: {
           create: [
             {
               name: 'défaut',
-              emissionSourceTags: {
-                create: (defaultEmissionSourceTags[Environment.TILT] ?? []).map((tag) => ({
+              tags: {
+                create: (DefaultStudyTags[Environment.TILT] ?? []).map((tag) => ({
                   name: tag.name,
                   color: tag.color,
                 })),

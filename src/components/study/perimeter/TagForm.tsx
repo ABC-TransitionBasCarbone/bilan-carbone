@@ -3,7 +3,7 @@
 import ColorPicker from '@/components/base/ColorPicker'
 import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
-import { EmissionSourceTagFamilyWithTags } from '@/db/study'
+import { StudyTagFamilyWithTags } from '@/db/study'
 import { Translations } from '@/types/translation'
 import { MenuItem } from '@mui/material'
 import { useTranslations } from 'next-intl'
@@ -12,7 +12,7 @@ import styles from './TagForm.module.css'
 
 interface Props {
   color: string
-  families: EmissionSourceTagFamilyWithTags[]
+  families: StudyTagFamilyWithTags[]
   onColorChange: (color: string) => void
   control: Control<{ name: string; familyId: string; color: string }>
   translation: Translations

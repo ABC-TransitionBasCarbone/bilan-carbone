@@ -138,7 +138,7 @@ export type ResultsByTag = {
 export const computeResultsByTag = (
   study: {
     emissionSources: FullStudy['emissionSources']
-    emissionSourceTagFamilies: FullStudy['emissionSourceTagFamilies']
+    tagFamilies: FullStudy['tagFamilies']
   },
   studySite: string,
   withDependencies: boolean,
@@ -155,23 +155,24 @@ export const computeResultsByTag = (
     }))
 
   const tagFamiliesWithOthers = [
-    ...study.emissionSourceTagFamilies,
+    ...study.tagFamilies,
     {
       id: 'otherFamily',
       name: t('other'),
-      emissionSourceTags: [{ name: t('other'), id: 'other', color: '', familyId: 'otherFamily' }],
+      tags: [{ name: t('other'), id: 'other', color: '', familyId: 'otherFamily' }],
     },
   ]
 
   return tagFamiliesWithOthers
     .map((tagFamily) => {
-      const tagInfos = tagFamily.emissionSourceTags
+      const tagInfos = tagFamily.tags
         .map((tag) => {
           const emissionSourcesforTag = emissionSourceWithEmissionValue.filter((emissionSource) =>
             tagFamily.id === 'otherFamily'
-              ? emissionSource.emissionSourceTags.length === 0
-              : emissionSource.emissionSourceTags?.some((emissionSourceTag) => emissionSourceTag.id === tag.id),
+              ? emissionSource.tagLinks.length === 0
+              : emissionSource.tagLinks?.some((tagLink) => tagLink.tag.id === tag.id),
           )
+
           const validatedEmissionSources = emissionSourcesforTag.filter((emissionSource) => emissionSource.validated)
           const emissionSourcesToUse = validatedOnly ? validatedEmissionSources : emissionSourcesforTag
 

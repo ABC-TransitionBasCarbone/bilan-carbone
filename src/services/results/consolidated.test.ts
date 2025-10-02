@@ -19,23 +19,93 @@ jest.mock('next-intl/server', () => ({
 const mockHasDeprecationPeriod = studyUtilsModule.hasDeprecationPeriod as jest.Mock
 
 const tags = [
-  { id: 'test', name: 'test', familyId: 'familyTag1', color: '#000000' },
-  { id: 'test2', name: 'test2', familyId: 'familyTag1', color: '#000000' },
-  { id: 'test3', name: 'test3', familyId: 'familyTag1', color: '#000000' },
-  { id: 'test4', name: 'test4', familyId: 'familyTag1', color: '#000000' },
-  { id: 'test21', name: 'test21', familyId: 'familyTag2', color: '#000000' },
-  { id: 'test22', name: 'test22', familyId: 'familyTag2', color: '#000000' },
-  { id: 'test23', name: 'test23', familyId: 'familyTag2', color: '#000000' },
-  { id: 'test24', name: 'test24', familyId: 'familyTag2', color: '#000000' },
-  { id: 'test31', name: 'test31', familyId: 'familyTag3', color: '#000000' },
-  { id: 'test32', name: 'test32', familyId: 'familyTag3', color: '#000000' },
-  { id: 'test34', name: 'test33', familyId: 'familyTag3', color: '#000000' },
+  { id: 'test', name: 'test', familyId: 'familyTag1', color: '#000000', createdAt: new Date(), updatedAt: new Date() },
+  {
+    id: 'test2',
+    name: 'test2',
+    familyId: 'familyTag1',
+    color: '#000000',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: 'test3',
+    name: 'test3',
+    familyId: 'familyTag1',
+    color: '#000000',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: 'test4',
+    name: 'test4',
+    familyId: 'familyTag1',
+    color: '#000000',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: 'test21',
+    name: 'test21',
+    familyId: 'familyTag2',
+    color: '#000000',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: 'test22',
+    name: 'test22',
+    familyId: 'familyTag2',
+    color: '#000000',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: 'test23',
+    name: 'test23',
+    familyId: 'familyTag2',
+    color: '#000000',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: 'test24',
+    name: 'test24',
+    familyId: 'familyTag2',
+    color: '#000000',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: 'test31',
+    name: 'test31',
+    familyId: 'familyTag3',
+    color: '#000000',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: 'test32',
+    name: 'test32',
+    familyId: 'familyTag3',
+    color: '#000000',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: 'test34',
+    name: 'test33',
+    familyId: 'familyTag3',
+    color: '#000000',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
 ]
 
-const emissionSourceTagFamilies = [
-  { id: 'familyTag1', name: 'Family Tag 1', emissionSourceTags: [tags[0], tags[1], tags[2], tags[3]] },
-  { id: 'familyTag2', name: 'Family Tag 2', emissionSourceTags: [tags[4], tags[5], tags[6], tags[7]] },
-  { id: 'familyTag3', name: 'Family Tag 3', emissionSourceTags: [tags[8], tags[9], tags[10]] },
+const tagFamilies = [
+  { id: 'familyTag1', name: 'Family Tag 1', tags: [tags[0], tags[1], tags[2], tags[3]] },
+  { id: 'familyTag2', name: 'Family Tag 2', tags: [tags[4], tags[5], tags[6], tags[7]] },
+  { id: 'familyTag3', name: 'Family Tag 3', tags: [tags[8], tags[9], tags[10]] },
 ]
 
 const studySite = { id: 'mocked-study-site-id', site: { name: 'Mocked Site', id: 'mocked-site-id' } }
@@ -51,7 +121,7 @@ describe('consolidated function', () => {
         getMockedFullStudyEmissionSource({
           validated: true,
           studySite,
-          emissionSourceTags: [tags[0], tags[4], tags[8]],
+          tagLinks: [tags[0], tags[4], tags[8]].map((tag) => ({ tag })),
           value: 100,
           reliability: 3,
           technicalRepresentativeness: 3,
@@ -59,34 +129,44 @@ describe('consolidated function', () => {
           temporalRepresentativeness: 5,
           completeness: 4,
         }),
-        getMockedFullStudyEmissionSource({ validated: true, studySite, emissionSourceTags: [tags[1]], value: 45 }),
         getMockedFullStudyEmissionSource({
           validated: true,
           studySite,
-          emissionSourceTags: [tags[1]],
+          tagLinks: [tags[1]].map((tag) => ({ tag })),
+          value: 45,
+        }),
+        getMockedFullStudyEmissionSource({
+          validated: true,
+          studySite,
+          tagLinks: [tags[1]].map((tag) => ({ tag })),
           subPost: SubPost.UtilisationEnDependance,
           value: 10,
         }),
-        getMockedFullStudyEmissionSource({ studySite, emissionSourceTags: [tags[1]], value: 45, validated: false }),
+        getMockedFullStudyEmissionSource({
+          studySite,
+          tagLinks: [tags[1]].map((tag) => ({ tag })),
+          value: 45,
+          validated: false,
+        }),
         getMockedFullStudyEmissionSource({
           validated: true,
           studySite,
-          emissionSourceTags: [tags[1], tags[4]],
+          tagLinks: [tags[1], tags[4]].map((tag) => ({ tag })),
           value: 50,
         }),
-        getMockedFullStudyEmissionSource({ validated: true, studySite, emissionSourceTags: [], value: 80 }),
-        getMockedFullStudyEmissionSource({ validated: true, studySite, emissionSourceTags: [], value: 0 }),
+        getMockedFullStudyEmissionSource({ validated: true, studySite, tagLinks: [], value: 80 }),
+        getMockedFullStudyEmissionSource({ validated: true, studySite, tagLinks: [], value: 0 }),
         getMockedFullStudyEmissionSource({
           validated: true,
           studySite,
           emissionFactor: null,
           emissionFactorId: null,
-          emissionSourceTags: [tags[1]],
+          tagLinks: [tags[1]].map((tag) => ({ tag })),
           value: 0,
         }),
       ]
 
-      const study = getMockeFullStudy({ emissionSources, emissionSourceTagFamilies })
+      const study = getMockeFullStudy({ emissionSources, tagFamilies })
 
       const result = computeResultsByTag(
         study,
@@ -165,42 +245,47 @@ describe('consolidated function', () => {
         getMockedFullStudyEmissionSource({
           validated: true,
           studySite,
-          emissionSourceTags: [tags[0], tags[4], tags[8]],
+          tagLinks: [tags[0], tags[4], tags[8]].map((tag) => ({ tag })),
           value: 100,
         }),
-        getMockedFullStudyEmissionSource({ validated: true, studySite, emissionSourceTags: [tags[1]], value: 45 }),
         getMockedFullStudyEmissionSource({
           validated: true,
           studySite,
-          emissionSourceTags: [tags[1]],
+          tagLinks: [tags[1]].map((tag) => ({ tag })),
+          value: 45,
+        }),
+        getMockedFullStudyEmissionSource({
+          validated: true,
+          studySite,
+          tagLinks: [tags[1]].map((tag) => ({ tag })),
           value: 10,
           subPost: SubPost.UtilisationEnDependance,
         }),
         getMockedFullStudyEmissionSource({
           studySite,
-          emissionSourceTags: [tags[1]],
+          tagLinks: [tags[1]].map((tag) => ({ tag })),
           value: 45,
           validated: false,
         }),
         getMockedFullStudyEmissionSource({
           validated: true,
           studySite,
-          emissionSourceTags: [tags[1], tags[4]],
+          tagLinks: [tags[1], tags[4]].map((tag) => ({ tag })),
           value: 50,
         }),
-        getMockedFullStudyEmissionSource({ validated: true, studySite, emissionSourceTags: [], value: 80 }),
-        getMockedFullStudyEmissionSource({ validated: true, studySite, emissionSourceTags: [], value: 0 }),
+        getMockedFullStudyEmissionSource({ validated: true, studySite, tagLinks: [], value: 80 }),
+        getMockedFullStudyEmissionSource({ validated: true, studySite, tagLinks: [], value: 0 }),
         getMockedFullStudyEmissionSource({
           validated: true,
           studySite,
           emissionFactor: null,
           emissionFactorId: null,
-          emissionSourceTags: [tags[1]],
+          tagLinks: [tags[1]].map((tag) => ({ tag })),
           value: 450,
         }),
       ]
 
-      const study = getMockeFullStudy({ emissionSources, emissionSourceTagFamilies })
+      const study = getMockeFullStudy({ emissionSources, tagFamilies })
 
       const result = computeResultsByTag(
         study,
@@ -277,7 +362,7 @@ describe('consolidated function', () => {
     test('should handle empty value', () => {
       const emissionSources = [] as FullStudy['emissionSources']
 
-      const study = getMockeFullStudy({ emissionSources, emissionSourceTagFamilies })
+      const study = getMockeFullStudy({ emissionSources, tagFamilies })
 
       const result = computeResultsByTag(
         study,
