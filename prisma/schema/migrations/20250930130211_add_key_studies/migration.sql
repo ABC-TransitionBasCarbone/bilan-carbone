@@ -2,17 +2,17 @@
 CREATE TYPE "public"."DuplicableStudy" AS ENUM ('TrainingExercise');
 
 -- CreateTable
-CREATE TABLE "public"."key_studies" (
+CREATE TABLE "public"."study_templates" (
     "id" TEXT NOT NULL,
     "study_id" TEXT NOT NULL,
     "environment" "public"."Environment" NOT NULL,
-    "role" "public"."DuplicableStudy" NOT NULL,
+    "template" "public"."DuplicableStudy" NOT NULL,
 
-    CONSTRAINT "key_studies_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "study_templates_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "key_studies_environment_role_key" ON "public"."key_studies"("environment", "role");
+CREATE UNIQUE INDEX "study_templates_environment_template_key" ON "public"."study_templates"("environment", "template");
 
 -- AddForeignKey
-ALTER TABLE "public"."key_studies" ADD CONSTRAINT "key_studies_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "public"."studies"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "public"."study_templates" ADD CONSTRAINT "study_templates_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "public"."studies"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
