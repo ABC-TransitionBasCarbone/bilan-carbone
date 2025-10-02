@@ -11,7 +11,7 @@ import { createUsersWithAccount, updateAccount } from '@/db/user'
 import { Environment, Level, Prisma, Role, UserSource, UserStatus } from '@prisma/client'
 import { getCutRoleFromBase } from '../../../prisma/seed/utils'
 
-const processUser = async (value: Record<string, string>, importedFileDate: Date) => {
+export const processUser = async (value: Record<string, string>, importedFileDate: Date) => {
   const {
     Firstname: firstName = '',
     Lastname: lastName = '',
