@@ -4958,8 +4958,6 @@ export const elementsBySubPost: Record<SubPost, string[]> = {
     '39601',
     '39602',
     '39603',
-    '20640',
-    '20558',
     '40679',
     '40969',
     '41423',
@@ -8619,6 +8617,8 @@ export const elementsBySubPost: Record<SubPost, string[]> = {
   ],
   [SubPost.AutresIntrants]: [
     '20762',
+    '20640',
+    '20558',
     '20587',
     '20793',
     '20761',
