@@ -6,6 +6,7 @@ const COUNT_ROUTE = '/count'
 const TILT_ROUTE = '/tilt'
 const ENV_ROUTES = [COUNT_ROUTE, TILT_ROUTE]
 const publicRoutes = ['/login', '/reset-password', '/activation', '/preview', ...ENV_ROUTES]
+const assetsRoutes = ['/_next', '/img']
 
 const bucketName = process.env.SCW_BUCKET_NAME as string
 const region = process.env.SCW_REGION
@@ -21,12 +22,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(countLoginUrl)
   }
 
-  if (
-    !publicRoutes.find((route) => req.nextUrl.pathname.startsWith(route)) &&
-    !req.nextUrl.pathname.startsWith('/_next') &&
-    !req.nextUrl.pathname.startsWith('/img') &&
-    !req.nextUrl.pathname.startsWith('/favicon.ico')
-  ) {
+  if (![...publicRoutes, ...assetsRoutes].find((route) => req.nextUrl.pathname.startsWith(route))) {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
 
     if (!token) {
