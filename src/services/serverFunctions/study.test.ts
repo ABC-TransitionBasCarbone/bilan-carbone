@@ -39,6 +39,7 @@ jest.mock('../../db/study', () => ({
   createStudy: jest.fn(),
   updateStudyEmissionFactorVersion: jest.fn(),
   createContributorOnStudy: jest.fn(),
+  createTagOnEmissionSources: jest.fn(),
 }))
 jest.mock('../../services/permissions/study', () => ({
   hasEditionRights: jest.fn(),
@@ -86,6 +87,7 @@ jest.mock('../../db/emissionFactors', () => ({
 jest.mock('../../db/emissionSource', () => ({
   createTagFamilyAndRelatedTags: jest.fn(),
   getFamilyTagsForStudy: jest.fn(),
+  createEmissionSourcesWithReturn: jest.fn(),
 }))
 jest.mock('../../utils/user', () => ({
   isAdmin: jest.fn(),
@@ -129,7 +131,7 @@ const mockedResults = {
   nonSpecificMonetaryRatio: mockedNonSpecificMonetaryRatio,
 }
 
-const { duplicateStudyCommand, mapStudyForReport } = jest.requireActual('./study')
+const { duplicateStudyCommand, mapStudyForReport, duplicateEmissionSources } = jest.requireActual('./study')
 
 const mockedAuthUser = getMockedAuthUser({ email: TEST_EMAILS.currentUser })
 const mockedSourceStudy = getMockeFullStudy()
@@ -143,6 +145,7 @@ const mockCreateUserOnStudy = studyDbModule.createUserOnStudy as jest.Mock
 const mockCreateStudy = studyDbModule.createStudy as jest.Mock
 const mockUpdateStudyEmissionFactorVersion = studyDbModule.updateStudyEmissionFactorVersion as jest.Mock
 const mockCreateContributorOnStudy = studyDbModule.createContributorOnStudy as jest.Mock
+const mockCreateTagOnEmissionSources = studyDbModule.createTagOnEmissionSources as jest.Mock
 const mockAddUserChecklistItem = userModule.addUserChecklistItem as jest.Mock
 const mockGetOrganizationVersionById = organizationModule.getOrganizationVersionById as jest.Mock
 const mockGetUserByEmail = userDbModule.getUserByEmail as jest.Mock
@@ -159,12 +162,15 @@ const mockGetEmissionFactorsImportActiveVersion =
 const mockIsAdmin = userUtilsModule.isAdmin as unknown as jest.Mock
 const mockCreateTagFamilyAndRelatedTags = emissionSourcesModule.createTagFamilyAndRelatedTags as jest.Mock
 const mockGetFamilyTagsForStudy = emissionSourcesModule.getFamilyTagsForStudy as jest.Mock
+const mockCreateEmissionSourcesWithReturn = emissionSourcesModule.createEmissionSourcesWithReturn as jest.Mock
 const mockIsOrganizationVersionCR = organizationModule.isOrganizationVersionCR as jest.Mock
 
 describe('study', () => {
   describe('duplicateStudyCommand', () => {
     const setupSuccessfulDuplication = () => {
       mockCreateTagFamilyAndRelatedTags.mockResolvedValue([])
+      mockCreateTagOnEmissionSources.mockResolvedValue(undefined)
+      mockCreateEmissionSourcesWithReturn.mockResolvedValue([{ id: TEST_IDS.emissionSource }])
       mockGetFamilyTagsForStudy.mockResolvedValue([])
       mockDbActualizedAuth.mockResolvedValue({ user: mockedAuthUser })
       mockCanDuplicateStudy.mockResolvedValue(true)
@@ -262,15 +268,17 @@ describe('study', () => {
       it('should duplicate emission sources with correct site mapping', async () => {
         await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand)
 
-        expect(mockCreateStudyEmissionSource).toHaveBeenCalledWith(
-          expect.objectContaining({
-            name: 'Test Emission Source',
-            value: 100,
-            study: { connect: { id: TEST_IDS.newStudy } },
-            studySite: { connect: { id: TEST_IDS.newStudySite } },
-            emissionFactor: { connect: { id: TEST_IDS.emissionFactor } },
-            validated: false,
-          }),
+        expect(mockCreateEmissionSourcesWithReturn).toHaveBeenCalledWith(
+          expect.arrayContaining([
+            expect.objectContaining({
+              name: 'Test Emission Source',
+              value: 100,
+              studyId: TEST_IDS.newStudy,
+              studySiteId: TEST_IDS.newStudySite,
+              emissionFactorId: TEST_IDS.emissionFactor,
+              validated: false,
+            }),
+          ]),
         )
       })
     })

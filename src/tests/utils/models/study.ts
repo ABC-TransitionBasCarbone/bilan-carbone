@@ -196,6 +196,7 @@ export const TEST_IDS = {
   userStudy: 'user-study-id',
   contributorStudy: 'contributor-study-id',
   account: 'account-id',
+  tag: 'tag-id',
 }
 
 export const TEST_EMAILS = {

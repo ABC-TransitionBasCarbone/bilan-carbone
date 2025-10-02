@@ -25,7 +25,11 @@ import {
   getEmissionFactorVersionsBySource,
   getStudyEmissionFactorSources,
 } from '@/db/emissionFactors'
-import { createEmissionSourcesOnStudy, getFamilyTagsForStudy } from '@/db/emissionSource'
+import {
+  createEmissionSourcesOnStudy,
+  createEmissionSourcesWithReturn,
+  getFamilyTagsForStudy,
+} from '@/db/emissionSource'
 import {
   getOrganizationVersionById,
   getOrganizationVersionsByOrganizationId,
@@ -40,6 +44,7 @@ import {
   createContributorOnStudy,
   createStudy,
   createStudyEmissionSource,
+  createTagOnEmissionSources,
   createUserOnStudy,
   deleteAccountOnStudy,
   deleteContributor,
@@ -1242,6 +1247,110 @@ export const upgradeStudyEmissionFactorSource = async (studyId: string, source: 
     return undefined
   })
 
+const duplicateEmissionSources = async (
+  sourceEmissionSources: FullStudy['emissionSources'],
+  targetStudy: FullStudy,
+  sourceStudyId: string,
+  shouldClearCaracterisations: boolean,
+) => {
+  const { id: targetStudyId, sites: targetStudySites, tagFamilies: targetTagFamilies } = targetStudy
+
+  const sourceTagFamilies = await getFamilyTagsForStudy(sourceStudyId)
+
+  // Map emission sources to target study sites
+  const emissionSourcesWithSites = sourceEmissionSources
+    .map((sourceEmissionSource) => {
+      const sourceSiteId = sourceEmissionSource.studySite.site.id
+      const targetStudySite = targetStudySites.find((studySite) => studySite.site.id === sourceSiteId)
+      const targetStudySiteId = targetStudySites.find((site) => targetStudySite && site.id === targetStudySite.id)?.id
+
+      if (!targetStudySiteId) {
+        return null
+      }
+
+      return {
+        sourceEmissionSource,
+        targetStudySiteId,
+      }
+    })
+    .filter((item) => item !== null)
+
+  const emissionSourcesDataWithSourceId = emissionSourcesWithSites.map(
+    ({ sourceEmissionSource, targetStudySiteId }) => ({
+      sourceId: sourceEmissionSource.id,
+      data: {
+        name: sourceEmissionSource.name,
+        value: sourceEmissionSource.value,
+        subPost: sourceEmissionSource.subPost,
+        type: sourceEmissionSource.type,
+        source: sourceEmissionSource.source,
+        comment: sourceEmissionSource.comment,
+        depreciationPeriod: sourceEmissionSource.depreciationPeriod,
+        hectare: sourceEmissionSource.hectare,
+        duration: sourceEmissionSource.duration,
+        reliability: sourceEmissionSource.reliability,
+        technicalRepresentativeness: sourceEmissionSource.technicalRepresentativeness,
+        geographicRepresentativeness: sourceEmissionSource.geographicRepresentativeness,
+        temporalRepresentativeness: sourceEmissionSource.temporalRepresentativeness,
+        completeness: sourceEmissionSource.completeness,
+        feReliability: sourceEmissionSource.feReliability,
+        feTechnicalRepresentativeness: sourceEmissionSource.feTechnicalRepresentativeness,
+        feGeographicRepresentativeness: sourceEmissionSource.feGeographicRepresentativeness,
+        feTemporalRepresentativeness: sourceEmissionSource.feTemporalRepresentativeness,
+        feCompleteness: sourceEmissionSource.feCompleteness,
+        caracterisation: shouldClearCaracterisations ? null : sourceEmissionSource.caracterisation,
+        studyId: targetStudyId,
+        emissionFactorId: sourceEmissionSource.emissionFactor?.id ?? null,
+        studySiteId: targetStudySiteId,
+        validated: false,
+      },
+    }),
+  )
+
+  const createdEmissionSources = await createEmissionSourcesWithReturn(
+    emissionSourcesDataWithSourceId.map((item) => item.data),
+  )
+
+  const sourceToTargetMap = new Map(
+    emissionSourcesDataWithSourceId.map((item, index) => [item.sourceId, createdEmissionSources[index].id]),
+  )
+
+  const tagLinksData = sourceEmissionSources.flatMap((sourceEmissionSource) => {
+    const createdEmissionSourceId = sourceToTargetMap.get(sourceEmissionSource.id)
+    if (!createdEmissionSourceId) {
+      return []
+    }
+
+    return sourceEmissionSource.tagLinks
+      .map((tagLink) => {
+        const sourceTag = sourceTagFamilies
+          .flatMap((f) => f.tags.map((t) => ({ ...t, familyName: f.name })))
+          .find((t) => t.id === tagLink.tag.id)
+
+        if (!sourceTag) {
+          return null
+        }
+
+        const targetFamily = targetTagFamilies.find((f) => f.name === sourceTag.familyName)
+        const targetTag = targetFamily?.tags.find((t) => t.name === sourceTag.name)
+
+        if (!targetTag) {
+          return null
+        }
+
+        return {
+          emissionSourceId: createdEmissionSourceId,
+          tagId: targetTag.id,
+        }
+      })
+      .filter((t) => t !== null)
+  })
+
+  if (tagLinksData.length > 0) {
+    await createTagOnEmissionSources(tagLinksData)
+  }
+}
+
 export const duplicateStudyCommand = async (
   sourceStudyId: string,
   studyCommand: CreateStudyCommand,
@@ -1271,12 +1380,10 @@ export const duplicateStudyCommand = async (
 
     const createdStudyId = createResult.data.id
 
-    const createdStudyWithSites = await getStudyById(createdStudyId, session.user.organizationVersionId)
-    if (!createdStudyWithSites) {
+    const createdStudy = await getStudyById(createdStudyId, session.user.organizationVersionId)
+    if (!createdStudy) {
       throw new Error('Failed to retrieve created study')
     }
-
-    const studySites = await getStudySites(createdStudyId)
 
     for (const sourceVersion of sourceStudy.emissionFactorVersions) {
       await updateStudyEmissionFactorVersion(createdStudyId, sourceVersion.source, sourceVersion.importVersionId)
@@ -1299,71 +1406,15 @@ export const duplicateStudyCommand = async (
 
     const shouldClearCaracterisations = Object.values(Export).some(hasControlModeChanged)
 
-    const sourceTagFamilies = await getFamilyTagsForStudy(sourceStudy.id)
-    const targetTagFamilies = createdStudyWithSites.tagFamilies
-
-    const sourceEmissionSources = sourceStudy.emissionSources
-    for (const sourceEmissionSource of sourceEmissionSources) {
-      const sourceSiteId = sourceEmissionSource.studySite.site.id
-      const targetStudySite = createdStudyWithSites.sites.find((studySite) => studySite.site.id === sourceSiteId)
-      const targetStudySiteId = studySites.find((site) => targetStudySite && site.id === targetStudySite.id)?.id
-
-      if (targetStudySiteId) {
-        const tagIds = sourceEmissionSource.tagLinks
-          .map((tagLink) => {
-            const sourceTag = sourceTagFamilies
-              .flatMap((f) => f.tags.map((t) => ({ ...t, familyName: f.name })))
-              .find((t) => t.id === tagLink.tag.id)
-
-            if (!sourceTag) {
-              return null
-            }
-
-            const targetFamily = targetTagFamilies.find((f) => f.name === sourceTag.familyName)
-            const targetTag = targetFamily?.tags.find((t) => t.name === sourceTag.name)
-
-            return targetTag ? { tagId: targetTag.id } : null
-          })
-          .filter((t) => t !== null)
-
-        const emissionSourceData = {
-          name: sourceEmissionSource.name,
-          value: sourceEmissionSource.value,
-          subPost: sourceEmissionSource.subPost,
-          type: sourceEmissionSource.type,
-          source: sourceEmissionSource.source,
-          comment: sourceEmissionSource.comment,
-          depreciationPeriod: sourceEmissionSource.depreciationPeriod,
-          hectare: sourceEmissionSource.hectare,
-          duration: sourceEmissionSource.duration,
-          reliability: sourceEmissionSource.reliability,
-          technicalRepresentativeness: sourceEmissionSource.technicalRepresentativeness,
-          geographicRepresentativeness: sourceEmissionSource.geographicRepresentativeness,
-          temporalRepresentativeness: sourceEmissionSource.temporalRepresentativeness,
-          completeness: sourceEmissionSource.completeness,
-          feReliability: sourceEmissionSource.feReliability,
-          feTechnicalRepresentativeness: sourceEmissionSource.feTechnicalRepresentativeness,
-          feGeographicRepresentativeness: sourceEmissionSource.feGeographicRepresentativeness,
-          feTemporalRepresentativeness: sourceEmissionSource.feTemporalRepresentativeness,
-          feCompleteness: sourceEmissionSource.feCompleteness,
-          caracterisation: shouldClearCaracterisations ? null : sourceEmissionSource.caracterisation,
-          study: { connect: { id: createdStudyId } },
-          emissionFactor: sourceEmissionSource.emissionFactor
-            ? { connect: { id: sourceEmissionSource.emissionFactor.id } }
-            : undefined,
-          studySite: { connect: { id: targetStudySiteId } },
-          validated: false,
-          tagLinks: {
-            create: tagIds,
-          },
-        }
-
-        await createStudyEmissionSource(emissionSourceData)
-      }
-    }
+    await duplicateEmissionSources(
+      sourceStudy.emissionSources,
+      createdStudy,
+      sourceStudy.id,
+      shouldClearCaracterisations,
+    )
 
     if (inviteExistingTeam) {
-      const organizationVersion = await getOrganizationVersionById(createdStudyWithSites.organizationVersionId)
+      const organizationVersion = await getOrganizationVersionById(createdStudy.organizationVersionId)
       if (organizationVersion) {
         for (const teamMember of sourceStudy.allowedUsers) {
           // Skip the current user since they're already added as the creator
@@ -1374,7 +1425,7 @@ export const duplicateStudyCommand = async (
           const existingUser = await getUserByEmail(teamMember.account.user.email)
           const accountId = await getOrCreateUserAndSendStudyInvite(
             teamMember.account.user.email,
-            createdStudyWithSites,
+            createdStudy,
             organizationVersion as OrganizationVersionWithOrganization,
             session.user,
             existingUser,
@@ -1392,7 +1443,7 @@ export const duplicateStudyCommand = async (
     }
 
     if (inviteExistingContributors) {
-      const organizationVersion = await getOrganizationVersionById(createdStudyWithSites.organizationVersionId)
+      const organizationVersion = await getOrganizationVersionById(createdStudy.organizationVersionId)
       if (organizationVersion) {
         const contributorsByEmail = sourceStudy.contributors.reduce(
           (acc, contributor) => {
@@ -1415,7 +1466,7 @@ export const duplicateStudyCommand = async (
           const existingUser = await getUserByEmail(email)
           const accountId = await getOrCreateUserAndSendStudyInvite(
             email,
-            createdStudyWithSites,
+            createdStudy,
             organizationVersion as OrganizationVersionWithOrganization,
             session.user,
             existingUser,
