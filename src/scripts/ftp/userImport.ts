@@ -25,6 +25,9 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
     Membership_Year: membershipYear,
     User_Source: source,
     Environment: dataEnvironment,
+    Formation_Name: formationName,
+    Formation_Start_Date: formationStartDate,
+    Formation_End_Date: formationEndDate,
   } = value
 
   const environment = (dataEnvironment || Environment.BC) as Environment
@@ -50,6 +53,9 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
       status: UserStatus.IMPORTED,
       importedFileDate,
       environment,
+      formationName,
+      formationStartDate,
+      formationEndDate,
       user: {
         create: undefined,
         connectOrCreate: undefined,
