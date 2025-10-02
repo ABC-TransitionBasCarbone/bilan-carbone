@@ -70,7 +70,7 @@ import {
 import { addUser, getUserApplicationSettings, getUserByEmail, getUserSourceById, UserWithAccounts } from '@/db/user'
 import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
-import { getNestedValue } from '@/utils/array'
+import { getNestedValue, groupBy } from '@/utils/array'
 import { mapCncToStudySite } from '@/utils/cnc'
 import { calculateDistanceFromParis } from '@/utils/distance'
 import { CA_UNIT_VALUES, defaultCAUnit, formatNumber } from '@/utils/number'
@@ -1886,9 +1886,10 @@ export const assignTrainingExerciseStudy = async (): Promise<{ created: number; 
     const studyTemplate = await getStudyTemplate(DuplicableStudy.TrainingExercise, account.environment)
     if (studyTemplate) {
       try {
-        await duplicateStudyTemplateForAccount(
-          account,
+        await duplicateStudyTemplateForAccounts(
+          [account],
           studyTemplate.studyId,
+          StudyRole.Validator,
           ` - ${account.user.firstName} ${account.user.lastName}`,
         )
         created++
@@ -1903,17 +1904,49 @@ export const assignTrainingExerciseStudy = async (): Promise<{ created: number; 
   return { created, error }
 }
 
-export const duplicateStudyTemplateForAccount = async (
-  account: { id: string; environment: Environment },
+export const assignTrainingCorrectionExerciseStudy = async () => {
+  const created = []
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  const tomorrow = new Date(today)
+  tomorrow.setDate(today.getDate() + 1)
+
+  const targetAccounts = await prismaClient.account.findMany({
+    where: { formationEndDate: { gte: today, lt: tomorrow } },
+    select: { id: true, environment: true, formationName: true, user: { select: { firstName: true, lastName: true } } },
+  })
+  const groupedByEnv = groupBy(targetAccounts, 'environment')
+  for (const [environment, envAccounts] of Object.entries(groupedByEnv)) {
+    const groupedByFormationName = groupBy(envAccounts, 'formationName')
+    const studyTemplate = await getStudyTemplate(DuplicableStudy.TrainingCorrectionExercise, environment as Environment)
+    if (studyTemplate) {
+      for (const [formationName, accounts] of Object.entries(groupedByFormationName)) {
+        await duplicateStudyTemplateForAccounts(
+          accounts,
+          studyTemplate.studyId,
+          StudyRole.Reader,
+          ` - ${formationName}`,
+        )
+        created.push(formationName)
+      }
+    }
+  }
+  return created
+}
+
+export const duplicateStudyTemplateForAccounts = async (
+  accounts: { id: string; environment: Environment }[],
   studyId: string,
+  role: StudyRole,
   nameSuffix?: string,
 ) => {
   const study = await getStudyById(studyId, null)
-  if (!study || study.organizationVersion.environment !== account.environment) {
+  const environment = accounts[0].environment
+  if (!study || study.organizationVersion.environment !== environment) {
     throw new Error(NOT_AUTHORIZED)
   }
-  const environment = account.environment
-  const allowedUsers = [{ accountId: account.id, role: StudyRole.Validator }]
+  const allowedUsers = accounts.map((account) => ({ accountId: account.id, role }))
   const sites = await getSitesForDuplication(study)
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -1921,9 +1954,10 @@ export const duplicateStudyTemplateForAccount = async (
   if (nameSuffix) {
     restStudy.name = restStudy.name + nameSuffix
   }
+  const creator = accounts.length === 1 ? accounts[0].id : createdById
   const studyCommand: Prisma.StudyCreateInput = buildStudyForDuplication(
     restStudy,
-    account.id,
+    creator,
     study.organizationVersion.id,
     allowedUsers,
     [],
