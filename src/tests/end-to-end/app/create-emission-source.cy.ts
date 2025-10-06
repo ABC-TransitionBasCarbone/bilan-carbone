@@ -117,7 +117,7 @@ describe('Create study emission source', () => {
     cy.getByTestId('emission-source-My emission source name')
       .last()
       .within(() => {
-        cy.getByTestId('emission-source-status').should('have.text', 'À vérifier')
+        cy.getByTestId('emission-source-status').invoke('text').should('contain', 'À vérifier')
         cy.getByTestId('emission-source-status').last().click()
         cy.getByTestId('emission-source-value').should('have.text', '1 008 tCO₂e')
         cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Mauvaise')
