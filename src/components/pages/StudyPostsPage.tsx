@@ -28,6 +28,10 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, use
   const [glossary, setGlossary] = useState('')
 
   const glossaryDescription = useMemo(() => {
+    if (!glossary) {
+      return ''
+    }
+
     const textForGlossary = tPost.has(
       `glossaryDescription.${glossary}${study.organizationVersion.environment.toLowerCase()}`,
     )
