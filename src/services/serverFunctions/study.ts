@@ -1755,7 +1755,6 @@ export const duplicateStudyEmissionSource = async (
       tagLinks: {
         create: emissionSource.tagLinks.map((tagLink) => ({
           tagId: tagLink.tag.id,
-          emissionSourceId: '',
         })),
       },
     } as Prisma.StudyEmissionSourceCreateInput
