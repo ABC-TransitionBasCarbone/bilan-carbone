@@ -190,7 +190,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
             study={study}
             emissionFactorsWithParts={emissionFactorsWithParts}
             validatedOnly={validatedOnly}
-            results={computedResultsWithoutDep}
+            results={computedResultsWithDep}
             begesResults={computedBegesData}
           />
         )}
