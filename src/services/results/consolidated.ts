@@ -169,8 +169,8 @@ export const computeResultsByTag = (
         .map((tag) => {
           const emissionSourcesforTag = emissionSourceWithEmissionValue.filter((emissionSource) =>
             tagFamily.id === 'otherFamily'
-              ? emissionSource.tagLinks.length === 0
-              : emissionSource.tagLinks?.some((tagLink) => tagLink.tag.id === tag.id),
+              ? emissionSource.emissionSourceTags.length === 0
+              : emissionSource.emissionSourceTags?.some((emissionSourceTag) => emissionSourceTag.tag.id === tag.id),
           )
 
           const validatedEmissionSources = emissionSourcesforTag.filter((emissionSource) => emissionSource.validated)

@@ -413,16 +413,18 @@ const EmissionSourceForm = ({
             disabled={!canEdit}
             data-testid="emission-source-tag"
             options={tags
-              .filter((tag) => !emissionSource.tagLinks.some((sourceTagLink) => tag.id === sourceTagLink.tag.id))
+              .filter(
+                (tag) => !emissionSource.emissionSourceTags.some((sourceTagLink) => tag.id === sourceTagLink.tag.id),
+              )
               .map((tag) => ({ label: tag.name, value: tag.id, color: tag.color }))}
-            value={emissionSource.tagLinks.map((tagLink) => ({
-              label: tagLink.tag.name,
-              value: tagLink.tag.id,
-              color: tagLink.tag.color,
+            value={emissionSource.emissionSourceTags.map((emissionSourceTag) => ({
+              label: emissionSourceTag.tag.name,
+              value: emissionSourceTag.tag.id,
+              color: emissionSourceTag.tag.color,
             }))}
             onChange={(_, options: Option[]) => {
               update(
-                'tagLinks',
+                'emissionSourceTags',
                 options.map((tag) => tag.value),
               )
             }}

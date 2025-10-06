@@ -98,7 +98,7 @@ model StudyTag {
   familyId String          @map("family_id")
   family   StudyTagFamily @relation(fields: [familyId], references: [id])
 
-  emissionSources TagOnEmissionSource[]
+  emissionSourceTags EmissionSourceTag[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -107,7 +107,7 @@ model StudyTag {
   @@map("study_tag")
 }
 
-model TagOnEmissionSource {
+model EmissionSourceTag {
   emissionSourceId String              @map("emission_source_id")
   emissionSource   StudyEmissionSource @relation(fields: [emissionSourceId], references: [id], onDelete: Cascade)
 
@@ -118,9 +118,9 @@ model TagOnEmissionSource {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@id([emissionSourceId, tagId])
-  @@index([emissionSourceId], map: "tag_on_emission_source_emission_source_id_idx")
-  @@index([tagId], map: "tag_on_emission_source_tag_id_idx")
-  @@map("tag_on_emission_source")
+  @@index([emissionSourceId], map: "emission_source_tag_emission_source_id_idx")
+  @@index([tagId], map: "emission_source_tag_tag_id_idx")
+  @@map("emission_source_tag")
 }
 
 model Study {
@@ -256,7 +256,7 @@ model StudyEmissionSource {
 
   answerEmissionSources AnswerEmissionSource[]
 
-  tagLinks TagOnEmissionSource[]
+  emissionSourceTags EmissionSourceTag[]
 
   @@map("study_emission_sources")
 }

@@ -123,7 +123,7 @@ const fullStudyInclude = {
           },
         },
       },
-      tagLinks: {
+      emissionSourceTags: {
         select: {
           tag: {
             select: {
@@ -843,7 +843,7 @@ export const upsertStudyTemplate = async (template: DuplicableStudy, environment
 export const getStudyTemplate = async (template: DuplicableStudy, environment: Environment) =>
   prismaClient.studyTemplate.findUnique({ where: { environment_template: { environment, template } } })
 
-export const createTagOnEmissionSources = async (tagOnEmissionSources: Prisma.TagOnEmissionSourceCreateManyInput[]) =>
-  prismaClient.tagOnEmissionSource.createMany({
-    data: tagOnEmissionSources,
+export const createEmissionSourceTags = async (emissionSourceTags: Prisma.EmissionSourceTagCreateManyInput[]) =>
+  prismaClient.emissionSourceTag.createMany({
+    data: emissionSourceTags,
   })

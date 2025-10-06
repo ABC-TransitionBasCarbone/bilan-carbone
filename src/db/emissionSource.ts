@@ -2,7 +2,8 @@ import { DefaultStudyTags } from '@/constants/studyTags'
 import { Environment, Prisma } from '@prisma/client'
 import { prismaClient } from './client'
 
-export const getEmissionSourceById = (id: string) => prismaClient.studyEmissionSource.findUnique({ where: { id } })
+export const getEmissionSourceById = (id: string) =>
+  prismaClient.studyEmissionSource.findUnique({ where: { id }, include: { emissionSourceTags: true } })
 
 export const createEmissionSourceOnStudy = (emissionSource: Prisma.StudyEmissionSourceCreateInput) =>
   prismaClient.studyEmissionSource.create({

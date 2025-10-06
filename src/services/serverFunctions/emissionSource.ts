@@ -74,7 +74,7 @@ export const createEmissionSource = async ({
 
     return await createEmissionSourceOnStudy({
       ...command,
-      tagLinks: { create: defaultTags.map((id) => ({ tagId: id })) },
+      emissionSourceTags: { create: defaultTags.map((id) => ({ tagId: id })) },
       ...(emissionFactorId ? { emissionFactor: { connect: { id: emissionFactorId } } } : {}),
       studySite: { connect: { id: studySiteId } },
       study: { connect: { id: studyId } },
@@ -128,16 +128,24 @@ export const updateEmissionSource = async ({
         contributor.account.user.email === account.user.email && contributor.subPost === emissionSource.subPost,
     )
 
+    let emissionSourceTags = undefined
+    if (command.emissionSourceTags && Array.isArray(command.emissionSourceTags)) {
+      const existingTagIds = emissionSource.emissionSourceTags.map((t) => t.tagId)
+      const newTagIds = command.emissionSourceTags || []
+
+      const toDelete = existingTagIds.filter((id) => !newTagIds.includes(id))
+      const toCreate = newTagIds.filter((id) => !existingTagIds.includes(id))
+
+      emissionSourceTags = {
+        deleteMany: { tagId: { in: toDelete } },
+        create: toCreate.map((tagId) => ({ tagId })),
+      }
+    }
+
     const data: Prisma.StudyEmissionSourceUpdateInput = {
       ...{
         ...command,
-        tagLinks:
-          command.tagLinks && Array.isArray(command.tagLinks)
-            ? {
-                deleteMany: {},
-                create: command.tagLinks.map((tagId) => ({ tagId })),
-              }
-            : undefined,
+        emissionSourceTags,
       },
       ...(emissionFactorId !== undefined
         ? {

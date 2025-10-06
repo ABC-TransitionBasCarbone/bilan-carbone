@@ -1,5 +1,6 @@
 import { expect } from '@jest/globals'
 import { Environment, Import, Level, StudyRole } from '@prisma/client'
+import { v4 as uuidv4 } from 'uuid'
 import * as accountModule from '../../db/account'
 import * as emissionFactorsModule from '../../db/emissionFactors'
 import * as emissionSourcesModule from '../../db/emissionSource'
@@ -28,6 +29,10 @@ jest.mock('next-intl/server', () => ({
   getTranslations: jest.fn(() => (key: string) => key),
 }))
 
+jest.mock('uuid', () => ({
+  v4: jest.fn(),
+}))
+
 jest.mock('../../services/auth', () => ({
   dbActualizedAuth: jest.fn(),
 }))
@@ -39,7 +44,7 @@ jest.mock('../../db/study', () => ({
   createStudy: jest.fn(),
   updateStudyEmissionFactorVersion: jest.fn(),
   createContributorOnStudy: jest.fn(),
-  createTagOnEmissionSources: jest.fn(),
+  createEmissionSourceTags: jest.fn(),
 }))
 jest.mock('../../services/permissions/study', () => ({
   hasEditionRights: jest.fn(),
@@ -145,7 +150,7 @@ const mockCreateUserOnStudy = studyDbModule.createUserOnStudy as jest.Mock
 const mockCreateStudy = studyDbModule.createStudy as jest.Mock
 const mockUpdateStudyEmissionFactorVersion = studyDbModule.updateStudyEmissionFactorVersion as jest.Mock
 const mockCreateContributorOnStudy = studyDbModule.createContributorOnStudy as jest.Mock
-const mockCreateTagOnEmissionSources = studyDbModule.createTagOnEmissionSources as jest.Mock
+const mockCreateEmissionSourceTags = studyDbModule.createEmissionSourceTags as jest.Mock
 const mockAddUserChecklistItem = userModule.addUserChecklistItem as jest.Mock
 const mockGetOrganizationVersionById = organizationModule.getOrganizationVersionById as jest.Mock
 const mockGetUserByEmail = userDbModule.getUserByEmail as jest.Mock
@@ -169,7 +174,7 @@ describe('study', () => {
   describe('duplicateStudyCommand', () => {
     const setupSuccessfulDuplication = () => {
       mockCreateTagFamilyAndRelatedTags.mockResolvedValue([])
-      mockCreateTagOnEmissionSources.mockResolvedValue(undefined)
+      mockCreateEmissionSourceTags.mockResolvedValue(undefined)
       mockCreateEmissionSourcesWithReturn.mockResolvedValue([{ id: TEST_IDS.emissionSource }])
       mockGetFamilyTagsForStudy.mockResolvedValue([])
       mockDbActualizedAuth.mockResolvedValue({ user: mockedAuthUser })
@@ -342,6 +347,11 @@ describe('study', () => {
       })
 
       it('should duplicate emission sources with tags from multiple tag families', async () => {
+        const mockUuidv4 = jest.mocked(uuidv4)
+        mockUuidv4
+          .mockReturnValueOnce('created-es-1' as unknown as Uint8Array)
+          .mockReturnValueOnce('created-es-2' as unknown as Uint8Array)
+
         const sourceTagFamilies = [
           {
             id: 'family-1-id',
@@ -388,7 +398,10 @@ describe('study', () => {
               name: 'Emission Source 1',
               value: 100,
               studySite: { id: TEST_IDS.studySite, site: { id: TEST_IDS.site } },
-              tagLinks: [{ tag: { id: 'tag-1-id', name: 'Scope 1' } }, { tag: { id: 'tag-3-id', name: 'Transport' } }],
+              emissionSourceTags: [
+                { tag: { id: 'tag-1-id', name: 'Scope 1' } },
+                { tag: { id: 'tag-3-id', name: 'Transport' } },
+              ],
             },
             {
               ...mockedSourceStudy.emissionSources[0],
@@ -396,7 +409,10 @@ describe('study', () => {
               name: 'Emission Source 2',
               value: 200,
               studySite: { id: TEST_IDS.studySite, site: { id: TEST_IDS.site } },
-              tagLinks: [{ tag: { id: 'tag-2-id', name: 'Scope 2' } }, { tag: { id: 'tag-4-id', name: 'Energy' } }],
+              emissionSourceTags: [
+                { tag: { id: 'tag-2-id', name: 'Scope 2' } },
+                { tag: { id: 'tag-4-id', name: 'Energy' } },
+              ],
             },
           ],
           tagFamilies: sourceTagFamilies,
@@ -457,7 +473,7 @@ describe('study', () => {
           }),
         ])
 
-        expect(mockCreateTagOnEmissionSources).toHaveBeenCalledWith([
+        expect(mockCreateEmissionSourceTags).toHaveBeenCalledWith([
           { emissionSourceId: 'created-es-1', tagId: 'target-tag-1-id' },
           { emissionSourceId: 'created-es-1', tagId: 'target-tag-3-id' },
           { emissionSourceId: 'created-es-2', tagId: 'target-tag-2-id' },

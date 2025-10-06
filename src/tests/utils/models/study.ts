@@ -257,7 +257,7 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
         unit: Unit.GWH,
         isMonetary: false,
       },
-      tagLinks: [],
+      emissionSourceTags: [],
       validated: true,
       subPost: SubPost.Achats,
       depreciationPeriod: 5,
