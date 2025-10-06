@@ -168,7 +168,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         reliability: 5,
         name: 'R22 (HCFC-22), Base Carbone',
         subPost: SubPost.EmissionsLieesALaProductionDeFroid,
-        caracterisation: EmissionSourceCaracterisation.OperatedProcedeed,
+        caracterisation: EmissionSourceCaracterisation.Operated,
         value: 8.5,
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '43119')?.id,
       },

@@ -52,6 +52,7 @@ const selectEmissionFactor = {
       name: true,
     },
   },
+  emissionFactorParts: { select: { type: true, totalCo2: true } },
 } as Prisma.EmissionFactorSelect
 
 const getDefaultEmissionFactors = (versionIds?: string[]) =>

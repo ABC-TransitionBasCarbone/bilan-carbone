@@ -12,6 +12,7 @@ import {
   getEmissionSourceTagFamilyById,
   removeSourceTagFamilyById,
   updateEmissionSourceOnStudy,
+  updateEmissionSourceTagOnStudy,
   upsertEmissionSourceTagFamilyById,
 } from '@/db/emissionSource'
 import { getStudyById } from '@/db/study'
@@ -241,6 +242,30 @@ export const createEmissionSourceTag = async ({ familyId, name, color }: NewEmis
       name,
       color,
     })
+  })
+
+export const updateEmissionSourceTag = async (tagId: string, name: string, color: string, familyId: string) =>
+  withServerResponse('updateEmissionSourceTag', async () => {
+    const session = await auth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const account = await getAccountById(session.user.accountId)
+    if (!account) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!(await hasAccessToCreateEmissionSourceTag(account.environment))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const updateData: { name: string; color: string; family?: { connect: { id: string } } } = { name, color }
+    if (familyId) {
+      updateData.family = { connect: { id: familyId } }
+    }
+
+    return updateEmissionSourceTagOnStudy(tagId, updateData)
   })
 
 export const deleteEmissionSourceTag = async (tagId: string) =>

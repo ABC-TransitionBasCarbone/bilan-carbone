@@ -12,19 +12,13 @@
 }
 
 .tags {
-  display: grid;
-  grid-auto-flow: column;
-  grid-template-rows: repeat(3, auto);
+  display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
   max-height: 8rem;
+  max-width: 16rem;
   overflow-x: auto;
   width: max-content;
-}
-
-.tag {
-  max-width: 16rem;
-  width: fit-content;
-  border: 1px solid var(--neutral-500);
 }
 
 .form {

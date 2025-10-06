@@ -2,6 +2,8 @@ enum DeactivatableFeature {
   Formation
   Feedback
   Creation
+  DownloadReport
+  FormationStudy
 }
 
 model DeactivatableFeatureStatus {
@@ -18,4 +20,9 @@ model DeactivatableFeatureStatus {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("deactivable_features_statuses")
+}
+
+enum DuplicableStudy {
+  TrainingExercise
+  TrainingCorrectionExercise
 }

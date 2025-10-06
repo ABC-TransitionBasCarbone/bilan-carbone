@@ -30,6 +30,7 @@ const Modal = ({ className, label, open, onClose, title, children, actions, big 
     onClose={onClose}
     aria-labelledby={`${label}-modal-title`}
     aria-describedby={`${label}-modal-description`}
+    data-testid={`${label}-modal`}
   >
     <Box className={classNames(styles.box, className, 'flex-col', { [styles.big]: big })}>
       <div className="justify-between align-center mb2">

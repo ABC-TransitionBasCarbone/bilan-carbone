@@ -9,6 +9,11 @@ export const createEmissionSourceOnStudy = (emissionSource: Prisma.StudyEmission
     data: emissionSource,
   })
 
+export const createEmissionSourcesOnStudy = (emissionSources: Prisma.StudyEmissionSourceCreateManyInput[]) =>
+  prismaClient.studyEmissionSource.createMany({
+    data: emissionSources,
+  })
+
 export const getFamilyTagsForStudy = (studyId: string) =>
   prismaClient.emissionSourceTagFamily.findMany({
     where: { studyId },
@@ -29,6 +34,12 @@ export const deleteEmissionSourceOnStudy = (id: string) => prismaClient.studyEmi
 export const createEmissionSourceTagOnStudy = (emissionSourceTag: Prisma.EmissionSourceTagCreateInput) =>
   prismaClient.emissionSourceTag.create({
     data: emissionSourceTag,
+  })
+
+export const updateEmissionSourceTagOnStudy = (id: string, data: Prisma.EmissionSourceTagUpdateInput) =>
+  prismaClient.emissionSourceTag.update({
+    where: { id },
+    data,
   })
 
 export const deleteEmissionSourceTagOnStudy = (id: string) => prismaClient.emissionSourceTag.delete({ where: { id } })

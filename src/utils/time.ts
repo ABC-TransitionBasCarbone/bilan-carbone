@@ -7,3 +7,11 @@ export const MONTH = 30 * DAY
 export const YEAR = 12 * MONTH
 
 export const TIME_IN_MS = 1000
+
+export const formatDateFr = (date: Date) => {
+  return date.toLocaleDateString('fr-FR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  })
+}

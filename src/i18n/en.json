@@ -310,12 +310,17 @@
   "study": {
     "create": "Add a Bilan Carbone®",
     "duplicate": "Duplicate study",
+    "duplicateEnvironment": "Duplicate study in another environment",
+    "deleteStudy": "Delete study",
     "duplicateCopy": " - Copy",
     "duplicateDialog": {
       "title": "Study duplication",
-      "description": "Would you like to duplicate this study? You will be redirected to the study creation page, all fields will be pre-filled with the information from this study, and once validated, the entire study and its emission sources will be duplicated. The studies will then be independent, any modification made to one will not be reflected in the other once the duplication is complete.",
+      "description": "Do you want to duplicate this study? You will be redirected to the study creation page, all fields will be pre-filled with the information from the study that you will be able to edit, and once the creation is validated, the entire study and its emission sources will be duplicated. Documents attached to the original study will not be duplicated. Please note that after duplication, the emission sources of the newly created study will need to be validated again in order to appear in the results. <br></br>Studies are independent after duplication, any modification made in one will not be reflected in the other.",
+      "duplicatedDescription": "Your study has been duplicated. You can find it in your {environment} environment.",
+      "otherEnvironnment": "Would you like to duplicate this study in your {environment}? All information will be copied to the new study.",
       "cancel": "Cancel",
-      "confirm": "Duplicate"
+      "confirm": "Duplicate",
+      "selectEnvironment": "Select the target environment"
     },
     "myCollaborations": "My collaborations",
     "myStudies": "My Bilan Carbone®",
@@ -598,6 +603,9 @@
       "color": "Color",
       "emissionSourceTagsPlaceholder": "Your tag",
       "createEmissionSourceTag": "Create my tag",
+      "editTagTitle": "Edit tag",
+      "updateTag": "Confirm",
+      "cancel": "Cancel",
       "validate": "Validate",
       "deleteDialog": {
         "accept": "Yes",
@@ -615,6 +623,12 @@
       "begesActivationWarning": {
         "title": "BEGES Export Activation",
         "description": "You are about to activate the regulatory BEGES export. When this export is enabled, you must fill in an additional \"Characterization\" field in certain emission sources. As a result, <warning>activating this export will invalidate the affected emission sources</warning>. Do you want to continue?",
+        "continue": "Continue",
+        "cancel": "Cancel"
+      },
+      "begesDeactivationWarning": {
+        "title": "BEGES Export Deactivation",
+        "description": "You are about to deactivate the regulatory BEGES export. <warning>Deactivating this export will result in the loss of all characterizations entered in the emission sources</warning>. Do you want to continue?",
         "continue": "Continue",
         "cancel": "Cancel"
       },
@@ -641,6 +655,7 @@
       "subPost": "Sub-post",
       "tag": "Tag",
       "download": "Download results",
+      "downloadReport": "Download report",
       "downloadPDF": "Download the summary",
       "downloadingPDF": "Downloading (at least 15 seconds)...",
       "value": "Emissions ({unit})",
@@ -1135,7 +1150,7 @@
         "negaOctet": "NegaOctet logo",
         "manual": "Manual"
       },
-      "post": "Posts:",
+      "post": "Posts",
       "co2f": "CO2f:",
       "ch4f": "CH4f:",
       "ch4b": "CH4b:",
@@ -1145,12 +1160,15 @@
       "hfc": "HFC:",
       "pfc": "PFC:",
       "otherGES": "Other gases:",
-      "qualityRating": "Overall quality of the Emission Factor:",
+      "qualityRating": "Overall quality of the Emission Factor",
       "reliability": "Reliability:",
       "technicalRepresentativeness": "Technical representativeness:",
       "geographicRepresentativeness": "Geographic representativeness:",
       "temporalRepresentativeness": "Temporal representativeness:",
       "completeness": "Completeness:",
+      "comment": "Other informations:",
+      "GESDecomposition": "Breakdown of GHGs:",
+      "factorParts": "Emission Factor Parts:",
       "yes": "Yes"
     },
     "edit": {
@@ -1510,7 +1528,7 @@
     }
   },
   "emissionSource": {
-    "in": "in",
+    "in": "in ",
     "emissionSource": "Activity data :",
     "emissionFactor": "Emission Factor :",
     "clear": "Clear value",
@@ -1721,6 +1739,8 @@
     "Formation": "Formation",
     "Feedback": "Feedback",
     "Creation": "Creation",
+    "DownloadReport": "Download Report",
+    "FormationStudy": "Formation study",
     "source": "Sources",
     "environment": "Environments",
     "true": "Activated",

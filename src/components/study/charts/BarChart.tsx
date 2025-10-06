@@ -6,7 +6,8 @@ import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import styles from './BarChart.module.css'
 
-import { BasicTypeCharts, formatValueAndUnit, processBarChartData } from '@/utils/charts'
+import { BasicTypeCharts, processBarChartData } from '@/utils/charts'
+import { formatNumber } from '@/utils/number'
 import { StudyResultUnit } from '@prisma/client'
 
 const BAR_CHART_CONSTANTS = {
@@ -53,7 +54,7 @@ const BarChart = <T extends BasicTypeCharts>({
     if (!showLabelsOnBars || !item.value) {
       return ''
     }
-    return formatValueAndUnit(item.value)
+    return formatNumber(item.value)
   }
 
   return (
@@ -87,7 +88,7 @@ const BarChart = <T extends BasicTypeCharts>({
           seriesData.length > 0
             ? seriesData.map((series, index) => ({
                 data: series.data,
-                valueFormatter: (value) => (value && value > 0 ? formatValueAndUnit(value) : null),
+                valueFormatter: (value) => (value && value > 0 ? formatNumber(value, 0) : null),
                 label: series.label,
                 stack: series.stack,
                 color: series.color,
@@ -96,17 +97,13 @@ const BarChart = <T extends BasicTypeCharts>({
             : [
                 {
                   data: barData.values,
-                  valueFormatter: (value) => formatValueAndUnit(value ?? 0),
+                  valueFormatter: (value) => formatNumber(value ?? 0, 0),
                   label: showLegend ? tResults('emissions') : undefined,
                 },
               ]
         }
         grid={{ horizontal: true }}
-        yAxis={[
-          {
-            label: tUnits(resultsUnit),
-          },
-        ]}
+        yAxis={[{ label: tUnits(resultsUnit) }]}
         axisHighlight={{ x: 'none' }}
         barLabel={showLabelsOnBars ? getBarLabel : undefined}
         slots={showLegend && seriesData.length === 0 ? undefined : { legend: () => null }}

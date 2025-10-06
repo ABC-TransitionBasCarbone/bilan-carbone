@@ -2,7 +2,7 @@
 
 import { FullStudy } from '@/db/study'
 import { getEmissionResults } from '@/services/emissionSource'
-import { Post, subPostsByPost } from '@/services/posts'
+import { subPostsByPost } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { getEmissionSourceTagsByStudyId } from '@/services/serverFunctions/emissionSource'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
@@ -16,12 +16,12 @@ import {
 } from '@/services/uncertainty'
 import { emissionFactorDefautQualityStar, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
-import { hasEditionRights, isCAS } from '@/utils/study'
+import { hasDeprecationPeriod, hasEditionRights, isCAS, STUDY_UNIT_VALUES } from '@/utils/study'
 import AddIcon from '@mui/icons-material/Add'
 import CopyIcon from '@mui/icons-material/ContentCopy'
 import EditIcon from '@mui/icons-material/Edit'
 import HideIcon from '@mui/icons-material/VisibilityOff'
-import { Autocomplete, Chip, FormControl, InputLabel, MenuItem, Popper, TextField } from '@mui/material'
+import { Autocomplete, FormControl, InputLabel, MenuItem, Popper, TextField } from '@mui/material'
 import {
   EmissionSourceCaracterisation,
   EmissionSourceTag,
@@ -42,6 +42,7 @@ import Button from '../base/Button'
 import HelpIcon from '../base/HelpIcon'
 import LinkButton from '../base/LinkButton'
 import { Select } from '../base/Select'
+import TagChip from '../base/TagChip'
 import GlossaryModal from '../modals/GlossaryModal'
 import Modal from '../modals/Modal'
 import DeleteEmissionSource from './DeleteEmissionSource'
@@ -140,6 +141,11 @@ const EmissionSourceForm = ({
   }
 
   const isCas = isCAS(emissionSource)
+
+  const withDeprecationPeriod = useMemo(
+    () => hasDeprecationPeriod(emissionSource.subPost),
+    [subPostsByPost, emissionSource.subPost],
+  )
 
   useEffect(() => {
     if (isCas) {
@@ -263,7 +269,7 @@ const EmissionSourceForm = ({
                 </div>
               )}
             </div>
-            {subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost) && (
+            {withDeprecationPeriod && (
               <div className={classNames(styles.inputWithUnit, 'flex grow')}>
                 <TextField
                   className="grow"
@@ -425,28 +431,22 @@ const EmissionSourceForm = ({
 
               return (
                 <li key={key} {...optionProps}>
-                  <Chip label={option.label} size="small" sx={{ bgcolor: option.color }} data-testid="tag-option" />
+                  <TagChip name={option.label} color={option.color} size="small" data-testid="tag-option" />
                 </li>
               )
             }}
             slots={{
-              popper: (props) => <Popper {...props} placement="bottom-start" className={styles.tagOptions} />,
+              popper: (props) => <Popper {...props} placement="bottom-start" />,
             }}
             renderInput={(params) => <TextField {...params} label={t('form.tag')} />}
-            renderValue={(value: Option[], getItemProps) =>
-              value.map((option: Option, index: number) => {
-                const { key, ...itemProps } = getItemProps({ index })
-                return (
-                  <Chip
-                    variant="outlined"
-                    label={option.label}
-                    key={key}
-                    sx={{ bgcolor: option.color }}
-                    {...itemProps}
-                  />
-                )
-              })
-            }
+            renderValue={(value: Option[], getItemProps) => (
+              <div className={classNames('flex wrap align-center gapped-2', styles.tagOptions)}>
+                {value.map((option: Option, index: number) => {
+                  const { key, ...itemProps } = getItemProps({ index })
+                  return <TagChip name={option.label} color={option.color} key={key} {...itemProps} />
+                })}
+              </div>
+            )}
           />
           <TextField
             className="grow"
@@ -487,8 +487,9 @@ const EmissionSourceForm = ({
             <div className="flex-col">
               <p>{t('results.confiance')}</p>
               <p>
-                [{formatNumber(emissionResults.confidenceInterval[0])};{' '}
-                {formatNumber(emissionResults.confidenceInterval[1])}] ({t('in')} {tResultUnits(studyUnit)})
+                [{formatNumber(emissionResults.confidenceInterval[0] / STUDY_UNIT_VALUES[studyUnit])};{' '}
+                {formatNumber(emissionResults.confidenceInterval[1] / STUDY_UNIT_VALUES[studyUnit])}] ({t('in')}
+                {tResultUnits(studyUnit)})
               </p>
             </div>
           )}

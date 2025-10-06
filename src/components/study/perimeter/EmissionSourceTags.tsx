@@ -3,19 +3,19 @@
 import Block from '@/components/base/Block'
 import Box from '@/components/base/Box'
 import Button from '@/components/base/Button'
-import ColorPicker from '@/components/base/ColorPicker'
 import Form from '@/components/base/Form'
 import HelpIcon from '@/components/base/HelpIcon'
+import TagChip from '@/components/base/TagChip'
 import Title from '@/components/base/Title'
-import { FormSelect } from '@/components/form/Select'
-import { FormTextField } from '@/components/form/TextField'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { emissionSourceTagColors } from '@/constants/emissionSourceTags'
 import { EmissionSourceTagFamilyWithTags } from '@/db/study'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import {
   createEmissionSourceTag,
   deleteEmissionSourceTag,
   getEmissionSourceTagsByStudyId,
+  updateEmissionSourceTag,
 } from '@/services/serverFunctions/emissionSource'
 import {
   NewEmissionSourceTagCommand,
@@ -24,14 +24,16 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod'
 import DeleteIcon from '@mui/icons-material/Cancel'
 import EditIcon from '@mui/icons-material/Edit'
-import { Chip, FormControl, MenuItem, Button as MuiButton } from '@mui/material'
+import { FormControl, Button as MuiButton } from '@mui/material'
 import { EmissionSourceTagFamily } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import EditTagModal from './EditTagModal'
 import styles from './EmissionSourceTag.module.css'
 import EmissionTagFamilyModal from './EmissionTagFamilyModal'
+import TagForm from './TagForm'
 
 interface Props {
   studyId: string
@@ -39,22 +41,25 @@ interface Props {
 
 const EmissionSourceTags = ({ studyId }: Props) => {
   const t = useTranslations('study.perimeter')
-
+  const { callServerFunction } = useServerFunction()
   const [tagFamilies, setTagFamilies] = useState<EmissionSourceTagFamilyWithTags[]>([])
   const [editingFamily, setEditingFamily] = useState<Partial<EmissionSourceTagFamily> | null | undefined>(null)
   const [deletingFamily, setDeletingFamily] = useState<Partial<EmissionSourceTagFamily> | null>(null)
   const [glossary, setGlossary] = useState('')
+  const [editingTag, setEditingTag] = useState<{ id: string; name: string; color: string; familyId: string } | null>(
+    null,
+  )
+
+  const getEmissionSourceTags = useCallback(async () => {
+    const response = await getEmissionSourceTagsByStudyId(studyId)
+    if (response.success && response.data) {
+      setTagFamilies([...response.data])
+    }
+  }, [studyId])
 
   useEffect(() => {
     getEmissionSourceTags()
-  }, [studyId])
-
-  const getEmissionSourceTags = async () => {
-    const response = await getEmissionSourceTagsByStudyId(studyId)
-    if (response.success && response.data) {
-      setTagFamilies(response.data)
-    }
-  }
+  }, [getEmissionSourceTags])
 
   const { control, formState, getValues, handleSubmit, setValue, watch } = useForm<NewEmissionSourceTagCommand>({
     resolver: zodResolver(NewEmissionSourceTagCommandValidation),
@@ -68,38 +73,39 @@ const EmissionSourceTags = ({ studyId }: Props) => {
   const color = watch('color')
 
   const onSubmit = async () => {
-    const createdTag = await createEmissionSourceTag(getValues())
-    if (createdTag.success) {
-      const targetedFamily: EmissionSourceTagFamilyWithTags | undefined = tagFamilies.find(
-        (family) => family.id === getValues().familyId,
-      )
-      if (targetedFamily) {
-        setTagFamilies((prevTags) =>
-          prevTags.map((family) => ({
-            ...family,
-            emissionSourceTags:
-              family.id === getValues().familyId
-                ? family.emissionSourceTags.concat(createdTag.data)
-                : family.emissionSourceTags,
-          })),
-        )
-      }
-      setValue('name', '')
-      setValue('familyId', '')
-      setValue('color', emissionSourceTagColors.DEFAULT)
-    }
+    await callServerFunction(() => createEmissionSourceTag(getValues()), {
+      onSuccess: () => {
+        setValue('name', '')
+        setValue('familyId', '')
+        setValue('color', emissionSourceTagColors.DEFAULT)
+        getEmissionSourceTags()
+      },
+    })
+  }
+
+  const onUpdate = async (tagId: string, newName: string, newColor: string, newFamilyId: string) => {
+    await callServerFunction(() => updateEmissionSourceTag(tagId, newName, newColor, newFamilyId), {
+      onSuccess: () => {
+        getEmissionSourceTags()
+      },
+    })
   }
 
   const onDelete = async (tagId: string) => {
-    const deleteTag = await deleteEmissionSourceTag(tagId)
-    if (deleteTag.success) {
-      setTagFamilies((prevTags) =>
-        prevTags.map((family) => ({
-          ...family,
-          emissionSourceTags: family.emissionSourceTags.filter((tag) => tag.id !== tagId),
-        })),
-      )
-    }
+    await callServerFunction(() => deleteEmissionSourceTag(tagId), {
+      onSuccess: () => {
+        getEmissionSourceTags()
+      },
+    })
+  }
+
+  const onEdit = (tag: { id: string; name: string; color: string | null; familyId: string }) => {
+    setEditingTag({
+      id: tag.id,
+      name: tag.name,
+      color: tag.color || emissionSourceTagColors.DEFAULT,
+      familyId: tag.familyId,
+    })
   }
 
   return (
@@ -116,7 +122,7 @@ const EmissionSourceTags = ({ studyId }: Props) => {
         {tagFamilies.map((family) => (
           <Box key={family.id} className="fit-content mr2 px1">
             <div className="flex-col">
-              <div className="flex justify-between align-center mb1">
+              <div className="flex justify-between align-center">
                 <Title as="h6" className="flex mb0" title={family.name} />
                 <div className="flex">
                   <MuiButton
@@ -137,16 +143,18 @@ const EmissionSourceTags = ({ studyId }: Props) => {
                   </Button>
                 </div>
               </div>
-              {family.emissionSourceTags.map((tag) => (
-                <div key={tag.id} className={classNames(styles.tags)}>
-                  <Chip
-                    className={styles.tag}
+              <div className={classNames(styles.tags)}>
+                {family.emissionSourceTags.map((tag) => (
+                  <TagChip
+                    key={tag.id}
+                    id={tag.id}
+                    name={tag.name}
+                    color={tag.color}
+                    onClick={() => onEdit({ ...tag, familyId: family.id })}
                     onDelete={() => onDelete(tag.id)}
-                    sx={{ bgcolor: tag.color }}
-                    label={tag.name}
                   />
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </Box>
         ))}
@@ -157,38 +165,15 @@ const EmissionSourceTags = ({ studyId }: Props) => {
       <Title as="h5" className="mb-2" title={t('family.add')} />
       <Form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
         <FormControl>
-          <div className="justify-between gapped my-2">
-            <div className="flex-col">
-              <div className="mb-2">
-                <span className="inputLabel bold">{t('color')}</span>
-              </div>
-              <ColorPicker color={color} onChange={(value) => setValue('color', value)} />
-            </div>
-            <div className={styles.selector}>
-              <FormSelect
-                control={control}
-                translation={t}
-                name="familyId"
-                label={t('emissionSourceTagFamily')}
-                data-testid="create-emission-source-tag-family"
-                fullWidth
-              >
-                {tagFamilies.map((family) => (
-                  <MenuItem key={family.id} value={family.id}>
-                    {family.name}
-                  </MenuItem>
-                ))}
-              </FormSelect>
-            </div>
-            <FormTextField
-              control={control}
-              translation={t}
-              name="name"
-              label={t('emissionSourceTagLabel')}
-              placeholder={t('emissionSourceTagsPlaceholder')}
-              data-testid="create-emission-source-tagFamilies"
-            />
-          </div>
+          <TagForm
+            color={color}
+            families={tagFamilies}
+            onColorChange={(value) => setValue('color', value)}
+            control={control}
+            translation={t}
+            namePlaceholder={t('emissionSourceTagsPlaceholder')}
+            data-testid="create-emission-source-tag"
+          />
           <Button data-testid="submit-button" type="submit" disabled={!tagFamilies.length || !formState.isValid}>
             {t('createEmissionSourceTag')}
           </Button>
@@ -214,6 +199,17 @@ const EmissionSourceTags = ({ studyId }: Props) => {
             setDeletingFamily(null)
             getEmissionSourceTags()
           }}
+        />
+      )}
+      {editingTag && (
+        <EditTagModal
+          tagId={editingTag.id}
+          currentName={editingTag.name}
+          currentColor={editingTag.color}
+          currentFamilyId={editingTag.familyId}
+          families={tagFamilies}
+          onSave={onUpdate}
+          onClose={() => setEditingTag(null)}
         />
       )}
       {glossary && (

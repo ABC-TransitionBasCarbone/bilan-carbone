@@ -1,4 +1,5 @@
 import { getSourceLatestImportVersionId } from '@/db/study'
+import { getEnvVar } from '@/lib/environment'
 import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
 import {
   EmissionFactorPartType,
@@ -414,7 +415,7 @@ export const addSourceToStudies = async (source: Import, transaction: Prisma.Tra
   if (studies.length && !!importVersion) {
     const filteredStudies = studies.filter((study) => {
       const environment = study.createdBy.environment
-      return environment === Environment.CUT || source !== Import.CUT
+      return isSourceForEnv(environment).includes(source)
     })
 
     if (filteredStudies.length > 0) {
@@ -424,4 +425,19 @@ export const addSourceToStudies = async (source: Import, transaction: Prisma.Tra
       })
     }
   }
+}
+
+export const isSourceForEnv = (env: Environment): Import[] => {
+  const envVar = getEnvVar('FE_SOURCES_IMPORT', env)
+
+  if (!envVar) {
+    return []
+  }
+  return envVar
+    .split(',')
+    .map((name) => {
+      const key = name.trim() as keyof typeof Import
+      return Import[key]
+    })
+    .filter((v): v is Import => !!v)
 }

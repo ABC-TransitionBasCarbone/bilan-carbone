@@ -17,9 +17,10 @@ interface Props {
 const GlossaryIconModal = ({ title, className, iconLabel, label, tModal, children }: Props) => {
   const t = useTranslations(tModal)
   const [open, setOpen] = useState(false)
+
   return (
     <>
-      <HelpIcon className={className} onClick={() => setOpen(!open)} label={t(iconLabel)} />
+      <HelpIcon className={className} onClick={() => setOpen((prevOpen) => !prevOpen)} label={t(iconLabel)} />
       <Modal
         open={open}
         label={`${label}-glossary`}

@@ -19,7 +19,12 @@ const BegesActivationWarningModal = ({ open, onConfirm, onCancel }: Props) => {
       title={t('title')}
       onClose={onCancel}
       actions={[
-        { actionType: 'button', onClick: onCancel, children: t('cancel') },
+        {
+          actionType: 'button',
+          onClick: onCancel,
+          children: t('cancel'),
+          ['data-testid']: 'beges-activation-cancel',
+        },
         {
           actionType: 'button',
           onClick: onConfirm,

@@ -1,13 +1,15 @@
 import { getAccountById } from '@/db/account'
 import { getDocumentById } from '@/db/document'
-import { OrganizationVersionWithOrganization } from '@/db/organization'
+import { getOrganizationVersionsByOrganizationId, OrganizationVersionWithOrganization } from '@/db/organization'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getAccountByIdWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
 import { canEditOrganizationVersion, isAdminOnOrga, isInOrgaOrParent } from '@/utils/organization'
-import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
-import { Environment, Level, Prisma, Study, StudyRole, User } from '@prisma/client'
+import { getAccountRoleOnStudy, getDuplicableEnvironments, hasEditionRights } from '@/utils/study'
+import { DeactivatableFeature, Environment, Level, Prisma, Study, StudyRole, User } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { dbActualizedAuth } from '../auth'
+import { isDeactivableFeatureActiveForEnvironment } from '../serverFunctions/deactivableFeatures'
+import { getUserActiveAccounts } from '../serverFunctions/user'
 import { checkLevel } from '../study'
 import { hasAccessToDuplicateStudy } from './environment'
 import { isInOrgaOrParentFromId } from './organization'
@@ -285,6 +287,40 @@ export const canDuplicateStudy = async (studyId: string) => {
   return true
 }
 
+export const getEnvironmentsForDuplication = async (studyId: string) => {
+  const [canDuplicate, session] = await Promise.all([canDuplicateStudy(studyId), dbActualizedAuth()])
+  if (!canDuplicate || !session) {
+    return []
+  }
+
+  const [study, userAccounts] = await Promise.all([
+    getStudyById(studyId, session.user.organizationVersionId),
+    getUserActiveAccounts(),
+  ])
+  if (
+    !study ||
+    study.organizationVersionId !== session.user.organizationVersionId ||
+    !userAccounts.success ||
+    !userAccounts.data.length
+  ) {
+    return []
+  }
+
+  const eligibleOrganizationVersions = (
+    await getOrganizationVersionsByOrganizationId(study.organizationVersion.organization.id)
+  ).map((organizationVersion) => organizationVersion.id)
+
+  const eligibleEnvironments = getDuplicableEnvironments(session.user.environment)
+  return userAccounts.data
+    .filter(
+      (userAccount) =>
+        eligibleEnvironments.includes(userAccount.environment) &&
+        userAccount.organizationVersionId &&
+        eligibleOrganizationVersions.includes(userAccount.organizationVersionId),
+    )
+    .map((eligibleEnvironment) => eligibleEnvironment.environment)
+}
+
 export const filterStudyDetail = (user: UserSession, study: FullStudy) => {
   const availableSubPosts = study.contributors
     .filter((contributor) => contributor.account.user.email === user.email)
@@ -402,4 +438,12 @@ export const canAccessFlowFromStudy = async (documentId: string, studyId: string
   }
 
   return true
+}
+
+export const hasAccessToFormationStudy = async (userAccount: Prisma.AccountCreateInput) => {
+  const isFormationStudyFeatureActive = await isDeactivableFeatureActiveForEnvironment(
+    DeactivatableFeature.FormationStudy,
+    userAccount.environment,
+  )
+  return isFormationStudyFeatureActive.success && isFormationStudyFeatureActive.data
 }

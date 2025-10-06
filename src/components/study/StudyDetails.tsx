@@ -12,12 +12,20 @@ import StudyDetailsHeader from './StudyDetailsHeader'
 interface Props {
   canDeleteStudy?: boolean
   canDuplicateStudy?: boolean
+  duplicableEnvironments: Environment[]
   study: FullStudy
   validatedOnly: boolean
   organizationVersionId: string | null
 }
 
-const StudyDetails = ({ canDeleteStudy, canDuplicateStudy, study, validatedOnly, organizationVersionId }: Props) => {
+const StudyDetails = ({
+  canDeleteStudy,
+  canDuplicateStudy,
+  duplicableEnvironments,
+  study,
+  validatedOnly,
+  organizationVersionId,
+}: Props) => {
   const { studySite, setSite } = useStudySite(study, true)
 
   return (
@@ -27,6 +35,7 @@ const StudyDetails = ({ canDeleteStudy, canDuplicateStudy, study, validatedOnly,
         organizationVersionId={organizationVersionId}
         canDeleteStudy={canDeleteStudy}
         canDuplicateStudy={canDuplicateStudy}
+        duplicableEnvironments={duplicableEnvironments}
         studySite={studySite}
         setSite={setSite}
         environment={study.organizationVersion.environment}

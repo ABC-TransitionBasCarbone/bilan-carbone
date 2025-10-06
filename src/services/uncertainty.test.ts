@@ -1,6 +1,10 @@
 import { expect } from '@jest/globals'
 import { getQualityRating, getQualityStandardDeviation } from './uncertainty'
 
+jest.mock('./file', () => ({ download: jest.fn() }))
+jest.mock('./permissions/study', () => ({ isAdminOnStudyOrga: jest.fn() }))
+jest.mock('./study', () => ({ checkLevel: jest.fn() }))
+
 describe('Uncertainty Service', () => {
   describe('getQualityStandardDeviation', () => {
     it('should return null if no quality is present', () => {

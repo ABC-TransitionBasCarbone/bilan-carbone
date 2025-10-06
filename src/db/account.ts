@@ -30,6 +30,9 @@ export const AccountWithUserSelect = {
     },
   },
   role: true,
+  formationName: true,
+  formationStartDate: true,
+  formationEndDate: true,
   user: {
     select: {
       id: true,
@@ -129,3 +132,12 @@ export const getAccountsUserLevel = (ids: string[]) =>
 
 export const getAccountsFromUser = (user: UserSession) =>
   prismaClient.account.findMany({ where: { userId: user.userId } })
+
+export const getAccountsByUserIdsAndEnvironment = (userIds: string[], environment: Environment) =>
+  prismaClient.account.findMany({
+    where: { userId: { in: userIds }, environment },
+    select: {
+      id: true,
+      user: { select: { id: true } },
+    },
+  })

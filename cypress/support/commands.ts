@@ -1,4 +1,8 @@
-Cypress.Commands.add('getByTestId', (testId: string) => cy.get(`[data-testid="${testId}"]`))
+Cypress.Commands.add(
+  'getByTestId',
+  (testId: string, params?: Partial<Cypress.Loggable & Cypress.Timeoutable & Cypress.Withinable & Cypress.Shadow>) =>
+    cy.get(`[data-testid="${testId}"]`, params),
+)
 
 Cypress.Commands.add('login', (email = 'bc-collaborator-0@yopmail.com', password = 'password-0') => {
   cy.visit('/login')

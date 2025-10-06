@@ -4,6 +4,7 @@ import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionF
 import { getQualityRating, qualityKeys } from '@/services/uncertainty'
 import { BCUnit } from '@/services/unit'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { formatNumber } from '@/utils/number'
 import ShrinkIcon from '@mui/icons-material/ZoomInMap'
 import ExpandIcon from '@mui/icons-material/ZoomOutMap'
 import { Environment, Import, StudyResultUnit, SubPost } from '@prisma/client'
@@ -24,6 +25,7 @@ const EmissionFactorDetails = ({ emissionFactor }: Props) => {
   const tQuality = useTranslations('quality')
   const [displayDetailedQuality, setDisplayDetailedQuality] = useState(false)
   const tResultUnits = useTranslations('study.results.units')
+  const tEmissionFactorType = useTranslations('emissionFactors.type')
 
   const gases = useMemo(() => gazKeys.filter((gaz) => emissionFactor[gaz]), [emissionFactor])
   const qualities = useMemo(() => qualityKeys.filter((quality) => emissionFactor[quality]), [emissionFactor])
@@ -63,7 +65,7 @@ const EmissionFactorDetails = ({ emissionFactor }: Props) => {
   return (
     <>
       <div className={styles.info}>
-        {t('source')} :{' '}
+        <span className={classNames(styles.infoTitle, 'bold')}>{t('source')} : </span>
         {emissionFactor.importedFrom !== Import.Manual && emissionFactor.version && (
           <>
             {t(emissionFactor.importedFrom)} {emissionFactor.version.name}
@@ -72,11 +74,10 @@ const EmissionFactorDetails = ({ emissionFactor }: Props) => {
         {emissionFactor.source && <> - {emissionFactor.source}</>}
       </div>
       <div className={styles.info}>
-        {t('quality')} :{' '}
+        <span className={classNames(styles.infoTitle, 'bold')}>{t('qualityRating')} : </span>
         {quality && (
-          <div className={classNames(styles.list, 'grid')}>
-            <span className="align-center">{t('qualityRating')}</span>
-            <span className="align-center">
+          <>
+            <span>
               {tQuality(quality?.toString())}
               <span
                 className={classNames(styles.expandIcon, 'ml-4')}
@@ -85,47 +86,78 @@ const EmissionFactorDetails = ({ emissionFactor }: Props) => {
                 {displayDetailedQuality ? <ShrinkIcon /> : <ExpandIcon />}
               </span>
             </span>
-            {displayDetailedQuality && (
-              <>
-                {qualities.map((quality) =>
-                  emissionFactor[quality] ? (
-                    <Fragment key={quality}>
-                      <span>{t(quality)}</span>
-                      <span>{tQuality(emissionFactor[quality].toString())}</span>
-                    </Fragment>
-                  ) : (
-                    <></>
-                  ),
-                )}
-              </>
-            )}
-          </div>
+            <div className={classNames(styles.list, 'italic grid')}>
+              {displayDetailedQuality && (
+                <>
+                  {qualities.map((quality) =>
+                    emissionFactor[quality] ? (
+                      <Fragment key={quality}>
+                        <span>{t(quality)}</span>
+                        <span>{tQuality(emissionFactor[quality].toString())}</span>
+                      </Fragment>
+                    ) : (
+                      <></>
+                    ),
+                  )}
+                </>
+              )}
+            </div>
+          </>
         )}
       </div>
       {Object.entries(subPosts).length > 0 && (
         <div className={styles.info}>
-          {t('post')}
-          {Object.entries(subPosts).map(([post, subPosts]) => (
-            <div key={post}>
-              {tPost(post)} (
-              {Array.from(subPosts)
-                .map((subPost) => tPost(subPost))
-                .join(', ')}
-              )
-            </div>
-          ))}
+          <span className={classNames(styles.infoTitle, 'bold')}>{t('post')} : </span>
+          <ul className={styles.listWithBullets}>
+            {Object.entries(subPosts).map(([post, subPosts]) => (
+              <li key={post}>
+                {tPost(post)} (
+                {Array.from(subPosts)
+                  .map((subPost) => tPost(subPost))
+                  .join(', ')}
+                )
+              </li>
+            ))}
+          </ul>
         </div>
       )}
-      {emissionFactor.metaData?.location && <div className={styles.info}>{emissionFactor.metaData.location}</div>}
-      {emissionFactor.metaData?.comment && <div className={styles.info}>{emissionFactor.metaData.comment}</div>}
+      {emissionFactor.metaData?.location && (
+        <div className={styles.info}>
+          <span className={classNames(styles.infoTitle, 'bold')}>{t('location')} : </span>
+          {emissionFactor.metaData.location}
+        </div>
+      )}
+      {emissionFactor.metaData?.comment && (
+        <div className={styles.info}>
+          <span className={classNames(styles.infoTitle, 'bold')}>{t('comment')}</span>
+          {emissionFactor.metaData.comment}
+        </div>
+      )}
       {gases.length > 0 && (
-        <div className={classNames(styles.info, styles.list, 'flex')}>
-          {gases.map((gaz) => (
-            <div key={gaz}>
-              {t(gaz)} {emissionFactor[gaz]} {tResultUnits(StudyResultUnit.K)}/
-              {tUnits(emissionFactor.unit || BCUnit.KG)}
-            </div>
-          ))}
+        <div className={classNames(styles.info, 'flex')}>
+          <span className={classNames(styles.infoTitle, 'bold')}>{t('GESDecomposition')}&nbsp;</span>
+          <div className="flex grow">
+            {gases
+              .map(
+                (gaz) =>
+                  `${t(gaz)} ${emissionFactor[gaz]} ${tResultUnits(StudyResultUnit.K)}/${tUnits(emissionFactor.unit || BCUnit.KG)}`,
+              )
+              .join(', ')}
+          </div>
+        </div>
+      )}
+      {emissionFactor.emissionFactorParts?.length > 0 && (
+        <div className={classNames(styles.info, 'flex')}>
+          <span className={classNames(styles.infoTitle, 'bold')}>{t('factorParts')}&nbsp;</span>
+          <div className="flex grow">
+            {emissionFactor.emissionFactorParts
+              .map(
+                (part) =>
+                  `${tEmissionFactorType(part.type)}: ${formatNumber(part.totalCo2, 2)}
+                ${tResultUnits(StudyResultUnit.K)}/${tUnits(emissionFactor.unit || BCUnit.KG)}`,
+              )
+              .join(', ')}
+          </div>
         </div>
       )}
     </>

@@ -1,7 +1,7 @@
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import { isAdminOnStudyOrga } from '@/services/permissions/study'
-import { Post } from '@/services/posts'
+import { Post, subPostsByPost } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { checkLevel } from '@/services/study'
 import { isAdmin } from '@/utils/user'
@@ -99,6 +99,14 @@ export const isCAS = (emissionSource: FullStudy['emissionSources'][number]) =>
   emissionSource.emissionFactor &&
   emissionSource.emissionFactor.unit === Unit.HA_YEAR
 
+export const hasDeprecationPeriod = (subPost: SubPost) =>
+  [
+    ...subPostsByPost[Post.Immobilisations],
+    ...subPostsByPost[Post.EquipementsEtImmobilisations],
+    SubPost.Electromenager,
+    SubPost.Batiment,
+  ].includes(subPost)
+
 export const STUDY_UNIT_VALUES: Record<StudyResultUnit, number> = {
   K: 1,
   T: 1000,
@@ -133,4 +141,19 @@ export const getEmissionValueString = (
 ): string => {
   const safeValue = value ?? 0
   return `${formatNumber(safeValue / STUDY_UNIT_VALUES[resultsUnit], decimals)} ${unitLabel}`
+}
+
+export const getDuplicableEnvironments = (environment: Environment): Environment[] => {
+  let compatibles: Environment[] = []
+  switch (environment) {
+    case Environment.BC:
+      compatibles = [Environment.TILT]
+      break
+    case Environment.TILT:
+      compatibles = [Environment.BC]
+      break
+    default:
+      break
+  }
+  return [environment].concat(compatibles)
 }

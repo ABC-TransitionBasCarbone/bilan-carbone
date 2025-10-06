@@ -1,4 +1,5 @@
 import { StudyContributorDeleteParams } from '@/components/study/rights/StudyContributorsTable'
+import { getEnvVar } from '@/lib/environment'
 import { filterAllowedStudies } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { ChangeStudyCinemaCommand } from '@/services/serverFunctions/study.command'
@@ -9,6 +10,7 @@ import { getUserRoleOnPublicStudy } from '@/utils/study'
 import { isAdmin } from '@/utils/user'
 import {
   ControlMode,
+  DuplicableStudy,
   EmissionSourceTag,
   EmissionSourceTagFamily,
   Environment,
@@ -24,22 +26,40 @@ import { getAccountOrganizationVersions } from './account'
 import { prismaClient } from './client'
 import { getOrganizationVersionById, OrganizationVersionWithOrganization } from './organization'
 
+const cutFeLegifrance = getEnvVar('FE_LEGIFRANCE_VERSION', Environment.CUT) || ''
+const cutFeBaseEmpreinte = getEnvVar('FE_BASE_EMPREINTE_VERSION', Environment.CUT) || ''
+
 export type EmissionSourceTagFamilyWithTags = Omit<EmissionSourceTagFamily, 'createdAt' | 'updatedAt'> & {
   emissionSourceTags: Omit<EmissionSourceTag, 'familyId'>[]
 }
 
-export const createStudy = async (data: Prisma.StudyCreateInput, environment: Environment) => {
+export const createStudy = async (
+  data: Prisma.StudyCreateInput,
+  environment: Environment,
+  shouldCreateFEVersions = true,
+) => {
   const dbStudy = await prismaClient.study.create({ data })
-  const studyEmissionFactorVersions = []
-  for (const source of Object.values(Import).filter(
-    (source) => source !== Import.Manual && (environment === Environment.CUT || source !== Import.CUT),
-  )) {
-    const latestImportVersion = await getSourceLatestImportVersionId(source)
-    if (latestImportVersion) {
-      studyEmissionFactorVersions.push({ studyId: dbStudy.id, source, importVersionId: latestImportVersion.id })
+  let studyEmissionFactorVersions: Prisma.StudyEmissionFactorVersionCreateManyInput[] = []
+
+  if (environment === Environment.CUT) {
+    studyEmissionFactorVersions = (await getSourceCutImportVersionIds()).map((importVersion) => ({
+      studyId: dbStudy.id,
+      source: importVersion.source,
+      importVersionId: importVersion.id,
+    }))
+  } else if (shouldCreateFEVersions) {
+    const sources = Object.values(Import).filter((source) => source !== Import.Manual && source !== Import.CUT)
+
+    const latestVersions = await getSourcesLatestImportVersionId(sources)
+    if (latestVersions) {
+      studyEmissionFactorVersions = latestVersions.map((latestImportVersion) => ({
+        studyId: dbStudy.id,
+        source: latestImportVersion.source,
+        importVersionId: latestImportVersion.id,
+      }))
     }
+    await prismaClient.studyEmissionFactorVersion.createMany({ data: studyEmissionFactorVersions })
   }
-  await prismaClient.studyEmissionFactorVersion.createMany({ data: studyEmissionFactorVersions })
   return dbStudy
 }
 
@@ -125,6 +145,8 @@ const fullStudyInclude = {
             select: {
               id: true,
               email: true,
+              firstName: true,
+              lastName: true,
             },
           },
         },
@@ -136,6 +158,7 @@ const fullStudyInclude = {
   allowedUsers: {
     select: {
       accountId: true,
+      createdAt: true,
       account: {
         select: {
           id: true,
@@ -144,6 +167,8 @@ const fullStudyInclude = {
             select: {
               id: true,
               email: true,
+              firstName: true,
+              lastName: true,
               level: true,
             },
           },
@@ -684,6 +709,28 @@ export const getStudyValidatedEmissionsSources = async (studyId: string) => {
   }
 }
 
+export const getSourceCutImportVersionIds = async () =>
+  prismaClient.emissionFactorImportVersion.findMany({
+    select: { id: true, source: true },
+    where: {
+      OR: [
+        { source: Import.CUT },
+        { name: cutFeLegifrance, source: Import.Legifrance },
+        { name: cutFeBaseEmpreinte, source: Import.BaseEmpreinte },
+      ],
+    },
+    orderBy: { createdAt: 'desc' },
+    distinct: ['source'],
+  })
+
+export const getSourcesLatestImportVersionId = async (sources: Import[]) =>
+  prismaClient.emissionFactorImportVersion.findMany({
+    select: { id: true, source: true },
+    where: { source: { in: sources } },
+    orderBy: { createdAt: 'desc' },
+    distinct: ['source'],
+  })
+
 export const getSourceLatestImportVersionId = async (source: Import, transaction?: Prisma.TransactionClient) =>
   (transaction || prismaClient).emissionFactorImportVersion.findFirst({
     select: { id: true, source: true },
@@ -775,3 +822,13 @@ export const getStudiesAffectedByQuestion = async (questionIdIntern: string) => 
     distinct: ['id'],
   })
 }
+
+export const upsertStudyTemplate = async (template: DuplicableStudy, environment: Environment, studyId: string) =>
+  prismaClient.studyTemplate.upsert({
+    where: { environment_template: { environment, template } },
+    update: { studyId },
+    create: { environment, template, studyId },
+  })
+
+export const getStudyTemplate = async (template: DuplicableStudy, environment: Environment) =>
+  prismaClient.studyTemplate.findUnique({ where: { environment_template: { environment, template } } })

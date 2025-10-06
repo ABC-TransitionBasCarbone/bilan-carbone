@@ -1,8 +1,9 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
+import { hasDeprecationPeriod } from '@/utils/study'
 import { EmissionSourceCaracterisation, ExportRule } from '@prisma/client'
 import { getStandardDeviation, sumStandardDeviations } from '../emissionSource'
-import { convertTiltSubPostToBCSubPost, Post, subPostsByPost } from '../posts'
+import { convertTiltSubPostToBCSubPost } from '../posts'
 import { filterWithDependencies, getSiteEmissionSources } from './utils'
 
 const allRules = [
@@ -112,7 +113,7 @@ export const getBegesEmissionValue = (emissionSource: EmissionSource): number =>
   }
 
   let value = emissionSource.value
-  if (subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost) && emissionSource.depreciationPeriod) {
+  if (hasDeprecationPeriod(emissionSource.subPost) && emissionSource.depreciationPeriod) {
     value = value / emissionSource.depreciationPeriod
   }
   return value

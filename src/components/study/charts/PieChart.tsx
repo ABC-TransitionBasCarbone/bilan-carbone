@@ -61,24 +61,24 @@ const PieChart = <T extends BasicTypeCharts>({
     if (innerRingData.length > 0) {
       seriesArray.push({
         data: innerRingData,
-        arcLabel: showLabelsOnPie ? (item: { value: number }) => formatNumber(item.value, 2) : undefined,
+        arcLabel: showLabelsOnPie ? (item: { value: number }) => formatNumber(item.value, 0) : undefined,
         arcLabelMinAngle: PIE_CHART_CONSTANTS.INNER_RING.ARC_LABEL_MIN_ANGLE,
         arcLabelRadius: PIE_CHART_CONSTANTS.INNER_RING.ARC_LABEL_RADIUS,
         innerRadius: PIE_CHART_CONSTANTS.INNER_RING.INNER_RADIUS,
         outerRadius: PIE_CHART_CONSTANTS.INNER_RING.OUTER_RADIUS,
-        valueFormatter: (item: { value: number }) => formatValueAndUnit(item.value, tUnits(resultsUnit)),
+        valueFormatter: (item: { value: number }) => formatValueAndUnit(item.value, tUnits(resultsUnit), 0),
       })
     }
 
     if (outerRingData.length > 0) {
       seriesArray.push({
         data: outerRingData,
-        arcLabel: showLabelsOnPie ? (item: { value: number }) => formatNumber(item.value, 2) : undefined,
+        arcLabel: showLabelsOnPie ? (item: { value: number }) => formatNumber(item.value, 0) : undefined,
         arcLabelMinAngle: PIE_CHART_CONSTANTS.OUTER_RING.ARC_LABEL_MIN_ANGLE,
         arcLabelRadius: PIE_CHART_CONSTANTS.OUTER_RING.ARC_LABEL_RADIUS,
         innerRadius: PIE_CHART_CONSTANTS.OUTER_RING.INNER_RADIUS,
         outerRadius: PIE_CHART_CONSTANTS.OUTER_RING.OUTER_RADIUS,
-        valueFormatter: (item: { value: number }) => formatValueAndUnit(item.value, tUnits(resultsUnit)),
+        valueFormatter: (item: { value: number }) => formatValueAndUnit(item.value, tUnits(resultsUnit), 0),
       })
     }
 

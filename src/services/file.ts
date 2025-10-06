@@ -7,8 +7,15 @@ export const allowedFlowFileTypes = ['application/pdf', 'image/png', 'image/jpeg
 
 export const maxAllowedFileSize = 5 * MB
 
-export const download = (fileContent: string[] | ArrayBuffer[], fileName: string, fileType: string) => {
-  const blob = new Blob(fileContent, { type: fileType })
+type FileType = 'xlsx' | 'csv' | 'docx'
+const typeTab: Record<FileType, string> = {
+  xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  csv: 'text/csv;charset=utf-8;',
+  docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+}
+
+export const download = (fileContent: string[] | ArrayBuffer[], fileName: string, fileType: FileType) => {
+  const blob = new Blob(fileContent, { type: typeTab[fileType] })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url

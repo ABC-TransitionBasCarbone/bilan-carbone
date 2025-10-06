@@ -13,11 +13,8 @@ export interface BasicTypeCharts {
   children: Omit<BasicTypeCharts, 'children'>[]
 }
 
-export const formatValueAndUnit = (value: number | null, unit?: string) => {
-  const safeValue = value ?? 0
-  const unitToDisplay = unit ?? ''
-  return `${formatNumber(safeValue, 2)} ${unitToDisplay}`
-}
+export const formatValueAndUnit = (value: number | null, unit: string, dec = 2) =>
+  `${formatNumber(value ?? 0, dec)} ${unit}`
 
 export const getPostColor = (themeColors: Theme, post?: string, color?: string) => {
   if (color) {

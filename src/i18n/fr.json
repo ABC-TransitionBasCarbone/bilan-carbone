@@ -310,12 +310,17 @@
   "study": {
     "create": "Ajouter un Bilan Carbone®",
     "duplicate": "Dupliquer l'étude",
+    "duplicateEnvironment": "Dupliquer l'étude dans un autre environnement",
+    "deleteStudy": "Supprimer l'étude",
     "duplicateCopy": " - Copie",
     "duplicateDialog": {
       "title": "Duplication de l'étude",
-      "description": "Souhaitez-vous dupliquer cette étude ? Vous serez redirigé vers la page de création d'une étude, tous les champs seront pré-remplis avec les informations de cette étude, et une fois validée, toute l'étude et ses sources d'émissions seront dupliquées. Les études seront alors indépendantes, toute modification faite dans l'une ne se reflètera pas dans l'autre une fois la duplication faite.",
+      "description": "Souhaitez-vous dupliquer cette étude ? Vous serez redirigé vers la page de création d'une étude, tous les champs seront pré-remplis avec les informations de l'étude que vous serez en mesure d'éditer, et une fois la création validée, toute l'étude et ses sources d'émissions seront dupliquées. Les documents attachés à l'étude originale ne seront pas dupliqués. Attention, après la duplication, les sources d'émission de la nouvelle étude créée devront être validées à nouveau afin d'apparaître dans les résultats. <br></br>Les études sont indépendantes après la duplication, toute modification faite dans l'une ne se reflètera pas dans l'autre.",
+      "duplicatedDescription": "Vous étude a été dupliquée. Vous pouvez la retrouver dans votre environnement {environment}.",
+      "otherEnvironnment": "Souhaitez vous dupliquer cette étude sur votre environnement {environment} ? Toutes les informations vont être copiées dans la nouvelle étude.",
       "cancel": "Annuler",
-      "confirm": "Dupliquer"
+      "confirm": "Dupliquer",
+      "selectEnvironment": "Selectionner l'environnement cible"
     },
     "myCollaborations": "Mes collaborations",
     "myStudies": "Mes Bilans Carbone®",
@@ -598,6 +603,9 @@
       "color": "Couleur",
       "emissionSourceTagsPlaceholder": "Votre tag",
       "createEmissionSourceTag": "Créer mon tag",
+      "editTagTitle": "Modifier le tag",
+      "updateTag": "Confirmer",
+      "cancel": "Annuler",
       "validate": "Valider",
       "deleteDialog": {
         "accept": "Oui",
@@ -615,6 +623,12 @@
       "begesActivationWarning": {
         "title": "Activation de l'export BEGES",
         "description": "Vous êtes sur le point d'activer l'export BEGES règlementaire. Lorsque cet export est activé, vous devez renseigner un champ supplémentaire \"Caractérisation\" dans certaines sources d'émissions. En conséquence, <warning>l'activation de cet export dévalidera les sources d'émission concernées</warning>. Voulez-vous continuer ?",
+        "continue": "Continuer",
+        "cancel": "Annuler"
+      },
+      "begesDeactivationWarning": {
+        "title": "Désactivation de l'export BEGES",
+        "description": "Vous êtes sur le point de désactiver l'export BEGES règlementaire. <warning>La désactivation de cet export entraînera la perte de toutes les caractérisations renseignées dans les sources d'émission</warning>. Voulez-vous continuer ?",
         "continue": "Continuer",
         "cancel": "Annuler"
       },
@@ -641,6 +655,7 @@
       "subPost": "Sous-poste",
       "tag": "Tag",
       "download": "Télécharger les résultats",
+      "downloadReport": "Télécharger le rapport",
       "downloadPDF": "Télécharger la fiche récapitulative",
       "downloadingPDF": "Téléchargement (au moins 15 secondes)...",
       "value": "Émissions ({unit})",
@@ -1136,7 +1151,7 @@
         "negaOctet": "Logo de NegaOctet",
         "manual": "Manuel"
       },
-      "post": "Postes :",
+      "post": "Postes",
       "co2f": "CO2f :",
       "ch4f": "CH4f :",
       "ch4b": "CH4b :",
@@ -1146,12 +1161,15 @@
       "hfc": "HFC :",
       "pfc": "PFC :",
       "otherGES": "Autres gaz :",
-      "qualityRating": "Qualité globale du Facteur d'Émission : ",
+      "qualityRating": "Qualité globale du facteur d'émission",
       "reliability": "Fiabilité :",
       "technicalRepresentativeness": "Représentativité technique :",
       "geographicRepresentativeness": "Représentativité géographique :",
       "temporalRepresentativeness": "Représentativité temporelle :",
-      "completeness": "Complétude :"
+      "completeness": "Complétude :",
+      "comment": "Autres informations : ",
+      "GESDecomposition": "Décomposition des GES : ",
+      "factorParts": "Composantes du facteur d'émission : "
     },
     "edit": {
       "title": "Modifier le facteur d'émissions ({name})",
@@ -1510,7 +1528,7 @@
     }
   },
   "emissionSource": {
-    "in": "en",
+    "in": "en ",
     "emissionSource": "Donnée d'activité :",
     "emissionFactor": "Facteur d'émission :",
     "clear": "Supprimer la valeur",
@@ -1721,6 +1739,8 @@
     "Formation": "Formation",
     "Feedback": "Feedback",
     "Creation": "Création",
+    "DownloadReport": "Téléchargement du rapport type",
+    "FormationStudy": "Étude de formation",
     "source": "Sources",
     "environment": "Environnements",
     "true": "Active",
