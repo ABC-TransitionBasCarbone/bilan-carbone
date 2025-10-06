@@ -48,7 +48,9 @@ const ConsolatedBEGESDifference = ({
   const navigateToEmissionSource = (emissionSourceId: string, subPost: SubPost) => {
     const post = getPost(subPost)
     if (post) {
-      const url = `/etudes/${study.id}/comptabilisation/saisie-des-donnees/${post}#emission-source-${emissionSourceId}`
+      const emissionSource = study.emissionSources.find((es) => es.id === emissionSourceId)
+      const targetSite = emissionSource?.studySite.id
+      const url = `/etudes/${study.id}/comptabilisation/saisie-des-donnees/${post}?site=${targetSite}#emission-source-${emissionSourceId}`
       router.push(url)
     }
   }
