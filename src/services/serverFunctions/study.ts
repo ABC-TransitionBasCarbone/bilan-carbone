@@ -25,11 +25,7 @@ import {
   getEmissionFactorVersionsBySource,
   getStudyEmissionFactorSources,
 } from '@/db/emissionFactors'
-import {
-  createEmissionSourcesOnStudy,
-  createEmissionSourcesWithReturn,
-  getFamilyTagsForStudy,
-} from '@/db/emissionSource'
+import { createEmissionSourcesWithReturn, getFamilyTagsForStudy } from '@/db/emissionSource'
 import {
   getOrganizationVersionById,
   getOrganizationVersionsByOrganizationId,
@@ -1252,6 +1248,8 @@ const duplicateEmissionSources = async (
   targetStudy: FullStudy,
   sourceStudyId: string,
   shouldClearCaracterisations: boolean,
+  sourceEnvironment?: Environment,
+  targetEnvironment?: Environment,
 ) => {
   const { id: targetStudyId, sites: targetStudySites, tagFamilies: targetTagFamilies } = targetStudy
 
@@ -1268,16 +1266,27 @@ const duplicateEmissionSources = async (
         return null
       }
 
+      const subPost =
+        sourceEnvironment && targetEnvironment
+          ? getTransEnvironmentSubPost(sourceEnvironment, targetEnvironment, sourceEmissionSource.subPost)
+          : sourceEmissionSource.subPost
+
+      if (!subPost) {
+        return null
+      }
+
       return {
         sourceEmissionSource,
         targetStudySiteId,
+        subPost,
       }
     })
     .filter((item) => item !== null)
 
   const emissionSourcesDataWithSourceId = emissionSourcesWithSites.map(
-    ({ sourceEmissionSource, targetStudySiteId }) => {
+    ({ sourceEmissionSource, targetStudySiteId, subPost }) => {
       const newId = uuidv4()
+      const contributorId = sourceEmissionSource.contributor?.id
       return {
         sourceId: sourceEmissionSource.id,
         targetId: newId,
@@ -1285,7 +1294,7 @@ const duplicateEmissionSources = async (
           id: newId,
           name: sourceEmissionSource.name,
           value: sourceEmissionSource.value,
-          subPost: sourceEmissionSource.subPost,
+          subPost: subPost,
           type: sourceEmissionSource.type,
           source: sourceEmissionSource.source,
           comment: sourceEmissionSource.comment,
@@ -1307,6 +1316,7 @@ const duplicateEmissionSources = async (
           emissionFactorId: sourceEmissionSource.emissionFactor?.id ?? null,
           studySiteId: targetStudySiteId,
           validated: false,
+          ...(contributorId ? { contributor: { connect: { id: contributorId } } } : {}),
         },
       }
     },
@@ -1623,34 +1633,6 @@ const buildStudyForDuplication = (
   },
 })
 
-const buildStudyEmissionSources = (
-  emissionSources: FullStudy['emissionSources'],
-  studyId: string,
-  studySites: FullStudy['sites'],
-  sourceEnvironment: Environment,
-  targetEnvironment: Environment,
-): Prisma.StudyEmissionSourceCreateManyInput[] =>
-  emissionSources
-    .map((emissionSource) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { id, studySite, emissionFactor, emissionSourceTags, ...restSource } = emissionSource
-      const studySiteId = studySites.find((studySite) => studySite.site.id === emissionSource.studySite.site.id)
-        ?.id as string
-      const subPost = getTransEnvironmentSubPost(sourceEnvironment, targetEnvironment, emissionSource.subPost)
-      if (!subPost) {
-        return undefined
-      }
-      const contributor = restSource.contributor?.id
-      return {
-        ...restSource,
-        studyId,
-        studySiteId,
-        subPost,
-        contributor: contributor ? { connect: { id: contributor } } : undefined,
-      }
-    })
-    .filter((source) => !!source)
-
 export const duplicateStudyInOtherEnvironment = async (studyId: string, targetEnvironment: Environment) =>
   withServerResponse('duplicateStudyInOtherEnvironment', async () => {
     if (!canDuplicateStudy(studyId)) {
@@ -1718,16 +1700,14 @@ export const duplicateStudyInOtherEnvironment = async (studyId: string, targetEn
       targetUserAccount.organizationVersionId,
     )) as FullStudy
 
-    // emission sources
-    // TODO : Add tags that are not currently added to the duplicated study
-    const emissionSources = buildStudyEmissionSources(
+    await duplicateEmissionSources(
       study.emissionSources,
-      createdStudy.id,
-      createdStudyWithSites.sites,
+      createdStudyWithSites,
+      studyId,
+      false,
       study.organizationVersion.environment,
       targetEnvironment,
     )
-    await createEmissionSourcesOnStudy(emissionSources)
     return
   })
 
@@ -2031,15 +2011,13 @@ export const duplicateStudyTemplateForAccounts = async (
   const createdStudy = await createStudy(studyCommand, environment, false)
   const createdStudyWithSites = (await getStudyById(createdStudy.id, organizationVersionId)) as FullStudy
 
-  // emission sources
-  const emissionSources = buildStudyEmissionSources(
+  await duplicateEmissionSources(
     study.emissionSources,
-    createdStudy.id,
-    createdStudyWithSites.sites,
+    createdStudyWithSites,
+    studyId,
+    false,
     study.organizationVersion.environment,
     environment,
   )
-
-  await createEmissionSourcesOnStudy(emissionSources)
   return
 }
