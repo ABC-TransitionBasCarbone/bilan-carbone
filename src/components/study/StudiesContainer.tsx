@@ -71,7 +71,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR }: Props) =>
     <MUIBox component="section">
       <div className="justify-center">
         <Box className={classNames(styles.firstStudyCard, 'flex-col align-center')}>
-          <Image src="/img/orga.png" alt="cr.png" width={177} height={119} />
+          <Image src="/img/orga.png" alt="orga.png" width={177} height={119} />
           <h5>{t('createFirstStudy')}</h5>
           <p>{t('firstStudyMessage')}</p>
           <LinkButton data-testid="new-study" className={classNames('w100 justify-center mb1')} href={creationUrl}>
