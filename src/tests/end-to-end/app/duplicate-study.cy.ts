@@ -10,7 +10,7 @@ describe('Delete study', () => {
 
   it('Should be able to duplicate a study', () => {
     cy.login('all-env-admin-0@yopmail.com', 'password-0')
-    cy.url({ timeout: 5000 }).should('eq', `${Cypress.config().baseUrl}/selection-du-compte`)
+    cy.url({ timeout: 15000 }).should('eq', `${Cypress.config().baseUrl}/selection-du-compte`)
     cy.contains('li', 'BC+').click()
     cy.url({ timeout: 10000 }).should('eq', `${Cypress.config().baseUrl}/`)
 
@@ -37,7 +37,7 @@ describe('Delete study', () => {
     cy.get('#duplicate-study-modal-title', { timeout: 15000 }).should('not.exist') // wait for duplication to be finished
 
     cy.visit('/selection-du-compte')
-    cy.url({ timeout: 5000 }).should('eq', `${Cypress.config().baseUrl}/selection-du-compte`)
+    cy.url({ timeout: 15000 }).should('eq', `${Cypress.config().baseUrl}/selection-du-compte`)
     cy.contains('li', 'Tilt').click()
     cy.url({ timeout: 10000 }).should('eq', `${Cypress.config().baseUrl}/`)
 

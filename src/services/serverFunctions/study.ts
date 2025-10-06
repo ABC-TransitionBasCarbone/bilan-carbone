@@ -1248,6 +1248,7 @@ const duplicateEmissionSources = async (
   targetStudy: FullStudy,
   sourceStudyId: string,
   shouldClearCaracterisations: boolean,
+  shouldClearValidations: boolean,
   sourceEnvironment?: Environment,
   targetEnvironment?: Environment,
 ) => {
@@ -1315,7 +1316,7 @@ const duplicateEmissionSources = async (
           studyId: targetStudyId,
           emissionFactorId: sourceEmissionSource.emissionFactor?.id ?? null,
           studySiteId: targetStudySiteId,
-          validated: false,
+          validated: shouldClearValidations ? false : sourceEmissionSource.validated,
           ...(contributorId ? { contributor: { connect: { id: contributorId } } } : {}),
         },
       }
@@ -1431,6 +1432,7 @@ export const duplicateStudyCommand = async (
       createdStudy,
       sourceStudy.id,
       shouldClearCaracterisations,
+      true,
     )
 
     if (inviteExistingTeam) {
@@ -1704,6 +1706,7 @@ export const duplicateStudyInOtherEnvironment = async (studyId: string, targetEn
       study.emissionSources,
       createdStudyWithSites,
       studyId,
+      false,
       false,
       study.organizationVersion.environment,
       targetEnvironment,
@@ -2015,6 +2018,7 @@ export const duplicateStudyTemplateForAccounts = async (
     study.emissionSources,
     createdStudyWithSites,
     studyId,
+    false,
     false,
     study.organizationVersion.environment,
     environment,
