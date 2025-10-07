@@ -286,65 +286,6 @@ describe('study', () => {
           ]),
         )
       })
-    })
-
-    describe('Team and Contributor Invitations', () => {
-      beforeEach(() => {
-        setupInvitationMocks()
-      })
-
-      it('should invite existing team members when flag is true', async () => {
-        const result = await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand, true, false)
-
-        expect(result).toEqual({ success: true, data: { id: TEST_IDS.newStudy } })
-        expect(mockCreateUserOnStudy).toHaveBeenCalled()
-        expect(mockCreateContributorOnStudy).not.toHaveBeenCalled()
-      })
-
-      it('should invite existing contributors when flag is true', async () => {
-        const result = await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand, false, true)
-
-        expect(result).toEqual({ success: true, data: { id: TEST_IDS.newStudy } })
-        expect(mockCreateContributorOnStudy).toHaveBeenCalled()
-        expect(mockCreateUserOnStudy).not.toHaveBeenCalled()
-      })
-
-      it('should skip current user when inviting team members', async () => {
-        const studyWithCurrentUser = getMockeFullStudy({
-          allowedUsers: [
-            {
-              id: 'current-user-study-id',
-              account: { user: { email: TEST_EMAILS.currentUser } },
-              role: StudyRole.Editor,
-            },
-          ],
-        })
-        mockGetStudyById.mockImplementation((id: string) => {
-          if (id === TEST_IDS.sourceStudy) {
-            return Promise.resolve(studyWithCurrentUser)
-          }
-          if (id === TEST_IDS.newStudy) {
-            return Promise.resolve({
-              ...studyWithCurrentUser,
-              id: TEST_IDS.newStudy,
-              sites: [{ id: TEST_IDS.newStudySite, site: { id: TEST_IDS.site } }],
-            })
-          }
-          return Promise.resolve(null)
-        })
-
-        const result = await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand, true, false)
-
-        expect(result).toEqual({ success: true, data: { id: TEST_IDS.newStudy } })
-        expect(mockCreateUserOnStudy).not.toHaveBeenCalled()
-      })
-    })
-
-    describe('Tag duplication', () => {
-      beforeEach(() => {
-        jest.clearAllMocks()
-        setupSuccessfulDuplication()
-      })
 
       it('should duplicate emission sources with tags from multiple tag families', async () => {
         const mockUuidv4 = jest.mocked(uuidv4)
@@ -479,6 +420,58 @@ describe('study', () => {
           { emissionSourceId: 'created-es-2', tagId: 'target-tag-2-id' },
           { emissionSourceId: 'created-es-2', tagId: 'target-tag-4-id' },
         ])
+      })
+    })
+
+    describe('Team and Contributor Invitations', () => {
+      beforeEach(() => {
+        setupInvitationMocks()
+      })
+
+      it('should invite existing team members when flag is true', async () => {
+        const result = await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand, true, false)
+
+        expect(result).toEqual({ success: true, data: { id: TEST_IDS.newStudy } })
+        expect(mockCreateUserOnStudy).toHaveBeenCalled()
+        expect(mockCreateContributorOnStudy).not.toHaveBeenCalled()
+      })
+
+      it('should invite existing contributors when flag is true', async () => {
+        const result = await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand, false, true)
+
+        expect(result).toEqual({ success: true, data: { id: TEST_IDS.newStudy } })
+        expect(mockCreateContributorOnStudy).toHaveBeenCalled()
+        expect(mockCreateUserOnStudy).not.toHaveBeenCalled()
+      })
+
+      it('should skip current user when inviting team members', async () => {
+        const studyWithCurrentUser = getMockeFullStudy({
+          allowedUsers: [
+            {
+              id: 'current-user-study-id',
+              account: { user: { email: TEST_EMAILS.currentUser } },
+              role: StudyRole.Editor,
+            },
+          ],
+        })
+        mockGetStudyById.mockImplementation((id: string) => {
+          if (id === TEST_IDS.sourceStudy) {
+            return Promise.resolve(studyWithCurrentUser)
+          }
+          if (id === TEST_IDS.newStudy) {
+            return Promise.resolve({
+              ...studyWithCurrentUser,
+              id: TEST_IDS.newStudy,
+              sites: [{ id: TEST_IDS.newStudySite, site: { id: TEST_IDS.site } }],
+            })
+          }
+          return Promise.resolve(null)
+        })
+
+        const result = await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand, true, false)
+
+        expect(result).toEqual({ success: true, data: { id: TEST_IDS.newStudy } })
+        expect(mockCreateUserOnStudy).not.toHaveBeenCalled()
       })
     })
   })
