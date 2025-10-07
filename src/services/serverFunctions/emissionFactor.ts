@@ -20,7 +20,7 @@ import { unitsMatrix } from '@/services/importEmissionFactor/historyUnits'
 import { ManualEmissionFactorUnitList } from '@/utils/emissionFactors'
 import { flattenSubposts } from '@/utils/post'
 import { IsSuccess, withServerResponse } from '@/utils/serverResponse'
-import { EmissionFactorStatus, Import, Unit } from '@prisma/client'
+import { EmissionFactorImportVersion, EmissionFactorStatus, Import, Unit } from '@prisma/client'
 import { auth, dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canCreateEmissionFactor } from '../permissions/emissionFactor'
@@ -28,6 +28,26 @@ import { canReadStudy } from '../permissions/study'
 import { getStudyParentOrganizationVersionId } from '../study'
 import { sortAlphabetically } from '../utils'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from './emissionFactor.command'
+
+export const mapImportVersions = async (emissionFactors: EmissionFactorWithMetaData[]) => {
+  const latestBySource: EmissionFactorImportVersion[] = []
+
+  emissionFactors.forEach((factor) => {
+    if (!factor.version || !factor.importedFrom || latestBySource.find((v) => v.source === factor.importedFrom)) {
+      return
+    }
+
+    latestBySource.push({
+      id: factor.version.id,
+      source: factor.importedFrom,
+      name: factor.version.name,
+      internId: '',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    })
+  })
+  return latestBySource
+}
 
 export const getEmissionFactors = async (studyId?: string, withCut: boolean = false) =>
   withServerResponse('getEmissionFactors', async () => {
