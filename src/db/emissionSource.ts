@@ -1,8 +1,9 @@
-import { defaultEmissionSourceTags } from '@/constants/emissionSourceTags'
+import { DefaultStudyTags } from '@/constants/studyTags'
 import { Environment, Prisma } from '@prisma/client'
 import { prismaClient } from './client'
 
-export const getEmissionSourceById = (id: string) => prismaClient.studyEmissionSource.findUnique({ where: { id } })
+export const getEmissionSourceById = (id: string) =>
+  prismaClient.studyEmissionSource.findUnique({ where: { id }, include: { emissionSourceTags: true } })
 
 export const createEmissionSourceOnStudy = (emissionSource: Prisma.StudyEmissionSourceCreateInput) =>
   prismaClient.studyEmissionSource.create({
@@ -14,10 +15,16 @@ export const createEmissionSourcesOnStudy = (emissionSources: Prisma.StudyEmissi
     data: emissionSources,
   })
 
+export const createEmissionSourcesWithReturn = (emissionSources: Prisma.StudyEmissionSourceCreateManyInput[]) =>
+  prismaClient.studyEmissionSource.createManyAndReturn({
+    data: emissionSources,
+    select: { id: true },
+  })
+
 export const getFamilyTagsForStudy = (studyId: string) =>
-  prismaClient.emissionSourceTagFamily.findMany({
+  prismaClient.studyTagFamily.findMany({
     where: { studyId },
-    select: { id: true, name: true, emissionSourceTags: { select: { id: true, name: true } } },
+    select: { id: true, name: true, tags: { select: { id: true, name: true } } },
   })
 
 export const updateEmissionSourceOnStudy = (
@@ -31,43 +38,43 @@ export const updateEmissionSourceOnStudy = (
 
 export const deleteEmissionSourceOnStudy = (id: string) => prismaClient.studyEmissionSource.delete({ where: { id } })
 
-export const createEmissionSourceTagOnStudy = (emissionSourceTag: Prisma.EmissionSourceTagCreateInput) =>
-  prismaClient.emissionSourceTag.create({
-    data: emissionSourceTag,
+export const createStudyTag = (tag: Prisma.StudyTagCreateInput) =>
+  prismaClient.studyTag.create({
+    data: tag,
   })
 
-export const updateEmissionSourceTagOnStudy = (id: string, data: Prisma.EmissionSourceTagUpdateInput) =>
-  prismaClient.emissionSourceTag.update({
+export const updateStudyTag = (id: string, data: Prisma.StudyTagUpdateInput) =>
+  prismaClient.studyTag.update({
     where: { id },
     data,
   })
 
-export const deleteEmissionSourceTagOnStudy = (id: string) => prismaClient.emissionSourceTag.delete({ where: { id } })
+export const deleteStudyTag = (id: string) => prismaClient.studyTag.delete({ where: { id } })
 
-export const getEmissionSourceTagFamilyById = async (familyId: string) =>
-  prismaClient.emissionSourceTagFamily.findUnique({ where: { id: familyId } })
+export const getTagFamilyById = async (familyId: string) =>
+  prismaClient.studyTagFamily.findUnique({ where: { id: familyId } })
 
-export const upsertEmissionSourceTagFamilyById = async (studyId: string, name: string, familyId?: string) =>
+export const upsertTagFamilyById = async (studyId: string, name: string, familyId?: string) =>
   familyId
-    ? prismaClient.emissionSourceTagFamily.update({
+    ? prismaClient.studyTagFamily.update({
         where: { id: familyId },
         data: { name },
       })
-    : prismaClient.emissionSourceTagFamily.create({
+    : prismaClient.studyTagFamily.create({
         data: { name, studyId },
       })
 
-export const removeSourceTagFamilyById = async (familyId: string) => {
-  await prismaClient.emissionSourceTag.deleteMany({ where: { familyId } })
-  return prismaClient.emissionSourceTagFamily.delete({ where: { id: familyId } })
+export const removeTagFamilyById = async (familyId: string) => {
+  await prismaClient.studyTag.deleteMany({ where: { familyId } })
+  return prismaClient.studyTagFamily.delete({ where: { id: familyId } })
 }
 
-export const createEmissionSourceTagFamilyAndRelatedTags = async (
+export const createTagFamilyAndRelatedTags = async (
   studyId: string,
   data: { familyName: string; tags: { name: string; color: string }[] }[],
   environment: Environment,
 ) => {
-  const environmentTags = defaultEmissionSourceTags[environment as keyof typeof defaultEmissionSourceTags]
+  const environmentTags = DefaultStudyTags[environment as keyof typeof DefaultStudyTags]
 
   const familyTagsToCreate = data.filter((d) => d.familyName !== 'défaut')
   const tagsToCreate = data.map((family) => {
@@ -81,16 +88,16 @@ export const createEmissionSourceTagFamilyAndRelatedTags = async (
     return family
   })
 
-  await prismaClient.emissionSourceTagFamily.createMany({
+  await prismaClient.studyTagFamily.createMany({
     data: familyTagsToCreate.map((item) => ({
       name: item.familyName,
       studyId,
     })),
   })
 
-  const studyFamilyTags = await prismaClient.emissionSourceTagFamily.findMany({ where: { studyId } })
+  const studyFamilyTags = await prismaClient.studyTagFamily.findMany({ where: { studyId } })
 
-  await prismaClient.emissionSourceTag.createMany({
+  await prismaClient.studyTag.createMany({
     data: tagsToCreate.flatMap((d) => {
       return d.tags
         .map((tag) => ({
@@ -102,8 +109,8 @@ export const createEmissionSourceTagFamilyAndRelatedTags = async (
     }),
   })
 
-  return prismaClient.emissionSourceTagFamily.findMany({
+  return prismaClient.studyTagFamily.findMany({
     where: { id: { in: studyFamilyTags.map((family) => family.id) } },
-    select: { id: true, name: true, emissionSourceTags: { select: { id: true, name: true } } },
+    select: { id: true, name: true, tags: { select: { id: true, name: true } } },
   })
 }

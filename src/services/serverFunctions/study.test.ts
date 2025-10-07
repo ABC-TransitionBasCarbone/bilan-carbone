@@ -1,5 +1,6 @@
 import { expect } from '@jest/globals'
-import { Import, Level, StudyRole } from '@prisma/client'
+import { Environment, Import, Level, StudyRole } from '@prisma/client'
+import { v4 as uuidv4 } from 'uuid'
 import * as accountModule from '../../db/account'
 import * as emissionFactorsModule from '../../db/emissionFactors'
 import * as emissionSourcesModule from '../../db/emissionSource'
@@ -28,6 +29,10 @@ jest.mock('next-intl/server', () => ({
   getTranslations: jest.fn(() => (key: string) => key),
 }))
 
+jest.mock('uuid', () => ({
+  v4: jest.fn(),
+}))
+
 jest.mock('../../services/auth', () => ({
   dbActualizedAuth: jest.fn(),
 }))
@@ -39,6 +44,7 @@ jest.mock('../../db/study', () => ({
   createStudy: jest.fn(),
   updateStudyEmissionFactorVersion: jest.fn(),
   createContributorOnStudy: jest.fn(),
+  createEmissionSourceTags: jest.fn(),
 }))
 jest.mock('../../services/permissions/study', () => ({
   hasEditionRights: jest.fn(),
@@ -84,8 +90,9 @@ jest.mock('../../db/emissionFactors', () => ({
   getEmissionFactorsImportActiveVersion: jest.fn(),
 }))
 jest.mock('../../db/emissionSource', () => ({
-  createEmissionSourceTagFamilyAndRelatedTags: jest.fn(),
+  createTagFamilyAndRelatedTags: jest.fn(),
   getFamilyTagsForStudy: jest.fn(),
+  createEmissionSourcesWithReturn: jest.fn(),
 }))
 jest.mock('../../utils/user', () => ({
   isAdmin: jest.fn(),
@@ -143,6 +150,7 @@ const mockCreateUserOnStudy = studyDbModule.createUserOnStudy as jest.Mock
 const mockCreateStudy = studyDbModule.createStudy as jest.Mock
 const mockUpdateStudyEmissionFactorVersion = studyDbModule.updateStudyEmissionFactorVersion as jest.Mock
 const mockCreateContributorOnStudy = studyDbModule.createContributorOnStudy as jest.Mock
+const mockCreateEmissionSourceTags = studyDbModule.createEmissionSourceTags as jest.Mock
 const mockAddUserChecklistItem = userModule.addUserChecklistItem as jest.Mock
 const mockGetOrganizationVersionById = organizationModule.getOrganizationVersionById as jest.Mock
 const mockGetUserByEmail = userDbModule.getUserByEmail as jest.Mock
@@ -157,15 +165,17 @@ const mockCanDuplicateStudy = studyPermissionsModule.canDuplicateStudy as jest.M
 const mockGetEmissionFactorsImportActiveVersion =
   emissionFactorsModule.getEmissionFactorsImportActiveVersion as jest.Mock
 const mockIsAdmin = userUtilsModule.isAdmin as unknown as jest.Mock
-const mockCreateEmissionSourceTagFamilyAndRelatedTags =
-  emissionSourcesModule.createEmissionSourceTagFamilyAndRelatedTags as jest.Mock
+const mockCreateTagFamilyAndRelatedTags = emissionSourcesModule.createTagFamilyAndRelatedTags as jest.Mock
 const mockGetFamilyTagsForStudy = emissionSourcesModule.getFamilyTagsForStudy as jest.Mock
+const mockCreateEmissionSourcesWithReturn = emissionSourcesModule.createEmissionSourcesWithReturn as jest.Mock
 const mockIsOrganizationVersionCR = organizationModule.isOrganizationVersionCR as jest.Mock
 
 describe('study', () => {
   describe('duplicateStudyCommand', () => {
     const setupSuccessfulDuplication = () => {
-      mockCreateEmissionSourceTagFamilyAndRelatedTags.mockResolvedValue([])
+      mockCreateTagFamilyAndRelatedTags.mockResolvedValue([])
+      mockCreateEmissionSourceTags.mockResolvedValue(undefined)
+      mockCreateEmissionSourcesWithReturn.mockResolvedValue([{ id: TEST_IDS.emissionSource }])
       mockGetFamilyTagsForStudy.mockResolvedValue([])
       mockDbActualizedAuth.mockResolvedValue({ user: mockedAuthUser })
       mockCanDuplicateStudy.mockResolvedValue(true)
@@ -263,16 +273,153 @@ describe('study', () => {
       it('should duplicate emission sources with correct site mapping', async () => {
         await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand)
 
-        expect(mockCreateStudyEmissionSource).toHaveBeenCalledWith(
-          expect.objectContaining({
-            name: 'Test Emission Source',
-            value: 100,
-            study: { connect: { id: TEST_IDS.newStudy } },
-            studySite: { connect: { id: TEST_IDS.newStudySite } },
-            emissionFactor: { connect: { id: TEST_IDS.emissionFactor } },
-            validated: false,
-          }),
+        expect(mockCreateEmissionSourcesWithReturn).toHaveBeenCalledWith(
+          expect.arrayContaining([
+            expect.objectContaining({
+              name: 'Test Emission Source',
+              value: 100,
+              studyId: TEST_IDS.newStudy,
+              studySiteId: TEST_IDS.newStudySite,
+              emissionFactorId: TEST_IDS.emissionFactor,
+              validated: false,
+            }),
+          ]),
         )
+      })
+
+      it('should duplicate emission sources with tags from multiple tag families', async () => {
+        const mockUuidv4 = jest.mocked(uuidv4)
+        mockUuidv4
+          .mockReturnValueOnce('created-es-1' as unknown as Uint8Array)
+          .mockReturnValueOnce('created-es-2' as unknown as Uint8Array)
+
+        const sourceTagFamilies = [
+          {
+            id: 'family-1-id',
+            name: 'Scope',
+            tags: [
+              { id: 'tag-1-id', name: 'Scope 1', color: '#FF0000', familyName: 'Scope' },
+              { id: 'tag-2-id', name: 'Scope 2', color: '#00FF00', familyName: 'Scope' },
+            ],
+          },
+          {
+            id: 'family-2-id',
+            name: 'Category',
+            tags: [
+              { id: 'tag-3-id', name: 'Transport', color: '#0000FF', familyName: 'Category' },
+              { id: 'tag-4-id', name: 'Energy', color: '#FFFF00', familyName: 'Category' },
+            ],
+          },
+        ]
+
+        const targetTagFamilies = [
+          {
+            id: 'target-family-1-id',
+            name: 'Scope',
+            tags: [
+              { id: 'target-tag-1-id', name: 'Scope 1', color: '#FF0000' },
+              { id: 'target-tag-2-id', name: 'Scope 2', color: '#00FF00' },
+            ],
+          },
+          {
+            id: 'target-family-2-id',
+            name: 'Category',
+            tags: [
+              { id: 'target-tag-3-id', name: 'Transport', color: '#0000FF' },
+              { id: 'target-tag-4-id', name: 'Energy', color: '#FFFF00' },
+            ],
+          },
+        ]
+
+        const sourceStudyWithTags = getMockeFullStudy({
+          emissionSources: [
+            {
+              ...mockedSourceStudy.emissionSources[0],
+              id: 'source-es-1',
+              name: 'Emission Source 1',
+              value: 100,
+              studySite: { id: TEST_IDS.studySite, site: { id: TEST_IDS.site } },
+              emissionSourceTags: [
+                { tag: { id: 'tag-1-id', name: 'Scope 1' } },
+                { tag: { id: 'tag-3-id', name: 'Transport' } },
+              ],
+            },
+            {
+              ...mockedSourceStudy.emissionSources[0],
+              id: 'source-es-2',
+              name: 'Emission Source 2',
+              value: 200,
+              studySite: { id: TEST_IDS.studySite, site: { id: TEST_IDS.site } },
+              emissionSourceTags: [
+                { tag: { id: 'tag-2-id', name: 'Scope 2' } },
+                { tag: { id: 'tag-4-id', name: 'Energy' } },
+              ],
+            },
+          ],
+          tagFamilies: sourceTagFamilies,
+        })
+
+        mockGetFamilyTagsForStudy.mockResolvedValue(sourceTagFamilies)
+        mockCreateEmissionSourcesWithReturn.mockResolvedValue([{ id: 'created-es-1' }, { id: 'created-es-2' }])
+
+        mockGetStudyById.mockImplementation((id: string) => {
+          if (id === TEST_IDS.sourceStudy) {
+            return Promise.resolve(sourceStudyWithTags)
+          }
+          if (id === TEST_IDS.newStudy) {
+            return Promise.resolve({
+              ...sourceStudyWithTags,
+              id: TEST_IDS.newStudy,
+              sites: [{ id: TEST_IDS.newStudySite, site: { id: TEST_IDS.site } }],
+              tagFamilies: targetTagFamilies,
+            })
+          }
+          return Promise.resolve(null)
+        })
+
+        await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand)
+
+        expect(mockCreateStudy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            tagFamilies: {
+              create: [
+                {
+                  name: 'défaut',
+                  tags: undefined,
+                },
+                ...sourceTagFamilies.map((tagFamily) => ({
+                  name: tagFamily.name,
+                  tags: {
+                    create: tagFamily.tags.map((tag) => ({ name: tag.name, color: tag.color })),
+                  },
+                })),
+              ],
+            },
+          }),
+          Environment.BC,
+        )
+
+        expect(mockCreateEmissionSourcesWithReturn).toHaveBeenCalledWith([
+          expect.objectContaining({
+            name: 'Emission Source 1',
+            value: 100,
+            studyId: TEST_IDS.newStudy,
+            studySiteId: TEST_IDS.newStudySite,
+          }),
+          expect.objectContaining({
+            name: 'Emission Source 2',
+            value: 200,
+            studyId: TEST_IDS.newStudy,
+            studySiteId: TEST_IDS.newStudySite,
+          }),
+        ])
+
+        expect(mockCreateEmissionSourceTags).toHaveBeenCalledWith([
+          { emissionSourceId: 'created-es-1', tagId: 'target-tag-1-id' },
+          { emissionSourceId: 'created-es-1', tagId: 'target-tag-3-id' },
+          { emissionSourceId: 'created-es-2', tagId: 'target-tag-2-id' },
+          { emissionSourceId: 'created-es-2', tagId: 'target-tag-4-id' },
+        ])
       })
     })
 

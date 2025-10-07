@@ -45,7 +45,7 @@ export const mockedFullStudy = {
   emissionFactorVersions: [],
   exports: [],
   organizationVersion: mockedOrganizationVersion,
-  emissionSourceTagFamilies: [],
+  tagFamilies: [],
   cncVersion: {
     id: '1',
     year: 2023,
@@ -196,6 +196,7 @@ export const TEST_IDS = {
   userStudy: 'user-study-id',
   contributorStudy: 'contributor-study-id',
   account: 'account-id',
+  tag: 'tag-id',
 }
 
 export const TEST_EMAILS = {
@@ -315,7 +316,7 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
       subPost: SubPost.Achats,
     },
   ],
-  emissionSourceTagFamilies: [],
+  tagFamilies: [],
   organizationVersion: mockedOrganizationVersion,
   sites: [],
   oldBCId: null,

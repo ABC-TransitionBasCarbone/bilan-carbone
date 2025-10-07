@@ -15,8 +15,8 @@ import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import DependencyMatrix from '../study/perimeter/documents/DependencyMatrix'
 import StudyFlow from '../study/perimeter/documents/StudyFlow'
-import EmissionSourceTags from '../study/perimeter/EmissionSourceTags'
 import StudyPerimeter from '../study/perimeter/StudyPerimeter'
+import StudyTags from '../study/perimeter/StudyTags'
 
 interface Props {
   study: FullStudy
@@ -66,7 +66,7 @@ const StudyPerimeterPage = async ({ study, organizationVersion, user }: Props) =
           caUnit={caUnit}
         />
       </Block>
-      <EmissionSourceTags studyId={study.id} />
+      <StudyTags studyId={study.id} />
       <StudyFlow canAddFlow={canAddFlow} documents={studyFlowDocuments} study={study} />
       {hasAccessToDependencyMatrix(user.environment) && (
         <DependencyMatrix documents={dependencyMatrixDocuments} study={study} />
