@@ -192,6 +192,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
             validatedOnly={validatedOnly}
             results={computedResultsWithDep}
             begesResults={computedBegesData}
+            studySite={studySite}
           />
         )}
       </div>
