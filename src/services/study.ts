@@ -1,6 +1,6 @@
 import { resultsExportHeadersBase, resultsExportHeadersCut } from '@/constants/exports'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
-import { FullStudy, getOrganizationVersionStudiesOrderedByStartDate, getStudyById } from '@/db/study'
+import { FullStudy, getStudyById } from '@/db/study'
 import { Translations } from '@/types/translation'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { getPost } from '@/utils/post'
@@ -658,17 +658,6 @@ export const getStudyParentOrganizationVersionId = async (
   }
 
   return study.organizationVersion.parentId || study.organizationVersion.id
-}
-
-export const getLatestVersionsOfStudiesByOrganizationVersionId = async (
-  organizationVersionId: string | null | undefined,
-) => {
-  if (!organizationVersionId) {
-    return []
-  }
-  const studies = await getOrganizationVersionStudiesOrderedByStartDate(organizationVersionId)
-
-  return studies.map((study) => study.emissionFactorVersions)
 }
 
 export const getResultsValues = (
