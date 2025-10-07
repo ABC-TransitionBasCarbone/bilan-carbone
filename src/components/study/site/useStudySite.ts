@@ -2,13 +2,14 @@
 
 import { FullStudy } from '@/db/study'
 import { StudyWithoutDetail } from '@/services/permissions/study'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 export default function useStudySite(study: FullStudy | StudyWithoutDetail, allowAll?: boolean) {
   const [ready, setReady] = useState(false)
   const [studySite, setSite] = useState('all')
   const searchParams = useSearchParams()
+  const router = useRouter()
 
   useEffect(() => {
     const siteFromUrl = searchParams.get('site')
@@ -16,6 +17,10 @@ export default function useStudySite(study: FullStudy | StudyWithoutDetail, allo
 
     if (siteFromUrl && study.sites.some((studySite) => studySite.id === siteFromUrl)) {
       defaultSite = siteFromUrl
+      const params = new URLSearchParams(searchParams.toString())
+      params.delete('site')
+      const newUrl = params.toString() ? `${window.location.pathname}?${params.toString()}` : window.location.pathname
+      router.replace(newUrl, { scroll: false })
     } else {
       defaultSite = window.localStorage.getItem(`studySite-${study.id}`)
     }
@@ -25,7 +30,7 @@ export default function useStudySite(study: FullStudy | StudyWithoutDetail, allo
     }
     setSite(defaultSite)
     setReady(true)
-  }, [study, searchParams, allowAll])
+  }, [study, searchParams, allowAll, router])
 
   useEffect(() => {
     if (ready) {
