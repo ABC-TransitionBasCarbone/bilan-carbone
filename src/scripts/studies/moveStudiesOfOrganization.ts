@@ -1,5 +1,5 @@
 import { prismaClient } from '@/db/client'
-import { getOrganizationVersionById, getOrganizationWithSitesById } from '@/db/organization'
+import { getOrganizationVersionById } from '@/db/organization'
 import { getStudyById } from '@/db/study'
 import { Command } from 'commander'
 import * as readline from 'readline'
@@ -10,12 +10,11 @@ program
   .name('move-studies-of-organization')
   .description('Script to switch study from one orga to another')
   .version('1.0.0')
-  .requiredOption('-oo, --old-orga-version-id <value>', 'old organization link to the study')
-  .requiredOption('-no, --new-orga-version-id <value>', 'new organization link to the study')
+  .requiredOption('--oldOrga, --old-orga-version-id <value>', 'old organization link to the study')
+  .requiredOption('--newOrga, --new-orga-version-id <value>', 'new organization link to the study')
   .requiredOption('-s, --study-id <value>', 'Id of the study')
   .option(
-    '-so',
-    '--new-organization-id-for-study',
+    '--studyOrga, --new-organization-version-id-for-study <value>',
     'id of the new organization for the study if new orga version is CR',
   )
   .parse(process.argv)
@@ -29,7 +28,7 @@ const switchStudiesOfOrganization = async () => {
   })
 
   const userConfirmation = await new Promise((resolve) => {
-    rl.question('Do you have the authorization from the orga that own the study ?', (answer) => {
+    rl.question('Do you have the authorization from the orga that own the study ? y(es)/n(o)', (answer) => {
       rl.close()
       resolve(answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes')
     })
@@ -40,18 +39,23 @@ const switchStudiesOfOrganization = async () => {
     return
   }
 
-  const { oldOrgaVersionId, newOrgaVersionId, studyId, newOrganizationIdForStudy } = params
+  const { oldOrgaVersionId, newOrgaVersionId, studyId, newOrganizationVersionIdForStudy } = params
 
   const oldOrgaVersion = await getOrganizationVersionById(oldOrgaVersionId)
   const newOrgaVersion = await getOrganizationVersionById(newOrgaVersionId)
-  const study = await getStudyById(studyId, null)
+  const study = await getStudyById(studyId, newOrgaVersionId)
 
   if (!oldOrgaVersion || !newOrgaVersion || !study) {
     console.log('❌ One of the organization does not exist.')
     return
   }
 
-  if (newOrgaVersion.isCR && !newOrganizationIdForStudy) {
+  if (study.organizationVersionId !== oldOrgaVersionId) {
+    console.log('❌ The study is not linked to the old organization.')
+    return
+  }
+
+  if (newOrgaVersion.isCR && !newOrganizationVersionIdForStudy) {
     console.log('❌ The new organization is a CR orga. Please provide the id of the new organization for the study.')
     return
   }
@@ -59,42 +63,28 @@ const switchStudiesOfOrganization = async () => {
   let newOrganizationVersionForStudy
   let newOrganizationForStudyName
   if (newOrgaVersion.isCR) {
-    const newOrganizationForStudy = await getOrganizationWithSitesById(newOrganizationIdForStudy)
-
-    if (!newOrganizationForStudy) {
-      console.log('❌ The new organization for the study does not exist.')
-      return
-    }
-
-    const newOrganizationVersionForStudyId = newOrganizationForStudy.organizationVersions.find(
-      (orgaV) => orgaV.environment === newOrgaVersion.environment,
-    )?.id
-
-    if (!newOrganizationVersionForStudyId) {
-      console.log(
-        `❌ The new organization for the study does not have an organization version in the same environment as the new orga version (${newOrgaVersion.environment}).`,
-      )
-      return
-    }
-
-    newOrganizationVersionForStudy = await getOrganizationVersionById(newOrganizationVersionForStudyId)
+    newOrganizationVersionForStudy = await getOrganizationVersionById(newOrganizationVersionIdForStudy)
 
     if (!newOrganizationVersionForStudy) {
       console.log('❌ The new organization version for the study does not exist.')
       return
     }
 
-    newOrganizationForStudyName = newOrganizationForStudy.name
+    newOrganizationForStudyName = newOrganizationVersionForStudy.organization.name
   } else {
     newOrganizationVersionForStudy = newOrgaVersion
     newOrganizationForStudyName = newOrgaVersion.organization.name
   }
 
+  const rl2 = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  })
   const userConfirmationOfOrgas = await new Promise((resolve) => {
-    rl.question(
-      `You do want to move the study from orga ${oldOrgaVersion.organization.name} to ${newOrgaVersion.organization.name} ${newOrgaVersion.isCR ? `, CR orga, the study will be put to this orga: ${newOrganizationForStudyName} included in the CR orga` : ''} ? `,
+    rl2.question(
+      `You do want to move the study from orga ${oldOrgaVersion.organization.name} to ${newOrgaVersion.organization.name} ${newOrgaVersion.isCR ? `, CR orga, the study will be put to this orga: ${newOrganizationForStudyName} included in the CR orga` : ''} y(es)/n(o) ? `,
       (answer) => {
-        rl.close()
+        rl2.close()
         resolve(answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes')
       },
     )
@@ -128,7 +118,7 @@ const switchStudiesOfOrganization = async () => {
 
   await prismaClient.study.update({
     where: { id: studyId },
-    data: { organizationVersionId: newOrgaVersionId },
+    data: { organizationVersionId: newOrganizationVersionForStudy.id },
   })
 
   await Promise.all(
@@ -148,6 +138,8 @@ const switchStudiesOfOrganization = async () => {
       })
     }),
   )
+
+  console.log(`✅ Study moved to the new organization: ${newOrganizationForStudyName}`)
 }
 
 switchStudiesOfOrganization()
