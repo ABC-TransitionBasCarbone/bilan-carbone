@@ -35,6 +35,7 @@ export const OrganizationVersionWithOrganizationSelect = {
       updatedAt: true,
       importedFileDate: true,
       wordpressId: true,
+      isCR: true,
       sites: {
         select: {
           name: true,
