@@ -78,13 +78,15 @@ const DuplicateSiteModal = ({ open, onClose, sourceSite, study, canEditOrganizat
   }, [fieldsToDuplicate, formValues.newSitesCount, selectedSiteIds])
 
   const handleSelectAll = () => {
-    if (selectAll) {
-      setSelectedSiteIds([])
-      setSelectAll(false)
-    } else {
-      setSelectedSiteIds(availableSites.map((site) => site.id))
-      setSelectAll(true)
-    }
+    setSelectAll((prev) => {
+      const newSelectAll = !prev
+      if (newSelectAll) {
+        setSelectedSiteIds(availableSites.map((site) => site.id))
+      } else {
+        setSelectedSiteIds([])
+      }
+      return newSelectAll
+    })
   }
 
   const handleSiteSelectionChange = (siteIds: string[]) => {
@@ -123,7 +125,7 @@ const DuplicateSiteModal = ({ open, onClose, sourceSite, study, canEditOrganizat
         <div className={styles.section}>
           <h3 className={styles.sectionTitle}>{tDuplicate('selectInfoTitle')}</h3>
           <div className={'flex-col gapped1'}>
-            <label className={styles.checkboxItem}>
+            <label className={classNames('align-center', 'pointer', 'gapped075')}>
               <Controller
                 control={control}
                 name="fieldsToDuplicate"
@@ -147,7 +149,7 @@ const DuplicateSiteModal = ({ open, onClose, sourceSite, study, canEditOrganizat
                 {tDuplicate('emissionSources')} ({emissionSourcesCount})
               </span>
             </label>
-            <label className={styles.checkboxItem}>
+            <label className={classNames('align-center', 'pointer', 'gapped075')}>
               <Controller
                 control={control}
                 name="fieldsToDuplicate"
@@ -171,7 +173,7 @@ const DuplicateSiteModal = ({ open, onClose, sourceSite, study, canEditOrganizat
                 {tSites('etp')} ({formatNumber(sourceSite.etp, 2)})
               </span>
             </label>
-            <label className={styles.checkboxItem}>
+            <label className={classNames('align-center', 'pointer', 'gapped075')}>
               <Controller
                 control={control}
                 name="fieldsToDuplicate"
@@ -197,7 +199,7 @@ const DuplicateSiteModal = ({ open, onClose, sourceSite, study, canEditOrganizat
             </label>
             {environment === 'TILT' && (
               <>
-                <label className={styles.checkboxItem}>
+                <label className={classNames('align-center', 'pointer', 'gapped075')}>
                   <Controller
                     control={control}
                     name="fieldsToDuplicate"
@@ -221,7 +223,7 @@ const DuplicateSiteModal = ({ open, onClose, sourceSite, study, canEditOrganizat
                     {tSites('volunteerNumber')} ({sourceSite.volunteerNumber ?? 0})
                   </span>
                 </label>
-                <label className={styles.checkboxItem}>
+                <label className={classNames('align-center', 'pointer', 'gapped075')}>
                   <Controller
                     control={control}
                     name="fieldsToDuplicate"
@@ -256,7 +258,7 @@ const DuplicateSiteModal = ({ open, onClose, sourceSite, study, canEditOrganizat
             <p className={styles.noSitesMessage}>{tDuplicate('noOtherSites')}</p>
           ) : (
             <>
-              <button type="button" onClick={handleSelectAll} className={styles.selectAllButton}>
+              <button type="button" onClick={handleSelectAll} className={classNames('pointer', styles.selectAllButton)}>
                 {selectAll ? tDuplicate('deselectAll') : tDuplicate('selectAll')}
               </button>
               <div className={classNames('w100', styles.multiSelectWrapper)}>
