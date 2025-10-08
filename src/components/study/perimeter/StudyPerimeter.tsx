@@ -380,15 +380,17 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
         cancelDeletion={() => setOpen(false)}
         deleting={deleting}
       />
-      <DuplicateSiteModal
-        open={!!duplicatingSiteId}
-        onClose={() => setDuplicatingSiteId(null)}
-        sourceSite={duplicatingSite ?? null}
-        study={study}
-        canEditOrganization={canEditOrga}
-        caUnit={caUnit}
-        onDuplicate={handleDuplicateSite}
-      />
+      {duplicatingSite && (
+        <DuplicateSiteModal
+          open={!!duplicatingSiteId}
+          onClose={() => setDuplicatingSiteId(null)}
+          sourceSite={duplicatingSite}
+          study={study}
+          canEditOrganization={canEditOrga}
+          caUnit={caUnit}
+          onDuplicate={handleDuplicateSite}
+        />
+      )}
       {glossary && (
         <GlossaryModal glossary={glossary} onClose={() => setGlossary('')} label="emission-source" t={tGlossary}>
           <p className="mb-2">{tGlossary(`${glossary}Description`)}</p>

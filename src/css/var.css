@@ -219,3 +219,7 @@
 .relative {
   position: relative;
 }
+
+.pointer {
+  cursor: pointer;
+}

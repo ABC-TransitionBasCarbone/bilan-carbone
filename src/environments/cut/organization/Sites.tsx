@@ -7,7 +7,6 @@ import { FormTextField } from '@/components/form/TextField'
 import GlobalSites from '@/components/organization/Sites'
 import { getCncByCncCode } from '@/services/serverFunctions/study'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
-import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Environment } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
@@ -20,10 +19,9 @@ interface Props<T extends SitesCommand> {
   form?: UseFormReturn<T>
   sites: SitesCommand['sites']
   withSelection?: boolean
-  onDuplicate?: (studySiteId: string) => void
 }
 
-const Sites = <T extends SitesCommand>({ sites, form, withSelection, onDuplicate }: Props<T>) => {
+const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>) => {
   const t = useTranslations('organization.sites')
 
   const control = form?.control as Control<SitesCommand>
@@ -250,31 +248,8 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, onDuplicate
         ),
       })
     }
-
-    if (!form && onDuplicate) {
-      columns.push({
-        id: 'duplicate',
-        header: t('actions'),
-        accessorKey: 'id',
-        cell: ({ getValue }) => (
-          <div className="w100 flex-cc">
-            <Button
-              data-testid="duplicate-site-button"
-              aria-label={t('duplicate')}
-              onClick={() => {
-                const id = getValue<string>()
-                onDuplicate(id)
-              }}
-            >
-              <ContentCopyIcon />
-            </Button>
-          </div>
-        ),
-      })
-    }
-
     return columns
-  }, [t, form, withSelection, control, setCncData, setValue, getValues, onDuplicate])
+  }, [t, form, withSelection, control, setCncData, setValue, getValues])
 
   return (
     <GlobalSites
