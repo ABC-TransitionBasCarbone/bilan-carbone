@@ -46,6 +46,12 @@ jest.mock('../../db/study', () => ({
   createContributorOnStudy: jest.fn(),
   createEmissionSourceTags: jest.fn(),
 }))
+const mockTransaction = Symbol('transaction')
+jest.mock('../../db/client', () => ({
+  prismaClient: {
+    $transaction: jest.fn((callback) => callback(mockTransaction)),
+  },
+}))
 jest.mock('../../services/permissions/study', () => ({
   hasEditionRights: jest.fn(),
   getAccountRoleOnStudy: jest.fn(),
@@ -267,6 +273,7 @@ describe('study', () => {
           TEST_IDS.newStudy,
           Import.BaseEmpreinte,
           TEST_IDS.importVersion,
+          mockTransaction,
         )
       })
 
@@ -284,6 +291,7 @@ describe('study', () => {
               validated: false,
             }),
           ]),
+          mockTransaction,
         )
       })
 
@@ -294,6 +302,11 @@ describe('study', () => {
           .mockReturnValueOnce('created-es-2' as unknown as Uint8Array)
 
         const sourceTagFamilies = [
+          {
+            id: 'family-0-id',
+            name: 'défaut',
+            tags: [],
+          },
           {
             id: 'family-1-id',
             name: 'Scope',
@@ -313,6 +326,11 @@ describe('study', () => {
         ]
 
         const targetTagFamilies = [
+          {
+            id: 'target-family-0-id',
+            name: 'défaut',
+            tags: [],
+          },
           {
             id: 'target-family-1-id',
             name: 'Scope',
@@ -382,44 +400,44 @@ describe('study', () => {
         expect(mockCreateStudy).toHaveBeenCalledWith(
           expect.objectContaining({
             tagFamilies: {
-              create: [
-                {
-                  name: 'défaut',
-                  tags: undefined,
+              create: sourceTagFamilies.map((tagFamily) => ({
+                name: tagFamily.name,
+                tags: {
+                  create: tagFamily.tags.map((tag) => ({ name: tag.name, color: tag.color })),
                 },
-                ...sourceTagFamilies.map((tagFamily) => ({
-                  name: tagFamily.name,
-                  tags: {
-                    create: tagFamily.tags.map((tag) => ({ name: tag.name, color: tag.color })),
-                  },
-                })),
-              ],
+              })),
             },
           }),
           Environment.BC,
         )
 
-        expect(mockCreateEmissionSourcesWithReturn).toHaveBeenCalledWith([
-          expect.objectContaining({
-            name: 'Emission Source 1',
-            value: 100,
-            studyId: TEST_IDS.newStudy,
-            studySiteId: TEST_IDS.newStudySite,
-          }),
-          expect.objectContaining({
-            name: 'Emission Source 2',
-            value: 200,
-            studyId: TEST_IDS.newStudy,
-            studySiteId: TEST_IDS.newStudySite,
-          }),
-        ])
+        expect(mockCreateEmissionSourcesWithReturn).toHaveBeenCalledWith(
+          [
+            expect.objectContaining({
+              name: 'Emission Source 1',
+              value: 100,
+              studyId: TEST_IDS.newStudy,
+              studySiteId: TEST_IDS.newStudySite,
+            }),
+            expect.objectContaining({
+              name: 'Emission Source 2',
+              value: 200,
+              studyId: TEST_IDS.newStudy,
+              studySiteId: TEST_IDS.newStudySite,
+            }),
+          ],
+          mockTransaction,
+        )
 
-        expect(mockCreateEmissionSourceTags).toHaveBeenCalledWith([
-          { emissionSourceId: 'created-es-1', tagId: 'target-tag-1-id' },
-          { emissionSourceId: 'created-es-1', tagId: 'target-tag-3-id' },
-          { emissionSourceId: 'created-es-2', tagId: 'target-tag-2-id' },
-          { emissionSourceId: 'created-es-2', tagId: 'target-tag-4-id' },
-        ])
+        expect(mockCreateEmissionSourceTags).toHaveBeenCalledWith(
+          [
+            { emissionSourceId: 'created-es-1', tagId: 'target-tag-1-id' },
+            { emissionSourceId: 'created-es-1', tagId: 'target-tag-3-id' },
+            { emissionSourceId: 'created-es-2', tagId: 'target-tag-2-id' },
+            { emissionSourceId: 'created-es-2', tagId: 'target-tag-4-id' },
+          ],
+          mockTransaction,
+        )
       })
     })
 

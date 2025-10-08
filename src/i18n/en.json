@@ -649,7 +649,7 @@
       },
       "duplicate": {
         "title": "Duplicate site {name} and its emission sources",
-        "description": "You can duplicate a site and/or its emission sources to one or more sites in your study.",
+        "description": "You can duplicate a site and/or its emission sources to one or more sites in your study. The emission sources will be duplicated. The site information (ETP, CA) will only be modified on the study and not on your general information.",
         "selectInfoTitle": "Choose information to duplicate",
         "emissionSources": "Emission sources",
         "selectSitesTitle": "Choose the site(s) to duplicate to",
@@ -659,7 +659,7 @@
         "selectSitesPlaceholder": "Select sites",
         "noOtherSites": "No other sites available in this study",
         "createSitesTitle": "Create sites and duplicate information to them",
-        "createSitesDescription": "You can also create new sites and duplicate the information to them. Please indicate the number of sites to create on which the information you selected will be duplicated.",
+        "createSitesDescription": "You can also create new sites and duplicate the information to them. These will appear in your general information. Please indicate the number of sites to create on which the information you selected will be duplicated.",
         "numberOfSitesToCreate": "Number of sites to create",
         "cancel": "Cancel",
         "duplicate": "Duplicate"
