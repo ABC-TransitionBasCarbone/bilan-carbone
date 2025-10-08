@@ -18,6 +18,7 @@ import {
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('../services/file', () => ({ download: jest.fn() }))
 jest.mock('../services/auth', () => ({ auth: jest.fn() }))
+jest.mock('uuid', () => ({ v4: jest.fn() }))
 
 jest.mock('../services/permissions/study', () => ({ canReadStudy: jest.fn() }))
 jest.mock('./study', () => ({

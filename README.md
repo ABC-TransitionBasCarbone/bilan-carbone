@@ -115,3 +115,45 @@ yarn cypress:gui
 ## Deploy on Scalingo
 
 Follow Scalingo deployment guidelines for Next.js applications.
+
+## Dependency Upgrades
+
+### Upgrades
+
+To upgrade packages to the latest version, run the following command:
+
+```bash
+yarn upgrade-interactive --latest
+```
+
+It's also possible to force upgrade all packages to the latest version, but that will include potential breaking changes:
+
+```bash
+yarn upgrade --latest
+```
+
+To list possible upgrades, run the following command:
+
+```bash
+yarn outdated
+```
+
+### Vulnerabilities
+
+To check for vulnerabilities, run the following command:
+
+```bash
+yarn audit
+```
+
+Then, try the upgade command to choose the packages to upgrade or manually upgrade the dependencies:
+
+```bash
+yarn upgrade-interactive --latest
+```
+
+Then, run the following command to check if the vulnerabilities are fixed:
+
+```bash
+yarn audit
+```
