@@ -160,7 +160,7 @@ const Sites = <T extends SitesCommand>({
         header: t('actions'),
         accessorKey: 'id',
         cell: ({ getValue }) => (
-          <div className="w100 flex-cc">
+          <div className="w100">
             <Button
               data-testid="duplicate-site-button"
               aria-label={t('duplicate')}

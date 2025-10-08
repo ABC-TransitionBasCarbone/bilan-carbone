@@ -15,14 +15,17 @@ export const createEmissionSourcesOnStudy = (emissionSources: Prisma.StudyEmissi
     data: emissionSources,
   })
 
-export const createEmissionSourcesWithReturn = (emissionSources: Prisma.StudyEmissionSourceCreateManyInput[]) =>
-  prismaClient.studyEmissionSource.createManyAndReturn({
+export const createEmissionSourcesWithReturn = (
+  emissionSources: Prisma.StudyEmissionSourceCreateManyInput[],
+  tx?: Prisma.TransactionClient,
+) =>
+  (tx ?? prismaClient).studyEmissionSource.createManyAndReturn({
     data: emissionSources,
     select: { id: true },
   })
 
-export const getFamilyTagsForStudy = (studyId: string) =>
-  prismaClient.studyTagFamily.findMany({
+export const getFamilyTagsForStudy = (studyId: string, tx?: Prisma.TransactionClient) =>
+  (tx ?? prismaClient).studyTagFamily.findMany({
     where: { studyId },
     select: { id: true, name: true, tags: { select: { id: true, name: true } } },
   })
