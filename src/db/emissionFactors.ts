@@ -97,6 +97,15 @@ export const getAllEmissionFactors = async (
 ) => {
   let versionIds
   let studyOldEmissionFactors: Awaited<ReturnType<typeof getDefaultEmissionFactors>> = []
+
+  const organizationEmissionFactor = organizationId
+    ? await prismaClient.emissionFactor.findMany({
+        where: { organizationId },
+        select: selectEmissionFactor,
+        orderBy: { createdAt: 'desc' },
+      })
+    : []
+
   if (studyId) {
     const study = await prismaClient.study.findFirst({
       where: { id: studyId },
@@ -111,14 +120,36 @@ export const getAllEmissionFactors = async (
       .filter((id) => id !== null)
 
     studyOldEmissionFactors = await getEmissionFactorsFromIdsExceptVersions(selectedEmissionFactors, versionIds)
-  }
-  const organizationEmissionFactor = organizationId
-    ? await prismaClient.emissionFactor.findMany({
-        where: { organizationId },
-        select: selectEmissionFactor,
-        orderBy: { createdAt: 'desc' },
+  } else {
+    if (organizationId) {
+      // Get all versions used in studies of the organization
+      const versions = await prismaClient.studyEmissionFactorVersion.findMany({
+        where: {
+          study: {
+            organizationVersion: {
+              organizationId,
+              environment: withCut ? {} : { not: Import.CUT },
+            },
+          },
+        },
+        select: { importVersionId: true, source: true, updatedAt: true },
       })
-    : []
+      console.log('Found versions for organization:', versions)
+      // Group by source and pick the latest version per source
+      const latestBySource = Object.values(
+        versions.reduce<Record<string, (typeof versions)[0]>>((acc, curr) => {
+          if (
+            !acc[curr.source] ||
+            (curr.updatedAt && acc[curr.source].updatedAt && curr.updatedAt > acc[curr.source].updatedAt)
+          ) {
+            acc[curr.source] = curr
+          }
+          return acc
+        }, {}),
+      )
+      versionIds = latestBySource.map((v) => v.importVersionId)
+    }
+  }
 
   const defaultEmissionFactors = await (process.env.NO_CACHE === 'true'
     ? getDefaultEmissionFactors(versionIds)
