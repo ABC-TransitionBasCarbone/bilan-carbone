@@ -20,6 +20,9 @@ import * as environmentModule from './environment'
 import * as organizationModule from './organization'
 import { canCreateSpecificStudy, canDeleteStudy, canDuplicateStudy, getEnvironmentsForDuplication } from './study'
 
+// TODO : remove these mocks. Should not be mocked but tests fail if not
+jest.mock('uuid', () => ({ v4: jest.fn() }))
+
 // mocked called function
 jest.mock('@/db/account', () => ({ getAccountById: jest.fn() }))
 jest.mock('@/db/organization', () => ({ getOrganizationVersionsByOrganizationId: jest.fn() }))

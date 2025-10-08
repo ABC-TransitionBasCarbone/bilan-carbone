@@ -11,6 +11,7 @@ import * as studyModule from './study'
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('../file', () => ({ download: jest.fn() }))
 jest.mock('../auth', () => ({ auth: jest.fn() }))
+jest.mock('uuid', () => ({ v4: jest.fn() }))
 
 jest.mock('./study', () => ({ canReadStudy: jest.fn() }))
 jest.mock('../../utils/study', () => ({ getAccountRoleOnStudy: jest.fn() }))
