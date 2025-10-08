@@ -51,14 +51,14 @@ const switchStudiesOfOrganization = async () => {
     return
   }
 
-  if (newOrgaVersion.organization.isCR && !newOrganizationIdForStudy) {
+  if (newOrgaVersion.isCR && !newOrganizationIdForStudy) {
     console.log('❌ The new organization is a CR orga. Please provide the id of the new organization for the study.')
     return
   }
 
   let newOrganizationVersionForStudy
   let newOrganizationForStudyName
-  if (newOrgaVersion.organization.isCR) {
+  if (newOrgaVersion.isCR) {
     const newOrganizationForStudy = await getOrganizationWithSitesById(newOrganizationIdForStudy)
 
     if (!newOrganizationForStudy) {
@@ -92,7 +92,7 @@ const switchStudiesOfOrganization = async () => {
 
   const userConfirmationOfOrgas = await new Promise((resolve) => {
     rl.question(
-      `You do want to move the study from orga ${oldOrgaVersion.organization.name} to ${newOrgaVersion.organization.name} ${newOrgaVersion.organization.isCR ? `, CR orga, the study will be put to this orga: ${newOrganizationForStudyName} included in the CR orga` : ''} ? `,
+      `You do want to move the study from orga ${oldOrgaVersion.organization.name} to ${newOrgaVersion.organization.name} ${newOrgaVersion.isCR ? `, CR orga, the study will be put to this orga: ${newOrganizationForStudyName} included in the CR orga` : ''} ? `,
       (answer) => {
         rl.close()
         resolve(answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes')
