@@ -82,9 +82,10 @@ const EmissionSource = ({
         if (element) {
           element.scrollIntoView({ behavior: 'smooth', block: 'center' })
         }
+        router.replace(window.location.pathname + window.location.search, { scroll: false })
       }, 600)
     }
-  }, [emissionSource.id])
+  }, [emissionSource.id, router])
 
   const canEdit = !emissionSource.validated && hasEditionRights(userRoleOnStudy)
   const canValidate = userRoleOnStudy === StudyRole.Validator
