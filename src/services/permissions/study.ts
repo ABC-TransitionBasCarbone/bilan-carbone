@@ -10,7 +10,7 @@ import { UserSession } from 'next-auth'
 import { dbActualizedAuth } from '../auth'
 import { isDeactivableFeatureActiveForEnvironment } from '../serverFunctions/deactivableFeatures'
 import { getUserActiveAccounts } from '../serverFunctions/user'
-import { checkLevel } from '../study'
+import { hasSufficientLevel } from '../study'
 import { hasAccessToDuplicateStudy } from './environment'
 import { isInOrgaOrParentFromId } from './organization'
 
@@ -111,7 +111,7 @@ const canCreateSpecificStudyBC = async (
     organizationVersionId,
   )
 
-  if (!commonRights || !dbAccount || !checkLevel(dbAccount.user.level, study.level)) {
+  if (!commonRights || !dbAccount || !hasSufficientLevel(dbAccount.user.level, study.level)) {
     return false
   }
 
@@ -169,7 +169,7 @@ export const canChangeLevel = async (user: UserSession, study: FullStudy, level:
     return false
   }
 
-  if (!checkLevel(user.level, level)) {
+  if (!hasSufficientLevel(user.level, level)) {
     return false
   }
 

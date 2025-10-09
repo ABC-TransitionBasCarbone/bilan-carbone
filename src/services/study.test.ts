@@ -1,6 +1,6 @@
 import { expect } from '@jest/globals'
-import { Environment, SubPost } from '@prisma/client'
-import { getTransEnvironmentSubPost } from './study'
+import { Environment, Level, SubPost } from '@prisma/client'
+import { getTransEnvironmentSubPost, hasSufficientLevel } from './study'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('./file', () => ({ download: jest.fn() }))
@@ -58,6 +58,32 @@ describe('Study Service', () => {
       )
       expect(getTransEnvironmentSubPost(source, target, SubPost.TeletravailSalaries)).toBe(SubPost.Electricite)
       expect(getTransEnvironmentSubPost(source, target, SubPost.Electricite)).toBe(SubPost.Electricite)
+    })
+  })
+
+  describe('hasSufficientLevel', () => {
+    it('Should return true if userLevel is sufficient', () => {
+      expect(hasSufficientLevel(Level.Advanced, Level.Initial)).toBe(true)
+      expect(hasSufficientLevel(Level.Advanced, Level.Standard)).toBe(true)
+      expect(hasSufficientLevel(Level.Advanced, Level.Advanced)).toBe(true)
+
+      expect(hasSufficientLevel(Level.Standard, Level.Standard)).toBe(true)
+      expect(hasSufficientLevel(Level.Standard, Level.Initial)).toBe(true)
+
+      expect(hasSufficientLevel(Level.Initial, Level.Initial)).toBe(true)
+    })
+
+    it('Should return false if userLevel is not sufficient', () => {
+      expect(hasSufficientLevel(Level.Initial, Level.Standard)).toBe(false)
+      expect(hasSufficientLevel(Level.Initial, Level.Advanced)).toBe(false)
+
+      expect(hasSufficientLevel(Level.Standard, Level.Advanced)).toBe(false)
+    })
+
+    it('Should return false if userLevel is null', () => {
+      expect(hasSufficientLevel(null, Level.Initial)).toBe(false)
+      expect(hasSufficientLevel(null, Level.Standard)).toBe(false)
+      expect(hasSufficientLevel(null, Level.Advanced)).toBe(false)
     })
   })
 })

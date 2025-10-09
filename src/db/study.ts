@@ -3,7 +3,7 @@ import { getEnvVar } from '@/lib/environment'
 import { filterAllowedStudies } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { ChangeStudyCinemaCommand } from '@/services/serverFunctions/study.command'
-import { checkLevel, getAllowedLevels } from '@/services/study'
+import { getAllowedLevels, hasSufficientLevel } from '@/services/study'
 import { mapCncToStudySite } from '@/utils/cnc'
 import { isAdminOnOrga } from '@/utils/organization'
 import { getUserRoleOnPublicStudy } from '@/utils/study'
@@ -272,7 +272,7 @@ const normalizeAllowedUsers = (
 ) =>
   allowedUsers.map((allowedUser) => {
     const readerOnly =
-      !allowedUser.account.organizationVersionId || !checkLevel(allowedUser.account.user.level, studyLevel)
+      !allowedUser.account.organizationVersionId || !hasSufficientLevel(allowedUser.account.user.level, studyLevel)
     return organizationVersionId && allowedUser.account.organizationVersionId === organizationVersionId
       ? { ...allowedUser, account: { ...allowedUser.account, readerOnly } }
       : {
