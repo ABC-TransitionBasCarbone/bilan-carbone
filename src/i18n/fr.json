@@ -741,7 +741,7 @@
         "uncertaintyPerPostDescription2": "Par ailleurs, plus le nombre de sources d'émission est important au sein d'un poste, moins l'incertitude de ce poste sera grande. Cela est dû au fait que deux incertitudes se compensent, car il n'est généralement pas certain que l'erreur soit faite dans le même sens. Pour donner un exemple concret, lorsque l'on mesure deux cordes, il est possible de surestimer la longueur de la première, et de sous-estimer celle de la seconde. Par conséquent, l'incertitude sur la longueur de la somme des deux cordes sera inférieure à la somme des deux incertitudes prises séparément."
       },
       "resultsExcel": "Excel",
-      "resultsWord": "Rapport type"
+      "resultsWord": "Rapport Bilan Carbone®"
     },
     "pdf": {
       "loading": "Chargement des données...",
@@ -1741,7 +1741,7 @@
     "Formation": "Formation",
     "Feedback": "Feedback",
     "Creation": "Création",
-    "DownloadReport": "Téléchargement du rapport type",
+    "DownloadReport": "Téléchargement du rapport Bilan Carbone®",
     "FormationStudy": "Étude de formation",
     "source": "Sources",
     "environment": "Environnements",

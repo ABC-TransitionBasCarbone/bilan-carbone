@@ -765,7 +765,7 @@
       },
       "additionalInfo": "Additional information",
       "resultsExcel": "Excel",
-      "resultsWord": "Standard Report"
+      "resultsWord": "Bilan Carbone® Report"
     },
     "export": {
       "activityDataComment": "Activity data comment",
@@ -1741,7 +1741,7 @@
     "Formation": "Formation",
     "Feedback": "Feedback",
     "Creation": "Creation",
-    "DownloadReport": "Download Report",
+    "DownloadReport": "Download Bilan Carbone® Report",
     "FormationStudy": "Formation study",
     "source": "Sources",
     "environment": "Environments",
