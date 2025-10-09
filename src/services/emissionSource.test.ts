@@ -6,7 +6,7 @@ import { getEmissionResults } from './emissionSource'
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('./file', () => ({ download: jest.fn() }))
 jest.mock('./permissions/study', () => ({ isAdminOnStudyOrga: jest.fn() }))
-jest.mock('./study', () => ({ checkLevel: jest.fn() }))
+jest.mock('./study', () => ({ hasSufficientLevel: jest.fn() }))
 
 const defaultEmissionSource = {
   id: 'random',
