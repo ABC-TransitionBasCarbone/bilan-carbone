@@ -5,7 +5,6 @@ import { TransitionPlanWithStudies } from '@/db/transitionPlan'
 import { FormControl, FormControlLabel, MenuItem, Radio, RadioGroup, Select } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import styles from './TransitionPlanSelectionModal.module.css'
 
@@ -18,7 +17,6 @@ interface Props {
 
 const TransitionPlanSelectionModal = ({ open, onClose, availablePlans, onConfirm }: Props) => {
   const t = useTranslations('study.transitionPlan.modal')
-  const router = useRouter()
 
   const hasAvailablePlans = availablePlans && availablePlans.length > 0
   const [selectedOption, setSelectedOption] = useState<'new' | 'existing'>('new')
@@ -33,10 +31,6 @@ const TransitionPlanSelectionModal = ({ open, onClose, availablePlans, onConfirm
     } finally {
       setLoading(false)
     }
-  }
-
-  const handleCancel = () => {
-    router.back()
   }
 
   const formatDate = (date: Date) => {
@@ -55,7 +49,7 @@ const TransitionPlanSelectionModal = ({ open, onClose, availablePlans, onConfirm
       label="transition-plan-selection"
       actions={[
         {
-          onClick: handleCancel,
+          onClick: onClose,
           children: t('cancel'),
           variant: 'outlined',
           color: 'secondary',
@@ -94,14 +88,12 @@ const TransitionPlanSelectionModal = ({ open, onClose, availablePlans, onConfirm
               disabled={!hasAvailablePlans}
               label={
                 <div className={'flex-col'}>
-                  <span className={classNames(styles.optionTitle, hasAvailablePlans ? '' : styles.disabledLabel)}>
-                    {t('reuseExisting')}
-                  </span>
+                  <span className={classNames(styles.optionTitle)}>{t('reuseExisting')}</span>
                   {hasAvailablePlans && (
                     <span className={styles.optionDescription}>{t('reuseExistingDescription')}</span>
                   )}
                   {selectedOption === 'existing' && hasAvailablePlans && (
-                    <FormControl fullWidth className={styles.selectControl}>
+                    <FormControl fullWidth className={'mt-2'}>
                       <Select value={selectedPlan} onChange={(e) => setSelectedPlan(e.target.value)} size="small">
                         {availablePlans?.map((plan) => (
                           <MenuItem key={plan.id} value={plan.id}>

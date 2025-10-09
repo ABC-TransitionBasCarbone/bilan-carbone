@@ -1,7 +1,4 @@
 .description {
-  margin: 0;
-  color: var(--text-600);
-  font-size: 0.9375rem;
   line-height: 1.5;
 }
 
@@ -33,25 +30,14 @@
 
 .optionTitle {
   font-weight: 600;
-  color: var(--text-800);
 }
 
 .optionDescription {
   font-size: 0.875rem;
-  color: var(--text-500);
-}
-
-.disabledLabel {
-  color: var(--text-400);
 }
 
 .noPlansMessage {
   font-size: 0.875rem;
-  color: var(--text-500);
   font-style: italic;
   margin-top: 0.25rem;
-}
-
-.selectControl {
-  margin-top: 0.5rem;
 }

@@ -97,12 +97,12 @@ const TrajectoryReductionPage = ({ study, user }: Props) => {
   if (!transitionPlan) {
     if (canEdit) {
       return (
-        <div className={classNames(styles.container, 'flex-cc')}>
+        <div className={classNames(styles.container, 'flex-cc', 'w100')}>
           <Box className={classNames(styles.emptyStateCard, 'flex-col align-center')}>
             <Image src="/img/CR.png" alt="Transition Plan" width={177} height={119} />
             <h5>{t('emptyState.title')}</h5>
             <p>{t('emptyState.subtitle')}</p>
-            <Button onClick={() => setShowModal(true)} size="large" className={styles.startButton}>
+            <Button onClick={() => setShowModal(true)} size="large" className={'mt-2'}>
               {t('startButton')}
             </Button>
           </Box>
