@@ -447,3 +447,11 @@ export const hasAccessToFormationStudy = async (userAccount: Prisma.AccountCreat
   )
   return isFormationStudyFeatureActive.success && isFormationStudyFeatureActive.data
 }
+
+export const hasAccessToTransitionPlan = async (environment: Environment) => {
+  const isTransitionPlanFeatureActive = await isDeactivableFeatureActiveForEnvironment(
+    DeactivatableFeature.TransitionPlan,
+    environment,
+  )
+  return isTransitionPlanFeatureActive.success && isTransitionPlanFeatureActive.data
+}
