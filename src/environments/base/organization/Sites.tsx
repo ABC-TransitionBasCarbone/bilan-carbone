@@ -178,7 +178,9 @@ const Sites = <T extends SitesCommand>({
     }
 
     return columns
-  }, [t, headerCAUnit, additionalColumns, form, withSelection, onDuplicate, control, caUnit, setValue, getValues])
+    // TODO: This component needs refactoring because the form is not properly defined
+    // Without removing some deps the form refreshes on every keystroke
+  }, [t, form, caUnit, onDuplicate])
 
   return (
     <GlobalSites
