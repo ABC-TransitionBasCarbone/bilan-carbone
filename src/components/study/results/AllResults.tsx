@@ -128,73 +128,78 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
 
   return (
     <Block title={tStudyNav('results')} as="h1">
-      <div className="flex gapped1 mb2">
-        <SelectStudySite study={study} allowAll studySite={studySite} setSite={setSite} />
-        <FormControl>
-          <InputLabel id="result-type-selector-label">{t('type')}</InputLabel>
-          <Select
-            value={type}
-            label={t('type')}
-            aria-labelledby="result-type-selector-label"
-            onChange={(event) => {
-              setType(event.target.value as ResultType)
-            }}
-            data-testid="result-type-select"
-            disabled={!allowTypeSelect}
+      <div className="flex mb2 justify-between">
+        <div className="flex gapped1">
+          <SelectStudySite study={study} allowAll studySite={studySite} setSite={setSite} />
+          <FormControl>
+            <InputLabel id="result-type-selector-label">{t('type')}</InputLabel>
+            <Select
+              value={type}
+              label={t('type')}
+              aria-labelledby="result-type-selector-label"
+              onChange={(event) => {
+                setType(event.target.value as ResultType)
+              }}
+              data-testid="result-type-select"
+              disabled={!allowTypeSelect}
+            >
+              <MenuItem value={AdditionalResultTypes.CONSOLIDATED}>{tExport('consolidated')}</MenuItem>
+              {environment && hasAccessToBcExport(environment) && (
+                <MenuItem value={AdditionalResultTypes.ENV_SPECIFIC_EXPORT}>{tExport('env_specific_export')}</MenuItem>
+              )}
+              {exports.map((exportItem) => (
+                <MenuItem
+                  key={exportItem.type}
+                  value={exportItem.type}
+                  disabled={exportItem.type !== Export.Beges || exportItem.control === ControlMode.CapitalShare}
+                >
+                  {tExport(exportItem.type)}
+                  {(exportItem.type !== Export.Beges || exportItem.control === ControlMode.CapitalShare) && (
+                    <em> ({t('coming')})</em>
+                  )}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          {exports.map((exportType) => exportType.type).includes(Export.Beges) && (
+            <ConsolatedBEGESDifference
+              study={study}
+              emissionFactorsWithParts={emissionFactorsWithParts}
+              validatedOnly={validatedOnly}
+              results={computedResultsWithDep}
+              begesResults={computedBegesData}
+              studySite={studySite}
+            />
+          )}
+        </div>
+        <div className="flex gapped1">
+          <Button
+            onClick={() =>
+              downloadStudyResults(
+                study,
+                begesRules,
+                emissionFactorsWithParts,
+                t,
+                tExport,
+                tPost,
+                tOrga,
+                tQuality,
+                tBeges,
+                tUnits,
+                environment,
+              )
+            }
+            title={t('download')}
+            variant="outlined"
           >
-            <MenuItem value={AdditionalResultTypes.CONSOLIDATED}>{tExport('consolidated')}</MenuItem>
-            {environment && hasAccessToBcExport(environment) && (
-              <MenuItem value={AdditionalResultTypes.ENV_SPECIFIC_EXPORT}>{tExport('env_specific_export')}</MenuItem>
-            )}
-            {exports.map((exportItem) => (
-              <MenuItem
-                key={exportItem.type}
-                value={exportItem.type}
-                disabled={exportItem.type !== Export.Beges || exportItem.control === ControlMode.CapitalShare}
-              >
-                {tExport(exportItem.type)}
-                {(exportItem.type !== Export.Beges || exportItem.control === ControlMode.CapitalShare) && (
-                  <em> ({t('coming')})</em>
-                )}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <Button
-          onClick={() =>
-            downloadStudyResults(
-              study,
-              begesRules,
-              emissionFactorsWithParts,
-              t,
-              tExport,
-              tPost,
-              tOrga,
-              tQuality,
-              tBeges,
-              tUnits,
-              environment,
-            )
-          }
-          title={t('download')}
-        >
-          <DownloadIcon />
-        </Button>
-        {isDownloadReportActive && (
-          <Button onClick={downloadReport} title={t('downloadReport')}>
-            <SummarizeIcon />
+            <DownloadIcon className="mr-2" /> {t('resultsExcel')}
           </Button>
-        )}
-        {exports.map((exportType) => exportType.type).includes(Export.Beges) && (
-          <ConsolatedBEGESDifference
-            study={study}
-            emissionFactorsWithParts={emissionFactorsWithParts}
-            validatedOnly={validatedOnly}
-            results={computedResultsWithDep}
-            begesResults={computedBegesData}
-            studySite={studySite}
-          />
-        )}
+          {isDownloadReportActive && (
+            <Button onClick={downloadReport} title={t('downloadReport')} variant="outlined">
+              <SummarizeIcon className="mr-2" /> {t('resultsWord')}
+            </Button>
+          )}
+        </div>
       </div>
       <div className="flex-col gapped2">
         <div className="mt1">
