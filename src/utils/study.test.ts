@@ -5,7 +5,7 @@ import { getDuplicableEnvironments } from './study'
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('../services/file', () => ({ download: jest.fn() }))
 jest.mock('@/services/permissions/study', () => ({ isAdminOnStudyOrga: jest.fn() }))
-jest.mock('@/services/study', () => ({ checkLevel: jest.fn() }))
+jest.mock('@/services/study', () => ({ hasSufficientLevel: jest.fn() }))
 
 describe('StudyUtils functions', () => {
   describe('getDuplicableEnvironments', () => {
