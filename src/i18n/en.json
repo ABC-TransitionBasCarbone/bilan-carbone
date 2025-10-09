@@ -763,7 +763,9 @@
         "entries": "Entries",
         "sessions": "Sessions"
       },
-      "additionalInfo": "Additional information"
+      "additionalInfo": "Additional information",
+      "resultsExcel": "Excel",
+      "resultsWord": "Standard Report"
     },
     "export": {
       "activityDataComment": "Activity data comment",
