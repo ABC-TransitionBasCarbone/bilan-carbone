@@ -16,6 +16,7 @@ import {
   changeStudyDates,
   changeStudyExports,
   changeStudySites,
+  duplicateSiteAndEmissionSources,
   hasActivityData,
 } from '@/services/serverFunctions/study'
 import {
@@ -28,28 +29,35 @@ import {
   StudyExportsCommandValidation,
 } from '@/services/serverFunctions/study.command'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
+import { canEditOrganizationVersion } from '@/utils/organization'
 import { hasEditionRights } from '@/utils/study'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ControlMode, Environment, Export, SiteCAUnit, StudyRole } from '@prisma/client'
 import classNames from 'classnames'
+import { UserSession } from 'next-auth'
 import { useFormatter, useTranslations } from 'next-intl'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm, UseFormReturn, useWatch } from 'react-hook-form'
 import DeleteStudySiteModal from './DeleteStudySiteModal'
+import { DuplicateFormData } from './DuplicateSiteModal'
 import StudyExportsForm from './StudyExportsForm'
 import styles from './StudyPerimeter.module.css'
+
+const DuplicateSiteModal = dynamic(() => import('./DuplicateSiteModal'), { ssr: false })
 
 interface Props {
   study: FullStudy
   organizationVersion: OrganizationWithSites
   userRoleOnStudy: StudyRole
   caUnit: SiteCAUnit
+  user: UserSession
 }
 
 const dateFormat = { year: 'numeric', month: 'long', day: 'numeric' } as const
 
-const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit }: Props) => {
+const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, user }: Props) => {
   const format = useFormatter()
   const tForm = useTranslations('study.new')
   const tGlossary = useTranslations('study.new.glossary')
@@ -59,9 +67,16 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit }:
   const [exportsValues, setExportsValues] = useState<Record<Export, ControlMode | false> | undefined>(undefined)
   const [isEditing, setIsEditing] = useState(false)
   const [deleting, setDeleting] = useState(0)
+  const [duplicatingSiteId, setDuplicatingSiteId] = useState<string | null>(null)
   const hasEditionRole = useMemo(() => hasEditionRights(userRoleOnStudy), [userRoleOnStudy])
+  const canEditOrga = useMemo(() => canEditOrganizationVersion(user, organizationVersion), [user, organizationVersion])
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
+
+  const duplicatingSite = useMemo(
+    () => (duplicatingSiteId ? study.sites.find((site) => site.id === duplicatingSiteId) : null),
+    [duplicatingSiteId, study.sites],
+  )
 
   const form = useForm<ChangeStudyDatesCommand>({
     resolver: zodResolver(ChangeStudyDatesCommandValidation),
@@ -199,6 +214,30 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit }:
     onDateSubmit(form.getValues())
   }, [startDate, endDate, realizationStartDate, realizationEndDate])
 
+  const handleDuplicateSite = async (data: DuplicateFormData) => {
+    if (!duplicatingSiteId) {
+      return
+    }
+
+    await callServerFunction(
+      () =>
+        duplicateSiteAndEmissionSources({
+          sourceSiteId: duplicatingSiteId,
+          targetSiteIds: data.targetSiteIds,
+          newSitesCount: data.newSitesCount,
+          organizationId: organizationVersion.organization.id,
+          studyId: study.id,
+          fieldsToDuplicate: data.fieldsToDuplicate,
+        }),
+      {
+        onSuccess: () => {
+          setDuplicatingSiteId(null)
+          router.refresh()
+        },
+      },
+    )
+  }
+
   const Help = (name: string) => (
     <HelpIcon className="ml-4" onClick={() => setGlossary(name)} label={tGlossary('title')} />
   )
@@ -298,6 +337,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit }:
               form={isEditing ? (siteForm as unknown as UseFormReturn<SitesCommand>) : undefined}
               caUnit={caUnit}
               withSelection
+              onDuplicate={!isEditing ? setDuplicatingSiteId : undefined}
             />
           ),
         }}
@@ -307,6 +347,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit }:
             form={isEditing ? (siteForm as unknown as UseFormReturn<SitesCommand>) : undefined}
             caUnit={caUnit}
             withSelection
+            onDuplicate={!isEditing ? setDuplicatingSiteId : undefined}
           />
         }
       />
@@ -339,6 +380,17 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit }:
         cancelDeletion={() => setOpen(false)}
         deleting={deleting}
       />
+      {duplicatingSite && (
+        <DuplicateSiteModal
+          open={!!duplicatingSiteId}
+          onClose={() => setDuplicatingSiteId(null)}
+          sourceSite={duplicatingSite}
+          study={study}
+          canEditOrganization={canEditOrga}
+          caUnit={caUnit}
+          onDuplicate={handleDuplicateSite}
+        />
+      )}
       {glossary && (
         <GlossaryModal glossary={glossary} onClose={() => setGlossary('')} label="emission-source" t={tGlossary}>
           <p className="mb-2">{tGlossary(`${glossary}Description`)}</p>

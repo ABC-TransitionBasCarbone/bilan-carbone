@@ -37,8 +37,10 @@ export const createStudy = async (
   data: Prisma.StudyCreateInput,
   environment: Environment,
   shouldCreateFEVersions = true,
+  tx?: Prisma.TransactionClient,
 ) => {
-  const dbStudy = await prismaClient.study.create({ data })
+  const client = tx ?? prismaClient
+  const dbStudy = await client.study.create({ data })
   let studyEmissionFactorVersions: Prisma.StudyEmissionFactorVersionCreateManyInput[] = []
 
   if (environment === Environment.CUT) {
@@ -58,7 +60,7 @@ export const createStudy = async (
         importVersionId: latestImportVersion.id,
       }))
     }
-    await prismaClient.studyEmissionFactorVersion.createMany({ data: studyEmissionFactorVersions })
+    await client.studyEmissionFactorVersion.createMany({ data: studyEmissionFactorVersions })
   }
   return dbStudy
 }
@@ -424,8 +426,9 @@ export const getAllowedStudiesByUserAndOrganization = async (user: UserSession, 
   return filterAllowedStudies(user, studies)
 }
 
-export const getStudyById = async (id: string, organizationVersionId: string | null) => {
-  const study = await prismaClient.study.findUnique({
+export const getStudyById = async (id: string, organizationVersionId: string | null, tx?: Prisma.TransactionClient) => {
+  const client = tx ?? prismaClient
+  const study = await client.study.findUnique({
     where: { id },
     include: fullStudyInclude,
   })
@@ -447,8 +450,8 @@ export const getStudyNameById = async (id: string) => {
   return study.name
 }
 
-export const createUserOnStudy = async (right: Prisma.UserOnStudyCreateInput) =>
-  prismaClient.userOnStudy.create({
+export const createUserOnStudy = async (right: Prisma.UserOnStudyCreateInput, tx?: Prisma.TransactionClient) =>
+  (tx ?? prismaClient).userOnStudy.create({
     data: right,
   })
 
@@ -588,8 +591,13 @@ export const clearEmissionSourceEmissionFactor = (emissionSourceId: string) =>
     data: { emissionFactorId: null, validated: false },
   })
 
-export const updateStudyEmissionFactorVersion = async (studyId: string, source: Import, importVersionId?: string) =>
-  prismaClient.studyEmissionFactorVersion.update({
+export const updateStudyEmissionFactorVersion = async (
+  studyId: string,
+  source: Import,
+  importVersionId?: string,
+  tx?: Prisma.TransactionClient,
+) =>
+  (tx ?? prismaClient).studyEmissionFactorVersion.update({
     where: { studyId_source: { studyId, source } },
     data: { importVersionId },
   })
@@ -632,8 +640,9 @@ export const createContributorOnStudy = (
   accountId: string,
   subPosts: SubPost[],
   data: Omit<Prisma.ContributorsCreateManyInput, 'accountId' | 'subPost'>,
+  tx?: Prisma.TransactionClient,
 ) =>
-  prismaClient.contributors.createMany({
+  (tx ?? prismaClient).contributors.createMany({
     data: subPosts.map((subPost) => ({ ...data, accountId, subPost })),
     skipDuplicates: true,
   })
@@ -843,7 +852,10 @@ export const upsertStudyTemplate = async (template: DuplicableStudy, environment
 export const getStudyTemplate = async (template: DuplicableStudy, environment: Environment) =>
   prismaClient.studyTemplate.findUnique({ where: { environment_template: { environment, template } } })
 
-export const createEmissionSourceTags = async (emissionSourceTags: Prisma.EmissionSourceTagCreateManyInput[]) =>
-  prismaClient.emissionSourceTag.createMany({
+export const createEmissionSourceTags = async (
+  emissionSourceTags: Prisma.EmissionSourceTagCreateManyInput[],
+  tx?: Prisma.TransactionClient,
+) =>
+  (tx ?? prismaClient).emissionSourceTag.createMany({
     data: emissionSourceTags,
   })

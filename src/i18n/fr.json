@@ -647,6 +647,23 @@
         "close": "Fermer",
         "glossaryDescription": "Les tags et familles de tags servent à identifier vos sources d'émissions dans le but de visualiser certains résultats par la suite. <br></br>Une fois vos tags créés, vous pourrez les associer à des sources d'émissions au sein de la page \"Saisie des données\". Puis, dans la page \"Résultats\", vous pourrez visualiser les émissions dues à une famille de tags ou à un tag en particulier, mais vous ne pourrez pas visualiser les émissions de deux familles de tags en parallèle, car des double-comptes peuvent être faits entre ces deux familles de tags. <br></br>Pour donner un exemple concret, admettons qu'il existe deux familles de tags : \"Produits vendus\" et \"Publics ciblés\". Ces deux familles et les tags y appartenant vous permettrons de visualiser quelle est la répartition des émissions de votre organisation en fonction des produits vendus, et de même pour les publics ciblés"
       },
+      "duplicate": {
+        "title": "Dupliquer le site {name} et ses sources d'émissions",
+        "description": "Vous pouvez dupliquer un site et/ou ses sources d'émissions sur un ou plusieurs sites de votre étude. Les sources d'émissions seront dupliquées. Les informations des sites (ETP, CA) ne seront modifiés que sur l'étude et non dans vos informations générales.",
+        "selectInfoTitle": "Choix des informations à dupliquer",
+        "emissionSources": "Sources d'émissions",
+        "selectSitesTitle": "Choix du ou des sites sur lesquels faire la duplication",
+        "selectAll": "Tout sélectionner",
+        "deselectAll": "Tout désélectionner",
+        "selectSitesLabel": "Sites de destination",
+        "selectSitesPlaceholder": "Sélectionnez les sites",
+        "noOtherSites": "Aucun autre site disponible dans cette étude",
+        "createSitesTitle": "Créer des sites et y dupliquer les informations",
+        "createSitesDescription": "Vous pouvez également créer de nouveaux sites et y dupliquer les informations. Ceux-ci seront apparaitront dans vos informations générales. Merci d'indiquer le nombre de sites à créer sur lesquels seront dupliquées les informations que vous avez sélectionnées.",
+        "numberOfSitesToCreate": "Nombre de sites à créer",
+        "cancel": "Annuler",
+        "duplicate": "Dupliquer"
+      },
       "information": "Pour plus d'information sur cette section, vous pouvez vous référer à cette documentation : "
     },
     "results": {
@@ -1483,6 +1500,7 @@
       "beneficiaryNumberPlaceholder": "Entrez le nombre de bénéficiaires pour ce site ici",
       "actions": "Actions",
       "delete": "Supprimer",
+      "duplicate": "Dupliquer",
       "add": "Ajouter un site",
       "update": "Modifier la liste",
       "cnc": "Numéro CNC",
