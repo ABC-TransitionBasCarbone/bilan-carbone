@@ -1,8 +1,7 @@
 'use server'
 
-import { getEmissionFactorSources } from '@/db/emissionFactors'
 import { environmentSubPostsMapping, Post } from '@/services/posts'
-import { getEmissionFactors } from '@/services/serverFunctions/emissionFactor'
+import { getEmissionFactors, mapImportVersions } from '@/services/serverFunctions/emissionFactor'
 import { EmissionFactorImportVersion, Environment, Import } from '@prisma/client'
 import EmissionFactorsTable from './Table'
 
@@ -13,18 +12,20 @@ interface Props {
 }
 
 const EmissionFactors = async ({ userOrganizationId, manualOnly, environment }: Props) => {
-  const [emissionFactors, importVersions] = await Promise.all([getEmissionFactors(), getEmissionFactorSources()])
+  const emissionFactors = await getEmissionFactors()
+
+  const importVersions = emissionFactors.success ? await mapImportVersions(emissionFactors.data) : []
   const manualImport = { id: Import.Manual, source: Import.Manual, name: '' } as EmissionFactorImportVersion
 
   const initialSelectedSources = importVersions
-    .filter((importVersion) =>
-      importVersion.source === Import.Manual
-        ? true
-        : !manualOnly &&
+    .filter(
+      (importVersion) =>
+        importVersion.source === Import.Manual ||
+        (!manualOnly &&
           importVersion.id ===
             importVersions
-              .filter((version) => version.source === importVersion.source)
-              .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0].id,
+              .filter((v) => v.source === importVersion.source)
+              .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0].id),
     )
     .map((importVersion) => importVersion.id)
 

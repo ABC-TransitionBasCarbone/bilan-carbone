@@ -6,6 +6,7 @@ import { EmissionFactorStatus, Import, Unit, type Prisma } from '@prisma/client'
 import { Session } from 'next-auth'
 import { prismaClient } from './client'
 import { getOrganizationVersionById } from './organization'
+import { getSourcesLatestImportVersionIdByOrganizationId } from './study'
 
 let cachedEmissionFactors: AsyncReturnType<typeof getDefaultEmissionFactors> = []
 
@@ -97,6 +98,7 @@ export const getAllEmissionFactors = async (
 ) => {
   let versionIds
   let studyOldEmissionFactors: Awaited<ReturnType<typeof getDefaultEmissionFactors>> = []
+  let organizationEmissionFactor: Awaited<ReturnType<typeof getDefaultEmissionFactors>> = []
   if (studyId) {
     const study = await prismaClient.study.findFirst({
       where: { id: studyId },
@@ -111,14 +113,14 @@ export const getAllEmissionFactors = async (
       .filter((id) => id !== null)
 
     studyOldEmissionFactors = await getEmissionFactorsFromIdsExceptVersions(selectedEmissionFactors, versionIds)
+  } else if (organizationId) {
+    organizationEmissionFactor = await prismaClient.emissionFactor.findMany({
+      where: { organizationId },
+      select: selectEmissionFactor,
+      orderBy: { createdAt: 'desc' },
+    })
+    versionIds = (await getSourcesLatestImportVersionIdByOrganizationId(organizationId)).map((v) => v.id)
   }
-  const organizationEmissionFactor = organizationId
-    ? await prismaClient.emissionFactor.findMany({
-        where: { organizationId },
-        select: selectEmissionFactor,
-        orderBy: { createdAt: 'desc' },
-      })
-    : []
 
   const defaultEmissionFactors = await (process.env.NO_CACHE === 'true'
     ? getDefaultEmissionFactors(versionIds)
