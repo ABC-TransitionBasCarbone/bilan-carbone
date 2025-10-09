@@ -58,8 +58,6 @@ const TrajectoryReductionPage = ({ study, user }: Props) => {
             if (plansResponse.success && plansResponse.data) {
               setAvailablePlans(plansResponse.data)
             }
-            // Always show modal on first visit if user can edit
-            setShowModal(true)
           }
         }
       } catch (error) {
