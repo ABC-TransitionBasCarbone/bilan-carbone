@@ -15,7 +15,7 @@ import styles from './DuplicateSiteModal.module.css'
 interface Props {
   open: boolean
   onClose: () => void
-  sourceSite: FullStudy['sites'][number] | null
+  sourceSite: FullStudy['sites'][number]
   study: FullStudy
   canEditOrganization: boolean
   caUnit: SiteCAUnit
@@ -48,12 +48,10 @@ const DuplicateSiteModal = ({ open, onClose, sourceSite, study, canEditOrganizat
   const formValues = watch()
   const fieldsToDuplicate = useMemo(() => formValues.fieldsToDuplicate, [formValues.fieldsToDuplicate])
 
-  const availableSites = useMemo(() => {
-    if (!sourceSite) {
-      return []
-    }
-    return study.sites.filter((site) => site.id !== sourceSite.id)
-  }, [study.sites, sourceSite])
+  const availableSites = useMemo(
+    () => study.sites.filter((site) => site.id !== sourceSite.id),
+    [study.sites, sourceSite],
+  )
 
   const siteOptions = useMemo(
     () =>
@@ -64,12 +62,10 @@ const DuplicateSiteModal = ({ open, onClose, sourceSite, study, canEditOrganizat
     [availableSites],
   )
 
-  const emissionSourcesCount = useMemo(() => {
-    if (!sourceSite) {
-      return 0
-    }
-    return study.emissionSources.filter((es) => es.studySite.id === sourceSite.id).length
-  }, [study.emissionSources, sourceSite])
+  const emissionSourcesCount = useMemo(
+    () => study.emissionSources.filter((es) => es.studySite.id === sourceSite.id).length,
+    [study.emissionSources, sourceSite],
+  )
 
   const isValid = useMemo(() => {
     const hasDataSelected = fieldsToDuplicate.length > 0
@@ -96,10 +92,6 @@ const DuplicateSiteModal = ({ open, onClose, sourceSite, study, canEditOrganizat
 
   const onSubmit = (data: DuplicateFormData) => {
     onDuplicate({ ...data, targetSiteIds: selectedSiteIds })
-  }
-
-  if (!sourceSite) {
-    return null
   }
 
   return (
