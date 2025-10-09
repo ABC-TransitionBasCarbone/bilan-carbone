@@ -6,6 +6,7 @@ import { EmissionFactorStatus, Import, Unit, type Prisma } from '@prisma/client'
 import { Session } from 'next-auth'
 import { prismaClient } from './client'
 import { getOrganizationVersionById } from './organization'
+import { getSourcesLatestImportVersionIdByOrganizationId } from './study'
 
 let cachedEmissionFactors: AsyncReturnType<typeof getDefaultEmissionFactors> = []
 
@@ -97,15 +98,7 @@ export const getAllEmissionFactors = async (
 ) => {
   let versionIds
   let studyOldEmissionFactors: Awaited<ReturnType<typeof getDefaultEmissionFactors>> = []
-
-  const organizationEmissionFactor = organizationId
-    ? await prismaClient.emissionFactor.findMany({
-        where: { organizationId },
-        select: selectEmissionFactor,
-        orderBy: { createdAt: 'desc' },
-      })
-    : []
-
+  let organizationEmissionFactor: Awaited<ReturnType<typeof getDefaultEmissionFactors>> = []
   if (studyId) {
     const study = await prismaClient.study.findFirst({
       where: { id: studyId },
@@ -120,35 +113,13 @@ export const getAllEmissionFactors = async (
       .filter((id) => id !== null)
 
     studyOldEmissionFactors = await getEmissionFactorsFromIdsExceptVersions(selectedEmissionFactors, versionIds)
-  } else {
-    if (organizationId) {
-      // Get all versions used in studies of the organization
-      const versions = await prismaClient.studyEmissionFactorVersion.findMany({
-        where: {
-          study: {
-            organizationVersion: {
-              organizationId,
-              environment: withCut ? {} : { not: Import.CUT },
-            },
-          },
-        },
-        select: { importVersionId: true, source: true, updatedAt: true },
-      })
-      console.log('Found versions for organization:', versions)
-      // Group by source and pick the latest version per source
-      const latestBySource = Object.values(
-        versions.reduce<Record<string, (typeof versions)[0]>>((acc, curr) => {
-          if (
-            !acc[curr.source] ||
-            (curr.updatedAt && acc[curr.source].updatedAt && curr.updatedAt > acc[curr.source].updatedAt)
-          ) {
-            acc[curr.source] = curr
-          }
-          return acc
-        }, {}),
-      )
-      versionIds = latestBySource.map((v) => v.importVersionId)
-    }
+  } else if (organizationId) {
+    organizationEmissionFactor = await prismaClient.emissionFactor.findMany({
+      where: { organizationId },
+      select: selectEmissionFactor,
+      orderBy: { createdAt: 'desc' },
+    })
+    versionIds = (await getSourcesLatestImportVersionIdByOrganizationId(organizationId)).map((v) => v.id)
   }
 
   const defaultEmissionFactors = await (process.env.NO_CACHE === 'true'
@@ -361,37 +332,6 @@ export const getEmissionFactorSources = async (withCut: boolean = false) => {
     return prismaClient.emissionFactorImportVersion.findMany()
   }
   return prismaClient.emissionFactorImportVersion.findMany({ where: { source: { not: Import.CUT } } })
-}
-
-export const getEmissionFactorSourcesByOrganization = async (organizationId: string | null) => {
-  if (!organizationId) {
-    return []
-  }
-  const studies = await prismaClient.study.findMany({
-    where: { organizationVersion: { organizationId } },
-    select: {
-      emissionFactorVersions: {
-        select: { importVersionId: true, source: true, updatedAt: true },
-      },
-    },
-  })
-  if (studies.length === 0) {
-    return []
-  }
-
-  // Flatten all importVersionIds and sources, then get distinct by source
-  const versions = studies
-    .flatMap((study) =>
-      study.emissionFactorVersions.map((version) => ({
-        importVersionId: version.importVersionId,
-        source: version.source,
-        updatedAt: version.updatedAt,
-      })),
-    )
-    .sort((a, b) => (b.updatedAt?.getTime() ?? 0) - (a.updatedAt?.getTime() ?? 0))
-  // Distinct by source
-  const distinctSources = Array.from(new Map(versions.map((v) => [v.source, v.importVersionId])).values())
-  return distinctSources
 }
 
 export const getStudyEmissionFactorSources = async (studyId: string, withCut: boolean = false) => {
