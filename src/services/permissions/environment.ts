@@ -14,7 +14,8 @@ export const hasAccessToDownloadStudyEmissionSourcesButton = (environment: Envir
 export const hasAccessToStudyCardDetails = (environment: Environment) =>
   ([Environment.BC, Environment.TILT] as Environment[]).includes(environment)
 
-export const hasAccessToCreateOrganization = (environment: Environment) => environment === Environment.BC
+export const hasAccessToCreateOrganization = (environment: Environment) =>
+  ([Environment.TILT, Environment.BC] as Environment[]).includes(environment)
 
 export const hasAccessToDuplicateStudy = (environment: Environment) =>
   ([Environment.BC, Environment.TILT] as Environment[]).includes(environment)

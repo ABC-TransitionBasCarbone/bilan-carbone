@@ -21,7 +21,7 @@ import { uniqBy } from '@/utils/array'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { withServerResponse } from '@/utils/serverResponse'
 import { isAdmin } from '@/utils/user'
-import { Account, Environment, Prisma, StudyRole, User, UserChecklist } from '@prisma/client'
+import { Account, Prisma, StudyRole, User, UserChecklist } from '@prisma/client'
 import { auth, dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED, UNKNOWN_ERROR } from '../permissions/check'
 import { hasAccessToCreateOrganization } from '../permissions/environment'
@@ -65,7 +65,7 @@ export const createOrganizationCommand = async (command: CreateOrganizationComma
     } satisfies Prisma.OrganizationCreateInput
 
     const organizationVersion = {
-      environment: Environment.BC,
+      environment: session.user.environment,
       parent: { connect: { id: session.user.organizationVersionId } },
     } satisfies Omit<Prisma.OrganizationVersionCreateInput, 'organization'>
 
