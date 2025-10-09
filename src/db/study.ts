@@ -742,6 +742,14 @@ export const getSourceCutImportVersionIds = async () =>
     distinct: ['source'],
   })
 
+export const getSourcesLatestImportVersionIdByOrganizationId = async (organizationId: string) =>
+  prismaClient.studyEmissionFactorVersion.findMany({
+    select: { id: true },
+    where: { study: { organizationVersion: { organizationId } } },
+    orderBy: { createdAt: 'desc' },
+    distinct: ['source'],
+  })
+
 export const getSourcesLatestImportVersionId = async (sources: Import[]) =>
   prismaClient.emissionFactorImportVersion.findMany({
     select: { id: true, source: true },
