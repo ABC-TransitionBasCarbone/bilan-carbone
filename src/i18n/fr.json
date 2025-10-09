@@ -351,7 +351,9 @@
       "team": "Mon équipe",
       "informationDefinition": "Définition des informations",
       "dataAccounting": "Comptabilisation des données",
-      "reductionTrajectories": "Trajectoires de réduction",
+      "trajectories": "Trajectoires de réduction",
+      "objectives": "Objectifs",
+      "actionPlan": "Plan d'action",
       "commingSoon": "À venir"
     },
     "new": {
@@ -842,6 +844,28 @@
       "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
       "title": "Suppression d'une étude",
       "wrongName": "Le nom de l'étude ne correspond pas"
+    },
+    "transitionPlan": {
+      "notInitialized": "Le plan de transition de cette étude n'a pas encore été initialisé.",
+      "validatorRequired": "Un validateur ou éditeur de l'étude doit s'en charger.",
+      "startButton": "Démarrer mon plan de transition",
+      "emptyState": {
+        "title": "Plan de Transition",
+        "subtitle": "Définissez les trajectoires de réduction des émissions de votre organisation et suivez vos actions dans le temps."
+      },
+      "modal": {
+        "title": "Choisir un plan de transition",
+        "description": "Bienvenue dans le plan de transition de votre étude. Vous pouvez choisir de réutiliser un plan de transition existant ou d'en définir un nouveau.",
+        "createNew": "Créer un nouveau plan de transition",
+        "createNewDescription": "Démarrer un nouveau plan de transition à partir de zéro",
+        "reuseExisting": "Réutiliser un plan de transition existant",
+        "reuseExistingDescription": "Réutiliser un plan de transition existant pour cette étude. Celui-ci sera dupliqué, tout changement fait ici n'impactera pas celui fait dans la précédente étude.",
+        "noAvailablePlans": "Aucun plan de transition disponible dans cette organisation",
+        "cancel": "Annuler",
+        "confirm": "Confirmer",
+        "selectPlaceholder": "Sélectionnez un plan de transition existant",
+        "studyPrefix": "Étude :"
+      }
     }
   },
   "emissionFactors": {
@@ -1741,6 +1765,7 @@
     "Creation": "Création",
     "DownloadReport": "Téléchargement du rapport type",
     "FormationStudy": "Étude de formation",
+    "TransitionPlan": "Plan de transition",
     "source": "Sources",
     "environment": "Environnements",
     "true": "Active",

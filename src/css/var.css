@@ -192,6 +192,10 @@
   gap: 0.5rem;
 }
 
+.gapped075 {
+  gap: 0.75rem;
+}
+
 .gapped1 {
   gap: 1rem;
 }

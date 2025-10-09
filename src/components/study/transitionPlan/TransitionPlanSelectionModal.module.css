@@ -1,0 +1,57 @@
+.description {
+  margin: 0;
+  color: var(--text-600);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.radioGroup :global(.MuiFormControlLabel-root) {
+  background: var(--background-100) !important;
+  border: 2px solid transparent;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin: 0 0 0.5rem 0;
+  transition: border-color 0.2s ease;
+}
+
+.radioGroup :global(.MuiFormControlLabel-root:has(.Mui-checked)) {
+  border: 2px solid var(--primary-300) !important;
+}
+
+.radioGroup :global(.MuiFormControlLabel-root:hover) {
+  border-color: var(--primary-300);
+}
+
+.radioGroup :global(.MuiFormControlLabel-root.Mui-disabled) {
+  opacity: 0.6;
+  background: var(--background-100);
+}
+
+.radioGroup :global(.MuiRadio-root.Mui-checked) ~ :global(.MuiFormControlLabel-label) {
+  font-weight: 500;
+}
+
+.optionTitle {
+  font-weight: 600;
+  color: var(--text-800);
+}
+
+.optionDescription {
+  font-size: 0.875rem;
+  color: var(--text-500);
+}
+
+.disabledLabel {
+  color: var(--text-400);
+}
+
+.noPlansMessage {
+  font-size: 0.875rem;
+  color: var(--text-500);
+  font-style: italic;
+  margin-top: 0.25rem;
+}
+
+.selectControl {
+  margin-top: 0.5rem;
+}

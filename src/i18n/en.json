@@ -351,7 +351,9 @@
       "team": "My team",
       "informationDefinition": "Information definition",
       "dataAccounting": "Accounting of data",
-      "reductionTrajectories": "Reduction trajectories",
+      "trajectories": "Trajectories",
+      "objectives": "Objectives",
+      "actionPlan": "Action plan",
       "commingSoon": "Coming soon"
     },
     "new": {
@@ -842,6 +844,26 @@
       "Not authorized": "You are not allowed to do this action",
       "title": "Study deletion",
       "wrongName": "Study name does not match"
+    },
+    "transitionPlan": {
+      "notInitialized": "The transition plan for this study has not been initialized yet.",
+      "validatorRequired": "A validator or editor of the study must initialize it.",
+      "startButton": "Start my transition plan",
+      "emptyState": {
+        "title": "Transition Plan",
+        "subtitle": "Define your organization's emission reduction trajectories and track your actions over time."
+      },
+      "modal": {
+        "title": "Choose a transition plan",
+        "description": "You already have one or more transition plans defined for this organization. Would you like to reuse one or define a new one? If you reuse it, it will be duplicated, any changes made here will not impact the one made in the previous study.",
+        "createNew": "Create a new transition plan from scratch",
+        "reuseExisting": "Reuse an existing transition plan",
+        "noAvailablePlans": "No transition plans available in this organization",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "selectPlaceholder": "Select an existing transition plan",
+        "studyPrefix": "Study:"
+      }
     }
   },
   "emissionFactors": {
@@ -1741,6 +1763,7 @@
     "Creation": "Creation",
     "DownloadReport": "Download Report",
     "FormationStudy": "Formation study",
+    "TransitionPlan": "Transition plan",
     "source": "Sources",
     "environment": "Environments",
     "true": "Activated",
