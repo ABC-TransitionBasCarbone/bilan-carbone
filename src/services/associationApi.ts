@@ -6,7 +6,11 @@ export const isValidAssociationSiret = async (siret: string) => {
     return false
   }
 
+<<<<<<< HEAD
   const result = await axios.get(`${process.env.ASSOCIATION_SERVICE_URL}/${trimmedSiret}`)
+=======
+  const result = await axios.get(`${process.env.INSEE_SERVICE_URL}/${trimmedSiret}`)
+>>>>>>> c333578655d7a15131797e6879a1c172fae10fc0
 
   if (!result?.data?.identite?.id_siret_siege) {
     return false
