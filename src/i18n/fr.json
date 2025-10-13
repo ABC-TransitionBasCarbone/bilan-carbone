@@ -884,6 +884,35 @@
         "confirm": "Confirmer",
         "selectPlaceholder": "Sélectionnez un plan de transition existant",
         "studyPrefix": "Étude :"
+      },
+      "onboarding": {
+        "badge": "ONBOARDING",
+        "learnMore": "En savoir plus",
+        "hideDetails": "Masquer les détails"
+      },
+      "trajectories": {
+        "title": "Trajectoires de réduction",
+        "onboarding": {
+          "title": "Choisissez une trajectoire de référence ou créez votre trajectoire top-down",
+          "description": "Comparez votre situation avec les trajectoires de référence SBTi et SNBC de référence. Suivez une de ces trajectoires et ses objectifs associés ou créer votre trajectoire personnalisée (trajectoire top down).",
+          "detailedInfo": "Deux trajectoires de référence, la SNBC et SBTi, vous sont proposées ici. Vous pouvez visualiser la trajectoire de décarbonation que devrait suivre votre organisation selon l'une et l'autre.<br><br>La SNBC étant déclinée selon les grands secteurs d'activité de l'économie française, vous devez sélectionner le secteur qui vous correspond le mieux. Plus d'informations sur la SNBC sont disponibles <snbcLink>ici</snbcLink>.\n\nSBTi fournit une trajectoire visant à limiter le réchauffement climatique à 1,5°C, et une seconde visant à le limiter bien en dessous de 2°C. Vous devez également choisir laquelle de ces deux trajectoires vous souhaitez visualiser. Plus d'informations sur SBTi sont disponibles <sbtiLink>ici</sbtiLink>.\n\nDans le cas où votre bilan de référence daterait d'une année antérieure à l'utilisation du BC+2.0, vous pouvez renseigner l'année de référence et les émissions associées. Si ce bilan est déjà présent sur le BC+2.0, vous pouvez le sélectionner comme bilan de référence.\n\nPour chacune de ces trajectoires, le choix a été fait de conserver le budget carbone associé. Si vos émissions ne suivent pas exactement la trajectoire choisie, le BC+2.0 recalculera une trajectoire adaptée pour éviter un dépassement du budget carbone initialement alloué. À chaque nouveau bilan réalisé, vos trajectoires se mettront à jour."
+        }
+      },
+      "objectives": {
+        "title": "Objectifs de réduction",
+        "onboarding": {
+          "title": "Ajouter une trajectoire ou des objectifs de réduction",
+          "description": "Vous avez déjà créé une trajectoire de référence mais vous souhaitez en ajouter d'autres afin de tester différentes hypothèses et différents niveaux d'ambition ? Vous pouvez créer de nouvelles trajectoires, ou ajouter des objectifs intermédiaire pour faire un suivi plus fin et ne pas perdre de vue l'objectif final !",
+          "detailedInfo": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        }
+      },
+      "actions": {
+        "title": "Plan d'action",
+        "onboarding": {
+          "title": "Faîtes votre plan d'action pour atteindre vos objectifs",
+          "description": "Vous avez déjà créé votre trajectoire ainsi que les objectifs associés. Maintenant vous pouvez ajouter dans votre plan de transition les actions qui vous permettront d'atteindre ces objectifs",
+          "detailedInfo": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        }
       }
     }
   },

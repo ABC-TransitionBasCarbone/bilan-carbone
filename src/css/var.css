@@ -112,6 +112,14 @@
   padding-top: 1rem;
 }
 
+.pt2 {
+  padding-top: 2rem;
+}
+
+.pt3 {
+  padding-top: 3rem;
+}
+
 .pl1 {
   padding-left: 1rem;
 }
@@ -178,6 +186,14 @@
 
 .hauto {
   height: auto;
+}
+
+.wauto {
+  width: auto;
+}
+
+.wfit {
+  width: fit-content;
 }
 
 .w100 {
