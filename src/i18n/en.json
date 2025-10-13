@@ -784,9 +784,7 @@
         "entries": "Entries",
         "sessions": "Sessions"
       },
-      "additionalInfo": "Additional information",
-      "resultsExcel": "Excel",
-      "resultsWord": "Bilan Carbone® Report"
+      "additionalInfo": "Additional information"
     },
     "export": {
       "activityDataComment": "Activity data comment",
@@ -897,7 +895,7 @@
         "onboarding": {
           "title": "Choose a reference trajectory or create your top-down trajectory",
           "description": "Compare your situation with SBTi and SNBC reference trajectories. Follow one of these trajectories and its associated objectives or create your personalized trajectory (top-down trajectory).",
-          "detailedInfo": "Two reference trajectories, SNBC and SBTi, are offered here. You can visualize the decarbonization trajectory that your organization should follow according to each one.\n\nSince SNBC is divided according to the major sectors of the French economy, you must select the sector that best corresponds to you. <snbcLink>More information about SNBC is available here</snbcLink>.\n\nSBTi provides a trajectory aimed at limiting global warming to 1.5°C, and a second aimed at limiting it well below 2°C. You must also choose which of these two trajectories you wish to visualize. <sbtiLink>More information about SBTi is available here</sbtiLink>.\n\nIf your reference assessment dates from a year prior to the use of BC+2.0, you can enter the reference year and associated emissions. If this assessment is already present on BC+2.0, you can select it as the reference assessment.\n\nFor each of these trajectories, the choice has been made to keep the associated carbon budget. If your emissions do not exactly follow the chosen trajectory, BC+2.0 will recalculate an adapted trajectory to avoid exceeding the initially allocated carbon budget. With each new assessment carried out, your trajectories will be updated."
+          "detailedInfo": "Two reference trajectories, SNBC and SBTi, are offered here. You can visualize the decarbonization trajectory that your organization should follow according to each one.\n\nSince SNBC is divided according to the major sectors of the French economy, you must select the sector that best corresponds to you. <snbcLink>More information about SNBC is available here</snbcLink>.<br><br>SBTi provides a trajectory aimed at limiting global warming to 1.5°C, and a second aimed at limiting it well below 2°C. You must also choose which of these two trajectories you wish to visualize. <sbtiLink>More information about SBTi is available here</sbtiLink>.<br><br>If your reference assessment dates from a year prior to the use of BC+2.0, you can enter the reference year and associated emissions. If this assessment is already present on BC+2.0, you can select it as the reference assessment.<br><br>For each of these trajectories, the choice has been made to keep the associated carbon budget. If your emissions do not exactly follow the chosen trajectory, BC+2.0 will recalculate an adapted trajectory to avoid exceeding the initially allocated carbon budget. With each new assessment carried out, your trajectories will be updated."
         }
       },
       "objectives": {
