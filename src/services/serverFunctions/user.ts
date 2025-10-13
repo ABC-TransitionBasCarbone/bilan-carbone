@@ -65,6 +65,7 @@ import {
   sendActivationRequest,
   sendAddedActiveUserEmail,
   sendAddedUsersByFile,
+  sendContributorInvitationEmail,
   sendNewContributorInvitationEmail,
   sendNewUserEmail,
   sendNewUserOnStudyInvitationEmail,
@@ -144,7 +145,7 @@ export const sendInvitation = async (
               roleOnStudy,
               env,
             )
-          : sendNewContributorInvitationEmail(
+          : sendContributorInvitationEmail(
               email,
               study.name,
               study.id,
