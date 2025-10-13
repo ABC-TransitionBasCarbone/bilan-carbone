@@ -13,3 +13,37 @@
   font-size: 1.25rem;
   font-weight: 700;
 }
+
+.trajectoryCard {
+  background: var(--grayscale-50);
+  min-width: 16rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
+  border: 0.125rem solid var(--grayscale-200);
+}
+
+.trajectoryCard h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.disabledCard {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--grayscale-100);
+}
+
+.cardTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: var(--neutral-500);
+}
+
+.cardDescription {
+  font-size: 0.875rem;
+  color: var(--grayscale-700);
+  margin: 0 0 1.5rem 0;
+  line-height: 1.5;
+}

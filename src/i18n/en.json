@@ -893,6 +893,24 @@
       },
       "trajectories": {
         "title": "Reduction trajectories",
+        "snbcButton": "SNBC Trajectory",
+        "sbtiButton": "SBTi Trajectories",
+        "customButton": "I choose my trajectory",
+        "sbtiCard": {
+          "title": "SBTi Trajectories",
+          "description": "The Science Based Targets Initiative defines two reference trajectories, aiming to limit global warming to 1.5°C or \"Well below 2 degrees\" (WB2C).",
+          "methodLabel": "Methods",
+          "option15": "1.5°C Trajectory",
+          "option2": "WB2C Trajectory",
+          "placeholder": "No method selected"
+        },
+        "graph": {
+          "title": "Reduction trajectories visualization",
+          "subtitle": "Display of reference trajectories and your organization's trajectories",
+          "trajectory15": "SBTi 1.5°C",
+          "trajectory2": "SBTi WB2C",
+          "yAxisLabel": "Emissions (tCO2e)"
+        },
         "onboarding": {
           "title": "Choose a reference trajectory or create your top-down trajectory",
           "description": "Compare your situation with SBTi and SNBC reference trajectories. Follow one of these trajectories and its associated objectives or create your personalized trajectory (top-down trajectory).",

@@ -53,6 +53,7 @@ export const MultiSelect = ({
       value={selected || []}
       onChange={handleChange}
       {...selectProps}
+      displayEmpty
       renderValue={() => {
         if (selectedLabels.length === 0) {
           return <em>{placeholder}</em>

@@ -2,19 +2,25 @@
 
 import Box from '@/components/base/Box'
 import Button from '@/components/base/Button'
+import { MultiSelect } from '@/components/base/MultiSelect'
 import Title from '@/components/base/Title'
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import Image from '@/components/document/Image'
 import { FullStudy } from '@/db/study'
 import EnvironmentLoader from '@/environments/core/utils/EnvironmentLoader'
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { getEmissionResults, getEmissionSourcesTotalCo2 } from '@/services/emissionSource'
 import { getStudyTransitionPlan, initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
+import { STUDY_UNIT_VALUES } from '@/utils/study'
+import { calculateTrajectory, SBTI_REDUCTION_RATE_15, SBTI_REDUCTION_RATE_2 } from '@/utils/trajectory'
+import { Typography } from '@mui/material'
 import { TransitionPlan } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import TrajectoryGraph from '../study/transitionPlan/TrajectoryGraph'
 import TransitionPlanOnboarding from '../study/transitionPlan/TransitionPlanOnboarding'
 import styles from './TrajectoryReductionPage.module.css'
 
@@ -38,7 +44,18 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
   const [transitionPlan, setTransitionPlan] = useState<TransitionPlan | null>(null)
   const [showModal, setShowModal] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [selectedTrajectories, setSelectedTrajectories] = useState<string[]>(() => {
+    if (typeof window === 'undefined') {
+      return ['15']
+    }
+    const stored = localStorage.getItem('trajectory-sbti-selected')
+    return stored ? JSON.parse(stored) : ['15']
+  })
   const { callServerFunction } = useServerFunction()
+
+  useEffect(() => {
+    localStorage.setItem('trajectory-sbti-selected', JSON.stringify(selectedTrajectories))
+  }, [selectedTrajectories])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -73,6 +90,38 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
     },
     [callServerFunction, study.id, router],
   )
+
+  const trajectoryData = useMemo(() => {
+    const environment = study.organizationVersion.environment
+
+    const emissionSourcesWithEmission = study.emissionSources.map((emissionSource) => ({
+      ...emissionSource,
+      ...getEmissionResults(emissionSource, environment),
+    }))
+
+    const totalCo2InKg = getEmissionSourcesTotalCo2(emissionSourcesWithEmission)
+    const totalCo2 = totalCo2InKg / STUDY_UNIT_VALUES[study.resultsUnit]
+    const studyStartYear = study.startDate.getFullYear()
+
+    const trajectory15Data = calculateTrajectory({
+      baseEmissions: totalCo2,
+      studyStartYear,
+      reductionRate: SBTI_REDUCTION_RATE_15,
+    })
+
+    const trajectory2Data = calculateTrajectory({
+      baseEmissions: totalCo2,
+      studyStartYear,
+      reductionRate: SBTI_REDUCTION_RATE_2,
+    })
+
+    return {
+      trajectory15: trajectory15Data,
+      trajectory2: trajectory2Data,
+      years: trajectory15Data.map((d) => d.year),
+      studyStartYear,
+    }
+  }, [study.emissionSources, study.startDate, study.resultsUnit, study.organizationVersion.environment])
 
   if (loading) {
     return (
@@ -133,7 +182,7 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
           { label: study.name, link: `/etudes/${study.id}` },
         ].filter((link) => link !== undefined)}
       />
-      <div className={classNames(styles.container, 'main-container', 'p2', 'pt3')}>
+      <div className={classNames(styles.container, 'flex-col', 'gapped2', 'main-container', 'p2', 'pt3')}>
         <Title title={t('trajectories.title')} as="h1" />
 
         <TransitionPlanOnboarding
@@ -153,6 +202,50 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
               </a>
             ),
           })}
+        />
+
+        <div className={classNames('flex', 'wrap', 'gapped1')}>
+          <Box className={classNames('grow', 'p125', styles.trajectoryCard, styles.disabledCard)}>
+            <Typography variant="h5" component="h2" fontWeight={600}>
+              {t('trajectories.snbcButton')}
+            </Typography>
+          </Box>
+
+          <Box className={classNames('grow', 'p125', 'flex-col', 'gapped075', styles.trajectoryCard)}>
+            <Typography variant="h5" component="h2" fontWeight={600}>
+              {t('trajectories.sbtiCard.title')}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              {t('trajectories.sbtiCard.description')}
+            </Typography>
+
+            <div className={classNames('w100', 'flex-col', 'gapped075')}>
+              <MultiSelect
+                label={t('trajectories.sbtiCard.methodLabel')}
+                value={selectedTrajectories}
+                onChange={setSelectedTrajectories}
+                options={[
+                  { label: t('trajectories.sbtiCard.option15'), value: '15' },
+                  { label: t('trajectories.sbtiCard.option2'), value: '2' },
+                ]}
+                placeholder={t('trajectories.sbtiCard.placeholder')}
+              />
+            </div>
+          </Box>
+
+          <Box className={classNames('grow', 'p125', styles.trajectoryCard, styles.disabledCard)}>
+            <Typography variant="h5" component="h2" fontWeight={600}>
+              {t('trajectories.customButton')}
+            </Typography>
+          </Box>
+        </div>
+
+        <TrajectoryGraph
+          trajectory15Data={trajectoryData.trajectory15}
+          trajectory2Data={trajectoryData.trajectory2}
+          trajectory15Enabled={selectedTrajectories.includes('15')}
+          trajectory2Enabled={selectedTrajectories.includes('2')}
+          studyStartYear={trajectoryData.studyStartYear}
         />
       </div>
     </>
