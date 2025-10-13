@@ -25,12 +25,11 @@ describe('Create study', () => {
     cy.getByTestId('new-study-name').type('My new study')
 
     cy.getByTestId('new-validator-name').click()
-    cy.get('[data-option-index="1"]').should('not.exist')
-    cy.getByTestId('new-study-level').click()
-    cy.get('[data-value="Initial"]').click()
     cy.getByTestId('new-validator-name').click()
     cy.get('[data-option-index="1"]').click()
 
+    cy.getByTestId('new-study-level').click()
+    cy.get('[data-value="Initial"]').click()
     cy.getByTestId('new-study-endDate').within(() => {
       cy.get('span').first().type(dayjs().add(1, 'y').format('DD/MM/YYYY'))
     })
@@ -51,6 +50,9 @@ describe('Create study', () => {
     cy.getByTestId('new-study-organization-button').click()
 
     cy.getByTestId('new-study-name').type('My new study')
+
+    cy.getByTestId('new-validator-name').click()
+    cy.get('[data-option-index="1"]').should('not.exist')
     cy.getByTestId('new-study-level').click()
     cy.get('[data-value="Initial"]').click()
     cy.getByTestId('new-validator-name').click()
