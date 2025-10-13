@@ -884,6 +884,35 @@
         "confirm": "Confirm",
         "selectPlaceholder": "Select an existing transition plan",
         "studyPrefix": "Study:"
+      },
+      "onboarding": {
+        "badge": "ONBOARDING",
+        "learnMore": "Learn more",
+        "hideDetails": "Hide details"
+      },
+      "trajectories": {
+        "title": "Reduction trajectories",
+        "onboarding": {
+          "title": "Choose a reference trajectory or create your top-down trajectory",
+          "description": "Compare your situation with SBTi and SNBC reference trajectories. Follow one of these trajectories and its associated objectives or create your personalized trajectory (top-down trajectory).",
+          "detailedInfo": "Two reference trajectories, SNBC and SBTi, are offered here. You can visualize the decarbonization trajectory that your organization should follow according to each one.<br></br><br></br>Since SNBC is divided according to the major sectors of the French economy, you must select the sector that best corresponds to you. <snbc>More information about SNBC is available here</snbc>.<br></br>SBTi provides a trajectory aimed at limiting global warming to 1.5°C, and a second aimed at limiting it well below 2°C. You must also choose which of these two trajectories you wish to visualize. <sbti>More information about SBTi is available here</sbti>.<br></br><br></br>If your reference assessment dates from a year prior to the use of BC+2.0, you can enter the reference year and associated emissions. If this assessment is already present on BC+2.0, you can select it as the reference assessment.<br></br><br></br>For each of these trajectories, the choice has been made to keep the associated carbon budget. If your emissions do not exactly follow the chosen trajectory, BC+2.0 will recalculate an adapted trajectory to avoid exceeding the initially allocated carbon budget. With each new assessment carried out, your trajectories will be updated."
+        }
+      },
+      "objectives": {
+        "title": "Reduction objectives",
+        "onboarding": {
+          "title": "Add a trajectory or reduction objectives",
+          "description": "You have already created a reference trajectory but want to add others to test different hypotheses and ambition levels? You can create new trajectories, or add intermediate objectives for more detailed tracking without losing sight of the final goal!",
+          "detailedInfo": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p><p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>"
+        }
+      },
+      "actions": {
+        "title": "Action plan",
+        "onboarding": {
+          "title": "Create your action plan to achieve your objectives",
+          "description": "You have already created your trajectory and associated objectives. Now you can add the actions to your transition plan that will allow you to achieve these objectives",
+          "detailedInfo": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p><p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>"
+        }
       }
     }
   },

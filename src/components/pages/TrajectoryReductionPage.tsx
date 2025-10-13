@@ -2,6 +2,8 @@
 
 import Box from '@/components/base/Box'
 import Button from '@/components/base/Button'
+import Title from '@/components/base/Title'
+import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import Image from '@/components/document/Image'
 import { FullStudy } from '@/db/study'
 import EnvironmentLoader from '@/environments/core/utils/EnvironmentLoader'
@@ -11,7 +13,9 @@ import { TransitionPlan } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
+import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
+import TransitionPlanOnboarding from '../study/transitionPlan/TransitionPlanOnboarding'
 import styles from './TrajectoryReductionPage.module.css'
 
 const TransitionPlanSelectionModal = dynamic(
@@ -28,6 +32,9 @@ interface Props {
 
 const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
   const t = useTranslations('study.transitionPlan')
+  const tNav = useTranslations('nav')
+  const tStudyNav = useTranslations('study.navigation')
+  const router = useRouter()
   const [transitionPlan, setTransitionPlan] = useState<TransitionPlan | null>(null)
   const [showModal, setShowModal] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -60,10 +67,11 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
         onSuccess: (data) => {
           setTransitionPlan(data)
           setShowModal(false)
+          router.refresh()
         },
       })
     },
-    [callServerFunction, study.id],
+    [callServerFunction, study.id, router],
   )
 
   if (loading) {
@@ -111,14 +119,43 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
   }
 
   return (
-    <div className={classNames(styles.container, 'p2')}>
-      <h1>Plan de Transition</h1>
-      {/* TODO: Remove this once we have a proper page */}
-      <div className={styles.debugContainer}>
-        <h2>Plan de transition (debug)</h2>
-        <pre className={styles.debugJson}>{JSON.stringify(transitionPlan, null, 2)}</pre>
+    <>
+      <Breadcrumbs
+        current={tStudyNav('trajectories')}
+        links={[
+          { label: tNav('home'), link: '/' },
+          study.organizationVersion.isCR
+            ? {
+                label: study.organizationVersion.organization.name,
+                link: `/organisations/${study.organizationVersion.id}`,
+              }
+            : undefined,
+          { label: study.name, link: `/etudes/${study.id}` },
+        ].filter((link) => link !== undefined)}
+      />
+      <div className={classNames(styles.container, 'main-container', 'p2', 'pt3')}>
+        <Title title={t('trajectories.title')} as="h1" />
+
+        <TransitionPlanOnboarding
+          title={t('trajectories.onboarding.title')}
+          description={t('trajectories.onboarding.description')}
+          storageKey="trajectory-reduction"
+          detailedContent={t.rich('trajectories.onboarding.detailedInfo', {
+            br: () => <br />,
+            snbc: (chunks) => (
+              <a href={process.env.NEXT_PUBLIC_SNBC_URL || '#'} target="_blank" rel="noopener noreferrer">
+                {chunks}
+              </a>
+            ),
+            sbti: (chunks) => (
+              <a href={process.env.NEXT_PUBLIC_SBTI_URL || '#'} target="_blank" rel="noopener noreferrer">
+                {chunks}
+              </a>
+            ),
+          })}
+        />
       </div>
-    </div>
+    </>
   )
 }
 
