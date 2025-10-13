@@ -102,9 +102,9 @@ export const getStudyNavbarMenu = (
         links: isTransitionPlanActive
           ? [
               {
-                href: `/etudes/${studyId}/trajectoire-reduction`,
+                href: `/etudes/${studyId}/trajectoires`,
                 label: t('trajectories'),
-                testId: 'study-trajectory-reduction-link',
+                testId: 'study-trajectories-link',
               },
               {
                 disabled: true,
