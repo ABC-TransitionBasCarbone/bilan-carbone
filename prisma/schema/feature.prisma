@@ -4,6 +4,7 @@ enum DeactivatableFeature {
   Creation
   DownloadReport
   FormationStudy
+  TransitionPlan
 }
 
 model DeactivatableFeatureStatus {

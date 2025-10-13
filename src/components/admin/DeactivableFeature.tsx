@@ -7,7 +7,7 @@ import {
   changeDeactivableFeatureStatus,
 } from '@/services/serverFunctions/deactivableFeatures'
 import { FormControl, FormControlLabel, FormLabel, Switch } from '@mui/material'
-import { Environment, UserSource } from '@prisma/client'
+import { DeactivatableFeature, Environment, UserSource } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 
@@ -45,13 +45,19 @@ const DeactivableFeature = ({ restrictions }: Props) => {
     })
   }
 
+  const showSourcesRow = restrictions.feature === DeactivatableFeature.Formation
+
   const featureDeactivationCriterias: Array<DeactivationCriteria<UserSource> | DeactivationCriteria<Environment>> = [
-    {
-      title: 'source',
-      criterias: restrictions.deactivatedSources,
-      t: tSource,
-      values: Object.values(UserSource),
-    },
+    ...(showSourcesRow
+      ? [
+          {
+            title: 'source',
+            criterias: restrictions.deactivatedSources,
+            t: tSource,
+            values: Object.values(UserSource),
+          },
+        ]
+      : []),
     {
       title: 'environment',
       criterias: restrictions.deactivatedEnvironments,

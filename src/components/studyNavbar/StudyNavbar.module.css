@@ -49,7 +49,9 @@
   align-items: center;
 
   @media screen and (max-width: 1279px) {
-    padding-bottom: 0.5rem !important;
+    font-size: 1rem;
+    padding-top: 0rem !important;
+    padding-bottom: 0rem !important;
   }
 }
 
@@ -58,7 +60,10 @@
   font-weight: 400;
   color: var(--mui-palette-text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+
+  @media screen and (max-width: 1279px) {
+    font-size: 0.875rem;
+  }
 }
 
 .button,

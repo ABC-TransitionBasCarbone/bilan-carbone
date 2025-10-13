@@ -1,0 +1,28 @@
+model TransitionPlan {
+  id String @id @default(uuid())
+
+  studyId String @unique @map("study_id")
+  study   Study  @relation(fields: [studyId], references: [id])
+
+  transitionPlanStudies TransitionPlanStudy[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("transition_plans")
+}
+
+model TransitionPlanStudy {
+  transitionPlanId String         @map("transition_plan_id")
+  transitionPlan   TransitionPlan @relation(fields: [transitionPlanId], references: [id], onDelete: Cascade)
+
+  studyId String @map("study_id")
+  study   Study  @relation(fields: [studyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@id([transitionPlanId, studyId])
+  @@map("transition_plan_studies")
+}
+
