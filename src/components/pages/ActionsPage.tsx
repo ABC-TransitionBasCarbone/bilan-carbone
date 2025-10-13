@@ -5,15 +5,15 @@ import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import { FullStudy } from '@/db/study'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
+import Actions from '../study/transitionPlan/Actions/Actions'
 import TransitionPlanOnboarding from '../study/transitionPlan/TransitionPlanOnboarding'
 import styles from './TrajectoryReductionPage.module.css'
 
 interface Props {
   study: FullStudy
-  canEdit: boolean
 }
 
-const ActionsPage = ({ study, canEdit }: Props) => {
+const ActionsPage = ({ study }: Props) => {
   const t = useTranslations('study.transitionPlan.actions')
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
@@ -44,6 +44,8 @@ const ActionsPage = ({ study, canEdit }: Props) => {
             br: () => <br />,
           })}
         />
+
+        <Actions actions={[]} />
       </div>
     </>
   )

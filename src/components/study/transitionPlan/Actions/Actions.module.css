@@ -1,0 +1,5 @@
+.searchInput {
+  input {
+    min-width: 20rem;
+  }
+}

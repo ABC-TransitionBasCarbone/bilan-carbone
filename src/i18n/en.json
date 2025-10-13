@@ -909,6 +909,8 @@
       },
       "actions": {
         "title": "Action plan",
+        "search": "Search for your action here",
+        "add": "Add an action",
         "onboarding": {
           "title": "Create your action plan to achieve your objectives",
           "description": "You have already created your trajectory and associated objectives. Now you can add the actions to your transition plan that will allow you to achieve these objectives",
