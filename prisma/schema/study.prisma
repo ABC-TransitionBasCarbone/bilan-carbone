@@ -157,7 +157,7 @@ model Study {
   updatedAt      DateTime        @default(now()) @updatedAt @map("updated_at")
   studyTemplates StudyTemplate[]
 
-  transitionPlans       TransitionPlan[]
+  transitionPlan        TransitionPlan?
   transitionPlanStudies TransitionPlanStudy[]
 
   @@map("studies")

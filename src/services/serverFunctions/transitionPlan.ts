@@ -14,15 +14,21 @@ import { TransitionPlan } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
+import { canViewTransitionPlan } from '../permissions/study'
 
-export const getStudyTransitionPlan = async (studyId: string): Promise<ApiResponse<TransitionPlan | null>> =>
+export const getStudyTransitionPlan = async (study: FullStudy): Promise<ApiResponse<TransitionPlan | null>> =>
   withServerResponse('getStudyTransitionPlan', async () => {
     const session = await auth()
     if (!session?.user) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const transitionPlan = await getTransitionPlanByStudyId(studyId)
+    const hasAccess = await canViewTransitionPlan(session.user, study)
+    if (!hasAccess) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const transitionPlan = await getTransitionPlanByStudyId(study.id)
     return transitionPlan
   })
 
@@ -38,9 +44,25 @@ export const getAvailableTransitionPlans = async (studyId: string) =>
       throw new Error('Study not found')
     }
 
+    const hasViewAccess = await canViewTransitionPlan(session.user, study)
+    if (!hasViewAccess) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
     const plans = await getOrganizationTransitionPlans(study.organizationVersionId)
 
-    return plans.filter((plan) => plan.studyId !== studyId)
+    const accessiblePlans = await Promise.all(
+      plans.map(async (plan) => {
+        const fullStudy = await getStudyById(plan.studyId, session.user.organizationVersionId)
+        if (!fullStudy) {
+          return null
+        }
+        const hasViewAccess = await canViewTransitionPlan(session.user, fullStudy)
+        return hasViewAccess ? plan : null
+      }),
+    )
+
+    return accessiblePlans.filter((plan) => plan !== null && plan.studyId !== studyId) as TransitionPlanWithStudies[]
   })
 
 export const initializeTransitionPlan = async (studyId: string, sourceTransitionPlanId?: string) =>

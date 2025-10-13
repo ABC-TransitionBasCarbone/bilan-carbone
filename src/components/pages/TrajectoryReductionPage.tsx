@@ -4,18 +4,11 @@ import Box from '@/components/base/Box'
 import Button from '@/components/base/Button'
 import Image from '@/components/document/Image'
 import { FullStudy } from '@/db/study'
-import { TransitionPlanWithStudies } from '@/db/transitionPlan'
 import EnvironmentLoader from '@/environments/core/utils/EnvironmentLoader'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import {
-  getAvailableTransitionPlans,
-  getStudyTransitionPlan,
-  initializeTransitionPlan,
-} from '@/services/serverFunctions/transitionPlan'
-import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
+import { getStudyTransitionPlan, initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
 import { TransitionPlan } from '@prisma/client'
 import classNames from 'classnames'
-import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useCallback, useEffect, useState } from 'react'
@@ -30,35 +23,24 @@ const TransitionPlanSelectionModal = dynamic(
 
 interface Props {
   study: FullStudy
-  user: UserSession
+  canEdit: boolean
 }
 
-const TrajectoryReductionPage = ({ study, user }: Props) => {
+const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
   const t = useTranslations('study.transitionPlan')
   const [transitionPlan, setTransitionPlan] = useState<TransitionPlan | null>(null)
-  const [availablePlans, setAvailablePlans] = useState<TransitionPlanWithStudies[] | null>(null)
   const [showModal, setShowModal] = useState(false)
   const [loading, setLoading] = useState(true)
   const { callServerFunction } = useServerFunction()
-
-  const userRoleOnStudy = getAccountRoleOnStudy(user, study)
-  const canEdit = hasEditionRights(userRoleOnStudy)
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
       try {
-        const planResponse = await getStudyTransitionPlan(study.id)
+        const planResponse = await getStudyTransitionPlan(study)
 
         if (planResponse.success && planResponse.data) {
           setTransitionPlan(planResponse.data)
-        } else {
-          if (canEdit) {
-            const plansResponse = await getAvailableTransitionPlans(study.id)
-            if (plansResponse.success && plansResponse.data) {
-              setAvailablePlans(plansResponse.data)
-            }
-          }
         }
       } catch (error) {
         console.error('Error fetching transition plan data:', error)
@@ -67,10 +49,10 @@ const TrajectoryReductionPage = ({ study, user }: Props) => {
       }
     }
 
-    if (!transitionPlan && !availablePlans) {
+    if (transitionPlan === null) {
       fetchData()
     }
-  }, [study.id, canEdit, transitionPlan, availablePlans])
+  }, [study, transitionPlan])
 
   const handleConfirmPlanSelection = useCallback(
     async (selectedPlanId?: string) => {
@@ -107,9 +89,9 @@ const TrajectoryReductionPage = ({ study, user }: Props) => {
 
           {showModal && (
             <TransitionPlanSelectionModal
+              studyId={study.id}
               open={showModal}
               onClose={() => setShowModal(false)}
-              availablePlans={availablePlans}
               onConfirm={handleConfirmPlanSelection}
             />
           )}
@@ -136,15 +118,6 @@ const TrajectoryReductionPage = ({ study, user }: Props) => {
         <h2>Plan de transition (debug)</h2>
         <pre className={styles.debugJson}>{JSON.stringify(transitionPlan, null, 2)}</pre>
       </div>
-
-      {showModal && (
-        <TransitionPlanSelectionModal
-          open={showModal}
-          onClose={() => setShowModal(false)}
-          availablePlans={availablePlans}
-          onConfirm={handleConfirmPlanSelection}
-        />
-      )}
     </div>
   )
 }

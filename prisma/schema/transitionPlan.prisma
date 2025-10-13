@@ -1,7 +1,7 @@
 model TransitionPlan {
   id String @id @default(uuid())
 
-  studyId String @map("study_id")
+  studyId String @unique @map("study_id")
   study   Study  @relation(fields: [studyId], references: [id])
 
   transitionPlanStudies TransitionPlanStudy[]

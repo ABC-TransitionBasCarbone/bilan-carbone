@@ -17,12 +17,9 @@ export const getTransitionPlanById = async (id: string): Promise<TransitionPlan 
 }
 
 export const getTransitionPlanByStudyId = async (studyId: string): Promise<TransitionPlan | null> => {
-  return prismaClient.transitionPlan.findFirst({
+  return prismaClient.transitionPlan.findUnique({
     where: {
       studyId,
-    },
-    orderBy: {
-      createdAt: 'desc',
     },
   })
 }

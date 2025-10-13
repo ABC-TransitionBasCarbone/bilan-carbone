@@ -2,26 +2,44 @@
 
 import Modal from '@/components/modals/Modal'
 import { TransitionPlanWithStudies } from '@/db/transitionPlan'
+import { getAvailableTransitionPlans } from '@/services/serverFunctions/transitionPlan'
 import { FormControl, FormControlLabel, MenuItem, Radio, RadioGroup, Select } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styles from './TransitionPlanSelectionModal.module.css'
 
 interface Props {
+  studyId: string
   open: boolean
   onClose: () => void
-  availablePlans: TransitionPlanWithStudies[] | null
   onConfirm: (selectedPlanId?: string) => Promise<void>
 }
 
-const TransitionPlanSelectionModal = ({ open, onClose, availablePlans, onConfirm }: Props) => {
+const TransitionPlanSelectionModal = ({ studyId, open, onClose, onConfirm }: Props) => {
   const t = useTranslations('study.transitionPlan.modal')
-
-  const hasAvailablePlans = availablePlans && availablePlans.length > 0
+  const [availablePlans, setAvailablePlans] = useState<TransitionPlanWithStudies[] | null>(null)
   const [selectedOption, setSelectedOption] = useState<'new' | 'existing'>('new')
-  const [selectedPlan, setSelectedPlan] = useState<string>(hasAvailablePlans ? availablePlans[0].id : '')
+  const [selectedPlan, setSelectedPlan] = useState<string>('')
   const [loading, setLoading] = useState(false)
+  const hasAvailablePlans = availablePlans && availablePlans.length > 0
+
+  useEffect(() => {
+    const fetchAvailablePlans = async () => {
+      const plansResponse = await getAvailableTransitionPlans(studyId)
+      if (plansResponse.success && plansResponse.data) {
+        setAvailablePlans(plansResponse.data)
+
+        if (plansResponse.data.length > 0) {
+          setSelectedPlan(plansResponse.data[0].id)
+        }
+      }
+    }
+
+    if (availablePlans === null) {
+      fetchAvailablePlans()
+    }
+  }, [availablePlans, studyId])
 
   const handleConfirm = async () => {
     setLoading(true)

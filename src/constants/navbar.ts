@@ -104,7 +104,7 @@ export const getStudyNavbarMenu = (
               {
                 href: `/etudes/${studyId}/trajectoire-reduction`,
                 label: t('trajectories'),
-                testId: 'study-trajectoire-reduction-link',
+                testId: 'study-trajectory-reduction-link',
               },
               {
                 disabled: true,

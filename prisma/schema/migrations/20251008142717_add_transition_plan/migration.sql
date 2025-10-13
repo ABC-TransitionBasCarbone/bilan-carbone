@@ -29,3 +29,6 @@ ALTER TABLE "transition_plan_studies" ADD CONSTRAINT "transition_plan_studies_st
 
 -- AlterEnum
 ALTER TYPE "DeactivatableFeature" ADD VALUE 'TransitionPlan';
+
+-- CreateIndex
+CREATE UNIQUE INDEX "transition_plans_study_id_key" ON "transition_plans"("study_id");
