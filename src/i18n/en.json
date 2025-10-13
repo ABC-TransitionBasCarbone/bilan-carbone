@@ -718,7 +718,8 @@
         "missingCaract1": "Uncharacterized emission sources are not accounted for in the BEGES-R, which leads to undue differences with the Bilan Carbone® if you have chosen to visualize unvalidated emission sources.",
         "missingCaract2": "You have not entered the characterizations for all the emission sources in your study. Please edit and add the characterization for the following emission sources:",
         "additionalMissing": "+ {count} other emission {count, plural,  =1 {source} other {sources}}",
-        "close": "Close"
+        "close": "Close",
+        "unexplainedDifference": "Some differences can not be explained. Please, contact us at the <support>support</support>."
       },
       "noData": "No data to display",
       "uncertainties": {
