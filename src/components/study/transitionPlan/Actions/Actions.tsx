@@ -8,13 +8,13 @@ import Table from './Table'
 
 interface Props {
   actions: Action[]
+  transitionPlanId: string
   studyUnit: string
   porters: { label: string; value: string }[]
-  transitionPlanId: string
 }
 
 const fuseOptions = {
-  keys: [{ name: 'title', weight: 1 }],
+  keys: [{ name: 'metaData.title', weight: 1 }],
   threshold: 0.3,
   isCaseSensitive: false,
 }
@@ -24,19 +24,23 @@ const Actions = ({ actions, studyUnit, porters, transitionPlanId }: Props) => {
 
   const fuse = useMemo(() => new Fuse(actions, fuseOptions), [actions])
 
-  const searchedActions = useMemo(
-    () => (filter ? fuse.search(filter).map(({ item }) => item) : actions),
-    [actions, filter, fuse],
-  )
+  const searchedActions: Action[] = useMemo(() => {
+    if (!filter) {
+      return actions
+    }
+    const searchResults = filter ? fuse.search(filter).map(({ item }) => item) : actions
+
+    return searchResults
+  }, [actions, filter, fuse])
 
   return (
     <>
       <ActionFilters
         search={filter}
         setSearch={setFilter}
+        transitionPlanId={transitionPlanId}
         studyUnit={studyUnit}
         porters={porters}
-        transitionPlanId={transitionPlanId}
       />
       <Table actions={searchedActions} studyUnit={studyUnit} porters={porters} transitionPlanId={transitionPlanId} />
     </>

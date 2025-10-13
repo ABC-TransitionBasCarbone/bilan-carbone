@@ -1,5 +1,7 @@
 import { TrajectoryDataPoint } from '@/components/study/transitionPlan/TrajectoryGraph'
-import { TrajectoryType } from '@prisma/client'
+import { FullStudy } from '@/db/study'
+import { getStudyTotalCo2EmissionsWithDep } from '@/services/study'
+import { ExternalStudy, TrajectoryType } from '@prisma/client'
 
 export type SBTIType = 'SBTI_15' | 'SBTI_WB2C'
 export const SBTI_REDUCTION_RATE_15 = 0.042
@@ -7,6 +9,30 @@ export const SBTI_REDUCTION_RATE_WB2C = 0.025
 const REFERENCE_YEAR = 2020
 export const MID_TAREGT_YEAR = 2030
 export const TARGET_YEAR = 2050
+
+interface CalculateTrajectoryParams {
+  baseEmissions: number
+  studyStartYear: number
+  reductionRate: number
+  startYear?: number
+  endYear?: number
+  maxYear?: number
+  linkedStudies?: FullStudy[]
+  externalStudies?: ExternalStudy[]
+}
+
+const getLinkedEmissions = (year: number, linkedStudies?: FullStudy[], externalStudies?: ExternalStudy[]) => {
+  const startDate = new Date(`01-01-${year}`)
+  const endDate = new Date(`01-01-${year + 1}`)
+
+  const linkedStudy = linkedStudies?.find((study) => study.startDate >= startDate && study.startDate < endDate)
+  if (linkedStudy) {
+    return getStudyTotalCo2EmissionsWithDep(linkedStudy)
+  } else {
+    const linkedExternalStudy = externalStudies?.find((study) => study.date >= startDate && study.date < endDate)
+    return linkedExternalStudy?.totalCo2
+  }
+}
 
 export const calculateOvershoot = (
   studyYear: number,
@@ -66,12 +92,9 @@ export const calculateSBTiTrajectory = ({
   studyStartYear,
   reductionRate,
   maxYear,
-}: {
-  baseEmissions: number
-  studyStartYear: number
-  reductionRate: number
-  maxYear?: number
-}) => {
+  linkedStudies,
+  externalStudies,
+}: CalculateTrajectoryParams) => {
   const dataPoints: TrajectoryDataPoint[] = []
 
   if (baseEmissions === 0) {
@@ -79,7 +102,12 @@ export const calculateSBTiTrajectory = ({
     const endYear = maxYear ?? TARGET_YEAR
 
     for (let year = graphStartYear; year <= endYear; year++) {
-      dataPoints.push({ year, value: 0 })
+      const linkedEmissions = getLinkedEmissions(year, linkedStudies, externalStudies)
+      if (linkedEmissions) {
+        dataPoints.push({ year, value: linkedEmissions })
+      } else {
+        dataPoints.push({ year, value: 0 })
+      }
     }
 
     return dataPoints
@@ -93,7 +121,12 @@ export const calculateSBTiTrajectory = ({
     const newReductionRate = calculateNewLinearReductionRate(1, nty, studyStartYear)
 
     for (let year = REFERENCE_YEAR; year <= Math.max(nty, maxYear ?? TARGET_YEAR); year++) {
-      dataPoints.push(calculateDataPoint(year, baseEmissions, studyStartYear, newReductionRate))
+      const linkedEmissions = getLinkedEmissions(year, linkedStudies, externalStudies)
+      if (linkedEmissions) {
+        dataPoints.push({ year, value: linkedEmissions })
+      } else {
+        dataPoints.push(calculateDataPoint(year, baseEmissions, studyStartYear, newReductionRate))
+      }
     }
   } else {
     const reductionStartYear = REFERENCE_YEAR
@@ -102,7 +135,12 @@ export const calculateSBTiTrajectory = ({
     const endYear = Math.max(targetYear, maxYear ?? TARGET_YEAR)
 
     for (let year = graphStartYear; year <= endYear; year++) {
-      dataPoints.push(calculateDataPoint(year, baseEmissions, reductionStartYear, reductionRate))
+      const linkedEmissions = getLinkedEmissions(year, linkedStudies, externalStudies)
+      if (linkedEmissions) {
+        dataPoints.push({ year, value: linkedEmissions })
+      } else {
+        dataPoints.push(calculateDataPoint(year, baseEmissions, reductionStartYear, reductionRate))
+      }
     }
   }
 
@@ -122,10 +160,14 @@ export const calculateCustomTrajectory = ({
   baseEmissions,
   studyStartYear,
   objectives,
+  linkedStudies,
+  externalStudies,
 }: {
   baseEmissions: number
   studyStartYear: number
   objectives: Array<{ targetYear: number; reductionRate: number }>
+  linkedStudies?: FullStudy[]
+  externalStudies?: ExternalStudy[]
 }): TrajectoryDataPoint[] => {
   if (objectives.length === 0) {
     return []
@@ -136,7 +178,12 @@ export const calculateCustomTrajectory = ({
   let startYear = studyStartYear
 
   for (let year = REFERENCE_YEAR; year < studyStartYear; year++) {
-    dataPoints.push({ year, value: baseEmissions })
+    const linkedEmissions = getLinkedEmissions(year, linkedStudies, externalStudies)
+    if (linkedEmissions) {
+      dataPoints.push({ year, value: linkedEmissions })
+    } else {
+      dataPoints.push({ year, value: baseEmissions })
+    }
   }
 
   dataPoints.push({ year: studyStartYear, value: baseEmissions })

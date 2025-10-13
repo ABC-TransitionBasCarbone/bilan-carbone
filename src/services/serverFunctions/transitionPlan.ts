@@ -1,12 +1,18 @@
 'use server'
 
-import { FullStudy, getStudyById } from '@/db/study'
+import { FullStudy, getStudyById, getStudyByIds } from '@/db/study'
 import {
   createAction,
+  createExternalStudy,
   createTransitionPlan,
+  createTransitionPlanStudy,
   duplicateTransitionPlanWithRelations,
   getActionById,
   getActions,
+  getExternalStudiesForTransitionPlan,
+  getExternalStudiesForTransitionPlanAndYear,
+  getLinkedStudiesForTransitionPlan,
+  getLinkedStudiesForTransitionPlanAndYear,
   getOrganizationTransitionPlans,
   getTransitionPlanById,
   getTransitionPlanByIdWithRelations,
@@ -21,9 +27,10 @@ import { DeactivatableFeature, TransitionPlan } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { auth, dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
-import { canCreateAction, canViewTransitionPlan } from '../permissions/study'
+import { canCreateAction, canLinkStudyToTransitionPlan, canViewTransitionPlan } from '../permissions/study'
 import { isDeactivableFeatureActiveForEnvironment } from './deactivableFeatures'
 import { AddActionCommand } from './study.command'
+import { ExternalStudyCommand } from './transitionPlan.command'
 
 export const getStudyTransitionPlan = async (study: FullStudy): Promise<ApiResponse<TransitionPlan | null>> =>
   withServerResponse('getStudyTransitionPlan', async () => {
@@ -143,6 +150,121 @@ export const addAction = async (command: AddActionCommand) =>
       throw new Error(NOT_AUTHORIZED)
     }
     await createAction(command)
+  })
+
+const isYearAlreadyLinked = async (transitionPlanId: string, year: number) => {
+  const startDate = new Date(`01-01-${year}`)
+  const endDate = new Date(`01-01-${year + 1}`)
+
+  const [externalStudies, linkedStudies] = await Promise.all([
+    getExternalStudiesForTransitionPlanAndYear(transitionPlanId, startDate, endDate),
+    getLinkedStudiesForTransitionPlanAndYear(transitionPlanId, startDate, endDate),
+  ])
+
+  return externalStudies.length || linkedStudies.length
+}
+
+export const linkOldStudy = async (transitionPlanId: string, studyId: string) =>
+  withServerResponse('linkOldStudy', async () => {
+    const session = await dbActualizedAuth()
+
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const [transitionPlan, study] = await Promise.all([
+      getTransitionPlanById(transitionPlanId),
+      getStudyById(studyId, session.user.organizationVersionId),
+    ])
+    if (!study || !transitionPlan || !canLinkStudyToTransitionPlan(session.user, study)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const transitionStudy = await getStudyById(transitionPlan.studyId, session.user.organizationVersionId)
+    if (study.organizationVersionId !== transitionStudy?.organizationVersionId) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (
+      !(await isDeactivableFeatureActiveForEnvironment(
+        DeactivatableFeature.TransitionPlan,
+        transitionStudy.organizationVersion.environment,
+      ))
+    ) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (await isYearAlreadyLinked(transitionPlan.id, study.startDate.getFullYear())) {
+      throw new Error('yearAlreadySet')
+    }
+
+    await createTransitionPlanStudy(transitionPlanId, studyId)
+  })
+
+export const addExternalStudy = async (command: ExternalStudyCommand) =>
+  withServerResponse('linkExternalStudy', async () => {
+    const session = await dbActualizedAuth()
+
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const transitionPlan = await getTransitionPlanById(command.transitionPlanId)
+
+    if (!transitionPlan) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(transitionPlan.studyId, session.user.organizationVersionId)
+
+    if (!study || !canLinkStudyToTransitionPlan(session.user, study)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (
+      !(await isDeactivableFeatureActiveForEnvironment(
+        DeactivatableFeature.TransitionPlan,
+        study.organizationVersion.environment,
+      ))
+    ) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (await isYearAlreadyLinked(transitionPlan.id, new Date(command.date).getFullYear())) {
+      throw new Error('yearAlreadySet')
+    }
+
+    await createExternalStudy(command)
+  })
+
+export const getLinkedStudies = async (transitionPlanId: string) =>
+  withServerResponse('linkExternalStudy', async () => {
+    const session = await dbActualizedAuth()
+
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const transitionPlan = await getTransitionPlanById(transitionPlanId)
+
+    if (!transitionPlan) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (
+      !(await isDeactivableFeatureActiveForEnvironment(DeactivatableFeature.TransitionPlan, session.user.environment))
+    ) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const [externalStudies, transitionPlanStudies] = await Promise.all([
+      getExternalStudiesForTransitionPlan(transitionPlanId),
+      getLinkedStudiesForTransitionPlan(transitionPlanId),
+    ])
+
+    const studies = await getStudyByIds(transitionPlanStudies.map((transitionPlan) => transitionPlan.studyId))
+
+    return { studies, externalStudies }
   })
 
 export const editAction = async (id: string, command: AddActionCommand) =>

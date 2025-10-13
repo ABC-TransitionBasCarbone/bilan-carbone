@@ -38,8 +38,9 @@ model TransitionPlan {
   actions               Action[]
   trajectories          Trajectory[]
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @default(now()) @updatedAt @map("updated_at")
+  ExternalStudies ExternalStudy[]
 
   @@map("transition_plans")
 }
@@ -86,6 +87,8 @@ model Action {
   nature                    ActionNature[]
   category                  ActionCategory[]
   relevance                 ActionRelevance[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("actions")
 }
@@ -110,11 +113,25 @@ model Trajectory {
   type        TrajectoryType
 
   objectives Objective[]
-
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("trajectories")
+}
+
+model ExternalStudy {
+  id String @id @default(uuid())
+
+  transitionPlanId String         @map("transition_plan_id")
+  transitionPlan   TransitionPlan @relation(fields: [transitionPlanId], references: [id])
+
+  name     String
+  date     DateTime
+  totalCo2 Int
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("external_studies")
 }
 
 model Objective {

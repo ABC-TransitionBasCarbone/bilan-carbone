@@ -49,6 +49,7 @@ import {
   deleteStudyExport,
   downgradeStudyUserRoles,
   FullStudy,
+  getOrganizationStudiesBeforeDate,
   getStudiesSitesFromIds,
   getStudyById,
   getStudyNameById,
@@ -2219,4 +2220,19 @@ export const getStudyOrganizationMembers = async (studyId: string) =>
       throw new Error(NOT_AUTHORIZED)
     }
     return getAccountsFromOrganization(study.organizationVersionId)
+  })
+
+export const getStudyPreviousOccurrences = async (studyId: string) =>
+  withServerResponse('getStudyPreviousOccurrences', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return getOrganizationStudiesBeforeDate(study.organizationVersionId, study.startDate)
   })

@@ -1,4 +1,5 @@
 import { AddActionCommand } from '@/services/serverFunctions/study.command'
+import { ExternalStudyCommand } from '@/services/serverFunctions/transitionPlan.command'
 import { Objective, Trajectory, TransitionPlan, TransitionPlanStudy } from '@prisma/client'
 import { prismaClient } from './client'
 
@@ -154,3 +155,31 @@ export const getActionById = async (id: string) => prismaClient.action.findUniqu
 
 export const getActions = async (transitionPlanId: string) =>
   prismaClient.action.findMany({ where: { transitionPlanId } })
+export const createTransitionPlanStudy = async (transitionPlanId: string, studyId: string) =>
+  prismaClient.transitionPlanStudy.create({ data: { transitionPlanId, studyId } })
+
+export const createExternalStudy = async (data: ExternalStudyCommand) => prismaClient.externalStudy.create({ data })
+
+export const getExternalStudiesForTransitionPlanAndYear = async (
+  transitionPlanId: string,
+  startDate: Date,
+  endDate: Date,
+) =>
+  prismaClient.externalStudy.findMany({
+    where: { transitionPlanId, date: { gte: startDate, lt: endDate } },
+  })
+
+export const getLinkedStudiesForTransitionPlanAndYear = async (
+  transitionPlanId: string,
+  startDate: Date,
+  endDate: Date,
+) =>
+  prismaClient.transitionPlanStudy.findMany({
+    where: { transitionPlanId, study: { startDate: { gte: startDate, lt: endDate } } },
+  })
+
+export const getExternalStudiesForTransitionPlan = async (transitionPlanId: string) =>
+  prismaClient.externalStudy.findMany({ where: { transitionPlanId } })
+
+export const getLinkedStudiesForTransitionPlan = async (transitionPlanId: string) =>
+  prismaClient.transitionPlanStudy.findMany({ where: { transitionPlanId } })

@@ -915,6 +915,31 @@
           "trajectoryWB2C": "SBTi WB2C",
           "yAxisLabel": "Émissions (tCO2e)"
         },
+        "linkedStudies": {
+          "linked": "Études liées",
+          "add": "Ajouter",
+          "linkStudy": "Lier une étude",
+          "source": "Source",
+          "study": "Étude concernée",
+          "oldStudy": "Études BC+",
+          "externalStudy": "Étude venant d'une autre plateforme",
+          "name": "Nom",
+          "namePlaceholder": "Veuillez renseigne un nom",
+          "date": "Année",
+          "totalCo2": "Emissions totales",
+          "totalCo2Placeholder": "256",
+          "yearAlreadySet": "Une étude est déjà configurée pour cette année",
+          "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
+          "table": {
+            "name": "Nom",
+            "year": "Année",
+            "see": "Voir",
+            "delete": "Supprimer"
+          },
+          "validation": {
+            "required": "Champs requis"
+          }
+        },
         "onboarding": {
           "title": "Visualisez plusieurs trajectoire de référence et créez votre première trajectoire descendante",
           "description": "Comparez votre situation avec les trajectoires de référence SBTi et SNBC. Vous pouvez choisir de suivre une de ces trajectoires et ses objectifs associés ou créer votre trajectoire personnalisée (trajectoire descendante).",

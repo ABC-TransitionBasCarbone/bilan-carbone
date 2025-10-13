@@ -36,7 +36,7 @@ const TrajectoryOption = ({
       tabIndex={disabled ? -1 : 0}
     >
       <div className="flex align-start">
-        <input type="radio" checked={isSelected} disabled={disabled} aria-label={t(titleKey)} />
+        <input type="radio" checked={isSelected} disabled={disabled} aria-label={t(titleKey)} readOnly />
         <div className="flex-col gapped-2 grow">
           <Typography fontWeight={'bold'} color="textSecondary">
             {t(titleKey)}

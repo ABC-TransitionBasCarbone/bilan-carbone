@@ -466,17 +466,23 @@ export const isFeatureTransitionPlanActive = async (environment: Environment) =>
   return isTransitionPlanFeatureActive.success && isTransitionPlanFeatureActive.data
 }
 
-export const canEditTransitionPlan = async (user: UserSession, study: FullStudy) => {
+const hasUserEditionRightOnStudy = async (user: UserSession, study: FullStudy) => {
   const userRightsOnStudy = getAccountRoleOnStudy(user, study)
   return !!(userRightsOnStudy && hasEditionRights(userRightsOnStudy))
+}
+
+export const canEditTransitionPlan = async (user: UserSession, study: FullStudy) => {
+  return hasUserEditionRightOnStudy(user, study)
 }
 
 export const canViewTransitionPlan = async (user: UserSession, study: FullStudy) => {
-  const userRightsOnStudy = getAccountRoleOnStudy(user, study)
-  return !!userRightsOnStudy
+  return hasUserEditionRightOnStudy(user, study)
 }
 
 export const canCreateAction = async (user: UserSession, study: FullStudy) => {
-  const userRightsOnStudy = getAccountRoleOnStudy(user, study)
-  return !!(userRightsOnStudy && hasEditionRights(userRightsOnStudy))
+  return hasUserEditionRightOnStudy(user, study)
+}
+
+export const canLinkStudyToTransitionPlan = async (user: UserSession, study: FullStudy) => {
+  return hasUserEditionRightOnStudy(user, study)
 }

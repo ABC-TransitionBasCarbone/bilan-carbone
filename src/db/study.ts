@@ -437,6 +437,17 @@ export const getStudyById = async (id: string, organizationVersionId: string | n
   }
   return { ...study, allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level, organizationVersionId) }
 }
+
+export const getStudyByIds = async (ids: string[]) => {
+  const studies = await prismaClient.study.findMany({
+    where: { id: { in: ids } },
+    include: fullStudyInclude,
+  })
+  return studies.map((study) => ({
+    ...study,
+    allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level, null),
+  }))
+}
 export type FullStudy = Exclude<AsyncReturnType<typeof getStudyById>, null>
 
 export const getStudyNameById = async (id: string) => {
@@ -858,4 +869,10 @@ export const createEmissionSourceTags = async (
 ) =>
   (tx ?? prismaClient).emissionSourceTag.createMany({
     data: emissionSourceTags,
+  })
+
+export const getOrganizationStudiesBeforeDate = (organizationVersionId: string, date: Date) =>
+  prismaClient.study.findMany({
+    select: { id: true, name: true },
+    where: { organizationVersionId, startDate: { lt: date } },
   })
