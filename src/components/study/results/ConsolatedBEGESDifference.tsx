@@ -217,7 +217,7 @@ const ConsolatedBEGESDifference = ({
   const unexplainedDifference = useMemo(() => {
     return (
       Math.floor(begesTotalNumber) +
-        2 -
+        1 -
         Math.floor(
           computedTotalNumber + utilisationEnDependanceValue + wasteTotalDifference + missingCaractDifference,
         ) >
