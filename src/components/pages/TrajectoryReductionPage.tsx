@@ -142,12 +142,12 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
           storageKey="trajectory-reduction"
           detailedContent={t.rich('trajectories.onboarding.detailedInfo', {
             br: () => <br />,
-            snbcLink: (chunks) => (
+            snbc: (chunks) => (
               <a href={process.env.NEXT_PUBLIC_SNBC_URL || '#'} target="_blank" rel="noopener noreferrer">
                 {chunks}
               </a>
             ),
-            sbtiLink: (chunks) => (
+            sbti: (chunks) => (
               <a href={process.env.NEXT_PUBLIC_SBTI_URL || '#'} target="_blank" rel="noopener noreferrer">
                 {chunks}
               </a>

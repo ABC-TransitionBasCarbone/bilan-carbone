@@ -41,7 +41,7 @@ const ActionsPage = ({ study, canEdit }: Props) => {
           description={t('onboarding.description')}
           storageKey="actions"
           detailedContent={t.rich('onboarding.detailedInfo', {
-            p: (chunks) => <p>{chunks}</p>,
+            br: () => <br />,
           })}
         />
       </div>
