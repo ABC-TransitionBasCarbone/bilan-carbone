@@ -34,4 +34,4 @@ export const hasAccessToBcExport = (environment: Environment) =>
 export const hasAccessToDependencyMatrix = (environment: Environment) =>
   ([Environment.TILT] as Environment[]).includes(environment)
 
-export const hasAccessToDependencyMatrixExample = (environment: Environment) => false
+export const hasAccessToDependencyMatrixExample = () => false

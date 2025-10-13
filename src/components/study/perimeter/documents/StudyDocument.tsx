@@ -60,7 +60,7 @@ const StudyDocument = ({ title, t, study, documents, canUpload = true, documentC
     }
 
     if (documentCategory === DocumentCategory.DependencyMatrix) {
-      return hasAccessToDependencyMatrixSample(environment)
+      return hasAccessToDependencyMatrixSample()
     }
     return hasAccessToStudyFlowExample(environment)
   }, [documentCategory, environment])
