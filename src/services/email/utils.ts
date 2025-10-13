@@ -21,3 +21,8 @@ export const getEnvResetLink = (path: string, token: string, env?: Environment) 
 
   return `${process.env.NEXTAUTH_URL}${route}/${token}`
 }
+
+export const getActivationInvitationLink = (email: string, env?: Environment) => {
+  const route = getEnvRoute('activation', env)
+  return `${process.env.NEXTAUTH_URL}${route}?email=${email}`
+}
