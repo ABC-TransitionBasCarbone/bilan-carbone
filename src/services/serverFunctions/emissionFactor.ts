@@ -22,7 +22,7 @@ import { unitsMatrix } from '@/services/importEmissionFactor/historyUnits'
 import { ManualEmissionFactorUnitList } from '@/utils/emissionFactors'
 import { flattenSubposts } from '@/utils/post'
 import { IsSuccess, withServerResponse } from '@/utils/serverResponse'
-import { EmissionFactorStatus, Import, Unit } from '@prisma/client'
+import { EmissionFactorStatus, Environment, Import, Unit } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { auth, dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
@@ -228,9 +228,9 @@ export const getEmissionFactorImportVersions = async (user: UserSession) =>
     }
 
     switch (user.environment) {
-      case 'cut':
+      case Environment.CUT:
         return getEmissionFactorImportVersionsCUT()
-      case 'bc':
+      case Environment.BC:
       default:
         return getEmissionFactorImportVersionsBC()
     }
