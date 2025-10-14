@@ -11,7 +11,7 @@ import EnvironmentLoader from '@/environments/core/utils/EnvironmentLoader'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { getStudyTransitionPlan, initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
 import { getStudyTotalCo2EmissionsWithDep } from '@/services/study'
-import { calculateTrajectory, SBTI_REDUCTION_RATE_15, SBTI_REDUCTION_RATE_WB2C } from '@/utils/trajectory'
+import { calculateSBTiTrajectory, SBTI_REDUCTION_RATE_15, SBTI_REDUCTION_RATE_WB2C } from '@/utils/trajectory'
 import { Typography } from '@mui/material'
 import { TransitionPlan } from '@prisma/client'
 import classNames from 'classnames'
@@ -97,16 +97,21 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
     const totalCo2 = getStudyTotalCo2EmissionsWithDep(study)
     const studyStartYear = study.startDate.getFullYear()
 
-    const trajectory15Data = calculateTrajectory({
-      baseEmissions: totalCo2,
-      studyStartYear,
-      reductionRate: SBTI_REDUCTION_RATE_15,
-    })
-
-    const trajectoryWB2CData = calculateTrajectory({
+    const trajectoryWB2CData = calculateSBTiTrajectory({
       baseEmissions: totalCo2,
       studyStartYear,
       reductionRate: SBTI_REDUCTION_RATE_WB2C,
+    })
+
+    const maxYear = selectedTrajectories.includes(TRAJECTORY_WB2C_ID)
+      ? trajectoryWB2CData[trajectoryWB2CData.length - 1].year
+      : undefined
+
+    const trajectory15Data = calculateSBTiTrajectory({
+      baseEmissions: totalCo2,
+      studyStartYear,
+      reductionRate: SBTI_REDUCTION_RATE_15,
+      maxYear,
     })
 
     return {
@@ -114,7 +119,7 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
       trajectoryWB2C: trajectoryWB2CData,
       studyStartYear,
     }
-  }, [study])
+  }, [selectedTrajectories, study])
 
   if (loading) {
     return (
