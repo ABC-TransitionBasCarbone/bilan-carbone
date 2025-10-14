@@ -41,7 +41,7 @@ describe('StudyUtils functions', () => {
   })
 
   describe('getUserRoleOnPublicStudy', () => {
-    it('sould return Validator for admin user with sufficient level', () => {
+    it('should return Validator for admin user with sufficient level', () => {
       mockIsAdmin.mockReturnValue(true)
       mockHasSufficientLevel.mockReturnValue(true)
 
@@ -50,7 +50,7 @@ describe('StudyUtils functions', () => {
       expect(res).toBe('Validator')
     })
 
-    it('sould return Reader for admin user with not sufficient level', () => {
+    it('should return Reader for admin user with not sufficient level', () => {
       mockIsAdmin.mockReturnValue(true)
       mockHasSufficientLevel.mockReturnValue(false)
 

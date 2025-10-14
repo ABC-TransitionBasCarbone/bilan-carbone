@@ -36,8 +36,8 @@ const NewStudyForm = ({ user, accounts, form, duplicateStudyId, sourceStudy }: P
 
   const tLevel = useTranslations('level')
 
-  const exports = useWatch(form).exports
-  const level = useWatch(form).level
+  const exports = useWatch({ control: form.control, name: 'exports' })
+  const level = useWatch({ control: form.control, name: 'level' })
 
   const validatorAccountOptions = useMemo(
     () =>
