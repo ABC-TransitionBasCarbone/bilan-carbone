@@ -9,9 +9,8 @@ import Image from '@/components/document/Image'
 import { FullStudy } from '@/db/study'
 import EnvironmentLoader from '@/environments/core/utils/EnvironmentLoader'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { getEmissionResults, getEmissionSourcesTotalCo2 } from '@/services/emissionSource'
 import { getStudyTransitionPlan, initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
-import { STUDY_UNIT_VALUES } from '@/utils/study'
+import { getTotalCO2EmissionsWithDependencies } from '@/services/study'
 import { calculateTrajectory, SBTI_REDUCTION_RATE_15, SBTI_REDUCTION_RATE_WB2C } from '@/utils/trajectory'
 import { Typography } from '@mui/material'
 import { TransitionPlan } from '@prisma/client'
@@ -95,15 +94,7 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
   )
 
   const trajectoryData = useMemo(() => {
-    const environment = study.organizationVersion.environment
-
-    const emissionSourcesWithEmission = study.emissionSources.map((emissionSource) => ({
-      ...emissionSource,
-      ...getEmissionResults(emissionSource, environment),
-    }))
-
-    const totalCo2InKg = getEmissionSourcesTotalCo2(emissionSourcesWithEmission)
-    const totalCo2 = totalCo2InKg / STUDY_UNIT_VALUES[study.resultsUnit]
+    const totalCo2 = getTotalCO2EmissionsWithDependencies(study)
     const studyStartYear = study.startDate.getFullYear()
 
     const trajectory15Data = calculateTrajectory({
@@ -123,7 +114,7 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
       trajectoryWB2C: trajectoryWB2CData,
       studyStartYear,
     }
-  }, [study.emissionSources, study.startDate, study.resultsUnit, study.organizationVersion.environment])
+  }, [study])
 
   if (loading) {
     return (

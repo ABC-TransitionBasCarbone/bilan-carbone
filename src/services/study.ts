@@ -725,6 +725,18 @@ export const getResultsValues = (
   }
 }
 
+export const getTotalCO2EmissionsWithDependencies = (study: FullStudy) => {
+  const environment = study.organizationVersion.environment
+
+  const emissionSourcesWithEmission = study.emissionSources.map((emissionSource) => ({
+    ...emissionSource,
+    ...getEmissionResults(emissionSource, environment),
+  }))
+
+  const totalCo2InKg = getEmissionSourcesTotalCo2(emissionSourcesWithEmission)
+  return totalCo2InKg / STUDY_UNIT_VALUES[study.resultsUnit]
+}
+
 export const getTransEnvironmentSubPost = (source: Environment, target: Environment, subPost: SubPost) => {
   if (source === target) {
     return subPost
