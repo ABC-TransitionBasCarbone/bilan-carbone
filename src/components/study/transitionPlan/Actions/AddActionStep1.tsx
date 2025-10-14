@@ -3,6 +3,7 @@ import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
 import { AddActionCommand } from '@/services/serverFunctions/study.command'
 import { MenuItem, TextField } from '@mui/material'
+import { ActionPotentialDeduction } from '@prisma/client'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
@@ -20,6 +21,7 @@ interface Props {
 const AddActionStep1 = ({ studyUnit, control, setValue }: Props) => {
   const t = useTranslations('study.transitionPlan.actions.addModal')
   const tUnit = useTranslations('study.results.units')
+  const tDeduction = useTranslations('study.transitionPlan.actions.potentialDeduction')
   const potentialDeduction = useWatch({ control, name: 'potentialDeduction' })
   const reductionStartYear = useWatch({ control, name: 'reductionStartYear' })
   const reductionEffectsStart = useWatch({ control, name: 'reductionEffectsStart' })
@@ -76,13 +78,13 @@ const AddActionStep1 = ({ studyUnit, control, setValue }: Props) => {
         name="potentialDeduction"
         fullWidth
       >
-        <MenuItem value="quality">{t('quality')}</MenuItem>
-        <MenuItem value="quantity">{t('quantity')}</MenuItem>
-        <MenuItem value="emissionSources" disabled>
-          {t('emissionSources')}
-        </MenuItem>
+        {Object.values(ActionPotentialDeduction).map((potential) => (
+          <MenuItem key={potential} value={potential} disabled={potential === ActionPotentialDeduction.EmissionSources}>
+            {tDeduction(potential)}
+          </MenuItem>
+        ))}
       </FormSelect>
-      {potentialDeduction === 'quantity' && (
+      {potentialDeduction === ActionPotentialDeduction.Quantity && (
         <>
           <div className=" flex-col grow">
             <span className="inputLabel bold mb-2">{`${t('reductionValue')} *`}</span>

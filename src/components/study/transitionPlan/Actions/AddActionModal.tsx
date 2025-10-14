@@ -31,7 +31,14 @@ const AddActionModal = ({ open, onClose, studyId, studyUnit, porters }: Props) =
     resolver: zodResolver(AddActionCommandValidation),
     mode: 'onSubmit',
     reValidateMode: 'onChange',
-    defaultValues: { studyId, actionPorter: '', nature: [], category: [], relevance: [] },
+    defaultValues: {
+      studyId,
+      potentialDeduction: undefined,
+      actionPorter: '',
+      nature: [],
+      category: [],
+      relevance: [],
+    },
   })
 
   const onSubmit = () => {

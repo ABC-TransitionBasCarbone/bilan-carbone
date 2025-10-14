@@ -928,15 +928,9 @@
           "detailedDescriptionPlaceholder": "Description détaillée",
           "potentialDeduction": "Potentiel de réduction d'émissions quantifiés",
           "potentialDeductionPlaceholder": "Sélectionnez une option",
-          "quality": "Qualité",
-          "quantity": "Quantité",
-          "emissionSources": "Sources d'émissions (à venir)",
           "reductionValue": "Valeur",
-          "reductionValuePlaceholder": "",
           "reductionStartYear": "Année de début de l'action",
-          "reductionStartYearPlaceholder": "",
           "reductionEffectsStart": "Date du début des effets",
-          "reductionEffectsStartPlaceholder": "",
           "actionPorter": "Porteur de l'action",
           "actionPorterPlaceholder": "Donnez le nom de la personne qui pilote l'action",
           "necessaryBudget": "Budget necessaire à sa mise en place (k€)",
@@ -952,27 +946,38 @@
           "facilitatorsAndObstacles": "Facilitateurs et freins potentiels à l'action",
           "additionalInformation": "Informations supplémentaires",
           "nature": "Nature de l'action",
-          "physical": "Physique",
-          "reglementary": "Réglementaire",
-          "organisational": "Organisationnelle",
-          "behavioural": "Comportementale",
           "category": " Catégories de l'action",
-          "immediate": "Immédiate",
-          "strategic": "Stratégique",
-          "priority": "Prioritaire",
-          "improvement": "Amélioration de la démarche",
-          "adaptation": "Adaption",
           "relevance": "Pour les actions d'atténuation indiquez le niveau de pertinence de l'action",
-          "offsetting": "De compensation",
-          "sequestration": "De séquestration",
-          "avoidance": "D'évitement",
-          "avoidanceFinancing": "De financement d'évitement",
-          "reductionOutsideOrganisationValueChain": "De réduction hors de la chaine de valeur de l'organisation",
-          "reductionWithinOrganisationCoreBusiness": "De réduction dans le coeur d'activité de l'organisation",
           "validation": {
             "required": "Champs requis",
             "email": "Format d'email non valide"
           }
+        },
+        "potentialDeduction": {
+          "Quality": "Qualité",
+          "Quantity": "Quantité",
+          "EmissionSources": "Sources d'émissions (à venir)"
+        },
+        "nature": {
+          "Physical": "Physique",
+          "Reglementary": "Réglementaire",
+          "Organisational": "Organisationnelle",
+          "Behavioural": "Comportementale"
+        },
+        "category": {
+          "Immediate": "Immédiate",
+          "Strategic": "Stratégique",
+          "Priority": "Prioritaire",
+          "Improvement": "Amélioration de la démarche",
+          "Adaptation": "Adaption"
+        },
+        "relevance": {
+          "Offsetting": "De compensation",
+          "Sequestration": "De séquestration",
+          "Avoidance": "D'évitement",
+          "AvoidanceFinancing": "De financement d'évitement",
+          "ReductionOutsideOrganisationValueChain": "De réduction hors de la chaine de valeur de l'organisation",
+          "ReductionWithinOrganisationCoreBusiness": "De réduction dans le coeur d'activité de l'organisation"
         },
         "onboarding": {
           "title": "Faîtes votre plan d'action pour atteindre vos objectifs",

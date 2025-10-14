@@ -1,4 +1,15 @@
-import { ControlMode, DayOfWeek, Export, Level, StudyResultUnit, StudyRole } from '@prisma/client'
+import {
+  ActionCategory,
+  ActionNature,
+  ActionPotentialDeduction,
+  ActionRelevance,
+  ControlMode,
+  DayOfWeek,
+  Export,
+  Level,
+  StudyResultUnit,
+  StudyRole,
+} from '@prisma/client'
 import dayjs from 'dayjs'
 import z from 'zod'
 import { HolidayOpeningHoursValidation, OpeningHoursValidation } from '../hours'
@@ -221,7 +232,7 @@ export const AddActionCommandBase = z.object({
   aim: z.string({ required_error: 'required' }),
   detailedDescription: z.string({ required_error: 'required' }),
   studyId: z.string().uuid(),
-  potentialDeduction: z.enum(['quality', 'quantity', 'emissionSources'], { required_error: 'required' }),
+  potentialDeduction: z.nativeEnum(ActionPotentialDeduction, { required_error: 'required' }),
   reductionValue: z.number().optional(),
   reductionStartYear: z.number().optional(),
   reductionEffectsStart: z.number().optional(),
@@ -236,24 +247,13 @@ export const AddActionCommandBase = z.object({
   performanceAim: z.number().optional(),
   facilitatorsAndObstacles: z.string().optional(),
   additionalInformation: z.string().optional(),
-  nature: z.array(z.enum(['physical', 'reglementary', 'organisational', 'behavioural'])).min(0),
-  category: z.array(z.enum(['immediate', 'strategic', 'priority', 'improvement', 'adaptation'])).min(0),
-  relevance: z
-    .array(
-      z.enum([
-        'offsetting',
-        'sequestration',
-        'avoidance',
-        'avoidanceFinancing',
-        'reductionOutsideOrganisationValueChain',
-        'reductionWithinOrganisationCoreBusiness',
-      ]),
-    )
-    .min(0),
+  nature: z.array(z.nativeEnum(ActionNature)).min(0),
+  category: z.array(z.nativeEnum(ActionCategory)).min(0),
+  relevance: z.array(z.nativeEnum(ActionRelevance)).min(0),
 })
 
 export const AddActionCommandValidation = AddActionCommandBase.superRefine((data, ctx) => {
-  if (data.potentialDeduction === 'quantity') {
+  if (data.potentialDeduction === ActionPotentialDeduction.Quantity) {
     if (!data) {
       ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'required', path: ['reductionValue'] })
     }
