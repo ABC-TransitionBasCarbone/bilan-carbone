@@ -6,7 +6,7 @@ import { EmissionFactorStatus, Import, Unit, type Prisma } from '@prisma/client'
 import { Session } from 'next-auth'
 import { prismaClient } from './client'
 import { getOrganizationVersionById } from './organization'
-import { getSourcesLatestImportVersionIdByOrganizationId } from './study'
+import { getSourcesLatestImportVersionId, getSourcesLatestImportVersionIdByOrganizationId } from './study'
 
 let cachedEmissionFactors: AsyncReturnType<typeof getDefaultEmissionFactors> = []
 
@@ -120,6 +120,12 @@ export const getAllEmissionFactors = async (
       orderBy: { createdAt: 'desc' },
     })
     versionIds = (await getSourcesLatestImportVersionIdByOrganizationId(organizationId)).map((v) => v.importVersionId)
+
+    if (versionIds.length <= 0) {
+      versionIds = (
+        await getSourcesLatestImportVersionId([Import.Legifrance, Import.BaseEmpreinte, Import.NegaOctet])
+      ).map((v) => v.id)
+    }
   }
 
   const defaultEmissionFactors = await (process.env.NO_CACHE === 'true'
