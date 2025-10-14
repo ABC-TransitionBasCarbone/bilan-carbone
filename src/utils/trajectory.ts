@@ -1,5 +1,5 @@
 export const SBTI_REDUCTION_RATE_15 = 0.042
-export const SBTI_REDUCTION_RATE_2 = 0.025
+export const SBTI_REDUCTION_RATE_WB2C = 0.025
 
 export interface TrajectoryDataPoint {
   year: number

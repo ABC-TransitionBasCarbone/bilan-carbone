@@ -12,7 +12,7 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { getEmissionResults, getEmissionSourcesTotalCo2 } from '@/services/emissionSource'
 import { getStudyTransitionPlan, initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
-import { calculateTrajectory, SBTI_REDUCTION_RATE_15, SBTI_REDUCTION_RATE_2 } from '@/utils/trajectory'
+import { calculateTrajectory, SBTI_REDUCTION_RATE_15, SBTI_REDUCTION_RATE_WB2C } from '@/utils/trajectory'
 import { Typography } from '@mui/material'
 import { TransitionPlan } from '@prisma/client'
 import classNames from 'classnames'
@@ -31,6 +31,9 @@ const TransitionPlanSelectionModal = dynamic(
   },
 )
 
+const TRAJECTORY_15_ID = '1,5'
+const TRAJECTORY_WB2C_ID = 'WB2C'
+
 interface Props {
   study: FullStudy
   canEdit: boolean
@@ -46,10 +49,10 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
   const [loading, setLoading] = useState(true)
   const [selectedTrajectories, setSelectedTrajectories] = useState<string[]>(() => {
     if (typeof window === 'undefined') {
-      return ['15']
+      return [TRAJECTORY_15_ID]
     }
     const stored = localStorage.getItem('trajectory-sbti-selected')
-    return stored ? JSON.parse(stored) : ['15']
+    return stored ? JSON.parse(stored) : [TRAJECTORY_15_ID]
   })
   const { callServerFunction } = useServerFunction()
 
@@ -109,16 +112,15 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
       reductionRate: SBTI_REDUCTION_RATE_15,
     })
 
-    const trajectory2Data = calculateTrajectory({
+    const trajectoryWB2CData = calculateTrajectory({
       baseEmissions: totalCo2,
       studyStartYear,
-      reductionRate: SBTI_REDUCTION_RATE_2,
+      reductionRate: SBTI_REDUCTION_RATE_WB2C,
     })
 
     return {
       trajectory15: trajectory15Data,
-      trajectory2: trajectory2Data,
-      years: trajectory15Data.map((d) => d.year),
+      trajectoryWB2C: trajectoryWB2CData,
       studyStartYear,
     }
   }, [study.emissionSources, study.startDate, study.resultsUnit, study.organizationVersion.environment])
@@ -134,7 +136,7 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
   if (!transitionPlan) {
     if (canEdit) {
       return (
-        <div className={classNames(styles.container, 'flex-cc', 'w100')}>
+        <div className={classNames(styles.container, 'flex-cc w100')}>
           <Box className={classNames(styles.emptyStateCard, 'flex-col align-center')}>
             <Image src="/img/CR.png" alt="Transition Plan" width={177} height={119} />
             <h5>{t('emptyState.title')}</h5>
@@ -182,7 +184,7 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
           { label: study.name, link: `/etudes/${study.id}` },
         ].filter((link) => link !== undefined)}
       />
-      <div className={classNames(styles.container, 'flex-col', 'gapped2', 'main-container', 'p2', 'pt3')}>
+      <div className={classNames(styles.container, 'flex-col gapped2 main-container p2 pt3')}>
         <Title title={t('trajectories.title')} as="h1" />
 
         <TransitionPlanOnboarding
@@ -204,14 +206,14 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
           })}
         />
 
-        <div className={classNames('flex', 'wrap', 'gapped1')}>
-          <Box className={classNames('grow', 'p125', styles.trajectoryCard, styles.disabledCard)}>
+        <div className={'flex wrap gapped1'}>
+          <Box className={classNames('grow p125', styles.trajectoryCard, styles.disabledCard)}>
             <Typography variant="h5" component="h2" fontWeight={600}>
               {t('trajectories.snbcButton')}
             </Typography>
           </Box>
 
-          <Box className={classNames('grow', 'p125', 'flex-col', 'gapped075', styles.trajectoryCard)}>
+          <Box className={classNames('grow p125 flex-col gapped075', styles.trajectoryCard)}>
             <Typography variant="h5" component="h2" fontWeight={600}>
               {t('trajectories.sbtiCard.title')}
             </Typography>
@@ -219,21 +221,21 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
               {t('trajectories.sbtiCard.description')}
             </Typography>
 
-            <div className={classNames('w100', 'flex-col', 'gapped075')}>
+            <div className={'w100 flex-col gapped075'}>
               <MultiSelect
                 label={t('trajectories.sbtiCard.methodLabel')}
                 value={selectedTrajectories}
                 onChange={setSelectedTrajectories}
                 options={[
-                  { label: t('trajectories.sbtiCard.option15'), value: '15' },
-                  { label: t('trajectories.sbtiCard.option2'), value: '2' },
+                  { label: t('trajectories.sbtiCard.option15'), value: TRAJECTORY_15_ID },
+                  { label: t('trajectories.sbtiCard.optionWB2C'), value: TRAJECTORY_WB2C_ID },
                 ]}
                 placeholder={t('trajectories.sbtiCard.placeholder')}
               />
             </div>
           </Box>
 
-          <Box className={classNames('grow', 'p125', styles.trajectoryCard, styles.disabledCard)}>
+          <Box className={classNames('grow p125', styles.trajectoryCard, styles.disabledCard)}>
             <Typography variant="h5" component="h2" fontWeight={600}>
               {t('trajectories.customButton')}
             </Typography>
@@ -241,10 +243,14 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
         </div>
 
         <TrajectoryGraph
-          trajectory15Data={trajectoryData.trajectory15}
-          trajectory2Data={trajectoryData.trajectory2}
-          trajectory15Enabled={selectedTrajectories.includes('15')}
-          trajectory2Enabled={selectedTrajectories.includes('2')}
+          trajectory15={{
+            data: trajectoryData.trajectory15,
+            enabled: selectedTrajectories.includes(TRAJECTORY_15_ID),
+          }}
+          trajectoryWB2C={{
+            data: trajectoryData.trajectoryWB2C,
+            enabled: selectedTrajectories.includes(TRAJECTORY_WB2C_ID),
+          }}
           studyStartYear={trajectoryData.studyStartYear}
         />
       </div>

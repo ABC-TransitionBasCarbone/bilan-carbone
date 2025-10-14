@@ -5,24 +5,21 @@ import { Typography } from '@mui/material'
 import { LineChart } from '@mui/x-charts/LineChart'
 import { useTranslations } from 'next-intl'
 
+interface TrajectoryData {
+  data: TrajectoryDataPoint[]
+  enabled: boolean
+}
+
 interface Props {
-  trajectory15Data: TrajectoryDataPoint[]
-  trajectory2Data: TrajectoryDataPoint[]
-  trajectory15Enabled: boolean
-  trajectory2Enabled: boolean
+  trajectory15: TrajectoryData
+  trajectoryWB2C: TrajectoryData
   studyStartYear: number
 }
 
-const TrajectoryGraph = ({
-  trajectory15Data,
-  trajectory2Data,
-  trajectory15Enabled,
-  trajectory2Enabled,
-  studyStartYear,
-}: Props) => {
+const TrajectoryGraph = ({ trajectory15, trajectoryWB2C, studyStartYear }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.graph')
 
-  const years = trajectory15Data.map((d) => d.year)
+  const years = trajectory15.data.map((d) => d.year)
   const studyStartYearIndex = years.indexOf(studyStartYear)
 
   return (
@@ -44,10 +41,10 @@ const TrajectoryGraph = ({
           },
         ]}
         series={[
-          ...(trajectory15Enabled
+          ...(trajectory15.enabled
             ? [
                 {
-                  data: trajectory15Data.map((d) => d.value),
+                  data: trajectory15.data.map((d) => d.value),
                   label: t('trajectory15'),
                   color: 'var(--trajectory-sbti-15)',
                   curve: 'linear' as const,
@@ -56,12 +53,12 @@ const TrajectoryGraph = ({
                 },
               ]
             : []),
-          ...(trajectory2Enabled
+          ...(trajectoryWB2C.enabled
             ? [
                 {
-                  data: trajectory2Data.map((d) => d.value),
-                  label: t('trajectory2'),
-                  color: 'var(--trajectory-sbti-2)',
+                  data: trajectoryWB2C.data.map((d) => d.value),
+                  label: t('trajectoryWB2C'),
+                  color: 'var(--trajectory-sbti-wb2c)',
                   curve: 'linear' as const,
                   showMark: ({ index }: { index: number }) => index === studyStartYearIndex,
                   valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),

@@ -1,5 +1,5 @@
 import { expect } from '@jest/globals'
-import { calculateTrajectory, SBTI_REDUCTION_RATE_15, SBTI_REDUCTION_RATE_2 } from './trajectory'
+import { calculateTrajectory, SBTI_REDUCTION_RATE_15, SBTI_REDUCTION_RATE_WB2C } from './trajectory'
 
 describe('calculateTrajectory', () => {
   describe('basic trajectory calculation before 2021', () => {
@@ -20,7 +20,7 @@ describe('calculateTrajectory', () => {
       const result = calculateTrajectory({
         baseEmissions: 1000,
         studyStartYear: 2020,
-        reductionRate: SBTI_REDUCTION_RATE_2,
+        reductionRate: SBTI_REDUCTION_RATE_WB2C,
       })
 
       expect(result).toHaveLength(31)
