@@ -164,14 +164,16 @@ const StudyDetailsHeader = ({
           t={tStudyDelete}
         />
       )}
-      <DuplicateStudyModal
-        studyId={study.id}
-        organizationVersionId={organizationVersionId}
-        sourceEnvironment={study.organizationVersion.environment}
-        environments={duplicableEnvironments}
-        open={duplicating}
-        onClose={() => setDuplicating(false)}
-      />
+      {duplicating && (
+        <DuplicateStudyModal
+          studyId={study.id}
+          organizationVersionId={organizationVersionId}
+          sourceEnvironment={study.organizationVersion.environment}
+          environments={duplicableEnvironments}
+          onClose={() => setDuplicating(false)}
+          open
+        />
+      )}
     </Block>
   )
 }
