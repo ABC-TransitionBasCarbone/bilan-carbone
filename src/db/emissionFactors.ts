@@ -119,7 +119,7 @@ export const getAllEmissionFactors = async (
       select: selectEmissionFactor,
       orderBy: { createdAt: 'desc' },
     })
-    versionIds = (await getSourcesLatestImportVersionIdByOrganizationId(organizationId)).map((v) => v.id)
+    versionIds = (await getSourcesLatestImportVersionIdByOrganizationId(organizationId)).map((v) => v.importVersionId)
   }
 
   const defaultEmissionFactors = await (process.env.NO_CACHE === 'true'
