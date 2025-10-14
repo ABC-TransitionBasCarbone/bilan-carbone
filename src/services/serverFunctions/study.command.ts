@@ -213,3 +213,67 @@ export const DuplicateSiteCommandValidation = z.object({
 })
 
 export type DuplicateSiteCommand = z.infer<typeof DuplicateSiteCommandValidation>
+
+export const AddActionCommandBase = z.object({
+  title: z.string({ required_error: 'required' }),
+  subSteps: z.string({ required_error: 'required' }),
+  // aim: z.array(z.string()),
+  aim: z.string({ required_error: 'required' }),
+  detailedDescription: z.string({ required_error: 'required' }),
+  studyId: z.string().uuid(),
+  potentialDeduction: z.enum(['quality', 'quantity', 'emissionSources'], { required_error: 'required' }),
+  reductionValue: z.number().optional(),
+  reductionStartYear: z.number().optional(),
+  reductionEffectsStart: z.number().optional(),
+  actionPorter: z.string().optional(),
+  necessaryBudget: z.number().optional(),
+  necesssaryRessources: z.string().optional(),
+  implementationDescription: z.string().optional(),
+  implementationAim: z.number().optional(),
+  followUpDescription: z.string().optional(),
+  followUpAim: z.number().optional(),
+  performanceDescription: z.string().optional(),
+  performanceAim: z.number().optional(),
+  facilitatorsAndObstacles: z.string().optional(),
+  additionalInformation: z.string().optional(),
+  nature: z.array(z.enum(['physical', 'reglementary', 'organisational', 'behavioural'])).min(0),
+  category: z.array(z.enum(['immediate', 'strategic', 'priority', 'improvement', 'adaptation'])).min(0),
+  relevance: z
+    .array(
+      z.enum([
+        'offsetting',
+        'sequestration',
+        'avoidance',
+        'avoidanceFinancing',
+        'reductionOutsideOrganisationValueChain',
+        'reductionWithinOrganisationCoreBusiness',
+      ]),
+    )
+    .min(0),
+})
+
+export const AddActionCommandValidation = AddActionCommandBase.superRefine((data, ctx) => {
+  if (data.potentialDeduction === 'quantity') {
+    if (!data) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'required', path: ['reductionValue'] })
+    }
+    if (!data.reductionStartYear) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'required', path: ['reductionStartYear'] })
+    }
+    if (!data.reductionEffectsStart) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'required', path: ['reductionEffectsStart'] })
+    }
+    if (data.actionPorter !== '') {
+      const emailValidation = z
+        .string()
+        .email()
+        .transform((val) => val.toLowerCase())
+        .safeParse(data.actionPorter)
+      if (!emailValidation.success) {
+        ctx.addIssue({ code: 'custom', path: ['actionPorter'], message: 'email' })
+      }
+    }
+  }
+})
+
+export type AddActionCommand = z.infer<typeof AddActionCommandValidation>

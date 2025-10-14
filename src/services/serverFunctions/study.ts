@@ -13,6 +13,7 @@ import {
   getAccountByEmailAndEnvironment,
   getAccountByEmailAndOrganizationVersionId,
   getAccountsByUserIdsAndEnvironment,
+  getAccountsFromOrganization,
   getAccountsUserLevel,
 } from '@/db/account'
 import { prismaClient } from '@/db/client'
@@ -2194,4 +2195,24 @@ export const duplicateSiteAndEmissionSources = async (command: DuplicateSiteComm
       }
       return
     })
+  })
+
+export const getStudyOrganizationMembers = async (studyId: string) =>
+  withServerResponse('getStudyOrganizationMembers', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const userOrganizationId = session.user.organizationVersionId
+    const study = await getStudyById(studyId, userOrganizationId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    if (
+      study.organizationVersion.id !== userOrganizationId &&
+      study.organizationVersion.parentId !== userOrganizationId
+    ) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    return getAccountsFromOrganization(study.organizationVersionId)
   })

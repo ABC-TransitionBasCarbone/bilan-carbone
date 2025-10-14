@@ -6,6 +6,10 @@ import ActionFilters from './ActionFilters'
 
 interface Props {
   actions: unknown[]
+  // transitionPlans: TransitionPlan[]
+  studyId: string
+  studyUnit: string
+  porters: { label: string; value: string }[]
 }
 
 const fuseOptions = {
@@ -14,7 +18,7 @@ const fuseOptions = {
   isCaseSensitive: false,
 }
 
-const Actions = ({ actions }: Props) => {
+const Actions = ({ actions, studyId, studyUnit, porters }: Props) => {
   const [filter, setFilter] = useState('')
 
   const fuse = useMemo(() => new Fuse(actions, fuseOptions), [actions])
@@ -28,7 +32,9 @@ const Actions = ({ actions }: Props) => {
     return searchResults
   }, [actions, filter, fuse])
 
-  return <ActionFilters search={filter} setSearch={setFilter} />
+  return (
+    <ActionFilters search={filter} setSearch={setFilter} studyId={studyId} studyUnit={studyUnit} porters={porters} />
+  )
 }
 
 export default Actions

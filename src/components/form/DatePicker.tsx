@@ -13,6 +13,7 @@ interface Props<T extends FieldValues> {
   translation: (slug: string) => string
   ['data-testid']?: string
   clearable?: boolean
+  fullWidth?: boolean
 }
 
 export const FormDatePicker = <T extends FieldValues>({
@@ -21,6 +22,7 @@ export const FormDatePicker = <T extends FieldValues>({
   translation,
   'data-testid': dataTestId,
   clearable = false,
+  fullWidth = false,
   ...datePickerProps
 }: Props<T> & DatePickerProps<true>) => {
   return (
@@ -28,7 +30,7 @@ export const FormDatePicker = <T extends FieldValues>({
       name={name}
       control={control}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
-        <FormControl error={!!error}>
+        <FormControl error={!!error} fullWidth={fullWidth}>
           <DatePicker
             {...datePickerProps}
             slotProps={{
@@ -39,7 +41,7 @@ export const FormDatePicker = <T extends FieldValues>({
               },
               field: { clearable },
             }}
-            sx={{ backgroundColor: 'white' }}
+            sx={{ backgroundColor: 'white', flex: '1' }}
             onChange={(date) => {
               if (date && date.isValid()) {
                 onChange(date.utc(true).format())

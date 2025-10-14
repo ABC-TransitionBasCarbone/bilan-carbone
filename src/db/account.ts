@@ -108,7 +108,14 @@ export type OrganizationWithSites = AsyncReturnType<typeof getAccountOrganizatio
 
 export const getAccountFromUserOrganization = (user: UserSession) =>
   prismaClient.account.findMany({ ...findUserInfo(user), orderBy: { user: { email: 'asc' } } })
-export type TeamMember = AsyncReturnType<typeof getAccountFromUserOrganization>[0]
+export type TeamMember = AsyncReturnType<typeof getAccountFromUserOrganization>[number]
+
+export const getAccountsFromOrganization = (organizationVersionId: string) =>
+  prismaClient.account.findMany({
+    select: { user: { select: { email: true, firstName: true, lastName: true } } },
+    where: { organizationVersionId },
+    orderBy: { user: { email: 'asc' } },
+  })
 
 export const addAccount = async (account: Prisma.AccountCreateInput & { role: Exclude<Role, 'SUPER_ADMIN'> }) => {
   const deactivatedFeaturesRestrictions = await getDeactivableFeatureRestrictions(DeactivatableFeature.Creation)

@@ -11,9 +11,10 @@ import styles from './TrajectoryReductionPage.module.css'
 
 interface Props {
   study: FullStudy
+  porters: { label: string; value: string }[]
 }
 
-const ActionsPage = ({ study }: Props) => {
+const ActionsPage = ({ study, porters }: Props) => {
   const t = useTranslations('study.transitionPlan.actions')
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
@@ -45,7 +46,7 @@ const ActionsPage = ({ study }: Props) => {
           })}
         />
 
-        <Actions actions={[]} />
+        <Actions actions={[]} studyId={study.id} studyUnit={study.resultsUnit} porters={porters} />
       </div>
     </>
   )

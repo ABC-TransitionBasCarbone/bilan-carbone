@@ -10,11 +10,14 @@ import AddActionModal from './AddActionModal'
 interface Props {
   search: string
   setSearch: (search: string) => void
+  studyId: string
+  studyUnit: string
+  porters: { label: string; value: string }[]
 }
 
-const ActionFilters = ({ search, setSearch }: Props) => {
+const ActionFilters = ({ search, setSearch, studyId, studyUnit, porters }: Props) => {
   const t = useTranslations('study.transitionPlan.actions')
-  const [addAction, setAddAction] = useState(false)
+  const [addAction, setAddAction] = useState(!false)
 
   return (
     <div className="grow justify-between align-center">
@@ -26,8 +29,14 @@ const ActionFilters = ({ search, setSearch }: Props) => {
         placeholder={t('search')}
         data-testid="actions-filter"
       />
-      <Button onClick={() => setAddAction(!addAction)}>{t('add')}</Button>
-      <AddActionModal open={addAction} onClose={() => setAddAction(false)} />
+      <Button onClick={() => setAddAction((prev) => !prev)}>{t('add')}</Button>
+      <AddActionModal
+        open={addAction}
+        onClose={() => setAddAction(false)}
+        studyId={studyId}
+        studyUnit={studyUnit}
+        porters={porters}
+      />
     </div>
   )
 }
