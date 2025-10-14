@@ -1,3 +1,33 @@
+enum ActionNature {
+  Physical
+  Reglementary
+  Organisational
+  Behavioural
+}
+
+enum ActionCategory {
+  Immediate
+  Strategic
+  Priority
+  Improvement
+  Adaptation
+}
+
+enum ActionRelevance {
+  Offsetting
+  Sequestration
+  Avoidance
+  AvoidanceFinancing
+  ReductionOutsideOrganisationValueChain
+  ReductionWithinOrganisationCoreBusiness
+}
+
+enum ActionPotentialDeduction {
+	Quality
+	Quantity
+	EmissionSources
+}
+
 model TransitionPlan {
   id String @id @default(uuid())
 
@@ -25,4 +55,3 @@ model TransitionPlanStudy {
   @@id([transitionPlanId, studyId])
   @@map("transition_plan_studies")
 }
-
