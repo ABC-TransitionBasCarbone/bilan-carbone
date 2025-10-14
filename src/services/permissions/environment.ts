@@ -34,4 +34,6 @@ export const hasAccessToBcExport = (environment: Environment) =>
 export const hasAccessToDependencyMatrix = (environment: Environment) =>
   ([Environment.TILT] as Environment[]).includes(environment)
 
+// environnement is not used but kept for consistency
+// eslint-disable-next-line no-use-before-define
 export const hasAccessToDependencyMatrixExample = (environment: Environment) => false
