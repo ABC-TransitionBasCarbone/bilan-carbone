@@ -4,6 +4,7 @@ import { FullStudy, getStudyById } from '@/db/study'
 import {
   createAction,
   createTransitionPlan,
+  getActions,
   getOrganizationTransitionPlans,
   getTransitionPlanById,
   getTransitionPlanByStudyId,
@@ -132,4 +133,28 @@ export const addAction = async (command: AddActionCommand) =>
       throw new Error(NOT_AUTHORIZED)
     }
     await createAction(command)
+  })
+
+export const getStudyActions = async (studyId: string) =>
+  withServerResponse('getStudyActions', async () => {
+    const session = await dbActualizedAuth()
+
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study || !getAccountRoleOnStudy(session.user, study)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (
+      !(await isDeactivableFeatureActiveForEnvironment(
+        DeactivatableFeature.TransitionPlan,
+        study.organizationVersion.environment,
+      ))
+    ) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    return getActions(studyId)
   })

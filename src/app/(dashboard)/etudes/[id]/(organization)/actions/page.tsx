@@ -3,9 +3,10 @@ import { StudyProps } from '@/components/hoc/withStudy'
 import withStudyDetails from '@/components/hoc/withStudyDetails'
 import withTransitionPlan from '@/components/hoc/withTransitionPlan'
 import ActionsPage from '@/components/pages/ActionsPage'
+import NotFound from '@/components/pages/NotFound'
 import { hasTransitionPlan } from '@/db/transitionPlan'
 import { getStudyOrganizationMembers } from '@/services/serverFunctions/study'
-import { getStudyTransitionPlan } from '@/services/serverFunctions/transitionPlan'
+import { getStudyActions, getStudyTransitionPlan } from '@/services/serverFunctions/transitionPlan'
 import { uniqBy } from '@/utils/array'
 import { redirect } from 'next/navigation'
 
@@ -15,9 +16,10 @@ const Actions = async ({ study }: StudyProps) => {
     redirect(`/etudes/${study.id}/trajectoires`)
   }
 
-  const [transitionPlan, organizationMembers] = await Promise.all([
+  const [transitionPlan, organizationMembers, actions] = await Promise.all([
     getStudyTransitionPlan(study),
     getStudyOrganizationMembers(study.id),
+    getStudyActions(study.id),
   ])
 
   const mappedOrganizationMembers = organizationMembers.success
@@ -31,7 +33,11 @@ const Actions = async ({ study }: StudyProps) => {
       value: user.email,
     }))
 
-  return <ActionsPage study={study} porters={uniqBy(porters, 'value')} />
+  if (!actions.success) {
+    return <NotFound />
+  }
+
+  return <ActionsPage study={study} actions={actions.data} porters={uniqBy(porters, 'value')} />
 }
 
 export default withAuth(withStudyDetails(withTransitionPlan(Actions)))

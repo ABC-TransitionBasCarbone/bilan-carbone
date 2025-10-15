@@ -929,6 +929,14 @@
         "title": "Plan d'action",
         "search": "Cherchez votre action ici",
         "add": "Ajouter une action",
+        "table": {
+          "title": "Titre",
+          "actionType": "Type d'action",
+          "targetYear": "Année cible",
+          "potential": "Potentiel de réduction",
+          "porter": "Porteur",
+          "budget": "Budget"
+        },
         "addModal": {
           "add": "Ajouter une action",
           "subTitle": "Afin d'ajouter une action à votre plan d'actions, vous devez remplir les informations obligatoires",
@@ -973,8 +981,8 @@
           }
         },
         "potentialDeduction": {
-          "Quality": "Qualité",
-          "Quantity": "Quantité",
+          "Quality": "Qualitative",
+          "Quantity": "Quantitative",
           "EmissionSources": "Sources d'émissions (à venir)"
         },
         "nature": {
@@ -1939,5 +1947,10 @@
       "contributorInvitation": "Demande de contribution sur l'étude {studyName}",
       "addedUsersByFile": "Autorisation pour l'ajout d'utilisateurs"
     }
+  },
+  "table": {
+    "page": "Page {page} sur {total}",
+    "goTo": "Aller à la page",
+    "items": "Élements par page"
   }
 }

@@ -9,6 +9,7 @@ import { addAction } from '@/services/serverFunctions/transitionPlan'
 import { zodResolver } from '@hookform/resolvers/zod'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './Actions.module.css'
@@ -33,6 +34,8 @@ const AddActionModal = ({ open, onClose, studyId, studyUnit, porters }: Props) =
   const [toast, setToast] = useState<{ text: string; color: ToastColors }>(emptyToast)
   const t = useTranslations('study.transitionPlan.actions.addModal')
 
+  const router = useRouter()
+
   const { control, formState, getValues, setValue, reset, handleSubmit } = useForm<AddActionCommand>({
     resolver: zodResolver(AddActionCommandValidation),
     mode: 'onSubmit',
@@ -53,6 +56,7 @@ const AddActionModal = ({ open, onClose, studyId, studyUnit, porters }: Props) =
       onClose()
       reset()
       setStep(1)
+      router.refresh()
     } else {
       onClose()
       setToast({ text: t(res.errorMessage), color: 'error' })

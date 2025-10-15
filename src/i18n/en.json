@@ -929,6 +929,14 @@
         "title": "Action plan",
         "search": "Search for your action here",
         "add": "Add an action",
+        "table": {
+          "title": "Title",
+          "actionType": "Action type",
+          "targetYear": "Target year",
+          "potential": "Reduction potential",
+          "porter": "Porter",
+          "budget": "Budget"
+        },
         "addModal": {
           "add": "Add an action",
           "subTitle": "To add an action to your action plan, you must fill in the required information",
@@ -973,8 +981,8 @@
           }
         },
         "potentialDeduction": {
-          "Quality": "Quality",
-          "Quantity": "Quantity",
+          "Quality": "Qualitative",
+          "Quantity": "Quantitative",
           "EmissionSources": "Emission sources (coming soon)"
         },
         "nature": {
@@ -1939,5 +1947,10 @@
       "contributorInvitation": "Contribution request on the study {studyName}",
       "addedUsersByFile": "Authorization for user import"
     }
+  },
+  "table": {
+    "page": "Page {page} of {total}",
+    "goTo": "Go to page",
+    "items": "Items per page"
   }
 }
