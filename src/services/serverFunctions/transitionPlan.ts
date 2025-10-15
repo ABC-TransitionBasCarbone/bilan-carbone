@@ -11,11 +11,12 @@ import {
 } from '@/db/transitionPlan'
 import { ApiResponse, withServerResponse } from '@/utils/serverResponse'
 import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
-import { TransitionPlan } from '@prisma/client'
+import { DeactivatableFeature, TransitionPlan } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { auth, dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canCreateAction, canViewTransitionPlan } from '../permissions/study'
+import { isDeactivableFeatureActiveForEnvironment } from './deactivableFeatures'
 import { AddActionCommand } from './study.command'
 
 export const getStudyTransitionPlan = async (study: FullStudy): Promise<ApiResponse<TransitionPlan | null>> =>
@@ -122,5 +123,13 @@ export const addAction = async (command: AddActionCommand) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
+    if (
+      !(await isDeactivableFeatureActiveForEnvironment(
+        DeactivatableFeature.TransitionPlan,
+        study.organizationVersion.environment,
+      ))
+    ) {
+      throw new Error(NOT_AUTHORIZED)
+    }
     await createAction(command)
   })

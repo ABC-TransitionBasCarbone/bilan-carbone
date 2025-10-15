@@ -948,6 +948,7 @@
           "nature": "Nature de l'action",
           "category": " Catégories de l'action",
           "relevance": "Pour les actions d'atténuation indiquez le niveau de pertinence de l'action",
+          "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
           "validation": {
             "required": "Champs requis",
             "email": "Format d'email non valide"

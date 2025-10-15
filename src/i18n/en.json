@@ -948,6 +948,7 @@
           "nature": "Nature of the action",
           "category": "Categories of action",
           "relevance": "For mitigation actions, indicate the level of relevance of the action",
+          "Not authorized": "You are not allowed to do this action",
           "validation": {
             "required": "Champs requis",
             "email": "Format d'email non valide"
