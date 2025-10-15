@@ -370,7 +370,7 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
     return (
       <tr
         key={row.id}
-        data-testid="study-contributors-table-line"
+        data-testid="study-contributors-table-row"
         className={isParentRow ? styles.parentRow : styles.childRow}
       >
         {row.getVisibleCells().map((cell) => (
