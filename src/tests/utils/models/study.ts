@@ -279,6 +279,7 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
       feTemporalRepresentativeness: null,
       feCompleteness: null,
       contributor: null,
+      createdAt: new Date(),
     },
   ],
   allowedUsers: [
