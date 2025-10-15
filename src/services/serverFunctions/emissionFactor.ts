@@ -74,7 +74,10 @@ export const getEmissionFactors = async (studyId?: string, withCut: boolean = fa
       emissionFactors = await getAllEmissionFactors(emissionFactorOrganizationId, studyId, withCut)
     } else {
       const organizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
-      emissionFactors = await getAllEmissionFactors(organizationVersion?.organizationId || null, undefined, withCut)
+      if (!organizationVersion?.organizationId) {
+        throw Error('Organization version does not exist')
+      }
+      emissionFactors = await getAllEmissionFactors(organizationVersion.organizationId, undefined, withCut)
     }
 
     return emissionFactors

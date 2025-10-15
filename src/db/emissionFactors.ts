@@ -91,11 +91,7 @@ const getCachedDefaultEmissionFactors = async (versionIds?: string[]) => {
   return emissionFactors.filter((emissionFactor) => filterVersionedEmissionFactor(emissionFactor, versionIds))
 }
 
-export const getAllEmissionFactors = async (
-  organizationId: string | null,
-  studyId?: string,
-  withCut: boolean = false,
-) => {
+export const getAllEmissionFactors = async (organizationId: string, studyId?: string, withCut: boolean = false) => {
   let versionIds
   let studyOldEmissionFactors: Awaited<ReturnType<typeof getDefaultEmissionFactors>> = []
   let organizationEmissionFactor: Awaited<ReturnType<typeof getDefaultEmissionFactors>> = []
@@ -113,20 +109,26 @@ export const getAllEmissionFactors = async (
       .filter((id) => id !== null)
 
     studyOldEmissionFactors = await getEmissionFactorsFromIdsExceptVersions(selectedEmissionFactors, versionIds)
-  } else if (organizationId) {
-    organizationEmissionFactor = await prismaClient.emissionFactor.findMany({
-      where: { organizationId },
-      select: selectEmissionFactor,
-      orderBy: { createdAt: 'desc' },
-    })
+  } else {
     versionIds = (await getSourcesLatestImportVersionIdByOrganizationId(organizationId)).map((v) => v.importVersionId)
 
     if (versionIds.length <= 0) {
       versionIds = (
-        await getSourcesLatestImportVersionId([Import.Legifrance, Import.BaseEmpreinte, Import.NegaOctet])
+        await getSourcesLatestImportVersionId([
+          Import.Manual,
+          Import.Legifrance,
+          Import.BaseEmpreinte,
+          Import.NegaOctet,
+        ])
       ).map((v) => v.id)
     }
   }
+
+  organizationEmissionFactor = await prismaClient.emissionFactor.findMany({
+    where: { organizationId },
+    select: selectEmissionFactor,
+    orderBy: { createdAt: 'desc' },
+  })
 
   const defaultEmissionFactors = await (process.env.NO_CACHE === 'true'
     ? getDefaultEmissionFactors(versionIds)
