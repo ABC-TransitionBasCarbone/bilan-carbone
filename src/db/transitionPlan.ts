@@ -1,3 +1,4 @@
+import { AddActionCommand } from '@/services/serverFunctions/study.command'
 import { TransitionPlan, TransitionPlanStudy } from '@prisma/client'
 import { prismaClient } from './client'
 
@@ -70,3 +71,5 @@ export const hasTransitionPlan = async (studyId: string): Promise<boolean> => {
   })
   return count > 0
 }
+
+export const createAction = async (data: AddActionCommand) => prismaClient.action.create({ data })

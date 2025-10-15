@@ -17,7 +17,7 @@ interface Props {
 
 const ActionFilters = ({ search, setSearch, studyId, studyUnit, porters }: Props) => {
   const t = useTranslations('study.transitionPlan.actions')
-  const [addAction, setAddAction] = useState(!false)
+  const [addAction, setAddAction] = useState(false)
 
   return (
     <div className="grow justify-between align-center">

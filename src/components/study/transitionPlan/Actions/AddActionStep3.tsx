@@ -37,6 +37,7 @@ const AddActionStep1 = ({ control, setValue, porters }: Props) => {
         data-testid="add-action-actionPorter"
       />
       <FormTextField
+        type="number"
         control={control}
         translation={t}
         name="necessaryBudget"

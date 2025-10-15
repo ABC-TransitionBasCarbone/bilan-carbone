@@ -4,7 +4,6 @@ import { FormTextField } from '@/components/form/TextField'
 import { AddActionCommand } from '@/services/serverFunctions/study.command'
 import { MenuItem, TextField } from '@mui/material'
 import { ActionPotentialDeduction } from '@prisma/client'
-import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import { useEffect } from 'react'
@@ -57,14 +56,6 @@ const AddActionStep1 = ({ studyUnit, control, setValue }: Props) => {
       <FormTextField
         control={control}
         translation={t}
-        name="aim"
-        label={`${t('aim')} *`}
-        placeholder={t('aimPlaceholder')}
-        data-testid="add-action-aim"
-      />
-      <FormTextField
-        control={control}
-        translation={t}
         name="detailedDescription"
         label={`${t('detailedDescription')} *`}
         placeholder={t('detailedDescriptionPlaceholder')}
@@ -88,7 +79,7 @@ const AddActionStep1 = ({ studyUnit, control, setValue }: Props) => {
         <>
           <div className=" flex-col grow">
             <span className="inputLabel bold mb-2">{`${t('reductionValue')} *`}</span>
-            <div className={classNames('flex grow relative')}>
+            <div className="flex grow relative">
               <TextField
                 type="number"
                 className="grow"
@@ -104,7 +95,7 @@ const AddActionStep1 = ({ studyUnit, control, setValue }: Props) => {
           <div className="flex grow gapped">
             <div className="flex-col grow">
               <span className="inputLabel bold mb-2">{`${t('reductionStartYear')} *`}</span>
-              <div className={classNames('flex grow relative')}>
+              <div className="flex grow relative">
                 <FormDatePicker
                   control={control}
                   className="grow"
@@ -119,7 +110,7 @@ const AddActionStep1 = ({ studyUnit, control, setValue }: Props) => {
             </div>
             <div className="flex-col grow">
               <span className="inputLabel bold mb-2">{`${t('reductionEffectsStart')} *`}</span>
-              <div className={classNames('flex grow relative')}>
+              <div className="flex grow relative">
                 <FormDatePicker
                   control={control}
                   translation={t}

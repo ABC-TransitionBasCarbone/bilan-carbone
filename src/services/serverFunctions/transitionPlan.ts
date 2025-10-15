@@ -2,6 +2,7 @@
 
 import { FullStudy, getStudyById } from '@/db/study'
 import {
+  createAction,
   createTransitionPlan,
   getOrganizationTransitionPlans,
   getTransitionPlanById,
@@ -12,9 +13,10 @@ import { ApiResponse, withServerResponse } from '@/utils/serverResponse'
 import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
 import { TransitionPlan } from '@prisma/client'
 import { UserSession } from 'next-auth'
-import { auth } from '../auth'
+import { auth, dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
-import { canViewTransitionPlan } from '../permissions/study'
+import { canCreateAction, canViewTransitionPlan } from '../permissions/study'
+import { AddActionCommand } from './study.command'
 
 export const getStudyTransitionPlan = async (study: FullStudy): Promise<ApiResponse<TransitionPlan | null>> =>
   withServerResponse('getStudyTransitionPlan', async () => {
@@ -106,3 +108,19 @@ export const duplicateTransitionPlan = async (
 
   return createTransitionPlan(targetStudyId)
 }
+
+export const addAction = async (command: AddActionCommand) =>
+  withServerResponse('addAction', async () => {
+    const session = await dbActualizedAuth()
+
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(command.studyId, session.user.organizationVersionId)
+    if (!study || !canCreateAction(session.user, study)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await createAction(command)
+  })

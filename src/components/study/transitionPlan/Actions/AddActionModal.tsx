@@ -4,6 +4,7 @@ import LoadingButton from '@/components/base/LoadingButton'
 import Stepper from '@/components/base/Stepper'
 import Modal from '@/components/modals/Modal'
 import { AddActionCommand, AddActionCommandValidation } from '@/services/serverFunctions/study.command'
+import { addAction } from '@/services/serverFunctions/transitionPlan'
 import { zodResolver } from '@hookform/resolvers/zod'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -27,7 +28,7 @@ const AddActionModal = ({ open, onClose, studyId, studyUnit, porters }: Props) =
   const [step, setStep] = useState(1)
   const t = useTranslations('study.transitionPlan.actions.addModal')
 
-  const { control, formState, getValues, setValue, handleSubmit } = useForm<AddActionCommand>({
+  const { control, formState, getValues, setValue, reset, handleSubmit } = useForm<AddActionCommand>({
     resolver: zodResolver(AddActionCommandValidation),
     mode: 'onSubmit',
     reValidateMode: 'onChange',
@@ -41,8 +42,12 @@ const AddActionModal = ({ open, onClose, studyId, studyUnit, porters }: Props) =
     },
   })
 
-  const onSubmit = () => {
-    console.log('onSubmit : ', getValues())
+  const onSubmit = async () => {
+    const res = await addAction(getValues())
+    if (res.success) {
+      reset()
+      onClose()
+    }
   }
 
   return (
