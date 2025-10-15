@@ -6,7 +6,6 @@ import ActionFilters from './ActionFilters'
 
 interface Props {
   actions: unknown[]
-  // transitionPlans: TransitionPlan[]
   studyId: string
   studyUnit: string
   porters: { label: string; value: string }[]
