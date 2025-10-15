@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 
+import BaseTable from '@/components/base/Table'
 import { canEditEmissionFactor } from '@/services/permissions/emissionFactor'
 import { Post, subPostsByPost } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
@@ -21,11 +22,9 @@ import {
   FormControl,
   FormControlLabel,
   FormLabel,
-  InputLabel,
   ListItemText,
   MenuItem,
   Button as MuiButton,
-  OutlinedInput,
   Select,
   SelectChangeEvent,
   Switch,
@@ -46,12 +45,13 @@ import {
   getExpandedRowModel,
   getPaginationRowModel,
   PaginationState,
+  Row,
   useReactTable,
 } from '@tanstack/react-table'
 import classNames from 'classnames'
 import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'
-import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Button from '../base/Button'
 import DebouncedInput from '../base/DebouncedInput'
 import MultiSelectAll from '../base/MultiSelectAll'
@@ -377,15 +377,6 @@ const EmissionFactorsTable = ({
     table.toggleAllRowsExpanded(false)
   }, [table, data])
 
-  const onPaginationChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const page = e.target.value ? Number(e.target.value) - 1 : 0
-    if (page >= table.getPageCount()) {
-      table.setPageIndex(table.getPageCount() - 1)
-    } else {
-      table.setPageIndex(page)
-    }
-  }
-
   const selectSource = (event: SelectChangeEvent<typeof filteredSources>) => {
     const {
       target: { value },
@@ -469,238 +460,187 @@ const EmissionFactorsTable = ({
     [data, getLocationLabel],
   )
 
+  const Row = (row: Row<EmissionFactorWithMetaData>) => {
+    const lines = [
+      <tr key={row.id} className={classNames(styles.line, { [styles.open]: row.getIsExpanded() })}>
+        {row.getVisibleCells().map((cell) => (
+          <td key={cell.id} data-testid={`cell-emission-${cell.column.id}`}>
+            {cell.column.id === 'actions' ? (
+              <div className={styles.cellDiv}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</div>
+            ) : (
+              <div className={styles.cellButton} onClick={() => row.toggleExpanded()}>
+                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+              </div>
+            )}
+          </td>
+        ))}
+      </tr>,
+    ]
+    if (row.getIsExpanded()) {
+      lines.push(
+        <tr key={`${row.id}-details`}>
+          <td colSpan={columns.length} className={classNames(styles.detail, 'p1')}>
+            <EmissionFactorDetails emissionFactor={row.original} />
+          </td>
+        </tr>,
+      )
+    }
+    return lines
+  }
+
   return (
     <>
-      {t('subTitle')}
-      <div ref={filtersRef} className={classNames(styles.filters, 'align-center wrap mt-2 mb1')}>
-        {displayFilters && (
-          <>
-            <FormControl>
-              <FormLabel id="emission-factors-filter-search" component="legend">
-                {t('search')}
-              </FormLabel>
-              <DebouncedInput
-                className={styles.searchInput}
-                debounce={200}
-                value={filter}
-                onChange={setFilter}
-                placeholder={t('searchPlaceholder')}
-                data-testid="emission-factor-search-input"
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel id="emission-factors-filter-location" component="legend">
-                {t('locationSearch')}
-              </FormLabel>
-              <Autocomplete
-                value={locationFilter}
-                options={locationOptions}
-                onChange={(_, option) => setLocationFilter(option || '')}
-                onInputChange={(_, newInputValue) => setLocationFilter(newInputValue)}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    placeholder={t('locationSearchPlaceholder')}
-                    sx={{
-                      minWidth: '20rem',
-                      '& .MuiOutlinedInput-root': { '& fieldset': { borderRadius: '0.25rem' } },
-                      '& .MuiInputBase-input': { color: 'black' },
-                    }}
-                  />
-                )}
-              />
-            </FormControl>
-            <FormControl className={styles.selector}>
-              <FormLabel id="emissions-sources-selector" component="legend">
-                {t('sources')}
-              </FormLabel>
-              <Select
-                id="emissions-sources-selector"
-                labelId="emissions-sources-selector"
-                value={filteredSources}
-                onChange={selectSource}
-                renderValue={statusSelectorRenderValue}
-                multiple
-              >
-                {sortedImportVersions.map((importVersion) => (
-                  <MenuItem key={`source-item-${importVersion.id}`} value={importVersion.id}>
-                    <Checkbox checked={filteredSources.includes(importVersion.id)} />
-                    <ListItemText primary={getEmissionVersionLabel(importVersion)} />
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl className={styles.selector}>
-              <FormLabel id="emissions-unit-selector" component="legend">
-                {t('units')}
-              </FormLabel>
-              <MultiSelectAll
-                id="emissions-unit"
-                renderValue={unitsSelectorRenderValue}
-                value={filteredUnits}
-                allValues={initialSelectedUnits.filter((unit) => unit != 'all')}
-                setValues={setFilteredUnits}
-                t={tUnits}
-              />
-            </FormControl>
-            <FormControl className={styles.selector}>
-              <FormLabel id="emissions-subposts-selector" component="legend">
-                {t('subPosts')}
-              </FormLabel>
-              <Select
-                id="emissions-subposts-selector"
-                labelId="emissions-subposts-selector"
-                value={filteredSubPosts}
-                renderValue={subPostsSelectorRenderValue}
-                multiple
-              >
-                <MenuItem
-                  key="subpost-item-all"
-                  className={allSelectedSubPosts ? 'Mui-selected' : ''} // dirty-hack because selected does not work on this option
-                  onClick={selectAllSubPosts}
+      <BaseTable
+        table={table}
+        t={t}
+        title="subTitle"
+        paginations={[25, 50, 100, 200, 500]}
+        className={classNames('grow', { [styles.modalTable]: fromModal })}
+        customRow={Row}
+        testId="emissionfactors"
+      >
+        <div ref={filtersRef} className={classNames(styles.filters, 'align-center wrap mt-2 mb1')}>
+          {displayFilters && (
+            <>
+              <FormControl>
+                <FormLabel id="emission-factors-filter-search" component="legend">
+                  {t('search')}
+                </FormLabel>
+                <DebouncedInput
+                  className={styles.searchInput}
+                  debounce={200}
+                  value={filter}
+                  onChange={setFilter}
+                  placeholder={t('searchPlaceholder')}
+                  data-testid="emission-factor-search-input"
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel id="emission-factors-filter-location" component="legend">
+                  {t('locationSearch')}
+                </FormLabel>
+                <Autocomplete
+                  value={locationFilter}
+                  options={locationOptions}
+                  onChange={(_, option) => setLocationFilter(option || '')}
+                  onInputChange={(_, newInputValue) => setLocationFilter(newInputValue)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      placeholder={t('locationSearchPlaceholder')}
+                      sx={{
+                        minWidth: '20rem',
+                        '& .MuiOutlinedInput-root': { '& fieldset': { borderRadius: '0.25rem' } },
+                        '& .MuiInputBase-input': { color: 'black' },
+                      }}
+                    />
+                  )}
+                />
+              </FormControl>
+              <FormControl className={styles.selector}>
+                <FormLabel id="emissions-sources-selector" component="legend">
+                  {t('sources')}
+                </FormLabel>
+                <Select
+                  id="emissions-sources-selector"
+                  labelId="emissions-sources-selector"
+                  value={filteredSources}
+                  onChange={selectSource}
+                  renderValue={statusSelectorRenderValue}
+                  multiple
                 >
-                  <Checkbox checked={allSelectedSubPosts} />
-                  <ListItemText primary={tPosts(allSelectedSubPosts ? 'unselectAll' : 'selectAll')} />
-                </MenuItem>
-                {Object.values(envPosts).map((post) => (
-                  <div key={`subpostGroup-${post}`}>
-                    <MenuItem key={`subpost-${post}`} selected={areAllSelected(post)} onClick={() => selectPost(post)}>
-                      <Checkbox checked={areAllSelected(post)} />
-                      <ListItemText primary={tPosts(post)} />
+                  {sortedImportVersions.map((importVersion) => (
+                    <MenuItem key={`source-item-${importVersion.id}`} value={importVersion.id}>
+                      <Checkbox checked={filteredSources.includes(importVersion.id)} />
+                      <ListItemText primary={getEmissionVersionLabel(importVersion)} />
                     </MenuItem>
-                    {subPostsByPost[post].map((subPost) => (
-                      <MenuItem
-                        key={`subpost-${subPost}`}
-                        className={styles.subPostItem}
-                        selected={filteredSubPosts.includes(subPost)}
-                        onClick={() => selectSubPost(subPost)}
-                      >
-                        <Checkbox checked={filteredSubPosts.includes(subPost)} />
-                        <ListItemText primary={tPosts(subPost)} />
-                      </MenuItem>
-                    ))}
-                  </div>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl className={styles.selector}>
-              <FormLabel id="archived-emissions-factors-radio-group-label" component="legend">
-                {t('displayArchived')}
-              </FormLabel>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={displayArchived}
-                    data-testid="archived-emissions-factors-switch"
-                    onChange={(event) => setDisplayArchived(event.target.checked)}
-                  />
-                }
-                label={t(displayArchived ? 'yes' : 'no')}
-              />
-            </FormControl>
-          </>
-        )}
-        {fromModal && (
-          <div className={classNames({ [styles.hideFiltersButton]: displayHideButton })}>
-            <Button onClick={() => setDisplayFilters(!displayFilters)}>
-              {t(displayFilters ? 'hideFilters' : 'displayFilters')}
-            </Button>
-          </div>
-        )}
-      </div>
-      <div className={classNames('grow', { [styles.modalTable]: fromModal })}>
-        <table className={styles.table}>
-          <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <th key={header.id}>
-                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.flatMap((row) => {
-              const lines = [
-                <tr key={row.id} className={classNames(styles.line, { [styles.open]: row.getIsExpanded() })}>
-                  {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id} data-testid={`cell-emission-${cell.column.id}`}>
-                      {cell.column.id === 'actions' ? (
-                        <div className={styles.cellDiv}>
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                        </div>
-                      ) : (
-                        <div className={styles.cellButton} onClick={() => row.toggleExpanded()}>
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                        </div>
-                      )}
-                    </td>
                   ))}
-                </tr>,
-              ]
-              if (row.getIsExpanded()) {
-                lines.push(
-                  <tr key={`${row.id}-details`}>
-                    <td colSpan={columns.length} className={classNames(styles.detail, 'p1')}>
-                      <EmissionFactorDetails emissionFactor={row.original} />
-                    </td>
-                  </tr>,
-                )
-              }
-              return lines
-            })}
-          </tbody>
-        </table>
-      </div>
-      <div className={classNames(styles.pagination, 'align-center mt1')}>
-        <Button onClick={() => table.firstPage()} disabled={!table.getCanPreviousPage()}>
-          {'<<'}
-        </Button>
-        <Button onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
-          {'<'}
-        </Button>
-        <Button onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
-          {'>'}
-        </Button>
-        <Button onClick={() => table.lastPage()} disabled={!table.getCanNextPage()}>
-          {'>>'}
-        </Button>
-        <p>
-          {t('page', {
-            page: table.getState().pagination.pageIndex + 1,
-            total: (table.getPageCount() || 1).toLocaleString(),
-          })}
-        </p>
-        {t('goTo')}
-        <TextField
-          type="number"
-          classes={{ root: styles.pageInput }}
-          slotProps={{
-            htmlInput: { min: 1, max: table.getPageCount() },
-            input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
-          }}
-          defaultValue={table.getState().pagination.pageIndex + 1}
-          onChange={onPaginationChange}
-        />
-        <FormControl className={styles.selector}>
-          <InputLabel id="emissions-paginator-count-selector">{t('items')}</InputLabel>
-          <Select
-            id="emissions-paginator-count-selector"
-            labelId="emissions-paginator-count-selector"
-            value={table.getState().pagination.pageSize}
-            onChange={(e) => table.setPageSize(Number(e.target.value))}
-            input={<OutlinedInput label={t('items')} />}
-          >
-            {[25, 50, 100, 200, 500].map((count) => (
-              <MenuItem key={count} value={count}>
-                <ListItemText primary={count} />
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </div>
+                </Select>
+              </FormControl>
+              <FormControl className={styles.selector}>
+                <FormLabel id="emissions-unit-selector" component="legend">
+                  {t('units')}
+                </FormLabel>
+                <MultiSelectAll
+                  id="emissions-unit"
+                  renderValue={unitsSelectorRenderValue}
+                  value={filteredUnits}
+                  allValues={initialSelectedUnits.filter((unit) => unit != 'all')}
+                  setValues={setFilteredUnits}
+                  t={tUnits}
+                />
+              </FormControl>
+              <FormControl className={styles.selector}>
+                <FormLabel id="emissions-subposts-selector" component="legend">
+                  {t('subPosts')}
+                </FormLabel>
+                <Select
+                  id="emissions-subposts-selector"
+                  labelId="emissions-subposts-selector"
+                  value={filteredSubPosts}
+                  renderValue={subPostsSelectorRenderValue}
+                  multiple
+                >
+                  <MenuItem
+                    key="subpost-item-all"
+                    className={allSelectedSubPosts ? 'Mui-selected' : ''} // dirty-hack because selected does not work on this option
+                    onClick={selectAllSubPosts}
+                  >
+                    <Checkbox checked={allSelectedSubPosts} />
+                    <ListItemText primary={tPosts(allSelectedSubPosts ? 'unselectAll' : 'selectAll')} />
+                  </MenuItem>
+                  {Object.values(envPosts).map((post) => (
+                    <div key={`subpostGroup-${post}`}>
+                      <MenuItem
+                        key={`subpost-${post}`}
+                        selected={areAllSelected(post)}
+                        onClick={() => selectPost(post)}
+                      >
+                        <Checkbox checked={areAllSelected(post)} />
+                        <ListItemText primary={tPosts(post)} />
+                      </MenuItem>
+                      {subPostsByPost[post].map((subPost) => (
+                        <MenuItem
+                          key={`subpost-${subPost}`}
+                          className={styles.subPostItem}
+                          selected={filteredSubPosts.includes(subPost)}
+                          onClick={() => selectSubPost(subPost)}
+                        >
+                          <Checkbox checked={filteredSubPosts.includes(subPost)} />
+                          <ListItemText primary={tPosts(subPost)} />
+                        </MenuItem>
+                      ))}
+                    </div>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl className={styles.selector}>
+                <FormLabel id="archived-emissions-factors-radio-group-label" component="legend">
+                  {t('displayArchived')}
+                </FormLabel>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={displayArchived}
+                      data-testid="archived-emissions-factors-switch"
+                      onChange={(event) => setDisplayArchived(event.target.checked)}
+                    />
+                  }
+                  label={t(displayArchived ? 'yes' : 'no')}
+                />
+              </FormControl>
+            </>
+          )}
+          {fromModal && (
+            <div className={classNames({ [styles.hideFiltersButton]: displayHideButton })}>
+              <Button onClick={() => setDisplayFilters(!displayFilters)}>
+                {t(displayFilters ? 'hideFilters' : 'displayFilters')}
+              </Button>
+            </div>
+          )}
+        </div>
+      </BaseTable>
+
       <div>
         {t('showing', {
           number: table.getRowModel().rows.length.toLocaleString(),

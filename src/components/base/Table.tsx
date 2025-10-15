@@ -20,7 +20,7 @@ const Table = <TData,>({ title, table, t, paginations, className, children, cust
     {title && <>{t(title)}</>}
     {children}
     <div className={className}>
-      <table>
+      <table aria-labelledby={`${testId}-table-title`}>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
@@ -33,19 +33,19 @@ const Table = <TData,>({ title, table, t, paginations, className, children, cust
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.flatMap((row) => (
-            <tr key={row.id} className={styles.line}>
-              {row.getVisibleCells().map((cell) =>
-                customRow ? (
-                  customRow(row)
-                ) : (
+          {table.getRowModel().rows.flatMap((row) =>
+            customRow ? (
+              customRow(row)
+            ) : (
+              <tr key={row.id} className={styles.line} data-testid={`${testId}-table-row`}>
+                {row.getVisibleCells().map((cell) => (
                   <td key={cell.id} data-testid={`${testId}-${cell.column.id}`}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
-                ),
-              )}
-            </tr>
-          ))}
+                ))}
+              </tr>
+            ),
+          )}
         </tbody>
       </table>
     </div>

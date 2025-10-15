@@ -2,6 +2,7 @@
 
 import Block from '@/components/base/Block'
 import HelpIcon from '@/components/base/HelpIcon'
+import BaseTable from '@/components/base/Table'
 import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
@@ -13,7 +14,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Button, IconButton } from '@mui/material'
 import { Environment } from '@prisma/client'
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
+import { ColumnDef, flexRender, getCoreRowModel, Row, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -362,6 +363,25 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
     setDeleting(false)
   }
 
+  const Row = (row: Row<StudyContributorTableRow>) => {
+    const rowData = row.original
+    const isParentRow = rowData.type === 'parent'
+
+    return (
+      <tr
+        key={row.id}
+        data-testid="study-contributors-table-line"
+        className={isParentRow ? styles.parentRow : styles.childRow}
+      >
+        {row.getVisibleCells().map((cell) => (
+          <td key={cell.id} className={isParentRow ? styles.parentCell : styles.childCell}>
+            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+          </td>
+        ))}
+      </tr>
+    )
+  }
+
   return (
     <>
       <Block
@@ -383,39 +403,7 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
         }
       >
         <div className={styles.container}>
-          <table aria-labelledby="study-rights-table-title" className="mb2">
-            <thead>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <th key={header.id} className={styles.headerWidth}>
-                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody>
-              {table.getRowModel().rows.map((row) => {
-                const rowData = row.original
-                const isParentRow = rowData.type === 'parent'
-
-                return (
-                  <tr
-                    key={row.id}
-                    data-testid="study-contributors-table-line"
-                    className={isParentRow ? styles.parentRow : styles.childRow}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <td key={cell.id} className={isParentRow ? styles.parentCell : styles.childCell}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </td>
-                    ))}
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
+          <BaseTable table={table} t={t} testId="study-contributors" className="mb2" customRow={Row} />
         </div>
       </Block>
       <Modal
