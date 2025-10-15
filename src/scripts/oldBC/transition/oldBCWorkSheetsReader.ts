@@ -255,6 +255,7 @@ export enum RequiredStudyEmissionSourcesColumns {
   COMMENTAIRES_COLLECTE = 'commentairesCollecte',
   ValidationDASaisie = 'validationDASaisie',
   DA_VAL_TOTAL = 'daTotalValue',
+  IDEF_TYPE = 'idefType',
   Nom_DOMAINE = 'domain',
   NOM_CATEGORIES = 'category',
   NOM_SOUS_CATEGORIE = 'subCategory',
@@ -264,6 +265,7 @@ export enum RequiredStudyEmissionSourcesColumns {
   EFV_GUID = 'emissionFactorOldBCId',
   EF_VAL_Conso = 'emissionFactorConsoValue',
   Amortissement = 'amortissement',
+  LIB_CARACT = 'caracterisation',
 }
 
 export type EmissionSourceRow = {
@@ -286,6 +288,7 @@ export class EmissionSourcesWorkSheet extends OldBCWorkSheetReader {
       commentairesCollecte: row[this.indexes.COMMENTAIRES_COLLECTE],
       validationDASaisie: row[this.indexes.ValidationDASaisie],
       daTotalValue: row[this.indexes.DA_VAL_TOTAL],
+      idefType: row[this.indexes.IDEF_TYPE],
       domain: row[this.indexes.Nom_DOMAINE],
       category: row[this.indexes.NOM_CATEGORIES],
       subCategory: row[this.indexes.NOM_SOUS_CATEGORIE],
@@ -295,6 +298,7 @@ export class EmissionSourcesWorkSheet extends OldBCWorkSheetReader {
       emissionFactorOldBCId: row[this.indexes.EFV_GUID],
       emissionFactorConsoValue: row[this.indexes.EF_VAL_Conso],
       amortissement: row[this.indexes.Amortissement],
+      caracterisation: row[this.indexes.LIB_CARACT],
     }))
   }
 }

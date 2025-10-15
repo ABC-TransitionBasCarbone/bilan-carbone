@@ -1,9 +1,12 @@
 import { getSourceLatestImportVersionId } from '@/db/study'
+import { getCaracterisationsBySubPost } from '@/services/emissionSource'
 import { getEmissionQuality } from '@/services/importEmissionFactor/import'
+import { hasDeprecationPeriod } from '@/utils/study'
 import {
   ControlMode,
   EmissionFactorImportVersion,
   EmissionFactor as EmissionFactorPrismaModel,
+  EmissionSourceCaracterisation,
   Environment,
   Import,
   Level,
@@ -65,6 +68,7 @@ interface EmissionSource {
   completeness: number
   emissionFactorImportedId: string
   emissionFactorConsoValue: number
+  caracterisation: string
 }
 
 interface EmissionFactor {
@@ -73,6 +77,37 @@ interface EmissionFactor {
   version: { id: string; source: string; createdAt: Date } | null
   importedId: string
   emissionFactorConsoValue: number | null
+}
+
+const caracterisationMapping: Record<string, EmissionSourceCaracterisation> = {
+  Détenu: EmissionSourceCaracterisation.Held,
+  'Non détenu location simple': EmissionSourceCaracterisation.NotHeldSimpleRent,
+  'Non détenue location simple': EmissionSourceCaracterisation.NotHeldSimpleRent,
+  'Non détenu, autre': EmissionSourceCaracterisation.NotHeldOther,
+  'Non détenue, autre': EmissionSourceCaracterisation.NotHeldOther,
+  'Détenue, procédés': EmissionSourceCaracterisation.HeldProcedeed,
+  'Détenue, fugitives': EmissionSourceCaracterisation.HeldFugitive,
+  'Non détenu, supporté': EmissionSourceCaracterisation.NotHeldSupported,
+  'Non détenue, non suporté': EmissionSourceCaracterisation.NotHeldNotSupported,
+  Opéré: EmissionSourceCaracterisation.Operated,
+  'Non opéré': EmissionSourceCaracterisation.NotOperated,
+  'Non opérée': EmissionSourceCaracterisation.NotOperated,
+  'Opérée, procédés': EmissionSourceCaracterisation.OperatedProcedeed,
+  'Opérée, fugitives': EmissionSourceCaracterisation.OperatedFugitive,
+  'Non opéré, supporté': EmissionSourceCaracterisation.NotOperatedSupported,
+  'Non opéré, non supporté': EmissionSourceCaracterisation.NotOperatedNotSupported,
+  Location: EmissionSourceCaracterisation.Rented,
+  'Mis en location': EmissionSourceCaracterisation.Rented,
+  'Utilisé par un intermédiaire': EmissionSourceCaracterisation.UsedByIntermediary,
+  'Utilisé par le client final': EmissionSourceCaracterisation.FinalClient,
+}
+
+const isCAS = (emissionSource: EmissionSource, emissionFactor: EmissionFactor | null) => {
+  return (
+    emissionSource.subPost === SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas &&
+    emissionFactor &&
+    emissionFactor.unit === Unit.HA_YEAR
+  )
 }
 
 const parseStudies = async (
@@ -260,7 +295,7 @@ const parseEmissionSources = (
   const skippedEmissionSource: { oldPost: string; reason: string }[] = []
   const emissionsSources = studyEmissionSourcesWorkSheet
     .map<[string, EmissionSource] | null>((row) => {
-      if (row.siteOldBCId === '00000000-0000-0000-0000-000000000000') {
+      if (row.siteOldBCId === '00000000-0000-0000-0000-000000000000' || row.idefType !== 1) {
         return null
       }
 
@@ -304,6 +339,7 @@ const parseEmissionSources = (
           completeness: incertitudeDA,
           emissionFactorImportedId: String(row.emissionFactorImportedId),
           emissionFactorConsoValue: row.emissionFactorConsoValue as number,
+          caracterisation: row.caracterisation as string,
           deprecation: row.amortissement as number,
           ...(subPost === SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas && {
             duration: 20,
@@ -734,6 +770,26 @@ export const uploadStudies = async (
               })
             }
 
+            const exports = studyExports.get(studyOldBCId) ?? []
+            const subPostCaracterisation = getCaracterisationsBySubPost(
+              studyEmissionSource.subPost,
+              exports,
+              Environment.BC,
+            )
+
+            let caracterisation = caracterisationMapping[studyEmissionSource.caracterisation]
+            if (!caracterisation && subPostCaracterisation.length === 1) {
+              caracterisation = subPostCaracterisation[0]
+            }
+
+            const canBeValidated = !!(
+              emissionFactorId &&
+              studyEmissionSource.value &&
+              (!exports.length || caracterisation) &&
+              (!isCAS(studyEmissionSource, emissionFactor) || studyEmissionSource.emissionFactorConsoValue) &&
+              !hasDeprecationPeriod(studyEmissionSource.subPost || studyEmissionSource.deprecation)
+            )
+
             return {
               studyId: existingStudy.id,
               studySiteId: studySite.id,
@@ -741,7 +797,7 @@ export const uploadStudies = async (
               subPost: studyEmissionSource.subPost,
               recycledPart: studyEmissionSource.recycledPart,
               comment: studyEmissionSource.comment,
-              validated: studyEmissionSource.validated,
+              validated: studyEmissionSource.validated && canBeValidated,
               value: studyEmissionSource.value,
               reliability: studyEmissionSource.reliability,
               technicalRepresentativeness: studyEmissionSource.technicalRepresentativeness,
@@ -749,6 +805,8 @@ export const uploadStudies = async (
               temporalRepresentativeness: studyEmissionSource.temporalRepresentativeness,
               completeness: studyEmissionSource.completeness,
               emissionFactorId: emissionFactorId,
+              ...(caracterisation && { caracterisation }),
+              ...(studyEmissionSource.deprecation && { depreciationPeriod: studyEmissionSource.deprecation }),
               duration: emissionFactor?.unit === Unit.HA_YEAR ? 20 : null,
               hectare: emissionFactor?.unit === Unit.HA_YEAR ? studyEmissionSource.emissionFactorConsoValue / 20 : null,
             }

@@ -98,9 +98,19 @@ export const uploadEmissionFactors = async (
   const emissionFactorPartsToCreate = emissionFactorsWorksheet
     .getRows()
     .filter((row) => !row.FE_BCPlus)
-    .filter((row) => row.EF_TYPE !== 'Consolidé')
+    .filter((row) => row.EF_TYPE !== 'Consolidé' && row.EF_TYPE !== 'NULL')
     .filter((row) => existingEmissionFactorParts.every((ef) => ef.oldBCId !== row.EFV_GUID))
-    .filter((row) => allEmissionFactors.some((ef) => ef.oldBCId === row.GUID))
+    .map((row) => {
+      const excelParentFE = emissionFactorsToCreate.find((ef) => ef.GUID === row.GUID && ef.EF_TYPE === 'Consolidé')
+
+      if (!excelParentFE) {
+        return false
+      }
+
+      const bddParentFE = allEmissionFactors.find((ef) => ef.oldBCId === excelParentFE.EFV_GUID)
+      return bddParentFE ? { ...row, bddParentFEId: bddParentFE.id } : false
+    })
+    .filter((row) => !!row)
 
   const sumByGuid: Record<
     string,
@@ -157,9 +167,9 @@ export const uploadEmissionFactors = async (
     throw new Error(`${inconsistentGuids.length} facteurs d'émissions avec des parties incohérentes, donc ignorées`)
   }
 
-  const filteredEmissionFactorPartsToCreate = emissionFactorPartsToCreate
-    .filter((row) => inconsistentGuids.every(([key]) => key !== getStringValue(row.GUID)))
-    .filter((row) => allEmissionFactors.some((ef) => ef.oldBCId === row.GUID))
+  const filteredEmissionFactorPartsToCreate = emissionFactorPartsToCreate.filter((row) =>
+    inconsistentGuids.every(([key]) => key !== getStringValue(row.GUID)),
+  )
 
   const partsMetaData = [] as Prisma.EmissionFactorPartMetaDataCreateManyInput[]
   console.log(`${filteredEmissionFactorPartsToCreate.length} composantes à importer`)
@@ -175,14 +185,9 @@ export const uploadEmissionFactors = async (
       })
       return {
         id,
-        emissionFactorId: allEmissionFactors.find((ef) => ef.oldBCId === row.GUID)?.id as string,
+        emissionFactorId: row.bddParentFEId,
         type: EmissionFactorPartType.Amont,
         oldBCId: getStringValue(row.EFV_GUID),
-        reliability: getEmissionQuality(row.Incertitude as number),
-        technicalRepresentativeness: getEmissionQuality(row.Incertitude as number),
-        geographicRepresentativeness: getEmissionQuality(row.Incertitude as number),
-        temporalRepresentativeness: getEmissionQuality(row.Incertitude as number),
-        completeness: getEmissionQuality(row.Incertitude as number),
         totalCo2: row.Total_CO2e as number,
         co2f: row.CO2f as number,
         ch4f: row.CH4f as number,
@@ -193,8 +198,6 @@ export const uploadEmissionFactors = async (
         hfc: row.HFC as number,
         pfc: row.PFC as number,
         otherGES: (row.Autre_gaz as number) + (row.NF3 as number),
-        source: getStringValue(row.Source_Nom),
-        location: getStringValue(row.NOM_CONTINENT),
       }
     }),
   })

@@ -6,7 +6,7 @@ import { formatEmissionFactorNumber } from '@/utils/number'
 import { displayOnlyExistingDataWithDash } from '@/utils/string'
 import ClearIcon from '@mui/icons-material/Clear'
 import SearchIcon from '@mui/icons-material/Search'
-import { StudyResultUnit, SubPost, Unit } from '@prisma/client'
+import { EmissionFactorStatus, StudyResultUnit, SubPost, Unit } from '@prisma/client'
 import classNames from 'classnames'
 import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'
@@ -109,10 +109,12 @@ const EmissionSourceFactor = ({
   )
   const fuse = useMemo(() => {
     return new Fuse(
-      emissionFactorsFilteredBySubPosts.filter((emissionFactor) => emissionFactor.metaData),
+      emissionFactorsFilteredBySubPosts
+        .filter((emissionFactor) => emissionFactor.metaData)
+        .filter((ef) => ef.status !== EmissionFactorStatus.Archived),
       fuseOptions,
     )
-  }, [emissionFactors])
+  }, [emissionFactorsFilteredBySubPosts])
 
   const searchNewEmissionFactor = () => setAdvancedSearch(true)
   const clearEmissionFactor = () => update('emissionFactorId', null)
