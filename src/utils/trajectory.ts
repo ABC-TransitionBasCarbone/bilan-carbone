@@ -79,14 +79,6 @@ export const calculateSBTiTrajectory = ({
     const nty = calculateNewTargetYear(cumulativeBudgetAdjusted, baseEmissions, studyStartYear)
     const newReductionRate = calculateNewLinearReductionRate(1, nty, studyStartYear)
 
-    console.log({
-      overshoot,
-      cumulativeBudget,
-      cumulativeBudgetAdjusted,
-      nty,
-      newReductionRate,
-    })
-
     // Create data points until a specific year which depends on other trajectories and calculated target year
     for (let year = REFERENCE_YEAR; year <= Math.max(nty, maxYear ?? TARGET_YEAR); year++) {
       dataPoints.push(calculateDataPoint(year, baseEmissions, studyStartYear, dataPoints, newReductionRate))
