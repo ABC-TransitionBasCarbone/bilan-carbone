@@ -1,6 +1,8 @@
+import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
+import { getMockeFullStudy } from '@/tests/utils/models/study'
 import { expect } from '@jest/globals'
-import { Environment, SubPost } from '@prisma/client'
-import { getTransEnvironmentSubPost } from './study'
+import { Environment, StudyResultUnit, SubPost } from '@prisma/client'
+import { getStudyTotalCo2EmissionsWithDep, getTransEnvironmentSubPost } from './study'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('./file', () => ({ download: jest.fn() }))
@@ -58,6 +60,58 @@ describe('Study Service', () => {
       )
       expect(getTransEnvironmentSubPost(source, target, SubPost.TeletravailSalaries)).toBe(SubPost.Electricite)
       expect(getTransEnvironmentSubPost(source, target, SubPost.Electricite)).toBe(SubPost.Electricite)
+    })
+  })
+
+  describe('getStudyTotalCo2EmissionsWithDep', () => {
+    it('Should return total CO2 in K unit', () => {
+      const mockStudy = getMockeFullStudy({
+        resultsUnit: StudyResultUnit.K,
+        organizationVersion: {
+          environment: Environment.BC,
+        },
+        emissionSources: [
+          getMockedFullStudyEmissionSource({
+            value: 1000,
+          }),
+          getMockedFullStudyEmissionSource({
+            value: 2000,
+          }),
+        ],
+      })
+
+      const result = getStudyTotalCo2EmissionsWithDep(mockStudy)
+
+      expect(result).toBe(30000) // Mocked FE has a totalCo2 of 10
+    })
+
+    it('Should return total CO2 in T unit', () => {
+      const mockStudy = getMockeFullStudy({
+        resultsUnit: StudyResultUnit.T,
+        emissionSources: [
+          getMockedFullStudyEmissionSource({
+            value: 1000,
+          }),
+          getMockedFullStudyEmissionSource({
+            value: 2000,
+          }),
+        ],
+      })
+
+      const result = getStudyTotalCo2EmissionsWithDep(mockStudy)
+
+      expect(result).toBe(30) // Mocked FE has a totalCo2 of 10
+    })
+
+    it('Should return 0 when no emission sources', () => {
+      const mockStudy = getMockeFullStudy({
+        resultsUnit: StudyResultUnit.T,
+        emissionSources: [],
+      })
+
+      const result = getStudyTotalCo2EmissionsWithDep(mockStudy)
+
+      expect(result).toBe(0)
     })
   })
 })

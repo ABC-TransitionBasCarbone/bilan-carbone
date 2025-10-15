@@ -725,7 +725,7 @@ export const getDetailedEmissionResults = (
   }
 }
 
-export const getTotalCO2EmissionsWithDependencies = (study: FullStudy) => {
+export const getStudyTotalCo2EmissionsWithDep = (study: FullStudy) => {
   const environment = study.organizationVersion.environment
 
   const emissionSourcesWithEmission = study.emissionSources.map((emissionSource) => ({
