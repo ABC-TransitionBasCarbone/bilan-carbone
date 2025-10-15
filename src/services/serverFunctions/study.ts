@@ -135,7 +135,7 @@ import {
   isAdminOnStudyOrga,
 } from '../permissions/study'
 import { deleteFileFromBucket, getFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
-import { checkLevel, getTransEnvironmentSubPost } from '../study'
+import { getTransEnvironmentSubPost, hasSufficientLevel } from '../study'
 import { saveAnswerForQuestion } from './question'
 import {
   ChangeStudyCinemaCommand,
@@ -212,6 +212,10 @@ export const createStudyCommand = async (
         session.user.organizationVersionId,
       )
       if (!accountValidator) {
+        throw new Error(NOT_AUTHORIZED)
+      }
+
+      if (!hasSufficientLevel(accountValidator.user.level, command.level)) {
         throw new Error(NOT_AUTHORIZED)
       }
 
@@ -377,7 +381,7 @@ export const changeStudyLevel = async ({ studyId, ...command }: ChangeStudyLevel
     const usersOnStudy = await getUsersOnStudy(studyId)
     const accountsLevel = await getAccountsUserLevel(usersOnStudy.map((account) => account.accountId))
     const accountsRoleToDowngrade = accountsLevel
-      .filter((accountLevel) => !checkLevel(accountLevel.user.level, command.level))
+      .filter((accountLevel) => !hasSufficientLevel(accountLevel.user.level, command.level))
       .map((accountLevel) => accountLevel.id)
     if (accountsRoleToDowngrade.length) {
       await downgradeStudyUserRoles(studyId, accountsRoleToDowngrade)
@@ -787,7 +791,7 @@ export const newStudyRight = async (right: NewStudyRightCommand) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (!existingUser || !checkLevel(existingUser.level, studyWithRights.level)) {
+    if (!existingUser || !hasSufficientLevel(existingUser.level, studyWithRights.level)) {
       right.role = StudyRole.Reader
     }
 
@@ -813,7 +817,7 @@ export const newStudyRight = async (right: NewStudyRightCommand) =>
         accountWithUserToUserSession(existingAccount as AccountWithUser),
         studyWithRights.organizationVersion as OrganizationVersionWithOrganization,
       ) &&
-      checkLevel(existingAccount.user.level, studyWithRights.level)
+      hasSufficientLevel(existingAccount.user.level, studyWithRights.level)
     ) {
       right.role = StudyRole.Validator
     }
@@ -883,7 +887,7 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
 
     if (
       existingAccount &&
-      !checkLevel(existingAccount.user.level, studyWithRights.level) &&
+      !hasSufficientLevel(existingAccount.user.level, studyWithRights.level) &&
       studyRole !== StudyRole.Reader
     ) {
       throw new Error(NOT_AUTHORIZED)

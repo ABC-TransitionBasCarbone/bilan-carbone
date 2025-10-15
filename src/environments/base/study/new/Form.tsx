@@ -12,8 +12,9 @@ import StudyExportsForm from '@/components/study/perimeter/StudyExportsForm'
 import { getOrganizationVersionAccounts } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
-import { getAllowedLevels } from '@/services/study'
+import { getAllowedLevels, hasSufficientLevel } from '@/services/study'
 import { FormControlLabel, MenuItem, Radio } from '@mui/material'
+import { Level } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
@@ -35,11 +36,20 @@ const NewStudyForm = ({ user, accounts, form, duplicateStudyId, sourceStudy }: P
 
   const tLevel = useTranslations('level')
 
+  const exports = useWatch({ control: form.control, name: 'exports' })
+  const level = useWatch({ control: form.control, name: 'level' })
+
+  const validatorAccountOptions = useMemo(
+    () =>
+      accounts
+        .filter((account) => hasSufficientLevel(account.user.level, level ?? Level.Advanced))
+        .map((account) => account.user.email),
+    [accounts, level],
+  )
+
   const Help = (name: string) => (
     <HelpIcon className="ml-4" onClick={() => setGlossary(name)} label={tGlossary('title')} />
   )
-
-  const exports = useWatch(form).exports
 
   const showControl = useMemo(() => Object.values(exports || {}).some((value) => value), [exports])
 
@@ -78,7 +88,7 @@ const NewStudyForm = ({ user, accounts, form, duplicateStudyId, sourceStudy }: P
           data-testid="new-validator-name"
           control={form.control}
           translation={t}
-          options={accounts.map((user) => user.user.email)}
+          options={validatorAccountOptions}
           name="validator"
           label={t('validator')}
           icon={<HelpIcon onClick={() => setGlossary('validatorEmail')} label={tGlossary('title')} />}

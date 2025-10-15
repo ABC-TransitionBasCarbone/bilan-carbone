@@ -1,8 +1,8 @@
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
 import { getMockeFullStudy } from '@/tests/utils/models/study'
 import { expect } from '@jest/globals'
-import { Environment, StudyResultUnit, SubPost } from '@prisma/client'
-import { getStudyTotalCo2EmissionsWithDep, getTransEnvironmentSubPost } from './study'
+import { Environment, Level, StudyResultUnit, SubPost } from '@prisma/client'
+import { getStudyTotalCo2EmissionsWithDep, getTransEnvironmentSubPost, hasSufficientLevel } from './study'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('./file', () => ({ download: jest.fn() }))
@@ -112,6 +112,32 @@ describe('Study Service', () => {
       const result = getStudyTotalCo2EmissionsWithDep(mockStudy)
 
       expect(result).toBe(0)
+    })
+  })
+
+  describe('hasSufficientLevel', () => {
+    it('Should return true if userLevel is sufficient', () => {
+      expect(hasSufficientLevel(Level.Advanced, Level.Initial)).toBe(true)
+      expect(hasSufficientLevel(Level.Advanced, Level.Standard)).toBe(true)
+      expect(hasSufficientLevel(Level.Advanced, Level.Advanced)).toBe(true)
+
+      expect(hasSufficientLevel(Level.Standard, Level.Standard)).toBe(true)
+      expect(hasSufficientLevel(Level.Standard, Level.Initial)).toBe(true)
+
+      expect(hasSufficientLevel(Level.Initial, Level.Initial)).toBe(true)
+    })
+
+    it('Should return false if userLevel is not sufficient', () => {
+      expect(hasSufficientLevel(Level.Initial, Level.Standard)).toBe(false)
+      expect(hasSufficientLevel(Level.Initial, Level.Advanced)).toBe(false)
+
+      expect(hasSufficientLevel(Level.Standard, Level.Advanced)).toBe(false)
+    })
+
+    it('Should return false if userLevel is null', () => {
+      expect(hasSufficientLevel(null, Level.Initial)).toBe(false)
+      expect(hasSufficientLevel(null, Level.Standard)).toBe(false)
+      expect(hasSufficientLevel(null, Level.Advanced)).toBe(false)
     })
   })
 })

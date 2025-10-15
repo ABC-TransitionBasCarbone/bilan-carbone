@@ -381,7 +381,7 @@ const users = async () => {
             firstName: faker.person.firstName(),
             lastName: faker.person.lastName(),
             password: await signPassword(`password-${index}`),
-            level: levels[index % levels.length] as Level,
+            level: levels[levels.length - 1 - (index % levels.length)] as Level, // on veut que les bc 0 soient en Advanced pour les tests
           },
         })
         const account = await prisma.account.create({
