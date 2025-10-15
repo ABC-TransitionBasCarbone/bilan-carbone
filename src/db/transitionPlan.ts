@@ -74,4 +74,9 @@ export const hasTransitionPlan = async (studyId: string): Promise<boolean> => {
 
 export const createAction = async (data: AddActionCommand) => prismaClient.action.create({ data })
 
+export const updateAction = async (id: string, data: AddActionCommand) =>
+  prismaClient.action.update({ where: { id }, data })
+
+export const getActionById = async (id: string) => prismaClient.action.findUnique({ where: { id } })
+
 export const getActions = async (studyId: string) => prismaClient.action.findMany({ where: { studyId } })

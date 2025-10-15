@@ -4,8 +4,8 @@ import Button from '@/components/base/Button'
 import DebouncedInput from '@/components/base/DebouncedInput'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
+import ActionModal from './ActionModal'
 import styles from './Actions.module.css'
-import AddActionModal from './AddActionModal'
 
 interface Props {
   search: string
@@ -30,13 +30,15 @@ const ActionFilters = ({ search, setSearch, studyId, studyUnit, porters }: Props
         data-testid="actions-filter"
       />
       <Button onClick={() => setAddAction((prev) => !prev)}>{t('add')}</Button>
-      <AddActionModal
-        open={addAction}
-        onClose={() => setAddAction(false)}
-        studyId={studyId}
-        studyUnit={studyUnit}
-        porters={porters}
-      />
+      {addAction && (
+        <ActionModal
+          open
+          onClose={() => setAddAction(false)}
+          studyId={studyId}
+          studyUnit={studyUnit}
+          porters={porters}
+        />
+      )}
     </div>
   )
 }

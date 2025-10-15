@@ -939,6 +939,7 @@
         },
         "addModal": {
           "add": "Add an action",
+          "update": "Update",
           "subTitle": "To add an action to your action plan, you must fill in the required information",
           "optionalSubtitle": "You will need to complete these fields",
           "previous": "Previous",

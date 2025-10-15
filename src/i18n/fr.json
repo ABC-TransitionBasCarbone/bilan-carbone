@@ -939,6 +939,7 @@
         },
         "addModal": {
           "add": "Ajouter une action",
+          "update": "Mettre à jour",
           "subTitle": "Afin d'ajouter une action à votre plan d'actions, vous devez remplir les informations obligatoires",
           "optionalSubtitle": "Vous devrez finaliser le remplissage de ces champs",
           "previous": "Précédent",

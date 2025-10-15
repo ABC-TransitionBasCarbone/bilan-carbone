@@ -1,20 +1,32 @@
 'use client'
 
 import BaseTable from '@/components/base/Table'
+import OpenIcon from '@mui/icons-material/OpenInNew'
 import { Action, ActionPotentialDeduction, StudyResultUnit } from '@prisma/client'
-import { getCoreRowModel, getPaginationRowModel, PaginationState, useReactTable } from '@tanstack/react-table'
+import {
+  ColumnDef,
+  getCoreRowModel,
+  getPaginationRowModel,
+  PaginationState,
+  useReactTable,
+} from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo, useState } from 'react'
+import ActionModal from './ActionModal'
 
 interface Props {
   actions: Action[]
+  studyId: string
+  studyUnit: string
+  porters: { label: string; value: string }[]
 }
 
-const Table = ({ actions }: Props) => {
+const Table = ({ actions, studyId, studyUnit, porters }: Props) => {
   const t = useTranslations('study.transitionPlan.actions.table')
   const tUnit = useTranslations('study.results.units')
   const tCategory = useTranslations('study.transitionPlan.actions.category')
   const tPotential = useTranslations('study.transitionPlan.actions.potentialDeduction')
+  const [editing, setEditing] = useState<Action | undefined>(undefined)
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 })
 
   const getPotential = useCallback(
@@ -32,21 +44,31 @@ const Table = ({ actions }: Props) => {
   )
 
   const columns = useMemo(
-    () => [
-      { header: t('title'), accessorKey: 'title' },
-      {
-        header: t('actionType'),
-        accessorFn: (action: Action) => action.category.map((category) => tCategory(category)).join(', '),
-      },
-      {
-        header: t('targetYear'),
-        // accessorFn: (action: Action) => Number(dayjs(action.reductionStartYear).year()),
-        accessorFn: () => '',
-      },
-      { header: t('potential'), accessorFn: getPotential },
-      { header: t('porter'), accessorKey: 'actionPorter' },
-      { header: `${t('budget')} (k€)`, accessorKey: 'necessaryBudget' },
-    ],
+    () =>
+      [
+        {
+          header: t('title'),
+          accessorKey: 'title',
+          cell: ({ getValue, row }) => (
+            <div className="justify-around align-center">
+              <span>{getValue<string>()}</span>
+              <OpenIcon className="pointer" onClick={() => setEditing(row.original)} />
+            </div>
+          ),
+        },
+        {
+          header: t('actionType'),
+          accessorFn: (action) => action.category.map((category) => tCategory(category)).join(', '),
+        },
+        {
+          header: t('targetYear'),
+          // accessorFn: (action) => Number(dayjs(action.reductionStartYear).year()),
+          accessorFn: () => '',
+        },
+        { header: t('potential'), accessorFn: getPotential },
+        { header: t('porter'), accessorKey: 'actionPorter' },
+        { header: `${t('budget')} (k€)`, accessorKey: 'necessaryBudget' },
+      ] as ColumnDef<Action>[],
     [getPotential, t, tCategory],
   )
 
@@ -59,7 +81,21 @@ const Table = ({ actions }: Props) => {
     state: { pagination },
   })
 
-  return <BaseTable table={table} paginations={[10, 25, 50, 100]} className="mt1" testId="actions" />
+  return (
+    <>
+      <BaseTable table={table} paginations={[10, 25, 50, 100]} className="mt1" testId="actions" />
+      {!!editing && (
+        <ActionModal
+          open
+          onClose={() => setEditing(undefined)}
+          action={editing}
+          studyId={studyId}
+          studyUnit={studyUnit}
+          porters={porters}
+        />
+      )}
+    </>
+  )
 }
 
 export default Table

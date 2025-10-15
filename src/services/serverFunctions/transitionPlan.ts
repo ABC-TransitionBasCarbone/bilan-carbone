@@ -4,11 +4,13 @@ import { FullStudy, getStudyById } from '@/db/study'
 import {
   createAction,
   createTransitionPlan,
+  getActionById,
   getActions,
   getOrganizationTransitionPlans,
   getTransitionPlanById,
   getTransitionPlanByStudyId,
   TransitionPlanWithStudies,
+  updateAction,
 } from '@/db/transitionPlan'
 import { ApiResponse, withServerResponse } from '@/utils/serverResponse'
 import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
@@ -133,6 +135,35 @@ export const addAction = async (command: AddActionCommand) =>
       throw new Error(NOT_AUTHORIZED)
     }
     await createAction(command)
+  })
+
+export const editAction = async (id: string, command: AddActionCommand) =>
+  withServerResponse('addAction', async () => {
+    const session = await dbActualizedAuth()
+
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const action = await getActionById(id)
+    if (!action || action.studyId !== command.studyId) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(command.studyId, session.user.organizationVersionId)
+    if (!study || !canCreateAction(session.user, study)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (
+      !(await isDeactivableFeatureActiveForEnvironment(
+        DeactivatableFeature.TransitionPlan,
+        study.organizationVersion.environment,
+      ))
+    ) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    await updateAction(id, command)
   })
 
 export const getStudyActions = async (studyId: string) =>

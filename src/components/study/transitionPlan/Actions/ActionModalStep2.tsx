@@ -9,7 +9,7 @@ interface Props {
   control: Control<AddActionCommand>
 }
 
-const AddActionStep1 = ({ control }: Props) => {
+const ActionModalStep1 = ({ control }: Props) => {
   const t = useTranslations('study.transitionPlan.actions.addModal')
   const tNature = useTranslations('study.transitionPlan.actions.nature')
   const tCategory = useTranslations('study.transitionPlan.actions.category')
@@ -46,4 +46,4 @@ const AddActionStep1 = ({ control }: Props) => {
   )
 }
 
-export default AddActionStep1
+export default ActionModalStep1

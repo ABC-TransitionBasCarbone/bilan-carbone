@@ -17,7 +17,7 @@ interface Props {
   getValues: UseFormGetValues<AddActionCommand>
 }
 
-const AddActionStep1 = ({ studyUnit, control, setValue }: Props) => {
+const ActionModalStep1 = ({ studyUnit, control, setValue, getValues }: Props) => {
   const t = useTranslations('study.transitionPlan.actions.addModal')
   const tUnit = useTranslations('study.results.units')
   const tDeduction = useTranslations('study.transitionPlan.actions.potentialDeduction')
@@ -83,7 +83,7 @@ const AddActionStep1 = ({ studyUnit, control, setValue }: Props) => {
               <TextField
                 type="number"
                 className="grow"
-                defaultValue={undefined}
+                value={getValues('reductionValue')}
                 onBlur={(event) => setValue('reductionValue', Number(event.target.value))}
                 slotProps={{
                   input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
@@ -130,4 +130,4 @@ const AddActionStep1 = ({ studyUnit, control, setValue }: Props) => {
   )
 }
 
-export default AddActionStep1
+export default ActionModalStep1

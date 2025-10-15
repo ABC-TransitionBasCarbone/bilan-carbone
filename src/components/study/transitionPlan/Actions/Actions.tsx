@@ -32,7 +32,7 @@ const Actions = ({ actions, studyId, studyUnit, porters }: Props) => {
   return (
     <>
       <ActionFilters search={filter} setSearch={setFilter} studyId={studyId} studyUnit={studyUnit} porters={porters} />
-      <Table actions={searchedActions} />
+      <Table actions={searchedActions} studyId={studyId} studyUnit={studyUnit} porters={porters} />
     </>
   )
 }
