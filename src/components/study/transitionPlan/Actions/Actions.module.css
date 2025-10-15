@@ -1,0 +1,21 @@
+.searchInput {
+  input {
+    min-width: 20rem;
+  }
+}
+
+.modal {
+  overflow-y: scroll;
+}
+
+.form {
+  gap: 1rem !important;
+}
+
+.drawer {
+  background-color: white !important;
+}
+
+.centered {
+  justify-content: center !important;
+}

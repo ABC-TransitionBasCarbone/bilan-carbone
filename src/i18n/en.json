@@ -927,6 +927,77 @@
       },
       "actions": {
         "title": "Action plan",
+        "search": "Search for your action here",
+        "add": "Add an action",
+        "addModal": {
+          "add": "Add an action",
+          "subTitle": "To add an action to your action plan, you must fill in the required information",
+          "optionalSubtitle": "You will need to complete these fields",
+          "previous": "Previous",
+          "next": "Next",
+          "clear": "Delete value",
+          "title": "Action title",
+          "titlePlaceholder": "Give your action a title",
+          "subSteps": "Sub-steps",
+          "subStepsPlaceholder": "Describe your sub-steps",
+          "aim": "Objectives and targets",
+          "aimPlaceholder": "Describe your objectives",
+          "detailedDescription": "Detailed description of the action and stakeholder involvement",
+          "detailedDescriptionPlaceholder": "Detailed description",
+          "potentialDeduction": "Quantified emission reduction potential",
+          "potentialDeductionPlaceholder": "Select an option",
+          "reductionValue": "Value",
+          "reductionStartYear": "Year action begins",
+          "reductionEffectsStart": "Date when effects begin",
+          "actionPorter": "Action leader",
+          "actionPorterPlaceholder": "Enter the name of the person leading the action",
+          "necessaryBudget": "Budget required for implementation (k€)",
+          "necessaryBudgetPlaceholder": "Enter the budget",
+          "necesssaryRessources": "Other resources required for implementation (human, financial, material, etc.)",
+          "necesssaryRessourcesPlaceholder": "Specify the resources",
+          "indicator": "Description of indicators",
+          "implementation": "Implementation",
+          "followUp": "Follow-up",
+          "performance": "Performance",
+          "indicatorDescriptionPlaceholder": "Description",
+          "indicatorAimPlaceholder": "Objective",
+          "facilitatorsAndObstacles": "Potential facilitators and obstacles to action",
+          "additionalInformation": "Additional information",
+          "nature": "Nature of the action",
+          "category": "Categories of action",
+          "relevance": "For mitigation actions, indicate the level of relevance of the action",
+          "Not authorized": "You are not allowed to do this action",
+          "validation": {
+            "required": "Champs requis",
+            "email": "Format d'email non valide"
+          }
+        },
+        "potentialDeduction": {
+          "Quality": "Quality",
+          "Quantity": "Quantity",
+          "EmissionSources": "Emission sources (coming soon)"
+        },
+        "nature": {
+          "Physical": "Physical",
+          "Reglementary": "Reglementary",
+          "Organisational": "Organisational",
+          "Behavioural": "Behavioural"
+        },
+        "category": {
+          "Immediate": "Immediate",
+          "Strategic": "Strategic",
+          "Priority": "Priority",
+          "Improvement": "Improvement of the approach",
+          "Adaptation": "Adaptation"
+        },
+        "relevance": {
+          "Offsetting": "Offsetting",
+          "Sequestration": "Sequestration",
+          "Avoidance": "Avoidance",
+          "AvoidanceFinancing": "Avoidance financing",
+          "ReductionOutsideOrganisationValueChain": "Reduction outside the organisation's value chain",
+          "ReductionWithinOrganisationCoreBusiness": "Reduction within the organisation's core business"
+        },
         "onboarding": {
           "title": "Create your action plan to achieve your objectives",
           "description": "You have already created your trajectory and associated objectives. Now you can add the actions to your transition plan that will allow you to achieve these objectives",

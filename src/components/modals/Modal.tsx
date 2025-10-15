@@ -12,8 +12,8 @@ export interface Props {
   label: string
   open: boolean
   onClose: () => void
-  title: React.ReactNode
   children: React.ReactNode
+  title?: React.ReactNode
   className?: string
   big?: boolean
   actions?: ModalAction[]
@@ -33,10 +33,13 @@ const Modal = ({ className, label, open, onClose, title, children, actions, big 
     data-testid={`${label}-modal`}
   >
     <Box className={classNames(styles.box, className, 'flex-col', { [styles.big]: big })}>
-      <div className="justify-between align-center mb2">
-        <Typography id={`${label}-modal-title`} variant="h6" sx={{ fontWeight: 'bold' }}>
-          {title}
-        </Typography>
+      <div className={classNames(title ? 'justify-between mb2' : 'justify-end', 'align-center')}>
+        {title && (
+          <Typography id={`${label}-modal-title`} variant="h6" sx={{ fontWeight: 'bold' }}>
+            {title}
+          </Typography>
+        )}
+
         <IconButton color="primary" onClick={onClose}>
           <CloseIcon />
         </IconButton>

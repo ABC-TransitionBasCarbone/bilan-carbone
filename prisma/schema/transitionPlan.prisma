@@ -1,3 +1,33 @@
+enum ActionNature {
+  Physical
+  Reglementary
+  Organisational
+  Behavioural
+}
+
+enum ActionCategory {
+  Immediate
+  Strategic
+  Priority
+  Improvement
+  Adaptation
+}
+
+enum ActionRelevance {
+  Offsetting
+  Sequestration
+  Avoidance
+  AvoidanceFinancing
+  ReductionOutsideOrganisationValueChain
+  ReductionWithinOrganisationCoreBusiness
+}
+
+enum ActionPotentialDeduction {
+  Quality
+  Quantity
+  EmissionSources
+}
+
 model TransitionPlan {
   id String @id @default(uuid())
 
@@ -26,3 +56,34 @@ model TransitionPlanStudy {
   @@map("transition_plan_studies")
 }
 
+model Action {
+  id String @id @default(uuid())
+
+  studyId String @map("study_id")
+  study   Study  @relation(fields: [studyId], references: [id])
+
+  title                     String
+  subSteps                  String                   @map("sub_steps")
+  // aim                    String
+  detailedDescription       String
+  potentialDeduction        ActionPotentialDeduction
+  reductionValue            Int?
+  reductionStartYear        String?                  @map("reduction_start_year")
+  reductionEffectsStart     String?                  @map("reduction_effects_start")
+  actionPorter              String?                  @map("action_porter")
+  necessaryBudget           Int?                     @map("necessary_budget")
+  necesssaryRessources      String?                  @map("necesssary_ressources")
+  implementationDescription String?                  @map("implementation_description")
+  implementationAim         Int?                     @map("implementation_aim")
+  followUpDescription       String?                  @map("follow_up_description")
+  followUpAim               Int?                     @map("follow_up_aim")
+  performanceDescription    String?                  @map("performance_description")
+  performanceAim            Int?                     @map("performance_aim")
+  facilitatorsAndObstacles  String?                  @map("facilitators_and_abstacles")
+  additionalInformation     String?                  @map("additional_information")
+  nature                    ActionNature[]
+  category                  ActionCategory[]
+  relevance                 ActionRelevance[]
+
+  @@map("actions")
+}

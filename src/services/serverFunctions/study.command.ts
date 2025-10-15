@@ -1,4 +1,15 @@
-import { ControlMode, DayOfWeek, Export, Level, StudyResultUnit, StudyRole } from '@prisma/client'
+import {
+  ActionCategory,
+  ActionNature,
+  ActionPotentialDeduction,
+  ActionRelevance,
+  ControlMode,
+  DayOfWeek,
+  Export,
+  Level,
+  StudyResultUnit,
+  StudyRole,
+} from '@prisma/client'
 import dayjs from 'dayjs'
 import z from 'zod'
 import { HolidayOpeningHoursValidation, OpeningHoursValidation } from '../hours'
@@ -213,3 +224,55 @@ export const DuplicateSiteCommandValidation = z.object({
 })
 
 export type DuplicateSiteCommand = z.infer<typeof DuplicateSiteCommandValidation>
+
+export const AddActionCommandBase = z.object({
+  title: z.string({ required_error: 'required' }),
+  subSteps: z.string({ required_error: 'required' }),
+  // aim: z.array(),
+  detailedDescription: z.string({ required_error: 'required' }),
+  studyId: z.string().uuid(),
+  potentialDeduction: z.nativeEnum(ActionPotentialDeduction, { required_error: 'required' }),
+  reductionValue: z.number().optional(),
+  reductionStartYear: z.string().optional(),
+  reductionEffectsStart: z.string().optional(),
+  actionPorter: z.string().optional(),
+  necessaryBudget: z.number().optional(),
+  necesssaryRessources: z.string().optional(),
+  implementationDescription: z.string().optional(),
+  implementationAim: z.number().optional(),
+  followUpDescription: z.string().optional(),
+  followUpAim: z.number().optional(),
+  performanceDescription: z.string().optional(),
+  performanceAim: z.number().optional(),
+  facilitatorsAndObstacles: z.string().optional(),
+  additionalInformation: z.string().optional(),
+  nature: z.array(z.nativeEnum(ActionNature)).min(0),
+  category: z.array(z.nativeEnum(ActionCategory)).min(0),
+  relevance: z.array(z.nativeEnum(ActionRelevance)).min(0),
+})
+
+export const AddActionCommandValidation = AddActionCommandBase.superRefine((data, ctx) => {
+  if (data.potentialDeduction === ActionPotentialDeduction.Quantity) {
+    if (!data) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'required', path: ['reductionValue'] })
+    }
+    if (!data.reductionStartYear) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'required', path: ['reductionStartYear'] })
+    }
+    if (!data.reductionEffectsStart) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'required', path: ['reductionEffectsStart'] })
+    }
+    if (data.actionPorter !== '') {
+      const emailValidation = z
+        .string()
+        .email()
+        .transform((val) => val.toLowerCase())
+        .safeParse(data.actionPorter)
+      if (!emailValidation.success) {
+        ctx.addIssue({ code: 'custom', path: ['actionPorter'], message: 'email' })
+      }
+    }
+  }
+})
+
+export type AddActionCommand = z.infer<typeof AddActionCommandValidation>

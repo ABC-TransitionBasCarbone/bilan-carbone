@@ -95,7 +95,7 @@ model StudyTag {
   name  String
   color String?
 
-  familyId String          @map("family_id")
+  familyId String         @map("family_id")
   family   StudyTagFamily @relation(fields: [familyId], references: [id])
 
   emissionSourceTags EmissionSourceTag[]
@@ -159,6 +159,8 @@ model Study {
 
   transitionPlan        TransitionPlan?
   transitionPlanStudies TransitionPlanStudy[]
+
+  Action Action[]
 
   @@map("studies")
 }

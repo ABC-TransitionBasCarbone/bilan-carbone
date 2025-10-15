@@ -475,3 +475,8 @@ export const canViewTransitionPlan = async (user: UserSession, study: FullStudy)
   const userRightsOnStudy = getAccountRoleOnStudy(user, study)
   return !!userRightsOnStudy
 }
+
+export const canCreateAction = async (user: UserSession, study: FullStudy) => {
+  const userRightsOnStudy = getAccountRoleOnStudy(user, study)
+  return !!(userRightsOnStudy && hasEditionRights(userRightsOnStudy))
+}
