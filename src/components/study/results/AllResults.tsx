@@ -9,7 +9,7 @@ import { hasAccessToBcExport } from '@/services/permissions/environment'
 import { computeBegesResult } from '@/services/results/beges'
 import { isDeactivableFeatureActiveForEnvironment } from '@/services/serverFunctions/deactivableFeatures'
 import { prepareReport } from '@/services/serverFunctions/study'
-import { AdditionalResultTypes, downloadStudyResults, getResultsValues, ResultType } from '@/services/study'
+import { AdditionalResultTypes, downloadStudyResults, getDetailedEmissionResults, ResultType } from '@/services/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import DownloadIcon from '@mui/icons-material/Download'
 import SummarizeIcon from '@mui/icons-material/Summarize'
@@ -96,7 +96,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     computedResultsWithoutDep,
   } = useMemo(
     () =>
-      getResultsValues(
+      getDetailedEmissionResults(
         study,
         tPost,
         studySite,

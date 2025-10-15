@@ -35,7 +35,7 @@ const TransitionPlanOnboarding = ({ title, description, detailedContent, storage
     <Accordion
       expanded={expanded}
       onChange={() => setExpanded(!expanded)}
-      className={classNames(styles.onboardingCard, 'mb2')}
+      className={classNames(styles.onboardingCard)}
       disableGutters
       elevation={0}
       sx={{

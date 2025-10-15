@@ -1,7 +1,7 @@
 import BarChart from '@/components/study/charts/BarChart'
 import PieChart from '@/components/study/charts/PieChart'
 import { FullStudy } from '@/db/study'
-import { getResultsValues } from '@/services/study'
+import { getDetailedEmissionResults } from '@/services/study'
 import { Translations } from '@/types/translation'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
@@ -19,7 +19,8 @@ export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll }: Props) =
   const tStudyResults = useTranslations('study.results')
 
   const { computedResultsWithDep } = useMemo(
-    () => getResultsValues(study, tPost, studySite, false, study.organizationVersion.environment, tStudyResults),
+    () =>
+      getDetailedEmissionResults(study, tPost, studySite, false, study.organizationVersion.environment, tStudyResults),
     [study, studySite, tPost, tStudyResults],
   )
 

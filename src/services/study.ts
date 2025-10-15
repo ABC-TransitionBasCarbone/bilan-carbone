@@ -538,7 +538,7 @@ export const formatBCResultsForCutExport = (
   data.push([])
 
   for (const site of siteList) {
-    const { computedResultsWithDep } = getResultsValues(study, tPost, site.id, false, environment, tStudy)
+    const { computedResultsWithDep } = getDetailedEmissionResults(study, tPost, site.id, false, environment, tStudy)
     const bilanCarboneEquivalent = convertCountToBilanCarbone(computedResultsWithDep)
 
     data.push([site.name])
@@ -660,7 +660,7 @@ export const getStudyParentOrganizationVersionId = async (
   return study.organizationVersion.parentId || study.organizationVersion.id
 }
 
-export const getResultsValues = (
+export const getDetailedEmissionResults = (
   study: FullStudy,
   tPost: Translations,
   studySite: string,
@@ -723,6 +723,18 @@ export const getResultsValues = (
     nonSpecificMonetaryRatio,
     computedResultsByTag,
   }
+}
+
+export const getStudyTotalCo2EmissionsWithDep = (study: FullStudy) => {
+  const environment = study.organizationVersion.environment
+
+  const emissionSourcesWithEmission = study.emissionSources.map((emissionSource) => ({
+    ...emissionSource,
+    ...getEmissionResults(emissionSource, environment),
+  }))
+
+  const totalCo2InKg = getEmissionSourcesTotalCo2(emissionSourcesWithEmission)
+  return totalCo2InKg / STUDY_UNIT_VALUES[study.resultsUnit]
 }
 
 export const getTransEnvironmentSubPost = (source: Environment, target: Environment, subPost: SubPost) => {
