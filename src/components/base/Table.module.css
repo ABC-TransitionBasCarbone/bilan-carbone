@@ -1,0 +1,19 @@
+.line {
+  background: white !important;
+  &:hover,
+  td {
+    padding: 0.75rem 0.5rem;
+  }
+}
+
+.pagination {
+  gap: 0.5rem;
+}
+
+.pageInput {
+  min-width: 5rem;
+}
+
+.selector {
+  width: 10rem;
+}
