@@ -72,7 +72,7 @@ model OpeningHours {
   @@map("opening_hours")
 }
 
-model EmissionSourceTagFamily {
+model StudyTagFamily {
   id String @id @default(uuid())
 
   name String
@@ -83,24 +83,43 @@ model EmissionSourceTagFamily {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-  emissionSourceTags EmissionSourceTag[]
+  tags StudyTag[]
 
   @@unique([name, studyId])
-  @@map("emission_source_tag_families")
+  @@map("study_tag_families")
 }
 
-model EmissionSourceTag {
+model StudyTag {
   id String @id @default(uuid())
 
   name  String
   color String?
 
-  familyId String                  @map("family_id")
-  family   EmissionSourceTagFamily @relation(fields: [familyId], references: [id])
+  familyId String          @map("family_id")
+  family   StudyTagFamily @relation(fields: [familyId], references: [id])
 
-  StudyEmissionSource StudyEmissionSource[] @relation("TagToEmissionSource")
+  emissionSourceTags EmissionSourceTag[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@unique([name, familyId])
+  @@map("study_tag")
+}
+
+model EmissionSourceTag {
+  emissionSourceId String              @map("emission_source_id")
+  emissionSource   StudyEmissionSource @relation(fields: [emissionSourceId], references: [id], onDelete: Cascade)
+
+  tagId String   @map("tag_id")
+  tag   StudyTag @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@id([emissionSourceId, tagId])
+  @@index([emissionSourceId], map: "emission_source_tag_emission_source_id_idx")
+  @@index([tagId], map: "emission_source_tag_tag_id_idx")
   @@map("emission_source_tag")
 }
 
@@ -132,11 +151,14 @@ model Study {
 
   emissionFactorVersions StudyEmissionFactorVersion[]
 
-  emissionSourceTagFamilies EmissionSourceTagFamily[]
+  tagFamilies StudyTagFamily[]
 
   createdAt      DateTime        @default(now()) @map("created_at")
   updatedAt      DateTime        @default(now()) @updatedAt @map("updated_at")
   studyTemplates StudyTemplate[]
+
+  transitionPlan        TransitionPlan?
+  transitionPlanStudies TransitionPlanStudy[]
 
   @@map("studies")
 }
@@ -237,7 +259,7 @@ model StudyEmissionSource {
 
   answerEmissionSources AnswerEmissionSource[]
 
-  emissionSourceTags EmissionSourceTag[] @relation("TagToEmissionSource")
+  emissionSourceTags EmissionSourceTag[]
 
   @@map("study_emission_sources")
 }

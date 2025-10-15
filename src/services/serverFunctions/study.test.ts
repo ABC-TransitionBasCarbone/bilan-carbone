@@ -1,10 +1,12 @@
 import { expect } from '@jest/globals'
-import { Import, Level, StudyRole } from '@prisma/client'
+import { Environment, Import, Level, StudyRole, SubPost } from '@prisma/client'
+import { v4 as uuidv4 } from 'uuid'
 import * as accountModule from '../../db/account'
 import * as emissionFactorsModule from '../../db/emissionFactors'
 import * as emissionSourcesModule from '../../db/emissionSource'
 import * as organizationModule from '../../db/organization'
 import * as studyDbModule from '../../db/study'
+import { FullStudy } from '../../db/study'
 import * as userDbModule from '../../db/user'
 import * as authModule from '../../services/auth'
 import * as studyPermissionsModule from '../../services/permissions/study'
@@ -13,19 +15,25 @@ import { mockedOrganizationVersion } from '../../tests/utils/models/organization
 import {
   getMockedDuplicateStudyCommand,
   getMockeFullStudy,
+  mockedDbFullStudySite,
   TEST_EMAILS,
   TEST_IDS,
 } from '../../tests/utils/models/study'
 import { getMockedAuthUser } from '../../tests/utils/models/user'
+import * as organizationUtilsModule from '../../utils/organization'
 import * as studyUtilsModule from '../../utils/study'
 import * as userUtilsModule from '../../utils/user'
-import type { CreateStudyCommand } from './study.command'
+import type { CreateStudyCommand, DuplicateSiteCommand } from './study.command'
 
 // TODO: ESM module issue with Jest. Remove these mocks when moving to Vitest
 jest.mock('../file', () => ({ download: jest.fn() }))
 jest.mock('../auth', () => ({ auth: jest.fn() }))
 jest.mock('next-intl/server', () => ({
   getTranslations: jest.fn(() => (key: string) => key),
+}))
+
+jest.mock('uuid', () => ({
+  v4: jest.fn(),
 }))
 
 jest.mock('../../services/auth', () => ({
@@ -39,6 +47,21 @@ jest.mock('../../db/study', () => ({
   createStudy: jest.fn(),
   updateStudyEmissionFactorVersion: jest.fn(),
   createContributorOnStudy: jest.fn(),
+  createEmissionSourceTags: jest.fn(),
+}))
+const mockTransaction = {
+  site: {
+    create: jest.fn(),
+  },
+  studySite: {
+    create: jest.fn(),
+    updateMany: jest.fn(),
+  },
+}
+jest.mock('../../db/client', () => ({
+  prismaClient: {
+    $transaction: jest.fn((callback) => callback(mockTransaction)),
+  },
 }))
 jest.mock('../../services/permissions/study', () => ({
   hasEditionRights: jest.fn(),
@@ -46,6 +69,7 @@ jest.mock('../../services/permissions/study', () => ({
   isAdminOnStudyOrga: jest.fn(),
   canCreateSpecificStudy: jest.fn(),
   canDuplicateStudy: jest.fn(),
+  canChangeSites: jest.fn(),
 }))
 jest.mock('../../utils/study', () => ({
   getAccountRoleOnStudy: jest.fn(),
@@ -84,11 +108,15 @@ jest.mock('../../db/emissionFactors', () => ({
   getEmissionFactorsImportActiveVersion: jest.fn(),
 }))
 jest.mock('../../db/emissionSource', () => ({
-  createEmissionSourceTagFamilyAndRelatedTags: jest.fn(),
+  createTagFamilyAndRelatedTags: jest.fn(),
   getFamilyTagsForStudy: jest.fn(),
+  createEmissionSourcesWithReturn: jest.fn(),
 }))
 jest.mock('../../utils/user', () => ({
   isAdmin: jest.fn(),
+}))
+jest.mock('../../utils/organization', () => ({
+  canEditOrganizationVersion: jest.fn(),
 }))
 jest.mock('../../utils/number', () => ({
   CA_UNIT_VALUES: { K: 1000, M: 1000000 },
@@ -129,7 +157,7 @@ const mockedResults = {
   nonSpecificMonetaryRatio: mockedNonSpecificMonetaryRatio,
 }
 
-const { duplicateStudyCommand, mapStudyForReport } = jest.requireActual('./study')
+const { duplicateStudyCommand, mapStudyForReport, duplicateSiteAndEmissionSources } = jest.requireActual('./study')
 
 const mockedAuthUser = getMockedAuthUser({ email: TEST_EMAILS.currentUser })
 const mockedSourceStudy = getMockeFullStudy()
@@ -143,6 +171,7 @@ const mockCreateUserOnStudy = studyDbModule.createUserOnStudy as jest.Mock
 const mockCreateStudy = studyDbModule.createStudy as jest.Mock
 const mockUpdateStudyEmissionFactorVersion = studyDbModule.updateStudyEmissionFactorVersion as jest.Mock
 const mockCreateContributorOnStudy = studyDbModule.createContributorOnStudy as jest.Mock
+const mockCreateEmissionSourceTags = studyDbModule.createEmissionSourceTags as jest.Mock
 const mockAddUserChecklistItem = userModule.addUserChecklistItem as jest.Mock
 const mockGetOrganizationVersionById = organizationModule.getOrganizationVersionById as jest.Mock
 const mockGetUserByEmail = userDbModule.getUserByEmail as jest.Mock
@@ -157,15 +186,19 @@ const mockCanDuplicateStudy = studyPermissionsModule.canDuplicateStudy as jest.M
 const mockGetEmissionFactorsImportActiveVersion =
   emissionFactorsModule.getEmissionFactorsImportActiveVersion as jest.Mock
 const mockIsAdmin = userUtilsModule.isAdmin as unknown as jest.Mock
-const mockCreateEmissionSourceTagFamilyAndRelatedTags =
-  emissionSourcesModule.createEmissionSourceTagFamilyAndRelatedTags as jest.Mock
+const mockCreateTagFamilyAndRelatedTags = emissionSourcesModule.createTagFamilyAndRelatedTags as jest.Mock
 const mockGetFamilyTagsForStudy = emissionSourcesModule.getFamilyTagsForStudy as jest.Mock
+const mockCreateEmissionSourcesWithReturn = emissionSourcesModule.createEmissionSourcesWithReturn as jest.Mock
 const mockIsOrganizationVersionCR = organizationModule.isOrganizationVersionCR as jest.Mock
+const mockCanChangeSites = studyPermissionsModule.canChangeSites as jest.Mock
+const mockCanEditOrganizationVersion = organizationUtilsModule.canEditOrganizationVersion as jest.Mock
 
 describe('study', () => {
   describe('duplicateStudyCommand', () => {
     const setupSuccessfulDuplication = () => {
-      mockCreateEmissionSourceTagFamilyAndRelatedTags.mockResolvedValue([])
+      mockCreateTagFamilyAndRelatedTags.mockResolvedValue([])
+      mockCreateEmissionSourceTags.mockResolvedValue(undefined)
+      mockCreateEmissionSourcesWithReturn.mockResolvedValue([{ id: TEST_IDS.emissionSource }])
       mockGetFamilyTagsForStudy.mockResolvedValue([])
       mockDbActualizedAuth.mockResolvedValue({ user: mockedAuthUser })
       mockCanDuplicateStudy.mockResolvedValue(true)
@@ -257,21 +290,170 @@ describe('study', () => {
           TEST_IDS.newStudy,
           Import.BaseEmpreinte,
           TEST_IDS.importVersion,
+          mockTransaction,
         )
       })
 
       it('should duplicate emission sources with correct site mapping', async () => {
         await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand)
 
-        expect(mockCreateStudyEmissionSource).toHaveBeenCalledWith(
+        expect(mockCreateEmissionSourcesWithReturn).toHaveBeenCalledWith(
+          expect.arrayContaining([
+            expect.objectContaining({
+              name: 'Test Emission Source',
+              value: 100,
+              studyId: TEST_IDS.newStudy,
+              studySiteId: TEST_IDS.newStudySite,
+              emissionFactorId: TEST_IDS.emissionFactor,
+              validated: false,
+            }),
+          ]),
+          mockTransaction,
+        )
+      })
+
+      it('should duplicate emission sources with tags from multiple tag families', async () => {
+        const mockUuidv4 = jest.mocked(uuidv4)
+        mockUuidv4
+          .mockReturnValueOnce('created-es-1' as unknown as Uint8Array)
+          .mockReturnValueOnce('created-es-2' as unknown as Uint8Array)
+
+        const sourceTagFamilies = [
+          {
+            id: 'family-0-id',
+            name: 'défaut',
+            tags: [],
+          },
+          {
+            id: 'family-1-id',
+            name: 'Scope',
+            tags: [
+              { id: 'tag-1-id', name: 'Scope 1', color: '#FF0000', familyName: 'Scope' },
+              { id: 'tag-2-id', name: 'Scope 2', color: '#00FF00', familyName: 'Scope' },
+            ],
+          },
+          {
+            id: 'family-2-id',
+            name: 'Category',
+            tags: [
+              { id: 'tag-3-id', name: 'Transport', color: '#0000FF', familyName: 'Category' },
+              { id: 'tag-4-id', name: 'Energy', color: '#FFFF00', familyName: 'Category' },
+            ],
+          },
+        ]
+
+        const targetTagFamilies = [
+          {
+            id: 'target-family-0-id',
+            name: 'défaut',
+            tags: [],
+          },
+          {
+            id: 'target-family-1-id',
+            name: 'Scope',
+            tags: [
+              { id: 'target-tag-1-id', name: 'Scope 1', color: '#FF0000' },
+              { id: 'target-tag-2-id', name: 'Scope 2', color: '#00FF00' },
+            ],
+          },
+          {
+            id: 'target-family-2-id',
+            name: 'Category',
+            tags: [
+              { id: 'target-tag-3-id', name: 'Transport', color: '#0000FF' },
+              { id: 'target-tag-4-id', name: 'Energy', color: '#FFFF00' },
+            ],
+          },
+        ]
+
+        const sourceStudyWithTags = getMockeFullStudy({
+          emissionSources: [
+            {
+              ...mockedSourceStudy.emissionSources[0],
+              id: 'source-es-1',
+              name: 'Emission Source 1',
+              value: 100,
+              studySite: { id: TEST_IDS.studySite, site: { id: TEST_IDS.site } },
+              emissionSourceTags: [
+                { tag: { id: 'tag-1-id', name: 'Scope 1' } },
+                { tag: { id: 'tag-3-id', name: 'Transport' } },
+              ],
+            },
+            {
+              ...mockedSourceStudy.emissionSources[0],
+              id: 'source-es-2',
+              name: 'Emission Source 2',
+              value: 200,
+              studySite: { id: TEST_IDS.studySite, site: { id: TEST_IDS.site } },
+              emissionSourceTags: [
+                { tag: { id: 'tag-2-id', name: 'Scope 2' } },
+                { tag: { id: 'tag-4-id', name: 'Energy' } },
+              ],
+            },
+          ],
+          tagFamilies: sourceTagFamilies,
+        })
+
+        mockGetFamilyTagsForStudy.mockResolvedValue(sourceTagFamilies)
+        mockCreateEmissionSourcesWithReturn.mockResolvedValue([{ id: 'created-es-1' }, { id: 'created-es-2' }])
+
+        mockGetStudyById.mockImplementation((id: string) => {
+          if (id === TEST_IDS.sourceStudy) {
+            return Promise.resolve(sourceStudyWithTags)
+          }
+          if (id === TEST_IDS.newStudy) {
+            return Promise.resolve({
+              ...sourceStudyWithTags,
+              id: TEST_IDS.newStudy,
+              sites: [{ id: TEST_IDS.newStudySite, site: { id: TEST_IDS.site } }],
+              tagFamilies: targetTagFamilies,
+            })
+          }
+          return Promise.resolve(null)
+        })
+
+        await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand)
+
+        expect(mockCreateStudy).toHaveBeenCalledWith(
           expect.objectContaining({
-            name: 'Test Emission Source',
-            value: 100,
-            study: { connect: { id: TEST_IDS.newStudy } },
-            studySite: { connect: { id: TEST_IDS.newStudySite } },
-            emissionFactor: { connect: { id: TEST_IDS.emissionFactor } },
-            validated: false,
+            tagFamilies: {
+              create: sourceTagFamilies.map((tagFamily) => ({
+                name: tagFamily.name,
+                tags: {
+                  create: tagFamily.tags.map((tag) => ({ name: tag.name, color: tag.color })),
+                },
+              })),
+            },
           }),
+          Environment.BC,
+        )
+
+        expect(mockCreateEmissionSourcesWithReturn).toHaveBeenCalledWith(
+          [
+            expect.objectContaining({
+              name: 'Emission Source 1',
+              value: 100,
+              studyId: TEST_IDS.newStudy,
+              studySiteId: TEST_IDS.newStudySite,
+            }),
+            expect.objectContaining({
+              name: 'Emission Source 2',
+              value: 200,
+              studyId: TEST_IDS.newStudy,
+              studySiteId: TEST_IDS.newStudySite,
+            }),
+          ],
+          mockTransaction,
+        )
+
+        expect(mockCreateEmissionSourceTags).toHaveBeenCalledWith(
+          [
+            { emissionSourceId: 'created-es-1', tagId: 'target-tag-1-id' },
+            { emissionSourceId: 'created-es-1', tagId: 'target-tag-3-id' },
+            { emissionSourceId: 'created-es-2', tagId: 'target-tag-2-id' },
+            { emissionSourceId: 'created-es-2', tagId: 'target-tag-4-id' },
+          ],
+          mockTransaction,
         )
       })
     })
@@ -583,6 +765,370 @@ describe('study', () => {
             postalCode: '69001',
           },
         ])
+      })
+    })
+  })
+
+  describe('duplicateSiteAndEmissionSources', () => {
+    const createMockEmissionSource = (overrides?: Partial<FullStudy['emissionSources'][0]>) => ({
+      id: 'source-es-1',
+      name: 'Source Emission',
+      value: 100,
+      subPost: SubPost.Achats,
+      studySite: { id: TEST_IDS.studySite, site: { id: TEST_IDS.site } },
+      emissionSourceTags: [],
+      emissionFactor: { id: 'ef-1' },
+      contributor: null,
+      type: null,
+      source: null,
+      comment: null,
+      depreciationPeriod: null,
+      hectare: null,
+      duration: null,
+      reliability: null,
+      technicalRepresentativeness: null,
+      geographicRepresentativeness: null,
+      temporalRepresentativeness: null,
+      completeness: null,
+      feReliability: null,
+      feTechnicalRepresentativeness: null,
+      feGeographicRepresentativeness: null,
+      feTemporalRepresentativeness: null,
+      feCompleteness: null,
+      caracterisation: null,
+      validated: true,
+      ...overrides,
+    })
+
+    const createMockStudySite = (overrides?: Partial<typeof mockedDbFullStudySite>) => ({
+      ...mockedDbFullStudySite,
+      etp: 1,
+      ca: 2,
+      volunteerNumber: 3,
+      beneficiaryNumber: 4,
+      ...overrides,
+    })
+
+    const setupIncrementalSiteCreationMocks = () => {
+      let siteIdCounter = 1
+      mockTransaction.site.create.mockImplementation(async ({ data }) => {
+        const id = `new-site-${siteIdCounter++}`
+        return { id, ...data }
+      })
+
+      let studySiteIdCounter = 1
+      mockTransaction.studySite.create.mockImplementation(async ({ data }) => {
+        const id = `new-study-site-${studySiteIdCounter++}`
+        return { id, ...data }
+      })
+    }
+
+    const setupMockGetStudyByIdWithNewSites = (baseStudy: FullStudy, newSites: Array<{ id: string; name: string }>) => {
+      mockGetStudyById.mockImplementation((studyId: string, _orgId?: string, tx?: unknown) => {
+        if (tx) {
+          return Promise.resolve({
+            ...baseStudy,
+            sites: [
+              ...baseStudy.sites,
+              ...newSites.map((site) =>
+                createMockStudySite({
+                  id: site.id,
+                  site: {
+                    ...mockedDbFullStudySite.site,
+                    id: site.id.replace('study-site', 'site'),
+                    name: site.name,
+                  },
+                }),
+              ),
+            ],
+          })
+        }
+        return Promise.resolve(baseStudy)
+      })
+    }
+
+    const createDuplicateSiteCommand = (overrides?: Partial<DuplicateSiteCommand>): DuplicateSiteCommand => ({
+      sourceSiteId: TEST_IDS.studySite,
+      targetSiteIds: [],
+      newSitesCount: 0,
+      organizationId: 'org-id',
+      studyId: TEST_IDS.sourceStudy,
+      fieldsToDuplicate: ['emissionSources'],
+      ...overrides,
+    })
+
+    const setupSiteDuplicationMocks = (study = getMockeFullStudy()) => {
+      mockDbActualizedAuth.mockResolvedValue({ user: mockedAuthUser })
+      mockGetStudyById.mockResolvedValue(study)
+      mockCanChangeSites.mockResolvedValue(true)
+      mockGetOrganizationVersionById.mockResolvedValue({
+        id: TEST_IDS.orgVersion,
+        organization: {
+          id: 'organization-id',
+          sites: [
+            { id: TEST_IDS.site, name: 'Site 1' },
+            { id: 'site-2', name: 'Site 2' },
+          ],
+        },
+        environment: Environment.BC,
+      })
+      mockCanEditOrganizationVersion.mockReturnValue(true)
+      mockGetFamilyTagsForStudy.mockResolvedValue([])
+      mockCreateEmissionSourcesWithReturn.mockResolvedValue([])
+      mockCreateEmissionSourceTags.mockResolvedValue(undefined)
+      mockTransaction.site.create.mockImplementation(async ({ data }) => ({
+        id: `new-site-${Math.random()}`,
+        ...data,
+      }))
+      mockTransaction.studySite.create.mockImplementation(async ({ data }) => ({
+        id: `new-study-site-${Math.random()}`,
+        ...data,
+      }))
+      mockTransaction.studySite.updateMany.mockResolvedValue({ count: 0 })
+    }
+
+    beforeEach(() => {
+      jest.clearAllMocks()
+    })
+
+    describe('Authorization', () => {
+      it('should return error when user cannot change sites', async () => {
+        const study = getMockeFullStudy()
+        setupSiteDuplicationMocks(study)
+        mockCanChangeSites.mockResolvedValue(false)
+
+        const command = createDuplicateSiteCommand({ targetSiteIds: ['target-site-1'] })
+
+        const result = await duplicateSiteAndEmissionSources(command)
+        expect(result).toEqual({ success: false, errorMessage: 'Not authorized' })
+      })
+    })
+
+    describe('Target sites only', () => {
+      it('should duplicate emission sources to existing target sites', async () => {
+        const mockUuidv4 = jest.mocked(uuidv4)
+        mockUuidv4.mockReturnValueOnce('new-es-1' as unknown as Uint8Array)
+
+        const sourceEmissionSource = createMockEmissionSource()
+
+        const study = getMockeFullStudy({
+          sites: [
+            createMockStudySite({ id: TEST_IDS.studySite, site: { ...mockedDbFullStudySite.site, id: TEST_IDS.site } }),
+            createMockStudySite({ id: 'target-site-1', site: { ...mockedDbFullStudySite.site, id: TEST_IDS.site } }),
+          ],
+          emissionSources: [sourceEmissionSource],
+        })
+
+        setupSiteDuplicationMocks(study)
+        setupMockGetStudyByIdWithNewSites(study, [])
+
+        const command = createDuplicateSiteCommand({
+          targetSiteIds: ['target-site-1'],
+          fieldsToDuplicate: ['emissionSources', 'etp', 'ca', 'volunteerNumber', 'beneficiaryNumber'],
+        })
+
+        mockCreateEmissionSourcesWithReturn.mockResolvedValue([{ id: 'new-es-1' }])
+
+        const result = await duplicateSiteAndEmissionSources(command)
+
+        expect(result).toEqual({ success: true, data: undefined })
+        expect(mockCreateEmissionSourcesWithReturn).toHaveBeenCalledWith(
+          expect.arrayContaining([
+            expect.objectContaining({
+              name: 'Source Emission',
+              value: 100,
+              studyId: TEST_IDS.sourceStudy,
+              validated: false,
+            }),
+          ]),
+          mockTransaction,
+        )
+        expect(mockTransaction.site.create).toHaveBeenCalledTimes(0)
+        expect(mockTransaction.studySite.updateMany).toHaveBeenCalledTimes(1)
+        expect(mockTransaction.studySite.updateMany).toHaveBeenCalledWith({
+          where: { id: { in: ['target-site-1'] } },
+          data: { etp: 1, ca: 2, volunteerNumber: 3, beneficiaryNumber: 4 },
+        })
+      })
+    })
+
+    describe('New sites only', () => {
+      it('should create new sites and duplicate emission sources to them', async () => {
+        const mockUuidv4 = jest.mocked(uuidv4)
+        mockUuidv4.mockReturnValueOnce('new-es-1' as unknown as Uint8Array)
+
+        const sourceEmissionSource = createMockEmissionSource()
+
+        const study = getMockeFullStudy({
+          sites: [
+            createMockStudySite({
+              id: TEST_IDS.studySite,
+              site: { ...mockedDbFullStudySite.site, id: TEST_IDS.site, name: 'Original Site' },
+            }),
+          ],
+          emissionSources: [sourceEmissionSource],
+        })
+
+        setupSiteDuplicationMocks(study)
+        setupIncrementalSiteCreationMocks()
+        setupMockGetStudyByIdWithNewSites(study, [
+          { id: 'new-study-site-1', name: 'Original Site - Copie 1' },
+          { id: 'new-study-site-2', name: 'Original Site - Copie 2' },
+        ])
+
+        const command = createDuplicateSiteCommand({
+          newSitesCount: 2,
+          fieldsToDuplicate: ['emissionSources', 'etp', 'ca', 'volunteerNumber', 'beneficiaryNumber'],
+        })
+
+        mockCreateEmissionSourcesWithReturn.mockResolvedValue([{ id: 'new-es-1' }, { id: 'new-es-2' }])
+
+        const result = await duplicateSiteAndEmissionSources(command)
+
+        expect(result).toEqual({ success: true, data: undefined })
+        expect(mockCreateEmissionSourcesWithReturn).toHaveBeenCalledTimes(1)
+        expect(mockTransaction.site.create).toHaveBeenCalledTimes(2)
+
+        expect(mockTransaction.site.create).toHaveBeenNthCalledWith(1, {
+          data: expect.objectContaining({
+            name: 'Original Site - Copie 1',
+            etp: 1,
+            ca: 2,
+            volunteerNumber: 3,
+            beneficiaryNumber: 4,
+            organization: { connect: { id: 'org-id' } },
+          }),
+        })
+
+        expect(mockTransaction.site.create).toHaveBeenNthCalledWith(2, {
+          data: expect.objectContaining({
+            name: 'Original Site - Copie 2',
+            etp: 1,
+            ca: 2,
+            volunteerNumber: 3,
+            beneficiaryNumber: 4,
+            organization: { connect: { id: 'org-id' } },
+          }),
+        })
+      })
+    })
+
+    describe('Both target sites and new sites', () => {
+      it('should duplicate to both existing and new sites', async () => {
+        const mockUuidv4 = jest.mocked(uuidv4)
+        mockUuidv4
+          .mockReturnValueOnce('new-es-1' as unknown as Uint8Array)
+          .mockReturnValueOnce('new-es-2' as unknown as Uint8Array)
+
+        const sourceEmissionSource = createMockEmissionSource()
+
+        const study = getMockeFullStudy({
+          sites: [
+            createMockStudySite({
+              id: TEST_IDS.studySite,
+              site: { ...mockedDbFullStudySite.site, id: TEST_IDS.site, name: 'Original Site' },
+            }),
+            createMockStudySite({
+              id: 'existing-target-site',
+              site: { ...mockedDbFullStudySite.site, id: TEST_IDS.site },
+            }),
+          ],
+          emissionSources: [sourceEmissionSource],
+        })
+
+        setupSiteDuplicationMocks(study)
+        setupIncrementalSiteCreationMocks()
+        setupMockGetStudyByIdWithNewSites(study, [{ id: 'new-study-site-1', name: 'Original Site - Copie 1' }])
+
+        const command = createDuplicateSiteCommand({
+          targetSiteIds: ['existing-target-site'],
+          newSitesCount: 1,
+          fieldsToDuplicate: ['emissionSources', 'etp', 'ca', 'volunteerNumber', 'beneficiaryNumber'],
+        })
+
+        mockCreateEmissionSourcesWithReturn.mockResolvedValue([{ id: 'new-es-1' }, { id: 'new-es-2' }])
+
+        const result = await duplicateSiteAndEmissionSources(command)
+
+        expect(result).toEqual({ success: true, data: undefined })
+        expect(mockCreateEmissionSourcesWithReturn).toHaveBeenCalledTimes(1)
+        expect(mockCreateEmissionSourcesWithReturn).toHaveBeenCalledWith(
+          expect.arrayContaining([
+            expect.objectContaining({
+              name: 'Source Emission',
+              value: 100,
+              validated: false,
+            }),
+          ]),
+          mockTransaction,
+        )
+        expect(mockTransaction.studySite.create).toHaveBeenCalledTimes(1)
+        expect(mockTransaction.studySite.create).toHaveBeenCalledWith({
+          data: expect.objectContaining({
+            etp: 1,
+            ca: 2,
+            volunteerNumber: 3,
+            beneficiaryNumber: 4,
+          }),
+        })
+      })
+
+      it('should not duplicate fields that are not in the command', async () => {
+        const sourceEmissionSource = createMockEmissionSource()
+
+        const study = getMockeFullStudy({
+          sites: [
+            createMockStudySite({
+              id: TEST_IDS.studySite,
+              site: { ...mockedDbFullStudySite.site, id: TEST_IDS.site, name: 'Original Site' },
+            }),
+            createMockStudySite({
+              id: 'existing-target-site',
+              site: { ...mockedDbFullStudySite.site, id: TEST_IDS.site },
+            }),
+          ],
+          emissionSources: [sourceEmissionSource],
+        })
+
+        setupSiteDuplicationMocks(study)
+        setupIncrementalSiteCreationMocks()
+
+        const newSiteData = createMockStudySite({
+          id: 'new-study-site-1',
+          site: { ...mockedDbFullStudySite.site, id: 'new-site-1', name: 'Original Site - Copie 1' },
+          etp: 1,
+          ca: 2,
+          volunteerNumber: 3,
+          beneficiaryNumber: 4,
+        })
+
+        mockGetStudyById.mockImplementation((studyId: string, _orgId?: string, tx?: unknown) => {
+          if (tx) {
+            return Promise.resolve({
+              ...study,
+              sites: [...study.sites, newSiteData],
+            })
+          }
+          return Promise.resolve(study)
+        })
+
+        const command = createDuplicateSiteCommand({
+          targetSiteIds: ['existing-target-site'],
+          newSitesCount: 1,
+        })
+
+        const result = await duplicateSiteAndEmissionSources(command)
+
+        expect(result).toEqual({ success: true, data: undefined })
+        expect(mockTransaction.studySite.create).toHaveBeenCalledTimes(1)
+        expect(mockTransaction.studySite.create).toHaveBeenCalledWith({
+          data: expect.objectContaining({
+            etp: 0,
+            ca: 0,
+            study: { connect: { id: TEST_IDS.sourceStudy } },
+          }),
+        })
+        expect(mockTransaction.studySite.updateMany).toHaveBeenCalledTimes(0)
       })
     })
   })

@@ -1,6 +1,5 @@
-import { Translations } from '@/types/translation'
 import { MenuItem, SelectChangeEvent, SelectProps } from '@mui/material'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Select } from './Select'
 
 interface MultiSelectProps {
@@ -9,7 +8,6 @@ interface MultiSelectProps {
   iconPosition?: 'before' | 'after'
   options: { label: string; value: string }[]
   onChange: (value: string[]) => void
-  translation: Translations
   clearable?: boolean
 }
 
@@ -19,7 +17,6 @@ export const MultiSelect = ({
   value,
   onChange,
   options,
-  translation,
   placeholder,
   clearable,
   ...selectProps
@@ -28,7 +25,15 @@ export const MultiSelect = ({
     typeof value === 'string' ? (value.split(',') as string[]) : (value as string[]),
   )
 
-  const translatedSelected = useMemo(() => selected.map((v) => translation(v)), [selected, translation])
+  useEffect(() => {
+    const newValue = typeof value === 'string' ? (value.split(',') as string[]) : (value as string[])
+    setSelected(newValue)
+  }, [value])
+
+  const selectedLabels = useMemo(
+    () => selected.map((v) => options.find((o) => o.value === v)?.label),
+    [selected, options],
+  )
 
   const handleChange = (event: SelectChangeEvent<unknown>) => {
     const {
@@ -49,12 +54,11 @@ export const MultiSelect = ({
       onChange={handleChange}
       {...selectProps}
       renderValue={() => {
-        if (translatedSelected.length === 0) {
+        if (selectedLabels.length === 0) {
           return <em>{placeholder}</em>
         }
-        return translatedSelected.join(', ')
+        return selectedLabels.join(', ')
       }}
-      t={translation}
       clearable={clearable && selected.length > 0}
     >
       {options.map((option) => (

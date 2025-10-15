@@ -351,7 +351,9 @@
       "team": "My team",
       "informationDefinition": "Information definition",
       "dataAccounting": "Accounting of data",
-      "reductionTrajectories": "Reduction trajectories",
+      "trajectories": "Reduction trajectories",
+      "objectives": "Reduction objectives",
+      "actionPlan": "Action plan",
       "commingSoon": "Coming soon"
     },
     "new": {
@@ -647,6 +649,23 @@
         "close": "Close",
         "glossaryDescription": "Tags and tag families are used to identify your emission sources in order to visualize certain results later. <br></br>Once your tags are created, you can associate them with emission sources within the \"Data Entry\" page. Then, on the \"Results\" page, you can view the emissions due to a tag family or a specific tag, but you will not be able to view the emissions of two tag families simultaneously, because double counting can occur between these two tag families. <br></br>To give a concrete example, let's say there are two tag families: \"Products Sold\" and \"Target Audiences\". These two families and the tags belonging to them will allow you to visualize the distribution of your organization's emissions based on the products sold, and the same for the target audiences."
       },
+      "duplicate": {
+        "title": "Duplicate site {name} and its emission sources",
+        "description": "You can duplicate a site and/or its emission sources to one or more sites in your study. The emission sources will be duplicated. The site information (ETP, CA) will only be modified on the study and not on your general information.",
+        "selectInfoTitle": "Choose information to duplicate",
+        "emissionSources": "Emission sources",
+        "selectSitesTitle": "Choose the site(s) to duplicate to",
+        "selectAll": "Select all",
+        "deselectAll": "Deselect all",
+        "selectSitesLabel": "Destination sites",
+        "selectSitesPlaceholder": "Select sites",
+        "noOtherSites": "No other sites available in this study",
+        "createSitesTitle": "Create sites and duplicate information to them",
+        "createSitesDescription": "You can also create new sites and duplicate the information to them. These will appear in your general information. Please indicate the number of sites to create on which the information you selected will be duplicated.",
+        "numberOfSitesToCreate": "Number of sites to create",
+        "cancel": "Cancel",
+        "duplicate": "Duplicate"
+      },
       "information": "For more information on this section, you can refer to this documentation: "
     },
     "results": {
@@ -699,7 +718,8 @@
         "missingCaract1": "Uncharacterized emission sources are not accounted for in the BEGES-R, which leads to undue differences with the Bilan Carbone® if you have chosen to visualize unvalidated emission sources.",
         "missingCaract2": "You have not entered the characterizations for all the emission sources in your study. Please edit and add the characterization for the following emission sources:",
         "additionalMissing": "+ {count} other emission {count, plural,  =1 {source} other {sources}}",
-        "close": "Close"
+        "close": "Close",
+        "unexplainedDifference": "Some differences can not be explained. Please, contact us at the <support>support</support>."
       },
       "noData": "No data to display",
       "uncertainties": {
@@ -739,7 +759,9 @@
         "uncertaintyPerPost": "Uncertainties per post",
         "uncertaintyPerPostDescription": "Please note that the size of the circles on this graph is proportional to the number of emission sources that have been entered for the item, and not to the total emissions for the item (which can be seen on the x-axis). This allows you to see which items have been analysed in the greatest detail and to assess whether this is relevant in terms of the significance of the associated emissions, as it is generally more relevant to work in detail on the most significant emission items. The following graphs also illustrate this effect.",
         "uncertaintyPerPostDescription2": "Furthermore, the greater the number of emission sources within a station, the less uncertainty there will be for that station. This is because two uncertainties cancel each other out, as it is generally uncertain whether the error will be made in the same direction. To give a concrete example, when measuring two strings, it is possible to overestimate the length of the first and underestimate the length of the second. Consequently, the uncertainty about the length of the sum of the two strings will be less than the sum of the two uncertainties taken separately."
-      }
+      },
+      "resultsExcel": "Excel",
+      "resultsWord": "Bilan Carbone® Report"
     },
     "pdf": {
       "loading": "Loading data...",
@@ -842,6 +864,57 @@
       "Not authorized": "You are not allowed to do this action",
       "title": "Study deletion",
       "wrongName": "Study name does not match"
+    },
+    "transitionPlan": {
+      "notInitialized": "The transition plan for this study has not been initialized yet.",
+      "validatorRequired": "A validator or editor of the study must initialize it.",
+      "startButton": "Start my transition plan",
+      "emptyState": {
+        "title": "Transition Plan",
+        "subtitle": "Define your organization's emission reduction trajectories and track your actions over time."
+      },
+      "modal": {
+        "title": "Choose a transition plan",
+        "description": "You already have one or more transition plans defined for this organization. Would you like to reuse one or define a new one? If you reuse it, it will be duplicated, any changes made here will not impact the one made in the previous study.",
+        "createNew": "Create a new transition plan from scratch",
+        "createNewDescription": "Start a new transition plan from scratch",
+        "reuseExisting": "Reuse an existing transition plan",
+        "reuseExistingDescription": "Reuse an existing transition plan for this study. It will be duplicated, any changes made here will not impact the one made in the previous study.",
+        "noAvailablePlans": "No transition plans available in this organization",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "selectPlaceholder": "Select an existing transition plan",
+        "studyPrefix": "Study:"
+      },
+      "onboarding": {
+        "badge": "ONBOARDING",
+        "learnMore": "Learn more",
+        "hideDetails": "Hide details"
+      },
+      "trajectories": {
+        "title": "Reduction trajectories",
+        "onboarding": {
+          "title": "Choose a reference trajectory or create your top-down trajectory",
+          "description": "Compare your situation with SBTi and SNBC reference trajectories. Follow one of these trajectories and its associated objectives or create your personalized trajectory (top-down trajectory).",
+          "detailedInfo": "Two reference trajectories, SNBC and SBTi, are offered here. You can visualize the decarbonization trajectory that your organization should follow according to each one.<br></br><br></br>Since SNBC is divided according to the major sectors of the French economy, you must select the sector that best corresponds to you. <snbc>More information about SNBC is available here</snbc>.<br></br>SBTi provides a trajectory aimed at limiting global warming to 1.5°C, and a second aimed at limiting it well below 2°C. You must also choose which of these two trajectories you wish to visualize. <sbti>More information about SBTi is available here</sbti>.<br></br><br></br>If your reference assessment dates from a year prior to the use of BC+2.0, you can enter the reference year and associated emissions. If this assessment is already present on BC+2.0, you can select it as the reference assessment.<br></br><br></br>For each of these trajectories, the choice has been made to keep the associated carbon budget. If your emissions do not exactly follow the chosen trajectory, BC+2.0 will recalculate an adapted trajectory to avoid exceeding the initially allocated carbon budget. With each new assessment carried out, your trajectories will be updated."
+        }
+      },
+      "objectives": {
+        "title": "Reduction objectives",
+        "onboarding": {
+          "title": "Add a trajectory or reduction objectives",
+          "description": "You have already created a reference trajectory but want to add others to test different hypotheses and ambition levels? You can create new trajectories, or add intermediate objectives for more detailed tracking without losing sight of the final goal!",
+          "detailedInfo": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p><p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>"
+        }
+      },
+      "actions": {
+        "title": "Action plan",
+        "onboarding": {
+          "title": "Create your action plan to achieve your objectives",
+          "description": "You have already created your trajectory and associated objectives. Now you can add the actions to your transition plan that will allow you to achieve these objectives",
+          "detailedInfo": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p><p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>"
+        }
+      }
     }
   },
   "emissionFactors": {
@@ -1483,6 +1556,7 @@
       "beneficiaryNumberPlaceholder": "Enter the number of beneficiaries for this site here",
       "actions": "Actions",
       "delete": "Delete",
+      "duplicate": "Duplicate",
       "add": "Add a site",
       "update": "Update list",
       "cnc": "Numéro CNC",
@@ -1739,8 +1813,9 @@
     "Formation": "Formation",
     "Feedback": "Feedback",
     "Creation": "Creation",
-    "DownloadReport": "Download Report",
+    "DownloadReport": "Download Bilan Carbone® Report",
     "FormationStudy": "Formation study",
+    "TransitionPlan": "Transition plan",
     "source": "Sources",
     "environment": "Environments",
     "true": "Activated",

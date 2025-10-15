@@ -19,15 +19,24 @@ interface Props {
   environment: Environment
   studyId: UUID
   study: FullStudy
+  isTransitionPlanActive: boolean
+  hasTransitionPlan: boolean
 }
 
-const StudyNavbar = ({ environment, studyId, study }: Props) => {
+const StudyNavbar = ({ environment, studyId, study, isTransitionPlanActive, hasTransitionPlan }: Props) => {
   const pathName = usePathname()
 
   const t = useTranslations('study.navigation')
   const [open, setOpen] = useState<boolean>(true)
 
-  const { title, sections } = getStudyNavbarMenu(environment, t, studyId, study.name)
+  const { title, sections } = getStudyNavbarMenu(
+    environment,
+    t,
+    studyId,
+    study.name,
+    isTransitionPlanActive,
+    hasTransitionPlan,
+  )
   return (
     <>
       <div className={styles.toggleButtonContainer}>

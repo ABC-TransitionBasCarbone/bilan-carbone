@@ -23,6 +23,8 @@ export const getStudyNavbarMenu = (
   t: Translations,
   studyId: string,
   studyName: string,
+  isTransitionPlanActive: boolean = false,
+  hasTransitionPlan: boolean = false,
 ): Menu => {
   if (environment === Environment.CUT) {
     return {
@@ -98,13 +100,33 @@ export const getStudyNavbarMenu = (
       },
       {
         header: t('transitionPlan'),
-        links: [
-          {
-            href: '#',
-            label: t('commingSoon'),
-            disabled: true,
-          },
-        ],
+        links: isTransitionPlanActive
+          ? [
+              {
+                href: `/etudes/${studyId}/trajectoires`,
+                label: t('trajectories'),
+                testId: 'study-trajectories-link',
+              },
+              {
+                disabled: !hasTransitionPlan,
+                href: hasTransitionPlan ? `/etudes/${studyId}/objectifs` : '#',
+                label: t('objectives'),
+                testId: 'study-objectives-link',
+              },
+              {
+                disabled: !hasTransitionPlan,
+                href: hasTransitionPlan ? `/etudes/${studyId}/actions` : '#',
+                label: t('actionPlan'),
+                testId: 'study-action-plan-link',
+              },
+            ]
+          : [
+              {
+                disabled: true,
+                href: '#',
+                label: t('commingSoon'),
+              },
+            ],
       },
     ],
   }

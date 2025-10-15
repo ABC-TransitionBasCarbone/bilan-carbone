@@ -3,7 +3,7 @@ import { getEnvVar } from '@/lib/environment'
 import { Environment } from '@prisma/client'
 import { getTranslations } from 'next-intl/server'
 import { sendEmail } from './send'
-import { getEnvResetLink } from './utils'
+import { getActivationInvitationLink, getEnvResetLink } from './utils'
 
 const BASE_URL = process.env.NEXTAUTH_URL
 
@@ -74,6 +74,26 @@ export const sendActivationEmail = async (toEmail: string, token: string, fromRe
     },
   )
 }
+
+export const sendActivationInvitationEmail = async (
+  toEmail: string,
+  creatorName: string,
+  userName: string,
+  isUser: boolean,
+  studyName: string,
+  env: Environment,
+) =>
+  sendEmail(
+    env,
+    [toEmail],
+    await tSubject(isUser ? 'userOnStudyInvitation' : 'contributorInvitation', { studyName }),
+    'new-user',
+    {
+      creatorName,
+      userName,
+      link: getActivationInvitationLink(toEmail, env),
+    },
+  )
 
 export const sendActivationRequest = async (
   toEmailList: string[],

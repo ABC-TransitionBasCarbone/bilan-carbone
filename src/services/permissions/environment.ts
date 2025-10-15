@@ -14,12 +14,13 @@ export const hasAccessToDownloadStudyEmissionSourcesButton = (environment: Envir
 export const hasAccessToStudyCardDetails = (environment: Environment) =>
   ([Environment.BC, Environment.TILT] as Environment[]).includes(environment)
 
-export const hasAccessToCreateOrganization = (environment: Environment) => environment === Environment.BC
+export const hasAccessToCreateOrganization = (environment: Environment) =>
+  ([Environment.TILT, Environment.BC] as Environment[]).includes(environment)
 
 export const hasAccessToDuplicateStudy = (environment: Environment) =>
   ([Environment.BC, Environment.TILT] as Environment[]).includes(environment)
 
-export const hasAccessToCreateEmissionSourceTag = async (environment: Environment) =>
+export const hasAccessToCreateStudyTag = async (environment: Environment) =>
   ([Environment.BC, Environment.TILT] as Environment[]).includes(environment)
 
 export const hasAccessToStudyFlowExample = (environment: Environment) =>
@@ -33,4 +34,6 @@ export const hasAccessToBcExport = (environment: Environment) =>
 export const hasAccessToDependencyMatrix = (environment: Environment) =>
   ([Environment.TILT] as Environment[]).includes(environment)
 
+// environnement is not used but kept for consistency
+// eslint-disable-next-line no-use-before-define
 export const hasAccessToDependencyMatrixExample = (environment: Environment) => false

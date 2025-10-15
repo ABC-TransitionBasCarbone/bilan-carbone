@@ -299,24 +299,34 @@ export const getEnvironmentsForDuplication = async (studyId: string) => {
   ])
   if (
     !study ||
-    study.organizationVersionId !== session.user.organizationVersionId ||
+    (study.organizationVersionId !== session.user.organizationVersionId &&
+      study.organizationVersion.parentId !== session.user.organizationVersionId) ||
     !userAccounts.success ||
     !userAccounts.data.length
   ) {
     return []
   }
 
-  const eligibleOrganizationVersions = (
-    await getOrganizationVersionsByOrganizationId(study.organizationVersion.organization.id)
-  ).map((organizationVersion) => organizationVersion.id)
+  const eligibleOrganizationVersions = await getOrganizationVersionsByOrganizationId(
+    study.organizationVersion.organization.id,
+  )
+
+  const versionIds = eligibleOrganizationVersions.map((organizationVersion) => organizationVersion.id)
+  const parentsIds = eligibleOrganizationVersions.map((organizationVersion) => organizationVersion.parentId)
 
   const eligibleEnvironments = getDuplicableEnvironments(session.user.environment)
   return userAccounts.data
     .filter(
       (userAccount) =>
+        // environments match
         eligibleEnvironments.includes(userAccount.environment) &&
+        // user is within an organization
         userAccount.organizationVersionId &&
-        eligibleOrganizationVersions.includes(userAccount.organizationVersionId),
+        // Account's organizationVersion is amongst the eligible organisation version for the study
+        (versionIds.includes(userAccount.organizationVersionId) ||
+          // OR account's organizationVersion is the study parent's organization AND is from the same environment (no cross-environment duplication for cr clients #1897)
+          (parentsIds.includes(userAccount.organizationVersionId) &&
+            userAccount.environment === study.organizationVersion.environment)),
     )
     .map((eligibleEnvironment) => eligibleEnvironment.environment)
 }
@@ -446,4 +456,22 @@ export const hasAccessToFormationStudy = async (userAccount: Prisma.AccountCreat
     userAccount.environment,
   )
   return isFormationStudyFeatureActive.success && isFormationStudyFeatureActive.data
+}
+
+export const isFeatureTransitionPlanActive = async (environment: Environment) => {
+  const isTransitionPlanFeatureActive = await isDeactivableFeatureActiveForEnvironment(
+    DeactivatableFeature.TransitionPlan,
+    environment,
+  )
+  return isTransitionPlanFeatureActive.success && isTransitionPlanFeatureActive.data
+}
+
+export const canEditTransitionPlan = async (user: UserSession, study: FullStudy) => {
+  const userRightsOnStudy = getAccountRoleOnStudy(user, study)
+  return !!(userRightsOnStudy && hasEditionRights(userRightsOnStudy))
+}
+
+export const canViewTransitionPlan = async (user: UserSession, study: FullStudy) => {
+  const userRightsOnStudy = getAccountRoleOnStudy(user, study)
+  return !!userRightsOnStudy
 }

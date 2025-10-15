@@ -3,6 +3,7 @@ import Modal from '@/components/modals/Modal'
 import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
+import { getEnvVar } from '@/lib/environment'
 import { getEmissionResults } from '@/services/emissionSource'
 import { Post } from '@/services/posts'
 import { BegesPostInfos, getBegesEmissionTotal } from '@/services/results/beges'
@@ -13,9 +14,11 @@ import { STUDY_UNIT_VALUES } from '@/utils/study'
 import LightbulbIcon from '@mui/icons-material/LightbulbOutlined'
 import TrendingUpIcon from '@mui/icons-material/TrendingUpOutlined'
 import WarningAmberIcon from '@mui/icons-material/WarningAmberOutlined'
+import { Alert } from '@mui/material'
 import { SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 import styles from './ConsolatedBEGESDifference.module.css'
@@ -26,6 +29,47 @@ interface Props {
   validatedOnly: boolean
   results: ResultsByPost[]
   begesResults: BegesPostInfos[]
+  studySite: string
+}
+
+const EmissionSourceList = ({
+  studySite,
+  emissionSources,
+  onClick,
+}: {
+  studySite: string
+  emissionSources: FullStudy['emissionSources']
+  onClick: (sourceId: string, subPost: SubPost) => void
+}) => {
+  const t = useTranslations('study.results.difference')
+  const maxButtonEmissionSources = 10
+
+  return (
+    <div className={classNames(styles.missingSourcesList, 'wrap')}>
+      {emissionSources
+        .filter((_, i) => i < maxButtonEmissionSources)
+        .map((emissionSource) => (
+          <Button
+            key={`emission-source-${emissionSource.id}`}
+            onClick={() => onClick(emissionSource.id, emissionSource.subPost)}
+            color="secondary"
+            variant="outlined"
+            size="small"
+            className={styles.missingSourceButton}
+          >
+            {emissionSource.name}
+            {studySite === 'all' && ` (${emissionSource.studySite.site.name})`}
+          </Button>
+        ))}
+      {emissionSources.length > maxButtonEmissionSources && (
+        <div className={classNames(styles.additionalMissingSources, 'mt-2')}>
+          {t('additionalMissing', {
+            count: emissionSources.length - 10,
+          })}
+        </div>
+      )}
+    </div>
+  )
 }
 
 const ConsolatedBEGESDifference = ({
@@ -34,6 +78,7 @@ const ConsolatedBEGESDifference = ({
   validatedOnly,
   results,
   begesResults,
+  studySite,
 }: Props) => {
   const t = useTranslations('study.results.difference')
   const tPost = useTranslations('emissionFactors.post')
@@ -43,47 +88,68 @@ const ConsolatedBEGESDifference = ({
   const [open, setOpen] = useState(false)
   const router = useRouter()
 
+  const contactMail = getEnvVar('SUPPORT_EMAIL', study.organizationVersion.environment)
+
   const environment = useMemo(() => study.organizationVersion.environment, [study])
 
   const navigateToEmissionSource = (emissionSourceId: string, subPost: SubPost) => {
     const post = getPost(subPost)
     if (post) {
-      const url = `/etudes/${study.id}/comptabilisation/saisie-des-donnees/${post}#emission-source-${emissionSourceId}`
+      const emissionSource = study.emissionSources.find((es) => es.id === emissionSourceId)
+      const targetSite = emissionSource?.studySite.id
+      const url = `/etudes/${study.id}/comptabilisation/saisie-des-donnees/${post}?site=${targetSite}#emission-source-${emissionSourceId}`
       router.push(url)
     }
   }
 
-  const begesTotal = formatNumber((begesResults.find((result) => result.rule === 'total')?.total || 0) / unitValue, 0)
-  const computedTotal = formatNumber((results.find((result) => result.post === 'total')?.value || 0) / unitValue, 0)
+  const begesTotalNumber = (begesResults.find((result) => result.rule === 'total')?.total || 0) / unitValue
+  const computedTotalNumber = (results.find((result) => result.post === 'total')?.value || 0) / unitValue
+  const begesTotal = formatNumber(begesTotalNumber, 0)
+  const computedTotal = formatNumber(computedTotalNumber, 0)
 
-  const utilisationEnDependance = results
+  const emissionSourcesForSelectedSite = useMemo(() => {
+    if (studySite === 'all') {
+      return study.emissionSources
+    }
+    return study.emissionSources.filter((es) => es.studySite.id === studySite)
+  }, [study.emissionSources, studySite])
+
+  const utilisationEnDependanceInfos = results
     .find((result) => result.post === Post.UtilisationEtDependance)
     ?.children.find((subPost) => subPost.post === SubPost.UtilisationEnDependance)
-  const hasUtilisationEnDependance = !!utilisationEnDependance && utilisationEnDependance.value !== 0
+  const hasUtilisationEnDependance = !!utilisationEnDependanceInfos && utilisationEnDependanceInfos.value !== 0
   // BEGES doesn't include "Utilisation en dépendance", BC does, so BEGES - BC = negative
-  const utilisationEnDependanceValue = utilisationEnDependance
-    ? Math.round(utilisationEnDependance.value / unitValue)
+  const utilisationEnDependanceValue = utilisationEnDependanceInfos
+    ? -utilisationEnDependanceInfos.value / unitValue
     : 0
-  const utilisationEnDependanceDifference = -utilisationEnDependanceValue
+  const utilisationEnDependanceValueToDisplay = formatNumber(Math.round(utilisationEnDependanceValue), 0)
 
   // Find an emission source for the "en dépendance" sub-post to use in navigation
-  const utilisationEnDependanceEmissionSource = study.emissionSources.find(
-    (emissionSource) => emissionSource.subPost === SubPost.UtilisationEnDependance,
+  const utilisationEnDependanceEmissionSources = useMemo(
+    () =>
+      emissionSourcesForSelectedSite.filter(
+        (emissionSource) => emissionSource.subPost === SubPost.UtilisationEnDependance,
+      ),
+    [emissionSourcesForSelectedSite],
   )
 
-  const wasteEmissionSourcesOnStudy = study.emissionSources.filter(
-    (emissionSource) =>
-      emissionSource.emissionFactor &&
-      emissionSource.emissionFactor.importedId &&
-      wasteEmissionFactors[emissionSource.emissionFactor.importedId],
+  const wasteEmissionSources = useMemo(
+    () =>
+      emissionSourcesForSelectedSite.filter(
+        (emissionSource) =>
+          emissionSource.emissionFactor &&
+          emissionSource.emissionFactor.importedId &&
+          wasteEmissionFactors[emissionSource.emissionFactor.importedId],
+      ),
+    [emissionSourcesForSelectedSite],
   )
 
   const wasteSourcesWithDifferences = useMemo(() => {
-    if (!wasteEmissionSourcesOnStudy.length) {
+    if (!wasteEmissionSources.length) {
       return []
     }
 
-    return wasteEmissionSourcesOnStudy
+    return wasteEmissionSources
       .filter((emissionSource) => (emissionSource.validated || !validatedOnly) && emissionSource.value)
       .map((emissionSource) => {
         const emissionFactor = emissionFactorsWithParts.find((ef) => ef.id === emissionSource.emissionFactor?.id)
@@ -91,20 +157,23 @@ const ConsolatedBEGESDifference = ({
           return null
         }
 
-        const bcValue = Math.round(getEmissionResults(emissionSource, environment).emissionValue / unitValue)
-        const begesValue = Math.round(getBegesEmissionTotal(emissionSource, emissionFactor) / unitValue)
-        const difference = begesValue - bcValue
+        const begesValue = getBegesEmissionTotal(emissionSource, emissionFactor) / unitValue
+        const consolidatedValue = getEmissionResults(emissionSource, environment).emissionValue / unitValue
+        const begesValueToDisplay = formatNumber(Math.round(begesValue), 0)
+        const consolidatedValueToDisplay = formatNumber(Math.round(consolidatedValue), 0)
+        const difference = begesValue - consolidatedValue
 
         return {
           source: emissionSource,
           post: tPost(emissionSource.subPost),
-          difference: difference,
-          consolidatedValue: bcValue,
-          begesValue,
+          difference,
+          differenceToDisplay: formatNumber(Math.round(difference), 0),
+          consolidatedValueToDisplay,
+          begesValueToDisplay,
         }
       })
-      .filter((item): item is NonNullable<typeof item> => item !== null && Math.abs(item.difference) >= 1)
-  }, [wasteEmissionSourcesOnStudy, emissionFactorsWithParts, validatedOnly, tPost, unitValue, environment])
+      .filter((item): item is NonNullable<typeof item> => item !== null && Math.abs(Math.round(item.difference)) >= 1)
+  }, [wasteEmissionSources, emissionFactorsWithParts, validatedOnly, tPost, unitValue, environment])
 
   const wasteTotalDifference = useMemo(() => {
     return wasteSourcesWithDifferences.reduce((total, item) => total + item.difference, 0)
@@ -112,7 +181,7 @@ const ConsolatedBEGESDifference = ({
 
   const missingCaract = useMemo(
     () =>
-      study.emissionSources.filter((emissionSource) => {
+      emissionSourcesForSelectedSite.filter((emissionSource) => {
         if (
           (!emissionSource.validated && validatedOnly) ||
           emissionSource.subPost === SubPost.UtilisationEnDependance
@@ -126,7 +195,7 @@ const ConsolatedBEGESDifference = ({
 
         return false
       }),
-    [study.emissionSources, validatedOnly],
+    [emissionSourcesForSelectedSite, validatedOnly],
   )
 
   const missingCaractDifference = useMemo(() => {
@@ -145,7 +214,22 @@ const ConsolatedBEGESDifference = ({
     }, 0)
   }, [missingCaract, emissionFactorsWithParts, unitValue, environment])
 
-  const maxButtonEmissionSources = 10
+  const unexplainedDifference = useMemo(() => {
+    return (
+      Math.floor(begesTotalNumber) +
+        1 -
+        Math.floor(
+          computedTotalNumber + utilisationEnDependanceValue + wasteTotalDifference + missingCaractDifference,
+        ) >
+      1
+    )
+  }, [
+    begesTotalNumber,
+    computedTotalNumber,
+    missingCaractDifference,
+    utilisationEnDependanceValue,
+    wasteTotalDifference,
+  ])
 
   return begesTotal !== computedTotal ? (
     <>
@@ -154,6 +238,15 @@ const ConsolatedBEGESDifference = ({
         {t('button')}
       </div>
       <Modal open={open} title={t('modalTitle')} label="computed-beges-difference" onClose={() => setOpen(false)}>
+        {unexplainedDifference && (
+          <div className="flex-col mb2">
+            <Alert severity="warning">
+              {t.rich('unexplainedDifference', {
+                support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
+              })}
+            </Alert>
+          </div>
+        )}
         <div className={classNames(styles.modalContent, 'flex-col')}>
           {hasUtilisationEnDependance && (
             <div className={styles.differenceCard}>
@@ -164,26 +257,17 @@ const ConsolatedBEGESDifference = ({
                 </div>
                 <div className={'align-center'}>
                   <span className={styles.differenceValueNegative}>
-                    {formatNumber(utilisationEnDependanceDifference, 0)} {unit}
+                    {utilisationEnDependanceValueToDisplay} {unit}
                   </span>
                 </div>
               </div>
               <div className={classNames(styles.cardContent, 'flex-col')}>
                 <p className={styles.cardDescription}>{t('dependance')}</p>
-                <div className={styles.cardActions}>
-                  <Button
-                    onClick={() =>
-                      navigateToEmissionSource(
-                        utilisationEnDependanceEmissionSource?.id || '',
-                        SubPost.UtilisationEnDependance,
-                      )
-                    }
-                    color="secondary"
-                    size="small"
-                  >
-                    {t('goToSubPost')}
-                  </Button>
-                </div>
+                <EmissionSourceList
+                  studySite={studySite}
+                  emissionSources={utilisationEnDependanceEmissionSources}
+                  onClick={navigateToEmissionSource}
+                />
               </div>
             </div>
           )}
@@ -222,17 +306,20 @@ const ConsolatedBEGESDifference = ({
                           className={styles.clickableRow}
                           onClick={() => navigateToEmissionSource(item.source.id, item.source.subPost)}
                         >
-                          <td className={styles.sourceName}>{item.source.name}</td>
+                          <td className={styles.sourceName}>
+                            {item.source.name}
+                            {studySite === 'all' && ` (${item.source.studySite.site.name})`}
+                          </td>
                           <td className={styles.sourcePost}>{item.post}</td>
                           <td className={styles.metricValue}>
-                            {formatNumber(item.consolidatedValue, 0)} {unit}
+                            {item.consolidatedValueToDisplay} {unit}
                           </td>
                           <td>
-                            {formatNumber(item.begesValue, 0)} {unit}
+                            {item.begesValueToDisplay} {unit}
                           </td>
                           <td className={item.difference >= 0 ? styles.differenceCell : styles.differenceCellNegative}>
                             {item.difference > 0 ? '+' : ''}
-                            {formatNumber(item.difference, 0)} {unit}
+                            {item.differenceToDisplay} {unit}
                           </td>
                         </tr>
                       ))}
@@ -262,27 +349,11 @@ const ConsolatedBEGESDifference = ({
                   <br />
                   {t('missingCaract2')}
                 </p>
-                <div className={classNames(styles.missingSourcesList, 'wrap')}>
-                  {missingCaract
-                    .filter((_, i) => i < maxButtonEmissionSources)
-                    .map((emissionSource) => (
-                      <Button
-                        key={`caract-emission-source-${emissionSource.id}`}
-                        onClick={() => navigateToEmissionSource(emissionSource.id, emissionSource.subPost)}
-                        color="secondary"
-                        variant="outlined"
-                        size="small"
-                        className={styles.missingSourceButton}
-                      >
-                        {emissionSource.name}
-                      </Button>
-                    ))}
-                  {missingCaract.length > maxButtonEmissionSources && (
-                    <div className={classNames(styles.additionalMissingSources, 'mt-2')}>
-                      {t('additionalMissing', { count: missingCaract.length - maxButtonEmissionSources })}
-                    </div>
-                  )}
-                </div>
+                <EmissionSourceList
+                  studySite={studySite}
+                  emissionSources={missingCaract}
+                  onClick={navigateToEmissionSource}
+                />
               </div>
             </div>
           )}

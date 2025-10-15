@@ -7,6 +7,7 @@ import * as environmentPermissionModule from '../permissions/environment'
 // TODO: ESM module issue with Jest. Remove these mocks when moving to Vitest
 jest.mock('../file', () => ({ download: jest.fn() }))
 jest.mock('../auth', () => ({ auth: jest.fn() }))
+jest.mock('uuid', () => ({ v4: jest.fn() }))
 jest.mock('next-intl/server', () => ({
   getTranslations: jest.fn(() => (key: string) => key),
 }))
@@ -16,11 +17,11 @@ jest.mock('../../db/account', () => ({
 }))
 
 jest.mock('../../db/emissionSource', () => ({
-  updateEmissionSourceTagOnStudy: jest.fn(),
+  updateStudyTag: jest.fn(),
 }))
 
 jest.mock('../permissions/environment', () => ({
-  hasAccessToCreateEmissionSourceTag: jest.fn(),
+  hasAccessToCreateStudyTag: jest.fn(),
 }))
 
 jest.mock('../permissions/check', () => ({
@@ -43,13 +44,12 @@ jest.mock('../../utils/serverResponse', () => ({
 
 jest.mock('./emissionSource', () => ({}))
 
-const { updateEmissionSourceTag } = jest.requireActual('./emissionSource')
+const { updateTag } = jest.requireActual('./emissionSource')
 
 const mockAuth = authModule.auth as jest.Mock
 const mockGetAccountById = accountModule.getAccountById as jest.Mock
-const mockUpdateEmissionSourceTagOnStudy = emissionSourceModule.updateEmissionSourceTagOnStudy as jest.Mock
-const mockHasAccessToCreateEmissionSourceTag =
-  environmentPermissionModule.hasAccessToCreateEmissionSourceTag as jest.Mock
+const mockUpdateStudyTag = emissionSourceModule.updateStudyTag as jest.Mock
+const mockHasAccessToCreateStudyTag = environmentPermissionModule.hasAccessToCreateStudyTag as jest.Mock
 
 const mockSession = {
   user: {
@@ -62,74 +62,74 @@ const mockAccount = {
   environment: 'BC',
 }
 
-describe('updateEmissionSourceTag', () => {
+describe('updateTag', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     mockAuth.mockResolvedValue(mockSession)
     mockGetAccountById.mockResolvedValue(mockAccount)
-    mockHasAccessToCreateEmissionSourceTag.mockResolvedValue(true)
-    mockUpdateEmissionSourceTagOnStudy.mockResolvedValue({ id: 'tag-id' })
+    mockHasAccessToCreateStudyTag.mockResolvedValue(true)
+    mockUpdateStudyTag.mockResolvedValue({ id: 'tag-id' })
   })
 
   describe('Authentication and Authorization', () => {
     it('should return error when user is not authenticated', async () => {
       mockAuth.mockResolvedValue(null)
 
-      const result = await updateEmissionSourceTag('tag-id', 'New Name', '#ff0000')
+      const result = await updateTag('tag-id', 'New Name', '#ff0000', 'family-id')
 
       expect(result).toEqual({
         success: false,
         errorMessage: 'Not authorized',
       })
-      expect(mockUpdateEmissionSourceTagOnStudy).not.toHaveBeenCalled()
+      expect(mockUpdateStudyTag).not.toHaveBeenCalled()
     })
 
     it('should return error when session has no user', async () => {
       mockAuth.mockResolvedValue({ user: null })
 
-      const result = await updateEmissionSourceTag('tag-id', 'New Name', '#ff0000')
+      const result = await updateTag('tag-id', 'New Name', '#ff0000', 'family-id')
 
       expect(result).toEqual({
         success: false,
         errorMessage: 'Not authorized',
       })
-      expect(mockUpdateEmissionSourceTagOnStudy).not.toHaveBeenCalled()
+      expect(mockUpdateStudyTag).not.toHaveBeenCalled()
     })
 
     it('should return error when account is not found', async () => {
       mockGetAccountById.mockResolvedValue(null)
 
-      const result = await updateEmissionSourceTag('tag-id', 'New Name', '#ff0000')
+      const result = await updateTag('tag-id', 'New Name', '#ff0000', 'family-id')
 
       expect(result).toEqual({
         success: false,
         errorMessage: 'Not authorized',
       })
-      expect(mockUpdateEmissionSourceTagOnStudy).not.toHaveBeenCalled()
+      expect(mockUpdateStudyTag).not.toHaveBeenCalled()
     })
 
     it('should return error when user has no access to create emission source tag', async () => {
-      mockHasAccessToCreateEmissionSourceTag.mockResolvedValue(false)
+      mockHasAccessToCreateStudyTag.mockResolvedValue(false)
 
-      const result = await updateEmissionSourceTag('tag-id', 'New Name', '#ff0000')
+      const result = await updateTag('tag-id', 'New Name', '#ff0000', 'family-id')
 
       expect(result).toEqual({
         success: false,
         errorMessage: 'Not authorized',
       })
-      expect(mockUpdateEmissionSourceTagOnStudy).not.toHaveBeenCalled()
+      expect(mockUpdateStudyTag).not.toHaveBeenCalled()
     })
   })
 
   describe('Successful Updates', () => {
     it('should update tag with name, color, and family', async () => {
-      const result = await updateEmissionSourceTag('tag-id', 'New Name', '#ff0000', 'family-id')
+      const result = await updateTag('tag-id', 'New Name', '#ff0000', 'family-id')
 
       expect(result).toEqual({
         success: true,
         data: { id: 'tag-id' },
       })
-      expect(mockUpdateEmissionSourceTagOnStudy).toHaveBeenCalledWith('tag-id', {
+      expect(mockUpdateStudyTag).toHaveBeenCalledWith('tag-id', {
         name: 'New Name',
         color: '#ff0000',
         family: { connect: { id: 'family-id' } },

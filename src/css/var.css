@@ -112,6 +112,14 @@
   padding-top: 1rem;
 }
 
+.pt2 {
+  padding-top: 2rem;
+}
+
+.pt3 {
+  padding-top: 3rem;
+}
+
 .pl1 {
   padding-left: 1rem;
 }
@@ -180,6 +188,14 @@
   height: auto;
 }
 
+.wauto {
+  width: auto;
+}
+
+.wfit {
+  width: fit-content;
+}
+
 .w100 {
   width: 100% !important;
 }
@@ -190,6 +206,10 @@
 
 .gapped-2 {
   gap: 0.5rem;
+}
+
+.gapped075 {
+  gap: 0.75rem;
 }
 
 .gapped1 {
@@ -214,4 +234,8 @@
 
 .relative {
   position: relative;
+}
+
+.pointer {
+  cursor: pointer;
 }

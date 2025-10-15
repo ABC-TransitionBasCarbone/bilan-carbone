@@ -1,5 +1,5 @@
-import { defaultEmissionSourceTags } from '@/constants/emissionSourceTags'
 import { environmentsWithChecklist } from '@/constants/environments'
+import { DefaultStudyTags } from '@/constants/studyTags'
 import { reCreateBegesRules } from '@/db/beges'
 import { signPassword } from '@/services/auth'
 import { getEmissionFactorsFromAPI } from '@/services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromAPI'
@@ -50,7 +50,8 @@ const users = async () => {
   await prisma.emissionFactor.deleteMany()
 
   await prisma.emissionSourceTag.deleteMany()
-  await prisma.emissionSourceTagFamily.deleteMany()
+  await prisma.studyTag.deleteMany()
+  await prisma.studyTagFamily.deleteMany()
 
   await prisma.userOnStudy.deleteMany()
   await prisma.studyExport.deleteMany()
@@ -304,9 +305,9 @@ const users = async () => {
   })
 
   const organizationVersionsTILT = await prisma.organizationVersion.createManyAndReturn({
-    data: organizations.map((organization) => ({
+    data: organizations.map((organization, index) => ({
       organizationId: organization.id,
-      isCR: false,
+      isCR: index % 2 === 1,
       onboarded: false,
       activatedLicence: true,
       environment: Environment.TILT,
@@ -316,10 +317,13 @@ const users = async () => {
   const crOrganizationVersions = organizationVersions.filter((organization) => organization.isCR)
   const regularOrganizationVersions = organizationVersions.filter((organization) => !organization.isCR)
 
+  const regularTiltOrganizationVersions = organizationVersionsTILT.filter((organization) => !organization.isCR)
+  const crTiltOrganizationVersions = organizationVersionsTILT.filter((organization) => organization.isCR)
+
   const environmentOrganizationVersions = {
     [Environment.BC]: regularOrganizationVersions,
     [Environment.CUT]: organizationVersionsCUT,
-    [Environment.TILT]: organizationVersionsTILT,
+    [Environment.TILT]: regularTiltOrganizationVersions,
   }
 
   const childOrganizations = await prisma.organization.createManyAndReturn({
@@ -524,6 +528,61 @@ const users = async () => {
           },
           {
             organizationVersionId: organizationVersionsTILT[index % organizationVersionsTILT.length].id,
+            role: role as Role,
+            userId: user.id,
+            environment: Environment.TILT,
+            status: UserStatus.ACTIVE,
+          },
+        ]
+        const accounts = await prisma.account.createManyAndReturn({
+          data: accountsData,
+        })
+
+        const organizationVersions = await prisma.organizationVersion.findMany({
+          where: {
+            id: {
+              in: accounts.map((account) => account.organizationVersionId).filter((id): id is string => id !== null),
+            },
+          },
+        })
+
+        const accountsAndOrganizationVersions = accounts.map((account) => {
+          const organizationVersion = organizationVersions.find((org) => org.id === account.organizationVersionId)
+          if (!organizationVersion) {
+            return { account, organizationVersion: { organizationId: null } }
+          }
+          return { account, organizationVersion }
+        })
+        return { user, accounts: accountsAndOrganizationVersions }
+      }),
+      // all-env-cr (if possible)
+      ...Array.from({ length: 2 }).map(async (_, index) => {
+        const user = await prisma.user.create({
+          data: {
+            email: `all-env-cr-${role.toLocaleLowerCase()}-${index}@yopmail.com`,
+            firstName: faker.person.firstName(),
+            lastName: faker.person.lastName(),
+            password: await signPassword(`password-${index}`),
+            level: levels[index % levels.length] as Level,
+          },
+        })
+        const accountsData = [
+          {
+            organizationVersionId: crOrganizationVersions[index % crOrganizationVersions.length].id,
+            role: role as Role,
+            userId: user.id,
+            environment: Environment.BC,
+            status: UserStatus.ACTIVE,
+          },
+          {
+            organizationVersionId: organizationVersionsCUT[index % organizationVersionsCUT.length].id,
+            role: getCutRoleFromBase(role as Role),
+            userId: user.id,
+            environment: Environment.CUT,
+            status: UserStatus.ACTIVE,
+          },
+          {
+            organizationVersionId: crTiltOrganizationVersions[index % crTiltOrganizationVersions.length].id,
             role: role as Role,
             userId: user.id,
             environment: Environment.TILT,
@@ -798,12 +857,12 @@ const users = async () => {
         contributors: {
           create: { accountId: contributor.id, subPost: SubPost.MetauxPlastiquesEtVerre },
         },
-        emissionSourceTagFamilies: {
+        tagFamilies: {
           create: [
             {
               name: 'défaut',
-              emissionSourceTags: {
-                create: (defaultEmissionSourceTags[Environment.TILT] ?? []).map((tag) => ({
+              tags: {
+                create: (DefaultStudyTags[Environment.TILT] ?? []).map((tag) => ({
                   name: tag.name,
                   color: tag.color,
                 })),
@@ -846,12 +905,12 @@ const users = async () => {
             data: [{ role: StudyRole.Validator, accountId: defaultUserWithAccount.accounts[0].account.id }],
           },
         },
-        emissionSourceTagFamilies: {
+        tagFamilies: {
           create: [
             {
               name: 'défaut',
-              emissionSourceTags: {
-                create: (defaultEmissionSourceTags[Environment.TILT] ?? []).map((tag) => ({
+              tags: {
+                create: (DefaultStudyTags[Environment.TILT] ?? []).map((tag) => ({
                   name: tag.name,
                   color: tag.color,
                 })),
