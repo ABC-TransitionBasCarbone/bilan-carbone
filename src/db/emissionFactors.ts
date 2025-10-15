@@ -1,8 +1,9 @@
 import { LocaleType } from '@/i18n/config'
+import { isSourceForEnv } from '@/services/importEmissionFactor/import'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
 import { flattenSubposts } from '@/utils/post'
-import { EmissionFactorStatus, Import, Unit, type Prisma } from '@prisma/client'
+import { EmissionFactorStatus, Environment, Import, Unit, type Prisma } from '@prisma/client'
 import { Session } from 'next-auth'
 import { prismaClient } from './client'
 import { getOrganizationVersionById } from './organization'
@@ -114,12 +115,7 @@ export const getAllEmissionFactors = async (organizationId: string, studyId?: st
 
     if (versionIds.length <= 0) {
       versionIds = (
-        await getSourcesLatestImportVersionId([
-          Import.Manual,
-          Import.Legifrance,
-          Import.BaseEmpreinte,
-          Import.NegaOctet,
-        ])
+        await getSourcesLatestImportVersionId(isSourceForEnv(Environment.BC).filter((s) => s !== Import.Manual))
       ).map((v) => v.id)
     }
   }
