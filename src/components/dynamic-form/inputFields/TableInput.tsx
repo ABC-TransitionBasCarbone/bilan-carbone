@@ -1,3 +1,4 @@
+import BaseTable from '@/components/base/Table'
 import { emissionFactorMap } from '@/constants/emissionFactorMap'
 import { UseAutoSaveReturn } from '@/hooks/useAutoSave'
 import { formatDynamicLabel } from '@/services/interpolation'
@@ -8,9 +9,9 @@ import {
 } from '@/services/serverFunctions/question'
 import { addTableRow, createFixedTableRow, deleteTableRow, duplicateTableRow, isTableAnswer } from '@/utils/tableInput'
 import { ContentCopy, Delete } from '@mui/icons-material'
-import { Box, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
+import { Box, IconButton, Paper, TableContainer } from '@mui/material'
 import { Prisma, QuestionType } from '@prisma/client'
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
+import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Control, FieldErrors, UseFormSetValue, UseFormWatch } from 'react-hook-form'
@@ -281,28 +282,7 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue, 
         </Button>
       )}
       <TableContainer component={Paper} className="mt1">
-        <Table>
-          <TableHead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableCell key={header.id}>
-                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableHead>
-          <TableBody>
-            {table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <BaseTable table={table} testId="table-input" />
       </TableContainer>
     </Box>
   )

@@ -492,8 +492,7 @@ const EmissionFactorsTable = ({
     <>
       <BaseTable
         table={table}
-        t={t}
-        title="subTitle"
+        title={t('subTitle')}
         paginations={[25, 50, 100, 200, 500]}
         className={classNames('grow', { [styles.modalTable]: fromModal })}
         customRow={Row}

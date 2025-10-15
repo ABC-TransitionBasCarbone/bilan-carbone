@@ -128,7 +128,6 @@ const ConsolidatedResultsTable = <
   return (
     <BaseTable
       table={table}
-      t={t}
       className={classNames({ [commonStyles.compact]: isCompact })}
       testId="consolidated-results"
     />

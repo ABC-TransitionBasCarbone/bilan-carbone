@@ -77,7 +77,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, columns, ca
           )}
         </div>
       </div>
-      <BaseTable table={table} t={t} className="mt1" testId="sites" customRow={Row} />
+      <BaseTable table={table} className="mt1" testId="sites" customRow={Row} />
       <GlossaryModal
         glossary={showGlossary ? 'title' : ''}
         onClose={() => setShowGlossary(false)}

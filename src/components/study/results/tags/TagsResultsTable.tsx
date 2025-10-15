@@ -79,7 +79,7 @@ const TagsResultsTable = ({ resultsUnit, data }: Props) => {
     getCoreRowModel: getCoreRowModel(),
   })
 
-  return <BaseTable table={table} t={t} testId="tags-results" />
+  return <BaseTable table={table} testId="tags-results" />
 }
 
 export default TagsResultsTable

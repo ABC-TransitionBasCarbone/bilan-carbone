@@ -129,7 +129,7 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
             : undefined
         }
       >
-        <BaseTable table={table} t={t} testId="study-rights" />
+        <BaseTable table={table} testId="study-rights" />
       </Block>
       <Modal
         open={displayRoles}

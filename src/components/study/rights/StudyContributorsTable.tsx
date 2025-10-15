@@ -403,7 +403,7 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
         }
       >
         <div className={styles.container}>
-          <BaseTable table={table} t={t} testId="study-contributors" className="mb2" customRow={Row} />
+          <BaseTable table={table} className="mb2" testId="study-contributors" customRow={Row} />
         </div>
       </Block>
       <Modal

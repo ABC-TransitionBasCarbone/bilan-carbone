@@ -156,7 +156,7 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
             : undefined
         }
       >
-        <BaseTable table={table} t={t} testId="team" />
+        <BaseTable table={table} testId="team" />
       </Block>
       <Modal
         open={displayRoles}
