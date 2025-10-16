@@ -896,6 +896,7 @@
         "snbcButton": "SNBC Trajectory",
         "sbtiButton": "SBTi Trajectories",
         "customButton": "I choose my trajectory",
+        "customSubtitle": "Build your own reduction trajectory",
         "sbtiCard": {
           "title": "SBTi Trajectories",
           "description": "The Science Based Targets Initiative defines two reference trajectories, aiming to limit global warming to 1.5°C or \"Well below 2 degrees\" (WB2C).",
@@ -915,6 +916,68 @@
           "title": "Choose a reference trajectory or create your top-down trajectory",
           "description": "Compare your situation with SBTi and SNBC reference trajectories. Follow one of these trajectories and its associated objectives or create your personalized trajectory (top-down trajectory).",
           "detailedInfo": "Two reference trajectories, SNBC and SBTi, are offered here. You can visualize the decarbonization trajectory that your organization should follow according to each one.<br></br><br></br>Since SNBC is divided according to the major sectors of the French economy, you must select the sector that best corresponds to you. <snbc>More information about SNBC is available here</snbc>.<br></br>SBTi provides a trajectory aimed at limiting global warming to 1.5°C, and a second aimed at limiting it well below 2°C. You must also choose which of these two trajectories you wish to visualize. <sbti>More information about SBTi is available here</sbti>.<br></br><br></br>If your reference assessment dates from a year prior to the use of BC+2.0, you can enter the reference year and associated emissions. If this assessment is already present on BC+2.0, you can select it as the reference assessment.<br></br><br></br>For each of these trajectories, the choice has been made to keep the associated carbon budget. If your emissions do not exactly follow the chosen trajectory, BC+2.0 will recalculate an adapted trajectory to avoid exceeding the initially allocated carbon budget. With each new assessment carried out, your trajectories will be updated."
+        }
+      },
+      "trajectoryModal": {
+        "title": "I choose my trajectory",
+        "submit": "Confirm",
+        "success": "You have created your first trajectory!",
+        "successSubtitle": "To modify your trajectory and associated objectives, you can go to the <link>My reduction objectives</link> section.",
+        "steps": {
+          "chooseTrajectory": "Choose my trajectory",
+          "defineObjectives": "Define my reduction objectives"
+        },
+        "subtitle": "Reuse an existing trajectory or create your own reduction trajectory to start building your transition plan",
+        "sbti": {
+          "title": "SBTi",
+          "subtitle": "I follow the SBTi reference trajectory",
+          "benefit1": "To commit to a trajectory <strong>compatible with the Paris Agreement</strong>",
+          "benefit2": "To gain <strong>international recognition</strong>",
+          "benefit3": "To structure your long-term reduction objectives"
+        },
+        "snbc": {
+          "title": "SNBC",
+          "subtitle": "I follow the SNBC reference trajectory",
+          "benefit1": "To position yourself in relation to your sector in France",
+          "benefit2": "To build a concrete and structured action plan",
+          "benefit3": "To understand French regulatory expectations"
+        },
+        "custom": {
+          "title": "CUSTOM",
+          "subtitle": "I follow my own trajectory",
+          "benefit1": "I build my own top-down trajectory",
+          "benefit2": "I can customize my intermediate objectives",
+          "benefit3": "My organization is already committed to a trajectory"
+        },
+        "sbtiType": {
+          "title": "SBTi trajectory type",
+          "15": "1.5°C aligned",
+          "wb2c": "WB2C (Well below 2 degrees)"
+        },
+        "selectedTrajectory": {
+          "SBTI_15": "I follow the SBTi reference trajectory",
+          "SBTI_WB2C": "I follow the SBTi reference trajectory",
+          "CUSTOM": "I follow my own trajectory"
+        },
+        "name": "My trajectory name",
+        "namePlaceholder": "Give your trajectory a name",
+        "description": "My trajectory description",
+        "descriptionPlaceholder": "Describe your trajectory",
+        "objectives": {
+          "title": "Reduction objectives",
+          "sbtiDescription": "These reduction objectives are linked to the SBTi reference trajectory and are predefined. You can add intermediate objectives in the \"My reduction objectives\" section",
+          "global": "GLOBAL OBJECTIVE",
+          "horizon2030": "2030 Horizon",
+          "horizon2050": "2050 Horizon",
+          "year": "Objective year",
+          "yearPlaceholder": "Choose a year",
+          "reductionRate": "Annual reduction percentage",
+          "reductionRatePlaceholder": "Give a reduction % (e.g., 2.5)"
+        },
+        "validation": {
+          "required": "Required field",
+          "objectiveBothRequired": "Both year and reduction rate are required",
+          "atLeastOneObjective": "At least one complete objective is required for custom trajectories"
         }
       },
       "objectives": {

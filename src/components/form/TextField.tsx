@@ -71,14 +71,16 @@ export const FormTextField = <T extends FieldValues>({
             slotProps={{
               input: {
                 onWheel: (event) => (event.target as HTMLInputElement).blur(),
-                sx: { borderRadius: '0.75rem', borderColor: 'var(--grayscale-300)', color: 'black' },
+                className: styles.textFieldInput,
                 endAdornment,
               },
             }}
           />
-          <FormHelperText className={styles.helper}>
-            {customError ? customError : error?.message ? translation('validation.' + error.message) : ' '}
-          </FormHelperText>
+          {customError || error?.message ? (
+            <FormHelperText className={styles.helper}>
+              {customError ? customError : error?.message ? translation('validation.' + error.message) : ' '}
+            </FormHelperText>
+          ) : null}
         </FormControl>
       )}
     />

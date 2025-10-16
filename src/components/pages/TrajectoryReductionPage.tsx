@@ -3,6 +3,7 @@
 import Box from '@/components/base/Box'
 import Button from '@/components/base/Button'
 import { MultiSelect } from '@/components/base/MultiSelect'
+import PersistentToast from '@/components/base/PersistentToast'
 import Title from '@/components/base/Title'
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import Image from '@/components/document/Image'
@@ -12,6 +13,7 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { getStudyTransitionPlan, initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
 import { getStudyTotalCo2EmissionsWithDep } from '@/services/study'
 import { calculateSBTiTrajectory, SBTI_REDUCTION_RATE_15, SBTI_REDUCTION_RATE_WB2C } from '@/utils/trajectory'
+import AddIcon from '@mui/icons-material/Add'
 import { Typography } from '@mui/material'
 import { TransitionPlan } from '@prisma/client'
 import classNames from 'classnames'
@@ -29,6 +31,10 @@ const TransitionPlanSelectionModal = dynamic(
   },
 )
 
+const TrajectoryCreationModal = dynamic(() => import('@/components/study/trajectory/TrajectoryCreationModal'), {
+  ssr: false,
+})
+
 const TRAJECTORY_15_ID = '1,5'
 const TRAJECTORY_WB2C_ID = 'WB2C'
 
@@ -43,6 +49,8 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
   const tStudyNav = useTranslations('study.navigation')
   const [transitionPlan, setTransitionPlan] = useState<TransitionPlan | null>(null)
   const [showModal, setShowModal] = useState(false)
+  const [showTrajectoryModal, setShowTrajectoryModal] = useState(false)
+  const [showSuccessToast, setShowSuccessToast] = useState(false)
   const [loading, setLoading] = useState(true)
   const [selectedTrajectories, setSelectedTrajectories] = useState<string[]>(() => {
     if (typeof window === 'undefined') {
@@ -78,6 +86,11 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
     }
   }, [study, transitionPlan])
 
+  const handleTrajectorySuccess = useCallback(() => {
+    setShowSuccessToast(true)
+    router.refresh()
+  }, [router])
+
   const handleConfirmPlanSelection = useCallback(
     async (selectedPlanId?: string) => {
       await callServerFunction(() => initializeTransitionPlan(study.id, selectedPlanId), {
@@ -91,6 +104,14 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
   )
 
   const trajectoryData = useMemo(() => {
+    if (!transitionPlan) {
+      return {
+        trajectory15: [],
+        trajectoryWB2C: [],
+        studyStartYear: 0,
+      }
+    }
+
     const totalCo2 = getStudyTotalCo2EmissionsWithDep(study)
     const studyStartYear = study.startDate.getFullYear()
 
@@ -112,12 +133,14 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
       maxYear,
     })
 
+    console.log('RECALCULATING TRAJECTORY POINTS', totalCo2, studyStartYear, SBTI_REDUCTION_RATE_15, maxYear)
+
     return {
       trajectory15: trajectory15Data,
       trajectoryWB2C: trajectoryWB2CData,
       studyStartYear,
     }
-  }, [selectedTrajectories, study])
+  }, [selectedTrajectories, study, transitionPlan])
 
   if (loading) {
     return (
@@ -178,75 +201,105 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
           { label: study.name, link: `/etudes/${study.id}` },
         ].filter((link) => link !== undefined)}
       />
-      <div className={classNames(styles.container, 'flex-col gapped2 main-container p2 pt3')}>
+      <div className={classNames(styles.container, 'flex-col main-container p2 pt3')}>
         <Title title={t('trajectories.title')} as="h1" />
 
-        <TransitionPlanOnboarding
-          title={t('trajectories.onboarding.title')}
-          description={t('trajectories.onboarding.description')}
-          storageKey="trajectory-reduction"
-          detailedContent={t.rich('trajectories.onboarding.detailedInfo', {
-            br: () => <br />,
-            snbc: (chunks) => (
-              <a href={process.env.NEXT_PUBLIC_SNBC_URL || '#'} target="_blank" rel="noopener noreferrer">
-                {chunks}
-              </a>
-            ),
-            sbti: (chunks) => (
-              <a href={process.env.NEXT_PUBLIC_SBTI_URL || '#'} target="_blank" rel="noopener noreferrer">
-                {chunks}
-              </a>
-            ),
-          })}
-        />
+        <div className="flex-col gapped2">
+          <TransitionPlanOnboarding
+            title={t('trajectories.onboarding.title')}
+            description={t('trajectories.onboarding.description')}
+            storageKey="trajectory-reduction"
+            detailedContent={t.rich('trajectories.onboarding.detailedInfo', {
+              br: () => <br />,
+              snbc: (chunks) => (
+                <a href={process.env.NEXT_PUBLIC_SNBC_URL || '#'} target="_blank" rel="noopener noreferrer">
+                  {chunks}
+                </a>
+              ),
+              sbti: (chunks) => (
+                <a href={process.env.NEXT_PUBLIC_SBTI_URL || '#'} target="_blank" rel="noopener noreferrer">
+                  {chunks}
+                </a>
+              ),
+            })}
+          />
 
-        <div className={'flex wrap gapped1'}>
-          <Box className={classNames('grow p125', styles.trajectoryCard, styles.disabledCard)}>
-            <Typography variant="h5" component="h2" fontWeight={600}>
-              {t('trajectories.snbcButton')}
-            </Typography>
-          </Box>
+          <div className={'flex wrap gapped1'}>
+            <Box className={classNames('grow p125', styles.trajectoryCard, styles.disabledCard)}>
+              <Typography variant="h5" component="h2" fontWeight={600}>
+                {t('trajectories.snbcButton')}
+              </Typography>
+            </Box>
 
-          <Box className={classNames('grow p125 flex-col gapped075', styles.trajectoryCard)}>
-            <Typography variant="h5" component="h2" fontWeight={600}>
-              {t('trajectories.sbtiCard.title')}
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              {t('trajectories.sbtiCard.description')}
-            </Typography>
+            <Box className={classNames('grow p125 flex-col gapped075', styles.trajectoryCard)}>
+              <Typography variant="h5" component="h2" fontWeight={600}>
+                {t('trajectories.sbtiCard.title')}
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                {t('trajectories.sbtiCard.description')}
+              </Typography>
 
-            <div className={'w100 flex-col gapped075'}>
-              <MultiSelect
-                label={t('trajectories.sbtiCard.methodLabel')}
-                value={selectedTrajectories}
-                onChange={setSelectedTrajectories}
-                options={[
-                  { label: t('trajectories.sbtiCard.option15'), value: TRAJECTORY_15_ID },
-                  { label: t('trajectories.sbtiCard.optionWB2C'), value: TRAJECTORY_WB2C_ID },
-                ]}
-                placeholder={t('trajectories.sbtiCard.placeholder')}
-              />
-            </div>
-          </Box>
+              <div className={'w100 flex-col gapped075'}>
+                <MultiSelect
+                  label={t('trajectories.sbtiCard.methodLabel')}
+                  value={selectedTrajectories}
+                  onChange={setSelectedTrajectories}
+                  options={[
+                    { label: t('trajectories.sbtiCard.option15'), value: TRAJECTORY_15_ID },
+                    { label: t('trajectories.sbtiCard.optionWB2C'), value: TRAJECTORY_WB2C_ID },
+                  ]}
+                  placeholder={t('trajectories.sbtiCard.placeholder')}
+                />
+              </div>
+            </Box>
 
-          <Box className={classNames('grow p125', styles.trajectoryCard, styles.disabledCard)}>
-            <Typography variant="h5" component="h2" fontWeight={600}>
-              {t('trajectories.customButton')}
-            </Typography>
-          </Box>
+            <Box
+              className={classNames('grow p125 flex-col gapped075', styles.trajectoryCard, styles.clickableCard)}
+              onClick={() => setShowTrajectoryModal(true)}
+              role="button"
+              tabIndex={0}
+            >
+              <div className="flex align-center gapped-2">
+                <AddIcon color="inherit" />
+                <Typography variant="h5" component="h2" fontWeight={600}>
+                  {t('trajectories.customButton')}
+                </Typography>
+              </div>
+              <Typography variant="body1">{t('trajectories.customSubtitle')}</Typography>
+            </Box>
+          </div>
+
+          <TrajectoryGraph
+            trajectory15={{
+              data: trajectoryData.trajectory15,
+              enabled: selectedTrajectories.includes(TRAJECTORY_15_ID),
+            }}
+            trajectoryWB2C={{
+              data: trajectoryData.trajectoryWB2C,
+              enabled: selectedTrajectories.includes(TRAJECTORY_WB2C_ID),
+            }}
+            studyStartYear={trajectoryData.studyStartYear}
+          />
+
+          {transitionPlan && (
+            <TrajectoryCreationModal
+              open={showTrajectoryModal}
+              onClose={() => setShowTrajectoryModal(false)}
+              transitionPlanId={transitionPlan.id}
+              onSuccess={handleTrajectorySuccess}
+            />
+          )}
+
+          {showSuccessToast && (
+            <PersistentToast
+              title={t('trajectoryModal.success')}
+              subtitle={t.rich('trajectoryModal.successSubtitle', {
+                link: (children) => <a href={`/etudes/${study.id}/objectifs`}>{children}</a>,
+              })}
+              onClose={() => setShowSuccessToast(false)}
+            />
+          )}
         </div>
-
-        <TrajectoryGraph
-          trajectory15={{
-            data: trajectoryData.trajectory15,
-            enabled: selectedTrajectories.includes(TRAJECTORY_15_ID),
-          }}
-          trajectoryWB2C={{
-            data: trajectoryData.trajectoryWB2C,
-            enabled: selectedTrajectories.includes(TRAJECTORY_WB2C_ID),
-          }}
-          studyStartYear={trajectoryData.studyStartYear}
-        />
       </div>
     </>
   )

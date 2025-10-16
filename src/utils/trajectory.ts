@@ -1,9 +1,12 @@
 import { TrajectoryDataPoint } from '@/components/study/transitionPlan/TrajectoryGraph'
+import { TrajectoryType } from '@prisma/client'
 
+export type SBTIType = 'SBTI_15' | 'SBTI_WB2C'
 export const SBTI_REDUCTION_RATE_15 = 0.042
 export const SBTI_REDUCTION_RATE_WB2C = 0.025
 const REFERENCE_YEAR = 2020
-const TARGET_YEAR = 2050
+export const MID_TAREGT_YEAR = 2030
+export const TARGET_YEAR = 2050
 
 export const calculateOvershoot = (
   studyYear: number,
@@ -94,4 +97,13 @@ export const calculateSBTiTrajectory = ({
   }
 
   return dataPoints
+}
+
+export const getReductionRatePerType = (sbtiType: TrajectoryType): number | undefined => {
+  if (sbtiType === TrajectoryType.SBTI_15) {
+    return SBTI_REDUCTION_RATE_15
+  } else if (sbtiType === TrajectoryType.SBTI_WB2C) {
+    return SBTI_REDUCTION_RATE_WB2C
+  }
+  return undefined
 }
