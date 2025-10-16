@@ -1,11 +1,13 @@
 import { LocaleType } from '@/i18n/config'
+import { isSourceForEnv } from '@/services/importEmissionFactor/import'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
 import { flattenSubposts } from '@/utils/post'
-import { EmissionFactorStatus, Import, Unit, type Prisma } from '@prisma/client'
+import { EmissionFactorStatus, Environment, Import, Unit, type Prisma } from '@prisma/client'
 import { Session } from 'next-auth'
 import { prismaClient } from './client'
 import { getOrganizationVersionById } from './organization'
+import { getSourcesLatestImportVersionId, getSourcesLatestImportVersionIdByOrganizationId } from './study'
 
 let cachedEmissionFactors: AsyncReturnType<typeof getDefaultEmissionFactors> = []
 
@@ -91,13 +93,10 @@ const getCachedDefaultEmissionFactors = async (versionIds?: string[]) => {
   return emissionFactors.filter((emissionFactor) => filterVersionedEmissionFactor(emissionFactor, versionIds))
 }
 
-export const getAllEmissionFactors = async (
-  organizationId: string | null,
-  studyId?: string,
-  withCut: boolean = false,
-) => {
+export const getAllEmissionFactors = async (organizationId: string, studyId?: string, withCut: boolean = false) => {
   let versionIds
   let studyOldEmissionFactors: Awaited<ReturnType<typeof getDefaultEmissionFactors>> = []
+  let organizationEmissionFactor: Awaited<ReturnType<typeof getDefaultEmissionFactors>> = []
   if (studyId) {
     const study = await prismaClient.study.findFirst({
       where: { id: studyId },
@@ -112,14 +111,21 @@ export const getAllEmissionFactors = async (
       .filter((id) => id !== null)
 
     studyOldEmissionFactors = await getEmissionFactorsFromIdsExceptVersions(selectedEmissionFactors, versionIds)
+  } else {
+    versionIds = (await getSourcesLatestImportVersionIdByOrganizationId(organizationId)).map((v) => v.importVersionId)
+
+    if (versionIds.length <= 0) {
+      versionIds = (
+        await getSourcesLatestImportVersionId(isSourceForEnv(Environment.BC).filter((s) => s !== Import.Manual))
+      ).map((v) => v.id)
+    }
   }
-  const organizationEmissionFactor = organizationId
-    ? await prismaClient.emissionFactor.findMany({
-        where: { organizationId },
-        select: selectEmissionFactor,
-        orderBy: { createdAt: 'desc' },
-      })
-    : []
+
+  organizationEmissionFactor = await prismaClient.emissionFactor.findMany({
+    where: { organizationId },
+    select: selectEmissionFactor,
+    orderBy: { createdAt: 'desc' },
+  })
 
   const defaultEmissionFactors = await (process.env.NO_CACHE === 'true'
     ? getDefaultEmissionFactors(versionIds)
