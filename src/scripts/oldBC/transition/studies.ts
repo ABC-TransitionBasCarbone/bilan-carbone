@@ -554,9 +554,23 @@ export const uploadStudies = async (
     },
   })
 
-  const newStudies = studies.filter((study) =>
-    alreadyImportedStudyIds.every((alreadyImportedStudy) => alreadyImportedStudy.oldBCId !== study.oldBCId),
-  )
+  const newStudies = studies
+    .filter((study) =>
+      alreadyImportedStudyIds.every((alreadyImportedStudy) => alreadyImportedStudy.oldBCId !== study.oldBCId),
+    )
+    .filter((study) => {
+      const studySitesArray = studySites.get(study.oldBCId)
+      const canCreateStudy = studySitesArray?.some((site) => site.siteOldBCId !== 'NULL')
+
+      if (!canCreateStudy) {
+        console.log({
+          oldBcId: study.oldBCId,
+          reason: "Etude ignorée - Aucun site sélectionné, demander à l'utilisateur de le sélectionner",
+        })
+        return false
+      }
+      return true
+    })
 
   const createdStudies = await transaction.study.createMany({
     data: newStudies.map((study) => ({
