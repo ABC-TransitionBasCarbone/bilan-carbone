@@ -17,7 +17,6 @@ import { TransitionPlan } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
-import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import TrajectoryGraph from '../study/transitionPlan/TrajectoryGraph'
 import TransitionPlanOnboarding from '../study/transitionPlan/TransitionPlanOnboarding'
@@ -42,7 +41,6 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
   const t = useTranslations('study.transitionPlan')
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
-  const router = useRouter()
   const [transitionPlan, setTransitionPlan] = useState<TransitionPlan | null>(null)
   const [showModal, setShowModal] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -86,11 +84,10 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
         onSuccess: (data) => {
           setTransitionPlan(data)
           setShowModal(false)
-          router.refresh()
         },
       })
     },
-    [callServerFunction, study.id, router],
+    [callServerFunction, study.id],
   )
 
   const trajectoryData = useMemo(() => {
@@ -103,9 +100,10 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
       reductionRate: SBTI_REDUCTION_RATE_WB2C,
     })
 
-    const maxYear = selectedTrajectories.includes(TRAJECTORY_WB2C_ID)
-      ? trajectoryWB2CData[trajectoryWB2CData.length - 1].year
-      : undefined
+    const maxYear =
+      selectedTrajectories.includes(TRAJECTORY_WB2C_ID) && trajectoryWB2CData.length > 0
+        ? trajectoryWB2CData[trajectoryWB2CData.length - 1].year
+        : undefined
 
     const trajectory15Data = calculateSBTiTrajectory({
       baseEmissions: totalCo2,
