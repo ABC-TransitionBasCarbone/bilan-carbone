@@ -19,6 +19,7 @@ import { TransitionPlan } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
+import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import TrajectoryGraph from '../study/transitionPlan/TrajectoryGraph'
 import TransitionPlanOnboarding from '../study/transitionPlan/TransitionPlanOnboarding'
@@ -46,6 +47,7 @@ interface Props {
 const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
   const t = useTranslations('study.transitionPlan')
   const tNav = useTranslations('nav')
+  const router = useRouter()
   const tStudyNav = useTranslations('study.navigation')
   const [transitionPlan, setTransitionPlan] = useState<TransitionPlan | null>(null)
   const [showModal, setShowModal] = useState(false)
