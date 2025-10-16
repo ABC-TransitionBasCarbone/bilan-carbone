@@ -47,15 +47,14 @@ const calculateDataPoint = (
   year: number,
   baseEmissions: number,
   thresholdYear: number,
-  dataPoints: TrajectoryDataPoint[],
-  reductionRate: number,
+  absoluteReductionRate: number,
 ): TrajectoryDataPoint => {
   if (year <= thresholdYear) {
     return { year, value: baseEmissions }
   }
 
-  const previousEmissions = dataPoints.length > 0 ? dataPoints[dataPoints.length - 1].value : baseEmissions
-  const newEmissions = previousEmissions * (1 - reductionRate)
+  const yearsFromThreshold = year - thresholdYear
+  const newEmissions = baseEmissions - yearsFromThreshold * absoluteReductionRate * baseEmissions
   return { year, value: Math.max(0, newEmissions) }
 }
 
@@ -81,14 +80,16 @@ export const calculateSBTiTrajectory = ({
 
     // Create data points until a specific year which depends on other trajectories and calculated target year
     for (let year = REFERENCE_YEAR; year <= Math.max(nty, maxYear ?? TARGET_YEAR); year++) {
-      dataPoints.push(calculateDataPoint(year, baseEmissions, studyStartYear, dataPoints, newReductionRate))
+      dataPoints.push(calculateDataPoint(year, baseEmissions, studyStartYear, newReductionRate))
     }
   } else {
     const reductionStartYear = REFERENCE_YEAR
     const graphStartYear = studyStartYear < REFERENCE_YEAR ? studyStartYear : REFERENCE_YEAR
+    const targetYear = Math.ceil(REFERENCE_YEAR + 1 / reductionRate)
+    const endYear = Math.max(targetYear, maxYear ?? TARGET_YEAR)
 
-    for (let year = graphStartYear; year <= TARGET_YEAR; year++) {
-      dataPoints.push(calculateDataPoint(year, baseEmissions, reductionStartYear, dataPoints, reductionRate))
+    for (let year = graphStartYear; year <= endYear; year++) {
+      dataPoints.push(calculateDataPoint(year, baseEmissions, reductionStartYear, reductionRate))
     }
   }
 
