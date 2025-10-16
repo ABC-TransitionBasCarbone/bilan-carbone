@@ -8,11 +8,18 @@ import Title from '@/components/base/Title'
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import Image from '@/components/document/Image'
 import { FullStudy } from '@/db/study'
+import { TrajectoryWithObjectives } from '@/db/trajectory'
 import EnvironmentLoader from '@/environments/core/utils/EnvironmentLoader'
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { getTrajectoriesForTransitionPlan } from '@/services/serverFunctions/trajectory'
 import { getStudyTransitionPlan, initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
 import { getStudyTotalCo2EmissionsWithDep } from '@/services/study'
-import { calculateSBTiTrajectory, SBTI_REDUCTION_RATE_15, SBTI_REDUCTION_RATE_WB2C } from '@/utils/trajectory'
+import {
+  calculateCustomTrajectory,
+  calculateSBTiTrajectory,
+  SBTI_REDUCTION_RATE_15,
+  SBTI_REDUCTION_RATE_WB2C,
+} from '@/utils/trajectory'
 import AddIcon from '@mui/icons-material/Add'
 import { Typography } from '@mui/material'
 import { TransitionPlan } from '@prisma/client'
@@ -21,6 +28,7 @@ import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import MyTrajectoriesCard from '../study/trajectory/MyTrajectoriesCard'
 import TrajectoryGraph from '../study/transitionPlan/TrajectoryGraph'
 import TransitionPlanOnboarding from '../study/transitionPlan/TransitionPlanOnboarding'
 import styles from './TrajectoryReductionPage.module.css'
@@ -54,18 +62,30 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
   const [showTrajectoryModal, setShowTrajectoryModal] = useState(false)
   const [showSuccessToast, setShowSuccessToast] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [customTrajectories, setCustomTrajectories] = useState<TrajectoryWithObjectives[]>([])
+  const [selectedCustomTrajectoryIds, setSelectedCustomTrajectoryIds] = useState<string[]>(() => {
+    if (typeof window === 'undefined') {
+      return []
+    }
+    const stored = localStorage.getItem(`trajectory-custom-selected-${study.id}`)
+    return stored ? JSON.parse(stored) : []
+  })
   const [selectedTrajectories, setSelectedTrajectories] = useState<string[]>(() => {
     if (typeof window === 'undefined') {
       return [TRAJECTORY_15_ID]
     }
-    const stored = localStorage.getItem('trajectory-sbti-selected')
+    const stored = localStorage.getItem(`trajectory-sbti-selected-${study.id}`)
     return stored ? JSON.parse(stored) : [TRAJECTORY_15_ID]
   })
   const { callServerFunction } = useServerFunction()
 
   useEffect(() => {
-    localStorage.setItem('trajectory-sbti-selected', JSON.stringify(selectedTrajectories))
-  }, [selectedTrajectories])
+    localStorage.setItem(`trajectory-sbti-selected-${study.id}`, JSON.stringify(selectedTrajectories))
+  }, [selectedTrajectories, study.id])
+
+  useEffect(() => {
+    localStorage.setItem(`trajectory-custom-selected-${study.id}`, JSON.stringify(selectedCustomTrajectoryIds))
+  }, [selectedCustomTrajectoryIds, study.id])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -75,6 +95,11 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
 
         if (planResponse.success && planResponse.data) {
           setTransitionPlan(planResponse.data)
+
+          const trajectoriesResponse = await getTrajectoriesForTransitionPlan(planResponse.data.id)
+          if (trajectoriesResponse.success && trajectoriesResponse.data) {
+            setCustomTrajectories(trajectoriesResponse.data)
+          }
         }
       } catch (error) {
         console.error('Error fetching transition plan data:', error)
@@ -88,10 +113,20 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
     }
   }, [study, transitionPlan])
 
-  const handleTrajectorySuccess = useCallback(() => {
-    setShowSuccessToast(true)
-    router.refresh()
-  }, [router])
+  const handleCreateTrajectorySuccess = useCallback(
+    async (trajectoryId: string) => {
+      setShowSuccessToast(true)
+      if (transitionPlan) {
+        const trajectoriesResponse = await getTrajectoriesForTransitionPlan(transitionPlan.id)
+        if (trajectoriesResponse.success && trajectoriesResponse.data) {
+          setCustomTrajectories(trajectoriesResponse.data)
+          setSelectedCustomTrajectoryIds((prev) => [...prev, trajectoryId])
+        }
+      }
+      router.refresh()
+    },
+    [router, transitionPlan],
+  )
 
   const handleConfirmPlanSelection = useCallback(
     async (selectedPlanId?: string) => {
@@ -110,6 +145,7 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
       return {
         trajectory15: [],
         trajectoryWB2C: [],
+        customTrajectories: [],
         studyStartYear: 0,
       }
     }
@@ -135,14 +171,29 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
       maxYear,
     })
 
-    console.log('RECALCULATING TRAJECTORY POINTS', totalCo2, studyStartYear, SBTI_REDUCTION_RATE_15, maxYear)
+    const customTrajectoriesData = customTrajectories
+      .filter((traj) => selectedCustomTrajectoryIds.includes(traj.id))
+      .map((traj) => ({
+        data: calculateCustomTrajectory({
+          baseEmissions: totalCo2,
+          studyStartYear,
+          objectives: traj.objectives.map((obj) => ({
+            targetYear: obj.targetYear,
+            reductionRate: Number(obj.reductionRate),
+          })),
+        }),
+        enabled: true,
+        label: traj.name,
+        color: undefined,
+      }))
 
     return {
       trajectory15: trajectory15Data,
       trajectoryWB2C: trajectoryWB2CData,
+      customTrajectories: customTrajectoriesData,
       studyStartYear,
     }
-  }, [selectedTrajectories, study, transitionPlan])
+  }, [selectedTrajectories, study, transitionPlan, customTrajectories, selectedCustomTrajectoryIds])
 
   if (loading) {
     return (
@@ -226,14 +277,14 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
             })}
           />
 
-          <div className={'flex wrap gapped1'}>
-            <Box className={classNames('grow p125', styles.trajectoryCard, styles.disabledCard)}>
+          <div className={styles.trajectoryCardsGrid}>
+            <Box className={classNames('p125', styles.trajectoryCard, styles.disabledCard)}>
               <Typography variant="h5" component="h2" fontWeight={600}>
                 {t('trajectories.snbcButton')}
               </Typography>
             </Box>
 
-            <Box className={classNames('grow p125 flex-col gapped075', styles.trajectoryCard)}>
+            <Box className={classNames('p125 flex-col gapped075', styles.trajectoryCard)}>
               <Typography variant="h5" component="h2" fontWeight={600}>
                 {t('trajectories.sbtiCard.title')}
               </Typography>
@@ -255,20 +306,32 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
               </div>
             </Box>
 
-            <Box
-              className={classNames('grow p125 flex-col gapped075', styles.trajectoryCard, styles.clickableCard)}
-              onClick={() => setShowTrajectoryModal(true)}
-              role="button"
-              tabIndex={0}
-            >
-              <div className="flex align-center gapped-2">
-                <AddIcon color="inherit" />
-                <Typography variant="h5" component="h2" fontWeight={600}>
-                  {t('trajectories.customButton')}
-                </Typography>
-              </div>
-              <Typography variant="body1">{t('trajectories.customSubtitle')}</Typography>
-            </Box>
+            {customTrajectories.length === 0 ? (
+              <Box
+                className={classNames('p125 flex-col gapped075', styles.trajectoryCard, styles.clickableCard)}
+                onClick={() => setShowTrajectoryModal(true)}
+                role="button"
+                tabIndex={0}
+              >
+                <div className="flex align-center gapped-2">
+                  <AddIcon color="inherit" />
+                  <Typography variant="h5" component="h2" fontWeight={600}>
+                    {t('trajectories.customButton')}
+                  </Typography>
+                </div>
+                <Typography variant="body1">{t('trajectories.customSubtitle')}</Typography>
+              </Box>
+            ) : (
+              <MyTrajectoriesCard
+                trajectories={customTrajectories}
+                selectedTrajectoryIds={selectedCustomTrajectoryIds}
+                onSelectionChange={setSelectedCustomTrajectoryIds}
+                onAddTrajectory={() => setShowTrajectoryModal(true)}
+                title={t('trajectories.myTrajectories')}
+                addButtonLabel={t('trajectories.addTrajectory')}
+                selectLabel={t('trajectories.selectTrajectories')}
+              />
+            )}
           </div>
 
           <TrajectoryGraph
@@ -280,6 +343,7 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
               data: trajectoryData.trajectoryWB2C,
               enabled: selectedTrajectories.includes(TRAJECTORY_WB2C_ID),
             }}
+            customTrajectories={trajectoryData.customTrajectories}
             studyStartYear={trajectoryData.studyStartYear}
           />
 
@@ -288,7 +352,7 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
               open={showTrajectoryModal}
               onClose={() => setShowTrajectoryModal(false)}
               transitionPlanId={transitionPlan.id}
-              onSuccess={handleTrajectorySuccess}
+              onSuccess={handleCreateTrajectorySuccess}
             />
           )}
 

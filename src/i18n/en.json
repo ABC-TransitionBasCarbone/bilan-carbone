@@ -897,6 +897,9 @@
         "sbtiButton": "SBTi Trajectories",
         "customButton": "I choose my trajectory",
         "customSubtitle": "Build your own reduction trajectory",
+        "myTrajectories": "My trajectories",
+        "addTrajectory": "+ Add a new reduction trajectory",
+        "selectTrajectories": "Select your trajectories",
         "sbtiCard": {
           "title": "SBTi Trajectories",
           "description": "The Science Based Targets Initiative defines two reference trajectories, aiming to limit global warming to 1.5°C or \"Well below 2 degrees\" (WB2C).",

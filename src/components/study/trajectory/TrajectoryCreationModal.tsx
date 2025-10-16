@@ -18,7 +18,7 @@ interface Props {
   open: boolean
   onClose: () => void
   transitionPlanId: string
-  onSuccess: () => void
+  onSuccess: (trajectoryId: string) => void
 }
 
 const createObjectiveSchema = (t: (key: string) => string) =>
@@ -134,7 +134,7 @@ const TrajectoryCreationModal = ({ open, onClose, transitionPlanId, onSuccess }:
     if (data.trajectoryType === TrajectoryType.CUSTOM) {
       input.objectives = data.objectives.map((obj) => ({
         targetYear: new Date(obj.targetYear!).getFullYear(),
-        reductionRate: obj.reductionRate!,
+        reductionRate: Number(obj.reductionRate) / 100,
       }))
     } else if (data.trajectoryType === TrajectoryType.SBTI_15) {
       input.objectives = [
@@ -149,8 +149,8 @@ const TrajectoryCreationModal = ({ open, onClose, transitionPlanId, onSuccess }:
     }
 
     await callServerFunction(() => createTrajectoryWithObjectives(input), {
-      onSuccess: () => {
-        onSuccess()
+      onSuccess: (trajectory) => {
+        onSuccess(trajectory.id)
         onClose()
         reset()
         setActiveStep(0)

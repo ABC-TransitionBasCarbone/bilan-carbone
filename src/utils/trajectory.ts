@@ -74,6 +74,17 @@ export const calculateSBTiTrajectory = ({
 }) => {
   const dataPoints: TrajectoryDataPoint[] = []
 
+  if (baseEmissions === 0) {
+    const graphStartYear = studyStartYear < REFERENCE_YEAR ? studyStartYear : REFERENCE_YEAR
+    const endYear = maxYear ?? TARGET_YEAR
+
+    for (let year = graphStartYear; year <= endYear; year++) {
+      dataPoints.push({ year, value: 0 })
+    }
+
+    return dataPoints
+  }
+
   if (studyStartYear > REFERENCE_YEAR) {
     const overshoot = calculateOvershoot(studyStartYear, REFERENCE_YEAR, baseEmissions, reductionRate)
     const cumulativeBudget = calculateCumulativeBudget(TARGET_YEAR, REFERENCE_YEAR, baseEmissions, reductionRate)
@@ -81,7 +92,6 @@ export const calculateSBTiTrajectory = ({
     const nty = calculateNewTargetYear(cumulativeBudgetAdjusted, baseEmissions, studyStartYear)
     const newReductionRate = calculateNewLinearReductionRate(1, nty, studyStartYear)
 
-    // Create data points until a specific year which depends on other trajectories and calculated target year
     for (let year = REFERENCE_YEAR; year <= Math.max(nty, maxYear ?? TARGET_YEAR); year++) {
       dataPoints.push(calculateDataPoint(year, baseEmissions, studyStartYear, newReductionRate))
     }
@@ -106,4 +116,51 @@ export const getReductionRatePerType = (sbtiType: TrajectoryType): number | unde
     return SBTI_REDUCTION_RATE_WB2C
   }
   return undefined
+}
+
+export const calculateCustomTrajectory = ({
+  baseEmissions,
+  studyStartYear,
+  objectives,
+}: {
+  baseEmissions: number
+  studyStartYear: number
+  objectives: Array<{ targetYear: number; reductionRate: number }>
+}): TrajectoryDataPoint[] => {
+  if (objectives.length === 0) {
+    return []
+  }
+
+  const sortedObjectives = [...objectives].sort((a, b) => a.targetYear - b.targetYear)
+
+  const dataPoints: TrajectoryDataPoint[] = []
+  let currentValue = baseEmissions
+  let startYear = studyStartYear
+
+  dataPoints.push({ year: studyStartYear, value: baseEmissions })
+
+  for (let i = 0; i < sortedObjectives.length; i++) {
+    const objective = sortedObjectives[i]
+    const absoluteReductionRate = Number(objective.reductionRate)
+    const yearlyReduction = baseEmissions * absoluteReductionRate
+    const isLastObjective = i === sortedObjectives.length - 1
+
+    for (let year = startYear + 1; year <= objective.targetYear; year++) {
+      currentValue = currentValue - yearlyReduction
+      dataPoints.push({ year, value: Math.max(0, currentValue) })
+    }
+
+    if (isLastObjective && currentValue > 0) {
+      let year = objective.targetYear + 1
+      while (currentValue > 0) {
+        currentValue = currentValue - yearlyReduction
+        dataPoints.push({ year, value: Math.max(0, currentValue) })
+        year++
+      }
+    }
+
+    startYear = objective.targetYear
+  }
+
+  return dataPoints
 }

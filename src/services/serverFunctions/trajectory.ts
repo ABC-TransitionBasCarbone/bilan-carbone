@@ -56,7 +56,7 @@ export const createTrajectoryWithObjectives = async (input: CreateTrajectoryInpu
       throw new Error('SNBC mode is not yet supported')
     }
 
-    await dbCreateTrajectoryWithObjectives({
+    const trajectory = await dbCreateTrajectoryWithObjectives({
       transitionPlan: {
         connect: {
           id: input.transitionPlanId,
@@ -72,7 +72,7 @@ export const createTrajectoryWithObjectives = async (input: CreateTrajectoryInpu
       },
     })
 
-    return
+    return trajectory
   })
 
 export const getTrajectoriesForTransitionPlan = async (

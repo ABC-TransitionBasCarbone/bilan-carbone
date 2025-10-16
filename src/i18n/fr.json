@@ -897,9 +897,12 @@
         "sbtiButton": "Trajectoires SBTi",
         "customButton": "Je choisis ma trajectoire",
         "customSubtitle": "Reprenez une trajectoire existante ou créez votre propre trajectoire de réduction pour commencer à construire votre plan de transition",
+        "myTrajectories": "Mes trajectoires",
+        "addTrajectory": "+ Ajouter une nouvelle trajectoire de réduction",
+        "selectTrajectories": "Sélectionnez vos trajectoires",
         "sbtiCard": {
           "title": "Trajectoires SBTi",
-          "description": "La Science Based Targets Initiative définit deux trajectoires de référence, visant à limiter le réchauffement climatique à 1,5°C ou \"Well below 2 degrees\" (WB2C).",
+          "description": "La Science Based Targets Initiative définit deux trajectoires visant à limiter le réchauffement climatique à 1,5°C ou \"Well below 2 degrees\" (WB2C).",
           "methodLabel": "Méthodes",
           "option15": "Trajectoire à 1,5°C",
           "optionWB2C": "Trajectoire WB2C",
