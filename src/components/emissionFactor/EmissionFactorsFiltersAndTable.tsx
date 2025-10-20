@@ -7,6 +7,7 @@ import {
   getEmissionFactors,
   mapImportVersions,
 } from '@/services/serverFunctions/emissionFactor'
+import { BCUnit } from '@/services/unit'
 import { EmissionFactorImportVersion, Environment, Import } from '@prisma/client'
 import { PaginationState } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
@@ -22,6 +23,7 @@ interface Props {
   selectEmissionFactor?: (emissionFactor: EmissionFactorWithMetaData) => void
 }
 
+const initialSelectedUnits: (BCUnit | string)[] = [...['all'], ...Object.values(BCUnit)]
 const EmissionFactorsFiltersAndTable = ({
   userOrganizationId,
   environment,
@@ -31,8 +33,6 @@ const EmissionFactorsFiltersAndTable = ({
   const t = useTranslations('emissionFactors.table')
   const [action, setAction] = useState<'edit' | 'delete' | undefined>(undefined)
   const [targetedEmission, setTargetedEmission] = useState('')
-  const fromModal = !!selectEmissionFactor
-
   const [emissionFactors, setEmissionFactors] = useState<EmissionFactorList[]>([])
   const [importVersions, setImportVersions] = useState<EmissionFactorImportVersion[]>([])
   const [skip, setSkip] = useState(0)
@@ -40,10 +40,56 @@ const EmissionFactorsFiltersAndTable = ({
   const [totalCount, setTotalCount] = useState(0)
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
 
+  const subPostsByPost = useMemo(() => environmentSubPostsMapping[environment], [environment])
+  const initialSelectedSubPosts = useMemo(
+    () => Object.values(subPostsByPost).flatMap((subPosts) => subPosts),
+    [subPostsByPost],
+  )
+  const posts = useMemo(() => Object.keys(subPostsByPost) as Post[], [subPostsByPost])
+  const initialSelectedSources = useMemo(() => {
+    return importVersions
+      .filter(
+        (importVersion) =>
+          importVersion.source === Import.Manual ||
+          (!manualOnly &&
+            importVersion.id ===
+              importVersions
+                .filter((v) => v.source === importVersion.source)
+                .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0].id),
+      )
+      .map((importVersion) => importVersion.id)
+  }, [importVersions, manualOnly])
+
+  const [filters, setFilters] = useState({
+    archived: false,
+    search: '',
+    location: '',
+    sources: initialSelectedSources,
+    units: initialSelectedUnits,
+    subPosts: initialSelectedSubPosts,
+  })
+
+  useEffect(() => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      sources: initialSelectedSources,
+    }))
+  }, [initialSelectedSources])
+
+  useEffect(() => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      subPosts: initialSelectedSubPosts,
+    }))
+  }, [initialSelectedSubPosts])
+
+  const fromModal = !!selectEmissionFactor
+
   useEffect(() => {
     async function fetchEmissionFactors() {
-      const emissionFactorsFromBdd = await getEmissionFactors(skip, skip === 0 ? take * 4 : take)
-      setSkip((prevSkip) => (prevSkip === 0 ? take * 4 : prevSkip + take))
+      const takeValue = skip === 0 ? take * 4 : take
+      const emissionFactorsFromBdd = await getEmissionFactors(skip, takeValue)
+      setSkip((prevSkip) => takeValue + prevSkip)
 
       if (emissionFactorsFromBdd.success) {
         if (emissionFactors.length === 0) {
@@ -69,27 +115,6 @@ const EmissionFactorsFiltersAndTable = ({
 
   const manualImport = { id: Import.Manual, source: Import.Manual, name: '' } as EmissionFactorImportVersion
 
-  const initialSelectedSources = useMemo(() => {
-    return importVersions
-      .filter(
-        (importVersion) =>
-          importVersion.source === Import.Manual ||
-          (!manualOnly &&
-            importVersion.id ===
-              importVersions
-                .filter((v) => v.source === importVersion.source)
-                .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0].id),
-      )
-      .map((importVersion) => importVersion.id)
-  }, [importVersions, manualOnly])
-
-  const subPostsByPost = useMemo(() => environmentSubPostsMapping[environment], [environment])
-  const initialSelectedSubPosts = useMemo(
-    () => Object.values(subPostsByPost).flatMap((subPosts) => subPosts),
-    [subPostsByPost],
-  )
-  const posts = useMemo(() => Object.keys(subPostsByPost) as Post[], [subPostsByPost])
-
   return (
     <>
       {t('subTitle')}
@@ -98,8 +123,10 @@ const EmissionFactorsFiltersAndTable = ({
         fromModal={fromModal}
         importVersions={importVersions.concat(manualImport)}
         initialSelectedSources={initialSelectedSources}
-        initialSelectedSubPosts={initialSelectedSubPosts}
+        initialSelectedUnits={initialSelectedUnits}
         envPosts={posts}
+        filters={filters}
+        setFilters={setFilters}
       />
       <EmissionFactorsTable
         setTargetedEmission={setTargetedEmission}

@@ -10,48 +10,52 @@ import {
   ListItemText,
   MenuItem,
   Select,
-  SelectChangeEvent,
   Switch,
   TextField,
 } from '@mui/material'
 import { EmissionFactorImportVersion, SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react'
 import Button from '../base/Button'
 import DebouncedInput from '../base/DebouncedInput'
 import MultiSelectAll from '../base/MultiSelectAll'
 import styles from './Table.module.css'
 
-const initialSelectedUnits: (BCUnit | string)[] = [...['all'], ...Object.values(BCUnit)]
-
+type filters = {
+  archived: boolean
+  search: string
+  location: string
+  sources: string[]
+  units: (BCUnit | string)[]
+  subPosts: SubPost[]
+}
 interface Props {
   emissionFactors: EmissionFactorWithMetaData[]
   fromModal: boolean
   importVersions: EmissionFactorImportVersion[]
   initialSelectedSources: string[]
-  initialSelectedSubPosts: SubPost[]
+  initialSelectedUnits: (BCUnit | string)[]
   envPosts: Post[]
+  filters: filters
+  setFilters: Dispatch<SetStateAction<filters>>
 }
 export const EmissionFactorsFilters = ({
   emissionFactors,
   fromModal,
   importVersions,
   initialSelectedSources,
-  initialSelectedSubPosts,
+  initialSelectedUnits,
   envPosts,
+  filters,
+  setFilters,
 }: Props) => {
   const t = useTranslations('emissionFactors.table')
   const tUnits = useTranslations('units')
   const tPosts = useTranslations('emissionFactors.post')
   const [filter, setFilter] = useState('')
-  const [displayArchived, setDisplayArchived] = useState(false)
-  const [locationFilter, setLocationFilter] = useState('')
   const [displayFilters, setDisplayFilters] = useState(true)
   const [displayHideButton, setDisplayHideButton] = useState(false)
-  const [filteredSources, setFilteredSources] = useState(initialSelectedSources)
-  const [filteredUnits, setFilteredUnits] = useState(initialSelectedUnits)
-  const [filteredSubPosts, setFilteredSubPosts] = useState(initialSelectedSubPosts)
 
   const filtersRef = useRef<HTMLDivElement>(null)
 
@@ -91,13 +95,6 @@ export const EmissionFactorsFilters = ({
     [t],
   )
 
-  const selectSource = (event: SelectChangeEvent<typeof filteredSources>) => {
-    const {
-      target: { value },
-    } = event
-    setFilteredSources(value as string[])
-  }
-
   const sortedImportVersions = useMemo(
     () =>
       importVersions.sort((a, b) => {
@@ -113,51 +110,53 @@ export const EmissionFactorsFilters = ({
   )
 
   const statusSelectorRenderValue = () =>
-    filteredSources.length === importVersions.length
+    filters.sources.length === importVersions.length
       ? t('all')
-      : filteredSources
+      : filters.sources
           .map((source) => getEmissionVersionLabel(importVersions.find((importVersion) => importVersion.id === source)))
           .join(', ')
+
   const allUnitsSelected = useMemo(
-    () => filteredUnits.filter((unit) => unit !== 'all').length === initialSelectedUnits.length - 1,
-    [filteredUnits],
+    () => filters.units.filter((unit) => unit !== 'all').length === initialSelectedUnits.length - 1,
+    [filters],
   )
 
   const unitsSelectorRenderValue = () =>
     allUnitsSelected
       ? t('all')
-      : filteredUnits.length === 0
+      : filters.units.length === 0
         ? t('none')
-        : filteredUnits.map((unit) => tUnits(unit)).join(', ')
+        : filters.units.map((unit) => tUnits(unit)).join(', ')
 
   const allSelectedSubPosts = useMemo(
-    () => filteredSubPosts.length === envSubPosts.length,
-    [filteredSubPosts, envSubPosts],
+    () => filters.subPosts.length === envSubPosts.length,
+    [filters.subPosts, envSubPosts],
   )
 
   const subPostsSelectorRenderValue = () =>
     allSelectedSubPosts
       ? tPosts('all')
-      : filteredSubPosts.length === 0
+      : filters.subPosts.length === 0
         ? tPosts('none')
-        : filteredSubPosts.map((subPosts) => tPosts(subPosts)).join(', ')
+        : filters.subPosts.map((subPosts) => tPosts(subPosts)).join(', ')
 
-  const areAllSelected = (post: Post) => !subPostsByPost[post].some((subPost) => !filteredSubPosts.includes(subPost))
+  const areAllSelected = (post: Post) => !subPostsByPost[post].some((subPost) => !filters.subPosts.includes(subPost))
 
-  const selectAllSubPosts = () => setFilteredSubPosts(allSelectedSubPosts ? [] : envSubPosts)
+  const selectAllSubPosts = () =>
+    setFilters((prevFilters) => ({ ...prevFilters, subPosts: allSelectedSubPosts ? [] : envSubPosts }))
 
   const selectPost = (post: Post) => {
     const newValue = areAllSelected(post)
-      ? filteredSubPosts.filter((filteredSubPost) => !subPostsByPost[post].includes(filteredSubPost))
-      : filteredSubPosts.concat(subPostsByPost[post].filter((a) => !filteredSubPosts.includes(a)))
-    setFilteredSubPosts(newValue)
+      ? filters.subPosts.filter((filteredSubPost) => !subPostsByPost[post].includes(filteredSubPost))
+      : filters.subPosts.concat(subPostsByPost[post].filter((a) => !filters.subPosts.includes(a)))
+    setFilters((prevFilters) => ({ ...prevFilters, subPosts: newValue }))
   }
 
   const selectSubPost = (subPost: SubPost) => {
-    const newValue = filteredSubPosts.includes(subPost)
-      ? filteredSubPosts.filter((filteredSubPost) => filteredSubPost !== subPost)
-      : filteredSubPosts.concat([subPost])
-    setFilteredSubPosts(newValue)
+    const newValue = filters.subPosts.includes(subPost)
+      ? filters.subPosts.filter((filteredSubPost) => filteredSubPost !== subPost)
+      : filters.subPosts.concat([subPost])
+    setFilters((prevFilters) => ({ ...prevFilters, subPosts: newValue }))
   }
 
   const locationOptions = useMemo(
@@ -192,10 +191,12 @@ export const EmissionFactorsFilters = ({
               {t('locationSearch')}
             </FormLabel>
             <Autocomplete
-              value={locationFilter}
+              value={filters.location}
               options={locationOptions}
-              onChange={(_, option) => setLocationFilter(option || '')}
-              onInputChange={(_, newInputValue) => setLocationFilter(newInputValue)}
+              onChange={(_, option) => setFilters((prevFilters) => ({ ...prevFilters, location: option || '' }))}
+              onInputChange={(_, newInputValue) =>
+                setFilters((prevFilters) => ({ ...prevFilters, location: newInputValue }))
+              }
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -216,14 +217,16 @@ export const EmissionFactorsFilters = ({
             <Select
               id="emissions-sources-selector"
               labelId="emissions-sources-selector"
-              value={filteredSources}
-              onChange={selectSource}
+              value={filters.sources}
+              onChange={({ target: { value } }) =>
+                setFilters((prevFilters) => ({ ...prevFilters, sources: value as string[] }))
+              }
               renderValue={statusSelectorRenderValue}
               multiple
             >
               {sortedImportVersions.map((importVersion) => (
                 <MenuItem key={`source-item-${importVersion.id}`} value={importVersion.id}>
-                  <Checkbox checked={filteredSources.includes(importVersion.id)} />
+                  <Checkbox checked={filters.sources.includes(importVersion.id)} />
                   <ListItemText primary={getEmissionVersionLabel(importVersion)} />
                 </MenuItem>
               ))}
@@ -236,9 +239,9 @@ export const EmissionFactorsFilters = ({
             <MultiSelectAll
               id="emissions-unit"
               renderValue={unitsSelectorRenderValue}
-              value={filteredUnits}
+              value={filters.units}
               allValues={initialSelectedUnits.filter((unit) => unit != 'all')}
-              setValues={setFilteredUnits}
+              setValues={(values) => setFilters((prevFilters) => ({ ...prevFilters, units: values }))}
               t={tUnits}
             />
           </FormControl>
@@ -249,7 +252,7 @@ export const EmissionFactorsFilters = ({
             <Select
               id="emissions-subposts-selector"
               labelId="emissions-subposts-selector"
-              value={filteredSubPosts}
+              value={filters.subPosts}
               renderValue={subPostsSelectorRenderValue}
               multiple
             >
@@ -271,10 +274,10 @@ export const EmissionFactorsFilters = ({
                     <MenuItem
                       key={`subpost-${subPost}`}
                       className={styles.subPostItem}
-                      selected={filteredSubPosts.includes(subPost)}
+                      selected={filters.subPosts.includes(subPost)}
                       onClick={() => selectSubPost(subPost)}
                     >
-                      <Checkbox checked={filteredSubPosts.includes(subPost)} />
+                      <Checkbox checked={filters.subPosts.includes(subPost)} />
                       <ListItemText primary={tPosts(subPost)} />
                     </MenuItem>
                   ))}
@@ -289,12 +292,14 @@ export const EmissionFactorsFilters = ({
             <FormControlLabel
               control={
                 <Switch
-                  checked={displayArchived}
+                  checked={filters.archived}
                   data-testid="archived-emissions-factors-switch"
-                  onChange={(event) => setDisplayArchived(event.target.checked)}
+                  onChange={(event) =>
+                    setFilters((prevFilters) => ({ ...prevFilters, archived: event.target.checked }))
+                  }
                 />
               }
-              label={t(displayArchived ? 'yes' : 'no')}
+              label={t(filters.archived ? 'yes' : 'no')}
             />
           </FormControl>
         </>
