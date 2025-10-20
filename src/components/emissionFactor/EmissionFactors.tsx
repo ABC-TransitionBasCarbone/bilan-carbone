@@ -7,7 +7,7 @@ import { EmissionFactorImportVersion, Environment, Import } from '@prisma/client
 import { PaginationState } from '@tanstack/react-table'
 import { UserSession } from 'next-auth'
 import { useEffect, useMemo, useState } from 'react'
-import EmissionFactorsTable from './Table'
+import EmissionFactorsFiltersAndTable from './EmissionFactorsFiltersAndTable'
 
 interface Props {
   userOrganizationId?: string
@@ -48,7 +48,6 @@ const EmissionFactors = ({ userOrganizationId, manualOnly, environment }: Props)
   }, [emissionFactors.length, take, pagination.pageIndex])
 
   useEffect(() => {
-    console.log('updateTake', pagination.pageSize)
     setTake(pagination.pageSize)
   }, [pagination.pageSize])
 
@@ -76,7 +75,7 @@ const EmissionFactors = ({ userOrganizationId, manualOnly, environment }: Props)
   const posts = useMemo(() => Object.keys(subPostsByPost) as Post[], [subPostsByPost])
 
   return (
-    <EmissionFactorsTable
+    <EmissionFactorsFiltersAndTable
       emissionFactors={emissionFactors}
       userOrganizationId={userOrganizationId}
       importVersions={importVersions.concat([manualImport])}
