@@ -1,46 +1,94 @@
 'use client'
 
-import { Post } from '@/services/posts'
-import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
-import { EmissionFactorImportVersion, Environment, SubPost } from '@prisma/client'
-import { OnChangeFn, PaginationState } from '@tanstack/react-table'
+import { EmissionFactorList } from '@/db/emissionFactors'
+import { environmentSubPostsMapping, Post } from '@/services/posts'
+import {
+  EmissionFactorWithMetaData,
+  getEmissionFactors,
+  mapImportVersions,
+} from '@/services/serverFunctions/emissionFactor'
+import { EmissionFactorImportVersion, Environment, Import } from '@prisma/client'
+import { PaginationState } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import EditEmissionFactorModal from './edit/EditEmissionFactorModal'
 import { EmissionFactorsFilters } from './EmissionFactorsFilters'
 import { EmissionFactorsTable } from './Table'
 
 interface Props {
-  emissionFactors: EmissionFactorWithMetaData[]
-  selectEmissionFactor?: (emissionFactor: EmissionFactorWithMetaData) => void
-  importVersions: EmissionFactorImportVersion[]
-  initialSelectedSources: string[]
   userOrganizationId?: string | null
-  initialSelectedSubPosts: SubPost[]
   environment: Environment
-  envPosts: Post[]
-  pagination: PaginationState
-  setPagination: OnChangeFn<PaginationState>
-  totalCount: number
+  manualOnly: boolean
+  selectEmissionFactor?: (emissionFactor: EmissionFactorWithMetaData) => void
 }
 
 const EmissionFactorsFiltersAndTable = ({
-  emissionFactors,
-  selectEmissionFactor,
   userOrganizationId,
-  importVersions,
-  initialSelectedSources,
-  initialSelectedSubPosts,
   environment,
-  envPosts,
-  pagination,
-  setPagination,
-  totalCount,
+  manualOnly,
+  selectEmissionFactor,
 }: Props) => {
   const t = useTranslations('emissionFactors.table')
   const [action, setAction] = useState<'edit' | 'delete' | undefined>(undefined)
   const [targetedEmission, setTargetedEmission] = useState('')
   const fromModal = !!selectEmissionFactor
+
+  const [emissionFactors, setEmissionFactors] = useState<EmissionFactorList[]>([])
+  const [importVersions, setImportVersions] = useState<EmissionFactorImportVersion[]>([])
+  const [skip, setSkip] = useState(0)
+  const [take, setTake] = useState(25)
+  const [totalCount, setTotalCount] = useState(0)
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
+
+  useEffect(() => {
+    async function fetchEmissionFactors() {
+      const emissionFactorsFromBdd = await getEmissionFactors(skip, skip === 0 ? take * 4 : take)
+      setSkip((prevSkip) => (prevSkip === 0 ? take * 4 : prevSkip + take))
+
+      if (emissionFactorsFromBdd.success) {
+        if (emissionFactors.length === 0) {
+          setImportVersions(await mapImportVersions(emissionFactorsFromBdd.data.emissionFactors))
+        }
+        setEmissionFactors((prevEF) => prevEF.concat(emissionFactorsFromBdd.data.emissionFactors))
+        setTotalCount(emissionFactorsFromBdd.data.count)
+      } else {
+        setEmissionFactors([])
+        setTotalCount(0)
+      }
+    }
+
+    if ((pagination.pageIndex + 1) * pagination.pageSize + 50 > skip + take) {
+      fetchEmissionFactors()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [emissionFactors.length, take, pagination.pageIndex])
+
+  useEffect(() => {
+    setTake(pagination.pageSize)
+  }, [pagination.pageSize])
+
+  const manualImport = { id: Import.Manual, source: Import.Manual, name: '' } as EmissionFactorImportVersion
+
+  const initialSelectedSources = useMemo(() => {
+    return importVersions
+      .filter(
+        (importVersion) =>
+          importVersion.source === Import.Manual ||
+          (!manualOnly &&
+            importVersion.id ===
+              importVersions
+                .filter((v) => v.source === importVersion.source)
+                .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0].id),
+      )
+      .map((importVersion) => importVersion.id)
+  }, [importVersions, manualOnly])
+
+  const subPostsByPost = useMemo(() => environmentSubPostsMapping[environment], [environment])
+  const initialSelectedSubPosts = useMemo(
+    () => Object.values(subPostsByPost).flatMap((subPosts) => subPosts),
+    [subPostsByPost],
+  )
+  const posts = useMemo(() => Object.keys(subPostsByPost) as Post[], [subPostsByPost])
 
   return (
     <>
@@ -48,10 +96,10 @@ const EmissionFactorsFiltersAndTable = ({
       <EmissionFactorsFilters
         emissionFactors={emissionFactors}
         fromModal={fromModal}
-        importVersions={importVersions}
+        importVersions={importVersions.concat(manualImport)}
         initialSelectedSources={initialSelectedSources}
         initialSelectedSubPosts={initialSelectedSubPosts}
-        envPosts={envPosts}
+        envPosts={posts}
       />
       <EmissionFactorsTable
         setTargetedEmission={setTargetedEmission}
