@@ -14,9 +14,10 @@ interface Props {
   study: FullStudy
   actions: Action[]
   porters: { label: string; value: string }[]
+  transitionPlanId: string
 }
 
-const ActionsPage = ({ study, actions, porters }: Props) => {
+const ActionsPage = ({ study, actions, porters, transitionPlanId }: Props) => {
   const t = useTranslations('study.transitionPlan.actions')
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
@@ -48,7 +49,12 @@ const ActionsPage = ({ study, actions, porters }: Props) => {
           })}
         />
 
-        <Actions actions={actions} studyId={study.id} studyUnit={study.resultsUnit} porters={porters} />
+        <Actions
+          actions={actions}
+          studyUnit={study.resultsUnit}
+          porters={porters}
+          transitionPlanId={transitionPlanId}
+        />
       </div>
     </>
   )

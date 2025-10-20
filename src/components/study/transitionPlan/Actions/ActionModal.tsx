@@ -26,13 +26,13 @@ interface Props {
   open: boolean
   action?: Action
   onClose: () => void
-  studyId: string
+  transitionPlanId: string
   studyUnit: string
   porters: { label: string; value: string }[]
 }
 const steps = 3
 
-const ActionModal = ({ action, open, onClose, studyId, studyUnit, porters }: Props) => {
+const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit, porters }: Props) => {
   const [step, setStep] = useState(1)
   const [toast, setToast] = useState<{ text: string; color: ToastColors }>(emptyToast)
   const t = useTranslations('study.transitionPlan.actions.addModal')
@@ -44,7 +44,7 @@ const ActionModal = ({ action, open, onClose, studyId, studyUnit, porters }: Pro
     mode: 'onSubmit',
     reValidateMode: 'onChange',
     defaultValues: {
-      studyId,
+      transitionPlanId,
       potentialDeduction: undefined,
       actionPorter: '',
       nature: [],

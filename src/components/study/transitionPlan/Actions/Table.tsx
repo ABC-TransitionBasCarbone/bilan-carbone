@@ -16,12 +16,12 @@ import ActionModal from './ActionModal'
 
 interface Props {
   actions: Action[]
-  studyId: string
   studyUnit: string
   porters: { label: string; value: string }[]
+  transitionPlanId: string
 }
 
-const Table = ({ actions, studyId, studyUnit, porters }: Props) => {
+const Table = ({ actions, studyUnit, porters, transitionPlanId }: Props) => {
   const t = useTranslations('study.transitionPlan.actions.table')
   const tUnit = useTranslations('study.results.units')
   const tCategory = useTranslations('study.transitionPlan.actions.category')
@@ -89,7 +89,7 @@ const Table = ({ actions, studyId, studyUnit, porters }: Props) => {
           open
           onClose={() => setEditing(undefined)}
           action={editing}
-          studyId={studyId}
+          transitionPlanId={transitionPlanId}
           studyUnit={studyUnit}
           porters={porters}
         />

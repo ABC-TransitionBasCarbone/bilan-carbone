@@ -8,9 +8,9 @@ import Table from './Table'
 
 interface Props {
   actions: Action[]
-  studyId: string
   studyUnit: string
   porters: { label: string; value: string }[]
+  transitionPlanId: string
 }
 
 const fuseOptions = {
@@ -19,7 +19,7 @@ const fuseOptions = {
   isCaseSensitive: false,
 }
 
-const Actions = ({ actions, studyId, studyUnit, porters }: Props) => {
+const Actions = ({ actions, studyUnit, porters, transitionPlanId }: Props) => {
   const [filter, setFilter] = useState('')
 
   const fuse = useMemo(() => new Fuse(actions, fuseOptions), [actions])
@@ -31,8 +31,14 @@ const Actions = ({ actions, studyId, studyUnit, porters }: Props) => {
 
   return (
     <>
-      <ActionFilters search={filter} setSearch={setFilter} studyId={studyId} studyUnit={studyUnit} porters={porters} />
-      <Table actions={searchedActions} studyId={studyId} studyUnit={studyUnit} porters={porters} />
+      <ActionFilters
+        search={filter}
+        setSearch={setFilter}
+        studyUnit={studyUnit}
+        porters={porters}
+        transitionPlanId={transitionPlanId}
+      />
+      <Table actions={searchedActions} studyUnit={studyUnit} porters={porters} transitionPlanId={transitionPlanId} />
     </>
   )
 }

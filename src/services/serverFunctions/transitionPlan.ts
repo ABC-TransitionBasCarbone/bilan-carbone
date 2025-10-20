@@ -121,7 +121,12 @@ export const addAction = async (command: AddActionCommand) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const study = await getStudyById(command.studyId, session.user.organizationVersionId)
+    const transitionPlan = await getTransitionPlanById(command.transitionPlanId)
+    if (!transitionPlan) {
+      throw new Error('Transition plan not found')
+    }
+
+    const study = await getStudyById(transitionPlan.studyId, session.user.organizationVersionId)
     if (!study || !canCreateAction(session.user, study)) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -146,11 +151,16 @@ export const editAction = async (id: string, command: AddActionCommand) =>
     }
 
     const action = await getActionById(id)
-    if (!action || action.studyId !== command.studyId) {
+    if (!action || action.transitionPlanId !== command.transitionPlanId) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const study = await getStudyById(command.studyId, session.user.organizationVersionId)
+    const transitionPlan = await getTransitionPlanById(command.transitionPlanId)
+    if (!transitionPlan) {
+      throw new Error('Transition plan not found')
+    }
+
+    const study = await getStudyById(transitionPlan.studyId, session.user.organizationVersionId)
     if (!study || !canCreateAction(session.user, study)) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -187,5 +197,11 @@ export const getStudyActions = async (studyId: string) =>
     ) {
       throw new Error(NOT_AUTHORIZED)
     }
-    return getActions(studyId)
+
+    const transitionPlan = await getTransitionPlanByStudyId(studyId)
+    if (!transitionPlan) {
+      return []
+    }
+
+    return getActions(transitionPlan.id)
   })

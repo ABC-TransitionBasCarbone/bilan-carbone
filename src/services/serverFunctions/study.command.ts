@@ -230,7 +230,7 @@ export const AddActionCommandBase = z.object({
   subSteps: z.string({ required_error: 'required' }),
   // aim: z.array(),
   detailedDescription: z.string({ required_error: 'required' }),
-  studyId: z.string().uuid(),
+  transitionPlanId: z.string().uuid(),
   potentialDeduction: z.nativeEnum(ActionPotentialDeduction, { required_error: 'required' }),
   reductionValue: z.number().optional(),
   reductionStartYear: z.string().optional(),

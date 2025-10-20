@@ -160,8 +160,6 @@ model Study {
   transitionPlan        TransitionPlan?
   transitionPlanStudies TransitionPlanStudy[]
 
-  Action Action[]
-
   @@map("studies")
 }
 

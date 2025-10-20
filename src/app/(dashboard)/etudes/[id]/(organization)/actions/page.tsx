@@ -33,11 +33,18 @@ const Actions = async ({ study }: StudyProps) => {
       value: user.email,
     }))
 
-  if (!actions.success) {
+  if (!actions.success || !transitionPlan.success || !transitionPlan.data) {
     return <NotFound />
   }
 
-  return <ActionsPage study={study} actions={actions.data} porters={uniqBy(porters, 'value')} />
+  return (
+    <ActionsPage
+      study={study}
+      actions={actions.data}
+      porters={uniqBy(porters, 'value')}
+      transitionPlanId={transitionPlan.data.id}
+    />
+  )
 }
 
 export default withAuth(withStudyDetails(withTransitionPlan(Actions)))

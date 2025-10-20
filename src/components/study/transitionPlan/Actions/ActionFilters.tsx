@@ -10,12 +10,12 @@ import styles from './Actions.module.css'
 interface Props {
   search: string
   setSearch: (search: string) => void
-  studyId: string
   studyUnit: string
   porters: { label: string; value: string }[]
+  transitionPlanId: string
 }
 
-const ActionFilters = ({ search, setSearch, studyId, studyUnit, porters }: Props) => {
+const ActionFilters = ({ search, setSearch, studyUnit, porters, transitionPlanId }: Props) => {
   const t = useTranslations('study.transitionPlan.actions')
   const [addAction, setAddAction] = useState(false)
 
@@ -34,7 +34,7 @@ const ActionFilters = ({ search, setSearch, studyId, studyUnit, porters }: Props
         <ActionModal
           open
           onClose={() => setAddAction(false)}
-          studyId={studyId}
+          transitionPlanId={transitionPlanId}
           studyUnit={studyUnit}
           porters={porters}
         />
