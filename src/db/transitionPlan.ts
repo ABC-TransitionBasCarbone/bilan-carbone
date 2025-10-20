@@ -1,5 +1,5 @@
 import { AddActionCommand } from '@/services/serverFunctions/study.command'
-import { TransitionPlan, TransitionPlanStudy } from '@prisma/client'
+import { Objective, Trajectory, TransitionPlan, TransitionPlanStudy } from '@prisma/client'
 import { prismaClient } from './client'
 
 export type TransitionPlanWithStudies = TransitionPlan & {
@@ -11,9 +11,32 @@ export type TransitionPlanWithStudies = TransitionPlan & {
   transitionPlanStudies: TransitionPlanStudy[]
 }
 
+export type TransitionPlanWithRelations = TransitionPlan & {
+  trajectories: Array<
+    Trajectory & {
+      objectives: Objective[]
+    }
+  >
+  transitionPlanStudies: TransitionPlanStudy[]
+}
+
 export const getTransitionPlanById = async (id: string): Promise<TransitionPlan | null> => {
   return prismaClient.transitionPlan.findUnique({
     where: { id },
+  })
+}
+
+export const getTransitionPlanByIdWithRelations = async (id: string): Promise<TransitionPlanWithRelations | null> => {
+  return prismaClient.transitionPlan.findUnique({
+    where: { id },
+    include: {
+      trajectories: {
+        include: {
+          objectives: true,
+        },
+      },
+      transitionPlanStudies: true,
+    },
   })
 }
 
@@ -50,7 +73,7 @@ export const getOrganizationTransitionPlans = async (
   })
 }
 
-export const createTransitionPlan = async (studyId: string): Promise<TransitionPlan> => {
+export const createTransitionPlan = async (studyId: string): Promise<TransitionPlanWithRelations> => {
   return prismaClient.transitionPlan.create({
     data: {
       studyId,
@@ -60,6 +83,58 @@ export const createTransitionPlan = async (studyId: string): Promise<TransitionP
         },
       },
     },
+    include: {
+      transitionPlanStudies: true,
+      trajectories: {
+        include: {
+          objectives: true,
+        },
+      },
+    },
+  })
+}
+
+export const duplicateTransitionPlanWithRelations = async (
+  sourceTransitionPlan: TransitionPlanWithRelations,
+  targetStudyId: string,
+): Promise<TransitionPlanWithRelations> => {
+  const linkedStudyIds = sourceTransitionPlan.transitionPlanStudies
+    .map((tps) => tps.studyId)
+    .filter((studyId) => studyId !== sourceTransitionPlan.studyId)
+
+  return prismaClient.$transaction(async (tx) => {
+    const newTransitionPlan = await tx.transitionPlan.create({
+      data: {
+        studyId: targetStudyId,
+        transitionPlanStudies: {
+          create: [{ studyId: targetStudyId }, ...linkedStudyIds.map((studyId) => ({ studyId }))],
+        },
+        trajectories: {
+          create: sourceTransitionPlan.trajectories.map((trajectory) => ({
+            name: trajectory.name,
+            description: trajectory.description,
+            type: trajectory.type,
+            objectives: {
+              create: trajectory.objectives.map((objective) => ({
+                targetYear: objective.targetYear,
+                reductionRate: objective.reductionRate,
+              })),
+            },
+          })),
+        },
+        // TODO: Add actions
+      },
+      include: {
+        trajectories: {
+          include: {
+            objectives: true,
+          },
+        },
+        transitionPlanStudies: true,
+      },
+    })
+
+    return newTransitionPlan
   })
 }
 

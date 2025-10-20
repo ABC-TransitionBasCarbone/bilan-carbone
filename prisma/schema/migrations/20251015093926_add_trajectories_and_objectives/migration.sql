@@ -19,7 +19,7 @@ CREATE TABLE "objectives" (
     "id" TEXT NOT NULL,
     "trajectory_id" TEXT NOT NULL,
     "target_year" INTEGER NOT NULL,
-    "reduction_rate" DECIMAL(6,4) NOT NULL,
+    "reduction_rate" DOUBLE PRECISION NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 

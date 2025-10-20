@@ -57,7 +57,7 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
   const tNav = useTranslations('nav')
   const router = useRouter()
   const tStudyNav = useTranslations('study.navigation')
-  const [transitionPlan, setTransitionPlan] = useState<TransitionPlan | null>(null)
+  const [transitionPlan, setTransitionPlan] = useState<TransitionPlan | null | undefined>(undefined)
   const [showModal, setShowModal] = useState(false)
   const [showTrajectoryModal, setShowTrajectoryModal] = useState(false)
   const [showSuccessToast, setShowSuccessToast] = useState(false)
@@ -89,17 +89,18 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true)
       try {
-        const planResponse = await getStudyTransitionPlan(study)
+        const response = await getStudyTransitionPlan(study)
 
-        if (planResponse.success && planResponse.data) {
-          setTransitionPlan(planResponse.data)
+        if (response.success && response.data) {
+          setTransitionPlan(response.data)
 
-          const trajectoriesResponse = await getTrajectoriesForTransitionPlan(planResponse.data.id)
+          const trajectoriesResponse = await getTrajectoriesForTransitionPlan(response.data.id)
           if (trajectoriesResponse.success && trajectoriesResponse.data) {
             setCustomTrajectories(trajectoriesResponse.data)
           }
+        } else {
+          setTransitionPlan(null)
         }
       } catch (error) {
         console.error('Error fetching transition plan data:', error)
@@ -108,7 +109,7 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
       }
     }
 
-    if (transitionPlan === null) {
+    if (transitionPlan === undefined) {
       fetchData()
     }
   }, [study, transitionPlan])
@@ -131,13 +132,15 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
   const handleConfirmPlanSelection = useCallback(
     async (selectedPlanId?: string) => {
       await callServerFunction(() => initializeTransitionPlan(study.id, selectedPlanId), {
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
           setTransitionPlan(data)
           setShowModal(false)
+          setCustomTrajectories(data.trajectories)
+          router.refresh()
         },
       })
     },
-    [callServerFunction, study.id],
+    [callServerFunction, study.id, router],
   )
 
   const trajectoryData = useMemo(() => {
@@ -173,19 +176,39 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
 
     const customTrajectoriesData = customTrajectories
       .filter((traj) => selectedCustomTrajectoryIds.includes(traj.id))
-      .map((traj) => ({
-        data: calculateCustomTrajectory({
-          baseEmissions: totalCo2,
-          studyStartYear,
-          objectives: traj.objectives.map((obj) => ({
-            targetYear: obj.targetYear,
-            reductionRate: Number(obj.reductionRate),
-          })),
-        }),
-        enabled: true,
-        label: traj.name,
-        color: undefined,
-      }))
+      .map((traj) => {
+        let data: typeof trajectory15Data
+
+        if (traj.type === 'SBTI_15') {
+          data = calculateSBTiTrajectory({
+            baseEmissions: totalCo2,
+            studyStartYear,
+            reductionRate: SBTI_REDUCTION_RATE_15,
+          })
+        } else if (traj.type === 'SBTI_WB2C') {
+          data = calculateSBTiTrajectory({
+            baseEmissions: totalCo2,
+            studyStartYear,
+            reductionRate: SBTI_REDUCTION_RATE_WB2C,
+          })
+        } else {
+          data = calculateCustomTrajectory({
+            baseEmissions: totalCo2,
+            studyStartYear,
+            objectives: traj.objectives.map((obj) => ({
+              targetYear: obj.targetYear,
+              reductionRate: Number(obj.reductionRate),
+            })),
+          })
+        }
+
+        return {
+          data,
+          enabled: true,
+          label: traj.name,
+          color: undefined,
+        }
+      })
 
     return {
       trajectory15: trajectory15Data,

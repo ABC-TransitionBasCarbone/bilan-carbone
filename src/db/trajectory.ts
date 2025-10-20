@@ -6,10 +6,8 @@ export type TrajectoryWithObjectives = Trajectory & {
   objectives: Objective[]
 }
 
-export const createTrajectoryWithObjectives = async (
-  data: Prisma.TrajectoryCreateInput,
-): Promise<TrajectoryWithObjectives> =>
-  prisma.trajectory.create({
+export const createTrajectoryWithObjectives = async (data: Prisma.TrajectoryCreateInput) => {
+  return prisma.trajectory.create({
     data,
     include: {
       objectives: {
@@ -19,6 +17,7 @@ export const createTrajectoryWithObjectives = async (
       },
     },
   })
+}
 
 export const getTrajectoryById = async (id: string): Promise<TrajectoryWithObjectives | null> => {
   return prisma.trajectory.findUnique({

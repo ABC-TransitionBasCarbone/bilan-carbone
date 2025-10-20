@@ -131,14 +131,17 @@ export const calculateCustomTrajectory = ({
     return []
   }
 
-  const sortedObjectives = [...objectives].sort((a, b) => a.targetYear - b.targetYear)
-
   const dataPoints: TrajectoryDataPoint[] = []
   let currentValue = baseEmissions
   let startYear = studyStartYear
 
+  for (let year = REFERENCE_YEAR; year < studyStartYear; year++) {
+    dataPoints.push({ year, value: baseEmissions })
+  }
+
   dataPoints.push({ year: studyStartYear, value: baseEmissions })
 
+  const sortedObjectives = [...objectives].sort((a, b) => a.targetYear - b.targetYear)
   for (let i = 0; i < sortedObjectives.length; i++) {
     const objective = sortedObjectives[i]
     const absoluteReductionRate = Number(objective.reductionRate)

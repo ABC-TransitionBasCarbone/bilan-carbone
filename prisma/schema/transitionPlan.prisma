@@ -122,7 +122,7 @@ model Objective {
   trajectory   Trajectory @relation(fields: [trajectoryId], references: [id], onDelete: Cascade)
 
   targetYear    Int     @map("target_year")
-  reductionRate Decimal @map("reduction_rate") @db.Decimal(6, 4)
+  reductionRate Float @map("reduction_rate")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")

@@ -4,9 +4,11 @@ import { FullStudy, getStudyById } from '@/db/study'
 import {
   createAction,
   createTransitionPlan,
+  duplicateTransitionPlanWithRelations,
   getOrganizationTransitionPlans,
-  getTransitionPlanById,
+  getTransitionPlanByIdWithRelations,
   getTransitionPlanByStudyId,
+  TransitionPlanWithRelations,
   TransitionPlanWithStudies,
 } from '@/db/transitionPlan'
 import { ApiResponse, withServerResponse } from '@/utils/serverResponse'
@@ -69,7 +71,7 @@ export const getAvailableTransitionPlans = async (studyId: string) =>
   })
 
 export const initializeTransitionPlan = async (studyId: string, sourceTransitionPlanId?: string) =>
-  withServerResponse('initializeTransitionPlan', async (): Promise<TransitionPlan> => {
+  withServerResponse('initializeTransitionPlan', async (): Promise<TransitionPlanWithRelations> => {
     const session = await auth()
     if (!session?.user) {
       throw new Error(NOT_AUTHORIZED)
@@ -100,14 +102,14 @@ export const initializeTransitionPlan = async (studyId: string, sourceTransition
 export const duplicateTransitionPlan = async (
   sourceTransitionPlanId: string,
   targetStudyId: string,
-): Promise<TransitionPlan> => {
-  const sourceTransitionPlan = await getTransitionPlanById(sourceTransitionPlanId)
+): Promise<TransitionPlanWithRelations> => {
+  const sourceTransitionPlan = await getTransitionPlanByIdWithRelations(sourceTransitionPlanId)
 
   if (!sourceTransitionPlan) {
     throw new Error('Source transition plan not found with id ' + sourceTransitionPlanId)
   }
 
-  return createTransitionPlan(targetStudyId)
+  return duplicateTransitionPlanWithRelations(sourceTransitionPlan, targetStudyId)
 }
 
 export const addAction = async (command: AddActionCommand) =>
