@@ -107,11 +107,14 @@ const getDefaultEmissionFactors = (
   skip: number,
   take: number,
   locale: localeType,
+  organizationId: string | null,
   versionIds?: string[],
 ): EmissionFactorList[] => {
   const skipSQL = Prisma.sql`${skip}`
   const takeSQL = Prisma.sql`${take}`
-  const versionsString = versionIds?.length ? Prisma.sql`AND version_id IN (${Prisma.join(versionIds)})` : Prisma.empty
+  const versionsString = versionIds?.length
+    ? Prisma.sql`AND (version_id IN (${Prisma.join(versionIds)}) OR version_id is null)`
+    : Prisma.empty
 
   return prismaClient.$queryRaw(Prisma.sql`
  SELECT ef.id, ef.status, ef.total_co2 as ${Prisma.sql`"totalCo2"`}, ef.location, ef.source, ef.unit, ${Prisma.sql`ef."customUnit"`}, ef.is_monetary as ${Prisma.sql`"isMonetary"`},
@@ -125,7 +128,7 @@ const getDefaultEmissionFactors = (
   FROM emission_factors ef
   JOIN emission_metadata m
     ON m.emission_factor_id = ef.id
-  WHERE m.language = 'fr' and ef.organization_id IS NULL AND ef.sub_posts IS NOT NULL AND ef.sub_posts::text != '{}' ${versionsString}
+  WHERE m.language = 'fr' and (ef.organization_id IS NULL OR ef.organization_id = ${Prisma.sql`${organizationId}`}) AND ef.sub_posts IS NOT NULL AND ef.sub_posts::text != '{}' ${versionsString}
   ORDER BY m.title ASC
   LIMIT ${takeSQL} OFFSET ${skipSQL}`) as unknown as EmissionFactorList[]
 }
@@ -136,7 +139,6 @@ const getDefaultEmissionFactorsCount = (versionIds?: string[]) =>
       organizationId: null,
       subPosts: { isEmpty: false },
       ...(versionIds && { versionId: { in: versionIds } }),
-      version: { archived: false },
     },
   })
 
@@ -177,7 +179,6 @@ export const getAllEmissionFactors = async (
 ) => {
   let versionIds
   let studyOldEmissionFactors: EmissionFactorList[] = []
-  let organizationEmissionFactor: EmissionFactorList[] = []
   if (studyId) {
     const study = await prismaClient.study.findFirst({
       where: { id: studyId },
@@ -202,18 +203,8 @@ export const getAllEmissionFactors = async (
     }
   }
 
-  organizationEmissionFactor = keepOnlyOneMetadata(
-    await prismaClient.emissionFactor.findMany({
-      where: { organizationId },
-      select: selectEmissionFactor,
-      orderBy: { createdAt: 'desc' },
-    }),
-    locale,
-  )
-
-  const defaultEmissionFactors = await getDefaultEmissionFactors(0, 10, locale, versionIds)
-  console.log('defaultEmissionFactors', defaultEmissionFactors)
-  const allEmissionFactors = organizationEmissionFactor.concat(defaultEmissionFactors).concat(studyOldEmissionFactors)
+  const defaultEmissionFactors = await getDefaultEmissionFactors(0, 10, locale, organizationId, versionIds)
+  const allEmissionFactors = defaultEmissionFactors.concat(studyOldEmissionFactors)
   if (withCut) {
     return allEmissionFactors
   }
