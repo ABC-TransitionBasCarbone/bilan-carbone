@@ -1,15 +1,14 @@
 import { LocaleType } from '@/i18n/config'
 import { isSourceForEnv } from '@/services/importEmissionFactor/import'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
+import { localeType } from '@/types/translation'
 import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
 import { flattenSubposts } from '@/utils/post'
-import { EmissionFactorStatus, Environment, Import, Unit, type Prisma } from '@prisma/client'
+import { EmissionFactorStatus, Environment, Import, Prisma, Unit } from '@prisma/client'
 import { Session } from 'next-auth'
 import { prismaClient } from './client'
 import { getOrganizationVersionById } from './organization'
 import { getSourcesLatestImportVersionId, getSourcesLatestImportVersionIdByOrganizationId } from './study'
-
-let cachedEmissionFactors: AsyncReturnType<typeof getDefaultEmissionFactors> = []
 
 const selectEmissionFactor = {
   id: true,
@@ -52,51 +51,133 @@ const selectEmissionFactor = {
     select: {
       id: true,
       name: true,
+      archived: true,
     },
   },
   emissionFactorParts: { select: { type: true, totalCo2: true } },
 } as Prisma.EmissionFactorSelect
 
-const getDefaultEmissionFactors = (versionIds?: string[]) =>
-  prismaClient.emissionFactor.findMany({
+export type EmissionFactorList = {
+  id: string
+  status: EmissionFactorStatus
+  totalCo2: number
+  location: string | null
+  source: string | null
+  unit: Unit | null
+  customUnit: string | null
+  isMonetary: boolean
+  importedFrom: Import
+  importedId: string | null
+  organizationId: string | null
+  reliability: number | null
+  technicalRepresentativeness: number | null
+  geographicRepresentativeness: number | null
+  temporalRepresentativeness: number | null
+  completeness: number | null
+  subPosts: string[]
+  co2f: number | null
+  ch4f: number | null
+  ch4b: number | null
+  n2o: number | null
+  co2b: number | null
+  sf6: number | null
+  hfc: number | null
+  pfc: number | null
+  otherGES: number | null
+  metaData: {
+    language: string
+    title: string | null
+    attribute: string | null
+    comment: string | null
+    location: string | null
+    frontiere: string | null
+  }
+  version: {
+    id: string
+    name: string
+    archived: boolean
+  } | null
+  emissionFactorParts: {
+    type: string
+    totalCo2: number
+  }[]
+}
+
+const getDefaultEmissionFactors = (
+  skip: number,
+  take: number,
+  locale: localeType,
+  versionIds?: string[],
+): EmissionFactorList[] => {
+  const skipSQL = Prisma.sql`${skip}`
+  const takeSQL = Prisma.sql`${take}`
+  const versionsString = versionIds?.length ? Prisma.sql`AND version_id IN (${Prisma.join(versionIds)})` : Prisma.empty
+
+  return prismaClient.$queryRaw(Prisma.sql`
+ SELECT ef.id, ef.status, ef.total_co2 as ${Prisma.sql`"totalCo2"`}, ef.location, ef.source, ef.unit, ${Prisma.sql`ef."customUnit"`}, ef.is_monetary as ${Prisma.sql`"isMonetary"`},
+        ef.imported_from as ${Prisma.sql`"importedFrom"`}, ef.imported_id as ${Prisma.sql`"importedId"`}, ef.organization_id as ${Prisma.sql`"organizationId"`},
+        ef.reliability, ef.technical_representativeness as ${Prisma.sql`"technicalRepresentativeness"`},
+        ef.geographic_representativeness as ${Prisma.sql`"geographicRepresentativeness"`},
+        ef.temporal_representativeness as ${Prisma.sql`"temporalRepresentativeness"`},
+        ef.completeness, ef.sub_posts as ${Prisma.sql`"subPosts"`},
+        ef.co2f, ef.ch4f, ef.ch4b, ef.n2o, ef.co2b, ef.sf6, ef.hfc, ef.pfc, ef.other_ges as otherGES,
+        (SELECT row_to_json(m.*) FROM emission_metadata m WHERE m.emission_factor_id = ef.id AND m.language = ${locale} LIMIT 1 ) AS ${Prisma.sql`"metaData"`}
+  FROM emission_factors ef
+  JOIN emission_metadata m
+    ON m.emission_factor_id = ef.id
+  WHERE m.language = 'fr' and ef.organization_id IS NULL AND ef.sub_posts IS NOT NULL AND ef.sub_posts::text != '{}' ${versionsString}
+  ORDER BY m.title ASC
+  LIMIT ${takeSQL} OFFSET ${skipSQL}`) as unknown as EmissionFactorList[]
+}
+
+const getDefaultEmissionFactorsCount = (versionIds?: string[]) =>
+  prismaClient.emissionFactor.count({
     where: {
       organizationId: null,
       subPosts: { isEmpty: false },
       ...(versionIds && { versionId: { in: versionIds } }),
       version: { archived: false },
     },
-    select: selectEmissionFactor,
-    orderBy: { createdAt: 'desc' },
   })
 
-const getEmissionFactorsFromIdsExceptVersions = (ids: string[], versionIds: string[]) =>
-  prismaClient.emissionFactor.findMany({
+const keepOnlyOneMetadata = <T extends EmissionFactorList>(
+  emissionFactors: (Omit<T, 'metaData'> & { metaData: EmissionFactorList['metaData'][] })[],
+  locale: localeType,
+) => {
+  return emissionFactors.map((ef) => ({
+    ...ef,
+    metaData: ef.metaData.find((meta) => meta.language === locale) ?? {
+      language: locale,
+      title: null,
+      attribute: null,
+      comment: null,
+      location: null,
+      frontiere: null,
+    },
+  }))
+}
+
+const getEmissionFactorsFromIdsExceptVersions = async (ids: string[], versionIds: string[], locale: localeType) => {
+  const efFromBdd = await prismaClient.emissionFactor.findMany({
     where: { id: { in: ids }, versionId: { notIn: versionIds } },
     select: selectEmissionFactor,
     orderBy: { createdAt: 'desc' },
   })
 
-const filterVersionedEmissionFactor = (
-  emissionFactor: AsyncReturnType<typeof getDefaultEmissionFactors>[0],
-  versionIds?: string[],
-) =>
-  !versionIds ||
-  !emissionFactor.version ||
-  (emissionFactor.version.id && versionIds.includes(emissionFactor.version.id))
-
-const getCachedDefaultEmissionFactors = async (versionIds?: string[]) => {
-  if (cachedEmissionFactors.length) {
-    return cachedEmissionFactors.filter((emissionFactor) => filterVersionedEmissionFactor(emissionFactor, versionIds))
-  }
-  const emissionFactors = await getDefaultEmissionFactors()
-  cachedEmissionFactors = emissionFactors
-  return emissionFactors.filter((emissionFactor) => filterVersionedEmissionFactor(emissionFactor, versionIds))
+  return keepOnlyOneMetadata(efFromBdd, locale)
 }
 
-export const getAllEmissionFactors = async (organizationId: string, studyId?: string, withCut: boolean = false) => {
+export const getAllEmissionFactors = async (
+  organizationId: string,
+  skip: number,
+  take: number,
+  locale: localeType,
+  studyId?: string,
+  withCut: boolean = false,
+) => {
   let versionIds
-  let studyOldEmissionFactors: Awaited<ReturnType<typeof getDefaultEmissionFactors>> = []
-  let organizationEmissionFactor: Awaited<ReturnType<typeof getDefaultEmissionFactors>> = []
+  let studyOldEmissionFactors: EmissionFactorList[] = []
+  let organizationEmissionFactor: EmissionFactorList[] = []
   if (studyId) {
     const study = await prismaClient.study.findFirst({
       where: { id: studyId },
@@ -110,7 +191,7 @@ export const getAllEmissionFactors = async (organizationId: string, studyId?: st
       .map((emissionSource) => emissionSource.emissionFactorId)
       .filter((id) => id !== null)
 
-    studyOldEmissionFactors = await getEmissionFactorsFromIdsExceptVersions(selectedEmissionFactors, versionIds)
+    studyOldEmissionFactors = await getEmissionFactorsFromIdsExceptVersions(selectedEmissionFactors, versionIds, locale)
   } else {
     versionIds = (await getSourcesLatestImportVersionIdByOrganizationId(organizationId)).map((v) => v.importVersionId)
 
@@ -121,16 +202,17 @@ export const getAllEmissionFactors = async (organizationId: string, studyId?: st
     }
   }
 
-  organizationEmissionFactor = await prismaClient.emissionFactor.findMany({
-    where: { organizationId },
-    select: selectEmissionFactor,
-    orderBy: { createdAt: 'desc' },
-  })
+  organizationEmissionFactor = keepOnlyOneMetadata(
+    await prismaClient.emissionFactor.findMany({
+      where: { organizationId },
+      select: selectEmissionFactor,
+      orderBy: { createdAt: 'desc' },
+    }),
+    locale,
+  )
 
-  const defaultEmissionFactors = await (process.env.NO_CACHE === 'true'
-    ? getDefaultEmissionFactors(versionIds)
-    : getCachedDefaultEmissionFactors(versionIds))
-
+  const defaultEmissionFactors = await getDefaultEmissionFactors(0, 10, locale, versionIds)
+  console.log('defaultEmissionFactors', defaultEmissionFactors)
   const allEmissionFactors = organizationEmissionFactor.concat(defaultEmissionFactors).concat(studyOldEmissionFactors)
   if (withCut) {
     return allEmissionFactors

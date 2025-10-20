@@ -53,7 +53,7 @@ export const mapImportVersions = async (emissionFactors: EmissionFactorWithMetaD
   return latestBySource
 }
 
-export const getEmissionFactors = async (studyId?: string, withCut: boolean = false) =>
+export const getEmissionFactors = async (skip: number, take: number, studyId?: string, withCut: boolean = false) =>
   withServerResponse('getEmissionFactors', async () => {
     const session = await auth()
     if (!session || !session.user) {
@@ -75,21 +75,23 @@ export const getEmissionFactors = async (studyId?: string, withCut: boolean = fa
         return []
       }
       const emissionFactorOrganizationId = organizationVersion.organizationId
-      emissionFactors = await getAllEmissionFactors(emissionFactorOrganizationId, studyId, withCut)
+      emissionFactors = await getAllEmissionFactors(emissionFactorOrganizationId, skip, take, locale, studyId, withCut)
     } else {
       const organizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
       if (!organizationVersion?.organizationId) {
         throw Error('Organization version does not exist')
       }
-      emissionFactors = await getAllEmissionFactors(organizationVersion.organizationId, undefined, withCut)
+      emissionFactors = await getAllEmissionFactors(
+        organizationVersion.organizationId,
+        skip,
+        take,
+        locale,
+        undefined,
+        withCut,
+      )
     }
 
-    return emissionFactors
-      .map((emissionFactor) => ({
-        ...emissionFactor,
-        metaData: emissionFactor.metaData.find((metadata) => metadata.language === locale),
-      }))
-      .sort((a, b) => sortAlphabetically(a?.metaData?.title, b?.metaData?.title))
+    return emissionFactors.sort((a, b) => sortAlphabetically(a?.metaData?.title, b?.metaData?.title))
   })
 export type EmissionFactorWithMetaData = IsSuccess<AsyncReturnType<typeof getEmissionFactors>>[number]
 
