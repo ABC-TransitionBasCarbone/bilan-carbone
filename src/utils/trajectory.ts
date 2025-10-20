@@ -145,7 +145,7 @@ export const calculateCustomTrajectory = ({
   for (let i = 0; i < sortedObjectives.length; i++) {
     const objective = sortedObjectives[i]
     const absoluteReductionRate = Number(objective.reductionRate)
-    const yearlyReduction = baseEmissions * absoluteReductionRate
+    const yearlyReduction = currentValue * absoluteReductionRate
     const isLastObjective = i === sortedObjectives.length - 1
 
     for (let year = startYear + 1; year <= objective.targetYear; year++) {
