@@ -107,14 +107,16 @@ const getDefaultEmissionFactors = (
   skip: number,
   take: number,
   locale: localeType,
+  withCut: boolean,
   organizationId: string | null,
   versionIds?: string[],
 ): EmissionFactorList[] => {
   const skipSQL = Prisma.sql`${skip}`
   const takeSQL = Prisma.sql`${take}`
   const versionsString = versionIds?.length
-    ? Prisma.sql`AND (version_id IN (${Prisma.join(versionIds)}) OR version_id is null)`
+    ? Prisma.sql`AND (version_id IN (${Prisma.join(versionIds)}) and ef.organization_id IS NULL) OR (version_id is null and ef.organization_id = ${Prisma.sql`${organizationId}`})`
     : Prisma.empty
+  const withCutCondition = withCut ? Prisma.empty : Prisma.sql`AND ef.imported_from != 'CUT'`
 
   return prismaClient.$queryRaw(Prisma.sql`
  SELECT ef.id, ef.status, ef.total_co2 as ${Prisma.sql`"totalCo2"`}, ef.location, ef.source, ef.unit, ${Prisma.sql`ef."customUnit"`}, ef.is_monetary as ${Prisma.sql`"isMonetary"`},
@@ -128,17 +130,17 @@ const getDefaultEmissionFactors = (
   FROM emission_factors ef
   JOIN emission_metadata m
     ON m.emission_factor_id = ef.id
-  WHERE m.language = 'fr' and (ef.organization_id IS NULL OR ef.organization_id = ${Prisma.sql`${organizationId}`}) AND ef.sub_posts IS NOT NULL AND ef.sub_posts::text != '{}' ${versionsString}
+  WHERE m.language = 'fr' ${withCutCondition} AND ef.sub_posts IS NOT NULL AND ef.sub_posts::text != '{}' ${versionsString}
   ORDER BY m.title ASC
   LIMIT ${takeSQL} OFFSET ${skipSQL}`) as unknown as EmissionFactorList[]
 }
 
-const getDefaultEmissionFactorsCount = (versionIds?: string[]) =>
+const getDefaultEmissionFactorsCount = (organizationId: string, withCut: boolean, versionIds?: string[]) =>
   prismaClient.emissionFactor.count({
     where: {
-      organizationId: null,
+      OR: [{ ...(versionIds && { versionId: { in: versionIds } }), organizationId: null }, { organizationId }],
       subPosts: { isEmpty: false },
-      ...(versionIds && { versionId: { in: versionIds } }),
+      ...(!withCut && { importedFrom: { not: Import.CUT } }),
     },
   })
 
@@ -185,7 +187,7 @@ export const getAllEmissionFactors = async (
       include: { emissionFactorVersions: true, emissionSources: true },
     })
     if (!study) {
-      return []
+      return { emissionFactors: [], count: 0 }
     }
     versionIds = study.emissionFactorVersions.map((version) => version.importVersionId)
     const selectedEmissionFactors = study.emissionSources
@@ -203,13 +205,20 @@ export const getAllEmissionFactors = async (
     }
   }
 
-  const defaultEmissionFactors = await getDefaultEmissionFactors(0, 10, locale, organizationId, versionIds)
-  const allEmissionFactors = defaultEmissionFactors.concat(studyOldEmissionFactors)
-  if (withCut) {
-    return allEmissionFactors
-  }
+  const defaultEmissionFactors = await getDefaultEmissionFactors(
+    skip,
+    take,
+    locale,
+    withCut,
+    organizationId,
+    versionIds,
+  )
 
-  return allEmissionFactors.filter((emissionFactor) => emissionFactor.importedFrom !== Import.CUT)
+  const emissionFactorsCount = await getDefaultEmissionFactorsCount(organizationId, withCut, versionIds)
+
+  const allEmissionFactors = defaultEmissionFactors.concat(studyOldEmissionFactors)
+
+  return { emissionFactors: allEmissionFactors, count: emissionFactorsCount + studyOldEmissionFactors.length }
 }
 
 export const getEmissionFactorById = (id: string) =>

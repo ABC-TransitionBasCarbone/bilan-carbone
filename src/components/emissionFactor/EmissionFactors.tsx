@@ -4,6 +4,7 @@ import { EmissionFactorList } from '@/db/emissionFactors'
 import { environmentSubPostsMapping, Post } from '@/services/posts'
 import { getEmissionFactors, mapImportVersions } from '@/services/serverFunctions/emissionFactor'
 import { EmissionFactorImportVersion, Environment, Import } from '@prisma/client'
+import { PaginationState } from '@tanstack/react-table'
 import { UserSession } from 'next-auth'
 import { useEffect, useMemo, useState } from 'react'
 import EmissionFactorsTable from './Table'
@@ -20,23 +21,36 @@ const EmissionFactors = ({ userOrganizationId, manualOnly, environment }: Props)
   const [importVersions, setImportVersions] = useState<EmissionFactorImportVersion[]>([])
   const [skip, setSkip] = useState(0)
   const [take, setTake] = useState(25)
+  const [totalCount, setTotalCount] = useState(0)
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
 
   useEffect(() => {
     async function fetchEmissionFactors() {
-      const emissionFactorsFromBdd = await getEmissionFactors(skip, take)
+      const emissionFactorsFromBdd = await getEmissionFactors(skip, skip === 0 ? take * 4 : take)
+      setSkip((prevSkip) => (prevSkip === 0 ? take * 4 : prevSkip + take))
 
       if (emissionFactorsFromBdd.success) {
         if (emissionFactors.length === 0) {
-          setImportVersions(await mapImportVersions(emissionFactorsFromBdd.data))
+          setImportVersions(await mapImportVersions(emissionFactorsFromBdd.data.emissionFactors))
         }
-        setEmissionFactors(emissionFactorsFromBdd.data)
+        setEmissionFactors((prevEF) => prevEF.concat(emissionFactorsFromBdd.data.emissionFactors))
+        setTotalCount(emissionFactorsFromBdd.data.count)
       } else {
         setEmissionFactors([])
+        setTotalCount(0)
       }
     }
 
-    fetchEmissionFactors()
-  }, [emissionFactors.length, skip, take])
+    if ((pagination.pageIndex + 1) * pagination.pageSize + 50 > skip + take) {
+      fetchEmissionFactors()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [emissionFactors.length, take, pagination.pageIndex])
+
+  useEffect(() => {
+    console.log('updateTake', pagination.pageSize)
+    setTake(pagination.pageSize)
+  }, [pagination.pageSize])
 
   const manualImport = { id: Import.Manual, source: Import.Manual, name: '' } as EmissionFactorImportVersion
 
@@ -70,6 +84,9 @@ const EmissionFactors = ({ userOrganizationId, manualOnly, environment }: Props)
       environment={environment}
       envPosts={posts}
       initialSelectedSubPosts={initialSelectedSubPosts}
+      pagination={pagination}
+      setPagination={setPagination}
+      totalCount={totalCount}
     />
   )
 }

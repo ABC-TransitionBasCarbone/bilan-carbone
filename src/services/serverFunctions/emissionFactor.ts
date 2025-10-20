@@ -57,14 +57,13 @@ export const getEmissionFactors = async (skip: number, take: number, studyId?: s
   withServerResponse('getEmissionFactors', async () => {
     const session = await auth()
     if (!session || !session.user) {
-      return []
+      return { emissionFactors: [], count: 0 }
     }
 
     const locale = await getLocale()
-    let emissionFactors
     if (studyId) {
       if (!(await canReadStudy(session.user, studyId))) {
-        return []
+        return { emissionFactors: [], count: 0 }
       }
       const organizationVersionId = await getStudyParentOrganizationVersionId(
         studyId,
@@ -72,28 +71,21 @@ export const getEmissionFactors = async (skip: number, take: number, studyId?: s
       )
       const organizationVersion = await getOrganizationVersionById(organizationVersionId)
       if (!organizationVersion) {
-        return []
+        return { emissionFactors: [], count: 0 }
       }
       const emissionFactorOrganizationId = organizationVersion.organizationId
-      emissionFactors = await getAllEmissionFactors(emissionFactorOrganizationId, skip, take, locale, studyId, withCut)
+      return getAllEmissionFactors(emissionFactorOrganizationId, skip, take, locale, studyId, withCut)
     } else {
       const organizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
       if (!organizationVersion?.organizationId) {
         throw Error('Organization version does not exist')
       }
-      emissionFactors = await getAllEmissionFactors(
-        organizationVersion.organizationId,
-        skip,
-        take,
-        locale,
-        undefined,
-        withCut,
-      )
+      return getAllEmissionFactors(organizationVersion.organizationId, skip, take, locale, undefined, withCut)
     }
-
-    return emissionFactors.sort((a, b) => sortAlphabetically(a?.metaData?.title, b?.metaData?.title))
   })
-export type EmissionFactorWithMetaData = IsSuccess<AsyncReturnType<typeof getEmissionFactors>>[number]
+export type EmissionFactorWithMetaData = IsSuccess<
+  AsyncReturnType<typeof getEmissionFactors>
+>['emissionFactors'][number]
 
 const getStudyOrganization = async (studyId: string, organizationVersionId: string) => {
   const study = await getStudyById(studyId, organizationVersionId)

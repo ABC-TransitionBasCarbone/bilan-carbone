@@ -45,6 +45,7 @@ import {
   getCoreRowModel,
   getExpandedRowModel,
   getPaginationRowModel,
+  OnChangeFn,
   PaginationState,
   useReactTable,
 } from '@tanstack/react-table'
@@ -101,6 +102,9 @@ interface Props {
   initialSelectedSubPosts: SubPost[]
   environment: Environment
   envPosts: Post[]
+  pagination: PaginationState
+  setPagination: OnChangeFn<PaginationState>
+  totalCount: number
 }
 
 const initialSelectedUnits: (BCUnit | string)[] = [...['all'], ...Object.values(BCUnit)]
@@ -114,6 +118,9 @@ const EmissionFactorsTable = ({
   initialSelectedSubPosts,
   environment,
   envPosts,
+  pagination,
+  setPagination,
+  totalCount,
 }: Props) => {
   const t = useTranslations('emissionFactors.table')
   const tUnits = useTranslations('units')
@@ -360,8 +367,6 @@ const EmissionFactorsTable = ({
     return filterEmissionFactorsBySubPostAndEnv(emissionFactorsAllSubposts, filteredSubPosts, environment)
   }, [searchedEmissionFactors, filteredSubPosts, environment, filteredSources, filteredUnits, displayArchived])
 
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
-
   const table = useReactTable({
     columns,
     data,
@@ -371,6 +376,7 @@ const EmissionFactorsTable = ({
     getRowCanExpand: () => true,
     getExpandedRowModel: getExpandedRowModel(),
     state: { pagination },
+    autoResetAll: false,
   })
 
   useEffect(() => {
@@ -704,7 +710,7 @@ const EmissionFactorsTable = ({
       <div>
         {t('showing', {
           number: table.getRowModel().rows.length.toLocaleString(),
-          total: table.getRowCount().toLocaleString(),
+          total: totalCount,
         })}
       </div>
       <EditEmissionFactorModal emissionFactorId={targetedEmission} action={action} setAction={setAction} />
