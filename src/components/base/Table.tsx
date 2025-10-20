@@ -19,7 +19,7 @@ const Table = <TData,>({ title, table, paginations, className, children, customR
     {title && <>{title}</>}
     {children}
     <div className={className}>
-      <MuiTable aria-labelledby={`${testId}-table-title`}>
+      <MuiTable aria-labelledby={`${testId}-table-title`} className={styles.tableWrapper}>
         <TableHead>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
