@@ -1,14 +1,14 @@
 'use client'
 
 import { EmissionFactorList } from '@/db/emissionFactors'
-import { environmentSubPostsMapping, Post } from '@/services/posts'
+import { environmentSubPostsMapping, Post, subPostsByPost } from '@/services/posts'
 import {
   EmissionFactorWithMetaData,
   getEmissionFactors,
   mapImportVersions,
 } from '@/services/serverFunctions/emissionFactor'
 import { BCUnit } from '@/services/unit'
-import { EmissionFactorImportVersion, Environment, Import } from '@prisma/client'
+import { EmissionFactorImportVersion, Environment, Import, SubPost } from '@prisma/client'
 import { PaginationState } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
@@ -34,8 +34,14 @@ const EmissionFactorsFiltersAndTable = ({ userOrganizationId, environment, selec
   const [totalCount, setTotalCount] = useState(0)
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
 
-  const subPostsByPost = useMemo(() => environmentSubPostsMapping[environment], [environment])
-  const posts = useMemo(() => Object.keys(subPostsByPost) as Post[], [subPostsByPost])
+  const envSubPostsByPost = useMemo(() => environmentSubPostsMapping[environment], [environment])
+  const posts = useMemo(() => Object.keys(envSubPostsByPost) as Post[], [envSubPostsByPost])
+  const envSubPosts = useMemo(() => {
+    return posts.reduce((acc, post) => {
+      const subPosts = subPostsByPost[post as Post] || []
+      return acc.concat(subPosts)
+    }, [] as SubPost[])
+  }, [posts])
 
   const [filters, setFilters] = useState({
     archived: false,
@@ -43,7 +49,7 @@ const EmissionFactorsFiltersAndTable = ({ userOrganizationId, environment, selec
     location: '',
     sources: ['all'],
     units: initialSelectedUnits,
-    subPosts: ['all'],
+    subPosts: envSubPosts,
   })
 
   const fromModal = !!selectEmissionFactor

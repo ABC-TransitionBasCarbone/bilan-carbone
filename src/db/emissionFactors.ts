@@ -129,10 +129,6 @@ const handleFilterConditions = (
     conditions.push(Prisma.sql`ef.status::text != ${'Archived'}`)
   }
 
-  if (filters.subPosts.length > 0 && filters.subPosts.some((subPost) => subPost !== 'all')) {
-    conditions.push(Prisma.sql`(${filters.subPosts.join(' ,')})`)
-  }
-
   if (filters.search && filters.search.trim() !== '') {
     const search = `%${filters.search.trim().toLowerCase()}%`
     conditions.push(Prisma.sql`(m.title ILIKE ${search} OR m.attribute ILIKE ${search} OR m.frontiere ILIKE ${search})`)
@@ -146,6 +142,12 @@ const handleFilterConditions = (
   if (filters.units.length > 0 && filters.units.some((unit) => unit !== 'all')) {
     conditions.push(
       Prisma.sql`(ef.unit::text IN (${Prisma.join(filters.units)}) OR ef."customUnit"::text IN (${Prisma.join(filters.units)}))`,
+    )
+  }
+
+  if (filters.subPosts.length > 0 && filters.subPosts.some((subPost) => subPost !== 'all')) {
+    conditions.push(
+      Prisma.sql`ef.sub_posts::text[] && ARRAY[${Prisma.join(filters.subPosts.map((sp) => Prisma.sql`${sp}`))}]::text[]`,
     )
   }
 
