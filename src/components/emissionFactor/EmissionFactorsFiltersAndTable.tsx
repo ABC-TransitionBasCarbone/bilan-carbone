@@ -19,17 +19,11 @@ import { EmissionFactorsTable } from './Table'
 interface Props {
   userOrganizationId?: string | null
   environment: Environment
-  manualOnly: boolean
   selectEmissionFactor?: (emissionFactor: EmissionFactorWithMetaData) => void
 }
 
 const initialSelectedUnits: (BCUnit | string)[] = [...['all'], ...Object.values(BCUnit)]
-const EmissionFactorsFiltersAndTable = ({
-  userOrganizationId,
-  environment,
-  manualOnly,
-  selectEmissionFactor,
-}: Props) => {
+const EmissionFactorsFiltersAndTable = ({ userOrganizationId, environment, selectEmissionFactor }: Props) => {
   const t = useTranslations('emissionFactors.table')
   const [action, setAction] = useState<'edit' | 'delete' | undefined>(undefined)
   const [targetedEmission, setTargetedEmission] = useState('')
@@ -41,54 +35,23 @@ const EmissionFactorsFiltersAndTable = ({
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
 
   const subPostsByPost = useMemo(() => environmentSubPostsMapping[environment], [environment])
-  const initialSelectedSubPosts = useMemo(
-    () => Object.values(subPostsByPost).flatMap((subPosts) => subPosts),
-    [subPostsByPost],
-  )
   const posts = useMemo(() => Object.keys(subPostsByPost) as Post[], [subPostsByPost])
-  const initialSelectedSources = useMemo(() => {
-    return importVersions
-      .filter(
-        (importVersion) =>
-          importVersion.source === Import.Manual ||
-          (!manualOnly &&
-            importVersion.id ===
-              importVersions
-                .filter((v) => v.source === importVersion.source)
-                .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0].id),
-      )
-      .map((importVersion) => importVersion.id)
-  }, [importVersions, manualOnly])
 
   const [filters, setFilters] = useState({
     archived: false,
     search: '',
     location: '',
-    sources: initialSelectedSources,
+    sources: ['all'],
     units: initialSelectedUnits,
-    subPosts: initialSelectedSubPosts,
+    subPosts: ['all'],
   })
-
-  useEffect(() => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      sources: initialSelectedSources,
-    }))
-  }, [initialSelectedSources])
-
-  useEffect(() => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      subPosts: initialSelectedSubPosts,
-    }))
-  }, [initialSelectedSubPosts])
 
   const fromModal = !!selectEmissionFactor
 
   useEffect(() => {
     async function fetchEmissionFactors() {
       const takeValue = skip === 0 ? take * 4 : take
-      const emissionFactorsFromBdd = await getEmissionFactors(skip, takeValue)
+      const emissionFactorsFromBdd = await getEmissionFactors(skip, takeValue, filters)
       setSkip((prevSkip) => takeValue + prevSkip)
 
       if (emissionFactorsFromBdd.success) {
@@ -110,6 +73,24 @@ const EmissionFactorsFiltersAndTable = ({
   }, [emissionFactors.length, take, pagination.pageIndex])
 
   useEffect(() => {
+    async function fetchEmissionFactors() {
+      const emissionFactorsFromBdd = await getEmissionFactors(0, 100, filters)
+      setSkip(100)
+
+      if (emissionFactorsFromBdd.success) {
+        setEmissionFactors(emissionFactorsFromBdd.data.emissionFactors)
+        setTotalCount(emissionFactorsFromBdd.data.count)
+      } else {
+        setEmissionFactors([])
+        setTotalCount(0)
+      }
+    }
+    console.log('filters changed', filters)
+
+    fetchEmissionFactors()
+  }, [filters])
+
+  useEffect(() => {
     setTake(pagination.pageSize)
   }, [pagination.pageSize])
 
@@ -122,7 +103,6 @@ const EmissionFactorsFiltersAndTable = ({
         emissionFactors={emissionFactors}
         fromModal={fromModal}
         importVersions={importVersions.concat(manualImport)}
-        initialSelectedSources={initialSelectedSources}
         initialSelectedUnits={initialSelectedUnits}
         envPosts={posts}
         filters={filters}

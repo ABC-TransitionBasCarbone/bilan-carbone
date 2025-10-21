@@ -19,6 +19,7 @@ import { getOrganizationVersionById } from '@/db/organization'
 import { getStudyById } from '@/db/study'
 import { getLocale } from '@/i18n/locale'
 import { unitsMatrix } from '@/services/importEmissionFactor/historyUnits'
+import { FeFilters } from '@/types/filters'
 import { ManualEmissionFactorUnitList } from '@/utils/emissionFactors'
 import { flattenSubposts } from '@/utils/post'
 import { IsSuccess, withServerResponse } from '@/utils/serverResponse'
@@ -53,7 +54,13 @@ export const mapImportVersions = async (emissionFactors: EmissionFactorWithMetaD
   return latestBySource
 }
 
-export const getEmissionFactors = async (skip: number, take: number, studyId?: string, withCut: boolean = false) =>
+export const getEmissionFactors = async (
+  skip: number,
+  take: number,
+  filters: FeFilters,
+  studyId?: string,
+  withCut: boolean = false,
+) =>
   withServerResponse('getEmissionFactors', async () => {
     const session = await auth()
     if (!session || !session.user) {
@@ -74,13 +81,13 @@ export const getEmissionFactors = async (skip: number, take: number, studyId?: s
         return { emissionFactors: [], count: 0 }
       }
       const emissionFactorOrganizationId = organizationVersion.organizationId
-      return getAllEmissionFactors(emissionFactorOrganizationId, skip, take, locale, studyId, withCut)
+      return getAllEmissionFactors(emissionFactorOrganizationId, skip, take, locale, filters, studyId, withCut)
     } else {
       const organizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
       if (!organizationVersion?.organizationId) {
         throw Error('Organization version does not exist')
       }
-      return getAllEmissionFactors(organizationVersion.organizationId, skip, take, locale, undefined, withCut)
+      return getAllEmissionFactors(organizationVersion.organizationId, skip, take, locale, filters, undefined, withCut)
     }
   })
 export type EmissionFactorWithMetaData = IsSuccess<

@@ -9,12 +9,11 @@ import withAuth from '../hoc/withAuth'
 
 interface Props {
   userOrganizationId?: string
-  manualOnly: boolean
   environment: Environment
   user: UserSession
 }
 
-const EmissionFactorsPage = ({ userOrganizationId, manualOnly, user, environment }: Props) => {
+const EmissionFactorsPage = ({ userOrganizationId, user, environment }: Props) => {
   const tNav = useTranslations('nav')
   const t = useTranslations('emissionFactors')
 
@@ -38,12 +37,7 @@ const EmissionFactorsPage = ({ userOrganizationId, manualOnly, user, environment
         }
       >
         <Suspense fallback={t('loading')}>
-          <EmissionFactors
-            userOrganizationId={userOrganizationId}
-            manualOnly={manualOnly}
-            user={user}
-            environment={environment}
-          />
+          <EmissionFactors userOrganizationId={userOrganizationId} user={user} environment={environment} />
         </Suspense>
       </Block>
     </>

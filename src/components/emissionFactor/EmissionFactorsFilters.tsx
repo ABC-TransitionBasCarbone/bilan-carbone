@@ -1,6 +1,7 @@
 import { Post, subPostsByPost } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { BCUnit } from '@/services/unit'
+import { FeFilters } from '@/types/filters'
 import {
   Autocomplete,
   Checkbox,
@@ -22,29 +23,19 @@ import DebouncedInput from '../base/DebouncedInput'
 import MultiSelectAll from '../base/MultiSelectAll'
 import styles from './Table.module.css'
 
-type filters = {
-  archived: boolean
-  search: string
-  location: string
-  sources: string[]
-  units: (BCUnit | string)[]
-  subPosts: SubPost[]
-}
 interface Props {
   emissionFactors: EmissionFactorWithMetaData[]
   fromModal: boolean
   importVersions: EmissionFactorImportVersion[]
-  initialSelectedSources: string[]
   initialSelectedUnits: (BCUnit | string)[]
   envPosts: Post[]
-  filters: filters
-  setFilters: Dispatch<SetStateAction<filters>>
+  filters: FeFilters
+  setFilters: Dispatch<SetStateAction<FeFilters>>
 }
 export const EmissionFactorsFilters = ({
   emissionFactors,
   fromModal,
   importVersions,
-  initialSelectedSources,
   initialSelectedUnits,
   envPosts,
   filters,
@@ -98,15 +89,9 @@ export const EmissionFactorsFilters = ({
   const sortedImportVersions = useMemo(
     () =>
       importVersions.sort((a, b) => {
-        if (initialSelectedSources.includes(a.id) === initialSelectedSources.includes(b.id)) {
-          // both are sort selected or not selected : sort by alphabetical order
-          return `${a.source} ${a.name}`.localeCompare(`${b.source} ${b.name}`)
-        } else {
-          // else : sort initially selected first
-          return initialSelectedSources.includes(a.id) ? -1 : 1
-        }
+        return `${a.source} ${a.name}`.localeCompare(`${b.source} ${b.name}`)
       }),
-    [importVersions, initialSelectedSources],
+    [importVersions],
   )
 
   const statusSelectorRenderValue = () =>

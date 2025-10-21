@@ -1,6 +1,7 @@
 import { LocaleType } from '@/i18n/config'
 import { isSourceForEnv } from '@/services/importEmissionFactor/import'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
+import { FeFilters } from '@/types/filters'
 import { localeType } from '@/types/translation'
 import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
 import { flattenSubposts } from '@/utils/post'
@@ -103,20 +104,49 @@ export type EmissionFactorList = {
   }[]
 }
 
+const handleFilterConditions = (
+  filters: FeFilters,
+  withCut: boolean,
+  versionIds: string[] | undefined,
+  organizationId: string | null,
+) => {
+  const conditions: Prisma.Sql[] = [
+    Prisma.sql`m.language = 'fr'`,
+    Prisma.sql`ef.sub_posts IS NOT NULL AND ef.sub_posts::text != '{}'`,
+  ]
+
+  if (withCut) {
+    conditions.push(Prisma.sql`ef.imported_from != 'CUT'`)
+  }
+
+  if (versionIds && versionIds.length) {
+    conditions.push(
+      Prisma.sql`((version_id IN (${Prisma.join(versionIds)}) and ef.organization_id IS NULL) OR (version_id is null and ef.organization_id = ${Prisma.sql`${organizationId}`}))`,
+    )
+  }
+
+  if (!filters.archived) {
+    conditions.push(Prisma.sql`ef.status::text != ${'Archived'}`)
+  }
+
+  if (filters.subPosts.length > 0 && filters.subPosts.some((subPost) => subPost !== 'all')) {
+    conditions.push(Prisma.sql`(${filters.subPosts.join(' ,')})`)
+  }
+
+  return Prisma.join(conditions, ' AND ')
+}
+
 const getDefaultEmissionFactors = (
   skip: number,
   take: number,
   locale: localeType,
+  filters: FeFilters,
   withCut: boolean,
   organizationId: string | null,
   versionIds?: string[],
 ): EmissionFactorList[] => {
   const skipSQL = Prisma.sql`${skip}`
   const takeSQL = Prisma.sql`${take}`
-  const versionsString = versionIds?.length
-    ? Prisma.sql`AND (version_id IN (${Prisma.join(versionIds)}) and ef.organization_id IS NULL) OR (version_id is null and ef.organization_id = ${Prisma.sql`${organizationId}`})`
-    : Prisma.empty
-  const withCutCondition = withCut ? Prisma.empty : Prisma.sql`AND ef.imported_from != 'CUT'`
 
   return prismaClient.$queryRaw(Prisma.sql`
  SELECT ef.id, ef.status, ef.total_co2 as ${Prisma.sql`"totalCo2"`}, ef.location, ef.source, ef.unit, ${Prisma.sql`ef."customUnit"`}, ef.is_monetary as ${Prisma.sql`"isMonetary"`},
@@ -130,7 +160,7 @@ const getDefaultEmissionFactors = (
   FROM emission_factors ef
   JOIN emission_metadata m
     ON m.emission_factor_id = ef.id
-  WHERE m.language = 'fr' ${withCutCondition} AND ef.sub_posts IS NOT NULL AND ef.sub_posts::text != '{}' ${versionsString}
+  WHERE ${handleFilterConditions(filters, withCut, versionIds, organizationId)}
   ORDER BY m.title ASC
   LIMIT ${takeSQL} OFFSET ${skipSQL}`) as unknown as EmissionFactorList[]
 }
@@ -176,6 +206,7 @@ export const getAllEmissionFactors = async (
   skip: number,
   take: number,
   locale: localeType,
+  filters: FeFilters,
   studyId?: string,
   withCut: boolean = false,
 ) => {
@@ -209,6 +240,7 @@ export const getAllEmissionFactors = async (
     skip,
     take,
     locale,
+    filters,
     withCut,
     organizationId,
     versionIds,
