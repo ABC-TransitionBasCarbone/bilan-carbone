@@ -1,4 +1,4 @@
-import { FormControl, FormHelperText } from '@mui/material'
+import { FormControl, FormHelperText, Typography } from '@mui/material'
 import { DatePicker, DatePickerProps } from '@mui/x-date-pickers'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
@@ -9,6 +9,7 @@ dayjs.extend(utc)
 
 interface Props<T extends FieldValues> {
   name: FieldPath<T>
+  label?: string
   control: Control<T>
   translation: (slug: string) => string
   ['data-testid']?: string
@@ -18,6 +19,7 @@ interface Props<T extends FieldValues> {
 
 export const FormDatePicker = <T extends FieldValues>({
   name,
+  label,
   control,
   translation,
   'data-testid': dataTestId,
@@ -31,6 +33,11 @@ export const FormDatePicker = <T extends FieldValues>({
       control={control}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
         <FormControl error={!!error} fullWidth={fullWidth}>
+          {label ? (
+            <Typography fontWeight="bold" className="mb-2">
+              {label}
+            </Typography>
+          ) : null}
           <DatePicker
             {...datePickerProps}
             slotProps={{
@@ -38,6 +45,7 @@ export const FormDatePicker = <T extends FieldValues>({
                 error: !!error,
                 //@ts-expect-error: Missing in MUI Props
                 'data-testid': dataTestId,
+                className: styles.datePickerInput,
               },
               field: { clearable },
             }}

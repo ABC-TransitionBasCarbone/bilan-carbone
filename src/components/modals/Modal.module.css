@@ -7,6 +7,7 @@
   width: 60%;
   max-width: 60rem !important;
   max-height: 80%;
+  padding: 1.5rem;
 }
 
 .big {
@@ -22,7 +23,8 @@
 }
 
 .content {
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .actions {

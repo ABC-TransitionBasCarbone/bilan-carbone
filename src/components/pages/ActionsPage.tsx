@@ -34,19 +34,21 @@ const ActionsPage = ({ study, porters }: Props) => {
           { label: study.name, link: `/etudes/${study.id}` },
         ].filter((link) => link !== undefined)}
       />
-      <div className={classNames(styles.container, 'main-container', 'p2', 'pt3')}>
+      <div className={classNames(styles.container, 'flex-col main-container p2 pt3')}>
         <Title title={t('title')} as="h1" />
 
-        <TransitionPlanOnboarding
-          title={t('onboarding.title')}
-          description={t('onboarding.description')}
-          storageKey="actions"
-          detailedContent={t.rich('onboarding.detailedInfo', {
-            br: () => <br />,
-          })}
-        />
+        <div className="flex-col gapped2">
+          <TransitionPlanOnboarding
+            title={t('onboarding.title')}
+            description={t('onboarding.description')}
+            storageKey="actions"
+            detailedContent={t.rich('onboarding.detailedInfo', {
+              br: () => <br />,
+            })}
+          />
 
-        <Actions actions={[]} studyId={study.id} studyUnit={study.resultsUnit} porters={porters} />
+          <Actions actions={[]} studyId={study.id} studyUnit={study.resultsUnit} porters={porters} />
+        </div>
       </div>
     </>
   )

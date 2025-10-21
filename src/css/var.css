@@ -154,6 +154,11 @@
   padding-right: 1rem;
 }
 
+.px15 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
 .px2 {
   padding-left: 2rem;
   padding-right: 2rem;

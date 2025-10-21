@@ -16,10 +16,15 @@
 
 .trajectoryCard {
   background: var(--grayscale-50);
-  min-width: 16rem;
   border-radius: 0.5rem;
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
   border: 0.125rem solid var(--grayscale-200);
+}
+
+.trajectoryCardsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
 }
 
 .trajectoryCard h3 {
@@ -46,4 +51,17 @@
   color: var(--grayscale-700);
   margin: 0 0 1.5rem 0;
   line-height: 1.5;
+}
+
+.clickableCard {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--mui-palette-primary-main);
+  color: white;
+  border-color: var(--mui-palette-primary-main);
+}
+
+.clickableCard:hover {
+  transform: translateY(-0.125rem);
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
 }

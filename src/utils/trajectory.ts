@@ -1,9 +1,12 @@
 import { TrajectoryDataPoint } from '@/components/study/transitionPlan/TrajectoryGraph'
+import { TrajectoryType } from '@prisma/client'
 
+export type SBTIType = 'SBTI_15' | 'SBTI_WB2C'
 export const SBTI_REDUCTION_RATE_15 = 0.042
 export const SBTI_REDUCTION_RATE_WB2C = 0.025
 const REFERENCE_YEAR = 2020
-const TARGET_YEAR = 2050
+export const MID_TAREGT_YEAR = 2030
+export const TARGET_YEAR = 2050
 
 export const calculateOvershoot = (
   studyYear: number,
@@ -71,6 +74,17 @@ export const calculateSBTiTrajectory = ({
 }) => {
   const dataPoints: TrajectoryDataPoint[] = []
 
+  if (baseEmissions === 0) {
+    const graphStartYear = studyStartYear < REFERENCE_YEAR ? studyStartYear : REFERENCE_YEAR
+    const endYear = maxYear ?? TARGET_YEAR
+
+    for (let year = graphStartYear; year <= endYear; year++) {
+      dataPoints.push({ year, value: 0 })
+    }
+
+    return dataPoints
+  }
+
   if (studyStartYear > REFERENCE_YEAR) {
     const overshoot = calculateOvershoot(studyStartYear, REFERENCE_YEAR, baseEmissions, reductionRate)
     const cumulativeBudget = calculateCumulativeBudget(TARGET_YEAR, REFERENCE_YEAR, baseEmissions, reductionRate)
@@ -78,7 +92,6 @@ export const calculateSBTiTrajectory = ({
     const nty = calculateNewTargetYear(cumulativeBudgetAdjusted, baseEmissions, studyStartYear)
     const newReductionRate = calculateNewLinearReductionRate(1, nty, studyStartYear)
 
-    // Create data points until a specific year which depends on other trajectories and calculated target year
     for (let year = REFERENCE_YEAR; year <= Math.max(nty, maxYear ?? TARGET_YEAR); year++) {
       dataPoints.push(calculateDataPoint(year, baseEmissions, studyStartYear, newReductionRate))
     }
@@ -91,6 +104,65 @@ export const calculateSBTiTrajectory = ({
     for (let year = graphStartYear; year <= endYear; year++) {
       dataPoints.push(calculateDataPoint(year, baseEmissions, reductionStartYear, reductionRate))
     }
+  }
+
+  return dataPoints
+}
+
+export const getReductionRatePerType = (sbtiType: TrajectoryType): number | undefined => {
+  if (sbtiType === TrajectoryType.SBTI_15) {
+    return SBTI_REDUCTION_RATE_15
+  } else if (sbtiType === TrajectoryType.SBTI_WB2C) {
+    return SBTI_REDUCTION_RATE_WB2C
+  }
+  return undefined
+}
+
+export const calculateCustomTrajectory = ({
+  baseEmissions,
+  studyStartYear,
+  objectives,
+}: {
+  baseEmissions: number
+  studyStartYear: number
+  objectives: Array<{ targetYear: number; reductionRate: number }>
+}): TrajectoryDataPoint[] => {
+  if (objectives.length === 0) {
+    return []
+  }
+
+  const dataPoints: TrajectoryDataPoint[] = []
+  let currentValue = baseEmissions
+  let startYear = studyStartYear
+
+  for (let year = REFERENCE_YEAR; year < studyStartYear; year++) {
+    dataPoints.push({ year, value: baseEmissions })
+  }
+
+  dataPoints.push({ year: studyStartYear, value: baseEmissions })
+
+  const sortedObjectives = [...objectives].sort((a, b) => a.targetYear - b.targetYear)
+  for (let i = 0; i < sortedObjectives.length; i++) {
+    const objective = sortedObjectives[i]
+    const absoluteReductionRate = Number(objective.reductionRate)
+    const yearlyReduction = currentValue * absoluteReductionRate
+    const isLastObjective = i === sortedObjectives.length - 1
+
+    for (let year = startYear + 1; year <= objective.targetYear; year++) {
+      currentValue = currentValue - yearlyReduction
+      dataPoints.push({ year, value: Math.max(0, currentValue) })
+    }
+
+    if (isLastObjective && currentValue > 0) {
+      let year = objective.targetYear + 1
+      while (currentValue > 0) {
+        currentValue = currentValue - yearlyReduction
+        dataPoints.push({ year, value: Math.max(0, currentValue) })
+        year++
+      }
+    }
+
+    startYear = objective.targetYear
   }
 
   return dataPoints

@@ -33,17 +33,20 @@ const ObjectivesPage = ({ study, canEdit }: Props) => {
           { label: study.name, link: `/etudes/${study.id}` },
         ].filter((link) => link !== undefined)}
       />
-      <div className={classNames(styles.container, 'main-container', 'p2', 'pt3')}>
+      <div className={classNames(styles.container, 'flex-col main-container p2 pt3')}>
         <Title title={t('title')} as="h1" />
 
-        <TransitionPlanOnboarding
-          title={t('onboarding.title')}
-          description={t('onboarding.description')}
-          storageKey="objectives"
-          detailedContent={t.rich('onboarding.detailedInfo', {
-            br: () => <br />,
-          })}
-        />
+        <div className="flex-col gapped2">
+          <TransitionPlanOnboarding
+            title={t('onboarding.title')}
+            description={t('onboarding.description')}
+            storageKey="objectives"
+            detailedContent={t.rich('onboarding.detailedInfo', {
+              br: () => <br />,
+            })}
+          />
+        </div>
+        {/* TODO: Add objectives table */}
       </div>
     </>
   )

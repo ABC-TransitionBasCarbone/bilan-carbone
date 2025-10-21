@@ -41,7 +41,8 @@ const base = createTheme({
       main: '#fc8514',
     },
     info: {
-      main: '#272768',
+      main: '#F6AD34',
+      light: '#FFF8EB',
     },
     divider: '#1b5bf51a',
     beges1: {
