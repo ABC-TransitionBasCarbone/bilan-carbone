@@ -165,6 +165,13 @@ const theme = createTheme(base, {
         },
       },
     },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          fontSize: '1rem !important',
+        },
+      },
+    },
   },
   custom: {
     palette: {

@@ -1,0 +1,23 @@
+.line {
+  &:hover,
+  td {
+    padding: 0.5rem 0.5rem;
+  }
+}
+
+.pagination {
+  gap: 0.5rem;
+}
+
+.pageInput {
+  min-width: 5rem;
+}
+
+.selector {
+  width: 10rem;
+}
+
+.tableWrapper {
+  border-radius: 0.5rem;
+  border-collapse: separate;
+}

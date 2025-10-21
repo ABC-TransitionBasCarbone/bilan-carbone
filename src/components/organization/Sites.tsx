@@ -1,9 +1,10 @@
 'use client'
 
+import BaseTable from '@/components/base/Table'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { defaultCAUnit } from '@/utils/number'
 import { Environment, SiteCAUnit } from '@prisma/client'
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
+import { ColumnDef, flexRender, getCoreRowModel, Row, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import { UseFormReturn, UseFormSetValue } from 'react-hook-form'
@@ -12,11 +13,13 @@ import Button from '../base/Button'
 import Help from '../base/HelpIcon'
 import GlossaryModal from '../modals/GlossaryModal'
 
+type TypeDef = SitesCommand['sites'][number]
+
 interface Props<T extends SitesCommand> {
   form?: UseFormReturn<T>
   sites: SitesCommand['sites']
   withSelection?: boolean
-  columns: ColumnDef<SitesCommand['sites'][0]>[]
+  columns: ColumnDef<TypeDef>[]
   caUnit?: SiteCAUnit
   environment: Environment
 }
@@ -38,6 +41,16 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, columns, ca
     data: sites,
     getCoreRowModel: getCoreRowModel(),
   })
+
+  const Row = (row: Row<TypeDef>) => (
+    <tr key={row.id}>
+      {row.getVisibleCells().map((cell) => (
+        <td className={form ? 'py0' : ''} key={cell.id}>
+          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+        </td>
+      ))}
+    </tr>
+  )
 
   return !form && sites.length === 0 ? (
     <p className="title-h3">{t('noSites')}</p>
@@ -64,30 +77,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, columns, ca
           )}
         </div>
       </div>
-      <table className="mt1">
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th key={header.id}>
-                  {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody data-testid="sites-table-body">
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td className={form ? 'py0' : ''} key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <BaseTable table={table} className="mt1" testId="sites" customRow={Row} />
       <GlossaryModal
         glossary={showGlossary ? 'title' : ''}
         onClose={() => setShowGlossary(false)}

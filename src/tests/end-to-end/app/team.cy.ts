@@ -14,7 +14,7 @@ describe('Team', () => {
   it('admins can edit team member role', () => {
     cy.login('bc-admin-1@yopmail.com', 'password-1')
     cy.visit('/equipe')
-    cy.getByTestId('team-table-line')
+    cy.getByTestId('team-table-row')
       .eq(0)
       .within(() => {
         cy.get('input').should('exist')
@@ -24,7 +24,7 @@ describe('Team', () => {
   it('super-admins can edit team member role', () => {
     cy.login('bc-super_admin-1@yopmail.com', 'password-1')
     cy.visit('/equipe')
-    cy.getByTestId('team-table-line')
+    cy.getByTestId('team-table-row')
       .eq(0)
       .within(() => {
         cy.get('input').should('exist')
@@ -34,7 +34,7 @@ describe('Team', () => {
   it('gestionnaires can edit team member role', () => {
     cy.login('bc-gestionnaire-1@yopmail.com', 'password-1')
     cy.visit('/equipe')
-    cy.getByTestId('team-table-line')
+    cy.getByTestId('team-table-row')
       .eq(0)
       .within(() => {
         cy.get('input').should('exist')
@@ -44,7 +44,7 @@ describe('Team', () => {
   it('collaborators cannot edit team member role', () => {
     cy.login('bc-collaborator-1@yopmail.com', 'password-1')
     cy.visit('/equipe')
-    cy.getByTestId('team-table-line')
+    cy.getByTestId('team-table-row')
       .eq(0)
       .within(() => {
         cy.get('input').should('not.exist')
@@ -54,7 +54,7 @@ describe('Team', () => {
   it('members cannot edit team member role', () => {
     cy.login('bc-default-1@yopmail.com', 'password-1')
     cy.visit('/equipe')
-    cy.getByTestId('team-table-line')
+    cy.getByTestId('team-table-row')
       .eq(0)
       .within(() => {
         cy.get('input').should('not.exist')
@@ -65,48 +65,48 @@ describe('Team', () => {
     cy.login('bc-admin-1@yopmail.com', 'password-1')
     cy.visit('/equipe')
 
-    cy.getByTestId('team-table-line').eq(5).contains('bc-admin-1@yopmail.com').should('exist')
-    cy.getByTestId('team-table-line')
+    cy.getByTestId('team-table-row').eq(5).contains('bc-admin-1@yopmail.com').should('exist')
+    cy.getByTestId('team-table-row')
       .eq(5)
       .within(() => {
         cy.get('input').should('have.value', Role.ADMIN)
         cy.get('input').should('not.be.disabled')
       })
 
-    cy.getByTestId('team-table-line').eq(6).contains('bc-collaborator-1@yopmail.com').should('exist')
-    cy.getByTestId('team-table-line')
+    cy.getByTestId('team-table-row').eq(6).contains('bc-collaborator-1@yopmail.com').should('exist')
+    cy.getByTestId('team-table-row')
       .eq(6)
       .within(() => {
         cy.get('input').should('have.value', Role.COLLABORATOR)
         cy.get('input').should('not.be.disabled')
       })
 
-    cy.getByTestId('team-table-line').eq(7).contains('bc-default-1@yopmail.com').should('exist')
-    cy.getByTestId('team-table-line')
+    cy.getByTestId('team-table-row').eq(7).contains('bc-default-1@yopmail.com').should('exist')
+    cy.getByTestId('team-table-row')
       .eq(7)
       .within(() => {
         cy.get('input').should('have.value', Role.DEFAULT)
         cy.get('input').should('not.be.disabled')
       })
 
-    cy.getByTestId('team-table-line').eq(13).contains('bc-gestionnaire-1@yopmail.com').should('exist')
-    cy.getByTestId('team-table-line')
+    cy.getByTestId('team-table-row').eq(13).contains('bc-gestionnaire-1@yopmail.com').should('exist')
+    cy.getByTestId('team-table-row')
       .eq(13)
       .within(() => {
         cy.get('input').should('have.value', Role.GESTIONNAIRE)
         cy.get('input').should('not.be.disabled')
       })
 
-    cy.getByTestId('team-table-line').eq(14).contains('bc-super_admin-1@yopmail.com').should('exist')
-    cy.getByTestId('team-table-line')
+    cy.getByTestId('team-table-row').eq(14).contains('bc-super_admin-1@yopmail.com').should('exist')
+    cy.getByTestId('team-table-row')
       .eq(14)
       .within(() => {
         cy.get('input').should('have.value', Role.SUPER_ADMIN)
         cy.get('input').should('be.disabled')
       })
 
-    cy.getByTestId('team-table-line').eq(6).contains('bc-collaborator-1@yopmail.com').should('exist')
-    cy.getByTestId('team-table-line')
+    cy.getByTestId('team-table-row').eq(6).contains('bc-collaborator-1@yopmail.com').should('exist')
+    cy.getByTestId('team-table-row')
       .eq(6)
       .within(() => {
         cy.get('input').should('have.value', Role.COLLABORATOR)
@@ -117,8 +117,8 @@ describe('Team', () => {
 
     cy.reload()
 
-    cy.getByTestId('team-table-line').eq(6).contains('bc-collaborator-1@yopmail.com').should('exist')
-    cy.getByTestId('team-table-line')
+    cy.getByTestId('team-table-row').eq(6).contains('bc-collaborator-1@yopmail.com').should('exist')
+    cy.getByTestId('team-table-row')
       .eq(6)
       .within(() => {
         cy.get('input').should('have.value', Role.GESTIONNAIRE)
