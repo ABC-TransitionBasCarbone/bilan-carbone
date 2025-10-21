@@ -78,14 +78,6 @@ export const EmissionFactorsFilters = ({
     }, [] as SubPost[])
   }, [envPosts])
 
-  const sortedImportVersions = useMemo(
-    () =>
-      importVersions.sort((a, b) => {
-        return `${a.source} ${a.name}`.localeCompare(`${b.source} ${b.name}`)
-      }),
-    [importVersions],
-  )
-
   const statusSelectorRenderValue = () =>
     filters.sources.length === importVersions.length
       ? t('all')
@@ -95,7 +87,7 @@ export const EmissionFactorsFilters = ({
 
   const allUnitsSelected = useMemo(
     () => filters.units.filter((unit) => unit !== 'all').length === initialSelectedUnits.length - 1,
-    [filters],
+    [filters.units, initialSelectedUnits.length],
   )
 
   const unitsSelectorRenderValue = () =>
@@ -191,7 +183,7 @@ export const EmissionFactorsFilters = ({
               renderValue={statusSelectorRenderValue}
               multiple
             >
-              {sortedImportVersions.map((importVersion) => (
+              {importVersions.map((importVersion) => (
                 <MenuItem key={`source-item-${importVersion.id}`} value={importVersion.id}>
                   <Checkbox checked={filters.sources.includes(importVersion.id)} />
                   <ListItemText primary={getEmissionVersionLabel(importVersion)} />

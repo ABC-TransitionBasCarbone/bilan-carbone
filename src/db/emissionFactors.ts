@@ -4,7 +4,7 @@ import { FeFilters } from '@/types/filters'
 import { localeType } from '@/types/translation'
 import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
 import { flattenSubposts } from '@/utils/post'
-import { EmissionFactorStatus, Import, Prisma, Unit } from '@prisma/client'
+import { EmissionFactorStatus, Import, Prisma, SubPost, Unit } from '@prisma/client'
 import { Session } from 'next-auth'
 import { prismaClient } from './client'
 import { getOrganizationVersionById } from './organization'
@@ -73,7 +73,7 @@ export type EmissionFactorList = {
   geographicRepresentativeness: number | null
   temporalRepresentativeness: number | null
   completeness: number | null
-  subPosts: string[]
+  subPosts: SubPost[]
   co2f: number | null
   ch4f: number | null
   ch4b: number | null

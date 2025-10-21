@@ -2,14 +2,9 @@
 
 import { EmissionFactorList } from '@/db/emissionFactors'
 import { environmentSubPostsMapping, Post, subPostsByPost } from '@/services/posts'
-import {
-  EmissionFactorWithMetaData,
-  getEmissionFactors,
-  getFELocations,
-  getImportVersions,
-} from '@/services/serverFunctions/emissionFactor'
+import { EmissionFactorWithMetaData, getEmissionFactors } from '@/services/serverFunctions/emissionFactor'
 import { BCUnit } from '@/services/unit'
-import { EmissionFactorImportVersion, Environment, Import, SubPost } from '@prisma/client'
+import { EmissionFactorImportVersion, Environment, SubPost } from '@prisma/client'
 import { PaginationState } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
@@ -20,21 +15,29 @@ import { EmissionFactorsTable } from './Table'
 interface Props {
   userOrganizationId?: string | null
   environment: Environment
+  initialImportVersions: string[]
+  importVersions: EmissionFactorImportVersion[]
+  locationOptions: string[]
   selectEmissionFactor?: (emissionFactor: EmissionFactorWithMetaData) => void
 }
 
 const initialSelectedUnits: (BCUnit | string)[] = [...['all'], ...Object.values(BCUnit)]
-const EmissionFactorsFiltersAndTable = ({ userOrganizationId, environment, selectEmissionFactor }: Props) => {
+const EmissionFactorsFiltersAndTable = ({
+  userOrganizationId,
+  environment,
+  initialImportVersions,
+  importVersions,
+  locationOptions,
+  selectEmissionFactor,
+}: Props) => {
   const t = useTranslations('emissionFactors.table')
   const [action, setAction] = useState<'edit' | 'delete' | undefined>(undefined)
   const [targetedEmission, setTargetedEmission] = useState('')
   const [emissionFactors, setEmissionFactors] = useState<EmissionFactorList[]>([])
-  const [importVersions, setImportVersions] = useState<EmissionFactorImportVersion[]>([])
   const [skip, setSkip] = useState(0)
   const [take, setTake] = useState(25)
   const [totalCount, setTotalCount] = useState(0)
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
-  const [locationOptions, setLocationOptions] = useState<string[]>([])
 
   const envSubPostsByPost = useMemo(() => environmentSubPostsMapping[environment], [environment])
   const posts = useMemo(() => Object.keys(envSubPostsByPost) as Post[], [envSubPostsByPost])
@@ -49,7 +52,7 @@ const EmissionFactorsFiltersAndTable = ({ userOrganizationId, environment, selec
     archived: false,
     search: '',
     location: '',
-    sources: [] as string[],
+    sources: initialImportVersions,
     units: initialSelectedUnits,
     subPosts: envSubPosts,
   })
@@ -60,19 +63,7 @@ const EmissionFactorsFiltersAndTable = ({ userOrganizationId, environment, selec
     async function fetchEmissionFactors() {
       const takeValue = skip === 0 ? take * 4 : take
       const emissionFactorsFromBdd = await getEmissionFactors(skip, takeValue, filters)
-      const importVersionsFromBdd = await getImportVersions()
-      const locationFromBdd = await getFELocations()
 
-      setLocationOptions(locationFromBdd.filter((loc) => !!loc).map((loc) => loc.location) ?? [])
-      const manualImport = { id: Import.Manual, source: Import.Manual, name: '' }
-      setImportVersions(importVersionsFromBdd.concat(manualImport as EmissionFactorImportVersion))
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        sources:
-          importVersionsFromBdd.length > 0
-            ? [Import.Manual, ...importVersionsFromBdd.map((iv) => iv.id)]
-            : [Import.Manual],
-      }))
       setSkip((prevSkip) => takeValue + prevSkip)
 
       if (emissionFactorsFromBdd.success) {

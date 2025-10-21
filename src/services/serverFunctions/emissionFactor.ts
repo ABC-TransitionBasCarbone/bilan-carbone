@@ -61,7 +61,7 @@ export const getImportVersions = async () => {
     return []
   }
 
-  return prismaClient.emissionFactorImportVersion.findMany({})
+  return prismaClient.emissionFactorImportVersion.findMany({ where: { archived: false } })
 }
 
 export const getFELocations = async () => {
@@ -165,7 +165,8 @@ export const getEmissionFactorsByIds = async (ids: string[], studyId: string) =>
           ...emissionFactor,
           metaData: emissionFactor.metaData.find((metadata) => metadata.language === locale),
         }))
-        .sort((a, b) => sortAlphabetically(a?.metaData?.title, b?.metaData?.title))
+        .filter((emissionFactor) => emissionFactor.metaData)
+        .sort((a, b) => sortAlphabetically(a?.metaData?.title, b?.metaData?.title)) as EmissionFactorWithMetaData[]
     } catch {
       return []
     }
