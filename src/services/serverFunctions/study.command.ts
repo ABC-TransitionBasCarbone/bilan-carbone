@@ -23,16 +23,24 @@ export const SitesCommandValidation = z.object({
       cncCode: z.string().optional(),
       name: z
         .string({
-          required_error: 'name',
+          error: (issue) => (issue.input === undefined ? 'name' : undefined),
         })
         .trim()
         .min(1, 'name'),
       etp: z
-        .number({ required_error: 'etp', invalid_type_error: 'etp' })
         .int('etp')
-        .min(0, { message: 'etp' })
+        .min(0, {
+          error: 'etp',
+        })
         .optional(),
-      ca: z.number({ required_error: 'ca', invalid_type_error: 'ca' }).min(0, { message: 'ca' }).optional(),
+      ca: z
+        .number({
+          error: (issue) => (issue.input === undefined ? 'ca' : 'ca'),
+        })
+        .min(0, {
+          error: 'ca',
+        })
+        .optional(),
       selected: z.boolean().optional(),
       postalCode: z.string().optional(),
       city: z.string().optional(),
@@ -46,16 +54,20 @@ export type SitesCommand = z.infer<typeof SitesCommandValidation>
 
 export const StudyExportsCommandValidation = z.object({
   exports: z.object({
-    [Export.Beges]: z.nativeEnum(ControlMode).or(z.literal(false)),
-    [Export.GHGP]: z.nativeEnum(ControlMode).or(z.literal(false)),
-    [Export.ISO14069]: z.nativeEnum(ControlMode).or(z.literal(false)),
+    [Export.Beges]: z.enum(ControlMode).or(z.literal(false)),
+    [Export.GHGP]: z.enum(ControlMode).or(z.literal(false)),
+    [Export.ISO14069]: z.enum(ControlMode).or(z.literal(false)),
   }),
 })
 
 export type StudyExportsCommand = z.infer<typeof StudyExportsCommandValidation>
 
 const dateValidation = (field: string) =>
-  z.string({ required_error: field }).refine((val) => dayjs(val).isValid(), field)
+  z
+    .string({
+      error: (issue) => (issue.input === undefined ? field : undefined),
+    })
+    .refine((val) => dayjs(val).isValid(), field)
 
 const optionalDateValidation = (field: string) =>
   z
@@ -68,30 +80,26 @@ const BaseStudyValidation = z.object({
   organizationVersionId: z.string(),
   name: z
     .string({
-      required_error: 'name',
+      error: (issue) => (issue.input === undefined ? 'name' : undefined),
     })
     .trim()
     .min(1, 'name'),
-  validator: z
-    .string({
-      required_error: 'validator',
-      invalid_type_error: 'validator',
-    })
-    .email('validator')
-    .trim(),
+  validator: z.email('validator').trim(),
   startDate: dateValidation('startDate'),
   endDate: dateValidation('endDate'),
   realizationStartDate: optionalDateValidation('startDate'),
   realizationEndDate: optionalDateValidation('endDate'),
-  level: z.nativeEnum(Level, { required_error: 'level' }),
+  level: z.enum(Level, {
+    error: (issue) => (issue.input === undefined ? 'level' : undefined),
+  }),
   isPublic: z.string(),
 })
 
 export const CreateStudyCommandValidation = z
   .intersection(z.intersection(BaseStudyValidation, StudyExportsCommandValidation), SitesCommandValidation)
   .refine((data) => dayjs(data.endDate).isAfter(dayjs(data.startDate)), {
-    message: 'endDateBeforStartDate',
     path: ['endDate'],
+    error: 'endDateBeforStartDate',
   })
   .refine(
     (data) =>
@@ -99,8 +107,8 @@ export const CreateStudyCommandValidation = z
       !data.realizationEndDate ||
       dayjs(data.realizationEndDate).isAfter(dayjs(data.realizationStartDate)),
     {
-      message: 'endDateBeforStartDate',
       path: ['realizationEndDate'],
+      error: 'endDateBeforStartDate',
     },
   )
   .refine(({ sites }) => sites.some((site) => site.selected), 'sites')
@@ -126,14 +134,14 @@ export type ChangeStudyPublicStatusCommand = z.infer<typeof ChangeStudyPublicSta
 
 export const ChangeStudyLevelCommandValidation = z.object({
   studyId: z.string(),
-  level: z.nativeEnum(Level),
+  level: z.enum(Level),
 })
 
 export type ChangeStudyLevelCommand = z.infer<typeof ChangeStudyLevelCommandValidation>
 
 export const ChangeStudyResultsUnitCommandValidation = z.object({
   studyId: z.string(),
-  resultsUnit: z.nativeEnum(StudyResultUnit),
+  resultsUnit: z.enum(StudyResultUnit),
 })
 
 export type ChangeStudyResultsUnitCommand = z.infer<typeof ChangeStudyResultsUnitCommandValidation>
@@ -147,8 +155,8 @@ export const ChangeStudyDatesCommandValidation = z
     realizationEndDate: optionalDateValidation('endDate'),
   })
   .refine((data) => dayjs(data.endDate).isAfter(dayjs(data.startDate)), {
-    message: 'endDateBeforStartDate',
     path: ['endDate'],
+    error: 'endDateBeforStartDate',
   })
   .refine(
     (data) =>
@@ -156,8 +164,8 @@ export const ChangeStudyDatesCommandValidation = z
       !data.realizationEndDate ||
       dayjs(data.realizationEndDate).isAfter(dayjs(data.realizationStartDate)),
     {
-      message: 'endDateBeforStartDate',
       path: ['realizationEndDate'],
+      error: 'endDateBeforStartDate',
     },
   )
 
@@ -167,7 +175,7 @@ export const ChangeStudyNameValidation = z.object({
   studyId: z.string(),
   name: z
     .string({
-      required_error: 'name',
+      error: (issue) => (issue.input === undefined ? 'name' : undefined),
     })
     .trim()
     .min(1, 'name'),
@@ -176,32 +184,48 @@ export const ChangeStudyNameValidation = z.object({
 export type ChangeStudyNameCommand = z.infer<typeof ChangeStudyNameValidation>
 
 export const ChangeStudyCinemaValidation = z.object({
-  openingHours: z.record(z.nativeEnum(DayOfWeek), OpeningHoursValidation).optional(),
-  openingHoursHoliday: z.record(z.nativeEnum(DayOfWeek), HolidayOpeningHoursValidation).optional(),
-  numberOfSessions: z.number({ invalid_type_error: 'invalidNumber' }).optional().nullable(),
-  numberOfTickets: z.number({ invalid_type_error: 'invalidNumber' }).optional().nullable(),
-  numberOfOpenDays: z.number({ invalid_type_error: 'invalidNumber' }).optional().nullable(),
-  numberOfProgrammedFilms: z.number({ invalid_type_error: 'invalidNumber' }).optional().nullable(),
+  openingHours: z.partialRecord(z.enum(DayOfWeek), OpeningHoursValidation).optional(),
+  openingHoursHoliday: z.partialRecord(z.enum(DayOfWeek), HolidayOpeningHoursValidation).optional(),
+  numberOfSessions: z
+    .number({
+      error: (issue) => (issue.input === undefined ? undefined : 'invalidNumber'),
+    })
+    .optional()
+    .nullable(),
+  numberOfTickets: z
+    .number({
+      error: (issue) => (issue.input === undefined ? undefined : 'invalidNumber'),
+    })
+    .optional()
+    .nullable(),
+  numberOfOpenDays: z
+    .number({
+      error: (issue) => (issue.input === undefined ? undefined : 'invalidNumber'),
+    })
+    .optional()
+    .nullable(),
+  numberOfProgrammedFilms: z
+    .number({
+      error: (issue) => (issue.input === undefined ? undefined : 'invalidNumber'),
+    })
+    .optional()
+    .nullable(),
 })
 
 export type ChangeStudyCinemaCommand = z.infer<typeof ChangeStudyCinemaValidation>
 
 export const NewStudyRightCommandValidation = z.object({
   studyId: z.string(),
-  email: z
-    .string({
-      required_error: 'emailRequired',
-      invalid_type_error: 'emailRequired',
-    })
-    .email('email')
-    .trim(),
-  role: z.nativeEnum(StudyRole, { required_error: 'role' }),
+  email: z.email('email').trim(),
+  role: z.enum(StudyRole, {
+    error: (issue) => (issue.input === undefined ? 'role' : undefined),
+  }),
 })
 
 export type NewStudyRightCommand = z.infer<typeof NewStudyRightCommandValidation>
 
 export const NewStudyContributorCommandValidation = z.intersection(
-  z.object({ studyId: z.string(), email: z.string({ required_error: 'email' }).email('email').trim() }),
+  z.object({ studyId: z.string(), email: z.email('email').trim() }),
   SubPostsCommandValidation,
 )
 
@@ -214,23 +238,31 @@ export const DeleteCommandValidation = z.object({
 export type DeleteCommand = z.infer<typeof DeleteCommandValidation>
 
 export const DuplicateSiteCommandValidation = z.object({
-  sourceSiteId: z.string().uuid(),
-  targetSiteIds: z.array(z.string().uuid()),
-  newSitesCount: z.number().int().min(0),
-  organizationId: z.string().uuid(),
-  studyId: z.string().uuid(),
+  sourceSiteId: z.uuid(),
+  targetSiteIds: z.array(z.uuid()),
+  newSitesCount: z.int().min(0),
+  organizationId: z.uuid(),
+  studyId: z.uuid(),
   fieldsToDuplicate: z.array(z.enum(['etp', 'ca', 'volunteerNumber', 'beneficiaryNumber', 'emissionSources'])),
 })
 
 export type DuplicateSiteCommand = z.infer<typeof DuplicateSiteCommandValidation>
 
 export const AddActionCommandBase = z.object({
-  title: z.string({ required_error: 'required' }),
-  subSteps: z.string({ required_error: 'required' }),
+  title: z.string({
+    error: (issue) => (issue.input === undefined ? 'required' : undefined),
+  }),
+  subSteps: z.string({
+    error: (issue) => (issue.input === undefined ? 'required' : undefined),
+  }),
   // aim: z.array(),
-  detailedDescription: z.string({ required_error: 'required' }),
+  detailedDescription: z.string({
+    error: (issue) => (issue.input === undefined ? 'required' : undefined),
+  }),
   transitionPlanId: z.string().uuid(),
-  potentialDeduction: z.nativeEnum(ActionPotentialDeduction, { required_error: 'required' }),
+  potentialDeduction: z.enum(ActionPotentialDeduction, {
+    error: (issue) => (issue.input === undefined ? 'required' : undefined),
+  }),
   reductionValue: z.number().optional(),
   reductionStartYear: z.string().optional(),
   reductionEndYear: z.string().optional(),
@@ -245,28 +277,30 @@ export const AddActionCommandBase = z.object({
   performanceAim: z.number().optional(),
   facilitatorsAndObstacles: z.string().optional(),
   additionalInformation: z.string().optional(),
-  nature: z.array(z.nativeEnum(ActionNature)).min(0),
-  category: z.array(z.nativeEnum(ActionCategory)).min(0),
-  relevance: z.array(z.nativeEnum(ActionRelevance)).min(0),
+  nature: z.array(z.enum(ActionNature)).min(0),
+  category: z.array(z.enum(ActionCategory)).min(0),
+  relevance: z.array(z.enum(ActionRelevance)).min(0),
 })
 
 export const AddActionCommandValidation = AddActionCommandBase.superRefine((data, ctx) => {
   if (data.potentialDeduction === ActionPotentialDeduction.Quantity) {
     if (!data) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'required', path: ['reductionValue'] })
+      ctx.addIssue({ code: 'custom', message: 'required', path: ['reductionValue'] })
     }
     if (!data.reductionStartYear) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'required', path: ['reductionStartYear'] })
+      ctx.addIssue({ code: 'custom', message: 'required', path: ['reductionStartYear'] })
     }
+
     if (!data.reductionEndYear) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'required', path: ['reductionEndYear'] })
+      ctx.addIssue({ code: 'custom', message: 'required', path: ['reductionEndYear'] })
     }
+
     if (data.actionPorter !== '') {
       const emailValidation = z
-        .string()
         .email()
         .transform((val) => val.toLowerCase())
         .safeParse(data.actionPorter)
+
       if (!emailValidation.success) {
         ctx.addIssue({ code: 'custom', path: ['actionPorter'], message: 'email' })
       }

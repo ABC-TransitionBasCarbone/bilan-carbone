@@ -16,17 +16,20 @@ const GESschema = z.object({
 })
 
 export const SubPostsCommandValidation = z.object({
-  subPosts: z.record(z.array(z.nativeEnum(SubPost)).min(1), { required_error: 'type' }).superRefine((val, ctx) => {
-    if (Object.keys(val).length === 0) {
-      ctx.addIssue({ message: 'type', code: z.ZodIssueCode.custom })
-      return false
-    }
+  subPosts: z
+    .record(z.string(), z.array(z.enum(SubPost)).min(1), {
+      error: 'type',
+    })
+    .superRefine((val, ctx) => {
+      if (Object.keys(val).length === 0) {
+        ctx.addIssue({ message: 'type', code: 'custom' })
+        return
+      }
 
-    if (Object.values(val).some((arr) => arr.length === 0)) {
-      ctx.addIssue({ message: 'subPost', code: z.ZodIssueCode.custom })
-      return false
-    }
-  }),
+      if (Object.values(val).some((arr) => arr.length === 0)) {
+        ctx.addIssue({ message: 'subPost', code: 'custom' })
+      }
+    }),
 })
 export type SubPostsCommand = z.infer<typeof SubPostsCommandValidation>
 
@@ -34,17 +37,43 @@ export const EmissionFactorCommandValidation = z.intersection(
   GESschema,
   z.intersection(
     z.object({
-      name: z.string({ required_error: 'name' }).trim().min(1, 'name'),
-      unit: z.nativeEnum(Unit, { required_error: 'unit' }),
+      name: z
+        .string({
+          error: (issue) => (issue.input === undefined ? 'name' : undefined),
+        })
+        .trim()
+        .min(1, 'name'),
+      unit: z.enum(Unit, {
+        error: (issue) => (issue.input === undefined ? 'unit' : undefined),
+      }),
       customUnit: z.string().nullable().optional(),
       isMonetary: z.boolean(),
-      source: z.string({ required_error: 'source' }).trim().min(1, 'source'),
-      totalCo2: z.number({ invalid_type_error: 'totalCo2', required_error: 'totalCo2' }).min(0, 'totalCo2'),
-      reliability: z.number({ required_error: 'required' }),
-      technicalRepresentativeness: z.number({ required_error: 'required' }),
-      geographicRepresentativeness: z.number({ required_error: 'required' }),
-      temporalRepresentativeness: z.number({ required_error: 'required' }),
-      completeness: z.number({ required_error: 'required' }),
+      source: z
+        .string({
+          error: (issue) => (issue.input === undefined ? 'source' : undefined),
+        })
+        .trim()
+        .min(1, 'source'),
+      totalCo2: z
+        .number({
+          error: (issue) => (issue.input === undefined ? 'totalCo2' : 'totalCo2'),
+        })
+        .min(0, 'totalCo2'),
+      reliability: z.number({
+        error: (issue) => (issue.input === undefined ? 'required' : undefined),
+      }),
+      technicalRepresentativeness: z.number({
+        error: (issue) => (issue.input === undefined ? 'required' : undefined),
+      }),
+      geographicRepresentativeness: z.number({
+        error: (issue) => (issue.input === undefined ? 'required' : undefined),
+      }),
+      temporalRepresentativeness: z.number({
+        error: (issue) => (issue.input === undefined ? 'required' : undefined),
+      }),
+      completeness: z.number({
+        error: (issue) => (issue.input === undefined ? 'required' : undefined),
+      }),
       attribute: z.string().optional(),
       comment: z.string().optional(),
       parts: z
@@ -52,9 +81,21 @@ export const EmissionFactorCommandValidation = z.intersection(
           z.intersection(
             GESschema,
             z.object({
-              name: z.string({ required_error: 'name' }).trim().min(1, 'name').max(64, 'nameMaxLength'),
-              type: z.nativeEnum(EmissionFactorPartType, { required_error: 'type' }),
-              totalCo2: z.number({ invalid_type_error: 'totalCo2', required_error: 'totalCo2' }).min(0, 'totalCo2'),
+              name: z
+                .string({
+                  error: (issue) => (issue.input === undefined ? 'name' : undefined),
+                })
+                .trim()
+                .min(1, 'name')
+                .max(64, 'nameMaxLength'),
+              type: z.enum(EmissionFactorPartType, {
+                error: (issue) => (issue.input === undefined ? 'type' : undefined),
+              }),
+              totalCo2: z
+                .number({
+                  error: (issue) => (issue.input === undefined ? 'totalCo2' : 'totalCo2'),
+                })
+                .min(0, 'totalCo2'),
             }),
           ),
         )

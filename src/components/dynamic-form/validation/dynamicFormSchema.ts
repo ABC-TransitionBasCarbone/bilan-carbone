@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import { z } from 'zod'
 
 export const createDynamicFormSchema = (questions: Question[]) => {
-  const schemaObject: Record<string, z.ZodSchema> = {}
+  const schemaObject: Record<string, z.ZodType> = {}
 
   questions.forEach((question) => {
     schemaObject[question.idIntern] = createQuestionSchema(question)
@@ -42,19 +42,20 @@ const validationMessages: Partial<Record<QuestionType, string>> = {
 }
 
 export const createQuestionSchema = (question: Question) => {
-  let schema: z.ZodSchema
+  let schema: z.ZodType
 
   if (question.required) {
     schema = z
       .string({
-        required_error: 'required',
-        invalid_type_error: 'required',
+        error: (issue) => (issue.input === undefined ? 'required' : 'required'),
       })
-      .min(1, { message: 'required' })
+      .min(1, {
+        error: 'required',
+      })
   } else {
     schema = z
       .string({
-        invalid_type_error: 'invalid_type',
+        error: (issue) => (issue.input === undefined ? undefined : 'invalid_type'),
       })
       .optional()
       .or(z.literal(''))
@@ -64,9 +65,12 @@ export const createQuestionSchema = (question: Question) => {
   const validationMessage = validationMessages[question.type]
 
   if (validationRule && validationMessage) {
-    schema = schema.refine(createValidationRefine(validationRule, validationMessage, question.required), {
-      message: validationMessage,
-    })
+    schema = schema.refine(
+      (val) => createValidationRefine(validationRule, validationMessage, question.required)(val as string),
+      {
+        message: validationMessage,
+      },
+    )
   }
 
   return schema

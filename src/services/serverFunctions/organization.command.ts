@@ -4,7 +4,7 @@ import { SitesCommandValidation } from './study.command'
 export const CreateOrganizationCommandValidation = z.object({
   name: z
     .string({
-      required_error: 'name',
+      error: (issue) => (issue.input === undefined ? 'name' : undefined),
     })
     .trim()
     .min(1, 'name'),
