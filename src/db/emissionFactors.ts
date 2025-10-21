@@ -1,15 +1,13 @@
 import { LocaleType } from '@/i18n/config'
-import { isSourceForEnv } from '@/services/importEmissionFactor/import'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { FeFilters } from '@/types/filters'
 import { localeType } from '@/types/translation'
 import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
 import { flattenSubposts } from '@/utils/post'
-import { EmissionFactorStatus, Environment, Import, Prisma, Unit } from '@prisma/client'
+import { EmissionFactorStatus, Import, Prisma, Unit } from '@prisma/client'
 import { Session } from 'next-auth'
 import { prismaClient } from './client'
 import { getOrganizationVersionById } from './organization'
-import { getSourcesLatestImportVersionId, getSourcesLatestImportVersionIdByOrganizationId } from './study'
 
 const selectEmissionFactor = {
   id: true,
@@ -104,12 +102,7 @@ export type EmissionFactorList = {
   }[]
 }
 
-const handleFilterConditions = (
-  filters: FeFilters,
-  withCut: boolean,
-  versionIds: string[] | undefined,
-  organizationId: string | null,
-) => {
+const handleFilterConditions = (filters: FeFilters, withCut: boolean, organizationId: string | null) => {
   const conditions: Prisma.Sql[] = [
     Prisma.sql`m.language = 'fr'`,
     Prisma.sql`ef.sub_posts IS NOT NULL AND ef.sub_posts::text != '{}'`,
@@ -117,12 +110,6 @@ const handleFilterConditions = (
 
   if (withCut) {
     conditions.push(Prisma.sql`ef.imported_from != 'CUT'`)
-  }
-
-  if (versionIds && versionIds.length) {
-    conditions.push(
-      Prisma.sql`((version_id IN (${Prisma.join(versionIds)}) and ef.organization_id IS NULL) OR (version_id is null and ef.organization_id = ${Prisma.sql`${organizationId}`}))`,
-    )
   }
 
   if (!filters.archived) {
@@ -151,6 +138,18 @@ const handleFilterConditions = (
     )
   }
 
+  if (filters.sources.length > 0 && filters.sources.some((source) => source !== 'all')) {
+    if (filters.sources.includes(Import.Manual)) {
+      conditions.push(
+        Prisma.sql`(ef.version_id::text IN (${Prisma.join(filters.sources.filter((s) => s !== Import.Manual))}) OR (version_id is null and ef.organization_id = ${Prisma.sql`${organizationId}`}))`,
+      )
+    } else {
+      conditions.push(
+        Prisma.sql`ef.version_id::text IN (${Prisma.join(filters.sources.filter((s) => s !== Import.Manual))})`,
+      )
+    }
+  }
+
   console.log('conditions', Prisma.join(conditions, ' AND '))
   return Prisma.join(conditions, ' AND ')
 }
@@ -162,7 +161,6 @@ const getDefaultEmissionFactors = (
   filters: FeFilters,
   withCut: boolean,
   organizationId: string | null,
-  versionIds?: string[],
 ): EmissionFactorList[] => {
   const skipSQL = Prisma.sql`${skip}`
   const takeSQL = Prisma.sql`${take}`
@@ -180,7 +178,7 @@ const getDefaultEmissionFactors = (
   FROM emission_factors ef
   JOIN emission_metadata m
     ON m.emission_factor_id = ef.id
-  WHERE ${handleFilterConditions(filters, withCut, versionIds, organizationId)}
+  WHERE ${handleFilterConditions(filters, withCut, organizationId)}
   ORDER BY m.title ASC
   LIMIT ${takeSQL} OFFSET ${skipSQL}`) as unknown as EmissionFactorList[]
 }
@@ -246,25 +244,9 @@ export const getAllEmissionFactors = async (
       .filter((id) => id !== null)
 
     studyOldEmissionFactors = await getEmissionFactorsFromIdsExceptVersions(selectedEmissionFactors, versionIds, locale)
-  } else {
-    versionIds = (await getSourcesLatestImportVersionIdByOrganizationId(organizationId)).map((v) => v.importVersionId)
-
-    if (versionIds.length <= 0) {
-      versionIds = (
-        await getSourcesLatestImportVersionId(isSourceForEnv(Environment.BC).filter((s) => s !== Import.Manual))
-      ).map((v) => v.id)
-    }
   }
 
-  const defaultEmissionFactors = await getDefaultEmissionFactors(
-    skip,
-    take,
-    locale,
-    filters,
-    withCut,
-    organizationId,
-    versionIds,
-  )
+  const defaultEmissionFactors = await getDefaultEmissionFactors(skip, take, locale, filters, withCut, organizationId)
 
   const emissionFactorsCount = await getDefaultEmissionFactorsCount(organizationId, withCut, versionIds)
 

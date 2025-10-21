@@ -1,6 +1,7 @@
 'use server'
 
 import { getAccountById } from '@/db/account'
+import { prismaClient } from '@/db/client'
 import {
   createEmissionFactorWithParts,
   deleteEmissionFactorAndDependencies,
@@ -52,6 +53,15 @@ export const mapImportVersions = async (emissionFactors: EmissionFactorWithMetaD
     })
   })
   return latestBySource
+}
+
+export const getImportVersions = async () => {
+  const session = await auth()
+  if (!session || !session.user) {
+    return []
+  }
+
+  return prismaClient.emissionFactorImportVersion.findMany({})
 }
 
 export const getEmissionFactors = async (

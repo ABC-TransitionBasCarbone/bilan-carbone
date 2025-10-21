@@ -5,7 +5,7 @@ import { environmentSubPostsMapping, Post, subPostsByPost } from '@/services/pos
 import {
   EmissionFactorWithMetaData,
   getEmissionFactors,
-  mapImportVersions,
+  getImportVersions,
 } from '@/services/serverFunctions/emissionFactor'
 import { BCUnit } from '@/services/unit'
 import { EmissionFactorImportVersion, Environment, Import, SubPost } from '@prisma/client'
@@ -58,12 +58,12 @@ const EmissionFactorsFiltersAndTable = ({ userOrganizationId, environment, selec
     async function fetchEmissionFactors() {
       const takeValue = skip === 0 ? take * 4 : take
       const emissionFactorsFromBdd = await getEmissionFactors(skip, takeValue, filters)
+      const importVersionsFromBdd = await getImportVersions()
+      console.log('fetched import versions:', importVersionsFromBdd)
+      setImportVersions(importVersionsFromBdd)
       setSkip((prevSkip) => takeValue + prevSkip)
 
       if (emissionFactorsFromBdd.success) {
-        if (emissionFactors.length === 0) {
-          setImportVersions(await mapImportVersions(emissionFactorsFromBdd.data.emissionFactors))
-        }
         setEmissionFactors((prevEF) => prevEF.concat(emissionFactorsFromBdd.data.emissionFactors))
         setTotalCount(emissionFactorsFromBdd.data.count)
       } else {
@@ -81,6 +81,7 @@ const EmissionFactorsFiltersAndTable = ({ userOrganizationId, environment, selec
   useEffect(() => {
     async function fetchEmissionFactors() {
       const emissionFactorsFromBdd = await getEmissionFactors(0, 100, filters)
+      console.log(emissionFactorsFromBdd)
       setSkip(100)
 
       if (emissionFactorsFromBdd.success) {
@@ -92,6 +93,8 @@ const EmissionFactorsFiltersAndTable = ({ userOrganizationId, environment, selec
         setTotalCount(0)
       }
     }
+
+    console.log('filters changed:', filters)
 
     fetchEmissionFactors()
   }, [filters])
