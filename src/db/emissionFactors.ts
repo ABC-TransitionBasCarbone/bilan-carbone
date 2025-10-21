@@ -143,6 +143,13 @@ const handleFilterConditions = (
     conditions.push(Prisma.sql`(m.location ILIKE ${location})`)
   }
 
+  if (filters.units.length > 0 && filters.units.some((unit) => unit !== 'all')) {
+    conditions.push(
+      Prisma.sql`(ef.unit::text IN (${Prisma.join(filters.units)}) OR ef."customUnit"::text IN (${Prisma.join(filters.units)}))`,
+    )
+  }
+
+  console.log('conditions', Prisma.join(conditions, ' AND '))
   return Prisma.join(conditions, ' AND ')
 }
 
