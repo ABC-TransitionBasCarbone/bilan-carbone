@@ -64,6 +64,28 @@ export const getImportVersions = async () => {
   return prismaClient.emissionFactorImportVersion.findMany({})
 }
 
+export const getFELocations = async () => {
+  const session = await auth()
+  if (!session || !session.user) {
+    return []
+  }
+  const locale = await getLocale()
+  return prismaClient.emissionFactorMetaData.findMany({
+    where: {
+      language: locale,
+      location: { not: null },
+      emissionFactor: {
+        subPosts: { isEmpty: false },
+        OR: [
+          { organizationId: session.user.organizationId },
+          { AND: [{ versionId: { not: null }, version: { source: { not: Import.CUT } } }] },
+        ],
+      },
+    },
+    distinct: ['location'],
+    select: { location: true },
+  }) as Promise<{ location: string }[]>
+}
 export const getEmissionFactors = async (
   skip: number,
   take: number,

@@ -1,5 +1,4 @@
 import { Post, subPostsByPost } from '@/services/posts'
-import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { BCUnit } from '@/services/unit'
 import { FeFilters } from '@/types/filters'
 import {
@@ -24,21 +23,21 @@ import MultiSelectAll from '../base/MultiSelectAll'
 import styles from './Table.module.css'
 
 interface Props {
-  emissionFactors: EmissionFactorWithMetaData[]
   fromModal: boolean
   importVersions: EmissionFactorImportVersion[]
   initialSelectedUnits: (BCUnit | string)[]
   envPosts: Post[]
   filters: FeFilters
+  locationOptions: string[]
   setFilters: Dispatch<SetStateAction<FeFilters>>
 }
 export const EmissionFactorsFilters = ({
-  emissionFactors,
   fromModal,
   importVersions,
   initialSelectedUnits,
   envPosts,
   filters,
+  locationOptions,
   setFilters,
 }: Props) => {
   const t = useTranslations('emissionFactors.table')
@@ -78,12 +77,6 @@ export const EmissionFactorsFilters = ({
       return acc.concat(subPosts)
     }, [] as SubPost[])
   }, [envPosts])
-
-  const getLocationLabel = useMemo(
-    () => (row: EmissionFactorWithMetaData) =>
-      `${row.location || t('noLocation')}${row.metaData?.location ? ` - ${row.metaData.location}` : ''}`,
-    [t],
-  )
 
   const sortedImportVersions = useMemo(
     () =>
@@ -143,16 +136,6 @@ export const EmissionFactorsFilters = ({
     setFilters((prevFilters) => ({ ...prevFilters, subPosts: newValue }))
   }
 
-  const locationOptions = useMemo(
-    () =>
-      emissionFactors
-        .map((emissionFactor) => getLocationLabel(emissionFactor))
-        .filter(
-          (location, i) =>
-            emissionFactors.map((emissionFactor) => getLocationLabel(emissionFactor)).indexOf(location) === i,
-        ),
-    [emissionFactors, getLocationLabel],
-  )
   return (
     <div ref={filtersRef} className={classNames(styles.filters, 'align-center wrap mt-2 mb1')}>
       {displayFilters && (
