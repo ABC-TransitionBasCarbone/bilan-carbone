@@ -103,7 +103,7 @@ export const duplicateTransitionPlanWithRelations = async (
     .filter((studyId) => studyId !== sourceTransitionPlan.studyId)
 
   return prismaClient.$transaction(async (tx) => {
-    const newTransitionPlan = await tx.transitionPlan.create({
+    return tx.transitionPlan.create({
       data: {
         studyId: targetStudyId,
         transitionPlanStudies: {
@@ -133,8 +133,6 @@ export const duplicateTransitionPlanWithRelations = async (
         transitionPlanStudies: true,
       },
     })
-
-    return newTransitionPlan
   })
 }
 
