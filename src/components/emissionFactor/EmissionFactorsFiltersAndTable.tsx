@@ -47,7 +47,7 @@ const EmissionFactorsFiltersAndTable = ({ userOrganizationId, environment, selec
     archived: false,
     search: '',
     location: '',
-    sources: ['all'],
+    sources: [] as string[],
     units: initialSelectedUnits,
     subPosts: envSubPosts,
   })
@@ -59,8 +59,15 @@ const EmissionFactorsFiltersAndTable = ({ userOrganizationId, environment, selec
       const takeValue = skip === 0 ? take * 4 : take
       const emissionFactorsFromBdd = await getEmissionFactors(skip, takeValue, filters)
       const importVersionsFromBdd = await getImportVersions()
-      console.log('fetched import versions:', importVersionsFromBdd)
-      setImportVersions(importVersionsFromBdd)
+      const manualImport = { id: Import.Manual, source: Import.Manual, name: '' }
+      setImportVersions(importVersionsFromBdd.concat(manualImport as EmissionFactorImportVersion))
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        sources:
+          importVersionsFromBdd.length > 0
+            ? [Import.Manual, ...importVersionsFromBdd.map((iv) => iv.id)]
+            : [Import.Manual],
+      }))
       setSkip((prevSkip) => takeValue + prevSkip)
 
       if (emissionFactorsFromBdd.success) {
@@ -103,15 +110,13 @@ const EmissionFactorsFiltersAndTable = ({ userOrganizationId, environment, selec
     setTake(pagination.pageSize)
   }, [pagination.pageSize])
 
-  const manualImport = { id: Import.Manual, source: Import.Manual, name: '' } as EmissionFactorImportVersion
-
   return (
     <>
       {t('subTitle')}
       <EmissionFactorsFilters
         emissionFactors={emissionFactors}
         fromModal={fromModal}
-        importVersions={importVersions.concat(manualImport)}
+        importVersions={importVersions}
         initialSelectedUnits={initialSelectedUnits}
         envPosts={posts}
         filters={filters}

@@ -139,7 +139,9 @@ const handleFilterConditions = (filters: FeFilters, withCut: boolean, organizati
   }
 
   if (filters.sources.length > 0 && filters.sources.some((source) => source !== 'all')) {
-    if (filters.sources.includes(Import.Manual)) {
+    if (filters.sources.includes(Import.Manual) && filters.sources.length === 1) {
+      conditions.push(Prisma.sql`(version_id is null and ef.organization_id = ${Prisma.sql`${organizationId}`})`)
+    } else if (filters.sources.includes(Import.Manual)) {
       conditions.push(
         Prisma.sql`(ef.version_id::text IN (${Prisma.join(filters.sources.filter((s) => s !== Import.Manual))}) OR (version_id is null and ef.organization_id = ${Prisma.sql`${organizationId}`}))`,
       )
