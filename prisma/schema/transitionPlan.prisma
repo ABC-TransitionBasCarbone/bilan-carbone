@@ -70,8 +70,7 @@ model Action {
   potentialDeduction        ActionPotentialDeduction
   reductionValue            Int?
   reductionStartYear        String?                  @map("reduction_start_year")
-  reductionEndYear        String?                    @map("reduction_end_year")
-  reductionEffectsStart     String?                  @map("reduction_effects_start")
+  reductionEndYear          String?                  @map("reduction_end_year")
   actionPorter              String?                  @map("action_porter")
   necessaryBudget           Int?                     @map("necessary_budget")
   necesssaryRessources      String?                  @map("necesssary_ressources")
@@ -89,4 +88,3 @@ model Action {
 
   @@map("actions")
 }
- 

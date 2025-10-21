@@ -957,7 +957,6 @@
           "potentialDeductionPlaceholder": "Select an option",
           "reductionValue": "Value",
           "reductionStartYear": "Year action begins",
-          "reductionEffectsStart": "Date when effects begin",
           "actionPorter": "Action leader",
           "actionPorterPlaceholder": "Enter the name of the person leading the action",
           "necessaryBudget": "Budget required for implementation (k€)",

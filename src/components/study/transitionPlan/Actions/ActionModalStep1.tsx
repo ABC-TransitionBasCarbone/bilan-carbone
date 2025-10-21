@@ -23,17 +23,13 @@ const ActionModalStep1 = ({ studyUnit, control, setValue, getValues }: Props) =>
   const tDeduction = useTranslations('study.transitionPlan.actions.potentialDeduction')
   const potentialDeduction = useWatch({ control, name: 'potentialDeduction' })
   const reductionStartYear = useWatch({ control, name: 'reductionStartYear' })
-  const reductionEffectsStart = useWatch({ control, name: 'reductionEffectsStart' })
+  const reductionEndYear = useWatch({ control, name: 'reductionEndYear' })
 
   useEffect(() => {
-    if (
-      reductionStartYear &&
-      reductionEffectsStart &&
-      dayjs(reductionStartYear).year() > dayjs(reductionEffectsStart).year()
-    ) {
-      setValue('reductionEffectsStart', reductionStartYear)
+    if (reductionStartYear && reductionEndYear && dayjs(reductionStartYear).year() > dayjs(reductionEndYear).year()) {
+      setValue('reductionEndYear', reductionStartYear)
     }
-  }, [reductionStartYear, reductionEffectsStart, setValue])
+  }, [reductionStartYear, reductionEndYear, setValue])
 
   return (
     <>
@@ -75,8 +71,8 @@ const ActionModalStep1 = ({ studyUnit, control, setValue, getValues }: Props) =>
           </MenuItem>
         ))}
       </FormSelect>
-      {potentialDeduction === ActionPotentialDeduction.Quantity && (
-        <>
+      <>
+        {potentialDeduction === ActionPotentialDeduction.Quantity && (
           <div className=" flex-col grow">
             <span className="inputLabel bold mb-2">{`${t('reductionValue')} *`}</span>
             <div className="flex grow relative">
@@ -92,40 +88,40 @@ const ActionModalStep1 = ({ studyUnit, control, setValue, getValues }: Props) =>
               <div className={textUnitStyles.unit}>{tUnit(studyUnit)}</div>
             </div>
           </div>
-          <div className="flex grow gapped">
-            <div className="flex-col grow">
-              <span className="inputLabel bold mb-2">{`${t('reductionStartYear')} *`}</span>
-              <div className="flex grow relative">
-                <FormDatePicker
-                  control={control}
-                  className="grow"
-                  translation={t}
-                  name="reductionStartYear"
-                  views={['year']}
-                  minDate={dayjs()}
-                  fullWidth
-                  data-testid="add-action-reductionStartYear"
-                />
-              </div>
-            </div>
-            <div className="flex-col grow">
-              <span className="inputLabel bold mb-2">{`${t('reductionEffectsStart')} *`}</span>
-              <div className="flex grow relative">
-                <FormDatePicker
-                  control={control}
-                  translation={t}
-                  className="grow"
-                  name="reductionEffectsStart"
-                  views={['year']}
-                  minDate={dayjs(reductionStartYear)}
-                  fullWidth
-                  data-testid="add-action-reductionEffectsStart"
-                />
-              </div>
+        )}
+        <div className="flex grow gapped">
+          <div className="flex-col grow">
+            <span className="inputLabel bold mb-2">{`${t('reductionStartYear')} *`}</span>
+            <div className="flex grow relative">
+              <FormDatePicker
+                control={control}
+                className="grow"
+                translation={t}
+                name="reductionStartYear"
+                views={['year']}
+                minDate={dayjs()}
+                fullWidth
+                data-testid="add-action-reductionStartYear"
+              />
             </div>
           </div>
-        </>
-      )}
+          <div className="flex-col grow">
+            <span className="inputLabel bold mb-2">{`${t('reductionEndYear')} *`}</span>
+            <div className="flex grow relative">
+              <FormDatePicker
+                control={control}
+                translation={t}
+                className="grow"
+                name="reductionEndYear"
+                views={['year']}
+                minDate={dayjs(reductionStartYear)}
+                fullWidth
+                data-testid="add-action-reductionEndYear"
+              />
+            </div>
+          </div>
+        </div>
+      </>
     </>
   )
 }
