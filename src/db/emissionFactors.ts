@@ -133,6 +133,16 @@ const handleFilterConditions = (
     conditions.push(Prisma.sql`(${filters.subPosts.join(' ,')})`)
   }
 
+  if (filters.search && filters.search.trim() !== '') {
+    const search = `%${filters.search.trim().toLowerCase()}%`
+    conditions.push(Prisma.sql`(m.title ILIKE ${search} OR m.attribute ILIKE ${search} OR m.frontiere ILIKE ${search})`)
+  }
+
+  if (filters.location && filters.location.trim() !== '') {
+    const location = `%${filters.location.trim().toLowerCase()}%`
+    conditions.push(Prisma.sql`(m.location ILIKE ${location})`)
+  }
+
   return Prisma.join(conditions, ' AND ')
 }
 
@@ -147,6 +157,7 @@ const getDefaultEmissionFactors = (
 ): EmissionFactorList[] => {
   const skipSQL = Prisma.sql`${skip}`
   const takeSQL = Prisma.sql`${take}`
+  console.log(filters)
 
   return prismaClient.$queryRaw(Prisma.sql`
  SELECT ef.id, ef.status, ef.total_co2 as ${Prisma.sql`"totalCo2"`}, ef.location, ef.source, ef.unit, ${Prisma.sql`ef."customUnit"`}, ef.is_monetary as ${Prisma.sql`"isMonetary"`},

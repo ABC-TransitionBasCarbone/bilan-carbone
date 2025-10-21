@@ -44,7 +44,6 @@ export const EmissionFactorsFilters = ({
   const t = useTranslations('emissionFactors.table')
   const tUnits = useTranslations('units')
   const tPosts = useTranslations('emissionFactors.post')
-  const [filter, setFilter] = useState('')
   const [displayFilters, setDisplayFilters] = useState(true)
   const [displayHideButton, setDisplayHideButton] = useState(false)
 
@@ -165,8 +164,8 @@ export const EmissionFactorsFilters = ({
             <DebouncedInput
               className={styles.searchInput}
               debounce={200}
-              value={filter}
-              onChange={setFilter}
+              value={filters.search}
+              onChange={(newValue) => setFilters((prevFilters) => ({ ...prevFilters, search: newValue }))}
               placeholder={t('searchPlaceholder')}
               data-testid="emission-factor-search-input"
             />

@@ -78,6 +78,7 @@ const EmissionFactorsFiltersAndTable = ({ userOrganizationId, environment, selec
       setSkip(100)
 
       if (emissionFactorsFromBdd.success) {
+        setPagination((prevPagination) => ({ ...prevPagination, pageIndex: 0 }))
         setEmissionFactors(emissionFactorsFromBdd.data.emissionFactors)
         setTotalCount(emissionFactorsFromBdd.data.count)
       } else {
@@ -85,7 +86,6 @@ const EmissionFactorsFiltersAndTable = ({ userOrganizationId, environment, selec
         setTotalCount(0)
       }
     }
-    console.log('filters changed', filters)
 
     fetchEmissionFactors()
   }, [filters])
