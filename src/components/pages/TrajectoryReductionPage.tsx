@@ -11,13 +11,12 @@ import EnvironmentLoader from '@/environments/core/utils/EnvironmentLoader'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { getStudyTransitionPlan, initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
 import { getStudyTotalCo2EmissionsWithDep } from '@/services/study'
-import { calculateTrajectory, SBTI_REDUCTION_RATE_15, SBTI_REDUCTION_RATE_WB2C } from '@/utils/trajectory'
+import { calculateSBTiTrajectory, SBTI_REDUCTION_RATE_15, SBTI_REDUCTION_RATE_WB2C } from '@/utils/trajectory'
 import { Typography } from '@mui/material'
 import { TransitionPlan } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
-import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import TrajectoryGraph from '../study/transitionPlan/TrajectoryGraph'
 import TransitionPlanOnboarding from '../study/transitionPlan/TransitionPlanOnboarding'
@@ -42,7 +41,6 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
   const t = useTranslations('study.transitionPlan')
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
-  const router = useRouter()
   const [transitionPlan, setTransitionPlan] = useState<TransitionPlan | null>(null)
   const [showModal, setShowModal] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -86,27 +84,32 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
         onSuccess: (data) => {
           setTransitionPlan(data)
           setShowModal(false)
-          router.refresh()
         },
       })
     },
-    [callServerFunction, study.id, router],
+    [callServerFunction, study.id],
   )
 
   const trajectoryData = useMemo(() => {
     const totalCo2 = getStudyTotalCo2EmissionsWithDep(study)
     const studyStartYear = study.startDate.getFullYear()
 
-    const trajectory15Data = calculateTrajectory({
-      baseEmissions: totalCo2,
-      studyStartYear,
-      reductionRate: SBTI_REDUCTION_RATE_15,
-    })
-
-    const trajectoryWB2CData = calculateTrajectory({
+    const trajectoryWB2CData = calculateSBTiTrajectory({
       baseEmissions: totalCo2,
       studyStartYear,
       reductionRate: SBTI_REDUCTION_RATE_WB2C,
+    })
+
+    const maxYear =
+      selectedTrajectories.includes(TRAJECTORY_WB2C_ID) && trajectoryWB2CData.length > 0
+        ? trajectoryWB2CData[trajectoryWB2CData.length - 1].year
+        : undefined
+
+    const trajectory15Data = calculateSBTiTrajectory({
+      baseEmissions: totalCo2,
+      studyStartYear,
+      reductionRate: SBTI_REDUCTION_RATE_15,
+      maxYear,
     })
 
     return {
@@ -114,7 +117,7 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
       trajectoryWB2C: trajectoryWB2CData,
       studyStartYear,
     }
-  }, [study])
+  }, [selectedTrajectories, study])
 
   if (loading) {
     return (

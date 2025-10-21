@@ -1,9 +1,14 @@
 'use client'
 
-import { TrajectoryDataPoint } from '@/utils/trajectory'
 import { Typography } from '@mui/material'
 import { LineChart } from '@mui/x-charts/LineChart'
 import { useTranslations } from 'next-intl'
+import { useMemo } from 'react'
+
+export interface TrajectoryDataPoint {
+  year: number
+  value: number
+}
 
 interface TrajectoryData {
   data: TrajectoryDataPoint[]
@@ -19,8 +24,15 @@ interface Props {
 const TrajectoryGraph = ({ trajectory15, trajectoryWB2C, studyStartYear }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.graph')
 
-  const years = trajectory15.data.map((d) => d.year)
-  const studyStartYearIndex = years.indexOf(studyStartYear)
+  const yearsToDisplay = useMemo(() => {
+    const allYears = [
+      ...(trajectory15.enabled ? trajectory15.data.map((d) => d.year) : []),
+      ...(trajectoryWB2C.enabled ? trajectoryWB2C.data.map((d) => d.year) : []),
+    ]
+    return Array.from(new Set(allYears)).sort((a, b) => a - b)
+  }, [trajectory15, trajectoryWB2C])
+
+  const studyStartYearIndex = yearsToDisplay.indexOf(studyStartYear)
 
   return (
     <div className="w100 mb2">
@@ -34,10 +46,11 @@ const TrajectoryGraph = ({ trajectory15, trajectoryWB2C, studyStartYear }: Props
       <LineChart
         xAxis={[
           {
-            data: years,
+            data: yearsToDisplay,
             scaleType: 'linear',
             valueFormatter: (value) => value.toString(),
-            tickMinStep: 5,
+            // Show first year value and every 5 years cap after that
+            tickInterval: [yearsToDisplay[0], ...yearsToDisplay.filter((year) => year % 5 === 0)],
           },
         ]}
         series={[
