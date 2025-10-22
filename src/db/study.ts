@@ -105,6 +105,7 @@ const fullStudyInclude = {
           id: true,
           totalCo2: true,
           unit: true,
+          customUnit: true,
           isMonetary: true,
           reliability: true,
           technicalRepresentativeness: true,
@@ -113,6 +114,22 @@ const fullStudyInclude = {
           completeness: true,
           importedFrom: true,
           importedId: true,
+          location: true,
+          metaData: {
+            select: {
+              language: true,
+              title: true,
+              attribute: true,
+              frontiere: true,
+              location: true,
+              comment: true,
+            },
+          },
+          version: {
+            select: {
+              id: true,
+            },
+          },
         },
       },
       contributor: {
@@ -227,6 +244,11 @@ const fullStudyInclude = {
       id: true,
       importVersionId: true,
       source: true,
+      importVersion: {
+        select: {
+          name: true,
+        },
+      },
     },
   },
   exports: { select: { type: true, control: true } },

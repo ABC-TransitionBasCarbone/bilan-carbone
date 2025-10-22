@@ -152,13 +152,12 @@ const handleFilterConditions = (filters: FeFilters, withCut: boolean, organizati
     }
   }
 
-  console.log('conditions', Prisma.join(conditions, ' AND '))
   return Prisma.join(conditions, ' AND ')
 }
 
 const getDefaultEmissionFactors = (
   skip: number,
-  take: number,
+  take: number | 'ALL',
   locale: localeType,
   filters: FeFilters,
   withCut: boolean,
@@ -166,9 +165,8 @@ const getDefaultEmissionFactors = (
 ): EmissionFactorList[] => {
   const skipSQL = Prisma.sql`${skip}`
   const takeSQL = Prisma.sql`${take}`
-  console.log(filters)
 
-  return prismaClient.$queryRaw(Prisma.sql`
+  const baseRequest = Prisma.sql`
  SELECT ef.id, ef.status, ef.total_co2 as ${Prisma.sql`"totalCo2"`}, ef.location, ef.source, ef.unit, ${Prisma.sql`ef."customUnit"`}, ef.is_monetary as ${Prisma.sql`"isMonetary"`},
         ef.imported_from as ${Prisma.sql`"importedFrom"`}, ef.imported_id as ${Prisma.sql`"importedId"`}, ef.organization_id as ${Prisma.sql`"organizationId"`},
         ef.reliability, ef.technical_representativeness as ${Prisma.sql`"technicalRepresentativeness"`},
@@ -181,8 +179,16 @@ const getDefaultEmissionFactors = (
   JOIN emission_metadata m
     ON m.emission_factor_id = ef.id
   WHERE ${handleFilterConditions(filters, withCut, organizationId)}
-  ORDER BY m.title ASC
-  LIMIT ${takeSQL} OFFSET ${skipSQL}`) as unknown as EmissionFactorList[]
+  ORDER BY m.title ASC`
+
+  let finalQuery = baseRequest
+  if (take === 'ALL') {
+    finalQuery = Prisma.sql`${baseRequest}`
+  } else {
+    finalQuery = Prisma.sql`${baseRequest} LIMIT ${takeSQL} OFFSET ${skipSQL}`
+  }
+
+  return prismaClient.$queryRaw(finalQuery) as unknown as EmissionFactorList[]
 }
 
 const getDefaultEmissionFactorsCount = (organizationId: string, withCut: boolean, versionIds?: string[]) =>
@@ -194,10 +200,10 @@ const getDefaultEmissionFactorsCount = (organizationId: string, withCut: boolean
     },
   })
 
-const keepOnlyOneMetadata = <T extends EmissionFactorList>(
-  emissionFactors: (Omit<T, 'metaData'> & { metaData: EmissionFactorList['metaData'][] })[],
+export const keepOnlyOneMetadata = <T extends { metaData: EmissionFactorList['metaData'][] }>(
+  emissionFactors: T[],
   locale: localeType,
-) => {
+): (T & { metaData: EmissionFactorList['metaData'] })[] => {
   return emissionFactors.map((ef) => ({
     ...ef,
     metaData: ef.metaData.find((meta) => meta.language === locale) ?? {
@@ -224,7 +230,7 @@ const getEmissionFactorsFromIdsExceptVersions = async (ids: string[], versionIds
 export const getAllEmissionFactors = async (
   organizationId: string,
   skip: number,
-  take: number,
+  take: number | 'ALL',
   locale: localeType,
   filters: FeFilters,
   studyId?: string,

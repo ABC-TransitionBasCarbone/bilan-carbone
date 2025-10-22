@@ -2,7 +2,6 @@
 
 import { getFELocations, getImportVersions } from '@/services/serverFunctions/emissionFactor'
 import { EmissionFactorImportVersion, Environment, Import } from '@prisma/client'
-import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import EmissionFactorsFiltersAndTable from './EmissionFactorsFiltersAndTable'
@@ -10,7 +9,6 @@ import EmissionFactorsFiltersAndTable from './EmissionFactorsFiltersAndTable'
 interface Props {
   userOrganizationId?: string
   environment: Environment
-  user: UserSession
 }
 
 const EmissionFactors = ({ userOrganizationId, environment }: Props) => {

@@ -3,7 +3,6 @@
 import { FullStudy } from '@/db/study'
 import { getCaracterisationsBySubPost, getEmissionResults } from '@/services/emissionSource'
 import { StudyWithoutDetail } from '@/services/permissions/study'
-import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
 import { withInfobulle } from '@/utils/post'
@@ -32,7 +31,6 @@ type StudyWithoutDetailProps = {
 interface Props {
   subPost: SubPostEnum
   userRoleOnStudy: StudyRole | null
-  emissionFactors: EmissionFactorWithMetaData[]
   emissionSources: FullStudy['emissionSources']
   studySite: string
   setGlossary: (subPost: string) => void
@@ -43,7 +41,6 @@ const SubPost = ({
   withoutDetail,
   study,
   userRoleOnStudy,
-  emissionFactors,
   emissionSources,
   studySite,
   setGlossary,
@@ -143,7 +140,6 @@ const SubPost = ({
                 study={study}
                 emissionSource={emissionSource}
                 key={emissionSource.id}
-                emissionFactors={emissionFactors}
                 subPost={subPost}
                 userRoleOnStudy={userRoleOnStudy}
                 withoutDetail
@@ -154,7 +150,6 @@ const SubPost = ({
                 study={study}
                 emissionSource={emissionSource}
                 key={emissionSource.id}
-                emissionFactors={emissionFactors}
                 subPost={subPost}
                 userRoleOnStudy={userRoleOnStudy}
                 withoutDetail={false}

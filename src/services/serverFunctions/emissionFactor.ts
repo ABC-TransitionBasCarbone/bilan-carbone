@@ -88,7 +88,7 @@ export const getFELocations = async () => {
 }
 export const getEmissionFactors = async (
   skip: number,
-  take: number,
+  take: number | 'ALL',
   filters: FeFilters,
   studyId?: string,
   withCut: boolean = false,

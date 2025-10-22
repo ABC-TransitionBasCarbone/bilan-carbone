@@ -1,5 +1,6 @@
 'use client'
 
+import { EmissionFactorList } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { getEmissionResults } from '@/services/emissionSource'
 import { subPostsByPost } from '@/services/posts'
@@ -63,9 +64,10 @@ interface Props {
   userRoleOnStudy: StudyRole | null
   canEdit: boolean | null
   canValidate: boolean
-  emissionFactors: EmissionFactorWithMetaData[]
   subPost: SubPost
-  selectedFactor?: EmissionFactorWithMetaData
+  selectedFactor?: FullStudy['emissionSources'][0]['emissionFactor'] & {
+    metaData: EmissionFactorList['metaData']
+  }
   update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null | string[]) => void
   environment: Environment
   caracterisations: EmissionSourceCaracterisation[]
@@ -75,6 +77,7 @@ interface Props {
   isFromOldImport: boolean
   currentBEVersion: string
   studyUnit: StudyResultUnit
+  userOrganizationId?: string
 }
 
 const EmissionSourceForm = ({
@@ -85,7 +88,6 @@ const EmissionSourceForm = ({
   canEdit,
   canValidate,
   update,
-  emissionFactors,
   subPost,
   selectedFactor,
   caracterisations,
@@ -96,6 +98,7 @@ const EmissionSourceForm = ({
   currentBEVersion,
   studyUnit,
   environment,
+  userOrganizationId,
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
@@ -210,12 +213,12 @@ const EmissionSourceForm = ({
         <EmissionSourceFactor
           canEdit={canEdit}
           update={update}
-          emissionFactors={emissionFactors}
           subPost={subPost}
           selectedFactor={selectedFactor}
           getDetail={getDetail}
           isFromOldImport={isFromOldImport}
           currentBEVersion={currentBEVersion}
+          userOrganizationId={userOrganizationId}
         />
         {isCas ? (
           <>

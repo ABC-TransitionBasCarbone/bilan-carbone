@@ -1,5 +1,7 @@
 'use client'
 
+import { EmissionFactorList } from '@/db/emissionFactors'
+import { FullStudy } from '@/db/study'
 import { StudyWithoutDetail } from '@/services/permissions/study'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
@@ -23,14 +25,16 @@ import QualitySelectGroup from './QualitySelectGroup'
 
 interface Props {
   emissionSource: StudyWithoutDetail['emissionSources'][0]
-  emissionFactors: EmissionFactorWithMetaData[]
-  selectedFactor?: EmissionFactorWithMetaData
+  selectedFactor?: FullStudy['emissionSources'][0]['emissionFactor'] & {
+    metaData: EmissionFactorList['metaData']
+  }
   subPost: SubPost
   update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null) => void
   isFromOldImport: boolean
   currentBEVersion: string
   advanced: boolean
   environment: Environment | undefined
+  userOrganizationId?: string
 }
 
 const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) =>
@@ -38,7 +42,6 @@ const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], und
 
 const EmissionSourceContributorForm = ({
   emissionSource,
-  emissionFactors,
   subPost,
   selectedFactor,
   update,
@@ -46,6 +49,7 @@ const EmissionSourceContributorForm = ({
   currentBEVersion,
   advanced,
   environment,
+  userOrganizationId,
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tResultUnits = useTranslations('study.results.units')
@@ -64,12 +68,12 @@ const EmissionSourceContributorForm = ({
         <EmissionSourceFactor
           canEdit={!emissionSource.validated}
           update={update}
-          emissionFactors={emissionFactors}
           subPost={subPost}
           selectedFactor={selectedFactor}
           getDetail={getDetail}
           isFromOldImport={isFromOldImport}
           currentBEVersion={currentBEVersion}
+          userOrganizationId={userOrganizationId}
         />
         <div className="grow flex gapped">
           <div className={classNames(styles.inputWithUnit, 'flex grow')}>

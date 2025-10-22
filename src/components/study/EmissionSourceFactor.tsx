@@ -1,7 +1,9 @@
-import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
+import { EmissionFactorList } from '@/db/emissionFactors'
+import { FullStudy } from '@/db/study'
+import { EmissionFactorWithMetaData, getEmissionFactors } from '@/services/serverFunctions/emissionFactor'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
-import { filterEmissionFactorsBySubPostAndEnv, getEmissionFactorValue } from '@/utils/emissionFactors'
+import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import { displayOnlyExistingDataWithDash } from '@/utils/string'
 import ClearIcon from '@mui/icons-material/Clear'
@@ -48,18 +50,19 @@ const fuseOptions = {
 }
 
 interface Props {
-  emissionFactors: EmissionFactorWithMetaData[]
   subPost: SubPost
   update: (name: Path<UpdateEmissionSourceCommand>, value: string | null) => void
-  selectedFactor?: EmissionFactorWithMetaData | null
+  selectedFactor?: FullStudy['emissionSources'][0]['emissionFactor'] & {
+    metaData: EmissionFactorList['metaData']
+  }
   canEdit: boolean | null
   getDetail: (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) => string
   isFromOldImport: boolean
   currentBEVersion: string
+  userOrganizationId?: string
 }
 
 const EmissionSourceFactor = ({
-  emissionFactors,
   subPost,
   update,
   selectedFactor,
@@ -67,6 +70,7 @@ const EmissionSourceFactor = ({
   getDetail,
   isFromOldImport,
   currentBEVersion,
+  userOrganizationId,
 }: Props) => {
   const { environment } = useAppEnvironmentStore()
   const t = useTranslations('emissionSource')
@@ -78,7 +82,27 @@ const EmissionSourceFactor = ({
   const [oldFactorAction, setOldFactorAction] = useState<'fieldSearch' | 'search' | 'clear' | undefined>(undefined)
   const [value, setValue] = useState('')
   const [results, setResults] = useState<EmissionFactorWithMetaData[]>([])
+  const [emissionFactorsForSubPost, setEmissionFactorsForSubPost] = useState<EmissionFactorWithMetaData[]>([])
   const containerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    async function fetchEmissionFactors() {
+      const emissionsFactors = await getEmissionFactors(0, 'ALL', {
+        archived: false,
+        search: '',
+        location: '',
+        sources: [],
+        units: [],
+        subPosts: [subPost],
+      })
+
+      if (emissionsFactors.success) {
+        setEmissionFactorsForSubPost(emissionsFactors.data.emissionFactors)
+      }
+    }
+
+    fetchEmissionFactors()
+  }, [subPost])
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -103,18 +127,14 @@ const EmissionSourceFactor = ({
     setValue(selectedFactor?.metaData?.title || '')
   }, [selectedFactor])
 
-  const emissionFactorsFilteredBySubPosts = useMemo(
-    () => filterEmissionFactorsBySubPostAndEnv(emissionFactors, [subPost], environment),
-    [emissionFactors, subPost, environment],
-  )
   const fuse = useMemo(() => {
     return new Fuse(
-      emissionFactorsFilteredBySubPosts
+      emissionFactorsForSubPost
         .filter((emissionFactor) => emissionFactor.metaData)
         .filter((ef) => ef.status !== EmissionFactorStatus.Archived),
       fuseOptions,
     )
-  }, [emissionFactorsFilteredBySubPosts])
+  }, [emissionFactorsForSubPost])
 
   const searchNewEmissionFactor = () => setAdvancedSearch(true)
   const clearEmissionFactor = () => update('emissionFactorId', null)
@@ -206,15 +226,9 @@ const EmissionSourceFactor = ({
       {advancedSearch && (
         <EmissionSourceFactorModal
           open={advancedSearch}
-          close={() => setAdvancedSearch(false)}
-          emissionFactors={emissionFactors}
-          subPost={subPost}
-          selectEmissionFactor={(emissionFactor) => {
-            update('emissionFactorId', emissionFactor.id)
-            setDisplay(false)
-            setAdvancedSearch(false)
-          }}
           environment={environment}
+          userOrganizationId={userOrganizationId}
+          close={() => setAdvancedSearch(false)}
         />
       )}
       <Modal
