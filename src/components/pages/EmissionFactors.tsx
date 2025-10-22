@@ -1,5 +1,4 @@
 import { Environment } from '@prisma/client'
-import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { Suspense } from 'react'
 import Block from '../base/Block'
@@ -10,10 +9,9 @@ import withAuth from '../hoc/withAuth'
 interface Props {
   userOrganizationId?: string
   environment: Environment
-  user: UserSession
 }
 
-const EmissionFactorsPage = ({ userOrganizationId, user, environment }: Props) => {
+const EmissionFactorsPage = ({ userOrganizationId, environment }: Props) => {
   const tNav = useTranslations('nav')
   const t = useTranslations('emissionFactors')
 

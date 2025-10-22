@@ -311,7 +311,7 @@ const parseEmissionSources = (
 
       try {
         subPost = mapToSubPost(newPostAndSubPost.newSubPost)
-      } catch (e) {
+      } catch {
         skippedEmissionSource.push({
           oldPost: `${row.domain} ${row.category} ${row.subCategory} ${row.post} ${row.subPost}`,
           reason: `Sous poste invalide ${subPost}`,
