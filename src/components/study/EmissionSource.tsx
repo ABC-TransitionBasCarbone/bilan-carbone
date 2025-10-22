@@ -7,6 +7,7 @@ import { Locale } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
 import { getEmissionResults } from '@/services/emissionSource'
 import { StudyWithoutDetail } from '@/services/permissions/study'
+import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { updateEmissionSource } from '@/services/serverFunctions/emissionSource'
 import {
   UpdateEmissionSourceCommand,
@@ -47,6 +48,7 @@ interface Props {
   subPost: SubPost
   userRoleOnStudy: StudyRole | null
   caracterisations: EmissionSourceCaracterisation[]
+  emissionFactorsForSubPost: EmissionFactorWithMetaData[]
 }
 
 const EmissionSource = ({
@@ -56,6 +58,7 @@ const EmissionSource = ({
   userRoleOnStudy,
   withoutDetail,
   caracterisations,
+  emissionFactorsForSubPost,
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
   const { environment } = useAppEnvironmentStore()
   const ref = useRef<HTMLDivElement>(null)
@@ -343,6 +346,7 @@ const EmissionSource = ({
                 currentBEVersion={currentBEVersion}
                 studyUnit={study.resultsUnit}
                 userOrganizationId={study.organizationVersion.organization.id}
+                emissionFactorsForSubPost={emissionFactorsForSubPost}
               />
             )}
           </div>

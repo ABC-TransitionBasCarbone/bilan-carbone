@@ -68,7 +68,6 @@ interface Props {
   selectedFactor?: FullStudy['emissionSources'][0]['emissionFactor'] & {
     metaData: EmissionFactorList['metaData']
   }
-  update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null | string[]) => void
   environment: Environment
   caracterisations: EmissionSourceCaracterisation[]
   mandatoryCaracterisation: boolean
@@ -78,6 +77,8 @@ interface Props {
   currentBEVersion: string
   studyUnit: StudyResultUnit
   userOrganizationId?: string
+  emissionFactorsForSubPost: EmissionFactorWithMetaData[]
+  update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null | string[]) => void
 }
 
 const EmissionSourceForm = ({
@@ -87,7 +88,6 @@ const EmissionSourceForm = ({
   userRoleOnStudy,
   canEdit,
   canValidate,
-  update,
   subPost,
   selectedFactor,
   caracterisations,
@@ -99,6 +99,8 @@ const EmissionSourceForm = ({
   studyUnit,
   environment,
   userOrganizationId,
+  emissionFactorsForSubPost,
+  update,
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
@@ -219,6 +221,7 @@ const EmissionSourceForm = ({
           isFromOldImport={isFromOldImport}
           currentBEVersion={currentBEVersion}
           userOrganizationId={userOrganizationId}
+          emissionFactorsForSubPost={emissionFactorsForSubPost}
         />
         {isCas ? (
           <>

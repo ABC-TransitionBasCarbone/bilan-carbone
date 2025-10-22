@@ -1,6 +1,6 @@
 import { EmissionFactorList } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
-import { EmissionFactorWithMetaData, getEmissionFactors } from '@/services/serverFunctions/emissionFactor'
+import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
@@ -51,26 +51,28 @@ const fuseOptions = {
 
 interface Props {
   subPost: SubPost
-  update: (name: Path<UpdateEmissionSourceCommand>, value: string | null) => void
   selectedFactor?: FullStudy['emissionSources'][0]['emissionFactor'] & {
     metaData: EmissionFactorList['metaData']
   }
   canEdit: boolean | null
-  getDetail: (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) => string
   isFromOldImport: boolean
   currentBEVersion: string
   userOrganizationId?: string
+  emissionFactorsForSubPost: EmissionFactorWithMetaData[]
+  getDetail: (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) => string
+  update: (name: Path<UpdateEmissionSourceCommand>, value: string | null) => void
 }
 
 const EmissionSourceFactor = ({
   subPost,
-  update,
   selectedFactor,
   canEdit,
-  getDetail,
   isFromOldImport,
   currentBEVersion,
   userOrganizationId,
+  emissionFactorsForSubPost,
+  getDetail,
+  update,
 }: Props) => {
   const { environment } = useAppEnvironmentStore()
   const t = useTranslations('emissionSource')
@@ -82,27 +84,7 @@ const EmissionSourceFactor = ({
   const [oldFactorAction, setOldFactorAction] = useState<'fieldSearch' | 'search' | 'clear' | undefined>(undefined)
   const [value, setValue] = useState('')
   const [results, setResults] = useState<EmissionFactorWithMetaData[]>([])
-  const [emissionFactorsForSubPost, setEmissionFactorsForSubPost] = useState<EmissionFactorWithMetaData[]>([])
   const containerRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    async function fetchEmissionFactors() {
-      const emissionsFactors = await getEmissionFactors(0, 'ALL', {
-        archived: false,
-        search: '',
-        location: '',
-        sources: [],
-        units: [],
-        subPosts: [subPost],
-      })
-
-      if (emissionsFactors.success) {
-        setEmissionFactorsForSubPost(emissionsFactors.data.emissionFactors)
-      }
-    }
-
-    fetchEmissionFactors()
-  }, [subPost])
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {

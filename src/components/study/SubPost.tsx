@@ -3,6 +3,7 @@
 import { FullStudy } from '@/db/study'
 import { getCaracterisationsBySubPost, getEmissionResults } from '@/services/emissionSource'
 import { StudyWithoutDetail } from '@/services/permissions/study'
+import { EmissionFactorWithMetaData, getEmissionFactors } from '@/services/serverFunctions/emissionFactor'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
 import { withInfobulle } from '@/utils/post'
@@ -49,6 +50,26 @@ const SubPost = ({
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('study.results.units')
   const { environment } = useAppEnvironmentStore()
+  const [emissionFactorsForSubPost, setEmissionFactorsForSubPost] = useState<EmissionFactorWithMetaData[]>([])
+
+  useEffect(() => {
+    async function fetchEmissionFactors() {
+      const emissionsFactors = await getEmissionFactors(0, 'ALL', {
+        archived: false,
+        search: '',
+        location: '',
+        sources: [],
+        units: [],
+        subPosts: [subPost],
+      })
+
+      if (emissionsFactors.success) {
+        setEmissionFactorsForSubPost(emissionsFactors.data.emissionFactors)
+      }
+    }
+
+    fetchEmissionFactors()
+  }, [subPost])
 
   const total = useMemo(() => {
     if (!environment) {
@@ -144,6 +165,7 @@ const SubPost = ({
                 userRoleOnStudy={userRoleOnStudy}
                 withoutDetail
                 caracterisations={caracterisations}
+                emissionFactorsForSubPost={emissionFactorsForSubPost}
               />
             ) : (
               <EmissionSource
@@ -154,6 +176,7 @@ const SubPost = ({
                 userRoleOnStudy={userRoleOnStudy}
                 withoutDetail={false}
                 caracterisations={caracterisations}
+                emissionFactorsForSubPost={emissionFactorsForSubPost}
               />
             ),
           )}
