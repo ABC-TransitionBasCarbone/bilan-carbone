@@ -887,7 +887,7 @@
         "studyPrefix": "Étude :"
       },
       "onboarding": {
-        "badge": "ONBOARDING",
+        "badge": "Prise en main",
         "learnMore": "En savoir plus",
         "hideDetails": "Masquer les détails"
       },
@@ -896,9 +896,13 @@
         "snbcButton": "Trajectoire SNBC",
         "sbtiButton": "Trajectoires SBTi",
         "customButton": "Je choisis ma trajectoire",
+        "customSubtitle": "Reprenez une trajectoire existante ou créez votre propre trajectoire de réduction pour commencer à construire votre plan de transition",
+        "myTrajectories": "Mes trajectoires",
+        "addTrajectory": "+ Ajouter une nouvelle trajectoire de réduction",
+        "selectTrajectories": "Sélectionnez vos trajectoires",
         "sbtiCard": {
           "title": "Trajectoires SBTi",
-          "description": "La Science Based Targets Initiative définit deux trajectoires de référence, visant à limiter le réchauffement climatique à 1,5°C ou \"Well below 2 degrees\" (WB2C).",
+          "description": "La Science Based Targets Initiative définit deux trajectoires visant à limiter le réchauffement climatique à 1,5°C ou \"Well below 2 degrees\" (WB2C).",
           "methodLabel": "Méthodes",
           "option15": "Trajectoire à 1,5°C",
           "optionWB2C": "Trajectoire WB2C",
@@ -915,6 +919,68 @@
           "title": "Visualisez plusieurs trajectoire de référence et créez votre première trajectoire descendante",
           "description": "Comparez votre situation avec les trajectoires de référence SBTi et SNBC. Vous pouvez choisir de suivre une de ces trajectoires et ses objectifs associés ou créer votre trajectoire personnalisée (trajectoire descendante).",
           "detailedInfo": "Deux trajectoires de référence, la SNBC et SBTi, vous sont proposées ici. Vous pouvez visualiser la trajectoire de décarbonation que devrait suivre votre organisation selon l'une et l'autre.<br></br><br></br>La SNBC étant déclinée selon les grands secteurs d'activité de l'économie française, vous devez sélectionner le secteur qui vous correspond le mieux. Plus d'informations sur la SNBC sont disponibles <snbc>ici</snbc>.<br></br>SBTi fournit une trajectoire visant à limiter le réchauffement climatique à 1,5°C, et une seconde visant à le limiter bien en dessous de 2°C. Vous devez également choisir laquelle de ces deux trajectoires vous souhaitez visualiser. Plus d'informations sur SBTi sont disponibles <sbti>ici</sbti>.<br></br><br></br>Dans le cas où votre bilan de référence daterait d'une année antérieure à l'utilisation du BC+2.0, vous pouvez renseigner l'année de référence et les émissions associées. Si ce bilan est déjà présent sur le BC+2.0, vous pouvez le sélectionner comme bilan de référence.<br></br><br></br>Pour chacune de ces trajectoires, le choix a été fait de conserver le budget carbone associé. Si vos émissions ne suivent pas exactement la trajectoire choisie, le BC+2.0 recalculera une trajectoire adaptée pour éviter un dépassement du budget carbone initialement alloué. À chaque nouveau bilan réalisé, vos trajectoires se mettront à jour et vous indiqueront quelles réductions restent à réaliser."
+        }
+      },
+      "trajectoryModal": {
+        "title": "Je choisis ma trajectoire",
+        "submit": "Valider",
+        "success": "Vous avez créé votre première trajectoire !",
+        "successSubtitle": "Pour modifier votre trajectoire et les objectifs associés vous pouvez aller dans la rubrique <link>Mes objectifs de réduction</link>.",
+        "steps": {
+          "chooseTrajectory": "Choix de ma trajectoire",
+          "defineObjectives": "Définition de mes objectifs de réduction"
+        },
+        "subtitle": "Reprenez une trajectoire existante ou créez votre propre trajectoire de réduction pour commencer à construire votre plan de transition",
+        "sbti": {
+          "title": "SBTi",
+          "subtitle": "Je suis la trajectoire de référence SBTi",
+          "benefit1": "Pour s'engager sur une trajectoire <strong>compatible avec les accords de Paris</strong>",
+          "benefit2": "Pour obtenir une <strong>reconnaissance internationale</strong>",
+          "benefit3": "Pour structurer vos objectifs de réduction long terme"
+        },
+        "snbc": {
+          "title": "SNBC",
+          "subtitle": "Je suis la trajectoire de référence SNBC",
+          "benefit1": "Pour vous positionner par rapport à votre secteur en France",
+          "benefit2": "Pour construire un plan d'actions concret et structuré",
+          "benefit3": "Pour comprendre les attentes réglementaires françaises"
+        },
+        "custom": {
+          "title": "PERSONNALISÉE",
+          "subtitle": "Je suis ma propre trajectoire",
+          "benefit1": "Je construis ma propre trajectoire descendante",
+          "benefit2": "Je peux personnaliser mes objectifs intermédiaires",
+          "benefit3": "Mon organisation est déjà engagée dans une trajectoire"
+        },
+        "sbtiType": {
+          "title": "Type de trajectoire SBTi",
+          "15": "Alignée 1,5°C",
+          "wb2c": "WB2C (Well below 2 degrees)"
+        },
+        "selectedTrajectory": {
+          "SBTI_15": "Je suis la trajectoire de référence SBTi",
+          "SBTI_WB2C": "Je suis la trajectoire de référence SBTi",
+          "CUSTOM": "Je suis ma propre trajectoire"
+        },
+        "name": "Nom de ma trajectoire",
+        "namePlaceholder": "Donner un nom à ma trajectoire",
+        "description": "Description de ma trajectoire",
+        "descriptionPlaceholder": "Décrivez votre trajectoire",
+        "objectives": {
+          "title": "Objectifs de réduction",
+          "sbtiDescription": "Ces objectifs de réduction sont liés à la trajectoire de référence SBTi et sont prédéfinis. Vous pourrez ajouter des objectifs intermédiaires dans la rubrique \"Mes objectifs de réduction\"",
+          "global": "OBJECTIF GLOBAL",
+          "horizon2030": "Horizon 2030",
+          "horizon2050": "Horizon 2050",
+          "year": "Année de l'objectif",
+          "yearPlaceholder": "Choisir une année",
+          "reductionRate": "Pourcentage de réduction annuel",
+          "reductionRatePlaceholder": "Donnez un % de réduction (ex: 2.5)"
+        },
+        "validation": {
+          "required": "Champs requis",
+          "objectiveBothRequired": "L'année et le taux de réduction sont tous les deux requis",
+          "atLeastOneObjective": "Au moins un objectif complet est requis pour les trajectoires personnalisées"
         }
       },
       "objectives": {

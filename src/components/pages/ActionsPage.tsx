@@ -30,31 +30,33 @@ const ActionsPage = ({ study, actions, porters, transitionPlanId }: Props) => {
           { label: tNav('home'), link: '/' },
           study.organizationVersion.isCR
             ? {
-                label: study.organizationVersion.organization.name,
-                link: `/organisations/${study.organizationVersion.id}`,
-              }
+              label: study.organizationVersion.organization.name,
+              link: `/organisations/${study.organizationVersion.id}`,
+            }
             : undefined,
           { label: study.name, link: `/etudes/${study.id}` },
         ].filter((link) => link !== undefined)}
       />
-      <div className={classNames(styles.container, 'main-container', 'p2', 'pt3')}>
+      <div className={classNames(styles.container, 'flex-col main-container p2 pt3')}>
         <Title title={t('title')} as="h1" />
 
-        <TransitionPlanOnboarding
-          title={t('onboarding.title')}
-          description={t('onboarding.description')}
-          storageKey="actions"
-          detailedContent={t.rich('onboarding.detailedInfo', {
-            br: () => <br />,
-          })}
-        />
+        <div className="flex-col gapped2">
+          <TransitionPlanOnboarding
+            title={t('onboarding.title')}
+            description={t('onboarding.description')}
+            storageKey="actions"
+            detailedContent={t.rich('onboarding.detailedInfo', {
+              br: () => <br />,
+            })}
+          />
 
-        <Actions
-          actions={actions}
-          studyUnit={study.resultsUnit}
-          porters={porters}
-          transitionPlanId={transitionPlanId}
-        />
+          <Actions
+            actions={actions}
+            studyUnit={study.resultsUnit}
+            porters={porters}
+            transitionPlanId={transitionPlanId}
+          />
+        </div>
       </div>
     </>
   )

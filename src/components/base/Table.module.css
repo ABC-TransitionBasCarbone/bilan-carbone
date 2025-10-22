@@ -1,8 +1,7 @@
 .line {
-  background: white !important;
   &:hover,
   td {
-    padding: 0.75rem 0.5rem;
+    padding: 0.5rem 0.5rem;
   }
 }
 
@@ -16,4 +15,9 @@
 
 .selector {
   width: 10rem;
+}
+
+.tableWrapper {
+  border-radius: 0.5rem;
+  border-collapse: separate;
 }

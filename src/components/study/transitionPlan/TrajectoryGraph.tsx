@@ -1,26 +1,42 @@
 'use client'
 
-import { TrajectoryDataPoint } from '@/utils/trajectory'
 import { Typography } from '@mui/material'
 import { LineChart } from '@mui/x-charts/LineChart'
 import { useTranslations } from 'next-intl'
+import { useMemo } from 'react'
+
+export interface TrajectoryDataPoint {
+  year: number
+  value: number
+}
 
 interface TrajectoryData {
   data: TrajectoryDataPoint[]
   enabled: boolean
+  label?: string
+  color?: string
 }
 
 interface Props {
   trajectory15: TrajectoryData
   trajectoryWB2C: TrajectoryData
+  customTrajectories?: TrajectoryData[]
   studyStartYear: number
 }
 
-const TrajectoryGraph = ({ trajectory15, trajectoryWB2C, studyStartYear }: Props) => {
+const TrajectoryGraph = ({ trajectory15, trajectoryWB2C, customTrajectories = [], studyStartYear }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.graph')
 
-  const years = trajectory15.data.map((d) => d.year)
-  const studyStartYearIndex = years.indexOf(studyStartYear)
+  const yearsToDisplay = useMemo(() => {
+    const allYears = [
+      ...(trajectory15.enabled ? trajectory15.data.map((d) => d.year) : []),
+      ...(trajectoryWB2C.enabled ? trajectoryWB2C.data.map((d) => d.year) : []),
+      ...customTrajectories.flatMap((traj) => (traj.enabled ? traj.data.map((d) => d.year) : [])),
+    ]
+    return Array.from(new Set(allYears)).sort((a, b) => a - b)
+  }, [trajectory15, trajectoryWB2C, customTrajectories])
+
+  const studyStartYearIndex = yearsToDisplay.indexOf(studyStartYear)
 
   return (
     <div className="w100 mb2">
@@ -34,10 +50,11 @@ const TrajectoryGraph = ({ trajectory15, trajectoryWB2C, studyStartYear }: Props
       <LineChart
         xAxis={[
           {
-            data: years,
+            data: yearsToDisplay,
             scaleType: 'linear',
             valueFormatter: (value) => value.toString(),
-            tickMinStep: 5,
+            // Show first year value and every 5 years cap after that
+            tickInterval: [yearsToDisplay[0], ...yearsToDisplay.filter((year) => year % 5 === 0)],
           },
         ]}
         series={[
@@ -65,6 +82,16 @@ const TrajectoryGraph = ({ trajectory15, trajectoryWB2C, studyStartYear }: Props
                 },
               ]
             : []),
+          ...customTrajectories
+            .filter((traj) => traj.enabled)
+            .map((traj, index) => ({
+              data: traj.data.map((d) => d.value),
+              label: traj.label || `Trajectory ${index + 1}`,
+              color: traj.color || `var(--trajectory-custom-${index % 9})`,
+              curve: 'linear' as const,
+              showMark: ({ index }: { index: number }) => index === studyStartYearIndex,
+              valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
+            })),
         ]}
         height={400}
         yAxis={[

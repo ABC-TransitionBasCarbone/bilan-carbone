@@ -20,10 +20,10 @@ interface Props {
   studyId: UUID
   study: FullStudy
   isTransitionPlanActive: boolean
-  hasTransitionPlan: boolean
+  hasObjectives: boolean
 }
 
-const StudyNavbar = ({ environment, studyId, study, isTransitionPlanActive, hasTransitionPlan }: Props) => {
+const StudyNavbar = ({ environment, studyId, study, isTransitionPlanActive, hasObjectives }: Props) => {
   const pathName = usePathname()
 
   const t = useTranslations('study.navigation')
@@ -35,7 +35,7 @@ const StudyNavbar = ({ environment, studyId, study, isTransitionPlanActive, hasT
     studyId,
     study.name,
     isTransitionPlanActive,
-    hasTransitionPlan,
+    hasObjectives,
   )
   return (
     <>

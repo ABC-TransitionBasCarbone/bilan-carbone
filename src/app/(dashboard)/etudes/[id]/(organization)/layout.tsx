@@ -2,7 +2,8 @@ import withAuth from '@/components/hoc/withAuth'
 import { StudyProps } from '@/components/hoc/withStudy'
 import WithStudyDetails from '@/components/hoc/withStudyDetails'
 import StudyNavbar from '@/components/studyNavbar/StudyNavbar'
-import { hasTransitionPlan } from '@/db/transitionPlan'
+import { getTrajectoriesByTransitionPlanId } from '@/db/trajectory'
+import { getTransitionPlanByStudyId } from '@/db/transitionPlan'
 import { isDeactivableFeatureActiveForEnvironment } from '@/services/serverFunctions/deactivableFeatures'
 import { DeactivatableFeature } from '@prisma/client'
 import { UUID } from 'crypto'
@@ -24,9 +25,13 @@ const NavLayout = async ({ children, params, study }: Props & StudyProps) => {
     environment,
   )
   const isTransitionPlanActive = transitionPlanFeature.success && transitionPlanFeature.data
-  const studyHasTransitionPlan = await hasTransitionPlan(study.id)
 
-  // TODO: Add logic to define hasObjectives which determines if actions should be disabled
+  let studyHasObjectives = false
+  const transitionPlan = await getTransitionPlanByStudyId(study.id)
+  if (transitionPlan) {
+    const trajectories = await getTrajectoriesByTransitionPlanId(transitionPlan.id)
+    studyHasObjectives = trajectories.some((trajectory) => trajectory.objectives.length > 0)
+  }
 
   return (
     <>
@@ -36,7 +41,7 @@ const NavLayout = async ({ children, params, study }: Props & StudyProps) => {
           studyId={id}
           study={study}
           isTransitionPlanActive={isTransitionPlanActive}
-          hasTransitionPlan={studyHasTransitionPlan}
+          hasObjectives={studyHasObjectives}
         />
         <div className={styles.children}>{children}</div>
       </div>

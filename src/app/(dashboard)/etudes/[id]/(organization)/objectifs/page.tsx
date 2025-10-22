@@ -3,16 +3,21 @@ import { StudyProps } from '@/components/hoc/withStudy'
 import withStudyDetails from '@/components/hoc/withStudyDetails'
 import withTransitionPlan, { TransitionPlanProps } from '@/components/hoc/withTransitionPlan'
 import ObjectivesPage from '@/components/pages/ObjectivesPage'
-import { hasTransitionPlan } from '@/db/transitionPlan'
+import { getTrajectoriesByTransitionPlanId } from '@/db/trajectory'
+import { getTransitionPlanByStudyId } from '@/db/transitionPlan'
 import { redirect } from 'next/navigation'
 
 const Objectives = async ({ study, canEdit }: StudyProps & UserSessionProps & TransitionPlanProps) => {
-  const studyHasTransitionPlan = await hasTransitionPlan(study.id)
-  if (!studyHasTransitionPlan) {
+  const transitionPlan = await getTransitionPlanByStudyId(study.id)
+  if (!transitionPlan) {
     redirect(`/etudes/${study.id}/trajectoires`)
   }
 
-  // TODO: Add logic to hide this page if there are no objectives yet
+  const trajectories = await getTrajectoriesByTransitionPlanId(transitionPlan.id)
+  if (trajectories.length === 0 || trajectories.some((trajectory) => trajectory.objectives.length === 0)) {
+    redirect(`/etudes/${study.id}/trajectoires`)
+  }
+
   return <ObjectivesPage study={study} canEdit={canEdit} />
 }
 
