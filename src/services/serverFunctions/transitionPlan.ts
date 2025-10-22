@@ -5,11 +5,15 @@ import {
   createAction,
   createTransitionPlan,
   duplicateTransitionPlanWithRelations,
+  getActionById,
+  getActions,
   getOrganizationTransitionPlans,
+  getTransitionPlanById,
   getTransitionPlanByIdWithRelations,
   getTransitionPlanByStudyId,
   TransitionPlanWithRelations,
   TransitionPlanWithStudies,
+  updateAction,
 } from '@/db/transitionPlan'
 import { ApiResponse, withServerResponse } from '@/utils/serverResponse'
 import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
@@ -120,7 +124,12 @@ export const addAction = async (command: AddActionCommand) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const study = await getStudyById(command.studyId, session.user.organizationVersionId)
+    const transitionPlan = await getTransitionPlanById(command.transitionPlanId)
+    if (!transitionPlan) {
+      throw new Error('Transition plan not found')
+    }
+
+    const study = await getStudyById(transitionPlan.studyId, session.user.organizationVersionId)
     if (!study || !canCreateAction(session.user, study)) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -134,4 +143,68 @@ export const addAction = async (command: AddActionCommand) =>
       throw new Error(NOT_AUTHORIZED)
     }
     await createAction(command)
+  })
+
+export const editAction = async (id: string, command: AddActionCommand) =>
+  withServerResponse('addAction', async () => {
+    const session = await dbActualizedAuth()
+
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const action = await getActionById(id)
+    if (!action || action.transitionPlanId !== command.transitionPlanId) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const transitionPlan = await getTransitionPlanById(command.transitionPlanId)
+    if (!transitionPlan) {
+      throw new Error('Transition plan not found')
+    }
+
+    const study = await getStudyById(transitionPlan.studyId, session.user.organizationVersionId)
+    if (!study || !canCreateAction(session.user, study)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (
+      !(await isDeactivableFeatureActiveForEnvironment(
+        DeactivatableFeature.TransitionPlan,
+        study.organizationVersion.environment,
+      ))
+    ) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    await updateAction(id, command)
+  })
+
+export const getStudyActions = async (studyId: string) =>
+  withServerResponse('getStudyActions', async () => {
+    const session = await dbActualizedAuth()
+
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study || !getAccountRoleOnStudy(session.user, study)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (
+      !(await isDeactivableFeatureActiveForEnvironment(
+        DeactivatableFeature.TransitionPlan,
+        study.organizationVersion.environment,
+      ))
+    ) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const transitionPlan = await getTransitionPlanByStudyId(studyId)
+    if (!transitionPlan) {
+      return []
+    }
+
+    return getActions(transitionPlan.id)
   })

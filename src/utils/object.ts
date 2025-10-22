@@ -30,3 +30,16 @@ export function mergeObjects<T extends Record<string, any>>(target: T, ...source
 
   return target
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const objectWithoutNullAttributes = (object?: Record<string, any>) => {
+  if (!object) {
+    return {}
+  }
+  Object.keys(object).forEach((attr) => {
+    if (object[attr] === null) {
+      delete object[attr]
+    }
+  })
+  return object
+}

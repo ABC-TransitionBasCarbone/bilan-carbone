@@ -3,6 +3,7 @@
 import Title from '@/components/base/Title'
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import { FullStudy } from '@/db/study'
+import { Action } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Actions from '../study/transitionPlan/Actions/Actions'
@@ -11,10 +12,12 @@ import styles from './TrajectoryReductionPage.module.css'
 
 interface Props {
   study: FullStudy
+  actions: Action[]
   porters: { label: string; value: string }[]
+  transitionPlanId: string
 }
 
-const ActionsPage = ({ study, porters }: Props) => {
+const ActionsPage = ({ study, actions, porters, transitionPlanId }: Props) => {
   const t = useTranslations('study.transitionPlan.actions')
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
@@ -47,7 +50,12 @@ const ActionsPage = ({ study, porters }: Props) => {
             })}
           />
 
-          <Actions actions={[]} studyId={study.id} studyUnit={study.resultsUnit} porters={porters} />
+          <Actions
+            actions={actions}
+            studyUnit={study.resultsUnit}
+            porters={porters}
+            transitionPlanId={transitionPlanId}
+          />
         </div>
       </div>
     </>

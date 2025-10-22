@@ -11,7 +11,7 @@ interface Props {
   porters: { label: string; value: string }[]
 }
 
-const AddActionStep1 = ({ control, setValue, porters }: Props) => {
+const ActionModalStep1 = ({ control, setValue, porters }: Props) => {
   const t = useTranslations('study.transitionPlan.actions.addModal')
 
   const onPorterChange = (_: SyntheticEvent, value: string | null) => {
@@ -136,4 +136,4 @@ const AddActionStep1 = ({ control, setValue, porters }: Props) => {
   )
 }
 
-export default AddActionStep1
+export default ActionModalStep1

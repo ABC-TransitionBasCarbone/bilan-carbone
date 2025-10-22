@@ -4,18 +4,18 @@ import Button from '@/components/base/Button'
 import DebouncedInput from '@/components/base/DebouncedInput'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
+import ActionModal from './ActionModal'
 import styles from './Actions.module.css'
-import AddActionModal from './AddActionModal'
 
 interface Props {
   search: string
   setSearch: (search: string) => void
-  studyId: string
   studyUnit: string
   porters: { label: string; value: string }[]
+  transitionPlanId: string
 }
 
-const ActionFilters = ({ search, setSearch, studyId, studyUnit, porters }: Props) => {
+const ActionFilters = ({ search, setSearch, studyUnit, porters, transitionPlanId }: Props) => {
   const t = useTranslations('study.transitionPlan.actions')
   const [addAction, setAddAction] = useState(false)
 
@@ -30,13 +30,15 @@ const ActionFilters = ({ search, setSearch, studyId, studyUnit, porters }: Props
         data-testid="actions-filter"
       />
       <Button onClick={() => setAddAction((prev) => !prev)}>{t('add')}</Button>
-      <AddActionModal
-        open={addAction}
-        onClose={() => setAddAction(false)}
-        studyId={studyId}
-        studyUnit={studyUnit}
-        porters={porters}
-      />
+      {addAction && (
+        <ActionModal
+          open
+          onClose={() => setAddAction(false)}
+          transitionPlanId={transitionPlanId}
+          studyUnit={studyUnit}
+          porters={porters}
+        />
+      )}
     </div>
   )
 }

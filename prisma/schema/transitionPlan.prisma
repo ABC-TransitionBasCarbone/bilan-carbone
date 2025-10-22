@@ -35,6 +35,7 @@ model TransitionPlan {
   study   Study  @relation(fields: [studyId], references: [id])
 
   transitionPlanStudies TransitionPlanStudy[]
+  actions               Action[]
   trajectories          Trajectory[]
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -60,8 +61,8 @@ model TransitionPlanStudy {
 model Action {
   id String @id @default(uuid())
 
-  studyId String @map("study_id")
-  study   Study  @relation(fields: [studyId], references: [id])
+  transitionPlanId String         @map("transition_plan_id")
+  transitionPlan   TransitionPlan @relation(fields: [transitionPlanId], references: [id])
 
   title                     String
   subSteps                  String                   @map("sub_steps")
@@ -70,7 +71,7 @@ model Action {
   potentialDeduction        ActionPotentialDeduction
   reductionValue            Int?
   reductionStartYear        String?                  @map("reduction_start_year")
-  reductionEffectsStart     String?                  @map("reduction_effects_start")
+  reductionEndYear          String?                  @map("reduction_end_year")
   actionPorter              String?                  @map("action_porter")
   necessaryBudget           Int?                     @map("necessary_budget")
   necesssaryRessources      String?                  @map("necesssary_ressources")
@@ -88,6 +89,7 @@ model Action {
 
   @@map("actions")
 }
+
 enum TrajectoryType {
   SBTI_15
   SBTI_WB2C
@@ -121,7 +123,7 @@ model Objective {
   trajectoryId String     @map("trajectory_id")
   trajectory   Trajectory @relation(fields: [trajectoryId], references: [id], onDelete: Cascade)
 
-  targetYear    Int     @map("target_year")
+  targetYear    Int   @map("target_year")
   reductionRate Float @map("reduction_rate")
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -129,4 +131,3 @@ model Objective {
 
   @@map("objectives")
 }
-

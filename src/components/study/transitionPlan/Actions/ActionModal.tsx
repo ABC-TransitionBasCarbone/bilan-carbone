@@ -5,54 +5,62 @@ import Stepper from '@/components/base/Stepper'
 import Toast, { ToastColors } from '@/components/base/Toast'
 import Modal from '@/components/modals/Modal'
 import { AddActionCommand, AddActionCommandValidation } from '@/services/serverFunctions/study.command'
-import { addAction } from '@/services/serverFunctions/transitionPlan'
+import { addAction, editAction } from '@/services/serverFunctions/transitionPlan'
+import { objectWithoutNullAttributes } from '@/utils/object'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Action } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import Step1 from './ActionModalStep1'
+import Step2 from './ActionModalStep2'
+import Step3 from './ActionModalStep3'
 import styles from './Actions.module.css'
-import Step1 from './AddActionStep1'
-import Step2 from './AddActionStep2'
-import Step3 from './AddActionStep3'
 
 const emptyToast = { text: '', color: 'info' } as const
 const toastPosition = { vertical: 'bottom', horizontal: 'left' } as const
 
 interface Props {
   open: boolean
+  action?: Action
   onClose: () => void
-  studyId: string
+  transitionPlanId: string
   studyUnit: string
   porters: { label: string; value: string }[]
 }
 const steps = 3
 
-const AddActionModal = ({ open, onClose, studyId, studyUnit, porters }: Props) => {
+const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit, porters }: Props) => {
   const [step, setStep] = useState(1)
   const [toast, setToast] = useState<{ text: string; color: ToastColors }>(emptyToast)
   const t = useTranslations('study.transitionPlan.actions.addModal')
+
+  const router = useRouter()
 
   const { control, formState, getValues, setValue, reset, handleSubmit } = useForm<AddActionCommand>({
     resolver: zodResolver(AddActionCommandValidation),
     mode: 'onSubmit',
     reValidateMode: 'onChange',
     defaultValues: {
-      studyId,
+      transitionPlanId,
       potentialDeduction: undefined,
       actionPorter: '',
       nature: [],
       category: [],
       relevance: [],
+      ...objectWithoutNullAttributes(action),
     },
   })
 
   const onSubmit = async () => {
-    const res = await addAction(getValues())
+    const res = action ? await editAction(action.id, getValues()) : await addAction(getValues())
     if (res.success) {
       onClose()
       reset()
       setStep(1)
+      router.refresh()
     } else {
       onClose()
       setToast({ text: t(res.errorMessage), color: 'error' })
@@ -87,7 +95,7 @@ const AddActionModal = ({ open, onClose, studyId, studyUnit, porters }: Props) =
                   <Button onClick={() => setStep((prev) => prev + 1)}>{t('next')}</Button>
                 ) : (
                   <LoadingButton type="submit" loading={formState.isValidating}>
-                    {t('add')}
+                    {t(action ? 'update' : 'add')}
                   </LoadingButton>
                 )}
               </div>
@@ -109,4 +117,4 @@ const AddActionModal = ({ open, onClose, studyId, studyUnit, porters }: Props) =
   )
 }
 
-export default AddActionModal
+export default ActionModal

@@ -230,11 +230,11 @@ export const AddActionCommandBase = z.object({
   subSteps: z.string({ required_error: 'required' }),
   // aim: z.array(),
   detailedDescription: z.string({ required_error: 'required' }),
-  studyId: z.string().uuid(),
+  transitionPlanId: z.string().uuid(),
   potentialDeduction: z.nativeEnum(ActionPotentialDeduction, { required_error: 'required' }),
   reductionValue: z.number().optional(),
   reductionStartYear: z.string().optional(),
-  reductionEffectsStart: z.string().optional(),
+  reductionEndYear: z.string().optional(),
   actionPorter: z.string().optional(),
   necessaryBudget: z.number().optional(),
   necesssaryRessources: z.string().optional(),
@@ -259,8 +259,8 @@ export const AddActionCommandValidation = AddActionCommandBase.superRefine((data
     if (!data.reductionStartYear) {
       ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'required', path: ['reductionStartYear'] })
     }
-    if (!data.reductionEffectsStart) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'required', path: ['reductionEffectsStart'] })
+    if (!data.reductionEndYear) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'required', path: ['reductionEndYear'] })
     }
     if (data.actionPorter !== '') {
       const emailValidation = z
