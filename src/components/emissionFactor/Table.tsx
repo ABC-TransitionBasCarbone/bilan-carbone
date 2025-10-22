@@ -13,7 +13,6 @@ import {
   Button as MuiButton,
   OutlinedInput,
   Select,
-  TextField,
 } from '@mui/material'
 import { Environment, StudyResultUnit } from '@prisma/client'
 import {
@@ -28,7 +27,7 @@ import {
 } from '@tanstack/react-table'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { ChangeEvent, useEffect, useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import EmissionFactorDetails from './EmissionFactorDetails'
 import styles from './Table.module.css'
 import { EmissionFactorActionCell } from './tableCells/EmissionFactorActionCell'
@@ -153,14 +152,6 @@ export const EmissionFactorsTable = ({
     table.toggleAllRowsExpanded(false)
   }, [table, data])
 
-  const onPaginationChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const page = e.target.value ? Number(e.target.value) - 1 : 0
-    if (page >= table.getPageCount()) {
-      table.setPageIndex(table.getPageCount() - 1)
-    } else {
-      table.setPageIndex(page)
-    }
-  }
   return (
     <>
       <div className={classNames('grow', { [styles.modalTable]: fromModal })}>
@@ -210,35 +201,18 @@ export const EmissionFactorsTable = ({
         </table>
       </div>
       <div className={classNames(styles.pagination, 'align-center mt1')}>
-        <MuiButton onClick={() => table.firstPage()} disabled={!table.getCanPreviousPage()}>
-          {'<<'}
-        </MuiButton>
         <MuiButton onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
           {'<'}
         </MuiButton>
         <MuiButton onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
           {'>'}
         </MuiButton>
-        <MuiButton onClick={() => table.lastPage()} disabled={!table.getCanNextPage()}>
-          {'>>'}
-        </MuiButton>
         <p>
           {t('page', {
-            page: table.getState().pagination.pageIndex + 1,
-            total: (table.getPageCount() || 1).toLocaleString(),
+            page: pagination.pageIndex + 1,
+            total: Math.ceil(totalCount / pagination.pageSize).toLocaleString(),
           })}
         </p>
-        {t('goTo')}
-        <TextField
-          type="number"
-          classes={{ root: styles.pageInput }}
-          slotProps={{
-            htmlInput: { min: 1, max: table.getPageCount() },
-            input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
-          }}
-          defaultValue={table.getState().pagination.pageIndex + 1}
-          onChange={onPaginationChange}
-        />
         <FormControl className={styles.selector}>
           <InputLabel id="emissions-paginator-count-selector">{t('items')}</InputLabel>
           <Select

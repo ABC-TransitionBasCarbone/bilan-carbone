@@ -37,7 +37,6 @@ const EmissionFactorsFiltersAndTable = ({
   const [targetedEmission, setTargetedEmission] = useState('')
   const [emissionFactors, setEmissionFactors] = useState<EmissionFactorList[]>([])
   const [skip, setSkip] = useState(0)
-  const [take, setTake] = useState(25)
   const [totalCount, setTotalCount] = useState(0)
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
 
@@ -63,7 +62,7 @@ const EmissionFactorsFiltersAndTable = ({
 
   useEffect(() => {
     async function fetchEmissionFactors() {
-      const takeValue = skip === 0 ? take * 4 : take
+      const takeValue = skip === 0 ? pagination.pageSize * 4 : pagination.pageSize
       const emissionFactorsFromBdd = await getEmissionFactors(skip, takeValue, filters)
 
       setSkip((prevSkip) => takeValue + prevSkip)
@@ -77,16 +76,18 @@ const EmissionFactorsFiltersAndTable = ({
       }
     }
 
-    if ((pagination.pageIndex + 1) * pagination.pageSize + 50 > skip + take) {
+    const alreadyLoadedCount = skip + pagination.pageSize
+    const alreadyDisplayedCount = (pagination.pageIndex + 1) * pagination.pageSize
+    const pagesInAdvancedToLoad = 3
+    if (alreadyLoadedCount < alreadyDisplayedCount + pagination.pageSize * pagesInAdvancedToLoad) {
       fetchEmissionFactors()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [emissionFactors.length, take, pagination.pageIndex])
+  }, [emissionFactors.length, pagination.pageIndex])
 
   useEffect(() => {
     async function fetchEmissionFactors() {
       const emissionFactorsFromBdd = await getEmissionFactors(0, 100, filters)
-      console.log(emissionFactorsFromBdd)
       setSkip(100)
 
       if (emissionFactorsFromBdd.success) {
@@ -99,14 +100,8 @@ const EmissionFactorsFiltersAndTable = ({
       }
     }
 
-    console.log('filters changed:', filters)
-
     fetchEmissionFactors()
   }, [filters])
-
-  useEffect(() => {
-    setTake(pagination.pageSize)
-  }, [pagination.pageSize])
 
   return (
     <>

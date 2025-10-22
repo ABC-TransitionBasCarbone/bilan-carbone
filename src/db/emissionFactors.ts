@@ -155,6 +155,27 @@ const handleFilterConditions = (filters: FeFilters, withCut: boolean, organizati
   return Prisma.join(conditions, ' AND ')
 }
 
+const getBaseRequest = (
+  selectRequest: Prisma.Sql,
+  filters: FeFilters,
+  withCut: boolean,
+  organizationId: string | null,
+): Prisma.Sql => {
+  return Prisma.sql`${selectRequest}
+    FROM emission_factors ef
+  JOIN emission_metadata m
+    ON m.emission_factor_id = ef.id
+  WHERE ${handleFilterConditions(filters, withCut, organizationId)}`
+}
+const getDefaultEmissionFactorsCount = (
+  filters: FeFilters,
+  withCut: boolean,
+  organizationId: string | null,
+): { count: number }[] => {
+  const request = getBaseRequest(Prisma.sql`SELECT COUNT(*)::int AS count`, filters, withCut, organizationId)
+  return prismaClient.$queryRaw(request) as unknown as { count: number }[]
+}
+
 const getDefaultEmissionFactors = (
   skip: number,
   take: number | 'ALL',
@@ -163,42 +184,28 @@ const getDefaultEmissionFactors = (
   withCut: boolean,
   organizationId: string | null,
 ): EmissionFactorList[] => {
-  const skipSQL = Prisma.sql`${skip}`
-  const takeSQL = Prisma.sql`${take}`
+  const select = Prisma.sql`SELECT ef.id, ef.status, ef.total_co2 as ${Prisma.sql`"totalCo2"`}, ef.location, ef.source, ef.unit, ${Prisma.sql`ef."customUnit"`}, ef.is_monetary as ${Prisma.sql`"isMonetary"`},
+           ef.imported_from as ${Prisma.sql`"importedFrom"`}, ef.imported_id as ${Prisma.sql`"importedId"`}, ef.organization_id as ${Prisma.sql`"organizationId"`},
+           ef.reliability, ef.technical_representativeness as ${Prisma.sql`"technicalRepresentativeness"`},
+           ef.geographic_representativeness as ${Prisma.sql`"geographicRepresentativeness"`},
+           ef.temporal_representativeness as ${Prisma.sql`"temporalRepresentativeness"`},
+           ef.completeness, ef.sub_posts as ${Prisma.sql`"subPosts"`},
+           ef.co2f, ef.ch4f, ef.ch4b, ef.n2o, ef.co2b, ef.sf6, ef.hfc, ef.pfc, ef.other_ges as otherGES,
+           (SELECT row_to_json(m.*) FROM emission_metadata m WHERE m.emission_factor_id = ef.id AND m.language = ${locale} LIMIT 1 ) AS ${Prisma.sql`"metaData"`}`
 
-  const baseRequest = Prisma.sql`
- SELECT ef.id, ef.status, ef.total_co2 as ${Prisma.sql`"totalCo2"`}, ef.location, ef.source, ef.unit, ${Prisma.sql`ef."customUnit"`}, ef.is_monetary as ${Prisma.sql`"isMonetary"`},
-        ef.imported_from as ${Prisma.sql`"importedFrom"`}, ef.imported_id as ${Prisma.sql`"importedId"`}, ef.organization_id as ${Prisma.sql`"organizationId"`},
-        ef.reliability, ef.technical_representativeness as ${Prisma.sql`"technicalRepresentativeness"`},
-        ef.geographic_representativeness as ${Prisma.sql`"geographicRepresentativeness"`},
-        ef.temporal_representativeness as ${Prisma.sql`"temporalRepresentativeness"`},
-        ef.completeness, ef.sub_posts as ${Prisma.sql`"subPosts"`},
-        ef.co2f, ef.ch4f, ef.ch4b, ef.n2o, ef.co2b, ef.sf6, ef.hfc, ef.pfc, ef.other_ges as otherGES,
-        (SELECT row_to_json(m.*) FROM emission_metadata m WHERE m.emission_factor_id = ef.id AND m.language = ${locale} LIMIT 1 ) AS ${Prisma.sql`"metaData"`}
-  FROM emission_factors ef
-  JOIN emission_metadata m
-    ON m.emission_factor_id = ef.id
-  WHERE ${handleFilterConditions(filters, withCut, organizationId)}
-  ORDER BY m.title ASC`
+  const baseRequest = getBaseRequest(select, filters, withCut, organizationId)
 
   let finalQuery = baseRequest
   if (take === 'ALL') {
-    finalQuery = Prisma.sql`${baseRequest}`
+    finalQuery = Prisma.sql`${baseRequest} ORDER BY m.title ASC`
   } else {
-    finalQuery = Prisma.sql`${baseRequest} LIMIT ${takeSQL} OFFSET ${skipSQL}`
+    const skipSQL = Prisma.sql`${skip}`
+    const takeSQL = Prisma.sql`${take}`
+    finalQuery = Prisma.sql`${baseRequest} ORDER BY m.title ASC LIMIT ${takeSQL} OFFSET ${skipSQL}`
   }
 
   return prismaClient.$queryRaw(finalQuery) as unknown as EmissionFactorList[]
 }
-
-const getDefaultEmissionFactorsCount = (organizationId: string, withCut: boolean, versionIds?: string[]) =>
-  prismaClient.emissionFactor.count({
-    where: {
-      OR: [{ ...(versionIds && { versionId: { in: versionIds } }), organizationId: null }, { organizationId }],
-      subPosts: { isEmpty: false },
-      ...(!withCut && { importedFrom: { not: Import.CUT } }),
-    },
-  })
 
 export const keepOnlyOneMetadata = <T extends { metaData: EmissionFactorList['metaData'][] }>(
   emissionFactors: T[],
@@ -256,11 +263,14 @@ export const getAllEmissionFactors = async (
 
   const defaultEmissionFactors = await getDefaultEmissionFactors(skip, take, locale, filters, withCut, organizationId)
 
-  const emissionFactorsCount = await getDefaultEmissionFactorsCount(organizationId, withCut, versionIds)
+  const emissionFactorsCountInfos = await getDefaultEmissionFactorsCount(filters, withCut, organizationId)
 
   const allEmissionFactors = defaultEmissionFactors.concat(studyOldEmissionFactors)
 
-  return { emissionFactors: allEmissionFactors, count: emissionFactorsCount + studyOldEmissionFactors.length }
+  return {
+    emissionFactors: allEmissionFactors,
+    count: emissionFactorsCountInfos[0].count + studyOldEmissionFactors.length,
+  }
 }
 
 export const getEmissionFactorById = (id: string) =>
