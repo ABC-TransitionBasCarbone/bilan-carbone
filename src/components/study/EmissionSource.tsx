@@ -325,6 +325,7 @@ const EmissionSource = ({
                 currentBEVersion={currentBEVersion}
                 advanced={study.level === Level.Advanced}
                 environment={environment}
+                emissionFactorsForSubPost={emissionFactorsForSubPost}
               />
             ) : (
               <EmissionSourceForm

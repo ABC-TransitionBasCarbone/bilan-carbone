@@ -29,12 +29,13 @@ interface Props {
     metaData: EmissionFactorList['metaData']
   }
   subPost: SubPost
-  update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null) => void
   isFromOldImport: boolean
   currentBEVersion: string
   advanced: boolean
   environment: Environment | undefined
   userOrganizationId?: string
+  emissionFactorsForSubPost: EmissionFactorWithMetaData[]
+  update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null) => void
 }
 
 const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) =>
@@ -44,12 +45,13 @@ const EmissionSourceContributorForm = ({
   emissionSource,
   subPost,
   selectedFactor,
-  update,
   isFromOldImport,
   currentBEVersion,
   advanced,
   environment,
   userOrganizationId,
+  emissionFactorsForSubPost,
+  update,
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tResultUnits = useTranslations('study.results.units')
@@ -66,14 +68,15 @@ const EmissionSourceContributorForm = ({
     <>
       <div className={classNames(styles.row, 'flex')}>
         <EmissionSourceFactor
-          canEdit={!emissionSource.validated}
-          update={update}
           subPost={subPost}
           selectedFactor={selectedFactor}
-          getDetail={getDetail}
+          canEdit={!emissionSource.validated}
           isFromOldImport={isFromOldImport}
           currentBEVersion={currentBEVersion}
           userOrganizationId={userOrganizationId}
+          emissionFactorsForSubPost={emissionFactorsForSubPost}
+          getDetail={getDetail}
+          update={update}
         />
         <div className="grow flex gapped">
           <div className={classNames(styles.inputWithUnit, 'flex grow')}>

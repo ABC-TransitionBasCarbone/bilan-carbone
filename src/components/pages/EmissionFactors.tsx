@@ -37,7 +37,7 @@ const EmissionFactorsPage = ({ userOrganizationId, user, environment }: Props) =
         }
       >
         <Suspense fallback={t('loading')}>
-          <EmissionFactors userOrganizationId={userOrganizationId} user={user} environment={environment} />
+          <EmissionFactors userOrganizationId={userOrganizationId} environment={environment} />
         </Suspense>
       </Block>
     </>
