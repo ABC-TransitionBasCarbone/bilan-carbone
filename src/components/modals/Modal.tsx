@@ -17,6 +17,7 @@ export interface Props {
   className?: string
   big?: boolean
   actions?: ModalAction[]
+  scrollableContent?: boolean
 }
 
 type ModalAction =
@@ -29,7 +30,7 @@ type ModalAction =
     })
   | (ButtonProps & { actionType: 'link'; href?: string; 'data-testid'?: string })
 
-const Modal = ({ className, label, open, onClose, title, children, actions, big }: Props) => (
+const Modal = ({ className, label, open, onClose, title, children, actions, big, scrollableContent }: Props) => (
   <MUIModal
     open={open}
     onClose={onClose}

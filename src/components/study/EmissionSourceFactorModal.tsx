@@ -14,6 +14,7 @@ interface Props {
 
 const EmissionSourceFactorModal = ({ open, environment, userOrganizationId, close }: Props) => {
   const t = useTranslations('emissionFactors')
+  const tDialog = useTranslations('emissionSource.emissionFactorDialog')
 
   const [importVersions, setImportVersions] = useState<EmissionFactorImportVersion[]>([])
   const [initialImportVersions, setInitialImportVersions] = useState<string[]>([])
@@ -63,29 +64,6 @@ const EmissionSourceFactorModal = ({ open, environment, userOrganizationId, clos
       setInit(true)
     }
   }, [importVersions, initialImportVersions.length, locationOptions])
-  // const t = useTranslations('emissionSource.emissionFactorDialog')
-  // const [emissionFactorVersions, setEmissionFactorVersions] = useState<EmissionFactorImportVersion[] | undefined>(
-  //   undefined,
-  // )
-  // const manualImport = { id: Import.Manual, source: Import.Manual, name: '' } as EmissionFactorImportVersion
-  // const { contextId: studyId } = useAppContextStore()
-  // useEffect(() => {
-  //   fetchSources(studyId)
-  // }, [studyId])
-
-  // const fetchSources = async (studyId: string) => {
-  //   const versions = await getStudyEmissionFactorImportVersions(studyId)
-  //   if (versions.success) {
-  //     setEmissionFactorVersions(versions.data)
-  //   }
-  // }
-
-  // const initialSelectedSources = (emissionFactorVersions || [])
-  //   .map((importVersion) => importVersion.id)
-  //   .concat([Import.Manual])
-
-  // const subPostsByPost = environmentSubPostsMapping[environment]
-  // const posts = Object.keys(subPostsByPost) as Post[]
 
   return (
     <Modal
@@ -93,8 +71,9 @@ const EmissionSourceFactorModal = ({ open, environment, userOrganizationId, clos
       label="emission-source-factor"
       title={t('title')}
       onClose={close}
-      actions={[{ actionType: 'button', onClick: close, children: t('cancel') }]}
+      actions={[{ actionType: 'button', onClick: close, children: tDialog('cancel') }]}
       big
+      scrollableContent
     >
       {init ? (
         <EmissionFactorsFiltersAndTable
