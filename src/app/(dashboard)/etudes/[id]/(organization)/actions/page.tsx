@@ -1,7 +1,7 @@
 import withAuth from '@/components/hoc/withAuth'
 import { StudyProps } from '@/components/hoc/withStudy'
 import withStudyDetails from '@/components/hoc/withStudyDetails'
-import withTransitionPlan from '@/components/hoc/withTransitionPlan'
+import withTransitionPlan, { TransitionPlanProps } from '@/components/hoc/withTransitionPlan'
 import ActionsPage from '@/components/pages/ActionsPage'
 import NotFound from '@/components/pages/NotFound'
 import { hasTransitionPlan } from '@/db/transitionPlan'
@@ -10,7 +10,7 @@ import { getStudyActions, getStudyTransitionPlan } from '@/services/serverFuncti
 import { uniqBy } from '@/utils/array'
 import { redirect } from 'next/navigation'
 
-const Actions = async ({ study }: StudyProps) => {
+const Actions = async ({ study, canEdit }: StudyProps & TransitionPlanProps) => {
   const studyHasTransitionPlan = await hasTransitionPlan(study.id)
   if (!studyHasTransitionPlan) {
     redirect(`/etudes/${study.id}/trajectoires`)
