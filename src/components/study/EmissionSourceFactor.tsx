@@ -229,6 +229,7 @@ const EmissionSourceFactor = ({
           environment={environment}
           userOrganizationId={userOrganizationId}
           close={() => setAdvancedSearch(false)}
+          defaultSubPost={subPost}
         />
       )}
       <Modal

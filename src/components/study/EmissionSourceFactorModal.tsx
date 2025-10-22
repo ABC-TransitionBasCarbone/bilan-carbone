@@ -1,5 +1,5 @@
 import { getFELocations, getImportVersions } from '@/services/serverFunctions/emissionFactor'
-import { EmissionFactorImportVersion, Environment, Import } from '@prisma/client'
+import { EmissionFactorImportVersion, Environment, Import, SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import EmissionFactorsFiltersAndTable from '../emissionFactor/EmissionFactorsFiltersAndTable'
@@ -9,10 +9,11 @@ interface Props {
   open: boolean
   environment: Environment
   userOrganizationId?: string
+  defaultSubPost: SubPost
   close: () => void
 }
 
-const EmissionSourceFactorModal = ({ open, environment, userOrganizationId, close }: Props) => {
+const EmissionSourceFactorModal = ({ open, environment, userOrganizationId, defaultSubPost, close }: Props) => {
   const t = useTranslations('emissionFactors')
   const tDialog = useTranslations('emissionSource.emissionFactorDialog')
 
@@ -82,6 +83,7 @@ const EmissionSourceFactorModal = ({ open, environment, userOrganizationId, clos
           importVersions={importVersions}
           initialImportVersions={initialImportVersions}
           locationOptions={locationOptions}
+          defaultSubPost={defaultSubPost}
         />
       ) : (
         <div>{t('loading')}</div>

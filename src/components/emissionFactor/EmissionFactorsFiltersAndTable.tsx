@@ -18,6 +18,7 @@ interface Props {
   initialImportVersions: string[]
   importVersions: EmissionFactorImportVersion[]
   locationOptions: string[]
+  defaultSubPost?: SubPost
   selectEmissionFactor?: (emissionFactor: EmissionFactorWithMetaData) => void
 }
 
@@ -28,6 +29,7 @@ const EmissionFactorsFiltersAndTable = ({
   initialImportVersions,
   importVersions,
   locationOptions,
+  defaultSubPost,
   selectEmissionFactor,
 }: Props) => {
   const t = useTranslations('emissionFactors.table')
@@ -54,7 +56,7 @@ const EmissionFactorsFiltersAndTable = ({
     location: '',
     sources: initialImportVersions,
     units: initialSelectedUnits,
-    subPosts: envSubPosts,
+    subPosts: defaultSubPost ? [defaultSubPost] : envSubPosts,
   })
 
   const fromModal = !!selectEmissionFactor
