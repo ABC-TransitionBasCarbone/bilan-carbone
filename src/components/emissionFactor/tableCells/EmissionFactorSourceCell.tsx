@@ -92,7 +92,7 @@ export const EmissionFactorSourceCell = ({
                 }}
                 data-testid={`edit-emission-factor-button`}
               >
-                <EditIcon color="info" />
+                <EditIcon />
               </MuiButton>
               <MuiButton
                 aria-label={t('delete')}

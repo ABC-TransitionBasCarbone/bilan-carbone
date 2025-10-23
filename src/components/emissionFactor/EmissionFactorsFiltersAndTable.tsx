@@ -126,7 +126,12 @@ const EmissionFactorsFiltersAndTable = ({
         setPagination={setPagination}
         selectEmissionFactor={selectEmissionFactor}
       />
-      <EditEmissionFactorModal emissionFactorId={targetedEmission} action={action} setAction={setAction} />
+      <EditEmissionFactorModal
+        emissionFactorId={targetedEmission}
+        action={action}
+        setAction={setAction}
+        setFilters={setFilters}
+      />
     </>
   )
 }

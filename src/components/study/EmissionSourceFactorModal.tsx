@@ -74,7 +74,6 @@ const EmissionSourceFactorModal = ({ open, environment, userOrganizationId, defa
       onClose={close}
       actions={[{ actionType: 'button', onClick: close, children: tDialog('cancel') }]}
       big
-      scrollableContent
     >
       {init ? (
         <EmissionFactorsFiltersAndTable
