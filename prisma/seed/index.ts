@@ -89,68 +89,6 @@ const users = async () => {
     },
   })
 
-  await Promise.all([
-    prisma.emissionFactor.create({
-      data: {
-        importedFrom: Import.Manual,
-        status: EmissionFactorStatus.Valid,
-        totalCo2: 111,
-        completeness: 4,
-        reliability: 5,
-        importedId: '1',
-        unit: Unit.KG,
-        isMonetary: false,
-        subPosts: [SubPost.MetauxPlastiquesEtVerre],
-        metaData: {
-          create: {
-            language: 'fr',
-            title: 'FE Test 1',
-          },
-        },
-      },
-    }),
-    prisma.emissionFactor.create({
-      data: {
-        importedFrom: Import.Manual,
-        status: EmissionFactorStatus.Valid,
-        totalCo2: 123,
-        geographicRepresentativeness: 3,
-        completeness: 1,
-        reliability: 5,
-        importedId: '2',
-        unit: Unit.KG_DRY_MATTER,
-        isMonetary: false,
-        subPosts: [SubPost.MetauxPlastiquesEtVerre],
-        metaData: {
-          create: {
-            language: 'fr',
-            title: 'FE Test 2',
-          },
-        },
-      },
-    }),
-    prisma.emissionFactor.create({
-      data: {
-        importedFrom: Import.Manual,
-        status: EmissionFactorStatus.Archived,
-        totalCo2: 42,
-        geographicRepresentativeness: 4,
-        completeness: 2,
-        reliability: 3,
-        importedId: '3',
-        unit: Unit.CAR_KM,
-        isMonetary: false,
-        subPosts: [SubPost.MetauxPlastiquesEtVerre],
-        metaData: {
-          create: {
-            language: 'fr',
-            title: 'FE Test Archived',
-          },
-        },
-      },
-    }),
-  ])
-
   const unOnboardedOrganization = await prisma.organization.create({
     data: {
       name: faker.company.name(),
@@ -331,6 +269,75 @@ const users = async () => {
       name: faker.company.name(),
     })),
   })
+
+  await Promise.all([
+    prisma.emissionFactor.create({
+      data: {
+        importedFrom: Import.Manual,
+        status: EmissionFactorStatus.Valid,
+        totalCo2: 111,
+        completeness: 4,
+        reliability: 5,
+        technicalRepresentativeness: 5,
+        temporalRepresentativeness: 5,
+        importedId: '1',
+        unit: Unit.KG,
+        isMonetary: false,
+        subPosts: [SubPost.MetauxPlastiquesEtVerre],
+        metaData: {
+          create: {
+            language: 'fr',
+            title: 'FE Test 1',
+          },
+        },
+      },
+    }),
+    prisma.emissionFactor.create({
+      data: {
+        importedFrom: Import.Manual,
+        status: EmissionFactorStatus.Valid,
+        totalCo2: 123,
+        geographicRepresentativeness: 3,
+        completeness: 1,
+        reliability: 5,
+        technicalRepresentativeness: 5,
+        temporalRepresentativeness: 5,
+        importedId: '2',
+        unit: Unit.KG_DRY_MATTER,
+        isMonetary: false,
+        subPosts: [SubPost.MetauxPlastiquesEtVerre],
+        metaData: {
+          create: {
+            language: 'fr',
+            title: 'FE Test 2',
+          },
+        },
+      },
+    }),
+    prisma.emissionFactor.create({
+      data: {
+        importedFrom: Import.Manual,
+        status: EmissionFactorStatus.Archived,
+        totalCo2: 42,
+        geographicRepresentativeness: 4,
+        technicalRepresentativeness: 5,
+        temporalRepresentativeness: 5,
+        completeness: 2,
+        reliability: 3,
+        importedId: '3',
+        unit: Unit.CAR_KM,
+        isMonetary: false,
+        subPosts: [SubPost.MetauxPlastiquesEtVerre],
+        organizationId: regularOrganizationVersions[0]?.organizationId,
+        metaData: {
+          create: {
+            language: 'fr',
+            title: 'FE Test Archived',
+          },
+        },
+      },
+    }),
+  ])
 
   await prisma.organizationVersion.createManyAndReturn({
     data: childOrganizations.map((childOrganization) => ({
