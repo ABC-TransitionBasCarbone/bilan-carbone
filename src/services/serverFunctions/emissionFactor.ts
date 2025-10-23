@@ -24,7 +24,7 @@ import { FeFilters } from '@/types/filters'
 import { ManualEmissionFactorUnitList } from '@/utils/emissionFactors'
 import { flattenSubposts } from '@/utils/post'
 import { IsSuccess, withServerResponse } from '@/utils/serverResponse'
-import { EmissionFactorImportVersion, EmissionFactorStatus, Environment, Import, Unit } from '@prisma/client'
+import { EmissionFactorStatus, Environment, Import, Unit } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { auth, dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
@@ -33,27 +33,6 @@ import { canReadStudy } from '../permissions/study'
 import { getStudyParentOrganizationVersionId } from '../study'
 import { sortAlphabetically } from '../utils'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from './emissionFactor.command'
-
-export const mapImportVersions = async (emissionFactors: EmissionFactorWithMetaData[]) => {
-  const latestBySource: EmissionFactorImportVersion[] = []
-
-  emissionFactors.forEach((factor) => {
-    if (!factor.version || !factor.importedFrom || latestBySource.find((v) => v.source === factor.importedFrom)) {
-      return
-    }
-
-    latestBySource.push({
-      id: factor.version.id,
-      source: factor.importedFrom,
-      name: factor.version.name,
-      internId: '',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      archived: factor.version.archived,
-    })
-  })
-  return latestBySource
-}
 
 export const getImportVersions = async () => {
   const session = await auth()
