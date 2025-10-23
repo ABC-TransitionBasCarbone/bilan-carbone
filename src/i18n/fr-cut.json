@@ -28,21 +28,6 @@
       "0": "Comprendre la mesure d’impact de votre établissement",
       "1": "Identifier les priorités d’action",
       "2": "À long terme, et via un travail plus approfondi, construire une trajectoire de réduction"
-    },
-    "message": {
-      "core": "Bienvenue sur COUNT le premier calculateur d'impact écologique dédié aux salles de cinéma.\nCet outil a été développé par l'association CUT ! Cinéma Uni pour la transition, en coopération avec l'ABC, association pour la transition bas carbone\nOpération soutenue par l'État dans le cadre du dispositif « Soutenir les alternatives vertes 2 » de France 2030, opéré par la Banque des territoires (Caisse des Dépôts)\nCUT bénéficie du soutien du CNC",
-      "0": "Calculer votre empreinte carbone simplifiée vous permettra de :",
-      "1": "Comprendre la mesure d'impact de votre établissement",
-      "2": "Identifier les priorités d'action",
-      "3": "À long terme, et via un travail plus approfondi, construire une trajectoire de réduction"
-    }
-  },
-  "footer": {
-    "message": {
-      "0": "Cet outil a été développé par l'Association",
-      "1": "En coopération avec l'ABC, <br></br> Association pour la transition Bas Carbone",
-      "2": "Opération soutenue par l'État dans le cadre du <br></br> dispositif « Soutenir les alternatives vertes 2 » <br></br> de France 2030, opéré par la Banque des <br></br> territoires (Caisse des Dépôts)",
-      "3": "CUT! bénéficie du soutien du CNC"
     }
   },
   "study": {
