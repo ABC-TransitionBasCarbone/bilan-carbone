@@ -51,6 +51,7 @@ const SubPost = ({
   const tUnits = useTranslations('study.results.units')
   const { environment } = useAppEnvironmentStore()
   const [emissionFactorsForSubPost, setEmissionFactorsForSubPost] = useState<EmissionFactorWithMetaData[]>([])
+  const [expanded, setExpanded] = useState(false)
 
   useEffect(() => {
     async function fetchEmissionFactors() {
@@ -68,8 +69,10 @@ const SubPost = ({
       }
     }
 
-    fetchEmissionFactors()
-  }, [subPost])
+    if (emissionFactorsForSubPost.length === 0 && expanded) {
+      fetchEmissionFactors()
+    }
+  }, [emissionFactorsForSubPost.length, expanded, subPost])
 
   const total = useMemo(() => {
     if (!environment) {
@@ -102,7 +105,6 @@ const SubPost = ({
     [subPost, study.exports, environment],
   )
 
-  const [expanded, setExpanded] = useState(false)
   const accordionRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {

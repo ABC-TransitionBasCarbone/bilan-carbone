@@ -87,6 +87,9 @@ const EmissionFactorsFiltersAndTable = ({
 
   useEffect(() => {
     async function fetchEmissionFactors() {
+      setEmissionFactors([])
+      setTotalCount(0)
+
       const emissionFactorsFromBdd = await getEmissionFactors(0, 100, filters)
       setSkip(100)
 
@@ -94,9 +97,6 @@ const EmissionFactorsFiltersAndTable = ({
         setPagination((prevPagination) => ({ ...prevPagination, pageIndex: 0 }))
         setEmissionFactors(emissionFactorsFromBdd.data.emissionFactors)
         setTotalCount(emissionFactorsFromBdd.data.count)
-      } else {
-        setEmissionFactors([])
-        setTotalCount(0)
       }
     }
 

@@ -1751,6 +1751,7 @@ export const duplicateStudyEmissionSource = async (
     const data = {
       ...emissionSource,
       id: uuidv4(),
+      name: `${emissionSource.name} - copie`,
       study: { connect: { id: studyId } },
       emissionFactor: emissionSource.emissionFactor ? { connect: { id: emissionSource.emissionFactor.id } } : undefined,
       emissionFactorId: undefined,
