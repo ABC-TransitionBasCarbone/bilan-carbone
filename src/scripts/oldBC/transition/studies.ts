@@ -522,7 +522,7 @@ export const uploadStudies = async (
   console.log('Import des études...')
 
   const skippedInfos: { oldBcId: string; reason: string }[] = []
-  const emissionSourceWithoutFe: { oldBcId: string; name: string; manual: boolean }[] = []
+  const emissionSourceWithoutFe: { oldBcId: string; name: string }[] = []
 
   const studies = await parseStudies(transaction, oldBCWorksheetReader.studiesWorksheet, organizationVersionId)
   const studySites = parseStudySites(oldBCWorksheetReader.studySitesWorksheet)
@@ -768,20 +768,23 @@ export const uploadStudies = async (
               if (emissionFactor) {
                 studiesEmissionFactorVersionsMap.addEmissionFactor(existingStudy.id, emissionFactor)
                 emissionFactorId = emissionFactor.id
+              } else {
+                emissionSourceWithoutFe.push({
+                  oldBcId: studyOldBCId,
+                  name: studyEmissionSource.emissionFactorImportedId,
+                })
               }
             } else {
               const existingEmissionFactor = existingEmissionFactorNames.get(studyEmissionSource.emissionFactorOldBCId)
               if (existingEmissionFactor) {
                 emissionFactorId = existingEmissionFactor.id
+              } else {
+                skippedInfos.push({
+                  oldBcId: studyOldBCId,
+                  reason: `Source d'émission ignorée - le FE n'existe pas pour la source d'émission ${studyEmissionSource.name}, FEID : ${studyEmissionSource.emissionFactorOldBCId}`,
+                })
+                return null
               }
-            }
-
-            if (!emissionFactorId) {
-              emissionSourceWithoutFe.push({
-                oldBcId: studyOldBCId,
-                name: studyEmissionSource.name,
-                manual: studyEmissionSource.emissionFactorImportedId === '0',
-              })
             }
 
             const exports = studyExports.get(studyOldBCId) ?? []

@@ -1625,7 +1625,10 @@ const buildStudyForDuplication = (
   emissionFactorVersions: {
     createMany: {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      data: study.emissionFactorVersions.map(({ id, ...emissionFactorVersion }) => emissionFactorVersion),
+      data: study.emissionFactorVersions.map(({ id, ...emissionFactorVersion }) => ({
+        importVersionId: emissionFactorVersion.importVersionId,
+        source: emissionFactorVersion.source,
+      })),
     },
   },
   tagFamilies: {
