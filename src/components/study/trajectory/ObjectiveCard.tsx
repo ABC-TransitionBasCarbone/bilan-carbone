@@ -1,12 +1,12 @@
 import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormTextField } from '@/components/form/TextField'
+import { TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
 import Typography from '@mui/material/Typography'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import { Control } from 'react-hook-form'
 import styles from './ObjectiveCard.module.css'
-import { TrajectoryFormData } from './TrajectoryCreationModal'
 
 interface Props {
   reductionRate?: number

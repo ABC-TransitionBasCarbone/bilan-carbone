@@ -232,3 +232,105 @@ export const studyHasObjectives = async (studyId: string): Promise<boolean> => {
   })
   return count > 0
 }
+
+export const getTrajectoryById = async (id: string): Promise<TrajectoryWithObjectives | null> => {
+  return prismaClient.trajectory.findUnique({
+    where: { id },
+    include: {
+      objectives: {
+        orderBy: {
+          targetYear: 'asc',
+        },
+      },
+    },
+  })
+}
+
+export const hasTrajectory = async (transitionPlanId: string): Promise<boolean> => {
+  const count = await prismaClient.trajectory.count({
+    where: { transitionPlanId },
+  })
+  return count > 0
+}
+
+export const deleteTrajectory = async (id: string): Promise<void> => {
+  await prismaClient.trajectory.delete({
+    where: { id },
+  })
+}
+
+export const updateTrajectory = async (
+  id: string,
+  data: { name?: string; description?: string },
+): Promise<TrajectoryWithObjectives> => {
+  return prismaClient.trajectory.update({
+    where: { id },
+    data,
+    include: {
+      objectives: {
+        orderBy: {
+          targetYear: 'asc',
+        },
+      },
+    },
+  })
+}
+
+export const deleteObjective = async (id: string): Promise<Objective> => {
+  return prismaClient.objective.delete({
+    where: { id },
+  })
+}
+
+export const updateObjective = async (
+  id: string,
+  data: { targetYear?: number; reductionRate?: number },
+): Promise<Objective> => {
+  return prismaClient.objective.update({
+    where: { id },
+    data,
+  })
+}
+
+export const updateTrajectoryWithObjectives = async (
+  trajectoryId: string,
+  data: {
+    name?: string
+    description?: string
+    objectives?: Array<{ id: string; targetYear: number; reductionRate: number }>
+  },
+): Promise<TrajectoryWithObjectives> => {
+  if (data.objectives) {
+    await Promise.all(
+      data.objectives.map((obj) =>
+        prismaClient.objective.upsert({
+          where: { id: obj.id },
+          update: {
+            targetYear: obj.targetYear,
+            reductionRate: obj.reductionRate,
+          },
+          create: {
+            trajectoryId: trajectoryId,
+            targetYear: obj.targetYear,
+            reductionRate: obj.reductionRate,
+          },
+        }),
+      ),
+    )
+  }
+
+  return prismaClient.trajectory.update({
+    where: { id: trajectoryId },
+    data: {
+      name: data.name,
+      description: data.description,
+    },
+    include: {
+      objectives: {
+        orderBy: {
+          targetYear: 'asc',
+        },
+      },
+    },
+  })
+}

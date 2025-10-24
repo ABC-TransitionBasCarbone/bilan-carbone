@@ -949,7 +949,10 @@
       },
       "trajectoryModal": {
         "title": "I choose my trajectory",
+        "editTitle": "Edit my trajectory",
         "submit": "Confirm",
+        "save": "Save",
+        "cancel": "Cancel",
         "success": "You have created your first trajectory!",
         "successSubtitle": "To modify your trajectory and associated objectives, you can go to the <link>My reduction objectives</link> section.",
         "steps": {
@@ -1011,6 +1014,25 @@
       },
       "objectives": {
         "title": "Reduction objectives",
+        "custom": "Custom",
+        "objectiveNumber": "Objective {number}",
+        "table": {
+          "name": "Name",
+          "type": "Type",
+          "targetYear": "Target year",
+          "reductionRate": "Annual reduction",
+          "actions": "Actions"
+        },
+        "delete": "Delete",
+        "cancel": "Cancel",
+        "deleteTrajectory": {
+          "title": "Delete trajectory",
+          "message": "Are you sure you want to delete this trajectory? This action will also delete all associated objectives."
+        },
+        "deleteObjective": {
+          "title": "Delete objective",
+          "message": "Are you sure you want to delete this objective?"
+        },
         "onboarding": {
           "title": "Add a trajectory or reduction objectives",
           "description": "You have already created a reference trajectory but want to add others to test different hypotheses and ambition levels? You can create new trajectories, or add intermediate objectives for more detailed tracking without losing sight of the final goal!",

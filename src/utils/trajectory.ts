@@ -1,6 +1,7 @@
 import { TrajectoryDataPoint } from '@/components/study/transitionPlan/TrajectoryGraph'
 import { FullStudy } from '@/db/study'
 import { getStudyTotalCo2EmissionsWithDep } from '@/services/study'
+import { Translations } from '@/types/translation'
 import { ExternalStudy, TrajectoryType } from '@prisma/client'
 
 export type SBTIType = 'SBTI_15' | 'SBTI_WB2C'
@@ -233,4 +234,19 @@ export const getDefaultObjectivesForTrajectoryType = (
   }
 
   return undefined
+}
+
+export const getTrajectoryTypeLabel = (type: TrajectoryType, t: Translations) => {
+  switch (type) {
+    case TrajectoryType.SBTI_15:
+      return 'SBTi 1.5°C'
+    case TrajectoryType.SBTI_WB2C:
+      return 'SBTi WB2C'
+    case TrajectoryType.SNBC:
+      return 'SNBC'
+    case TrajectoryType.CUSTOM:
+      return t('custom')
+    default:
+      return type
+  }
 }
