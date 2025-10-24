@@ -899,7 +899,7 @@
         "customButton": "Je choisis ma trajectoire",
         "customSubtitle": "Reprenez une trajectoire existante ou créez votre propre trajectoire de réduction pour commencer à construire votre plan de transition",
         "myTrajectories": "Mes trajectoires",
-        "addTrajectory": "+ Ajouter une nouvelle trajectoire de réduction",
+        "addTrajectory": "Ajouter une trajectoire de réduction",
         "selectTrajectories": "Sélectionnez vos trajectoires",
         "sbtiCard": {
           "title": "Trajectoires SBTi",

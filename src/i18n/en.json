@@ -899,7 +899,7 @@
         "customButton": "I choose my trajectory",
         "customSubtitle": "Build your own reduction trajectory",
         "myTrajectories": "My trajectories",
-        "addTrajectory": "+ Add a new reduction trajectory",
+        "addTrajectory": "Add a reduction trajectory",
         "selectTrajectories": "Select your trajectories",
         "sbtiCard": {
           "title": "SBTi Trajectories",

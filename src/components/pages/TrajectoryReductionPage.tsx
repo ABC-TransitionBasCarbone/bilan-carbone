@@ -105,6 +105,11 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
           const trajectoriesResponse = await getTrajectories(study.id, response.data.id)
           if (trajectoriesResponse.success && trajectoriesResponse.data) {
             setCustomTrajectories(trajectoriesResponse.data)
+
+            const validTrajectoryIds = selectedCustomTrajectoryIds.filter((id) =>
+              trajectoriesResponse.data.some((t) => t.id === id),
+            )
+            setSelectedCustomTrajectoryIds(validTrajectoryIds)
           }
 
           const studiesResponse = await getLinkedStudies(response.data.id)
@@ -125,7 +130,7 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
     if (transitionPlan === undefined) {
       fetchData()
     }
-  }, [study, transitionPlan])
+  }, [study, transitionPlan, selectedCustomTrajectoryIds])
 
   const handleCreateTrajectorySuccess = useCallback(
     async (trajectoryId: string) => {
@@ -336,15 +341,15 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
               </Typography>
             </Box>
 
-            <Box className={classNames('p125 flex-col gapped075', styles.trajectoryCard)}>
-              <Typography variant="h5" component="h2" fontWeight={600}>
-                {t('trajectories.sbtiCard.title')}
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                {t('trajectories.sbtiCard.description')}
-              </Typography>
+            <Box className={classNames('p125 flex-col justify-between gapped2', styles.trajectoryCard)}>
+              <div className="flex-col gapped-2">
+                <Typography variant="h5" component="h2" fontWeight={600}>
+                  {t('trajectories.sbtiCard.title')}
+                </Typography>
+                <Typography variant="body1">{t('trajectories.sbtiCard.description')}</Typography>
+              </div>
 
-              <div className={'w100 flex-col gapped075'}>
+              <div className="w100 flex-col gapped-2">
                 <MultiSelect
                   label={t('trajectories.sbtiCard.methodLabel')}
                   value={selectedTrajectories}
