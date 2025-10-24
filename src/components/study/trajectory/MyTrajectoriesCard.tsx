@@ -3,7 +3,7 @@
 import Box from '@/components/base/Box'
 import Button from '@/components/base/Button'
 import { MultiSelect } from '@/components/base/MultiSelect'
-import { TrajectoryWithObjectives } from '@/db/trajectory'
+import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { Typography } from '@mui/material'
 import classNames from 'classnames'
 import styles from '../../pages/TrajectoryReductionPage.module.css'

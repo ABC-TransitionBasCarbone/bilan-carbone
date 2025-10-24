@@ -1,6 +1,6 @@
 import { AddActionCommand } from '@/services/serverFunctions/study.command'
 import { ExternalStudyCommand } from '@/services/serverFunctions/transitionPlan.command'
-import { Objective, Trajectory, TransitionPlan, TransitionPlanStudy } from '@prisma/client'
+import { Objective, Prisma, Trajectory, TransitionPlan, TransitionPlanStudy } from '@prisma/client'
 import { prismaClient } from './client'
 
 export type TransitionPlanWithStudies = TransitionPlan & {
@@ -19,6 +19,10 @@ export type TransitionPlanWithRelations = TransitionPlan & {
     }
   >
   transitionPlanStudies: TransitionPlanStudy[]
+}
+
+export type TrajectoryWithObjectives = Trajectory & {
+  objectives: Objective[]
 }
 
 export const getTransitionPlanById = async (id: string): Promise<TransitionPlan | null> => {
@@ -155,6 +159,7 @@ export const getActionById = async (id: string) => prismaClient.action.findUniqu
 
 export const getActions = async (transitionPlanId: string) =>
   prismaClient.action.findMany({ where: { transitionPlanId } })
+
 export const createTransitionPlanStudy = async (transitionPlanId: string, studyId: string) =>
   prismaClient.transitionPlanStudy.create({ data: { transitionPlanId, studyId } })
 
@@ -183,3 +188,47 @@ export const getExternalStudiesForTransitionPlan = async (transitionPlanId: stri
 
 export const getLinkedStudiesForTransitionPlan = async (transitionPlanId: string) =>
   prismaClient.transitionPlanStudy.findMany({ where: { transitionPlanId } })
+
+export const createTrajectoryWithObjectives = async (data: Prisma.TrajectoryCreateInput) => {
+  return prismaClient.trajectory.create({
+    data,
+    include: {
+      objectives: {
+        orderBy: {
+          targetYear: 'asc',
+        },
+      },
+    },
+  })
+}
+
+export const getTrajectoriesByTransitionPlanId = async (
+  transitionPlanId: string,
+): Promise<TrajectoryWithObjectives[]> => {
+  return prismaClient.trajectory.findMany({
+    where: { transitionPlanId },
+    include: {
+      objectives: {
+        orderBy: {
+          targetYear: 'asc',
+        },
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  })
+}
+
+export const studyHasObjectives = async (studyId: string): Promise<boolean> => {
+  const count = await prismaClient.objective.count({
+    where: {
+      trajectory: {
+        transitionPlan: {
+          studyId,
+        },
+      },
+    },
+  })
+  return count > 0
+}

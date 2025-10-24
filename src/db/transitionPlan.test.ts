@@ -2,9 +2,15 @@ import { expect } from '@jest/globals'
 import { Objective, Trajectory, TrajectoryType, TransitionPlanStudy } from '@prisma/client'
 import { duplicateTransitionPlanWithRelations, TransitionPlanWithRelations } from './transitionPlan'
 
+const mockTx = {
+  transitionPlan: {
+    create: jest.fn(),
+  },
+}
+
 jest.mock('./client', () => ({
   prismaClient: {
-    $transaction: jest.fn(),
+    $transaction: jest.fn((callback) => callback(mockTx)),
     transitionPlan: {
       create: jest.fn(),
     },
@@ -62,18 +68,6 @@ const createMockTransitionPlan = (overrides?: Partial<TransitionPlanWithRelation
   ],
   ...overrides,
 })
-
-const mockTx = {
-  transitionPlan: {
-    create: jest.fn(),
-  },
-}
-
-jest.mock('./client', () => ({
-  prismaClient: {
-    $transaction: jest.fn((callback) => callback(mockTx)),
-  },
-}))
 
 describe('TransitionPlan DB', () => {
   describe('duplicateTransitionPlanWithRelations', () => {

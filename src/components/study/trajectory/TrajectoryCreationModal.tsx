@@ -4,7 +4,7 @@ import LoadingButton from '@/components/base/LoadingButton'
 import ModalStepper from '@/components/modals/ModalStepper'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { CreateTrajectoryInput, createTrajectoryWithObjectives } from '@/services/serverFunctions/trajectory'
-import { MID_TAREGT_YEAR, SBTI_REDUCTION_RATE_15, SBTI_REDUCTION_RATE_WB2C, TARGET_YEAR } from '@/utils/trajectory'
+import { getDefaultObjectivesForTrajectoryType } from '@/utils/trajectory'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { TrajectoryType } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -116,8 +116,6 @@ const TrajectoryCreationModal = ({ open, onClose, transitionPlanId, onSuccess }:
   }
 
   const onSubmit = async (data: TrajectoryFormData) => {
-    console.log({ data })
-
     setIsLoading(true)
     if (!data.trajectoryType) {
       setIsLoading(false)
@@ -137,15 +135,9 @@ const TrajectoryCreationModal = ({ open, onClose, transitionPlanId, onSuccess }:
         reductionRate: Number(obj.reductionRate) / 100,
       }))
     } else if (data.trajectoryType === TrajectoryType.SBTI_15) {
-      input.objectives = [
-        { targetYear: MID_TAREGT_YEAR, reductionRate: SBTI_REDUCTION_RATE_15 },
-        { targetYear: TARGET_YEAR, reductionRate: SBTI_REDUCTION_RATE_15 },
-      ]
+      input.objectives = getDefaultObjectivesForTrajectoryType(TrajectoryType.SBTI_15)
     } else if (data.trajectoryType === TrajectoryType.SBTI_WB2C) {
-      input.objectives = [
-        { targetYear: MID_TAREGT_YEAR, reductionRate: SBTI_REDUCTION_RATE_WB2C },
-        { targetYear: TARGET_YEAR, reductionRate: SBTI_REDUCTION_RATE_WB2C },
-      ]
+      input.objectives = getDefaultObjectivesForTrajectoryType(TrajectoryType.SBTI_WB2C)
     }
 
     await callServerFunction(() => createTrajectoryWithObjectives(input), {

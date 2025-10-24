@@ -7,7 +7,7 @@ export type SBTIType = 'SBTI_15' | 'SBTI_WB2C'
 export const SBTI_REDUCTION_RATE_15 = 0.042
 export const SBTI_REDUCTION_RATE_WB2C = 0.025
 const REFERENCE_YEAR = 2020
-export const MID_TAREGT_YEAR = 2030
+export const MID_TARGET_YEAR = 2030
 export const TARGET_YEAR = 2050
 
 interface CalculateTrajectoryParams {
@@ -213,4 +213,24 @@ export const calculateCustomTrajectory = ({
   }
 
   return dataPoints
+}
+
+export const getDefaultObjectivesForTrajectoryType = (
+  type: TrajectoryType,
+): Array<{ targetYear: number; reductionRate: number }> | undefined => {
+  if (type === TrajectoryType.SBTI_15) {
+    return [
+      { targetYear: MID_TARGET_YEAR, reductionRate: SBTI_REDUCTION_RATE_15 },
+      { targetYear: TARGET_YEAR, reductionRate: SBTI_REDUCTION_RATE_15 },
+    ]
+  }
+
+  if (type === TrajectoryType.SBTI_WB2C) {
+    return [
+      { targetYear: MID_TARGET_YEAR, reductionRate: SBTI_REDUCTION_RATE_WB2C },
+      { targetYear: TARGET_YEAR, reductionRate: SBTI_REDUCTION_RATE_WB2C },
+    ]
+  }
+
+  return undefined
 }

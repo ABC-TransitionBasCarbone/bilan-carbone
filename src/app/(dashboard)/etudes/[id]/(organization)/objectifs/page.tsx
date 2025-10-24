@@ -3,18 +3,14 @@ import { StudyProps } from '@/components/hoc/withStudy'
 import withStudyDetails from '@/components/hoc/withStudyDetails'
 import withTransitionPlan, { TransitionPlanProps } from '@/components/hoc/withTransitionPlan'
 import ObjectivesPage from '@/components/pages/ObjectivesPage'
-import { getTrajectoriesByTransitionPlanId } from '@/db/trajectory'
-import { getTransitionPlanByStudyId } from '@/db/transitionPlan'
+import { checkStudyHasObjectives } from '@/services/serverFunctions/trajectory'
 import { redirect } from 'next/navigation'
 
 const Objectives = async ({ study, canEdit }: StudyProps & UserSessionProps & TransitionPlanProps) => {
-  const transitionPlan = await getTransitionPlanByStudyId(study.id)
-  if (!transitionPlan) {
-    redirect(`/etudes/${study.id}/trajectoires`)
-  }
+  const objectivesResponse = await checkStudyHasObjectives(study.id)
+  const hasObjectives = objectivesResponse.success ? objectivesResponse.data : false
 
-  const trajectories = await getTrajectoriesByTransitionPlanId(transitionPlan.id)
-  if (trajectories.length === 0 || trajectories.some((trajectory) => trajectory.objectives.length === 0)) {
+  if (!hasObjectives) {
     redirect(`/etudes/${study.id}/trajectoires`)
   }
 

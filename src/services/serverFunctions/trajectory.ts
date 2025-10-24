@@ -3,14 +3,15 @@
 import {
   createTrajectoryWithObjectives as dbCreateTrajectoryWithObjectives,
   getTrajectoriesByTransitionPlanId,
+  getTransitionPlanById,
+  studyHasObjectives,
   TrajectoryWithObjectives,
-} from '@/db/trajectory'
-import { getTransitionPlanById } from '@/db/transitionPlan'
+} from '@/db/transitionPlan'
 import { ApiResponse, withServerResponse } from '@/utils/serverResponse'
-import { MID_TAREGT_YEAR, SBTI_REDUCTION_RATE_15, SBTI_REDUCTION_RATE_WB2C, TARGET_YEAR } from '@/utils/trajectory'
+import { getDefaultObjectivesForTrajectoryType } from '@/utils/trajectory'
 import { TrajectoryType } from '@prisma/client'
-import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
+import { hasEditAccessOnStudy, hasReadAccessOnStudy } from '../permissions/study'
 
 export interface CreateTrajectoryInput {
   transitionPlanId: string
@@ -25,35 +26,28 @@ export interface CreateTrajectoryInput {
 
 export const createTrajectoryWithObjectives = async (input: CreateTrajectoryInput) =>
   withServerResponse('createTrajectoryWithObjectives', async () => {
-    const session = await auth()
-    if (!session?.user) {
-      throw new Error(NOT_AUTHORIZED)
-    }
-
     const transitionPlan = await getTransitionPlanById(input.transitionPlanId)
     if (!transitionPlan) {
       throw new Error('Transition plan not found')
     }
 
+    const hasEditAccess = await hasEditAccessOnStudy(transitionPlan.studyId)
+    if (!hasEditAccess) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
     let objectives: { targetYear: number; reductionRate: number }[]
 
-    if (input.type === TrajectoryType.SBTI_15) {
-      objectives = [
-        { targetYear: MID_TAREGT_YEAR, reductionRate: SBTI_REDUCTION_RATE_15 },
-        { targetYear: TARGET_YEAR, reductionRate: SBTI_REDUCTION_RATE_15 },
-      ]
-    } else if (input.type === TrajectoryType.SBTI_WB2C) {
-      objectives = [
-        { targetYear: MID_TAREGT_YEAR, reductionRate: SBTI_REDUCTION_RATE_WB2C },
-        { targetYear: TARGET_YEAR, reductionRate: SBTI_REDUCTION_RATE_WB2C },
-      ]
+    const defaultObjectives = getDefaultObjectivesForTrajectoryType(input.type)
+    if (defaultObjectives) {
+      objectives = defaultObjectives
     } else if (input.type === TrajectoryType.CUSTOM) {
-      if (!input.objectives || input.objectives.length < 1 || input.objectives.length > 2) {
-        throw new Error('Custom trajectory must have 1 or 2 objectives')
+      if (!input.objectives || input.objectives.length < 1) {
+        throw new Error('Custom trajectory must have at least 1 objective')
       }
       objectives = input.objectives
     } else {
-      throw new Error('SNBC mode is not yet supported')
+      throw new Error(`${input.type} mode is not yet supported`)
     }
 
     return dbCreateTrajectoryWithObjectives({
@@ -73,14 +67,25 @@ export const createTrajectoryWithObjectives = async (input: CreateTrajectoryInpu
     })
   })
 
-export const getTrajectoriesForTransitionPlan = async (
+export const getTrajectories = async (
+  studyId: string,
   transitionPlanId: string,
 ): Promise<ApiResponse<TrajectoryWithObjectives[]>> =>
-  withServerResponse('getTrajectoriesForTransitionPlan', async () => {
-    const session = await auth()
-    if (!session?.user) {
+  withServerResponse('getTrajectories', async () => {
+    const hasReadAccess = await hasReadAccessOnStudy(studyId)
+    if (!hasReadAccess) {
       throw new Error(NOT_AUTHORIZED)
     }
 
     return getTrajectoriesByTransitionPlanId(transitionPlanId)
+  })
+
+export const checkStudyHasObjectives = async (studyId: string): Promise<ApiResponse<boolean>> =>
+  withServerResponse('checkStudyHasObjectives', async () => {
+    const hasReadAccess = await hasReadAccessOnStudy(studyId)
+    if (!hasReadAccess) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return studyHasObjectives(studyId)
   })

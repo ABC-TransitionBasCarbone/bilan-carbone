@@ -135,7 +135,7 @@ export const canCreateSpecificStudy = async (
   }
 }
 
-const canChangeStudyValues = async (user: UserSession, study: FullStudy) => {
+const canEditStudy = async (user: UserSession, study: FullStudy) => {
   if (isAdminOnStudyOrga(user, study.organizationVersion as OrganizationVersionWithOrganization)) {
     return true
   }
@@ -149,23 +149,23 @@ const canChangeStudyValues = async (user: UserSession, study: FullStudy) => {
 }
 
 export const canChangePublicStatus = async (user: UserSession, study: FullStudy) => {
-  return canChangeStudyValues(user, study)
+  return canEditStudy(user, study)
 }
 
 export const canUpgradeSourceVersion = async (user: UserSession, study: FullStudy) => {
-  return canChangeStudyValues(user, study)
+  return canEditStudy(user, study)
 }
 
 export const canChangeDates = async (user: UserSession, study: FullStudy) => {
-  return canChangeStudyValues(user, study)
+  return canEditStudy(user, study)
 }
 
 export const canChangeSites = async (user: UserSession, study: FullStudy) => {
-  return canChangeStudyValues(user, study)
+  return canEditStudy(user, study)
 }
 
 export const canChangeLevel = async (user: UserSession, study: FullStudy, level: Level) => {
-  if (!(await canChangeStudyValues(user, study))) {
+  if (!(await canEditStudy(user, study))) {
     return false
   }
 
@@ -177,15 +177,15 @@ export const canChangeLevel = async (user: UserSession, study: FullStudy, level:
 }
 
 export const canChangeResultsUnit = async (user: UserSession, study: FullStudy) => {
-  return canChangeStudyValues(user, study)
+  return canEditStudy(user, study)
 }
 
 export const canChangeName = async (user: UserSession, study: FullStudy) => {
-  return canChangeStudyValues(user, study)
+  return canEditStudy(user, study)
 }
 
 export const canChangeOpeningHours = async (user: UserSession, study: FullStudy) => {
-  return canChangeStudyValues(user, study)
+  return canEditStudy(user, study)
 }
 
 export const canAddRightOnStudy = (
@@ -485,4 +485,27 @@ export const canCreateAction = async (user: UserSession, study: FullStudy) => {
 
 export const canLinkStudyToTransitionPlan = async (user: UserSession, study: FullStudy) => {
   return hasUserEditionRightOnStudy(user, study)
+}
+
+export const hasReadAccessOnStudy = async (studyId: string) => {
+  const session = await dbActualizedAuth()
+  if (!session) {
+    return false
+  }
+
+  return canReadStudy(session.user, studyId)
+}
+
+export const hasEditAccessOnStudy = async (studyId: string) => {
+  const session = await dbActualizedAuth()
+  if (!session) {
+    return false
+  }
+
+  const study = await getStudyById(studyId, session.user.organizationVersionId)
+  if (!study) {
+    return false
+  }
+
+  return canEditStudy(session.user, study)
 }
