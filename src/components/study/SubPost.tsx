@@ -55,14 +55,19 @@ const SubPost = ({
 
   useEffect(() => {
     async function fetchEmissionFactors() {
-      const emissionsFactors = await getEmissionFactors(0, 'ALL', {
-        archived: false,
-        search: '',
-        location: '',
-        sources: [],
-        units: [],
-        subPosts: [subPost],
-      })
+      const emissionsFactors = await getEmissionFactors(
+        0,
+        'ALL',
+        {
+          archived: false,
+          search: '',
+          location: '',
+          sources: [],
+          units: [],
+          subPosts: [subPost],
+        },
+        study.id,
+      )
 
       if (emissionsFactors.success) {
         setEmissionFactorsForSubPost(emissionsFactors.data.emissionFactors)
@@ -72,7 +77,7 @@ const SubPost = ({
     if (emissionFactorsForSubPost.length === 0 && expanded) {
       fetchEmissionFactors()
     }
-  }, [emissionFactorsForSubPost.length, expanded, subPost])
+  }, [emissionFactorsForSubPost.length, expanded, study.id, subPost])
 
   const total = useMemo(() => {
     if (!environment) {

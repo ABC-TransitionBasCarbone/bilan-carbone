@@ -8,8 +8,7 @@
   },
   "scripts": {
     "dev": "next dev --turbopack",
-    "dev:test": "NODE_ENV=test next dev --turbopack --port 3001",
-    "dev:test:win": "next dev --turbopack --port 3001",
+    "dev:test": "dotenv -e .env.test -- next dev --turbopack --port 3001",
     "build": "next build",
     "start": "next start",
     "lint": "prettier --check . && next lint",

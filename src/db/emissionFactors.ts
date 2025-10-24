@@ -102,7 +102,7 @@ export type EmissionFactorList = {
   }[]
 }
 
-const handleFilterConditions = (filters: FeFilters, withCut: boolean, organizationId: string | null) => {
+const handleFilterConditions = (filters: FeFilters, withCut: boolean, organizationId?: string) => {
   const conditions: Prisma.Sql[] = [
     Prisma.sql`m.language = 'fr'`,
     Prisma.sql`ef.sub_posts IS NOT NULL AND ef.sub_posts::text != '{}'`,
@@ -139,7 +139,7 @@ const handleFilterConditions = (filters: FeFilters, withCut: boolean, organizati
   }
 
   if (filters.sources.length > 0 && filters.sources.some((source) => source !== 'all')) {
-    if (filters.sources.includes(Import.Manual) && filters.sources.length === 1) {
+    if (filters.sources.includes(Import.Manual) && filters.sources.length === 1 && organizationId) {
       conditions.push(Prisma.sql`(version_id is null and ef.organization_id = ${Prisma.sql`${organizationId}`})`)
     } else if (filters.sources.includes(Import.Manual)) {
       conditions.push(
@@ -159,7 +159,7 @@ const getBaseRequest = (
   selectRequest: Prisma.Sql,
   filters: FeFilters,
   withCut: boolean,
-  organizationId: string | null,
+  organizationId?: string,
 ): Prisma.Sql => {
   return Prisma.sql`${selectRequest}
     FROM emission_factors ef
@@ -170,7 +170,7 @@ const getBaseRequest = (
 const getDefaultEmissionFactorsCount = (
   filters: FeFilters,
   withCut: boolean,
-  organizationId: string | null,
+  organizationId?: string,
 ): { count: number }[] => {
   const request = getBaseRequest(Prisma.sql`SELECT COUNT(*)::int AS count`, filters, withCut, organizationId)
   return prismaClient.$queryRaw(request) as unknown as { count: number }[]
@@ -182,7 +182,7 @@ const getDefaultEmissionFactors = (
   locale: localeType,
   filters: FeFilters,
   withCut: boolean,
-  organizationId: string | null,
+  organizationId?: string,
 ): EmissionFactorList[] => {
   const select = Prisma.sql`SELECT ef.id, ef.status, ef.total_co2 as ${Prisma.sql`"totalCo2"`}, ef.location, ef.source, ef.unit, ${Prisma.sql`ef."customUnit"`}, ef.is_monetary as ${Prisma.sql`"isMonetary"`},
            ef.imported_from as ${Prisma.sql`"importedFrom"`}, ef.imported_id as ${Prisma.sql`"importedId"`}, ef.organization_id as ${Prisma.sql`"organizationId"`},
@@ -235,7 +235,7 @@ const getEmissionFactorsFromIdsExceptVersions = async (ids: string[], versionIds
 }
 
 export const getAllEmissionFactors = async (
-  organizationId: string,
+  organizationId: string | undefined,
   skip: number,
   take: number | 'ALL',
   locale: localeType,
@@ -262,7 +262,6 @@ export const getAllEmissionFactors = async (
   }
 
   const defaultEmissionFactors = await getDefaultEmissionFactors(skip, take, locale, filters, withCut, organizationId)
-
   const emissionFactorsCountInfos = await getDefaultEmissionFactorsCount(filters, withCut, organizationId)
 
   const allEmissionFactors = defaultEmissionFactors.concat(studyOldEmissionFactors)

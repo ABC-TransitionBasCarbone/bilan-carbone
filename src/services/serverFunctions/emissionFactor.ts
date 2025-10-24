@@ -95,10 +95,7 @@ export const getEmissionFactors = async (
       return getAllEmissionFactors(emissionFactorOrganizationId, skip, take, locale, filters, studyId, withCut)
     } else {
       const organizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
-      if (!organizationVersion?.organizationId) {
-        throw Error('Organization version does not exist')
-      }
-      return getAllEmissionFactors(organizationVersion.organizationId, skip, take, locale, filters, undefined, withCut)
+      return getAllEmissionFactors(organizationVersion?.organizationId, skip, take, locale, filters, undefined, withCut)
     }
   })
 export type EmissionFactorWithMetaData = IsSuccess<
