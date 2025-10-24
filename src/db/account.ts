@@ -50,6 +50,27 @@ export const AccountWithUserSelect = {
   },
 }
 
+import { OrganizationVersion } from '@prisma/client'
+
+export type AccountWithUserAndOrganization = Omit<AccountWithUser, 'organizationVersion'> & {
+  organizationVersion: OrganizationVersion | null
+}
+
+export const AccountWithUserAndOrganizationSelect = {
+  ...AccountWithUserSelect,
+  organizationVersion: {
+    select: {
+      ...OrganizationVersionWithOrganizationSelect,
+    },
+  },
+}
+
+export const getAccounts = async (): Promise<AccountWithUserAndOrganization[]> => {
+  return await prismaClient.account.findMany({
+    select: AccountWithUserAndOrganizationSelect,
+  })
+}
+
 export const getAccountByEmailAndOrganizationVersionId = (email: string, organizationVersionId: string | null) => {
   return prismaClient.account.findFirst({
     where: { user: { email }, organizationVersionId },

@@ -303,6 +303,13 @@
     }
   },
   "admin": {
+    "modal": {
+      "title": "Modifier un compte",
+      "email": "Email",
+      "role": "Rôle",
+      "environment": "Environnement",
+      "close": "Fermer"
+    },
     "title": "Administration du BC+",
     "csvOnly": "Seuls les fichiers CSV sont acceptés",
     "uploadButton": "Importer un fichier CSV d'utilisateur·rices"
