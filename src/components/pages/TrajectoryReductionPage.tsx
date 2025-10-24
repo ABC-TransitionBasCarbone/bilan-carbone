@@ -12,7 +12,11 @@ import { TrajectoryWithObjectives } from '@/db/trajectory'
 import EnvironmentLoader from '@/environments/core/utils/EnvironmentLoader'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { getTrajectoriesForTransitionPlan } from '@/services/serverFunctions/trajectory'
-import { getStudyTransitionPlan, initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
+import {
+  getLinkedStudies,
+  getStudyTransitionPlan,
+  initializeTransitionPlan,
+} from '@/services/serverFunctions/transitionPlan'
 import { getStudyTotalCo2EmissionsWithDep } from '@/services/study'
 import {
   calculateCustomTrajectory,
@@ -22,13 +26,14 @@ import {
 } from '@/utils/trajectory'
 import AddIcon from '@mui/icons-material/Add'
 import { Typography } from '@mui/material'
-import { TransitionPlan } from '@prisma/client'
+import { ExternalStudy, TransitionPlan } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import MyTrajectoriesCard from '../study/trajectory/MyTrajectoriesCard'
+import LinkedStudies from '../study/transitionPlan/LinkedStudies'
 import TrajectoryGraph from '../study/transitionPlan/TrajectoryGraph'
 import TransitionPlanOnboarding from '../study/transitionPlan/TransitionPlanOnboarding'
 import styles from './TrajectoryReductionPage.module.css'
@@ -58,6 +63,8 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
   const router = useRouter()
   const tStudyNav = useTranslations('study.navigation')
   const [transitionPlan, setTransitionPlan] = useState<TransitionPlan | null | undefined>(undefined)
+  const [linkedStudies, setLinkedStudies] = useState<FullStudy[]>([])
+  const [linkedExternalStudies, setLinkedExternalStudies] = useState<ExternalStudy[]>([])
   const [showModal, setShowModal] = useState(false)
   const [showTrajectoryModal, setShowTrajectoryModal] = useState(false)
   const [showSuccessToast, setShowSuccessToast] = useState(false)
@@ -98,6 +105,12 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
           const trajectoriesResponse = await getTrajectoriesForTransitionPlan(response.data.id)
           if (trajectoriesResponse.success && trajectoriesResponse.data) {
             setCustomTrajectories(trajectoriesResponse.data)
+          }
+
+          const studiesResponse = await getLinkedStudies(response.data.id)
+          if (studiesResponse.success) {
+            setLinkedStudies(studiesResponse.data.studies)
+            setLinkedExternalStudies(studiesResponse.data.externalStudies)
           }
         } else {
           setTransitionPlan(null)
@@ -172,6 +185,8 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
       studyStartYear,
       reductionRate: SBTI_REDUCTION_RATE_15,
       maxYear,
+      linkedStudies,
+      externalStudies: linkedExternalStudies,
     })
 
     const customTrajectoriesData = customTrajectories
@@ -184,12 +199,16 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
             baseEmissions: totalCo2,
             studyStartYear,
             reductionRate: SBTI_REDUCTION_RATE_15,
+            linkedStudies,
+            externalStudies: linkedExternalStudies,
           })
         } else if (traj.type === 'SBTI_WB2C') {
           data = calculateSBTiTrajectory({
             baseEmissions: totalCo2,
             studyStartYear,
             reductionRate: SBTI_REDUCTION_RATE_WB2C,
+            linkedStudies,
+            externalStudies: linkedExternalStudies,
           })
         } else {
           data = calculateCustomTrajectory({
@@ -199,6 +218,8 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
               targetYear: obj.targetYear,
               reductionRate: Number(obj.reductionRate),
             })),
+            linkedStudies,
+            externalStudies: linkedExternalStudies,
           })
         }
 
@@ -216,7 +237,15 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
       customTrajectories: customTrajectoriesData,
       studyStartYear,
     }
-  }, [selectedTrajectories, study, transitionPlan, customTrajectories, selectedCustomTrajectoryIds])
+  }, [
+    selectedTrajectories,
+    study,
+    transitionPlan,
+    customTrajectories,
+    selectedCustomTrajectoryIds,
+    linkedStudies,
+    linkedExternalStudies,
+  ])
 
   if (loading) {
     return (
@@ -356,6 +385,14 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
               />
             )}
           </div>
+
+          <LinkedStudies
+            transitionPlanId={transitionPlan.id}
+            studyId={study.id}
+            studyYear={study.startDate}
+            linkedStudies={linkedStudies}
+            externalStudies={linkedExternalStudies}
+          />
 
           <TrajectoryGraph
             trajectory15={{

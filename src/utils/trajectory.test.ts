@@ -9,6 +9,12 @@ import {
   SBTI_REDUCTION_RATE_WB2C,
 } from './trajectory'
 
+// TODO: ESM module issue with Jest. Remove these mocks when moving to Vitest
+jest.mock('../services/file', () => ({ download: jest.fn() }))
+jest.mock('../services/auth', () => ({ auth: jest.fn() }))
+jest.mock('uuid', () => ({ v4: jest.fn() }))
+jest.mock('next-intl/server', () => ({ getTranslations: jest.fn(() => (key: string) => key) }))
+
 const DEFAULT_LINEAR_REDUCTION_15C = 42
 const DEFAULT_LINEAR_REDUCTION_WB2C = 25
 const COMENSATED_LINEAR_REDUCTION_2025_15C = 46.125
