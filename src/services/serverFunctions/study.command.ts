@@ -165,7 +165,6 @@ export type ChangeStudyDatesCommand = z.infer<typeof ChangeStudyDatesCommandVali
 
 export const ChangeStudyNameValidation = z.object({
   studyId: z.string(),
-  cncId: z.string(),
   name: z
     .string({
       required_error: 'name',
