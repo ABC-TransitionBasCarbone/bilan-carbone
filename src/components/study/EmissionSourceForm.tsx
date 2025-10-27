@@ -44,6 +44,7 @@ import HelpIcon from '../base/HelpIcon'
 import LinkButton from '../base/LinkButton'
 import { Select } from '../base/Select'
 import TagChip from '../base/TagChip'
+import { ImportVersionForFilters } from '../emissionFactor/EmissionFactorsFilters'
 import GlossaryModal from '../modals/GlossaryModal'
 import Modal from '../modals/Modal'
 import DeleteEmissionSource from './DeleteEmissionSource'
@@ -78,6 +79,7 @@ interface Props {
   studyUnit: StudyResultUnit
   userOrganizationId?: string
   emissionFactorsForSubPost: EmissionFactorWithMetaData[]
+  importVersions: ImportVersionForFilters[]
   update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null | string[]) => void
 }
 
@@ -100,6 +102,7 @@ const EmissionSourceForm = ({
   environment,
   userOrganizationId,
   emissionFactorsForSubPost,
+  importVersions,
   update,
 }: Props) => {
   const t = useTranslations('emissionSource')
@@ -222,6 +225,8 @@ const EmissionSourceForm = ({
           currentBEVersion={currentBEVersion}
           userOrganizationId={userOrganizationId}
           emissionFactorsForSubPost={emissionFactorsForSubPost}
+          importVersions={importVersions}
+          studyId={studyId}
         />
         {isCas ? (
           <>

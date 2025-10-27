@@ -261,8 +261,22 @@ export const getAllEmissionFactors = async (
     studyOldEmissionFactors = await getEmissionFactorsFromIdsExceptVersions(selectedEmissionFactors, versionIds, locale)
   }
 
-  const defaultEmissionFactors = await getDefaultEmissionFactors(skip, take, locale, filters, withCut, organizationId)
-  const emissionFactorsCountInfos = await getDefaultEmissionFactorsCount(filters, withCut, organizationId)
+  const filtersToApply = versionIds
+    ? {
+        ...filters,
+        sources: [...versionIds, Import.Manual],
+      }
+    : filters
+
+  const defaultEmissionFactors = await getDefaultEmissionFactors(
+    skip,
+    take,
+    locale,
+    filtersToApply,
+    withCut,
+    organizationId,
+  )
+  const emissionFactorsCountInfos = await getDefaultEmissionFactorsCount(filtersToApply, withCut, organizationId)
 
   const allEmissionFactors = defaultEmissionFactors.concat(studyOldEmissionFactors)
 

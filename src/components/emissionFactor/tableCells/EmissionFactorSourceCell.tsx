@@ -9,7 +9,7 @@ import { Getter } from '@tanstack/react-table'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useCallback } from 'react'
-import styles from '../Table.module.css'
+import styles from '../EmissionFactorsTable.module.css'
 
 interface Props {
   fromModal: boolean

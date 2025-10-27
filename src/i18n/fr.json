@@ -506,7 +506,7 @@
         },
         "dialog": {
           "title": "Êtes-vous sûr de vouloir ajouter cette personne à votre étude ?",
-          "otherOrganization": "<warning>Elle ne fait pas partie de votre organisation.</warning>",
+          "otherOrganization": "<warning>Elle ne fait pas partie de votre organisation.</warning> Cette personne aura alors accès aux données de votre étude ainsi qu'aux facteurs d'émissions manuels de votre entreprise.",
           "rightsWarning": "Si elle ne réunit pas les conditions nécessaires pour l'ajouter avec ce rôle, vous ne pourrez donc lui donner un accès qu'à cette étude avec les droits de LECTURE ou de contribution. Un mail lui sera envoyé pour lui donner accès à l'étude.",
           "accept": "Oui",
           "decline": "Non"

@@ -4,21 +4,22 @@ import { EmissionFactorList } from '@/db/emissionFactors'
 import { environmentSubPostsMapping, Post, subPostsByPost } from '@/services/posts'
 import { EmissionFactorWithMetaData, getEmissionFactors } from '@/services/serverFunctions/emissionFactor'
 import { BCUnit } from '@/services/unit'
-import { EmissionFactorImportVersion, Environment, SubPost } from '@prisma/client'
+import { Environment, SubPost } from '@prisma/client'
 import { PaginationState } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import EditEmissionFactorModal from './edit/EditEmissionFactorModal'
-import { EmissionFactorsFilters } from './EmissionFactorsFilters'
-import { EmissionFactorsTable } from './Table'
+import { EmissionFactorsFilters, ImportVersionForFilters } from './EmissionFactorsFilters'
+import { EmissionFactorsTable } from './EmissionFactorsTable'
 
 interface Props {
   userOrganizationId?: string | null
   environment: Environment
   initialImportVersions: string[]
-  importVersions: EmissionFactorImportVersion[]
+  importVersions: ImportVersionForFilters[]
   locationOptions: string[]
   defaultSubPost?: SubPost
+  studyId?: string
   selectEmissionFactor?: (emissionFactor: EmissionFactorWithMetaData) => void
 }
 
@@ -30,6 +31,7 @@ const EmissionFactorsFiltersAndTable = ({
   importVersions,
   locationOptions,
   defaultSubPost,
+  studyId,
   selectEmissionFactor,
 }: Props) => {
   const t = useTranslations('emissionFactors.table')
@@ -57,29 +59,38 @@ const EmissionFactorsFiltersAndTable = ({
     units: initialSelectedUnits,
     subPosts: defaultSubPost ? [defaultSubPost] : envSubPosts,
   })
+  const filtersRef = useRef(filters)
 
   const fromModal = !!selectEmissionFactor
 
   useEffect(() => {
     async function fetchEmissionFactors() {
       const takeValue = skip === 0 ? pagination.pageSize * 4 : pagination.pageSize
-      const emissionFactorsFromBdd = await getEmissionFactors(skip, takeValue, filters)
+      filtersRef.current = filters
+      const emissionFactorsFromBdd = await getEmissionFactors(skip, takeValue, filters, studyId)
 
-      setSkip((prevSkip) => takeValue + prevSkip)
+      if (filtersRef.current !== filters) {
+        setSkip((prevSkip) => takeValue + prevSkip)
 
-      if (emissionFactorsFromBdd.success) {
-        setEmissionFactors((prevEF) => prevEF.concat(emissionFactorsFromBdd.data.emissionFactors))
-        setTotalCount(emissionFactorsFromBdd.data.count)
-      } else {
-        setEmissionFactors([])
-        setTotalCount(0)
+        if (emissionFactorsFromBdd.success) {
+          setEmissionFactors((prevEF) => prevEF.concat(emissionFactorsFromBdd.data.emissionFactors))
+          setTotalCount(emissionFactorsFromBdd.data.count)
+        } else {
+          setTotalCount(0)
+          setEmissionFactors([])
+        }
       }
     }
 
     const alreadyLoadedCount = skip + pagination.pageSize
     const alreadyDisplayedCount = (pagination.pageIndex + 1) * pagination.pageSize
     const pagesInAdvancedToLoad = 3
-    if (alreadyLoadedCount < alreadyDisplayedCount + pagination.pageSize * pagesInAdvancedToLoad) {
+
+    if (
+      alreadyLoadedCount < alreadyDisplayedCount + pagination.pageSize * pagesInAdvancedToLoad &&
+      alreadyLoadedCount < totalCount
+    ) {
+      console.log('in loading FE', alreadyDisplayedCount, alreadyLoadedCount, pagesInAdvancedToLoad, totalCount)
       fetchEmissionFactors()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -90,7 +101,7 @@ const EmissionFactorsFiltersAndTable = ({
       setEmissionFactors([])
       setTotalCount(0)
 
-      const emissionFactorsFromBdd = await getEmissionFactors(0, 100, filters)
+      const emissionFactorsFromBdd = await getEmissionFactors(0, 100, filters, studyId)
       setSkip(100)
 
       if (emissionFactorsFromBdd.success) {
@@ -100,8 +111,10 @@ const EmissionFactorsFiltersAndTable = ({
       }
     }
 
+    console.log('in filters changed')
+
     fetchEmissionFactors()
-  }, [filters])
+  }, [filters, studyId])
 
   return (
     <>

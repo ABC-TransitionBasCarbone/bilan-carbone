@@ -20,11 +20,12 @@ import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from '
 import Button from '../base/Button'
 import DebouncedInput from '../base/DebouncedInput'
 import MultiSelectAll from '../base/MultiSelectAll'
-import styles from './Table.module.css'
+import styles from './EmissionFactorsTable.module.css'
 
+export type ImportVersionForFilters = Pick<EmissionFactorImportVersion, 'id' | 'source' | 'name'>
 interface Props {
   fromModal: boolean
-  importVersions: EmissionFactorImportVersion[]
+  importVersions: ImportVersionForFilters[]
   initialSelectedUnits: (BCUnit | string)[]
   envPosts: Post[]
   filters: FeFilters
@@ -68,7 +69,7 @@ export const EmissionFactorsFilters = ({
     return () => window.removeEventListener('resize', checkWrappedRows)
   }, [])
 
-  const getEmissionVersionLabel = (version?: EmissionFactorImportVersion) =>
+  const getEmissionVersionLabel = (version?: Pick<EmissionFactorImportVersion, 'source' | 'name'>) =>
     version ? `${t(version.source)} ${version.name}` : ''
 
   const envSubPosts = useMemo(() => {
@@ -138,7 +139,7 @@ export const EmissionFactorsFilters = ({
             </FormLabel>
             <DebouncedInput
               className={styles.searchInput}
-              debounce={200}
+              debounce={500}
               value={filters.search}
               onChange={(newValue) => setFilters((prevFilters) => ({ ...prevFilters, search: newValue }))}
               placeholder={t('searchPlaceholder')}

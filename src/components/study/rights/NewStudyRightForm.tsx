@@ -34,7 +34,7 @@ const NewStudyRightForm = ({ study, accounts, existingAccounts, accountRole }: P
   const t = useTranslations('study.rights.new')
   const tRole = useTranslations('study.role')
   const { showErrorToast } = useToast()
-
+  const [loading, setLoading] = useState(false)
   const [readerOnly, setReaderOnly] = useState(false)
   const [otherOrganizationVersion, setOtherOrganizationVersion] = useState(false)
   const { callServerFunction } = useServerFunction()
@@ -71,11 +71,16 @@ const NewStudyRightForm = ({ study, accounts, existingAccounts, accountRole }: P
   }
 
   const saveRight = async (command: NewStudyRightCommand) => {
+    setLoading(true)
     await callServerFunction(() => newStudyRight(command), {
       getErrorMessage: (error) => t(error),
       onSuccess: () => {
         setOtherOrganizationVersion(false)
+        setLoading(false)
         router.push(`/etudes/${study.id}/cadrage`)
+      },
+      onError: () => {
+        setLoading(false)
       },
     })
   }
@@ -151,6 +156,7 @@ const NewStudyRightForm = ({ study, accounts, existingAccounts, accountRole }: P
         rightsWarning={form.getValues().role !== StudyRole.Reader}
         decline={() => setOtherOrganizationVersion(false)}
         accept={() => saveRight(form.getValues())}
+        loading={loading}
       />
     </>
   )

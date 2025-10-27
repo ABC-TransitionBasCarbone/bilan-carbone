@@ -247,6 +247,8 @@ const fullStudyInclude = {
       importVersion: {
         select: {
           name: true,
+          source: true,
+          id: true,
         },
       },
     },

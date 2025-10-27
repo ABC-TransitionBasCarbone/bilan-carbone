@@ -18,6 +18,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { Path } from 'react-hook-form'
 import LinkButton from '../base/LinkButton'
+import { ImportVersionForFilters } from '../emissionFactor/EmissionFactorsFilters'
 import GlossaryModal from '../modals/GlossaryModal'
 import styles from './EmissionSource.module.css'
 import EmissionSourceFactor from './EmissionSourceFactor'
@@ -35,6 +36,8 @@ interface Props {
   environment: Environment | undefined
   userOrganizationId?: string
   emissionFactorsForSubPost: EmissionFactorWithMetaData[]
+  importVersions: ImportVersionForFilters[]
+  studyId: string
   update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null) => void
 }
 
@@ -51,6 +54,8 @@ const EmissionSourceContributorForm = ({
   environment,
   userOrganizationId,
   emissionFactorsForSubPost,
+  importVersions,
+  studyId,
   update,
 }: Props) => {
   const t = useTranslations('emissionSource')
@@ -75,6 +80,8 @@ const EmissionSourceContributorForm = ({
           currentBEVersion={currentBEVersion}
           userOrganizationId={userOrganizationId}
           emissionFactorsForSubPost={emissionFactorsForSubPost}
+          importVersions={importVersions}
+          studyId={studyId}
           getDetail={getDetail}
           update={update}
         />

@@ -317,6 +317,7 @@ const EmissionSource = ({
             )}
             {withoutDetail ? (
               <EmissionSourceContributorForm
+                studyId={study.id}
                 emissionSource={emissionSource}
                 selectedFactor={selectedFactor}
                 subPost={subPost}
@@ -326,6 +327,10 @@ const EmissionSource = ({
                 advanced={study.level === Level.Advanced}
                 environment={environment}
                 emissionFactorsForSubPost={emissionFactorsForSubPost}
+                importVersions={[
+                  { id: Import.Manual, source: Import.Manual, name: '' },
+                  ...study.emissionFactorVersions.map((efv) => efv.importVersion),
+                ]}
               />
             ) : (
               <EmissionSourceForm
@@ -348,6 +353,10 @@ const EmissionSource = ({
                 studyUnit={study.resultsUnit}
                 userOrganizationId={study.organizationVersion.organization.id}
                 emissionFactorsForSubPost={emissionFactorsForSubPost}
+                importVersions={[
+                  { id: Import.Manual, source: Import.Manual, name: '' },
+                  ...study.emissionFactorVersions.map((efv) => efv.importVersion),
+                ]}
               />
             )}
           </div>

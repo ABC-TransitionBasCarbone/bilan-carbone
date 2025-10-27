@@ -16,6 +16,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Path } from 'react-hook-form'
 import Button from '../base/Button'
 import DebouncedInput from '../base/DebouncedInput'
+import { ImportVersionForFilters } from '../emissionFactor/EmissionFactorsFilters'
 import Modal from '../modals/Modal'
 import styles from './EmissionSourceFactor.module.css'
 import EmissionSourceFactorModal from './EmissionSourceFactorModal'
@@ -59,6 +60,8 @@ interface Props {
   currentBEVersion: string
   userOrganizationId?: string
   emissionFactorsForSubPost: EmissionFactorWithMetaData[]
+  importVersions: ImportVersionForFilters[]
+  studyId: string
   getDetail: (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) => string
   update: (name: Path<UpdateEmissionSourceCommand>, value: string | null) => void
 }
@@ -71,6 +74,8 @@ const EmissionSourceFactor = ({
   currentBEVersion,
   userOrganizationId,
   emissionFactorsForSubPost,
+  importVersions,
+  studyId,
   getDetail,
   update,
 }: Props) => {
@@ -212,6 +217,13 @@ const EmissionSourceFactor = ({
           userOrganizationId={userOrganizationId}
           close={() => setAdvancedSearch(false)}
           defaultSubPost={subPost}
+          importVersions={importVersions}
+          selectEmissionFactor={(emissionFactor) => {
+            update('emissionFactorId', emissionFactor.id)
+            setDisplay(false)
+            setAdvancedSearch(false)
+          }}
+          studyId={studyId}
         />
       )}
       <Modal
