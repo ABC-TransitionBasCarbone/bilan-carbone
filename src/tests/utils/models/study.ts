@@ -233,7 +233,7 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
       source: Import.BaseEmpreinte,
       importVersionId: TEST_IDS.importVersion,
       id: 'fe_version_id',
-      importVersion: { name: 'Import v1' },
+      importVersion: { name: 'Import v1', id: TEST_IDS.importVersion, source: Import.BaseEmpreinte },
     },
   ],
   emissionSources: [
