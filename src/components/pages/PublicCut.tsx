@@ -90,13 +90,13 @@ const PublicCutPage = ({ children }: Props) => {
             width={204}
             height={198}
           />
-          <Typography textAlign="justify" width="75%" fontSize="0.8rem">
+          <Typography textAlign="justify" width="75%" fontSize="0.8rem" display="flex" alignItems="center">
             {t('explanation2')}
           </Typography>
         </Box>
         <Box className="justify-between" padding="1rem">
           <Image className={styles.france2030Logo} src="/logos/cut/CINEO.png" alt="logo" width={80} height={78} />
-          <Typography textAlign="justify" width="75%" fontSize="0.8rem">
+          <Typography textAlign="justify" width="75%" fontSize="0.8rem" display="flex" alignItems="center">
             {t('cineo')}
           </Typography>
         </Box>
