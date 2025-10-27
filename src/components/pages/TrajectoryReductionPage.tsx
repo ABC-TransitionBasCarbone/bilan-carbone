@@ -418,6 +418,7 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
               onClose={() => setShowTrajectoryModal(false)}
               transitionPlanId={transitionPlan.id}
               onSuccess={handleCreateTrajectorySuccess}
+              trajectory={null}
             />
           )}
 
