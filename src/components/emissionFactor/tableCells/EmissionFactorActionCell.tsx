@@ -16,6 +16,8 @@ export const EmissionFactorActionCell = ({ emissionFactor, selectEmissionFactor 
       aria-label={t('selectLine')}
       title={t('selectLine')}
       onClick={() => selectEmissionFactor(emissionFactor)}
+      color="secondary"
+      variant="contained"
     >
       <CheckIcon />
     </MuiButton>

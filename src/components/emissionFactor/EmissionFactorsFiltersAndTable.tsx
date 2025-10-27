@@ -111,8 +111,6 @@ const EmissionFactorsFiltersAndTable = ({
       }
     }
 
-    console.log('in filters changed')
-
     fetchEmissionFactors()
   }, [filters, studyId])
 
