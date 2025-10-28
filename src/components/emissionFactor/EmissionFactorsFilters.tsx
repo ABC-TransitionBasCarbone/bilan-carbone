@@ -161,6 +161,7 @@ export const EmissionFactorsFilters = ({
                 <TextField
                   {...params}
                   placeholder={t('locationSearchPlaceholder')}
+                  className={styles.locationInput}
                   sx={{
                     minWidth: '20rem',
                     '& .MuiOutlinedInput-root': { '& fieldset': { borderRadius: '0.25rem' } },
@@ -216,11 +217,7 @@ export const EmissionFactorsFilters = ({
               renderValue={subPostsSelectorRenderValue}
               multiple
             >
-              <MenuItem
-                key="subpost-item-all"
-                className={allSelectedSubPosts ? 'Mui-selected' : ''} // dirty-hack because selected does not work on this option
-                onClick={selectAllSubPosts}
-              >
+              <MenuItem key="subpost-item-all" selected={allSelectedSubPosts} onClick={selectAllSubPosts}>
                 <Checkbox checked={allSelectedSubPosts} />
                 <ListItemText primary={tPosts(allSelectedSubPosts ? 'unselectAll' : 'selectAll')} />
               </MenuItem>

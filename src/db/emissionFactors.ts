@@ -102,13 +102,14 @@ export type EmissionFactorList = {
   }[]
 }
 
-const handleFilterConditions = (filters: FeFilters, withCut: boolean, organizationId?: string) => {
+const handleFilterConditions = (filters: FeFilters, withCut: boolean, locale: localeType, organizationId?: string) => {
+  const langugagePrisma = Prisma.sql`${locale}`
   const conditions: Prisma.Sql[] = [
-    Prisma.sql`m.language = 'fr'`,
+    Prisma.sql`m.language = ${langugagePrisma}`,
     Prisma.sql`ef.sub_posts IS NOT NULL AND ef.sub_posts::text != '{}'`,
   ]
 
-  if (withCut) {
+  if (!withCut) {
     conditions.push(Prisma.sql`ef.imported_from != 'CUT'`)
   }
 
@@ -140,7 +141,9 @@ const handleFilterConditions = (filters: FeFilters, withCut: boolean, organizati
 
   if (filters.sources.length > 0 && filters.sources.some((source) => source !== 'all')) {
     if (filters.sources.includes(Import.Manual) && filters.sources.length === 1 && organizationId) {
-      conditions.push(Prisma.sql`(version_id is null and ef.organization_id = ${Prisma.sql`${organizationId}`})`)
+      conditions.push(
+        Prisma.sql`(ef.imported_from = ${Prisma.sql`${Import.Manual}`} and ef.organization_id = ${Prisma.sql`${organizationId}`})`,
+      )
     } else if (filters.sources.includes(Import.Manual)) {
       conditions.push(
         Prisma.sql`(ef.version_id::text IN (${Prisma.join(filters.sources.filter((s) => s !== Import.Manual))}) OR (version_id is null and ef.organization_id = ${Prisma.sql`${organizationId}`}))`,
@@ -159,20 +162,22 @@ const getBaseRequest = (
   selectRequest: Prisma.Sql,
   filters: FeFilters,
   withCut: boolean,
+  locale: localeType,
   organizationId?: string,
 ): Prisma.Sql => {
   return Prisma.sql`${selectRequest}
     FROM emission_factors ef
   JOIN emission_metadata m
     ON m.emission_factor_id = ef.id
-  WHERE ${handleFilterConditions(filters, withCut, organizationId)}`
+  WHERE ${handleFilterConditions(filters, withCut, locale, organizationId)}`
 }
 const getDefaultEmissionFactorsCount = (
   filters: FeFilters,
   withCut: boolean,
+  locale: localeType,
   organizationId?: string,
 ): { count: number }[] => {
-  const request = getBaseRequest(Prisma.sql`SELECT COUNT(*)::int AS count`, filters, withCut, organizationId)
+  const request = getBaseRequest(Prisma.sql`SELECT COUNT(*)::int AS count`, filters, withCut, locale, organizationId)
   return prismaClient.$queryRaw(request) as unknown as { count: number }[]
 }
 
@@ -193,7 +198,7 @@ const getDefaultEmissionFactors = (
            ef.co2f, ef.ch4f, ef.ch4b, ef.n2o, ef.co2b, ef.sf6, ef.hfc, ef.pfc, ef.other_ges as otherGES,
            (SELECT row_to_json(m.*) FROM emission_metadata m WHERE m.emission_factor_id = ef.id AND m.language = ${locale} LIMIT 1 ) AS ${Prisma.sql`"metaData"`}`
 
-  const baseRequest = getBaseRequest(select, filters, withCut, organizationId)
+  const baseRequest = getBaseRequest(select, filters, withCut, locale, organizationId)
 
   let finalQuery = baseRequest
   if (take === 'ALL') {
@@ -276,7 +281,12 @@ export const getAllEmissionFactors = async (
     withCut,
     organizationId,
   )
-  const emissionFactorsCountInfos = await getDefaultEmissionFactorsCount(filtersToApply, withCut, organizationId)
+  const emissionFactorsCountInfos = await getDefaultEmissionFactorsCount(
+    filtersToApply,
+    withCut,
+    locale,
+    organizationId,
+  )
 
   const allEmissionFactors = defaultEmissionFactors.concat(studyOldEmissionFactors)
 

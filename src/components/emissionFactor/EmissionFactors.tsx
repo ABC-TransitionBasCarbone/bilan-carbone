@@ -24,7 +24,9 @@ const EmissionFactors = ({ userOrganizationId, environment }: Props) => {
       const importVersionsFromBdd = await getImportVersions()
       const locationFromBdd = await getFELocations()
       const selectedImportVersions: Record<string, string> = {}
-      for (const iv of importVersionsFromBdd.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())) {
+      const sortedImportVersions = importVersionsFromBdd.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+
+      for (const iv of sortedImportVersions) {
         if (selectedImportVersions[iv.source]) {
           continue
         }

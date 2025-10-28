@@ -80,3 +80,15 @@
 .modalTable {
   overflow-y: auto;
 }
+
+.locationInput {
+  min-width: 20rem;
+  & .MuiOutlinedInput-root {
+    & fieldset {
+      border-radius: 0.25rem;
+    }
+  }
+  & .MuiInputBase-input {
+    color: black;
+  }
+}

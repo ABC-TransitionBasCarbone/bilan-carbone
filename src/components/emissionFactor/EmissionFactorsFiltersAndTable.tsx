@@ -65,20 +65,20 @@ const EmissionFactorsFiltersAndTable = ({
 
   useEffect(() => {
     async function fetchEmissionFactors() {
+      console.log('here')
       const takeValue = skip === 0 ? pagination.pageSize * 4 : pagination.pageSize
       filtersRef.current = filters
       const emissionFactorsFromBdd = await getEmissionFactors(skip, takeValue, filters, studyId)
+      console.log(skip, takeValue, emissionFactorsFromBdd)
 
-      if (filtersRef.current !== filters) {
-        setSkip((prevSkip) => takeValue + prevSkip)
+      setSkip((prevSkip) => takeValue + prevSkip)
 
-        if (emissionFactorsFromBdd.success) {
-          setEmissionFactors((prevEF) => prevEF.concat(emissionFactorsFromBdd.data.emissionFactors))
-          setTotalCount(emissionFactorsFromBdd.data.count)
-        } else {
-          setTotalCount(0)
-          setEmissionFactors([])
-        }
+      if (emissionFactorsFromBdd.success) {
+        setEmissionFactors((prevEF) => prevEF.concat(emissionFactorsFromBdd.data.emissionFactors))
+        setTotalCount(emissionFactorsFromBdd.data.count)
+      } else {
+        setTotalCount(0)
+        setEmissionFactors([])
       }
     }
 
@@ -90,19 +90,19 @@ const EmissionFactorsFiltersAndTable = ({
       alreadyLoadedCount < alreadyDisplayedCount + pagination.pageSize * pagesInAdvancedToLoad &&
       alreadyLoadedCount < totalCount
     ) {
-      console.log('in loading FE', alreadyDisplayedCount, alreadyLoadedCount, pagesInAdvancedToLoad, totalCount)
       fetchEmissionFactors()
     }
+    // We only want to trigger this effect when the user change pages or the number of FE per page
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [emissionFactors.length, pagination.pageIndex])
+  }, [emissionFactors.length, pagination.pageIndex, pagination.pageSize])
 
   useEffect(() => {
     async function fetchEmissionFactors() {
       setEmissionFactors([])
       setTotalCount(0)
 
-      const emissionFactorsFromBdd = await getEmissionFactors(0, 100, filters, studyId)
-      setSkip(100)
+      const emissionFactorsFromBdd = await getEmissionFactors(0, pagination.pageSize, filters, studyId)
+      setSkip(pagination.pageSize)
 
       if (emissionFactorsFromBdd.success) {
         setPagination((prevPagination) => ({ ...prevPagination, pageIndex: 0 }))
@@ -112,11 +112,13 @@ const EmissionFactorsFiltersAndTable = ({
     }
 
     fetchEmissionFactors()
+    // We don't want this effect to trigger when number of FE changes, because it is the use case of the other effect
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters, studyId])
 
   return (
     <>
-      {t('subTitle')}
+      {!fromModal && t('subTitle')}
       <EmissionFactorsFilters
         fromModal={fromModal}
         importVersions={importVersions}
