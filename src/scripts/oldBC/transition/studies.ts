@@ -181,7 +181,7 @@ const parseStudySites = (studySitesWorksheet: StudySitesWorkSheet): Map<string, 
 }
 
 const getType = (type: string) => {
-  if (type.startsWith('BEGES-r')) {
+  if (type.startsWith('BEGES')) {
     return StudyExport.Beges
   } else if (type === 'GHG-P') {
     return StudyExport.GHGP
@@ -266,10 +266,11 @@ const getExistingEmissionFactorsNames = async (
     .getRows()
     .filter((row) => row.studyOldBCId !== '00000000-0000-0000-0000-000000000000')
     .map((row) =>
-      row.emissionFactorImportedId === '0' ? `${row.emissionFactorOldBCId}` : `${row.emissionFactorImportedId}`,
+      row.emissionFactorImportedId == '0' ? `${row.emissionFactorOldBCId}` : `${row.emissionFactorImportedId}`,
     )
 
-  return await getExistingEmissionFactorsNamesFromRepository(transaction, emissionFactorsOldBCIds)
+  const test = await getExistingEmissionFactorsNamesFromRepository(transaction, emissionFactorsOldBCIds)
+  return test
 }
 
 const buildEmissionSourceName = (
@@ -296,6 +297,7 @@ const parseEmissionSources = (
   const emissionsSources = studyEmissionSourcesWorkSheet
     .map<[string, EmissionSource] | null>((row) => {
       if (row.siteOldBCId === '00000000-0000-0000-0000-000000000000' || row.idefType !== 1) {
+        console.log('skipped', row.studyOldBCId)
         return null
       }
 
@@ -522,7 +524,8 @@ export const uploadStudies = async (
   console.log('Import des études...')
 
   const skippedInfos: { oldBcId: string; reason: string }[] = []
-  const emissionSourceWithoutFe: { oldBcId: string; name: string }[] = []
+  const emissionSourceWithoutFe: Record<string, string[]> = {}
+  const nonExistingFEs: Record<string, string[]> = {}
 
   const studies = await parseStudies(transaction, oldBCWorksheetReader.studiesWorksheet, organizationVersionId)
   const studySites = parseStudySites(oldBCWorksheetReader.studySitesWorksheet)
@@ -534,7 +537,6 @@ export const uploadStudies = async (
 
   const studyEmissionSourcesWorksheet = oldBCWorksheetReader.emissionSourcesWorksheet
     .getRows()
-    .slice(1)
     .filter((row) => row.studyOldBCId !== '00000000-0000-0000-0000-000000000000')
 
   const [studyEmissionSources, skippedEmissionSource] = parseEmissionSources(
@@ -726,6 +728,7 @@ export const uploadStudies = async (
           return []
         }
         if (skippedInfos.some((s) => s.oldBcId === studyOldBCId)) {
+          console.log(`Étude ignorée ${studyOldBCId} car dans la liste des études à ignorer`)
           return []
         }
 
@@ -735,6 +738,9 @@ export const uploadStudies = async (
               studyEmissionSource.siteOldBCId === 'NULL' ||
               skippedInfos.some((s) => s.oldBcId === studyEmissionSource.siteOldBCId)
             ) {
+              console.log(
+                `Source d'émission ignorée - car dans skippedINfos ${studyOldBCId} ${studyEmissionSource.siteOldBCId}`,
+              )
               return null
             }
 
@@ -769,20 +775,25 @@ export const uploadStudies = async (
                 studiesEmissionFactorVersionsMap.addEmissionFactor(existingStudy.id, emissionFactor)
                 emissionFactorId = emissionFactor.id
               } else {
-                emissionSourceWithoutFe.push({
-                  oldBcId: studyOldBCId,
-                  name: studyEmissionSource.emissionFactorImportedId,
-                })
+                if (!emissionSourceWithoutFe[studyEmissionSource.emissionFactorImportedId]) {
+                  emissionSourceWithoutFe[studyEmissionSource.emissionFactorImportedId] = [studyOldBCId]
+                } else {
+                  emissionSourceWithoutFe[studyEmissionSource.emissionFactorImportedId].push(studyOldBCId)
+                }
               }
             } else {
               const existingEmissionFactor = existingEmissionFactorNames.get(studyEmissionSource.emissionFactorOldBCId)
               if (existingEmissionFactor) {
                 emissionFactorId = existingEmissionFactor.id
               } else {
-                skippedInfos.push({
-                  oldBcId: studyOldBCId,
-                  reason: `Source d'émission ignorée - le FE n'existe pas pour la source d'émission ${studyEmissionSource.name}, FEID : ${studyEmissionSource.emissionFactorOldBCId}`,
-                })
+                if (!nonExistingFEs[studyEmissionSource.emissionFactorOldBCId]) {
+                  nonExistingFEs[studyEmissionSource.emissionFactorOldBCId] = [studyEmissionSource.name]
+                } else {
+                  nonExistingFEs[studyEmissionSource.emissionFactorOldBCId].push(studyEmissionSource.name)
+                }
+                console.log(
+                  `Impossible de retrouver le facteur d'émission de oldBCId: ${studyEmissionSource.emissionFactorOldBCId}`,
+                )
                 return null
               }
             }
@@ -933,16 +944,30 @@ export const uploadStudies = async (
     await transaction.studyEmissionFactorVersion.createMany({ data: studyEmissionFactorVersions })
   }
 
-  console.log(EmissionFactorsByImportedIdMap.skippedEmissionFactors)
-  console.log(
-    studyWithoutFEImportVersions.length,
-    "études sans version de facteur d'émission, ajout des versions par défaut.",
-    studyWithoutFEImportVersions,
-  )
-  console.log('skippedInfos', JSON.stringify(skippedInfos))
-  console.log('sous poste en erreur', new Set(skippedEmissionSource.map((e) => e.oldPost)))
-  console.log('raisons des sous postes en erreur', new Set(skippedEmissionSource.map((e) => e.reason)))
-  console.log('emissionSourceWithoutFe', JSON.stringify(emissionSourceWithoutFe))
+  if (EmissionFactorsByImportedIdMap.skippedEmissionFactors.size > 0) {
+    console.log(EmissionFactorsByImportedIdMap.skippedEmissionFactors)
+  }
+  if (studyWithoutFEImportVersions.length) {
+    console.log(
+      studyWithoutFEImportVersions.length,
+      "études sans version de facteur d'émission, ajout des versions par défaut.",
+      studyWithoutFEImportVersions,
+    )
+  }
+
+  if (skippedInfos.length) {
+    console.log('skippedInfos', JSON.stringify(skippedInfos))
+  }
+  if (Object.keys(nonExistingFEs).length) {
+    console.log('skippedFes', JSON.stringify(nonExistingFEs))
+  }
+  if (skippedEmissionSource.length) {
+    console.log('sous poste en erreur', new Set(skippedEmissionSource.map((e) => e.oldPost)))
+    console.log('raisons des sous postes en erreur', new Set(skippedEmissionSource.map((e) => e.reason)))
+  }
+  if (Object.keys(emissionSourceWithoutFe).length) {
+    console.log('emissionSourceWithoutFe', JSON.stringify(emissionSourceWithoutFe))
+  }
 
   return false
 }

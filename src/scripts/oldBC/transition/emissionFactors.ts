@@ -104,6 +104,7 @@ export const uploadEmissionFactors = async (
       const excelParentFE = emissionFactorsToCreate.find((ef) => ef.GUID === row.GUID && ef.EF_TYPE === 'Consolidé')
 
       if (!excelParentFE) {
+        console.log(" Pas de facteur d'émission parent trouvé pour la partie avec GUID :", row.EF_VAL_LIB, row.EFV_GUID)
         return false
       }
 
