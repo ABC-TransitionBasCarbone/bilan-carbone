@@ -1,6 +1,6 @@
 import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormTextField } from '@/components/form/TextField'
-import { TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
+import { TrajectoryFormData } from '@/services/serverFunctions/transitionPlan.command'
 import Typography from '@mui/material/Typography'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
