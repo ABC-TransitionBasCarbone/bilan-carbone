@@ -279,6 +279,8 @@ describe('Study Rights', () => {
     cy.get('[data-value="Agriculture"]').click()
     cy.get('body').click(0, 0)
     cy.getByTestId('study-contributor-create-button').click()
+    cy.getByTestId('new-study-right-modal-accept').click()
+
     cy.wait('@createContributor')
     cy.getByTestId('study-rights-add-contributor').scrollIntoView()
     cy.getByTestId('study-rights-add-contributor').click()
@@ -289,6 +291,8 @@ describe('Study Rights', () => {
     cy.get('[data-value="Agriculture"]').click()
     cy.get('body').click(0, 0)
     cy.getByTestId('study-contributor-create-button').click()
+    cy.getByTestId('new-study-right-modal-accept').click()
+
     cy.wait('@createContributor')
     cy.getByTestId('study-contributors-table-row').first().scrollIntoView()
     cy.getByTestId('study-contributors-table-row').should('have.length', 2)
