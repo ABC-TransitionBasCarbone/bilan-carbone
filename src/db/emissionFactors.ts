@@ -109,11 +109,11 @@ const handleFilterConditions = (filters: FeFilters, withCut: boolean, locale: Lo
   ]
 
   if (!withCut) {
-    conditions.push(Prisma.sql`ef.imported_from != 'CUT'`)
+    conditions.push(Prisma.sql`ef.imported_from::text != ${Import.CUT}`)
   }
 
   if (!filters.archived) {
-    conditions.push(Prisma.sql`ef.status::text != ${'Archived'}`)
+    conditions.push(Prisma.sql`ef.status::text != ${EmissionFactorStatus.Archived}`)
   }
 
   if (filters.search && filters.search.trim() !== '') {
@@ -195,7 +195,7 @@ const getDefaultEmissionFactors = (
            ef.temporal_representativeness as ${Prisma.sql`"temporalRepresentativeness"`},
            ef.completeness, ef.sub_posts as ${Prisma.sql`"subPosts"`},
            ef.co2f, ef.ch4f, ef.ch4b, ef.n2o, ef.co2b, ef.sf6, ef.hfc, ef.pfc, ef.other_ges as otherGES,
-           (SELECT row_to_json(m.*) FROM emission_metadata m WHERE m.emission_factor_id = ef.id AND m.language = ${locale} LIMIT 1 ) AS ${Prisma.sql`"metaData"`}`
+           (SELECT row_to_json(m.*) FROM emission_metadata m WHERE m.emission_factor_id = ef.id AND m.language = ${Prisma.sql`${locale}`} LIMIT 1 ) AS ${Prisma.sql`"metaData"`}`
 
   const baseRequest = getBaseRequest(select, filters, withCut, locale, organizationId)
 

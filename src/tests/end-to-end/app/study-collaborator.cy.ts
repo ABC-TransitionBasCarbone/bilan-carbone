@@ -42,6 +42,7 @@ describe('Study collaborators', () => {
     cy.get('body').click(0, 0)
     cy.getByTestId('study-contributor-create-button').click()
     cy.getByTestId('new-study-right-modal-accept').click()
+
     cy.wait('@createContributor')
     cy.getByTestId('study-contributors-table-row').should('have.length', 1)
 

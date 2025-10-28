@@ -158,16 +158,7 @@ export const EmissionFactorsFilters = ({
                 setFilters((prevFilters) => ({ ...prevFilters, location: newInputValue }))
               }
               renderInput={(params) => (
-                <TextField
-                  {...params}
-                  placeholder={t('locationSearchPlaceholder')}
-                  className={styles.locationInput}
-                  sx={{
-                    minWidth: '20rem',
-                    '& .MuiOutlinedInput-root': { '& fieldset': { borderRadius: '0.25rem' } },
-                    '& .MuiInputBase-input': { color: 'black' },
-                  }}
-                />
+                <TextField {...params} placeholder={t('locationSearchPlaceholder')} className={styles.locationInput} />
               )}
             />
           </FormControl>

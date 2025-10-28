@@ -21,7 +21,7 @@ const EmissionFactors = ({ userOrganizationId, environment }: Props) => {
 
   useEffect(() => {
     async function fetchFiltersInfos() {
-      const importVersionsFromBdd = await getImportVersions()
+      const importVersionsFromBdd = await getImportVersions(environment === Environment.CUT)
       const locationFromBdd = await getFELocations()
       const selectedImportVersions: Record<string, string> = {}
       const sortedImportVersions = importVersionsFromBdd.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())

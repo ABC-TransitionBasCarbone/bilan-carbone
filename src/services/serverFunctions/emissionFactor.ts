@@ -34,13 +34,18 @@ import { getStudyParentOrganizationVersionId } from '../study'
 import { sortAlphabetically } from '../utils'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from './emissionFactor.command'
 
-export const getImportVersions = async () => {
+export const getImportVersions = async (withCut: boolean) => {
   const session = await auth()
   if (!session || !session.user) {
     return []
   }
 
-  return prismaClient.emissionFactorImportVersion.findMany({ where: { archived: false } })
+  return prismaClient.emissionFactorImportVersion.findMany({
+    where: {
+      archived: false,
+      ...(!withCut ? { source: { not: Import.CUT } } : {}),
+    },
+  })
 }
 
 export const getFELocations = async () => {
