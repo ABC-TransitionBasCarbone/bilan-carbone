@@ -1,7 +1,6 @@
 import { LocaleType } from '@/i18n/config'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { FeFilters } from '@/types/filters'
-import { localeType } from '@/types/translation'
 import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
 import { flattenSubposts } from '@/utils/post'
 import { EmissionFactorStatus, Import, Prisma, SubPost, Unit } from '@prisma/client'
@@ -102,7 +101,7 @@ export type EmissionFactorList = {
   }[]
 }
 
-const handleFilterConditions = (filters: FeFilters, withCut: boolean, locale: localeType, organizationId?: string) => {
+const handleFilterConditions = (filters: FeFilters, withCut: boolean, locale: LocaleType, organizationId?: string) => {
   const langugagePrisma = Prisma.sql`${locale}`
   const conditions: Prisma.Sql[] = [
     Prisma.sql`m.language = ${langugagePrisma}`,
@@ -162,7 +161,7 @@ const getBaseRequest = (
   selectRequest: Prisma.Sql,
   filters: FeFilters,
   withCut: boolean,
-  locale: localeType,
+  locale: LocaleType,
   organizationId?: string,
 ): Prisma.Sql => {
   return Prisma.sql`${selectRequest}
@@ -174,7 +173,7 @@ const getBaseRequest = (
 const getDefaultEmissionFactorsCount = (
   filters: FeFilters,
   withCut: boolean,
-  locale: localeType,
+  locale: LocaleType,
   organizationId?: string,
 ): { count: number }[] => {
   const request = getBaseRequest(Prisma.sql`SELECT COUNT(*)::int AS count`, filters, withCut, locale, organizationId)
@@ -184,7 +183,7 @@ const getDefaultEmissionFactorsCount = (
 const getDefaultEmissionFactors = (
   skip: number,
   take: number | 'ALL',
-  locale: localeType,
+  locale: LocaleType,
   filters: FeFilters,
   withCut: boolean,
   organizationId?: string,
@@ -214,7 +213,7 @@ const getDefaultEmissionFactors = (
 
 export const keepOnlyOneMetadata = <T extends { metaData: EmissionFactorList['metaData'][] }>(
   emissionFactors: T[],
-  locale: localeType,
+  locale: LocaleType,
 ): (T & { metaData: EmissionFactorList['metaData'] })[] => {
   return emissionFactors.map((ef) => ({
     ...ef,
@@ -229,7 +228,7 @@ export const keepOnlyOneMetadata = <T extends { metaData: EmissionFactorList['me
   }))
 }
 
-const getEmissionFactorsFromIdsExceptVersions = async (ids: string[], versionIds: string[], locale: localeType) => {
+const getEmissionFactorsFromIdsExceptVersions = async (ids: string[], versionIds: string[], locale: LocaleType) => {
   const efFromBdd = await prismaClient.emissionFactor.findMany({
     where: { id: { in: ids }, versionId: { notIn: versionIds } },
     select: selectEmissionFactor,
@@ -243,7 +242,7 @@ export const getAllEmissionFactors = async (
   organizationId: string | undefined,
   skip: number,
   take: number | 'ALL',
-  locale: localeType,
+  locale: LocaleType,
   filters: FeFilters,
   studyId?: string,
   withCut: boolean = false,
