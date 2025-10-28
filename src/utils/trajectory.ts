@@ -1,13 +1,14 @@
 import { TrajectoryDataPoint } from '@/components/study/transitionPlan/TrajectoryGraph'
 import { FullStudy } from '@/db/study'
 import { getStudyTotalCo2EmissionsWithDep } from '@/services/study'
+import { Translations } from '@/types/translation'
 import { ExternalStudy, TrajectoryType } from '@prisma/client'
 
 export type SBTIType = 'SBTI_15' | 'SBTI_WB2C'
 export const SBTI_REDUCTION_RATE_15 = 0.042
 export const SBTI_REDUCTION_RATE_WB2C = 0.025
 const REFERENCE_YEAR = 2020
-export const MID_TAREGT_YEAR = 2030
+export const MID_TARGET_YEAR = 2030
 export const TARGET_YEAR = 2050
 
 interface CalculateTrajectoryParams {
@@ -213,4 +214,39 @@ export const calculateCustomTrajectory = ({
   }
 
   return dataPoints
+}
+
+export const getDefaultObjectivesForTrajectoryType = (
+  type: TrajectoryType,
+): Array<{ targetYear: number; reductionRate: number }> | undefined => {
+  if (type === TrajectoryType.SBTI_15) {
+    return [
+      { targetYear: MID_TARGET_YEAR, reductionRate: SBTI_REDUCTION_RATE_15 },
+      { targetYear: TARGET_YEAR, reductionRate: SBTI_REDUCTION_RATE_15 },
+    ]
+  }
+
+  if (type === TrajectoryType.SBTI_WB2C) {
+    return [
+      { targetYear: MID_TARGET_YEAR, reductionRate: SBTI_REDUCTION_RATE_WB2C },
+      { targetYear: TARGET_YEAR, reductionRate: SBTI_REDUCTION_RATE_WB2C },
+    ]
+  }
+
+  return undefined
+}
+
+export const getTrajectoryTypeLabel = (type: TrajectoryType, t: Translations) => {
+  switch (type) {
+    case TrajectoryType.SBTI_15:
+      return 'SBTi 1.5°C'
+    case TrajectoryType.SBTI_WB2C:
+      return 'SBTi WB2C'
+    case TrajectoryType.SNBC:
+      return 'SNBC'
+    case TrajectoryType.CUSTOM:
+      return t('custom')
+    default:
+      return type
+  }
 }

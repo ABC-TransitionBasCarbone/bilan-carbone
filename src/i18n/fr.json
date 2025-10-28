@@ -900,7 +900,7 @@
         "customButton": "Je choisis ma trajectoire",
         "customSubtitle": "Reprenez une trajectoire existante ou créez votre propre trajectoire de réduction pour commencer à construire votre plan de transition",
         "myTrajectories": "Mes trajectoires",
-        "addTrajectory": "+ Ajouter une nouvelle trajectoire de réduction",
+        "addTrajectory": "Ajouter une trajectoire de réduction",
         "selectTrajectories": "Sélectionnez vos trajectoires",
         "sbtiCard": {
           "title": "Trajectoires SBTi",
@@ -950,7 +950,10 @@
       },
       "trajectoryModal": {
         "title": "Je choisis ma trajectoire",
+        "editTitle": "Modifier ma trajectoire",
         "submit": "Valider",
+        "save": "Enregistrer",
+        "cancel": "Annuler",
         "success": "Vous avez créé votre première trajectoire !",
         "successSubtitle": "Pour modifier votre trajectoire et les objectifs associés vous pouvez aller dans la rubrique <link>Mes objectifs de réduction</link>.",
         "steps": {
@@ -1012,6 +1015,25 @@
       },
       "objectives": {
         "title": "Objectifs de réduction",
+        "custom": "Personnalisée",
+        "objectiveNumber": "Objectif {number}",
+        "table": {
+          "name": "Nom",
+          "type": "Type",
+          "targetYear": "Année cible",
+          "reductionRate": "Réduction annuelle",
+          "actions": "Actions"
+        },
+        "delete": "Supprimer",
+        "cancel": "Annuler",
+        "deleteTrajectory": {
+          "title": "Supprimer la trajectoire",
+          "message": "Êtes-vous sûr de vouloir supprimer cette trajectoire ? Cette action supprimera également tous les objectifs associés."
+        },
+        "deleteObjective": {
+          "title": "Supprimer l'objectif",
+          "message": "Êtes-vous sûr de vouloir supprimer cet objectif ?"
+        },
         "onboarding": {
           "title": "Ajoutez des trajectoires alternatives ou détaillez vos objectifs de réduction",
           "description": "Vous avez déjà créé une trajectoire de référence mais vous souhaitez en ajouter d'autres afin de tester différentes hypothèses et différents niveaux d'ambition ? Ici, vous pouvez créer de nouvelles trajectoires, ou ajouter des objectifs intermédiaire pour faire un suivi plus fin et ne pas perdre de vue l'objectif final !",

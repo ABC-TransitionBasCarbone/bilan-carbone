@@ -1,4 +1,5 @@
 import { FormTextField } from '@/components/form/TextField'
+import { TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
 import { getReductionRatePerType } from '@/utils/trajectory'
 import { FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material'
 import { TrajectoryType } from '@prisma/client'
@@ -6,7 +7,6 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { Control, Controller } from 'react-hook-form'
 import ObjectiveCard from './ObjectiveCard'
-import { TrajectoryFormData } from './TrajectoryCreationModal'
 import styles from './TrajectoryCreationModal.module.css'
 
 interface Props {

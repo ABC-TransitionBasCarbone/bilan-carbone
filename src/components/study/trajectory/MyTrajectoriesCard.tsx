@@ -3,7 +3,7 @@
 import Box from '@/components/base/Box'
 import Button from '@/components/base/Button'
 import { MultiSelect } from '@/components/base/MultiSelect'
-import { TrajectoryWithObjectives } from '@/db/trajectory'
+import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { Typography } from '@mui/material'
 import classNames from 'classnames'
 import styles from '../../pages/TrajectoryReductionPage.module.css'
@@ -33,16 +33,17 @@ const MyTrajectoriesCard = ({
   }))
 
   return (
-    <Box className={classNames('p125 flex-col gapped075', styles.trajectoryCard)}>
-      <Typography variant="h5" component="h2" fontWeight={600}>
-        {title}
-      </Typography>
+    <Box className={classNames('p125 flex-col justify-between gapped2', styles.trajectoryCard)}>
+      <div className="flex-col gapped-2">
+        <Typography variant="h5" component="h2" fontWeight={600}>
+          {title}
+        </Typography>
+        <Button onClick={onAddTrajectory} variant="outlined">
+          {addButtonLabel}
+        </Button>
+      </div>
 
-      <Button onClick={onAddTrajectory} variant="outlined">
-        {addButtonLabel}
-      </Button>
-
-      <div className={'w100 flex-col gapped075'}>
+      <div className="w100 flex-col gapped-2">
         <MultiSelect
           label={selectLabel}
           value={selectedTrajectoryIds}

@@ -1,13 +1,12 @@
-import { Objective, Prisma, PrismaClient, Trajectory } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { Objective, Prisma, Trajectory } from '@prisma/client'
+import { prismaClient } from './client'
 
 export type TrajectoryWithObjectives = Trajectory & {
   objectives: Objective[]
 }
 
 export const createTrajectoryWithObjectives = async (data: Prisma.TrajectoryCreateInput) => {
-  return prisma.trajectory.create({
+  return prismaClient.trajectory.create({
     data,
     include: {
       objectives: {
@@ -20,7 +19,7 @@ export const createTrajectoryWithObjectives = async (data: Prisma.TrajectoryCrea
 }
 
 export const getTrajectoryById = async (id: string): Promise<TrajectoryWithObjectives | null> => {
-  return prisma.trajectory.findUnique({
+  return prismaClient.trajectory.findUnique({
     where: { id },
     include: {
       objectives: {
@@ -35,7 +34,7 @@ export const getTrajectoryById = async (id: string): Promise<TrajectoryWithObjec
 export const getTrajectoriesByTransitionPlanId = async (
   transitionPlanId: string,
 ): Promise<TrajectoryWithObjectives[]> => {
-  return prisma.trajectory.findMany({
+  return prismaClient.trajectory.findMany({
     where: { transitionPlanId },
     include: {
       objectives: {
@@ -51,14 +50,14 @@ export const getTrajectoriesByTransitionPlanId = async (
 }
 
 export const hasTrajectory = async (transitionPlanId: string): Promise<boolean> => {
-  const count = await prisma.trajectory.count({
+  const count = await prismaClient.trajectory.count({
     where: { transitionPlanId },
   })
   return count > 0
 }
 
 export const deleteTrajectory = async (id: string): Promise<void> => {
-  await prisma.trajectory.delete({
+  await prismaClient.trajectory.delete({
     where: { id },
   })
 }

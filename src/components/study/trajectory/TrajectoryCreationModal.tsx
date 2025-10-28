@@ -1,16 +1,22 @@
 'use client'
 
 import LoadingButton from '@/components/base/LoadingButton'
+import Modal from '@/components/modals/Modal'
 import ModalStepper from '@/components/modals/ModalStepper'
+import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { CreateTrajectoryInput, createTrajectoryWithObjectives } from '@/services/serverFunctions/trajectory'
-import { MID_TAREGT_YEAR, SBTI_REDUCTION_RATE_15, SBTI_REDUCTION_RATE_WB2C, TARGET_YEAR } from '@/utils/trajectory'
+import {
+  CreateTrajectoryInput,
+  createTrajectoryWithObjectives,
+  updateTrajectory,
+} from '@/services/serverFunctions/trajectory'
+import { createTrajectorySchema, TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
+import { getDefaultObjectivesForTrajectoryType } from '@/utils/trajectory'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { TrajectoryType } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 import TrajectoryCreationStep1 from './TrajectoryCreationStep1'
 import TrajectoryCreationStep2 from './TrajectoryCreationStep2'
 
@@ -19,55 +25,8 @@ interface Props {
   onClose: () => void
   transitionPlanId: string
   onSuccess: (trajectoryId: string) => void
+  trajectory: TrajectoryWithObjectives | null
 }
-
-const createObjectiveSchema = (t: (key: string) => string) =>
-  z
-    .object({
-      targetYear: z.string().optional().nullable(),
-      reductionRate: z.number().optional().nullable(),
-    })
-    .refine(
-      (data) => {
-        const hasTargetYear = data.targetYear !== undefined && data.targetYear !== null
-        const hasReductionRate = data.reductionRate !== undefined && data.reductionRate !== null
-        const isEmpty = !hasTargetYear && !hasReductionRate
-        const isFull = hasTargetYear && hasReductionRate
-        return isEmpty || isFull
-      },
-      { message: t('objectiveBothRequired') },
-    )
-
-const createTrajectorySchema = (t: (key: string) => string) => {
-  const objectiveSchema = createObjectiveSchema(t)
-  return z
-    .object({
-      trajectoryType: z.nativeEnum(TrajectoryType),
-      name: z.string({ required_error: t('required') }).min(1, t('required')),
-      description: z.string().optional(),
-      objectives: z.array(objectiveSchema),
-    })
-    .transform((data) => ({
-      ...data,
-      objectives: data.objectives.filter(
-        (obj) =>
-          obj.targetYear !== undefined &&
-          obj.targetYear !== null &&
-          obj.reductionRate !== undefined &&
-          obj.reductionRate !== null,
-      ),
-    }))
-    .refine(
-      (data) => {
-        if (data.trajectoryType !== TrajectoryType.CUSTOM) {
-          return true
-        }
-        return data.objectives.length > 0
-      },
-      { message: t('atLeastOneObjective'), path: ['objectives'] },
-    )
-}
-export type TrajectoryFormData = z.infer<ReturnType<typeof createTrajectorySchema>>
 
 const defaultValues: TrajectoryFormData = {
   trajectoryType: TrajectoryType.SBTI_15,
@@ -76,10 +35,11 @@ const defaultValues: TrajectoryFormData = {
   objectives: [],
 }
 
-const TrajectoryCreationModal = ({ open, onClose, transitionPlanId, onSuccess }: Props) => {
+const TrajectoryCreationModal = ({ open, onClose, transitionPlanId, onSuccess, trajectory }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectoryModal')
   const tValidation = useTranslations('study.transitionPlan.trajectoryModal.validation')
-  const [activeStep, setActiveStep] = useState(0)
+  const isEditMode = !!trajectory
+  const [activeStep, setActiveStep] = useState(isEditMode ? 1 : 0)
   const [isLoading, setIsLoading] = useState(false)
   const { callServerFunction } = useServerFunction()
 
@@ -97,6 +57,20 @@ const TrajectoryCreationModal = ({ open, onClose, transitionPlanId, onSuccess }:
     resolver: zodResolver(trajectorySchema),
     mode: 'onChange',
   })
+
+  useEffect(() => {
+    if (trajectory) {
+      reset({
+        trajectoryType: trajectory.type,
+        name: trajectory.name,
+        description: trajectory.description || '',
+        objectives: trajectory.objectives.map((obj) => ({
+          targetYear: obj.targetYear.toString(),
+          reductionRate: Math.round(obj.reductionRate * 100),
+        })),
+      })
+    }
+  }, [trajectory, reset])
 
   const trajectoryType = watch('trajectoryType')
 
@@ -116,11 +90,42 @@ const TrajectoryCreationModal = ({ open, onClose, transitionPlanId, onSuccess }:
   }
 
   const onSubmit = async (data: TrajectoryFormData) => {
-    console.log({ data })
-
     setIsLoading(true)
     if (!data.trajectoryType) {
       setIsLoading(false)
+      return
+    }
+
+    if (isEditMode && trajectory) {
+      const objectives = data.objectives
+        .filter((obj) => obj.targetYear && obj.reductionRate !== null && obj.reductionRate !== undefined)
+        .map((obj) => ({
+          id: obj.id,
+          targetYear: new Date(obj.targetYear!).getFullYear(),
+          reductionRate: Number(obj.reductionRate) / 100,
+        }))
+
+      await callServerFunction(
+        () =>
+          updateTrajectory(trajectory.id, {
+            name: data.name,
+            description: data.description,
+            type: data.trajectoryType,
+            objectives,
+          }),
+        {
+          onSuccess: () => {
+            onSuccess(trajectory.id)
+            onClose()
+            reset()
+            setActiveStep(isEditMode ? 1 : 0)
+            setIsLoading(false)
+          },
+          onError: () => {
+            setIsLoading(false)
+          },
+        },
+      )
       return
     }
 
@@ -137,15 +142,9 @@ const TrajectoryCreationModal = ({ open, onClose, transitionPlanId, onSuccess }:
         reductionRate: Number(obj.reductionRate) / 100,
       }))
     } else if (data.trajectoryType === TrajectoryType.SBTI_15) {
-      input.objectives = [
-        { targetYear: MID_TAREGT_YEAR, reductionRate: SBTI_REDUCTION_RATE_15 },
-        { targetYear: TARGET_YEAR, reductionRate: SBTI_REDUCTION_RATE_15 },
-      ]
+      input.objectives = getDefaultObjectivesForTrajectoryType(TrajectoryType.SBTI_15)
     } else if (data.trajectoryType === TrajectoryType.SBTI_WB2C) {
-      input.objectives = [
-        { targetYear: MID_TAREGT_YEAR, reductionRate: SBTI_REDUCTION_RATE_WB2C },
-        { targetYear: TARGET_YEAR, reductionRate: SBTI_REDUCTION_RATE_WB2C },
-      ]
+      input.objectives = getDefaultObjectivesForTrajectoryType(TrajectoryType.SBTI_WB2C)
     }
 
     await callServerFunction(() => createTrajectoryWithObjectives(input), {
@@ -164,6 +163,35 @@ const TrajectoryCreationModal = ({ open, onClose, transitionPlanId, onSuccess }:
 
   const isSBTI = trajectoryType === TrajectoryType.SBTI_15 || trajectoryType === TrajectoryType.SBTI_WB2C
   const isStep1Valid = trajectoryType !== null
+
+  if (isEditMode) {
+    return (
+      <Modal
+        label="trajectory-edit"
+        open={open}
+        onClose={onClose}
+        title={t('editTitle')}
+        actions={[
+          {
+            children: t('cancel'),
+            onClick: onClose,
+            variant: 'outlined',
+          },
+          {
+            actionType: 'loadingButton',
+            children: t('save'),
+            loading: isLoading,
+            onClick: handleSubmit(onSubmit),
+            disabled: !isValid,
+          },
+        ]}
+      >
+        {trajectoryType && (
+          <TrajectoryCreationStep2 isSBTI={isSBTI} trajectoryType={trajectoryType} control={control} />
+        )}
+      </Modal>
+    )
+  }
 
   return (
     <ModalStepper
