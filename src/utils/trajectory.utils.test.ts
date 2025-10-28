@@ -1,7 +1,8 @@
 import { TrajectoryDataPoint } from '@/components/study/transitionPlan/TrajectoryGraph'
 import { expect } from '@jest/globals'
-import { TrajectoryType } from '@prisma/client'
+import { Action, TrajectoryType } from '@prisma/client'
 import {
+  calculateActionBasedTrajectory,
   calculateCustomTrajectory,
   calculateSBTiTrajectory,
   getReductionRatePerType,
@@ -267,6 +268,131 @@ describe('calculateTrajectory', () => {
     test('should return undefined for CUSTOM type', () => {
       const rate = getReductionRatePerType(TrajectoryType.CUSTOM)
       expect(rate).toBeUndefined()
+    })
+  })
+
+  describe('calculateActionBasedTrajectory', () => {
+    test('should return base emissions with flat line to 2050 when no quantitative actions', () => {
+      const actions = [
+        {
+          reductionValue: null,
+          reductionStartYear: '2025-01-01',
+          reductionEndYear: '2030-01-01',
+          potentialDeduction: 'Quality',
+        },
+      ] as Action[]
+
+      const result = calculateActionBasedTrajectory({
+        baseEmissions: 1000,
+        studyStartYear: 2024,
+        actions,
+      })
+
+      expect(result[0]).toEqual({ year: 2020, value: 1000 })
+      expect(result.find((p) => p.year === 2024)).toEqual({ year: 2024, value: 1000 })
+      expect(result.find((p) => p.year === 2050)).toEqual({ year: 2050, value: 1000 })
+    })
+
+    test('should calculate trajectory with single quantitative action', () => {
+      const actions = [
+        {
+          reductionValue: 100,
+          reductionStartYear: '2025-01-01',
+          reductionEndYear: '2030-01-01',
+          potentialDeduction: 'Quantity',
+        },
+      ] as Action[]
+
+      const result = calculateActionBasedTrajectory({
+        baseEmissions: 1000,
+        studyStartYear: 2024,
+        actions,
+      })
+
+      const annualReduction = 100 / (2030 - 2025)
+
+      expect(result.find((p) => p.year === 2024)).toEqual({ year: 2024, value: 1000 })
+      expect(result.find((p) => p.year === 2025)?.value).toBeCloseTo(1000 - annualReduction, 1)
+      expect(result.find((p) => p.year === 2026)?.value).toBeCloseTo(1000 - 2 * annualReduction, 1)
+      expect(result.find((p) => p.year === 2027)?.value).toBeCloseTo(1000 - 3 * annualReduction, 1)
+      expect(result.find((p) => p.year === 2030)?.value).toBeCloseTo(1000 - 6 * annualReduction, 1)
+    })
+
+    test('should calculate trajectory with multiple overlapping actions', () => {
+      const actions = [
+        {
+          reductionValue: 100,
+          reductionStartYear: '2025-01-01',
+          reductionEndYear: '2030-01-01',
+          potentialDeduction: 'Quantity',
+        },
+        {
+          reductionValue: 50,
+          reductionStartYear: '2027-01-01',
+          reductionEndYear: '2032-01-01',
+          potentialDeduction: 'Quantity',
+        },
+      ] as Action[]
+
+      const result = calculateActionBasedTrajectory({
+        baseEmissions: 1000,
+        studyStartYear: 2024,
+        actions,
+      })
+
+      const action1AnnualReduction = 100 / (2030 - 2025)
+      const action2AnnualReduction = 50 / (2032 - 2027)
+
+      expect(result.find((p) => p.year === 2024)).toEqual({ year: 2024, value: 1000 })
+      expect(result.find((p) => p.year === 2025)?.value).toBeCloseTo(1000 - action1AnnualReduction, 1)
+      expect(result.find((p) => p.year === 2026)?.value).toBeCloseTo(1000 - 2 * action1AnnualReduction, 1)
+      expect(result.find((p) => p.year === 2027)?.value).toBeCloseTo(
+        1000 - 3 * action1AnnualReduction - action2AnnualReduction,
+        1,
+      )
+      expect(result.find((p) => p.year === 2028)?.value).toBeCloseTo(
+        1000 - 4 * action1AnnualReduction - 2 * action2AnnualReduction,
+        1,
+      )
+
+      const lastPoint = result[result.length - 1]
+      expect(lastPoint.year).toBe(2050)
+    })
+
+    test('should filter out actions with missing data or quality actions', () => {
+      const actions = [
+        {
+          reductionValue: 100,
+          reductionStartYear: '2025-01-01',
+          reductionEndYear: '2030-01-01',
+          potentialDeduction: 'Quality',
+        },
+        {
+          reductionValue: null,
+          reductionStartYear: '2025-01-01',
+          reductionEndYear: '2030-01-01',
+          potentialDeduction: 'Quantity',
+        },
+        {
+          reductionValue: 50,
+          reductionStartYear: '2026-01-01',
+          reductionEndYear: '2030-01-01',
+          potentialDeduction: 'Quantity',
+        },
+      ] as Action[]
+
+      const result = calculateActionBasedTrajectory({
+        baseEmissions: 1000,
+        studyStartYear: 2024,
+        actions,
+      })
+
+      const annualReduction = 50 / (2030 - 2026)
+      const point2026 = result.find((p) => p.year === 2026)
+      expect(point2026?.value).toBeCloseTo(1000 - annualReduction, 1)
+
+      const point2027 = result.find((p) => p.year === 2027)
+      expect(point2027?.value).toBeCloseTo(1000 - 2 * annualReduction, 1)
     })
   })
 })

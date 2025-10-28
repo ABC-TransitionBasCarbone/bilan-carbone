@@ -2,7 +2,8 @@ import { TrajectoryDataPoint } from '@/components/study/transitionPlan/Trajector
 import { FullStudy } from '@/db/study'
 import { getStudyTotalCo2EmissionsWithDep } from '@/services/study'
 import { Translations } from '@/types/translation'
-import { ExternalStudy, TrajectoryType } from '@prisma/client'
+import { Action, ActionPotentialDeduction, ExternalStudy, TrajectoryType } from '@prisma/client'
+import { getYearFromDate } from './time'
 
 export type SBTIType = 'SBTI_15' | 'SBTI_WB2C'
 export const SBTI_REDUCTION_RATE_15 = 0.042
@@ -22,6 +23,7 @@ interface CalculateTrajectoryParams {
   externalStudies?: ExternalStudy[]
 }
 
+// TODO: Refactor this with ticket https://github.com/ABC-TransitionBasCarbone/bilan-carbone/issues/1808
 const getLinkedEmissions = (year: number, linkedStudies?: FullStudy[], externalStudies?: ExternalStudy[]) => {
   const startDate = new Date(`01-01-${year}`)
   const endDate = new Date(`01-01-${year + 1}`)
@@ -249,4 +251,83 @@ export const getTrajectoryTypeLabel = (type: TrajectoryType, t: Translations) =>
     default:
       return type
   }
+}
+
+export const calculateActionBasedTrajectory = ({
+  baseEmissions,
+  studyStartYear,
+  actions,
+  linkedStudies,
+  externalStudies,
+  maxYear,
+}: {
+  baseEmissions: number
+  studyStartYear: number
+  actions: Action[]
+  linkedStudies?: FullStudy[]
+  externalStudies?: ExternalStudy[]
+  maxYear?: number
+}): TrajectoryDataPoint[] => {
+  const dataPoints: TrajectoryDataPoint[] = []
+
+  for (let year = REFERENCE_YEAR; year < studyStartYear; year++) {
+    const linkedEmissions = getLinkedEmissions(year, linkedStudies, externalStudies)
+    if (linkedEmissions) {
+      dataPoints.push({ year, value: linkedEmissions })
+    } else {
+      dataPoints.push({ year, value: baseEmissions })
+    }
+  }
+
+  let currentEmissions = baseEmissions
+  dataPoints.push({ year: studyStartYear, value: currentEmissions })
+
+  const quantitativeActions = actions.filter(
+    (action) =>
+      action.potentialDeduction === ActionPotentialDeduction.Quantity &&
+      action.reductionValue !== null &&
+      action.reductionStartYear !== null &&
+      action.reductionEndYear !== null,
+  )
+
+  const maxActionsEndYear =
+    quantitativeActions.length > 0
+      ? Math.max(
+          ...quantitativeActions.map((action) =>
+            action.reductionEndYear ? getYearFromDate(action.reductionEndYear) : 0,
+          ),
+        )
+      : 0
+
+  const maxDefaultEndYear = Math.max(maxYear ?? TARGET_YEAR, TARGET_YEAR)
+  const maxEndYear = Math.max(maxActionsEndYear, maxDefaultEndYear)
+  const yearlyReductions: Record<number, number> = {}
+
+  for (const action of quantitativeActions) {
+    const startYear = action.reductionStartYear ? getYearFromDate(action.reductionStartYear) : 0
+    const endYear = action.reductionEndYear ? getYearFromDate(action.reductionEndYear) : 0
+
+    if (startYear === endYear) {
+      yearlyReductions[startYear] = action.reductionValue ?? 0
+    } else if (startYear <= endYear) {
+      for (let year = startYear; year <= endYear; year++) {
+        const actionDuration = endYear - startYear
+        const annualReduction = (action.reductionValue ?? 0) / actionDuration
+        const currentYearlyReduction = yearlyReductions[year]
+        if (currentYearlyReduction) {
+          yearlyReductions[year] += annualReduction
+        } else {
+          yearlyReductions[year] = annualReduction
+        }
+      }
+    }
+  }
+
+  for (let year = studyStartYear + 1; year <= maxEndYear; year++) {
+    const yearlyReduction = yearlyReductions[year] ?? 0
+    currentEmissions = Math.max(0, currentEmissions - yearlyReduction)
+    dataPoints.push({ year, value: currentEmissions })
+  }
+
+  return dataPoints
 }

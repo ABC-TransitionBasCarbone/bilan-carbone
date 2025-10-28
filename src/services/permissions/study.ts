@@ -458,35 +458,6 @@ export const hasAccessToFormationStudy = async (userAccount: Prisma.AccountCreat
   return isFormationStudyFeatureActive.success && isFormationStudyFeatureActive.data
 }
 
-export const isFeatureTransitionPlanActive = async (environment: Environment) => {
-  const isTransitionPlanFeatureActive = await isDeactivableFeatureActiveForEnvironment(
-    DeactivatableFeature.TransitionPlan,
-    environment,
-  )
-  return isTransitionPlanFeatureActive.success && isTransitionPlanFeatureActive.data
-}
-
-const hasUserEditionRightOnStudy = async (user: UserSession, study: FullStudy) => {
-  const userRightsOnStudy = getAccountRoleOnStudy(user, study)
-  return !!(userRightsOnStudy && hasEditionRights(userRightsOnStudy))
-}
-
-export const canEditTransitionPlan = async (user: UserSession, study: FullStudy) => {
-  return hasUserEditionRightOnStudy(user, study)
-}
-
-export const canViewTransitionPlan = async (user: UserSession, study: FullStudy) => {
-  return hasUserEditionRightOnStudy(user, study)
-}
-
-export const canCreateAction = async (user: UserSession, study: FullStudy) => {
-  return hasUserEditionRightOnStudy(user, study)
-}
-
-export const canLinkStudyToTransitionPlan = async (user: UserSession, study: FullStudy) => {
-  return hasUserEditionRightOnStudy(user, study)
-}
-
 export const hasReadAccessOnStudy = async (studyId: string) => {
   const session = await dbActualizedAuth()
   if (!session) {

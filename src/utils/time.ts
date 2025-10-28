@@ -1,3 +1,5 @@
+import dayjs from 'dayjs'
+
 export const SEC = 1
 export const MIN = 60 * SEC
 export const HOUR = 60 * MIN
@@ -14,4 +16,8 @@ export const formatDateFr = (date: Date) => {
     month: '2-digit',
     year: 'numeric',
   })
+}
+
+export const getYearFromDate = (date: string) => {
+  return dayjs(date).year()
 }

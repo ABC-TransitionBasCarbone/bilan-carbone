@@ -1,7 +1,10 @@
 'use client'
 
 import BaseTable from '@/components/base/Table'
+import { useServerFunction } from '@/hooks/useServerFunction'
+import { toggleActionEnabled } from '@/services/serverFunctions/transitionPlan'
 import OpenIcon from '@mui/icons-material/OpenInNew'
+import { Switch } from '@mui/material'
 import { Action, ActionPotentialDeduction, StudyResultUnit } from '@prisma/client'
 import {
   ColumnDef,
@@ -11,6 +14,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
 import { useCallback, useMemo, useState } from 'react'
 import ActionModal from './ActionModal'
 
@@ -21,13 +25,26 @@ interface Props {
   transitionPlanId: string
 }
 
-const Table = ({ actions, studyUnit, porters, transitionPlanId }: Props) => {
+const ActionTable = ({ actions, studyUnit, porters, transitionPlanId }: Props) => {
   const t = useTranslations('study.transitionPlan.actions.table')
   const tUnit = useTranslations('study.results.units')
   const tCategory = useTranslations('study.transitionPlan.actions.category')
   const tPotential = useTranslations('study.transitionPlan.actions.potentialDeduction')
   const [editing, setEditing] = useState<Action | undefined>(undefined)
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 })
+  const router = useRouter()
+  const { callServerFunction } = useServerFunction()
+
+  const handleToggleEnabled = useCallback(
+    async (actionId: string, currentValue: boolean) => {
+      await callServerFunction(() => toggleActionEnabled(actionId, !currentValue), {
+        onSuccess: () => {
+          router.refresh()
+        },
+      })
+    },
+    [callServerFunction, router],
+  )
 
   const getPotential = useCallback(
     (action: Action) => {
@@ -46,6 +63,17 @@ const Table = ({ actions, studyUnit, porters, transitionPlanId }: Props) => {
   const columns = useMemo(
     () =>
       [
+        {
+          header: t('enabled'),
+          accessorKey: 'isEnabled',
+          cell: ({ getValue, row }) => (
+            <Switch
+              checked={getValue<boolean>()}
+              onChange={() => handleToggleEnabled(row.original.id, getValue<boolean>())}
+              color="primary"
+            />
+          ),
+        },
         {
           header: t('title'),
           accessorKey: 'title',
@@ -69,7 +97,7 @@ const Table = ({ actions, studyUnit, porters, transitionPlanId }: Props) => {
         { header: t('porter'), accessorKey: 'actionPorter' },
         { header: `${t('budget')} (k€)`, accessorKey: 'necessaryBudget' },
       ] as ColumnDef<Action>[],
-    [getPotential, t, tCategory],
+    [getPotential, t, tCategory, handleToggleEnabled],
   )
 
   const table = useReactTable({
@@ -98,4 +126,4 @@ const Table = ({ actions, studyUnit, porters, transitionPlanId }: Props) => {
   )
 }
 
-export default Table
+export default ActionTable

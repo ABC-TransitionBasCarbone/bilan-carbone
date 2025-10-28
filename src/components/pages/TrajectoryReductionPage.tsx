@@ -14,11 +14,13 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { getTrajectories } from '@/services/serverFunctions/trajectory'
 import {
   getLinkedStudies,
+  getStudyActions,
   getStudyTransitionPlan,
   initializeTransitionPlan,
 } from '@/services/serverFunctions/transitionPlan'
 import { getStudyTotalCo2EmissionsWithDep } from '@/services/study'
 import {
+  calculateActionBasedTrajectory,
   calculateCustomTrajectory,
   calculateSBTiTrajectory,
   SBTI_REDUCTION_RATE_15,
@@ -26,7 +28,7 @@ import {
 } from '@/utils/trajectory'
 import AddIcon from '@mui/icons-material/Add'
 import { Typography } from '@mui/material'
-import { ExternalStudy, TransitionPlan } from '@prisma/client'
+import { Action, ExternalStudy, TransitionPlan } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
@@ -65,6 +67,7 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
   const [transitionPlan, setTransitionPlan] = useState<TransitionPlan | null | undefined>(undefined)
   const [linkedStudies, setLinkedStudies] = useState<FullStudy[]>([])
   const [linkedExternalStudies, setLinkedExternalStudies] = useState<ExternalStudy[]>([])
+  const [actions, setActions] = useState<Action[]>([])
   const [showModal, setShowModal] = useState(false)
   const [showTrajectoryModal, setShowTrajectoryModal] = useState(false)
   const [showSuccessToast, setShowSuccessToast] = useState(false)
@@ -97,7 +100,7 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getStudyTransitionPlan(study)
+        const response = await getStudyTransitionPlan(study.id)
 
         if (response.success && response.data) {
           setTransitionPlan(response.data)
@@ -116,6 +119,11 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
           if (studiesResponse.success) {
             setLinkedStudies(studiesResponse.data.studies)
             setLinkedExternalStudies(studiesResponse.data.externalStudies)
+          }
+
+          const actionsResponse = await getStudyActions(study.id)
+          if (actionsResponse.success) {
+            setActions(actionsResponse.data)
           }
         } else {
           setTransitionPlan(null)
@@ -167,6 +175,7 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
         trajectory15: [],
         trajectoryWB2C: [],
         customTrajectories: [],
+        actionBasedTrajectory: [],
         studyStartYear: 0,
       }
     }
@@ -174,13 +183,15 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
     const totalCo2 = getStudyTotalCo2EmissionsWithDep(study)
     const studyStartYear = study.startDate.getFullYear()
 
+    const enabledActions = actions.filter((action) => action.isEnabled)
+
     const trajectoryWB2CData = calculateSBTiTrajectory({
       baseEmissions: totalCo2,
       studyStartYear,
       reductionRate: SBTI_REDUCTION_RATE_WB2C,
     })
 
-    const maxYear =
+    let maxYear =
       selectedTrajectories.includes(TRAJECTORY_WB2C_ID) && trajectoryWB2CData.length > 0
         ? trajectoryWB2CData[trajectoryWB2CData.length - 1].year
         : undefined
@@ -236,10 +247,27 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
         }
       })
 
+    const customTrajectoriesMaxYear = customTrajectoriesData.reduce((max, traj) => {
+      const lastYear = traj.data.length > 0 ? traj.data[traj.data.length - 1].year : 0
+      return lastYear > max ? lastYear : max
+    }, 0)
+
+    maxYear = Math.max(maxYear ?? 0, customTrajectoriesMaxYear)
+
+    const actionBasedTrajectoryData = calculateActionBasedTrajectory({
+      baseEmissions: totalCo2,
+      studyStartYear,
+      actions: enabledActions,
+      linkedStudies,
+      externalStudies: linkedExternalStudies,
+      maxYear,
+    })
+
     return {
       trajectory15: trajectory15Data,
       trajectoryWB2C: trajectoryWB2CData,
       customTrajectories: customTrajectoriesData,
+      actionBasedTrajectory: actionBasedTrajectoryData,
       studyStartYear,
     }
   }, [
@@ -250,6 +278,7 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
     selectedCustomTrajectoryIds,
     linkedStudies,
     linkedExternalStudies,
+    actions,
   ])
 
   if (loading) {
@@ -409,6 +438,10 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
               enabled: selectedTrajectories.includes(TRAJECTORY_WB2C_ID),
             }}
             customTrajectories={trajectoryData.customTrajectories}
+            actionBasedTrajectory={{
+              data: trajectoryData.actionBasedTrajectory,
+              enabled: true,
+            }}
             studyStartYear={trajectoryData.studyStartYear}
           />
 
