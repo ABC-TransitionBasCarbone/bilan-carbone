@@ -2,7 +2,7 @@ import { EmissionSourceCaracterisation, EmissionSourceType, SubPost } from '@pri
 import z from 'zod'
 
 export const CreateEmissionSourceCommandValidation = z.object({
-  name: z.string().trim().min(1, 'name'),
+  name: z.string().trim().min(1),
   subPost: z.enum(SubPost),
   studyId: z.string(),
   studySiteId: z.string(),
@@ -12,7 +12,6 @@ export const CreateEmissionSourceCommandValidation = z.object({
   type: z.enum(EmissionSourceType).optional().nullable(),
   depreciationPeriod: z.number().optional(),
 })
-
 export type CreateEmissionSourceCommand = z.infer<typeof CreateEmissionSourceCommandValidation>
 
 export const UpdateEmissionSourceCommandValidation = z.object({

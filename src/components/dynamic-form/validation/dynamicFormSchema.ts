@@ -1,3 +1,4 @@
+import { setCustomMessage } from '@/lib/zod.config'
 import { Question, QuestionType } from '@prisma/client'
 import { useMemo } from 'react'
 import { z } from 'zod'
@@ -35,30 +36,19 @@ const validationRules: Partial<Record<QuestionType, (val: string) => boolean>> =
 }
 
 const validationMessages: Partial<Record<QuestionType, string>> = {
-  [QuestionType.NUMBER]: 'number',
-  [QuestionType.POSTAL_CODE]: 'postalCode',
-  [QuestionType.DATE]: 'date',
-  [QuestionType.PHONE]: 'phone',
+  [QuestionType.NUMBER]: 'invalidNumber',
+  [QuestionType.POSTAL_CODE]: 'invalidPostalCode',
+  [QuestionType.DATE]: 'invalidDate',
+  [QuestionType.PHONE]: 'invalidPhone',
 }
 
 export const createQuestionSchema = (question: Question) => {
   let schema: z.ZodType
 
   if (question.required) {
-    schema = z
-      .string({
-        error: (issue) => (issue.input === undefined ? 'required' : 'required'),
-      })
-      .min(1, {
-        error: 'required',
-      })
+    schema = z.string().min(1)
   } else {
-    schema = z
-      .string({
-        error: (issue) => (issue.input === undefined ? undefined : 'invalid_type'),
-      })
-      .optional()
-      .or(z.literal(''))
+    schema = z.string().optional().or(z.literal(''))
   }
 
   const validationRule = validationRules[question.type]
@@ -67,9 +57,7 @@ export const createQuestionSchema = (question: Question) => {
   if (validationRule && validationMessage) {
     schema = schema.refine(
       (val) => createValidationRefine(validationRule, validationMessage, question.required)(val as string),
-      {
-        message: validationMessage,
-      },
+      setCustomMessage(validationMessage),
     )
   }
 

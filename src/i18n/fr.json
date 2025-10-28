@@ -2068,5 +2068,25 @@
     "page": "Page {page} sur {total}",
     "goTo": "Aller à la page",
     "items": "Élements par page"
+  },
+  "validation": {
+    "required": "Veuillez renseigner ce champ",
+    "invalidEnum": "Veuillez sélectionner une valeur valide",
+    "invalidEmail": "Veuillez saisir une adresse email valide",
+    "invalidDate": "Veuillez saisir une date valide",
+    "invalidNumber": "Veuillez saisir un nombre valide",
+    "invalidPostalCode": "Veuillez saisir un code postal valide",
+    "invalidPhone": "Veuillez saisir un numéro de téléphone valide",
+    "invalidString": "Veuillez renseigner ce champ",
+    "endDateBeforeStartDate": "La date de fin doit etre supérieure à la date de début",
+    "noSiteSelected": "Veuillez sélectionner au moins un site",
+    "siretInvalid": "Le SIRET doit contenir exactement 14 chiffres",
+    "nameMaxLength": "Le nom ne peut pas dépasser 64 caractères",
+    "subPostRequired": "Veuillez sélectionner au moins un sous-poste",
+    "objectiveIncomplete": "Veuillez renseigner tous les champs de l'objectif",
+    "atLeastOneObjective": "Veuillez ajouter au moins un objectif",
+    "positiveNumber": "Veuillez saisir un nombre positif",
+    "tooSmall": "Veuillez saisir une valeur plus grande",
+    "tooBig": "Veuillez saisir une valeur plus petite"
   }
 }

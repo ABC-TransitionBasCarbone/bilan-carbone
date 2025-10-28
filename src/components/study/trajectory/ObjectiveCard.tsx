@@ -37,7 +37,7 @@ const ObjectiveCard = ({ reductionRate, name, isEditable, control, index }: Prop
               </Typography>
             </>
           ) : (
-            <>
+            <div className="flex-col gapped1">
               <FormDatePicker
                 name={`objectives.${index}.targetYear`}
                 label={t('objectives.year')}
@@ -59,7 +59,7 @@ const ObjectiveCard = ({ reductionRate, name, isEditable, control, index }: Prop
                 placeholder={t('objectives.reductionRatePlaceholder')}
                 data-testid="objective-reduction-rate-input"
               />
-            </>
+            </div>
           )}
         </div>
       </div>

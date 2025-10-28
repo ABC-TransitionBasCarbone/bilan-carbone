@@ -1,3 +1,4 @@
+import { setCustomIssue, setCustomMessage } from '@/lib/zod.config'
 import {
   ActionCategory,
   ActionNature,
@@ -21,26 +22,9 @@ export const SitesCommandValidation = z.object({
       id: z.string(),
       cncId: z.string().optional(),
       cncCode: z.string().optional(),
-      name: z
-        .string({
-          error: (issue) => (issue.input === undefined ? 'name' : undefined),
-        })
-        .trim()
-        .min(1, 'name'),
-      etp: z
-        .int('etp')
-        .min(0, {
-          error: 'etp',
-        })
-        .optional(),
-      ca: z
-        .number({
-          error: (issue) => (issue.input === undefined ? 'ca' : 'ca'),
-        })
-        .min(0, {
-          error: 'ca',
-        })
-        .optional(),
+      name: z.string().trim().min(1),
+      etp: z.int().min(0).optional(),
+      ca: z.number().min(0).optional(),
       selected: z.boolean().optional(),
       postalCode: z.string().optional(),
       city: z.string().optional(),
@@ -62,56 +46,44 @@ export const StudyExportsCommandValidation = z.object({
 
 export type StudyExportsCommand = z.infer<typeof StudyExportsCommandValidation>
 
-const dateValidation = (field: string) =>
-  z
-    .string({
-      error: (issue) => (issue.input === undefined ? field : undefined),
-    })
-    .refine((val) => dayjs(val).isValid(), field)
+const dateValidation = () => z.string().refine((val) => dayjs(val).isValid(), setCustomMessage('invalidDate'))
 
-const optionalDateValidation = (field: string) =>
+const optionalDateValidation = () =>
   z
     .string()
     .optional()
     .nullable()
-    .refine((val) => val === null || dayjs(val).isValid(), field)
+    .refine((val) => val === null || dayjs(val).isValid(), setCustomMessage('invalidDate'))
 
 const BaseStudyValidation = z.object({
   organizationVersionId: z.string(),
-  name: z
-    .string({
-      error: (issue) => (issue.input === undefined ? 'name' : undefined),
-    })
-    .trim()
-    .min(1, 'name'),
-  validator: z.email('validator').trim(),
-  startDate: dateValidation('startDate'),
-  endDate: dateValidation('endDate'),
-  realizationStartDate: optionalDateValidation('startDate'),
-  realizationEndDate: optionalDateValidation('endDate'),
-  level: z.enum(Level, {
-    error: (issue) => (issue.input === undefined ? 'level' : undefined),
-  }),
+  name: z.string().trim().min(1),
+  validator: z.email().trim(),
+  startDate: dateValidation(),
+  endDate: dateValidation(),
+  realizationStartDate: optionalDateValidation(),
+  realizationEndDate: optionalDateValidation(),
+  level: z.enum(Level),
   isPublic: z.string(),
 })
 
 export const CreateStudyCommandValidation = z
   .intersection(z.intersection(BaseStudyValidation, StudyExportsCommandValidation), SitesCommandValidation)
-  .refine((data) => dayjs(data.endDate).isAfter(dayjs(data.startDate)), {
-    path: ['endDate'],
-    error: 'endDateBeforStartDate',
+  .superRefine((data, ctx) => {
+    if (!dayjs(data.endDate).isAfter(dayjs(data.startDate))) {
+      ctx.addIssue(setCustomIssue(['endDate'], 'endDateBeforeStartDate'))
+    }
+    if (
+      data.realizationStartDate &&
+      data.realizationEndDate &&
+      !dayjs(data.realizationEndDate).isAfter(dayjs(data.realizationStartDate))
+    ) {
+      ctx.addIssue(setCustomIssue(['realizationEndDate'], 'endDateBeforStartDate'))
+    }
+    if (!data.sites.some((site) => site.selected)) {
+      ctx.addIssue(setCustomIssue(['sites'], 'noSiteSelected'))
+    }
   })
-  .refine(
-    (data) =>
-      !data.realizationStartDate ||
-      !data.realizationEndDate ||
-      dayjs(data.realizationEndDate).isAfter(dayjs(data.realizationStartDate)),
-    {
-      path: ['realizationEndDate'],
-      error: 'endDateBeforStartDate',
-    },
-  )
-  .refine(({ sites }) => sites.some((site) => site.selected), 'sites')
 
 export type CreateStudyCommand = z.infer<typeof CreateStudyCommandValidation>
 
@@ -122,7 +94,7 @@ export const ChangeStudySitesCommandValidation = z
     }),
     SitesCommandValidation,
   )
-  .refine(({ sites }) => sites.some((site) => site.selected), 'sites')
+  .refine(({ sites }) => sites.some((site) => site.selected), { params: { message: 'noSiteSelected' } })
 export type ChangeStudySitesCommand = z.infer<typeof ChangeStudySitesCommandValidation>
 
 export const ChangeStudyPublicStatusCommandValidation = z.object({
@@ -149,36 +121,29 @@ export type ChangeStudyResultsUnitCommand = z.infer<typeof ChangeStudyResultsUni
 export const ChangeStudyDatesCommandValidation = z
   .object({
     studyId: z.string(),
-    startDate: dateValidation('startDate'),
-    endDate: dateValidation('endDate'),
-    realizationStartDate: optionalDateValidation('startDate'),
-    realizationEndDate: optionalDateValidation('endDate'),
+    startDate: dateValidation(),
+    endDate: dateValidation(),
+    realizationStartDate: optionalDateValidation(),
+    realizationEndDate: optionalDateValidation(),
   })
-  .refine((data) => dayjs(data.endDate).isAfter(dayjs(data.startDate)), {
-    path: ['endDate'],
-    error: 'endDateBeforStartDate',
+  .superRefine((data, ctx) => {
+    if (!dayjs(data.endDate).isAfter(dayjs(data.startDate))) {
+      ctx.addIssue(setCustomIssue(['endDate'], 'endDateBeforeStartDate'))
+    }
+    if (
+      data.realizationStartDate &&
+      data.realizationEndDate &&
+      !dayjs(data.realizationEndDate).isAfter(dayjs(data.realizationStartDate))
+    ) {
+      ctx.addIssue(setCustomIssue(['realizationEndDate'], 'endDateBeforeStartDate'))
+    }
   })
-  .refine(
-    (data) =>
-      !data.realizationStartDate ||
-      !data.realizationEndDate ||
-      dayjs(data.realizationEndDate).isAfter(dayjs(data.realizationStartDate)),
-    {
-      path: ['realizationEndDate'],
-      error: 'endDateBeforStartDate',
-    },
-  )
 
 export type ChangeStudyDatesCommand = z.infer<typeof ChangeStudyDatesCommandValidation>
 
 export const ChangeStudyNameValidation = z.object({
   studyId: z.string(),
-  name: z
-    .string({
-      error: (issue) => (issue.input === undefined ? 'name' : undefined),
-    })
-    .trim()
-    .min(1, 'name'),
+  name: z.string().trim().min(1),
 })
 
 export type ChangeStudyNameCommand = z.infer<typeof ChangeStudyNameValidation>
@@ -186,46 +151,24 @@ export type ChangeStudyNameCommand = z.infer<typeof ChangeStudyNameValidation>
 export const ChangeStudyCinemaValidation = z.object({
   openingHours: z.partialRecord(z.enum(DayOfWeek), OpeningHoursValidation).optional(),
   openingHoursHoliday: z.partialRecord(z.enum(DayOfWeek), HolidayOpeningHoursValidation).optional(),
-  numberOfSessions: z
-    .number({
-      error: (issue) => (issue.input === undefined ? undefined : 'invalidNumber'),
-    })
-    .optional()
-    .nullable(),
-  numberOfTickets: z
-    .number({
-      error: (issue) => (issue.input === undefined ? undefined : 'invalidNumber'),
-    })
-    .optional()
-    .nullable(),
-  numberOfOpenDays: z
-    .number({
-      error: (issue) => (issue.input === undefined ? undefined : 'invalidNumber'),
-    })
-    .optional()
-    .nullable(),
-  numberOfProgrammedFilms: z
-    .number({
-      error: (issue) => (issue.input === undefined ? undefined : 'invalidNumber'),
-    })
-    .optional()
-    .nullable(),
+  numberOfSessions: z.number().optional().nullable(),
+  numberOfTickets: z.number().optional().nullable(),
+  numberOfOpenDays: z.number().optional().nullable(),
+  numberOfProgrammedFilms: z.number().optional().nullable(),
 })
 
 export type ChangeStudyCinemaCommand = z.infer<typeof ChangeStudyCinemaValidation>
 
 export const NewStudyRightCommandValidation = z.object({
   studyId: z.string(),
-  email: z.email('email').trim(),
-  role: z.enum(StudyRole, {
-    error: (issue) => (issue.input === undefined ? 'role' : undefined),
-  }),
+  email: z.email().trim(),
+  role: z.enum(StudyRole),
 })
 
 export type NewStudyRightCommand = z.infer<typeof NewStudyRightCommandValidation>
 
 export const NewStudyContributorCommandValidation = z.intersection(
-  z.object({ studyId: z.string(), email: z.email('email').trim() }),
+  z.object({ studyId: z.string(), email: z.email().trim() }),
   SubPostsCommandValidation,
 )
 
@@ -249,20 +192,12 @@ export const DuplicateSiteCommandValidation = z.object({
 export type DuplicateSiteCommand = z.infer<typeof DuplicateSiteCommandValidation>
 
 export const AddActionCommandBase = z.object({
-  title: z.string({
-    error: (issue) => (issue.input === undefined ? 'required' : undefined),
-  }),
-  subSteps: z.string({
-    error: (issue) => (issue.input === undefined ? 'required' : undefined),
-  }),
+  title: z.string().min(1),
+  subSteps: z.string().min(1),
   // aim: z.array(),
-  detailedDescription: z.string({
-    error: (issue) => (issue.input === undefined ? 'required' : undefined),
-  }),
-  transitionPlanId: z.string().uuid(),
-  potentialDeduction: z.enum(ActionPotentialDeduction, {
-    error: (issue) => (issue.input === undefined ? 'required' : undefined),
-  }),
+  detailedDescription: z.string().min(1),
+  transitionPlanId: z.uuid(),
+  potentialDeduction: z.enum(ActionPotentialDeduction),
   reductionValue: z.number().optional(),
   reductionStartYear: z.string().optional(),
   reductionEndYear: z.string().optional(),
@@ -285,14 +220,14 @@ export const AddActionCommandBase = z.object({
 export const AddActionCommandValidation = AddActionCommandBase.superRefine((data, ctx) => {
   if (data.potentialDeduction === ActionPotentialDeduction.Quantity) {
     if (!data) {
-      ctx.addIssue({ code: 'custom', message: 'required', path: ['reductionValue'] })
+      ctx.addIssue(setCustomIssue(['reductionValue'], 'required'))
     }
     if (!data.reductionStartYear) {
-      ctx.addIssue({ code: 'custom', message: 'required', path: ['reductionStartYear'] })
+      ctx.addIssue(setCustomIssue(['reductionStartYear'], 'required'))
     }
 
     if (!data.reductionEndYear) {
-      ctx.addIssue({ code: 'custom', message: 'required', path: ['reductionEndYear'] })
+      ctx.addIssue(setCustomIssue(['reductionEndYear'], 'required'))
     }
 
     if (data.actionPorter !== '') {
@@ -302,7 +237,7 @@ export const AddActionCommandValidation = AddActionCommandBase.superRefine((data
         .safeParse(data.actionPorter)
 
       if (!emailValidation.success) {
-        ctx.addIssue({ code: 'custom', path: ['actionPorter'], message: 'email' })
+        ctx.addIssue(setCustomIssue(['actionPorter'], 'invalidEmail'))
       }
     }
   }

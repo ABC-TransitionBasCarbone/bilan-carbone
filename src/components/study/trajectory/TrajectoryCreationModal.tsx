@@ -37,13 +37,12 @@ const defaultValues: TrajectoryFormData = {
 
 const TrajectoryCreationModal = ({ open, onClose, transitionPlanId, onSuccess, trajectory }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectoryModal')
-  const tValidation = useTranslations('study.transitionPlan.trajectoryModal.validation')
   const isEditMode = !!trajectory
   const [activeStep, setActiveStep] = useState(isEditMode ? 1 : 0)
   const [isLoading, setIsLoading] = useState(false)
   const { callServerFunction } = useServerFunction()
 
-  const trajectorySchema = createTrajectorySchema(tValidation)
+  const trajectorySchema = createTrajectorySchema()
 
   const {
     control,

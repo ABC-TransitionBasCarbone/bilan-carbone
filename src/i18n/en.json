@@ -2068,5 +2068,25 @@
     "page": "Page {page} of {total}",
     "goTo": "Go to page",
     "items": "Items per page"
+  },
+  "validation": {
+    "required": "Please fill in this field",
+    "invalidEnum": "Please select a valid value",
+    "invalidEmail": "Please enter a valid email address",
+    "invalidDate": "Please enter a valid date",
+    "invalidNumber": "Please enter a valid number",
+    "invalidString": "Please fill in this field",
+    "invalidPostalCode": "Please enter a valid postal code",
+    "invalidPhone": "Please enter a valid phone number",
+    "endDateBeforeStartDate": "The end date must be after the start date",
+    "noSiteSelected": "Please select at least one site",
+    "siretInvalid": "The SIRET must contain exactly 14 digits",
+    "nameMaxLength": "The name cannot exceed 64 characters",
+    "subPostRequired": "Please select at least one sub-post",
+    "objectiveBothRequired": "Please fill in the target year and reduction rate",
+    "atLeastOneObjective": "Please add at least one objective",
+    "positiveNumber": "Please enter a positive number",
+    "tooSmall": "Please enter a larger value",
+    "tooBig": "Please enter a smaller value"
   }
 }
