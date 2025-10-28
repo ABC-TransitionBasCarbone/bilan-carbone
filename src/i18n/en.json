@@ -2083,7 +2083,7 @@
     "siretInvalid": "The SIRET must contain exactly 14 digits",
     "nameMaxLength": "The name cannot exceed 64 characters",
     "subPostRequired": "Please select at least one sub-post",
-    "objectiveBothRequired": "Please fill in the target year and reduction rate",
+    "objectiveIncomplete": "Please fill in all the objective fields",
     "atLeastOneObjective": "Please add at least one objective",
     "positiveNumber": "Please enter a positive number",
     "tooSmall": "Please enter a larger value",
