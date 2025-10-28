@@ -460,7 +460,7 @@ export const hasAccessToFormationStudy = async (userAccount: Prisma.AccountCreat
 
 export const hasReadAccessOnStudy = async (studyId: string) => {
   const session = await dbActualizedAuth()
-  if (!session) {
+  if (!session || !session.user) {
     return false
   }
 
@@ -469,7 +469,7 @@ export const hasReadAccessOnStudy = async (studyId: string) => {
 
 export const hasEditAccessOnStudy = async (studyId: string) => {
   const session = await dbActualizedAuth()
-  if (!session) {
+  if (!session || !session.user) {
     return false
   }
 

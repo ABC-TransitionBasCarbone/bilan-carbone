@@ -32,12 +32,16 @@ import { ExternalStudyCommand } from './transitionPlan.command'
 
 export const getStudyTransitionPlan = async (studyId: string): Promise<ApiResponse<TransitionPlan | null>> =>
   withServerResponse('getStudyTransitionPlan', async () => {
-    const hasReadAccess = await canReadTransitionPlan(studyId)
+    const transitionPlan = await getTransitionPlanByStudyId(studyId)
+    if (!transitionPlan) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const hasReadAccess = await canReadTransitionPlan(transitionPlan.id)
     if (!hasReadAccess) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const transitionPlan = await getTransitionPlanByStudyId(studyId)
     return transitionPlan
   })
 
@@ -211,13 +215,13 @@ export const editAction = async (id: string, command: AddActionCommand) =>
 
 export const getStudyActions = async (studyId: string) =>
   withServerResponse('getStudyActions', async () => {
-    const hasReadAccess = await canReadTransitionPlan(studyId)
-    if (!hasReadAccess) {
+    const transitionPlan = await getTransitionPlanByStudyId(studyId)
+    if (!transitionPlan) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const transitionPlan = await getTransitionPlanByStudyId(studyId)
-    if (!transitionPlan) {
+    const hasReadAccess = await canReadTransitionPlan(transitionPlan.id)
+    if (!hasReadAccess) {
       throw new Error(NOT_AUTHORIZED)
     }
 
