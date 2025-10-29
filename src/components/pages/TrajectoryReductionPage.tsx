@@ -143,7 +143,7 @@ const TrajectoryReductionPage = ({
     const enabledActions = actions.filter((action) => action.enabled)
 
     const trajectoryWB2CData = calculateSBTiTrajectory({
-      baseEmissions: totalCo2,
+      studyEmissions: totalCo2,
       studyStartYear,
       reductionRate: SBTI_REDUCTION_RATE_WB2C,
     })
@@ -154,7 +154,7 @@ const TrajectoryReductionPage = ({
         : undefined
 
     const trajectory15Data = calculateSBTiTrajectory({
-      baseEmissions: totalCo2,
+      studyEmissions: totalCo2,
       studyStartYear,
       reductionRate: SBTI_REDUCTION_RATE_15,
       maxYear,
@@ -169,7 +169,7 @@ const TrajectoryReductionPage = ({
 
         if (traj.type === 'SBTI_15') {
           data = calculateSBTiTrajectory({
-            baseEmissions: totalCo2,
+            studyEmissions: totalCo2,
             studyStartYear,
             reductionRate: SBTI_REDUCTION_RATE_15,
             linkedStudies,
@@ -177,7 +177,7 @@ const TrajectoryReductionPage = ({
           })
         } else if (traj.type === 'SBTI_WB2C') {
           data = calculateSBTiTrajectory({
-            baseEmissions: totalCo2,
+            studyEmissions: totalCo2,
             studyStartYear,
             reductionRate: SBTI_REDUCTION_RATE_WB2C,
             linkedStudies,
@@ -185,7 +185,7 @@ const TrajectoryReductionPage = ({
           })
         } else {
           data = calculateCustomTrajectory({
-            baseEmissions: totalCo2,
+            studyEmissions: totalCo2,
             studyStartYear,
             objectives: traj.objectives.map((obj) => ({
               targetYear: obj.targetYear,
@@ -212,7 +212,7 @@ const TrajectoryReductionPage = ({
     maxYear = Math.max(maxYear ?? 0, customTrajectoriesMaxYear)
 
     const actionBasedTrajectoryData = calculateActionBasedTrajectory({
-      baseEmissions: totalCo2,
+      studyEmissions: totalCo2,
       studyStartYear,
       actions: enabledActions,
       linkedStudies,
