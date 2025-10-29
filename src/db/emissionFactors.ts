@@ -8,6 +8,43 @@ import { Session } from 'next-auth'
 import { prismaClient } from './client'
 import { getOrganizationVersionById } from './organization'
 
+const otherSelectEmissionFactor = {
+  id: true,
+  status: true,
+  totalCo2: true,
+  location: true,
+  source: true,
+  unit: true,
+  customUnit: true,
+  isMonetary: true,
+  importedFrom: true,
+  importedId: true,
+  organizationId: true,
+  reliability: true,
+  technicalRepresentativeness: true,
+  geographicRepresentativeness: true,
+  temporalRepresentativeness: true,
+  completeness: true,
+  subPosts: true,
+  co2f: true,
+  ch4f: true,
+  ch4b: true,
+  n2o: true,
+  co2b: true,
+  sf6: true,
+  hfc: true,
+  pfc: true,
+  otherGES: true,
+  version: {
+    select: {
+      id: true,
+      name: true,
+      archived: true,
+    },
+  },
+  emissionFactorParts: { select: { type: true, totalCo2: true } },
+}
+
 const selectEmissionFactor = {
   id: true,
   status: true,
@@ -180,7 +217,7 @@ const getDefaultEmissionFactorsCount = (
   return prismaClient.$queryRaw(request) as unknown as { count: number }[]
 }
 
-const getDefaultEmissionFactors = (
+const getDefaultEmissionFactorsOld = (
   skip: number,
   take: number | 'ALL',
   locale: LocaleType,
@@ -236,6 +273,87 @@ const getEmissionFactorsFromIdsExceptVersions = async (ids: string[], versionIds
   })
 
   return keepOnlyOneMetadata(efFromBdd, locale)
+}
+
+const getDefaultEmissionFactors = async (
+  skip: number,
+  take: number | 'ALL',
+  locale: LocaleType,
+  filters: FeFilters,
+  withCut: boolean,
+  organizationId?: string,
+): Promise<EmissionFactorList[]> => {
+  let importedFromCondition = {}
+  if (filters.sources.length > 0 && filters.sources.some((source) => source !== 'all')) {
+    if (filters.sources.includes(Import.Manual) && filters.sources.length === 1 && organizationId) {
+      importedFromCondition = { OR: [{ importedFrom: Import.Manual, organizationId }] }
+    } else if (filters.sources.includes(Import.Manual)) {
+      importedFromCondition = {
+        OR: [
+          { versionId: { in: filters.sources.filter((s) => s !== Import.Manual) } },
+          { importedFrom: Import.Manual, organizationId },
+        ],
+      }
+    }
+  } else {
+    importedFromCondition = {
+      OR: [{ versionId: { in: filters.sources.filter((s) => s !== Import.Manual) } }],
+    }
+  }
+
+  const emissionFactorsMetadata = await prismaClient.emissionFactorMetaData.findMany({
+    where: {
+      language: locale,
+      ...(filters.search && {
+        OR: [
+          { title: { contains: filters.search, mode: 'insensitive' } },
+          { attribute: { contains: filters.search, mode: 'insensitive' } },
+          { frontiere: { contains: filters.search, mode: 'insensitive' } },
+        ],
+      }),
+      ...(filters.location && { location: { contains: filters.location, mode: 'insensitive' } }),
+      emissionFactor: {
+        AND: [
+          {
+            subPosts: filters.subPosts.some((sp) => sp === 'all')
+              ? { isEmpty: false }
+              : { hasSome: filters.subPosts as SubPost[] },
+          },
+          filters.archived ? {} : { status: { not: EmissionFactorStatus.Archived } },
+          filters.units.length > 0 && !filters.units.includes('all')
+            ? {
+                OR: [{ unit: { in: filters.units as Unit[] } }, { customUnit: { in: filters.units as string[] } }],
+              }
+            : {},
+          importedFromCondition,
+        ],
+      },
+    },
+    skip,
+    take: take === 'ALL' ? undefined : take,
+    select: {
+      language: true,
+      title: true,
+      attribute: true,
+      comment: true,
+      location: true,
+      frontiere: true,
+      emissionFactor: { select: selectEmissionFactor },
+    },
+    orderBy: { title: 'asc' },
+  })
+
+  return emissionFactorsMetadata.map((metadata) => ({
+    ...metadata.emissionFactor,
+    metaData: {
+      language: metadata.language,
+      title: metadata.title,
+      attribute: metadata.attribute,
+      comment: metadata.comment,
+      location: metadata.location,
+      frontiere: metadata.frontiere,
+    },
+  }))
 }
 
 export const getAllEmissionFactors = async (
