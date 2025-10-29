@@ -14,7 +14,7 @@ interface Props {
 }
 
 const fuseOptions = {
-  keys: [{ name: 'metaData.title', weight: 1 }],
+  keys: [{ name: 'title', weight: 1 }],
   threshold: 0.3,
   isCaseSensitive: false,
 }

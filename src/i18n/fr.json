@@ -1019,7 +1019,7 @@
         "title": "Objectifs de réduction",
         "custom": "Personnalisée",
         "objectiveNumber": "Objectif {number}",
-        "search": "Cherchez une trajectoire ou un objectif ici",
+        "search": "Cherchez une trajectoire",
         "add": "Ajouter une trajectoire",
         "table": {
           "name": "Nom",

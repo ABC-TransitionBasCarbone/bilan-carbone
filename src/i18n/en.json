@@ -1019,7 +1019,7 @@
         "title": "Reduction objectives",
         "custom": "Custom",
         "objectiveNumber": "Objective {number}",
-        "search": "Search for a trajectory or objective here",
+        "search": "Search for a trajectory",
         "add": "Add a trajectory",
         "table": {
           "name": "Name",

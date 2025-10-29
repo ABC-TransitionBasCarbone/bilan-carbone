@@ -13,6 +13,7 @@ import { Chip, IconButton } from '@mui/material'
 import { TrajectoryType } from '@prisma/client'
 import { ColumnDef, getCoreRowModel, getExpandedRowModel, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
+import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
@@ -52,6 +53,12 @@ interface Props {
   searchFilter?: string
 }
 
+const fuseOptions = {
+  keys: [{ name: 'name', weight: 1 }],
+  threshold: 0.3,
+  isCaseSensitive: false,
+}
+
 const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, searchFilter = '' }: Props) => {
   const t = useTranslations('study.transitionPlan.objectives')
   const router = useRouter()
@@ -64,6 +71,8 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, se
   } | null>(null)
   const [editModalOpen, setEditModalOpen] = useState(false)
   const [editTrajectory, setEditTrajectory] = useState<TrajectoryWithObjectives | null>(null)
+
+  const fuse = useMemo(() => new Fuse(trajectories, fuseOptions), [trajectories])
 
   const handleDeleteClick = (type: 'trajectory' | 'objective', id: string, name: string) => {
     setDeleteTarget({ type, id, name })
@@ -223,9 +232,7 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, se
   }, [t, canEdit, trajectories]) as ColumnDef<TableDataType>[]
 
   const tableData = useMemo((): TrajectoryRow[] => {
-    const filteredTrajectories = searchFilter
-      ? trajectories.filter((trajectory) => trajectory.name.toLowerCase().includes(searchFilter.toLowerCase()))
-      : trajectories
+    const filteredTrajectories = searchFilter ? fuse.search(searchFilter).map(({ item }) => item) : trajectories
 
     return filteredTrajectories.map((trajectory) => {
       const sortedObjectives = [...trajectory.objectives].sort((a, b) => a.targetYear - b.targetYear)
@@ -249,7 +256,7 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, se
         })),
       }
     })
-  }, [trajectories, t, searchFilter])
+  }, [trajectories, t, searchFilter, fuse])
 
   const table = useReactTable({
     columns,
