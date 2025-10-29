@@ -48,11 +48,10 @@ const ActionTable = ({ actions, studyUnit, porters, transitionPlanId }: Props) =
   )
 
   const handleToggleEnabled = useCallback(
-    async (actionId: string, currentValue: boolean) => {
-      const newValue = !currentValue
-      setOptimisticActions({ actionId, enabled: newValue })
+    async (actionId: string, value: boolean) => {
+      setOptimisticActions({ actionId, enabled: value })
 
-      await callServerFunction(() => toggleActionEnabled(actionId, newValue), {
+      await callServerFunction(() => toggleActionEnabled(actionId, value), {
         getErrorMessage: () => {
           return t('errorChangingEnabled')
         },
@@ -86,7 +85,7 @@ const ActionTable = ({ actions, studyUnit, porters, transitionPlanId }: Props) =
           cell: ({ getValue, row }) => (
             <Switch
               checked={getValue<boolean>()}
-              onChange={() => handleToggleEnabled(row.original.id, getValue<boolean>())}
+              onChange={(event) => handleToggleEnabled(row.original.id, event.target.checked)}
               color="primary"
             />
           ),

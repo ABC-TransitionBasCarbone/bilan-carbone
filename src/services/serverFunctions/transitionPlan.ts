@@ -231,11 +231,6 @@ export const getStudyActions = async (studyId: string) =>
 
 export const toggleActionEnabled = async (actionId: string, enabled: boolean) =>
   withServerResponse('toggleActionEnabled', async () => {
-    const session = await dbActualizedAuth()
-    if (!session || !session.user) {
-      throw new Error(NOT_AUTHORIZED)
-    }
-
     const action = await getActionById(actionId)
     if (!action) {
       throw new Error(NOT_AUTHORIZED)

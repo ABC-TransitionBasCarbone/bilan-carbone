@@ -394,5 +394,37 @@ describe('calculateTrajectory', () => {
       const point2027 = result.find((p) => p.year === 2027)
       expect(point2027?.value).toBeCloseTo(1000 - 2 * annualReduction, 1)
     })
+
+    test('should correctly sum single-year action with multi-year action in the same year', () => {
+      const actions = [
+        {
+          reductionValue: 100,
+          reductionStartYear: '2026-01-01',
+          reductionEndYear: '2026-01-01',
+          potentialDeduction: 'Quantity',
+        },
+        {
+          reductionValue: 50,
+          reductionStartYear: '2025-01-01',
+          reductionEndYear: '2030-01-01',
+          potentialDeduction: 'Quantity',
+        },
+      ] as Action[]
+
+      const result = calculateActionBasedTrajectory({
+        studyEmissions: 1000,
+        studyStartYear: 2024,
+        actions,
+      })
+
+      const action2AnnualReduction = 50 / (2030 - 2025)
+
+      const expectedResult2026 = 1000 - 2 * action2AnnualReduction - 100
+
+      expect(result.find((p) => p.year === 2024)).toEqual({ year: 2024, value: 1000 })
+      expect(result.find((p) => p.year === 2025)?.value).toBeCloseTo(1000 - action2AnnualReduction, 1)
+      expect(result.find((p) => p.year === 2026)?.value).toBeCloseTo(expectedResult2026, 1)
+      expect(result.find((p) => p.year === 2027)?.value).toBeCloseTo(expectedResult2026 - action2AnnualReduction, 1)
+    })
   })
 })

@@ -307,11 +307,9 @@ export const calculateActionBasedTrajectory = ({
     const startYear = action.reductionStartYear ? getYearFromDateStr(action.reductionStartYear) : 0
     const endYear = action.reductionEndYear ? getYearFromDateStr(action.reductionEndYear) : 0
 
-    if (startYear === endYear) {
-      yearlyReductions[startYear] = action.reductionValue ?? 0
-    } else if (startYear <= endYear) {
+    if (startYear <= endYear) {
       for (let year = startYear; year <= endYear; year++) {
-        const actionDuration = endYear - startYear
+        const actionDuration = Math.max(1, endYear - startYear)
         const annualReduction = (action.reductionValue ?? 0) / actionDuration
         const currentYearlyReduction = yearlyReductions[year]
         if (currentYearlyReduction) {
