@@ -1,9 +1,10 @@
+import { setCustomMessage } from '@/lib/zod.config'
 import { Question, QuestionType } from '@prisma/client'
 import { useMemo } from 'react'
 import { z } from 'zod'
 
 export const createDynamicFormSchema = (questions: Question[]) => {
-  const schemaObject: Record<string, z.ZodSchema> = {}
+  const schemaObject: Record<string, z.ZodType> = {}
 
   questions.forEach((question) => {
     schemaObject[question.idIntern] = createQuestionSchema(question)
@@ -35,38 +36,29 @@ const validationRules: Partial<Record<QuestionType, (val: string) => boolean>> =
 }
 
 const validationMessages: Partial<Record<QuestionType, string>> = {
-  [QuestionType.NUMBER]: 'number',
-  [QuestionType.POSTAL_CODE]: 'postalCode',
-  [QuestionType.DATE]: 'date',
-  [QuestionType.PHONE]: 'phone',
+  [QuestionType.NUMBER]: 'invalidNumber',
+  [QuestionType.POSTAL_CODE]: 'invalidPostalCode',
+  [QuestionType.DATE]: 'invalidDate',
+  [QuestionType.PHONE]: 'invalidPhone',
 }
 
 export const createQuestionSchema = (question: Question) => {
-  let schema: z.ZodSchema
+  let schema: z.ZodType
 
   if (question.required) {
-    schema = z
-      .string({
-        required_error: 'required',
-        invalid_type_error: 'required',
-      })
-      .min(1, { message: 'required' })
+    schema = z.string().min(1)
   } else {
-    schema = z
-      .string({
-        invalid_type_error: 'invalid_type',
-      })
-      .optional()
-      .or(z.literal(''))
+    schema = z.string().optional().or(z.literal(''))
   }
 
   const validationRule = validationRules[question.type]
   const validationMessage = validationMessages[question.type]
 
   if (validationRule && validationMessage) {
-    schema = schema.refine(createValidationRefine(validationRule, validationMessage, question.required), {
-      message: validationMessage,
-    })
+    schema = schema.refine(
+      (val) => createValidationRefine(validationRule, validationMessage, question.required)(val as string),
+      setCustomMessage(validationMessage),
+    )
   }
 
   return schema

@@ -167,7 +167,7 @@ const Posts = <T extends SubPostsCommand>({
             />
             {error && error.message && selectedSubPosts?.length === 0 && (
               <FormHelperText className={styles.errorSubposts} color="red">
-                {t('validation.' + error.message)}
+                {error.message}
               </FormHelperText>
             )}
           </FormControl>

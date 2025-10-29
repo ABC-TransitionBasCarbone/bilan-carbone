@@ -112,7 +112,7 @@ const MultiplePosts = <T extends SubPostsCommand>({ form, context }: Props<T>) =
                 ))}
               </Select>
               {error && error.message && Object.keys(selectedPosts).length === 0 && (
-                <FormHelperText color="red">{t('validation.' + error.message)}</FormHelperText>
+                <FormHelperText color="red">{error.message}</FormHelperText>
               )}
             </FormControl>
           )}

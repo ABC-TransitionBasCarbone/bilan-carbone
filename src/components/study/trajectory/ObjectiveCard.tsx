@@ -1,6 +1,6 @@
 import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormTextField } from '@/components/form/TextField'
-import { TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
+import { TrajectoryFormData } from '@/services/serverFunctions/transitionPlan.command'
 import Typography from '@mui/material/Typography'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
@@ -37,7 +37,7 @@ const ObjectiveCard = ({ reductionRate, name, isEditable, control, index }: Prop
               </Typography>
             </>
           ) : (
-            <>
+            <div className="flex-col gapped1">
               <FormDatePicker
                 name={`objectives.${index}.targetYear`}
                 label={t('objectives.year')}
@@ -59,7 +59,7 @@ const ObjectiveCard = ({ reductionRate, name, isEditable, control, index }: Prop
                 placeholder={t('objectives.reductionRatePlaceholder')}
                 data-testid="objective-reduction-rate-input"
               />
-            </>
+            </div>
           )}
         </div>
       </div>

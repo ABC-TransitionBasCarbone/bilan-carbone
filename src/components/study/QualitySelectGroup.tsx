@@ -100,7 +100,7 @@ const QualitySelectGroup = <T extends FieldValues>({
                     error={!!error}
                     clearable={clearable}
                   />
-                  {error?.message && <FormHelperText>{t('validation.' + error.message)}</FormHelperText>}
+                  {error?.message && <FormHelperText>{error.message}</FormHelperText>}
                 </FormControl>
               )}
             />
@@ -118,7 +118,7 @@ const QualitySelectGroup = <T extends FieldValues>({
             error={hasQualityError}
             clearable={clearable}
           />
-          {hasQualityError && <FormHelperText>{t('validation.' + qualityFieldErrors[0]?.message)}</FormHelperText>}
+          {hasQualityError && <FormHelperText>{qualityFieldErrors[0]?.message?.toString()}</FormHelperText>}
         </FormControl>
       )}
       <HelpIcon onClick={() => setGlossary('quality')} label={tGlossary('title')} />

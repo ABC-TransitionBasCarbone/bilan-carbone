@@ -76,11 +76,9 @@ export const FormTextField = <T extends FieldValues>({
               },
             }}
           />
-          {customError || error?.message ? (
-            <FormHelperText className={styles.helper}>
-              {customError ? customError : error?.message ? translation('validation.' + error.message) : ' '}
-            </FormHelperText>
-          ) : null}
+          {(customError || error?.message) && (
+            <FormHelperText className={styles.helper}>{customError ?? error?.message}</FormHelperText>
+          )}
         </FormControl>
       )}
     />

@@ -34,9 +34,7 @@ export const FormCheckbox = <T extends FieldValues>({
             checked={value || false}
             onChange={onChange}
           />
-          {error?.message && (
-            <FormHelperText className={styles.helper}>{translation('validation.' + error.message)}</FormHelperText>
-          )}
+          {error?.message && <FormHelperText className={styles.helper}>{error.message}</FormHelperText>}
         </FormControl>
       )}
     />

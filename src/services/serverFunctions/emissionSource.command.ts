@@ -2,27 +2,26 @@ import { EmissionSourceCaracterisation, EmissionSourceType, SubPost } from '@pri
 import z from 'zod'
 
 export const CreateEmissionSourceCommandValidation = z.object({
-  name: z.string().trim().min(1, 'name'),
-  subPost: z.nativeEnum(SubPost),
+  name: z.string().trim().min(1),
+  subPost: z.enum(SubPost),
   studyId: z.string(),
   studySiteId: z.string(),
-  caracterisation: z.nativeEnum(EmissionSourceCaracterisation).optional(),
+  caracterisation: z.enum(EmissionSourceCaracterisation).optional(),
   emissionFactorId: z.string().nullable().optional(),
   value: z.number().optional(),
-  type: z.nativeEnum(EmissionSourceType).optional().nullable(),
+  type: z.enum(EmissionSourceType).optional().nullable(),
   depreciationPeriod: z.number().optional(),
 })
-
 export type CreateEmissionSourceCommand = z.infer<typeof CreateEmissionSourceCommandValidation>
 
 export const UpdateEmissionSourceCommandValidation = z.object({
   emissionSourceId: z.string(),
   name: z.string().trim().optional(),
   emissionFactorId: z.string().trim().optional().nullable(),
-  caracterisation: z.nativeEnum(EmissionSourceCaracterisation).optional().nullable(),
+  caracterisation: z.enum(EmissionSourceCaracterisation).optional().nullable(),
   value: z.number().optional(),
   source: z.string().trim().optional(),
-  type: z.nativeEnum(EmissionSourceType).optional().nullable(),
+  type: z.enum(EmissionSourceType).optional().nullable(),
   reliability: z.number().optional(),
   technicalRepresentativeness: z.number().optional(),
   geographicRepresentativeness: z.number().optional(),

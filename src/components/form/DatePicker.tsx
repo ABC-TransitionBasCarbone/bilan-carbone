@@ -59,9 +59,7 @@ export const FormDatePicker = <T extends FieldValues>({
             }}
             value={value ? dayjs(value) : null}
           />
-          <FormHelperText className={styles.helper}>
-            {error?.message ? translation('validation.' + error.message) : ' '}
-          </FormHelperText>
+          {error?.message && <FormHelperText className={styles.helper}>{error.message}</FormHelperText>}
         </FormControl>
       )}
     />

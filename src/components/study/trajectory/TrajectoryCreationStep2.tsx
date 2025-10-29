@@ -1,5 +1,5 @@
 import { FormTextField } from '@/components/form/TextField'
-import { TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
+import { TrajectoryFormData } from '@/services/serverFunctions/transitionPlan.command'
 import { getReductionRatePerType } from '@/utils/trajectory'
 import { FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material'
 import { TrajectoryType } from '@prisma/client'
