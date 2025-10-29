@@ -25,7 +25,7 @@ describe('calculateTrajectory', () => {
   describe('basic trajectory calculation before 2021', () => {
     test('should calculate trajectory from 2020 to 2050 with 1.5°C trajectory', () => {
       const result = calculateSBTiTrajectory({
-        baseEmissions: 1000,
+        studyEmissions: 1000,
         studyStartYear: 2020,
         reductionRate: SBTI_REDUCTION_RATE_15,
       })
@@ -42,7 +42,7 @@ describe('calculateTrajectory', () => {
 
     test('should calculate trajectory with 2°C trajectory', () => {
       const result = calculateSBTiTrajectory({
-        baseEmissions: 1000,
+        studyEmissions: 1000,
         studyStartYear: 2020,
         reductionRate: SBTI_REDUCTION_RATE_WB2C,
       })
@@ -58,7 +58,7 @@ describe('calculateTrajectory', () => {
 
     test('should start graph from study year and keep emissions flat until 2020', () => {
       const result = calculateSBTiTrajectory({
-        baseEmissions: 1000,
+        studyEmissions: 1000,
         studyStartYear: 2018,
         reductionRate: SBTI_REDUCTION_RATE_15,
       })
@@ -73,12 +73,12 @@ describe('calculateTrajectory', () => {
 
   describe('trajectory calculation after 2020 with overshoot compensation', () => {
     test('should calculate exact values for 2025 start with 1.5°C trajectory', () => {
-      const baseEmissions = 1000
+      const studyEmissions = 1000
       const studyStartYear = 2025
       const reductionRate = SBTI_REDUCTION_RATE_15
 
       const result = calculateSBTiTrajectory({
-        baseEmissions,
+        studyEmissions,
         studyStartYear,
         reductionRate,
       })
@@ -100,12 +100,12 @@ describe('calculateTrajectory', () => {
     })
 
     test('should calculate exact values for 2025 start with WB2C trajectory', () => {
-      const baseEmissions = 1000
+      const studyEmissions = 1000
       const studyStartYear = 2025
       const reductionRate = SBTI_REDUCTION_RATE_WB2C
 
       const result = calculateSBTiTrajectory({
-        baseEmissions,
+        studyEmissions,
         studyStartYear,
         reductionRate,
       })
@@ -130,12 +130,12 @@ describe('calculateTrajectory', () => {
 
   describe('custom trajectory calculation', () => {
     test('should calculate trajectory with single objective', () => {
-      const baseEmissions = 1000
+      const studyEmissions = 1000
       const studyStartYear = 2024
       const objectives = [{ targetYear: 2030, reductionRate: 0.05 }]
 
       const result = calculateCustomTrajectory({
-        baseEmissions,
+        studyEmissions,
         studyStartYear,
         objectives,
       })
@@ -144,7 +144,7 @@ describe('calculateTrajectory', () => {
       const startPoint = result.find((p) => p.year === studyStartYear)
       expect(startPoint).toEqual({ year: 2024, value: 1000 })
 
-      const yearlyReduction = baseEmissions * 0.05
+      const yearlyReduction = studyEmissions * 0.05
       const point2025 = result.find((p) => p.year === 2025)
       expect(point2025?.value).toBeCloseTo(1000 - yearlyReduction, 1)
 
@@ -156,7 +156,7 @@ describe('calculateTrajectory', () => {
     })
 
     test('should calculate trajectory with multiple objectives', () => {
-      const baseEmissions = 1000
+      const studyEmissions = 1000
       const studyStartYear = 2024
       const objectives = [
         { targetYear: 2030, reductionRate: 0.05 },
@@ -164,32 +164,32 @@ describe('calculateTrajectory', () => {
       ]
 
       const result = calculateCustomTrajectory({
-        baseEmissions,
+        studyEmissions,
         studyStartYear,
         objectives,
       })
 
-      const yearlyReduction = baseEmissions * 0.05
+      const yearlyReduction = studyEmissions * 0.05
 
       const point2030 = result.find((p) => p.year === 2030) as TrajectoryDataPoint
       expect(point2030?.value).toBeCloseTo(1000 - (2030 - 2024) * yearlyReduction, 1)
 
-      const newBaseEmissions = point2030.value
-      const newYearlyReduction = newBaseEmissions * 0.08
+      const newstudyEmissions = point2030.value
+      const newYearlyReduction = newstudyEmissions * 0.08
 
       const point2031 = result.find((p) => p.year === 2031)
-      expect(point2031?.value).toBeCloseTo(newBaseEmissions - newYearlyReduction, 1)
+      expect(point2031?.value).toBeCloseTo(newstudyEmissions - newYearlyReduction, 1)
 
       const point2040 = result.find((p) => p.year === 2040)
-      expect(point2040?.value).toBeCloseTo(newBaseEmissions - (2040 - 2030) * newYearlyReduction, 1)
+      expect(point2040?.value).toBeCloseTo(newstudyEmissions - (2040 - 2030) * newYearlyReduction, 1)
 
       // After last objective we follow the same reduction rate and base emissions until 0
       const point2041 = result.find((p) => p.year === 2041)
-      expect(point2041?.value).toBeCloseTo(newBaseEmissions - (2041 - 2030) * newYearlyReduction, 1)
+      expect(point2041?.value).toBeCloseTo(newstudyEmissions - (2041 - 2030) * newYearlyReduction, 1)
     })
 
     test('should handle objectives with unsorted years', () => {
-      const baseEmissions = 1000
+      const studyEmissions = 1000
       const studyStartYear = 2024
       const objectives = [
         { targetYear: 2040, reductionRate: 0.08 },
@@ -197,30 +197,30 @@ describe('calculateTrajectory', () => {
       ]
 
       const result = calculateCustomTrajectory({
-        baseEmissions,
+        studyEmissions,
         studyStartYear,
         objectives,
       })
 
-      const yearlyReduction = baseEmissions * 0.05
+      const yearlyReduction = studyEmissions * 0.05
 
       const point2030 = result.find((p) => p.year === 2030) as TrajectoryDataPoint
       expect(point2030?.value).toBeCloseTo(1000 - (2030 - 2024) * yearlyReduction, 1)
 
-      const newBaseEmissions = point2030.value
-      const newYearlyReduction = newBaseEmissions * 0.08
+      const newstudyEmissions = point2030.value
+      const newYearlyReduction = newstudyEmissions * 0.08
 
       const point2040 = result.find((p) => p.year === 2040)
-      expect(point2040?.value).toBeCloseTo(newBaseEmissions - (2040 - 2030) * newYearlyReduction, 1)
+      expect(point2040?.value).toBeCloseTo(newstudyEmissions - (2040 - 2030) * newYearlyReduction, 1)
     })
 
     test('should continue reducing until zero emissions after last objective', () => {
-      const baseEmissions = 1000
+      const studyEmissions = 1000
       const studyStartYear = 2024
       const objectives = [{ targetYear: 2030, reductionRate: 0.1 }]
 
       const result = calculateCustomTrajectory({
-        baseEmissions,
+        studyEmissions,
         studyStartYear,
         objectives,
       })
@@ -232,12 +232,12 @@ describe('calculateTrajectory', () => {
     })
 
     test('should include flat emissions from reference year to study start year', () => {
-      const baseEmissions = 1000
+      const studyEmissions = 1000
       const studyStartYear = 2024
       const objectives = [{ targetYear: 2030, reductionRate: 0.05 }]
 
       const result = calculateCustomTrajectory({
-        baseEmissions,
+        studyEmissions,
         studyStartYear,
         objectives,
       })
@@ -283,7 +283,7 @@ describe('calculateTrajectory', () => {
       ] as Action[]
 
       const result = calculateActionBasedTrajectory({
-        baseEmissions: 1000,
+        studyEmissions: 1000,
         studyStartYear: 2024,
         actions,
       })
@@ -304,7 +304,7 @@ describe('calculateTrajectory', () => {
       ] as Action[]
 
       const result = calculateActionBasedTrajectory({
-        baseEmissions: 1000,
+        studyEmissions: 1000,
         studyStartYear: 2024,
         actions,
       })
@@ -335,7 +335,7 @@ describe('calculateTrajectory', () => {
       ] as Action[]
 
       const result = calculateActionBasedTrajectory({
-        baseEmissions: 1000,
+        studyEmissions: 1000,
         studyStartYear: 2024,
         actions,
       })
@@ -382,7 +382,7 @@ describe('calculateTrajectory', () => {
       ] as Action[]
 
       const result = calculateActionBasedTrajectory({
-        baseEmissions: 1000,
+        studyEmissions: 1000,
         studyStartYear: 2024,
         actions,
       })
