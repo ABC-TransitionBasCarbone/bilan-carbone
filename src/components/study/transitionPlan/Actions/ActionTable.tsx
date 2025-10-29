@@ -15,7 +15,7 @@ import {
 } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useOptimistic, useState } from 'react'
 import ActionModal from './ActionModal'
 
 interface Props {
@@ -35,15 +35,32 @@ const ActionTable = ({ actions, studyUnit, porters, transitionPlanId }: Props) =
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
 
-  const handleToggleEnabled = useCallback(
-    async (actionId: string, currentValue: boolean) => {
-      await callServerFunction(() => toggleActionEnabled(actionId, !currentValue), {
-        onSuccess: () => {
-          router.refresh()
-        },
+  const [optimisticActions, setOptimisticActions] = useOptimistic(
+    actions,
+    (state, { actionId, enabled }: { actionId: string; enabled: boolean }) => {
+      return state.map((action) => {
+        if (action.id === actionId) {
+          return { ...action, enabled }
+        }
+        return action
       })
     },
-    [callServerFunction, router],
+  )
+
+  const handleToggleEnabled = useCallback(
+    async (actionId: string, currentValue: boolean) => {
+      const newValue = !currentValue
+      setOptimisticActions({ actionId, enabled: newValue })
+
+      await callServerFunction(() => toggleActionEnabled(actionId, newValue), {
+        getErrorMessage: () => {
+          return t('errorChangingEnabled')
+        },
+      })
+
+      router.refresh()
+    },
+    [callServerFunction, t, router, setOptimisticActions],
   )
 
   const getPotential = useCallback(
@@ -65,7 +82,7 @@ const ActionTable = ({ actions, studyUnit, porters, transitionPlanId }: Props) =
       [
         {
           header: t('enabled'),
-          accessorKey: 'isEnabled',
+          accessorKey: 'enabled',
           cell: ({ getValue, row }) => (
             <Switch
               checked={getValue<boolean>()}
@@ -102,7 +119,7 @@ const ActionTable = ({ actions, studyUnit, porters, transitionPlanId }: Props) =
 
   const table = useReactTable({
     columns,
-    data: actions,
+    data: optimisticActions,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,

@@ -1052,7 +1052,8 @@
           "targetYear": "Année cible",
           "potential": "Potentiel de réduction",
           "porter": "Porteur",
-          "budget": "Budget"
+          "budget": "Budget",
+          "errorChangingEnabled": "Erreur lors du changement de statut de l'action"
         },
         "addModal": {
           "add": "Ajouter une action",

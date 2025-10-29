@@ -183,7 +183,7 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
     const totalCo2 = getStudyTotalCo2EmissionsWithDep(study)
     const studyStartYear = study.startDate.getFullYear()
 
-    const enabledActions = actions.filter((action) => action.isEnabled)
+    const enabledActions = actions.filter((action) => action.enabled)
 
     const trajectoryWB2CData = calculateSBTiTrajectory({
       baseEmissions: totalCo2,

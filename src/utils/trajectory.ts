@@ -3,7 +3,7 @@ import { FullStudy } from '@/db/study'
 import { getStudyTotalCo2EmissionsWithDep } from '@/services/study'
 import { Translations } from '@/types/translation'
 import { Action, ActionPotentialDeduction, ExternalStudy, TrajectoryType } from '@prisma/client'
-import { getYearFromDate } from './time'
+import { getYearFromDateStr } from './time'
 
 export type SBTIType = 'SBTI_15' | 'SBTI_WB2C'
 export const SBTI_REDUCTION_RATE_15 = 0.042
@@ -294,7 +294,7 @@ export const calculateActionBasedTrajectory = ({
     quantitativeActions.length > 0
       ? Math.max(
           ...quantitativeActions.map((action) =>
-            action.reductionEndYear ? getYearFromDate(action.reductionEndYear) : 0,
+            action.reductionEndYear ? getYearFromDateStr(action.reductionEndYear) : 0,
           ),
         )
       : 0
@@ -304,8 +304,8 @@ export const calculateActionBasedTrajectory = ({
   const yearlyReductions: Record<number, number> = {}
 
   for (const action of quantitativeActions) {
-    const startYear = action.reductionStartYear ? getYearFromDate(action.reductionStartYear) : 0
-    const endYear = action.reductionEndYear ? getYearFromDate(action.reductionEndYear) : 0
+    const startYear = action.reductionStartYear ? getYearFromDateStr(action.reductionStartYear) : 0
+    const endYear = action.reductionEndYear ? getYearFromDateStr(action.reductionEndYear) : 0
 
     if (startYear === endYear) {
       yearlyReductions[startYear] = action.reductionValue ?? 0

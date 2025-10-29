@@ -22,6 +22,7 @@ import {
   updateAction,
 } from '@/db/transitionPlan'
 import { ApiResponse, withServerResponse } from '@/utils/serverResponse'
+import { getYearFromDateStr } from '@/utils/time'
 import { TransitionPlan } from '@prisma/client'
 import { dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
@@ -174,7 +175,7 @@ export const addExternalStudy = async (command: ExternalStudyCommand) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (await isYearAlreadyLinked(command.transitionPlanId, new Date(command.date).getFullYear())) {
+    if (await isYearAlreadyLinked(command.transitionPlanId, getYearFromDateStr(command.date))) {
       throw new Error('yearAlreadySet')
     }
 
@@ -228,7 +229,7 @@ export const getStudyActions = async (studyId: string) =>
     return getActions(transitionPlan.id)
   })
 
-export const toggleActionEnabled = async (actionId: string, isEnabled: boolean) =>
+export const toggleActionEnabled = async (actionId: string, enabled: boolean) =>
   withServerResponse('toggleActionEnabled', async () => {
     const session = await dbActualizedAuth()
     if (!session || !session.user) {
@@ -245,5 +246,5 @@ export const toggleActionEnabled = async (actionId: string, isEnabled: boolean) 
       throw new Error(NOT_AUTHORIZED)
     }
 
-    await updateAction(actionId, { isEnabled })
+    await updateAction(actionId, { enabled })
   })

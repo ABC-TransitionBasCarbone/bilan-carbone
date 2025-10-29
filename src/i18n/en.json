@@ -1052,7 +1052,8 @@
           "targetYear": "Target year",
           "potential": "Reduction potential",
           "porter": "Porter",
-          "budget": "Budget"
+          "budget": "Budget",
+          "errorChangingEnabled": "Error changing action status"
         },
         "addModal": {
           "add": "Add an action",
