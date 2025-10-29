@@ -34,7 +34,7 @@ const Actions = ({ actions, studyUnit, porters, transitionPlanId }: Props) => {
   }, [actions, filter, fuse])
 
   return (
-    <>
+    <div className="flex-col gapped1">
       <ActionFilters
         search={filter}
         setSearch={setFilter}
@@ -48,7 +48,7 @@ const Actions = ({ actions, studyUnit, porters, transitionPlanId }: Props) => {
         porters={porters}
         transitionPlanId={transitionPlanId}
       />
-    </>
+    </div>
   )
 }
 

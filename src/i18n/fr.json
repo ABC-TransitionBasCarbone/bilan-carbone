@@ -951,6 +951,7 @@
       },
       "trajectoryModal": {
         "title": "Je choisis ma trajectoire",
+        "addTitle": "Ajouter une trajectoire",
         "editTitle": "Modifier ma trajectoire",
         "submit": "Valider",
         "save": "Enregistrer",
@@ -1018,6 +1019,8 @@
         "title": "Objectifs de réduction",
         "custom": "Personnalisée",
         "objectiveNumber": "Objectif {number}",
+        "search": "Cherchez une trajectoire ou un objectif ici",
+        "add": "Ajouter une trajectoire",
         "table": {
           "name": "Nom",
           "type": "Type",

@@ -127,7 +127,7 @@ const ActionTable = ({ actions, studyUnit, porters, transitionPlanId }: Props) =
 
   return (
     <>
-      <BaseTable table={table} paginations={[10, 25, 50, 100]} className="mt1" testId="actions" />
+      <BaseTable table={table} paginations={[10, 25, 50, 100]} testId="actions" />
       {!!editing && (
         <ActionModal
           open

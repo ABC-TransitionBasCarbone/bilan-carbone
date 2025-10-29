@@ -49,11 +49,10 @@ interface Props {
   trajectories: TrajectoryWithObjectives[]
   canEdit: boolean
   transitionPlanId: string
-  studyId: string
-  onUpdate: () => void
+  searchFilter?: string
 }
 
-const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, studyId, onUpdate }: Props) => {
+const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, searchFilter = '' }: Props) => {
   const t = useTranslations('study.transitionPlan.objectives')
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
@@ -90,7 +89,6 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, st
           localStorage.setItem(`trajectory-custom-selected-${studyId}`, JSON.stringify(updatedIds))
         }
       }
-      onUpdate()
       setDeleteModalOpen(false)
       setDeleteTarget(null)
       router.refresh()
@@ -103,7 +101,6 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, st
   }
 
   const handleEditSuccess = () => {
-    onUpdate()
     router.refresh()
     setEditModalOpen(false)
     setEditTrajectory(null)
@@ -226,7 +223,11 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, st
   }, [t, canEdit, trajectories]) as ColumnDef<TableDataType>[]
 
   const tableData = useMemo((): TrajectoryRow[] => {
-    return trajectories.map((trajectory) => {
+    const filteredTrajectories = searchFilter
+      ? trajectories.filter((trajectory) => trajectory.name.toLowerCase().includes(searchFilter.toLowerCase()))
+      : trajectories
+
+    return filteredTrajectories.map((trajectory) => {
       const sortedObjectives = [...trajectory.objectives].sort((a, b) => a.targetYear - b.targetYear)
       const lastObjective = sortedObjectives[sortedObjectives.length - 1]
 
@@ -248,7 +249,7 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, st
         })),
       }
     })
-  }, [trajectories, t])
+  }, [trajectories, t, searchFilter])
 
   const table = useReactTable({
     columns,

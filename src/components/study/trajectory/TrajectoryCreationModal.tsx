@@ -2,7 +2,6 @@
 
 import LoadingButton from '@/components/base/LoadingButton'
 import Modal from '@/components/modals/Modal'
-import ModalStepper from '@/components/modals/ModalStepper'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import {
@@ -16,10 +15,13 @@ import { getDefaultObjectivesForTrajectoryType } from '@/utils/trajectory'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { TrajectoryType } from '@prisma/client'
 import { useTranslations } from 'next-intl'
+import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import TrajectoryCreationStep1 from './TrajectoryCreationStep1'
 import TrajectoryCreationStep2 from './TrajectoryCreationStep2'
+
+const TrajectoryCreationStep1 = dynamic(() => import('./TrajectoryCreationStep1'), { ssr: false })
+const ModalStepper = dynamic(() => import('@/components/modals/ModalStepper'), { ssr: false })
 
 interface Props {
   open: boolean
@@ -27,6 +29,7 @@ interface Props {
   transitionPlanId: string
   onSuccess: (trajectoryId: string) => void
   trajectory: TrajectoryWithObjectives | null
+  isFirstCreation?: boolean
 }
 
 const defaultValues: TrajectoryFormData = {
@@ -36,10 +39,17 @@ const defaultValues: TrajectoryFormData = {
   objectives: [],
 }
 
-const TrajectoryCreationModal = ({ open, onClose, transitionPlanId, onSuccess, trajectory }: Props) => {
+const TrajectoryCreationModal = ({
+  open,
+  onClose,
+  transitionPlanId,
+  onSuccess,
+  trajectory,
+  isFirstCreation = true,
+}: Props) => {
   const t = useTranslations('study.transitionPlan.trajectoryModal')
   const isEditMode = !!trajectory
-  const [activeStep, setActiveStep] = useState(isEditMode ? 1 : 0)
+  const [activeStep, setActiveStep] = useState(isEditMode || !isFirstCreation ? 1 : 0)
   const [isLoading, setIsLoading] = useState(false)
   const { callServerFunction } = useServerFunction()
 
@@ -86,7 +96,7 @@ const TrajectoryCreationModal = ({ open, onClose, transitionPlanId, onSuccess, t
   }
 
   const handleModeSelect = (type: TrajectoryType) => {
-    setValue('trajectoryType', type)
+    setValue('trajectoryType', type, { shouldValidate: true })
   }
 
   const onSubmit = async (data: TrajectoryFormData) => {
@@ -164,13 +174,18 @@ const TrajectoryCreationModal = ({ open, onClose, transitionPlanId, onSuccess, t
   const isSBTI = trajectoryType === TrajectoryType.SBTI_15 || trajectoryType === TrajectoryType.SBTI_WB2C
   const isStep1Valid = trajectoryType !== null
 
-  if (isEditMode) {
+  if (isEditMode || !isFirstCreation) {
     return (
       <Modal
-        label="trajectory-edit"
+        label={isEditMode ? 'trajectory-edit' : 'trajectory-creation'}
         open={open}
-        onClose={onClose}
-        title={t('editTitle')}
+        onClose={() => {
+          onClose()
+          if (!isEditMode) {
+            reset()
+          }
+        }}
+        title={isEditMode ? t('editTitle') : t('addTitle')}
         actions={[
           {
             children: t('cancel'),
@@ -179,7 +194,7 @@ const TrajectoryCreationModal = ({ open, onClose, transitionPlanId, onSuccess, t
           },
           {
             actionType: 'loadingButton',
-            children: t('save'),
+            children: isEditMode ? t('save') : t('submit'),
             loading: isLoading,
             onClick: handleSubmit(onSubmit),
             disabled: !isValid,
@@ -187,7 +202,13 @@ const TrajectoryCreationModal = ({ open, onClose, transitionPlanId, onSuccess, t
         ]}
       >
         {trajectoryType && (
-          <TrajectoryCreationStep2 isSBTI={isSBTI} trajectoryType={trajectoryType} control={control} />
+          <TrajectoryCreationStep2
+            isSBTI={isSBTI}
+            trajectoryType={trajectoryType}
+            control={control}
+            showTrajectoryTypeSelector={!isEditMode}
+            handleModeSelect={handleModeSelect}
+          />
         )}
       </Modal>
     )
@@ -221,7 +242,13 @@ const TrajectoryCreationModal = ({ open, onClose, transitionPlanId, onSuccess, t
         <TrajectoryCreationStep1 trajectoryType={trajectoryType} handleModeSelect={handleModeSelect} />
       )}
       {activeStep === 1 && trajectoryType && (
-        <TrajectoryCreationStep2 isSBTI={isSBTI} trajectoryType={trajectoryType} control={control} />
+        <TrajectoryCreationStep2
+          isSBTI={isSBTI}
+          trajectoryType={trajectoryType}
+          control={control}
+          showTrajectoryTypeSelector={false}
+          handleModeSelect={handleModeSelect}
+        />
       )}
     </ModalStepper>
   )

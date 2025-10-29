@@ -29,7 +29,9 @@ const ActionFilters = ({ search, setSearch, studyUnit, porters, transitionPlanId
         placeholder={t('search')}
         data-testid="actions-filter"
       />
-      <Button onClick={() => setAddAction((prev) => !prev)}>{t('add')}</Button>
+      <Button className={styles.addButton} onClick={() => setAddAction((prev) => !prev)}>
+        {t('add')}
+      </Button>
       {addAction && (
         <ActionModal
           open
