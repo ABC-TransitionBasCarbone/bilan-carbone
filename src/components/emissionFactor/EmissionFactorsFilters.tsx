@@ -117,7 +117,9 @@ export const EmissionFactorsFilters = ({
 
   const selectPost = (post: Post) => {
     const newValue = areAllSelected(post)
-      ? filters.subPosts.filter((filteredSubPost) => !subPostsByPost[post].includes(filteredSubPost))
+      ? filters.subPosts.filter(
+          (filteredSubPost) => filteredSubPost === 'all' || !subPostsByPost[post].includes(filteredSubPost),
+        )
       : filters.subPosts.concat(subPostsByPost[post].filter((a) => !filters.subPosts.includes(a)))
     setFilters((prevFilters) => ({ ...prevFilters, subPosts: newValue }))
   }

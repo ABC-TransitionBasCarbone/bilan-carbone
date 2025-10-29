@@ -1,13 +1,14 @@
 'use client'
 
 import { EmissionFactorList } from '@/db/emissionFactors'
-import { environmentSubPostsMapping, Post, subPostsByPost } from '@/services/posts'
+import { environmentSubPostsMapping, Post } from '@/services/posts'
 import { EmissionFactorWithMetaData, getEmissionFactors } from '@/services/serverFunctions/emissionFactor'
 import { BCUnit } from '@/services/unit'
+import { FeFilters } from '@/types/filters'
 import { Environment, SubPost } from '@prisma/client'
 import { PaginationState } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import EditEmissionFactorModal from './edit/EditEmissionFactorModal'
 import { EmissionFactorsFilters, ImportVersionForFilters } from './EmissionFactorsFilters'
 import { EmissionFactorsTable } from './EmissionFactorsTable'
@@ -44,29 +45,21 @@ const EmissionFactorsFiltersAndTable = ({
 
   const envSubPostsByPost = useMemo(() => environmentSubPostsMapping[environment], [environment])
   const posts = useMemo(() => Object.keys(envSubPostsByPost) as Post[], [envSubPostsByPost])
-  const envSubPosts = useMemo(() => {
-    return posts.reduce((acc, post) => {
-      const subPosts = subPostsByPost[post as Post] || []
-      return acc.concat(subPosts)
-    }, [] as SubPost[])
-  }, [posts])
 
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<FeFilters>({
     archived: false,
     search: '',
     location: '',
     sources: initialImportVersions,
     units: initialSelectedUnits,
-    subPosts: defaultSubPost ? [defaultSubPost] : envSubPosts,
+    subPosts: defaultSubPost ? [defaultSubPost] : ['all'],
   })
-  const filtersRef = useRef(filters)
 
   const fromModal = !!selectEmissionFactor
 
   useEffect(() => {
     async function fetchEmissionFactors() {
       const takeValue = skip === 0 ? pagination.pageSize * 4 : pagination.pageSize
-      filtersRef.current = filters
       const emissionFactorsFromBdd = await getEmissionFactors(skip, takeValue, filters, studyId)
 
       setSkip((prevSkip) => takeValue + prevSkip)
@@ -80,7 +73,7 @@ const EmissionFactorsFiltersAndTable = ({
       }
     }
 
-    const alreadyLoadedCount = skip + pagination.pageSize
+    const alreadyLoadedCount = skip
     const alreadyDisplayedCount = (pagination.pageIndex + 1) * pagination.pageSize
     const pagesInAdvancedToLoad = 3
 
@@ -92,7 +85,7 @@ const EmissionFactorsFiltersAndTable = ({
     }
     // We only want to trigger this effect when the user change pages or the number of FE per page
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [emissionFactors.length, pagination.pageIndex, pagination.pageSize])
+  }, [pagination.pageIndex, pagination.pageSize])
 
   useEffect(() => {
     async function fetchEmissionFactors() {

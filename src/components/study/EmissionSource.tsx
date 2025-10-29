@@ -28,6 +28,7 @@ import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Path } from 'react-hook-form'
 import Label from '../base/Label'
+import { ImportVersionForFilters } from '../emissionFactor/EmissionFactorsFilters'
 import styles from './EmissionSource.module.css'
 import EmissionSourceContributorForm from './EmissionSourceContributorForm'
 import EmissionSourceForm from './EmissionSourceForm'
@@ -49,6 +50,7 @@ interface Props {
   userRoleOnStudy: StudyRole | null
   caracterisations: EmissionSourceCaracterisation[]
   emissionFactorsForSubPost: EmissionFactorWithMetaData[]
+  importVersions: ImportVersionForFilters[]
 }
 
 const EmissionSource = ({
@@ -59,6 +61,7 @@ const EmissionSource = ({
   withoutDetail,
   caracterisations,
   emissionFactorsForSubPost,
+  importVersions,
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
   const { environment } = useAppEnvironmentStore()
   const ref = useRef<HTMLDivElement>(null)
@@ -327,10 +330,7 @@ const EmissionSource = ({
                 advanced={study.level === Level.Advanced}
                 environment={environment}
                 emissionFactorsForSubPost={emissionFactorsForSubPost}
-                importVersions={[
-                  { id: Import.Manual, source: Import.Manual, name: '' },
-                  ...study.emissionFactorVersions.map((efv) => efv.importVersion),
-                ]}
+                importVersions={importVersions}
               />
             ) : (
               <EmissionSourceForm
@@ -353,10 +353,7 @@ const EmissionSource = ({
                 studyUnit={study.resultsUnit}
                 userOrganizationId={study.organizationVersion.organization.id}
                 emissionFactorsForSubPost={emissionFactorsForSubPost}
-                importVersions={[
-                  { id: Import.Manual, source: Import.Manual, name: '' },
-                  ...study.emissionFactorVersions.map((efv) => efv.importVersion),
-                ]}
+                importVersions={importVersions}
               />
             )}
           </div>

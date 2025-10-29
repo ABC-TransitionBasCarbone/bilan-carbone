@@ -138,114 +138,61 @@ export type EmissionFactorList = {
   }[]
 }
 
-const handleFilterConditions = (filters: FeFilters, withCut: boolean, locale: LocaleType, organizationId?: string) => {
-  const langugagePrisma = Prisma.sql`${locale}`
-  const conditions: Prisma.Sql[] = [
-    Prisma.sql`m.language = ${langugagePrisma}`,
-    Prisma.sql`ef.sub_posts IS NOT NULL AND ef.sub_posts::text != '{}'`,
-  ]
-
-  if (!withCut) {
-    conditions.push(Prisma.sql`ef.imported_from::text != ${Import.CUT}`)
-  }
-
-  if (!filters.archived) {
-    conditions.push(Prisma.sql`ef.status::text != ${EmissionFactorStatus.Archived}`)
-  }
-
-  if (filters.search && filters.search.trim() !== '') {
-    const search = `%${filters.search.trim().toLowerCase()}%`
-    conditions.push(Prisma.sql`(m.title ILIKE ${search} OR m.attribute ILIKE ${search} OR m.frontiere ILIKE ${search})`)
-  }
-
-  if (filters.location && filters.location.trim() !== '') {
-    const location = `%${filters.location.trim().toLowerCase()}%`
-    conditions.push(Prisma.sql`(m.location ILIKE ${location})`)
-  }
-
-  if (filters.units.length > 0 && filters.units.some((unit) => unit !== 'all')) {
-    conditions.push(
-      Prisma.sql`(ef.unit::text IN (${Prisma.join(filters.units)}) OR ef."customUnit"::text IN (${Prisma.join(filters.units)}))`,
-    )
-  }
-
-  if (filters.subPosts.length > 0 && filters.subPosts.some((subPost) => subPost !== 'all')) {
-    conditions.push(
-      Prisma.sql`ef.sub_posts::text[] && ARRAY[${Prisma.join(filters.subPosts.map((sp) => Prisma.sql`${sp}`))}]::text[]`,
-    )
-  }
-
+const getDefaultEmissionFactorsCount = async (
+  filters: FeFilters,
+  withCut: boolean,
+  locale: LocaleType,
+  organizationId?: string,
+): Promise<{ count: number }> => {
+  let importedFromCondition = {}
   if (filters.sources.length > 0 && filters.sources.some((source) => source !== 'all')) {
     if (filters.sources.includes(Import.Manual) && filters.sources.length === 1 && organizationId) {
-      conditions.push(
-        Prisma.sql`(ef.imported_from = ${Prisma.sql`${Import.Manual}`} and ef.organization_id = ${Prisma.sql`${organizationId}`})`,
-      )
+      importedFromCondition = { OR: [{ importedFrom: Import.Manual, organizationId }] }
     } else if (filters.sources.includes(Import.Manual)) {
-      conditions.push(
-        Prisma.sql`(ef.version_id::text IN (${Prisma.join(filters.sources.filter((s) => s !== Import.Manual))}) OR (version_id is null and ef.organization_id = ${Prisma.sql`${organizationId}`}))`,
-      )
+      importedFromCondition = {
+        OR: [
+          { versionId: { in: filters.sources.filter((s) => s !== Import.Manual) } },
+          { importedFrom: Import.Manual, organizationId },
+        ],
+      }
     } else {
-      conditions.push(
-        Prisma.sql`ef.version_id::text IN (${Prisma.join(filters.sources.filter((s) => s !== Import.Manual))})`,
-      )
+      importedFromCondition = {
+        OR: [{ versionId: { in: filters.sources.filter((s) => s !== Import.Manual) } }],
+      }
     }
   }
 
-  return Prisma.join(conditions, ' AND ')
-}
+  const count = await prismaClient.emissionFactorMetaData.count({
+    where: {
+      language: locale,
+      ...(filters.search && {
+        OR: [
+          { title: { contains: filters.search, mode: 'insensitive' } },
+          { attribute: { contains: filters.search, mode: 'insensitive' } },
+          { frontiere: { contains: filters.search, mode: 'insensitive' } },
+        ],
+      }),
+      ...(filters.location && { location: { contains: filters.location, mode: 'insensitive' } }),
+      emissionFactor: {
+        AND: [
+          {
+            subPosts: filters.subPosts.some((sp) => sp === 'all')
+              ? { isEmpty: false }
+              : { hasSome: filters.subPosts as SubPost[] },
+          },
+          filters.archived ? {} : { status: { not: EmissionFactorStatus.Archived } },
+          filters.units.length > 0 && !filters.units.includes('all')
+            ? {
+                OR: [{ unit: { in: filters.units as Unit[] } }, { customUnit: { in: filters.units as string[] } }],
+              }
+            : {},
+          importedFromCondition,
+        ],
+      },
+    },
+  })
 
-const getBaseRequest = (
-  selectRequest: Prisma.Sql,
-  filters: FeFilters,
-  withCut: boolean,
-  locale: LocaleType,
-  organizationId?: string,
-): Prisma.Sql => {
-  return Prisma.sql`${selectRequest}
-    FROM emission_factors ef
-  JOIN emission_metadata m
-    ON m.emission_factor_id = ef.id
-  WHERE ${handleFilterConditions(filters, withCut, locale, organizationId)}`
-}
-const getDefaultEmissionFactorsCount = (
-  filters: FeFilters,
-  withCut: boolean,
-  locale: LocaleType,
-  organizationId?: string,
-): { count: number }[] => {
-  const request = getBaseRequest(Prisma.sql`SELECT COUNT(*)::int AS count`, filters, withCut, locale, organizationId)
-  return prismaClient.$queryRaw(request) as unknown as { count: number }[]
-}
-
-const getDefaultEmissionFactorsOld = (
-  skip: number,
-  take: number | 'ALL',
-  locale: LocaleType,
-  filters: FeFilters,
-  withCut: boolean,
-  organizationId?: string,
-): EmissionFactorList[] => {
-  const select = Prisma.sql`SELECT ef.id, ef.status, ef.total_co2 as ${Prisma.sql`"totalCo2"`}, ef.location, ef.source, ef.unit, ${Prisma.sql`ef."customUnit"`}, ef.is_monetary as ${Prisma.sql`"isMonetary"`},
-           ef.imported_from as ${Prisma.sql`"importedFrom"`}, ef.imported_id as ${Prisma.sql`"importedId"`}, ef.organization_id as ${Prisma.sql`"organizationId"`},
-           ef.reliability, ef.technical_representativeness as ${Prisma.sql`"technicalRepresentativeness"`},
-           ef.geographic_representativeness as ${Prisma.sql`"geographicRepresentativeness"`},
-           ef.temporal_representativeness as ${Prisma.sql`"temporalRepresentativeness"`},
-           ef.completeness, ef.sub_posts as ${Prisma.sql`"subPosts"`},
-           ef.co2f, ef.ch4f, ef.ch4b, ef.n2o, ef.co2b, ef.sf6, ef.hfc, ef.pfc, ef.other_ges as otherGES,
-           (SELECT row_to_json(m.*) FROM emission_metadata m WHERE m.emission_factor_id = ef.id AND m.language = ${Prisma.sql`${locale}`} LIMIT 1 ) AS ${Prisma.sql`"metaData"`}`
-
-  const baseRequest = getBaseRequest(select, filters, withCut, locale, organizationId)
-
-  let finalQuery = baseRequest
-  if (take === 'ALL') {
-    finalQuery = Prisma.sql`${baseRequest} ORDER BY m.title ASC`
-  } else {
-    const skipSQL = Prisma.sql`${skip}`
-    const takeSQL = Prisma.sql`${take}`
-    finalQuery = Prisma.sql`${baseRequest} ORDER BY m.title ASC LIMIT ${takeSQL} OFFSET ${skipSQL}`
-  }
-
-  return prismaClient.$queryRaw(finalQuery) as unknown as EmissionFactorList[]
+  return { count }
 }
 
 export const keepOnlyOneMetadata = <T extends { metaData: EmissionFactorList['metaData'][] }>(
@@ -294,10 +241,10 @@ const getDefaultEmissionFactors = async (
           { importedFrom: Import.Manual, organizationId },
         ],
       }
-    }
-  } else {
-    importedFromCondition = {
-      OR: [{ versionId: { in: filters.sources.filter((s) => s !== Import.Manual) } }],
+    } else {
+      importedFromCondition = {
+        OR: [{ versionId: { in: filters.sources.filter((s) => s !== Import.Manual) } }],
+      }
     }
   }
 
@@ -338,10 +285,12 @@ const getDefaultEmissionFactors = async (
       comment: true,
       location: true,
       frontiere: true,
-      emissionFactor: { select: selectEmissionFactor },
+      emissionFactor: { select: otherSelectEmissionFactor },
     },
     orderBy: { title: 'asc' },
   })
+
+  console.log(JSON.stringify(importedFromCondition))
 
   return emissionFactorsMetadata.map((metadata) => ({
     ...metadata.emissionFactor,
@@ -362,26 +311,9 @@ export const getAllEmissionFactors = async (
   take: number | 'ALL',
   locale: LocaleType,
   filters: FeFilters,
-  studyId?: string,
   withCut: boolean = false,
 ) => {
   let versionIds
-  let studyOldEmissionFactors: EmissionFactorList[] = []
-  if (studyId) {
-    const study = await prismaClient.study.findFirst({
-      where: { id: studyId },
-      include: { emissionFactorVersions: true, emissionSources: true },
-    })
-    if (!study) {
-      return { emissionFactors: [], count: 0 }
-    }
-    versionIds = study.emissionFactorVersions.map((version) => version.importVersionId)
-    const selectedEmissionFactors = study.emissionSources
-      .map((emissionSource) => emissionSource.emissionFactorId)
-      .filter((id) => id !== null)
-
-    studyOldEmissionFactors = await getEmissionFactorsFromIdsExceptVersions(selectedEmissionFactors, versionIds, locale)
-  }
 
   const filtersToApply = versionIds
     ? {
@@ -405,11 +337,9 @@ export const getAllEmissionFactors = async (
     organizationId,
   )
 
-  const allEmissionFactors = defaultEmissionFactors.concat(studyOldEmissionFactors)
-
   return {
-    emissionFactors: allEmissionFactors,
-    count: emissionFactorsCountInfos[0].count + studyOldEmissionFactors.length,
+    emissionFactors: defaultEmissionFactors,
+    count: emissionFactorsCountInfos.count,
   }
 }
 

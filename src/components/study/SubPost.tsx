@@ -10,7 +10,7 @@ import { withInfobulle } from '@/utils/post'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
-import { StudyRole, SubPost as SubPostEnum } from '@prisma/client'
+import { Import, StudyRole, SubPost as SubPostEnum } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -52,6 +52,13 @@ const SubPost = ({
   const { environment } = useAppEnvironmentStore()
   const [emissionFactorsForSubPost, setEmissionFactorsForSubPost] = useState<EmissionFactorWithMetaData[]>([])
   const [expanded, setExpanded] = useState(false)
+  const importVersions = useMemo(
+    () => [
+      { id: Import.Manual, source: Import.Manual, name: '' },
+      ...study.emissionFactorVersions.map((efv) => efv.importVersion),
+    ],
+    [study.emissionFactorVersions],
+  )
 
   useEffect(() => {
     async function fetchEmissionFactors() {
@@ -62,7 +69,7 @@ const SubPost = ({
           archived: false,
           search: '',
           location: '',
-          sources: [],
+          sources: importVersions.map((iv) => iv.id),
           units: [],
           subPosts: [subPost],
         },
@@ -77,7 +84,7 @@ const SubPost = ({
     if (emissionFactorsForSubPost.length === 0 && expanded) {
       fetchEmissionFactors()
     }
-  }, [emissionFactorsForSubPost.length, expanded, study.id, subPost])
+  }, [emissionFactorsForSubPost.length, expanded, importVersions, study.id, subPost])
 
   const total = useMemo(() => {
     if (!environment) {
@@ -173,6 +180,7 @@ const SubPost = ({
                 withoutDetail
                 caracterisations={caracterisations}
                 emissionFactorsForSubPost={emissionFactorsForSubPost}
+                importVersions={importVersions}
               />
             ) : (
               <EmissionSource
@@ -184,6 +192,7 @@ const SubPost = ({
                 withoutDetail={false}
                 caracterisations={caracterisations}
                 emissionFactorsForSubPost={emissionFactorsForSubPost}
+                importVersions={importVersions}
               />
             ),
           )}
