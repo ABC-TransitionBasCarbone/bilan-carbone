@@ -91,9 +91,10 @@ const EmissionFactorsFiltersAndTable = ({
     async function fetchEmissionFactors() {
       setEmissionFactors([])
       setTotalCount(0)
+      const takeValue = pagination.pageSize * 4
 
-      const emissionFactorsFromBdd = await getEmissionFactors(0, pagination.pageSize, filters, studyId)
-      setSkip(pagination.pageSize)
+      const emissionFactorsFromBdd = await getEmissionFactors(0, takeValue, filters, studyId)
+      setSkip(takeValue)
 
       if (emissionFactorsFromBdd.success) {
         setPagination((prevPagination) => ({ ...prevPagination, pageIndex: 0 }))
