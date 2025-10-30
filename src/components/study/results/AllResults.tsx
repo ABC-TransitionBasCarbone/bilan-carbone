@@ -235,6 +235,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
             resultsUnit={study.resultsUnit}
             emissionSources={study.emissionSources}
             environment={environment}
+            validatedOnly={validatedOnly}
           />
         )}
       </div>

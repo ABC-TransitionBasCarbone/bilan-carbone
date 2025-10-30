@@ -21,25 +21,27 @@ interface Props {
   studyId: string
   resultsUnit: StudyResultUnit
   computedResults: ResultsByPost[]
+  validatedOnly: boolean
 }
 
-const UncertaintyPerPost = ({ studyId, resultsUnit, computedResults }: Props) => {
+const UncertaintyPerPost = ({ studyId, resultsUnit, computedResults, validatedOnly }: Props) => {
   const t = useTranslations('study.results')
   const tPost = useTranslations('emissionFactors.post')
   const tGlossary = useTranslations('study.results.glossary')
   const [glossary, setGlossary] = useState(false)
   const [moreInfo, setMoreInfo] = useState(false)
+  const numberOfSources = validatedOnly ? 'numberOfValidatedEmissionSource' : 'numberOfEmissionSource'
 
   const results = [...computedResults]
     .filter((post) => post.post !== 'total' && !!post.uncertainty)
     .map((post) => ({ ...post, uncertainty: 100 * ((post.uncertainty as number) - 1) }))
-    .sort((postA, postB) => postB.numberOfValidatedEmissionSource - postA.numberOfValidatedEmissionSource)
+    .sort((postA, postB) => postB[numberOfSources] - postA[numberOfSources])
 
   const { maxValue, maxUncertainty, maxSource } = results.reduce(
     (res, post) => ({
       maxValue: Math.max(res.maxValue, post.value),
       maxUncertainty: Math.max(res.maxUncertainty, post.uncertainty || 0),
-      maxSource: Math.max(res.maxSource, post.numberOfValidatedEmissionSource),
+      maxSource: Math.max(res.maxSource, post[numberOfSources]),
     }),
     { maxValue: 0, maxUncertainty: 0, maxSource: 0 },
   )
@@ -49,7 +51,7 @@ const UncertaintyPerPost = ({ studyId, resultsUnit, computedResults }: Props) =>
     .map((post) => ({
       id: post.post,
       data: [{ id: post.post, x: post.value, y: post.uncertainty as number }],
-      markerSize: 50 * (post.numberOfValidatedEmissionSource / maxSource),
+      markerSize: 50 * (post[numberOfSources] / maxSource),
       valueFormatter: () =>
         `${tPost(post.post)} : ${t('total')} : ${formatEmissionFactorNumber(post.value / STUDY_UNIT_VALUES[resultsUnit])} ${t(`units.${resultsUnit}`)} - ${t('uncertainty')} : ${formatNumber(post.uncertainty, 2)}%`,
     }))
