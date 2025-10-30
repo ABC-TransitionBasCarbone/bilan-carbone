@@ -72,7 +72,7 @@ export const BasePostInfography = ({ post, mainPost, subPosts, studyId, percent,
       href={`/etudes/${studyId}/comptabilisation/saisie-des-donnees/${mainPost}`}
     >
       <PostHeader post={post} mainPost={mainPost} emissionValue={emissionValue} percent={percent} color={postColor} />
-      <SubPostInfography subPosts={subPosts} ref={ref} />
+      <SubPostInfography subPosts={subPosts} ref={ref} studyId={studyId} mainPost={mainPost} />
     </StyledLink>
   )
 }

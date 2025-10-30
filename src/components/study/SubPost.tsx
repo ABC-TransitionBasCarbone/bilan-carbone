@@ -13,7 +13,7 @@ import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
 import { StudyRole, SubPost as SubPostEnum } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import HelpIcon from '../base/HelpIcon'
 import EmissionSource from './EmissionSource'
 import NewEmissionSource from './NewEmissionSource'
@@ -80,11 +80,17 @@ const SubPost = ({
   )
 
   const [expanded, setExpanded] = useState(false)
+  const accordionRef = useRef<HTMLDivElement>(null)
 
-  // Check if any emission source in this subpost should be opened by URL hash
   useEffect(() => {
     const hash = window.location.hash
-    if (hash.startsWith('#emission-source-')) {
+
+    if (hash === `#subpost-${subPost}`) {
+      setExpanded(true)
+      setTimeout(() => {
+        accordionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }, 300)
+    } else if (hash.startsWith('#emission-source-')) {
       const emissionSourceId = hash.replace('#emission-source-', '')
       const hasTargetEmissionSource = emissionSources.some((source) => source.id === emissionSourceId)
 
@@ -92,10 +98,10 @@ const SubPost = ({
         setExpanded(true)
       }
     }
-  }, [emissionSources])
+  }, [emissionSources, subPost])
 
   return (!userRoleOnStudy || userRoleOnStudy === StudyRole.Reader) && emissionSources.length === 0 ? null : (
-    <div>
+    <div ref={accordionRef} id={`subpost-${subPost}`} className={styles.subPostScrollContainer}>
       <Accordion expanded={expanded} onChange={(_, isExpanded) => setExpanded(isExpanded)}>
         <AccordionSummary
           className={styles.subPostContainer}
