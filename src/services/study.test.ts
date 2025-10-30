@@ -2,7 +2,7 @@ import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionS
 import { getMockeFullStudy } from '@/tests/utils/models/study'
 import { expect } from '@jest/globals'
 import { Environment, Level, StudyResultUnit, SubPost } from '@prisma/client'
-import { getStudyTotalCo2EmissionsWithDep, getTransEnvironmentSubPost, hasSufficientLevel } from './study'
+import { getStudyTotalCo2Emissions, getTransEnvironmentSubPost, hasSufficientLevel } from './study'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('./file', () => ({ download: jest.fn() }))
@@ -80,7 +80,7 @@ describe('Study Service', () => {
         ],
       })
 
-      const result = getStudyTotalCo2EmissionsWithDep(mockStudy)
+      const result = getStudyTotalCo2Emissions(mockStudy)
 
       expect(result).toBe(30000) // Mocked FE has a totalCo2 of 10
     })
@@ -98,7 +98,7 @@ describe('Study Service', () => {
         ],
       })
 
-      const result = getStudyTotalCo2EmissionsWithDep(mockStudy)
+      const result = getStudyTotalCo2Emissions(mockStudy)
 
       expect(result).toBe(30) // Mocked FE has a totalCo2 of 10
     })
@@ -109,7 +109,7 @@ describe('Study Service', () => {
         emissionSources: [],
       })
 
-      const result = getStudyTotalCo2EmissionsWithDep(mockStudy)
+      const result = getStudyTotalCo2Emissions(mockStudy)
 
       expect(result).toBe(0)
     })

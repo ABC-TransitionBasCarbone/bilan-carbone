@@ -20,6 +20,7 @@ import {
 } from './posts'
 import { computeBegesResult } from './results/beges'
 import { computeResultsByPost, computeResultsByTag, ResultsByPost } from './results/consolidated'
+import { filterWithDependencies } from './results/utils'
 import { EmissionFactorWithMetaData, getEmissionFactorsByIds } from './serverFunctions/emissionFactor'
 import { prepareExcel } from './serverFunctions/file'
 import { getUserSettings } from './serverFunctions/user'
@@ -725,12 +726,15 @@ export const getDetailedEmissionResults = (
   }
 }
 
-export const getStudyTotalCo2EmissionsWithDep = (study: FullStudy) => {
+export const getStudyTotalCo2Emissions = (study: FullStudy, withDependencies: boolean = true) => {
   const environment = study.organizationVersion.environment
+  const filteredSources = withDependencies
+    ? study.emissionSources
+    : study.emissionSources.filter((source) => filterWithDependencies(source.subPost, withDependencies))
 
-  const emissionSourcesWithEmission = study.emissionSources.map((emissionSource) => ({
-    ...emissionSource,
-    ...getEmissionResults(emissionSource, environment),
+  const emissionSourcesWithEmission = filteredSources.map((source) => ({
+    ...source,
+    ...getEmissionResults(source, environment),
   }))
 
   const totalCo2InKg = getEmissionSourcesTotalCo2(emissionSourcesWithEmission)

@@ -4,8 +4,8 @@ import LoadingButton from '@/components/base/LoadingButton'
 import Stepper from '@/components/base/Stepper'
 import Toast, { ToastColors } from '@/components/base/Toast'
 import Modal from '@/components/modals/Modal'
-import { AddActionCommand, AddActionCommandValidation } from '@/services/serverFunctions/study.command'
 import { addAction, editAction } from '@/services/serverFunctions/transitionPlan'
+import { AddActionCommand, AddActionCommandValidation } from '@/services/serverFunctions/transitionPlan.command'
 import { objectWithoutNullAttributes } from '@/utils/object'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Action } from '@prisma/client'
@@ -50,6 +50,7 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit, porte
       nature: [],
       category: [],
       relevance: [],
+      dependenciesOnly: false,
       ...objectWithoutNullAttributes(action),
     },
   })

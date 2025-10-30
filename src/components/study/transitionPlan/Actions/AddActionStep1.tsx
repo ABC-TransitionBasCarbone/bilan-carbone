@@ -1,7 +1,7 @@
 import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
-import { AddActionCommand } from '@/services/serverFunctions/study.command'
+import { AddActionCommand } from '@/services/serverFunctions/transitionPlan.command'
 import { getYearFromDateStr } from '@/utils/time'
 import { MenuItem, TextField } from '@mui/material'
 import { ActionPotentialDeduction } from '@prisma/client'

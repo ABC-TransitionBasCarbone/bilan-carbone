@@ -1,6 +1,6 @@
 import { TrajectoryDataPoint } from '@/components/study/transitionPlan/TrajectoryGraph'
 import { FullStudy } from '@/db/study'
-import { getStudyTotalCo2EmissionsWithDep } from '@/services/study'
+import { getStudyTotalCo2Emissions } from '@/services/study'
 import { Translations } from '@/types/translation'
 import { Action, ActionPotentialDeduction, ExternalStudy, TrajectoryType } from '@prisma/client'
 import { getYearFromDateStr } from './time'
@@ -16,6 +16,7 @@ interface CalculateTrajectoryParams {
   studyEmissions: number
   studyStartYear: number
   reductionRate: number
+  withDependencies: boolean
   startYear?: number
   endYear?: number
   maxYear?: number
@@ -24,13 +25,18 @@ interface CalculateTrajectoryParams {
 }
 
 // TODO: Refactor this with ticket https://github.com/ABC-TransitionBasCarbone/bilan-carbone/issues/1808
-const getLinkedEmissions = (year: number, linkedStudies?: FullStudy[], externalStudies?: ExternalStudy[]) => {
+const getLinkedEmissions = (
+  year: number,
+  withDependencies: boolean,
+  linkedStudies?: FullStudy[],
+  externalStudies?: ExternalStudy[],
+) => {
   const startDate = new Date(`01-01-${year}`)
   const endDate = new Date(`01-01-${year + 1}`)
 
   const linkedStudy = linkedStudies?.find((study) => study.startDate >= startDate && study.startDate < endDate)
   if (linkedStudy) {
-    return getStudyTotalCo2EmissionsWithDep(linkedStudy)
+    return getStudyTotalCo2Emissions(linkedStudy, withDependencies)
   } else {
     const linkedExternalStudy = externalStudies?.find((study) => study.date >= startDate && study.date < endDate)
     return linkedExternalStudy?.totalCo2
@@ -95,6 +101,7 @@ export const calculateSBTiTrajectory = ({
   studyStartYear,
   reductionRate,
   maxYear,
+  withDependencies,
   linkedStudies,
   externalStudies,
 }: CalculateTrajectoryParams) => {
@@ -105,7 +112,7 @@ export const calculateSBTiTrajectory = ({
     const endYear = maxYear ?? TARGET_YEAR
 
     for (let year = graphStartYear; year <= endYear; year++) {
-      const linkedEmissions = getLinkedEmissions(year, linkedStudies, externalStudies)
+      const linkedEmissions = getLinkedEmissions(year, withDependencies, linkedStudies, externalStudies)
       if (linkedEmissions) {
         dataPoints.push({ year, value: linkedEmissions })
       } else {
@@ -124,7 +131,7 @@ export const calculateSBTiTrajectory = ({
     const newReductionRate = calculateNewLinearReductionRate(1, nty, studyStartYear)
 
     for (let year = REFERENCE_YEAR; year <= Math.max(nty, maxYear ?? TARGET_YEAR); year++) {
-      const linkedEmissions = getLinkedEmissions(year, linkedStudies, externalStudies)
+      const linkedEmissions = getLinkedEmissions(year, withDependencies, linkedStudies, externalStudies)
       if (linkedEmissions) {
         dataPoints.push({ year, value: linkedEmissions })
       } else {
@@ -138,7 +145,7 @@ export const calculateSBTiTrajectory = ({
     const endYear = Math.max(targetYear, maxYear ?? TARGET_YEAR)
 
     for (let year = graphStartYear; year <= endYear; year++) {
-      const linkedEmissions = getLinkedEmissions(year, linkedStudies, externalStudies)
+      const linkedEmissions = getLinkedEmissions(year, withDependencies, linkedStudies, externalStudies)
       if (linkedEmissions) {
         dataPoints.push({ year, value: linkedEmissions })
       } else {
@@ -163,12 +170,14 @@ export const calculateCustomTrajectory = ({
   studyEmissions,
   studyStartYear,
   objectives,
+  withDependencies,
   linkedStudies,
   externalStudies,
 }: {
   studyEmissions: number
   studyStartYear: number
   objectives: Array<{ targetYear: number; reductionRate: number }>
+  withDependencies: boolean
   linkedStudies?: FullStudy[]
   externalStudies?: ExternalStudy[]
 }): TrajectoryDataPoint[] => {
@@ -181,7 +190,7 @@ export const calculateCustomTrajectory = ({
   let startYear = studyStartYear
 
   for (let year = REFERENCE_YEAR; year < studyStartYear; year++) {
-    const linkedEmissions = getLinkedEmissions(year, linkedStudies, externalStudies)
+    const linkedEmissions = getLinkedEmissions(year, withDependencies, linkedStudies, externalStudies)
     if (linkedEmissions) {
       dataPoints.push({ year, value: linkedEmissions })
     } else {
@@ -260,6 +269,7 @@ export const calculateActionBasedTrajectory = ({
   linkedStudies,
   externalStudies,
   maxYear,
+  withDependencies = true,
 }: {
   studyEmissions: number
   studyStartYear: number
@@ -267,11 +277,12 @@ export const calculateActionBasedTrajectory = ({
   linkedStudies?: FullStudy[]
   externalStudies?: ExternalStudy[]
   maxYear?: number
+  withDependencies?: boolean
 }): TrajectoryDataPoint[] => {
   const dataPoints: TrajectoryDataPoint[] = []
 
   for (let year = REFERENCE_YEAR; year < studyStartYear; year++) {
-    const linkedEmissions = getLinkedEmissions(year, linkedStudies, externalStudies)
+    const linkedEmissions = getLinkedEmissions(year, withDependencies, linkedStudies, externalStudies)
     if (linkedEmissions) {
       dataPoints.push({ year, value: linkedEmissions })
     } else {
@@ -282,7 +293,14 @@ export const calculateActionBasedTrajectory = ({
   let currentEmissions = studyEmissions
   dataPoints.push({ year: studyStartYear, value: currentEmissions })
 
-  const quantitativeActions = actions.filter(
+  const filteredActions = actions.filter((action) => {
+    if (action.dependenciesOnly && !withDependencies) {
+      return false
+    }
+    return true
+  })
+
+  const quantitativeActions = filteredActions.filter(
     (action) =>
       action.potentialDeduction === ActionPotentialDeduction.Quantity &&
       action.reductionValue !== null &&

@@ -28,8 +28,7 @@ import { dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canReadStudy, hasEditAccessOnStudy, hasReadAccessOnStudy } from '../permissions/study'
 import { canEditTransitionPlan, canReadTransitionPlan } from '../permissions/transitionPlan'
-import { AddActionCommand } from './study.command'
-import { ExternalStudyCommand } from './transitionPlan.command'
+import { AddActionCommand, ExternalStudyCommand } from './transitionPlan.command'
 
 export const getStudyTransitionPlan = async (studyId: string): Promise<ApiResponse<TransitionPlan | null>> =>
   withServerResponse('getStudyTransitionPlan', async () => {

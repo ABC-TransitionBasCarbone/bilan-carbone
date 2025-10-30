@@ -16,5 +16,13 @@ const dependencySubPosts = [
   SubPost.UtilisationEnDependanceConsommationNumerique,
   SubPost.UtilisationEnDependanceFuitesEtAutresConsommations,
 ] as SubPost[]
+
 export const filterWithDependencies = (subPost: SubPost, withDependencies: boolean) =>
   withDependencies || !dependencySubPosts.includes(subPost)
+
+export const filterEmissionSourcesWithDeps = (emissionSources: { subPost: SubPost; emissionValue: number }[]) => {
+  return emissionSources.filter((source) => {
+    const subPost = source.subPost
+    return dependencySubPosts.includes(subPost)
+  })
+}

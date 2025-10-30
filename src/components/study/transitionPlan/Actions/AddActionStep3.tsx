@@ -1,6 +1,6 @@
 import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormTextField } from '@/components/form/TextField'
-import { AddActionCommand } from '@/services/serverFunctions/study.command'
+import { AddActionCommand } from '@/services/serverFunctions/transitionPlan.command'
 import { useTranslations } from 'next-intl'
 import { SyntheticEvent } from 'react'
 import { Control, UseFormSetValue } from 'react-hook-form'

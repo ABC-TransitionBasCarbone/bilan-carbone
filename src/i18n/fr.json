@@ -1079,6 +1079,7 @@
           "reductionValue": "Valeur",
           "reductionStartYear": "Début de la mise en oeuvre de l'action",
           "reductionEndYear": "Fin de la mise en oeuvre de l'action",
+          "dependenciesOnly": "Mon action concerne uniquement le sous poste \"en dépendance\"",
           "actionPorter": "Porteur de l'action",
           "actionPorterPlaceholder": "Donnez le nom de la personne qui pilote l'action",
           "necessaryBudget": "Budget necessaire à sa mise en place (k€)",

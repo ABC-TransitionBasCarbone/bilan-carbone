@@ -1,5 +1,6 @@
 import Button from '@/components/base/Button'
 import { FullStudy } from '@/db/study'
+import Typography from '@mui/material/Typography'
 import { ExternalStudy } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
@@ -23,9 +24,11 @@ const LinkedStudies = ({ transitionPlanId, studyId, studyYear, linkedStudies, ex
   const [linking, setLinking] = useState(false)
 
   return (
-    <>
-      <div className="flex grow justify-between">
-        <h2>{t('linked')}</h2>
+    <div className="flex-col gapped1">
+      <div className="flex align-center justify-between">
+        <Typography variant="h5" component="h2" fontWeight={600}>
+          {t('linked')}
+        </Typography>
         <Button onClick={() => setLinking((prev) => !prev)}>{t('linkStudy')}</Button>
       </div>
       {linking && (
@@ -42,7 +45,7 @@ const LinkedStudies = ({ transitionPlanId, studyId, studyYear, linkedStudies, ex
         linkedStudies={linkedStudies}
         externalStudies={externalStudies}
       />
-    </>
+    </div>
   )
 }
 

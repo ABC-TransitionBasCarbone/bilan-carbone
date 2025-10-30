@@ -1079,6 +1079,7 @@
           "reductionValue": "Value",
           "reductionStartYear": "Year action begins",
           "reductionEndYear": "Year action ends",
+          "dependenciesOnly": "My action only concerns the \"dependency\" sub-item",
           "actionPorter": "Action leader",
           "actionPorterPlaceholder": "Enter the name of the person leading the action",
           "necessaryBudget": "Budget required for implementation (k€)",
