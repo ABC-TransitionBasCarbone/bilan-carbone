@@ -121,6 +121,11 @@ export enum RequiredEmissionFactorsColumns {
   NOM_REGION = 'NOM_REGION',
   NOM_DEPARTEMENT = 'NOM_DEPARTEMENT',
   FE_BCPlus = 'FE_BCPlus',
+  Nom_DOMAINE = 'domain',
+  NOM_CATEGORIES = 'category',
+  NOM_SOUS_CATEGORIE = 'subCategory',
+  NOM_POSTE = 'post',
+  NOM_SOUS_POSTE = 'subPost',
 }
 
 export type EmissionFactorRow = {
@@ -166,6 +171,11 @@ export class EmissionFactorsWorkSheet extends OldBCWorkSheetReader {
       NOM_PAYS: row[this.indexes.NOM_PAYS],
       NOM_REGION: row[this.indexes.NOM_REGION],
       NOM_DEPARTEMENT: row[this.indexes.NOM_DEPARTEMENT],
+      domain: row[this.indexes.Nom_DOMAINE],
+      category: row[this.indexes.NOM_CATEGORIES],
+      subCategory: row[this.indexes.NOM_SOUS_CATEGORIE],
+      post: row[this.indexes.NOM_POSTE],
+      subPost: row[this.indexes.NOM_SOUS_POSTE],
       FE_BCPlus: row[this.indexes.FE_BCPlus],
     }))
   }

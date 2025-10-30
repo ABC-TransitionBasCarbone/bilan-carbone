@@ -290,8 +290,6 @@ const getDefaultEmissionFactors = async (
     orderBy: { title: 'asc' },
   })
 
-  console.log(JSON.stringify(importedFromCondition))
-
   return emissionFactorsMetadata.map((metadata) => ({
     ...metadata.emissionFactor,
     metaData: {

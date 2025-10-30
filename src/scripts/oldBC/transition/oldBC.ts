@@ -76,6 +76,7 @@ export const uploadOldBCInformations = async (
         transaction,
         oldBCWorksheetsReader.emissionFactorsWorksheet,
         accountOrganizationVersion,
+        postAndSubPostsOldNewMapping,
       )
       hasStudiesWarning = await uploadStudies(
         transaction,

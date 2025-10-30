@@ -528,12 +528,18 @@ export const uploadStudies = async (
   const nonExistingFEs: Record<string, string[]> = {}
 
   const studies = await parseStudies(transaction, oldBCWorksheetReader.studiesWorksheet, organizationVersionId)
-  const studySites = parseStudySites(oldBCWorksheetReader.studySitesWorksheet)
-  const studyExports = parseStudyExports(oldBCWorksheetReader.studyExportsWorksheet)
   const existingEmissionFactorNames = await getExistingEmissionFactorsNames(
     oldBCWorksheetReader.emissionSourcesWorksheet,
     transaction,
   )
+
+  if (studies.length === 0) {
+    console.log('Aucune étude à importer.')
+    return false
+  }
+
+  const studySites = parseStudySites(oldBCWorksheetReader.studySitesWorksheet)
+  const studyExports = parseStudyExports(oldBCWorksheetReader.studyExportsWorksheet)
 
   const studyEmissionSourcesWorksheet = oldBCWorksheetReader.emissionSourcesWorksheet
     .getRows()

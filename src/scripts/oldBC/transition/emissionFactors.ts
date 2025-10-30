@@ -2,9 +2,10 @@ import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { unitsMatrix } from '@/services/importEmissionFactor/historyUnits'
 import { getEmissionQuality } from '@/services/importEmissionFactor/import'
 import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
-import { EmissionFactorPartType, EmissionFactorStatus, Import, Prisma } from '@prisma/client'
+import { EmissionFactorPartType, EmissionFactorStatus, Import, Prisma, SubPost } from '@prisma/client'
 import { v4 } from 'uuid'
-import { EmissionFactorsWorkSheet } from './oldBCWorkSheetsReader'
+import { OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
+import { EmissionFactorRow, EmissionFactorsWorkSheet } from './oldBCWorkSheetsReader'
 
 const getStringValue = (value: string | number) => {
   const stringValue = value ? value.toString() : ''
@@ -13,10 +14,59 @@ const getStringValue = (value: string | number) => {
     : stringValue
 }
 
+const mapToSubPost = (newSubPost: string) => {
+  const normalizedSubPost = newSubPost
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[\s,']/g, '')
+    .toLowerCase()
+
+  const foundSubPost = Object.values(SubPost).find((subPost) => subPost.toLowerCase() === normalizedSubPost)
+  if (foundSubPost) {
+    return foundSubPost
+  }
+  throw new Error(`Sous poste invalide "${newSubPost}"`)
+}
+
+const getSubPost = (emissionFactor: EmissionFactorRow, postAndSubPostsOldNewMapping: OldNewPostAndSubPostsMapping) => {
+  if (
+    emissionFactor.domain === 'NULL' ||
+    emissionFactor.category === 'NULL' ||
+    emissionFactor.subCategory === 'NULL' ||
+    emissionFactor.post === 'NULL' ||
+    emissionFactor.subPost === 'NULL'
+  ) {
+    console.log({
+      reason: `pas de sous psote pour  ${emissionFactor.EF_VAL_LIB}`,
+    })
+
+    return null
+  }
+  const newPostAndSubPost = postAndSubPostsOldNewMapping.getNewPostAndSubPost({
+    domain: emissionFactor.domain as string,
+    category: emissionFactor.category as string,
+    subCategory: emissionFactor.subCategory as string,
+    oldPost: emissionFactor.post as string,
+    oldSubPost: emissionFactor.subPost as string,
+  })
+  let subPost
+
+  try {
+    return mapToSubPost(newPostAndSubPost.newSubPost)
+  } catch {
+    console.log({
+      oldPost: `${emissionFactor.domain} ${emissionFactor.category} ${emissionFactor.subCategory} ${emissionFactor.post} ${emissionFactor.subPost}`,
+      reason: `Sous poste invalide ${subPost}`,
+    })
+    return null
+  }
+}
+
 export const uploadEmissionFactors = async (
   transaction: Prisma.TransactionClient,
   emissionFactorsWorksheet: EmissionFactorsWorkSheet,
   organizationVersion: OrganizationVersionWithOrganization,
+  postAndSubPostsOldNewMapping: OldNewPostAndSubPostsMapping,
 ) => {
   console.log("Import des facteurs d'émissions...")
   const ids = emissionFactorsWorksheet.getRows().map((row) => row.EFV_GUID as string)
@@ -53,6 +103,8 @@ export const uploadEmissionFactors = async (
       const unit = unitsMatrix[getStringValue(row.Unité_Nom)]
       const isMonetary = isMonetaryEmissionFactor({ unit })
 
+      const subPost = getSubPost(row, postAndSubPostsOldNewMapping)
+
       return {
         id,
         organizationId: organizationVersion.organizationId,
@@ -78,6 +130,7 @@ export const uploadEmissionFactors = async (
         otherGES: (row.Autre_gaz as number) + (row.NF3 as number),
         source: getStringValue(row.Source_Nom),
         location: getStringValue(row.NOM_CONTINENT),
+        ...(subPost ? { subPosts: [subPost] } : {}),
       }
     }),
   })
