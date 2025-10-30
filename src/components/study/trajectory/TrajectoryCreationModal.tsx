@@ -181,9 +181,6 @@ const TrajectoryCreationModal = ({
         open={open}
         onClose={() => {
           onClose()
-          if (!isEditMode) {
-            reset()
-          }
         }}
         title={isEditMode ? t('editTitle') : t('addTitle')}
         actions={[

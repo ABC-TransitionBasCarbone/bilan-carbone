@@ -17,7 +17,7 @@ interface Props {
 
 const ActionFilters = ({ search, setSearch, studyUnit, porters, transitionPlanId }: Props) => {
   const t = useTranslations('study.transitionPlan.actions')
-  const [addAction, setAddAction] = useState(false)
+  const [actionModalOpened, setActionModalOpened] = useState(false)
 
   return (
     <div className="grow justify-between align-center">
@@ -29,13 +29,13 @@ const ActionFilters = ({ search, setSearch, studyUnit, porters, transitionPlanId
         placeholder={t('search')}
         data-testid="actions-filter"
       />
-      <Button className={styles.addButton} onClick={() => setAddAction((prev) => !prev)}>
+      <Button className={styles.addButton} onClick={() => setActionModalOpened((prev) => !prev)}>
         {t('add')}
       </Button>
-      {addAction && (
+      {actionModalOpened && (
         <ActionModal
           open
-          onClose={() => setAddAction(false)}
+          onClose={() => setActionModalOpened(false)}
           transitionPlanId={transitionPlanId}
           studyUnit={studyUnit}
           porters={porters}

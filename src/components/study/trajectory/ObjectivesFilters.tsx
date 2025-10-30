@@ -18,11 +18,11 @@ interface Props {
 
 const ObjectivesFilters = ({ search, setSearch, transitionPlanId, onTrajectoryCreation }: Props) => {
   const t = useTranslations('study.transitionPlan.objectives')
-  const [addTrajectory, setAddTrajectory] = useState(false)
+  const [creationModalOpened, setCreationModalOpened] = useState(false)
 
   const handleSuccess = () => {
     onTrajectoryCreation()
-    setAddTrajectory(false)
+    setCreationModalOpened(false)
   }
 
   return (
@@ -35,13 +35,13 @@ const ObjectivesFilters = ({ search, setSearch, transitionPlanId, onTrajectoryCr
         placeholder={t('search')}
         data-testid="objectives-filter"
       />
-      <Button className={styles.addButton} onClick={() => setAddTrajectory((prev) => !prev)}>
+      <Button className={styles.addButton} onClick={() => setCreationModalOpened((prev) => !prev)}>
         {t('add')}
       </Button>
-      {addTrajectory && (
+      {creationModalOpened && (
         <TrajectoryCreationModal
           open
-          onClose={() => setAddTrajectory(false)}
+          onClose={() => setCreationModalOpened(false)}
           transitionPlanId={transitionPlanId}
           onSuccess={handleSuccess}
           trajectory={null}
