@@ -88,51 +88,58 @@ export const uploadEmissionFactors = async (
   console.log(`${emissionFactorsToCreate.length} facteurs d'émissions à importer`)
 
   const createdEmissionFactor = await transaction.emissionFactor.createMany({
-    data: emissionFactorsToCreate.map((row) => {
-      const id = v4()
-      metaData.push({
-        emissionFactorId: id,
-        language: 'fr',
-        title: getStringValue(row.EF_VAL_LIB),
-        attribute: getStringValue(row.EF_VAL_CARAC),
-        frontiere: getStringValue(row.EF_VAL_COMPLEMENT),
-        comment: `${getStringValue(row.Commentaires)} ${getStringValue(row.DateValidité)}`,
-        location: `${getStringValue(row.NOM_PAYS)} ${getStringValue(row.NOM_REGION)} ${getStringValue(row.NOM_DEPARTEMENT)}`,
+    data: emissionFactorsToCreate
+      .map((row) => {
+        const id = v4()
+        const unit = unitsMatrix[getStringValue(row.Unité_Nom)]
+
+        if (!unit) {
+          return null
+        }
+
+        metaData.push({
+          emissionFactorId: id,
+          language: 'fr',
+          title: getStringValue(row.EF_VAL_LIB),
+          attribute: getStringValue(row.EF_VAL_CARAC),
+          frontiere: getStringValue(row.EF_VAL_COMPLEMENT),
+          comment: `${getStringValue(row.Commentaires)} ${getStringValue(row.DateValidité)}`,
+          location: `${getStringValue(row.NOM_PAYS)} ${getStringValue(row.NOM_REGION)} ${getStringValue(row.NOM_DEPARTEMENT)}`,
+        })
+
+        const isMonetary = isMonetaryEmissionFactor({ unit })
+
+        const subPost = getSubPost(row, postAndSubPostsOldNewMapping)
+
+        return {
+          id,
+          organizationId: organizationVersion.organizationId,
+          importedFrom: Import.Manual,
+          status: EmissionFactorStatus.Valid,
+          oldBCId: getStringValue(row.EFV_GUID),
+          reliability: getEmissionQuality(row.Incertitude as number),
+          technicalRepresentativeness: getEmissionQuality(row.Incertitude as number),
+          geographicRepresentativeness: getEmissionQuality(row.Incertitude as number),
+          temporalRepresentativeness: getEmissionQuality(row.Incertitude as number),
+          completeness: getEmissionQuality(row.Incertitude as number),
+          unit,
+          isMonetary,
+          totalCo2: row.Total_CO2e as number,
+          co2f: row.CO2f as number,
+          ch4f: row.CH4f as number,
+          ch4b: row.CH4b as number,
+          n2o: row.N2O as number,
+          co2b: row.CO2b as number,
+          sf6: row.SF6 as number,
+          hfc: row.HFC as number,
+          pfc: row.PFC as number,
+          otherGES: (row.Autre_gaz as number) + (row.NF3 as number),
+          source: getStringValue(row.Source_Nom),
+          location: getStringValue(row.NOM_CONTINENT),
+          ...(subPost ? { subPosts: [subPost] } : {}),
+        }
       })
-
-      const unit = unitsMatrix[getStringValue(row.Unité_Nom)]
-      const isMonetary = isMonetaryEmissionFactor({ unit })
-
-      const subPost = getSubPost(row, postAndSubPostsOldNewMapping)
-
-      return {
-        id,
-        organizationId: organizationVersion.organizationId,
-        importedFrom: Import.Manual,
-        status: EmissionFactorStatus.Valid,
-        oldBCId: getStringValue(row.EFV_GUID),
-        reliability: getEmissionQuality(row.Incertitude as number),
-        technicalRepresentativeness: getEmissionQuality(row.Incertitude as number),
-        geographicRepresentativeness: getEmissionQuality(row.Incertitude as number),
-        temporalRepresentativeness: getEmissionQuality(row.Incertitude as number),
-        completeness: getEmissionQuality(row.Incertitude as number),
-        unit,
-        isMonetary,
-        totalCo2: row.Total_CO2e as number,
-        co2f: row.CO2f as number,
-        ch4f: row.CH4f as number,
-        ch4b: row.CH4b as number,
-        n2o: row.N2O as number,
-        co2b: row.CO2b as number,
-        sf6: row.SF6 as number,
-        hfc: row.HFC as number,
-        pfc: row.PFC as number,
-        otherGES: (row.Autre_gaz as number) + (row.NF3 as number),
-        source: getStringValue(row.Source_Nom),
-        location: getStringValue(row.NOM_CONTINENT),
-        ...(subPost ? { subPosts: [subPost] } : {}),
-      }
-    }),
+      .filter((data) => data !== null),
   })
 
   console.log(createdEmissionFactor.count, "facteurs d'émissions importés")
