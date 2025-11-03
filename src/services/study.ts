@@ -182,8 +182,6 @@ const getEmissionSourcesRows = (
           emissionFactor?.unit ? `${tResultUnits(StudyResultUnit.K)}/${tUnit(emissionFactor.unit)}` : '',
           emissionFactor ? getQuality(getQualityRating(emissionFactor), tQuality) : '',
           emissionFactor?.source || '',
-          '',
-          '',
         ])
         .map((field) => encodeCSVField(field))
         .join(';')
@@ -258,8 +256,8 @@ const getEmissionSourcesCSVContent = (
   const uncertaintyRow = [
     t('uncertainty'),
     ...emptyFields(emptyFieldsCount),
-    uncertainty[0] / STUDY_UNIT_VALUES[resultsUnit],
-    uncertainty[1] / STUDY_UNIT_VALUES[resultsUnit],
+    formatValueForExport(uncertainty[0] / STUDY_UNIT_VALUES[resultsUnit]),
+    formatValueForExport(uncertainty[1] / STUDY_UNIT_VALUES[resultsUnit]),
   ].join(';')
 
   return [columns, ...rows, totalRow, qualityRow, uncertaintyRow].join('\n')
