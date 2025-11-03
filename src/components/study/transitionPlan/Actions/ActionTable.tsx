@@ -1,7 +1,10 @@
 'use client'
 
 import BaseTable from '@/components/base/Table'
+import { useServerFunction } from '@/hooks/useServerFunction'
+import { toggleActionEnabled } from '@/services/serverFunctions/transitionPlan'
 import OpenIcon from '@mui/icons-material/OpenInNew'
+import { Switch } from '@mui/material'
 import { Action, ActionPotentialDeduction, StudyResultUnit } from '@prisma/client'
 import {
   ColumnDef,
@@ -11,7 +14,8 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
-import { useCallback, useMemo, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useCallback, useMemo, useOptimistic, useState } from 'react'
 import ActionModal from './ActionModal'
 
 interface Props {
@@ -21,13 +25,42 @@ interface Props {
   transitionPlanId: string
 }
 
-const Table = ({ actions, studyUnit, porters, transitionPlanId }: Props) => {
+const ActionTable = ({ actions, studyUnit, porters, transitionPlanId }: Props) => {
   const t = useTranslations('study.transitionPlan.actions.table')
   const tUnit = useTranslations('study.results.units')
   const tCategory = useTranslations('study.transitionPlan.actions.category')
   const tPotential = useTranslations('study.transitionPlan.actions.potentialDeduction')
   const [editing, setEditing] = useState<Action | undefined>(undefined)
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 })
+  const router = useRouter()
+  const { callServerFunction } = useServerFunction()
+
+  const [optimisticActions, setOptimisticActions] = useOptimistic(
+    actions,
+    (state, { actionId, enabled }: { actionId: string; enabled: boolean }) => {
+      return state.map((action) => {
+        if (action.id === actionId) {
+          return { ...action, enabled }
+        }
+        return action
+      })
+    },
+  )
+
+  const handleToggleEnabled = useCallback(
+    async (actionId: string, value: boolean) => {
+      setOptimisticActions({ actionId, enabled: value })
+
+      await callServerFunction(() => toggleActionEnabled(actionId, value), {
+        getErrorMessage: () => {
+          return t('errorChangingEnabled')
+        },
+      })
+
+      router.refresh()
+    },
+    [callServerFunction, t, router, setOptimisticActions],
+  )
 
   const getPotential = useCallback(
     (action: Action) => {
@@ -46,6 +79,17 @@ const Table = ({ actions, studyUnit, porters, transitionPlanId }: Props) => {
   const columns = useMemo(
     () =>
       [
+        {
+          header: t('enabled'),
+          accessorKey: 'enabled',
+          cell: ({ getValue, row }) => (
+            <Switch
+              checked={getValue<boolean>()}
+              onChange={(event) => handleToggleEnabled(row.original.id, event.target.checked)}
+              color="primary"
+            />
+          ),
+        },
         {
           header: t('title'),
           accessorKey: 'title',
@@ -69,12 +113,12 @@ const Table = ({ actions, studyUnit, porters, transitionPlanId }: Props) => {
         { header: t('porter'), accessorKey: 'actionPorter' },
         { header: `${t('budget')} (k€)`, accessorKey: 'necessaryBudget' },
       ] as ColumnDef<Action>[],
-    [getPotential, t, tCategory],
+    [getPotential, t, tCategory, handleToggleEnabled],
   )
 
   const table = useReactTable({
     columns,
-    data: actions,
+    data: optimisticActions,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
@@ -98,4 +142,4 @@ const Table = ({ actions, studyUnit, porters, transitionPlanId }: Props) => {
   )
 }
 
-export default Table
+export default ActionTable

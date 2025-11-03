@@ -11,6 +11,7 @@ import {
   updateTrajectory,
 } from '@/services/serverFunctions/trajectory'
 import { createTrajectorySchema, TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
+import { getYearFromDateStr } from '@/utils/time'
 import { getDefaultObjectivesForTrajectoryType } from '@/utils/trajectory'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { TrajectoryType } from '@prisma/client'
@@ -100,7 +101,7 @@ const TrajectoryCreationModal = ({ open, onClose, transitionPlanId, onSuccess, t
         .filter((obj) => obj.targetYear && obj.reductionRate !== null && obj.reductionRate !== undefined)
         .map((obj) => ({
           id: obj.id,
-          targetYear: new Date(obj.targetYear!).getFullYear(),
+          targetYear: getYearFromDateStr(obj.targetYear!),
           reductionRate: Number(obj.reductionRate) / 100,
         }))
 
@@ -137,7 +138,7 @@ const TrajectoryCreationModal = ({ open, onClose, transitionPlanId, onSuccess, t
 
     if (data.trajectoryType === TrajectoryType.CUSTOM) {
       input.objectives = data.objectives.map((obj) => ({
-        targetYear: new Date(obj.targetYear!).getFullYear(),
+        targetYear: getYearFromDateStr(obj.targetYear!),
         reductionRate: Number(obj.reductionRate) / 100,
       }))
     } else if (data.trajectoryType === TrajectoryType.SBTI_15) {

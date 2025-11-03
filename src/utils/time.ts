@@ -15,3 +15,7 @@ export const formatDateFr = (date: Date) => {
     year: 'numeric',
   })
 }
+
+export const getYearFromDateStr = (date: string) => {
+  return new Date(date).getFullYear()
+}

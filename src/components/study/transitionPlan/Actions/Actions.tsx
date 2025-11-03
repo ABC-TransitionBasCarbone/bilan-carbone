@@ -4,7 +4,7 @@ import { Action } from '@prisma/client'
 import Fuse from 'fuse.js'
 import { useMemo, useState } from 'react'
 import ActionFilters from './ActionFilters'
-import Table from './Table'
+import ActionTable from './ActionTable'
 
 interface Props {
   actions: Action[]
@@ -42,7 +42,12 @@ const Actions = ({ actions, studyUnit, porters, transitionPlanId }: Props) => {
         studyUnit={studyUnit}
         porters={porters}
       />
-      <Table actions={searchedActions} studyUnit={studyUnit} porters={porters} transitionPlanId={transitionPlanId} />
+      <ActionTable
+        actions={searchedActions}
+        studyUnit={studyUnit}
+        porters={porters}
+        transitionPlanId={transitionPlanId}
+      />
     </>
   )
 }

@@ -915,7 +915,8 @@
           "subtitle": "Display of reference trajectories and your organization's trajectories",
           "trajectory15": "SBTi 1.5°C",
           "trajectoryWB2C": "SBTi WB2C",
-          "yAxisLabel": "Emissions (tCO2e)"
+          "yAxisLabel": "Emissions (tCO2e)",
+          "actionBasedTrajectory": "Action-based trajectory"
         },
         "linkedStudies": {
           "linked": "Linked studies",
@@ -1045,12 +1046,14 @@
         "search": "Search for your action here",
         "add": "Add an action",
         "table": {
+          "enabled": "Enabled",
           "title": "Title",
           "actionType": "Action type",
           "targetYear": "Target year",
           "potential": "Reduction potential",
           "porter": "Porter",
-          "budget": "Budget"
+          "budget": "Budget",
+          "errorChangingEnabled": "Error changing action status"
         },
         "addModal": {
           "add": "Add an action",

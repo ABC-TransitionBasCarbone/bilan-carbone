@@ -1,4 +1,3 @@
-import { AddActionCommand } from '@/services/serverFunctions/study.command'
 import { ExternalStudyCommand } from '@/services/serverFunctions/transitionPlan.command'
 import { Objective, Prisma, Trajectory, TransitionPlan, TransitionPlanStudy } from '@prisma/client'
 import { prismaClient } from './client'
@@ -150,15 +149,15 @@ export const hasTransitionPlan = async (studyId: string): Promise<boolean> => {
   return count > 0
 }
 
-export const createAction = async (data: AddActionCommand) => prismaClient.action.create({ data })
+export const createAction = async (data: Prisma.ActionUncheckedCreateInput) => prismaClient.action.create({ data })
 
-export const updateAction = async (id: string, data: AddActionCommand) =>
+export const updateAction = async (id: string, data: Prisma.ActionUpdateInput) =>
   prismaClient.action.update({ where: { id }, data })
 
 export const getActionById = async (id: string) => prismaClient.action.findUnique({ where: { id } })
 
 export const getActions = async (transitionPlanId: string) =>
-  prismaClient.action.findMany({ where: { transitionPlanId } })
+  prismaClient.action.findMany({ where: { transitionPlanId }, orderBy: { createdAt: 'desc' } })
 
 export const createTransitionPlanStudy = async (transitionPlanId: string, studyId: string) =>
   prismaClient.transitionPlanStudy.create({ data: { transitionPlanId, studyId } })

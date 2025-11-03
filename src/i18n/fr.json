@@ -915,6 +915,7 @@
           "subtitle": "Affichage des trajectoires de référence et des trajectoires de votre organisation",
           "trajectory15": "SBTi 1,5°C",
           "trajectoryWB2C": "SBTi WB2C",
+          "actionBasedTrajectory": "Courbe prévisionnelle",
           "yAxisLabel": "Émissions (tCO2e)"
         },
         "linkedStudies": {
@@ -1045,12 +1046,14 @@
         "search": "Cherchez votre action ici",
         "add": "Ajouter une action",
         "table": {
+          "enabled": "Activée",
           "title": "Titre",
           "actionType": "Type d'action",
           "targetYear": "Année cible",
           "potential": "Potentiel de réduction",
           "porter": "Porteur",
-          "budget": "Budget"
+          "budget": "Budget",
+          "errorChangingEnabled": "Erreur lors du changement de statut de l'action"
         },
         "addModal": {
           "add": "Ajouter une action",

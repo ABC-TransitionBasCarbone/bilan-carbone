@@ -13,7 +13,6 @@ export function configureZod(locale: LocaleType, t?: Translations) {
   if (t) {
     z.config({
       customError: (issue) => {
-        console.log('ISSUE', JSON.stringify(issue, null, 2))
         switch (issue.code) {
           case 'too_small':
             if (issue.minimum === 0) {

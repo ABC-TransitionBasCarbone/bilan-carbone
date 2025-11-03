@@ -17,7 +17,7 @@ const Actions = async ({ study }: StudyProps) => {
   }
 
   const [transitionPlan, organizationMembers, actions] = await Promise.all([
-    getStudyTransitionPlan(study),
+    getStudyTransitionPlan(study.id),
     getStudyOrganizationMembers(study.id),
     getStudyActions(study.id),
   ])

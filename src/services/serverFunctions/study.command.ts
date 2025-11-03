@@ -215,6 +215,7 @@ export const AddActionCommandBase = z.object({
   nature: z.array(z.enum(ActionNature)).min(0),
   category: z.array(z.enum(ActionCategory)).min(0),
   relevance: z.array(z.enum(ActionRelevance)).min(0),
+  enabled: z.boolean().optional(),
 })
 
 export const AddActionCommandValidation = AddActionCommandBase.superRefine((data, ctx) => {

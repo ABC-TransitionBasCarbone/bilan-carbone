@@ -8,7 +8,10 @@ export const isAdminOnOrga = (account: UserSession, organizationVersion: Organiz
 
 export const isInOrgaOrParent = (
   userOrganizationVersionId: string | null,
-  organizationVersion: OrganizationVersionWithOrganization,
+  organizationVersion: {
+    id: string
+    parentId: string | null
+  },
 ) =>
   userOrganizationVersionId &&
   (userOrganizationVersionId === organizationVersion.id || userOrganizationVersionId === organizationVersion.parentId)

@@ -2,6 +2,7 @@ import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
 import { AddActionCommand } from '@/services/serverFunctions/study.command'
+import { getYearFromDateStr } from '@/utils/time'
 import { MenuItem, TextField } from '@mui/material'
 import { ActionPotentialDeduction } from '@prisma/client'
 import dayjs from 'dayjs'
@@ -26,8 +27,12 @@ const AddActionStep1 = ({ studyUnit, control, setValue }: Props) => {
   const reductionEndYear = useWatch({ control, name: 'reductionEndYear' })
 
   useEffect(() => {
-    if (reductionStartYear && reductionEndYear && dayjs(reductionStartYear).year() > dayjs(reductionEndYear).year()) {
-      setValue('reductionEndYear', reductionStartYear)
+    if (reductionStartYear && reductionEndYear) {
+      const startYear = getYearFromDateStr(reductionStartYear)
+      const endYear = getYearFromDateStr(reductionEndYear)
+      if (startYear > endYear) {
+        setValue('reductionEndYear', reductionStartYear)
+      }
     }
   }, [reductionStartYear, reductionEndYear, setValue])
 

@@ -21,10 +21,17 @@ interface Props {
   trajectory15: TrajectoryData
   trajectoryWB2C: TrajectoryData
   customTrajectories?: TrajectoryData[]
+  actionBasedTrajectory?: TrajectoryData
   studyStartYear: number
 }
 
-const TrajectoryGraph = ({ trajectory15, trajectoryWB2C, customTrajectories = [], studyStartYear }: Props) => {
+const TrajectoryGraph = ({
+  trajectory15,
+  trajectoryWB2C,
+  customTrajectories = [],
+  actionBasedTrajectory,
+  studyStartYear,
+}: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.graph')
 
   const yearsToDisplay = useMemo(() => {
@@ -32,9 +39,10 @@ const TrajectoryGraph = ({ trajectory15, trajectoryWB2C, customTrajectories = []
       ...(trajectory15.enabled ? trajectory15.data.map((d) => d.year) : []),
       ...(trajectoryWB2C.enabled ? trajectoryWB2C.data.map((d) => d.year) : []),
       ...customTrajectories.flatMap((traj) => (traj.enabled ? traj.data.map((d) => d.year) : [])),
+      ...(actionBasedTrajectory?.enabled ? actionBasedTrajectory.data.map((d) => d.year) : []),
     ]
     return Array.from(new Set(allYears)).sort((a, b) => a - b)
-  }, [trajectory15, trajectoryWB2C, customTrajectories])
+  }, [trajectory15, trajectoryWB2C, customTrajectories, actionBasedTrajectory])
 
   const studyStartYearIndex = yearsToDisplay.indexOf(studyStartYear)
 
@@ -92,6 +100,18 @@ const TrajectoryGraph = ({ trajectory15, trajectoryWB2C, customTrajectories = []
               showMark: ({ index }: { index: number }) => index === studyStartYearIndex,
               valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
             })),
+          ...(actionBasedTrajectory?.enabled && actionBasedTrajectory.data.length > 0
+            ? [
+                {
+                  data: actionBasedTrajectory.data.map((d) => d.value),
+                  label: t('actionBasedTrajectory'),
+                  color: 'var(--mui-palette-primary-main)',
+                  curve: 'linear' as const,
+                  showMark: ({ index }: { index: number }) => index === studyStartYearIndex,
+                  valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
+                },
+              ]
+            : []),
         ]}
         height={400}
         yAxis={[

@@ -9,16 +9,11 @@ import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import Image from '@/components/document/Image'
 import { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
-import EnvironmentLoader from '@/environments/core/utils/EnvironmentLoader'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { getTrajectories } from '@/services/serverFunctions/trajectory'
-import {
-  getLinkedStudies,
-  getStudyTransitionPlan,
-  initializeTransitionPlan,
-} from '@/services/serverFunctions/transitionPlan'
+import { initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
 import { getStudyTotalCo2EmissionsWithDep } from '@/services/study'
 import {
+  calculateActionBasedTrajectory,
   calculateCustomTrajectory,
   calculateSBTiTrajectory,
   SBTI_REDUCTION_RATE_15,
@@ -26,7 +21,7 @@ import {
 } from '@/utils/trajectory'
 import AddIcon from '@mui/icons-material/Add'
 import { Typography } from '@mui/material'
-import { ExternalStudy, TransitionPlan } from '@prisma/client'
+import { Action, ExternalStudy, TransitionPlan } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
@@ -55,105 +50,81 @@ const TRAJECTORY_WB2C_ID = 'WB2C'
 interface Props {
   study: FullStudy
   canEdit: boolean
+  transitionPlan: TransitionPlan | null
+  trajectories?: TrajectoryWithObjectives[]
+  linkedStudies?: FullStudy[]
+  linkedExternalStudies?: ExternalStudy[]
+  actions?: Action[]
 }
 
-const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
+const TrajectoryReductionPage = ({
+  study,
+  canEdit,
+  transitionPlan,
+  trajectories = [],
+  linkedStudies = [],
+  linkedExternalStudies = [],
+  actions = [],
+}: Props) => {
   const t = useTranslations('study.transitionPlan')
   const tNav = useTranslations('nav')
   const router = useRouter()
+  const { callServerFunction } = useServerFunction()
   const tStudyNav = useTranslations('study.navigation')
-  const [transitionPlan, setTransitionPlan] = useState<TransitionPlan | null | undefined>(undefined)
-  const [linkedStudies, setLinkedStudies] = useState<FullStudy[]>([])
-  const [linkedExternalStudies, setLinkedExternalStudies] = useState<ExternalStudy[]>([])
   const [showModal, setShowModal] = useState(false)
   const [showTrajectoryModal, setShowTrajectoryModal] = useState(false)
   const [showSuccessToast, setShowSuccessToast] = useState(false)
-  const [loading, setLoading] = useState(true)
-  const [customTrajectories, setCustomTrajectories] = useState<TrajectoryWithObjectives[]>([])
-  const [selectedCustomTrajectoryIds, setSelectedCustomTrajectoryIds] = useState<string[]>(() => {
+  const [selectedCustomTrajectories, setSelectedCustomTrajectories] = useState<string[]>(() => {
     if (typeof window === 'undefined') {
       return []
     }
     const stored = localStorage.getItem(`trajectory-custom-selected-${study.id}`)
     return stored ? JSON.parse(stored) : []
   })
-  const [selectedTrajectories, setSelectedTrajectories] = useState<string[]>(() => {
+  const [selectedSbtiTrajectories, setSelectedSbtiTrajectories] = useState<string[]>(() => {
     if (typeof window === 'undefined') {
       return [TRAJECTORY_15_ID]
     }
     const stored = localStorage.getItem(`trajectory-sbti-selected-${study.id}`)
     return stored ? JSON.parse(stored) : [TRAJECTORY_15_ID]
   })
-  const { callServerFunction } = useServerFunction()
 
   useEffect(() => {
-    localStorage.setItem(`trajectory-sbti-selected-${study.id}`, JSON.stringify(selectedTrajectories))
-  }, [selectedTrajectories, study.id])
+    localStorage.setItem(`trajectory-sbti-selected-${study.id}`, JSON.stringify(selectedSbtiTrajectories))
+  }, [selectedSbtiTrajectories, study.id])
 
   useEffect(() => {
-    localStorage.setItem(`trajectory-custom-selected-${study.id}`, JSON.stringify(selectedCustomTrajectoryIds))
-  }, [selectedCustomTrajectoryIds, study.id])
+    localStorage.setItem(`trajectory-custom-selected-${study.id}`, JSON.stringify(selectedCustomTrajectories))
+  }, [selectedCustomTrajectories, study.id])
 
+  // Local storage may keep leftover custom trajectory ids from previous transition plans
+  // This ensures that displayed custom trajectories are always valid and cleans up the invalid ones
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getStudyTransitionPlan(study)
-
-        if (response.success && response.data) {
-          setTransitionPlan(response.data)
-
-          const trajectoriesResponse = await getTrajectories(study.id, response.data.id)
-          if (trajectoriesResponse.success && trajectoriesResponse.data) {
-            setCustomTrajectories(trajectoriesResponse.data)
-
-            const validTrajectoryIds = selectedCustomTrajectoryIds.filter((id) =>
-              trajectoriesResponse.data.some((t) => t.id === id),
-            )
-            setSelectedCustomTrajectoryIds(validTrajectoryIds)
-          }
-
-          const studiesResponse = await getLinkedStudies(response.data.id)
-          if (studiesResponse.success) {
-            setLinkedStudies(studiesResponse.data.studies)
-            setLinkedExternalStudies(studiesResponse.data.externalStudies)
-          }
-        } else {
-          setTransitionPlan(null)
+    if (trajectories.length > 0) {
+      setSelectedCustomTrajectories((prev) => {
+        const validIds = prev.filter((id) => trajectories.some((t) => t.id === id))
+        if (validIds.length !== prev.length) {
+          localStorage.setItem(`trajectory-custom-selected-${study.id}`, JSON.stringify(validIds))
         }
-      } catch (error) {
-        console.error('Error fetching transition plan data:', error)
-      } finally {
-        setLoading(false)
-      }
+        return validIds
+      })
     }
-
-    if (transitionPlan === undefined) {
-      fetchData()
-    }
-  }, [study, transitionPlan, selectedCustomTrajectoryIds])
+  }, [trajectories, study.id])
 
   const handleCreateTrajectorySuccess = useCallback(
     async (trajectoryId: string) => {
-      setShowSuccessToast(true)
-      if (transitionPlan) {
-        const trajectoriesResponse = await getTrajectories(study.id, transitionPlan.id)
-        if (trajectoriesResponse.success && trajectoriesResponse.data) {
-          setCustomTrajectories(trajectoriesResponse.data)
-          setSelectedCustomTrajectoryIds((prev) => [...prev, trajectoryId])
-        }
-      }
       router.refresh()
+      setShowSuccessToast(true)
+      setSelectedCustomTrajectories((prev) => [...prev, trajectoryId])
     },
-    [router, study.id, transitionPlan],
+    [router],
   )
 
   const handleConfirmPlanSelection = useCallback(
     async (selectedPlanId?: string) => {
       await callServerFunction(() => initializeTransitionPlan(study.id, selectedPlanId), {
-        onSuccess: async (data) => {
-          setTransitionPlan(data)
+        onSuccess: async () => {
           setShowModal(false)
-          setCustomTrajectories(data.trajectories)
           router.refresh()
         },
       })
@@ -167,6 +138,7 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
         trajectory15: [],
         trajectoryWB2C: [],
         customTrajectories: [],
+        actionBasedTrajectory: [],
         studyStartYear: 0,
       }
     }
@@ -174,19 +146,21 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
     const totalCo2 = getStudyTotalCo2EmissionsWithDep(study)
     const studyStartYear = study.startDate.getFullYear()
 
+    const enabledActions = actions.filter((action) => action.enabled)
+
     const trajectoryWB2CData = calculateSBTiTrajectory({
-      baseEmissions: totalCo2,
+      studyEmissions: totalCo2,
       studyStartYear,
       reductionRate: SBTI_REDUCTION_RATE_WB2C,
     })
 
-    const maxYear =
-      selectedTrajectories.includes(TRAJECTORY_WB2C_ID) && trajectoryWB2CData.length > 0
+    let maxYear =
+      selectedSbtiTrajectories.includes(TRAJECTORY_WB2C_ID) && trajectoryWB2CData.length > 0
         ? trajectoryWB2CData[trajectoryWB2CData.length - 1].year
         : undefined
 
     const trajectory15Data = calculateSBTiTrajectory({
-      baseEmissions: totalCo2,
+      studyEmissions: totalCo2,
       studyStartYear,
       reductionRate: SBTI_REDUCTION_RATE_15,
       maxYear,
@@ -194,14 +168,14 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
       externalStudies: linkedExternalStudies,
     })
 
-    const customTrajectoriesData = customTrajectories
-      .filter((traj) => selectedCustomTrajectoryIds.includes(traj.id))
+    const customTrajectoriesData = trajectories
+      .filter((traj) => selectedCustomTrajectories.includes(traj.id))
       .map((traj) => {
         let data: typeof trajectory15Data
 
         if (traj.type === 'SBTI_15') {
           data = calculateSBTiTrajectory({
-            baseEmissions: totalCo2,
+            studyEmissions: totalCo2,
             studyStartYear,
             reductionRate: SBTI_REDUCTION_RATE_15,
             linkedStudies,
@@ -209,7 +183,7 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
           })
         } else if (traj.type === 'SBTI_WB2C') {
           data = calculateSBTiTrajectory({
-            baseEmissions: totalCo2,
+            studyEmissions: totalCo2,
             studyStartYear,
             reductionRate: SBTI_REDUCTION_RATE_WB2C,
             linkedStudies,
@@ -217,7 +191,7 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
           })
         } else {
           data = calculateCustomTrajectory({
-            baseEmissions: totalCo2,
+            studyEmissions: totalCo2,
             studyStartYear,
             objectives: traj.objectives.map((obj) => ({
               targetYear: obj.targetYear,
@@ -236,29 +210,39 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
         }
       })
 
+    const customTrajectoriesMaxYear = customTrajectoriesData.reduce((max, traj) => {
+      const lastYear = traj.data.length > 0 ? traj.data[traj.data.length - 1].year : 0
+      return lastYear > max ? lastYear : max
+    }, 0)
+
+    maxYear = Math.max(maxYear ?? 0, customTrajectoriesMaxYear)
+
+    const actionBasedTrajectoryData = calculateActionBasedTrajectory({
+      studyEmissions: totalCo2,
+      studyStartYear,
+      actions: enabledActions,
+      linkedStudies,
+      externalStudies: linkedExternalStudies,
+      maxYear,
+    })
+
     return {
       trajectory15: trajectory15Data,
       trajectoryWB2C: trajectoryWB2CData,
       customTrajectories: customTrajectoriesData,
+      actionBasedTrajectory: actionBasedTrajectoryData,
       studyStartYear,
     }
   }, [
-    selectedTrajectories,
+    selectedSbtiTrajectories,
     study,
     transitionPlan,
-    customTrajectories,
-    selectedCustomTrajectoryIds,
+    trajectories,
+    selectedCustomTrajectories,
     linkedStudies,
     linkedExternalStudies,
+    actions,
   ])
-
-  if (loading) {
-    return (
-      <div className={classNames(styles.container, 'flex-cc')}>
-        <EnvironmentLoader />
-      </div>
-    )
-  }
 
   if (!transitionPlan) {
     if (canEdit) {
@@ -352,8 +336,8 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
               <div className="w100 flex-col gapped-2">
                 <MultiSelect
                   label={t('trajectories.sbtiCard.methodLabel')}
-                  value={selectedTrajectories}
-                  onChange={setSelectedTrajectories}
+                  value={selectedSbtiTrajectories}
+                  onChange={setSelectedSbtiTrajectories}
                   options={[
                     { label: t('trajectories.sbtiCard.option15'), value: TRAJECTORY_15_ID },
                     { label: t('trajectories.sbtiCard.optionWB2C'), value: TRAJECTORY_WB2C_ID },
@@ -363,7 +347,7 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
               </div>
             </Box>
 
-            {customTrajectories.length === 0 ? (
+            {trajectories.length === 0 ? (
               <Box
                 className={classNames('p125 flex-col gapped075', styles.trajectoryCard, styles.clickableCard)}
                 onClick={() => setShowTrajectoryModal(true)}
@@ -380,9 +364,9 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
               </Box>
             ) : (
               <MyTrajectoriesCard
-                trajectories={customTrajectories}
-                selectedTrajectoryIds={selectedCustomTrajectoryIds}
-                onSelectionChange={setSelectedCustomTrajectoryIds}
+                trajectories={trajectories}
+                selectedTrajectoryIds={selectedCustomTrajectories}
+                onSelectionChange={setSelectedCustomTrajectories}
                 onAddTrajectory={() => setShowTrajectoryModal(true)}
                 title={t('trajectories.myTrajectories')}
                 addButtonLabel={t('trajectories.addTrajectory')}
@@ -402,13 +386,17 @@ const TrajectoryReductionPage = ({ study, canEdit }: Props) => {
           <TrajectoryGraph
             trajectory15={{
               data: trajectoryData.trajectory15,
-              enabled: selectedTrajectories.includes(TRAJECTORY_15_ID),
+              enabled: selectedSbtiTrajectories.includes(TRAJECTORY_15_ID),
             }}
             trajectoryWB2C={{
               data: trajectoryData.trajectoryWB2C,
-              enabled: selectedTrajectories.includes(TRAJECTORY_WB2C_ID),
+              enabled: selectedSbtiTrajectories.includes(TRAJECTORY_WB2C_ID),
             }}
             customTrajectories={trajectoryData.customTrajectories}
+            actionBasedTrajectory={{
+              data: trajectoryData.actionBasedTrajectory,
+              enabled: true,
+            }}
             studyStartYear={trajectoryData.studyStartYear}
           />
 

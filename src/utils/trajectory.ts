@@ -2,7 +2,8 @@ import { TrajectoryDataPoint } from '@/components/study/transitionPlan/Trajector
 import { FullStudy } from '@/db/study'
 import { getStudyTotalCo2EmissionsWithDep } from '@/services/study'
 import { Translations } from '@/types/translation'
-import { ExternalStudy, TrajectoryType } from '@prisma/client'
+import { Action, ActionPotentialDeduction, ExternalStudy, TrajectoryType } from '@prisma/client'
+import { getYearFromDateStr } from './time'
 
 export type SBTIType = 'SBTI_15' | 'SBTI_WB2C'
 export const SBTI_REDUCTION_RATE_15 = 0.042
@@ -12,7 +13,7 @@ export const MID_TARGET_YEAR = 2030
 export const TARGET_YEAR = 2050
 
 interface CalculateTrajectoryParams {
-  baseEmissions: number
+  studyEmissions: number
   studyStartYear: number
   reductionRate: number
   startYear?: number
@@ -22,6 +23,7 @@ interface CalculateTrajectoryParams {
   externalStudies?: ExternalStudy[]
 }
 
+// TODO: Refactor this with ticket https://github.com/ABC-TransitionBasCarbone/bilan-carbone/issues/1808
 const getLinkedEmissions = (year: number, linkedStudies?: FullStudy[], externalStudies?: ExternalStudy[]) => {
   const startDate = new Date(`01-01-${year}`)
   const endDate = new Date(`01-01-${year + 1}`)
@@ -75,21 +77,21 @@ export const calculateNewLinearReductionRate = (
 
 const calculateDataPoint = (
   year: number,
-  baseEmissions: number,
+  studyEmissions: number,
   thresholdYear: number,
   absoluteReductionRate: number,
 ): TrajectoryDataPoint => {
   if (year <= thresholdYear) {
-    return { year, value: baseEmissions }
+    return { year, value: studyEmissions }
   }
 
   const yearsFromThreshold = year - thresholdYear
-  const newEmissions = baseEmissions - yearsFromThreshold * absoluteReductionRate * baseEmissions
+  const newEmissions = studyEmissions - yearsFromThreshold * absoluteReductionRate * studyEmissions
   return { year, value: Math.max(0, newEmissions) }
 }
 
 export const calculateSBTiTrajectory = ({
-  baseEmissions,
+  studyEmissions,
   studyStartYear,
   reductionRate,
   maxYear,
@@ -98,7 +100,7 @@ export const calculateSBTiTrajectory = ({
 }: CalculateTrajectoryParams) => {
   const dataPoints: TrajectoryDataPoint[] = []
 
-  if (baseEmissions === 0) {
+  if (studyEmissions === 0) {
     const graphStartYear = studyStartYear < REFERENCE_YEAR ? studyStartYear : REFERENCE_YEAR
     const endYear = maxYear ?? TARGET_YEAR
 
@@ -115,10 +117,10 @@ export const calculateSBTiTrajectory = ({
   }
 
   if (studyStartYear > REFERENCE_YEAR) {
-    const overshoot = calculateOvershoot(studyStartYear, REFERENCE_YEAR, baseEmissions, reductionRate)
-    const cumulativeBudget = calculateCumulativeBudget(TARGET_YEAR, REFERENCE_YEAR, baseEmissions, reductionRate)
+    const overshoot = calculateOvershoot(studyStartYear, REFERENCE_YEAR, studyEmissions, reductionRate)
+    const cumulativeBudget = calculateCumulativeBudget(TARGET_YEAR, REFERENCE_YEAR, studyEmissions, reductionRate)
     const cumulativeBudgetAdjusted = cumulativeBudget - overshoot
-    const nty = calculateNewTargetYear(cumulativeBudgetAdjusted, baseEmissions, studyStartYear)
+    const nty = calculateNewTargetYear(cumulativeBudgetAdjusted, studyEmissions, studyStartYear)
     const newReductionRate = calculateNewLinearReductionRate(1, nty, studyStartYear)
 
     for (let year = REFERENCE_YEAR; year <= Math.max(nty, maxYear ?? TARGET_YEAR); year++) {
@@ -126,7 +128,7 @@ export const calculateSBTiTrajectory = ({
       if (linkedEmissions) {
         dataPoints.push({ year, value: linkedEmissions })
       } else {
-        dataPoints.push(calculateDataPoint(year, baseEmissions, studyStartYear, newReductionRate))
+        dataPoints.push(calculateDataPoint(year, studyEmissions, studyStartYear, newReductionRate))
       }
     }
   } else {
@@ -140,7 +142,7 @@ export const calculateSBTiTrajectory = ({
       if (linkedEmissions) {
         dataPoints.push({ year, value: linkedEmissions })
       } else {
-        dataPoints.push(calculateDataPoint(year, baseEmissions, reductionStartYear, reductionRate))
+        dataPoints.push(calculateDataPoint(year, studyEmissions, reductionStartYear, reductionRate))
       }
     }
   }
@@ -158,13 +160,13 @@ export const getReductionRatePerType = (sbtiType: TrajectoryType): number | unde
 }
 
 export const calculateCustomTrajectory = ({
-  baseEmissions,
+  studyEmissions,
   studyStartYear,
   objectives,
   linkedStudies,
   externalStudies,
 }: {
-  baseEmissions: number
+  studyEmissions: number
   studyStartYear: number
   objectives: Array<{ targetYear: number; reductionRate: number }>
   linkedStudies?: FullStudy[]
@@ -175,7 +177,7 @@ export const calculateCustomTrajectory = ({
   }
 
   const dataPoints: TrajectoryDataPoint[] = []
-  let currentValue = baseEmissions
+  let currentValue = studyEmissions
   let startYear = studyStartYear
 
   for (let year = REFERENCE_YEAR; year < studyStartYear; year++) {
@@ -183,11 +185,11 @@ export const calculateCustomTrajectory = ({
     if (linkedEmissions) {
       dataPoints.push({ year, value: linkedEmissions })
     } else {
-      dataPoints.push({ year, value: baseEmissions })
+      dataPoints.push({ year, value: studyEmissions })
     }
   }
 
-  dataPoints.push({ year: studyStartYear, value: baseEmissions })
+  dataPoints.push({ year: studyStartYear, value: studyEmissions })
 
   const sortedObjectives = [...objectives].sort((a, b) => a.targetYear - b.targetYear)
   for (let i = 0; i < sortedObjectives.length; i++) {
@@ -249,4 +251,81 @@ export const getTrajectoryTypeLabel = (type: TrajectoryType, t: Translations) =>
     default:
       return type
   }
+}
+
+export const calculateActionBasedTrajectory = ({
+  studyEmissions,
+  studyStartYear,
+  actions,
+  linkedStudies,
+  externalStudies,
+  maxYear,
+}: {
+  studyEmissions: number
+  studyStartYear: number
+  actions: Action[]
+  linkedStudies?: FullStudy[]
+  externalStudies?: ExternalStudy[]
+  maxYear?: number
+}): TrajectoryDataPoint[] => {
+  const dataPoints: TrajectoryDataPoint[] = []
+
+  for (let year = REFERENCE_YEAR; year < studyStartYear; year++) {
+    const linkedEmissions = getLinkedEmissions(year, linkedStudies, externalStudies)
+    if (linkedEmissions) {
+      dataPoints.push({ year, value: linkedEmissions })
+    } else {
+      dataPoints.push({ year, value: studyEmissions })
+    }
+  }
+
+  let currentEmissions = studyEmissions
+  dataPoints.push({ year: studyStartYear, value: currentEmissions })
+
+  const quantitativeActions = actions.filter(
+    (action) =>
+      action.potentialDeduction === ActionPotentialDeduction.Quantity &&
+      action.reductionValue !== null &&
+      action.reductionStartYear !== null &&
+      action.reductionEndYear !== null,
+  )
+
+  const maxActionsEndYear =
+    quantitativeActions.length > 0
+      ? Math.max(
+          ...quantitativeActions.map((action) =>
+            action.reductionEndYear ? getYearFromDateStr(action.reductionEndYear) : 0,
+          ),
+        )
+      : 0
+
+  const maxDefaultEndYear = Math.max(maxYear ?? TARGET_YEAR, TARGET_YEAR)
+  const maxEndYear = Math.max(maxActionsEndYear, maxDefaultEndYear)
+  const yearlyReductions: Record<number, number> = {}
+
+  for (const action of quantitativeActions) {
+    const startYear = action.reductionStartYear ? getYearFromDateStr(action.reductionStartYear) : 0
+    const endYear = action.reductionEndYear ? getYearFromDateStr(action.reductionEndYear) : 0
+
+    if (startYear <= endYear) {
+      for (let year = startYear; year <= endYear; year++) {
+        const actionDuration = Math.max(1, endYear - startYear)
+        const annualReduction = (action.reductionValue ?? 0) / actionDuration
+        const currentYearlyReduction = yearlyReductions[year]
+        if (currentYearlyReduction) {
+          yearlyReductions[year] += annualReduction
+        } else {
+          yearlyReductions[year] = annualReduction
+        }
+      }
+    }
+  }
+
+  for (let year = studyStartYear + 1; year <= maxEndYear; year++) {
+    const yearlyReduction = yearlyReductions[year] ?? 0
+    currentEmissions = Math.max(0, currentEmissions - yearlyReduction)
+    dataPoints.push({ year, value: currentEmissions })
+  }
+
+  return dataPoints
 }
