@@ -71,6 +71,7 @@ const ObjectivesPage = ({ study, canEdit, trajectories: initialTrajectories, tra
             trajectories={trajectories}
             canEdit={canEdit}
             transitionPlanId={transitionPlanId}
+            studyId={study.id}
             onUpdate={loadTrajectories}
           />
         </div>

@@ -49,10 +49,11 @@ interface Props {
   trajectories: TrajectoryWithObjectives[]
   canEdit: boolean
   transitionPlanId: string
+  studyId: string
   onUpdate: () => void
 }
 
-const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, onUpdate }: Props) => {
+const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, studyId, onUpdate }: Props) => {
   const t = useTranslations('study.transitionPlan.objectives')
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
@@ -81,6 +82,14 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, on
         : await callServerFunction(() => deleteObjective(deleteTarget.id))
 
     if (result.success) {
+      if (deleteTarget.type === 'trajectory') {
+        const stored = localStorage.getItem(`trajectory-custom-selected-${studyId}`)
+        if (stored) {
+          const selectedIds = JSON.parse(stored) as string[]
+          const updatedIds = selectedIds.filter((id) => id !== deleteTarget.id)
+          localStorage.setItem(`trajectory-custom-selected-${studyId}`, JSON.stringify(updatedIds))
+        }
+      }
       onUpdate()
       setDeleteModalOpen(false)
       setDeleteTarget(null)

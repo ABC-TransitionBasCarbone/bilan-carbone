@@ -98,12 +98,18 @@ const TrajectoryReductionPage = ({
   }, [selectedCustomTrajectories, study.id])
 
   // Local storage may keep leftover custom trajectory ids from previous transition plans
-  // This ensures that the selected custom trajectories are always valid
+  // This ensures that displayed custom trajectories are always valid and cleans up the invalid ones
   useEffect(() => {
     if (trajectories.length > 0) {
-      setSelectedCustomTrajectories((prev) => prev.filter((id) => trajectories.some((t) => t.id === id)))
+      setSelectedCustomTrajectories((prev) => {
+        const validIds = prev.filter((id) => trajectories.some((t) => t.id === id))
+        if (validIds.length !== prev.length) {
+          localStorage.setItem(`trajectory-custom-selected-${study.id}`, JSON.stringify(validIds))
+        }
+        return validIds
+      })
     }
-  }, [trajectories])
+  }, [trajectories, study.id])
 
   const handleCreateTrajectorySuccess = useCallback(
     async (trajectoryId: string) => {
