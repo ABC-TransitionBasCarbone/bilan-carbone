@@ -407,6 +407,7 @@ const TrajectoryReductionPage = ({
               transitionPlanId={transitionPlan.id}
               onSuccess={handleCreateTrajectorySuccess}
               trajectory={null}
+              isFirstCreation={trajectories.length === 0}
             />
           )}
 

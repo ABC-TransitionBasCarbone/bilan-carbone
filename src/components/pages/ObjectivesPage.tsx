@@ -4,11 +4,11 @@ import Title from '@/components/base/Title'
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
-import { useServerFunction } from '@/hooks/useServerFunction'
-import { getTrajectories } from '@/services/serverFunctions/trajectory'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useCallback, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import ObjectivesFilters from '../study/trajectory/ObjectivesFilters'
 import TrajectoryObjectivesTable from '../study/trajectory/TrajectoryObjectivesTable'
 import TransitionPlanOnboarding from '../study/transitionPlan/TransitionPlanOnboarding'
 import styles from './TrajectoryReductionPage.module.css'
@@ -20,24 +20,12 @@ interface Props {
   transitionPlanId: string
 }
 
-const ObjectivesPage = ({ study, canEdit, trajectories: initialTrajectories, transitionPlanId }: Props) => {
+const ObjectivesPage = ({ study, canEdit, trajectories, transitionPlanId }: Props) => {
   const t = useTranslations('study.transitionPlan.objectives')
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
-  const { callServerFunction } = useServerFunction()
-
-  const [trajectories, setTrajectories] = useState<TrajectoryWithObjectives[]>(initialTrajectories)
-
-  const loadTrajectories = useCallback(async () => {
-    await callServerFunction(() => getTrajectories(study.id, transitionPlanId), {
-      onSuccess: (data) => {
-        setTrajectories(data)
-      },
-      onError: () => {
-        setTrajectories([])
-      },
-    })
-  }, [study.id, transitionPlanId, callServerFunction])
+  const router = useRouter()
+  const [searchFilter, setSearchFilter] = useState('')
 
   return (
     <>
@@ -67,13 +55,21 @@ const ObjectivesPage = ({ study, canEdit, trajectories: initialTrajectories, tra
             })}
           />
 
-          <TrajectoryObjectivesTable
-            trajectories={trajectories}
-            canEdit={canEdit}
-            transitionPlanId={transitionPlanId}
-            studyId={study.id}
-            onUpdate={loadTrajectories}
-          />
+          <div className="flex-col gapped1">
+            <ObjectivesFilters
+              search={searchFilter}
+              setSearch={setSearchFilter}
+              transitionPlanId={transitionPlanId}
+              onTrajectoryCreation={() => router.refresh()}
+            />
+
+            <TrajectoryObjectivesTable
+              trajectories={trajectories}
+              canEdit={canEdit}
+              transitionPlanId={transitionPlanId}
+              searchFilter={searchFilter}
+            />
+          </div>
         </div>
       </div>
     </>

@@ -13,6 +13,7 @@ import { Chip, IconButton } from '@mui/material'
 import { TrajectoryType } from '@prisma/client'
 import { ColumnDef, getCoreRowModel, getExpandedRowModel, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
+import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
@@ -49,11 +50,16 @@ interface Props {
   trajectories: TrajectoryWithObjectives[]
   canEdit: boolean
   transitionPlanId: string
-  studyId: string
-  onUpdate: () => void
+  searchFilter?: string
 }
 
-const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, studyId, onUpdate }: Props) => {
+const fuseOptions = {
+  keys: [{ name: 'name', weight: 1 }],
+  threshold: 0.3,
+  isCaseSensitive: false,
+}
+
+const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, searchFilter = '' }: Props) => {
   const t = useTranslations('study.transitionPlan.objectives')
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
@@ -65,6 +71,8 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, st
   } | null>(null)
   const [editModalOpen, setEditModalOpen] = useState(false)
   const [editTrajectory, setEditTrajectory] = useState<TrajectoryWithObjectives | null>(null)
+
+  const fuse = useMemo(() => new Fuse(trajectories, fuseOptions), [trajectories])
 
   const handleDeleteClick = (type: 'trajectory' | 'objective', id: string, name: string) => {
     setDeleteTarget({ type, id, name })
@@ -90,7 +98,6 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, st
           localStorage.setItem(`trajectory-custom-selected-${studyId}`, JSON.stringify(updatedIds))
         }
       }
-      onUpdate()
       setDeleteModalOpen(false)
       setDeleteTarget(null)
       router.refresh()
@@ -103,7 +110,6 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, st
   }
 
   const handleEditSuccess = () => {
-    onUpdate()
     router.refresh()
     setEditModalOpen(false)
     setEditTrajectory(null)
@@ -226,7 +232,9 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, st
   }, [t, canEdit, trajectories]) as ColumnDef<TableDataType>[]
 
   const tableData = useMemo((): TrajectoryRow[] => {
-    return trajectories.map((trajectory) => {
+    const filteredTrajectories = searchFilter ? fuse.search(searchFilter).map(({ item }) => item) : trajectories
+
+    return filteredTrajectories.map((trajectory) => {
       const sortedObjectives = [...trajectory.objectives].sort((a, b) => a.targetYear - b.targetYear)
       const lastObjective = sortedObjectives[sortedObjectives.length - 1]
 
@@ -248,7 +256,7 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, st
         })),
       }
     })
-  }, [trajectories, t])
+  }, [trajectories, t, searchFilter, fuse])
 
   const table = useReactTable({
     columns,

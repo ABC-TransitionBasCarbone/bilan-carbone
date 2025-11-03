@@ -14,7 +14,7 @@ interface Props {
 }
 
 const fuseOptions = {
-  keys: [{ name: 'metaData.title', weight: 1 }],
+  keys: [{ name: 'title', weight: 1 }],
   threshold: 0.3,
   isCaseSensitive: false,
 }
@@ -34,7 +34,7 @@ const Actions = ({ actions, studyUnit, porters, transitionPlanId }: Props) => {
   }, [actions, filter, fuse])
 
   return (
-    <>
+    <div className="flex-col gapped1">
       <ActionFilters
         search={filter}
         setSearch={setFilter}
@@ -48,7 +48,7 @@ const Actions = ({ actions, studyUnit, porters, transitionPlanId }: Props) => {
         porters={porters}
         transitionPlanId={transitionPlanId}
       />
-    </>
+    </div>
   )
 }
 

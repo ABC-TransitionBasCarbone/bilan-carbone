@@ -1,5 +1,6 @@
 import { TextField, TextFieldProps } from '@mui/material'
 import { InputHTMLAttributes, useEffect, useState } from 'react'
+import styles from '../form/Form.module.css'
 
 interface Props {
   debounce: number
@@ -27,7 +28,18 @@ const DebouncedInput = ({
     return () => clearTimeout(timeout)
   }, [value])
 
-  return <TextField {...props} value={value} onChange={(e) => setValue(e.target.value)} />
+  return (
+    <TextField
+      {...props}
+      slotProps={{
+        input: {
+          className: styles.textFieldInput,
+        },
+      }}
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+    />
+  )
 }
 
 export default DebouncedInput
