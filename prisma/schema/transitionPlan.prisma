@@ -67,7 +67,6 @@ model Action {
 
   title                     String
   subSteps                  String                   @map("sub_steps")
-  // aim                    String
   detailedDescription       String
   potentialDeduction        ActionPotentialDeduction
   reductionValue            Int?

@@ -21,8 +21,5 @@ export const filterWithDependencies = (subPost: SubPost, withDependencies: boole
   withDependencies || !dependencySubPosts.includes(subPost)
 
 export const filterEmissionSourcesWithDeps = (emissionSources: { subPost: SubPost; emissionValue: number }[]) => {
-  return emissionSources.filter((source) => {
-    const subPost = source.subPost
-    return dependencySubPosts.includes(subPost)
-  })
+  return emissionSources.filter((source) => dependencySubPosts.includes(source.subPost))
 }

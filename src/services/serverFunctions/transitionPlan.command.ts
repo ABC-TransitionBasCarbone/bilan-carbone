@@ -56,7 +56,6 @@ export type TrajectoryFormData = z.infer<ReturnType<typeof createTrajectorySchem
 export const AddActionCommandBase = z.object({
   title: z.string().min(1),
   subSteps: z.string().min(1),
-  // aim: z.array(),
   detailedDescription: z.string().min(1),
   transitionPlanId: z.uuid(),
   potentialDeduction: z.enum(ActionPotentialDeduction),
