@@ -7,7 +7,13 @@ import { getPost } from '@/utils/post'
 import { formatValueForExport, hasDeprecationPeriod, isCAS, STUDY_UNIT_VALUES } from '@/utils/study'
 import { Environment, Export, ExportRule, Level, StudyResultUnit, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
-import { canBeValidated, getEmissionResults, getEmissionSourcesTotalCo2, getStandardDeviation } from './emissionSource'
+import {
+  canBeValidated,
+  getEmissionResults,
+  getEmissionSourceEmission,
+  getEmissionSourcesTotalCo2,
+  getStandardDeviation,
+} from './emissionSource'
 import { download } from './file'
 import { hasAccessToBcExport } from './permissions/environment'
 import { StudyWithoutDetail } from './permissions/study'
@@ -160,11 +166,7 @@ const getEmissionSourcesRows = (
           emissionSource.validated ? t('yes') : t('no'),
           emissionSource.name || '',
           emissionSource.caracterisation ? tCaracterisations(emissionSource.caracterisation) : '',
-          formatValueForExport(
-            ((emissionSource.value || 0) * (emissionFactor ? getEmissionFactorValue(emissionFactor, environment) : 0)) /
-              STUDY_UNIT_VALUES[resultsUnit] /
-              (withDeprecation ? emissionSource.depreciationPeriod || 1 : 1),
-          ) || '0',
+          formatValueForExport(getEmissionSourceEmission(emissionSource, environment) || 0),
           withDeprecation ? emissionSource.depreciationPeriod || '1' : ' ',
           isCAS(emissionSource) ? emissionSource.hectare || '1' : ' ',
           isCAS(emissionSource) ? emissionSource.duration || '1' : ' ',
@@ -176,10 +178,12 @@ const getEmissionSourcesRows = (
           getQuality(getQualityRating(emissionSource), tQuality),
           emissionSource.comment || '',
           emissionFactor?.metaData?.title || t('noFactor'),
-          emissionFactor ? formatValueForExport(getEmissionFactorValue(emissionFactor, environment)) : '',
+          emissionFactor ? getEmissionFactorValue(emissionFactor, environment) : '',
           emissionFactor?.unit ? `${tResultUnits(StudyResultUnit.K)}/${tUnit(emissionFactor.unit)}` : '',
           emissionFactor ? getQuality(getQualityRating(emissionFactor), tQuality) : '',
           emissionFactor?.source || '',
+          '',
+          '',
         ])
         .map((field) => encodeCSVField(field))
         .join(';')
@@ -254,8 +258,8 @@ const getEmissionSourcesCSVContent = (
   const uncertaintyRow = [
     t('uncertainty'),
     ...emptyFields(emptyFieldsCount),
-    formatValueForExport(uncertainty[0] / STUDY_UNIT_VALUES[resultsUnit]),
-    formatValueForExport(uncertainty[1] / STUDY_UNIT_VALUES[resultsUnit]),
+    uncertainty[0] / STUDY_UNIT_VALUES[resultsUnit],
+    uncertainty[1] / STUDY_UNIT_VALUES[resultsUnit],
   ].join(';')
 
   return [columns, ...rows, totalRow, qualityRow, uncertaintyRow].join('\n')
