@@ -16,7 +16,7 @@ const DebouncedInput = ({
   size = 'medium',
   ...props
 }: Props & Omit<TextFieldProps & InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | 'size'>) => {
-  const [value, setValue] = useState(initialValue)
+  const [value, setValue] = useState(initialValue || '')
 
   useEffect(() => {
     setValue(initialValue)
@@ -28,7 +28,7 @@ const DebouncedInput = ({
     }, debounce)
 
     return () => clearTimeout(timeout)
-  }, [value])
+  }, [value, onChange, debounce])
 
   return (
     <TextField

@@ -161,7 +161,7 @@ export const getActionById = async (id: string) => prismaClient.action.findUniqu
 export const getActions = async (transitionPlanId: string) =>
   prismaClient.action.findMany({
     where: { transitionPlanId },
-    orderBy: [{ priority: 'desc' }, { createdAt: 'desc' }],
+    orderBy: [{ priority: 'asc' }, { createdAt: 'desc' }],
   })
 
 export const createTransitionPlanStudy = async (transitionPlanId: string, studyId: string) =>

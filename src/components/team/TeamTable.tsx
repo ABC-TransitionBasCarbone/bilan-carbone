@@ -7,7 +7,6 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteOrganizationMember } from '@/services/serverFunctions/organization'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { canEditMemberRole, getEnvironmentRoles } from '@/utils/user'
-import DeleteIcon from '@mui/icons-material/Delete'
 import { Environment, Role } from '@prisma/client'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { UserSession } from 'next-auth'
@@ -15,7 +14,7 @@ import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useCallback, useMemo, useState } from 'react'
 import Block from '../base/Block'
-import Button from '../base/Button'
+import { TableActionButton } from '../base/TableActionButton'
 import Modal from '../modals/Modal'
 import SelectRole from './SelectRole'
 import styles from './TeamTable.module.css'
@@ -86,21 +85,21 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
 
     if (canUpdateTeam) {
       col.push({
-        header: t('action'),
-        cell: ({ row }) =>
-          row.original.user.email !== user.email ? (
-            <div className="justify-center">
-              <Button onClick={() => setDeletingMember(row.original.user.email)} title={t('deleteMember')}>
-                <DeleteIcon />
-              </Button>
-            </div>
-          ) : (
-            <></>
-          ),
+        id: 'actions',
+        header: '',
+        cell: ({ row }) => {
+          return row.original.user.email !== user.email ? (
+            <TableActionButton
+              type="delete"
+              onClick={() => setDeletingMember(row.original.user.email)}
+              data-testid="delete-member-button"
+            />
+          ) : null
+        },
       })
     }
     return col
-  }, [canUpdateTeam, t, tLevel, tRole, user.email])
+  }, [t, isCut, canUpdateTeam, tLevel, user.email, user.environment, tRole])
 
   const table = useReactTable({
     columns,

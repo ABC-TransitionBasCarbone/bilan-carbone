@@ -15,7 +15,7 @@ import {
 } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useCallback, useMemo, useOptimistic, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 interface Props {
   actions: Action[]
@@ -32,31 +32,30 @@ const ActionTable = ({ actions, onOpenEditModal, onOpenDeleteModal }: Props) => 
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
 
-  const [optimisticActions, setOptimisticActions] = useOptimistic(
-    actions,
-    (state, { actionId, enabled }: { actionId: string; enabled: boolean }) => {
-      return state.map((action) => {
-        if (action.id === actionId) {
-          return { ...action, enabled }
-        }
-        return action
-      })
-    },
-  )
+  // Local optimistic state
+  const [localActions, setLocalActions] = useState<Action[]>(actions)
+
+  // Sync with server data when it changes
+  useEffect(() => {
+    setLocalActions(actions)
+  }, [actions])
 
   const handleToggleEnabled = useCallback(
-    async (actionId: string, value: boolean) => {
-      setOptimisticActions({ actionId, enabled: value })
+    async (actionId: string, enabled: boolean) => {
+      // Optimistically update local state
+      setLocalActions((prev) => prev.map((action) => (action.id === actionId ? { ...action, enabled } : action)))
 
-      await callServerFunction(() => toggleActionEnabled(actionId, value), {
-        getErrorMessage: () => {
-          return t('errorChangingEnabled')
+      // Call server function
+      await callServerFunction(() => toggleActionEnabled(actionId, enabled), {
+        onSuccess: () => {
+          router.refresh()
+        },
+        onError: () => {
+          setLocalActions(actions)
         },
       })
-
-      router.refresh()
     },
-    [callServerFunction, t, router, setOptimisticActions],
+    [callServerFunction, router, setLocalActions, actions],
   )
 
   const getPotential = useCallback(
@@ -119,12 +118,12 @@ const ActionTable = ({ actions, onOpenEditModal, onOpenDeleteModal }: Props) => 
           ),
         },
       ] as ColumnDef<Action>[],
-    [getPotential, t, tCategory, handleToggleEnabled, onOpenEditModal, onOpenDeleteModal],
+    [t, getPotential, handleToggleEnabled, tCategory, onOpenEditModal, onOpenDeleteModal],
   )
 
   const table = useReactTable({
     columns,
-    data: optimisticActions,
+    data: localActions,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,

@@ -3,13 +3,12 @@
 import Block from '@/components/base/Block'
 import HelpIcon from '@/components/base/HelpIcon'
 import BaseTable from '@/components/base/Table'
+import { TableActionButton } from '@/components/base/TableActionButton'
 import Toast, { ToastColors } from '@/components/base/Toast'
 import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteStudyMember } from '@/services/serverFunctions/study'
-import DeleteIcon from '@mui/icons-material/Cancel'
-import { Button } from '@mui/material'
 import { StudyRole } from '@prisma/client'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { UserSession } from 'next-auth'
@@ -67,20 +66,15 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
         },
       })
       columns.push({
-        header: t('actions'),
+        id: 'actions',
+        header: '',
         cell: ({ row }) =>
           user.accountId !== row.original.accountId && (
-            <div className="flex-cc">
-              <Button
-                aria-label={t('delete')}
-                title={t('delete')}
-                onClick={() => setToDelete(row.original)}
-                data-testid={`delete-study-member-button`}
-                color="error"
-              >
-                <DeleteIcon />
-              </Button>
-            </div>
+            <TableActionButton
+              type="delete"
+              onClick={() => setToDelete(row.original)}
+              data-testid="delete-study-member-button"
+            />
           ),
       })
     } else {
@@ -90,7 +84,7 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
       })
     }
     return columns
-  }, [t, tStudyRole, userRoleOnStudy, user, study])
+  }, [t, canAddMember, user, userRoleOnStudy, study, tStudyRole])
 
   const table = useReactTable({
     columns,
