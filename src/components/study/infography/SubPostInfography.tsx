@@ -29,7 +29,7 @@ export const SubPostInfography = ({ subPosts, ref, studyId, mainPost }: Props) =
                 <Link
                   href={`/etudes/${studyId}/comptabilisation/saisie-des-donnees/${mainPost}#subpost-${subPost}`}
                   onClick={(e) => e.stopPropagation()}
-                  className={styles.subPostLink}
+                  className={classNames(styles.subPostLink, 'flex align-center')}
                 >
                   <KeyboardArrowRightIcon />
                   {t(subPost)}

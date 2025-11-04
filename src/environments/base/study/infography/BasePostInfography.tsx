@@ -46,6 +46,14 @@ export const BasePostInfography = ({ post, mainPost, subPosts, studyId, percent,
   const displayTimeout = useRef<NodeJS.Timeout | null>(null)
   const postColor = useMemo(() => (mainPost ? postColors[mainPost] : defaultPostColor), [mainPost])
 
+  const href = useMemo(() => {
+    const isSubPost = Object.values(SubPost).includes(post as SubPost)
+    if (isSubPost) {
+      return `/etudes/${studyId}/comptabilisation/saisie-des-donnees/${mainPost}#subpost-${post}`
+    }
+    return `/etudes/${studyId}/comptabilisation/saisie-des-donnees/${mainPost}`
+  }, [post, mainPost, studyId])
+
   useEffect(() => {
     if (ref.current) {
       if (displayChildren) {
@@ -69,7 +77,7 @@ export const BasePostInfography = ({ post, mainPost, subPosts, studyId, percent,
         }
         setDisplayChildren(false)
       }}
-      href={`/etudes/${studyId}/comptabilisation/saisie-des-donnees/${mainPost}`}
+      href={href}
     >
       <PostHeader post={post} mainPost={mainPost} emissionValue={emissionValue} percent={percent} color={postColor} />
       <SubPostInfography subPosts={subPosts} ref={ref} studyId={studyId} mainPost={mainPost} />
