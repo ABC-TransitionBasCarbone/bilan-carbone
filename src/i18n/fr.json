@@ -1127,12 +1127,13 @@
           "Adaptation": "Adaption"
         },
         "relevance": {
-          "Offsetting": "De compensation",
-          "Sequestration": "De séquestration",
-          "Avoidance": "D'évitement",
-          "AvoidanceFinancing": "De financement d'évitement",
-          "ReductionOutsideOrganisationValueChain": "De réduction hors de la chaine de valeur de l'organisation",
-          "ReductionWithinOrganisationCoreBusiness": "De réduction dans le coeur d'activité de l'organisation"
+          "Offsetting": "Compensation (Priorité 6/6)",
+          "Sequestration": "Séquestration (Priorité 5/6)",
+          "Avoidance": "Évitement (Priorité 3/6)",
+          "AvoidanceFinancing": "Financement d'évitement (Priorité 4/6)",
+          "ReductionOutsideOrganisationValueChain": "Réduction hors de la chaîne de valeur de l'organisation (Priorité 2/6)",
+          "ReductionWithinOrganisationValueChain": "Réduction dans la chaîne de valeur de l'organisation (Priorité 1/6)",
+          "ReductionWithinOrganisationCoreBusiness": "Réduction dans le coeur d'activité de l'organisation (Priorité 1/6)"
         },
         "onboarding": {
           "title": "Construisez un plan d'action afin d'atteindre vos objectifs",

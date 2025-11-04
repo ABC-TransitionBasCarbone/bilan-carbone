@@ -1127,12 +1127,13 @@
           "Adaptation": "Adaptation"
         },
         "relevance": {
-          "Offsetting": "Offsetting",
-          "Sequestration": "Sequestration",
-          "Avoidance": "Avoidance",
-          "AvoidanceFinancing": "Avoidance financing",
-          "ReductionOutsideOrganisationValueChain": "Reduction outside the organisation's value chain",
-          "ReductionWithinOrganisationCoreBusiness": "Reduction within the organisation's core business"
+          "Offsetting": "Offsetting (Priority 6/6)",
+          "Sequestration": "Sequestration (Priority 5/6)",
+          "Avoidance": "Avoidance (Priority 3/6)",
+          "AvoidanceFinancing": "Avoidance financing (Priority 4/6)",
+          "ReductionOutsideOrganisationValueChain": "Reduction outside the organisation's value chain (Priority 2/6)",
+          "ReductionWithinOrganisationValueChain": "Reduction within the organisation's value chain (Priority 1/6)",
+          "ReductionWithinOrganisationCoreBusiness": "Reduction within the organisation's core business (Priority 1/6)"
         },
         "onboarding": {
           "title": "Create your action plan to achieve your objectives",

@@ -19,6 +19,7 @@ enum ActionRelevance {
   Avoidance
   AvoidanceFinancing
   ReductionOutsideOrganisationValueChain
+  ReductionWithinOrganisationValueChain
   ReductionWithinOrganisationCoreBusiness
 }
 

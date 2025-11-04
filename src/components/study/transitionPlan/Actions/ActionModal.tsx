@@ -5,6 +5,7 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { getStudyOrganizationMembers } from '@/services/serverFunctions/study'
 import { addAction, editAction } from '@/services/serverFunctions/transitionPlan'
 import { AddActionCommand, AddActionCommandValidation } from '@/services/serverFunctions/transitionPlan.command'
+import { calculatePriorityFromRelevance } from '@/utils/action'
 import { objectWithoutNullAttributes } from '@/utils/object'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Action, ActionPotentialDeduction } from '@prisma/client'
@@ -71,8 +72,11 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
     },
   )
 
-  const onSubmit = async () => {
-    const res = action ? await editAction(action.id, getValues()) : await addAction(getValues())
+  const onSubmit = async (data: AddActionCommand) => {
+    const priority = calculatePriorityFromRelevance(data.relevance)
+    const dataWithPriority = { ...data, priority }
+
+    const res = action ? await editAction(action.id, dataWithPriority) : await addAction(dataWithPriority)
     if (res.success) {
       reset()
       setActiveStep(0)
@@ -142,13 +146,11 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
         'reductionValue',
       ]
     }
-    if (step === 1) {
-      return ['priority']
-    }
     return []
   }
 
   const isStepValid = () => {
+    console.log('isStepValid')
     const fieldsToValidate = getFieldsForStep(activeStep)
     if (fieldsToValidate.length === 0) {
       return true
