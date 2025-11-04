@@ -73,6 +73,7 @@ export const AddActionCommandBase = z.object({
   performanceGoal: z.number().optional(),
   facilitatorsAndObstacles: z.string().optional(),
   additionalInformation: z.string().optional(),
+  priority: z.number().min(1).max(7),
   nature: z.array(z.enum(ActionNature)).min(0),
   category: z.array(z.enum(ActionCategory)).min(0),
   relevance: z.array(z.enum(ActionRelevance)).min(0),

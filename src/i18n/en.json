@@ -1107,6 +1107,7 @@
           "indicatorGoalPlaceholder": "Goal",
           "facilitatorsAndObstacles": "Potential facilitators and obstacles to action",
           "additionalInformation": "Additional information",
+          "priority": "Priority",
           "nature": "Nature of the action",
           "category": "Categories of action",
           "relevance": "For mitigation actions, indicate the level of relevance of the action",
