@@ -25,7 +25,6 @@ import { ManualEmissionFactorUnitList } from '@/utils/emissionFactors'
 import { flattenSubposts } from '@/utils/post'
 import { IsSuccess, withServerResponse } from '@/utils/serverResponse'
 import { EmissionFactorStatus, Environment, Import, Unit } from '@prisma/client'
-import { UserSession } from 'next-auth'
 import { auth, dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canCreateEmissionFactor } from '../permissions/emissionFactor'
@@ -33,20 +32,6 @@ import { canReadStudy } from '../permissions/study'
 import { getStudyParentOrganizationVersionId } from '../study'
 import { sortAlphabetically } from '../utils'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from './emissionFactor.command'
-
-export const getImportVersions = async (withCut: boolean) => {
-  const session = await auth()
-  if (!session || !session.user) {
-    return []
-  }
-
-  return prismaClient.emissionFactorImportVersion.findMany({
-    where: {
-      archived: false,
-      ...(!withCut ? { source: { not: Import.CUT } } : {}),
-    },
-  })
-}
 
 export const getFELocations = async () => {
   const session = await auth()
@@ -260,17 +245,22 @@ export const fixUnits = async () => {
   console.log(`Fait : ${emissionFactors.length} facteurs mis à jour`)
 }
 
-export const getEmissionFactorImportVersions = async (user: UserSession) =>
+export const getEmissionFactorImportVersions = async (withArchived: boolean = false) =>
   withServerResponse('getEmissionFactorImportVersions', async () => {
-    if (!user) {
+    const session = await auth()
+    if (!session || !session.user) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    switch (user.environment) {
+    if (!session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    switch (session.user.environment) {
       case Environment.CUT:
         return getEmissionFactorImportVersionsCUT()
       case Environment.BC:
       default:
-        return getEmissionFactorImportVersionsBC()
+        return getEmissionFactorImportVersionsBC(withArchived)
     }
   })

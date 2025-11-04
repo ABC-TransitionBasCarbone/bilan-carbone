@@ -1,6 +1,6 @@
 'use client'
 
-import { getFELocations, getImportVersions } from '@/services/serverFunctions/emissionFactor'
+import { getEmissionFactorImportVersions, getFELocations } from '@/services/serverFunctions/emissionFactor'
 import { EmissionFactorImportVersion, Environment, Import } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
@@ -21,7 +21,14 @@ const EmissionFactors = ({ userOrganizationId, environment }: Props) => {
 
   useEffect(() => {
     async function fetchFiltersInfos() {
-      const importVersionsFromBdd = await getImportVersions(environment === Environment.CUT)
+      const importVersionsResponse = await getEmissionFactorImportVersions()
+
+      if (!importVersionsResponse.success) {
+        console.error('Failed to fetch emission factor import versions')
+        return
+      }
+
+      const importVersionsFromBdd = importVersionsResponse.data
       const locationFromBdd = await getFELocations()
       const selectedImportVersions: Record<string, string> = {}
       const sortedImportVersions = importVersionsFromBdd.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())

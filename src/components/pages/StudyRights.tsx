@@ -19,7 +19,7 @@ const StudyRightsPage = async ({ study, user }: Props) => {
 
   const editionDisabled = !hasEditionRights(userRoleOnStudy)
 
-  const emissionFactorImportVersionRes = await getEmissionFactorImportVersions(user)
+  const emissionFactorImportVersionRes = await getEmissionFactorImportVersions(true)
   if (!emissionFactorImportVersionRes.success) {
     console.error('Failed to fetch emission factor import versions')
     return <NotFound />
