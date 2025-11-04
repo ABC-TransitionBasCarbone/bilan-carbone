@@ -4,6 +4,7 @@ import { Typography } from '@mui/material'
 import { LineChart } from '@mui/x-charts/LineChart'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
+import DependenciesSwitch from '../results/DependenciesSwitch'
 
 export interface TrajectoryDataPoint {
   year: number
@@ -23,6 +24,8 @@ interface Props {
   customTrajectories?: TrajectoryData[]
   actionBasedTrajectory?: TrajectoryData
   studyStartYear: number
+  withDependencies: boolean
+  setWithDependencies: (value: boolean) => void
 }
 
 const TrajectoryGraph = ({
@@ -31,6 +34,8 @@ const TrajectoryGraph = ({
   customTrajectories = [],
   actionBasedTrajectory,
   studyStartYear,
+  withDependencies,
+  setWithDependencies,
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.graph')
 
@@ -48,9 +53,12 @@ const TrajectoryGraph = ({
 
   return (
     <div className="w100 mb2">
-      <Typography variant="h5" component="h2" fontWeight={600} gutterBottom>
-        {t('title')}
-      </Typography>
+      <div className="flex align-center justify-between mb1">
+        <Typography variant="h5" component="h2" fontWeight={600}>
+          {t('title')}
+        </Typography>
+        <DependenciesSwitch withDependencies={withDependencies} setWithDependencies={setWithDependencies} />
+      </div>
       <Typography variant="body2" color="text.secondary">
         {t('subtitle')}
       </Typography>

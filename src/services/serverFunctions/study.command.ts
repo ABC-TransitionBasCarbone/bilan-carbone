@@ -1,16 +1,5 @@
 import { setCustomIssue, setCustomMessage } from '@/lib/zod.config'
-import {
-  ActionCategory,
-  ActionNature,
-  ActionPotentialDeduction,
-  ActionRelevance,
-  ControlMode,
-  DayOfWeek,
-  Export,
-  Level,
-  StudyResultUnit,
-  StudyRole,
-} from '@prisma/client'
+import { ControlMode, DayOfWeek, Export, Level, StudyResultUnit, StudyRole } from '@prisma/client'
 import dayjs from 'dayjs'
 import z from 'zod'
 import { HolidayOpeningHoursValidation, OpeningHoursValidation } from '../hours'
@@ -190,58 +179,3 @@ export const DuplicateSiteCommandValidation = z.object({
 })
 
 export type DuplicateSiteCommand = z.infer<typeof DuplicateSiteCommandValidation>
-
-export const AddActionCommandBase = z.object({
-  title: z.string().min(1),
-  subSteps: z.string().min(1),
-  // aim: z.array(),
-  detailedDescription: z.string().min(1),
-  transitionPlanId: z.uuid(),
-  potentialDeduction: z.enum(ActionPotentialDeduction),
-  reductionValue: z.number().optional(),
-  reductionStartYear: z.string().optional(),
-  reductionEndYear: z.string().optional(),
-  actionPorter: z.string().optional(),
-  necessaryBudget: z.number().optional(),
-  necesssaryRessources: z.string().optional(),
-  implementationDescription: z.string().optional(),
-  implementationAim: z.number().optional(),
-  followUpDescription: z.string().optional(),
-  followUpAim: z.number().optional(),
-  performanceDescription: z.string().optional(),
-  performanceAim: z.number().optional(),
-  facilitatorsAndObstacles: z.string().optional(),
-  additionalInformation: z.string().optional(),
-  nature: z.array(z.enum(ActionNature)).min(0),
-  category: z.array(z.enum(ActionCategory)).min(0),
-  relevance: z.array(z.enum(ActionRelevance)).min(0),
-  enabled: z.boolean().optional(),
-})
-
-export const AddActionCommandValidation = AddActionCommandBase.superRefine((data, ctx) => {
-  if (data.potentialDeduction === ActionPotentialDeduction.Quantity) {
-    if (!data) {
-      ctx.addIssue(setCustomIssue(['reductionValue'], 'required'))
-    }
-    if (!data.reductionStartYear) {
-      ctx.addIssue(setCustomIssue(['reductionStartYear'], 'required'))
-    }
-
-    if (!data.reductionEndYear) {
-      ctx.addIssue(setCustomIssue(['reductionEndYear'], 'required'))
-    }
-
-    if (data.actionPorter !== '') {
-      const emailValidation = z
-        .email()
-        .transform((val) => val.toLowerCase())
-        .safeParse(data.actionPorter)
-
-      if (!emailValidation.success) {
-        ctx.addIssue(setCustomIssue(['actionPorter'], 'invalidEmail'))
-      }
-    }
-  }
-})
-
-export type AddActionCommand = z.infer<typeof AddActionCommandValidation>

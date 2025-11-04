@@ -1,9 +1,9 @@
 import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
-import { AddActionCommand } from '@/services/serverFunctions/study.command'
+import { AddActionCommand } from '@/services/serverFunctions/transitionPlan.command'
 import { getYearFromDateStr } from '@/utils/time'
-import { MenuItem, TextField } from '@mui/material'
+import { Checkbox, FormControlLabel, MenuItem, TextField } from '@mui/material'
 import { ActionPotentialDeduction } from '@prisma/client'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
@@ -25,6 +25,7 @@ const ActionModalStep1 = ({ studyUnit, control, setValue, getValues }: Props) =>
   const potentialDeduction = useWatch({ control, name: 'potentialDeduction' })
   const reductionStartYear = useWatch({ control, name: 'reductionStartYear' })
   const reductionEndYear = useWatch({ control, name: 'reductionEndYear' })
+  const dependenciesOnly = useWatch({ control, name: 'dependenciesOnly' })
 
   useEffect(() => {
     if (reductionStartYear && reductionEndYear) {
@@ -76,6 +77,18 @@ const ActionModalStep1 = ({ studyUnit, control, setValue, getValues }: Props) =>
           </MenuItem>
         ))}
       </FormSelect>
+      {(potentialDeduction === ActionPotentialDeduction.Quantity ||
+        potentialDeduction === ActionPotentialDeduction.Quality) && (
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={dependenciesOnly ?? false}
+              onChange={(e) => setValue('dependenciesOnly', e.target.checked)}
+            />
+          }
+          label={t('dependenciesOnly')}
+        />
+      )}
       <>
         {potentialDeduction === ActionPotentialDeduction.Quantity && (
           <div className=" flex-col grow">

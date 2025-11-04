@@ -67,7 +67,6 @@ model Action {
 
   title                     String
   subSteps                  String                   @map("sub_steps")
-  // aim                    String
   detailedDescription       String
   potentialDeduction        ActionPotentialDeduction
   reductionValue            Int?
@@ -88,6 +87,7 @@ model Action {
   category                  ActionCategory[]
   relevance                 ActionRelevance[]
   enabled                   Boolean                  @default(false) @map("enabled")
+  dependenciesOnly          Boolean                  @default(false) @map("dependencies_only")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 

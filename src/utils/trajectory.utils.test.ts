@@ -28,6 +28,7 @@ describe('calculateTrajectory', () => {
         studyEmissions: 1000,
         studyStartYear: 2020,
         reductionRate: SBTI_REDUCTION_RATE_15,
+        withDependencies: true,
       })
 
       expect(result).toHaveLength(31)
@@ -45,6 +46,7 @@ describe('calculateTrajectory', () => {
         studyEmissions: 1000,
         studyStartYear: 2020,
         reductionRate: SBTI_REDUCTION_RATE_WB2C,
+        withDependencies: true,
       })
 
       expect(result).toHaveLength(2061 - 2020)
@@ -61,6 +63,7 @@ describe('calculateTrajectory', () => {
         studyEmissions: 1000,
         studyStartYear: 2018,
         reductionRate: SBTI_REDUCTION_RATE_15,
+        withDependencies: true,
       })
 
       expect(result[0]).toEqual({ year: 2018, value: 1000 })
@@ -81,6 +84,7 @@ describe('calculateTrajectory', () => {
         studyEmissions,
         studyStartYear,
         reductionRate,
+        withDependencies: true,
       })
 
       expect(result[0]).toEqual({ year: 2020, value: 1000 })
@@ -108,6 +112,7 @@ describe('calculateTrajectory', () => {
         studyEmissions,
         studyStartYear,
         reductionRate,
+        withDependencies: true,
       })
 
       expect(result[0]).toEqual({ year: 2020, value: 1000 })
@@ -138,6 +143,7 @@ describe('calculateTrajectory', () => {
         studyEmissions,
         studyStartYear,
         objectives,
+        withDependencies: true,
       })
 
       expect(result[0]).toEqual({ year: 2020, value: 1000 })
@@ -167,6 +173,7 @@ describe('calculateTrajectory', () => {
         studyEmissions,
         studyStartYear,
         objectives,
+        withDependencies: true,
       })
 
       const yearlyReduction = studyEmissions * 0.05
@@ -200,6 +207,7 @@ describe('calculateTrajectory', () => {
         studyEmissions,
         studyStartYear,
         objectives,
+        withDependencies: true,
       })
 
       const yearlyReduction = studyEmissions * 0.05
@@ -223,6 +231,7 @@ describe('calculateTrajectory', () => {
         studyEmissions,
         studyStartYear,
         objectives,
+        withDependencies: true,
       })
 
       const lastPoint = result[result.length - 1]
@@ -240,6 +249,7 @@ describe('calculateTrajectory', () => {
         studyEmissions,
         studyStartYear,
         objectives,
+        withDependencies: true,
       })
 
       const point2020 = result.find((p) => p.year === 2020)
@@ -425,6 +435,133 @@ describe('calculateTrajectory', () => {
       expect(result.find((p) => p.year === 2025)?.value).toBeCloseTo(1000 - action2AnnualReduction, 1)
       expect(result.find((p) => p.year === 2026)?.value).toBeCloseTo(expectedResult2026, 1)
       expect(result.find((p) => p.year === 2027)?.value).toBeCloseTo(expectedResult2026 - action2AnnualReduction, 1)
+    })
+
+    test('should filter out dependenciesOnly actions when withDependencies is false', () => {
+      const actions = [
+        {
+          reductionValue: 100,
+          reductionStartYear: '2025-01-01',
+          reductionEndYear: '2030-01-01',
+          potentialDeduction: 'Quantity',
+          dependenciesOnly: false,
+          enabled: true,
+        },
+        {
+          reductionValue: 50,
+          reductionStartYear: '2025-01-01',
+          reductionEndYear: '2030-01-01',
+          potentialDeduction: 'Quantity',
+          dependenciesOnly: true,
+          enabled: true,
+        },
+      ] as Action[]
+
+      const resultWithDeps = calculateActionBasedTrajectory({
+        studyEmissions: 1000,
+        studyStartYear: 2024,
+        actions,
+        withDependencies: true,
+      })
+
+      const resultWithoutDeps = calculateActionBasedTrajectory({
+        studyEmissions: 1000,
+        studyStartYear: 2024,
+        actions,
+        withDependencies: false,
+      })
+
+      const action1AnnualReduction = 100 / (2030 - 2025)
+      const action2AnnualReduction = 50 / (2030 - 2025)
+
+      expect(resultWithDeps.find((p) => p.year === 2025)?.value).toBeCloseTo(
+        1000 - action1AnnualReduction - action2AnnualReduction,
+        1,
+      )
+
+      expect(resultWithoutDeps.find((p) => p.year === 2025)?.value).toBeCloseTo(1000 - action1AnnualReduction, 1)
+    })
+
+    test('should include dependenciesOnly actions when withDependencies is true', () => {
+      const actions = [
+        {
+          reductionValue: 100,
+          reductionStartYear: '2025-01-01',
+          reductionEndYear: '2030-01-01',
+          potentialDeduction: 'Quantity',
+          dependenciesOnly: true,
+          enabled: true,
+        },
+      ] as Action[]
+
+      const result = calculateActionBasedTrajectory({
+        studyEmissions: 1000,
+        studyStartYear: 2024,
+        actions,
+        withDependencies: true,
+      })
+
+      const annualReduction = 100 / (2030 - 2025)
+
+      expect(result.find((p) => p.year === 2025)?.value).toBeCloseTo(1000 - annualReduction, 1)
+      expect(result.find((p) => p.year === 2030)?.value).toBeCloseTo(1000 - 6 * annualReduction, 1)
+    })
+
+    test('should handle mix of dependenciesOnly and regular actions correctly', () => {
+      const actions = [
+        {
+          reductionValue: 100,
+          reductionStartYear: '2025-01-01',
+          reductionEndYear: '2029-01-01',
+          potentialDeduction: 'Quantity',
+          dependenciesOnly: false,
+          enabled: true,
+        },
+        {
+          reductionValue: 60,
+          reductionStartYear: '2026-01-01',
+          reductionEndYear: '2030-01-01',
+          potentialDeduction: 'Quantity',
+          dependenciesOnly: true,
+          enabled: true,
+        },
+        {
+          reductionValue: 40,
+          reductionStartYear: '2027-01-01',
+          reductionEndYear: '2031-01-01',
+          potentialDeduction: 'Quantity',
+          dependenciesOnly: false,
+          enabled: true,
+        },
+      ] as Action[]
+
+      const resultWithDeps = calculateActionBasedTrajectory({
+        studyEmissions: 1000,
+        studyStartYear: 2024,
+        actions,
+        withDependencies: true,
+      })
+
+      const resultWithoutDeps = calculateActionBasedTrajectory({
+        studyEmissions: 1000,
+        studyStartYear: 2024,
+        actions,
+        withDependencies: false,
+      })
+
+      const action1AnnualReduction = 100 / (2029 - 2025)
+      const action2AnnualReduction = 60 / (2030 - 2026)
+      const action3AnnualReduction = 40 / (2031 - 2027)
+
+      expect(resultWithDeps.find((p) => p.year === 2027)?.value).toBeCloseTo(
+        1000 - 3 * action1AnnualReduction - 2 * action2AnnualReduction - action3AnnualReduction,
+        1,
+      )
+
+      expect(resultWithoutDeps.find((p) => p.year === 2027)?.value).toBeCloseTo(
+        1000 - 3 * action1AnnualReduction - action3AnnualReduction,
+        1,
+      )
     })
   })
 })

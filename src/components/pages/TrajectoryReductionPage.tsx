@@ -11,7 +11,7 @@ import { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
-import { getStudyTotalCo2EmissionsWithDep } from '@/services/study'
+import { getStudyTotalCo2Emissions } from '@/services/study'
 import {
   calculateActionBasedTrajectory,
   calculateCustomTrajectory,
@@ -88,10 +88,21 @@ const TrajectoryReductionPage = ({
     const stored = localStorage.getItem(`trajectory-sbti-selected-${study.id}`)
     return stored ? JSON.parse(stored) : [TRAJECTORY_15_ID]
   })
+  const [withDependencies, setWithDependencies] = useState<boolean>(() => {
+    if (typeof window === 'undefined') {
+      return true
+    }
+    const stored = localStorage.getItem(`trajectory-with-dependencies-${study.id}`)
+    return stored ? JSON.parse(stored) : true
+  })
 
   useEffect(() => {
     localStorage.setItem(`trajectory-sbti-selected-${study.id}`, JSON.stringify(selectedSbtiTrajectories))
   }, [selectedSbtiTrajectories, study.id])
+
+  useEffect(() => {
+    localStorage.setItem(`trajectory-with-dependencies-${study.id}`, JSON.stringify(withDependencies))
+  }, [withDependencies, study.id])
 
   useEffect(() => {
     localStorage.setItem(`trajectory-custom-selected-${study.id}`, JSON.stringify(selectedCustomTrajectories))
@@ -143,7 +154,7 @@ const TrajectoryReductionPage = ({
       }
     }
 
-    const totalCo2 = getStudyTotalCo2EmissionsWithDep(study)
+    const totalCo2 = getStudyTotalCo2Emissions(study, withDependencies)
     const studyStartYear = study.startDate.getFullYear()
 
     const enabledActions = actions.filter((action) => action.enabled)
@@ -152,6 +163,7 @@ const TrajectoryReductionPage = ({
       studyEmissions: totalCo2,
       studyStartYear,
       reductionRate: SBTI_REDUCTION_RATE_WB2C,
+      withDependencies,
     })
 
     let maxYear =
@@ -163,6 +175,7 @@ const TrajectoryReductionPage = ({
       studyEmissions: totalCo2,
       studyStartYear,
       reductionRate: SBTI_REDUCTION_RATE_15,
+      withDependencies,
       maxYear,
       linkedStudies,
       externalStudies: linkedExternalStudies,
@@ -178,6 +191,7 @@ const TrajectoryReductionPage = ({
             studyEmissions: totalCo2,
             studyStartYear,
             reductionRate: SBTI_REDUCTION_RATE_15,
+            withDependencies,
             linkedStudies,
             externalStudies: linkedExternalStudies,
           })
@@ -186,6 +200,7 @@ const TrajectoryReductionPage = ({
             studyEmissions: totalCo2,
             studyStartYear,
             reductionRate: SBTI_REDUCTION_RATE_WB2C,
+            withDependencies,
             linkedStudies,
             externalStudies: linkedExternalStudies,
           })
@@ -197,6 +212,7 @@ const TrajectoryReductionPage = ({
               targetYear: obj.targetYear,
               reductionRate: Number(obj.reductionRate),
             })),
+            withDependencies,
             linkedStudies,
             externalStudies: linkedExternalStudies,
           })
@@ -224,6 +240,7 @@ const TrajectoryReductionPage = ({
       linkedStudies,
       externalStudies: linkedExternalStudies,
       maxYear,
+      withDependencies,
     })
 
     return {
@@ -242,6 +259,7 @@ const TrajectoryReductionPage = ({
     linkedStudies,
     linkedExternalStudies,
     actions,
+    withDependencies,
   ])
 
   if (!transitionPlan) {
@@ -318,6 +336,14 @@ const TrajectoryReductionPage = ({
             })}
           />
 
+          <LinkedStudies
+            transitionPlanId={transitionPlan.id}
+            studyId={study.id}
+            studyYear={study.startDate}
+            linkedStudies={linkedStudies}
+            externalStudies={linkedExternalStudies}
+          />
+
           <div className={styles.trajectoryCardsGrid}>
             <Box className={classNames('p125', styles.trajectoryCard, styles.disabledCard)}>
               <Typography variant="h5" component="h2" fontWeight={600}>
@@ -375,14 +401,6 @@ const TrajectoryReductionPage = ({
             )}
           </div>
 
-          <LinkedStudies
-            transitionPlanId={transitionPlan.id}
-            studyId={study.id}
-            studyYear={study.startDate}
-            linkedStudies={linkedStudies}
-            externalStudies={linkedExternalStudies}
-          />
-
           <TrajectoryGraph
             trajectory15={{
               data: trajectoryData.trajectory15,
@@ -398,6 +416,8 @@ const TrajectoryReductionPage = ({
               enabled: true,
             }}
             studyStartYear={trajectoryData.studyStartYear}
+            withDependencies={withDependencies}
+            setWithDependencies={setWithDependencies}
           />
 
           {transitionPlan && (

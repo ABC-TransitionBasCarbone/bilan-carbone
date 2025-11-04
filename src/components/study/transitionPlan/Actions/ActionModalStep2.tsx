@@ -1,5 +1,5 @@
 import { FormSelect } from '@/components/form/Select'
-import { AddActionCommand } from '@/services/serverFunctions/study.command'
+import { AddActionCommand } from '@/services/serverFunctions/transitionPlan.command'
 import { MenuItem } from '@mui/material'
 import { ActionCategory, ActionNature, ActionRelevance } from '@prisma/client'
 import { useTranslations } from 'next-intl'
