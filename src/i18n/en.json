@@ -1051,10 +1051,11 @@
         "table": {
           "enabled": "Enabled",
           "title": "Title",
+          "priority": "Priority",
           "actionType": "Action type",
           "targetYear": "Target year",
           "potential": "Reduction potential",
-          "porter": "Porter",
+          "owner": "Owner",
           "budget": "Budget",
           "errorChangingEnabled": "Error changing action status"
         },
@@ -1078,8 +1079,8 @@
           "reductionStartYear": "Year action begins",
           "reductionEndYear": "Year action ends",
           "dependenciesOnly": "My action only concerns the \"Use in dependence\" sub-item",
-          "actionPorter": "Action leader",
-          "actionPorterPlaceholder": "Enter the name of the person leading the action",
+          "owner": "Action owner",
+          "ownerPlaceholder": "Enter the name of the person leading the action",
           "necessaryBudget": "Budget required for implementation (k€)",
           "necessaryBudgetPlaceholder": "Enter the budget",
           "necesssaryRessources": "Other resources required for implementation (human, financial, material, etc.)",
@@ -1089,16 +1090,22 @@
           "followUp": "Follow-up",
           "performance": "Performance",
           "indicatorDescriptionPlaceholder": "Description",
-          "indicatorAimPlaceholder": "Objective",
+          "indicatorGoalPlaceholder": "Goal",
           "facilitatorsAndObstacles": "Potential facilitators and obstacles to action",
           "additionalInformation": "Additional information",
+          "priority": "Priority",
           "nature": "Nature of the action",
           "category": "Categories of action",
           "relevance": "For mitigation actions, indicate the level of relevance of the action",
+          "steps": {
+            "step1": "Main information",
+            "step2": "Categorization",
+            "step3": "Details and responsibility"
+          },
           "Not authorized": "You are not allowed to do this action",
           "validation": {
-            "required": "Champs requis",
-            "email": "Format d'email non valide"
+            "required": "Required fields",
+            "email": "Invalid email format"
           }
         },
         "potentialDeduction": {
@@ -1131,6 +1138,11 @@
           "title": "Create your action plan to achieve your objectives",
           "description": "You have already created your trajectory and associated objectives. Now you can add the actions to your transition plan that will allow you to achieve these objectives",
           "detailedInfo": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p><p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>"
+        },
+        "deleteModal": {
+          "title": "Delete action",
+          "message": "Are you sure you want to delete this action definitively?",
+          "confirm": "Delete"
         }
       }
     }
@@ -2119,5 +2131,13 @@
     "positiveNumber": "Please enter a positive number",
     "tooSmall": "Please enter a larger value",
     "tooBig": "Please enter a smaller value"
+  },
+  "common": {
+    "actions": {
+      "edit": "Edit",
+      "duplicate": "Duplicate",
+      "delete": "Delete"
+    },
+    "typeToConfirm": "Type \"{name}\" to confirm"
   }
 }

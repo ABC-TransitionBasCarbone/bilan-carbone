@@ -1,4 +1,4 @@
-import { FormControl, FormHelperText } from '@mui/material'
+import { FormControl, FormHelperText, Typography } from '@mui/material'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
 import { useCallback } from 'react'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
@@ -55,9 +55,17 @@ export const FormTextField = <T extends FieldValues>({
       render={({ field: { onChange, value }, fieldState: { error } }) => (
         <FormControl fullWidth={textFieldProps.fullWidth} error={!!error || !!customError} className="inputContainer">
           {label ? (
-            <IconLabel icon={iconDiv} iconPosition={iconPosition} className="mb-2">
-              <span className="inputLabel bold">{label}</span>
-            </IconLabel>
+            <>
+              {iconDiv ? (
+                <IconLabel icon={iconDiv} iconPosition={iconPosition} className="mb-2">
+                  <span className="inputLabel bold">{label}</span>
+                </IconLabel>
+              ) : (
+                <Typography fontWeight="bold" className="mb-2">
+                  {label}
+                </Typography>
+              )}
+            </>
           ) : null}
           <TextField
             {...textFieldProps}

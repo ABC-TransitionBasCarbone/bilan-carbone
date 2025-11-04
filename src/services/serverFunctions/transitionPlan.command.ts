@@ -62,17 +62,18 @@ export const AddActionCommandBase = z.object({
   reductionValue: z.number().optional(),
   reductionStartYear: z.string().optional(),
   reductionEndYear: z.string().optional(),
-  actionPorter: z.string().optional(),
+  owner: z.string().optional(),
   necessaryBudget: z.number().optional(),
   necesssaryRessources: z.string().optional(),
   implementationDescription: z.string().optional(),
-  implementationAim: z.number().optional(),
+  implementationGoal: z.number().optional(),
   followUpDescription: z.string().optional(),
-  followUpAim: z.number().optional(),
+  followUpGoal: z.number().optional(),
   performanceDescription: z.string().optional(),
-  performanceAim: z.number().optional(),
+  performanceGoal: z.number().optional(),
   facilitatorsAndObstacles: z.string().optional(),
   additionalInformation: z.string().optional(),
+  priority: z.number().min(1).max(7),
   nature: z.array(z.enum(ActionNature)).min(0),
   category: z.array(z.enum(ActionCategory)).min(0),
   relevance: z.array(z.enum(ActionRelevance)).min(0),
@@ -82,26 +83,16 @@ export const AddActionCommandBase = z.object({
 
 export const AddActionCommandValidation = AddActionCommandBase.superRefine((data, ctx) => {
   if (data.potentialDeduction === ActionPotentialDeduction.Quantity) {
-    if (!data) {
+    if (!data.reductionValue) {
       ctx.addIssue(setCustomIssue(['reductionValue'], 'required'))
     }
+
     if (!data.reductionStartYear) {
       ctx.addIssue(setCustomIssue(['reductionStartYear'], 'required'))
     }
 
     if (!data.reductionEndYear) {
       ctx.addIssue(setCustomIssue(['reductionEndYear'], 'required'))
-    }
-
-    if (data.actionPorter !== '') {
-      const emailValidation = z
-        .email()
-        .transform((val) => val.toLowerCase())
-        .safeParse(data.actionPorter)
-
-      if (!emailValidation.success) {
-        ctx.addIssue(setCustomIssue(['actionPorter'], 'invalidEmail'))
-      }
     }
   }
 })

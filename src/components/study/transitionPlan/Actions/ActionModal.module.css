@@ -1,0 +1,26 @@
+.actionModal {
+  height: 80vh !important;
+  max-height: 80vh !important;
+}
+
+.stepContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 30rem;
+  overflow-y: auto;
+}
+
+.reductionContainer {
+  @media (max-width: 1536px) {
+    flex-direction: column;
+  }
+}
+
+.reductionYearContainer :global(.MuiFormControl-root) {
+  flex: 1 !important;
+}
+
+.reductionValue {
+  width: 18rem;
+}

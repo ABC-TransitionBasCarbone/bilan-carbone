@@ -1,19 +1,16 @@
 'use client'
 
-import Button from '@/components/base/Button'
+import { TableActionButton } from '@/components/base/TableActionButton'
 import { FormCheckbox } from '@/components/form/Checkbox'
 import { FormTextField } from '@/components/form/TextField'
 import GlobalSites from '@/components/organization/Sites'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { CA_UNIT_VALUES, displayCA, formatNumber } from '@/utils/number'
-import ContentCopyIcon from '@mui/icons-material/ContentCopy'
-import DeleteIcon from '@mui/icons-material/Delete'
 import { Environment, SiteCAUnit } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { Control, UseFormGetValues, UseFormReturn, UseFormSetValue } from 'react-hook-form'
-import styles from './Sites.module.css'
 
 interface Props<T extends SitesCommand> {
   form?: UseFormReturn<T>
@@ -55,6 +52,7 @@ const Sites = <T extends SitesCommand>({
               {withSelection ? (
                 <div className="align-center">
                   <FormCheckbox
+                    size="small"
                     control={control}
                     translation={t}
                     name={`sites.${row.index}.selected`}
@@ -65,7 +63,7 @@ const Sites = <T extends SitesCommand>({
               ) : (
                 <FormTextField
                   data-testid="edit-site-name"
-                  className={styles.field}
+                  size="small"
                   control={control}
                   translation={t}
                   name={`sites.${row.index}.name`}
@@ -87,7 +85,7 @@ const Sites = <T extends SitesCommand>({
             <FormTextField
               data-testid="organization-sites-etp"
               type="number"
-              className={styles.field}
+              size="small"
               control={control}
               translation={t}
               name={`sites.${row.index}.etp`}
@@ -110,8 +108,8 @@ const Sites = <T extends SitesCommand>({
           form ? (
             <FormTextField
               data-testid="organization-sites-ca"
+              size="small"
               type="number"
-              className={styles.field}
               control={control}
               translation={t}
               name={`sites.${row.index}.ca`}
@@ -128,51 +126,38 @@ const Sites = <T extends SitesCommand>({
       },
       ...additionalColumns,
     ] as ColumnDef<SitesCommand['sites'][0]>[]
-    if (form && !withSelection) {
-      columns.push({
-        id: 'delete',
-        header: t('actions'),
-        accessorKey: 'id',
-        cell: ({ getValue }) => (
-          <div className="w100 flex-cc">
-            <Button
-              data-testid="delete-site-button"
-              title={t('delete')}
-              aria-label={t('delete')}
-              onClick={() => {
-                const id = getValue<string>()
-                setValue(
-                  'sites',
-                  getValues('sites').filter((site) => site.id !== id),
-                )
-              }}
-            >
-              <DeleteIcon />
-            </Button>
-          </div>
-        ),
-      })
-    }
 
-    if (!form && onDuplicate) {
+    if ((form && !withSelection) || (!form && onDuplicate)) {
       columns.push({
-        id: 'duplicate',
-        header: t('actions'),
+        id: 'actions',
+        header: '',
         accessorKey: 'id',
         cell: ({ getValue }) => (
-          <div className="w100">
-            <Button
-              data-testid="duplicate-site-button"
-              aria-label={t('duplicate')}
-              variant="outlined"
-              onClick={() => {
-                const id = getValue<string>()
-                onDuplicate(id)
-              }}
-            >
-              <ContentCopyIcon />
-            </Button>
-          </div>
+          <>
+            {form && !withSelection && (
+              <TableActionButton
+                type="delete"
+                onClick={() => {
+                  const id = getValue<string>()
+                  setValue(
+                    'sites',
+                    getValues('sites').filter((site) => site.id !== id),
+                  )
+                }}
+                data-testid="delete-site-button"
+              />
+            )}
+            {!form && onDuplicate && (
+              <TableActionButton
+                type="duplicate"
+                onClick={() => {
+                  const id = getValue<string>()
+                  onDuplicate(id)
+                }}
+                data-testid="duplicate-site-button"
+              />
+            )}
+          </>
         ),
       })
     }

@@ -6,6 +6,7 @@ import {
   createExternalStudy,
   createTransitionPlan,
   createTransitionPlanStudy,
+  deleteAction as dbDeleteAction,
   duplicateTransitionPlanWithRelations,
   getActionById,
   getActions,
@@ -211,6 +212,21 @@ export const editAction = async (id: string, command: AddActionCommand) =>
     }
 
     await updateAction(id, command)
+  })
+
+export const deleteAction = async (id: string) =>
+  withServerResponse('deleteAction', async () => {
+    const action = await getActionById(id)
+    if (!action) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const hasEditAccess = await canEditTransitionPlan(action.transitionPlanId)
+    if (!hasEditAccess) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await dbDeleteAction(id)
   })
 
 export const getStudyActions = async (studyId: string) =>

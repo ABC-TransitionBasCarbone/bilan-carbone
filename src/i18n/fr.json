@@ -1051,10 +1051,11 @@
         "table": {
           "enabled": "Activée",
           "title": "Titre",
+          "priority": "Priorité",
           "actionType": "Type d'action",
           "targetYear": "Année cible",
           "potential": "Potentiel de réduction",
-          "porter": "Porteur",
+          "owner": "Responsable",
           "budget": "Budget",
           "errorChangingEnabled": "Erreur lors du changement de statut de l'action"
         },
@@ -1078,8 +1079,8 @@
           "reductionStartYear": "Début de la mise en oeuvre de l'action",
           "reductionEndYear": "Fin de la mise en oeuvre de l'action",
           "dependenciesOnly": "Mon action concerne uniquement le sous poste \"Utilisation en dépendance\"",
-          "actionPorter": "Porteur de l'action",
-          "actionPorterPlaceholder": "Donnez le nom de la personne qui pilote l'action",
+          "owner": "Responsable de l'action",
+          "ownerPlaceholder": "Donnez le nom de la personne qui pilote l'action",
           "necessaryBudget": "Budget necessaire à sa mise en place (k€)",
           "necessaryBudgetPlaceholder": "Indiquez le budget",
           "necesssaryRessources": "Autres ressources necessaire à sa mise en place (humaines, financières, matérielles, ...)",
@@ -1089,12 +1090,18 @@
           "followUp": "De suivi",
           "performance": "De performance",
           "indicatorDescriptionPlaceholder": "Description",
-          "indicatorAimPlaceholder": "Objectif",
+          "indicatorGoalPlaceholder": "Objectif",
           "facilitatorsAndObstacles": "Facilitateurs et freins potentiels à l'action",
           "additionalInformation": "Informations supplémentaires",
+          "priority": "Priorité",
           "nature": "Nature de l'action",
           "category": " Catégories de l'action",
           "relevance": "Pour les actions d'atténuation indiquez le niveau de pertinence de l'action",
+          "steps": {
+            "step1": "Informations principales",
+            "step2": "Catégorisation",
+            "step3": "Détails et responsabilité"
+          },
           "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
           "validation": {
             "required": "Champs requis",
@@ -1131,6 +1138,11 @@
           "title": "Construisez un plan d'action afin d'atteindre vos objectifs",
           "description": "Vous avez déjà créé votre trajectoire descendante et détaillé les objectifs associés. Désormais, il vous faut construire un plan d'action pour vous assurer d'atteindre ces objectifs. La somme des potentiels de réduction de vos actions constituera votre trajectoire ascendante, le but étant d'aligner cette trajectoire ascendante avec la trajectoire descendante choisie précédemment.",
           "detailedInfo": "Une trajectoire descendante est une trajectoire définie de manière macroscopique, et fixant des objectifs de réduction à moyen et long terme. Au contraire, une trajectoire ascendante est construite à partir d'un plan d'action, c'est-à-dire d'un certain nombre d'actions qui, mises côte à côte, constituent un ensemble cohérent et, s'additionnant, permettent des réductions d'émissions au cours de leur mise en oeuvre. Cette page vous permet de renseigner différentes actions et de les caractériser, en reprenant l'ensemble des informations définies au sein de la méthode Bilan Carbone®. L'ensemble de ces informations doivent être renseignées au sein d'un Bilan Carbone®, mais il est possible d'en remplir certaines ultérieurement, dans le but de tester différentes combinaisons d'actions afin de les sélectionner définitivement. Un toggle dans la première colonne du tableau vous permet ainsi d'activer ou de désactiver les actions renseignées, afin de voir si la trajectoire ascendente résultante est cohérente avec la trajectoire descendante choisie. Une fois les actions pertinentes sélectionnées, vous pouvez compléter les informations manquantes, afin de mieux caractériser l'action, de lui attribuer un budget, de renseigner des étapes de mises en oeuvre, et des indicateurs qui vous permettront par la suite de piloter la mise en oeuvre, le suivi et les performances de vos actions."
+        },
+        "deleteModal": {
+          "title": "Supprimer l'action",
+          "message": "Êtes-vous sûr de vouloir supprimer cette action de manière définitive ?",
+          "confirm": "Supprimer"
         }
       }
     }
@@ -2119,5 +2131,13 @@
     "positiveNumber": "Veuillez saisir un nombre positif",
     "tooSmall": "Veuillez saisir une valeur plus grande",
     "tooBig": "Veuillez saisir une valeur plus petite"
+  },
+  "common": {
+    "actions": {
+      "edit": "Modifier",
+      "duplicate": "Dupliquer",
+      "delete": "Supprimer"
+    },
+    "typeToConfirm": "Tapez \"{name}\" pour confirmer"
   }
 }

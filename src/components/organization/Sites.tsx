@@ -4,7 +4,7 @@ import BaseTable from '@/components/base/Table'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { defaultCAUnit } from '@/utils/number'
 import { Environment, SiteCAUnit } from '@prisma/client'
-import { ColumnDef, flexRender, getCoreRowModel, Row, useReactTable } from '@tanstack/react-table'
+import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import { UseFormReturn, UseFormSetValue } from 'react-hook-form'
@@ -42,16 +42,6 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, columns, ca
     getCoreRowModel: getCoreRowModel(),
   })
 
-  const Row = (row: Row<TypeDef>) => (
-    <tr key={row.id}>
-      {row.getVisibleCells().map((cell) => (
-        <td className={form ? 'py0' : ''} key={cell.id}>
-          {flexRender(cell.column.columnDef.cell, cell.getContext())}
-        </td>
-      ))}
-    </tr>
-  )
-
   return !form && sites.length === 0 ? (
     <p className="title-h3">{t('noSites')}</p>
   ) : (
@@ -77,7 +67,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, columns, ca
           )}
         </div>
       </div>
-      <BaseTable table={table} className="mt1" testId="sites" customRow={Row} />
+      <BaseTable table={table} className="mt1" testId="sites" />
       <GlossaryModal
         glossary={showGlossary ? 'title' : ''}
         onClose={() => setShowGlossary(false)}

@@ -1,9 +1,9 @@
 'use client'
 
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material'
+import { TextField, Typography } from '@mui/material'
+import { useTranslations } from 'next-intl'
 import { useState } from 'react'
-import Button from '../base/Button'
-import LoadingButton from '../base/LoadingButton'
+import Modal from './Modal'
 
 interface ConfirmDeleteModalProps {
   open: boolean
@@ -26,6 +26,7 @@ const ConfirmDeleteModal = ({
   onConfirm,
   onCancel,
 }: ConfirmDeleteModalProps) => {
+  const t = useTranslations('common')
   const [inputValue, setInputValue] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -47,40 +48,43 @@ const ConfirmDeleteModal = ({
   const isDisabled = requireNameMatch ? inputValue !== requireNameMatch : false
 
   return (
-    <Dialog open={open} onClose={handleCancel} maxWidth="sm" fullWidth>
-      <DialogTitle>{title}</DialogTitle>
-      <DialogContent>
-        <DialogContentText>{message}</DialogContentText>
-        {requireNameMatch && (
-          <TextField
-            autoFocus
-            margin="dense"
-            label={`Tapez "${requireNameMatch}" pour confirmer`}
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={inputValue}
-            onChange={(e) => {
-              setInputValue(e.target.value)
-            }}
-          />
-        )}
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleCancel} disabled={isSubmitting}>
-          {cancelText}
-        </Button>
-        <LoadingButton
-          onClick={handleConfirm}
-          loading={isSubmitting}
-          disabled={isDisabled}
-          color="error"
-          variant="contained"
-        >
-          {confirmText}
-        </LoadingButton>
-      </DialogActions>
-    </Dialog>
+    <Modal
+      label="confirm-delete"
+      open={open}
+      onClose={handleCancel}
+      title={title}
+      actions={[
+        {
+          children: cancelText,
+          onClick: handleCancel,
+          disabled: isSubmitting,
+        },
+        {
+          actionType: 'loadingButton',
+          children: confirmText,
+          onClick: handleConfirm,
+          loading: isSubmitting,
+          disabled: isDisabled,
+          color: 'error',
+        },
+      ]}
+    >
+      {message && <Typography variant="body1">{message}</Typography>}
+      {requireNameMatch && (
+        <TextField
+          autoFocus
+          margin="dense"
+          label={t('typeToConfirm', { name: requireNameMatch })}
+          type="text"
+          fullWidth
+          variant="outlined"
+          value={inputValue}
+          onChange={(e) => {
+            setInputValue(e.target.value)
+          }}
+        />
+      )}
+    </Modal>
   )
 }
 

@@ -1,9 +1,9 @@
 'use client'
 
 import BaseTable from '@/components/base/Table'
+import { TableActionButton } from '@/components/base/TableActionButton'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { toggleActionEnabled } from '@/services/serverFunctions/transitionPlan'
-import OpenIcon from '@mui/icons-material/OpenInNew'
 import { Switch } from '@mui/material'
 import { Action, ActionPotentialDeduction, StudyResultUnit } from '@prisma/client'
 import {
@@ -16,21 +16,18 @@ import {
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useCallback, useMemo, useOptimistic, useState } from 'react'
-import ActionModal from './ActionModal'
 
 interface Props {
   actions: Action[]
-  studyUnit: string
-  porters: { label: string; value: string }[]
-  transitionPlanId: string
+  onOpenEditModal: (action: Action) => void
+  onOpenDeleteModal: (action: Action) => void
 }
 
-const ActionTable = ({ actions, studyUnit, porters, transitionPlanId }: Props) => {
+const ActionTable = ({ actions, onOpenEditModal, onOpenDeleteModal }: Props) => {
   const t = useTranslations('study.transitionPlan.actions.table')
   const tUnit = useTranslations('study.results.units')
   const tCategory = useTranslations('study.transitionPlan.actions.category')
   const tPotential = useTranslations('study.transitionPlan.actions.potentialDeduction')
-  const [editing, setEditing] = useState<Action | undefined>(undefined)
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 })
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
@@ -87,18 +84,17 @@ const ActionTable = ({ actions, studyUnit, porters, transitionPlanId }: Props) =
               checked={getValue<boolean>()}
               onChange={(event) => handleToggleEnabled(row.original.id, event.target.checked)}
               color="primary"
+              size="small"
             />
           ),
         },
         {
           header: t('title'),
           accessorKey: 'title',
-          cell: ({ getValue, row }) => (
-            <div className="justify-around align-center">
-              <span>{getValue<string>()}</span>
-              <OpenIcon className="pointer" onClick={() => setEditing(row.original)} />
-            </div>
-          ),
+        },
+        {
+          header: t('priority'),
+          accessorKey: 'priority',
         },
         {
           header: t('actionType'),
@@ -106,14 +102,24 @@ const ActionTable = ({ actions, studyUnit, porters, transitionPlanId }: Props) =
         },
         {
           header: t('targetYear'),
-          // accessorFn: (action) => Number(dayjs(action.reductionStartYear).year()),
           accessorFn: () => '',
         },
         { header: t('potential'), accessorFn: getPotential },
-        { header: t('porter'), accessorKey: 'actionPorter' },
+        { header: t('owner'), accessorKey: 'owner' },
         { header: `${t('budget')} (k€)`, accessorKey: 'necessaryBudget' },
+        {
+          id: 'actions',
+          header: '',
+          accessorFn: () => '',
+          cell: ({ row }) => (
+            <>
+              <TableActionButton type="edit" onClick={() => onOpenEditModal(row.original)} />
+              <TableActionButton type="delete" onClick={() => onOpenDeleteModal(row.original)} />
+            </>
+          ),
+        },
       ] as ColumnDef<Action>[],
-    [getPotential, t, tCategory, handleToggleEnabled],
+    [getPotential, t, tCategory, handleToggleEnabled, onOpenEditModal, onOpenDeleteModal],
   )
 
   const table = useReactTable({
@@ -125,21 +131,7 @@ const ActionTable = ({ actions, studyUnit, porters, transitionPlanId }: Props) =
     state: { pagination },
   })
 
-  return (
-    <>
-      <BaseTable table={table} paginations={[10, 25, 50, 100]} testId="actions" />
-      {!!editing && (
-        <ActionModal
-          open
-          onClose={() => setEditing(undefined)}
-          action={editing}
-          transitionPlanId={transitionPlanId}
-          studyUnit={studyUnit}
-          porters={porters}
-        />
-      )}
-    </>
-  )
+  return <BaseTable table={table} paginations={[10, 25, 50, 100]} testId="actions" />
 }
 
 export default ActionTable

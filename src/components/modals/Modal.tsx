@@ -26,6 +26,7 @@ type ModalAction =
       onClick: VoidFunction
       'data-testid'?: string
       disabled?: boolean
+      color?: 'secondary' | 'error' | 'primary'
     })
   | (ButtonProps & { actionType: 'link'; href?: string; 'data-testid'?: string })
 

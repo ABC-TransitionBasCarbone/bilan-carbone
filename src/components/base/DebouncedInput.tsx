@@ -6,14 +6,16 @@ interface Props {
   debounce: number
   value: string
   onChange: (value: string) => void
+  size?: 'small' | 'medium'
 }
 
 const DebouncedInput = ({
   value: initialValue,
   onChange,
   debounce,
+  size = 'medium',
   ...props
-}: Props & Omit<TextFieldProps & InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'>) => {
+}: Props & Omit<TextFieldProps & InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | 'size'>) => {
   const [value, setValue] = useState(initialValue)
 
   useEffect(() => {
@@ -31,6 +33,7 @@ const DebouncedInput = ({
   return (
     <TextField
       {...props}
+      size={size}
       slotProps={{
         input: {
           className: styles.textFieldInput,

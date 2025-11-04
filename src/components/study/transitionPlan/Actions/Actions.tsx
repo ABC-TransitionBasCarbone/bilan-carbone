@@ -1,16 +1,23 @@
 'use client'
 
+import { useServerFunction } from '@/hooks/useServerFunction'
+import { deleteAction } from '@/services/serverFunctions/transitionPlan'
 import { Action } from '@prisma/client'
 import Fuse from 'fuse.js'
+import { useTranslations } from 'next-intl'
+import dynamic from 'next/dynamic'
+import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 import ActionFilters from './ActionFilters'
 import ActionTable from './ActionTable'
+
+const ActionModal = dynamic(() => import('./ActionModal'))
+const ConfirmDeleteModal = dynamic(() => import('@/components/modals/ConfirmDeleteModal'))
 
 interface Props {
   actions: Action[]
   transitionPlanId: string
   studyUnit: string
-  porters: { label: string; value: string }[]
 }
 
 const fuseOptions = {
@@ -19,8 +26,16 @@ const fuseOptions = {
   isCaseSensitive: false,
 }
 
-const Actions = ({ actions, studyUnit, porters, transitionPlanId }: Props) => {
+const Actions = ({ actions, studyUnit, transitionPlanId }: Props) => {
+  const router = useRouter()
+  const { callServerFunction } = useServerFunction()
+  const t = useTranslations('study.transitionPlan.actions')
+
   const [filter, setFilter] = useState('')
+  const [editingAction, setEditingAction] = useState<Action | undefined>(undefined)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [deletingAction, setDeletingAction] = useState<Action | undefined>(undefined)
 
   const fuse = useMemo(() => new Fuse(actions, fuseOptions), [actions])
 
@@ -33,21 +48,72 @@ const Actions = ({ actions, studyUnit, porters, transitionPlanId }: Props) => {
     return searchResults
   }, [actions, filter, fuse])
 
+  const handleOpenAddModal = () => {
+    setEditingAction(undefined)
+    setIsEditModalOpen(true)
+  }
+
+  const handleOpenEditModal = (action: Action) => {
+    setEditingAction(action)
+    setIsEditModalOpen(true)
+  }
+
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false)
+    setEditingAction(undefined)
+  }
+
+  const handleOpenDeleteModal = (action: Action) => {
+    setDeletingAction(action)
+    setIsDeleteModalOpen(true)
+  }
+
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false)
+    setDeletingAction(undefined)
+  }
+
+  const handleConfirmDeleteAction = async () => {
+    if (!deletingAction) {
+      return
+    }
+
+    await callServerFunction(() => deleteAction(deletingAction.id), {
+      onSuccess: () => {
+        router.refresh()
+      },
+    })
+    handleCloseDeleteModal()
+  }
+
   return (
     <div className="flex-col gapped1">
-      <ActionFilters
-        search={filter}
-        setSearch={setFilter}
-        transitionPlanId={transitionPlanId}
-        studyUnit={studyUnit}
-        porters={porters}
-      />
+      <ActionFilters search={filter} setSearch={setFilter} onOpenAddModal={handleOpenAddModal} />
       <ActionTable
         actions={searchedActions}
-        studyUnit={studyUnit}
-        porters={porters}
-        transitionPlanId={transitionPlanId}
+        onOpenEditModal={handleOpenEditModal}
+        onOpenDeleteModal={handleOpenDeleteModal}
       />
+      {isEditModalOpen && (
+        <ActionModal
+          open
+          onClose={handleCloseEditModal}
+          action={editingAction}
+          transitionPlanId={transitionPlanId}
+          studyUnit={studyUnit}
+        />
+      )}
+      {isDeleteModalOpen && (
+        <ConfirmDeleteModal
+          open={isDeleteModalOpen}
+          onCancel={handleCloseDeleteModal}
+          onConfirm={handleConfirmDeleteAction}
+          title={t('deleteModal.title')}
+          message={t('deleteModal.message')}
+          confirmText={t('deleteModal.confirm')}
+          requireNameMatch={deletingAction?.title}
+        />
+      )}
     </div>
   )
 }

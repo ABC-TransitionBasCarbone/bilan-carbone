@@ -3,7 +3,7 @@ import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
 import { hasWasteImpact } from '@/services/permissions/environment'
 import { Post, subPostsByPostBC } from '@/services/posts'
 import { EmissionFactor, Environment, Import, Prisma, SubPost, Unit } from '@prisma/client'
-import { uniq } from './array'
+import { unique } from './array'
 
 export const getEmissionFactorValue = (
   emissionFactor: Pick<EmissionFactor, 'importedFrom' | 'importedId' | 'totalCo2'>,
@@ -97,4 +97,4 @@ const getEmissionFactorSubPostMap = (subPost: SubPost, env: Environment) => {
 }
 
 export const getEmissionFactorSubPostsMap = (subPosts: SubPost[], env: Environment) =>
-  uniq(subPosts.reduce((res, subPost) => res.concat(getEmissionFactorSubPostMap(subPost, env)), [] as SubPost[]))
+  unique(subPosts.reduce((res, subPost) => res.concat(getEmissionFactorSubPostMap(subPost, env)), [] as SubPost[]))

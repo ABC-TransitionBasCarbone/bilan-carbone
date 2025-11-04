@@ -8,14 +8,14 @@ import { Control, UseFormSetValue } from 'react-hook-form'
 interface Props {
   control: Control<AddActionCommand>
   setValue: UseFormSetValue<AddActionCommand>
-  porters: { label: string; value: string }[]
+  organizationMembers: { label: string; value: string }[]
 }
 
-const ActionModalStep1 = ({ control, setValue, porters }: Props) => {
+const ActionModalStep3 = ({ control, setValue, organizationMembers }: Props) => {
   const t = useTranslations('study.transitionPlan.actions.addModal')
 
-  const onPorterChange = (_: SyntheticEvent, value: string | null) => {
-    setValue('actionPorter', value?.trim() || '')
+  const onOwnerChange = (_: SyntheticEvent, value: string | null) => {
+    setValue('owner', value?.trim() || '')
   }
 
   return (
@@ -23,18 +23,18 @@ const ActionModalStep1 = ({ control, setValue, porters }: Props) => {
       <FormAutocomplete
         control={control}
         translation={t}
-        options={porters}
+        options={organizationMembers}
         getOptionLabel={(option) => (typeof option === 'string' ? option : option.label)}
         filterOptions={(options, { inputValue }) =>
           options.filter((option) =>
             typeof option === 'string' ? option : option.label.toLowerCase().includes(inputValue.toLowerCase()),
           )
         }
-        name="actionPorter"
-        label={t('actionPorter')}
-        onInputChange={onPorterChange}
+        name="owner"
+        label={t('owner')}
+        onInputChange={onOwnerChange}
         freeSolo
-        data-testid="add-action-actionPorter"
+        data-testid="add-action-owner"
       />
       <FormTextField
         type="number"
@@ -52,6 +52,8 @@ const ActionModalStep1 = ({ control, setValue, porters }: Props) => {
         label={t('necesssaryRessources')}
         placeholder={t('necesssaryRessourcesPlaceholder')}
         fullWidth
+        multiline
+        rows={2}
         data-testid="add-action-necesssaryRessources"
       />
       <span className="inputLabel bold">{t('indicator')}</span>
@@ -70,9 +72,9 @@ const ActionModalStep1 = ({ control, setValue, porters }: Props) => {
             type="number"
             control={control}
             translation={t}
-            name="implementationAim"
-            placeholder={t('indicatorAimPlaceholder')}
-            data-testid="add-action-implementationAim"
+            name="implementationGoal"
+            placeholder={t('indicatorGoalPlaceholder')}
+            data-testid="add-action-implementationGoal"
           />
         </div>
       </div>
@@ -91,9 +93,9 @@ const ActionModalStep1 = ({ control, setValue, porters }: Props) => {
             type="number"
             control={control}
             translation={t}
-            name="followUpAim"
-            placeholder={t('indicatorAimPlaceholder')}
-            data-testid="add-action-followUpAim"
+            name="followUpGoal"
+            placeholder={t('indicatorGoalPlaceholder')}
+            data-testid="add-action-followUpGoal"
           />
         </div>
       </div>
@@ -112,9 +114,9 @@ const ActionModalStep1 = ({ control, setValue, porters }: Props) => {
             type="number"
             control={control}
             translation={t}
-            name="performanceAim"
-            placeholder={t('indicatorAimPlaceholder')}
-            data-testid="add-action-performanceAim"
+            name="performanceGoal"
+            placeholder={t('indicatorGoalPlaceholder')}
+            data-testid="add-action-performanceGoal"
           />
         </div>
       </div>
@@ -123,6 +125,8 @@ const ActionModalStep1 = ({ control, setValue, porters }: Props) => {
         translation={t}
         name="facilitatorsAndObstacles"
         label={t('facilitatorsAndObstacles')}
+        multiline
+        rows={2}
         data-testid="add-action-facilitatorsAndObstacles"
       />
       <FormTextField
@@ -130,10 +134,12 @@ const ActionModalStep1 = ({ control, setValue, porters }: Props) => {
         translation={t}
         name="additionalInformation"
         label={t('additionalInformation')}
+        multiline
+        rows={2}
         data-testid="add-action-additionalInformation"
       />
     </>
   )
 }
 
-export default ActionModalStep1
+export default ActionModalStep3
