@@ -41,27 +41,29 @@ export const createStudy = async (
 ) => {
   const client = tx ?? prismaClient
   const dbStudy = await client.study.create({ data })
-  let studyEmissionFactorVersions: Prisma.StudyEmissionFactorVersionCreateManyInput[] = []
 
-  if (environment === Environment.CUT) {
-    studyEmissionFactorVersions = (await getSourceCutImportVersionIds()).map((importVersion) => ({
-      studyId: dbStudy.id,
-      source: importVersion.source,
-      importVersionId: importVersion.id,
-    }))
-  } else if (shouldCreateFEVersions) {
-    const sources = Object.values(Import).filter((source) => source !== Import.Manual && source !== Import.CUT)
-
-    const latestVersions = await getSourcesLatestImportVersionId(sources)
-    if (latestVersions) {
-      studyEmissionFactorVersions = latestVersions.map((latestImportVersion) => ({
+  if (environment === Environment.CUT || shouldCreateFEVersions) {
+    let studyEmissionFactorVersions: Prisma.StudyEmissionFactorVersionCreateManyInput[] = []
+    if (environment === Environment.CUT) {
+      studyEmissionFactorVersions = (await getSourceCutImportVersionIds()).map((importVersion) => ({
         studyId: dbStudy.id,
-        source: latestImportVersion.source,
-        importVersionId: latestImportVersion.id,
+        source: importVersion.source,
+        importVersionId: importVersion.id,
       }))
+    } else {
+      const sources = Object.values(Import).filter((source) => source !== Import.Manual && source !== Import.CUT)
+
+      const latestVersions = await getSourcesLatestImportVersionId(sources)
+      if (latestVersions) {
+        studyEmissionFactorVersions = latestVersions.map((latestImportVersion) => ({
+          studyId: dbStudy.id,
+          source: latestImportVersion.source,
+          importVersionId: latestImportVersion.id,
+        }))
+      }
     }
+    await client.studyEmissionFactorVersion.createMany({ data: studyEmissionFactorVersions })
   }
-  await client.studyEmissionFactorVersion.createMany({ data: studyEmissionFactorVersions })
   return dbStudy
 }
 
