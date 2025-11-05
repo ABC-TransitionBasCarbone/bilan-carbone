@@ -260,8 +260,10 @@ export const getAllEmissionFactors = async (
   locale: LocaleType,
   filters: FeFilters,
 ) => {
-  const defaultEmissionFactors = await getDefaultEmissionFactors(skip, take, locale, filters, organizationId)
-  const emissionFactorsCountInfos = await getDefaultEmissionFactorsCount(filters, locale, organizationId)
+  const [defaultEmissionFactors, emissionFactorsCountInfos] = await Promise.all([
+    getDefaultEmissionFactors(skip, take, locale, filters, organizationId),
+    getDefaultEmissionFactorsCount(filters, locale, organizationId),
+  ])
 
   return {
     emissionFactors: defaultEmissionFactors,

@@ -236,7 +236,6 @@ export const fixUnits = async () => {
       return setEmissionFactorUnitAsCustom(emissionFactor.id, entry ? entry[0] : '')
     }),
   )
-  console.log(`Fait : ${emissionFactors.length} facteurs mis à jour`)
 }
 
 export const getEmissionFactorImportVersions = async (withArchived: boolean = false) =>
