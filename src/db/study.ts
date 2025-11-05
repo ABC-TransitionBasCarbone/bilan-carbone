@@ -60,8 +60,8 @@ export const createStudy = async (
         importVersionId: latestImportVersion.id,
       }))
     }
-    await client.studyEmissionFactorVersion.createMany({ data: studyEmissionFactorVersions })
   }
+  await client.studyEmissionFactorVersion.createMany({ data: studyEmissionFactorVersions })
   return dbStudy
 }
 
