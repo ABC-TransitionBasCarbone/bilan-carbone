@@ -83,7 +83,7 @@ const EmissionSource = ({
           element.scrollIntoView({ behavior: 'smooth', block: 'center' })
         }
         router.replace(window.location.pathname + window.location.search, { scroll: false })
-      }, 600)
+      }, 300)
     }
   }, [emissionSource.id, router])
 

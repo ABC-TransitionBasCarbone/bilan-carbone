@@ -4,10 +4,16 @@ import { FullStudy, getStudyById } from '@/db/study'
 import { Translations } from '@/types/translation'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { getPost } from '@/utils/post'
-import { hasDeprecationPeriod, isCAS, STUDY_UNIT_VALUES } from '@/utils/study'
+import { formatValueForExport, hasDeprecationPeriod, isCAS, STUDY_UNIT_VALUES } from '@/utils/study'
 import { Environment, Export, ExportRule, Level, StudyResultUnit, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
-import { canBeValidated, getEmissionResults, getEmissionSourcesTotalCo2, getStandardDeviation } from './emissionSource'
+import {
+  canBeValidated,
+  getEmissionResults,
+  getEmissionSourceEmission,
+  getEmissionSourcesTotalCo2,
+  getStandardDeviation,
+} from './emissionSource'
 import { download } from './file'
 import { hasAccessToBcExport } from './permissions/environment'
 import { StudyWithoutDetail } from './permissions/study'
@@ -161,9 +167,7 @@ const getEmissionSourcesRows = (
           emissionSource.validated ? t('yes') : t('no'),
           emissionSource.name || '',
           emissionSource.caracterisation ? tCaracterisations(emissionSource.caracterisation) : '',
-          ((emissionSource.value || 0) * (emissionFactor ? getEmissionFactorValue(emissionFactor, environment) : 0)) /
-            STUDY_UNIT_VALUES[resultsUnit] /
-            (withDeprecation ? emissionSource.depreciationPeriod || 1 : 1) || '0',
+          formatValueForExport(getEmissionSourceEmission(emissionSource, environment) || 0),
           withDeprecation ? emissionSource.depreciationPeriod || '1' : ' ',
           isCAS(emissionSource) ? emissionSource.hectare || '1' : ' ',
           isCAS(emissionSource) ? emissionSource.duration || '1' : ' ',
@@ -240,7 +244,9 @@ const getEmissionSourcesCSVContent = (
     ...emissionSource,
     ...getEmissionResults(emissionSource, environment),
   }))
-  const totalEmissions = getEmissionSourcesTotalCo2(emissionSourcesWithEmission) / STUDY_UNIT_VALUES[resultsUnit]
+  const totalEmissions = formatValueForExport(
+    getEmissionSourcesTotalCo2(emissionSourcesWithEmission) / STUDY_UNIT_VALUES[resultsUnit],
+  )
   const totalRow = [t('total'), ...emptyFields(emptyFieldsCount + 1), totalEmissions].join(';')
 
   const qualities = emissionSources.map((emissionSource) => getStandardDeviation(emissionSource))
@@ -251,8 +257,8 @@ const getEmissionSourcesCSVContent = (
   const uncertaintyRow = [
     t('uncertainty'),
     ...emptyFields(emptyFieldsCount),
-    uncertainty[0] / STUDY_UNIT_VALUES[resultsUnit],
-    uncertainty[1] / STUDY_UNIT_VALUES[resultsUnit],
+    formatValueForExport(uncertainty[0] / STUDY_UNIT_VALUES[resultsUnit]),
+    formatValueForExport(uncertainty[1] / STUDY_UNIT_VALUES[resultsUnit]),
   ].join(';')
 
   return [columns, ...rows, totalRow, qualityRow, uncertaintyRow].join('\n')
@@ -363,7 +369,7 @@ const handleLine = (
     resultLine.push(result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '')
   }
 
-  return [...resultLine, Math.round((result.value ?? 0) / STUDY_UNIT_VALUES[resultsUnits])]
+  return [...resultLine, formatValueForExport((result.value ?? 0) / STUDY_UNIT_VALUES[resultsUnits])]
 }
 
 export const formatConsolidatedStudyResultsForExport = (
@@ -488,6 +494,8 @@ export const formatBegesStudyResultsForExport = (
       tBeges('uncertainty'),
     ])
 
+    const gasFields = ['co2', 'ch4', 'n2o', 'other', 'total', 'co2b'] as const
+
     for (const result of resultList) {
       const category = result.rule.split('.')[0]
       const rule = result.rule
@@ -500,15 +508,14 @@ export const formatBegesStudyResultsForExport = (
         post = `${rule}. ${tBeges(`post.${rule}`)}`
       }
 
+      const gasValues = gasFields.map((field) =>
+        formatValueForExport(result[field] / STUDY_UNIT_VALUES[study.resultsUnit]),
+      )
+
       dataForExport.push([
         category === 'total' ? '' : `${category}. ${tBeges(`category.${category}`)}`,
         post,
-        result.co2 / STUDY_UNIT_VALUES[study.resultsUnit],
-        result.ch4 / STUDY_UNIT_VALUES[study.resultsUnit],
-        result.n2o / STUDY_UNIT_VALUES[study.resultsUnit],
-        result.other / STUDY_UNIT_VALUES[study.resultsUnit],
-        result.total / STUDY_UNIT_VALUES[study.resultsUnit],
-        result.co2b / STUDY_UNIT_VALUES[study.resultsUnit],
+        ...gasValues,
         result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '',
       ])
     }
