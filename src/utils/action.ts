@@ -10,9 +10,9 @@ const RELEVANCE_TO_PRIORITY: Record<ActionRelevance, number> = {
   [ActionRelevance.Offsetting]: 6,
 }
 
-export const calculatePriorityFromRelevance = (relevances: ActionRelevance[]): number => {
+export const calculatePriorityFromRelevance = (relevances: ActionRelevance[]): number | null => {
   if (relevances.length === 0) {
-    return 1
+    return null
   }
 
   return Math.min(...relevances.map((relevance) => RELEVANCE_TO_PRIORITY[relevance]))
