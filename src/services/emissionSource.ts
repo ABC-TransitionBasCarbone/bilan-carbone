@@ -12,6 +12,7 @@ import {
 } from '@prisma/client'
 import { StudyWithoutDetail } from './permissions/study'
 import { convertTiltSubPostToBCSubPost } from './posts'
+import { computeUncertainty } from './results/consolidated'
 import { getConfidenceInterval, getQualityStandardDeviation, getSpecificEmissionFactorQuality } from './uncertainty'
 
 type CaracterisationsBySubPost = Partial<Record<SubPost, EmissionSourceCaracterisation[]>>
@@ -154,29 +155,15 @@ export const getEmissionResults = (
   }
 }
 
-export const sumStandardDeviations = (results: { value: number; standardDeviation: number | null }[]) => {
-  const totalValue = results.reduce((acc, { value }) => acc + value, 0)
-
-  return Math.exp(
-    Math.sqrt(
-      results.reduce((acc, { value, standardDeviation }) => {
-        const sensibility = value / totalValue
-        const sd = Math.log(standardDeviation || 1)
-        return acc + sensibility * sensibility * sd * sd
-      }, 0),
-    ),
-  )
-}
-
 export const sumEmissionSourcesUncertainty = (
   emissionSources: { emissionValue: number; standardDeviation: number | null }[],
 ) => {
   const results = emissionSources.map((result) => ({
     value: result.emissionValue,
-    standardDeviation: result.standardDeviation,
+    uncertainty: result.standardDeviation,
   }))
 
-  return sumStandardDeviations(results)
+  return computeUncertainty(results)
 }
 
 export const getEmissionSourcesTotalCo2 = (emissionSources: { emissionValue: number }[]) =>

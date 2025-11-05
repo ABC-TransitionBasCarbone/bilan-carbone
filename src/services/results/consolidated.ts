@@ -23,7 +23,9 @@ export type ResultsByPost = {
   children: ResultsByPost[]
 }
 
-const computeUncertainty = (uncertaintyToReduce: { value: number; uncertainty?: number }[], value: number) => {
+export const computeUncertainty = (uncertaintyToReduce: { value: number; uncertainty?: number | null }[]) => {
+  const total = uncertaintyToReduce.reduce((acc, info) => acc + info.value, 0)
+
   return Math.exp(
     Math.sqrt(
       uncertaintyToReduce.reduce((acc, info) => {
@@ -31,7 +33,7 @@ const computeUncertainty = (uncertaintyToReduce: { value: number; uncertainty?: 
           return acc
         }
 
-        return acc + Math.pow(info.value / value, 2) * Math.pow(Math.log(info.uncertainty || 1), 2)
+        return acc + Math.pow(info.value / total, 2) * Math.pow(Math.log(info.uncertainty || 1), 2)
       }, 0),
     ),
   )
@@ -97,7 +99,7 @@ export const computeResultsByPost = (
         value,
         monetaryValue,
         nonSpecificMonetaryValue,
-        uncertainty: subPosts.length > 0 ? computeUncertainty(subPosts, value) : undefined,
+        uncertainty: subPosts.length > 0 ? computeUncertainty(subPosts) : undefined,
         children: subPosts.sort((a, b) => tPost(a.post).localeCompare(tPost(b.post))),
         numberOfEmissionSource: subPosts.reduce((acc, subPost) => acc + subPost.numberOfEmissionSource, 0),
         numberOfValidatedEmissionSource: subPosts.reduce(
@@ -121,7 +123,7 @@ export const computeTotalForPosts = (postInfos: ResultsByPost[], tPost: (key: st
     monetaryValue: postInfos.reduce((acc, post) => acc + post.monetaryValue, 0),
     nonSpecificMonetaryValue: postInfos.reduce((acc, post) => acc + post.nonSpecificMonetaryValue, 0),
     children: [],
-    uncertainty: computeUncertainty(postInfos, value),
+    uncertainty: computeUncertainty(postInfos),
     numberOfEmissionSource: postInfos.reduce((acc, post) => acc + post.numberOfEmissionSource, 0),
     numberOfValidatedEmissionSource: postInfos.reduce((acc, post) => acc + post.numberOfValidatedEmissionSource, 0),
   }
@@ -193,7 +195,7 @@ export const computeResultsByTag = (
         label: tagFamily.name,
         value,
         children: tagInfos.filter((tag) => tag.value > 0),
-        uncertainty: computeUncertainty(tagInfos, value),
+        uncertainty: computeUncertainty(tagInfos),
       }
     })
     .filter((family) => family.value > 0)

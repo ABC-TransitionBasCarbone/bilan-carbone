@@ -2,8 +2,9 @@ import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { hasDeprecationPeriod } from '@/utils/study'
 import { EmissionSourceCaracterisation, ExportRule } from '@prisma/client'
-import { getStandardDeviation, sumStandardDeviations } from '../emissionSource'
+import { getStandardDeviation } from '../emissionSource'
 import { convertTiltSubPostToBCSubPost } from '../posts'
+import { computeUncertainty } from './consolidated'
 import { filterWithDependencies, getSiteEmissionSources } from './utils'
 
 const allRules = [
@@ -153,7 +154,7 @@ const sumLines = (lines: Omit<BegesPostInfos, 'rule'>[]) => {
     total,
     co2b: lines.reduce((acc, line) => acc + line.co2b, 0),
     uncertainty: total
-      ? sumStandardDeviations(lines.map((line) => ({ value: line.total, standardDeviation: line.uncertainty })))
+      ? computeUncertainty(lines.map((line) => ({ value: line.total, standardDeviation: line.uncertainty })))
       : null,
   }
 }
