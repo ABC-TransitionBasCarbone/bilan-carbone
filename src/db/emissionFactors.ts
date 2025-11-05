@@ -140,57 +140,12 @@ export type EmissionFactorList = {
 
 const getDefaultEmissionFactorsCount = async (
   filters: FeFilters,
-  withCut: boolean,
   locale: LocaleType,
   organizationId?: string,
 ): Promise<{ count: number }> => {
-  let importedFromCondition = {}
-  if (filters.sources.length > 0 && filters.sources.some((source) => source !== 'all')) {
-    if (filters.sources.includes(Import.Manual) && filters.sources.length === 1 && organizationId) {
-      importedFromCondition = { OR: [{ importedFrom: Import.Manual, organizationId }] }
-    } else if (filters.sources.includes(Import.Manual)) {
-      importedFromCondition = {
-        OR: [
-          { versionId: { in: filters.sources.filter((s) => s !== Import.Manual) } },
-          { importedFrom: Import.Manual, organizationId },
-        ],
-      }
-    } else {
-      importedFromCondition = {
-        OR: [{ versionId: { in: filters.sources.filter((s) => s !== Import.Manual) } }],
-      }
-    }
-  }
-
-  const count = await prismaClient.emissionFactorMetaData.count({
-    where: {
-      language: locale,
-      ...(filters.search && {
-        OR: [
-          { title: { contains: filters.search, mode: 'insensitive' } },
-          { attribute: { contains: filters.search, mode: 'insensitive' } },
-          { frontiere: { contains: filters.search, mode: 'insensitive' } },
-        ],
-      }),
-      ...(filters.location && { location: { contains: filters.location, mode: 'insensitive' } }),
-      emissionFactor: {
-        AND: [
-          {
-            subPosts: filters.subPosts.some((sp) => sp === 'all')
-              ? { isEmpty: false }
-              : { hasSome: filters.subPosts as SubPost[] },
-          },
-          filters.archived ? {} : { status: { not: EmissionFactorStatus.Archived } },
-          filters.units.length > 0 && !filters.units.includes('all')
-            ? {
-                OR: [{ unit: { in: filters.units as Unit[] } }, { customUnit: { in: filters.units as string[] } }],
-              }
-            : {},
-          importedFromCondition,
-        ],
-      },
-    },
-  })
+  const count = await prismaClient.emissionFactorMetaData.count(
+    getBaseFilterForEmissionFactors(locale, filters, organizationId),
+  )
 
   return { count }
 }
@@ -212,24 +167,7 @@ export const keepOnlyOneMetadata = <T extends { metaData: EmissionFactorList['me
   }))
 }
 
-const getEmissionFactorsFromIdsExceptVersions = async (ids: string[], versionIds: string[], locale: LocaleType) => {
-  const efFromBdd = await prismaClient.emissionFactor.findMany({
-    where: { id: { in: ids }, versionId: { notIn: versionIds } },
-    select: selectEmissionFactor,
-    orderBy: { createdAt: 'desc' },
-  })
-
-  return keepOnlyOneMetadata(efFromBdd, locale)
-}
-
-const getDefaultEmissionFactors = async (
-  skip: number,
-  take: number | 'ALL',
-  locale: LocaleType,
-  filters: FeFilters,
-  withCut: boolean,
-  organizationId?: string,
-): Promise<EmissionFactorList[]> => {
+const getBaseFilterForEmissionFactors = (locale: LocaleType, filters: FeFilters, organizationId?: string) => {
   let importedFromCondition = {}
   if (filters.sources.length > 0 && filters.sources.some((source) => source !== 'all')) {
     if (filters.sources.includes(Import.Manual) && filters.sources.length === 1 && organizationId) {
@@ -248,17 +186,17 @@ const getDefaultEmissionFactors = async (
     }
   }
 
-  const emissionFactorsMetadata = await prismaClient.emissionFactorMetaData.findMany({
+  return {
     where: {
       language: locale,
       ...(filters.search && {
         OR: [
-          { title: { contains: filters.search, mode: 'insensitive' } },
-          { attribute: { contains: filters.search, mode: 'insensitive' } },
-          { frontiere: { contains: filters.search, mode: 'insensitive' } },
+          { title: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
+          { attribute: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
+          { frontiere: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
         ],
       }),
-      ...(filters.location && { location: { contains: filters.location, mode: 'insensitive' } }),
+      ...(filters.location && { location: { contains: filters.location, mode: Prisma.QueryMode.insensitive } }),
       emissionFactor: {
         AND: [
           {
@@ -276,6 +214,18 @@ const getDefaultEmissionFactors = async (
         ],
       },
     },
+  }
+}
+
+const getDefaultEmissionFactors = async (
+  skip: number,
+  take: number | 'ALL',
+  locale: LocaleType,
+  filters: FeFilters,
+  organizationId?: string,
+): Promise<EmissionFactorList[]> => {
+  const emissionFactorsMetadata = await prismaClient.emissionFactorMetaData.findMany({
+    ...getBaseFilterForEmissionFactors(locale, filters, organizationId),
     skip,
     take: take === 'ALL' ? undefined : take,
     select: {
@@ -309,10 +259,9 @@ export const getAllEmissionFactors = async (
   take: number | 'ALL',
   locale: LocaleType,
   filters: FeFilters,
-  withCut: boolean = false,
 ) => {
-  const defaultEmissionFactors = await getDefaultEmissionFactors(skip, take, locale, filters, withCut, organizationId)
-  const emissionFactorsCountInfos = await getDefaultEmissionFactorsCount(filters, withCut, locale, organizationId)
+  const defaultEmissionFactors = await getDefaultEmissionFactors(skip, take, locale, filters, organizationId)
+  const emissionFactorsCountInfos = await getDefaultEmissionFactorsCount(filters, locale, organizationId)
 
   return {
     emissionFactors: defaultEmissionFactors,
