@@ -88,11 +88,11 @@ const Actions = ({ actions, studyUnit, transitionPlanId }: Props) => {
 
   return (
     <div className="flex-col gapped1">
-      <ActionFilters search={filter} setSearch={setFilter} onOpenAddModal={handleOpenAddModal} />
+      <ActionFilters search={filter} setSearch={setFilter} openAddModal={handleOpenAddModal} />
       <ActionTable
         actions={searchedActions}
-        onOpenEditModal={handleOpenEditModal}
-        onOpenDeleteModal={handleOpenDeleteModal}
+        openEditModal={handleOpenEditModal}
+        openDeleteModal={handleOpenDeleteModal}
       />
       {isEditModalOpen && (
         <ActionModal

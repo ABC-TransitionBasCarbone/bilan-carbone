@@ -19,11 +19,11 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 
 interface Props {
   actions: Action[]
-  onOpenEditModal: (action: Action) => void
-  onOpenDeleteModal: (action: Action) => void
+  openEditModal: (action: Action) => void
+  openDeleteModal: (action: Action) => void
 }
 
-const ActionTable = ({ actions, onOpenEditModal, onOpenDeleteModal }: Props) => {
+const ActionTable = ({ actions, openEditModal, openDeleteModal }: Props) => {
   const t = useTranslations('study.transitionPlan.actions.table')
   const tUnit = useTranslations('study.results.units')
   const tCategory = useTranslations('study.transitionPlan.actions.category')
@@ -32,20 +32,16 @@ const ActionTable = ({ actions, onOpenEditModal, onOpenDeleteModal }: Props) => 
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
 
-  // Local optimistic state
   const [localActions, setLocalActions] = useState<Action[]>(actions)
 
-  // Sync with server data when it changes
   useEffect(() => {
     setLocalActions(actions)
   }, [actions])
 
   const handleToggleEnabled = useCallback(
     async (actionId: string, enabled: boolean) => {
-      // Optimistically update local state
       setLocalActions((prev) => prev.map((action) => (action.id === actionId ? { ...action, enabled } : action)))
 
-      // Call server function
       await callServerFunction(() => toggleActionEnabled(actionId, enabled), {
         onSuccess: () => {
           router.refresh()
@@ -112,13 +108,13 @@ const ActionTable = ({ actions, onOpenEditModal, onOpenDeleteModal }: Props) => 
           accessorFn: () => '',
           cell: ({ row }) => (
             <>
-              <TableActionButton type="edit" onClick={() => onOpenEditModal(row.original)} />
-              <TableActionButton type="delete" onClick={() => onOpenDeleteModal(row.original)} />
+              <TableActionButton type="edit" onClick={() => openEditModal(row.original)} />
+              <TableActionButton type="delete" onClick={() => openDeleteModal(row.original)} />
             </>
           ),
         },
       ] as ColumnDef<Action>[],
-    [t, getPotential, handleToggleEnabled, tCategory, onOpenEditModal, onOpenDeleteModal],
+    [t, getPotential, handleToggleEnabled, tCategory, openEditModal, openDeleteModal],
   )
 
   const table = useReactTable({

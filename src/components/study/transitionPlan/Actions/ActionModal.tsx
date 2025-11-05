@@ -9,10 +9,11 @@ import { calculatePriorityFromRelevance } from '@/utils/action'
 import { objectWithoutNullAttributes } from '@/utils/object'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Action, ActionPotentialDeduction } from '@prisma/client'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import styles from './ActionModal.module.css'
 import Step1 from './ActionModalStep1'
 import Step2 from './ActionModalStep2'
@@ -34,6 +35,7 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
   const [toast, setToast] = useState<{ text: string; color: ToastColors }>(emptyToast)
   const [organizationMembers, setOrganizationMembers] = useState<{ label: string; value: string }[]>([])
   const t = useTranslations('study.transitionPlan.actions.addModal')
+  const tValidation = useTranslations('validation')
   const { callServerFunction } = useServerFunction()
   const params = useParams()
   const studyId = params.id as string
@@ -54,8 +56,8 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
     }
   }, [open, studyId, callServerFunction])
 
-  const { control, formState, getValues, setValue, reset, handleSubmit, trigger, setError } = useForm<AddActionCommand>(
-    {
+  const { control, formState, getValues, setValue, reset, handleSubmit, trigger, setError, clearErrors } =
+    useForm<AddActionCommand>({
       resolver: zodResolver(AddActionCommandValidation),
       mode: 'onChange',
       reValidateMode: 'onChange',
@@ -69,8 +71,16 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
         dependenciesOnly: false,
         ...objectWithoutNullAttributes(action),
       },
-    },
-  )
+    })
+
+  const potentialDeduction = useWatch({ control, name: 'potentialDeduction' })
+  const reductionValue = useWatch({ control, name: 'reductionValue' })
+
+  useEffect(() => {
+    if (potentialDeduction !== ActionPotentialDeduction.Quantity) {
+      clearErrors(['reductionValue'])
+    }
+  }, [potentialDeduction, clearErrors])
 
   const onSubmit = async (data: AddActionCommand) => {
     const priority = calculatePriorityFromRelevance(data.relevance)
@@ -93,48 +103,7 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
     onClose()
   }
 
-  const handleNext = async () => {
-    const fieldsToValidate = getFieldsForStep(activeStep)
-    const isValid = await trigger(fieldsToValidate)
-    if (!isValid) {
-      return
-    }
-
-    if (activeStep === 0) {
-      const potentialDeduction = getValues('potentialDeduction')
-      if (potentialDeduction === ActionPotentialDeduction.Quantity) {
-        const reductionValue = getValues('reductionValue')
-        const reductionStartYear = getValues('reductionStartYear')
-        const reductionEndYear = getValues('reductionEndYear')
-
-        let hasErrors = false
-        if (!reductionValue) {
-          setError('reductionValue', { type: 'required' })
-          hasErrors = true
-        }
-        if (!reductionStartYear) {
-          setError('reductionStartYear', { type: 'required' })
-          hasErrors = true
-        }
-        if (!reductionEndYear) {
-          setError('reductionEndYear', { type: 'required' })
-          hasErrors = true
-        }
-
-        if (hasErrors) {
-          return
-        }
-      }
-    }
-
-    setActiveStep((prev) => prev + 1)
-  }
-
-  const handleBack = () => {
-    setActiveStep((prev) => prev - 1)
-  }
-
-  const getFieldsForStep = (step: number): (keyof AddActionCommand)[] => {
+  const getRequiredFieldsForStep = (step: number): (keyof AddActionCommand)[] => {
     if (step === 0) {
       return [
         'title',
@@ -149,9 +118,33 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
     return []
   }
 
+  const handleNext = async () => {
+    const fieldsToValidate = getRequiredFieldsForStep(activeStep)
+    let isValid = await trigger(fieldsToValidate)
+
+    if (activeStep === 0) {
+      if (potentialDeduction === ActionPotentialDeduction.Quantity) {
+        if (!reductionValue) {
+          setError('reductionValue', { message: tValidation('required') })
+          isValid = false
+          return
+        }
+      }
+    }
+
+    if (!isValid) {
+      return
+    }
+
+    setActiveStep((prev) => prev + 1)
+  }
+
+  const handleBack = () => {
+    setActiveStep((prev) => prev - 1)
+  }
+
   const isStepValid = () => {
-    console.log('isStepValid')
-    const fieldsToValidate = getFieldsForStep(activeStep)
+    const fieldsToValidate = getRequiredFieldsForStep(activeStep)
     if (fieldsToValidate.length === 0) {
       return true
     }
@@ -184,7 +177,7 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
         backLabel={t('previous')}
         className={styles.actionModal}
       >
-        <div className={styles.stepContent}>
+        <div className={classNames('flex-col gapped1', styles.stepContent)}>
           {activeStep === 0 && (
             <Step1
               studyUnit={studyUnit}

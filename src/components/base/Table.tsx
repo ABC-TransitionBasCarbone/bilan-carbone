@@ -13,12 +13,21 @@ interface Props<TData> {
   children?: ReactNode
   customRow?: (row: Row<TData>) => React.ReactNode
   testId: string
-  small?: boolean
+  size?: 'small' | 'medium'
 }
 
-const Table = <TData,>({ title, table, paginations, className, children, customRow, testId, small }: Props<TData>) => {
+const Table = <TData,>({
+  title,
+  table,
+  paginations,
+  className,
+  children,
+  customRow,
+  testId,
+  size = 'medium',
+}: Props<TData>) => {
   const totalRows = table.getRowCount()
-  const shouldShowPagination = !!paginations && totalRows >= 10
+  const shouldShowPagination = !!paginations && totalRows > Math.min(...paginations)
 
   return (
     <>
@@ -27,7 +36,7 @@ const Table = <TData,>({ title, table, paginations, className, children, customR
       <div className={className}>
         <MuiTable
           aria-labelledby={`${testId}-table-title`}
-          className={classNames(styles.tableWrapper, { [styles.small]: small })}
+          className={classNames(styles.tableWrapper, { [styles.small]: size === 'small' })}
         >
           <TableHead>
             {table.getHeaderGroups().map((headerGroup) => (

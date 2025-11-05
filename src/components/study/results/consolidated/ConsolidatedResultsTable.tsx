@@ -130,7 +130,7 @@ const ConsolidatedResultsTable = <
       table={table}
       className={classNames(commonStyles.headers, { [commonStyles.compact]: isCompact })}
       testId="consolidated-results"
-      small
+      size="small"
     />
   )
 }

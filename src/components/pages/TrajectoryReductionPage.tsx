@@ -9,6 +9,7 @@ import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import Image from '@/components/document/Image'
 import { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
+import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
 import { getStudyTotalCo2Emissions } from '@/services/study'
@@ -95,23 +96,9 @@ const TrajectoryReductionPage = ({
     }
   }, [study.id])
 
-  useEffect(() => {
-    if (mounted) {
-      localStorage.setItem(`trajectory-sbti-selected-${study.id}`, JSON.stringify(selectedSbtiTrajectories))
-    }
-  }, [selectedSbtiTrajectories, study.id, mounted])
-
-  useEffect(() => {
-    if (mounted) {
-      localStorage.setItem(`trajectory-with-dependencies-${study.id}`, JSON.stringify(withDependencies))
-    }
-  }, [withDependencies, study.id, mounted])
-
-  useEffect(() => {
-    if (mounted) {
-      localStorage.setItem(`trajectory-custom-selected-${study.id}`, JSON.stringify(selectedCustomTrajectories))
-    }
-  }, [selectedCustomTrajectories, study.id, mounted])
+  useLocalStorageSync(`trajectory-sbti-selected-${study.id}`, selectedSbtiTrajectories, mounted)
+  useLocalStorageSync(`trajectory-with-dependencies-${study.id}`, withDependencies, mounted)
+  useLocalStorageSync(`trajectory-custom-selected-${study.id}`, selectedCustomTrajectories, mounted)
 
   // Local storage may keep leftover custom trajectory ids from previous transition plans
   // This ensures that displayed custom trajectories are always valid and cleans up the invalid ones

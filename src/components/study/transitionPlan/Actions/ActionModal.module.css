@@ -4,9 +4,6 @@
 }
 
 .stepContent {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
   min-height: 30rem;
   overflow-y: auto;
 }

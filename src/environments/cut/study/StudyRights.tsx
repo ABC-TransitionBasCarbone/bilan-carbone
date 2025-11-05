@@ -135,6 +135,11 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
   const openingHours = form.watch('openingHours')
   const openingHoursHoliday = form.watch('openingHoursHoliday')
 
+  // const daysHoliday: DayOfWeek[] = useMemo(
+  //   () => Object.keys(openingHoursHoliday || {}) as DayOfWeek[],
+  //   [openingHoursHoliday],
+  // )
+
   const handleStudyCinemaUpdate = useCallback(
     async (data: ChangeStudyCinemaCommand) => {
       const cncId = siteData?.site.cnc?.id
@@ -221,6 +226,30 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
     form.handleSubmit(handleStudyCinemaUpdate, (e) => console.log('invalid', e))()
   }, [form, handleStudyCinemaUpdate, studySite])
 
+  // const handleCheckDay = useCallback(
+  //   (day: DayOfWeek) => {
+  //     const existingHolidayDay = day in (openingHoursHoliday || {})
+  //     if (existingHolidayDay) {
+  //       const updatedHolidays = { ...openingHoursHoliday }
+  //       delete updatedHolidays[day]
+  //       form.setValue('openingHoursHoliday', updatedHolidays)
+  //     } else {
+  //       form.setValue('openingHoursHoliday', {
+  //         ...(openingHoursHoliday || {}),
+  //         [day]: { day, openHour: '', closeHour: '', isHoliday: true },
+  //       })
+  //     }
+  //   },
+  //   [openingHoursHoliday, form],
+  // )
+
+  // const isChecked = useCallback(
+  //   (day: DayOfWeek) => {
+  //     return day in (openingHoursHoliday || {})
+  //   },
+  //   [openingHoursHoliday],
+  // )
+
   useEffect(() => {
     onStudyCinemaUpdate()
     // This effect is used to update the study cinema whenever the opening hours or holiday opening hours change.
@@ -288,6 +317,28 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
                 {t('goToDataEntry')}
               </LinkButton>
             </Box>
+            {/* <Block title={t('openingHours')}>
+            <div className={classNames(styles.openingHoursContainer, 'flex-col')}>
+              <WeekScheduleForm
+                label={t('openingHours')}
+                days={Object.values(DayOfWeek)}
+                name={'openingHours'}
+                control={form.control}
+                disabled={editionDisabled}
+                onCheckDay={handleCheckDay}
+                isChecked={isChecked}
+              />
+              {openingHoursHoliday && Object.keys(openingHoursHoliday).length !== 0 && (
+                <WeekScheduleForm
+                  label={t('openingHoursHoliday')}
+                  days={daysHoliday}
+                  name={'openingHoursHoliday'}
+                  control={form.control}
+                  disabled={editionDisabled}
+                />
+              )}
+            </div>
+          </Block> */}
           </>
         )}
         {showSiteDataWarning && pendingSiteChanges && (

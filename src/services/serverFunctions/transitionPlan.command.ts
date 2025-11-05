@@ -59,9 +59,9 @@ export const AddActionCommandBase = z.object({
   detailedDescription: z.string().min(1),
   transitionPlanId: z.uuid(),
   potentialDeduction: z.enum(ActionPotentialDeduction),
-  reductionValue: z.number().optional(),
-  reductionStartYear: z.string().optional(),
-  reductionEndYear: z.string().optional(),
+  reductionValue: z.number().optional().nullable(),
+  reductionStartYear: z.string(),
+  reductionEndYear: z.string(),
   owner: z.string().optional(),
   necessaryBudget: z.number().optional(),
   necesssaryRessources: z.string().optional(),
@@ -80,20 +80,11 @@ export const AddActionCommandBase = z.object({
   dependenciesOnly: z.boolean().optional(),
 })
 
-export const AddActionCommandValidation = AddActionCommandBase.superRefine((data, ctx) => {
+export const AddActionCommandValidation = AddActionCommandBase.refine((data) => {
   if (data.potentialDeduction === ActionPotentialDeduction.Quantity) {
-    if (!data.reductionValue) {
-      ctx.addIssue(setCustomIssue(['reductionValue'], 'required'))
-    }
-
-    if (!data.reductionStartYear) {
-      ctx.addIssue(setCustomIssue(['reductionStartYear'], 'required'))
-    }
-
-    if (!data.reductionEndYear) {
-      ctx.addIssue(setCustomIssue(['reductionEndYear'], 'required'))
-    }
+    return data.reductionValue !== undefined && data.reductionValue !== null
   }
-})
+  return true
+}, setCustomMessage('required'))
 
 export type AddActionCommand = z.infer<typeof AddActionCommandValidation>

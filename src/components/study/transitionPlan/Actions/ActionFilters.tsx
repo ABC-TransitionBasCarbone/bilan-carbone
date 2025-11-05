@@ -8,10 +8,10 @@ import styles from './Actions.module.css'
 interface Props {
   search: string
   setSearch: (search: string) => void
-  onOpenAddModal: () => void
+  openAddModal: () => void
 }
 
-const ActionFilters = ({ search, setSearch, onOpenAddModal }: Props) => {
+const ActionFilters = ({ search, setSearch, openAddModal }: Props) => {
   const t = useTranslations('study.transitionPlan.actions')
 
   return (
@@ -24,7 +24,7 @@ const ActionFilters = ({ search, setSearch, onOpenAddModal }: Props) => {
         placeholder={t('search')}
         data-testid="actions-filter"
       />
-      <Button className={styles.addButton} onClick={onOpenAddModal}>
+      <Button className={styles.addButton} onClick={openAddModal}>
         {t('add')}
       </Button>
     </div>
