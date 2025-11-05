@@ -94,7 +94,6 @@ export class SitesCAsMapper extends SitesAdditionalDataMapper<SitesCAsWorkSheet,
         const startDate = row.startDate ? new Date(getJsDateFromExcel(row.startDate as number)) : null
         const endDate = row.endDate ? new Date(getJsDateFromExcel(row.endDate as number)) : null
         if (!startDate || !endDate) {
-          // console.warn(`Periode invalide. Début : "${startDate}", fin : "${endDate}" donc non prise en compte`)
           return null
         }
         let multiply = 0

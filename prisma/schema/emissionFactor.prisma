@@ -260,6 +260,7 @@ model EmissionFactorMetaData {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@id([emissionFactorId, language])
+  @@index([language, title])
   @@map("emission_metadata")
 }
 

@@ -311,29 +311,8 @@ export const getAllEmissionFactors = async (
   filters: FeFilters,
   withCut: boolean = false,
 ) => {
-  let versionIds
-
-  const filtersToApply = versionIds
-    ? {
-        ...filters,
-        sources: [...versionIds, Import.Manual],
-      }
-    : filters
-
-  const defaultEmissionFactors = await getDefaultEmissionFactors(
-    skip,
-    take,
-    locale,
-    filtersToApply,
-    withCut,
-    organizationId,
-  )
-  const emissionFactorsCountInfos = await getDefaultEmissionFactorsCount(
-    filtersToApply,
-    withCut,
-    locale,
-    organizationId,
-  )
+  const defaultEmissionFactors = await getDefaultEmissionFactors(skip, take, locale, filters, withCut, organizationId)
+  const emissionFactorsCountInfos = await getDefaultEmissionFactorsCount(filters, withCut, locale, organizationId)
 
   return {
     emissionFactors: defaultEmissionFactors,
