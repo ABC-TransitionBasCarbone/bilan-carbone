@@ -951,7 +951,13 @@
             "name": "Name",
             "year": "Year",
             "see": "See",
-            "delete": "Supprimer"
+            "delete": "Delete"
+          },
+          "deleteModal": {
+            "title": "Delete linked study",
+            "message": "Are you sure you want to delete this linked study? This action is irreversible.",
+            "confirm": "Delete",
+            "cancel": "Cancel"
           },
           "validation": {
             "required": "Required field"

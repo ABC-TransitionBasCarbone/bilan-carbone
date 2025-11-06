@@ -7,6 +7,8 @@ import {
   createTransitionPlan,
   createTransitionPlanStudy,
   deleteAction as dbDeleteAction,
+  deleteExternalStudy as dbDeleteExternalStudy,
+  deleteLinkedStudy as dbDeleteLinkedStudy,
   deleteTransitionPlan as dbDeleteTransitionPlan,
   duplicateTransitionPlanWithRelations,
   getActionById,
@@ -77,7 +79,7 @@ export const getAvailableTransitionPlans = async (studyId: string) =>
   })
 
 export const initializeTransitionPlan = async (studyId: string, sourceTransitionPlanId?: string) =>
-  withServerResponse('initializeTransitionPlan', async (): Promise<TransitionPlanWithRelations> => {
+  withServerResponse('initializeTransitionPlan', async () => {
     const hasEditAccess = await hasEditAccessOnStudy(studyId)
     if (!hasEditAccess) {
       throw new Error(NOT_AUTHORIZED)
@@ -89,9 +91,9 @@ export const initializeTransitionPlan = async (studyId: string, sourceTransition
     }
 
     if (sourceTransitionPlanId) {
-      return duplicateTransitionPlan(sourceTransitionPlanId, studyId)
+      await duplicateTransitionPlan(sourceTransitionPlanId, studyId)
     } else {
-      return createTransitionPlan(studyId)
+      await createTransitionPlan(studyId)
     }
   })
 
@@ -183,6 +185,16 @@ export const addExternalStudy = async (command: ExternalStudyCommand) =>
     await createExternalStudy(command)
   })
 
+export const deleteExternalStudy = async (studyId: string, transitionPlanId: string) =>
+  withServerResponse('deleteExternalStudy', async () => {
+    const hasEditAccess = await canEditTransitionPlan(transitionPlanId)
+    if (!hasEditAccess) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await dbDeleteExternalStudy(studyId, transitionPlanId)
+  })
+
 export const getLinkedStudies = async (transitionPlanId: string) =>
   withServerResponse('getLinkedStudies', async () => {
     const hasReadAccess = await canReadTransitionPlan(transitionPlanId)
@@ -198,6 +210,16 @@ export const getLinkedStudies = async (transitionPlanId: string) =>
     const studies = await getStudyByIds(transitionPlanStudies.map((transitionPlan) => transitionPlan.studyId))
 
     return { studies, externalStudies }
+  })
+
+export const deleteLinkedStudy = async (studyId: string, transitionPlanId: string) =>
+  withServerResponse('deleteLinkedStudy', async () => {
+    const hasEditAccess = await canEditTransitionPlan(transitionPlanId)
+    if (!hasEditAccess) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await dbDeleteLinkedStudy(studyId, transitionPlanId)
   })
 
 export const editAction = async (id: string, command: AddActionCommand) =>

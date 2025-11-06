@@ -953,6 +953,12 @@
             "see": "Voir",
             "delete": "Supprimer"
           },
+          "deleteModal": {
+            "title": "Supprimer l'étude liée",
+            "message": "Êtes-vous sûr de vouloir supprimer cette étude liée ? Cette action est irréversible.",
+            "confirm": "Supprimer",
+            "cancel": "Annuler"
+          },
           "validation": {
             "required": "Champs requis"
           }
