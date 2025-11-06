@@ -53,6 +53,7 @@ interface Props {
   linkedStudies?: FullStudy[]
   linkedExternalStudies?: ExternalStudy[]
   actions?: Action[]
+  validatedOnly: boolean
 }
 
 const TrajectoryReductionPage = ({
@@ -63,6 +64,7 @@ const TrajectoryReductionPage = ({
   linkedStudies = [],
   linkedExternalStudies = [],
   actions = [],
+  validatedOnly,
 }: Props) => {
   const t = useTranslations('study.transitionPlan')
   const tNav = useTranslations('nav')
@@ -155,7 +157,7 @@ const TrajectoryReductionPage = ({
       }
     }
 
-    const totalCo2 = getStudyTotalCo2Emissions(study, withDependencies)
+    const totalCo2 = getStudyTotalCo2Emissions(study, withDependencies, validatedOnly)
     const studyStartYear = study.startDate.getFullYear()
 
     const enabledActions = actions.filter((action) => action.enabled)
@@ -252,15 +254,16 @@ const TrajectoryReductionPage = ({
       studyStartYear,
     }
   }, [
-    selectedSbtiTrajectories,
-    study,
     transitionPlan,
-    trajectories,
-    selectedCustomTrajectories,
+    study,
+    withDependencies,
+    validatedOnly,
+    actions,
+    selectedSbtiTrajectories,
     linkedStudies,
     linkedExternalStudies,
-    actions,
-    withDependencies,
+    trajectories,
+    selectedCustomTrajectories,
   ])
 
   if (!transitionPlan) {

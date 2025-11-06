@@ -89,25 +89,10 @@ export const getOrganizationTransitionPlans = async (
   })
 }
 
-export const createTransitionPlan = async (studyId: string): Promise<TransitionPlanWithRelations> => {
+export const createTransitionPlan = async (studyId: string) => {
   return prismaClient.transitionPlan.create({
     data: {
       studyId,
-      transitionPlanStudies: {
-        create: {
-          studyId,
-        },
-      },
-    },
-    include: {
-      transitionPlanStudies: true,
-      trajectories: {
-        include: {
-          objectives: true,
-        },
-      },
-      actions: true,
-      externalStudies: true,
     },
   })
 }
@@ -217,6 +202,12 @@ export const getExternalStudiesForTransitionPlan = async (transitionPlanId: stri
 
 export const getLinkedStudiesForTransitionPlan = async (transitionPlanId: string) =>
   prismaClient.transitionPlanStudy.findMany({ where: { transitionPlanId } })
+
+export const deleteLinkedStudy = async (studyId: string, transitionPlanId: string) =>
+  prismaClient.transitionPlanStudy.delete({ where: { transitionPlanId_studyId: { studyId, transitionPlanId } } })
+
+export const deleteExternalStudy = async (externalStudyId: string, transitionPlanId: string) =>
+  prismaClient.externalStudy.delete({ where: { id: externalStudyId, transitionPlanId } })
 
 export const createTrajectoryWithObjectives = async (data: Prisma.TrajectoryCreateInput) => {
   return prismaClient.trajectory.create({
