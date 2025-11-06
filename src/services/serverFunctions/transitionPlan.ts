@@ -195,7 +195,7 @@ export const deleteExternalStudy = async (studyId: string, transitionPlanId: str
     await dbDeleteExternalStudy(studyId)
   })
 
-export const getLinkedAndExternalStudies = async (studyId: string, transitionPlanId: string) =>
+export const getLinkedAndExternalStudies = async (transitionPlanId: string) =>
   withServerResponse('getLinkedAndExternalStudies', async () => {
     const hasReadAccess = await canReadTransitionPlan(transitionPlanId)
     if (!hasReadAccess) {
