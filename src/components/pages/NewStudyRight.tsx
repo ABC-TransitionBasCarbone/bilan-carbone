@@ -16,7 +16,7 @@ const NewStudyRightPage = async ({ study, user }: Props) => {
   const tNav = await getTranslations('nav')
   const t = await getTranslations('study.rights.new')
 
-  const accounts = await getOrganizationVersionAccounts(user.organizationVersionId)
+  const accounts = await getOrganizationVersionAccounts(study.organizationVersionId)
   const accountRole = getAccountRoleOnStudy(user, study)
 
   if (!accountRole) {

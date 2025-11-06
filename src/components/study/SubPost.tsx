@@ -3,14 +3,14 @@
 import { FullStudy } from '@/db/study'
 import { getCaracterisationsBySubPost, getEmissionResults } from '@/services/emissionSource'
 import { StudyWithoutDetail } from '@/services/permissions/study'
-import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
+import { EmissionFactorWithMetaData, getEmissionFactors } from '@/services/serverFunctions/emissionFactor'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
 import { withInfobulle } from '@/utils/post'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
-import { StudyRole, SubPost as SubPostEnum } from '@prisma/client'
+import { Import, StudyRole, SubPost as SubPostEnum } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -32,7 +32,6 @@ type StudyWithoutDetailProps = {
 interface Props {
   subPost: SubPostEnum
   userRoleOnStudy: StudyRole | null
-  emissionFactors: EmissionFactorWithMetaData[]
   emissionSources: FullStudy['emissionSources']
   studySite: string
   setGlossary: (subPost: string) => void
@@ -43,7 +42,6 @@ const SubPost = ({
   withoutDetail,
   study,
   userRoleOnStudy,
-  emissionFactors,
   emissionSources,
   studySite,
   setGlossary,
@@ -52,6 +50,41 @@ const SubPost = ({
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('study.results.units')
   const { environment } = useAppEnvironmentStore()
+  const [emissionFactorsForSubPost, setEmissionFactorsForSubPost] = useState<EmissionFactorWithMetaData[]>([])
+  const [expanded, setExpanded] = useState(false)
+  const importVersions = useMemo(
+    () => [
+      { id: Import.Manual, source: Import.Manual, name: '' },
+      ...study.emissionFactorVersions.map((efv) => efv.importVersion),
+    ],
+    [study.emissionFactorVersions],
+  )
+
+  useEffect(() => {
+    async function fetchEmissionFactors() {
+      const emissionsFactors = await getEmissionFactors(
+        0,
+        'ALL',
+        {
+          archived: false,
+          search: '',
+          location: '',
+          sources: importVersions.map((iv) => iv.id),
+          units: [],
+          subPosts: [subPost],
+        },
+        study.id,
+      )
+
+      if (emissionsFactors.success) {
+        setEmissionFactorsForSubPost(emissionsFactors.data.emissionFactors)
+      }
+    }
+
+    if (emissionFactorsForSubPost.length === 0 && expanded) {
+      fetchEmissionFactors()
+    }
+  }, [emissionFactorsForSubPost.length, expanded, importVersions, study.id, subPost])
 
   const total = useMemo(() => {
     if (!environment) {
@@ -79,7 +112,6 @@ const SubPost = ({
     [subPost, study.exports, environment],
   )
 
-  const [expanded, setExpanded] = useState(false)
   const accordionRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -138,22 +170,24 @@ const SubPost = ({
                 study={study}
                 emissionSource={emissionSource}
                 key={emissionSource.id}
-                emissionFactors={emissionFactors}
                 subPost={subPost}
                 userRoleOnStudy={userRoleOnStudy}
                 withoutDetail
                 caracterisations={caracterisations}
+                emissionFactorsForSubPost={emissionFactorsForSubPost}
+                importVersions={importVersions}
               />
             ) : (
               <EmissionSource
                 study={study}
                 emissionSource={emissionSource}
                 key={emissionSource.id}
-                emissionFactors={emissionFactors}
                 subPost={subPost}
                 userRoleOnStudy={userRoleOnStudy}
                 withoutDetail={false}
                 caracterisations={caracterisations}
+                emissionFactorsForSubPost={emissionFactorsForSubPost}
+                importVersions={importVersions}
               />
             ),
           )}

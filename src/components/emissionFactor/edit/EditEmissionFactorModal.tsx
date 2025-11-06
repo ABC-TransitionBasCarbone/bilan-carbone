@@ -1,17 +1,19 @@
 import Modal from '@/components/modals/Modal'
 import { deleteEmissionFactor } from '@/services/serverFunctions/emissionFactor'
+import { FeFilters } from '@/types/filters'
 import { handleWarningText } from '@/utils/components'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 
 interface Props {
   emissionFactorId: string
   action: 'edit' | 'delete' | undefined
   setAction: (action: 'edit' | 'delete' | undefined) => void
+  setFilters: Dispatch<SetStateAction<FeFilters>>
 }
 
-const EditEmissionFactorModal = ({ emissionFactorId, action, setAction }: Props) => {
+const EditEmissionFactorModal = ({ emissionFactorId, action, setAction, setFilters }: Props) => {
   const t = useTranslations('emissionFactors.edit.modal')
   const [deleting, setDeleting] = useState(false)
   const router = useRouter()
@@ -24,6 +26,12 @@ const EditEmissionFactorModal = ({ emissionFactorId, action, setAction }: Props)
       await deleteEmissionFactor(emissionFactorId)
       setDeleting(false)
       setAction(undefined)
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        archived: false,
+        search: '',
+        location: '',
+      }))
       router.refresh()
     }
   }

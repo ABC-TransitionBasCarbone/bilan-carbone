@@ -1,5 +1,7 @@
 'use client'
 
+import { EmissionFactorList } from '@/db/emissionFactors'
+import { FullStudy } from '@/db/study'
 import { StudyWithoutDetail } from '@/services/permissions/study'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
@@ -16,6 +18,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { Path } from 'react-hook-form'
 import LinkButton from '../base/LinkButton'
+import { ImportVersionForFilters } from '../emissionFactor/EmissionFactorsFilters'
 import GlossaryModal from '../modals/GlossaryModal'
 import styles from './EmissionSource.module.css'
 import EmissionSourceFactor from './EmissionSourceFactor'
@@ -23,14 +26,19 @@ import QualitySelectGroup from './QualitySelectGroup'
 
 interface Props {
   emissionSource: StudyWithoutDetail['emissionSources'][0]
-  emissionFactors: EmissionFactorWithMetaData[]
-  selectedFactor?: EmissionFactorWithMetaData
+  selectedFactor?: FullStudy['emissionSources'][0]['emissionFactor'] & {
+    metaData: EmissionFactorList['metaData']
+  }
   subPost: SubPost
-  update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null) => void
   isFromOldImport: boolean
   currentBEVersion: string
   advanced: boolean
   environment: Environment | undefined
+  userOrganizationId?: string
+  emissionFactorsForSubPost: EmissionFactorWithMetaData[]
+  importVersions: ImportVersionForFilters[]
+  studyId: string
+  update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null) => void
 }
 
 const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) =>
@@ -38,14 +46,17 @@ const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], und
 
 const EmissionSourceContributorForm = ({
   emissionSource,
-  emissionFactors,
   subPost,
   selectedFactor,
-  update,
   isFromOldImport,
   currentBEVersion,
   advanced,
   environment,
+  userOrganizationId,
+  emissionFactorsForSubPost,
+  importVersions,
+  studyId,
+  update,
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tResultUnits = useTranslations('study.results.units')
@@ -62,14 +73,17 @@ const EmissionSourceContributorForm = ({
     <>
       <div className={classNames(styles.row, 'flex')}>
         <EmissionSourceFactor
-          canEdit={!emissionSource.validated}
-          update={update}
-          emissionFactors={emissionFactors}
           subPost={subPost}
           selectedFactor={selectedFactor}
-          getDetail={getDetail}
+          canEdit={!emissionSource.validated}
           isFromOldImport={isFromOldImport}
           currentBEVersion={currentBEVersion}
+          userOrganizationId={userOrganizationId}
+          emissionFactorsForSubPost={emissionFactorsForSubPost}
+          importVersions={importVersions}
+          studyId={studyId}
+          getDetail={getDetail}
+          update={update}
         />
         <div className="grow flex gapped">
           <div className={classNames(styles.inputWithUnit, 'flex grow')}>

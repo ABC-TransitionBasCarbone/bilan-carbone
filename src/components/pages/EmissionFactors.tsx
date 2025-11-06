@@ -4,14 +4,14 @@ import { Suspense } from 'react'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import EmissionFactors from '../emissionFactor/EmissionFactors'
+import withAuth from '../hoc/withAuth'
 
 interface Props {
   userOrganizationId?: string
-  manualOnly: boolean
   environment: Environment
 }
 
-const EmissionFactorsPage = ({ userOrganizationId, manualOnly, environment }: Props) => {
+const EmissionFactorsPage = ({ userOrganizationId, environment }: Props) => {
   const tNav = useTranslations('nav')
   const t = useTranslations('emissionFactors')
 
@@ -35,11 +35,11 @@ const EmissionFactorsPage = ({ userOrganizationId, manualOnly, environment }: Pr
         }
       >
         <Suspense fallback={t('loading')}>
-          <EmissionFactors userOrganizationId={userOrganizationId} manualOnly={manualOnly} environment={environment} />
+          <EmissionFactors userOrganizationId={userOrganizationId} environment={environment} />
         </Suspense>
       </Block>
     </>
   )
 }
 
-export default EmissionFactorsPage
+export default withAuth(EmissionFactorsPage)

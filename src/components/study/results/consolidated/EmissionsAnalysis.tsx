@@ -93,7 +93,6 @@ const EmissionsAnalysis = ({
             withDep={withDepValue}
             withoutDep={withoutDepValue}
             caUnit={caUnit}
-            setGlossary={setGlossary}
           />
         </div>
         <div className="flex-col grow">

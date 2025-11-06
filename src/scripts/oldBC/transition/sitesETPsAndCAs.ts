@@ -63,7 +63,6 @@ export class SitesETPsMapper extends SitesAdditionalDataMapper<SitesETPsWorkShee
         const startDate = row.startDate ? new Date(getJsDateFromExcel(row.startDate as number)) : null
         const endDate = row.endDate ? new Date(getJsDateFromExcel(row.endDate as number)) : null
         if (!startDate || !endDate) {
-          console.warn(`Period invalide. Début : "${startDate}", fin : "${endDate}"`)
           return null
         }
         return {
@@ -95,7 +94,6 @@ export class SitesCAsMapper extends SitesAdditionalDataMapper<SitesCAsWorkSheet,
         const startDate = row.startDate ? new Date(getJsDateFromExcel(row.startDate as number)) : null
         const endDate = row.endDate ? new Date(getJsDateFromExcel(row.endDate as number)) : null
         if (!startDate || !endDate) {
-          console.warn(`Period invalide. Début : "${startDate}", fin : "${endDate}"`)
           return null
         }
         let multiply = 0

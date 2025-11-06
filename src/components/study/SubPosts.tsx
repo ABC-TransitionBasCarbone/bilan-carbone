@@ -3,10 +3,9 @@
 import { FullStudy } from '@/db/study'
 import { StudyWithoutDetail } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
-import { EmissionFactorWithMetaData, getEmissionFactors } from '@/services/serverFunctions/emissionFactor'
-import { EmissionFactorStatus, StudyRole } from '@prisma/client'
+import { StudyRole } from '@prisma/client'
 import classNames from 'classnames'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import SubPost from './SubPost'
 import styles from './SubPosts.module.css'
 
@@ -38,23 +37,11 @@ const SubPosts = ({
   setGlossary,
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
   const subPosts = useMemo(() => subPostsByPost[post], [post])
-  const [emissionFactors, setEmissionFactors] = useState<EmissionFactorWithMetaData[]>([])
-  useEffect(() => {
-    const fetchData = async () => {
-      const emissionFactorsData = await getEmissionFactors(study.id)
-      const emissionFactors = emissionFactorsData.success ? emissionFactorsData.data : []
-      setEmissionFactors(
-        emissionFactors.filter((emissionFactor) => emissionFactor.status !== EmissionFactorStatus.Archived),
-      )
-    }
-    fetchData()
-  }, [])
 
   return (
     <div className={classNames(styles.subPosts, 'flex-col')}>
       {subPosts.map((subPost) => (
         <SubPost
-          emissionFactors={emissionFactors}
           emissionSources={emissionSources.filter((emissionSource) => emissionSource.subPost === subPost)}
           subPost={subPost}
           key={subPost}

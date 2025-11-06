@@ -1,6 +1,6 @@
-import { getEmissionFactorSources } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import DynamicStudyRights from '@/environments/core/study/DynamicStudyRights'
+import { getEmissionFactorImportVersions } from '@/services/serverFunctions/emissionFactor'
 import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
@@ -19,7 +19,11 @@ const StudyRightsPage = async ({ study, user }: Props) => {
 
   const editionDisabled = !hasEditionRights(userRoleOnStudy)
 
-  const emissionFactorSources = await getEmissionFactorSources()
+  const emissionFactorImportVersionRes = await getEmissionFactorImportVersions(true)
+  if (!emissionFactorImportVersionRes.success) {
+    console.error('Failed to fetch emission factor import versions')
+    return <NotFound />
+  }
 
   if (!userRoleOnStudy) {
     return <NotFound />
@@ -46,7 +50,7 @@ const StudyRightsPage = async ({ study, user }: Props) => {
         study={study}
         editionDisabled={editionDisabled}
         userRoleOnStudy={userRoleOnStudy}
-        emissionFactorSources={emissionFactorSources}
+        emissionFactorSources={emissionFactorImportVersionRes.data}
       />
     </>
   )

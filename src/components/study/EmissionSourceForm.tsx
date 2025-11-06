@@ -1,5 +1,6 @@
 'use client'
 
+import { EmissionFactorList } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { getEmissionResults } from '@/services/emissionSource'
 import { subPostsByPost } from '@/services/posts'
@@ -43,6 +44,7 @@ import HelpIcon from '../base/HelpIcon'
 import LinkButton from '../base/LinkButton'
 import { Select } from '../base/Select'
 import TagChip from '../base/TagChip'
+import { ImportVersionForFilters } from '../emissionFactor/EmissionFactorsFilters'
 import GlossaryModal from '../modals/GlossaryModal'
 import Modal from '../modals/Modal'
 import DeleteEmissionSource from './DeleteEmissionSource'
@@ -63,10 +65,10 @@ interface Props {
   userRoleOnStudy: StudyRole | null
   canEdit: boolean | null
   canValidate: boolean
-  emissionFactors: EmissionFactorWithMetaData[]
   subPost: SubPost
-  selectedFactor?: EmissionFactorWithMetaData
-  update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null | string[]) => void
+  selectedFactor?: FullStudy['emissionSources'][0]['emissionFactor'] & {
+    metaData: EmissionFactorList['metaData']
+  }
   environment: Environment
   caracterisations: EmissionSourceCaracterisation[]
   mandatoryCaracterisation: boolean
@@ -75,6 +77,10 @@ interface Props {
   isFromOldImport: boolean
   currentBEVersion: string
   studyUnit: StudyResultUnit
+  userOrganizationId?: string
+  emissionFactorsForSubPost: EmissionFactorWithMetaData[]
+  importVersions: ImportVersionForFilters[]
+  update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null | string[]) => void
 }
 
 const EmissionSourceForm = ({
@@ -84,8 +90,6 @@ const EmissionSourceForm = ({
   userRoleOnStudy,
   canEdit,
   canValidate,
-  update,
-  emissionFactors,
   subPost,
   selectedFactor,
   caracterisations,
@@ -96,6 +100,10 @@ const EmissionSourceForm = ({
   currentBEVersion,
   studyUnit,
   environment,
+  userOrganizationId,
+  emissionFactorsForSubPost,
+  importVersions,
+  update,
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
@@ -210,12 +218,15 @@ const EmissionSourceForm = ({
         <EmissionSourceFactor
           canEdit={canEdit}
           update={update}
-          emissionFactors={emissionFactors}
           subPost={subPost}
           selectedFactor={selectedFactor}
           getDetail={getDetail}
           isFromOldImport={isFromOldImport}
           currentBEVersion={currentBEVersion}
+          userOrganizationId={userOrganizationId}
+          emissionFactorsForSubPost={emissionFactorsForSubPost}
+          importVersions={importVersions}
+          studyId={studyId}
         />
         {isCas ? (
           <>

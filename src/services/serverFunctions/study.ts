@@ -1625,7 +1625,10 @@ const buildStudyForDuplication = (
   emissionFactorVersions: {
     createMany: {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      data: study.emissionFactorVersions.map(({ id, ...emissionFactorVersion }) => emissionFactorVersion),
+      data: study.emissionFactorVersions.map(({ id, ...emissionFactorVersion }) => ({
+        importVersionId: emissionFactorVersion.importVersionId,
+        source: emissionFactorVersion.source,
+      })),
     },
   },
   tagFamilies: {
@@ -1751,6 +1754,7 @@ export const duplicateStudyEmissionSource = async (
     const data = {
       ...emissionSource,
       id: uuidv4(),
+      name: `${emissionSource.name} - copie`,
       study: { connect: { id: studyId } },
       emissionFactor: emissionSource.emissionFactor ? { connect: { id: emissionSource.emissionFactor.id } } : undefined,
       emissionFactorId: undefined,

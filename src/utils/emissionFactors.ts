@@ -2,7 +2,6 @@ import { wasteImpact } from '@/constants/emissions'
 import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
 import { hasWasteImpact } from '@/services/permissions/environment'
 import { convertTiltSubPostToBCSubPost } from '@/services/posts'
-import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { EmissionFactor, Environment, Import, Prisma, SubPost, Unit } from '@prisma/client'
 
 export const getEmissionFactorValue = (
@@ -84,16 +83,4 @@ const getTiltSubPostList = (subPosts: SubPost[]) => {
     }
   }
   return result
-}
-
-export const filterEmissionFactorsBySubPostAndEnv = <T extends Pick<EmissionFactorWithMetaData, 'subPosts'>>(
-  emissionFactors: T[],
-  subPosts: SubPost[],
-  environment?: Environment,
-) => {
-  const filterSubPostList = environment === Environment.TILT ? getTiltSubPostList(subPosts) : subPosts
-
-  return emissionFactors.filter((emissionFactor) =>
-    emissionFactor.subPosts.some((efSubPost) => filterSubPostList.includes(efSubPost)),
-  )
 }

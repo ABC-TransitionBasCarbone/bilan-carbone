@@ -1,7 +1,10 @@
 'use client'
 
+import { keepOnlyOneMetadata } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { Locale } from '@/i18n/config'
+import { getLocale } from '@/i18n/locale'
 import { getEmissionResults } from '@/services/emissionSource'
 import { StudyWithoutDetail } from '@/services/permissions/study'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
@@ -25,6 +28,7 @@ import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Path } from 'react-hook-form'
 import Label from '../base/Label'
+import { ImportVersionForFilters } from '../emissionFactor/EmissionFactorsFilters'
 import styles from './EmissionSource.module.css'
 import EmissionSourceContributorForm from './EmissionSourceContributorForm'
 import EmissionSourceForm from './EmissionSourceForm'
@@ -42,20 +46,22 @@ type StudyWithoutDetailProps = {
 }
 
 interface Props {
-  emissionFactors: EmissionFactorWithMetaData[]
   subPost: SubPost
   userRoleOnStudy: StudyRole | null
   caracterisations: EmissionSourceCaracterisation[]
+  emissionFactorsForSubPost: EmissionFactorWithMetaData[]
+  importVersions: ImportVersionForFilters[]
 }
 
 const EmissionSource = ({
   study,
   emissionSource,
-  emissionFactors,
   subPost,
   userRoleOnStudy,
   withoutDetail,
   caracterisations,
+  emissionFactorsForSubPost,
+  importVersions,
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
   const { environment } = useAppEnvironmentStore()
   const ref = useRef<HTMLDivElement>(null)
@@ -70,8 +76,18 @@ const EmissionSource = ({
   const router = useRouter()
   const [display, setDisplay] = useState(false)
   const { callServerFunction } = useServerFunction()
+  const [locale, setLocale] = useState(Locale.FR)
 
   const detailId = `${emissionSource.id}-detail`
+
+  useEffect(() => {
+    async function fetchLocale() {
+      const localeCookie = await getLocale()
+      setLocale(localeCookie)
+    }
+
+    fetchLocale()
+  }, [])
 
   useEffect(() => {
     const hash = window.location.hash
@@ -143,10 +159,11 @@ const EmissionSource = ({
   }, [display, ref])
 
   const selectedFactor = useMemo(() => {
-    if (emissionSource.emissionFactor) {
-      return emissionFactors.find((emissionFactor) => emissionFactor.id === emissionSource.emissionFactor?.id)
+    if (!emissionSource.emissionFactor) {
+      return undefined
     }
-  }, [emissionSource.emissionFactor, emissionFactors])
+    return keepOnlyOneMetadata([emissionSource.emissionFactor], locale)[0]
+  }, [emissionSource.emissionFactor, locale])
 
   const status = useMemo(
     () => getEmissionSourceStatus(study, emissionSource, environment),
@@ -170,13 +187,13 @@ const EmissionSource = ({
   )
 
   const currentBEVersion = useMemo(() => {
-    const versionId = isFromOldImport
+    const version = isFromOldImport
       ? study.emissionFactorVersions.find(
           (emissionFactorVersion) => emissionFactorVersion.source === Import.BaseEmpreinte,
-        )?.importVersionId || ''
+        )?.importVersion.name
       : ''
-    return versionId ? emissionFactors.find((factor) => factor?.version?.id === versionId)?.version?.name || '' : ''
-  }, [study.emissionFactorVersions, isFromOldImport, emissionFactors])
+    return version ?? ''
+  }, [study.emissionFactorVersions, isFromOldImport])
 
   if (!environment) {
     return null
@@ -303,15 +320,17 @@ const EmissionSource = ({
             )}
             {withoutDetail ? (
               <EmissionSourceContributorForm
+                studyId={study.id}
                 emissionSource={emissionSource}
                 selectedFactor={selectedFactor}
                 subPost={subPost}
-                emissionFactors={emissionFactors}
                 update={update}
                 isFromOldImport={isFromOldImport}
                 currentBEVersion={currentBEVersion}
                 advanced={study.level === Level.Advanced}
                 environment={environment}
+                emissionFactorsForSubPost={emissionFactorsForSubPost}
+                importVersions={importVersions}
               />
             ) : (
               <EmissionSourceForm
@@ -322,7 +341,6 @@ const EmissionSource = ({
                 canValidate={canValidate}
                 emissionSource={emissionSource}
                 selectedFactor={selectedFactor}
-                emissionFactors={emissionFactors}
                 subPost={subPost}
                 update={update}
                 environment={environment}
@@ -333,6 +351,9 @@ const EmissionSource = ({
                 isFromOldImport={isFromOldImport}
                 currentBEVersion={currentBEVersion}
                 studyUnit={study.resultsUnit}
+                userOrganizationId={study.organizationVersion.organization.id}
+                emissionFactorsForSubPost={emissionFactorsForSubPost}
+                importVersions={importVersions}
               />
             )}
           </div>

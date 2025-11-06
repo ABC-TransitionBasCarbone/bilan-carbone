@@ -4,11 +4,12 @@ import { useTranslations } from 'next-intl'
 
 interface Props {
   otherOrganizationVersion: boolean
-  rightsWarning: boolean
+  rightsWarning?: boolean
+  loading: boolean
   decline: () => void
   accept: () => void
 }
-const NewStudyRightModal = ({ otherOrganizationVersion, rightsWarning, decline, accept }: Props) => {
+const NewStudyRightModal = ({ otherOrganizationVersion, rightsWarning, loading, decline, accept }: Props) => {
   const t = useTranslations('study.rights.new.dialog')
 
   return (
@@ -26,10 +27,11 @@ const NewStudyRightModal = ({ otherOrganizationVersion, rightsWarning, decline, 
             children: t('decline'),
           },
           {
-            actionType: 'button',
+            actionType: 'loadingButton',
             onClick: accept,
             ['data-testid']: 'new-study-right-modal-accept',
             children: t('accept'),
+            loading,
           },
         ]}
       >
