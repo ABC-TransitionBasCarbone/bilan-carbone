@@ -58,7 +58,7 @@ const ModalStepper = ({
       data-testid={`${label}-modal`}
     >
       <Box className={classNames(styles.box, className, 'flex-col p2', { [styles.big]: big })}>
-        <div className="justify-between align-center mb2">
+        <div className="justify-between align-center mb1">
           <div className="flex align-center gapped1">
             {stepTitles && (
               <Typography variant="body2" color="textSecondary">

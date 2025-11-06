@@ -4,8 +4,7 @@
 }
 
 .stepContent {
-  min-height: 30rem;
-  overflow-y: auto;
+  padding-right: 1rem;
 }
 
 .reductionContainer {
