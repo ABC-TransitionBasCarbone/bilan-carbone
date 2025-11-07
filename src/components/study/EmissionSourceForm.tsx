@@ -10,7 +10,7 @@ import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emission
 import { duplicateStudyEmissionSource } from '@/services/serverFunctions/study'
 import { EmissionSourcesStatus } from '@/services/study'
 import {
-  getQualityRating,
+  getQualitativeUncertaintyFromQuality,
   getSpecificEmissionFactorQuality,
   qualityKeys,
   specificFEQualityKeys,
@@ -127,7 +127,7 @@ const EmissionSourceForm = ({
   const emissionResults = useMemo(() => getEmissionResults(emissionSource, environment), [emissionSource, environment])
 
   const qualityRating = useMemo(
-    () => (selectedFactor ? getQualityRating(getSpecificEmissionFactorQuality(emissionSource)) : null),
+    () => (selectedFactor ? getQualitativeUncertaintyFromQuality(getSpecificEmissionFactorQuality(emissionSource)) : null),
     [selectedFactor, emissionSource],
   )
 

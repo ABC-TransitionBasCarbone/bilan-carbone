@@ -1,14 +1,10 @@
 import { FullStudy } from '@/db/study'
 import { Translations } from '@/types/translation'
 import { Environment, SubPost } from '@prisma/client'
-import {
-  getEmissionResults,
-  getEmissionSourcesTotalCo2,
-  getEmissionSourcesTotalMonetaryCo2,
-  sumEmissionSourcesUncertainty,
-} from '../emissionSource'
+import { getEmissionResults, getEmissionSourcesTotalCo2, getEmissionSourcesTotalMonetaryCo2 } from '../emissionSource'
 import { BCPost, convertTiltSubPostToBCSubPost, CutPost, Post, subPostsByPost, TiltPost } from '../posts'
 import { AdditionalResultTypes, ResultType } from '../study'
+import { getSquaredStandardDeviationForEmissionSourceArray } from '../uncertainty'
 import { filterWithDependencies, getSiteEmissionSources } from './utils'
 
 export type ResultsByPost = {
@@ -21,22 +17,6 @@ export type ResultsByPost = {
   numberOfValidatedEmissionSource: number
   uncertainty: number
   children: ResultsByPost[]
-}
-
-export const computeUncertainty = (uncertaintyToReduce: { value: number; uncertainty?: number | null }[]) => {
-  const total = uncertaintyToReduce.reduce((acc, info) => acc + info.value, 0)
-
-  return Math.exp(
-    Math.sqrt(
-      uncertaintyToReduce.reduce((acc, info) => {
-        if (!info.value) {
-          return acc
-        }
-
-        return acc + Math.pow(info.value / total, 2) * Math.pow(Math.log(info.uncertainty || 1), 2)
-      }, 0),
-    ),
-  )
 }
 
 export const computeResultsByPost = (
@@ -81,7 +61,7 @@ export const computeResultsByPost = (
             nonSpecificMonetaryValue: getEmissionSourcesTotalMonetaryCo2(emissionSourcesToUse, true),
             numberOfEmissionSource: emissionSources.length,
             numberOfValidatedEmissionSource: validatedEmissionSources.length,
-            uncertainty: sumEmissionSourcesUncertainty(emissionSourcesToUse),
+            uncertainty: getSquaredStandardDeviationForEmissionSourceArray(emissionSourcesToUse),
           }
         })
 
@@ -99,7 +79,7 @@ export const computeResultsByPost = (
         value,
         monetaryValue,
         nonSpecificMonetaryValue,
-        uncertainty: subPosts.length > 0 ? computeUncertainty(subPosts) : undefined,
+        uncertainty: subPosts.length > 0 ? getSquaredStandardDeviationForEmissionSourceArray(subPosts) : undefined,
         children: subPosts.sort((a, b) => tPost(a.post).localeCompare(tPost(b.post))),
         numberOfEmissionSource: subPosts.reduce((acc, subPost) => acc + subPost.numberOfEmissionSource, 0),
         numberOfValidatedEmissionSource: subPosts.reduce(
@@ -123,7 +103,7 @@ export const computeTotalForPosts = (postInfos: ResultsByPost[], tPost: (key: st
     monetaryValue: postInfos.reduce((acc, post) => acc + post.monetaryValue, 0),
     nonSpecificMonetaryValue: postInfos.reduce((acc, post) => acc + post.nonSpecificMonetaryValue, 0),
     children: [],
-    uncertainty: computeUncertainty(postInfos),
+    uncertainty: getSquaredStandardDeviationForEmissionSourceArray(postInfos),
     numberOfEmissionSource: postInfos.reduce((acc, post) => acc + post.numberOfEmissionSource, 0),
     numberOfValidatedEmissionSource: postInfos.reduce((acc, post) => acc + post.numberOfValidatedEmissionSource, 0),
   }
@@ -183,7 +163,7 @@ export const computeResultsByTag = (
             tagFamily: tag.familyId,
             value: getEmissionSourcesTotalCo2(emissionSourcesToUse),
             color: tag.color ?? '',
-            uncertainty: sumEmissionSourcesUncertainty(emissionSourcesToUse),
+            uncertainty: getSquaredStandardDeviationForEmissionSourceArray(emissionSourcesToUse),
           }
         })
         .filter((tag) => tag.value > 0)
@@ -195,7 +175,7 @@ export const computeResultsByTag = (
         label: tagFamily.name,
         value,
         children: tagInfos.filter((tag) => tag.value > 0),
-        uncertainty: computeUncertainty(tagInfos),
+        uncertainty: getSquaredStandardDeviationForEmissionSourceArray(tagInfos),
       }
     })
     .filter((family) => family.value > 0)

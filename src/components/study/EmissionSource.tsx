@@ -14,7 +14,7 @@ import {
   UpdateEmissionSourceCommandValidation,
 } from '@/services/serverFunctions/emissionSource.command'
 import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study'
-import { getStandardDeviationRating } from '@/services/uncertainty'
+import { getQualitativeUncertaintyFromSquaredStandardDeviation } from '@/services/uncertainty'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
@@ -271,7 +271,7 @@ const EmissionSource = ({
                   data-testid="emission-source-quality"
                 >
                   {tQuality('name')}{' '}
-                  {tQuality(getStandardDeviationRating(emissionResults.standardDeviation).toString())}
+                  {tQuality(getQualitativeUncertaintyFromSquaredStandardDeviation(emissionResults.standardDeviation).toString())}
                 </p>
               )}
             </div>
