@@ -15,7 +15,7 @@ import commonStyles from '../commonTable.module.css'
 type tableDataType = {
   label: string
   value: number
-  uncertainty: number
+  squaredStandardDeviation: number
   children: tableDataType[]
 }
 interface Props {
@@ -49,8 +49,10 @@ const TagsResultsTable = ({ resultsUnit, data }: Props) => {
       },
       {
         header: t('uncertainty'),
-        accessorFn: ({ uncertainty }) =>
-          uncertainty ? tQuality(getQualitativeUncertaintyFromSquaredStandardDeviation(uncertainty).toString()) : '',
+        accessorFn: ({ squaredStandardDeviation }) =>
+          squaredStandardDeviation
+            ? tQuality(getQualitativeUncertaintyFromSquaredStandardDeviation(squaredStandardDeviation).toString())
+            : '',
       },
       {
         header: t('emissions'),

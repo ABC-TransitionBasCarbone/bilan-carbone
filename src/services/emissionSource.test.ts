@@ -74,7 +74,7 @@ describe('emissionSource Service', () => {
         emissionValue: 1200,
         confidenceInterval: [516.2597423212065, 2789.2936093088983],
         alpha: 1.3244113410907485,
-        standardDeviation: 2.3244113410907485,
+        squaredStandardDeviation: 2.3244113410907485,
       })
     })
 
@@ -86,7 +86,12 @@ describe('emissionSource Service', () => {
         },
         Environment.BC,
       )
-      expect(result).toEqual({ emissionValue: 0, standardDeviation: null, confidenceInterval: null, alpha: null })
+      expect(result).toEqual({
+        emissionValue: 0,
+        squaredStandardDeviation: null,
+        confidenceInterval: null,
+        alpha: null,
+      })
     })
 
     it('should return null if emission factor is not defined', () => {
@@ -97,7 +102,12 @@ describe('emissionSource Service', () => {
         },
         Environment.BC,
       )
-      expect(result).toEqual({ emissionValue: 0, standardDeviation: null, confidenceInterval: null, alpha: null })
+      expect(result).toEqual({
+        emissionValue: 0,
+        squaredStandardDeviation: null,
+        confidenceInterval: null,
+        alpha: null,
+      })
     })
   })
 })

@@ -116,7 +116,7 @@ export const getSquaredStandardDeviationForEmissionSourceArray = (
           return acc
         }
 
-        return acc + Math.pow(es.value / total, 2) * Math.pow(Math.log(Math.sqrt(es.squaredStandardDeviation || 1)), 2)
+        return acc + Math.pow(es.value / total, 2) * Math.pow(Math.log(es.squaredStandardDeviation || 1), 2)
       }, 0),
     ),
   )
@@ -148,14 +148,14 @@ export const getQualitativeUncertaintyFromQuality = (quality: Quality) => {
 export const getEmissionSourcesConfidenceInterval = (
   emissionSources: (Pick<FullStudy['emissionSources'][number], 'emissionFactor'> & {
     emissionValue: number
-    standardDeviation: number | null
+    squaredStandardDeviation: number | null
   })[],
 ) => {
   const totalEmissions = getEmissionSourcesTotalCo2(emissionSources)
   const gsd = getSquaredStandardDeviationForEmissionSourceArray(
     emissionSources.map((es) => ({
       value: es.emissionValue,
-      squaredStandardDeviation: es.standardDeviation,
+      squaredStandardDeviation: es.squaredStandardDeviation,
     })),
   )
   return getConfidenceInterval(totalEmissions, gsd)

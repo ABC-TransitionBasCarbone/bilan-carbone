@@ -175,7 +175,7 @@ const EmissionSource = ({
   )
   const emissionResults = useMemo(() => {
     if (!environment) {
-      return { emissionValue: 0, standardDeviation: 0 }
+      return { emissionValue: 0, squaredStandardDeviation: 0 }
     }
 
     return getEmissionResults(emissionSource, environment)
@@ -269,14 +269,16 @@ const EmissionSource = ({
               <p className={styles.resultText} data-testid="emission-source-value">
                 {`${formatNumber(emissionResults.emissionValue / STUDY_UNIT_VALUES[study.resultsUnit])} ${tResultstUnits(study.resultsUnit)}`}
               </p>
-              {emissionResults.standardDeviation && (
+              {emissionResults.squaredStandardDeviation && (
                 <p
                   className={classNames(styles.resultQuality, styles.resultText)}
                   data-testid="emission-source-quality"
                 >
                   {tQuality('name')}{' '}
                   {tQuality(
-                    getQualitativeUncertaintyFromSquaredStandardDeviation(emissionResults.standardDeviation).toString(),
+                    getQualitativeUncertaintyFromSquaredStandardDeviation(
+                      emissionResults.squaredStandardDeviation,
+                    ).toString(),
                   )}
                 </p>
               )}
