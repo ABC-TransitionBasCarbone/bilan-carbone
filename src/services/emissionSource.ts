@@ -12,8 +12,7 @@ import {
 } from '@prisma/client'
 import { StudyWithoutDetail } from './permissions/study'
 import { convertTiltSubPostToBCSubPost } from './posts'
-import { computeUncertainty } from './results/consolidated'
-import { getConfidenceInterval, getQualityStandardDeviation, getSpecificEmissionFactorQuality } from './uncertainty'
+import { getConfidenceInterval, getSquaredStandardDeviationForEmissionSource } from './uncertainty'
 
 type CaracterisationsBySubPost = Partial<Record<SubPost, EmissionSourceCaracterisation[]>>
 
@@ -77,25 +76,6 @@ export const canBeValidated = (
   return getEmissionSourceCompletion(emissionSource, study, emissionFactor, environment) === 1
 }
 
-export const getStandardDeviation = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][number]) => {
-  if (!emissionSource.emissionFactor || emissionSource.value === null) {
-    return null
-  }
-  const emissionStandardDeviation = getQualityStandardDeviation(emissionSource)
-  const factorStandardDeviation = getQualityStandardDeviation(getSpecificEmissionFactorQuality(emissionSource))
-  if (emissionStandardDeviation === null || factorStandardDeviation === null) {
-    return null
-  }
-
-  return Math.exp(
-    2 *
-      Math.sqrt(
-        Math.pow(Math.log(Math.sqrt(factorStandardDeviation)), 2) +
-          Math.pow(Math.log(Math.sqrt(emissionStandardDeviation)), 2),
-      ),
-  )
-}
-
 export const getAlpha = (emission: number | null, confidenceInterval: number[] | null) => {
   if (emission === null || confidenceInterval === null || confidenceInterval[1] === undefined) {
     return null
@@ -143,7 +123,7 @@ export const getEmissionResults = (
     return { emissionValue: 0, standardDeviation: null, confidenceInterval: null, alpha: null }
   }
 
-  const standardDeviation = getStandardDeviation(emissionSource)
+  const standardDeviation = getSquaredStandardDeviationForEmissionSource(emissionSource)
   const confidenceInterval = standardDeviation ? getConfidenceInterval(emission, standardDeviation) : null
   const alpha = getAlpha(emission, confidenceInterval)
 
@@ -153,17 +133,6 @@ export const getEmissionResults = (
     confidenceInterval,
     alpha,
   }
-}
-
-export const sumEmissionSourcesUncertainty = (
-  emissionSources: { emissionValue: number; standardDeviation: number | null }[],
-) => {
-  const results = emissionSources.map((result) => ({
-    value: result.emissionValue,
-    uncertainty: result.standardDeviation,
-  }))
-
-  return computeUncertainty(results)
 }
 
 export const getEmissionSourcesTotalCo2 = (emissionSources: { emissionValue: number }[]) =>

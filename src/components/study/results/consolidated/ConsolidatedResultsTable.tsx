@@ -1,7 +1,7 @@
 'use client'
 
 import BaseTable from '@/components/base/Table'
-import { getStandardDeviationRating } from '@/services/uncertainty'
+import { getQualitativeUncertaintyFromSquaredStandardDeviation } from '@/services/uncertainty'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
@@ -92,7 +92,7 @@ const ConsolidatedResultsTable = <
       tmpColumns.push({
         header: t('uncertainty'),
         accessorFn: ({ uncertainty }) =>
-          uncertainty ? tQuality(getStandardDeviationRating(uncertainty).toString()) : '',
+          uncertainty ? tQuality(getQualitativeUncertaintyFromSquaredStandardDeviation(uncertainty).toString()) : '',
       })
     }
 

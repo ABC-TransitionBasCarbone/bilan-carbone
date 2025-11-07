@@ -3,7 +3,7 @@
 import BaseTable from '@/components/base/Table'
 import { FullStudy } from '@/db/study'
 import { BegesPostInfos, rulesSpans } from '@/services/results/beges'
-import { getStandardDeviationRating } from '@/services/uncertainty'
+import { getQualitativeUncertaintyFromSquaredStandardDeviation } from '@/services/uncertainty'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { ColumnDef, flexRender, getCoreRowModel, Row, useReactTable } from '@tanstack/react-table'
@@ -83,7 +83,7 @@ const BegesResultsTable = ({ study, withDepValue, data }: Props) => {
           id: 'uncertainty',
           header: t('uncertainty'),
           accessorFn: ({ uncertainty }) =>
-            uncertainty ? tQuality(getStandardDeviationRating(uncertainty).toString()) : '',
+            uncertainty ? tQuality(getQualitativeUncertaintyFromSquaredStandardDeviation(uncertainty).toString()) : '',
         },
       ] as ColumnDef<BegesPostInfos>[],
     [t, tQuality, tUnits, study.resultsUnit],

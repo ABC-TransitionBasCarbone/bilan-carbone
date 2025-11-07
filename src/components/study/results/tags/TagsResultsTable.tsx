@@ -1,6 +1,6 @@
 import BaseTable from '@/components/base/Table'
 import { ResultsByTag } from '@/services/results/consolidated'
-import { getStandardDeviationRating } from '@/services/uncertainty'
+import { getQualitativeUncertaintyFromSquaredStandardDeviation } from '@/services/uncertainty'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
@@ -50,7 +50,7 @@ const TagsResultsTable = ({ resultsUnit, data }: Props) => {
       {
         header: t('uncertainty'),
         accessorFn: ({ uncertainty }) =>
-          uncertainty ? tQuality(getStandardDeviationRating(uncertainty).toString()) : '',
+          uncertainty ? tQuality(getQualitativeUncertaintyFromSquaredStandardDeviation(uncertainty).toString()) : '',
       },
       {
         header: t('emissions'),

@@ -1,6 +1,6 @@
 import { Post } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
-import { getStandardDeviationRating } from '@/services/uncertainty'
+import { getQualitativeUncertaintyFromSquaredStandardDeviation } from '@/services/uncertainty'
 import { postColors } from '@/utils/study'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -36,7 +36,7 @@ const MostUncertainPostsChart = ({ computedResults }: Props) => {
       icon: result.post as Post,
       post: t(result.post),
       color: postColors[result.post as Post],
-      uncertainty: tQuality(getStandardDeviationRating(result.uncertainty ?? 1).toString()),
+      uncertainty: tQuality(getQualitativeUncertaintyFromSquaredStandardDeviation(result.uncertainty ?? 1).toString()),
     }))
 
   const PostInfo = ({ post }: { post: { post: string; color: string; uncertainty: string; icon: Post } }) => (

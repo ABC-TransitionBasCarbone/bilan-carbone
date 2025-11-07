@@ -18,7 +18,6 @@ import {
   getEmissionResults,
   getEmissionSourceEmission,
   getEmissionSourcesTotalCo2,
-  getStandardDeviation,
 } from './emissionSource'
 import { download } from './file'
 import { hasAccessToBcExport } from './permissions/environment'
@@ -37,10 +36,11 @@ import { EmissionFactorWithMetaData, getEmissionFactorsByIds } from './serverFun
 import { prepareExcel } from './serverFunctions/file'
 import { getUserSettings } from './serverFunctions/user'
 import {
-  getEmissionSourcesGlobalUncertainty,
-  getQualityRating,
-  getStandardDeviationRating,
-  sumQualities,
+  getEmissionSourcesConfidenceInterval,
+  getQualitativeUncertaintyForEmissionSources,
+  getQualitativeUncertaintyFromQuality,
+  getQualitativeUncertaintyFromSquaredStandardDeviation,
+  getSquaredStandardDeviationForEmissionSource,
 } from './uncertainty'
 
 export enum AdditionalResultTypes {
@@ -49,7 +49,7 @@ export enum AdditionalResultTypes {
 }
 export type ResultType = Export | AdditionalResultTypes
 
-const getQuality = (quality: ReturnType<typeof getQualityRating>, t: Translations) => {
+const getQuality = (quality: ReturnType<typeof getQualitativeUncertaintyFromQuality>, t: Translations) => {
   return quality === null ? t('unknown') : t(quality.toString())
 }
 
@@ -164,7 +164,7 @@ const getEmissionSourcesRows = (
         initCols.push(tPost(post || ''))
         initCols.push(tPost(emissionSource.subPost))
       }
-      const emissionSourceSD = getStandardDeviation(emissionSource)
+      const emissionSourceSD = getSquaredStandardDeviationForEmissionSource(emissionSource)
 
       const withDeprecation = hasDeprecationPeriod(emissionSource.subPost)
 
@@ -178,18 +178,20 @@ const getEmissionSourcesRows = (
           isCAS(emissionSource) ? emissionSource.hectare || '1' : ' ',
           isCAS(emissionSource) ? emissionSource.duration || '1' : ' ',
           tResultUnits(resultsUnit),
-          emissionSourceSD ? getQuality(getStandardDeviationRating(emissionSourceSD), tQuality) : '',
+          emissionSourceSD
+            ? getQuality(getQualitativeUncertaintyFromSquaredStandardDeviation(emissionSourceSD), tQuality)
+            : '',
           emissionSource.emissionSourceTags.map((emissionSourceTag) => emissionSourceTag.tag.name).join(', ') || '',
           emissionSource.value?.toLocaleString('fr-FR', { useGrouping: false }) || '0',
           emissionFactor?.unit ? tUnit(emissionFactor.unit, { count: 1 }) : '',
-          getQuality(getQualityRating(emissionSource), tQuality),
+          getQuality(getQualitativeUncertaintyFromQuality(emissionSource), tQuality),
           emissionSource.comment || '',
           emissionFactor?.metaData?.title || t('noFactor'),
           emissionFactor
             ? getEmissionFactorValue(emissionFactor, environment).toLocaleString('fr-FR', { useGrouping: false })
             : '',
           emissionFactor?.unit ? `${tResultUnits(StudyResultUnit.K)}/${tUnit(emissionFactor.unit, { count: 1 })}` : '',
-          emissionFactor ? getQuality(getQualityRating(emissionFactor), tQuality) : '',
+          emissionFactor ? getQuality(getQualitativeUncertaintyFromQuality(emissionFactor), tQuality) : '',
           emissionFactor?.source || '',
         ])
         .map((field) => encodeCSVField(field))
@@ -258,11 +260,10 @@ const getEmissionSourcesCSVContent = (
   )
   const totalRow = [t('total'), ...emptyFields(emptyFieldsCount + 1), totalEmissions].join(';')
 
-  const qualities = emissionSources.map((emissionSource) => getStandardDeviation(emissionSource))
-  const quality = getQuality(getStandardDeviationRating(sumQualities(qualities)), tQuality)
+  const quality = getQuality(getQualitativeUncertaintyForEmissionSources(emissionSources), tQuality)
   const qualityRow = [t('quality'), ...emptyFields(emptyFieldsCount + 1), quality].join(';')
 
-  const uncertainty = getEmissionSourcesGlobalUncertainty(emissionSourcesWithEmission)
+  const uncertainty = getEmissionSourcesConfidenceInterval(emissionSourcesWithEmission)
   const uncertaintyRow = [
     t('uncertainty'),
     ...emptyFields(emptyFieldsCount),
@@ -375,7 +376,11 @@ const handleLine = (
 ) => {
   const resultLine = []
   if (headersForEnv.includes('uncertainty')) {
-    resultLine.push(result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '')
+    resultLine.push(
+      result.uncertainty
+        ? tQuality(getQualitativeUncertaintyFromSquaredStandardDeviation(result.uncertainty).toString())
+        : '',
+    )
   }
 
   return [...resultLine, formatEmissionValueForExport(result.value ?? 0, resultsUnits)]
@@ -523,7 +528,9 @@ export const formatBegesStudyResultsForExport = (
         category === 'total' ? '' : `${category}. ${tBeges(`category.${category}`)}`,
         post,
         ...gasValues,
-        result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '',
+        result.uncertainty
+          ? tQuality(getQualitativeUncertaintyFromSquaredStandardDeviation(result.uncertainty).toString())
+          : '',
       ])
     }
 

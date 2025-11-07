@@ -1,14 +1,14 @@
 import { expect } from '@jest/globals'
-import { getQualityRating, getQualityStandardDeviation } from './uncertainty'
+import { getQualitativeUncertaintyFromQuality, getSquaredStandardDeviationForQuality } from './uncertainty'
 
 jest.mock('./file', () => ({ download: jest.fn() }))
 jest.mock('./permissions/study', () => ({ isAdminOnStudyOrga: jest.fn() }))
 jest.mock('./study', () => ({ hasSufficientLevel: jest.fn() }))
 
 describe('Uncertainty Service', () => {
-  describe('getQualityStandardDeviation', () => {
+  describe('getSquaredStandardDeviationForQuality', () => {
     it('should return null if no quality is present', () => {
-      const result = getQualityStandardDeviation({
+      const result = getSquaredStandardDeviationForQuality({
         completeness: null,
         geographicRepresentativeness: null,
         reliability: null,
@@ -19,7 +19,7 @@ describe('Uncertainty Service', () => {
     })
 
     it('should compute standard deviation based on available inputs', () => {
-      const result = getQualityStandardDeviation({
+      const result = getSquaredStandardDeviationForQuality({
         completeness: 4,
         geographicRepresentativeness: 3,
         reliability: null,
@@ -30,7 +30,7 @@ describe('Uncertainty Service', () => {
     })
 
     it('should compute standard deviation based on all inputs', () => {
-      const result = getQualityStandardDeviation({
+      const result = getSquaredStandardDeviationForQuality({
         completeness: 4,
         geographicRepresentativeness: 3,
         reliability: 2,
@@ -41,9 +41,9 @@ describe('Uncertainty Service', () => {
     })
   })
 
-  describe('getQualityRating', () => {
+  describe('getQualitativeUncertaintyFromQuality', () => {
     it('should return null if no quality is present', () => {
-      const result = getQualityRating({
+      const result = getQualitativeUncertaintyFromQuality({
         completeness: null,
         geographicRepresentativeness: null,
         reliability: null,
@@ -54,7 +54,7 @@ describe('Uncertainty Service', () => {
     })
 
     it('should return score based on the quality', () => {
-      const result = getQualityRating({
+      const result = getQualitativeUncertaintyFromQuality({
         completeness: 4,
         geographicRepresentativeness: 3,
         reliability: 2,
