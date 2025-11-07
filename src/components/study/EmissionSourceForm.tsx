@@ -127,7 +127,8 @@ const EmissionSourceForm = ({
   const emissionResults = useMemo(() => getEmissionResults(emissionSource, environment), [emissionSource, environment])
 
   const qualityRating = useMemo(
-    () => (selectedFactor ? getQualitativeUncertaintyFromQuality(getSpecificEmissionFactorQuality(emissionSource)) : null),
+    () =>
+      selectedFactor ? getQualitativeUncertaintyFromQuality(getSpecificEmissionFactorQuality(emissionSource)) : null,
     [selectedFactor, emissionSource],
   )
 

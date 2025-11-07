@@ -36,7 +36,7 @@ const MostUncertainPostsChart = ({ computedResults }: Props) => {
       icon: result.post as Post,
       post: t(result.post),
       color: postColors[result.post as Post],
-      squaredStandardDeviation: tQuality(
+      qualitativeUncertainty: tQuality(
         getQualitativeUncertaintyFromSquaredStandardDeviation(result.squaredStandardDeviation ?? 1).toString(),
       ),
     }))
@@ -44,12 +44,12 @@ const MostUncertainPostsChart = ({ computedResults }: Props) => {
   const PostInfo = ({
     post,
   }: {
-    post: { post: string; color: string; squaredStandardDeviation: string; icon: Post }
+    post: { post: string; color: string; qualitativeUncertainty: string; icon: Post }
   }) => (
     <div className={classNames(styles[post.color], styles.postContainer, 'grow justify-center align-center p-2')}>
       <PostIcon post={post.icon as Post} className={classNames(styles.icon, 'mr1')} />
       <p>
-        {post.post} : {post.squaredStandardDeviation}
+        {post.post} : {post.qualitativeUncertainty}
       </p>
     </div>
   )
