@@ -20,30 +20,36 @@ const MostUncertainPostsChart = ({ computedResults }: Props) => {
   const threeMostUncertainPosts = [...computedResults]
     .filter((post) => post.post !== 'total')
     .sort((a, b) => {
-      if (!a.uncertainty || !b.uncertainty) {
-        if (!a.uncertainty && b.uncertainty) {
+      if (!a.squaredStandardDeviation || !b.squaredStandardDeviation) {
+        if (!a.squaredStandardDeviation && b.squaredStandardDeviation) {
           return 1
         }
-        if (a.uncertainty && !b.uncertainty) {
+        if (a.squaredStandardDeviation && !b.squaredStandardDeviation) {
           return -1
         }
         return 0
       }
-      return b.uncertainty - a.uncertainty
+      return b.squaredStandardDeviation - a.squaredStandardDeviation
     })
     .slice(0, 3)
     .map((result) => ({
       icon: result.post as Post,
       post: t(result.post),
       color: postColors[result.post as Post],
-      uncertainty: tQuality(getQualitativeUncertaintyFromSquaredStandardDeviation(result.uncertainty ?? 1).toString()),
+      squaredStandardDeviation: tQuality(
+        getQualitativeUncertaintyFromSquaredStandardDeviation(result.squaredStandardDeviation ?? 1).toString(),
+      ),
     }))
 
-  const PostInfo = ({ post }: { post: { post: string; color: string; uncertainty: string; icon: Post } }) => (
+  const PostInfo = ({
+    post,
+  }: {
+    post: { post: string; color: string; squaredStandardDeviation: string; icon: Post }
+  }) => (
     <div className={classNames(styles[post.color], styles.postContainer, 'grow justify-center align-center p-2')}>
       <PostIcon post={post.icon as Post} className={classNames(styles.icon, 'mr1')} />
       <p>
-        {post.post} : {post.uncertainty}
+        {post.post} : {post.squaredStandardDeviation}
       </p>
     </div>
   )

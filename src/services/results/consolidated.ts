@@ -15,7 +15,7 @@ export type ResultsByPost = {
   nonSpecificMonetaryValue: number
   numberOfEmissionSource: number
   numberOfValidatedEmissionSource: number
-  uncertainty: number
+  squaredStandardDeviation: number
   children: ResultsByPost[]
 }
 
@@ -61,7 +61,7 @@ export const computeResultsByPost = (
             nonSpecificMonetaryValue: getEmissionSourcesTotalMonetaryCo2(emissionSourcesToUse, true),
             numberOfEmissionSource: emissionSources.length,
             numberOfValidatedEmissionSource: validatedEmissionSources.length,
-            uncertainty: getSquaredStandardDeviationForEmissionSourceArray(emissionSourcesToUse),
+            squaredStandardDeviation: getSquaredStandardDeviationForEmissionSourceArray(emissionSourcesToUse),
           }
         })
 
@@ -79,7 +79,8 @@ export const computeResultsByPost = (
         value,
         monetaryValue,
         nonSpecificMonetaryValue,
-        uncertainty: subPosts.length > 0 ? getSquaredStandardDeviationForEmissionSourceArray(subPosts) : undefined,
+        squaredStandardDeviation:
+          subPosts.length > 0 ? getSquaredStandardDeviationForEmissionSourceArray(subPosts) : undefined,
         children: subPosts.sort((a, b) => tPost(a.post).localeCompare(tPost(b.post))),
         numberOfEmissionSource: subPosts.reduce((acc, subPost) => acc + subPost.numberOfEmissionSource, 0),
         numberOfValidatedEmissionSource: subPosts.reduce(
@@ -103,7 +104,7 @@ export const computeTotalForPosts = (postInfos: ResultsByPost[], tPost: (key: st
     monetaryValue: postInfos.reduce((acc, post) => acc + post.monetaryValue, 0),
     nonSpecificMonetaryValue: postInfos.reduce((acc, post) => acc + post.nonSpecificMonetaryValue, 0),
     children: [],
-    uncertainty: getSquaredStandardDeviationForEmissionSourceArray(postInfos),
+    squaredStandardDeviation: getSquaredStandardDeviationForEmissionSourceArray(postInfos),
     numberOfEmissionSource: postInfos.reduce((acc, post) => acc + post.numberOfEmissionSource, 0),
     numberOfValidatedEmissionSource: postInfos.reduce((acc, post) => acc + post.numberOfValidatedEmissionSource, 0),
   }
@@ -113,8 +114,8 @@ export type ResultsByTag = {
   value: number
   familyId: string
   label: string
-  uncertainty: number
-  children: { label: string; value: number; color: string; uncertainty: number; tagFamily: string }[]
+  squaredStandardDeviation: number
+  children: { label: string; value: number; color: string; squaredStandardDeviation: number; tagFamily: string }[]
 }
 
 export const computeResultsByTag = (
@@ -163,7 +164,7 @@ export const computeResultsByTag = (
             tagFamily: tag.familyId,
             value: getEmissionSourcesTotalCo2(emissionSourcesToUse),
             color: tag.color ?? '',
-            uncertainty: getSquaredStandardDeviationForEmissionSourceArray(emissionSourcesToUse),
+            squaredStandardDeviation: getSquaredStandardDeviationForEmissionSourceArray(emissionSourcesToUse),
           }
         })
         .filter((tag) => tag.value > 0)
@@ -175,7 +176,7 @@ export const computeResultsByTag = (
         label: tagFamily.name,
         value,
         children: tagInfos.filter((tag) => tag.value > 0),
-        uncertainty: getSquaredStandardDeviationForEmissionSourceArray(tagInfos),
+        squaredStandardDeviation: getSquaredStandardDeviationForEmissionSourceArray(tagInfos),
       }
     })
     .filter((family) => family.value > 0)

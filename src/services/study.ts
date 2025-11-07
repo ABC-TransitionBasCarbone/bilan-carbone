@@ -254,12 +254,12 @@ const getEmissionSourcesCSVContent = (
   const quality = getQuality(getQualitativeUncertaintyForEmissionSources(emissionSources), tQuality)
   const qualityRow = [t('quality'), ...emptyFields(emptyFieldsCount + 1), quality].join(';')
 
-  const uncertainty = getEmissionSourcesConfidenceInterval(emissionSourcesWithEmission)
+  const confidenceInterval = getEmissionSourcesConfidenceInterval(emissionSourcesWithEmission)
   const uncertaintyRow = [
     t('uncertainty'),
     ...emptyFields(emptyFieldsCount),
-    formatValueForExport(uncertainty[0] / STUDY_UNIT_VALUES[resultsUnit]),
-    formatValueForExport(uncertainty[1] / STUDY_UNIT_VALUES[resultsUnit]),
+    formatValueForExport(confidenceInterval[0] / STUDY_UNIT_VALUES[resultsUnit]),
+    formatValueForExport(confidenceInterval[1] / STUDY_UNIT_VALUES[resultsUnit]),
   ].join(';')
 
   return [columns, ...rows, totalRow, qualityRow, uncertaintyRow].join('\n')
@@ -368,8 +368,8 @@ const handleLine = (
   const resultLine = []
   if (headersForEnv.includes('uncertainty')) {
     resultLine.push(
-      result.uncertainty
-        ? tQuality(getQualitativeUncertaintyFromSquaredStandardDeviation(result.uncertainty).toString())
+      result.squaredStandardDeviation
+        ? tQuality(getQualitativeUncertaintyFromSquaredStandardDeviation(result.squaredStandardDeviation).toString())
         : '',
     )
   }
@@ -521,8 +521,8 @@ export const formatBegesStudyResultsForExport = (
         category === 'total' ? '' : `${category}. ${tBeges(`category.${category}`)}`,
         post,
         ...gasValues,
-        result.uncertainty
-          ? tQuality(getQualitativeUncertaintyFromSquaredStandardDeviation(result.uncertainty).toString())
+        result.squaredStandardDeviation
+          ? tQuality(getQualitativeUncertaintyFromSquaredStandardDeviation(result.squaredStandardDeviation).toString())
           : '',
       ])
     }

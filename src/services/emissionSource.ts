@@ -120,16 +120,16 @@ export const getEmissionResults = (
 ) => {
   const emission = getEmissionSourceEmission(emissionSource, environment)
   if (emission === null) {
-    return { emissionValue: 0, standardDeviation: null, confidenceInterval: null, alpha: null }
+    return { emissionValue: 0, squaredStandardDeviation: null, confidenceInterval: null, alpha: null }
   }
 
-  const standardDeviation = getSquaredStandardDeviationForEmissionSource(emissionSource)
-  const confidenceInterval = standardDeviation ? getConfidenceInterval(emission, standardDeviation) : null
+  const squaredStandardDeviation = getSquaredStandardDeviationForEmissionSource(emissionSource)
+  const confidenceInterval = squaredStandardDeviation ? getConfidenceInterval(emission, squaredStandardDeviation) : null
   const alpha = getAlpha(emission, confidenceInterval)
 
   return {
     emissionValue: emission ?? 0,
-    standardDeviation,
+    squaredStandardDeviation,
     confidenceInterval,
     alpha,
   }

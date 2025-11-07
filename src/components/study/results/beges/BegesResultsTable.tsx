@@ -82,8 +82,10 @@ const BegesResultsTable = ({ study, withDepValue, data }: Props) => {
         {
           id: 'uncertainty',
           header: t('uncertainty'),
-          accessorFn: ({ uncertainty }) =>
-            uncertainty ? tQuality(getQualitativeUncertaintyFromSquaredStandardDeviation(uncertainty).toString()) : '',
+          accessorFn: ({ squaredStandardDeviation }) =>
+            squaredStandardDeviation
+              ? tQuality(getQualitativeUncertaintyFromSquaredStandardDeviation(squaredStandardDeviation).toString())
+              : '',
         },
       ] as ColumnDef<BegesPostInfos>[],
     [t, tQuality, tUnits, study.resultsUnit],
