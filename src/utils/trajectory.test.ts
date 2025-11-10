@@ -18,8 +18,11 @@ jest.mock('next-intl/server', () => ({ getTranslations: jest.fn(() => (key: stri
 
 const DEFAULT_LINEAR_REDUCTION_15C = 42
 const DEFAULT_LINEAR_REDUCTION_WB2C = 25
-const COMENSATED_LINEAR_REDUCTION_2025_15C = 46.125
-const COMENSATED_LINEAR_REDUCTION_2025_WB2C = 26.316
+const COMENSATED_LINEAR_REDUCTION_2025_15C = 6.7294751
+const COMENSATED_LINEAR_REDUCTION_2025_WB2C = 3.26530612
+const ZERO_REACHED_YEAR_WB2C = 2055.625
+const ZERO_REACHED_YEAR_15C = 2039.86
+const EMISSION_FACTOR_VALUE = 10
 
 describe('calculateTrajectory', () => {
   describe('basic trajectory calculation before 2021', () => {
@@ -28,7 +31,7 @@ describe('calculateTrajectory', () => {
         studyEmissions: 1000,
         studyStartYear: 2020,
         reductionRate: SBTI_REDUCTION_RATE_15,
-        withDependencies: true,
+        pastStudies: [],
       })
 
       expect(result).toHaveLength(31)
@@ -46,7 +49,7 @@ describe('calculateTrajectory', () => {
         studyEmissions: 1000,
         studyStartYear: 2020,
         reductionRate: SBTI_REDUCTION_RATE_WB2C,
-        withDependencies: true,
+        pastStudies: [],
       })
 
       expect(result).toHaveLength(2061 - 2020)
@@ -63,7 +66,7 @@ describe('calculateTrajectory', () => {
         studyEmissions: 1000,
         studyStartYear: 2018,
         reductionRate: SBTI_REDUCTION_RATE_15,
-        withDependencies: true,
+        pastStudies: [],
       })
 
       expect(result[0]).toEqual({ year: 2018, value: 1000 })
@@ -84,22 +87,31 @@ describe('calculateTrajectory', () => {
         studyEmissions,
         studyStartYear,
         reductionRate,
-        withDependencies: true,
+        pastStudies: [],
       })
 
       expect(result[0]).toEqual({ year: 2020, value: 1000 })
       expect(result[5]).toEqual({ year: 2025, value: 1000 })
 
       expect(result[6].year).toBe(2026)
-      expect(result[6].value).toBeCloseTo(1000 - (2026 - 2025) * COMENSATED_LINEAR_REDUCTION_2025_15C, 1)
+      expect(result[6].value).toBeCloseTo(
+        1000 - (2026 - 2025) * COMENSATED_LINEAR_REDUCTION_2025_15C * EMISSION_FACTOR_VALUE,
+        1,
+      )
       expect(result[7].year).toBe(2027)
-      expect(result[7].value).toBeCloseTo(1000 - (2027 - 2025) * COMENSATED_LINEAR_REDUCTION_2025_15C, 1)
+      expect(result[7].value).toBeCloseTo(
+        1000 - (2027 - 2025) * COMENSATED_LINEAR_REDUCTION_2025_15C * EMISSION_FACTOR_VALUE,
+        1,
+      )
 
-      const point2046 = result.find((p) => p.year === 2046)
-      expect(point2046?.value).toBeCloseTo(1000 - (2046 - 2025) * COMENSATED_LINEAR_REDUCTION_2025_15C, 1)
+      const point2039 = result.find((p) => p.year === 2039)
+      expect(point2039?.value).toBeCloseTo(
+        1000 - (2039 - 2025) * COMENSATED_LINEAR_REDUCTION_2025_15C * EMISSION_FACTOR_VALUE,
+        1,
+      )
 
       const lastPoint = result[result.length - 1]
-      expect(lastPoint.year).toBe(2050)
+      expect(lastPoint.year).toBe(Math.max(2050, Math.ceil(ZERO_REACHED_YEAR_15C)))
       expect(lastPoint.value).toBeCloseTo(0, 1)
     })
 
@@ -112,23 +124,32 @@ describe('calculateTrajectory', () => {
         studyEmissions,
         studyStartYear,
         reductionRate,
-        withDependencies: true,
+        pastStudies: [],
       })
 
       expect(result[0]).toEqual({ year: 2020, value: 1000 })
       expect(result[5]).toEqual({ year: 2025, value: 1000 })
 
       expect(result[6].year).toBe(2026)
-      expect(result[6].value).toBeCloseTo(1000 - (2026 - 2025) * COMENSATED_LINEAR_REDUCTION_2025_WB2C, 1)
+      expect(result[6].value).toBeCloseTo(
+        1000 - (2026 - 2025) * COMENSATED_LINEAR_REDUCTION_2025_WB2C * EMISSION_FACTOR_VALUE,
+        1,
+      )
 
       expect(result[7].year).toBe(2027)
-      expect(result[7].value).toBeCloseTo(1000 - (2027 - 2025) * COMENSATED_LINEAR_REDUCTION_2025_WB2C, 1)
+      expect(result[7].value).toBeCloseTo(
+        1000 - (2027 - 2025) * COMENSATED_LINEAR_REDUCTION_2025_WB2C * EMISSION_FACTOR_VALUE,
+        1,
+      )
 
       const point2050 = result.find((p) => p.year === 2050)
-      expect(point2050?.value).toBeCloseTo(1000 - (2050 - 2025) * COMENSATED_LINEAR_REDUCTION_2025_WB2C, 1)
+      expect(point2050?.value).toBeCloseTo(
+        1000 - (2050 - 2025) * COMENSATED_LINEAR_REDUCTION_2025_WB2C * EMISSION_FACTOR_VALUE,
+        1,
+      )
 
       const lastPoint = result[result.length - 1]
-      expect(lastPoint.year).toBe(2063)
+      expect(lastPoint.year).toBe(Math.max(2050, Math.ceil(ZERO_REACHED_YEAR_WB2C)))
       expect(lastPoint.value).toBeCloseTo(0, 1)
     })
   })
@@ -143,7 +164,7 @@ describe('calculateTrajectory', () => {
         studyEmissions,
         studyStartYear,
         objectives,
-        withDependencies: true,
+        pastStudies: [],
       })
 
       expect(result[0]).toEqual({ year: 2020, value: 1000 })
@@ -173,7 +194,7 @@ describe('calculateTrajectory', () => {
         studyEmissions,
         studyStartYear,
         objectives,
-        withDependencies: true,
+        pastStudies: [],
       })
 
       const yearlyReduction = studyEmissions * 0.05
@@ -207,7 +228,7 @@ describe('calculateTrajectory', () => {
         studyEmissions,
         studyStartYear,
         objectives,
-        withDependencies: true,
+        pastStudies: [],
       })
 
       const yearlyReduction = studyEmissions * 0.05
@@ -231,7 +252,7 @@ describe('calculateTrajectory', () => {
         studyEmissions,
         studyStartYear,
         objectives,
-        withDependencies: true,
+        pastStudies: [],
       })
 
       const lastPoint = result[result.length - 1]
@@ -249,7 +270,7 @@ describe('calculateTrajectory', () => {
         studyEmissions,
         studyStartYear,
         objectives,
-        withDependencies: true,
+        pastStudies: [],
       })
 
       const point2020 = result.find((p) => p.year === 2020)
@@ -296,6 +317,7 @@ describe('calculateTrajectory', () => {
         studyEmissions: 1000,
         studyStartYear: 2024,
         actions,
+        pastStudies: [],
       })
 
       expect(result[0]).toEqual({ year: 2020, value: 1000 })
@@ -317,6 +339,7 @@ describe('calculateTrajectory', () => {
         studyEmissions: 1000,
         studyStartYear: 2024,
         actions,
+        pastStudies: [],
       })
 
       const annualReduction = 100 / (2030 - 2025)
@@ -348,6 +371,7 @@ describe('calculateTrajectory', () => {
         studyEmissions: 1000,
         studyStartYear: 2024,
         actions,
+        pastStudies: [],
       })
 
       const action1AnnualReduction = 100 / (2030 - 2025)
@@ -395,6 +419,7 @@ describe('calculateTrajectory', () => {
         studyEmissions: 1000,
         studyStartYear: 2024,
         actions,
+        pastStudies: [],
       })
 
       const annualReduction = 50 / (2030 - 2026)
@@ -425,6 +450,7 @@ describe('calculateTrajectory', () => {
         studyEmissions: 1000,
         studyStartYear: 2024,
         actions,
+        pastStudies: [],
       })
 
       const action2AnnualReduction = 50 / (2030 - 2025)
@@ -461,6 +487,7 @@ describe('calculateTrajectory', () => {
         studyEmissions: 1000,
         studyStartYear: 2024,
         actions,
+        pastStudies: [],
         withDependencies: true,
       })
 
@@ -468,6 +495,7 @@ describe('calculateTrajectory', () => {
         studyEmissions: 1000,
         studyStartYear: 2024,
         actions,
+        pastStudies: [],
         withDependencies: false,
       })
 
@@ -498,7 +526,7 @@ describe('calculateTrajectory', () => {
         studyEmissions: 1000,
         studyStartYear: 2024,
         actions,
-        withDependencies: true,
+        pastStudies: [],
       })
 
       const annualReduction = 100 / (2030 - 2025)
@@ -539,6 +567,7 @@ describe('calculateTrajectory', () => {
         studyEmissions: 1000,
         studyStartYear: 2024,
         actions,
+        pastStudies: [],
         withDependencies: true,
       })
 
@@ -546,6 +575,7 @@ describe('calculateTrajectory', () => {
         studyEmissions: 1000,
         studyStartYear: 2024,
         actions,
+        pastStudies: [],
         withDependencies: false,
       })
 

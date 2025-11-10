@@ -344,7 +344,7 @@ export const calculateSBTiTrajectory = ({
       pastOvershoot = actualBudgetFrom2020 - referenceIntegralFrom2020
     }
 
-    // Step 1: Calculate the reference future budget
+    // Calculate the reference future budget
     const referenceYearlyReduction = referenceBaseline2020 * reductionRate
     const yearsToZeroFromReference = referenceValueAtStudyYear / referenceYearlyReduction
     const referenceFutureBudget = (referenceValueAtStudyYear * yearsToZeroFromReference) / 2
