@@ -1,4 +1,5 @@
 import { UpdateOrganizationCommand } from '@/services/serverFunctions/organization.command'
+import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { OnboardingCommand } from '@/services/serverFunctions/user.command'
 import { Environment, Organization, OrganizationVersion, Prisma, Site, UserStatus } from '@prisma/client'
 import { prismaClient } from './client'
@@ -202,6 +203,49 @@ export const updateOrganization = async (
     prismaClient.organization.update({
       where: { id: organizationVersion.organizationId },
       data: data,
+    }),
+  ])
+}
+
+export const updateOrganizationSites = async (
+  { sites }: SitesCommand,
+  organizationVersionId: string,
+  caUnit: number,
+) => {
+  const organizationVersion = await getOrganizationVersionById(organizationVersionId)
+  if (!organizationVersion) {
+    return
+  }
+  return prismaClient.$transaction([
+    ...sites.map((site) =>
+      prismaClient.site.upsert({
+        where: { id: site.id },
+        create: {
+          id: site.id,
+          organizationId: organizationVersion.organizationId,
+          name: site.name,
+          etp: site.etp,
+          ca: (site?.ca || 0) * caUnit,
+          postalCode: site.postalCode,
+          city: site.city,
+          cncId: site.cncId || undefined,
+          volunteerNumber: site.volunteerNumber || undefined,
+          beneficiaryNumber: site.beneficiaryNumber || undefined,
+        },
+        update: {
+          name: site.name,
+          etp: site.etp,
+          ca: (site?.ca || 0) * caUnit,
+          postalCode: site.postalCode,
+          city: site.city,
+          cncId: site.cncId || undefined,
+          volunteerNumber: site.volunteerNumber || undefined,
+          beneficiaryNumber: site.beneficiaryNumber || undefined,
+        },
+      }),
+    ),
+    prismaClient.site.deleteMany({
+      where: { organizationId: organizationVersion.organizationId, id: { notIn: sites.map((site) => site.id) } },
     }),
   ])
 }
