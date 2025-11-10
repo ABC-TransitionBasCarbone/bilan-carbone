@@ -131,6 +131,7 @@ jest.mock('../../utils/number', () => ({
 }))
 jest.mock('../posts', () => ({
   environmentPostMapping: { BC: 'bc-mapping', CUT: 'cut-mapping', TILT: 'tilt-mapping' },
+  subPostsByPostBC: {},
   Post: {
     DechetsDirects: 'DechetsDirects',
     IntrantsBiensEtMatieres: 'IntrantsBiensEtMatieres',
