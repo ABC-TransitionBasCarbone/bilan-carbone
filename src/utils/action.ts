@@ -1,6 +1,6 @@
 import { ActionRelevance } from '@prisma/client'
 
-const RELEVANCE_TO_PRIORITY: Record<ActionRelevance, number> = {
+export const RELEVANCE_TO_PRIORITY: Record<ActionRelevance, number> = {
   [ActionRelevance.ReductionWithinOrganisationValueChain]: 1,
   [ActionRelevance.ReductionWithinOrganisationCoreBusiness]: 1,
   [ActionRelevance.ReductionOutsideOrganisationValueChain]: 2,
