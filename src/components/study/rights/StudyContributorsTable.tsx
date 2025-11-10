@@ -138,24 +138,35 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
     [tPost, t, getActualSubPosts],
   )
 
-  const renderEmailCell = useCallback(
+  const renderExpandCell = useCallback(
     (rowData: StudyContributorTableRow) => {
       if (rowData.type === 'parent') {
         const isExpanded = expandedRows.has(rowData.email)
         return (
           <ExpandableCell email={rowData.email}>
-            <div className="align-center">
-              <IconButton size="small" className={styles.iconButton} aria-label={isExpanded ? 'Collapse' : 'Expand'}>
-                {isExpanded ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
-              </IconButton>
-              <span>{rowData.email}</span>
-            </div>
+            <IconButton size="small" className={styles.iconButton} aria-label={isExpanded ? 'Collapse' : 'Expand'}>
+              {isExpanded ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
+            </IconButton>
+          </ExpandableCell>
+        )
+      }
+      return null
+    },
+    [expandedRows, ExpandableCell],
+  )
+
+  const renderEmailCell = useCallback(
+    (rowData: StudyContributorTableRow) => {
+      if (rowData.type === 'parent') {
+        return (
+          <ExpandableCell email={rowData.email}>
+            <span>{rowData.email}</span>
           </ExpandableCell>
         )
       }
       return <div className={styles.childRowContent}>{/* Empty for sub-rows */}</div>
     },
-    [expandedRows, ExpandableCell],
+    [ExpandableCell],
   )
 
   const renderPostCell = useCallback(
@@ -262,6 +273,11 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
   const columns = useMemo(() => {
     const columns: ColumnDef<StudyContributorTableRow>[] = [
       {
+        id: 'expand',
+        header: '',
+        cell: ({ row }) => renderExpandCell(row.original),
+      },
+      {
         header: t('email'),
         cell: ({ row }) => renderEmailCell(row.original),
       },
@@ -297,7 +313,7 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
           },
         ])
       : columns
-  }, [canAddContributor, t, renderEmailCell, renderPostCell, renderSubPostCell])
+  }, [canAddContributor, t, renderExpandCell, renderEmailCell, renderPostCell, renderSubPostCell])
 
   const table = useReactTable({
     columns,

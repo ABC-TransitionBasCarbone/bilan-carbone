@@ -1053,7 +1053,7 @@
           "title": "Titre",
           "priority": "Priorité",
           "actionType": "Type d'action",
-          "targetYear": "Année cible",
+          "implementation": "Mise en oeuvre",
           "potential": "Potentiel de réduction",
           "owner": "Responsable",
           "budget": "Budget",

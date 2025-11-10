@@ -117,9 +117,10 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, se
   const columns = useMemo(() => {
     return [
       {
-        header: t('table.name'),
-        accessorFn: (row) => row.name,
-        cell: ({ getValue, row }) => {
+        id: 'expand',
+        header: '',
+        accessorFn: () => '',
+        cell: ({ row }) => {
           const isTrajectory = row.original.isTrajectory
           const hasChildren = row.getCanExpand()
           const isExpanded = row.getIsExpanded()
@@ -128,9 +129,21 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, se
             return (
               <div onClick={row.getToggleExpandedHandler()} className={classNames('align-center', styles.expandable)}>
                 {isExpanded ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
-                {getValue<string>()}
               </div>
             )
+          }
+
+          return null
+        },
+      },
+      {
+        header: t('table.name'),
+        accessorFn: (row) => row.name,
+        cell: ({ getValue, row }) => {
+          const isTrajectory = row.original.isTrajectory
+
+          if (isTrajectory) {
+            return <span>{getValue<string>()}</span>
           }
 
           return null

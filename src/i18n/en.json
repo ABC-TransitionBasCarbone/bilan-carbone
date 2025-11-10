@@ -1053,7 +1053,7 @@
           "title": "Title",
           "priority": "Priority",
           "actionType": "Action type",
-          "targetYear": "Target year",
+          "implementation": "Implementation",
           "potential": "Reduction potential",
           "owner": "Owner",
           "budget": "Budget",

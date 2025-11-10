@@ -4,6 +4,7 @@ import BaseTable from '@/components/base/Table'
 import { TableActionButton } from '@/components/base/TableActionButton'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { toggleActionEnabled } from '@/services/serverFunctions/transitionPlan'
+import { getYearFromDateStr } from '@/utils/time'
 import { Switch } from '@mui/material'
 import { Action, ActionPotentialDeduction, StudyResultUnit } from '@prisma/client'
 import {
@@ -68,6 +69,15 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal }: Props) => {
     [tPotential, tUnit],
   )
 
+  const getImplementationPeriod = useCallback((action: Action) => {
+    if (!action.reductionStartYear || !action.reductionEndYear) {
+      return ''
+    }
+    const startYear = getYearFromDateStr(action.reductionStartYear)
+    const endYear = getYearFromDateStr(action.reductionEndYear)
+    return `${startYear}-${endYear}`
+  }, [])
+
   const columns = useMemo(
     () =>
       [
@@ -96,8 +106,8 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal }: Props) => {
           accessorFn: (action) => action.category.map((category) => tCategory(category)).join(', '),
         },
         {
-          header: t('targetYear'),
-          accessorFn: () => '',
+          header: t('implementation'),
+          accessorFn: getImplementationPeriod,
         },
         { header: t('potential'), accessorFn: getPotential },
         { header: t('owner'), accessorKey: 'owner' },
@@ -114,7 +124,7 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal }: Props) => {
           ),
         },
       ] as ColumnDef<Action>[],
-    [t, getPotential, handleToggleEnabled, tCategory, openEditModal, openDeleteModal],
+    [t, getPotential, getImplementationPeriod, handleToggleEnabled, tCategory, openEditModal, openDeleteModal],
   )
 
   const table = useReactTable({
