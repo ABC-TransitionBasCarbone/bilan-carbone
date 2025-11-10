@@ -159,7 +159,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
       'sites',
       siteList.map((site) => ({ ...site, ca: displayCA(site.ca, CA_UNIT_VALUES[caUnit]) })),
     )
-  }, [siteList, isEditing, caUnit])
+  }, [siteList, isEditing, caUnit, siteForm])
 
   const onSitesSubmit = async () => {
     const deletedSites = sites.filter((site) => {
@@ -205,12 +205,16 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
     'realizationStartDate',
     'realizationEndDate',
   ])
-  const onDateSubmit = async (command: ChangeStudyDatesCommand) => {
-    await form.trigger()
-    if (form.formState.isValid) {
-      await changeStudyDates(command)
-    }
-  }
+
+  const onDateSubmit = useCallback(
+    async (command: ChangeStudyDatesCommand) => {
+      await form.trigger()
+      if (form.formState.isValid) {
+        await changeStudyDates(command)
+      }
+    },
+    [form],
+  )
 
   const updateStudyExport = useCallback(
     async (exportType: Export, control: ControlMode | false) => {
@@ -232,7 +236,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
 
   useEffect(() => {
     onDateSubmit(form.getValues())
-  }, [startDate, endDate, realizationStartDate, realizationEndDate])
+  }, [startDate, endDate, realizationStartDate, realizationEndDate, onDateSubmit, form])
 
   const handleDuplicateSite = async (data: DuplicateFormData) => {
     if (!duplicatingSiteId) {
