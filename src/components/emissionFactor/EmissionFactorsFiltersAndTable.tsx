@@ -1,7 +1,7 @@
 'use client'
 
 import { EmissionFactorList } from '@/db/emissionFactors'
-import { environmentSubPostsMapping, Post } from '@/services/posts'
+import { environmentSubPostsMapping, Post, subPostsByPost } from '@/services/posts'
 import { EmissionFactorWithMetaData, getEmissionFactors } from '@/services/serverFunctions/emissionFactor'
 import { BCUnit } from '@/services/unit'
 import { FeFilters } from '@/types/filters'
@@ -45,6 +45,10 @@ const EmissionFactorsFiltersAndTable = ({
 
   const envSubPostsByPost = useMemo(() => environmentSubPostsMapping[environment], [environment])
   const posts = useMemo(() => Object.keys(envSubPostsByPost) as Post[], [envSubPostsByPost])
+  const envSubPosts = useMemo(
+    () => posts.reduce((acc, post) => acc.concat(subPostsByPost[post] || []), [] as SubPost[]),
+    [posts],
+  )
 
   const [filters, setFilters] = useState<FeFilters>({
     archived: false,
@@ -54,6 +58,12 @@ const EmissionFactorsFiltersAndTable = ({
     units: initialSelectedUnits,
     subPosts: defaultSubPost ? [defaultSubPost] : ['all'],
   })
+
+  useEffect(() => {
+    if (filters.subPosts.length === 1 && filters.subPosts[0] === 'all') {
+      setFilters((prevFilters) => ({ ...prevFilters, subPosts: envSubPosts }))
+    }
+  }, [filters.subPosts, envSubPosts])
 
   const fromModal = !!selectEmissionFactor
 
@@ -116,6 +126,7 @@ const EmissionFactorsFiltersAndTable = ({
         importVersions={importVersions}
         initialSelectedUnits={initialSelectedUnits}
         envPosts={posts}
+        envSubPosts={envSubPosts}
         filters={filters}
         setFilters={setFilters}
         locationOptions={locationOptions}

@@ -28,6 +28,7 @@ interface Props {
   importVersions: ImportVersionForFilters[]
   initialSelectedUnits: (BCUnit | string)[]
   envPosts: Post[]
+  envSubPosts: SubPost[]
   filters: FeFilters
   locationOptions: string[]
   setFilters: Dispatch<SetStateAction<FeFilters>>
@@ -37,6 +38,7 @@ export const EmissionFactorsFilters = ({
   importVersions,
   initialSelectedUnits,
   envPosts,
+  envSubPosts,
   filters,
   locationOptions,
   setFilters,
@@ -71,13 +73,6 @@ export const EmissionFactorsFilters = ({
 
   const getEmissionVersionLabel = (version?: Pick<EmissionFactorImportVersion, 'source' | 'name'>) =>
     version ? `${t(version.source)} ${version.name}` : ''
-
-  const envSubPosts = useMemo(() => {
-    return envPosts.reduce((acc, post) => {
-      const subPosts = subPostsByPost[post] || []
-      return acc.concat(subPosts)
-    }, [] as SubPost[])
-  }, [envPosts])
 
   const statusSelectorRenderValue = () =>
     filters.sources.length === importVersions.length
