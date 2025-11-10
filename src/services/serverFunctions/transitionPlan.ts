@@ -195,7 +195,7 @@ export const deleteExternalStudy = async (studyId: string, transitionPlanId: str
     await dbDeleteExternalStudy(studyId, transitionPlanId)
   })
 
-export const getLinkedStudies = async (transitionPlanId: string) =>
+export const getLinkedStudies = async (studyId: string, transitionPlanId: string) =>
   withServerResponse('getLinkedStudies', async () => {
     const hasReadAccess = await canReadTransitionPlan(transitionPlanId)
     if (!hasReadAccess) {
@@ -207,7 +207,11 @@ export const getLinkedStudies = async (transitionPlanId: string) =>
       getLinkedStudiesForTransitionPlan(transitionPlanId),
     ])
 
-    const studies = await getStudyByIds(transitionPlanStudies.map((transitionPlan) => transitionPlan.studyId))
+    const linkedStudyIds = transitionPlanStudies
+      .map((transitionPlan) => transitionPlan.studyId)
+      .filter((id) => id !== studyId)
+
+    const studies = await getStudyByIds(linkedStudyIds)
 
     return { studies, externalStudies }
   })
