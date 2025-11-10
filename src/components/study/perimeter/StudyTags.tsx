@@ -166,7 +166,12 @@ const StudyTags = ({ studyId }: Props) => {
             namePlaceholder={t('emissionSourceTagsPlaceholder')}
             data-testid="create-emission-source-tag"
           />
-          <Button data-testid="submit-button" type="submit" disabled={!tagFamilies.length || !formState.isValid}>
+          <Button
+            className="mt1"
+            data-testid="submit-button"
+            type="submit"
+            disabled={!tagFamilies.length || !formState.isValid}
+          >
             {t('createEmissionSourceTag')}
           </Button>
         </FormControl>
