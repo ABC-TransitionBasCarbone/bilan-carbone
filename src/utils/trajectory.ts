@@ -374,7 +374,9 @@ export const calculateSBTiTrajectory = ({
     }
   } else {
     const reductionStartYear = REFERENCE_YEAR
-    const graphStartYear = studyStartYear < REFERENCE_YEAR ? studyStartYear : REFERENCE_YEAR
+    // Include past studies that occur before studyStartYear
+    const earliestPastStudyYear = pastStudies.length > 0 ? Math.min(...pastStudies.map((s) => s.year)) : studyStartYear
+    const graphStartYear = Math.min(earliestPastStudyYear, studyStartYear)
     const targetYear = Math.ceil(REFERENCE_YEAR + 1 / reductionRate)
     const endYear = Math.max(targetYear, maxYear ?? TARGET_YEAR)
 

@@ -6,6 +6,9 @@ import {
   calculateCustomTrajectory,
   calculateSBTiTrajectory,
   getReductionRatePerType,
+  getTrajectoryValueAtYear,
+  isWithinThreshold,
+  PastStudy,
   SBTI_REDUCTION_RATE_15,
   SBTI_REDUCTION_RATE_WB2C,
 } from './trajectory'
@@ -23,6 +26,39 @@ const COMENSATED_LINEAR_REDUCTION_2025_WB2C = 3.26530612
 const ZERO_REACHED_YEAR_WB2C = 2055.625
 const ZERO_REACHED_YEAR_15C = 2039.86
 const EMISSION_FACTOR_VALUE = 10
+
+const createPastStudies = (...studies: Array<[number, number]>): PastStudy[] =>
+  studies.map(([year, totalCo2]) => ({ year, totalCo2 }))
+
+const verifyTrajectoryInterpolation = (
+  trajectory: TrajectoryDataPoint[],
+  pastStudies: PastStudy[],
+  studyStartYear: number,
+): void => {
+  pastStudies.forEach((pastStudy) => {
+    const point = trajectory.find((p) => p.year === pastStudy.year)
+    expect(point).toBeDefined()
+    expect(point?.value).toBeCloseTo(pastStudy.totalCo2, 1)
+  })
+
+  if (pastStudies.length >= 2) {
+    for (let i = 0; i < pastStudies.length - 1; i++) {
+      const current = pastStudies[i]
+      const next = pastStudies[i + 1]
+      const midYear = Math.floor((current.year + next.year) / 2)
+
+      if (midYear > current.year && midYear < next.year && midYear < studyStartYear) {
+        const midPoint = trajectory.find((p) => p.year === midYear)
+        if (midPoint) {
+          const expectedValue =
+            current.totalCo2 +
+            ((midYear - current.year) / (next.year - current.year)) * (next.totalCo2 - current.totalCo2)
+          expect(midPoint.value).toBeCloseTo(expectedValue, 1)
+        }
+      }
+    }
+  }
+}
 
 describe('calculateTrajectory', () => {
   describe('basic trajectory calculation before 2021', () => {
@@ -592,6 +628,362 @@ describe('calculateTrajectory', () => {
         1000 - 3 * action1AnnualReduction - action3AnnualReduction,
         1,
       )
+    })
+  })
+
+  describe('trajectory calculation with past studies', () => {
+    describe('single past study', () => {
+      test('SBTi 1.5°C with one past study - within threshold', () => {
+        const pastStudies = createPastStudies([2022, 1000])
+        const currentEmissions = 920
+        const currentYear = 2024
+
+        const referenceTrajectory = calculateSBTiTrajectory({
+          studyEmissions: 1000,
+          studyStartYear: 2022,
+          reductionRate: SBTI_REDUCTION_RATE_15,
+          pastStudies,
+        })
+        const expectedValue = getTrajectoryValueAtYear(referenceTrajectory, currentYear)
+        expect(expectedValue).not.toBeNull()
+
+        const withinThreshold = expectedValue !== null && isWithinThreshold(currentEmissions, expectedValue)
+        expect(withinThreshold).toBe(true)
+
+        const currentTrajectory = calculateSBTiTrajectory({
+          studyEmissions: currentEmissions,
+          studyStartYear: currentYear,
+          reductionRate: SBTI_REDUCTION_RATE_15,
+          pastStudies,
+          excludeStudyValue: withinThreshold,
+        })
+
+        verifyTrajectoryInterpolation(currentTrajectory, pastStudies, currentYear)
+        const currentPoint = currentTrajectory.find((p) => p.year === currentYear)
+        expect(currentPoint?.value).toBeCloseTo(currentEmissions, 1)
+      })
+
+      test('SBTi 1.5°C with one past study - outside threshold (overshoot)', () => {
+        const pastStudies = createPastStudies([2022, 1000])
+        const currentEmissions = 1100
+        const currentYear = 2024
+
+        const referenceTrajectory = calculateSBTiTrajectory({
+          studyEmissions: 1000,
+          studyStartYear: 2022,
+          reductionRate: SBTI_REDUCTION_RATE_15,
+          pastStudies,
+        })
+        const expectedValue = getTrajectoryValueAtYear(referenceTrajectory, currentYear)
+        expect(expectedValue).not.toBeNull()
+
+        const withinThreshold = expectedValue !== null && isWithinThreshold(currentEmissions, expectedValue)
+        expect(withinThreshold).toBe(false)
+
+        const currentTrajectory = calculateSBTiTrajectory({
+          studyEmissions: currentEmissions,
+          studyStartYear: currentYear,
+          reductionRate: SBTI_REDUCTION_RATE_15,
+          pastStudies,
+          overshootAdjustment: {
+            referenceTrajectory,
+            referenceStudyYear: 2022,
+          },
+        })
+
+        verifyTrajectoryInterpolation(currentTrajectory, pastStudies, currentYear)
+        const currentPoint = currentTrajectory.find((p) => p.year === currentYear)
+        expect(currentPoint?.value).toBeCloseTo(currentEmissions, 1)
+
+        const point2025 = currentTrajectory.find((p) => p.year === 2025)
+        const point2027 = currentTrajectory.find((p) => p.year === 2027)
+        const refPoint2025 = referenceTrajectory.find((p) => p.year === 2025)
+        const refPoint2027 = referenceTrajectory.find((p) => p.year === 2027)
+        if (point2025 && point2027 && refPoint2025 && refPoint2027) {
+          const currentReduction = (point2025.value - point2027.value) / 2
+          const referenceReduction = (refPoint2025.value - refPoint2027.value) / 2
+          expect(currentReduction).toBeGreaterThan(referenceReduction)
+        }
+      })
+
+      test('Custom trajectory with one past study - within threshold', () => {
+        const pastStudies = createPastStudies([2022, 1000])
+        const currentEmissions = 900
+        const currentYear = 2024
+        const objectives = [{ targetYear: 2030, reductionRate: 0.05 }]
+
+        const referenceTrajectory = calculateCustomTrajectory({
+          studyEmissions: 1000,
+          studyStartYear: 2022,
+          objectives,
+          pastStudies,
+        })
+
+        const expectedValue = getTrajectoryValueAtYear(referenceTrajectory, currentYear)
+        expect(expectedValue).not.toBeNull()
+
+        const withinThreshold = expectedValue !== null && isWithinThreshold(currentEmissions, expectedValue)
+        expect(withinThreshold).toBe(true)
+
+        const currentTrajectory = calculateCustomTrajectory({
+          studyEmissions: currentEmissions,
+          studyStartYear: currentYear,
+          objectives,
+          pastStudies,
+        })
+
+        verifyTrajectoryInterpolation(currentTrajectory, pastStudies, currentYear)
+        const currentPoint = currentTrajectory.find((p) => p.year === currentYear)
+        expect(currentPoint?.value).toBeCloseTo(currentEmissions, 1)
+      })
+
+      test('Custom trajectory with one past study - overshoot compensation', () => {
+        const pastStudies = createPastStudies([2022, 1000])
+        const currentEmissions = 1100
+        const currentYear = 2024
+        const objectives = [
+          { targetYear: 2030, reductionRate: 0.05 },
+          { targetYear: 2040, reductionRate: 0.08 },
+        ]
+
+        const referenceTrajectory = calculateCustomTrajectory({
+          studyEmissions: 1000,
+          studyStartYear: 2022,
+          objectives,
+          pastStudies,
+        })
+
+        const expectedValue = getTrajectoryValueAtYear(referenceTrajectory, currentYear)
+        expect(expectedValue).not.toBeNull()
+
+        const withinThreshold = expectedValue !== null && isWithinThreshold(currentEmissions, expectedValue)
+        expect(withinThreshold).toBe(false)
+
+        const currentTrajectory = calculateCustomTrajectory({
+          studyEmissions: currentEmissions,
+          studyStartYear: currentYear,
+          objectives,
+          pastStudies,
+          overshootAdjustment: {
+            referenceTrajectory,
+            referenceStudyYear: 2022,
+          },
+        })
+
+        verifyTrajectoryInterpolation(currentTrajectory, pastStudies, currentYear)
+        const currentPoint = currentTrajectory.find((p) => p.year === currentYear)
+        expect(currentPoint?.value).toBeCloseTo(currentEmissions, 1)
+
+        const point2025 = currentTrajectory.find((p) => p.year === 2025)
+        const point2027 = currentTrajectory.find((p) => p.year === 2027)
+        const refPoint2025 = referenceTrajectory.find((p) => p.year === 2025)
+        const refPoint2027 = referenceTrajectory.find((p) => p.year === 2027)
+        if (point2025 && point2027 && refPoint2025 && refPoint2027) {
+          const currentReduction = (point2025.value - point2027.value) / 2
+          const referenceReduction = (refPoint2025.value - refPoint2027.value) / 2
+          expect(currentReduction).toBeGreaterThan(referenceReduction)
+        }
+      })
+
+      test('Action-based trajectory with one past study', () => {
+        const pastStudies = createPastStudies([2022, 1000])
+        const currentEmissions = 950
+        const currentYear = 2024
+        const actions = [
+          {
+            reductionValue: 100,
+            reductionStartYear: '2025-01-01',
+            reductionEndYear: '2030-01-01',
+            potentialDeduction: 'Quantity',
+          },
+        ] as Action[]
+
+        const currentTrajectory = calculateActionBasedTrajectory({
+          studyEmissions: currentEmissions,
+          studyStartYear: currentYear,
+          actions,
+          pastStudies,
+        })
+
+        verifyTrajectoryInterpolation(currentTrajectory, pastStudies, currentYear)
+        const currentPoint = currentTrajectory.find((p) => p.year === currentYear)
+        expect(currentPoint?.value).toBeCloseTo(currentEmissions, 1)
+
+        const point2025 = currentTrajectory.find((p) => p.year === 2025)
+        const point2026 = currentTrajectory.find((p) => p.year === 2026)
+        expect(point2025?.value).toBeLessThan(currentEmissions)
+        expect(point2026?.value).toBeLessThan(point2025?.value ?? currentEmissions)
+      })
+    })
+
+    describe('multiple past studies', () => {
+      test('SBTi 1.5°C with multiple past studies - interpolation', () => {
+        const pastStudies = createPastStudies([2020, 1200], [2022, 1000])
+        const currentEmissions = 900
+        const currentYear = 2024
+
+        const currentTrajectory = calculateSBTiTrajectory({
+          studyEmissions: currentEmissions,
+          studyStartYear: currentYear,
+          reductionRate: SBTI_REDUCTION_RATE_15,
+          pastStudies,
+        })
+
+        verifyTrajectoryInterpolation(currentTrajectory, pastStudies, currentYear)
+
+        const point2021 = currentTrajectory.find((p) => p.year === 2021)
+        expect(point2021).toBeDefined()
+        const expected2021 = 1200 + ((2021 - 2020) / (2022 - 2020)) * (1000 - 1200)
+        expect(point2021?.value).toBeCloseTo(expected2021, 1)
+
+        const currentPoint = currentTrajectory.find((p) => p.year === currentYear)
+        expect(currentPoint?.value).toBeCloseTo(currentEmissions, 1)
+      })
+
+      test('SBTi 1.5°C with multiple past studies - overshoot', () => {
+        const pastStudies = createPastStudies([2020, 1200], [2022, 1000])
+        const currentEmissions = 1100
+        const currentYear = 2025
+
+        const referenceTrajectory = calculateSBTiTrajectory({
+          studyEmissions: 1000,
+          studyStartYear: 2022,
+          reductionRate: SBTI_REDUCTION_RATE_15,
+          pastStudies,
+        })
+
+        const expectedValue = getTrajectoryValueAtYear(referenceTrajectory, currentYear)
+        expect(expectedValue).not.toBeNull()
+
+        const withinThreshold = expectedValue !== null && isWithinThreshold(currentEmissions, expectedValue)
+        expect(withinThreshold).toBe(false)
+
+        const currentTrajectory = calculateSBTiTrajectory({
+          studyEmissions: currentEmissions,
+          studyStartYear: currentYear,
+          reductionRate: SBTI_REDUCTION_RATE_15,
+          pastStudies,
+          overshootAdjustment: {
+            referenceTrajectory,
+            referenceStudyYear: 2022,
+          },
+        })
+
+        verifyTrajectoryInterpolation(currentTrajectory, pastStudies, currentYear)
+
+        const point2026 = currentTrajectory.find((p) => p.year === 2026)
+        const point2028 = currentTrajectory.find((p) => p.year === 2028)
+        const refPoint2026 = referenceTrajectory.find((p) => p.year === 2026)
+        const refPoint2028 = referenceTrajectory.find((p) => p.year === 2028)
+        if (point2026 && point2028 && refPoint2026 && refPoint2028) {
+          const currentReduction = (point2026.value - point2028.value) / 2
+          const referenceReduction = (refPoint2026.value - refPoint2028.value) / 2
+          expect(currentReduction).toBeGreaterThan(referenceReduction)
+        }
+      })
+
+      test('Custom trajectory with multiple past studies', () => {
+        const pastStudies = createPastStudies([2021, 1100], [2023, 950])
+        const currentEmissions = 900
+        const currentYear = 2025
+        const objectives = [{ targetYear: 2030, reductionRate: 0.05 }]
+
+        const currentTrajectory = calculateCustomTrajectory({
+          studyEmissions: currentEmissions,
+          studyStartYear: currentYear,
+          objectives,
+          pastStudies,
+        })
+
+        verifyTrajectoryInterpolation(currentTrajectory, pastStudies, currentYear)
+
+        const point2022 = currentTrajectory.find((p) => p.year === 2022)
+        expect(point2022).toBeDefined()
+        const expected2022 = 1100 + ((2022 - 2021) / (2023 - 2021)) * (950 - 1100)
+        expect(point2022?.value).toBeCloseTo(expected2022, 1)
+
+        const currentPoint = currentTrajectory.find((p) => p.year === currentYear)
+        expect(currentPoint?.value).toBeCloseTo(currentEmissions, 1)
+      })
+
+      test('Action-based trajectory with multiple past studies', () => {
+        const pastStudies = createPastStudies([2020, 1200], [2022, 1000])
+        const currentEmissions = 950
+        const currentYear = 2024
+        const actions = [
+          {
+            reductionValue: 50,
+            reductionStartYear: '2025-01-01',
+            reductionEndYear: '2030-01-01',
+            potentialDeduction: 'Quantity',
+          },
+        ] as Action[]
+
+        const currentTrajectory = calculateActionBasedTrajectory({
+          studyEmissions: currentEmissions,
+          studyStartYear: currentYear,
+          actions,
+          pastStudies,
+        })
+
+        verifyTrajectoryInterpolation(currentTrajectory, pastStudies, currentYear)
+
+        const point2021 = currentTrajectory.find((p) => p.year === 2021)
+        expect(point2021).toBeDefined()
+        const expected2021 = 1200 + ((2021 - 2020) / (2022 - 2020)) * (1000 - 1200)
+        expect(point2021?.value).toBeCloseTo(expected2021, 1)
+
+        const currentPoint = currentTrajectory.find((p) => p.year === currentYear)
+        expect(currentPoint?.value).toBeCloseTo(currentEmissions, 1)
+      })
+
+      test('Multiple past studies - reference study selection', () => {
+        const pastStudies = createPastStudies([2020, 1200], [2022, 1000], [2023, 950])
+        const currentEmissions = 900
+        const currentYear = 2025
+
+        const currentTrajectory = calculateSBTiTrajectory({
+          studyEmissions: currentEmissions,
+          studyStartYear: currentYear,
+          reductionRate: SBTI_REDUCTION_RATE_15,
+          pastStudies,
+        })
+
+        verifyTrajectoryInterpolation(currentTrajectory, pastStudies, currentYear)
+
+        pastStudies.forEach((pastStudy) => {
+          const point = currentTrajectory.find((p) => p.year === pastStudy.year)
+          expect(point?.value).toBeCloseTo(pastStudy.totalCo2, 1)
+        })
+      })
+
+      test('SBTi trajectory with past studies before 2020', () => {
+        const pastStudies = createPastStudies([2018, 1300])
+        const currentEmissions = 1000
+        const currentYear = 2019
+
+        const currentTrajectory = calculateSBTiTrajectory({
+          studyEmissions: currentEmissions,
+          studyStartYear: currentYear,
+          reductionRate: SBTI_REDUCTION_RATE_15,
+          pastStudies,
+        })
+
+        const point2018 = currentTrajectory.find((p) => p.year === 2018)
+        expect(point2018?.value).toBeCloseTo(1300, 1)
+
+        const point2019 = currentTrajectory.find((p) => p.year === 2019)
+        const point2020 = currentTrajectory.find((p) => p.year === 2020)
+
+        expect(point2019?.value).toBeCloseTo(currentEmissions, 1)
+        expect(point2020?.value).toBeCloseTo(currentEmissions, 1)
+
+        const point2021 = currentTrajectory.find((p) => p.year === 2021)
+        expect(point2021?.value).toBeLessThan(point2020?.value ?? 0)
+
+        const currentPoint = currentTrajectory.find((p) => p.year === currentYear)
+        expect(currentPoint?.value).toBeCloseTo(currentEmissions, 1)
+      })
     })
   })
 })
