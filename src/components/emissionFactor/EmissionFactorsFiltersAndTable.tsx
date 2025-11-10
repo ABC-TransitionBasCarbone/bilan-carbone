@@ -70,7 +70,7 @@ const EmissionFactorsFiltersAndTable = ({
   useEffect(() => {
     async function fetchEmissionFactors() {
       const takeValue = skip === 0 ? pagination.pageSize * 4 : pagination.pageSize
-      const emissionFactorsFromBdd = await getEmissionFactors(skip, takeValue, filters, studyId)
+      const emissionFactorsFromBdd = await getEmissionFactors(skip, takeValue, filters, environment, studyId)
 
       setSkip((prevSkip) => takeValue + prevSkip)
 
@@ -103,7 +103,7 @@ const EmissionFactorsFiltersAndTable = ({
       setTotalCount(0)
       const takeValue = pagination.pageSize * 4
 
-      const emissionFactorsFromBdd = await getEmissionFactors(0, takeValue, filters, studyId)
+      const emissionFactorsFromBdd = await getEmissionFactors(0, takeValue, filters, environment, studyId)
       setSkip(takeValue)
 
       if (emissionFactorsFromBdd.success) {
