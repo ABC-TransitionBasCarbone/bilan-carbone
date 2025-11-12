@@ -36,7 +36,7 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
 
   const companyNumber = siret || siren || vat || taxNumber
   const isCR = ['adhesion_conseil', 'licence_exploitation'].includes(purchasedProducts)
-  const activatedLicence = membershipYear.includes(new Date().getFullYear().toString())
+  const activatedLicence = membershipYear.replace(/[{}]/g, '').split(';').map(Number)
 
   const dbAccount = await getAccountByEmailAndEnvironment(email, environment)
 
