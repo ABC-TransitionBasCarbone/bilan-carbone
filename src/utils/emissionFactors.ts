@@ -80,10 +80,11 @@ const tiltEmissionFactorSubPostsMapping: Partial<Record<SubPost, SubPost[]>> = {
   [SubPost.UtilisationEnDependanceConsommationDeBiens]: subPostsByPostBC[Post.IntrantsBiensEtMatieres],
   [SubPost.UtilisationEnResponsabiliteConsommationDEnergie]: subPostsByPostBC[Post.Energies],
   [SubPost.UtilisationEnDependanceConsommationDEnergie]: subPostsByPostBC[Post.Energies],
+  [SubPost.UtilisationEnDependanceFuitesEtAutresConsommations]: subPostsByPostBC[Post.AutresEmissionsNonEnergetiques],
+  [SubPost.UtilisationEnResponsabiliteFuitesEtAutresConsommations]:
+    subPostsByPostBC[Post.AutresEmissionsNonEnergetiques],
   [SubPost.UtilisationEnResponsabiliteConsommationNumerique]: [SubPost.Informatique, SubPost.UsagesNumeriques],
   [SubPost.UtilisationEnDependanceConsommationNumerique]: [SubPost.Informatique, SubPost.UsagesNumeriques],
-  [SubPost.FuitesOuEmissionsNonEnergetiques]: subPostsByPostBC[Post.AutresEmissionsNonEnergetiques],
-  [SubPost.CommunicationDigitale]: subPostsByPostBC[Post.AutresEmissionsNonEnergetiques],
 }
 
 const getEmissionFactorSubPostMap = (subPost: SubPost, env: Environment) => {
