@@ -1831,7 +1831,9 @@
       "myOrganization": "Mon organisation",
       "myClient": "Mon client",
       "update": "Modifier mes informations",
-      "updateClient": "Modifier mon client"
+      "updateClient": "Modifier mon client",
+      "renew": "Votre license n'a pas été renouvellée pour l'année {year}",
+      "renewLink": "Renouveller"
     },
     "delete": {
       "button": "Supprimer l'organisation",
