@@ -17,7 +17,7 @@ import {
 import { deleteStudyMemberFromOrganization, getAllowedStudiesByAccountIdAndOrganizationId } from '@/db/study'
 import { getUserApplicationSettings, getUserByEmail, updateAccount } from '@/db/user'
 import { getLocale } from '@/i18n/locale'
-import { uniqBy } from '@/utils/array'
+import { uniqueByKey } from '@/utils/array'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { withServerResponse } from '@/utils/serverResponse'
 import { isAdmin } from '@/utils/user'
@@ -159,7 +159,7 @@ export const onboardOrganizationVersionCommand = async (command: OnboardingComma
 
       let collaborators: AddMemberCommand[] = []
       if (command.collaborators && command.collaborators?.length > 0) {
-        const fileredCollaborators = uniqBy(command.collaborators, 'email').filter(
+        const fileredCollaborators = uniqueByKey(command.collaborators, 'email').filter(
           (collaborator) => !!collaborator.email && !!collaborator.role,
         ) as { email: User['email']; role: Account['role'] }[]
 

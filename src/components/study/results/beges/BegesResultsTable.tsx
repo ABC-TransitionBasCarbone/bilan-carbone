@@ -155,7 +155,7 @@ const BegesResultsTable = ({ study, withDepValue, data }: Props) => {
         totalBeges={(data.find((d) => d.rule === 'total')?.total ?? 0) / STUDY_UNIT_VALUES[study.resultsUnit]}
         totalCarbon={withDepValue}
       />
-      <BaseTable table={table} className={styles.begesTable} customRow={Row} testId="beges-results" />
+      <BaseTable table={table} className={styles.begesTable} customRow={Row} testId="beges-results" size="small" />
     </>
   )
 }

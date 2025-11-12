@@ -9,6 +9,7 @@ import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import Image from '@/components/document/Image'
 import { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
+import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
 import { getStudyTotalCo2Emissions } from '@/services/study'
@@ -74,39 +75,30 @@ const TrajectoryReductionPage = ({
   const [showModal, setShowModal] = useState(false)
   const [showTrajectoryModal, setShowTrajectoryModal] = useState(false)
   const [showSuccessToast, setShowSuccessToast] = useState(false)
-  const [selectedCustomTrajectories, setSelectedCustomTrajectories] = useState<string[]>(() => {
-    if (typeof window === 'undefined') {
-      return []
-    }
-    const stored = localStorage.getItem(`trajectory-custom-selected-${study.id}`)
-    return stored ? JSON.parse(stored) : []
-  })
-  const [selectedSbtiTrajectories, setSelectedSbtiTrajectories] = useState<string[]>(() => {
-    if (typeof window === 'undefined') {
-      return [TRAJECTORY_15_ID]
-    }
-    const stored = localStorage.getItem(`trajectory-sbti-selected-${study.id}`)
-    return stored ? JSON.parse(stored) : [TRAJECTORY_15_ID]
-  })
-  const [withDependencies, setWithDependencies] = useState<boolean>(() => {
-    if (typeof window === 'undefined') {
-      return true
-    }
-    const stored = localStorage.getItem(`trajectory-with-dependencies-${study.id}`)
-    return stored ? JSON.parse(stored) : true
-  })
+  const [selectedCustomTrajectories, setSelectedCustomTrajectories] = useState<string[]>([])
+  const [selectedSbtiTrajectories, setSelectedSbtiTrajectories] = useState<string[]>([TRAJECTORY_15_ID])
+  const [withDependencies, setWithDependencies] = useState<boolean>(true)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    localStorage.setItem(`trajectory-sbti-selected-${study.id}`, JSON.stringify(selectedSbtiTrajectories))
-  }, [selectedSbtiTrajectories, study.id])
+    setMounted(true)
+    const storedCustom = localStorage.getItem(`trajectory-custom-selected-${study.id}`)
+    if (storedCustom) {
+      setSelectedCustomTrajectories(JSON.parse(storedCustom))
+    }
+    const storedSbti = localStorage.getItem(`trajectory-sbti-selected-${study.id}`)
+    if (storedSbti) {
+      setSelectedSbtiTrajectories(JSON.parse(storedSbti))
+    }
+    const storedDependencies = localStorage.getItem(`trajectory-with-dependencies-${study.id}`)
+    if (storedDependencies) {
+      setWithDependencies(JSON.parse(storedDependencies))
+    }
+  }, [study.id])
 
-  useEffect(() => {
-    localStorage.setItem(`trajectory-with-dependencies-${study.id}`, JSON.stringify(withDependencies))
-  }, [withDependencies, study.id])
-
-  useEffect(() => {
-    localStorage.setItem(`trajectory-custom-selected-${study.id}`, JSON.stringify(selectedCustomTrajectories))
-  }, [selectedCustomTrajectories, study.id])
+  useLocalStorageSync(`trajectory-sbti-selected-${study.id}`, selectedSbtiTrajectories, mounted)
+  useLocalStorageSync(`trajectory-with-dependencies-${study.id}`, withDependencies, mounted)
+  useLocalStorageSync(`trajectory-custom-selected-${study.id}`, selectedCustomTrajectories, mounted)
 
   // Local storage may keep leftover custom trajectory ids from previous transition plans
   // This ensures that displayed custom trajectories are always valid and cleans up the invalid ones

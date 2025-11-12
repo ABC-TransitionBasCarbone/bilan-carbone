@@ -1,9 +1,10 @@
 'use client'
 
 import BaseTable from '@/components/base/Table'
+import { TableActionButton } from '@/components/base/TableActionButton'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { toggleActionEnabled } from '@/services/serverFunctions/transitionPlan'
-import OpenIcon from '@mui/icons-material/OpenInNew'
+import { getYearFromDateStr } from '@/utils/time'
 import { Switch } from '@mui/material'
 import { Action, ActionPotentialDeduction, StudyResultUnit } from '@prisma/client'
 import {
@@ -15,51 +16,43 @@ import {
 } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useCallback, useMemo, useOptimistic, useState } from 'react'
-import ActionModal from './ActionModal'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 interface Props {
   actions: Action[]
-  studyUnit: string
-  porters: { label: string; value: string }[]
-  transitionPlanId: string
+  openEditModal: (action: Action) => void
+  openDeleteModal: (action: Action) => void
 }
 
-const ActionTable = ({ actions, studyUnit, porters, transitionPlanId }: Props) => {
+const ActionTable = ({ actions, openEditModal, openDeleteModal }: Props) => {
   const t = useTranslations('study.transitionPlan.actions.table')
   const tUnit = useTranslations('study.results.units')
   const tCategory = useTranslations('study.transitionPlan.actions.category')
   const tPotential = useTranslations('study.transitionPlan.actions.potentialDeduction')
-  const [editing, setEditing] = useState<Action | undefined>(undefined)
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 })
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
 
-  const [optimisticActions, setOptimisticActions] = useOptimistic(
-    actions,
-    (state, { actionId, enabled }: { actionId: string; enabled: boolean }) => {
-      return state.map((action) => {
-        if (action.id === actionId) {
-          return { ...action, enabled }
-        }
-        return action
-      })
-    },
-  )
+  const [localActions, setLocalActions] = useState<Action[]>(actions)
+
+  useEffect(() => {
+    setLocalActions(actions)
+  }, [actions])
 
   const handleToggleEnabled = useCallback(
-    async (actionId: string, value: boolean) => {
-      setOptimisticActions({ actionId, enabled: value })
+    async (actionId: string, enabled: boolean) => {
+      setLocalActions((prev) => prev.map((action) => (action.id === actionId ? { ...action, enabled } : action)))
 
-      await callServerFunction(() => toggleActionEnabled(actionId, value), {
-        getErrorMessage: () => {
-          return t('errorChangingEnabled')
+      await callServerFunction(() => toggleActionEnabled(actionId, enabled), {
+        onSuccess: () => {
+          router.refresh()
+        },
+        onError: () => {
+          setLocalActions(actions)
         },
       })
-
-      router.refresh()
     },
-    [callServerFunction, t, router, setOptimisticActions],
+    [callServerFunction, router, setLocalActions, actions],
   )
 
   const getPotential = useCallback(
@@ -76,6 +69,15 @@ const ActionTable = ({ actions, studyUnit, porters, transitionPlanId }: Props) =
     [tPotential, tUnit],
   )
 
+  const getImplementationPeriod = useCallback((action: Action) => {
+    if (!action.reductionStartYear || !action.reductionEndYear) {
+      return ''
+    }
+    const startYear = getYearFromDateStr(action.reductionStartYear)
+    const endYear = getYearFromDateStr(action.reductionEndYear)
+    return `${startYear}-${endYear}`
+  }, [])
+
   const columns = useMemo(
     () =>
       [
@@ -87,59 +89,54 @@ const ActionTable = ({ actions, studyUnit, porters, transitionPlanId }: Props) =
               checked={getValue<boolean>()}
               onChange={(event) => handleToggleEnabled(row.original.id, event.target.checked)}
               color="primary"
+              size="small"
             />
           ),
         },
         {
           header: t('title'),
           accessorKey: 'title',
-          cell: ({ getValue, row }) => (
-            <div className="justify-around align-center">
-              <span>{getValue<string>()}</span>
-              <OpenIcon className="pointer" onClick={() => setEditing(row.original)} />
-            </div>
-          ),
+        },
+        {
+          header: t('priority'),
+          accessorKey: 'priority',
         },
         {
           header: t('actionType'),
           accessorFn: (action) => action.category.map((category) => tCategory(category)).join(', '),
         },
         {
-          header: t('targetYear'),
-          // accessorFn: (action) => Number(dayjs(action.reductionStartYear).year()),
-          accessorFn: () => '',
+          header: t('implementation'),
+          accessorFn: getImplementationPeriod,
         },
         { header: t('potential'), accessorFn: getPotential },
-        { header: t('porter'), accessorKey: 'actionPorter' },
+        { header: t('owner'), accessorKey: 'owner' },
         { header: `${t('budget')} (k€)`, accessorKey: 'necessaryBudget' },
+        {
+          id: 'actions',
+          header: '',
+          accessorFn: () => '',
+          cell: ({ row }) => (
+            <>
+              <TableActionButton type="edit" onClick={() => openEditModal(row.original)} />
+              <TableActionButton type="delete" onClick={() => openDeleteModal(row.original)} />
+            </>
+          ),
+        },
       ] as ColumnDef<Action>[],
-    [getPotential, t, tCategory, handleToggleEnabled],
+    [t, getPotential, getImplementationPeriod, handleToggleEnabled, tCategory, openEditModal, openDeleteModal],
   )
 
   const table = useReactTable({
     columns,
-    data: optimisticActions,
+    data: localActions,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
     state: { pagination },
   })
 
-  return (
-    <>
-      <BaseTable table={table} paginations={[10, 25, 50, 100]} testId="actions" />
-      {!!editing && (
-        <ActionModal
-          open
-          onClose={() => setEditing(undefined)}
-          action={editing}
-          transitionPlanId={transitionPlanId}
-          studyUnit={studyUnit}
-          porters={porters}
-        />
-      )}
-    </>
-  )
+  return <BaseTable table={table} paginations={[10, 25, 50, 100]} testId="actions" />
 }
 
 export default ActionTable

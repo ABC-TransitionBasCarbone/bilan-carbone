@@ -1,15 +1,14 @@
 'use client'
 
 import BaseTable from '@/components/base/Table'
+import { TableActionButton } from '@/components/base/TableActionButton'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteObjective, deleteTrajectory } from '@/services/serverFunctions/trajectory'
 import { getTrajectoryTypeLabel } from '@/utils/trajectory'
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
-import { Chip, IconButton } from '@mui/material'
+import { Chip } from '@mui/material'
 import { TrajectoryType } from '@prisma/client'
 import { ColumnDef, getCoreRowModel, getExpandedRowModel, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
@@ -118,9 +117,10 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, se
   const columns = useMemo(() => {
     return [
       {
-        header: t('table.name'),
-        accessorFn: (row) => row.name,
-        cell: ({ getValue, row }) => {
+        id: 'expand',
+        header: '',
+        accessorFn: () => '',
+        cell: ({ row }) => {
           const isTrajectory = row.original.isTrajectory
           const hasChildren = row.getCanExpand()
           const isExpanded = row.getIsExpanded()
@@ -129,9 +129,21 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, se
             return (
               <div onClick={row.getToggleExpandedHandler()} className={classNames('align-center', styles.expandable)}>
                 {isExpanded ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
-                {getValue<string>()}
               </div>
             )
+          }
+
+          return null
+        },
+      },
+      {
+        header: t('table.name'),
+        accessorFn: (row) => row.name,
+        cell: ({ getValue, row }) => {
+          const isTrajectory = row.original.isTrajectory
+
+          if (isTrajectory) {
+            return <span>{getValue<string>()}</span>
           }
 
           return null
@@ -181,7 +193,8 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, se
         },
       },
       {
-        header: t('table.actions'),
+        id: 'actions',
+        header: '',
         accessorFn: () => '',
         cell: ({ row }) => {
           if (!canEdit) {
@@ -192,13 +205,12 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, se
 
           if (rowData.isTrajectory) {
             return (
-              <div className="flex align-center gapped1">
-                <IconButton size="small" onClick={() => handleEditClick(rowData.trajectory)}>
-                  <EditOutlinedIcon fontSize="small" />
-                </IconButton>
-                <IconButton size="small" onClick={() => handleDeleteClick('trajectory', rowData.id, rowData.name)}>
-                  <DeleteOutlinedIcon fontSize="small" />
-                </IconButton>
+              <div className="flex">
+                <TableActionButton type="edit" onClick={() => handleEditClick(rowData.trajectory)} />
+                <TableActionButton
+                  type="delete"
+                  onClick={() => handleDeleteClick('trajectory', rowData.id, rowData.name)}
+                />
               </div>
             )
           }
@@ -213,16 +225,13 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, se
             parentTrajectory.objectives.length > 1
 
           return (
-            <div className="flex align-center gapped1">
-              {canEditObjective && (
-                <IconButton size="small" onClick={() => handleEditClick(parentTrajectory)}>
-                  <EditOutlinedIcon fontSize="small" />
-                </IconButton>
-              )}
+            <div className="flex">
+              {canEditObjective && <TableActionButton type="edit" onClick={() => handleEditClick(parentTrajectory)} />}
               {canDeleteObjective && (
-                <IconButton size="small" onClick={() => handleDeleteClick('objective', rowData.id, rowData.name)}>
-                  <DeleteOutlinedIcon fontSize="small" />
-                </IconButton>
+                <TableActionButton
+                  type="delete"
+                  onClick={() => handleDeleteClick('objective', rowData.id, rowData.name)}
+                />
               )}
             </div>
           )

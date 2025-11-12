@@ -154,10 +154,15 @@ export const createAction = async (data: Prisma.ActionUncheckedCreateInput) => p
 export const updateAction = async (id: string, data: Prisma.ActionUpdateInput) =>
   prismaClient.action.update({ where: { id }, data })
 
+export const deleteAction = async (id: string) => prismaClient.action.delete({ where: { id } })
+
 export const getActionById = async (id: string) => prismaClient.action.findUnique({ where: { id } })
 
 export const getActions = async (transitionPlanId: string) =>
-  prismaClient.action.findMany({ where: { transitionPlanId }, orderBy: { createdAt: 'desc' } })
+  prismaClient.action.findMany({
+    where: { transitionPlanId },
+    orderBy: [{ priority: 'asc' }, { createdAt: 'desc' }],
+  })
 
 export const createTransitionPlanStudy = async (transitionPlanId: string, studyId: string) =>
   prismaClient.transitionPlanStudy.create({ data: { transitionPlanId, studyId } })

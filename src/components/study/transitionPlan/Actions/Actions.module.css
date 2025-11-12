@@ -27,3 +27,13 @@
   border-radius: 0.75rem;
   height: 2.5rem;
 }
+
+.reductionValue {
+  width: 10rem;
+  flex-shrink: 0;
+}
+
+.reductionYear {
+  flex: 1;
+  min-width: 0;
+}

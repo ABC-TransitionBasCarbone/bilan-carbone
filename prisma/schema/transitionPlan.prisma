@@ -19,6 +19,7 @@ enum ActionRelevance {
   Avoidance
   AvoidanceFinancing
   ReductionOutsideOrganisationValueChain
+  ReductionWithinOrganisationValueChain
   ReductionWithinOrganisationCoreBusiness
 }
 
@@ -72,17 +73,18 @@ model Action {
   reductionValue            Int?
   reductionStartYear        String?                  @map("reduction_start_year")
   reductionEndYear          String?                  @map("reduction_end_year")
-  actionPorter              String?                  @map("action_porter")
+  owner                     String?
   necessaryBudget           Int?                     @map("necessary_budget")
   necesssaryRessources      String?                  @map("necesssary_ressources")
   implementationDescription String?                  @map("implementation_description")
-  implementationAim         Int?                     @map("implementation_aim")
+  implementationGoal        Int?                     @map("implementation_goal")
   followUpDescription       String?                  @map("follow_up_description")
-  followUpAim               Int?                     @map("follow_up_aim")
+  followUpGoal              Int?                     @map("follow_up_goal")
   performanceDescription    String?                  @map("performance_description")
-  performanceAim            Int?                     @map("performance_aim")
+  performanceGoal           Int?                     @map("performance_goal")
   facilitatorsAndObstacles  String?                  @map("facilitators_and_abstacles")
   additionalInformation     String?                  @map("additional_information")
+  priority                  Int?
   nature                    ActionNature[]
   category                  ActionCategory[]
   relevance                 ActionRelevance[]

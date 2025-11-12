@@ -3,22 +3,25 @@ import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
 import { AddActionCommand } from '@/services/serverFunctions/transitionPlan.command'
 import { getYearFromDateStr } from '@/utils/time'
-import { Checkbox, FormControlLabel, MenuItem, TextField } from '@mui/material'
+import { Checkbox, FormControlLabel, MenuItem } from '@mui/material'
 import { ActionPotentialDeduction } from '@prisma/client'
+import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import { useEffect } from 'react'
-import { Control, UseFormGetValues, UseFormSetValue, useWatch } from 'react-hook-form'
+import { Control, FieldErrors, UseFormGetValues, UseFormSetValue, useWatch } from 'react-hook-form'
 import textUnitStyles from '../../../dynamic-form/inputFields/TextUnitInput.module.css'
+import styles from './ActionModal.module.css'
 
 interface Props {
   studyUnit: string
   control: Control<AddActionCommand>
   setValue: UseFormSetValue<AddActionCommand>
   getValues: UseFormGetValues<AddActionCommand>
+  errors: FieldErrors<AddActionCommand>
 }
 
-const ActionModalStep1 = ({ studyUnit, control, setValue, getValues }: Props) => {
+const ActionModalStep1 = ({ studyUnit, control, setValue }: Props) => {
   const t = useTranslations('study.transitionPlan.actions.addModal')
   const tUnit = useTranslations('study.results.units')
   const tDeduction = useTranslations('study.transitionPlan.actions.potentialDeduction')
@@ -53,6 +56,8 @@ const ActionModalStep1 = ({ studyUnit, control, setValue, getValues }: Props) =>
         name="subSteps"
         label={`${t('subSteps')} *`}
         placeholder={t('subStepsPlaceholder')}
+        multiline
+        rows={2}
         data-testid="add-action-subSteps"
       />
       <FormTextField
@@ -61,6 +66,8 @@ const ActionModalStep1 = ({ studyUnit, control, setValue, getValues }: Props) =>
         name="detailedDescription"
         label={`${t('detailedDescription')} *`}
         placeholder={t('detailedDescriptionPlaceholder')}
+        multiline
+        rows={2}
         data-testid="add-action-detailedDescription"
       />
       <FormSelect
@@ -77,69 +84,54 @@ const ActionModalStep1 = ({ studyUnit, control, setValue, getValues }: Props) =>
           </MenuItem>
         ))}
       </FormSelect>
-      {(potentialDeduction === ActionPotentialDeduction.Quantity ||
-        potentialDeduction === ActionPotentialDeduction.Quality) && (
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={dependenciesOnly ?? false}
-              onChange={(e) => setValue('dependenciesOnly', e.target.checked)}
-            />
-          }
-          label={t('dependenciesOnly')}
-        />
-      )}
-      <>
+
+      <div className={classNames('flex gapped1 w100', styles.reductionContainer)}>
         {potentialDeduction === ActionPotentialDeduction.Quantity && (
-          <div className=" flex-col grow">
-            <span className="inputLabel bold mb-2">{`${t('reductionValue')} *`}</span>
-            <div className="flex grow relative">
-              <TextField
-                type="number"
-                className="grow"
-                value={getValues('reductionValue')}
-                onBlur={(event) => setValue('reductionValue', Number(event.target.value))}
-                slotProps={{
-                  input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
-                }}
-              />
-              <div className={textUnitStyles.unit}>{tUnit(studyUnit)}</div>
-            </div>
+          <div className={styles.reductionValue}>
+            <FormTextField
+              label={`${t('reductionValue')} *`}
+              type="number"
+              control={control}
+              translation={t}
+              name="reductionValue"
+              endAdornment={<div className={textUnitStyles.unit}>{tUnit(studyUnit)}</div>}
+              data-testid="add-action-reductionValue"
+            />
           </div>
         )}
-        <div className="flex grow gapped">
-          <div className="flex-col grow">
-            <span className="inputLabel bold mb-2">{`${t('reductionStartYear')} *`}</span>
-            <div className="flex grow relative">
-              <FormDatePicker
-                control={control}
-                className="grow"
-                translation={t}
-                name="reductionStartYear"
-                views={['year']}
-                minDate={dayjs()}
-                fullWidth
-                data-testid="add-action-reductionStartYear"
-              />
-            </div>
-          </div>
-          <div className="flex-col grow">
-            <span className="inputLabel bold mb-2">{`${t('reductionEndYear')} *`}</span>
-            <div className="flex grow relative">
-              <FormDatePicker
-                control={control}
-                translation={t}
-                className="grow"
-                name="reductionEndYear"
-                views={['year']}
-                minDate={dayjs(reductionStartYear)}
-                fullWidth
-                data-testid="add-action-reductionEndYear"
-              />
-            </div>
-          </div>
+        <div className={classNames('flex gapped1 w100', styles.reductionYearContainer)}>
+          <FormDatePicker
+            label={`${t('reductionStartYear')} *`}
+            control={control}
+            translation={t}
+            className={styles.reductionYear}
+            name="reductionStartYear"
+            views={['year']}
+            minDate={dayjs()}
+            data-testid="add-action-reductionStartYear"
+          />
+          <FormDatePicker
+            label={`${t('reductionEndYear')} *`}
+            control={control}
+            translation={t}
+            className={styles.reductionYear}
+            name="reductionEndYear"
+            views={['year']}
+            minDate={dayjs(reductionStartYear)}
+            data-testid="add-action-reductionEndYear"
+          />
         </div>
-      </>
+      </div>
+
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={dependenciesOnly ?? false}
+            onChange={(e) => setValue('dependenciesOnly', e.target.checked)}
+          />
+        }
+        label={t('dependenciesOnly')}
+      />
     </>
   )
 }

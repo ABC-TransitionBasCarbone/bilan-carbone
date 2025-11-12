@@ -1,5 +1,5 @@
 .container {
-  min-height: calc(100vh - var(--total-header-height));
+  min-height: calc(100vh - var(--total-header-height) - 2.75rem); /* 2.75rem is the height of the breadcrumbs */
 }
 
 .emptyStateCard {

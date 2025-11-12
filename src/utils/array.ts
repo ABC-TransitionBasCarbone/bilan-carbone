@@ -1,4 +1,4 @@
-export const uniqBy = <T, K extends keyof T>(arr: T[], key: K) => {
+export const uniqueByKey = <T, K extends keyof T>(arr: T[], key: K) => {
   const filteredKeys = new Set<T[K]>()
   return arr.filter((item) => {
     if (filteredKeys.has(item[key])) {
@@ -9,7 +9,7 @@ export const uniqBy = <T, K extends keyof T>(arr: T[], key: K) => {
   })
 }
 
-export const uniq = <T>(arr: T[]): T[] => [...new Set(arr)]
+export const unique = <T>(arr: T[]): T[] => [...new Set(arr)]
 
 export const getNestedValue = <T extends object, R = unknown>(obj: T, path: string): R | undefined => {
   const [key, ...rest] = path.split('.')

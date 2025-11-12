@@ -266,7 +266,7 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
         ) : (
           <>
             <div className="my2">{t('cncInfo', { year: siteData?.cncVersion?.year ?? 2023 })}</div>
-            <div>
+            <div className="flex-col gapped1">
               <FormTextField
                 control={form.control}
                 name="numberOfSessions"

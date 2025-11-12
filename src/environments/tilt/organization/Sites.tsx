@@ -9,7 +9,6 @@ import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { Control, UseFormReturn } from 'react-hook-form'
 import BCSites from '../../base/organization/Sites'
-import styles from '../../base/organization/Sites.module.css'
 
 interface Props<T extends SitesCommand> {
   form?: UseFormReturn<T>
@@ -34,7 +33,6 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, caUnit, onD
               <FormTextField
                 data-testid="organization-sites-volunteer-number"
                 type="number"
-                className={styles.field}
                 control={control}
                 translation={t}
                 name={`sites.${row.index}.volunteerNumber`}
@@ -44,6 +42,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, caUnit, onD
                   input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
                 }}
                 fullWidth
+                size="small"
               />
             ) : (
               formatNumber(getValue<number>(), 2)
@@ -58,7 +57,6 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, caUnit, onD
               <FormTextField
                 data-testid="organization-sites-beneficiary-number"
                 type="number"
-                className={styles.field}
                 control={control}
                 translation={t}
                 name={`sites.${row.index}.beneficiaryNumber`}
@@ -68,6 +66,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, caUnit, onD
                   input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
                 }}
                 fullWidth
+                size="small"
               />
             ) : (
               formatNumber(getValue<number>(), 2)

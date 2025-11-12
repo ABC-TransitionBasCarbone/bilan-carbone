@@ -3,18 +3,18 @@
 import Block from '@/components/base/Block'
 import HelpIcon from '@/components/base/HelpIcon'
 import BaseTable from '@/components/base/Table'
+import { TableActionButton } from '@/components/base/TableActionButton'
 import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { getEnvVar } from '@/lib/environment'
 import { BCPost, Post, subPostsByPost } from '@/services/posts'
 import { deleteStudyContributor } from '@/services/serverFunctions/study'
-import DeleteIcon from '@mui/icons-material/Cancel'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { Button, IconButton } from '@mui/material'
+import { IconButton } from '@mui/material'
 import { Environment } from '@prisma/client'
-import { ColumnDef, flexRender, getCoreRowModel, Row, useReactTable } from '@tanstack/react-table'
+import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -138,24 +138,35 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
     [tPost, t, getActualSubPosts],
   )
 
-  const renderEmailCell = useCallback(
+  const renderExpandCell = useCallback(
     (rowData: StudyContributorTableRow) => {
       if (rowData.type === 'parent') {
         const isExpanded = expandedRows.has(rowData.email)
         return (
           <ExpandableCell email={rowData.email}>
-            <div className="align-center">
-              <IconButton size="small" className={styles.iconButton} aria-label={isExpanded ? 'Collapse' : 'Expand'}>
-                {isExpanded ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
-              </IconButton>
-              <span>{rowData.email}</span>
-            </div>
+            <IconButton size="small" className={styles.iconButton} aria-label={isExpanded ? 'Collapse' : 'Expand'}>
+              {isExpanded ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
+            </IconButton>
+          </ExpandableCell>
+        )
+      }
+      return null
+    },
+    [expandedRows, ExpandableCell],
+  )
+
+  const renderEmailCell = useCallback(
+    (rowData: StudyContributorTableRow) => {
+      if (rowData.type === 'parent') {
+        return (
+          <ExpandableCell email={rowData.email}>
+            <span>{rowData.email}</span>
           </ExpandableCell>
         )
       }
       return <div className={styles.childRowContent}>{/* Empty for sub-rows */}</div>
     },
-    [expandedRows, ExpandableCell],
+    [ExpandableCell],
   )
 
   const renderPostCell = useCallback(
@@ -262,6 +273,11 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
   const columns = useMemo(() => {
     const columns: ColumnDef<StudyContributorTableRow>[] = [
       {
+        id: 'expand',
+        header: '',
+        cell: ({ row }) => renderExpandCell(row.original),
+      },
+      {
         header: t('email'),
         cell: ({ row }) => renderEmailCell(row.original),
       },
@@ -278,47 +294,26 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
     return canAddContributor
       ? columns.concat([
           {
-            header: t('actions'),
+            id: 'actions',
+            header: '',
             cell: ({ row }) => {
               const rowData = row.original
-
-              if (rowData.type === 'parent') {
-                // Delete entire contributor
-                return (
-                  <div className="flex-cc">
-                    <Button
-                      aria-label={t('delete')}
-                      title={t('delete')}
-                      onClick={() => setToDelete(rowData)}
-                      data-testid={`delete-study-contributor-button`}
-                      color="error"
-                    >
-                      <DeleteIcon />
-                    </Button>
-                  </div>
-                )
-              } else {
-                // Delete specific post assignment
-                return (
-                  <div className="flex-cc">
-                    <Button
-                      aria-label={t('delete')}
-                      title={`Delete ${tPost(rowData.post)}`}
-                      onClick={() => setToDelete(rowData)}
-                      data-testid={`delete-study-contributor-post-button`}
-                      size="small"
-                      color="error"
-                    >
-                      <DeleteIcon fontSize="small" />
-                    </Button>
-                  </div>
-                )
-              }
+              return (
+                <TableActionButton
+                  type="delete"
+                  onClick={() => setToDelete(rowData)}
+                  data-testid={
+                    rowData.type === 'parent'
+                      ? 'delete-study-contributor-button'
+                      : 'delete-study-contributor-post-button'
+                  }
+                />
+              )
             },
           },
         ])
       : columns
-  }, [canAddContributor, t, tPost, renderEmailCell, renderPostCell, renderSubPostCell])
+  }, [canAddContributor, t, renderExpandCell, renderEmailCell, renderPostCell, renderSubPostCell])
 
   const table = useReactTable({
     columns,
@@ -363,25 +358,6 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
     setDeleting(false)
   }
 
-  const Row = (row: Row<StudyContributorTableRow>) => {
-    const rowData = row.original
-    const isParentRow = rowData.type === 'parent'
-
-    return (
-      <tr
-        key={row.id}
-        data-testid="study-contributors-table-row"
-        className={isParentRow ? styles.parentRow : styles.childRow}
-      >
-        {row.getVisibleCells().map((cell) => (
-          <td key={cell.id} className={isParentRow ? styles.parentCell : styles.childCell}>
-            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-          </td>
-        ))}
-      </tr>
-    )
-  }
-
   return (
     <>
       <Block
@@ -403,7 +379,7 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
         }
       >
         <div className={styles.container}>
-          <BaseTable table={table} className="mb2" testId="study-contributors" customRow={Row} />
+          <BaseTable table={table} className="mb2" testId="study-contributors" />
         </div>
       </Block>
       <Modal

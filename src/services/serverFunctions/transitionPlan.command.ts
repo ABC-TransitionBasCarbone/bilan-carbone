@@ -59,18 +59,18 @@ export const AddActionCommandBase = z.object({
   detailedDescription: z.string().min(1),
   transitionPlanId: z.uuid(),
   potentialDeduction: z.enum(ActionPotentialDeduction),
-  reductionValue: z.number().optional(),
-  reductionStartYear: z.string().optional(),
-  reductionEndYear: z.string().optional(),
-  actionPorter: z.string().optional(),
+  reductionValue: z.number().optional().nullable(),
+  reductionStartYear: z.string(),
+  reductionEndYear: z.string(),
+  owner: z.string().optional(),
   necessaryBudget: z.number().optional(),
   necesssaryRessources: z.string().optional(),
   implementationDescription: z.string().optional(),
-  implementationAim: z.number().optional(),
+  implementationGoal: z.number().optional(),
   followUpDescription: z.string().optional(),
-  followUpAim: z.number().optional(),
+  followUpGoal: z.number().optional(),
   performanceDescription: z.string().optional(),
-  performanceAim: z.number().optional(),
+  performanceGoal: z.number().optional(),
   facilitatorsAndObstacles: z.string().optional(),
   additionalInformation: z.string().optional(),
   nature: z.array(z.enum(ActionNature)).min(0),
@@ -80,30 +80,11 @@ export const AddActionCommandBase = z.object({
   dependenciesOnly: z.boolean().optional(),
 })
 
-export const AddActionCommandValidation = AddActionCommandBase.superRefine((data, ctx) => {
+export const AddActionCommandValidation = AddActionCommandBase.refine((data) => {
   if (data.potentialDeduction === ActionPotentialDeduction.Quantity) {
-    if (!data) {
-      ctx.addIssue(setCustomIssue(['reductionValue'], 'required'))
-    }
-    if (!data.reductionStartYear) {
-      ctx.addIssue(setCustomIssue(['reductionStartYear'], 'required'))
-    }
-
-    if (!data.reductionEndYear) {
-      ctx.addIssue(setCustomIssue(['reductionEndYear'], 'required'))
-    }
-
-    if (data.actionPorter !== '') {
-      const emailValidation = z
-        .email()
-        .transform((val) => val.toLowerCase())
-        .safeParse(data.actionPorter)
-
-      if (!emailValidation.success) {
-        ctx.addIssue(setCustomIssue(['actionPorter'], 'invalidEmail'))
-      }
-    }
+    return data.reductionValue !== undefined && data.reductionValue !== null
   }
-})
+  return true
+}, setCustomMessage('required'))
 
 export type AddActionCommand = z.infer<typeof AddActionCommandValidation>

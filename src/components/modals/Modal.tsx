@@ -26,6 +26,7 @@ type ModalAction =
       onClick: VoidFunction
       'data-testid'?: string
       disabled?: boolean
+      color?: 'secondary' | 'error' | 'primary'
     })
   | (ButtonProps & { actionType: 'link'; href?: string; 'data-testid'?: string })
 
@@ -38,7 +39,7 @@ const Modal = ({ className, label, open, onClose, title, children, actions, big 
     data-testid={`${label}-modal`}
   >
     <Box className={classNames(styles.box, className, 'flex-col', { [styles.big]: big })}>
-      <div className={classNames(title ? 'justify-between mb2' : 'justify-end', 'align-center')}>
+      <div className={classNames(title ? 'justify-between mb1' : 'justify-end', 'align-center')}>
         {title && (
           <Typography id={`${label}-modal-title`} variant="h6" sx={{ fontWeight: 'bold' }}>
             {title}
