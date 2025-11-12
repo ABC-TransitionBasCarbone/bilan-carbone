@@ -1,58 +1,46 @@
-.opened {
-  width: 21rem;
-
-  @media screen and (max-width: 1279px) {
-    width: 17rem;
-  }
-}
-
 .toggleButtonContainer {
   top: calc(var(--total-header-height) + 1.5rem);
   left: 1.5rem;
   position: fixed;
-  z-index: 100;
+  z-index: 1300;
 }
 
 .toggleButton {
-  z-index: 100;
   border-radius: 50%;
   border: none;
   color: white;
 }
 
 .drawerContainer {
-  z-index: 99;
-  margin-left: 1rem;
-  display: flex;
+  z-index: 1200;
   top: calc(var(--total-header-height) + 1rem) !important;
-  width: 20rem;
+  width: fit-content;
   height: auto;
+  max-width: calc(100vw - 2rem);
+  max-height: calc(100vh - var(--total-header-height) - 2rem);
   box-sizing: border-box;
   border-radius: 1.5rem;
   border: 1px solid var(--mui-palette-primary-main);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-  padding: 4rem 0rem 1rem 0rem;
-
-  @media screen and (max-width: 1279px) {
-    width: 16rem;
-  }
+  padding: 0;
+  overflow: hidden;
 }
 
-.studyTitle {
-  padding: 0.5rem 1rem 0.5rem 1rem;
-  font-size: 1.25rem;
-  font-weight: 800;
-  line-height: 120%;
-  color: var(--mui-palette-secondary-main);
-  text-decoration: none;
-  display: flex;
-  align-items: center;
+.drawerTitle {
+  padding: 1rem 0.5rem 1.25rem 4.25rem;
+  flex-shrink: 0;
+  max-width: 18rem;
+}
 
-  @media screen and (max-width: 1279px) {
-    font-size: 1rem;
-    padding-top: 0rem !important;
-    padding-bottom: 0rem !important;
-  }
+.backdrop {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.menuContent {
+  overflow-y: auto;
+  overflow-x: hidden;
+  gap: 1.5rem;
+  padding: 0.5rem 0;
 }
 
 .sectionHeader {

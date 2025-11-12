@@ -12,7 +12,7 @@ import { UUID } from 'crypto'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styles from './StudyNavbar.module.css'
 
 interface Props {
@@ -27,7 +27,21 @@ const StudyNavbar = ({ environment, studyId, study, isTransitionPlanActive, hasO
   const pathName = usePathname()
 
   const t = useTranslations('study.navigation')
-  const [open, setOpen] = useState<boolean>(true)
+  const [open, setOpen] = useState<boolean>(false)
+  const [isPersistent, setIsPersistent] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      // Measured width where the navbar doesn't overlap with the content
+      setIsPersistent(window.innerWidth > 1970)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (isPersistent) {
+      setOpen(true)
+    }
+  }, [isPersistent])
 
   const { title, sections } = getStudyNavbarMenu(
     environment,
@@ -37,6 +51,13 @@ const StudyNavbar = ({ environment, studyId, study, isTransitionPlanActive, hasO
     isTransitionPlanActive,
     hasObjectives,
   )
+
+  const handleLinkClick = () => {
+    if (!isPersistent) {
+      setOpen(false)
+    }
+  }
+
   return (
     <>
       <div className={styles.toggleButtonContainer}>
@@ -53,23 +74,22 @@ const StudyNavbar = ({ environment, studyId, study, isTransitionPlanActive, hasO
         </Fab>
       </div>
       <Drawer
-        className={open ? styles.opened : ''}
         open={open}
+        onClose={() => setOpen(false)}
         slotProps={{
           paper: {
-            className: styles.drawerContainer,
+            className: classNames('flex-col ml1', styles.drawerContainer, open && styles.opened),
+          },
+          backdrop: {
+            className: styles.backdrop,
           },
         }}
-        variant="persistent"
-        transitionDuration={0}
+        variant={isPersistent ? 'persistent' : 'temporary'}
       >
-        <div className={classNames('flex-col pt1', sections.length === 1 && !sections[0].header ? '' : 'gapped15')}>
-          <div className="flex-col">
-            <Link className={styles.studyTitle} href={title.href}>
-              <StudyName name={title.label} />
-            </Link>
-          </div>
-
+        <div className={styles.drawerTitle}>
+          <StudyName name={title.label} />
+        </div>
+        <div className={classNames('flex-col', styles.menuContent)}>
           {sections.map((section, sectionIndex) => (
             <div key={sectionIndex} className="flex-col">
               {section.header && <div className={styles.sectionHeader}>{section.header}</div>}
@@ -84,6 +104,7 @@ const StudyNavbar = ({ environment, studyId, study, isTransitionPlanActive, hasO
                     className={classNames(styles.link, { [styles.active]: pathName.includes(link.href) })}
                     href={link.href || '#'}
                     {...(link.testId && { 'data-testid': link.testId })}
+                    onClick={handleLinkClick}
                   >
                     {link.label}
                   </Link>
