@@ -57,8 +57,8 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
           <OrganizationCard
             account={account}
             organizationVersions={organizationVersions as OrganizationVersionWithOrganization[]}
-            organizationData={shouldDisplayOrgaData}
-            licenseRenewal={shouldRenewLicense}
+            shouldDisplayOrgaData={shouldDisplayOrgaData}
+            shouldRenewLicense={shouldRenewLicense}
           />
         )}
         <Box component="main" className={styles.content}>

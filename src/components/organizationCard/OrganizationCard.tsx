@@ -14,8 +14,8 @@ import Link from '../base/Link'
 interface Props {
   account: UserSession
   organizationVersions: OrganizationVersionWithOrganization[]
-  organizationData: boolean
-  licenseRenewal: boolean
+  shouldDisplayOrgaData: boolean
+  shouldRenewLicense: boolean
 }
 
 const OrganizationToolbar = styled(Toolbar)<ToolbarProps>(({ theme }) => ({
@@ -28,7 +28,7 @@ const OrganizationToolbar = styled(Toolbar)<ToolbarProps>(({ theme }) => ({
 
 const renewalLink = process.env.NEXT_PUBLIC_LICENSE_RENEWAL_LINK
 
-const OrganizationCard = ({ account, organizationVersions, organizationData, licenseRenewal }: Props) => {
+const OrganizationCard = ({ account, organizationVersions, shouldDisplayOrgaData, shouldRenewLicense }: Props) => {
   const t = useTranslations('organization.card')
 
   const date = new Date()
@@ -103,7 +103,7 @@ const OrganizationCard = ({ account, organizationVersions, organizationData, lic
     <AppBar position="sticky">
       <OrganizationToolbar>
         <Box display="flex" alignItems="center" gap={10}>
-          {organizationData && (
+          {shouldDisplayOrgaData && (
             <div className="align-center gapped">
               <HomeIcon />
               <Typography>{organizationVersion.organization.name}</Typography>
@@ -114,7 +114,7 @@ const OrganizationCard = ({ account, organizationVersions, organizationData, lic
               )}
             </div>
           )}
-          {licenseRenewal && renewalLink && (
+          {shouldRenewLicense && renewalLink && (
             <div className="align-center gapped">
               <Typography>{t('renew', { year: date.getFullYear() + 1 })}</Typography>
               <Link color="secondary" href={renewalLink} target="_blank" rel="noreferrer noopener">
