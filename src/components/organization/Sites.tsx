@@ -34,7 +34,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, columns, ca
 
   const newSite = () => ({ id: uuidv4(), name: '', selected: false }) as SitesCommand['sites'][0]
 
-  const headerCAUnit = useMemo(() => tUnit(caUnit ?? defaultCAUnit), [caUnit])
+  const headerCAUnit = useMemo(() => tUnit(caUnit ?? defaultCAUnit), [caUnit, tUnit])
 
   const table = useReactTable({
     columns,
@@ -50,14 +50,14 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, columns, ca
         <div className="justify-between align-center">
           <p className="title-h3">
             {environment !== Environment.CUT && (
-              <>
+              <span className="inputLabel bold align-center">
                 {t('title')}
                 <Help
                   className="ml-4 pointer"
                   onClick={() => setShowGlossary(!showGlossary)}
                   label={tGlossary('title')}
                 />
-              </>
+              </span>
             )}
           </p>
           {form && !withSelection && (

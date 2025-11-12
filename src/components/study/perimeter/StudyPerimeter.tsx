@@ -380,7 +380,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
         }
       />
       {hasEditionRole && isFromStudyOrganization && (
-        <div className={classNames('mt1', { 'justify-between': isEditing })}>
+        <div className={classNames('mt1 gapped', isEditing ? 'justify-between' : 'justify-end')}>
           <Button
             data-testid={`${isEditing ? 'cancel-' : ''}edit-study-sites`}
             onClick={() => setIsEditing(!isEditing)}

@@ -1807,7 +1807,7 @@
       "Unknown error": "Une erreur inconnue s'est produite. Veuillez contacter le support"
     },
     "sites": {
-      "title": "Les sites de l'organisation concernés par l'étude",
+      "title": "Sites de l'organisation concernés par l'étude",
       "noSites": "Il n'y a pas de sites configurés sur l'organisation",
       "name": "Nom",
       "namePlaceholder": "Nom du site",

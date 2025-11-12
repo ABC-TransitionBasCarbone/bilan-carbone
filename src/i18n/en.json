@@ -1807,7 +1807,7 @@
       "Unknown error": "An unknwon error happened. Please contact the support"
     },
     "sites": {
-      "title": "The organization's sites concerned by this study",
+      "title": "Organization's sites concerned by this study",
       "noSites": "There are no sites configured for the organization",
       "name": "Name",
       "namePlaceholder": "Site name",
