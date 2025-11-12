@@ -669,9 +669,9 @@
         "duplicate": "Dupliquer",
         "sitesChanges": {
           "title": "Modification de l'organisation",
-          "description": "Vous êtes sur le point de modifier les sites pris en compte au sein de votre Bilan Carbone®. Tous les nouveaux sites seront ajoutés et les noms des sites modifiés au sein de vos informations générales. <error>Cela n'aura aucun impact sur vos études autre que celle-ci.</error> Souhaitez-vous également répercuter les modifications effectuées sur des sites existants (CA et ETP) sur vos informations générales ?",
+          "description": "Vous êtes sur le point de modifier les sites pris en compte au sein de votre Bilan Carbone®. <error>Cela n'aura aucun impact sur vos études autre que celle-ci.</error> Souhaitez-vous également répercuter les modifications effectuées sur des sites existants (CA et ETP) sur vos informations générales ?",
           "no": "Non",
-          "duplicate": "Dupliquer"
+          "duplicate": "Modifier l'organisation globale"
         }
       },
       "information": "Pour plus d'information sur cette section, vous pouvez vous référer à cette documentation : "

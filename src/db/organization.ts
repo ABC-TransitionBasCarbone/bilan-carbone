@@ -218,21 +218,9 @@ export const updateOrganizationSites = async (
   }
   return prismaClient.$transaction([
     ...sites.map((site) =>
-      prismaClient.site.upsert({
+      prismaClient.site.update({
         where: { id: site.id },
-        create: {
-          id: site.id,
-          organizationId: organizationVersion.organizationId,
-          name: site.name,
-          etp: site.etp,
-          ca: (site?.ca || 0) * caUnit,
-          postalCode: site.postalCode,
-          city: site.city,
-          cncId: site.cncId || undefined,
-          volunteerNumber: site.volunteerNumber || undefined,
-          beneficiaryNumber: site.beneficiaryNumber || undefined,
-        },
-        update: {
+        data: {
           name: site.name,
           etp: site.etp,
           ca: (site?.ca || 0) * caUnit,
@@ -244,9 +232,6 @@ export const updateOrganizationSites = async (
         },
       }),
     ),
-    prismaClient.site.deleteMany({
-      where: { organizationId: organizationVersion.organizationId, id: { notIn: sites.map((site) => site.id) } },
-    }),
   ])
 }
 

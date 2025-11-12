@@ -118,8 +118,6 @@ export const updateOrganizationSitesCommand = async (command: SitesCommand, orga
     const caUnit = CA_UNIT_VALUES[userCAUnit || defaultCAUnit]
 
     await updateOrganizationSites(command, organizationVersionId, caUnit)
-    const organizationVersion = await getOrganizationVersionById(organizationVersionId)
-    addUserChecklistItem(organizationVersion?.isCR ? UserChecklist.AddSiteCR : UserChecklist.AddSiteOrga)
   })
 
 export const deleteOrganizationCommand = async ({ id, name }: DeleteCommand) =>
@@ -284,9 +282,5 @@ export const getUpdateOrganizationVersionPermission = async (organizationVersion
       return false
     }
 
-    if (!(await canUpdateOrganizationVersion(session.user, organizationVersionId))) {
-      return false
-    }
-
-    return true
+    return canUpdateOrganizationVersion(session.user, organizationVersionId)
   })

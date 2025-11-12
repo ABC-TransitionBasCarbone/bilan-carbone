@@ -669,9 +669,9 @@
         "duplicate": "Duplicate",
         "sitesChanges": {
           "title": "Organisation modification",
-          "description": "You are about to modify the sites included in your Bilan Carbone® study. All new sites will be added and the names of modified sites will be updated in your general information. <error>This will have no impact on your studies other than this one.</error> Would you also like to reflect the changes made to existing sites (Turnover and FTE) in your general information?",
+          "description": "You are about to modify the sites included in your Bilan Carbone® study. <error>This will have no impact on your studies other than this one.</error> Would you also like to reflect the changes made to existing sites (Turnover and FTE) in your general information?",
           "no": "No",
-          "duplicate": "Duplicate"
+          "duplicate": "Change the overall organisation"
         }
       },
       "information": "For more information on this section, you can refer to this documentation: "
