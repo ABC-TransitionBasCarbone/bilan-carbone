@@ -18,21 +18,20 @@ interface Props {
   children: React.ReactNode
 }
 
+const renewvalMessageStartMonth = Number(process.env.NEXT_LICENSE_RENEWVAL_MONTH) || 13 // 13 is never to be displayed if variable is not defined
+
 const NavLayout = async ({ children, user: account }: Props & UserSessionProps) => {
   const environment = await getEnvironment()
   if (account.needsAccountSelection) {
     return <main className={styles.content}>{children}</main>
   }
 
+  const currentDate = new Date()
+
   const [organizationVersions, studyId] = await Promise.all([
     getAccountOrganizationVersions(account.accountId),
     getAllowedStudyIdByAccount(account),
   ])
-
-  const shouldDisplayOrgaData =
-    !!organizationVersions.find((org) => org.isCR || org.parentId) && account.environment !== Environment.CUT
-  const shouldRenewLicense = true
-  const withOrganizationCard = shouldDisplayOrgaData || shouldRenewLicense
 
   const accountOrganizationVersion = organizationVersions.find(
     (organizationVersion) => organizationVersion.id === account.organizationVersionId,
@@ -40,6 +39,15 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
   const clientId = organizationVersions.find(
     (organizationVersion) => organizationVersion.id !== account.organizationVersionId,
   )?.id
+
+  const shouldDisplayOrgaData =
+    !!organizationVersions.find((org) => org.isCR || org.parentId) && account.environment !== Environment.CUT
+  const shouldRenewLicense =
+    accountOrganizationVersion &&
+    !accountOrganizationVersion.activatedLicence.includes(currentDate.getFullYear() + 1) &&
+    currentDate.getMonth() + 1 >= renewvalMessageStartMonth // month + 1 is to use "human" month : january is 1, december is 12
+
+  const withOrganizationCard = shouldDisplayOrgaData || shouldRenewLicense
 
   return (
     <DynamicTheme environment={environment}>
