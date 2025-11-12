@@ -117,10 +117,12 @@ const TrajectoryReductionPage = ({
   const handleCreateTrajectorySuccess = useCallback(
     async (trajectoryId: string) => {
       router.refresh()
-      setShowSuccessToast(true)
+      if (trajectories.length === 0) {
+        setShowSuccessToast(true)
+      }
       setSelectedCustomTrajectories((prev) => [...prev, trajectoryId])
     },
-    [router],
+    [router, trajectories.length],
   )
 
   const handleConfirmPlanSelection = useCallback(
