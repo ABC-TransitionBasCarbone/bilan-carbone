@@ -55,7 +55,13 @@ export const getFELocations = async () => {
     select: { location: true },
   }) as Promise<{ location: string }[]>
 }
-export const getEmissionFactors = async (skip: number, take: number | 'ALL', filters: FeFilters, studyId?: string) =>
+export const getEmissionFactors = async (
+  skip: number,
+  take: number | 'ALL',
+  filters: FeFilters,
+  environment: Environment,
+  studyId?: string,
+) =>
   withServerResponse('getEmissionFactors', async () => {
     const session = await auth()
     if (!session || !session.user) {
@@ -76,10 +82,10 @@ export const getEmissionFactors = async (skip: number, take: number | 'ALL', fil
         return { emissionFactors: [], count: 0 }
       }
       const emissionFactorOrganizationId = organizationVersion.organizationId
-      return getAllEmissionFactors(emissionFactorOrganizationId, skip, take, locale, filters)
+      return getAllEmissionFactors(emissionFactorOrganizationId, skip, take, locale, filters, environment)
     } else {
       const organizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
-      return getAllEmissionFactors(organizationVersion?.organizationId, skip, take, locale, filters)
+      return getAllEmissionFactors(organizationVersion?.organizationId, skip, take, locale, filters, environment)
     }
   })
 export type EmissionFactorWithMetaData = IsSuccess<

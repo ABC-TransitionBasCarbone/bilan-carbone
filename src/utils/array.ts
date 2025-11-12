@@ -8,6 +8,9 @@ export const uniqBy = <T, K extends keyof T>(arr: T[], key: K) => {
     return true
   })
 }
+
+export const uniq = <T>(arr: T[]): T[] => [...new Set(arr)]
+
 export const getNestedValue = <T extends object, R = unknown>(obj: T, path: string): R | undefined => {
   const [key, ...rest] = path.split('.')
   const value = (obj as Record<string, unknown>)[key]

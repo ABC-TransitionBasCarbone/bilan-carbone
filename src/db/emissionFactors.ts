@@ -1,9 +1,9 @@
 import { LocaleType } from '@/i18n/config'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { FeFilters } from '@/types/filters'
-import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
+import { getEmissionFactorSubPostsMap, isMonetaryEmissionFactor } from '@/utils/emissionFactors'
 import { flattenSubposts } from '@/utils/post'
-import { EmissionFactorStatus, Import, Prisma, SubPost, Unit } from '@prisma/client'
+import { EmissionFactorStatus, Environment, Import, Prisma, SubPost, Unit } from '@prisma/client'
 import { Session } from 'next-auth'
 import { prismaClient } from './client'
 import { getOrganizationVersionById } from './organization'
@@ -141,10 +141,11 @@ export type EmissionFactorList = {
 const getDefaultEmissionFactorsCount = async (
   filters: FeFilters,
   locale: LocaleType,
+  environment: Environment,
   organizationId?: string,
 ): Promise<{ count: number }> => {
   const count = await prismaClient.emissionFactorMetaData.count(
-    getBaseFilterForEmissionFactors(locale, filters, organizationId),
+    getBaseFilterForEmissionFactors(locale, filters, environment, organizationId),
   )
 
   return { count }
@@ -167,7 +168,12 @@ export const keepOnlyOneMetadata = <T extends { metaData: EmissionFactorList['me
   }))
 }
 
-const getBaseFilterForEmissionFactors = (locale: LocaleType, filters: FeFilters, organizationId?: string) => {
+const getBaseFilterForEmissionFactors = (
+  locale: LocaleType,
+  filters: FeFilters,
+  environment: Environment,
+  organizationId?: string,
+) => {
   let importedFromCondition = {}
   if (filters.sources.length > 0 && filters.sources.some((source) => source !== 'all')) {
     if (filters.sources.includes(Import.Manual) && filters.sources.length === 1 && organizationId) {
@@ -202,7 +208,7 @@ const getBaseFilterForEmissionFactors = (locale: LocaleType, filters: FeFilters,
           {
             subPosts: filters.subPosts.some((sp) => sp === 'all')
               ? { isEmpty: false }
-              : { hasSome: filters.subPosts as SubPost[] },
+              : { hasSome: getEmissionFactorSubPostsMap(filters.subPosts as SubPost[], environment) },
           },
           filters.archived ? {} : { status: { not: EmissionFactorStatus.Archived } },
           filters.units.length > 0 && !filters.units.includes('all')
@@ -222,10 +228,11 @@ const getDefaultEmissionFactors = async (
   take: number | 'ALL',
   locale: LocaleType,
   filters: FeFilters,
+  environment: Environment,
   organizationId?: string,
 ): Promise<EmissionFactorList[]> => {
   const emissionFactorsMetadata = await prismaClient.emissionFactorMetaData.findMany({
-    ...getBaseFilterForEmissionFactors(locale, filters, organizationId),
+    ...getBaseFilterForEmissionFactors(locale, filters, environment, organizationId),
     skip,
     take: take === 'ALL' ? undefined : take,
     select: {
@@ -259,10 +266,11 @@ export const getAllEmissionFactors = async (
   take: number | 'ALL',
   locale: LocaleType,
   filters: FeFilters,
+  environment: Environment,
 ) => {
   const [defaultEmissionFactors, emissionFactorsCountInfos] = await Promise.all([
-    getDefaultEmissionFactors(skip, take, locale, filters, organizationId),
-    getDefaultEmissionFactorsCount(filters, locale, organizationId),
+    getDefaultEmissionFactors(skip, take, locale, filters, environment, organizationId),
+    getDefaultEmissionFactorsCount(filters, locale, environment, organizationId),
   ])
 
   return {

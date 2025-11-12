@@ -10,7 +10,7 @@ import { withInfobulle } from '@/utils/post'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
-import { Import, StudyRole, SubPost as SubPostEnum } from '@prisma/client'
+import { Environment, Import, StudyRole, SubPost as SubPostEnum } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -73,6 +73,7 @@ const SubPost = ({
           units: [],
           subPosts: [subPost],
         },
+        environment as Environment,
         study.id,
       )
 
