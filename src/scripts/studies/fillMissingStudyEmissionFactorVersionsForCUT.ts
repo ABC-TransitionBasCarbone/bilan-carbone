@@ -2,7 +2,7 @@
 
 import { prismaClient } from '@/db/client'
 import { getSourceCutImportVersionIds } from '@/db/study'
-import { Environment, Prisma } from '@prisma/client'
+import { Environment, Import, Prisma } from '@prisma/client'
 
 /**
  * Script to populate missing StudyEmissionFactorVersion entries for CUT studies.
@@ -32,7 +32,7 @@ const fillMissingStudyEmissionFactorVersionsForCUT = async () => {
 
     console.log(`Found ${cutStudies.length} CUT studies`)
 
-    const studiesMissingVersions = cutStudies.filter((study) => study.emissionFactorVersions.length === 0)
+    const studiesMissingVersions = cutStudies.filter((study) => study.emissionFactorVersions.length < 3)
 
     console.log(`Found ${studiesMissingVersions.length} CUT studies missing emission factor versions`)
 
@@ -52,12 +52,14 @@ const fillMissingStudyEmissionFactorVersionsForCUT = async () => {
       return
     }
 
+    const onlyBaseEmpreinte = cutImportVersions.filter((version) => version.source === Import.BaseEmpreinte)
+
     let createdCount = 0
     let totalCreated = 0
 
     await prismaClient.$transaction(async (tx) => {
       for (const study of studiesMissingVersions) {
-        const studyEmissionFactorVersions: Prisma.StudyEmissionFactorVersionCreateManyInput[] = cutImportVersions.map(
+        const studyEmissionFactorVersions: Prisma.StudyEmissionFactorVersionCreateManyInput[] = onlyBaseEmpreinte.map(
           (importVersion) => ({
             studyId: study.id,
             source: importVersion.source,
