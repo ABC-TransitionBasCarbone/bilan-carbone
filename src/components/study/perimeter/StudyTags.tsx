@@ -108,6 +108,7 @@ const StudyTags = ({ studyId }: Props) => {
           {<HelpIcon label={t('family.glossary')} onClick={() => setGlossary('family.glossary')} />}
         </>
       }
+      as="h2"
     >
       <Title as="h5" className="mb-2 flex-start" title={t('family.title')} />
       <div className={classNames(styles.families, 'mb1')}>

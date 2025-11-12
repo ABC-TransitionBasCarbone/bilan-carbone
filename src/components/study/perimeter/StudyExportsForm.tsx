@@ -38,7 +38,7 @@ const StudyExportsForm = <T extends StudyExportsCommand>({
       control={control}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
         <FormControl error={!!error} component="fieldset">
-          <div className="flex mb-2 mt2">
+          <div className="flex">
             <FormLabel component="legend" className={styles.exportsLabel}>
               <div className={classNames(formStyles.gapped, 'align-center')}>
                 <span className="inputLabel bold">{t('exports')}</span>
@@ -59,7 +59,7 @@ const StudyExportsForm = <T extends StudyExportsCommand>({
             )}
           </div>
           <FormGroup>
-            <div className={styles.exports}>
+            <div className="flex-col">
               {Object.keys(Export).map((key) => (
                 <ExportCheckbox
                   key={key}

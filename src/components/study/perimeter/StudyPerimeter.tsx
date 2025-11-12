@@ -274,7 +274,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
     <>
       {hasEditionRole ? (
         <>
-          <div className="mb1">
+          <div className="mb2">
             <IconLabel icon={Help('studyDates')} iconPosition="after" className="mb-2">
               <span className="inputLabel bold">{t('studyDates')}</span>
             </IconLabel>
@@ -289,7 +289,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
               />
             </div>
           </div>
-          <div className="mb1">
+          <div className="mb2">
             <IconLabel icon={Help('realizationDates')} iconPosition="after" className="mb-2">
               <span className="inputLabel bold">{t('realizationDates')}</span>
             </IconLabel>
@@ -380,7 +380,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
         }
       />
       {hasEditionRole && isFromStudyOrganization && (
-        <div className={classNames('mt1 gapped', isEditing ? 'justify-between' : 'justify-end')}>
+        <div className={classNames('mt1 mb2 gapped', isEditing ? 'justify-between' : 'justify-end')}>
           <Button
             data-testid={`${isEditing ? 'cancel-' : ''}edit-study-sites`}
             onClick={() => setIsEditing(!isEditing)}

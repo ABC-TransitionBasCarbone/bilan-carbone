@@ -63,7 +63,7 @@ const StudyPerimeterPage = async ({ study, organizationVersion, user }: Props) =
           { label: study.name, link: `/etudes/${study.id}` },
         ].filter((link) => link !== undefined)}
       />
-      <Block title={t('title', { name: study.name })} as="h1">
+      <Block title={t('title', { name: study.name })} as="h2">
         <StudyPerimeter
           study={study}
           organizationVersion={organizationVersion}
