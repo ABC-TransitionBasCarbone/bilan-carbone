@@ -135,7 +135,6 @@ const LinkingStudyModal = ({ transitionPlanId, studyId, studyYear, open, onClose
           <Form onSubmit={handleSubmit(linkExternalStudy)} className={classNames(styles.form, 'grow justify-center')}>
             <FormTextField
               control={control}
-              translation={t}
               name="name"
               label={`${t('name')} *`}
               placeholder={t('namePlaceholder')}

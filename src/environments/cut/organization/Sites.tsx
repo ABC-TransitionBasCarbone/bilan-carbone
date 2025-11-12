@@ -157,7 +157,6 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
                 <FormTextField
                   data-testid="edit-site-name"
                   control={control}
-                  translation={t}
                   name={`sites.${row.index}.name`}
                   placeholder={t('namePlaceholder')}
                   size="small"
@@ -181,7 +180,6 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
                 <FormTextField
                   data-testid="organization-sites-postal-code"
                   control={control}
-                  translation={t}
                   name={`sites.${row.index}.postalCode`}
                   placeholder={t('postalCodePlaceholder')}
                   size="small"
@@ -205,7 +203,6 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
                 <FormTextField
                   data-testid="organization-sites-city"
                   control={control}
-                  translation={t}
                   name={`sites.${row.index}.city`}
                   placeholder={t('cityPlaceholder')}
                   size="small"

@@ -122,7 +122,7 @@ const StudyParams = ({ user, study, disabled, emissionFactorSources }: Props) =>
           },
         ]}
       >
-        <FormTextField name="name" translation={tValidation} control={form.control} required />
+        <FormTextField name="name" control={form.control} required />
       </Modal>
     </>
   )

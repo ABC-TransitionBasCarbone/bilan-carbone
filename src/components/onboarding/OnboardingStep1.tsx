@@ -23,7 +23,6 @@ const OnboardingStep = ({ form, role }: Props) => {
           className="w100"
           control={form.control}
           name="companyName"
-          translation={t}
           label={t('name')}
           icon={<HomeIcon />}
           fullWidth
@@ -36,10 +35,10 @@ const OnboardingStep = ({ form, role }: Props) => {
         </div>
         <div className={classNames(styles.fields, 'flex mb-2')}>
           <div className="grow">
-            <FormTextField control={form.control} name="firstName" translation={t} label={t('firstName')} fullWidth />
+            <FormTextField control={form.control} name="firstName" label={t('firstName')} fullWidth />
           </div>
           <div className="grow">
-            <FormTextField control={form.control} name="lastName" translation={t} label={t('lastName')} fullWidth />
+            <FormTextField control={form.control} name="lastName" label={t('lastName')} fullWidth />
           </div>
         </div>
         <div className="mb-2 bold">

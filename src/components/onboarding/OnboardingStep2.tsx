@@ -53,7 +53,6 @@ const OnboardingStep = ({ form, isCr }: Props) => {
             <FormTextField
               control={form.control}
               name={`collaborators.${index}.email`}
-              translation={t}
               fullWidth
               {...(index === 0 && { label: t('email') })}
               placeholder={t('emailPlaceholder')}

@@ -87,13 +87,7 @@ const EditOrganizationForm = ({ organizationVersion, caUnit, isCut = false }: Pr
   return (
     <Form onSubmit={form.handleSubmit(onSubmit)}>
       {!isCut && (
-        <FormTextField
-          data-testid="edit-organization-name"
-          control={form.control}
-          translation={t}
-          name="name"
-          label={t('name')}
-        />
+        <FormTextField data-testid="edit-organization-name" control={form.control} name="name" label={t('name')} />
       )}
       <DynamicSites sites={sites} form={form} caUnit={caUnit} />
       <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="edit-organization-button">

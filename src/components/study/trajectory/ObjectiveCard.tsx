@@ -53,7 +53,6 @@ const ObjectiveCard = ({ reductionRate, name, isEditable, control, index }: Prop
                 name={`objectives.${index}.reductionRate`}
                 label={t('objectives.reductionRate')}
                 control={control}
-                translation={t}
                 className="w100"
                 type="number"
                 placeholder={t('objectives.reductionRatePlaceholder')}

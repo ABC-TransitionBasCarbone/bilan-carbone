@@ -65,7 +65,6 @@ const NewStudyContributorForm = ({ study, accounts }: Props) => {
       <FormTextField
         data-testid="study-contributor-email"
         control={form.control}
-        translation={t}
         name="email"
         label={t('email')}
         trim

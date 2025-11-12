@@ -39,7 +39,6 @@ const ActionModalStep3 = ({ control, setValue, organizationMembers }: Props) => 
       <FormTextField
         type="number"
         control={control}
-        translation={t}
         name="necessaryBudget"
         label={t('necessaryBudget')}
         placeholder={t('necessaryBudgetPlaceholder')}
@@ -47,7 +46,6 @@ const ActionModalStep3 = ({ control, setValue, organizationMembers }: Props) => 
       />
       <FormTextField
         control={control}
-        translation={t}
         name="necesssaryRessources"
         label={t('necesssaryRessources')}
         placeholder={t('necesssaryRessourcesPlaceholder')}
@@ -62,7 +60,6 @@ const ActionModalStep3 = ({ control, setValue, organizationMembers }: Props) => 
         <div className="flex grow gapped">
           <FormTextField
             control={control}
-            translation={t}
             name="implementationDescription"
             placeholder={t('indicatorDescriptionPlaceholder')}
             fullWidth
@@ -71,7 +68,6 @@ const ActionModalStep3 = ({ control, setValue, organizationMembers }: Props) => 
           <FormTextField
             type="number"
             control={control}
-            translation={t}
             name="implementationGoal"
             placeholder={t('indicatorGoalPlaceholder')}
             data-testid="add-action-implementationGoal"
@@ -83,7 +79,6 @@ const ActionModalStep3 = ({ control, setValue, organizationMembers }: Props) => 
         <div className="flex grow gapped">
           <FormTextField
             control={control}
-            translation={t}
             name="followUpDescription"
             placeholder={t('indicatorDescriptionPlaceholder')}
             fullWidth
@@ -92,7 +87,6 @@ const ActionModalStep3 = ({ control, setValue, organizationMembers }: Props) => 
           <FormTextField
             type="number"
             control={control}
-            translation={t}
             name="followUpGoal"
             placeholder={t('indicatorGoalPlaceholder')}
             data-testid="add-action-followUpGoal"
@@ -104,7 +98,6 @@ const ActionModalStep3 = ({ control, setValue, organizationMembers }: Props) => 
         <div className="flex grow gapped">
           <FormTextField
             control={control}
-            translation={t}
             name="performanceDescription"
             placeholder={t('indicatorDescriptionPlaceholder')}
             fullWidth
@@ -113,7 +106,6 @@ const ActionModalStep3 = ({ control, setValue, organizationMembers }: Props) => 
           <FormTextField
             type="number"
             control={control}
-            translation={t}
             name="performanceGoal"
             placeholder={t('indicatorGoalPlaceholder')}
             data-testid="add-action-performanceGoal"
@@ -122,7 +114,6 @@ const ActionModalStep3 = ({ control, setValue, organizationMembers }: Props) => 
       </div>
       <FormTextField
         control={control}
-        translation={t}
         name="facilitatorsAndObstacles"
         label={t('facilitatorsAndObstacles')}
         multiline
@@ -131,7 +122,6 @@ const ActionModalStep3 = ({ control, setValue, organizationMembers }: Props) => 
       />
       <FormTextField
         control={control}
-        translation={t}
         name="additionalInformation"
         label={t('additionalInformation')}
         multiline

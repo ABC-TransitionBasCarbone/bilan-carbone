@@ -50,7 +50,6 @@ const NewMemberForm = ({ environment }: Props) => {
         data-testid="new-member-firstName"
         type="firstName"
         control={form.control}
-        translation={t}
         name="firstName"
         label={t('firstName')}
       />
@@ -58,7 +57,6 @@ const NewMemberForm = ({ environment }: Props) => {
         data-testid="new-member-lastName"
         type="lastName"
         control={form.control}
-        translation={t}
         name="lastName"
         label={t('lastName')}
       />
@@ -66,7 +64,6 @@ const NewMemberForm = ({ environment }: Props) => {
         data-testid="new-member-email"
         type="email"
         control={form.control}
-        translation={t}
         name="email"
         label={t('email')}
         trim

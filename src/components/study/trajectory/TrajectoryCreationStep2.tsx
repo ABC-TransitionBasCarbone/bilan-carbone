@@ -71,7 +71,6 @@ const TrajectoryCreationStep2 = ({
       <FormTextField
         name="name"
         control={control}
-        translation={t}
         label={t('name')}
         placeholder={t('namePlaceholder')}
         fullWidth
@@ -81,7 +80,6 @@ const TrajectoryCreationStep2 = ({
       <FormTextField
         name="description"
         control={control}
-        translation={t}
         label={t('description')}
         placeholder={t('descriptionPlaceholder')}
         fullWidth

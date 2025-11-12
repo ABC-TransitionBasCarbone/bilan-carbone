@@ -67,7 +67,6 @@ const SignUpFormTilt = () => {
       <FormControl className={authStyles.form}>
         <FormTextField
           control={control}
-          translation={t}
           name="email"
           className={authStyles.input}
           label={t('email')}
@@ -76,7 +75,6 @@ const SignUpFormTilt = () => {
         />
         <FormTextField
           control={control}
-          translation={t}
           name="siret"
           className={authStyles.input}
           label={t('siret')}
