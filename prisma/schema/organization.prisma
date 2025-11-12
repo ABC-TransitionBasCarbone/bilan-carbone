@@ -37,7 +37,7 @@ model OrganizationVersion {
   organization   Organization @relation(fields: [organizationId], references: [id])
 
   isCR             Boolean @default(false) @map("is_cr")
-  activatedLicence Boolean @default(false) @map("activated_licence")
+  activatedLicence Int[] @default([2025]) @map("activated_licence")
 
   userAccounts Account[]
   studies      Study[]
