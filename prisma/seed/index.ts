@@ -100,7 +100,6 @@ const users = async () => {
     data: {
       isCR: false,
       onboarded: false,
-      activatedLicence: true,
       organizationId: unOnboardedOrganization.id,
       environment: Environment.BC,
     },
@@ -156,7 +155,6 @@ const users = async () => {
     data: {
       isCR: true,
       onboarded: true,
-      activatedLicence: true,
       organizationId: clientLessOrganization.id,
       environment: Environment.BC,
     },
@@ -227,7 +225,6 @@ const users = async () => {
       organizationId: organization.id,
       isCR: index % 2 === 1,
       onboarded: true,
-      activatedLicence: true,
       environment: Environment.BC,
     })),
   })
@@ -237,7 +234,6 @@ const users = async () => {
       organizationId: organization.id,
       isCR: false,
       onboarded: false,
-      activatedLicence: true,
       environment: Environment.CUT,
     })),
   })
@@ -247,7 +243,6 @@ const users = async () => {
       organizationId: organization.id,
       isCR: index % 2 === 1,
       onboarded: false,
-      activatedLicence: true,
       environment: Environment.TILT,
     })),
   })
@@ -345,7 +340,6 @@ const users = async () => {
       organizationId: childOrganization.id,
       isCR: false,
       onboarded: true,
-      activatedLicence: true,
       environment: Environment.BC,
     })),
   })
