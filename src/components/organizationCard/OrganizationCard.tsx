@@ -5,9 +5,7 @@ import { getStudyOrganizationVersion } from '@/services/serverFunctions/organiza
 import { ORGANIZATION, STUDY, useAppContextStore } from '@/store/AppContext'
 import { canEditOrganizationVersion, isInOrgaOrParent } from '@/utils/organization'
 import HomeIcon from '@mui/icons-material/Home'
-import MenuBookIcon from '@mui/icons-material/MenuBook'
 import { AppBar, Box, Button, styled, Toolbar, ToolbarProps, Typography } from '@mui/material'
-import { Environment } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -27,8 +25,6 @@ const OrganizationToolbar = styled(Toolbar)<ToolbarProps>(({ theme }) => ({
 
 const OrganizationCard = ({ account, organizationVersions }: Props) => {
   const t = useTranslations('organization.card')
-
-  const isCut = useMemo(() => account.environment === Environment.CUT, [account?.environment])
 
   const defaultOrganizationVersion = organizationVersions.find(
     (organizationVersion) => organizationVersion.id === account.organizationVersionId,
@@ -108,18 +104,6 @@ const OrganizationCard = ({ account, organizationVersions }: Props) => {
             </Button>
           )}
         </Box>
-        {!isCut && (
-          <Button
-            color="secondary"
-            target="_blank"
-            rel="noreferrer noopener"
-            href="https://www.bilancarbone-methode.com/"
-            variant="outlined"
-            startIcon={<MenuBookIcon />}
-          >
-            {t('method')}
-          </Button>
-        )}
       </OrganizationToolbar>
     </AppBar>
   )
