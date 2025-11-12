@@ -9,10 +9,13 @@ import { AppBar, Box, Button, styled, Toolbar, ToolbarProps, Typography } from '
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import Link from '../base/Link'
 
 interface Props {
   account: UserSession
   organizationVersions: OrganizationVersionWithOrganization[]
+  organizationData: boolean
+  licenseRenewval: boolean
 }
 
 const OrganizationToolbar = styled(Toolbar)<ToolbarProps>(({ theme }) => ({
@@ -23,8 +26,12 @@ const OrganizationToolbar = styled(Toolbar)<ToolbarProps>(({ theme }) => ({
   borderBottom: theme.custom.navbar.organizationToolbar?.border,
 }))
 
-const OrganizationCard = ({ account, organizationVersions }: Props) => {
+const renewvalLink = process.env.NEXT_PUBLIC_LICENSE_RENEWVAL_LINK
+
+const OrganizationCard = ({ account, organizationVersions, organizationData, licenseRenewval }: Props) => {
   const t = useTranslations('organization.card')
+
+  const date = new Date()
 
   const defaultOrganizationVersion = organizationVersions.find(
     (organizationVersion) => organizationVersion.id === account.organizationVersionId,
@@ -95,13 +102,25 @@ const OrganizationCard = ({ account, organizationVersions }: Props) => {
   return (
     <AppBar position="sticky">
       <OrganizationToolbar>
-        <Box display="flex" alignItems="center" gap={2}>
-          <HomeIcon />
-          <Typography>{organizationVersion.organization.name}</Typography>
-          {hasAccess && (
-            <Button color="secondary" href={organizationVersionLink} variant="outlined">
-              {t(linkLabel)}
-            </Button>
+        <Box display="flex" alignItems="center" gap={10}>
+          {organizationData && (
+            <div className="align-center gapped">
+              <HomeIcon />
+              <Typography>{organizationVersion.organization.name}</Typography>
+              {hasAccess && (
+                <Button color="secondary" href={organizationVersionLink} variant="outlined">
+                  {t(linkLabel)}
+                </Button>
+              )}
+            </div>
+          )}
+          {licenseRenewval && renewvalLink && (
+            <div className="align-center gapped">
+              <Typography>{t('renew', { year: date.getFullYear() + 1 })}</Typography>
+              <Link color="secondary" href={renewvalLink} target="_blank" rel="noreferrer noopener">
+                {t('renewLink')}
+              </Link>
+            </div>
           )}
         </Box>
       </OrganizationToolbar>

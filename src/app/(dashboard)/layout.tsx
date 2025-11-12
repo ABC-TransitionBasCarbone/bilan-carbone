@@ -29,8 +29,10 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
     getAllowedStudyIdByAccount(account),
   ])
 
-  const shouldDisplayOrgaCard =
-    organizationVersions.find((org) => org.isCR || org.parentId) && account.environment !== Environment.CUT
+  const shouldDisplayOrgaData =
+    !!organizationVersions.find((org) => org.isCR || org.parentId) && account.environment !== Environment.CUT
+  const shouldRenewLicense = true
+  const withOrganizationCard = shouldDisplayOrgaData || shouldRenewLicense
 
   const accountOrganizationVersion = organizationVersions.find(
     (organizationVersion) => organizationVersion.id === account.organizationVersionId,
@@ -41,12 +43,14 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
 
   return (
     <DynamicTheme environment={environment}>
-      <Box className={classNames('flex-col h100', { [styles.withOrganizationCard]: shouldDisplayOrgaCard })}>
+      <Box className={classNames('flex-col h100', { [styles.withOrganizationCard]: withOrganizationCard })}>
         <Navbar user={account} environment={environment} />
-        {shouldDisplayOrgaCard && (
+        {withOrganizationCard && (
           <OrganizationCard
             account={account}
             organizationVersions={organizationVersions as OrganizationVersionWithOrganization[]}
+            organizationData={shouldDisplayOrgaData}
+            licenseRenewval={shouldRenewLicense}
           />
         )}
         <Box component="main" className={styles.content}>
