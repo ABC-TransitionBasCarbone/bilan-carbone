@@ -902,6 +902,12 @@
         "myTrajectories": "My trajectories",
         "addTrajectory": "Add a reduction trajectory",
         "selectTrajectories": "Select your trajectories",
+        "reset": {
+          "title": "Reset your transition plan",
+          "description": "Do you really want to reset your transition plan? All data from your transition plan will be deleted. Enter the name of your study to confirm the deletion of the transition plan.",
+          "confirm": "Reset",
+          "cancel": "Cancel"
+        },
         "sbtiCard": {
           "title": "SBTi Trajectories",
           "description": "The Science Based Targets Initiative defines two reference trajectories, aiming to limit global warming to 1.5°C or \"Well below 2 degrees\" (WB2C).",

@@ -1,5 +1,13 @@
 import { ExternalStudyCommand } from '@/services/serverFunctions/transitionPlan.command'
-import { Objective, Prisma, Trajectory, TransitionPlan, TransitionPlanStudy } from '@prisma/client'
+import {
+  Action,
+  ExternalStudy,
+  Objective,
+  Prisma,
+  Trajectory,
+  TransitionPlan,
+  TransitionPlanStudy,
+} from '@prisma/client'
 import { prismaClient } from './client'
 
 export type TransitionPlanWithStudies = TransitionPlan & {
@@ -18,6 +26,8 @@ export type TransitionPlanWithRelations = TransitionPlan & {
     }
   >
   transitionPlanStudies: TransitionPlanStudy[]
+  actions: Action[]
+  externalStudies: ExternalStudy[]
 }
 
 export type TrajectoryWithObjectives = Trajectory & {
@@ -40,6 +50,8 @@ export const getTransitionPlanByIdWithRelations = async (id: string): Promise<Tr
         },
       },
       transitionPlanStudies: true,
+      actions: true,
+      externalStudies: true,
     },
   })
 }
@@ -94,6 +106,8 @@ export const createTransitionPlan = async (studyId: string): Promise<TransitionP
           objectives: true,
         },
       },
+      actions: true,
+      externalStudies: true,
     },
   })
 }
@@ -126,7 +140,16 @@ export const duplicateTransitionPlanWithRelations = async (
             },
           })),
         },
-        // TODO: Add actions
+        actions: {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          create: sourceTransitionPlan.actions.map(({ id, transitionPlanId, createdAt, updatedAt, ...rest }) => rest),
+        },
+        externalStudies: {
+          create: sourceTransitionPlan.externalStudies.map(
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            ({ id, transitionPlanId, createdAt, updatedAt, ...rest }) => rest,
+          ),
+        },
       },
       include: {
         trajectories: {
@@ -135,6 +158,8 @@ export const duplicateTransitionPlanWithRelations = async (
           },
         },
         transitionPlanStudies: true,
+        actions: true,
+        externalStudies: true,
       },
     })
   })
@@ -336,5 +361,11 @@ export const updateTrajectoryWithObjectives = async (
         },
       },
     },
+  })
+}
+
+export const deleteTransitionPlan = async (id: string): Promise<void> => {
+  await prismaClient.transitionPlan.delete({
+    where: { id },
   })
 }

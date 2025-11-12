@@ -7,6 +7,7 @@ import {
   createTransitionPlan,
   createTransitionPlanStudy,
   deleteAction as dbDeleteAction,
+  deleteTransitionPlan as dbDeleteTransitionPlan,
   duplicateTransitionPlanWithRelations,
   getActionById,
   getActions,
@@ -257,4 +258,19 @@ export const toggleActionEnabled = async (actionId: string, enabled: boolean) =>
     }
 
     await updateAction(actionId, { enabled })
+  })
+
+export const resetTransitionPlan = async (studyId: string) =>
+  withServerResponse('resetTransitionPlan', async () => {
+    const hasEditAccess = await hasEditAccessOnStudy(studyId)
+    if (!hasEditAccess) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const transitionPlan = await getTransitionPlanByStudyId(studyId)
+    if (!transitionPlan) {
+      throw new Error('Transition plan not found')
+    }
+
+    await dbDeleteTransitionPlan(transitionPlan.id)
   })
