@@ -31,6 +31,7 @@ describe('Study collaborators', () => {
 
     cy.wait('@create')
 
+    cy.getByTestId('study-navbar-button').click()
     cy.getByTestId('study-cadrage-link').click()
     cy.getByTestId('study-rights-add-contributor').click()
 
