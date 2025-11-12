@@ -4,8 +4,8 @@ import { OrganizationWithSites } from '@/db/account'
 import { getDocumentsForStudy } from '@/db/document'
 import { FullStudy } from '@/db/study'
 import { getUserApplicationSettings } from '@/db/user'
-import { hasAccessToDependencyMatrix } from '@/services/permissions/environment'
-import { canEditStudyFlows, hasAccessToPerimeterPage } from '@/services/permissions/study'
+import { hasAccessToDependencyMatrix, hasAccessToPerimeterPage } from '@/services/permissions/environment'
+import { canEditStudyFlows } from '@/services/permissions/study'
 import { defaultCAUnit } from '@/utils/number'
 import { getAccountRoleOnStudy } from '@/utils/study'
 import { DocumentCategory } from '@prisma/client'
@@ -36,7 +36,7 @@ const StudyPerimeterPage = async ({ study, organizationVersion, user }: Props) =
     return null
   }
 
-  if (!hasAccessToPerimeterPage(user)) {
+  if (!hasAccessToPerimeterPage(user.environment)) {
     redirect(`/etudes/${study.id}`)
   }
 

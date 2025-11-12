@@ -480,11 +480,3 @@ export const hasEditAccessOnStudy = async (studyId: string) => {
 
   return canEditStudy(session.user, study)
 }
-
-export const hasAccessToPerimeterPage = (user: UserSession) => {
-  if (user.environment === Environment.CUT) {
-    return false
-  }
-
-  return true
-}

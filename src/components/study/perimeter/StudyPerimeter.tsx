@@ -190,8 +190,8 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
     })
   }
 
-  const onReplicateSitesChanges = (duplicate: boolean) => {
-    if (duplicate) {
+  const onReplicateSitesChanges = (replicate: boolean) => {
+    if (replicate) {
       updateOrganizationSitesCommand(siteForm.getValues(), study.organizationVersionId)
     }
     setReplicateSitesChanges(false)

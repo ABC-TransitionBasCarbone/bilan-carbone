@@ -671,7 +671,7 @@
           "title": "Organisation modification",
           "description": "You are about to modify the sites included in your Bilan Carbone® study. <error>This will have no impact on your studies other than this one.</error> Would you also like to reflect the changes made to existing sites (Turnover and FTE) in your general information?",
           "no": "No",
-          "duplicate": "Change the overall organisation"
+          "replicate": "Change the overall organisation"
         }
       },
       "information": "For more information on this section, you can refer to this documentation: "

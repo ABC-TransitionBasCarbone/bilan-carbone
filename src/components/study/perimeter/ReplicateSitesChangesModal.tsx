@@ -15,7 +15,7 @@ const ReplicateSitesChangesModal = ({ replicate }: Props) => {
   return (
     <Modal
       open
-      label="duplicate-sites-changes"
+      label="replicate-sites-changes"
       title={t('title')}
       onClose={() => replicate(false)}
       actions={[
@@ -23,8 +23,8 @@ const ReplicateSitesChangesModal = ({ replicate }: Props) => {
         {
           actionType: 'button',
           onClick: () => replicate(true),
-          children: t('duplicate'),
-          ['data-testid']: 'duplicate-sites-changes-modal-confirm',
+          children: t('replicate'),
+          ['data-testid']: 'replicate-sites-changes-modal-confirm',
         },
       ]}
     >

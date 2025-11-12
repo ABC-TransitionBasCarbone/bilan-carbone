@@ -671,7 +671,7 @@
           "title": "Modification de l'organisation",
           "description": "Vous êtes sur le point de modifier les sites pris en compte au sein de votre Bilan Carbone®. <error>Cela n'aura aucun impact sur vos études autre que celle-ci.</error> Souhaitez-vous également répercuter les modifications effectuées sur des sites existants (CA et ETP) sur vos informations générales ?",
           "no": "Non",
-          "duplicate": "Modifier l'organisation globale"
+          "replicate": "Modifier l'organisation globale"
         }
       },
       "information": "Pour plus d'information sur cette section, vous pouvez vous référer à cette documentation : "
