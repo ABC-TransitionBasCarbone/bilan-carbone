@@ -20,7 +20,6 @@ interface Props<T extends FieldValues> {
 export const FormTextField = <T extends FieldValues>({
   name,
   control,
-  translation,
   label,
   icon,
   iconPosition = 'before',
