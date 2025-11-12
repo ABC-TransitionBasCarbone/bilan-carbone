@@ -15,7 +15,7 @@ import { FormControlLabel, FormLabel, MenuItem, Switch } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { SyntheticEvent, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Control, UseFormReturn, UseFormSetValue, useWatch } from 'react-hook-form'
 import DetailedGES from './DetailedGES'
 import MultiplePosts from './MultiplePosts'
@@ -82,8 +82,6 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
     completeness,
   }
 
-  const onLocationChange = (_: SyntheticEvent, value: string | null) => setValue('location', value?.trim() || '')
-
   return (
     <>
       <FormTextField
@@ -99,7 +97,6 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         control={control}
         translation={t}
         options={locations}
-        getOptionLabel={(option) => (typeof option === 'string' ? option : option.label)}
         filterOptions={(options, { inputValue }) =>
           options.filter((option) =>
             typeof option === 'string' ? option : option.label.toLowerCase().includes(inputValue.toLowerCase()),
@@ -107,7 +104,7 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         }
         name="location"
         label={t('location')}
-        onInputChange={onLocationChange}
+        onInputChange={(_, value) => setValue('location', value?.trim() || '')}
         freeSolo
       />
       <FormTextField data-testid="emission-factor-source" control={control} name="source" label={t('source')} />

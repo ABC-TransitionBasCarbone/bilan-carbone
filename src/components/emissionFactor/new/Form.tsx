@@ -31,6 +31,7 @@ const NewEmissionFactorForm = ({ locations }: Props) => {
       name: '',
       attribute: '',
       source: '',
+      location: '',
       totalCo2: 0,
       parts: Array.from({ length: maxParts }, () => ({ name: '', totalCo2: 0 })),
       comment: '',
