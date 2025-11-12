@@ -18,7 +18,7 @@ interface Props {
   children: React.ReactNode
 }
 
-const renewvalMessageStartMonth = Number(process.env.NEXT_LICENSE_RENEWVAL_MONTH) || 13 // 13 is never to be displayed if variable is not defined
+const renewalMessageStartMonth = Number(process.env.NEXT_LICENSE_RENEWAL_MONTH) || 13 // 13 is never to be displayed if variable is not defined
 
 const NavLayout = async ({ children, user: account }: Props & UserSessionProps) => {
   const environment = await getEnvironment()
@@ -45,7 +45,7 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
   const shouldRenewLicense =
     accountOrganizationVersion &&
     !accountOrganizationVersion.activatedLicence.includes(currentDate.getFullYear() + 1) &&
-    currentDate.getMonth() + 1 >= renewvalMessageStartMonth // month + 1 is to use "human" month : january is 1, december is 12
+    currentDate.getMonth() + 1 >= renewalMessageStartMonth // month + 1 is to use "human" month : january is 1, december is 12
 
   const withOrganizationCard = shouldDisplayOrgaData || shouldRenewLicense
 
@@ -58,7 +58,7 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
             account={account}
             organizationVersions={organizationVersions as OrganizationVersionWithOrganization[]}
             organizationData={shouldDisplayOrgaData}
-            licenseRenewval={shouldRenewLicense}
+            licenseRenewal={shouldRenewLicense}
           />
         )}
         <Box component="main" className={styles.content}>

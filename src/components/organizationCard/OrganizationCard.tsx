@@ -15,7 +15,7 @@ interface Props {
   account: UserSession
   organizationVersions: OrganizationVersionWithOrganization[]
   organizationData: boolean
-  licenseRenewval: boolean
+  licenseRenewal: boolean
 }
 
 const OrganizationToolbar = styled(Toolbar)<ToolbarProps>(({ theme }) => ({
@@ -26,9 +26,9 @@ const OrganizationToolbar = styled(Toolbar)<ToolbarProps>(({ theme }) => ({
   borderBottom: theme.custom.navbar.organizationToolbar?.border,
 }))
 
-const renewvalLink = process.env.NEXT_PUBLIC_LICENSE_RENEWVAL_LINK
+const renewalLink = process.env.NEXT_PUBLIC_LICENSE_RENEWAL_LINK
 
-const OrganizationCard = ({ account, organizationVersions, organizationData, licenseRenewval }: Props) => {
+const OrganizationCard = ({ account, organizationVersions, organizationData, licenseRenewal }: Props) => {
   const t = useTranslations('organization.card')
 
   const date = new Date()
@@ -114,10 +114,10 @@ const OrganizationCard = ({ account, organizationVersions, organizationData, lic
               )}
             </div>
           )}
-          {licenseRenewval && renewvalLink && (
+          {licenseRenewal && renewalLink && (
             <div className="align-center gapped">
               <Typography>{t('renew', { year: date.getFullYear() + 1 })}</Typography>
-              <Link color="secondary" href={renewvalLink} target="_blank" rel="noreferrer noopener">
+              <Link color="secondary" href={renewalLink} target="_blank" rel="noreferrer noopener">
                 {t('renewLink')}
               </Link>
             </div>
