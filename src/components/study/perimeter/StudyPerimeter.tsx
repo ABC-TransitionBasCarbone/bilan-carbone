@@ -46,7 +46,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm, UseFormReturn, useWatch } from 'react-hook-form'
 import DeleteStudySiteModal from './DeleteStudySiteModal'
 import { DuplicateFormData } from './DuplicateSiteModal'
-import DuplicateSitesChangesModal from './DuplicateSitesChangesModal'
+import ReplicateSitesChangesModal from './ReplicateSitesChangesModal'
 import StudyExportsForm from './StudyExportsForm'
 import styles from './StudyPerimeter.module.css'
 
@@ -71,7 +71,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
   const [glossary, setGlossary] = useState('')
   const [exportsValues, setExportsValues] = useState<Record<Export, ControlMode | false> | undefined>(undefined)
   const [isEditing, setIsEditing] = useState(false)
-  const [duplicateSitesChanges, setDuplicateSitesChanges] = useState(false)
+  const [replicateSitesChanges, setReplicateSitesChanges] = useState(false)
   const [deleting, setDeleting] = useState(0)
   const [duplicatingSiteId, setDuplicatingSiteId] = useState<string | null>(null)
   const hasEditionRole = useMemo(() => hasEditionRights(userRoleOnStudy), [userRoleOnStudy])
@@ -181,7 +181,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
       onSuccess: async () => {
         const canUpdateOrganization = await getUpdateOrganizationVersionPermission(study.organizationVersionId)
         if (canUpdateOrganization.success && canUpdateOrganization.data) {
-          setDuplicateSitesChanges(true)
+          setReplicateSitesChanges(true)
         } else {
           setIsEditing(false)
           router.refresh()
@@ -190,11 +190,11 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
     })
   }
 
-  const onDuplicateSitesChanges = (duplicate: boolean) => {
+  const onReplicateSitesChanges = (duplicate: boolean) => {
     if (duplicate) {
       updateOrganizationSitesCommand(siteForm.getValues(), study.organizationVersionId)
     }
-    setDuplicateSitesChanges(false)
+    setReplicateSitesChanges(false)
     setIsEditing(false)
     router.refresh()
   }
@@ -415,7 +415,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
           onDuplicate={handleDuplicateSite}
         />
       )}
-      {duplicateSitesChanges && <DuplicateSitesChangesModal duplicate={onDuplicateSitesChanges} />}
+      {replicateSitesChanges && <ReplicateSitesChangesModal replicate={onReplicateSitesChanges} />}
       {glossary && (
         <GlossaryModal glossary={glossary} onClose={() => setGlossary('')} label="emission-source" t={tGlossary}>
           <p className="mb-2">{tGlossary(`${glossary}Description`)}</p>

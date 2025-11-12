@@ -6,10 +6,10 @@ import { useTranslations } from 'next-intl'
 import styles from './DuplicateSiteModal.module.css'
 
 interface Props {
-  duplicate: (data: boolean) => void
+  replicate: (data: boolean) => void
 }
 
-const DuplicateSitesChangesModal = ({ duplicate }: Props) => {
+const ReplicateSitesChangesModal = ({ replicate }: Props) => {
   const t = useTranslations('study.perimeter.duplicate.sitesChanges')
 
   return (
@@ -17,12 +17,12 @@ const DuplicateSitesChangesModal = ({ duplicate }: Props) => {
       open
       label="duplicate-sites-changes"
       title={t('title')}
-      onClose={() => duplicate(false)}
+      onClose={() => replicate(false)}
       actions={[
-        { actionType: 'button', onClick: () => duplicate(false), children: t('no') },
+        { actionType: 'button', onClick: () => replicate(false), children: t('no') },
         {
           actionType: 'button',
-          onClick: () => duplicate(true),
+          onClick: () => replicate(true),
           children: t('duplicate'),
           ['data-testid']: 'duplicate-sites-changes-modal-confirm',
         },
@@ -39,4 +39,4 @@ const DuplicateSitesChangesModal = ({ duplicate }: Props) => {
   )
 }
 
-export default DuplicateSitesChangesModal
+export default ReplicateSitesChangesModal
