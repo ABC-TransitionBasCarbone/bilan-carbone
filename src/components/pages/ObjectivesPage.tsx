@@ -67,6 +67,7 @@ const ObjectivesPage = ({ study, canEdit, trajectories, transitionPlanId }: Prop
               trajectories={trajectories}
               canEdit={canEdit}
               transitionPlanId={transitionPlanId}
+              studyId={study.id}
               searchFilter={searchFilter}
             />
           </div>
