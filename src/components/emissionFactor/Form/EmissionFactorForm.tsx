@@ -2,6 +2,7 @@
 
 import LinkButton from '@/components/base/LinkButton'
 import LoadingButton from '@/components/base/LoadingButton'
+import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
 import GlossaryModal from '@/components/modals/GlossaryModal'
@@ -14,13 +15,14 @@ import { FormControlLabel, FormLabel, MenuItem, Switch } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useMemo, useState } from 'react'
+import { SyntheticEvent, useMemo, useState } from 'react'
 import { Control, UseFormReturn, UseFormSetValue, useWatch } from 'react-hook-form'
 import DetailedGES from './DetailedGES'
 import MultiplePosts from './MultiplePosts'
 
 interface Props<T extends EmissionFactorCommand> {
   form: UseFormReturn<T>
+  locations: string[]
   detailedGES?: boolean
   hasParts: boolean
   setHasParts: (hasParts: boolean) => void
@@ -35,6 +37,7 @@ type EmissionFactorQuality = Partial<
 
 const EmissionFactorForm = <T extends EmissionFactorCommand>({
   form,
+  locations,
   detailedGES,
   hasParts,
   setHasParts,
@@ -79,6 +82,8 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
     completeness,
   }
 
+  const onLocationChange = (_: SyntheticEvent, value: string | null) => setValue('location', value?.trim() || '')
+
   return (
     <>
       <FormTextField
@@ -89,6 +94,22 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         placeholder={t('namePlaceholder')}
       />
       <FormTextField control={control} name="attribute" label={t('attribute')} />
+      <FormAutocomplete
+        data-testid="fe-location"
+        control={control}
+        translation={t}
+        options={locations}
+        getOptionLabel={(option) => (typeof option === 'string' ? option : option.label)}
+        filterOptions={(options, { inputValue }) =>
+          options.filter((option) =>
+            typeof option === 'string' ? option : option.label.toLowerCase().includes(inputValue.toLowerCase()),
+          )
+        }
+        name="location"
+        label={t('location')}
+        onInputChange={onLocationChange}
+        freeSolo
+      />
       <FormTextField data-testid="emission-factor-source" control={control} name="source" label={t('source')} />
       <div className="flex gapped">
         <div className="grow">

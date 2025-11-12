@@ -8,6 +8,7 @@ import {
   findEmissionFactorByImportedId,
   getAllEmissionFactors,
   getAllEmissionFactorsByIds,
+  getAllEmissionFactorsLocations,
   getEmissionFactorById,
   getEmissionFactorDetailsById,
   getEmissionFactorImportVersionsBC,
@@ -153,6 +154,17 @@ export const getDetailedEmissionFactor = async (id: string) =>
     }
 
     return emissionFactor
+  })
+
+export const getEmissionFactorLocations = async () =>
+  withServerResponse('getEmissionFactorLocations', async () => {
+    const session = await auth()
+
+    if (!session) {
+      return []
+    }
+
+    return getAllEmissionFactorsLocations()
   })
 
 export const isFromEmissionFactorOrganization = async (id: string) =>
