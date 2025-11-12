@@ -5,12 +5,13 @@ import { getDocumentsForStudy } from '@/db/document'
 import { FullStudy } from '@/db/study'
 import { getUserApplicationSettings } from '@/db/user'
 import { hasAccessToDependencyMatrix } from '@/services/permissions/environment'
-import { canEditStudyFlows } from '@/services/permissions/study'
+import { canEditStudyFlows, hasAccessToPerimeterPage } from '@/services/permissions/study'
 import { defaultCAUnit } from '@/utils/number'
 import { getAccountRoleOnStudy } from '@/utils/study'
 import { DocumentCategory } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
+import { redirect } from 'next/navigation'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import DependencyMatrix from '../study/perimeter/documents/DependencyMatrix'
@@ -33,6 +34,10 @@ const StudyPerimeterPage = async ({ study, organizationVersion, user }: Props) =
 
   if (!userRoleOnStudy) {
     return null
+  }
+
+  if (!hasAccessToPerimeterPage(user)) {
+    redirect(`/etudes/${study.id}`)
   }
 
   const caUnit = (await getUserApplicationSettings(user.accountId))?.caUnit || defaultCAUnit
