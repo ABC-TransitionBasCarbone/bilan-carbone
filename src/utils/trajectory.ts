@@ -14,6 +14,9 @@ export const TARGET_YEAR = 2050
 export const OVERSHOOT_THRESHOLD = 0.05
 
 export interface PastStudy {
+  id: string
+  name: string
+  type: 'linked' | 'external'
   year: number
   totalCo2: number
 }
@@ -27,6 +30,9 @@ export const convertToPastStudies = (
 
   linkedStudies.forEach((study) => {
     pastStudies.push({
+      id: study.id,
+      name: study.name,
+      type: 'linked',
       year: study.startDate.getFullYear(),
       totalCo2: getStudyTotalCo2Emissions(study, withDependencies, false),
     })
@@ -34,6 +40,9 @@ export const convertToPastStudies = (
 
   externalStudies.forEach((study) => {
     pastStudies.push({
+      id: study.id,
+      name: study.name,
+      type: 'external',
       year: study.date.getFullYear(),
       totalCo2: study.totalCo2,
     })
@@ -94,6 +103,7 @@ export interface CalculateTrajectoriesWithHistoryParams {
 }
 
 export interface TrajectoryData {
+  previousTrajectoryReferenceYear: number | null
   previousTrajectory: TrajectoryDataPoint[] | null
   currentTrajectory: TrajectoryDataPoint[]
   withinThreshold: boolean
@@ -601,6 +611,7 @@ export const calculateTrajectoriesWithHistory = ({
 
     const sbti15Data: TrajectoryData | null = sbti15Enabled
       ? {
+          previousTrajectoryReferenceYear: REFERENCE_YEAR,
           previousTrajectory: theoreticalSbti15Reference,
           currentTrajectory: calculateSBTiTrajectory({
             studyEmissions: totalCo2,
@@ -614,6 +625,7 @@ export const calculateTrajectoriesWithHistory = ({
 
     const sbtiWB2CData: TrajectoryData | null = sbtiWB2CEnabled
       ? {
+          previousTrajectoryReferenceYear: REFERENCE_YEAR,
           previousTrajectory: theoreticalSbtiWB2CReference,
           currentTrajectory: calculateSBTiTrajectory({
             studyEmissions: totalCo2,
@@ -630,6 +642,7 @@ export const calculateTrajectoriesWithHistory = ({
       .map((traj) => ({
         id: traj.id,
         data: {
+          previousTrajectoryReferenceYear: null,
           previousTrajectory: null,
           currentTrajectory: calculateCustomTrajectory({
             studyEmissions: totalCo2,
@@ -653,6 +666,7 @@ export const calculateTrajectoriesWithHistory = ({
     )
 
     const actionBasedData: TrajectoryData = {
+      previousTrajectoryReferenceYear: null,
       previousTrajectory: null,
       currentTrajectory: calculateActionBasedTrajectory({
         studyEmissions: totalCo2,
@@ -706,6 +720,7 @@ export const calculateTrajectoriesWithHistory = ({
     })
 
     sbti15Data = {
+      previousTrajectoryReferenceYear: referenceStudyYear,
       previousTrajectory: referenceTrajectory,
       currentTrajectory,
       withinThreshold,
@@ -739,6 +754,7 @@ export const calculateTrajectoriesWithHistory = ({
     })
 
     sbtiWB2CData = {
+      previousTrajectoryReferenceYear: referenceStudyYear,
       previousTrajectory: referenceTrajectory,
       currentTrajectory,
       withinThreshold,
@@ -779,6 +795,7 @@ export const calculateTrajectoriesWithHistory = ({
     customTrajectoriesData.push({
       id: traj.id,
       data: {
+        previousTrajectoryReferenceYear: referenceStudyYear,
         previousTrajectory: referenceTrajectory,
         currentTrajectory,
         withinThreshold,
@@ -816,6 +833,7 @@ export const calculateTrajectoriesWithHistory = ({
   })
 
   const actionBasedData: TrajectoryData = {
+    previousTrajectoryReferenceYear: referenceStudyYear,
     previousTrajectory: referenceActionTrajectory,
     currentTrajectory: currentActionTrajectory,
     withinThreshold: actionWithinThreshold,
@@ -966,4 +984,28 @@ const calculateBudgetWithMultiplier = (
   }
 
   return totalBudget
+}
+
+const extractYearsFromTrajectory = (data: TrajectoryData | null): number[] => {
+  if (!data) {
+    return []
+  }
+  return [...data.currentTrajectory.map((d) => d.year), ...(data.previousTrajectory?.map((d) => d.year) ?? [])]
+}
+
+export const getYearsToDisplay = (
+  trajectory15Data: TrajectoryData | null,
+  trajectoryWB2CData: TrajectoryData | null,
+  customTrajectoriesData: Array<{ trajectoryData: TrajectoryData | null; label: string; color?: string }>,
+  actionBasedTrajectoryData: TrajectoryData | null,
+  trajectory15Enabled: boolean,
+  trajectoryWB2CEnabled: boolean,
+): number[] => {
+  const allYears = [
+    ...(trajectory15Enabled ? extractYearsFromTrajectory(trajectory15Data) : []),
+    ...(trajectoryWB2CEnabled ? extractYearsFromTrajectory(trajectoryWB2CData) : []),
+    ...customTrajectoriesData.flatMap((traj) => extractYearsFromTrajectory(traj.trajectoryData)),
+    ...extractYearsFromTrajectory(actionBasedTrajectoryData),
+  ]
+  return Array.from(new Set(allYears)).sort((a, b) => a - b)
 }

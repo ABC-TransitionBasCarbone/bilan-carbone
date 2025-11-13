@@ -2,10 +2,9 @@
 
 import BaseTable from '@/components/base/Table'
 import { TableActionButton } from '@/components/base/TableActionButton'
-import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteExternalStudy, deleteLinkedStudy } from '@/services/serverFunctions/transitionPlan'
-import { ExternalStudy } from '@prisma/client'
+import { PastStudy } from '@/utils/trajectory'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
@@ -17,19 +16,10 @@ const ConfirmDeleteModal = dynamic(() => import('../../modals/ConfirmDeleteModal
 
 interface Props {
   transitionPlanId: string
-  linkedStudies: FullStudy[]
-  externalStudies: ExternalStudy[]
-  canEdit: boolean
+  pastStudies: PastStudy[]
 }
 
-type Study = {
-  id: string
-  name: string
-  year: number
-  type: 'linked' | 'external'
-}
-
-const LinkedStudiesTable = ({ transitionPlanId, linkedStudies, externalStudies, canEdit }: Props) => {
+const LinkedStudiesTable = ({ transitionPlanId, pastStudies }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.linkedStudies.table')
   const tDeleteModal = useTranslations('study.transitionPlan.trajectories.linkedStudies.deleteModal')
   const router = useRouter()
@@ -68,25 +58,6 @@ const LinkedStudiesTable = ({ transitionPlanId, linkedStudies, externalStudies, 
     }
   }
 
-  const mergedStudies = useMemo(
-    () =>
-      [
-        ...linkedStudies.map((study) => ({
-          id: study.id,
-          name: study.name,
-          year: study.startDate.getFullYear(),
-          type: 'linked' as const,
-        })),
-        ...externalStudies.map((study) => ({
-          id: study.id,
-          name: study.name,
-          year: study.date.getFullYear(),
-          type: 'external' as const,
-        })),
-      ].sort((a, b) => a.year - b.year),
-    [linkedStudies, externalStudies],
-  )
-
   const mergedColumns = useMemo(
     () =>
       [
@@ -117,19 +88,19 @@ const LinkedStudiesTable = ({ transitionPlanId, linkedStudies, externalStudies, 
             />
           ),
         },
-      ] as ColumnDef<Study>[],
+      ] as ColumnDef<PastStudy>[],
     [t, handleDeleteClick],
   )
 
-  const mergedTable = useReactTable({
+  const pastStudiesTable = useReactTable({
     columns: mergedColumns,
-    data: mergedStudies,
+    data: pastStudies,
     getCoreRowModel: getCoreRowModel(),
   })
 
   return (
     <>
-      {mergedStudies.length > 0 && <BaseTable table={mergedTable} testId="table-merged-studies" />}
+      {pastStudies.length > 0 && <BaseTable table={pastStudiesTable} testId="table-past-studies" />}
 
       {deleteModalOpen && (
         <ConfirmDeleteModal

@@ -139,14 +139,25 @@ const TrajectoryReductionPage = ({
     })
   }, [callServerFunction, study.id, router])
 
-  const trajectoryResult = useMemo(() => {
+  const pastStudies = useMemo(
+    () => convertToPastStudies(linkedStudies, linkedExternalStudies, withDependencies),
+    [linkedStudies, linkedExternalStudies, withDependencies],
+  )
+
+  const trajectoryData = useMemo(() => {
+    const studyStartYear = study.startDate.getFullYear()
+
     if (!transitionPlan) {
-      return null
+      return {
+        trajectory15Data: null,
+        trajectoryWB2CData: null,
+        customTrajectoriesData: [],
+        actionBasedTrajectoryData: null,
+        studyStartYear,
+      }
     }
 
-    const pastStudies = convertToPastStudies(linkedStudies, linkedExternalStudies, withDependencies)
-
-    return calculateTrajectoriesWithHistory({
+    const trajectoryResult = calculateTrajectoriesWithHistory({
       study,
       withDependencies,
       validatedOnly,
@@ -156,42 +167,15 @@ const TrajectoryReductionPage = ({
       selectedSbtiTrajectories,
       selectedCustomTrajectoryIds: selectedCustomTrajectories,
     })
-  }, [
-    transitionPlan,
-    study,
-    withDependencies,
-    validatedOnly,
-    linkedStudies,
-    linkedExternalStudies,
-    actions,
-    selectedSbtiTrajectories,
-    trajectories,
-    selectedCustomTrajectories,
-  ])
 
-  const studyStartYear = study.startDate.getFullYear()
-
-  const trajectoryData = useMemo(() => {
-    if (!transitionPlan || !trajectoryResult) {
+    const customTrajectoriesData = trajectoryResult.customTrajectories.map((trajData) => {
+      const traj = trajectories.find((t) => t.id === trajData.id)
       return {
-        trajectory15Data: null,
-        trajectoryWB2CData: null,
-        customTrajectoriesData: [],
-        actionBasedTrajectoryData: null,
-        studyStartYear: 0,
+        trajectoryData: trajData.data,
+        label: traj?.name || '',
+        color: undefined,
       }
-    }
-
-    const customTrajectoriesData = trajectories
-      .filter((traj) => selectedCustomTrajectories.includes(traj.id))
-      .map((traj) => {
-        const trajData = trajectoryResult.customTrajectories.find((t) => t.id === traj.id)
-        return {
-          trajectoryData: trajData?.data || null,
-          label: traj.name,
-          color: undefined,
-        }
-      })
+    })
 
     return {
       trajectory15Data: trajectoryResult.sbti15,
@@ -200,7 +184,17 @@ const TrajectoryReductionPage = ({
       actionBasedTrajectoryData: trajectoryResult.actionBased,
       studyStartYear,
     }
-  }, [transitionPlan, trajectoryResult, trajectories, selectedCustomTrajectories, studyStartYear])
+  }, [
+    transitionPlan,
+    study,
+    withDependencies,
+    validatedOnly,
+    trajectories,
+    actions,
+    pastStudies,
+    selectedSbtiTrajectories,
+    selectedCustomTrajectories,
+  ])
 
   if (!transitionPlan) {
     if (canEdit) {
@@ -292,9 +286,7 @@ const TrajectoryReductionPage = ({
             transitionPlanId={transitionPlan.id}
             studyId={study.id}
             studyYear={study.startDate}
-            linkedStudies={linkedStudies}
-            externalStudies={linkedExternalStudies}
-            canEdit={canEdit}
+            pastStudies={pastStudies}
           />
 
           <div className={styles.trajectoryCardsGrid}>
@@ -356,6 +348,7 @@ const TrajectoryReductionPage = ({
           </div>
 
           <TrajectoryGraph
+            studyName={study.name}
             trajectory15Data={trajectoryData.trajectory15Data}
             trajectoryWB2CData={trajectoryData.trajectoryWB2CData}
             customTrajectoriesData={trajectoryData.customTrajectoriesData}
@@ -364,8 +357,7 @@ const TrajectoryReductionPage = ({
             selectedSbtiTrajectories={selectedSbtiTrajectories}
             withDependencies={withDependencies}
             setWithDependencies={setWithDependencies}
-            linkedStudies={linkedStudies}
-            linkedExternalStudies={linkedExternalStudies}
+            pastStudies={pastStudies}
           />
 
           {transitionPlan && (
