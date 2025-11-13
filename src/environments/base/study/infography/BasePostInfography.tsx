@@ -4,18 +4,14 @@ import { Post } from '@/services/posts'
 import { defaultPostColor, postColors } from '@/utils/study'
 import { styled } from '@mui/material/styles'
 import { SubPost } from '@prisma/client'
-import Link from 'next/link'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
-const StyledLink = styled(Link, { shouldForwardProp: (prop) => prop !== 'visible' && prop !== 'post' })<{
+const StyledLink = styled('div', { shouldForwardProp: (prop) => prop !== 'visible' && prop !== 'post' })<{
   post: Post
   visible: boolean
 }>(({ theme, post, visible }) => ({
   borderRadius: '1rem',
   border: 'solid 0.25rem',
-  textDecoration: 'none',
-  outlineOffset: '0.375rem',
-
   backgroundColor: theme.custom.postColors[post]?.light,
   borderColor: theme.custom.postColors[post]?.dark,
 
@@ -46,14 +42,6 @@ export const BasePostInfography = ({ post, mainPost, subPosts, studyId, percent,
   const displayTimeout = useRef<NodeJS.Timeout | null>(null)
   const postColor = useMemo(() => (mainPost ? postColors[mainPost] : defaultPostColor), [mainPost])
 
-  const href = useMemo(() => {
-    const isSubPost = Object.values(SubPost).includes(post as SubPost)
-    if (isSubPost) {
-      return `/etudes/${studyId}/comptabilisation/saisie-des-donnees/${mainPost}#subpost-${post}`
-    }
-    return `/etudes/${studyId}/comptabilisation/saisie-des-donnees/${mainPost}`
-  }, [post, mainPost, studyId])
-
   useEffect(() => {
     if (ref.current) {
       if (displayChildren) {
@@ -77,9 +65,15 @@ export const BasePostInfography = ({ post, mainPost, subPosts, studyId, percent,
         }
         setDisplayChildren(false)
       }}
-      href={href}
     >
-      <PostHeader post={post} mainPost={mainPost} emissionValue={emissionValue} percent={percent} color={postColor} />
+      <PostHeader
+        post={post}
+        mainPost={mainPost}
+        emissionValue={emissionValue}
+        percent={percent}
+        color={postColor}
+        studyId={studyId}
+      />
       <SubPostInfography subPosts={subPosts} ref={ref} studyId={studyId} mainPost={mainPost} />
     </StyledLink>
   )
