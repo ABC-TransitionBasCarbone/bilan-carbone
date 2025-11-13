@@ -49,6 +49,7 @@ interface Props {
   trajectories: TrajectoryWithObjectives[]
   canEdit: boolean
   transitionPlanId: string
+  studyId: string
   searchFilter?: string
 }
 
@@ -58,7 +59,7 @@ const fuseOptions = {
   isCaseSensitive: false,
 }
 
-const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, searchFilter = '' }: Props) => {
+const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, studyId, searchFilter = '' }: Props) => {
   const t = useTranslations('study.transitionPlan.objectives')
   const router = useRouter()
   const { callServerFunction } = useServerFunction()

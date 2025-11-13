@@ -1,6 +1,6 @@
-const studyId = '88c93e88-7c80-4be4-905b-f0bbd2ccc779'
-
 describe('Create study emission source', () => {
+  const studyId = '88c93e88-7c80-4be4-905b-f0bbd2ccc779'
+
   before(() => {
     cy.resetTestDatabase()
   })
