@@ -11,7 +11,7 @@ import { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { initializeTransitionPlan, resetTransitionPlan } from '@/services/serverFunctions/transitionPlan'
+import { deleteTransitionPlan, initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
 import { getStudyTotalCo2Emissions } from '@/services/study'
 import {
   calculateActionBasedTrajectory,
@@ -133,8 +133,8 @@ const TrajectoryReductionPage = ({
     [callServerFunction, study.id, router],
   )
 
-  const handleConfirmReset = useCallback(async () => {
-    await callServerFunction(() => resetTransitionPlan(study.id), {
+  const handleConfirmDelete = useCallback(async () => {
+    await callServerFunction(() => deleteTransitionPlan(study.id), {
       onSuccess: async () => {
         setShowDeleteModal(false)
         router.refresh()
@@ -320,7 +320,7 @@ const TrajectoryReductionPage = ({
               variant="contained"
               color="error"
               onClick={() => setShowDeleteModal(true)}
-              title={t('trajectories.reset.title')}
+              title={t('trajectories.delete.title')}
             >
               <DeleteIcon />
             </Button>
@@ -456,12 +456,12 @@ const TrajectoryReductionPage = ({
         {showDeleteModal && (
           <ConfirmDeleteModal
             open={showDeleteModal}
-            title={t('trajectories.reset.title')}
-            message={t('trajectories.reset.description')}
-            confirmText={t('trajectories.reset.confirm')}
-            cancelText={t('trajectories.reset.cancel')}
+            title={t('trajectories.delete.title')}
+            message={t('trajectories.delete.description')}
+            confirmText={t('trajectories.delete.confirm')}
+            cancelText={t('trajectories.delete.cancel')}
             requireNameMatch={study.name}
-            onConfirm={handleConfirmReset}
+            onConfirm={handleConfirmDelete}
             onCancel={() => setShowDeleteModal(false)}
           />
         )}

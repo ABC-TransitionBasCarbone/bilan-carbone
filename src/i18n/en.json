@@ -902,10 +902,10 @@
         "myTrajectories": "My trajectories",
         "addTrajectory": "Add a reduction trajectory",
         "selectTrajectories": "Select your trajectories",
-        "reset": {
-          "title": "Reset your transition plan",
-          "description": "Do you really want to reset your transition plan? All data from your transition plan will be deleted. Enter the name of your study to confirm the deletion of the transition plan.",
-          "confirm": "Reset",
+        "delete": {
+          "title": "Transition plan deletion",
+          "description": "Do you really want to delete your transition plan? All data from your transition plan will be deleted. This will not impact linked studies.",
+          "confirm": "Delete",
           "cancel": "Cancel"
         },
         "sbtiCard": {
@@ -1982,6 +1982,7 @@
   },
   "error": {
     "Not authorized": "You are not allowed to do this action",
+    "Not found": "The requested resource was not found",
     "Server error": "A server error occurred, please contact support",
     "default": "Something went wrong ..., please try again. If the problem persists, please contact support",
     "error": "Something went wrong ...",

@@ -902,10 +902,10 @@
         "myTrajectories": "Mes trajectoires",
         "addTrajectory": "Ajouter une trajectoire de réduction",
         "selectTrajectories": "Sélectionnez vos trajectoires",
-        "reset": {
-          "title": "Réinitialiser votre plan de transition",
-          "description": "Souhaitez-vous vraiment réinitialiser votre plan de transition ? Toutes les données de votre plan de transition seront supprimées. Renseignez le nom de votre étude pour confirmer la suppression du plan de transition.",
-          "confirm": "Réinitialiser",
+        "delete": {
+          "title": "Suppression du plan de transition",
+          "description": "Souhaitez-vous vraiment supprimer votre plan de transition ? Toutes les données de votre plan de transition seront supprimées. Cela n'impactera pas les études liées.",
+          "confirm": "Supprimer",
           "cancel": "Annuler"
         },
         "sbtiCard": {
@@ -1982,6 +1982,7 @@
   },
   "error": {
     "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
+    "Not found": "La ressource demandée n'a pas été trouvée",
     "Server error": "Une erreur serveur est survenue, veuillez contacter le support",
     "default": "Une erreur s'est produite, veuillez reessayer. Si le problème persiste, contactez le support.",
     "error": "Une erreur s'est produite...",
