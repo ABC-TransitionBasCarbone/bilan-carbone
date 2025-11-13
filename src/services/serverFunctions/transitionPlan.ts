@@ -7,6 +7,7 @@ import {
   createTransitionPlan,
   createTransitionPlanStudy,
   deleteAction as dbDeleteAction,
+  deleteTransitionPlan as dbDeleteTransitionPlan,
   duplicateTransitionPlanWithRelations,
   getActionById,
   getActions,
@@ -26,7 +27,7 @@ import { ApiResponse, withServerResponse } from '@/utils/serverResponse'
 import { getYearFromDateStr } from '@/utils/time'
 import { TransitionPlan } from '@prisma/client'
 import { dbActualizedAuth } from '../auth'
-import { NOT_AUTHORIZED } from '../permissions/check'
+import { NOT_AUTHORIZED, NOT_FOUND } from '../permissions/check'
 import { canReadStudy, hasEditAccessOnStudy, hasReadAccessOnStudy } from '../permissions/study'
 import { canEditTransitionPlan, canReadTransitionPlan } from '../permissions/transitionPlan'
 import { AddActionCommand, ExternalStudyCommand } from './transitionPlan.command'
@@ -257,4 +258,19 @@ export const toggleActionEnabled = async (actionId: string, enabled: boolean) =>
     }
 
     await updateAction(actionId, { enabled })
+  })
+
+export const deleteTransitionPlan = async (studyId: string) =>
+  withServerResponse('deleteTransitionPlan', async () => {
+    const hasEditAccess = await hasEditAccessOnStudy(studyId)
+    if (!hasEditAccess) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const transitionPlan = await getTransitionPlanByStudyId(studyId)
+    if (!transitionPlan) {
+      throw new Error(NOT_FOUND)
+    }
+
+    await dbDeleteTransitionPlan(transitionPlan.id)
   })

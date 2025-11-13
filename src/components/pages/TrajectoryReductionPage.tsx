@@ -11,7 +11,7 @@ import { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
+import { deleteTransitionPlan, initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
 import { getStudyTotalCo2Emissions } from '@/services/study'
 import {
   calculateActionBasedTrajectory,
@@ -21,6 +21,7 @@ import {
   SBTI_REDUCTION_RATE_WB2C,
 } from '@/utils/trajectory'
 import AddIcon from '@mui/icons-material/Add'
+import DeleteIcon from '@mui/icons-material/Delete'
 import { Typography } from '@mui/material'
 import { Action, ExternalStudy, TransitionPlan } from '@prisma/client'
 import classNames from 'classnames'
@@ -36,14 +37,10 @@ import styles from './TrajectoryReductionPage.module.css'
 
 const TransitionPlanSelectionModal = dynamic(
   () => import('@/components/study/transitionPlan/TransitionPlanSelectionModal'),
-  {
-    ssr: false,
-  },
 )
 
-const TrajectoryCreationModal = dynamic(() => import('@/components/study/trajectory/TrajectoryCreationModal'), {
-  ssr: false,
-})
+const TrajectoryCreationModal = dynamic(() => import('@/components/study/trajectory/TrajectoryCreationModal'))
+const ConfirmDeleteModal = dynamic(() => import('@/components/modals/ConfirmDeleteModal'))
 
 const TRAJECTORY_15_ID = '1,5'
 const TRAJECTORY_WB2C_ID = 'WB2C'
@@ -79,6 +76,7 @@ const TrajectoryReductionPage = ({
   const [selectedSbtiTrajectories, setSelectedSbtiTrajectories] = useState<string[]>([TRAJECTORY_15_ID])
   const [withDependencies, setWithDependencies] = useState<boolean>(true)
   const [mounted, setMounted] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -136,6 +134,15 @@ const TrajectoryReductionPage = ({
     },
     [callServerFunction, study.id, router],
   )
+
+  const handleConfirmDelete = useCallback(async () => {
+    await callServerFunction(() => deleteTransitionPlan(study.id), {
+      onSuccess: async () => {
+        setShowDeleteModal(false)
+        router.refresh()
+      },
+    })
+  }, [callServerFunction, study.id, router])
 
   const trajectoryData = useMemo(() => {
     if (!transitionPlan) {
@@ -308,7 +315,19 @@ const TrajectoryReductionPage = ({
         ].filter((link) => link !== undefined)}
       />
       <div className={classNames(styles.container, 'flex-col main-container p2 pt3')}>
-        <Title title={t('trajectories.title')} as="h1" />
+        <div className="flex align-center justify-between">
+          <Title title={t('trajectories.title')} as="h1" />
+          {canEdit && (
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => setShowDeleteModal(true)}
+              title={t('trajectories.delete.title')}
+            >
+              <DeleteIcon />
+            </Button>
+          )}
+        </div>
 
         <div className="flex-col gapped2">
           <TransitionPlanOnboarding
@@ -435,6 +454,19 @@ const TrajectoryReductionPage = ({
             />
           )}
         </div>
+
+        {showDeleteModal && (
+          <ConfirmDeleteModal
+            open={showDeleteModal}
+            title={t('trajectories.delete.title')}
+            message={t('trajectories.delete.description')}
+            confirmText={t('trajectories.delete.confirm')}
+            cancelText={t('trajectories.delete.cancel')}
+            requireNameMatch={study.name}
+            onConfirm={handleConfirmDelete}
+            onCancel={() => setShowDeleteModal(false)}
+          />
+        )}
       </div>
     </>
   )

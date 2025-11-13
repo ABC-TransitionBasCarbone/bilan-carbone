@@ -908,6 +908,12 @@
         "myTrajectories": "Mes trajectoires",
         "addTrajectory": "Ajouter une trajectoire de réduction",
         "selectTrajectories": "Sélectionnez vos trajectoires",
+        "delete": {
+          "title": "Suppression du plan de transition",
+          "description": "Souhaitez-vous vraiment supprimer votre plan de transition ? Toutes les données de votre plan de transition seront supprimées. Cela n'impactera pas les études et plans de transition liées.",
+          "confirm": "Supprimer",
+          "cancel": "Annuler"
+        },
         "sbtiCard": {
           "title": "Trajectoires SBTi",
           "description": "La Science Based Targets Initiative définit deux trajectoires visant à limiter le réchauffement climatique à 1,5°C ou \"Well below 2 degrees\" (WB2C).",
@@ -1984,6 +1990,7 @@
   },
   "error": {
     "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
+    "Not found": "La ressource demandée n'a pas été trouvée",
     "Server error": "Une erreur serveur est survenue, veuillez contacter le support",
     "default": "Une erreur s'est produite, veuillez reessayer. Si le problème persiste, contactez le support.",
     "error": "Une erreur s'est produite...",

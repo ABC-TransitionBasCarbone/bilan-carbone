@@ -41,7 +41,7 @@ model TransitionPlan {
 
   createdAt       DateTime        @default(now()) @map("created_at")
   updatedAt       DateTime        @default(now()) @updatedAt @map("updated_at")
-  ExternalStudies ExternalStudy[]
+  externalStudies ExternalStudy[]
 
   @@map("transition_plans")
 }
@@ -64,7 +64,7 @@ model Action {
   id String @id @default(uuid())
 
   transitionPlanId String         @map("transition_plan_id")
-  transitionPlan   TransitionPlan @relation(fields: [transitionPlanId], references: [id])
+  transitionPlan   TransitionPlan @relation(fields: [transitionPlanId], references: [id], onDelete: Cascade)
 
   title                     String
   subSteps                  String                   @map("sub_steps")
@@ -126,7 +126,7 @@ model ExternalStudy {
   id String @id @default(uuid())
 
   transitionPlanId String         @map("transition_plan_id")
-  transitionPlan   TransitionPlan @relation(fields: [transitionPlanId], references: [id])
+  transitionPlan   TransitionPlan @relation(fields: [transitionPlanId], references: [id], onDelete: Cascade)
 
   name     String
   date     DateTime
