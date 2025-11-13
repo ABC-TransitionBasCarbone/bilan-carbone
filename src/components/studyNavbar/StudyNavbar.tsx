@@ -78,7 +78,7 @@ const StudyNavbar = ({ environment, studyId, study, isTransitionPlanActive, hasO
         onClose={() => setOpen(false)}
         slotProps={{
           paper: {
-            className: classNames('flex-col ml1', styles.drawerContainer, open && styles.opened),
+            className: classNames('wfit hauto flex-col ml1 p0', styles.drawerContainer, open && styles.opened),
           },
           backdrop: {
             className: styles.backdrop,

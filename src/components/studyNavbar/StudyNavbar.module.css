@@ -14,15 +14,12 @@
 .drawerContainer {
   z-index: 1200;
   top: calc(var(--total-header-height) + 1rem) !important;
-  width: fit-content;
-  height: auto;
   max-width: calc(100vw - 2rem);
   max-height: calc(100vh - var(--total-header-height) - 2rem);
   box-sizing: border-box;
   border-radius: 1.5rem;
   border: 1px solid var(--mui-palette-primary-main);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-  padding: 0;
   overflow: hidden;
 }
 
