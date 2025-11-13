@@ -75,6 +75,10 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
   const [deleting, setDeleting] = useState(0)
   const [duplicatingSiteId, setDuplicatingSiteId] = useState<string | null>(null)
   const hasEditionRole = useMemo(() => hasEditionRights(userRoleOnStudy), [userRoleOnStudy])
+  const isFromStudyOrgnization = useMemo(
+    () => study.organizationVersionId === user.organizationVersionId,
+    [study.organizationVersionId, user.organizationVersionId],
+  )
   const canEditOrga = useMemo(() => canEditOrganizationVersion(user, organizationVersion), [user, organizationVersion])
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
@@ -361,7 +365,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
               form={isEditing ? (siteForm as unknown as UseFormReturn<SitesCommand>) : undefined}
               caUnit={caUnit}
               withSelection
-              onDuplicate={!isEditing ? setDuplicatingSiteId : undefined}
+              onDuplicate={!isEditing && isFromStudyOrgnization ? setDuplicatingSiteId : undefined}
             />
           ),
         }}
@@ -371,11 +375,11 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
             form={isEditing ? (siteForm as unknown as UseFormReturn<SitesCommand>) : undefined}
             caUnit={caUnit}
             withSelection
-            onDuplicate={!isEditing ? setDuplicatingSiteId : undefined}
+            onDuplicate={!isEditing && isFromStudyOrgnization ? setDuplicatingSiteId : undefined}
           />
         }
       />
-      {hasEditionRole && (
+      {hasEditionRole && isFromStudyOrgnization && (
         <div className={classNames('mt1', { 'justify-between': isEditing })}>
           <Button
             data-testid={`${isEditing ? 'cancel-' : ''}edit-study-sites`}
