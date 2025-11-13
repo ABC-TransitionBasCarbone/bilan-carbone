@@ -31,7 +31,6 @@ const DeletionModal = <T extends DeleteCommand>({ form, type, onDelete, onClose,
               control={control}
               name="name"
               label={t('name')}
-              translation={t}
               data-testid={`delete-${type}-name-field`}
               fullWidth
             />

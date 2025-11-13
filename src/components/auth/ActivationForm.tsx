@@ -71,7 +71,6 @@ const ActivationForm = ({ environment = Environment.BC }: Props) => {
         <p>{t('description')}</p>
         <FormTextField
           control={control}
-          translation={t}
           name="email"
           className={authStyles.input}
           label={t('email')}

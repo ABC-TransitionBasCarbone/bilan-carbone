@@ -183,7 +183,6 @@ const DetailedGES = <T extends EmissionFactorCommand>({
         disabled={detailedGES || hasParts}
         data-testid="emission-factor-totalCo2"
         control={control}
-        translation={t}
         slotProps={{
           htmlInput: { min: 0 },
           inputLabel: { shrink: true },

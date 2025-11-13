@@ -67,7 +67,6 @@ const NewPasswordForm = ({ environment = Environment.BC }: Props) => {
           label={t('email')}
           placeholder={t('emailPlaceholder')}
           name="email"
-          translation={t}
           data-testid="input-email"
           trim
         />

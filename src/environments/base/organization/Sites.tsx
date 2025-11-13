@@ -38,7 +38,7 @@ const Sites = <T extends SitesCommand>({
   const setValue = form?.setValue as UseFormSetValue<SitesCommand>
   const getValues = form?.getValues as UseFormGetValues<SitesCommand>
 
-  const headerCAUnit = useMemo(() => tUnit(caUnit), [caUnit])
+  const headerCAUnit = useMemo(() => tUnit(caUnit), [caUnit, tUnit])
 
   const columns = useMemo(() => {
     const columns = [
@@ -48,30 +48,24 @@ const Sites = <T extends SitesCommand>({
         accessorKey: 'name',
         cell: ({ row, getValue }) =>
           form ? (
-            <>
-              {withSelection ? (
-                <div className="align-center">
-                  <FormCheckbox
-                    size="small"
-                    control={control}
-                    translation={t}
-                    name={`sites.${row.index}.selected`}
-                    data-testid="organization-sites-checkbox"
-                  />
-                  {getValue<string>()}
-                </div>
-              ) : (
-                <FormTextField
-                  data-testid="edit-site-name"
-                  size="small"
+            <div className="align-center">
+              {withSelection && (
+                <FormCheckbox
                   control={control}
                   translation={t}
-                  name={`sites.${row.index}.name`}
-                  placeholder={t('namePlaceholder')}
-                  fullWidth
+                  name={`sites.${row.index}.selected`}
+                  data-testid="organization-sites-checkbox"
                 />
               )}
-            </>
+              <FormTextField
+                size="small"
+                data-testid="edit-site-name"
+                control={control}
+                name={`sites.${row.index}.name`}
+                placeholder={t('namePlaceholder')}
+                fullWidth
+              />
+            </div>
           ) : (
             getValue<string>()
           ),
@@ -87,7 +81,6 @@ const Sites = <T extends SitesCommand>({
               type="number"
               size="small"
               control={control}
-              translation={t}
               name={`sites.${row.index}.etp`}
               placeholder={t('etpPlaceholder')}
               slotProps={{
@@ -111,7 +104,6 @@ const Sites = <T extends SitesCommand>({
               size="small"
               type="number"
               control={control}
-              translation={t}
               name={`sites.${row.index}.ca`}
               placeholder={t('caPlaceholder', { unit: headerCAUnit })}
               slotProps={{

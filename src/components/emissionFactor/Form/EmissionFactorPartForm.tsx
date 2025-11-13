@@ -59,7 +59,6 @@ const EmissionFactorPartForm = <T extends EmissionFactorCommand>({
             <FormTextField
               data-testid={`emission-factor-part-${index}-name`}
               control={control}
-              translation={t}
               type="string"
               name={`parts.${index}.name`}
               label={t('name')}
@@ -85,7 +84,6 @@ const EmissionFactorPartForm = <T extends EmissionFactorCommand>({
             disabled={detailedGES}
             data-testid={`emission-factor-part-${index}-totalCo2`}
             control={control}
-            translation={t}
             slotProps={{
               htmlInput: { min: 0 },
               inputLabel: { shrink: true },

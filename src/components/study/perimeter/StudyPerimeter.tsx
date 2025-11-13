@@ -13,6 +13,10 @@ import SitesTilt from '@/environments/tilt/organization/Sites'
 
 import { useServerFunction } from '@/hooks/useServerFunction'
 import {
+  getUpdateOrganizationVersionPermission,
+  updateOrganizationSitesCommand,
+} from '@/services/serverFunctions/organization'
+import {
   changeStudyDates,
   changeStudyExports,
   changeStudySites,
@@ -42,6 +46,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm, UseFormReturn, useWatch } from 'react-hook-form'
 import DeleteStudySiteModal from './DeleteStudySiteModal'
 import { DuplicateFormData } from './DuplicateSiteModal'
+import ReplicateSitesChangesModal from './ReplicateSitesChangesModal'
 import StudyExportsForm from './StudyExportsForm'
 import styles from './StudyPerimeter.module.css'
 
@@ -66,6 +71,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
   const [glossary, setGlossary] = useState('')
   const [exportsValues, setExportsValues] = useState<Record<Export, ControlMode | false> | undefined>(undefined)
   const [isEditing, setIsEditing] = useState(false)
+  const [replicateSitesChanges, setReplicateSitesChanges] = useState(false)
   const [deleting, setDeleting] = useState(0)
   const [duplicatingSiteId, setDuplicatingSiteId] = useState<string | null>(null)
   const hasEditionRole = useMemo(() => hasEditionRights(userRoleOnStudy), [userRoleOnStudy])
@@ -153,7 +159,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
       'sites',
       siteList.map((site) => ({ ...site, ca: displayCA(site.ca, CA_UNIT_VALUES[caUnit]) })),
     )
-  }, [siteList, isEditing, caUnit])
+  }, [siteList, isEditing, caUnit, siteForm])
 
   const onSitesSubmit = async () => {
     const deletedSites = sites.filter((site) => {
@@ -172,11 +178,25 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
     setOpen(false)
 
     await callServerFunction(() => changeStudySites(study.id, siteForm.getValues()), {
-      onSuccess: () => {
-        router.refresh()
-        setIsEditing(false)
+      onSuccess: async () => {
+        const canUpdateOrganization = await getUpdateOrganizationVersionPermission(study.organizationVersionId)
+        if (canUpdateOrganization.success && canUpdateOrganization.data) {
+          setReplicateSitesChanges(true)
+        } else {
+          setIsEditing(false)
+          router.refresh()
+        }
       },
     })
+  }
+
+  const onReplicateSitesChanges = (replicate: boolean) => {
+    if (replicate) {
+      updateOrganizationSitesCommand(siteForm.getValues(), study.organizationVersionId)
+    }
+    setReplicateSitesChanges(false)
+    setIsEditing(false)
+    router.refresh()
   }
 
   const [startDate, endDate, realizationStartDate, realizationEndDate] = form.watch([
@@ -185,12 +205,16 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
     'realizationStartDate',
     'realizationEndDate',
   ])
-  const onDateSubmit = async (command: ChangeStudyDatesCommand) => {
-    await form.trigger()
-    if (form.formState.isValid) {
-      await changeStudyDates(command)
-    }
-  }
+
+  const onDateSubmit = useCallback(
+    async (command: ChangeStudyDatesCommand) => {
+      await form.trigger()
+      if (form.formState.isValid) {
+        await changeStudyDates(command)
+      }
+    },
+    [form],
+  )
 
   const updateStudyExport = useCallback(
     async (exportType: Export, control: ControlMode | false) => {
@@ -212,7 +236,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
 
   useEffect(() => {
     onDateSubmit(form.getValues())
-  }, [startDate, endDate, realizationStartDate, realizationEndDate])
+  }, [startDate, endDate, realizationStartDate, realizationEndDate, onDateSubmit, form])
 
   const handleDuplicateSite = async (data: DuplicateFormData) => {
     if (!duplicatingSiteId) {
@@ -391,6 +415,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
           onDuplicate={handleDuplicateSite}
         />
       )}
+      {replicateSitesChanges && <ReplicateSitesChangesModal replicate={onReplicateSitesChanges} />}
       {glossary && (
         <GlossaryModal glossary={glossary} onClose={() => setGlossary('')} label="emission-source" t={tGlossary}>
           <p className="mb-2">{tGlossary(`${glossary}Description`)}</p>

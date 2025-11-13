@@ -84,19 +84,12 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
       <FormTextField
         data-testid="emission-factor-name"
         control={control}
-        translation={t}
         name="name"
         label={t('name')}
         placeholder={t('namePlaceholder')}
       />
-      <FormTextField control={control} translation={t} name="attribute" label={t('attribute')} />
-      <FormTextField
-        data-testid="emission-factor-source"
-        control={control}
-        translation={t}
-        name="source"
-        label={t('source')}
-      />
+      <FormTextField control={control} name="attribute" label={t('attribute')} />
+      <FormTextField data-testid="emission-factor-source" control={control} name="source" label={t('source')} />
       <div className="flex gapped">
         <div className="grow">
           <FormSelect
@@ -123,7 +116,6 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
               <FormTextField
                 data-testid="emission-factor-custom-unit"
                 control={control}
-                translation={t}
                 name="customUnit"
                 label={t('customUnit')}
                 placeholder={t('customUnitPlaceholder')}
@@ -171,7 +163,7 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         canShrink={qualityKeys.every((key) => quality[key] === quality[qualityKeys[0]])}
       />
       <MultiplePosts form={form} context="emissionFactor" />
-      <FormTextField control={control} translation={t} name="comment" label={t('comment')} multiline rows={2} />
+      <FormTextField control={control} name="comment" label={t('comment')} multiline rows={2} />
       <div className={classNames({ ['justify-between']: button === 'update' })}>
         {button === 'update' && (
           <LinkButton data-testid="emission-factor-cancel-update" href="/facteurs-d-emission">

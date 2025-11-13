@@ -59,7 +59,6 @@ const TagForm = ({
       </div>
       <FormTextField
         control={control}
-        translation={translation}
         name="name"
         label={nameLabel || t('emissionSourceTagLabel')}
         placeholder={namePlaceholder}

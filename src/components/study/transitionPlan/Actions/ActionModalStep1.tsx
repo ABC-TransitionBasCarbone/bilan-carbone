@@ -44,7 +44,6 @@ const ActionModalStep1 = ({ studyUnit, control, setValue }: Props) => {
     <>
       <FormTextField
         control={control}
-        translation={t}
         name="title"
         label={`${t('title')} *`}
         placeholder={t('titlePlaceholder')}
@@ -52,7 +51,6 @@ const ActionModalStep1 = ({ studyUnit, control, setValue }: Props) => {
       />
       <FormTextField
         control={control}
-        translation={t}
         name="subSteps"
         label={`${t('subSteps')} *`}
         placeholder={t('subStepsPlaceholder')}
@@ -62,7 +60,6 @@ const ActionModalStep1 = ({ studyUnit, control, setValue }: Props) => {
       />
       <FormTextField
         control={control}
-        translation={t}
         name="detailedDescription"
         label={`${t('detailedDescription')} *`}
         placeholder={t('detailedDescriptionPlaceholder')}
@@ -92,7 +89,6 @@ const ActionModalStep1 = ({ studyUnit, control, setValue }: Props) => {
               label={`${t('reductionValue')} *`}
               type="number"
               control={control}
-              translation={t}
               name="reductionValue"
               endAdornment={<div className={textUnitStyles.unit}>{tUnit(studyUnit)}</div>}
               data-testid="add-action-reductionValue"

@@ -8,7 +8,6 @@ import styles from './Form.module.css'
 interface Props<T extends FieldValues> {
   name: FieldPath<T>
   control: Control<T>
-  translation: (slug: string) => string
   label?: string
   icon?: React.ReactNode
   iconPosition?: 'before' | 'after'
@@ -20,7 +19,6 @@ interface Props<T extends FieldValues> {
 export const FormTextField = <T extends FieldValues>({
   name,
   control,
-  translation,
   label,
   icon,
   iconPosition = 'before',
