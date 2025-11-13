@@ -157,7 +157,7 @@ const SubPost = ({
               {formatNumber(total / STUDY_UNIT_VALUES[study.resultsUnit])} {tUnits(study.resultsUnit)}
             </span>
             {contributors && contributors.length > 0 && (
-              <span className={styles.contributors}>
+              <span className={classNames(styles.contributors, 'ml1')}>
                 {t('contributorsList', { count: contributors.length })} {contributors.join(', ')}
               </span>
             )}
