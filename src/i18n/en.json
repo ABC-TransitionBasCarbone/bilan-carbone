@@ -904,7 +904,7 @@
         "selectTrajectories": "Select your trajectories",
         "delete": {
           "title": "Transition plan deletion",
-          "description": "Do you really want to delete your transition plan? All data from your transition plan will be deleted. This will not impact linked studies.",
+          "description": "Do you really want to delete your transition plan? All data from your transition plan will be deleted. This will not impact linked studies and transition plans.",
           "confirm": "Delete",
           "cancel": "Cancel"
         },

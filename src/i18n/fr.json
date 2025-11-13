@@ -904,7 +904,7 @@
         "selectTrajectories": "Sélectionnez vos trajectoires",
         "delete": {
           "title": "Suppression du plan de transition",
-          "description": "Souhaitez-vous vraiment supprimer votre plan de transition ? Toutes les données de votre plan de transition seront supprimées. Cela n'impactera pas les études liées.",
+          "description": "Souhaitez-vous vraiment supprimer votre plan de transition ? Toutes les données de votre plan de transition seront supprimées. Cela n'impactera pas les études et plans de transition liées.",
           "confirm": "Supprimer",
           "cancel": "Annuler"
         },
