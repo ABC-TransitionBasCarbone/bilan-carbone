@@ -180,7 +180,7 @@ describe('signUpWithSiretOrCNC', () => {
       })
       mockGetOrganizationVersionById.mockResolvedValue({
         id: mockedOrganizationVersionId,
-        activatedLicence: true,
+        activatedLicence: false,
       })
       mockOrganizationVersionActiveAccountsCount.mockResolvedValue(true)
       mockGetAccountFromUserOrganization.mockResolvedValue([
