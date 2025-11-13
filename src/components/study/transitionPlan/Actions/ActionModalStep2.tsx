@@ -28,20 +28,6 @@ const ActionModalStep1 = ({ control }: Props) => {
 
   return (
     <>
-      <FormSelect
-        control={control}
-        translation={t}
-        name="priority"
-        label={`${t('priority')} *`}
-        data-testid="add-action-priority"
-        fullWidth
-      >
-        {[7, 6, 5, 4, 3, 2, 1].map((priority) => (
-          <MenuItem key={priority} value={priority}>
-            {priority}
-          </MenuItem>
-        ))}
-      </FormSelect>
       {(Object.entries(selectors) as [SelectorKey, (typeof selectors)[SelectorKey]][]).map(([selector, values]) => (
         <FormSelect
           key={selector}

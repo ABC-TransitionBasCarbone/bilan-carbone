@@ -83,14 +83,10 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
   }, [potentialDeduction, clearErrors])
 
   const onSubmit = async (data: AddActionCommand) => {
-    const fullData = data
-
     const priority = calculatePriorityFromRelevance(data.relevance)
-    if (priority !== null) {
-      fullData.priority = priority
-    }
+    const dataWithPriority = { ...data, priority }
 
-    const res = action ? await editAction(action.id, fullData) : await addAction(fullData)
+    const res = action ? await editAction(action.id, dataWithPriority) : await addAction(dataWithPriority)
     if (res.success) {
       reset()
       setActiveStep(0)
