@@ -12,7 +12,6 @@ import { DocumentCategory } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import { redirect } from 'next/navigation'
-import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import DependencyMatrix from '../study/perimeter/documents/DependencyMatrix'
 import StudyFlow from '../study/perimeter/documents/StudyFlow'
@@ -27,7 +26,6 @@ interface Props {
 
 const StudyPerimeterPage = async ({ study, organizationVersion, user }: Props) => {
   const tNav = await getTranslations('nav')
-  const t = await getTranslations('study.perimeter')
   const documents = await getDocumentsForStudy(study.id)
 
   const userRoleOnStudy = getAccountRoleOnStudy(user, study)
@@ -63,15 +61,13 @@ const StudyPerimeterPage = async ({ study, organizationVersion, user }: Props) =
           { label: study.name, link: `/etudes/${study.id}` },
         ].filter((link) => link !== undefined)}
       />
-      <Block title={t('title', { name: study.name })} as="h2">
-        <StudyPerimeter
-          study={study}
-          organizationVersion={organizationVersion}
-          userRoleOnStudy={userRoleOnStudy}
-          caUnit={caUnit}
-          user={user}
-        />
-      </Block>
+      <StudyPerimeter
+        study={study}
+        organizationVersion={organizationVersion}
+        userRoleOnStudy={userRoleOnStudy}
+        caUnit={caUnit}
+        user={user}
+      />
       <StudyTags studyId={study.id} />
       <StudyFlow canAddFlow={canAddFlow} documents={studyFlowDocuments} study={study} />
       {hasAccessToDependencyMatrix(user.environment) && (
