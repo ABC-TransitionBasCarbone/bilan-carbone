@@ -155,7 +155,7 @@ export const createOrganizationWithVersion = async (
       ...organizationVersion,
       organization: { connect: { id: newOrganization.id } },
       isCR: false,
-      activatedLicence: false,
+      activatedLicence: [],
     },
   })
 }
@@ -290,7 +290,7 @@ export const getRawOrganizationById = (id: string | null) =>
 export const createOrUpdateOrganization = async (
   organization: Prisma.OrganizationCreateInput & { id?: string },
   isCR?: boolean,
-  activatedLicence?: boolean,
+  activatedLicence?: number[],
   importedFileDate?: Date,
   environment: Environment = Environment.BC,
 ) => {
