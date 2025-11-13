@@ -1357,6 +1357,7 @@
       "name": "Nom",
       "namePlaceholder": "Donnez un nom à votre facteur d'émission",
       "attribute": "Détails",
+      "location": "Localisation",
       "unit": "Unité",
       "customUnit": "Unité personalisée",
       "customUnitPlaceholder": "Votre unité personalisée",

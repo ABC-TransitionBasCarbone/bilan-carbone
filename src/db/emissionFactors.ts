@@ -1,6 +1,7 @@
 import { LocaleType } from '@/i18n/config'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { FeFilters } from '@/types/filters'
+import { unique } from '@/utils/array'
 import { getEmissionFactorSubPostsMap, isMonetaryEmissionFactor } from '@/utils/emissionFactors'
 import { flattenSubposts } from '@/utils/post'
 import { EmissionFactorStatus, Environment, Import, Prisma, SubPost, Unit } from '@prisma/client'
@@ -258,6 +259,17 @@ const getDefaultEmissionFactors = async (
       frontiere: metadata.frontiere,
     },
   }))
+}
+
+export const getAllEmissionFactorsLocations = async () => {
+  const emissionFactors = await prismaClient.emissionFactor.findMany({
+    where: { status: { not: EmissionFactorStatus.Archived } },
+    select: { location: true },
+  })
+
+  return unique(emissionFactors.map((emissionFactor) => emissionFactor.location)).filter(
+    (location) => location !== null,
+  )
 }
 
 export const getAllEmissionFactors = async (

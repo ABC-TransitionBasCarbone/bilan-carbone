@@ -1357,6 +1357,7 @@
       "name": "Name",
       "namePlaceholder": "Give a name to your emission Factor",
       "attribute": "Details",
+      "location": "Location",
       "unit": "Unit",
       "customUnit": "Custom unit",
       "customUnitPlaceholder": "Your custom unit",
