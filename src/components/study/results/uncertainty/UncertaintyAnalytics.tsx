@@ -48,7 +48,7 @@ const UncertaintyAnalytics = ({
 
   return (
     <div className="my2">
-      <Title title={t('title')} as="h2" />
+      <Title title={t('title')} as="h3" />
       <div className={styles.container}>
         <div className="grow flex-cc">
           <ConfidenceIntervalCharts confidenceInterval={confidenceInterval} unit={resultsUnit} percent={percent} />

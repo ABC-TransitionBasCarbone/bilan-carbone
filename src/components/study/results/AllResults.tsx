@@ -183,7 +183,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   }
 
   return (
-    <Block title={tStudyNav('results')} as="h1">
+    <Block title={tStudyNav('results')} as="h2">
       <div className="flex mb2 justify-between">
         <div className="flex gapped1">
           <SelectStudySite study={study} allowAll studySite={studySite} setSite={setSite} />

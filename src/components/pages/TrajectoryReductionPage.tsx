@@ -316,7 +316,7 @@ const TrajectoryReductionPage = ({
       />
       <div className={classNames(styles.container, 'flex-col main-container p2 pt3')}>
         <div className="flex align-center justify-between">
-          <Title title={t('trajectories.title')} as="h1" />
+          <Title title={t('trajectories.title')} as="h2" />
           {canEdit && (
             <Button
               variant="contained"

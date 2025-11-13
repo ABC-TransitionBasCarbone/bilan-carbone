@@ -489,6 +489,7 @@
     "title": "Study",
     "rights": {
       "title": "Rights on study : {name}",
+      "general": "General",
       "edit": "Edit the study name",
       "new": {
         "title": "Add a person to the study: {name}",

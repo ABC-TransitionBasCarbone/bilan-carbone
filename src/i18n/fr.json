@@ -489,6 +489,7 @@
     "title": "Étude",
     "rights": {
       "title": "Cadrage de l'étude : {name}",
+      "general": "Général",
       "edit": "Renommer l'étude",
       "new": {
         "title": "Ajouter une personne sur l'étude : {name}",
