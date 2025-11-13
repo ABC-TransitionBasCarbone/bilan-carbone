@@ -36,7 +36,7 @@ model Answer {
   response Json
 
   studySite   StudySite @relation(fields: [studySiteId], references: [id], onDelete: Cascade)
-  studySiteId String
+  studySiteId String    @map("study_site_id")
 
   question   Question @relation(fields: [questionId], references: [id])
   questionId String   @map("question_id")
