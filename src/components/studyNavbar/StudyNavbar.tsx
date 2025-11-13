@@ -87,7 +87,9 @@ const StudyNavbar = ({ environment, studyId, study, isTransitionPlanActive, hasO
         variant={isPersistent ? 'persistent' : 'temporary'}
       >
         <div className={styles.drawerTitle}>
-          <StudyName name={title.label} />
+          <Link href={title.href}>
+            <StudyName name={title.label} />
+          </Link>
         </div>
         <div className={classNames('flex-col', styles.menuContent)}>
           {sections.map((section, sectionIndex) => (
