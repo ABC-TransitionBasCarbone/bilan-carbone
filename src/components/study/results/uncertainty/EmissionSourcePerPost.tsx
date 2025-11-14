@@ -47,7 +47,7 @@ const EmissionSourcePerPost = ({ studyId, resultsUnit, results, validatedOnly }:
   )
 
   const series: ScatterSeries[] = filteredResults
-    .filter((post) => !!post.uncertainty || !!post[numberOfSources])
+    .filter((post) => !!post.squaredStandardDeviation || !!post[numberOfSources])
     .map((post) => ({
       id: post.post,
       data: [

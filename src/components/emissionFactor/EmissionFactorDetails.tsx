@@ -1,7 +1,7 @@
 import { gazKeys } from '@/constants/emissions'
 import { environmentSubPostsMapping, Post, subPostBCToSubPostTiltMapping } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
-import { getQualityRating, qualityKeys } from '@/services/uncertainty'
+import { getQualitativeUncertaintyFromQuality, qualityKeys } from '@/services/uncertainty'
 import { BCUnit } from '@/services/unit'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
@@ -29,7 +29,7 @@ const EmissionFactorDetails = ({ emissionFactor }: Props) => {
 
   const gases = useMemo(() => gazKeys.filter((gaz) => emissionFactor[gaz]), [emissionFactor])
   const qualities = useMemo(() => qualityKeys.filter((quality) => emissionFactor[quality]), [emissionFactor])
-  const quality = useMemo(() => getQualityRating(emissionFactor), [emissionFactor])
+  const quality = useMemo(() => getQualitativeUncertaintyFromQuality(emissionFactor), [emissionFactor])
 
   const subPosts = useMemo(() => {
     return emissionFactor.subPosts

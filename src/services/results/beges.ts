@@ -2,8 +2,11 @@ import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { hasDeprecationPeriod } from '@/utils/study'
 import { EmissionSourceCaracterisation, ExportRule } from '@prisma/client'
-import { getStandardDeviation, sumStandardDeviations } from '../emissionSource'
 import { convertTiltSubPostToBCSubPost } from '../posts'
+import {
+  getSquaredStandardDeviationForEmissionSource,
+  getSquaredStandardDeviationForEmissionSourceArray,
+} from '../uncertainty'
 import { filterWithDependencies, getSiteEmissionSources } from './utils'
 
 const allRules = [
@@ -49,7 +52,7 @@ export type BegesPostInfos = {
   other: number
   total: number
   co2b: number
-  uncertainty: number | null
+  squaredStandardDeviation: number | null
 }
 
 interface EmissionFactor {
@@ -122,7 +125,10 @@ export const getBegesEmissionValue = (emissionSource: EmissionSource): number =>
 export const getBegesEmissionTotal = (emissionSource: EmissionSource, emissionFactor: EmissionFactor) =>
   getBegesLine(getBegesEmissionValue(emissionSource), emissionFactor).total
 
-const getBegesLine = (value: number, emissionFactor: EmissionFactor): Omit<BegesPostInfos, 'rule' | 'uncertainty'> => {
+const getBegesLine = (
+  value: number,
+  emissionFactor: EmissionFactor,
+): Omit<BegesPostInfos, 'rule' | 'squaredStandardDeviation'> => {
   const ch4 = emissionFactor.ch4f || 0
   const n2o = emissionFactor.n2o || 0
   const other =
@@ -152,8 +158,10 @@ const sumLines = (lines: Omit<BegesPostInfos, 'rule'>[]) => {
     other: lines.reduce((acc, line) => acc + line.other, 0),
     total,
     co2b: lines.reduce((acc, line) => acc + line.co2b, 0),
-    uncertainty: total
-      ? sumStandardDeviations(lines.map((line) => ({ value: line.total, standardDeviation: line.uncertainty })))
+    squaredStandardDeviation: total
+      ? getSquaredStandardDeviationForEmissionSourceArray(
+          lines.map((line) => ({ value: line.total, squaredStandardDeviation: line.squaredStandardDeviation })),
+        )
       : null,
   }
 }
@@ -212,13 +220,13 @@ export const computeBegesResult = (
       }
 
       // l'incertitude est globale, peu importe
-      const uncertainty = getStandardDeviation(emissionSource)
+      const squaredStandardDeviation = getSquaredStandardDeviationForEmissionSource(emissionSource)
 
       if (emissionFactor.emissionFactorParts.length === 0) {
         // Pas de decomposition => on ventile selon la regle par default
         const post = getDefaultRule(subPostRules, caracterisation)
         if (post) {
-          results[post].push({ ...getBegesLine(value, emissionFactor), uncertainty })
+          results[post].push({ ...getBegesLine(value, emissionFactor), squaredStandardDeviation })
         }
       } else {
         emissionFactor.emissionFactorParts.forEach((part) => {
@@ -232,7 +240,7 @@ export const computeBegesResult = (
 
           if (post) {
             // Et on ajoute la valeur selon la composante quoi qu'il arrive
-            results[post].push({ ...getBegesLine(value, part), uncertainty })
+            results[post].push({ ...getBegesLine(value, part), squaredStandardDeviation })
           }
         })
       }

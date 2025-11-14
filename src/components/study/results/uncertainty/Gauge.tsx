@@ -7,10 +7,10 @@ import styles from './Gauge.module.css'
 import commonStyles from './UncertaintyAnalytics.module.css'
 
 interface Props {
-  uncertainty?: number
+  squaredStandardDeviation?: number
 }
 
-const UncertaintyGauge = ({ uncertainty }: Props) => {
+const UncertaintyGauge = ({ squaredStandardDeviation }: Props) => {
   const t = useTranslations('study.results.uncertainties')
   const refUncertainties = useMemo(() => [1, ...uncertaintyValues, 3.4], [])
   const arcLength = useMemo(() => {
@@ -25,7 +25,7 @@ const UncertaintyGauge = ({ uncertainty }: Props) => {
     <div className="grow">
       <GaugeCharts
         id="uncertainty-gauge"
-        percent={((uncertainty || 1) - 1) / (refUncertainties[refUncertainties.length - 1] - 1)}
+        percent={((squaredStandardDeviation || 1) - 1) / (refUncertainties[refUncertainties.length - 1] - 1)}
         arcsLength={arcLength}
         colors={['#adc5f8', '#709af3', '#346fef', '#244da7', '#142c5f']}
         animate={false}

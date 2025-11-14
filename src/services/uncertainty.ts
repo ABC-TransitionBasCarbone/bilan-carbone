@@ -2,7 +2,7 @@
 
 import { FullStudy } from '@/db/study'
 import { EmissionFactor } from '@prisma/client'
-import { getEmissionSourcesTotalCo2, sumEmissionSourcesUncertainty } from './emissionSource'
+import { getEmissionSourcesTotalCo2 } from './emissionSource'
 import { StudyWithoutDetail } from './permissions/study'
 
 export const qualityKeys = [
@@ -58,14 +58,7 @@ const coeffs: Record<keyof Quality, number[]> = {
   completeness: [1.2, 1.1, 1.05, 1.02, 1],
 }
 
-export const sumQualities = (qualities: (number | null)[]) =>
-  Math.exp(
-    Math.sqrt(
-      qualities.filter((value) => value !== null).reduce((acc, value) => acc + Math.pow(Math.log(value), 2), 0),
-    ),
-  )
-
-export const getQualityStandardDeviation = (quality: Quality) => {
+export const getSquaredStandardDeviationForQuality = (quality: Quality) => {
   const qualities = Object.entries(coeffs)
     .map(([key, values]) => {
       const value = Number(quality[key as keyof Quality])
@@ -76,44 +69,106 @@ export const getQualityStandardDeviation = (quality: Quality) => {
       return values[value - 1]
     })
     .filter((value) => value !== undefined)
-  return qualities.length > 0 ? sumQualities(qualities) : null
+
+  if (qualities.length === 0) {
+    return null
+  }
+
+  return Math.exp(
+    Math.sqrt(
+      qualities.filter((value) => value !== null).reduce((acc, value) => acc + Math.pow(Math.log(value), 2), 0),
+    ),
+  )
+}
+
+export const getSquaredStandardDeviationForEmissionSource = (
+  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][number],
+) => {
+  if (!emissionSource.emissionFactor || emissionSource.value === null) {
+    return null
+  }
+  const emissionSquaredStandardDeviation = getSquaredStandardDeviationForQuality(emissionSource)
+  const factorSquaredStandardDeviation = getSquaredStandardDeviationForQuality(
+    getSpecificEmissionFactorQuality(emissionSource),
+  )
+  if (emissionSquaredStandardDeviation === null || factorSquaredStandardDeviation === null) {
+    return null
+  }
+
+  return Math.exp(
+    2 *
+      Math.sqrt(
+        Math.pow(Math.log(Math.sqrt(factorSquaredStandardDeviation)), 2) +
+          Math.pow(Math.log(Math.sqrt(emissionSquaredStandardDeviation)), 2),
+      ),
+  )
+}
+
+export const getSquaredStandardDeviationForEmissionSourceArray = (
+  emissionSources: { value: number | null; squaredStandardDeviation?: number | null }[],
+) => {
+  const total = emissionSources.reduce((acc, es) => (es.value ? acc + es.value : acc), 0)
+
+  return Math.exp(
+    Math.sqrt(
+      emissionSources.reduce((acc, es) => {
+        if (!es.value) {
+          return acc
+        }
+
+        return acc + Math.pow(es.value / total, 2) * Math.pow(Math.log(es.squaredStandardDeviation || 1), 2)
+      }, 0),
+    ),
+  )
 }
 
 export const uncertaintyValues = [1.1199, 1.2621, 1.6361, 2.5164]
-export const getStandardDeviationRating = (standardDeviation: number) => {
-  if (standardDeviation < uncertaintyValues[0]) {
+export const getQualitativeUncertaintyFromSquaredStandardDeviation = (squaredStandardDeviation: number) => {
+  if (squaredStandardDeviation < uncertaintyValues[0]) {
     return 5
-  } else if (standardDeviation < uncertaintyValues[1]) {
+  } else if (squaredStandardDeviation < uncertaintyValues[1]) {
     return 4
-  } else if (standardDeviation < uncertaintyValues[2]) {
+  } else if (squaredStandardDeviation < uncertaintyValues[2]) {
     return 3
-  } else if (standardDeviation < uncertaintyValues[3]) {
+  } else if (squaredStandardDeviation < uncertaintyValues[3]) {
     return 2
-  } else {
-    return 1
   }
+
+  return 1
 }
 
-export const getQualityRating = (quality: Quality) => {
-  const standardDeviation = getQualityStandardDeviation(quality)
-  if (!standardDeviation) {
+export const getQualitativeUncertaintyFromQuality = (quality: Quality) => {
+  const squaredStandardDeviation = getSquaredStandardDeviationForQuality(quality)
+  if (!squaredStandardDeviation) {
     return null
   }
-  return getStandardDeviationRating(standardDeviation)
+  return getQualitativeUncertaintyFromSquaredStandardDeviation(squaredStandardDeviation)
 }
 
-export const getEmissionSourcesGlobalUncertainty = (
+export const getEmissionSourcesConfidenceInterval = (
   emissionSources: (Pick<FullStudy['emissionSources'][number], 'emissionFactor'> & {
     emissionValue: number
-    standardDeviation: number | null
+    squaredStandardDeviation: number | null
   })[],
 ) => {
   const totalEmissions = getEmissionSourcesTotalCo2(emissionSources)
-  const gsd = sumEmissionSourcesUncertainty(emissionSources)
+  const gsd = getSquaredStandardDeviationForEmissionSourceArray(
+    emissionSources.map((es) => ({
+      value: es.emissionValue,
+      squaredStandardDeviation: es.squaredStandardDeviation,
+    })),
+  )
   return getConfidenceInterval(totalEmissions, gsd)
 }
 
-export const getConfidenceInterval = (emission: number, standardDeviation: number) => [
-  emission / standardDeviation,
-  emission * standardDeviation,
+export const getConfidenceInterval = (emission: number, squaredStandardDeviation: number) => [
+  emission / squaredStandardDeviation,
+  emission * squaredStandardDeviation,
 ]
+
+export const getQualitativeUncertaintyForEmissionSources = (
+  emissionSources: { value: number | null; squaredStandardDeviation?: number | null }[],
+) =>
+  getQualitativeUncertaintyFromSquaredStandardDeviation(
+    getSquaredStandardDeviationForEmissionSourceArray(emissionSources),
+  )

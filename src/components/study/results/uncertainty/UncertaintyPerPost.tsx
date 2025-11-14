@@ -1,8 +1,10 @@
 import HelpIcon from '@/components/base/HelpIcon'
 import Title from '@/components/base/Title'
 import GlossaryModal from '@/components/modals/GlossaryModal'
+import { getAlpha } from '@/services/emissionSource'
 import { Post } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
+import { getConfidenceInterval } from '@/services/uncertainty'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { defaultPostColor, postColors, STUDY_UNIT_VALUES } from '@/utils/study'
 import { ScatterMarkerProps, ScatterSeries } from '@mui/x-charts'
@@ -33,27 +35,30 @@ const UncertaintyPerPost = ({ studyId, resultsUnit, computedResults, validatedOn
   const numberOfSources = validatedOnly ? 'numberOfValidatedEmissionSource' : 'numberOfEmissionSource'
 
   const results = [...computedResults]
-    .filter((post) => post.post !== 'total' && !!post.uncertainty)
-    .map((post) => ({ ...post, uncertainty: 100 * ((post.uncertainty as number) - 1) }))
+    .filter((post) => post.post !== 'total' && !!post.squaredStandardDeviation)
+    .map((post) => ({
+      ...post,
+      alphaPercent: 100 * (getAlpha(post.value, getConfidenceInterval(post.value, post.squaredStandardDeviation)) ?? 0),
+    }))
     .sort((postA, postB) => postB[numberOfSources] - postA[numberOfSources])
 
   const { maxValue, maxUncertainty, maxSource } = results.reduce(
     (res, post) => ({
       maxValue: Math.max(res.maxValue, post.value),
-      maxUncertainty: Math.max(res.maxUncertainty, post.uncertainty || 0),
+      maxUncertainty: Math.max(res.maxUncertainty, post.alphaPercent || 0),
       maxSource: Math.max(res.maxSource, post[numberOfSources]),
     }),
     { maxValue: 0, maxUncertainty: 0, maxSource: 0 },
   )
 
   const series: ScatterSeries[] = results
-    .filter((post) => !!post.uncertainty)
+    .filter((post) => !!post.alphaPercent)
     .map((post) => ({
       id: post.post,
-      data: [{ id: post.post, x: post.value, y: post.uncertainty as number }],
+      data: [{ id: post.post, x: post.value, y: post.alphaPercent as number }],
       markerSize: 50 * (post[numberOfSources] / maxSource),
       valueFormatter: () =>
-        `${tPost(post.post)} : ${t('total')} : ${formatEmissionFactorNumber(post.value / STUDY_UNIT_VALUES[resultsUnit])} ${t(`units.${resultsUnit}`)} - ${t('uncertainty')} : ${formatNumber(post.uncertainty, 2)}%`,
+        `${tPost(post.post)} : ${t('total')} : ${formatEmissionFactorNumber(post.value / STUDY_UNIT_VALUES[resultsUnit])} ${t(`units.${resultsUnit}`)} - ${t('uncertainty')} : ${formatNumber(post.alphaPercent, 2)}%`,
     }))
 
   const colors = series.map((post) => `var(--post-${postColors[post.id as Post] || defaultPostColor}-light)`)
