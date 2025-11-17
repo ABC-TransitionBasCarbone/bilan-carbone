@@ -83,7 +83,7 @@ export const EmissionFactorsTable = ({
       {
         header: t('value'),
         accessorFn: (emissionFactor) =>
-          `${formatEmissionFactorNumber(getEmissionFactorValue(emissionFactor, environment))} ${tResultUnits(StudyResultUnit.K)}/${emissionFactor.unit === BCUnit.CUSTOM ? emissionFactor.customUnit : getUnitLabel(emissionFactor.unit || '', getEmissionFactorValue(emissionFactor, environment))}`,
+          `${formatEmissionFactorNumber(getEmissionFactorValue(emissionFactor, environment))} ${tResultUnits(StudyResultUnit.K)}/${emissionFactor.unit === BCUnit.CUSTOM ? emissionFactor.customUnit : getUnitLabel(emissionFactor.unit || '')}`,
       },
       {
         header: t('location'),

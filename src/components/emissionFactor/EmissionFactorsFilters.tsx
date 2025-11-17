@@ -44,7 +44,6 @@ export const EmissionFactorsFilters = ({
   setFilters,
 }: Props) => {
   const t = useTranslations('emissionFactors.table')
-  const tUnits = useTranslations('units')
   const tPosts = useTranslations('emissionFactors.post')
   const [displayFilters, setDisplayFilters] = useState(true)
   const [displayHideButton, setDisplayHideButton] = useState(false)
@@ -192,7 +191,6 @@ export const EmissionFactorsFilters = ({
               value={filters.units}
               allValues={initialSelectedUnits.filter((unit) => unit != 'all')}
               setValues={(values) => setFilters((prevFilters) => ({ ...prevFilters, units: values }))}
-              t={tUnits}
             />
           </FormControl>
           <FormControl className={styles.selector}>
