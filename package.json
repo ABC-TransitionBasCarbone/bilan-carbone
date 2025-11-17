@@ -6,6 +6,9 @@
     "node": "22.16.0",
     "yarn": "1.22"
   },
+  "workspaces": [
+    "publicodes-packages/*"
+  ],
   "scripts": {
     "dev": "next dev --turbopack",
     "dev:test": "dotenv -e .env.test -- next dev --turbopack --port 3001",
@@ -28,6 +31,8 @@
     "seed": "tsx prisma/seed/index.ts"
   },
   "dependencies": {
+    "@abc-transitionbascarbone/publicodes-count": "*",
+    "publicodes": "^1.9.1",
     "@aws-sdk/client-s3": "^3.913.0",
     "@aws-sdk/s3-request-presigner": "^3.913.0",
     "@emotion/cache": "^11.14.0",
