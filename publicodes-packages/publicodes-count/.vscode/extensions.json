@@ -1,6 +1,3 @@
-
 {
-	"recommendations": [
-		"emilerolley.publicodes-language-server"
-	]
+  "recommendations": ["emilerolley.publicodes-language-server"]
 }
