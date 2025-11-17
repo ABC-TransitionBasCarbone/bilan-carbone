@@ -38,7 +38,7 @@ jobs:
       - name: Launch unit tests
         run: yarn run test
 
-  publicodes-unit-tests:
+  unit-tests-publicodes:
     timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
