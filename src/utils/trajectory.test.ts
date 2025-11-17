@@ -664,7 +664,7 @@ describe('calculateTrajectory', () => {
           studyStartYear: currentYear,
           reductionRate: SBTI_REDUCTION_RATE_15,
           pastStudies,
-          excludeStudyValue: withinThreshold,
+          displayCurrentStudyValueOnTrajectory: withinThreshold,
         })
 
         verifyTrajectoryInterpolation(currentTrajectory, pastStudies, currentYear)
