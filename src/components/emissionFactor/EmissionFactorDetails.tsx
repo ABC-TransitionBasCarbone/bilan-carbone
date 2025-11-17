@@ -2,7 +2,7 @@ import { gazKeys } from '@/constants/emissions'
 import { environmentSubPostsMapping, Post, subPostBCToSubPostTiltMapping } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { getQualityRating, qualityKeys } from '@/services/uncertainty'
-import { BCUnit } from '@/services/unit'
+import { BCUnit, useUnitLabel } from '@/services/unit'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
 import ShrinkIcon from '@mui/icons-material/ZoomInMap'
@@ -21,11 +21,11 @@ const EmissionFactorDetails = ({ emissionFactor }: Props) => {
 
   const t = useTranslations('emissionFactors.table')
   const tPost = useTranslations('emissionFactors.post')
-  const tUnits = useTranslations('units')
   const tQuality = useTranslations('quality')
-  const [displayDetailedQuality, setDisplayDetailedQuality] = useState(false)
   const tResultUnits = useTranslations('study.results.units')
   const tEmissionFactorType = useTranslations('emissionFactors.type')
+  const [displayDetailedQuality, setDisplayDetailedQuality] = useState(false)
+  const getUnitLabel = useUnitLabel()
 
   const gases = useMemo(() => gazKeys.filter((gaz) => emissionFactor[gaz]), [emissionFactor])
   const qualities = useMemo(() => qualityKeys.filter((quality) => emissionFactor[quality]), [emissionFactor])
@@ -140,7 +140,7 @@ const EmissionFactorDetails = ({ emissionFactor }: Props) => {
             {gases
               .map(
                 (gaz) =>
-                  `${t(gaz)} ${emissionFactor[gaz]} ${tResultUnits(StudyResultUnit.K)}/${tUnits(emissionFactor.unit || BCUnit.KG)}`,
+                  `${t(gaz)} ${emissionFactor[gaz]} ${tResultUnits(StudyResultUnit.K)}/${getUnitLabel(emissionFactor.unit || BCUnit.KG, emissionFactor[gaz])}`,
               )
               .join(', ')}
           </div>
@@ -154,7 +154,7 @@ const EmissionFactorDetails = ({ emissionFactor }: Props) => {
               .map(
                 (part) =>
                   `${tEmissionFactorType(part.type)}: ${formatNumber(part.totalCo2, 2)}
-                ${tResultUnits(StudyResultUnit.K)}/${tUnits(emissionFactor.unit || BCUnit.KG)}`,
+                ${tResultUnits(StudyResultUnit.K)}/${getUnitLabel(emissionFactor.unit || BCUnit.KG, part.totalCo2)}`,
               )
               .join(', ')}
           </div>

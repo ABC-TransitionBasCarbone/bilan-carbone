@@ -2,6 +2,7 @@ import { EmissionFactorList } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
+import { useUnitLabel } from '@/services/unit'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
@@ -81,9 +82,8 @@ const EmissionSourceFactor = ({
 }: Props) => {
   const { environment } = useAppEnvironmentStore()
   const t = useTranslations('emissionSource')
-  const tUnits = useTranslations('units')
   const tResultUnits = useTranslations('study.results.units')
-
+  const getUnitLabel = useUnitLabel()
   const [advancedSearch, setAdvancedSearch] = useState(false)
   const [display, setDisplay] = useState(false)
   const [oldFactorAction, setOldFactorAction] = useState<'fieldSearch' | 'search' | 'clear' | undefined>(undefined)
@@ -199,7 +199,9 @@ const EmissionSourceFactor = ({
                   formatEmissionFactorNumber(getEmissionFactorValue(result, environment)),
                 ])}{' '}
                 {tResultUnits(StudyResultUnit.K)}/
-                {result.unit === Unit.CUSTOM ? result.customUnit : tUnits(result.unit || '')}
+                {result.unit === Unit.CUSTOM
+                  ? result.customUnit
+                  : getUnitLabel(result.unit || '', getEmissionFactorValue(result, environment))}
               </p>
               {result.metaData && <p className={styles.detail}>{getDetail(result.metaData)}</p>}
             </button>

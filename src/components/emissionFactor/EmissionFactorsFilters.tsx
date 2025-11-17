@@ -1,5 +1,5 @@
 import { Post, subPostsByPost } from '@/services/posts'
-import { BCUnit } from '@/services/unit'
+import { BCUnit, useUnitLabel } from '@/services/unit'
 import { FeFilters } from '@/types/filters'
 import {
   Autocomplete,
@@ -44,10 +44,10 @@ export const EmissionFactorsFilters = ({
   setFilters,
 }: Props) => {
   const t = useTranslations('emissionFactors.table')
-  const tUnits = useTranslations('units')
   const tPosts = useTranslations('emissionFactors.post')
   const [displayFilters, setDisplayFilters] = useState(true)
   const [displayHideButton, setDisplayHideButton] = useState(false)
+  const getUnitLabel = useUnitLabel()
 
   const filtersRef = useRef<HTMLDivElement>(null)
 
@@ -91,7 +91,7 @@ export const EmissionFactorsFilters = ({
       ? t('all')
       : filters.units.length === 0
         ? t('none')
-        : filters.units.map((unit) => tUnits(unit)).join(', ')
+        : filters.units.map((unit) => getUnitLabel(unit)).join(', ')
 
   const allSelectedSubPosts = useMemo(
     () => filters.subPosts.length === envSubPosts.length,
@@ -191,7 +191,6 @@ export const EmissionFactorsFilters = ({
               value={filters.units}
               allValues={initialSelectedUnits.filter((unit) => unit != 'all')}
               setValues={(values) => setFilters((prevFilters) => ({ ...prevFilters, units: values }))}
-              t={tUnits}
             />
           </FormControl>
           <FormControl className={styles.selector}>

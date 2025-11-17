@@ -9,7 +9,7 @@ import GlossaryModal from '@/components/modals/GlossaryModal'
 import QualitySelectGroup from '@/components/study/QualitySelectGroup'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { qualityKeys, specificFEQualityKeys } from '@/services/uncertainty'
-import { BCUnit } from '@/services/unit'
+import { BCUnit, useUnitLabel } from '@/services/unit'
 import { ManualEmissionFactorUnitList } from '@/utils/emissionFactors'
 import { FormControlLabel, FormLabel, MenuItem, Switch } from '@mui/material'
 import classNames from 'classnames'
@@ -46,11 +46,11 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
   button,
 }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
-  const tUnit = useTranslations('units')
   const tGlossary = useTranslations('emissionSource.glossary')
+  const getUnitLabel = useUnitLabel()
   const units = useMemo(
-    () => Object.values(ManualEmissionFactorUnitList).sort((a, b) => tUnit(a).localeCompare(tUnit(b))),
-    [tUnit],
+    () => Object.values(ManualEmissionFactorUnitList).sort((a, b) => getUnitLabel(a).localeCompare(getUnitLabel(b))),
+    [getUnitLabel],
   )
   const [expandedQuality, setExpandedQuality] = useState(button === 'update')
   const [glossary, setGlossary] = useState('')
@@ -118,12 +118,12 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
             name="unit"
             fullWidth
           >
-            <MenuItem value={BCUnit.CUSTOM}>{tUnit(BCUnit.CUSTOM)}</MenuItem>
+            <MenuItem value={BCUnit.CUSTOM}>{getUnitLabel(BCUnit.CUSTOM)}</MenuItem>
             {units
               .filter((unit) => unit !== BCUnit.CUSTOM)
               .map((unit) => (
                 <MenuItem key={unit} value={unit}>
-                  {tUnit(unit)}
+                  {getUnitLabel(unit)}
                 </MenuItem>
               ))}
           </FormSelect>

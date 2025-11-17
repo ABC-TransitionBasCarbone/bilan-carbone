@@ -15,6 +15,7 @@ import {
 } from '@/services/serverFunctions/emissionSource.command'
 import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study'
 import { getStandardDeviationRating } from '@/services/uncertainty'
+import { useUnitLabel } from '@/services/unit'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
@@ -70,9 +71,9 @@ const EmissionSource = ({
   const [error, setError] = useState('')
   const tError = useTranslations('error')
   const t = useTranslations('emissionSource')
-  const tUnits = useTranslations('units')
   const tResultstUnits = useTranslations('study.results.units')
   const tQuality = useTranslations('quality')
+  const getUnitLabel = useUnitLabel()
   const router = useRouter()
   const [display, setDisplay] = useState(false)
   const { callServerFunction } = useServerFunction()
@@ -239,7 +240,7 @@ const EmissionSource = ({
                     {selectedFactor &&
                       (selectedFactor.unit === Unit.CUSTOM
                         ? selectedFactor.customUnit
-                        : tUnits(selectedFactor.unit || ''))}
+                        : getUnitLabel(selectedFactor.unit, emissionSource.value))}
                   </p>
                 </>
               )}
@@ -255,7 +256,7 @@ const EmissionSource = ({
                     {tResultstUnits(StudyResultUnit.K)}/
                     {selectedFactor.unit === Unit.CUSTOM
                       ? selectedFactor.customUnit
-                      : tUnits(selectedFactor.unit || '')}
+                      : getUnitLabel(selectedFactor.unit)}
                   </p>
                 </>
               </div>

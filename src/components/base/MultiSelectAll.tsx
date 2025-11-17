@@ -1,4 +1,4 @@
-import { Translations } from '@/types/translation'
+import { useUnitLabel } from '@/services/unit'
 import { Checkbox, ListItemText, MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { useMemo } from 'react'
 
@@ -7,11 +7,11 @@ interface Props {
   renderValue: () => string
   value: string[]
   allValues: string[]
-  t: Translations
   setValues: (allValues: string[]) => void
 }
 
-const MultiSelect = ({ id, renderValue, value, allValues, t, setValues }: Props) => {
+const MultiSelect = ({ id, renderValue, value, allValues, setValues }: Props) => {
+  const t = useUnitLabel()
   const allUnitsSelected = useMemo(
     () => value.filter((unit) => unit !== 'all').length === allValues.length,
     [value, allValues],
