@@ -794,6 +794,61 @@ describe('calculateTrajectory', () => {
         }
       })
 
+      test('Custom trajectory with SBTI_15 type - should use SBTI overshoot compensation', () => {
+        const pastStudies = createPastStudies([2022, 1000])
+        const currentEmissions = 1100
+        const currentYear = 2025
+        const objectives = [
+          { targetYear: 2030, reductionRate: SBTI_REDUCTION_RATE_15 },
+          { targetYear: 2050, reductionRate: SBTI_REDUCTION_RATE_15 },
+        ]
+
+        const referenceTrajectory = calculateCustomTrajectory({
+          studyEmissions: 1000,
+          studyStartYear: 2022,
+          objectives,
+          pastStudies,
+          trajectoryType: TrajectoryType.SBTI_15,
+        })
+
+        const expectedValue = getTrajectoryValueAtYear(referenceTrajectory, currentYear)
+        expect(expectedValue).not.toBeNull()
+
+        const withinThreshold = expectedValue !== null && isWithinThreshold(currentEmissions, expectedValue)
+        expect(withinThreshold).toBe(false)
+
+        const currentTrajectory = calculateCustomTrajectory({
+          studyEmissions: currentEmissions,
+          studyStartYear: currentYear,
+          objectives,
+          pastStudies,
+          overshootAdjustment: {
+            referenceTrajectory,
+            referenceStudyYear: 2022,
+          },
+          trajectoryType: TrajectoryType.SBTI_15,
+        })
+
+        const sbtiTrajectory = calculateSBTiTrajectory({
+          studyEmissions: currentEmissions,
+          studyStartYear: currentYear,
+          reductionRate: SBTI_REDUCTION_RATE_15,
+          pastStudies,
+          overshootAdjustment: {
+            referenceTrajectory,
+            referenceStudyYear: 2022,
+          },
+        })
+
+        const customPoint2026 = currentTrajectory.find((p) => p.year === 2026)
+        const sbtiPoint2026 = sbtiTrajectory.find((p) => p.year === 2026)
+        expect(customPoint2026?.value).toBeCloseTo(sbtiPoint2026?.value ?? 0, 1)
+
+        const customPoint2030 = currentTrajectory.find((p) => p.year === 2030)
+        const sbtiPoint2030 = sbtiTrajectory.find((p) => p.year === 2030)
+        expect(customPoint2030?.value).toBeCloseTo(sbtiPoint2030?.value ?? 0, 1)
+      })
+
       test('Action-based trajectory with one past study', () => {
         const pastStudies = createPastStudies([2022, 1000])
         const currentEmissions = 950

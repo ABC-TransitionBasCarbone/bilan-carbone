@@ -74,6 +74,7 @@ interface CalculateCustomTrajectoryParams {
   objectives: Array<{ targetYear: number; reductionRate: number }>
   pastStudies?: PastStudy[]
   overshootAdjustment?: OvershootAdjustment
+  trajectoryType?: TrajectoryType
 }
 
 interface CalculateActionBasedTrajectoryParams {
@@ -478,9 +479,24 @@ export const calculateCustomTrajectory = ({
   objectives,
   pastStudies = [],
   overshootAdjustment,
+  trajectoryType,
 }: CalculateCustomTrajectoryParams): TrajectoryDataPoint[] => {
   if (objectives.length === 0) {
     return []
+  }
+
+  if (trajectoryType === TrajectoryType.SBTI_15 || trajectoryType === TrajectoryType.SBTI_WB2C) {
+    const reductionRate = getReductionRatePerType(trajectoryType)
+    if (reductionRate) {
+      return calculateSBTiTrajectory({
+        studyEmissions,
+        studyStartYear,
+        reductionRate,
+        pastStudies,
+        overshootAdjustment,
+        excludeStudyValue: overshootAdjustment ? false : undefined,
+      })
+    }
   }
 
   const dataPoints: TrajectoryDataPoint[] = []
@@ -660,6 +676,7 @@ export const calculateTrajectoriesWithHistory = ({
               reductionRate: Number(obj.reductionRate),
             })),
             pastStudies,
+            trajectoryType: traj.type,
           }),
           withinThreshold: true,
         },
@@ -779,6 +796,7 @@ export const calculateTrajectoriesWithHistory = ({
         reductionRate: Number(obj.reductionRate),
       })),
       pastStudies,
+      trajectoryType: traj.type,
     })
 
     const referenceValue = getTrajectoryValueAtYear(referenceTrajectory, studyStartYear)
@@ -798,6 +816,7 @@ export const calculateTrajectoriesWithHistory = ({
             referenceTrajectory,
             referenceStudyYear,
           },
+      trajectoryType: traj.type,
     })
 
     customTrajectoriesData.push({
