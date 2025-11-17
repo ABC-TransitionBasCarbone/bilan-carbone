@@ -131,6 +131,18 @@ export const getEarliestReferenceStudyAfter2020 = (pastStudies: PastStudy[]): Pa
   return studiesAfter2020.reduce((earliest, current) => (current.year < earliest.year ? current : earliest))
 }
 
+export const getEarliestPastStudyYear = (pastStudies: PastStudy[]): number | null => {
+  if (pastStudies.length === 0) {
+    return null
+  }
+  return Math.min(...pastStudies.map((s) => s.year))
+}
+
+export const getGraphStartYear = (pastStudies: PastStudy[], fallbackYear: number = REFERENCE_YEAR): number => {
+  const earliestPastStudyYear = getEarliestPastStudyYear(pastStudies)
+  return earliestPastStudyYear !== null ? Math.min(earliestPastStudyYear, fallbackYear) : fallbackYear
+}
+
 export const getTrajectoryValueAtYear = (trajectory: TrajectoryDataPoint[], year: number): number | null => {
   const point = trajectory.find((p) => p.year === year)
   return point ? point.value : null
@@ -362,7 +374,9 @@ export const calculateSBTiTrajectory = ({
     const newReductionRate = 1 / targetYears
     const newEndYear = Math.ceil(targetEndYear)
 
-    for (let year = REFERENCE_YEAR; year <= Math.max(newEndYear, maxYear ?? TARGET_YEAR); year++) {
+    const graphStartYear = getGraphStartYear(pastStudies)
+
+    for (let year = graphStartYear; year <= Math.max(newEndYear, maxYear ?? TARGET_YEAR); year++) {
       const interpolatedValue = getInterpolatedValue(
         year,
         historicalPoints,
@@ -378,9 +392,7 @@ export const calculateSBTiTrajectory = ({
     }
   } else {
     const reductionStartYear = REFERENCE_YEAR
-    // Include past studies that occur before studyStartYear
-    const earliestPastStudyYear = pastStudies.length > 0 ? Math.min(...pastStudies.map((s) => s.year)) : studyStartYear
-    const graphStartYear = Math.min(earliestPastStudyYear, studyStartYear)
+    const graphStartYear = getGraphStartYear(pastStudies, studyStartYear)
     const targetYear = Math.ceil(REFERENCE_YEAR + 1 / reductionRate)
     const endYear = Math.max(targetYear, maxYear ?? TARGET_YEAR)
 
@@ -476,7 +488,9 @@ export const calculateCustomTrajectory = ({
   let currentValue = studyEmissions
   let startYear = studyStartYear
 
-  for (let year = REFERENCE_YEAR; year < studyStartYear; year++) {
+  const graphStartYear = getGraphStartYear(pastStudies)
+
+  for (let year = graphStartYear; year < studyStartYear; year++) {
     const interpolatedValue = getInterpolatedValue(year, historicalPoints, studyEmissions, studyStartYear)
     if (interpolatedValue !== null) {
       dataPoints.push({ year, value: interpolatedValue })
@@ -852,7 +866,9 @@ export const calculateActionBasedTrajectory = ({
   const dataPoints: TrajectoryDataPoint[] = []
   const historicalPoints = getAllHistoricalStudyPoints(pastStudies)
 
-  for (let year = REFERENCE_YEAR; year < studyStartYear; year++) {
+  const graphStartYear = getGraphStartYear(pastStudies)
+
+  for (let year = graphStartYear; year < studyStartYear; year++) {
     const interpolatedValue = getInterpolatedValue(year, historicalPoints, studyEmissions, studyStartYear)
     if (interpolatedValue !== null) {
       dataPoints.push({ year, value: interpolatedValue })
