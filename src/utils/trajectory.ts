@@ -116,14 +116,8 @@ export interface TrajectoryResult {
   actionBased: TrajectoryData | null
 }
 
-export const getMostRecentReferenceStudy = (currentStudyYear: number, pastStudies: PastStudy[]): PastStudy | null => {
-  const validPastStudies = pastStudies.filter((s) => s.year < currentStudyYear)
-
-  if (validPastStudies.length === 0) {
-    return null
-  }
-
-  return validPastStudies.reduce((most, current) => (current.year > most.year ? current : most))
+export const getMostRecentReferenceStudy = (pastStudies: PastStudy[]): PastStudy | null => {
+  return pastStudies.reduce((mostRecent, current) => (current.year > mostRecent.year ? current : mostRecent))
 }
 
 // Get the earliest reference study after 2020 (closest to 2020)
@@ -150,6 +144,13 @@ export const isWithinThreshold = (
   return actualValue <= referenceValue * (1 + threshold)
 }
 
+// Helper function to calculate integral of a linear trajectory
+// For a linear trajectory going from startValue to endValue over numberOfYears
+// This is the area under the trapezoid: (startValue + endValue) * years / 2
+const calculateLinearTrajectoryIntegral = (startValue: number, endValue: number, numberOfYears: number): number => {
+  return ((startValue + endValue) * numberOfYears) / 2
+}
+
 export const calculateTrajectoryIntegral = (
   trajectory: TrajectoryDataPoint[],
   startYear: number,
@@ -161,17 +162,10 @@ export const calculateTrajectoryIntegral = (
     const next = trajectory[i + 1]
 
     if (current.year >= startYear && next.year <= endYear) {
-      integral += (current.value + next.value) / 2
+      integral += calculateLinearTrajectoryIntegral(current.value, next.value, 1)
     }
   }
   return integral
-}
-
-// Helper function to calculate integral of a linear trajectory
-// For a linear trajectory going from startValue to endValue over numberOfYears
-// This is the area under the trapezoid: (startValue + endValue) * years / 2
-const calculateLinearTrajectoryIntegral = (startValue: number, endValue: number, numberOfYears: number): number => {
-  return ((startValue + endValue) * numberOfYears) / 2
 }
 
 const getPastEmissions = (year: number, pastStudies: PastStudy[]) => {
@@ -583,7 +577,7 @@ export const calculateTrajectoriesWithHistory = ({
   const totalCo2 = getStudyTotalCo2Emissions(study, withDependencies, validatedOnly)
   const studyStartYear = study.startDate.getFullYear()
 
-  const referenceStudyData = getMostRecentReferenceStudy(studyStartYear, pastStudies)
+  const referenceStudyData = getMostRecentReferenceStudy(pastStudies)
 
   if (!referenceStudyData) {
     const sbti15Enabled = selectedSbtiTrajectories.includes('1,5')

@@ -129,6 +129,21 @@ describe('Study Service', () => {
       expect(result).toBe(0)
     })
 
+    it('Should return total CO2 only from validated sources when validated only is true', () => {
+      const mockStudy = getMockeFullStudy({
+        resultsUnit: StudyResultUnit.T,
+        emissionSources: [
+          getMockedFullStudyEmissionSource({ value: 1000, validated: true }),
+          getMockedFullStudyEmissionSource({ value: 2000, validated: false }),
+          getMockedFullStudyEmissionSource({ value: 3000, validated: false }),
+        ],
+      })
+
+      const result = getStudyTotalCo2Emissions(mockStudy, true, true)
+
+      expect(result).toBe(10)
+    })
+
     it('Should return total CO2 in T unit when sources not validated and validated only is false', () => {
       const mockStudy = getMockeFullStudy({
         resultsUnit: StudyResultUnit.K,

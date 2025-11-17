@@ -206,8 +206,8 @@ export const getLinkedStudiesForTransitionPlan = async (transitionPlanId: string
 export const deleteLinkedStudy = async (studyId: string, transitionPlanId: string) =>
   prismaClient.transitionPlanStudy.delete({ where: { transitionPlanId_studyId: { studyId, transitionPlanId } } })
 
-export const deleteExternalStudy = async (externalStudyId: string, transitionPlanId: string) =>
-  prismaClient.externalStudy.delete({ where: { id: externalStudyId, transitionPlanId } })
+export const deleteExternalStudy = async (externalStudyId: string) =>
+  prismaClient.externalStudy.delete({ where: { id: externalStudyId } })
 
 export const createTrajectoryWithObjectives = async (data: Prisma.TrajectoryCreateInput) => {
   return prismaClient.trajectory.create({

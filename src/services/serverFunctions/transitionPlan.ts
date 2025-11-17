@@ -192,7 +192,7 @@ export const deleteExternalStudy = async (studyId: string, transitionPlanId: str
       throw new Error(NOT_AUTHORIZED)
     }
 
-    await dbDeleteExternalStudy(studyId, transitionPlanId)
+    await dbDeleteExternalStudy(studyId)
   })
 
 export const getLinkedAndExternalStudies = async (studyId: string, transitionPlanId: string) =>
