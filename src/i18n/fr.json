@@ -1857,7 +1857,7 @@
       "myClient": "Mon client",
       "update": "Modifier mes informations",
       "updateClient": "Modifier mon client",
-      "renew": "Votre license n'a pas été renouvellée pour l'année {year}",
+      "renew": "Votre licence {year} touche à sa fin, pensez à la renouveler pour continuer à utiliser les services en {nextYear}",
       "renewLink": "Renouveller"
     },
     "delete": {
