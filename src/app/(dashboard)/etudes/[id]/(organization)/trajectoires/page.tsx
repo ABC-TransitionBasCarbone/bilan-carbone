@@ -5,7 +5,11 @@ import withTransitionPlan, { TransitionPlanProps } from '@/components/hoc/withTr
 import TrajectoryReductionPage from '@/components/pages/TrajectoryReductionPage'
 import { getUserApplicationSettings } from '@/db/user'
 import { getTrajectories } from '@/services/serverFunctions/trajectory'
-import { getLinkedStudies, getStudyActions, getStudyTransitionPlan } from '@/services/serverFunctions/transitionPlan'
+import {
+  getLinkedAndExternalStudies,
+  getStudyActions,
+  getStudyTransitionPlan,
+} from '@/services/serverFunctions/transitionPlan'
 
 const TrajectoryReduction = async ({ study, canEdit, user }: StudyProps & UserSessionProps & TransitionPlanProps) => {
   const [transitionPlanResponse, settings] = await Promise.all([
@@ -28,7 +32,7 @@ const TrajectoryReduction = async ({ study, canEdit, user }: StudyProps & UserSe
 
   const [trajectoriesResponse, linkedStudiesResponse, actionsResponse] = await Promise.all([
     getTrajectories(study.id, transitionPlan.id),
-    getLinkedStudies(study.id, transitionPlan.id),
+    getLinkedAndExternalStudies(study.id, transitionPlan.id),
     getStudyActions(study.id),
   ])
 
