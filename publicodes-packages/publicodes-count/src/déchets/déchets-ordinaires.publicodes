@@ -74,7 +74,7 @@ déchets . ordinaires . emballages et papier:
 
     FE:
       titre: Facteur d'émission
-      description: Facteur d'émission des ordures ménagères (déchets non triés / sans filière).
+      description: Facteur d'émission des emballages et papier (plastique, métal, papier et carton).
       valeur: 0.04 # TODO: extraire le FE à partir de l'id
       unité: kgCO2e/l
       meta:
@@ -109,7 +109,7 @@ déchets . ordinaires . biodéchets:
 
     FE:
       titre: Facteur d'émission
-      description: Facteur d'émission des ordures ménagères (déchets non triés / sans filière).
+      description: Facteur d'émission des biodéchets (restes alimentaires).
       valeur: 0.04 # TODO: extraire le FE à partir de l'id
       unité: kgCO2e/l
       meta:
@@ -144,7 +144,7 @@ déchets . ordinaires . verre:
 
     FE:
       titre: Facteur d'émission
-      description: Facteur d'émission des ordures ménagères (déchets non triés / sans filière).
+      description: Facteur d'émission des déchets de verre.
       valeur: 0.04
       unité: kgCO2e/l
       meta:
