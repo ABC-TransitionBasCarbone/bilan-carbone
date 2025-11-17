@@ -11,16 +11,16 @@ yarn install publicodes-cut publicodes
 ## Usage
 
 ```typescript
-import { Engine } from 'publicodes'
-import rules from 'publicodes-cut'
+import { Engine } from "publicodes";
+import rules from "publicodes-cut";
 
-const engine = new Engine(rules)
+const engine = new Engine(rules);
 
-console.log(engine.evaluate('salaire net').nodeValue)
+console.log(engine.evaluate("salaire net").nodeValue);
 // 1957.5
 
-engine.setSituation({ 'salaire brut': 4000 })
-console.log(engine.evaluate('salaire net').nodeValue)
+engine.setSituation({ "salaire brut": 4000 });
+console.log(engine.evaluate("salaire net").nodeValue);
 // 3120
 ```
 

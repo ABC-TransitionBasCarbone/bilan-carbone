@@ -18,7 +18,7 @@
     "format": "prettier --write .",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:publicodes-packages": "yarn run test:publicodes-packages:count",
+    "test:publicodes-packages": "yarn run test:publicodes-packages:publicodes-count",
     "test:publicodes-packages:publicodes-count": "yarn workspace @abc-transitionbascarbone/publicodes-count test",
     "cypress": "cypress run",
     "cypress:gui": "cypress open",
