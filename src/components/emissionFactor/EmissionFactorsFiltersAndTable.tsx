@@ -98,7 +98,7 @@ const EmissionFactorsFiltersAndTable = ({
   }, [pagination.pageIndex, pagination.pageSize])
 
   useEffect(() => {
-    async function fetchEmissionFactors() {
+    const fetchEmissionFactors = async () => {
       setEmissionFactors([])
       setTotalCount(0)
       const takeValue = pagination.pageSize * 4
@@ -116,7 +116,7 @@ const EmissionFactorsFiltersAndTable = ({
     fetchEmissionFactors()
     // We don't want this effect to trigger when number of FE changes, because it is the use case of the other effect
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters, studyId])
+  }, [filters.archived, filters.search, filters.location, filters.sources, filters.units, filters.subPosts, studyId])
 
   return (
     <>
