@@ -18,6 +18,8 @@
     "format": "prettier --write .",
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:publicodes-packages": "yarn run test:publicodes-packages:count",
+    "test:publicodes-packages:publicodes-count": "yarn workspace @abc-transitionbascarbone/publicodes-count test",
     "cypress": "cypress run",
     "cypress:gui": "cypress open",
     "db:test:reset": "dotenv -e .env.test -- prisma migrate reset --force",
