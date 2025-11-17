@@ -84,11 +84,9 @@ const StudyParams = ({ user, study, disabled, emissionFactorSources }: Props) =>
           disabled ? (
             <></>
           ) : (
-            <div className="ml1">
-              <Button aria-label={t('edit')} title={t('edit')} onClick={() => setEditTitle(true)}>
-                <EditIcon />
-              </Button>
-            </div>
+            <Button aria-label={t('edit')} title={t('edit')} onClick={() => setEditTitle(true)}>
+              <EditIcon />
+            </Button>
           )
         }
         iconPosition="after"
