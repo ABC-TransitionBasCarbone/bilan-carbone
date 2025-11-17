@@ -6,6 +6,9 @@
     "node": "22.16.0",
     "yarn": "1.22"
   },
+  "workspaces": [
+    "publicodes-packages/*"
+  ],
   "scripts": {
     "postinstall": "cd publicodes-packages/publicodes-count && yarn install && yarn run compile",
     "dev": "next dev --turbopack",
