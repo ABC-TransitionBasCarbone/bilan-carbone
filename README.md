@@ -115,6 +115,19 @@ yarn cypress --spec "src/tests/end-to-end/app/auth.cy.ts"
 yarn cypress:gui
 ```
 
+### Run Publicodes tests
+
+To run unit tests for each [Publicodes](https//publi.codes) packages under
+`./publicodes-packages/` :
+
+```bash
+# To run all tests
+yarn test:publicodes-packages
+
+# To run tests of only one package
+yarn test:publicodes-packages:<package_dir>
+```
+
 ## Deploy on Scalingo
 
 Follow Scalingo deployment guidelines for Next.js applications.

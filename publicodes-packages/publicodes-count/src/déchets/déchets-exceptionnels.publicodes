@@ -1,0 +1,50 @@
+déchets . exceptionnels:
+  titre: Déchets exceptionnels
+  unité: kgCO2e/an
+  valeur:
+    somme:
+      - lampe Xenon
+      - matériel technique
+
+déchets . exceptionnels . lampe Xenon:
+  titre: Lampes Xenon
+  valeur: nb lampes * poids * FE * 1 /an
+  unité: kgCO2e/an
+  avec:
+    nb lampes:
+      titre: Nombre de lampes
+      question: Quelle quantité de lampes Xenon avez vous jeté en 2025 ?
+      par défaut: 0
+      unité: unité
+
+    poids:
+      titre: Poids moyen
+      valeur: 0.86
+      unité: kg/unité
+
+    FE:
+      titre: Facteur d'émission
+      description: Facteur d'émission des lampes Xenon.
+      valeur: 8.0 # TODO: extraire le FE à partir de l'id
+      unité: kgCO2e/kg
+      meta:
+        id: 144
+
+déchets . exceptionnels . matériel technique:
+  titre: Matériel technique
+  valeur: quantité * FE * 1 /an
+  unité: kgCO2e/an
+  avec:
+    quantité:
+      # NOTE: variabilisé la date ?
+      question: Quelle quantité de matériel technique avez vous jeté en 2025 ?
+      par défaut: 0
+      unité: kg
+
+    FE:
+      titre: Facteur d'émission
+      description: Facteur d'émission du matériel technique (écrans, ordinateurs, etc.).
+      valeur: 12.0 # TODO: extraire le FE à partir de l'id
+      unité: kgCO2e/kg
+      meta:
+        id: 34620
