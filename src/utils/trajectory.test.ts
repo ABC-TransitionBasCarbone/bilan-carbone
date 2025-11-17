@@ -27,8 +27,17 @@ const ZERO_REACHED_YEAR_WB2C = 2055.625
 const ZERO_REACHED_YEAR_15C = 2039.86
 const EMISSION_FACTOR_VALUE = 10
 
+const createPastStudy = (year: number, totalCo2: number, overrides?: Partial<PastStudy>): PastStudy => ({
+  id: `past-study-${year}`,
+  name: `Study ${year}`,
+  type: 'linked',
+  year,
+  totalCo2,
+  ...overrides,
+})
+
 const createPastStudies = (...studies: Array<[number, number]>): PastStudy[] =>
-  studies.map(([year, totalCo2]) => ({ year, totalCo2 }))
+  studies.map(([year, totalCo2]) => createPastStudy(year, totalCo2))
 
 const verifyTrajectoryInterpolation = (
   trajectory: TrajectoryDataPoint[],
