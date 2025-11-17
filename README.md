@@ -18,6 +18,12 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
    yarn install
    ```
 
+   > [!IMPORTANT]
+   > As this repo use [Yarn
+   > workspace](https://classic.yarnpkg.com/blog/2017/08/02/introducing-workspaces/),
+   > to add new dependencies to the Next app, you need to add the the flag
+   > `-W`.
+
 2. **Environment setup**
 
    Create a `.env` copied from `.env.dist` in the root directory and a `.env.test` copied from `.env.test.dist` in the root directory.
