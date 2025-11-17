@@ -1857,7 +1857,7 @@
       "myClient": "My client",
       "update": "Update my information",
       "updateClient": "Update my client",
-      "renew": "Your license hasn't been renewed for the year {year}",
+      "renew": "Your {year} licence is about to expire. Remember to renew it to continue using the services in {nextYear}",
       "renewLink": "Renew"
     },
     "delete": {

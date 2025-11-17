@@ -116,7 +116,7 @@ const OrganizationCard = ({ account, organizationVersions, shouldDisplayOrgaData
           )}
           {shouldRenewLicense && renewalLink && (
             <div className="align-center gapped">
-              <Typography>{t('renew', { year: date.getFullYear() + 1 })}</Typography>
+              <Typography>{t('renew', { year: date.getFullYear(), nextYear: date.getFullYear() + 1 })}</Typography>
               <Link color="secondary" href={renewalLink} target="_blank" rel="noreferrer noopener">
                 {t('renewLink')}
               </Link>
