@@ -6,6 +6,9 @@
     "node": "22.16.0",
     "yarn": "1.22"
   },
+  "workspaces": [
+    "publicodes-packages/*"
+  ],
   "scripts": {
     "dev": "next dev --turbopack",
     "dev:test": "dotenv -e .env.test -- next dev --turbopack --port 3001",
@@ -30,6 +33,8 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.946.0",
     "@aws-sdk/s3-request-presigner": "^3.946.0",
+    "@abc-transitionbascarbone/publicodes-count": "*",
+    "publicodes": "^1.9.1",
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
