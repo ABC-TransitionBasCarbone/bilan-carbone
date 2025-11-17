@@ -1,0 +1,2 @@
+
+overrides: [{ 'files': '**/*.publicodes', 'options': { 'parser': 'yaml' } }]
