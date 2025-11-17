@@ -88,7 +88,7 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         data-testid="emission-factor-name"
         control={control}
         name="name"
-        label={t('name')}
+        label={`${t('name')} *`}
         placeholder={t('namePlaceholder')}
       />
       <FormTextField control={control} name="attribute" label={t('attribute')} />
@@ -107,14 +107,14 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         onInputChange={(_, value) => setValue('location', value?.trim() || '')}
         freeSolo
       />
-      <FormTextField data-testid="emission-factor-source" control={control} name="source" label={t('source')} />
+      <FormTextField data-testid="emission-factor-source" control={control} name="source" label={`${t('source')} *`} />
       <div className="flex gapped">
         <div className="grow">
           <FormSelect
             data-testid="emission-factor-unit"
             control={control}
             translation={t}
-            label={t('unit')}
+            label={`${t('unit')} *`}
             name="unit"
             fullWidth
           >
@@ -179,6 +179,7 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         setExpanded={setExpandedQuality}
         defaultQuality={qualityKeys.map((qualityKey) => quality[qualityKey]).find((quality) => !!quality)}
         canShrink={qualityKeys.every((key) => quality[key] === quality[qualityKeys[0]])}
+        mandatory
       />
       <MultiplePosts form={form} context="emissionFactor" />
       <FormTextField control={control} name="comment" label={t('comment')} multiline rows={2} />
@@ -188,9 +189,11 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
             {t('cancel')}
           </LinkButton>
         )}
-        <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="emission-factor-valid-button">
-          {t(button)}
-        </LoadingButton>
+        <div className="justify-end">
+          <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="emission-factor-valid-button">
+            {t(button)}
+          </LoadingButton>
+        </div>
       </div>
       {glossary && (
         <GlossaryModal glossary={glossary} onClose={() => setGlossary('')} label="emission-factor" t={tGlossary}>

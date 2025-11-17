@@ -29,6 +29,7 @@ interface Props<T extends FieldValues> {
   feSpecific?: boolean
   control?: Control<T>
   clearable?: boolean
+  mandatory?: boolean
 }
 
 const QualitySelectGroup = <T extends FieldValues>({
@@ -44,6 +45,7 @@ const QualitySelectGroup = <T extends FieldValues>({
   feSpecific,
   control,
   clearable,
+  mandatory,
 }: Props<T>) => {
   const t = useTranslations('emissionSource')
   const tGlossary = useTranslations('emissionSource.glossary')
@@ -93,7 +95,7 @@ const QualitySelectGroup = <T extends FieldValues>({
                       field.onChange(event)
                       update(field.name as keyof Source, Number(event.target.value))
                     }}
-                    label={t(`form.${key}`)}
+                    label={mandatory ? `${t('form.' + key)} *` : t(`form.${key}`)}
                     starredValue={
                       feSpecific && emissionSource.emissionFactor ? emissionSource.emissionFactor[key] : null
                     }
@@ -114,7 +116,7 @@ const QualitySelectGroup = <T extends FieldValues>({
             id="quality"
             value={defaultQuality || ''}
             onChange={(event) => qualityKeys.forEach((field) => update(getField(field), Number(event.target.value)))}
-            label={t('form.quality')}
+            label={mandatory ? `${t('form.quality')} *` : t('form.quality')}
             error={hasQualityError}
             clearable={clearable}
           />
