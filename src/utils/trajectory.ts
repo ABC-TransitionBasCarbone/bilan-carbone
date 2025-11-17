@@ -118,6 +118,9 @@ export interface TrajectoryResult {
 }
 
 export const getMostRecentReferenceStudy = (pastStudies: PastStudy[]): PastStudy | null => {
+  if (pastStudies.length === 0) {
+    return null
+  }
   return pastStudies.reduce((mostRecent, current) => (current.year > mostRecent.year ? current : mostRecent))
 }
 
