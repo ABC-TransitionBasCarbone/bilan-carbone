@@ -2,7 +2,7 @@
 
 import { EmissionFactorList } from '@/db/emissionFactors'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
-import { BCUnit } from '@/services/unit'
+import { BCUnit, useUnitLabel } from '@/services/unit'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import {
@@ -58,8 +58,8 @@ export const EmissionFactorsTable = ({
   selectEmissionFactor,
 }: Props) => {
   const t = useTranslations('emissionFactors.table')
-  const tUnits = useTranslations('units')
   const tResultUnits = useTranslations('study.results.units')
+  const getUnitLabel = useUnitLabel()
 
   const fromModal = useMemo(() => Boolean(selectEmissionFactor), [selectEmissionFactor])
 
@@ -83,7 +83,7 @@ export const EmissionFactorsTable = ({
       {
         header: t('value'),
         accessorFn: (emissionFactor) =>
-          `${formatEmissionFactorNumber(getEmissionFactorValue(emissionFactor, environment))} ${tResultUnits(StudyResultUnit.K)}/${emissionFactor.unit === BCUnit.CUSTOM ? emissionFactor.customUnit : tUnits(emissionFactor.unit || '')}`,
+          `${formatEmissionFactorNumber(getEmissionFactorValue(emissionFactor, environment))} ${tResultUnits(StudyResultUnit.K)}/${emissionFactor.unit === BCUnit.CUSTOM ? emissionFactor.customUnit : getUnitLabel(emissionFactor.unit || '', getEmissionFactorValue(emissionFactor, environment))}`,
       },
       {
         header: t('location'),
@@ -128,7 +128,7 @@ export const EmissionFactorsTable = ({
     selectEmissionFactor,
     environment,
     tResultUnits,
-    tUnits,
+    getUnitLabel,
     getLocationLabel,
     fromModal,
     userOrganizationId,

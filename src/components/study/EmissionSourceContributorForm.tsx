@@ -6,6 +6,7 @@ import { StudyWithoutDetail } from '@/services/permissions/study'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { qualityKeys } from '@/services/uncertainty'
+import { useUnitLabel } from '@/services/unit'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import { hasDeprecationPeriod } from '@/utils/study'
@@ -60,8 +61,8 @@ const EmissionSourceContributorForm = ({
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tResultUnits = useTranslations('study.results.units')
-  const tUnits = useTranslations('units')
   const tGlossary = useTranslations('emissionSource.glossary')
+  const getUnitLabel = useUnitLabel()
   const [expandedQuality, setExpandedQuality] = useState(!!advanced)
   const [glossary, setGlossary] = useState('')
 
@@ -99,7 +100,9 @@ const EmissionSourceContributorForm = ({
             />
             {selectedFactor && (
               <div className={styles.unit}>
-                {selectedFactor.unit === Unit.CUSTOM ? selectedFactor.customUnit : tUnits(selectedFactor.unit || '')}
+                {selectedFactor.unit === Unit.CUSTOM
+                  ? selectedFactor.customUnit
+                  : getUnitLabel(selectedFactor.unit || '')}
               </div>
             )}
           </div>
@@ -137,7 +140,9 @@ const EmissionSourceContributorForm = ({
             {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
             {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor, environment))}
             {tResultUnits(StudyResultUnit.K)}/
-            {selectedFactor.unit === Unit.CUSTOM ? selectedFactor.customUnit : tUnits(selectedFactor.unit || '')}
+            {selectedFactor.unit === Unit.CUSTOM
+              ? selectedFactor.customUnit
+              : getUnitLabel(selectedFactor.unit || '', getEmissionFactorValue(selectedFactor, environment))}
           </p>
           {selectedFactor.metaData && <p className={styles.detail}>{getDetail(selectedFactor.metaData)}</p>}
         </div>

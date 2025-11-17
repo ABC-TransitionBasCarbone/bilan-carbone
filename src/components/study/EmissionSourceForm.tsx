@@ -15,6 +15,7 @@ import {
   qualityKeys,
   specificFEQualityKeys,
 } from '@/services/uncertainty'
+import { useUnitLabel } from '@/services/unit'
 import { emissionFactorDefautQualityStar, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { hasDeprecationPeriod, hasEditionRights, isCAS, STUDY_UNIT_VALUES } from '@/utils/study'
@@ -106,11 +107,11 @@ const EmissionSourceForm = ({
   update,
 }: Props) => {
   const t = useTranslations('emissionSource')
-  const tUnits = useTranslations('units')
   const tCategorisations = useTranslations('categorisations')
   const tGlossary = useTranslations('emissionSource.glossary')
   const tResultUnits = useTranslations('study.results.units')
   const tQuality = useTranslations('quality')
+  const getUnitLabel = useUnitLabel()
   const [glossary, setGlossary] = useState('')
   const [editSpecificQuality, setEditSpecificQuality] = useState(false)
   const [error, setError] = useState('')
@@ -159,7 +160,7 @@ const EmissionSourceForm = ({
     if (isCas) {
       update('value', (emissionSource.hectare || 0) * (emissionSource.duration || 0))
     }
-  }, [emissionSource.hectare, emissionSource.duration])
+  }, [emissionSource.hectare, emissionSource.duration, isCas, update])
 
   useEffect(() => {
     getEmissionSourceTags()
@@ -276,7 +277,9 @@ const EmissionSourceForm = ({
               />
               {selectedFactor && (
                 <div className={styles.unit}>
-                  {selectedFactor.unit === Unit.CUSTOM ? selectedFactor.customUnit : tUnits(selectedFactor.unit || '')}
+                  {selectedFactor.unit === Unit.CUSTOM
+                    ? selectedFactor.customUnit
+                    : getUnitLabel(selectedFactor.unit || '', emissionSource.value)}
                 </div>
               )}
             </div>
@@ -362,7 +365,7 @@ const EmissionSourceForm = ({
             {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
             {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor, environment))}
             {tResultUnits(StudyResultUnit.K)}/
-            {selectedFactor.unit === Unit.CUSTOM ? selectedFactor.customUnit : tUnits(selectedFactor.unit || '')}{' '}
+            {selectedFactor.unit === Unit.CUSTOM ? selectedFactor.customUnit : getUnitLabel(selectedFactor.unit || '')}{' '}
             {qualityRating && (
               <>
                 - {tQuality('name')} {tQuality(qualityRating.toString())}
