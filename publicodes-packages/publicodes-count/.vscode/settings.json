@@ -1,24 +1,23 @@
-
 {
   "prettier.documentSelectors": ["**/*.publicodes"],
   "editor.semanticTokenColorCustomizations": {
     "rules": {
       "*.readonly:publicodes": {
-        "italic": true,
+        "italic": true
       },
       "*.definition:publicodes": {
-        "bold": true,
+        "bold": true
       },
       "namespace:publicodes": {
         "foreground": "#4ec99a"
       },
       "type:publicodes": {
         "foreground": "#4EC9B0",
-        "italic": true,
+        "italic": true
       },
       "operator:publicodes": "#c7c7c7ad",
       "string:publicodes": {
-        "foreground": "#CE9178",
+        "foreground": "#CE9178"
       },
       "string.readonly:publicodes": "#569cd6",
       "number:publicodes": "#e67f7f",
@@ -30,5 +29,5 @@
         "italic": true
       }
     }
-  },
+  }
 }
