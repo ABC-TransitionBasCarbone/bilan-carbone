@@ -1,3 +1,18 @@
 .form {
   gap: 0.5rem !important;
 }
+
+.linkedStudiesCard {
+  background: var(--mui-palette-primary-light);
+  border-radius: 0.5rem;
+}
+
+.details {
+  padding: 0 1.5rem 1.5rem 1.5rem;
+}
+
+.badge {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}

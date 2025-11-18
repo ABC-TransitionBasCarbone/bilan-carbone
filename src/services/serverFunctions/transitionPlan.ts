@@ -10,6 +10,7 @@ import {
   deleteExternalStudy as dbDeleteExternalStudy,
   deleteLinkedStudy as dbDeleteLinkedStudy,
   deleteTransitionPlan as dbDeleteTransitionPlan,
+  updateExternalStudy as dbUpdateExternalStudy,
   duplicateTransitionPlanWithRelations,
   getActionById,
   getActions,
@@ -183,6 +184,22 @@ export const addExternalStudy = async (command: ExternalStudyCommand) =>
     }
 
     await createExternalStudy(command)
+  })
+
+export const updateExternalStudy = async (command: ExternalStudyCommand) =>
+  withServerResponse('updateExternalStudy', async () => {
+    const { transitionPlanId, externalStudyId, ...updateData } = command
+
+    const hasEditAccess = await canEditTransitionPlan(transitionPlanId)
+    if (!hasEditAccess) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!externalStudyId) {
+      throw new Error('External study ID is required for update')
+    }
+
+    await dbUpdateExternalStudy(externalStudyId, updateData)
   })
 
 export const deleteExternalStudy = async (studyId: string, transitionPlanId: string) =>

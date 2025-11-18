@@ -1,16 +1,17 @@
 import { setCustomIssue, setCustomMessage } from '@/lib/zod.config'
 import { ActionCategory, ActionNature, ActionPotentialDeduction, ActionRelevance, TrajectoryType } from '@prisma/client'
-import dayjs from 'dayjs'
 import z from 'zod'
 
 export const ExternalStudyCommandValidation = z.object({
   transitionPlanId: z.string().min(1),
+  externalStudyId: z.string().optional(),
   name: z.string().min(1),
-  date: z.string().refine((val) => dayjs(val).isValid()),
+  date: z.union([z.string(), z.date()]).transform((val) => (typeof val === 'string' ? val : val.toISOString())),
   totalCo2: z.number().min(0),
 })
 
 export type ExternalStudyCommand = z.infer<typeof ExternalStudyCommandValidation>
+export type ExternalStudyFormInput = z.input<typeof ExternalStudyCommandValidation>
 
 export const createObjectiveSchema = () =>
   z
