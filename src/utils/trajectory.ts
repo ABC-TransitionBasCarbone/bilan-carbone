@@ -8,7 +8,7 @@ import { getYearFromDateStr } from './time'
 export type SBTIType = 'SBTI_15' | 'SBTI_WB2C'
 export const SBTI_REDUCTION_RATE_15 = 0.042
 export const SBTI_REDUCTION_RATE_WB2C = 0.025
-const REFERENCE_YEAR = 2020
+const SNBC_SBTI_REDUCTION_START_YEAR = 2020
 export const MID_TARGET_YEAR = 2030
 export const TARGET_YEAR = 2050
 export const OVERSHOOT_THRESHOLD = 0.05
@@ -64,6 +64,7 @@ interface CalculateSbtiTrajectoryParams {
   endYear?: number
   maxYear?: number
   pastStudies?: PastStudy[]
+  // overshootAdjustment is kept for backward compatibility but not used for SBTi (reference is always 2020)
   overshootAdjustment?: OvershootAdjustment
   displayCurrentStudyValueOnTrajectory?: boolean
 }
@@ -126,7 +127,7 @@ export const getMostRecentReferenceStudy = (pastStudies: PastStudy[]): PastStudy
 
 // Get the earliest reference study after 2020 (closest to 2020)
 export const getEarliestReferenceStudyAfter2020 = (pastStudies: PastStudy[]): PastStudy | null => {
-  const studiesAfter2020 = pastStudies.filter((s) => s.year > REFERENCE_YEAR)
+  const studiesAfter2020 = pastStudies.filter((s) => s.year > SNBC_SBTI_REDUCTION_START_YEAR)
 
   if (studiesAfter2020.length === 0) {
     return null
@@ -142,12 +143,15 @@ export const getEarliestPastStudyYear = (pastStudies: PastStudy[]): number | nul
   return Math.min(...pastStudies.map((s) => s.year))
 }
 
-export const getGraphStartYear = (pastStudies: PastStudy[], fallbackYear: number = REFERENCE_YEAR): number => {
+export const getGraphStartYear = (
+  pastStudies: PastStudy[],
+  fallbackYear: number = SNBC_SBTI_REDUCTION_START_YEAR,
+): number => {
   const earliestPastStudyYear = getEarliestPastStudyYear(pastStudies)
   return earliestPastStudyYear !== null ? Math.min(earliestPastStudyYear, fallbackYear) : fallbackYear
 }
 
-export const getTrajectoryValueAtYear = (trajectory: TrajectoryDataPoint[], year: number): number | null => {
+export const getTrajectoryEmissionsAtYear = (trajectory: TrajectoryDataPoint[], year: number): number | null => {
   const point = trajectory.find((p) => p.year === year)
   return point ? point.value : null
 }
@@ -184,13 +188,51 @@ export const calculateTrajectoryIntegral = (
   return integral
 }
 
-const getPastEmissions = (year: number, pastStudies: PastStudy[]) => {
-  const study = pastStudies.find((s) => s.year === year)
-  return study?.totalCo2
-}
-
 const getAllHistoricalStudyPoints = (pastStudies: PastStudy[]): Array<{ year: number; emissions: number }> => {
   return pastStudies.map((s) => ({ year: s.year, emissions: s.totalCo2 })).sort((a, b) => a.year - b.year)
+}
+
+const buildTrajectoryFromHistoricalPoints = (
+  startYear: number,
+  endYear: number,
+  endYearEmissions: number,
+  historicalPoints: Array<{ year: number; emissions: number }>,
+): TrajectoryDataPoint[] => {
+  const trajectory: TrajectoryDataPoint[] = []
+
+  for (let year = startYear; year <= endYear; year++) {
+    const value = computePastOrPresentValue(year, historicalPoints, endYearEmissions, endYear, year === endYear)
+    if (value !== null) {
+      trajectory.push({ year, value })
+    }
+  }
+
+  return trajectory
+}
+
+/**
+ * Adds historical data points before the study start year and the study start year point to the trajectory
+ */
+const addHistoricalDataAndStudyPoint = (
+  dataPoints: TrajectoryDataPoint[],
+  pastStudies: PastStudy[],
+  studyEmissions: number,
+  studyStartYear: number,
+): void => {
+  const graphStartYear = getGraphStartYear(pastStudies)
+  const historicalPoints = getAllHistoricalStudyPoints(pastStudies)
+
+  // Add historical data before the study start year
+  for (let year = graphStartYear; year < studyStartYear; year++) {
+    const dataPoint = computeValue(year, historicalPoints, studyEmissions, studyStartYear)
+
+    if (dataPoint) {
+      dataPoints.push(dataPoint)
+    }
+  }
+
+  // Add the actual study data point
+  dataPoints.push({ year: studyStartYear, value: studyEmissions })
 }
 
 const computePastOrPresentValue = (
@@ -198,7 +240,7 @@ const computePastOrPresentValue = (
   historicalPoints: Array<{ year: number; emissions: number }>,
   studyEmissions: number,
   studyStartYear: number,
-  displayCurrentStudyValueOnTrajectory?: boolean,
+  displayCurrentStudyValueOnTrajectory: boolean = true,
 ): number | null => {
   const foundHistoricalPoint = historicalPoints.find((p) => p.year === year)
   if (foundHistoricalPoint) {
@@ -231,7 +273,7 @@ const computePastOrPresentValue = (
     return pointBefore.emissions + ratio * (pointAfter.emissions - pointBefore.emissions)
   }
 
-  if (year === studyStartYear && displayCurrentStudyValueOnTrajectory !== false) {
+  if (year === studyStartYear && displayCurrentStudyValueOnTrajectory) {
     // Add the actual study value to this trajectory unless explicitly excluded (when displayCurrentStudyValueOnTrajectory is false)
     return studyEmissions
   }
@@ -335,18 +377,24 @@ export const calculateSBTiTrajectory = ({
   reductionRate,
   maxYear,
   pastStudies = [],
-  overshootAdjustment,
   displayCurrentStudyValueOnTrajectory,
 }: CalculateSbtiTrajectoryParams) => {
   const dataPoints: TrajectoryDataPoint[] = []
   const historicalPoints = getAllHistoricalStudyPoints(pastStudies)
 
   if (studyEmissions === 0) {
-    const graphStartYear = studyStartYear < REFERENCE_YEAR ? studyStartYear : REFERENCE_YEAR
-    const endYear = maxYear ?? TARGET_YEAR
+    const graphStartYear =
+      studyStartYear < SNBC_SBTI_REDUCTION_START_YEAR ? studyStartYear : SNBC_SBTI_REDUCTION_START_YEAR
+    const graphEndYear = maxYear ?? TARGET_YEAR
 
-    for (let year = graphStartYear; year <= endYear; year++) {
-      const pastEmissions = getPastEmissions(year, pastStudies)
+    for (let year = graphStartYear; year <= graphEndYear; year++) {
+      const pastEmissions = computePastOrPresentValue(
+        year,
+        pastStudies.map((study) => ({ year: study.year, emissions: study.totalCo2 })),
+        studyEmissions,
+        studyStartYear,
+      )
+
       if (pastEmissions) {
         dataPoints.push({ year, value: pastEmissions })
       } else {
@@ -357,56 +405,80 @@ export const calculateSBTiTrajectory = ({
     return dataPoints
   }
 
-  if (studyStartYear > REFERENCE_YEAR) {
+  if (studyStartYear > SNBC_SBTI_REDUCTION_START_YEAR) {
     let pastOvershoot = 0
-    let referenceBaseline2020 = studyEmissions
-    let referenceValueAtStudyYear = studyEmissions * (1 - (studyStartYear - REFERENCE_YEAR) * reductionRate)
+    let emissionsValue2020 = studyEmissions
+    let referenceValueAtStudyYear =
+      studyEmissions * (1 - (studyStartYear - SNBC_SBTI_REDUCTION_START_YEAR) * reductionRate)
 
-    if (overshootAdjustment) {
-      // For SBTi: We need the EARLIEST reference study after 2020 (closest to 2020)
-      // We assume emissions were CONSTANT from 2020 to that earliest study's year
-      const earliestStudy = getEarliestReferenceStudyAfter2020(pastStudies)
+    // Check if we have historical data between 2020 and studyStartYear
+    const hasHistoricalDataBetween2020AndStudyYear = historicalPoints.some(
+      (p) => p.year >= SNBC_SBTI_REDUCTION_START_YEAR && p.year < studyStartYear,
+    )
 
-      if (earliestStudy) {
-        referenceBaseline2020 = earliestStudy.totalCo2
-      } else {
-        // Fallback: use the reference study from overshootAdjustment
-        const { referenceTrajectory, referenceStudyYear } = overshootAdjustment
-        const referenceStudyEmissions = getTrajectoryValueAtYear(referenceTrajectory, referenceStudyYear)
-        if (referenceStudyEmissions !== null) {
-          referenceBaseline2020 = referenceStudyEmissions
-        }
+    if (hasHistoricalDataBetween2020AndStudyYear) {
+      // Use historical data to compute actual overshoot
+      const computedEmissionsValue2020 = computePastOrPresentValue(
+        SNBC_SBTI_REDUCTION_START_YEAR,
+        historicalPoints,
+        studyEmissions,
+        studyStartYear,
+        false,
+      )
+
+      if (computedEmissionsValue2020 !== null) {
+        emissionsValue2020 = computedEmissionsValue2020
       }
+    }
 
-      // Build theoretical SBTi trajectory from 2020 at that baseline
-      const yearsSince2020 = studyStartYear - REFERENCE_YEAR
-      const referenceYearlyReduction = referenceBaseline2020 * reductionRate
-      referenceValueAtStudyYear = referenceBaseline2020 - yearsSince2020 * referenceYearlyReduction
+    // Calculate reference trajectory values
+    const yearsSince2020 = studyStartYear - SNBC_SBTI_REDUCTION_START_YEAR
+    const referenceYearlyReduction = emissionsValue2020 * reductionRate
+    referenceValueAtStudyYear = emissionsValue2020 - yearsSince2020 * referenceYearlyReduction
 
-      // Calculate overshoot from 2020 to studyStartYear
-      // Reference trajectory: reducing linearly from referenceBaseline2020
-      const referenceIntegralFrom2020 = calculateLinearTrajectoryIntegral(
-        referenceBaseline2020,
-        referenceValueAtStudyYear,
+    const referenceBudgetFrom2020ToStudyYear = calculateLinearTrajectoryIntegral(
+      emissionsValue2020,
+      referenceValueAtStudyYear,
+      yearsSince2020,
+    )
+
+    // Calculate actual overshoot based on whether we have historical data
+    if (hasHistoricalDataBetween2020AndStudyYear) {
+      // Use historical data to compute actual trajectory
+      const actualTrajectoryFrom2020ToStudyYear = buildTrajectoryFromHistoricalPoints(
+        SNBC_SBTI_REDUCTION_START_YEAR,
+        studyStartYear,
+        studyEmissions,
+        historicalPoints,
+      )
+
+      const actualBudgetUsedFrom2020ToStudyYear = calculateTrajectoryIntegral(
+        actualTrajectoryFrom2020ToStudyYear,
+        SNBC_SBTI_REDUCTION_START_YEAR,
+        studyStartYear,
+      )
+
+      pastOvershoot = actualBudgetUsedFrom2020ToStudyYear - referenceBudgetFrom2020ToStudyYear
+    } else {
+      // When there's no historical data, we assume emissions are stable between 2020 and studyStartYear
+      const actualBudgetUsedFrom2020ToStudyYear = calculateLinearTrajectoryIntegral(
+        studyEmissions,
+        studyEmissions,
         yearsSince2020,
       )
 
-      // Actual emissions: we need to account for all historical values
-      // For simplicity, we assume flat at studyEmissions from 2020 to studyStartYear
-      const actualBudgetFrom2020 = studyEmissions * yearsSince2020
-      pastOvershoot = actualBudgetFrom2020 - referenceIntegralFrom2020
+      pastOvershoot = actualBudgetUsedFrom2020ToStudyYear - referenceBudgetFrom2020ToStudyYear
     }
 
-    // Calculate the reference future budget
-    const referenceYearlyReduction = referenceBaseline2020 * reductionRate
+    // Calculate the reference total budget from 2020 to reaching zero emissions
     const yearsToZeroFromReference = referenceValueAtStudyYear / referenceYearlyReduction
-    const referenceFutureBudget = (referenceValueAtStudyYear * yearsToZeroFromReference) / 2
+    const referenceTotalBudget = (referenceValueAtStudyYear * yearsToZeroFromReference) / 2
 
-    // The adjusted budget compensates for past overshoot
-    const adjustedFutureBudget = referenceFutureBudget - pastOvershoot
+    // The total budget remaining compensates for past overshoot
+    const totalBudgetRemaining = referenceTotalBudget - pastOvershoot
 
-    // Now calculate the rate needed starting from ACTUAL emissions to match this budget
-    const targetYears = (2 * adjustedFutureBudget) / studyEmissions
+    // Now calculate the rate needed starting from actual emissions to match this budget
+    const targetYears = (2 * totalBudgetRemaining) / studyEmissions
     const targetEndYear = studyStartYear + targetYears
     const newReductionRate = 1 / targetYears
     const newEndYear = Math.ceil(targetEndYear)
@@ -429,9 +501,9 @@ export const calculateSBTiTrajectory = ({
       }
     }
   } else {
-    const reductionStartYear = REFERENCE_YEAR
+    const reductionStartYear = SNBC_SBTI_REDUCTION_START_YEAR
     const graphStartYear = getGraphStartYear(pastStudies, studyStartYear)
-    const targetYear = Math.ceil(REFERENCE_YEAR + 1 / reductionRate)
+    const targetYear = Math.ceil(SNBC_SBTI_REDUCTION_START_YEAR + 1 / reductionRate)
     const endYear = Math.max(targetYear, maxYear ?? TARGET_YEAR)
 
     for (let year = graphStartYear; year <= endYear; year++) {
@@ -454,52 +526,85 @@ export const calculateSBTiTrajectory = ({
   return dataPoints
 }
 
-const adjustCustomTrajectoryForOvershoot = (
-  baselineEmissions: number,
+/**
+ * This method calculates the adjusted objectives rates to compensate for the overshoot.
+ * It uses a derivative approximation to find the multiplier needed to compensate each original rate.
+ */
+const getObjectivesWithOvershootCompensation = (
+  actualEmissions: number,
   studyYear: number,
   objectives: Array<{ targetYear: number; reductionRate: number }>,
   overshootAdjustment: OvershootAdjustment,
+  pastStudies: PastStudy[],
 ): Array<{ targetYear: number; reductionRate: number }> => {
   const { referenceTrajectory, referenceStudyYear } = overshootAdjustment
+  const historicalPoints = getAllHistoricalStudyPoints(pastStudies)
 
-  // Calculate past overshoot (area difference between actual flat line and reference trajectory)
-  const pastOvershoot =
-    baselineEmissions * (studyYear - referenceStudyYear) -
-    calculateTrajectoryIntegral(referenceTrajectory, referenceStudyYear, studyYear)
+  const trajectoryFromReferenceYearToStudyYear = buildTrajectoryFromHistoricalPoints(
+    referenceStudyYear,
+    studyYear,
+    actualEmissions,
+    historicalPoints,
+  )
+
+  const actualBudgetUsedFromReferenceYearToStudyYear = calculateTrajectoryIntegral(
+    trajectoryFromReferenceYearToStudyYear,
+    referenceStudyYear,
+    studyYear,
+  )
+
+  const referenceBudgetFromReferenceYearToStudyYear = calculateTrajectoryIntegral(
+    referenceTrajectory,
+    referenceStudyYear,
+    studyYear,
+  )
+
+  const pastOvershoot = actualBudgetUsedFromReferenceYearToStudyYear - referenceBudgetFromReferenceYearToStudyYear
 
   if (pastOvershoot <= 0 || objectives.length === 0) {
     return objectives
   }
 
-  // Get the reference trajectory's expected value at studyYear
-  const referenceValueAtStudyYear = getTrajectoryValueAtYear(referenceTrajectory, studyYear)
-  if (referenceValueAtStudyYear === null) {
+  // Get the reference trajectory's expected emissions at studyYear
+  const referenceEmissionsAtStudyYear = getTrajectoryEmissionsAtYear(referenceTrajectory, studyYear)
+  if (referenceEmissionsAtStudyYear === null) {
     return objectives
   }
 
   // Calculate the reference future budget (what the trajectory would have been if we were at the reference value)
-  const referenceFutureBudget = calculateBudgetWithMultiplier(referenceValueAtStudyYear, studyYear, objectives, 1.0)
+  const referenceFutureBudget = calculateBudgetWithObjectivesAndMultiplier(
+    referenceEmissionsAtStudyYear,
+    studyYear,
+    objectives,
+    1.0,
+  )
 
   // The adjusted budget must compensate for the past overshoot
-  const adjustedTotalBudget = referenceFutureBudget - pastOvershoot
+  const remainingTotalBudget = referenceFutureBudget - pastOvershoot
 
-  // Now we need to find k such that the trajectory starting from ACTUAL emissions has this adjusted budget
-  const actualFutureBudget = calculateBudgetWithMultiplier(baselineEmissions, studyYear, objectives, 1.0)
+  // Now we need to find k such that the trajectory starting from ACTUAL emissions uses this remaining budget
+  // This is the budget that would have been used if we were not compensating for the overshoot
+  const actualBudgetWithoutCompensation = calculateBudgetWithObjectivesAndMultiplier(
+    actualEmissions,
+    studyYear,
+    objectives,
+    1.0,
+  )
 
   // Use derivative approximation to find k
   // Budget(k) ≈ Budget(1) + Budget'(1) × (k - 1)
   const delta = 0.001
-  const budgetAtDelta = calculateBudgetWithMultiplier(baselineEmissions, studyYear, objectives, 1.0 + delta)
-  const derivative = (budgetAtDelta - actualFutureBudget) / delta
-  const k = 1.0 + (adjustedTotalBudget - actualFutureBudget) / derivative
+  const budgetAtDelta = calculateBudgetWithObjectivesAndMultiplier(actualEmissions, studyYear, objectives, 1.0 + delta)
+  const derivative = (budgetAtDelta - actualBudgetWithoutCompensation) / delta
+  const k = 1.0 + (remainingTotalBudget - actualBudgetWithoutCompensation) / derivative
 
   // Apply multiplier to all objective rates
-  const adjustedObjectives: Array<{ targetYear: number; reductionRate: number }> = objectives.map((obj) => ({
+  const compensatedObjectives: Array<{ targetYear: number; reductionRate: number }> = objectives.map((obj) => ({
     targetYear: obj.targetYear,
     reductionRate: Math.max(0, obj.reductionRate * k),
   }))
 
-  return adjustedObjectives
+  return compensatedObjectives
 }
 
 export const getReductionRatePerType = (sbtiType: TrajectoryType): number | undefined => {
@@ -531,62 +636,54 @@ export const calculateCustomTrajectory = ({
         studyStartYear,
         reductionRate,
         pastStudies,
-        overshootAdjustment,
-        displayCurrentStudyValueOnTrajectory: overshootAdjustment ? false : undefined,
+        // If there is an overshoot adjustment, we need to display the current study value which is outside of threshold
+        displayCurrentStudyValueOnTrajectory: !!overshootAdjustment,
       })
     }
   }
 
   const dataPoints: TrajectoryDataPoint[] = []
-  const historicalPoints = getAllHistoricalStudyPoints(pastStudies)
-  let currentValue = studyEmissions
+  let actualEmissions = studyEmissions
   let startYear = studyStartYear
 
-  const graphStartYear = getGraphStartYear(pastStudies)
-
-  for (let year = graphStartYear; year < studyStartYear; year++) {
-    const dataPoint = computeValue(year, historicalPoints, studyEmissions, studyStartYear)
-
-    if (dataPoint) {
-      dataPoints.push(dataPoint)
-    }
-  }
-
-  dataPoints.push({ year: studyStartYear, value: studyEmissions })
+  addHistoricalDataAndStudyPoint(dataPoints, pastStudies, studyEmissions, studyStartYear)
 
   let sortedObjectives = [...objectives].sort((a, b) => a.targetYear - b.targetYear)
 
   if (overshootAdjustment) {
-    sortedObjectives = adjustCustomTrajectoryForOvershoot(
-      studyEmissions,
+    sortedObjectives = getObjectivesWithOvershootCompensation(
+      actualEmissions,
       studyStartYear,
       sortedObjectives,
       overshootAdjustment,
+      pastStudies,
     )
   }
 
   for (let i = 0; i < sortedObjectives.length; i++) {
     const objective = sortedObjectives[i]
     const absoluteReductionRate = Number(objective.reductionRate)
-    const yearlyReduction = currentValue * absoluteReductionRate
+    const yearlyReduction = actualEmissions * absoluteReductionRate
     const isLastObjective = i === sortedObjectives.length - 1
 
     for (let year = startYear + 1; year <= objective.targetYear; year++) {
-      currentValue = currentValue - yearlyReduction
-      dataPoints.push({ year, value: Math.max(0, currentValue) })
+      actualEmissions = actualEmissions - yearlyReduction
+      dataPoints.push({ year, value: Math.max(0, actualEmissions) })
     }
 
-    if (isLastObjective && currentValue > 0) {
+    if (isLastObjective && actualEmissions > 0) {
       let year = objective.targetYear + 1
 
       if (yearlyReduction <= 0) {
-        dataPoints.push({ year, value: 0 })
-      } else {
-        while (currentValue > 0) {
-          currentValue = currentValue - yearlyReduction
-          dataPoints.push({ year, value: Math.max(0, currentValue) })
-          year++
-        }
+        throw new Error(
+          `Invalid reduction rate: yearly reduction is ${yearlyReduction} (rate: ${absoluteReductionRate}, emissions: ${actualEmissions}). Reduction rate must be positive.`,
+        )
+      }
+
+      while (actualEmissions > 0) {
+        actualEmissions = actualEmissions - yearlyReduction
+        dataPoints.push({ year, value: Math.max(0, actualEmissions) })
+        year++
       }
     }
 
@@ -654,7 +751,7 @@ export const calculateTrajectoriesWithHistory = ({
     const theoreticalSbti15Reference = sbti15Enabled
       ? calculateSBTiTrajectory({
           studyEmissions: totalCo2,
-          studyStartYear: REFERENCE_YEAR,
+          studyStartYear: SNBC_SBTI_REDUCTION_START_YEAR,
           reductionRate: SBTI_REDUCTION_RATE_15,
           pastStudies,
         })
@@ -663,7 +760,7 @@ export const calculateTrajectoriesWithHistory = ({
     const theoreticalSbtiWB2CReference = sbtiWB2CEnabled
       ? calculateSBTiTrajectory({
           studyEmissions: totalCo2,
-          studyStartYear: REFERENCE_YEAR,
+          studyStartYear: SNBC_SBTI_REDUCTION_START_YEAR,
           reductionRate: SBTI_REDUCTION_RATE_WB2C,
           pastStudies,
         })
@@ -671,7 +768,7 @@ export const calculateTrajectoriesWithHistory = ({
 
     const sbti15Data: TrajectoryData | null = sbti15Enabled
       ? {
-          previousTrajectoryReferenceYear: REFERENCE_YEAR,
+          previousTrajectoryReferenceYear: SNBC_SBTI_REDUCTION_START_YEAR,
           previousTrajectory: theoreticalSbti15Reference,
           currentTrajectory: calculateSBTiTrajectory({
             studyEmissions: totalCo2,
@@ -685,7 +782,7 @@ export const calculateTrajectoriesWithHistory = ({
 
     const sbtiWB2CData: TrajectoryData | null = sbtiWB2CEnabled
       ? {
-          previousTrajectoryReferenceYear: REFERENCE_YEAR,
+          previousTrajectoryReferenceYear: SNBC_SBTI_REDUCTION_START_YEAR,
           previousTrajectory: theoreticalSbtiWB2CReference,
           currentTrajectory: calculateSBTiTrajectory({
             studyEmissions: totalCo2,
@@ -720,11 +817,15 @@ export const calculateTrajectoriesWithHistory = ({
 
     const enabledActions = actions.filter((action) => action.enabled)
 
-    const maxYearFromTrajectories = Math.max(
-      sbti15Data?.currentTrajectory[sbti15Data.currentTrajectory.length - 1]?.year || 0,
-      sbtiWB2CData?.currentTrajectory[sbtiWB2CData.currentTrajectory.length - 1]?.year || 0,
-      ...customTrajectoriesData.map((t) => t.data.currentTrajectory[t.data.currentTrajectory.length - 1]?.year || 0),
+    const yearsFromTrajectories = getYearsToDisplay(
+      sbti15Data,
+      sbtiWB2CData,
+      customTrajectoriesData.map((values) => values.data),
+      null,
+      sbti15Enabled,
+      sbtiWB2CEnabled,
     )
+    const maxYearFromTrajectories = yearsFromTrajectories[yearsFromTrajectories.length - 1]
 
     const actionBasedData: TrajectoryData = {
       previousTrajectoryReferenceYear: null,
@@ -760,22 +861,25 @@ export const calculateTrajectoriesWithHistory = ({
         pastStudies,
       })
 
-      const referenceValue = getTrajectoryValueAtYear(referenceTrajectory, studyStartYear)
-      const withinThreshold = referenceValue !== null && isWithinThreshold(totalCo2, referenceValue)
+      const referenceEmissionsForStudyStartYear = getTrajectoryEmissionsAtYear(referenceTrajectory, studyStartYear)
+      const withinThreshold =
+        referenceEmissionsForStudyStartYear !== null && isWithinThreshold(totalCo2, referenceEmissionsForStudyStartYear)
 
-      const currentTrajectory = calculateSBTiTrajectory({
-        studyEmissions: totalCo2,
-        studyStartYear,
-        reductionRate: SBTI_REDUCTION_RATE_15,
-        pastStudies,
-        overshootAdjustment: withinThreshold
-          ? undefined
-          : {
-              referenceTrajectory,
-              referenceStudyYear,
-            },
-        displayCurrentStudyValueOnTrajectory: withinThreshold,
-      })
+      let currentTrajectory: TrajectoryDataPoint[] | null = null
+
+      // Case where we only display the current study emissions as isolated point
+      if (withinThreshold) {
+        currentTrajectory = [{ year: studyStartYear, value: totalCo2 }]
+      } else {
+        // Case where we need overshoot compensation since we are above the threshold
+        currentTrajectory = calculateSBTiTrajectory({
+          studyEmissions: totalCo2,
+          studyStartYear,
+          reductionRate: SBTI_REDUCTION_RATE_15,
+          pastStudies,
+          displayCurrentStudyValueOnTrajectory: true,
+        })
+      }
 
       sbti15Data = {
         previousTrajectoryReferenceYear: referenceStudyYear,
@@ -794,21 +898,16 @@ export const calculateTrajectoriesWithHistory = ({
         pastStudies,
       })
 
-      const referenceValue = getTrajectoryValueAtYear(referenceTrajectory, studyStartYear)
-      const withinThreshold = referenceValue !== null && isWithinThreshold(totalCo2, referenceValue)
+      const referenceEmissionsForStudyStartYear = getTrajectoryEmissionsAtYear(referenceTrajectory, studyStartYear)
+      const withinThreshold =
+        referenceEmissionsForStudyStartYear !== null && isWithinThreshold(totalCo2, referenceEmissionsForStudyStartYear)
 
       const currentTrajectory = calculateSBTiTrajectory({
         studyEmissions: totalCo2,
         studyStartYear,
         reductionRate: SBTI_REDUCTION_RATE_WB2C,
         pastStudies,
-        overshootAdjustment: withinThreshold
-          ? undefined
-          : {
-              referenceTrajectory,
-              referenceStudyYear,
-            },
-        displayCurrentStudyValueOnTrajectory: withinThreshold,
+        displayCurrentStudyValueOnTrajectory: !withinThreshold,
       })
 
       sbtiWB2CData = {
@@ -832,8 +931,9 @@ export const calculateTrajectoriesWithHistory = ({
         trajectoryType: traj.type,
       })
 
-      const referenceValue = getTrajectoryValueAtYear(referenceTrajectory, studyStartYear)
-      const withinThreshold = referenceValue !== null && isWithinThreshold(totalCo2, referenceValue)
+      const referenceEmissionsForStudyStartYear = getTrajectoryEmissionsAtYear(referenceTrajectory, studyStartYear)
+      const withinThreshold =
+        referenceEmissionsForStudyStartYear !== null && isWithinThreshold(totalCo2, referenceEmissionsForStudyStartYear)
 
       const currentTrajectory = calculateCustomTrajectory({
         studyEmissions: totalCo2,
@@ -865,11 +965,15 @@ export const calculateTrajectoriesWithHistory = ({
 
     const enabledActions = actions.filter((action) => action.enabled)
 
-    const maxYearFromTrajectories = Math.max(
-      sbti15Data?.currentTrajectory[sbti15Data.currentTrajectory.length - 1]?.year || 0,
-      sbtiWB2CData?.currentTrajectory[sbtiWB2CData.currentTrajectory.length - 1]?.year || 0,
-      ...customTrajectoriesData.map((t) => t.data.currentTrajectory[t.data.currentTrajectory.length - 1]?.year || 0),
+    const yearsFromTrajectories = getYearsToDisplay(
+      sbti15Data,
+      sbtiWB2CData,
+      customTrajectoriesData.map((values) => values.data),
+      null,
+      sbti15Enabled,
+      sbtiWB2CEnabled,
     )
+    const maxYearFromTrajectories = yearsFromTrajectories[yearsFromTrajectories.length - 1]
 
     const referenceActionTrajectory = calculateActionBasedTrajectory({
       studyEmissions: referenceEmissions,
@@ -880,7 +984,7 @@ export const calculateTrajectoriesWithHistory = ({
       maxYear: maxYearFromTrajectories > 0 ? maxYearFromTrajectories : undefined,
     })
 
-    const referenceActionValue = getTrajectoryValueAtYear(referenceActionTrajectory, studyStartYear)
+    const referenceActionValue = getTrajectoryEmissionsAtYear(referenceActionTrajectory, studyStartYear)
     const actionWithinThreshold = referenceActionValue !== null && isWithinThreshold(totalCo2, referenceActionValue)
 
     const currentActionTrajectory = calculateActionBasedTrajectory({
@@ -917,20 +1021,7 @@ export const calculateActionBasedTrajectory = ({
   withDependencies = true,
 }: CalculateActionBasedTrajectoryParams): TrajectoryDataPoint[] => {
   const dataPoints: TrajectoryDataPoint[] = []
-  const historicalPoints = getAllHistoricalStudyPoints(pastStudies)
-
-  const graphStartYear = getGraphStartYear(pastStudies)
-
-  for (let year = graphStartYear; year < studyStartYear; year++) {
-    const dataPoint = computeValue(year, historicalPoints, studyEmissions, studyStartYear)
-
-    if (dataPoint) {
-      dataPoints.push(dataPoint)
-    }
-  }
-
-  let currentEmissions = studyEmissions
-  dataPoints.push({ year: studyStartYear, value: currentEmissions })
+  addHistoricalDataAndStudyPoint(dataPoints, pastStudies, studyEmissions, studyStartYear)
 
   const filteredActions = actions.filter((action) => {
     if (action.dependenciesOnly && !withDependencies) {
@@ -978,6 +1069,7 @@ export const calculateActionBasedTrajectory = ({
     }
   }
 
+  let currentEmissions = studyEmissions
   for (let year = studyStartYear + 1; year <= maxEndYear; year++) {
     const yearlyReduction = yearlyReductions[year] ?? 0
     currentEmissions = Math.max(0, currentEmissions - yearlyReduction)
@@ -987,23 +1079,22 @@ export const calculateActionBasedTrajectory = ({
   return dataPoints
 }
 
-// Helper function to calculate budget with a given rate multiplier
-const calculateBudgetWithMultiplier = (
-  baselineEmissions: number,
-  studyYear: number,
+// Calculate budget with a given rate multiplier applied to the objectives
+const calculateBudgetWithObjectivesAndMultiplier = (
+  startEmissions: number,
+  startYear: number,
   objectives: Array<{ targetYear: number; reductionRate: number }>,
   multiplier: number,
 ): number => {
   let totalBudget = 0
-  let currentEmissions = baselineEmissions
-  let previousSegmentEnd = studyYear
+  let currentEmissions = startEmissions
+  let previousSegmentEnd = startYear
 
-  // Process each explicit objective
   for (let i = 0; i < objectives.length; i++) {
     const objective = objectives[i]
-    const effectiveStart = Math.max(previousSegmentEnd + 1, studyYear + 1)
 
-    if (objective.targetYear > studyYear) {
+    if (objective.targetYear > startYear) {
+      const effectiveStart = previousSegmentEnd + 1
       const adjustedRate = objective.reductionRate * multiplier
       const yearsInSegment = objective.targetYear - effectiveStart + 1
       const yearlyReduction = currentEmissions * adjustedRate
@@ -1013,27 +1104,14 @@ const calculateBudgetWithMultiplier = (
       }
 
       currentEmissions = currentEmissions - yearsInSegment * yearlyReduction
+      previousSegmentEnd = objective.targetYear
     }
-
-    previousSegmentEnd = objective.targetYear
   }
 
   // Add final segment to zero using last objective's rate
   if (currentEmissions > 0 && objectives.length > 0) {
-    // Track emissions at start of last segment
-    let lastSegmentStartEmissions = baselineEmissions
-    for (let i = 0; i < objectives.length - 1; i++) {
-      const obj = objectives[i]
-      const effectiveStart = Math.max(studyYear + 1, i === 0 ? studyYear + 1 : objectives[i - 1].targetYear + 1)
-      if (obj.targetYear > studyYear) {
-        const years = obj.targetYear - effectiveStart + 1
-        const reduction = lastSegmentStartEmissions * obj.reductionRate * multiplier
-        lastSegmentStartEmissions = lastSegmentStartEmissions - years * reduction
-      }
-    }
-
     const lastRate = objectives[objectives.length - 1].reductionRate * multiplier
-    const lastYearlyReduction = lastSegmentStartEmissions * lastRate
+    const lastYearlyReduction = currentEmissions * lastRate
 
     if (lastYearlyReduction > 0) {
       const yearsToZero = currentEmissions / lastYearlyReduction
@@ -1048,7 +1126,12 @@ const calculateBudgetWithMultiplier = (
   return totalBudget
 }
 
-const extractYearsFromTrajectory = (data: TrajectoryData | null): number[] => {
+type TrajectoriesForYear = {
+  currentTrajectory: { year: number }[]
+  previousTrajectory: { year: number }[] | null
+}
+
+const extractYearsFromTrajectory = (data: TrajectoriesForYear | null): number[] => {
   if (!data) {
     return []
   }
@@ -1056,17 +1139,17 @@ const extractYearsFromTrajectory = (data: TrajectoryData | null): number[] => {
 }
 
 export const getYearsToDisplay = (
-  trajectory15Data: TrajectoryData | null,
-  trajectoryWB2CData: TrajectoryData | null,
-  customTrajectoriesData: Array<{ trajectoryData: TrajectoryData | null; label: string; color?: string }>,
-  actionBasedTrajectoryData: TrajectoryData | null,
+  trajectory15Data: TrajectoriesForYear | null,
+  trajectoryWB2CData: TrajectoriesForYear | null,
+  customTrajectoriesData: (TrajectoriesForYear | null)[],
+  actionBasedTrajectoryData: TrajectoriesForYear | null,
   trajectory15Enabled: boolean,
   trajectoryWB2CEnabled: boolean,
 ): number[] => {
   const allYears = [
     ...(trajectory15Enabled ? extractYearsFromTrajectory(trajectory15Data) : []),
     ...(trajectoryWB2CEnabled ? extractYearsFromTrajectory(trajectoryWB2CData) : []),
-    ...customTrajectoriesData.flatMap((traj) => extractYearsFromTrajectory(traj.trajectoryData)),
+    ...customTrajectoriesData.flatMap((trajData) => extractYearsFromTrajectory(trajData)),
     ...extractYearsFromTrajectory(actionBasedTrajectoryData),
   ]
   return Array.from(new Set(allYears)).sort((a, b) => a - b)

@@ -51,7 +51,7 @@ const TrajectoryGraph = ({
       getYearsToDisplay(
         trajectory15Data,
         trajectoryWB2CData,
-        customTrajectoriesData,
+        customTrajectoriesData.map((values) => values.trajectoryData),
         actionBasedTrajectoryData,
         trajectory15Enabled,
         trajectoryWB2CEnabled,

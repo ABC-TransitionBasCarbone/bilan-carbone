@@ -6,7 +6,7 @@ import {
   calculateCustomTrajectory,
   calculateSBTiTrajectory,
   getReductionRatePerType,
-  getTrajectoryValueAtYear,
+  getTrajectoryEmissionsAtYear,
   isWithinThreshold,
   PastStudy,
   SBTI_REDUCTION_RATE_15,
@@ -21,10 +21,9 @@ jest.mock('next-intl/server', () => ({ getTranslations: jest.fn(() => (key: stri
 
 const DEFAULT_LINEAR_REDUCTION_15C = 42
 const DEFAULT_LINEAR_REDUCTION_WB2C = 25
-const COMENSATED_LINEAR_REDUCTION_2025_15C = 6.7294751
-const COMENSATED_LINEAR_REDUCTION_2025_WB2C = 3.26530612
-const ZERO_REACHED_YEAR_WB2C = 2055.625
-const ZERO_REACHED_YEAR_15C = 2039.86
+// Updated values after fixing overshoot calculation for SBTi (now calculates overshoot even without historical data)
+const COMENSATED_LINEAR_REDUCTION_2025_15C = 7.241379310344829
+const COMENSATED_LINEAR_REDUCTION_2025_WB2C = 3.333333333333333
 const EMISSION_FACTOR_VALUE = 10
 
 const createPastStudy = (year: number, totalCo2: number, overrides?: Partial<PastStudy>): PastStudy => ({
@@ -150,13 +149,12 @@ describe('calculateTrajectory', () => {
       )
 
       const point2039 = result.find((p) => p.year === 2039)
-      expect(point2039?.value).toBeCloseTo(
-        1000 - (2039 - 2025) * COMENSATED_LINEAR_REDUCTION_2025_15C * EMISSION_FACTOR_VALUE,
-        1,
-      )
+      // With the new overshoot calculation, we reach zero emissions before 2039
+      expect(point2039?.value).toBeCloseTo(0, 1)
 
       const lastPoint = result[result.length - 1]
-      expect(lastPoint.year).toBe(Math.max(2050, Math.ceil(ZERO_REACHED_YEAR_15C)))
+      // The trajectory extends to TARGET_YEAR (2050) even though we reach zero earlier
+      expect(lastPoint.year).toBe(2050)
       expect(lastPoint.value).toBeCloseTo(0, 1)
     })
 
@@ -194,7 +192,8 @@ describe('calculateTrajectory', () => {
       )
 
       const lastPoint = result[result.length - 1]
-      expect(lastPoint.year).toBe(Math.max(2050, Math.ceil(ZERO_REACHED_YEAR_WB2C)))
+      // Updated end year: 2025 + 30 = 2055 (with new overshoot calculation)
+      expect(lastPoint.year).toBe(2055)
       expect(lastPoint.value).toBeCloseTo(0, 1)
     })
   })
@@ -653,7 +652,7 @@ describe('calculateTrajectory', () => {
           reductionRate: SBTI_REDUCTION_RATE_15,
           pastStudies,
         })
-        const expectedValue = getTrajectoryValueAtYear(referenceTrajectory, currentYear)
+        const expectedValue = getTrajectoryEmissionsAtYear(referenceTrajectory, currentYear)
         expect(expectedValue).not.toBeNull()
 
         const withinThreshold = expectedValue !== null && isWithinThreshold(currentEmissions, expectedValue)
@@ -683,7 +682,7 @@ describe('calculateTrajectory', () => {
           reductionRate: SBTI_REDUCTION_RATE_15,
           pastStudies,
         })
-        const expectedValue = getTrajectoryValueAtYear(referenceTrajectory, currentYear)
+        const expectedValue = getTrajectoryEmissionsAtYear(referenceTrajectory, currentYear)
         expect(expectedValue).not.toBeNull()
 
         const withinThreshold = expectedValue !== null && isWithinThreshold(currentEmissions, expectedValue)
@@ -728,7 +727,7 @@ describe('calculateTrajectory', () => {
           pastStudies,
         })
 
-        const expectedValue = getTrajectoryValueAtYear(referenceTrajectory, currentYear)
+        const expectedValue = getTrajectoryEmissionsAtYear(referenceTrajectory, currentYear)
         expect(expectedValue).not.toBeNull()
 
         const withinThreshold = expectedValue !== null && isWithinThreshold(currentEmissions, expectedValue)
@@ -762,7 +761,7 @@ describe('calculateTrajectory', () => {
           pastStudies,
         })
 
-        const expectedValue = getTrajectoryValueAtYear(referenceTrajectory, currentYear)
+        const expectedValue = getTrajectoryEmissionsAtYear(referenceTrajectory, currentYear)
         expect(expectedValue).not.toBeNull()
 
         const withinThreshold = expectedValue !== null && isWithinThreshold(currentEmissions, expectedValue)
@@ -811,7 +810,7 @@ describe('calculateTrajectory', () => {
           trajectoryType: TrajectoryType.SBTI_15,
         })
 
-        const expectedValue = getTrajectoryValueAtYear(referenceTrajectory, currentYear)
+        const expectedValue = getTrajectoryEmissionsAtYear(referenceTrajectory, currentYear)
         expect(expectedValue).not.toBeNull()
 
         const withinThreshold = expectedValue !== null && isWithinThreshold(currentEmissions, expectedValue)
@@ -916,7 +915,7 @@ describe('calculateTrajectory', () => {
           pastStudies,
         })
 
-        const expectedValue = getTrajectoryValueAtYear(referenceTrajectory, currentYear)
+        const expectedValue = getTrajectoryEmissionsAtYear(referenceTrajectory, currentYear)
         expect(expectedValue).not.toBeNull()
 
         const withinThreshold = expectedValue !== null && isWithinThreshold(currentEmissions, expectedValue)
