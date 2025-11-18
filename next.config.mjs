@@ -15,7 +15,6 @@ const nextConfig = {
 
       // On dev mode, we use the source code of publicodes-count
       // to allow easier debugging. In prod mode, the build version is used.
-
       ...(process.env.NODE_ENV === 'development'
         ? {
             '@abc-transitionbascarbone/publicodes-count': './publicodes-packages/publicodes-count/',
