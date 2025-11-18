@@ -1,4 +1,6 @@
 'use client'
+
+import Block from '@/components/base/Block'
 import Button from '@/components/base/Button'
 import HelpIcon from '@/components/base/HelpIcon'
 import IconLabel from '@/components/base/IconLabel'
@@ -10,7 +12,6 @@ import Sites from '@/environments/base/organization/Sites'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import SitesCut from '@/environments/cut/organization/Sites'
 import SitesTilt from '@/environments/tilt/organization/Sites'
-
 import { useServerFunction } from '@/hooks/useServerFunction'
 import {
   getUpdateOrganizationVersionPermission,
@@ -271,10 +272,11 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
   )
 
   return (
-    <>
+    <Block title={t('title', { name: study.name })} as="h2">
+      <h3 className="mb1">{t('general', { name: study.name })}</h3>
       {hasEditionRole ? (
         <>
-          <div className="mb1">
+          <div className="mb2">
             <IconLabel icon={Help('studyDates')} iconPosition="after" className="mb-2">
               <span className="inputLabel bold">{t('studyDates')}</span>
             </IconLabel>
@@ -289,7 +291,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
               />
             </div>
           </div>
-          <div className="mb1">
+          <div className="mb2">
             <IconLabel icon={Help('realizationDates')} iconPosition="after" className="mb-2">
               <span className="inputLabel bold">{t('realizationDates')}</span>
             </IconLabel>
@@ -380,7 +382,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
         }
       />
       {hasEditionRole && isFromStudyOrganization && (
-        <div className={classNames('mt1', { 'justify-between': isEditing })}>
+        <div className={classNames('mt1 mb2 gapped', isEditing ? 'justify-between' : 'justify-end')}>
           <Button
             data-testid={`${isEditing ? 'cancel-' : ''}edit-study-sites`}
             onClick={() => setIsEditing(!isEditing)}
@@ -425,7 +427,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
           <p className="mb-2">{tGlossary(`${glossary}Description`)}</p>
         </GlossaryModal>
       )}
-    </>
+    </Block>
   )
 }
 

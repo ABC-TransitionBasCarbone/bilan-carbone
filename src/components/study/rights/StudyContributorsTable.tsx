@@ -362,6 +362,7 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
     <>
       <Block
         title={t('title')}
+        as="h3"
         icon={<HelpIcon onClick={() => setDisplayRoles(!displayRoles)} label={tRole('information')} />}
         expIcon
         iconPosition="after"

@@ -92,7 +92,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
   )
 
   return (
-    <Block title={study.name} as="h1" description={tStudyNav('results')} bold descriptionColor="primary">
+    <Block title={study.name} as="h2" description={tStudyNav('results')} bold descriptionColor="primary">
       <Box component="section" className="mb2">
         <Typography>
           {tResults.rich('cutFeedback', {

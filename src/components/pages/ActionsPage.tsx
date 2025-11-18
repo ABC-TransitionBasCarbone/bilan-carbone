@@ -37,7 +37,7 @@ const ActionsPage = ({ study, actions, transitionPlanId }: Props) => {
         ].filter((link) => link !== undefined)}
       />
       <div className={classNames(styles.container, 'flex-col main-container p2 pt3')}>
-        <Title title={t('title')} as="h1" />
+        <Title title={t('title')} as="h2" />
 
         <div className="flex-col gapped2">
           <TransitionPlanOnboarding

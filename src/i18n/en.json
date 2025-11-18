@@ -489,6 +489,7 @@
     "title": "Study",
     "rights": {
       "title": "Rights on study : {name}",
+      "general": "General",
       "edit": "Edit the study name",
       "new": {
         "title": "Add a person to the study: {name}",
@@ -579,6 +580,7 @@
       }
     },
     "perimeter": {
+      "general": "General",
       "studyDates": "Study dates",
       "realizationDates": "Study completion date",
       "dates": "from {startDate} to {endDate}",
@@ -1807,7 +1809,7 @@
       "Unknown error": "An unknwon error happened. Please contact the support"
     },
     "sites": {
-      "title": "The organization's sites concerned by this study",
+      "title": "Organization's sites concerned by this study",
       "noSites": "There are no sites configured for the organization",
       "name": "Name",
       "namePlaceholder": "Site name",

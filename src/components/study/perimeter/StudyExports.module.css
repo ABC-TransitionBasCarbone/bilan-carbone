@@ -1,10 +1,4 @@
 .exportsLabel {
   width: 15rem;
-  margin-right: calc(2rem);
-}
-
-.exports {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  margin-right: 2rem;
 }

@@ -18,7 +18,6 @@ import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import StudyLevel from './StudyLevel'
-import styles from './StudyParams.module.css'
 import StudyPublicStatus from './StudyPublicStatus'
 import StudyResultsUnit from './StudyResultsUnit'
 import StudyVersions from './StudyVersions'
@@ -80,21 +79,19 @@ const StudyParams = ({ user, study, disabled, emissionFactorSources }: Props) =>
     <>
       <Block
         title={t('title', { name: study.name })}
-        as="h1"
+        as="h2"
         icon={
           disabled ? (
             <></>
           ) : (
-            <div className="ml1">
-              <Button aria-label={t('edit')} title={t('edit')} onClick={() => setEditTitle(true)}>
-                <EditIcon />
-              </Button>
-            </div>
+            <Button aria-label={t('edit')} title={t('edit')} onClick={() => setEditTitle(true)}>
+              <EditIcon />
+            </Button>
           )
         }
         iconPosition="after"
-        className={styles.blockStudyParams}
       >
+        <h3 className="mb1">{t('general')}</h3>
         {!isCut && (
           <>
             <div className="flex pb2">

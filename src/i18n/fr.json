@@ -489,6 +489,7 @@
     "title": "Étude",
     "rights": {
       "title": "Cadrage de l'étude : {name}",
+      "general": "Général",
       "edit": "Renommer l'étude",
       "new": {
         "title": "Ajouter une personne sur l'étude : {name}",
@@ -579,6 +580,7 @@
       }
     },
     "perimeter": {
+      "general": "Général",
       "studyDates": "Date de l'étude",
       "realizationDates": "Date de la réalisation de l'étude",
       "dates": "Du {startDate} au {endDate}",
@@ -1807,7 +1809,7 @@
       "Unknown error": "Une erreur inconnue s'est produite. Veuillez contacter le support"
     },
     "sites": {
-      "title": "Les sites de l'organisation concernés par l'étude",
+      "title": "Sites de l'organisation concernés par l'étude",
       "noSites": "Il n'y a pas de sites configurés sur l'organisation",
       "name": "Nom",
       "namePlaceholder": "Nom du site",

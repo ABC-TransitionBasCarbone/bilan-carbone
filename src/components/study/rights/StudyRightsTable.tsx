@@ -107,6 +107,7 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
     <>
       <Block
         title={t('title')}
+        as="h3"
         icon={<HelpIcon onClick={() => setDisplayRoles(!displayRoles)} label={tStudyRole('guide')} />}
         iconPosition="after"
         expIcon

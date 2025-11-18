@@ -9,6 +9,9 @@
     height: 1.5rem;
     width: auto;
   }
+  &:has(> button) {
+    height: 100%;
+  }
 }
 
 .bigIcon {
