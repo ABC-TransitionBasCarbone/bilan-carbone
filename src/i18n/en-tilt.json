@@ -40,13 +40,6 @@
     },
     "dependencyMatrix": {
       "info": "You can download a sample risk and dependency matrix to help you build your own. Afterwards, if you wish to submit your own matrix to help other associations by providing a working base, please send it to <mail>methodologie@abc-transitionbascarbone.fr</mail>"
-    },
-    "perimeter": {
-      "duplicate": {
-        "sitesChanges": {
-          "description": "You are about to modify the sites included in your Bilan Carbone® study. <error>This will have no impact on your studies other than this one.</error> Would you also like to reflect the changes made to existing sites (Turnover, FTE, volunteers and beneficiaries) in your general information?"
-        }
-      }
     }
   },
   "emissionFactors": {
