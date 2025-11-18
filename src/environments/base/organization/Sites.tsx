@@ -48,24 +48,29 @@ const Sites = <T extends SitesCommand>({
         accessorKey: 'name',
         cell: ({ row, getValue }) =>
           form ? (
-            <div className="align-center">
-              {withSelection && (
-                <FormCheckbox
+            <>
+              {withSelection ? (
+                <div className="align-center">
+                  <FormCheckbox
+                    size="small"
+                    control={control}
+                    translation={t}
+                    name={`sites.${row.index}.selected`}
+                    data-testid="organization-sites-checkbox"
+                  />
+                  {getValue<string>()}
+                </div>
+              ) : (
+                <FormTextField
+                  data-testid="edit-site-name"
+                  size="small"
                   control={control}
-                  translation={t}
-                  name={`sites.${row.index}.selected`}
-                  data-testid="organization-sites-checkbox"
+                  name={`sites.${row.index}.name`}
+                  placeholder={t('namePlaceholder')}
+                  fullWidth
                 />
               )}
-              <FormTextField
-                size="small"
-                data-testid="edit-site-name"
-                control={control}
-                name={`sites.${row.index}.name`}
-                placeholder={t('namePlaceholder')}
-                fullWidth
-              />
-            </div>
+            </>
           ) : (
             getValue<string>()
           ),
