@@ -1,3 +1,5 @@
+'use client'
+
 import { getOrCreateEngine } from '@/lib/publicodes/engine'
 import rules from '@abc-transitionbascarbone/publicodes-count'
 import Engine from 'publicodes'
