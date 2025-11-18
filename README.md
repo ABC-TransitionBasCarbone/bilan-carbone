@@ -18,12 +18,6 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
    yarn install
    ```
 
-   > [!IMPORTANT]
-   > As this repo use [Yarn
-   > workspace](https://classic.yarnpkg.com/blog/2017/08/02/introducing-workspaces/),
-   > to add new dependencies to the Next app, you need to add the the flag
-   > `-W`.
-
 2. **Environment setup**
 
    Create a `.env` copied from `.env.dist` in the root directory and a `.env.test` copied from `.env.test.dist` in the root directory.
@@ -44,7 +38,17 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
    npx prisma db seed
    ```
 
-5. **Run the development server**
+5. **Set up Publicodes local development** (optionnal)
+
+   ```bash
+   # Yarn link to ./publicodes-packages/publicodes-count/ package
+   yarn publicodes-count:link
+
+   # Recompile Publicodes rules
+   yarn publicodes-count:compile
+   ```
+
+6. **Run the development server**
 
    ```bash
    yarn dev
@@ -123,15 +127,9 @@ yarn cypress:gui
 
 ### Run Publicodes tests
 
-To run unit tests for each [Publicodes](https//publi.codes) packages under
-`./publicodes-packages/` :
-
 ```bash
-# To run all tests
-yarn test:publicodes-packages
-
-# To run tests of only one package
-yarn test:publicodes-packages:<package_dir>
+# Run tests
+yarn publicodes-count:test
 ```
 
 ## Deploy on Scalingo
