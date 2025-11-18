@@ -1,0 +1,57 @@
+confiseries et boissons . achats:
+  formule: général . nombre entrées * vente sur place . achat type . empreinte
+  unité: kgCO2e/an
+
+confiseries et boissons . achats . vente sur place:
+  titre: Vente sur place
+  question: Vendez-vous des boissons et des confiseries ?
+  par défaut: oui
+
+confiseries et boissons . achats . vente sur place . achat type:
+  applicable si:
+    toutes ces conditions:
+      - est défini: vente sur place
+      - vente sur place
+  par défaut: "'standard'"
+  question: |
+    Selon vous, en moyenne, un spectateur achète:
+  une possibilité:
+    - un peu
+    - standard
+    - significatif
+  avec:
+    un peu:
+      titre: Un peu de confiseries et de boissons (~30g)
+    standard:
+      titre: Une part standard de confiseries et de boissons (~120g)
+    significatif:
+      titre: Une part significative de confiseries et de boissons (~200g)
+
+confiseries et boissons . achats . vente sur place . achat type . empreinte:
+  formule:
+    variations:
+      - si: achat type = 'un peu'
+        alors: achat type . un peu . FE
+      - si: achat type = 'standard'
+        alors: achat type . standard . FE
+      - si: achat type = 'significatif'
+        alors: achat type . significatif . FE
+  unité: kgCO2e
+
+confiseries et boissons . achats . vente sur place . achat type . un peu . FE:
+  valeur: 0.030414
+  unité: kgCO2e
+  meta:
+    id: 136
+
+confiseries et boissons . achats . vente sur place . achat type . standard . FE:
+  valeur: 0.121656
+  unité: kgCO2e
+  meta:
+    id: 137
+
+confiseries et boissons . achats . vente sur place . achat type . significatif . FE:
+  valeur: 0.20276
+  unité: kgCO2e
+  meta:
+    id: 138
