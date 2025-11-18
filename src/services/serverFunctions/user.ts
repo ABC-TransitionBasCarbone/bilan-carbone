@@ -555,6 +555,13 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
 
     const accountAlreadyCreated = await getAccountByEmailAndEnvironment(email, environment)
     if (accountAlreadyCreated && accountAlreadyCreated.organizationVersionId) {
+      if (environment === Environment.TILT && accountAlreadyCreated.status !== UserStatus.ACTIVE) {
+        const activation = await activateEmail(email.toLowerCase(), environment)
+        if (!activation.success) {
+          throw new Error(activation.errorMessage)
+        }
+        return activation.data
+      }
       throw new Error(NOT_AUTHORIZED)
     }
 
