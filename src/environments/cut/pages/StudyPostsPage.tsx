@@ -9,7 +9,7 @@ import { ArrowLeftIcon, ArrowRightIcon } from '@mui/x-date-pickers'
 import { useTranslations } from 'next-intl'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
-import DynamicSubPostForm from '../study/DynamicSubPostForm'
+import PublicodesSubPostForm from '../study/PublicodesSubPostForm'
 
 interface Props {
   post: Post
@@ -56,7 +56,7 @@ const StudyPostsPageCut = ({ post, study, studySiteId }: Props) => {
 
   const tabContent = useMemo(() => {
     return subPosts.map((subPost) => (
-      <DynamicSubPostForm key={subPost} subPost={subPost} study={study} studySiteId={studySiteId} />
+      <PublicodesSubPostForm key={subPost} subPost={subPost} study={study} studySiteId={studySiteId} />
     ))
   }, [subPosts, study, studySiteId])
 
