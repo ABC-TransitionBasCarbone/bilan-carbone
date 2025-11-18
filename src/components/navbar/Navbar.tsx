@@ -1,6 +1,5 @@
 'use client'
 
-import { hasAccessToFormation } from '@/services/permissions/formations'
 import { getUserActiveAccounts } from '@/services/serverFunctions/user'
 import { isAdmin } from '@/utils/user'
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
@@ -31,7 +30,6 @@ interface Props {
 
 const Navbar = ({ children, user, environment }: Props) => {
   const t = useTranslations('navigation')
-  const [hasFormation, setHasFormation] = useState(false)
   const [hasMultipleAccounts, setHasMultipleAccounts] = useState(false)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
@@ -39,11 +37,6 @@ const Navbar = ({ children, user, environment }: Props) => {
   const handleClose = () => setAnchorEl(null)
 
   useEffect(() => {
-    const getFormationAccess = async () => {
-      const hasAccess = await hasAccessToFormation(user)
-      setHasFormation(hasAccess)
-    }
-
     const hasMultipleAccounts = async () => {
       const userAccounts = await getUserActiveAccounts()
       if (userAccounts.success) {
@@ -52,7 +45,6 @@ const Navbar = ({ children, user, environment }: Props) => {
     }
 
     hasMultipleAccounts()
-    getFormationAccess()
   }, [user])
 
   const isCut = useMemo(() => user.environment === Environment.CUT, [user?.environment])
@@ -130,7 +122,7 @@ const Navbar = ({ children, user, environment }: Props) => {
                   <span className={styles.big}>{t('factors')}</span>
                   <span className={styles.small}>{t('fe')}</span>
                 </NavbarButton>
-                {hasFormation && <NavbarButton href="/formation">{t('formation')}</NavbarButton>}
+                <NavbarButton href="/formation">{t('formation')}</NavbarButton>
               </>
             )}
           </Box>

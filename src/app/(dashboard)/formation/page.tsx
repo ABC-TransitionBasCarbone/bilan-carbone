@@ -1,5 +1,6 @@
 'use server'
 
+import ForbiddenAccess from '@/components/formation/Forbidden'
 import FormationPage from '@/components/pages/Formation'
 import NotFound from '@/components/pages/NotFound'
 import { getFormationVideos } from '@/db/formation'
@@ -9,8 +10,12 @@ import { hasAccessToFormation } from '@/services/permissions/formations'
 
 const Formation = async () => {
   const session = await auth()
-  if (!session?.user || !(await hasAccessToFormation(session.user))) {
+  if (!session?.user) {
     return <NotFound />
+  }
+
+  if (!(await hasAccessToFormation(session.user))) {
+    return <ForbiddenAccess />
   }
 
   const organizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
