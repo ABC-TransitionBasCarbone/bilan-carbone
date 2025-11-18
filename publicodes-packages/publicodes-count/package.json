@@ -12,6 +12,7 @@
   ],
   "scripts": {
     "compile": "publicodes compile",
+    "watch": "publicodes compile --watch",
     "dev": "publicodes dev",
     "pretest": "yarn run compile",
     "test": "vitest run"

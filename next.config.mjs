@@ -10,7 +10,18 @@ const scalewayUrl = `${bucketName}.s3.${region}.scw.cloud`
 const nextConfig = {
   // output: 'standalone', // TODO: Uncomment this if we meed to reduce the app size and add heavy node_modules packages to .slugignore
   turbopack: {
-    resolveAlias: { underscore: 'lodash' },
+    resolveAlias: {
+      underscore: 'lodash',
+
+      // On dev mode, we use the source code of publicodes-count
+      // to allow easier debugging. In prod mode, the build version is used.
+
+      ...(process.env.NODE_ENV === 'development'
+        ? {
+            '@abc-transitionbascarbone/publicodes-count': './publicodes-packages/publicodes-count/',
+          }
+        : {}),
+    },
     resolveExtensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
   },
   images: {
@@ -19,7 +30,7 @@ const nextConfig = {
   experimental: {
     serverActions: { bodySizeLimit: '5mb' },
   },
-  transpilePackages: ['mui-color-input'],
+  transpilePackages: ['mui-color-input', '@abc-transitionbascarbone/publicodes-count'],
   reactStrictMode: true,
   headers: async () => [
     {
