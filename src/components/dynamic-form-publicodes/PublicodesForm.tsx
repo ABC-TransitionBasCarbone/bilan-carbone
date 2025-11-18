@@ -1,9 +1,8 @@
-'use client'
-
 import { Box } from '@mui/material'
 import { FormBuilder, FormState } from '@publicodes/forms'
 import Engine, { Situation } from 'publicodes'
 import { useCallback, useMemo, useState } from 'react'
+import PublicodesFormField from './PublicodesFormField'
 
 export interface PublicodesFormProps<RuleName extends string, S extends Situation<RuleName>> {
   /** The Publicodes engine instanciated with the relevant rules. */
@@ -27,6 +26,7 @@ export default function PublicodesForm<RuleName extends string, S extends Situat
   onFieldChange,
 }: PublicodesFormProps<RuleName, S>) {
   const formBuilder = useMemo(() => {
+    // NOTE: maybe we could have a singleton FormBuilder the same way we do for Engine?
     return new FormBuilder({ engine })
   }, [engine])
 
@@ -54,8 +54,22 @@ export default function PublicodesForm<RuleName extends string, S extends Situat
   return (
     <Box className="dynamic-form">
       <Box>
+        {/* TODO: the relation lines between questions */}
         {currentPage.elements.map((element) => (
           <Box key={element.id} sx={{ mb: 2 }}>
+            <PublicodesFormField
+              formElement={element}
+              onChange={handleFieldChange}
+              // error={
+              //   touchedFields[question.idIntern] ? (errors[question.idIntern] as FieldError | undefined) : undefined
+              // }
+              // isLoading={isFormDisabled}
+              // autoSave={autoSave}
+              // watch={watch}
+              // formErrors={errors}
+              // setValue={setValue}
+              // studyStartDate={studyStartDate}
+            />
             {/* TODO: manage inputs */}
             <pre>{JSON.stringify(element, null, 2)}</pre>
           </Box>
