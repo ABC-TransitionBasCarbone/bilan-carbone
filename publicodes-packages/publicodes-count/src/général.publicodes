@@ -1,0 +1,18 @@
+général:
+  note: Les questions de cette catégories ne devront pas faire partie des variables manquantes au sein d'une page de form.
+
+général . nombre séances:
+  question: Nombre de séances
+  par défaut: 0
+
+général . nombre entrées:
+  question: Nombre d'entrées
+  par défaut: 0
+
+général . nombre de jours ouverture:
+  question: Nombre de jours d'ouverture
+  par défaut: 0
+
+général . nombre de films programmés:
+  question: Nombre de films programmés
+  par défaut: 0
