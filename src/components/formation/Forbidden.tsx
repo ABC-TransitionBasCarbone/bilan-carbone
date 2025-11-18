@@ -1,11 +1,17 @@
+import { getEnvVar } from '@/lib/environment'
+import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import Block from '../base/Block'
 
-const FAQLink = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
+interface Props {
+  environment: Environment
+}
 
-const ForbiddenAccess = () => {
+const ForbiddenAccess = ({ environment }: Props) => {
   const t = useTranslations('formation.forbidden')
+  const FAQLink = getEnvVar('FAQ_LINK', environment)
+
   return (
     <Block title={t('title')} as="h1">
       <div className="flex-col">
