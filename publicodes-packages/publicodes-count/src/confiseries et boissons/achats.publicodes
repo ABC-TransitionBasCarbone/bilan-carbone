@@ -36,22 +36,22 @@ confiseries et boissons . achats . vente sur place . achat type . empreinte:
         alors: achat type . standard . FE
       - si: achat type = 'significatif'
         alors: achat type . significatif . FE
-  unité: kgCO2e
+  unité: kgCO2e/entrée
 
 confiseries et boissons . achats . vente sur place . achat type . un peu . FE:
   valeur: 0.030414
-  unité: kgCO2e
+  unité: kgCO2e/entrée
   meta:
     id: 136
 
 confiseries et boissons . achats . vente sur place . achat type . standard . FE:
   valeur: 0.121656
-  unité: kgCO2e
+  unité: kgCO2e/entrée
   meta:
     id: 137
 
 confiseries et boissons . achats . vente sur place . achat type . significatif . FE:
   valeur: 0.20276
-  unité: kgCO2e
+  unité: kgCO2e/entrée
   meta:
     id: 138
