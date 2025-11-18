@@ -14,7 +14,7 @@ const Formation = async () => {
     return <NotFound />
   }
 
-  if (!(await hasLevelForFormation(session.user))) {
+  if (!hasLevelForFormation(session.user)) {
     return <ForbiddenAccess environment={session.user.environment} />
   }
 

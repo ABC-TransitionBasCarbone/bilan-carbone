@@ -3,7 +3,7 @@ import { UserSession } from 'next-auth'
 import { getDeactivableFeatureRestrictions, isDeactivableFeatureActive } from '../serverFunctions/deactivableFeatures'
 import { getUserSource } from '../serverFunctions/user'
 
-export const hasLevelForFormation = async (user: UserSession) => !!user.level
+export const hasLevelForFormation = (user: UserSession) => !!user.level
 
 export const hasAccessToFormation = async (environment: Environment) => {
   const [activeFeature, userSource, restrictions] = await Promise.all([
