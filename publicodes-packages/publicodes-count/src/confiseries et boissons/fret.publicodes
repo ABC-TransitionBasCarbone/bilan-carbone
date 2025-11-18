@@ -1,3 +1,14 @@
 confiseries et boissons . fret:
   note: TODO
-  formule: 0
+  formule: distance * FE
+  unité: kgCO2e
+
+confiseries et boissons . fret . distance:
+  question: Quelle est la distance entre votre cinéma et votre principal fournisseur ?
+  unité: km
+
+confiseries et boissons . fret . FE:
+  valeur: 0.0002
+  unité: kgCO2e/t.km
+  meta:
+    id: 28026
