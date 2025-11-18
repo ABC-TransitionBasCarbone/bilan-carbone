@@ -681,7 +681,8 @@
       "post": "Poste",
       "subPost": "Sous-poste",
       "tag": "Tag",
-      "download": "Télécharger les résultats",
+      "download": "Télécharger",
+      "downloadResults": "Télécharger les résultats (xlsx)",
       "downloadReport": "Télécharger le rapport",
       "downloadPDF": "Télécharger la fiche récapitulative",
       "downloadingPDF": "Téléchargement (au moins 15 secondes)...",
@@ -768,7 +769,6 @@
         "uncertaintyPerPostDescription": "Attention, la taille des cercles sur ce graphique est proportionnelle au nombre de sources d'émission qui ont étés renseignées au sein du poste, et non pas au total des émissions du poste (qui peut lui s'observer sur l'axe des abscisses). Cela permet de visualiser sur quels postes le travail a été le plus approfondi, et d'apprécier si cela est pertinent en fonction de l'importance des émissions associées, car il est généralement plus pertinent d'aller travailler dans le détail sur les postes d'émissions les plus importants. Les graphiques suivants permettent également de visualiser cet effet.",
         "uncertaintyPerPostDescription2": "Par ailleurs, plus le nombre de sources d'émission est important au sein d'un poste, moins l'incertitude de ce poste sera grande. Cela est dû au fait que deux incertitudes se compensent, car il n'est généralement pas certain que l'erreur soit faite dans le même sens. Pour donner un exemple concret, lorsque l'on mesure deux cordes, il est possible de surestimer la longueur de la première, et de sous-estimer celle de la seconde. Par conséquent, l'incertitude sur la longueur de la somme des deux cordes sera inférieure à la somme des deux incertitudes prises séparément."
       },
-      "resultsExcel": "Excel",
       "resultsWord": "Rapport Bilan Carbone®"
     },
     "pdf": {
@@ -801,7 +801,7 @@
       "activityDataUnit": "Unité de la donnée d'activité",
       "activityDataValue": "Valeur de la donnée d'activité",
       "date": "Date butoire",
-      "download": "Télécharger les sources d'émission",
+      "download": "Télécharger les sources d'émission (csv)",
       "emissionName": "Nom du FE (facteur d'émission)",
       "emissionQuality": "Qualité du FE",
       "emissionSource": "Source du FE",

@@ -68,9 +68,9 @@ model Action {
 
   title                     String
   subSteps                  String                   @map("sub_steps")
-  detailedDescription       String
-  potentialDeduction        ActionPotentialDeduction
-  reductionValue            Int?
+  detailedDescription       String                   @map("detailed_description")
+  potentialDeduction        ActionPotentialDeduction @map("potential_deduction")
+  reductionValue            Int?                     @map("reduction_value")
   reductionStartYear        String?                  @map("reduction_start_year")
   reductionEndYear          String?                  @map("reduction_end_year")
   owner                     String?
@@ -90,8 +90,8 @@ model Action {
   relevance                 ActionRelevance[]
   enabled                   Boolean                  @default(false) @map("enabled")
   dependenciesOnly          Boolean                  @default(false) @map("dependencies_only")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  createdAt                 DateTime                 @default(now()) @map("created_at")
+  updatedAt                 DateTime                 @default(now()) @updatedAt @map("updated_at")
 
   @@map("actions")
 }
@@ -116,8 +116,8 @@ model Trajectory {
   type        TrajectoryType
 
   objectives Objective[]
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  createdAt  DateTime    @default(now()) @map("created_at")
+  updatedAt  DateTime    @default(now()) @updatedAt @map("updated_at")
 
   @@map("trajectories")
 }
@@ -128,9 +128,9 @@ model ExternalStudy {
   transitionPlanId String         @map("transition_plan_id")
   transitionPlan   TransitionPlan @relation(fields: [transitionPlanId], references: [id], onDelete: Cascade)
 
-  name     String
-  date     DateTime
-  totalCo2 Int
+  name      String
+  date      DateTime
+  totalCo2  Int      @map("total_co2")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 

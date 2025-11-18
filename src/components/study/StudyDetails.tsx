@@ -38,7 +38,6 @@ const StudyDetails = ({
         duplicableEnvironments={duplicableEnvironments}
         studySite={studySite}
         setSite={setSite}
-        environment={study.organizationVersion.environment}
       />
       <Block>
         <DynamicComponent
