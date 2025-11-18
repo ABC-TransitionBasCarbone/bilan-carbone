@@ -16,7 +16,7 @@
     "pretest": "yarn run compile",
     "test": "vitest run"
   },
-  "peerDependencies": {
+  "dependencies": {
     "publicodes": "^1.9.1"
   },
   "devDependencies": {
