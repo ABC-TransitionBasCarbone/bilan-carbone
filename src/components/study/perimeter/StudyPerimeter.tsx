@@ -368,6 +368,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
               caUnit={caUnit}
               withSelection
               onDuplicate={!isEditing && isFromStudyOrganization ? setDuplicatingSiteId : undefined}
+              organizationId={isFromStudyOrganization ? study.organizationVersion.id : undefined}
             />
           ),
         }}
@@ -378,6 +379,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
             caUnit={caUnit}
             withSelection
             onDuplicate={!isEditing && isFromStudyOrganization ? setDuplicatingSiteId : undefined}
+            organizationId={isFromStudyOrganization ? study.organizationVersion.id : undefined}
           />
         }
       />
