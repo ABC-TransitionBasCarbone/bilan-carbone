@@ -16,9 +16,8 @@
     "format": "prettier --write .",
     "test": "jest",
     "test:watch": "jest --watch",
-    "publicodes-count:link": "cd publicodes-packages/publicodes-count && yarn link && cd ../../ && yarn link @abc-transitionbascarbone/publicodes-count",
     "publicodes-count:compile": "cd publicodes-packages/publicodes-count && yarn run compile",
-    "publicodes-count:unlink": "cd publicodes-packages/publicodes-count && yarn unlink && cd ../../ && yarn unlink @abc-transitionbascarbone/publicodes-count",
+    "publicodes-count:watch": "cd publicodes-packages/publicodes-count && yarn run watch",
     "publicodes-count:test": "cd publicodes-packages/publicodes-count && yarn test",
     "cypress": "cypress run",
     "cypress:gui": "cypress open",
@@ -34,7 +33,6 @@
   },
   "dependencies": {
     "@abc-transitionbascarbone/publicodes-count": "file:./publicodes-packages/publicodes-count/",
-    "publicodes": "^1.9.1",
     "@aws-sdk/client-s3": "^3.913.0",
     "@aws-sdk/s3-request-presigner": "^3.913.0",
     "@emotion/cache": "^11.14.0",
