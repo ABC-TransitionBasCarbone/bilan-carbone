@@ -50,7 +50,7 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
       - name: Launch unit tests
-        run: yarn run test:publicodes-packages
+        run: yarn run publicodes-count:test
 
   e2e-tests:
     timeout-minutes: 30
