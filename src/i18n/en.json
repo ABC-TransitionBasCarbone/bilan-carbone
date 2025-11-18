@@ -2080,7 +2080,12 @@
     "answer": "Answer the questionnaire",
     "timer": "Remaining time: ",
     "alertMessage": "You only have 10 minutes remaining. After 10 minutes, this form will remain available and you will be able to submit your answers. However, if you take too long, your answers will not be taken into account and you will not receive a attestation of achievement.",
-    "form": "Typeform Questionnaire"
+    "form": "Typeform Questionnaire",
+    "forbidden": {
+      "title": "Blocked access",
+      "message": "You are not in our database of trained members, so you cannot access the training tab to take the refresher training course. If you believe this is an error, please follow the process outlined in our <link>FAQ</link>.",
+      "backToHome": "Back to home"
+    }
   },
   "deactivableFeatures": {
     "title": "Deactivable functionnalities",

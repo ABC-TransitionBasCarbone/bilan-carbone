@@ -2080,7 +2080,12 @@
     "answer": "Répondre au questionnaire",
     "timer": "Temps restant : ",
     "alertMessage": "Il ne vous reste que 10 minutes. Passé ce délai, le formulaire restera accessible et vous pourrez toujours transmettre vos réponses. Cependant, si vous dépassez la limite de {time} minutes avant de les envoyer, celles-ci ne seront pas prises en compte et vous ne recevrez pas d'attestation de réussite.",
-    "form": "Questionnaire Typeform"
+    "form": "Questionnaire Typeform",
+    "forbidden": {
+      "title": "Accès bloqué",
+      "message": "Vous n'êtes pas dans notre base de donnée de formés, vous ne pouvez donc pas avoir accès à l'onglet formation pour passer la formation de mise à jour. Si vous pensez que c'est une erreur merci de suivre le processus indiqué dans notre <link>FAQ</link>.",
+      "backToHome": "Retour à l'accueil"
+    }
   },
   "deactivableFeatures": {
     "title": "Fonctionnalités désactivables",
