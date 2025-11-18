@@ -47,11 +47,11 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 5. **Set up Publicodes local development** (optionnal)
 
    ```bash
-   # Yarn link to ./publicodes-packages/publicodes-count/ package
-   yarn publicodes-count:link
-
-   # Recompile Publicodes rules
+   # Recompile Publicodes rules (one time)
    yarn publicodes-count:compile
+
+   # In an other terminal watch changes
+   yarn publicodes-count:watch
    ```
 
 6. **Run the development server**

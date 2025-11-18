@@ -1,3 +1,5 @@
+'use client'
+
 import { Box } from '@mui/material'
 import { FormBuilder, FormState } from '@publicodes/forms'
 import Engine, { Situation } from 'publicodes'
