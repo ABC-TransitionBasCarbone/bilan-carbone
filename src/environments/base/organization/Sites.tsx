@@ -1,11 +1,13 @@
 'use client'
 
+import LinkButton from '@/components/base/LinkButton'
 import { TableActionButton } from '@/components/base/TableActionButton'
 import { FormCheckbox } from '@/components/form/Checkbox'
 import { FormTextField } from '@/components/form/TextField'
 import GlobalSites from '@/components/organization/Sites'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { CA_UNIT_VALUES, displayCA, formatNumber } from '@/utils/number'
+import EditIcon from '@mui/icons-material/Edit'
 import { Environment, SiteCAUnit } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
@@ -19,6 +21,7 @@ interface Props<T extends SitesCommand> {
   caUnit: SiteCAUnit
   additionalColumns?: ColumnDef<SitesCommand['sites'][number]>[]
   environment?: Environment
+  organizationId?: string
   onDuplicate?: (studySiteId: string) => void
 }
 
@@ -29,6 +32,7 @@ const Sites = <T extends SitesCommand>({
   caUnit,
   additionalColumns = [],
   environment = Environment.BC,
+  organizationId,
   onDuplicate,
 }: Props<T>) => {
   const t = useTranslations('organization.sites')
@@ -44,28 +48,42 @@ const Sites = <T extends SitesCommand>({
     const columns = [
       {
         id: 'name',
-        header: t('name'),
+        header: () => (
+          <div className="align-center gapped">
+            {t('name')}
+            {form && withSelection && organizationId && (
+              <LinkButton href={`/organisations/${organizationId}/modifier`} target="_blank" rel="noreferrer noopener">
+                <EditIcon />
+              </LinkButton>
+            )}
+          </div>
+        ),
         accessorKey: 'name',
         cell: ({ row, getValue }) =>
           form ? (
-            <div className="align-center">
-              {withSelection && (
-                <FormCheckbox
+            <>
+              {withSelection ? (
+                <div className="align-center">
+                  <FormCheckbox
+                    size="small"
+                    control={control}
+                    translation={t}
+                    name={`sites.${row.index}.selected`}
+                    data-testid="organization-sites-checkbox"
+                  />
+                  {getValue<string>()}
+                </div>
+              ) : (
+                <FormTextField
+                  data-testid="edit-site-name"
+                  size="small"
                   control={control}
-                  translation={t}
-                  name={`sites.${row.index}.selected`}
-                  data-testid="organization-sites-checkbox"
+                  name={`sites.${row.index}.name`}
+                  placeholder={t('namePlaceholder')}
+                  fullWidth
                 />
               )}
-              <FormTextField
-                size="small"
-                data-testid="edit-site-name"
-                control={control}
-                name={`sites.${row.index}.name`}
-                placeholder={t('namePlaceholder')}
-                fullWidth
-              />
-            </div>
+            </>
           ) : (
             getValue<string>()
           ),
