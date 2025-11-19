@@ -1,0 +1,8 @@
+commun:
+  titre: Règles communes
+
+commun . nombre de semaines par an:
+  titre: Nombre de semaines par an
+  description: Nombre de semaines prises en compte pour le calcul annuel.
+  valeur: 52
+  unité: semaine/an
