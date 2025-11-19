@@ -140,8 +140,8 @@ const TrajectoryReductionPage = ({
   }, [callServerFunction, study.id, router])
 
   const pastStudies = useMemo(
-    () => convertToPastStudies(linkedStudies, linkedExternalStudies, withDependencies),
-    [linkedStudies, linkedExternalStudies, withDependencies],
+    () => convertToPastStudies(linkedStudies, linkedExternalStudies, withDependencies, validatedOnly),
+    [linkedStudies, linkedExternalStudies, withDependencies, validatedOnly],
   )
 
   const trajectoryData = useMemo(() => {

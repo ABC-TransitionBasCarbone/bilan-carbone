@@ -25,6 +25,7 @@ export const convertToPastStudies = (
   linkedStudies: FullStudy[],
   externalStudies: ExternalStudy[],
   withDependencies: boolean,
+  validatedOnly: boolean,
 ): PastStudy[] => {
   const pastStudies: PastStudy[] = []
 
@@ -34,7 +35,7 @@ export const convertToPastStudies = (
       name: study.name,
       type: 'linked',
       year: study.startDate.getFullYear(),
-      totalCo2: getStudyTotalCo2Emissions(study, withDependencies, false),
+      totalCo2: getStudyTotalCo2Emissions(study, withDependencies, validatedOnly),
     })
   })
 
@@ -64,8 +65,6 @@ interface CalculateSbtiTrajectoryParams {
   endYear?: number
   maxYear?: number
   pastStudies?: PastStudy[]
-  // overshootAdjustment is kept for backward compatibility but not used for SBTi (reference is always 2020)
-  overshootAdjustment?: OvershootAdjustment
   displayCurrentStudyValueOnTrajectory?: boolean
 }
 
@@ -591,11 +590,12 @@ const getObjectivesWithOvershootCompensation = (
     1.0,
   )
 
-  // Use derivative approximation to find k
-  // Budget(k) ≈ Budget(1) + Budget'(1) × (k - 1)
+  // Use derivative approximation to find k with delta close to 0
   const delta = 0.001
   const budgetAtDelta = calculateBudgetWithObjectivesAndMultiplier(actualEmissions, studyYear, objectives, 1.0 + delta)
   const derivative = (budgetAtDelta - actualBudgetWithoutCompensation) / delta
+
+  // Linear approximation: Budget(k) ≈ Budget(1) + derivative × (k - 1) => remainingTotalBudget = actualBudgetWithoutCompensation + derivative × (k - 1)
   const k = 1.0 + (remainingTotalBudget - actualBudgetWithoutCompensation) / derivative
 
   // Apply multiplier to all objective rates
