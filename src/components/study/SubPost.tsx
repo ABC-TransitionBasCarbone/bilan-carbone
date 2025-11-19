@@ -85,7 +85,7 @@ const SubPost = ({
     if (emissionFactorsForSubPost.length === 0 && expanded) {
       fetchEmissionFactors()
     }
-  }, [emissionFactorsForSubPost.length, expanded, importVersions, study.id, subPost])
+  }, [emissionFactorsForSubPost.length, environment, expanded, importVersions, study.id, subPost])
 
   const total = useMemo(() => {
     if (!environment) {
