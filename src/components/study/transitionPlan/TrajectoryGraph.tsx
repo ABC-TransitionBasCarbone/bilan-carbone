@@ -4,7 +4,7 @@ import { getYearsToDisplay, PastStudy, TrajectoryData } from '@/utils/trajectory
 import { Typography } from '@mui/material'
 import { LineChart, LineSeries } from '@mui/x-charts/LineChart'
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import DependenciesSwitch from '../results/DependenciesSwitch'
 
 export interface TrajectoryDataPoint {
@@ -68,10 +68,13 @@ const TrajectoryGraph = ({
 
   const studyStartYearIndex = yearsToDisplay.indexOf(studyStartYear)
 
-  const mapDataToYears = (dataPoints: TrajectoryDataPoint[]) => {
-    const dataMap = new Map(dataPoints.map((d) => [d.year, d.value]))
-    return yearsToDisplay.map((year) => dataMap.get(year) ?? null)
-  }
+  const mapDataToYears = useCallback(
+    (dataPoints: TrajectoryDataPoint[]) => {
+      const dataMap = new Map(dataPoints.map((d) => [d.year, d.value]))
+      return yearsToDisplay.map((year) => dataMap.get(year) ?? null)
+    },
+    [yearsToDisplay],
+  )
 
   const historicalStudyYearIndices = useMemo(() => {
     const indices = new Set<number>()
@@ -86,14 +89,14 @@ const TrajectoryGraph = ({
     return indices
   }, [pastStudies, studyStartYear, yearsToDisplay])
 
-  const shouldShowMark = (index: number, onlyCurrentYear: boolean = false) => {
-    if (onlyCurrentYear) {
-      return index === studyStartYearIndex
-    }
-    return index === studyStartYearIndex || historicalStudyYearIndices.has(index)
-  }
+  const shouldShowMark = useCallback(
+    (index: number) => {
+      return index === studyStartYearIndex || historicalStudyYearIndices.has(index)
+    },
+    [studyStartYearIndex, historicalStudyYearIndices],
+  )
 
-  const createSeries = () => {
+  const createSeries = useMemo(() => {
     const series: LineSeries[] = []
 
     if (trajectory15Enabled && trajectory15Data) {
@@ -133,7 +136,7 @@ const TrajectoryGraph = ({
           color: 'var(--trajectory-sbti-15)',
           curve: 'linear' as const,
           connectNulls: false,
-          showMark: ({ index }: { index: number }) => shouldShowMark(index, false),
+          showMark: ({ index }: { index: number }) => shouldShowMark(index),
           valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
         })
       } else {
@@ -186,7 +189,7 @@ const TrajectoryGraph = ({
           color: 'var(--trajectory-sbti-wb2c)',
           curve: 'linear' as const,
           connectNulls: false,
-          showMark: ({ index }: { index: number }) => shouldShowMark(index, false),
+          showMark: ({ index }: { index: number }) => shouldShowMark(index),
           valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
         })
       } else {
@@ -241,7 +244,7 @@ const TrajectoryGraph = ({
             color: traj.color || `var(--trajectory-custom-${index % 9})`,
             curve: 'linear' as const,
             connectNulls: false,
-            showMark: ({ index }: { index: number }) => shouldShowMark(index, false),
+            showMark: ({ index }: { index: number }) => shouldShowMark(index),
             valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
           })
         } else {
@@ -295,7 +298,7 @@ const TrajectoryGraph = ({
           color: 'var(--mui-palette-primary-main)',
           curve: 'linear' as const,
           connectNulls: false,
-          showMark: ({ index }: { index: number }) => shouldShowMark(index, false),
+          showMark: ({ index }: { index: number }) => shouldShowMark(index),
           valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
         })
       } else {
@@ -312,7 +315,21 @@ const TrajectoryGraph = ({
     }
 
     return series
-  }
+  }, [
+    trajectory15Enabled,
+    trajectory15Data,
+    trajectoryWB2CEnabled,
+    trajectoryWB2CData,
+    customTrajectoriesData,
+    actionBasedTrajectoryData,
+    mapDataToYears,
+    t,
+    historicalStudyYearIndices,
+    shouldShowMark,
+    studyStartYear,
+    studyStartYearIndex,
+    studyName,
+  ])
 
   return (
     <div className="w100 mb2">
@@ -335,7 +352,7 @@ const TrajectoryGraph = ({
             tickInterval: [yearsToDisplay[0], ...yearsToDisplay.filter((year) => year % 5 === 0)],
           },
         ]}
-        series={createSeries()}
+        series={createSeries}
         height={400}
         yAxis={[
           {
