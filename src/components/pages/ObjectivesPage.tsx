@@ -61,6 +61,7 @@ const ObjectivesPage = ({ study, canEdit, trajectories, transitionPlanId }: Prop
               setSearch={setSearchFilter}
               transitionPlanId={transitionPlanId}
               onTrajectoryCreation={() => router.refresh()}
+              canEdit={canEdit}
             />
 
             <TrajectoryObjectivesTable
