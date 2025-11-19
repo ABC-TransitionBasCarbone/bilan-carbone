@@ -693,10 +693,6 @@ describe('calculateTrajectory', () => {
           studyStartYear: currentYear,
           reductionRate: SBTI_REDUCTION_RATE_15,
           pastStudies,
-          overshootAdjustment: {
-            referenceTrajectory,
-            referenceStudyYear: 2022,
-          },
         })
 
         verifyTrajectoryInterpolation(currentTrajectory, pastStudies, currentYear)
@@ -833,10 +829,6 @@ describe('calculateTrajectory', () => {
           studyStartYear: currentYear,
           reductionRate: SBTI_REDUCTION_RATE_15,
           pastStudies,
-          overshootAdjustment: {
-            referenceTrajectory,
-            referenceStudyYear: 2022,
-          },
         })
 
         const customPoint2026 = currentTrajectory.find((p) => p.year === 2026)
@@ -926,10 +918,6 @@ describe('calculateTrajectory', () => {
           studyStartYear: currentYear,
           reductionRate: SBTI_REDUCTION_RATE_15,
           pastStudies,
-          overshootAdjustment: {
-            referenceTrajectory,
-            referenceStudyYear: 2022,
-          },
         })
 
         verifyTrajectoryInterpolation(currentTrajectory, pastStudies, currentYear)
