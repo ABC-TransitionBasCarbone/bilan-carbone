@@ -27,7 +27,8 @@ describe("Poste - Déchets", () => {
     expect(result.unit?.numerators).toContain("kgCO2e");
   });
 
-  test("devrait retourner 0 quand aucune donnée", () => {
+  // NOTE: We want to have non-zero default values to dynamically check unit homogeneity.
+  test.skip("devrait retourner 0 quand aucune donnée", () => {
     const localEngine = engine.shallowCopy();
     const result = localEngine.evaluate("déchets");
 
