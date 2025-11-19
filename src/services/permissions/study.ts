@@ -3,7 +3,7 @@ import { getDocumentById } from '@/db/document'
 import { getOrganizationVersionsByOrganizationId, OrganizationVersionWithOrganization } from '@/db/organization'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getAccountByIdWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
-import { canEditOrganizationVersion, isAdminOnOrga, isInOrgaOrParent } from '@/utils/organization'
+import { canEditOrganizationVersion, hasActiveLicence, isAdminOnOrga, isInOrgaOrParent } from '@/utils/organization'
 import { getAccountRoleOnStudy, getDuplicableEnvironments, hasEditionRights } from '@/utils/study'
 import { DeactivatableFeature, Environment, Level, Prisma, Study, StudyRole, User } from '@prisma/client'
 import { UserSession } from 'next-auth'
@@ -136,6 +136,10 @@ export const canCreateSpecificStudy = async (
 }
 
 const canEditStudy = async (user: UserSession, study: FullStudy) => {
+  if (!hasActiveLicence(study.organizationVersion)) {
+    return false
+  }
+
   if (isAdminOnStudyOrga(user, study.organizationVersion as OrganizationVersionWithOrganization)) {
     return true
   }

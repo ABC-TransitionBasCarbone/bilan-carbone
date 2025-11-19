@@ -12,6 +12,7 @@ interface Props {
   transitionPlanId: string
   linkedStudies: FullStudy[]
   externalStudies: ExternalStudy[]
+  canEdit: boolean
 }
 
 type Study = {
@@ -21,7 +22,7 @@ type Study = {
   type: 'linked' | 'external'
 }
 
-const LinkedStudiesTable = ({ transitionPlanId, linkedStudies, externalStudies }: Props) => {
+const LinkedStudiesTable = ({ transitionPlanId, linkedStudies, externalStudies, canEdit }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.linkedStudies.table')
 
   const deleteLinkedStudy = useCallback(
@@ -70,19 +71,22 @@ const LinkedStudiesTable = ({ transitionPlanId, linkedStudies, externalStudies }
             <div className="align-center">
               {row.original.type === 'linked' ? (
                 <>
-                  <Button
-                    aria-label={t('delete')}
-                    title={t('delete')}
-                    onClick={() => deleteLinkedStudy(row.original.id)}
-                    data-testid={`delete-linked-study-button`}
-                    color="error"
-                    variant="text"
-                  >
-                    <DeleteIcon />
-                  </Button>
+                  {canEdit && (
+                    <Button
+                      aria-label={t('delete')}
+                      title={t('delete')}
+                      onClick={() => deleteLinkedStudy(row.original.id)}
+                      data-testid={`delete-linked-study-button`}
+                      color="error"
+                      variant="text"
+                    >
+                      <DeleteIcon />
+                    </Button>
+                  )}
+
                   <LinkButton href={`/etudes/${row.original.id}`}>{t('see')}</LinkButton>
                 </>
-              ) : (
+              ) : canEdit ? (
                 <Button
                   aria-label={t('delete')}
                   title={t('delete')}
@@ -93,12 +97,14 @@ const LinkedStudiesTable = ({ transitionPlanId, linkedStudies, externalStudies }
                 >
                   <DeleteIcon />
                 </Button>
+              ) : (
+                <></>
               )}
             </div>
           ),
         },
       ] as ColumnDef<Study>[],
-    [t, deleteLinkedStudy, deleteExternalStudy],
+    [t, canEdit, deleteLinkedStudy, deleteExternalStudy],
   )
 
   const mergedTable = useReactTable({
