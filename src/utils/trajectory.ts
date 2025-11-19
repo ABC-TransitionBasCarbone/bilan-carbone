@@ -298,7 +298,7 @@ const computeValue = (
       displayCurrentStudyValueOnTrajectory,
     )
 
-    if (!pastOrPresentValue) {
+    if (pastOrPresentValue === null) {
       return null
     }
 
@@ -394,7 +394,7 @@ export const calculateSBTiTrajectory = ({
         studyStartYear,
       )
 
-      if (pastEmissions) {
+      if (pastEmissions !== null) {
         dataPoints.push({ year, value: pastEmissions })
       } else {
         dataPoints.push({ year, value: 0 })
