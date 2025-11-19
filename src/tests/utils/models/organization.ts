@@ -32,4 +32,5 @@ export const mockedOrganizationVersion = {
   parentId: null,
   organization: mockedOrganization,
   environment: Environment.BC,
+  activatedLicence: [2025],
 }
