@@ -96,7 +96,7 @@ const TrajectoryGraph = ({
     [studyStartYearIndex, historicalStudyYearIndices],
   )
 
-  const createSeries = useMemo(() => {
+  const seriesCreated = useMemo(() => {
     const series: LineSeries[] = []
 
     if (trajectory15Enabled && trajectory15Data) {
@@ -352,7 +352,7 @@ const TrajectoryGraph = ({
             tickInterval: [yearsToDisplay[0], ...yearsToDisplay.filter((year) => year % 5 === 0)],
           },
         ]}
-        series={createSeries}
+        series={seriesCreated}
         height={400}
         yAxis={[
           {

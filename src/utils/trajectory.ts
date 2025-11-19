@@ -312,44 +312,6 @@ const computeValue = (
   return computeFutureValue(year, studyEmissions, reductionStartYear, reductionRate)
 }
 
-export const calculateOvershoot = (
-  studyYear: number,
-  referenceYear: number,
-  result: number,
-  percentage: number,
-): number => {
-  let sum = 0
-  for (let i = referenceYear; i <= studyYear; i++) {
-    sum += 1 - (studyYear - i) * percentage
-  }
-  return (studyYear - referenceYear + 1) * result - sum * result
-}
-
-export const calculateCumulativeBudget = (
-  targetYear: number,
-  referenceYear: number,
-  result: number,
-  percentage: number,
-): number => {
-  let budget = 0
-  for (let i = referenceYear; i <= targetYear; i++) {
-    budget += (1 - (i - referenceYear) * percentage) * result
-  }
-  return budget
-}
-
-export const calculateNewTargetYear = (cumulativeBudgetAdjusted: number, result: number, studyYear: number): number => {
-  return 2 * (cumulativeBudgetAdjusted / result) + studyYear
-}
-
-export const calculateNewLinearReductionRate = (
-  reductionTarget: number,
-  newTargetYear: number,
-  studyYear: number,
-): number => {
-  return reductionTarget / (newTargetYear - studyYear)
-}
-
 const computeFutureValue = (
   year: number,
   studyEmissions: number,
@@ -407,8 +369,6 @@ export const calculateSBTiTrajectory = ({
   if (studyStartYear > SNBC_SBTI_REDUCTION_START_YEAR) {
     let pastOvershoot = 0
     let emissionsValue2020 = studyEmissions
-    let referenceValueAtStudyYear =
-      studyEmissions * (1 - (studyStartYear - SNBC_SBTI_REDUCTION_START_YEAR) * reductionRate)
 
     // Check if we have historical data between 2020 and studyStartYear
     const hasHistoricalDataBetween2020AndStudyYear = historicalPoints.some(
@@ -433,7 +393,7 @@ export const calculateSBTiTrajectory = ({
     // Calculate reference trajectory values
     const yearsSince2020 = studyStartYear - SNBC_SBTI_REDUCTION_START_YEAR
     const referenceYearlyReduction = emissionsValue2020 * reductionRate
-    referenceValueAtStudyYear = emissionsValue2020 - yearsSince2020 * referenceYearlyReduction
+    const referenceValueAtStudyYear = emissionsValue2020 - yearsSince2020 * referenceYearlyReduction
 
     const referenceBudgetFrom2020ToStudyYear = calculateLinearTrajectoryIntegral(
       emissionsValue2020,
@@ -469,15 +429,17 @@ export const calculateSBTiTrajectory = ({
       pastOvershoot = actualBudgetUsedFrom2020ToStudyYear - referenceBudgetFrom2020ToStudyYear
     }
 
-    // Calculate the reference total budget from 2020 to reaching zero emissions
-    const yearsToZeroFromReference = referenceValueAtStudyYear / referenceYearlyReduction
-    const referenceTotalBudget = (referenceValueAtStudyYear * yearsToZeroFromReference) / 2
+    // Calculate the reference budget from study year to reaching zero emissions
+    // This represents the total carbon budget if following the reference linear reduction trajectory
+    const remainingReferenceYearsFromStudyYearToZero = referenceValueAtStudyYear / referenceYearlyReduction
+    const remainingReferenceBudgetFromStudyYearToZero =
+      (referenceValueAtStudyYear * remainingReferenceYearsFromStudyYearToZero) / 2
 
     // The total budget remaining compensates for past overshoot
-    const totalBudgetRemaining = referenceTotalBudget - pastOvershoot
+    const totalRemainingBudget = remainingReferenceBudgetFromStudyYearToZero - pastOvershoot
 
     // Now calculate the rate needed starting from actual emissions to match this budget
-    const targetYears = (2 * totalBudgetRemaining) / studyEmissions
+    const targetYears = (2 * totalRemainingBudget) / studyEmissions
     const targetEndYear = studyStartYear + targetYears
     const newReductionRate = 1 / targetYears
     const newEndYear = Math.ceil(targetEndYear)
@@ -1135,6 +1097,7 @@ const extractYearsFromTrajectory = (data: TrajectoriesForYear | null): number[] 
   if (!data) {
     return []
   }
+  // We need both current and past points in case the current trajectory is only a single point due to being bellow threshold
   return [...data.currentTrajectory.map((d) => d.year), ...(data.previousTrajectory?.map((d) => d.year) ?? [])]
 }
 
