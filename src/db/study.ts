@@ -262,6 +262,7 @@ const fullStudyInclude = {
       isCR: true,
       parentId: true,
       environment: true,
+      activatedLicence: true,
       organization: {
         select: {
           id: true,
