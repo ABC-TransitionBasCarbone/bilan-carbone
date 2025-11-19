@@ -36,10 +36,9 @@ describe('Duplicate study', () => {
 
     cy.get('#duplicate-study-modal-title', { timeout: 15000 }).should('not.exist') // wait for duplication to be finished
 
-    cy.visit('/selection-du-compte')
-    cy.url({ timeout: 10000 }).should('eq', `${Cypress.config().baseUrl}/selection-du-compte`)
-    cy.contains('li', 'Tilt').click()
-    cy.url({ timeout: 10000 }).should('eq', `${Cypress.config().baseUrl}/`)
+    cy.logout()
+    cy.login('tilt-env-admin-0@yopmail.com', 'password-0')
+    cy.url({ timeout: 10000 }).should('eq', `${Cypress.config().baseUrl}/?fromLogin`)
 
     cy.getByTestId('study').contains('BC V8.10').scrollIntoView().should('be.visible')
     cy.getByTestId('study')
