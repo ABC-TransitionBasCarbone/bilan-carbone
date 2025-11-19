@@ -367,7 +367,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
               form={isEditing ? (siteForm as unknown as UseFormReturn<SitesCommand>) : undefined}
               caUnit={caUnit}
               withSelection
-              onDuplicate={!isEditing && isFromStudyOrganization ? setDuplicatingSiteId : undefined}
+              onDuplicate={!isEditing && hasEditionRole && isFromStudyOrganization ? setDuplicatingSiteId : undefined}
               organizationId={isFromStudyOrganization ? study.organizationVersion.id : undefined}
             />
           ),
@@ -378,13 +378,13 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
             form={isEditing ? (siteForm as unknown as UseFormReturn<SitesCommand>) : undefined}
             caUnit={caUnit}
             withSelection
-            onDuplicate={!isEditing && isFromStudyOrganization ? setDuplicatingSiteId : undefined}
+            onDuplicate={!isEditing && hasEditionRole && isFromStudyOrganization ? setDuplicatingSiteId : undefined}
             organizationId={isFromStudyOrganization ? study.organizationVersion.id : undefined}
           />
         }
       />
       {hasEditionRole && isFromStudyOrganization && (
-        <div className={classNames('mt1 mb2 gapped', isEditing ? 'justify-between' : 'justify-end')}>
+        <div className={classNames('mt1 gapped', isEditing ? 'justify-between' : 'justify-end')}>
           <Button
             data-testid={`${isEditing ? 'cancel-' : ''}edit-study-sites`}
             onClick={() => setIsEditing(!isEditing)}
