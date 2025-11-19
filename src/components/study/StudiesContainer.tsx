@@ -1,9 +1,11 @@
+import { getOrganizationVersionById } from '@/db/organization'
 import {
   getAllowedStudiesByAccount,
   getAllowedStudiesByUserAndOrganization,
   getExternalAllowedStudiesByUser,
 } from '@/db/study'
 import { canCreateAStudy } from '@/services/permissions/study'
+import { hasActiveLicence } from '@/utils/organization'
 import AddIcon from '@mui/icons-material/Add'
 import { Box as MUIBox } from '@mui/material'
 import { Study } from '@prisma/client'
@@ -49,6 +51,9 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR }: Props) =>
 
   const mainStudyOrganizationVersionId = organizationVersionId ?? user.organizationVersionId
 
+  const organizationVersion = await getOrganizationVersionById(mainStudyOrganizationVersionId)
+  const activeLicence = !!(organizationVersion && hasActiveLicence(organizationVersion))
+
   return studies.length ? (
     <>
       {mainStudyOrganizationVersionId && !isCR && (
@@ -59,7 +64,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR }: Props) =>
       {!!mainStudies.length && (
         <Studies
           studies={mainStudies}
-          canAddStudy={canCreateAStudy(user) && !isCR}
+          canAddStudy={canCreateAStudy(user) && !isCR && activeLicence}
           creationUrl={creationUrl}
           user={user}
           collaborations={!organizationVersionId && isCR}
