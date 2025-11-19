@@ -13,7 +13,7 @@ import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
 import { Environment, Import, StudyRole, SubPost as SubPostEnum } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import HelpIcon from '../base/HelpIcon'
 import EmissionSource from './EmissionSource'
 import NewEmissionSource from './NewEmissionSource'
@@ -60,32 +60,32 @@ const SubPost = ({
     [study.emissionFactorVersions],
   )
 
-  useEffect(() => {
-    async function fetchEmissionFactors() {
-      const emissionsFactors = await getEmissionFactors(
-        0,
-        'ALL',
-        {
-          archived: false,
-          search: '',
-          location: '',
-          sources: importVersions.map((iv) => iv.id),
-          units: [],
-          subPosts: [subPost],
-        },
-        environment as Environment,
-        study.id,
-      )
+  const fetchEmissionFactors = useCallback(async () => {
+    const emissionsFactors = await getEmissionFactors(
+      0,
+      'ALL',
+      {
+        archived: false,
+        search: '',
+        location: '',
+        sources: importVersions.map((iv) => iv.id),
+        units: [],
+        subPosts: [subPost],
+      },
+      environment as Environment,
+      study.id,
+    )
 
-      if (emissionsFactors.success) {
-        setEmissionFactorsForSubPost(emissionsFactors.data.emissionFactors)
-      }
+    if (emissionsFactors.success) {
+      setEmissionFactorsForSubPost(emissionsFactors.data.emissionFactors)
     }
+  }, [environment, importVersions, study.id, subPost])
 
+  useEffect(() => {
     if (emissionFactorsForSubPost.length === 0 && expanded) {
       fetchEmissionFactors()
     }
-  }, [emissionFactorsForSubPost.length, environment, expanded, importVersions, study.id, subPost])
+  }, [emissionFactorsForSubPost.length, expanded, fetchEmissionFactors])
 
   const total = useMemo(() => {
     if (!environment) {
