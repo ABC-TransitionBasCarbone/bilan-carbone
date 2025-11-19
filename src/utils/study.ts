@@ -8,7 +8,7 @@ import { isAdmin } from '@/utils/user'
 import { Environment, Level, Role, StudyResultUnit, StudyRole, SubPost, Unit } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { formatNumber } from './number'
-import { isInOrgaOrParent } from './organization'
+import { hasActiveLicence, isInOrgaOrParent } from './organization'
 
 export const getUserRoleOnPublicStudy = (
   user: Pick<UserSession, 'role' | 'level' | 'environment'>,
@@ -29,19 +29,23 @@ export const getUserRoleOnPublicStudy = (
 
 export const getAccountRoleOnStudy = (user: UserSession, study: FullStudy) => {
   if (isAdminOnStudyOrga(user, study.organizationVersion as OrganizationVersionWithOrganization)) {
-    return hasSufficientLevel(user.level, study.level) ? StudyRole.Validator : StudyRole.Reader
+    return hasSufficientLevel(user.level, study.level) && hasActiveLicence(study.organizationVersion)
+      ? StudyRole.Validator
+      : StudyRole.Reader
   }
 
   const right = study.allowedUsers.find((right) => right.account.id === user.accountId)
   if (right) {
-    return hasSufficientLevel(user.level, study.level) ? right.role : StudyRole.Reader
+    return hasSufficientLevel(user.level, study.level) && hasActiveLicence(study.organizationVersion)
+      ? right.role
+      : StudyRole.Reader
   }
 
   if (
     study.isPublic &&
     isInOrgaOrParent(user.organizationVersionId, study.organizationVersion as OrganizationVersionWithOrganization)
   ) {
-    return getUserRoleOnPublicStudy(user, study.level)
+    return hasActiveLicence(study.organizationVersion) ? getUserRoleOnPublicStudy(user, study.level) : StudyRole.Reader
   }
 
   return null

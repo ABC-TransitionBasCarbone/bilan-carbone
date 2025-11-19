@@ -14,9 +14,10 @@ interface Props {
   study: FullStudy
   actions: Action[]
   transitionPlanId: string
+  canEdit: boolean
 }
 
-const ActionsPage = ({ study, actions, transitionPlanId }: Props) => {
+const ActionsPage = ({ study, actions, transitionPlanId, canEdit }: Props) => {
   const t = useTranslations('study.transitionPlan.actions')
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
@@ -49,7 +50,12 @@ const ActionsPage = ({ study, actions, transitionPlanId }: Props) => {
             })}
           />
 
-          <Actions actions={actions} studyUnit={study.resultsUnit} transitionPlanId={transitionPlanId} />
+          <Actions
+            actions={actions}
+            studyUnit={study.resultsUnit}
+            transitionPlanId={transitionPlanId}
+            canEdit={canEdit}
+          />
         </div>
       </div>
     </>

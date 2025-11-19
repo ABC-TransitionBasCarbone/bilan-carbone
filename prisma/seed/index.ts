@@ -226,6 +226,7 @@ const users = async () => {
       isCR: index % 2 === 1,
       onboarded: true,
       environment: Environment.BC,
+      activatedLicence: [new Date().getFullYear()],
     })),
   })
 
@@ -235,6 +236,7 @@ const users = async () => {
       isCR: false,
       onboarded: false,
       environment: Environment.CUT,
+      activatedLicence: [new Date().getFullYear()],
     })),
   })
 
@@ -244,6 +246,7 @@ const users = async () => {
       isCR: index % 2 === 1,
       onboarded: false,
       environment: Environment.TILT,
+      activatedLicence: [new Date().getFullYear()],
     })),
   })
 

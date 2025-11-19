@@ -17,9 +17,10 @@ interface Props {
   studyYear: Date
   linkedStudies: FullStudy[]
   externalStudies: ExternalStudy[]
+  canEdit: boolean
 }
 
-const LinkedStudies = ({ transitionPlanId, studyId, studyYear, linkedStudies, externalStudies }: Props) => {
+const LinkedStudies = ({ transitionPlanId, studyId, studyYear, linkedStudies, externalStudies, canEdit }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.linkedStudies')
   const [linking, setLinking] = useState(false)
 
@@ -29,7 +30,7 @@ const LinkedStudies = ({ transitionPlanId, studyId, studyYear, linkedStudies, ex
         <Typography variant="h5" component="h2" fontWeight={600}>
           {t('linked')}
         </Typography>
-        <Button onClick={() => setLinking((prev) => !prev)}>{t('linkStudy')}</Button>
+        {canEdit && <Button onClick={() => setLinking((prev) => !prev)}>{t('linkStudy')}</Button>}
       </div>
       {linking && (
         <LinkingStudyModal
@@ -44,6 +45,7 @@ const LinkedStudies = ({ transitionPlanId, studyId, studyYear, linkedStudies, ex
         transitionPlanId={transitionPlanId}
         linkedStudies={linkedStudies}
         externalStudies={externalStudies}
+        canEdit={canEdit}
       />
     </div>
   )

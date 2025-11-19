@@ -22,9 +22,10 @@ interface Props {
   actions: Action[]
   openEditModal: (action: Action) => void
   openDeleteModal: (action: Action) => void
+  canEdit: boolean
 }
 
-const ActionTable = ({ actions, openEditModal, openDeleteModal }: Props) => {
+const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit }: Props) => {
   const t = useTranslations('study.transitionPlan.actions.table')
   const tUnit = useTranslations('study.results.units')
   const tCategory = useTranslations('study.transitionPlan.actions.category')
@@ -90,6 +91,7 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal }: Props) => {
               onChange={(event) => handleToggleEnabled(row.original.id, event.target.checked)}
               color="primary"
               size="small"
+              disabled={!canEdit}
             />
           ),
         },
@@ -116,15 +118,18 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal }: Props) => {
           id: 'actions',
           header: '',
           accessorFn: () => '',
-          cell: ({ row }) => (
-            <>
-              <TableActionButton type="edit" onClick={() => openEditModal(row.original)} />
-              <TableActionButton type="delete" onClick={() => openDeleteModal(row.original)} />
-            </>
-          ),
+          cell: ({ row }) =>
+            canEdit ? (
+              <>
+                <TableActionButton type="edit" onClick={() => openEditModal(row.original)} />
+                <TableActionButton type="delete" onClick={() => openDeleteModal(row.original)} />
+              </>
+            ) : (
+              <></>
+            ),
         },
       ] as ColumnDef<Action>[],
-    [t, getPotential, getImplementationPeriod, handleToggleEnabled, tCategory, openEditModal, openDeleteModal],
+    [t, getImplementationPeriod, getPotential, canEdit, handleToggleEnabled, tCategory, openEditModal, openDeleteModal],
   )
 
   const table = useReactTable({

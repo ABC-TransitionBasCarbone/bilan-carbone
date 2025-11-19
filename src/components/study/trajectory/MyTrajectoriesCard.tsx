@@ -16,6 +16,7 @@ interface Props {
   title: string
   addButtonLabel: string
   selectLabel: string
+  canEdit: boolean
 }
 
 const MyTrajectoriesCard = ({
@@ -26,6 +27,7 @@ const MyTrajectoriesCard = ({
   title,
   addButtonLabel,
   selectLabel,
+  canEdit,
 }: Props) => {
   const trajectoryOptions = trajectories.map((trajectory) => ({
     label: trajectory.name,
@@ -38,9 +40,11 @@ const MyTrajectoriesCard = ({
         <Typography variant="h5" component="h2" fontWeight={600}>
           {title}
         </Typography>
-        <Button onClick={onAddTrajectory} variant="outlined">
-          {addButtonLabel}
-        </Button>
+        {canEdit && (
+          <Button onClick={onAddTrajectory} variant="outlined">
+            {addButtonLabel}
+          </Button>
+        )}
       </div>
 
       <div className="w100 flex-col gapped-2">

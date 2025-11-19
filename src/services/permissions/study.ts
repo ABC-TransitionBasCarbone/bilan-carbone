@@ -1,9 +1,13 @@
 import { getAccountById } from '@/db/account'
 import { getDocumentById } from '@/db/document'
-import { getOrganizationVersionsByOrganizationId, OrganizationVersionWithOrganization } from '@/db/organization'
+import {
+  getOrganizationVersionById,
+  getOrganizationVersionsByOrganizationId,
+  OrganizationVersionWithOrganization,
+} from '@/db/organization'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getAccountByIdWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
-import { canEditOrganizationVersion, isAdminOnOrga, isInOrgaOrParent } from '@/utils/organization'
+import { canEditOrganizationVersion, hasActiveLicence, isAdminOnOrga, isInOrgaOrParent } from '@/utils/organization'
 import { getAccountRoleOnStudy, getDuplicableEnvironments, hasEditionRights } from '@/utils/study'
 import { DeactivatableFeature, Environment, Level, Prisma, Study, StudyRole, User } from '@prisma/client'
 import { UserSession } from 'next-auth'
@@ -73,11 +77,7 @@ export const canCreateAStudy = (user: UserSession) => {
   return user.environment === Environment.CUT || (!!user.level && !!user.organizationVersionId)
 }
 
-const canCreateSpecificStudyCommon = async (
-  accountId: string,
-  study: Prisma.StudyCreateInput,
-  organizationVersionId: string,
-) => {
+const canCreateSpecificStudyCommon = async (accountId: string, organizationVersionId: string) => {
   const dbAccount = await getAccountById(accountId)
 
   if (!dbAccount) {
@@ -85,6 +85,11 @@ const canCreateSpecificStudyCommon = async (
   }
 
   if (!(await isInOrgaOrParentFromId(dbAccount.organizationVersionId, organizationVersionId))) {
+    return { allowed: false }
+  }
+
+  const organizationVersion = await getOrganizationVersionById(organizationVersionId)
+  if (!organizationVersion || !hasActiveLicence(organizationVersion)) {
     return { allowed: false }
   }
 
@@ -96,7 +101,7 @@ const canCreateSpecificStudyCUT = async (
   study: Prisma.StudyCreateInput,
   organizationVersionId: string,
 ) => {
-  const { allowed } = await canCreateSpecificStudyCommon(accountId, study, organizationVersionId)
+  const { allowed } = await canCreateSpecificStudyCommon(accountId, organizationVersionId)
   return allowed
 }
 
@@ -107,7 +112,6 @@ const canCreateSpecificStudyBC = async (
 ) => {
   const { allowed: commonRights, account: dbAccount } = await canCreateSpecificStudyCommon(
     accountId,
-    study,
     organizationVersionId,
   )
 
@@ -126,9 +130,8 @@ export const canCreateSpecificStudy = async (
   switch (user.environment) {
     case Environment.CUT:
       return canCreateSpecificStudyCUT(user.accountId, study, organizationVersionId)
-    case Environment.BC:
-      return canCreateSpecificStudyBC(user.accountId, study, organizationVersionId)
     case Environment.TILT:
+    case Environment.BC:
       return canCreateSpecificStudyBC(user.accountId, study, organizationVersionId)
     default:
       return false
@@ -136,6 +139,10 @@ export const canCreateSpecificStudy = async (
 }
 
 const canEditStudy = async (user: UserSession, study: FullStudy) => {
+  if (!hasActiveLicence(study.organizationVersion)) {
+    return false
+  }
+
   if (isAdminOnStudyOrga(user, study.organizationVersion as OrganizationVersionWithOrganization)) {
     return true
   }

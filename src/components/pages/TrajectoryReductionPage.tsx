@@ -355,6 +355,7 @@ const TrajectoryReductionPage = ({
             studyYear={study.startDate}
             linkedStudies={linkedStudies}
             externalStudies={linkedExternalStudies}
+            canEdit={canEdit}
           />
 
           <div className={styles.trajectoryCardsGrid}>
@@ -410,6 +411,7 @@ const TrajectoryReductionPage = ({
                 title={t('trajectories.myTrajectories')}
                 addButtonLabel={t('trajectories.addTrajectory')}
                 selectLabel={t('trajectories.selectTrajectories')}
+                canEdit={canEdit}
               />
             )}
           </div>

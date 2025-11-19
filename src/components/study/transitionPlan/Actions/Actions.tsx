@@ -18,6 +18,7 @@ interface Props {
   actions: Action[]
   transitionPlanId: string
   studyUnit: string
+  canEdit: boolean
 }
 
 const fuseOptions = {
@@ -26,7 +27,7 @@ const fuseOptions = {
   isCaseSensitive: false,
 }
 
-const Actions = ({ actions, studyUnit, transitionPlanId }: Props) => {
+const Actions = ({ actions, studyUnit, transitionPlanId, canEdit }: Props) => {
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
   const t = useTranslations('study.transitionPlan.actions')
@@ -88,11 +89,12 @@ const Actions = ({ actions, studyUnit, transitionPlanId }: Props) => {
 
   return (
     <div className="flex-col gapped1">
-      <ActionFilters search={filter} setSearch={setFilter} openAddModal={handleOpenAddModal} />
+      <ActionFilters search={filter} setSearch={setFilter} openAddModal={handleOpenAddModal} canEdit={canEdit} />
       <ActionTable
         actions={searchedActions}
         openEditModal={handleOpenEditModal}
         openDeleteModal={handleOpenDeleteModal}
+        canEdit={canEdit}
       />
       {isEditModalOpen && (
         <ActionModal
