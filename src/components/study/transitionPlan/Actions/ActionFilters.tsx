@@ -9,9 +9,10 @@ interface Props {
   search: string
   setSearch: (search: string) => void
   openAddModal: () => void
+  canEdit: boolean
 }
 
-const ActionFilters = ({ search, setSearch, openAddModal }: Props) => {
+const ActionFilters = ({ search, setSearch, openAddModal, canEdit }: Props) => {
   const t = useTranslations('study.transitionPlan.actions')
 
   return (
@@ -24,9 +25,11 @@ const ActionFilters = ({ search, setSearch, openAddModal }: Props) => {
         placeholder={t('search')}
         data-testid="actions-filter"
       />
-      <Button className={styles.addButton} onClick={openAddModal}>
-        {t('add')}
-      </Button>
+      {canEdit && (
+        <Button className={styles.addButton} onClick={openAddModal}>
+          {t('add')}
+        </Button>
+      )}
     </div>
   )
 }
