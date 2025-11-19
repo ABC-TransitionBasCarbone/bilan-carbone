@@ -7,6 +7,7 @@
     "yarn": "1.22"
   },
   "scripts": {
+    "postinstall": "cd publicodes-packages/publicodes-count && yarn install && yarn run compile",
     "dev": "next dev --turbopack",
     "dev:test": "dotenv -e .env.test -- next dev --turbopack --port 3001",
     "build": "next build",
@@ -15,6 +16,10 @@
     "format": "prettier --write .",
     "test": "jest",
     "test:watch": "jest --watch",
+    "publicodes-count:link": "cd publicodes-packages/publicodes-count && yarn link && cd ../../ && yarn link @abc-transitionbascarbone/publicodes-count",
+    "publicodes-count:compile": "cd publicodes-packages/publicodes-count && yarn run compile",
+    "publicodes-count:unlink": "cd publicodes-packages/publicodes-count && yarn unlink && cd ../../ && yarn unlink @abc-transitionbascarbone/publicodes-count",
+    "publicodes-count:test": "cd publicodes-packages/publicodes-count && yarn test",
     "cypress": "cypress run",
     "cypress:gui": "cypress open",
     "db:test:reset": "dotenv -e .env.test -- prisma migrate reset --force",
@@ -30,6 +35,8 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.940.0",
     "@aws-sdk/s3-request-presigner": "^3.940.0",
+    "@abc-transitionbascarbone/publicodes-count": "file:./publicodes-packages/publicodes-count/",
+    "publicodes": "^1.9.1",
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",

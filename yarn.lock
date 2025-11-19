@@ -2,6 +2,9 @@
 # yarn lockfile v1
 
 
+"@abc-transitionbascarbone/publicodes-count@file:./publicodes-packages/publicodes-count":
+  version "0.1.0"
+
 "@adobe/css-tools@^4.4.0":
   version "4.4.4"
   resolved "https://registry.yarnpkg.com/@adobe/css-tools/-/css-tools-4.4.4.tgz#2856c55443d3d461693f32d2b96fb6ea92e1ffa9"
@@ -4645,6 +4648,11 @@ ansi-styles@^5.0.0, ansi-styles@^5.2.0:
   resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-5.2.0.tgz#07449690ad45777d1924ac2abb2fc8895dba836b"
   integrity sha512-Cxwpt2SfTzTtXcfOlzGEee8O+c+MmUgGrNiBcXnuWxuFJHe6a5Hz7qwhwe5OgaSYI0IJvkLqWX1ASG+cJOkEiA==
 
+ansi-styles@^6.1.0:
+  version "6.2.3"
+  resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-6.2.3.tgz#c044d5dcc521a076413472597a1acb1f103c4041"
+  integrity sha512-4Dj6M28JB+oAH8kFkTLUo+a2jwOFkuqb3yucU0CANcRRUbxS0cP0nZYCGjcc3BNXwRIsUVmDGgzawme7zvJHvg==
+
 anymatch@^3.1.3:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/anymatch/-/anymatch-3.1.3.tgz#790c58b19ba1720a84205b57c618d5ad8524973e"
@@ -6849,6 +6857,11 @@ fs-extra@^9.1.0:
     graceful-fs "^4.2.0"
     jsonfile "^6.0.1"
     universalify "^2.0.0"
+
+fs.realpath@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
+  integrity sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==
 
 fsevents@^2.3.3, fsevents@~2.3.3:
   version "2.3.3"
@@ -9348,6 +9361,11 @@ proxy-from-env@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/proxy-from-env/-/proxy-from-env-1.1.0.tgz#e102f16ca355424865755d2c9e8ea4f24d58c3e2"
   integrity sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==
+
+publicodes@^1.9.1:
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/publicodes/-/publicodes-1.9.1.tgz#0c5031337e4515af81e5079fae29d34fbc8c0768"
+  integrity sha512-sXBgGuAH/bIehF8waXm4Pp/EnqjFmxZJb6FNSAZ9FRO1neACHRYKv34lxFM3qZNyJ2RaI5jwtOupGlozMW0fcA==
 
 pump@^3.0.0:
   version "3.0.3"
