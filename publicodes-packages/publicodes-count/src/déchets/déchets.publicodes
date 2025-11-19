@@ -1,0 +1,8 @@
+déchets:
+  titre: Déchets
+  description: Calcul de l'impact des déchets.
+  valeur:
+    somme:
+      - ordinaires
+      - exceptionnels
+  unité: kgCO2e/an
