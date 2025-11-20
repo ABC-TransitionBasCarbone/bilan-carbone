@@ -488,8 +488,13 @@ export const calculateSBTiTrajectory = ({
 }
 
 /**
- * This method calculates the adjusted objectives rates to compensate for the overshoot.
- * It uses a derivative approximation to find the multiplier needed to compensate each original rate.
+ * Calculates adjusted objectives rates to compensate for carbon budget overshoot.
+ *
+ * When actual emissions exceed the reference trajectory between referenceYear and studyYear,
+ * this function increases reduction rates for future years to compensate for the overshoot
+ * and maintain the same total carbon budget.
+ *
+ * Uses Newton-Raphson iteration to find the optimal multiplier k.
  */
 const getObjectivesWithOvershootCompensation = (
   actualEmissions: number,
@@ -526,13 +531,12 @@ const getObjectivesWithOvershootCompensation = (
     return objectives
   }
 
-  // Get the reference trajectory's expected emissions at studyYear
   const referenceEmissionsAtStudyYear = getTrajectoryEmissionsAtYear(referenceTrajectory, studyYear)
   if (referenceEmissionsAtStudyYear === null) {
     return objectives
   }
 
-  // Calculate the reference future budget (what the trajectory would have been if we were at the reference value)
+  // Calculate future budget if we were at reference emissions
   const referenceFutureBudget = calculateBudgetWithObjectivesAndMultiplier(
     referenceEmissionsAtStudyYear,
     studyYear,
@@ -540,11 +544,10 @@ const getObjectivesWithOvershootCompensation = (
     1.0,
   )
 
-  // The adjusted budget must compensate for the past overshoot
+  // Reduce future budget to compensate for past overshoot
   const remainingTotalBudget = referenceFutureBudget - pastOvershoot
 
-  // Now we need to find k such that the trajectory starting from ACTUAL emissions uses this remaining budget
-  // This is the budget that would have been used if we were not compensating for the overshoot
+  // Calculate what future budget would be without compensation
   const actualBudgetWithoutCompensation = calculateBudgetWithObjectivesAndMultiplier(
     actualEmissions,
     studyYear,
@@ -552,15 +555,36 @@ const getObjectivesWithOvershootCompensation = (
     1.0,
   )
 
-  // Use derivative approximation to find k with delta close to 0
-  const delta = 0.001
+  // Newton-Raphson iteration to find k such that budget(k) = remainingTotalBudget
+  const delta = 0.0001
   const budgetAtDelta = calculateBudgetWithObjectivesAndMultiplier(actualEmissions, studyYear, objectives, 1.0 + delta)
   const derivative = (budgetAtDelta - actualBudgetWithoutCompensation) / delta
 
-  // Linear approximation: Budget(k) ≈ Budget(1) + derivative × (k - 1) => remainingTotalBudget = actualBudgetWithoutCompensation + derivative × (k - 1)
-  const k = 1.0 + (remainingTotalBudget - actualBudgetWithoutCompensation) / derivative
+  let k = 1.0 + (remainingTotalBudget - actualBudgetWithoutCompensation) / derivative
 
-  // Apply multiplier to all objective rates
+  // Improve k by using Newton-Raphson iteration
+  for (let i = 0; i < 10; i++) {
+    const budgetAtK = calculateBudgetWithObjectivesAndMultiplier(actualEmissions, studyYear, objectives, k)
+    const error = budgetAtK - remainingTotalBudget
+
+    if (Math.abs(error / remainingTotalBudget) < 0.001) {
+      break
+    }
+
+    const budgetAtKPlusDelta = calculateBudgetWithObjectivesAndMultiplier(
+      actualEmissions,
+      studyYear,
+      objectives,
+      k + delta,
+    )
+    const derivativeAtK = (budgetAtKPlusDelta - budgetAtK) / delta
+
+    if (Math.abs(derivativeAtK) > 1e-10) {
+      k = k - error / derivativeAtK
+    }
+  }
+
+  // Apply multiplier k to all objective rates
   const compensatedObjectives: Array<{ targetYear: number; reductionRate: number }> = objectives.map((obj) => ({
     targetYear: obj.targetYear,
     reductionRate: Math.max(0, obj.reductionRate * k),
@@ -629,8 +653,8 @@ export const calculateCustomTrajectory = ({
     const isLastObjective = i === sortedObjectives.length - 1
 
     for (let year = startYear + 1; year <= objective.targetYear; year++) {
-      actualEmissions = actualEmissions - yearlyReduction
-      dataPoints.push({ year, value: Math.max(0, actualEmissions) })
+      actualEmissions = Math.max(0, actualEmissions - yearlyReduction)
+      dataPoints.push({ year, value: actualEmissions })
     }
 
     if (isLastObjective && actualEmissions > 0) {
@@ -643,8 +667,8 @@ export const calculateCustomTrajectory = ({
       }
 
       while (actualEmissions > 0) {
-        actualEmissions = actualEmissions - yearlyReduction
-        dataPoints.push({ year, value: Math.max(0, actualEmissions) })
+        actualEmissions = Math.max(0, actualEmissions - yearlyReduction)
+        dataPoints.push({ year, value: actualEmissions })
         year++
       }
     }

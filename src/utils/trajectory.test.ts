@@ -1037,4 +1037,138 @@ describe('calculateTrajectory', () => {
       })
     })
   })
+
+  describe('getObjectivesWithOvershootCompensation - budget equality test', () => {
+    // Helper function to check if budgets are approximately equal with relative tolerance
+    const expectBudgetsApproximatelyEqual = (
+      actual: number,
+      expected: number,
+      tolerancePercent: number = 5,
+      testName?: string,
+    ) => {
+      const difference = Math.abs(actual - expected)
+      const relativeDifference = (difference / expected) * 100
+      if (testName) {
+        console.log(
+          `Test "${testName}": Actual budget=${actual.toFixed(2)}, Reference budget=${expected.toFixed(2)}, Difference=${difference.toFixed(2)}, Precision=${relativeDifference.toFixed(2)}%`,
+        )
+      }
+      expect(relativeDifference).toBeLessThanOrEqual(tolerancePercent)
+    }
+
+    const calculateBudgetBySummingTrajectory = (trajectory: TrajectoryDataPoint[], referenceYear: number): number => {
+      let totalBudget = 0
+      const lastYear = trajectory[trajectory.length - 1].year
+      for (let i = referenceYear + 1; i <= lastYear; i++) {
+        const point = trajectory.find((p) => p.year === i)
+        totalBudget += point?.value ?? 0
+      }
+      return totalBudget
+    }
+
+    const testBudgetEqualityWithCompensation = (
+      referenceYear: number,
+      currentYear: number,
+      referenceEmissions: number,
+      currentEmissions: number,
+      objectives: Array<{ targetYear: number; reductionRate: number }>,
+      pastStudies: PastStudy[],
+      tolerancePercent: number,
+      testName: string,
+    ) => {
+      // Calculate reference trajectory (without compensation)
+      const referenceTrajectory = calculateCustomTrajectory({
+        studyEmissions: referenceEmissions,
+        studyStartYear: referenceYear,
+        objectives,
+        pastStudies,
+      })
+
+      // Calculate current trajectory with overshoot compensation
+      const currentTrajectoryWithCompensation = calculateCustomTrajectory({
+        studyEmissions: currentEmissions,
+        studyStartYear: currentYear,
+        objectives,
+        pastStudies,
+        overshootAdjustment: {
+          referenceTrajectory,
+          referenceStudyYear: referenceYear,
+        },
+      })
+
+      const referenceTotalBudget = calculateBudgetBySummingTrajectory(referenceTrajectory, referenceYear)
+      const currentTotalBudget = calculateBudgetBySummingTrajectory(currentTrajectoryWithCompensation, referenceYear)
+
+      expectBudgetsApproximatelyEqual(currentTotalBudget, referenceTotalBudget, tolerancePercent, testName)
+    }
+
+    test('compare precision: referenceYear 2024 with only reference study vs multiple past studies', () => {
+      const objectives = [
+        { targetYear: 2030, reductionRate: 0.02 },
+        { targetYear: 2040, reductionRate: 0.04 },
+      ]
+
+      testBudgetEqualityWithCompensation(
+        2024,
+        2025,
+        1000,
+        1100,
+        objectives,
+        createPastStudies([2024, 1000]),
+        3,
+        'diagnostic - 2024 reference, only reference study',
+      )
+
+      testBudgetEqualityWithCompensation(
+        2024,
+        2025,
+        1000,
+        1100,
+        objectives,
+        createPastStudies([2020, 1200], [2022, 1100], [2024, 1000]),
+        3,
+        'diagnostic - 2024 reference, multiple past studies',
+      )
+    })
+
+    test('compare precision: impact of gap between referenceYear and currentYear', () => {
+      const objectives = [
+        { targetYear: 2030, reductionRate: 0.02 },
+        { targetYear: 2040, reductionRate: 0.04 },
+      ]
+
+      testBudgetEqualityWithCompensation(
+        2024,
+        2025,
+        1000,
+        1100,
+        objectives,
+        createPastStudies([2024, 1000]),
+        3,
+        'diagnostic - gap 1 year (2024->2025)',
+      )
+
+      testBudgetEqualityWithCompensation(
+        2023,
+        2025,
+        1000,
+        1200,
+        objectives,
+        createPastStudies([2023, 1000]),
+        3,
+        'diagnostic - gap 2 years (2023->2025)',
+      )
+
+      testBudgetEqualityWithCompensation(
+        2022,
+        2025,
+        1000,
+        1300,
+        objectives,
+        createPastStudies([2022, 1000]),
+        3,
+        'diagnostic - gap 3 years (2022->2025)',
+      )
+    })
+  })
 })
