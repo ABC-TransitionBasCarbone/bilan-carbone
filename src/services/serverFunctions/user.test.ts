@@ -26,7 +26,7 @@ import {
 } from '@/services/permissions/check'
 import { mockedOrganizationId, mockedOrganizationVersionId } from '@/tests/utils/models/organization'
 import { mockedAccountId, mockedUserId } from '@/tests/utils/models/user'
-import { getCompanyName, isValidAssociationSiret } from '../associationApi'
+import { getCompanyName, getValidAssociationNameBySiret } from '../associationApi'
 import { sendActivationRequest } from '../email/email'
 import { getDeactivableFeatureRestrictions } from './deactivableFeatures'
 import { activateEmail, signUpWithSiretOrCNC } from './user'
@@ -82,7 +82,7 @@ const mockGetOrganizationVersionByOrganizationIdAndEnvironment =
 const mockCreateOrganizationWithVersion = createOrganizationWithVersion as jest.Mock
 const mockAddSite = addSite as jest.Mock
 const mockGetRawOrganizationBySiret = getRawOrganizationBySiret as jest.Mock
-const mockIsValidAssociationSiret = isValidAssociationSiret as jest.Mock
+const mockGetValidAssociationNameBySiret = getValidAssociationNameBySiret as jest.Mock
 const mockGetCompanyName = getCompanyName as jest.Mock
 const mockSendActivationRequest = sendActivationRequest as jest.Mock
 const mockGetOrganizationVersionById = getOrganizationVersionById as jest.Mock
@@ -128,7 +128,7 @@ describe('signUpWithSiretOrCNC', () => {
         accounts: [{ id: mockedAccountId }],
       })
       mockGetRawOrganizationBySiret.mockResolvedValue(null)
-      mockIsValidAssociationSiret.mockResolvedValue(true)
+      mockGetValidAssociationNameBySiret.mockResolvedValue('Test Association')
       mockCreateOrganizationWithVersion.mockResolvedValue({ id: mockedOrganizationVersionId })
       mockValidateUser.mockResolvedValue(undefined)
 
@@ -230,7 +230,7 @@ describe('signUpWithSiretOrCNC', () => {
         accounts: [{ id: mockedAccountId }],
       })
       mockGetRawOrganizationBySiret.mockResolvedValue(null)
-      mockIsValidAssociationSiret.mockResolvedValue(true)
+      mockGetValidAssociationNameBySiret.mockResolvedValue('Test Association')
       mockCreateOrganizationWithVersion.mockResolvedValue({ id: mockedOrganizationVersionId })
       mockValidateUser.mockResolvedValue(undefined)
 
@@ -248,6 +248,11 @@ describe('signUpWithSiretOrCNC', () => {
           },
         },
       })
+      expect(mockGetValidAssociationNameBySiret).toHaveBeenCalledWith(testSiret)
+      expect(mockCreateOrganizationWithVersion).toHaveBeenCalledWith(
+        { wordpressId: testSiret, name: 'Test Association' },
+        { environment: Environment.TILT },
+      )
       expect(result.success).toBe(true)
       expect(mockActivateEmail).not.toHaveBeenCalled()
     })
@@ -257,7 +262,7 @@ describe('signUpWithSiretOrCNC', () => {
       mockGetUserByEmail.mockResolvedValue({ id: mockedUserId, email: testEmail })
       mockAddAccount.mockResolvedValue({ id: mockedAccountId })
       mockGetRawOrganizationBySiret.mockResolvedValue(null)
-      mockIsValidAssociationSiret.mockResolvedValue(true)
+      mockGetValidAssociationNameBySiret.mockResolvedValue('Test Association')
       mockCreateOrganizationWithVersion.mockResolvedValue({ id: mockedOrganizationVersionId })
       mockValidateUser.mockResolvedValue(undefined)
 
@@ -269,6 +274,7 @@ describe('signUpWithSiretOrCNC', () => {
         environment: Environment.TILT,
         status: UserStatus.PENDING_REQUEST,
       })
+      expect(mockGetValidAssociationNameBySiret).toHaveBeenCalledWith(testSiret)
       expect(result.success).toBe(true)
       expect(mockActivateEmail).not.toHaveBeenCalled()
     })
@@ -389,7 +395,7 @@ describe('signUpWithSiretOrCNC', () => {
         accounts: [{ id: mockedAccountId }],
       })
       mockGetRawOrganizationBySiret.mockResolvedValue(null)
-      mockIsValidAssociationSiret.mockResolvedValue(false)
+      mockGetValidAssociationNameBySiret.mockResolvedValue(null)
 
       const result = await signUpWithSiretOrCNC(testEmail, testSiret, Environment.TILT)
 
@@ -397,6 +403,7 @@ describe('signUpWithSiretOrCNC', () => {
       if (!result.success) {
         expect(result.errorMessage).toBe(NOT_ASSOCIATION_SIRET)
       }
+      expect(mockGetValidAssociationNameBySiret).toHaveBeenCalledWith(testSiret)
     })
 
     it('allows signup when TILT SIRET is valid association', async () => {
@@ -408,13 +415,17 @@ describe('signUpWithSiretOrCNC', () => {
         accounts: [{ id: mockedAccountId }],
       })
       mockGetRawOrganizationBySiret.mockResolvedValue(null)
-      mockIsValidAssociationSiret.mockResolvedValue(true)
+      mockGetValidAssociationNameBySiret.mockResolvedValue('Test Association')
       mockCreateOrganizationWithVersion.mockResolvedValue({ id: mockedOrganizationVersionId })
       mockValidateUser.mockResolvedValue(undefined)
 
       const result = await signUpWithSiretOrCNC(testEmail, testSiret, Environment.TILT)
 
-      expect(mockIsValidAssociationSiret).toHaveBeenCalledWith(testSiret)
+      expect(mockGetValidAssociationNameBySiret).toHaveBeenCalledWith(testSiret)
+      expect(mockCreateOrganizationWithVersion).toHaveBeenCalledWith(
+        { wordpressId: testSiret, name: 'Test Association' },
+        { environment: Environment.TILT },
+      )
       expect(result.success).toBe(true)
     })
   })
@@ -454,9 +465,9 @@ describe('signUpWithSiretOrCNC', () => {
         accounts: [{ id: mockedAccountId }],
       })
       mockGetRawOrganizationBySiret.mockResolvedValue(null)
+      mockGetValidAssociationNameBySiret.mockResolvedValue('Test Association')
       mockCreateOrganizationWithVersion.mockResolvedValue({ id: mockedOrganizationVersionId })
       mockValidateUser.mockResolvedValue(undefined)
-      mockIsValidAssociationSiret.mockResolvedValue(true)
 
       const result = await signUpWithSiretOrCNC(testEmail, testSiret, Environment.TILT)
 
@@ -563,6 +574,7 @@ describe('signUpWithSiretOrCNC', () => {
         accounts: [{ id: mockedAccountId }],
       })
       mockGetRawOrganizationBySiret.mockResolvedValue(null)
+      mockGetCompanyName.mockResolvedValue('Test Company')
       mockCreateOrganizationWithVersion.mockResolvedValue({ id: mockedOrganizationVersionId })
       mockValidateUser.mockResolvedValue(undefined)
 

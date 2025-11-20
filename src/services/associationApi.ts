@@ -1,9 +1,9 @@
 import axios from 'axios'
 
-export const isValidAssociationSiret = async (siret: string) => {
+export const getValidAssociationNameBySiret = async (siret: string): Promise<string | null> => {
   const trimmedSiret = siret.trim()
   if (!trimmedSiret || trimmedSiret.length !== 14) {
-    return false
+    return null
   }
 
   try {
@@ -15,12 +15,12 @@ export const isValidAssociationSiret = async (siret: string) => {
 
     const etablissement = result?.data?.etablissement
     if (!etablissement) {
-      return false
+      return null
     }
 
     // Vérifier que le SIRET correspond bien à l'établissement
     if (etablissement.siret !== trimmedSiret) {
-      return false
+      return null
     }
 
     // Codes juridiques des associations :
@@ -37,10 +37,15 @@ export const isValidAssociationSiret = async (siret: string) => {
     const categorieJuridique = etablissement.uniteLegale?.categorieJuridiqueUniteLegale
     const isAssociation = associationCategories.includes(categorieJuridique)
 
-    return isAssociation
+    if (!isAssociation) {
+      return null
+    }
+
+    // Retourner le nom de l'association
+    return (etablissement.uniteLegale?.denominationUniteLegale as string) || null
   } catch (error) {
-    console.error('Error validating association SIRET:', error)
-    return false
+    console.error('Error getting valid association name by SIRET:', error)
+    return null
   }
 }
 
