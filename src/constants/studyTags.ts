@@ -103,6 +103,7 @@ export const DefaultStudyTagMap: DefaultStudyTagMap = {
     ],
     [DefaultStudyTagNames.PERIMETRE_BENEFICIAIRES]: [
       SubPost.DeplacementsDesBeneficiaires,
+      SubPost.RepasPrisParLesBeneficiaires,
       SubPost.UtilisationEnResponsabiliteConsommationDeBiens,
       SubPost.UtilisationEnResponsabiliteConsommationNumerique,
       SubPost.UtilisationEnResponsabiliteConsommationDEnergie,

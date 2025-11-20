@@ -21945,6 +21945,7 @@ export const elementsBySubPost: Record<SubPost, string[]> = {
   [SubPost.TransportFabricationDesVehicules]: [],
   [SubPost.RepasPrisParLesSalaries]: [],
   [SubPost.RepasPrisParLesBenevoles]: [],
+  [SubPost.RepasPrisParLesBeneficiaires]: [],
   [SubPost.EquipementsDesSalaries]: [],
   [SubPost.ParcInformatiqueDesSalaries]: [],
   [SubPost.EquipementsDesBenevoles]: [],

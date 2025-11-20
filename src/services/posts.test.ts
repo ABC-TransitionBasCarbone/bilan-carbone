@@ -57,7 +57,11 @@ describe('Posts Service', () => {
         MatiereDestineeAuxEmballages: ['MatiereDestineeAuxEmballages'],
         AutresIntrants: ['AutresIntrants'],
         BiensEtMatieresEnApprocheMonetaire: ['BiensEtMatieresEnApprocheMonetaire'],
-        NourritureRepasBoissons: ['RepasPrisParLesSalaries', 'RepasPrisParLesBenevoles'],
+        NourritureRepasBoissons: [
+          'RepasPrisParLesSalaries',
+          'RepasPrisParLesBenevoles',
+          'RepasPrisParLesBeneficiaires',
+        ],
         AchatsDeServices: ['AchatsDeServices'],
         UsagesNumeriques: ['UsagesNumeriques'],
         ServicesEnApprocheMonetaire: ['ServicesEnApprocheMonetaire'],
