@@ -1038,34 +1038,30 @@ describe('calculateTrajectory', () => {
     })
   })
 
+  const BUDGET_PRECISION_TOLERANCE_PERCENT = 3
+
+  const expectBudgetsApproximatelyEqual = (actual: number, expected: number) => {
+    const difference = Math.abs(actual - expected)
+    const relativeDifference = (difference / expected) * 100
+    if (relativeDifference > BUDGET_PRECISION_TOLERANCE_PERCENT) {
+      console.warn(
+        `WARNING: Budget precision exceeds ${BUDGET_PRECISION_TOLERANCE_PERCENT}% threshold. Actual precision: ${relativeDifference.toFixed(2)}%`,
+      )
+    }
+    expect(relativeDifference).toBeLessThanOrEqual(BUDGET_PRECISION_TOLERANCE_PERCENT)
+  }
+
+  const calculateBudgetBySummingTrajectory = (trajectory: TrajectoryDataPoint[], referenceYear: number): number => {
+    let totalBudget = 0
+    const lastYear = trajectory[trajectory.length - 1].year
+    for (let i = referenceYear + 1; i <= lastYear; i++) {
+      const point = trajectory.find((p) => p.year === i)
+      totalBudget += point?.value ?? 0
+    }
+    return totalBudget
+  }
+
   describe('getObjectivesWithOvershootCompensation - budget equality test', () => {
-    // Helper function to check if budgets are approximately equal with relative tolerance
-    const expectBudgetsApproximatelyEqual = (
-      actual: number,
-      expected: number,
-      tolerancePercent: number = 5,
-      testName?: string,
-    ) => {
-      const difference = Math.abs(actual - expected)
-      const relativeDifference = (difference / expected) * 100
-      if (testName) {
-        console.log(
-          `Test "${testName}": Actual budget=${actual.toFixed(2)}, Reference budget=${expected.toFixed(2)}, Difference=${difference.toFixed(2)}, Precision=${relativeDifference.toFixed(2)}%`,
-        )
-      }
-      expect(relativeDifference).toBeLessThanOrEqual(tolerancePercent)
-    }
-
-    const calculateBudgetBySummingTrajectory = (trajectory: TrajectoryDataPoint[], referenceYear: number): number => {
-      let totalBudget = 0
-      const lastYear = trajectory[trajectory.length - 1].year
-      for (let i = referenceYear + 1; i <= lastYear; i++) {
-        const point = trajectory.find((p) => p.year === i)
-        totalBudget += point?.value ?? 0
-      }
-      return totalBudget
-    }
-
     const testBudgetEqualityWithCompensation = (
       referenceYear: number,
       currentYear: number,
@@ -1073,10 +1069,7 @@ describe('calculateTrajectory', () => {
       currentEmissions: number,
       objectives: Array<{ targetYear: number; reductionRate: number }>,
       pastStudies: PastStudy[],
-      tolerancePercent: number,
-      testName: string,
     ) => {
-      // Calculate reference trajectory (without compensation)
       const referenceTrajectory = calculateCustomTrajectory({
         studyEmissions: referenceEmissions,
         studyStartYear: referenceYear,
@@ -1084,7 +1077,6 @@ describe('calculateTrajectory', () => {
         pastStudies,
       })
 
-      // Calculate current trajectory with overshoot compensation
       const currentTrajectoryWithCompensation = calculateCustomTrajectory({
         studyEmissions: currentEmissions,
         studyStartYear: currentYear,
@@ -1099,7 +1091,7 @@ describe('calculateTrajectory', () => {
       const referenceTotalBudget = calculateBudgetBySummingTrajectory(referenceTrajectory, referenceYear)
       const currentTotalBudget = calculateBudgetBySummingTrajectory(currentTrajectoryWithCompensation, referenceYear)
 
-      expectBudgetsApproximatelyEqual(currentTotalBudget, referenceTotalBudget, tolerancePercent, testName)
+      expectBudgetsApproximatelyEqual(currentTotalBudget, referenceTotalBudget)
     }
 
     test('compare precision: referenceYear 2024 with only reference study vs multiple past studies', () => {
@@ -1108,16 +1100,7 @@ describe('calculateTrajectory', () => {
         { targetYear: 2040, reductionRate: 0.04 },
       ]
 
-      testBudgetEqualityWithCompensation(
-        2024,
-        2025,
-        1000,
-        1100,
-        objectives,
-        createPastStudies([2024, 1000]),
-        3,
-        'diagnostic - 2024 reference, only reference study',
-      )
+      testBudgetEqualityWithCompensation(2024, 2025, 1000, 1100, objectives, createPastStudies([2024, 1000]))
 
       testBudgetEqualityWithCompensation(
         2024,
@@ -1126,8 +1109,6 @@ describe('calculateTrajectory', () => {
         1100,
         objectives,
         createPastStudies([2020, 1200], [2022, 1100], [2024, 1000]),
-        3,
-        'diagnostic - 2024 reference, multiple past studies',
       )
     })
 
@@ -1137,38 +1118,83 @@ describe('calculateTrajectory', () => {
         { targetYear: 2040, reductionRate: 0.04 },
       ]
 
-      testBudgetEqualityWithCompensation(
+      testBudgetEqualityWithCompensation(2024, 2025, 1000, 1100, objectives, createPastStudies([2024, 1000]))
+
+      testBudgetEqualityWithCompensation(2023, 2025, 1000, 1200, objectives, createPastStudies([2023, 1000]))
+
+      testBudgetEqualityWithCompensation(2022, 2025, 1000, 1300, objectives, createPastStudies([2022, 1000]))
+    })
+  })
+
+  describe('SBTI trajectories - budget equality test', () => {
+    const testSBTiBudgetEquality = (
+      referenceYear: number,
+      currentYear: number,
+      referenceEmissions: number,
+      currentEmissions: number,
+      reductionRate: number,
+      pastStudies: PastStudy[],
+    ) => {
+      const referenceTrajectory = calculateSBTiTrajectory({
+        studyEmissions: referenceEmissions,
+        studyStartYear: referenceYear,
+        reductionRate,
+        pastStudies,
+      })
+
+      const currentTrajectory = calculateSBTiTrajectory({
+        studyEmissions: currentEmissions,
+        studyStartYear: currentYear,
+        reductionRate,
+        pastStudies,
+      })
+
+      const referenceTotalBudget = calculateBudgetBySummingTrajectory(referenceTrajectory, referenceYear)
+      const currentTotalBudget = calculateBudgetBySummingTrajectory(currentTrajectory, referenceYear)
+
+      expectBudgetsApproximatelyEqual(currentTotalBudget, referenceTotalBudget)
+    }
+
+    test('SBTI - compare precision with only reference study vs multiple past studies', () => {
+      testSBTiBudgetEquality(2024, 2025, 1000, 1100, SBTI_REDUCTION_RATE_15, createPastStudies([2024, 1000]))
+
+      testSBTiBudgetEquality(
         2024,
         2025,
         1000,
         1100,
-        objectives,
-        createPastStudies([2024, 1000]),
-        3,
-        'diagnostic - gap 1 year (2024->2025)',
+        SBTI_REDUCTION_RATE_15,
+        createPastStudies([2020, 1200], [2022, 1100], [2024, 1000]),
       )
 
-      testBudgetEqualityWithCompensation(
-        2023,
-        2025,
-        1000,
-        1200,
-        objectives,
-        createPastStudies([2023, 1000]),
-        3,
-        'diagnostic - gap 2 years (2023->2025)',
-      )
+      testSBTiBudgetEquality(2024, 2025, 1000, 1100, SBTI_REDUCTION_RATE_WB2C, createPastStudies([2024, 1000]))
 
-      testBudgetEqualityWithCompensation(
-        2022,
+      testSBTiBudgetEquality(
+        2024,
         2025,
         1000,
-        1300,
-        objectives,
-        createPastStudies([2022, 1000]),
-        3,
-        'diagnostic - gap 3 years (2022->2025)',
+        1100,
+        SBTI_REDUCTION_RATE_WB2C,
+        createPastStudies([2020, 1200], [2022, 1100], [2024, 1000]),
       )
+    })
+
+    test('SBTI - impact of gap between referenceYear and currentYear', () => {
+      testSBTiBudgetEquality(2024, 2025, 1000, 1100, SBTI_REDUCTION_RATE_15, createPastStudies([2024, 1000]))
+      testSBTiBudgetEquality(2023, 2025, 1000, 1200, SBTI_REDUCTION_RATE_15, createPastStudies([2023, 1000]))
+      testSBTiBudgetEquality(2022, 2025, 1000, 1300, SBTI_REDUCTION_RATE_15, createPastStudies([2022, 1000]))
+
+      testSBTiBudgetEquality(2024, 2025, 1000, 1100, SBTI_REDUCTION_RATE_WB2C, createPastStudies([2024, 1000]))
+      testSBTiBudgetEquality(2023, 2025, 1000, 1200, SBTI_REDUCTION_RATE_WB2C, createPastStudies([2023, 1000]))
+      testSBTiBudgetEquality(2022, 2025, 1000, 1300, SBTI_REDUCTION_RATE_WB2C, createPastStudies([2022, 1000]))
+    })
+
+    test('SBTI - precision with larger emissions differences', () => {
+      testSBTiBudgetEquality(2024, 2025, 1000, 1500, SBTI_REDUCTION_RATE_15, createPastStudies([2024, 1000]))
+      testSBTiBudgetEquality(2024, 2025, 1000, 2000, SBTI_REDUCTION_RATE_15, createPastStudies([2024, 1000]))
+
+      testSBTiBudgetEquality(2024, 2025, 1000, 1500, SBTI_REDUCTION_RATE_WB2C, createPastStudies([2024, 1000]))
+      testSBTiBudgetEquality(2024, 2025, 1000, 2000, SBTI_REDUCTION_RATE_WB2C, createPastStudies([2024, 1000]))
     })
   })
 })
