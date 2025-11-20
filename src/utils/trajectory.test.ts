@@ -22,8 +22,8 @@ jest.mock('next-intl/server', () => ({ getTranslations: jest.fn(() => (key: stri
 const DEFAULT_LINEAR_REDUCTION_15C = 42
 const DEFAULT_LINEAR_REDUCTION_WB2C = 25
 // Updated values after fixing overshoot calculation for SBTi (now calculates overshoot even without historical data)
-const COMENSATED_LINEAR_REDUCTION_2025_15C = 7.241379310344829
-const COMENSATED_LINEAR_REDUCTION_2025_WB2C = 3.333333333333333
+const COMPENSATED_LINEAR_REDUCTION_2025_15C = 7.241379310344829
+const COMPENSATED_LINEAR_REDUCTION_2025_WB2C = 3.333333333333333
 const EMISSION_FACTOR_VALUE = 10
 
 const createPastStudy = (year: number, totalCo2: number, overrides?: Partial<PastStudy>): PastStudy => ({
@@ -139,12 +139,12 @@ describe('calculateTrajectory', () => {
 
       expect(result[6].year).toBe(2026)
       expect(result[6].value).toBeCloseTo(
-        1000 - (2026 - 2025) * COMENSATED_LINEAR_REDUCTION_2025_15C * EMISSION_FACTOR_VALUE,
+        1000 - (2026 - 2025) * COMPENSATED_LINEAR_REDUCTION_2025_15C * EMISSION_FACTOR_VALUE,
         1,
       )
       expect(result[7].year).toBe(2027)
       expect(result[7].value).toBeCloseTo(
-        1000 - (2027 - 2025) * COMENSATED_LINEAR_REDUCTION_2025_15C * EMISSION_FACTOR_VALUE,
+        1000 - (2027 - 2025) * COMPENSATED_LINEAR_REDUCTION_2025_15C * EMISSION_FACTOR_VALUE,
         1,
       )
 
@@ -175,19 +175,19 @@ describe('calculateTrajectory', () => {
 
       expect(result[6].year).toBe(2026)
       expect(result[6].value).toBeCloseTo(
-        1000 - (2026 - 2025) * COMENSATED_LINEAR_REDUCTION_2025_WB2C * EMISSION_FACTOR_VALUE,
+        1000 - (2026 - 2025) * COMPENSATED_LINEAR_REDUCTION_2025_WB2C * EMISSION_FACTOR_VALUE,
         1,
       )
 
       expect(result[7].year).toBe(2027)
       expect(result[7].value).toBeCloseTo(
-        1000 - (2027 - 2025) * COMENSATED_LINEAR_REDUCTION_2025_WB2C * EMISSION_FACTOR_VALUE,
+        1000 - (2027 - 2025) * COMPENSATED_LINEAR_REDUCTION_2025_WB2C * EMISSION_FACTOR_VALUE,
         1,
       )
 
       const point2050 = result.find((p) => p.year === 2050)
       expect(point2050?.value).toBeCloseTo(
-        1000 - (2050 - 2025) * COMENSATED_LINEAR_REDUCTION_2025_WB2C * EMISSION_FACTOR_VALUE,
+        1000 - (2050 - 2025) * COMPENSATED_LINEAR_REDUCTION_2025_WB2C * EMISSION_FACTOR_VALUE,
         1,
       )
 
