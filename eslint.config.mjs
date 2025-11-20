@@ -55,6 +55,7 @@ const config = [
     plugins: { cypress },
     rules: {
       ...cypress.configs.recommended.rules,
+      'mocha/no-top-level-hooks': 'off',
     },
   },
 ]
