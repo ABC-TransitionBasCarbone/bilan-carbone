@@ -27,7 +27,7 @@ const LinkedStudies = ({ transitionPlanId, studyId, studyYear, pastStudies }: Pr
         <Typography variant="h5" component="h2" fontWeight={600}>
           {t('linked')}
         </Typography>
-        {canEdit && <Button onClick={() => setLinking((prev) => !prev)}>{t('linkStudy')}</Button>}
+        <Button onClick={() => setLinking((prev) => !prev)}>{t('linkStudy')}</Button>
       </div>
       {linking && (
         <LinkingStudyModal
