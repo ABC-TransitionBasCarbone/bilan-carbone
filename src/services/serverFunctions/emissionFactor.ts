@@ -199,7 +199,7 @@ export const createEmissionFactorCommand = async ({
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (!canCreateEmissionFactor()) {
+    if (!(await canCreateEmissionFactor(account.organizationVersionId))) {
       throw new Error(NOT_AUTHORIZED)
     }
 
