@@ -1,8 +1,4 @@
 describe('Accounts - multiple environment with the same user', () => {
-  before(() => {
-    cy.resetTestDatabase()
-  })
-
   beforeEach(() => {
     cy.login('all-env-admin-0@yopmail.com', 'password-0')
   })

@@ -1,8 +1,4 @@
 describe('Real use case: BC V8_10', () => {
-  before(() => {
-    cy.resetTestDatabase()
-  })
-
   it('should correctly compute results', () => {
     cy.login()
     cy.visit('/etudes/91bb3826-2be7-4d56-bb9b-363f4d9af62f/comptabilisation/resultats')

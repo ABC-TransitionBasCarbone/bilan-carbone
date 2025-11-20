@@ -1,8 +1,4 @@
 describe('Create organization', () => {
-  before(() => {
-    cy.resetTestDatabase()
-  })
-
   beforeEach(() => {
     cy.intercept('POST', '/organisations/creer').as('create')
   })

@@ -1,10 +1,6 @@
 import dayjs from 'dayjs'
 
 describe('Edit study', () => {
-  before(() => {
-    cy.resetTestDatabase()
-  })
-
   beforeEach(() => {
     cy.intercept('POST', '/etudes/creer').as('create')
   })

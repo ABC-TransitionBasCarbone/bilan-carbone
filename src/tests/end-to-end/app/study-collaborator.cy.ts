@@ -1,10 +1,6 @@
 import dayjs from 'dayjs'
 
 describe('Study collaborators', () => {
-  before(() => {
-    cy.resetTestDatabase()
-  })
-
   beforeEach(() => {
     cy.intercept('POST', '/etudes/creer').as('create')
     cy.intercept('POST', '/etudes/*/cadrage/ajouter-contributeur').as('createContributor')

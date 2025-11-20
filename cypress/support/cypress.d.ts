@@ -8,6 +8,5 @@ declare namespace Cypress {
     login(email?: string, password?: string): Chainable<void>
     logout(): Chainable<void>
     signupCut(string?: string, string?: string): Chainable<void>
-    resetTestDatabase(): Chainable<void>
   }
 }

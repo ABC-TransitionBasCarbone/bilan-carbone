@@ -1,10 +1,6 @@
 import { Role } from '@prisma/client'
 
 describe('Team', () => {
-  before(() => {
-    cy.resetTestDatabase()
-  })
-
   beforeEach(() => {
     cy.intercept('POST', '/api/auth/callback/credentials').as('login')
     cy.intercept('POST', '/api/auth/signout').as('logout')

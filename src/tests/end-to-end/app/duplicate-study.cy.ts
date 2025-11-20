@@ -1,8 +1,4 @@
 describe('Duplicate study', () => {
-  before(() => {
-    cy.resetTestDatabase()
-  })
-
   beforeEach(() => {
     cy.intercept('POST', '/etudes/creer').as('create')
     cy.intercept('POST', '/etudes/*').as('delete')

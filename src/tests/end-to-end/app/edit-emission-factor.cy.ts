@@ -1,8 +1,4 @@
 describe('Edit emission factor', () => {
-  before(() => {
-    cy.resetTestDatabase()
-  })
-
   beforeEach(() => {
     cy.intercept('POST', '/facteurs-d-emission/creer').as('create')
     cy.intercept('POST', '/facteurs-d-emission/*/modifier').as('update')

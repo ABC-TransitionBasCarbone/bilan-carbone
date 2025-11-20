@@ -1,8 +1,4 @@
 describe('Emission factors table', () => {
-  before(() => {
-    cy.resetTestDatabase()
-  })
-
   it('Should be able to display archived emission factors', () => {
     cy.login()
     cy.visit('/facteurs-d-emission')
