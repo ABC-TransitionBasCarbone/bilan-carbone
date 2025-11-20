@@ -165,7 +165,14 @@ export const linkOldStudy = async (transitionPlanId: string, studyIdToLink: stri
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (await isYearAlreadyLinked(transitionPlan.id, studyToLink.startDate.getFullYear())) {
+    const currentStudyYear = transitionPlanStudy.startDate.getFullYear()
+    const linkedStudyYear = studyToLink.startDate.getFullYear()
+
+    if (linkedStudyYear >= currentStudyYear) {
+      throw new Error('studyYearMustBeBeforeCurrent')
+    }
+
+    if (await isYearAlreadyLinked(transitionPlan.id, linkedStudyYear)) {
       throw new Error('yearAlreadySet')
     }
 
@@ -179,7 +186,29 @@ export const addExternalStudy = async (command: ExternalStudyCommand) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (await isYearAlreadyLinked(command.transitionPlanId, getYearFromDateStr(command.date))) {
+    const transitionPlan = await getTransitionPlanById(command.transitionPlanId)
+    if (!transitionPlan) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const currentStudy = await getStudyById(transitionPlan.studyId, session.user.organizationVersionId)
+    if (!currentStudy) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const currentStudyYear = currentStudy.startDate.getFullYear()
+    const externalStudyYear = getYearFromDateStr(command.date)
+
+    if (externalStudyYear >= currentStudyYear) {
+      throw new Error('studyYearMustBeBeforeCurrent')
+    }
+
+    if (await isYearAlreadyLinked(command.transitionPlanId, externalStudyYear)) {
       throw new Error('yearAlreadySet')
     }
 
@@ -197,6 +226,47 @@ export const updateExternalStudy = async (command: ExternalStudyCommand) =>
 
     if (!externalStudyId) {
       throw new Error('External study ID is required for update')
+    }
+
+    const transitionPlan = await getTransitionPlanById(transitionPlanId)
+    if (!transitionPlan) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const currentStudy = await getStudyById(transitionPlan.studyId, session.user.organizationVersionId)
+    if (!currentStudy) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const currentStudyYear = currentStudy.startDate.getFullYear()
+
+    if (updateData.date) {
+      const updatedYear = getYearFromDateStr(updateData.date)
+
+      if (updatedYear >= currentStudyYear) {
+        throw new Error('studyYearMustBeBeforeCurrent')
+      }
+
+      if (await isYearAlreadyLinked(transitionPlanId, updatedYear)) {
+        const startDate = new Date(`01-01-${updatedYear}`)
+        const endDate = new Date(`01-01-${updatedYear + 1}`)
+
+        const [externalStudies, linkedStudies] = await Promise.all([
+          getExternalStudiesForTransitionPlanAndYear(transitionPlanId, startDate, endDate),
+          getLinkedStudiesForTransitionPlanAndYear(transitionPlanId, startDate, endDate),
+        ])
+
+        const otherStudies = [...externalStudies.filter((s) => s.id !== externalStudyId), ...linkedStudies]
+
+        if (otherStudies.length > 0) {
+          throw new Error('yearAlreadySet')
+        }
+      }
     }
 
     await dbUpdateExternalStudy(externalStudyId, updateData)

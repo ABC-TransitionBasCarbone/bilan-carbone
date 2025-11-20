@@ -9,7 +9,7 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { getStudyPreviousOccurrences } from '@/services/serverFunctions/study'
 import { addExternalStudy, linkOldStudy, updateExternalStudy } from '@/services/serverFunctions/transitionPlan'
 import {
-  ExternalStudyCommandValidation,
+  createExternalStudyCommandValidation,
   ExternalStudyFormInput,
 } from '@/services/serverFunctions/transitionPlan.command'
 import { PastStudy } from '@/utils/trajectory'
@@ -54,13 +54,14 @@ const LinkingStudyModal = ({
   const [oldSource, setOldSource] = useState('')
   const [studies, setStudies] = useState<Pick<FullStudy, 'id' | 'name'>[] | null>(null)
 
-  const previousYear = new Date(studyYear)
+  const currentStudyYear = studyYear.getFullYear()
+  const previousYear = new Date(currentStudyYear)
   previousYear.setFullYear(previousYear.getFullYear() - 1)
 
   const router = useRouter()
 
   const { control, formState, getValues, setValue, reset, handleSubmit } = useForm<ExternalStudyFormInput>({
-    resolver: zodResolver(ExternalStudyCommandValidation),
+    resolver: zodResolver(createExternalStudyCommandValidation(currentStudyYear)),
     mode: 'onBlur',
     reValidateMode: 'onChange',
     defaultValues: pastStudyToUpdate
@@ -98,10 +99,6 @@ const LinkingStudyModal = ({
         onClose()
       },
       getErrorMessage: (errorMessage) => t(errorMessage),
-      onError: () => {
-        reset()
-        onClose()
-      },
     })
     setLinking(false)
   }
@@ -117,6 +114,8 @@ const LinkingStudyModal = ({
       await callServerFunction(() => updateExternalStudy(data), {
         onSuccess: () => {
           router.refresh()
+          reset()
+          onClose()
         },
         getErrorMessage: (errorMessage) => t(errorMessage),
       })
@@ -124,12 +123,12 @@ const LinkingStudyModal = ({
       await callServerFunction(() => addExternalStudy(data), {
         onSuccess: () => {
           router.refresh()
+          reset()
+          onClose()
         },
         getErrorMessage: (errorMessage) => t(errorMessage),
       })
     }
-    reset()
-    onClose()
   }
 
   return (

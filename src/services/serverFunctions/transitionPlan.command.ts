@@ -10,6 +10,20 @@ export const ExternalStudyCommandValidation = z.object({
   totalCo2: z.number().min(0),
 })
 
+export const createExternalStudyCommandValidation = (currentStudyYear: number) => {
+  return ExternalStudyCommandValidation.refine(
+    (data) => {
+      const dateValue = new Date(data.date)
+      const studyYear = dateValue.getFullYear()
+      return studyYear < currentStudyYear
+    },
+    {
+      ...setCustomMessage('studyYearMustBeBeforeCurrent'),
+      path: ['date'],
+    },
+  )
+}
+
 export type ExternalStudyCommand = z.infer<typeof ExternalStudyCommandValidation>
 export type ExternalStudyFormInput = z.input<typeof ExternalStudyCommandValidation>
 
