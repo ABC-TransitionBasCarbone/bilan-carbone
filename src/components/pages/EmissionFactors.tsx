@@ -18,6 +18,7 @@ const EmissionFactorsPage = async ({ userOrganizationId, environment, user }: Pr
   const t = await getTranslations('emissionFactors')
 
   const userOrganization = await getOrganizationVersionById(user.organizationVersionId || '')
+  const activeLicence = !!userOrganization && hasActiveLicence(userOrganization)
 
   return (
     <>
@@ -26,7 +27,7 @@ const EmissionFactorsPage = async ({ userOrganizationId, environment, user }: Pr
         title={t('title')}
         as="h1"
         actions={
-          userOrganizationId && userOrganization && hasActiveLicence(userOrganization)
+          userOrganizationId && activeLicence
             ? [
                 {
                   actionType: 'link',
@@ -39,7 +40,11 @@ const EmissionFactorsPage = async ({ userOrganizationId, environment, user }: Pr
         }
       >
         <Suspense fallback={t('loading')}>
-          <EmissionFactors userOrganizationId={userOrganizationId} environment={environment} />
+          <EmissionFactors
+            userOrganizationId={userOrganizationId}
+            environment={environment}
+            hasActiveLicence={activeLicence}
+          />
         </Suspense>
       </Block>
     </>
