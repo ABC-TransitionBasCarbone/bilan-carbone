@@ -132,7 +132,7 @@ const TrajectoryGraph = ({
       if (showCurrentTrajectory) {
         series.push({
           data: currentData,
-          label: trajectory15Data.previousTrajectory ? t('trajectory15') : t('trajectory15'),
+          label: trajectory15Data.previousTrajectory ? t('trajectory15') + ` (${studyStartYear})` : t('trajectory15'),
           color: 'var(--trajectory-sbti-15)',
           curve: 'linear' as const,
           connectNulls: false,
@@ -142,7 +142,7 @@ const TrajectoryGraph = ({
       } else {
         series.push({
           data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
-          label: `${t('trajectory15')} (${studyStartYear})`,
+          label: t('trajectory15') + ` (${studyStartYear})`,
           color: 'var(--trajectory-sbti-15)',
           curve: 'linear' as const,
           connectNulls: false,
@@ -185,7 +185,9 @@ const TrajectoryGraph = ({
       if (showCurrentTrajectory) {
         series.push({
           data: currentData,
-          label: t('trajectoryWB2C'),
+          label: trajectoryWB2CData.previousTrajectory
+            ? t('trajectoryWB2C') + ` (${studyStartYear})`
+            : t('trajectoryWB2C'),
           color: 'var(--trajectory-sbti-wb2c)',
           curve: 'linear' as const,
           connectNulls: false,
@@ -195,7 +197,7 @@ const TrajectoryGraph = ({
       } else {
         series.push({
           data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
-          label: t('trajectoryWB2C'),
+          label: t('trajectoryWB2C') + ` (${studyStartYear})`,
           color: 'var(--trajectory-sbti-wb2c)',
           curve: 'linear' as const,
           connectNulls: false,
@@ -214,7 +216,7 @@ const TrajectoryGraph = ({
           if (withinThreshold) {
             series.push({
               data: mapDataToYears(previousTrajectory),
-              label: traj.label,
+              label: traj.label + ` (${previousTrajectoryReferenceYear})`,
               color: traj.color || `var(--trajectory-custom-${index % 9})`,
               curve: 'linear' as const,
               connectNulls: false,
@@ -240,7 +242,7 @@ const TrajectoryGraph = ({
         if (showCurrentTrajectory) {
           series.push({
             data: currentData,
-            label: traj.label,
+            label: previousTrajectory ? traj.label + ` (${studyStartYear})` : traj.label,
             color: traj.color || `var(--trajectory-custom-${index % 9})`,
             curve: 'linear' as const,
             connectNulls: false,
@@ -250,7 +252,7 @@ const TrajectoryGraph = ({
         } else {
           series.push({
             data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
-            label: traj.label,
+            label: traj.label + ` (${studyStartYear})`,
             color: traj.color || `var(--trajectory-custom-${index % 9})`,
             curve: 'linear' as const,
             connectNulls: false,
@@ -269,7 +271,7 @@ const TrajectoryGraph = ({
         if (withinThreshold) {
           series.push({
             data: mapDataToYears(previousTrajectory),
-            label: t('actionBasedTrajectory'),
+            label: t('actionBasedTrajectory') + ` (${previousTrajectoryReferenceYear})`,
             color: 'var(--mui-palette-primary-main)',
             curve: 'linear' as const,
             connectNulls: false,
@@ -294,7 +296,9 @@ const TrajectoryGraph = ({
       if (showCurrentTrajectory) {
         series.push({
           data: currentData,
-          label: t('actionBasedTrajectory'),
+          label: actionBasedTrajectoryData.previousTrajectory
+            ? t('actionBasedTrajectory') + ` (${studyStartYear})`
+            : t('actionBasedTrajectory'),
           color: 'var(--mui-palette-primary-main)',
           curve: 'linear' as const,
           connectNulls: false,
