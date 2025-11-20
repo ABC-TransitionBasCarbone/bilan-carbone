@@ -6,21 +6,42 @@ export const isValidAssociationSiret = async (siret: string) => {
     return false
   }
 
-  const result = await axios.get(`${process.env.ASSOCIATION_SERVICE_URL}/${trimmedSiret}`)
+  try {
+    const result = await axios.get(`${process.env.INSEE_SERVICE_URL}/${trimmedSiret}`, {
+      headers: {
+        'X-INSEE-Api-Key-Integration': process.env.INSEE_API_SECRET,
+      },
+    })
 
-  if (!result?.data?.identite?.id_siret_siege) {
+    const etablissement = result?.data?.etablissement
+    if (!etablissement) {
+      return false
+    }
+
+    // Vérifier que le SIRET correspond bien à l'établissement
+    if (etablissement.siret !== trimmedSiret) {
+      return false
+    }
+
+    // Codes juridiques des associations :
+    // 9210 : Association non déclarée
+    // 9220 : Association déclarée
+    // 9221 : Association déclarée d'insertion par l'économique
+    // 9222 : Association intermédiaire
+    // 9223 : Groupement d'employeurs
+    // 9224 : Association d'avocats à responsabilité professionnelle individuelle
+    // 9230 : Association déclarée, reconnue d'utilité publique
+    // 9240 : Congrégation
+    // 9260 : Association de droit local (Bas-Rhin, Haut-Rhin et Moselle)
+    const associationCategories = ['9210', '9220', '9221', '9222', '9223', '9224', '9230', '9240', '9260']
+    const categorieJuridique = etablissement.uniteLegale?.categorieJuridiqueUniteLegale
+    const isAssociation = associationCategories.includes(categorieJuridique)
+
+    return isAssociation
+  } catch (error) {
+    console.error('Error validating association SIRET:', error)
     return false
   }
-
-  if (result.data.identite.id_siret_siege !== parseInt(trimmedSiret)) {
-    return false
-  }
-
-  if (!result?.data?.identite?.lib_forme_juridique?.includes('Association déclarée')) {
-    return false
-  }
-
-  return true
 }
 
 export const getCompanyName = async (siret: string) => {
