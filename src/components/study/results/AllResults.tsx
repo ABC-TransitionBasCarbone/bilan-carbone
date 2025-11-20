@@ -27,11 +27,11 @@ import { useTranslations } from 'next-intl'
 import { MouseEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import SelectStudySite from '../site/SelectStudySite'
 import useStudySite from '../site/useStudySite'
+import styles from './AllResults.module.css'
 import BegesResultsTable from './beges/BegesResultsTable'
 import ConsolatedBEGESDifference from './ConsolatedBEGESDifference'
 import ConsolidatedResults from './consolidated/ConsolidatedResults'
 import EmissionsAnalysis from './consolidated/EmissionsAnalysis'
-import DownloadMenu from './DownloadMenu'
 import UncertaintyAnalytics from './uncertainty/UncertaintyAnalytics'
 
 interface Props {
@@ -147,7 +147,8 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   if (!environment) {
     return null
   }
-  const downloadEmissionSources = async () => {
+  const downloadEmissionSources = async (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
+    preventClose(e)
     if (hasAccessToEmissionSourcesDownload) {
       setDownloading('emissionSources')
       await downloadStudyEmissionSources(
@@ -164,7 +165,8 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     }
   }
 
-  const downloadResults = async () => {
+  const downloadResults = async (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
+    preventClose(e)
     setDownloading('results')
     await downloadStudyResults(
       study,
@@ -180,6 +182,11 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       environment,
     )
     setDownloading(null)
+  }
+
+  const preventClose = (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
+    e.preventDefault()
+    e.stopPropagation()
   }
 
   return (
@@ -229,48 +236,39 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
           )}
         </div>
         <div className="flex gapped1">
-          <Button
-            data-testid="download-results-dropdown"
-            color="secondary"
-            title={t('download')}
-            onMouseEnter={handleClickMenu}
-          >
-            <DownloadIcon />
-          </Button>
-          <DownloadMenu
-            id="downlaod-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            slotProps={{
-              list: { onMouseLeave: handleClose },
-            }}
-          >
-            {downloadEmissionSources && (
-              <MenuItem>
-                <LoadingButton
-                  disabled={study.emissionSources.length === 0}
-                  title={tStudyExport('download')}
-                  onClick={downloadEmissionSources}
-                  className="mb1"
-                  loading={downloading === 'emissionSources'}
-                >
-                  <DownloadIcon className="mr-2" /> {tStudyExport('download')}
-                </LoadingButton>
-              </MenuItem>
+          <Select
+            id="download-results-dropdown"
+            labelId="download-results-dropdown"
+            value="download"
+            renderValue={() => (
+              <div className="align-center">
+                <DownloadIcon className="mr-2" /> {t('download')}
+              </div>
             )}
-
-            <MenuItem>
+          >
+            <MenuItem className={styles.downloadOption}>
               <LoadingButton
+                className="grow justify-start"
+                disabled={study.emissionSources.length === 0}
+                title={tStudyExport('download')}
+                onClick={downloadEmissionSources}
+                loading={downloading === 'emissionSources'}
+              >
+                {tStudyExport('download')}
+              </LoadingButton>
+            </MenuItem>
+            <MenuItem className={styles.downloadOption}>
+              <LoadingButton
+                className="grow justify-start"
                 disabled={study.emissionSources.length === 0}
                 title={t('download')}
                 onClick={downloadResults}
                 loading={downloading === 'results'}
               >
-                <DownloadIcon className="mr-2" /> {t('downloadResults')}
+                {t('downloadResults')}
               </LoadingButton>
             </MenuItem>
-          </DownloadMenu>
+          </Select>
           {isDownloadReportActive && (
             <Button onClick={downloadReport} title={t('downloadReport')} variant="outlined">
               <SummarizeIcon className="mr-2" /> {t('resultsWord')}
