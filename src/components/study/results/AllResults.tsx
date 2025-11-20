@@ -2,7 +2,6 @@
 
 import Block from '@/components/base/Block'
 import Button from '@/components/base/Button'
-import LoadingButton from '@/components/base/LoadingButton'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
@@ -27,7 +26,6 @@ import { useTranslations } from 'next-intl'
 import { MouseEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import SelectStudySite from '../site/SelectStudySite'
 import useStudySite from '../site/useStudySite'
-import styles from './AllResults.module.css'
 import BegesResultsTable from './beges/BegesResultsTable'
 import ConsolatedBEGESDifference from './ConsolatedBEGESDifference'
 import ConsolidatedResults from './consolidated/ConsolidatedResults'
@@ -147,7 +145,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   if (!environment) {
     return null
   }
-  const downloadEmissionSources = async (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
+  const downloadEmissionSources = async (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
     preventClose(e)
     if (hasAccessToEmissionSourcesDownload) {
       setDownloading('emissionSources')
@@ -165,7 +163,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     }
   }
 
-  const downloadResults = async (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
+  const downloadResults = async (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
     preventClose(e)
     setDownloading('results')
     await downloadStudyResults(
@@ -184,7 +182,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     setDownloading(null)
   }
 
-  const preventClose = (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
+  const preventClose = (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
     e.preventDefault()
     e.stopPropagation()
   }
@@ -246,27 +244,17 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
               </div>
             )}
           >
-            <MenuItem className={styles.downloadOption}>
-              <LoadingButton
-                className="grow justify-start"
-                disabled={study.emissionSources.length === 0}
-                title={tStudyExport('download')}
-                onClick={downloadEmissionSources}
-                loading={downloading === 'emissionSources'}
-              >
-                {tStudyExport('download')}
-              </LoadingButton>
-            </MenuItem>
-            <MenuItem className={styles.downloadOption}>
-              <LoadingButton
-                className="grow justify-start"
-                disabled={study.emissionSources.length === 0}
-                title={t('download')}
-                onClick={downloadResults}
-                loading={downloading === 'results'}
-              >
+            {study.emissionSources.length > 0 && (
+              <MenuItem>
+                <div className="grow justify-start" onClick={downloadEmissionSources}>
+                  {tStudyExport('download')}
+                </div>
+              </MenuItem>
+            )}
+            <MenuItem>
+              <div className="grow justify-start" onClick={downloadResults}>
                 {t('downloadResults')}
-              </LoadingButton>
+              </div>
             </MenuItem>
           </Select>
           {isDownloadReportActive && (
