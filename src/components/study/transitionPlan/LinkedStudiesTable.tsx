@@ -17,9 +17,10 @@ const ConfirmDeleteModal = dynamic(() => import('../../modals/ConfirmDeleteModal
 interface Props {
   transitionPlanId: string
   pastStudies: PastStudy[]
+  canEdit: boolean
 }
 
-const LinkedStudiesTable = ({ transitionPlanId, pastStudies }: Props) => {
+const LinkedStudiesTable = ({ transitionPlanId, pastStudies, canEdit }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.linkedStudies.table')
   const tDeleteModal = useTranslations('study.transitionPlan.trajectories.linkedStudies.deleteModal')
   const router = useRouter()
@@ -76,20 +77,22 @@ const LinkedStudiesTable = ({ transitionPlanId, pastStudies }: Props) => {
           },
         },
         { header: t('year'), accessorKey: 'year' },
-        {
-          id: 'actions',
-          header: '',
-          accessorKey: 'id',
-          cell: ({ row }) => (
-            <TableActionButton
-              type="delete"
-              onClick={() => handleDeleteClick(row.original.type, row.original.id, row.original.name)}
-              data-testid={`delete-${row.original.type}-study-button`}
-            />
-          ),
-        },
+        canEdit
+          ? {
+              id: 'actions',
+              header: '',
+              accessorKey: 'id',
+              cell: ({ row }) => (
+                <TableActionButton
+                  type="delete"
+                  onClick={() => handleDeleteClick(row.original.type, row.original.id, row.original.name)}
+                  data-testid={`delete-${row.original.type}-study-button`}
+                />
+              ),
+            }
+          : null,
       ] as ColumnDef<PastStudy>[],
-    [t, handleDeleteClick],
+    [t, handleDeleteClick, canEdit],
   )
 
   const pastStudiesTable = useReactTable({

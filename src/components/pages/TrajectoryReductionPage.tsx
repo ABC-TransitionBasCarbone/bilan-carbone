@@ -287,6 +287,7 @@ const TrajectoryReductionPage = ({
             studyId={study.id}
             studyYear={study.startDate}
             pastStudies={pastStudies}
+            canEdit={canEdit}
           />
 
           <div className={styles.trajectoryCardsGrid}>

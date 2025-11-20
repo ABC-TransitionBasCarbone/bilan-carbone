@@ -15,9 +15,10 @@ interface Props {
   studyId: string
   studyYear: Date
   pastStudies: PastStudy[]
+  canEdit: boolean
 }
 
-const LinkedStudies = ({ transitionPlanId, studyId, studyYear, pastStudies }: Props) => {
+const LinkedStudies = ({ transitionPlanId, studyId, studyYear, pastStudies, canEdit }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.linkedStudies')
   const [linking, setLinking] = useState(false)
 
@@ -27,7 +28,7 @@ const LinkedStudies = ({ transitionPlanId, studyId, studyYear, pastStudies }: Pr
         <Typography variant="h5" component="h2" fontWeight={600}>
           {t('linked')}
         </Typography>
-        <Button onClick={() => setLinking((prev) => !prev)}>{t('linkStudy')}</Button>
+        {canEdit && <Button onClick={() => setLinking((prev) => !prev)}>{t('linkStudy')}</Button>}
       </div>
       {linking && (
         <LinkingStudyModal
@@ -38,7 +39,7 @@ const LinkedStudies = ({ transitionPlanId, studyId, studyYear, pastStudies }: Pr
           onClose={() => setLinking(false)}
         />
       )}
-      <LinkedStudiesTable transitionPlanId={transitionPlanId} pastStudies={pastStudies} />
+      <LinkedStudiesTable transitionPlanId={transitionPlanId} pastStudies={pastStudies} canEdit={canEdit} />
     </div>
   )
 }
