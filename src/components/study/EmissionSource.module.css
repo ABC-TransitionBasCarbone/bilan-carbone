@@ -16,7 +16,6 @@
 .tagOptions {
   min-width: fit-content;
   max-width: 50vw;
-  z-index: 10;
 }
 
 .emissionsSourceName {
