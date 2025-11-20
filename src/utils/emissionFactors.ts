@@ -90,10 +90,7 @@ const tiltEmissionFactorSubPostsMapping: Partial<Record<SubPost, SubPost[]>> = {
 const getEmissionFactorSubPostMap = (subPost: SubPost, env: Environment) => {
   switch (env) {
     case Environment.TILT:
-      if (tiltEmissionFactorSubPostsMapping[subPost]) {
-        return tiltEmissionFactorSubPostsMapping[subPost]!
-      }
-      return [convertTiltSubPostToBCSubPost(subPost)]
+      return tiltEmissionFactorSubPostsMapping[subPost] ?? [convertTiltSubPostToBCSubPost(subPost)]
     default:
       return [subPost]
   }
