@@ -927,18 +927,20 @@ const users = async () => {
   )
 
   await Promise.all(
-    studies.map(async (study) => {
-      return prisma.studyEmissionSource.createMany({
-        data: faker.helpers.arrayElements(subPosts, { min: 1, max: subPosts.length }).flatMap((subPost) =>
-          Array.from({ length: Math.ceil(Math.random() * 20) }).map(() => ({
-            studyId: study.id,
-            name: faker.lorem.words({ min: 2, max: 5 }),
-            subPost: subPost as SubPost,
-            studySiteId: faker.helpers.arrayElement(study.sites).id,
-          })),
-        ),
-      })
-    }),
+    studies
+      .filter((study) => study.id !== '88c93e88-7c80-4be4-905b-f0bbd2ccc779')
+      .map(async (study) => {
+        return prisma.studyEmissionSource.createMany({
+          data: faker.helpers.arrayElements(subPosts, { min: 1, max: subPosts.length }).flatMap((subPost) =>
+            Array.from({ length: Math.ceil(Math.random() * 20) }).map(() => ({
+              studyId: study.id,
+              name: faker.lorem.words({ min: 2, max: 5 }),
+              subPost: subPost as SubPost,
+              studySiteId: faker.helpers.arrayElement(study.sites).id,
+            })),
+          ),
+        })
+      }),
   )
 
   await createRealStudy(prisma, defaultUserWithAccount.accounts[0].account)
