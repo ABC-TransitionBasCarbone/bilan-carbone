@@ -1,6 +1,6 @@
 confiseries et boissons . achats:
   formule: général . nombre entrées * vente sur place . achat type . empreinte
-  unité: kgCO2e/an
+  unité: kgCO2e
 
 confiseries et boissons . achats . vente sur place:
   titre: Vente sur place
@@ -37,6 +37,17 @@ confiseries et boissons . achats . vente sur place . achat type . empreinte:
       - si: achat type = 'significatif'
         alors: achat type . significatif . FE
   unité: kgCO2e/entrée
+
+confiseries et boissons . achats . vente sur place . achat type . poids:
+  formule:
+    variations:
+      - si: achat type = 'un peu'
+        alors: 0.03
+      - si: achat type = 'standard'
+        alors: 0.12
+      - si: achat type = 'significatif'
+        alors: 0.2
+  unité: kg/entrée
 
 confiseries et boissons . achats . vente sur place . achat type . un peu . FE:
   valeur: 0.030414
