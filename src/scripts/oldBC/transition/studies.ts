@@ -523,7 +523,8 @@ export const uploadStudies = async (
 ) => {
   console.log('Import des études...')
 
-  const skippedInfos: { oldBcId: string; reason: string }[] = []
+  const skippedStudiesInfos: { oldBcId: string; reason: string }[] = []
+  const skippedSitesInfos: { oldBcId: string; reason: string }[] = []
   const emissionSourceWithoutFe: Record<string, string[]> = {}
   const nonExistingFEs: Record<string, string[]> = {}
 
@@ -616,7 +617,7 @@ export const uploadStudies = async (
         return studySites
           .map((studySite) => {
             if (studySite.siteOldBCId === 'NULL') {
-              skippedInfos.push({
+              skippedStudiesInfos.push({
                 oldBcId: studyOldBCId,
                 reason: "Etude ignorée - Aucun site sélectionné, demander à l'utilisateur de le sélectionner",
               })
@@ -625,7 +626,7 @@ export const uploadStudies = async (
 
             const existingSiteId = existingSiteIds.get(studySite.siteOldBCId)
             if (!existingSiteId) {
-              skippedInfos.push({
+              skippedSitesInfos.push({
                 oldBcId: studySite.siteOldBCId,
                 reason: `Site d'étude ignoré - Le site n'existe plus ${studySite.siteOldBCId} ${studyOldBCId}`,
               })
@@ -669,7 +670,7 @@ export const uploadStudies = async (
           console.warn(`Impossible de retrouver l'étude de oldBCId: ${studyOldBCId}`)
           return []
         }
-        if (skippedInfos.some((s) => s.oldBcId === studyOldBCId)) {
+        if (skippedStudiesInfos.some((s) => s.oldBcId === studyOldBCId)) {
           return []
         }
 
@@ -733,7 +734,7 @@ export const uploadStudies = async (
           console.warn(`Impossible de retrouver l'étude de oldBCId: ${studyOldBCId}`)
           return []
         }
-        if (skippedInfos.some((s) => s.oldBcId === studyOldBCId)) {
+        if (skippedStudiesInfos.some((s) => s.oldBcId === studyOldBCId)) {
           console.log(`Étude ignorée ${studyOldBCId} car dans la liste des études à ignorer`)
           return []
         }
@@ -742,7 +743,7 @@ export const uploadStudies = async (
           .map((studyEmissionSource) => {
             if (
               studyEmissionSource.siteOldBCId === 'NULL' ||
-              skippedInfos.some((s) => s.oldBcId === studyEmissionSource.siteOldBCId)
+              skippedSitesInfos.some((s) => s.oldBcId === studyEmissionSource.siteOldBCId)
             ) {
               console.log(
                 `Source d'émission ignorée - car dans skippedINfos ${studyOldBCId} ${studyEmissionSource.siteOldBCId}`,
@@ -762,7 +763,7 @@ export const uploadStudies = async (
             }
             const studySite = studySites.find((studySite) => studySite.siteId === existingSiteId)
             if (!studySite) {
-              skippedInfos.push({
+              skippedStudiesInfos.push({
                 oldBcId: studyOldBCId,
                 reason: `Source d'émission ignorée - Le site associée n'est pas sélectionné pour l'étude ${studyOldBCId} ${studyEmissionSource.siteOldBCId}`,
               })
@@ -961,8 +962,11 @@ export const uploadStudies = async (
     )
   }
 
-  if (skippedInfos.length) {
-    console.log('skippedInfos', JSON.stringify(skippedInfos))
+  if (skippedStudiesInfos.length) {
+    console.log('skippedStudiesInfos', JSON.stringify(skippedStudiesInfos))
+  }
+  if (skippedSitesInfos.length) {
+    console.log('skippedSitesInfos', JSON.stringify(skippedSitesInfos))
   }
   if (Object.keys(nonExistingFEs).length) {
     console.log('skippedFes', JSON.stringify(nonExistingFEs))
