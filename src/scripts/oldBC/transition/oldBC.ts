@@ -6,8 +6,6 @@ import {
   OrganizationVersionWithOrganization,
 } from '@/db/organization'
 import { Environment } from '@prisma/client'
-import { stdin as input, stdout as output } from 'node:process'
-import * as readline from 'node:readline/promises'
 import { uploadEmissionFactors } from './emissionFactors'
 import { OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
 import { OldBCWorkSheetsReader } from './oldBCWorkSheetsReader'
@@ -50,21 +48,6 @@ export const uploadOldBCInformations = async (
   let hasOrganizationsWarning = false
   let hasEmissionFactorsWarning = false
   let hasStudiesWarning = false
-
-  if (!skip) {
-    const rl = readline.createInterface({ input, output })
-    const doWeContinue = await rl.question(
-      "Tu n'as pas choisi de passer en mode vérification (pas de paramètre skip), es-tu sûr de vouloir continuer ? (oui/non) ",
-    )
-
-    if (doWeContinue?.toLocaleLowerCase() !== 'oui') {
-      console.log('On arrête le programme')
-      return
-    } else {
-      console.log("C'est parti pour la migration !")
-    }
-    rl.close()
-  }
 
   await prismaClient.$transaction(
     async (transaction) => {
