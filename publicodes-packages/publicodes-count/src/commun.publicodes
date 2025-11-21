@@ -5,4 +5,15 @@ commun . nombre de semaines par an:
   titre: Nombre de semaines par an
   description: Nombre de semaines prises en compte pour le calcul annuel.
   valeur: 52
-  unité: semaine/an
+  unité: semaine
+
+commun . nombre de jours par an:
+  titre: Nombre de jours par an
+  description: Nombre de jours pris en compte pour le calcul annuel.
+  valeur: 365
+  unité: jour
+
+commun . année actuelle:
+  titre: Année actuelle
+  description: Année de référence pour le calcul des amortissements.
+  valeur: 12/2025
