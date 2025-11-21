@@ -5,33 +5,35 @@ confiseries et boissons . électroménager:
     Pour les différents équipements informatiques utilisés, veuillez indiquer leur nombre et leur date d'achat ou durée de location :
   description: |
     Si l'équipement concerné est acheté, merci de ne pas remplir le champ "Durée de location". Si l'équipement concerné est loué de manière ponctuelle, merci de ne pas remplir le champ "Date d'achat". Si vous louez un équipement pour de longues durées ou de manière continue, nous vous recommandons de le considérer comme acheté (à la date de la première année de location).
+  note: |
+    La durée de location prévaut sur la date d'achat.
   formule:
     somme:
       - réfrigérateurs
+      - congélateurs
+      - warmers
+      - distributeurs
 
-confiseries et boissons . électroménager . réfrigérateurs:
-  titre: Réfrigérateurs
+confiseries et boissons . électroménager . appareil:
+  titre: Empreinte appareil électroménager type
   formule:
     variations:
       - si:
-          est applicable: année achat
+          est défini: durée location
         alors:
+          produit:
+            - nb appareils
+            - FE
+            - (durée location / (commun . nombre de jours par an * amortissement))
+      - sinon:
           variations:
             - si: age > amortissement
               alors: 0
             - sinon:
                 produit:
-                  - nb réfrigérateurs
+                  - nb appareils
                   - FE
                   - (1 / amortissement)
-      - si:
-          est applicable: durée location
-        alors:
-          produit:
-            - nb réfrigérateurs
-            - FE
-            - (durée location / (commun . nombre de jours par an * amortissement))
-      - sinon: 0
   unité: kgCO2e/an
   avec:
     age:
@@ -40,23 +42,130 @@ confiseries et boissons . électroménager . réfrigérateurs:
         depuis: année achat
         jusqu'à: commun . année actuelle
       arrondi: oui
-    nb réfrigérateurs:
-      question: Nombre de réfrigérateurs
-      par défaut: 0
+    nb appareils:
+      question: Nombre d'appareils
     année achat:
       non applicable si:
         est défini: durée location
-      question: Année d'achat des réfrigérateurs
+      question: Année d'achat des appareils
     durée location:
-      non applicable si:
-        est défini: année achat
-      question: Durée de location des réfrigérateurs (jours à l'année)
+      question: Durée de location des appareils (jours à l'année)
       unité: jour/an
     amortissement:
       valeur: 5
       unité: an
+      note: La durée d'amortissement est la même pour tous les appareils électroménagers.
     FE:
-      valeur: 1000
-      unité: kgCO2e/l
-      meta:
-        id: 26976
+      unité: kgCO2e
+
+confiseries et boissons . électroménager . réfrigérateurs:
+  titre: Réfrigérateurs
+  formule: appareil
+  contexte:
+    appareil . nb appareils: réfrigérateurs . nombre
+    appareil . année achat: réfrigérateurs . année achat
+    appareil . durée location: réfrigérateurs . durée location
+    appareil . FE: réfrigérateurs . FE
+
+confiseries et boissons . électroménager . réfrigérateurs . nombre:
+  question: Nombre de réfrigérateurs
+  valeur: 1
+
+confiseries et boissons . électroménager . réfrigérateurs . durée location:
+  question: Durée de location des réfrigérateurs (jours à l'année)
+  unité: jour/an
+
+confiseries et boissons . électroménager . réfrigérateurs . année achat:
+  non applicable si:
+    est défini: réfrigérateurs . durée location
+  question: Année d'achat des réfrigérateurs
+
+confiseries et boissons . électroménager . réfrigérateurs . FE:
+  valeur: 257.3
+  unité: kgCO2e
+  meta:
+    id: 26976
+
+confiseries et boissons . électroménager . congélateurs:
+  titre: Congélateurs
+  formule: appareil
+  contexte:
+    appareil . nb appareils: congélateurs . nombre
+    appareil . année achat: congélateurs . année achat
+    appareil . durée location: congélateurs . durée location
+    appareil . FE: congélateurs . FE
+
+confiseries et boissons . électroménager . congélateurs . nombre:
+  question: Nombre de congélateurs
+  valeur: 1
+
+confiseries et boissons . électroménager . congélateurs . durée location:
+  question: Durée de location des congélateurs (jours à l'année)
+  unité: jour/an
+
+confiseries et boissons . électroménager . congélateurs . année achat:
+  non applicable si:
+    est défini: congélateurs . durée location
+  question: Année d'achat des congélateurs
+
+confiseries et boissons . électroménager . congélateurs . FE:
+  valeur: 301.4
+  unité: kgCO2e
+  meta:
+    id: 26978
+
+confiseries et boissons . électroménager . warmers:
+  titre: Warmers
+  formule: appareil
+  contexte:
+    appareil . nb appareils: warmers . nombre
+    appareil . année achat: warmers . année achat
+    appareil . durée location: warmers . durée location
+    appareil . FE: warmers . FE
+
+confiseries et boissons . électroménager . warmers . nombre:
+  question: Nombre de warmers
+  valeur: 1
+
+confiseries et boissons . électroménager . warmers . durée location:
+  question: Durée de location des warmers (jours à l'année)
+  unité: jour/an
+
+confiseries et boissons . électroménager . warmers . année achat:
+  non applicable si:
+    est défini: warmers . durée location
+  question: Année d'achat des warmers
+
+confiseries et boissons . électroménager . warmers . FE:
+  valeur: 217.59
+  unité: kgCO2e
+  meta:
+    id: 26986
+
+confiseries et boissons . électroménager . distributeurs:
+  titre: Distributeurs snack et boissons
+  formule: appareil
+  contexte:
+    appareil . nb appareils: distributeurs . nombre
+    appareil . année achat: distributeurs . année achat
+    appareil . durée location: distributeurs . durée location
+    appareil . FE: distributeurs . FE
+
+confiseries et boissons . électroménager . distributeurs . nombre:
+  question: Nombre de distributeurs snack et boissons
+  valeur: 1
+
+confiseries et boissons . électroménager . distributeurs . durée location:
+  question: Durée de location des distributeurs snack et boissons (jours à l'année)
+  unité: jour/an
+
+confiseries et boissons . électroménager . distributeurs . année achat:
+  non applicable si:
+    est défini: distributeurs . durée location
+  question: Année d'achat des distributeurs snack et boissons
+
+confiseries et boissons . électroménager . distributeurs . FE:
+  valeur: 257.3
+  unité: kgCO2e
+  meta:
+    id: 26976
