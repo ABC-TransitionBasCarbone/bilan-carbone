@@ -1,14 +1,19 @@
 confiseries et boissons . fret:
-  note: TODO
-  formule: distance * FE
+  formule: poids total * distance * FE
   unité: kgCO2e
+  note: |
+    Il semble que le facteur (poids total confiserie) est manquant dans le code actuel.
+
+confiseries et boissons . fret . poids total:
+  formule: général . nombre entrées * achats . vente sur place . achat type . poids / 1000 kg/tonne
+  unité: tonne
 
 confiseries et boissons . fret . distance:
   question: Quelle est la distance entre votre cinéma et votre principal fournisseur ?
   unité: km
 
 confiseries et boissons . fret . FE:
-  valeur: 0.0002
-  unité: kgCO2e/t.km
+  valeur: 0.3772
+  unité: kgCO2e/tonne.km
   meta:
     id: 28026
