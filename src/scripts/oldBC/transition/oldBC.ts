@@ -45,30 +45,43 @@ export const uploadOldBCInformations = async (
 
   const oldBCWorksheetsReader = new OldBCWorkSheetsReader(file)
 
-  let hasOrganizationsWarning = false
-  let hasEmissionFactorsWarning = false
-  let hasStudiesWarning = false
-
   await prismaClient.$transaction(
     async (transaction) => {
-      hasOrganizationsWarning = await uploadOrganizations(
+      const hasOrganizationsWarning = await uploadOrganizations(
         transaction,
         oldBCWorksheetsReader.organizationsWorksheet,
         accountOrganizationVersion,
       )
-      hasEmissionFactorsWarning = await uploadEmissionFactors(
+      if (hasOrganizationsWarning) {
+        console.log(
+          'Attention, certaines organisations (basé sur le SIRET, ou le nom) existent déjà. Ces dernières ont été ignorées. Veuillez verifier que toutes vos données sont correctes.',
+        )
+      }
+
+      const hasEmissionFactorsWarning = await uploadEmissionFactors(
         transaction,
         oldBCWorksheetsReader.emissionFactorsWorksheet,
         accountOrganizationVersion,
         postAndSubPostsOldNewMapping,
       )
-      hasStudiesWarning = await uploadStudies(
+      if (hasEmissionFactorsWarning) {
+        console.log(
+          "Attention, certains facteurs d'emissions ont des sommes inconsistentes et ont été ignorées. Veuillez verifier que toutes vos données sont correctes.",
+        )
+      }
+
+      const hasStudiesWarning = await uploadStudies(
         transaction,
         account.id,
         organizationVersionId,
         postAndSubPostsOldNewMapping,
         oldBCWorksheetsReader,
       )
+      if (hasStudiesWarning) {
+        console.log(
+          'Attention, certaines études ont été ignorées. Veuillez verifier que toutes vos données sont correctes.',
+        )
+      }
 
       if (skip) {
         throw Error()
@@ -76,21 +89,4 @@ export const uploadOldBCInformations = async (
     },
     { timeout: 10000 },
   ) // 10 seconds timeout for the transaction
-
-  if (hasOrganizationsWarning) {
-    console.log(
-      'Attention, certaines organisations (basé sur le SIRET, ou le nom) existent déjà. Ces dernières ont été ignorées. Veuillez verifier que toutes vos données sont correctes.',
-    )
-  }
-  if (hasEmissionFactorsWarning) {
-    console.log(
-      "Attention, certains facteurs d'emissions ont des sommes inconsistentes et ont été ignorées. Veuillez verifier que toutes vos données sont correctes.",
-    )
-  }
-
-  if (hasStudiesWarning) {
-    console.log(
-      'Attention, certaines études ont été ignorées. Veuillez verifier que toutes vos données sont correctes.',
-    )
-  }
 }
