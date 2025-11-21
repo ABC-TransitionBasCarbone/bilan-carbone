@@ -58,7 +58,8 @@ export const uploadOldBCInformations = async (
     )
 
     if (doWeContinue?.toLocaleLowerCase() !== 'oui') {
-      throw new Error('On arrête le programme')
+      console.log('On arrête le programme')
+      return
     } else {
       console.log("C'est parti pour la migration !")
     }
