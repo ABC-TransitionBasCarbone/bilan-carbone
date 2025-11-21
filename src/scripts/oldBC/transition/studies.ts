@@ -940,9 +940,7 @@ export const uploadStudies = async (
 
   for (const study of studyWithoutFEImportVersions) {
     const studyEmissionFactorVersions = []
-    for (const source of Object.values(Import).filter(
-      (source) => source === Import.BaseEmpreinte || source === Import.Legifrance || source === Import.NegaOctet,
-    )) {
+    for (const source of [Import.BaseEmpreinte, Import.Legifrance, Import.NegaOctet]) {
       const latestImportVersion = await getSourceLatestImportVersionId(source)
       if (latestImportVersion) {
         studyEmissionFactorVersions.push({ studyId: study.id, source, importVersionId: latestImportVersion.id })
