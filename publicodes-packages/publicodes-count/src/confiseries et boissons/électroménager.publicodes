@@ -66,6 +66,12 @@ confiseries et boissons . électroménager . réfrigérateurs:
     appareil . année achat: réfrigérateurs . année achat
     appareil . durée location: réfrigérateurs . durée location
     appareil . FE: réfrigérateurs . FE
+  avec:
+    FE:
+      valeur: 257.3
+      unité: kgCO2e
+      meta:
+        id: 26976
 
 confiseries et boissons . électroménager . réfrigérateurs . nombre:
   question: Nombre de réfrigérateurs
@@ -80,12 +86,6 @@ confiseries et boissons . électroménager . réfrigérateurs . année achat:
     est défini: réfrigérateurs . durée location
   question: Année d'achat des réfrigérateurs
 
-confiseries et boissons . électroménager . réfrigérateurs . FE:
-  valeur: 257.3
-  unité: kgCO2e
-  meta:
-    id: 26976
-
 confiseries et boissons . électroménager . congélateurs:
   titre: Congélateurs
   formule: appareil
@@ -94,6 +94,12 @@ confiseries et boissons . électroménager . congélateurs:
     appareil . année achat: congélateurs . année achat
     appareil . durée location: congélateurs . durée location
     appareil . FE: congélateurs . FE
+  avec:
+    FE:
+      valeur: 301.4
+      unité: kgCO2e
+      meta:
+        id: 26978
 
 confiseries et boissons . électroménager . congélateurs . nombre:
   question: Nombre de congélateurs
@@ -108,12 +114,6 @@ confiseries et boissons . électroménager . congélateurs . année achat:
     est défini: congélateurs . durée location
   question: Année d'achat des congélateurs
 
-confiseries et boissons . électroménager . congélateurs . FE:
-  valeur: 301.4
-  unité: kgCO2e
-  meta:
-    id: 26978
-
 confiseries et boissons . électroménager . warmers:
   titre: Warmers
   formule: appareil
@@ -122,6 +122,12 @@ confiseries et boissons . électroménager . warmers:
     appareil . année achat: warmers . année achat
     appareil . durée location: warmers . durée location
     appareil . FE: warmers . FE
+  avec:
+    FE:
+      valeur: 217.59
+      unité: kgCO2e
+      meta:
+        id: 26986
 
 confiseries et boissons . électroménager . warmers . nombre:
   question: Nombre de warmers
@@ -136,12 +142,6 @@ confiseries et boissons . électroménager . warmers . année achat:
     est défini: warmers . durée location
   question: Année d'achat des warmers
 
-confiseries et boissons . électroménager . warmers . FE:
-  valeur: 217.59
-  unité: kgCO2e
-  meta:
-    id: 26986
-
 confiseries et boissons . électroménager . distributeurs:
   titre: Distributeurs snack et boissons
   formule: appareil
@@ -150,6 +150,12 @@ confiseries et boissons . électroménager . distributeurs:
     appareil . année achat: distributeurs . année achat
     appareil . durée location: distributeurs . durée location
     appareil . FE: distributeurs . FE
+  avec:
+    FE:
+      valeur: 257.3
+      unité: kgCO2e
+      meta:
+        id: 26976
 
 confiseries et boissons . électroménager . distributeurs . nombre:
   question: Nombre de distributeurs snack et boissons
@@ -163,9 +169,3 @@ confiseries et boissons . électroménager . distributeurs . année achat:
   non applicable si:
     est défini: distributeurs . durée location
   question: Année d'achat des distributeurs snack et boissons
-
-confiseries et boissons . électroménager . distributeurs . FE:
-  valeur: 257.3
-  unité: kgCO2e
-  meta:
-    id: 26976
