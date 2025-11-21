@@ -439,7 +439,7 @@ interface EmissionFactorWithVersion extends EmissionFactorPrismaModel {
 
 class EmissionFactorsByImportedIdMap {
   emissionFactorsMap: Map<string, EmissionFactor[]>
-  static skippedEmissionFactors: Set<string> = new Set()
+  skippedEmissionFactors: Set<string> = new Set()
 
   constructor(emissionFactors: EmissionFactorWithVersion[]) {
     this.emissionFactorsMap = emissionFactors.reduce((emissionFactorsMap, emissionFactor) => {
@@ -474,7 +474,7 @@ class EmissionFactorsByImportedIdMap {
   ) {
     const emissionFactorList = this.emissionFactorsMap.get(emissionFactorImportedId)
     if (!emissionFactorList) {
-      EmissionFactorsByImportedIdMap.skippedEmissionFactors.add(emissionFactorImportedId)
+      this.skippedEmissionFactors.add(emissionFactorImportedId)
       return null
     }
 
@@ -950,8 +950,8 @@ export const uploadStudies = async (
     await transaction.studyEmissionFactorVersion.createMany({ data: studyEmissionFactorVersions })
   }
 
-  if (EmissionFactorsByImportedIdMap.skippedEmissionFactors.size > 0) {
-    console.log(EmissionFactorsByImportedIdMap.skippedEmissionFactors)
+  if (emissionFactorsByImportedIdMap.skippedEmissionFactors.size > 0) {
+    console.log(emissionFactorsByImportedIdMap.skippedEmissionFactors)
   }
   if (studyWithoutFEImportVersions.length) {
     console.log(
