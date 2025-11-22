@@ -1,0 +1,180 @@
+fonctionnement . déplacements pro:
+  titre: Déplacements professionnels
+  formule:
+    somme:
+      - déplacements
+  unité: kgCO2e
+
+fonctionnement . déplacements pro . déplacements:
+  # TODO: Should be a liste of types of collaborators
+  titre: Déplacements
+  question: Décrivez les déplacements professionnels de vos collaborateurs
+  description: |
+    Les déplacements professionnels de vos collaborateurs sont tous les déplacements autres que les déplacements domicile-travail, effectués dans le cadre du travail. Ceux-ci incluent par exemple les déplacements pour se rendre à des congrès, conventions, festivals, prévisionnages, etc.
+  formule: déplacement type
+
+fonctionnement . déplacements pro . déplacement type:
+  formule:
+    somme:
+      - repas
+      - transport
+      - nuitées
+  unité: kgCO2e
+
+fonctionnement . déplacements pro . déplacement type . nombre participants:
+  question: Nombre de participants
+
+fonctionnement . déplacements pro . déplacement type . nombre occurences:
+  question: Nombre d'occurrences
+
+fonctionnement . déplacements pro . déplacement type . nombre de nuitées:
+  question: Nombre de nuitées
+  unité: jour
+
+fonctionnement . déplacements pro . déplacement type . repas:
+  formule:
+    produit:
+      - nombre participants
+      - nombre occurences
+      - nombre de nuitées
+      - 2 repas/jour
+      - commun . FE repas
+
+fonctionnement . déplacements pro . déplacement type . transport:
+  formule:
+    produit:
+      - nombre participants
+      - nombre occurences
+      - distance
+      - FE
+  avec:
+    distance:
+      question: Distance "aller-retour"
+      unité: km
+    FE:
+      formule:
+        variations:
+          - si: moyen de transport = "RER et transilien"
+            alors: commun . moyen de transport . RER et transilien . FE
+          - si: moyen de transport = "métro ou tram"
+            alors: commun . moyen de transport . métro ou tram . FE
+          - si: moyen de transport = "bus"
+            alors: commun . moyen de transport . bus . FE
+          - si: moyen de transport = "vélo électrique"
+            alors: commun . moyen de transport . vélo électrique . FE
+          - si: moyen de transport = "voiture diesel"
+            alors: commun . moyen de transport . voiture diesel . FE
+          - si: moyen de transport = "voiture essence"
+            alors: commun . moyen de transport . voiture essence . FE
+          - si: moyen de transport = "voiture hybride"
+            alors: commun . moyen de transport . voiture hybride . FE
+          - si: moyen de transport = "voiture électrique"
+            alors: commun . moyen de transport . voiture électrique . FE
+          - si: moyen de transport = "moto"
+            alors: commun . moyen de transport . moto . FE
+          - si: moyen de transport = "scooter"
+            alors: commun . moyen de transport . scooter . FE
+          - si: moyen de transport = "TGV"
+            alors: commun . moyen de transport . TGV . FE
+          - si: moyen de transport = "avion"
+            alors: commun . moyen de transport . avion . FE
+
+fonctionnement . déplacements pro . déplacement type . transport . moyen de transport:
+  question: Moyen de transport
+  une possibilié:
+    - RER et transilien
+    - métro ou tram
+    - bus
+    - vélo électrique
+    - voiture diesel
+    - voiture essence
+    - voiture hybride
+    - voiture électrique
+    - moto
+    - scooter
+    - trottinette électrique
+    - TGV
+    - avion
+
+fonctionnement . déplacements pro . déplacement type . nuitées:
+  formule:
+    produit:
+      - nombre participants
+      - nombre occurences
+      - nombre de nuitées
+      - FE nuitée
+  avec:
+    FE nuitée:
+      formule:
+        variations:
+          - si: type hébergement = "appartement"
+            alors: type hébergement . appartement . FE
+          - si: type hébergement = "hotel 1 étoile"
+            alors: type hébergement . hotel 1 étoile . FE
+          - si: type hébergement = "hotel 2 étoiles"
+            alors: type hébergement . hotel 2 étoiles . FE
+          - si: type hébergement = "hotel 3 étoiles"
+            alors: type hébergement . hotel 3 étoiles . FE
+          - si: type hébergement = "hotel 4 étoiles"
+            alors: type hébergement . hotel 4 étoiles . FE
+          - si: type hébergement = "hotel 5 étoiles"
+            alors: type hébergement . hotel 5 étoiles . FE
+
+fonctionnement . déplacements pro . déplacement type . type hébergement:
+  question: Type d'hébergement
+  une possibilité:
+    - appartement
+    - hotel 1 étoile
+    - hotel 2 étoiles
+    - hotel 3 étoiles
+    - hotel 4 étoiles
+    - hotel 5 étoiles
+  avec:
+    appartement:
+      titre: Appartement
+      avec:
+        FE:
+          valeur: 9.91
+          unité: kgCO2e/nuitée
+          meta:
+            id: 100
+    hotel 1 étoile:
+      titre: Hôtel 1*
+      avec:
+        FE:
+          valeur: 4.73
+          unité: kgCO2e/nuitée
+          meta:
+            id: 102
+    hotel 2 étoiles:
+      titre: Hôtel 2*
+      avec:
+        FE:
+          valeur: 8.53
+          unité: kgCO2e/nuitée
+          meta:
+            id: 103
+    hotel 3 étoiles:
+      titre: Hôtel 3*
+      avec:
+        FE:
+          valeur: 0.03
+          unité: kgCO2e/nuitée
+          meta:
+            id: 104
+    hotel 4 étoiles:
+      titre: Hôtel 4*
+      avec:
+        FE:
+          valeur: 11.43
+          unité: kgCO2e/nuitée
+          meta:
+            id: 105
+    hotel 5 étoiles:
+      titre: Hôtel 5*
+      avec:
+        FE:
+          valeur: 17.11
+          unité: kgCO2e/nuitée
+          meta:
+            id: 106
