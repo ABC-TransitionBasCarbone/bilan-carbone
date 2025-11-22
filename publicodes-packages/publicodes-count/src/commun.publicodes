@@ -12,13 +12,157 @@ commun . nombre de semaines par an:
   titre: Nombre de semaines par an
   description: Nombre de semaines prises en compte pour le calcul annuel.
   valeur: 52
+  unité: semaine
+
+commun . nombre de semaines travaillées par an:
+  titre: Nombre de semaines travaillées par an
+  valeur: 47
+  unité: semaine
 
 commun . nombre de jours par an:
   titre: Nombre de jours par an
   description: Nombre de jours pris en compte pour le calcul annuel.
   valeur: 365
+  unité: jour
 
 commun . année actuelle:
   titre: Année actuelle
   description: Année de référence pour le calcul des amortissements.
   valeur: 12/2025
+
+commun . FE:
+  description: |
+    On regroupe ici les facteurs d'émission communs à plusieurs postes.
+
+commun . FE . repas:
+  # TODO: refactor with other fields ?
+  titre: Facteur d'émission moyen d'un repas
+  valeur: 2.04
+  unité: kgCO2e/repas
+  meta:
+    id: 20682
+
+commun . moyen de transport:
+  # TODO: refactor with "déplacements spectateurs ?"
+  titre: FE moyens de transport
+  avec:
+    RER et transilien:
+      titre: RER et transilien
+      avec:
+        FE:
+          valeur: 0.00978
+          unité: kgCO2e/km
+          meta:
+            id: 43254
+    métro ou tram:
+      titre: Métro, tramway
+      avec:
+        FE:
+          valeur: 0.005030000000000001
+          unité: kgCO2e/km
+          meta:
+            id: 28150
+    bus:
+      titre: Bus
+      avec:
+        FE:
+          valeur: 0.1466
+          unité: kgCO2e/km
+          meta:
+            id: 27999
+    vélo électrique:
+      titre: Vélo électrique
+      avec:
+        FE:
+          valeur: 0.01095
+          unité: kgCO2e/km
+          meta:
+            id: 28331
+    vélo classique:
+      titre: Vélo classique
+      avec:
+        FE:
+          valeur: 0
+          unité: kgCO2e/km
+          meta:
+            id: 134
+    marche:
+      titre: Marche
+      avec:
+        FE:
+          valeur: 0
+          unité: kgCO2e/km
+          meta:
+            id: 135
+    voiture diesel:
+      titre: Voiture diesel
+      avec:
+        FE:
+          valeur: 0.165
+          unité: kgCO2e/km
+          meta:
+            id: 27984
+    voiture essence:
+      titre: Voiture essence
+      avec:
+        FE:
+          valeur: 0.1746
+          unité: kgCO2e/km
+          meta:
+            id: 27983
+    voiture hybride:
+      titre: Voiture hybride
+      avec:
+        FE:
+          valeur: 0.0717
+          unité: kgCO2e/km
+          meta:
+            id: 28015
+    voiture électrique:
+      titre: Voiture électrique
+      avec:
+        FE:
+          valeur: 0.0953
+          unité: kgCO2e/km
+          meta:
+            id: 28013
+    moto:
+      titre: Moto
+      avec:
+        FE:
+          valeur: 0.1913
+          unité: kgCO2e/km
+          meta:
+            id: 27995
+    scooter:
+      titre: Scooter
+      avec:
+        FE:
+          valeur: 0.0763
+          unité: kgCO2e/km
+          meta:
+            id: 27992
+    trottinette électrique:
+      titre: Trottinette électrique
+      avec:
+        FE:
+          valeur: 0.0249
+          unité: kgCO2e/km
+          meta:
+            id: 28329
+    TGV:
+      titre: TGV
+      avec:
+        FE:
+          valeur: 0.00293
+          unité: kgCO2e/km
+          meta:
+            id: 43256
+    avion:
+      titre: Avion moyen courrier
+      avec:
+        FE:
+          valeur: 0.18748437
+          unité: kgCO2e/km
+          meta:
+            id: 28132
