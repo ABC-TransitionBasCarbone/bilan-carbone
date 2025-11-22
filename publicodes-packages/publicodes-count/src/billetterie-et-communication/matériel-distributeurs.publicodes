@@ -1,0 +1,113 @@
+billetterie et communication . matériel distributeurs:
+  titre: Matériel distributeurs
+  formule:
+    somme:
+      - affiches
+      - PLV
+  unité: kgCO2e
+
+billetterie et communication . matériel distributeurs . affiches:
+  titre: Type de matériel
+  question: Quelle quantité de matériel distributeurs recevez-vous en moyenne par semaine ?
+  formule:
+    somme:
+      - affiches 120x160
+      - affiches 40x60
+  unité: kgCO2e
+
+billetterie et communication . matériel distributeurs . affiches . affiches 120x160:
+  titre: Affiches 120x160
+  formule:
+    produit:
+      - nombre
+      - FE
+      - poids
+      - commun . nombre de semaines par an
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: Quantité
+      unité: unité/semaine
+    FE:
+      valeur: 0.31218
+      unité: kgCO2e/kg
+      meta:
+        id: 125
+    poids:
+      valeur: 0.22
+      unité: kg/unité
+
+billetterie et communication . matériel distributeurs . affiches . affiches 40x60:
+  titre: Affiches 40x60
+  formule:
+    produit:
+      - nombre
+      - FE
+      - poids
+      - commun . nombre de semaines par an
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: Quantité
+      unité: unité/semaine
+    FE:
+      valeur: 0.038313
+      unité: kgCO2e/kg
+      meta:
+        id: 126
+    poids:
+      valeur: 0.027
+      unité: kg/unité
+
+billetterie et communication . matériel distributeurs . PLV:
+  titre: Type de matériel
+  question: Quelle quantité de matériel distributeurs recevez-vous en moyenne par mois ?
+  formule:
+    somme:
+      - PLV comptoir
+      - PLV grand format
+  unité: kgCO2e
+
+billetterie et communication . matériel distributeurs . PLV . PLV comptoir:
+  titre: PLV comptoir
+  formule:
+    produit:
+      - nombre
+      - FE
+      - poids
+      - commun . nombre de mois par an
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: Quantité
+      unité: unité/mois
+    FE:
+      valeur: 0.195
+      unité: kgCO2e/kg
+      meta:
+        id: 127
+    poids:
+      valeur: 0.5
+      unité: kg/unité
+
+billetterie et communication . matériel distributeurs . PLV . PLV grand format:
+  titre: PLV grand format
+  formule:
+    produit:
+      - nombre
+      - FE
+      - poids
+      - commun . nombre de mois par an
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: Quantité
+      unité: unité/mois
+    FE:
+      valeur: 1.365
+      unité: kgCO2e/kg
+      meta:
+        id: 128
+    poids:
+      valeur: 3.5
+      unité: kg/unité
