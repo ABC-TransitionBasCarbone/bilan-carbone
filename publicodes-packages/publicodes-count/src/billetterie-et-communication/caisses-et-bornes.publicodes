@@ -1,0 +1,43 @@
+billetterie et communication . caisses et bornes:
+  titre: Caisses et bornes
+  formule:
+    somme:
+      - caisses libre service
+      - caisse classique
+  unité: kgCO2e
+
+billetterie et communication . caisses et bornes . caisses libre service:
+  titre: Caisses libre service
+  note: |
+    TODO: Il semble qu'il manque les 5 ans d'amortissement
+  formule:
+    produit:
+      - nombre
+      - FE
+  avec:
+    nombre:
+      question: De combien de bornes de caisse libre-service dispose le cinéma ?
+      unité: unité
+    FE:
+      valeur: 495.41
+      unité: kgCO2e/unité
+      meta:
+        id: 123
+
+billetterie et communication . caisses et bornes . caisse classique:
+  titre: Caisse classique
+  note: |
+    TODO: Il semble qu'il manque les 5 ans d'amortissement
+  formule:
+    produit:
+      - nombre
+      - FE
+  avec:
+    nombre:
+      question: De combien de systèmes de caisse classique dispose le cinéma ?
+      unité: unité
+    FE:
+      valeur: 69.07
+      unité: kgCO2e/unité
+      meta:
+        id: 124
