@@ -733,11 +733,19 @@ export const getDetailedEmissionResults = (
   }
 }
 
-export const getStudyTotalCo2Emissions = (study: FullStudy, withDependencies: boolean = true) => {
+export const getStudyTotalCo2Emissions = (
+  study: FullStudy,
+  withDependencies: boolean = true,
+  validatedOnly: boolean = true,
+) => {
   const environment = study.organizationVersion.environment
-  const filteredSources = withDependencies
+  let filteredSources = withDependencies
     ? study.emissionSources
     : study.emissionSources.filter((source) => filterWithDependencies(source.subPost, withDependencies))
+
+  if (validatedOnly) {
+    filteredSources = filteredSources.filter((source) => source.validated)
+  }
 
   const emissionSourcesWithEmission = filteredSources.map((source) => ({
     ...source,

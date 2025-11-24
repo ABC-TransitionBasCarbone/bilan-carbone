@@ -1,119 +1,127 @@
-import Button from '@/components/base/Button'
-import LinkButton from '@/components/base/LinkButton'
+'use client'
+
 import BaseTable from '@/components/base/Table'
-import { FullStudy } from '@/db/study'
-import DeleteIcon from '@mui/icons-material/Cancel'
-import { ExternalStudy } from '@prisma/client'
+import { TableActionButton } from '@/components/base/TableActionButton'
+import { useServerFunction } from '@/hooks/useServerFunction'
+import { deleteExternalStudy, deleteLinkedStudy } from '@/services/serverFunctions/transitionPlan'
+import { PastStudy } from '@/utils/trajectory'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
-import { useCallback, useMemo } from 'react'
+import dynamic from 'next/dynamic'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useCallback, useMemo, useState } from 'react'
+
+const ConfirmDeleteModal = dynamic(() => import('../../modals/ConfirmDeleteModal'))
 
 interface Props {
   transitionPlanId: string
-  linkedStudies: FullStudy[]
-  externalStudies: ExternalStudy[]
+  pastStudies: PastStudy[]
   canEdit: boolean
 }
 
-type Study = {
-  id: string
-  name: string
-  year: number
-  type: 'linked' | 'external'
-}
-
-const LinkedStudiesTable = ({ transitionPlanId, linkedStudies, externalStudies, canEdit }: Props) => {
+const LinkedStudiesTable = ({ transitionPlanId, pastStudies, canEdit }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.linkedStudies.table')
+  const tDeleteModal = useTranslations('study.transitionPlan.trajectories.linkedStudies.deleteModal')
+  const router = useRouter()
+  const { callServerFunction } = useServerFunction()
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false)
+  const [deleteTarget, setDeleteTarget] = useState<{
+    type: 'linked' | 'external'
+    id: string
+    name: string
+  } | null>(null)
 
-  const deleteLinkedStudy = useCallback(
-    (studyId: string) => {
-      console.log('deleteLinkedStudy : ', studyId)
-      console.log('transitionPlanId : ', transitionPlanId)
-    },
-    [transitionPlanId],
-  )
+  const handleDeleteClick = useCallback((type: 'linked' | 'external', id: string, name: string) => {
+    setDeleteTarget({ type, id, name })
+    setDeleteModalOpen(true)
+  }, [])
 
-  const deleteExternalStudy = useCallback(
-    (id: string) => {
-      console.log('deleteExternalStudy : ', id)
-      console.log('transitionPlanId : ', transitionPlanId)
-    },
-    [transitionPlanId],
-  )
+  const handleDeleteSuccess = useCallback(() => {
+    router.refresh()
+    setDeleteModalOpen(false)
+    setDeleteTarget(null)
+  }, [router])
 
-  const mergedStudies = useMemo(
-    () => [
-      ...linkedStudies.map((study) => ({
-        id: study.id,
-        name: study.name,
-        year: study.startDate.getFullYear(),
-        type: 'linked' as const,
-      })),
-      ...externalStudies.map((study) => ({
-        id: study.id,
-        name: study.name,
-        year: study.date.getFullYear(),
-        type: 'external' as const,
-      })),
-    ],
-    [linkedStudies, externalStudies],
-  )
+  const handleConfirmDelete = async () => {
+    if (!deleteTarget) {
+      return
+    }
+
+    if (deleteTarget.type === 'linked') {
+      await callServerFunction(() => deleteLinkedStudy(deleteTarget.id, transitionPlanId), {
+        onSuccess: handleDeleteSuccess,
+      })
+    } else {
+      await callServerFunction(() => deleteExternalStudy(deleteTarget.id, transitionPlanId), {
+        onSuccess: handleDeleteSuccess,
+      })
+    }
+  }
 
   const mergedColumns = useMemo(
     () =>
       [
-        { header: t('name'), accessorKey: 'name' },
-        { header: t('year'), accessorKey: 'year' },
         {
-          header: '',
-          accessorKey: 'id',
-          cell: ({ row }) => (
-            <div className="align-center">
-              {row.original.type === 'linked' ? (
-                <>
-                  {canEdit && (
-                    <Button
-                      aria-label={t('delete')}
-                      title={t('delete')}
-                      onClick={() => deleteLinkedStudy(row.original.id)}
-                      data-testid={`delete-linked-study-button`}
-                      color="error"
-                      variant="text"
-                    >
-                      <DeleteIcon />
-                    </Button>
-                  )}
-
-                  <LinkButton href={`/etudes/${row.original.id}`}>{t('see')}</LinkButton>
-                </>
-              ) : canEdit ? (
-                <Button
-                  aria-label={t('delete')}
-                  title={t('delete')}
-                  onClick={() => deleteExternalStudy(row.original.id)}
-                  data-testid={`delete-external-study-button`}
-                  color="error"
-                  variant="text"
-                >
-                  <DeleteIcon />
-                </Button>
-              ) : (
-                <></>
-              )}
-            </div>
-          ),
+          header: t('name'),
+          accessorKey: 'name',
+          cell: ({ row }) => {
+            if (row.original.type === 'linked') {
+              return (
+                <Link href={`/etudes/${row.original.id}`} className="link">
+                  {row.original.name}
+                </Link>
+              )
+            }
+            return row.original.name
+          },
         },
-      ] as ColumnDef<Study>[],
-    [t, canEdit, deleteLinkedStudy, deleteExternalStudy],
+        { header: t('year'), accessorKey: 'year' },
+        canEdit
+          ? {
+              id: 'actions',
+              header: '',
+              accessorKey: 'id',
+              cell: ({ row }) => (
+                <TableActionButton
+                  type="delete"
+                  onClick={() => handleDeleteClick(row.original.type, row.original.id, row.original.name)}
+                  data-testid={`delete-${row.original.type}-study-button`}
+                />
+              ),
+            }
+          : null,
+      ] as ColumnDef<PastStudy>[],
+    [t, handleDeleteClick, canEdit],
   )
 
-  const mergedTable = useReactTable({
+  const pastStudiesTable = useReactTable({
     columns: mergedColumns,
-    data: mergedStudies,
+    data: pastStudies,
     getCoreRowModel: getCoreRowModel(),
   })
 
-  return mergedStudies.length && <BaseTable table={mergedTable} testId="table-merged-studies" />
+  return (
+    <>
+      {pastStudies.length > 0 && <BaseTable table={pastStudiesTable} testId="table-past-studies" />}
+
+      {deleteModalOpen && (
+        <ConfirmDeleteModal
+          open={deleteModalOpen}
+          title={tDeleteModal('title')}
+          message={tDeleteModal('message')}
+          confirmText={tDeleteModal('confirm')}
+          cancelText={tDeleteModal('cancel')}
+          requireNameMatch={deleteTarget?.name}
+          onConfirm={handleConfirmDelete}
+          onCancel={() => {
+            setDeleteModalOpen(false)
+            setDeleteTarget(null)
+          }}
+        />
+      )}
+    </>
+  )
 }
 
 export default LinkedStudiesTable

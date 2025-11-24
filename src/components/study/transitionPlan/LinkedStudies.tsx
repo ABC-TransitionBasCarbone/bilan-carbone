@@ -1,7 +1,6 @@
 import Button from '@/components/base/Button'
-import { FullStudy } from '@/db/study'
+import { PastStudy } from '@/utils/trajectory'
 import Typography from '@mui/material/Typography'
-import { ExternalStudy } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useState } from 'react'
@@ -15,12 +14,11 @@ interface Props {
   transitionPlanId: string
   studyId: string
   studyYear: Date
-  linkedStudies: FullStudy[]
-  externalStudies: ExternalStudy[]
+  pastStudies: PastStudy[]
   canEdit: boolean
 }
 
-const LinkedStudies = ({ transitionPlanId, studyId, studyYear, linkedStudies, externalStudies, canEdit }: Props) => {
+const LinkedStudies = ({ transitionPlanId, studyId, studyYear, pastStudies, canEdit }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.linkedStudies')
   const [linking, setLinking] = useState(false)
 
@@ -41,12 +39,7 @@ const LinkedStudies = ({ transitionPlanId, studyId, studyYear, linkedStudies, ex
           onClose={() => setLinking(false)}
         />
       )}
-      <LinkedStudiesTable
-        transitionPlanId={transitionPlanId}
-        linkedStudies={linkedStudies}
-        externalStudies={externalStudies}
-        canEdit={canEdit}
-      />
+      <LinkedStudiesTable transitionPlanId={transitionPlanId} pastStudies={pastStudies} canEdit={canEdit} />
     </div>
   )
 }

@@ -3,21 +3,36 @@ import { StudyProps } from '@/components/hoc/withStudy'
 import withStudyDetails from '@/components/hoc/withStudyDetails'
 import withTransitionPlan, { TransitionPlanProps } from '@/components/hoc/withTransitionPlan'
 import TrajectoryReductionPage from '@/components/pages/TrajectoryReductionPage'
+import { getUserApplicationSettings } from '@/db/user'
 import { getTrajectories } from '@/services/serverFunctions/trajectory'
-import { getLinkedStudies, getStudyActions, getStudyTransitionPlan } from '@/services/serverFunctions/transitionPlan'
+import {
+  getLinkedAndExternalStudies,
+  getStudyActions,
+  getStudyTransitionPlan,
+} from '@/services/serverFunctions/transitionPlan'
 
-const TrajectoryReduction = async ({ study, canEdit }: StudyProps & UserSessionProps & TransitionPlanProps) => {
-  const transitionPlanResponse = await getStudyTransitionPlan(study.id)
+const TrajectoryReduction = async ({ study, canEdit, user }: StudyProps & UserSessionProps & TransitionPlanProps) => {
+  const [transitionPlanResponse, settings] = await Promise.all([
+    getStudyTransitionPlan(study.id),
+    getUserApplicationSettings(user.accountId),
+  ])
 
   if (!transitionPlanResponse.success || !transitionPlanResponse.data) {
-    return <TrajectoryReductionPage study={study} canEdit={canEdit} transitionPlan={null} />
+    return (
+      <TrajectoryReductionPage
+        study={study}
+        canEdit={canEdit}
+        transitionPlan={null}
+        validatedOnly={settings.validatedEmissionSourcesOnly}
+      />
+    )
   }
 
   const transitionPlan = transitionPlanResponse.data
 
   const [trajectoriesResponse, linkedStudiesResponse, actionsResponse] = await Promise.all([
     getTrajectories(study.id, transitionPlan.id),
-    getLinkedStudies(transitionPlan.id),
+    getLinkedAndExternalStudies(study.id, transitionPlan.id),
     getStudyActions(study.id),
   ])
 
@@ -30,6 +45,7 @@ const TrajectoryReduction = async ({ study, canEdit }: StudyProps & UserSessionP
       linkedStudies={linkedStudiesResponse.success ? linkedStudiesResponse.data.studies : []}
       linkedExternalStudies={linkedStudiesResponse.success ? linkedStudiesResponse.data.externalStudies : []}
       actions={actionsResponse.success ? actionsResponse.data : []}
+      validatedOnly={settings.validatedEmissionSourcesOnly}
     />
   )
 }

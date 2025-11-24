@@ -12,14 +12,7 @@ import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteTransitionPlan, initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
-import { getStudyTotalCo2Emissions } from '@/services/study'
-import {
-  calculateActionBasedTrajectory,
-  calculateCustomTrajectory,
-  calculateSBTiTrajectory,
-  SBTI_REDUCTION_RATE_15,
-  SBTI_REDUCTION_RATE_WB2C,
-} from '@/utils/trajectory'
+import { calculateTrajectoriesWithHistory, convertToPastStudies } from '@/utils/trajectory'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Typography } from '@mui/material'
@@ -53,6 +46,7 @@ interface Props {
   linkedStudies?: FullStudy[]
   linkedExternalStudies?: ExternalStudy[]
   actions?: Action[]
+  validatedOnly: boolean
 }
 
 const TrajectoryReductionPage = ({
@@ -63,6 +57,7 @@ const TrajectoryReductionPage = ({
   linkedStudies = [],
   linkedExternalStudies = [],
   actions = [],
+  validatedOnly,
 }: Props) => {
   const t = useTranslations('study.transitionPlan')
   const tNav = useTranslations('nav')
@@ -144,123 +139,61 @@ const TrajectoryReductionPage = ({
     })
   }, [callServerFunction, study.id, router])
 
+  const pastStudies = useMemo(
+    () => convertToPastStudies(linkedStudies, linkedExternalStudies, withDependencies, validatedOnly),
+    [linkedStudies, linkedExternalStudies, withDependencies, validatedOnly],
+  )
+
   const trajectoryData = useMemo(() => {
+    const studyStartYear = study.startDate.getFullYear()
+
     if (!transitionPlan) {
       return {
-        trajectory15: [],
-        trajectoryWB2C: [],
-        customTrajectories: [],
-        actionBasedTrajectory: [],
-        studyStartYear: 0,
+        trajectory15Data: null,
+        trajectoryWB2CData: null,
+        customTrajectoriesData: [],
+        actionBasedTrajectoryData: null,
+        studyStartYear,
       }
     }
 
-    const totalCo2 = getStudyTotalCo2Emissions(study, withDependencies)
-    const studyStartYear = study.startDate.getFullYear()
-
-    const enabledActions = actions.filter((action) => action.enabled)
-
-    const trajectoryWB2CData = calculateSBTiTrajectory({
-      studyEmissions: totalCo2,
-      studyStartYear,
-      reductionRate: SBTI_REDUCTION_RATE_WB2C,
+    const trajectoryResult = calculateTrajectoriesWithHistory({
+      study,
       withDependencies,
+      validatedOnly,
+      trajectories,
+      actions,
+      pastStudies,
+      selectedSbtiTrajectories,
+      selectedCustomTrajectoryIds: selectedCustomTrajectories,
     })
 
-    let maxYear =
-      selectedSbtiTrajectories.includes(TRAJECTORY_WB2C_ID) && trajectoryWB2CData.length > 0
-        ? trajectoryWB2CData[trajectoryWB2CData.length - 1].year
-        : undefined
-
-    const trajectory15Data = calculateSBTiTrajectory({
-      studyEmissions: totalCo2,
-      studyStartYear,
-      reductionRate: SBTI_REDUCTION_RATE_15,
-      withDependencies,
-      maxYear,
-      linkedStudies,
-      externalStudies: linkedExternalStudies,
-    })
-
-    const customTrajectoriesData = trajectories
-      .filter((traj) => selectedCustomTrajectories.includes(traj.id))
-      .map((traj) => {
-        let data: typeof trajectory15Data
-
-        if (traj.type === 'SBTI_15') {
-          data = calculateSBTiTrajectory({
-            studyEmissions: totalCo2,
-            studyStartYear,
-            reductionRate: SBTI_REDUCTION_RATE_15,
-            withDependencies,
-            linkedStudies,
-            externalStudies: linkedExternalStudies,
-          })
-        } else if (traj.type === 'SBTI_WB2C') {
-          data = calculateSBTiTrajectory({
-            studyEmissions: totalCo2,
-            studyStartYear,
-            reductionRate: SBTI_REDUCTION_RATE_WB2C,
-            withDependencies,
-            linkedStudies,
-            externalStudies: linkedExternalStudies,
-          })
-        } else {
-          data = calculateCustomTrajectory({
-            studyEmissions: totalCo2,
-            studyStartYear,
-            objectives: traj.objectives.map((obj) => ({
-              targetYear: obj.targetYear,
-              reductionRate: Number(obj.reductionRate),
-            })),
-            withDependencies,
-            linkedStudies,
-            externalStudies: linkedExternalStudies,
-          })
-        }
-
-        return {
-          data,
-          enabled: true,
-          label: traj.name,
-          color: undefined,
-        }
-      })
-
-    const customTrajectoriesMaxYear = customTrajectoriesData.reduce((max, traj) => {
-      const lastYear = traj.data.length > 0 ? traj.data[traj.data.length - 1].year : 0
-      return lastYear > max ? lastYear : max
-    }, 0)
-
-    maxYear = Math.max(maxYear ?? 0, customTrajectoriesMaxYear)
-
-    const actionBasedTrajectoryData = calculateActionBasedTrajectory({
-      studyEmissions: totalCo2,
-      studyStartYear,
-      actions: enabledActions,
-      linkedStudies,
-      externalStudies: linkedExternalStudies,
-      maxYear,
-      withDependencies,
+    const customTrajectoriesData = trajectoryResult.customTrajectories.map((trajData) => {
+      const traj = trajectories.find((t) => t.id === trajData.id)
+      return {
+        trajectoryData: trajData.data,
+        label: traj?.name || '',
+        color: undefined,
+      }
     })
 
     return {
-      trajectory15: trajectory15Data,
-      trajectoryWB2C: trajectoryWB2CData,
-      customTrajectories: customTrajectoriesData,
-      actionBasedTrajectory: actionBasedTrajectoryData,
+      trajectory15Data: trajectoryResult.sbti15,
+      trajectoryWB2CData: trajectoryResult.sbtiWB2C,
+      customTrajectoriesData,
+      actionBasedTrajectoryData: trajectoryResult.actionBased,
       studyStartYear,
     }
   }, [
-    selectedSbtiTrajectories,
-    study,
     transitionPlan,
-    trajectories,
-    selectedCustomTrajectories,
-    linkedStudies,
-    linkedExternalStudies,
-    actions,
+    study,
     withDependencies,
+    validatedOnly,
+    trajectories,
+    actions,
+    pastStudies,
+    selectedSbtiTrajectories,
+    selectedCustomTrajectories,
   ])
 
   if (!transitionPlan) {
@@ -353,8 +286,7 @@ const TrajectoryReductionPage = ({
             transitionPlanId={transitionPlan.id}
             studyId={study.id}
             studyYear={study.startDate}
-            linkedStudies={linkedStudies}
-            externalStudies={linkedExternalStudies}
+            pastStudies={pastStudies}
             canEdit={canEdit}
           />
 
@@ -417,22 +349,16 @@ const TrajectoryReductionPage = ({
           </div>
 
           <TrajectoryGraph
-            trajectory15={{
-              data: trajectoryData.trajectory15,
-              enabled: selectedSbtiTrajectories.includes(TRAJECTORY_15_ID),
-            }}
-            trajectoryWB2C={{
-              data: trajectoryData.trajectoryWB2C,
-              enabled: selectedSbtiTrajectories.includes(TRAJECTORY_WB2C_ID),
-            }}
-            customTrajectories={trajectoryData.customTrajectories}
-            actionBasedTrajectory={{
-              data: trajectoryData.actionBasedTrajectory,
-              enabled: true,
-            }}
+            studyName={study.name}
+            trajectory15Data={trajectoryData.trajectory15Data}
+            trajectoryWB2CData={trajectoryData.trajectoryWB2CData}
+            customTrajectoriesData={trajectoryData.customTrajectoriesData}
+            actionBasedTrajectoryData={trajectoryData.actionBasedTrajectoryData}
             studyStartYear={trajectoryData.studyStartYear}
+            selectedSbtiTrajectories={selectedSbtiTrajectories}
             withDependencies={withDependencies}
             setWithDependencies={setWithDependencies}
+            pastStudies={pastStudies}
           />
 
           {transitionPlan && (
