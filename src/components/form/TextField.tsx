@@ -75,7 +75,7 @@ export const FormTextField = <T extends FieldValues>({
                 ? ''
                 : value
             }
-            minRows={isMultiline ? 2 : undefined}
+            minRows={isMultiline ? textFieldProps.rows || 2 : undefined}
             className={isMultiline ? styles.multilineResizable : undefined}
             slotProps={{
               input: isMultiline
