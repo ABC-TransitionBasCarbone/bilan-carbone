@@ -250,16 +250,30 @@ const users = async () => {
     })),
   })
 
+  const organizationVersionsCLICKSON = await prisma.organizationVersion.createManyAndReturn({
+    data: organizations.map((organization, index) => ({
+      organizationId: organization.id,
+      isCR: index % 2 === 1,
+      onboarded: false,
+      environment: Environment.CLICKSON,
+      activatedLicence: [new Date().getFullYear()],
+    })),
+  })
+
   const crOrganizationVersions = organizationVersions.filter((organization) => organization.isCR)
   const regularOrganizationVersions = organizationVersions.filter((organization) => !organization.isCR)
 
   const regularTiltOrganizationVersions = organizationVersionsTILT.filter((organization) => !organization.isCR)
   const crTiltOrganizationVersions = organizationVersionsTILT.filter((organization) => organization.isCR)
 
+  const regularClicksonOrganizationVersions = organizationVersionsCLICKSON.filter((organization) => !organization.isCR)
+  const crClicksonOrganizationVersions = organizationVersionsCLICKSON.filter((organization) => organization.isCR)
+
   const environmentOrganizationVersions = {
     [Environment.BC]: regularOrganizationVersions,
     [Environment.CUT]: organizationVersionsCUT,
     [Environment.TILT]: regularTiltOrganizationVersions,
+    [Environment.CLICKSON]: regularClicksonOrganizationVersions,
   }
 
   const childOrganizations = await prisma.organization.createManyAndReturn({
@@ -537,6 +551,13 @@ const users = async () => {
             environment: Environment.TILT,
             status: UserStatus.ACTIVE,
           },
+          {
+            organizationVersionId: organizationVersionsCLICKSON[index % organizationVersionsCLICKSON.length].id,
+            role: role as Role,
+            userId: user.id,
+            environment: Environment.CLICKSON,
+            status: UserStatus.ACTIVE,
+          },
         ]
         const accounts = await prisma.account.createManyAndReturn({
           data: accountsData,
@@ -590,6 +611,13 @@ const users = async () => {
             role: role as Role,
             userId: user.id,
             environment: Environment.TILT,
+            status: UserStatus.ACTIVE,
+          },
+          {
+            organizationVersionId: crClicksonOrganizationVersions[index % crClicksonOrganizationVersions.length].id,
+            role: role as Role,
+            userId: user.id,
+            environment: Environment.CLICKSON,
             status: UserStatus.ACTIVE,
           },
         ]
