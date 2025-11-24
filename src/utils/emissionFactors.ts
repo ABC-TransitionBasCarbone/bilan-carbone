@@ -1,7 +1,7 @@
 import { wasteImpact } from '@/constants/emissions'
 import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
 import { hasWasteImpact } from '@/services/permissions/environment'
-import { convertTiltSubPostToBCSubPost, Post, subPostsByPostBC } from '@/services/posts'
+import { Post, subPostsByPostBC, subPostTiltToBcSubPostMapping } from '@/services/posts'
 import { EmissionFactor, Environment, Import, Prisma, SubPost, Unit } from '@prisma/client'
 import { unique } from './array'
 
@@ -75,7 +75,12 @@ export const monetaryUnits: Unit[] = [
   Unit.FRANC_CFP,
 ]
 
+const baseTiltEmissionFactorSubPostsMapping: Partial<Record<SubPost, SubPost[]>> = Object.fromEntries(
+  Object.entries(subPostTiltToBcSubPostMapping).map(([key, value]) => [key, [value]]),
+) as Partial<Record<SubPost, SubPost[]>>
+
 const tiltEmissionFactorSubPostsMapping: Partial<Record<SubPost, SubPost[]>> = {
+  ...baseTiltEmissionFactorSubPostsMapping,
   [SubPost.UtilisationEnResponsabiliteConsommationDeBiens]: subPostsByPostBC[Post.IntrantsBiensEtMatieres],
   [SubPost.UtilisationEnDependanceConsommationDeBiens]: subPostsByPostBC[Post.IntrantsBiensEtMatieres],
   [SubPost.UtilisationEnResponsabiliteConsommationDEnergie]: subPostsByPostBC[Post.Energies],
@@ -90,7 +95,7 @@ const tiltEmissionFactorSubPostsMapping: Partial<Record<SubPost, SubPost[]>> = {
 const getEmissionFactorSubPostMap = (subPost: SubPost, env: Environment) => {
   switch (env) {
     case Environment.TILT:
-      return tiltEmissionFactorSubPostsMapping[subPost] ?? [convertTiltSubPostToBCSubPost(subPost)]
+      return tiltEmissionFactorSubPostsMapping[subPost] || [subPost]
     default:
       return [subPost]
   }
