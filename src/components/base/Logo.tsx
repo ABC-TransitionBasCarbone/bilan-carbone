@@ -19,6 +19,7 @@ export const Logo = ({ environment }: Props) => {
       { src: '/logos/abc/logo_abc_base.png', alt: 'Logo ABC', width: 84, height: 28 },
       { src: '/logos/tilt/logo_tilt.svg', alt: 'Logo TILT', width: 82, height: 28 },
     ],
+    [Environment.CLICKSON]: [{ src: '/logos/clickson/logo_clickson.png', alt: 'Logo Clickson', width: 98, height: 70 }],
     DEFAULT: [
       {
         src: '/logos/logo_bc_2025_blanc_nospace.png',
