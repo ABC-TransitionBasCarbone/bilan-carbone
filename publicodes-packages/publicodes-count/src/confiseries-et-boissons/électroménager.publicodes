@@ -62,110 +62,94 @@ confiseries et boissons . électroménager . réfrigérateurs:
   titre: Réfrigérateurs
   formule: appareil
   contexte:
-    appareil . nb appareils: réfrigérateurs . nombre
-    appareil . année achat: réfrigérateurs . année achat
-    appareil . durée location: réfrigérateurs . durée location
-    appareil . FE: réfrigérateurs . FE
+    appareil . nb appareils: nombre
+    appareil . année achat: année achat
+    appareil . durée location: durée location
+    appareil . FE: FE
   avec:
     FE:
       valeur: 257.3
       unité: kgCO2e
       meta:
         id: 26976
-
-confiseries et boissons . électroménager . réfrigérateurs . nombre:
-  question: Nombre de réfrigérateurs
-  valeur: 1
-
-confiseries et boissons . électroménager . réfrigérateurs . durée location:
-  question: Durée de location des réfrigérateurs (jours à l'année)
-  unité: jour
-
-confiseries et boissons . électroménager . réfrigérateurs . année achat:
-  non applicable si:
-    est défini: réfrigérateurs . durée location
-  question: Année d'achat des réfrigérateurs
+    nombre:
+      question: Nombre de réfrigérateurs
+    durée location:
+      question: Durée de location des réfrigérateurs (jours à l'année)
+      unité: jour
+    année achat:
+      non applicable si:
+        est défini: réfrigérateurs . durée location
+      question: Année d'achat des réfrigérateurs
 
 confiseries et boissons . électroménager . congélateurs:
   titre: Congélateurs
   formule: appareil
   contexte:
-    appareil . nb appareils: congélateurs . nombre
-    appareil . année achat: congélateurs . année achat
-    appareil . durée location: congélateurs . durée location
-    appareil . FE: congélateurs . FE
+    appareil . nb appareils: nombre
+    appareil . année achat: année achat
+    appareil . durée location: durée location
+    appareil . FE: FE
   avec:
     FE:
       valeur: 301.4
       unité: kgCO2e
       meta:
         id: 26978
-
-confiseries et boissons . électroménager . congélateurs . nombre:
-  question: Nombre de congélateurs
-  valeur: 1
-
-confiseries et boissons . électroménager . congélateurs . durée location:
-  question: Durée de location des congélateurs (jours à l'année)
-  unité: jour
-
-confiseries et boissons . électroménager . congélateurs . année achat:
-  non applicable si:
-    est défini: congélateurs . durée location
-  question: Année d'achat des congélateurs
+    nombre:
+      question: Nombre de congélateurs
+    durée location:
+      question: Durée de location des congélateurs (jours à l'année)
+      unité: jour
+    année achat:
+      non applicable si:
+        est défini: congélateurs . durée location
+      question: Année d'achat des congélateurs
 
 confiseries et boissons . électroménager . warmers:
   titre: Warmers
   formule: appareil
   contexte:
-    appareil . nb appareils: warmers . nombre
-    appareil . année achat: warmers . année achat
-    appareil . durée location: warmers . durée location
-    appareil . FE: warmers . FE
+    appareil . nb appareils: nombre
+    appareil . année achat: année achat
+    appareil . durée location: durée location
+    appareil . FE: FE
   avec:
     FE:
       valeur: 217.59
       unité: kgCO2e
       meta:
         id: 26986
-
-confiseries et boissons . électroménager . warmers . nombre:
-  question: Nombre de warmers
-  valeur: 1
-
-confiseries et boissons . électroménager . warmers . durée location:
-  question: Durée de location des warmers (jours à l'année)
-  unité: jour
-
-confiseries et boissons . électroménager . warmers . année achat:
-  non applicable si:
-    est défini: warmers . durée location
-  question: Année d'achat des warmers
+    nombre:
+      question: Nombre de warmers
+    durée location:
+      question: Durée de location des warmers (jours à l'année)
+      unité: jour
+    année achat:
+      non applicable si:
+        est défini: warmers . durée location
+      question: Année d'achat des warmers
 
 confiseries et boissons . électroménager . distributeurs:
   titre: Distributeurs snack et boissons
   formule: appareil
   contexte:
-    appareil . nb appareils: distributeurs . nombre
-    appareil . année achat: distributeurs . année achat
-    appareil . durée location: distributeurs . durée location
-    appareil . FE: distributeurs . FE
+    appareil . nb appareils: nombre
+    appareil . année achat: année achat
+    appareil . durée location: durée location
+    appareil . FE: FE
   avec:
     FE:
       valeur: 257.3
       unité: kgCO2e
       meta:
         id: 26976
-
-confiseries et boissons . électroménager . distributeurs . nombre:
-  question: Nombre de distributeurs snack et boissons
-  valeur: 1
-
-confiseries et boissons . électroménager . distributeurs . durée location:
-  question: Durée de location des distributeurs snack et boissons (jours à l'année)
-  unité: jour
-
-confiseries et boissons . électroménager . distributeurs . année achat:
-  non applicable si:
-    est défini: distributeurs . durée location
-  question: Année d'achat des distributeurs snack et boissons
+    nombre:
+      question: Nombre de distributeurs snack et boissons
+    durée location:
+      question: Durée de location des distributeurs snack et boissons (jours à l'année)
+      unité: jour
+    année achat:
+      non applicable si:
+        est défini: distributeurs . durée location
+      question: Année d'achat des distributeurs snack et boissons
