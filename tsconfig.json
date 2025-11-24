@@ -18,7 +18,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@abc-transitionbascarbone/publicodes-count": ["./publicodes-packages/publicodes-count"]
     },
     "target": "ESNext"
   },
