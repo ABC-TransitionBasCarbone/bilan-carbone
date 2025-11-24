@@ -1,8 +1,13 @@
 import { Environment } from '@prisma/client'
 import Engine, { Situation } from 'publicodes'
 
-const engineInstances = new Map<Environment, Engine<any>>()
+const engineInstances = new Map<Environment, Engine>()
 
+/**
+ * Returns a singleton instance of a Publicodes {@link Engine} for the given
+ * environment. If an instance does not already exist for the specified
+ * environment, it uses the provided `createEngine` function to create one.
+ */
 export function getOrCreateEngine<RuleName extends string>(
   key: Environment,
   createEngine: () => Engine<RuleName>,

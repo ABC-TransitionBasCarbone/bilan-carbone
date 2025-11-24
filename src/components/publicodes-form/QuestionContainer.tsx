@@ -22,6 +22,12 @@ export interface QuestionContainerProps {
   saveStatus?: FieldSaveStatus
 }
 
+/**
+ * A container component for displaying a question with its label, optional
+ * helper text, and save status indicator.
+ *
+ * NOTE: for now, this is a simple copy-paste from ../dynamic-form/QuestionContainer.tsx
+ */
 const QuestionContainer = ({
   label,
   helperText,
