@@ -935,21 +935,30 @@
         "linkedStudies": {
           "linked": "Linked studies",
           "add": "Add",
+          "save": "Save",
           "linkStudy": "Link a study",
+          "editStudy": "Edit study",
           "source": "Source",
           "study": "Concerned study",
           "oldStudy": "BC+ study",
-          "externalStudy": "Study from another plateform",
+          "externalStudy": "Study from another platform",
           "name": "Name",
           "namePlaceholder": "Please fill a name",
           "date": "Year",
-          "totalCo2": "Total emission",
+          "totalCo2": "Total emissions",
           "totalCo2Placeholder": "256",
           "yearAlreadySet": "A study is already configured for this year",
+          "studyYearMustBeBeforeCurrent": "The study year must be before the current study year",
           "Not authorized": "You are not allowed to do this action",
+          "noAvailableStudies": "No previous studies available",
+          "noLinkedStudies": "No linked studies yet",
           "table": {
             "name": "Name",
             "year": "Year",
+            "type": "Type",
+            "typeLinked": "Existing study",
+            "typeExternal": "External study",
+            "emissions": "Emissions",
             "see": "See",
             "delete": "Delete"
           },
@@ -2160,7 +2169,8 @@
     "atLeastOneObjective": "Please add at least one objective",
     "positiveNumber": "Please enter a positive number",
     "tooSmall": "Please enter a larger value",
-    "tooBig": "Please enter a smaller value"
+    "tooBig": "Please enter a smaller value",
+    "studyYearMustBeBeforeCurrent": "The study year must be before the current study year"
   },
   "common": {
     "actions": {

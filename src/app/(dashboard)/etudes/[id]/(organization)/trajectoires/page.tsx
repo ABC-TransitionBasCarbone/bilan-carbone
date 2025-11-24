@@ -32,7 +32,7 @@ const TrajectoryReduction = async ({ study, canEdit, user }: StudyProps & UserSe
 
   const [trajectoriesResponse, linkedStudiesResponse, actionsResponse] = await Promise.all([
     getTrajectories(study.id, transitionPlan.id),
-    getLinkedAndExternalStudies(study.id, transitionPlan.id),
+    getLinkedAndExternalStudies(transitionPlan.id),
     getStudyActions(study.id),
   ])
 

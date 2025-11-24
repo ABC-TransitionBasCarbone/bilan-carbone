@@ -263,32 +263,34 @@ const TrajectoryReductionPage = ({
         </div>
 
         <div className="flex-col gapped2">
-          <TransitionPlanOnboarding
-            title={t('trajectories.onboarding.title')}
-            description={t('trajectories.onboarding.description')}
-            storageKey="trajectory-reduction"
-            detailedContent={t.rich('trajectories.onboarding.detailedInfo', {
-              br: () => <br />,
-              snbc: (chunks) => (
-                <a href={process.env.NEXT_PUBLIC_SNBC_URL || '#'} target="_blank" rel="noopener noreferrer">
-                  {chunks}
-                </a>
-              ),
-              sbti: (chunks) => (
-                <a href={process.env.NEXT_PUBLIC_SBTI_URL || '#'} target="_blank" rel="noopener noreferrer">
-                  {chunks}
-                </a>
-              ),
-            })}
-          />
+          <div className={classNames(styles.collapsibleBlocks, 'flex-col gapped0')}>
+            <TransitionPlanOnboarding
+              title={t('trajectories.onboarding.title')}
+              description={t('trajectories.onboarding.description')}
+              storageKey="trajectory-reduction"
+              detailedContent={t.rich('trajectories.onboarding.detailedInfo', {
+                br: () => <br />,
+                snbc: (chunks) => (
+                  <a href={process.env.NEXT_PUBLIC_SNBC_URL || '#'} target="_blank" rel="noopener noreferrer">
+                    {chunks}
+                  </a>
+                ),
+                sbti: (chunks) => (
+                  <a href={process.env.NEXT_PUBLIC_SBTI_URL || '#'} target="_blank" rel="noopener noreferrer">
+                    {chunks}
+                  </a>
+                ),
+              })}
+            />
 
-          <LinkedStudies
-            transitionPlanId={transitionPlan.id}
-            studyId={study.id}
-            studyYear={study.startDate}
-            pastStudies={pastStudies}
-            canEdit={canEdit}
-          />
+            <LinkedStudies
+              transitionPlanId={transitionPlan.id}
+              studyId={study.id}
+              studyYear={study.startDate}
+              pastStudies={pastStudies}
+              canEdit={canEdit}
+            />
+          </div>
 
           <div className={styles.trajectoryCardsGrid}>
             <Box className={classNames('p125', styles.trajectoryCard, styles.disabledCard)}>
