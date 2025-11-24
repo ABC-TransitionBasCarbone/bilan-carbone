@@ -7,13 +7,13 @@ import styles from './TextWithUnitInput.module.css'
 import { getInputFormatConfig, NumberInputFormat, TextInputFormat } from './textInputFormatConfig'
 import { BaseInputProps } from './utils'
 
-interface TextUnitInputProps extends BaseInputProps {
-  formElement: EvaluatedNumberInput
+interface TextUnitInputProps<RuleName extends string> extends BaseInputProps<RuleName> {
+  formElement: EvaluatedNumberInput<RuleName>
   format?: TextInputFormat | NumberInputFormat
 }
 
 // TODO: should be NumberUnitInput if only supports number inputs
-const TextWithUnitInput = ({
+const TextWithUnitInput = <RuleName extends string>({
   formElement,
   formElementProps,
   onChange,
@@ -21,7 +21,7 @@ const TextWithUnitInput = ({
   format,
   errorMessage,
   ...props
-}: TextUnitInputProps &
+}: TextUnitInputProps<RuleName> &
   Omit<TextFieldProps & InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | 'onBlur'>) => {
   // TODO: manage unit translation
   // const getUnitLabel = useUnitLabel()

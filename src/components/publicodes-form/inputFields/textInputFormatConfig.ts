@@ -1,3 +1,9 @@
+/**
+ * Defines input format configurations for text and number inputs.
+ *
+ * NOTE: for now, this is a simple copy-paste from ../../dynamic-form/inputFields/textInputFormatConfig.ts
+ */
+
 export enum TextInputFormat {
   Text = 'Text',
   Phone = 'Phone',
