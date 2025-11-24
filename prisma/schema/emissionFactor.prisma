@@ -155,6 +155,7 @@ enum SubPost {
   // Alimentation 
   RepasPrisParLesSalaries
   RepasPrisParLesBenevoles
+  RepasPrisParLesBeneficiaires
 
   // Utilisation
   UtilisationEnResponsabiliteConsommationDeBiens
