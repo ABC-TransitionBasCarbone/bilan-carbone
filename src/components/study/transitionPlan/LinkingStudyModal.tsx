@@ -55,7 +55,7 @@ const LinkingStudyModal = ({
   const [studies, setStudies] = useState<Pick<FullStudy, 'id' | 'name'>[] | null>(null)
 
   const currentStudyYear = studyYear.getFullYear()
-  const previousYear = new Date(currentStudyYear)
+  const previousYear = new Date(currentStudyYear, 0, 1)
   previousYear.setFullYear(previousYear.getFullYear() - 1)
 
   const router = useRouter()

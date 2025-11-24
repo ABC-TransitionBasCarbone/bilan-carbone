@@ -54,48 +54,47 @@ const LinkedStudies = ({ transitionPlanId, studyId, studyYear, pastStudies, canE
       <Accordion
         expanded={expanded}
         onChange={() => setExpanded(!expanded)}
-        className={classNames(styles.linkedStudiesCard)}
+        className={classNames(styles.linkedStudiesCard, { [styles.expanded]: expanded })}
         disableGutters
         elevation={0}
-        sx={{
-          '& .MuiAccordionSummary-root': {
-            padding: expanded ? '1.5rem' : '1rem 1.5rem',
-            transition: 'padding 0.2s ease',
-            minHeight: 'auto',
-          },
-          '& .MuiAccordionSummary-content': {
-            margin: 0,
-          },
-        }}
       >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <div className="flex align-center justify-between w100" style={{ marginRight: '1rem' }}>
-            <div className="flex align-center gapped1">
-              <LinkIcon fontSize="small" color="primary" />
-              <Typography variant="caption" className={styles.badge} color="text.secondary">
-                {t('linked')}
-              </Typography>
-            </div>
-            {canEdit && (
-              <Button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setLinking(true)
-                }}
-                size="small"
-              >
-                {t('linkStudy')}
-              </Button>
-            )}
+          <div className="flex align-center gapped1" style={{ marginRight: '1rem' }}>
+            <LinkIcon fontSize="small" color="primary" />
+            <Typography variant="caption" className={styles.badge} color="text.secondary">
+              {t('linked')}
+            </Typography>
           </div>
         </AccordionSummary>
         <AccordionDetails className={classNames('flex-col', 'gapped1', styles.details)}>
-          <LinkedStudiesTable
-            transitionPlanId={transitionPlanId}
-            pastStudies={pastStudies}
-            onEdit={(study) => setEditTarget(study)}
-            canEdit={canEdit}
-          />
+          {pastStudies.length === 0 ? (
+            <div className="flex align-center justify-between">
+              <Typography variant="body2" color="text.secondary">
+                {t('noLinkedStudies')}
+              </Typography>
+              {canEdit && (
+                <Button onClick={() => setLinking(true)} size="small">
+                  {t('linkStudy')}
+                </Button>
+              )}
+            </div>
+          ) : (
+            <>
+              {canEdit && (
+                <div className="flex justify-end">
+                  <Button onClick={() => setLinking(true)} size="small">
+                    {t('linkStudy')}
+                  </Button>
+                </div>
+              )}
+              <LinkedStudiesTable
+                transitionPlanId={transitionPlanId}
+                pastStudies={pastStudies}
+                onEdit={(study) => setEditTarget(study)}
+                canEdit={canEdit}
+              />
+            </>
+          )}
         </AccordionDetails>
       </Accordion>
       {(linking || editTarget) && (

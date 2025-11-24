@@ -951,6 +951,7 @@
           "studyYearMustBeBeforeCurrent": "L'année de l'étude doit être antérieure à l'année de l'étude actuelle",
           "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
           "noAvailableStudies": "Aucune étude passée disponible",
+          "noLinkedStudies": "Aucune étude liée pour le moment",
           "table": {
             "name": "Nom",
             "year": "Année",
