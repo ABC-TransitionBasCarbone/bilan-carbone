@@ -84,7 +84,6 @@ const TrajectoryCreationStep2 = ({
         placeholder={t('descriptionPlaceholder')}
         fullWidth
         multiline
-        rows={3}
       />
 
       {isSBTI && (

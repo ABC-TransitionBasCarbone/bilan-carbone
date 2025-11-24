@@ -28,6 +28,7 @@ export const FormTextField = <T extends FieldValues>({
   ...textFieldProps
 }: Props<T> & TextFieldProps) => {
   const iconDiv = icon ? <div className={styles.icon}>{icon}</div> : null
+  const isMultiline = textFieldProps.multiline
 
   const handleChange = useCallback(
     (
@@ -74,12 +75,17 @@ export const FormTextField = <T extends FieldValues>({
                 ? ''
                 : value
             }
+            minRows={isMultiline ? textFieldProps.rows || 2 : undefined}
+            className={isMultiline ? styles.multilineResizable : undefined}
             slotProps={{
-              input: {
-                onWheel: (event) => (event.target as HTMLInputElement).blur(),
-                className: styles.textFieldInput,
-                endAdornment,
-              },
+              input: isMultiline
+                ? {
+                    endAdornment,
+                  }
+                : {
+                    onWheel: (event) => (event.target as HTMLInputElement).blur(),
+                    endAdornment,
+                  },
             }}
           />
           {(customError || error?.message) && (
