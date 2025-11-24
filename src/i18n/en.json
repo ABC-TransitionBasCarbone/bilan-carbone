@@ -1265,6 +1265,7 @@
       "Alimentation": "Food",
       "RepasPrisParLesSalaries": "Meals taken by employees",
       "RepasPrisParLesBenevoles": "Meals taken by volunteers",
+      "RepasPrisParLesBeneficiaires": "Meals taken by beneficiaries",
       "EquipementsEtImmobilisations": "Equipment and fixed assets",
       "DeplacementsDePersonne": "People travel",
       "DeplacementsDomicileTravailSalaries": "Employee home-to-work travel",

@@ -152,7 +152,11 @@ export const subPostsByPostTILT: Record<TiltPost, SubPost[]> = {
   [TiltPost.IntrantsBiensEtMatieresTilt]: subPostsByPostBC[BCPost.IntrantsBiensEtMatieres].filter(
     (sp) => sp !== SubPost.NourritureRepasBoissons,
   ),
-  [TiltPost.Alimentation]: [SubPost.RepasPrisParLesSalaries, SubPost.RepasPrisParLesBenevoles],
+  [TiltPost.Alimentation]: [
+    SubPost.RepasPrisParLesSalaries,
+    SubPost.RepasPrisParLesBenevoles,
+    SubPost.RepasPrisParLesBeneficiaires,
+  ],
   [TiltPost.IntrantsServices]: subPostsByPostBC[BCPost.IntrantsServices],
   [TiltPost.EquipementsEtImmobilisations]: [
     SubPost.EquipementsDesSalaries,
@@ -209,6 +213,7 @@ export const subPostTiltToBcSubPostMapping: Partial<Record<SubPost, SubPost>> = 
   [SubPost.TransportFabricationDesVehicules]: SubPost.Equipements,
   [SubPost.RepasPrisParLesSalaries]: SubPost.NourritureRepasBoissons,
   [SubPost.RepasPrisParLesBenevoles]: SubPost.NourritureRepasBoissons,
+  [SubPost.RepasPrisParLesBeneficiaires]: SubPost.NourritureRepasBoissons,
   [SubPost.EquipementsDesSalaries]: SubPost.Equipements,
   [SubPost.ParcInformatiqueDesSalaries]: SubPost.Informatique,
   [SubPost.EquipementsDesBenevoles]: SubPost.Equipements,
