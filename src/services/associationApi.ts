@@ -1,26 +1,52 @@
 import axios from 'axios'
 
-export const isValidAssociationSiret = async (siret: string) => {
+export const getValidAssociationNameBySiret = async (siret: string): Promise<string | null> => {
   const trimmedSiret = siret.trim()
   if (!trimmedSiret || trimmedSiret.length !== 14) {
-    return false
+    return null
   }
 
-  const result = await axios.get(`${process.env.ASSOCIATION_SERVICE_URL}/${trimmedSiret}`)
+  try {
+    const result = await axios.get(`${process.env.INSEE_SERVICE_URL}/${trimmedSiret}`, {
+      headers: {
+        'X-INSEE-Api-Key-Integration': process.env.INSEE_API_SECRET,
+      },
+    })
 
-  if (!result?.data?.identite?.id_siret_siege) {
-    return false
+    const etablissement = result?.data?.etablissement
+    if (!etablissement) {
+      return null
+    }
+
+    // Vérifier que le SIRET correspond bien à l'établissement
+    if (etablissement.siret !== trimmedSiret) {
+      return null
+    }
+
+    // Codes juridiques des associations :
+    // 9210 : Association non déclarée
+    // 9220 : Association déclarée
+    // 9221 : Association déclarée d'insertion par l'économique
+    // 9222 : Association intermédiaire
+    // 9223 : Groupement d'employeurs
+    // 9224 : Association d'avocats à responsabilité professionnelle individuelle
+    // 9230 : Association déclarée, reconnue d'utilité publique
+    // 9240 : Congrégation
+    // 9260 : Association de droit local (Bas-Rhin, Haut-Rhin et Moselle)
+    const associationCategories = ['9210', '9220', '9221', '9222', '9223', '9224', '9230', '9240', '9260']
+    const categorieJuridique = etablissement.uniteLegale?.categorieJuridiqueUniteLegale
+    const isAssociation = associationCategories.includes(categorieJuridique)
+
+    if (!isAssociation) {
+      return null
+    }
+
+    // Retourner le nom de l'association
+    return (etablissement.uniteLegale?.denominationUniteLegale as string) || null
+  } catch (error) {
+    console.error('Error getting valid association name by SIRET:', error)
+    return null
   }
-
-  if (result.data.identite.id_siret_siege !== parseInt(trimmedSiret)) {
-    return false
-  }
-
-  if (!result?.data?.identite?.lib_forme_juridique?.includes('Association déclarée')) {
-    return false
-  }
-
-  return true
 }
 
 export const getCompanyName = async (siret: string) => {
