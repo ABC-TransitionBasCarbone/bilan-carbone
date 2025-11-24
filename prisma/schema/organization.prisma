@@ -8,6 +8,7 @@ enum Environment {
   BC
   CUT
   TILT
+  CLICKSON
 }
 
 model Organization {
