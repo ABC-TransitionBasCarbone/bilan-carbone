@@ -1,16 +1,29 @@
 import { EvaluatedFormElement, FormPageElementProp } from '@publicodes/forms'
 import { OnFormInputChange } from '../utils'
 
-export interface BaseInputProps {
+/**
+ * Props shared by all form input components of the {@link PublicodesFormField}.
+ */
+export interface BaseInputProps<RuleName extends string> {
+  /** The evaluated form element to render returned by the {@link FormBuilder}. */
   formElement: EvaluatedFormElement
+  /** The HTML props to spread on the form element. */
   formElementProps: FormPageElementProp
-  onChange: OnFormInputChange
+  /** Callback invoked when the input value changes. */
+  onChange: OnFormInputChange<RuleName>
   onBlur?: () => void
   errorMessage?: string
   disabled?: boolean
 }
 
-export function getFormElementInputType(element: EvaluatedFormElement): string | undefined {
+/**
+ * The supported input types for form elements.
+ *
+ * TODO: should be exported from @publicodes/forms
+ */
+export type InputType = 'date' | 'month' | 'checkbox' | 'number' | 'text'
+
+export function getFormElementInputType(element: EvaluatedFormElement): InputType | undefined {
   if (element.element === 'input') {
     return element.type
   }

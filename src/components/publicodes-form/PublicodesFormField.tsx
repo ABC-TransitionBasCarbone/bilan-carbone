@@ -3,12 +3,19 @@ import TextWithUnitInput from './inputFields/TextWithUnitInput'
 import QuestionContainer from './QuestionContainer'
 import { OnFormInputChange } from './utils'
 
-export interface PublicodesFormFieldProps {
-  formElement: EvaluatedFormElement & FormPageElementProp
-  onChange: OnFormInputChange
+export interface PublicodesFormFieldProps<RuleName extends string> {
+  formElement: EvaluatedFormElement<RuleName> & FormPageElementProp
+  onChange: OnFormInputChange<RuleName>
 }
 
-export default function PublicodesFormField({ formElement, onChange }: PublicodesFormFieldProps) {
+/**
+ * A generic form field component that renders different types of input fields
+ * based on the provided {@link EvaluatedFormElement}.
+ */
+export default function PublicodesFormField<RuleName extends string>({
+  formElement,
+  onChange,
+}: PublicodesFormFieldProps<RuleName>) {
   const formElementProps = {
     hidden: formElement.hidden,
     useful: formElement.useful,
@@ -23,11 +30,15 @@ export default function PublicodesFormField({ formElement, onChange }: Publicode
   )
 }
 
-function getFieldInput(
-  formElement: EvaluatedFormElement,
+/**
+ * Maps an {@link EvaluatedFormElement} to the corresponding input component.
+ */
+function getFieldInput<RuleName extends string>(
+  formElement: EvaluatedFormElement<RuleName>,
   formElementProps: FormPageElementProp,
-  onChange: OnFormInputChange,
+  onChange: OnFormInputChange<RuleName>,
 ) {
+  /* eslint-disable no-fallthrough */
   switch (formElement.element) {
     case 'input':
       switch (formElement.type) {
