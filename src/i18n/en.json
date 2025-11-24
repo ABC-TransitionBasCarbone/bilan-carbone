@@ -2173,7 +2173,8 @@
     "positiveNumber": "Please enter a positive number",
     "tooSmall": "Please enter a larger value",
     "tooBig": "Please enter a smaller value",
-    "studyYearMustBeBeforeCurrent": "The study year must be before the current study year"
+    "studyYearMustBeBeforeCurrent": "The study year must be before the current study year",
+    "maxTwoDecimals": "The reduction rate must have at most 2 decimal places"
   },
   "common": {
     "actions": {

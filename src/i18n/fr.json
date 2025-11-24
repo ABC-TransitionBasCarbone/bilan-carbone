@@ -2173,7 +2173,8 @@
     "positiveNumber": "Veuillez saisir un nombre positif",
     "tooSmall": "Veuillez saisir une valeur plus grande",
     "tooBig": "Veuillez saisir une valeur plus petite",
-    "studyYearMustBeBeforeCurrent": "L'année de l'étude doit être antérieure à l'année de l'étude actuelle"
+    "studyYearMustBeBeforeCurrent": "L'année de l'étude doit être antérieure à l'année de l'étude actuelle",
+    "maxTwoDecimals": "Le taux de réduction doit avoir au maximum 2 décimales"
   },
   "common": {
     "actions": {

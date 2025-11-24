@@ -76,7 +76,7 @@ const TrajectoryCreationModal = ({
         description: trajectory.description || '',
         objectives: trajectory.objectives.map((obj) => ({
           targetYear: obj.targetYear.toString(),
-          reductionRate: Math.round(obj.reductionRate * 100),
+          reductionRate: Number((obj.reductionRate * 100).toFixed(2)),
         })),
       })
     }
@@ -112,7 +112,7 @@ const TrajectoryCreationModal = ({
         .map((obj) => ({
           id: obj.id,
           targetYear: getYearFromDateStr(obj.targetYear!),
-          reductionRate: Number(obj.reductionRate) / 100,
+          reductionRate: Number((obj.reductionRate! / 100).toFixed(4)), // Keep precision of 2 digits percentage so 0.01% = 0.0001 => 4 digits
         }))
 
       await callServerFunction(
@@ -149,7 +149,7 @@ const TrajectoryCreationModal = ({
     if (data.trajectoryType === TrajectoryType.CUSTOM) {
       input.objectives = data.objectives.map((obj) => ({
         targetYear: getYearFromDateStr(obj.targetYear!),
-        reductionRate: Number(obj.reductionRate) / 100,
+        reductionRate: Number((obj.reductionRate! / 100).toFixed(4)), // Keep precision of 2 digits percentage so 0.01% = 0.0001 => 4 digits
       }))
     } else if (data.trajectoryType === TrajectoryType.SBTI_15) {
       input.objectives = getDefaultObjectivesForTrajectoryType(TrajectoryType.SBTI_15)
