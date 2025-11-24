@@ -37,7 +37,7 @@ interface Study {
   name: string
   startDate: Date | string
   endDate: Date | string
-  organizationVersionId?: string | null
+  organizationVersionId: string
 }
 
 interface StudySite {
@@ -144,18 +144,35 @@ const parseStudies = async (
     },
   })
 
-  return relevantStudies.map((row) => {
-    const studyOrga = studiesOrganizations.find((org) => org.sites.some((site) => site.oldBCId === row.siteId))
+  return relevantStudies
+    .map((row) => {
+      const studyOrga = studiesOrganizations.find((org) => org.sites.some((site) => site.oldBCId === row.siteId))
 
-    return {
-      oldBCId: row.oldBCId as string,
-      name: row.name as string,
-      startDate: row.startDate ? new Date(getJsDateFromExcel(row.startDate as number)) : '',
-      endDate: row.endDate ? new Date(getJsDateFromExcel(row.endDate as number)) : '',
-      organizationVersionId: studyOrga?.organizationVersions.find((orgVer) => orgVer.environment === Environment.BC)
-        ?.id,
-    }
-  })
+      if (!studyOrga) {
+        console.warn(`Impossible de retrouver l'organisation pour l'étude oldBCId: ${row.siteId}`)
+        return null
+      }
+
+      const organizationVersionId = studyOrga.organizationVersions.find(
+        (orgVer) => orgVer.environment === Environment.BC,
+      )?.id
+
+      if (!organizationVersionId) {
+        console.warn(
+          `Impossible de retrouver l'organisation dans studyOrga.organizationVersions pour l'étude oldBCId: ${row.siteId}`,
+        )
+        return null
+      }
+
+      return {
+        oldBCId: row.oldBCId as string,
+        name: row.name as string,
+        startDate: row.startDate ? new Date(getJsDateFromExcel(row.startDate as number)) : '',
+        endDate: row.endDate ? new Date(getJsDateFromExcel(row.endDate as number)) : '',
+        organizationVersionId,
+      }
+    })
+    .filter((study) => study) as Study[]
 }
 
 const parseStudySites = (studySitesWorksheet: StudySitesWorkSheet): Map<string, StudySite[]> => {
@@ -587,7 +604,7 @@ export const uploadStudies = async (
       createdById: accountId,
       isPublic: false,
       level: Level.Initial,
-      organizationVersionId: study.organizationVersionId ?? organizationVersionId,
+      organizationVersionId: study.organizationVersionId,
     })),
   })
 
