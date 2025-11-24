@@ -33,6 +33,10 @@ const launch = !params.skip ? await getUserConfirmation() : true
 if (!launch) {
   console.log('On arrête le programme')
 } else {
-  console.log("C'est parti pour la migration !")
+  if (params.skip) {
+    console.log('trying the migration wihout importing, just to validate the file')
+  } else {
+    console.log("C'est parti pour la migration !")
+  }
   await uploadOldBCInformations(params.file, params.email.toLowerCase(), params.organizationVersion, params.skip)
 }
