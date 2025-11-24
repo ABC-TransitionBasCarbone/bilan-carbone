@@ -12,14 +12,8 @@ const nextConfig = {
   turbopack: {
     resolveAlias: {
       underscore: 'lodash',
-
-      // On dev mode, we use the source code of publicodes-count
-      // to allow easier debugging. In prod mode, the build version is used.
-      ...(process.env.NODE_ENV === 'development'
-        ? {
-            '@abc-transitionbascarbone/publicodes-count': './publicodes-packages/publicodes-count/',
-          }
-        : {}),
+      // NOTE: while the package is not published to npm, we use a local path
+      '@abc-transitionbascarbone/publicodes-count': './publicodes-packages/publicodes-count/',
     },
     resolveExtensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
   },
