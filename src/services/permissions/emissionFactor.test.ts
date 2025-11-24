@@ -5,6 +5,11 @@ import { EmissionFactor, Import } from '@prisma/client'
 import * as emissionFactorModule from '../serverFunctions/emissionFactor'
 import { canEditEmissionFactor, canReadEmissionFactor } from './emissionFactor'
 
+// TODO : remove these mocks. Should not be mocked but tests fail if not
+jest.mock('./study', () => ({ isAdminOnStudyOrga: jest.fn() }))
+jest.mock('../auth', () => ({ auth: jest.fn() }))
+jest.mock('../study', () => ({ hasSufficientLevel: jest.fn() }))
+
 jest.mock('../serverFunctions/emissionFactor', () => ({ isFromEmissionFactorOrganization: jest.fn() }))
 const mockIsFromEmissionFactorOrganization = emissionFactorModule.isFromEmissionFactorOrganization as jest.Mock
 
