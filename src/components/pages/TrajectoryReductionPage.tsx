@@ -144,6 +144,33 @@ const TrajectoryReductionPage = ({
     [linkedStudies, linkedExternalStudies, withDependencies, validatedOnly],
   )
 
+  const unvalidatedSourcesInfo = useMemo(() => {
+    let totalCount = 0
+    const currentStudyUnvalidatedCount = study.emissionSources.filter((source) => !source.validated).length
+
+    totalCount += currentStudyUnvalidatedCount
+
+    const linkedStudiesWithUnvalidatedSources = linkedStudies
+      .map((linkedStudy) => {
+        const unvalidatedCount = linkedStudy.emissionSources.filter((source) => !source.validated).length
+        totalCount += unvalidatedCount
+        return unvalidatedCount > 0
+          ? {
+              id: linkedStudy.id,
+              name: linkedStudy.name,
+              unvalidatedCount,
+            }
+          : null
+      })
+      .filter((study) => study !== null) as Array<{ id: string; name: string; unvalidatedCount: number }>
+
+    return {
+      currentStudyCount: currentStudyUnvalidatedCount,
+      linkedStudies: linkedStudiesWithUnvalidatedSources,
+      totalCount,
+    }
+  }, [study.emissionSources, linkedStudies])
+
   const trajectoryData = useMemo(() => {
     const studyStartYear = study.startDate.getFullYear()
 
@@ -361,6 +388,8 @@ const TrajectoryReductionPage = ({
             withDependencies={withDependencies}
             setWithDependencies={setWithDependencies}
             pastStudies={pastStudies}
+            validatedOnly={validatedOnly}
+            unvalidatedSourcesInfo={unvalidatedSourcesInfo}
           />
 
           {transitionPlan && (

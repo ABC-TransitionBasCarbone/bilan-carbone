@@ -1,9 +1,10 @@
 'use client'
 
 import { getYearsToDisplay, PastStudy, TrajectoryData } from '@/utils/trajectory'
-import { Typography } from '@mui/material'
+import { Alert, Typography } from '@mui/material'
 import { LineChart, LineSeries } from '@mui/x-charts/LineChart'
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
 import { useCallback, useMemo } from 'react'
 import DependenciesSwitch from '../results/DependenciesSwitch'
 
@@ -27,6 +28,12 @@ interface Props {
   withDependencies: boolean
   setWithDependencies: (value: boolean) => void
   pastStudies: PastStudy[]
+  validatedOnly: boolean
+  unvalidatedSourcesInfo: {
+    currentStudyCount: number
+    linkedStudies: Array<{ id: string; name: string; unvalidatedCount: number }>
+    totalCount: number
+  }
 }
 
 const TrajectoryGraph = ({
@@ -40,6 +47,8 @@ const TrajectoryGraph = ({
   withDependencies,
   setWithDependencies,
   pastStudies = [],
+  validatedOnly,
+  unvalidatedSourcesInfo,
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.graph')
 
@@ -336,13 +345,35 @@ const TrajectoryGraph = ({
   ])
 
   return (
-    <div className="w100 mb2">
-      <div className="flex align-center justify-between mb1">
+    <div className="w100 flex-col gapped1 mb2">
+      <div className="flex align-center justify-between">
         <Typography variant="h5" component="h2" fontWeight={600}>
           {t('title')}
         </Typography>
         <DependenciesSwitch withDependencies={withDependencies} setWithDependencies={setWithDependencies} />
       </div>
+      {validatedOnly && unvalidatedSourcesInfo.totalCount > 0 && (
+        <Alert severity="warning">
+          {unvalidatedSourcesInfo.currentStudyCount > 0 && (
+            <div>{t('unvalidatedSourcesWarning', { count: unvalidatedSourcesInfo.currentStudyCount })}</div>
+          )}
+          {unvalidatedSourcesInfo.linkedStudies.length > 0 && (
+            <div className="mt1">
+              {t('unvalidatedSourcesLinkedStudiesWarning', {
+                count: unvalidatedSourcesInfo.linkedStudies.reduce((sum, s) => sum + s.unvalidatedCount, 0),
+              })}{' '}
+              {unvalidatedSourcesInfo.linkedStudies.map((study, index) => (
+                <span key={study.id}>
+                  <Link href={`/etudes/${study.id}`}>{study.name}</Link>
+                  {t('unvalidatedSourcesLinkedStudyCount', { count: study.unvalidatedCount })}
+                  {index < unvalidatedSourcesInfo.linkedStudies.length - 1 && ', '}
+                </span>
+              ))}
+              .
+            </div>
+          )}
+        </Alert>
+      )}
       <Typography variant="body2" color="text.secondary">
         {t('subtitle')}
       </Typography>
