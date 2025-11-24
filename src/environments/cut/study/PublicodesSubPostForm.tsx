@@ -1,6 +1,6 @@
 'use client'
 
-import PublicodesForm from '@/components/dynamic-form-publicodes/PublicodesForm'
+import PublicodesForm from '@/components/publicodes-form/PublicodesForm'
 import { FullStudy } from '@/db/study'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -13,6 +13,10 @@ export interface PublicodesSubPostFormProps {
   studySiteId: string
 }
 
+/**
+ * Specific {@link PublicodesForm} for CUT. Target rules are determined based
+ * on the given `subPost`.
+ */
 const PublicodesSubPostForm = ({ subPost, study, studySiteId }: PublicodesSubPostFormProps) => {
   const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
 
