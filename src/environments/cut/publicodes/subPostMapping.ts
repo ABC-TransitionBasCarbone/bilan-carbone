@@ -1,12 +1,12 @@
 import { SubPost } from '@prisma/client'
 import { CutRuleName } from './types'
 
-/** Retrieves the Publicodes rule name corresponding to a given SubPost, if it exists */
+/** Retrieves the Publicodes rule name corresponding to a given {@link SubPost}, if it exists */
 export function getPublicodesTarget(subPost: SubPost): CutRuleName | undefined {
   return SUBPOST_TO_RULENAME[subPost]
 }
 
-/** Indicates whether a given SubPost has a mapping to a Publicodes rule name */
+/** Indicates whether a given {@link SubPost} has a mapping to a Publicodes rule name. */
 export function hasPublicodesMapping(subPost: SubPost): boolean {
   return SUBPOST_TO_RULENAME[subPost] !== undefined
 }
