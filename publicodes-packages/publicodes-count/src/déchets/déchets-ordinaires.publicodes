@@ -20,30 +20,25 @@ déchets . ordinaires . ordures ménagères:
   unité: kgCO2e
   valeur:
     produit:
-      - nb bennes
+      - nombre bennes
       - taille benne
       - densité par défaut
       - fréquence ramassage
       - 0.001 tonne/kg
       - FE
-      - commun . nombre de semaines par an
+      - commun . nombre de semaines par an * 1 semaine
   avec:
-    nb bennes:
+    nombre bennes:
       question: Nombre de bennes
-      par défaut: 1
-
+      unité: benne/ramassage
     taille benne:
       question: Taille de la benne
       description: Capacité d'une benne à ordures ménagères.
-      par défaut: 1
-      unité: l
-
+      unité: l/benne
     fréquence ramassage:
       titre: Fréquence de ramassage
       description: Fréquence de ramassage des ordures ménagères par semaine.
-      par défaut: 1
-      unité: /semaine
-
+      unité: ramassage/semaine
     FE:
       titre: Facteur d'émission
       description: Facteur d'émission des ordures ménagères (déchets non triés / sans filière).
@@ -58,30 +53,25 @@ déchets . ordinaires . emballages et papier:
   unité: kgCO2e
   valeur:
     produit:
-      - nb bennes
+      - nombre bennes
       - taille benne
       - densité par défaut
       - fréquence ramassage
       - 0.001 tonne/kg
       - FE
-      - commun . nombre de semaines par an
+      - commun . nombre de semaines par an * 1 semaine
   avec:
-    nb bennes:
+    nombre bennes:
       question: Nombre de bennes
-      par défaut: 1
-
+      unité: benne/ramassage
     taille benne:
       question: Taille de la benne
       description: Capacité d'une benne à ordures ménagères.
-      par défaut: 1
-      unité: l
-
+      unité: l/benne
     fréquence ramassage:
       question: Fréquence de ramassage
       description: Fréquence de ramassage des ordures ménagères par semaine.
-      par défaut: 1
-      unité: /semaine
-
+      unité: ramassage/semaine
     FE:
       titre: Facteur d'émission
       description: Facteur d'émission des emballages et papier (plastique, métal, papier et carton).
@@ -96,30 +86,25 @@ déchets . ordinaires . biodéchets:
   unité: kgCO2e
   valeur:
     produit:
-      - nb bennes
+      - nombre bennes
       - taille benne
       - densité par défaut
       - fréquence ramassage
       - 0.001 tonne/kg
       - FE
-      - commun . nombre de semaines par an
+      - commun . nombre de semaines par an * 1 semaine
   avec:
-    nb bennes:
+    nombre bennes:
       question: Nombre de bennes
-      par défaut: 1
-
+      unité: benne/ramassage
     taille benne:
       question: Taille de la benne
       description: Capacité d'une benne à ordures ménagères.
-      par défaut: 1
-      unité: l
-
+      unité: l/benne
     fréquence ramassage:
       question: Fréquence de ramassage
       description: Fréquence de ramassage des ordures ménagères par semaine.
-      par défaut: 1
-      unité: /semaine
-
+      unité: ramassage/semaine
     FE:
       titre: Facteur d'émission
       description: Facteur d'émission des biodéchets (restes alimentaires).
@@ -134,35 +119,29 @@ déchets . ordinaires . verre:
   unité: kgCO2e
   valeur:
     produit:
-      - nb bennes
+      - nombre bennes
       - taille benne
       - densité
       - fréquence ramassage
       - 0.001 tonne/kg
       - FE
-      - commun . nombre de semaines par an
+      - commun . nombre de semaines par an * 1 semaine
   avec:
-    nb bennes:
+    nombre bennes:
       question: Nombre de bennes
-      par défaut: 1
-
+      unité: benne/ramassage
     taille benne:
       question: Taille de la benne
       description: Capacité d'une benne à ordures ménagères.
-      par défaut: 1
-      unité: l
-
+      unité: l/benne
     fréquence ramassage:
       question: Fréquence de ramassage
       description: Fréquence de ramassage des ordures ménagères par semaine.
-      par défaut: 1
-      unité: /semaine
-
+      unité: ramassage/semaine
     densité:
       description: Densité du verre.
       valeur: 0.04
       unité: kg/l
-
     FE:
       titre: Facteur d'émission
       description: Facteur d'émission des déchets de verre.
