@@ -1,8 +1,8 @@
 import { FormSelect } from '@/components/form/Select'
 import { AddActionCommand } from '@/services/serverFunctions/transitionPlan.command'
-import { RELEVANCE_TO_PRIORITY } from '@/utils/action'
+import { getOrderedActionRelevances } from '@/utils/action'
 import { MenuItem } from '@mui/material'
-import { ActionCategory, ActionNature, ActionRelevance } from '@prisma/client'
+import { ActionCategory, ActionNature } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { Control } from 'react-hook-form'
 
@@ -20,7 +20,7 @@ const ActionModalStep1 = ({ control }: Props) => {
     nature: { keys: Object.values(ActionNature), t: tNature },
     category: { keys: Object.values(ActionCategory), t: tCategory },
     relevance: {
-      keys: Object.values(ActionRelevance).sort((a, b) => RELEVANCE_TO_PRIORITY[a] - RELEVANCE_TO_PRIORITY[b]),
+      keys: getOrderedActionRelevances(),
       t: tRelevance,
     },
   }
