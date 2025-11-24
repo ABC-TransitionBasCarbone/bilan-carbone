@@ -1,7 +1,7 @@
 import { wasteImpact } from '@/constants/emissions'
 import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
 import { hasWasteImpact } from '@/services/permissions/environment'
-import { convertTiltSubPostToBCSubPost, Post, subPostsByPostBC } from '@/services/posts'
+import { Post, subPostsByPostBC } from '@/services/posts'
 import { EmissionFactor, Environment, Import, Prisma, SubPost, Unit } from '@prisma/client'
 import { unique } from './array'
 
