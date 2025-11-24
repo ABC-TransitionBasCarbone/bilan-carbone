@@ -1,5 +1,6 @@
 import { EvaluatedFormElement, FormPageElementProp } from '@publicodes/forms'
 import RadioGroupInput from './inputFields/RadioGroupInput'
+import SelectInput from './inputFields/SelectInput'
 import TextWithUnitInput from './inputFields/TextWithUnitInput'
 import QuestionContainer from './QuestionContainer'
 import { OnFormInputChange } from './utils'
@@ -56,6 +57,7 @@ function getFieldInput<RuleName extends string>(
     case 'RadioGroup':
       return <RadioGroupInput formElement={formElement} formElementProps={formElementProps} onChange={onChange} />
     case 'select':
+      return <SelectInput formElement={formElement} formElementProps={formElementProps} onChange={onChange} />
     case 'textarea':
     default:
       return <p>Unsupported formElement type: {formElement.element}</p>
