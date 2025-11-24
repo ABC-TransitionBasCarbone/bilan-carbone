@@ -88,7 +88,7 @@ model Action {
   nature                    ActionNature[]
   category                  ActionCategory[]
   relevance                 ActionRelevance[]
-  enabled                   Boolean                  @default(false) @map("enabled")
+  enabled                   Boolean                  @default(true) @map("enabled")
   dependenciesOnly          Boolean                  @default(false) @map("dependencies_only")
   createdAt                 DateTime                 @default(now()) @map("created_at")
   updatedAt                 DateTime                 @default(now()) @updatedAt @map("updated_at")
