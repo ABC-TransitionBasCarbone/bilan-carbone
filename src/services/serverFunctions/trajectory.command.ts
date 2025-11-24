@@ -7,7 +7,18 @@ export const createObjectiveSchema = () =>
     .object({
       id: z.string().optional(),
       targetYear: z.string().optional().nullable(),
-      reductionRate: z.number().optional().nullable(),
+      reductionRate: z
+        .number()
+        .optional()
+        .nullable()
+        .refine((val) => {
+          if (val === null || val === undefined) {
+            return true
+          }
+          // Check if the number has at most 2 decimal places
+          const decimalPlaces = (val.toString().split('.')[1] || '').length
+          return decimalPlaces <= 2
+        }, setCustomMessage('maxTwoDecimals')),
     })
     .refine((data) => {
       const hasTargetYear = data.targetYear !== undefined && data.targetYear !== null
