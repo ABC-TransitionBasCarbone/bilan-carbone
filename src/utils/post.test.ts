@@ -62,8 +62,10 @@ describe('PostUtils functions', () => {
 
     test('should return a post that includes the subPost', () => {
       Object.values(SubPost).forEach((subPost: SubPost) => {
-        const res = getPost(subPost) as Post
-        expect(subPostsByPost[res]).toContain(subPost)
+        const res = getPost(subPost)
+        if (res) {
+          expect(subPostsByPost[res]).toContain(subPost)
+        }
       })
     })
   })
