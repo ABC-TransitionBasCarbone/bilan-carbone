@@ -1,6 +1,6 @@
 déchets . ordinaires:
   titre: Déchets ordinaires
-  unité: kgCO2e/an
+  unité: kgCO2e
   valeur:
     somme:
       - ordures ménagères
@@ -17,7 +17,7 @@ déchets . ordinaires . densité par défaut:
 # fréquence) avec un appel à `contexte` pour chaque sous-poste.
 déchets . ordinaires . ordures ménagères:
   titre: Ordures ménagères (déchets non triés / sans filière)
-  unité: kgCO2e/an
+  unité: kgCO2e
   valeur:
     produit:
       - nb bennes
@@ -55,7 +55,7 @@ déchets . ordinaires . ordures ménagères:
 
 déchets . ordinaires . emballages et papier:
   titre: Emballages et papier (plastique, métal, papier et carton)
-  unité: kgCO2e/an
+  unité: kgCO2e
   valeur:
     produit:
       - nb bennes
@@ -93,7 +93,7 @@ déchets . ordinaires . emballages et papier:
 
 déchets . ordinaires . biodéchets:
   titre: Biodéchets (restes alimentaires)
-  unité: kgCO2e/an
+  unité: kgCO2e
   valeur:
     produit:
       - nb bennes
@@ -131,7 +131,7 @@ déchets . ordinaires . biodéchets:
 
 déchets . ordinaires . verre:
   titre: Déchets verre
-  unité: kgCO2e/an
+  unité: kgCO2e
   valeur:
     produit:
       - nb bennes

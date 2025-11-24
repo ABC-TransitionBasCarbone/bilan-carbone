@@ -1,7 +1,7 @@
 déchets . exceptionnels:
   titre: Déchets exceptionnels
   description: Impact annuels des déchets exceptionnels.
-  unité: kgCO2e/an
+  unité: kgCO2e
   valeur:
     somme:
       - lampe Xenon
@@ -10,20 +10,13 @@ déchets . exceptionnels:
 déchets . exceptionnels . lampe Xenon:
   titre: Lampes Xenon
   description: Impact annuel des déchets de lampes Xenon.
-  valeur: nb lampes * poids * FE * 1 /an
-  unité: kgCO2e/an
+  valeur: nombre * poids * FE
   avec:
-    nb lampes:
-      titre: Nombre de lampes
-      # TODO: variabiliser la date ?
-      question: Quelle quantité de lampes Xenon avez vous jeté en 2025 ?
-      par défaut: 1
-
     poids:
       titre: Poids moyen
       valeur: 0.86
       unité: kg
-
+      note: Hypothèse CUT
     FE:
       titre: Facteur d'émission
       description: Facteur d'émission des lampes Xenon.
@@ -32,19 +25,18 @@ déchets . exceptionnels . lampe Xenon:
       note: "Source : CUT v5.0"
       meta:
         id: 144
+    nombre:
+      titre: Nombre de lampes
+      question: Quelle quantité de lampes Xenon avez vous jeté cette année ?
+      note: |
+        Nous avons modifier la question pour ne pas faire apparaitre la date dans la question pour le moment. (old: Quelle quantité de lampes Xenon avez vous jeté en 2025 ?)
 
 déchets . exceptionnels . matériel technique:
   titre: Matériel technique
   description: Impact annuel des déchets de matériel technique (écrans, ordinateurs, etc.).
-  valeur: quantité * 0.001 tonne/kg * FE * 1 /an
-  unité: kgCO2e/an
+  valeur: quantité * 0.001 tonne/kg * FE
+  unité: kgCO2e
   avec:
-    quantité:
-      # TODO: variabiliser la date ?
-      question: Quelle quantité de matériel technique avez vous jeté en 2025 ?
-      par défaut: 1
-      unité: kg
-
     FE:
       titre: Facteur d'émission
       description: Facteur d'émission du matériel technique (écrans, ordinateurs, etc.).
@@ -53,3 +45,8 @@ déchets . exceptionnels . matériel technique:
       note: "Source : Base Empreinte v23.5 - GT Déchets Base Carbone"
       meta:
         id: 34620
+    quantité:
+      question: Quelle quantité de matériel technique avez vous jeté cette année ?
+      note: |
+        Nous avons modifer la question pour ne pas faire apparaire la date dans la question poue le moment. (old: Quelle quantité de matériel technique avez vous jeté en 2025 ?)
+      unité: kg

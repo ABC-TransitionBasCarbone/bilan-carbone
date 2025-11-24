@@ -5,4 +5,4 @@ déchets:
     somme:
       - ordinaires
       - exceptionnels
-  unité: kgCO2e/an
+  unité: kgCO2e
