@@ -54,3 +54,7 @@
   border-radius: 0.75rem;
   border-color: var(--grayscale-300);
 }
+
+.multilineResizable :global(.MuiInputBase-input) {
+  resize: vertical;
+}

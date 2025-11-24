@@ -45,6 +45,7 @@ interface Props {
   setTargetedEmission: (emissionFactorId: string) => void
   setAction: (action: 'edit' | 'delete' | undefined) => void
   selectEmissionFactor?: (emissionFactor: EmissionFactorWithMetaData) => void
+  hasActiveLicence: boolean
 }
 export const EmissionFactorsTable = ({
   data,
@@ -56,6 +57,7 @@ export const EmissionFactorsTable = ({
   setTargetedEmission,
   setAction,
   selectEmissionFactor,
+  hasActiveLicence,
 }: Props) => {
   const t = useTranslations('emissionFactors.table')
   const tResultUnits = useTranslations('study.results.units')
@@ -106,6 +108,7 @@ export const EmissionFactorsTable = ({
             getValue={getValue}
             setTargetedEmission={setTargetedEmission}
             setAction={setAction}
+            hasActiveLicence={hasActiveLicence}
           />
         ),
       },
@@ -134,6 +137,7 @@ export const EmissionFactorsTable = ({
     userOrganizationId,
     setTargetedEmission,
     setAction,
+    hasActiveLicence,
   ])
 
   const table = useReactTable({

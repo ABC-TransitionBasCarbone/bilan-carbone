@@ -51,7 +51,6 @@ const ActionModalStep3 = ({ control, setValue, organizationMembers }: Props) => 
         placeholder={t('necesssaryRessourcesPlaceholder')}
         fullWidth
         multiline
-        rows={2}
         data-testid="add-action-necesssaryRessources"
       />
       <span className="inputLabel bold">{t('indicator')}</span>
@@ -117,7 +116,6 @@ const ActionModalStep3 = ({ control, setValue, organizationMembers }: Props) => 
         name="facilitatorsAndObstacles"
         label={t('facilitatorsAndObstacles')}
         multiline
-        rows={2}
         data-testid="add-action-facilitatorsAndObstacles"
       />
       <FormTextField
@@ -125,7 +123,6 @@ const ActionModalStep3 = ({ control, setValue, organizationMembers }: Props) => 
         name="additionalInformation"
         label={t('additionalInformation')}
         multiline
-        rows={2}
         data-testid="add-action-additionalInformation"
       />
     </>

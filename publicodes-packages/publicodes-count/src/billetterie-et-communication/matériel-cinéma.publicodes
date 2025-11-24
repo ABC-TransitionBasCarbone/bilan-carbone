@@ -1,0 +1,88 @@
+billetterie et communication . matériel cinéma:
+  titre: Matériel cinéma
+  formule:
+    somme:
+      - production
+  unité: kgCO2e
+
+billetterie et communication . matériel cinéma . production:
+  titre: Type de matériel
+  question: Quelle quantité de matériel produisez-vous chaque mois ?
+  formule:
+    somme:
+      - programme
+      - affiches
+      - flyers
+  unité: kgCO2e
+
+billetterie et communication . matériel cinéma . production . programme:
+  titre: Programme
+  formule:
+    produit:
+      - nombre
+      - FE
+      - poids
+      - commun . nombre de mois par an
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: Quantité
+      unité: unité/mois
+
+    FE:
+      valeur: 0.007095
+      unité: kgCO2e/kg
+      meta:
+        id: 130
+
+    poids:
+      valeur: 0.005
+      unité: kg/unité
+
+billetterie et communication . matériel cinéma . production . affiches:
+  titre: Affiches
+  formule:
+    produit:
+      - nombre
+      - FE
+      - poids
+      - commun . nombre de mois par an
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: Quantité
+      unité: unité/mois
+
+    FE:
+      valeur: 0.038313
+      unité: kgCO2e/kg
+      meta:
+        id: 126
+
+    poids:
+      valeur: 0.027
+      unité: kg/unité
+
+billetterie et communication . matériel cinéma . production . flyers:
+  titre: Flyers
+  formule:
+    produit:
+      - nombre
+      - FE
+      - poids
+      - commun . nombre de mois par an
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: Quantité
+      unité: unité/mois
+
+    FE:
+      valeur: 0.0059598
+      unité: kgCO2e/kg
+      meta:
+        id: 133
+
+    poids:
+      valeur: 0.0042
+      unité: kg/unité

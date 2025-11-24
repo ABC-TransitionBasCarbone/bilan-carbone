@@ -9,9 +9,10 @@ import EmissionFactorsFiltersAndTable from './EmissionFactorsFiltersAndTable'
 interface Props {
   userOrganizationId?: string
   environment: Environment
+  hasActiveLicence: boolean
 }
 
-const EmissionFactors = ({ userOrganizationId, environment }: Props) => {
+const EmissionFactors = ({ userOrganizationId, environment, hasActiveLicence }: Props) => {
   const t = useTranslations('emissionFactors')
 
   const [importVersions, setImportVersions] = useState<EmissionFactorImportVersion[]>([])
@@ -79,6 +80,7 @@ const EmissionFactors = ({ userOrganizationId, environment }: Props) => {
       importVersions={importVersions}
       initialImportVersions={initialImportVersions}
       locationOptions={locationOptions}
+      hasActiveLicence={hasActiveLicence}
     />
   ) : (
     <div>{t('loading')}</div>

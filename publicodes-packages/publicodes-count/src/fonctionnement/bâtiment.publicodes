@@ -1,0 +1,196 @@
+fonctionnement . bâtiment:
+  titre: Bâtiment
+  formule:
+    somme:
+      - construction
+      - rénovation
+      - autre activité
+      - parking
+  unité: kgCO2e
+
+fonctionnement . bâtiment . construction:
+  titre: Construction
+  formule:
+    variations:
+      - si: age > amortissement
+        alors: 0
+      - sinon:
+          produit:
+            - surface
+            - FE
+            - (1 an / amortissement)
+  unité: kgCO2e
+  avec:
+    age:
+      durée:
+        unité: an
+        depuis: année de construction
+        jusqu'à: commun . année actuelle
+      arrondi: oui
+
+    amortissement:
+      valeur: 50
+      unité: an
+
+    année de construction:
+      question: Quand le bâtiment a-t-il été construit ?
+
+    surface:
+      question: |
+        Quelle est la surface plancher du cinéma ? (La somme des surfaces des
+        différents niveaux)
+      unité: m2
+
+    FE:
+      valeur: 825
+      unité: kgCO2e/m2
+      meta:
+        id: 20730
+
+fonctionnement . bâtiment . rénovation:
+  titre: Rénovation
+  formule:
+    somme:
+      - empreinte travaux
+      - empreinte extension
+  unité: kgCO2e
+
+fonctionnement . bâtiment . rénovation . type:
+  titre: Rénovation
+  question: |
+    Parmi les rénovations suivantes, lesquelles avez-vous réalisées durant les
+    dix dernières années ?
+  # TODO: Deals with it as "plusieurs possibilités"
+  # une possibilité:
+  #   - rénovation totale
+  #   - extension
+  #   - autres travaux importants
+  #   - aucun
+  avec:
+    rénovation totale:
+      titre: Rénovation totale (hors agrandissement)
+    rénovation totale . présent:
+      question: |
+        Avez-vous réalisé une rénovation totale (hors agrandissement) durant
+        les dix dernières années ?
+
+    extension:
+      titre: Agrandissement - extension
+    extension . présent:
+      question: |
+        Avez-vous réalisé un agrandissement ou une extension durant les dix
+        dernières années ?
+
+    autres travaux importants:
+      titre: |
+        Autres travaux importants (par ex : changement moquette, ravalement, peinture etc)
+    autres travaux importants . présent:
+      question: |
+        Avez-vous réalisé d'autres travaux importants (par ex : changement
+        moquette, ravalement, peinture etc) durant les dix dernières années ?
+
+    aucun:
+      titre: Je n'ai pas réalisé ces rénovations durant les dix dernières années
+    aucun . présent:
+      question: N'avez-vous pas réalisé ces rénovations durant les dix dernières années ?
+
+fonctionnement . bâtiment . rénovation . empreinte travaux:
+  applicable si:
+    une de ces conditions:
+      - toutes ces conditions:
+          - est défini: type . rénovation totale . présent
+          - type . rénovation totale . présent
+      - toutes ces conditions:
+          - est défini: type . autres travaux importants . présent
+          - type . autres travaux importants . présent
+  formule:
+    produit:
+      - montant
+      - FE
+      - (1 an / amortissement)
+  note: Conversion auto €/k€ publicodes.
+  avec:
+    montant:
+      question: |
+        Dans le cas d'une rénovation durant ces 10 dernières années, Quel est
+        le montant des dépenses liées à ces travaux de rénovation ?
+      unité: €
+
+    FE:
+      valeur: 245
+      unité: kgCO2e/k€
+      meta:
+        id: 43340
+
+    amortissement:
+      valeur: 10
+      unité: an
+
+fonctionnement . bâtiment . rénovation . empreinte extension:
+  applicable si:
+    toutes ces conditions:
+      - est défini: type . extension . présent
+      - type . extension . présent
+  formule:
+    produit:
+      - surface
+      - FE
+      - (1 an / amortissement)
+  avec:
+    surface:
+      question: |
+        Dans le cas d'un agrandissement durant ces 10 dernières années, quelle
+        est la surface supplémentaire ajoutée ?
+      unité: m2
+
+    FE:
+      valeur: 825
+      unité: kgCO2e/m2
+      meta:
+        id: 20730
+
+    amortissement:
+      valeur: 10
+      unité: an
+
+fonctionnement . bâtiment . autre activité:
+  applicable si: est partagé = oui
+  titre: Autre activité
+  formule: 0
+  note: |
+    TODO: Pas d'émissions associées ?
+  avec:
+    surface:
+      question: Quelle est la surface totale du bâtiment (cinéma inclus) ?
+      unité: m2
+
+fonctionnement . bâtiment . est partagé:
+  question: Le bâtiment est-il partagé avec une autre activité ?
+
+fonctionnement . bâtiment . parking:
+  applicable si: parking présent = oui
+  titre: Parking
+  formule:
+    produit:
+      - nombre de places
+      - 12 m2/place
+      - FE
+      - (1 an / amortissement)
+  note: |
+    Il semble que le calcul n'est pas bon actuellement en ligne.
+  avec:
+    nombre de places:
+      question: Si oui, de combien de places ?
+
+    FE:
+      valeur: 92
+      unité: kgCO2e/m2
+      meta:
+        id: 26008
+
+    amortissement:
+      valeur: 50
+      unité: an
+
+fonctionnement . bâtiment . parking présent:
+  question: Le cinéma dispose-t-il d’un parking ?

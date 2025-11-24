@@ -17,12 +17,13 @@ import {
   setEmissionFactorUnitAsCustom,
   updateEmissionFactor,
 } from '@/db/emissionFactors'
-import { getOrganizationVersionById } from '@/db/organization'
+import { getOrganizationVersionById, getOrganizationVersionByOrganizationIdAndEnvironment } from '@/db/organization'
 import { getStudyById } from '@/db/study'
 import { getLocale } from '@/i18n/locale'
 import { unitsMatrix } from '@/services/importEmissionFactor/historyUnits'
 import { FeFilters } from '@/types/filters'
 import { ManualEmissionFactorUnitList } from '@/utils/emissionFactors'
+import { hasActiveLicence } from '@/utils/organization'
 import { flattenSubposts } from '@/utils/post'
 import { IsSuccess, withServerResponse } from '@/utils/serverResponse'
 import { EmissionFactorStatus, Environment, Import, Unit } from '@prisma/client'
@@ -177,6 +178,23 @@ export const isFromEmissionFactorOrganization = async (id: string) =>
     return emissionFactor.organizationId === session.user.organizationId
   })
 
+export const isEmissionFactorFromActiveOrganization = async (id: string) =>
+  withServerResponse('isEmissionFactorFromActiveOrganization', async () => {
+    const [session, emissionFactor] = await Promise.all([dbActualizedAuth(), getEmissionFactorById(id)])
+
+    if (!emissionFactor || !emissionFactor.organizationId || !session || !session.user) {
+      return false
+    }
+    const organizationVersion = await getOrganizationVersionByOrganizationIdAndEnvironment(
+      emissionFactor.organizationId,
+      session.user.environment,
+    )
+    if (!organizationVersion || !hasActiveLicence(organizationVersion)) {
+      return false
+    }
+    return true
+  })
+
 export const createEmissionFactorCommand = async ({
   name,
   unit,
@@ -199,7 +217,7 @@ export const createEmissionFactorCommand = async ({
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (!canCreateEmissionFactor()) {
+    if (!(await canCreateEmissionFactor(account.organizationVersionId))) {
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -230,12 +248,20 @@ export const updateEmissionFactorCommand = async (command: UpdateEmissionFactorC
       throw new Error(NOT_AUTHORIZED)
     }
 
+    if (!(await isEmissionFactorFromActiveOrganization(command.id))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
     await updateEmissionFactor(session, local, command)
   })
 
 export const deleteEmissionFactor = async (id: string) =>
   withServerResponse('deleteEmissionFactor', async () => {
     if (!isFromEmissionFactorOrganization(id)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!(await isEmissionFactorFromActiveOrganization(id))) {
       throw new Error(NOT_AUTHORIZED)
     }
 

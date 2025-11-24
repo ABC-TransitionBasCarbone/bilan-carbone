@@ -930,12 +930,17 @@
           "trajectory15": "SBTi 1,5°C",
           "trajectoryWB2C": "SBTi WB2C",
           "actionBasedTrajectory": "Courbe prévisionnelle",
-          "yAxisLabel": "Émissions (tCO2e)"
+          "yAxisLabel": "Émissions (tCO2e)",
+          "unvalidatedSourcesWarning": "{count, plural, =1 {Une source d'émissions n'est pas validée dans l'étude actuelle et n'est donc pas prise en compte dans le calcul des trajectoires.} other {{count} sources d'émissions ne sont pas validées dans l'étude actuelle et ne sont donc pas prises en compte dans le calcul des trajectoires.}}",
+          "unvalidatedSourcesLinkedStudiesWarning": "{count, plural, =1 {Une source d'émissions n'est pas validée dans l' étude passée suivante :} other {{count} sources d'émissions ne sont pas validées dans les études passées suivantes :}}",
+          "unvalidatedSourcesLinkedStudyCount": " ({count, plural, =1 {1 source non validée} other {{count} sources non validées}})"
         },
         "linkedStudies": {
           "linked": "Études liées",
           "add": "Ajouter",
+          "save": "Enregistrer",
           "linkStudy": "Lier une étude",
+          "editStudy": "Modifier l'étude",
           "source": "Source",
           "study": "Étude concernée",
           "oldStudy": "Études BC+",
@@ -946,10 +951,17 @@
           "totalCo2": "Emissions totales",
           "totalCo2Placeholder": "256",
           "yearAlreadySet": "Une étude est déjà configurée pour cette année",
+          "studyYearMustBeBeforeCurrent": "L'année de l'étude doit être antérieure à l'année de l'étude actuelle",
           "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
+          "noAvailableStudies": "Aucune étude passée disponible",
+          "noLinkedStudies": "Aucune étude liée pour le moment",
           "table": {
             "name": "Nom",
             "year": "Année",
+            "type": "Type",
+            "typeLinked": "Étude existante",
+            "typeExternal": "Étude externe",
+            "emissions": "Émissions",
             "see": "Voir",
             "delete": "Supprimer"
           },
@@ -2160,7 +2172,9 @@
     "atLeastOneObjective": "Veuillez ajouter au moins un objectif",
     "positiveNumber": "Veuillez saisir un nombre positif",
     "tooSmall": "Veuillez saisir une valeur plus grande",
-    "tooBig": "Veuillez saisir une valeur plus petite"
+    "tooBig": "Veuillez saisir une valeur plus petite",
+    "studyYearMustBeBeforeCurrent": "L'année de l'étude doit être antérieure à l'année de l'étude actuelle",
+    "maxTwoDecimals": "Le taux de réduction doit avoir au maximum 2 décimales"
   },
   "common": {
     "actions": {

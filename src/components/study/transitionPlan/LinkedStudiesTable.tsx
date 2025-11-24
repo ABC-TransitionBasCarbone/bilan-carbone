@@ -18,11 +18,13 @@ interface Props {
   transitionPlanId: string
   pastStudies: PastStudy[]
   canEdit: boolean
+  onEdit: (study: PastStudy) => void
 }
 
-const LinkedStudiesTable = ({ transitionPlanId, pastStudies, canEdit }: Props) => {
+const LinkedStudiesTable = ({ transitionPlanId, pastStudies, canEdit, onEdit }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.linkedStudies.table')
   const tDeleteModal = useTranslations('study.transitionPlan.trajectories.linkedStudies.deleteModal')
+  const tUnit = useTranslations('study.results.units')
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
@@ -77,22 +79,46 @@ const LinkedStudiesTable = ({ transitionPlanId, pastStudies, canEdit }: Props) =
           },
         },
         { header: t('year'), accessorKey: 'year' },
+        {
+          header: t('type'),
+          accessorKey: 'type',
+          cell: ({ row }) => {
+            return row.original.type === 'linked' ? t('typeLinked') : t('typeExternal')
+          },
+        },
+        {
+          header: t('emissions'),
+          accessorKey: 'totalCo2',
+          cell: ({ row }) => {
+            const value = row.original.totalCo2
+            return `${value.toLocaleString('fr-FR', { maximumFractionDigits: 2 })} ${tUnit('T')}`
+          },
+        },
         canEdit
           ? {
               id: 'actions',
               header: '',
               accessorKey: 'id',
               cell: ({ row }) => (
-                <TableActionButton
-                  type="delete"
-                  onClick={() => handleDeleteClick(row.original.type, row.original.id, row.original.name)}
-                  data-testid={`delete-${row.original.type}-study-button`}
-                />
+                <div className="flex justify-end gapped-2">
+                  {row.original.type === 'external' && (
+                    <TableActionButton
+                      type="edit"
+                      onClick={() => onEdit(row.original)}
+                      data-testid={`edit-${row.original.type}-study-button`}
+                    />
+                  )}
+                  <TableActionButton
+                    type="delete"
+                    onClick={() => handleDeleteClick(row.original.type, row.original.id, row.original.name)}
+                    data-testid={`delete-${row.original.type}-study-button`}
+                  />
+                </div>
               ),
             }
           : null,
       ] as ColumnDef<PastStudy>[],
-    [t, handleDeleteClick, canEdit],
+    [t, tUnit, handleDeleteClick, onEdit, canEdit],
   )
 
   const pastStudiesTable = useReactTable({

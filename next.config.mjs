@@ -10,7 +10,11 @@ const scalewayUrl = `${bucketName}.s3.${region}.scw.cloud`
 const nextConfig = {
   // output: 'standalone', // TODO: Uncomment this if we meed to reduce the app size and add heavy node_modules packages to .slugignore
   turbopack: {
-    resolveAlias: { underscore: 'lodash' },
+    resolveAlias: {
+      underscore: 'lodash',
+      // NOTE: while the package is not published to npm, we use a local path
+      '@abc-transitionbascarbone/publicodes-count': './publicodes-packages/publicodes-count/',
+    },
     resolveExtensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
   },
   images: {
@@ -19,7 +23,7 @@ const nextConfig = {
   experimental: {
     serverActions: { bodySizeLimit: '5mb' },
   },
-  transpilePackages: ['mui-color-input'],
+  transpilePackages: ['mui-color-input', '@abc-transitionbascarbone/publicodes-count'],
   reactStrictMode: true,
   headers: async () => [
     {

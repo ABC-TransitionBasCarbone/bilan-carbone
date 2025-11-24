@@ -1,0 +1,152 @@
+commun:
+  titre: Règles communes
+
+#TODO: should be imported from package "publicodes-commun"
+commun . nombre de mois par an:
+  titre: Nombre de mois par an
+  description: Nombre de mois pris en compte pour le calcul annuel.
+  valeur: 12
+  unité: mois
+
+commun . nombre de semaines par an:
+  titre: Nombre de semaines par an
+  description: Nombre de semaines prises en compte pour le calcul annuel.
+  valeur: 52
+  unité: semaine
+
+commun . nombre de semaines travaillées par an:
+  titre: Nombre de semaines travaillées par an
+  valeur: 47
+  unité: semaine
+
+commun . nombre de jours par an:
+  titre: Nombre de jours par an
+  description: Nombre de jours pris en compte pour le calcul annuel.
+  valeur: 365
+  unité: jour
+
+commun . année actuelle:
+  titre: Année actuelle
+  description: Année de référence pour le calcul des amortissements.
+  valeur: 12/2025
+
+commun . FE:
+  description: |
+    On regroupe ici les facteurs d'émission communs à plusieurs postes.
+
+commun . FE . repas:
+  # TODO: refactor with other fields ?
+  titre: Facteur d'émission d'un repas moyen
+  valeur: 2.04
+  unité: kgCO2e/repas
+  meta:
+    id: 20682
+
+commun . FE . moyen de transport:
+  # TODO: refactor with "déplacements spectateurs ?"
+  titre: Facteur d'émission moyens de transport
+  avec:
+    RER et transilien:
+      titre: Facteur d'émission RER et transilien
+      valeur: 0.00978
+      unité: kgCO2e/km
+      meta:
+        id: 43254
+
+    métro ou tram:
+      titre: Facteur d'émission métro, tramway
+      valeur: 0.005030000000000001
+      unité: kgCO2e/km
+      meta:
+        id: 28150
+
+    bus:
+      titre: Facteur d'émission bus
+      valeur: 0.1466
+      unité: kgCO2e/km
+      meta:
+        id: 27999
+
+    vélo électrique:
+      titre: Facteur d'émission vélo électrique
+      valeur: 0.01095
+      unité: kgCO2e/km
+      meta:
+        id: 28331
+
+    vélo classique:
+      titre: Facteur d'émission vélo classique
+      valeur: 0
+      unité: kgCO2e/km
+      meta:
+        id: 134
+
+    marche:
+      titre: Facteur d'émission marche
+      valeur: 0
+      unité: kgCO2e/km
+      meta:
+        id: 135
+
+    voiture diesel:
+      titre: Facteur d'émission voiture diesel
+      valeur: 0.165
+      unité: kgCO2e/km
+      meta:
+        id: 27984
+
+    voiture essence:
+      titre: Facteur d'émission voiture essence
+      valeur: 0.1746
+      unité: kgCO2e/km
+      meta:
+        id: 27983
+
+    voiture hybride:
+      titre: Facteur d'émission voiture hybride
+      valeur: 0.0717
+      unité: kgCO2e/km
+      meta:
+        id: 28015
+
+    voiture électrique:
+      titre: Facteur d'émission voiture électrique
+      valeur: 0.0953
+      unité: kgCO2e/km
+      meta:
+        id: 28013
+
+    moto:
+      titre: Facteur d'émission moto
+      valeur: 0.1913
+      unité: kgCO2e/km
+      meta:
+        id: 27995
+
+    scooter:
+      titre: Facteur d'émission scooter
+      valeur: 0.0763
+      unité: kgCO2e/km
+      meta:
+        id: 27992
+
+    trottinette électrique:
+      titre: Facteur d'émission trottinette électrique
+      valeur: 0.0249
+      unité: kgCO2e/km
+      meta:
+        id: 28329
+
+    TGV:
+      titre: Facteur d'émission TGV
+      valeur: 0.00293
+      unité: kgCO2e/km
+      meta:
+        id: 43256
+
+    avion:
+      titre: Facteur d'émission avion moyen-courrier
+      valeur: 0.18748437
+      unité: kgCO2e/km
+      meta:
+        id: 28132

@@ -55,7 +55,6 @@ const ActionModalStep1 = ({ studyUnit, control, setValue }: Props) => {
         label={`${t('subSteps')} *`}
         placeholder={t('subStepsPlaceholder')}
         multiline
-        rows={2}
         data-testid="add-action-subSteps"
       />
       <FormTextField
@@ -64,7 +63,6 @@ const ActionModalStep1 = ({ studyUnit, control, setValue }: Props) => {
         label={`${t('detailedDescription')} *`}
         placeholder={t('detailedDescriptionPlaceholder')}
         multiline
-        rows={2}
         data-testid="add-action-detailedDescription"
       />
       <FormSelect

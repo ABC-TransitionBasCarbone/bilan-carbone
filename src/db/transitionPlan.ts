@@ -1,4 +1,3 @@
-import { ExternalStudyCommand } from '@/services/serverFunctions/transitionPlan.command'
 import {
   Action,
   ExternalStudy,
@@ -177,7 +176,16 @@ export const getActions = async (transitionPlanId: string) =>
 export const createTransitionPlanStudy = async (transitionPlanId: string, studyId: string) =>
   prismaClient.transitionPlanStudy.create({ data: { transitionPlanId, studyId } })
 
-export const createExternalStudy = async (data: ExternalStudyCommand) => prismaClient.externalStudy.create({ data })
+export const createExternalStudy = async (data: Prisma.ExternalStudyUncheckedCreateInput) => {
+  return prismaClient.externalStudy.create({ data })
+}
+
+export const updateExternalStudy = async (id: string, data: Prisma.ExternalStudyUpdateInput) => {
+  return prismaClient.externalStudy.update({
+    where: { id },
+    data,
+  })
+}
 
 export const getExternalStudiesForTransitionPlanAndYear = async (
   transitionPlanId: string,

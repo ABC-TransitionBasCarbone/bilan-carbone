@@ -7,8 +7,12 @@ import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { getStudyPreviousOccurrences } from '@/services/serverFunctions/study'
-import { addExternalStudy, linkOldStudy } from '@/services/serverFunctions/transitionPlan'
-import { ExternalStudyCommand, ExternalStudyCommandValidation } from '@/services/serverFunctions/transitionPlan.command'
+import { addExternalStudy, linkOldStudy, updateExternalStudy } from '@/services/serverFunctions/transitionPlan'
+import {
+  createExternalStudyCommandValidation,
+  ExternalStudyFormInput,
+} from '@/services/serverFunctions/transitionPlan.command'
+import { PastStudy } from '@/utils/trajectory'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem, TextField } from '@mui/material'
 import { StudyResultUnit } from '@prisma/client'
@@ -21,7 +25,7 @@ import { useForm } from 'react-hook-form'
 import textUnitStyles from '../../dynamic-form/inputFields/TextUnitInput.module.css'
 import styles from './LinkedStudies.module.css'
 
-type option = 'oldStudy' | 'externalStudy'
+type PastStudyType = PastStudy['type']
 
 interface Props {
   transitionPlanId: string
@@ -29,42 +33,62 @@ interface Props {
   studyYear: Date
   open: boolean
   onClose: () => void
+  pastStudyToUpdate: PastStudy | null
+  linkedStudyIds?: string[]
 }
 
-const LinkingStudyModal = ({ transitionPlanId, studyId, studyYear, open, onClose }: Props) => {
+const LinkingStudyModal = ({
+  transitionPlanId,
+  studyId,
+  studyYear,
+  open,
+  onClose,
+  pastStudyToUpdate,
+  linkedStudyIds = [],
+}: Props) => {
   const { callServerFunction } = useServerFunction()
   const t = useTranslations('study.transitionPlan.trajectories.linkedStudies')
   const tUnit = useTranslations('study.results.units')
   const [linking, setLinking] = useState(false)
-  const [source, setSource] = useState<option>('oldStudy')
+  const [source, setSource] = useState<PastStudyType>(pastStudyToUpdate?.type ?? 'linked')
   const [oldSource, setOldSource] = useState('')
   const [studies, setStudies] = useState<Pick<FullStudy, 'id' | 'name'>[] | null>(null)
 
-  const previousYear = new Date(studyYear)
+  const currentStudyYear = studyYear.getFullYear()
+  const previousYear = new Date(currentStudyYear, 0, 1)
   previousYear.setFullYear(previousYear.getFullYear() - 1)
 
   const router = useRouter()
 
-  const { control, formState, getValues, setValue, reset, handleSubmit } = useForm<ExternalStudyCommand>({
-    resolver: zodResolver(ExternalStudyCommandValidation),
+  const { control, formState, getValues, setValue, reset, handleSubmit } = useForm<ExternalStudyFormInput>({
+    resolver: zodResolver(createExternalStudyCommandValidation(currentStudyYear)),
     mode: 'onBlur',
     reValidateMode: 'onChange',
-    defaultValues: {
-      transitionPlanId,
-    },
+    defaultValues: pastStudyToUpdate
+      ? {
+          transitionPlanId,
+          externalStudyId: pastStudyToUpdate.id,
+          name: pastStudyToUpdate.name,
+          date: new Date(pastStudyToUpdate.year, 0, 1),
+          totalCo2: pastStudyToUpdate.totalCo2,
+        }
+      : {
+          transitionPlanId,
+        },
   })
 
   useEffect(() => {
     const fetchStudies = async () => {
       const res = await getStudyPreviousOccurrences(studyId)
       if (res.success) {
-        setStudies(res.data)
+        const filteredStudies = res.data.filter((study) => !linkedStudyIds.includes(study.id))
+        setStudies(filteredStudies)
       }
     }
     if (studies === null) {
       fetchStudies()
     }
-  }, [studyId, studies])
+  }, [studyId, studies, linkedStudyIds])
 
   const linkOldBCStudy = async () => {
     setLinking(true)
@@ -75,40 +99,60 @@ const LinkingStudyModal = ({ transitionPlanId, studyId, studyYear, open, onClose
         onClose()
       },
       getErrorMessage: (errorMessage) => t(errorMessage),
-      onError: () => {
-        reset()
-        onClose()
-      },
     })
     setLinking(false)
   }
 
   const linkExternalStudy = async () => {
-    await callServerFunction(() => addExternalStudy(getValues()), {
-      onSuccess: () => {
-        router.refresh()
-      },
-      getErrorMessage: (errorMessage) => t(errorMessage),
-    })
-    reset()
-    onClose()
+    const formData = getValues()
+    const data = {
+      ...formData,
+      date: formData.date instanceof Date ? formData.date.toISOString() : formData.date,
+    }
+
+    if (pastStudyToUpdate) {
+      await callServerFunction(() => updateExternalStudy(data), {
+        onSuccess: () => {
+          router.refresh()
+          reset()
+          onClose()
+        },
+        getErrorMessage: (errorMessage) => t(errorMessage),
+      })
+    } else {
+      await callServerFunction(() => addExternalStudy(data), {
+        onSuccess: () => {
+          router.refresh()
+          reset()
+          onClose()
+        },
+        getErrorMessage: (errorMessage) => t(errorMessage),
+      })
+    }
   }
 
   return (
-    <Modal open={open} onClose={onClose} label="linking-study" title={t('linkStudy')}>
-      <Select
-        label={t('source')}
-        t={t}
-        value={source}
-        onChange={(event) => setSource(event.target.value as option)}
-        labelId="select-linked-study-source"
-        withLabel
-      >
-        <MenuItem value="oldStudy">{t('oldStudy')}</MenuItem>
-        <MenuItem value="externalStudy">{t('externalStudy')}</MenuItem>
-      </Select>
-      <div className="mt1">
-        {source === 'oldStudy' ? (
+    <Modal
+      open={open}
+      onClose={onClose}
+      label="linking-study"
+      title={pastStudyToUpdate ? t('editStudy') : t('linkStudy')}
+    >
+      {!pastStudyToUpdate && (
+        <Select
+          label={t('source')}
+          t={t}
+          value={source}
+          onChange={(event) => setSource(event.target.value as PastStudyType)}
+          labelId="select-linked-study-source"
+          withLabel
+        >
+          <MenuItem value="linked">{t('oldStudy')}</MenuItem>
+          <MenuItem value="external">{t('externalStudy')}</MenuItem>
+        </Select>
+      )}
+      <div className={!pastStudyToUpdate ? 'mt1' : ''}>
+        {source === 'linked' && !pastStudyToUpdate ? (
           <>
             <Select
               label={t('study')}
@@ -118,12 +162,18 @@ const LinkingStudyModal = ({ transitionPlanId, studyId, studyYear, open, onClose
               labelId="select-linked-old-study-source"
               withLabel
               fullWidth
+              disabled={!studies || studies.length === 0}
+              displayEmpty={studies && studies.length > 0 ? false : true} // Show placeholder if no studies are available
             >
-              {studies?.map((study) => (
-                <MenuItem key={study.id} value={study.id}>
-                  {study.name}
-                </MenuItem>
-              ))}
+              {!studies || studies.length === 0 ? (
+                <MenuItem value="">{t('noAvailableStudies')}</MenuItem>
+              ) : (
+                studies.map((study) => (
+                  <MenuItem key={study.id} value={study.id}>
+                    {study.name}
+                  </MenuItem>
+                ))
+              )}
             </Select>
             <div className="mt1 justify-end">
               <LoadingButton disabled={!oldSource} loading={linking} onClick={linkOldBCStudy}>
@@ -133,47 +183,50 @@ const LinkingStudyModal = ({ transitionPlanId, studyId, studyYear, open, onClose
           </>
         ) : (
           <Form onSubmit={handleSubmit(linkExternalStudy)} className={classNames(styles.form, 'grow justify-center')}>
-            <FormTextField
-              control={control}
-              name="name"
-              label={`${t('name')} *`}
-              placeholder={t('namePlaceholder')}
-              data-testid="link-external-study-name"
-            />
-            <div className="flex-col grow">
-              <span className="inputLabel bold mb-2">{`${t('date')} *`}</span>
-              <div className="flex grow relative">
-                <FormDatePicker
-                  control={control}
-                  className="grow"
-                  translation={t}
-                  name="date"
-                  views={['year']}
-                  maxDate={dayjs(previousYear)}
-                  fullWidth
-                  data-testid="link-external-study-date"
-                />
+            <div className="flex-col gapped1">
+              <FormTextField
+                control={control}
+                name="name"
+                label={`${t('name')} *`}
+                placeholder={t('namePlaceholder')}
+                data-testid="link-external-study-name"
+              />
+              <div className="flex-col grow">
+                <span className="inputLabel bold mb-2">{`${t('date')} *`}</span>
+                <div className="flex grow relative">
+                  <FormDatePicker
+                    control={control}
+                    className="grow"
+                    translation={t}
+                    name="date"
+                    views={['year']}
+                    maxDate={dayjs(previousYear)}
+                    fullWidth
+                    data-testid="link-external-study-date"
+                  />
+                </div>
               </div>
-            </div>
-            <div className="flex-col grow">
-              <span className="inputLabel bold mb-2">{`${t('totalCo2')} *`}</span>
-              <div className="flex grow relative">
-                <TextField
-                  type="number"
-                  className="grow"
-                  placeholder={t('totalCo2Placeholder')}
-                  onBlur={(event) => setValue('totalCo2', Number(event.target.value))}
-                  slotProps={{
-                    input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
-                  }}
-                />
-                <div className={textUnitStyles.unit}>{tUnit(StudyResultUnit.T)}</div>
+              <div className="flex-col grow">
+                <span className="inputLabel bold mb-2">{`${t('totalCo2')} *`}</span>
+                <div className="flex grow relative">
+                  <TextField
+                    type="number"
+                    className="grow"
+                    placeholder={t('totalCo2Placeholder')}
+                    defaultValue={pastStudyToUpdate?.totalCo2}
+                    onBlur={(event) => setValue('totalCo2', Number(event.target.value))}
+                    slotProps={{
+                      input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
+                    }}
+                  />
+                  <div className={textUnitStyles.unit}>{tUnit(StudyResultUnit.T)}</div>
+                </div>
               </div>
-            </div>
-            <div className="mt1 justify-end">
-              <LoadingButton type="submit" loading={formState.isSubmitting}>
-                {t('add')}
-              </LoadingButton>
+              <div className="mt1 justify-end">
+                <LoadingButton type="submit" loading={formState.isSubmitting}>
+                  {pastStudyToUpdate ? t('save') : t('add')}
+                </LoadingButton>
+              </div>
             </div>
           </Form>
         )}

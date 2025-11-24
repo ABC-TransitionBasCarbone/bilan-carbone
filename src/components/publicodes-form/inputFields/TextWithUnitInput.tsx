@@ -1,9 +1,9 @@
 import { TextFieldProps } from '@mui/material'
 import { EvaluatedNumberInput } from '@publicodes/forms'
 import classNames from 'classnames'
-import { InputHTMLAttributes, useMemo } from 'react'
+import { InputHTMLAttributes, useCallback, useMemo } from 'react'
 import DebouncedInput from '../../base/DebouncedInput'
-import styles from '../styles/TextWithUnitInput.module.css'
+import styles from './TextWithUnitInput.module.css'
 import { getInputFormatConfig, NumberInputFormat, TextInputFormat } from './textInputFormatConfig'
 import { BaseInputProps } from './utils'
 
@@ -39,6 +39,13 @@ const TextWithUnitInput = <RuleName extends string>({
     return { ...config.inputProps, ...formElementProps }
   }, [questionFormat])
 
+  const handleChange = useCallback(
+    (newValue: string) => {
+      onChange(formElement.id, newValue)
+    },
+    [onChange, formElement.id],
+  )
+
   return (
     <div className={classNames(styles.inputWithUnit, 'flex grow')}>
       <DebouncedInput
@@ -51,9 +58,7 @@ const TextWithUnitInput = <RuleName extends string>({
           // TODO: check number conversion correctness
           String(value ?? '')
         }
-        onChange={(newValue) => {
-          onChange(formElement.id, newValue)
-        }}
+        onChange={handleChange}
         disabled={disabled}
         debounce={300}
         sx={{

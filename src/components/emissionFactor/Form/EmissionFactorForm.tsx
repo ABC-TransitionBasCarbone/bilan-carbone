@@ -182,7 +182,7 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         mandatory
       />
       <MultiplePosts form={form} context="emissionFactor" />
-      <FormTextField control={control} name="comment" label={t('comment')} multiline rows={2} />
+      <FormTextField control={control} name="comment" label={t('comment')} multiline />
       <div className={classNames({ ['justify-between']: button === 'update' })}>
         {button === 'update' && (
           <LinkButton data-testid="emission-factor-cancel-update" href="/facteurs-d-emission">

@@ -80,17 +80,25 @@ const tiltEmissionFactorSubPostsMapping: Partial<Record<SubPost, SubPost[]>> = {
   [SubPost.UtilisationEnDependanceConsommationDeBiens]: subPostsByPostBC[Post.IntrantsBiensEtMatieres],
   [SubPost.UtilisationEnResponsabiliteConsommationDEnergie]: subPostsByPostBC[Post.Energies],
   [SubPost.UtilisationEnDependanceConsommationDEnergie]: subPostsByPostBC[Post.Energies],
-  [SubPost.UtilisationEnDependanceFuitesEtAutresConsommations]: subPostsByPostBC[Post.AutresEmissionsNonEnergetiques],
-  [SubPost.UtilisationEnResponsabiliteFuitesEtAutresConsommations]:
-    subPostsByPostBC[Post.AutresEmissionsNonEnergetiques],
+  [SubPost.UtilisationEnDependanceFuitesEtAutresConsommations]: [
+    ...(subPostsByPostBC[Post.AutresEmissionsNonEnergetiques] || []),
+    SubPost.FroidEtClim,
+    SubPost.EmissionsLieesALaProductionDeFroid,
+  ],
+  [SubPost.UtilisationEnResponsabiliteFuitesEtAutresConsommations]: [
+    ...(subPostsByPostBC[Post.AutresEmissionsNonEnergetiques] || []),
+    SubPost.FroidEtClim,
+    SubPost.EmissionsLieesALaProductionDeFroid,
+  ],
   [SubPost.UtilisationEnResponsabiliteConsommationNumerique]: [SubPost.Informatique, SubPost.UsagesNumeriques],
   [SubPost.UtilisationEnDependanceConsommationNumerique]: [SubPost.Informatique, SubPost.UsagesNumeriques],
+  [SubPost.FroidEtClim]: [SubPost.EmissionsLieesALaProductionDeFroid],
 }
 
-const getEmissionFactorSubPostMap = (subPost: SubPost, env: Environment) => {
+const getEmissionFactorSubPostMap = (subPost: SubPost, env: Environment): SubPost[] => {
   switch (env) {
     case Environment.TILT:
-      return tiltEmissionFactorSubPostsMapping[subPost] || [subPost]
+      return [subPost, ...(tiltEmissionFactorSubPostsMapping[subPost] || [])]
     default:
       return [subPost]
   }

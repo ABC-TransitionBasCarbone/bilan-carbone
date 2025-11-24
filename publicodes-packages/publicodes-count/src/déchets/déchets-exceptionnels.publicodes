@@ -1,0 +1,67 @@
+déchets . exceptionnels:
+  titre: Déchets exceptionnels
+  description: Impact annuels des déchets exceptionnels.
+  unité: kgCO2e
+  formule:
+    somme:
+      - lampe xenon
+      - matériel technique
+
+déchets . exceptionnels . lampe xenon:
+  titre: Lampes Xenon
+  description: Impact annuel des déchets de lampes Xenon.
+  formule:
+    produit:
+      - poids
+      - FE
+      - nombre
+  unité: kgCO2e
+  avec:
+    poids:
+      titre: Poids moyen
+      valeur: 0.86
+      unité: kg/unité
+      note: Hypothèse CUT
+
+    FE:
+      titre: Facteur d'émission
+      description: Facteur d'émission des lampes Xenon.
+      valeur: 50
+      unité: kgCO2e/kg
+      note: "Source : CUT v5.0"
+      meta:
+        id: 144
+
+    nombre:
+      titre: Nombre de lampes
+      question: Quelle quantité de lampes Xenon avez vous jeté cette année ?
+      unité: unité
+      note: |
+        Nous avons modifier la question pour ne pas faire apparaitre la date
+        dans la question pour le moment. (old: Quelle quantité de lampes Xenon
+        avez vous jeté en 2025 ?)
+
+déchets . exceptionnels . matériel technique:
+  titre: Matériel technique
+  description: Impact annuel des déchets de matériel technique (écrans, ordinateurs, etc.).
+  formule:
+    produit:
+      - quantité
+      - 0.001 tonne/kg
+      - FE
+  unité: kgCO2e
+  avec:
+    FE:
+      titre: Facteur d'émission
+      description: Facteur d'émission du matériel technique (écrans, ordinateurs, etc.).
+      valeur: 1995
+      unité: kgCO2e/tonne
+      note: "Source : Base Empreinte v23.5 - GT Déchets Base Carbone"
+      meta:
+        id: 34620
+
+    quantité:
+      question: Quelle quantité de matériel technique avez vous jeté cette année ?
+      note: |
+        Nous avons modifer la question pour ne pas faire apparaire la date dans la question poue le moment. (old: Quelle quantité de matériel technique avez vous jeté en 2025 ?)
+      unité: kg

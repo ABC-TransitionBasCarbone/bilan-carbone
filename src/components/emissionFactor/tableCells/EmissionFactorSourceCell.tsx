@@ -8,7 +8,7 @@ import { Import } from '@prisma/client'
 import { Getter } from '@tanstack/react-table'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import styles from '../EmissionFactorsTable.module.css'
 
 interface Props {
@@ -18,6 +18,7 @@ interface Props {
   getValue: Getter<string>
   setTargetedEmission: (emissionFactorId: string) => void
   setAction: (action: 'edit' | 'delete' | undefined) => void
+  hasActiveLicence: boolean
 }
 export const EmissionFactorSourceCell = ({
   fromModal,
@@ -26,21 +27,27 @@ export const EmissionFactorSourceCell = ({
   getValue,
   setTargetedEmission,
   setAction,
+  hasActiveLicence,
 }: Props) => {
   const t = useTranslations('emissionFactors.table')
 
+  const importedFrom = useMemo(() => getValue<Import>(), [getValue])
+  const canEdit = useMemo(
+    () => hasActiveLicence && !fromModal && isFromRightOrga,
+    [fromModal, hasActiveLicence, isFromRightOrga],
+  )
+
   const editEmissionFactor = useCallback(
     async (emissionFactorId: string, action: 'edit' | 'delete') => {
-      if (!(await canEditEmissionFactor(emissionFactorId))) {
+      if (!canEdit || !(await canEditEmissionFactor(emissionFactorId))) {
         return
       }
       setTargetedEmission(emissionFactorId)
       setAction(action)
     },
-    [setAction, setTargetedEmission],
+    [canEdit, setAction, setTargetedEmission],
   )
 
-  const importedFrom = getValue<Import>()
   switch (importedFrom) {
     case Import.BaseEmpreinte:
       return (
@@ -80,7 +87,7 @@ export const EmissionFactorSourceCell = ({
         <span className={classNames(styles.importFrom, 'flex-cc')}>
           <HomeWorkIcon />
           {t('Manual')}
-          {!fromModal && isFromRightOrga && (
+          {canEdit && (
             <>
               <MuiButton
                 aria-label={t('edit')}

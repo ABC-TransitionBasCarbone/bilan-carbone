@@ -18,7 +18,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@abc-transitionbascarbone/publicodes-count": ["./publicodes-packages/publicodes-count"]
     },
     "target": "ESNext"
   },
@@ -29,5 +30,5 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "publicodes-packages"]
 }

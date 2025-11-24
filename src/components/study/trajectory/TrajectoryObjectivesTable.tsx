@@ -5,6 +5,7 @@ import { TableActionButton } from '@/components/base/TableActionButton'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteObjective, deleteTrajectory } from '@/services/serverFunctions/trajectory'
+import { formatNumber } from '@/utils/number'
 import { getTrajectoryTypeLabel } from '@/utils/trajectory'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
@@ -190,7 +191,7 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, st
             return null
           }
 
-          return rate !== undefined ? `${(rate * 100).toFixed(1)}%` : null
+          return rate !== undefined ? `${formatNumber(rate * 100, 2)}%` : null
         },
       },
       {

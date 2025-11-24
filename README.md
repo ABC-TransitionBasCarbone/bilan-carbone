@@ -38,7 +38,17 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
    npx prisma db seed
    ```
 
-5. **Run the development server**
+5. **Set up Publicodes local development** (optionnal)
+
+   ```bash
+   # Recompile Publicodes rules (one time)
+   yarn publicodes-count:compile
+
+   # In an other terminal watch changes
+   yarn publicodes-count:watch
+   ```
+
+6. **Run the development server**
 
    ```bash
    yarn dev
@@ -113,6 +123,13 @@ yarn cypress --spec "src/tests/end-to-end/app/auth.cy.ts"
 
 # Open Cypress GUI
 yarn cypress:gui
+```
+
+### Run Publicodes tests
+
+```bash
+# Run tests
+yarn publicodes-count:test
 ```
 
 ## Deploy on Scalingo

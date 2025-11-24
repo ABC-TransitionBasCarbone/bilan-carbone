@@ -1,0 +1,334 @@
+salles et cabines . matériel technique . salles:
+  #TODO: Should be a list of salles
+  titre: Salles
+  formule: salle
+
+salles et cabines . matériel technique . salle:
+  titre: Salle
+  formule:
+    somme:
+      - projecteur
+      - écran
+      - fauteuils
+      - système son
+  unité: kgCO2e
+
+salles et cabines . matériel technique . salle . projecteur:
+  titre: Projecteur
+  formule:
+    variations:
+      - si: age > amortissement
+        alors: 0
+      - sinon:
+          produit:
+            - FE
+            - (1 an / amortissement)
+  avec:
+    age:
+      durée:
+        unité: an
+        depuis: année achat
+        jusqu'à: commun . année actuelle
+      arrondi: oui
+
+    amortissement:
+      valeur: 10
+      unité: an
+      note: La durée d'amortissement est la même pour tous les projecteurs.
+
+    année achat:
+      question: Année d'acquisition projecteur
+
+    FE:
+      titre: Facteur d'émission du projecteur
+      formule:
+        variations:
+          - si: type = "xénon"
+            alors: type . xénon . FE
+          - si: type = "laser"
+            alors: type . laser . FE
+      unité: kgCO2e
+
+salles et cabines . matériel technique . salle . projecteur . type:
+  titre: Type de projecteur
+  question: Projecteurs
+  une possibilité:
+    - xénon
+    - laser
+  avec:
+    xénon:
+      titre: Projecteur xénon
+
+    xénon . FE:
+      titre: Facteur d'émission du projecteur xénon
+      valeur: 12259
+      meta:
+        id: 107
+
+    laser:
+      titre: Projecteur laser
+
+    laser . FE:
+      titre: Facteur d'émission du projecteur laser
+      valeur: 3759
+      meta:
+        id: 108
+
+salles et cabines . matériel technique . salle . écran:
+  titre: Ecran
+  formule:
+    variations:
+      - si: age > amortissement
+        alors: 0
+      - sinon:
+          produit:
+            - FE
+            - surface écran
+            - (1 an / amortissement)
+  avec:
+    age:
+      durée:
+        unité: an
+        depuis: année achat
+        jusqu'à: commun . année actuelle
+      arrondi: oui
+
+    amortissement:
+      valeur: 10
+      unité: an
+      note: La durée d'amortissement est la même pour tous les écrans.
+
+    année achat:
+      question: Année d'acquisition écran
+
+    surface écran:
+      question: Surface de l'écran
+      unité: m2
+
+    FE:
+      titre: Facteur d'émission de l'écran
+      note: Les FE des 2 types d'écrans sont identiques ?
+      formule:
+        variations:
+          - si: type = "écran 2D"
+            alors: type . écran 2D . FE
+          - si: type = "écran 3D"
+            alors: type . écran 3D . FE
+      unité: kgCO2e/m2
+
+salles et cabines . matériel technique . salle . écran . type:
+  titre: Type d'écran
+  question: Écrans
+  une possibilité:
+    - écran 2D
+    - écran 3D
+  avec:
+    écran 2D:
+      titre: Écran 2D
+
+    écran 2D . FE:
+      titre: Facteur d'émission de l'écran 2D
+      valeur: 127.18
+      unité: kgCO2e/m2
+      meta:
+        id: 109
+
+    écran 3D:
+      titre: Écran 3D
+
+    écran 3D . FE:
+      titre: Facteur d'émission de l'écran 3D
+      valeur: 127.18
+      unité: kgCO2e/m2
+      meta:
+        id: 110
+
+salles et cabines . matériel technique . salle . fauteuils:
+  titre: Ecran
+  formule:
+    variations:
+      - si: age > amortissement
+        alors: 0
+      - sinon:
+          produit:
+            - FE
+            - nombre
+            - (1 an / amortissement)
+  avec:
+    age:
+      durée:
+        unité: an
+        depuis: année achat
+        jusqu'à: commun . année actuelle
+      arrondi: oui
+
+    amortissement:
+      valeur: 10
+      unité: an
+      note: La durée d'amortissement est la même pour tous les écrans.
+
+    année achat:
+      question: Année d'acquisition fauteuils
+
+    nombre:
+      question: Nombre de fauteuils
+
+    FE:
+      titre: Facteur d'émission des fauteuils
+      formule:
+        variations:
+          - si: type = "fauteuils classiques"
+            alors: type . fauteuils classiques . FE
+          - si: type = "fauteuils 4DX"
+            alors: type . fauteuils 4DX . FE
+      unité: kgCO2e
+
+salles et cabines . matériel technique . salle . fauteuils . type:
+  titre: Type de fauteuils
+  question: Fauteuils
+  une possibilité:
+    - fauteuils classiques
+    - fauteuils 4DX
+  avec:
+    fauteuils classiques:
+      titre: Fauteuils classiques
+
+    fauteuils classiques . FE:
+      titre: Facteur d'émission des fauteuils classiques
+      valeur: 197.43
+      unité: kgCO2e
+      meta:
+        id: 111
+
+    fauteuils 4DX:
+      titre: Fauteuils 4DX
+
+    fauteuils 4DX . FE:
+      titre: Facteur d'émission des fauteuils 4DX
+      valeur: 603.04
+      unité: kgCO2e
+      meta:
+        id: 112
+
+salles et cabines . matériel technique . salle . système son:
+  titre: Système son
+  formule:
+    variations:
+      - si: age > amortissement
+        alors: 0
+      - sinon:
+          produit:
+            - FE
+            - (1 an / amortissement)
+  avec:
+    age:
+      durée:
+        unité: an
+        depuis: année achat
+        jusqu'à: commun . année actuelle
+      arrondi: oui
+
+    amortissement:
+      valeur: 10
+      unité: an
+      note: La durée d'amortissement est la même pour tous les systèmes son.
+
+    année achat:
+      question: Année d'acquisition système son
+
+    FE:
+      titre: Facteur d'émission du système son
+      formule:
+        variations:
+          - si: type = "stéréo"
+            alors: type . stéréo . FE
+          - si: type = "dolby 51"
+            alors: type . dolby 51 . FE
+          - si: type = "dolby 71"
+            alors: type . dolby 71 . FE
+          - si: type = "dolby atmos"
+            alors: type . dolby atmos . FE
+          - si: type = "imax"
+            alors: type . imax . FE
+          - si: type = "auro 3dIce"
+            alors: type . auro 3dIce . FE
+          - si: type = "dtsx"
+            alors: type . dtsx . FE
+      unité: kgCO2e
+
+salles et cabines . matériel technique . salle . système son . type:
+  titre: Type de système son
+  question: Systèmes son
+  une possibilité:
+    - stéréo
+    - dolby 51
+    - dolby 71
+    - dolby atmos
+    - imax
+    - auro 3dIce
+    - dtsx
+  avec:
+    stéréo:
+      titre: Son Stéréo
+
+    stéréo . FE:
+      titre: Facteur d'émission du son stéréo
+      valeur: 1730.98
+      meta:
+        id: 113
+
+    dolby 51:
+      titre: Dolby 5.1
+
+    dolby 51 . FE:
+      titre: Facteur d'émission du Dolby 5.1
+      valeur: 4158.44
+      meta:
+        id: 114
+
+    dolby 71:
+      titre: Dolby 7.1
+
+    dolby 71 . FE:
+      titre: Facteur d'émission du Dolby 7.1
+      valeur: 5720.41
+      meta:
+        id: 115
+
+    dolby atmos:
+      titre: Dolby Atmos
+
+    dolby atmos . FE:
+      titre: Facteur d'émission du Dolby Atmos
+      valeur: 11795.61
+      meta:
+        id: 116
+
+    imax:
+      titre: IMAX
+
+    imax . FE:
+      titre: Facteur d'émission de l'IMAX
+      valeur: 9013.36
+      meta:
+        id: 117
+
+    auro 3dIce:
+      titre: Auro 3D / Ice
+
+    auro 3dIce . FE:
+      titre: Facteur d'émission de l'Auro 3D / Ice
+      valeur: 7998.61
+      meta:
+        id: 118
+
+    dtsx:
+      titre: |
+        DTS : X
+
+    dtsx . FE:
+      titre: |
+        Facteur d'émission du DTS : X
+      valeur: 11415.91
+      meta:
+        id: 119

@@ -1,19 +1,24 @@
+import { getOrganizationVersionById } from '@/db/organization'
+import { hasActiveLicence } from '@/utils/organization'
 import { Environment } from '@prisma/client'
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 import { Suspense } from 'react'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import EmissionFactors from '../emissionFactor/EmissionFactors'
-import withAuth from '../hoc/withAuth'
+import withAuth, { UserSessionProps } from '../hoc/withAuth'
 
 interface Props {
   userOrganizationId?: string
   environment: Environment
 }
 
-const EmissionFactorsPage = ({ userOrganizationId, environment }: Props) => {
-  const tNav = useTranslations('nav')
-  const t = useTranslations('emissionFactors')
+const EmissionFactorsPage = async ({ userOrganizationId, environment, user }: Props & UserSessionProps) => {
+  const tNav = await getTranslations('nav')
+  const t = await getTranslations('emissionFactors')
+
+  const userOrganization = await getOrganizationVersionById(user.organizationVersionId || '')
+  const activeLicence = !!userOrganization && hasActiveLicence(userOrganization)
 
   return (
     <>
@@ -22,7 +27,7 @@ const EmissionFactorsPage = ({ userOrganizationId, environment }: Props) => {
         title={t('title')}
         as="h1"
         actions={
-          userOrganizationId
+          userOrganizationId && activeLicence
             ? [
                 {
                   actionType: 'link',
@@ -35,7 +40,11 @@ const EmissionFactorsPage = ({ userOrganizationId, environment }: Props) => {
         }
       >
         <Suspense fallback={t('loading')}>
-          <EmissionFactors userOrganizationId={userOrganizationId} environment={environment} />
+          <EmissionFactors
+            userOrganizationId={userOrganizationId}
+            environment={environment}
+            hasActiveLicence={activeLicence}
+          />
         </Suspense>
       </Block>
     </>
