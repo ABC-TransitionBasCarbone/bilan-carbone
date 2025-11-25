@@ -1,6 +1,6 @@
 déchets . ordinaires:
   titre: Déchets ordinaires
-  unité: kgCO2e/an
+  unité: kgCO2e
   valeur:
     somme:
       - ordures ménagères
@@ -8,145 +8,145 @@ déchets . ordinaires:
       - biodéchets
       - verre
 
+déchets . ordinaires . densité par défaut:
+  description: Densité par défaut des déchets.
+  valeur: 0.3
+  unité: kg/l
+
 # NOTE: pourra être factorisé avec une formule générique (nb * taille * FE /
 # fréquence) avec un appel à `contexte` pour chaque sous-poste.
 déchets . ordinaires . ordures ménagères:
   titre: Ordures ménagères (déchets non triés / sans filière)
-  unité: kgCO2e/an
+  unité: kgCO2e
   valeur:
     produit:
-      - nb bennes
+      - nombre bennes
       - taille benne
-      - FE
+      - densité par défaut
       - fréquence ramassage
-      - commun . nombre de semaines par an
+      - 0.001 tonne/kg
+      - FE
+      - commun . nombre de semaines par an * 1 semaine
   avec:
-    nb bennes:
+    nombre bennes:
       question: Nombre de bennes
-      par défaut: 0
-
+      unité: benne/ramassage
     taille benne:
       question: Taille de la benne
       description: Capacité d'une benne à ordures ménagères.
-      par défaut: 0
-      unité: l
-
+      unité: l/benne
     fréquence ramassage:
       titre: Fréquence de ramassage
       description: Fréquence de ramassage des ordures ménagères par semaine.
-      par défaut: 1
-      unité: /semaine
-
+      unité: ramassage/semaine
     FE:
       titre: Facteur d'émission
       description: Facteur d'émission des ordures ménagères (déchets non triés / sans filière).
-      valeur: 0.04 # TODO: extraire le FE à partir de l'id
-      unité: kgCO2e/l
+      valeur: 386
+      unité: kgCO2e/tonne
+      note: "Source : Base Empreinte v23.5 - GT Déchets Base Carbone - CITEO"
       meta:
         id: 34654
 
 déchets . ordinaires . emballages et papier:
   titre: Emballages et papier (plastique, métal, papier et carton)
-  unité: kgCO2e/an
+  unité: kgCO2e
   valeur:
     produit:
-      - nb bennes
+      - nombre bennes
       - taille benne
-      - FE
+      - densité par défaut
       - fréquence ramassage
-      - commun . nombre de semaines par an
+      - 0.001 tonne/kg
+      - FE
+      - commun . nombre de semaines par an * 1 semaine
   avec:
-    nb bennes:
+    nombre bennes:
       question: Nombre de bennes
-      par défaut: 0
-
+      unité: benne/ramassage
     taille benne:
       question: Taille de la benne
       description: Capacité d'une benne à ordures ménagères.
-      par défaut: 0
-      unité: l
-
+      unité: l/benne
     fréquence ramassage:
       question: Fréquence de ramassage
       description: Fréquence de ramassage des ordures ménagères par semaine.
-      par défaut: 1
-      unité: /semaine
-
+      unité: ramassage/semaine
     FE:
       titre: Facteur d'émission
       description: Facteur d'émission des emballages et papier (plastique, métal, papier et carton).
-      valeur: 0.04 # TODO: extraire le FE à partir de l'id
-      unité: kgCO2e/l
+      valeur: 737
+      unité: kgCO2e/tonne
+      note: "Source : Base Empreinte v23.5 - GT Déchets Base Carbone - CITEO"
       meta:
         id: 34486
 
 déchets . ordinaires . biodéchets:
   titre: Biodéchets (restes alimentaires)
-  unité: kgCO2e/an
+  unité: kgCO2e
   valeur:
     produit:
-      - nb bennes
+      - nombre bennes
       - taille benne
-      - FE
+      - densité par défaut
       - fréquence ramassage
-      - commun . nombre de semaines par an
+      - 0.001 tonne/kg
+      - FE
+      - commun . nombre de semaines par an * 1 semaine
   avec:
-    nb bennes:
+    nombre bennes:
       question: Nombre de bennes
-      par défaut: 0
-
+      unité: benne/ramassage
     taille benne:
       question: Taille de la benne
       description: Capacité d'une benne à ordures ménagères.
-      par défaut: 0
-      unité: l
-
+      unité: l/benne
     fréquence ramassage:
       question: Fréquence de ramassage
       description: Fréquence de ramassage des ordures ménagères par semaine.
-      par défaut: 0
-      unité: /semaine
-
+      unité: ramassage/semaine
     FE:
       titre: Facteur d'émission
       description: Facteur d'émission des biodéchets (restes alimentaires).
-      valeur: 0.04 # TODO: extraire le FE à partir de l'id
-      unité: kgCO2e/l
+      valeur: 424
+      unité: kgCO2e/tonne
+      note: "Source : Base Empreinte v23.5 - ADEME"
       meta:
         id: 22040
 
 déchets . ordinaires . verre:
   titre: Déchets verre
-  unité: kgCO2e/an
+  unité: kgCO2e
   valeur:
     produit:
-      - nb bennes
+      - nombre bennes
       - taille benne
-      - FE
+      - densité
       - fréquence ramassage
-      - commun . nombre de semaines par an
+      - 0.001 tonne/kg
+      - FE
+      - commun . nombre de semaines par an * 1 semaine
   avec:
-    nb bennes:
+    nombre bennes:
       question: Nombre de bennes
-      par défaut: 0
-
+      unité: benne/ramassage
     taille benne:
       question: Taille de la benne
       description: Capacité d'une benne à ordures ménagères.
-      par défaut: 0
-      unité: l
-
+      unité: l/benne
     fréquence ramassage:
       question: Fréquence de ramassage
       description: Fréquence de ramassage des ordures ménagères par semaine.
-      par défaut: 1
-      unité: /semaine
-
+      unité: ramassage/semaine
+    densité:
+      description: Densité du verre.
+      valeur: 0.04
+      unité: kg/l
     FE:
       titre: Facteur d'émission
       description: Facteur d'émission des déchets de verre.
-      valeur: 0.04
-      unité: kgCO2e/l
+      valeur: 496
+      unité: kgCO2e/tonne
+      note: "Source : Base Empreinte v23.5 - GT Déchets Base Carbone - CITEO"
       meta:
-        # NOTE: codé en dur dans le code source
         id: 34478
