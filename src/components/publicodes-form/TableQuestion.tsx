@@ -49,7 +49,12 @@ export default function TableQuestion<RuleName extends string>({
           required: formElement.required,
         }
 
-        return <InputField formElement={formElement} formElementProps={formElementProps} onChange={onChange} />
+        // TODO: could we have a cleaner way to distinguish between value and inputs ?
+        return colIndex === 0 ? (
+          <p>{formElement.label}</p>
+        ) : (
+          <InputField formElement={formElement} formElementProps={formElementProps} onChange={onChange} />
+        )
       },
     }))
   }, [headers, onChange])

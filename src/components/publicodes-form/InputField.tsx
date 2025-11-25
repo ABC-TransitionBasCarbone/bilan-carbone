@@ -16,7 +16,6 @@ export default function InputField<RuleName extends string>({
   onChange,
 }: PublicodesInputFieldProps<RuleName>) {
   /* eslint-disable no-fallthrough */
-  console.log('formElement', formElement)
   switch (formElement.element) {
     case 'input':
       switch (formElement.type) {
