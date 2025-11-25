@@ -26,19 +26,22 @@ déchets . ordinaires . ordures ménagères:
       - fréquence ramassage
       - 0.001 tonne/kg
       - FE
-      - commun . nombre de semaines par an * 1 semaine
+      - commun . nombre de semaines par an
   avec:
     nombre bennes:
       question: Nombre de bennes
       unité: benne/ramassage
+
     taille benne:
       question: Taille de la benne
       description: Capacité d'une benne à ordures ménagères.
       unité: l/benne
+
     fréquence ramassage:
       titre: Fréquence de ramassage
       description: Fréquence de ramassage des ordures ménagères par semaine.
       unité: ramassage/semaine
+
     FE:
       titre: Facteur d'émission
       description: Facteur d'émission des ordures ménagères (déchets non triés / sans filière).
@@ -59,19 +62,22 @@ déchets . ordinaires . emballages et papier:
       - fréquence ramassage
       - 0.001 tonne/kg
       - FE
-      - commun . nombre de semaines par an * 1 semaine
+      - commun . nombre de semaines par an
   avec:
     nombre bennes:
       question: Nombre de bennes
       unité: benne/ramassage
+
     taille benne:
       question: Taille de la benne
       description: Capacité d'une benne à ordures ménagères.
       unité: l/benne
+
     fréquence ramassage:
       question: Fréquence de ramassage
       description: Fréquence de ramassage des ordures ménagères par semaine.
       unité: ramassage/semaine
+
     FE:
       titre: Facteur d'émission
       description: Facteur d'émission des emballages et papier (plastique, métal, papier et carton).
@@ -92,19 +98,22 @@ déchets . ordinaires . biodéchets:
       - fréquence ramassage
       - 0.001 tonne/kg
       - FE
-      - commun . nombre de semaines par an * 1 semaine
+      - commun . nombre de semaines par an
   avec:
     nombre bennes:
       question: Nombre de bennes
       unité: benne/ramassage
+
     taille benne:
       question: Taille de la benne
       description: Capacité d'une benne à ordures ménagères.
       unité: l/benne
+
     fréquence ramassage:
       question: Fréquence de ramassage
       description: Fréquence de ramassage des ordures ménagères par semaine.
       unité: ramassage/semaine
+
     FE:
       titre: Facteur d'émission
       description: Facteur d'émission des biodéchets (restes alimentaires).
@@ -125,23 +134,27 @@ déchets . ordinaires . verre:
       - fréquence ramassage
       - 0.001 tonne/kg
       - FE
-      - commun . nombre de semaines par an * 1 semaine
+      - commun . nombre de semaines par an
   avec:
     nombre bennes:
       question: Nombre de bennes
       unité: benne/ramassage
+
     taille benne:
       question: Taille de la benne
       description: Capacité d'une benne à ordures ménagères.
       unité: l/benne
+
     fréquence ramassage:
       question: Fréquence de ramassage
       description: Fréquence de ramassage des ordures ménagères par semaine.
       unité: ramassage/semaine
+
     densité:
       description: Densité du verre.
       valeur: 0.04
       unité: kg/l
+
     FE:
       titre: Facteur d'émission
       description: Facteur d'émission des déchets de verre.

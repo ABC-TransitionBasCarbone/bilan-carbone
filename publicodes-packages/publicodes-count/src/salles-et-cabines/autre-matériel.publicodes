@@ -11,13 +11,13 @@ salles et cabines . autre matériel . lunettes 3D:
     produit:
       - FE
       - nombre
+  unité: kgCO2e
   avec:
     FE:
       valeur: 1.31
       unité: kgCO2e/unité
       meta:
         id: 139
-  unité: kgCO2e
 
 salles et cabines . autre matériel . lunettes 3D . nombre:
   question: De combien de lunettes 3D disposez-vous ?

@@ -10,16 +10,23 @@ salles et cabines . matériel technique . films . nombre films dématérialisés
   question: Combien de films avez-vous reçu en dématérialisé cette année ?
   plafond: général . nombre de films programmés / 1 film
   note: |
-    Nous avons changé de wording de la question pour ne pas faire apparaître la date en dur (old: Combien de films avez-vous reçu en dématérialisé en 2025 ?)
-    Il semble que la question "Combien de films recevez vous sur DCP physique par an ?" n'est plus posée et est déduite du nombre de films programmés totaux moins le nombre de films dématérialisés.
+    Nous avons changé de wording de la question pour ne pas faire apparaître la
+    date en dur (old: Combien de films avez-vous reçu en dématérialisé en 2025
+    ?)
+
+    Il semble que la question "Combien de films recevez vous sur DCP physique
+    par an ?" n'est plus posée et est déduite du nombre de films programmés
+    totaux moins le nombre de films dématérialisés.
   description: |
-    Vous pouvez par défaut renseigner 90% des films programmés totaux (ce nombre de films est disponible dans vos données générales), qui est la valeur moyenne issue des Bilans Carbone® qui ont étés réalisés sur plusieurs cinémas français. Si vous détenez une information plus précise pour votre cinéma, nous vous invitons à l'utiliser plutôt que la valeur par défaut.
+    Vous pouvez par défaut renseigner 90% des films programmés totaux (ce
+    nombre de films est disponible dans vos données générales), qui est la
+    valeur moyenne issue des Bilans Carbone® qui ont étés réalisés sur
+    plusieurs cinémas français. Si vous détenez une information plus précise
+    pour votre cinéma, nous vous invitons à l'utiliser plutôt que la valeur par
+    défaut.
 
 salles et cabines . matériel technique . films . dématérialisés:
-  formule:
-    produit:
-      - FE
-      - taille fichiers transférés
+  formule: taille fichiers transférés * FE
   avec:
     taille fichiers transférés:
       formule:
@@ -29,8 +36,9 @@ salles et cabines . matériel technique . films . dématérialisés:
           - 4 Go * nombre films dématérialisés
       unité: Go
       note: |
-        Formule sombre.. 0,00921*90*2*nombre de films*90% + 1,5*nombre de films*2*0,00921+2*nombre de films*2*0,00921
-        Manque le 90% ?
+        Formule sombre.. 0,00921*90*2*nombre de films*90% + 1,5*nombre de
+        films*2*0,00921+2*nombre de films*2*0,00921 Manque le 90% ?
+
     FE:
       valeur: 0.00921
       unité: kgCO2e/Go
@@ -40,6 +48,7 @@ salles et cabines . matériel technique . films . dématérialisés:
 salles et cabines . matériel technique . films . DCP:
   titre: Film phyisque (Digital Cinema Package)
   # TODO: Where does / 1000 come from ?
+  # NOTE(Emile): it seems to be a conversion from tCO2e to kgCO2e?
   formule:
     produit:
       - général . nombre de films programmés - nombre films dématérialisés
