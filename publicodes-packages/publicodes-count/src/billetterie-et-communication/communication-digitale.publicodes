@@ -1,0 +1,83 @@
+billetterie et communication . communication digitale:
+  titre: Communication digitale
+  formule:
+    somme:
+      - newsletters
+      - affichage dynamique
+      - écrans
+      - affichage extérieur
+  unité: kgCO2e
+
+billetterie et communication . communication digitale . newsletters:
+  titre: Newsletters
+  formule:
+    produit:
+      - nombre
+      - destinataires
+      - FE
+  avec:
+    nombre:
+      question: Combien de newsletters ont été envoyées cette annnée ?
+      note: |
+        Pour le moment, nous avons modifer le wording pour ne pas faire apparaître la date da ns la question (old: Combien de newsletters ont été envoyées en 2025 ?)
+    destinataires:
+      question: En moyenne, à combien de personnes sont adressées ces newsletters ?
+    FE:
+      valeur: 0.00471
+      unité: kgCO2e
+      meta:
+        id: 120
+
+billetterie et communication . communication digitale . affichage dynamique:
+  titre: Affichage dynamique
+  note: |
+    TODO: Il semble qu'il manque les 5 ans d'amortissement
+  formule:
+    produit:
+      - nombre
+      - FE
+  avec:
+    nombre:
+      question: Combien de caissons d’affichage dynamique sont présents dans le cinéma ?
+      unité: unité
+    FE:
+      valeur: 892.25
+      unité: kgCO2e/unité
+      meta:
+        id: 121
+
+billetterie et communication . communication digitale . écrans:
+  titre: Écrans
+  note: |
+    TODO: Il semble qu'il manque les 5 ans d'amortissement
+  formule:
+    produit:
+      - nombre
+      - FE
+  avec:
+    nombre:
+      question: Combien d’écrans se trouvent dans les espaces de circulation ?
+      unité: unité
+    FE:
+      valeur: 248.18
+      unité: kgCO2e/unité
+      meta:
+        id: 27006
+
+billetterie et communication . communication digitale . affichage extérieur:
+  titre: Affichage extérieur
+  note: |
+    TODO: Il semble qu'il manque les 5 ans d'amortissement
+  formule:
+    produit:
+      - surface
+      - FE
+  avec:
+    surface:
+      question: Si le cinéma dispose d'un affichage extérieur, quelle est sa surface ?
+      unité: m2
+    FE:
+      valeur: 379.05
+      unité: kgCO2e/m2
+      meta:
+        id: 122
