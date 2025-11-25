@@ -1,0 +1,315 @@
+fonctionnement . activités de bureau:
+  titre: Activités de bureau
+  formule:
+    somme:
+      - petites fournitures
+      - services
+      - informatique
+  unité: kgCO2e
+
+fonctionnement . activités de bureau . petites fournitures:
+  titre: Petites fournitures de bureau
+  formule:
+    produit:
+      - montant
+      - FE
+  avec:
+    montant:
+      question: |
+        Quel montant avez-vous dépensé en petites fournitures de bureau ? (Exemples: crayon, cartouche d’encre, papier hors programme, cahier, etc.)
+      unité: €
+    FE:
+      valeur: 0.367
+      unité: kgCO2e/€
+      meta:
+        id: 20556
+
+fonctionnement . activités de bureau . services:
+  titre: Services
+  formule:
+    produit:
+      - montant
+      - FE
+  note: Conversion auto €/k€ publicodes.
+  avec:
+    montant:
+      question: Quel montant avez-vous dépensé en services ?
+      description: |
+        Les services incluent par exemple les dépenses de ménage, sécurité, comptabilité, frais bancaires, etc. Vous pouvez utiliser une valeur par défaut pour cette réponse (25286€) qui est issue des Bilans Carbone® qui ont étés réalisés sur plusieurs cinémas français. Si vous détenez une information plus précise pour votre cinéma, nous vous invitons à l'utiliser plutôt que la valeur par défaut.
+      valeur: 10
+      unité: €
+    FE:
+      valeur: 67
+      unité: kgCO2e/k€
+      meta:
+        id: 43545
+
+fonctionnement . activités de bureau . informatique:
+  titre: Informatique
+  unité: kgCO2e
+  question: Pour chacun de ces équipements informatiques, veuillez indiquer leur nombre et leur date d'achat ou durée de location
+  description: |
+    'Si l'équipement concerné est acheté, merci de ne pas remplir le champ "Durée de location". Si l'équipement concerné est loué de manière ponctuelle, merci de ne pas remplir le champ "Date d'achat". Si vous louez un équipement pour de longues durées ou de manière continue, nous vous recommandons de le considérer comme acheté (à la date de la première année de location).'
+  note: |
+    La durée de location prévaut sur la date d'achat.
+  # TODO: Should be a list of equipment
+  formule: empreinte équipement
+
+fonctionnement . activités de bureau . informatique . empreinte équipement:
+  titre: Empreinte appareil
+  formule:
+    variations:
+      - si: équipement = "ordinateurs fixes"
+        alors: ordinateurs fixes
+      - si: équipement = "ordinateurs portables"
+        alors: ordinateurs portables
+      - si: équipement = "photocopieurs"
+        alors: photocopieurs
+      - si: équipement = "imprimantes"
+        alors: imprimantes
+      - si: équipement = "téléphones fixes"
+        alors: téléphones fixes
+      - si: équipement = "téléphones portables"
+        alors: téléphones portables
+      - si: équipement = "tablettes"
+        alors: tablettes
+  unité: kgCO2e
+
+fonctionnement . activités de bureau . informatique . équipement:
+  titre: Type dd'équipement informatique
+  question: Type d'équipement informatique
+  une possibilité:
+    - ordinateurs fixes
+    - ordinateurs portables
+    - photocopieurs
+    - imprimantes
+    - téléphones fixes
+    - téléphones portables
+    - tablettes
+  avec:
+    ordinateurs fixes:
+      titre: Ordinateurs fixes
+    ordinateurs portables:
+      titre: Ordinateurs portables
+    photocopieurs:
+      titre: Photocopieurs
+    imprimantes:
+      titre: Imprimantes
+    téléphones fixes:
+      titre: Téléphones fixes
+    téléphones portables:
+      titre: Téléphones portables
+    tablettes:
+      titre: Tablettes
+
+fonctionnement . activités de bureau . informatique . appareil:
+  titre: Empreinte appareil informatique type
+  formule:
+    variations:
+      - si:
+          est défini: durée location
+        alors:
+          produit:
+            - nb appareils
+            - FE
+            - (durée location / (commun . nombre de jours par an * 1 /an * amortissement))
+      - sinon:
+          variations:
+            - si: age > amortissement
+              alors: 0
+            - sinon:
+                produit:
+                  - nb appareils
+                  - FE
+                  - (1 an / amortissement)
+  unité: kgCO2e
+  avec:
+    age:
+      durée:
+        unité: an
+        depuis: année achat
+        jusqu'à: commun . année actuelle
+      arrondi: oui
+    nb appareils:
+      question: Nombre d'appareils
+    année achat:
+      non applicable si:
+        est défini: durée location
+      question: Année d'achat des appareils
+    durée location:
+      question: Durée de location des appareils (jours à l'année)
+      unité: jour
+    amortissement:
+      valeur: 5
+      unité: an
+      note: La durée d'amortissement est la même pour tous les appareils informatiques.
+    FE:
+      unité: kgCO2e
+
+fonctionnement . activités de bureau . informatique . ordinateurs fixes:
+  titre: Ordinateurs fixes
+  formule: appareil
+  contexte:
+    appareil . nb appareils: nombre
+    appareil . année achat: année achat
+    appareil . durée location: durée location
+    appareil . FE: FE
+  avec:
+    FE:
+      valeur: 169
+      unité: kgCO2e
+      meta:
+        id: 27003
+    nombre:
+      question: Nombre d'ordinateurs fixes
+    durée location:
+      question: Durée de location des ordinateurs fixes (jours à l'année)
+      unité: jour
+    année achat:
+      non applicable si:
+        est défini: durée location
+      question: Année d'achat des ordinateurs fixes
+
+fonctionnement . activités de bureau . informatique . ordinateurs portables:
+  titre: Ordinateurs portables
+  formule: appareil
+  contexte:
+    appareil . nb appareils: nombre
+    appareil . année achat: année achat
+    appareil . durée location: durée location
+    appareil . FE: FE
+  avec:
+    FE:
+      valeur: 156.24
+      unité: kgCO2e
+      meta:
+        id: 27002
+    nombre:
+      question: Nombre d'ordinateurs portables
+    durée location:
+      question: Durée de location des ordinateurs portables (jours à l'année)
+      unité: jour
+    année achat:
+      non applicable si:
+        est défini: durée location
+      question: Année d'achat des ordinateurs portables
+
+fonctionnement . activités de bureau . informatique . photocopieurs:
+  titre: Photocopieurs
+  formule: appareil
+  contexte:
+    appareil . nb appareils: nombre
+    appareil . année achat: année achat
+    appareil . durée location: durée location
+    appareil . FE: FE
+  avec:
+    FE:
+      valeur: 2935
+      unité: kgCO2e
+      meta:
+        id: 20591
+    nombre:
+      question: Nombre de photocopieurs
+    durée location:
+      question: Durée de location des photocopieurs (jours à l'année)
+      unité: jour
+    année achat:
+      non applicable si:
+        est défini: durée location
+      question: Année d'achat des photocopieurs
+
+fonctionnement . activités de bureau . informatique . imprimantes:
+  titre: Imprimantes
+  formule: appareil
+  contexte:
+    appareil . nb appareils: nombre
+    appareil . année achat: année achat
+    appareil . durée location: durée location
+    appareil . FE: FE
+  avec:
+    FE:
+      valeur: 87.84
+      unité: kgCO2e
+      meta:
+        id: 27027
+    nombre:
+      question: Nombre d'imprimantes
+    durée location:
+      question: Durée de location des imprimantes (jours à l'année)
+      unité: jour
+    année achat:
+      non applicable si:
+        est défini: durée location
+      question: Année d'achat des imprimantes
+
+fonctionnement . activités de bureau . informatique . téléphones fixes:
+  titre: Téléphones fixes
+  formule: appareil
+  contexte:
+    appareil . nb appareils: nombre
+    appareil . année achat: année achat
+    appareil . durée location: durée location
+    appareil . FE: FE
+  avec:
+    FE:
+      valeur: 17
+      unité: kgCO2e
+      meta:
+        id: 20614
+    nombre:
+      question: Nombre de téléphones fixes
+    durée location:
+      question: Durée de location des téléphones fixes (jours à l'année)
+      unité: jour
+    année achat:
+      non applicable si:
+        est défini: durée location
+      question: Année d'achat des téléphones fixes
+
+fonctionnement . activités de bureau . informatique . téléphones portables:
+  titre: Téléphones portables
+  formule: appareil
+  contexte:
+    appareil . nb appareils: nombre
+    appareil . année achat: année achat
+    appareil . durée location: durée location
+    appareil . FE: FE
+  avec:
+    FE:
+      valeur: 16.5209
+      unité: kgCO2e
+      meta:
+        id: 27010
+    nombre:
+      question: Nombre de téléphones portables
+    durée location:
+      question: Durée de location des téléphones portables (jours à l'année)
+      unité: jour
+    année achat:
+      non applicable si:
+        est défini: durée location
+      question: Année d'achat des téléphones portables
+
+fonctionnement . activités de bureau . informatique . tablettes:
+  titre: Tablettes
+  formule: appareil
+  contexte:
+    appareil . nb appareils: nombre
+    appareil . année achat: année achat
+    appareil . durée location: durée location
+    appareil . FE: FE
+  avec:
+    FE:
+      valeur: 63.187
+      unité: kgCO2e
+      meta:
+        id: 27007
+    nombre:
+      question: Nombre de tablettes
+    durée location:
+      question: Durée de location des tablettes (jours à l'année)
+      unité: jour
+    année achat:
+      non applicable si:
+        est défini: durée location
+      question: Année d'achat des tablettes
