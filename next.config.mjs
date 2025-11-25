@@ -16,8 +16,10 @@ const nextConfig = {
   images: {
     remotePatterns: [{ hostname: scalewayUrl }],
   },
+  // cacheComponents: true, // Next 16 feature disabled for now - requires architectural changes to withAuth HOC
   experimental: {
     serverActions: { bodySizeLimit: '5mb' },
+    turbopackFileSystemCacheForDev: true,
   },
   transpilePackages: ['mui-color-input'],
   reactStrictMode: true,
