@@ -16,16 +16,10 @@ export interface QuestionContainerProps {
   label: string
   helperText?: string
   children: React.ReactNode
-  // NOTE: how and when is it used?
-  showResults?: boolean
-  // results?: EmissionResults
   saveStatus?: FieldSaveStatus
 }
 
 /**
- * A container component for displaying a question with its label, optional
- * helper text, and save status indicator.
- *
  * NOTE: for now, this is a simple copy-paste from ../dynamic-form/QuestionContainer.tsx
  */
 const QuestionContainer = ({
@@ -33,7 +27,6 @@ const QuestionContainer = ({
   helperText,
   children,
   saveStatus = { status: 'saved' },
-  /* showResults  results, saveStatus */
 }: QuestionContainerProps) => {
   const tGlossary = useTranslations('questions.glossary')
   const [glossary, setGlossary] = useState('')
