@@ -47,10 +47,10 @@ export default function PublicodesForm<RuleName extends string, S extends Situat
   }, [formBuilder, formState])
 
   const handleFieldChange = useCallback(
-    (fieldName: RuleName, value: string | number | boolean | undefined) => {
+    (ruleName: RuleName, value: string | number | boolean | undefined) => {
       setFormState((currentState) => {
-        const newState = formBuilder.handleInputChange(currentState, fieldName, value)
-        onFieldChange?.(fieldName, value, newState)
+        const newState = formBuilder.handleInputChange(currentState, ruleName, value)
+        onFieldChange?.(ruleName, value, newState)
         return newState
       })
     },
