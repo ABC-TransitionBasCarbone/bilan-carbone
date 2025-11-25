@@ -17,7 +17,7 @@ export interface PublicodesSubPostFormProps {
  * Specific {@link PublicodesForm} for CUT. Target rules are determined based
  * on the given `subPost`.
  */
-const PublicodesSubPostForm = ({ subPost, study, studySiteId }: PublicodesSubPostFormProps) => {
+const PublicodesSubPostForm = ({ subPost }: PublicodesSubPostFormProps) => {
   const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
 
   // const [isLoading, setIsLoading] = useState(true)
