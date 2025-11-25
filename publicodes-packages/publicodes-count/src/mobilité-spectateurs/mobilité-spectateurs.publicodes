@@ -392,7 +392,5 @@ mobilité spectateurs . mobilité spectateurs . précision . estimation . emprei
       meta:
         id: 27977
     FE TGV:
-      valeur: 0.00293
+      valeur: commun . FE . moyen de transport . TGV
       unité: kgCO2e/km
-      meta:
-        id: 43256
