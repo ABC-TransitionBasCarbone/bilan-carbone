@@ -20,3 +20,9 @@ général . nombre de films programmés:
   question: Nombre de films programmés
   par défaut: 1
   unité: film
+
+général . distance depuis paris:
+  question: Distance depuis Paris
+  par défaut: 100
+  unité: km
+  # TODO: How to deal with it ?
