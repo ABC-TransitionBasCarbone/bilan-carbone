@@ -93,6 +93,7 @@ const SUBPOST_TO_RULENAME: Record<SubPost, CutRuleName | undefined> = {
   TransportFabricationDesVehicules: undefined,
   RepasPrisParLesSalaries: undefined,
   RepasPrisParLesBenevoles: undefined,
+  RepasPrisParLesBeneficiaires: undefined,
   UtilisationEnResponsabiliteConsommationDeBiens: undefined,
   UtilisationEnResponsabiliteConsommationNumerique: undefined,
   UtilisationEnResponsabiliteConsommationDEnergie: undefined,
