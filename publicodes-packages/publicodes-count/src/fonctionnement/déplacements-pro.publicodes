@@ -38,7 +38,7 @@ fonctionnement . déplacements pro . déplacement type . repas:
       - nombre occurences
       - nombre de nuitées
       - 2 repas/jour
-      - commun . FE repas
+      - commun . FE . repas
 
 fonctionnement . déplacements pro . déplacement type . transport:
   formule:
@@ -55,29 +55,29 @@ fonctionnement . déplacements pro . déplacement type . transport:
       formule:
         variations:
           - si: moyen de transport = "RER et transilien"
-            alors: commun . moyen de transport . RER et transilien . FE
+            alors: commun . FE . moyen de transport . RER et transilien
           - si: moyen de transport = "métro ou tram"
-            alors: commun . moyen de transport . métro ou tram . FE
+            alors: commun . FE . moyen de transport . métro ou tram
           - si: moyen de transport = "bus"
-            alors: commun . moyen de transport . bus . FE
+            alors: commun . FE . moyen de transport . bus
           - si: moyen de transport = "vélo électrique"
-            alors: commun . moyen de transport . vélo électrique . FE
+            alors: commun . FE . moyen de transport . vélo électrique
           - si: moyen de transport = "voiture diesel"
-            alors: commun . moyen de transport . voiture diesel . FE
+            alors: commun . FE . moyen de transport . voiture diesel
           - si: moyen de transport = "voiture essence"
-            alors: commun . moyen de transport . voiture essence . FE
+            alors: commun . FE . moyen de transport . voiture essence
           - si: moyen de transport = "voiture hybride"
-            alors: commun . moyen de transport . voiture hybride . FE
+            alors: commun . FE . moyen de transport . voiture hybride
           - si: moyen de transport = "voiture électrique"
-            alors: commun . moyen de transport . voiture électrique . FE
+            alors: commun . FE . moyen de transport . voiture électrique
           - si: moyen de transport = "moto"
-            alors: commun . moyen de transport . moto . FE
+            alors: commun . FE . moyen de transport . moto
           - si: moyen de transport = "scooter"
-            alors: commun . moyen de transport . scooter . FE
+            alors: commun . FE . moyen de transport . scooter
           - si: moyen de transport = "TGV"
-            alors: commun . moyen de transport . TGV . FE
+            alors: commun . FE . moyen de transport . TGV
           - si: moyen de transport = "avion"
-            alors: commun . moyen de transport . avion . FE
+            alors: commun . FE . moyen de transport . avion
 
 fonctionnement . déplacements pro . déplacement type . transport . moyen de transport:
   question: Moyen de transport
