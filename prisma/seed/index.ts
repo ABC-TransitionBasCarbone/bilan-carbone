@@ -250,7 +250,7 @@ const users = async () => {
     })),
   })
 
-  const organizationVersionsCLICKSON = await prisma.organizationVersion.createManyAndReturn({
+  const organizationVersionsClickson = await prisma.organizationVersion.createManyAndReturn({
     data: organizations.map((organization, index) => ({
       organizationId: organization.id,
       isCR: index % 2 === 1,
@@ -266,8 +266,8 @@ const users = async () => {
   const regularTiltOrganizationVersions = organizationVersionsTILT.filter((organization) => !organization.isCR)
   const crTiltOrganizationVersions = organizationVersionsTILT.filter((organization) => organization.isCR)
 
-  const regularClicksonOrganizationVersions = organizationVersionsCLICKSON.filter((organization) => !organization.isCR)
-  const crClicksonOrganizationVersions = organizationVersionsCLICKSON.filter((organization) => organization.isCR)
+  const regularClicksonOrganizationVersions = organizationVersionsClickson.filter((organization) => !organization.isCR)
+  const crClicksonOrganizationVersions = organizationVersionsClickson.filter((organization) => organization.isCR)
 
   const environmentOrganizationVersions = {
     [Environment.BC]: regularOrganizationVersions,
@@ -552,7 +552,7 @@ const users = async () => {
             status: UserStatus.ACTIVE,
           },
           {
-            organizationVersionId: organizationVersionsCLICKSON[index % organizationVersionsCLICKSON.length].id,
+            organizationVersionId: organizationVersionsClickson[index % organizationVersionsClickson.length].id,
             role: role as Role,
             userId: user.id,
             environment: Environment.CLICKSON,
