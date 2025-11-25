@@ -76,8 +76,6 @@ export default function PublicodesForm<RuleName extends string, S extends Situat
               // setValue={setValue}
               // studyStartDate={studyStartDate}
             />
-            {/* TODO: manage inputs */}
-            <pre>{JSON.stringify(element, null, 2)}</pre>
           </Box>
         ))}
       </Box>
