@@ -4,7 +4,7 @@ import PublicodesForm from '@/components/publicodes-form/PublicodesForm'
 import { FullStudy } from '@/db/study'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import { getCutEngine } from '../publicodes/cut-engine'
+import { getCutFormBuilder } from '../publicodes/cut-engine'
 import { getPublicodesTarget as getPublicodesTargetRule } from '../publicodes/subPostMapping'
 
 export interface PublicodesSubPostFormProps {
@@ -23,7 +23,7 @@ const PublicodesSubPostForm = ({ subPost, study, studySiteId }: PublicodesSubPos
   // const [isLoading, setIsLoading] = useState(true)
   // const [error, setError] = useState<string | null>(null)
 
-  const cutEngine = getCutEngine()
+  const cutFormBuilder = getCutFormBuilder()
   const targetRule = getPublicodesTargetRule(subPost)
 
   // if (error) {
@@ -62,7 +62,7 @@ const PublicodesSubPostForm = ({ subPost, study, studySiteId }: PublicodesSubPos
   return (
     <div className="dynamic-subpost-form">
       <PublicodesForm
-        engine={cutEngine}
+        formBuilder={cutFormBuilder}
         targetRules={[targetRule]}
         // TODO: manage autosave answers
         // subPost={subPost}
