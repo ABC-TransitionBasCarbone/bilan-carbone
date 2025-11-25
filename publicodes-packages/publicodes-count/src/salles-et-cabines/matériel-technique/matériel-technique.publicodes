@@ -1,0 +1,50 @@
+salles et cabines . matériel technique:
+  titre: Matériel technique des salles et cabines
+  formule:
+    somme:
+      - salles
+      - films
+      - cloud
+      - disques durs
+  unité: kgCO2e
+
+salles et cabines . matériel technique . cloud:
+  titre: Cloud
+  formule:
+    produit:
+      - stockage
+      - FE
+  unité: kgCO2e
+  avec:
+    FE:
+      titre: Facteur d'émission d'un Go stocké dans un cloud externe
+      valeur: 0.0116
+      unité: kgCO2e/Go
+      meta:
+        id: 141
+
+salles et cabines . matériel technique . cloud . stockage:
+  question: Combien de données stockez-vous dans un cloud externe ?
+  unité: Go
+
+salles et cabines . matériel technique . disques durs:
+  titre: Disques durs
+  formule:
+    produit:
+      - FE
+      - nombre
+      - (1 an / amortissement)
+  avec:
+    amortissement:
+      valeur: 5
+      unité: an
+    FE:
+      valeur: 200
+      unité: kgCO2e/unité
+      meta:
+        id: 140
+  unité: kgCO2e
+
+salles et cabines . matériel technique . disques durs . nombre:
+  question: De combien de disques durs disposez-vous ?
+  unité: unité
