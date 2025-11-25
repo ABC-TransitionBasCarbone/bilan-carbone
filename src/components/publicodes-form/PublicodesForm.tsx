@@ -5,8 +5,8 @@ import { useCallback, useMemo, useState } from 'react'
 import PublicodesFormField from './PublicodesFormField'
 
 export interface PublicodesFormProps<RuleName extends string, S extends Situation<RuleName>> {
-  /** The Publicodes engine instanciated with the relevant rules. */
-  engine: Engine<RuleName>
+  /** The form builder used to generate the form pages and handle input changes. */
+  formBuilder: FormBuilder<RuleName>
   /** The rules to be evaluated by the Publicodes engine which determines the questions to display. */
   targetRules: RuleName[]
   /** The initial situation to pre-fill the form and determine the visibility of questions. */
@@ -29,16 +29,11 @@ export interface PublicodesFormProps<RuleName extends string, S extends Situatio
  * update as the user interacts with the form.
  */
 export default function PublicodesForm<RuleName extends string, S extends Situation<RuleName>>({
-  engine,
   targetRules,
+  formBuilder,
   initialSituation = {} as S,
   onFieldChange,
 }: PublicodesFormProps<RuleName, S>) {
-  const formBuilder = useMemo(() => {
-    // NOTE: maybe we could have a singleton FormBuilder the same way we do for Engine?
-    return new FormBuilder({ engine })
-  }, [engine])
-
   const [formState, setFormState] = useState<FormState<RuleName>>(() => {
     const initial = FormBuilder.newState(initialSituation)
     return formBuilder.start(initial, ...targetRules)
@@ -47,7 +42,9 @@ export default function PublicodesForm<RuleName extends string, S extends Situat
   // NOTE: for now, if we want to mimic the previous behavior, we don't need
   // to manage pagination, but it could be added later if we need a realy
   // generic form component.
-  const currentPage = useMemo(() => formBuilder.currentPage(formState), [formBuilder, formState])
+  const currentPage = useMemo(() => {
+    return formBuilder.currentPage(formState)
+  }, [formBuilder, formState])
 
   const handleFieldChange = useCallback(
     (fieldName: RuleName, value: string | number | boolean | undefined) => {
