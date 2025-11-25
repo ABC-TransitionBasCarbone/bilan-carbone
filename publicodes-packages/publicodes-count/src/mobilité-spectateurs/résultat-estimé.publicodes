@@ -1,0 +1,202 @@
+mobilité spectateurs . résultat estimé:
+  description: Calcul de l'empreinte basé sur des profils types de cinémas comparables
+
+mobilité spectateurs . résultat estimé . empreinte:
+  applicable si: mobilité spectateurs . précision = "estimation"
+  titre: Empreinte estimée
+  formule:
+    variations:
+      - si: proximité spectateurs = "zone très touristique"
+        alors:
+          somme:
+            - 0.8 * empreinte établissement lointain
+            - 0.2 * empreinte établissement proche
+      - si: proximité spectateurs = "zone moyennement touristique"
+        alors:
+          somme:
+            - 0.25 * empreinte établissement lointain
+            - 0.75 * empreinte établissement proche
+      - si: proximité spectateurs = "majoritairement locaux"
+        alors: empreinte établissement proche
+
+mobilité spectateurs . résultat estimé . proximité spectateurs:
+  applicable si: mobilité spectateurs . précision = "estimation"
+  question: |
+    Vos spectateurs sont-ils majoritairement des habitants "locaux", c'est à
+    dire résidant à l'année dans les environs ou attirez-vous aussi une part
+    non négligeable de spectateurs de passage dans la région (touristes
+    notamment)
+  une possibilité:
+    - zone très touristique:
+        titre: |
+          Le cinéma est situé dans une zone touristique et 80% ou + des
+          spectateurs ne résident pas à proximité du cinéma à l'année.
+    - zone moyennement touristique:
+        titre: |
+          Le cinéma est situé dans une ville de destination de week-end et / ou
+          station balnéaire attirant environ 25% de spectateurs "non-locaux".
+    - majoritairement locaux:
+        titre: |
+          Le cinéma accueille majoritairement des spectateurs locaux
+
+mobilité spectateurs . résultat estimé . empreinte établissement proche:
+  formule:
+    variations:
+      - si: profil établissement = "distances courtes"
+        alors: profil établissement . distances courtes . empreinte
+      - si: profil établissement = "distances moyennes"
+        alors: profil établissement . distances moyennes . empreinte
+      - si: profil établissement = "distances longues"
+        alors: profil établissement . distances longues . empreinte
+      - si: profil établissement = "majoritairement en voiture"
+        alors: profil établissement . majoritairement en voiture . empreinte
+      - si: profil établissement = "uniquement accessible en voiture"
+        alors: profil établissement . uniquement accessible en voiture . empreinte
+
+mobilité spectateurs . résultat estimé . profil établissement:
+  applicable si: mobilité spectateurs . précision = "estimation"
+  question: Si vous souhaitez vous identifier à des profils de cinéma comparable, de quel type de cinéma votre établissement se rapproche le plus
+  une possibilité:
+    - distances courtes
+    - distances moyennes
+    - distances longues
+    - majoritairement en voiture
+    - uniquement accessible en voiture
+  avec:
+    distances courtes:
+      titre: |
+        Les spectateurs parcourent des distances très courtes pour venir au cinéma (moins de 10km aller-retour). Très peu viennent en voiture (- de 10%) et la grande majorité des spectateurs vient à pied ou en transports en commun.
+      avec:
+        empreinte:
+          valeur: résultat précis . empreinte * général . nombre entrées / 1 entrée
+          contexte:
+            mobilité spectateurs . précision: "'résultat précis'"
+            résultat précis . empreinte . voiture essence . distance: 0.13 * 5.98 km
+            résultat précis . empreinte . métro ou tram . distance: 0.28 * 7.41 km
+            résultat précis . empreinte . RER et transilien . distance: 0.02 * 9.59 km
+            résultat précis . empreinte . moto . distance: 0 km
+            résultat précis . empreinte . trottinette électrique . distance: 0 km
+            résultat précis . empreinte . bus . distance: 0 km
+            résultat précis . empreinte . vélo électrique . distance: 0 km
+            résultat précis . empreinte . vélo classique . distance: 0 km
+            résultat précis . empreinte . marche . distance: 0 km
+            résultat précis . empreinte . voiture diesel . distance: 0 km
+            résultat précis . empreinte . voiture hybride . distance: 0 km
+            résultat précis . empreinte . voiture électrique . distance: 0 km
+            résultat précis . empreinte . scooter . distance: 0 km
+
+    distances moyennes:
+      titre: |
+        Les spectateurs parcourent autour de 10 km aller-retour pour se rendre
+        au cinéma. Il s'agit essentiellement d'un public de proximité venant en
+        grande partie en voiture. Autour de 25% d'entre eux viennent à pied.
+      avec:
+        empreinte:
+          valeur: résultat précis . empreinte * général . nombre entrées / 1 entrée
+          contexte:
+            mobilité spectateurs . précision: "'résultat précis'"
+            résultat précis . empreinte . voiture essence . distance: 0.69 * 10.77 km
+            résultat précis . empreinte . métro ou tram . distance: 0.02 * 7.41 km
+            résultat précis . empreinte . moto . distance: 0.02 * 6.42 km
+            résultat précis . empreinte . RER et transilien . distance: 0 km
+            résultat précis . empreinte . trottinette électrique . distance: 0 km
+            résultat précis . empreinte . bus . distance: 0 km
+            résultat précis . empreinte . vélo électrique . distance: 0 km
+            résultat précis . empreinte . vélo classique . distance: 0 km
+            résultat précis . empreinte . marche . distance: 0 km
+            résultat précis . empreinte . voiture diesel . distance: 0 km
+            résultat précis . empreinte . voiture hybride . distance: 0 km
+            résultat précis . empreinte . voiture électrique . distance: 0 km
+            résultat précis . empreinte . scooter . distance: 0 km
+
+    distances longues:
+      titre: |
+        Les spectateurs parcourent autour de 20-25 km aller-retour pour se
+        rendre au cinéma. Il s'agit essentiellement d'un public de proximité
+        venant en grande partie en voiture. Autour de 25% d'entre eux viennent
+        à pied.
+      avec:
+        empreinte:
+          valeur: résultat précis . empreinte * général . nombre entrées / 1 entrée
+          contexte:
+            mobilité spectateurs . précision: "'résultat précis'"
+            résultat précis . empreinte . voiture essence . distance: 0.63 * 24.36 km
+            résultat précis . empreinte . métro ou tram . distance: 0.05 * 25.84 km
+            résultat précis . empreinte . moto . distance: 0.01 * 9.91 km
+            résultat précis . empreinte . RER et transilien . distance: 0 km
+            résultat précis . empreinte . trottinette électrique . distance: 0 km
+            résultat précis . empreinte . bus . distance: 0 km
+            résultat précis . empreinte . vélo électrique . distance: 0 km
+            résultat précis . empreinte . vélo classique . distance: 0 km
+            résultat précis . empreinte . marche . distance: 0 km
+            résultat précis . empreinte . voiture diesel . distance: 0 km
+            résultat précis . empreinte . voiture hybride . distance: 0 km
+            résultat précis . empreinte . voiture électrique . distance: 0 km
+            résultat précis . empreinte . scooter . distance: 0 km
+
+    majoritairement en voiture:
+      titre: |
+        Plus de 80% des spectateurs viennent en voiture. Pas ou peu viennent en
+        transports en commun, peu viennent à pied. La distance moyenne
+        parcourue est autour de 15 km aller-retour.
+      avec:
+        empreinte:
+          valeur: résultat précis . empreinte * général . nombre entrées / 1 entrée
+          contexte:
+            mobilité spectateurs . précision: "'résultat précis'"
+            résultat précis . empreinte . voiture essence . distance: 0.89 * 15.84 km
+            résultat précis . empreinte . métro ou tram . distance: 0.02 * 10.27 km
+            résultat précis . empreinte . moto . distance: 0 km
+            résultat précis . empreinte . RER et transilien . distance: 0 km
+            résultat précis . empreinte . trottinette électrique . distance: 0 km
+            résultat précis . empreinte . bus . distance: 0 km
+            résultat précis . empreinte . vélo électrique . distance: 0 km
+            résultat précis . empreinte . vélo classique . distance: 0 km
+            résultat précis . empreinte . marche . distance: 0 km
+            résultat précis . empreinte . voiture diesel . distance: 0 km
+            résultat précis . empreinte . voiture hybride . distance: 0 km
+            résultat précis . empreinte . voiture électrique . distance: 0 km
+            résultat précis . empreinte . scooter . distance: 0 km
+
+    uniquement accessible en voiture:
+      titre: |
+        Le cinéma n'est accessible qu'en voiture.
+      avec:
+        empreinte:
+          valeur: résultat précis . empreinte * général . nombre entrées / 1 entrée
+          contexte:
+            mobilité spectateurs . précision: "'résultat précis'"
+            résultat précis . empreinte . voiture essence . distance: 18.73 km
+            résultat précis . empreinte . RER et transilien . distance: 0 km
+            résultat précis . empreinte . métro ou tram . distance: 0 km
+            résultat précis . empreinte . bus . distance: 0 km
+            résultat précis . empreinte . vélo électrique . distance: 0 km
+            résultat précis . empreinte . vélo classique . distance: 0 km
+            résultat précis . empreinte . marche . distance: 0 km
+            résultat précis . empreinte . voiture diesel . distance: 0 km
+            résultat précis . empreinte . voiture hybride . distance: 0 km
+            résultat précis . empreinte . voiture électrique . distance: 0 km
+            résultat précis . empreinte . moto . distance: 0 km
+            résultat précis . empreinte . scooter . distance: 0 km
+            résultat précis . empreinte . trottinette électrique . distance: 0 km
+
+mobilité spectateurs . résultat estimé . empreinte établissement lointain:
+  formule:
+    produit:
+      - général . nombre entrées
+      - général . distance depuis paris * 0.03
+      - somme:
+          - 0.7 * FE voiture longue distance
+          - 0.3 * FE TGV
+  note: |
+    On considère qu'un trajet moyen est 3% de la distance Paris - lieu du cinéma.
+  avec:
+    FE voiture longue distance:
+      valeur: 0.1092
+      unité: kgCO2e/km
+      meta:
+        id: 27977
+
+    FE TGV:
+      valeur: commun . FE . moyen de transport . TGV
+      unité: kgCO2e/km
