@@ -28,7 +28,7 @@ fonctionnement . équipe . collaborateur type . repas:
       - commun . nombre de semaines travaillées par an
       - nombre de jours par semaine
       - 1 repas/jour
-      - commun . FE repas
+      - commun . FE . repas
 
 fonctionnement . équipe . collaborateur type . transport:
   formule:
@@ -45,31 +45,31 @@ fonctionnement . équipe . collaborateur type . transport:
       formule:
         variations:
           - si: moyen de transport = "RER et transilien"
-            alors: commun . moyen de transport . RER et transilien . FE
+            alors: commun . FE . moyen de transport . RER et transilien
           - si: moyen de transport = "métro ou tram"
-            alors: commun . moyen de transport . métro ou tram . FE
+            alors: commun . FE . moyen de transport . métro ou tram
           - si: moyen de transport = "bus"
-            alors: commun . moyen de transport . bus . FE
+            alors: commun . FE . moyen de transport . bus
           - si: moyen de transport = "vélo électrique"
-            alors: commun . moyen de transport . vélo électrique . FE
+            alors: commun . FE . moyen de transport . vélo électrique
           - si: moyen de transport = "vélo classique"
-            alors: commun . moyen de transport . vélo classique . FE
+            alors: commun . FE . moyen de transport . vélo classique
           - si: moyen de transport = "marche"
-            alors: commun . moyen de transport . marche . FE
+            alors: commun . FE . moyen de transport . marche
           - si: moyen de transport = "voiture diesel"
-            alors: commun . moyen de transport . voiture diesel . FE
+            alors: commun . FE . moyen de transport . voiture diesel
           - si: moyen de transport = "voiture essence"
-            alors: commun . moyen de transport . voiture essence . FE
+            alors: commun . FE . moyen de transport . voiture essence
           - si: moyen de transport = "voiture hybride"
-            alors: commun . moyen de transport . voiture hybride . FE
+            alors: commun . FE . moyen de transport . voiture hybride
           - si: moyen de transport = "voiture électrique"
-            alors: commun . moyen de transport . voiture électrique . FE
+            alors: commun . FE . moyen de transport . voiture électrique
           - si: moyen de transport = "moto"
-            alors: commun . moyen de transport . moto . FE
+            alors: commun . FE . moyen de transport . moto
           - si: moyen de transport = "scooter"
-            alors: commun . moyen de transport . scooter . FE
+            alors: commun . FE . moyen de transport . scooter
           - si: moyen de transport = "trottinette électrique"
-            alors: commun . moyen de transport . trottinette électrique . FE
+            alors: commun . FE . moyen de transport . trottinette électrique
 
 fonctionnement . équipe . collaborateur type . transport . moyen de transport:
   question: Moyen de transport
