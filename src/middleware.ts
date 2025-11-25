@@ -80,7 +80,7 @@ export const config = {
   matcher: [
     {
       // Appliquer le middleware uniquement sur les routes spécifiées
-      source: '/((?!_next/static|_next/image|favicon.ico|images|logos|api/auth).*)',
+      source: '/((?!_next/static|_next/image|favicon.ico|images|logos|api/auth|api/schools/*).*)',
       missing: [
         { type: 'header', key: 'next-router-prefetch' },
         { type: 'header', key: 'purpose', value: 'prefetch' },
