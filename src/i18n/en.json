@@ -242,6 +242,25 @@
       "siret": "Please enter a Siret"
     }
   },
+  "signupClickson": {
+    "description": "Create a Clickson account with your email and a school postal code",
+    "email": "Email",
+    "emailPlaceholder": "Email used during your training",
+    "emailRequired": "Please enter an email",
+    "schoolPostalCode": "School postal code",
+    "schoolPostalCodePlaceholder": "The postal code of the school establishment",
+    "schoolPostalCodeRequired": "Please enter the school postal code",
+    "validate": "Validate",
+    "clear": "Clear value",
+    "Not authorized": "This email is already used for Clickson or there's an issue with the account creation. Please see <link>the FAQ</link> or <support>contact support</support> if you think this is an error.",
+    "Request sent": "A request has been sent to your colleagues",
+    "Email sent": "You will receive an email to finish your account validation.",
+    "Not known school": "The school establishment you entered is not recognized. Please check it and try again.",
+    "validation": {
+      "email": "Please enter an email",
+      "schoolPostalCode": "Please enter the school postal code"
+    }
+  },
   "footer": {
     "message": {
       "0": "",

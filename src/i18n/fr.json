@@ -242,6 +242,25 @@
       "siret": "Veuillez entrer un Siret"
     }
   },
+  "signupClickson": {
+    "description": "Créez un compte sur Clickson en entrant votre email ainsi que le code postal de votre établissement scolaire",
+    "email": "Email",
+    "emailPlaceholder": "Votre adresse email",
+    "emailRequired": "Veuillez entrer un email",
+    "schoolPostalCode": "Code postal de l'établissement scolaire",
+    "schoolPostalCodePlaceholder": "Le code postal de l'établissement scolaire",
+    "schoolPostalCodeRequired": "Veuillez entrer le code postal de l'établissement scolaire",
+    "validate": "Valider",
+    "clear": "Supprimer la valeur",
+    "Not authorized": "Cet email est déjà inscrit avec un compte Clickson ou il y a eu un soucis lors de sa création. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
+    "Request sent": "Une demande d'activation de votre compte a été envoyé à vos collègues",
+    "Email sent": "Vous allez recevoir un mail pour finaliser l'activation de votre compte.",
+    "Not known school": "L'établissement scolaire n'est pas reconnu. Veuillez vérifier votre saisie.",
+    "validation": {
+      "email": "Veuillez entrer un email",
+      "schoolPostalCode": "Veuillez entrer le code postal de l'établissement scolaire"
+    }
+  },
   "footer": {
     "message": {
       "0": "",
