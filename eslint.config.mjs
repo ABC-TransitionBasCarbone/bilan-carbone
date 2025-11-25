@@ -57,6 +57,9 @@ const config = [
       ...cypress.configs.recommended.rules,
     },
   },
+  {
+    ignores: ['next-env.d.ts'],
+  },
 ]
 
 export default config
