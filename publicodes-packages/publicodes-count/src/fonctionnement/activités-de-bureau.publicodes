@@ -52,15 +52,55 @@ fonctionnement . activités de bureau . informatique:
     'Si l'équipement concerné est acheté, merci de ne pas remplir le champ "Durée de location". Si l'équipement concerné est loué de manière ponctuelle, merci de ne pas remplir le champ "Date d'achat". Si vous louez un équipement pour de longues durées ou de manière continue, nous vous recommandons de le considérer comme acheté (à la date de la première année de location).'
   note: |
     La durée de location prévaut sur la date d'achat.
+  # TODO: Should be a list of equipment
+  formule: empreinte équipement
+
+fonctionnement . activités de bureau . informatique . empreinte équipement:
+  titre: Empreinte appareil
   formule:
-    somme:
-      - ordinateurs fixes
-      - ordinateurs portables
-      - photocopieurs
-      - imprimantes
-      - téléphones fixes
-      - téléphones portables
-      - tablettes
+    variations:
+      - si: équipement = "ordinateurs fixes"
+        alors: ordinateurs fixes
+      - si: équipement = "ordinateurs portables"
+        alors: ordinateurs portables
+      - si: équipement = "photocopieurs"
+        alors: photocopieurs
+      - si: équipement = "imprimantes"
+        alors: imprimantes
+      - si: équipement = "téléphones fixes"
+        alors: téléphones fixes
+      - si: équipement = "téléphones portables"
+        alors: téléphones portables
+      - si: équipement = "tablettes"
+        alors: tablettes
+  unité: kgCO2e
+
+fonctionnement . activités de bureau . informatique . équipement:
+  titre: Type dd'équipement informatique
+  question: Type d'équipement informatique
+  une possibilité:
+    - ordinateurs fixes
+    - ordinateurs portables
+    - photocopieurs
+    - imprimantes
+    - téléphones fixes
+    - téléphones portables
+    - tablettes
+  avec:
+    ordinateurs fixes:
+      titre: Ordinateurs fixes
+    ordinateurs portables:
+      titre: Ordinateurs portables
+    photocopieurs:
+      titre: Photocopieurs
+    imprimantes:
+      titre: Imprimantes
+    téléphones fixes:
+      titre: Téléphones fixes
+    téléphones portables:
+      titre: Téléphones portables
+    tablettes:
+      titre: Tablettes
 
 fonctionnement . activités de bureau . informatique . appareil:
   titre: Empreinte appareil informatique type
