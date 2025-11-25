@@ -1,0 +1,89 @@
+fonctionnement . équipe:
+  titre: Équipe
+  formule:
+    somme:
+      - collaborateurs
+  unité: kgCO2e
+
+fonctionnement . équipe . collaborateurs:
+  # TODO: Should be a liste of types of collaborators
+  titre: Collaborateurs
+  question: Quel est le rythme de travail des collaborateurs du cinéma ?
+  formule: collaborateur type
+
+fonctionnement . équipe . collaborateur type:
+  formule:
+    somme:
+      - repas
+      - transport
+  unité: kgCO2e
+
+fonctionnement . équipe . collaborateur type . nombre de jours par semaine:
+  question: Nombre de jours / semaine
+  unité: jour/semaine
+
+fonctionnement . équipe . collaborateur type . repas:
+  formule:
+    produit:
+      - commun . nombre de semaines travaillées par an
+      - nombre de jours par semaine
+      - 1 repas/jour
+      - commun . FE . repas
+
+fonctionnement . équipe . collaborateur type . transport:
+  formule:
+    produit:
+      - commun . nombre de semaines travaillées par an
+      - nombre de jours par semaine
+      - distance
+      - FE
+  avec:
+    distance:
+      question: Distance domicile travail (aller-retour)
+      unité: km
+    FE:
+      formule:
+        variations:
+          - si: moyen de transport = "RER et transilien"
+            alors: commun . FE . moyen de transport . RER et transilien
+          - si: moyen de transport = "métro ou tram"
+            alors: commun . FE . moyen de transport . métro ou tram
+          - si: moyen de transport = "bus"
+            alors: commun . FE . moyen de transport . bus
+          - si: moyen de transport = "vélo électrique"
+            alors: commun . FE . moyen de transport . vélo électrique
+          - si: moyen de transport = "vélo classique"
+            alors: commun . FE . moyen de transport . vélo classique
+          - si: moyen de transport = "marche"
+            alors: commun . FE . moyen de transport . marche
+          - si: moyen de transport = "voiture diesel"
+            alors: commun . FE . moyen de transport . voiture diesel
+          - si: moyen de transport = "voiture essence"
+            alors: commun . FE . moyen de transport . voiture essence
+          - si: moyen de transport = "voiture hybride"
+            alors: commun . FE . moyen de transport . voiture hybride
+          - si: moyen de transport = "voiture électrique"
+            alors: commun . FE . moyen de transport . voiture électrique
+          - si: moyen de transport = "moto"
+            alors: commun . FE . moyen de transport . moto
+          - si: moyen de transport = "scooter"
+            alors: commun . FE . moyen de transport . scooter
+          - si: moyen de transport = "trottinette électrique"
+            alors: commun . FE . moyen de transport . trottinette électrique
+
+fonctionnement . équipe . collaborateur type . transport . moyen de transport:
+  question: Moyen de transport
+  une possibilié:
+    - RER et transilien
+    - métro ou tram
+    - bus
+    - vélo électrique
+    - vélo classique
+    - marche
+    - voiture diesel
+    - voiture essence
+    - voiture hybride
+    - voiture électrique
+    - moto
+    - scooter
+    - trottinette électrique
