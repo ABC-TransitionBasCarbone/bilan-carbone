@@ -22,17 +22,17 @@ const ConfidenceIntervalCharts = ({ confidenceInterval, unit, percent }: Props) 
       <div className="grow align-center">
         <div className="flex-row relative grow">
           <div className="grow flex-col">
-            <div className={classNames(styles.container, 'grow justify-end ml-4')}>
-              <div className={classNames(styles.bar, progressStyles[`w${percent.toFixed(0)}`])} />
-            </div>
-            <div className="flex-row justify-between">
-              <p className="bold">0</p>
-              <p className={classNames(styles.min, progressStyles[`w${percent.toFixed(0)}`], 'bold')}>
+            <div className={classNames(styles.container, 'relative grow justify-end ml-4')}>
+              <p className={classNames(styles.min, progressStyles[`w${percent.toFixed(0)}`], 'absolute bold')}>
                 {formatNumber(confidenceInterval[0] / STUDY_UNIT_VALUES[unit])}
               </p>
+              <div className={classNames(styles.bar, progressStyles[`w${percent.toFixed(0)}`])} />
+            </div>
+            <div className="flex-row justify-between pt025">
+              <p className="bold">0</p>
             </div>
           </div>
-          <p className={classNames(styles.max, 'bold')}>
+          <p className={classNames(styles.max, 'relative bold')}>
             {formatNumber(confidenceInterval[1] / STUDY_UNIT_VALUES[unit])}
           </p>
         </div>
