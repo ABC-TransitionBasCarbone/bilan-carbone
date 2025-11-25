@@ -5,7 +5,7 @@ import { getEnvVar } from '@/lib/environment'
 import { getEnvRoute } from '@/services/email/utils'
 import { UNKNOWN_SCHOOL } from '@/services/permissions/check'
 import { getSchoolsFromPostalCode, School } from '@/services/schoolApi'
-import { signUpWithSchoolPostalCode } from '@/services/serverFunctions/user'
+import { signUpWithSchool } from '@/services/serverFunctions/user'
 import { SignUpClicksonCommand, SignUpClicksonCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
@@ -82,7 +82,7 @@ const SignUpFormClickson = () => {
       return
     }
 
-    const activation = await signUpWithSchoolPostalCode(getValues().email, school, Environment.CLICKSON)
+    const activation = await signUpWithSchool(getValues().email, school, Environment.CLICKSON)
     setSubmitting(false)
 
     if (activation.success) {
