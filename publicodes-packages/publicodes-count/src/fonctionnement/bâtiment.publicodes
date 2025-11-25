@@ -51,27 +51,41 @@ fonctionnement . bâtiment . rénovation:
 fonctionnement . bâtiment . rénovation . type:
   titre: Rénovation
   question: Parmi les rénovations suivantes, lesquelles avez-vous réalisées durant les dix dernières années ?
-  une possibilité:
-    - rénovation totale
-    - extension
-    - autres travaux importants
-    - aucun
+  # TODO: Deals with it as "plusieurs possibilités"
+  # une possibilité:
+  #   - rénovation totale
+  #   - extension
+  #   - autres travaux importants
+  #   - aucun
   avec:
     rénovation totale:
       titre: Rénovation totale (hors agrandissement)
+    rénovation totale . présent:
+      question: Avez-vous réalisé une rénovation totale (hors agrandissement) durant les dix dernières années ?
     extension:
       titre: Agrandissement - extension
+    extension . présent:
+      question: Avez-vous réalisé un agrandissement ou une extension durant les dix dernières années ?
     autres travaux importants:
       titre: |
         Autres travaux importants (par ex : changement moquette, ravalement, peinture etc)
+    autres travaux importants . présent:
+      question: |
+        Avez-vous réalisé d'autres travaux importants (par ex : changement moquette, ravalement, peinture etc) durant les dix dernières années ?
     aucun:
       titre: Je n'ai pas réalisé ces rénovations durant les dix dernières années
+    aucun . présent:
+      question: N'avez-vous pas réalisé ces rénovations durant les dix dernières années ?
 
 fonctionnement . bâtiment . rénovation . empreinte travaux:
   applicable si:
     une de ces conditions:
-      - rénovation . type = "'rénovation totale'"
-      - rénovation . type = "'autres travaux importants'"
+      - toutes ces conditions:
+          - est défini: type . rénovation totale . présent
+          - type . rénovation totale . présent
+      - toutes ces conditions:
+          - est défini: type . autres travaux importants . présent
+          - type . autres travaux importants . présent
   formule:
     produit:
       - montant
@@ -92,7 +106,10 @@ fonctionnement . bâtiment . rénovation . empreinte travaux:
       unité: an
 
 fonctionnement . bâtiment . rénovation . empreinte extension:
-  applicable si: rénovation . type = "'extension'"
+  applicable si:
+    toutes ces conditions:
+      - est défini: type . extension . présent
+      - type . extension . présent
   formule:
     produit:
       - surface
