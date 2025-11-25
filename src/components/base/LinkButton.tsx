@@ -1,3 +1,5 @@
+'use client'
+
 import { Button, ButtonProps } from '@mui/material'
 import Link from 'next/link'
 import { AnchorHTMLAttributes } from 'react'
@@ -6,8 +8,8 @@ type AnchorProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof ButtonPro
 
 type LinkButtonProps = ButtonProps & AnchorProps
 
-const LinkButton = ({ href = '#', color = 'secondary', variant = 'outlined', ...props }: LinkButtonProps) => (
-  <Button component={Link} href={href} variant={variant} color={color} {...props} />
-)
+const LinkButton = ({ href = '#', color = 'secondary', variant = 'outlined', ...props }: LinkButtonProps) => {
+  return <Button component={Link} href={href} variant={variant} color={color} {...props} />
+}
 
 export default LinkButton
