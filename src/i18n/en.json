@@ -249,6 +249,7 @@
     "emailRequired": "Please enter an email",
     "schoolPostalCode": "School postal code",
     "schoolPostalCodePlaceholder": "The postal code of the school establishment",
+    "schoolSearchTooltip": "Find your school establishment by entering its postal code, then selecting it from the dropdown list.",
     "schoolPostalCodeRequired": "Please enter the school postal code",
     "validate": "Validate",
     "clear": "Clear value",
