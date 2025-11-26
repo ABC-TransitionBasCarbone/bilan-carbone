@@ -128,6 +128,7 @@ export const canCreateSpecificStudy = async (
   organizationVersionId: string,
 ) => {
   switch (user.environment) {
+    case Environment.CLICKSON:
     case Environment.CUT:
       return canCreateSpecificStudyCUT(user.accountId, study, organizationVersionId)
     case Environment.TILT:
