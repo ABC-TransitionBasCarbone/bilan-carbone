@@ -8,7 +8,7 @@ import { getSchoolsFromPostalCode, School } from '@/services/schoolApi'
 import { signUpWithSchool } from '@/services/serverFunctions/user'
 import { SignUpClicksonCommand, SignUpClicksonCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { FormControl } from '@mui/material'
+import { FormControl, Tooltip } from '@mui/material'
 import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -128,7 +128,11 @@ const SignUpFormClickson = () => {
             )
           }}
           name="schoolName"
-          label={t('schoolPostalCode')}
+          label={
+            <Tooltip title={t('schoolSearchTooltip')} arrow>
+              <span>{t('schoolPostalCode')}</span>
+            </Tooltip>
+          }
           helperText={t('schoolPostalCodePlaceholder')}
           freeSolo
           disableClearable
