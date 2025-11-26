@@ -78,6 +78,9 @@ model Site {
   cncId String?
   cnc   Cnc?    @relation(fields: [cncId], references: [id])
 
+  establishmentId   String? @map("establishment_id")
+  establishmentYear String? @map("establishment_year")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
