@@ -1,0 +1,21 @@
+.expandable {
+  cursor: pointer;
+}
+
+.expandable:hover {
+  opacity: 0.7;
+}
+
+.searchInput {
+  :global(.MuiInputBase-root) {
+    height: 2.5rem;
+  }
+  input {
+    min-width: 20rem;
+  }
+}
+
+.addButton {
+  border-radius: 0.75rem;
+  height: 2.5rem;
+}

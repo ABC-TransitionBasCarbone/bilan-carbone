@@ -6,9 +6,10 @@ import EditEmissionFactorForm from '../emissionFactor/edit/Form'
 
 interface Props {
   emissionFactor: Exclude<DetailedEmissionFactor, null>
+  locations: string[]
 }
 
-const EditEmissionFactor = ({ emissionFactor }: Props) => {
+const EditEmissionFactor = ({ emissionFactor, locations }: Props) => {
   const tNav = useTranslations('nav')
   const t = useTranslations('emissionFactors.edit')
   return (
@@ -21,7 +22,7 @@ const EditEmissionFactor = ({ emissionFactor }: Props) => {
         ]}
       />
       <Block title={t('title', { name: emissionFactor?.metaData[0].title || '' })} as="h1">
-        <EditEmissionFactorForm emissionFactor={emissionFactor} />
+        <EditEmissionFactorForm emissionFactor={emissionFactor} locations={locations} />
       </Block>
     </>
   )

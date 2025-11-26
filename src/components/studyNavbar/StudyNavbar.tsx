@@ -20,10 +20,10 @@ interface Props {
   studyId: UUID
   study: FullStudy
   isTransitionPlanActive: boolean
-  hasTransitionPlan: boolean
+  hasObjectives: boolean
 }
 
-const StudyNavbar = ({ environment, studyId, study, isTransitionPlanActive, hasTransitionPlan }: Props) => {
+const StudyNavbar = ({ environment, studyId, study, isTransitionPlanActive, hasObjectives }: Props) => {
   const pathName = usePathname()
 
   const t = useTranslations('study.navigation')
@@ -35,7 +35,7 @@ const StudyNavbar = ({ environment, studyId, study, isTransitionPlanActive, hasT
     studyId,
     study.name,
     isTransitionPlanActive,
-    hasTransitionPlan,
+    hasObjectives,
   )
   return (
     <>
@@ -57,40 +57,44 @@ const StudyNavbar = ({ environment, studyId, study, isTransitionPlanActive, hasT
         open={open}
         slotProps={{
           paper: {
-            className: styles.drawerContainer,
+            className: classNames('flex-col ml1 hauto', styles.drawerContainer),
           },
         }}
         variant="persistent"
         transitionDuration={0}
       >
-        <div className={classNames('flex-col pt1', sections.length === 1 && !sections[0].header ? '' : 'gapped15')}>
-          <div className="flex-col">
+        <div className={styles.drawerContent}>
+          <div className={styles.titleContainer}>
             <Link className={styles.studyTitle} href={title.href}>
               <StudyName name={title.label} />
             </Link>
           </div>
 
-          {sections.map((section, sectionIndex) => (
-            <div key={sectionIndex} className="flex-col">
-              {section.header && <div className={styles.sectionHeader}>{section.header}</div>}
-              {section.links.map((link, linkIndex) =>
-                link.disabled ? (
-                  <button key={linkIndex} className={classNames(styles.link, styles.disabled)}>
-                    {link.label}
-                  </button>
-                ) : (
-                  <Link
-                    key={linkIndex}
-                    className={classNames(styles.link, { [styles.active]: pathName.includes(link.href) })}
-                    href={link.href || '#'}
-                    {...(link.testId && { 'data-testid': link.testId })}
-                  >
-                    {link.label}
-                  </Link>
-                ),
-              )}
+          <div className={styles.menuContainer}>
+            <div className={classNames('flex-col', sections.length === 1 && !sections[0].header ? '' : 'gapped15')}>
+              {sections.map((section, sectionIndex) => (
+                <div key={sectionIndex} className="flex-col">
+                  {section.header && <div className={styles.sectionHeader}>{section.header}</div>}
+                  {section.links.map((link, linkIndex) =>
+                    link.disabled ? (
+                      <button key={linkIndex} className={classNames(styles.link, styles.disabled)}>
+                        {link.label}
+                      </button>
+                    ) : (
+                      <Link
+                        key={linkIndex}
+                        className={classNames(styles.link, { [styles.active]: pathName.includes(link.href) })}
+                        href={link.href || '#'}
+                        {...(link.testId && { 'data-testid': link.testId })}
+                      >
+                        {link.label}
+                      </Link>
+                    ),
+                  )}
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </Drawer>
     </>

@@ -1,4 +1,6 @@
 'use client'
+
+import Block from '@/components/base/Block'
 import Button from '@/components/base/Button'
 import HelpIcon from '@/components/base/HelpIcon'
 import IconLabel from '@/components/base/IconLabel'
@@ -10,8 +12,11 @@ import Sites from '@/environments/base/organization/Sites'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import SitesCut from '@/environments/cut/organization/Sites'
 import SitesTilt from '@/environments/tilt/organization/Sites'
-
 import { useServerFunction } from '@/hooks/useServerFunction'
+import {
+  getUpdateOrganizationVersionPermission,
+  updateOrganizationSitesCommand,
+} from '@/services/serverFunctions/organization'
 import {
   changeStudyDates,
   changeStudyExports,
@@ -42,6 +47,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm, UseFormReturn, useWatch } from 'react-hook-form'
 import DeleteStudySiteModal from './DeleteStudySiteModal'
 import { DuplicateFormData } from './DuplicateSiteModal'
+import ReplicateSitesChangesModal from './ReplicateSitesChangesModal'
 import StudyExportsForm from './StudyExportsForm'
 import styles from './StudyPerimeter.module.css'
 
@@ -66,9 +72,14 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
   const [glossary, setGlossary] = useState('')
   const [exportsValues, setExportsValues] = useState<Record<Export, ControlMode | false> | undefined>(undefined)
   const [isEditing, setIsEditing] = useState(false)
+  const [replicateSitesChanges, setReplicateSitesChanges] = useState(false)
   const [deleting, setDeleting] = useState(0)
   const [duplicatingSiteId, setDuplicatingSiteId] = useState<string | null>(null)
   const hasEditionRole = useMemo(() => hasEditionRights(userRoleOnStudy), [userRoleOnStudy])
+  const isFromStudyOrganization = useMemo(
+    () => study.organizationVersionId === user.organizationVersionId,
+    [study.organizationVersionId, user.organizationVersionId],
+  )
   const canEditOrga = useMemo(() => canEditOrganizationVersion(user, organizationVersion), [user, organizationVersion])
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
@@ -153,7 +164,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
       'sites',
       siteList.map((site) => ({ ...site, ca: displayCA(site.ca, CA_UNIT_VALUES[caUnit]) })),
     )
-  }, [siteList, isEditing, caUnit])
+  }, [siteList, isEditing, caUnit, siteForm])
 
   const onSitesSubmit = async () => {
     const deletedSites = sites.filter((site) => {
@@ -172,11 +183,25 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
     setOpen(false)
 
     await callServerFunction(() => changeStudySites(study.id, siteForm.getValues()), {
-      onSuccess: () => {
-        router.refresh()
-        setIsEditing(false)
+      onSuccess: async () => {
+        const canUpdateOrganization = await getUpdateOrganizationVersionPermission(study.organizationVersionId)
+        if (canUpdateOrganization.success && canUpdateOrganization.data) {
+          setReplicateSitesChanges(true)
+        } else {
+          setIsEditing(false)
+          router.refresh()
+        }
       },
     })
+  }
+
+  const onReplicateSitesChanges = (replicate: boolean) => {
+    if (replicate) {
+      updateOrganizationSitesCommand(siteForm.getValues(), study.organizationVersionId)
+    }
+    setReplicateSitesChanges(false)
+    setIsEditing(false)
+    router.refresh()
   }
 
   const [startDate, endDate, realizationStartDate, realizationEndDate] = form.watch([
@@ -185,12 +210,16 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
     'realizationStartDate',
     'realizationEndDate',
   ])
-  const onDateSubmit = async (command: ChangeStudyDatesCommand) => {
-    await form.trigger()
-    if (form.formState.isValid) {
-      await changeStudyDates(command)
-    }
-  }
+
+  const onDateSubmit = useCallback(
+    async (command: ChangeStudyDatesCommand) => {
+      await form.trigger()
+      if (form.formState.isValid) {
+        await changeStudyDates(command)
+      }
+    },
+    [form],
+  )
 
   const updateStudyExport = useCallback(
     async (exportType: Export, control: ControlMode | false) => {
@@ -212,7 +241,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
 
   useEffect(() => {
     onDateSubmit(form.getValues())
-  }, [startDate, endDate, realizationStartDate, realizationEndDate])
+  }, [startDate, endDate, realizationStartDate, realizationEndDate, onDateSubmit, form])
 
   const handleDuplicateSite = async (data: DuplicateFormData) => {
     if (!duplicatingSiteId) {
@@ -243,10 +272,11 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
   )
 
   return (
-    <>
+    <Block title={t('title', { name: study.name })} as="h2">
+      <h3 className="mb1">{t('general', { name: study.name })}</h3>
       {hasEditionRole ? (
         <>
-          <div className="mb1">
+          <div className="mb2">
             <IconLabel icon={Help('studyDates')} iconPosition="after" className="mb-2">
               <span className="inputLabel bold">{t('studyDates')}</span>
             </IconLabel>
@@ -261,7 +291,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
               />
             </div>
           </div>
-          <div className="mb1">
+          <div className="mb2">
             <IconLabel icon={Help('realizationDates')} iconPosition="after" className="mb-2">
               <span className="inputLabel bold">{t('realizationDates')}</span>
             </IconLabel>
@@ -337,7 +367,8 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
               form={isEditing ? (siteForm as unknown as UseFormReturn<SitesCommand>) : undefined}
               caUnit={caUnit}
               withSelection
-              onDuplicate={!isEditing ? setDuplicatingSiteId : undefined}
+              onDuplicate={!isEditing && hasEditionRole && isFromStudyOrganization ? setDuplicatingSiteId : undefined}
+              organizationId={isFromStudyOrganization ? study.organizationVersion.id : undefined}
             />
           ),
         }}
@@ -347,12 +378,13 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
             form={isEditing ? (siteForm as unknown as UseFormReturn<SitesCommand>) : undefined}
             caUnit={caUnit}
             withSelection
-            onDuplicate={!isEditing ? setDuplicatingSiteId : undefined}
+            onDuplicate={!isEditing && hasEditionRole && isFromStudyOrganization ? setDuplicatingSiteId : undefined}
+            organizationId={isFromStudyOrganization ? study.organizationVersion.id : undefined}
           />
         }
       />
-      {hasEditionRole && (
-        <div className={classNames('mt1', { 'justify-between': isEditing })}>
+      {hasEditionRole && isFromStudyOrganization && (
+        <div className={classNames('mt1 gapped', isEditing ? 'justify-between' : 'justify-end')}>
           <Button
             data-testid={`${isEditing ? 'cancel-' : ''}edit-study-sites`}
             onClick={() => setIsEditing(!isEditing)}
@@ -391,12 +423,13 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
           onDuplicate={handleDuplicateSite}
         />
       )}
+      {replicateSitesChanges && <ReplicateSitesChangesModal replicate={onReplicateSitesChanges} />}
       {glossary && (
         <GlossaryModal glossary={glossary} onClose={() => setGlossary('')} label="emission-source" t={tGlossary}>
           <p className="mb-2">{tGlossary(`${glossary}Description`)}</p>
         </GlossaryModal>
       )}
-    </>
+    </Block>
   )
 }
 

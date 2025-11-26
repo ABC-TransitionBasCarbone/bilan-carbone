@@ -45,3 +45,13 @@
 .link {
   display: contents;
 }
+
+.subPostLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.subPostLink:hover {
+  color: var(--mui-palette-primary-main);
+  font-weight: 700;
+}

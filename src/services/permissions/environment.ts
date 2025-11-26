@@ -35,5 +35,8 @@ export const hasAccessToDependencyMatrix = (environment: Environment) =>
   ([Environment.TILT] as Environment[]).includes(environment)
 
 // environnement is not used but kept for consistency
-// eslint-disable-next-line no-use-before-define
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const hasAccessToDependencyMatrixExample = (environment: Environment) => false
+
+export const hasAccessToPerimeterPage = (environment: Environment) =>
+  !([Environment.CUT] as Environment[]).includes(environment)

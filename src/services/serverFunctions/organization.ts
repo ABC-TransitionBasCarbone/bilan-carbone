@@ -13,11 +13,12 @@ import {
   onboardOrganizationVersion,
   setOnboarded,
   updateOrganization,
+  updateOrganizationSites,
 } from '@/db/organization'
 import { deleteStudyMemberFromOrganization, getAllowedStudiesByAccountIdAndOrganizationId } from '@/db/study'
 import { getUserApplicationSettings, getUserByEmail, updateAccount } from '@/db/user'
 import { getLocale } from '@/i18n/locale'
-import { uniqBy } from '@/utils/array'
+import { uniqueByKey } from '@/utils/array'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { withServerResponse } from '@/utils/serverResponse'
 import { isAdmin } from '@/utils/user'
@@ -33,7 +34,7 @@ import {
 } from '../permissions/organization'
 import { CreateOrganizationCommand, UpdateOrganizationCommand } from './organization.command'
 import { getStudy } from './study'
-import { DeleteCommand } from './study.command'
+import { DeleteCommand, SitesCommand } from './study.command'
 import { addMember, addUserChecklistItem } from './user'
 import { AddMemberCommand, OnboardingCommand } from './user.command'
 
@@ -102,6 +103,23 @@ export const updateOrganizationCommand = async (command: UpdateOrganizationComma
     addUserChecklistItem(organizationVersion?.isCR ? UserChecklist.AddSiteCR : UserChecklist.AddSiteOrga)
   })
 
+export const updateOrganizationSitesCommand = async (command: SitesCommand, organizationVersionId: string) =>
+  withServerResponse('updateOrganizationSitesCommand', async () => {
+    const session = await auth()
+    if (!session || !session.user.organizationVersionId) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!(await canUpdateOrganizationVersion(session.user, organizationVersionId))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const userCAUnit = (await getUserApplicationSettings(session.user.accountId))?.caUnit
+    const caUnit = CA_UNIT_VALUES[userCAUnit || defaultCAUnit]
+
+    await updateOrganizationSites(command, organizationVersionId, caUnit)
+  })
+
 export const deleteOrganizationCommand = async ({ id, name }: DeleteCommand) =>
   withServerResponse('deleteOrganizationCommand', async () => {
     if (!(await canDeleteOrganizationVersion(id))) {
@@ -159,7 +177,7 @@ export const onboardOrganizationVersionCommand = async (command: OnboardingComma
 
       let collaborators: AddMemberCommand[] = []
       if (command.collaborators && command.collaborators?.length > 0) {
-        const fileredCollaborators = uniqBy(command.collaborators, 'email').filter(
+        const fileredCollaborators = uniqueByKey(command.collaborators, 'email').filter(
           (collaborator) => !!collaborator.email && !!collaborator.role,
         ) as { email: User['email']; role: Account['role'] }[]
 
@@ -255,3 +273,14 @@ const getStudiesWithOnlyValidator = async (
   }
   return []
 }
+
+export const getUpdateOrganizationVersionPermission = async (organizationVersionId: string) =>
+  withServerResponse('getUpdateOrganizationVersionPermission', async () => {
+    const session = await dbActualizedAuth()
+
+    if (!session) {
+      return false
+    }
+
+    return canUpdateOrganizationVersion(session.user, organizationVersionId)
+  })

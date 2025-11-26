@@ -1,0 +1,44 @@
+.trajectoryOption {
+  border: 1px solid var(--mui-palette-info-light);
+  border-radius: 1rem;
+  background-color: var(--mui-palette-info-light);
+  transition: all 0.2s ease;
+}
+
+.trajectoryOption:hover:not(.disabled) {
+  border-color: var(--mui-palette-info-main);
+  background-color: var(--mui-palette-info-light);
+}
+
+.trajectoryOption.selected {
+  border-color: var(--mui-palette-info-main);
+  background-color: var(--mui-palette-info-light);
+  border-width: 2px;
+}
+
+.trajectoryOptionSelected {
+  border: 1px solid var(--mui-palette-info-main);
+  border-radius: 1rem;
+  background-color: var(--mui-palette-info-light);
+}
+
+.trajectoryOption.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.trajectoryOption input[type='radio'] {
+  margin-right: 1rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+}
+
+.trajectoryOption.disabled input[type='radio'] {
+  cursor: not-allowed;
+}
+
+.checkmark {
+  margin-right: 0.5rem;
+  font-size: 1.125rem;
+}

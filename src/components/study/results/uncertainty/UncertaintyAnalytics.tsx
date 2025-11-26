@@ -20,9 +20,17 @@ interface Props {
   computedResults: ResultsByPost[]
   emissionSources: FullStudy['emissionSources']
   environment: Environment
+  validatedOnly: boolean
 }
 
-const UncertaintyAnalytics = ({ studyId, resultsUnit, computedResults, emissionSources, environment }: Props) => {
+const UncertaintyAnalytics = ({
+  studyId,
+  resultsUnit,
+  computedResults,
+  emissionSources,
+  environment,
+  validatedOnly,
+}: Props) => {
   const t = useTranslations('study.results.uncertainties')
 
   const totalResults = computedResults.find((res) => res.post === 'total')
@@ -40,7 +48,7 @@ const UncertaintyAnalytics = ({ studyId, resultsUnit, computedResults, emissionS
 
   return (
     <div className="my2">
-      <Title title={t('title')} as="h2" />
+      <Title title={t('title')} as="h3" />
       <div className={styles.container}>
         <div className="grow flex-cc">
           <ConfidenceIntervalCharts confidenceInterval={confidenceInterval} unit={resultsUnit} percent={percent} />
@@ -50,14 +58,25 @@ const UncertaintyAnalytics = ({ studyId, resultsUnit, computedResults, emissionS
           <MostUncertainPostsChart computedResults={computedResults} />
         </div>
       </div>
-      <UncertaintyPerPost studyId={studyId} resultsUnit={resultsUnit} computedResults={computedResults} />
+      <UncertaintyPerPost
+        studyId={studyId}
+        resultsUnit={resultsUnit}
+        computedResults={computedResults}
+        validatedOnly={validatedOnly}
+      />
       <UncertaintyPerEmissionSource
         emissionSources={emissionSources}
         studyId={studyId}
         resultsUnit={resultsUnit}
         environment={environment}
+        validatedOnly={validatedOnly}
       />
-      <EmissionSourcePerPost studyId={studyId} resultsUnit={resultsUnit} results={computedResults} />
+      <EmissionSourcePerPost
+        studyId={studyId}
+        resultsUnit={resultsUnit}
+        results={computedResults}
+        validatedOnly={validatedOnly}
+      />
     </div>
   )
 }

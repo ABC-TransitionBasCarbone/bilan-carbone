@@ -66,7 +66,7 @@ const Posts = <T extends SubPostsCommand>({
       Object.keys(environmentPostMapping[environment || Environment.BC]).sort((a, b) =>
         tPost(a).localeCompare(tPost(b)),
       ),
-    [tPost],
+    [environment, tPost],
   )
 
   // For regular posts, show sub-posts for that specific post
@@ -79,7 +79,7 @@ const Posts = <T extends SubPostsCommand>({
         .sort((a, b) => tPost(a).localeCompare(tPost(b)))
     }
     return post ? subPostsByPost[post].sort((a, b) => tPost(a).localeCompare(tPost(b))) : []
-  }, [post, tPost, isAllPosts])
+  }, [isAllPosts, post, environment, tPost])
 
   const handleSelectPost = (event: SelectChangeEvent<unknown>) => {
     const selectedPost = event.target.value as Post | typeof ALL_POSTS_VALUE
@@ -141,7 +141,7 @@ const Posts = <T extends SubPostsCommand>({
           labelId="post-select-label"
           value={isAllPosts ? 'ALL_POSTS' : post || ''}
           onChange={handleSelectPost}
-          label={t('post')}
+          label={`${t('post')} *`}
           t={t}
           clearable
         >
@@ -167,7 +167,7 @@ const Posts = <T extends SubPostsCommand>({
             />
             {error && error.message && selectedSubPosts?.length === 0 && (
               <FormHelperText className={styles.errorSubposts} color="red">
-                {t('validation.' + error.message)}
+                {error.message}
               </FormHelperText>
             )}
           </FormControl>

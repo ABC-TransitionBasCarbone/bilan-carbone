@@ -121,6 +121,11 @@ export enum RequiredEmissionFactorsColumns {
   NOM_REGION = 'NOM_REGION',
   NOM_DEPARTEMENT = 'NOM_DEPARTEMENT',
   FE_BCPlus = 'FE_BCPlus',
+  Nom_DOMAINE = 'domain',
+  NOM_CATEGORIES = 'category',
+  NOM_SOUS_CATEGORIE = 'subCategory',
+  NOM_POSTE = 'post',
+  NOM_SOUS_POSTE = 'subPost',
 }
 
 export type EmissionFactorRow = {
@@ -166,6 +171,11 @@ export class EmissionFactorsWorkSheet extends OldBCWorkSheetReader {
       NOM_PAYS: row[this.indexes.NOM_PAYS],
       NOM_REGION: row[this.indexes.NOM_REGION],
       NOM_DEPARTEMENT: row[this.indexes.NOM_DEPARTEMENT],
+      domain: row[this.indexes.Nom_DOMAINE],
+      category: row[this.indexes.NOM_CATEGORIES],
+      subCategory: row[this.indexes.NOM_SOUS_CATEGORIE],
+      post: row[this.indexes.NOM_POSTE],
+      subPost: row[this.indexes.NOM_SOUS_POSTE],
       FE_BCPlus: row[this.indexes.FE_BCPlus],
     }))
   }
@@ -255,6 +265,7 @@ export enum RequiredStudyEmissionSourcesColumns {
   COMMENTAIRES_COLLECTE = 'commentairesCollecte',
   ValidationDASaisie = 'validationDASaisie',
   DA_VAL_TOTAL = 'daTotalValue',
+  IDEF_TYPE = 'idefType',
   Nom_DOMAINE = 'domain',
   NOM_CATEGORIES = 'category',
   NOM_SOUS_CATEGORIE = 'subCategory',
@@ -263,6 +274,8 @@ export enum RequiredStudyEmissionSourcesColumns {
   ID_Source_Ref = 'emissionFactorImportedId',
   EFV_GUID = 'emissionFactorOldBCId',
   EF_VAL_Conso = 'emissionFactorConsoValue',
+  Amortissement = 'amortissement',
+  LIB_CARACT = 'caracterisation',
 }
 
 export type EmissionSourceRow = {
@@ -285,6 +298,7 @@ export class EmissionSourcesWorkSheet extends OldBCWorkSheetReader {
       commentairesCollecte: row[this.indexes.COMMENTAIRES_COLLECTE],
       validationDASaisie: row[this.indexes.ValidationDASaisie],
       daTotalValue: row[this.indexes.DA_VAL_TOTAL],
+      idefType: row[this.indexes.IDEF_TYPE],
       domain: row[this.indexes.Nom_DOMAINE],
       category: row[this.indexes.NOM_CATEGORIES],
       subCategory: row[this.indexes.NOM_SOUS_CATEGORIE],
@@ -293,6 +307,8 @@ export class EmissionSourcesWorkSheet extends OldBCWorkSheetReader {
       emissionFactorImportedId: row[this.indexes.ID_Source_Ref],
       emissionFactorOldBCId: row[this.indexes.EFV_GUID],
       emissionFactorConsoValue: row[this.indexes.EF_VAL_Conso],
+      amortissement: row[this.indexes.Amortissement],
+      caracterisation: row[this.indexes.LIB_CARACT],
     }))
   }
 }

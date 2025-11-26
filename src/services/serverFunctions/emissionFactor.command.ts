@@ -1,50 +1,52 @@
+import { setCustomIssue } from '@/lib/zod.config'
 import { EmissionFactorPartType, SubPost, Unit } from '@prisma/client'
 import z from 'zod'
 
 export const maxParts = 5
 
 const GESschema = z.object({
-  co2f: z.nan().or(z.number().min(0, 'co2f')).optional(),
-  ch4f: z.nan().or(z.number().min(0, 'ch4f')).optional(),
-  ch4b: z.nan().or(z.number().min(0, 'ch4b')).optional(),
-  n2o: z.nan().or(z.number().min(0, 'n2o')).optional(),
+  co2f: z.nan().or(z.number().min(0)).optional(),
+  ch4f: z.nan().or(z.number().min(0)).optional(),
+  ch4b: z.nan().or(z.number().min(0)).optional(),
+  n2o: z.nan().or(z.number().min(0)).optional(),
   co2b: z.nan().or(z.number()).optional(),
-  sf6: z.nan().or(z.number().min(0, 'sf6')).optional(),
-  hfc: z.nan().or(z.number().min(0, 'hfc')).optional(),
-  pfc: z.nan().or(z.number().min(0, 'pfc')).optional(),
-  otherGES: z.nan().or(z.number().min(0, 'otherGES')).optional(),
+  sf6: z.nan().or(z.number().min(0)).optional(),
+  hfc: z.nan().or(z.number().min(0)).optional(),
+  pfc: z.nan().or(z.number().min(0)).optional(),
+  otherGES: z.nan().or(z.number().min(0)).optional(),
 })
 
 export const SubPostsCommandValidation = z.object({
-  subPosts: z.record(z.array(z.nativeEnum(SubPost)).min(1), { required_error: 'type' }).superRefine((val, ctx) => {
+  subPosts: z.record(z.string(), z.array(z.enum(SubPost)).min(1)).superRefine((val, ctx) => {
     if (Object.keys(val).length === 0) {
-      ctx.addIssue({ message: 'type', code: z.ZodIssueCode.custom })
-      return false
+      ctx.addIssue(setCustomIssue(['subPosts'], 'subPostRequired'))
+      return
     }
 
     if (Object.values(val).some((arr) => arr.length === 0)) {
-      ctx.addIssue({ message: 'subPost', code: z.ZodIssueCode.custom })
-      return false
+      ctx.addIssue(setCustomIssue(['subPosts'], 'subPostRequired'))
     }
   }),
 })
+
 export type SubPostsCommand = z.infer<typeof SubPostsCommandValidation>
 
 export const EmissionFactorCommandValidation = z.intersection(
   GESschema,
   z.intersection(
     z.object({
-      name: z.string({ required_error: 'name' }).trim().min(1, 'name'),
-      unit: z.nativeEnum(Unit, { required_error: 'unit' }),
+      name: z.string().trim().min(1),
+      unit: z.enum(Unit),
       customUnit: z.string().nullable().optional(),
       isMonetary: z.boolean(),
-      source: z.string({ required_error: 'source' }).trim().min(1, 'source'),
-      totalCo2: z.number({ invalid_type_error: 'totalCo2', required_error: 'totalCo2' }).min(0, 'totalCo2'),
-      reliability: z.number({ required_error: 'required' }),
-      technicalRepresentativeness: z.number({ required_error: 'required' }),
-      geographicRepresentativeness: z.number({ required_error: 'required' }),
-      temporalRepresentativeness: z.number({ required_error: 'required' }),
-      completeness: z.number({ required_error: 'required' }),
+      source: z.string().trim().min(1),
+      location: z.string().trim().optional(),
+      totalCo2: z.number().min(0),
+      reliability: z.number(),
+      technicalRepresentativeness: z.number(),
+      geographicRepresentativeness: z.number(),
+      temporalRepresentativeness: z.number(),
+      completeness: z.number(),
       attribute: z.string().optional(),
       comment: z.string().optional(),
       parts: z
@@ -52,9 +54,9 @@ export const EmissionFactorCommandValidation = z.intersection(
           z.intersection(
             GESschema,
             z.object({
-              name: z.string({ required_error: 'name' }).trim().min(1, 'name').max(64, 'nameMaxLength'),
-              type: z.nativeEnum(EmissionFactorPartType, { required_error: 'type' }),
-              totalCo2: z.number({ invalid_type_error: 'totalCo2', required_error: 'totalCo2' }).min(0, 'totalCo2'),
+              name: z.string().trim().min(1).max(64),
+              type: z.enum(EmissionFactorPartType),
+              totalCo2: z.number().min(0),
             }),
           ),
         )

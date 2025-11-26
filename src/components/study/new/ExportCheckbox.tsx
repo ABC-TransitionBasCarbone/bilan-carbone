@@ -158,6 +158,7 @@ const ExportCheckbox = ({ id, study, values, setValues, disabled, duplicateStudy
         <div className={styles.field}>
           <FormControl fullWidth>
             <Select
+              size="small"
               value={values[id]}
               onChange={(event) => handleControlModeChange(event.target.value as ControlMode)}
               disabled={disabled}

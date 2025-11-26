@@ -40,13 +40,7 @@ const NewOrganizationForm = () => {
   return (
     <Block title={t('title')} as="h1" data-testid="new-organization-title">
       <Form onSubmit={form.handleSubmit(onSubmit)}>
-        <FormTextField
-          data-testid="new-organization-name"
-          control={form.control}
-          translation={t}
-          name="name"
-          label={t('name')}
-        />
+        <FormTextField data-testid="new-organization-name" control={form.control} name="name" label={t('name')} />
         <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="new-organization-create-button">
           {t('create')}
         </LoadingButton>

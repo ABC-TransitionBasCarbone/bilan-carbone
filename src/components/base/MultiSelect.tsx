@@ -1,5 +1,6 @@
 import { MenuItem, SelectChangeEvent, SelectProps } from '@mui/material'
 import { useEffect, useMemo, useState } from 'react'
+import styles from './MultiSelect.module.css'
 import { Select } from './Select'
 
 interface MultiSelectProps {
@@ -53,6 +54,7 @@ export const MultiSelect = ({
       value={selected || []}
       onChange={handleChange}
       {...selectProps}
+      displayEmpty
       renderValue={() => {
         if (selectedLabels.length === 0) {
           return <em>{placeholder}</em>
@@ -60,6 +62,7 @@ export const MultiSelect = ({
         return selectedLabels.join(', ')
       }}
       clearable={clearable && selected.length > 0}
+      className={styles.multiSelect}
     >
       {options.map((option) => (
         <MenuItem key={option.value} value={option.value}>

@@ -56,7 +56,7 @@ import { accountWithUserToUserSession, userSessionToDbUser } from '@/utils/userA
 import { DeactivatableFeature, Environment, Organization, Role, User, UserChecklist, UserStatus } from '@prisma/client'
 import jwt from 'jsonwebtoken'
 import { UserSession } from 'next-auth'
-import { getCompanyName, isValidAssociationSiret } from '../associationApi'
+import { getCompanyName, getValidAssociationNameBySiret } from '../associationApi'
 import { auth, dbActualizedAuth } from '../auth'
 import { getUserCheckList } from '../checklist'
 import {
@@ -555,6 +555,13 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
 
     const accountAlreadyCreated = await getAccountByEmailAndEnvironment(email, environment)
     if (accountAlreadyCreated && accountAlreadyCreated.organizationVersionId) {
+      if (environment === Environment.TILT && accountAlreadyCreated.status !== UserStatus.ACTIVE) {
+        const activation = await activateEmail(email.toLowerCase(), environment)
+        if (!activation.success) {
+          throw new Error(activation.errorMessage)
+        }
+        return activation.data
+      }
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -630,13 +637,18 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
     }
 
     if (!organizationVersion) {
-      if (environment === Environment.TILT && !(await isValidAssociationSiret(siretOrCNC))) {
-        throw new Error(NOT_ASSOCIATION_SIRET)
+      let companyName = ''
+
+      if (environment === Environment.TILT) {
+        const associationName = await getValidAssociationNameBySiret(siretOrCNC)
+        if (!associationName) {
+          throw new Error(NOT_ASSOCIATION_SIRET)
+        }
+        companyName = associationName
       }
 
       organization = await getRawOrganizationBySiret(siretOrCNC)
 
-      let companyName = ''
       if (environment === Environment.CUT && !organization?.id) {
         companyName = (await getCompanyName(siretOrCNC)) || ''
 

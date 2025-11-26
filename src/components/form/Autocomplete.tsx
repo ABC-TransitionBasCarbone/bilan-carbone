@@ -91,9 +91,9 @@ export const FormAutocomplete = <T extends FieldValues>({
               />
             )}
           />
-          <FormHelperText className={styles.helper}>
-            {(error?.message ? translation('validation.' + error.message) : ' ') || helperText}
-          </FormHelperText>
+          {(error?.message || helperText) && (
+            <FormHelperText className={styles.helper}>{error?.message ?? helperText}</FormHelperText>
+          )}
         </FormControl>
       )}
     />

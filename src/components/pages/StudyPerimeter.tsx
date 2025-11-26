@@ -4,14 +4,14 @@ import { OrganizationWithSites } from '@/db/account'
 import { getDocumentsForStudy } from '@/db/document'
 import { FullStudy } from '@/db/study'
 import { getUserApplicationSettings } from '@/db/user'
-import { hasAccessToDependencyMatrix } from '@/services/permissions/environment'
+import { hasAccessToDependencyMatrix, hasAccessToPerimeterPage } from '@/services/permissions/environment'
 import { canEditStudyFlows } from '@/services/permissions/study'
 import { defaultCAUnit } from '@/utils/number'
 import { getAccountRoleOnStudy } from '@/utils/study'
 import { DocumentCategory } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
-import Block from '../base/Block'
+import { redirect } from 'next/navigation'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import DependencyMatrix from '../study/perimeter/documents/DependencyMatrix'
 import StudyFlow from '../study/perimeter/documents/StudyFlow'
@@ -26,13 +26,16 @@ interface Props {
 
 const StudyPerimeterPage = async ({ study, organizationVersion, user }: Props) => {
   const tNav = await getTranslations('nav')
-  const t = await getTranslations('study.perimeter')
   const documents = await getDocumentsForStudy(study.id)
 
   const userRoleOnStudy = getAccountRoleOnStudy(user, study)
 
   if (!userRoleOnStudy) {
     return null
+  }
+
+  if (!hasAccessToPerimeterPage(user.environment)) {
+    redirect(`/etudes/${study.id}`)
   }
 
   const caUnit = (await getUserApplicationSettings(user.accountId))?.caUnit || defaultCAUnit
@@ -58,15 +61,13 @@ const StudyPerimeterPage = async ({ study, organizationVersion, user }: Props) =
           { label: study.name, link: `/etudes/${study.id}` },
         ].filter((link) => link !== undefined)}
       />
-      <Block title={t('title', { name: study.name })} as="h1">
-        <StudyPerimeter
-          study={study}
-          organizationVersion={organizationVersion}
-          userRoleOnStudy={userRoleOnStudy}
-          caUnit={caUnit}
-          user={user}
-        />
-      </Block>
+      <StudyPerimeter
+        study={study}
+        organizationVersion={organizationVersion}
+        userRoleOnStudy={userRoleOnStudy}
+        caUnit={caUnit}
+        user={user}
+      />
       <StudyTags studyId={study.id} />
       <StudyFlow canAddFlow={canAddFlow} documents={studyFlowDocuments} study={study} />
       {hasAccessToDependencyMatrix(user.environment) && (

@@ -1,10 +1,6 @@
 import { expect } from '@jest/globals'
-import { Environment, Import, SubPost, Unit } from '@prisma/client'
-import {
-  filterEmissionFactorsBySubPostAndEnv,
-  getEmissionFactorValue,
-  isMonetaryEmissionFactor,
-} from './emissionFactors'
+import { Environment, Import, Unit } from '@prisma/client'
+import { getEmissionFactorValue, isMonetaryEmissionFactor } from './emissionFactors'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('../services/file', () => ({ download: jest.fn() }))
@@ -81,47 +77,6 @@ describe('emissionFactors utils function', () => {
       const emissionFactor = { unit: Unit.KG }
       const result = isMonetaryEmissionFactor(emissionFactor)
       expect(result).toBe(false)
-    })
-  })
-
-  describe('filterEmissionFactorsBySubPostAndEnv', () => {
-    test('BC env - should return all FE in subposts', () => {
-      const emissionFactors = [
-        { subPosts: [SubPost.CombustiblesFossiles, SubPost.Electricite, SubPost.Achats] },
-        { subPosts: [SubPost.DeplacementsDomicileTravail, SubPost.DeplacementsVisiteurs] },
-        { subPosts: [SubPost.CombustiblesFossiles, SubPost.CombustiblesOrganiques] },
-      ]
-      const subPosts = [SubPost.CombustiblesFossiles, SubPost.Electricite]
-
-      const result = filterEmissionFactorsBySubPostAndEnv(emissionFactors, subPosts, Environment.BC)
-
-      expect(result).toEqual([emissionFactors[0], emissionFactors[2]])
-    })
-
-    test('CUT env - should return all FE in subposts', () => {
-      const emissionFactors = [
-        { subPosts: [SubPost.CombustiblesFossiles, SubPost.Electricite, SubPost.Achats] },
-        { subPosts: [SubPost.DeplacementsDomicileTravail, SubPost.DeplacementsVisiteurs] },
-        { subPosts: [SubPost.CombustiblesFossiles, SubPost.CombustiblesOrganiques] },
-      ]
-      const subPosts = [SubPost.CombustiblesFossiles, SubPost.Electricite]
-
-      const result = filterEmissionFactorsBySubPostAndEnv(emissionFactors, subPosts, Environment.CUT)
-
-      expect(result).toEqual([emissionFactors[0], emissionFactors[2]])
-    })
-
-    test('TILT env - should return all FE in subposts with BC-TILT trad', () => {
-      const emissionFactors = [
-        { subPosts: [SubPost.CombustiblesFossiles, SubPost.Electricite, SubPost.Agriculture] },
-        { subPosts: [SubPost.DeplacementsDomicileTravail, SubPost.DeplacementsVisiteurs] },
-        { subPosts: [SubPost.Agriculture, SubPost.CombustiblesOrganiques] },
-      ]
-      const subPosts = [SubPost.TeletravailSalaries, SubPost.ActivitesAgricoles]
-
-      const result = filterEmissionFactorsBySubPostAndEnv(emissionFactors, subPosts, Environment.TILT)
-
-      expect(result).toEqual([emissionFactors[0], emissionFactors[2]])
     })
   })
 })

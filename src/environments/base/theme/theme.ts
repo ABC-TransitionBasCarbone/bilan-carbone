@@ -41,7 +41,8 @@ const base = createTheme({
       main: '#fc8514',
     },
     info: {
-      main: '#272768',
+      main: '#F6AD34',
+      light: '#FFF8EB',
     },
     divider: '#1b5bf51a',
     beges1: {
@@ -162,6 +163,13 @@ const theme = createTheme(base, {
         tooltip: {
           fontSize: '1rem',
           lineHeight: 'normal',
+        },
+      },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          fontSize: '1rem !important',
         },
       },
     },
@@ -310,6 +318,7 @@ const theme = createTheme(base, {
       [SubPost.TransportFabricationDesVehicules]: '#9932CC',
       [SubPost.RepasPrisParLesSalaries]: '#FF6347',
       [SubPost.RepasPrisParLesBenevoles]: '#FF7F50',
+      [SubPost.RepasPrisParLesBeneficiaires]: '#FF8C69',
       [SubPost.UtilisationEnResponsabiliteConsommationDeBiens]: '#FFA07A',
       [SubPost.UtilisationEnResponsabiliteConsommationNumerique]: '#FA8072',
       [SubPost.UtilisationEnResponsabiliteConsommationDEnergie]: '#F08080',

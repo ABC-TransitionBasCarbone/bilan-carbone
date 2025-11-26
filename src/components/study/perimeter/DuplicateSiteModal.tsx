@@ -273,7 +273,6 @@ const DuplicateSiteModal = ({ open, onClose, sourceSite, study, canEditOrganizat
             <div className={styles.numberInput}>
               <FormTextField
                 control={control}
-                translation={tDuplicate}
                 name="newSitesCount"
                 label={tDuplicate('numberOfSitesToCreate')}
                 type="number"

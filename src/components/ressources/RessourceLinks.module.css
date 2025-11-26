@@ -1,5 +1,5 @@
 .card {
-  border: 2px solid var(--mui-palette-info-main);
+  border: 2px solid var(--mui-palette-primary-main);
   border-radius: 1rem;
 }
 

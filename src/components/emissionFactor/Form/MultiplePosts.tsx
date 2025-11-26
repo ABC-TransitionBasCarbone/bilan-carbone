@@ -50,7 +50,7 @@ const MultiplePosts = <T extends SubPostsCommand>({ form, context }: Props<T>) =
       Object.keys(environmentPostMapping[environment || Environment.BC])
         .sort((a, b) => tPost(a).localeCompare(tPost(b)))
         .filter((postKey) => !Object.keys(selectedPosts).includes(postKey)) as Post[],
-    [selectedPosts, tPost],
+    [environment, selectedPosts, tPost],
   )
 
   const handleSelectPost = (event: SelectChangeEvent<unknown>) => {
@@ -95,7 +95,7 @@ const MultiplePosts = <T extends SubPostsCommand>({ form, context }: Props<T>) =
                 name={'post'}
                 onChange={handleSelectPost}
                 data-testid="emission-factor-post"
-                label={t('posts')}
+                label={Object.keys(selectedPosts).length ? t('posts') : `${t('posts')} *`}
                 fullWidth
                 icon={<HelpIcon onClick={() => setGlossary(`post_${context}`)} label={tGlossary('title')} />}
                 iconPosition="after"
@@ -112,7 +112,7 @@ const MultiplePosts = <T extends SubPostsCommand>({ form, context }: Props<T>) =
                 ))}
               </Select>
               {error && error.message && Object.keys(selectedPosts).length === 0 && (
-                <FormHelperText color="red">{t('validation.' + error.message)}</FormHelperText>
+                <FormHelperText color="red">{error.message}</FormHelperText>
               )}
             </FormControl>
           )}

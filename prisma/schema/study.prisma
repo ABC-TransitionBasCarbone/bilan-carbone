@@ -61,10 +61,10 @@ model OpeningHours {
   studySite   StudySite @relation(fields: [studySiteId], references: [id])
   studySiteId String    @map("study_site_id")
 
-  isHoliday Boolean   @default(false)
+  isHoliday Boolean   @default(false) @map("is_holiday")
   day       DayOfWeek
-  openHour  String?
-  closeHour String?
+  openHour  String?   @map("open_hour")
+  closeHour String?   @map("close_hour")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -95,7 +95,7 @@ model StudyTag {
   name  String
   color String?
 
-  familyId String          @map("family_id")
+  familyId String         @map("family_id")
   family   StudyTagFamily @relation(fields: [familyId], references: [id])
 
   emissionSourceTags EmissionSourceTag[]
@@ -197,7 +197,7 @@ model Contributors {
   account   Account @relation(fields: [accountId], references: [id])
   accountId String  @map("account_id")
 
-  subPost SubPost
+  subPost SubPost @map("sub_post")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -234,7 +234,7 @@ model StudyEmissionSource {
   technicalRepresentativeness  Int?                @map("technical_representativeness")
   geographicRepresentativeness Int?                @map("geographic_representativeness")
   temporalRepresentativeness   Int?                @map("temporal_representativeness")
-  completeness                 Int?                @map("completeness")
+  completeness                 Int?
   source                       String?
   type                         EmissionSourceType?
   comment                      String?
@@ -332,10 +332,10 @@ model StudySite {
 
   volunteerNumber   Int?           @map("volunteer_number")
   beneficiaryNumber Int?           @map("beneficiary_number")
-  numberOfSessions  Int?
-  numberOfTickets   Int?
-  numberOfOpenDays  Int?
-  distanceToParis   Int?
+  numberOfSessions  Int?           @map("number_of_sessions")
+  numberOfTickets   Int?           @map("number_of_tickets")
+  numberOfOpenDays  Int?           @map("number_of_openDays")
+  distanceToParis   Int?           @map("distance_to_paris")
   openingHours      OpeningHours[]
 
   createdAt DateTime @default(now()) @map("created_at")

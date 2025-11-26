@@ -1,19 +1,17 @@
 'use client'
 
-import Button from '@/components/base/Button'
 import DebouncedInput from '@/components/base/DebouncedInput'
+import { TableActionButton } from '@/components/base/TableActionButton'
 import { FormCheckbox } from '@/components/form/Checkbox'
 import { FormTextField } from '@/components/form/TextField'
 import GlobalSites from '@/components/organization/Sites'
 import { getCncByCncCode } from '@/services/serverFunctions/study'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
-import DeleteIcon from '@mui/icons-material/Delete'
 import { Environment } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo, useRef } from 'react'
 import { Control, Controller, UseFormGetValues, UseFormReturn, UseFormSetValue } from 'react-hook-form'
-import styles from '../../base/organization/Sites.module.css'
 
 interface Props<T extends SitesCommand> {
   form?: UseFormReturn<T>
@@ -128,18 +126,14 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
                     return (
                       <DebouncedInput
                         data-testid="edit-site-cnc"
-                        className={styles.cnc}
                         debounce={200}
                         value={displayValue}
                         onChange={(newValue: string) => {
                           setCncData(newValue, row.index)
                         }}
                         placeholder={t('cncPlaceholder')}
-                        slotProps={{
-                          input: {
-                            sx: { borderRadius: '0.75rem', borderColor: 'var(--grayscale-300)', color: 'black' },
-                          },
-                        }}
+                        size="small"
+                        fullWidth
                       />
                     )
                   }}
@@ -162,11 +156,10 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
               ) : (
                 <FormTextField
                   data-testid="edit-site-name"
-                  className={styles.field}
                   control={control}
-                  translation={t}
                   name={`sites.${row.index}.name`}
                   placeholder={t('namePlaceholder')}
+                  size="small"
                 />
               )}
             </>
@@ -186,11 +179,10 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
               ) : (
                 <FormTextField
                   data-testid="organization-sites-postal-code"
-                  className={styles.field}
                   control={control}
-                  translation={t}
                   name={`sites.${row.index}.postalCode`}
                   placeholder={t('postalCodePlaceholder')}
+                  size="small"
                 />
               )}
             </>
@@ -210,11 +202,10 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
               ) : (
                 <FormTextField
                   data-testid="organization-sites-city"
-                  className={styles.field}
                   control={control}
-                  translation={t}
                   name={`sites.${row.index}.city`}
                   placeholder={t('cityPlaceholder')}
+                  size="small"
                 />
               )}
             </>
@@ -223,28 +214,25 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
           ),
       },
     ] as ColumnDef<SitesCommand['sites'][0]>[]
+
     if (form && !withSelection) {
       columns.push({
-        id: 'delete',
-        header: t('actions'),
+        id: 'actions',
+        header: '',
         accessorKey: 'id',
         cell: ({ getValue }) => (
-          <div className="w100 flex-cc">
-            <Button
-              data-testid="delete-site-button"
-              title={t('delete')}
-              aria-label={t('delete')}
-              onClick={() => {
-                const id = getValue<string>()
-                setValue(
-                  'sites',
-                  getValues('sites').filter((site) => site.id !== id),
-                )
-              }}
-            >
-              <DeleteIcon />
-            </Button>
-          </div>
+          <TableActionButton
+            type="delete"
+            size="medium"
+            data-testid="delete-site-button"
+            onClick={() => {
+              const id = getValue<string>()
+              setValue(
+                'sites',
+                getValues('sites').filter((site) => site.id !== id),
+              )
+            }}
+          />
         ),
       })
     }

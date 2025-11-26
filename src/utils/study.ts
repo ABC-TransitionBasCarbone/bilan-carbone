@@ -3,43 +3,49 @@ import { FullStudy } from '@/db/study'
 import { isAdminOnStudyOrga } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
-import { checkLevel } from '@/services/study'
+import { hasSufficientLevel } from '@/services/study'
 import { isAdmin } from '@/utils/user'
 import { Environment, Level, Role, StudyResultUnit, StudyRole, SubPost, Unit } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { formatNumber } from './number'
-import { isInOrgaOrParent } from './organization'
+import { hasActiveLicence, isInOrgaOrParent } from './organization'
 
 export const getUserRoleOnPublicStudy = (
   user: Pick<UserSession, 'role' | 'level' | 'environment'>,
   studyLevel: Level,
 ) => {
   if (isAdmin(user.role)) {
-    return checkLevel(user.level, studyLevel) ? StudyRole.Validator : StudyRole.Reader
+    return hasSufficientLevel(user.level, studyLevel) ? StudyRole.Validator : StudyRole.Reader
   }
 
   if (user.environment === Environment.CUT) {
     return StudyRole.Editor
   }
 
-  return user.role === Role.COLLABORATOR && checkLevel(user.level, studyLevel) ? StudyRole.Editor : StudyRole.Reader
+  return user.role === Role.COLLABORATOR && hasSufficientLevel(user.level, studyLevel)
+    ? StudyRole.Editor
+    : StudyRole.Reader
 }
 
 export const getAccountRoleOnStudy = (user: UserSession, study: FullStudy) => {
   if (isAdminOnStudyOrga(user, study.organizationVersion as OrganizationVersionWithOrganization)) {
-    return checkLevel(user.level, study.level) ? StudyRole.Validator : StudyRole.Reader
+    return hasSufficientLevel(user.level, study.level) && hasActiveLicence(study.organizationVersion)
+      ? StudyRole.Validator
+      : StudyRole.Reader
   }
 
   const right = study.allowedUsers.find((right) => right.account.id === user.accountId)
   if (right) {
-    return right.role
+    return hasSufficientLevel(user.level, study.level) && hasActiveLicence(study.organizationVersion)
+      ? right.role
+      : StudyRole.Reader
   }
 
   if (
     study.isPublic &&
     isInOrgaOrParent(user.organizationVersionId, study.organizationVersion as OrganizationVersionWithOrganization)
   ) {
-    return getUserRoleOnPublicStudy(user, study.level)
+    return hasActiveLicence(study.organizationVersion) ? getUserRoleOnPublicStudy(user, study.level) : StudyRole.Reader
   }
 
   return null
@@ -156,4 +162,8 @@ export const getDuplicableEnvironments = (environment: Environment): Environment
       break
   }
   return [environment].concat(compatibles)
+}
+
+export const formatValueForExport = (value: number): number => {
+  return Math.round(value)
 }

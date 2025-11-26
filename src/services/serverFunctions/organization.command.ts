@@ -2,12 +2,7 @@ import z from 'zod'
 import { SitesCommandValidation } from './study.command'
 
 export const CreateOrganizationCommandValidation = z.object({
-  name: z
-    .string({
-      required_error: 'name',
-    })
-    .trim()
-    .min(1, 'name'),
+  name: z.string().trim().min(1),
 })
 
 export type CreateOrganizationCommand = z.infer<typeof CreateOrganizationCommandValidation>

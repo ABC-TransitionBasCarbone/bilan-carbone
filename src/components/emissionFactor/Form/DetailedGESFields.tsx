@@ -24,7 +24,6 @@ const DetailedGESFields = <T extends EmissionFactorCommand>({ form, index }: Pro
           key={getName(gaz)}
           data-testid={getTestId(gaz)}
           control={control}
-          translation={t}
           slotProps={{
             htmlInput: { min: 0 },
             input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },

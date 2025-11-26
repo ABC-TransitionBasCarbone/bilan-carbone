@@ -29,35 +29,37 @@ interface Props {
   studyId: string
   resultsUnit: StudyResultUnit
   results: ResultsByPost[]
+  validatedOnly: boolean
 }
 
-const EmissionSourcePerPost = ({ studyId, resultsUnit, results }: Props) => {
+const EmissionSourcePerPost = ({ studyId, resultsUnit, results, validatedOnly }: Props) => {
   const t = useTranslations('study.results')
   const tPost = useTranslations('emissionFactors.post')
 
   const filteredResults = results.filter((post) => post.post !== 'total')
+  const numberOfSources = validatedOnly ? 'numberOfValidatedEmissionSource' : 'numberOfEmissionSource'
   const { maxValue, maxSource } = filteredResults.reduce(
     (res, post) => ({
       maxValue: Math.max(res.maxValue, post.value),
-      maxSource: Math.max(res.maxSource, post.numberOfValidatedEmissionSource as number),
+      maxSource: Math.max(res.maxSource, post[numberOfSources] as number),
     }),
     { maxValue: 0, maxSource: 0 },
   )
 
   const series: ScatterSeries[] = filteredResults
-    .filter((post) => !!post.uncertainty || !!post.numberOfValidatedEmissionSource)
+    .filter((post) => !!post.uncertainty || !!post[numberOfSources])
     .map((post) => ({
       id: post.post,
       data: [
         {
           id: post.post,
           x: post.value,
-          y: post.numberOfValidatedEmissionSource as number,
+          y: post[numberOfSources] as number,
         },
       ],
       markerSize: 30,
       valueFormatter: () =>
-        `${tPost(post.post)} : ${t('total')} : ${formatEmissionFactorNumber(post.value / STUDY_UNIT_VALUES[resultsUnit])} ${t(`units.${resultsUnit}`)} - ${t('emissionSources')} : ${post.numberOfValidatedEmissionSource}`,
+        `${tPost(post.post)} : ${t('total')} : ${formatEmissionFactorNumber(post.value / STUDY_UNIT_VALUES[resultsUnit])} ${t(`units.${resultsUnit}`)} - ${t('emissionSources')} : ${post[numberOfSources]}`,
     }))
 
   const colors = series.map((post) => `var(--post-${postColors[post.id as Post] || defaultPostColor}-light)`)

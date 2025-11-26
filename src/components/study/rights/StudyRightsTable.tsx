@@ -2,15 +2,15 @@
 
 import Block from '@/components/base/Block'
 import HelpIcon from '@/components/base/HelpIcon'
+import BaseTable from '@/components/base/Table'
+import { TableActionButton } from '@/components/base/TableActionButton'
 import Toast, { ToastColors } from '@/components/base/Toast'
 import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteStudyMember } from '@/services/serverFunctions/study'
-import DeleteIcon from '@mui/icons-material/Cancel'
-import { Button } from '@mui/material'
 import { StudyRole } from '@prisma/client'
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
+import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -24,6 +24,8 @@ interface Props {
   userRoleOnStudy: StudyRole
 }
 
+type AllowedUser = FullStudy['allowedUsers'][number]
+
 const emptyToast = { text: '', color: 'error' } as const
 const toastPosition = { vertical: 'bottom', horizontal: 'left' } as const
 
@@ -33,14 +35,14 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
   const tStudyRole = useTranslations('study.role')
   const [displayRoles, setDisplayRoles] = useState(false)
   const [toast, setToast] = useState<{ text: string; color: ToastColors }>(emptyToast)
-  const [memberToDelete, setToDelete] = useState<FullStudy['allowedUsers'][0] | undefined>(undefined)
+  const [memberToDelete, setToDelete] = useState<AllowedUser | undefined>(undefined)
   const [deleting, setDeleting] = useState(false)
   const { callServerFunction } = useServerFunction()
 
   const router = useRouter()
 
   const columns = useMemo(() => {
-    const columns: ColumnDef<FullStudy['allowedUsers'][0]>[] = [
+    const columns: ColumnDef<AllowedUser>[] = [
       {
         header: t('email'),
         accessorKey: 'account.user.email',
@@ -64,20 +66,15 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
         },
       })
       columns.push({
-        header: t('actions'),
+        id: 'actions',
+        header: '',
         cell: ({ row }) =>
           user.accountId !== row.original.accountId && (
-            <div className="flex-cc">
-              <Button
-                aria-label={t('delete')}
-                title={t('delete')}
-                onClick={() => setToDelete(row.original)}
-                data-testid={`delete-study-member-button`}
-                color="error"
-              >
-                <DeleteIcon />
-              </Button>
-            </div>
+            <TableActionButton
+              type="delete"
+              onClick={() => setToDelete(row.original)}
+              data-testid="delete-study-member-button"
+            />
           ),
       })
     } else {
@@ -87,7 +84,7 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
       })
     }
     return columns
-  }, [t, tStudyRole, userRoleOnStudy, user, study])
+  }, [t, canAddMember, user, userRoleOnStudy, study, tStudyRole])
 
   const table = useReactTable({
     columns,
@@ -95,7 +92,7 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
     getCoreRowModel: getCoreRowModel(),
   })
 
-  const deleteMember = async (member: FullStudy['allowedUsers'][0]) => {
+  const deleteMember = async (member: AllowedUser) => {
     setDeleting(true)
     await callServerFunction(() => deleteStudyMember(member, study.id), {
       onSuccess: () => {
@@ -110,6 +107,7 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
     <>
       <Block
         title={t('title')}
+        as="h3"
         icon={<HelpIcon onClick={() => setDisplayRoles(!displayRoles)} label={tStudyRole('guide')} />}
         iconPosition="after"
         expIcon
@@ -126,28 +124,7 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
             : undefined
         }
       >
-        <table aria-labelledby="study-rights-table-title">
-          <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <th key={header.id}>
-                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <tr key={row.id} data-testid="study-rights-table-line">
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <BaseTable table={table} testId="study-rights" />
       </Block>
       <Modal
         open={displayRoles}

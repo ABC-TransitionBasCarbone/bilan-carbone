@@ -15,9 +15,9 @@ import EditIcon from '@mui/icons-material/Edit'
 import { EmissionFactorImportVersion, Environment } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import StudyLevel from './StudyLevel'
-import styles from './StudyParams.module.css'
 import StudyPublicStatus from './StudyPublicStatus'
 import StudyResultsUnit from './StudyResultsUnit'
 import StudyVersions from './StudyVersions'
@@ -32,8 +32,10 @@ interface Props {
 const StudyParams = ({ user, study, disabled, emissionFactorSources }: Props) => {
   const t = useTranslations('study.rights')
   const tValidation = useTranslations('study.rights.new')
+  const router = useRouter()
 
   const [editTitle, setEditTitle] = useState(false)
+  const [loading, setLoading] = useState(false)
   const { callServerFunction } = useServerFunction()
 
   const form = useForm<ChangeStudyNameCommand>({
@@ -46,16 +48,16 @@ const StudyParams = ({ user, study, disabled, emissionFactorSources }: Props) =>
     },
   })
 
-  const name = form.watch('name')
-
   const resetInput = useCallback(() => {
     form.setValue('name', study.name)
     setEditTitle(false)
   }, [form, study])
 
-  const handleSubmit = useCallback(
-    async (data: ChangeStudyNameCommand) => {
-      if (name === study.name) {
+  const handleSubmit = useCallback(async () => {
+    setLoading(true)
+
+    await form.handleSubmit(async (data) => {
+      if (data.name === study.name) {
         resetInput()
         return
       }
@@ -63,12 +65,13 @@ const StudyParams = ({ user, study, disabled, emissionFactorSources }: Props) =>
       await callServerFunction(() => changeStudyName(data), {
         onSuccess: () => {
           setEditTitle(false)
-          study.name = name
+          router.refresh()
         },
       })
-    },
-    [name, study, callServerFunction, resetInput],
-  )
+    })()
+
+    setLoading(false)
+  }, [form, study.name, callServerFunction, resetInput, router])
 
   const isCut = useMemo(() => user.environment === Environment.CUT, [user?.environment])
 
@@ -76,21 +79,19 @@ const StudyParams = ({ user, study, disabled, emissionFactorSources }: Props) =>
     <>
       <Block
         title={t('title', { name: study.name })}
-        as="h1"
+        as="h2"
         icon={
           disabled ? (
             <></>
           ) : (
-            <div className="ml1">
-              <Button aria-label={t('edit')} title={t('edit')} onClick={() => setEditTitle(true)}>
-                <EditIcon />
-              </Button>
-            </div>
+            <Button aria-label={t('edit')} title={t('edit')} onClick={() => setEditTitle(true)}>
+              <EditIcon />
+            </Button>
           )
         }
         iconPosition="after"
-        className={styles.blockStudyParams}
       >
+        <h3 className="mb1">{t('general')}</h3>
         {!isCut && (
           <>
             <div className="flex pb2">
@@ -109,9 +110,16 @@ const StudyParams = ({ user, study, disabled, emissionFactorSources }: Props) =>
         label={'edit-study-title'}
         title={t('edit')}
         onClose={resetInput}
-        actions={[{ actionType: 'button', onClick: form.handleSubmit(handleSubmit), children: t('edit') }]}
+        actions={[
+          {
+            actionType: 'loadingButton',
+            onClick: () => handleSubmit(),
+            loading,
+            children: t('edit'),
+          },
+        ]}
       >
-        <FormTextField name="name" translation={tValidation} control={form.control} required />
+        <FormTextField name="name" control={form.control} required />
       </Modal>
     </>
   )

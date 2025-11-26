@@ -1,6 +1,6 @@
+import { useUnitLabel } from '@/services/unit'
 import { TextFieldProps } from '@mui/material'
 import classNames from 'classnames'
-import { useTranslations } from 'next-intl'
 import { InputHTMLAttributes, useCallback, useMemo } from 'react'
 import DebouncedInput from '../../base/DebouncedInput'
 import { getNumberInputFormat, getTextInputFormat } from '../services/questionService'
@@ -26,7 +26,7 @@ const TextUnitInput = ({
   ...props
 }: TextUnitInputProps &
   Omit<TextFieldProps & InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | 'onBlur'>) => {
-  const tUnits = useTranslations('units')
+  const getUnitLabel = useUnitLabel()
   const questionFormat =
     format ||
     (question.type === QuestionType.NUMBER || question.type === QuestionType.POSTAL_CODE
@@ -70,7 +70,7 @@ const TextUnitInput = ({
           },
         }}
       />
-      {questionUnit && <div className={styles.unit}>{tUnits(questionUnit)}</div>}
+      {questionUnit && <div className={styles.unit}>{getUnitLabel(questionUnit, Number(value))}</div>}
     </div>
   )
 }

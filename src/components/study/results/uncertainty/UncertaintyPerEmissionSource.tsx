@@ -24,30 +24,33 @@ interface Props {
   studyId: string
   resultsUnit: StudyResultUnit
   environment: Environment
+  validatedOnly: boolean
 }
 
 type Serie = ScatterSeries & {
   post: Post
 }
 
-const UncertaintyPerEmissionSource = ({ emissionSources, studyId, resultsUnit, environment }: Props) => {
+const UncertaintyPerEmissionSource = ({ emissionSources, studyId, resultsUnit, environment, validatedOnly }: Props) => {
   const t = useTranslations('study.results')
   const tCaract = useTranslations('emissionSource.form')
   const tQuality = useTranslations('quality')
   const [details, setDetails] = useState('')
 
-  const results = emissionSources.map((emissionSource) => {
-    const res = getEmissionResults(emissionSource, environment)
-    const alpha = getAlpha(res.emissionValue, res.confidenceInterval)
+  const results = emissionSources
+    .filter((emissionSource) => !validatedOnly || emissionSource.validated)
+    .map((emissionSource) => {
+      const res = getEmissionResults(emissionSource, environment)
+      const alpha = getAlpha(res.emissionValue, res.confidenceInterval)
 
-    return {
-      id: emissionSource.id,
-      name: emissionSource.name,
-      value: res.emissionValue,
-      post: getPost(emissionSource.subPost),
-      uncertainty: alpha ? alpha * 100 : undefined,
-    }
-  })
+      return {
+        id: emissionSource.id,
+        name: emissionSource.name,
+        value: res.emissionValue,
+        post: getPost(emissionSource.subPost),
+        uncertainty: alpha ? alpha * 100 : undefined,
+      }
+    })
 
   const { maxValue, maxUncertainty } = results.reduce(
     (res, emissionSource) => ({

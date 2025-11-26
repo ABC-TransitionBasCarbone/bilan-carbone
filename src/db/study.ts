@@ -3,7 +3,7 @@ import { getEnvVar } from '@/lib/environment'
 import { filterAllowedStudies } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { ChangeStudyCinemaCommand } from '@/services/serverFunctions/study.command'
-import { checkLevel, getAllowedLevels } from '@/services/study'
+import { getAllowedLevels, hasSufficientLevel } from '@/services/study'
 import { mapCncToStudySite } from '@/utils/cnc'
 import { isAdminOnOrga } from '@/utils/organization'
 import { getUserRoleOnPublicStudy } from '@/utils/study'
@@ -41,24 +41,26 @@ export const createStudy = async (
 ) => {
   const client = tx ?? prismaClient
   const dbStudy = await client.study.create({ data })
-  let studyEmissionFactorVersions: Prisma.StudyEmissionFactorVersionCreateManyInput[] = []
 
-  if (environment === Environment.CUT) {
-    studyEmissionFactorVersions = (await getSourceCutImportVersionIds()).map((importVersion) => ({
-      studyId: dbStudy.id,
-      source: importVersion.source,
-      importVersionId: importVersion.id,
-    }))
-  } else if (shouldCreateFEVersions) {
-    const sources = Object.values(Import).filter((source) => source !== Import.Manual && source !== Import.CUT)
-
-    const latestVersions = await getSourcesLatestImportVersionId(sources)
-    if (latestVersions) {
-      studyEmissionFactorVersions = latestVersions.map((latestImportVersion) => ({
+  if (environment === Environment.CUT || shouldCreateFEVersions) {
+    let studyEmissionFactorVersions: Prisma.StudyEmissionFactorVersionCreateManyInput[] = []
+    if (environment === Environment.CUT) {
+      studyEmissionFactorVersions = (await getSourceCutImportVersionIds()).map((importVersion) => ({
         studyId: dbStudy.id,
-        source: latestImportVersion.source,
-        importVersionId: latestImportVersion.id,
+        source: importVersion.source,
+        importVersionId: importVersion.id,
       }))
+    } else {
+      const sources = Object.values(Import).filter((source) => source !== Import.Manual && source !== Import.CUT)
+
+      const latestVersions = await getSourcesLatestImportVersionId(sources)
+      if (latestVersions) {
+        studyEmissionFactorVersions = latestVersions.map((latestImportVersion) => ({
+          studyId: dbStudy.id,
+          source: latestImportVersion.source,
+          importVersionId: latestImportVersion.id,
+        }))
+      }
     }
     await client.studyEmissionFactorVersion.createMany({ data: studyEmissionFactorVersions })
   }
@@ -69,6 +71,7 @@ const fullStudyInclude = {
   emissionSources: {
     select: {
       id: true,
+      createdAt: true,
       subPost: true,
       name: true,
       caracterisation: true,
@@ -104,6 +107,7 @@ const fullStudyInclude = {
           id: true,
           totalCo2: true,
           unit: true,
+          customUnit: true,
           isMonetary: true,
           reliability: true,
           technicalRepresentativeness: true,
@@ -112,6 +116,22 @@ const fullStudyInclude = {
           completeness: true,
           importedFrom: true,
           importedId: true,
+          location: true,
+          metaData: {
+            select: {
+              language: true,
+              title: true,
+              attribute: true,
+              frontiere: true,
+              location: true,
+              comment: true,
+            },
+          },
+          version: {
+            select: {
+              id: true,
+            },
+          },
         },
       },
       contributor: {
@@ -226,6 +246,13 @@ const fullStudyInclude = {
       id: true,
       importVersionId: true,
       source: true,
+      importVersion: {
+        select: {
+          name: true,
+          source: true,
+          id: true,
+        },
+      },
     },
   },
   exports: { select: { type: true, control: true } },
@@ -235,6 +262,7 @@ const fullStudyInclude = {
       isCR: true,
       parentId: true,
       environment: true,
+      activatedLicence: true,
       organization: {
         select: {
           id: true,
@@ -272,7 +300,7 @@ const normalizeAllowedUsers = (
 ) =>
   allowedUsers.map((allowedUser) => {
     const readerOnly =
-      !allowedUser.account.organizationVersionId || !checkLevel(allowedUser.account.user.level, studyLevel)
+      !allowedUser.account.organizationVersionId || !hasSufficientLevel(allowedUser.account.user.level, studyLevel)
     return organizationVersionId && allowedUser.account.organizationVersionId === organizationVersionId
       ? { ...allowedUser, account: { ...allowedUser.account, readerOnly } }
       : {
@@ -436,6 +464,17 @@ export const getStudyById = async (id: string, organizationVersionId: string | n
     return null
   }
   return { ...study, allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level, organizationVersionId) }
+}
+
+export const getStudyByIds = async (ids: string[]) => {
+  const studies = await prismaClient.study.findMany({
+    where: { id: { in: ids } },
+    include: fullStudyInclude,
+  })
+  return studies.map((study) => ({
+    ...study,
+    allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level, null),
+  }))
 }
 export type FullStudy = Exclude<AsyncReturnType<typeof getStudyById>, null>
 
@@ -858,4 +897,10 @@ export const createEmissionSourceTags = async (
 ) =>
   (tx ?? prismaClient).emissionSourceTag.createMany({
     data: emissionSourceTags,
+  })
+
+export const getOrganizationStudiesBeforeDate = (organizationVersionId: string, date: Date) =>
+  prismaClient.study.findMany({
+    select: { id: true, name: true },
+    where: { organizationVersionId, startDate: { lt: date } },
   })

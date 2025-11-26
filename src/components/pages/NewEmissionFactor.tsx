@@ -3,7 +3,11 @@ import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import NewEmissionFactorForm from '../emissionFactor/new/Form'
 
-const NewEmissionFactorPage = () => {
+interface Props {
+  locations: string[]
+}
+
+const NewEmissionFactorPage = ({ locations }: Props) => {
   const tNav = useTranslations('nav')
   const t = useTranslations('emissionFactors.create')
   return (
@@ -16,7 +20,7 @@ const NewEmissionFactorPage = () => {
         ]}
       />
       <Block title={t('title')} as="h1">
-        <NewEmissionFactorForm />
+        <NewEmissionFactorForm locations={locations} />
       </Block>
     </>
   )

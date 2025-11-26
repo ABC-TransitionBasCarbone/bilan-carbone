@@ -3,9 +3,11 @@ import withStudyDuplication, { StudyDuplicationProps } from '@/components/hoc/wi
 import NewStudyPage from '@/components/pages/NewStudy'
 import NotFound from '@/components/pages/NotFound'
 import { getAccountOrganizationVersions } from '@/db/account'
-import { getOrganizationVersionAccounts } from '@/db/organization'
+import { getOrganizationVersionAccounts, getOrganizationVersionById } from '@/db/organization'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { defaultCAUnit } from '@/utils/number'
+import { hasActiveLicence } from '@/utils/organization'
+import { redirect } from 'next/navigation'
 
 const NewStudy = async ({ user, duplicateStudyId }: UserSessionProps & StudyDuplicationProps) => {
   if (!user.organizationVersionId || !user.level) {
@@ -16,6 +18,16 @@ const NewStudy = async ({ user, duplicateStudyId }: UserSessionProps & StudyDupl
     getAccountOrganizationVersions(user.accountId),
     getOrganizationVersionAccounts(user.organizationVersionId),
   ])
+
+  const organizationVersionId = organizationVersions.find(
+    (organizationVersion) => organizationVersion.id === user.organizationVersionId,
+  )?.id
+  if (organizationVersionId) {
+    const organizationVersion = await getOrganizationVersionById(organizationVersionId)
+    if (!organizationVersion || !hasActiveLicence(organizationVersion)) {
+      redirect('/')
+    }
+  }
 
   const userSettings = await getUserSettings()
   const caUnit = userSettings.success ? userSettings.data?.caUnit || defaultCAUnit : defaultCAUnit

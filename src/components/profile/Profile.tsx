@@ -72,14 +72,12 @@ const Profile = ({ version }: Props) => {
                 <FormTextField
                   data-testid="edit-user-firstName"
                   control={form.control}
-                  translation={t}
                   name="firstName"
                   label={t('firstName')}
                 />
                 <FormTextField
                   data-testid="edit-user-lastName"
                   control={form.control}
-                  translation={t}
                   name="lastName"
                   label={t('lastName')}
                 />

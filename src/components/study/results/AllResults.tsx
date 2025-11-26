@@ -1,22 +1,29 @@
 'use client'
+
 import Block from '@/components/base/Block'
 import Button from '@/components/base/Button'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { download } from '@/services/file'
-import { hasAccessToBcExport } from '@/services/permissions/environment'
+import { hasAccessToBcExport, hasAccessToDownloadStudyEmissionSourcesButton } from '@/services/permissions/environment'
 import { computeBegesResult } from '@/services/results/beges'
 import { isDeactivableFeatureActiveForEnvironment } from '@/services/serverFunctions/deactivableFeatures'
 import { prepareReport } from '@/services/serverFunctions/study'
-import { AdditionalResultTypes, downloadStudyResults, getResultsValues, ResultType } from '@/services/study'
+import {
+  AdditionalResultTypes,
+  downloadStudyEmissionSources,
+  downloadStudyResults,
+  getDetailedEmissionResults,
+  ResultType,
+} from '@/services/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import DownloadIcon from '@mui/icons-material/Download'
 import SummarizeIcon from '@mui/icons-material/Summarize'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import { ControlMode, DeactivatableFeature, Environment, Export, ExportRule, SiteCAUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { MouseEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import SelectStudySite from '../site/SelectStudySite'
 import useStudySite from '../site/useStudySite'
 import BegesResultsTable from './beges/BegesResultsTable'
@@ -38,17 +45,25 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   const { callServerFunction } = useServerFunction()
   const tOrga = useTranslations('study.organization')
   const tPost = useTranslations('emissionFactors.post')
+  const tUnit = useTranslations('units')
   const tExport = useTranslations('exports')
   const tQuality = useTranslations('quality')
   const tBeges = useTranslations('beges')
   const tUnits = useTranslations('study.results.units')
+  const tResultUnits = useTranslations('study.results.units')
+  const tStudyExport = useTranslations('study.export')
+  const tCaracterisations = useTranslations('categorisations')
   const tStudyNav = useTranslations('study.navigation')
-
   const { environment } = useAppEnvironmentStore()
   const [type, setType] = useState<ResultType>(AdditionalResultTypes.CONSOLIDATED)
   const exports = useMemo(() => study.exports, [study.exports])
   const [displayValueWithDep, setDisplayValueWithDep] = useState(true)
   const [isDownloadReportActive, setIsDownloadReportActive] = useState(false)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const [downloading, setDownloading] = useState<'emissionSources' | 'results' | null>(null)
+  const handleClickMenu = (event: MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget)
+  const open = Boolean(anchorEl)
+  const handleClose = () => setAnchorEl(null)
 
   useEffect(() => {
     if (environment && environment !== Environment.BC) {
@@ -96,7 +111,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     computedResultsWithoutDep,
   } = useMemo(
     () =>
-      getResultsValues(
+      getDetailedEmissionResults(
         study,
         tPost,
         studySite,
@@ -122,12 +137,58 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     })
   }, [study, monetaryRatio, nonSpecificMonetaryRatio, callServerFunction])
 
+  const hasAccessToEmissionSourcesDownload = useMemo(
+    () => hasAccessToDownloadStudyEmissionSourcesButton(study.organizationVersion.environment),
+    [study.organizationVersion.environment],
+  )
+
   if (!environment) {
     return null
   }
+  const downloadEmissionSources = async (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
+    preventClose(e)
+    if (hasAccessToEmissionSourcesDownload) {
+      setDownloading('emissionSources')
+      await downloadStudyEmissionSources(
+        study,
+        tStudyExport,
+        tCaracterisations,
+        tPost,
+        tQuality,
+        tUnit,
+        tResultUnits,
+        environment,
+      )
+      setDownloading(null)
+    }
+  }
+
+  const downloadResults = async (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
+    preventClose(e)
+    setDownloading('results')
+    await downloadStudyResults(
+      study,
+      begesRules,
+      emissionFactorsWithParts,
+      t,
+      tExport,
+      tPost,
+      tOrga,
+      tQuality,
+      tBeges,
+      tUnits,
+      environment,
+    )
+    setDownloading(null)
+  }
+
+  const preventClose = (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
+    e.preventDefault()
+    e.stopPropagation()
+  }
 
   return (
-    <Block title={tStudyNav('results')} as="h1">
+    <Block title={tStudyNav('results')} as="h2">
       <div className="flex mb2 justify-between">
         <div className="flex gapped1">
           <SelectStudySite study={study} allowAll studySite={studySite} setSite={setSite} />
@@ -173,27 +234,29 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
           )}
         </div>
         <div className="flex gapped1">
-          <Button
-            onClick={() =>
-              downloadStudyResults(
-                study,
-                begesRules,
-                emissionFactorsWithParts,
-                t,
-                tExport,
-                tPost,
-                tOrga,
-                tQuality,
-                tBeges,
-                tUnits,
-                environment,
-              )
-            }
-            title={t('download')}
-            variant="outlined"
+          <Select
+            id="download-results-dropdown"
+            labelId="download-results-dropdown"
+            value="download"
+            renderValue={() => (
+              <div className="align-center">
+                <DownloadIcon className="mr-2" /> {t('download')}
+              </div>
+            )}
           >
-            <DownloadIcon className="mr-2" /> {t('resultsExcel')}
-          </Button>
+            {study.emissionSources.length > 0 && (
+              <MenuItem>
+                <div className="grow justify-start" onClick={downloadEmissionSources}>
+                  {tStudyExport('download')}
+                </div>
+              </MenuItem>
+            )}
+            <MenuItem>
+              <div className="grow justify-start" onClick={downloadResults}>
+                {t('downloadResults')}
+              </div>
+            </MenuItem>
+          </Select>
           {isDownloadReportActive && (
             <Button onClick={downloadReport} title={t('downloadReport')} variant="outlined">
               <SummarizeIcon className="mr-2" /> {t('resultsWord')}
@@ -235,6 +298,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
             resultsUnit={study.resultsUnit}
             emissionSources={study.emissionSources}
             environment={environment}
+            validatedOnly={validatedOnly}
           />
         )}
       </div>

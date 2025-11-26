@@ -3,17 +3,17 @@
 import { FullStudy } from '@/db/study'
 import { getCaracterisationsBySubPost, getEmissionResults } from '@/services/emissionSource'
 import { StudyWithoutDetail } from '@/services/permissions/study'
-import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
+import { EmissionFactorWithMetaData, getEmissionFactors } from '@/services/serverFunctions/emissionFactor'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
 import { withInfobulle } from '@/utils/post'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
-import { StudyRole, SubPost as SubPostEnum } from '@prisma/client'
+import { Environment, Import, StudyRole, SubPost as SubPostEnum } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import HelpIcon from '../base/HelpIcon'
 import EmissionSource from './EmissionSource'
 import NewEmissionSource from './NewEmissionSource'
@@ -32,7 +32,6 @@ type StudyWithoutDetailProps = {
 interface Props {
   subPost: SubPostEnum
   userRoleOnStudy: StudyRole | null
-  emissionFactors: EmissionFactorWithMetaData[]
   emissionSources: FullStudy['emissionSources']
   studySite: string
   setGlossary: (subPost: string) => void
@@ -43,7 +42,6 @@ const SubPost = ({
   withoutDetail,
   study,
   userRoleOnStudy,
-  emissionFactors,
   emissionSources,
   studySite,
   setGlossary,
@@ -52,6 +50,42 @@ const SubPost = ({
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('study.results.units')
   const { environment } = useAppEnvironmentStore()
+  const [emissionFactorsForSubPost, setEmissionFactorsForSubPost] = useState<EmissionFactorWithMetaData[]>([])
+  const [expanded, setExpanded] = useState(false)
+  const importVersions = useMemo(
+    () => [
+      { id: Import.Manual, source: Import.Manual, name: '' },
+      ...study.emissionFactorVersions.map((efv) => efv.importVersion),
+    ],
+    [study.emissionFactorVersions],
+  )
+
+  useEffect(() => {
+    async function fetchEmissionFactors() {
+      const emissionsFactors = await getEmissionFactors(
+        0,
+        'ALL',
+        {
+          archived: false,
+          search: '',
+          location: '',
+          sources: importVersions.map((iv) => iv.id),
+          units: [],
+          subPosts: [subPost],
+        },
+        environment as Environment,
+        study.id,
+      )
+
+      if (emissionsFactors.success) {
+        setEmissionFactorsForSubPost(emissionsFactors.data.emissionFactors)
+      }
+    }
+
+    if (emissionFactorsForSubPost.length === 0 && expanded) {
+      fetchEmissionFactors()
+    }
+  }, [emissionFactorsForSubPost.length, environment, expanded, importVersions, study.id, subPost])
 
   const total = useMemo(() => {
     if (!environment) {
@@ -79,12 +113,17 @@ const SubPost = ({
     [subPost, study.exports, environment],
   )
 
-  const [expanded, setExpanded] = useState(false)
+  const accordionRef = useRef<HTMLDivElement>(null)
 
-  // Check if any emission source in this subpost should be opened by URL hash
   useEffect(() => {
     const hash = window.location.hash
-    if (hash.startsWith('#emission-source-')) {
+
+    if (hash === `#subpost-${subPost}`) {
+      setExpanded(true)
+      setTimeout(() => {
+        accordionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }, 300)
+    } else if (hash.startsWith('#emission-source-')) {
       const emissionSourceId = hash.replace('#emission-source-', '')
       const hasTargetEmissionSource = emissionSources.some((source) => source.id === emissionSourceId)
 
@@ -92,10 +131,10 @@ const SubPost = ({
         setExpanded(true)
       }
     }
-  }, [emissionSources])
+  }, [emissionSources, subPost])
 
   return (!userRoleOnStudy || userRoleOnStudy === StudyRole.Reader) && emissionSources.length === 0 ? null : (
-    <div>
+    <div ref={accordionRef} id={`subpost-${subPost}`} className={styles.subPostScrollContainer}>
       <Accordion expanded={expanded} onChange={(_, isExpanded) => setExpanded(isExpanded)}>
         <AccordionSummary
           className={styles.subPostContainer}
@@ -118,7 +157,7 @@ const SubPost = ({
               {formatNumber(total / STUDY_UNIT_VALUES[study.resultsUnit])} {tUnits(study.resultsUnit)}
             </span>
             {contributors && contributors.length > 0 && (
-              <span className={styles.contributors}>
+              <span className={classNames(styles.contributors, 'ml1')}>
                 {t('contributorsList', { count: contributors.length })} {contributors.join(', ')}
               </span>
             )}
@@ -132,22 +171,24 @@ const SubPost = ({
                 study={study}
                 emissionSource={emissionSource}
                 key={emissionSource.id}
-                emissionFactors={emissionFactors}
                 subPost={subPost}
                 userRoleOnStudy={userRoleOnStudy}
                 withoutDetail
                 caracterisations={caracterisations}
+                emissionFactorsForSubPost={emissionFactorsForSubPost}
+                importVersions={importVersions}
               />
             ) : (
               <EmissionSource
                 study={study}
                 emissionSource={emissionSource}
                 key={emissionSource.id}
-                emissionFactors={emissionFactors}
                 subPost={subPost}
                 userRoleOnStudy={userRoleOnStudy}
                 withoutDetail={false}
                 caracterisations={caracterisations}
+                emissionFactorsForSubPost={emissionFactorsForSubPost}
+                importVersions={importVersions}
               />
             ),
           )}

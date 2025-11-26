@@ -84,6 +84,10 @@
   padding: 1rem;
 }
 
+.p125 {
+  padding: 1.25rem;
+}
+
 .p15 {
   padding: 1.5rem;
 }
@@ -120,6 +124,10 @@
   padding-top: 3rem;
 }
 
+.pt025 {
+  padding-top: 0.25rem;
+}
+
 .pl1 {
   padding-left: 1rem;
 }
@@ -148,6 +156,11 @@
 .px1 {
   padding-left: 1rem;
   padding-right: 1rem;
+}
+
+.px15 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 .px2 {

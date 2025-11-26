@@ -24,7 +24,7 @@ export const getStudyNavbarMenu = (
   studyId: string,
   studyName: string,
   isTransitionPlanActive: boolean = false,
-  hasTransitionPlan: boolean = false,
+  hasObjectives: boolean = false,
 ): Menu => {
   if (environment === Environment.CUT) {
     return {
@@ -108,14 +108,14 @@ export const getStudyNavbarMenu = (
                 testId: 'study-trajectories-link',
               },
               {
-                disabled: !hasTransitionPlan,
-                href: hasTransitionPlan ? `/etudes/${studyId}/objectifs` : '#',
+                disabled: !hasObjectives,
+                href: hasObjectives ? `/etudes/${studyId}/objectifs` : '#',
                 label: t('objectives'),
                 testId: 'study-objectives-link',
               },
               {
-                disabled: !hasTransitionPlan,
-                href: hasTransitionPlan ? `/etudes/${studyId}/actions` : '#',
+                disabled: !hasObjectives,
+                href: hasObjectives ? `/etudes/${studyId}/actions` : '#',
                 label: t('actionPlan'),
                 testId: 'study-action-plan-link',
               },

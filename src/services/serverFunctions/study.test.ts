@@ -11,6 +11,7 @@ import * as userDbModule from '../../db/user'
 import * as authModule from '../../services/auth'
 import * as studyPermissionsModule from '../../services/permissions/study'
 import * as userModule from '../../services/serverFunctions/user'
+import * as studyModule from '../../services/study'
 import { mockedOrganizationVersion } from '../../tests/utils/models/organization'
 import {
   getMockedDuplicateStudyCommand,
@@ -19,7 +20,7 @@ import {
   TEST_EMAILS,
   TEST_IDS,
 } from '../../tests/utils/models/study'
-import { getMockedAuthUser } from '../../tests/utils/models/user'
+import { getMockedDbActualizedAuth } from '../../tests/utils/models/user'
 import * as organizationUtilsModule from '../../utils/organization'
 import * as studyUtilsModule from '../../utils/study'
 import * as userUtilsModule from '../../utils/user'
@@ -130,6 +131,7 @@ jest.mock('../../utils/number', () => ({
 }))
 jest.mock('../posts', () => ({
   environmentPostMapping: { BC: 'bc-mapping', CUT: 'cut-mapping', TILT: 'tilt-mapping' },
+  subPostsByPostBC: {},
   Post: {
     DechetsDirects: 'DechetsDirects',
     IntrantsBiensEtMatieres: 'IntrantsBiensEtMatieres',
@@ -143,6 +145,7 @@ jest.mock('../../utils/post', () => ({
 jest.mock('../../services/study', () => ({
   AdditionalResultTypes: {},
   ResultType: {},
+  hasSufficientLevel: jest.fn(),
 }))
 jest.mock('../results/consolidated', () => ({
   computeResultsByPost: jest.fn(),
@@ -159,7 +162,8 @@ const mockedResults = {
 
 const { duplicateStudyCommand, mapStudyForReport, duplicateSiteAndEmissionSources } = jest.requireActual('./study')
 
-const mockedAuthUser = getMockedAuthUser({ email: TEST_EMAILS.currentUser })
+const mockedSessionValidator = getMockedDbActualizedAuth({}, { email: TEST_EMAILS.validator })
+const mockedSession = getMockedDbActualizedAuth({}, { email: TEST_EMAILS.currentUser })
 const mockedSourceStudy = getMockeFullStudy()
 const mockedStudyCommand = getMockedDuplicateStudyCommand() as CreateStudyCommand
 
@@ -192,18 +196,20 @@ const mockCreateEmissionSourcesWithReturn = emissionSourcesModule.createEmission
 const mockIsOrganizationVersionCR = organizationModule.isOrganizationVersionCR as jest.Mock
 const mockCanChangeSites = studyPermissionsModule.canChangeSites as jest.Mock
 const mockCanEditOrganizationVersion = organizationUtilsModule.canEditOrganizationVersion as jest.Mock
+const mockHasSufficientLevel = studyModule.hasSufficientLevel as jest.Mock
 
 describe('study', () => {
   describe('duplicateStudyCommand', () => {
-    const setupSuccessfulDuplication = () => {
+    const setupSuccessfullDuplication = () => {
       mockCreateTagFamilyAndRelatedTags.mockResolvedValue([])
       mockCreateEmissionSourceTags.mockResolvedValue(undefined)
       mockCreateEmissionSourcesWithReturn.mockResolvedValue([{ id: TEST_IDS.emissionSource }])
       mockGetFamilyTagsForStudy.mockResolvedValue([])
-      mockDbActualizedAuth.mockResolvedValue({ user: mockedAuthUser })
+      mockDbActualizedAuth.mockResolvedValue(mockedSession)
       mockCanDuplicateStudy.mockResolvedValue(true)
+      mockHasSufficientLevel.mockResolvedValue(true)
       mockGetAccountRoleOnStudy.mockReturnValue(StudyRole.Editor)
-      mockGetAccountByEmailAndOrganizationVersionId.mockResolvedValue({ id: 'validator-account-id' })
+      mockGetAccountByEmailAndOrganizationVersionId.mockResolvedValue(mockedSessionValidator)
       mockGetOrganizationVersionById.mockImplementation(() =>
         Promise.resolve({
           id: TEST_IDS.orgVersion,
@@ -247,7 +253,7 @@ describe('study', () => {
 
     beforeEach(() => {
       jest.clearAllMocks()
-      setupSuccessfulDuplication()
+      setupSuccessfullDuplication()
     })
 
     it('should successfully duplicate a study with basic data', async () => {
@@ -858,7 +864,7 @@ describe('study', () => {
     })
 
     const setupSiteDuplicationMocks = (study = getMockeFullStudy()) => {
-      mockDbActualizedAuth.mockResolvedValue({ user: mockedAuthUser })
+      mockDbActualizedAuth.mockResolvedValue(mockedSession)
       mockGetStudyById.mockResolvedValue(study)
       mockCanChangeSites.mockResolvedValue(true)
       mockGetOrganizationVersionById.mockResolvedValue({

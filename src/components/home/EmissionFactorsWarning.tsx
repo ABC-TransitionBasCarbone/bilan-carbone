@@ -25,10 +25,10 @@ const EmissionFactorsWarning = ({ emissionFactors }: Props) => {
         title={t('title')}
         actions={[
           { actionType: 'button', children: t('close'), onClick: onClose },
-          { actionType: 'link', children: t('correct'), href: '/facteurs-d-emission?manual', variant: 'contained' },
+          { actionType: 'link', children: t('correct'), href: '/facteurs-d-emission', variant: 'contained' },
         ]}
       >
-        <p>{t.rich('body', { link: (children) => <a href="/facteurs-d-emission?manual">{children}</a> })}</p>
+        <p>{t.rich('body', { link: (children) => <a href="/facteurs-d-emission">{children}</a> })}</p>
         <ul className="mt-2">
           {emissionFactors.map((emissionFactor) => (
             <li key={emissionFactor}>{emissionFactor}</li>

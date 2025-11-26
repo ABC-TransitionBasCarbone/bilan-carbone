@@ -5,16 +5,17 @@ import { getStudyOrganizationVersion } from '@/services/serverFunctions/organiza
 import { ORGANIZATION, STUDY, useAppContextStore } from '@/store/AppContext'
 import { canEditOrganizationVersion, isInOrgaOrParent } from '@/utils/organization'
 import HomeIcon from '@mui/icons-material/Home'
-import MenuBookIcon from '@mui/icons-material/MenuBook'
 import { AppBar, Box, Button, styled, Toolbar, ToolbarProps, Typography } from '@mui/material'
-import { Environment } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import Link from '../base/Link'
 
 interface Props {
   account: UserSession
   organizationVersions: OrganizationVersionWithOrganization[]
+  shouldDisplayOrgaData: boolean
+  shouldRenewLicense: boolean
 }
 
 const OrganizationToolbar = styled(Toolbar)<ToolbarProps>(({ theme }) => ({
@@ -25,10 +26,12 @@ const OrganizationToolbar = styled(Toolbar)<ToolbarProps>(({ theme }) => ({
   borderBottom: theme.custom.navbar.organizationToolbar?.border,
 }))
 
-const OrganizationCard = ({ account, organizationVersions }: Props) => {
+const renewalLink = process.env.NEXT_PUBLIC_LICENSE_RENEWAL_LINK
+
+const OrganizationCard = ({ account, organizationVersions, shouldDisplayOrgaData, shouldRenewLicense }: Props) => {
   const t = useTranslations('organization.card')
 
-  const isCut = useMemo(() => account.environment === Environment.CUT, [account?.environment])
+  const date = new Date()
 
   const defaultOrganizationVersion = organizationVersions.find(
     (organizationVersion) => organizationVersion.id === account.organizationVersionId,
@@ -99,27 +102,27 @@ const OrganizationCard = ({ account, organizationVersions }: Props) => {
   return (
     <AppBar position="sticky">
       <OrganizationToolbar>
-        <Box display="flex" alignItems="center" gap={2}>
-          <HomeIcon />
-          <Typography>{organizationVersion.organization.name}</Typography>
-          {hasAccess && (
-            <Button color="secondary" href={organizationVersionLink} variant="outlined">
-              {t(linkLabel)}
-            </Button>
+        <Box display="flex" alignItems="center" gap={10}>
+          {shouldDisplayOrgaData && (
+            <div className="align-center gapped">
+              <HomeIcon />
+              <Typography>{organizationVersion.organization.name}</Typography>
+              {hasAccess && (
+                <Button color="secondary" href={organizationVersionLink} variant="outlined">
+                  {t(linkLabel)}
+                </Button>
+              )}
+            </div>
+          )}
+          {shouldRenewLicense && renewalLink && (
+            <div className="align-center gapped">
+              <Typography>{t('renew', { year: date.getFullYear(), nextYear: date.getFullYear() + 1 })}</Typography>
+              <Link color="secondary" href={renewalLink} target="_blank" rel="noreferrer noopener">
+                {t('renewLink')}
+              </Link>
+            </div>
           )}
         </Box>
-        {!isCut && (
-          <Button
-            color="secondary"
-            target="_blank"
-            rel="noreferrer noopener"
-            href="https://www.bilancarbone-methode.com/"
-            variant="outlined"
-            startIcon={<MenuBookIcon />}
-          >
-            {t('method')}
-          </Button>
-        )}
       </OrganizationToolbar>
     </AppBar>
   )

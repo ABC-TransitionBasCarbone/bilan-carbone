@@ -154,6 +154,8 @@
     "subtext": "",
     "explanation": "The tool dedicated to the application of the Bilan Carbone® method, developed by the Association for the Low Carbon Transition (ABC), and accessible to all of our members: Consulting and Research, Business, Association and Public Sector",
     "question": "A question? Read the <link>FAQ</link> or <support>contact us</support>!",
+    "cineo": "Tool developed thanks to the Bilan Carbone® assessments of Cineo",
+    "explanation2": "Operation supported by the State as part of the 'Support Green Alternatives 2' initiative under France 2030, operated by the Banque des Territoires (Caisse des Dépôts)",
     "form": {
       "activate": "Activate my account",
       "firstConnection": "First connection ?",
@@ -406,7 +408,7 @@
         "title": "Warning: Sites with emission sources",
         "description": "You are trying to deselect sites that contain emission sources in the original study.",
         "affectedSites": "Affected sites",
-        "sourcesCount": "{count, plural, =1 {1 emission source} other {# emission sources}}",
+        "sourcesCount": "{count, plural, =1 {1 emission source} other {emission sources}}",
         "totalSources": "{count, plural, =1 {In total, 1 emission source will not be duplicated.} other {In total, # emission sources will not be duplicated.}}",
         "confirmation": "Are you sure you want to continue?",
         "cancel": "Cancel",
@@ -450,8 +452,8 @@
     "post": {
       "displayInfography": "Display all posts",
       "hideInfography": "Hide all posts",
-      "emissionSource": "{count, plural, =0 {No emission source} =1 {1 emission source} other {# emission sources}}",
-      "contributors": "{count, plural, =1 {1 contributor} other {# contibutors}}",
+      "emissionSource": "{count, plural, =0 {No emission source} =1 {1 emission source} other {emission sources}}",
+      "contributors": "{count, plural, =1 {1 contributor} other {contibutors}}",
       "contributorsList": "{count, plural, =1 {Contributor :} other {Contributors :}}",
       "label": "Emission source label",
       "new": "Give your new emission source a title",
@@ -487,6 +489,7 @@
     "title": "Study",
     "rights": {
       "title": "Rights on study : {name}",
+      "general": "General",
       "edit": "Edit the study name",
       "new": {
         "title": "Add a person to the study: {name}",
@@ -531,7 +534,7 @@
         "subPosts": "Sub posts",
         "title": "Contributors",
         "newContributorLink": "Add a contributor",
-        "andXOthers": "and {count, plural, =1 {1 other} other {# others}}",
+        "andXOthers": "and {count, plural, =1 {1 other} other {others}}",
         "deleting": {
           "title": "Confirmation",
           "confirmation": "Are you sure you want to remove {email} from this study's contributors ?",
@@ -577,6 +580,7 @@
       }
     },
     "perimeter": {
+      "general": "General",
       "studyDates": "Study dates",
       "realizationDates": "Study completion date",
       "dates": "from {startDate} to {endDate}",
@@ -664,7 +668,13 @@
         "createSitesDescription": "You can also create new sites and duplicate the information to them. These will appear in your general information. Please indicate the number of sites to create on which the information you selected will be duplicated.",
         "numberOfSitesToCreate": "Number of sites to create",
         "cancel": "Cancel",
-        "duplicate": "Duplicate"
+        "duplicate": "Duplicate",
+        "sitesChanges": {
+          "title": "Organisation modification",
+          "description": "You have modified some information related to the sites in this study. Would you like to apply these changes to the organisation's information? <error>These changes will not be applied to your other studies.</error>",
+          "no": "No",
+          "replicate": "Change the overall organisation"
+        }
       },
       "information": "For more information on this section, you can refer to this documentation: "
     },
@@ -673,7 +683,8 @@
       "post": "Post",
       "subPost": "Sub-post",
       "tag": "Tag",
-      "download": "Download results",
+      "download": "Download",
+      "downloadResults": "Results",
       "downloadReport": "Download report",
       "downloadPDF": "Download the summary",
       "downloadingPDF": "Downloading (at least 15 seconds)...",
@@ -760,7 +771,6 @@
         "uncertaintyPerPostDescription": "Please note that the size of the circles on this graph is proportional to the number of emission sources that have been entered for the item, and not to the total emissions for the item (which can be seen on the x-axis). This allows you to see which items have been analysed in the greatest detail and to assess whether this is relevant in terms of the significance of the associated emissions, as it is generally more relevant to work in detail on the most significant emission items. The following graphs also illustrate this effect.",
         "uncertaintyPerPostDescription2": "Furthermore, the greater the number of emission sources within a station, the less uncertainty there will be for that station. This is because two uncertainties cancel each other out, as it is generally uncertain whether the error will be made in the same direction. To give a concrete example, when measuring two strings, it is possible to overestimate the length of the first and underestimate the length of the second. Consequently, the uncertainty about the length of the sum of the two strings will be less than the sum of the two uncertainties taken separately."
       },
-      "resultsExcel": "Excel",
       "resultsWord": "Bilan Carbone® Report"
     },
     "pdf": {
@@ -793,7 +803,7 @@
       "activityDataUnit": "Activity data unit",
       "activityDataValue": "Activity data value",
       "date": "Deadline",
-      "download": "Download emission sources",
+      "download": "Emission sources",
       "emissionName": "Emission factor (EF) name",
       "emissionQuality": "EF quality",
       "emissionSource": "EF source",
@@ -893,14 +903,173 @@
       },
       "trajectories": {
         "title": "Reduction trajectories",
+        "snbcButton": "SNBC Trajectory",
+        "sbtiButton": "SBTi Trajectories",
+        "customButton": "I choose my trajectory",
+        "customSubtitle": "Build your own reduction trajectory",
+        "myTrajectories": "My trajectories",
+        "addTrajectory": "Add a reduction trajectory",
+        "selectTrajectories": "Select your trajectories",
+        "delete": {
+          "title": "Transition plan deletion",
+          "description": "Do you really want to delete your transition plan? All data from your transition plan will be deleted. This will not impact linked studies and transition plans.",
+          "confirm": "Delete",
+          "cancel": "Cancel"
+        },
+        "sbtiCard": {
+          "title": "SBTi Trajectories",
+          "description": "The Science Based Targets Initiative defines two reference trajectories, aiming to limit global warming to 1.5°C or \"Well below 2 degrees\" (WB2C).",
+          "methodLabel": "Methods",
+          "option15": "1.5°C Trajectory",
+          "optionWB2C": "WB2C Trajectory",
+          "placeholder": "No method selected"
+        },
+        "graph": {
+          "title": "Reduction trajectories visualization",
+          "subtitle": "Display of reference trajectories and your organization's trajectories",
+          "trajectory15": "SBTi 1.5°C",
+          "trajectoryWB2C": "SBTi WB2C",
+          "yAxisLabel": "Emissions (tCO2e)",
+          "actionBasedTrajectory": "Action-based trajectory",
+          "unvalidatedSourcesWarning": "{count, plural, =1 {One emission source is not validated in the current study and is therefore not taken into account in the trajectory calculations.} other {{count} emission sources are not validated in the current study and are therefore not taken into account in the trajectory calculations.}}",
+          "unvalidatedSourcesLinkedStudiesWarning": "{count, plural, =1 {One emission source is not validated in the following past study:} other {{count} emission sources are not validated in the following past studies:}}",
+          "unvalidatedSourcesLinkedStudyCount": " ({count, plural, =1 {1 unvalidated source} other {{count} unvalidated sources}})"
+        },
+        "linkedStudies": {
+          "linked": "Linked studies",
+          "add": "Add",
+          "save": "Save",
+          "linkStudy": "Link a study",
+          "editStudy": "Edit study",
+          "source": "Source",
+          "study": "Concerned study",
+          "oldStudy": "BC+ study",
+          "externalStudy": "Study from another platform",
+          "name": "Name",
+          "namePlaceholder": "Please fill a name",
+          "date": "Year",
+          "totalCo2": "Total emissions",
+          "totalCo2Placeholder": "256",
+          "yearAlreadySet": "A study is already configured for this year",
+          "studyYearMustBeBeforeCurrent": "The study year must be before the current study year",
+          "Not authorized": "You are not allowed to do this action",
+          "noAvailableStudies": "No previous studies available",
+          "noLinkedStudies": "No linked studies yet",
+          "table": {
+            "name": "Name",
+            "year": "Year",
+            "type": "Type",
+            "typeLinked": "Existing study",
+            "typeExternal": "External study",
+            "emissions": "Emissions",
+            "see": "See",
+            "delete": "Delete"
+          },
+          "deleteModal": {
+            "title": "Delete linked study",
+            "message": "Are you sure you want to delete this linked study? This action is irreversible.",
+            "confirm": "Delete",
+            "cancel": "Cancel"
+          },
+          "validation": {
+            "required": "Required field"
+          }
+        },
         "onboarding": {
           "title": "Choose a reference trajectory or create your top-down trajectory",
           "description": "Compare your situation with SBTi and SNBC reference trajectories. Follow one of these trajectories and its associated objectives or create your personalized trajectory (top-down trajectory).",
           "detailedInfo": "Two reference trajectories, SNBC and SBTi, are offered here. You can visualize the decarbonization trajectory that your organization should follow according to each one.<br></br><br></br>Since SNBC is divided according to the major sectors of the French economy, you must select the sector that best corresponds to you. <snbc>More information about SNBC is available here</snbc>.<br></br>SBTi provides a trajectory aimed at limiting global warming to 1.5°C, and a second aimed at limiting it well below 2°C. You must also choose which of these two trajectories you wish to visualize. <sbti>More information about SBTi is available here</sbti>.<br></br><br></br>If your reference assessment dates from a year prior to the use of BC+2.0, you can enter the reference year and associated emissions. If this assessment is already present on BC+2.0, you can select it as the reference assessment.<br></br><br></br>For each of these trajectories, the choice has been made to keep the associated carbon budget. If your emissions do not exactly follow the chosen trajectory, BC+2.0 will recalculate an adapted trajectory to avoid exceeding the initially allocated carbon budget. With each new assessment carried out, your trajectories will be updated."
         }
       },
+      "trajectoryModal": {
+        "title": "I choose my trajectory",
+        "addTitle": "Add a trajectory",
+        "editTitle": "Edit my trajectory",
+        "submit": "Confirm",
+        "save": "Save",
+        "cancel": "Cancel",
+        "success": "You have created your first trajectory!",
+        "successSubtitle": "To modify your trajectory and associated objectives, you can go to the <link>My reduction objectives</link> section.",
+        "steps": {
+          "chooseTrajectory": "Choose my trajectory",
+          "defineObjectives": "Define my reduction objectives"
+        },
+        "subtitle": "Reuse an existing trajectory or create your own reduction trajectory to start building your transition plan",
+        "sbti": {
+          "title": "SBTi",
+          "subtitle": "I follow the SBTi reference trajectory",
+          "benefit1": "To commit to a trajectory <strong>compatible with the Paris Agreement</strong>",
+          "benefit2": "To gain <strong>international recognition</strong>",
+          "benefit3": "To structure your long-term reduction objectives"
+        },
+        "snbc": {
+          "title": "SNBC",
+          "subtitle": "I follow the SNBC reference trajectory",
+          "benefit1": "To position yourself in relation to your sector in France",
+          "benefit2": "To build a concrete and structured action plan",
+          "benefit3": "To understand French regulatory expectations"
+        },
+        "custom": {
+          "title": "CUSTOM",
+          "subtitle": "I follow my own trajectory",
+          "benefit1": "I build my own top-down trajectory",
+          "benefit2": "I can customize my intermediate objectives",
+          "benefit3": "My organization is already committed to a trajectory"
+        },
+        "sbtiType": {
+          "title": "SBTi trajectory type",
+          "15": "1.5°C aligned",
+          "wb2c": "WB2C (Well below 2 degrees)"
+        },
+        "selectedTrajectory": {
+          "SBTI_15": "I follow the SBTi reference trajectory",
+          "SBTI_WB2C": "I follow the SBTi reference trajectory",
+          "CUSTOM": "I follow my own trajectory"
+        },
+        "name": "My trajectory name",
+        "namePlaceholder": "Give your trajectory a name",
+        "description": "My trajectory description",
+        "descriptionPlaceholder": "Describe your trajectory",
+        "objectives": {
+          "title": "Reduction objectives",
+          "sbtiDescription": "These reduction objectives are linked to the SBTi reference trajectory and are predefined. You can add intermediate objectives in the \"My reduction objectives\" section",
+          "global": "GLOBAL OBJECTIVE",
+          "horizon2030": "2030 Horizon",
+          "horizon2050": "2050 Horizon",
+          "year": "Objective year",
+          "yearPlaceholder": "Choose a year",
+          "reductionRate": "Annual reduction percentage",
+          "reductionRatePlaceholder": "Give a reduction % (e.g., 2.5)"
+        },
+        "validation": {
+          "required": "Required field",
+          "objectiveBothRequired": "Both year and reduction rate are required",
+          "atLeastOneObjective": "At least one complete objective is required for custom trajectories"
+        }
+      },
       "objectives": {
         "title": "Reduction objectives",
+        "custom": "Custom",
+        "objectiveNumber": "Objective {number}",
+        "search": "Search for a trajectory",
+        "add": "Add a trajectory",
+        "table": {
+          "name": "Name",
+          "type": "Type",
+          "targetYear": "Target year",
+          "reductionRate": "Annual reduction",
+          "actions": "Actions"
+        },
+        "delete": "Delete",
+        "cancel": "Cancel",
+        "deleteTrajectory": {
+          "title": "Delete trajectory",
+          "message": "Are you sure you want to delete this trajectory? This action will also delete all associated objectives."
+        },
+        "deleteObjective": {
+          "title": "Delete objective",
+          "message": "Are you sure you want to delete this objective?"
+        },
         "onboarding": {
           "title": "Add a trajectory or reduction objectives",
           "description": "You have already created a reference trajectory but want to add others to test different hypotheses and ambition levels? You can create new trajectories, or add intermediate objectives for more detailed tracking without losing sight of the final goal!",
@@ -909,10 +1078,103 @@
       },
       "actions": {
         "title": "Action plan",
+        "search": "Search for your action here",
+        "add": "Add an action",
+        "table": {
+          "enabled": "Enabled",
+          "title": "Title",
+          "priority": "Priority",
+          "actionType": "Action type",
+          "implementation": "Implementation",
+          "potential": "Reduction potential",
+          "owner": "Owner",
+          "budget": "Budget",
+          "errorChangingEnabled": "Error changing action status"
+        },
+        "addModal": {
+          "add": "Add an action",
+          "update": "Update",
+          "subTitle": "To add an action to your action plan, you must fill in the required information",
+          "optionalSubtitle": "You will need to complete these fields",
+          "previous": "Previous",
+          "next": "Next",
+          "clear": "Delete value",
+          "title": "Action title",
+          "titlePlaceholder": "Give your action a title",
+          "subSteps": "Sub-steps",
+          "subStepsPlaceholder": "Describe your sub-steps",
+          "detailedDescription": "Detailed description of the action and stakeholder involvement",
+          "detailedDescriptionPlaceholder": "Detailed description",
+          "potentialDeduction": "Quantified emission reduction potential",
+          "potentialDeductionPlaceholder": "Select an option",
+          "reductionValue": "Value",
+          "reductionStartYear": "Year action begins",
+          "reductionEndYear": "Year action ends",
+          "dependenciesOnly": "My action only concerns the \"Use in dependence\" sub-item",
+          "owner": "Action owner",
+          "ownerPlaceholder": "Enter the name of the person leading the action",
+          "necessaryBudget": "Budget required for implementation (k€)",
+          "necessaryBudgetPlaceholder": "Enter the budget",
+          "necesssaryRessources": "Other resources required for implementation (human, financial, material, etc.)",
+          "necesssaryRessourcesPlaceholder": "Specify the resources",
+          "indicator": "Description of indicators",
+          "implementation": "Implementation",
+          "followUp": "Follow-up",
+          "performance": "Performance",
+          "indicatorDescriptionPlaceholder": "Description",
+          "indicatorGoalPlaceholder": "Goal",
+          "facilitatorsAndObstacles": "Potential facilitators and obstacles to action",
+          "additionalInformation": "Additional information",
+          "nature": "Nature of the action",
+          "category": "Categories of action",
+          "relevance": "For mitigation actions, indicate the level of relevance of the action",
+          "steps": {
+            "step1": "Main information",
+            "step2": "Categorization",
+            "step3": "Details and responsibility"
+          },
+          "Not authorized": "You are not allowed to do this action",
+          "validation": {
+            "required": "Required fields",
+            "email": "Invalid email format"
+          }
+        },
+        "potentialDeduction": {
+          "Quality": "Qualitative",
+          "Quantity": "Quantitative",
+          "EmissionSources": "Emission sources (coming soon)"
+        },
+        "nature": {
+          "Physical": "Physical",
+          "Reglementary": "Reglementary",
+          "Organisational": "Organisational",
+          "Behavioural": "Behavioural"
+        },
+        "category": {
+          "Immediate": "Immediate",
+          "Strategic": "Strategic",
+          "Priority": "Priority",
+          "Improvement": "Improvement of the approach",
+          "Adaptation": "Adaptation"
+        },
+        "relevance": {
+          "Offsetting": "Offsetting (Priority 6/6)",
+          "Sequestration": "Sequestration (Priority 5/6)",
+          "Avoidance": "Avoidance (Priority 3/6)",
+          "AvoidanceFinancing": "Avoidance financing (Priority 4/6)",
+          "ReductionOutsideOrganisationValueChain": "Reduction outside the organisation's value chain (Priority 2/6)",
+          "ReductionWithinOrganisationValueChain": "Reduction within the organisation's value chain (Priority 1/6)",
+          "ReductionWithinOrganisationCoreBusiness": "Reduction within the organisation's core business (Priority 1/6)"
+        },
         "onboarding": {
           "title": "Create your action plan to achieve your objectives",
           "description": "You have already created your trajectory and associated objectives. Now you can add the actions to your transition plan that will allow you to achieve these objectives",
           "detailedInfo": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p><p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>"
+        },
+        "deleteModal": {
+          "title": "Delete action",
+          "message": "Are you sure you want to delete this action definitively?",
+          "confirm": "Delete"
         }
       }
     }
@@ -1015,6 +1277,7 @@
       "Alimentation": "Food",
       "RepasPrisParLesSalaries": "Meals taken by employees",
       "RepasPrisParLesBenevoles": "Meals taken by volunteers",
+      "RepasPrisParLesBeneficiaires": "Meals taken by beneficiaries",
       "EquipementsEtImmobilisations": "Equipment and fixed assets",
       "DeplacementsDePersonne": "People travel",
       "DeplacementsDomicileTravailSalaries": "Employee home-to-work travel",
@@ -1115,6 +1378,7 @@
       "name": "Name",
       "namePlaceholder": "Give a name to your emission Factor",
       "attribute": "Details",
+      "location": "Location",
       "unit": "Unit",
       "customUnit": "Custom unit",
       "customUnitPlaceholder": "Your custom unit",
@@ -1361,25 +1625,26 @@
     "selectAll": "Select all",
     "unSelectAll": "Unselect all",
     "": "No unit",
-    "A4_SHEET_100": "100 A4 sheets",
+    "A4_SHEET_100": "{count, plural, one {A4 sheet} other {A4 sheets}}",
     "KM_100": "100km",
-    "ACTIVE": "active",
-    "APPAREL": "device",
+    "ACTIVE": "{count, plural, one {active} other {active}}",
+    "APPAREL": "{count, plural, one {device} other {devices}}",
     "RACE_KM": "race.km",
-    "EURO_SPENT": "euros spent",
-    "FRANC_CFP": "CFP Franc",
+    "CAR": "{count, plural, one {car} other {cars}}",
+    "EURO_SPENT": "{count, plural, one {euro spent} other {euros spent}}",
+    "FRANC_CFP": "{count, plural, one {CFP Franc} other {CFP Francs}}",
     "GJ_PCI": "GJ PCI",
     "GJ_PCS": "GJ PCS",
     "HA": "ha",
     "HA_YEAR": "ha/year",
     "HA_CLEMENTINE": "ha of clementine",
-    "HOUR": "hour",
-    "KEURO": "keuro",
-    "KEURO_2019_HT": "keuro (2019) excl. VAT",
-    "KEURO_2020_HT": "keuro (2020) excl. VAT",
-    "KEURO_2021_HT": "keuro (2021) excl. VAT",
-    "KEURO_2022_HT": "keuro (2022) excl. VAT",
-    "KEURO_2023_HT": "keuro (2023) excl. VAT",
+    "HOUR": "{count, plural, one {hour} other {hours}}",
+    "KEURO": "{count, plural, one {keuro} other {keuros}}",
+    "KEURO_2019_HT": "{count, plural, one {keuro (2019) excl. VAT} other {keuros (2019) excl. VAT}}",
+    "KEURO_2020_HT": "{count, plural, one {keuro (2020) excl. VAT} other {keuros (2020) excl. VAT}}",
+    "KEURO_2021_HT": "{count, plural, one {keuro (2021) excl. VAT} other {keuros (2021) excl. VAT}}",
+    "KEURO_2022_HT": "{count, plural, one {keuro (2022) excl. VAT} other {keuros (2022) excl. VAT}}",
+    "KEURO_2023_HT": "{count, plural, one {keuro (2023) excl. VAT} other {keuros (2023) excl. VAT}}",
     "KG": "kg",
     "KG_BIOGNC": "kg BioGNC",
     "KG_NITROGEN_SPREAD": "kg of nitrogen spread",
@@ -1415,7 +1680,7 @@
     "KG_TRITICALE_15": "kg of triticale at 15% moisture",
     "KG_NET_COMMERCIALLY_VIABLE_MEAT": "kg of net commercially viable meat",
     "KG_PASTURED_GRASS_80": "kg of grazed grass at 80% moisture",
-    "KG_INGREDIENT_EXIT_STORE_NET_WEIGHT": "kg of ingredient exiting store (net weight)",
+    "KG_INGREDIENT_EXIT_STORE_NET_WEIGHT": "net weight",
     "KG_INGREDIENT_EXIT_STORE_NET_WEIGHT_GR": "kg of ingredient exiting store (net weight gr)",
     "KG_INGREDIENT_EXIT_STORE_NET_WEIGHT_GRAINS": "kg of ingredient exiting store (net weight grains)",
     "KG_INGESTED_INGREDIENT": "kg of ingested ingredient",
@@ -1427,16 +1692,34 @@
     "KG_BREWING_BARLEY_15": "kg of brewing barley at 15% moisture",
     "KG_FEED_BARLEY_15": "kg of feed barley at 15% moisture",
     "KGH2": "kgH2",
-    "KG_MILK_LIQUID": "kg of milk",
+    "KG_MILK_LIQUID": "{count, plural, one {kg of milk} other {kg of milk}}",
     "KG_NTK": "kg NTK",
+    "KG_PER_KM": "kg / km",
+    "KG_PER_CAR_KM": "kg / car.km",
+    "KG_PER_KM_CAR": "kg / km (car)",
+    "KG_PER_KM_PASSENGER": "kg / km (passager)",
+    "KG_PER_PASSENGER_KM": "kg / passenger.km",
+    "KG_PER_TON_KM": "kg / ton.km",
     "KM": "km",
+    "KM_PER_JOURNEY": "km / journey",
     "KM_PERSON": "km/person",
+    "KNOTS": "{count, plural, one {knot} other {knots}}",
     "KWH": "kWh",
     "KWH_PCI": "kWh PCI",
     "KWH_PCS": "kWh PCS",
+    "KWH_ELEC_TON": "kWh elec / ton",
+    "KWH_PER_KM": "kWh / km",
+    "KWH_PER_PASSENGER_KM": "kWh / passenger.km",
+    "KWH_THERM_TON": "kWh heat / ton",
+    "KWH_PCI_TON": "kWh PCI / ton",
     "LITER": "Liter",
-    "LITER_LIQUID": "Liter of liquid",
-    "POUND": "pound",
+    "LITER_LIQUID": "{count, plural, one {Liter of liquid} other {Liters of liquid}}",
+    "LITER_PER_ERRAND_KM": "{count, plural, one {Liter / errand.km} other {Liters / errand.km}}",
+    "LITER_PER_KM": "{count, plural, one {Liter / km} other {Liters / km}}",
+    "LITER_PER_M3_KM": "{count, plural, one {Liter / m³.km} other {Liters / m³.km}}",
+    "LITER_PER_PASSENGER_KM": "{count, plural, one {Liter / passenger.km} other {Liters / passenger.km}}",
+    "LITER_PER_TON_KM": "{count, plural, one {Liter / ton.km} other {Liters / ton.km}}",
+    "POUND": "{count, plural, one {pound} other {pounds}}",
     "METER": "m",
     "M2_SHON": "m² SHON",
     "M3": "m³",
@@ -1449,48 +1732,54 @@
     "M2_WALL": "m² of wall",
     "M2_FLOOR": "m² of floor",
     "M2_ROOF": "m² of roof",
+    "PASSENGERS": "{count, plural, one {passenger} other {passengers}}",
     "PASSENGER_KM": "passenger.km",
     "PEQ_KM": "peq.km",
     "PERSON_MONTH": "person.month",
-    "UNIT_PIECE_SHRUB_POT": "unit (shrub in pot)",
-    "UNIT_PIECE_SHRUB_POT_3L": "unit (shrub in 3-Liter pot)",
-    "UNIT_PIECE_GRAFT": "unit (graft)",
-    "UNIT_PIECE_STEM": "unit (stem)",
-    "PORTION": "portion",
-    "MEAL": "meal",
+    "UNIT_PIECE_SHRUB_POT": "{count, plural, one {unit (shrub in pot)} other {units (shrub in pot)}}",
+    "UNIT_PIECE_SHRUB_POT_3L": "{count, plural, one {unit (shrub in 3-Liter pot)} other {units (shrub in 3-Liter pot)}}",
+    "UNIT_PIECE_GRAFT": "{count, plural, one {unit (graft)} other {unit (grafts)}}",
+    "UNIT_PIECE_STEM": "{count, plural, one {unit (stem)} other {unit (stesm)}}",
+    "PORTION": "{count, plural, one {portion} other {portions}}",
+    "MEAL": "{count, plural, one {meal} other {meals}}",
     "T": "t",
-    "TEAM": "team",
+    "TEAM": "{count, plural, one {team} other {teams}}",
     "TEP": "tep",
     "TEP_PCI": "tep PCI",
     "TEP_PCS": "tep PCS",
     "TON_KM": "t.km",
-    "TON": "ton",
-    "TON_WITH_BONES": "ton with bones",
-    "TON_RAW": "ton raw",
-    "TON_COLLECTED": "ton collected",
-    "TON_CLINKER": "ton of clinker",
-    "TON_WASTE": "ton of waste",
-    "TON_K2O": "ton of K2O",
-    "TON_DRY_MATTER": "ton of dry matter",
-    "TON_N": "ton of N",
-    "TON_P2O5": "ton of P2O5",
-    "TON_VIABLE_MEAT": "ton of net commercially viable meat",
+    "TON": "{count, plural, one {ton} other {tons}}",
+    "TON_WITH_BONES": "{count, plural, one {ton with bones} other {tons with bones}}",
+    "TON_RAW": "{count, plural, one {ton raw} other {tons raw}}",
+    "TON_COLLECTED": "{count, plural, one {ton collected} other {tons collected}}",
+    "TON_CLINKER": "{count, plural, one {ton of clinker} other {tons of clinker}}",
+    "TON_WASTE": "{count, plural, one {ton of waste} other {tons of waste}}",
+    "TON_GAZOLINE_PER_DAY": "gazoline ton / day",
+    "TON_K2O": "{count, plural, one {ton of K2O} other {tons of K2O}}",
+    "TON_DRY_MATTER": "{count, plural, one {ton of dry matter} other {tons of dry matter}}",
+    "TON_N": "{count, plural, one {ton of N} other {tons of N}}",
+    "TON_P2O5": "{count, plural, one {ton of P2O5} other {tons of P2O5}}",
+    "TON_VIABLE_MEAT": "{count, plural, one {ton of net commercially viable meat} other {tons of net commercially viable meat}}",
     "TON_KM_PRODUCED": "ton.km",
-    "TON_PRODUCTED": "ton produced",
-    "TON_PROCESSED": "ton Procedeed",
-    "UNIT": "unit",
-    "IMPORTED_UNIT_PIECE_SHRUB_POT": "Imported unit (shrub in pot)",
+    "TON_PRODUCTED": "{count, plural, one {ton produced} other {tons produced}}",
+    "TON_PROCESSED": "{count, plural, one {ton processed} other {tons processed}}",
+    "UNIT": "{count, plural, one {unit} other {units}}",
+    "IMPORTED_UNIT_PIECE_SHRUB_POT": "{count, plural, one {Imported unit (shrub in pot)} other {Imported units (shrub in pot)}}",
     "VEHICLE_YEAR": "vehicle/year",
     "VEHICLE_KM": "vehicle.km",
     "CAR_KM": "car.km",
     "PERCENT": "%",
     "GJ_PER_TON": "GJ / ton",
-    "TON_KM_ROAD_PER_PERSON_YEAR": "(ton.km road) / (person/year)",
+    "TON_KM_PER_PERSON_YEAR": "ton.km / person.year",
+    "TON_KM_ROAD_PER_PERSON_YEAR": "(ton.km road) / (person.year)",
+    "KG_GAZOLINE_PER_KM": "kg gazoline / km",
+    "KG_GAZOLINE_PER_TON_KM": "kg gazoline / ton.km",
     "KG_FLUID": "kg of fluid",
     "KWH_PER_HOME_YEAR": "kWh / (home/year)",
     "KM_PER_PERSON_YEAR": "km / (person/year)",
     "KGN_PER_HA": "kgN / ha",
     "KWH_PER_M2_YEAR": "kWh / (m²/year)",
+    "KWH_PER_TON_KM": "kWh / (ton.km)",
     "GWH": "GWh",
     "KG_FLUID_PER_KW_FRIDGE": "kg of fluid / kW fridge",
     "KG_FLUID_PER_m2": "kg of fluid / m²",
@@ -1499,24 +1788,25 @@
     "KWH_PER_HOUSING_YEAR": "kWh / (housing/year)",
     "PERCENT_APPARTMENTS": "% of apartments",
     "PERCENT_HOUSES": "% of houses",
-    "DAY": "days",
-    "LITER_PER_HA": "Liter / ha",
+    "DAY": "{count, plural, one {day} other {days}}",
+    "LITER_PER_HA": "{count, plural, one {Liter / ha} other {Liters / ha}}",
     "MJ_PER_HA": "MJ / ha",
     "KWH_PER_PERSON_FLOOR_YEAR": "kWh / (person.floor/year)",
-    "PLANT": "plant",
+    "PLANT": "{count, plural, one {plant} other {plants}}",
     "KG_PER_m3": "kg / m³",
     "KGDBO": "kgDBO",
     "KGDBO_PER_M3": "kgDBO / m³",
     "KG_H2_PER_100KM": "kgH2/100km",
     "GO": "GB",
-    "REQUEST": "request",
-    "MAIL": "mail",
-    "EURO": "Euro (€)",
-    "DOLLAR": "Dollar ($)",
-    "JPY": "Japanese yen (¥)",
-    "CNY": "Renminbi (¥)",
-    "YEAR": "Years",
-    "CUSTOM": "Custom"
+    "REQUEST": "{count, plural, one {request} other {requests}}",
+    "MAIL": "{count, plural, one {mail} other {mails}}",
+    "EURO": "{count, plural, one {Euro (€)} other {Euros (€)}}",
+    "DOLLAR": "{count, plural, one {Dollar ($)} other {Dollars ($)}}",
+    "JPY": "{count, plural, one {Japanese yen (¥)} other {Japanese yen (¥)}}",
+    "CNY": "{count, plural, one {Renminbi (¥)} other {Renminbi (¥)}}",
+    "YEAR": "{count, plural, one {Year} other {Years}}",
+    "CUSTOM": "Custom",
+    "MAX_TONNAGE": "max loaded tonnage"
   },
   "organization": {
     "create": "New Organization",
@@ -1538,7 +1828,7 @@
       "Unknown error": "An unknwon error happened. Please contact the support"
     },
     "sites": {
-      "title": "The organization's sites concerned by this study",
+      "title": "Organization's sites concerned by this study",
       "noSites": "There are no sites configured for the organization",
       "name": "Name",
       "namePlaceholder": "Site name",
@@ -1580,14 +1870,16 @@
       "description": "Studies exist with the following sites. <warning>Please delete them from the concerned studies before you can delete them from your organization.</warning>",
       "close": "Close",
       "existingSite": "<name></name>: <link></link>",
-      "existingUnauthorizedSite": "{name} : {count, plural,  =1 {1 study} other {#  studies}} you do not have access to"
+      "existingUnauthorizedSite": "{name} : {count, plural,  =1 {1 study} other { studies}} you do not have access to"
     },
     "card": {
       "method": "Consult the Bilan Carbone® method",
       "myOrganization": "My organization",
       "myClient": "My client",
       "update": "Update my information",
-      "updateClient": "Update my client"
+      "updateClient": "Update my client",
+      "renew": "Your {year} licence is about to expire. Remember to renew it to continue using the services in {nextYear}",
+      "renewLink": "Renew"
     },
     "delete": {
       "button": "Delete organization",
@@ -1720,6 +2012,7 @@
   },
   "error": {
     "Not authorized": "You are not allowed to do this action",
+    "Not found": "The requested resource was not found",
     "Server error": "A server error occurred, please contact support",
     "default": "Something went wrong ..., please try again. If the problem persists, please contact support",
     "error": "Something went wrong ...",
@@ -1806,7 +2099,12 @@
     "answer": "Answer the questionnaire",
     "timer": "Remaining time: ",
     "alertMessage": "You only have 10 minutes remaining. After 10 minutes, this form will remain available and you will be able to submit your answers. However, if you take too long, your answers will not be taken into account and you will not receive a attestation of achievement.",
-    "form": "Typeform Questionnaire"
+    "form": "Typeform Questionnaire",
+    "forbidden": {
+      "title": "Blocked access",
+      "message": "You are not in our database of trained members, so you cannot access the training tab to take the refresher training course. If you believe this is an error, please follow the process outlined in our <link>FAQ</link>.",
+      "backToHome": "Back to home"
+    }
   },
   "deactivableFeatures": {
     "title": "Deactivable functionnalities",
@@ -1850,5 +2148,40 @@
       "contributorInvitation": "Contribution request on the study {studyName}",
       "addedUsersByFile": "Authorization for user import"
     }
+  },
+  "table": {
+    "page": "Page {page} of {total}",
+    "goTo": "Go to page",
+    "items": "Items per page"
+  },
+  "validation": {
+    "required": "Please fill in this field",
+    "invalidEnum": "Please select a valid value",
+    "invalidEmail": "Please enter a valid email address",
+    "invalidDate": "Please enter a valid date",
+    "invalidNumber": "Please enter a valid number",
+    "invalidString": "Please fill in this field",
+    "invalidPostalCode": "Please enter a valid postal code",
+    "invalidPhone": "Please enter a valid phone number",
+    "endDateBeforeStartDate": "The end date must be after the start date",
+    "noSiteSelected": "Please select at least one site",
+    "siretInvalid": "The SIRET must contain exactly 14 digits",
+    "nameMaxLength": "The name cannot exceed 64 characters",
+    "subPostRequired": "Please select at least one sub-post",
+    "objectiveIncomplete": "Please fill in all the objective fields",
+    "atLeastOneObjective": "Please add at least one objective",
+    "positiveNumber": "Please enter a positive number",
+    "tooSmall": "Please enter a larger value",
+    "tooBig": "Please enter a smaller value",
+    "studyYearMustBeBeforeCurrent": "The study year must be before the current study year",
+    "maxTwoDecimals": "The reduction rate must have at most 2 decimal places"
+  },
+  "common": {
+    "actions": {
+      "edit": "Edit",
+      "duplicate": "Duplicate",
+      "delete": "Delete"
+    },
+    "typeToConfirm": "Type \"{name}\" to confirm"
   }
 }

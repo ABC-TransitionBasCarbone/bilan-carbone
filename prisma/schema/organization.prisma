@@ -37,7 +37,7 @@ model OrganizationVersion {
   organization   Organization @relation(fields: [organizationId], references: [id])
 
   isCR             Boolean @default(false) @map("is_cr")
-  activatedLicence Boolean @default(false) @map("activated_licence")
+  activatedLicence Int[]   @default([]) @map("activated_licence")
 
   userAccounts Account[]
   studies      Study[]
@@ -64,7 +64,7 @@ model Site {
   etp  Int    @default(0)
   ca   Float  @default(0)
 
-  postalCode String?
+  postalCode String? @map("postal_code")
   city       String?
 
   volunteerNumber   Int @default(0) @map("volunteer_number")

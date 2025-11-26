@@ -86,7 +86,6 @@ const LoginForm = ({ environment = Environment.BC }: Props) => {
           name="email"
           label={t('email')}
           placeholder={t('emailPlaceholder')}
-          translation={t}
           data-testid="input-email"
           trim
         />
@@ -96,7 +95,6 @@ const LoginForm = ({ environment = Environment.BC }: Props) => {
           name="password"
           label={t('password')}
           placeholder={t('passwordPlaceholder')}
-          translation={t}
           endAdornment={
             <InputAdornment position="end">
               <IconButton

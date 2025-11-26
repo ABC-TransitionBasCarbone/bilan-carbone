@@ -13,7 +13,11 @@ import { FormEvent, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import EmissionFactorForm from '../Form/EmissionFactorForm'
 
-const NewEmissionFactorForm = () => {
+interface Props {
+  locations: string[]
+}
+
+const NewEmissionFactorForm = ({ locations }: Props) => {
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
   const [hasParts, setHasParts] = useState(false)
@@ -27,6 +31,7 @@ const NewEmissionFactorForm = () => {
       name: '',
       attribute: '',
       source: '',
+      location: '',
       totalCo2: 0,
       parts: Array.from({ length: maxParts }, () => ({ name: '', totalCo2: 0 })),
       comment: '',
@@ -51,6 +56,7 @@ const NewEmissionFactorForm = () => {
     <Form onSubmit={onSubmit}>
       <EmissionFactorForm
         form={form}
+        locations={locations}
         hasParts={hasParts}
         setHasParts={setHasParts}
         partsCount={partsCount}

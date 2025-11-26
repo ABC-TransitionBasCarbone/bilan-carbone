@@ -6,7 +6,7 @@ import HelpIcon from '@/components/base/HelpIcon'
 import StyledChip from '@/components/base/StyledChip'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
-import { getResultsValues } from '@/services/study'
+import { getDetailedEmissionResults } from '@/services/study'
 import { formatNumber } from '@/utils/number'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import SpaIcon from '@mui/icons-material/Spa'
@@ -45,7 +45,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
     computedResultsWithoutDep,
   ] = useMemo(() => {
     const { withDepValue, withoutDepValue, monetaryRatio, computedResultsWithDep, computedResultsWithoutDep } =
-      getResultsValues(study, tPost, studySite, !!validatedOnly, environment, tResults)
+      getDetailedEmissionResults(study, tPost, studySite, !!validatedOnly, environment, tResults)
     return [
       formatNumber(withDepValue),
       formatNumber(withoutDepValue),

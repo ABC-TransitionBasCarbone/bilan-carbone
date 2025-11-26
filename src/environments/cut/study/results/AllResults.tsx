@@ -12,7 +12,7 @@ import { SyntheticEvent, useMemo, useState } from 'react'
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import TabPanel from '@/components/tabPanel/tabPanel'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
-import { downloadStudyResults, getResultsValues } from '@/services/study'
+import { downloadStudyResults, getDetailedEmissionResults } from '@/services/study'
 import { Environment } from '@prisma/client'
 
 import Block from '@/components/base/Block'
@@ -79,12 +79,20 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
   }
 
   const { computedResultsWithDep } = useMemo(
-    () => getResultsValues(study, tPost, studySite, !!validatedOnly, study.organizationVersion.environment, tResults),
+    () =>
+      getDetailedEmissionResults(
+        study,
+        tPost,
+        studySite,
+        !!validatedOnly,
+        study.organizationVersion.environment,
+        tResults,
+      ),
     [study, studySite, tPost, tResults, validatedOnly],
   )
 
   return (
-    <Block title={study.name} as="h1" description={tStudyNav('results')} bold descriptionColor="primary">
+    <Block title={study.name} as="h2" description={tStudyNav('results')} bold descriptionColor="primary">
       <Box component="section" className="mb2">
         <Typography>
           {tResults.rich('cutFeedback', {

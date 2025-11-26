@@ -206,7 +206,7 @@ const calculateEmissionSourcesDepreciation = async (
     )
 
     if (emissionFactor) {
-      const currentYear = new Date(study.startDate).getFullYear()
+      const currentYear = study.startDate.getFullYear()
 
       if (purchaseYear > currentYear) {
         return {
@@ -272,7 +272,7 @@ const calculateElectromenager: TableEmissionCalculator = {
       'electromenager-location',
       equipmentType,
       (quantity * rentedDays) / 365,
-      new Date(study.startDate).getFullYear(),
+      study.startDate.getFullYear(),
     )
   },
 }
@@ -307,7 +307,7 @@ const calculateInformatique: TableEmissionCalculator = {
       'informatique-location',
       equipmentType,
       (quantity * rentedDays) / 365,
-      new Date(study.startDate).getFullYear(),
+      study.startDate.getFullYear(),
     )
   },
 }

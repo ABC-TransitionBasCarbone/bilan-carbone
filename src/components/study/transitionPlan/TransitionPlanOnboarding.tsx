@@ -18,24 +18,33 @@ interface Props {
 
 const TransitionPlanOnboarding = ({ title, description, detailedContent, storageKey }: Props) => {
   const t = useTranslations('study.transitionPlan.onboarding')
-  const [expanded, setExpanded] = useState(() => {
-    if (typeof window === 'undefined') {
-      return true
-    }
-    const stored = localStorage.getItem(`onboarding-${storageKey}`)
-    return stored !== null ? stored === 'true' : true
-  })
+  const [expanded, setExpanded] = useState(true)
   const [showDetails, setShowDetails] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    localStorage.setItem(`onboarding-${storageKey}`, String(expanded))
-  }, [expanded, storageKey])
+    setMounted(true)
+    const stored = localStorage.getItem(`onboarding-${storageKey}`)
+    if (stored !== null) {
+      setExpanded(stored === 'true')
+    }
+  }, [storageKey])
+
+  useEffect(() => {
+    if (mounted) {
+      localStorage.setItem(`onboarding-${storageKey}`, String(expanded))
+    }
+  }, [expanded, storageKey, mounted])
+
+  if (!mounted) {
+    return null
+  }
 
   return (
     <Accordion
       expanded={expanded}
       onChange={() => setExpanded(!expanded)}
-      className={classNames(styles.onboardingCard, 'mb2')}
+      className={classNames(styles.onboardingCard)}
       disableGutters
       elevation={0}
       sx={{

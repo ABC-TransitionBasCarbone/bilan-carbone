@@ -39,7 +39,7 @@ const TagForm = ({
         <div className="mb-2">
           <span className="inputLabel bold">{t('color')}</span>
         </div>
-        <ColorPicker color={color} onChange={onColorChange} />
+        <ColorPicker color={color} onChange={onColorChange} disabled={!families.length} />
       </div>
       <div className={styles.familySelector}>
         <FormSelect
@@ -48,6 +48,7 @@ const TagForm = ({
           name="familyId"
           label={t('emissionSourceTagFamily')}
           data-testid={`${dataTestId}-family`}
+          disabled={!families.length}
           autoWidth
         >
           {families.map((family) => (
@@ -59,11 +60,11 @@ const TagForm = ({
       </div>
       <FormTextField
         control={control}
-        translation={translation}
         name="name"
         label={nameLabel || t('emissionSourceTagLabel')}
         placeholder={namePlaceholder}
         data-testid={`${dataTestId}-name`}
+        disabled={!families.length}
       />
     </div>
   )

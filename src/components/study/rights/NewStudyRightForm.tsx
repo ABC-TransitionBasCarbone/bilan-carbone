@@ -11,7 +11,7 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { ALREADY_IN_STUDY } from '@/services/permissions/check'
 import { newStudyRight } from '@/services/serverFunctions/study'
 import { NewStudyRightCommand, NewStudyRightCommandValidation } from '@/services/serverFunctions/study.command'
-import { checkLevel } from '@/services/study'
+import { hasSufficientLevel } from '@/services/study'
 import { isAdmin } from '@/utils/user'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
@@ -34,7 +34,7 @@ const NewStudyRightForm = ({ study, accounts, existingAccounts, accountRole }: P
   const t = useTranslations('study.rights.new')
   const tRole = useTranslations('study.role')
   const { showErrorToast } = useToast()
-
+  const [loading, setLoading] = useState(false)
   const [readerOnly, setReaderOnly] = useState(false)
   const [otherOrganizationVersion, setOtherOrganizationVersion] = useState(false)
   const { callServerFunction } = useServerFunction()
@@ -61,7 +61,7 @@ const NewStudyRightForm = ({ study, accounts, existingAccounts, accountRole }: P
     form.setValue('email', value?.trim() || '')
     if (value) {
       const organizationVersionAccount = accounts.find((account) => account.user.email === value)
-      if (!organizationVersionAccount || checkLevel(organizationVersionAccount.user.level, study.level)) {
+      if (!organizationVersionAccount || hasSufficientLevel(organizationVersionAccount.user.level, study.level)) {
         setReaderOnly(false)
       } else {
         setReaderOnly(true)
@@ -71,11 +71,16 @@ const NewStudyRightForm = ({ study, accounts, existingAccounts, accountRole }: P
   }
 
   const saveRight = async (command: NewStudyRightCommand) => {
+    setLoading(true)
     await callServerFunction(() => newStudyRight(command), {
       getErrorMessage: (error) => t(error),
       onSuccess: () => {
         setOtherOrganizationVersion(false)
+        setLoading(false)
         router.push(`/etudes/${study.id}/cadrage`)
+      },
+      onError: () => {
+        setLoading(false)
       },
     })
   }
@@ -151,6 +156,7 @@ const NewStudyRightForm = ({ study, accounts, existingAccounts, accountRole }: P
         rightsWarning={form.getValues().role !== StudyRole.Reader}
         decline={() => setOtherOrganizationVersion(false)}
         accept={() => saveRight(form.getValues())}
+        loading={loading}
       />
     </>
   )

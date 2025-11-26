@@ -1,6 +1,6 @@
-const studyId = '88c93e88-7c80-4be4-905b-f0bbd2ccc779'
-
 describe('Create study emission source', () => {
+  const studyId = '88c93e88-7c80-4be4-905b-f0bbd2ccc779'
+
   before(() => {
     cy.resetTestDatabase()
   })
@@ -114,8 +114,8 @@ describe('Create study emission source', () => {
     cy.getByTestId('duplicate-emission-source').click()
     cy.getByTestId('duplicate-confirm').click()
 
-    cy.getByTestId('emission-source-My emission source name')
-      .last()
+    cy.getByTestId('emission-source-My emission source name - copie')
+      .first()
       .within(() => {
         cy.getByTestId('emission-source-status').should('have.text', 'À vérifier')
         cy.getByTestId('emission-source-status').last().click()
@@ -132,20 +132,20 @@ describe('Create study emission source', () => {
     cy.getByTestId('subpost').first().scrollIntoView().click({ force: true })
     cy.getByTestId('new-emission-source').should('exist')
 
-    cy.getByTestId('emission-source-My emission source name')
+    cy.getByTestId('emission-source-My emission source name - copie')
       .last()
       .within(() => {
         cy.getByTestId('emission-source-status').invoke('text').should('contain', 'À vérifier')
         cy.getByTestId('emission-source-value').should('have.text', '1 008 tCO₂e')
         cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Mauvaise')
       })
-    cy.getByTestId('emission-source-My emission source name').first().click({ force: true })
-    cy.getByTestId('emission-source-My emission source name')
+    cy.getByTestId('emission-source-My emission source name - copie').last().click({ force: true })
+    cy.getByTestId('emission-source-My emission source name - copie')
       .last()
       .within(() => {
         cy.get('[data-testid="emission-source-name"] > .MuiInputBase-root > .MuiInputBase-input').should(
           'have.value',
-          'My emission source name',
+          'My emission source name - copie',
         )
         cy.get('[data-testid="emission-source-name"] > .MuiInputBase-root > .MuiInputBase-input').should(
           'not.be.disabled',

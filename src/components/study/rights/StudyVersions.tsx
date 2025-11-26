@@ -7,6 +7,7 @@ import {
   simulateStudyEmissionFactorSourceUpgrade,
   upgradeStudyEmissionFactorSource,
 } from '@/services/serverFunctions/study'
+import { useUnitLabel } from '@/services/unit'
 import { IsSuccess } from '@/utils/serverResponse'
 import { EmissionFactorImportVersion, Import, StudyResultUnit } from '@prisma/client'
 import classNames from 'classnames'
@@ -33,8 +34,8 @@ type SimulationResult = {
 const StudyVersions = ({ study, emissionFactorSources, canUpdate }: Props) => {
   const t = useTranslations('study.rights.versions')
   const tSources = useTranslations('emissionFactors.table')
-  const tUnits = useTranslations('units')
   const unit = useTranslations('study.results.units')(StudyResultUnit.K)
+  const getUnitLabel = useUnitLabel()
   const [source, setSource] = useState<Import | null>(null)
   const [upgrading, setUpgrading] = useState(false)
   const [simulationResult, setSimulationResult] = useState<SimulationResult>({ updated: [], deleted: [] })
@@ -147,7 +148,7 @@ const StudyVersions = ({ study, emissionFactorSources, canUpdate }: Props) => {
                     <p className="ml1">
                       {getEmissionFactorName(emissionFactor.metaData)} :{' '}
                       <span className={styles.updatedValue}>{emissionFactor.totalCo2}</span> {emissionFactor.newValue}{' '}
-                      {unit}/{tUnits(emissionFactor.unit || '')}
+                      {unit}/{getUnitLabel(emissionFactor.unit || '', emissionFactor.newValue)}
                       {!!wasteEmissionFactors[emissionFactor.importedId || ''] && <>*</>}
                     </p>
                   </li>

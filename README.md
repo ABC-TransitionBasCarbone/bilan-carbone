@@ -99,6 +99,9 @@ yarn test:watch
 ### Run Cypress tests
 
 ```bash
+# Add environment variables to the test database
+Create a `.env.test` file in the root directory and copy the content of `.env.test.dist` to it.
+
 # Start the app in test environment connected to the test database
 yarn dev:test
 

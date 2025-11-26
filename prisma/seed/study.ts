@@ -3,6 +3,7 @@ import { addSourceToStudies } from '@/services/importEmissionFactor/import'
 import {
   Account,
   ControlMode,
+  DeactivatableFeature,
   EmissionFactorStatus,
   EmissionSourceCaracterisation,
   EmissionSourceType,
@@ -107,6 +108,19 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       .filter((source) => source !== Import.Manual)
       .map((source) => addSourceToStudies(source, prisma)),
   )
+
+  await prisma.deactivatableFeatureStatus.upsert({
+    where: { feature: DeactivatableFeature.TransitionPlan },
+    create: {
+      feature: DeactivatableFeature.TransitionPlan,
+      active: true,
+      deactivatedSources: [],
+      deactivatedEnvironments: [],
+    },
+    update: {
+      active: true,
+    },
+  })
 
   await prisma.userOnStudy.create({ data: { role: StudyRole.Validator, accountId: creator.id, studyId } })
 

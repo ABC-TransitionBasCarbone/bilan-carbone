@@ -1,12 +1,15 @@
+import { EmissionFactorList } from '@/db/emissionFactors'
+import { FullStudy } from '@/db/study'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
+import { useUnitLabel } from '@/services/unit'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
-import { filterEmissionFactorsBySubPostAndEnv, getEmissionFactorValue } from '@/utils/emissionFactors'
+import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import { displayOnlyExistingDataWithDash } from '@/utils/string'
 import ClearIcon from '@mui/icons-material/Clear'
 import SearchIcon from '@mui/icons-material/Search'
-import { StudyResultUnit, SubPost, Unit } from '@prisma/client'
+import { EmissionFactorStatus, StudyResultUnit, SubPost, Unit } from '@prisma/client'
 import classNames from 'classnames'
 import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'
@@ -14,6 +17,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Path } from 'react-hook-form'
 import Button from '../base/Button'
 import DebouncedInput from '../base/DebouncedInput'
+import { ImportVersionForFilters } from '../emissionFactor/EmissionFactorsFilters'
 import Modal from '../modals/Modal'
 import styles from './EmissionSourceFactor.module.css'
 import EmissionSourceFactorModal from './EmissionSourceFactorModal'
@@ -48,31 +52,38 @@ const fuseOptions = {
 }
 
 interface Props {
-  emissionFactors: EmissionFactorWithMetaData[]
   subPost: SubPost
-  update: (name: Path<UpdateEmissionSourceCommand>, value: string | null) => void
-  selectedFactor?: EmissionFactorWithMetaData | null
+  selectedFactor?: FullStudy['emissionSources'][0]['emissionFactor'] & {
+    metaData: EmissionFactorList['metaData']
+  }
   canEdit: boolean | null
-  getDetail: (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) => string
   isFromOldImport: boolean
   currentBEVersion: string
+  userOrganizationId?: string
+  emissionFactorsForSubPost: EmissionFactorWithMetaData[]
+  importVersions: ImportVersionForFilters[]
+  studyId: string
+  getDetail: (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) => string
+  update: (name: Path<UpdateEmissionSourceCommand>, value: string | null) => void
 }
 
 const EmissionSourceFactor = ({
-  emissionFactors,
   subPost,
-  update,
   selectedFactor,
   canEdit,
-  getDetail,
   isFromOldImport,
   currentBEVersion,
+  userOrganizationId,
+  emissionFactorsForSubPost,
+  importVersions,
+  studyId,
+  getDetail,
+  update,
 }: Props) => {
   const { environment } = useAppEnvironmentStore()
   const t = useTranslations('emissionSource')
-  const tUnits = useTranslations('units')
   const tResultUnits = useTranslations('study.results.units')
-
+  const getUnitLabel = useUnitLabel()
   const [advancedSearch, setAdvancedSearch] = useState(false)
   const [display, setDisplay] = useState(false)
   const [oldFactorAction, setOldFactorAction] = useState<'fieldSearch' | 'search' | 'clear' | undefined>(undefined)
@@ -103,16 +114,14 @@ const EmissionSourceFactor = ({
     setValue(selectedFactor?.metaData?.title || '')
   }, [selectedFactor])
 
-  const emissionFactorsFilteredBySubPosts = useMemo(
-    () => filterEmissionFactorsBySubPostAndEnv(emissionFactors, [subPost], environment),
-    [emissionFactors, subPost, environment],
-  )
   const fuse = useMemo(() => {
     return new Fuse(
-      emissionFactorsFilteredBySubPosts.filter((emissionFactor) => emissionFactor.metaData),
+      emissionFactorsForSubPost
+        .filter((emissionFactor) => emissionFactor.metaData)
+        .filter((ef) => ef.status !== EmissionFactorStatus.Archived),
       fuseOptions,
     )
-  }, [emissionFactors])
+  }, [emissionFactorsForSubPost])
 
   const searchNewEmissionFactor = () => setAdvancedSearch(true)
   const clearEmissionFactor = () => update('emissionFactorId', null)
@@ -190,7 +199,9 @@ const EmissionSourceFactor = ({
                   formatEmissionFactorNumber(getEmissionFactorValue(result, environment)),
                 ])}{' '}
                 {tResultUnits(StudyResultUnit.K)}/
-                {result.unit === Unit.CUSTOM ? result.customUnit : tUnits(result.unit || '')}
+                {result.unit === Unit.CUSTOM
+                  ? result.customUnit
+                  : getUnitLabel(result.unit || '', getEmissionFactorValue(result, environment))}
               </p>
               {result.metaData && <p className={styles.detail}>{getDetail(result.metaData)}</p>}
             </button>
@@ -204,15 +215,17 @@ const EmissionSourceFactor = ({
       {advancedSearch && (
         <EmissionSourceFactorModal
           open={advancedSearch}
+          environment={environment}
+          userOrganizationId={userOrganizationId}
           close={() => setAdvancedSearch(false)}
-          emissionFactors={emissionFactors}
-          subPost={subPost}
+          defaultSubPost={subPost}
+          importVersions={importVersions}
           selectEmissionFactor={(emissionFactor) => {
             update('emissionFactorId', emissionFactor.id)
             setDisplay(false)
             setAdvancedSearch(false)
           }}
-          environment={environment}
+          studyId={studyId}
         />
       )}
       <Modal

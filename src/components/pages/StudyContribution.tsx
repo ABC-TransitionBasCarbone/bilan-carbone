@@ -36,7 +36,7 @@ const StudyContributionPage = ({ study, user }: Props) => {
           { label: study.name, link: `/etudes/${study.id}` },
         ].filter((link) => link !== undefined)}
       />
-      <Block title={tStudyNav('dataEntry')} as="h1">
+      <Block title={tStudyNav('dataEntry')} as="h2">
         <div className="mb1">
           <SelectStudySite study={study} studySite={studySite} setSite={setSite} />
         </div>

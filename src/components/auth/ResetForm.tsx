@@ -104,7 +104,6 @@ const ResetForm = ({ user, token, environment = Environment.BC }: Props) => {
           className={authStyles.input}
           label={t('email')}
           placeholder={t('emailPlaceholder')}
-          translation={t}
           trim
         />
         <FormTextField
@@ -115,7 +114,6 @@ const ResetForm = ({ user, token, environment = Environment.BC }: Props) => {
           placeholder={t('passwordPlaceholder')}
           name="password"
           type={showPassword1 ? 'text' : 'password'}
-          translation={t}
           endAdornment={
             <InputAdornment position="end">
               <IconButton
@@ -142,7 +140,6 @@ const ResetForm = ({ user, token, environment = Environment.BC }: Props) => {
           className={authStyles.input}
           label={t('confirmPassword')}
           name="confirmPassword"
-          translation={t}
           type={showPassword2 ? 'text' : 'password'}
           endAdornment={
             <InputAdornment position="end">

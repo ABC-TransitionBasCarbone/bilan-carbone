@@ -1,0 +1,12 @@
+.multiSelect :global(.MuiSelect-select) {
+  white-space: normal !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0.5rem 1.5rem 0.5rem 0.5rem !important;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.5;
+  max-height: 2.75rem;
+}

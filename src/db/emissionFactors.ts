@@ -1,13 +1,50 @@
 import { LocaleType } from '@/i18n/config'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
-import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
+import { FeFilters } from '@/types/filters'
+import { unique } from '@/utils/array'
+import { getEmissionFactorSubPostsMap, isMonetaryEmissionFactor } from '@/utils/emissionFactors'
 import { flattenSubposts } from '@/utils/post'
-import { EmissionFactorStatus, Import, Unit, type Prisma } from '@prisma/client'
+import { EmissionFactorStatus, Environment, Import, Prisma, SubPost, Unit } from '@prisma/client'
 import { Session } from 'next-auth'
 import { prismaClient } from './client'
 import { getOrganizationVersionById } from './organization'
 
-let cachedEmissionFactors: AsyncReturnType<typeof getDefaultEmissionFactors> = []
+const otherSelectEmissionFactor = {
+  id: true,
+  status: true,
+  totalCo2: true,
+  location: true,
+  source: true,
+  unit: true,
+  customUnit: true,
+  isMonetary: true,
+  importedFrom: true,
+  importedId: true,
+  organizationId: true,
+  reliability: true,
+  technicalRepresentativeness: true,
+  geographicRepresentativeness: true,
+  temporalRepresentativeness: true,
+  completeness: true,
+  subPosts: true,
+  co2f: true,
+  ch4f: true,
+  ch4b: true,
+  n2o: true,
+  co2b: true,
+  sf6: true,
+  hfc: true,
+  pfc: true,
+  otherGES: true,
+  version: {
+    select: {
+      id: true,
+      name: true,
+      archived: true,
+    },
+  },
+  emissionFactorParts: { select: { type: true, totalCo2: true } },
+}
 
 const selectEmissionFactor = {
   id: true,
@@ -50,86 +87,208 @@ const selectEmissionFactor = {
     select: {
       id: true,
       name: true,
+      archived: true,
     },
   },
   emissionFactorParts: { select: { type: true, totalCo2: true } },
 } as Prisma.EmissionFactorSelect
 
-const getDefaultEmissionFactors = (versionIds?: string[]) =>
-  prismaClient.emissionFactor.findMany({
-    where: {
-      organizationId: null,
-      subPosts: { isEmpty: false },
-      ...(versionIds && { versionId: { in: versionIds } }),
-    },
-    select: selectEmissionFactor,
-    orderBy: { createdAt: 'desc' },
-  })
-
-const getEmissionFactorsFromIdsExceptVersions = (ids: string[], versionIds: string[]) =>
-  prismaClient.emissionFactor.findMany({
-    where: { id: { in: ids }, versionId: { notIn: versionIds } },
-    select: selectEmissionFactor,
-    orderBy: { createdAt: 'desc' },
-  })
-
-const filterVersionedEmissionFactor = (
-  emissionFactor: AsyncReturnType<typeof getDefaultEmissionFactors>[0],
-  versionIds?: string[],
-) =>
-  !versionIds ||
-  !emissionFactor.version ||
-  (emissionFactor.version.id && versionIds.includes(emissionFactor.version.id))
-
-const getCachedDefaultEmissionFactors = async (versionIds?: string[]) => {
-  if (cachedEmissionFactors.length) {
-    return cachedEmissionFactors.filter((emissionFactor) => filterVersionedEmissionFactor(emissionFactor, versionIds))
+export type EmissionFactorList = {
+  id: string
+  status: EmissionFactorStatus
+  totalCo2: number
+  location: string | null
+  source: string | null
+  unit: Unit | null
+  customUnit: string | null
+  isMonetary: boolean
+  importedFrom: Import
+  importedId: string | null
+  organizationId: string | null
+  reliability: number | null
+  technicalRepresentativeness: number | null
+  geographicRepresentativeness: number | null
+  temporalRepresentativeness: number | null
+  completeness: number | null
+  subPosts: SubPost[]
+  co2f: number | null
+  ch4f: number | null
+  ch4b: number | null
+  n2o: number | null
+  co2b: number | null
+  sf6: number | null
+  hfc: number | null
+  pfc: number | null
+  otherGES: number | null
+  metaData: {
+    language: string
+    title: string | null
+    attribute: string | null
+    comment: string | null
+    location: string | null
+    frontiere: string | null
   }
-  const emissionFactors = await getDefaultEmissionFactors()
-  cachedEmissionFactors = emissionFactors
-  return emissionFactors.filter((emissionFactor) => filterVersionedEmissionFactor(emissionFactor, versionIds))
+  version: {
+    id: string
+    name: string
+    archived: boolean
+  } | null
+  emissionFactorParts: {
+    type: string
+    totalCo2: number
+  }[]
+}
+
+const getDefaultEmissionFactorsCount = async (
+  filters: FeFilters,
+  locale: LocaleType,
+  environment: Environment,
+  organizationId?: string,
+): Promise<{ count: number }> => {
+  const count = await prismaClient.emissionFactorMetaData.count(
+    getBaseFilterForEmissionFactors(locale, filters, environment, organizationId),
+  )
+
+  return { count }
+}
+
+export const keepOnlyOneMetadata = <T extends { metaData: EmissionFactorList['metaData'][] }>(
+  emissionFactors: T[],
+  locale: LocaleType,
+): (T & { metaData: EmissionFactorList['metaData'] })[] => {
+  return emissionFactors.map((ef) => ({
+    ...ef,
+    metaData: ef.metaData.find((meta) => meta.language === locale) ?? {
+      language: locale,
+      title: null,
+      attribute: null,
+      comment: null,
+      location: null,
+      frontiere: null,
+    },
+  }))
+}
+
+const getBaseFilterForEmissionFactors = (
+  locale: LocaleType,
+  filters: FeFilters,
+  environment: Environment,
+  organizationId?: string,
+) => {
+  let importedFromCondition = {}
+  if (filters.sources.length > 0 && filters.sources.some((source) => source !== 'all')) {
+    if (filters.sources.includes(Import.Manual) && filters.sources.length === 1 && organizationId) {
+      importedFromCondition = { OR: [{ importedFrom: Import.Manual, organizationId }] }
+    } else if (filters.sources.includes(Import.Manual)) {
+      importedFromCondition = {
+        OR: [
+          { versionId: { in: filters.sources.filter((s) => s !== Import.Manual) } },
+          { importedFrom: Import.Manual, organizationId },
+        ],
+      }
+    } else {
+      importedFromCondition = {
+        OR: [{ versionId: { in: filters.sources.filter((s) => s !== Import.Manual) } }],
+      }
+    }
+  }
+
+  return {
+    where: {
+      language: locale,
+      ...(filters.search && {
+        OR: [
+          { title: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
+          { attribute: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
+          { frontiere: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
+        ],
+      }),
+      ...(filters.location && { location: { contains: filters.location, mode: Prisma.QueryMode.insensitive } }),
+      emissionFactor: {
+        AND: [
+          {
+            subPosts: filters.subPosts.some((sp) => sp === 'all')
+              ? { isEmpty: false }
+              : { hasSome: getEmissionFactorSubPostsMap(filters.subPosts as SubPost[], environment) },
+          },
+          filters.archived ? {} : { status: { not: EmissionFactorStatus.Archived } },
+          filters.units.length > 0 && !filters.units.includes('all')
+            ? {
+                OR: [{ unit: { in: filters.units as Unit[] } }, { customUnit: { in: filters.units as string[] } }],
+              }
+            : {},
+          importedFromCondition,
+        ],
+      },
+    },
+  }
+}
+
+const getDefaultEmissionFactors = async (
+  skip: number,
+  take: number | 'ALL',
+  locale: LocaleType,
+  filters: FeFilters,
+  environment: Environment,
+  organizationId?: string,
+): Promise<EmissionFactorList[]> => {
+  const emissionFactorsMetadata = await prismaClient.emissionFactorMetaData.findMany({
+    ...getBaseFilterForEmissionFactors(locale, filters, environment, organizationId),
+    skip,
+    take: take === 'ALL' ? undefined : take,
+    select: {
+      language: true,
+      title: true,
+      attribute: true,
+      comment: true,
+      location: true,
+      frontiere: true,
+      emissionFactor: { select: otherSelectEmissionFactor },
+    },
+    orderBy: { title: 'asc' },
+  })
+
+  return emissionFactorsMetadata.map((metadata) => ({
+    ...metadata.emissionFactor,
+    metaData: {
+      language: metadata.language,
+      title: metadata.title,
+      attribute: metadata.attribute,
+      comment: metadata.comment,
+      location: metadata.location,
+      frontiere: metadata.frontiere,
+    },
+  }))
+}
+
+export const getAllEmissionFactorsLocations = async () => {
+  const emissionFactors = await prismaClient.emissionFactor.findMany({
+    where: { status: { not: EmissionFactorStatus.Archived } },
+    select: { location: true },
+  })
+
+  return unique(emissionFactors.map((emissionFactor) => emissionFactor.location)).filter(
+    (location) => location !== null,
+  )
 }
 
 export const getAllEmissionFactors = async (
-  organizationId: string | null,
-  studyId?: string,
-  withCut: boolean = false,
+  organizationId: string | undefined,
+  skip: number,
+  take: number | 'ALL',
+  locale: LocaleType,
+  filters: FeFilters,
+  environment: Environment,
 ) => {
-  let versionIds
-  let studyOldEmissionFactors: Awaited<ReturnType<typeof getDefaultEmissionFactors>> = []
-  if (studyId) {
-    const study = await prismaClient.study.findFirst({
-      where: { id: studyId },
-      include: { emissionFactorVersions: true, emissionSources: true },
-    })
-    if (!study) {
-      return []
-    }
-    versionIds = study.emissionFactorVersions.map((version) => version.importVersionId)
-    const selectedEmissionFactors = study.emissionSources
-      .map((emissionSource) => emissionSource.emissionFactorId)
-      .filter((id) => id !== null)
+  const [defaultEmissionFactors, emissionFactorsCountInfos] = await Promise.all([
+    getDefaultEmissionFactors(skip, take, locale, filters, environment, organizationId),
+    getDefaultEmissionFactorsCount(filters, locale, environment, organizationId),
+  ])
 
-    studyOldEmissionFactors = await getEmissionFactorsFromIdsExceptVersions(selectedEmissionFactors, versionIds)
+  return {
+    emissionFactors: defaultEmissionFactors,
+    count: emissionFactorsCountInfos.count,
   }
-  const organizationEmissionFactor = organizationId
-    ? await prismaClient.emissionFactor.findMany({
-        where: { organizationId },
-        select: selectEmissionFactor,
-        orderBy: { createdAt: 'desc' },
-      })
-    : []
-
-  const defaultEmissionFactors = await (process.env.NO_CACHE === 'true'
-    ? getDefaultEmissionFactors(versionIds)
-    : getCachedDefaultEmissionFactors(versionIds))
-
-  const allEmissionFactors = organizationEmissionFactor.concat(defaultEmissionFactors).concat(studyOldEmissionFactors)
-  if (withCut) {
-    return allEmissionFactors
-  }
-
-  return allEmissionFactors.filter((emissionFactor) => emissionFactor.importedFrom !== Import.CUT)
 }
 
 export const getEmissionFactorById = (id: string) =>
@@ -325,11 +484,14 @@ export const getEmissionFactorDetailsById = async (id: string) =>
   })
 export type DetailedEmissionFactor = AsyncReturnType<typeof getEmissionFactorDetailsById>
 
-export const getEmissionFactorSources = async (withCut: boolean = false) => {
-  if (withCut) {
-    return prismaClient.emissionFactorImportVersion.findMany()
-  }
-  return prismaClient.emissionFactorImportVersion.findMany({ where: { source: { not: Import.CUT } } })
+export const getEmissionFactorImportVersionsBC = async (withArchived?: boolean) => {
+  return prismaClient.emissionFactorImportVersion.findMany({
+    where: { source: { not: Import.CUT }, ...(!withArchived && { archived: false }) },
+  })
+}
+
+export const getEmissionFactorImportVersionsCUT = async () => {
+  return prismaClient.emissionFactorImportVersion.findMany()
 }
 
 export const getStudyEmissionFactorSources = async (studyId: string, withCut: boolean = false) => {

@@ -2,9 +2,10 @@ import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { unitsMatrix } from '@/services/importEmissionFactor/historyUnits'
 import { getEmissionQuality } from '@/services/importEmissionFactor/import'
 import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
-import { EmissionFactorPartType, EmissionFactorStatus, Import, Prisma } from '@prisma/client'
+import { EmissionFactorPartType, EmissionFactorStatus, Import, Prisma, SubPost } from '@prisma/client'
 import { v4 } from 'uuid'
-import { EmissionFactorsWorkSheet } from './oldBCWorkSheetsReader'
+import { OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
+import { EmissionFactorRow, EmissionFactorsWorkSheet } from './oldBCWorkSheetsReader'
 
 const getStringValue = (value: string | number) => {
   const stringValue = value ? value.toString() : ''
@@ -13,15 +14,64 @@ const getStringValue = (value: string | number) => {
     : stringValue
 }
 
+const mapToSubPost = (newSubPost: string) => {
+  const normalizedSubPost = newSubPost
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[\s,']/g, '')
+    .toLowerCase()
+
+  const foundSubPost = Object.values(SubPost).find((subPost) => subPost.toLowerCase() === normalizedSubPost)
+  if (foundSubPost) {
+    return foundSubPost
+  }
+  throw new Error(`Sous poste invalide "${newSubPost}"`)
+}
+
+const getSubPost = (emissionFactor: EmissionFactorRow, postAndSubPostsOldNewMapping: OldNewPostAndSubPostsMapping) => {
+  if (
+    emissionFactor.domain === 'NULL' ||
+    emissionFactor.category === 'NULL' ||
+    emissionFactor.subCategory === 'NULL' ||
+    emissionFactor.post === 'NULL' ||
+    emissionFactor.subPost === 'NULL'
+  ) {
+    console.log({
+      reason: `pas de sous psote pour  ${emissionFactor.EF_VAL_LIB}`,
+    })
+
+    return null
+  }
+  const newPostAndSubPost = postAndSubPostsOldNewMapping.getNewPostAndSubPost({
+    domain: emissionFactor.domain as string,
+    category: emissionFactor.category as string,
+    subCategory: emissionFactor.subCategory as string,
+    oldPost: emissionFactor.post as string,
+    oldSubPost: emissionFactor.subPost as string,
+  })
+  let subPost
+
+  try {
+    return mapToSubPost(newPostAndSubPost.newSubPost)
+  } catch {
+    console.log({
+      oldPost: `${emissionFactor.domain} ${emissionFactor.category} ${emissionFactor.subCategory} ${emissionFactor.post} ${emissionFactor.subPost}`,
+      reason: `Sous poste invalide ${subPost}`,
+    })
+    return null
+  }
+}
+
 export const uploadEmissionFactors = async (
   transaction: Prisma.TransactionClient,
   emissionFactorsWorksheet: EmissionFactorsWorkSheet,
   organizationVersion: OrganizationVersionWithOrganization,
+  postAndSubPostsOldNewMapping: OldNewPostAndSubPostsMapping,
 ) => {
   console.log("Import des facteurs d'émissions...")
   const ids = emissionFactorsWorksheet.getRows().map((row) => row.EFV_GUID as string)
   const existingEmissionFactors = await transaction.emissionFactor.findMany({
-    where: { oldBCId: { in: ids } },
+    where: { oldBCId: { in: ids }, organizationId: organizationVersion.organizationId },
   })
 
   if (existingEmissionFactors.length > 0) {
@@ -38,48 +88,58 @@ export const uploadEmissionFactors = async (
   console.log(`${emissionFactorsToCreate.length} facteurs d'émissions à importer`)
 
   const createdEmissionFactor = await transaction.emissionFactor.createMany({
-    data: emissionFactorsToCreate.map((row) => {
-      const id = v4()
-      metaData.push({
-        emissionFactorId: id,
-        language: 'fr',
-        title: getStringValue(row.EF_VAL_LIB),
-        attribute: getStringValue(row.EF_VAL_CARAC),
-        frontiere: getStringValue(row.EF_VAL_COMPLEMENT),
-        comment: `${getStringValue(row.Commentaires)} ${getStringValue(row.DateValidité)}`,
-        location: `${getStringValue(row.NOM_PAYS)} ${getStringValue(row.NOM_REGION)} ${getStringValue(row.NOM_DEPARTEMENT)}`,
+    data: emissionFactorsToCreate
+      .map((row) => {
+        const id = v4()
+        const unit = unitsMatrix[getStringValue(row.Unité_Nom)]
+
+        if (!unit) {
+          return null
+        }
+
+        metaData.push({
+          emissionFactorId: id,
+          language: 'fr',
+          title: getStringValue(row.EF_VAL_LIB),
+          attribute: getStringValue(row.EF_VAL_CARAC),
+          frontiere: getStringValue(row.EF_VAL_COMPLEMENT),
+          comment: `${getStringValue(row.Commentaires)} ${getStringValue(row.DateValidité)}`,
+          location: `${getStringValue(row.NOM_PAYS)} ${getStringValue(row.NOM_REGION)} ${getStringValue(row.NOM_DEPARTEMENT)}`,
+        })
+
+        const isMonetary = isMonetaryEmissionFactor({ unit })
+
+        const subPost = getSubPost(row, postAndSubPostsOldNewMapping)
+
+        return {
+          id,
+          organizationId: organizationVersion.organizationId,
+          importedFrom: Import.Manual,
+          status: EmissionFactorStatus.Valid,
+          oldBCId: getStringValue(row.EFV_GUID),
+          reliability: getEmissionQuality(row.Incertitude as number),
+          technicalRepresentativeness: getEmissionQuality(row.Incertitude as number),
+          geographicRepresentativeness: getEmissionQuality(row.Incertitude as number),
+          temporalRepresentativeness: getEmissionQuality(row.Incertitude as number),
+          completeness: getEmissionQuality(row.Incertitude as number),
+          unit,
+          isMonetary,
+          totalCo2: row.Total_CO2e as number,
+          co2f: row.CO2f as number,
+          ch4f: row.CH4f as number,
+          ch4b: row.CH4b as number,
+          n2o: row.N2O as number,
+          co2b: row.CO2b as number,
+          sf6: row.SF6 as number,
+          hfc: row.HFC as number,
+          pfc: row.PFC as number,
+          otherGES: (row.Autre_gaz as number) + (row.NF3 as number),
+          source: getStringValue(row.Source_Nom),
+          location: getStringValue(row.NOM_CONTINENT),
+          ...(subPost ? { subPosts: [subPost] } : {}),
+        }
       })
-
-      const unit = unitsMatrix[getStringValue(row.Unité_Nom)]
-      const isMonetary = isMonetaryEmissionFactor({ unit })
-
-      return {
-        id,
-        organizationId: organizationVersion.organizationId,
-        importedFrom: Import.Manual,
-        status: EmissionFactorStatus.Valid,
-        oldBCId: getStringValue(row.EFV_GUID),
-        reliability: getEmissionQuality(row.Incertitude as number),
-        technicalRepresentativeness: getEmissionQuality(row.Incertitude as number),
-        geographicRepresentativeness: getEmissionQuality(row.Incertitude as number),
-        temporalRepresentativeness: getEmissionQuality(row.Incertitude as number),
-        completeness: getEmissionQuality(row.Incertitude as number),
-        unit,
-        isMonetary,
-        totalCo2: row.Total_CO2e as number,
-        co2f: row.CO2f as number,
-        ch4f: row.CH4f as number,
-        ch4b: row.CH4b as number,
-        n2o: row.N2O as number,
-        co2b: row.CO2b as number,
-        sf6: row.SF6 as number,
-        hfc: row.HFC as number,
-        pfc: row.PFC as number,
-        otherGES: (row.Autre_gaz as number) + (row.NF3 as number),
-        source: getStringValue(row.Source_Nom),
-        location: getStringValue(row.NOM_CONTINENT),
-      }
-    }),
+      .filter((data) => data !== null),
   })
 
   console.log(createdEmissionFactor.count, "facteurs d'émissions importés")
@@ -98,9 +158,20 @@ export const uploadEmissionFactors = async (
   const emissionFactorPartsToCreate = emissionFactorsWorksheet
     .getRows()
     .filter((row) => !row.FE_BCPlus)
-    .filter((row) => row.EF_TYPE !== 'Consolidé')
+    .filter((row) => row.EF_TYPE !== 'Consolidé' && row.EF_TYPE !== 'NULL')
     .filter((row) => existingEmissionFactorParts.every((ef) => ef.oldBCId !== row.EFV_GUID))
-    .filter((row) => allEmissionFactors.some((ef) => ef.oldBCId === row.GUID))
+    .map((row) => {
+      const excelParentFE = emissionFactorsToCreate.find((ef) => ef.GUID === row.GUID && ef.EF_TYPE === 'Consolidé')
+
+      if (!excelParentFE) {
+        console.log(" Pas de facteur d'émission parent trouvé pour la partie avec GUID :", row.EF_VAL_LIB, row.EFV_GUID)
+        return false
+      }
+
+      const bddParentFE = allEmissionFactors.find((ef) => ef.oldBCId === excelParentFE.EFV_GUID)
+      return bddParentFE ? { ...row, bddParentFEId: bddParentFE.id } : false
+    })
+    .filter((row) => !!row)
 
   const sumByGuid: Record<
     string,
@@ -154,12 +225,12 @@ export const uploadEmissionFactors = async (
   })
 
   if (inconsistentGuids.length > 0) {
-    console.log(`${inconsistentGuids.length} facteurs d'émissions avec des parties incohérentes, donc ignorées`)
+    throw new Error(`${inconsistentGuids.length} facteurs d'émissions avec des parties incohérentes, donc ignorées`)
   }
 
-  const filteredEmissionFactorPartsToCreate = emissionFactorPartsToCreate
-    .filter((row) => inconsistentGuids.every(([key]) => key !== getStringValue(row.GUID)))
-    .filter((row) => allEmissionFactors.some((ef) => ef.oldBCId === row.GUID))
+  const filteredEmissionFactorPartsToCreate = emissionFactorPartsToCreate.filter((row) =>
+    inconsistentGuids.every(([key]) => key !== getStringValue(row.GUID)),
+  )
 
   const partsMetaData = [] as Prisma.EmissionFactorPartMetaDataCreateManyInput[]
   console.log(`${filteredEmissionFactorPartsToCreate.length} composantes à importer`)
@@ -175,14 +246,9 @@ export const uploadEmissionFactors = async (
       })
       return {
         id,
-        emissionFactorId: allEmissionFactors.find((ef) => ef.oldBCId === row.GUID)?.id as string,
+        emissionFactorId: row.bddParentFEId,
         type: EmissionFactorPartType.Amont,
         oldBCId: getStringValue(row.EFV_GUID),
-        reliability: getEmissionQuality(row.Incertitude as number),
-        technicalRepresentativeness: getEmissionQuality(row.Incertitude as number),
-        geographicRepresentativeness: getEmissionQuality(row.Incertitude as number),
-        temporalRepresentativeness: getEmissionQuality(row.Incertitude as number),
-        completeness: getEmissionQuality(row.Incertitude as number),
         totalCo2: row.Total_CO2e as number,
         co2f: row.CO2f as number,
         ch4f: row.CH4f as number,
@@ -193,8 +259,6 @@ export const uploadEmissionFactors = async (
         hfc: row.HFC as number,
         pfc: row.PFC as number,
         otherGES: (row.Autre_gaz as number) + (row.NF3 as number),
-        source: getStringValue(row.Source_Nom),
-        location: getStringValue(row.NOM_CONTINENT),
       }
     }),
   })

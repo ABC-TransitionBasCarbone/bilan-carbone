@@ -12,8 +12,8 @@ export interface Props {
   label: string
   open: boolean
   onClose: () => void
-  title: React.ReactNode
   children: React.ReactNode
+  title?: React.ReactNode
   className?: string
   big?: boolean
   actions?: ModalAction[]
@@ -21,7 +21,13 @@ export interface Props {
 
 type ModalAction =
   | (ButtonProps & { actionType?: 'button' | 'submit'; 'data-testid'?: string })
-  | (LoadingButtonProps & { actionType: 'loadingButton'; onClick: VoidFunction; 'data-testid'?: string })
+  | (LoadingButtonProps & {
+      actionType: 'loadingButton'
+      onClick: VoidFunction
+      'data-testid'?: string
+      disabled?: boolean
+      color?: 'secondary' | 'error' | 'primary'
+    })
   | (ButtonProps & { actionType: 'link'; href?: string; 'data-testid'?: string })
 
 const Modal = ({ className, label, open, onClose, title, children, actions, big }: Props) => (
@@ -33,10 +39,13 @@ const Modal = ({ className, label, open, onClose, title, children, actions, big 
     data-testid={`${label}-modal`}
   >
     <Box className={classNames(styles.box, className, 'flex-col', { [styles.big]: big })}>
-      <div className="justify-between align-center mb2">
-        <Typography id={`${label}-modal-title`} variant="h6" sx={{ fontWeight: 'bold' }}>
-          {title}
-        </Typography>
+      <div className={classNames(title ? 'justify-between mb1' : 'justify-end', 'align-center')}>
+        {title && (
+          <Typography id={`${label}-modal-title`} variant="h6" sx={{ fontWeight: 'bold' }}>
+            {title}
+          </Typography>
+        )}
+
         <IconButton color="primary" onClick={onClose}>
           <CloseIcon />
         </IconButton>

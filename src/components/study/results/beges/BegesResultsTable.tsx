@@ -1,11 +1,12 @@
 'use client'
 
+import BaseTable from '@/components/base/Table'
 import { FullStudy } from '@/db/study'
 import { BegesPostInfos, rulesSpans } from '@/services/results/beges'
 import { getStandardDeviationRating } from '@/services/uncertainty'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
+import { ColumnDef, flexRender, getCoreRowModel, Row, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import TotalCarbonBeges from '../consolidated/TotalCarbonBeges'
@@ -94,6 +95,59 @@ const BegesResultsTable = ({ study, withDepValue, data }: Props) => {
     getCoreRowModel: getCoreRowModel(),
   })
 
+  const Row = (row: Row<BegesPostInfos>) => {
+    const rule = row.original.rule.split('.')
+    const category = rule[0]
+    const isTotal = category === 'total'
+    const isCategorieFirstRow = rule[1] === '1' || isTotal
+
+    return (
+      <tr
+        key={row.id}
+        data-testid="beges-results-table-row"
+        data-category={category}
+        className={isCategorieFirstRow ? styles.categoryFirstRow : ''}
+      >
+        {row.getVisibleCells().map((cell) => {
+          const shouldRenderCell = cell.column.id !== 'category' || isCategorieFirstRow
+
+          if (!shouldRenderCell) {
+            return null
+          }
+
+          let cellClass = ''
+          const isSubtotal = row.original.rule.includes('.total')
+          const isTotalColumn = cell.column.id === 'total'
+
+          if (cell.column.id === 'category') {
+            cellClass = `${styles.categoryCell} ${styles.categoryBold}`
+          } else if (isTotal) {
+            cellClass = styles.totalRow
+          } else if (isSubtotal) {
+            cellClass = `${styles.postCell} ${styles.subtotalRow}`
+          } else {
+            cellClass = styles.postCell
+          }
+
+          if (isTotalColumn) {
+            cellClass += ` ${styles.totalColumn}`
+          }
+
+          return (
+            <td
+              key={cell.id}
+              rowSpan={cell.column.id === 'category' ? rulesSpans[category] : undefined}
+              className={cellClass}
+              data-category={category}
+            >
+              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            </td>
+          )
+        })}
+      </tr>
+    )
+  }
+
   return (
     <>
       <TotalCarbonBeges
@@ -101,73 +155,7 @@ const BegesResultsTable = ({ study, withDepValue, data }: Props) => {
         totalBeges={(data.find((d) => d.rule === 'total')?.total ?? 0) / STUDY_UNIT_VALUES[study.resultsUnit]}
         totalCarbon={withDepValue}
       />
-      <table className={styles.begesTable} aria-labelledby="study-rights-table-title">
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th key={header.id} colSpan={header.colSpan}>
-                  {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => {
-            const rule = row.original.rule.split('.')
-            const category = rule[0]
-            const isTotal = category === 'total'
-            const isCategorieFirstRow = rule[1] === '1' || isTotal
-
-            return (
-              <tr
-                key={row.id}
-                data-testid="beges-results-table-row"
-                data-category={category}
-                className={isCategorieFirstRow ? styles.categoryFirstRow : ''}
-              >
-                {row.getVisibleCells().map((cell) => {
-                  const shouldRenderCell = cell.column.id !== 'category' || isCategorieFirstRow
-
-                  if (!shouldRenderCell) {
-                    return null
-                  }
-
-                  let cellClass = ''
-                  const isSubtotal = row.original.rule.includes('.total')
-                  const isTotalColumn = cell.column.id === 'total'
-
-                  if (cell.column.id === 'category') {
-                    cellClass = `${styles.categoryCell} ${styles.categoryBold}`
-                  } else if (isTotal) {
-                    cellClass = styles.totalRow
-                  } else if (isSubtotal) {
-                    cellClass = `${styles.postCell} ${styles.subtotalRow}`
-                  } else {
-                    cellClass = styles.postCell
-                  }
-
-                  if (isTotalColumn) {
-                    cellClass += ` ${styles.totalColumn}`
-                  }
-
-                  return (
-                    <td
-                      key={cell.id}
-                      rowSpan={cell.column.id === 'category' ? rulesSpans[category] : undefined}
-                      className={cellClass}
-                      data-category={category}
-                    >
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </td>
-                  )
-                })}
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
+      <BaseTable table={table} className={styles.begesTable} customRow={Row} testId="beges-results" size="small" />
     </>
   )
 }

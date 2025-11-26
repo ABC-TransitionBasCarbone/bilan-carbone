@@ -3,7 +3,7 @@ import { z } from 'zod'
 
 export const OpeningHoursValidation = z.object({
   id: z.string().optional(),
-  day: z.nativeEnum(DayOfWeek),
+  day: z.enum(DayOfWeek),
   isHoliday: z.boolean().refine((val) => val === false),
   openHour: z.string().optional().nullable(),
   closeHour: z.string().optional().nullable(),

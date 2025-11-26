@@ -1,20 +1,20 @@
 'use client'
 
 import HelpIcon from '@/components/base/HelpIcon'
+import BaseTable from '@/components/base/Table'
 import { TeamMember } from '@/db/account'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteOrganizationMember } from '@/services/serverFunctions/organization'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { canEditMemberRole, getEnvironmentRoles } from '@/utils/user'
-import DeleteIcon from '@mui/icons-material/Delete'
 import { Environment, Role } from '@prisma/client'
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
+import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useCallback, useMemo, useState } from 'react'
 import Block from '../base/Block'
-import Button from '../base/Button'
+import { TableActionButton } from '../base/TableActionButton'
 import Modal from '../modals/Modal'
 import SelectRole from './SelectRole'
 import styles from './TeamTable.module.css'
@@ -85,21 +85,21 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
 
     if (canUpdateTeam) {
       col.push({
-        header: t('action'),
-        cell: ({ row }) =>
-          row.original.user.email !== user.email ? (
-            <div className="justify-center">
-              <Button onClick={() => setDeletingMember(row.original.user.email)} title={t('deleteMember')}>
-                <DeleteIcon />
-              </Button>
-            </div>
-          ) : (
-            <></>
-          ),
+        id: 'actions',
+        header: '',
+        cell: ({ row }) => {
+          return row.original.user.email !== user.email ? (
+            <TableActionButton
+              type="delete"
+              onClick={() => setDeletingMember(row.original.user.email)}
+              data-testid="delete-member-button"
+            />
+          ) : null
+        },
       })
     }
     return col
-  }, [canUpdateTeam, t, tLevel, tRole, user.email])
+  }, [t, isCut, canUpdateTeam, tLevel, user.email, user.environment, tRole])
 
   const table = useReactTable({
     columns,
@@ -155,28 +155,7 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
             : undefined
         }
       >
-        <table aria-labelledby="team-table-title">
-          <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <th key={header.id}>
-                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <tr key={row.id} data-testid="team-table-line">
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <BaseTable table={table} testId="team" />
       </Block>
       <Modal
         open={displayRoles}

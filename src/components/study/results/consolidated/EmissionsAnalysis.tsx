@@ -48,7 +48,7 @@ const EmissionsAnalysis = ({
 
   return (
     <div className="mb2">
-      <Title title={t('analysis')} as="h2" />
+      <Title title={t('analysis')} as="h3" />
       <div className={classNames(styles.analysisContainer, 'flex')}>
         <div className="flex-col grow">
           <Box className={classNames(styles.gapped, 'justify-center flex-col')}>
@@ -93,7 +93,6 @@ const EmissionsAnalysis = ({
             withDep={withDepValue}
             withoutDep={withoutDepValue}
             caUnit={caUnit}
-            setGlossary={setGlossary}
           />
         </div>
         <div className="flex-col grow">

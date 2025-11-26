@@ -108,6 +108,7 @@ const StudyTags = ({ studyId }: Props) => {
           {<HelpIcon label={t('family.glossary')} onClick={() => setGlossary('family.glossary')} />}
         </>
       }
+      as="h3"
     >
       <Title as="h5" className="mb-2 flex-start" title={t('family.title')} />
       <div className={classNames(styles.families, 'mb1')}>
@@ -166,7 +167,12 @@ const StudyTags = ({ studyId }: Props) => {
             namePlaceholder={t('emissionSourceTagsPlaceholder')}
             data-testid="create-emission-source-tag"
           />
-          <Button data-testid="submit-button" type="submit" disabled={!tagFamilies.length || !formState.isValid}>
+          <Button
+            className="mt1"
+            data-testid="submit-button"
+            type="submit"
+            disabled={!tagFamilies.length || !formState.isValid}
+          >
             {t('createEmissionSourceTag')}
           </Button>
         </FormControl>

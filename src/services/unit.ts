@@ -1,4 +1,5 @@
 import { Unit } from '@prisma/client'
+import { useTranslations } from 'next-intl'
 
 const UnitCommon = {
   UNIT: Unit.UNIT,
@@ -171,3 +172,8 @@ export const CUTUnit = {
 
 export type BCUnit = (typeof BCUnit)[keyof typeof BCUnit]
 export type CUTUnit = (typeof CUTUnit)[keyof typeof CUTUnit]
+
+export const useUnitLabel = () => {
+  const t = useTranslations('units')
+  return (unitKey: string | null, count?: number | null): string => t(unitKey || '', { count: count || 1 })
+}

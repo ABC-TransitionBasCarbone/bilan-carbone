@@ -99,7 +99,7 @@ const SubPostSelector = ({ isAllPosts, post, selectedSubPosts, sortedSubPosts, o
     <Select
       name="subPosts"
       data-testid="emission-factor-subPost"
-      label={t('subPost')}
+      label={`${t('subPost')} *`}
       value={selectedSubPosts || []}
       onChange={handleChange}
       multiple

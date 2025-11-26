@@ -34,7 +34,7 @@
 
   --info: #272768;
 
-  --grayscale-50: #f0f2f4;
+  --grayscale-50: #f4f7f9;
   --grayscale-100: #ebf0f4;
   --grayscale-200: #ebf2ff;
   --grayscale-300: #c4d1dd;
@@ -71,4 +71,17 @@
   --contributor-background: var(--grayscale-300);
 
   --error-background: #f6b8b8;
+
+  --trajectory-sbti-15: #199e73;
+  --trajectory-sbti-wb2c: #60e6bc;
+
+  --trajectory-custom-0: #fad98d;
+  --trajectory-custom-1: #f8c151;
+  --trajectory-custom-2: #f6ad34;
+  --trajectory-custom-3: #ef8611;
+  --trajectory-custom-4: #d4630b;
+  --trajectory-custom-5: #b0440d;
+  --trajectory-custom-6: #8f3511;
+  --trajectory-custom-7: #752c12;
+  --trajectory-custom-8: #431505;
 }

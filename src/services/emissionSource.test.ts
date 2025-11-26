@@ -6,7 +6,7 @@ import { getEmissionResults } from './emissionSource'
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('./file', () => ({ download: jest.fn() }))
 jest.mock('./permissions/study', () => ({ isAdminOnStudyOrga: jest.fn() }))
-jest.mock('./study', () => ({ checkLevel: jest.fn() }))
+jest.mock('./study', () => ({ hasSufficientLevel: jest.fn() }))
 
 const defaultEmissionSource = {
   id: 'random',
@@ -24,6 +24,21 @@ const defaultEmissionSource = {
     importedFrom: 'BaseEmpreinte',
     importedId: '123',
     isMonetary: false,
+    location: '',
+    customUnit: null,
+    version: {
+      id: 'version-id',
+    },
+    metaData: [
+      {
+        language: 'fr',
+        frontiere: 'Mocked Frontiere',
+        location: 'Mocked Location',
+        title: 'Mocked Emission Factor',
+        attribute: 'Mocked Attribute',
+        comment: 'Mocked Comment',
+      },
+    ],
   },
   studySite: { id: 'siteId', site: { id: 'siteId', name: 'mocked-site' } },
   emissionFactorId: 'emissionFactor',
@@ -48,6 +63,7 @@ const defaultEmissionSource = {
   duration: null,
   hectare: null,
   emissionSourceTags: [],
+  createdAt: new Date(),
 } satisfies FullStudy['emissionSources'][0]
 
 describe('emissionSource Service', () => {

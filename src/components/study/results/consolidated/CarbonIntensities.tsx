@@ -12,10 +12,9 @@ interface Props {
   withDep: number
   withoutDep: number
   caUnit: SiteCAUnit
-  setGlossary: (glossary: string) => void
 }
 
-const CarbonIntensities = ({ study, studySite, withDep, withoutDep, caUnit, setGlossary }: Props) => {
+const CarbonIntensities = ({ study, studySite, withDep, withoutDep, caUnit }: Props) => {
   const t = useTranslations('study.results')
   const tCAUnit = useTranslations('settings.caUnit')
   const site = study.sites.find((site) => site.id === studySite)

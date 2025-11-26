@@ -160,7 +160,7 @@ const StudyDocument = ({ title, t, study, documents, canUpload = true, documentC
   return (
     <Block
       title={titleWithGlossary}
-      as="h1"
+      as="h3"
       actions={
         canUpload
           ? [

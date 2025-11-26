@@ -1,4 +1,4 @@
-describe('Delete study', () => {
+describe('Duplicate study', () => {
   before(() => {
     cy.resetTestDatabase()
   })

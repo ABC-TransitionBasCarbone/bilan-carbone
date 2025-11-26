@@ -24,6 +24,7 @@ type Part = Exclude<DetailedEmissionFactor, null>['emissionFactorParts'][0]
 
 interface Props {
   emissionFactor: EmissionFactor
+  locations: string[]
 }
 
 const getGazValues = (emissionFactor: EmissionFactor | Part) =>
@@ -49,7 +50,7 @@ const buildParts = (emissionFactor: EmissionFactor, partsCount: number) =>
     return { name: '', totalCo2: 0 }
   })
 
-const EditEmissionFactorForm = ({ emissionFactor }: Props) => {
+const EditEmissionFactorForm = ({ emissionFactor, locations }: Props) => {
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
   const [hasParts, setHasParts] = useState(!!(emissionFactor.emissionFactorParts.length > 0))
@@ -81,6 +82,7 @@ const EditEmissionFactorForm = ({ emissionFactor }: Props) => {
       name: emissionFactor?.metaData[0].title || '',
       attribute: emissionFactor?.metaData[0].attribute || '',
       source: emissionFactor?.source || '',
+      location: emissionFactor.location || '',
       unit: emissionFactor?.unit || undefined,
       customUnit: emissionFactor.customUnit || undefined,
       isMonetary: emissionFactor.isMonetary || false,
@@ -114,6 +116,7 @@ const EditEmissionFactorForm = ({ emissionFactor }: Props) => {
     <Form onSubmit={onSubmit}>
       <EmissionFactorForm
         form={form}
+        locations={locations}
         detailedGES={detailedGES}
         hasParts={hasParts}
         setHasParts={setHasParts}

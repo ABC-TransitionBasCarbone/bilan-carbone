@@ -1,3 +1,34 @@
+enum ActionNature {
+  Physical
+  Reglementary
+  Organisational
+  Behavioural
+}
+
+enum ActionCategory {
+  Immediate
+  Strategic
+  Priority
+  Improvement
+  Adaptation
+}
+
+enum ActionRelevance {
+  Offsetting
+  Sequestration
+  Avoidance
+  AvoidanceFinancing
+  ReductionOutsideOrganisationValueChain
+  ReductionWithinOrganisationValueChain
+  ReductionWithinOrganisationCoreBusiness
+}
+
+enum ActionPotentialDeduction {
+  Quality
+  Quantity
+  EmissionSources
+}
+
 model TransitionPlan {
   id String @id @default(uuid())
 
@@ -5,9 +36,12 @@ model TransitionPlan {
   study   Study  @relation(fields: [studyId], references: [id])
 
   transitionPlanStudies TransitionPlanStudy[]
+  actions               Action[]
+  trajectories          Trajectory[]
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @default(now()) @updatedAt @map("updated_at")
+  externalStudies ExternalStudy[]
 
   @@map("transition_plans")
 }
@@ -26,3 +60,94 @@ model TransitionPlanStudy {
   @@map("transition_plan_studies")
 }
 
+model Action {
+  id String @id @default(uuid())
+
+  transitionPlanId String         @map("transition_plan_id")
+  transitionPlan   TransitionPlan @relation(fields: [transitionPlanId], references: [id], onDelete: Cascade)
+
+  title                     String
+  subSteps                  String                   @map("sub_steps")
+  detailedDescription       String                   @map("detailed_description")
+  potentialDeduction        ActionPotentialDeduction @map("potential_deduction")
+  reductionValue            Int?                     @map("reduction_value")
+  reductionStartYear        String?                  @map("reduction_start_year")
+  reductionEndYear          String?                  @map("reduction_end_year")
+  owner                     String?
+  necessaryBudget           Int?                     @map("necessary_budget")
+  necesssaryRessources      String?                  @map("necesssary_ressources")
+  implementationDescription String?                  @map("implementation_description")
+  implementationGoal        Int?                     @map("implementation_goal")
+  followUpDescription       String?                  @map("follow_up_description")
+  followUpGoal              Int?                     @map("follow_up_goal")
+  performanceDescription    String?                  @map("performance_description")
+  performanceGoal           Int?                     @map("performance_goal")
+  facilitatorsAndObstacles  String?                  @map("facilitators_and_abstacles")
+  additionalInformation     String?                  @map("additional_information")
+  priority                  Int?
+  nature                    ActionNature[]
+  category                  ActionCategory[]
+  relevance                 ActionRelevance[]
+  enabled                   Boolean                  @default(true) @map("enabled")
+  dependenciesOnly          Boolean                  @default(false) @map("dependencies_only")
+  createdAt                 DateTime                 @default(now()) @map("created_at")
+  updatedAt                 DateTime                 @default(now()) @updatedAt @map("updated_at")
+
+  @@map("actions")
+}
+
+enum TrajectoryType {
+  SBTI_15
+  SBTI_WB2C
+  SNBC
+  CUSTOM
+
+  @@map("trajectory_type")
+}
+
+model Trajectory {
+  id String @id @default(uuid())
+
+  transitionPlanId String         @map("transition_plan_id")
+  transitionPlan   TransitionPlan @relation(fields: [transitionPlanId], references: [id], onDelete: Cascade)
+
+  name        String
+  description String?
+  type        TrajectoryType
+
+  objectives Objective[]
+  createdAt  DateTime    @default(now()) @map("created_at")
+  updatedAt  DateTime    @default(now()) @updatedAt @map("updated_at")
+
+  @@map("trajectories")
+}
+
+model ExternalStudy {
+  id String @id @default(uuid())
+
+  transitionPlanId String         @map("transition_plan_id")
+  transitionPlan   TransitionPlan @relation(fields: [transitionPlanId], references: [id], onDelete: Cascade)
+
+  name      String
+  date      DateTime
+  totalCo2  Int      @map("total_co2")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("external_studies")
+}
+
+model Objective {
+  id String @id @default(uuid())
+
+  trajectoryId String     @map("trajectory_id")
+  trajectory   Trajectory @relation(fields: [trajectoryId], references: [id], onDelete: Cascade)
+
+  targetYear    Int   @map("target_year")
+  reductionRate Float @map("reduction_rate")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("objectives")
+}

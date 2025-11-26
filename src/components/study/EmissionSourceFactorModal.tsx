@@ -1,75 +1,77 @@
-import { environmentSubPostsMapping, Post } from '@/services/posts'
-import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
-import { getStudyEmissionFactorImportVersions } from '@/services/serverFunctions/study'
-import { useAppContextStore } from '@/store/AppContext'
-import { EmissionFactorImportVersion, Environment, Import, SubPost } from '@prisma/client'
+import { EmissionFactorWithMetaData, getFELocations } from '@/services/serverFunctions/emissionFactor'
+import { Environment, SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
-import EmissionFactorsTable from '../emissionFactor/Table'
+import { ImportVersionForFilters } from '../emissionFactor/EmissionFactorsFilters'
+import EmissionFactorsFiltersAndTable from '../emissionFactor/EmissionFactorsFiltersAndTable'
 import Modal from '../modals/Modal'
 
 interface Props {
-  close: () => void
   open: boolean
-  emissionFactors: EmissionFactorWithMetaData[]
-  subPost: SubPost
-  selectEmissionFactor: (emissionFactor: EmissionFactorWithMetaData) => void
   environment: Environment
+  userOrganizationId?: string
+  defaultSubPost: SubPost
+  importVersions: ImportVersionForFilters[]
+  studyId: string
+  selectEmissionFactor: (emissionFactor: EmissionFactorWithMetaData) => void
+  close: () => void
 }
 
 const EmissionSourceFactorModal = ({
-  close,
   open,
-  emissionFactors,
-  subPost,
-  selectEmissionFactor,
   environment,
+  userOrganizationId,
+  defaultSubPost,
+  importVersions,
+  studyId,
+  selectEmissionFactor,
+  close,
 }: Props) => {
-  const t = useTranslations('emissionSource.emissionFactorDialog')
-  const [emissionFactorVersions, setEmissionFactorVersions] = useState<EmissionFactorImportVersion[] | undefined>(
-    undefined,
-  )
-  const manualImport = { id: Import.Manual, source: Import.Manual, name: '' } as EmissionFactorImportVersion
-  const { contextId: studyId } = useAppContextStore()
+  const t = useTranslations('emissionFactors')
+  const tDialog = useTranslations('emissionSource.emissionFactorDialog')
+  const [locationOptions, setLocationOptions] = useState<string[]>([])
+  const [init, setInit] = useState(false)
+
   useEffect(() => {
-    fetchSources(studyId)
-  }, [studyId])
-
-  const fetchSources = async (studyId: string) => {
-    const versions = await getStudyEmissionFactorImportVersions(studyId)
-    if (versions.success) {
-      setEmissionFactorVersions(versions.data)
+    async function fetchFiltersInfos() {
+      const locationFromBdd = await getFELocations()
+      setLocationOptions(locationFromBdd.filter((loc) => !!loc).map((loc) => loc.location) ?? [])
     }
-  }
 
-  const initialSelectedSources = (emissionFactorVersions || [])
-    .map((importVersion) => importVersion.id)
-    .concat([Import.Manual])
+    fetchFiltersInfos()
+  }, [])
 
-  const subPostsByPost = environmentSubPostsMapping[environment]
-  const posts = Object.keys(subPostsByPost) as Post[]
+  useEffect(() => {
+    if (locationOptions.length >= 0) {
+      setInit(true)
+    }
+  }, [importVersions, locationOptions])
 
-  return emissionFactorVersions ? (
+  return (
     <Modal
       open={open}
       label="emission-source-factor"
       title={t('title')}
       onClose={close}
-      actions={[{ actionType: 'button', onClick: close, children: t('cancel') }]}
+      actions={[{ actionType: 'button', onClick: close, children: tDialog('cancel') }]}
       big
     >
-      <EmissionFactorsTable
-        emissionFactors={emissionFactors}
-        selectEmissionFactor={selectEmissionFactor}
-        importVersions={emissionFactorVersions.concat(manualImport)}
-        initialSelectedSources={initialSelectedSources}
-        initialSelectedSubPosts={[subPost]}
-        environment={environment}
-        envPosts={posts}
-      />
+      {init ? (
+        <EmissionFactorsFiltersAndTable
+          userOrganizationId={userOrganizationId}
+          environment={environment}
+          importVersions={importVersions}
+          initialImportVersions={importVersions.map((iv) => iv.id)}
+          locationOptions={locationOptions}
+          defaultSubPost={defaultSubPost}
+          selectEmissionFactor={selectEmissionFactor}
+          studyId={studyId}
+          hasActiveLicence
+        />
+      ) : (
+        <div>{t('loading')}</div>
+      )}
     </Modal>
-  ) : (
-    <></>
   )
 }
 

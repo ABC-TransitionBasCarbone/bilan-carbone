@@ -2,13 +2,14 @@
 
 import LinkButton from '@/components/base/LinkButton'
 import LoadingButton from '@/components/base/LoadingButton'
+import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import QualitySelectGroup from '@/components/study/QualitySelectGroup'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { qualityKeys, specificFEQualityKeys } from '@/services/uncertainty'
-import { BCUnit } from '@/services/unit'
+import { BCUnit, useUnitLabel } from '@/services/unit'
 import { ManualEmissionFactorUnitList } from '@/utils/emissionFactors'
 import { FormControlLabel, FormLabel, MenuItem, Switch } from '@mui/material'
 import classNames from 'classnames'
@@ -21,6 +22,7 @@ import MultiplePosts from './MultiplePosts'
 
 interface Props<T extends EmissionFactorCommand> {
   form: UseFormReturn<T>
+  locations: string[]
   detailedGES?: boolean
   hasParts: boolean
   setHasParts: (hasParts: boolean) => void
@@ -35,6 +37,7 @@ type EmissionFactorQuality = Partial<
 
 const EmissionFactorForm = <T extends EmissionFactorCommand>({
   form,
+  locations,
   detailedGES,
   hasParts,
   setHasParts,
@@ -43,11 +46,11 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
   button,
 }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
-  const tUnit = useTranslations('units')
   const tGlossary = useTranslations('emissionSource.glossary')
+  const getUnitLabel = useUnitLabel()
   const units = useMemo(
-    () => Object.values(ManualEmissionFactorUnitList).sort((a, b) => tUnit(a).localeCompare(tUnit(b))),
-    [tUnit],
+    () => Object.values(ManualEmissionFactorUnitList).sort((a, b) => getUnitLabel(a).localeCompare(getUnitLabel(b))),
+    [getUnitLabel],
   )
   const [expandedQuality, setExpandedQuality] = useState(button === 'update')
   const [glossary, setGlossary] = useState('')
@@ -84,35 +87,43 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
       <FormTextField
         data-testid="emission-factor-name"
         control={control}
-        translation={t}
         name="name"
-        label={t('name')}
+        label={`${t('name')} *`}
         placeholder={t('namePlaceholder')}
       />
-      <FormTextField control={control} translation={t} name="attribute" label={t('attribute')} />
-      <FormTextField
-        data-testid="emission-factor-source"
+      <FormTextField control={control} name="attribute" label={t('attribute')} />
+      <FormAutocomplete
+        data-testid="fe-location"
         control={control}
         translation={t}
-        name="source"
-        label={t('source')}
+        options={locations}
+        filterOptions={(options, { inputValue }) =>
+          options.filter((option) =>
+            typeof option === 'string' ? option : option.label.toLowerCase().includes(inputValue.toLowerCase()),
+          )
+        }
+        name="location"
+        label={t('location')}
+        onInputChange={(_, value) => setValue('location', value?.trim() || '')}
+        freeSolo
       />
+      <FormTextField data-testid="emission-factor-source" control={control} name="source" label={`${t('source')} *`} />
       <div className="flex gapped">
         <div className="grow">
           <FormSelect
             data-testid="emission-factor-unit"
             control={control}
             translation={t}
-            label={t('unit')}
+            label={`${t('unit')} *`}
             name="unit"
             fullWidth
           >
-            <MenuItem value={BCUnit.CUSTOM}>{tUnit(BCUnit.CUSTOM)}</MenuItem>
+            <MenuItem value={BCUnit.CUSTOM}>{getUnitLabel(BCUnit.CUSTOM)}</MenuItem>
             {units
               .filter((unit) => unit !== BCUnit.CUSTOM)
               .map((unit) => (
                 <MenuItem key={unit} value={unit}>
-                  {tUnit(unit)}
+                  {getUnitLabel(unit)}
                 </MenuItem>
               ))}
           </FormSelect>
@@ -123,7 +134,6 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
               <FormTextField
                 data-testid="emission-factor-custom-unit"
                 control={control}
-                translation={t}
                 name="customUnit"
                 label={t('customUnit')}
                 placeholder={t('customUnitPlaceholder')}
@@ -169,18 +179,21 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         setExpanded={setExpandedQuality}
         defaultQuality={qualityKeys.map((qualityKey) => quality[qualityKey]).find((quality) => !!quality)}
         canShrink={qualityKeys.every((key) => quality[key] === quality[qualityKeys[0]])}
+        mandatory
       />
       <MultiplePosts form={form} context="emissionFactor" />
-      <FormTextField control={control} translation={t} name="comment" label={t('comment')} multiline rows={2} />
+      <FormTextField control={control} name="comment" label={t('comment')} multiline />
       <div className={classNames({ ['justify-between']: button === 'update' })}>
         {button === 'update' && (
           <LinkButton data-testid="emission-factor-cancel-update" href="/facteurs-d-emission">
             {t('cancel')}
           </LinkButton>
         )}
-        <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="emission-factor-valid-button">
-          {t(button)}
-        </LoadingButton>
+        <div className="justify-end">
+          <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="emission-factor-valid-button">
+            {t(button)}
+          </LoadingButton>
+        </div>
       </div>
       {glossary && (
         <GlossaryModal glossary={glossary} onClose={() => setGlossary('')} label="emission-factor" t={tGlossary}>

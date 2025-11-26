@@ -1,9 +1,10 @@
 'use client'
 
+import BaseTable from '@/components/base/Table'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { defaultCAUnit } from '@/utils/number'
 import { Environment, SiteCAUnit } from '@prisma/client'
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
+import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import { UseFormReturn, UseFormSetValue } from 'react-hook-form'
@@ -12,11 +13,13 @@ import Button from '../base/Button'
 import Help from '../base/HelpIcon'
 import GlossaryModal from '../modals/GlossaryModal'
 
+type TypeDef = SitesCommand['sites'][number]
+
 interface Props<T extends SitesCommand> {
   form?: UseFormReturn<T>
   sites: SitesCommand['sites']
   withSelection?: boolean
-  columns: ColumnDef<SitesCommand['sites'][0]>[]
+  columns: ColumnDef<TypeDef>[]
   caUnit?: SiteCAUnit
   environment: Environment
 }
@@ -31,7 +34,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, columns, ca
 
   const newSite = () => ({ id: uuidv4(), name: '', selected: false }) as SitesCommand['sites'][0]
 
-  const headerCAUnit = useMemo(() => tUnit(caUnit ?? defaultCAUnit), [caUnit])
+  const headerCAUnit = useMemo(() => tUnit(caUnit ?? defaultCAUnit), [caUnit, tUnit])
 
   const table = useReactTable({
     columns,
@@ -47,14 +50,14 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, columns, ca
         <div className="justify-between align-center">
           <p className="title-h3">
             {environment !== Environment.CUT && (
-              <>
+              <span className="inputLabel bold align-center">
                 {t('title')}
                 <Help
                   className="ml-4 pointer"
                   onClick={() => setShowGlossary(!showGlossary)}
                   label={tGlossary('title')}
                 />
-              </>
+              </span>
             )}
           </p>
           {form && !withSelection && (
@@ -64,30 +67,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, columns, ca
           )}
         </div>
       </div>
-      <table className="mt1">
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th key={header.id}>
-                  {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody data-testid="sites-table-body">
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td className={form ? 'py0' : ''} key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <BaseTable table={table} className="mt1" testId="sites" />
       <GlossaryModal
         glossary={showGlossary ? 'title' : ''}
         onClose={() => setShowGlossary(false)}

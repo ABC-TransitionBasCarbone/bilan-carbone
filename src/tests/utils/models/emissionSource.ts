@@ -60,6 +60,21 @@ export const getMockedFullStudyEmissionSource = (
     importedId: '4',
     unit: Unit.GWH,
     isMonetary: false,
+    location: '',
+    customUnit: null,
+    version: {
+      id: 'version-id',
+    },
+    metaData: [
+      {
+        language: 'fr',
+        frontiere: 'Mocked Frontiere',
+        location: 'Mocked Location',
+        title: 'Mocked Emission Factor',
+        attribute: 'Mocked Attribute',
+        comment: 'Mocked Comment',
+      },
+    ],
   },
   studySite: {
     id: 'mocked-study-site-id',

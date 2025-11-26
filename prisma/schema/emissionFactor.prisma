@@ -155,6 +155,7 @@ enum SubPost {
   // Alimentation 
   RepasPrisParLesSalaries
   RepasPrisParLesBenevoles
+  RepasPrisParLesBeneficiaires
 
   // Utilisation
   UtilisationEnResponsabiliteConsommationDeBiens
@@ -185,6 +186,8 @@ model EmissionFactorImportVersion {
 
   emissionFactors             EmissionFactor[]
   studyEmissionFactorVersions StudyEmissionFactorVersion[]
+
+  archived Boolean @default(false)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -258,6 +261,7 @@ model EmissionFactorMetaData {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@id([emissionFactorId, language])
+  @@index([language, title])
   @@map("emission_metadata")
 }
 

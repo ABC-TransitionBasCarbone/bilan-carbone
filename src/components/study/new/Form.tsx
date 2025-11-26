@@ -76,7 +76,6 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudy
         <FormTextField
           data-testid="new-study-name"
           control={form.control}
-          translation={t}
           name="name"
           label={t('name')}
           placeholder={studyNamePlaceHolder}

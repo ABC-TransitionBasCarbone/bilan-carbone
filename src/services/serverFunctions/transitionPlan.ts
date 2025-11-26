@@ -1,41 +1,59 @@
 'use server'
 
-import { FullStudy, getStudyById } from '@/db/study'
+import { getStudyById, getStudyByIds } from '@/db/study'
 import {
+  createAction,
+  createExternalStudy,
   createTransitionPlan,
+  createTransitionPlanStudy,
+  deleteAction as dbDeleteAction,
+  deleteExternalStudy as dbDeleteExternalStudy,
+  deleteLinkedStudy as dbDeleteLinkedStudy,
+  deleteTransitionPlan as dbDeleteTransitionPlan,
+  updateExternalStudy as dbUpdateExternalStudy,
+  duplicateTransitionPlanWithRelations,
+  getActionById,
+  getActions,
+  getExternalStudiesForTransitionPlan,
+  getExternalStudiesForTransitionPlanAndYear,
+  getLinkedStudiesForTransitionPlan,
+  getLinkedStudiesForTransitionPlanAndYear,
   getOrganizationTransitionPlans,
   getTransitionPlanById,
+  getTransitionPlanByIdWithRelations,
   getTransitionPlanByStudyId,
+  TransitionPlanWithRelations,
   TransitionPlanWithStudies,
+  updateAction,
 } from '@/db/transitionPlan'
 import { ApiResponse, withServerResponse } from '@/utils/serverResponse'
-import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
+import { getYearFromDateStr } from '@/utils/time'
 import { TransitionPlan } from '@prisma/client'
-import { UserSession } from 'next-auth'
-import { auth } from '../auth'
-import { NOT_AUTHORIZED } from '../permissions/check'
-import { canViewTransitionPlan } from '../permissions/study'
+import { dbActualizedAuth } from '../auth'
+import { NOT_AUTHORIZED, NOT_FOUND } from '../permissions/check'
+import { canReadStudy, hasEditAccessOnStudy, hasReadAccessOnStudy } from '../permissions/study'
+import { canEditTransitionPlan, canReadTransitionPlan } from '../permissions/transitionPlan'
+import { AddActionCommand, ExternalStudyCommand } from './transitionPlan.command'
 
-export const getStudyTransitionPlan = async (study: FullStudy): Promise<ApiResponse<TransitionPlan | null>> =>
+export const getStudyTransitionPlan = async (studyId: string): Promise<ApiResponse<TransitionPlan | null>> =>
   withServerResponse('getStudyTransitionPlan', async () => {
-    const session = await auth()
-    if (!session?.user) {
+    const transitionPlan = await getTransitionPlanByStudyId(studyId)
+    if (!transitionPlan) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const hasAccess = await canViewTransitionPlan(session.user, study)
-    if (!hasAccess) {
+    const hasReadAccess = await canReadTransitionPlan(transitionPlan.id)
+    if (!hasReadAccess) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const transitionPlan = await getTransitionPlanByStudyId(study.id)
     return transitionPlan
   })
 
 export const getAvailableTransitionPlans = async (studyId: string) =>
   withServerResponse('getAvailableTransitionPlans', async (): Promise<TransitionPlanWithStudies[]> => {
-    const session = await auth()
-    if (!session?.user) {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -44,8 +62,8 @@ export const getAvailableTransitionPlans = async (studyId: string) =>
       throw new Error('Study not found')
     }
 
-    const hasViewAccess = await canViewTransitionPlan(session.user, study)
-    if (!hasViewAccess) {
+    const hasReadAccess = await canReadStudy(session.user, studyId)
+    if (!hasReadAccess) {
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -53,12 +71,8 @@ export const getAvailableTransitionPlans = async (studyId: string) =>
 
     const accessiblePlans = await Promise.all(
       plans.map(async (plan) => {
-        const fullStudy = await getStudyById(plan.studyId, session.user.organizationVersionId)
-        if (!fullStudy) {
-          return null
-        }
-        const hasViewAccess = await canViewTransitionPlan(session.user, fullStudy)
-        return hasViewAccess ? plan : null
+        const hasReadAccess = await hasReadAccessOnStudy(plan.studyId)
+        return hasReadAccess ? plan : null
       }),
     )
 
@@ -66,19 +80,9 @@ export const getAvailableTransitionPlans = async (studyId: string) =>
   })
 
 export const initializeTransitionPlan = async (studyId: string, sourceTransitionPlanId?: string) =>
-  withServerResponse('initializeTransitionPlan', async (): Promise<TransitionPlan> => {
-    const session = await auth()
-    if (!session?.user) {
-      throw new Error(NOT_AUTHORIZED)
-    }
-
-    const study = await getStudyById(studyId, session.user.organizationVersionId)
-    if (!study) {
-      throw new Error('Study not found')
-    }
-
-    const userRoleOnStudy = getAccountRoleOnStudy(session.user as UserSession, study as FullStudy)
-    if (!hasEditionRights(userRoleOnStudy)) {
+  withServerResponse('initializeTransitionPlan', async () => {
+    const hasEditAccess = await hasEditAccessOnStudy(studyId)
+    if (!hasEditAccess) {
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -88,21 +92,296 @@ export const initializeTransitionPlan = async (studyId: string, sourceTransition
     }
 
     if (sourceTransitionPlanId) {
-      return duplicateTransitionPlan(sourceTransitionPlanId, studyId)
+      await duplicateTransitionPlan(sourceTransitionPlanId, studyId)
     } else {
-      return createTransitionPlan(studyId)
+      await createTransitionPlan(studyId)
     }
   })
 
-export const duplicateTransitionPlan = async (
+const duplicateTransitionPlan = async (
   sourceTransitionPlanId: string,
   targetStudyId: string,
-): Promise<TransitionPlan> => {
-  const sourceTransitionPlan = await getTransitionPlanById(sourceTransitionPlanId)
+): Promise<TransitionPlanWithRelations> => {
+  const sourceTransitionPlan = await getTransitionPlanByIdWithRelations(sourceTransitionPlanId)
 
   if (!sourceTransitionPlan) {
     throw new Error('Source transition plan not found with id ' + sourceTransitionPlanId)
   }
 
-  return createTransitionPlan(targetStudyId)
+  return duplicateTransitionPlanWithRelations(sourceTransitionPlan, targetStudyId)
 }
+
+export const addAction = async (command: AddActionCommand) =>
+  withServerResponse('addAction', async () => {
+    const hasEditAccess = await canEditTransitionPlan(command.transitionPlanId)
+    if (!hasEditAccess) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await createAction(command)
+  })
+
+const isYearAlreadyLinked = async (transitionPlanId: string, year: number) => {
+  const startDate = new Date(`01-01-${year}`)
+  const endDate = new Date(`01-01-${year + 1}`)
+
+  const [externalStudies, linkedStudies] = await Promise.all([
+    getExternalStudiesForTransitionPlanAndYear(transitionPlanId, startDate, endDate),
+    getLinkedStudiesForTransitionPlanAndYear(transitionPlanId, startDate, endDate),
+  ])
+
+  return externalStudies.length || linkedStudies.length
+}
+
+export const linkOldStudy = async (transitionPlanId: string, studyIdToLink: string) =>
+  withServerResponse('linkOldStudy', async () => {
+    const session = await dbActualizedAuth()
+
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const hasReadAccess = await canReadStudy(session.user, studyIdToLink)
+    if (!hasReadAccess) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const [transitionPlan, studyToLink] = await Promise.all([
+      getTransitionPlanById(transitionPlanId),
+      getStudyById(studyIdToLink, session.user.organizationVersionId),
+    ])
+
+    if (!studyToLink || !transitionPlan) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const hasEditAccess = await canEditTransitionPlan(transitionPlanId)
+    if (!hasEditAccess) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const transitionPlanStudy = await getStudyById(transitionPlan.studyId, session.user.organizationVersionId)
+    if (studyToLink.organizationVersion?.id !== transitionPlanStudy?.organizationVersionId) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const currentStudyYear = transitionPlanStudy.startDate.getFullYear()
+    const linkedStudyYear = studyToLink.startDate.getFullYear()
+
+    if (linkedStudyYear >= currentStudyYear) {
+      throw new Error('studyYearMustBeBeforeCurrent')
+    }
+
+    if (await isYearAlreadyLinked(transitionPlan.id, linkedStudyYear)) {
+      throw new Error('yearAlreadySet')
+    }
+
+    await createTransitionPlanStudy(transitionPlanId, studyIdToLink)
+  })
+
+export const addExternalStudy = async (command: ExternalStudyCommand) =>
+  withServerResponse('addExternalStudy', async () => {
+    const hasEditAccess = await canEditTransitionPlan(command.transitionPlanId)
+    if (!hasEditAccess) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const transitionPlan = await getTransitionPlanById(command.transitionPlanId)
+    if (!transitionPlan) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const currentStudy = await getStudyById(transitionPlan.studyId, session.user.organizationVersionId)
+    if (!currentStudy) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const currentStudyYear = currentStudy.startDate.getFullYear()
+    const externalStudyYear = getYearFromDateStr(command.date)
+
+    if (externalStudyYear >= currentStudyYear) {
+      throw new Error('studyYearMustBeBeforeCurrent')
+    }
+
+    if (await isYearAlreadyLinked(command.transitionPlanId, externalStudyYear)) {
+      throw new Error('yearAlreadySet')
+    }
+
+    await createExternalStudy(command)
+  })
+
+export const updateExternalStudy = async (command: ExternalStudyCommand) =>
+  withServerResponse('updateExternalStudy', async () => {
+    const { transitionPlanId, externalStudyId, ...updateData } = command
+
+    const hasEditAccess = await canEditTransitionPlan(transitionPlanId)
+    if (!hasEditAccess) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!externalStudyId) {
+      throw new Error('External study ID is required for update')
+    }
+
+    const transitionPlan = await getTransitionPlanById(transitionPlanId)
+    if (!transitionPlan) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const currentStudy = await getStudyById(transitionPlan.studyId, session.user.organizationVersionId)
+    if (!currentStudy) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const currentStudyYear = currentStudy.startDate.getFullYear()
+
+    if (updateData.date) {
+      const updatedYear = getYearFromDateStr(updateData.date)
+
+      if (updatedYear >= currentStudyYear) {
+        throw new Error('studyYearMustBeBeforeCurrent')
+      }
+
+      if (await isYearAlreadyLinked(transitionPlanId, updatedYear)) {
+        const startDate = new Date(`01-01-${updatedYear}`)
+        const endDate = new Date(`01-01-${updatedYear + 1}`)
+
+        const [externalStudies, linkedStudies] = await Promise.all([
+          getExternalStudiesForTransitionPlanAndYear(transitionPlanId, startDate, endDate),
+          getLinkedStudiesForTransitionPlanAndYear(transitionPlanId, startDate, endDate),
+        ])
+
+        const otherStudies = [...externalStudies.filter((s) => s.id !== externalStudyId), ...linkedStudies]
+
+        if (otherStudies.length > 0) {
+          throw new Error('yearAlreadySet')
+        }
+      }
+    }
+
+    await dbUpdateExternalStudy(externalStudyId, updateData)
+  })
+
+export const deleteExternalStudy = async (studyId: string, transitionPlanId: string) =>
+  withServerResponse('deleteExternalStudy', async () => {
+    const hasEditAccess = await canEditTransitionPlan(transitionPlanId)
+    if (!hasEditAccess) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await dbDeleteExternalStudy(studyId)
+  })
+
+export const getLinkedAndExternalStudies = async (transitionPlanId: string) =>
+  withServerResponse('getLinkedAndExternalStudies', async () => {
+    const hasReadAccess = await canReadTransitionPlan(transitionPlanId)
+    if (!hasReadAccess) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const [externalStudies, transitionPlanStudies] = await Promise.all([
+      getExternalStudiesForTransitionPlan(transitionPlanId),
+      getLinkedStudiesForTransitionPlan(transitionPlanId),
+    ])
+
+    const linkedStudyIds = transitionPlanStudies.map((transitionPlan) => transitionPlan.studyId)
+
+    const studies = await getStudyByIds(linkedStudyIds)
+
+    return { studies, externalStudies }
+  })
+
+export const deleteLinkedStudy = async (studyId: string, transitionPlanId: string) =>
+  withServerResponse('deleteLinkedStudy', async () => {
+    const hasEditAccess = await canEditTransitionPlan(transitionPlanId)
+    if (!hasEditAccess) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await dbDeleteLinkedStudy(studyId, transitionPlanId)
+  })
+
+export const editAction = async (id: string, command: AddActionCommand) =>
+  withServerResponse('editAction', async () => {
+    const hasEditAccess = await canEditTransitionPlan(command.transitionPlanId)
+    if (!hasEditAccess) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const action = await getActionById(id)
+    if (!action || action.transitionPlanId !== command.transitionPlanId) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await updateAction(id, command)
+  })
+
+export const deleteAction = async (id: string) =>
+  withServerResponse('deleteAction', async () => {
+    const action = await getActionById(id)
+    if (!action) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const hasEditAccess = await canEditTransitionPlan(action.transitionPlanId)
+    if (!hasEditAccess) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await dbDeleteAction(id)
+  })
+
+export const getStudyActions = async (studyId: string) =>
+  withServerResponse('getStudyActions', async () => {
+    const transitionPlan = await getTransitionPlanByStudyId(studyId)
+    if (!transitionPlan) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const hasReadAccess = await canReadTransitionPlan(transitionPlan.id)
+    if (!hasReadAccess) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return getActions(transitionPlan.id)
+  })
+
+export const toggleActionEnabled = async (actionId: string, enabled: boolean) =>
+  withServerResponse('toggleActionEnabled', async () => {
+    const action = await getActionById(actionId)
+    if (!action) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const hasEditAccess = await canEditTransitionPlan(action.transitionPlanId)
+    if (!hasEditAccess) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await updateAction(actionId, { enabled })
+  })
+
+export const deleteTransitionPlan = async (studyId: string) =>
+  withServerResponse('deleteTransitionPlan', async () => {
+    const hasEditAccess = await hasEditAccessOnStudy(studyId)
+    if (!hasEditAccess) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const transitionPlan = await getTransitionPlanByStudyId(studyId)
+    if (!transitionPlan) {
+      throw new Error(NOT_FOUND)
+    }
+
+    await dbDeleteTransitionPlan(transitionPlan.id)
+  })

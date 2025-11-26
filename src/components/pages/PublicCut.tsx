@@ -49,7 +49,7 @@ const PublicCutPage = ({ children }: Props) => {
   return (
     <PublicContainer>
       <StyledPublicCutPage className={classNames('grow text-center')}>
-        <Box p="1.5rem" borderBottom="1px solid" borderColor="success.light">
+        <Box p="0.1rem" borderBottom="1px solid" borderColor="success.light">
           <Box className="justify-around flex-col gapped1" minHeight="400px" px="1rem" py="2rem">
             <Typography className="title-h2">{t('welcome')}</Typography>
             <Image
@@ -82,7 +82,7 @@ const PublicCutPage = ({ children }: Props) => {
             ),
           })}
         </p>
-        <Box className="justify-between" padding="2rem">
+        <Box className="justify-between" padding="1.2rem">
           <Image
             className={styles.france2030Logo}
             src="/logos/cut/france_2030.png"
@@ -90,8 +90,14 @@ const PublicCutPage = ({ children }: Props) => {
             width={204}
             height={198}
           />
-          <Typography textAlign="justify" width="75%" fontSize="0.8rem">
+          <Typography textAlign="justify" width="75%" fontSize="0.8rem" display="flex" alignItems="center">
             {t('explanation2')}
+          </Typography>
+        </Box>
+        <Box className="justify-between" padding="1rem">
+          <Image className={styles.france2030Logo} src="/logos/cut/CINEO.png" alt="logo" width={80} height={78} />
+          <Typography textAlign="justify" width="75%" fontSize="0.8rem" display="flex" alignItems="center">
+            {t('cineo')}
           </Typography>
         </Box>
       </StyledPublicCutPage>

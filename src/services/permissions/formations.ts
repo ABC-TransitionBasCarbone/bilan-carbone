@@ -1,13 +1,11 @@
-import { DeactivatableFeature } from '@prisma/client'
+import { DeactivatableFeature, Environment } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { getDeactivableFeatureRestrictions, isDeactivableFeatureActive } from '../serverFunctions/deactivableFeatures'
 import { getUserSource } from '../serverFunctions/user'
 
-export const hasAccessToFormation = async (user: UserSession) => {
-  if (!user.level) {
-    return false
-  }
+export const hasLevelForFormation = (user: UserSession) => !!user.level
 
+export const hasAccessToFormation = async (environment: Environment) => {
   const [activeFeature, userSource, restrictions] = await Promise.all([
     isDeactivableFeatureActive(DeactivatableFeature.Formation),
     getUserSource(),
@@ -21,7 +19,7 @@ export const hasAccessToFormation = async (user: UserSession) => {
     return false
   }
 
-  if ((restrictions?.deactivatedEnvironments || []).includes(user.environment)) {
+  if ((restrictions?.deactivatedEnvironments || []).includes(environment)) {
     return false
   }
 

@@ -5,7 +5,7 @@ import { FullStudy } from '@/db/study'
 import cutTheme from '@/environments/cut/theme/theme'
 import { convertCountToBilanCarbone, CutPost } from '@/services/posts'
 import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
-import { getResultsValues } from '@/services/study'
+import { getDetailedEmissionResults } from '@/services/study'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { ThemeProvider } from '@mui/material/styles'
@@ -70,7 +70,7 @@ const PDFSummary = ({ study, environment }: Props) => {
   const [isLoading, setIsLoading] = useState(true)
 
   const { computedResultsWithDep } = useMemo(
-    () => getResultsValues(study, tPost, 'all', false, study.organizationVersion.environment, tStudy),
+    () => getDetailedEmissionResults(study, tPost, 'all', false, study.organizationVersion.environment, tStudy),
     [study, tPost, tStudy],
   )
 
@@ -312,7 +312,7 @@ const PDFSummary = ({ study, environment }: Props) => {
         </div>
 
         {sitesData.map((site) => {
-          const { computedResultsWithDep: siteResults } = getResultsValues(
+          const { computedResultsWithDep: siteResults } = getDetailedEmissionResults(
             study,
             tPost,
             site.id,

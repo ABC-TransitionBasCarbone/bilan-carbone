@@ -1,4 +1,5 @@
 import { UpdateOrganizationCommand } from '@/services/serverFunctions/organization.command'
+import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { OnboardingCommand } from '@/services/serverFunctions/user.command'
 import { Environment, Organization, OrganizationVersion, Prisma, Site, UserStatus } from '@prisma/client'
 import { prismaClient } from './client'
@@ -155,7 +156,7 @@ export const createOrganizationWithVersion = async (
       ...organizationVersion,
       organization: { connect: { id: newOrganization.id } },
       isCR: false,
-      activatedLicence: false,
+      activatedLicence: [],
     },
   })
 }
@@ -203,6 +204,34 @@ export const updateOrganization = async (
       where: { id: organizationVersion.organizationId },
       data: data,
     }),
+  ])
+}
+
+export const updateOrganizationSites = async (
+  { sites }: SitesCommand,
+  organizationVersionId: string,
+  caUnit: number,
+) => {
+  const organizationVersion = await getOrganizationVersionById(organizationVersionId)
+  if (!organizationVersion) {
+    return
+  }
+  return prismaClient.$transaction([
+    ...sites.map((site) =>
+      prismaClient.site.update({
+        where: { id: site.id },
+        data: {
+          name: site.name,
+          etp: site.etp,
+          ca: (site?.ca || 0) * caUnit,
+          postalCode: site.postalCode,
+          city: site.city,
+          cncId: site.cncId || undefined,
+          volunteerNumber: site.volunteerNumber || undefined,
+          beneficiaryNumber: site.beneficiaryNumber || undefined,
+        },
+      }),
+    ),
   ])
 }
 
@@ -290,7 +319,7 @@ export const getRawOrganizationById = (id: string | null) =>
 export const createOrUpdateOrganization = async (
   organization: Prisma.OrganizationCreateInput & { id?: string },
   isCR?: boolean,
-  activatedLicence?: boolean,
+  activatedLicence?: number[],
   importedFileDate?: Date,
   environment: Environment = Environment.BC,
 ) => {

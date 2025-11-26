@@ -58,7 +58,6 @@ const StudyTagFamilyModal = ({ action, studyId, family, onClose }: Props) => {
                 control={control}
                 name="name"
                 label={t('name')}
-                translation={t}
                 data-testid="emission-tag-family-name-field"
                 fullWidth
               />

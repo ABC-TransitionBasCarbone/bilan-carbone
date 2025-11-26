@@ -233,6 +233,7 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
       source: Import.BaseEmpreinte,
       importVersionId: TEST_IDS.importVersion,
       id: 'fe_version_id',
+      importVersion: { name: 'Import v1', id: TEST_IDS.importVersion, source: Import.BaseEmpreinte },
     },
   ],
   emissionSources: [
@@ -256,6 +257,21 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
         importedId: '4',
         unit: Unit.GWH,
         isMonetary: false,
+        location: '',
+        customUnit: null,
+        version: {
+          id: 'version-id',
+        },
+        metaData: [
+          {
+            language: 'fr',
+            frontiere: 'Mocked Frontiere',
+            location: 'Mocked Location',
+            title: 'Mocked Emission Factor',
+            attribute: 'Mocked Attribute',
+            comment: 'Mocked Comment',
+          },
+        ],
       },
       emissionSourceTags: [],
       validated: true,
@@ -279,6 +295,7 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
       feTemporalRepresentativeness: null,
       feCompleteness: null,
       contributor: null,
+      createdAt: new Date(),
     },
   ],
   allowedUsers: [

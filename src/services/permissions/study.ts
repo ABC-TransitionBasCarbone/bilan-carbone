@@ -1,16 +1,20 @@
 import { getAccountById } from '@/db/account'
 import { getDocumentById } from '@/db/document'
-import { getOrganizationVersionsByOrganizationId, OrganizationVersionWithOrganization } from '@/db/organization'
+import {
+  getOrganizationVersionById,
+  getOrganizationVersionsByOrganizationId,
+  OrganizationVersionWithOrganization,
+} from '@/db/organization'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getAccountByIdWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
-import { canEditOrganizationVersion, isAdminOnOrga, isInOrgaOrParent } from '@/utils/organization'
+import { canEditOrganizationVersion, hasActiveLicence, isAdminOnOrga, isInOrgaOrParent } from '@/utils/organization'
 import { getAccountRoleOnStudy, getDuplicableEnvironments, hasEditionRights } from '@/utils/study'
 import { DeactivatableFeature, Environment, Level, Prisma, Study, StudyRole, User } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { dbActualizedAuth } from '../auth'
 import { isDeactivableFeatureActiveForEnvironment } from '../serverFunctions/deactivableFeatures'
 import { getUserActiveAccounts } from '../serverFunctions/user'
-import { checkLevel } from '../study'
+import { hasSufficientLevel } from '../study'
 import { hasAccessToDuplicateStudy } from './environment'
 import { isInOrgaOrParentFromId } from './organization'
 
@@ -73,11 +77,7 @@ export const canCreateAStudy = (user: UserSession) => {
   return user.environment === Environment.CUT || (!!user.level && !!user.organizationVersionId)
 }
 
-const canCreateSpecificStudyCommon = async (
-  accountId: string,
-  study: Prisma.StudyCreateInput,
-  organizationVersionId: string,
-) => {
+const canCreateSpecificStudyCommon = async (accountId: string, organizationVersionId: string) => {
   const dbAccount = await getAccountById(accountId)
 
   if (!dbAccount) {
@@ -85,6 +85,11 @@ const canCreateSpecificStudyCommon = async (
   }
 
   if (!(await isInOrgaOrParentFromId(dbAccount.organizationVersionId, organizationVersionId))) {
+    return { allowed: false }
+  }
+
+  const organizationVersion = await getOrganizationVersionById(organizationVersionId)
+  if (!organizationVersion || !hasActiveLicence(organizationVersion)) {
     return { allowed: false }
   }
 
@@ -96,7 +101,7 @@ const canCreateSpecificStudyCUT = async (
   study: Prisma.StudyCreateInput,
   organizationVersionId: string,
 ) => {
-  const { allowed } = await canCreateSpecificStudyCommon(accountId, study, organizationVersionId)
+  const { allowed } = await canCreateSpecificStudyCommon(accountId, organizationVersionId)
   return allowed
 }
 
@@ -107,11 +112,10 @@ const canCreateSpecificStudyBC = async (
 ) => {
   const { allowed: commonRights, account: dbAccount } = await canCreateSpecificStudyCommon(
     accountId,
-    study,
     organizationVersionId,
   )
 
-  if (!commonRights || !dbAccount || !checkLevel(dbAccount.user.level, study.level)) {
+  if (!commonRights || !dbAccount || !hasSufficientLevel(dbAccount.user.level, study.level)) {
     return false
   }
 
@@ -126,16 +130,19 @@ export const canCreateSpecificStudy = async (
   switch (user.environment) {
     case Environment.CUT:
       return canCreateSpecificStudyCUT(user.accountId, study, organizationVersionId)
-    case Environment.BC:
-      return canCreateSpecificStudyBC(user.accountId, study, organizationVersionId)
     case Environment.TILT:
+    case Environment.BC:
       return canCreateSpecificStudyBC(user.accountId, study, organizationVersionId)
     default:
       return false
   }
 }
 
-const canChangeStudyValues = async (user: UserSession, study: FullStudy) => {
+const canEditStudy = async (user: UserSession, study: FullStudy) => {
+  if (!hasActiveLicence(study.organizationVersion)) {
+    return false
+  }
+
   if (isAdminOnStudyOrga(user, study.organizationVersion as OrganizationVersionWithOrganization)) {
     return true
   }
@@ -149,27 +156,27 @@ const canChangeStudyValues = async (user: UserSession, study: FullStudy) => {
 }
 
 export const canChangePublicStatus = async (user: UserSession, study: FullStudy) => {
-  return canChangeStudyValues(user, study)
+  return canEditStudy(user, study)
 }
 
 export const canUpgradeSourceVersion = async (user: UserSession, study: FullStudy) => {
-  return canChangeStudyValues(user, study)
+  return canEditStudy(user, study)
 }
 
 export const canChangeDates = async (user: UserSession, study: FullStudy) => {
-  return canChangeStudyValues(user, study)
+  return canEditStudy(user, study)
 }
 
 export const canChangeSites = async (user: UserSession, study: FullStudy) => {
-  return canChangeStudyValues(user, study)
+  return canEditStudy(user, study)
 }
 
 export const canChangeLevel = async (user: UserSession, study: FullStudy, level: Level) => {
-  if (!(await canChangeStudyValues(user, study))) {
+  if (!(await canEditStudy(user, study))) {
     return false
   }
 
-  if (!checkLevel(user.level, level)) {
+  if (!hasSufficientLevel(user.level, level)) {
     return false
   }
 
@@ -177,15 +184,15 @@ export const canChangeLevel = async (user: UserSession, study: FullStudy, level:
 }
 
 export const canChangeResultsUnit = async (user: UserSession, study: FullStudy) => {
-  return canChangeStudyValues(user, study)
+  return canEditStudy(user, study)
 }
 
 export const canChangeName = async (user: UserSession, study: FullStudy) => {
-  return canChangeStudyValues(user, study)
+  return canEditStudy(user, study)
 }
 
 export const canChangeOpeningHours = async (user: UserSession, study: FullStudy) => {
-  return canChangeStudyValues(user, study)
+  return canEditStudy(user, study)
 }
 
 export const canAddRightOnStudy = (
@@ -458,20 +465,25 @@ export const hasAccessToFormationStudy = async (userAccount: Prisma.AccountCreat
   return isFormationStudyFeatureActive.success && isFormationStudyFeatureActive.data
 }
 
-export const isFeatureTransitionPlanActive = async (environment: Environment) => {
-  const isTransitionPlanFeatureActive = await isDeactivableFeatureActiveForEnvironment(
-    DeactivatableFeature.TransitionPlan,
-    environment,
-  )
-  return isTransitionPlanFeatureActive.success && isTransitionPlanFeatureActive.data
+export const hasReadAccessOnStudy = async (studyId: string) => {
+  const session = await dbActualizedAuth()
+  if (!session || !session.user) {
+    return false
+  }
+
+  return canReadStudy(session.user, studyId)
 }
 
-export const canEditTransitionPlan = async (user: UserSession, study: FullStudy) => {
-  const userRightsOnStudy = getAccountRoleOnStudy(user, study)
-  return !!(userRightsOnStudy && hasEditionRights(userRightsOnStudy))
-}
+export const hasEditAccessOnStudy = async (studyId: string) => {
+  const session = await dbActualizedAuth()
+  if (!session || !session.user) {
+    return false
+  }
 
-export const canViewTransitionPlan = async (user: UserSession, study: FullStudy) => {
-  const userRightsOnStudy = getAccountRoleOnStudy(user, study)
-  return !!userRightsOnStudy
+  const study = await getStudyById(studyId, session.user.organizationVersionId)
+  if (!study) {
+    return false
+  }
+
+  return canEditStudy(session.user, study)
 }

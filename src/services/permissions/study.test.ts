@@ -25,11 +25,14 @@ jest.mock('uuid', () => ({ v4: jest.fn() }))
 
 // mocked called function
 jest.mock('@/db/account', () => ({ getAccountById: jest.fn() }))
-jest.mock('@/db/organization', () => ({ getOrganizationVersionsByOrganizationId: jest.fn() }))
+jest.mock('@/db/organization', () => ({
+  getOrganizationVersionsByOrganizationId: jest.fn(),
+  getOrganizationVersionById: jest.fn(),
+}))
 jest.mock('@/db/study', () => ({ getStudyById: jest.fn() }))
 jest.mock('@/db/user', () => ({ getUserByEmail: jest.fn() }))
 jest.mock('@/utils/study', () => ({ getAccountRoleOnStudy: jest.fn(), getDuplicableEnvironments: jest.fn() }))
-jest.mock('@/utils/organization', () => ({ canEditOrganizationVersion: jest.fn() }))
+jest.mock('@/utils/organization', () => ({ canEditOrganizationVersion: jest.fn(), hasActiveLicence: jest.fn() }))
 jest.mock('./organization', () => ({ isInOrgaOrParentFromId: jest.fn() }))
 jest.mock('./environment', () => ({ hasAccessToDuplicateStudy: jest.fn() }))
 jest.mock('../auth', () => ({ dbActualizedAuth: jest.fn() }))
@@ -48,11 +51,13 @@ const mockGetStudyById = dbStudyModule.getStudyById as jest.Mock
 const mockGetAccountRoleOnStudy = studyUtils.getAccountRoleOnStudy as jest.Mock
 const mockGetDuplicableEnvironments = studyUtils.getDuplicableEnvironments as jest.Mock
 const mockCanEditOrganizationVersion = organizationUtils.canEditOrganizationVersion as jest.Mock
+const mockHasActiveLicence = organizationUtils.hasActiveLicence as jest.Mock
 const mockIsInOrgaOrParentFromId = organizationModule.isInOrgaOrParentFromId as jest.Mock
 const mockHasAccessToDuplicateStudy = environmentModule.hasAccessToDuplicateStudy as jest.Mock
 const mockGetAccountById = dbAccountModule.getAccountById as jest.Mock
 const mockGetOrganizationVersionsByOrganizationId =
   dbOrganizationModule.getOrganizationVersionsByOrganizationId as jest.Mock
+const mockGetOrganizationVersionById = dbOrganizationModule.getOrganizationVersionById as jest.Mock
 
 const advancedStudy = getMockedStudyCreateInput({ level: Level.Advanced })
 const standardStudy = getMockedStudyCreateInput({ level: Level.Standard })
@@ -83,6 +88,8 @@ describe('Study permissions service', () => {
     describe('"Advanced" level user', () => {
       beforeEach(() => {
         mockGetAccountById.mockResolvedValue(getMockedDbAccount({}, { level: Level.Advanced }))
+        mockGetOrganizationVersionById.mockResolvedValue({})
+        mockHasActiveLicence.mockReturnValue(true)
       })
 
       it('User should be able to create an "Advanced" study', async () => {

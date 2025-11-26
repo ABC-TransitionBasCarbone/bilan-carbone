@@ -42,7 +42,7 @@ const PublicTiltPage = ({ children }: Props) => {
           <p className="title-h6 bold">{t('subtext')}</p>
         </div>
         <p>{t.rich('explanation', { b: (children) => <b>{children}</b> })}</p>
-        <div className="flex-cc gapped1 w100">
+        <div className="flex-cc gapped1 w100 p1">
           <Image src="/logos/abc/logo_abc.png" alt="ABC logo" fill className="w50 hauto" />
           <CloseIcon />
           <Image src="/logos/tilt/logo_tilt.svg" alt="TILT logo" fill className="w50 hauto" />

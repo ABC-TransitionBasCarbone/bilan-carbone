@@ -1,5 +1,5 @@
 .container {
-  min-height: calc(100vh - var(--total-header-height));
+  min-height: calc(100vh - var(--total-header-height) - 2.75rem); /* 2.75rem is the height of the breadcrumbs */
 }
 
 .emptyStateCard {
@@ -12,4 +12,68 @@
 .emptyStateCard h5 {
   font-size: 1.25rem;
   font-weight: 700;
+}
+
+.trajectoryCard {
+  background: var(--grayscale-50);
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
+  border: 0.125rem solid var(--grayscale-200);
+}
+
+.trajectoryCardsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.trajectoryCard h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.disabledCard {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--grayscale-100);
+}
+
+.cardTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: var(--neutral-500);
+}
+
+.cardDescription {
+  font-size: 0.875rem;
+  color: var(--grayscale-700);
+  margin: 0 0 1.5rem 0;
+  line-height: 1.5;
+}
+
+.clickableCard {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--mui-palette-primary-main);
+  color: white;
+  border-color: var(--mui-palette-primary-main);
+}
+
+.clickableCard:hover {
+  transform: translateY(-0.125rem);
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+}
+
+.collapsibleBlocks > *:first-child {
+  border-radius: 0.5rem;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.collapsibleBlocks > *:last-child {
+  border-radius: 0.5rem;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }

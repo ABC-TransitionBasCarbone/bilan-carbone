@@ -33,49 +33,51 @@ const StudyExportsForm = <T extends StudyExportsCommand>({
   const tGlossary = useTranslations('study.new.glossary')
   const control = form?.control as Control<StudyExportsCommand>
   return (
-    <Controller
-      name="exports"
-      control={control}
-      render={({ field: { onChange, value }, fieldState: { error } }) => (
-        <FormControl error={!!error} component="fieldset">
-          <div className="flex mb-2 mt2">
-            <FormLabel component="legend" className={styles.exportsLabel}>
-              <div className={classNames(formStyles.gapped, 'align-center')}>
-                <span className="inputLabel bold">{t('exports')}</span>
-                <div className={formStyles.icon}>
-                  {<HelpIcon onClick={() => setGlossary('exports')} label={tGlossary('title')} />}
-                </div>
-              </div>
-            </FormLabel>
-            {showControl && (
-              <FormLabel component="legend">
+    <div className="mt2">
+      <Controller
+        name="exports"
+        control={control}
+        render={({ field: { onChange, value }, fieldState: { error } }) => (
+          <FormControl error={!!error} component="fieldset">
+            <div className="flex">
+              <FormLabel component="legend" className={styles.exportsLabel}>
                 <div className={classNames(formStyles.gapped, 'align-center')}>
-                  <span className="inputLabel bold">{t('control')}</span>
+                  <span className="inputLabel bold">{t('exports')}</span>
                   <div className={formStyles.icon}>
-                    {<HelpIcon onClick={() => setGlossary('control')} label={tGlossary('title')} />}
+                    {<HelpIcon onClick={() => setGlossary('exports')} label={tGlossary('title')} />}
                   </div>
                 </div>
               </FormLabel>
-            )}
-          </div>
-          <FormGroup>
-            <div className={styles.exports}>
-              {Object.keys(Export).map((key) => (
-                <ExportCheckbox
-                  key={key}
-                  id={key as Export}
-                  study={study}
-                  values={value}
-                  setValues={onChange}
-                  disabled={disabled}
-                  duplicateStudyId={duplicateStudyId}
-                />
-              ))}
+              {showControl && (
+                <FormLabel component="legend">
+                  <div className={classNames(formStyles.gapped, 'align-center')}>
+                    <span className="inputLabel bold">{t('control')}</span>
+                    <div className={formStyles.icon}>
+                      {<HelpIcon onClick={() => setGlossary('control')} label={tGlossary('title')} />}
+                    </div>
+                  </div>
+                </FormLabel>
+              )}
             </div>
-          </FormGroup>
-        </FormControl>
-      )}
-    />
+            <FormGroup>
+              <div className="flex-col">
+                {Object.keys(Export).map((key) => (
+                  <ExportCheckbox
+                    key={key}
+                    id={key as Export}
+                    study={study}
+                    values={value}
+                    setValues={onChange}
+                    disabled={disabled}
+                    duplicateStudyId={duplicateStudyId}
+                  />
+                ))}
+              </div>
+            </FormGroup>
+          </FormControl>
+        )}
+      />
+    </div>
   )
 }
 

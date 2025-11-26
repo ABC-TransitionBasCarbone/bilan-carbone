@@ -1,9 +1,9 @@
 import { wasteImpact } from '@/constants/emissions'
 import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
 import { hasWasteImpact } from '@/services/permissions/environment'
-import { convertTiltSubPostToBCSubPost } from '@/services/posts'
-import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
+import { Post, subPostsByPostBC } from '@/services/posts'
 import { EmissionFactor, Environment, Import, Prisma, SubPost, Unit } from '@prisma/client'
+import { unique } from './array'
 
 export const getEmissionFactorValue = (
   emissionFactor: Pick<EmissionFactor, 'importedFrom' | 'importedId' | 'totalCo2'>,
@@ -75,25 +75,34 @@ export const monetaryUnits: Unit[] = [
   Unit.FRANC_CFP,
 ]
 
-const getTiltSubPostList = (subPosts: SubPost[]) => {
-  const result = []
-  for (const subPost of subPosts) {
-    const converted = convertTiltSubPostToBCSubPost(subPost)
-    if (converted) {
-      result.push(converted)
-    }
+const tiltEmissionFactorSubPostsMapping: Partial<Record<SubPost, SubPost[]>> = {
+  [SubPost.UtilisationEnResponsabiliteConsommationDeBiens]: subPostsByPostBC[Post.IntrantsBiensEtMatieres],
+  [SubPost.UtilisationEnDependanceConsommationDeBiens]: subPostsByPostBC[Post.IntrantsBiensEtMatieres],
+  [SubPost.UtilisationEnResponsabiliteConsommationDEnergie]: subPostsByPostBC[Post.Energies],
+  [SubPost.UtilisationEnDependanceConsommationDEnergie]: subPostsByPostBC[Post.Energies],
+  [SubPost.UtilisationEnDependanceFuitesEtAutresConsommations]: [
+    ...(subPostsByPostBC[Post.AutresEmissionsNonEnergetiques] || []),
+    SubPost.FroidEtClim,
+    SubPost.EmissionsLieesALaProductionDeFroid,
+  ],
+  [SubPost.UtilisationEnResponsabiliteFuitesEtAutresConsommations]: [
+    ...(subPostsByPostBC[Post.AutresEmissionsNonEnergetiques] || []),
+    SubPost.FroidEtClim,
+    SubPost.EmissionsLieesALaProductionDeFroid,
+  ],
+  [SubPost.UtilisationEnResponsabiliteConsommationNumerique]: [SubPost.Informatique, SubPost.UsagesNumeriques],
+  [SubPost.UtilisationEnDependanceConsommationNumerique]: [SubPost.Informatique, SubPost.UsagesNumeriques],
+  [SubPost.FroidEtClim]: [SubPost.EmissionsLieesALaProductionDeFroid],
+}
+
+const getEmissionFactorSubPostMap = (subPost: SubPost, env: Environment): SubPost[] => {
+  switch (env) {
+    case Environment.TILT:
+      return [subPost, ...(tiltEmissionFactorSubPostsMapping[subPost] || [])]
+    default:
+      return [subPost]
   }
-  return result
 }
 
-export const filterEmissionFactorsBySubPostAndEnv = <T extends Pick<EmissionFactorWithMetaData, 'subPosts'>>(
-  emissionFactors: T[],
-  subPosts: SubPost[],
-  environment?: Environment,
-) => {
-  const filterSubPostList = environment === Environment.TILT ? getTiltSubPostList(subPosts) : subPosts
-
-  return emissionFactors.filter((emissionFactor) =>
-    emissionFactor.subPosts.some((efSubPost) => filterSubPostList.includes(efSubPost)),
-  )
-}
+export const getEmissionFactorSubPostsMap = (subPosts: SubPost[], env: Environment) =>
+  unique(subPosts.reduce((res, subPost) => res.concat(getEmissionFactorSubPostMap(subPost, env)), [] as SubPost[]))

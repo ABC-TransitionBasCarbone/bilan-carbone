@@ -6,13 +6,20 @@ import {
   OrganizationVersionWithOrganization,
 } from '@/db/organization'
 import { Environment } from '@prisma/client'
+import { stdin as input, stdout as output } from 'node:process'
+import * as readline from 'node:readline/promises'
 import { uploadEmissionFactors } from './emissionFactors'
 import { OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
 import { OldBCWorkSheetsReader } from './oldBCWorkSheetsReader'
 import { uploadOrganizations } from './organizations'
 import { uploadStudies } from './studies'
 
-export const uploadOldBCInformations = async (file: string, email: string, organizationVersionId: string) => {
+export const uploadOldBCInformations = async (
+  file: string,
+  email: string,
+  organizationVersionId: string,
+  skip: boolean,
+) => {
   const postAndSubPostsOldNewMapping = new OldNewPostAndSubPostsMapping()
 
   const account = await getAccountByEmailAndOrganizationVersionId(email, organizationVersionId)
@@ -44,25 +51,47 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
   let hasEmissionFactorsWarning = false
   let hasStudiesWarning = false
 
-  await prismaClient.$transaction(async (transaction) => {
-    hasOrganizationsWarning = await uploadOrganizations(
-      transaction,
-      oldBCWorksheetsReader.organizationsWorksheet,
-      accountOrganizationVersion,
+  if (!skip) {
+    const rl = readline.createInterface({ input, output })
+    const doWeContinue = await rl.question(
+      "Tu n'as pas choisi de passer en mode vérification (pas de paramètre skip), es-tu sûr de vouloir continuer ? (oui/non) ",
     )
-    hasEmissionFactorsWarning = await uploadEmissionFactors(
-      transaction,
-      oldBCWorksheetsReader.emissionFactorsWorksheet,
-      accountOrganizationVersion,
-    )
-    hasStudiesWarning = await uploadStudies(
-      transaction,
-      account.id,
-      organizationVersionId,
-      postAndSubPostsOldNewMapping,
-      oldBCWorksheetsReader,
-    )
-  })
+
+    if (doWeContinue?.toLocaleLowerCase() !== 'oui') {
+      throw new Error('On arrête le programme')
+    } else {
+      console.log("C'est parti pour la migration !")
+    }
+    rl.close()
+  }
+
+  await prismaClient.$transaction(
+    async (transaction) => {
+      hasOrganizationsWarning = await uploadOrganizations(
+        transaction,
+        oldBCWorksheetsReader.organizationsWorksheet,
+        accountOrganizationVersion,
+      )
+      hasEmissionFactorsWarning = await uploadEmissionFactors(
+        transaction,
+        oldBCWorksheetsReader.emissionFactorsWorksheet,
+        accountOrganizationVersion,
+        postAndSubPostsOldNewMapping,
+      )
+      hasStudiesWarning = await uploadStudies(
+        transaction,
+        account.id,
+        organizationVersionId,
+        postAndSubPostsOldNewMapping,
+        oldBCWorksheetsReader,
+      )
+
+      if (skip) {
+        throw Error()
+      }
+    },
+    { timeout: 10000 },
+  ) // 10 seconds timeout for the transaction
 
   if (hasOrganizationsWarning) {
     console.log(

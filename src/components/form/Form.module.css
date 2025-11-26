@@ -38,3 +38,23 @@
   height: 1.25rem;
   margin-top: 0 !important;
 }
+
+.textFieldInput {
+  border-radius: 0.75rem;
+  border-color: var(--grayscale-300);
+  color: black;
+}
+
+.datePickerInput {
+  border-radius: 0.75rem;
+  background-color: white;
+}
+
+.datePickerInput fieldset {
+  border-radius: 0.75rem;
+  border-color: var(--grayscale-300);
+}
+
+.multilineResizable :global(.MuiInputBase-input) {
+  resize: vertical;
+}

@@ -1,4 +1,4 @@
-import { FormControl, FormHelperText } from '@mui/material'
+import { FormControl, FormHelperText, Typography } from '@mui/material'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
 import { useCallback } from 'react'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
@@ -8,7 +8,6 @@ import styles from './Form.module.css'
 interface Props<T extends FieldValues> {
   name: FieldPath<T>
   control: Control<T>
-  translation: (slug: string) => string
   label?: string
   icon?: React.ReactNode
   iconPosition?: 'before' | 'after'
@@ -20,7 +19,6 @@ interface Props<T extends FieldValues> {
 export const FormTextField = <T extends FieldValues>({
   name,
   control,
-  translation,
   label,
   icon,
   iconPosition = 'before',
@@ -30,6 +28,7 @@ export const FormTextField = <T extends FieldValues>({
   ...textFieldProps
 }: Props<T> & TextFieldProps) => {
   const iconDiv = icon ? <div className={styles.icon}>{icon}</div> : null
+  const isMultiline = textFieldProps.multiline
 
   const handleChange = useCallback(
     (
@@ -55,9 +54,17 @@ export const FormTextField = <T extends FieldValues>({
       render={({ field: { onChange, value }, fieldState: { error } }) => (
         <FormControl fullWidth={textFieldProps.fullWidth} error={!!error || !!customError} className="inputContainer">
           {label ? (
-            <IconLabel icon={iconDiv} iconPosition={iconPosition} className="mb-2">
-              <span className="inputLabel bold">{label}</span>
-            </IconLabel>
+            <>
+              {iconDiv ? (
+                <IconLabel icon={iconDiv} iconPosition={iconPosition} className="mb-2">
+                  <span className="inputLabel bold">{label}</span>
+                </IconLabel>
+              ) : (
+                <Typography fontWeight="bold" className="mb-2">
+                  {label}
+                </Typography>
+              )}
+            </>
           ) : null}
           <TextField
             {...textFieldProps}
@@ -68,17 +75,22 @@ export const FormTextField = <T extends FieldValues>({
                 ? ''
                 : value
             }
+            minRows={isMultiline ? textFieldProps.rows || 2 : undefined}
+            className={isMultiline ? styles.multilineResizable : undefined}
             slotProps={{
-              input: {
-                onWheel: (event) => (event.target as HTMLInputElement).blur(),
-                sx: { borderRadius: '0.75rem', borderColor: 'var(--grayscale-300)', color: 'black' },
-                endAdornment,
-              },
+              input: isMultiline
+                ? {
+                    endAdornment,
+                  }
+                : {
+                    onWheel: (event) => (event.target as HTMLInputElement).blur(),
+                    endAdornment,
+                  },
             }}
           />
-          <FormHelperText className={styles.helper}>
-            {customError ? customError : error?.message ? translation('validation.' + error.message) : ' '}
-          </FormHelperText>
+          {(customError || error?.message) && (
+            <FormHelperText className={styles.helper}>{customError ?? error?.message}</FormHelperText>
+          )}
         </FormControl>
       )}
     />

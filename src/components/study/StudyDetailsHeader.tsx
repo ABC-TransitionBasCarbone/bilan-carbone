@@ -2,14 +2,11 @@
 
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { hasAccessToDownloadStudyEmissionSourcesButton } from '@/services/permissions/environment'
 import { deleteStudyCommand } from '@/services/serverFunctions/study'
 import { DeleteCommand, DeleteCommandValidation } from '@/services/serverFunctions/study.command'
-import { downloadStudyEmissionSources } from '@/services/study'
 import { zodResolver } from '@hookform/resolvers/zod'
 import CopyIcon from '@mui/icons-material/ContentCopy'
 import DeleteIcon from '@mui/icons-material/Delete'
-import DownloadIcon from '@mui/icons-material/Download'
 import LockIcon from '@mui/icons-material/Lock'
 import LockOpenIcon from '@mui/icons-material/LockOpen'
 import { Environment } from '@prisma/client'
@@ -31,7 +28,6 @@ interface Props {
   duplicableEnvironments: Environment[]
   studySite: string
   setSite: Dispatch<SetStateAction<string>>
-  environment: Environment
 }
 
 const StudyDetailsHeader = ({
@@ -42,7 +38,6 @@ const StudyDetailsHeader = ({
   duplicableEnvironments,
   studySite,
   setSite,
-  environment,
 }: Props) => {
   const [deleting, setDeleting] = useState(false)
   const [duplicating, setDuplicating] = useState(false)
@@ -50,13 +45,7 @@ const StudyDetailsHeader = ({
   const format = useFormatter()
   const t = useTranslations('study')
   const tStudyDelete = useTranslations('study.delete')
-  const tStudyExport = useTranslations('study.export')
-  const tCaracterisations = useTranslations('categorisations')
   const tExport = useTranslations('exports')
-  const tPost = useTranslations('emissionFactors.post')
-  const tQuality = useTranslations('quality')
-  const tUnit = useTranslations('units')
-  const tResultUnits = useTranslations('study.results.units')
   const router = useRouter()
 
   const form = useForm<DeleteCommand>({
@@ -104,42 +93,12 @@ const StudyDetailsHeader = ({
       ]
     : []
 
-  const exportAction: BlockProps['actions'] = hasAccessToDownloadStudyEmissionSourcesButton(
-    study.organizationVersion.environment,
-  )
-    ? [
-        {
-          actionType: 'button',
-          onClick: () =>
-            downloadStudyEmissionSources(
-              study,
-              tStudyExport,
-              tCaracterisations,
-              tPost,
-              tQuality,
-              tUnit,
-              tResultUnits,
-              environment,
-            ),
-          disabled: study.emissionSources.length === 0,
-          variant: 'contained',
-          color: 'secondary',
-          children: (
-            <>
-              {tStudyExport('download')}
-              <DownloadIcon />
-            </>
-          ),
-        },
-      ]
-    : []
-
   return (
     <Block
       title={study.name}
       as="h1"
       icon={study.isPublic ? <LockOpenIcon /> : <LockIcon />}
-      actions={[...duplicateAction, ...exportAction, ...deleteAction]}
+      actions={[...duplicateAction, ...deleteAction]}
       description={
         <div className={styles.studyInfo}>
           <p>

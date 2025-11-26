@@ -1,3 +1,7 @@
+.link {
+  text-decoration: none;
+}
+
 .header {
   position: relative;
   padding: 1rem;

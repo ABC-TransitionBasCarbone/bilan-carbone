@@ -4,7 +4,7 @@ import LinkButton from '@/components/base/LinkButton'
 import StudyName from '@/components/study/card/StudyName'
 import BarChart from '@/components/study/charts/BarChart'
 import { FullStudy } from '@/db/study'
-import { getResultsValues } from '@/services/study'
+import { getDetailedEmissionResults } from '@/services/study'
 import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -21,7 +21,14 @@ const StudyResultsContainerSummaryCut = ({ study }: Props) => {
 
   const studySite = 'all'
 
-  const { computedResultsWithDep } = getResultsValues(study, tPost, studySite, false, Environment.CUT, tResults)
+  const { computedResultsWithDep } = getDetailedEmissionResults(
+    study,
+    tPost,
+    studySite,
+    false,
+    Environment.CUT,
+    tResults,
+  )
 
   return (
     <>

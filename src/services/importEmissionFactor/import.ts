@@ -125,6 +125,7 @@ const getUnit = (value?: string): Unit | null => {
   if (value.startsWith('kgCO2e/')) {
     value = value.replace('kgCO2e/', '')
   }
+  value = value.trim().replace(/\.$/, '').replace("% d'humidité)", '% humidité)').replace('  ', ' ')
   if (value.toLowerCase() === 'tep pci') {
     value = 'tep PCI'
   } else if (value.toLowerCase() === 'tep pcs') {
@@ -143,6 +144,14 @@ const getUnit = (value?: string): Unit | null => {
     value = 'm² SHON'
   } else if (value.includes('m3')) {
     value = value.replace('m3', 'm³')
+  } else if (value.includes('kg d?ingrédient ingéré')) {
+    value = "kg d'ingrédient ingéré"
+  } else if (value.includes('kg de matière seche')) {
+    value = 'kg de matière sèche'
+  } else if (value.includes("kg d'oeufs") || value.includes("kf d'oeuf")) {
+    value = "kg d'oeuf"
+  } else if (value.includes('kg fioul / km')) {
+    value = 'kg fioul/ km'
   }
 
   if (!unitsMatrix[value]) {

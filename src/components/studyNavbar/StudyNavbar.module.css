@@ -1,5 +1,5 @@
 .opened {
-  width: 21rem;
+  width: 20rem;
 
   @media screen and (max-width: 1279px) {
     width: 17rem;
@@ -22,24 +22,36 @@
 
 .drawerContainer {
   z-index: 99;
-  margin-left: 1rem;
-  display: flex;
   top: calc(var(--total-header-height) + 1rem) !important;
-  width: 20rem;
-  height: auto;
+  max-height: calc(100vh - var(--total-header-height) - 2rem);
   box-sizing: border-box;
   border-radius: 1.5rem;
   border: 1px solid var(--mui-palette-primary-main);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-  padding: 4rem 0rem 1rem 0rem;
+  overflow: hidden;
+}
 
-  @media screen and (max-width: 1279px) {
-    width: 16rem;
-  }
+.drawerContent {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.titleContainer {
+  flex-shrink: 0;
+  padding: 0.5rem 0rem;
+  border-bottom: 1px solid var(--mui-palette-divider);
+}
+
+.menuContainer {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 1rem 0rem 1rem 0rem;
 }
 
 .studyTitle {
-  padding: 0.5rem 1rem 0.5rem 1rem;
+  padding: 0.5rem 1rem 0.5rem 4.5rem;
   font-size: 1.25rem;
   font-weight: 800;
   line-height: 120%;
@@ -47,11 +59,10 @@
   text-decoration: none;
   display: flex;
   align-items: center;
+  max-width: 19rem;
 
   @media screen and (max-width: 1279px) {
     font-size: 1rem;
-    padding-top: 0rem !important;
-    padding-bottom: 0rem !important;
   }
 }
 
