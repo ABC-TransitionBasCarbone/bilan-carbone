@@ -1,4 +1,43 @@
 {
+  "navigation": {
+    "organizations": "Mes Empreintes",
+    "organization": "Mon équipe enseignante",
+    "information": "Mon établissement",
+    "team": "Mon équipe enseignante"
+  },
+  "team": {
+    "table": {
+      "title": "Mon équipe enseignante"
+    }
+  },
+  "study": {
+    "create": "Ajouter une empreinte",
+    "myStudies": "Mes empreintes",
+    "createFirstStudy": "Créer ma première empreinte",
+    "see": "Voir mon empreinte",
+    "selectSite": "Avant de remplir les données, choisissez un établissement",
+    "lastStudyTitle": "Dernière empreinte en date",
+    "navigation": {
+      "framing": "Données générales",
+      "organizations": "Mes établissement",
+      "team": "Mes Collaborateur·rices",
+      "title": "Mon Empreinte"
+    }
+  },
+  "organization": {
+    "card": {
+      "myOrganization": "Mes établissements"
+    },
+    "form": {
+      "editTitle": "Modifier mes établissements"
+    },
+    "sites": {
+      "title": "Sur quels établissements doit porter l'empreinte ?",
+      "noSites": "Il n'y a pas d'établissements configurés",
+      "namePlaceholder": "Nom de l'établissement",
+      "add": "Ajouter un établissement"
+    }
+  },
   "login": {
     "welcome": "Bienvenue sur Clickson PEBC",
     "explanation": "Mesurons les émissions de gaz à effet de serre de votre établissement!",
