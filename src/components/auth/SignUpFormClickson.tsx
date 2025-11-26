@@ -115,8 +115,18 @@ const SignUpFormClickson = () => {
               : schools.map((school) => ({
                   label: `${school.nom_etablissement} - ${school.adresse_1} (${school.code_postal})`,
                   value: school.nom_etablissement,
+                  testId: `school-option-${school.identifiant_de_l_etablissement}`,
                 }))
           }
+          renderOption={(props, option) => {
+            const dataTestId = typeof option === 'string' ? undefined : (option as { testId?: string }).testId
+            const label = typeof option === 'string' ? option : option.label
+            return (
+              <li {...props} data-testid={dataTestId}>
+                {label}
+              </li>
+            )
+          }}
           name="schoolName"
           label={t('schoolPostalCode')}
           helperText={t('schoolPostalCodePlaceholder')}
