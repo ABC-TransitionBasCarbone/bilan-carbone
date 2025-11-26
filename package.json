@@ -11,7 +11,7 @@
     "dev:test": "dotenv -e .env.test -- next dev --port 3001",
     "build": "next build",
     "start": "next start",
-    "lint": "prettier --check . && next lint",
+    "lint": "prettier --check . && eslint .",
     "format": "prettier --write .",
     "test": "jest",
     "test:watch": "jest --watch",
