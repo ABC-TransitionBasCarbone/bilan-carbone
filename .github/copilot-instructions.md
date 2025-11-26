@@ -15,40 +15,40 @@ This is a Next.js monorepo for the "Bilan Carbone" platform, focused on carbon a
 
 ## Developer Workflows
 
-- **Build/Dev**:  
+- **Build/Dev**:
   - Start dev server: `npx next dev --turbopack --port 3001`
   - Prisma Studio: `npx prisma studio`
-- **Testing**:  
+- **Testing**:
   - Run Cypress: `npx cypress run --spec "src/tests/end-to-end/app/register-cut.cy.ts"`
   - Run Jest: `npx jest`
-- **Data Import**:  
+- **Data Import**:
   - Example:  
     `npx tsx src/scripts/baseEmpreinte/getEmissionFactors.ts -f src/scripts/baseEmpreinte/Base_Carbone_V23.7.csv -n 23.7`
   - For multiple scripts in PowerShell, use `;` to chain commands.
-- **Environment**:  
+- **Environment**:
   - Environment variables in `.env` (see comments for staging/production/test URLs).
   - Use correct `POSTGRES_PRISMA_URL` for your environment.
 
 ## Project-Specific Patterns
 
-- **Prisma Usage**:  
+- **Prisma Usage**:
   - Raw SQL queries use `Prisma.sql` and are only passed to `$queryRaw` for SELECTs.
   - All mutations (INSERT/UPDATE/DELETE) use Prisma model methods, not raw SQL.
-- **Feature Folders**:  
+- **Feature Folders**:
   - UI and logic are grouped by feature (e.g., `src/components/emissionFactor/`, `src/app/(dashboard)/`).
-- **Metadata Handling**:  
+- **Metadata Handling**:
   - Emission factors and their metadata are always joined and filtered by locale.
   - See `src/db/emissionFactors.ts` for query patterns.
-- **Custom Units**:  
+- **Custom Units**:
   - Custom units are handled via the `customUnit` field and `setEmissionFactorUnitAsCustom` function.
 
 ## Integration Points
 
-- **External APIs**:  
+- **External APIs**:
   - INSEE, Association Service, PDF Service, etc. (see `.env` for URLs and secrets).
-- **Mail**:  
+- **Mail**:
   - Configured via `.env` for different environments.
-- **FTP**:  
+- **FTP**:
   - Used for file exports/imports, credentials in `.env`.
 
 ## Conventions
