@@ -9,9 +9,18 @@ interface Props {
   resultsUnit: string
   label: string
   testId: string
+  withoutResponsability?: boolean
 }
 
-const CarbonIntensity = ({ withDep, withoutDep, divider, resultsUnit, label, testId }: Props) => {
+const CarbonIntensity = ({
+  withDep,
+  withoutDep,
+  divider,
+  resultsUnit,
+  label,
+  testId,
+  withoutResponsability = false,
+}: Props) => {
   const tResultUnits = useTranslations('study.results.units')
   return (
     <div className="flex grow mt1">
@@ -20,11 +29,13 @@ const CarbonIntensity = ({ withDep, withoutDep, divider, resultsUnit, label, tes
         label={`${tResultUnits(resultsUnit)}/${label}`}
         testId={`dependency-${testId}`}
       />
-      <Data
-        value={formatNumber(withoutDep / divider)}
-        label={`${tResultUnits(resultsUnit)}/${label}`}
-        testId={`responsability-${testId}`}
-      />
+      {!withoutResponsability && (
+        <Data
+          value={formatNumber(withoutDep / divider)}
+          label={`${tResultUnits(resultsUnit)}/${label}`}
+          testId={`responsability-${testId}`}
+        />
+      )}
     </div>
   )
 }

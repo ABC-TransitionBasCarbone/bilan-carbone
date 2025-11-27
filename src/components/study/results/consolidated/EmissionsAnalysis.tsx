@@ -3,13 +3,14 @@ import Title from '@/components/base/Title'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
 import { ResultsByTag } from '@/services/results/consolidated'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
-import { SiteCAUnit } from '@prisma/client'
+import { Environment, SiteCAUnit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import styles from '../ResultsContainer.module.css'
 import ResultsTableAndGraphs from '../ResultsTableAndGraphs'
 import TagsResultsTable from '../tags/TagsResultsTable'
@@ -45,6 +46,9 @@ const EmissionsAnalysis = ({
   const tGlossary = useTranslations('study')
   const tResultUnits = useTranslations('study.results.units')
   const [glossary, setGlossary] = useState('')
+
+  const { environment } = useAppEnvironmentStore()
+  const isClickson = useMemo(() => environment === Environment.CLICKSON, [environment])
 
   return (
     <div className="mb2">
@@ -96,22 +100,24 @@ const EmissionsAnalysis = ({
           />
         </div>
         <div className="flex-col grow">
-          <Box className="mb2">
-            <Title as="h6" title={t('monetaryRatio')} className="justify-center" />
-            <div className={classNames('flex')}>
-              <Data
-                value={`${formatNumber(monetaryRatio, 2)}%`}
-                label={t('monetaryRatioEmissions')}
-                testId="results-monetary-ratio"
-              />
-              <span>{t('ofWhich')}</span>
-              <Data
-                value={`${formatNumber(nonSpecificMonetaryRatio, 2)}%`}
-                label={t('nonSpeMonetaryRatioEmissions')}
-                testId="results-non-spe-monetary-ratio"
-              />
-            </div>
-          </Box>
+          {!isClickson && (
+            <Box className="mb2">
+              <Title as="h6" title={t('monetaryRatio')} className="justify-center" />
+              <div className={classNames('flex')}>
+                <Data
+                  value={`${formatNumber(monetaryRatio, 2)}%`}
+                  label={t('monetaryRatioEmissions')}
+                  testId="results-monetary-ratio"
+                />
+                <span>{t('ofWhich')}</span>
+                <Data
+                  value={`${formatNumber(nonSpecificMonetaryRatio, 2)}%`}
+                  label={t('nonSpeMonetaryRatioEmissions')}
+                  testId="results-non-spe-monetary-ratio"
+                />
+              </div>
+            </Box>
+          )}
           <ResultsTableAndGraphs
             computedResults={computedResultsByTag}
             resultsUnit={study.resultsUnit}
