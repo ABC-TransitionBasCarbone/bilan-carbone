@@ -1,6 +1,6 @@
-import { getOrganizationVersionById, OrganizationVersionWithOrganization } from '@/db/organization'
+import { OrganizationVersionWithOrganization, OrganizationVersionWithParentLicence } from '@/db/organization'
 import { isAdmin } from '@/utils/user'
-import { OrganizationVersion, Role } from '@prisma/client'
+import { Role } from '@prisma/client'
 import { UserSession } from 'next-auth'
 
 export const isAdminOnOrga = (account: UserSession, organizationVersion: OrganizationVersionWithOrganization) =>
@@ -31,12 +31,10 @@ export const canEditOrganizationVersion = (
   return hasEditionRole(isCR, account.role)
 }
 
-export const hasActiveLicence = async (
-  organizationVersion: Pick<OrganizationVersion, 'activatedLicence' | 'parentId'>,
+export const hasActiveLicence = (
+  organizationVersion: Pick<Exclude<OrganizationVersionWithParentLicence, null>, 'activatedLicence' | 'parent'>,
 ) => {
-  const userOrgaVersion = organizationVersion.parentId
-    ? await getOrganizationVersionById(organizationVersion.parentId)
-    : organizationVersion
+  const userOrgaVersion = organizationVersion.parent ? organizationVersion.parent : organizationVersion
 
   if (!userOrgaVersion) {
     return false
