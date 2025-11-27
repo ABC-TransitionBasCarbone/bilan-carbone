@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { NextRequest } from 'next/server'
 
-const schoolApi = 'https://data.education.gouv.fr/api/explore/v2.1/catalog/datasets/fr-en-annuaire-education/records'
+const schoolApi = process.env.SCHOOL_API_URL!
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ postalCode: string }> }) {
   const { postalCode } = await params
