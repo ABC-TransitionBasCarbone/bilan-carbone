@@ -27,6 +27,11 @@ export const OrganizationVersionWithOrganizationSelect = {
   onboarderId: true,
   environment: true,
   parentId: true,
+  parent: {
+    select: {
+      activatedLicence: true,
+    },
+  },
   organization: {
     select: {
       oldBCId: true,
@@ -82,6 +87,11 @@ export const getOrganizationVersionById = (id: string | null) =>
   id
     ? prismaClient.organizationVersion.findUnique({ where: { id }, select: OrganizationVersionWithOrganizationSelect })
     : null
+
+export type OrganizationVersionWithParentLicence = Exclude<
+  Awaited<ReturnType<typeof getOrganizationVersionById>>,
+  'null'
+>
 
 export const isOrganizationVersionCR = async (id: string | null) =>
   id ? (await prismaClient.organizationVersion.findUnique({ where: { id } }))?.isCR : undefined
