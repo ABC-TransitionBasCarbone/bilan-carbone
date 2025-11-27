@@ -1,4 +1,4 @@
-import { BCPost, CutPost, Post, subPostsByPost, TiltPost } from '@/services/posts'
+import { BCPost, ClicksonPost, CutPost, Post, subPostsByPost, TiltPost } from '@/services/posts'
 import { AdditionalResultTypes, ResultType } from '@/services/study'
 import { Environment, SubPost } from '@prisma/client'
 
@@ -71,6 +71,8 @@ export const getPostValues = (environment: Environment | undefined, type?: Resul
       return type === AdditionalResultTypes.ENV_SPECIFIC_EXPORT ? TiltPost : BCPost
     case Environment.CUT:
       return CutPost
+    case Environment.CLICKSON:
+      return ClicksonPost
     case Environment.BC:
     default:
       return BCPost
