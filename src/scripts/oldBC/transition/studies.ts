@@ -359,7 +359,7 @@ const parseEmissionSources = (
           emissionFactorImportedId: String(row.emissionFactorImportedId),
           emissionFactorConsoValue: row.emissionFactorConsoValue as number,
           caracterisation: row.caracterisation as string,
-          deprecation: row.amortissement as number,
+          deprecation: (row.amortissement === 1 ? row.immoVal : row.amortissement) as number,
           ...(subPost === SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas && {
             duration: 20,
             hectare: typeof row.daTotalValue === 'number' ? row.daTotalValue / 20 : parseFloat(row.daTotalValue) / 20,
