@@ -4,7 +4,6 @@ import Box from '@/components/base/Box'
 import Button from '@/components/base/Button'
 import { MultiSelect } from '@/components/base/MultiSelect'
 import PersistentToast from '@/components/base/PersistentToast'
-import Title from '@/components/base/Title'
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import Image from '@/components/document/Image'
 import { FullStudy } from '@/db/study'
@@ -22,6 +21,8 @@ import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import Block from '../base/Block'
+import SelectStudySite from '../study/site/SelectStudySite'
 import MyTrajectoriesCard from '../study/trajectory/MyTrajectoriesCard'
 import LinkedStudies from '../study/transitionPlan/LinkedStudies'
 import TrajectoryGraph from '../study/transitionPlan/TrajectoryGraph'
@@ -274,21 +275,25 @@ const TrajectoryReductionPage = ({
           { label: study.name, link: `/etudes/${study.id}` },
         ].filter((link) => link !== undefined)}
       />
-      <div className={classNames(styles.container, 'flex-col main-container p2 pt3')}>
-        <div className="flex align-center justify-between">
-          <Title title={t('trajectories.title')} as="h2" />
-          {canEdit && (
-            <Button
-              variant="contained"
-              color="error"
-              onClick={() => setShowDeleteModal(true)}
-              title={t('trajectories.delete.title')}
-            >
-              <DeleteIcon />
-            </Button>
-          )}
-        </div>
-
+      <Block
+        title={t('trajectories.title')}
+        as="h2"
+        rightComponent={<SelectStudySite sites={study.sites} siteSelectionDisabled isTransitionPlan />}
+        actions={
+          canEdit
+            ? [
+                {
+                  actionType: 'button',
+                  variant: 'contained',
+                  color: 'error',
+                  onClick: () => setShowDeleteModal(true),
+                  title: t('trajectories.delete.title'),
+                  children: <DeleteIcon />,
+                },
+              ]
+            : undefined
+        }
+      >
         <div className="flex-col gapped2">
           <div className={classNames(styles.collapsibleBlocks, 'flex-col gapped0')}>
             <TransitionPlanOnboarding
@@ -426,7 +431,7 @@ const TrajectoryReductionPage = ({
             onCancel={() => setShowDeleteModal(false)}
           />
         )}
-      </div>
+      </Block>
     </>
   )
 }

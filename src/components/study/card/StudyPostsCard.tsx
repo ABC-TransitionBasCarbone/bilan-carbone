@@ -50,7 +50,13 @@ const StudyPostsCard = ({ study, post, userRole, studySite, setSite, isCut }: Pr
           )}
         </div>
         <p className="text-center">{t('selectSite')}</p>
-        <SelectStudySite study={study} studySite={studySite} setSite={setSite} withLabel={false} />
+        <SelectStudySite
+          sites={study.sites}
+          defaultValue={studySite}
+          setSite={setSite}
+          withLabel={false}
+          showAllOption={false}
+        />
         {!isCut && (
           <Box className={classNames(styles.emissionSources, 'p1', { [styles.allValidated]: percent === 100 })}>
             <p className="mb1 align-center">
