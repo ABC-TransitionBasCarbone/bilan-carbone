@@ -41,3 +41,6 @@ export const hasAccessToDependencyMatrixExample = (environment: Environment) => 
 
 export const hasAccessToPerimeterPage = (environment: Environment) =>
   !([Environment.CUT, Environment.CLICKSON] as Environment[]).includes(environment)
+
+export const needsLicenceToUseApp = (environment: Environment) =>
+  ([Environment.BC] as Environment[]).includes(environment)
