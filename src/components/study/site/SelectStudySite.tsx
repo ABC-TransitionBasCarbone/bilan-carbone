@@ -29,7 +29,7 @@ const SelectStudySite = ({
   const tooltipMessage = useMemo(() => {
     if (siteSelectionDisabled) {
       if (isTransitionPlan) {
-        return t('allStiesOnlyTransitionPlan')
+        return t('allSitesOnlyTransitionPlan')
       } else {
         return t('allSitesOnly')
       }

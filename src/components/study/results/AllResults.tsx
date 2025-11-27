@@ -219,24 +219,20 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       <div className="flex-col gapped2">
         <div className="flex gapped2">
           {exports.map((exportType) => exportType.type).includes(Export.Beges) && (
-            <div>
-              {exports.map((exportType) => exportType.type).includes(Export.Beges) && (
-                <ConsolatedBEGESDifference
-                  study={study}
-                  emissionFactorsWithParts={emissionFactorsWithParts}
-                  validatedOnly={validatedOnly}
-                  results={computedResultsWithDep}
-                  begesResults={computedBegesData}
-                  studySite={studySite}
-                />
-              )}
-            </div>
+            <ConsolatedBEGESDifference
+              study={study}
+              emissionFactorsWithParts={emissionFactorsWithParts}
+              validatedOnly={validatedOnly}
+              results={computedResultsWithDep}
+              begesResults={computedBegesData}
+              studySite={studySite}
+            />
           )}
           <FormControl>
             <InputLabel id="result-type-selector-label">{t('type')}</InputLabel>
             <Select
               value={type}
-              label={t('type')}
+              label={t('format')}
               aria-labelledby="result-type-selector-label"
               onChange={(event) => {
                 setType(event.target.value as ResultType)
