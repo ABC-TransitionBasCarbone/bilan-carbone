@@ -1,4 +1,48 @@
 {
+  "navigation": {
+    "organizations": "My Carbon Footprints",
+    "organization": "Pilot Team",
+    "information": "My Establishment",
+    "team": "Pilot Team"
+  },
+  "team": {
+    "table": {
+      "title": "Pilot Team"
+    }
+  },
+  "study": {
+    "create": "Add a Footprint",
+    "myStudies": "My Carbon Footprints",
+    "createFirstStudy": "Create My First Footprint",
+    "see": "View My Footprint",
+    "selectSite": "Before filling in data, please select an establishment",
+    "lastStudyTitle": "Latest Footprint",
+    "navigation": {
+      "framing": "General Data",
+      "organizations": "My Establishments",
+      "team": "My Collaborators",
+      "title": "My Footprint"
+    },
+    "new": {
+      "suggestion": {
+        "name": "Example: carbon footprint Simone Veil Middle School"
+      }
+    }
+  },
+  "organization": {
+    "card": {
+      "myOrganization": "My Establishments"
+    },
+    "form": {
+      "editTitle": "Edit My Establishments"
+    },
+    "sites": {
+      "title": "Which establishments should the footprint cover?",
+      "noSites": "No establishments configured",
+      "namePlaceholder": "Establishment Name",
+      "add": "Add an Establishment"
+    }
+  },
   "login": {
     "welcome": "Welcome to Clickson PEBC",
     "explanation": "Let's measure your establishment's greenhouse gas emissions!",
@@ -15,3 +59,4 @@
     }
   }
 }
+
