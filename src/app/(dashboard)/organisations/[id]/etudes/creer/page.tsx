@@ -31,7 +31,10 @@ const NewStudyInOrganization = async (props: Props & UserSessionProps & StudyDup
   ])
 
   const organizationVersion = await getOrganizationVersionById(id)
-  if (!organizationVersion || (!hasActiveLicence(organizationVersion) && organizationVersion.environment !== Environment.CUT)) {
+  if (
+    !organizationVersion ||
+    (!hasActiveLicence(organizationVersion) && organizationVersion.environment !== Environment.CUT)
+  ) {
     redirect('/')
   }
 

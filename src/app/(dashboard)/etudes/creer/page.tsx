@@ -25,7 +25,10 @@ const NewStudy = async ({ user, duplicateStudyId }: UserSessionProps & StudyDupl
   )?.id
   if (organizationVersionId) {
     const organizationVersion = await getOrganizationVersionById(organizationVersionId)
-    if (!organizationVersion || (!hasActiveLicence(organizationVersion) && organizationVersion.environment !== Environment.CUT)) {
+    if (
+      !organizationVersion ||
+      (!hasActiveLicence(organizationVersion) && organizationVersion.environment !== Environment.CUT)
+    ) {
       redirect('/')
     }
   }

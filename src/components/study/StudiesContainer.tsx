@@ -64,18 +64,13 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR }: Props) =>
       {mainStudies.length > 0 && (
         <Studies
           studies={mainStudies}
-          canAddStudy={
-            user.environment === Environment.CUT ||
-            (canCreateAStudy(user) && !isCR && activeLicence)
-          }
+          canAddStudy={user.environment === Environment.CUT || (canCreateAStudy(user) && !isCR && activeLicence)}
           creationUrl={creationUrl}
           user={user}
           collaborations={!organizationVersionId && isCR}
         />
       )}
-      {collaborations.length > 0 && (
-        <Studies studies={collaborations} canAddStudy={false} user={user} collaborations />
-      )}
+      {collaborations.length > 0 && <Studies studies={collaborations} canAddStudy={false} user={user} collaborations />}
     </>
   ) : canCreateAStudy(user) && !isCR ? (
     <MUIBox component="section">
