@@ -1,10 +1,15 @@
-import { OrganizationVersionWithOrganization, OrganizationVersionWithParentLicence } from '@/db/organization'
+import { OrganizationVersionWithParentLicence } from '@/db/organization'
 import { isAdmin } from '@/utils/user'
 import { Role } from '@prisma/client'
 import { UserSession } from 'next-auth'
 
-export const isAdminOnOrga = (account: UserSession, organizationVersion: OrganizationVersionWithOrganization) =>
-  isAdmin(account.role) && isInOrgaOrParent(account.organizationVersionId, organizationVersion)
+export const isAdminOnOrga = (
+  account: UserSession,
+  organizationVersion: {
+    id: string
+    parentId: string | null
+  },
+) => isAdmin(account.role) && isInOrgaOrParent(account.organizationVersionId, organizationVersion)
 
 export const isInOrgaOrParent = (
   userOrganizationVersionId: string | null,
@@ -21,7 +26,10 @@ export const hasEditionRole = (isCR: boolean, userRole: Role) =>
 
 export const canEditOrganizationVersion = (
   account: UserSession,
-  organizationVersion?: OrganizationVersionWithOrganization,
+  organizationVersion?: {
+    id: string
+    parentId: string | null
+  },
 ) => {
   if (organizationVersion && !isInOrgaOrParent(account.organizationVersionId, organizationVersion)) {
     return false

@@ -1,10 +1,6 @@
 import { getAccountById } from '@/db/account'
 import { getDocumentById } from '@/db/document'
-import {
-  getOrganizationVersionById,
-  getOrganizationVersionsByOrganizationId,
-  OrganizationVersionWithOrganization,
-} from '@/db/organization'
+import { getOrganizationVersionById, getOrganizationVersionsByOrganizationId } from '@/db/organization'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getAccountByIdWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
 import { canEditOrganizationVersion, hasActiveLicence, isAdminOnOrga, isInOrgaOrParent } from '@/utils/organization'
@@ -18,8 +14,13 @@ import { hasSufficientLevel } from '../study'
 import { hasAccessToDuplicateStudy } from './environment'
 import { isInOrgaOrParentFromId } from './organization'
 
-export const isAdminOnStudyOrga = (user: UserSession, studyOrganizationVersion: OrganizationVersionWithOrganization) =>
-  isAdminOnOrga(user, studyOrganizationVersion)
+export const isAdminOnStudyOrga = (
+  user: UserSession,
+  studyOrganizationVersion: {
+    id: string
+    parentId: string | null
+  },
+) => isAdminOnOrga(user, studyOrganizationVersion)
 
 export const canReadStudy = async (user: UserSession | UserWithAllowedStudies, studyId: string) => {
   if (!user) {
@@ -33,9 +34,8 @@ export const canReadStudy = async (user: UserSession | UserWithAllowedStudies, s
   }
 
   if (
-    isAdminOnStudyOrga(user as UserSession, study.organizationVersion as OrganizationVersionWithOrganization) ||
-    (study.isPublic &&
-      isInOrgaOrParent(user.organizationVersionId, study.organizationVersion as OrganizationVersionWithOrganization))
+    isAdminOnStudyOrga(user as UserSession, study.organizationVersion) ||
+    (study.isPublic && isInOrgaOrParent(user.organizationVersionId, study.organizationVersion))
   ) {
     return true
   }
@@ -139,11 +139,18 @@ export const canCreateSpecificStudy = async (
 }
 
 const canEditStudy = async (user: UserSession, study: FullStudy) => {
-  if (!hasActiveLicence(study.organizationVersion)) {
+  const organizationVersion = await getOrganizationVersionById(
+    study.organizationVersion.parentId ? study.organizationVersion.parentId : study.organizationVersionId,
+  )
+  if (!organizationVersion) {
     return false
   }
 
-  if (isAdminOnStudyOrga(user, study.organizationVersion as OrganizationVersionWithOrganization)) {
+  if (!hasActiveLicence(organizationVersion)) {
+    return false
+  }
+
+  if (isAdminOnStudyOrga(user, study.organizationVersion)) {
     return true
   }
 
@@ -223,7 +230,7 @@ export const canAddRightOnStudy = (
 }
 
 export const canAddContributorOnStudy = (user: UserSession, study: FullStudy) => {
-  if (isAdminOnStudyOrga(user, study.organizationVersion as OrganizationVersionWithOrganization)) {
+  if (isAdminOnStudyOrga(user, study.organizationVersion)) {
     return true
   }
 
@@ -278,10 +285,7 @@ export const canDuplicateStudy = async (studyId: string) => {
     return false
   }
 
-  const canEditOrga = canEditOrganizationVersion(
-    session.user,
-    study.organizationVersion as OrganizationVersionWithOrganization,
-  )
+  const canEditOrga = canEditOrganizationVersion(session.user, study.organizationVersion)
   if (!canEditOrga) {
     return false
   }
@@ -394,9 +398,8 @@ export const canReadStudyDetail = async (user: UserSession, study: FullStudy) =>
   }
 
   if (
-    isAdminOnStudyOrga(user, study.organizationVersion as OrganizationVersionWithOrganization) ||
-    (study.isPublic &&
-      isInOrgaOrParent(user.organizationVersionId, study.organizationVersion as OrganizationVersionWithOrganization))
+    isAdminOnStudyOrga(user, study.organizationVersion) ||
+    (study.isPublic && isInOrgaOrParent(user.organizationVersionId, study.organizationVersion))
   ) {
     return true
   }
