@@ -61,7 +61,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR }: Props) =>
           <ResultsContainerForUser user={user} mainStudyOrganizationVersionId={mainStudyOrganizationVersionId} />
         </Suspense>
       )}
-      {mainStudies.length > 0 && (
+      {!!mainStudies.length && (
         <Studies
           studies={mainStudies}
           canAddStudy={user.environment === Environment.CUT || (canCreateAStudy(user) && !isCR && activeLicence)}
@@ -70,7 +70,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR }: Props) =>
           collaborations={!organizationVersionId && isCR}
         />
       )}
-      {collaborations.length > 0 && <Studies studies={collaborations} canAddStudy={false} user={user} collaborations />}
+      {!!collaborations.length && <Studies studies={collaborations} canAddStudy={false} user={user} collaborations />}
     </>
   ) : canCreateAStudy(user) && !isCR ? (
     <MUIBox component="section">
