@@ -1,18 +1,18 @@
 {
   "navigation": {
-    "organizations": "Mes Empreintes",
-    "organization": "Mon équipe enseignante",
+    "organizations": "Mes Empreintes carbone",
+    "organization": "L'équipe pilote",
     "information": "Mon établissement",
-    "team": "Mon équipe enseignante"
+    "team": "L'équipe pilote"
   },
   "team": {
     "table": {
-      "title": "Mon équipe enseignante"
+      "title": "L'équipe pilote"
     }
   },
   "study": {
     "create": "Ajouter une empreinte",
-    "myStudies": "Mes empreintes",
+    "myStudies": "Mes empreintes carbone",
     "createFirstStudy": "Créer ma première empreinte",
     "see": "Voir mon empreinte",
     "selectSite": "Avant de remplir les données, choisissez un établissement",
@@ -22,6 +22,11 @@
       "organizations": "Mes établissement",
       "team": "Mes Collaborateur·rices",
       "title": "Mon Empreinte"
+    },
+    "new": {
+      "suggestion": {
+        "name": "Exemple : empreinte carbone Collège Simone Veil"
+      }
     }
   },
   "organization": {
