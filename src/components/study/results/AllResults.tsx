@@ -229,7 +229,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
             />
           )}
           <FormControl>
-            <InputLabel id="result-type-selector-label">{t('type')}</InputLabel>
+            <InputLabel id="result-type-selector-label">{t('format')}</InputLabel>
             <Select
               value={type}
               label={t('format')}
