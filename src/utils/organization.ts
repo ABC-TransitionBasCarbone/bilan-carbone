@@ -1,10 +1,15 @@
-import { OrganizationVersionWithOrganization } from '@/db/organization'
+import { OrganizationVersionWithParentLicence } from '@/db/organization'
 import { isAdmin } from '@/utils/user'
-import { OrganizationVersion, Role } from '@prisma/client'
+import { Role } from '@prisma/client'
 import { UserSession } from 'next-auth'
 
-export const isAdminOnOrga = (account: UserSession, organizationVersion: OrganizationVersionWithOrganization) =>
-  isAdmin(account.role) && isInOrgaOrParent(account.organizationVersionId, organizationVersion)
+export const isAdminOnOrga = (
+  account: UserSession,
+  organizationVersion: {
+    id: string
+    parentId: string | null
+  },
+) => isAdmin(account.role) && isInOrgaOrParent(account.organizationVersionId, organizationVersion)
 
 export const isInOrgaOrParent = (
   userOrganizationVersionId: string | null,
@@ -21,7 +26,10 @@ export const hasEditionRole = (isCR: boolean, userRole: Role) =>
 
 export const canEditOrganizationVersion = (
   account: UserSession,
-  organizationVersion?: OrganizationVersionWithOrganization,
+  organizationVersion?: {
+    id: string
+    parentId: string | null
+  },
 ) => {
   if (organizationVersion && !isInOrgaOrParent(account.organizationVersionId, organizationVersion)) {
     return false
@@ -31,5 +39,14 @@ export const canEditOrganizationVersion = (
   return hasEditionRole(isCR, account.role)
 }
 
-export const hasActiveLicence = (organizationVersion: Pick<OrganizationVersion, 'activatedLicence'>) =>
-  organizationVersion.activatedLicence.includes(new Date().getFullYear())
+export const hasActiveLicence = (
+  organizationVersion: Pick<Exclude<OrganizationVersionWithParentLicence, null>, 'activatedLicence' | 'parent'>,
+) => {
+  const userOrgaVersion = organizationVersion.parent ? organizationVersion.parent : organizationVersion
+
+  if (!userOrgaVersion) {
+    return false
+  }
+
+  return userOrgaVersion.activatedLicence.includes(new Date().getFullYear())
+}
