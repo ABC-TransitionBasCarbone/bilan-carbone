@@ -8,6 +8,7 @@ import { canCreateAStudy } from '@/services/permissions/study'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { defaultCAUnit } from '@/utils/number'
 import { hasActiveLicence } from '@/utils/organization'
+import { Environment } from '@prisma/client'
 import { redirect } from 'next/navigation'
 
 interface Props {
@@ -30,7 +31,7 @@ const NewStudyInOrganization = async (props: Props & UserSessionProps & StudyDup
   ])
 
   const organizationVersion = await getOrganizationVersionById(id)
-  if (!organizationVersion || !hasActiveLicence(organizationVersion)) {
+  if (!organizationVersion || (!hasActiveLicence(organizationVersion) && organizationVersion.environment !== Environment.CUT)) {
     redirect('/')
   }
 

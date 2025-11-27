@@ -8,7 +8,7 @@ import { canCreateAStudy } from '@/services/permissions/study'
 import { hasActiveLicence } from '@/utils/organization'
 import AddIcon from '@mui/icons-material/Add'
 import { Box as MUIBox } from '@mui/material'
-import { Study } from '@prisma/client'
+import { Environment, Study } from '@prisma/client'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
@@ -61,16 +61,21 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR }: Props) =>
           <ResultsContainerForUser user={user} mainStudyOrganizationVersionId={mainStudyOrganizationVersionId} />
         </Suspense>
       )}
-      {!!mainStudies.length && (
+      {mainStudies.length > 0 && (
         <Studies
           studies={mainStudies}
-          canAddStudy={canCreateAStudy(user) && !isCR && activeLicence}
+          canAddStudy={
+            user.environment === Environment.CUT ||
+            (canCreateAStudy(user) && !isCR && activeLicence)
+          }
           creationUrl={creationUrl}
           user={user}
           collaborations={!organizationVersionId && isCR}
         />
       )}
-      {!!collaborations.length && <Studies studies={collaborations} canAddStudy={false} user={user} collaborations />}
+      {collaborations.length > 0 && (
+        <Studies studies={collaborations} canAddStudy={false} user={user} collaborations />
+      )}
     </>
   ) : canCreateAStudy(user) && !isCR ? (
     <MUIBox component="section">

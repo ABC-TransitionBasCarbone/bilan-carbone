@@ -89,7 +89,7 @@ const canCreateSpecificStudyCommon = async (accountId: string, organizationVersi
   }
 
   const organizationVersion = await getOrganizationVersionById(organizationVersionId)
-  if (!organizationVersion || !hasActiveLicence(organizationVersion)) {
+  if (!organizationVersion || (!hasActiveLicence(organizationVersion) && organizationVersion.environment !== Environment.CUT)) {
     return { allowed: false }
   }
 

@@ -7,6 +7,7 @@ import { getOrganizationVersionAccounts, getOrganizationVersionById } from '@/db
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { defaultCAUnit } from '@/utils/number'
 import { hasActiveLicence } from '@/utils/organization'
+import { Environment } from '@prisma/client'
 import { redirect } from 'next/navigation'
 
 const NewStudy = async ({ user, duplicateStudyId }: UserSessionProps & StudyDuplicationProps) => {
@@ -24,7 +25,7 @@ const NewStudy = async ({ user, duplicateStudyId }: UserSessionProps & StudyDupl
   )?.id
   if (organizationVersionId) {
     const organizationVersion = await getOrganizationVersionById(organizationVersionId)
-    if (!organizationVersion || !hasActiveLicence(organizationVersion)) {
+    if (!organizationVersion || (!hasActiveLicence(organizationVersion) && organizationVersion.environment !== Environment.CUT)) {
       redirect('/')
     }
   }
