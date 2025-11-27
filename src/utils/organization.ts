@@ -1,4 +1,5 @@
 import { OrganizationVersionWithParentLicence } from '@/db/organization'
+import { needsLicenceToUseApp } from '@/services/permissions/environment'
 import { isAdmin } from '@/utils/user'
 import { Role } from '@prisma/client'
 import { UserSession } from 'next-auth'
@@ -40,8 +41,15 @@ export const canEditOrganizationVersion = (
 }
 
 export const hasActiveLicence = (
-  organizationVersion: Pick<Exclude<OrganizationVersionWithParentLicence, null>, 'activatedLicence' | 'parent'>,
+  organizationVersion: Pick<
+    Exclude<OrganizationVersionWithParentLicence, null>,
+    'activatedLicence' | 'parent' | 'environment'
+  >,
 ) => {
+  if (!needsLicenceToUseApp(organizationVersion.environment)) {
+    return true
+  }
+
   const userOrgaVersion = organizationVersion.parent ? organizationVersion.parent : organizationVersion
 
   if (!userOrgaVersion) {
