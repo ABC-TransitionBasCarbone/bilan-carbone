@@ -26,7 +26,8 @@ export const hasAccessToCreateStudyTag = async (environment: Environment) =>
 export const hasAccessToStudyFlowExample = (environment: Environment) =>
   ([Environment.TILT, Environment.BC] as Environment[]).includes(environment)
 
-export const hasWasteImpact = (environment: Environment) => environment !== Environment.CUT
+export const hasWasteImpact = (environment: Environment) =>
+  !([Environment.CUT, Environment.CLICKSON] as Environment[]).includes(environment)
 
 export const hasAccessToBcExport = (environment: Environment) =>
   ([Environment.TILT] as Environment[]).includes(environment)
@@ -39,4 +40,4 @@ export const hasAccessToDependencyMatrix = (environment: Environment) =>
 export const hasAccessToDependencyMatrixExample = (environment: Environment) => false
 
 export const hasAccessToPerimeterPage = (environment: Environment) =>
-  !([Environment.CUT] as Environment[]).includes(environment)
+  !([Environment.CUT, Environment.CLICKSON] as Environment[]).includes(environment)
