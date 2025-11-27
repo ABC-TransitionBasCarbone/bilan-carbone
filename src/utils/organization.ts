@@ -1,4 +1,4 @@
-import { OrganizationVersionWithOrganization } from '@/db/organization'
+import { getOrganizationVersionById, OrganizationVersionWithOrganization } from '@/db/organization'
 import { isAdmin } from '@/utils/user'
 import { OrganizationVersion, Role } from '@prisma/client'
 import { UserSession } from 'next-auth'
@@ -31,5 +31,16 @@ export const canEditOrganizationVersion = (
   return hasEditionRole(isCR, account.role)
 }
 
-export const hasActiveLicence = (organizationVersion: Pick<OrganizationVersion, 'activatedLicence'>) =>
-  organizationVersion.activatedLicence.includes(new Date().getFullYear())
+export const hasActiveLicence = async (
+  organizationVersion: Pick<OrganizationVersion, 'activatedLicence' | 'parentId'>,
+) => {
+  const userOrgaVersion = organizationVersion.parentId
+    ? await getOrganizationVersionById(organizationVersion.parentId)
+    : organizationVersion
+
+  if (!userOrgaVersion) {
+    return false
+  }
+
+  return userOrgaVersion.activatedLicence.includes(new Date().getFullYear())
+}
