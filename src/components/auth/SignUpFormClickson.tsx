@@ -4,7 +4,7 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { getEnvVar } from '@/lib/environment'
 import { getEnvRoute } from '@/services/email/utils'
 import { UNKNOWN_SCHOOL } from '@/services/permissions/check'
-import { getSchoolsFromPostalCode, School } from '@/services/schoolApi'
+import { getSchoolsFromPostalCodeOrName, School } from '@/services/schoolApi'
 import { signUpWithSchool } from '@/services/serverFunctions/user'
 import { SignUpClicksonCommand, SignUpClicksonCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -32,7 +32,7 @@ const SignUpFormClickson = () => {
   const [message, setMessage] = useState('')
   const [success, setSuccess] = useState(false)
   const [schools, setSchools] = useState<School[]>([])
-  const [schoolPostalCode, setSchoolPostalCode] = useState('')
+  const [schoolPostalCodeOrName, setSchoolPostalCodeOrName] = useState('')
   const { callServerFunction } = useServerFunction()
 
   const searchParams = useSearchParams()
@@ -50,7 +50,7 @@ const SignUpFormClickson = () => {
   useEffect(() => {
     const fetchSchools = async () => {
       const response = await callServerFunction(async () => {
-        const data = await getSchoolsFromPostalCode(schoolPostalCode)
+        const data = await getSchoolsFromPostalCodeOrName(schoolPostalCodeOrName)
         return { success: true, data }
       })
 
@@ -61,7 +61,7 @@ const SignUpFormClickson = () => {
 
     fetchSchools()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [schoolPostalCode])
+  }, [schoolPostalCodeOrName])
 
   useEffect(() => {
     const email = searchParams.get('email')
@@ -110,7 +110,7 @@ const SignUpFormClickson = () => {
           control={control}
           translation={t}
           options={
-            schoolPostalCode.length < 5
+            schoolPostalCodeOrName.length < 3
               ? []
               : schools.map((school) => ({
                   label: `${school.nom_etablissement} - ${school.adresse_1} (${school.code_postal})`,
@@ -130,14 +130,14 @@ const SignUpFormClickson = () => {
           name="schoolName"
           label={
             <Tooltip title={t('schoolSearchTooltip')} arrow>
-              <span>{t('schoolPostalCode')}</span>
+              <span>{t('schoolPostalCodeOrName')}</span>
             </Tooltip>
           }
-          helperText={t('schoolPostalCodePlaceholder')}
+          helperText={t('schoolPostalCodeOrNamePlaceholder')}
           freeSolo
           disableClearable
           onInputChange={(_, value) => {
-            setSchoolPostalCode(value)
+            setSchoolPostalCodeOrName(value)
             setValue('schoolName', value)
           }}
         />

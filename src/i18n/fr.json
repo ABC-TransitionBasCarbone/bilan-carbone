@@ -243,14 +243,14 @@
     }
   },
   "signupClickson": {
-    "description": "Créez un compte sur Clickson en entrant votre email ainsi que le code postal de votre établissement scolaire",
+    "description": "Créez un compte sur Clickson en entrant votre email ainsi que le code postal ou nom de votre établissement scolaire",
     "email": "Email",
     "emailPlaceholder": "Votre adresse email",
     "emailRequired": "Veuillez entrer un email",
-    "schoolPostalCode": "Code postal de l'établissement scolaire",
-    "schoolPostalCodePlaceholder": "Le code postal de l'établissement scolaire",
-    "schoolSearchTooltip": "Retrouvez votre établissement scolaire en entrant son code postal, puis en le sélectionnant dans la liste déroulante.",
-    "schoolPostalCodeRequired": "Veuillez entrer le code postal de l'établissement scolaire",
+    "schoolPostalCodeOrName": "Code postal ou nom de l'établissement scolaire",
+    "schoolPostalCodeOrNamePlaceholder": "Le code postal ou nom de l'établissement scolaire",
+    "schoolSearchTooltip": "Retrouvez votre établissement scolaire en entrant son code postal ou son nom, puis en le sélectionnant dans la liste déroulante.",
+    "schoolPostalCodeOrNameRequired": "Veuillez entrer le code postal ou le nom de l'établissement scolaire",
     "validate": "Valider",
     "clear": "Supprimer la valeur",
     "Not authorized": "Cet email est déjà inscrit avec un compte Clickson ou il y a eu un soucis lors de sa création. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
@@ -259,7 +259,7 @@
     "Not known school": "L'établissement scolaire n'est pas reconnu. Veuillez vérifier votre saisie.",
     "validation": {
       "email": "Veuillez entrer un email",
-      "schoolPostalCode": "Veuillez entrer le code postal de l'établissement scolaire"
+      "schoolPostalCodeOrName": "Veuillez entrer le code postal ou nom de l'établissement scolaire"
     }
   },
   "footer": {

@@ -6,13 +6,8 @@ export interface School {
   date_ouverture: string
 }
 
-export const getSchoolsFromPostalCode = async (postalCode: string): Promise<School[]> => {
-  const trimmedPostalCode = postalCode.trim()
-  if (!trimmedPostalCode || trimmedPostalCode.length !== 5) {
-    return []
-  }
-
-  const res = await fetch(`/api/schools/${trimmedPostalCode}`)
+export const getSchoolsFromPostalCodeOrName = async (postalCodeOrName: string): Promise<School[]> => {
+  const res = await fetch(`/api/schools/${postalCodeOrName}`)
   const data = await res.json()
 
   return data || []
