@@ -816,7 +816,7 @@ export const newStudyRight = async (right: NewStudyRightCommand) =>
       existingAccount &&
       isAdminOnStudyOrga(
         accountWithUserToUserSession(existingAccount as AccountWithUser),
-        studyWithRights.organizationVersion as OrganizationVersionWithOrganization,
+        studyWithRights.organizationVersion,
       ) &&
       hasSufficientLevel(existingAccount.user.level, studyWithRights.level)
     ) {
@@ -879,7 +879,7 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
       existingAccount &&
       isAdminOnStudyOrga(
         accountWithUserToUserSession(existingAccount as AccountWithUser),
-        studyWithRights.organizationVersion as OrganizationVersionWithOrganization,
+        studyWithRights.organizationVersion,
       ) &&
       studyRole !== StudyRole.Validator
     ) {
