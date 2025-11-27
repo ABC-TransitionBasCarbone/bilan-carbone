@@ -445,8 +445,6 @@ export const changeStudyDates = async ({ studyId, ...command }: ChangeStudyDates
       }
     }
 
-    console.log('updateStudy', command)
-
     await updateStudy(studyId, command)
   })
 
