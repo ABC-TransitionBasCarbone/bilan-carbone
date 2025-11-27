@@ -918,11 +918,11 @@
         },
         "sbtiCard": {
           "title": "SBTi Trajectories",
-          "description": "The Science Based Targets Initiative defines two reference trajectories, aiming to limit global warming to 1.5°C or \"Well below 2 degrees\" (WB2C).",
+          "description": "The Science Based Targets Initiative defines two reference trajectories, aiming to limit global warming to 1.5°C (SBTi 1.5°C) or \"Well below 2 degrees\" (SBTi WB2C).",
           "methodLabel": "Methods",
-          "option15": "1.5°C Trajectory",
-          "optionWB2C": "WB2C Trajectory",
-          "placeholder": "No method selected"
+          "option15": "SBTi 1.5°C",
+          "optionWB2C": "SBTi WB2C",
+          "placeholder": "No trajectory selected"
         },
         "graph": {
           "title": "Reduction trajectories visualization",
@@ -1105,7 +1105,7 @@
           "subStepsPlaceholder": "Describe your sub-steps",
           "detailedDescription": "Detailed description of the action and stakeholder involvement",
           "detailedDescriptionPlaceholder": "Detailed description",
-          "potentialDeduction": "Quantified emission reduction potential",
+          "potentialDeduction": "Emission reduction potential",
           "potentialDeductionPlaceholder": "Select an option",
           "reductionValue": "Value",
           "reductionStartYear": "Year action begins",
