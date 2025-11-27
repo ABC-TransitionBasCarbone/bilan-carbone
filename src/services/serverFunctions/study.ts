@@ -52,6 +52,7 @@ import {
   getOrganizationStudiesBeforeDate,
   getStudiesSitesFromIds,
   getStudyById,
+  getStudyByIds,
   getStudyNameById,
   getStudySites,
   getStudyTemplate,
@@ -66,6 +67,11 @@ import {
   upsertStudyExport,
   upsertStudyTemplate,
 } from '@/db/study'
+import {
+  getExternalStudiesForTransitionPlan,
+  getLinkedStudiesForTransitionPlan,
+  getTransitionPlanByStudyId,
+} from '@/db/transitionPlan'
 import { addUser, getUserApplicationSettings, getUserByEmail, getUserSourceById, UserWithAccounts } from '@/db/user'
 import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
@@ -413,6 +419,34 @@ export const changeStudyDates = async ({ studyId, ...command }: ChangeStudyDates
     if (!(await canChangeDates(informations.user, informations.studyWithRights))) {
       throw new Error(NOT_AUTHORIZED)
     }
+
+    const newYear = new Date(command.startDate).getFullYear()
+    const currentYear = informations.studyWithRights.startDate.getFullYear()
+
+    if (newYear !== currentYear) {
+      const transitionPlan = await getTransitionPlanByStudyId(studyId)
+
+      if (transitionPlan) {
+        const [externalStudies, transitionPlanStudies] = await Promise.all([
+          getExternalStudiesForTransitionPlan(transitionPlan.id),
+          getLinkedStudiesForTransitionPlan(transitionPlan.id),
+        ])
+
+        const linkedStudyIds = transitionPlanStudies.map((tps) => tps.studyId)
+        const linkedStudies = linkedStudyIds.length > 0 ? await getStudyByIds(linkedStudyIds) : []
+
+        const hasLinkedOrExternalStudySameYearOrAfter =
+          (linkedStudies || []).some((study) => study.startDate.getFullYear() >= newYear) ||
+          (externalStudies || []).some((study) => study.date.getFullYear() >= newYear)
+
+        if (hasLinkedOrExternalStudySameYearOrAfter) {
+          throw new Error('studyYearMustBeAfterLinkedStudies')
+        }
+      }
+    }
+
+    console.log('updateStudy', command)
+
     await updateStudy(studyId, command)
   })
 
