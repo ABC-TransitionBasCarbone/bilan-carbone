@@ -86,19 +86,33 @@ fonctionnement . déplacements pro . déplacement type . transport:
 fonctionnement . déplacements pro . déplacement type . transport . moyen de transport:
   question: Moyen de transport
   une possibilité:
-    - RER et transilien:
-    - métro ou tram:
-    - bus:
-    - vélo électrique:
-    - voiture diesel:
-    - voiture essence:
-    - voiture hybride:
-    - voiture électrique:
-    - moto:
-    - scooter:
-    - trottinette électrique:
-    - TGV:
-    - avion:
+    - RER et transilien
+    - métro ou tram
+    - bus
+    - vélo électrique
+    - voiture diesel
+    - voiture essence
+    - voiture hybride
+    - voiture électrique
+    - moto
+    - scooter
+    - trottinette électrique
+    - TGV
+    - avion
+  avec:
+    RER et transilien:
+    métro ou tram:
+    bus:
+    vélo électrique:
+    voiture diesel:
+    voiture essence:
+    voiture hybride:
+    voiture électrique:
+    moto:
+    scooter:
+    trottinette électrique:
+    TGV:
+    avion:
 
 fonctionnement . déplacements pro . déplacement type . nuitées:
   formule:
@@ -127,49 +141,55 @@ fonctionnement . déplacements pro . déplacement type . nuitées:
 fonctionnement . déplacements pro . déplacement type . type hébergement:
   question: Type d'hébergement
   une possibilité:
-    - appartement:
-        titre: Appartement
-    - hotel 1 étoile:
-        titre: Hôtel 1*
-    - hotel 2 étoiles:
-        titre: Hôtel 2*
-    - hotel 3 étoiles:
-        titre: Hôtel 3*
-    - hotel 4 étoiles:
-        titre: Hôtel 4*
-    - hotel 5 étoiles:
-        titre: Hôtel 5*
+    - appartement
+    - hotel 1 étoile
+    - hotel 2 étoiles
+    - hotel 3 étoiles
+    - hotel 4 étoiles
+    - hotel 5 étoiles
   avec:
+    appartement:
+      titre: Appartement
     appartement . FE:
       valeur: 9.91
       unité: kgCO2e/nuitée
       meta:
         id: 100
 
+    hotel 1 étoile:
+      titre: Hôtel 1*
     hotel 1 étoile . FE:
       valeur: 4.73
       unité: kgCO2e/nuitée
       meta:
         id: 102
 
+    hotel 2 étoiles:
+      titre: Hôtel 2*
     hotel 2 étoiles . FE:
       valeur: 8.53
       unité: kgCO2e/nuitée
       meta:
         id: 103
 
+    hotel 3 étoiles:
+      titre: Hôtel 3*
     hotel 3 étoiles . FE:
       valeur: 0.03
       unité: kgCO2e/nuitée
       meta:
         id: 104
 
+    hotel 4 étoiles:
+      titre: Hôtel 4*
     hotel 4 étoiles . FE:
       valeur: 11.43
       unité: kgCO2e/nuitée
       meta:
         id: 105
 
+    hotel 5 étoiles:
+      titre: Hôtel 5*
     hotel 5 étoiles . FE:
       valeur: 17.11
       unité: kgCO2e/nuitée
