@@ -28,21 +28,23 @@ export default function PublicodesFormField<RuleName extends string>({
         autofocus: formElement.autofocus,
         required: formElement.required,
       }
-      return (
+
+      return formElement.applicable ? (
         <Box key={formElement.id} sx={{ mb: 2 }}>
           <QuestionContainer label={formElement.label} helperText={formElement.description}>
             <PublicodesInputField formElement={formElement} formElementProps={formElementProps} onChange={onChange} />
           </QuestionContainer>
         </Box>
-      )
+      ) : null
     }
+
     case 'table': {
-      return (
+      return formLayout.evaluatedRows.flat().some(({ applicable }) => applicable) ? (
         // TODO: manage helper text for table
         <QuestionContainer label={formLayout.title}>
           <TableQuestion tableLayout={formLayout} onChange={onChange} />
         </QuestionContainer>
-      )
+      ) : null
     }
   }
 }
