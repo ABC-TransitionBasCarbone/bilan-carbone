@@ -4,7 +4,8 @@ import { NextRequest, NextResponse } from 'next/server'
 
 const COUNT_ROUTE = '/count'
 const TILT_ROUTE = '/tilt'
-const ENV_ROUTES = [COUNT_ROUTE, TILT_ROUTE]
+const CLICKSON_ROUTE = '/clickson'
+const ENV_ROUTES = [COUNT_ROUTE, TILT_ROUTE, CLICKSON_ROUTE]
 const publicRoutes = ['/login', '/reset-password', '/activation', '/preview', ...ENV_ROUTES]
 const assetsRoutes = ['/_next', '/img']
 
@@ -34,6 +35,9 @@ export async function middleware(req: NextRequest) {
           break
         case Environment.TILT:
           baseUrl = `${TILT_ROUTE}`
+          break
+        case Environment.CLICKSON:
+          baseUrl = `${CLICKSON_ROUTE}`
           break
         default:
           break
@@ -76,7 +80,7 @@ export const config = {
   matcher: [
     {
       // Appliquer le middleware uniquement sur les routes spécifiées
-      source: '/((?!_next/static|_next/image|favicon.ico|images|logos|api/auth).*)',
+      source: '/((?!_next/static|_next/image|favicon.ico|images|logos|api/auth|api/schools/*).*)',
       missing: [
         { type: 'header', key: 'next-router-prefetch' },
         { type: 'header', key: 'purpose', value: 'prefetch' },

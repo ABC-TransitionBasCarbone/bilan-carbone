@@ -11,9 +11,9 @@ describe('Real use case: BC V8_10', () => {
     cy.getByTestId('withDep-total-result').invoke('text').should('contain', '280') // 280.45
     cy.getByTestId('withoutDep-total-result').invoke('text').should('contain', '280')
     cy.getByTestId('dependency-result-budget').scrollIntoView().invoke('text').should('contain', '0') // 0.28044686001857144
-    cy.getByTestId('responsability-result-budget').scrollIntoView().invoke('text').should('contain', '0')
+    cy.getByTestId('responsibility-result-budget').scrollIntoView().invoke('text').should('contain', '0')
     cy.getByTestId('dependency-result-etp').scrollIntoView().invoke('text').should('contain', '8') // 8.012767429102041
-    cy.getByTestId('responsability-result-etp').scrollIntoView().invoke('text').should('contain', '8')
+    cy.getByTestId('responsibility-result-etp').scrollIntoView().invoke('text').should('contain', '8')
 
     // monetary ratios
     cy.getByTestId('results-monetary-ratio').scrollIntoView().invoke('text').should('contain', '36,99') // 36.99251508579199

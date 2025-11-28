@@ -261,6 +261,9 @@ const fullStudyInclude = {
       id: true,
       isCR: true,
       parentId: true,
+      parent: {
+        select: { id: true, activatedLicence: true },
+      },
       environment: true,
       activatedLicence: true,
       organization: {

@@ -5,6 +5,7 @@ import {
   calculateActionBasedTrajectory,
   calculateCustomTrajectory,
   calculateSBTiTrajectory,
+  calculateTrajectoryIntegral,
   getReductionRatePerType,
   getTrajectoryEmissionsAtYear,
   isWithinThreshold,
@@ -1088,8 +1089,15 @@ describe('calculateTrajectory', () => {
         },
       })
 
-      const referenceTotalBudget = calculateBudgetBySummingTrajectory(referenceTrajectory, referenceYear)
-      const currentTotalBudget = calculateBudgetBySummingTrajectory(currentTrajectoryWithCompensation, referenceYear)
+      const refEndYear = referenceTrajectory[referenceTrajectory.length - 1].year
+      const currentEndYear = currentTrajectoryWithCompensation[currentTrajectoryWithCompensation.length - 1].year
+
+      const referenceTotalBudget = calculateTrajectoryIntegral(referenceTrajectory, referenceYear, refEndYear)
+      const currentTotalBudget = calculateTrajectoryIntegral(
+        currentTrajectoryWithCompensation,
+        referenceYear,
+        currentEndYear,
+      )
 
       expectBudgetsApproximatelyEqual(currentTotalBudget, referenceTotalBudget)
     }
@@ -1118,11 +1126,10 @@ describe('calculateTrajectory', () => {
         { targetYear: 2040, reductionRate: 0.04 },
       ]
 
-      testBudgetEqualityWithCompensation(2024, 2025, 1000, 1100, objectives, createPastStudies([2024, 1000]))
-
+      testBudgetEqualityWithCompensation(2024, 2025, 1000, 1200, objectives, createPastStudies([2024, 1000]))
       testBudgetEqualityWithCompensation(2023, 2025, 1000, 1200, objectives, createPastStudies([2023, 1000]))
-
-      testBudgetEqualityWithCompensation(2022, 2025, 1000, 1300, objectives, createPastStudies([2022, 1000]))
+      testBudgetEqualityWithCompensation(2022, 2025, 1000, 1200, objectives, createPastStudies([2022, 1000]))
+      testBudgetEqualityWithCompensation(2020, 2025, 1000, 1200, objectives, createPastStudies([2020, 1000]))
     })
   })
 

@@ -70,7 +70,7 @@ const SubPost = ({
           search: '',
           location: '',
           sources: importVersions.map((iv) => iv.id),
-          units: [],
+          units: ['all'],
           subPosts: [subPost],
         },
         environment as Environment,

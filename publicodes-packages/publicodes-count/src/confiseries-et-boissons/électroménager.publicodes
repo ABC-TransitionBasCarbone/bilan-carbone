@@ -45,6 +45,7 @@ confiseries et boissons . électroménager . appareil:
                   - FE
                   - (1 an / amortissement)
   unité: kgCO2e
+  par défaut: 0
   avec:
     age:
       durée:
@@ -59,6 +60,7 @@ confiseries et boissons . électroménager . appareil:
     année achat:
       non applicable si:
         est défini: durée location
+      type: date
       question: Année d'achat des appareils
 
     durée location:
@@ -89,6 +91,7 @@ confiseries et boissons . électroménager . réfrigérateurs:
         id: 26976
 
     nombre:
+      type: nombre
       question: Nombre de réfrigérateurs
 
     durée location:
@@ -99,6 +102,9 @@ confiseries et boissons . électroménager . réfrigérateurs:
       non applicable si:
         est défini: réfrigérateurs . durée location
       question: Année d'achat des réfrigérateurs
+      type: date
+      form:
+        saisie: année
 
 confiseries et boissons . électroménager . congélateurs:
   titre: Congélateurs
@@ -116,6 +122,7 @@ confiseries et boissons . électroménager . congélateurs:
         id: 26978
 
     nombre:
+      type: nombre
       question: Nombre de congélateurs
 
     durée location:
@@ -126,6 +133,9 @@ confiseries et boissons . électroménager . congélateurs:
       non applicable si:
         est défini: congélateurs . durée location
       question: Année d'achat des congélateurs
+      type: date
+      form:
+        saisie: année
 
 confiseries et boissons . électroménager . warmers:
   titre: Warmers
@@ -143,6 +153,7 @@ confiseries et boissons . électroménager . warmers:
         id: 26986
 
     nombre:
+      type: nombre
       question: Nombre de warmers
 
     durée location:
@@ -153,6 +164,9 @@ confiseries et boissons . électroménager . warmers:
       non applicable si:
         est défini: warmers . durée location
       question: Année d'achat des warmers
+      type: date
+      form:
+        saisie: année
 
 confiseries et boissons . électroménager . distributeurs:
   titre: Distributeurs snack et boissons
@@ -170,6 +184,7 @@ confiseries et boissons . électroménager . distributeurs:
         id: 26976
 
     nombre:
+      type: nombre
       question: Nombre de distributeurs snack et boissons
 
     durée location:
@@ -180,3 +195,6 @@ confiseries et boissons . électroménager . distributeurs:
       non applicable si:
         est défini: distributeurs . durée location
       question: Année d'achat des distributeurs snack et boissons
+      type: date
+      form:
+        saisie: année

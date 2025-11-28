@@ -4,13 +4,13 @@ import Box from '@/components/base/Box'
 import Button from '@/components/base/Button'
 import { MultiSelect } from '@/components/base/MultiSelect'
 import PersistentToast from '@/components/base/PersistentToast'
-import Title from '@/components/base/Title'
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import Image from '@/components/document/Image'
 import { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { customRich } from '@/i18n/customRich'
 import { deleteTransitionPlan, initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
 import { calculateTrajectoriesWithHistory, convertToPastStudies } from '@/utils/trajectory'
 import AddIcon from '@mui/icons-material/Add'
@@ -22,6 +22,8 @@ import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import Block from '../base/Block'
+import SelectStudySite from '../study/site/SelectStudySite'
 import MyTrajectoriesCard from '../study/trajectory/MyTrajectoriesCard'
 import LinkedStudies from '../study/transitionPlan/LinkedStudies'
 import TrajectoryGraph from '../study/transitionPlan/TrajectoryGraph'
@@ -230,7 +232,7 @@ const TrajectoryReductionPage = ({
           <Box className={classNames(styles.emptyStateCard, 'flex-col align-center')}>
             <Image src="/img/CR.png" alt="Transition Plan" width={177} height={119} />
             <h5>{t('emptyState.title')}</h5>
-            <p>{t('emptyState.subtitle')}</p>
+            <p>{customRich(t, 'emptyState.subtitle')}</p>
             <Button onClick={() => setShowModal(true)} size="large" className={'mt-2'}>
               {t('startButton')}
             </Button>
@@ -274,29 +276,32 @@ const TrajectoryReductionPage = ({
           { label: study.name, link: `/etudes/${study.id}` },
         ].filter((link) => link !== undefined)}
       />
-      <div className={classNames(styles.container, 'flex-col main-container p2 pt3')}>
-        <div className="flex align-center justify-between">
-          <Title title={t('trajectories.title')} as="h2" />
-          {canEdit && (
-            <Button
-              variant="contained"
-              color="error"
-              onClick={() => setShowDeleteModal(true)}
-              title={t('trajectories.delete.title')}
-            >
-              <DeleteIcon />
-            </Button>
-          )}
-        </div>
-
+      <Block
+        title={t('trajectories.title')}
+        as="h2"
+        rightComponent={<SelectStudySite sites={study.sites} siteSelectionDisabled isTransitionPlan />}
+        actions={
+          canEdit
+            ? [
+                {
+                  actionType: 'button',
+                  variant: 'contained',
+                  color: 'error',
+                  onClick: () => setShowDeleteModal(true),
+                  title: t('trajectories.delete.title'),
+                  children: <DeleteIcon />,
+                },
+              ]
+            : undefined
+        }
+      >
         <div className="flex-col gapped2">
           <div className={classNames(styles.collapsibleBlocks, 'flex-col gapped0')}>
             <TransitionPlanOnboarding
               title={t('trajectories.onboarding.title')}
               description={t('trajectories.onboarding.description')}
               storageKey="trajectory-reduction"
-              detailedContent={t.rich('trajectories.onboarding.detailedInfo', {
-                br: () => <br />,
+              detailedContent={customRich(t, 'trajectories.onboarding.detailedInfo', {
                 snbc: (chunks) => (
                   <a href={process.env.NEXT_PUBLIC_SNBC_URL || '#'} target="_blank" rel="noopener noreferrer">
                     {chunks}
@@ -406,7 +411,7 @@ const TrajectoryReductionPage = ({
           {showSuccessToast && (
             <PersistentToast
               title={t('trajectoryModal.success')}
-              subtitle={t.rich('trajectoryModal.successSubtitle', {
+              subtitle={customRich(t, 'trajectoryModal.successSubtitle', {
                 link: (children) => <a href={`/etudes/${study.id}/objectifs`}>{children}</a>,
               })}
               onClose={() => setShowSuccessToast(false)}
@@ -426,7 +431,7 @@ const TrajectoryReductionPage = ({
             onCancel={() => setShowDeleteModal(false)}
           />
         )}
-      </div>
+      </Block>
     </>
   )
 }

@@ -7,7 +7,7 @@ billetterie et communication . matériel distributeurs:
   unité: kgCO2e
 
 billetterie et communication . matériel distributeurs . affiches:
-  titre: Type de matériel
+  titre: Affiches
   question: Quelle quantité de matériel distributeurs recevez-vous en moyenne par semaine ?
   formule:
     somme:
@@ -23,6 +23,7 @@ billetterie et communication . matériel distributeurs . affiches . affiches 120
       - FE
       - poids
       - commun . nombre de semaines par an
+  par défaut: 0
   unité: kgCO2e
   avec:
     nombre:
@@ -47,6 +48,7 @@ billetterie et communication . matériel distributeurs . affiches . affiches 40x
       - FE
       - poids
       - commun . nombre de semaines par an
+  par défaut: 0
   unité: kgCO2e
   avec:
     nombre:
@@ -64,7 +66,7 @@ billetterie et communication . matériel distributeurs . affiches . affiches 40x
       unité: kg/unité
 
 billetterie et communication . matériel distributeurs . PLV:
-  titre: Type de matériel
+  titre: PLV
   question: Quelle quantité de matériel distributeurs recevez-vous en moyenne par mois ?
   formule:
     somme:
@@ -80,6 +82,7 @@ billetterie et communication . matériel distributeurs . PLV . PLV comptoir:
       - FE
       - poids
       - commun . nombre de mois par an
+  par défaut: 0
   unité: kgCO2e
   avec:
     nombre:
@@ -104,6 +107,7 @@ billetterie et communication . matériel distributeurs . PLV . PLV grand format:
       - FE
       - poids
       - commun . nombre de mois par an
+  par défaut: 0
   unité: kgCO2e
   avec:
     nombre:

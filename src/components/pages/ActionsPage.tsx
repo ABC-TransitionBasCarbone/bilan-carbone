@@ -1,14 +1,14 @@
 'use client'
 
-import Title from '@/components/base/Title'
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import { FullStudy } from '@/db/study'
+import { customRich } from '@/i18n/customRich'
 import { Action } from '@prisma/client'
-import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
+import Block from '../base/Block'
+import SelectStudySite from '../study/site/SelectStudySite'
 import Actions from '../study/transitionPlan/Actions/Actions'
 import TransitionPlanOnboarding from '../study/transitionPlan/TransitionPlanOnboarding'
-import styles from './TrajectoryReductionPage.module.css'
 
 interface Props {
   study: FullStudy
@@ -37,19 +37,18 @@ const ActionsPage = ({ study, actions, transitionPlanId, canEdit }: Props) => {
           { label: study.name, link: `/etudes/${study.id}` },
         ].filter((link) => link !== undefined)}
       />
-      <div className={classNames(styles.container, 'flex-col main-container p2 pt3')}>
-        <Title title={t('title')} as="h2" />
-
+      <Block
+        title={t('title')}
+        as="h2"
+        rightComponent={<SelectStudySite sites={study.sites} siteSelectionDisabled isTransitionPlan />}
+      >
         <div className="flex-col gapped2">
           <TransitionPlanOnboarding
             title={t('onboarding.title')}
             description={t('onboarding.description')}
             storageKey="actions"
-            detailedContent={t.rich('onboarding.detailedInfo', {
-              br: () => <br />,
-            })}
+            detailedContent={customRich(t, 'onboarding.detailedInfo')}
           />
-
           <Actions
             actions={actions}
             studyUnit={study.resultsUnit}
@@ -57,7 +56,7 @@ const ActionsPage = ({ study, actions, transitionPlanId, canEdit }: Props) => {
             canEdit={canEdit}
           />
         </div>
-      </div>
+      </Block>
     </>
   )
 }

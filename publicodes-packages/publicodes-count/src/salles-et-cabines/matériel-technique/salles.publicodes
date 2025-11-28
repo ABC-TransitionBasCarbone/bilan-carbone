@@ -2,6 +2,8 @@ salles et cabines . matériel technique . salles:
   #TODO: Should be a list of salles
   titre: Salles
   formule: salle
+  par défaut: 0
+  unité: kgCO2e
 
 salles et cabines . matériel technique . salle:
   titre: Salle
@@ -23,6 +25,8 @@ salles et cabines . matériel technique . salle . projecteur:
           produit:
             - FE
             - (1 an / amortissement)
+  par défaut: 0
+  unité: kgCO2e
   avec:
     age:
       durée:
@@ -38,6 +42,9 @@ salles et cabines . matériel technique . salle . projecteur:
 
     année achat:
       question: Année d'acquisition projecteur
+      type: date
+      form:
+        saisie: année
 
     FE:
       titre: Facteur d'émission du projecteur
@@ -85,6 +92,8 @@ salles et cabines . matériel technique . salle . écran:
             - FE
             - surface écran
             - (1 an / amortissement)
+  par défaut: 0
+  unité: kgCO2e
   avec:
     age:
       durée:
@@ -100,6 +109,9 @@ salles et cabines . matériel technique . salle . écran:
 
     année achat:
       question: Année d'acquisition écran
+      type: date
+      form:
+        saisie: année
 
     surface écran:
       question: Surface de l'écran
@@ -144,7 +156,7 @@ salles et cabines . matériel technique . salle . écran . type:
         id: 110
 
 salles et cabines . matériel technique . salle . fauteuils:
-  titre: Ecran
+  titre: Fauteuils
   formule:
     variations:
       - si: age > amortissement
@@ -154,6 +166,8 @@ salles et cabines . matériel technique . salle . fauteuils:
             - FE
             - nombre
             - (1 an / amortissement)
+  par défaut: 0
+  unité: kgCO2e
   avec:
     age:
       durée:
@@ -169,9 +183,13 @@ salles et cabines . matériel technique . salle . fauteuils:
 
     année achat:
       question: Année d'acquisition fauteuils
+      type: date
+      form:
+        saisie: année
 
     nombre:
       question: Nombre de fauteuils
+      type: nombre
 
     FE:
       titre: Facteur d'émission des fauteuils
@@ -220,6 +238,8 @@ salles et cabines . matériel technique . salle . système son:
           produit:
             - FE
             - (1 an / amortissement)
+  par défaut: 0
+  unité: kgCO2e
   avec:
     age:
       durée:
@@ -235,6 +255,9 @@ salles et cabines . matériel technique . salle . système son:
 
     année achat:
       question: Année d'acquisition système son
+      type: date
+      form:
+        saisie: année
 
     FE:
       titre: Facteur d'émission du système son

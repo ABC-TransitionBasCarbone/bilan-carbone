@@ -1,0 +1,119 @@
+{
+  "nav": {
+    "newStudyContributor": "Ajouter un·e élève"
+  },
+  "navigation": {
+    "organizations": "Mes Empreintes carbone",
+    "organization": "L'équipe pilote",
+    "information": "Mon établissement",
+    "team": "L'équipe pilote"
+  },
+  "home": {
+    "navigation": {
+      "collaborators": {
+        "title": "L'équipe Pilote :",
+        "message": "Retrouvez ici la liste des enseignants, personnels administratifs et élèves autorisés à modifier les données de l'établissement"
+      },
+      "footprints": {
+        "title": "Mes Empreintes :",
+        "message": "Créer votre première empreinte ici. Vous pourrez ensuite consulter vos empreintes ou en créer de nouvelles à tout moment."
+      },
+      "sites": {
+        "title": "Mes Établissements :",
+        "message": "Retrouvez ici la liste des établissements rattachés à votre compte"
+      }
+    },
+    "title": "Calculer votre empreinte carbone simplifiée vous permettra de :",
+    "alert": {
+      "info": "Le calculateur Clickson vous permet d’estimer l’impact sur le climat de votre activité. Il s’agit avant tout d’un outil de sensibilisation. Il ne s'agit pas d'une démarche de transition bas carbone mais d'une empreinte carbone simplifiée — au sens du <link>Guide de communication autour de la comptabilité carbone</link> — centrée sur les principaux postes d’émissions liés à l’activité des établissements."
+    },
+    "info": {
+      "0": "Comprendre la mesure d’impact de votre établissement",
+      "1": "Identifier les priorités d’action",
+      "2": "À long terme, et via un travail plus approfondi, construire une trajectoire de réduction"
+    }
+  },
+  "team": {
+    "table": {
+      "title": "L'équipe pilote"
+    }
+  },
+  "study": {
+    "create": "Ajouter une empreinte",
+    "myStudies": "Mes empreintes carbone",
+    "createFirstStudy": "Créer ma première empreinte",
+    "see": "Voir mon empreinte",
+    "selectSite": "Avant de remplir les données, choisissez un établissement",
+    "lastStudyTitle": "Dernière empreinte en date",
+    "navigation": {
+      "framing": "Données générales",
+      "organizations": "Mes établissement",
+      "team": "Mes Collaborateur·rices",
+      "title": "Mon Empreinte"
+    },
+    "validatedOnlyDescription": "En tant qu'élèves j'ai accès en tant que contributeurice sur un ou plusieurs postes d'émission.",
+    "new": {
+      "suggestion": {
+        "name": "Exemple : empreinte carbone Collège Simone Veil"
+      },
+      "inviteContributors": "Inviter les mêmes élèves",
+      "glossary": {
+        "validatorEmailDescription": "En tant qu'élèves j'ai accès en tant que contributeurice sur un ou plusieurs postes d'émission.",
+        "duplicationOptionsDescription": "Lors de la duplication d'une étude, vous pouvez choisir d'inviter les mêmes membres d'équipe et élèves de l'étude originale dans la nouvelle. Cela permet de maintenir la continuité de la collaboration."
+      }
+    },
+    "newContributor": {
+      "title": "Ajouter un·e élève sur l'étude : {name}"
+    },
+    "role": {
+      "Contributor": "Élève"
+    },
+    "rights": {
+      "contributorsTable": {
+        "delete": "Supprimer l'élève",
+        "title": "Élèves",
+        "newContributorLink": "Ajouter un·e élève",
+        "deleting": {
+          "confirmation": "Êtes vous sûr de vouloir supprimer {email} des élèves de cette étude ?"
+        },
+        "role": {
+          "description": "Vous pouvez ici gérer les élèves de votre étude. Ceux-ci auront accès à certains postes et sous postes (que vous pouvez définir) et pourront remplir certaines informations pour des sources d'émission que vous aurez déjà créées dans l'étude. Pour plus d'information sur l'interface des élèves, n'hésitez pas à aller voir notre <link>FAQ</link>"
+        }
+      }
+    }
+  },
+  "emissionFactors": {
+    "post": {
+      "Restauration": "Restauration"
+    }
+  },
+  "organization": {
+    "card": {
+      "myOrganization": "Mes établissements"
+    },
+    "form": {
+      "editTitle": "Modifier mes établissements"
+    },
+    "sites": {
+      "title": "Sur quels établissements doit porter l'empreinte ?",
+      "noSites": "Il n'y a pas d'établissements configurés",
+      "namePlaceholder": "Nom de l'établissement",
+      "add": "Ajouter un établissement"
+    }
+  },
+  "login": {
+    "welcome": "Bienvenue sur Clickson PEBC",
+    "explanation": "Mesurons les émissions de gaz à effet de serre de votre établissement!",
+    "form": {
+      "activate": "Créer mon compte"
+    }
+  },
+  "email": {
+    "subject": {
+      "newUser": "Vous avez été invité sur Clickson",
+      "addedActiveUser": "Vous avez été invité sur un nouvel environnement Clickson",
+      "activation": "Vous avez activé votre compte sur Clickson",
+      "activationRequest": "Demande d'accès à votre organisation Clickson"
+    }
+  }
+}

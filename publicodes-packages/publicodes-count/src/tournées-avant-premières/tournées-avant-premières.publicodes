@@ -19,9 +19,10 @@ tournées avant premières . équipes reçues . transport:
   formule:
     produit:
       - FE
-      - nombre équipes
       - nombre de personnes par équipe
+      - nombre équipes
       - général . distance depuis paris / 1 personne
+  par défaut: 0
   unité: kgCO2e
   avec:
     FE:
@@ -31,9 +32,9 @@ tournées avant premières . équipes reçues . transport:
 
 tournées avant premières . équipes reçues . nombre équipes:
   question: Combien d'équipes de films avez-vous reçues en 2025 ?
-  valeur: 10
   unité: équipe
 
+# NOTE: ne devrait-il pas être un paramètre ?
 tournées avant premières . équipes reçues . nombre de personnes par équipe:
   valeur: 3
   unité: personne/équipe
@@ -46,6 +47,7 @@ tournées avant premières . équipes reçues . repas:
       - nombre équipes
       - nombre de personnes par équipe
       - repas par personne
+  par défaut: 0
   unité: kgCO2e
   avec:
     repas par personne:

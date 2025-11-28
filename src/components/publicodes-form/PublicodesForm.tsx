@@ -3,6 +3,8 @@ import { FormBuilder, FormState } from '@publicodes/forms'
 import { Situation } from 'publicodes'
 import { useCallback, useMemo, useState } from 'react'
 import PublicodesQuestion from './PublicodesQuestion'
+import styles from './styles/DynamicForm.module.css'
+import { areRulesReferencedInApplicability, evaluatedLayoutIsApplicable, getRuleNamesFromLayout } from './utils'
 
 export interface PublicodesFormProps<RuleName extends string, S extends Situation<RuleName>> {
   /** The form builder used to generate the form pages and handle input changes. */
@@ -21,7 +23,7 @@ export interface PublicodesFormProps<RuleName extends string, S extends Situatio
 
 /**
  * A generic form component that dynamically generates form fields based on a
- * Publicodes {@link Engine} and a set of target rules.
+ * Publicodes {@link FormBuilder} and a set of target rules.
  *
  * The target rules are the Publicodes rules that the form aims to evaluate.
  * The form will display the necessary questions to determine the values of
@@ -35,15 +37,38 @@ export default function PublicodesForm<RuleName extends string, S extends Situat
   onFieldChange,
 }: PublicodesFormProps<RuleName, S>) {
   const [formState, setFormState] = useState<FormState<RuleName>>(() => {
-    const initial = FormBuilder.newState(initialSituation)
-    return formBuilder.start(initial, ...targetRules)
+    const initialState = FormBuilder.newState(initialSituation)
+    return formBuilder.start(initialState, ...targetRules)
   })
 
   // NOTE: for now, if we want to mimic the previous behavior, we don't need
   // to manage pagination, but it could be added later if we need a realy
   // generic form component.
-  const currentPage = useMemo(() => {
-    return formBuilder.currentPage(formState)
+  const elementsWithRelation = useMemo(() => {
+    const { elements } = formBuilder.currentPage(formState)
+    // FIXME: should manage multiple questions linked to previous ones.
+    return elements.map((formLayout, index) => {
+      const currentRuleNames = getRuleNamesFromLayout(formLayout)
+      const previousRuleNames = index > 0 ? getRuleNamesFromLayout(elements[index - 1]) : undefined
+      const isLinkedToPreviousQuestion =
+        currentRuleNames &&
+        previousRuleNames &&
+        areRulesReferencedInApplicability(
+          (rule: RuleName) => formBuilder.getRule(formState, rule),
+          currentRuleNames,
+          previousRuleNames,
+        )
+
+      const key =
+        formLayout.type === 'simple'
+          ? formLayout.evaluatedElement.id
+          : formLayout.type === 'group'
+            ? `group-${index}`
+            : `table-${formLayout.title}-${index}`
+
+      const isApplicable = evaluatedLayoutIsApplicable(formLayout)
+      return { formLayout, isLinkedToPreviousQuestion, key, isApplicable }
+    })
   }, [formBuilder, formState])
 
   const handleFieldChange = useCallback(
@@ -57,17 +82,16 @@ export default function PublicodesForm<RuleName extends string, S extends Situat
     [formBuilder, onFieldChange],
   )
 
-  console.log('currentPage', currentPage)
-
   return (
     <Box className="dynamic-form">
       <Box>
-        {/* TODO: the relation lines between questions */}
-        {currentPage.elements.map((formLayout, index) => {
-          // Generate a unique key based on the layout type
-          const key =
-            formLayout.type === 'simple' ? formLayout.evaluatedElement.id : `table-${formLayout.title}-${index}`
-          return <PublicodesQuestion key={key} formLayout={formLayout} onChange={handleFieldChange} />
+        {elementsWithRelation.map(({ key, formLayout, isApplicable, isLinkedToPreviousQuestion }) => {
+          return isApplicable ? (
+            <Box key={key}>
+              {isLinkedToPreviousQuestion && <Box className={styles.relationLine} />}
+              <PublicodesQuestion formLayout={formLayout} onChange={handleFieldChange} />
+            </Box>
+          ) : null
         })}
       </Box>
     </Box>
