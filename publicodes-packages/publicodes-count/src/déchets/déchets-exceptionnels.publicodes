@@ -2,7 +2,7 @@ déchets . exceptionnels:
   titre: Déchets exceptionnels
   description: Impact annuels des déchets exceptionnels.
   unité: kgCO2e
-  valeur:
+  formule:
     somme:
       - lampe xenon
       - matériel technique
@@ -10,7 +10,12 @@ déchets . exceptionnels:
 déchets . exceptionnels . lampe xenon:
   titre: Lampes Xenon
   description: Impact annuel des déchets de lampes Xenon.
-  valeur: nombre * poids * FE
+  formule:
+    produit:
+      - poids
+      - FE
+      - nombre
+  unité: kgCO2e
   avec:
     poids:
       titre: Poids moyen
@@ -39,7 +44,11 @@ déchets . exceptionnels . lampe xenon:
 déchets . exceptionnels . matériel technique:
   titre: Matériel technique
   description: Impact annuel des déchets de matériel technique (écrans, ordinateurs, etc.).
-  valeur: quantité * 0.001 tonne/kg * FE
+  formule:
+    produit:
+      - quantité
+      - 0.001 tonne/kg
+      - FE
   unité: kgCO2e
   avec:
     FE:
