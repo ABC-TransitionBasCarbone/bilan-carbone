@@ -38,7 +38,7 @@ déchets . ordinaires . ordures ménagères:
       unité: l/benne
 
     fréquence ramassage:
-      titre: Fréquence de ramassage
+      question: Fréquence de ramassage
       description: Fréquence de ramassage des ordures ménagères par semaine.
       unité: ramassage/semaine
 
