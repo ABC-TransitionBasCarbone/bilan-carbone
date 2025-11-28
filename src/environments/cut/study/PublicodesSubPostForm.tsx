@@ -1,10 +1,14 @@
 'use client'
 
 import PublicodesForm from '@/components/publicodes-form/PublicodesForm'
-import { FullStudy } from '@/db/study'
-import { getSituationFromDB } from '@/services/serverFunctions/publicodes'
+import SaveStatusIndicator from '@/components/publicodes-form/SaveStatusIndicator'
+import { PUBLICODES_COUNT_VERSION } from '@/constants/versions'
+import { useBeforeUnload } from '@/hooks/useBeforeUnload'
+import { usePublicodesAutoSave } from '@/hooks/usePublicodesAutoSave'
+import { loadSituation } from '@/services/serverFunctions/publicodes'
 import CircularProgress from '@mui/material/CircularProgress'
 import { SubPost } from '@prisma/client'
+import { FormState } from '@publicodes/forms'
 import { useTranslations } from 'next-intl'
 import { Situation } from 'publicodes'
 import { useCallback, useEffect, useState } from 'react'
@@ -13,17 +17,22 @@ import { getPublicodesTarget as getPublicodesTargetRule } from '../publicodes/su
 import { CutRuleName, CutSituation } from '../publicodes/types'
 
 export interface PublicodesSubPostFormProps {
-  subPost: SubPost
-  study: FullStudy
+  studyId: string
   studySiteId: string
+  subPost: SubPost
 }
 
 /**
  * Specific {@link PublicodesForm} for CUT. Target rules are determined based
  * on the given `subPost`.
  */
-const PublicodesSubPostForm = ({ subPost, studySiteId }: PublicodesSubPostFormProps) => {
+const PublicodesSubPostForm = ({ studyId, studySiteId, subPost }: PublicodesSubPostFormProps) => {
   const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
+  const autoSave = usePublicodesAutoSave({
+    studyId,
+    studySiteId,
+    modelVersion: PUBLICODES_COUNT_VERSION,
+  })
 
   const cutFormBuilder = getCutFormBuilder()
   const targetRule = getPublicodesTargetRule(subPost)
@@ -32,12 +41,19 @@ const PublicodesSubPostForm = ({ subPost, studySiteId }: PublicodesSubPostFormPr
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+  const handleFieldChange = useCallback(
+    (_fieldName: any, _value: any, newState: FormState<string>) => {
+      autoSave.saveSituation(newState.situation)
+    },
+    [autoSave],
+  )
+
   const constLoadSituation = useCallback(async () => {
     try {
       setIsLoading(true)
       setError(null)
 
-      const result = await getSituationFromDB(studySiteId)
+      const result = await loadSituation(studySiteId)
       if (!result.success) {
         throw new Error(result.errorMessage || 'Failed to load situation')
       }
@@ -56,6 +72,10 @@ const PublicodesSubPostForm = ({ subPost, studySiteId }: PublicodesSubPostFormPr
   useEffect(() => {
     constLoadSituation()
   }, [constLoadSituation, studySiteId])
+
+  useBeforeUnload({
+    when: autoSave.hasUnsavedChanges,
+  })
 
   if (error) {
     return (
@@ -92,18 +112,21 @@ const PublicodesSubPostForm = ({ subPost, studySiteId }: PublicodesSubPostFormPr
 
   return (
     <div className="dynamic-subpost-form">
+      {autoSave && (
+        <SaveStatusIndicator
+          status={{
+            status: autoSave.saveStatus,
+            error: autoSave.error,
+            lastSaved: autoSave.lastSaved,
+          }}
+        />
+      )}
+
       <PublicodesForm
         formBuilder={cutFormBuilder}
         targetRules={[targetRule]}
         initialSituation={situation as Situation<CutRuleName>}
-        // TODO: manage autosave answers
-        // subPost={subPost}
-        // studyId={study.id}
-        // studySiteId={studySiteId}
-        // studyStartDate={study.startDate}
-
-        // TODO: manage initial answers
-        // initialSituation={{}}
+        onFieldChange={handleFieldChange}
       />
     </div>
   )

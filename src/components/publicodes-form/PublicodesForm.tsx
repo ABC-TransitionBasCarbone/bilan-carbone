@@ -58,6 +58,7 @@ export default function PublicodesForm<RuleName extends string, S extends Situat
   )
 
   console.log('currentPage', currentPage)
+  console.log('formState', formState)
 
   return (
     <Box className="dynamic-form">

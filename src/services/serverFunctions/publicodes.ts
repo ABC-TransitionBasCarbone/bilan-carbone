@@ -1,11 +1,13 @@
 'use server'
 
-import { getSituationByStudySite } from '@/db/situation'
+import { getSituationByStudySite, upsertSituation } from '@/db/situation'
 import { withServerResponse } from '@/utils/serverResponse'
+import { InputJsonValue } from '@prisma/client/runtime/library'
+import { Situation } from 'publicodes'
 import { dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 
-export const getSituationFromDB = async (studySiteId: string) =>
+export const loadSituation = async (studySiteId: string) =>
   withServerResponse('getSituationFromDB', async () => {
     const session = await dbActualizedAuth()
     if (!session || !session.user) {
@@ -13,4 +15,29 @@ export const getSituationFromDB = async (studySiteId: string) =>
     }
 
     return await getSituationByStudySite(studySiteId)
+  })
+
+export const saveSituation = async (
+  studyId: string,
+  studySiteId: string,
+  situation: Situation<string>,
+  modelVersion: string,
+) =>
+  withServerResponse('saveSituation', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    // if (!canReadStudy(session.user, studyId)) {
+    //   throw new Error(NOT_AUTHORIZED)
+    // }
+    //
+    // const study = await getStudyById(studyId, session.user.organizationVersionId)
+    // const studySite = study?.sites.find((site) => site.id === studySiteId)
+    // if (!study || !studySite) {
+    //   throw new Error(NOT_AUTHORIZED)
+    // }
+
+    return await upsertSituation(studySiteId, situation as InputJsonValue, modelVersion)
   })

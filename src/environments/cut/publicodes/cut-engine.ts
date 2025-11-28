@@ -1,9 +1,13 @@
 import { getOrCreateEngine, getOrCreateFormBuilder } from '@/lib/publicodes/singletons'
-import { isInNamespace } from '@/lib/publicodes/utils'
+import { isInNamespace as isInNamespaceGeneric } from '@/lib/publicodes/utils'
 import rules from '@abc-transitionbascarbone/publicodes-count'
-import { FormBuilder, FormLayout, FormPages, groupByNamespace, tableLayout } from '@publicodes/forms'
-import Engine from 'publicodes'
+import { FormBuilder, FormLayout, FormPages, simpleLayout, tableLayout } from '@publicodes/forms'
+import Engine, { utils } from 'publicodes'
 import { CutPublicodesEngine, CutRuleName } from './types'
+
+function isInNamespace(namespace: CutRuleName, rule: string | undefined): boolean {
+  return rule ? isInNamespaceGeneric<CutRuleName>(rule as CutRuleName, namespace) : false
+}
 
 /**
  * Returns a singleton instance of the Publicodes {@link Engine} configured
@@ -28,13 +32,18 @@ export function getCutFormBuilder(): FormBuilder<CutRuleName> {
 }
 
 function cutPageBuilder(rules: CutRuleName[]): FormPages<FormLayout<CutRuleName>> {
-  const groupedRules = groupByNamespace(rules)
-  return groupedRules.map(({ title, elements }) => {
-    if (isInNamespace<CutRuleName>(title as CutRuleName, 'déchets . ordinaires')) {
-      return { title, elements: [DECHETS_ORDINAIRES_TABLE] }
-    }
-    return { title, elements }
-  })
+  const title =
+    rules.length === 0
+      ? undefined
+      : rules.length === 1
+        ? rules[0]
+        : rules.reduce((acc, rule) => utils.findCommonAncestor(acc, rule) as CutRuleName, rules[0])
+
+  if (rules.some((rule) => isInNamespace('déchets . ordinaires', rule))) {
+    return [{ title, elements: [DECHETS_ORDINAIRES_TABLE] }]
+  }
+
+  return [{ title, elements: rules.map(simpleLayout) }]
 }
 
 const DECHETS_ORDINAIRES_TABLE = tableLayout<CutRuleName>(
