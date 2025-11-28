@@ -323,11 +323,11 @@ salles et cabines . matériel technique . salle . système son . type:
         id: 118
 
     dtsx:
-      titre: |
+      titre: >
         DTS : X
 
     dtsx . FE:
-      titre: |
+      titre: >
         Facteur d'émission du DTS : X
       valeur: 11415.91
       meta:

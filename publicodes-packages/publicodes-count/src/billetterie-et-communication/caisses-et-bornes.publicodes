@@ -8,7 +8,7 @@ billetterie et communication . caisses et bornes:
 
 billetterie et communication . caisses et bornes . caisses libre service:
   titre: Caisses libre service
-  note: |
+  note: >
     TODO: Il semble qu'il manque les 5 ans d'amortissement
   formule: nombre * FE
   avec:
@@ -24,7 +24,7 @@ billetterie et communication . caisses et bornes . caisses libre service:
 
 billetterie et communication . caisses et bornes . caisse classique:
   titre: Caisse classique
-  note: |
+  note: >
     TODO: Il semble qu'il manque les 5 ans d'amortissement
   formule: nombre * FE
   avec:

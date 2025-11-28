@@ -15,7 +15,8 @@
     "watch": "publicodes compile --watch",
     "dev": "publicodes dev",
     "pretest": "yarn run compile",
-    "test": "vitest run"
+    "test": "vitest run",
+    "format": "node scripts/wrap-yaml.js"
   },
   "dependencies": {
     "publicodes": "^1.9.1"

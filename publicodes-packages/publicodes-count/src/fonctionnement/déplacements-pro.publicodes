@@ -9,11 +9,12 @@ fonctionnement . déplacements pro . déplacements:
   # TODO: Should be a liste of types of collaborators
   titre: Déplacements
   question: Décrivez les déplacements professionnels de vos collaborateurs
-  description: |
+  description: >
     Les déplacements professionnels de vos collaborateurs sont tous les
-    déplacements autres que les déplacements domicile-travail, effectués dans
-    le cadre du travail. Ceux-ci incluent par exemple les déplacements pour se
-    rendre à des congrès, conventions, festivals, prévisionnages, etc.
+    déplacements autres que les déplacements domicile-travail, effectués
+    dans le cadre du travail. Ceux-ci incluent par exemple les déplacements
+    pour se rendre à des congrès, conventions, festivals, prévisionnages,
+    etc.
   formule: déplacement type
 
 fonctionnement . déplacements pro . déplacement type:

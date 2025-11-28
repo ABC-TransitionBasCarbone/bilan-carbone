@@ -10,8 +10,9 @@ fonctionnement . énergie:
       - granulés
       - climatisation
       - groupes électrogènes
-  note: |
-    TODO: vérifier les formule pour la climatisation et les groupes électrogènes
+  note: >
+    TODO: vérifier les formule pour la climatisation et les groupes
+    électrogènes
   unité: kgCO2e
 
 fonctionnement . énergie . électricité:
@@ -20,7 +21,7 @@ fonctionnement . énergie . électricité:
   avec:
     consommation:
       question: Combien de kWh d'électricité ont étés consommés par le cinéma cette année ?
-      note: |
+      note: >
         Pour le moment, nous avons modifer le wording pour ne pas faire
         apparaître la date dans la question.
       unité: kWh
@@ -37,7 +38,7 @@ fonctionnement . énergie . gaz:
   avec:
     consommation:
       question: Combien de m³ de gaz ont étés consommés par le cinéma cette année ?
-      note: |
+      note: >
         Pour le moment, nous avons modifer le wording pour ne pas faire
         apparaître la date dans la question.
       unité: m3
@@ -54,7 +55,7 @@ fonctionnement . énergie . fioul:
   avec:
     consommation:
       question: Combien de litres de fioul ont étés consommés par le cinéma cette année ?
-      note: |
+      note: >
         Pour le moment, nous avons modifer le wording pour ne pas faire
         apparaître la date dans la question.
       unité: litre
@@ -70,10 +71,8 @@ fonctionnement . énergie . réseau de chaleur:
   formule: consommation * FE
   avec:
     consommation:
-      question: |
-        Combien de KWh issus de réseau de chaleur ont été consommés par le
-        cinéma cette année ?
-      note: |
+      question: Combien de KWh issus de réseau de chaleur ont été consommés par le cinéma cette année ?
+      note: >
         Pour le moment, nous avons modifer le wording pour ne pas faire
         apparaître la date dans la question.
       unité: kWh
@@ -88,10 +87,8 @@ fonctionnement . énergie . réseau de froid:
   formule: consommation * FE
   avec:
     consommation:
-      question: |
-        Combien de KWh issus de réseau de froid ont été consommés par le cinéma
-        cette année ?
-      note: |
+      question: Combien de KWh issus de réseau de froid ont été consommés par le cinéma cette année ?
+      note: >
         Pour le moment, nous avons modifer le wording pour ne pas faire
         apparaître la date dans la question.
       unité: kWh
@@ -107,10 +104,8 @@ fonctionnement . énergie . granulés:
   formule: consommation * FE
   avec:
     consommation:
-      question: |
-        Combien de kWh issus de la combustion de granulés de bois ont étés
-        consommés par le cinéma cette année ?
-      note: |
+      question: Combien de kWh issus de la combustion de granulés de bois ont étés consommés par le cinéma cette année ?
+      note: >
         Pour le moment, nous avons modifer le wording pour ne pas faire
         apparaître la date dans la question.
       unité: kg
@@ -132,7 +127,7 @@ fonctionnement . énergie . climatisation:
   avec:
     cnc écrans:
       question: Combien de kWh de climatisation ont étés consommés par le cinéma cette année ?
-      note: |
+      note: >
         TODO: comprendre le chiffre à prendre ? CNC.écrans ?
 
     FE:
@@ -176,12 +171,11 @@ fonctionnement . énergie . groupes électrogènes:
 fonctionnement . énergie . équipement groupes électrogènes:
   question: Quel type de groupes électrogènes utilisez-vous ?
   une possibilité:
-    - utilisation régulière
+    - utilisation régulière:
+        titre: Test
     - équipé sans utilisation
     - aucun
   avec:
-    utilisation régulière:
-      titre: Oui et je l’utilise plusieurs fois par an
     équipé sans utilisation:
       titre: Oui mais je ne l'utilise pas
     aucun:

@@ -31,7 +31,9 @@ mobilité spectateurs . mobilité spectateurs . précision:
 
 mobilité spectateurs . mobilité spectateurs . précision . besoin . contact:
   applicable si: précision = "besoin"
-  question: |
-    Si vous souhaitez réaliser une enquête mobilité spectateur, vous pouvez nous envoyer un mail pour récupérer un modèle d'enquête qui vous permettra de remplir d'ici quelques semaines les informations demandées
-  texte: |
+  question: >
+    Si vous souhaitez réaliser une enquête mobilité spectateur, vous pouvez
+    nous envoyer un mail pour récupérer un modèle d'enquête qui vous
+    permettra de remplir d'ici quelques semaines les informations demandées
+  texte: >
     Vous pouvez nous contacter à [count@cut-collectif.fr](mailto:count@cut-collectif.fr) pour recevoir une proposition d'enquête mobilité.

@@ -13,7 +13,7 @@ confiseries et boissons . achats . vente sur place . achat type:
       - est défini: vente sur place
       - vente sur place
   par défaut: "'standard'"
-  question: |
+  question: >
     Selon vous, en moyenne, un spectateur achète:
   une possibilité:
     - un peu

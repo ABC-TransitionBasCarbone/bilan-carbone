@@ -1,0 +1,8 @@
+# Wrap YAML files in publicodes before committing
+echo "🔄 Wrapping YAML publicodes files..."
+cd publicodes-packages/publicodes-count && node scripts/wrap-yaml.js
+
+# Stage any changes made by the wrapping script
+git add src/**/*.publicodes 2>/dev/null || true
+
+echo "✅ YAML wrapping complete"
