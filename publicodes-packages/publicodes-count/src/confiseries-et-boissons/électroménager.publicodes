@@ -1,8 +1,9 @@
 confiseries et boissons . électroménager:
   titre: Électroménager
   unité: kgCO2e
-  question: |
-    Pour les différents équipements informatiques utilisés, veuillez indiquer leur nombre et leur date d'achat ou durée de location :
+  question: >
+    Pour les différents équipements informatiques utilisés, veuillez
+    indiquer leur nombre et leur date d'achat ou durée de location :
   description: >
     Si l'équipement concerné est acheté, merci de ne pas remplir le champ
     "Durée de location". Si l'équipement concerné est loué de manière
@@ -21,11 +22,10 @@ confiseries et boissons . électroménager:
 
 confiseries et boissons . électroménager . appareil:
   titre: Empreinte appareil électroménager type
-  description: |
+  description: >
     Calcul de l'empreinte d'un appareil électroménager type en fonction de
-    son nombre, de sa date d'achat ou de sa durée de location.
-
-    Règle de calcul utilisée pour chaque type d'appareil électroménager.
+    son nombre, de sa date d'achat ou de sa durée de location. Règle de
+    calcul utilisée pour chaque type d'appareil électroménager.
   formule:
     variations:
       - si:

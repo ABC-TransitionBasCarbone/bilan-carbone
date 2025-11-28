@@ -21,7 +21,7 @@ mobilité spectateurs . résultat estimé . empreinte:
 
 mobilité spectateurs . résultat estimé . proximité spectateurs:
   applicable si: mobilité spectateurs . précision = "estimation"
-  question: |
+  question: >
     Vos spectateurs sont-ils majoritairement des habitants "locaux", c'est à
     dire résidant à l'année dans les environs ou attirez-vous aussi une part
     non négligeable de spectateurs de passage dans la région (touristes
@@ -32,15 +32,17 @@ mobilité spectateurs . résultat estimé . proximité spectateurs:
     - majoritairement locaux
   avec:
     zone très touristique:
-      titre: |
-        Le cinéma est situé dans une zone touristique et 80% ou + des spectateurs ne résident pas à proximité du cinéma à l'année.
+      titre: >
+        Le cinéma est situé dans une zone touristique et 80% ou + des
+        spectateurs ne résident pas à proximité du cinéma à l'année.
     zone moyennement touristique:
-      titre: |
-        Le cinéma est situé dans une ville de destination de week-end et / ou station balnéaire attirant environ 25% de spectateurs "non-locaux".
+      titre: >
+        Le cinéma est situé dans une ville de destination de week-end et
+        / ou station balnéaire attirant environ 25% de spectateurs
+        "non-locaux".
     majoritairement locaux:
-      titre: |
+      titre: >
         Le cinéma accueille majoritairement des spectateurs locaux
-
 mobilité spectateurs . résultat estimé . empreinte établissement proche:
   formule:
     variations:
@@ -66,8 +68,11 @@ mobilité spectateurs . résultat estimé . profil établissement:
     - uniquement accessible en voiture
   avec:
     distances courtes:
-      titre: |
-        Les spectateurs parcourent des distances très courtes pour venir au cinéma (moins de 10km aller-retour). Très peu viennent en voiture (- de 10%) et la grande majorité des spectateurs vient à pied ou en transports en commun.
+      titre: >
+        Les spectateurs parcourent des distances très courtes pour venir
+        au cinéma (moins de 10km aller-retour). Très peu viennent en
+        voiture (- de 10%) et la grande majorité des spectateurs vient à
+        pied ou en transports en commun.
       avec:
         empreinte:
           valeur: résultat précis . empreinte * général . nombre entrées / 1 entrée
@@ -88,10 +93,11 @@ mobilité spectateurs . résultat estimé . profil établissement:
             résultat précis . empreinte . scooter . distance: 0 km
 
     distances moyennes:
-      titre: |
-        Les spectateurs parcourent autour de 10 km aller-retour pour se rendre
-        au cinéma. Il s'agit essentiellement d'un public de proximité venant en
-        grande partie en voiture. Autour de 25% d'entre eux viennent à pied.
+      titre: >
+        Les spectateurs parcourent autour de 10 km aller-retour pour se
+        rendre au cinéma. Il s'agit essentiellement d'un public de
+        proximité venant en grande partie en voiture. Autour de 25%
+        d'entre eux viennent à pied.
       avec:
         empreinte:
           valeur: résultat précis . empreinte * général . nombre entrées / 1 entrée
@@ -112,11 +118,11 @@ mobilité spectateurs . résultat estimé . profil établissement:
             résultat précis . empreinte . scooter . distance: 0 km
 
     distances longues:
-      titre: |
-        Les spectateurs parcourent autour de 20-25 km aller-retour pour se
-        rendre au cinéma. Il s'agit essentiellement d'un public de proximité
-        venant en grande partie en voiture. Autour de 25% d'entre eux viennent
-        à pied.
+      titre: >
+        Les spectateurs parcourent autour de 20-25 km aller-retour pour
+        se rendre au cinéma. Il s'agit essentiellement d'un public de
+        proximité venant en grande partie en voiture. Autour de 25%
+        d'entre eux viennent à pied.
       avec:
         empreinte:
           valeur: résultat précis . empreinte * général . nombre entrées / 1 entrée
@@ -137,10 +143,10 @@ mobilité spectateurs . résultat estimé . profil établissement:
             résultat précis . empreinte . scooter . distance: 0 km
 
     majoritairement en voiture:
-      titre: |
-        Plus de 80% des spectateurs viennent en voiture. Pas ou peu viennent en
-        transports en commun, peu viennent à pied. La distance moyenne
-        parcourue est autour de 15 km aller-retour.
+      titre: >
+        Plus de 80% des spectateurs viennent en voiture. Pas ou peu
+        viennent en transports en commun, peu viennent à pied. La
+        distance moyenne parcourue est autour de 15 km aller-retour.
       avec:
         empreinte:
           valeur: résultat précis . empreinte * général . nombre entrées / 1 entrée
@@ -161,7 +167,7 @@ mobilité spectateurs . résultat estimé . profil établissement:
             résultat précis . empreinte . scooter . distance: 0 km
 
     uniquement accessible en voiture:
-      titre: |
+      titre: >
         Le cinéma n'est accessible qu'en voiture.
       avec:
         empreinte:
@@ -190,8 +196,9 @@ mobilité spectateurs . résultat estimé . empreinte établissement lointain:
       - somme:
           - 0.7 * FE voiture longue distance
           - 0.3 * FE TGV
-  note: |
-    On considère qu'un trajet moyen est 3% de la distance Paris - lieu du cinéma.
+  note: >
+    On considère qu'un trajet moyen est 3% de la distance Paris - lieu du
+    cinéma.
   avec:
     FE voiture longue distance:
       valeur: 0.1092

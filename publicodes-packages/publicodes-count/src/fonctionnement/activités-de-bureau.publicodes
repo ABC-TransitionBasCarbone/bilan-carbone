@@ -15,10 +15,10 @@ fonctionnement . activités de bureau . petites fournitures:
       - FE
   avec:
     montant:
-      question: |
-        Quel montant avez-vous dépensé en petites fournitures de bureau ?
-        (Exemples: crayon, cartouche d’encre, papier hors programme, cahier,
-        etc.)
+      question: >
+        Quel montant avez-vous dépensé en petites fournitures de bureau
+        ? (Exemples: crayon, cartouche d'encre, papier hors programme,
+        cahier, etc.)
       unité: €
 
     FE:
@@ -119,11 +119,10 @@ fonctionnement . activités de bureau . informatique . équipement:
 
 fonctionnement . activités de bureau . informatique . appareil:
   titre: Empreinte appareil informatique type
-  description: |
+  description: >
     Calcul de l'empreinte d'un appareil informatique type en fonction de son
-    nombre, de sa date d'achat ou de sa durée de location.
-
-    Règle de calcul utilisée pour chaque type d'appareil informatique.
+    nombre, de sa date d'achat ou de sa durée de location. Règle de calcul
+    utilisée pour chaque type d'appareil informatique.
   formule:
     variations:
       - si:

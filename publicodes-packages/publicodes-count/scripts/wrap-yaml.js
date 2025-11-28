@@ -21,7 +21,7 @@ const __dirname = path.dirname(__filename);
 // Constants
 const DEFAULT_WIDTH = 80;
 const DEFAULT_INDENT = 4;
-const FOLDED_BLOCK_PATTERN = /^(\s*)(description|note): >$/;
+const FOLDED_BLOCK_PATTERN = /^(\s*)(description|note|question|titre): >$/;
 const PUBLICODES_EXTENSION = ".publicodes";
 
 /**
