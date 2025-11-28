@@ -1,6 +1,5 @@
 describe('Onboarding', () => {
   beforeEach(() => {
-    cy.resetTestDatabase()
     cy.intercept('POST', '/api/auth/callback/credentials').as('login')
   })
 

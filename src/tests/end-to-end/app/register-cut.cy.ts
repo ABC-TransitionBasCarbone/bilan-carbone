@@ -1,8 +1,4 @@
 describe('Register cut', () => {
-  before(() => {
-    cy.resetTestDatabase()
-  })
-
   it('does create new cut user and organization with CNC', () => {
     cy.signupCut('cut-cnc@yopmail.com', '1321')
 

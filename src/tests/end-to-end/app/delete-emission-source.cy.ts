@@ -1,8 +1,4 @@
 describe('Delete emission source', () => {
-  before(() => {
-    cy.resetTestDatabase()
-  })
-
   it('should be able to delete an emission source on a study', () => {
     cy.login()
 

@@ -1,8 +1,4 @@
 describe('Edit organization', () => {
-  before(() => {
-    cy.resetTestDatabase()
-  })
-
   beforeEach(() => {
     cy.intercept('POST', '/organisations/*/modifier').as('update')
   })
