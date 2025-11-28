@@ -2,6 +2,7 @@
 
 import Modal from '@/components/modals/Modal'
 import { TransitionPlanWithStudies } from '@/db/transitionPlan'
+import { customRich } from '@/i18n/customRich'
 import { getAvailableTransitionPlans } from '@/services/serverFunctions/transitionPlan'
 import { FormControl, FormControlLabel, MenuItem, Radio, RadioGroup, Select } from '@mui/material'
 import classNames from 'classnames'
@@ -82,7 +83,7 @@ const TransitionPlanSelectionModal = ({ studyId, open, onClose, onConfirm }: Pro
       ]}
     >
       <div className={classNames('flex-col', 'gapped15')}>
-        <p className={styles.description}>{t('description')}</p>
+        <p className={styles.description}>{customRich(t, 'description')}</p>
 
         <FormControl
           component="fieldset"
@@ -108,7 +109,7 @@ const TransitionPlanSelectionModal = ({ studyId, open, onClose, onConfirm }: Pro
                 <div className={'flex-col'}>
                   <span className={classNames(styles.optionTitle)}>{t('reuseExisting')}</span>
                   {hasAvailablePlans && (
-                    <span className={styles.optionDescription}>{t('reuseExistingDescription')}</span>
+                    <span className={styles.optionDescription}>{customRich(t, 'reuseExistingDescription')}</span>
                   )}
                   {selectedOption === 'existing' && hasAvailablePlans && (
                     <FormControl fullWidth className={'mt-2'}>

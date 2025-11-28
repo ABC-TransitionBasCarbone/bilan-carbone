@@ -6,4 +6,5 @@ export const EnvironmentNames = {
   [Environment.BC]: 'BC+ 2.0',
   [Environment.CUT]: 'Count',
   [Environment.TILT]: 'Tilt',
+  [Environment.CLICKSON]: 'ClicksOn',
 }

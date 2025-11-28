@@ -9,6 +9,9 @@ export const getEnvRoute = (path: string, env?: Environment) => {
     case Environment.TILT:
       base = '/tilt'
       break
+    case Environment.CLICKSON:
+      base = '/clickson'
+      break
     default:
       break
   }

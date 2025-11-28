@@ -1,8 +1,8 @@
 'use client'
 
+import { ActionWithIndicators } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteAction } from '@/services/serverFunctions/transitionPlan'
-import { Action } from '@prisma/client'
 import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
@@ -15,7 +15,7 @@ const ActionModal = dynamic(() => import('./ActionModal'))
 const ConfirmDeleteModal = dynamic(() => import('@/components/modals/ConfirmDeleteModal'))
 
 interface Props {
-  actions: Action[]
+  actions: ActionWithIndicators[]
   transitionPlanId: string
   studyUnit: string
   canEdit: boolean
@@ -33,14 +33,14 @@ const Actions = ({ actions, studyUnit, transitionPlanId, canEdit }: Props) => {
   const t = useTranslations('study.transitionPlan.actions')
 
   const [filter, setFilter] = useState('')
-  const [editingAction, setEditingAction] = useState<Action | undefined>(undefined)
+  const [editingAction, setEditingAction] = useState<ActionWithIndicators | undefined>(undefined)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-  const [deletingAction, setDeletingAction] = useState<Action | undefined>(undefined)
+  const [deletingAction, setDeletingAction] = useState<ActionWithIndicators | undefined>(undefined)
 
   const fuse = useMemo(() => new Fuse(actions, fuseOptions), [actions])
 
-  const searchedActions: Action[] = useMemo(() => {
+  const searchedActions: ActionWithIndicators[] = useMemo(() => {
     if (!filter) {
       return actions
     }
@@ -54,7 +54,7 @@ const Actions = ({ actions, studyUnit, transitionPlanId, canEdit }: Props) => {
     setIsEditModalOpen(true)
   }
 
-  const handleOpenEditModal = (action: Action) => {
+  const handleOpenEditModal = (action: ActionWithIndicators) => {
     setEditingAction(action)
     setIsEditModalOpen(true)
   }
@@ -64,7 +64,7 @@ const Actions = ({ actions, studyUnit, transitionPlanId, canEdit }: Props) => {
     setEditingAction(undefined)
   }
 
-  const handleOpenDeleteModal = (action: Action) => {
+  const handleOpenDeleteModal = (action: ActionWithIndicators) => {
     setDeletingAction(action)
     setIsDeleteModalOpen(true)
   }

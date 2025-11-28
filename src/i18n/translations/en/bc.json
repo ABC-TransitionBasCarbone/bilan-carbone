@@ -29,6 +29,7 @@
     }
   },
   "categorisations": {
+    "all": "All categorisations",
     "Operated": "Operated",
     "NotOperated": "Not operated",
     "OperatedProcedeed": "Operated, procedeed",
@@ -153,7 +154,7 @@
     "welcome": "Welcome",
     "subtext": "",
     "explanation": "The tool dedicated to the application of the Bilan Carbone® method, developed by the Association for the Low Carbon Transition (ABC), and accessible to all of our members: Consulting and Research, Business, Association and Public Sector",
-    "question": "A question? Read the <link>FAQ</link> or <support>contact us</support>!",
+    "question": "A question? Read the <faq>FAQ</faq> or <support>contact us</support>!",
     "cineo": "Tool developed thanks to the Bilan Carbone® assessments of Cineo",
     "explanation2": "Operation supported by the State as part of the 'Support Green Alternatives 2' initiative under France 2030, operated by the Banque des Territoires (Caisse des Dépôts)",
     "form": {
@@ -202,44 +203,6 @@
     "Email sent": "You will receive an email to finish your account validation.",
     "validation": {
       "email": "Please enter an email"
-    }
-  },
-  "signupCut": {
-    "description": "Create a CUT account with your email and a Siret/CNC number",
-    "email": "Email",
-    "emailPlaceholder": "Email used during your training",
-    "emailRequired": "Please enter an email",
-    "siretOrCNC": "Siret or CNC",
-    "siretOrCNCPlaceholder": "Your Siret/CNC",
-    "siretOrCNCRequired": "Please enter a Siret/CNC number",
-    "validate": "Validate",
-    "clear": "Clear value",
-    "Unknown CNC": "The CNC number you entered is not recognized. Please check it and try again.",
-    "Unknown SIRET or CNC": "The Siret or CNC number you entered is not recognized. Please check it and try again.",
-    "Not authorized": "This email is already used for CUT or there's an issue with the account creation. Please see <link>the FAQ</link> or <support>contact support</support> if you think this is an error.",
-    "Request sent": "A request has been sent to your colleagues",
-    "Email sent": "You will receive an email to finish your account validation.",
-    "validation": {
-      "email": "Please enter an email",
-      "siretOrCNC": "Please enter a Siret/CNC number"
-    }
-  },
-  "signupTilt": {
-    "description": "Create a Tilt account with your email and a Siret",
-    "email": "Email",
-    "emailPlaceholder": "Email used during your training",
-    "emailRequired": "Please enter an email",
-    "siret": "Siret",
-    "siretPlaceholder": "Your Siret",
-    "siretRequired": "Please enter a Siret",
-    "validate": "Validate",
-    "Not authorized": "This email is already used for Tilt or there's an issue with the account creation. Please see <link>the FAQ</link> or <support>contact support</support> if you think this is an error.",
-    "Not association SIRET": "This tool is reserved for associations. Please use the classic version of Bilan Carbone®+",
-    "Request sent": "A request has been sent to your colleagues",
-    "Email sent": "You will receive an email to finish your account validation.",
-    "validation": {
-      "email": "Please enter an email",
-      "siret": "Please enter a Siret"
     }
   },
   "footer": {
@@ -457,12 +420,22 @@
       "contributorsList": "{count, plural, =1 {Contributor :} other {Contributors :}}",
       "label": "Emission source label",
       "new": "Give your new emission source a title",
-      "add": "Add"
+      "add": "Add",
+      "filters": "Filters",
+      "sort": "Sort by",
+      "activityData": "Activity data",
+      "emissionFactor": "Emission factor",
+      "emissions": "Emissions",
+      "uncertainty": "Uncertainty (Alpha, %)",
+      "asc": "Ascendant",
+      "desc": "Descendant"
     },
     "organization": {
       "site": "Site",
       "allSites": "All sites",
       "noSites": "There are no sites configured for the organization",
+      "allSitesOnly": "This page is global to all sites of the study",
+      "allSitesOnlyTransitionPlan": "This page is global to all sites of the study for the moment",
       "addSite": "Create a site",
       "title": "Which organization is concerned by the study?",
       "sites": "The organization's sites",
@@ -483,7 +456,6 @@
       "Validator_description": "Has full rights over the study and can validate the emission sources entered by validators, editors and contributors.",
       "Editor_description": "Has all rights to the study except for validation of emission sources.",
       "Reader_description": "Can only read the study and export its information.",
-      "close": "Close",
       "saved": "New role saved"
     },
     "title": "Study",
@@ -545,8 +517,7 @@
         },
         "role": {
           "information": "Information",
-          "description": "Here you can manage the contributors to your study. They will have access to certain posts and sub-posts (which you can define) and will be able to fill in certain information for emission sources that you have already created in the study. For more information on the contributor interface, please see our <link>FAQ</link>.",
-          "close": "Close"
+          "description": "Here you can manage the contributors to your study. They will have access to certain posts and sub-posts (which you can define) and will be able to fill in certain information for emission sources that you have already created in the study. For more information on the contributor interface, please see our <link>FAQ</link>."
         }
       },
       "table": {
@@ -644,14 +615,15 @@
         "name": "Label",
         "edit": "Rename family",
         "delete": "Delete family",
-        "deleteContent": "Do you really want to delete the \"{name}\" tag family ? <red>All its tags will be permanently deleted.</red>",
+        "deleteContent": "Do you really want to delete the \"{name}\" tag family ? <error>All its tags will be permanently deleted.</error>",
         "new": "Add a new tag family",
         "content": "Which name do you want to give to you family ?",
         "cancel": "Cancel",
         "confirm": "Confirm",
         "glossary": "Tags family",
         "close": "Close",
-        "glossaryDescription": "Tags and tag families are used to identify your emission sources in order to visualize certain results later. <br></br>Once your tags are created, you can associate them with emission sources within the \"Data Entry\" page. Then, on the \"Results\" page, you can view the emissions due to a tag family or a specific tag, but you will not be able to view the emissions of two tag families simultaneously, because double counting can occur between these two tag families. <br></br>To give a concrete example, let's say there are two tag families: \"Products Sold\" and \"Target Audiences\". These two families and the tags belonging to them will allow you to visualize the distribution of your organization's emissions based on the products sold, and the same for the target audiences."
+        "glossaryDescription": "Tags and tag families are used to identify your emission sources in order to visualize certain results later. <br></br>Once your tags are created, you can associate them with emission sources within the \"Data Entry\" page. Then, on the \"Results\" page, you can view the emissions due to a tag family or a specific tag, but you will not be able to view the emissions of two tag families simultaneously, because double counting can occur between these two tag families. <br></br>To give a concrete example, let's say there are two tag families: \"Products Sold\" and \"Target Audiences\". These two families and the tags belonging to them will allow you to visualize the distribution of your organization's emissions based on the products sold, and the same for the target audiences.",
+        "allTags": "All tags"
       },
       "duplicate": {
         "title": "Duplicate site {name} and its emission sources",
@@ -668,7 +640,6 @@
         "createSitesDescription": "You can also create new sites and duplicate the information to them. These will appear in your general information. Please indicate the number of sites to create on which the information you selected will be duplicated.",
         "numberOfSitesToCreate": "Number of sites to create",
         "cancel": "Cancel",
-        "duplicate": "Duplicate",
         "sitesChanges": {
           "title": "Organisation modification",
           "description": "You have modified some information related to the sites in this study. Would you like to apply these changes to the organisation's information? <error>These changes will not be applied to your other studies.</error>",
@@ -680,6 +651,7 @@
     },
     "results": {
       "type": "Type",
+      "format": "Format",
       "post": "Post",
       "subPost": "Sub-post",
       "tag": "Tag",
@@ -697,7 +669,7 @@
       "withDependencies": "With dependencies",
       "withoutDependencies": "Without dependencies",
       "dependencyIntensity": "Carbon intensities in dependency",
-      "responsabilityIntensity": "Carbon intensity in responsibility",
+      "responsibilityIntensity": "Carbon intensity in responsibility",
       "monetaryRatio": "Monetary ratios",
       "monetaryRatioEmissions": "emissions from monetary ratios",
       "nonSpeMonetaryRatioEmissions": "resulting from unspecific monetary ratios",
@@ -729,7 +701,6 @@
         "missingCaract1": "Uncharacterized emission sources are not accounted for in the BEGES-R, which leads to undue differences with the Bilan Carbone® if you have chosen to visualize unvalidated emission sources.",
         "missingCaract2": "You have not entered the characterizations for all the emission sources in your study. Please edit and add the characterization for the following emission sources:",
         "additionalMissing": "+ {count} other emission {count, plural,  =1 {source} other {sources}}",
-        "close": "Close",
         "unexplainedDifference": "Some differences can not be explained. Please, contact us at the <support>support</support>."
       },
       "noData": "No data to display",
@@ -745,7 +716,6 @@
       },
       "analysis": "Emissions analysis",
       "total": "Emissions total",
-      "close": "Close",
       "intensities": {
         "budget": "budget",
         "etp": "employee",
@@ -918,11 +888,11 @@
         },
         "sbtiCard": {
           "title": "SBTi Trajectories",
-          "description": "The Science Based Targets Initiative defines two reference trajectories, aiming to limit global warming to 1.5°C or \"Well below 2 degrees\" (WB2C).",
+          "description": "The Science Based Targets Initiative defines two reference trajectories, aiming to limit global warming to 1.5°C (SBTi 1.5°C) or \"Well below 2 degrees\" (SBTi WB2C).",
           "methodLabel": "Methods",
-          "option15": "1.5°C Trajectory",
-          "optionWB2C": "WB2C Trajectory",
-          "placeholder": "No method selected"
+          "option15": "SBTi 1.5°C",
+          "optionWB2C": "SBTi WB2C",
+          "placeholder": "No trajectory selected"
         },
         "graph": {
           "title": "Reduction trajectories visualization",
@@ -955,6 +925,10 @@
           "Not authorized": "You are not allowed to do this action",
           "noAvailableStudies": "No previous studies available",
           "noLinkedStudies": "No linked studies yet",
+          "information": "Information",
+          "glossaryTitle": "Pour gabriel - titre",
+          "glossaryDescription": "Pour gabriel - description",
+          "close": "Close",
           "table": {
             "name": "Name",
             "year": "Year",
@@ -1060,7 +1034,6 @@
           "reductionRate": "Annual reduction",
           "actions": "Actions"
         },
-        "delete": "Delete",
         "cancel": "Cancel",
         "deleteTrajectory": {
           "title": "Delete trajectory",
@@ -1073,7 +1046,7 @@
         "onboarding": {
           "title": "Add a trajectory or reduction objectives",
           "description": "You have already created a reference trajectory but want to add others to test different hypotheses and ambition levels? You can create new trajectories, or add intermediate objectives for more detailed tracking without losing sight of the final goal!",
-          "detailedInfo": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p><p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>"
+          "detailedInfo": "When you enter your first top-down trajectory, the associated objectives for 2030 and 2050 will be recorded in this table. You can then detail these objectives by adding additional intermediate targets, which can apply either to all categories and sites of the Carbon Assessment® (in which case the reductions will be calculated automatically to maintain consistency with the 2030 and 2050 objectives), or to specific categories and sites. You can also enter your projected revenue growth to obtain annual reductions that account for this growth. Finally, you can add other top-down trajectories, particularly to visualize different trajectories on the previous page before choosing the one you will follow."
         }
       },
       "actions": {
@@ -1105,9 +1078,11 @@
           "subStepsPlaceholder": "Describe your sub-steps",
           "detailedDescription": "Detailed description of the action and stakeholder involvement",
           "detailedDescriptionPlaceholder": "Detailed description",
-          "potentialDeduction": "Quantified emission reduction potential",
+          "potentialDeduction": "Emission reduction potential",
           "potentialDeductionPlaceholder": "Select an option",
           "reductionValue": "Value",
+          "reductionDetails": "Details and assumptions on the action's reduction potential",
+          "reductionDetailsPlaceholder": "Describe the details and assumptions",
           "reductionStartYear": "Year action begins",
           "reductionEndYear": "Year action ends",
           "dependenciesOnly": "My action only concerns the \"Use in dependence\" sub-item",
@@ -1123,6 +1098,12 @@
           "performance": "Performance",
           "indicatorDescriptionPlaceholder": "Description",
           "indicatorGoalPlaceholder": "Goal",
+          "indicatorTooltipTitle": "Feature under development",
+          "indicatorTooltipLabel": "Information about indicators",
+          "indicatorTooltipDescription": "An action tracking feature is coming! You can already list your indicators and will be able to quantify and track them once the feature is released.",
+          "addIndicator": "Add an indicator",
+          "removeIndicator": "Remove indicator",
+          "noIndicators": "No indicators yet",
           "facilitatorsAndObstacles": "Potential facilitators and obstacles to action",
           "additionalInformation": "Additional information",
           "nature": "Nature of the action",
@@ -1133,6 +1114,7 @@
             "step2": "Categorization",
             "step3": "Details and responsibility"
           },
+          "close": "Close",
           "Not authorized": "You are not allowed to do this action",
           "validation": {
             "required": "Required fields",
@@ -1164,12 +1146,16 @@
           "AvoidanceFinancing": "Avoidance financing (Priority 4/6)",
           "ReductionOutsideOrganisationValueChain": "Reduction outside the organisation's value chain (Priority 2/6)",
           "ReductionWithinOrganisationValueChain": "Reduction within the organisation's value chain (Priority 1/6)",
-          "ReductionWithinOrganisationCoreBusiness": "Reduction within the organisation's core business (Priority 1/6)"
+          "ReductionWithinOrganisationCoreBusiness": "Reduction within the organisation's core business (Priority 1/6)",
+          "glossaryTitle": "Action relevance levels",
+          "information": "Information about relevance levels",
+          "learnMore": "For more information, please visit this page.",
+          "close": "Close"
         },
         "onboarding": {
           "title": "Create your action plan to achieve your objectives",
           "description": "You have already created your trajectory and associated objectives. Now you can add the actions to your transition plan that will allow you to achieve these objectives",
-          "detailedInfo": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p><p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>"
+          "detailedInfo": "A top-down trajectory is defined macroscopically, setting medium and long-term reduction targets. In contrast, a bottom-up trajectory is built from an action plan—a set of coherent actions that, when combined, enable emission reductions during their implementation. This page allows you to enter and characterize various actions, following the information defined in the Carbon Assessment® methodology. All this information must be recorded in a Carbon Assessment®, but it is possible to fill in some details later to test different action combinations before making final selections. A toggle in the first column of the table allows you to activate or deactivate the entered actions to see if the resulting bottom-up trajectory aligns with the chosen top-down trajectory. Once relevant actions are selected, you can complete the missing information to better characterize each action, assign a budget, specify implementation steps, and define indicators that will later help you monitor the implementation, tracking, and performance of your actions."
         },
         "deleteModal": {
           "title": "Delete action",
@@ -1335,39 +1321,6 @@
         "BiensEtMatieresEnApprocheMonetaire": "A sub-section is also dedicated to materials for which emission factors in monetary ratios are used.",
         "UtilisationEnResponsabilite": "Products sold by the organization within the timeframe under consideration over their entire lifespan, for which the organization is directly responsible ([in italisque] for a manufacturer of meal trays served on aircraft, the responsible use corresponds to the energy used to cool and heat the meal tray).",
         "UtilisationEnDependance": "Products sold by the organization within the timeframe under consideration over their entire lifespan, for which the organization is not directly responsible but which its activity contributes to emitting ([in italics] For a manufacturer of meal trays served in an aircraft, the dependent use corresponds to the emissions for the entire flight)."
-      },
-      "cutQuestions": {
-        "actions": "Actions",
-        "add": "Add",
-        "delete": "Delete",
-        "duplicate": "Duplicate",
-        "error": "Error while updating the field",
-        "next": "Next sub-post",
-        "previous": "Previous sub-post",
-        "numberOfYears": "Number of years",
-        "bonbons": "Candies - Quantity (packs of {value}g)",
-        "chips": "Chips - Quantity (packs of {value}g)",
-        "Electromenager": "For each of these household appliances, please provide the following information:",
-        "FretCadence": "Freight - Frequency (times/month)",
-        "FretPoids moyen": "Freight - Average weight (kg)",
-        "FretProvenance": "Where is your main supplier based?",
-        "Refrigerateurs": "Refrigerators",
-        "Congelateurs": "Freezers",
-        "Warmers": "Warmers",
-        "Distributeurs": "Snack / drink vending machines",
-        "format": {
-          "text": "Text",
-          "postalCode": "Postal code",
-          "phone": "Phone",
-          "year": "Year",
-          "hour": "Hour",
-          "number": "Number"
-        },
-        "errorLoadingQuestions": "Error loading questions",
-        "retry": "Retry",
-        "finish": "Finish",
-        "noQuestions": "No questions found for this sub-post",
-        "autoSaveError": "The answer could not be saved automatically"
       }
     },
     "create": {
@@ -1406,7 +1359,6 @@
       "subPost": "Sub Post",
       "partType": "Part type",
       "comment": "Comments",
-      "delete": "Delete",
       "clear": "Clear value",
       "glossary": {
         "title": "Glossary",
@@ -1541,7 +1493,6 @@
     "missingQualities": {
       "title": "Add quality for manual emission factors",
       "body": "Hello, according to our information, you added emission factors manually when it was still impossible to enter their uncertainty. By default, for these emission factors, the qualities are considered to be \"Very good\", which corresponds to zero uncertainty on the emission factor. Now that this bug has been resolved, we strongly recommend that you update the emission factors concerned, which are as follows: ",
-      "close": "Close",
       "correct": "Correct"
     }
   },
@@ -1868,7 +1819,6 @@
     "studySites": {
       "title": "You cannot delete these sites",
       "description": "Studies exist with the following sites. <warning>Please delete them from the concerned studies before you can delete them from your organization.</warning>",
-      "close": "Close",
       "existingSite": "<name></name>: <link></link>",
       "existingUnauthorizedSite": "{name} : {count, plural,  =1 {1 study} other { studies}} you do not have access to"
     },
@@ -1942,12 +1892,14 @@
     },
     "saving": "Saving ...",
     "status": {
+      "all": "All statuses",
       "valid": "Validated",
       "waiting": "Completing",
       "waitingContributor": "Waiting for a contributor",
       "toVerify": "To verify"
     },
     "type": {
+      "all": "All types",
       "Physical": "Physical",
       "Accounting": "Accounting",
       "Extrapolated": "Extrapolated",
@@ -2094,7 +2046,7 @@
     "videoExplanation": "Please note that the assessment associated with this 'condensed' training course does not contain any traps if you watch the training carefully. Successful completion will allow you to obtain a free updated training certificate. However, an insufficient result would mean that you will have to reintegrate into the full training course (new Initiation module if you were trained M1 on V8, or new Professional module if you were trained M2 on V8).",
     "evaluation": "Knowledge assessment",
     "evaluationEnded": "You already answered the questionnaire",
-    "evaluationSubtitle": "Please complete the knowledge assessment questionnaire to receive your v9 training attestation. It is limited in time and you will have <red>at most {time} minutes to answer the question. You can only answer the questionnaire once. Once you've started, you can't go back.</red>",
+    "evaluationSubtitle": "Please complete the knowledge assessment questionnaire to receive your v9 training attestation. It is limited in time and you will have <error>at most {time} minutes to answer the question. You can only answer the questionnaire once. Once you've started, you can't go back.</error>",
     "acceptation": "I've understood that I'll only be able to launch the questionnaire once and that I'll have a limited amount of time to answer the question. I'm in the right conditions to start my test",
     "answer": "Answer the questionnaire",
     "timer": "Remaining time: ",
@@ -2125,8 +2077,7 @@
     "body": " If you have 5 minutes, we'd love to hear your feedback on BC+! This will help us to meet your needs as effectively as possible in our future developments. If this isn't a good time, you can delay your answer.",
     "reject": "Do not answer",
     "delay": "Later ({time} days)",
-    "answer": "Let's go",
-    "close": "Close"
+    "answer": "Let's go"
   },
   "form": {
     "validation": {
@@ -2174,14 +2125,10 @@
     "tooSmall": "Please enter a larger value",
     "tooBig": "Please enter a smaller value",
     "studyYearMustBeBeforeCurrent": "The study year must be before the current study year",
+    "studyYearMustBeAfterLinkedStudies": "Cannot set a date earlier than your linked studies in your transition plan",
     "maxTwoDecimals": "The reduction rate must have at most 2 decimal places"
   },
   "common": {
-    "actions": {
-      "edit": "Edit",
-      "duplicate": "Duplicate",
-      "delete": "Delete"
-    },
     "typeToConfirm": "Type \"{name}\" to confirm"
   }
 }

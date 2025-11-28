@@ -34,6 +34,7 @@ const SelectOrganization = ({
   duplicateStudyId,
 }: Props) => {
   const t = useTranslations('study.organization')
+  const tCommon = useTranslations('common')
   const tOrganizationSites = useTranslations('organization.sites')
   const [error, setError] = useState('')
   const [showWarningModal, setShowWarningModal] = useState(false)
@@ -183,7 +184,7 @@ const SelectOrganization = ({
                   data-testid="new-study-organization-button"
                   onClick={next}
                 >
-                  {t('next')}
+                  {tCommon('next')}
                 </Button>
                 {error && <FormHelperText error>{error}</FormHelperText>}
               </div>

@@ -1,12 +1,12 @@
 'use client'
 
-import { Button, ButtonProps, styled } from '@mui/material'
+import { Button, ButtonProps, CSSProperties, styled } from '@mui/material'
 
-const StyledNavbarButton = styled(Button)(({ theme }) => ({
+const StyledNavbarButton = styled(Button)<ButtonProps>(({ theme }) => ({
   color: theme.custom.navbar.text.color,
   fontFamily: theme.custom.navbar.text.fontFamily,
   fontWeight: theme.custom.navbar.text.fontWeight,
-  textTransform: theme.custom.navbar.text.textTransform,
+  textTransform: theme.custom.navbar.text.textTransform as CSSProperties['textTransform'],
   fontSize: theme.custom.navbar.text.fontSize,
 }))
 

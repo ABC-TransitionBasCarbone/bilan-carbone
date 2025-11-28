@@ -4,7 +4,6 @@
 
 .value {
   font-size: 0.875rem;
-  color: var(--neutral-500);
 }
 
 .contributors {
@@ -12,15 +11,56 @@
   font-size: 0.875rem;
 }
 
+.accordion {
+  border-radius: 0.5rem !important;
+}
+
 .subPostContainer {
   position: sticky;
   top: 0;
   z-index: 10;
   background-color: white;
-  border-bottom: solid 1px var(--grayscale-700);
+  border-radius: 0.5rem;
   height: 5rem;
+  color: white;
+
+  &.open {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+  }
+
+  svg {
+    color: white;
+  }
+}
+
+.post-green {
+  background-color: var(--post-green-dark);
+}
+
+.post-darkBlue {
+  background-color: var(--post-darkBlue-dark);
+}
+
+.post-blue {
+  background-color: var(--post-blue-dark);
+}
+
+.post-orange {
+  background-color: var(--post-orange-dark);
 }
 
 .subPostDetailsContainer {
   position: relative;
+}
+
+.searchInput {
+  input {
+    min-width: 10rem;
+  }
+}
+.helpIcon {
+  &:hover {
+    color: white !important;
+  }
 }
