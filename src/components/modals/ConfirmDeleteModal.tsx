@@ -2,13 +2,13 @@
 
 import { TextField, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import { useState } from 'react'
+import { ReactNode, useState } from 'react'
 import Modal from './Modal'
 
 interface ConfirmDeleteModalProps {
   open: boolean
   title: string
-  message: string
+  message: string | ReactNode
   confirmText?: string
   cancelText?: string
   requireNameMatch?: string

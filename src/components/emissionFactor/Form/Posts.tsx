@@ -49,6 +49,7 @@ const Posts = <T extends SubPostsCommand>({
   post: initialPost,
   postOptions,
 }: Props<T>) => {
+  const tCommon = useTranslations('common')
   const t = useTranslations('emissionFactors.create')
   const tPost = useTranslations('emissionFactors.post')
   const [selectedSubPosts, setSelectedSubPosts] = useState<SubPost[] | undefined>(initalSubPosts)
@@ -176,8 +177,8 @@ const Posts = <T extends SubPostsCommand>({
       <Button
         className={styles.deleteButton}
         data-testid="delete-site-button"
-        title={t('delete')}
-        aria-label={t('delete')}
+        title={tCommon('delete')}
+        aria-label={tCommon('delete')}
         onClick={handleDelete}
       >
         <DeleteIcon />

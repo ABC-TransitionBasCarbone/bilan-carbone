@@ -4,6 +4,7 @@ import BaseTable from '@/components/base/Table'
 import { TableActionButton } from '@/components/base/TableActionButton'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { customRich } from '@/i18n/customRich'
 import { deleteObjective, deleteTrajectory } from '@/services/serverFunctions/trajectory'
 import { formatNumber } from '@/utils/number'
 import { getTrajectoryTypeLabel } from '@/utils/trajectory'
@@ -61,6 +62,7 @@ const fuseOptions = {
 }
 
 const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, studyId, searchFilter = '' }: Props) => {
+  const tCommon = useTranslations('common')
   const t = useTranslations('study.transitionPlan.objectives')
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
@@ -285,14 +287,17 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, st
   return (
     <>
       <BaseTable table={table} testId="trajectory-objectives" />
-
       {deleteModalOpen && (
         <ConfirmDeleteModal
           open={deleteModalOpen}
           title={deleteTarget?.type === 'trajectory' ? t('deleteTrajectory.title') : t('deleteObjective.title')}
-          message={deleteTarget?.type === 'trajectory' ? t('deleteTrajectory.message') : t('deleteObjective.message')}
-          confirmText={t('delete')}
-          cancelText={t('cancel')}
+          message={
+            deleteTarget?.type === 'trajectory'
+              ? customRich(t, 'deleteTrajectory.message')
+              : customRich(t, 'deleteObjective.message')
+          }
+          confirmText={tCommon('delete')}
+          cancelText={tCommon('cancel')}
           requireNameMatch={deleteTarget?.type === 'trajectory' ? deleteTarget.name : undefined}
           onConfirm={handleConfirmDelete}
           onCancel={() => {
@@ -301,7 +306,6 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, st
           }}
         />
       )}
-
       {editModalOpen && (
         <TrajectoryCreationModal
           open={editModalOpen}

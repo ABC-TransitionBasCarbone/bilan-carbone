@@ -26,6 +26,8 @@ export interface Props {
   bold?: boolean
   descriptionColor?: string
   fullSize?: boolean
+  rightComponent?: ReactNode
+  isMainContainer?: boolean
 }
 
 const Block = ({
@@ -43,6 +45,8 @@ const Block = ({
   bold,
   descriptionColor,
   fullSize = true,
+  rightComponent,
+  isMainContainer = true,
   ...rest
 }: Props) => {
   const titleDiv = (
@@ -58,21 +62,26 @@ const Block = ({
   )
 
   return (
-    <div className={classNames('main-container', styles.block, { grow: fullSize })} {...rest}>
+    <div className={classNames(isMainContainer ? 'main-container' : '', styles.block, { grow: fullSize })} {...rest}>
       <div className={classNames(styles.content, className)}>
-        {actions ? (
+        {actions || rightComponent ? (
           <div className={classNames(styles.header, 'align-center justify-between', bold && 'bold')}>
             {titleDiv}
-            <div className={classNames(styles.actions, 'flex')}>
-              {actions.map(({ actionType, ...action }, index) =>
-                actionType === 'button' ? (
-                  <Button key={index} variant="outlined" {...(action as ButtonProps)} />
-                ) : actionType === 'loadingButton' ? (
-                  <LoadingButton key={index} {...(action as LoadingButtonProps)} />
-                ) : (
-                  <LinkButton key={index} variant="contained" {...(action as ButtonProps & { href: string })} />
-                ),
+            <div className={classNames(styles.actions, 'flex gapped1 align-center')}>
+              {actions && (
+                <div className={classNames(styles.actions, 'flex')}>
+                  {actions.map(({ actionType, ...action }, index) =>
+                    actionType === 'button' ? (
+                      <Button key={index} variant="outlined" {...(action as ButtonProps)} />
+                    ) : actionType === 'loadingButton' ? (
+                      <LoadingButton key={index} {...(action as LoadingButtonProps)} />
+                    ) : (
+                      <LinkButton key={index} variant="contained" {...(action as ButtonProps & { href: string })} />
+                    ),
+                  )}
+                </div>
               )}
+              {rightComponent && <div className={'ml1'}>{rightComponent}</div>}
             </div>
           </div>
         ) : (

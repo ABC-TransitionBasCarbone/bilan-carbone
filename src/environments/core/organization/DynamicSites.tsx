@@ -9,7 +9,7 @@ import { UseFormReturn } from 'react-hook-form'
 import DynamicComponent from '../utils/DynamicComponent'
 
 interface Props<T extends SitesCommand> {
-  form?: UseFormReturn<T>
+  form: UseFormReturn<T>
   sites: SitesCommand['sites']
   withSelection?: boolean
   caUnit: SiteCAUnit
@@ -18,7 +18,9 @@ interface Props<T extends SitesCommand> {
 const DynamicSites = <T extends SitesCommand>({ sites, form, withSelection, caUnit }: Props<T>) => (
   <DynamicComponent
     environmentComponents={{
-      [Environment.CUT]: <SitesCut sites={sites} form={form} withSelection={withSelection} />,
+      [Environment.CUT]: (
+        <SitesCut sites={sites} form={form as UseFormReturn<SitesCommand>} withSelection={withSelection} />
+      ),
       [Environment.TILT]: <SitesTilt sites={sites} form={form} caUnit={caUnit} withSelection={withSelection} />,
     }}
     defaultComponent={<SitesBC sites={sites} form={form} caUnit={caUnit} withSelection={withSelection} />}

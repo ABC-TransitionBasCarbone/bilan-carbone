@@ -215,6 +215,10 @@ const theme = createTheme(base, {
       [Post.Fret]: { light: '#79C7AB', dark: '#469478' },
       [Post.FinDeVie]: { light: '#FBBC6B', dark: '#C88938' },
       [Post.UtilisationEtDependance]: { light: '#FBBC6B', dark: '#C88938' },
+
+      // CLICKSON
+      [Post.Achats]: { light: '#79C7AB', dark: '#469478' },
+      [Post.Restauration]: { light: '#79C7AB', dark: '#469478' },
     },
     subPostColors: {
       // Energies subposts - variations of #3F5488

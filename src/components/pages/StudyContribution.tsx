@@ -36,10 +36,13 @@ const StudyContributionPage = ({ study, user }: Props) => {
           { label: study.name, link: `/etudes/${study.id}` },
         ].filter((link) => link !== undefined)}
       />
-      <Block title={tStudyNav('dataEntry')} as="h2">
-        <div className="mb1">
-          <SelectStudySite study={study} studySite={studySite} setSite={setSite} />
-        </div>
+      <Block
+        title={tStudyNav('dataEntry')}
+        as="h2"
+        rightComponent={
+          <SelectStudySite sites={study.sites} defaultValue={studySite} setSite={setSite} showAllOption={false} />
+        }
+      >
         <AllPostsInfographyContainer study={study} studySite={studySite} user={user} />
       </Block>
     </>

@@ -46,7 +46,7 @@ const SelectInput = <RuleName extends string>({
   return (
     <StyledFormControl fullWidth error={!!errorMessage} disabled={disabled}>
       <Select
-        value={formElement.value || ''}
+        value={formElement.value ?? formElement.defaultValue ?? ''}
         onChange={handleChange}
         onBlur={onBlur}
         MenuProps={{

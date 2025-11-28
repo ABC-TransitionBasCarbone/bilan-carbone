@@ -2,7 +2,9 @@ import Box from '@/components/base/Box'
 import Title from '@/components/base/Title'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
+import { hasAccessToMonetaryRatio } from '@/services/permissions/environment'
 import { ResultsByTag } from '@/services/results/consolidated'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import { SiteCAUnit } from '@prisma/client'
@@ -27,6 +29,7 @@ interface Props {
   nonSpecificMonetaryRatio: number
   caUnit?: SiteCAUnit
   computedResultsByTag: ResultsByTag[]
+  exportType: string
 }
 
 const EmissionsAnalysis = ({
@@ -40,17 +43,20 @@ const EmissionsAnalysis = ({
   nonSpecificMonetaryRatio,
   caUnit = SiteCAUnit.K,
   computedResultsByTag,
+  exportType,
 }: Props) => {
   const t = useTranslations('study.results')
   const tGlossary = useTranslations('study')
   const tResultUnits = useTranslations('study.results.units')
   const [glossary, setGlossary] = useState('')
 
+  const { environment } = useAppEnvironmentStore()
+
   return (
     <div className="mb2">
-      <Title title={t('analysis')} as="h3" />
+      <Title title={t('analysis')} as="h3" className="mb1" />
       <div className={classNames(styles.analysisContainer, 'flex')}>
-        <div className="flex-col grow">
+        <div className="flex-col grow gapped2">
           <Box className={classNames(styles.gapped, 'justify-center flex-col')}>
             <Title as="h6" title={t('total')} className="justify-center" />
             <div className="flex-row justify-around">
@@ -96,22 +102,24 @@ const EmissionsAnalysis = ({
           />
         </div>
         <div className="flex-col grow">
-          <Box className="mb2">
-            <Title as="h6" title={t('monetaryRatio')} className="justify-center" />
-            <div className={classNames('flex')}>
-              <Data
-                value={`${formatNumber(monetaryRatio, 2)}%`}
-                label={t('monetaryRatioEmissions')}
-                testId="results-monetary-ratio"
-              />
-              <span>{t('ofWhich')}</span>
-              <Data
-                value={`${formatNumber(nonSpecificMonetaryRatio, 2)}%`}
-                label={t('nonSpeMonetaryRatioEmissions')}
-                testId="results-non-spe-monetary-ratio"
-              />
-            </div>
-          </Box>
+          {environment && hasAccessToMonetaryRatio(environment) && (
+            <Box className="mb2">
+              <Title as="h6" title={t('monetaryRatio')} className="justify-center" />
+              <div className={classNames('flex')}>
+                <Data
+                  value={`${formatNumber(monetaryRatio, 2)}%`}
+                  label={t('monetaryRatioEmissions')}
+                  testId="results-monetary-ratio"
+                />
+                <span>{t('ofWhich')}</span>
+                <Data
+                  value={`${formatNumber(nonSpecificMonetaryRatio, 2)}%`}
+                  label={t('nonSpeMonetaryRatioEmissions')}
+                  testId="results-non-spe-monetary-ratio"
+                />
+              </div>
+            </Box>
+          )}
           <ResultsTableAndGraphs
             computedResults={computedResultsByTag}
             resultsUnit={study.resultsUnit}
@@ -119,6 +127,7 @@ const EmissionsAnalysis = ({
             title={t('tagPieChartTitle', { unit: tResultUnits(study.resultsUnit) })}
             type="tag"
             glossary="tagGlossary"
+            exportType={exportType}
           />
         </div>
       </div>

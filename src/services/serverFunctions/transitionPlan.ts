@@ -1,8 +1,8 @@
 'use server'
 
+import { prismaClient } from '@/db/client'
 import { getStudyById, getStudyByIds } from '@/db/study'
 import {
-  createAction,
   createExternalStudy,
   createTransitionPlan,
   createTransitionPlanStudy,
@@ -22,7 +22,7 @@ import {
   getTransitionPlanById,
   getTransitionPlanByIdWithRelations,
   getTransitionPlanByStudyId,
-  TransitionPlanWithRelations,
+  saveIndicatorsOnAction,
   TransitionPlanWithStudies,
   updateAction,
 } from '@/db/transitionPlan'
@@ -67,7 +67,7 @@ export const getAvailableTransitionPlans = async (studyId: string) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const plans = await getOrganizationTransitionPlans(study.organizationVersionId)
+    const plans = await getOrganizationTransitionPlans(study.organizationVersionId, study.startDate.getFullYear())
 
     const accessiblePlans = await Promise.all(
       plans.map(async (plan) => {
@@ -98,17 +98,30 @@ export const initializeTransitionPlan = async (studyId: string, sourceTransition
     }
   })
 
-const duplicateTransitionPlan = async (
-  sourceTransitionPlanId: string,
-  targetStudyId: string,
-): Promise<TransitionPlanWithRelations> => {
+export const duplicateTransitionPlan = async (sourceTransitionPlanId: string, targetStudyId: string) => {
   const sourceTransitionPlan = await getTransitionPlanByIdWithRelations(sourceTransitionPlanId)
 
   if (!sourceTransitionPlan) {
     throw new Error('Source transition plan not found with id ' + sourceTransitionPlanId)
   }
 
-  return duplicateTransitionPlanWithRelations(sourceTransitionPlan, targetStudyId)
+  const duplicated = await duplicateTransitionPlanWithRelations(sourceTransitionPlan, targetStudyId)
+
+  const [sourceStudy, targetStudy] = await Promise.all([
+    getStudyById(sourceTransitionPlan.studyId, null),
+    getStudyById(targetStudyId, null),
+  ])
+
+  if (!targetStudy || !sourceStudy) {
+    console.error(
+      `Cannot link studies because target or source is not found. Target (id, isFound) : ${targetStudyId}, ${!!targetStudy} ; Source (id, isFound) : ${sourceTransitionPlan.studyId}, ${!!sourceStudy}`,
+    )
+    return
+  }
+
+  if (targetStudy.startDate.getFullYear() > sourceStudy.startDate.getFullYear()) {
+    await linkOldStudy(duplicated.id, sourceStudy.id)
+  }
 }
 
 export const addAction = async (command: AddActionCommand) =>
@@ -118,7 +131,15 @@ export const addAction = async (command: AddActionCommand) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    await createAction(command)
+    const { indicators, ...actionData } = command
+    await prismaClient.action.create({
+      data: {
+        ...actionData,
+        ...(indicators && {
+          indicators: { create: indicators.map((ind) => ({ type: ind.type, description: ind.description })) },
+        }),
+      },
+    })
   })
 
 const isYearAlreadyLinked = async (transitionPlanId: string, year: number) => {
@@ -296,9 +317,9 @@ export const getLinkedAndExternalStudies = async (transitionPlanId: string) =>
 
     const linkedStudyIds = transitionPlanStudies.map((transitionPlan) => transitionPlan.studyId)
 
-    const studies = await getStudyByIds(linkedStudyIds)
+    const linkedStudies = await getStudyByIds(linkedStudyIds)
 
-    return { studies, externalStudies }
+    return { linkedStudies, externalStudies }
   })
 
 export const deleteLinkedStudy = async (studyId: string, transitionPlanId: string) =>
@@ -323,7 +344,17 @@ export const editAction = async (id: string, command: AddActionCommand) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    await updateAction(id, command)
+    const { indicators, ...actionData } = command
+
+    await updateAction(id, actionData)
+
+    if (indicators) {
+      const existingIndicatorIds = action.indicators.map((ind) => ind.id)
+      const newIndicatorIds = indicators.map((ind) => ind.id).filter(Boolean)
+      const indicatorsToDelete = existingIndicatorIds.filter((existingId) => !newIndicatorIds.includes(existingId))
+
+      await saveIndicatorsOnAction(id, indicators, indicatorsToDelete)
+    }
   })
 
 export const deleteAction = async (id: string) =>

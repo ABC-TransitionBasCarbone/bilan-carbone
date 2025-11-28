@@ -1,11 +1,15 @@
 'use client'
 
+import usePublicodesSituation from '@/components/publicodes-form/hooks/usePublicodesSituation'
 import PublicodesForm from '@/components/publicodes-form/PublicodesForm'
 import { FullStudy } from '@/db/study'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import { getCutFormBuilder } from '../publicodes/cut-engine'
-import { getPublicodesTarget as getPublicodesTargetRule } from '../publicodes/subPostMapping'
+import { Situation } from 'publicodes'
+import { useMemo } from 'react'
+import { getCutEngine } from '../publicodes/cut-engine'
+import { studySiteToSituation } from '../publicodes/studySiteToSituation'
+import { getFormLayoutsForSubPost, getPublicodesTarget as getPublicodesTargetRule } from '../publicodes/subPostMapping'
 
 export interface PublicodesSubPostFormProps {
   subPost: SubPost
@@ -17,14 +21,27 @@ export interface PublicodesSubPostFormProps {
  * Specific {@link PublicodesForm} for CUT. Target rules are determined based
  * on the given `subPost`.
  */
-const PublicodesSubPostForm = ({ subPost }: PublicodesSubPostFormProps) => {
+const PublicodesSubPostForm = ({ subPost, study, studySiteId }: PublicodesSubPostFormProps) => {
   const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
 
   // const [isLoading, setIsLoading] = useState(true)
   // const [error, setError] = useState<string | null>(null)
 
-  const cutFormBuilder = getCutFormBuilder()
+  const initialSituation = useMemo(() => {
+    const studySite = study.sites.find((site) => site.id === studySiteId)
+    return studySiteToSituation(studySite)
+  }, [study, studySiteId])
+
+  const cutEngine = useMemo(() => {
+    const engine = getCutEngine().shallowCopy()
+    engine.setSituation(initialSituation as Situation<string>)
+    return engine
+  }, [initialSituation])
+
+  const { situation, updateField } = usePublicodesSituation(cutEngine, initialSituation)
+
   const targetRule = getPublicodesTargetRule(subPost)
+  const formLayouts = getFormLayoutsForSubPost(subPost)
 
   // if (error) {
   //   return (
@@ -62,16 +79,15 @@ const PublicodesSubPostForm = ({ subPost }: PublicodesSubPostFormProps) => {
   return (
     <div className="dynamic-subpost-form">
       <PublicodesForm
-        formBuilder={cutFormBuilder}
-        targetRules={[targetRule]}
+        engine={cutEngine}
+        formLayouts={formLayouts}
+        situation={situation}
+        onFieldChange={updateField}
         // TODO: manage autosave answers
         // subPost={subPost}
         // studyId={study.id}
         // studySiteId={studySiteId}
         // studyStartDate={study.startDate}
-
-        // TODO: manage initial answers
-        // initialSituation={{}}
       />
     </div>
   )

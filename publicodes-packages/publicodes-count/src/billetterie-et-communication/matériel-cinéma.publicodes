@@ -6,7 +6,7 @@ billetterie et communication . matériel cinéma:
   unité: kgCO2e
 
 billetterie et communication . matériel cinéma . production:
-  titre: Type de matériel
+  titre: Production cinéma
   question: Quelle quantité de matériel produisez-vous chaque mois ?
   formule:
     somme:
@@ -23,6 +23,7 @@ billetterie et communication . matériel cinéma . production . programme:
       - FE
       - poids
       - commun . nombre de mois par an
+  par défaut: 0
   unité: kgCO2e
   avec:
     nombre:
@@ -47,6 +48,7 @@ billetterie et communication . matériel cinéma . production . affiches:
       - FE
       - poids
       - commun . nombre de mois par an
+  par défaut: 0
   unité: kgCO2e
   avec:
     nombre:
@@ -71,6 +73,7 @@ billetterie et communication . matériel cinéma . production . flyers:
       - FE
       - poids
       - commun . nombre de mois par an
+  par défaut: 0
   unité: kgCO2e
   avec:
     nombre:

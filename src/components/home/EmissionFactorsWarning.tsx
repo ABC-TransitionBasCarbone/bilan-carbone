@@ -9,6 +9,7 @@ interface Props {
 }
 
 const EmissionFactorsWarning = ({ emissionFactors }: Props) => {
+  const tCommon = useTranslations('common')
   const t = useTranslations('emissionFactors.missingQualities')
   const [open, setOpen] = useState(true)
 
@@ -24,7 +25,7 @@ const EmissionFactorsWarning = ({ emissionFactors }: Props) => {
         onClose={onClose}
         title={t('title')}
         actions={[
-          { actionType: 'button', children: t('close'), onClick: onClose },
+          { actionType: 'button', children: tCommon('close'), onClick: onClose },
           { actionType: 'link', children: t('correct'), href: '/facteurs-d-emission', variant: 'contained' },
         ]}
       >
