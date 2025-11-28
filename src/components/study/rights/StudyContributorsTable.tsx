@@ -366,6 +366,7 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
         icon={<HelpIcon onClick={() => setDisplayRoles(!displayRoles)} label={tRole('information')} />}
         expIcon
         iconPosition="after"
+        isMainContainer={false}
         actions={
           canAddContributor
             ? [

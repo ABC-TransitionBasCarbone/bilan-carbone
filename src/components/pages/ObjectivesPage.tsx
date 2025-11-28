@@ -1,17 +1,16 @@
 'use client'
 
-import Title from '@/components/base/Title'
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
-import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import Block from '../base/Block'
+import SelectStudySite from '../study/site/SelectStudySite'
 import ObjectivesFilters from '../study/trajectory/ObjectivesFilters'
 import TrajectoryObjectivesTable from '../study/trajectory/TrajectoryObjectivesTable'
 import TransitionPlanOnboarding from '../study/transitionPlan/TransitionPlanOnboarding'
-import styles from './TrajectoryReductionPage.module.css'
 
 interface Props {
   study: FullStudy
@@ -42,9 +41,11 @@ const ObjectivesPage = ({ study, canEdit, trajectories, transitionPlanId }: Prop
           { label: study.name, link: `/etudes/${study.id}` },
         ].filter((link) => link !== undefined)}
       />
-      <div className={classNames(styles.container, 'flex-col main-container p2 pt3')}>
-        <Title title={t('title')} as="h2" />
-
+      <Block
+        title={t('title')}
+        as="h2"
+        rightComponent={<SelectStudySite sites={study.sites} siteSelectionDisabled isTransitionPlan />}
+      >
         <div className="flex-col gapped2">
           <TransitionPlanOnboarding
             title={t('onboarding.title')}
@@ -73,7 +74,7 @@ const ObjectivesPage = ({ study, canEdit, trajectories, transitionPlanId }: Prop
             />
           </div>
         </div>
-      </div>
+      </Block>
     </>
   )
 }

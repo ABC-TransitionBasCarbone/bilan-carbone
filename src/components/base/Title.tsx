@@ -32,7 +32,7 @@ const Title = ({
   ) : null
 
   return (
-    <IconLabel icon={iconDiv} iconPosition={iconPosition} className={classNames(styles.title, 'mb1', className)}>
+    <IconLabel icon={iconDiv} iconPosition={iconPosition} className={classNames(styles.title, className)}>
       <Title id={id} data-testid={dataTestId}>
         {title}
       </Title>

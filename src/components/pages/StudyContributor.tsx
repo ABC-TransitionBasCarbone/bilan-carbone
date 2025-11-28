@@ -40,42 +40,46 @@ const StudyContributorPage = ({ study, userRole }: Props) => {
   return (
     <>
       <Breadcrumbs current={study.name} links={[{ label: tNav('home'), link: '/' }]} />
-      <Block title={study.name} as="h1">
-        <SelectStudySite study={study} studySite={studySite} setSite={setSite} />
+      <Block
+        title={study.name}
+        as="h2"
+        rightComponent={
+          <SelectStudySite sites={study.sites} defaultValue={studySite} setSite={setSite} showAllOption={false} />
+        }
+      >
+        {Object.values(environmentPostMapping[environment || Environment.BC])
+          .filter((post: Post) =>
+            study.emissionSources.some((emissionSource) => subPostsByPost[post].includes(emissionSource.subPost)),
+          )
+          .map((post) => (
+            <Block
+              key={post}
+              title={
+                <>
+                  {tPost(post)}{' '}
+                  {withInfobulle(post) && <HelpIcon label={tPost('glossary')} onClick={() => setGlossary(post)} />}
+                </>
+              }
+              icon={<PostIcon post={post} />}
+              iconPosition="before"
+            >
+              <SubPosts
+                post={post}
+                study={study}
+                withoutDetail
+                emissionSources={emissionSources}
+                studySite={studySite}
+                userRole={userRole}
+                setGlossary={setGlossary}
+              />
+            </Block>
+          ))}
+        {glossary && (
+          <GlossaryModal glossary={glossary} label="post-glossary" t={tPost} onClose={() => setGlossary('')}>
+            {tPost(`glossaryDescription.${glossary}`)}
+          </GlossaryModal>
+        )}
       </Block>
-
-      {Object.values(environmentPostMapping[environment || Environment.BC])
-        .filter((post: Post) =>
-          study.emissionSources.some((emissionSource) => subPostsByPost[post].includes(emissionSource.subPost)),
-        )
-        .map((post) => (
-          <Block
-            key={post}
-            title={
-              <>
-                {tPost(post)}{' '}
-                {withInfobulle(post) && <HelpIcon label={tPost('glossary')} onClick={() => setGlossary(post)} />}
-              </>
-            }
-            icon={<PostIcon post={post} />}
-            iconPosition="before"
-          >
-            <SubPosts
-              post={post}
-              study={study}
-              withoutDetail
-              emissionSources={emissionSources}
-              studySite={studySite}
-              userRole={userRole}
-              setGlossary={setGlossary}
-            />
-          </Block>
-        ))}
-      {glossary && (
-        <GlossaryModal glossary={glossary} label="post-glossary" t={tPost} onClose={() => setGlossary('')}>
-          {tPost(`glossaryDescription.${glossary}`)}
-        </GlossaryModal>
-      )}
     </>
   )
 }

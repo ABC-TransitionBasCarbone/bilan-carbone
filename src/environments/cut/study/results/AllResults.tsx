@@ -92,21 +92,14 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
   )
 
   return (
-    <Block title={study.name} as="h2" description={tStudyNav('results')} bold descriptionColor="primary">
-      <Box component="section" className="mb2">
-        <Typography>
-          {tResults.rich('cutFeedback', {
-            questionnaire: (children) => (
-              <Link href={process.env.NEXT_PUBLIC_CUT_FEEDBACK_TYPEFORM_LINK ?? ''} target="_blank">
-                <strong>{children}</strong>
-              </Link>
-            ),
-          })}
-        </Typography>
-      </Box>
-      <Box component="section" className="flex gapped">
-        <div className="flex-col gapped">
-          <SelectStudySite study={study} allowAll studySite={studySite} setSite={setSite} />
+    <Block
+      title={study.name}
+      as="h2"
+      description={tStudyNav('results')}
+      bold
+      descriptionColor="primary"
+      rightComponent={
+        <div className="flex gapped align-center">
           <Button
             variant="contained"
             color="primary"
@@ -140,8 +133,23 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
           >
             {pdfLoading ? tResults('downloadingPDF') : tResults('downloadPDF')}
           </LoadingButton>
+          <SelectStudySite sites={study.sites} defaultValue={studySite} setSite={setSite} />
         </div>
-        <Typography className={classNames(styles.infoContainer, 'ml2')}>
+      }
+    >
+      <Box component="section" className="mb2">
+        <Typography>
+          {tResults.rich('cutFeedback', {
+            questionnaire: (children) => (
+              <Link href={process.env.NEXT_PUBLIC_CUT_FEEDBACK_TYPEFORM_LINK ?? ''} target="_blank">
+                <strong>{children}</strong>
+              </Link>
+            ),
+          })}
+        </Typography>
+      </Box>
+      <Box component="section">
+        <Typography className={classNames(styles.infoContainer)}>
           {tResults.rich('infoWithLinks', {
             formation: (children) => (
               <Link href={process.env.NEXT_PUBLIC_FORMATION_URL ?? ''} target="_blank">

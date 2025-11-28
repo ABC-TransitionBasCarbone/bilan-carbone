@@ -6,6 +6,7 @@ import HelpIcon from '@/components/base/HelpIcon'
 import IconLabel from '@/components/base/IconLabel'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import GlossaryModal from '@/components/modals/GlossaryModal'
+import SelectStudySite from '@/components/study/site/SelectStudySite'
 import { OrganizationWithSites } from '@/db/account'
 import { FullStudy } from '@/db/study'
 import Sites from '@/environments/base/organization/Sites'
@@ -272,7 +273,11 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
   )
 
   return (
-    <Block title={t('title', { name: study.name })} as="h2">
+    <Block
+      title={t('title', { name: study.name })}
+      as="h2"
+      rightComponent={<SelectStudySite sites={study.sites} siteSelectionDisabled />}
+    >
       <h3 className="mb1">{t('general', { name: study.name })}</h3>
       {hasEditionRole ? (
         <>

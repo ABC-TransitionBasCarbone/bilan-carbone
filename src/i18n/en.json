@@ -463,6 +463,8 @@
       "site": "Site",
       "allSites": "All sites",
       "noSites": "There are no sites configured for the organization",
+      "allSitesOnly": "This page is global to all sites of the study",
+      "allSitesOnlyTransitionPlan": "This page is global to all sites of the study for the moment",
       "addSite": "Create a site",
       "title": "Which organization is concerned by the study?",
       "sites": "The organization's sites",
@@ -680,6 +682,7 @@
     },
     "results": {
       "type": "Type",
+      "format": "Format",
       "post": "Post",
       "subPost": "Sub-post",
       "tag": "Tag",

@@ -462,6 +462,8 @@
     "organization": {
       "site": "Site",
       "allSites": "Tous les sites",
+      "allSitesOnly": "Cette page est globale à tous les sites de l'étude",
+      "allSitesOnlyTransitionPlan": "Cette page est globale à tous les sites de l'étude pour le moment",
       "noSites": "Il n'y a pas de sites configurés sur l'organisation",
       "addSite": "Créer un site",
       "title": "Quelle organisation est concernée par l'étude ?",
@@ -680,6 +682,7 @@
     },
     "results": {
       "type": "Type",
+      "format": "Format",
       "post": "Poste",
       "subPost": "Sous-poste",
       "tag": "Tag",

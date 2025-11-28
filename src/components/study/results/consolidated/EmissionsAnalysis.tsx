@@ -48,9 +48,9 @@ const EmissionsAnalysis = ({
 
   return (
     <div className="mb2">
-      <Title title={t('analysis')} as="h3" />
+      <Title title={t('analysis')} as="h3" className="mb1" />
       <div className={classNames(styles.analysisContainer, 'flex')}>
-        <div className="flex-col grow">
+        <div className="flex-col grow gapped2">
           <Box className={classNames(styles.gapped, 'justify-center flex-col')}>
             <Title as="h6" title={t('total')} className="justify-center" />
             <div className="flex-row justify-around">
