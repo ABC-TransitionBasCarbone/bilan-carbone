@@ -10,10 +10,7 @@ salles et cabines . matériel technique:
 
 salles et cabines . matériel technique . cloud:
   titre: Cloud
-  formule:
-    produit:
-      - stockage
-      - FE
+  formule: stockage * FE
   unité: kgCO2e
   avec:
     FE:
@@ -34,16 +31,17 @@ salles et cabines . matériel technique . disques durs:
       - FE
       - nombre
       - (1 an / amortissement)
+  unité: kgCO2e
   avec:
     amortissement:
       valeur: 5
       unité: an
+
     FE:
       valeur: 200
       unité: kgCO2e/unité
       meta:
         id: 140
-  unité: kgCO2e
 
 salles et cabines . matériel technique . disques durs . nombre:
   question: De combien de disques durs disposez-vous ?
