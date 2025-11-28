@@ -1,7 +1,7 @@
 déchets:
   titre: Déchets
   description: Calcul de l'impact des déchets.
-  valeur:
+  formule:
     somme:
       - ordinaires
       - exceptionnels
