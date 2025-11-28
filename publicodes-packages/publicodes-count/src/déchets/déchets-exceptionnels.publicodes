@@ -36,11 +36,10 @@ déchets . exceptionnels . lampe xenon:
       titre: Nombre de lampes
       question: Quelle quantité de lampes Xenon avez vous jeté cette année ?
       unité: unité
-      note: |
-        Nous avons modifier la question pour ne pas faire apparaitre la date
-        dans la question pour le moment. (old: Quelle quantité de lampes Xenon
-        avez vous jeté en 2025 ?)
-
+      note: >
+        Nous avons modifier la question pour ne pas faire apparaitre la
+        date dans la question pour le moment. (old: Quelle quantité de
+        lampes Xenon avez vous jeté en 2025 ?)
 déchets . exceptionnels . matériel technique:
   titre: Matériel technique
   description: Impact annuel des déchets de matériel technique (écrans, ordinateurs, etc.).
@@ -62,6 +61,8 @@ déchets . exceptionnels . matériel technique:
 
     quantité:
       question: Quelle quantité de matériel technique avez vous jeté cette année ?
-      note: |
-        Nous avons modifer la question pour ne pas faire apparaire la date dans la question poue le moment. (old: Quelle quantité de matériel technique avez vous jeté en 2025 ?)
+      note: >
+        Nous avons modifer la question pour ne pas faire apparaire la
+        date dans la question poue le moment. (old: Quelle quantité de
+        matériel technique avez vous jeté en 2025 ?)
       unité: kg

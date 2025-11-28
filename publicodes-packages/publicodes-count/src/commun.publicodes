@@ -31,9 +31,8 @@ commun . année actuelle:
   valeur: 12/2025
 
 commun . FE:
-  description: |
+  description: >
     On regroupe ici les facteurs d'émission communs à plusieurs postes.
-
 commun . FE . repas:
   # TODO: refactor with other fields ?
   titre: Facteur d'émission d'un repas moyen

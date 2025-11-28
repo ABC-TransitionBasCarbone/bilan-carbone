@@ -163,7 +163,8 @@ fonctionnement . bâtiment . autre activité:
     surface:
       question: Quelle est la surface totale du bâtiment (cinéma inclus) ?
       unité: m2
-
+  note: >
+    TODO: Pas d'émissions associées ?
 fonctionnement . bâtiment . est partagé:
   question: Le bâtiment est-il partagé avec une autre activité ?
 
@@ -191,6 +192,7 @@ fonctionnement . bâtiment . parking:
     amortissement:
       valeur: 50
       unité: an
-
+  note: >
+    Il semble que le calcul n'est pas bon actuellement en ligne.
 fonctionnement . bâtiment . parking présent:
   question: Le cinéma dispose-t-il d’un parking ?

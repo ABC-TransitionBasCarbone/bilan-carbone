@@ -37,13 +37,14 @@ fonctionnement . activités de bureau . services:
   avec:
     montant:
       question: Quel montant avez-vous dépensé en services ?
-      description: |
-        Les services incluent par exemple les dépenses de ménage, sécurité,
-        comptabilité, frais bancaires, etc. Vous pouvez utiliser une valeur par
-        défaut pour cette réponse (25286€) qui est issue des Bilans Carbone®
-        qui ont étés réalisés sur plusieurs cinémas français. Si vous détenez
-        une information plus précise pour votre cinéma, nous vous invitons à
-        l'utiliser plutôt que la valeur par défaut.
+      description: >
+        Les services incluent par exemple les dépenses de ménage,
+        sécurité, comptabilité, frais bancaires, etc. Vous pouvez
+        utiliser une valeur par défaut pour cette réponse (25286€) qui
+        est issue des Bilans Carbone® qui ont étés réalisés sur
+        plusieurs cinémas français. Si vous détenez une information plus
+        précise pour votre cinéma, nous vous invitons à l'utiliser
+        plutôt que la valeur par défaut.
       valeur: 10
       unité: €
 
@@ -57,14 +58,15 @@ fonctionnement . activités de bureau . informatique:
   titre: Informatique
   unité: kgCO2e
   question: Pour chacun de ces équipements informatiques, veuillez indiquer leur nombre et leur date d'achat ou durée de location
-  description: |
-    Si l'équipement concerné est acheté, merci de ne pas remplir le champ
+  description: >
+    'Si l'équipement concerné est acheté, merci de ne pas remplir le champ
     "Durée de location". Si l'équipement concerné est loué de manière
-    ponctuelle, merci de ne pas remplir le champ "Date d'achat". Si vous louez
-    un équipement pour de longues durées ou de manière continue, nous vous
-    recommandons de le considérer comme acheté (à la date de la première année
-    de location).
-  note: La durée de location prévaut sur la date d'achat.
+    ponctuelle, merci de ne pas remplir le champ "Date d'achat". Si vous
+    louez un équipement pour de longues durées ou de manière continue, nous
+    vous recommandons de le considérer comme acheté (à la date de la
+    première année de location).'
+  note: >
+    La durée de location prévaut sur la date d'achat.
   # TODO: Should be a list of equipment
   formule: empreinte équipement
 

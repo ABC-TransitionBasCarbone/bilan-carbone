@@ -18,9 +18,10 @@ billetterie et communication . communication digitale . newsletters:
   avec:
     nombre:
       question: Combien de newsletters ont été envoyées cette annnée ?
-      note: |
-        Pour le moment, nous avons modifer le wording pour ne pas faire apparaître la date da ns la question (old: Combien de newsletters ont été envoyées en 2025 ?)
-
+      note: >
+        Pour le moment, nous avons modifer le wording pour ne pas faire
+        apparaître la date da ns la question (old: Combien de
+        newsletters ont été envoyées en 2025 ?)
     destinataires:
       question: En moyenne, à combien de personnes sont adressées ces newsletters ?
 
@@ -32,7 +33,7 @@ billetterie et communication . communication digitale . newsletters:
 
 billetterie et communication . communication digitale . affichage dynamique:
   titre: Affichage dynamique
-  note: |
+  note: >
     TODO: Il semble qu'il manque les 5 ans d'amortissement
   formule: nombre * FE
   avec:
@@ -48,7 +49,7 @@ billetterie et communication . communication digitale . affichage dynamique:
 
 billetterie et communication . communication digitale . écrans:
   titre: Écrans
-  note: |
+  note: >
     TODO: Il semble qu'il manque les 5 ans d'amortissement
   formule: nombre * FE
   avec:
@@ -64,7 +65,7 @@ billetterie et communication . communication digitale . écrans:
 
 billetterie et communication . communication digitale . affichage extérieur:
   titre: Affichage extérieur
-  note: |
+  note: >
     TODO: Il semble qu'il manque les 5 ans d'amortissement
   formule: surface * FE
   avec:
