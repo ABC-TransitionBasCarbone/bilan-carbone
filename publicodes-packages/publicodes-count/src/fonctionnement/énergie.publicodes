@@ -16,16 +16,15 @@ fonctionnement . énergie:
 
 fonctionnement . énergie . électricité:
   titre: Électricité
-  formule:
-    produit:
-      - consommation
-      - FE
+  formule: consommation * FE
   avec:
     consommation:
       question: Combien de kWh d'électricité ont étés consommés par le cinéma cette année ?
       note: |
-        Pour le moment, nous avons modifer le wording pour ne pas faire apparaître la date dans la question.
+        Pour le moment, nous avons modifer le wording pour ne pas faire
+        apparaître la date dans la question.
       unité: kWh
+
     FE:
       valeur: 0.0791
       unité: kgCO2e/kWh
@@ -34,16 +33,15 @@ fonctionnement . énergie . électricité:
 
 fonctionnement . énergie . gaz:
   titre: Gaz
-  formule:
-    produit:
-      - consommation
-      - FE
+  formule: consommation * FE
   avec:
     consommation:
       question: Combien de m³ de gaz ont étés consommés par le cinéma cette année ?
       note: |
-        Pour le moment, nous avons modifer le wording pour ne pas faire apparaître la date dans la question.
+        Pour le moment, nous avons modifer le wording pour ne pas faire
+        apparaître la date dans la question.
       unité: m3
+
     FE:
       valeur: 2.32
       unité: kgCO2e/m3
@@ -52,16 +50,15 @@ fonctionnement . énergie . gaz:
 
 fonctionnement . énergie . fioul:
   titre: Fioul
-  formule:
-    produit:
-      - consommation
-      - FE
+  formule: consommation * FE
   avec:
     consommation:
       question: Combien de litres de fioul ont étés consommés par le cinéma cette année ?
       note: |
-        Pour le moment, nous avons modifer le wording pour ne pas faire apparaître la date dans la question.
+        Pour le moment, nous avons modifer le wording pour ne pas faire
+        apparaître la date dans la question.
       unité: litre
+
     FE:
       valeur: 3.18586
       unité: kgCO2e/litre
@@ -70,15 +67,15 @@ fonctionnement . énergie . fioul:
 
 fonctionnement . énergie . réseau de chaleur:
   titre: Réseau de chaleur
-  formule:
-    produit:
-      - consommation
-      - FE
+  formule: consommation * FE
   avec:
     consommation:
-      question: Combien de KWh issus de réseau de chaleur ont été consommés par le cinéma cette année ?
+      question: |
+        Combien de KWh issus de réseau de chaleur ont été consommés par le
+        cinéma cette année ?
       note: |
-        Pour le moment, nous avons modifer le wording pour ne pas faire apparaître la date dans la question.
+        Pour le moment, nous avons modifer le wording pour ne pas faire
+        apparaître la date dans la question.
       unité: kWh
     FE:
       valeur: 0.385
@@ -88,16 +85,17 @@ fonctionnement . énergie . réseau de chaleur:
 
 fonctionnement . énergie . réseau de froid:
   titre: Réseau de froid
-  formule:
-    produit:
-      - consommation
-      - FE
+  formule: consommation * FE
   avec:
     consommation:
-      question: Combien de KWh issus de réseau de froid ont été consommés par le cinéma cette année ?
+      question: |
+        Combien de KWh issus de réseau de froid ont été consommés par le cinéma
+        cette année ?
       note: |
-        Pour le moment, nous avons modifer le wording pour ne pas faire apparaître la date dans la question.
+        Pour le moment, nous avons modifer le wording pour ne pas faire
+        apparaître la date dans la question.
       unité: kWh
+
     FE:
       valeur: 0.12
       unité: kgCO2e/kWh
@@ -106,16 +104,17 @@ fonctionnement . énergie . réseau de froid:
 
 fonctionnement . énergie . granulés:
   titre: Granulés de bois
-  formule:
-    produit:
-      - consommation
-      - FE
+  formule: consommation * FE
   avec:
     consommation:
-      question: Combien de kWh issus de la combustion de granulés de bois ont étés consommés par le cinéma cette année ?
+      question: |
+        Combien de kWh issus de la combustion de granulés de bois ont étés
+        consommés par le cinéma cette année ?
       note: |
-        Pour le moment, nous avons modifer le wording pour ne pas faire apparaître la date dans la question.
+        Pour le moment, nous avons modifer le wording pour ne pas faire
+        apparaître la date dans la question.
       unité: kg
+
     FE:
       valeur: 0.0113
       unité: kgCO2e/kg
@@ -135,6 +134,7 @@ fonctionnement . énergie . climatisation:
       question: Combien de kWh de climatisation ont étés consommés par le cinéma cette année ?
       note: |
         TODO: comprendre le chiffre à prendre ? CNC.écrans ?
+
     FE:
       valeur: 2332
       unité: kgCO2e
@@ -150,9 +150,7 @@ fonctionnement . énergie . groupes électrogènes:
   formule:
     somme:
       - fabrication
-      - produit:
-          - consommation
-          - FE
+      - consommation * FE
   avec:
     fabrication:
       note: Pas d'amortissement  ?
@@ -163,10 +161,12 @@ fonctionnement . énergie . groupes électrogènes:
           unité: kgCO2e
           meta:
             id: 20911
+
     consommation:
       applicable si: équipement groupes électrogènes = "utilisation régulière"
       question: Quelle est votre consommation annuelle de diesel ?
       unité: litre
+
     FE:
       valeur: 3.161689
       unité: kgCO2e/litre

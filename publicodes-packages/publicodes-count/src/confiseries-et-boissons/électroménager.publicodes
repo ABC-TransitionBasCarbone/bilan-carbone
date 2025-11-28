@@ -2,11 +2,16 @@ confiseries et boissons . électroménager:
   titre: Électroménager
   unité: kgCO2e
   question: |
-    Pour les différents équipements informatiques utilisés, veuillez indiquer leur nombre et leur date d'achat ou durée de location :
+    Pour les différents équipements informatiques utilisés, veuillez indiquer
+    leur nombre et leur date d'achat ou durée de location :
   description: |
-    Si l'équipement concerné est acheté, merci de ne pas remplir le champ "Durée de location". Si l'équipement concerné est loué de manière ponctuelle, merci de ne pas remplir le champ "Date d'achat". Si vous louez un équipement pour de longues durées ou de manière continue, nous vous recommandons de le considérer comme acheté (à la date de la première année de location).
-  note: |
-    La durée de location prévaut sur la date d'achat.
+    Si l'équipement concerné est acheté, merci de ne pas remplir le champ
+    "Durée de location". Si l'équipement concerné est loué de manière
+    ponctuelle, merci de ne pas remplir le champ "Date d'achat". Si vous louez
+    un équipement pour de longues durées ou de manière continue, nous vous
+    recommandons de le considérer comme acheté (à la date de la première année
+    de location).
+  note: La durée de location prévaut sur la date d'achat.
   formule:
     somme:
       - réfrigérateurs
@@ -16,6 +21,11 @@ confiseries et boissons . électroménager:
 
 confiseries et boissons . électroménager . appareil:
   titre: Empreinte appareil électroménager type
+  description: |
+    Calcul de l'empreinte d'un appareil électroménager type en fonction de
+    son nombre, de sa date d'achat ou de sa durée de location.
+
+    Règle de calcul utilisée pour chaque type d'appareil électroménager.
   formule:
     variations:
       - si:
@@ -42,19 +52,24 @@ confiseries et boissons . électroménager . appareil:
         depuis: année achat
         jusqu'à: commun . année actuelle
       arrondi: oui
+
     nb appareils:
       question: Nombre d'appareils
+
     année achat:
       non applicable si:
         est défini: durée location
       question: Année d'achat des appareils
+
     durée location:
       question: Durée de location des appareils (jours à l'année)
       unité: jour
+
     amortissement:
       valeur: 5
       unité: an
       note: La durée d'amortissement est la même pour tous les appareils électroménagers.
+
     FE:
       unité: kgCO2e
 
@@ -72,11 +87,14 @@ confiseries et boissons . électroménager . réfrigérateurs:
       unité: kgCO2e
       meta:
         id: 26976
+
     nombre:
       question: Nombre de réfrigérateurs
+
     durée location:
       question: Durée de location des réfrigérateurs (jours à l'année)
       unité: jour
+
     année achat:
       non applicable si:
         est défini: réfrigérateurs . durée location
@@ -96,11 +114,14 @@ confiseries et boissons . électroménager . congélateurs:
       unité: kgCO2e
       meta:
         id: 26978
+
     nombre:
       question: Nombre de congélateurs
+
     durée location:
       question: Durée de location des congélateurs (jours à l'année)
       unité: jour
+
     année achat:
       non applicable si:
         est défini: congélateurs . durée location
@@ -120,11 +141,14 @@ confiseries et boissons . électroménager . warmers:
       unité: kgCO2e
       meta:
         id: 26986
+
     nombre:
       question: Nombre de warmers
+
     durée location:
       question: Durée de location des warmers (jours à l'année)
       unité: jour
+
     année achat:
       non applicable si:
         est défini: warmers . durée location
@@ -144,11 +168,14 @@ confiseries et boissons . électroménager . distributeurs:
       unité: kgCO2e
       meta:
         id: 26976
+
     nombre:
       question: Nombre de distributeurs snack et boissons
+
     durée location:
       question: Durée de location des distributeurs snack et boissons (jours à l'année)
       unité: jour
+
     année achat:
       non applicable si:
         est défini: distributeurs . durée location
