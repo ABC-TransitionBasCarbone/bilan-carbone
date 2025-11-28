@@ -27,6 +27,7 @@ déchets . ordinaires . ordures ménagères:
       - 0.001 tonne/kg
       - FE
       - commun . nombre de semaines par an
+  par défaut: 0
   avec:
     nombre bennes:
       question: Nombre de bennes
@@ -63,6 +64,7 @@ déchets . ordinaires . emballages et papier:
       - 0.001 tonne/kg
       - FE
       - commun . nombre de semaines par an
+  par défaut: 0
   avec:
     nombre bennes:
       question: Nombre de bennes
@@ -99,6 +101,7 @@ déchets . ordinaires . biodéchets:
       - 0.001 tonne/kg
       - FE
       - commun . nombre de semaines par an
+  par défaut: 0
   avec:
     nombre bennes:
       question: Nombre de bennes
@@ -135,6 +138,7 @@ déchets . ordinaires . verre:
       - 0.001 tonne/kg
       - FE
       - commun . nombre de semaines par an
+  par défaut: 0
   avec:
     nombre bennes:
       question: Nombre de bennes
