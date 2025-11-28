@@ -28,6 +28,7 @@ commun . nombre de jours par an:
 commun . année actuelle:
   titre: Année actuelle
   description: Année de référence pour le calcul des amortissements.
+  type: date
   valeur: 12/2025
 
 commun . FE:
@@ -35,7 +36,6 @@ commun . FE:
     On regroupe ici les facteurs d'émission communs à plusieurs postes.
 
 commun . FE . repas:
-  # TODO: refactor with other fields ?
   titre: Facteur d'émission d'un repas moyen
   valeur: 2.04
   unité: kgCO2e/repas
@@ -43,7 +43,6 @@ commun . FE . repas:
     id: 20682
 
 commun . FE . moyen de transport:
-  # TODO: refactor with "déplacements spectateurs ?"
   titre: Facteur d'émission moyens de transport
   avec:
     RER et transilien:

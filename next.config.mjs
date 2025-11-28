@@ -14,6 +14,7 @@ const nextConfig = {
       underscore: 'lodash',
       // NOTE: while the package is not published to npm, we use a local path
       '@abc-transitionbascarbone/publicodes-count': './publicodes-packages/publicodes-count/',
+      // '@publicodes/forms': '../../publicodes/publicodes/packages/forms/src/',
     },
     resolveExtensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
   },
@@ -23,7 +24,7 @@ const nextConfig = {
   experimental: {
     serverActions: { bodySizeLimit: '5mb' },
   },
-  transpilePackages: ['mui-color-input', '@abc-transitionbascarbone/publicodes-count'],
+  transpilePackages: ['mui-color-input', '@abc-transitionbascarbone/publicodes-count', '@publicodes/forms'],
   reactStrictMode: true,
   headers: async () => [
     {

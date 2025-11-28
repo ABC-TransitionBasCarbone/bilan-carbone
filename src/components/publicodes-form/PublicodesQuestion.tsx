@@ -1,39 +1,37 @@
 import Box from '@mui/material/Box'
-import { EvaluatedFormLayout } from '@publicodes/forms'
+import GroupQuestion from './GroupQuestion'
 import PublicodesInputField from './InputField'
+import { EvaluatedFormLayout } from './layouts/evaluatedFormLayout'
 import QuestionContainer from './QuestionContainer'
 import TableQuestion from './TableQuestion'
-import { OnFormInputChange } from './utils'
+import { OnFieldChange } from './utils'
 
-export interface PublicodesFormFieldProps<RuleName extends string> {
+export interface PublicodesQuestionProps<RuleName extends string> {
   formLayout: EvaluatedFormLayout<RuleName>
-  onChange: OnFormInputChange<RuleName>
+  onChange: OnFieldChange<RuleName>
 }
 
-/**
- * A generic form field component that renders different types of input fields
- * based on the provided {@link EvaluatedFormElement}.
- */
-export default function PublicodesFormField<RuleName extends string>({
+export default function PublicodesQuestion<RuleName extends string>({
   formLayout,
   onChange,
-}: PublicodesFormFieldProps<RuleName>) {
+}: PublicodesQuestionProps<RuleName>) {
   switch (formLayout.type) {
-    case 'simple': {
+    case 'input': {
       const formElement = formLayout.evaluatedElement
-      const formElementProps = {
-        hidden: formElement.hidden,
-        useful: formElement.useful,
-        disabled: formElement.disabled,
-        autofocus: formElement.autofocus,
-        required: formElement.required,
-      }
+
       return (
         <Box key={formElement.id} sx={{ mb: 2 }}>
           <QuestionContainer label={formElement.label} helperText={formElement.description}>
-            <PublicodesInputField formElement={formElement} formElementProps={formElementProps} onChange={onChange} />
+            <PublicodesInputField formElement={formElement} onChange={onChange} />
           </QuestionContainer>
         </Box>
+      )
+    }
+    case 'group': {
+      return (
+        <QuestionContainer label={formLayout.title}>
+          <GroupQuestion groupLayout={formLayout} onChange={onChange} />
+        </QuestionContainer>
       )
     }
     case 'table': {

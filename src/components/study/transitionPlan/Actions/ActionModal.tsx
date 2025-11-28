@@ -1,18 +1,23 @@
 import LoadingButton from '@/components/base/LoadingButton'
 import Toast, { ToastColors } from '@/components/base/Toast'
 import ModalStepper from '@/components/modals/ModalStepper'
+import { ActionWithIndicators } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { getStudyOrganizationMembers } from '@/services/serverFunctions/study'
 import { addAction, editAction } from '@/services/serverFunctions/transitionPlan'
-import { AddActionCommand, AddActionCommandValidation } from '@/services/serverFunctions/transitionPlan.command'
+import {
+  ActionIndicatorCommand,
+  AddActionCommand,
+  AddActionCommandValidation,
+} from '@/services/serverFunctions/transitionPlan.command'
 import { calculatePriorityFromRelevance } from '@/utils/action'
 import { objectWithoutNullAttributes } from '@/utils/object'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Action, ActionPotentialDeduction } from '@prisma/client'
+import { ActionIndicatorType, ActionPotentialDeduction } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useParams, useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import styles from './ActionModal.module.css'
 import Step1 from './ActionModalStep1'
@@ -24,7 +29,7 @@ const toastPosition = { vertical: 'bottom', horizontal: 'left' } as const
 
 interface Props {
   open: boolean
-  action?: Action
+  action?: ActionWithIndicators
   onClose: () => void
   transitionPlanId: string
   studyUnit: string
@@ -56,6 +61,23 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
     }
   }, [open, studyId, callServerFunction])
 
+  const setDefaultIndicators = useCallback((indicators: ActionIndicatorCommand[]) => {
+    const defaultIndicators: ActionIndicatorCommand[] = [...indicators]
+    const requiredTypes = [
+      ActionIndicatorType.Implementation,
+      ActionIndicatorType.FollowUp,
+      ActionIndicatorType.Performance,
+    ]
+
+    requiredTypes.forEach((type) => {
+      if (!indicators.some((ind) => ind.type === type)) {
+        defaultIndicators.push({ type, description: '' })
+      }
+    })
+
+    return defaultIndicators
+  }, [])
+
   const { control, formState, getValues, setValue, reset, handleSubmit, trigger, setError, clearErrors } =
     useForm<AddActionCommand>({
       resolver: zodResolver(AddActionCommandValidation),
@@ -70,6 +92,7 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
         relevance: [],
         dependenciesOnly: false,
         ...objectWithoutNullAttributes(action),
+        indicators: setDefaultIndicators(action?.indicators ?? []),
       },
     })
 
@@ -83,18 +106,18 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
   }, [potentialDeduction, clearErrors])
 
   const onSubmit = async (data: AddActionCommand) => {
+    const cleanedIndicators = data.indicators?.filter((ind) => ind && ind.type) || []
     const priority = calculatePriorityFromRelevance(data.relevance)
-    const dataWithPriority = { ...data, priority }
+    const dataWithPriority = { ...data, indicators: cleanedIndicators, priority }
 
-    const res = action ? await editAction(action.id, dataWithPriority) : await addAction(dataWithPriority)
-    if (res.success) {
-      reset()
-      setActiveStep(0)
-      onClose()
-      router.refresh()
-    } else {
-      setToast({ text: t(res.errorMessage), color: 'error' })
-    }
+    await callServerFunction(() => (action ? editAction(action.id, dataWithPriority) : addAction(dataWithPriority)), {
+      onSuccess: () => {
+        reset()
+        setActiveStep(0)
+        onClose()
+        router.refresh()
+      },
+    })
   }
 
   const handleClose = () => {
@@ -168,7 +191,16 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
         disableNext={!isStepValid()}
         nextButton={
           activeStep === 2 ? (
-            <LoadingButton onClick={handleSubmit(onSubmit)} loading={formState.isSubmitting}>
+            <LoadingButton
+              onClick={() => {
+                const currentValues = getValues()
+                const cleanedIndicators =
+                  currentValues.indicators?.filter((ind) => ind && ind.type && ind.description?.trim()) || []
+                setValue('indicators', cleanedIndicators)
+                handleSubmit(onSubmit)()
+              }}
+              loading={formState.isSubmitting}
+            >
               {t(action ? 'update' : 'add')}
             </LoadingButton>
           ) : undefined
