@@ -15,6 +15,7 @@ Les environnements impactés sont : (Vérifier que la fonctionnalité fonctionne
 - [ ] le BC+,
 - [ ] TILT,
 - [ ] CUT
+- [ ] CLICKSON
 
 ## Information pour le déploiement sur staging
 

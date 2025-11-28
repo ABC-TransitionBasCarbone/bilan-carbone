@@ -236,7 +236,7 @@ const users = async () => {
       isCR: false,
       onboarded: false,
       environment: Environment.CUT,
-      activatedLicence: [new Date().getFullYear()],
+      activatedLicence: [],
     })),
   })
 
@@ -246,7 +246,17 @@ const users = async () => {
       isCR: index % 2 === 1,
       onboarded: false,
       environment: Environment.TILT,
-      activatedLicence: [new Date().getFullYear()],
+      activatedLicence: [],
+    })),
+  })
+
+  const organizationVersionsClickson = await prisma.organizationVersion.createManyAndReturn({
+    data: organizations.map((organization) => ({
+      organizationId: organization.id,
+      isCR: false,
+      onboarded: false,
+      environment: Environment.CLICKSON,
+      activatedLicence: [],
     })),
   })
 
@@ -260,6 +270,7 @@ const users = async () => {
     [Environment.BC]: regularOrganizationVersions,
     [Environment.CUT]: organizationVersionsCUT,
     [Environment.TILT]: regularTiltOrganizationVersions,
+    [Environment.CLICKSON]: organizationVersionsClickson,
   }
 
   const childOrganizations = await prisma.organization.createManyAndReturn({
@@ -535,6 +546,13 @@ const users = async () => {
             role: role as Role,
             userId: user.id,
             environment: Environment.TILT,
+            status: UserStatus.ACTIVE,
+          },
+          {
+            organizationVersionId: organizationVersionsClickson[index % organizationVersionsClickson.length].id,
+            role: role as Role,
+            userId: user.id,
+            environment: Environment.CLICKSON,
             status: UserStatus.ACTIVE,
           },
         ]
