@@ -1,30 +1,49 @@
 'use client'
 
-import DebouncedInput from '@/components/base/DebouncedInput'
 import { TableActionButton } from '@/components/base/TableActionButton'
 import { FormCheckbox } from '@/components/form/Checkbox'
 import { FormTextField } from '@/components/form/TextField'
 import GlobalSites from '@/components/organization/Sites'
-import { getCncByCncCode } from '@/services/serverFunctions/study'
+import EnvironmentLoader from '@/environments/core/utils/EnvironmentLoader'
+import { useServerFunction } from '@/hooks/useServerFunction'
+import { getAllCNCs } from '@/services/serverFunctions/cnc'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
-import { Environment } from '@prisma/client'
+import { Autocomplete, TextField } from '@mui/material'
+import { Cnc, Environment } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
-import { useCallback, useMemo, useRef } from 'react'
-import { Control, Controller, UseFormGetValues, UseFormReturn, UseFormSetValue } from 'react-hook-form'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Controller, UseFormReturn } from 'react-hook-form'
 
-interface Props<T extends SitesCommand> {
-  form?: UseFormReturn<T>
+interface Props {
+  form: UseFormReturn<SitesCommand>
   sites: SitesCommand['sites']
   withSelection?: boolean
 }
 
-const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>) => {
+const Sites = ({ sites, form, withSelection }: Props) => {
   const t = useTranslations('organization.sites')
+  const { callServerFunction } = useServerFunction()
+  const [cncs, setCNCs] = useState<Cnc[] | null>(null)
 
-  const control = form?.control as Control<SitesCommand>
-  const setValue = form?.setValue as UseFormSetValue<SitesCommand>
-  const getValues = form?.getValues as UseFormGetValues<SitesCommand>
+  useEffect(() => {
+    const fetchCNCs = async () => {
+      const response = await callServerFunction(async () => {
+        const data = await getAllCNCs()
+        return { success: true, data }
+      })
+
+      if (response.success) {
+        setCNCs(response.data)
+      } else {
+        setCNCs([])
+      }
+    }
+
+    if (cncs === null) {
+      fetchCNCs()
+    }
+  }, [callServerFunction, cncs])
 
   // Track original site data to detect manual changes
   const originalSiteDataRef = useRef<
@@ -32,7 +51,10 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
   >({})
 
   const setCncData = useCallback(
-    async (cncCode: string, index: number) => {
+    (cnc: Cnc | null, index: number) => {
+      const { setValue, getValues } = form
+      const sites = getValues('sites')
+
       // Initialize original values if not set
       if (!(index in originalSiteDataRef.current)) {
         const currentSite = sites[index]
@@ -47,8 +69,17 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
 
       const originalData = originalSiteDataRef.current[index]
 
+      if (!cnc) {
+        setValue(`sites.${index}.cncId`, '')
+        setValue(`sites.${index}.name`, '')
+        setValue(`sites.${index}.postalCode`, '')
+        setValue(`sites.${index}.city`, '')
+        setValue(`sites.${index}.cncCode`, '')
+        return
+      }
+
       // If going back to original value, restore original site data
-      if (cncCode === originalData.cncCode) {
+      if (cnc.cncCode === originalData.cncCode) {
         setValue(`sites.${index}.cncId`, originalData.cncId)
         setValue(`sites.${index}.name`, originalData.name)
         setValue(`sites.${index}.postalCode`, originalData.postalCode)
@@ -57,44 +88,13 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
         return
       }
 
-      if (!cncCode || cncCode.length < 1) {
-        // Clear all fields if input is too short
-        setValue(`sites.${index}.cncId`, '')
-        setValue(`sites.${index}.name`, '')
-        setValue(`sites.${index}.postalCode`, '')
-        setValue(`sites.${index}.city`, '')
-        return
-      }
-      // Look up CNC by cncCode (what the user enters)
-      const response = await getCncByCncCode(cncCode)
-      if (!response.success || !response.data) {
-        // Clear all fields if CNC lookup fails
-        setValue(`sites.${index}.cncId`, '')
-        setValue(`sites.${index}.name`, '')
-        setValue(`sites.${index}.postalCode`, '')
-        setValue(`sites.${index}.city`, '')
-        return
-      }
-      const cnc = response.data
-      // Store the CNC's id (UUID) in the cncId field, not the cncCode
-      if (cnc.id) {
-        setValue(`sites.${index}.cncId`, cnc.id)
-      }
-      // Store the cnc cncCode for display purposes only
-      if (cnc.cncCode) {
-        setValue(`sites.${index}.cncCode`, cnc.cncCode)
-      }
-      if (cnc.nom) {
-        setValue(`sites.${index}.name`, cnc.nom)
-      }
-      if (cnc.codeInsee) {
-        setValue(`sites.${index}.postalCode`, cnc.codeInsee)
-      }
-      if (cnc.commune) {
-        setValue(`sites.${index}.city`, cnc.commune)
-      }
+      setValue(`sites.${index}.cncId`, cnc.id || '')
+      setValue(`sites.${index}.cncCode`, cnc.cncCode || '')
+      setValue(`sites.${index}.name`, cnc.nom || '')
+      setValue(`sites.${index}.postalCode`, cnc.codeInsee || '')
+      setValue(`sites.${index}.city`, cnc.commune || '')
     },
-    [setValue, sites],
+    [form],
   )
 
   const columns = useMemo(() => {
@@ -109,7 +109,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
               {withSelection ? (
                 <div className="align-center">
                   <FormCheckbox
-                    control={control}
+                    control={form.control}
                     translation={t}
                     name={`sites.${row.index}.selected`}
                     data-testid="organization-sites-checkbox"
@@ -118,22 +118,59 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
                 </div>
               ) : (
                 <Controller
-                  name={`sites.${row.index}.cncId`}
-                  control={control}
-                  render={() => {
-                    const displayValue = row.original.cncCode || ''
-
+                  name={`sites.${row.index}.cncCode`}
+                  control={form.control}
+                  defaultValue=""
+                  render={({ field }) => {
+                    const selectedCnc = cncs?.find((cnc) => cnc.cncCode === field.value)
                     return (
-                      <DebouncedInput
+                      <Autocomplete
                         data-testid="edit-site-cnc"
-                        debounce={200}
-                        value={displayValue}
-                        onChange={(newValue: string) => {
-                          setCncData(newValue, row.index)
+                        freeSolo
+                        options={cncs ?? []}
+                        filterOptions={(options, { inputValue }) =>
+                          options.filter((option) =>
+                            `${option.cncCode} ${option.nom} ${option.dep}`
+                              .toLowerCase()
+                              .includes(inputValue.toLowerCase()),
+                          )
+                        }
+                        value={selectedCnc || null}
+                        inputValue={field.value || ''}
+                        onChange={(_, newValue) => {
+                          if (typeof newValue === 'string') {
+                            if (!newValue) {
+                              setCncData(null, row.index)
+                            } else {
+                              field.onChange(newValue)
+                            }
+                          } else {
+                            setCncData(newValue, row.index)
+                          }
                         }}
-                        placeholder={t('cncPlaceholder')}
-                        size="small"
-                        fullWidth
+                        onInputChange={(_, newInputValue, reason) => {
+                          if (reason === 'input') {
+                            if (!newInputValue) {
+                              setCncData(null, row.index)
+                            } else {
+                              field.onChange(newInputValue)
+                            }
+                          }
+                        }}
+                        getOptionLabel={(option) => {
+                          if (typeof option === 'string') {
+                            return option
+                          }
+                          return option.cncCode || ''
+                        }}
+                        renderOption={(props, option) => (
+                          <li {...props} key={option.id}>
+                            {`${option.cncCode} - ${option.nom} (${option.dep})`}
+                          </li>
+                        )}
+                        renderInput={(params) => (
+                          <TextField {...params} placeholder={t('cncPlaceholder')} size="small" />
+                        )}
                       />
                     )
                   }}
@@ -156,7 +193,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
               ) : (
                 <FormTextField
                   data-testid="edit-site-name"
-                  control={control}
+                  control={form.control}
                   name={`sites.${row.index}.name`}
                   placeholder={t('namePlaceholder')}
                   size="small"
@@ -179,7 +216,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
               ) : (
                 <FormTextField
                   data-testid="organization-sites-postal-code"
-                  control={control}
+                  control={form.control}
                   name={`sites.${row.index}.postalCode`}
                   placeholder={t('postalCodePlaceholder')}
                   size="small"
@@ -202,7 +239,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
               ) : (
                 <FormTextField
                   data-testid="organization-sites-city"
-                  control={control}
+                  control={form.control}
                   name={`sites.${row.index}.city`}
                   placeholder={t('cityPlaceholder')}
                   size="small"
@@ -227,9 +264,9 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
             data-testid="delete-site-button"
             onClick={() => {
               const id = getValue<string>()
-              setValue(
+              form.setValue(
                 'sites',
-                getValues('sites').filter((site) => site.id !== id),
+                form.getValues('sites').filter((site) => site.id !== id),
               )
             }}
           />
@@ -237,7 +274,11 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
       })
     }
     return columns
-  }, [t, form, withSelection, control, setCncData, setValue, getValues])
+  }, [t, form, withSelection, cncs, setCncData])
+
+  if (cncs === null) {
+    return <EnvironmentLoader />
+  }
 
   return (
     <GlobalSites

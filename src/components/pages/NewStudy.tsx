@@ -3,6 +3,7 @@ import SelectOrganization from '@/components/study/organization/Select'
 import { OrganizationWithSites } from '@/db/account'
 import { getOrganizationVersionAccounts } from '@/db/organization'
 import NewStudyForm from '@/environments/base/study/new/Form'
+import NewStudyFormClickson from '@/environments/clickson/study/new/Form'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import NewStudyFormCut from '@/environments/cut/study/new/Form'
 import { useDuplicateStudy } from '@/hooks/useDuplicateStudy'
@@ -113,6 +114,7 @@ const NewStudyPage = ({
         <DynamicComponent
           environmentComponents={{
             [Environment.CUT]: <NewStudyFormCut form={form} />,
+            [Environment.CLICKSON]: <NewStudyFormClickson form={form} />,
           }}
           defaultComponent={
             <NewStudyForm

@@ -65,14 +65,12 @@ async function handleUserOrganizationSites(existingSites: BddSite[], oldBCOrgani
   const sitesToCreate: Site[] = []
   const sitesToUpdate: { id: string; oldBCId: string; name: string }[] = []
 
-  if (existingSites.length > 0) {
-    for (const oldBCSite of oldBCOrganizationSites) {
-      const site = existingSites.find((s) => compareString(s.name, oldBCSite.name))
-      if (site) {
-        sitesToUpdate.push({ id: site.id, oldBCId: oldBCSite.oldBCId, name: site.name })
-      } else {
-        sitesToCreate.push(oldBCSite)
-      }
+  for (const oldBCSite of oldBCOrganizationSites) {
+    const site = existingSites.find((s) => compareString(s.name, oldBCSite.name))
+    if (site) {
+      sitesToUpdate.push({ id: site.id, oldBCId: oldBCSite.oldBCId, name: site.name })
+    } else {
+      sitesToCreate.push(oldBCSite)
     }
   }
 

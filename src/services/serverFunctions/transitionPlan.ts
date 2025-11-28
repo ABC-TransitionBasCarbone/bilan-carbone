@@ -296,9 +296,9 @@ export const getLinkedAndExternalStudies = async (transitionPlanId: string) =>
 
     const linkedStudyIds = transitionPlanStudies.map((transitionPlan) => transitionPlan.studyId)
 
-    const studies = await getStudyByIds(linkedStudyIds)
+    const linkedStudies = await getStudyByIds(linkedStudyIds)
 
-    return { studies, externalStudies }
+    return { linkedStudies, externalStudies }
   })
 
 export const deleteLinkedStudy = async (studyId: string, transitionPlanId: string) =>

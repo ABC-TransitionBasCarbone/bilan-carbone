@@ -1,12 +1,11 @@
 'use client'
 import { defaultLocale, Locale, LocaleType } from '@/i18n/config'
+import { customRich } from '@/i18n/customRich'
 import { switchEnvironment } from '@/i18n/environment'
 import { getLocale, switchLocale } from '@/i18n/locale'
-import { getEnvVar } from '@/lib/environment'
 import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import Link from 'next/link'
 import { ReactNode, useEffect, useState } from 'react'
 import PublicContainer from '../base/PublicContainer'
 import Image from '../document/Image'
@@ -17,9 +16,6 @@ interface Props {
 }
 
 const PublicPage = ({ children }: Props) => {
-  const support = getEnvVar('SUPPORT_EMAIL', Environment.BC)
-  const faq = getEnvVar('FAQ_LINK', Environment.BC)
-
   const t = useTranslations('login')
   const tLocale = useTranslations('locale')
   const [locale, setLocale] = useState<LocaleType>(defaultLocale)
@@ -46,20 +42,7 @@ const PublicPage = ({ children }: Props) => {
           height={400}
           className={classNames(styles.image, 'w100')}
         />
-        <p>
-          {t.rich('question', {
-            link: (children) => (
-              <Link href={faq} className={styles.link} target="_blank" rel="noreferrer noopener">
-                {children}
-              </Link>
-            ),
-            support: (children) => (
-              <Link href={`mailto:${support}`} className={styles.link}>
-                {children}
-              </Link>
-            ),
-          })}
-        </p>
+        <p>{customRich(t, 'question', {}, undefined, { faq: styles.link, support: styles.link })}</p>
       </div>
       <div className={classNames(styles.loginForm, 'grow flex-col')}>
         <div className={classNames(styles.header, 'justify-between')}>

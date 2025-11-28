@@ -275,6 +275,7 @@ export enum RequiredStudyEmissionSourcesColumns {
   EFV_GUID = 'emissionFactorOldBCId',
   EF_VAL_Conso = 'emissionFactorConsoValue',
   Amortissement = 'amortissement',
+  ImmoVal = 'immoVal',
   LIB_CARACT = 'caracterisation',
 }
 
@@ -308,6 +309,7 @@ export class EmissionSourcesWorkSheet extends OldBCWorkSheetReader {
       emissionFactorOldBCId: row[this.indexes.EFV_GUID],
       emissionFactorConsoValue: row[this.indexes.EF_VAL_Conso],
       amortissement: row[this.indexes.Amortissement],
+      immoVal: row[this.indexes.ImmoVal],
       caracterisation: row[this.indexes.LIB_CARACT],
     }))
   }
