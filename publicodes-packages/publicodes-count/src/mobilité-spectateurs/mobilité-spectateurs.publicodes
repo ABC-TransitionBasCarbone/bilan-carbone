@@ -18,20 +18,20 @@ mobilité spectateurs . mobilité spectateurs:
 mobilité spectateurs . mobilité spectateurs . précision:
   question: Avez-vous déjà réalisé une enquête mobilité spectateurs ?
   une possibilité:
-    - résultat précis:
-        titre: Oui et je peux entrer les résultats
-    - besoin:
-        titre: Non mais je voudrais le faire pour estimer l'impact du cinéma
-        avec:
-          contact:
-            applicable si: précision = "besoin"
-            question: |
-              Si vous souhaitez réaliser une enquête mobilité spectateur, vous pouvez
-              nous envoyer un mail pour récupérer un modèle d'enquête qui vous permettra
-              de remplir d'ici quelques semaines les informations demandées
-            texte: |
-              Vous pouvez nous contacter à
-              [count@cut-collectif.fr](mailto:count@cut-collectif.fr) pour recevoir une
-              proposition d'enquête mobilité.
-    - estimation:
-        titre: Non mais je préfère m'identifier dans des profils de cinéma comparables
+    - résultat précis
+    - besoin
+    - estimation
+  avec:
+    résultat précis:
+      titre: Oui et je peux entrer les résultats
+    besoin:
+      titre: Non mais je voudrais le faire pour estimer l'impact du cinéma
+    estimation:
+      titre: Non mais je préfère m'identifier dans des profils de cinéma comparables
+
+mobilité spectateurs . mobilité spectateurs . précision . besoin . contact:
+  applicable si: précision = "besoin"
+  question: |
+    Si vous souhaitez réaliser une enquête mobilité spectateur, vous pouvez nous envoyer un mail pour récupérer un modèle d'enquête qui vous permettra de remplir d'ici quelques semaines les informations demandées
+  texte: |
+    Vous pouvez nous contacter à [count@cut-collectif.fr](mailto:count@cut-collectif.fr) pour recevoir une proposition d'enquête mobilité.
