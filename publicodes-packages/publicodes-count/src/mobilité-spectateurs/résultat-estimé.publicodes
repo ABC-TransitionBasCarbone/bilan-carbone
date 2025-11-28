@@ -80,16 +80,6 @@ mobilité spectateurs . résultat estimé . profil établissement:
             résultat précis . empreinte . voiture essence . distance: 0.13 * 5.98 km
             résultat précis . empreinte . métro ou tram . distance: 0.28 * 7.41 km
             résultat précis . empreinte . RER et transilien . distance: 0.02 * 9.59 km
-            résultat précis . empreinte . moto . distance: 0 km
-            résultat précis . empreinte . trottinette électrique . distance: 0 km
-            résultat précis . empreinte . bus . distance: 0 km
-            résultat précis . empreinte . vélo électrique . distance: 0 km
-            résultat précis . empreinte . vélo classique . distance: 0 km
-            résultat précis . empreinte . marche . distance: 0 km
-            résultat précis . empreinte . voiture diesel . distance: 0 km
-            résultat précis . empreinte . voiture hybride . distance: 0 km
-            résultat précis . empreinte . voiture électrique . distance: 0 km
-            résultat précis . empreinte . scooter . distance: 0 km
 
     distances moyennes:
       titre: |
@@ -104,16 +94,6 @@ mobilité spectateurs . résultat estimé . profil établissement:
             résultat précis . empreinte . voiture essence . distance: 0.69 * 10.77 km
             résultat précis . empreinte . métro ou tram . distance: 0.02 * 7.41 km
             résultat précis . empreinte . moto . distance: 0.02 * 6.42 km
-            résultat précis . empreinte . RER et transilien . distance: 0 km
-            résultat précis . empreinte . trottinette électrique . distance: 0 km
-            résultat précis . empreinte . bus . distance: 0 km
-            résultat précis . empreinte . vélo électrique . distance: 0 km
-            résultat précis . empreinte . vélo classique . distance: 0 km
-            résultat précis . empreinte . marche . distance: 0 km
-            résultat précis . empreinte . voiture diesel . distance: 0 km
-            résultat précis . empreinte . voiture hybride . distance: 0 km
-            résultat précis . empreinte . voiture électrique . distance: 0 km
-            résultat précis . empreinte . scooter . distance: 0 km
 
     distances longues:
       titre: |
@@ -129,16 +109,6 @@ mobilité spectateurs . résultat estimé . profil établissement:
             résultat précis . empreinte . voiture essence . distance: 0.63 * 24.36 km
             résultat précis . empreinte . métro ou tram . distance: 0.05 * 25.84 km
             résultat précis . empreinte . moto . distance: 0.01 * 9.91 km
-            résultat précis . empreinte . RER et transilien . distance: 0 km
-            résultat précis . empreinte . trottinette électrique . distance: 0 km
-            résultat précis . empreinte . bus . distance: 0 km
-            résultat précis . empreinte . vélo électrique . distance: 0 km
-            résultat précis . empreinte . vélo classique . distance: 0 km
-            résultat précis . empreinte . marche . distance: 0 km
-            résultat précis . empreinte . voiture diesel . distance: 0 km
-            résultat précis . empreinte . voiture hybride . distance: 0 km
-            résultat précis . empreinte . voiture électrique . distance: 0 km
-            résultat précis . empreinte . scooter . distance: 0 km
 
     majoritairement en voiture:
       titre: |
@@ -152,17 +122,6 @@ mobilité spectateurs . résultat estimé . profil établissement:
             mobilité spectateurs . précision: "'résultat précis'"
             résultat précis . empreinte . voiture essence . distance: 0.89 * 15.84 km
             résultat précis . empreinte . métro ou tram . distance: 0.02 * 10.27 km
-            résultat précis . empreinte . moto . distance: 0 km
-            résultat précis . empreinte . RER et transilien . distance: 0 km
-            résultat précis . empreinte . trottinette électrique . distance: 0 km
-            résultat précis . empreinte . bus . distance: 0 km
-            résultat précis . empreinte . vélo électrique . distance: 0 km
-            résultat précis . empreinte . vélo classique . distance: 0 km
-            résultat précis . empreinte . marche . distance: 0 km
-            résultat précis . empreinte . voiture diesel . distance: 0 km
-            résultat précis . empreinte . voiture hybride . distance: 0 km
-            résultat précis . empreinte . voiture électrique . distance: 0 km
-            résultat précis . empreinte . scooter . distance: 0 km
 
     uniquement accessible en voiture:
       titre: Le cinéma n'est accessible qu'en voiture.
@@ -172,24 +131,12 @@ mobilité spectateurs . résultat estimé . profil établissement:
           contexte:
             mobilité spectateurs . précision: "'résultat précis'"
             résultat précis . empreinte . voiture essence . distance: 18.73 km
-            résultat précis . empreinte . RER et transilien . distance: 0 km
-            résultat précis . empreinte . métro ou tram . distance: 0 km
-            résultat précis . empreinte . bus . distance: 0 km
-            résultat précis . empreinte . vélo électrique . distance: 0 km
-            résultat précis . empreinte . vélo classique . distance: 0 km
-            résultat précis . empreinte . marche . distance: 0 km
-            résultat précis . empreinte . voiture diesel . distance: 0 km
-            résultat précis . empreinte . voiture hybride . distance: 0 km
-            résultat précis . empreinte . voiture électrique . distance: 0 km
-            résultat précis . empreinte . moto . distance: 0 km
-            résultat précis . empreinte . scooter . distance: 0 km
-            résultat précis . empreinte . trottinette électrique . distance: 0 km
 
 mobilité spectateurs . résultat estimé . empreinte établissement lointain:
   formule:
     produit:
       - général . nombre entrées
-      - général . distance depuis paris * 0.03
+      - général . distance depuis paris * 0.03 / 1 entrée
       - somme:
           - 0.7 * FE voiture longue distance
           - 0.3 * FE TGV
