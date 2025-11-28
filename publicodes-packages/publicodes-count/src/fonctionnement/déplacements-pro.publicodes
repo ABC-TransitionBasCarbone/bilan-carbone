@@ -10,7 +10,10 @@ fonctionnement . déplacements pro . déplacements:
   titre: Déplacements
   question: Décrivez les déplacements professionnels de vos collaborateurs
   description: |
-    Les déplacements professionnels de vos collaborateurs sont tous les déplacements autres que les déplacements domicile-travail, effectués dans le cadre du travail. Ceux-ci incluent par exemple les déplacements pour se rendre à des congrès, conventions, festivals, prévisionnages, etc.
+    Les déplacements professionnels de vos collaborateurs sont tous les
+    déplacements autres que les déplacements domicile-travail, effectués dans
+    le cadre du travail. Ceux-ci incluent par exemple les déplacements pour se
+    rendre à des congrès, conventions, festivals, prévisionnages, etc.
   formule: déplacement type
 
 fonctionnement . déplacements pro . déplacement type:
@@ -51,6 +54,7 @@ fonctionnement . déplacements pro . déplacement type . transport:
     distance:
       question: Distance "aller-retour"
       unité: km
+
     FE:
       formule:
         variations:
@@ -81,7 +85,7 @@ fonctionnement . déplacements pro . déplacement type . transport:
 
 fonctionnement . déplacements pro . déplacement type . transport . moyen de transport:
   question: Moyen de transport
-  une possibilié:
+  une possibilité:
     - RER et transilien
     - métro ou tram
     - bus
@@ -95,6 +99,20 @@ fonctionnement . déplacements pro . déplacement type . transport . moyen de tr
     - trottinette électrique
     - TGV
     - avion
+  avec:
+    RER et transilien:
+    métro ou tram:
+    bus:
+    vélo électrique:
+    voiture diesel:
+    voiture essence:
+    voiture hybride:
+    voiture électrique:
+    moto:
+    scooter:
+    trottinette électrique:
+    TGV:
+    avion:
 
 fonctionnement . déplacements pro . déplacement type . nuitées:
   formule:
@@ -132,49 +150,48 @@ fonctionnement . déplacements pro . déplacement type . type hébergement:
   avec:
     appartement:
       titre: Appartement
-      avec:
-        FE:
-          valeur: 9.91
-          unité: kgCO2e/nuitée
-          meta:
-            id: 100
+    appartement . FE:
+      valeur: 9.91
+      unité: kgCO2e/nuitée
+      meta:
+        id: 100
+
     hotel 1 étoile:
       titre: Hôtel 1*
-      avec:
-        FE:
-          valeur: 4.73
-          unité: kgCO2e/nuitée
-          meta:
-            id: 102
+    hotel 1 étoile . FE:
+      valeur: 4.73
+      unité: kgCO2e/nuitée
+      meta:
+        id: 102
+
     hotel 2 étoiles:
       titre: Hôtel 2*
-      avec:
-        FE:
-          valeur: 8.53
-          unité: kgCO2e/nuitée
-          meta:
-            id: 103
+    hotel 2 étoiles . FE:
+      valeur: 8.53
+      unité: kgCO2e/nuitée
+      meta:
+        id: 103
+
     hotel 3 étoiles:
       titre: Hôtel 3*
-      avec:
-        FE:
-          valeur: 0.03
-          unité: kgCO2e/nuitée
-          meta:
-            id: 104
+    hotel 3 étoiles . FE:
+      valeur: 0.03
+      unité: kgCO2e/nuitée
+      meta:
+        id: 104
+
     hotel 4 étoiles:
       titre: Hôtel 4*
-      avec:
-        FE:
-          valeur: 11.43
-          unité: kgCO2e/nuitée
-          meta:
-            id: 105
+    hotel 4 étoiles . FE:
+      valeur: 11.43
+      unité: kgCO2e/nuitée
+      meta:
+        id: 105
+
     hotel 5 étoiles:
       titre: Hôtel 5*
-      avec:
-        FE:
-          valeur: 17.11
-          unité: kgCO2e/nuitée
-          meta:
-            id: 106
+    hotel 5 étoiles . FE:
+      valeur: 17.11
+      unité: kgCO2e/nuitée
+      meta:
+        id: 106

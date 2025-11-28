@@ -28,11 +28,13 @@ billetterie et communication . matériel cinéma . production . programme:
     nombre:
       question: Quantité
       unité: unité/mois
+
     FE:
       valeur: 0.007095
       unité: kgCO2e/kg
       meta:
         id: 130
+
     poids:
       valeur: 0.005
       unité: kg/unité
@@ -50,11 +52,13 @@ billetterie et communication . matériel cinéma . production . affiches:
     nombre:
       question: Quantité
       unité: unité/mois
+
     FE:
       valeur: 0.038313
       unité: kgCO2e/kg
       meta:
         id: 126
+
     poids:
       valeur: 0.027
       unité: kg/unité
@@ -72,11 +76,13 @@ billetterie et communication . matériel cinéma . production . flyers:
     nombre:
       question: Quantité
       unité: unité/mois
+
     FE:
       valeur: 0.0059598
       unité: kgCO2e/kg
       meta:
         id: 133
+
     poids:
       valeur: 0.0042
       unité: kg/unité

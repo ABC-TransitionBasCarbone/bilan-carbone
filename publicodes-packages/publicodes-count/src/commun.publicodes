@@ -52,84 +52,98 @@ commun . FE . moyen de transport:
       unité: kgCO2e/km
       meta:
         id: 43254
+
     métro ou tram:
       titre: Facteur d'émission métro, tramway
       valeur: 0.005030000000000001
       unité: kgCO2e/km
       meta:
         id: 28150
+
     bus:
       titre: Facteur d'émission bus
       valeur: 0.1466
       unité: kgCO2e/km
       meta:
         id: 27999
+
     vélo électrique:
       titre: Facteur d'émission vélo électrique
       valeur: 0.01095
       unité: kgCO2e/km
       meta:
         id: 28331
+
     vélo classique:
       titre: Facteur d'émission vélo classique
       valeur: 0
       unité: kgCO2e/km
       meta:
         id: 134
+
     marche:
       titre: Facteur d'émission marche
       valeur: 0
       unité: kgCO2e/km
       meta:
         id: 135
+
     voiture diesel:
       titre: Facteur d'émission voiture diesel
       valeur: 0.165
       unité: kgCO2e/km
       meta:
         id: 27984
+
     voiture essence:
       titre: Facteur d'émission voiture essence
       valeur: 0.1746
       unité: kgCO2e/km
       meta:
         id: 27983
+
     voiture hybride:
       titre: Facteur d'émission voiture hybride
       valeur: 0.0717
       unité: kgCO2e/km
       meta:
         id: 28015
+
     voiture électrique:
       titre: Facteur d'émission voiture électrique
       valeur: 0.0953
       unité: kgCO2e/km
       meta:
         id: 28013
+
     moto:
       titre: Facteur d'émission moto
       valeur: 0.1913
       unité: kgCO2e/km
       meta:
         id: 27995
+
     scooter:
       titre: Facteur d'émission scooter
       valeur: 0.0763
       unité: kgCO2e/km
       meta:
         id: 27992
+
     trottinette électrique:
       titre: Facteur d'émission trottinette électrique
       valeur: 0.0249
       unité: kgCO2e/km
       meta:
         id: 28329
+
     TGV:
       titre: Facteur d'émission TGV
       valeur: 0.00293
       unité: kgCO2e/km
       meta:
         id: 43256
+
     avion:
       titre: Facteur d'émission avion moyen-courrier
       valeur: 0.18748437

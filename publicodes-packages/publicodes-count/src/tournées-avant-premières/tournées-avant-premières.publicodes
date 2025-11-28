@@ -14,6 +14,21 @@ tournées avant premières . équipes reçues:
       - repas
   unité: kgCO2e
 
+tournées avant premières . équipes reçues . transport:
+  titre: Transport équipes reçues
+  formule:
+    produit:
+      - FE
+      - nombre équipes
+      - nombre de personnes par équipe
+      - général . distance depuis paris / 1 personne
+  unité: kgCO2e
+  avec:
+    FE:
+      note: TGV par défaut ?
+      valeur: commun . FE . moyen de transport . TGV
+      unité: kgCO2e/km
+
 tournées avant premières . équipes reçues . nombre équipes:
   question: Combien d'équipes de films avez-vous reçues en 2025 ?
   valeur: 10
@@ -23,21 +38,6 @@ tournées avant premières . équipes reçues . nombre de personnes par équipe:
   valeur: 3
   unité: personne/équipe
 
-tournées avant premières . équipes reçues . transport:
-  titre: Transport équipes reçues
-  formule:
-    produit:
-      - FE
-      - nombre équipes
-      - nombre de personnes par équipe
-      - général . distance depuis paris / 1 personne
-  avec:
-    FE:
-      note: TGV par défaut ?
-      valeur: commun . FE . moyen de transport . TGV
-      unité: kgCO2e/km
-  unité: kgCO2e
-
 tournées avant premières . équipes reçues . repas:
   titre: Repas équipes reçues
   formule:
@@ -46,8 +46,8 @@ tournées avant premières . équipes reçues . repas:
       - nombre équipes
       - nombre de personnes par équipe
       - repas par personne
+  unité: kgCO2e
   avec:
     repas par personne:
       valeur: 5
       unité: repas/personne
-  unité: kgCO2e
