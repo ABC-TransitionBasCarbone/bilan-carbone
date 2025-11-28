@@ -17,8 +17,8 @@ const TotalCarbonBeges = ({ totalCarbon, totalBeges, resultUnit }: Props) => {
   const tResultUnits = useTranslations('study.results.units')
 
   return (
-    <div className={classNames(styles.gapped, 'justify-center flex-col mb2')}>
-      <Title as="h6" title={t('total')} />
+    <div className={classNames('justify-center flex-col mb2')}>
+      <Title as="h3" title={t('total')} />
       <div className={classNames(styles.totalBegesGrid)}>
         <Box className="px2 pointer align-center flex-col relative" color="secondary">
           <Data value={formatNumber(totalCarbon)} label={tResultUnits(resultUnit)} testId="withDep-total-result" />

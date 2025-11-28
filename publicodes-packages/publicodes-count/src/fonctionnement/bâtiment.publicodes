@@ -20,6 +20,7 @@ fonctionnement . bâtiment . construction:
             - FE
             - (1 an / amortissement)
   unité: kgCO2e
+  par défaut: 0
   avec:
     age:
       durée:
@@ -34,11 +35,12 @@ fonctionnement . bâtiment . construction:
 
     année de construction:
       question: Quand le bâtiment a-t-il été construit ?
+      form:
+        saisie: année
 
     surface:
       question: |
-        Quelle est la surface plancher du cinéma ? (La somme des surfaces des
-        différents niveaux)
+        Quelle est la surface plancher du cinéma ? (La somme des surfaces des différents niveaux)
       unité: m2
 
     FE:
@@ -57,63 +59,57 @@ fonctionnement . bâtiment . rénovation:
 
 fonctionnement . bâtiment . rénovation . type:
   titre: Rénovation
-  question: |
-    Parmi les rénovations suivantes, lesquelles avez-vous réalisées durant les
-    dix dernières années ?
-  # TODO: Deals with it as "plusieurs possibilités"
-  # une possibilité:
-  #   - rénovation totale
-  #   - extension
-  #   - autres travaux importants
-  #   - aucun
+  question: Parmi les rénovations suivantes, lesquelles avez-vous réalisées durant les dix dernières années ?
   avec:
     rénovation totale:
+      non applicable si:
+        toutes ces conditions:
+          - est défini: type . aucun
+          - type . aucun = oui
+      type: booléen
       titre: Rénovation totale (hors agrandissement)
-    rénovation totale . présent:
-      question: |
-        Avez-vous réalisé une rénovation totale (hors agrandissement) durant
-        les dix dernières années ?
 
     extension:
+      non applicable si:
+        toutes ces conditions:
+          - est défini: type . aucun
+          - type . aucun = oui
+      type: booléen
       titre: Agrandissement - extension
-    extension . présent:
-      question: |
-        Avez-vous réalisé un agrandissement ou une extension durant les dix
-        dernières années ?
 
     autres travaux importants:
+      non applicable si:
+        toutes ces conditions:
+          - est défini: type . aucun
+          - type . aucun = oui
+      type: booléen
       titre: |
-        Autres travaux importants (par ex : changement moquette, ravalement, peinture etc)
-    autres travaux importants . présent:
-      question: |
-        Avez-vous réalisé d'autres travaux importants (par ex : changement
-        moquette, ravalement, peinture etc) durant les dix dernières années ?
+        Autres travaux importants (par ex : changement moquette, ravalement,peinture etc)
 
     aucun:
+      type: booléen
       titre: Je n'ai pas réalisé ces rénovations durant les dix dernières années
-    aucun . présent:
-      question: N'avez-vous pas réalisé ces rénovations durant les dix dernières années ?
 
 fonctionnement . bâtiment . rénovation . empreinte travaux:
   applicable si:
     une de ces conditions:
       - toutes ces conditions:
-          - est défini: type . rénovation totale . présent
-          - type . rénovation totale . présent
+          - est défini: type . rénovation totale
+          - type . rénovation totale
       - toutes ces conditions:
-          - est défini: type . autres travaux importants . présent
-          - type . autres travaux importants . présent
+          - est défini: type . autres travaux importants
+          - type . autres travaux importants
   formule:
     produit:
       - montant
       - FE
       - (1 an / amortissement)
+  par défaut: 0
+  unité: kgCO2e
   note: Conversion auto €/k€ publicodes.
   avec:
     montant:
-      question: |
-        Dans le cas d'une rénovation durant ces 10 dernières années, Quel est
-        le montant des dépenses liées à ces travaux de rénovation ?
+      question: Dans le cas d'une rénovation durant ces 10 dernières années, quel est le montant des dépenses liées à ces travaux de rénovation ?
       unité: €
 
     FE:
@@ -129,18 +125,18 @@ fonctionnement . bâtiment . rénovation . empreinte travaux:
 fonctionnement . bâtiment . rénovation . empreinte extension:
   applicable si:
     toutes ces conditions:
-      - est défini: type . extension . présent
-      - type . extension . présent
+      - est défini: type . extension
+      - type . extension
   formule:
     produit:
       - surface
       - FE
       - (1 an / amortissement)
+  par défaut: 0
+  unité: kgCO2e
   avec:
     surface:
-      question: |
-        Dans le cas d'un agrandissement durant ces 10 dernières années, quelle
-        est la surface supplémentaire ajoutée ?
+      question: Dans le cas d'un agrandissement durant ces 10 dernières années, quelle est la surface supplémentaire ajoutée ?
       unité: m2
 
     FE:
@@ -154,9 +150,14 @@ fonctionnement . bâtiment . rénovation . empreinte extension:
       unité: an
 
 fonctionnement . bâtiment . autre activité:
-  applicable si: est partagé = oui
+  applicable si:
+    toutes ces conditions:
+      - est défini: est partagé
+      - est partagé = oui
   titre: Autre activité
-  formule: 0
+  formule: surface * 0
+  unité: kgCO2e
+  par défaut: 0
   note: |
     TODO: Pas d'émissions associées ?
   avec:
@@ -168,7 +169,10 @@ fonctionnement . bâtiment . est partagé:
   question: Le bâtiment est-il partagé avec une autre activité ?
 
 fonctionnement . bâtiment . parking:
-  applicable si: parking présent = oui
+  applicable si:
+    toutes ces conditions:
+      - est défini: parking présent
+      - parking présent = oui
   titre: Parking
   formule:
     produit:
@@ -176,11 +180,14 @@ fonctionnement . bâtiment . parking:
       - 12 m2/place
       - FE
       - (1 an / amortissement)
+  par défaut: 0
+  unité: kgCO2e
   note: |
-    Il semble que le calcul n'est pas bon actuellement en ligne.
+    Il semble que le calcul n'est pas bon actuellement en ligne. Il manque la surface par place.
   avec:
     nombre de places:
       question: Si oui, de combien de places ?
+      unité: place
 
     FE:
       valeur: 92

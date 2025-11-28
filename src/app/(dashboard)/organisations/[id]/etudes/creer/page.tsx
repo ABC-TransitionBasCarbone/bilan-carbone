@@ -29,11 +29,15 @@ const NewStudyInOrganization = async (props: Props & UserSessionProps & StudyDup
     getOrganizationVersionAccounts(user.organizationVersionId),
   ])
 
-  const organizationVersion = await getOrganizationVersionById(id)
-  if (!organizationVersion || !hasActiveLicence(organizationVersion)) {
-    redirect('/')
+  const organizationVersionId = organizationVersions.find(
+    (organizationVersion) => organizationVersion.id === user.organizationVersionId,
+  )?.id
+  if (organizationVersionId) {
+    const organizationVersion = await getOrganizationVersionById(organizationVersionId)
+    if (!organizationVersion || !hasActiveLicence(organizationVersion)) {
+      redirect('/')
+    }
   }
-
   const userSettings = await getUserSettings()
   const caUnit = userSettings.success ? userSettings.data?.caUnit || defaultCAUnit : defaultCAUnit
 

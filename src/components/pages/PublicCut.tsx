@@ -1,9 +1,9 @@
 'use client'
 import { defaultLocale, Locale, LocaleType } from '@/i18n/config'
+import { customRich } from '@/i18n/customRich'
 import { switchEnvironment } from '@/i18n/environment'
 import { getLocale, switchLocale } from '@/i18n/locale'
-import { getEnvVar } from '@/lib/environment'
-import { alpha, Box, Container, Divider, Link, styled, Typography } from '@mui/material'
+import { alpha, Box, Container, Divider, styled, Typography } from '@mui/material'
 import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -32,9 +32,6 @@ interface Props {
   children: ReactNode
 }
 const PublicCutPage = ({ children }: Props) => {
-  const support = getEnvVar('SUPPORT_EMAIL', Environment.CUT)
-  const faq = getEnvVar('FAQ_LINK', Environment.CUT)
-
   const t = useTranslations('login')
   const tLocale = useTranslations('locale')
   const [locale, setLocale] = useState<LocaleType>(defaultLocale)
@@ -68,20 +65,7 @@ const PublicCutPage = ({ children }: Props) => {
             </Typography>
           </Box>
         </Box>
-        <p>
-          {t.rich('question', {
-            link: (children) => (
-              <Link href={faq} className={styles.linkCut} target="_blank" rel="noreferrer noopener">
-                {children}
-              </Link>
-            ),
-            support: (children) => (
-              <Link href={`mailto:${support}`} className={styles.linkCut}>
-                {children}
-              </Link>
-            ),
-          })}
-        </p>
+        <p>{customRich(t, 'question', {}, Environment.CUT, { faq: styles.link, support: styles.link })}</p>
         <Box className="justify-between" padding="1.2rem">
           <Image
             className={styles.france2030Logo}

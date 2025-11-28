@@ -7,7 +7,7 @@ import ConsolidatedResultsTable from './ConsolidatedResultsTable'
 interface Props {
   computedResults: ResultsByPost[]
   resultsUnit: StudyResultUnit
-  exportType?: string
+  exportType: string
 }
 
 const ConsolidatedResults = ({ computedResults, resultsUnit, exportType }: Props) => {

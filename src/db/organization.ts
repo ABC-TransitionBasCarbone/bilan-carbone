@@ -27,6 +27,11 @@ export const OrganizationVersionWithOrganizationSelect = {
   onboarderId: true,
   environment: true,
   parentId: true,
+  parent: {
+    select: {
+      activatedLicence: true,
+    },
+  },
   organization: {
     select: {
       oldBCId: true,
@@ -50,6 +55,8 @@ export const OrganizationVersionWithOrganizationSelect = {
           city: true,
           volunteerNumber: true,
           beneficiaryNumber: true,
+          establishmentId: true,
+          establishmentYear: true,
           cncId: true,
           cnc: {
             select: {
@@ -82,6 +89,11 @@ export const getOrganizationVersionById = (id: string | null) =>
   id
     ? prismaClient.organizationVersion.findUnique({ where: { id }, select: OrganizationVersionWithOrganizationSelect })
     : null
+
+export type OrganizationVersionWithParentLicence = Exclude<
+  Awaited<ReturnType<typeof getOrganizationVersionById>>,
+  'null'
+>
 
 export const isOrganizationVersionCR = async (id: string | null) =>
   id ? (await prismaClient.organizationVersion.findUnique({ where: { id } }))?.isCR : undefined
@@ -312,6 +324,9 @@ export const getRawOrganizationBySiret = (siret: string | null) =>
 
 export const getRawOrganizationBySiteCNC = (cncCode: string | null) =>
   cncCode ? prismaClient.organization.findFirst({ where: { sites: { some: { cncId: cncCode } } } }) : null
+
+export const getRawOrganizationBySiteEstablishmentId = (establishmentId: string | null) =>
+  establishmentId ? prismaClient.organization.findFirst({ where: { sites: { some: { establishmentId } } } }) : null
 
 export const getRawOrganizationById = (id: string | null) =>
   id ? prismaClient.organization.findUnique({ where: { id } }) : null

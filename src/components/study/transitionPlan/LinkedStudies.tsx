@@ -1,6 +1,7 @@
 'use client'
 
 import Button from '@/components/base/Button'
+import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import { PastStudy } from '@/utils/trajectory'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import LinkIcon from '@mui/icons-material/Link'
@@ -59,11 +60,21 @@ const LinkedStudies = ({ transitionPlanId, studyId, studyYear, pastStudies, canE
         elevation={0}
       >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <div className="flex align-center gapped1" style={{ marginRight: '1rem' }}>
+          <div className="flex align-center gapped1 mr1">
             <LinkIcon fontSize="small" color="primary" />
             <Typography variant="caption" className={styles.badge} color="text.secondary">
               {t('linked')}
             </Typography>
+            <div onClick={(e) => e.stopPropagation()}>
+              <GlossaryIconModal
+                label="linkedStudy"
+                title="glossaryTitle"
+                iconLabel="information"
+                tModal="study.transitionPlan.trajectories.linkedStudies"
+              >
+                {t('glossaryDescription')}
+              </GlossaryIconModal>
+            </div>
           </div>
         </AccordionSummary>
         <AccordionDetails className={classNames('flex-col', 'gapped1', styles.details)}>

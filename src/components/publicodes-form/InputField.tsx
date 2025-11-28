@@ -2,6 +2,7 @@ import { EvaluatedFormElement, FormPageElementProp } from '@publicodes/forms'
 import RadioGroupInput from './inputFields/RadioGroupInput'
 import SelectInput from './inputFields/SelectInput'
 import TextWithUnitInput from './inputFields/TextWithUnitInput'
+import YearPickerInput from './inputFields/YearPickerInput'
 import { OnFormInputChange } from './utils'
 
 export interface PublicodesInputFieldProps<RuleName extends string> {
@@ -15,17 +16,22 @@ export default function InputField<RuleName extends string>({
   formElementProps,
   onChange,
 }: PublicodesInputFieldProps<RuleName>) {
-  /* eslint-disable no-fallthrough */
+  /*
+   * TODO: to check if we want to support more input types in the future
+   * eslint-disable no-fallthrough
+   */
   switch (formElement.element) {
     case 'input':
       switch (formElement.type) {
         case 'number':
           return <TextWithUnitInput formElement={formElement} formElementProps={formElementProps} onChange={onChange} />
         // TODO: handle month type properly
-        case 'month':
+        // case 'month':
         case 'date':
-        case 'checkbox':
+          return <YearPickerInput formElement={formElement} formElementProps={formElementProps} onChange={onChange} />
         case 'text':
+          return formElement.defaultValue ? <p dangerouslySetInnerHTML={{ __html: formElement.defaultValue }} /> : null
+        case 'checkbox':
         default:
           return <p>Unsupported input type: {formElement.type}</p>
       }

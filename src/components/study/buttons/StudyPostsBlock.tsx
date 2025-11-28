@@ -1,15 +1,18 @@
 'use client'
 import Block from '@/components/base/Block'
-import HelpIcon from '@/components/base/HelpIcon'
+import DebouncedInput from '@/components/base/DebouncedInput'
 import { FullStudy } from '@/db/study'
 import { Post } from '@/services/posts'
 import { downloadStudyPost } from '@/services/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
-import { withInfobulle } from '@/utils/post'
+import { EmissionSourcesFilters, EmissionSourcesSort } from '@/types/filters'
 import DownloadIcon from '@mui/icons-material/Download'
+import { EmissionSourceCaracterisation } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useState } from 'react'
-import PostIcon from '../infography/icons/PostIcon'
+import styles from '../SubPosts.module.css'
+import StudyPostFilters from './StudyPostFilters'
+import StudyPostSort from './StudyPostSort'
 
 interface Props {
   post: Post
@@ -18,10 +21,26 @@ interface Props {
   setDisplay: (display: boolean) => void
   children: ReactNode
   emissionSources: FullStudy['emissionSources']
-  setGlossary: (post: string) => void
+  filters: EmissionSourcesFilters
+  setFilters: (values: Partial<EmissionSourcesFilters>) => void
+  caracterisationOptions: EmissionSourceCaracterisation[]
+  sort: EmissionSourcesSort
+  setSort: (field: EmissionSourcesSort['field'], order: EmissionSourcesSort['order']) => void
 }
 
-const StudyPostsBlock = ({ post, study, display, setDisplay, children, emissionSources, setGlossary }: Props) => {
+const StudyPostsBlock = ({
+  post,
+  study,
+  display,
+  setDisplay,
+  children,
+  emissionSources,
+  filters,
+  setFilters,
+  caracterisationOptions,
+  sort,
+  setSort,
+}: Props) => {
   const { environment } = useAppEnvironmentStore()
   const [downloading, setDownloading] = useState(false)
   const tCaracterisations = useTranslations('categorisations')
@@ -39,15 +58,25 @@ const StudyPostsBlock = ({ post, study, display, setDisplay, children, emissionS
   return (
     <Block
       title={
-        <>
-          {tPost(post)}
-          {withInfobulle(post) && (
-            <HelpIcon className="ml-2" label={tPost('glossary')} onClick={() => setGlossary(post)} />
-          )}
-        </>
+        <div className="flex gapped">
+          <DebouncedInput
+            className={styles.searchInput}
+            debounce={500}
+            value={filters.search}
+            onChange={(newValue) => setFilters({ search: newValue })}
+            placeholder="🔎"
+            data-testid="emission-source-search-field"
+          />
+          <StudyPostFilters
+            filters={filters}
+            setFilters={setFilters}
+            study={study}
+            post={post}
+            caracterisationOptions={caracterisationOptions}
+          />
+          <StudyPostSort sort={sort} setSort={setSort} />
+        </div>
       }
-      icon={<PostIcon post={post} />}
-      iconPosition="before"
       actions={[
         {
           actionType: 'loadingButton',

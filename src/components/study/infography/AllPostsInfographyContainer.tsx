@@ -1,4 +1,5 @@
 import { FullStudy } from '@/db/study'
+import AllPostsInfographyClickson from '@/environments/clickson/study/infography/AllPostsInfography'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import AllPostsInfographyCut from '@/environments/cut/study/infography/AllPostsInfography'
 import AllPostsInfographyTilt from '@/environments/tilt/study/infography/AllPostsInfography'
@@ -55,6 +56,7 @@ const AllPostsInfographyContainer = ({ study, studySite, user }: Props) => {
       environmentComponents={{
         [Environment.CUT]: <AllPostsInfographyCut study={study} data={data} studySiteId={studySite} user={user} />,
         [Environment.TILT]: <AllPostsInfographyTilt study={study} data={data} />,
+        [Environment.CLICKSON]: <AllPostsInfographyClickson study={study} data={data} />,
       }}
     />
   )

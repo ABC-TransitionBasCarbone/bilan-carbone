@@ -4,7 +4,7 @@ import { FullStudy, getStudyById } from '@/db/study'
 import { Translations } from '@/types/translation'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { getPost } from '@/utils/post'
-import { formatValueForExport, hasDeprecationPeriod, isCAS, STUDY_UNIT_VALUES } from '@/utils/study'
+import { formatEmissionValueForExport, hasDeprecationPeriod, isCAS, STUDY_UNIT_VALUES } from '@/utils/study'
 import { Environment, Export, ExportRule, Level, StudyResultUnit, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import {
@@ -167,19 +167,21 @@ const getEmissionSourcesRows = (
           emissionSource.validated ? t('yes') : t('no'),
           emissionSource.name || '',
           emissionSource.caracterisation ? tCaracterisations(emissionSource.caracterisation) : '',
-          formatValueForExport(getEmissionSourceEmission(emissionSource, environment) || 0),
+          formatEmissionValueForExport(getEmissionSourceEmission(emissionSource, environment) || 0, resultsUnit),
           withDeprecation ? emissionSource.depreciationPeriod || '1' : ' ',
           isCAS(emissionSource) ? emissionSource.hectare || '1' : ' ',
           isCAS(emissionSource) ? emissionSource.duration || '1' : ' ',
           tResultUnits(resultsUnit),
           emissionSourceSD ? getQuality(getStandardDeviationRating(emissionSourceSD), tQuality) : '',
           emissionSource.emissionSourceTags.map((emissionSourceTag) => emissionSourceTag.tag.name).join(', ') || '',
-          emissionSource.value?.toString().replace('.', ',') || '0',
+          emissionSource.value?.toLocaleString('fr-FR', { useGrouping: false }) || '0',
           emissionFactor?.unit ? tUnit(emissionFactor.unit, { count: 1 }) : '',
           getQuality(getQualityRating(emissionSource), tQuality),
           emissionSource.comment || '',
           emissionFactor?.metaData?.title || t('noFactor'),
-          emissionFactor ? getEmissionFactorValue(emissionFactor, environment) : '',
+          emissionFactor
+            ? getEmissionFactorValue(emissionFactor, environment).toLocaleString('fr-FR', { useGrouping: false })
+            : '',
           emissionFactor?.unit ? `${tResultUnits(StudyResultUnit.K)}/${tUnit(emissionFactor.unit, { count: 1 })}` : '',
           emissionFactor ? getQuality(getQualityRating(emissionFactor), tQuality) : '',
           emissionFactor?.source || '',
@@ -244,8 +246,9 @@ const getEmissionSourcesCSVContent = (
     ...emissionSource,
     ...getEmissionResults(emissionSource, environment),
   }))
-  const totalEmissions = formatValueForExport(
-    getEmissionSourcesTotalCo2(emissionSourcesWithEmission) / STUDY_UNIT_VALUES[resultsUnit],
+  const totalEmissions = formatEmissionValueForExport(
+    getEmissionSourcesTotalCo2(emissionSourcesWithEmission),
+    resultsUnit,
   )
   const totalRow = [t('total'), ...emptyFields(emptyFieldsCount + 1), totalEmissions].join(';')
 
@@ -257,8 +260,8 @@ const getEmissionSourcesCSVContent = (
   const uncertaintyRow = [
     t('uncertainty'),
     ...emptyFields(emptyFieldsCount),
-    formatValueForExport(uncertainty[0] / STUDY_UNIT_VALUES[resultsUnit]),
-    formatValueForExport(uncertainty[1] / STUDY_UNIT_VALUES[resultsUnit]),
+    formatEmissionValueForExport(uncertainty[0], resultsUnit),
+    formatEmissionValueForExport(uncertainty[1], resultsUnit),
   ].join(';')
 
   return [columns, ...rows, totalRow, qualityRow, uncertaintyRow].join('\n')
@@ -369,7 +372,7 @@ const handleLine = (
     resultLine.push(result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '')
   }
 
-  return [...resultLine, formatValueForExport((result.value ?? 0) / STUDY_UNIT_VALUES[resultsUnits])]
+  return [...resultLine, formatEmissionValueForExport(result.value ?? 0, resultsUnits)]
 }
 
 export const formatConsolidatedStudyResultsForExport = (
@@ -508,9 +511,7 @@ export const formatBegesStudyResultsForExport = (
         post = `${rule}. ${tBeges(`post.${rule}`)}`
       }
 
-      const gasValues = gasFields.map((field) =>
-        formatValueForExport(result[field] / STUDY_UNIT_VALUES[study.resultsUnit]),
-      )
+      const gasValues = gasFields.map((field) => formatEmissionValueForExport(result[field], study.resultsUnit))
 
       dataForExport.push([
         category === 'total' ? '' : `${category}. ${tBeges(`category.${category}`)}`,

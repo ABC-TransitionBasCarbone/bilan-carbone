@@ -14,13 +14,17 @@ mobilité spectateurs . mobilité spectateurs:
       - si: précision = "estimation"
         alors: résultat estimé . empreinte
       - sinon: 0
+  par défaut: 0
+  unité: kgCO2e
 
-mobilité spectateurs . mobilité spectateurs . précision:
+mobilité spectateurs . précision:
   question: Avez-vous déjà réalisé une enquête mobilité spectateurs ?
   une possibilité:
     - résultat précis
     - besoin
     - estimation
+  form:
+    saisie: "menu déroulant"
   avec:
     résultat précis:
       titre: Oui et je peux entrer les résultats
@@ -29,9 +33,9 @@ mobilité spectateurs . mobilité spectateurs . précision:
     estimation:
       titre: Non mais je préfère m'identifier dans des profils de cinéma comparables
 
-mobilité spectateurs . mobilité spectateurs . précision . besoin . contact:
+mobilité spectateurs . mobilité spectateurs . contact:
   applicable si: précision = "besoin"
   question: |
     Si vous souhaitez réaliser une enquête mobilité spectateur, vous pouvez nous envoyer un mail pour récupérer un modèle d'enquête qui vous permettra de remplir d'ici quelques semaines les informations demandées
   texte: |
-    Vous pouvez nous contacter à [count@cut-collectif.fr](mailto:count@cut-collectif.fr) pour recevoir une proposition d'enquête mobilité.
+    Vous pouvez nous contacter à <a href="mailto:count@cut-collectif.fr?subject=Enqu%C3%AAte%20mobilit%C3%A9%20cin%C3%A9ma&body=Bonjour%2C%20%0D%0AJe%20vous%20contacte%20car%20j'aimerais%20r%C3%A9aliser%20une%20enqu%C3%AAte%20mobilit%C3%A9%20pour%20connaitre%20l'impact%20des%20d%C3%A9placements%20des%20spectateurs%20de%20mon%20cin%C3%A9ma.%20%0D%0A%0D%0APouvez-vous%20me%20transmettre%20la%20proposition%20d'enqu%C3%AAte%20mobilit%C3%A9%20%3F" target="_blank">count@cut-collectif.fr</a> pour recevoir une proposition d'enquête mobilité.

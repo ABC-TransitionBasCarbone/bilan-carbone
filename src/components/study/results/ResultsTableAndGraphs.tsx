@@ -35,7 +35,7 @@ interface Props<T> {
   title: string
   type: 'tag' | 'post'
   glossary?: string
-  exportType?: string
+  exportType: string
 }
 const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: string; name: string } }>({
   activeTabs = Object.values(TabsPossibilities),
@@ -110,7 +110,7 @@ const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: s
   return (
     <>
       <Box className={styles.container}>
-        <Title as="h6" title={title} className="justify-center">
+        <Title as="h6" title={title} className="justify-center mb1">
           {glossary && (
             <HelpOutlineOutlinedIcon color="secondary" className="ml-4 pointer" onClick={() => setOpenGlossary(true)} />
           )}

@@ -1,4 +1,5 @@
 import { FormTextField } from '@/components/form/TextField'
+import { customRich } from '@/i18n/customRich'
 import { TrajectoryFormData } from '@/services/serverFunctions/transitionPlan.command'
 import { toTitleCase } from '@/utils/string'
 import { getReductionRatePerType } from '@/utils/trajectory'
@@ -110,7 +111,7 @@ const TrajectoryCreationStep2 = ({
         </Typography>
         {isSBTI && (
           <Typography variant="body2" color="textSecondary" className="mb1">
-            {t('objectives.sbtiDescription')}
+            {customRich(t, 'objectives.sbtiDescription')}
           </Typography>
         )}
 

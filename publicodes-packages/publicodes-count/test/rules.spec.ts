@@ -9,20 +9,9 @@ describe("Poste - Déchets", () => {
     const localEngine = engine.shallowCopy();
 
     const situation: Questions = {
-      "déchets . ordinaires . ordures ménagères . nombre bennes": 2,
+      "déchets . ordinaires . ordures ménagères . nb bennes": 2,
       "déchets . ordinaires . ordures ménagères . taille benne": 660,
-      "déchets . ordinaires . ordures ménagères . fréquence ramassage": 1,
-      "déchets . ordinaires . emballages et papier . nombre bennes": 2,
-      "déchets . ordinaires . emballages et papier . taille benne": 660,
-      "déchets . ordinaires . emballages et papier . fréquence ramassage": 1,
-      "déchets . ordinaires . biodéchets . nombre bennes": 2,
-      "déchets . ordinaires . biodéchets . taille benne": 660,
-      "déchets . ordinaires . biodéchets . fréquence ramassage": 1,
-      "déchets . ordinaires . verre . nombre bennes": 2,
-      "déchets . ordinaires . verre . taille benne": 660,
-      "déchets . ordinaires . verre . fréquence ramassage": 1,
-      "déchets . exceptionnels . lampe xenon . nombre": 10,
-      "déchets . exceptionnels . matériel technique . quantité": 5,
+      "déchets . exceptionnels . lampe Xenon . nb lampes": 10,
     };
 
     localEngine.setSituation(situation);
@@ -38,11 +27,10 @@ describe("Poste - Déchets", () => {
     expect(result.unit?.numerators).toContain("kgCO2e");
   });
 
-  // NOTE: We want to have non-zero default values to dynamically check unit homogeneity.
-  test.skip("devrait retourner undefined quand aucune donnée", () => {
+  test("devrait retourner 0 quand aucune donnée", () => {
     const localEngine = engine.shallowCopy();
     const result = localEngine.evaluate("déchets");
 
-    expect(result.nodeValue).toBeUndefined();
+    expect(result.nodeValue).toBe(0);
   });
 });

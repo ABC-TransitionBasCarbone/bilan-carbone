@@ -15,6 +15,7 @@ interface Props {
 const delayDuration = process.env.NEXT_PUBLIC_FEEDBACK_TYPEFORM_DELAY
 
 const UserFeedback = ({ environment }: Props) => {
+  const tCommon = useTranslations('feedback')
   const t = useTranslations('feedback')
   const [open, setOpen] = useState(true)
   const [displayForm, setDisplayForm] = useState(false)
@@ -43,7 +44,7 @@ const UserFeedback = ({ environment }: Props) => {
         title={t('title')}
         actions={
           displayForm
-            ? [{ actionType: 'button', children: t('close'), onClick: onClose }]
+            ? [{ actionType: 'button', children: tCommon('close'), onClick: onClose }]
             : [
                 { actionType: 'button', children: t('reject'), onClick: onClose },
                 {
