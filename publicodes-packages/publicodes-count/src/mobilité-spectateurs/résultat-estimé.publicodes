@@ -27,17 +27,19 @@ mobilité spectateurs . résultat estimé . proximité spectateurs:
     non négligeable de spectateurs de passage dans la région (touristes
     notamment)
   une possibilité:
-    - zone très touristique:
-        titre: |
-          Le cinéma est situé dans une zone touristique et 80% ou + des
-          spectateurs ne résident pas à proximité du cinéma à l'année.
-    - zone moyennement touristique:
-        titre: |
-          Le cinéma est situé dans une ville de destination de week-end et / ou
-          station balnéaire attirant environ 25% de spectateurs "non-locaux".
-    - majoritairement locaux:
-        titre: |
-          Le cinéma accueille majoritairement des spectateurs locaux
+    - zone très touristique
+    - zone moyennement touristique
+    - majoritairement locaux
+  avec:
+    zone très touristique:
+      titre: |
+        Le cinéma est situé dans une zone touristique et 80% ou + des spectateurs ne résident pas à proximité du cinéma à l'année.
+    zone moyennement touristique:
+      titre: |
+        Le cinéma est situé dans une ville de destination de week-end et / ou station balnéaire attirant environ 25% de spectateurs "non-locaux".
+    majoritairement locaux:
+      titre: |
+        Le cinéma accueille majoritairement des spectateurs locaux
 
 mobilité spectateurs . résultat estimé . empreinte établissement proche:
   formule:

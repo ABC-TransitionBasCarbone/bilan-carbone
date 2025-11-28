@@ -176,9 +176,13 @@ fonctionnement . énergie . groupes électrogènes:
 fonctionnement . énergie . équipement groupes électrogènes:
   question: Quel type de groupes électrogènes utilisez-vous ?
   une possibilité:
-    - utilisation régulière:
-        titre: Oui et je l’utilise plusieurs fois par an
-    - équipé sans utilisation:
-        titre: Oui mais je ne l'utilise pas
-    - aucun:
-        titre: Non
+    - utilisation régulière
+    - équipé sans utilisation
+    - aucun
+  avec:
+    utilisation régulière:
+      titre: Oui et je l’utilise plusieurs fois par an
+    équipé sans utilisation:
+      titre: Oui mais je ne l'utilise pas
+    aucun:
+      titre: Non
