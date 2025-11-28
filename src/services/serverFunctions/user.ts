@@ -20,6 +20,7 @@ import {
   getOrganizationVersionByOrganizationIdAndEnvironment,
   getRawOrganizationBySiret,
   getRawOrganizationBySiteCNC,
+  getRawOrganizationBySiteEstablishmentId,
   isOrganizationVersionCR,
 } from '@/db/organization'
 import { addSite } from '@/db/site'
@@ -78,9 +79,11 @@ import {
   NOT_ASSOCIATION_SIRET,
   NOT_AUTHORIZED,
   REQUEST_SENT,
+  UNKNOWN_SCHOOL,
   UNKNOWN_SIRET_OR_CNC,
 } from '../permissions/check'
 import { canAddMember, canChangeRole, canDeleteMember, canEditSelfRole } from '../permissions/user'
+import { School } from '../schoolApi'
 import { getDeactivableFeatureRestrictions } from './deactivableFeatures'
 import { AddMemberCommand, EditProfileCommand, EditSettingsCommand } from './user.command'
 
@@ -664,6 +667,106 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
             { wordpressId: siretOrCNC, name: companyName },
             { environment: environment },
           )
+    }
+
+    if (!organizationVersion) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await updateAccount(account.id, {
+      role: organization?.id ? Role.DEFAULT : Role.ADMIN,
+      organizationVersion: { connect: { id: organizationVersion.id } },
+    })
+
+    if (organization?.id) {
+      const createdAccount = (await getAccountById(account.id || '')) as AccountWithUser
+      const accounts = await getAccountFromUserOrganization(accountWithUserToUserSession(createdAccount))
+
+      await sendActivationRequest(
+        accounts.filter((a) => a.role === Role.GESTIONNAIRE || a.role === Role.ADMIN).map((a) => a.user.email),
+        email.toLowerCase(),
+        `${user.firstName} ${user.lastName}`,
+        environment,
+      )
+
+      return REQUEST_SENT
+    } else {
+      await validateUser(account.id)
+      await sendActivation(email, false, environment)
+    }
+    return EMAIL_SENT
+  })
+
+export const signUpWithSchool = async (email: string, school: School, environment: Environment) =>
+  withServerResponse('signUpWithSchool', async () => {
+    if (!school || !school.identifiant_de_l_etablissement) {
+      throw new Error(UNKNOWN_SCHOOL)
+    }
+    const deactivatedFeaturesRestrictions = await getDeactivableFeatureRestrictions(DeactivatableFeature.Creation)
+    if (
+      deactivatedFeaturesRestrictions?.active &&
+      deactivatedFeaturesRestrictions.deactivatedEnvironments?.includes(environment)
+    ) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const accountAlreadyCreated = await getAccountByEmailAndEnvironment(email, environment)
+    if (accountAlreadyCreated && accountAlreadyCreated.organizationVersionId) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    let user = (await getUserByEmail(email)) as UserWithAccounts
+    let organization = null
+    let account = null
+
+    if (!user) {
+      user = (await addUser({
+        email,
+        firstName: '',
+        lastName: '',
+        accounts: {
+          create: {
+            status: UserStatus.PENDING_REQUEST,
+            role: Role.DEFAULT,
+            environment,
+          },
+        },
+      })) as UserWithAccounts
+      account = user?.accounts[0]
+    } else {
+      account =
+        accountAlreadyCreated ||
+        ((await addAccount({
+          user: { connect: { id: user.id } },
+          role: Role.DEFAULT,
+          environment,
+          status: UserStatus.PENDING_REQUEST,
+        })) as AccountWithUser)
+    }
+    if (!user || !account) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    let organizationVersion = null
+
+    organization = await getRawOrganizationBySiteEstablishmentId(school.identifiant_de_l_etablissement)
+    organizationVersion = organization?.id
+      ? await getOrganizationVersionByOrganizationIdAndEnvironment(organization.id, environment)
+      : null
+
+    if (!organizationVersion) {
+      organizationVersion = await createOrganizationWithVersion(
+        { name: school.nom_etablissement || '' },
+        { environment: environment },
+      )
+
+      await addSite({
+        name: school.nom_etablissement || '',
+        postalCode: school.code_postal || '',
+        establishmentId: school.identifiant_de_l_etablissement,
+        establishmentYear: school.date_ouverture || '',
+        organization: { connect: { id: organizationVersion.organizationId } },
+      })
     }
 
     if (!organizationVersion) {

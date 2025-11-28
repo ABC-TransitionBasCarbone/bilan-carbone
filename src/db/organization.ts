@@ -55,6 +55,8 @@ export const OrganizationVersionWithOrganizationSelect = {
           city: true,
           volunteerNumber: true,
           beneficiaryNumber: true,
+          establishmentId: true,
+          establishmentYear: true,
           cncId: true,
           cnc: {
             select: {
@@ -322,6 +324,9 @@ export const getRawOrganizationBySiret = (siret: string | null) =>
 
 export const getRawOrganizationBySiteCNC = (cncCode: string | null) =>
   cncCode ? prismaClient.organization.findFirst({ where: { sites: { some: { cncId: cncCode } } } }) : null
+
+export const getRawOrganizationBySiteEstablishmentId = (establishmentId: string | null) =>
+  establishmentId ? prismaClient.organization.findFirst({ where: { sites: { some: { establishmentId } } } }) : null
 
 export const getRawOrganizationById = (id: string | null) =>
   id ? prismaClient.organization.findUnique({ where: { id } }) : null

@@ -5,5 +5,13 @@
     "form": {
       "activate": "Créer mon compte"
     }
+  },
+  "email": {
+    "subject": {
+      "newUser": "Vous avez été invité sur Clickson",
+      "addedActiveUser": "Vous avez été invité sur un nouvel environnement Clickson",
+      "activation": "Vous avez activé votre compte sur Clickson",
+      "activationRequest": "Demande d'accès à votre organisation Clickson"
+    }
   }
 }

@@ -17,7 +17,7 @@ type Option = { label: string; value: string }
 interface Props<T extends FieldValues> {
   name: FieldPath<T>
   control: Control<T>
-  label: string
+  label: string | React.ReactNode
   icon?: React.ReactNode
   iconPosition?: 'before' | 'after'
   helperText?: string

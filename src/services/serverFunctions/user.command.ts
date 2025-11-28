@@ -95,3 +95,13 @@ export const SignUpTiltCommandValidation = z.object({
 })
 
 export type SignUpTiltCommand = z.infer<typeof SignUpTiltCommandValidation>
+
+export const SignUpClicksonCommandValidation = z.object({
+  email: z
+    .email()
+    .trim()
+    .transform((email) => email.toLowerCase()),
+  schoolName: z.string(),
+})
+
+export type SignUpClicksonCommand = z.infer<typeof SignUpClicksonCommandValidation>
