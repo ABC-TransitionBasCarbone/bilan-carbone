@@ -50,6 +50,7 @@ export const mockedFullStudy = {
     id: '1',
     year: 2023,
   },
+  parent: null,
 }
 
 export const mockedStudySite = {

@@ -3,7 +3,6 @@
 import Block from '@/components/base/Block'
 import LinkButton from '@/components/base/LinkButton'
 import { FormTextField } from '@/components/form/TextField'
-import StudyParams from '@/components/study/rights/StudyParams'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
 import useStudySite from '@/components/study/site/useStudySite'
 import {
@@ -11,14 +10,13 @@ import {
   SITE_DEPENDENT_FIELDS,
   SiteDependentField,
 } from '@/constants/emissionFactorMap'
-import { FullStudy } from '@/db/study'
+import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { changeStudyCinema, getQuestionsGroupedBySubPost, getStudySite } from '@/services/serverFunctions/study'
 import { ChangeStudyCinemaCommand, ChangeStudyCinemaValidation } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Box, CircularProgress } from '@mui/material'
-import { DayOfWeek, EmissionFactorImportVersion, OpeningHours } from '@prisma/client'
-import { UserSession } from 'next-auth'
+import { DayOfWeek, OpeningHours } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useCallback, useEffect, useState } from 'react'
@@ -30,15 +28,14 @@ const SiteDataChangeWarningModal = dynamic(() => import('@/components/modals/Sit
 })
 
 type PartialOpeningHours = Pick<OpeningHours, 'day' | 'openHour' | 'closeHour' | 'isHoliday'>
+
 interface Props {
-  user: UserSession
   study: FullStudy
-  editionDisabled: boolean
-  emissionFactorSources: EmissionFactorImportVersion[]
 }
 
-const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Props) => {
+const StudyRightsCut = ({ study }: Props) => {
   const t = useTranslations('study.new')
+  const tRights = useTranslations('study.rights')
   const { callServerFunction } = useServerFunction()
   const { studySite, setSite } = useStudySite(study)
   const [siteData, setSiteData] = useState<FullStudy['sites'][0] | undefined>()
@@ -229,9 +226,12 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
 
   return (
     <>
-      <StudyParams user={user} study={study} disabled={editionDisabled} emissionFactorSources={emissionFactorSources} />
-      <Block className="flex flex-col">
-        <SelectStudySite study={study} studySite={studySite} setSite={setSite} />
+      <Block
+        title={tRights('general')}
+        rightComponent={
+          <SelectStudySite sites={study.sites} defaultValue={studySite} setSite={setSite} showAllOption={false} />
+        }
+      >
         {loading ? (
           <CircularProgress variant="indeterminate" color="primary" size={100} className="flex mt2" />
         ) : (
@@ -299,4 +299,4 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
   )
 }
 
-export default StudyRights
+export default StudyRightsCut

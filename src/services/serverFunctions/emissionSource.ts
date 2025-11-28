@@ -223,7 +223,7 @@ export const createTag = async ({ familyId, name, color }: NewStudyTagCommand) =
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (!(await hasAccessToCreateStudyTag(account.environment))) {
+    if (!hasAccessToCreateStudyTag(account.environment)) {
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -263,7 +263,7 @@ export const updateTag = async (tagId: string, name: string, color: string, fami
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (!(await hasAccessToCreateStudyTag(account.environment))) {
+    if (!hasAccessToCreateStudyTag(account.environment)) {
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -287,7 +287,7 @@ export const deleteTag = async (tagId: string) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (!(await hasAccessToCreateStudyTag(account.environment))) {
+    if (!hasAccessToCreateStudyTag(account.environment)) {
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -360,7 +360,7 @@ export const createOrUpdateStudyTagFamily = async (studyId: string, name: string
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (!(await hasAccessToCreateStudyTag(account.user.environment))) {
+    if (!hasAccessToCreateStudyTag(account.user.environment)) {
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -383,7 +383,7 @@ export const deleteStudyTagFamily = async (studyId: string, familyId: string) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (!(await hasAccessToCreateStudyTag(account.user.environment))) {
+    if (!hasAccessToCreateStudyTag(account.user.environment)) {
       throw new Error(NOT_AUTHORIZED)
     }
 

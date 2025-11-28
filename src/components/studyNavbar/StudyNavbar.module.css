@@ -115,3 +115,22 @@
     background-color: var(--mui-palette-background-paper);
   }
 }
+
+.role {
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  min-width: 5rem;
+}
+
+.validator {
+  background-color: var(--validator-background);
+}
+.editor {
+  background-color: var(--editor-background);
+}
+.reader {
+  background-color: var(--reader-background);
+}
+.contributor {
+  background-color: var(--contributor-background);
+}

@@ -94,26 +94,27 @@ const StudyDetailsHeader = ({
     : []
 
   return (
-    <Block
-      title={study.name}
-      as="h1"
-      icon={study.isPublic ? <LockOpenIcon /> : <LockIcon />}
-      actions={[...duplicateAction, ...deleteAction]}
-      description={
-        <div className={styles.studyInfo}>
-          <p>
-            {format.dateTime(study.startDate, { year: 'numeric', day: 'numeric', month: 'long' })} -{' '}
-            {format.dateTime(study.endDate, { year: 'numeric', day: 'numeric', month: 'long' })}
-          </p>
-          {study.exports.length > 0 && (
+    <>
+      <Block
+        title={study.name}
+        as="h2"
+        icon={study.isPublic ? <LockOpenIcon /> : <LockIcon />}
+        actions={[...duplicateAction, ...deleteAction]}
+        description={
+          <div className={styles.studyInfo}>
             <p>
-              {tExport('title')} {study.exports.map((e) => e.type).join(', ')}
+              {format.dateTime(study.startDate, { year: 'numeric', day: 'numeric', month: 'long' })} -{' '}
+              {format.dateTime(study.endDate, { year: 'numeric', day: 'numeric', month: 'long' })}
             </p>
-          )}
-        </div>
-      }
-    >
-      <SelectStudySite study={study} allowAll studySite={studySite} setSite={setSite} />
+            {study.exports.length > 0 && (
+              <p>
+                {tExport('title')} {study.exports.map((e) => e.type).join(', ')}
+              </p>
+            )}
+          </div>
+        }
+        rightComponent={<SelectStudySite sites={study.sites} defaultValue={studySite} setSite={setSite} />}
+      />
       {deleting && (
         <DeletionModal
           form={form}
@@ -133,7 +134,7 @@ const StudyDetailsHeader = ({
           open
         />
       )}
-    </Block>
+    </>
   )
 }
 

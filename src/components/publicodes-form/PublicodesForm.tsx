@@ -1,8 +1,8 @@
 import { Box } from '@mui/material'
 import { FormBuilder, FormState } from '@publicodes/forms'
-import { Situation } from 'publicodes'
+import Engine, { Situation } from 'publicodes'
 import { useCallback, useMemo, useState } from 'react'
-import PublicodesQuestion from './PublicodesQuestion'
+import PublicodesFormField from './PublicodesFormField'
 
 export interface PublicodesFormProps<RuleName extends string, S extends Situation<RuleName>> {
   /** The form builder used to generate the form pages and handle input changes. */
@@ -56,8 +56,6 @@ export default function PublicodesForm<RuleName extends string, S extends Situat
     },
     [formBuilder, onFieldChange],
   )
-
-  console.log('currentPage', currentPage)
 
   return (
     <Box className="dynamic-form">
