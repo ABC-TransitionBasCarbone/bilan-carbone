@@ -16,6 +16,7 @@ déchets . exceptionnels . lampe xenon:
       - FE
       - nombre
   unité: kgCO2e
+  par défaut: 0
   avec:
     poids:
       titre: Poids moyen
@@ -49,6 +50,7 @@ déchets . exceptionnels . matériel technique:
       - quantité
       - 0.001 tonne/kg
       - FE
+  par défaut: 0
   unité: kgCO2e
   avec:
     FE:
