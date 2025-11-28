@@ -161,8 +161,7 @@ mobilité spectateurs . résultat estimé . profil établissement:
             résultat précis . empreinte . scooter . distance: 0 km
 
     uniquement accessible en voiture:
-      titre: |
-        Le cinéma n'est accessible qu'en voiture.
+      titre: Le cinéma n'est accessible qu'en voiture.
       avec:
         empreinte:
           valeur: résultat précis . empreinte * général . nombre entrées / 1 entrée
