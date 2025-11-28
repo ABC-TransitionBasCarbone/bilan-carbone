@@ -1,6 +1,5 @@
 import { AccountWithUser } from '@/db/account'
 import { getEmissionFactorById } from '@/db/emissionFactors'
-import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { FullStudy, getStudyById, getStudySites } from '@/db/study'
 import { getAccountRoleOnStudy, hasDeprecationPeriod } from '@/utils/study'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
@@ -98,10 +97,7 @@ const canUpdateEmissionSourceBC = async (
   if (change.validated !== undefined) {
     const rights = study.allowedUsers.find((right) => right.account.user.email === account.user.email)
     if (
-      !isAdminOnStudyOrga(
-        accountWithUserToUserSession(account),
-        study.organizationVersion as OrganizationVersionWithOrganization,
-      ) &&
+      !isAdminOnStudyOrga(accountWithUserToUserSession(account), study.organizationVersion) &&
       (!rights || rights.role !== StudyRole.Validator)
     ) {
       return false

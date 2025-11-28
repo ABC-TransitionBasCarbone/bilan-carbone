@@ -1,0 +1,9 @@
+{
+  "login": {
+    "welcome": "Welcome to Clickson PEBC",
+    "explanation": "Let's measure your establishment's greenhouse gas emissions!",
+    "form": {
+      "activate": "Create my account"
+    }
+  }
+}

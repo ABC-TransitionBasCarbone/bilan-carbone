@@ -1,7 +1,7 @@
 import { wasteImpact } from '@/constants/emissions'
 import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
 import { hasWasteImpact } from '@/services/permissions/environment'
-import { Post, subPostsByPostBC } from '@/services/posts'
+import { convertTiltSubPostToBCSubPost, Post, subPostsByPostBC } from '@/services/posts'
 import { EmissionFactor, Environment, Import, Prisma, SubPost, Unit } from '@prisma/client'
 import { unique } from './array'
 
@@ -98,7 +98,7 @@ const tiltEmissionFactorSubPostsMapping: Partial<Record<SubPost, SubPost[]>> = {
 const getEmissionFactorSubPostMap = (subPost: SubPost, env: Environment): SubPost[] => {
   switch (env) {
     case Environment.TILT:
-      return [subPost, ...(tiltEmissionFactorSubPostsMapping[subPost] || [])]
+      return [subPost, ...(tiltEmissionFactorSubPostsMapping[subPost] || [convertTiltSubPostToBCSubPost(subPost)])]
     default:
       return [subPost]
   }
