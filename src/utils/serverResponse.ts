@@ -21,7 +21,7 @@ export const withServerResponse = async <T>(functionName: string, fn: () => Prom
   try {
     const data = await fn()
     const duration = Date.now() - start.getTime()
-    await logServerFunctionCall({ userId, functionName, success: true, start, duration })
+    logServerFunctionCall({ userId, functionName, success: true, start, duration })
     return { success: true, data }
   } catch (err: unknown) {
     const error = err instanceof Error ? err : new Error('error')
