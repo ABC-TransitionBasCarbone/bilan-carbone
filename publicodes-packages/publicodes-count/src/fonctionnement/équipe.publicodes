@@ -12,10 +12,7 @@ fonctionnement . équipe . collaborateurs:
   formule: collaborateur type
 
 fonctionnement . équipe . collaborateur type:
-  formule:
-    somme:
-      - repas
-      - transport
+  formule: repas + transport
   unité: kgCO2e
 
 fonctionnement . équipe . collaborateur type . nombre de jours par semaine:
@@ -41,6 +38,7 @@ fonctionnement . équipe . collaborateur type . transport:
     distance:
       question: Distance domicile travail (aller-retour)
       unité: km
+
     FE:
       formule:
         variations:
@@ -73,7 +71,7 @@ fonctionnement . équipe . collaborateur type . transport:
 
 fonctionnement . équipe . collaborateur type . transport . moyen de transport:
   question: Moyen de transport
-  une possibilié:
+  une possibilité:
     - RER et transilien
     - métro ou tram
     - bus
@@ -87,3 +85,17 @@ fonctionnement . équipe . collaborateur type . transport . moyen de transport:
     - moto
     - scooter
     - trottinette électrique
+  avec:
+    RER et transilien:
+    métro ou tram:
+    bus:
+    vélo électrique:
+    vélo classique:
+    marche:
+    voiture diesel:
+    voiture essence:
+    voiture hybride:
+    voiture électrique:
+    moto:
+    scooter:
+    trottinette électrique:
