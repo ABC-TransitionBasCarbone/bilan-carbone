@@ -1,3 +1,5 @@
+// SCRIPT A RELIRE
+
 import { prismaClient } from '@/db/client'
 import { getOrganizationVersionById } from '@/db/organization'
 import { getStudyById } from '@/db/study'

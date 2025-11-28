@@ -28,38 +28,47 @@ const mapToSubPost = (newSubPost: string) => {
   throw new Error(`Sous poste invalide "${newSubPost}"`)
 }
 
-const getSubPost = (emissionFactor: EmissionFactorRow, postAndSubPostsOldNewMapping: OldNewPostAndSubPostsMapping) => {
-  if (
-    emissionFactor.domain === 'NULL' ||
-    emissionFactor.category === 'NULL' ||
-    emissionFactor.subCategory === 'NULL' ||
-    emissionFactor.post === 'NULL' ||
-    emissionFactor.subPost === 'NULL'
-  ) {
-    console.log({
-      reason: `pas de sous psote pour  ${emissionFactor.EF_VAL_LIB}`,
-    })
+const getSubPosts = (
+  emissionFactors: EmissionFactorRow[],
+  postAndSubPostsOldNewMapping: OldNewPostAndSubPostsMapping,
+) => {
+  const subPosts: SubPost[] = []
 
-    return null
-  }
-  const newPostAndSubPost = postAndSubPostsOldNewMapping.getNewPostAndSubPost({
-    domain: emissionFactor.domain as string,
-    category: emissionFactor.category as string,
-    subCategory: emissionFactor.subCategory as string,
-    oldPost: emissionFactor.post as string,
-    oldSubPost: emissionFactor.subPost as string,
-  })
-  let subPost
+  for (const emissionFactor of emissionFactors) {
+    if (
+      emissionFactor.domain === 'NULL' ||
+      emissionFactor.category === 'NULL' ||
+      emissionFactor.subCategory === 'NULL' ||
+      emissionFactor.post === 'NULL' ||
+      emissionFactor.subPost === 'NULL'
+    ) {
+      console.log({
+        reason: `pas de sous poste pour  ${emissionFactor.EF_VAL_LIB}`,
+      })
 
-  try {
-    return mapToSubPost(newPostAndSubPost.newSubPost)
-  } catch {
-    console.log({
-      oldPost: `${emissionFactor.domain} ${emissionFactor.category} ${emissionFactor.subCategory} ${emissionFactor.post} ${emissionFactor.subPost}`,
-      reason: `Sous poste invalide ${subPost}`,
+      return null
+    }
+    const newPostAndSubPost = postAndSubPostsOldNewMapping.getNewPostAndSubPost({
+      domain: emissionFactor.domain as string,
+      category: emissionFactor.category as string,
+      subCategory: emissionFactor.subCategory as string,
+      oldPost: emissionFactor.post as string,
+      oldSubPost: emissionFactor.subPost as string,
     })
-    return null
+    let subPost
+
+    try {
+      subPosts.push(mapToSubPost(newPostAndSubPost.newSubPost))
+    } catch {
+      console.log({
+        oldPost: `${emissionFactor.domain} ${emissionFactor.category} ${emissionFactor.subCategory} ${emissionFactor.post} ${emissionFactor.subPost}`,
+        reason: `Sous poste invalide ${subPost}`,
+      })
+      return null
+    }
   }
+
+  return subPosts
 }
 
 export const uploadEmissionFactors = async (
@@ -87,11 +96,24 @@ export const uploadEmissionFactors = async (
 
   console.log(`${emissionFactorsToCreate.length} facteurs d'émissions à importer`)
 
+  const groupedEmissionFactors = emissionFactorsToCreate.reduce(
+    (acc, row) => {
+      if (acc[row.EFV_GUID]) {
+        acc[row.EFV_GUID].push(row)
+      } else {
+        acc[row.EFV_GUID] = [row]
+      }
+      return acc
+    },
+    {} as Record<string, EmissionFactorRow[]>,
+  )
+
   const createdEmissionFactor = await transaction.emissionFactor.createMany({
-    data: emissionFactorsToCreate
+    data: Object.values(groupedEmissionFactors)
       .map((row) => {
+        const ef = row[0]
         const id = v4()
-        const unit = unitsMatrix[getStringValue(row.Unité_Nom)]
+        const unit = unitsMatrix[getStringValue(ef.Unité_Nom)]
 
         if (!unit) {
           return null
@@ -100,43 +122,43 @@ export const uploadEmissionFactors = async (
         metaData.push({
           emissionFactorId: id,
           language: 'fr',
-          title: getStringValue(row.EF_VAL_LIB),
-          attribute: getStringValue(row.EF_VAL_CARAC),
-          frontiere: getStringValue(row.EF_VAL_COMPLEMENT),
-          comment: `${getStringValue(row.Commentaires)} ${getStringValue(row.DateValidité)}`,
-          location: `${getStringValue(row.NOM_PAYS)} ${getStringValue(row.NOM_REGION)} ${getStringValue(row.NOM_DEPARTEMENT)}`,
+          title: getStringValue(ef.EF_VAL_LIB),
+          attribute: getStringValue(ef.EF_VAL_CARAC),
+          frontiere: getStringValue(ef.EF_VAL_COMPLEMENT),
+          comment: `${getStringValue(ef.Commentaires)} ${getStringValue(ef.DateValidité)}`,
+          location: `${getStringValue(ef.NOM_PAYS)} ${getStringValue(ef.NOM_REGION)} ${getStringValue(ef.NOM_DEPARTEMENT)}`,
         })
 
         const isMonetary = isMonetaryEmissionFactor({ unit })
 
-        const subPost = getSubPost(row, postAndSubPostsOldNewMapping)
+        const subPosts = getSubPosts(row, postAndSubPostsOldNewMapping)
 
         return {
           id,
           organizationId: organizationVersion.organizationId,
           importedFrom: Import.Manual,
           status: EmissionFactorStatus.Valid,
-          oldBCId: getStringValue(row.EFV_GUID),
-          reliability: getEmissionQuality(row.Incertitude as number),
-          technicalRepresentativeness: getEmissionQuality(row.Incertitude as number),
-          geographicRepresentativeness: getEmissionQuality(row.Incertitude as number),
-          temporalRepresentativeness: getEmissionQuality(row.Incertitude as number),
-          completeness: getEmissionQuality(row.Incertitude as number),
+          oldBCId: getStringValue(ef.EFV_GUID),
+          reliability: getEmissionQuality(ef.Incertitude as number),
+          technicalRepresentativeness: getEmissionQuality(ef.Incertitude as number),
+          geographicRepresentativeness: getEmissionQuality(ef.Incertitude as number),
+          temporalRepresentativeness: getEmissionQuality(ef.Incertitude as number),
+          completeness: getEmissionQuality(ef.Incertitude as number),
           unit,
           isMonetary,
-          totalCo2: row.Total_CO2e as number,
-          co2f: row.CO2f as number,
-          ch4f: row.CH4f as number,
-          ch4b: row.CH4b as number,
-          n2o: row.N2O as number,
-          co2b: row.CO2b as number,
-          sf6: row.SF6 as number,
-          hfc: row.HFC as number,
-          pfc: row.PFC as number,
-          otherGES: (row.Autre_gaz as number) + (row.NF3 as number),
-          source: getStringValue(row.Source_Nom),
-          location: getStringValue(row.NOM_CONTINENT),
-          ...(subPost ? { subPosts: [subPost] } : {}),
+          totalCo2: ef.Total_CO2e as number,
+          co2f: ef.CO2f as number,
+          ch4f: ef.CH4f as number,
+          ch4b: ef.CH4b as number,
+          n2o: ef.N2O as number,
+          co2b: ef.CO2b as number,
+          sf6: ef.SF6 as number,
+          hfc: ef.HFC as number,
+          pfc: ef.PFC as number,
+          otherGES: (ef.Autre_gaz as number) + (ef.NF3 as number),
+          source: getStringValue(ef.Source_Nom),
+          location: getStringValue(ef.NOM_CONTINENT),
+          ...(subPosts?.length ? { subPosts } : {}),
         }
       })
       .filter((data) => data !== null),

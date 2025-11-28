@@ -6,8 +6,6 @@ import {
   OrganizationVersionWithOrganization,
 } from '@/db/organization'
 import { Environment } from '@prisma/client'
-import { stdin as input, stdout as output } from 'node:process'
-import * as readline from 'node:readline/promises'
 import { uploadEmissionFactors } from './emissionFactors'
 import { OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
 import { OldBCWorkSheetsReader } from './oldBCWorkSheetsReader'
@@ -47,44 +45,43 @@ export const uploadOldBCInformations = async (
 
   const oldBCWorksheetsReader = new OldBCWorkSheetsReader(file)
 
-  let hasOrganizationsWarning = false
-  let hasEmissionFactorsWarning = false
-  let hasStudiesWarning = false
-
-  if (!skip) {
-    const rl = readline.createInterface({ input, output })
-    const doWeContinue = await rl.question(
-      "Tu n'as pas choisi de passer en mode vérification (pas de paramètre skip), es-tu sûr de vouloir continuer ? (oui/non) ",
-    )
-
-    if (doWeContinue?.toLocaleLowerCase() !== 'oui') {
-      throw new Error('On arrête le programme')
-    } else {
-      console.log("C'est parti pour la migration !")
-    }
-    rl.close()
-  }
-
   await prismaClient.$transaction(
     async (transaction) => {
-      hasOrganizationsWarning = await uploadOrganizations(
+      const hasOrganizationsWarning = await uploadOrganizations(
         transaction,
         oldBCWorksheetsReader.organizationsWorksheet,
         accountOrganizationVersion,
       )
-      hasEmissionFactorsWarning = await uploadEmissionFactors(
+      if (hasOrganizationsWarning) {
+        console.log(
+          'Attention, certaines organisations (basé sur le SIRET, ou le nom) existent déjà. Ces dernières ont été ignorées. Veuillez verifier que toutes vos données sont correctes.',
+        )
+      }
+
+      const hasEmissionFactorsWarning = await uploadEmissionFactors(
         transaction,
         oldBCWorksheetsReader.emissionFactorsWorksheet,
         accountOrganizationVersion,
         postAndSubPostsOldNewMapping,
       )
-      hasStudiesWarning = await uploadStudies(
+      if (hasEmissionFactorsWarning) {
+        console.log(
+          "Attention, certains facteurs d'emissions ont des sommes inconsistentes et ont été ignorées. Veuillez verifier que toutes vos données sont correctes.",
+        )
+      }
+
+      const hasStudiesWarning = await uploadStudies(
         transaction,
         account.id,
         organizationVersionId,
         postAndSubPostsOldNewMapping,
         oldBCWorksheetsReader,
       )
+      if (hasStudiesWarning) {
+        console.log(
+          'Attention, certaines études ont été ignorées. Veuillez verifier que toutes vos données sont correctes.',
+        )
+      }
 
       if (skip) {
         throw Error()
@@ -92,21 +89,4 @@ export const uploadOldBCInformations = async (
     },
     { timeout: 10000 },
   ) // 10 seconds timeout for the transaction
-
-  if (hasOrganizationsWarning) {
-    console.log(
-      'Attention, certaines organisations (basé sur le SIRET, ou le nom) existent déjà. Ces dernières ont été ignorées. Veuillez verifier que toutes vos données sont correctes.',
-    )
-  }
-  if (hasEmissionFactorsWarning) {
-    console.log(
-      "Attention, certains facteurs d'emissions ont des sommes inconsistentes et ont été ignorées. Veuillez verifier que toutes vos données sont correctes.",
-    )
-  }
-
-  if (hasStudiesWarning) {
-    console.log(
-      'Attention, certaines études ont été ignorées. Veuillez verifier que toutes vos données sont correctes.',
-    )
-  }
 }
