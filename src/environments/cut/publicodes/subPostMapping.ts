@@ -18,7 +18,7 @@ const SUBPOST_TO_RULENAME: Record<SubPost, CutRuleName | undefined> = {
   Energie: 'fonctionnement . énergie',
   ActivitesDeBureau: 'fonctionnement . activités de bureau',
   MobiliteSpectateurs: 'mobilité spectateurs . mobilité spectateurs',
-  EquipesRecues: undefined,
+  EquipesRecues: 'tournées avant premières . équipes reçues',
   MaterielTechnique: 'salles et cabines . matériel technique',
   AutreMateriel: 'salles et cabines . autre matériel',
   Achats: 'confiseries et boissons . achats',

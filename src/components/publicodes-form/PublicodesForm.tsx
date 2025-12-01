@@ -1,8 +1,8 @@
 import { Box } from '@mui/material'
 import { FormBuilder, FormState } from '@publicodes/forms'
-import Engine, { Situation } from 'publicodes'
+import { Situation } from 'publicodes'
 import { useCallback, useMemo, useState } from 'react'
-import PublicodesFormField from './PublicodesFormField'
+import PublicodesQuestion from './PublicodesQuestion'
 
 export interface PublicodesFormProps<RuleName extends string, S extends Situation<RuleName>> {
   /** The form builder used to generate the form pages and handle input changes. */
@@ -35,7 +35,7 @@ export default function PublicodesForm<RuleName extends string, S extends Situat
   onFieldChange,
 }: PublicodesFormProps<RuleName, S>) {
   const [formState, setFormState] = useState<FormState<RuleName>>(() => {
-    const initial = FormBuilder.newState(initialSituation)
+    const initial = FormBuilder.newState({})
     return formBuilder.start(initial, ...targetRules)
   })
 
@@ -43,6 +43,7 @@ export default function PublicodesForm<RuleName extends string, S extends Situat
   // to manage pagination, but it could be added later if we need a realy
   // generic form component.
   const currentPage = useMemo(() => {
+    formState.situation = { ...initialSituation }
     return formBuilder.currentPage(formState)
   }, [formBuilder, formState])
 
@@ -57,27 +58,19 @@ export default function PublicodesForm<RuleName extends string, S extends Situat
     [formBuilder, onFieldChange],
   )
 
+  console.log('currentPage', currentPage)
+  console.log('formState', formState)
+
   return (
     <Box className="dynamic-form">
       <Box>
         {/* TODO: the relation lines between questions */}
-        {currentPage.elements.map((element) => (
-          <Box key={element.id} sx={{ mb: 2 }}>
-            <PublicodesFormField
-              formElement={element}
-              onChange={handleFieldChange}
-              // error={
-              //   touchedFields[question.idIntern] ? (errors[question.idIntern] as FieldError | undefined) : undefined
-              // }
-              // isLoading={isFormDisabled}
-              // autoSave={autoSave}
-              // watch={watch}
-              // formErrors={errors}
-              // setValue={setValue}
-              // studyStartDate={studyStartDate}
-            />
-          </Box>
-        ))}
+        {currentPage.elements.map((formLayout, index) => {
+          // Generate a unique key based on the layout type
+          const key =
+            formLayout.type === 'simple' ? formLayout.evaluatedElement.id : `table-${formLayout.title}-${index}`
+          return <PublicodesQuestion key={key} formLayout={formLayout} onChange={handleFieldChange} />
+        })}
       </Box>
     </Box>
   )

@@ -174,7 +174,7 @@ fonctionnement . énergie . groupes électrogènes:
         id: 14015
 
 fonctionnement . énergie . équipement groupes électrogènes:
-  question: Quel type de groupes électrogènes utilisez-vous ?
+  question: Le cinéma dispose-t-il d’un ou plusieurs groupes électrogènes ?
   une possibilité:
     - utilisation régulière
     - équipé sans utilisation
