@@ -1,7 +1,7 @@
 import { getOrCreateEngine, getOrCreateFormBuilder } from '@/lib/publicodes/singletons'
 import { isInNamespace } from '@/lib/publicodes/utils'
 import rules from '@abc-transitionbascarbone/publicodes-count'
-import { FormBuilder, FormLayout, FormPages, simpleLayout, tableLayout } from '@publicodes/forms'
+import { FormBuilder, FormLayout, FormPages, groupLayout, simpleLayout, tableLayout } from '@publicodes/forms'
 import Engine from 'publicodes'
 import { CutPublicodesEngine, CutRuleName } from './types'
 
@@ -47,6 +47,12 @@ function cutPageBuilder(rules: CutRuleName[]): FormPages<FormLayout<CutRuleName>
           return {
             title: 'billetterie et communication . matériel distributeurs',
             elements: BILLETTERIE_ET_COMMUNICATION_MATERIEL_DISTRIBUTEUR,
+          }
+        }
+        if (isInNamespace<CutRuleName>(rule, 'fonctionnement . bâtiment')) {
+          return {
+            title: 'fonctionnement . bâtiment',
+            elements: FONCTIONNEMENT_BATIMENT_RENOVATION_TYPE_LAYOUT,
           }
         }
         if (isInNamespace<CutRuleName>(rule, 'billetterie et communication . matériel cinéma')) {
@@ -215,7 +221,7 @@ const BILLETTERIE_ET_COMMUNICATION_MATERIEL_CINEMA = [
 const CONFISERIES_ET_BOISSONS_ELECTROMENAGER = [
   tableLayout<CutRuleName>(
     "Pour les différents équipements informatiques utilisés, veuillez indiquer leur nombre et leur date d'achat ou durée de location :",
-    ["Type d'électroménager", 'Nombre', "Date d'achat", "Durée de location (à l'année)"],
+    ["Type d'électroménagers", 'Nombre', "Date d'achat", "Durée de location (à l'année)"],
     [
       [
         'confiseries et boissons . électroménager . réfrigérateurs',
@@ -243,4 +249,21 @@ const CONFISERIES_ET_BOISSONS_ELECTROMENAGER = [
       ],
     ],
   ),
+]
+
+const FONCTIONNEMENT_BATIMENT_RENOVATION_TYPE_LAYOUT = [
+  simpleLayout<CutRuleName>('fonctionnement . bâtiment . construction . surface'),
+  simpleLayout<CutRuleName>('fonctionnement . bâtiment . construction . année de construction'),
+  groupLayout<CutRuleName>(
+    'Parmi les rénovations suivantes, lesquelles avez-vous réalisées durant les dix dernières années ?',
+    [
+      'fonctionnement . bâtiment . rénovation . type . rénovation totale',
+      'fonctionnement . bâtiment . rénovation . type . extension',
+      'fonctionnement . bâtiment . rénovation . type . autres travaux importants',
+    ],
+  ),
+  simpleLayout<CutRuleName>('fonctionnement . bâtiment . est partagé'),
+  simpleLayout<CutRuleName>('fonctionnement . bâtiment . autre activité . surface'),
+  simpleLayout<CutRuleName>('fonctionnement . bâtiment . parking présent'),
+  simpleLayout<CutRuleName>('fonctionnement . bâtiment . parking . nombre de places'),
 ]
