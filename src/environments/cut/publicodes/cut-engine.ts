@@ -1,6 +1,6 @@
 import { getOrCreateEngine, getOrCreateFormBuilder } from '@/lib/publicodes/singletons'
 import rules from '@abc-transitionbascarbone/publicodes-count'
-import { FormBuilder } from '@publicodes/forms'
+import { FormBuilder, FormLayout, FormPages, simpleLayout, tableLayout } from '@publicodes/forms'
 import Engine from 'publicodes'
 import { CutPublicodesEngine, CutRuleName } from './types'
 

@@ -5,16 +5,16 @@ confiseries et boissons . achats:
 confiseries et boissons . achats . vente sur place:
   titre: Vente sur place
   question: Vendez-vous des boissons et des confiseries ?
-  par défaut: oui
 
 confiseries et boissons . achats . vente sur place . achat type:
-  applicable si:
-    toutes ces conditions:
-      - est défini: vente sur place
-      - vente sur place
+  applicable si: vente sur place = oui
+  # FIXME: pourquoi cela ne fonctionne pas ?
+  # toutes ces conditions:
+  #   - est défini: vente sur place
+  #   - vente sur place
+  question: >
+    Selon vous, en moyenne, un spectateur achète :
   par défaut: "'standard'"
-  question: |
-    Selon vous, en moyenne, un spectateur achète:
   une possibilité:
     - un peu
     - standard
