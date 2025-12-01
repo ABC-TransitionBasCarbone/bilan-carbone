@@ -128,6 +128,13 @@ const Sites = ({ sites, form, withSelection }: Props) => {
                         data-testid="edit-site-cnc"
                         freeSolo
                         options={cncs ?? []}
+                        filterOptions={(options, { inputValue }) =>
+                          options.filter((option) =>
+                            `${option.cncCode} ${option.nom} ${option.dep}`
+                              .toLowerCase()
+                              .includes(inputValue.toLowerCase()),
+                          )
+                        }
                         value={selectedCnc || null}
                         inputValue={field.value || ''}
                         onChange={(_, newValue) => {
