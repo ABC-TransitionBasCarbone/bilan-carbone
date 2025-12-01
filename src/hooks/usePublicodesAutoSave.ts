@@ -84,7 +84,7 @@ export const usePublicodesAutoSave = ({
     [enabled, debounceMs, performSave],
   )
 
-  const hasUnsavedChanges = pendingSituation.current !== null || saveStatus === 'saving'
+  const hasUnsavedChanges = useMemo(() => pendingSituation.current !== null || saveStatus === 'saving', [saveStatus])
 
   useEffect(() => {
     return () => {

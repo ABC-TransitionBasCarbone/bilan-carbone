@@ -12,7 +12,7 @@ import { FormState } from '@publicodes/forms'
 import { useTranslations } from 'next-intl'
 import { Situation } from 'publicodes'
 import { useCallback, useEffect, useState } from 'react'
-import { getCutFormBuilder } from '../publicodes/cut-engine'
+import { getCutFormBuilder } from '../publicodes/cutEngine'
 import { getPublicodesTarget as getPublicodesTargetRule } from '../publicodes/subPostMapping'
 import { CutRuleName, CutSituation } from '../publicodes/types'
 
@@ -41,12 +41,10 @@ const PublicodesSubPostForm = ({ studyId, studySiteId, subPost }: PublicodesSubP
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const handleFieldChange = useCallback(
-    (_fieldName: any, _value: any, newState: FormState<string>) => {
-      autoSave.saveSituation(newState.situation)
-    },
-    [autoSave],
-  )
+  const handleFieldChange = useCallback((_fieldName: any, _value: any, newState: FormState<string>) => {
+    console.log('PublicodesSubPostForm handleFieldChange', _fieldName, _value, newState)
+    autoSave.saveSituation(newState.situation)
+  }, [])
 
   const constLoadSituation = useCallback(async () => {
     try {
