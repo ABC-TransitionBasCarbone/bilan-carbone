@@ -35,7 +35,7 @@ export default function PublicodesForm<RuleName extends string, S extends Situat
   onFieldChange,
 }: PublicodesFormProps<RuleName, S>) {
   const [formState, setFormState] = useState<FormState<RuleName>>(() => {
-    const initial = FormBuilder.newState(initialSituation)
+    const initial = FormBuilder.newState({})
     return formBuilder.start(initial, ...targetRules)
   })
 
@@ -43,6 +43,7 @@ export default function PublicodesForm<RuleName extends string, S extends Situat
   // to manage pagination, but it could be added later if we need a realy
   // generic form component.
   const currentPage = useMemo(() => {
+    formState.situation = { ...initialSituation }
     return formBuilder.currentPage(formState)
   }, [formBuilder, formState])
 
