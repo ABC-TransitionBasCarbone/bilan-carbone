@@ -43,7 +43,7 @@ const PublicTiltPage = ({ children }: Props) => {
           <CloseIcon />
           <Image src="/logos/tilt/logo_tilt.svg" alt="TILT logo" fill className="w50 hauto" />
         </div>
-        <p>{customRich(t, 'question', {}, Environment.TILT)}</p>
+        <p>{customRich(t, 'question', {}, Environment.TILT, { faq: styles.link, support: styles.link })}</p>
       </div>
       <div className={classNames(styles.loginForm, 'grow flex-col')}>
         <div className={classNames(styles.header, 'justify-between')}>

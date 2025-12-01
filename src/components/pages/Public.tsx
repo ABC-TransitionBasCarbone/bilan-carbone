@@ -42,7 +42,7 @@ const PublicPage = ({ children }: Props) => {
           height={400}
           className={classNames(styles.image, 'w100')}
         />
-        <p>{customRich(t, 'question')}</p>
+        <p>{customRich(t, 'question', {}, undefined, { faq: styles.link, support: styles.link })}</p>
       </div>
       <div className={classNames(styles.loginForm, 'grow flex-col')}>
         <div className={classNames(styles.header, 'justify-between')}>

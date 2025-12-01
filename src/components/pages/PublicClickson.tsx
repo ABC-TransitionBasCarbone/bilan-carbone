@@ -46,7 +46,7 @@ const PublicClicksonPage = ({ children }: Props) => {
             className={classNames(styles.image, 'w50')}
           />
         </div>
-        <p>{customRich(t, 'question', {}, Environment.CLICKSON)}</p>
+        <p>{customRich(t, 'question', {}, Environment.CLICKSON, { faq: styles.link, support: styles.link })}</p>
       </div>
       <div className={classNames(styles.loginForm, 'grow flex-col')}>
         <div className={classNames(styles.header, 'justify-between')}>

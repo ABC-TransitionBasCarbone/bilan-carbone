@@ -2,15 +2,13 @@
 
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
-import { getEnvVar } from '@/lib/environment'
 import { getFormationFormStart, startFormationForm } from '@/services/serverFunctions/user'
 import { MIN, TIME_IN_MS } from '@/utils/time'
 import { Checkbox } from '@mui/material'
-import { Environment, Formation } from '@prisma/client'
+import { Formation } from '@prisma/client'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
 import Button from '../base/Button'
 import Modal from '../modals/Modal'
@@ -27,7 +25,6 @@ interface Props {
 const timer = Number(process.env.NEXT_PUBLIC_FORMATION_TYPEFORM_DURATION)
 
 const FormationView = ({ formations, user, organizationName }: Props) => {
-  const support = getEnvVar('SUPPORT_EMAIL', Environment.BC)
   const t = useTranslations('formation')
   const tLevel = useTranslations('level')
   const { callServerFunction } = useServerFunction()
@@ -74,7 +71,6 @@ const FormationView = ({ formations, user, organizationName }: Props) => {
           organization: organizationName,
           name: `${user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1).toLowerCase()} ${user.lastName.toUpperCase()}`,
           level: user.level ? tLevel(user.level) : '',
-          support: (children) => <Link href={`mailto:${support}`}>{children}</Link>,
         })}
       </div>
       <h3 className="mb1">{t('videos')}</h3>

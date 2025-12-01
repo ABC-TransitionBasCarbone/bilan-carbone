@@ -65,7 +65,7 @@ const PublicCutPage = ({ children }: Props) => {
             </Typography>
           </Box>
         </Box>
-        <p>{customRich(t, 'question', {}, Environment.CUT)}</p>
+        <p>{customRich(t, 'question', {}, Environment.CUT, { faq: styles.link, support: styles.link })}</p>
         <Box className="justify-between" padding="1.2rem">
           <Image
             className={styles.france2030Logo}
