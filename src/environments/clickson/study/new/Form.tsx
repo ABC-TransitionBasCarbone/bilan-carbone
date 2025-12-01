@@ -6,7 +6,7 @@ import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { Export, Level } from '@prisma/client'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 
 interface Props {
@@ -17,6 +17,10 @@ interface Props {
 const NewStudyForm = ({ form, duplicateStudyId }: Props) => {
   const t = useTranslations('study.new')
   const [glossary, setGlossary] = useState('')
+
+  const name = form.watch('name')
+  const startDate = form.watch('startDate')
+  const endDate = form.watch('endDate')
 
   useEffect(() => {
     const currentYear = dayjs().year()
@@ -32,6 +36,17 @@ const NewStudyForm = ({ form, duplicateStudyId }: Props) => {
     })
   }, [form])
 
+  const beforeSubmit = useCallback(
+    (createStudyCommand: CreateStudyCommand) => {
+      const startYear = dayjs(startDate).year()
+      const endYear = dayjs(endDate).year()
+
+      const newName = `${name} ${startYear}-${endYear}`
+      return { ...createStudyCommand, name: newName }
+    },
+    [form, name, startDate, endDate],
+  )
+
   return (
     <Block title={t('title')} as="h1">
       <GlobalNewStudyForm
@@ -40,6 +55,7 @@ const NewStudyForm = ({ form, duplicateStudyId }: Props) => {
         duplicateStudyId={duplicateStudyId}
         glossary={glossary}
         setGlossary={setGlossary}
+        beforeSubmit={beforeSubmit}
       />
     </Block>
   )

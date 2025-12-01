@@ -25,9 +25,10 @@ interface Props {
   setGlossary?: (glossary: string) => void
   t: (key: string) => string
   duplicateStudyId?: string | null
+  beforeSubmit?: (createStudyCommand: CreateStudyCommand) => CreateStudyCommand
 }
 
-const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudyId }: Props) => {
+const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudyId, beforeSubmit }: Props) => {
   const router = useRouter()
   const tError = useTranslations('study.new.error')
   const tGlossary = useTranslations('study.new.glossary')
@@ -41,6 +42,9 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudy
 
   const onSubmit = async (command: CreateStudyCommand) => {
     setLoading(true)
+    if (beforeSubmit) {
+      command = beforeSubmit(command)
+    }
     const serverFunction = duplicateStudyId
       ? () => duplicateStudyCommand(duplicateStudyId, command, inviteOptions.team, inviteOptions.contributors)
       : () => createStudyCommand(command)
