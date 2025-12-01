@@ -21,6 +21,7 @@ mobilité spectateurs . précision:
     - résultat précis
     - besoin
     - estimation
+  par défaut: "'résultat précis'"
   avec:
     résultat précis:
       titre: Oui et je peux entrer les résultats

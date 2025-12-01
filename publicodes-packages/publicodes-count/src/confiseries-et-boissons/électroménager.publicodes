@@ -90,6 +90,7 @@ confiseries et boissons . électroménager . réfrigérateurs:
 
     nombre:
       question: Nombre de réfrigérateurs
+      unité: unité
 
     durée location:
       question: Durée de location des réfrigérateurs (jours à l'année)
@@ -99,6 +100,8 @@ confiseries et boissons . électroménager . réfrigérateurs:
       non applicable si:
         est défini: réfrigérateurs . durée location
       question: Année d'achat des réfrigérateurs
+      form:
+        saisie: année
 
 confiseries et boissons . électroménager . congélateurs:
   titre: Congélateurs
@@ -117,6 +120,7 @@ confiseries et boissons . électroménager . congélateurs:
 
     nombre:
       question: Nombre de congélateurs
+      unité: unité
 
     durée location:
       question: Durée de location des congélateurs (jours à l'année)
@@ -126,6 +130,8 @@ confiseries et boissons . électroménager . congélateurs:
       non applicable si:
         est défini: congélateurs . durée location
       question: Année d'achat des congélateurs
+      form:
+        saisie: année
 
 confiseries et boissons . électroménager . warmers:
   titre: Warmers
@@ -144,6 +150,7 @@ confiseries et boissons . électroménager . warmers:
 
     nombre:
       question: Nombre de warmers
+      unité: unité
 
     durée location:
       question: Durée de location des warmers (jours à l'année)
@@ -153,6 +160,8 @@ confiseries et boissons . électroménager . warmers:
       non applicable si:
         est défini: warmers . durée location
       question: Année d'achat des warmers
+      form:
+        saisie: année
 
 confiseries et boissons . électroménager . distributeurs:
   titre: Distributeurs snack et boissons
@@ -171,6 +180,7 @@ confiseries et boissons . électroménager . distributeurs:
 
     nombre:
       question: Nombre de distributeurs snack et boissons
+      unité: unité
 
     durée location:
       question: Durée de location des distributeurs snack et boissons (jours à l'année)
@@ -180,3 +190,5 @@ confiseries et boissons . électroménager . distributeurs:
       non applicable si:
         est défini: distributeurs . durée location
       question: Année d'achat des distributeurs snack et boissons
+      form:
+        saisie: année
