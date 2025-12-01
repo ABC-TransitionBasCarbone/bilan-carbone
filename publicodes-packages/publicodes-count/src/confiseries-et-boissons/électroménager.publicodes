@@ -93,6 +93,7 @@ confiseries et boissons . électroménager . réfrigérateurs:
     nombre:
       type: nombre
       question: Nombre de réfrigérateurs
+      unité: unité
 
     durée location:
       question: Durée de location des réfrigérateurs (jours à l'année)
@@ -124,6 +125,7 @@ confiseries et boissons . électroménager . congélateurs:
     nombre:
       type: nombre
       question: Nombre de congélateurs
+      unité: unité
 
     durée location:
       question: Durée de location des congélateurs (jours à l'année)
@@ -155,6 +157,7 @@ confiseries et boissons . électroménager . warmers:
     nombre:
       type: nombre
       question: Nombre de warmers
+      unité: unité
 
     durée location:
       question: Durée de location des warmers (jours à l'année)
@@ -186,6 +189,7 @@ confiseries et boissons . électroménager . distributeurs:
     nombre:
       type: nombre
       question: Nombre de distributeurs snack et boissons
+      unité: unité
 
     durée location:
       question: Durée de location des distributeurs snack et boissons (jours à l'année)
