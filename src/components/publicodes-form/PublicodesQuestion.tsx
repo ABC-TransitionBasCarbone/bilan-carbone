@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box'
 import { EvaluatedFormLayout } from '@publicodes/forms'
+import GroupQuestion from './GroupQuestion'
 import PublicodesInputField from './InputField'
 import QuestionContainer from './QuestionContainer'
 import TableQuestion from './TableQuestion'
@@ -37,7 +38,13 @@ export default function PublicodesFormField<RuleName extends string>({
         </Box>
       ) : null
     }
-
+    case 'group': {
+      return formLayout.evaluatedElements.some(({ applicable }) => applicable) ? (
+        <QuestionContainer label={formLayout.title}>
+          <GroupQuestion groupLayout={formLayout} onChange={onChange} />
+        </QuestionContainer>
+      ) : null
+    }
     case 'table': {
       return formLayout.evaluatedRows.flat().some(({ applicable }) => applicable) ? (
         // TODO: manage helper text for table
