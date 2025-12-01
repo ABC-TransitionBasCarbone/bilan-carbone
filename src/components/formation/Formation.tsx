@@ -1,6 +1,7 @@
 'use client'
 
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { customRich } from '@/i18n/customRich'
 import { getEnvVar } from '@/lib/environment'
 import { getFormationFormStart, startFormationForm } from '@/services/serverFunctions/user'
 import { MIN, TIME_IN_MS } from '@/utils/time'
@@ -69,15 +70,11 @@ const FormationView = ({ formations, user, organizationName }: Props) => {
       </div>
       <h3 className="mb1">{t('warning')}</h3>
       <div className={classNames(styles.subTitle, 'mb2')}>
-        {t.rich('warningMessage', {
+        {customRich(t, 'warningMessage', {
           organization: organizationName,
           name: `${user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1).toLowerCase()} ${user.lastName.toUpperCase()}`,
           level: user.level ? tLevel(user.level) : '',
           support: (children) => <Link href={`mailto:${support}`}>{children}</Link>,
-          error: (children) => <span className="error">{children}</span>,
-          b: (children) => <span className="bold">{children}</span>,
-          i: (children) => <span className="italic">{children}</span>,
-          br: () => <br />,
         })}
       </div>
       <h3 className="mb1">{t('videos')}</h3>
