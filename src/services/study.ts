@@ -174,12 +174,14 @@ const getEmissionSourcesRows = (
           tResultUnits(resultsUnit),
           emissionSourceSD ? getQuality(getStandardDeviationRating(emissionSourceSD), tQuality) : '',
           emissionSource.emissionSourceTags.map((emissionSourceTag) => emissionSourceTag.tag.name).join(', ') || '',
-          emissionSource.value?.toString().replace('.', ',') || '0',
+          emissionSource.value?.toLocaleString('fr-FR', { useGrouping: false }) || '0',
           emissionFactor?.unit ? tUnit(emissionFactor.unit, { count: 1 }) : '',
           getQuality(getQualityRating(emissionSource), tQuality),
           emissionSource.comment || '',
           emissionFactor?.metaData?.title || t('noFactor'),
-          emissionFactor ? getEmissionFactorValue(emissionFactor, environment) : '',
+          emissionFactor
+            ? getEmissionFactorValue(emissionFactor, environment).toLocaleString('fr-FR', { useGrouping: false })
+            : '',
           emissionFactor?.unit ? `${tResultUnits(StudyResultUnit.K)}/${tUnit(emissionFactor.unit, { count: 1 })}` : '',
           emissionFactor ? getQuality(getQualityRating(emissionFactor), tQuality) : '',
           emissionFactor?.source || '',
