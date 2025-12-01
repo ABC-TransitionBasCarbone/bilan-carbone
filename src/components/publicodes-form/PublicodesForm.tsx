@@ -50,6 +50,7 @@ export default function PublicodesForm<RuleName extends string, S extends Situat
     (ruleName: RuleName, value: string | number | boolean | undefined) => {
       setFormState((currentState) => {
         const newState = formBuilder.handleInputChange(currentState, ruleName, value)
+        console.log('handleFieldChange', ruleName, value, newState)
         onFieldChange?.(ruleName, value, newState)
         return newState
       })
