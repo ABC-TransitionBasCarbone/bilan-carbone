@@ -153,7 +153,7 @@
     "welcome": "Bienvenue sur le Bilan Carbone® +",
     "subtext": "",
     "explanation": "L'outil dédié à l'application de la méthode Bilan Carbone®, développé par l'Association pour la transition Bas Carbone (ABC), et accessible à l'ensemble de nos membres Conseil et Recherche, Entreprise, Association et Secteur Public",
-    "question": "Une question ? Lisez la <link>FAQ</link> ou <support>contactez-nous</support> !",
+    "question": "Une question ? Lisez la <faq>FAQ</faq> ou <support>contactez-nous</support> !",
     "cineo": "Outil développé grâce aux Bilans Carbone® de Cineo",
     "explanation2": "Opération soutenue par l'État dans le cadre du dispositif « Soutenir les alternatives vertes 2 » de France 2030, opéré par la Banque des territoires (Caisse des Dépôts)",
     "form": {

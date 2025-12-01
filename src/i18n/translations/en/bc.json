@@ -153,7 +153,7 @@
     "welcome": "Welcome",
     "subtext": "",
     "explanation": "The tool dedicated to the application of the Bilan Carbone® method, developed by the Association for the Low Carbon Transition (ABC), and accessible to all of our members: Consulting and Research, Business, Association and Public Sector",
-    "question": "A question? Read the <link>FAQ</link> or <support>contact us</support>!",
+    "question": "A question? Read the <faq>FAQ</faq> or <support>contact us</support>!",
     "cineo": "Tool developed thanks to the Bilan Carbone® assessments of Cineo",
     "explanation2": "Operation supported by the State as part of the 'Support Green Alternatives 2' initiative under France 2030, operated by the Banque des Territoires (Caisse des Dépôts)",
     "form": {
