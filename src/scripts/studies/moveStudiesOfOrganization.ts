@@ -160,7 +160,7 @@ const switchStudiesOfOrganization = async () => {
 
           if (!newSite) {
             console.log(`❌ Site ${studySite.site.name} not found in the new organization.`)
-            return Promise.resolve()
+            return Promise.reject()
           }
 
           return transaction.studySite.update({
