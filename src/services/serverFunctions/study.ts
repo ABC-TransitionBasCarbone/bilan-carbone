@@ -52,7 +52,6 @@ import {
   getOrganizationStudiesBeforeDate,
   getStudiesSitesFromIds,
   getStudyById,
-  getStudyByIds,
   getStudyNameById,
   getStudySites,
   getStudyTemplate,
@@ -67,11 +66,7 @@ import {
   upsertStudyExport,
   upsertStudyTemplate,
 } from '@/db/study'
-import {
-  getExternalStudiesForTransitionPlan,
-  getLinkedStudiesForTransitionPlan,
-  getTransitionPlanByStudyId,
-} from '@/db/transitionPlan'
+import { getTransitionPlanByStudyId } from '@/db/transitionPlan'
 import { addUser, getUserApplicationSettings, getUserByEmail, getUserSourceById, UserWithAccounts } from '@/db/user'
 import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
@@ -158,6 +153,7 @@ import {
   NewStudyContributorCommand,
   NewStudyRightCommand,
 } from './study.command'
+import { getLinkedAndExternalStudies } from './transitionPlan'
 import { addUserChecklistItem, getUserActiveAccounts, sendInvitation } from './user'
 
 export const getStudy = async (studyId: string) =>
@@ -427,13 +423,12 @@ export const changeStudyDates = async ({ studyId, ...command }: ChangeStudyDates
       const transitionPlan = await getTransitionPlanByStudyId(studyId)
 
       if (transitionPlan) {
-        const [externalStudies, transitionPlanStudies] = await Promise.all([
-          getExternalStudiesForTransitionPlan(transitionPlan.id),
-          getLinkedStudiesForTransitionPlan(transitionPlan.id),
-        ])
+        const response = await getLinkedAndExternalStudies(transitionPlan.id)
+        if (!response.success) {
+          throw new Error(response.errorMessage)
+        }
 
-        const linkedStudyIds = transitionPlanStudies.map((tps) => tps.studyId)
-        const linkedStudies = linkedStudyIds.length > 0 ? await getStudyByIds(linkedStudyIds) : []
+        const { linkedStudies, externalStudies } = response.data
 
         const hasLinkedOrExternalStudySameYearOrAfter =
           (linkedStudies || []).some((study) => study.startDate.getFullYear() >= newYear) ||
