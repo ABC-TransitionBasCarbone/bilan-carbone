@@ -1,42 +1,42 @@
 import { CheckCircle, Error } from '@mui/icons-material'
-import { Box, CircularProgress, Fade, styled, Typography, useTheme } from '@mui/material'
+import { Box, CircularProgress, styled, Typography, useTheme } from '@mui/material'
 import { FieldSaveStatus } from '../../hooks/useAutoSave'
 
 interface SaveStatusIndicatorProps {
   status: FieldSaveStatus
-  variant?: 'compact' | 'full' | 'fixed' // 'fixed' = position fixe en haut à droite
   showTime?: boolean
 }
 
-const SaveStatusIndicator = ({ status, variant = 'fixed', showTime = true }: SaveStatusIndicatorProps) => {
+const SaveStatusIndicator = ({ status, showTime = true }: SaveStatusIndicatorProps) => {
   const theme = useTheme()
 
   const getStatusContent = () => {
     switch (status.status) {
       case 'saving':
         return {
-          icon: <CircularProgress size={20} />,
+          icon: <CircularProgress size={16} />,
           color: theme.palette.text.secondary,
-          text: 'Sauvegarde...',
-          bgColor: theme.palette.grey[100],
+          text: 'Sauvegarde en cours...',
         }
       case 'saved':
         return {
           icon: <CheckCircle fontSize="small" />,
-          color: theme.palette.success.main,
+          color: theme.palette.success.dark,
           text: 'Sauvegardé',
-          bgColor: theme.palette.success.light + '20',
         }
       case 'error':
         return {
           icon: <Error fontSize="small" />,
           color: theme.palette.error.main,
-          text: 'Erreur',
-          bgColor: theme.palette.error.light + '20',
+          text: 'Erreur de sauvegarde',
         }
       case 'idle':
       default:
-        return null
+        return {
+          icon: <CheckCircle fontSize="small" />,
+          color: theme.palette.grey[400],
+          text: 'Prêt',
+        }
     }
   }
 
@@ -47,126 +47,52 @@ const SaveStatusIndicator = ({ status, variant = 'fixed', showTime = true }: Sav
     return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
   }
 
-  // Variante fixe (position fixe en haut à droite, toujours visible)
-  if (variant === 'fixed') {
-    return (
-      <FixedContainer>
-        <Fade in={!!statusContent} timeout={300}>
-          <FixedContent
-            sx={{
-              backgroundColor: statusContent?.bgColor || 'transparent',
-              border: statusContent ? `1px solid ${statusContent.color}30` : 'none',
-              opacity: statusContent ? 1 : 0,
-              visibility: statusContent ? 'visible' : 'hidden',
-            }}
-          >
-            {statusContent?.icon && <StyledIcon statusColor={statusContent.color}>{statusContent.icon}</StyledIcon>}
-            {statusContent?.text && (
-              <Box>
-                <StatusText sx={{ color: statusContent.color }}>{statusContent.text}</StatusText>
-                {showTime && status.status === 'saved' && status.lastSaved && (
-                  <TimeText>à {formatTime(status.lastSaved)}</TimeText>
-                )}
-                {status.status === 'error' && status.error && (
-                  <TimeText sx={{ color: theme.palette.error.main }}>{status.error}</TimeText>
-                )}
-              </Box>
-            )}
-          </FixedContent>
-        </Fade>
-      </FixedContainer>
-    )
-  }
-
-  // Variante compacte (icône seule)
-  if (variant === 'compact') {
-    if (!statusContent) return null
-    return (
-      <Fade in timeout={300}>
-        <StyledIcon statusColor={statusContent.color} title={statusContent.text}>
-          {statusContent.icon}
-        </StyledIcon>
-      </Fade>
-    )
-  }
-
-  // Variante full (intégré dans le flow)
-  if (!statusContent) return null
   return (
-    <Fade in timeout={1000}>
-      <Container
-        sx={{
-          backgroundColor: statusContent.bgColor,
-          border: `1px solid ${statusContent.color}30`,
-        }}
-      >
-        <StyledIcon statusColor={statusContent.color}>{statusContent.icon}</StyledIcon>
-        <Box>
-          <StatusText sx={{ color: statusContent.color }}>{statusContent.text}</StatusText>
-          {showTime && status.status === 'saved' && status.lastSaved && (
-            <TimeText>à {formatTime(status.lastSaved)}</TimeText>
-          )}
-          {status.status === 'error' && status.error && (
-            <TimeText sx={{ color: theme.palette.error.main }}>{status.error}</TimeText>
-          )}
-        </Box>
-      </Container>
-    </Fade>
+    <Container>
+      <StyledIcon statusColor={statusContent.color}>{statusContent.icon}</StyledIcon>
+      <Box>
+        <StatusText sx={{ color: statusContent.color }}>{statusContent.text}</StatusText>
+        {showTime && status.status === 'saved' && status.lastSaved && (
+          <TimeText>à {formatTime(status.lastSaved)}</TimeText>
+        )}
+        {status.status === 'error' && status.error && (
+          <TimeText sx={{ color: theme.palette.error.main }}>{status.error}</TimeText>
+        )}
+      </Box>
+    </Container>
   )
 }
 
-// Container pour la variante fixe
-const FixedContainer = styled(Box)(() => ({
-  position: 'fixed',
-  bottom: '1rem',
-  right: '1rem',
-  zIndex: 1200,
-  pointerEvents: 'none', // Ne bloque pas les clics
-}))
-
-const FixedContent = styled(Box)(() => ({
+const Container = styled(Box)(({ theme }) => ({
+  width: 'fit-content',
   display: 'flex',
   alignItems: 'center',
   gap: '0.5rem',
-  padding: '0.5rem 1rem',
+  padding: '0.625rem 1rem',
   borderRadius: '0.5rem',
-  transition: 'all 0.3s ease',
-  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-  pointerEvents: 'auto', // Le contenu peut recevoir des clics
-  minWidth: '150px', // Largeur minimale pour éviter le rétrécissement
-  minHeight: '40px', // Hauteur minimale pour éviter le saut
-}))
-
-// Container pour variante full
-const Container = styled(Box)(() => ({
-  display: 'flex',
-  alignItems: 'center',
-  gap: '0.5rem',
-  padding: '0.5rem 1rem',
-  borderRadius: '0.5rem',
-  transition: 'all 0.3s ease',
-  marginTop: '0.5rem',
-  marginBottom: '0.5rem',
+  marginBottom: '1rem',
+  border: `1px solid ${theme.palette.divider}`,
+  backgroundColor: theme.palette.background.paper,
 }))
 
 const StyledIcon = styled(Box)<{ statusColor: string }>(({ statusColor }) => ({
-  fontSize: '1.25rem',
+  fontSize: '1.125rem',
   color: statusColor,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  minWidth: '20px', // Espace réservé
+  minWidth: '18px',
 }))
 
 const StatusText = styled(Typography)(() => ({
-  fontSize: '0.875rem',
+  fontSize: '0.8125rem',
   fontWeight: 500,
   lineHeight: 1.2,
   whiteSpace: 'nowrap',
 }))
 
 const TimeText = styled(Typography)(({ theme }) => ({
-  fontSize: '0.75rem',
+  fontSize: '0.6875rem',
   color: theme.palette.text.secondary,
   lineHeight: 1.2,
   whiteSpace: 'nowrap',
