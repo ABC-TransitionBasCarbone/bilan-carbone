@@ -2,6 +2,7 @@ import { EvaluatedFormElement, FormPageElementProp } from '@publicodes/forms'
 import RadioGroupInput from './inputFields/RadioGroupInput'
 import SelectInput from './inputFields/SelectInput'
 import TextWithUnitInput from './inputFields/TextWithUnitInput'
+import YearPickerInput from './inputFields/YearPickerInput'
 import { OnFormInputChange } from './utils'
 
 export interface PublicodesInputFieldProps<RuleName extends string> {
@@ -23,7 +24,9 @@ export default function InputField<RuleName extends string>({
           return <TextWithUnitInput formElement={formElement} formElementProps={formElementProps} onChange={onChange} />
         // TODO: handle month type properly
         case 'month':
+        //   return <DatePickerInput formElement={formElement} formElementProps={formElementProps} onChange={onChange} />
         case 'date':
+          return <YearPickerInput formElement={formElement} formElementProps={formElementProps} onChange={onChange} />
         case 'checkbox':
         case 'text':
         default:
