@@ -249,14 +249,16 @@
     "emailRequired": "Please enter an email",
     "schoolPostalCodeOrName": "School postal code or name",
     "schoolPostalCodeOrNamePlaceholder": "The postal code or name of the school establishment",
-    "schoolSearchTooltip": "Find your school establishment by entering its postal code or name, then selecting it from the dropdown list.",
+    "schoolSearchGlossaryTitle": "Find your school establishment.",
+    "schoolSearchGlossary": "Find your school establishment by entering its postal code or name, then selecting it from the dropdown list.",
+    "close": "Close",
     "schoolPostalCodeOrNameRequired": "Please enter the school postal code or name",
     "validate": "Validate",
     "clear": "Clear value",
     "Not authorized": "This email is already used for Clickson or there's an issue with the account creation. Please see <link>the FAQ</link> or <support>contact support</support> if you think this is an error.",
     "Request sent": "A request has been sent to your colleagues",
     "Email sent": "You will receive an email to finish your account validation.",
-    "Not known school": "The school establishment you entered is not recognized. Please check it and try again.",
+    "Not known school": "Please find and select your establishment.",
     "validation": {
       "email": "Please enter an email",
       "schoolPostalCodeOrName": "Please enter the school postal code or name"

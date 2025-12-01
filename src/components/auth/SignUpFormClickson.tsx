@@ -8,7 +8,8 @@ import { getSchoolsFromPostalCodeOrName, School } from '@/services/schoolApi'
 import { signUpWithSchool } from '@/services/serverFunctions/user'
 import { SignUpClicksonCommand, SignUpClicksonCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { FormControl, Tooltip } from '@mui/material'
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
+import { FormControl } from '@mui/material'
 import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -20,6 +21,7 @@ import Form from '../base/Form'
 import LoadingButton from '../base/LoadingButton'
 import { FormAutocomplete } from '../form/Autocomplete'
 import { FormTextField } from '../form/TextField'
+import GlossaryModal from '../modals/GlossaryModal'
 import authStyles from './Auth.module.css'
 
 const SignUpFormClickson = () => {
@@ -32,6 +34,7 @@ const SignUpFormClickson = () => {
   const [message, setMessage] = useState('')
   const [success, setSuccess] = useState(false)
   const [schools, setSchools] = useState<School[]>([])
+  const [glossary, setGlossary] = useState('')
   const [schoolPostalCodeOrName, setSchoolPostalCodeOrName] = useState('')
   const { callServerFunction } = useServerFunction()
 
@@ -129,9 +132,14 @@ const SignUpFormClickson = () => {
           }}
           name="schoolName"
           label={
-            <Tooltip title={t('schoolSearchTooltip')} arrow>
-              <span>{t('schoolPostalCodeOrName')}</span>
-            </Tooltip>
+            <span className="align-center text-center">
+              {t('schoolPostalCodeOrName')}
+              <HelpOutlineOutlinedIcon
+                color="secondary"
+                className={`ml-4 pointer`}
+                onClick={() => setGlossary('schoolSearchGlossaryTitle')}
+              />
+            </span>
           }
           helperText={t('schoolPostalCodeOrNamePlaceholder')}
           freeSolo
@@ -163,6 +171,11 @@ const SignUpFormClickson = () => {
           </Link>
         </div>
       </FormControl>
+      {glossary && (
+        <GlossaryModal label="glossary-help-school-search" glossary={glossary} t={t} onClose={() => setGlossary('')}>
+          {t('schoolSearchGlossary')}
+        </GlossaryModal>
+      )}
     </Form>
   )
 }

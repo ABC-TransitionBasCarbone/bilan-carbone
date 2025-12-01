@@ -3,7 +3,7 @@ describe('Register clickson', () => {
     cy.resetTestDatabase()
   })
 
-  it('does create new clickson user and organization with CNC', () => {
+  it('does create new clickson user and organization with school', () => {
     cy.visit('/clickson/register')
 
     cy.getByTestId('activation-email').should('be.visible')
@@ -12,7 +12,7 @@ describe('Register clickson', () => {
 
     cy.getByTestId('activation-email').type('clickson-school@yopmail.com')
     cy.getByTestId('activation-school').type('78600')
-    cy.get('[data-testid="school-option-0781587B"]').click()
+    cy.get('[data-testid="school-option-0781587B"]').should('be.visible').click()
     cy.getByTestId('activation-form-message').should('not.exist')
     cy.getByTestId('activation-button').click()
 
@@ -45,7 +45,7 @@ describe('Register clickson', () => {
     cy.getByTestId('activation-form-message').should('be.visible')
     cy.getByTestId('activation-form-message')
       .invoke('text')
-      .should('include', "L'établissement scolaire n'est pas reconnu. Veuillez vérifier votre saisie.")
+      .should('include', 'Veuillez chercher et sélectionner votre établissement.')
   })
 
   it('does create new clickson user and ask for validation to already existing organization ', () => {
