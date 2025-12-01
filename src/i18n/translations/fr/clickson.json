@@ -1,4 +1,7 @@
 {
+  "nav": {
+    "newStudyContributor": "Ajouter un·e élève"
+  },
   "navigation": {
     "organizations": "Mes Empreintes carbone",
     "organization": "L'équipe pilote",
@@ -23,9 +26,34 @@
       "team": "Mes Collaborateur·rices",
       "title": "Mon Empreinte"
     },
+    "validatedOnlyDescription": "Pour chaque Bilan Carbone®, un ou plusieurs validateur·rices peuvent être définis. Ceux-ci ont la responsabilité de valider les sources d'émission lorsque celles-ci auront été renseignées par les élèves et éditeur·rices de l'étude. Par défaut, seules les émissions validées apparaissent au sein de vos résultats, mais vous pouvez changer ce comportement via le menu \"Paramètres\".",
     "new": {
       "suggestion": {
         "name": "Exemple : empreinte carbone Collège Simone Veil"
+      },
+      "inviteContributors": "Inviter les mêmes élèves"
+    },
+    "glossary": {
+      "validatorEmailDescription": "Pour chaque Bilan Carbone®, un ou plusieurs validateur·rices peuvent être définis. Ceux-ci ont la responsabilité de valider les sources d'émission lorsque celles-ci auront été renseignées par les élèves et éditeur·rices de l'étude. Par défaut, seules les émissions validées apparaissent au sein de vos résultats, mais vous pouvez changer ce comportement via le menu \"Paramètres\".",
+      "duplicationOptionsDescription": "Lors de la duplication d'une étude, vous pouvez choisir d'inviter les mêmes membres d'équipe et élèves de l'étude originale dans la nouvelle. Cela permet de maintenir la continuité de la collaboration."
+    },
+    "newContributor": {
+      "title": "Ajouter un·e élève sur l'étude : {name}"
+    },
+    "role": {
+      "Contributor": "Élève"
+    },
+    "rights": {
+      "contributorsTable": {
+        "delete": "Supprimer l'élève",
+        "title": "Élèves",
+        "newContributorLink": "Ajouter un·e élève",
+        "deleting": {
+          "confirmation": "Êtes vous sûr de vouloir supprimer {email} des élèves de cette étude ?"
+        },
+        "role": {
+          "description": "Vous pouvez ici gérer les élèves de votre étude. Ceux-ci auront accès à certains postes et sous postes (que vous pouvez définir) et pourront remplir certaines informations pour des sources d'émission que vous aurez déjà créées dans l'étude. Pour plus d'information sur l'interface des élèves, n'hésitez pas à aller voir notre <link>FAQ</link>"
+        }
       }
     }
   },
