@@ -20,8 +20,10 @@ const RadioGroupInput = <RuleName extends string>({
   errorMessage,
   disabled,
 }: RadioGroupInputProps<RuleName>) => {
+  const flexDirection = formElement.orientation === 'horizontal' ? 'flex-row' : 'flex-col'
+
   return (
-    <FormControl className="flex-row m2 gapped1" error={!!errorMessage} disabled={disabled}>
+    <FormControl className={`${flexDirection} m2 gapped1`} error={!!errorMessage} disabled={disabled}>
       {formElement.options.map((option, index) => (
         <StyledFormControlLabel
           key={`box-${index}`}
