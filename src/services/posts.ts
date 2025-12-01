@@ -188,11 +188,11 @@ export const subPostsByPostTILT: Record<TiltPost, SubPost[]> = {
 }
 
 export const subPostsByPostClickson: Record<ClicksonPost, SubPost[]> = {
-  [ClicksonPost.Energies]: [],
+  [ClicksonPost.Energies]: subPostsByPostBC[BCPost.Energies],
   [ClicksonPost.Restauration]: [],
-  [ClicksonPost.Deplacements]: [],
+  [ClicksonPost.Deplacements]: subPostsByPostBC[BCPost.Deplacements],
   [ClicksonPost.Achats]: [],
-  [ClicksonPost.Immobilisations]: [],
+  [ClicksonPost.Immobilisations]: subPostsByPostBC[BCPost.Immobilisations],
 }
 
 export const environmentPostMapping = {
