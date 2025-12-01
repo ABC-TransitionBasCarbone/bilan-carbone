@@ -8,6 +8,31 @@
     "information": "Mon établissement",
     "team": "L'équipe pilote"
   },
+  "home": {
+    "navigation": {
+      "collaborators": {
+        "title": "L'équipe Pilote :",
+        "message": "Retrouvez ici la liste des enseignants, personnels administratifs et élèves autorisés à modifier les données de l'établissement"
+      },
+      "footprints": {
+        "title": "Mes Empreintes :",
+        "message": "Créer votre première empreinte ici. Vous pourrez ensuite consulter vos empreintes ou en créer de nouvelles à tout moment."
+      },
+      "movietheater": {
+        "title": "Mes Établissements :",
+        "message": "Retrouvez ici la liste des établissements rattachés à votre compte"
+      }
+    },
+    "title": "Calculer votre empreinte carbone simplifiée vous permettra de :",
+    "alert": {
+      "info": "Le calculateur Clickson vous permet d’estimer l’impact sur le climat de votre activité. Il s’agit avant tout d’un outil de sensibilisation. Il ne s'agit pas d'une démarche de transition bas carbone mais d'une empreinte carbone simplifiée — au sens du <link>Guide de communication autour de la comptabilité carbone</link> — centrée sur les principaux postes d’émissions liés à l’activité des établissements."
+    },
+    "info": {
+      "0": "Comprendre la mesure d’impact de votre établissement",
+      "1": "Identifier les priorités d’action",
+      "2": "À long terme, et via un travail plus approfondi, construire une trajectoire de réduction"
+    }
+  },
   "team": {
     "table": {
       "title": "L'équipe pilote"
@@ -55,6 +80,11 @@
           "description": "Vous pouvez ici gérer les élèves de votre étude. Ceux-ci auront accès à certains postes et sous postes (que vous pouvez définir) et pourront remplir certaines informations pour des sources d'émission que vous aurez déjà créées dans l'étude. Pour plus d'information sur l'interface des élèves, n'hésitez pas à aller voir notre <link>FAQ</link>"
         }
       }
+    }
+  },
+  "emissionFactors": {
+    "post": {
+      "Restauration": "Réstauration"
     }
   },
   "organization": {

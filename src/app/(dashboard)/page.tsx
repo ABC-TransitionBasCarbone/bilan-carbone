@@ -16,7 +16,15 @@ const Home = async ({ user: account }: UserSessionProps) => {
   return (
     <>
       <Block>
-        {account.environment === Environment.CUT ? <CUTUserView account={account} /> : <UserView account={account} />}
+        {(() => {
+          switch (account.environment) {
+            case Environment.CUT:
+            case Environment.CLICKSON:
+              return <CUTUserView account={account} />
+            default:
+              return <UserView account={account} />
+          }
+        })()}
       </Block>
 
       {account.environment === Environment.CUT && <Footer />}
