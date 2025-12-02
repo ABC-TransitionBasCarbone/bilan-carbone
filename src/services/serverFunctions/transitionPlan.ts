@@ -68,7 +68,7 @@ export const getAvailableTransitionPlans = async (studyId: string) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const plans = await getOrganizationTransitionPlans(study.organizationVersionId)
+    const plans = await getOrganizationTransitionPlans(study.organizationVersionId, study.startDate.getFullYear())
 
     const accessiblePlans = await Promise.all(
       plans.map(async (plan) => {
