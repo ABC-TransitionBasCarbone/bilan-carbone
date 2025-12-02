@@ -2177,6 +2177,7 @@
     "tooSmall": "Please enter a larger value",
     "tooBig": "Please enter a smaller value",
     "studyYearMustBeBeforeCurrent": "The study year must be before the current study year",
+    "studyYearMustBeAfterLinkedStudies": "Cannot set a date earlier than your linked studies in your transition plan",
     "maxTwoDecimals": "The reduction rate must have at most 2 decimal places"
   },
   "common": {
