@@ -45,6 +45,7 @@ confiseries et boissons . électroménager . appareil:
                   - FE
                   - (1 an / amortissement)
   unité: kgCO2e
+  par défaut: 0
   avec:
     age:
       durée:
@@ -89,8 +90,8 @@ confiseries et boissons . électroménager . réfrigérateurs:
         id: 26976
 
     nombre:
+      type: nombre
       question: Nombre de réfrigérateurs
-      unité: unité
 
     durée location:
       question: Durée de location des réfrigérateurs (jours à l'année)
@@ -119,8 +120,8 @@ confiseries et boissons . électroménager . congélateurs:
         id: 26978
 
     nombre:
+      type: nombre
       question: Nombre de congélateurs
-      unité: unité
 
     durée location:
       question: Durée de location des congélateurs (jours à l'année)
@@ -149,8 +150,8 @@ confiseries et boissons . électroménager . warmers:
         id: 26986
 
     nombre:
+      type: nombre
       question: Nombre de warmers
-      unité: unité
 
     durée location:
       question: Durée de location des warmers (jours à l'année)
@@ -179,8 +180,8 @@ confiseries et boissons . électroménager . distributeurs:
         id: 26976
 
     nombre:
+      type: nombre
       question: Nombre de distributeurs snack et boissons
-      unité: unité
 
     durée location:
       question: Durée de location des distributeurs snack et boissons (jours à l'année)
