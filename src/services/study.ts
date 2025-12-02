@@ -167,7 +167,9 @@ const getEmissionSourcesRows = (
           emissionSource.validated ? t('yes') : t('no'),
           emissionSource.name || '',
           emissionSource.caracterisation ? tCaracterisations(emissionSource.caracterisation) : '',
-          formatValueForExport(getEmissionSourceEmission(emissionSource, environment) || 0),
+          formatValueForExport(
+            (getEmissionSourceEmission(emissionSource, environment) || 0) / STUDY_UNIT_VALUES[resultsUnit],
+          ),
           withDeprecation ? emissionSource.depreciationPeriod || '1' : ' ',
           isCAS(emissionSource) ? emissionSource.hectare || '1' : ' ',
           isCAS(emissionSource) ? emissionSource.duration || '1' : ' ',
