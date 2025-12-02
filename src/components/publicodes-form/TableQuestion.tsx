@@ -43,10 +43,11 @@ export default function TableQuestion<RuleName extends string>({
 
         const formElementProps: FormPageElementProp = {
           hidden: formElement.hidden,
-          useful: formElement.useful,
-          disabled: formElement.disabled,
           autofocus: formElement.autofocus,
           required: formElement.required,
+          // FIXME: handling custom rule layout doesn't fit well with table layout for now
+          useful: formElement.applicable,
+          disabled: !formElement.applicable,
         }
 
         // TODO: could we have a cleaner way to distinguish between value and inputs ?
