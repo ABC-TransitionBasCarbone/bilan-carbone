@@ -6,19 +6,15 @@ import QuestionContainer from './QuestionContainer'
 import TableQuestion from './TableQuestion'
 import { OnFormInputChange } from './utils'
 
-export interface PublicodesFormFieldProps<RuleName extends string> {
+export interface PublicodesQuestionProps<RuleName extends string> {
   formLayout: EvaluatedFormLayout<RuleName>
   onChange: OnFormInputChange<RuleName>
 }
 
-/**
- * A generic form field component that renders different types of input fields
- * based on the provided {@link EvaluatedFormElement}.
- */
-export default function PublicodesFormField<RuleName extends string>({
+export default function PublicodesQuestion<RuleName extends string>({
   formLayout,
   onChange,
-}: PublicodesFormFieldProps<RuleName>) {
+}: PublicodesQuestionProps<RuleName>) {
   switch (formLayout.type) {
     case 'simple': {
       const formElement = formLayout.evaluatedElement
