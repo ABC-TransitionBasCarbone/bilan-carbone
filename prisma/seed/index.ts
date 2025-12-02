@@ -386,6 +386,15 @@ const users = async () => {
     )
   }
 
+  const clicksonOrganizationIds = organizationVersionsClickson.map((orgVersion) => orgVersion.organizationId)
+  const clicksonSite = sites.find((site) => clicksonOrganizationIds.includes(site.organizationId))
+  if (clicksonSite) {
+    await prisma.site.update({
+      where: { id: clicksonSite.id },
+      data: { establishmentId: '0781494A', name: 'Ecole élémentaire Mansart', establishmentYear: '1965-05-01' },
+    })
+  }
+
   const levels = Object.keys(Level)
   const usersWithAccounts = await Promise.all([
     ...Object.keys(Role).flatMap((role) => [
