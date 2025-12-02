@@ -60,7 +60,7 @@ const CarbonIntensities = ({ study, studySite, withDep, withoutDep, caUnit }: Pr
         </div>
         {!isClickson && (
           <div className="grow justify-center">
-            <span className="text-center bold">{t('responsabilityIntensity')}</span>
+            <span className="text-center bold">{t('responsibilityIntensity')}</span>
           </div>
         )}
       </div>
@@ -71,7 +71,7 @@ const CarbonIntensities = ({ study, studySite, withDep, withoutDep, caUnit }: Pr
         resultsUnit={study.resultsUnit}
         label={`${tCAUnit(caUnit)} ${t('intensities.budget')}`}
         testId="result-budget"
-        withoutResponsability={isClickson}
+        withResponsibility={!isClickson}
       />
       <CarbonIntensity
         withDep={withDep}
@@ -80,7 +80,7 @@ const CarbonIntensities = ({ study, studySite, withDep, withoutDep, caUnit }: Pr
         resultsUnit={study.resultsUnit}
         label={t('intensities.etp')}
         testId="result-etp"
-        withoutResponsability={isClickson}
+        withResponsibility={!isClickson}
       />
       {study.organizationVersion.environment === Environment.TILT && (
         <>

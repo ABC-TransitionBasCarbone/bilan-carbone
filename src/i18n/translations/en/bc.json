@@ -722,7 +722,7 @@
       "withDependencies": "With dependencies",
       "withoutDependencies": "Without dependencies",
       "dependencyIntensity": "Carbon intensities in dependency",
-      "responsabilityIntensity": "Carbon intensity in responsibility",
+      "responsibilityIntensity": "Carbon intensity in responsibility",
       "monetaryRatio": "Monetary ratios",
       "monetaryRatioEmissions": "emissions from monetary ratios",
       "nonSpeMonetaryRatioEmissions": "resulting from unspecific monetary ratios",
