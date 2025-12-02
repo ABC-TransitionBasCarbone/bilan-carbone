@@ -4,6 +4,7 @@ import BaseTable from '@/components/base/Table'
 import { TableActionButton } from '@/components/base/TableActionButton'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { customRich } from '@/i18n/customRich'
 import { deleteObjective, deleteTrajectory } from '@/services/serverFunctions/trajectory'
 import { formatNumber } from '@/utils/number'
 import { getTrajectoryTypeLabel } from '@/utils/trajectory'
@@ -290,7 +291,11 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, st
         <ConfirmDeleteModal
           open={deleteModalOpen}
           title={deleteTarget?.type === 'trajectory' ? t('deleteTrajectory.title') : t('deleteObjective.title')}
-          message={deleteTarget?.type === 'trajectory' ? t('deleteTrajectory.message') : t('deleteObjective.message')}
+          message={
+            deleteTarget?.type === 'trajectory'
+              ? customRich(t, 'deleteTrajectory.message')
+              : t('deleteObjective.message')
+          }
           confirmText={t('delete')}
           cancelText={t('cancel')}
           requireNameMatch={deleteTarget?.type === 'trajectory' ? deleteTarget.name : undefined}

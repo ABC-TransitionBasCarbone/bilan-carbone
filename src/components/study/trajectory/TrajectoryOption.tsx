@@ -1,3 +1,4 @@
+import { customRich } from '@/i18n/customRich'
 import CheckIcon from '@mui/icons-material/Check'
 import { Typography } from '@mui/material'
 import { TrajectoryType } from '@prisma/client'
@@ -47,7 +48,7 @@ const TrajectoryOption = ({
               <div key={index} className="flex align-center">
                 <CheckIcon className={styles.checkmark} />
                 <Typography variant="body1">
-                  {t.rich(benefitKey, { strong: (children) => <strong>{children}</strong> })}
+                  {customRich(t, benefitKey, { strong: (children) => <strong>{children}</strong> })}
                 </Typography>
               </div>
             ))}

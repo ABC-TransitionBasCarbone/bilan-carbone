@@ -3,6 +3,7 @@
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
+import { customRich } from '@/i18n/customRich'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -51,9 +52,7 @@ const ObjectivesPage = ({ study, canEdit, trajectories, transitionPlanId }: Prop
             title={t('onboarding.title')}
             description={t('onboarding.description')}
             storageKey="objectives"
-            detailedContent={t.rich('onboarding.detailedInfo', {
-              br: () => <br />,
-            })}
+            detailedContent={customRich(t, 'onboarding.detailedInfo')}
           />
 
           <div className="flex-col gapped1">
