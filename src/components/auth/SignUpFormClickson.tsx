@@ -52,6 +52,10 @@ const SignUpFormClickson = () => {
 
   useEffect(() => {
     const fetchSchools = async () => {
+      if (!schoolPostalCodeOrName) {
+        setSchools([])
+        return
+      }
       const response = await callServerFunction(async () => {
         const data = await getSchoolsFromPostalCodeOrName(schoolPostalCodeOrName)
         return { success: true, data }
