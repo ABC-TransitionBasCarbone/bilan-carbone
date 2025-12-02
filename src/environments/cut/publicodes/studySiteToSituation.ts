@@ -1,6 +1,11 @@
 import { FullStudy } from '@/db/study'
 import { CutSituation } from './types'
 
+/**
+ * NOTE: if one of the study site fields are null or 0, some questions (which
+ * depends of this inputs) will be non-applicable by default and won't be shown
+ * to the user.
+ */
 export function studySiteToSituation(study: FullStudy['sites'][number] | undefined): CutSituation {
   if (!study) {
     return {}
