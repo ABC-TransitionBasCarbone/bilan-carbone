@@ -163,7 +163,6 @@ const MOBILITE_SPECTATEURS_LAYOUT = [
   simpleLayout<CutRuleName>('mobilité spectateurs . mobilité spectateurs . contact'),
   simpleLayout<CutRuleName>('mobilité spectateurs . résultat estimé . profil établissement'),
   simpleLayout<CutRuleName>('mobilité spectateurs . résultat estimé . proximité spectateurs'),
-  simpleLayout<CutRuleName>('mobilité spectateurs . résultat estimé . proximité spectateurs'),
 ]
 
 const BILLETTERIE_ET_COMMUNICATION_MATERIEL_DISTRIBUTEUR = [
