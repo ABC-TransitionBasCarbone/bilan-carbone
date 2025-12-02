@@ -958,6 +958,10 @@
           "Not authorized": "You are not allowed to do this action",
           "noAvailableStudies": "No previous studies available",
           "noLinkedStudies": "No linked studies yet",
+          "information": "Information",
+          "glossaryTitle": "Pour gabriel - titre",
+          "glossaryDescription": "Pour gabriel - description",
+          "close": "Close",
           "table": {
             "name": "Name",
             "year": "Year",
