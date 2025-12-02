@@ -16,15 +16,17 @@ export default function InputField<RuleName extends string>({
   formElementProps,
   onChange,
 }: PublicodesInputFieldProps<RuleName>) {
-  /* eslint-disable no-fallthrough */
+  /*
+   * TODO: to check if we want to support more input types in the future
+   * eslint-disable no-fallthrough
+   */
   switch (formElement.element) {
     case 'input':
       switch (formElement.type) {
         case 'number':
           return <TextWithUnitInput formElement={formElement} formElementProps={formElementProps} onChange={onChange} />
         // TODO: handle month type properly
-        case 'month':
-        //   return <DatePickerInput formElement={formElement} formElementProps={formElementProps} onChange={onChange} />
+        // case 'month':
         case 'date':
           return <YearPickerInput formElement={formElement} formElementProps={formElementProps} onChange={onChange} />
         case 'text':
