@@ -23,7 +23,7 @@ export interface PublicodesFormProps<RuleName extends string, S extends Situatio
 
 /**
  * A generic form component that dynamically generates form fields based on a
- * Publicodes {@link Engine} and a set of target rules.
+ * Publicodes {@link FormBuilder} and a set of target rules.
  *
  * The target rules are the Publicodes rules that the form aims to evaluate.
  * The form will display the necessary questions to determine the values of
