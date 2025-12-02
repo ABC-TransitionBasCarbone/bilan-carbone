@@ -3,7 +3,7 @@ import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import StudyPostsPageCut from '@/environments/cut/pages/StudyPostsPage'
 import { Post, subPostsByPost } from '@/services/posts'
-import { Environment, StudyRole } from '@prisma/client'
+import { Environment, StudyRole, SubPost } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -18,12 +18,13 @@ import styles from './StudyPostsPage.module.css'
 
 interface Props {
   post: Post
+  currentSubPost: SubPost | undefined
   study: FullStudy
   userRole: StudyRole
   user: UserSession
 }
 
-const StudyPostsPageContainer = ({ post, study, userRole, user }: Props) => {
+const StudyPostsPageContainer = ({ post, currentSubPost, study, userRole, user }: Props) => {
   const tNav = useTranslations('nav')
   const tPost = useTranslations('emissionFactors.post')
   const { studySite, setSite } = useStudySite(study)
@@ -102,7 +103,9 @@ const StudyPostsPageContainer = ({ post, study, userRole, user }: Props) => {
           />
         }
         environmentComponents={{
-          [Environment.CUT]: <StudyPostsPageCut post={post} study={study} studySiteId={studySite} />,
+          [Environment.CUT]: (
+            <StudyPostsPageCut currentSubPost={currentSubPost} post={post} study={study} studySiteId={studySite} />
+          ),
         }}
       />
 
