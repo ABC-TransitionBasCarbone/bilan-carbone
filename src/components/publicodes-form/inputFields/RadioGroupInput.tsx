@@ -34,7 +34,7 @@ const RadioGroupInput = <RuleName extends string>({
               onBlur={onBlur}
               key={index}
               name={option.label}
-              checked={formElement.value === option.value}
+              checked={(formElement.value ?? formElement.defaultValue) === option.value}
               onChange={(e) => onChange(formElement.id, e.target.checked ? option.value : undefined)}
             />
           }
