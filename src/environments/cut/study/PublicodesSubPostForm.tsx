@@ -4,7 +4,10 @@ import PublicodesForm from '@/components/publicodes-form/PublicodesForm'
 import { FullStudy } from '@/db/study'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
+import { Situation } from 'publicodes'
+import { useMemo } from 'react'
 import { getCutFormBuilder } from '../publicodes/cut-engine'
+import { studySiteToSituation } from '../publicodes/studySiteToSituation'
 import { getPublicodesTarget as getPublicodesTargetRule } from '../publicodes/subPostMapping'
 
 export interface PublicodesSubPostFormProps {
@@ -17,11 +20,16 @@ export interface PublicodesSubPostFormProps {
  * Specific {@link PublicodesForm} for CUT. Target rules are determined based
  * on the given `subPost`.
  */
-const PublicodesSubPostForm = ({ subPost }: PublicodesSubPostFormProps) => {
+const PublicodesSubPostForm = ({ subPost, study, studySiteId }: PublicodesSubPostFormProps) => {
   const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
 
   // const [isLoading, setIsLoading] = useState(true)
   // const [error, setError] = useState<string | null>(null)
+
+  const initialSituation = useMemo(() => {
+    const studySite = study.sites.find((site) => site.id === studySiteId)
+    return studySiteToSituation(studySite)
+  }, [study])
 
   const cutFormBuilder = getCutFormBuilder()
   const targetRule = getPublicodesTargetRule(subPost)
@@ -64,14 +72,12 @@ const PublicodesSubPostForm = ({ subPost }: PublicodesSubPostFormProps) => {
       <PublicodesForm
         formBuilder={cutFormBuilder}
         targetRules={[targetRule]}
+        initialSituation={initialSituation as Situation<string>}
         // TODO: manage autosave answers
         // subPost={subPost}
         // studyId={study.id}
         // studySiteId={studySiteId}
         // studyStartDate={study.startDate}
-
-        // TODO: manage initial answers
-        // initialSituation={{}}
       />
     </div>
   )
