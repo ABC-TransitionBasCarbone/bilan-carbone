@@ -29,7 +29,7 @@ const PublicodesSubPostForm = ({ subPost, study, studySiteId }: PublicodesSubPos
   const initialSituation = useMemo(() => {
     const studySite = study.sites.find((site) => site.id === studySiteId)
     return studySiteToSituation(studySite)
-  }, [study])
+  }, [study, studySiteId])
 
   const cutFormBuilder = getCutFormBuilder()
   const targetRule = getPublicodesTargetRule(subPost)
