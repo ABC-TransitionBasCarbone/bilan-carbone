@@ -8,6 +8,7 @@ import { Link, MenuItem } from '@mui/material'
 import { ActionCategory, ActionNature } from '@prisma/client'
 import { useLocale, useTranslations } from 'next-intl'
 import Image from 'next/image'
+import { useMemo } from 'react'
 import { Control } from 'react-hook-form'
 
 interface Props {
@@ -21,12 +22,15 @@ const ActionModalStep1 = ({ control }: Props) => {
   const tCategory = useTranslations('study.transitionPlan.actions.category')
   const tRelevance = useTranslations('study.transitionPlan.actions.relevance')
 
-  const methodologyUrl =
-    locale === Locale.FR
+  const methodologyUrl = useMemo(() => {
+    return locale === Locale.FR
       ? process.env.NEXT_PUBLIC_ACTION_RELEVANCE_DOC_URL_FR
       : process.env.NEXT_PUBLIC_ACTION_RELEVANCE_DOC_URL_EN
+  }, [locale])
 
-  const relevanceImageSrc = locale === Locale.FR ? '/img/action-relevance-fr.avif' : '/img/action-relevance-en.avif'
+  const relevanceImageSrc = useMemo(() => {
+    return locale === Locale.FR ? '/img/action-relevance-fr.avif' : '/img/action-relevance-en.avif'
+  }, [locale])
 
   const selectors: Record<
     'nature' | 'category' | 'relevance',
