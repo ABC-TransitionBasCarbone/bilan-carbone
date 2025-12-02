@@ -6,6 +6,7 @@ import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import CheckIcon from '@mui/icons-material/Check'
 import { ArrowLeftIcon, ArrowRightIcon } from '@mui/x-date-pickers'
+import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
@@ -13,52 +14,43 @@ import PublicodesSubPostForm from '../study/PublicodesSubPostForm'
 
 interface Props {
   post: Post
+  currentSubPost: SubPost | undefined
   study: FullStudy
   studySiteId: string
 }
 
-const StudyPostsPageCut = ({ post, study, studySiteId }: Props) => {
+const StudyPostsPageCut = ({ post, currentSubPost, study, studySiteId }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const tCutQuestions = useTranslations('emissionFactors.post.questions')
   const tInfography = useTranslations('study.infography')
   const router = useRouter()
   const searchParams = useSearchParams()
   const subPosts = useMemo(() => subPostsByPost[post], [post])
-  const [activeStep, setActiveStep] = useState(0)
-  const [pageLoading, setPageLoading] = useState(true)
 
-  useEffect(() => {
-    if (pageLoading) {
-      const subPostParam = searchParams.get('subPost')
-      if (subPostParam) {
-        const subPostIndex = subPosts.findIndex((subPost) => subPost === subPostParam)
-        if (subPostIndex !== -1) {
-          setActiveStep(subPostIndex)
-        }
-      }
-      setPageLoading(false)
-    }
-  }, [pageLoading, searchParams, subPosts])
-
-  useEffect(() => {
-    if (pageLoading) {
-      return
-    }
-
-    const currentSubPost = subPosts[activeStep]
+  const initialStep = useMemo(() => {
     if (currentSubPost) {
+      const index = subPosts.findIndex((subPost) => subPost === currentSubPost)
+      return index !== -1 ? index : 0
+    }
+    return 0
+  }, [currentSubPost, subPosts])
+
+  const [activeStep, setActiveStep] = useState(initialStep)
+
+  const activeSubPost = subPosts[activeStep]
+
+  useEffect(() => {
+    if (activeSubPost) {
       const newSearchParams = new URLSearchParams(searchParams.toString())
-      newSearchParams.set('subPost', currentSubPost)
+      newSearchParams.set('subPost', activeSubPost)
       const newUrl = `${window.location.pathname}?${newSearchParams.toString()}`
       window.history.replaceState(null, '', newUrl)
     }
-  }, [activeStep, subPosts, searchParams, pageLoading])
+  }, [activeSubPost, searchParams])
 
   const tabContent = useMemo(() => {
-    return subPosts.map((subPost) => (
-      <PublicodesSubPostForm key={subPost} subPost={subPost} study={study} studySiteId={studySiteId} />
-    ))
-  }, [subPosts, study, studySiteId])
+    return <PublicodesSubPostForm key={activeSubPost} subPost={activeSubPost} study={study} studySiteId={studySiteId} />
+  }, [activeSubPost, study, studySiteId])
 
   const handleNextStep = () => {
     if (activeStep < subPosts.length - 1) {
