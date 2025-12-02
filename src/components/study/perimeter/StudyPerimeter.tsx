@@ -360,7 +360,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
                       city: site.site.city ?? '',
                     }))
               }
-              form={isEditing ? siteForm : undefined}
+              form={siteForm as unknown as UseFormReturn<SitesCommand>}
               withSelection
             />
           ),
