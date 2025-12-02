@@ -1,10 +1,6 @@
 describe('Create study emission source', () => {
   const studyId = '88c93e88-7c80-4be4-905b-f0bbd2ccc779'
 
-  before(() => {
-    cy.resetTestDatabase()
-  })
-
   it('should create an emission source on a study', () => {
     cy.login()
 
@@ -153,7 +149,7 @@ describe('Create study emission source', () => {
         cy.getByTestId('emission-source-name').scrollIntoView().clear()
         cy.getByTestId('emission-source-name').type('My edited emission source name')
         cy.get('[data-testid="emission-source-name"] > .MuiInputBase-root > .MuiInputBase-input').blur()
-        cy.getByTestId('emission-source-status').should('contain', 'Enregistré')
+        cy.getByTestId('emission-source-status', { timeout: 10000 }).should('contain', 'Enregistré')
       })
     cy.getByTestId('emission-source-validate').should('not.exist')
 

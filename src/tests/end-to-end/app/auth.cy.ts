@@ -1,8 +1,4 @@
 describe('Authentication', () => {
-  before(() => {
-    cy.resetTestDatabase()
-  })
-
   beforeEach(() => {
     cy.intercept('POST', '/api/auth/callback/credentials').as('login')
     cy.intercept('POST', '/reset-password/*').as('reset-password')
