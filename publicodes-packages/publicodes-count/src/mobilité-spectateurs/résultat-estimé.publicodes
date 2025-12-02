@@ -30,6 +30,8 @@ mobilité spectateurs . résultat estimé . proximité spectateurs:
     - zone très touristique
     - zone moyennement touristique
     - majoritairement locaux
+  form:
+    saisie: menu déroulant
   avec:
     zone très touristique:
       titre: |
@@ -64,6 +66,8 @@ mobilité spectateurs . résultat estimé . profil établissement:
     - distances longues
     - majoritairement en voiture
     - uniquement accessible en voiture
+  form:
+    saisie: menu déroulant
   avec:
     distances courtes:
       titre: |
