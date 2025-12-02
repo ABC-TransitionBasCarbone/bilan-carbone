@@ -117,7 +117,7 @@ export const duplicateTransitionPlanWithRelations = async (
       data: {
         studyId: targetStudyId,
         transitionPlanStudies: {
-          create: [{ studyId: targetStudyId }, ...linkedStudyIds.map((studyId) => ({ studyId }))],
+          create: linkedStudyIds.map((studyId) => ({ studyId })),
         },
         trajectories: {
           create: sourceTransitionPlan.trajectories.map((trajectory) => ({

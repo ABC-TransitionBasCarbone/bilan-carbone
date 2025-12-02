@@ -151,7 +151,7 @@ describe('TransitionPlan DB', () => {
         data: {
           studyId: 'target-study-id',
           transitionPlanStudies: {
-            create: [{ studyId: 'target-study-id' }, { studyId: 'linked-study-1' }],
+            create: [{ studyId: 'linked-study-1' }],
           },
           trajectories: {
             create: sourceTransitionPlan.trajectories.map((trajectory) => ({

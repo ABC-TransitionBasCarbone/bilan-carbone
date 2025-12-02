@@ -118,17 +118,15 @@ const duplicateTransitionPlan = async (
 
   if (!targetStudy) {
     console.error('Cannot link studies because target is not found with id ' + targetStudyId)
+    return duplicated
   }
 
   if (!sourceStudy) {
-    console.error('Cannot link studies because source is not found with id ' + targetStudyId)
+    console.error('Cannot link studies because source is not found with id ' + sourceTransitionPlan.studyId)
+    return duplicated
   }
 
-  if (
-    targetStudy?.startDate &&
-    sourceStudy?.startDate &&
-    targetStudy.startDate.getFullYear() > sourceStudy.startDate.getFullYear()
-  ) {
+  if (targetStudy.startDate.getFullYear() > sourceStudy.startDate.getFullYear()) {
     await linkOldStudy(duplicated.id, sourceStudy.id)
   }
 
