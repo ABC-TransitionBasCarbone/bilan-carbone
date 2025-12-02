@@ -9,7 +9,7 @@ interface Props {
   resultsUnit: string
   label: string
   testId: string
-  withoutResponsability?: boolean
+  withResponsibility?: boolean
 }
 
 const CarbonIntensity = ({
@@ -19,7 +19,7 @@ const CarbonIntensity = ({
   resultsUnit,
   label,
   testId,
-  withoutResponsability = false,
+  withResponsibility = true,
 }: Props) => {
   const tResultUnits = useTranslations('study.results.units')
   return (
@@ -29,11 +29,11 @@ const CarbonIntensity = ({
         label={`${tResultUnits(resultsUnit)}/${label}`}
         testId={`dependency-${testId}`}
       />
-      {!withoutResponsability && (
+      {withResponsibility && (
         <Data
           value={formatNumber(withoutDep / divider)}
           label={`${tResultUnits(resultsUnit)}/${label}`}
-          testId={`responsability-${testId}`}
+          testId={`responsibility-${testId}`}
         />
       )}
     </div>

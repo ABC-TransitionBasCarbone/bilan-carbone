@@ -722,7 +722,7 @@
       "withDependencies": "Avec le sous-poste 'Utilisation en dépendance'",
       "withoutDependencies": "Sans le sous-poste 'Utilisation en dépendance'",
       "dependencyIntensity": "Intensités carbone en dépendance",
-      "responsabilityIntensity": "Intensités carbone en responsabilité",
+      "responsibilityIntensity": "Intensités carbone en responsabilité",
       "monetaryRatio": "Ratios monétaires",
       "monetaryRatioEmissions": "d'émissions issues de ratios monétaires",
       "nonSpeMonetaryRatioEmissions": "issues de ratios monétaires non spécifiques",
