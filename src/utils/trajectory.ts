@@ -662,8 +662,6 @@ export const calculateCustomTrajectory = ({
     if (isLastObjective && actualEmissions > 0) {
       let year = objective.targetYear + 1
 
-      console.log('maxYear', maxYear)
-
       while (actualEmissions > 0 && (yearlyReduction > 0 || year <= Math.max(maxYear ?? 0, TARGET_YEAR))) {
         actualEmissions = Math.max(0, actualEmissions - yearlyReduction)
         dataPoints.push({ year, value: actualEmissions })
