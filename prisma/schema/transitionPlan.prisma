@@ -71,6 +71,7 @@ model Action {
   detailedDescription       String                   @map("detailed_description")
   potentialDeduction        ActionPotentialDeduction @map("potential_deduction")
   reductionValue            Int?                     @map("reduction_value")
+  reductionDetails          String?                  @map("reduction_details")
   reductionStartYear        String?                  @map("reduction_start_year")
   reductionEndYear          String?                  @map("reduction_end_year")
   owner                     String?
