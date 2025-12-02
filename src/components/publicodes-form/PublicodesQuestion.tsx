@@ -30,28 +30,28 @@ export default function PublicodesFormField<RuleName extends string>({
         required: formElement.required,
       }
 
-      return formElement.applicable ? (
+      return (
         <Box key={formElement.id} sx={{ mb: 2 }}>
           <QuestionContainer label={formElement.label} helperText={formElement.description}>
             <PublicodesInputField formElement={formElement} formElementProps={formElementProps} onChange={onChange} />
           </QuestionContainer>
         </Box>
-      ) : null
+      )
     }
     case 'group': {
-      return formLayout.evaluatedElements.some(({ applicable }) => applicable) ? (
+      return (
         <QuestionContainer label={formLayout.title}>
           <GroupQuestion groupLayout={formLayout} onChange={onChange} />
         </QuestionContainer>
-      ) : null
+      )
     }
     case 'table': {
-      return formLayout.evaluatedRows.flat().some(({ applicable }) => applicable) ? (
+      return (
         // TODO: manage helper text for table
         <QuestionContainer label={formLayout.title}>
           <TableQuestion tableLayout={formLayout} onChange={onChange} />
         </QuestionContainer>
-      ) : null
+      )
     }
   }
 }
