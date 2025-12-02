@@ -27,8 +27,9 @@ export default function InputField<RuleName extends string>({
         //   return <DatePickerInput formElement={formElement} formElementProps={formElementProps} onChange={onChange} />
         case 'date':
           return <YearPickerInput formElement={formElement} formElementProps={formElementProps} onChange={onChange} />
-        case 'checkbox':
         case 'text':
+          return formElement.defaultValue ? <p dangerouslySetInnerHTML={{ __html: formElement.defaultValue }} /> : null
+        case 'checkbox':
         default:
           return <p>Unsupported input type: {formElement.type}</p>
       }
