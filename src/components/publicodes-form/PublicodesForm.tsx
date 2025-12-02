@@ -2,7 +2,9 @@ import { Box } from '@mui/material'
 import { FormBuilder, FormState } from '@publicodes/forms'
 import Engine, { Situation } from 'publicodes'
 import { useCallback, useMemo, useState } from 'react'
-import PublicodesFormField from './PublicodesFormField'
+import PublicodesQuestion from './PublicodesQuestion'
+import styles from './styles/DynamicForm.module.css'
+import { evaluatedLayoutIsApplicable, getRuleNameFromLayout, isRuleReferencedInApplicability } from './utils'
 
 export interface PublicodesFormProps<RuleName extends string, S extends Situation<RuleName>> {
   /** The form builder used to generate the form pages and handle input changes. */
@@ -35,8 +37,9 @@ export default function PublicodesForm<RuleName extends string, S extends Situat
   onFieldChange,
 }: PublicodesFormProps<RuleName, S>) {
   const [formState, setFormState] = useState<FormState<RuleName>>(() => {
-    const initial = FormBuilder.newState(initialSituation)
-    return formBuilder.start(initial, ...targetRules)
+    const initialState = FormBuilder.newState(initialSituation)
+    console.log({ initialSituation, initialState })
+    return formBuilder.start(initialState, ...targetRules)
   })
 
   // NOTE: for now, if we want to mimic the previous behavior, we don't need
@@ -61,12 +64,29 @@ export default function PublicodesForm<RuleName extends string, S extends Situat
   return (
     <Box className="dynamic-form">
       <Box>
-        {/* TODO: the relation lines between questions */}
         {currentPage.elements.map((formLayout, index) => {
-          // Generate a unique key based on the layout type
+          const currentRuleName = getRuleNameFromLayout(formLayout)
+          const previousRuleName = index > 0 ? getRuleNameFromLayout(currentPage.elements[index - 1]) : undefined
+          const isLinkedToPrevious =
+            currentRuleName &&
+            previousRuleName &&
+            isRuleReferencedInApplicability(formBuilder.getRule(formState, currentRuleName), previousRuleName)
+
           const key =
-            formLayout.type === 'simple' ? formLayout.evaluatedElement.id : `table-${formLayout.title}-${index}`
-          return <PublicodesQuestion key={key} formLayout={formLayout} onChange={handleFieldChange} />
+            formLayout.type === 'simple'
+              ? formLayout.evaluatedElement.id
+              : formLayout.type === 'group'
+                ? `group-${index}`
+                : `table-${formLayout.title}-${index}`
+
+          const isApplicable = evaluatedLayoutIsApplicable(formLayout)
+
+          return isApplicable ? (
+            <Box key={key}>
+              {isLinkedToPrevious && <Box className={styles.relationLine} />}
+              <PublicodesQuestion formLayout={formLayout} onChange={handleFieldChange} />
+            </Box>
+          ) : null
         })}
       </Box>
     </Box>
