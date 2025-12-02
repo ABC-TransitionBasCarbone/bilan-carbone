@@ -3,7 +3,6 @@
 import { FullStudy } from '@/db/study'
 import StudyRights from '@/environments/base/study/StudyRights'
 import StudyRightsCut from '@/environments/cut/study/StudyRightsCut'
-import StudyRightsClickson from '@/environments/clickson/study/StudyRights'
 import { EmissionFactorImportVersion, Environment, StudyRole } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import DynamicComponent from '../utils/DynamicComponent'
@@ -30,14 +29,6 @@ const DynamicStudyRights = ({ user, study, editionDisabled, userRoleOnStudy, emi
       }
       environmentComponents={{
         [Environment.CUT]: <StudyRightsCut study={study} />,
-        [Environment.CLICKSON]: (
-          <StudyRightsClickson
-            user={user}
-            study={study}
-            editionDisabled={editionDisabled}
-            emissionFactorSources={emissionFactorSources}
-          />
-        ),
       }}
     />
   )
