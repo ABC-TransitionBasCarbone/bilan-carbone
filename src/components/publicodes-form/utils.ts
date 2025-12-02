@@ -1,5 +1,5 @@
 import { EvaluatedFormLayout, FormLayout } from '@publicodes/forms'
-import { reduceAST, RuleNode } from 'publicodes'
+import { reduceAST, RuleNode, utils } from 'publicodes'
 
 export type OnFormInputChange<RuleName extends string> = (
   ruleName: RuleName,
@@ -29,6 +29,27 @@ export function evaluatedLayoutIsApplicable<RuleName extends string>(layout: Eva
 }
 
 export function isRuleReferencedInApplicability<RuleName extends string>(
+  getRuleNode: (rule: RuleName) => RuleNode<RuleName>,
+  current: RuleName,
+  previous: RuleName,
+): boolean {
+  const currentNode = getRuleNode(current)
+  if (hasReferencedInApplicability(currentNode, previous)) {
+    return true
+  }
+
+  const parents = utils.ruleParents(current) as RuleName[]
+  for (const parent of parents) {
+    const parentNode = getRuleNode(parent)
+    if (hasReferencedInApplicability(parentNode, previous)) {
+      return true
+    }
+  }
+
+  return false
+}
+
+function hasReferencedInApplicability<RuleName extends string>(
   currentNode: RuleNode<RuleName>,
   previous: RuleName,
 ): boolean {
