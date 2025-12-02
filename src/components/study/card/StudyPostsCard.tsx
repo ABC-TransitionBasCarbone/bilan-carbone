@@ -1,4 +1,3 @@
-import ProgressBar from '@/components/base/ProgressBar'
 import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { withInfobulle } from '@/utils/post'
@@ -8,7 +7,7 @@ import { StudyRole } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { Dispatch, SetStateAction, useMemo } from 'react'
-import Box from '../../base/Box'
+import progressStyles from '../../base/ProgressBar.module.css'
 import PostIcon from '../infography/icons/PostIcon'
 import SelectStudySite from '../site/SelectStudySite'
 import StudyName from './StudyName'
@@ -38,29 +37,9 @@ const StudyPostsCard = ({ study, post, userRole, studySite, setSite, isCut, setG
   const percent = emissionSources.length ? Math.floor((validated / emissionSources.length) * 100) : 0
 
   return (
-    <div className="justify-center">
-      <Box className={classNames(styles.card, 'flex-col')}>
-        <div className={classNames(styles.post, styles[`post-${postColor}`], 'flex-cc')}>
-          <PostIcon className={styles.icon} post={post} />
-          {tPost(post)}
-          {withInfobulle(post) && (
-            <HelpOutlineIcon
-              className={classNames(styles.icon, 'pointer ml-2')}
-              onClick={() => setGlossary(post)}
-              aria-label={tPost('glossary')}
-              titleAccess={tPost('glossary')}
-            />
-          )}
-        </div>
-        <div className={`justify-${isCut ? 'center' : 'between'} align-center`}>
-          <StudyName name={study.name} />
-          {!isCut && (
-            <div className={classNames(styles.role, styles[userRole.toLowerCase()], 'ml-2 text-center')}>
-              {tRole(userRole)}
-            </div>
-          )}
-        </div>
-        <p className="text-center">{t('selectSite')}</p>
+    <div className={classNames(styles.card, 'flex-col px1')}>
+      <div className="justify-between align-center">
+        <StudyName name={study.name} />
         <SelectStudySite
           sites={study.sites}
           defaultValue={studySite}
@@ -68,26 +47,56 @@ const StudyPostsCard = ({ study, post, userRole, studySite, setSite, isCut, setG
           withLabel={false}
           showAllOption={false}
         />
-        {!isCut && (
-          <Box className={classNames(styles.emissionSources, 'p1', { [styles.allValidated]: percent === 100 })}>
-            <p className="mb1 align-center">
-              {t.rich('validatedSources', {
-                validated: validated,
-                total: emissionSources.length,
-                data: (children) => (
-                  <span className={classNames(styles.validated, 'mr-4', { [styles.success]: percent === 100 })}>
-                    {children}
-                  </span>
-                ),
-              })}
-            </p>
-            <ProgressBar
-              value={percent}
-              barClass={classNames(styles.progressBar, { [styles.success]: percent === 100 })}
+      </div>
+      <div className={classNames(styles.post, styles[`post-${postColor}`], 'flex-cc')}>
+        <div className={classNames(styles.header, 'flex-col align-center grow')}>
+          {percent > 0 && (
+            <div
+              className={classNames(
+                styles.progress,
+                styles[`progress-${postColor}`],
+                progressStyles[`w${percent.toFixed(0)}`],
+              )}
             />
-          </Box>
-        )}
-      </Box>
+          )}
+          <div className={classNames(styles.content, 'flex-cc text-center p1 w100')}>
+            <PostIcon className={styles.icon} post={post} />
+            {tPost(post)}
+            {withInfobulle(post) && (
+              <HelpOutlineIcon
+                className={classNames(styles.icon, 'pointer ml-2')}
+                onClick={() => setGlossary(post)}
+                aria-label={tPost('glossary')}
+                titleAccess={tPost('glossary')}
+              />
+            )}
+          </div>
+        </div>
+      </div>
+      {!isCut && (
+        <div className="flex-col align-end">
+          <div>
+            <div className={classNames(styles.emissionSources, { [styles.allValidated]: percent === 100 })}>
+              <p className="mb1 align-center">
+                {t.rich('validatedSources', {
+                  validated: validated,
+                  total: emissionSources.length,
+                  data: (children) => (
+                    <span className={classNames(styles.validated, 'mr-4', { [styles.success]: percent === 100 })}>
+                      {children}
+                    </span>
+                  ),
+                })}
+              </p>
+            </div>
+          </div>
+          <div>
+            <div className={classNames(styles.role, styles[userRole.toLowerCase()], 'ml-2 text-center')}>
+              {tRole(userRole)}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
