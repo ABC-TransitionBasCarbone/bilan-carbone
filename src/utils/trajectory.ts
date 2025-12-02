@@ -661,15 +661,17 @@ export const calculateCustomTrajectory = ({
       let year = objective.targetYear + 1
 
       if (yearlyReduction <= 0) {
-        throw new Error(
-          `Invalid reduction rate: yearly reduction is ${yearlyReduction} (rate: ${absoluteReductionRate}, emissions: ${actualEmissions}). Reduction rate must be positive.`,
-        )
-      }
-
-      while (actualEmissions > 0) {
-        actualEmissions = Math.max(0, actualEmissions - yearlyReduction)
-        dataPoints.push({ year, value: actualEmissions })
-        year++
+        while (actualEmissions >= 0 && year <= TARGET_YEAR) {
+          actualEmissions = Math.max(0, actualEmissions - yearlyReduction)
+          dataPoints.push({ year, value: actualEmissions })
+          year++
+        }
+      } else {
+        while (actualEmissions > 0) {
+          actualEmissions = Math.max(0, actualEmissions - yearlyReduction)
+          dataPoints.push({ year, value: actualEmissions })
+          year++
+        }
       }
     }
 
