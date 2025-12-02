@@ -1,5 +1,6 @@
 'use client'
 import Block from '@/components/base/Block'
+import DebouncedInput from '@/components/base/DebouncedInput'
 import { FullStudy } from '@/db/study'
 import { Post } from '@/services/posts'
 import { downloadStudyPost } from '@/services/study'
@@ -7,7 +8,7 @@ import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import DownloadIcon from '@mui/icons-material/Download'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useState } from 'react'
-import PostIcon from '../infography/icons/PostIcon'
+import styles from '../SubPosts.module.css'
 
 interface Props {
   post: Post
@@ -16,9 +17,11 @@ interface Props {
   setDisplay: (display: boolean) => void
   children: ReactNode
   emissionSources: FullStudy['emissionSources']
+  filter: string
+  setFilter: (value: string) => void
 }
 
-const StudyPostsBlock = ({ post, study, display, setDisplay, children, emissionSources }: Props) => {
+const StudyPostsBlock = ({ post, study, display, setDisplay, children, emissionSources, filter, setFilter }: Props) => {
   const { environment } = useAppEnvironmentStore()
   const [downloading, setDownloading] = useState(false)
   const tCaracterisations = useTranslations('categorisations')
@@ -35,9 +38,18 @@ const StudyPostsBlock = ({ post, study, display, setDisplay, children, emissionS
 
   return (
     <Block
-      title={tPost(post)}
-      icon={<PostIcon post={post} />}
-      iconPosition="before"
+      title={
+        <>
+          <DebouncedInput
+            className={styles.searchInput}
+            debounce={500}
+            value={filter}
+            onChange={(newValue) => setFilter(newValue)}
+            placeholder="🔎"
+            data-testid="emission-source-search-field"
+          />
+        </>
+      }
       actions={[
         {
           actionType: 'loadingButton',

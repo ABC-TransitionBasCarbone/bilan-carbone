@@ -2,9 +2,12 @@
 
 import { FullStudy } from '@/db/study'
 import { Post } from '@/services/posts'
+import { getEmissionSourcesFuseOptions } from '@/utils/emissionSources'
 import { StudyRole } from '@prisma/client'
+import Fuse from 'fuse.js'
 import { UserSession } from 'next-auth'
-import { useState } from 'react'
+import { useLocale, useTranslations } from 'next-intl'
+import { useMemo, useState } from 'react'
 import SubPosts from '../study/SubPosts'
 import StudyPostsBlock from '../study/buttons/StudyPostsBlock'
 import StudyPostInfography from '../study/infography/StudyPostInfography'
@@ -21,6 +24,19 @@ interface Props {
 
 const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, user, setGlossary }: Props) => {
   const [showInfography, setShowInfography] = useState(false)
+  const [filter, setFilter] = useState('')
+  const tQuality = useTranslations('quality')
+  const tUnit = useTranslations('units')
+  const locale = useLocale()
+
+  const fuseOptions = useMemo(() => getEmissionSourcesFuseOptions(tQuality, tUnit, locale), [locale, tQuality, tUnit])
+
+  const fuse = useMemo(() => new Fuse(emissionSources, fuseOptions), [emissionSources, fuseOptions])
+
+  const filteredSources = useMemo(
+    () => (filter ? fuse.search(filter).map(({ item }) => item) : emissionSources),
+    [emissionSources, filter, fuse],
+  )
 
   return (
     <>
@@ -30,6 +46,8 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, use
         display={showInfography}
         setDisplay={setShowInfography}
         emissionSources={emissionSources}
+        filter={filter}
+        setFilter={setFilter}
       >
         {showInfography && <StudyPostInfography study={study} studySite={studySite} user={user} />}
         <SubPosts
@@ -38,7 +56,7 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, use
           userRole={userRole}
           withoutDetail={false}
           studySite={studySite}
-          emissionSources={emissionSources}
+          emissionSources={filteredSources}
           setGlossary={setGlossary}
         />
       </StudyPostsBlock>
