@@ -21,11 +21,11 @@ confiseries et boissons . achats . vente sur place . achat type:
     - significatif
   avec:
     un peu:
-      titre: Un peu de confiseries et de boissons
+      titre: Un peu de confiseries et de boissons (~30g)
     standard:
-      titre: Une part standard de confiseries et de boissons
+      titre: Une part standard de confiseries et de boissons (~120g)
     significatif:
-      titre: Une part significative de confiseries et de boissons
+      titre: Une part significative de confiseries et de boissons (~200g)
 
 confiseries et boissons . achats . vente sur place . achat type . empreinte:
   formule:
