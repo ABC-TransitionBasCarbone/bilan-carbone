@@ -32,10 +32,9 @@
     "seed": "tsx prisma/seed/index.ts"
   },
   "dependencies": {
+    "@abc-transitionbascarbone/publicodes-count": "file:./publicodes-packages/publicodes-count/",
     "@aws-sdk/client-s3": "^3.940.0",
     "@aws-sdk/s3-request-presigner": "^3.940.0",
-    "@abc-transitionbascarbone/publicodes-count": "file:./publicodes-packages/publicodes-count/",
-    "publicodes": "^1.9.1",
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
@@ -46,7 +45,7 @@
     "@mui/x-charts": "^8.19.0",
     "@mui/x-date-pickers": "^8.19.0",
     "@prisma/client": "^6.17.1",
-    "@publicodes/forms": "^0.6.0",
+    "@publicodes/forms": "https://pkg.pr.new/publicodes/publicodes/@publicodes/forms@785",
     "@tanstack/react-table": "^8.21.3",
     "@types/react-gauge-chart": "^0.5.0",
     "axios": "^1.13.2",
