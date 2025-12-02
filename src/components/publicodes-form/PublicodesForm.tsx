@@ -38,22 +38,42 @@ export default function PublicodesForm<RuleName extends string, S extends Situat
 }: PublicodesFormProps<RuleName, S>) {
   const [formState, setFormState] = useState<FormState<RuleName>>(() => {
     const initialState = FormBuilder.newState(initialSituation)
-    console.log({ initialSituation, initialState })
     return formBuilder.start(initialState, ...targetRules)
   })
 
   // NOTE: for now, if we want to mimic the previous behavior, we don't need
   // to manage pagination, but it could be added later if we need a realy
   // generic form component.
-  const currentPage = useMemo(() => {
-    return formBuilder.currentPage(formState)
+  const elementsWithRelation = useMemo(() => {
+    const { elements } = formBuilder.currentPage(formState)
+    return elements.map((formLayout, index) => {
+      const currentRuleName = getRuleNameFromLayout(formLayout)
+      const previousRuleName = index > 0 ? getRuleNameFromLayout(elements[index - 1]) : undefined
+      const isLinkedToPreviousQuestion =
+        currentRuleName &&
+        previousRuleName &&
+        isRuleReferencedInApplicability(
+          (rule: RuleName) => formBuilder.getRule(formState, rule),
+          currentRuleName,
+          previousRuleName,
+        )
+
+      const key =
+        formLayout.type === 'simple'
+          ? formLayout.evaluatedElement.id
+          : formLayout.type === 'group'
+            ? `group-${index}`
+            : `table-${formLayout.title}-${index}`
+
+      const isApplicable = evaluatedLayoutIsApplicable(formLayout)
+      return { formLayout, isLinkedToPreviousQuestion, key, isApplicable }
+    })
   }, [formBuilder, formState])
 
   const handleFieldChange = useCallback(
     (ruleName: RuleName, value: string | number | boolean | undefined) => {
       setFormState((currentState) => {
         const newState = formBuilder.handleInputChange(currentState, ruleName, value)
-        console.log('handleFieldChange', ruleName, value, newState)
         onFieldChange?.(ruleName, value, newState)
         return newState
       })
@@ -64,26 +84,10 @@ export default function PublicodesForm<RuleName extends string, S extends Situat
   return (
     <Box className="dynamic-form">
       <Box>
-        {currentPage.elements.map((formLayout, index) => {
-          const currentRuleName = getRuleNameFromLayout(formLayout)
-          const previousRuleName = index > 0 ? getRuleNameFromLayout(currentPage.elements[index - 1]) : undefined
-          const isLinkedToPrevious =
-            currentRuleName &&
-            previousRuleName &&
-            isRuleReferencedInApplicability(formBuilder.getRule(formState, currentRuleName), previousRuleName)
-
-          const key =
-            formLayout.type === 'simple'
-              ? formLayout.evaluatedElement.id
-              : formLayout.type === 'group'
-                ? `group-${index}`
-                : `table-${formLayout.title}-${index}`
-
-          const isApplicable = evaluatedLayoutIsApplicable(formLayout)
-
+        {elementsWithRelation.map(({ key, formLayout, isApplicable, isLinkedToPreviousQuestion }) => {
           return isApplicable ? (
             <Box key={key}>
-              {isLinkedToPrevious && <Box className={styles.relationLine} />}
+              {isLinkedToPreviousQuestion && <Box className={styles.relationLine} />}
               <PublicodesQuestion formLayout={formLayout} onChange={handleFieldChange} />
             </Box>
           ) : null
