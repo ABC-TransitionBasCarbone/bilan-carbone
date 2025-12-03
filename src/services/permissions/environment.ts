@@ -44,3 +44,9 @@ export const hasAccessToPerimeterPage = (environment: Environment) =>
 
 export const needsLicenceToUseApp = (environment: Environment) =>
   ([Environment.BC] as Environment[]).includes(environment)
+
+export const hasAccessToCarbonResponsibilityIntensities = (environment: Environment) =>
+  ([Environment.BC, Environment.TILT, Environment.CUT] as Environment[]).includes(environment)
+
+export const hasAccessToMonetaryRatio = (environment: Environment) =>
+  ([Environment.BC, Environment.TILT, Environment.CUT] as Environment[]).includes(environment)

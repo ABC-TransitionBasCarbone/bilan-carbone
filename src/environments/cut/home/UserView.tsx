@@ -68,8 +68,8 @@ const UserView = ({ account }: Props) => {
           <LinkCard
             href={`/organisations/${account.organizationVersionId}/modifier`}
             icon={<CinemaOutlinedIcon className={styles.icon} />}
-            title={navigation('movietheater.title')}
-            message={navigation('movietheater.message')}
+            title={navigation('sites.title')}
+            message={navigation('sites.message')}
           />
           <LinkCard
             href="/equipe"

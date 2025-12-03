@@ -18,7 +18,7 @@
         "title": "My Footprints:",
         "message": "Create your first footprint here. You can then view your footprints or create new ones at any time."
       },
-      "movietheater": {
+      "sites": {
         "title": "My Establishments:",
         "message": "Find here the list of establishments linked to your account"
       }
@@ -118,4 +118,3 @@
     }
   }
 }
-

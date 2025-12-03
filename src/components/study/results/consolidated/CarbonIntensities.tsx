@@ -1,5 +1,6 @@
 import Box from '@/components/base/Box'
 import { FullStudy } from '@/db/study'
+import { hasAccessToCarbonResponsibilityIntensities } from '@/services/permissions/environment'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { CA_UNIT_VALUES } from '@/utils/number'
 import { Environment, SiteCAUnit } from '@prisma/client'
@@ -21,7 +22,6 @@ const CarbonIntensities = ({ study, studySite, withDep, withoutDep, caUnit }: Pr
   const site = study.sites.find((site) => site.id === studySite)
 
   const { environment } = useAppEnvironmentStore()
-  const isClickson = useMemo(() => environment === Environment.CLICKSON, [environment])
 
   const noValidSite = (!site && studySite !== 'all') || (studySite === 'all' && !study.sites.length)
 
@@ -58,7 +58,7 @@ const CarbonIntensities = ({ study, studySite, withDep, withoutDep, caUnit }: Pr
         <div className="grow justify-center">
           <span className="text-center bold">{t('dependencyIntensity')}</span>
         </div>
-        {!isClickson && (
+        {environment && hasAccessToCarbonResponsibilityIntensities(environment) && (
           <div className="grow justify-center">
             <span className="text-center bold">{t('responsibilityIntensity')}</span>
           </div>
@@ -71,7 +71,6 @@ const CarbonIntensities = ({ study, studySite, withDep, withoutDep, caUnit }: Pr
         resultsUnit={study.resultsUnit}
         label={`${tCAUnit(caUnit)} ${t('intensities.budget')}`}
         testId="result-budget"
-        withResponsibility={!isClickson}
       />
       <CarbonIntensity
         withDep={withDep}
@@ -80,7 +79,6 @@ const CarbonIntensities = ({ study, studySite, withDep, withoutDep, caUnit }: Pr
         resultsUnit={study.resultsUnit}
         label={t('intensities.etp')}
         testId="result-etp"
-        withResponsibility={!isClickson}
       />
       {study.organizationVersion.environment === Environment.TILT && (
         <>
