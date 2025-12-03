@@ -1,13 +1,15 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
-import { Post } from '@/services/posts'
+import { Post, subPostsByPost } from '@/services/posts'
+import { EmissionSourcesStatus } from '@/services/study'
+import { EmissionSourcesFilters } from '@/types/filters'
 import { getEmissionSourcesFuseOptions } from '@/utils/emissionSources'
-import { StudyRole } from '@prisma/client'
+import { EmissionSourceCaracterisation, EmissionSourceType, StudyRole } from '@prisma/client'
 import Fuse from 'fuse.js'
 import { UserSession } from 'next-auth'
 import { useLocale, useTranslations } from 'next-intl'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import SubPosts from '../study/SubPosts'
 import StudyPostsBlock from '../study/buttons/StudyPostsBlock'
 import StudyPostInfography from '../study/infography/StudyPostInfography'
@@ -24,10 +26,26 @@ interface Props {
 
 const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, user, setGlossary }: Props) => {
   const [showInfography, setShowInfography] = useState(false)
-  const [filter, setFilter] = useState('')
   const tQuality = useTranslations('quality')
   const tUnit = useTranslations('units')
   const locale = useLocale()
+
+  const [emissionSourcesFilters, setEmissionSourcesFilters] = useState<EmissionSourcesFilters>({
+    search: '',
+    subPosts: Object.values(subPostsByPost[post]),
+    tags: study.tagFamilies.reduce(
+      (res, tagFamily) => [...res, ...tagFamily.tags.map((tag) => tag.id)],
+      [] as string[],
+    ),
+    activityData: Object.values(EmissionSourceType),
+    status: Object.values(EmissionSourcesStatus),
+    caracterisations: Object.values(EmissionSourceCaracterisation),
+  })
+
+  const updateFilters = useCallback(
+    (values: Partial<EmissionSourcesFilters>) => setEmissionSourcesFilters((prev) => ({ ...prev, ...values })),
+    [],
+  )
 
   const fuse = useMemo(
     () => new Fuse(emissionSources, getEmissionSourcesFuseOptions(tQuality, tUnit, locale)),
@@ -35,8 +53,11 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, use
   )
 
   const filteredSources = useMemo(
-    () => (filter ? fuse.search(filter).map(({ item }) => item) : emissionSources),
-    [emissionSources, filter, fuse],
+    () =>
+      emissionSourcesFilters.search
+        ? fuse.search(emissionSourcesFilters.search).map(({ item }) => item)
+        : emissionSources,
+    [emissionSources, emissionSourcesFilters.search, fuse],
   )
 
   return (
@@ -47,8 +68,8 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, use
         display={showInfography}
         setDisplay={setShowInfography}
         emissionSources={emissionSources}
-        filter={filter}
-        setFilter={setFilter}
+        filters={emissionSourcesFilters}
+        setFilters={updateFilters}
       >
         {showInfography && <StudyPostInfography study={study} studySite={studySite} user={user} />}
         <SubPosts

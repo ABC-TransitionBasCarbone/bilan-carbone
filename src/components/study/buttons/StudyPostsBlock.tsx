@@ -5,10 +5,12 @@ import { FullStudy } from '@/db/study'
 import { Post } from '@/services/posts'
 import { downloadStudyPost } from '@/services/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { EmissionSourcesFilters } from '@/types/filters'
 import DownloadIcon from '@mui/icons-material/Download'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useState } from 'react'
 import styles from '../SubPosts.module.css'
+import StudyPostFilters from './StudyPostFilters'
 
 interface Props {
   post: Post
@@ -17,11 +19,20 @@ interface Props {
   setDisplay: (display: boolean) => void
   children: ReactNode
   emissionSources: FullStudy['emissionSources']
-  filter: string
-  setFilter: (value: string) => void
+  filters: EmissionSourcesFilters
+  setFilters: (values: Partial<EmissionSourcesFilters>) => void
 }
 
-const StudyPostsBlock = ({ post, study, display, setDisplay, children, emissionSources, filter, setFilter }: Props) => {
+const StudyPostsBlock = ({
+  post,
+  study,
+  display,
+  setDisplay,
+  children,
+  emissionSources,
+  filters,
+  setFilters,
+}: Props) => {
   const { environment } = useAppEnvironmentStore()
   const [downloading, setDownloading] = useState(false)
   const tCaracterisations = useTranslations('categorisations')
@@ -39,16 +50,17 @@ const StudyPostsBlock = ({ post, study, display, setDisplay, children, emissionS
   return (
     <Block
       title={
-        <>
+        <div className="flex gapped">
           <DebouncedInput
             className={styles.searchInput}
             debounce={500}
-            value={filter}
-            onChange={(newValue) => setFilter(newValue)}
+            value={filters.search}
+            onChange={(newValue) => setFilters({ search: newValue })}
             placeholder="🔎"
             data-testid="emission-source-search-field"
           />
-        </>
+          <StudyPostFilters filters={filters} setFilters={setFilters} study={study} post={post} />
+        </div>
       }
       actions={[
         {

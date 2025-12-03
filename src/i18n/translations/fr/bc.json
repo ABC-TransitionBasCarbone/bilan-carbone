@@ -29,6 +29,7 @@
     }
   },
   "categorisations": {
+    "all": "Toutes les categorisations",
     "Operated": "Opéré",
     "NotOperated": "Non opéré",
     "OperatedProcedeed": "Opéré, procédé",
@@ -479,7 +480,9 @@
       "contributorsList": "{count, plural, =1 {Contributeur·rice :} other {Contributeur·rices :}}",
       "label": "Libellé de la source d'émission",
       "new": "Donnez un titre à votre nouvelle source d'émission",
-      "add": "Ajouter"
+      "add": "Ajouter",
+      "filters": "Filtres",
+      "sort": "Trier"
     },
     "organization": {
       "site": "Site",
@@ -675,7 +678,8 @@
         "confirm": "Confirmer",
         "glossary": "Famille de tags",
         "close": "Fermer",
-        "glossaryDescription": "Les tags et familles de tags servent à identifier vos sources d'émissions dans le but de visualiser certains résultats par la suite. <br></br>Une fois vos tags créés, vous pourrez les associer à des sources d'émissions au sein de la page \"Saisie des données\". Puis, dans la page \"Résultats\", vous pourrez visualiser les émissions dues à une famille de tags ou à un tag en particulier, mais vous ne pourrez pas visualiser les émissions de deux familles de tags en parallèle, car des double-comptes peuvent être faits entre ces deux familles de tags. <br></br>Pour donner un exemple concret, admettons qu'il existe deux familles de tags : \"Produits vendus\" et \"Publics ciblés\". Ces deux familles et les tags y appartenant vous permettrons de visualiser quelle est la répartition des émissions de votre organisation en fonction des produits vendus, et de même pour les publics ciblés"
+        "glossaryDescription": "Les tags et familles de tags servent à identifier vos sources d'émissions dans le but de visualiser certains résultats par la suite. <br></br>Une fois vos tags créés, vous pourrez les associer à des sources d'émissions au sein de la page \"Saisie des données\". Puis, dans la page \"Résultats\", vous pourrez visualiser les émissions dues à une famille de tags ou à un tag en particulier, mais vous ne pourrez pas visualiser les émissions de deux familles de tags en parallèle, car des double-comptes peuvent être faits entre ces deux familles de tags. <br></br>Pour donner un exemple concret, admettons qu'il existe deux familles de tags : \"Produits vendus\" et \"Publics ciblés\". Ces deux familles et les tags y appartenant vous permettrons de visualiser quelle est la répartition des émissions de votre organisation en fonction des produits vendus, et de même pour les publics ciblés",
+        "allTags": "Tous les tags"
       },
       "duplicate": {
         "title": "Dupliquer le site {name} et ses sources d'émissions",
@@ -1971,12 +1975,14 @@
     },
     "saving": "Sauvegarde en cours...",
     "status": {
+      "all": "Tous les status",
       "valid": "Validée",
       "waiting": "En complétion",
       "waitingContributor": "En attente d'un·e contributeur·rice",
       "toVerify": "À vérifier"
     },
     "type": {
+      "all": "Tous les types",
       "Physical": "Physique",
       "Accounting": "Comptable",
       "Extrapolated": "Extrapolée",
