@@ -29,9 +29,10 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, use
   const tUnit = useTranslations('units')
   const locale = useLocale()
 
-  const fuseOptions = useMemo(() => getEmissionSourcesFuseOptions(tQuality, tUnit, locale), [locale, tQuality, tUnit])
-
-  const fuse = useMemo(() => new Fuse(emissionSources, fuseOptions), [emissionSources, fuseOptions])
+  const fuse = useMemo(
+    () => new Fuse(emissionSources, getEmissionSourcesFuseOptions(tQuality, tUnit, locale)),
+    [emissionSources, locale, tQuality, tUnit],
+  )
 
   const filteredSources = useMemo(
     () => (filter ? fuse.search(filter).map(({ item }) => item) : emissionSources),

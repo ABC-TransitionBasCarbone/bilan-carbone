@@ -31,6 +31,12 @@ export const getEmissionSourcesFuseOptions = (tQuality: Translations, tUnit: Tra
       weight: 0.5,
     },
     {
+      name: 'emissionFactorValue',
+      getFn: (emissionSource: FullStudy['emissionSources'][number]) =>
+        emissionSource.emissionFactor?.totalCo2.toString() || '',
+      weight: 0.3,
+    },
+    {
       name: 'emissionFactorUnit',
       getFn: (emissionSource: FullStudy['emissionSources'][number]) =>
         tUnit(emissionSource.emissionFactor?.unit || '', { count: 0 }),
