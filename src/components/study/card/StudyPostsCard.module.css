@@ -5,6 +5,8 @@
 .post {
   border-radius: 1rem;
   color: white;
+  max-width: 50rem;
+  margin: 0 2rem;
 
   &.post-darkBlue {
     background-color: var(--post-darkBlue-light);
@@ -56,6 +58,7 @@
 .content {
   position: relative;
   gap: 0.5rem;
+  padding: 1.5rem;
 }
 
 .icon {
@@ -65,25 +68,6 @@
   @media screen and (max-width: 50rem) {
     display: none;
   }
-}
-
-.role {
-  padding: 0.5rem 1rem;
-  border-radius: 2rem;
-  min-width: 5rem;
-}
-
-.validator {
-  background-color: var(--validator-background);
-}
-.editor {
-  background-color: var(--editor-background);
-}
-.reader {
-  background-color: var(--reader-background);
-}
-.contributor {
-  background-color: var(--contributor-background);
 }
 
 .validated {

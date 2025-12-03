@@ -1,31 +1,30 @@
-import withAuth from '@/components/hoc/withAuth'
+import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import { StudyProps } from '@/components/hoc/withStudy'
 import WithStudyDetails from '@/components/hoc/withStudyDetails'
 import StudyNavbar from '@/components/studyNavbar/StudyNavbar'
 import { isDeactivableFeatureActiveForEnvironment } from '@/services/serverFunctions/deactivableFeatures'
 import { checkStudyHasObjectives } from '@/services/serverFunctions/trajectory'
+import { getAccountRoleOnStudy } from '@/utils/study'
 import { DeactivatableFeature } from '@prisma/client'
 import { UUID } from 'crypto'
 import styles from './layout.module.css'
 
 interface Props {
   children: React.ReactNode
-  params: Promise<{
-    id: UUID
-  }>
+  params: Promise<{ id: UUID }>
 }
 
-const NavLayout = async ({ children, params, study }: Props & StudyProps) => {
+const NavLayout = async ({ children, params, study, user }: Props & StudyProps & UserSessionProps) => {
   const { id } = await params
   const environment = study.organizationVersion.environment
 
-  const transitionPlanFeature = await isDeactivableFeatureActiveForEnvironment(
-    DeactivatableFeature.TransitionPlan,
-    environment,
-  )
-  const isTransitionPlanActive = transitionPlanFeature.success && transitionPlanFeature.data
+  const [transitionPlanFeature, objectivesResponse, userRole] = await Promise.all([
+    isDeactivableFeatureActiveForEnvironment(DeactivatableFeature.TransitionPlan, environment),
+    checkStudyHasObjectives(study.id),
+    getAccountRoleOnStudy(user, study),
+  ])
 
-  const objectivesResponse = await checkStudyHasObjectives(study.id)
+  const isTransitionPlanActive = transitionPlanFeature.success && transitionPlanFeature.data
   const hasObjectives = objectivesResponse.success ? objectivesResponse.data : false
 
   return (
@@ -37,6 +36,7 @@ const NavLayout = async ({ children, params, study }: Props & StudyProps) => {
           study={study}
           isTransitionPlanActive={isTransitionPlanActive}
           hasObjectives={hasObjectives}
+          userRole={userRole}
         />
         <div className={styles.children}>{children}</div>
       </div>

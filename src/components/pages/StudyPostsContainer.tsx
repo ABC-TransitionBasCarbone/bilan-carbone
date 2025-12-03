@@ -83,10 +83,9 @@ const StudyPostsPageContainer = ({ post, study, userRole, user }: Props) => {
         <StudyPostsCard
           study={study}
           post={post}
-          userRole={userRole as StudyRole}
           studySite={studySite}
           setSite={setSite}
-          isCut={isCut}
+          environment={study.organizationVersion.environment}
           setGlossary={setGlossary}
         />
       </Block>
