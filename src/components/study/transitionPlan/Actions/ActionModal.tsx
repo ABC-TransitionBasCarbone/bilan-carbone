@@ -71,7 +71,6 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
 
     requiredTypes.forEach((type) => {
       if (!indicators.some((ind) => ind.type === type)) {
-        console.log('adding default indicator', type)
         defaultIndicators.push({ type, description: '' })
       }
     })
