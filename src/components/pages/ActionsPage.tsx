@@ -2,6 +2,7 @@
 
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import { FullStudy } from '@/db/study'
+import { customRich } from '@/i18n/customRich'
 import { Action } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Block from '../base/Block'
@@ -46,9 +47,7 @@ const ActionsPage = ({ study, actions, transitionPlanId, canEdit }: Props) => {
             title={t('onboarding.title')}
             description={t('onboarding.description')}
             storageKey="actions"
-            detailedContent={t.rich('onboarding.detailedInfo', {
-              br: () => <br />,
-            })}
+            detailedContent={customRich(t, 'onboarding.detailedInfo')}
           />
           <Actions
             actions={actions}

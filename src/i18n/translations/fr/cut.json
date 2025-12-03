@@ -140,7 +140,7 @@
     "welcome": "Bienvenue sur",
     "subtext": "Le premier calculateur d'impact écologique dédié aux salles de cinéma.",
     "explanation": "Cet outil a été développé par l'association <b>CUT ! Cinéma Uni pour la Transition,</b> en coopération avec <b>l'ABC, association pour la Transition bas carbone.</b>",
-    "question": "Une question ? Lisez la <link>FAQ</link> ou <support>contactez-nous</support> !",
+    "question": "Une question ? Lisez la <faq>FAQ</faq> ou <support>contactez-nous</support> !",
     "explanation2": "Opération soutenue par l'État dans le cadre du dispositif « Soutenir les alternatives vertes 2 » de France 2030, opéré par la Banque des territoires (Caisse des Dépôts)",
     "form": {
       "activate": "Créer mon compte"

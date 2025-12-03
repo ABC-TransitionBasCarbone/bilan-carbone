@@ -10,6 +10,7 @@ import { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { customRich } from '@/i18n/customRich'
 import { deleteTransitionPlan, initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
 import { calculateTrajectoriesWithHistory, convertToPastStudies } from '@/utils/trajectory'
 import AddIcon from '@mui/icons-material/Add'
@@ -231,7 +232,7 @@ const TrajectoryReductionPage = ({
           <Box className={classNames(styles.emptyStateCard, 'flex-col align-center')}>
             <Image src="/img/CR.png" alt="Transition Plan" width={177} height={119} />
             <h5>{t('emptyState.title')}</h5>
-            <p>{t('emptyState.subtitle')}</p>
+            <p>{customRich(t, 'emptyState.subtitle')}</p>
             <Button onClick={() => setShowModal(true)} size="large" className={'mt-2'}>
               {t('startButton')}
             </Button>
@@ -300,8 +301,7 @@ const TrajectoryReductionPage = ({
               title={t('trajectories.onboarding.title')}
               description={t('trajectories.onboarding.description')}
               storageKey="trajectory-reduction"
-              detailedContent={t.rich('trajectories.onboarding.detailedInfo', {
-                br: () => <br />,
+              detailedContent={customRich(t, 'trajectories.onboarding.detailedInfo', {
                 snbc: (chunks) => (
                   <a href={process.env.NEXT_PUBLIC_SNBC_URL || '#'} target="_blank" rel="noopener noreferrer">
                     {chunks}
@@ -411,7 +411,7 @@ const TrajectoryReductionPage = ({
           {showSuccessToast && (
             <PersistentToast
               title={t('trajectoryModal.success')}
-              subtitle={t.rich('trajectoryModal.successSubtitle', {
+              subtitle={customRich(t, 'trajectoryModal.successSubtitle', {
                 link: (children) => <a href={`/etudes/${study.id}/objectifs`}>{children}</a>,
               })}
               onClose={() => setShowSuccessToast(false)}
