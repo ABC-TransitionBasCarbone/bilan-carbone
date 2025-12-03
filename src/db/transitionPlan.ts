@@ -77,7 +77,7 @@ export const getOrganizationTransitionPlans = async (
     where: {
       study: {
         organizationVersionId,
-        startDate: { lte: new Date(maxYear + 1, 0, 1) },
+        startDate: { lt: new Date(maxYear + 1, 0, 1) },
       },
     },
     include: {
