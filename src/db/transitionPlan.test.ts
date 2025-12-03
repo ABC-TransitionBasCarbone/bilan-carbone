@@ -193,6 +193,12 @@ describe('TransitionPlan DB', () => {
               relevance: action.relevance,
               enabled: action.enabled,
               dependenciesOnly: action.dependenciesOnly,
+              indicators: {
+                create: action.indicators.map((indicator) => ({
+                  type: indicator.type,
+                  description: indicator.description,
+                })),
+              },
             })),
           },
           externalStudies: {
@@ -210,7 +216,11 @@ describe('TransitionPlan DB', () => {
             },
           },
           transitionPlanStudies: true,
-          actions: true,
+          actions: {
+            include: {
+              indicators: true,
+            },
+          },
           externalStudies: true,
         },
       })

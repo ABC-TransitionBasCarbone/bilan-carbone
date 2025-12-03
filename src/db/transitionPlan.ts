@@ -27,7 +27,7 @@ export type TransitionPlanWithRelations = TransitionPlan & {
     }
   >
   transitionPlanStudies: TransitionPlanStudy[]
-  actions: Action[]
+  actions: Array<Action & { indicators: ActionIndicator[] }>
   externalStudies: ExternalStudy[]
 }
 
@@ -51,7 +51,11 @@ export const getTransitionPlanByIdWithRelations = async (id: string): Promise<Tr
         },
       },
       transitionPlanStudies: true,
-      actions: true,
+      actions: {
+        include: {
+          indicators: true,
+        },
+      },
       externalStudies: true,
     },
   })
@@ -127,8 +131,18 @@ export const duplicateTransitionPlanWithRelations = async (
           })),
         },
         actions: {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          create: sourceTransitionPlan.actions.map(({ id, transitionPlanId, createdAt, updatedAt, ...rest }) => rest),
+          create: sourceTransitionPlan.actions.map(
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            ({ id, transitionPlanId, createdAt, updatedAt, indicators, ...rest }) => ({
+              ...rest,
+              indicators: {
+                create: indicators.map((indicator) => ({
+                  type: indicator.type,
+                  description: indicator.description,
+                })),
+              },
+            }),
+          ),
         },
         externalStudies: {
           create: sourceTransitionPlan.externalStudies.map(
@@ -144,7 +158,11 @@ export const duplicateTransitionPlanWithRelations = async (
           },
         },
         transitionPlanStudies: true,
-        actions: true,
+        actions: {
+          include: {
+            indicators: true,
+          },
+        },
         externalStudies: true,
       },
     })
