@@ -547,22 +547,10 @@ const getObjectivesWithOvershootCompensation = (
   // Reduce future budget to compensate for past overshoot
   const remainingTotalBudget = referenceFutureBudget - pastOvershoot
 
-  // Calculate what future budget would be without compensation
-  const actualBudgetWithoutCompensation = calculateBudgetWithObjectivesAndMultiplier(
-    actualEmissions,
-    studyYear,
-    objectives,
-    1.0,
-  )
-
   // Newton-Raphson iteration to find k such that budget(k) = remainingTotalBudget
   const delta = 0.0001
-  const budgetAtDelta = calculateBudgetWithObjectivesAndMultiplier(actualEmissions, studyYear, objectives, 1.0 + delta)
-  const derivative = (budgetAtDelta - actualBudgetWithoutCompensation) / delta
+  let k = 1.0
 
-  let k = 1.0 + (remainingTotalBudget - actualBudgetWithoutCompensation) / derivative
-
-  // Improve k by using Newton-Raphson iteration
   for (let i = 0; i < 10; i++) {
     const budgetAtK = calculateBudgetWithObjectivesAndMultiplier(actualEmissions, studyYear, objectives, k)
     const error = budgetAtK - remainingTotalBudget
@@ -1065,14 +1053,14 @@ export const calculateActionBasedTrajectory = ({
   return dataPoints
 }
 
-// Calculate budget with a given rate multiplier applied to the objectives
-const calculateBudgetWithObjectivesAndMultiplier = (
+// Build trajectory with a given rate multiplier applied to the objectives
+const buildTrajectoryWithObjectivesAndMultiplier = (
   startEmissions: number,
   startYear: number,
   objectives: Array<{ targetYear: number; reductionRate: number }>,
   multiplier: number,
-): number => {
-  let totalBudget = 0
+): TrajectoryDataPoint[] => {
+  const trajectory: TrajectoryDataPoint[] = [{ year: startYear, value: startEmissions }]
   let currentEmissions = startEmissions
   let previousSegmentEnd = startYear
 
@@ -1086,7 +1074,9 @@ const calculateBudgetWithObjectivesAndMultiplier = (
       const yearlyReduction = currentEmissions * adjustedRate
 
       for (let j = 0; j < yearsInSegment; j++) {
-        totalBudget += currentEmissions - j * yearlyReduction
+        const year = effectiveStart + j
+        const emissionThisYear = currentEmissions - j * yearlyReduction
+        trajectory.push({ year, value: emissionThisYear })
       }
 
       currentEmissions = currentEmissions - yearsInSegment * yearlyReduction
@@ -1103,13 +1093,27 @@ const calculateBudgetWithObjectivesAndMultiplier = (
       const yearsToZero = currentEmissions / lastYearlyReduction
 
       for (let j = 0; j < Math.ceil(yearsToZero); j++) {
+        const year = previousSegmentEnd + 1 + j
         const emissionThisYear = Math.max(0, currentEmissions - j * lastYearlyReduction)
-        totalBudget += emissionThisYear
+        trajectory.push({ year, value: emissionThisYear })
       }
     }
   }
 
-  return totalBudget
+  return trajectory
+}
+
+// Calculate budget with a given rate multiplier applied to the objectives
+const calculateBudgetWithObjectivesAndMultiplier = (
+  startEmissions: number,
+  startYear: number,
+  objectives: Array<{ targetYear: number; reductionRate: number }>,
+  multiplier: number,
+): number => {
+  const trajectory = buildTrajectoryWithObjectivesAndMultiplier(startEmissions, startYear, objectives, multiplier)
+  const endYear = trajectory[trajectory.length - 1].year
+
+  return calculateTrajectoryIntegral(trajectory, startYear, endYear)
 }
 
 type TrajectoriesForYear = {
