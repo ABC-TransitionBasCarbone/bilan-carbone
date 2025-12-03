@@ -1,0 +1,28 @@
+{
+  "common": {
+    "yes": "Sí",
+    "no": "No",
+    "edit": "Editar",
+    "duplicate": "Duplicar",
+    "close": "Cerrar",
+    "delete": "Eliminar",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "update": "Actualizar",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "notAuthorized": "Acción no autorizada",
+    "Not authorized": "No tiene permiso para realizar esta acción"
+  },
+  "signup": {
+    "email": "Correo electrónico",
+    "emailPlaceholder": "Correo electrónico utilizado durante su formación",
+    "emailRequired": "Por favor, ingrese un correo electrónico",
+    "validate": "Validar",
+    "Request sent": "Se ha enviado una solicitud a sus colegas",
+    "Email sent": "Recibirá un correo electrónico para terminar la validación de su cuenta.",
+    "validation": {
+      "email": "Por favor, ingrese un correo electrónico"
+    }
+  }
+}
