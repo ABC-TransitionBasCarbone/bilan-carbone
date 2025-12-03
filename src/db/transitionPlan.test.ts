@@ -161,6 +161,7 @@ describe('TransitionPlan DB', () => {
               reductionValue: action.reductionValue,
               reductionStartYear: action.reductionStartYear,
               reductionEndYear: action.reductionEndYear,
+              reductionDetails: action.reductionDetails,
               owner: action.owner,
               necessaryBudget: action.necessaryBudget,
               necesssaryRessources: action.necesssaryRessources,
