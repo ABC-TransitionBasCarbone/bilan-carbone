@@ -36,27 +36,7 @@
 }
 
 .progress {
-  height: 100%;
   border-radius: 1rem;
-  position: absolute;
-  top: 0;
-  left: 0;
-
-  &.progress-green {
-    background-color: var(--post-green-dark);
-  }
-
-  &.progress-darkBlue {
-    background-color: var(--post-darkBlue-dark);
-  }
-
-  &.progress-blue {
-    background-color: var(--post-blue-dark);
-  }
-
-  &.progress-orange {
-    background-color: var(--post-orange-dark);
-  }
 }
 
 .content {

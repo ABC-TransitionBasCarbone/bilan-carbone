@@ -8,7 +8,8 @@ import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { Dispatch, SetStateAction, useMemo } from 'react'
-import progressStyles from '../../base/ProgressBar.module.css'
+import widthStyles from '../../base/ProgressBar.module.css'
+import progressStyles from '../infography/PostHeader.module.css'
 import PostIcon from '../infography/icons/PostIcon'
 import SelectStudySite from '../site/SelectStudySite'
 import styles from './StudyPostsCard.module.css'
@@ -53,8 +54,9 @@ const StudyPostsCard = ({ study, post, studySite, setSite, setGlossary, environm
                 <div
                   className={classNames(
                     styles.progress,
-                    styles[`progress-${postColor}`],
-                    progressStyles[`w${percent.toFixed(0)}`],
+                    progressStyles.progress,
+                    progressStyles[`progress-${postColor}`],
+                    widthStyles[`w${percent.toFixed(0)}`],
                   )}
                 />
               )}
