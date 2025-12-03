@@ -74,6 +74,7 @@ const createMockAction = (overrides?: Partial<Action>): Action => ({
   reductionValue: 100,
   reductionStartYear: '2024',
   reductionEndYear: '2030',
+  reductionDetails: 'Test details',
   owner: 'Test Owner',
   necessaryBudget: 10000,
   necesssaryRessources: 'Test resources',
