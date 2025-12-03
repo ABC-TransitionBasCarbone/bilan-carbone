@@ -1,5 +1,7 @@
+import { ActionIndicatorCommand } from '@/services/serverFunctions/transitionPlan.command'
 import {
   Action,
+  ActionIndicator,
   ExternalStudy,
   Objective,
   Prisma,
@@ -161,16 +163,28 @@ export const hasTransitionPlan = async (studyId: string): Promise<boolean> => {
 export const createAction = async (data: Prisma.ActionUncheckedCreateInput) => prismaClient.action.create({ data })
 
 export const updateAction = async (id: string, data: Prisma.ActionUpdateInput) =>
-  prismaClient.action.update({ where: { id }, data })
+  prismaClient.action.update({
+    where: { id },
+    data,
+  })
 
 export const deleteAction = async (id: string) => prismaClient.action.delete({ where: { id } })
 
-export const getActionById = async (id: string) => prismaClient.action.findUnique({ where: { id } })
+export type ActionWithIndicators = Action & {
+  indicators: ActionIndicator[]
+}
 
-export const getActions = async (transitionPlanId: string) =>
+export const getActionById = async (id: string): Promise<ActionWithIndicators | null> =>
+  prismaClient.action.findUnique({
+    where: { id },
+    include: { indicators: { orderBy: { createdAt: 'asc' } } },
+  })
+
+export const getActions = async (transitionPlanId: string): Promise<ActionWithIndicators[]> =>
   prismaClient.action.findMany({
     where: { transitionPlanId },
     orderBy: [{ priority: 'asc' }, { createdAt: 'desc' }],
+    include: { indicators: { orderBy: { createdAt: 'asc' } } },
   })
 
 export const createTransitionPlanStudy = async (transitionPlanId: string, studyId: string) =>
@@ -367,4 +381,37 @@ export const deleteTransitionPlan = async (id: string): Promise<void> => {
   await prismaClient.transitionPlan.delete({
     where: { id },
   })
+}
+
+export const saveIndicatorsOnAction = async (
+  actionId: string,
+  indicatorsToKeep: ActionIndicatorCommand[],
+  indicatorsToDelete: string[],
+) => {
+  await prismaClient.$transaction([
+    prismaClient.actionIndicator.deleteMany({
+      where: {
+        id: { in: indicatorsToDelete },
+      },
+    }),
+    ...indicatorsToKeep.map((ind) => {
+      if (ind.id) {
+        return prismaClient.actionIndicator.update({
+          where: { id: ind.id },
+          data: {
+            description: ind.description,
+            type: ind.type,
+          },
+        })
+      } else {
+        return prismaClient.actionIndicator.create({
+          data: {
+            actionId,
+            type: ind.type,
+            description: ind.description,
+          },
+        })
+      }
+    }),
+  ])
 }

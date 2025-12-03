@@ -1149,6 +1149,12 @@
           "necesssaryRessources": "Autres ressources necessaire à sa mise en place (humaines, financières, matérielles, ...)",
           "necesssaryRessourcesPlaceholder": "Indiquez les ressources",
           "indicator": "Description des indicateurs",
+          "indicatorTooltipTitle": "Fonctionnalité en cours de développement",
+          "indicatorTooltipLabel": "Information sur les indicateurs",
+          "indicatorTooltipDescription": "Une fonctionnalité de suivi des actions arrive ! Vous pouvez déjà lister vos indicateurs et vous pourrez les quantifier et les suivre une fois la fonctionnalité sortie.",
+          "addIndicator": "Ajouter un indicateur",
+          "removeIndicator": "Retirer l'indicateur",
+          "noIndicators": "Aucun indicateur pour le moment",
           "implementation": "De mise en oeuvre",
           "followUp": "De suivi",
           "performance": "De performance",
@@ -1164,6 +1170,7 @@
             "step2": "Catégorisation",
             "step3": "Détails et responsabilité"
           },
+          "close": "Fermer",
           "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
           "validation": {
             "required": "Champs requis",
