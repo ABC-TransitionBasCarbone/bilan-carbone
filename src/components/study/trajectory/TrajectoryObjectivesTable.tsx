@@ -62,6 +62,7 @@ const fuseOptions = {
 }
 
 const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, studyId, searchFilter = '' }: Props) => {
+  const tCommon = useTranslations('common')
   const t = useTranslations('study.transitionPlan.objectives')
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
@@ -295,8 +296,8 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, st
               ? customRich(t, 'deleteTrajectory.message')
               : customRich(t, 'deleteObjective.message')
           }
-          confirmText={t('delete')}
-          cancelText={t('cancel')}
+          confirmText={tCommon('delete')}
+          cancelText={tCommon('cancel')}
           requireNameMatch={deleteTarget?.type === 'trajectory' ? deleteTarget.name : undefined}
           onConfirm={handleConfirmDelete}
           onCancel={() => {

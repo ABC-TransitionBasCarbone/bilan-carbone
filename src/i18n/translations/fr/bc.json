@@ -507,7 +507,6 @@
       "Validator_description": "A tous les droits sur l'étude et peut valider les sources d'émission qui ont été renseignées par les validateur·rices, éditeur·rices et contributeur·rices.",
       "Editor_description": "A tous les droits sur l'étude à l'exception de la validation des sources d'émission.",
       "Reader_description": "Peut uniquement accéder en lecture à l'étude et exporter les informations de celle-ci.",
-      "close": "Fermer",
       "saved": "Nouveau rôle sauvegardé"
     },
     "title": "Étude",
@@ -569,8 +568,7 @@
         },
         "role": {
           "information": "Informations",
-          "description": "Vous pouvez ici gérer les contributeur·rices de votre étude. Ceux-ci auront accès à certains postes et sous postes (que vous pouvez définir) et pourront remplir certaines informations pour des sources d'émission que vous aurez déjà créées dans l'étude. Pour plus d'information sur l'interface des contributeur·rices, n'hésitez pas à aller voir notre <link>FAQ</link>",
-          "close": "Fermer"
+          "description": "Vous pouvez ici gérer les contributeur·rices de votre étude. Ceux-ci auront accès à certains postes et sous postes (que vous pouvez définir) et pourront remplir certaines informations pour des sources d'émission que vous aurez déjà créées dans l'étude. Pour plus d'information sur l'interface des contributeur·rices, n'hésitez pas à aller voir notre <link>FAQ</link>"
         }
       },
       "table": {
@@ -692,7 +690,6 @@
         "createSitesDescription": "Vous pouvez également créer de nouveaux sites et y dupliquer les informations. Ceux-ci seront apparaitront dans vos informations générales. Merci d'indiquer le nombre de sites à créer sur lesquels seront dupliquées les informations que vous avez sélectionnées.",
         "numberOfSitesToCreate": "Nombre de sites à créer",
         "cancel": "Annuler",
-        "duplicate": "Dupliquer",
         "sitesChanges": {
           "title": "Modification de l'organisation",
           "description": "Vous avez modifié certaines informations liées aux sites de cette étude. Souhaitez-vous répercuter ces modifications sur les informations de l'organisation ? <error>Ces changements ne seront pas répercutés sur vos autres études.</error>",
@@ -754,7 +751,6 @@
         "missingCaract1": "Les sources d'émissions non caractérisées ne sont pas comptabilisées au sein du BEGES-R, ce qui entraine des différences indues avec le Bilan Carbone® dans le cas où vous auriez choisi de visualiser les sources d'émissions non validées.",
         "missingCaract2": "Vous n'avez pas renseigné les caractérisations pour toutes les sources d'émission de votre étude. Merci d'éditer et ajouter la caractérisation pour les sources d'émission suivantes : ",
         "additionalMissing": "+ {count, plural,  =1 {1 autre source} other {# autres sources}} d'émission",
-        "close": "Fermer",
         "unexplainedDifference": "Certaines différences ne peuvent être expliquées pour votre étude et peuvent être liées à des problèmes de calcul de l'outil. Si vous le pouvez, merci de nous contacter à l'adresse <support>support</support>."
       },
       "noData": "Aucune donnée à afficher",
@@ -770,7 +766,6 @@
       },
       "analysis": "Analyse des émissions",
       "total": "Total des émissions",
-      "close": "Fermer",
       "intensities": {
         "budget": "budget",
         "etp": "salarié",
@@ -1089,7 +1084,6 @@
           "reductionRate": "Réduction annuelle",
           "actions": "Actions"
         },
-        "delete": "Supprimer",
         "cancel": "Annuler",
         "deleteTrajectory": {
           "title": "Supprimer la trajectoire",
@@ -1372,8 +1366,6 @@
       "cutQuestions": {
         "actions": "Actions",
         "add": "Ajouter",
-        "delete": "Supprimer",
-        "duplicate": "Dupliquer",
         "error": "Erreur lors de la mise à jour du champs",
         "next": "Sous-poste suivant",
         "previous": "Sous-poste précédent",
@@ -1439,7 +1431,6 @@
       "missingPost": "Veuillez selectionner un poste",
       "subPost": "Sous Poste",
       "comment": "Commentaires",
-      "delete": "Supprimer",
       "clear": "Supprimer la valeur",
       "glossary": {
         "title": "Glossaire",
@@ -1574,7 +1565,6 @@
     "missingQualities": {
       "title": "Ajout de la qualité pour les facteurs d'émission manuels",
       "body": "Bonjour, d'après nos informations, vous aviez ajouté des facteurs d'émissions manuellement lorsqu'il était encore impossible de renseigner leur incertitude. Par défaut, pour ces facteurs d'émissions, les qualités sont considérées comme étant \"Très bonne\", ce qui correspond à une incertitude nulle sur le facteur d'émission. Ce bug étant dorénavant résolu, nous vous recommandons fortement de mettre à jour les facteurs d'émissions concernés qui sont les suivants :",
-      "close": "Fermer",
       "correct": "Corriger"
     }
   },
@@ -1901,7 +1891,6 @@
     "studySites": {
       "title": "Vous ne pouvez pas supprimer ces sites",
       "description": "Des études existent avec les sites suivants. <warning>Vous devez d'abord les supprimer des études concernées avant de pouvoir les supprimer de votre organisation.</warning>",
-      "close": "Fermer",
       "existingSite": "<name></name> : <link></link>",
       "existingUnauthorizedSite": "{name} : {count, plural,  =1 {1 étude à laquelle} other {#  études auxquelles}} vous n'avez pas accès"
     },
@@ -2158,8 +2147,7 @@
     "body": " Si vous avez 5 minutes, nous serions ravis d'avoir vos retours sur le BC+ ! Ceux-ci nous permettront de répondre aux mieux à vos besoins avec nos prochains développements. Si ce n'est pas le bon moment, vous pouvez reportez votre réponse.",
     "reject": "Ne pas répondre",
     "delay": "Plus tard ({time} jours)",
-    "answer": "Je donne mon avis",
-    "close": "Fermer"
+    "answer": "Je donne mon avis"
   },
   "form": {
     "validation": {
@@ -2211,11 +2199,6 @@
     "maxTwoDecimals": "Le taux de réduction doit avoir au maximum 2 décimales"
   },
   "common": {
-    "actions": {
-      "edit": "Modifier",
-      "duplicate": "Dupliquer",
-      "delete": "Supprimer"
-    },
     "typeToConfirm": "Tapez \"{name}\" pour confirmer"
   }
 }
