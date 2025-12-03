@@ -31,6 +31,7 @@ const toastPosition = { vertical: 'bottom', horizontal: 'left' } as const
 
 const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props) => {
   const t = useTranslations('study.rights.table')
+  const tCommon = useTranslations('common')
   const tDeleting = useTranslations('study.rights.table.deleting')
   const tStudyRole = useTranslations('study.role')
   const [displayRoles, setDisplayRoles] = useState(false)
@@ -132,7 +133,7 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
         label="study-roles"
         title={tStudyRole('guide')}
         onClose={() => setDisplayRoles(false)}
-        actions={[{ actionType: 'button', onClick: () => setDisplayRoles(false), children: tStudyRole('close') }]}
+        actions={[{ actionType: 'button', onClick: () => setDisplayRoles(false), children: tCommon('close') }]}
       >
         <span className="block mb-2">{tStudyRole('introduction')}</span>
         {Object.keys(StudyRole).map((role) => (

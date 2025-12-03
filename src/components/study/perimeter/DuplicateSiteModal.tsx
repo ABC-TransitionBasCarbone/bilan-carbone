@@ -29,6 +29,7 @@ export interface DuplicateFormData {
 }
 
 const DuplicateSiteModal = ({ open, onClose, sourceSite, study, canEditOrganization, caUnit, onDuplicate }: Props) => {
+  const tCommon = useTranslations('common')
   const tDuplicate = useTranslations('study.perimeter.duplicate')
   const tSites = useTranslations('organization.sites')
   const tCaUnit = useTranslations('settings.caUnit')
@@ -101,11 +102,11 @@ const DuplicateSiteModal = ({ open, onClose, sourceSite, study, canEditOrganizat
       title={tDuplicate('title', { name: sourceSite.site.name })}
       onClose={onClose}
       actions={[
-        { actionType: 'button', onClick: onClose, children: tDuplicate('cancel') },
+        { actionType: 'button', onClick: onClose, children: tCommon('cancel') },
         {
           actionType: 'button',
           onClick: handleSubmit(onSubmit),
-          children: tDuplicate('duplicate'),
+          children: tCommon('duplicate'),
           disabled: !isValid,
           ['data-testid']: 'duplicate-site-modal-confirm',
         },

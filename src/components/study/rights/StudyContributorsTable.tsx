@@ -56,6 +56,7 @@ const SUBPOST_PREVIEW_LIMIT = 3
 
 const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
   const faq = getEnvVar('FAQ_LINK', Environment.BC)
+  const tCommon = useTranslations('common')
   const t = useTranslations('study.rights.contributorsTable')
   const tDeleting = useTranslations('study.rights.contributorsTable.deleting')
   const tRole = useTranslations('study.rights.contributorsTable.role')
@@ -389,7 +390,7 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
         label="study-contributor"
         title={tRole('information')}
         onClose={() => setDisplayRoles(false)}
-        actions={[{ actionType: 'button', onClick: () => setDisplayRoles(false), children: tRole('close') }]}
+        actions={[{ actionType: 'button', onClick: () => setDisplayRoles(false), children: tCommon('close') }]}
       >
         <p className="mb-2">
           {tRole.rich('description', {
@@ -412,13 +413,13 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
               actionType: 'button',
               color: 'secondary',
               onClick: () => setToDelete(undefined),
-              children: tDeleting('no'),
+              children: tCommon('no'),
               ['data-testid']: 'study-contributor-cancel-deletion',
             },
             {
               actionType: 'loadingButton',
               onClick: () => deleteContributor(contributorToDelete),
-              children: tDeleting('yes'),
+              children: tCommon('yes'),
               loading: deleting,
               ['data-testid']: 'study-contributor-confirm-deletion',
             },

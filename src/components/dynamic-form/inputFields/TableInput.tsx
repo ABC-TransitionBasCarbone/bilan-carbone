@@ -32,6 +32,7 @@ interface Props extends Omit<BaseInputProps, 'value' | 'onChange' | 'onBlur'> {
 const TableInput = ({ question, control, autoSave, watch, formErrors, setValue, studyStartDate }: Props) => {
   const [questions, setQuestions] = useState<Prisma.QuestionGetPayload<{ include: { userAnswers: true } }>[]>([])
   const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
+  const tCommon = useTranslations('common')
   const [tableAnswer, setTableAnswer] = useState<TableAnswer>({ rows: [] })
 
   const emissionFactorInfo = emissionFactorMap[question.idIntern]
@@ -158,7 +159,7 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue, 
           return (
             <Box>
               <IconButton
-                title={tCutQuestions('duplicate')}
+                title={tCommon('duplicate')}
                 aria-label="duplicate"
                 color="primary"
                 onClick={() => handleDuplicateRow(tableRow.id)}
@@ -166,7 +167,7 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue, 
                 <ContentCopy />
               </IconButton>
               <IconButton
-                title={tCutQuestions('delete')}
+                title={tCommon('delete')}
                 aria-label="delete"
                 color="error"
                 onClick={() => handleDeleteRow(tableRow.id)}
