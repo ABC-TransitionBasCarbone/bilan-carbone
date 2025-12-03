@@ -120,7 +120,7 @@ const duplicateTransitionPlan = async (
   }
 
   if (!sourceStudy) {
-    console.error('Cannot link studies because source is not found with id ' + targetStudyId)
+    console.error('Cannot link studies because source is not found with id ' + sourceTransitionPlan.studyId)
   }
 
   if (
