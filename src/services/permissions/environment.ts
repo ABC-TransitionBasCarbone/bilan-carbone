@@ -44,3 +44,9 @@ export const needsLicenceToUseApp = isBC
 export const hasAccessToEmissionSourceValidation = isAdvanced
 
 export const hasRoleOnStudy = isAdvanced
+
+export const hasAccessToCarbonResponsibilityIntensities = (environment: Environment) =>
+  ([Environment.BC, Environment.TILT, Environment.CUT] as Environment[]).includes(environment)
+
+export const hasAccessToMonetaryRatio = (environment: Environment) =>
+  ([Environment.BC, Environment.TILT, Environment.CUT] as Environment[]).includes(environment)

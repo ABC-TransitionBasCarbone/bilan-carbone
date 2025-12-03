@@ -2,15 +2,16 @@ import Box from '@/components/base/Box'
 import Title from '@/components/base/Title'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
+import { hasAccessToMonetaryRatio } from '@/services/permissions/environment'
 import { ResultsByTag } from '@/services/results/consolidated'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
-import { Environment, SiteCAUnit } from '@prisma/client'
+import { SiteCAUnit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import styles from '../ResultsContainer.module.css'
 import ResultsTableAndGraphs from '../ResultsTableAndGraphs'
 import TagsResultsTable from '../tags/TagsResultsTable'
@@ -48,7 +49,6 @@ const EmissionsAnalysis = ({
   const [glossary, setGlossary] = useState('')
 
   const { environment } = useAppEnvironmentStore()
-  const isClickson = useMemo(() => environment === Environment.CLICKSON, [environment])
 
   return (
     <div className="mb2">
@@ -100,7 +100,7 @@ const EmissionsAnalysis = ({
           />
         </div>
         <div className="flex-col grow">
-          {!isClickson && (
+          {environment && hasAccessToMonetaryRatio(environment) && (
             <Box className="mb2">
               <Title as="h6" title={t('monetaryRatio')} className="justify-center" />
               <div className={classNames('flex')}>
