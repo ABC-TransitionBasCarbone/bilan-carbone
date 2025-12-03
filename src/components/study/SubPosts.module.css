@@ -24,3 +24,9 @@
 .subPostDetailsContainer {
   position: relative;
 }
+
+.searchInput {
+  input {
+    min-width: 10rem;
+  }
+}
