@@ -29,7 +29,7 @@ const ActionModalStep1 = ({ control }: Props) => {
   }, [locale])
 
   const relevanceImageSrc = useMemo(() => {
-    return locale === Locale.FR ? '/img/action-relevance-fr.avif' : '/img/action-relevance-en.avif'
+    return locale === Locale.FR ? '/img/action-relevance-fr.avif' : '/img/action-relevance-en.png'
   }, [locale])
 
   const selectors: Record<
