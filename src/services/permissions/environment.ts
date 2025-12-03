@@ -2,48 +2,45 @@ import { Environment } from '@prisma/client'
 
 const { BC, CUT, TILT, CLICKSON } = Environment
 const advancedEnvironments: Environment[] = [BC, TILT]
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const simplifiedEnvironments: Environment[] = [CUT, CLICKSON]
 
-export const hasAccessToEmissionFactor = (environment: Environment) =>
-  ([BC, TILT] as Environment[]).includes(environment)
+const isAdvanced = (environment: Environment) => advancedEnvironments.includes(environment)
+const isBC = (environment: Environment) => environment === BC
+const isTilt = (environment: Environment) => environment === TILT
 
-export const hasAccessToSettings = (environment: Environment) => ([BC, TILT] as Environment[]).includes(environment)
+export const hasAccessToEmissionFactor = isAdvanced
 
-export const hasAccessToActualityCards = (environment: Environment) => environment === BC
+export const hasAccessToSettings = isAdvanced
 
-export const hasAccessToDownloadStudyEmissionSourcesButton = (environment: Environment) =>
-  ([BC, TILT] as Environment[]).includes(environment)
+export const hasAccessToActualityCards = isBC
 
-export const hasAccessToStudyCardDetails = (environment: Environment) =>
-  ([BC, TILT] as Environment[]).includes(environment)
+export const hasAccessToDownloadStudyEmissionSourcesButton = isAdvanced
 
-export const hasAccessToCreateOrganization = (environment: Environment) =>
-  ([TILT, BC] as Environment[]).includes(environment)
+export const hasAccessToStudyCardDetails = isAdvanced
 
-export const hasAccessToDuplicateStudy = (environment: Environment) =>
-  ([BC, TILT] as Environment[]).includes(environment)
+export const hasAccessToCreateOrganization = isAdvanced
 
-export const hasAccessToCreateStudyTag = async (environment: Environment) =>
-  ([BC, TILT] as Environment[]).includes(environment)
+export const hasAccessToDuplicateStudy = isAdvanced
 
-export const hasAccessToStudyFlowExample = (environment: Environment) =>
-  ([TILT, BC] as Environment[]).includes(environment)
+export const hasAccessToCreateStudyTag = isAdvanced
 
-export const hasWasteImpact = (environment: Environment) => !([CUT, CLICKSON] as Environment[]).includes(environment)
+export const hasAccessToStudyFlowExample = isAdvanced
 
-export const hasAccessToBcExport = (environment: Environment) => ([TILT] as Environment[]).includes(environment)
+export const hasWasteImpact = isAdvanced
 
-export const hasAccessToDependencyMatrix = (environment: Environment) => ([TILT] as Environment[]).includes(environment)
+export const hasAccessToBcExport = isTilt
+
+export const hasAccessToDependencyMatrix = isTilt
 
 // environnement is not used but kept for consistency
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const hasAccessToDependencyMatrixExample = (environment: Environment) => false
 
-export const hasAccessToPerimeterPage = (environment: Environment) =>
-  !([CUT, CLICKSON] as Environment[]).includes(environment)
+export const hasAccessToPerimeterPage = isAdvanced
 
-export const needsLicenceToUseApp = (environment: Environment) => ([BC] as Environment[]).includes(environment)
+export const needsLicenceToUseApp = isBC
 
-export const hasAccessToEmissionSourceValidation = (environment: Environment) =>
-  advancedEnvironments.includes(environment)
+export const hasAccessToEmissionSourceValidation = isAdvanced
 
-export const hasRoleOnStudy = (environment: Environment) => advancedEnvironments.includes(environment)
+export const hasRoleOnStudy = isAdvanced
