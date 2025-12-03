@@ -25,7 +25,6 @@ export const customRich = (
 
   return t.rich(key, {
     error: (children: ReactNode) => <span className={classNames('error', styles.error)}>{children}</span>,
-    red: (children: ReactNode) => <span className={classNames('error', styles.red)}>{children}</span>,
     b: (children: ReactNode) => <span className={classNames('bold', styles.b)}>{children}</span>,
     i: (children: ReactNode) => <span className={classNames('italic', styles.i)}>{children}</span>,
     faq: (children: ReactNode) => (

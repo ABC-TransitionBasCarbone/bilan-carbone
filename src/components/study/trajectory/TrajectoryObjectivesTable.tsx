@@ -286,7 +286,6 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, st
   return (
     <>
       <BaseTable table={table} testId="trajectory-objectives" />
-
       {deleteModalOpen && (
         <ConfirmDeleteModal
           open={deleteModalOpen}
@@ -294,7 +293,7 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, st
           message={
             deleteTarget?.type === 'trajectory'
               ? customRich(t, 'deleteTrajectory.message')
-              : t('deleteObjective.message')
+              : customRich(t, 'deleteObjective.message')
           }
           confirmText={t('delete')}
           cancelText={t('cancel')}
@@ -306,7 +305,6 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, st
           }}
         />
       )}
-
       {editModalOpen && (
         <TrajectoryCreationModal
           open={editModalOpen}
