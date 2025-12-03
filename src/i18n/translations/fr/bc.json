@@ -153,7 +153,7 @@
     "welcome": "Bienvenue sur le Bilan Carbone® +",
     "subtext": "",
     "explanation": "L'outil dédié à l'application de la méthode Bilan Carbone®, développé par l'Association pour la transition Bas Carbone (ABC), et accessible à l'ensemble de nos membres Conseil et Recherche, Entreprise, Association et Secteur Public",
-    "question": "Une question ? Lisez la <link>FAQ</link> ou <support>contactez-nous</support> !",
+    "question": "Une question ? Lisez la <faq>FAQ</faq> ou <support>contactez-nous</support> !",
     "cineo": "Outil développé grâce aux Bilans Carbone® de Cineo",
     "explanation2": "Opération soutenue par l'État dans le cadre du dispositif « Soutenir les alternatives vertes 2 » de France 2030, opéré par la Banque des territoires (Caisse des Dépôts)",
     "form": {
@@ -240,6 +240,28 @@
     "validation": {
       "email": "Veuillez entrer un email",
       "siret": "Veuillez entrer un Siret"
+    }
+  },
+  "signupClickson": {
+    "description": "Créez un compte sur Clickson en entrant votre email ainsi que le code postal ou nom de votre établissement scolaire",
+    "email": "Email",
+    "emailPlaceholder": "Votre adresse email",
+    "emailRequired": "Veuillez entrer un email",
+    "schoolPostalCodeOrName": "Code postal ou nom de l'établissement scolaire",
+    "schoolPostalCodeOrNamePlaceholder": "Le code postal ou nom de l'établissement scolaire",
+    "schoolSearchGlossaryTitle": "Retrouvez votre établissement scolaire.",
+    "schoolSearchGlossary": "Retrouvez votre établissement scolaire en entrant son code postal ou son nom, puis en le sélectionnant dans la liste déroulante.",
+    "close": "Fermer",
+    "schoolPostalCodeOrNameRequired": "Veuillez entrer le code postal ou le nom de l'établissement scolaire",
+    "validate": "Valider",
+    "clear": "Supprimer la valeur",
+    "Not authorized": "Cet email est déjà inscrit avec un compte Clickson ou il y a eu un soucis lors de sa création. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
+    "Request sent": "Une demande d'activation de votre compte a été envoyé à vos collègues",
+    "Email sent": "Vous allez recevoir un mail pour finaliser l'activation de votre compte.",
+    "Not known school": "Veuillez chercher et sélectionner votre établissement.",
+    "validation": {
+      "email": "Veuillez entrer un email",
+      "schoolPostalCodeOrName": "Veuillez entrer le code postal ou nom de l'établissement scolaire"
     }
   },
   "footer": {
@@ -462,6 +484,8 @@
     "organization": {
       "site": "Site",
       "allSites": "Tous les sites",
+      "allSitesOnly": "Cette page est globale à tous les sites de l'étude",
+      "allSitesOnlyTransitionPlan": "Cette page est globale à tous les sites de l'étude pour le moment",
       "noSites": "Il n'y a pas de sites configurés sur l'organisation",
       "addSite": "Créer un site",
       "title": "Quelle organisation est concernée par l'étude ?",
@@ -644,7 +668,7 @@
         "name": "Libellé",
         "edit": "Renommer la famille",
         "delete": "Supprimer la famille",
-        "deleteContent": "Voulez vous vraiment supprimer la famille de tags \"{name}\" ? <red>Tous ses tags associés seront supprimés de façon permanente.</red>",
+        "deleteContent": "Voulez vous vraiment supprimer la famille de tags \"{name}\" ? <error>Tous ses tags associés seront supprimés de façon permanente.</error>",
         "new": "Ajouter une famille de tag",
         "content": "Quel nom voulez vous donner à cette famille ?",
         "cancel": "Annuler",
@@ -680,6 +704,7 @@
     },
     "results": {
       "type": "Type",
+      "format": "Format",
       "post": "Poste",
       "subPost": "Sous-poste",
       "tag": "Tag",
@@ -918,18 +943,18 @@
         },
         "sbtiCard": {
           "title": "Trajectoires SBTi",
-          "description": "La Science Based Targets Initiative définit deux trajectoires visant à limiter le réchauffement climatique à 1,5°C ou \"Well below 2 degrees\" (WB2C).",
+          "description": "La Science Based Targets Initiative définit deux trajectoires visant à limiter le réchauffement climatique à 1,5°C (SBTi 1.5°C) ou \"Well below 2 degrees\" (SBTi WB2C).",
           "methodLabel": "Méthodes",
-          "option15": "Trajectoire à 1,5°C",
-          "optionWB2C": "Trajectoire WB2C",
-          "placeholder": "Aucune méthode sélectionnée"
+          "option15": "SBTi 1,5°C",
+          "optionWB2C": "SBTi WB2C",
+          "placeholder": "Aucune trajectoire sélectionnée"
         },
         "graph": {
           "title": "Visualisation des trajectoires de réduction",
           "subtitle": "Affichage des trajectoires de référence et des trajectoires de votre organisation",
           "trajectory15": "SBTi 1,5°C",
           "trajectoryWB2C": "SBTi WB2C",
-          "actionBasedTrajectory": "Courbe prévisionnelle",
+          "actionBasedTrajectory": "Trajectoire bottom-up",
           "yAxisLabel": "Émissions (tCO2e)",
           "unvalidatedSourcesWarning": "{count, plural, =1 {Une source d'émissions n'est pas validée dans l'étude actuelle et n'est donc pas prise en compte dans le calcul des trajectoires.} other {{count} sources d'émissions ne sont pas validées dans l'étude actuelle et ne sont donc pas prises en compte dans le calcul des trajectoires.}}",
           "unvalidatedSourcesLinkedStudiesWarning": "{count, plural, =1 {Une source d'émissions n'est pas validée dans l' étude passée suivante :} other {{count} sources d'émissions ne sont pas validées dans les études passées suivantes :}}",
@@ -955,6 +980,10 @@
           "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
           "noAvailableStudies": "Aucune étude passée disponible",
           "noLinkedStudies": "Aucune étude liée pour le moment",
+          "information": "Informations",
+          "glossaryTitle": "Pour gabriel - titre",
+          "glossaryDescription": "Pour gabriel - description",
+          "close": "Fermer",
           "table": {
             "name": "Nom",
             "year": "Année",
@@ -977,12 +1006,12 @@
         },
         "onboarding": {
           "title": "Visualisez plusieurs trajectoire de référence et créez votre première trajectoire descendante",
-          "description": "Comparez votre situation avec les trajectoires de référence SBTi et SNBC. Vous pouvez choisir de suivre une de ces trajectoires et ses objectifs associés ou créer votre trajectoire personnalisée (trajectoire descendante).",
-          "detailedInfo": "Deux trajectoires de référence, la SNBC et SBTi, vous sont proposées ici. Vous pouvez visualiser la trajectoire de décarbonation que devrait suivre votre organisation selon l'une et l'autre.<br></br><br></br>La SNBC étant déclinée selon les grands secteurs d'activité de l'économie française, vous devez sélectionner le secteur qui vous correspond le mieux. Plus d'informations sur la SNBC sont disponibles <snbc>ici</snbc>.<br></br>SBTi fournit une trajectoire visant à limiter le réchauffement climatique à 1,5°C, et une seconde visant à le limiter bien en dessous de 2°C. Vous devez également choisir laquelle de ces deux trajectoires vous souhaitez visualiser. Plus d'informations sur SBTi sont disponibles <sbti>ici</sbti>.<br></br><br></br>Dans le cas où votre bilan de référence daterait d'une année antérieure à l'utilisation du BC+2.0, vous pouvez renseigner l'année de référence et les émissions associées. Si ce bilan est déjà présent sur le BC+2.0, vous pouvez le sélectionner comme bilan de référence.<br></br><br></br>Pour chacune de ces trajectoires, le choix a été fait de conserver le budget carbone associé. Si vos émissions ne suivent pas exactement la trajectoire choisie, le BC+2.0 recalculera une trajectoire adaptée pour éviter un dépassement du budget carbone initialement alloué. À chaque nouveau bilan réalisé, vos trajectoires se mettront à jour et vous indiqueront quelles réductions restent à réaliser."
+          "description": "Comparez votre situation avec les trajectoires de référence qui sont issues de la Stratégie Nationale Bas Carbone (SNBC) et de la Science-Based Target Initiative (SBTi). Vous pouvez choisir de suivre une de ces trajectoires et ses objectifs associés ou créer votre trajectoire personnalisée. Cette trajectoire est votre trajectoire en approche descendante, ou top-down.",
+          "detailedInfo": "Deux trajectoires de référence, la SNBC et SBTi, vous sont proposées ici. Vous pouvez visualiser la trajectoire de décarbonation que devrait suivre votre organisation selon l'une et l'autre.<br></br><br></br>La SNBC étant déclinée selon les grands secteurs d'activité de l'économie française, vous devez sélectionner le secteur qui vous correspond le mieux. Plus d'informations sur la SNBC sont disponibles <snbc>ici</snbc>.<br></br>SBTi fournit une trajectoire visant à limiter le réchauffement climatique à 1,5°C, et une seconde visant à le limiter bien en dessous de 2°C. Vous devez également choisir laquelle de ces deux trajectoires vous souhaitez visualiser. Plus d'informations sur SBTi sont disponibles <sbti>ici</sbti>.<br></br><br></br>Dans le cas où votre bilan de référence daterait d'une année antérieure à l'utilisation du BC+2.0, vous pouvez renseigner l'année de référence et les émissions associées. Si ce bilan est déjà présent sur le BC+2.0, vous pouvez le sélectionner comme bilan de référence.<br></br><br></br>Pour chacune de ces trajectoires, le choix a été fait de conserver le budget carbone associé. Si vos émissions ne suivent pas la trajectoire choisie (la trajectoire est recalculée si vos émissions sont supérieures aux émissions attendues d'au moins 5%), le BC+2.0 recalculera une trajectoire adaptée pour éviter un dépassement du budget carbone initialement alloué. À chaque nouveau bilan réalisé, vos trajectoires se mettront à jour et vous indiqueront quelles réductions restent à réaliser."
         }
       },
       "trajectoryModal": {
-        "title": "Je choisis ma trajectoire",
+        "title": "Je choisis ma trajectoire et les objectifs associés",
         "addTitle": "Ajouter une trajectoire",
         "editTitle": "Modifier ma trajectoire",
         "submit": "Valider",
@@ -994,7 +1023,7 @@
           "chooseTrajectory": "Choix de ma trajectoire",
           "defineObjectives": "Définition de mes objectifs de réduction"
         },
-        "subtitle": "Reprenez une trajectoire existante ou créez votre propre trajectoire de réduction pour commencer à construire votre plan de transition",
+        "subtitle": "Suivez une des trajectoires de référence ou créez votre propre trajectoire de réduction en approche descendante, ou top-down, pour commencer à construire votre plan de transition",
         "sbti": {
           "title": "SBTi",
           "subtitle": "Je suis la trajectoire de référence SBTi",
@@ -1073,7 +1102,7 @@
         "onboarding": {
           "title": "Ajoutez des trajectoires alternatives ou détaillez vos objectifs de réduction",
           "description": "Vous avez déjà créé une trajectoire de référence mais vous souhaitez en ajouter d'autres afin de tester différentes hypothèses et différents niveaux d'ambition ? Ici, vous pouvez créer de nouvelles trajectoires, ou ajouter des objectifs intermédiaire pour faire un suivi plus fin et ne pas perdre de vue l'objectif final !",
-          "detailedInfo": "Lorsque vous renseignez votre première trajectoire, les objectifs associés, à horizon 2030 et 2050, seront renseignés au sein de ce tableau. Vous pouvez ensuite détailler ces objectifs en renseignant des objectifs intermédiaires supplémentaires, qui peuvent porter soit sur tous les postes et tous les sites du Bilan Carbone® (auquel cas les réductions seront calculées automatiquement pour maintenir une cohérence avec les objectifs 2030 et 2050), soit sur certains postes et sites en particulier. Vous pouvez également renseigner la croissance prévisionnelle de votre chiffre d'affaire, afin d'obtenir les réductions annuelles tenant compte de cette croissance. Enfin, vous pouvez ajouter d'autres trajectoires descendante, notamment dans le but de visualiser différentes trajectoires sur la page précédente avant de choisir celle que vous suivrez."
+          "detailedInfo": "Lorsque vous renseignez votre première trajectoire top-down, les objectifs associés, à horizon 2030 et 2050, seront renseignés au sein de ce tableau. Vous pouvez ensuite détailler ces objectifs en renseignant des objectifs intermédiaires supplémentaires, qui peuvent porter soit sur tous les postes et tous les sites du Bilan Carbone® (auquel cas les réductions seront calculées automatiquement pour maintenir une cohérence avec les objectifs 2030 et 2050), soit sur certains postes et sites en particulier. Vous pouvez également renseigner la croissance prévisionnelle de votre chiffre d'affaire, afin d'obtenir les réductions annuelles tenant compte de cette croissance. Enfin, vous pouvez ajouter d'autres trajectoires top-down, notamment dans le but de visualiser différentes trajectoires sur la page précédente avant de choisir celle que vous suivrez."
         }
       },
       "actions": {
@@ -1105,7 +1134,7 @@
           "subStepsPlaceholder": "Décrivez vos sous-étapes",
           "detailedDescription": "Description détaillée de l'action et de l'implication des parties prenantes",
           "detailedDescriptionPlaceholder": "Description détaillée",
-          "potentialDeduction": "Potentiel de réduction d'émissions quantifiés",
+          "potentialDeduction": "Potentiel de réduction d'émissions",
           "potentialDeductionPlaceholder": "Sélectionnez une option",
           "reductionValue": "Valeur",
           "reductionStartYear": "Début de la mise en oeuvre de l'action",
@@ -1168,8 +1197,8 @@
         },
         "onboarding": {
           "title": "Construisez un plan d'action afin d'atteindre vos objectifs",
-          "description": "Vous avez déjà créé votre trajectoire descendante et détaillé les objectifs associés. Désormais, il vous faut construire un plan d'action pour vous assurer d'atteindre ces objectifs. La somme des potentiels de réduction de vos actions constituera votre trajectoire ascendante, le but étant d'aligner cette trajectoire ascendante avec la trajectoire descendante choisie précédemment.",
-          "detailedInfo": "Une trajectoire descendante est une trajectoire définie de manière macroscopique, et fixant des objectifs de réduction à moyen et long terme. Au contraire, une trajectoire ascendante est construite à partir d'un plan d'action, c'est-à-dire d'un certain nombre d'actions qui, mises côte à côte, constituent un ensemble cohérent et, s'additionnant, permettent des réductions d'émissions au cours de leur mise en oeuvre. Cette page vous permet de renseigner différentes actions et de les caractériser, en reprenant l'ensemble des informations définies au sein de la méthode Bilan Carbone®. L'ensemble de ces informations doivent être renseignées au sein d'un Bilan Carbone®, mais il est possible d'en remplir certaines ultérieurement, dans le but de tester différentes combinaisons d'actions afin de les sélectionner définitivement. Un toggle dans la première colonne du tableau vous permet ainsi d'activer ou de désactiver les actions renseignées, afin de voir si la trajectoire ascendente résultante est cohérente avec la trajectoire descendante choisie. Une fois les actions pertinentes sélectionnées, vous pouvez compléter les informations manquantes, afin de mieux caractériser l'action, de lui attribuer un budget, de renseigner des étapes de mises en oeuvre, et des indicateurs qui vous permettront par la suite de piloter la mise en oeuvre, le suivi et les performances de vos actions."
+          "description": "Vous avez déjà créé votre trajectoire en approche descendante, ou top-down, et détaillé les objectifs associés. Désormais, il vous faut construire un plan d'action pour vous assurer d'atteindre ces objectifs. La somme des potentiels de réduction de vos actions constituera votre trajectoire en approche ascendante, ou bottom-up, le but étant d'aligner cette trajectoire bottom-up avec la trajectoire top-down choisie précédemment.",
+          "detailedInfo": "Une trajectoire top-down est une trajectoire définie de manière macroscopique, et fixant des objectifs de réduction à moyen et long terme. Au contraire, une trajectoire bottom-up est construite à partir d'un plan d'action, c'est-à-dire d'un certain nombre d'actions qui, mises côte à côte, constituent un ensemble cohérent et, s'additionnant, permettent des réductions d'émissions au cours de leur mise en oeuvre. Cette page vous permet de renseigner différentes actions et de les caractériser, en reprenant l'ensemble des informations définies au sein de la méthode Bilan Carbone®. L'ensemble de ces informations doivent être renseignées au sein d'un Bilan Carbone®, mais il est possible d'en remplir certaines ultérieurement, dans le but de tester différentes combinaisons d'actions afin de les sélectionner définitivement. Un toggle dans la première colonne du tableau vous permet ainsi d'activer ou de désactiver les actions renseignées, afin de voir si la trajectoire bottom-up résultante est cohérente avec la trajectoire top-down choisie. Une fois les actions pertinentes sélectionnées, vous pouvez compléter les informations manquantes, afin de mieux caractériser l'action, lui attribuer un budget, renseigner des étapes de mises en oeuvre, et des indicateurs qui vous permettront par la suite de piloter la mise en oeuvre, le suivi et les performances de vos actions."
         },
         "deleteModal": {
           "title": "Supprimer l'action",
@@ -2094,7 +2123,7 @@
     "videoExplanation": "Notez bien que l'évaluation associée à cette formation « condensée » ne comporte aucun piège si vous visionnez la formation avec attention. Sa réussite vous permettra d'obtenir gratuitement une attestation de formation mise à jour. En revanche, un résultat insuffisant impliquerait de vous réintégrer au parcours de formation intégral (nouveau module Initiation si vous étiez formé M1 sur la V8, ou nouveau module Professionnel si vous étiez formé M2 sur la V8).",
     "evaluation": "Evaluation des connaissances",
     "evaluationEnded": "Vous avez déjà répondu au questionnaire",
-    "evaluationSubtitle": "Veuillez à présent répondre au questionnaire d'évaluation des connaissances afin de recevoir votre attestation de formation de mise à jour. <b>Ce dernier est chronométré et vous aurez au maximum {time} minutes pour répondre aux questions. Vous ne pouvez répondre au questionnaire qu'une seule fois.</b><red> Une fois lancé, impossible de revenir en arrière. Des exercices pratiques sont présents dans le questionnaire. Nous vous invitons, avant de le commencer, à ouvrir le guide en ligne ainsi que l'outil Excel Bilan Carbone® v9 (pour rappel il est disponible dans votre espace adhérent). Ceux-ci seront utiles et nécessaires pour certaines questions.</red>",
+    "evaluationSubtitle": "Veuillez à présent répondre au questionnaire d'évaluation des connaissances afin de recevoir votre attestation de formation de mise à jour. <b>Ce dernier est chronométré et vous aurez au maximum {time} minutes pour répondre aux questions. Vous ne pouvez répondre au questionnaire qu'une seule fois.</b><error> Une fois lancé, impossible de revenir en arrière. Des exercices pratiques sont présents dans le questionnaire. Nous vous invitons, avant de le commencer, à ouvrir le guide en ligne ainsi que l'outil Excel Bilan Carbone® v9 (pour rappel il est disponible dans votre espace adhérent). Ceux-ci seront utiles et nécessaires pour certaines questions.</error>",
     "acceptation": "J'ai compris que je ne pourrais lancer qu'une seule fois le questionnaire et que je vais avoir un temps limité pour répondre aux questions. Je suis dans les bonnes conditions pour commencer mon test.",
     "answer": "Répondre au questionnaire",
     "timer": "Temps restant : ",
@@ -2174,6 +2203,7 @@
     "tooSmall": "Veuillez saisir une valeur plus grande",
     "tooBig": "Veuillez saisir une valeur plus petite",
     "studyYearMustBeBeforeCurrent": "L'année de l'étude doit être antérieure à l'année de l'étude actuelle",
+    "studyYearMustBeAfterLinkedStudies": "Impossible de renseigner une date antérieure à celles de vos études liées sur votre plan de transition",
     "maxTwoDecimals": "Le taux de réduction doit avoir au maximum 2 décimales"
   },
   "common": {

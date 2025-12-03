@@ -6,6 +6,7 @@ import HelpIcon from '@/components/base/HelpIcon'
 import IconLabel from '@/components/base/IconLabel'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import GlossaryModal from '@/components/modals/GlossaryModal'
+import SelectStudySite from '@/components/study/site/SelectStudySite'
 import { OrganizationWithSites } from '@/db/account'
 import { FullStudy } from '@/db/study'
 import Sites from '@/environments/base/organization/Sites'
@@ -67,6 +68,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
   const format = useFormatter()
   const tForm = useTranslations('study.new')
   const tGlossary = useTranslations('study.new.glossary')
+  const tValidation = useTranslations('validation')
   const t = useTranslations('study.perimeter')
   const [open, setOpen] = useState(false)
   const [glossary, setGlossary] = useState('')
@@ -211,15 +213,29 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
     'realizationEndDate',
   ])
 
-  const onDateSubmit = useCallback(
-    async (command: ChangeStudyDatesCommand) => {
-      await form.trigger()
-      if (form.formState.isValid) {
-        await changeStudyDates(command)
-      }
-    },
-    [form],
-  )
+  const handleDateChange = useCallback(async () => {
+    const isValid = await form.trigger()
+    if (isValid) {
+      const values = form.getValues()
+      await callServerFunction(() => changeStudyDates(values), {
+        onSuccess: () => {
+          router.refresh()
+        },
+        onError: () => {
+          router.refresh()
+
+          form.reset({
+            studyId: study.id,
+            startDate: study.startDate.toISOString(),
+            endDate: study.endDate.toISOString(),
+            realizationStartDate: study.realizationStartDate?.toISOString() ?? null,
+            realizationEndDate: study.realizationEndDate?.toISOString() ?? null,
+          })
+        },
+        getErrorMessage: (errorMessage: string) => tValidation(errorMessage),
+      })
+    }
+  }, [form, callServerFunction, router, tValidation, study])
 
   const updateStudyExport = useCallback(
     async (exportType: Export, control: ControlMode | false) => {
@@ -238,10 +254,6 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
     }
     setExportsValues(exportsForm.getValues().exports)
   }, [exportsForm, exportsValues, exportsWatch, updateStudyExport])
-
-  useEffect(() => {
-    onDateSubmit(form.getValues())
-  }, [startDate, endDate, realizationStartDate, realizationEndDate, onDateSubmit, form])
 
   const handleDuplicateSite = async (data: DuplicateFormData) => {
     if (!duplicatingSiteId) {
@@ -272,7 +284,11 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
   )
 
   return (
-    <Block title={t('title', { name: study.name })} as="h2">
+    <Block
+      title={t('title', { name: study.name })}
+      as="h2"
+      rightComponent={<SelectStudySite sites={study.sites} siteSelectionDisabled />}
+    >
       <h3 className="mb1">{t('general', { name: study.name })}</h3>
       {hasEditionRole ? (
         <>
@@ -281,13 +297,20 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
               <span className="inputLabel bold">{t('studyDates')}</span>
             </IconLabel>
             <div className={classNames(styles.dates, 'flex')}>
-              <FormDatePicker control={form.control} translation={tForm} name="startDate" label={tForm('start')} />
+              <FormDatePicker
+                control={form.control}
+                translation={tForm}
+                name="startDate"
+                label={tForm('start')}
+                onAccept={handleDateChange}
+              />
               <FormDatePicker
                 control={form.control}
                 translation={tForm}
                 name="endDate"
                 label={tForm('end')}
                 data-testid="study-endDate"
+                onAccept={handleDateChange}
               />
             </div>
           </div>
@@ -302,6 +325,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
                 name="realizationStartDate"
                 label={tForm('start')}
                 clearable
+                onAccept={handleDateChange}
               />
               <FormDatePicker
                 control={form.control}
@@ -310,6 +334,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
                 label={tForm('end')}
                 data-testid="new-study-realizationEndDate"
                 clearable
+                onAccept={handleDateChange}
               />
             </div>
           </div>
@@ -355,7 +380,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
                       city: site.site.city ?? '',
                     }))
               }
-              form={isEditing ? siteForm : undefined}
+              form={siteForm as unknown as UseFormReturn<SitesCommand>}
               withSelection
             />
           ),

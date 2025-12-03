@@ -59,11 +59,6 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   const exports = useMemo(() => study.exports, [study.exports])
   const [displayValueWithDep, setDisplayValueWithDep] = useState(true)
   const [isDownloadReportActive, setIsDownloadReportActive] = useState(false)
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const [downloading, setDownloading] = useState<'emissionSources' | 'results' | null>(null)
-  const handleClickMenu = (event: MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget)
-  const open = Boolean(anchorEl)
-  const handleClose = () => setAnchorEl(null)
 
   useEffect(() => {
     if (environment && environment !== Environment.BC) {
@@ -148,7 +143,6 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   const downloadEmissionSources = async (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
     preventClose(e)
     if (hasAccessToEmissionSourcesDownload) {
-      setDownloading('emissionSources')
       await downloadStudyEmissionSources(
         study,
         tStudyExport,
@@ -159,13 +153,11 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
         tResultUnits,
         environment,
       )
-      setDownloading(null)
     }
   }
 
   const downloadResults = async (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
     preventClose(e)
-    setDownloading('results')
     await downloadStudyResults(
       study,
       begesRules,
@@ -179,7 +171,6 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       tUnits,
       environment,
     )
-    setDownloading(null)
   }
 
   const preventClose = (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
@@ -188,52 +179,11 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   }
 
   return (
-    <Block title={tStudyNav('results')} as="h2">
-      <div className="flex mb2 justify-between">
-        <div className="flex gapped1">
-          <SelectStudySite study={study} allowAll studySite={studySite} setSite={setSite} />
-          <FormControl>
-            <InputLabel id="result-type-selector-label">{t('type')}</InputLabel>
-            <Select
-              value={type}
-              label={t('type')}
-              aria-labelledby="result-type-selector-label"
-              onChange={(event) => {
-                setType(event.target.value as ResultType)
-              }}
-              data-testid="result-type-select"
-              disabled={!allowTypeSelect}
-            >
-              <MenuItem value={AdditionalResultTypes.CONSOLIDATED}>{tExport('consolidated')}</MenuItem>
-              {environment && hasAccessToBcExport(environment) && (
-                <MenuItem value={AdditionalResultTypes.ENV_SPECIFIC_EXPORT}>{tExport('env_specific_export')}</MenuItem>
-              )}
-              {exports.map((exportItem) => (
-                <MenuItem
-                  key={exportItem.type}
-                  value={exportItem.type}
-                  disabled={exportItem.type !== Export.Beges || exportItem.control === ControlMode.CapitalShare}
-                >
-                  {tExport(exportItem.type)}
-                  {(exportItem.type !== Export.Beges || exportItem.control === ControlMode.CapitalShare) && (
-                    <em> ({t('coming')})</em>
-                  )}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          {exports.map((exportType) => exportType.type).includes(Export.Beges) && (
-            <ConsolatedBEGESDifference
-              study={study}
-              emissionFactorsWithParts={emissionFactorsWithParts}
-              validatedOnly={validatedOnly}
-              results={computedResultsWithDep}
-              begesResults={computedBegesData}
-              studySite={studySite}
-            />
-          )}
-        </div>
-        <div className="flex gapped1">
+    <Block
+      title={tStudyNav('results')}
+      as="h2"
+      rightComponent={
+        <div className="flex gapped1 align-center">
           <Select
             id="download-results-dropdown"
             labelId="download-results-dropdown"
@@ -262,9 +212,53 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
               <SummarizeIcon className="mr-2" /> {t('resultsWord')}
             </Button>
           )}
+          <SelectStudySite sites={study.sites} defaultValue={studySite} setSite={setSite} />
         </div>
-      </div>
+      }
+    >
       <div className="flex-col gapped2">
+        <div className="flex gapped2">
+          {exports.map((exportType) => exportType.type).includes(Export.Beges) && (
+            <ConsolatedBEGESDifference
+              study={study}
+              emissionFactorsWithParts={emissionFactorsWithParts}
+              validatedOnly={validatedOnly}
+              results={computedResultsWithDep}
+              begesResults={computedBegesData}
+              studySite={studySite}
+            />
+          )}
+          <FormControl>
+            <InputLabel id="result-type-selector-label">{t('format')}</InputLabel>
+            <Select
+              value={type}
+              label={t('format')}
+              aria-labelledby="result-type-selector-label"
+              onChange={(event) => {
+                setType(event.target.value as ResultType)
+              }}
+              data-testid="result-type-select"
+              disabled={!allowTypeSelect}
+            >
+              <MenuItem value={AdditionalResultTypes.CONSOLIDATED}>{tExport('consolidated')}</MenuItem>
+              {environment && hasAccessToBcExport(environment) && (
+                <MenuItem value={AdditionalResultTypes.ENV_SPECIFIC_EXPORT}>{tExport('env_specific_export')}</MenuItem>
+              )}
+              {exports.map((exportItem) => (
+                <MenuItem
+                  key={exportItem.type}
+                  value={exportItem.type}
+                  disabled={exportItem.type !== Export.Beges || exportItem.control === ControlMode.CapitalShare}
+                >
+                  {tExport(exportItem.type)}
+                  {(exportItem.type !== Export.Beges || exportItem.control === ControlMode.CapitalShare) && (
+                    <em> ({t('coming')})</em>
+                  )}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </div>
         <div className="mt1">
           {type !== Export.Beges && (
             <>

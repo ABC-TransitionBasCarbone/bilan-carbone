@@ -7,7 +7,7 @@ import Modal from './Modal'
 
 interface Props {
   title: string
-  className: string
+  className?: string
   iconLabel: string
   label: string
   tModal: string

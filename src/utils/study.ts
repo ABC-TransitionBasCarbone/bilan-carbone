@@ -1,4 +1,3 @@
-import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import { isAdminOnStudyOrga } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
@@ -28,7 +27,7 @@ export const getUserRoleOnPublicStudy = (
 }
 
 export const getAccountRoleOnStudy = (user: UserSession, study: FullStudy) => {
-  if (isAdminOnStudyOrga(user, study.organizationVersion as OrganizationVersionWithOrganization)) {
+  if (isAdminOnStudyOrga(user, study.organizationVersion)) {
     return hasSufficientLevel(user.level, study.level) && hasActiveLicence(study.organizationVersion)
       ? StudyRole.Validator
       : StudyRole.Reader
@@ -41,10 +40,7 @@ export const getAccountRoleOnStudy = (user: UserSession, study: FullStudy) => {
       : StudyRole.Reader
   }
 
-  if (
-    study.isPublic &&
-    isInOrgaOrParent(user.organizationVersionId, study.organizationVersion as OrganizationVersionWithOrganization)
-  ) {
+  if (study.isPublic && isInOrgaOrParent(user.organizationVersionId, study.organizationVersion)) {
     return hasActiveLicence(study.organizationVersion) ? getUserRoleOnPublicStudy(user, study.level) : StudyRole.Reader
   }
 

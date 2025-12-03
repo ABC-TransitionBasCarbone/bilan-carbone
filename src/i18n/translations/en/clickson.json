@@ -1,0 +1,17 @@
+{
+  "login": {
+    "welcome": "Welcome to Clickson PEBC",
+    "explanation": "Let's measure your establishment's greenhouse gas emissions!",
+    "form": {
+      "activate": "Create my account"
+    }
+  },
+  "email": {
+    "subject": {
+      "newUser": "You have been invited on Clickson",
+      "addedActiveUser": "You have been invited on a new environment Clickson",
+      "activation": "You have activated you account on Clickson",
+      "activationRequest": "Access request to your Clickson organization"
+    }
+  }
+}

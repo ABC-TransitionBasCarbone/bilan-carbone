@@ -1,7 +1,9 @@
 import ProgressBar from '@/components/base/ProgressBar'
 import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
+import { withInfobulle } from '@/utils/post'
 import { defaultPostColor, postColors } from '@/utils/study'
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import { StudyRole } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -19,8 +21,9 @@ interface Props {
   studySite: string
   setSite: Dispatch<SetStateAction<string>>
   isCut: boolean
+  setGlossary: (glossary: string) => void
 }
-const StudyPostsCard = ({ study, post, userRole, studySite, setSite, isCut }: Props) => {
+const StudyPostsCard = ({ study, post, userRole, studySite, setSite, isCut, setGlossary }: Props) => {
   const t = useTranslations('study')
   const tRole = useTranslations('study.role')
   const tPost = useTranslations('emissionFactors.post')
@@ -40,6 +43,14 @@ const StudyPostsCard = ({ study, post, userRole, studySite, setSite, isCut }: Pr
         <div className={classNames(styles.post, styles[`post-${postColor}`], 'flex-cc')}>
           <PostIcon className={styles.icon} post={post} />
           {tPost(post)}
+          {withInfobulle(post) && (
+            <HelpOutlineIcon
+              className={classNames(styles.icon, 'pointer ml-2')}
+              onClick={() => setGlossary(post)}
+              aria-label={tPost('glossary')}
+              titleAccess={tPost('glossary')}
+            />
+          )}
         </div>
         <div className={`justify-${isCut ? 'center' : 'between'} align-center`}>
           <StudyName name={study.name} />
@@ -50,7 +61,13 @@ const StudyPostsCard = ({ study, post, userRole, studySite, setSite, isCut }: Pr
           )}
         </div>
         <p className="text-center">{t('selectSite')}</p>
-        <SelectStudySite study={study} studySite={studySite} setSite={setSite} withLabel={false} />
+        <SelectStudySite
+          sites={study.sites}
+          defaultValue={studySite}
+          setSite={setSite}
+          withLabel={false}
+          showAllOption={false}
+        />
         {!isCut && (
           <Box className={classNames(styles.emissionSources, 'p1', { [styles.allValidated]: percent === 100 })}>
             <p className="mb1 align-center">

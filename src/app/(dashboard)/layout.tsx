@@ -44,6 +44,7 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
     !!organizationVersions.find((org) => org.isCR || org.parentId) && account.environment !== Environment.CUT
   const shouldRenewLicense =
     accountOrganizationVersion &&
+    accountOrganizationVersion.environment === Environment.BC &&
     !accountOrganizationVersion.activatedLicence.includes(currentDate.getFullYear() + 1) &&
     currentDate.getMonth() + 1 >= renewalMessageStartMonth // month + 1 is to use "human" month : january is 1, december is 12
 

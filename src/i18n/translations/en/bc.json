@@ -153,7 +153,7 @@
     "welcome": "Welcome",
     "subtext": "",
     "explanation": "The tool dedicated to the application of the Bilan Carbone® method, developed by the Association for the Low Carbon Transition (ABC), and accessible to all of our members: Consulting and Research, Business, Association and Public Sector",
-    "question": "A question? Read the <link>FAQ</link> or <support>contact us</support>!",
+    "question": "A question? Read the <faq>FAQ</faq> or <support>contact us</support>!",
     "cineo": "Tool developed thanks to the Bilan Carbone® assessments of Cineo",
     "explanation2": "Operation supported by the State as part of the 'Support Green Alternatives 2' initiative under France 2030, operated by the Banque des Territoires (Caisse des Dépôts)",
     "form": {
@@ -240,6 +240,28 @@
     "validation": {
       "email": "Please enter an email",
       "siret": "Please enter a Siret"
+    }
+  },
+  "signupClickson": {
+    "description": "Create a Clickson account with your email and a school postal code or name",
+    "email": "Email",
+    "emailPlaceholder": "Email used during your training",
+    "emailRequired": "Please enter an email",
+    "schoolPostalCodeOrName": "School postal code or name",
+    "schoolPostalCodeOrNamePlaceholder": "The postal code or name of the school establishment",
+    "schoolSearchGlossaryTitle": "Find your school establishment.",
+    "schoolSearchGlossary": "Find your school establishment by entering its postal code or name, then selecting it from the dropdown list.",
+    "close": "Close",
+    "schoolPostalCodeOrNameRequired": "Please enter the school postal code or name",
+    "validate": "Validate",
+    "clear": "Clear value",
+    "Not authorized": "This email is already used for Clickson or there's an issue with the account creation. Please see <link>the FAQ</link> or <support>contact support</support> if you think this is an error.",
+    "Request sent": "A request has been sent to your colleagues",
+    "Email sent": "You will receive an email to finish your account validation.",
+    "Not known school": "Please find and select your establishment.",
+    "validation": {
+      "email": "Please enter an email",
+      "schoolPostalCodeOrName": "Please enter the school postal code or name"
     }
   },
   "footer": {
@@ -463,6 +485,8 @@
       "site": "Site",
       "allSites": "All sites",
       "noSites": "There are no sites configured for the organization",
+      "allSitesOnly": "This page is global to all sites of the study",
+      "allSitesOnlyTransitionPlan": "This page is global to all sites of the study for the moment",
       "addSite": "Create a site",
       "title": "Which organization is concerned by the study?",
       "sites": "The organization's sites",
@@ -644,7 +668,7 @@
         "name": "Label",
         "edit": "Rename family",
         "delete": "Delete family",
-        "deleteContent": "Do you really want to delete the \"{name}\" tag family ? <red>All its tags will be permanently deleted.</red>",
+        "deleteContent": "Do you really want to delete the \"{name}\" tag family ? <error>All its tags will be permanently deleted.</error>",
         "new": "Add a new tag family",
         "content": "Which name do you want to give to you family ?",
         "cancel": "Cancel",
@@ -680,6 +704,7 @@
     },
     "results": {
       "type": "Type",
+      "format": "Format",
       "post": "Post",
       "subPost": "Sub-post",
       "tag": "Tag",
@@ -918,11 +943,11 @@
         },
         "sbtiCard": {
           "title": "SBTi Trajectories",
-          "description": "The Science Based Targets Initiative defines two reference trajectories, aiming to limit global warming to 1.5°C or \"Well below 2 degrees\" (WB2C).",
+          "description": "The Science Based Targets Initiative defines two reference trajectories, aiming to limit global warming to 1.5°C (SBTi 1.5°C) or \"Well below 2 degrees\" (SBTi WB2C).",
           "methodLabel": "Methods",
-          "option15": "1.5°C Trajectory",
-          "optionWB2C": "WB2C Trajectory",
-          "placeholder": "No method selected"
+          "option15": "SBTi 1.5°C",
+          "optionWB2C": "SBTi WB2C",
+          "placeholder": "No trajectory selected"
         },
         "graph": {
           "title": "Reduction trajectories visualization",
@@ -955,6 +980,10 @@
           "Not authorized": "You are not allowed to do this action",
           "noAvailableStudies": "No previous studies available",
           "noLinkedStudies": "No linked studies yet",
+          "information": "Information",
+          "glossaryTitle": "Pour gabriel - titre",
+          "glossaryDescription": "Pour gabriel - description",
+          "close": "Close",
           "table": {
             "name": "Name",
             "year": "Year",
@@ -1105,7 +1134,7 @@
           "subStepsPlaceholder": "Describe your sub-steps",
           "detailedDescription": "Detailed description of the action and stakeholder involvement",
           "detailedDescriptionPlaceholder": "Detailed description",
-          "potentialDeduction": "Quantified emission reduction potential",
+          "potentialDeduction": "Emission reduction potential",
           "potentialDeductionPlaceholder": "Select an option",
           "reductionValue": "Value",
           "reductionStartYear": "Year action begins",
@@ -2094,7 +2123,7 @@
     "videoExplanation": "Please note that the assessment associated with this 'condensed' training course does not contain any traps if you watch the training carefully. Successful completion will allow you to obtain a free updated training certificate. However, an insufficient result would mean that you will have to reintegrate into the full training course (new Initiation module if you were trained M1 on V8, or new Professional module if you were trained M2 on V8).",
     "evaluation": "Knowledge assessment",
     "evaluationEnded": "You already answered the questionnaire",
-    "evaluationSubtitle": "Please complete the knowledge assessment questionnaire to receive your v9 training attestation. It is limited in time and you will have <red>at most {time} minutes to answer the question. You can only answer the questionnaire once. Once you've started, you can't go back.</red>",
+    "evaluationSubtitle": "Please complete the knowledge assessment questionnaire to receive your v9 training attestation. It is limited in time and you will have <error>at most {time} minutes to answer the question. You can only answer the questionnaire once. Once you've started, you can't go back.</error>",
     "acceptation": "I've understood that I'll only be able to launch the questionnaire once and that I'll have a limited amount of time to answer the question. I'm in the right conditions to start my test",
     "answer": "Answer the questionnaire",
     "timer": "Remaining time: ",
@@ -2174,6 +2203,7 @@
     "tooSmall": "Please enter a larger value",
     "tooBig": "Please enter a smaller value",
     "studyYearMustBeBeforeCurrent": "The study year must be before the current study year",
+    "studyYearMustBeAfterLinkedStudies": "Cannot set a date earlier than your linked studies in your transition plan",
     "maxTwoDecimals": "The reduction rate must have at most 2 decimal places"
   },
   "common": {

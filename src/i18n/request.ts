@@ -14,7 +14,7 @@ export default getRequestConfig(async () => {
 
   const locale = environment === Environment.CUT ? Locale.FR : await getLocale()
 
-  const baseMessages = (await import(`./${locale}.json`)).default
+  const baseMessages = (await import(`./translations/${locale}/bc.json`)).default
 
   if (!environment || environment === Environment.BC) {
     return {
@@ -23,7 +23,11 @@ export default getRequestConfig(async () => {
     }
   }
 
-  const overrideFilePath = path.join(process.cwd(), 'src/i18n', `${locale}-${environment.toLocaleLowerCase()}.json`)
+  const overrideFilePath = path.join(
+    process.cwd(),
+    'src/i18n/translations',
+    `${locale}/${environment.toLocaleLowerCase()}.json`,
+  )
   let overrideMessages = {}
   if (fs.existsSync(overrideFilePath)) {
     overrideMessages = JSON.parse(fs.readFileSync(overrideFilePath, 'utf-8'))

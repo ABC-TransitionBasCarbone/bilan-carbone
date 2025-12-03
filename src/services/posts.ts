@@ -183,6 +183,7 @@ export const environmentPostMapping = {
   [Environment.BC]: BCPost,
   [Environment.CUT]: CutPost,
   [Environment.TILT]: TiltPost,
+  [Environment.CLICKSON]: BCPost,
 }
 
 export const subPostsByPost: Record<Post, SubPost[]> = {
@@ -195,6 +196,7 @@ export const environmentSubPostsMapping = {
   [Environment.BC]: subPostsByPostBC,
   [Environment.CUT]: subPostsByPostCUT,
   [Environment.TILT]: subPostsByPostTILT,
+  [Environment.CLICKSON]: subPostsByPostBC,
 }
 
 export const subPostTiltToBcSubPostMapping: Partial<Record<SubPost, SubPost>> = {
