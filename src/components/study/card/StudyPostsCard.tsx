@@ -11,7 +11,6 @@ import { Dispatch, SetStateAction, useMemo } from 'react'
 import progressStyles from '../../base/ProgressBar.module.css'
 import PostIcon from '../infography/icons/PostIcon'
 import SelectStudySite from '../site/SelectStudySite'
-import StudyName from './StudyName'
 import styles from './StudyPostsCard.module.css'
 
 interface Props {
@@ -37,8 +36,7 @@ const StudyPostsCard = ({ study, post, studySite, setSite, setGlossary, environm
 
   return (
     <div className={classNames(styles.card, 'flex-col px1')}>
-      <div className="justify-between align-center">
-        <StudyName name={study.name} />
+      <div className="justify-end align-center">
         <SelectStudySite
           sites={study.sites}
           defaultValue={studySite}
@@ -47,37 +45,37 @@ const StudyPostsCard = ({ study, post, studySite, setSite, setGlossary, environm
           showAllOption={false}
         />
       </div>
-      <div className={classNames(styles.postContainer, 'grow flex-cc')}>
-        <div className={classNames(styles.post, styles[`post-${postColor}`], 'grow flex-cc')}>
-          <div className={classNames(styles.header, 'flex-col align-center grow')}>
-            {percent > 0 && (
-              <div
-                className={classNames(
-                  styles.progress,
-                  styles[`progress-${postColor}`],
-                  progressStyles[`w${percent.toFixed(0)}`],
-                )}
-              />
-            )}
-            <div className={classNames(styles.content, 'flex-cc text-center w100')}>
-              <PostIcon className={styles.icon} post={post} />
-              {tPost(post)}
-              {withInfobulle(post) && (
-                <HelpOutlineIcon
-                  className={classNames(styles.icon, 'pointer ml-2')}
-                  onClick={() => setGlossary(post)}
-                  aria-label={tPost('glossary')}
-                  titleAccess={tPost('glossary')}
+      <div className={classNames(styles.postContainer, 'grow flex-col gapped')}>
+        <div className="grow justify-center">
+          <div className={classNames(styles.post, styles[`post-${postColor}`], 'grow')}>
+            <div className={classNames(styles.header, 'flex-col align-center grow')}>
+              {percent > 0 && (
+                <div
+                  className={classNames(
+                    styles.progress,
+                    styles[`progress-${postColor}`],
+                    progressStyles[`w${percent.toFixed(0)}`],
+                  )}
                 />
               )}
+              <div className={classNames(styles.content, 'flex-cc text-center w100')}>
+                <PostIcon className={styles.icon} post={post} />
+                {tPost(post)}
+                {withInfobulle(post) && (
+                  <HelpOutlineIcon
+                    className={classNames(styles.icon, 'pointer ml-2')}
+                    onClick={() => setGlossary(post)}
+                    aria-label={tPost('glossary')}
+                    titleAccess={tPost('glossary')}
+                  />
+                )}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      {hasAccessToEmissionSourceValidation(environment) && (
-        <div className="flex-col align-end">
-          <div className={classNames(styles.emissionSources, { [styles.allValidated]: percent === 100 })}>
-            <p className="mb1 align-center">
+        {hasAccessToEmissionSourceValidation(environment) && (
+          <div className={classNames({ [styles.allValidated]: percent === 100 }, 'grow flex-cc')}>
+            <p className={classNames(styles.emissionSources, 'mb1 justify-end grow')}>
               {t.rich('validatedSources', {
                 validated: validated,
                 total: emissionSources.length,
@@ -89,8 +87,8 @@ const StudyPostsCard = ({ study, post, studySite, setSite, setGlossary, environm
               })}
             </p>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }

@@ -2,11 +2,15 @@
   gap: 1rem;
 }
 
+.postContainer {
+  --card-max-length: 40rem;
+  margin: 0 2rem;
+}
+
 .post {
   border-radius: 1rem;
   color: white;
-  max-width: 50rem;
-  margin: 0 2rem;
+  max-width: var(--card-max-length);
 
   &.post-darkBlue {
     background-color: var(--post-darkBlue-light);
@@ -59,6 +63,12 @@
   position: relative;
   gap: 0.5rem;
   padding: 1.5rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.emissionSources {
+  max-width: var(--card-max-length);
 }
 
 .icon {
