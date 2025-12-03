@@ -1,0 +1,28 @@
+{
+  "common": {
+    "yes": "Yes",
+    "no": "No",
+    "edit": "Edit",
+    "duplicate": "Duplicate",
+    "close": "Close",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "update": "Update",
+    "previous": "Previous",
+    "next": "Next",
+    "notAuthorized": "Action not authorized",
+    "Not authorized": "You are not allowed to do this action"
+  },
+  "signup": {
+    "email": "Email",
+    "emailPlaceholder": "Email used during your training",
+    "emailRequired": "Please enter an email",
+    "validate": "Validate",
+    "Request sent": "A request has been sent to your colleagues",
+    "Email sent": "You will receive an email to finish your account validation.",
+    "validation": {
+      "email": "Please enter an email"
+    }
+  }
+}
