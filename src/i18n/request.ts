@@ -14,7 +14,9 @@ export default getRequestConfig(async () => {
 
   const locale = environment === Environment.CUT ? Locale.FR : await getLocale()
 
-  const baseMessages = (await import(`./translations/${locale}/bc.json`)).default
+  const commonMessages = (await import(`./translations/${locale}/common.json`)).default
+  const bcMessages = (await import(`./translations/${locale}/bc.json`)).default
+  const baseMessages = mergeObjects({}, commonMessages, bcMessages)
 
   if (!environment || environment === Environment.BC) {
     return {
