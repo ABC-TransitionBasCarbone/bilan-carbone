@@ -1,5 +1,12 @@
 import { setCustomIssue, setCustomMessage } from '@/lib/zod.config'
-import { ActionCategory, ActionNature, ActionPotentialDeduction, ActionRelevance, TrajectoryType } from '@prisma/client'
+import {
+  ActionCategory,
+  ActionIndicatorType,
+  ActionNature,
+  ActionPotentialDeduction,
+  ActionRelevance,
+  TrajectoryType,
+} from '@prisma/client'
 import z from 'zod'
 
 export const ExternalStudyCommandValidation = z.object({
@@ -68,6 +75,14 @@ export const createTrajectorySchema = () => {
 
 export type TrajectoryFormData = z.infer<ReturnType<typeof createTrajectorySchema>>
 
+export const ActionIndicatorSchema = z.object({
+  id: z.string().optional(),
+  type: z.enum(ActionIndicatorType),
+  description: z.string(),
+})
+
+export type ActionIndicatorCommand = z.infer<typeof ActionIndicatorSchema>
+
 export const AddActionCommandBase = z.object({
   title: z.string().min(1),
   subSteps: z.string().min(1),
@@ -87,6 +102,7 @@ export const AddActionCommandBase = z.object({
   followUpGoal: z.number().optional(),
   performanceDescription: z.string().optional(),
   performanceGoal: z.number().optional(),
+  indicators: z.array(ActionIndicatorSchema).optional(),
   facilitatorsAndObstacles: z.string().optional(),
   additionalInformation: z.string().optional(),
   nature: z.array(z.enum(ActionNature)).min(0),
