@@ -204,66 +204,6 @@
       "email": "Veuillez entrer un email"
     }
   },
-  "signupCut": {
-    "description": "Créez un compte sur CUT en entrant votre email ainsi qu'un numéro CNC (recommandé) ou Siret",
-    "email": "Email",
-    "emailPlaceholder": "Votre adresse email",
-    "emailRequired": "Veuillez entrer un email",
-    "siretOrCNC": "Numéro CNC (recommandé) ou Siret",
-    "siretOrCNCPlaceholder": "Votre numéro CNC (recommandé) ou Siret",
-    "siretOrCNCRequired": "Veuillez entrer un numéro CNC (recommandé) ou Siret",
-    "validate": "Valider",
-    "clear": "Supprimer la valeur",
-    "Unknown CNC": "Ce code CNC n'est pas reconnu. Veuillez vérifier votre saisie ou contacter le support si vous pensez qu'il s'agit d'une erreur.",
-    "Unknown SIRET or CNC": "Ce Siret ou code CNC n'est pas reconnu. Veuillez vérifier votre saisie ou contacter le support si vous pensez qu'il s'agit d'une erreur.",
-    "Not authorized": "Cet email est déjà inscrit avec un compte CUT ou il y a eu un soucis lors de sa création. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
-    "Request sent": "Une demande d'activation de votre compte a été envoyé à vos collègues",
-    "Email sent": "Vous allez recevoir un mail pour finaliser l'activation de votre compte.",
-    "validation": {
-      "email": "Veuillez entrer un email",
-      "siretOrCNC": "Veuillez entrer un numéro CNC (recommandé) ou Siret"
-    }
-  },
-  "signupTilt": {
-    "description": "Créez un compte sur Tilt en entrant votre email ainsi qu'un Siret",
-    "email": "Email",
-    "emailPlaceholder": "Votre adresse email",
-    "emailRequired": "Veuillez entrer un email",
-    "siret": "Siret",
-    "siretPlaceholder": "Votre Siret",
-    "siretRequired": "Veuillez entrer un Siret",
-    "validate": "Valider",
-    "Not authorized": "Cet email est déjà inscrit avec un compte Tilt ou ce SIRET n'est pas valide. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
-    "Not association SIRET": "L'utilisation de cet outil est réservé aux associations. Veuillez utiliser la version classique du Bilan Carbone®+",
-    "Request sent": "Une demande d'activation de votre compte a été envoyé à vos collègues",
-    "Email sent": "Vous allez recevoir un mail pour finaliser l'activation de votre compte.",
-    "validation": {
-      "email": "Veuillez entrer un email",
-      "siret": "Veuillez entrer un Siret"
-    }
-  },
-  "signupClickson": {
-    "description": "Créez un compte sur Clickson en entrant votre email ainsi que le code postal ou nom de votre établissement scolaire",
-    "email": "Email",
-    "emailPlaceholder": "Votre adresse email",
-    "emailRequired": "Veuillez entrer un email",
-    "schoolPostalCodeOrName": "Code postal ou nom de l'établissement scolaire",
-    "schoolPostalCodeOrNamePlaceholder": "Le code postal ou nom de l'établissement scolaire",
-    "schoolSearchGlossaryTitle": "Retrouvez votre établissement scolaire.",
-    "schoolSearchGlossary": "Retrouvez votre établissement scolaire en entrant son code postal ou son nom, puis en le sélectionnant dans la liste déroulante.",
-    "close": "Fermer",
-    "schoolPostalCodeOrNameRequired": "Veuillez entrer le code postal ou le nom de l'établissement scolaire",
-    "validate": "Valider",
-    "clear": "Supprimer la valeur",
-    "Not authorized": "Cet email est déjà inscrit avec un compte Clickson ou il y a eu un soucis lors de sa création. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
-    "Request sent": "Une demande d'activation de votre compte a été envoyé à vos collègues",
-    "Email sent": "Vous allez recevoir un mail pour finaliser l'activation de votre compte.",
-    "Not known school": "Veuillez chercher et sélectionner votre établissement.",
-    "validation": {
-      "email": "Veuillez entrer un email",
-      "schoolPostalCodeOrName": "Veuillez entrer le code postal ou nom de l'établissement scolaire"
-    }
-  },
   "footer": {
     "message": {
       "0": "",
@@ -1362,37 +1302,6 @@
         "BiensEtMatieresEnApprocheMonetaire": "Un sous-poste est également dédié aux matières pour lesquelles des facteurs d'émission en ratios monétaires sont utilisés.",
         "UtilisationEnResponsabilite": "Des produits vendus par l'organisation au sein du périmètre temporel considéré sur l'ensemble de leur durée de vie, dont l'organisation est directement responsable ([en italisque] pour un fabriquant de plateau-repas servi dans un avion, l'utilisation en responsabilité correspond à l'énergie utilisée pour refroidir et réchauffer le plateau-repas).",
         "UtilisationEnDependance": "Des produits vendus par l'organisation au sein du périmètre temporel considéré sur l'ensemble de leur durée de vie, dont l'organisation n'est pas directement reponsable mais que sont activité contribue à émettre ([en italique] Pour un fabriquant de plateau-repas servi dans un avion, l'utilisation en dépendance correspond aux émissions du vol complet)."
-      },
-      "cutQuestions": {
-        "actions": "Actions",
-        "add": "Ajouter",
-        "error": "Erreur lors de la mise à jour du champs",
-        "next": "Sous-poste suivant",
-        "previous": "Sous-poste précédent",
-        "numberOfYears": "Nombre d'années",
-        "bonbons": "Bonbons - Nombre (sachets de {value}g)",
-        "chips": "Chips - Nombre (sachets de {value}g)",
-        "Electromenager": "Pour chacun de ces équipements électroménagers, veuillez renseigner :",
-        "FretCadence": "Fret - Cadence (fois/mois)",
-        "FretPoids moyen": "Fret - Poids moyen (kg)",
-        "FretProvenance": "Où est basé votre principal fournisseur ?",
-        "Refrigerateurs": "Réfrigérateurs",
-        "Congelateurs": "Congélateurs",
-        "Warmers": "Warmers",
-        "Distributeurs": "Distributeurs snacks / boisson",
-        "format": {
-          "text": "Texte",
-          "postalCode": "Code postal",
-          "phone": "Téléphone",
-          "year": "Année",
-          "hour": "Heure",
-          "number": "Nombre"
-        },
-        "errorLoadingQuestions": "Erreur lors du chargement des questions",
-        "retry": "Réessayer",
-        "finish": "Terminer",
-        "noQuestions": "Aucune question trouvée pour ce sous-poste",
-        "autoSaveError": "Certaines réponses n'ont pas pu être sauvegardées automatiquement. Veuillez vérifier votre connexion et réessayer."
       }
     },
     "create": {
