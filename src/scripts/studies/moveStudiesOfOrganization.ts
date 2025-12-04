@@ -1,3 +1,5 @@
+// SCRIPT A RELIRE
+
 import { prismaClient } from '@/db/client'
 import { getOrganizationVersionById } from '@/db/organization'
 import { getStudyById } from '@/db/study'
@@ -116,56 +118,62 @@ const switchStudiesOfOrganization = async () => {
     return
   }
 
-  const { oldOrgaVersion, newOrganizationVersionForStudy, study, newOrgaVersion, newOrganizationForStudyName } = data
+  await prismaClient.$transaction(
+    async (transaction) => {
+      const { oldOrgaVersion, newOrganizationVersionForStudy, study, newOrgaVersion, newOrganizationForStudyName } =
+        data
 
-  const rl2 = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  })
-  const userConfirmationOfOrgas = await new Promise((resolve) => {
-    rl2.question(
-      `You do want to move the study from orga ${oldOrgaVersion.organization.name} to ${newOrgaVersion.organization.name} ${
-        newOrgaVersion.isCR
-          ? `, CR orga, the study will be put to this orga:
-          ${newOrganizationForStudyName} included in the CR orga`
-          : ''
-      } y(es)/n(o) ? `,
-      (answer) => {
-        rl2.close()
-        resolve(answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes')
-      },
-    )
-  })
+      const rl2 = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+      })
+      const userConfirmationOfOrgas = await new Promise((resolve) => {
+        rl2.question(
+          `You do want to move the study from orga ${oldOrgaVersion.organization.name} to ${newOrgaVersion.organization.name} ${
+            newOrgaVersion.isCR
+              ? `, CR orga, the study will be put to this orga:
+            ${newOrganizationForStudyName} included in the CR orga`
+              : ''
+          } y(es)/n(o) ? `,
+          (answer) => {
+            rl2.close()
+            resolve(answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes')
+          },
+        )
+      })
 
-  if (!userConfirmationOfOrgas) {
-    console.log('❌ switch cancelled.')
-    return
-  }
-
-  await prismaClient.study.update({
-    where: { id: study.id },
-    data: { organizationVersionId: newOrganizationVersionForStudy.id },
-  })
-
-  await Promise.all(
-    study.sites.map((studySite) => {
-      const newSite = newOrganizationVersionForStudy.organization.sites.find(
-        (site) => site.name === studySite.site.name,
-      )
-
-      if (!newSite) {
-        console.log(`❌ Site ${studySite.site.name} not found in the new organization.`)
-        return Promise.resolve()
+      if (!userConfirmationOfOrgas) {
+        console.log('❌ switch cancelled.')
+        return
       }
 
-      return prismaClient.studySite.update({
-        where: { id: studySite.id },
-        data: { siteId: newSite.id },
+      await transaction.study.update({
+        where: { id: study.id },
+        data: { organizationVersionId: newOrganizationVersionForStudy.id },
       })
-    }),
-  )
 
-  console.log(`✅ Study moved to the new organization: ${newOrganizationForStudyName}`)
+      await Promise.all(
+        study.sites.map((studySite) => {
+          const newSite = newOrganizationVersionForStudy.organization.sites.find(
+            (site) => site.name === studySite.site.name,
+          )
+
+          if (!newSite) {
+            console.log(`❌ Site ${studySite.site.name} not found in the new organization.`)
+            return Promise.reject()
+          }
+
+          return transaction.studySite.update({
+            where: { id: studySite.id },
+            data: { siteId: newSite.id },
+          })
+        }),
+      )
+
+      console.log(`✅ Study moved to the new organization: ${newOrganizationForStudyName}`)
+    },
+    { timeout: 10000 },
+  )
 }
 
 switchStudiesOfOrganization()

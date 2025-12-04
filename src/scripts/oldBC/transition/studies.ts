@@ -37,7 +37,7 @@ interface Study {
   name: string
   startDate: Date | string
   endDate: Date | string
-  organizationVersionId?: string | null
+  organizationVersionId: string
 }
 
 interface StudySite {
@@ -144,18 +144,35 @@ const parseStudies = async (
     },
   })
 
-  return relevantStudies.map((row) => {
-    const studyOrga = studiesOrganizations.find((org) => org.sites.some((site) => site.oldBCId === row.siteId))
+  return relevantStudies
+    .map((row) => {
+      const studyOrga = studiesOrganizations.find((org) => org.sites.some((site) => site.oldBCId === row.siteId))
 
-    return {
-      oldBCId: row.oldBCId as string,
-      name: row.name as string,
-      startDate: row.startDate ? new Date(getJsDateFromExcel(row.startDate as number)) : '',
-      endDate: row.endDate ? new Date(getJsDateFromExcel(row.endDate as number)) : '',
-      organizationVersionId: studyOrga?.organizationVersions.find((orgVer) => orgVer.environment === Environment.BC)
-        ?.id,
-    }
-  })
+      if (!studyOrga) {
+        console.warn(`Impossible de retrouver l'organisation pour l'étude oldBCId: ${row.siteId}`)
+        return null
+      }
+
+      const organizationVersionId = studyOrga.organizationVersions.find(
+        (orgVer) => orgVer.environment === Environment.BC,
+      )?.id
+
+      if (!organizationVersionId) {
+        console.warn(
+          `Impossible de retrouver l'organisation dans studyOrga.organizationVersions pour l'étude oldBCId: ${row.siteId}`,
+        )
+        return null
+      }
+
+      return {
+        oldBCId: row.oldBCId as string,
+        name: row.name as string,
+        startDate: row.startDate ? new Date(getJsDateFromExcel(row.startDate as number)) : '',
+        endDate: row.endDate ? new Date(getJsDateFromExcel(row.endDate as number)) : '',
+        organizationVersionId,
+      }
+    })
+    .filter((study) => study) as Study[]
 }
 
 const parseStudySites = (studySitesWorksheet: StudySitesWorkSheet): Map<string, StudySite[]> => {
@@ -342,7 +359,7 @@ const parseEmissionSources = (
           emissionFactorImportedId: String(row.emissionFactorImportedId),
           emissionFactorConsoValue: row.emissionFactorConsoValue as number,
           caracterisation: row.caracterisation as string,
-          deprecation: row.amortissement as number,
+          deprecation: (row.amortissement === 1 ? row.immoVal : row.amortissement) as number,
           ...(subPost === SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas && {
             duration: 20,
             hectare: typeof row.daTotalValue === 'number' ? row.daTotalValue / 20 : parseFloat(row.daTotalValue) / 20,
@@ -439,7 +456,7 @@ interface EmissionFactorWithVersion extends EmissionFactorPrismaModel {
 
 class EmissionFactorsByImportedIdMap {
   emissionFactorsMap: Map<string, EmissionFactor[]>
-  static skippedEmissionFactors: Set<string> = new Set()
+  skippedEmissionFactors: Set<string> = new Set()
 
   constructor(emissionFactors: EmissionFactorWithVersion[]) {
     this.emissionFactorsMap = emissionFactors.reduce((emissionFactorsMap, emissionFactor) => {
@@ -474,7 +491,7 @@ class EmissionFactorsByImportedIdMap {
   ) {
     const emissionFactorList = this.emissionFactorsMap.get(emissionFactorImportedId)
     if (!emissionFactorList) {
-      EmissionFactorsByImportedIdMap.skippedEmissionFactors.add(emissionFactorImportedId)
+      this.skippedEmissionFactors.add(emissionFactorImportedId)
       return null
     }
 
@@ -523,7 +540,8 @@ export const uploadStudies = async (
 ) => {
   console.log('Import des études...')
 
-  const skippedInfos: { oldBcId: string; reason: string }[] = []
+  const skippedStudiesInfos: { oldBcId: string; reason: string }[] = []
+  const skippedSitesInfos: { oldBcId: string; reason: string }[] = []
   const emissionSourceWithoutFe: Record<string, string[]> = {}
   const nonExistingFEs: Record<string, string[]> = {}
 
@@ -586,7 +604,7 @@ export const uploadStudies = async (
       createdById: accountId,
       isPublic: false,
       level: Level.Initial,
-      organizationVersionId: study.organizationVersionId ?? organizationVersionId,
+      organizationVersionId: study.organizationVersionId,
     })),
   })
 
@@ -616,7 +634,7 @@ export const uploadStudies = async (
         return studySites
           .map((studySite) => {
             if (studySite.siteOldBCId === 'NULL') {
-              skippedInfos.push({
+              skippedStudiesInfos.push({
                 oldBcId: studyOldBCId,
                 reason: "Etude ignorée - Aucun site sélectionné, demander à l'utilisateur de le sélectionner",
               })
@@ -625,7 +643,7 @@ export const uploadStudies = async (
 
             const existingSiteId = existingSiteIds.get(studySite.siteOldBCId)
             if (!existingSiteId) {
-              skippedInfos.push({
+              skippedSitesInfos.push({
                 oldBcId: studySite.siteOldBCId,
                 reason: `Site d'étude ignoré - Le site n'existe plus ${studySite.siteOldBCId} ${studyOldBCId}`,
               })
@@ -669,7 +687,7 @@ export const uploadStudies = async (
           console.warn(`Impossible de retrouver l'étude de oldBCId: ${studyOldBCId}`)
           return []
         }
-        if (skippedInfos.some((s) => s.oldBcId === studyOldBCId)) {
+        if (skippedStudiesInfos.some((s) => s.oldBcId === studyOldBCId)) {
           return []
         }
 
@@ -733,7 +751,7 @@ export const uploadStudies = async (
           console.warn(`Impossible de retrouver l'étude de oldBCId: ${studyOldBCId}`)
           return []
         }
-        if (skippedInfos.some((s) => s.oldBcId === studyOldBCId)) {
+        if (skippedStudiesInfos.some((s) => s.oldBcId === studyOldBCId)) {
           console.log(`Étude ignorée ${studyOldBCId} car dans la liste des études à ignorer`)
           return []
         }
@@ -742,7 +760,7 @@ export const uploadStudies = async (
           .map((studyEmissionSource) => {
             if (
               studyEmissionSource.siteOldBCId === 'NULL' ||
-              skippedInfos.some((s) => s.oldBcId === studyEmissionSource.siteOldBCId)
+              skippedSitesInfos.some((s) => s.oldBcId === studyEmissionSource.siteOldBCId)
             ) {
               console.log(
                 `Source d'émission ignorée - car dans skippedINfos ${studyOldBCId} ${studyEmissionSource.siteOldBCId}`,
@@ -762,7 +780,7 @@ export const uploadStudies = async (
             }
             const studySite = studySites.find((studySite) => studySite.siteId === existingSiteId)
             if (!studySite) {
-              skippedInfos.push({
+              skippedStudiesInfos.push({
                 oldBcId: studyOldBCId,
                 reason: `Source d'émission ignorée - Le site associée n'est pas sélectionné pour l'étude ${studyOldBCId} ${studyEmissionSource.siteOldBCId}`,
               })
@@ -939,9 +957,7 @@ export const uploadStudies = async (
 
   for (const study of studyWithoutFEImportVersions) {
     const studyEmissionFactorVersions = []
-    for (const source of Object.values(Import).filter(
-      (source) => source === Import.BaseEmpreinte || source === Import.Legifrance || source === Import.NegaOctet,
-    )) {
+    for (const source of [Import.BaseEmpreinte, Import.Legifrance, Import.NegaOctet]) {
       const latestImportVersion = await getSourceLatestImportVersionId(source)
       if (latestImportVersion) {
         studyEmissionFactorVersions.push({ studyId: study.id, source, importVersionId: latestImportVersion.id })
@@ -950,8 +966,8 @@ export const uploadStudies = async (
     await transaction.studyEmissionFactorVersion.createMany({ data: studyEmissionFactorVersions })
   }
 
-  if (EmissionFactorsByImportedIdMap.skippedEmissionFactors.size > 0) {
-    console.log(EmissionFactorsByImportedIdMap.skippedEmissionFactors)
+  if (emissionFactorsByImportedIdMap.skippedEmissionFactors.size > 0) {
+    console.log(emissionFactorsByImportedIdMap.skippedEmissionFactors)
   }
   if (studyWithoutFEImportVersions.length) {
     console.log(
@@ -961,8 +977,11 @@ export const uploadStudies = async (
     )
   }
 
-  if (skippedInfos.length) {
-    console.log('skippedInfos', JSON.stringify(skippedInfos))
+  if (skippedStudiesInfos.length) {
+    console.log('skippedStudiesInfos', JSON.stringify(skippedStudiesInfos))
+  }
+  if (skippedSitesInfos.length) {
+    console.log('skippedSitesInfos', JSON.stringify(skippedSitesInfos))
   }
   if (Object.keys(nonExistingFEs).length) {
     console.log('skippedFes', JSON.stringify(nonExistingFEs))

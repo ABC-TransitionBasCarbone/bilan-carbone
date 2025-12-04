@@ -1,4 +1,6 @@
 import { Command } from 'commander'
+import { stdin as input, stdout as output } from 'node:process'
+import * as readline from 'node:readline/promises'
 import { uploadOldBCInformations } from './transition/oldBC'
 
 const program = new Command()
@@ -15,4 +17,30 @@ program
 
 const params = program.opts()
 
-uploadOldBCInformations(params.file, params.email.toLowerCase(), params.organizationVersion, params.skip)
+const launchingProgram = async () => {
+  const getUserConfirmation = async () => {
+    const rl = readline.createInterface({ input, output })
+    const doWeContinue = await rl.question(
+      "Tu n'as pas choisi de passer en mode vérification (pas de paramètre skip), es-tu sûr de vouloir continuer ? (oui/non) ",
+    )
+
+    const userConfirmation = doWeContinue?.toLocaleLowerCase() === 'oui'
+    rl.close()
+    return userConfirmation
+  }
+
+  const launch = !params.skip ? await getUserConfirmation() : true
+
+  if (!launch) {
+    console.log('On arrête le programme')
+  } else {
+    if (params.skip) {
+      console.log('On teste juste la migration sans rien importer !')
+    } else {
+      console.log("C'est parti pour la migration !")
+    }
+    await uploadOldBCInformations(params.file, params.email.toLowerCase(), params.organizationVersion, params.skip)
+  }
+}
+
+launchingProgram()
