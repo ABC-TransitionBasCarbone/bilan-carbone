@@ -99,7 +99,7 @@ export const initializeTransitionPlan = async (studyId: string, sourceTransition
     }
   })
 
-const duplicateTransitionPlan = async (
+export const duplicateTransitionPlan = async (
   sourceTransitionPlanId: string,
   targetStudyId: string,
 ): Promise<TransitionPlanWithRelations> => {
