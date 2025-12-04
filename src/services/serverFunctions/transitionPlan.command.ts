@@ -75,6 +75,7 @@ export const AddActionCommandBase = z.object({
   transitionPlanId: z.uuid(),
   potentialDeduction: z.enum(ActionPotentialDeduction),
   reductionValue: z.number().optional().nullable(),
+  reductionDetails: z.string().optional(),
   reductionStartYear: z.string(),
   reductionEndYear: z.string(),
   owner: z.string().optional(),

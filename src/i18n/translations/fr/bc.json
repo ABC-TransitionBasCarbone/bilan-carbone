@@ -1137,6 +1137,8 @@
           "potentialDeduction": "Potentiel de réduction d'émissions",
           "potentialDeductionPlaceholder": "Sélectionnez une option",
           "reductionValue": "Valeur",
+          "reductionDetails": "Détails et hypothèses sur le potentiel de réduction de l'action",
+          "reductionDetailsPlaceholder": "Décrivez les détails et hypothèses",
           "reductionStartYear": "Début de la mise en oeuvre de l'action",
           "reductionEndYear": "Fin de la mise en oeuvre de l'action",
           "dependenciesOnly": "Mon action concerne uniquement le sous poste \"Utilisation en dépendance\"",

@@ -117,6 +117,15 @@ const ActionModalStep1 = ({ studyUnit, control, setValue }: Props) => {
         </div>
       </div>
 
+      <FormTextField
+        control={control}
+        name="reductionDetails"
+        label={t('reductionDetails')}
+        placeholder={t('reductionDetailsPlaceholder')}
+        multiline
+        data-testid="add-action-reductionDetails"
+      />
+
       <FormControlLabel
         control={
           <Checkbox
