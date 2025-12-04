@@ -54,6 +54,7 @@ const ActionsPage = ({ study, actions, transitionPlanId, canEdit }: Props) => {
             studyUnit={study.resultsUnit}
             transitionPlanId={transitionPlanId}
             canEdit={canEdit}
+            studyId={study.id}
           />
         </div>
       </Block>

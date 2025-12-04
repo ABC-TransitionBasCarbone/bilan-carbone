@@ -1056,6 +1056,10 @@
         "add": "Ajouter une action",
         "table": {
           "enabled": "Activée",
+          "enabledGlossaryIconLabel": "Activation et désactivation de mes actions",
+          "enabledGlossaryTitle": "Activation et désactivation de mes actions",
+          "enabledGlossaryDescription": "Les réductions liées aux actions que vous avez activées sont prises en compte sur la page <trajectoryLink>Trajectoires de réduction</trajectoryLink> dans votre trajectoire bottom-up. Les réductions liées aux actions désactivées ne seront pas visibles. Activer ou désactiver des actions vous permet ainsi d'envisager différents scénarios pour atteindre vos objectifs de réduction.",
+          "close": "Fermer",
           "title": "Titre",
           "priority": "Priorité",
           "actionType": "Type d'action",
