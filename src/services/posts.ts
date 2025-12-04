@@ -41,11 +41,11 @@ export enum TiltPost {
 }
 
 export enum ClicksonPost {
-  Energies = BCPost.Energies,
+  EnergiesClickson = "EnergiesClickson",
   Restauration = 'Restauration',
-  Deplacements = BCPost.Deplacements,
+  DeplacementsClickson = "DeplacementsClickson",
   Achats = 'Achats',
-  Immobilisations = BCPost.Immobilisations,
+  ImmobilisationsClickson = "ImmobilisationsClickson",
 }
 
 export const Post = { ...BCPost, ...CutPost, ...TiltPost, ...ClicksonPost }
@@ -188,11 +188,11 @@ export const subPostsByPostTILT: Record<TiltPost, SubPost[]> = {
 }
 
 export const subPostsByPostClickson: Record<ClicksonPost, SubPost[]> = {
-  [ClicksonPost.Energies]: subPostsByPostBC[BCPost.Energies],
+  [ClicksonPost.EnergiesClickson]: subPostsByPostBC[BCPost.Energies],
   [ClicksonPost.Restauration]: [],
-  [ClicksonPost.Deplacements]: subPostsByPostBC[BCPost.Deplacements],
+  [ClicksonPost.DeplacementsClickson]: subPostsByPostBC[BCPost.Deplacements],
   [ClicksonPost.Achats]: [],
-  [ClicksonPost.Immobilisations]: subPostsByPostBC[BCPost.Immobilisations],
+  [ClicksonPost.ImmobilisationsClickson]: subPostsByPostBC[BCPost.Immobilisations],
 }
 
 export const environmentPostMapping = {
