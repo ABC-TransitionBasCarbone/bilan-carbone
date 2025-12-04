@@ -19,3 +19,8 @@ export type EmissionSourcesFilters = {
   status: EmissionSourcesStatus[]
   caracterisations: EmissionSourceCaracterisation[]
 }
+
+export type EmissionSourcesSort = {
+  field: 'activityData' | 'emissionFactor' | 'emissions' | 'uncertainty' | undefined
+  order: 'asc' | 'desc'
+}

@@ -4,9 +4,9 @@ import { FullStudy } from '@/db/study'
 import { getCaracterisationsBySubPost } from '@/services/emissionSource'
 import { Post, subPostsByPost } from '@/services/posts'
 import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study'
-import { EmissionSourcesFilters } from '@/types/filters'
+import { EmissionSourcesFilters, EmissionSourcesSort } from '@/types/filters'
 import { unique } from '@/utils/array'
-import { getEmissionSourcesFuseOptions } from '@/utils/emissionSources'
+import { getEmissionSourcesFuseOptions, getSortedEmissionSources } from '@/utils/emissionSources'
 import { EmissionSourceCaracterisation, EmissionSourceType, StudyRole } from '@prisma/client'
 import Fuse from 'fuse.js'
 import { UserSession } from 'next-auth'
@@ -63,9 +63,14 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, use
     status: Object.values(EmissionSourcesStatus),
     caracterisations: initialCaracterisations,
   })
+  const [sort, setSort] = useState<EmissionSourcesSort>({ field: undefined, order: 'asc' })
 
   const updateFilters = useCallback(
     (values: Partial<EmissionSourcesFilters>) => setFilters((prev) => ({ ...prev, ...values })),
+    [],
+  )
+  const updateSort = useCallback(
+    (field: EmissionSourcesSort['field'], order: EmissionSourcesSort['order']) => setSort({ field, order }),
     [],
   )
 
@@ -122,8 +127,19 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, use
         )
       }
     }
-    return filtered
-  }, [emissionSources, filters, fuse, subPosts.length, initialTags.length, initialCaracterisations.length, study])
+
+    return getSortedEmissionSources(filtered, sort, study.organizationVersion.environment, locale)
+  }, [
+    emissionSources,
+    filters,
+    sort,
+    fuse,
+    subPosts.length,
+    initialTags.length,
+    initialCaracterisations.length,
+    study,
+    locale,
+  ])
 
   return (
     <>
@@ -136,6 +152,8 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, use
         filters={filters}
         setFilters={updateFilters}
         caracterisationOptions={initialCaracterisations}
+        sort={sort}
+        setSort={updateSort}
       >
         {showInfography && <StudyPostInfography study={study} studySite={studySite} user={user} />}
         <SubPosts
