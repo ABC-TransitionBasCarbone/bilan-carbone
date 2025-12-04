@@ -105,6 +105,15 @@ const canCreateSpecificStudyCUT = async (
   return allowed
 }
 
+const canCreateSpecificStudyClickson = async (
+  accountId: string,
+  study: Prisma.StudyCreateInput,
+  organizationVersionId: string,
+) => {
+  const { allowed } = await canCreateSpecificStudyCommon(accountId, organizationVersionId)
+  return allowed
+}
+
 const canCreateSpecificStudyBC = async (
   accountId: string,
   study: Prisma.StudyCreateInput,
@@ -128,6 +137,8 @@ export const canCreateSpecificStudy = async (
   organizationVersionId: string,
 ) => {
   switch (user.environment) {
+    case Environment.CLICKSON:
+      return canCreateSpecificStudyClickson(user.accountId, study, organizationVersionId)
     case Environment.CUT:
       return canCreateSpecificStudyCUT(user.accountId, study, organizationVersionId)
     case Environment.TILT:

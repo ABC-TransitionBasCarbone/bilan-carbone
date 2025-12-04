@@ -40,8 +40,16 @@ export enum TiltPost {
   Teletravail = 'Teletravail',
 }
 
-export const Post = { ...BCPost, ...CutPost, ...TiltPost }
-export type Post = BCPost | CutPost | TiltPost
+export enum ClicksonPost {
+  Energies = BCPost.Energies,
+  Restauration = 'Restauration',
+  Deplacements = BCPost.Deplacements,
+  Achats = 'Achats',
+  Immobilisations = BCPost.Immobilisations,
+}
+
+export const Post = { ...BCPost, ...CutPost, ...TiltPost, ...ClicksonPost }
+export type Post = BCPost | CutPost | TiltPost | ClicksonPost
 
 export const subPostsByPostBC: Record<BCPost, SubPost[]> = {
   [BCPost.Energies]: [
@@ -179,24 +187,33 @@ export const subPostsByPostTILT: Record<TiltPost, SubPost[]> = {
   [TiltPost.Teletravail]: [SubPost.TeletravailSalaries, SubPost.TeletravailBenevoles],
 }
 
+export const subPostsByPostClickson: Record<ClicksonPost, SubPost[]> = {
+  [ClicksonPost.Energies]: subPostsByPostBC[BCPost.Energies],
+  [ClicksonPost.Restauration]: [],
+  [ClicksonPost.Deplacements]: subPostsByPostBC[BCPost.Deplacements],
+  [ClicksonPost.Achats]: [],
+  [ClicksonPost.Immobilisations]: subPostsByPostBC[BCPost.Immobilisations],
+}
+
 export const environmentPostMapping = {
   [Environment.BC]: BCPost,
   [Environment.CUT]: CutPost,
   [Environment.TILT]: TiltPost,
-  [Environment.CLICKSON]: BCPost,
+  [Environment.CLICKSON]: ClicksonPost,
 }
 
 export const subPostsByPost: Record<Post, SubPost[]> = {
   ...subPostsByPostBC,
   ...subPostsByPostCUT,
   ...subPostsByPostTILT,
+  ...subPostsByPostClickson,
 }
 
 export const environmentSubPostsMapping = {
   [Environment.BC]: subPostsByPostBC,
   [Environment.CUT]: subPostsByPostCUT,
   [Environment.TILT]: subPostsByPostTILT,
-  [Environment.CLICKSON]: subPostsByPostBC,
+  [Environment.CLICKSON]: subPostsByPostClickson,
 }
 
 export const subPostTiltToBcSubPostMapping: Partial<Record<SubPost, SubPost>> = {

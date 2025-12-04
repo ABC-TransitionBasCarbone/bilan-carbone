@@ -7,7 +7,7 @@ import {
   getEmissionSourcesTotalMonetaryCo2,
   sumEmissionSourcesUncertainty,
 } from '../emissionSource'
-import { BCPost, convertTiltSubPostToBCSubPost, CutPost, Post, subPostsByPost, TiltPost } from '../posts'
+import { BCPost, ClicksonPost, convertTiltSubPostToBCSubPost, CutPost, Post, subPostsByPost, TiltPost } from '../posts'
 import { AdditionalResultTypes, ResultType } from '../study'
 import { filterWithDependencies, getSiteEmissionSources } from './utils'
 
@@ -43,7 +43,7 @@ export const computeResultsByPost = (
   studySite: string,
   withDependencies: boolean,
   validatedOnly: boolean = true,
-  postValues: typeof Post | typeof CutPost | typeof BCPost | typeof TiltPost = BCPost,
+  postValues: typeof Post | typeof CutPost | typeof BCPost | typeof TiltPost | typeof ClicksonPost = BCPost,
   environment: Environment,
   type?: ResultType,
 ): ResultsByPost[] => {
