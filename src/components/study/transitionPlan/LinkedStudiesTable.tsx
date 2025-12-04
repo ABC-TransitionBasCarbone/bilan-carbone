@@ -61,65 +61,66 @@ const LinkedStudiesTable = ({ transitionPlanId, pastStudies, canEdit, onEdit }: 
     }
   }
 
-  const mergedColumns = useMemo(
-    () =>
-      [
-        {
-          header: t('name'),
-          accessorKey: 'name',
-          cell: ({ row }) => {
-            if (row.original.type === 'linked') {
-              return (
-                <Link href={`/etudes/${row.original.id}`} className="link">
-                  {row.original.name}
-                </Link>
-              )
-            }
-            return row.original.name
-          },
+  const mergedColumns = useMemo<ColumnDef<PastStudy>[]>(() => {
+    const baseColumns: ColumnDef<PastStudy>[] = [
+      {
+        header: t('name'),
+        accessorKey: 'name',
+        cell: ({ row }) => {
+          if (row.original.type === 'linked') {
+            return (
+              <Link href={`/etudes/${row.original.id}`} className="link">
+                {row.original.name}
+              </Link>
+            )
+          }
+          return row.original.name
         },
-        { header: t('year'), accessorKey: 'year' },
-        {
-          header: t('type'),
-          accessorKey: 'type',
-          cell: ({ row }) => {
-            return row.original.type === 'linked' ? t('typeLinked') : t('typeExternal')
-          },
+      },
+      { header: t('year'), accessorKey: 'year' },
+      {
+        header: t('type'),
+        accessorKey: 'type',
+        cell: ({ row }) => {
+          return row.original.type === 'linked' ? t('typeLinked') : t('typeExternal')
         },
-        {
-          header: t('emissions'),
-          accessorKey: 'totalCo2',
-          cell: ({ row }) => {
-            const value = row.original.totalCo2
-            return `${value.toLocaleString('fr-FR', { maximumFractionDigits: 2 })} ${tUnit('T')}`
-          },
+      },
+      {
+        header: t('emissions'),
+        accessorKey: 'totalCo2',
+        cell: ({ row }) => {
+          const value = row.original.totalCo2
+          return `${value.toLocaleString('fr-FR', { maximumFractionDigits: 2 })} ${tUnit('T')}`
         },
-        canEdit
-          ? {
-              id: 'actions',
-              header: '',
-              accessorKey: 'id',
-              cell: ({ row }) => (
-                <div className="flex justify-end gapped-2">
-                  {row.original.type === 'external' && (
-                    <TableActionButton
-                      type="edit"
-                      onClick={() => onEdit(row.original)}
-                      data-testid={`edit-${row.original.type}-study-button`}
-                    />
-                  )}
-                  <TableActionButton
-                    type="delete"
-                    onClick={() => handleDeleteClick(row.original.type, row.original.id, row.original.name)}
-                    data-testid={`delete-${row.original.type}-study-button`}
-                  />
-                </div>
-              ),
-            }
-          : null,
-      ] as ColumnDef<PastStudy>[],
-    [t, tUnit, handleDeleteClick, onEdit, canEdit],
-  )
+      },
+    ]
+
+    if (canEdit) {
+      baseColumns.push({
+        id: 'actions',
+        header: '',
+        accessorKey: 'id',
+        cell: ({ row }) => (
+          <div className="flex justify-end gapped-2">
+            {row.original.type === 'external' && (
+              <TableActionButton
+                type="edit"
+                onClick={() => onEdit(row.original)}
+                data-testid={`edit-${row.original.type}-study-button`}
+              />
+            )}
+            <TableActionButton
+              type="delete"
+              onClick={() => handleDeleteClick(row.original.type, row.original.id, row.original.name)}
+              data-testid={`delete-${row.original.type}-study-button`}
+            />
+          </div>
+        ),
+      })
+    }
+
+    return baseColumns
+  }, [t, tUnit, handleDeleteClick, onEdit, canEdit])
 
   const pastStudiesTable = useReactTable({
     columns: mergedColumns,

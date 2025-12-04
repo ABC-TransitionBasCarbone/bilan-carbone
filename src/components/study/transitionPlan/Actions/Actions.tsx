@@ -19,6 +19,7 @@ interface Props {
   transitionPlanId: string
   studyUnit: string
   canEdit: boolean
+  studyId: string
 }
 
 const fuseOptions = {
@@ -27,7 +28,7 @@ const fuseOptions = {
   isCaseSensitive: false,
 }
 
-const Actions = ({ actions, studyUnit, transitionPlanId, canEdit }: Props) => {
+const Actions = ({ actions, studyUnit, transitionPlanId, canEdit, studyId }: Props) => {
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
   const t = useTranslations('study.transitionPlan.actions')
@@ -95,6 +96,7 @@ const Actions = ({ actions, studyUnit, transitionPlanId, canEdit }: Props) => {
         openEditModal={handleOpenEditModal}
         openDeleteModal={handleOpenDeleteModal}
         canEdit={canEdit}
+        studyId={studyId}
       />
       {isEditModalOpen && (
         <ActionModal
