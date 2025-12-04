@@ -918,8 +918,6 @@ export const calculateTrajectoriesWithHistory = ({
       sbtiWB2CEnabled,
     )
 
-    console.log('maxYearFromTrajectories', maxYearFromTrajectories)
-
     const customTrajectoriesData: Array<{ id: string; data: TrajectoryData }> = []
     for (const traj of trajectories.filter((t) => selectedCustomTrajectoryIds.includes(t.id))) {
       const referenceTrajectory = calculateCustomTrajectory({
