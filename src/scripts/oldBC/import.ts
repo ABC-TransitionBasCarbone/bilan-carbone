@@ -35,7 +35,7 @@ const launchingProgram = async () => {
     console.log('On arrête le programme')
   } else {
     if (params.skip) {
-      console.log('trying the migration wihout importing, just to validate the file')
+      console.log('On teste juste la migration sans rien importer !')
     } else {
       console.log("C'est parti pour la migration !")
     }
