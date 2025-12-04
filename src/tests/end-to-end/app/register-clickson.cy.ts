@@ -9,9 +9,11 @@ describe('Register clickson', () => {
     cy.getByTestId('activation-email').should('be.visible')
     cy.getByTestId('activation-school').should('be.visible')
     cy.getByTestId('activation-button').should('be.visible')
-
     cy.getByTestId('activation-email').type('clickson-school@yopmail.com')
-    cy.getByTestId('activation-school').type('78600')
+
+    cy.intercept('GET', '/api/schools/*').as('getSchools')
+    cy.getByTestId('activation-school').type('78600', { delay: 200 })
+    cy.wait('@getSchools')
     cy.get('[data-testid="school-option-0781587B"]').should('be.visible').click()
     cy.getByTestId('activation-form-message').should('not.exist')
     cy.getByTestId('activation-button').click()
@@ -51,7 +53,9 @@ describe('Register clickson', () => {
   it('does create new clickson user and ask for validation to already existing organization ', () => {
     cy.visit('/clickson/register')
     cy.getByTestId('activation-email').type('clickson-school-pending@yopmail.com')
-    cy.getByTestId('activation-school').type('78600')
+    cy.intercept('GET', '/api/schools/*').as('getSchools')
+    cy.getByTestId('activation-school').type('78600', { delay: 200 })
+    cy.wait('@getSchools')
     cy.get('[data-testid="school-option-0781494A"]').click()
     cy.getByTestId('activation-button').click()
     cy.wait('@signupClickson')
