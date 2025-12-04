@@ -2,11 +2,9 @@
 
 import { FullStudy } from '@/db/study'
 import { StudyWithoutDetail } from '@/services/permissions/study'
-import { Post, subPostsByPost } from '@/services/posts'
-import { StudyRole } from '@prisma/client'
+import { StudyRole, SubPost } from '@prisma/client'
 import classNames from 'classnames'
-import { useMemo } from 'react'
-import SubPost from './SubPost'
+import SubPostComponent from './SubPost'
 import styles from './SubPosts.module.css'
 
 type StudyProps = {
@@ -20,7 +18,7 @@ type StudyWithoutDetailProps = {
 }
 
 interface Props {
-  post: Post
+  subPosts: SubPost[]
   userRole: StudyRole | null
   studySite: string
   emissionSources: FullStudy['emissionSources']
@@ -28,7 +26,7 @@ interface Props {
 }
 
 const SubPosts = ({
-  post,
+  subPosts,
   study,
   userRole,
   withoutDetail,
@@ -36,12 +34,10 @@ const SubPosts = ({
   studySite,
   setGlossary,
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
-  const subPosts = useMemo(() => subPostsByPost[post], [post])
-
   return (
     <div className={classNames(styles.subPosts, 'flex-col')}>
       {subPosts.map((subPost) => (
-        <SubPost
+        <SubPostComponent
           emissionSources={emissionSources.filter((emissionSource) => emissionSource.subPost === subPost)}
           subPost={subPost}
           key={subPost}

@@ -28,7 +28,9 @@ const DebouncedInput = ({
     }, debounce)
 
     return () => clearTimeout(timeout)
-  }, [value, onChange, debounce])
+    // DO NOT FIX, adding onChange will create an infinite re-render of components that use DebouncedInput
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value, debounce])
 
   return (
     <TextField

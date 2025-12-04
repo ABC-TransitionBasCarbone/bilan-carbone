@@ -29,6 +29,7 @@
     }
   },
   "categorisations": {
+    "all": "All categorisations",
     "Operated": "Operated",
     "NotOperated": "Not operated",
     "OperatedProcedeed": "Operated, procedeed",
@@ -479,7 +480,9 @@
       "contributorsList": "{count, plural, =1 {Contributor :} other {Contributors :}}",
       "label": "Emission source label",
       "new": "Give your new emission source a title",
-      "add": "Add"
+      "add": "Add",
+      "filters": "Filters",
+      "sort": "Sort"
     },
     "organization": {
       "site": "Site",
@@ -675,7 +678,8 @@
         "confirm": "Confirm",
         "glossary": "Tags family",
         "close": "Close",
-        "glossaryDescription": "Tags and tag families are used to identify your emission sources in order to visualize certain results later. <br></br>Once your tags are created, you can associate them with emission sources within the \"Data Entry\" page. Then, on the \"Results\" page, you can view the emissions due to a tag family or a specific tag, but you will not be able to view the emissions of two tag families simultaneously, because double counting can occur between these two tag families. <br></br>To give a concrete example, let's say there are two tag families: \"Products Sold\" and \"Target Audiences\". These two families and the tags belonging to them will allow you to visualize the distribution of your organization's emissions based on the products sold, and the same for the target audiences."
+        "glossaryDescription": "Tags and tag families are used to identify your emission sources in order to visualize certain results later. <br></br>Once your tags are created, you can associate them with emission sources within the \"Data Entry\" page. Then, on the \"Results\" page, you can view the emissions due to a tag family or a specific tag, but you will not be able to view the emissions of two tag families simultaneously, because double counting can occur between these two tag families. <br></br>To give a concrete example, let's say there are two tag families: \"Products Sold\" and \"Target Audiences\". These two families and the tags belonging to them will allow you to visualize the distribution of your organization's emissions based on the products sold, and the same for the target audiences.",
+        "allTags": "All tags"
       },
       "duplicate": {
         "title": "Duplicate site {name} and its emission sources",
@@ -1971,12 +1975,14 @@
     },
     "saving": "Saving ...",
     "status": {
+      "all": "All statuses",
       "valid": "Validated",
       "waiting": "Completing",
       "waitingContributor": "Waiting for a contributor",
       "toVerify": "To verify"
     },
     "type": {
+      "all": "All types",
       "Physical": "Physical",
       "Accounting": "Accounting",
       "Extrapolated": "Extrapolated",
