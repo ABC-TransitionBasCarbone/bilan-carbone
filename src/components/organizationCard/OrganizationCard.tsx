@@ -20,7 +20,7 @@ interface Props {
 
 const OrganizationToolbar = styled(Toolbar)<ToolbarProps>(({ theme }) => ({
   display: 'flex',
-  justifyContent: 'space-between',
+  justifyContent: 'center',
   backgroundColor: theme.palette.primary.light,
   color: theme.palette.text.primary,
   borderBottom: theme.custom.navbar.organizationToolbar?.border,
