@@ -3,10 +3,11 @@
 import StudyName from '@/components/study/card/StudyName'
 import { getStudyNavbarMenu } from '@/constants/navbar'
 import { FullStudy } from '@/db/study'
+import { hasRoleOnStudy } from '@/services/permissions/environment'
 import MenuIcon from '@mui/icons-material/Menu'
 import MenuOpenIcon from '@mui/icons-material/MenuOpen'
 import { Drawer, Fab } from '@mui/material'
-import { Environment } from '@prisma/client'
+import { Environment, StudyRole } from '@prisma/client'
 import classNames from 'classnames'
 import { UUID } from 'crypto'
 import { useTranslations } from 'next-intl'
@@ -21,12 +22,14 @@ interface Props {
   study: FullStudy
   isTransitionPlanActive: boolean
   hasObjectives: boolean
+  userRole: StudyRole | null
 }
 
-const StudyNavbar = ({ environment, studyId, study, isTransitionPlanActive, hasObjectives }: Props) => {
+const StudyNavbar = ({ environment, studyId, study, isTransitionPlanActive, hasObjectives, userRole }: Props) => {
   const pathName = usePathname()
 
   const t = useTranslations('study.navigation')
+  const tRole = useTranslations('study.role')
   const [open, setOpen] = useState<boolean>(true)
 
   const { title, sections } = getStudyNavbarMenu(
@@ -68,6 +71,13 @@ const StudyNavbar = ({ environment, studyId, study, isTransitionPlanActive, hasO
             <Link className={styles.studyTitle} href={title.href}>
               <StudyName name={title.label} />
             </Link>
+            {hasRoleOnStudy(environment) && userRole && (
+              <div className="justify-center">
+                <div className={classNames(styles.role, styles[userRole.toLowerCase()], 'text-center')}>
+                  {tRole(userRole)}
+                </div>
+              </div>
+            )}
           </div>
 
           <div className={styles.menuContainer}>
