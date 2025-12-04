@@ -127,12 +127,8 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, use
         )
       }
     }
-    console.log('\nfiltered : ', filtered)
 
-    const filteredAndSorted = getSortedEmissionSources(filtered, sort, study.organizationVersion.environment, locale)
-
-    console.log('filteredAndSorted : ', filteredAndSorted)
-    return filteredAndSorted
+    return getSortedEmissionSources(filtered, sort, study.organizationVersion.environment, locale)
   }, [emissionSources, filters, sort, fuse, initialTags.length, study, locale])
 
   return (

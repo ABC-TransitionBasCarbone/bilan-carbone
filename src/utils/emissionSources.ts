@@ -83,7 +83,9 @@ export const getSortedEmissionSources = (
             a.emissionFactor?.metaData.find((metaData) => metaData.language === locale)?.title || ''
           const emissionFactorB =
             b.emissionFactor?.metaData.find((metaData) => metaData.language === locale)?.title || ''
-          return emissionFactorA.localeCompare(emissionFactorB)
+          return sort.order === 'asc'
+            ? emissionFactorA.localeCompare(emissionFactorB)
+            : emissionFactorB.localeCompare(emissionFactorA)
         })
 
       case 'uncertainty':
