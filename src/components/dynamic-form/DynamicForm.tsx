@@ -20,7 +20,7 @@ const DynamicForm = ({
   studySiteId,
   studyStartDate,
 }: DynamicFormProps) => {
-  const tQuestions = useTranslations('emissionFactors.post.cutQuestions')
+  const tQuestions = useTranslations('emissionFactors.post.questions')
 
   const {
     form: {

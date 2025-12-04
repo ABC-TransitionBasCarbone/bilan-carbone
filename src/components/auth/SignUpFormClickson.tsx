@@ -28,7 +28,7 @@ const SignUpFormClickson = () => {
   const contactMail = getEnvVar('SUPPORT_EMAIL', Environment.CLICKSON)
   const faq = getEnvVar('FAQ_LINK', Environment.CLICKSON)
 
-  const t = useTranslations('signupClickson')
+  const t = useTranslations('signup')
   const tForm = useTranslations('login.form')
   const [submitting, setSubmitting] = useState(false)
   const [message, setMessage] = useState('')

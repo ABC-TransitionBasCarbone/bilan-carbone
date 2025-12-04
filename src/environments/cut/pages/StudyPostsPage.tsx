@@ -19,7 +19,7 @@ interface Props {
 
 const StudyPostsPageCut = ({ post, study, studySiteId }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
-  const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
+  const tCutQuestions = useTranslations('emissionFactors.post.questions')
   const tInfography = useTranslations('study.infography')
   const router = useRouter()
   const searchParams = useSearchParams()

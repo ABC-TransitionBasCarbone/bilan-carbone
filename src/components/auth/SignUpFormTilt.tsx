@@ -22,7 +22,7 @@ const SignUpFormTilt = () => {
   const contactMail = getEnvVar('SUPPORT_EMAIL', Environment.TILT)
   const faq = getEnvVar('FAQ_LINK', Environment.TILT)
 
-  const t = useTranslations('signupTilt')
+  const t = useTranslations('signup')
   const tForm = useTranslations('login.form')
   const [submitting, setSubmitting] = useState(false)
   const [message, setMessage] = useState('')

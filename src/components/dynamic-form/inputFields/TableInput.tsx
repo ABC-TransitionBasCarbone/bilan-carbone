@@ -31,7 +31,7 @@ interface Props extends Omit<BaseInputProps, 'value' | 'onChange' | 'onBlur'> {
 
 const TableInput = ({ question, control, autoSave, watch, formErrors, setValue, studyStartDate }: Props) => {
   const [questions, setQuestions] = useState<Prisma.QuestionGetPayload<{ include: { userAnswers: true } }>[]>([])
-  const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
+  const tCutQuestions = useTranslations('emissionFactors.post.questions')
   const tCommon = useTranslations('common')
   const [tableAnswer, setTableAnswer] = useState<TableAnswer>({ rows: [] })
 

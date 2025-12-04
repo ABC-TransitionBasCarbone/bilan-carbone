@@ -70,7 +70,7 @@ const FieldComponent = ({
   const { callServerFunction } = useServerFunction()
 
   const tValidation = useTranslations('form.validation')
-  const tFormat = useTranslations('emissionFactors.post.cutQuestions.format')
+  const tFormat = useTranslations('emissionFactors.post.questions.format')
 
   const saveField = useCallback(
     async (value: unknown) => {

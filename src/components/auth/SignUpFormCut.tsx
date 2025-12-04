@@ -25,7 +25,7 @@ const SignUpFormCut = () => {
   const contactMail = getEnvVar('SUPPORT_EMAIL', Environment.CUT)
   const faq = getEnvVar('FAQ_LINK', Environment.CUT)
 
-  const t = useTranslations('signupCut')
+  const t = useTranslations('signup')
   const tForm = useTranslations('login.form')
   const [submitting, setSubmitting] = useState(false)
   const [message, setMessage] = useState('')
