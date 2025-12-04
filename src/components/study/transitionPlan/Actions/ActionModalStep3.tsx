@@ -1,9 +1,12 @@
 import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormTextField } from '@/components/form/TextField'
+import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import { AddActionCommand } from '@/services/serverFunctions/transitionPlan.command'
+import { ActionIndicatorType } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { SyntheticEvent } from 'react'
 import { Control, UseFormSetValue } from 'react-hook-form'
+import IndicatorList from './IndicatorList'
 
 interface Props {
   control: Control<AddActionCommand>
@@ -53,63 +56,36 @@ const ActionModalStep3 = ({ control, setValue, organizationMembers }: Props) => 
         multiline
         data-testid="add-action-necesssaryRessources"
       />
-      <span className="inputLabel bold">{t('indicator')}</span>
-      <div className="flex-col">
-        <span className="inputLabel bold mb-2">{t('implementation')}</span>
-        <div className="flex grow gapped">
-          <FormTextField
-            control={control}
-            name="implementationDescription"
-            placeholder={t('indicatorDescriptionPlaceholder')}
-            fullWidth
-            data-testid="add-action-implementationDescription"
-          />
-          <FormTextField
-            type="number"
-            control={control}
-            name="implementationGoal"
-            placeholder={t('indicatorGoalPlaceholder')}
-            data-testid="add-action-implementationGoal"
-          />
+      <div className="flex-col gapped-2">
+        <div className="flex align-center gapped1">
+          <span className="inputLabel bold">{t('indicator')}</span>
+          <GlossaryIconModal
+            title="indicatorTooltipTitle"
+            iconLabel="indicatorTooltipLabel"
+            label="indicator-tooltip"
+            tModal="study.transitionPlan.actions.addModal"
+          >
+            <p>{t('indicatorTooltipDescription')}</p>
+          </GlossaryIconModal>
         </div>
-      </div>
-      <div className="flex-col">
-        <span className="inputLabel bold mb-2">{t('followUp')}</span>
-        <div className="flex grow gapped">
-          <FormTextField
-            control={control}
-            name="followUpDescription"
-            placeholder={t('indicatorDescriptionPlaceholder')}
-            fullWidth
-            data-testid="add-action-followUpDescription"
-          />
-          <FormTextField
-            type="number"
-            control={control}
-            name="followUpGoal"
-            placeholder={t('indicatorGoalPlaceholder')}
-            data-testid="add-action-followUpGoal"
-          />
-        </div>
-      </div>
-      <div className="flex-col">
-        <span className="inputLabel bold mb-2">{t('performance')}</span>
-        <div className="flex grow gapped">
-          <FormTextField
-            control={control}
-            name="performanceDescription"
-            placeholder={t('indicatorDescriptionPlaceholder')}
-            fullWidth
-            data-testid="add-action-performanceDescription"
-          />
-          <FormTextField
-            type="number"
-            control={control}
-            name="performanceGoal"
-            placeholder={t('indicatorGoalPlaceholder')}
-            data-testid="add-action-performanceGoal"
-          />
-        </div>
+        <IndicatorList
+          control={control}
+          setValue={setValue}
+          type={ActionIndicatorType.Implementation}
+          label={t('implementation')}
+        />
+        <IndicatorList
+          control={control}
+          setValue={setValue}
+          type={ActionIndicatorType.FollowUp}
+          label={t('followUp')}
+        />
+        <IndicatorList
+          control={control}
+          setValue={setValue}
+          type={ActionIndicatorType.Performance}
+          label={t('performance')}
+        />
       </div>
       <FormTextField
         control={control}

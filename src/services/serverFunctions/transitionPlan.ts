@@ -1,8 +1,8 @@
 'use server'
 
+import { prismaClient } from '@/db/client'
 import { getStudyById, getStudyByIds } from '@/db/study'
 import {
-  createAction,
   createExternalStudy,
   createTransitionPlan,
   createTransitionPlanStudy,
@@ -22,6 +22,7 @@ import {
   getTransitionPlanById,
   getTransitionPlanByIdWithRelations,
   getTransitionPlanByStudyId,
+  saveIndicatorsOnAction,
   TransitionPlanWithRelations,
   TransitionPlanWithStudies,
   updateAction,
@@ -118,7 +119,15 @@ export const addAction = async (command: AddActionCommand) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    await createAction(command)
+    const { indicators, ...actionData } = command
+    await prismaClient.action.create({
+      data: {
+        ...actionData,
+        ...(indicators && {
+          indicators: { create: indicators.map((ind) => ({ type: ind.type, description: ind.description })) },
+        }),
+      },
+    })
   })
 
 const isYearAlreadyLinked = async (transitionPlanId: string, year: number) => {
@@ -323,7 +332,17 @@ export const editAction = async (id: string, command: AddActionCommand) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    await updateAction(id, command)
+    const { indicators, ...actionData } = command
+
+    await updateAction(id, actionData)
+
+    if (indicators) {
+      const existingIndicatorIds = action.indicators.map((ind) => ind.id)
+      const newIndicatorIds = indicators.map((ind) => ind.id).filter(Boolean)
+      const indicatorsToDelete = existingIndicatorIds.filter((existingId) => !newIndicatorIds.includes(existingId))
+
+      await saveIndicatorsOnAction(id, indicators, indicatorsToDelete)
+    }
   })
 
 export const deleteAction = async (id: string) =>

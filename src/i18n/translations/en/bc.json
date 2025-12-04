@@ -1154,6 +1154,12 @@
           "performance": "Performance",
           "indicatorDescriptionPlaceholder": "Description",
           "indicatorGoalPlaceholder": "Goal",
+          "indicatorTooltipTitle": "Feature under development",
+          "indicatorTooltipLabel": "Information about indicators",
+          "indicatorTooltipDescription": "An action tracking feature is coming! You can already list your indicators and will be able to quantify and track them once the feature is released.",
+          "addIndicator": "Add an indicator",
+          "removeIndicator": "Remove indicator",
+          "noIndicators": "No indicators yet",
           "facilitatorsAndObstacles": "Potential facilitators and obstacles to action",
           "additionalInformation": "Additional information",
           "nature": "Nature of the action",
@@ -1164,6 +1170,7 @@
             "step2": "Categorization",
             "step3": "Details and responsibility"
           },
+          "close": "Close",
           "Not authorized": "You are not allowed to do this action",
           "validation": {
             "required": "Required fields",

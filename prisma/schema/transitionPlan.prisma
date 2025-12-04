@@ -29,6 +29,14 @@ enum ActionPotentialDeduction {
   EmissionSources
 }
 
+enum ActionIndicatorType {
+  Implementation
+  FollowUp
+  Performance
+
+  @@map("action_indicator_type")
+}
+
 model TransitionPlan {
   id String @id @default(uuid())
 
@@ -91,10 +99,25 @@ model Action {
   relevance                 ActionRelevance[]
   enabled                   Boolean                  @default(true) @map("enabled")
   dependenciesOnly          Boolean                  @default(false) @map("dependencies_only")
+  indicators                ActionIndicator[]
   createdAt                 DateTime                 @default(now()) @map("created_at")
   updatedAt                 DateTime                 @default(now()) @updatedAt @map("updated_at")
 
   @@map("actions")
+}
+
+model ActionIndicator {
+  id String @id @default(uuid())
+
+  actionId String @map("action_id")
+  action   Action @relation(fields: [actionId], references: [id], onDelete: Cascade)
+
+  type        ActionIndicatorType
+  description String              @map("description")
+  createdAt   DateTime            @default(now()) @map("created_at")
+  updatedAt   DateTime            @default(now()) @updatedAt @map("updated_at")
+
+  @@map("action_indicators")
 }
 
 enum TrajectoryType {

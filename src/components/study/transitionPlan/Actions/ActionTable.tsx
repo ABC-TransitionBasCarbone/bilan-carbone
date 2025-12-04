@@ -2,11 +2,12 @@
 
 import BaseTable from '@/components/base/Table'
 import { TableActionButton } from '@/components/base/TableActionButton'
+import { ActionWithIndicators } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { toggleActionEnabled } from '@/services/serverFunctions/transitionPlan'
 import { getYearFromDateStr } from '@/utils/time'
 import { Switch } from '@mui/material'
-import { Action, ActionPotentialDeduction, StudyResultUnit } from '@prisma/client'
+import { ActionPotentialDeduction, StudyResultUnit } from '@prisma/client'
 import {
   ColumnDef,
   getCoreRowModel,
@@ -19,9 +20,9 @@ import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 interface Props {
-  actions: Action[]
-  openEditModal: (action: Action) => void
-  openDeleteModal: (action: Action) => void
+  actions: ActionWithIndicators[]
+  openEditModal: (action: ActionWithIndicators) => void
+  openDeleteModal: (action: ActionWithIndicators) => void
   canEdit: boolean
 }
 
@@ -34,7 +35,7 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit }: Props
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
 
-  const [localActions, setLocalActions] = useState<Action[]>(actions)
+  const [localActions, setLocalActions] = useState<ActionWithIndicators[]>(actions)
 
   useEffect(() => {
     setLocalActions(actions)
@@ -57,7 +58,7 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit }: Props
   )
 
   const getPotential = useCallback(
-    (action: Action) => {
+    (action: ActionWithIndicators) => {
       switch (action.potentialDeduction) {
         case ActionPotentialDeduction.Quality:
           return tPotential(ActionPotentialDeduction.Quality)
@@ -70,7 +71,7 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit }: Props
     [tPotential, tUnit],
   )
 
-  const getImplementationPeriod = useCallback((action: Action) => {
+  const getImplementationPeriod = useCallback((action: ActionWithIndicators) => {
     if (!action.reductionStartYear || !action.reductionEndYear) {
       return ''
     }
@@ -128,7 +129,7 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit }: Props
               <></>
             ),
         },
-      ] as ColumnDef<Action>[],
+      ] as ColumnDef<ActionWithIndicators>[],
     [t, getImplementationPeriod, getPotential, canEdit, handleToggleEnabled, tCategory, openEditModal, openDeleteModal],
   )
 

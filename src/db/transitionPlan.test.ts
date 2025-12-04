@@ -1,6 +1,6 @@
 import { expect } from '@jest/globals'
 import {
-  Action,
+  ActionIndicatorType,
   ActionPotentialDeduction,
   ExternalStudy,
   Objective,
@@ -8,7 +8,11 @@ import {
   TrajectoryType,
   TransitionPlanStudy,
 } from '@prisma/client'
-import { duplicateTransitionPlanWithRelations, TransitionPlanWithRelations } from './transitionPlan'
+import {
+  ActionWithIndicators,
+  duplicateTransitionPlanWithRelations,
+  TransitionPlanWithRelations,
+} from './transitionPlan'
 
 const mockTx = {
   transitionPlan: {
@@ -64,7 +68,7 @@ const createMockTransitionPlanStudy = (overrides?: Partial<TransitionPlanStudy>)
   ...overrides,
 })
 
-const createMockAction = (overrides?: Partial<Action>): Action => ({
+const createMockAction = (overrides?: Partial<ActionWithIndicators>): ActionWithIndicators => ({
   id: 'action-1',
   transitionPlanId: 'plan-id',
   title: 'Test Action',
@@ -84,6 +88,16 @@ const createMockAction = (overrides?: Partial<Action>): Action => ({
   followUpGoal: 75,
   performanceDescription: 'Test performance',
   performanceGoal: 100,
+  indicators: [
+    {
+      id: 'indicator-1',
+      actionId: 'action-1',
+      type: ActionIndicatorType.Implementation,
+      description: 'Test implementation',
+      createdAt: new Date('2024-01-01'),
+      updatedAt: new Date('2024-01-01'),
+    },
+  ],
   facilitatorsAndObstacles: 'Test facilitators',
   additionalInformation: 'Test info',
   priority: 1,
@@ -179,6 +193,12 @@ describe('TransitionPlan DB', () => {
               relevance: action.relevance,
               enabled: action.enabled,
               dependenciesOnly: action.dependenciesOnly,
+              indicators: {
+                create: action.indicators.map((indicator) => ({
+                  type: indicator.type,
+                  description: indicator.description,
+                })),
+              },
             })),
           },
           externalStudies: {
@@ -196,7 +216,11 @@ describe('TransitionPlan DB', () => {
             },
           },
           transitionPlanStudies: true,
-          actions: true,
+          actions: {
+            include: {
+              indicators: true,
+            },
+          },
           externalStudies: true,
         },
       })
