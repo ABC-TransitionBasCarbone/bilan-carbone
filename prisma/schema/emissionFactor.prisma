@@ -177,6 +177,33 @@ enum SubPost {
   ParcInformatiqueDesSalaries
   EquipementsDesBenevoles
   ParcInformatiqueDesBenevoles
+
+  // CLICKSON
+  // Energie
+  Combustibles
+  AutresGaz
+
+  // Restauration
+  TypesDeRepasServis
+  DistributeursAutomatiques
+
+  // Deplacements
+  TransportDesEleves
+  TransportDuPersonnel
+  VoyagesScolaires
+
+  // Achats
+  Fournitures
+  ProduitsChimiques
+  EquipementsDeSport
+  DechetsRecyclables
+  OrduresMenageresResiduelles
+
+  // Immobilisations
+  Construction
+  Renovation
+  EquipementsInformatiqueAudiovisuel
+  EquipementsDivers
 }
 
 model EmissionFactorImportVersion {
