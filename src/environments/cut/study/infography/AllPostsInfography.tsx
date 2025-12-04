@@ -1,7 +1,7 @@
 import { FullStudy } from '@/db/study'
 import EnvironmentLoader from '@/environments/core/utils/EnvironmentLoader'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { CutPost, subPostsByPost } from '@/services/posts'
+import { ClicksonPost, CutPost, subPostsByPost } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { getQuestionProgressBySubPostPerPost, StatsResult } from '@/services/serverFunctions/question'
 import { getEmissionValueString } from '@/utils/study'
@@ -16,6 +16,7 @@ interface Props {
   study: FullStudy
   data: ResultsByPost[]
   user: UserSession
+  posts?: typeof CutPost | typeof ClicksonPost
 }
 
 const StyledGrid = styled('div')({
@@ -27,7 +28,7 @@ const StyledGrid = styled('div')({
   paddingBottom: '12rem',
 })
 
-const AllPostsInfography = ({ studySiteId, study, data, user }: Props) => {
+const AllPostsInfography = ({ studySiteId, study, data, user, posts = CutPost }: Props) => {
   const [questionProgress, setQuestionProgress] = useState<StatsResult>({} as StatsResult)
   const { callServerFunction } = useServerFunction()
 
@@ -35,7 +36,7 @@ const AllPostsInfography = ({ studySiteId, study, data, user }: Props) => {
   const [isLoading, setIsLoading] = useState(true)
 
   const getQuestionProgress = useCallback(async () => {
-    await callServerFunction(() => getQuestionProgressBySubPostPerPost({ studySiteId, user, study }), {
+    await callServerFunction(() => getQuestionProgressBySubPostPerPost({ studySiteId, user, study, posts }), {
       onSuccess: (value) => {
         if (value) {
           setQuestionProgress(value)
@@ -51,8 +52,8 @@ const AllPostsInfography = ({ studySiteId, study, data, user }: Props) => {
   }, [studySiteId, getQuestionProgress])
 
   const renderedInfographies = useMemo(() => {
-    return Object.values(CutPost).map((cutPost) => {
-      const subPostStats = questionProgress[cutPost] ?? {}
+    return Object.values(posts).map((post) => {
+      const subPostStats = questionProgress[post as CutPost | ClicksonPost] ?? {}
       let allAnswered = 0
       let allTotal = 0
       for (const stats of Object.values(subPostStats)) {
@@ -63,19 +64,19 @@ const AllPostsInfography = ({ studySiteId, study, data, user }: Props) => {
       const completionRate = allTotal > 0 ? (allAnswered / allTotal) * 100 : 0
 
       const unit = tUnits(study.resultsUnit)
-      const dataByPost = data.find((d) => d.post === cutPost)
+      const dataByPost = data.find((d) => d.post === post)
       const emissionValue = getEmissionValueString(dataByPost?.value, study.resultsUnit, unit)
 
       return (
         <CutPostInfography
-          key={cutPost}
-          mainPost={cutPost}
+          key={post}
+          mainPost={post}
           emissionValue={emissionValue}
           percent={completionRate}
-          post={cutPost}
+          post={post}
           studyId={study.id}
-          subPosts={subPostsByPost[cutPost]}
-          questionStats={questionProgress[cutPost]}
+          subPosts={subPostsByPost[post as CutPost | ClicksonPost]}
+          questionStats={questionProgress[post as CutPost | ClicksonPost]}
         />
       )
     })
