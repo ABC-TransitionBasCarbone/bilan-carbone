@@ -129,7 +129,17 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, use
     }
 
     return getSortedEmissionSources(filtered, sort, study.organizationVersion.environment, locale)
-  }, [emissionSources, filters, sort, fuse, initialTags.length, study, locale])
+  }, [
+    emissionSources,
+    filters,
+    sort,
+    fuse,
+    subPosts.length,
+    initialTags.length,
+    initialCaracterisations.length,
+    study,
+    locale,
+  ])
 
   return (
     <>
