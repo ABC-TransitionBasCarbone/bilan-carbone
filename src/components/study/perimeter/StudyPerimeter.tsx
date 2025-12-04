@@ -35,7 +35,7 @@ import {
   StudyExportsCommandValidation,
 } from '@/services/serverFunctions/study.command'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
-import { canEditOrganizationVersion } from '@/utils/organization'
+import { canEditOrganizationVersion, isInOrgaOrParent } from '@/utils/organization'
 import { hasEditionRights } from '@/utils/study'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ControlMode, Environment, Export, SiteCAUnit, StudyRole } from '@prisma/client'
@@ -78,9 +78,13 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
   const [deleting, setDeleting] = useState(0)
   const [duplicatingSiteId, setDuplicatingSiteId] = useState<string | null>(null)
   const hasEditionRole = useMemo(() => hasEditionRights(userRoleOnStudy), [userRoleOnStudy])
-  const isFromStudyOrganization = useMemo(
-    () => study.organizationVersionId === user.organizationVersionId,
-    [study.organizationVersionId, user.organizationVersionId],
+  const isFromStudyOrganizationOrParent = useMemo(
+    () =>
+      isInOrgaOrParent(user.organizationVersionId, {
+        id: study.organizationVersionId,
+        parentId: study.organizationVersion.parent?.id || '',
+      }),
+    [study.organizationVersion.parent?.id, study.organizationVersionId, user.organizationVersionId],
   )
   const canEditOrga = useMemo(() => canEditOrganizationVersion(user, organizationVersion), [user, organizationVersion])
   const router = useRouter()
@@ -392,8 +396,10 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
               form={isEditing ? (siteForm as unknown as UseFormReturn<SitesCommand>) : undefined}
               caUnit={caUnit}
               withSelection
-              onDuplicate={!isEditing && hasEditionRole && isFromStudyOrganization ? setDuplicatingSiteId : undefined}
-              organizationId={isFromStudyOrganization ? study.organizationVersion.id : undefined}
+              onDuplicate={
+                !isEditing && hasEditionRole && isFromStudyOrganizationOrParent ? setDuplicatingSiteId : undefined
+              }
+              organizationId={isFromStudyOrganizationOrParent ? study.organizationVersion.id : undefined}
             />
           ),
         }}
@@ -403,12 +409,14 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
             form={isEditing ? (siteForm as unknown as UseFormReturn<SitesCommand>) : undefined}
             caUnit={caUnit}
             withSelection
-            onDuplicate={!isEditing && hasEditionRole && isFromStudyOrganization ? setDuplicatingSiteId : undefined}
-            organizationId={isFromStudyOrganization ? study.organizationVersion.id : undefined}
+            onDuplicate={
+              !isEditing && hasEditionRole && isFromStudyOrganizationOrParent ? setDuplicatingSiteId : undefined
+            }
+            organizationId={isFromStudyOrganizationOrParent ? study.organizationVersion.id : undefined}
           />
         }
       />
-      {hasEditionRole && isFromStudyOrganization && (
+      {hasEditionRole && isFromStudyOrganizationOrParent && (
         <div className={classNames('mt1 gapped', isEditing ? 'justify-between' : 'justify-end')}>
           <Button
             data-testid={`${isEditing ? 'cancel-' : ''}edit-study-sites`}
