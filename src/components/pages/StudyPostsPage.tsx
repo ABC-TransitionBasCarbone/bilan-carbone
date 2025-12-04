@@ -76,44 +76,54 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, use
 
   const filteredSources = useMemo(() => {
     const searched = filters.search ? fuse.search(filters.search).map(({ item }) => item) : emissionSources
+    let filtered = searched
 
-    let filtered = searched.filter(
-      (emissionSource) =>
-        filters.status.includes(
-          getEmissionSourceStatus(study, emissionSource, study.organizationVersion.environment),
-        ) && filters.subPosts.includes(emissionSource.subPost),
-    )
+    if (filters.subPosts.length !== subPosts.length) {
+      filtered = filtered.filter((emissionSource) => filters.subPosts.includes(emissionSource.subPost))
+    }
 
-    const filterOnTags = filters.tags.length && filters.tags.length !== initialTags.length
-    if (filterOnTags) {
-      filtered = filtered.filter(
-        (emissionSource) =>
-          emissionSource.emissionSourceTags.length &&
-          emissionSource.emissionSourceTags.some((emissionSourceTag) =>
-            filters.tags.includes(emissionSourceTag.tag.id),
-          ),
+    if (filters.status.length !== Object.values(EmissionSourcesStatus).length) {
+      filtered = filtered.filter((emissionSource) =>
+        filters.status.includes(getEmissionSourceStatus(study, emissionSource, study.organizationVersion.environment)),
       )
     }
 
-    const filterOnActivityData =
-      filters.activityData.length && filters.activityData.length !== Object.keys(EmissionSourceType).length
-    if (filterOnActivityData) {
-      filtered = filtered.filter(
-        (emissionSource) => emissionSource.type && filters.activityData.includes(emissionSource.type),
-      )
+    if (filters.tags.length !== initialTags.length) {
+      if (!filters.tags.length) {
+        filtered = filtered.filter((emissionSources) => !emissionSources.emissionSourceTags.length)
+      } else {
+        filtered = filtered.filter(
+          (emissionSource) =>
+            emissionSource.emissionSourceTags.length &&
+            emissionSource.emissionSourceTags.some((emissionSourceTag) =>
+              filters.tags.includes(emissionSourceTag.tag.id),
+            ),
+        )
+      }
     }
 
-    const filterOnCaracterisation =
-      filters.caracterisations.length &&
-      filters.caracterisations.length === Object.keys(EmissionSourceCaracterisation).length
-    if (filterOnCaracterisation) {
-      filtered = filtered.filter(
-        (emissionSource) =>
-          emissionSource.caracterisation && filters.caracterisations.includes(emissionSource.caracterisation),
-      )
+    if (filters.activityData.length !== Object.keys(EmissionSourceType).length) {
+      if (!filters.activityData.length) {
+        filtered = filtered.filter((emissionSource) => !emissionSource.type)
+      } else {
+        filtered = filtered.filter(
+          (emissionSource) => emissionSource.type && filters.activityData.includes(emissionSource.type),
+        )
+      }
+    }
+
+    if (filters.caracterisations.length !== initialCaracterisations.length) {
+      if (!filters.caracterisations.length) {
+        filtered = filtered.filter((emissionSource) => !emissionSource.caracterisation)
+      } else {
+        filtered = filtered.filter(
+          (emissionSource) =>
+            emissionSource.caracterisation && filters.caracterisations.includes(emissionSource.caracterisation),
+        )
+      }
     }
     return filtered
-  }, [emissionSources, filters, fuse, initialTags.length, study])
+  }, [emissionSources, filters, fuse, subPosts.length, initialTags.length, initialCaracterisations.length, study])
 
   return (
     <>
