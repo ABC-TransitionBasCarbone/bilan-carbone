@@ -20,7 +20,8 @@ interface Props {
 
 const OrganizationToolbar = styled(Toolbar)<ToolbarProps>(({ theme }) => ({
   display: 'flex',
-  justifyContent: 'center',
+  flex: 1,
+  justifyContent: 'space-between',
   backgroundColor: theme.palette.primary.light,
   color: theme.palette.text.primary,
   borderBottom: theme.custom.navbar.organizationToolbar?.border,
@@ -102,7 +103,7 @@ const OrganizationCard = ({ account, organizationVersions, shouldDisplayOrgaData
   return (
     <AppBar position="sticky">
       <OrganizationToolbar>
-        <Box display="flex" alignItems="center" gap={10}>
+        <Box display="flex" alignItems="center" gap={10} flex={1}>
           {shouldDisplayOrgaData && (
             <div className="align-center gapped">
               <HomeIcon />
@@ -115,7 +116,7 @@ const OrganizationCard = ({ account, organizationVersions, shouldDisplayOrgaData
             </div>
           )}
           {shouldRenewLicense && renewalLink && (
-            <div className="align-center gapped">
+            <div className="align-center gapped grow justify-center">
               <Typography>{t('renew', { year: date.getFullYear(), nextYear: date.getFullYear() + 1 })}</Typography>
               <Link color="secondary" href={renewalLink} target="_blank" rel="noreferrer noopener">
                 {t('renewLink')}
