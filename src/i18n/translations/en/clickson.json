@@ -88,7 +88,26 @@
   },
   "emissionFactors": {
     "post": {
-      "Restauration": "Restauration"
+      "EnergiesClickson": "Energy",
+      "Combustibles": "Fuels",
+      "AutresGaz": "Other gases",
+      "Restauration": "Catering",
+      "TypesDeRepasServis": "Types of meals served",
+      "DistributeursAutomatiques": "Vending machines",
+      "DeplacementsClickson": "Travel",
+      "TransportDesEleves": "Student transport",
+      "TransportDuPersonnel": "Staff transport",
+      "VoyagesScolaires": "School trips",
+      "Fournitures": "Supplies",
+      "ProduitsChimiques": "Chemical products",
+      "EquipementsDeSport": "Sports equipment",
+      "DechetsRecyclables": "Recyclable waste",
+      "OrduresMenageresResiduelles": "Residual household waste",
+      "ImmobilisationsClickson": "Fixed assets",
+      "Construction": "Construction",
+      "Renovation": "Renovation",
+      "EquipementsInformatiqueAudiovisuel": "IT / Audiovisual equipment",
+      "EquipementsDivers": "Miscellaneous equipment (appliances, professional equipment...)"
     }
   },
   "organization": {
