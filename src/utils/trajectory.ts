@@ -84,7 +84,6 @@ interface CalculateActionBasedTrajectoryParams {
   pastStudies?: PastStudy[]
   maxYear?: number
   withDependencies?: boolean
-  overshootAdjustment?: OvershootAdjustment
 }
 
 export interface CalculateTrajectoriesWithHistoryParams {
@@ -972,7 +971,7 @@ export const calculateTrajectoriesWithHistory = ({
 
     const actionBasedData: TrajectoryData = {
       previousTrajectoryReferenceYear: referenceStudyYear,
-      previousTrajectory: referenceActionTrajectory,
+      previousTrajectory: actionWithinThreshold ? null : referenceActionTrajectory,
       currentTrajectory: currentActionTrajectory,
       withinThreshold: actionWithinThreshold,
     }
