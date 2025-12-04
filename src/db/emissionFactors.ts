@@ -179,7 +179,7 @@ const getBaseFilterForEmissionFactors = (
   if (filters.sources.length > 0 && filters.sources.some((source) => source !== 'all')) {
     if (filters.sources.includes(Import.Manual) && filters.sources.length === 1 && organizationId) {
       importedFromCondition = { OR: [{ importedFrom: Import.Manual, organizationId }] }
-    } else if (filters.sources.includes(Import.Manual)) {
+    } else if (filters.sources.includes(Import.Manual) && organizationId) {
       importedFromCondition = {
         OR: [
           { versionId: { in: filters.sources.filter((s) => s !== Import.Manual) } },
