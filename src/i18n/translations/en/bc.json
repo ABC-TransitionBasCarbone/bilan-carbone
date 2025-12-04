@@ -482,7 +482,13 @@
       "new": "Give your new emission source a title",
       "add": "Add",
       "filters": "Filters",
-      "sort": "Sort"
+      "sort": "Sort by",
+      "activityData": "Activity data",
+      "emissionFactor": "Emission factor",
+      "emissions": "Emissions",
+      "uncertainty": "Uncertainty (Alpha, %)",
+      "asc": "Ascendant",
+      "desc": "Descendant"
     },
     "organization": {
       "site": "Site",

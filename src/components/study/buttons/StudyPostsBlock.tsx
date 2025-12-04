@@ -5,13 +5,14 @@ import { FullStudy } from '@/db/study'
 import { Post } from '@/services/posts'
 import { downloadStudyPost } from '@/services/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
-import { EmissionSourcesFilters } from '@/types/filters'
+import { EmissionSourcesFilters, EmissionSourcesSort } from '@/types/filters'
 import DownloadIcon from '@mui/icons-material/Download'
 import { EmissionSourceCaracterisation } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useState } from 'react'
 import styles from '../SubPosts.module.css'
 import StudyPostFilters from './StudyPostFilters'
+import StudyPostSort from './StudyPostSort'
 
 interface Props {
   post: Post
@@ -23,6 +24,8 @@ interface Props {
   filters: EmissionSourcesFilters
   setFilters: (values: Partial<EmissionSourcesFilters>) => void
   caracterisationOptions: EmissionSourceCaracterisation[]
+  sort: EmissionSourcesSort
+  setSort: (field: EmissionSourcesSort['field'], order: EmissionSourcesSort['order']) => void
 }
 
 const StudyPostsBlock = ({
@@ -35,6 +38,8 @@ const StudyPostsBlock = ({
   filters,
   setFilters,
   caracterisationOptions,
+  sort,
+  setSort,
 }: Props) => {
   const { environment } = useAppEnvironmentStore()
   const [downloading, setDownloading] = useState(false)
@@ -69,6 +74,7 @@ const StudyPostsBlock = ({
             post={post}
             caracterisationOptions={caracterisationOptions}
           />
+          <StudyPostSort sort={sort} setSort={setSort} />
         </div>
       }
       actions={[
