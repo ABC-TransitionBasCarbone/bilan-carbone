@@ -4,6 +4,7 @@ import { EmissionSourcesStatus } from '@/services/study'
 import { EmissionSourcesFilters } from '@/types/filters'
 import { Checkbox, FormControl, ListItemText, MenuItem, Select } from '@mui/material'
 import { EmissionSourceCaracterisation, EmissionSourceType } from '@prisma/client'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import styles from './StudyPostFilters.module.css'
@@ -83,93 +84,126 @@ const StudyPostFilters = ({ study, post, filters, setFilters, caracterisationOpt
         labelId="emissions-source-filters-selector"
         value={[' ']}
         renderValue={() => <div className="align-center">{t('filters')}</div>}
+        MenuProps={{
+          PaperProps: {
+            sx: {
+              '& .MuiList-root': {
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr 1fr',
+                gap: '8px',
+              },
+            },
+          },
+        }}
         multiple
       >
-        {/* SubPosts */}
-        <MenuItem
-          key="subpost-item-all"
-          onClick={() => onMasterClick('subPosts', areAllSubPostsSelected, subPostOptions)}
-        >
-          <Checkbox checked={areAllSubPostsSelected} />
-          <ListItemText primary={tPost('allSubPost')} />
-        </MenuItem>
-        {subPostOptions.map((subPost) => (
+        <div>
+          {/* SubPosts */}
           <MenuItem
-            key={`subpost-${subPost}`}
-            className={styles.subItem}
-            onClick={() => onItemClick('subPosts', subPost)}
+            className="p0"
+            key="subpost-item-all"
+            onClick={() => onMasterClick('subPosts', areAllSubPostsSelected, subPostOptions)}
           >
-            <Checkbox checked={filters.subPosts.includes(subPost)} />
-            <ListItemText primary={tPost(subPost)} />
+            <Checkbox checked={areAllSubPostsSelected} />
+            <ListItemText primary={<span className="bold">{tPost('allSubPost')}</span>} />
           </MenuItem>
-        ))}
-        {/* Tags */}
-        <MenuItem
-          key="tag-item-all"
-          onClick={() =>
-            onMasterClick(
-              'tags',
-              areAllTagsSelected,
-              tagsOptions.map((tag) => tag.value),
-            )
-          }
-        >
-          <Checkbox checked={areAllTagsSelected} />
-          <ListItemText primary={tTag('allTags')} />
-        </MenuItem>
-        {tagsOptions.map((tag) => (
-          <MenuItem key={`tags-${tag.value}`} className={styles.subItem} onClick={() => onItemClick('tags', tag.value)}>
-            <Checkbox checked={filters.tags.includes(tag.value)} />
-            <ListItemText primary={tag.label} />
-          </MenuItem>
-        ))}
-        {/* activityData */}
-        <MenuItem
-          key="activityData-item-all"
-          onClick={() => onMasterClick('activityData', areAllEmissionSourceTypeSelected, activityDataOptions)}
-        >
-          <Checkbox checked={areAllEmissionSourceTypeSelected} />
-          <ListItemText primary={tEmissionSource('all')} />
-        </MenuItem>
-        {activityDataOptions.map((emissionSourceType) => (
+          {subPostOptions.map((subPost) => (
+            <MenuItem
+              key={`subpost-${subPost}`}
+              className={classNames('p0', styles.subItem)}
+              onClick={() => onItemClick('subPosts', subPost)}
+            >
+              <Checkbox checked={filters.subPosts.includes(subPost)} />
+              <ListItemText primary={tPost(subPost)} />
+            </MenuItem>
+          ))}
+        </div>
+        <div>
+          {/* Tags */}
           <MenuItem
-            key={`activityData-${emissionSourceType}`}
-            className={styles.subItem}
-            onClick={() => onItemClick('activityData', emissionSourceType)}
+            className="p0"
+            key="tag-item-all"
+            onClick={() =>
+              onMasterClick(
+                'tags',
+                areAllTagsSelected,
+                tagsOptions.map((tag) => tag.value),
+              )
+            }
           >
-            <Checkbox checked={filters.activityData.includes(emissionSourceType)} />
-            <ListItemText primary={tEmissionSource(emissionSourceType)} />
+            <Checkbox checked={areAllTagsSelected} />
+            <ListItemText primary={<span className="bold">{tTag('allTags')}</span>} />
           </MenuItem>
-        ))}
-        {/* status */}
-        <MenuItem key="status-item-all" onClick={() => onMasterClick('status', areAllStatusesSelected, statusOptions)}>
-          <Checkbox checked={areAllStatusesSelected} />
-          <ListItemText primary={tStatus('all')} />
-        </MenuItem>
-        {statusOptions.map((status) => (
-          <MenuItem key={`status-${status}`} className={styles.subItem} onClick={() => onItemClick('status', status)}>
-            <Checkbox checked={filters.status.includes(status)} />
-            <ListItemText primary={tStatus(status)} />
-          </MenuItem>
-        ))}
-        {/* caracterisation */}
-        <MenuItem
-          key="caracterisation-item-all"
-          onClick={() => onMasterClick('caracterisations', areAllCaracterisationsSelected, caracterisationOptions)}
-        >
-          <Checkbox checked={areAllCaracterisationsSelected} />
-          <ListItemText primary={tCategorisations('all')} />
-        </MenuItem>
-        {caracterisationOptions.map((caracterisation) => (
+          {tagsOptions.map((tag) => (
+            <MenuItem
+              key={`tags-${tag.value}`}
+              className={classNames('p0', styles.subItem)}
+              onClick={() => onItemClick('tags', tag.value)}
+            >
+              <Checkbox checked={filters.tags.includes(tag.value)} />
+              <ListItemText primary={tag.label} />
+            </MenuItem>
+          ))}
+          {/* activityData */}
           <MenuItem
-            key={`caracterisation-${caracterisation}`}
-            className={styles.subItem}
-            onClick={() => onItemClick('caracterisations', caracterisation)}
+            className="p0 mt1"
+            key="activityData-item-all"
+            onClick={() => onMasterClick('activityData', areAllEmissionSourceTypeSelected, activityDataOptions)}
           >
-            <Checkbox checked={filters.caracterisations.includes(caracterisation)} />
-            <ListItemText primary={tCategorisations(caracterisation)} />
+            <Checkbox checked={areAllEmissionSourceTypeSelected} />
+            <ListItemText primary={<span className="bold">{tEmissionSource('all')}</span>} />
           </MenuItem>
-        ))}
+          {activityDataOptions.map((emissionSourceType) => (
+            <MenuItem
+              key={`activityData-${emissionSourceType}`}
+              className={classNames('p0', styles.subItem)}
+              onClick={() => onItemClick('activityData', emissionSourceType)}
+            >
+              <Checkbox checked={filters.activityData.includes(emissionSourceType)} />
+              <ListItemText primary={tEmissionSource(emissionSourceType)} />
+            </MenuItem>
+          ))}
+        </div>
+        <div>
+          {/* status */}
+          <MenuItem
+            className="p0"
+            key="status-item-all"
+            onClick={() => onMasterClick('status', areAllStatusesSelected, statusOptions)}
+          >
+            <Checkbox checked={areAllStatusesSelected} />
+            <ListItemText primary={<span className="bold">{tStatus('all')}</span>} />
+          </MenuItem>
+          {statusOptions.map((status) => (
+            <MenuItem
+              key={`status-${status}`}
+              className={classNames('p0', styles.subItem)}
+              onClick={() => onItemClick('status', status)}
+            >
+              <Checkbox checked={filters.status.includes(status)} />
+              <ListItemText primary={tStatus(status)} />
+            </MenuItem>
+          ))}
+          {/* caracterisation */}
+          <MenuItem
+            className="p0 mt1"
+            key="caracterisation-item-all"
+            onClick={() => onMasterClick('caracterisations', areAllCaracterisationsSelected, caracterisationOptions)}
+          >
+            <Checkbox checked={areAllCaracterisationsSelected} />
+            <ListItemText primary={<span className="bold">{tCategorisations('all')}</span>} />
+          </MenuItem>
+          {caracterisationOptions.map((caracterisation) => (
+            <MenuItem
+              key={`caracterisation-${caracterisation}`}
+              className={classNames('p0', styles.subItem)}
+              onClick={() => onItemClick('caracterisations', caracterisation)}
+            >
+              <Checkbox checked={filters.caracterisations.includes(caracterisation)} />
+              <ListItemText primary={tCategorisations(caracterisation)} />
+            </MenuItem>
+          ))}
+        </div>
       </Select>
     </FormControl>
   )
