@@ -1907,8 +1907,8 @@
       "myClient": "Mon client",
       "update": "Modifier mes informations",
       "updateClient": "Modifier mon client",
-      "renew": "Votre licence {year} touche à sa fin, pensez à la renouveler pour continuer à utiliser les services en {nextYear}",
-      "renewLink": "Renouveller"
+      "renew": "Votre licence {year} touche à sa fin, pensez à la renouveler pour continuer à utiliser les services en {nextYear}.",
+      "renewLink": "Renouveler"
     },
     "delete": {
       "button": "Supprimer l'organisation",
