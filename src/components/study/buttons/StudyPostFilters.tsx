@@ -13,13 +13,14 @@ interface Props {
   post: Post
   filters: EmissionSourcesFilters
   setFilters: (values: Partial<EmissionSourcesFilters>) => void
+  caracterisationOptions: EmissionSourceCaracterisation[]
 }
 
 type EmissionSourcesFiltersSelects = Omit<EmissionSourcesFilters, 'search'>
 type SelectKey = keyof EmissionSourcesFiltersSelects
 type EmissionSourcesFiltersItem = EmissionSourcesFiltersSelects[SelectKey][number]
 
-const StudyPostFilters = ({ study, post, filters, setFilters }: Props) => {
+const StudyPostFilters = ({ study, post, filters, setFilters, caracterisationOptions }: Props) => {
   const t = useTranslations('study.post')
   const tPost = useTranslations('emissionFactors.post')
   const tTag = useTranslations('study.perimeter.family')
@@ -58,7 +59,6 @@ const StudyPostFilters = ({ study, post, filters, setFilters }: Props) => {
     [filters.status, statusOptions.length],
   )
 
-  const caracterisationOptions = useMemo(() => Object.values(EmissionSourceCaracterisation), [])
   const areAllCaracterisationsSelected = useMemo(
     () => Object.keys(filters.caracterisations).length === caracterisationOptions.length,
     [caracterisationOptions.length, filters.caracterisations],

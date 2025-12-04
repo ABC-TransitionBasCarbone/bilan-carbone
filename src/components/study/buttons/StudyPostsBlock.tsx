@@ -7,6 +7,7 @@ import { downloadStudyPost } from '@/services/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { EmissionSourcesFilters } from '@/types/filters'
 import DownloadIcon from '@mui/icons-material/Download'
+import { EmissionSourceCaracterisation } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useState } from 'react'
 import styles from '../SubPosts.module.css'
@@ -21,6 +22,7 @@ interface Props {
   emissionSources: FullStudy['emissionSources']
   filters: EmissionSourcesFilters
   setFilters: (values: Partial<EmissionSourcesFilters>) => void
+  caracterisationOptions: EmissionSourceCaracterisation[]
 }
 
 const StudyPostsBlock = ({
@@ -32,6 +34,7 @@ const StudyPostsBlock = ({
   emissionSources,
   filters,
   setFilters,
+  caracterisationOptions,
 }: Props) => {
   const { environment } = useAppEnvironmentStore()
   const [downloading, setDownloading] = useState(false)
@@ -59,7 +62,13 @@ const StudyPostsBlock = ({
             placeholder="🔎"
             data-testid="emission-source-search-field"
           />
-          <StudyPostFilters filters={filters} setFilters={setFilters} study={study} post={post} />
+          <StudyPostFilters
+            filters={filters}
+            setFilters={setFilters}
+            study={study}
+            post={post}
+            caracterisationOptions={caracterisationOptions}
+          />
         </div>
       }
       actions={[
