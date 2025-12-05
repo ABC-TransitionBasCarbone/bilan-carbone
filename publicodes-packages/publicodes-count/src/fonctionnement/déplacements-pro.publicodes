@@ -31,14 +31,14 @@ fonctionnement . déplacements pro . déplacement type . nombre occurences:
 
 fonctionnement . déplacements pro . déplacement type . nombre de nuitées:
   question: Nombre de nuitées
-  unité: jour
+  unité: nuitée
 
 fonctionnement . déplacements pro . déplacement type . repas:
   formule:
     produit:
       - nombre participants
       - nombre occurences
-      - nombre de nuitées
+      - nombre de nuitées * 1 jour/nuitée
       - 2 repas/jour
       - commun . FE . repas
   par défaut: 0
