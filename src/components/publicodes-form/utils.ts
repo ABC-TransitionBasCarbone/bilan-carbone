@@ -1,10 +1,24 @@
-import { EvaluatedFormLayout, FormLayout } from '@publicodes/forms'
+import { EvaluatedFormLayout, FormLayout, FormPageElementProp } from '@publicodes/forms'
 import { reduceAST, RuleNode, utils } from 'publicodes'
 
 export type OnFormInputChange<RuleName extends string> = (
   ruleName: RuleName,
   value: string | number | boolean | undefined,
 ) => void
+
+export function getFormPageElementProp(
+  formElement: { applicable: boolean } & FormPageElementProp,
+): FormPageElementProp {
+  return {
+    hidden: formElement.hidden,
+    autofocus: formElement.autofocus,
+    required: formElement.required,
+    // NOTE: we want to show all questions even if they aren't useful for the
+    // target computation
+    useful: formElement.applicable,
+    disabled: !formElement.applicable,
+  }
+}
 
 export function getRuleNameFromLayout<RuleName extends string>(layout: FormLayout<RuleName>): RuleName | undefined {
   switch (layout.type) {
