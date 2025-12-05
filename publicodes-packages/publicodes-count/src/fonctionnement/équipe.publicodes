@@ -10,6 +10,8 @@ fonctionnement . équipe . collaborateurs:
   titre: Collaborateurs
   question: Quel est le rythme de travail des collaborateurs du cinéma ?
   formule: collaborateur type
+  par défaut: 0
+  unité: kgCO2e
 
 fonctionnement . équipe . collaborateur type:
   formule: repas + transport
@@ -26,6 +28,8 @@ fonctionnement . équipe . collaborateur type . repas:
       - nombre de jours par semaine
       - 1 repas/jour
       - commun . FE . repas
+  par défaut: 0
+  unité: kgCO2e
 
 fonctionnement . équipe . collaborateur type . transport:
   formule:
@@ -34,6 +38,8 @@ fonctionnement . équipe . collaborateur type . transport:
       - nombre de jours par semaine
       - distance
       - FE
+  par défaut: 0
+  unité: kgCO2e
   avec:
     distance:
       question: Distance domicile travail (aller-retour)
