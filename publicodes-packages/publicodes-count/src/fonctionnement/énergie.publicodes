@@ -140,6 +140,7 @@ fonctionnement . énergie . climatisation:
   avec:
     cnc écrans:
       question: Combien de kWh de climatisation ont étés consommés par le cinéma cette année ?
+      type: nombre
       note: |
         TODO: comprendre le chiffre à prendre ? CNC.écrans ?
 
