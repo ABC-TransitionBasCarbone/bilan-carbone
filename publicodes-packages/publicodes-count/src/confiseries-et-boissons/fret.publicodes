@@ -19,6 +19,7 @@ confiseries et boissons . fret . poids total:
 confiseries et boissons . fret . distance:
   question: Quelle est la distance entre votre cinéma et votre principal fournisseur ?
   unité: km
+  par défaut: 1
 
 confiseries et boissons . fret . FE:
   valeur: 0.3772
