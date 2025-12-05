@@ -65,17 +65,24 @@ fonctionnement . bâtiment . rénovation . type:
     Question 'QCM'
   avec:
     rénovation totale:
+      non applicable si: type . aucun = oui
       type: booléen
-      question: Rénovation totale (hors agrandissement)
+      titre: Rénovation totale (hors agrandissement)
 
     extension:
+      non applicable si: type . aucun = oui
       type: booléen
-      question: Agrandissement - extension
+      titre: Agrandissement - extension
 
     autres travaux importants:
+      non applicable si: type . aucun = oui
       type: booléen
-      question: |
+      titre: |
         Autres travaux importants (par ex : changement moquette, ravalement,peinture etc)
+
+    aucun:
+      type: booléen
+      titre: Je n'ai pas réalisé ces rénovations durant les dix dernières années
 
 fonctionnement . bâtiment . rénovation . empreinte travaux:
   applicable si:
