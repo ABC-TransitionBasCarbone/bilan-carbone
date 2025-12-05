@@ -21,8 +21,7 @@ fonctionnement . énergie . électricité:
     consommation:
       question: Combien de kWh d'électricité ont étés consommés par le cinéma cette année ?
       note: |
-        Pour le moment, nous avons modifer le wording pour ne pas faire
-        apparaître la date dans la question.
+        Pour le moment, nous avons modifer le wording pour ne pas faire apparaître la date dans la question.
       unité: kWh
 
     FE:
@@ -38,8 +37,7 @@ fonctionnement . énergie . gaz:
     consommation:
       question: Combien de m³ de gaz ont étés consommés par le cinéma cette année ?
       note: |
-        Pour le moment, nous avons modifer le wording pour ne pas faire
-        apparaître la date dans la question.
+        Pour le moment, nous avons modifer le wording pour ne pas faire apparaître la date dans la question.
       unité: m3
 
     FE:
@@ -55,8 +53,7 @@ fonctionnement . énergie . fioul:
     consommation:
       question: Combien de litres de fioul ont étés consommés par le cinéma cette année ?
       note: |
-        Pour le moment, nous avons modifer le wording pour ne pas faire
-        apparaître la date dans la question.
+        Pour le moment, nous avons modifer le wording pour ne pas faire apparaître la date dans la question.
       unité: litre
 
     FE:
@@ -71,11 +68,9 @@ fonctionnement . énergie . réseau de chaleur:
   avec:
     consommation:
       question: |
-        Combien de KWh issus de réseau de chaleur ont été consommés par le
-        cinéma cette année ?
+        Combien de KWh issus de réseau de chaleur ont été consommés par le cinéma cette année ?
       note: |
-        Pour le moment, nous avons modifer le wording pour ne pas faire
-        apparaître la date dans la question.
+        Pour le moment, nous avons modifer le wording pour ne pas faire apparaître la date dans la question.
       unité: kWh
     FE:
       valeur: 0.385
@@ -89,11 +84,9 @@ fonctionnement . énergie . réseau de froid:
   avec:
     consommation:
       question: |
-        Combien de KWh issus de réseau de froid ont été consommés par le cinéma
-        cette année ?
+        Combien de KWh issus de réseau de froid ont été consommés par le cinéma cette année ?
       note: |
-        Pour le moment, nous avons modifer le wording pour ne pas faire
-        apparaître la date dans la question.
+        Pour le moment, nous avons modifer le wording pour ne pas faire apparaître la date dans la question.
       unité: kWh
 
     FE:
@@ -108,11 +101,9 @@ fonctionnement . énergie . granulés:
   avec:
     consommation:
       question: |
-        Combien de kWh issus de la combustion de granulés de bois ont étés
-        consommés par le cinéma cette année ?
+        Combien de kWh issus de la combustion de granulés de bois ont étés consommés par le cinéma cette année ?
       note: |
-        Pour le moment, nous avons modifer le wording pour ne pas faire
-        apparaître la date dans la question.
+        Pour le moment, nous avons modifer le wording pour ne pas faire apparaître la date dans la question.
       unité: kg
 
     FE:
