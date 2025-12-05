@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
-import Engine from "publicodes";
-import rules, { Situation } from "../publicodes-build/index.js";
+import Engine, { Situation as PublicodesSituation } from "publicodes";
+import rules, { RuleName, Situation } from "../publicodes-build/index.js";
 
 describe("Poste - Mobilité Spectateurs", () => {
   const engine = new Engine(rules);
@@ -9,7 +9,7 @@ describe("Poste - Mobilité Spectateurs", () => {
 
     const situation: Situation = {};
 
-    localEngine.setSituation(situation);
+    localEngine.setSituation(situation as PublicodesSituation<RuleName>);
     const result = localEngine.evaluate("mobilité spectateurs");
 
     // Vérifier que le calcul retourne un nombre
@@ -23,13 +23,13 @@ describe("Poste - Mobilité Spectateurs", () => {
     const localEngine = engine.shallowCopy();
 
     const situation: Situation = {
-      "mobilité spectateurs . mobilité spectateurs . précision": "'besoin'",
+      "mobilité spectateurs . précision": "'besoin'",
     };
 
-    localEngine.setSituation(situation);
+    localEngine.setSituation(situation as PublicodesSituation<RuleName>);
     const result = localEngine.evaluate("mobilité spectateurs");
     const itemResult = localEngine.evaluate(
-      "mobilité spectateurs . mobilité spectateurs . précision . besoin . contact",
+      "mobilité spectateurs . mobilité spectateurs . contact",
     );
 
     // Vérifier que c'est positif
@@ -40,7 +40,7 @@ describe("Poste - Mobilité Spectateurs", () => {
     expect(
       localEngine.evaluate({
         "est applicable":
-          "mobilité spectateurs . mobilité spectateurs . précision . besoin . contact",
+          "mobilité spectateurs . mobilité spectateurs . contact",
       }).nodeValue,
     ).toBe(true);
     expect(itemResult.nodeValue).toBeTypeOf("string");
@@ -50,8 +50,7 @@ describe("Poste - Mobilité Spectateurs", () => {
     const localEngine = engine.shallowCopy();
 
     const situation: Situation = {
-      "mobilité spectateurs . mobilité spectateurs . précision":
-        "'résultat précis'",
+      "mobilité spectateurs . précision": "'résultat précis'",
       "mobilité spectateurs . résultat précis . empreinte . RER et transilien . distance": 1000,
       "mobilité spectateurs . résultat précis . empreinte . métro ou tram . distance": 500,
       "mobilité spectateurs . résultat précis . empreinte . bus . distance": 200,
@@ -67,7 +66,7 @@ describe("Poste - Mobilité Spectateurs", () => {
       "mobilité spectateurs . résultat précis . empreinte . trottinette électrique . distance": 40,
     };
 
-    localEngine.setSituation(situation);
+    localEngine.setSituation(situation as PublicodesSituation<RuleName>);
     const result = localEngine.evaluate("mobilité spectateurs");
 
     // Vérifier que le calcul retourne un nombre
@@ -84,8 +83,7 @@ describe("Poste - Mobilité Spectateurs", () => {
     const localEngine = engine.shallowCopy();
 
     const situation: Situation = {
-      "mobilité spectateurs . mobilité spectateurs . précision":
-        "'résultat précis'",
+      "mobilité spectateurs . précision": "'résultat précis'",
       "mobilité spectateurs . résultat précis . empreinte . RER et transilien . distance": 1000,
       "mobilité spectateurs . résultat précis . empreinte . métro ou tram . distance": 500,
       "mobilité spectateurs . résultat précis . empreinte . bus . distance": 200,
@@ -95,7 +93,7 @@ describe("Poste - Mobilité Spectateurs", () => {
       "mobilité spectateurs . résultat précis . empreinte . voiture diesel . distance": 300,
     };
 
-    localEngine.setSituation(situation);
+    localEngine.setSituation(situation as PublicodesSituation<RuleName>);
     const result = localEngine.evaluate("mobilité spectateurs");
 
     // Vérifier que le calcul retourne un nombre
@@ -112,12 +110,12 @@ describe("Poste - Mobilité Spectateurs", () => {
     const localEngine = engine.shallowCopy();
 
     const situation: Situation = {
-      "mobilité spectateurs . mobilité spectateurs . précision": "'estimation'",
+      "mobilité spectateurs . précision": "'estimation'",
       "mobilité spectateurs . résultat estimé . proximité spectateurs":
         "'majoritairement locaux'",
     };
 
-    localEngine.setSituation(situation);
+    localEngine.setSituation(situation as PublicodesSituation<RuleName>);
     const result = localEngine.evaluate("mobilité spectateurs");
 
     expect(result.nodeValue).toBe(0);
@@ -127,12 +125,12 @@ describe("Poste - Mobilité Spectateurs", () => {
     const localEngine = engine.shallowCopy();
 
     const situation: Situation = {
-      "mobilité spectateurs . mobilité spectateurs . précision": "'estimation'",
+      "mobilité spectateurs . précision": "'estimation'",
       "mobilité spectateurs . résultat estimé . profil établissement":
         "'distances longues'",
     };
 
-    localEngine.setSituation(situation);
+    localEngine.setSituation(situation as PublicodesSituation<RuleName>);
     const result = localEngine.evaluate("mobilité spectateurs");
 
     expect(result.nodeValue).toBe(0);
@@ -142,14 +140,14 @@ describe("Poste - Mobilité Spectateurs", () => {
     const localEngine = engine.shallowCopy();
 
     const situation: Situation = {
-      "mobilité spectateurs . mobilité spectateurs . précision": "'estimation'",
+      "mobilité spectateurs . précision": "'estimation'",
       "mobilité spectateurs . résultat estimé . proximité spectateurs":
         "'majoritairement locaux'",
       "mobilité spectateurs . résultat estimé . profil établissement":
         "'distances longues'",
     };
 
-    localEngine.setSituation(situation);
+    localEngine.setSituation(situation as PublicodesSituation<RuleName>);
     const result = localEngine.evaluate("mobilité spectateurs");
 
     // Vérifier que le calcul retourne un nombre
