@@ -13,12 +13,12 @@ fonctionnement . activités de bureau . petites fournitures:
     produit:
       - montant
       - FE
+  par défaut: 0
+  unité: kgCO2e
   avec:
     montant:
       question: |
-        Quel montant avez-vous dépensé en petites fournitures de bureau ?
-        (Exemples: crayon, cartouche d’encre, papier hors programme, cahier,
-        etc.)
+        Quel montant avez-vous dépensé en petites fournitures de bureau ? (Exemples: crayon, cartouche d’encre, papier hors programme, cahier, etc.)
       unité: €
 
     FE:
@@ -33,18 +33,14 @@ fonctionnement . activités de bureau . services:
     produit:
       - montant
       - FE
+  par défaut: 0
+  unité: kgCO2e
   note: Conversion auto €/k€ publicodes.
   avec:
     montant:
       question: Quel montant avez-vous dépensé en services ?
       description: |
-        Les services incluent par exemple les dépenses de ménage, sécurité,
-        comptabilité, frais bancaires, etc. Vous pouvez utiliser une valeur par
-        défaut pour cette réponse (25286€) qui est issue des Bilans Carbone®
-        qui ont étés réalisés sur plusieurs cinémas français. Si vous détenez
-        une information plus précise pour votre cinéma, nous vous invitons à
-        l'utiliser plutôt que la valeur par défaut.
-      valeur: 10
+        Les services incluent par exemple les dépenses de ménage, sécurité, comptabilité, frais bancaires, etc. Vous pouvez utiliser une valeur par défaut pour cette réponse (25286€) qui est issue des Bilans Carbone® qui ont étés réalisés sur plusieurs cinémas français. Si vous détenez une information plus précise pour votre cinéma, nous vous invitons à l'utiliser plutôt que la valeur par défaut.
       unité: €
 
     FE:
@@ -58,15 +54,11 @@ fonctionnement . activités de bureau . informatique:
   unité: kgCO2e
   question: Pour chacun de ces équipements informatiques, veuillez indiquer leur nombre et leur date d'achat ou durée de location
   description: |
-    Si l'équipement concerné est acheté, merci de ne pas remplir le champ
-    "Durée de location". Si l'équipement concerné est loué de manière
-    ponctuelle, merci de ne pas remplir le champ "Date d'achat". Si vous louez
-    un équipement pour de longues durées ou de manière continue, nous vous
-    recommandons de le considérer comme acheté (à la date de la première année
-    de location).
+    Si l'équipement concerné est acheté, merci de ne pas remplir le champ "Durée de location". Si l'équipement concerné est loué de manière ponctuelle, merci de ne pas remplir le champ "Date d'achat". Si vous louez un équipement pour de longues durées ou de manière continue, nous vous recommandons de le considérer comme acheté (à la date de la première année de location).
   note: La durée de location prévaut sur la date d'achat.
   # TODO: Should be a list of equipment
   formule: empreinte équipement
+  par défaut: 0
 
 fonctionnement . activités de bureau . informatique . empreinte équipement:
   titre: Empreinte appareil
@@ -86,6 +78,7 @@ fonctionnement . activités de bureau . informatique . empreinte équipement:
         alors: téléphones portables
       - si: équipement = "tablettes"
         alors: tablettes
+  par défaut: 0
   unité: kgCO2e
 
 fonctionnement . activités de bureau . informatique . équipement:
@@ -118,9 +111,7 @@ fonctionnement . activités de bureau . informatique . équipement:
 fonctionnement . activités de bureau . informatique . appareil:
   titre: Empreinte appareil informatique type
   description: |
-    Calcul de l'empreinte d'un appareil informatique type en fonction de son
-    nombre, de sa date d'achat ou de sa durée de location.
-
+    Calcul de l'empreinte d'un appareil informatique type en fonction de son nombre, de sa date d'achat ou de sa durée de location.
     Règle de calcul utilisée pour chaque type d'appareil informatique.
   formule:
     variations:
@@ -140,6 +131,7 @@ fonctionnement . activités de bureau . informatique . appareil:
                   - nb appareils
                   - FE
                   - (1 an / amortissement)
+  par défaut: 0
   unité: kgCO2e
   avec:
     age:
@@ -156,6 +148,8 @@ fonctionnement . activités de bureau . informatique . appareil:
       non applicable si:
         est défini: durée location
       question: Année d'achat des appareils
+      form:
+        saisie: année
 
     durée location:
       question: Durée de location des appareils (jours à l'année)
@@ -177,6 +171,8 @@ fonctionnement . activités de bureau . informatique . ordinateurs fixes:
     appareil . année achat: année achat
     appareil . durée location: durée location
     appareil . FE: FE
+  par défaut: 0
+  unité: kgCO2e
   avec:
     nombre:
       question: Nombre d'ordinateurs fixes
@@ -189,6 +185,8 @@ fonctionnement . activités de bureau . informatique . ordinateurs fixes:
       non applicable si:
         est défini: durée location
       question: Année d'achat des ordinateurs fixes
+      form:
+        saisie: année
 
     FE:
       valeur: 169
@@ -204,6 +202,8 @@ fonctionnement . activités de bureau . informatique . ordinateurs portables:
     appareil . année achat: année achat
     appareil . durée location: durée location
     appareil . FE: FE
+  par défaut: 0
+  unité: kgCO2e
   avec:
     nombre:
       question: Nombre d'ordinateurs portables
@@ -216,6 +216,8 @@ fonctionnement . activités de bureau . informatique . ordinateurs portables:
       non applicable si:
         est défini: durée location
       question: Année d'achat des ordinateurs portables
+      form:
+        saisie: année
 
     FE:
       valeur: 156.24
@@ -231,6 +233,8 @@ fonctionnement . activités de bureau . informatique . photocopieurs:
     appareil . année achat: année achat
     appareil . durée location: durée location
     appareil . FE: FE
+  par défaut: 0
+  unité: kgCO2e
   avec:
     nombre:
       question: Nombre de photocopieurs
@@ -243,6 +247,8 @@ fonctionnement . activités de bureau . informatique . photocopieurs:
       non applicable si:
         est défini: durée location
       question: Année d'achat des photocopieurs
+      form:
+        saisie: année
 
     FE:
       valeur: 2935
@@ -258,6 +264,8 @@ fonctionnement . activités de bureau . informatique . imprimantes:
     appareil . année achat: année achat
     appareil . durée location: durée location
     appareil . FE: FE
+  par défaut: 0
+  unité: kgCO2e
   avec:
     nombre:
       question: Nombre d'imprimantes
@@ -270,6 +278,8 @@ fonctionnement . activités de bureau . informatique . imprimantes:
       non applicable si:
         est défini: durée location
       question: Année d'achat des imprimantes
+      form:
+        saisie: année
 
     FE:
       valeur: 87.84
@@ -285,6 +295,8 @@ fonctionnement . activités de bureau . informatique . téléphones fixes:
     appareil . année achat: année achat
     appareil . durée location: durée location
     appareil . FE: FE
+  par défaut: 0
+  unité: kgCO2e
   avec:
     nombre:
       question: Nombre de téléphones fixes
@@ -297,6 +309,8 @@ fonctionnement . activités de bureau . informatique . téléphones fixes:
       non applicable si:
         est défini: durée location
       question: Année d'achat des téléphones fixes
+      form:
+        saisie: année
 
     FE:
       valeur: 17
@@ -312,6 +326,8 @@ fonctionnement . activités de bureau . informatique . téléphones portables:
     appareil . année achat: année achat
     appareil . durée location: durée location
     appareil . FE: FE
+  par défaut: 0
+  unité: kgCO2e
   avec:
     nombre:
       question: Nombre de téléphones portables
@@ -324,6 +340,8 @@ fonctionnement . activités de bureau . informatique . téléphones portables:
       non applicable si:
         est défini: durée location
       question: Année d'achat des téléphones portables
+      form:
+        saisie: année
 
     FE:
       valeur: 16.5209
@@ -339,6 +357,8 @@ fonctionnement . activités de bureau . informatique . tablettes:
     appareil . année achat: année achat
     appareil . durée location: durée location
     appareil . FE: FE
+  par défaut: 0
+  unité: kgCO2e
   avec:
     nombre:
       question: Nombre de tablettes
@@ -351,6 +371,8 @@ fonctionnement . activités de bureau . informatique . tablettes:
       non applicable si:
         est défini: durée location
       question: Année d'achat des tablettes
+      form:
+        saisie: année
 
     FE:
       valeur: 63.187

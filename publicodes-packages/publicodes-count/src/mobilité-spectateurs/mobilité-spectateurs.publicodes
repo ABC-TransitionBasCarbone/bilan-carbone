@@ -14,6 +14,8 @@ mobilité spectateurs . mobilité spectateurs:
       - si: précision = "estimation"
         alors: résultat estimé . empreinte
       - sinon: 0
+  par défaut: 0
+  unité: kgCO2e
 
 mobilité spectateurs . précision:
   question: Avez-vous déjà réalisé une enquête mobilité spectateurs ?
