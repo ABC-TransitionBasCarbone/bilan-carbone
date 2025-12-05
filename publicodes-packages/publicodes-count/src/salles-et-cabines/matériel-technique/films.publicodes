@@ -16,6 +16,7 @@ salles et cabines . matériel technique . films . nombre films dématérialisés
     Vous pouvez par défaut renseigner 90% des films programmés totaux (ce nombre de films est disponible dans vos données générales), qui est la valeur moyenne issue des Bilans Carbone® qui ont étés réalisés sur plusieurs cinémas français. Si vous détenez une information plus précise pour votre cinéma, nous vous invitons à l'utiliser plutôt que la valeur par défaut.
 
 salles et cabines . matériel technique . films . dématérialisés:
+  titre: Films dématérialisés
   formule: taille fichiers transférés * FE
   par défaut: 0
   unité: kgCO2e
@@ -39,8 +40,8 @@ salles et cabines . matériel technique . films . dématérialisés:
 
 salles et cabines . matériel technique . films . DCP:
   titre: Film phyisque (Digital Cinema Package)
-  # TODO: Where does / 1000 come from ?
-  # NOTE(Emile): it seems to be a conversion from tCO2e to kgCO2e?
+  note: |
+    Le facteur 1000 ne semble pas présent dans l'excel ?
   formule:
     produit:
       - général . nombre de films programmés - nombre films dématérialisés
