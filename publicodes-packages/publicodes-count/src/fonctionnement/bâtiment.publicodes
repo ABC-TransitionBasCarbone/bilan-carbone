@@ -20,6 +20,7 @@ fonctionnement . bâtiment . construction:
             - FE
             - (1 an / amortissement)
   unité: kgCO2e
+  par défaut: 0
   avec:
     age:
       durée:
@@ -39,8 +40,7 @@ fonctionnement . bâtiment . construction:
 
     surface:
       question: |
-        Quelle est la surface plancher du cinéma ? (La somme des surfaces des
-        différents niveaux)
+        Quelle est la surface plancher du cinéma ? (La somme des surfaces des différents niveaux)
       unité: m2
 
     FE:
@@ -60,21 +60,22 @@ fonctionnement . bâtiment . rénovation:
 fonctionnement . bâtiment . rénovation . type:
   titre: Rénovation
   question: |
-    Parmi les rénovations suivantes, lesquelles avez-vous réalisées durant les
-    dix dernières années ?
+    Parmi les rénovations suivantes, lesquelles avez-vous réalisées durant les dix dernières années ?
+  note: |
+    Question 'QCM'
   avec:
     rénovation totale:
       type: booléen
-      titre: Rénovation totale (hors agrandissement)
+      question: Rénovation totale (hors agrandissement)
 
     extension:
       type: booléen
-      titre: Agrandissement - extension
+      question: Agrandissement - extension
 
     autres travaux importants:
       type: booléen
-      titre: |
-        Autres travaux importants (par ex : changement moquette, ravalement, peinture etc)
+      question: |
+        Autres travaux importants (par ex : changement moquette, ravalement,peinture etc)
 
 fonctionnement . bâtiment . rénovation . empreinte travaux:
   applicable si:
@@ -90,12 +91,13 @@ fonctionnement . bâtiment . rénovation . empreinte travaux:
       - montant
       - FE
       - (1 an / amortissement)
+  par défaut: 0
+  unité: kgCO2e
   note: Conversion auto €/k€ publicodes.
   avec:
     montant:
       question: |
-        Dans le cas d'une rénovation durant ces 10 dernières années, Quel est
-        le montant des dépenses liées à ces travaux de rénovation ?
+        Dans le cas d'une rénovation durant ces 10 dernières années, Quel est le montant des dépenses liées à ces travaux de rénovation ?
       unité: €
 
     FE:
@@ -118,11 +120,12 @@ fonctionnement . bâtiment . rénovation . empreinte extension:
       - surface
       - FE
       - (1 an / amortissement)
+  par défaut: 0
+  unité: kgCO2e
   avec:
     surface:
       question: |
-        Dans le cas d'un agrandissement durant ces 10 dernières années, quelle
-        est la surface supplémentaire ajoutée ?
+        Dans le cas d'un agrandissement durant ces 10 dernières années, quelle est la surface supplémentaire ajoutée ?
       unité: m2
 
     FE:
@@ -141,7 +144,9 @@ fonctionnement . bâtiment . autre activité:
       - est défini: est partagé
       - est partagé = oui
   titre: Autre activité
-  formule: 0
+  formule: surface * 0
+  unité: kgCO2e
+  par défaut: 0
   note: |
     TODO: Pas d'émissions associées ?
   avec:
@@ -164,8 +169,10 @@ fonctionnement . bâtiment . parking:
       - 12 m2/place
       - FE
       - (1 an / amortissement)
+  par défaut: 0
+  unité: kgCO2e
   note: |
-    Il semble que le calcul n'est pas bon actuellement en ligne.
+    Il semble que le calcul n'est pas bon actuellement en ligne. Il manque la surface par place.
   avec:
     nombre de places:
       question: Si oui, de combien de places ?

@@ -1,0 +1,302 @@
+cine test:
+  contexte:
+    général . nombre séances: 1200
+    général . nombre entrées: 65000
+    général . nombre de jours ouverture: 330
+    général . nombre de films programmés: 150
+    général . distance depuis paris: 300
+
+    tournées avant premières . équipes reçues . nombre équipes: 5
+
+    salles et cabines . autre matériel . lunettes 3D . nombre: 200
+
+    salles et cabines . matériel technique . salle . projecteur . année achat: "'01/2018'"
+    salles et cabines . matériel technique . salle . projecteur . type: "'xénon'"
+
+    salles et cabines . matériel technique . salle . écran . année achat: "'01/2021'"
+    salles et cabines . matériel technique . salle . écran . surface écran: 70
+    salles et cabines . matériel technique . salle . écran . type: "'écran 2D'"
+
+    salles et cabines . matériel technique . salle . fauteuils . année achat: "'01/2021'"
+    salles et cabines . matériel technique . salle . fauteuils . nombre: 180
+    salles et cabines . matériel technique . salle . fauteuils . type: "'fauteuils classiques'"
+    salles et cabines . matériel technique . salle . système son . année achat: "'01/2022'"
+    salles et cabines . matériel technique . salle . système son . type: "'dolby 51'"
+
+    salles et cabines . matériel technique . cloud . stockage: 2000
+    salles et cabines . matériel technique . disques durs . nombre: 10
+    salles et cabines . matériel technique . films . nombre films dématérialisés: 300
+
+    mobilité spectateurs . précision: "'résultat précis'"
+    mobilité spectateurs . résultat précis . empreinte . RER et transilien . distance: 26000
+    mobilité spectateurs . résultat précis . empreinte . métro ou tram . distance: 81250
+    mobilité spectateurs . résultat précis . empreinte . bus . distance: 36400
+    mobilité spectateurs . résultat précis . empreinte . vélo électrique . distance: 5850
+    mobilité spectateurs . résultat précis . empreinte . vélo classique . distance: 5200
+    mobilité spectateurs . résultat précis . empreinte . marche . distance: 13000
+    mobilité spectateurs . résultat précis . empreinte . voiture diesel . distance: 117000
+    mobilité spectateurs . résultat précis . empreinte . voiture essence . distance: 91000
+    mobilité spectateurs . résultat précis . empreinte . voiture hybride . distance: 46800
+    mobilité spectateurs . résultat précis . empreinte . voiture électrique . distance: 26000
+    mobilité spectateurs . résultat précis . empreinte . moto . distance: 5850
+    mobilité spectateurs . résultat précis . empreinte . scooter . distance: 4550
+    mobilité spectateurs . résultat précis . empreinte . trottinette électrique . distance: 2600
+
+    fonctionnement . équipe . collaborateur type . nombre de jours par semaine: 5
+    fonctionnement . équipe . collaborateur type . transport . distance: 10
+    fonctionnement . équipe . collaborateur type . transport . moyen de transport: "'voiture hybride'"
+
+    fonctionnement . énergie . électricité . consommation: 120000
+    fonctionnement . énergie . gaz . consommation: 8000
+    fonctionnement . énergie . fioul . consommation: 0
+    fonctionnement . énergie . réseau de chaleur . consommation: 0
+    fonctionnement . énergie . réseau de froid . consommation: 0
+    fonctionnement . énergie . granulés . consommation: 0
+    # fonctionnement . énergie . climatisation . cnc écrans: 1000
+    fonctionnement . énergie . est équipé climatisation: oui
+    fonctionnement . énergie . équipement groupes électrogènes: "'aucun'"
+
+    fonctionnement . déplacements pro . déplacement type . nombre participants: 2
+    fonctionnement . déplacements pro . déplacement type . nombre occurences: 5
+    fonctionnement . déplacements pro . déplacement type . nombre de nuitées: 2
+    fonctionnement . déplacements pro . déplacement type . transport . distance: 120
+    fonctionnement . déplacements pro . déplacement type . transport . moyen de transport: "'TGV'"
+    fonctionnement . déplacements pro . déplacement type . type hébergement: "'hotel 3 étoiles'"
+
+    fonctionnement . bâtiment . construction . année de construction: "'01/1985'"
+    fonctionnement . bâtiment . construction . surface: 1200
+
+    fonctionnement . bâtiment . rénovation . type . rénovation totale: oui
+    fonctionnement . bâtiment . rénovation . type . extension: oui
+    fonctionnement . bâtiment . rénovation . empreinte travaux . montant: 50000
+    fonctionnement . bâtiment . rénovation . empreinte extension . surface: 150
+
+    fonctionnement . bâtiment . est partagé: non
+    fonctionnement . bâtiment . parking . nombre de places: 40
+    fonctionnement . bâtiment . parking présent: oui
+
+    fonctionnement . activités de bureau . petites fournitures . montant: 2000
+    fonctionnement . activités de bureau . services . montant: 8000
+
+    fonctionnement . activités de bureau . informatique . équipement: "'ordinateurs portables'"
+
+    fonctionnement . activités de bureau . informatique . ordinateurs portables . nombre: 10
+    fonctionnement . activités de bureau . informatique . ordinateurs portables . année achat: "'01/2021'"
+
+    déchets . ordinaires . ordures ménagères . nombre bennes: 2
+    déchets . ordinaires . ordures ménagères . taille benne: 660
+    déchets . ordinaires . ordures ménagères . fréquence ramassage: 3
+
+    déchets . ordinaires . emballages et papier . nombre bennes: 1
+    déchets . ordinaires . emballages et papier . taille benne: 660
+    déchets . ordinaires . emballages et papier . fréquence ramassage: 2
+
+    déchets . ordinaires . biodéchets . nombre bennes: 1
+    déchets . ordinaires . biodéchets . taille benne: 240
+    déchets . ordinaires . biodéchets . fréquence ramassage: 2
+
+    déchets . ordinaires . verre . nombre bennes: 1
+    déchets . ordinaires . verre . taille benne: 240
+    déchets . ordinaires . verre . fréquence ramassage: 1
+
+    déchets . exceptionnels . lampe xenon . nombre: 4
+    déchets . exceptionnels . matériel technique . quantité: 20
+
+    confiseries et boissons . électroménager . réfrigérateurs . nombre: 3
+    confiseries et boissons . électroménager . réfrigérateurs . année achat: "'01/2019'"
+
+    confiseries et boissons . électroménager . congélateurs . nombre: 2
+    confiseries et boissons . électroménager . congélateurs . année achat: "'01/2020'"
+    confiseries et boissons . électroménager . warmers . nombre: 2
+    confiseries et boissons . électroménager . warmers . année achat: "'01/2021'"
+
+    confiseries et boissons . électroménager . distributeurs . nombre: 1
+    confiseries et boissons . électroménager . distributeurs . année achat: "'01/2022'"
+    confiseries et boissons . fret . distance: 50
+
+    confiseries et boissons . achats . vente sur place: oui
+    confiseries et boissons . achats . achat type: "'standard'"
+
+    billetterie et communication . matériel distributeurs . affiches: 100
+    billetterie et communication . matériel distributeurs . affiches . affiches 120x160 . nombre: 20
+    billetterie et communication . matériel distributeurs . affiches . affiches 40x60 . nombre: 40
+
+    billetterie et communication . matériel distributeurs . PLV: 30
+    billetterie et communication . matériel distributeurs . PLV . PLV comptoir . nombre: 10
+    billetterie et communication . matériel distributeurs . PLV . PLV grand format . nombre: 5
+
+    billetterie et communication . matériel cinéma . production: 5000
+    billetterie et communication . matériel cinéma . production . programme . nombre: 2000
+    billetterie et communication . matériel cinéma . production . affiches . nombre: 300
+    billetterie et communication . matériel cinéma . production . flyers . nombre: 5000
+
+    billetterie et communication . communication digitale . newsletters . nombre: 24
+    billetterie et communication . communication digitale . newsletters . destinataires: 3500
+    billetterie et communication . communication digitale . affichage dynamique . nombre: 4
+    billetterie et communication . communication digitale . écrans . nombre: 6
+    billetterie et communication . communication digitale . affichage extérieur . surface: 10
+
+    billetterie et communication . caisses et bornes . caisses libre service . nombre: 2
+    billetterie et communication . caisses et bornes . caisse classique . nombre: 3
+
+template:
+#   contexte:
+# général . nombre séances: number
+# général . nombre entrées: number
+# général . nombre de jours ouverture: number
+# général . nombre de films programmés: number
+# général . distance depuis paris: number
+# tournées avant premières . équipes reçues . nombre équipes: number
+# salles et cabines . autre matériel . lunettes 3D . nombre: number
+# salles et cabines . matériel technique . salle . projecteur . année achat: boolean
+# Type de projecteur
+# salles et cabines . matériel technique . salle . projecteur . type: "xénon" | "laser"
+# salles et cabines . matériel technique . salle . écran . année achat: boolean
+# salles et cabines . matériel technique . salle . écran . surface écran: number
+# Type d'écran
+# salles et cabines . matériel technique . salle . écran . type: "écran 2D" | "écran 3D",
+# salles et cabines . matériel technique . salle . fauteuils . année achat: boolean,
+# salles et cabines . matériel technique . salle . fauteuils . nombre: boolean
+# Type de fauteuils
+# salles et cabines . matériel technique . salle . fauteuils . type: "fauteuils classiques" | "fauteuils 4DX"
+# salles et cabines . matériel technique . salle . système son . année achat: boolean,
+# Type de système son
+# salles et cabines . matériel technique . salle . système son . type: "stéréo" | "dolby 51" | "dolby 71" | "dolby atmos" | "imax" | "auro 3dIce" | "dtsx"
+# salles et cabines . matériel technique . cloud . stockage: number
+# salles et cabines . matériel technique . disques durs . nombre: number
+# salles et cabines . matériel technique . films . nombre films dématérialisés: number,
+# mobilité spectateurs . résultat précis . empreinte . RER et transilien . distance: number
+# mobilité spectateurs . résultat précis . empreinte . métro ou tram . distance: number
+# mobilité spectateurs . résultat précis . empreinte . bus . distance: number
+# mobilité spectateurs . résultat précis . empreinte . vélo électrique . distance: number
+# mobilité spectateurs . résultat précis . empreinte . vélo classique . distance: number
+# mobilité spectateurs . résultat précis . empreinte . marche . distance: number
+# mobilité spectateurs . résultat précis . empreinte . voiture diesel . distance: number
+# mobilité spectateurs . résultat précis . empreinte . voiture essence . distance: number
+# mobilité spectateurs . résultat précis . empreinte . voiture hybride . distance: number
+# mobilité spectateurs . résultat précis . empreinte . voiture électrique . distance: number
+# mobilité spectateurs . résultat précis . empreinte . moto . distance: number
+# mobilité spectateurs . résultat précis . empreinte . scooter . distance: number
+# mobilité spectateurs . résultat précis . empreinte . trottinette électrique . distance: number
+# mobilité spectateurs . résultat estimé . proximité spectateurs: "zone très touristique" | "zone moyennement touristique" | "majoritairement locaux" | null
+# mobilité spectateurs . résultat estimé . profil établissement: "distances courtes" | "distances moyennes" | "distances longues" | "majoritairement en voiture" | "uniquement accessible en voiture" | null
+# mobilité spectateurs . précision: "résultat précis" | "besoin" | "estimation"
+# mobilité spectateurs . mobilité spectateurs . contact: string | null,
+# Collaborateurs
+# fonctionnement . équipe . collaborateurs: number
+# fonctionnement . équipe . collaborateur type . nombre de jours par semaine: number
+# fonctionnement . équipe . collaborateur type . transport . distance: number
+# fonctionnement . équipe . collaborateur type . transport . moyen de transport: "RER et transilien" | "métro ou tram" | "bus" | "vélo électrique" | "vélo classique" | "marche" | "voiture diesel" | "voiture essence" | "voiture hybride" | "voiture électrique" | "moto" | "scooter" | "trottinette électrique"
+# fonctionnement . énergie . électricité . consommation: number
+# fonctionnement . énergie . gaz . consommation: number
+# fonctionnement . énergie . fioul . consommation: number
+# fonctionnement . énergie . réseau de chaleur . consommation: number
+# fonctionnement . énergie . réseau de froid . consommation: number
+# fonctionnement . énergie . granulés . consommation: number
+# fonctionnement . énergie . climatisation . cnc écrans: boolean
+# fonctionnement . énergie . est équipé climatisation: boolean
+# fonctionnement . énergie . groupes électrogènes . consommation: number | null
+# fonctionnement . énergie . équipement groupes électrogènes: "utilisation régulière" | "équipé sans utilisation" | "aucun",
+# Déplacements
+# fonctionnement . déplacements pro . déplacements: number
+# fonctionnement . déplacements pro . déplacement type . nombre participants: boolean
+# fonctionnement . déplacements pro . déplacement type . nombre occurences: boolean
+# fonctionnement . déplacements pro . déplacement type . nombre de nuitées: number
+# fonctionnement . déplacements pro . déplacement type . transport . distance: number
+# fonctionnement . déplacements pro . déplacement type . transport . moyen de transport: "RER et transilien" | "métro ou tram" | "bus" | "vélo électrique" | "voiture diesel" | "voiture essence" | "voiture hybride" | "voiture électrique" | "moto" | "scooter" | "trottinette électrique" | "TGV" | "avion"
+# fonctionnement . déplacements pro . déplacement type . type hébergement: "appartement" | "hotel 1 étoile" | "hotel 2 étoiles" | "hotel 3 étoiles" | "hotel 4 étoiles" | "hotel 5 étoiles"
+# fonctionnement . bâtiment . construction . année de construction: boolean
+# fonctionnement . bâtiment . construction . surface: number,
+# Rénovation
+# fonctionnement . bâtiment . rénovation . type: boolean
+# fonctionnement . bâtiment . rénovation . empreinte travaux . montant: number
+# fonctionnement . bâtiment . rénovation . empreinte extension . surface: number
+# fonctionnement . bâtiment . autre activité . surface: number
+# fonctionnement . bâtiment . est partagé: boolean
+# fonctionnement . bâtiment . parking . nombre de places: number
+# fonctionnement . bâtiment . parking présent: boolean
+# fonctionnement . activités de bureau . petites fournitures . montant: number
+# fonctionnement . activités de bureau . services . montant: number,
+# Informatique
+# fonctionnement . activités de bureau . informatique: number,
+# fonctionnement . activités de bureau . informatique . équipement: "ordinateurs fixes" | "ordinateurs portables" | "photocopieurs" | "imprimantes" | "téléphones fixes" | "téléphones portables" | "tablettes"
+# fonctionnement . activités de bureau . informatique . appareil . nb appareils: boolean
+# fonctionnement . activités de bureau . informatique . appareil . année achat: boolean | null
+# fonctionnement . activités de bureau . informatique . appareil . durée location: number
+# fonctionnement . activités de bureau . informatique . ordinateurs fixes . nombre: boolean
+# fonctionnement . activités de bureau . informatique . ordinateurs fixes . durée location: number
+# fonctionnement . activités de bureau . informatique . ordinateurs fixes . année achat: boolean | null
+# fonctionnement . activités de bureau . informatique . ordinateurs portables . nombre: boolean
+# fonctionnement . activités de bureau . informatique . ordinateurs portables . durée location: number
+# fonctionnement . activités de bureau . informatique . ordinateurs portables . année achat: boolean | null
+# fonctionnement . activités de bureau . informatique . photocopieurs . nombre: boolean
+# fonctionnement . activités de bureau . informatique . photocopieurs . durée location: number
+# fonctionnement . activités de bureau . informatique . photocopieurs . année achat: boolean | null
+# fonctionnement . activités de bureau . informatique . imprimantes . nombre: boolean
+# fonctionnement . activités de bureau . informatique . imprimantes . durée location: number
+# fonctionnement . activités de bureau . informatique . imprimantes . année achat: boolean | null
+# fonctionnement . activités de bureau . informatique . téléphones fixes . nombre: boolean
+# fonctionnement . activités de bureau . informatique . téléphones fixes . durée location: number
+# fonctionnement . activités de bureau . informatique . téléphones fixes . année achat: boolean | null
+# fonctionnement . activités de bureau . informatique . téléphones portables . nombre: boolean
+# fonctionnement . activités de bureau . informatique . téléphones portables . durée location: number
+# fonctionnement . activités de bureau . informatique . téléphones portables . année achat: boolean | null
+# fonctionnement . activités de bureau . informatique . tablettes . nombre: boolean
+# fonctionnement . activités de bureau . informatique . tablettes . durée location: number
+# fonctionnement . activités de bureau . informatique . tablettes . année achat: boolean | null
+# déchets . ordinaires . ordures ménagères . nombre bennes: number
+# déchets . ordinaires . ordures ménagères . taille benne: number
+# déchets . ordinaires . ordures ménagères . fréquence ramassage: number
+# déchets . ordinaires . emballages et papier . nombre bennes: number
+# déchets . ordinaires . emballages et papier . taille benne: number
+# déchets . ordinaires . emballages et papier . fréquence ramassage: number
+# déchets . ordinaires . biodéchets . nombre bennes: number
+# déchets . ordinaires . biodéchets . taille benne: number
+# déchets . ordinaires . biodéchets . fréquence ramassage: number
+# déchets . ordinaires . verre . nombre bennes: number
+# déchets . ordinaires . verre . taille benne: number
+# déchets . ordinaires . verre . fréquence ramassage: number,
+# Nombre de lampes
+# déchets . exceptionnels . lampe xenon . nombre: number
+# déchets . exceptionnels . matériel technique . quantité: number,
+# Électroménager
+# confiseries et boissons . électroménager: number
+# confiseries et boissons . électroménager . appareil . nb appareils: boolean
+# confiseries et boissons . électroménager . appareil . année achat: boolean | null
+# confiseries et boissons . électroménager . appareil . durée location: number
+# confiseries et boissons . électroménager . réfrigérateurs . nombre: number
+# confiseries et boissons . électroménager . réfrigérateurs . durée location: number
+# confiseries et boissons . électroménager . réfrigérateurs . année achat: boolean | null
+# confiseries et boissons . électroménager . congélateurs . nombre: number
+# confiseries et boissons . électroménager . congélateurs . durée location: number
+# confiseries et boissons . électroménager . congélateurs . année achat: boolean | null
+# confiseries et boissons . électroménager . warmers . nombre: number
+# confiseries et boissons . électroménager . warmers . durée location: number
+# confiseries et boissons . électroménager . warmers . année achat: boolean | null
+# confiseries et boissons . électroménager . distributeurs . nombre: number
+# confiseries et boissons . électroménager . distributeurs . durée location: number
+# confiseries et boissons . électroménager . distributeurs . année achat: boolean | null
+# confiseries et boissons . fret . distance: number,
+# Vente sur place
+# confiseries et boissons . achats . vente sur place: boolean
+# confiseries et boissons . achats . achat type: "un peu" | "standard" | "significatif" | null,
+# Type de matériel
+# billetterie et communication . matériel distributeurs . affiches: number
+# billetterie et communication . matériel distributeurs . affiches . affiches 120x160 . nombre: number
+# billetterie et communication . matériel distributeurs . affiches . affiches 40x60 . nombre: number,
+# Type de matériel
+# billetterie et communication . matériel distributeurs . PLV: number
+# billetterie et communication . matériel distributeurs . PLV . PLV comptoir . nombre: number
+# billetterie et communication . matériel distributeurs . PLV . PLV grand format . nombre: number,
+# Type de matériel
+# billetterie et communication . matériel cinéma . production: number
+# billetterie et communication . matériel cinéma . production . programme . nombre: number
+# billetterie et communication . matériel cinéma . production . affiches . nombre: number
+# billetterie et communication . matériel cinéma . production . flyers . nombre: number
+# billetterie et communication . communication digitale . newsletters . nombre: number
+# billetterie et communication . communication digitale . newsletters . destinataires: number
+# billetterie et communication . communication digitale . affichage dynamique . nombre: number
+# billetterie et communication . communication digitale . écrans . nombre: number
+# billetterie et communication . communication digitale . affichage extérieur . surface: number
+# billetterie et communication . caisses et bornes . caisses libre service . nombre: number
+# billetterie et communication . caisses et bornes . caisse classique . nombre: number
