@@ -66,16 +66,16 @@ fonctionnement . bâtiment . rénovation . type:
   avec:
     rénovation totale:
       type: booléen
-      titre: Rénovation totale (hors agrandissement)
+      question: Rénovation totale (hors agrandissement)
 
     extension:
       type: booléen
-      titre: Agrandissement - extension
+      question: Agrandissement - extension
 
     autres travaux importants:
       type: booléen
-      titre: |
-        Autres travaux importants (par ex : changement moquette, ravalement, peinture etc)
+      question: |
+        Autres travaux importants (par ex : changement moquette, ravalement,peinture etc)
 
 fonctionnement . bâtiment . rénovation . empreinte travaux:
   applicable si:
