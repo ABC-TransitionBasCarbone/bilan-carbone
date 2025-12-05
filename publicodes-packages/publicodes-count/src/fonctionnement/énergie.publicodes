@@ -126,7 +126,10 @@ fonctionnement . énergie . granulés:
 
 fonctionnement . énergie . climatisation:
   titre: Climatisation
-  applicable si: est équipé climatisation = oui
+  applicable si:
+    toutes ces conditions:
+      - est défini: est équipé climatisation
+      - est équipé climatisation = oui
   formule:
     produit:
       # - cnc écrans
@@ -151,7 +154,10 @@ fonctionnement . énergie . est équipé climatisation:
 
 fonctionnement . énergie . groupes électrogènes:
   titre: Groupes électrogènes
-  non applicable si: équipement groupes électrogènes = "aucun"
+  applicable si:
+    toutes ces conditions:
+      - est défini: équipement groupes électrogènes
+      - équipement groupes électrogènes != "aucun"
   formule:
     somme:
       - fabrication
