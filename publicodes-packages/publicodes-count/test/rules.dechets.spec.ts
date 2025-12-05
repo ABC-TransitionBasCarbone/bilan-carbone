@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
-import Engine from "publicodes";
-import rules, { Situation } from "../publicodes-build/index.js";
+import Engine, { Situation as PublicodesSituation } from "publicodes";
+import rules, { RuleName, Situation } from "../publicodes-build/index.js";
 
 describe("Poste - Déchets", () => {
   const engine = new Engine(rules);
@@ -9,7 +9,7 @@ describe("Poste - Déchets", () => {
 
     const situation: Situation = {};
 
-    localEngine.setSituation(situation);
+    localEngine.setSituation(situation as PublicodesSituation<RuleName>);
     const result = localEngine.evaluate("déchets");
 
     // Vérifier que le calcul retourne un nombre
@@ -42,7 +42,7 @@ describe("Poste - Déchets", () => {
       "déchets . exceptionnels . matériel technique . quantité": 5,
     };
 
-    localEngine.setSituation(situation);
+    localEngine.setSituation(situation as PublicodesSituation<RuleName>);
     const result = localEngine.evaluate("déchets");
 
     // Vérifier que le calcul retourne un nombre
@@ -50,6 +50,26 @@ describe("Poste - Déchets", () => {
 
     // Vérifier que c'est positif
     expect(result.nodeValue).toBeGreaterThan(0);
+
+    // Vérifier l'unité
+    expect(result.unit?.numerators).toContain("kgCO2e");
+  });
+
+  test("devrait calculer correctement les émissions associées aux lampes Xénon", () => {
+    const localEngine = engine.shallowCopy();
+
+    const situation: Situation = {
+      "déchets . exceptionnels . lampe xenon . nombre": 10000,
+    };
+
+    localEngine.setSituation(situation as PublicodesSituation<RuleName>);
+    const result = localEngine.evaluate("déchets");
+
+    // Vérifier que le calcul retourne un nombre
+    expect(result.nodeValue).toBeTypeOf("number");
+
+    // Vérifier que le résultats est bien de 430kTCO2e pour 10 000 lampes
+    expect(result.nodeValue).toBe(430000);
 
     // Vérifier l'unité
     expect(result.unit?.numerators).toContain("kgCO2e");
@@ -68,7 +88,7 @@ describe("Poste - Déchets", () => {
       "déchets . exceptionnels . matériel technique . quantité": 5,
     };
 
-    localEngine.setSituation(situation);
+    localEngine.setSituation(situation as PublicodesSituation<RuleName>);
     const result = localEngine.evaluate("déchets");
 
     // Vérifier que le calcul retourne un nombre
@@ -89,7 +109,7 @@ describe("Poste - Déchets", () => {
       "déchets . ordinaires . ordures ménagères . taille benne": 660,
     };
 
-    localEngine.setSituation(situation);
+    localEngine.setSituation(situation as PublicodesSituation<RuleName>);
     const itemResult = localEngine.evaluate(
       "déchets . ordinaires . ordures ménagères",
     );
