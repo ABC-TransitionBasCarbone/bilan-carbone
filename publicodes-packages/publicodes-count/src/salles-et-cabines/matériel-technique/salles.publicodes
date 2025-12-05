@@ -42,6 +42,8 @@ salles et cabines . matériel technique . salle . projecteur:
 
     année achat:
       question: Année d'acquisition projecteur
+      form:
+        saisie: année
 
     FE:
       titre: Facteur d'émission du projecteur
@@ -106,6 +108,8 @@ salles et cabines . matériel technique . salle . écran:
 
     année achat:
       question: Année d'acquisition écran
+      form:
+        saisie: année
 
     surface écran:
       question: Surface de l'écran
@@ -177,6 +181,8 @@ salles et cabines . matériel technique . salle . fauteuils:
 
     année achat:
       question: Année d'acquisition fauteuils
+      form:
+        saisie: année
 
     nombre:
       question: Nombre de fauteuils
@@ -245,6 +251,8 @@ salles et cabines . matériel technique . salle . système son:
 
     année achat:
       question: Année d'acquisition système son
+      form:
+        saisie: année
 
     FE:
       titre: Facteur d'émission du système son
