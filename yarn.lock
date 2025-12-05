@@ -2931,10 +2931,12 @@
   dependencies:
     "@prisma/debug" "6.17.1"
 
-"@publicodes/forms@^0.6.0":
+"@publicodes/forms@file:../../publicodes/publicodes/packages/forms":
   version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@publicodes/forms/-/forms-0.6.0.tgz#9a4d83092994956772eb0a1bec086b6c3ef20529"
-  integrity sha512-NSR9LjHHzNMBafVNlzHFpGWKWD9owPoChAL2afGEiEAqPiL9/33mKdxkyCNvNmCFOAHRHzORtlX9BY1Y/DImsQ==
+
+"@publicodes/forms@https://pkg.pr.new/publicodes/publicodes/@publicodes/forms@785":
+  version "0.6.0"
+  resolved "https://pkg.pr.new/publicodes/publicodes/@publicodes/forms@785#96aac2550596693b37f0945fc061fbd0f3cd45cc"
 
 "@rtsao/scc@^1.1.0":
   version "1.1.0"
