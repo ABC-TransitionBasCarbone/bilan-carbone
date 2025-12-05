@@ -27,7 +27,7 @@ const TextWithUnitInput = <RuleName extends string>({
   // const getUnitLabel = useUnitLabel()
   const questionUnit = formElement.unit
   const inputType = formElement.type
-  const value = formElement.value
+  const value = formElement.value ?? formElement.defaultValue
 
   const questionFormat =
     format ||

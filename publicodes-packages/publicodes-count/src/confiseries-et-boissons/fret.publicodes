@@ -1,3 +1,6 @@
+# NOTE: problème car dépend de la question "achats . vente sur place . achat
+# type" qui n'est pas dans le même namespace, ducoup la question est posée deux
+# fois potentiellement.
 confiseries et boissons . fret:
   formule: poids total * distance * FE
   unité: kgCO2e

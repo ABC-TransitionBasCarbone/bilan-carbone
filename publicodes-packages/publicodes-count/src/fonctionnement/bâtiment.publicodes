@@ -34,6 +34,8 @@ fonctionnement . bâtiment . construction:
 
     année de construction:
       question: Quand le bâtiment a-t-il été construit ?
+      form:
+        saisie: année
 
     surface:
       question: |
@@ -60,49 +62,29 @@ fonctionnement . bâtiment . rénovation . type:
   question: |
     Parmi les rénovations suivantes, lesquelles avez-vous réalisées durant les
     dix dernières années ?
-  # TODO: Deals with it as "plusieurs possibilités"
-  # une possibilité:
-  #   - rénovation totale
-  #   - extension
-  #   - autres travaux importants
-  #   - aucun
   avec:
     rénovation totale:
+      type: booléen
       titre: Rénovation totale (hors agrandissement)
-    rénovation totale . présent:
-      question: |
-        Avez-vous réalisé une rénovation totale (hors agrandissement) durant
-        les dix dernières années ?
 
     extension:
+      type: booléen
       titre: Agrandissement - extension
-    extension . présent:
-      question: |
-        Avez-vous réalisé un agrandissement ou une extension durant les dix
-        dernières années ?
 
     autres travaux importants:
+      type: booléen
       titre: |
         Autres travaux importants (par ex : changement moquette, ravalement, peinture etc)
-    autres travaux importants . présent:
-      question: |
-        Avez-vous réalisé d'autres travaux importants (par ex : changement
-        moquette, ravalement, peinture etc) durant les dix dernières années ?
-
-    aucun:
-      titre: Je n'ai pas réalisé ces rénovations durant les dix dernières années
-    aucun . présent:
-      question: N'avez-vous pas réalisé ces rénovations durant les dix dernières années ?
 
 fonctionnement . bâtiment . rénovation . empreinte travaux:
   applicable si:
     une de ces conditions:
       - toutes ces conditions:
-          - est défini: type . rénovation totale . présent
-          - type . rénovation totale . présent
+          - est défini: type . rénovation totale
+          - type . rénovation totale
       - toutes ces conditions:
-          - est défini: type . autres travaux importants . présent
-          - type . autres travaux importants . présent
+          - est défini: type . autres travaux importants
+          - type . autres travaux importants
   formule:
     produit:
       - montant
@@ -129,8 +111,8 @@ fonctionnement . bâtiment . rénovation . empreinte travaux:
 fonctionnement . bâtiment . rénovation . empreinte extension:
   applicable si:
     toutes ces conditions:
-      - est défini: type . extension . présent
-      - type . extension . présent
+      - est défini: type . extension
+      - type . extension
   formule:
     produit:
       - surface
@@ -154,7 +136,10 @@ fonctionnement . bâtiment . rénovation . empreinte extension:
       unité: an
 
 fonctionnement . bâtiment . autre activité:
-  applicable si: est partagé = oui
+  applicable si:
+    toutes ces conditions:
+      - est défini: est partagé
+      - est partagé = oui
   titre: Autre activité
   formule: 0
   note: |
@@ -168,7 +153,10 @@ fonctionnement . bâtiment . est partagé:
   question: Le bâtiment est-il partagé avec une autre activité ?
 
 fonctionnement . bâtiment . parking:
-  applicable si: parking présent = oui
+  applicable si:
+    toutes ces conditions:
+      - est défini: parking présent
+      - parking présent = oui
   titre: Parking
   formule:
     produit:
@@ -181,6 +169,7 @@ fonctionnement . bâtiment . parking:
   avec:
     nombre de places:
       question: Si oui, de combien de places ?
+      unité: place
 
     FE:
       valeur: 92
