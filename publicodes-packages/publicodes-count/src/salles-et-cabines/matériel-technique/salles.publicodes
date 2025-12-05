@@ -2,6 +2,8 @@ salles et cabines . matériel technique . salles:
   #TODO: Should be a list of salles
   titre: Salles
   formule: salle
+  par défaut: 0
+  unité: kgCO2e
 
 salles et cabines . matériel technique . salle:
   titre: Salle
@@ -23,6 +25,8 @@ salles et cabines . matériel technique . salle . projecteur:
           produit:
             - FE
             - (1 an / amortissement)
+  par défaut: 0
+  unité: kgCO2e
   avec:
     age:
       durée:
@@ -85,6 +89,8 @@ salles et cabines . matériel technique . salle . écran:
             - FE
             - surface écran
             - (1 an / amortissement)
+  par défaut: 0
+  unité: kgCO2e
   avec:
     age:
       durée:
@@ -154,6 +160,8 @@ salles et cabines . matériel technique . salle . fauteuils:
             - FE
             - nombre
             - (1 an / amortissement)
+  par défaut: 0
+  unité: kgCO2e
   avec:
     age:
       durée:
@@ -220,6 +228,8 @@ salles et cabines . matériel technique . salle . système son:
           produit:
             - FE
             - (1 an / amortissement)
+  par défaut: 0
+  unité: kgCO2e
   avec:
     age:
       durée:

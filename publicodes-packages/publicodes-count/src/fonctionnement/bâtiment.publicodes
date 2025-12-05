@@ -20,6 +20,7 @@ fonctionnement . bâtiment . construction:
             - FE
             - (1 an / amortissement)
   unité: kgCO2e
+  par défaut: 0
   avec:
     age:
       durée:
@@ -90,6 +91,8 @@ fonctionnement . bâtiment . rénovation . empreinte travaux:
       - montant
       - FE
       - (1 an / amortissement)
+  par défaut: 0
+  unité: kgCO2e
   note: Conversion auto €/k€ publicodes.
   avec:
     montant:
@@ -117,6 +120,8 @@ fonctionnement . bâtiment . rénovation . empreinte extension:
       - surface
       - FE
       - (1 an / amortissement)
+  par défaut: 0
+  unité: kgCO2e
   avec:
     surface:
       question: |
@@ -139,7 +144,9 @@ fonctionnement . bâtiment . autre activité:
       - est défini: est partagé
       - est partagé = oui
   titre: Autre activité
-  formule: 0
+  formule: surface * 0
+  unité: kgCO2e
+  par défaut: 0
   note: |
     TODO: Pas d'émissions associées ?
   avec:
@@ -162,8 +169,10 @@ fonctionnement . bâtiment . parking:
       - 12 m2/place
       - FE
       - (1 an / amortissement)
+  par défaut: 0
+  unité: kgCO2e
   note: |
-    Il semble que le calcul n'est pas bon actuellement en ligne.
+    Il semble que le calcul n'est pas bon actuellement en ligne. Il manque la surface par place.
   avec:
     nombre de places:
       question: Si oui, de combien de places ?

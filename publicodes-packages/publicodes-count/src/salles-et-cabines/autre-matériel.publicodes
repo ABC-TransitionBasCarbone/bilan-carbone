@@ -11,6 +11,7 @@ salles et cabines . autre matériel . lunettes 3D:
     produit:
       - FE
       - nombre
+  par défaut: 0
   unité: kgCO2e
   avec:
     FE:

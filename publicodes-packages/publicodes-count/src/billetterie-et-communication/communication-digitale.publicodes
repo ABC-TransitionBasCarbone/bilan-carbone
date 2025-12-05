@@ -15,6 +15,8 @@ billetterie et communication . communication digitale . newsletters:
       - destinataires
       - nombre
       - FE
+  unité: kgCO2e
+  par défaut: 0
   avec:
     nombre:
       question: Combien de newsletters ont été envoyées cette annnée ?
@@ -37,6 +39,8 @@ billetterie et communication . communication digitale . affichage dynamique:
   note: |
     TODO: Il semble qu'il manque les 5 ans d'amortissement
   formule: nombre * FE
+  unité: kgCO2e
+  par défaut: 0
   avec:
     nombre:
       question: Combien de caissons d’affichage dynamique sont présents dans le cinéma ?
@@ -53,6 +57,8 @@ billetterie et communication . communication digitale . écrans:
   note: |
     TODO: Il semble qu'il manque les 5 ans d'amortissement
   formule: nombre * FE
+  par défaut: 0
+  unité: kgCO2e
   avec:
     nombre:
       question: Combien d’écrans se trouvent dans les espaces de circulation ?
@@ -69,6 +75,8 @@ billetterie et communication . communication digitale . affichage extérieur:
   note: |
     TODO: Il semble qu'il manque les 5 ans d'amortissement
   formule: surface * FE
+  par défaut: 0
+  unité: kgCO2e
   avec:
     surface:
       question: Si le cinéma dispose d'un affichage extérieur, quelle est sa surface ?
