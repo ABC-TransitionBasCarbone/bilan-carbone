@@ -259,6 +259,7 @@ const FONCTIONNEMENT_BATIMENT_RENOVATION_TYPE_LAYOUT = [
       'fonctionnement . bâtiment . rénovation . type . rénovation totale',
       'fonctionnement . bâtiment . rénovation . type . extension',
       'fonctionnement . bâtiment . rénovation . type . autres travaux importants',
+      'fonctionnement . bâtiment . rénovation . type . aucun',
     ],
   ),
   simpleLayout<CutRuleName>('fonctionnement . bâtiment . est partagé'),
