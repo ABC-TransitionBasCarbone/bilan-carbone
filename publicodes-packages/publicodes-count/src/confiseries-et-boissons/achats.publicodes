@@ -1,20 +1,36 @@
 confiseries et boissons . achats:
-  formule: général . nombre entrées * vente sur place . achat type . empreinte
+  formule: général . nombre entrées * empreinte unitaire
   unité: kgCO2e
 
 confiseries et boissons . achats . vente sur place:
   titre: Vente sur place
   question: Vendez-vous des boissons et des confiseries ?
 
-confiseries et boissons . achats . vente sur place . achat type:
-  applicable si: vente sur place = oui
-  # FIXME: pourquoi cela ne fonctionne pas ?
-  # toutes ces conditions:
-  #   - est défini: vente sur place
-  #   - vente sur place
-  question: >
+confiseries et boissons . achats . empreinte unitaire:
+  formule:
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: vente sur place
+            - est défini: achat type
+        alors:
+          variations:
+            - si: achat type = 'un peu'
+              alors: achat type . un peu . FE
+            - si: achat type = 'standard'
+              alors: achat type . standard . FE
+            - si: achat type = 'significatif'
+              alors: achat type . significatif . FE
+      - sinon: 0
+  unité: kgCO2e/entrée
+
+confiseries et boissons . achats . achat type:
+  applicable si:
+    toutes ces conditions:
+      - est défini: vente sur place
+      - vente sur place = oui
+  question: |
     Selon vous, en moyenne, un spectateur achète :
-  par défaut: "'standard'"
   une possibilité:
     - un peu
     - standard
@@ -27,42 +43,38 @@ confiseries et boissons . achats . vente sur place . achat type:
     significatif:
       titre: Une part significative de confiseries et de boissons (~200g)
 
-confiseries et boissons . achats . vente sur place . achat type . empreinte:
-  formule:
-    variations:
-      - si: achat type = 'un peu'
-        alors: achat type . un peu . FE
-      - si: achat type = 'standard'
-        alors: achat type . standard . FE
-      - si: achat type = 'significatif'
-        alors: achat type . significatif . FE
-  unité: kgCO2e/entrée
-
-confiseries et boissons . achats . vente sur place . achat type . poids:
-  formule:
-    variations:
-      - si: achat type = 'un peu'
-        alors: 0.03
-      - si: achat type = 'standard'
-        alors: 0.12
-      - si: achat type = 'significatif'
-        alors: 0.2
-  unité: kg/entrée
-
-confiseries et boissons . achats . vente sur place . achat type . un peu . FE:
+confiseries et boissons . achats . achat type . un peu . FE:
   valeur: 0.030414
   unité: kgCO2e/entrée
   meta:
     id: 136
 
-confiseries et boissons . achats . vente sur place . achat type . standard . FE:
+confiseries et boissons . achats . achat type . standard . FE:
   valeur: 0.121656
   unité: kgCO2e/entrée
   meta:
     id: 137
 
-confiseries et boissons . achats . vente sur place . achat type . significatif . FE:
+confiseries et boissons . achats . achat type . significatif . FE:
   valeur: 0.20276
   unité: kgCO2e/entrée
   meta:
     id: 138
+
+confiseries et boissons . achats . poids unitaire:
+  formule:
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: vente sur place
+            - est défini: achat type
+        alors:
+          variations:
+            - si: achat type = 'un peu'
+              alors: 0.03
+            - si: achat type = 'standard'
+              alors: 0.12
+            - si: achat type = 'significatif'
+              alors: 0.2
+      - sinon: 0
+  unité: kg/entrée
