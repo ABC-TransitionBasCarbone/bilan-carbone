@@ -1,3 +1,143 @@
+cine test:
+  contexte:
+    général . nombre séances: 1200
+    général . nombre entrées: 65000
+    général . nombre de jours ouverture: 330
+    général . nombre de films programmés: 150
+    général . distance depuis paris: 300
+
+    tournées avant premières . équipes reçues . nombre équipes: 5
+
+    salles et cabines . autre matériel . lunettes 3D . nombre: 200
+
+    salles et cabines . matériel technique . salle . projecteur . année achat: "'01/2018'"
+    salles et cabines . matériel technique . salle . projecteur . type: "'xénon'"
+
+    salles et cabines . matériel technique . salle . écran . année achat: "'01/2021'"
+    salles et cabines . matériel technique . salle . écran . surface écran: 70
+    salles et cabines . matériel technique . salle . écran . type: "'écran 2D'"
+
+    salles et cabines . matériel technique . salle . fauteuils . année achat: "'01/2021'"
+    salles et cabines . matériel technique . salle . fauteuils . nombre: 180
+    salles et cabines . matériel technique . salle . fauteuils . type: "'fauteuils classiques'"
+    salles et cabines . matériel technique . salle . système son . année achat: "'01/2022'"
+    salles et cabines . matériel technique . salle . système son . type: "'dolby 51'"
+
+    salles et cabines . matériel technique . cloud . stockage: 2000
+    salles et cabines . matériel technique . disques durs . nombre: 10
+    salles et cabines . matériel technique . films . nombre films dématérialisés: 300
+
+    mobilité spectateurs . précision: "'résultat précis'"
+    mobilité spectateurs . résultat précis . empreinte . RER et transilien . distance: 26000
+    mobilité spectateurs . résultat précis . empreinte . métro ou tram . distance: 81250
+    mobilité spectateurs . résultat précis . empreinte . bus . distance: 36400
+    mobilité spectateurs . résultat précis . empreinte . vélo électrique . distance: 5850
+    mobilité spectateurs . résultat précis . empreinte . vélo classique . distance: 5200
+    mobilité spectateurs . résultat précis . empreinte . marche . distance: 13000
+    mobilité spectateurs . résultat précis . empreinte . voiture diesel . distance: 117000
+    mobilité spectateurs . résultat précis . empreinte . voiture essence . distance: 91000
+    mobilité spectateurs . résultat précis . empreinte . voiture hybride . distance: 46800
+    mobilité spectateurs . résultat précis . empreinte . voiture électrique . distance: 26000
+    mobilité spectateurs . résultat précis . empreinte . moto . distance: 5850
+    mobilité spectateurs . résultat précis . empreinte . scooter . distance: 4550
+    mobilité spectateurs . résultat précis . empreinte . trottinette électrique . distance: 2600
+
+    fonctionnement . équipe . collaborateur type . nombre de jours par semaine: 5
+    fonctionnement . équipe . collaborateur type . transport . distance: 10
+    fonctionnement . équipe . collaborateur type . transport . moyen de transport: "'voiture hybride'"
+
+    fonctionnement . énergie . électricité . consommation: 120000
+    fonctionnement . énergie . gaz . consommation: 8000
+    fonctionnement . énergie . fioul . consommation: 0
+    fonctionnement . énergie . réseau de chaleur . consommation: 0
+    fonctionnement . énergie . réseau de froid . consommation: 0
+    fonctionnement . énergie . granulés . consommation: 0
+    # fonctionnement . énergie . climatisation . cnc écrans: 1000
+    fonctionnement . énergie . est équipé climatisation: oui
+    fonctionnement . énergie . équipement groupes électrogènes: "'aucun'"
+
+    fonctionnement . déplacements pro . déplacement type . nombre participants: 2
+    fonctionnement . déplacements pro . déplacement type . nombre occurences: 5
+    fonctionnement . déplacements pro . déplacement type . nombre de nuitées: 2
+    fonctionnement . déplacements pro . déplacement type . transport . distance: 120
+    fonctionnement . déplacements pro . déplacement type . transport . moyen de transport: "'TGV'"
+    fonctionnement . déplacements pro . déplacement type . type hébergement: "'hotel 3 étoiles'"
+
+    fonctionnement . bâtiment . construction . année de construction: "'01/1985'"
+    fonctionnement . bâtiment . construction . surface: 1200
+
+    fonctionnement . bâtiment . rénovation . type . rénovation totale: oui
+    fonctionnement . bâtiment . rénovation . type . extension: oui
+    fonctionnement . bâtiment . rénovation . empreinte travaux . montant: 50000
+    fonctionnement . bâtiment . rénovation . empreinte extension . surface: 150
+
+    fonctionnement . bâtiment . est partagé: non
+    fonctionnement . bâtiment . parking . nombre de places: 40
+    fonctionnement . bâtiment . parking présent: oui
+
+    fonctionnement . activités de bureau . petites fournitures . montant: 2000
+    fonctionnement . activités de bureau . services . montant: 8000
+
+    fonctionnement . activités de bureau . informatique . équipement: "'ordinateurs portables'"
+
+    fonctionnement . activités de bureau . informatique . ordinateurs portables . nombre: 10
+    fonctionnement . activités de bureau . informatique . ordinateurs portables . année achat: "'01/2021'"
+
+    déchets . ordinaires . ordures ménagères . nombre bennes: 2
+    déchets . ordinaires . ordures ménagères . taille benne: 660
+    déchets . ordinaires . ordures ménagères . fréquence ramassage: 3
+
+    déchets . ordinaires . emballages et papier . nombre bennes: 1
+    déchets . ordinaires . emballages et papier . taille benne: 660
+    déchets . ordinaires . emballages et papier . fréquence ramassage: 2
+
+    déchets . ordinaires . biodéchets . nombre bennes: 1
+    déchets . ordinaires . biodéchets . taille benne: 240
+    déchets . ordinaires . biodéchets . fréquence ramassage: 2
+
+    déchets . ordinaires . verre . nombre bennes: 1
+    déchets . ordinaires . verre . taille benne: 240
+    déchets . ordinaires . verre . fréquence ramassage: 1
+
+    déchets . exceptionnels . lampe xenon . nombre: 4
+    déchets . exceptionnels . matériel technique . quantité: 20
+
+    confiseries et boissons . électroménager . réfrigérateurs . nombre: 3
+    confiseries et boissons . électroménager . réfrigérateurs . année achat: "'01/2019'"
+
+    confiseries et boissons . électroménager . congélateurs . nombre: 2
+    confiseries et boissons . électroménager . congélateurs . année achat: "'01/2020'"
+    confiseries et boissons . électroménager . warmers . nombre: 2
+    confiseries et boissons . électroménager . warmers . année achat: "'01/2021'"
+
+    confiseries et boissons . électroménager . distributeurs . nombre: 1
+    confiseries et boissons . électroménager . distributeurs . année achat: "'01/2022'"
+    confiseries et boissons . fret . distance: 50
+
+    confiseries et boissons . achats . vente sur place: oui
+    confiseries et boissons . achats . achat type: "'standard'"
+
+    billetterie et communication . matériel distributeurs . affiches: 100
+    billetterie et communication . matériel distributeurs . affiches . affiches 120x160 . nombre: 20
+    billetterie et communication . matériel distributeurs . affiches . affiches 40x60 . nombre: 40
+
+    billetterie et communication . matériel distributeurs . PLV: 30
+    billetterie et communication . matériel distributeurs . PLV . PLV comptoir . nombre: 10
+    billetterie et communication . matériel distributeurs . PLV . PLV grand format . nombre: 5
+
+    billetterie et communication . matériel cinéma . production: 5000
+    billetterie et communication . matériel cinéma . production . programme . nombre: 2000
+    billetterie et communication . matériel cinéma . production . affiches . nombre: 300
+    billetterie et communication . matériel cinéma . production . flyers . nombre: 5000
+
+    billetterie et communication . communication digitale . newsletters . nombre: 24
+    billetterie et communication . communication digitale . newsletters . destinataires: 3500
+    billetterie et communication . communication digitale . affichage dynamique . nombre: 4
+    billetterie et communication . communication digitale . écrans . nombre: 6
+    billetterie et communication . communication digitale . affichage extérieur . surface: 10
+
+    billetterie et communication . caisses et bornes . caisses libre service . nombre: 2
+    billetterie et communication . caisses et bornes . caisse classique . nombre: 3
 
 template:
 #   contexte:
@@ -25,7 +165,7 @@ template:
 # salles et cabines . matériel technique . cloud . stockage: number
 # salles et cabines . matériel technique . disques durs . nombre: number
 # salles et cabines . matériel technique . films . nombre films dématérialisés: number,
-#mobilité spectateurs . résultat précis . empreinte . RER et transilien . distance: number
+# mobilité spectateurs . résultat précis . empreinte . RER et transilien . distance: number
 # mobilité spectateurs . résultat précis . empreinte . métro ou tram . distance: number
 # mobilité spectateurs . résultat précis . empreinte . bus . distance: number
 # mobilité spectateurs . résultat précis . empreinte . vélo électrique . distance: number
