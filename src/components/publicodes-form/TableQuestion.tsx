@@ -4,7 +4,7 @@ import { EvaluatedFormElement, EvaluatedTableLayout, FormPageElementProp } from 
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useMemo } from 'react'
 import InputField from './InputField'
-import { OnFormInputChange } from './utils'
+import { getFormPageElementProp, OnFormInputChange } from './utils'
 
 interface TableLayoutProps<RuleName extends string> {
   tableLayout: EvaluatedTableLayout<RuleName>
@@ -41,21 +41,10 @@ export default function TableQuestion<RuleName extends string>({
           return null
         }
 
-        const formElementProps: FormPageElementProp = {
-          hidden: formElement.hidden,
-          autofocus: formElement.autofocus,
-          required: formElement.required,
-          // FIXME: handling custom rule layout doesn't fit well with table layout for now
-          useful: formElement.applicable,
-          disabled: !formElement.applicable,
-        }
+        const formElementProps = getFormPageElementProp(formElement)
 
         // TODO: could we have a cleaner way to distinguish between value and inputs ?
-        return colIndex === 0 ? (
-          <p>{formElement.label}</p>
-        ) : (
-          <InputField formElement={formElement} formElementProps={formElementProps} onChange={onChange} />
-        )
+        return <InputField formElement={formElement} formElementProps={formElementProps} onChange={onChange} />
       },
     }))
   }, [headers, onChange])

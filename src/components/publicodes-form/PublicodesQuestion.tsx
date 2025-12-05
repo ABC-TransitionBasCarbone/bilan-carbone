@@ -4,7 +4,7 @@ import GroupQuestion from './GroupQuestion'
 import PublicodesInputField from './InputField'
 import QuestionContainer from './QuestionContainer'
 import TableQuestion from './TableQuestion'
-import { OnFormInputChange } from './utils'
+import { getFormPageElementProp, OnFormInputChange } from './utils'
 
 export interface PublicodesQuestionProps<RuleName extends string> {
   formLayout: EvaluatedFormLayout<RuleName>
@@ -18,13 +18,7 @@ export default function PublicodesQuestion<RuleName extends string>({
   switch (formLayout.type) {
     case 'simple': {
       const formElement = formLayout.evaluatedElement
-      const formElementProps = {
-        hidden: formElement.hidden,
-        useful: formElement.useful,
-        disabled: formElement.disabled,
-        autofocus: formElement.autofocus,
-        required: formElement.required,
-      }
+      const formElementProps = getFormPageElementProp(formElement)
 
       return (
         <Box key={formElement.id} sx={{ mb: 2 }}>
