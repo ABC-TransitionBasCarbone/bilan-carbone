@@ -17,6 +17,8 @@ salles et cabines . matériel technique . films . nombre films dématérialisés
 
 salles et cabines . matériel technique . films . dématérialisés:
   formule: taille fichiers transférés * FE
+  par défaut: 0
+  unité: kgCO2e
   avec:
     taille fichiers transférés:
       formule:
@@ -45,6 +47,8 @@ salles et cabines . matériel technique . films . DCP:
       - FE
       - général . distance depuis paris
       - 0.001
+  par défaut: 0
+  unité: kgCO2e
   avec:
     FE:
       valeur: 0.402

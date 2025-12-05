@@ -2,7 +2,12 @@
 # type" qui n'est pas dans le même namespace, ducoup la question est posée deux
 # fois potentiellement.
 confiseries et boissons . fret:
-  formule: poids total * distance * FE
+  formule:
+    produit:
+      - poids total
+      - distance
+      - FE
+  par défaut: 0
   unité: kgCO2e
   note: |
     Il semble que le facteur (poids total confiserie) est manquant dans le code actuel.

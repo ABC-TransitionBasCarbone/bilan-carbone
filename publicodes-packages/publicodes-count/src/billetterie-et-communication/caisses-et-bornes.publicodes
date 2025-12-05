@@ -11,6 +11,8 @@ billetterie et communication . caisses et bornes . caisses libre service:
   note: |
     TODO: Il semble qu'il manque les 5 ans d'amortissement
   formule: nombre * FE
+  par défaut: 0
+  unité: kgCO2e
   avec:
     nombre:
       question: De combien de bornes de caisse libre-service dispose le cinéma ?
@@ -27,6 +29,8 @@ billetterie et communication . caisses et bornes . caisse classique:
   note: |
     TODO: Il semble qu'il manque les 5 ans d'amortissement
   formule: nombre * FE
+  par défaut: 0
+  unité: kgCO2e
   avec:
     nombre:
       question: De combien de systèmes de caisse classique dispose le cinéma ?

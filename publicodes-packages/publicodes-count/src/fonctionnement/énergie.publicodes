@@ -17,6 +17,8 @@ fonctionnement . énergie:
 fonctionnement . énergie . électricité:
   titre: Électricité
   formule: consommation * FE
+  par défaut: 0
+  unité: kgCO2e
   avec:
     consommation:
       question: Combien de kWh d'électricité ont étés consommés par le cinéma cette année ?
@@ -33,6 +35,8 @@ fonctionnement . énergie . électricité:
 fonctionnement . énergie . gaz:
   titre: Gaz
   formule: consommation * FE
+  par défaut: 0
+  unité: kgCO2e
   avec:
     consommation:
       question: Combien de m³ de gaz ont étés consommés par le cinéma cette année ?
@@ -49,6 +53,8 @@ fonctionnement . énergie . gaz:
 fonctionnement . énergie . fioul:
   titre: Fioul
   formule: consommation * FE
+  par défaut: 0
+  unité: kgCO2e
   avec:
     consommation:
       question: Combien de litres de fioul ont étés consommés par le cinéma cette année ?
@@ -65,6 +71,8 @@ fonctionnement . énergie . fioul:
 fonctionnement . énergie . réseau de chaleur:
   titre: Réseau de chaleur
   formule: consommation * FE
+  par défaut: 0
+  unité: kgCO2e
   avec:
     consommation:
       question: |
@@ -81,6 +89,8 @@ fonctionnement . énergie . réseau de chaleur:
 fonctionnement . énergie . réseau de froid:
   titre: Réseau de froid
   formule: consommation * FE
+  par défaut: 0
+  unité: kgCO2e
   avec:
     consommation:
       question: |
@@ -98,6 +108,8 @@ fonctionnement . énergie . réseau de froid:
 fonctionnement . énergie . granulés:
   titre: Granulés de bois
   formule: consommation * FE
+  par défaut: 0
+  unité: kgCO2e
   avec:
     consommation:
       question: |
@@ -120,6 +132,8 @@ fonctionnement . énergie . climatisation:
       # - cnc écrans
       - 1
       - FE
+  par défaut: 0
+  unité: kgCO2e
   avec:
     cnc écrans:
       question: Combien de kWh de climatisation ont étés consommés par le cinéma cette année ?
@@ -142,6 +156,8 @@ fonctionnement . énergie . groupes électrogènes:
     somme:
       - fabrication
       - consommation * FE
+  par défaut: 0
+  unité: kgCO2e
   avec:
     fabrication:
       note: Pas d'amortissement  ?
