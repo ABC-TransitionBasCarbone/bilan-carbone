@@ -59,23 +59,29 @@ fonctionnement . bâtiment . rénovation:
 
 fonctionnement . bâtiment . rénovation . type:
   titre: Rénovation
-  question: |
-    Parmi les rénovations suivantes, lesquelles avez-vous réalisées durant les dix dernières années ?
-  note: |
-    Question 'QCM'
+  question: Parmi les rénovations suivantes, lesquelles avez-vous réalisées durant les dix dernières années ?
   avec:
     rénovation totale:
-      non applicable si: type . aucun = oui
+      non applicable si:
+        toutes ces conditions:
+          - est défini: type . aucun
+          - type . aucun = oui
       type: booléen
       titre: Rénovation totale (hors agrandissement)
 
     extension:
-      non applicable si: type . aucun = oui
+      non applicable si:
+        toutes ces conditions:
+          - est défini: type . aucun
+          - type . aucun = oui
       type: booléen
       titre: Agrandissement - extension
 
     autres travaux importants:
-      non applicable si: type . aucun = oui
+      non applicable si:
+        toutes ces conditions:
+          - est défini: type . aucun
+          - type . aucun = oui
       type: booléen
       titre: |
         Autres travaux importants (par ex : changement moquette, ravalement,peinture etc)
@@ -103,8 +109,7 @@ fonctionnement . bâtiment . rénovation . empreinte travaux:
   note: Conversion auto €/k€ publicodes.
   avec:
     montant:
-      question: |
-        Dans le cas d'une rénovation durant ces 10 dernières années, Quel est le montant des dépenses liées à ces travaux de rénovation ?
+      question: Dans le cas d'une rénovation durant ces 10 dernières années, quel est le montant des dépenses liées à ces travaux de rénovation ?
       unité: €
 
     FE:
@@ -131,8 +136,7 @@ fonctionnement . bâtiment . rénovation . empreinte extension:
   unité: kgCO2e
   avec:
     surface:
-      question: |
-        Dans le cas d'un agrandissement durant ces 10 dernières années, quelle est la surface supplémentaire ajoutée ?
+      question: Dans le cas d'un agrandissement durant ces 10 dernières années, quelle est la surface supplémentaire ajoutée ?
       unité: m2
 
     FE:
