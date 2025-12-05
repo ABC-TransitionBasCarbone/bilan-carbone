@@ -22,192 +22,117 @@ mobilité spectateurs . résultat précis . empreinte:
   avec:
     RER et transilien:
       titre: RER et transilien
-      formule: distance * FE
+      formule: distance * commun . FE . moyen de transport . RER et transilien
       avec:
         distance:
           question: Distance (km)
           unité: km
           par défaut: 0
-
-        FE:
-          valeur: 0.00978
-          unité: kgCO2e/km
-          meta:
-            id: 43254
 
     métro ou tram:
       titre: Métro, tramway
-      formule: distance * FE
+      formule: distance * commun . FE . moyen de transport . métro ou tram
       avec:
         distance:
           question: Distance (km)
           unité: km
           par défaut: 0
-
-        FE:
-          valeur: 0.005030000000000001
-          unité: kgCO2e/km
-          meta:
-            id: 28150
 
     bus:
       titre: Bus
-      formule: distance * FE
+      formule: distance * commun . FE . moyen de transport . bus
       avec:
         distance:
           question: Distance (km)
           unité: km
           par défaut: 0
-
-        FE:
-          valeur: 0.1466
-          unité: kgCO2e/km
-          meta:
-            id: 27999
 
     vélo électrique:
       titre: Vélo électrique
-      formule: distance * FE
+      formule: distance * commun . FE . moyen de transport . vélo électrique
       avec:
         distance:
           question: Distance (km)
           unité: km
           par défaut: 0
-
-        FE:
-          valeur: 0.01095
-          unité: kgCO2e/km
-          meta:
-            id: 28331
 
     vélo classique:
       titre: Vélo classique
-      formule: distance * FE
+      formule: distance * commun . FE . moyen de transport . vélo classique
       avec:
         distance:
           question: Distance (km)
           unité: km
           par défaut: 0
-
-        FE:
-          valeur: 0
-          unité: kgCO2e/km
-          meta:
-            id: 134
 
     marche:
       titre: Marche
-      formule: distance * FE
+      formule: distance * commun . FE . moyen de transport . marche
       avec:
         distance:
           question: Distance (km)
           unité: km
           par défaut: 0
-
-        FE:
-          valeur: 0
-          unité: kgCO2e/km
-          meta:
-            id: 135
 
     voiture diesel:
       titre: Voiture diesel
-      formule: distance * FE
+      formule: distance * commun . FE . moyen de transport . voiture diesel
       avec:
         distance:
           question: Distance (km)
           unité: km
           par défaut: 0
-
-        FE:
-          valeur: 0.165
-          unité: kgCO2e/km
-          meta:
-            id: 27984
 
     voiture essence:
       titre: Voiture essence
-      formule: distance * FE
+      formule: distance * commun . FE . moyen de transport . voiture essence
       avec:
         distance:
           question: Distance (km)
           unité: km
           par défaut: 0
-
-        FE:
-          valeur: 0.1746
-          unité: kgCO2e/km
-          meta:
-            id: 27983
 
     voiture hybride:
       titre: Voiture hybride
-      formule: distance * FE
+      formule: distance * commun . FE . moyen de transport . voiture hybride
       avec:
         distance:
           question: Distance (km)
           unité: km
           par défaut: 0
-
-        FE:
-          valeur: 0.0717
-          unité: kgCO2e/km
-          meta:
-            id: 28015
 
     voiture électrique:
       titre: Voiture électrique
-      formule: distance * FE
+      formule: distance * commun . FE . moyen de transport . voiture électrique
       avec:
         distance:
           question: Distance (km)
           unité: km
           par défaut: 0
 
-        FE:
-          valeur: 0.0953
-          unité: kgCO2e/km
-          meta:
-            id: 28013
     moto:
       titre: Moto
-      formule: distance * FE
+      formule: distance * commun . FE . moyen de transport . moto
       avec:
         distance:
           question: Distance (km)
           unité: km
           par défaut: 0
 
-        FE:
-          valeur: 0.1913
-          unité: kgCO2e/km
-          meta:
-            id: 27995
     scooter:
       titre: Scooter
-      formule: distance * FE
+      formule: distance * commun . FE . moyen de transport . scooter
       avec:
         distance:
           question: Distance (km)
           unité: km
           par défaut: 0
 
-        FE:
-          valeur: 0.0763
-          unité: kgCO2e/km
-          meta:
-            id: 27992
     trottinette électrique:
       titre: Trottinette électrique
-      formule: distance * FE
+      formule: distance * commun . FE . moyen de transport . trottinette électrique
       avec:
         distance:
           question: Distance (km)
           unité: km
           par défaut: 0
-
-        FE:
-          valeur: 0.0249
-          unité: kgCO2e/km
-          meta:
-            id: 28329
