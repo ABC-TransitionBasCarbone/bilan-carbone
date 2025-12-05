@@ -148,6 +148,7 @@ fonctionnement . activités de bureau . informatique . appareil:
       non applicable si:
         est défini: durée location
       question: Année d'achat des appareils
+      type: date
       form:
         saisie: année
 
@@ -185,6 +186,7 @@ fonctionnement . activités de bureau . informatique . ordinateurs fixes:
       non applicable si:
         est défini: durée location
       question: Année d'achat des ordinateurs fixes
+      type: date
       form:
         saisie: année
 
@@ -216,6 +218,7 @@ fonctionnement . activités de bureau . informatique . ordinateurs portables:
       non applicable si:
         est défini: durée location
       question: Année d'achat des ordinateurs portables
+      type: date
       form:
         saisie: année
 
@@ -247,6 +250,7 @@ fonctionnement . activités de bureau . informatique . photocopieurs:
       non applicable si:
         est défini: durée location
       question: Année d'achat des photocopieurs
+      type: date
       form:
         saisie: année
 
@@ -278,6 +282,7 @@ fonctionnement . activités de bureau . informatique . imprimantes:
       non applicable si:
         est défini: durée location
       question: Année d'achat des imprimantes
+      type: date
       form:
         saisie: année
 
@@ -309,6 +314,7 @@ fonctionnement . activités de bureau . informatique . téléphones fixes:
       non applicable si:
         est défini: durée location
       question: Année d'achat des téléphones fixes
+      type: date
       form:
         saisie: année
 
@@ -340,6 +346,7 @@ fonctionnement . activités de bureau . informatique . téléphones portables:
       non applicable si:
         est défini: durée location
       question: Année d'achat des téléphones portables
+      type: date
       form:
         saisie: année
 
@@ -371,6 +378,7 @@ fonctionnement . activités de bureau . informatique . tablettes:
       non applicable si:
         est défini: durée location
       question: Année d'achat des tablettes
+      type: date
       form:
         saisie: année
 
