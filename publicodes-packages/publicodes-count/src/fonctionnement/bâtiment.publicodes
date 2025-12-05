@@ -39,8 +39,7 @@ fonctionnement . bâtiment . construction:
 
     surface:
       question: |
-        Quelle est la surface plancher du cinéma ? (La somme des surfaces des
-        différents niveaux)
+        Quelle est la surface plancher du cinéma ? (La somme des surfaces des différents niveaux)
       unité: m2
 
     FE:
@@ -60,8 +59,9 @@ fonctionnement . bâtiment . rénovation:
 fonctionnement . bâtiment . rénovation . type:
   titre: Rénovation
   question: |
-    Parmi les rénovations suivantes, lesquelles avez-vous réalisées durant les
-    dix dernières années ?
+    Parmi les rénovations suivantes, lesquelles avez-vous réalisées durant les dix dernières années ?
+  note: |
+    Question 'QCM'
   avec:
     rénovation totale:
       type: booléen
@@ -94,8 +94,7 @@ fonctionnement . bâtiment . rénovation . empreinte travaux:
   avec:
     montant:
       question: |
-        Dans le cas d'une rénovation durant ces 10 dernières années, Quel est
-        le montant des dépenses liées à ces travaux de rénovation ?
+        Dans le cas d'une rénovation durant ces 10 dernières années, Quel est le montant des dépenses liées à ces travaux de rénovation ?
       unité: €
 
     FE:
@@ -121,8 +120,7 @@ fonctionnement . bâtiment . rénovation . empreinte extension:
   avec:
     surface:
       question: |
-        Dans le cas d'un agrandissement durant ces 10 dernières années, quelle
-        est la surface supplémentaire ajoutée ?
+        Dans le cas d'un agrandissement durant ces 10 dernières années, quelle est la surface supplémentaire ajoutée ?
       unité: m2
 
     FE:
