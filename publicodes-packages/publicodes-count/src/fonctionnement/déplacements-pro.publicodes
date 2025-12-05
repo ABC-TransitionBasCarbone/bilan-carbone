@@ -12,6 +12,8 @@ fonctionnement . déplacements pro . déplacements:
   description: |
     Les déplacements professionnels de vos collaborateurs sont tous les déplacements autres que les déplacements domicile-travail, effectués dans le cadre du travail. Ceux-ci incluent par exemple les déplacements pour se rendre à des congrès, conventions, festivals, prévisionnages, etc.
   formule: déplacement type
+  par défaut: 0
+  unité: kgCO2e
 
 fonctionnement . déplacements pro . déplacement type:
   formule:
@@ -39,6 +41,8 @@ fonctionnement . déplacements pro . déplacement type . repas:
       - nombre de nuitées
       - 2 repas/jour
       - commun . FE . repas
+  par défaut: 0
+  unité: kgCO2e
 
 fonctionnement . déplacements pro . déplacement type . transport:
   formule:
@@ -47,6 +51,8 @@ fonctionnement . déplacements pro . déplacement type . transport:
       - nombre occurences
       - distance
       - FE
+  par défaut: 0
+  unité: kgCO2e
   avec:
     distance:
       question: Distance "aller-retour"
@@ -118,6 +124,8 @@ fonctionnement . déplacements pro . déplacement type . nuitées:
       - nombre occurences
       - nombre de nuitées
       - FE nuitée
+  par défaut: 0
+  unité: kgCO2e
   avec:
     FE nuitée:
       formule:

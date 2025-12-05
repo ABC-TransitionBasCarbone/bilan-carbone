@@ -13,6 +13,8 @@ fonctionnement . activités de bureau . petites fournitures:
     produit:
       - montant
       - FE
+  par défaut: 0
+  unité: kgCO2e
   avec:
     montant:
       question: |
@@ -31,6 +33,8 @@ fonctionnement . activités de bureau . services:
     produit:
       - montant
       - FE
+  par défaut: 0
+  unité: kgCO2e
   note: Conversion auto €/k€ publicodes.
   avec:
     montant:
@@ -54,6 +58,7 @@ fonctionnement . activités de bureau . informatique:
   note: La durée de location prévaut sur la date d'achat.
   # TODO: Should be a list of equipment
   formule: empreinte équipement
+  par défaut: 0
 
 fonctionnement . activités de bureau . informatique . empreinte équipement:
   titre: Empreinte appareil
@@ -73,6 +78,7 @@ fonctionnement . activités de bureau . informatique . empreinte équipement:
         alors: téléphones portables
       - si: équipement = "tablettes"
         alors: tablettes
+  par défaut: 0
   unité: kgCO2e
 
 fonctionnement . activités de bureau . informatique . équipement:
@@ -125,6 +131,7 @@ fonctionnement . activités de bureau . informatique . appareil:
                   - nb appareils
                   - FE
                   - (1 an / amortissement)
+  par défaut: 0
   unité: kgCO2e
   avec:
     age:
@@ -162,6 +169,8 @@ fonctionnement . activités de bureau . informatique . ordinateurs fixes:
     appareil . année achat: année achat
     appareil . durée location: durée location
     appareil . FE: FE
+  par défaut: 0
+  unité: kgCO2e
   avec:
     nombre:
       question: Nombre d'ordinateurs fixes
@@ -189,6 +198,8 @@ fonctionnement . activités de bureau . informatique . ordinateurs portables:
     appareil . année achat: année achat
     appareil . durée location: durée location
     appareil . FE: FE
+  par défaut: 0
+  unité: kgCO2e
   avec:
     nombre:
       question: Nombre d'ordinateurs portables
