@@ -7,7 +7,7 @@ billetterie et communication . matériel distributeurs:
   unité: kgCO2e
 
 billetterie et communication . matériel distributeurs . affiches:
-  titre: Type de matériel
+  titre: Affiches
   question: Quelle quantité de matériel distributeurs recevez-vous en moyenne par semaine ?
   formule:
     somme:
@@ -66,7 +66,7 @@ billetterie et communication . matériel distributeurs . affiches . affiches 40x
       unité: kg/unité
 
 billetterie et communication . matériel distributeurs . PLV:
-  titre: Type de matériel
+  titre: PLV
   question: Quelle quantité de matériel distributeurs recevez-vous en moyenne par mois ?
   formule:
     somme:

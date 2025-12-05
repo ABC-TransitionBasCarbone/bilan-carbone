@@ -154,7 +154,7 @@ salles et cabines . matériel technique . salle . écran . type:
         id: 110
 
 salles et cabines . matériel technique . salle . fauteuils:
-  titre: Ecran
+  titre: Fauteuils
   formule:
     variations:
       - si: age > amortissement

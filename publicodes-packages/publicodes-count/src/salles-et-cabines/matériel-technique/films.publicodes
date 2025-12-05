@@ -44,7 +44,7 @@ salles et cabines . matériel technique . films . DCP:
     Le facteur 1000 ne semble pas présent dans l'excel ?
   formule:
     produit:
-      - général . nombre de films programmés - nombre films dématérialisés
+      - général . nombre de films programmés / 1 film - nombre films dématérialisés
       - FE
       - général . distance depuis paris
       - 0.001

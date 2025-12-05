@@ -43,7 +43,7 @@ fonctionnement . équipe . collaborateur type . transport:
   avec:
     distance:
       question: Distance domicile travail (aller-retour)
-      unité: km
+      unité: km/jour
 
     FE:
       formule:
