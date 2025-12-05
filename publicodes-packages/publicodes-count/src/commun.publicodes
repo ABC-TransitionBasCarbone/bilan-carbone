@@ -28,6 +28,7 @@ commun . nombre de jours par an:
 commun . année actuelle:
   titre: Année actuelle
   description: Année de référence pour le calcul des amortissements.
+  type: date
   valeur: 12/2025
 
 commun . FE:

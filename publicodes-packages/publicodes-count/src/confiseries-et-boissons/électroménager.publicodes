@@ -60,6 +60,7 @@ confiseries et boissons . électroménager . appareil:
     année achat:
       non applicable si:
         est défini: durée location
+      type: date
       question: Année d'achat des appareils
 
     durée location:
@@ -101,6 +102,7 @@ confiseries et boissons . électroménager . réfrigérateurs:
       non applicable si:
         est défini: réfrigérateurs . durée location
       question: Année d'achat des réfrigérateurs
+      type: date
       form:
         saisie: année
 
@@ -131,6 +133,7 @@ confiseries et boissons . électroménager . congélateurs:
       non applicable si:
         est défini: congélateurs . durée location
       question: Année d'achat des congélateurs
+      type: date
       form:
         saisie: année
 
@@ -161,6 +164,7 @@ confiseries et boissons . électroménager . warmers:
       non applicable si:
         est défini: warmers . durée location
       question: Année d'achat des warmers
+      type: date
       form:
         saisie: année
 
@@ -191,5 +195,6 @@ confiseries et boissons . électroménager . distributeurs:
       non applicable si:
         est défini: distributeurs . durée location
       question: Année d'achat des distributeurs snack et boissons
+      type: date
       form:
         saisie: année
