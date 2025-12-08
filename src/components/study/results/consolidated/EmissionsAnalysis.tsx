@@ -2,7 +2,9 @@ import Box from '@/components/base/Box'
 import Title from '@/components/base/Title'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
+import { hasAccessToMonetaryRatio } from '@/services/permissions/environment'
 import { ResultsByTag } from '@/services/results/consolidated'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import { SiteCAUnit } from '@prisma/client'
@@ -45,6 +47,8 @@ const EmissionsAnalysis = ({
   const tGlossary = useTranslations('study')
   const tResultUnits = useTranslations('study.results.units')
   const [glossary, setGlossary] = useState('')
+
+  const { environment } = useAppEnvironmentStore()
 
   return (
     <div className="mb2">
@@ -96,22 +100,24 @@ const EmissionsAnalysis = ({
           />
         </div>
         <div className="flex-col grow">
-          <Box className="mb2">
-            <Title as="h6" title={t('monetaryRatio')} className="justify-center" />
-            <div className={classNames('flex')}>
-              <Data
-                value={`${formatNumber(monetaryRatio, 2)}%`}
-                label={t('monetaryRatioEmissions')}
-                testId="results-monetary-ratio"
-              />
-              <span>{t('ofWhich')}</span>
-              <Data
-                value={`${formatNumber(nonSpecificMonetaryRatio, 2)}%`}
-                label={t('nonSpeMonetaryRatioEmissions')}
-                testId="results-non-spe-monetary-ratio"
-              />
-            </div>
-          </Box>
+          {environment && hasAccessToMonetaryRatio(environment) && (
+            <Box className="mb2">
+              <Title as="h6" title={t('monetaryRatio')} className="justify-center" />
+              <div className={classNames('flex')}>
+                <Data
+                  value={`${formatNumber(monetaryRatio, 2)}%`}
+                  label={t('monetaryRatioEmissions')}
+                  testId="results-monetary-ratio"
+                />
+                <span>{t('ofWhich')}</span>
+                <Data
+                  value={`${formatNumber(nonSpecificMonetaryRatio, 2)}%`}
+                  label={t('nonSpeMonetaryRatioEmissions')}
+                  testId="results-non-spe-monetary-ratio"
+                />
+              </div>
+            </Box>
+          )}
           <ResultsTableAndGraphs
             computedResults={computedResultsByTag}
             resultsUnit={study.resultsUnit}

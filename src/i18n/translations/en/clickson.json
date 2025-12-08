@@ -1,4 +1,106 @@
 {
+  "nav": {
+    "newStudyContributor": "Add a student"
+  },
+  "navigation": {
+    "organizations": "My Carbon Footprints",
+    "organization": "Pilot Team",
+    "information": "My Establishment",
+    "team": "Pilot Team"
+  },
+  "home": {
+    "navigation": {
+      "collaborators": {
+        "title": "Pilot Team:",
+        "message": "Find here the list of teachers, administrative staff and students authorized to modify the establishment's data"
+      },
+      "footprints": {
+        "title": "My Footprints:",
+        "message": "Create your first footprint here. You can then view your footprints or create new ones at any time."
+      },
+      "sites": {
+        "title": "My Establishments:",
+        "message": "Find here the list of establishments linked to your account"
+      }
+    },
+    "title": "Calculating your simplified carbon footprint will allow you to:",
+    "alert": {
+      "info": "The Clickson calculator allows you to estimate the climate impact of your activity. It is above all an awareness tool. It is not a low-carbon transition approach but a simplified carbon footprint — in the sense of the <link>Guide to communication around carbon accounting</link> — focused on the main emission sources related to the activity of establishments."
+    },
+    "info": {
+      "0": "Understand the measurement of your establishment's impact",
+      "1": "Identify action priorities",
+      "2": "In the long term, and through more in-depth work, build a reduction trajectory"
+    }
+  },
+  "team": {
+    "table": {
+      "title": "Pilot Team"
+    }
+  },
+  "study": {
+    "create": "Add a Footprint",
+    "myStudies": "My Carbon Footprints",
+    "createFirstStudy": "Create My First Footprint",
+    "see": "View My Footprint",
+    "selectSite": "Before filling in data, please select an establishment",
+    "lastStudyTitle": "Latest Footprint",
+    "navigation": {
+      "framing": "General Data",
+      "organizations": "My Establishments",
+      "team": "My Collaborators",
+      "title": "My Footprint"
+    },
+    "validatedOnlyDescription": "As a student, I have access as a contributor to one or more emission posts.",
+    "new": {
+      "suggestion": {
+        "name": "Example: carbon footprint Simone Veil Middle School"
+      },
+      "inviteContributors": "Invite the same students",
+      "glossary": {
+        "validatorEmailDescription": "As a student, I have access as a contributor to one or more emission posts.",
+        "duplicationOptionsDescription": "When duplicating a study, you can choose to invite the same team members and students from the original study to the new one. This helps maintain collaboration continuity."
+      }
+    },
+    "newContributor": {
+      "title": "Add on student on study : {name}"
+    },
+    "role": {
+      "Contributor": "Student"
+    },
+    "rights": {
+      "contributorsTable": {
+        "delete": "Remove the student",
+        "title": "Students",
+        "newContributorLink": "Add a student",
+        "deleting": {
+          "confirmation": "Are you sure you want to remove {email} from this study's students?"
+        },
+        "role": {
+          "description": "Here you can manage the students to your study. They will have access to certain posts and sub-posts (which you can define) and will be able to fill in certain information for emission sources that you have already created in the study. For more information on the contributor interface, please see our <link>FAQ</link>."
+        }
+      }
+    }
+  },
+  "emissionFactors": {
+    "post": {
+      "Restauration": "Restauration"
+    }
+  },
+  "organization": {
+    "card": {
+      "myOrganization": "My Establishments"
+    },
+    "form": {
+      "editTitle": "Edit My Establishments"
+    },
+    "sites": {
+      "title": "Which establishments should the footprint cover?",
+      "noSites": "No establishments configured",
+      "namePlaceholder": "Establishment Name",
+      "add": "Add an Establishment"
+    }
+  },
   "login": {
     "welcome": "Welcome to Clickson PEBC",
     "explanation": "Let's measure your establishment's greenhouse gas emissions!",
