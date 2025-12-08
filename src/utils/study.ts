@@ -93,6 +93,10 @@ export const postColors: Record<Post, string> = {
 
   [Post.Restauration]: 'darkBlue',
   [Post.Achats]: 'darkBlue',
+
+  [Post.EnergiesClickson]: 'darkblue',
+  [Post.DeplacementsClickson]: 'darblue',
+  [Post.ImmobilisationsClickson]: 'darblue',
 }
 
 export const hasEditionRights = (userRoleOnStudy: StudyRole | null) => {
