@@ -1,24 +1,12 @@
-import { EvaluatedFormLayout, FormLayout, FormPageElementProp } from '@publicodes/forms'
-import { reduceAST, RuleNode, utils } from 'publicodes'
+import { convertInputValueToPublicodes } from '@publicodes/forms'
+import Engine, { reduceAST, RuleNode, Situation, utils } from 'publicodes'
+import { EvaluatedFormLayout } from './layouts/evaluatedFormLayout'
+import { FormLayout } from './layouts/formLayout'
 
 export type OnFormInputChange<RuleName extends string> = (
   ruleName: RuleName,
   value: string | number | boolean | undefined,
 ) => void
-
-export function getFormPageElementProp(
-  formElement: { applicable: boolean } & FormPageElementProp,
-): FormPageElementProp {
-  return {
-    hidden: formElement.hidden,
-    autofocus: formElement.autofocus,
-    required: formElement.required,
-    // NOTE: we want to show all questions even if they aren't useful for the
-    // target computation
-    useful: formElement.applicable,
-    disabled: !formElement.applicable,
-  }
-}
 
 export function getRuleNamesFromLayout<RuleName extends string>(layout: FormLayout<RuleName>): RuleName[] | undefined {
   switch (layout.type) {
@@ -47,7 +35,6 @@ export function areRulesReferencedInApplicability<RuleName extends string>(
   currents: RuleName[],
   previous: RuleName[],
 ): boolean {
-  console.log({ currents, previous })
   return currents.some((current) => {
     const currentNode = getRuleNode(current)
     if (areReferencedInApplicability(currentNode, previous)) {
@@ -89,4 +76,31 @@ function areReferencedInApplicability<RuleName extends string>(
     false,
     currentNode,
   )
+}
+
+/**
+ * Returns an updated situation object with the new input value for the specified rule.
+ *
+ * If the input value is `undefined`, the rule is removed from the situation.
+ */
+export function getUpdatedSituationWithInputValue<RuleName extends string>(
+  engine: Engine<RuleName>,
+  currentSituation: Situation<RuleName>,
+  dottedName: RuleName,
+  inputValue: string | number | boolean | undefined,
+): Situation<RuleName> {
+  const situationValue = convertInputValueToPublicodes(engine, dottedName, inputValue)
+
+  if (situationValue === undefined) {
+    if (!(dottedName in currentSituation)) {
+      return currentSituation
+    }
+    delete currentSituation[dottedName]
+    return { ...currentSituation }
+  }
+
+  return {
+    ...currentSituation,
+    [dottedName]: situationValue,
+  }
 }

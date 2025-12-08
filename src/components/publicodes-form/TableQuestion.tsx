@@ -1,10 +1,11 @@
 import BaseTable from '@/components/base/Table'
 import { Paper, TableContainer } from '@mui/material'
-import { EvaluatedFormElement, EvaluatedTableLayout, FormPageElementProp } from '@publicodes/forms'
+import { EvaluatedFormElement } from '@publicodes/forms'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useMemo } from 'react'
 import InputField from './InputField'
-import { getFormPageElementProp, OnFormInputChange } from './utils'
+import { EvaluatedTableLayout } from './layouts/evaluatedFormLayout'
+import { OnFormInputChange } from './utils'
 
 interface TableLayoutProps<RuleName extends string> {
   tableLayout: EvaluatedTableLayout<RuleName>
@@ -17,7 +18,7 @@ interface TableLayoutProps<RuleName extends string> {
  */
 type TableRowData<RuleName extends string> = {
   id: string
-  elements: Array<EvaluatedFormElement<RuleName> & FormPageElementProp>
+  elements: Array<EvaluatedFormElement<RuleName>>
 }
 
 export default function TableQuestion<RuleName extends string>({
@@ -41,13 +42,11 @@ export default function TableQuestion<RuleName extends string>({
           return null
         }
 
-        const formElementProps = getFormPageElementProp(formElement)
-
         // TODO: could we have a cleaner way to distinguish between value and inputs ?
         return colIndex === 0 ? (
           <p>{formElement.label}</p>
         ) : (
-          <InputField formElement={formElement} formElementProps={formElementProps} onChange={onChange} />
+          <InputField formElement={formElement} onChange={onChange} />
         )
       },
     }))

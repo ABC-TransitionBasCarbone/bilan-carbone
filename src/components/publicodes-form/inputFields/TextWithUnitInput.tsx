@@ -15,7 +15,6 @@ interface TextUnitInputProps<RuleName extends string> extends BaseInputProps<Rul
 // TODO: should be NumberUnitInput if only supports number inputs
 const TextWithUnitInput = <RuleName extends string>({
   formElement,
-  formElementProps,
   onChange,
   disabled,
   format,
@@ -36,7 +35,7 @@ const TextWithUnitInput = <RuleName extends string>({
 
   const inputProps: Record<string, unknown> = useMemo(() => {
     const config = getInputFormatConfig(questionFormat)
-    return { ...config.inputProps, ...formElementProps }
+    return { ...config.inputProps, disabled: !formElement.applicable }
   }, [questionFormat])
 
   const handleChange = useCallback(
