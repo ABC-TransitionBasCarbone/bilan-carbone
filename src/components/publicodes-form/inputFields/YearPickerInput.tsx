@@ -20,12 +20,15 @@ const YearPickerInput = <RuleName extends string>({
   Omit<DatePickerProps & InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | 'onBlur'>) => {
   const value = formElement.value
 
-  const handleYearChange = useCallback((newValue: PickerValue) => {
-    if (newValue && newValue.isValid()) {
-      const formattedValue = newValue.format('YYYY')
-      onChange(formElement.id, '01/01/' + formattedValue)
-    }
-  }, [])
+  const handleYearChange = useCallback(
+    (newValue: PickerValue) => {
+      if (newValue && newValue.isValid()) {
+        const formattedValue = newValue.format('YYYY')
+        onChange(formElement.id, '01/01/' + formattedValue)
+      }
+    },
+    [onChange, formElement.id],
+  )
 
   const handleAccept = () => {
     if (onBlur) {

@@ -1,6 +1,6 @@
-import { EvaluatedFormElement, FormLayout, getEvaluatedFormElement } from '@publicodes/forms'
+import { EvaluatedFormElement, getEvaluatedFormElement } from '@publicodes/forms'
 import Engine, { Situation } from 'publicodes'
-import { GroupLayout, SimpleLayout, TableLayout } from './formLayout'
+import { FormLayout, GroupLayout, SimpleLayout, TableLayout } from './formLayout'
 
 export type EvaluatedFormLayout<RuleName extends string> =
   | EvaluatedSimpleLayout<RuleName>
@@ -38,22 +38,4 @@ export function getEvaluatedFormLayout<RuleName extends string>(
         evaluatedRows: layout.rows.map((row) => row.map((rule) => getEvaluatedFormElement(engine, rule, situation))),
       }
   }
-}
-
-export function isSimpleLayout<RuleName extends string>(
-  layout: EvaluatedFormLayout<RuleName>,
-): layout is EvaluatedSimpleLayout<RuleName> {
-  return layout.type === 'simple'
-}
-
-export function isGroupLayout<RuleName extends string>(
-  layout: EvaluatedFormLayout<RuleName>,
-): layout is EvaluatedGroupLayout<RuleName> {
-  return layout.type === 'group'
-}
-
-export function isTableLayout<RuleName extends string>(
-  layout: EvaluatedFormLayout<RuleName>,
-): layout is EvaluatedTableLayout<RuleName> {
-  return layout.type === 'table'
 }

@@ -37,7 +37,7 @@ const PublicodesSubPostForm = ({ subPost, study, studySiteId }: PublicodesSubPos
     const engine = getCutEngine()
     engine.setSituation(initialSituation as Situation<string>)
     return engine
-  }, [])
+  }, [initialSituation])
   const targetRule = getPublicodesTargetRule(subPost)
   const formLayouts = getFormLayoutsForSubPost(subPost)
 

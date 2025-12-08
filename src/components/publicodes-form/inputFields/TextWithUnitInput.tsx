@@ -3,7 +3,7 @@ import { EvaluatedNumberInput } from '@publicodes/forms'
 import classNames from 'classnames'
 import { InputHTMLAttributes, useCallback, useMemo } from 'react'
 import DebouncedInput from '../../base/DebouncedInput'
-import styles from './TextWithUnitInput.module.css'
+import styles from '../styles/TextWithUnitInput.module.css'
 import { getInputFormatConfig, NumberInputFormat, TextInputFormat } from './textInputFormatConfig'
 import { BaseInputProps } from './utils'
 
@@ -36,7 +36,7 @@ const TextWithUnitInput = <RuleName extends string>({
   const inputProps: Record<string, unknown> = useMemo(() => {
     const config = getInputFormatConfig(questionFormat)
     return { ...config.inputProps, disabled: !formElement.applicable }
-  }, [questionFormat])
+  }, [questionFormat, formElement.applicable])
 
   const handleChange = useCallback(
     (newValue: string) => {
