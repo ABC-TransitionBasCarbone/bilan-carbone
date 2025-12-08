@@ -95,8 +95,9 @@ export function getUpdatedSituationWithInputValue<RuleName extends string>(
     if (!(dottedName in currentSituation)) {
       return currentSituation
     }
-    delete currentSituation[dottedName]
-    return { ...currentSituation }
+
+    const { [dottedName]: _, ...rest } = currentSituation
+    return rest as Situation<RuleName>
   }
 
   return {

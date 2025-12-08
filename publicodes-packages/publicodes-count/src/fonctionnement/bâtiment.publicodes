@@ -34,6 +34,7 @@ fonctionnement . bâtiment . construction:
       unité: an
 
     année de construction:
+      type: date
       question: Quand le bâtiment a-t-il été construit ?
       form:
         saisie: année

@@ -1,5 +1,4 @@
 import { Box } from '@mui/material'
-import { FormBuilder } from '@publicodes/forms'
 import Engine, { Situation } from 'publicodes'
 import { useCallback, useMemo } from 'react'
 import { getEvaluatedFormLayout } from './layouts/evaluatedFormLayout'
@@ -36,7 +35,6 @@ export default function PublicodesForm<RuleName extends string, S extends Situat
   setSituation,
 }: PublicodesFormProps<RuleName, S>) {
   const elementsWithRelation = useMemo(() => {
-    console.log('PublicodesForm: rendering form layouts', formLayouts.length)
     // FIXME: should manage multiple questions linked to previous ones.
     return formLayouts.map((formLayout, index) => {
       const evaluatedFormLayout = getEvaluatedFormLayout(engine, formLayout, situation)
@@ -65,7 +63,7 @@ export default function PublicodesForm<RuleName extends string, S extends Situat
       engine.setSituation(newSituation)
       setSituation(newSituation as S)
     },
-    [engine, situation],
+    [engine, situation, setSituation],
   )
 
   return (
