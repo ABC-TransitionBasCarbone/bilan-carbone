@@ -40,6 +40,7 @@ const PostIcon = ({ post, className }: Props) => {
       return <DechetsDirectsIcon className={className} />
     case Post.Deplacements:
       return <DeplacementsIcon className={className} />
+    case Post.EnergiesClickson:
     case Post.Energies:
       return <EnergiesIcon className={className} />
     case Post.Immobilisations:
@@ -52,8 +53,10 @@ const PostIcon = ({ post, className }: Props) => {
       return <IntrantsBiensEtMatieresIcon className={className} />
     case Post.Fret:
       return <FretIcon className={className} />
+    case Post.Achats:
     case Post.IntrantsServices:
       return <IntrantsServicesIcon className={className} />
+    case Post.ImmobilisationsClickson:
     case Post.Fonctionnement:
       return <FonctionnementIcon className={className} />
     case Post.MobiliteSpectateurs:
