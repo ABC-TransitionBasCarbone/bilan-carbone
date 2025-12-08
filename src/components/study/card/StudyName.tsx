@@ -4,10 +4,11 @@ import SpaIcon from '@mui/icons-material/Spa'
 
 interface Props {
   name: string
+  role?: string
 }
 
-const StudyName = ({ name }: Props) => {
-  return <StyledChip color="success" label={name} icon={<SpaIcon />} />
+const StudyName = ({ name, role }: Props) => {
+  return <StyledChip color="success" label={name} subtitle={role} icon={<SpaIcon />} />
 }
 
 export default StudyName

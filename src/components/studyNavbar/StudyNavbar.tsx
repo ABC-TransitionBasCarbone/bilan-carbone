@@ -69,15 +69,11 @@ const StudyNavbar = ({ environment, studyId, study, isTransitionPlanActive, hasO
         <div className={styles.drawerContent}>
           <div className={styles.titleContainer}>
             <Link className={styles.studyTitle} href={title.href}>
-              <StudyName name={title.label} />
+              <StudyName
+                name={title.label}
+                role={hasRoleOnStudy(environment) && userRole ? tRole(userRole) : undefined}
+              />
             </Link>
-            {hasRoleOnStudy(environment) && userRole && (
-              <div className="justify-center">
-                <div className={classNames(styles.role, styles[userRole.toLowerCase()], 'text-center')}>
-                  {tRole(userRole)}
-                </div>
-              </div>
-            )}
           </div>
 
           <div className={styles.menuContainer}>

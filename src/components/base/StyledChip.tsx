@@ -1,9 +1,11 @@
 import { alpha, Chip, ChipProps, styled, Tooltip } from '@mui/material'
 import { useEffect, useRef, useState } from 'react'
+import styles from './StyledChip.module.css'
 
 const BaseStyledChip = styled(Chip)(({ theme, color = 'default' }) => {
   const baseStyles = {
     maxWidth: '100%',
+    height: 'auto',
     '& .MuiChip-label': {
       overflow: 'hidden',
       textOverflow: 'ellipsis',
@@ -38,11 +40,23 @@ const BaseStyledChip = styled(Chip)(({ theme, color = 'default' }) => {
   }
 })
 
-type PolymorphicChipProps<C extends React.ElementType = 'div'> = ChipProps<C> & { component?: C }
+type PolymorphicChipProps<C extends React.ElementType = 'div'> = ChipProps<C> & {
+  component?: C
+  subtitle?: string
+}
 
-const StyledChip = <C extends React.ElementType = 'div'>({ label, ...props }: PolymorphicChipProps<C>) => {
+const StyledChip = <C extends React.ElementType = 'div'>({ label, subtitle, ...props }: PolymorphicChipProps<C>) => {
   const [showTooltip, setShowTooltip] = useState(false)
   const chipRef = useRef<HTMLDivElement>(null)
+
+  const finalLabel = subtitle ? (
+    <div className={styles.labelContainer}>
+      <span>{label}</span>
+      <span className={styles.subtitle}>{subtitle}</span>
+    </div>
+  ) : (
+    label
+  )
 
   useEffect(() => {
     if (chipRef.current && label) {
@@ -53,7 +67,7 @@ const StyledChip = <C extends React.ElementType = 'div'>({ label, ...props }: Po
     }
   }, [label])
 
-  const chip = <BaseStyledChip ref={chipRef} label={label} {...props} />
+  const chip = <BaseStyledChip ref={chipRef} label={finalLabel} {...props} />
 
   return showTooltip && label ? (
     <Tooltip title={label} arrow>
