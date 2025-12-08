@@ -176,7 +176,7 @@ const getBaseFilterForEmissionFactors = (
   organizationId?: string,
 ) => {
   let importedFromCondition = {}
-  if (filters.sources.length > 0 && filters.sources.some((source) => source !== 'all')) {
+  if (filters.sources.length > 0) {
     if (filters.sources.includes(Import.Manual) && filters.sources.length === 1 && organizationId) {
       importedFromCondition = { OR: [{ importedFrom: Import.Manual, organizationId }] }
     } else if (filters.sources.includes(Import.Manual) && organizationId) {
@@ -191,6 +191,9 @@ const getBaseFilterForEmissionFactors = (
         OR: [{ versionId: { in: filters.sources.filter((s) => s !== Import.Manual) } }],
       }
     }
+  } else {
+    // Simple way to filter out all emission factors. importedFrom: null is not supported by Prisma here.
+    importedFromCondition = { id: 'no-source' }
   }
 
   return {
