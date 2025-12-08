@@ -75,6 +75,7 @@ interface CalculateCustomTrajectoryParams {
   pastStudies?: PastStudy[]
   overshootAdjustment?: OvershootAdjustment
   trajectoryType?: TrajectoryType
+  maxYear?: number
 }
 
 interface CalculateActionBasedTrajectoryParams {
@@ -609,6 +610,7 @@ export const calculateCustomTrajectory = ({
   pastStudies = [],
   overshootAdjustment,
   trajectoryType,
+  maxYear,
 }: CalculateCustomTrajectoryParams): TrajectoryDataPoint[] => {
   if (objectives.length === 0) {
     return []
@@ -660,13 +662,7 @@ export const calculateCustomTrajectory = ({
     if (isLastObjective && actualEmissions > 0) {
       let year = objective.targetYear + 1
 
-      if (yearlyReduction <= 0) {
-        throw new Error(
-          `Invalid reduction rate: yearly reduction is ${yearlyReduction} (rate: ${absoluteReductionRate}, emissions: ${actualEmissions}). Reduction rate must be positive.`,
-        )
-      }
-
-      while (actualEmissions > 0) {
+      while (actualEmissions > 0 && (yearlyReduction > 0 || year <= Math.max(maxYear ?? 0, TARGET_YEAR))) {
         actualEmissions = Math.max(0, actualEmissions - yearlyReduction)
         dataPoints.push({ year, value: actualEmissions })
         year++
@@ -780,6 +776,15 @@ export const calculateTrajectoriesWithHistory = ({
         }
       : null
 
+    let maxYearFromTrajectories = getMaxYearFromTrajectories(
+      sbti15Data,
+      sbtiWB2CData,
+      [],
+      null,
+      sbti15Enabled,
+      sbtiWB2CEnabled,
+    )
+
     const customTrajectoriesData: Array<{ id: string; data: TrajectoryData }> = trajectories
       .filter((t) => selectedCustomTrajectoryIds.includes(t.id))
       .map((traj) => ({
@@ -796,6 +801,7 @@ export const calculateTrajectoriesWithHistory = ({
             })),
             pastStudies,
             trajectoryType: traj.type,
+            maxYear: maxYearFromTrajectories > 0 ? maxYearFromTrajectories : undefined,
           }),
           withinThreshold: true,
         },
@@ -803,7 +809,7 @@ export const calculateTrajectoriesWithHistory = ({
 
     const enabledActions = actions.filter((action) => action.enabled)
 
-    const yearsFromTrajectories = getYearsToDisplay(
+    maxYearFromTrajectories = getMaxYearFromTrajectories(
       sbti15Data,
       sbtiWB2CData,
       customTrajectoriesData.map((values) => values.data),
@@ -811,7 +817,6 @@ export const calculateTrajectoriesWithHistory = ({
       sbti15Enabled,
       sbtiWB2CEnabled,
     )
-    const maxYearFromTrajectories = yearsFromTrajectories[yearsFromTrajectories.length - 1]
 
     const actionBasedData: TrajectoryData = {
       previousTrajectoryReferenceYear: null,
@@ -904,6 +909,15 @@ export const calculateTrajectoriesWithHistory = ({
       }
     }
 
+    let maxYearFromTrajectories = getMaxYearFromTrajectories(
+      sbti15Data,
+      sbtiWB2CData,
+      [],
+      null,
+      sbti15Enabled,
+      sbtiWB2CEnabled,
+    )
+
     const customTrajectoriesData: Array<{ id: string; data: TrajectoryData }> = []
     for (const traj of trajectories.filter((t) => selectedCustomTrajectoryIds.includes(t.id))) {
       const referenceTrajectory = calculateCustomTrajectory({
@@ -915,6 +929,7 @@ export const calculateTrajectoriesWithHistory = ({
         })),
         pastStudies,
         trajectoryType: traj.type,
+        maxYear: maxYearFromTrajectories > 0 ? maxYearFromTrajectories : undefined,
       })
 
       const referenceEmissionsForStudyStartYear = getTrajectoryEmissionsAtYear(referenceTrajectory, studyStartYear)
@@ -936,6 +951,7 @@ export const calculateTrajectoriesWithHistory = ({
               referenceStudyYear,
             },
         trajectoryType: traj.type,
+        maxYear: maxYearFromTrajectories > 0 ? maxYearFromTrajectories : undefined,
       })
 
       customTrajectoriesData.push({
@@ -951,7 +967,7 @@ export const calculateTrajectoriesWithHistory = ({
 
     const enabledActions = actions.filter((action) => action.enabled)
 
-    const yearsFromTrajectories = getYearsToDisplay(
+    maxYearFromTrajectories = getMaxYearFromTrajectories(
       sbti15Data,
       sbtiWB2CData,
       customTrajectoriesData.map((values) => values.data),
@@ -959,7 +975,6 @@ export const calculateTrajectoriesWithHistory = ({
       sbti15Enabled,
       sbtiWB2CEnabled,
     )
-    const maxYearFromTrajectories = yearsFromTrajectories[yearsFromTrajectories.length - 1]
 
     const referenceActionTrajectory = calculateActionBasedTrajectory({
       studyEmissions: referenceEmissions,
@@ -1140,4 +1155,24 @@ export const getYearsToDisplay = (
     ...extractYearsFromTrajectory(actionBasedTrajectoryData),
   ]
   return Array.from(new Set(allYears)).sort((a, b) => a - b)
+}
+
+export const getMaxYearFromTrajectories = (
+  trajectory15Data: TrajectoriesForYear | null,
+  trajectoryWB2CData: TrajectoriesForYear | null,
+  customTrajectoriesData: (TrajectoriesForYear | null)[],
+  actionBasedTrajectoryData: TrajectoriesForYear | null,
+  trajectory15Enabled: boolean,
+  trajectoryWB2CEnabled: boolean,
+): number => {
+  const years = getYearsToDisplay(
+    trajectory15Data,
+    trajectoryWB2CData,
+    customTrajectoriesData,
+    actionBasedTrajectoryData,
+    trajectory15Enabled,
+    trajectoryWB2CEnabled,
+  )
+
+  return years[years.length - 1]
 }
