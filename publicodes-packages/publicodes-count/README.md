@@ -47,5 +47,5 @@ yarn compile
 yarn test
 
 // Run the documentation server
-yarn doc
+yarn dev
 ```
