@@ -31,7 +31,7 @@ const StyledProgressBar = styled('div')<{ value: number }>(({ theme, value }) =>
   transition: 'width 1s ease',
 }))
 
-export const CutProgressBar = ({ value }: Props) => {
+export const SimplifiedProgressBar = ({ value }: Props) => {
   return (
     <StyledProgressWrapper>
       <StyledProgressBackground>

@@ -9,7 +9,7 @@ import { styled } from '@mui/material'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { CutPostInfography } from './CutPostInfography'
+import { SimplifiedPostInfography } from './SimplifiedPostInfography'
 
 interface Props {
   studySiteId: string
@@ -68,7 +68,7 @@ const AllPostsInfography = ({ studySiteId, study, data, user, posts = CutPost }:
       const emissionValue = getEmissionValueString(dataByPost?.value, study.resultsUnit, unit)
 
       return (
-        <CutPostInfography
+        <SimplifiedPostInfography
           key={post}
           mainPost={post}
           emissionValue={emissionValue}
