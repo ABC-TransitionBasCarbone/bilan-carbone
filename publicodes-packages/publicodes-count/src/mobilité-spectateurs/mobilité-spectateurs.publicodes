@@ -23,7 +23,6 @@ mobilité spectateurs . précision:
     - résultat précis
     - besoin
     - estimation
-  par défaut: "'résultat précis'"
   form:
     saisie: "menu déroulant"
   avec:
