@@ -20,14 +20,14 @@ export function getFormPageElementProp(
   }
 }
 
-export function getRuleNameFromLayout<RuleName extends string>(layout: FormLayout<RuleName>): RuleName | undefined {
+export function getRuleNamesFromLayout<RuleName extends string>(layout: FormLayout<RuleName>): RuleName[] | undefined {
   switch (layout.type) {
     case 'simple':
-      return layout.rule
+      return [layout.rule]
     case 'group':
-      return layout.rules[0]
+      return layout.rules
     case 'table':
-      return layout.rows[0]?.[0]
+      return layout.rows.flat()
   }
 }
 
@@ -42,30 +42,31 @@ export function evaluatedLayoutIsApplicable<RuleName extends string>(layout: Eva
   }
 }
 
-export function isRuleReferencedInApplicability<RuleName extends string>(
+export function areRulesReferencedInApplicability<RuleName extends string>(
   getRuleNode: (rule: RuleName) => RuleNode<RuleName>,
-  current: RuleName,
-  previous: RuleName,
+  currents: RuleName[],
+  previous: RuleName[],
 ): boolean {
-  const currentNode = getRuleNode(current)
-  if (hasReferencedInApplicability(currentNode, previous)) {
-    return true
-  }
-
-  const parents = utils.ruleParents(current) as RuleName[]
-  for (const parent of parents) {
-    const parentNode = getRuleNode(parent)
-    if (hasReferencedInApplicability(parentNode, previous)) {
+  console.log({ currents, previous })
+  return currents.some((current) => {
+    const currentNode = getRuleNode(current)
+    if (areReferencedInApplicability(currentNode, previous)) {
       return true
     }
-  }
 
-  return false
+    const parents = utils.ruleParents(current) as RuleName[]
+    for (const parent of parents) {
+      const parentNode = getRuleNode(parent)
+      if (areReferencedInApplicability(parentNode, previous)) {
+        return true
+      }
+    }
+  })
 }
 
-function hasReferencedInApplicability<RuleName extends string>(
+function areReferencedInApplicability<RuleName extends string>(
   currentNode: RuleNode<RuleName>,
-  previous: RuleName,
+  previous: RuleName[],
 ): boolean {
   return reduceAST(
     (found, node) => {
@@ -76,7 +77,7 @@ function hasReferencedInApplicability<RuleName extends string>(
       if (node.sourceMap?.mecanismName === 'applicable si' || node.sourceMap?.mecanismName === 'non applicable si') {
         return reduceAST(
           (_, node) => {
-            if (node.nodeKind === 'reference' && node.dottedName === previous) {
+            if (node.nodeKind === 'reference' && previous.includes(node.dottedName as RuleName)) {
               return true
             }
           },

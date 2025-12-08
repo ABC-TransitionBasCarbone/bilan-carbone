@@ -1,10 +1,10 @@
 import { Box } from '@mui/material'
 import { FormBuilder, FormState } from '@publicodes/forms'
-import Engine, { Situation } from 'publicodes'
+import { Situation } from 'publicodes'
 import { useCallback, useMemo, useState } from 'react'
 import PublicodesQuestion from './PublicodesQuestion'
 import styles from './styles/DynamicForm.module.css'
-import { evaluatedLayoutIsApplicable, getRuleNameFromLayout, isRuleReferencedInApplicability } from './utils'
+import { areRulesReferencedInApplicability, evaluatedLayoutIsApplicable, getRuleNamesFromLayout } from './utils'
 
 export interface PublicodesFormProps<RuleName extends string, S extends Situation<RuleName>> {
   /** The form builder used to generate the form pages and handle input changes. */
@@ -46,16 +46,17 @@ export default function PublicodesForm<RuleName extends string, S extends Situat
   // generic form component.
   const elementsWithRelation = useMemo(() => {
     const { elements } = formBuilder.currentPage(formState)
+    // FIXME: should manage multiple questions linked to previous ones.
     return elements.map((formLayout, index) => {
-      const currentRuleName = getRuleNameFromLayout(formLayout)
-      const previousRuleName = index > 0 ? getRuleNameFromLayout(elements[index - 1]) : undefined
+      const currentRuleNames = getRuleNamesFromLayout(formLayout)
+      const previousRuleNames = index > 0 ? getRuleNamesFromLayout(elements[index - 1]) : undefined
       const isLinkedToPreviousQuestion =
-        currentRuleName &&
-        previousRuleName &&
-        isRuleReferencedInApplicability(
+        currentRuleNames &&
+        previousRuleNames &&
+        areRulesReferencedInApplicability(
           (rule: RuleName) => formBuilder.getRule(formState, rule),
-          currentRuleName,
-          previousRuleName,
+          currentRuleNames,
+          previousRuleNames,
         )
 
       const key =
