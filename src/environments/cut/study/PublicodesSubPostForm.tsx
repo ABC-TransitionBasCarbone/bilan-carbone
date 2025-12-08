@@ -5,10 +5,10 @@ import { FullStudy } from '@/db/study'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { Situation } from 'publicodes'
-import { useMemo } from 'react'
-import { getCutFormBuilder } from '../publicodes/cut-engine'
+import { useMemo, useState } from 'react'
+import { getCutEngine } from '../publicodes/cut-engine'
 import { studySiteToSituation } from '../publicodes/studySiteToSituation'
-import { getPublicodesTarget as getPublicodesTargetRule } from '../publicodes/subPostMapping'
+import { getFormLayoutsForSubPost, getPublicodesTarget as getPublicodesTargetRule } from '../publicodes/subPostMapping'
 
 export interface PublicodesSubPostFormProps {
   subPost: SubPost
@@ -31,8 +31,15 @@ const PublicodesSubPostForm = ({ subPost, study, studySiteId }: PublicodesSubPos
     return studySiteToSituation(studySite)
   }, [study, studySiteId])
 
-  const cutFormBuilder = getCutFormBuilder()
+  const [situation, setSituation] = useState<Situation<string>>(initialSituation as Situation<string>)
+
+  const cutEngine = useMemo(() => {
+    const engine = getCutEngine()
+    engine.setSituation(initialSituation as Situation<string>)
+    return engine
+  }, [])
   const targetRule = getPublicodesTargetRule(subPost)
+  const formLayouts = getFormLayoutsForSubPost(subPost)
 
   // if (error) {
   //   return (
@@ -70,9 +77,10 @@ const PublicodesSubPostForm = ({ subPost, study, studySiteId }: PublicodesSubPos
   return (
     <div className="dynamic-subpost-form">
       <PublicodesForm
-        formBuilder={cutFormBuilder}
-        targetRules={[targetRule]}
-        initialSituation={initialSituation as Situation<string>}
+        engine={cutEngine}
+        formLayouts={formLayouts}
+        situation={situation}
+        setSituation={setSituation}
         // TODO: manage autosave answers
         // subPost={subPost}
         // studyId={study.id}

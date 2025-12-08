@@ -1,5 +1,6 @@
 import { Checkbox, FormControl, FormControlLabel, styled } from '@mui/material'
-import { EvaluatedFormElement, EvaluatedGroupLayout, FormPageElementProp } from '@publicodes/forms'
+import { EvaluatedFormElement, FormPageElementProp } from '@publicodes/forms'
+import { EvaluatedGroupLayout } from './layouts/evaluatedFormLayout'
 import { OnFormInputChange } from './utils'
 
 const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({

@@ -1,24 +1,23 @@
 import { Box } from '@mui/material'
-import { FormBuilder, FormState } from '@publicodes/forms'
-import { Situation } from 'publicodes'
-import { useCallback, useMemo, useState } from 'react'
+import { FormBuilder } from '@publicodes/forms'
+import Engine, { Situation } from 'publicodes'
+import { useCallback, useMemo } from 'react'
+import { getEvaluatedFormLayout } from './layouts/evaluatedFormLayout'
+import { FormLayout } from './layouts/formLayout'
 import PublicodesQuestion from './PublicodesQuestion'
 import styles from './styles/DynamicForm.module.css'
-import { areRulesReferencedInApplicability, evaluatedLayoutIsApplicable, getRuleNamesFromLayout } from './utils'
+import {
+  areRulesReferencedInApplicability,
+  evaluatedLayoutIsApplicable,
+  getRuleNamesFromLayout,
+  getUpdatedSituationWithInputValue,
+} from './utils'
 
 export interface PublicodesFormProps<RuleName extends string, S extends Situation<RuleName>> {
-  /** The form builder used to generate the form pages and handle input changes. */
-  formBuilder: FormBuilder<RuleName>
-  /** The rules to be evaluated by the Publicodes engine which determines the questions to display. */
-  targetRules: RuleName[]
-  /** The initial situation to pre-fill the form and determine the visibility of questions. */
-  initialSituation?: S
-  /** Callback invoked whenever a form field changes. */
-  onFieldChange?: (
-    fieldName: RuleName,
-    value: string | number | boolean | undefined,
-    newState: FormState<RuleName>,
-  ) => void
+  engine: Engine<RuleName>
+  formLayouts: FormLayout<RuleName>[]
+  situation: S
+  setSituation: (situation: S) => void
 }
 
 /**
@@ -31,65 +30,52 @@ export interface PublicodesFormProps<RuleName extends string, S extends Situatio
  * update as the user interacts with the form.
  */
 export default function PublicodesForm<RuleName extends string, S extends Situation<RuleName>>({
-  targetRules,
-  formBuilder,
-  initialSituation = {} as S,
-  onFieldChange,
+  engine,
+  formLayouts,
+  situation,
+  setSituation,
 }: PublicodesFormProps<RuleName, S>) {
-  const [formState, setFormState] = useState<FormState<RuleName>>(() => {
-    const initialState = FormBuilder.newState(initialSituation)
-    return formBuilder.start(initialState, ...targetRules)
-  })
-
-  // NOTE: for now, if we want to mimic the previous behavior, we don't need
-  // to manage pagination, but it could be added later if we need a realy
-  // generic form component.
   const elementsWithRelation = useMemo(() => {
-    const { elements } = formBuilder.currentPage(formState)
+    console.log('PublicodesForm: rendering form layouts', formLayouts.length)
     // FIXME: should manage multiple questions linked to previous ones.
-    return elements.map((formLayout, index) => {
+    return formLayouts.map((formLayout, index) => {
+      const evaluatedFormLayout = getEvaluatedFormLayout(engine, formLayout, situation)
       const currentRuleNames = getRuleNamesFromLayout(formLayout)
-      const previousRuleNames = index > 0 ? getRuleNamesFromLayout(elements[index - 1]) : undefined
+      const previousRuleNames = index > 0 ? getRuleNamesFromLayout(formLayouts[index - 1]) : undefined
       const isLinkedToPreviousQuestion =
         currentRuleNames &&
         previousRuleNames &&
-        areRulesReferencedInApplicability(
-          (rule: RuleName) => formBuilder.getRule(formState, rule),
-          currentRuleNames,
-          previousRuleNames,
-        )
+        areRulesReferencedInApplicability((rule: RuleName) => engine.getRule(rule), currentRuleNames, previousRuleNames)
 
       const key =
         formLayout.type === 'simple'
-          ? formLayout.evaluatedElement.id
+          ? formLayout.rule
           : formLayout.type === 'group'
             ? `group-${index}`
             : `table-${formLayout.title}-${index}`
 
-      const isApplicable = evaluatedLayoutIsApplicable(formLayout)
-      return { formLayout, isLinkedToPreviousQuestion, key, isApplicable }
+      const isApplicable = evaluatedLayoutIsApplicable(evaluatedFormLayout)
+      return { evaluatedFormLayout, isLinkedToPreviousQuestion, key, isApplicable }
     })
-  }, [formBuilder, formState])
+  }, [formLayouts, engine, situation])
 
   const handleFieldChange = useCallback(
     (ruleName: RuleName, value: string | number | boolean | undefined) => {
-      setFormState((currentState) => {
-        const newState = formBuilder.handleInputChange(currentState, ruleName, value)
-        onFieldChange?.(ruleName, value, newState)
-        return newState
-      })
+      const newSituation = getUpdatedSituationWithInputValue(engine, situation, ruleName, value)
+      engine.setSituation(newSituation)
+      setSituation(newSituation as S)
     },
-    [formBuilder, onFieldChange],
+    [engine, situation],
   )
 
   return (
     <Box className="dynamic-form">
       <Box>
-        {elementsWithRelation.map(({ key, formLayout, isApplicable, isLinkedToPreviousQuestion }) => {
+        {elementsWithRelation.map(({ key, evaluatedFormLayout, isApplicable, isLinkedToPreviousQuestion }) => {
           return isApplicable ? (
             <Box key={key}>
               {isLinkedToPreviousQuestion && <Box className={styles.relationLine} />}
-              <PublicodesQuestion formLayout={formLayout} onChange={handleFieldChange} />
+              <PublicodesQuestion formLayout={evaluatedFormLayout} onChange={handleFieldChange} />
             </Box>
           ) : null
         })}

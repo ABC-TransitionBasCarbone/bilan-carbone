@@ -1,10 +1,10 @@
 import Box from '@mui/material/Box'
-import { EvaluatedFormLayout } from '@publicodes/forms'
 import GroupQuestion from './GroupQuestion'
 import PublicodesInputField from './InputField'
+import { EvaluatedFormLayout } from './layouts/evaluatedFormLayout'
 import QuestionContainer from './QuestionContainer'
 import TableQuestion from './TableQuestion'
-import { getFormPageElementProp, OnFormInputChange } from './utils'
+import { OnFormInputChange } from './utils'
 
 export interface PublicodesQuestionProps<RuleName extends string> {
   formLayout: EvaluatedFormLayout<RuleName>
@@ -18,12 +18,11 @@ export default function PublicodesQuestion<RuleName extends string>({
   switch (formLayout.type) {
     case 'simple': {
       const formElement = formLayout.evaluatedElement
-      const formElementProps = getFormPageElementProp(formElement)
 
       return (
         <Box key={formElement.id} sx={{ mb: 2 }}>
           <QuestionContainer label={formElement.label} helperText={formElement.description}>
-            <PublicodesInputField formElement={formElement} formElementProps={formElementProps} onChange={onChange} />
+            <PublicodesInputField formElement={formElement} onChange={onChange} />
           </QuestionContainer>
         </Box>
       )
