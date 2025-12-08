@@ -1193,7 +1193,11 @@
           "AvoidanceFinancing": "Financement d'évitement (Priorité 4/6)",
           "ReductionOutsideOrganisationValueChain": "Réduction hors de la chaîne de valeur de l'organisation (Priorité 2/6)",
           "ReductionWithinOrganisationValueChain": "Réduction dans la chaîne de valeur de l'organisation (Priorité 1/6)",
-          "ReductionWithinOrganisationCoreBusiness": "Réduction dans le coeur d'activité de l'organisation (Priorité 1/6)"
+          "ReductionWithinOrganisationCoreBusiness": "Réduction dans le coeur d'activité de l'organisation (Priorité 1/6)",
+          "glossaryTitle": "Niveaux de pertinence d'une action",
+          "information": "Information sur les niveaux de pertinence",
+          "learnMore": "Pour plus d'information, nous vous invitons à consulter cette page.",
+          "close": "Fermer"
         },
         "onboarding": {
           "title": "Construisez un plan d'action afin d'atteindre vos objectifs",

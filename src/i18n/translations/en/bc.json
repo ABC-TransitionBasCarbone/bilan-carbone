@@ -1102,7 +1102,7 @@
         "onboarding": {
           "title": "Add a trajectory or reduction objectives",
           "description": "You have already created a reference trajectory but want to add others to test different hypotheses and ambition levels? You can create new trajectories, or add intermediate objectives for more detailed tracking without losing sight of the final goal!",
-          "detailedInfo": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p><p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>"
+          "detailedInfo": "When you enter your first top-down trajectory, the associated objectives for 2030 and 2050 will be recorded in this table. You can then detail these objectives by adding additional intermediate targets, which can apply either to all categories and sites of the Carbon Assessment® (in which case the reductions will be calculated automatically to maintain consistency with the 2030 and 2050 objectives), or to specific categories and sites. You can also enter your projected revenue growth to obtain annual reductions that account for this growth. Finally, you can add other top-down trajectories, particularly to visualize different trajectories on the previous page before choosing the one you will follow."
         }
       },
       "actions": {
@@ -1193,12 +1193,16 @@
           "AvoidanceFinancing": "Avoidance financing (Priority 4/6)",
           "ReductionOutsideOrganisationValueChain": "Reduction outside the organisation's value chain (Priority 2/6)",
           "ReductionWithinOrganisationValueChain": "Reduction within the organisation's value chain (Priority 1/6)",
-          "ReductionWithinOrganisationCoreBusiness": "Reduction within the organisation's core business (Priority 1/6)"
+          "ReductionWithinOrganisationCoreBusiness": "Reduction within the organisation's core business (Priority 1/6)",
+          "glossaryTitle": "Action relevance levels",
+          "information": "Information about relevance levels",
+          "learnMore": "For more information, please visit this page.",
+          "close": "Close"
         },
         "onboarding": {
           "title": "Create your action plan to achieve your objectives",
           "description": "You have already created your trajectory and associated objectives. Now you can add the actions to your transition plan that will allow you to achieve these objectives",
-          "detailedInfo": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p><p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>"
+          "detailedInfo": "A top-down trajectory is defined macroscopically, setting medium and long-term reduction targets. In contrast, a bottom-up trajectory is built from an action plan—a set of coherent actions that, when combined, enable emission reductions during their implementation. This page allows you to enter and characterize various actions, following the information defined in the Carbon Assessment® methodology. All this information must be recorded in a Carbon Assessment®, but it is possible to fill in some details later to test different action combinations before making final selections. A toggle in the first column of the table allows you to activate or deactivate the entered actions to see if the resulting bottom-up trajectory aligns with the chosen top-down trajectory. Once relevant actions are selected, you can complete the missing information to better characterize each action, assign a budget, specify implementation steps, and define indicators that will later help you monitor the implementation, tracking, and performance of your actions."
         },
         "deleteModal": {
           "title": "Delete action",
