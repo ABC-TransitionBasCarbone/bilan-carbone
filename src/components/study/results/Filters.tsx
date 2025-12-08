@@ -95,7 +95,7 @@ const Filters = <T extends FilterType>({
       const defaultItems = Object.values(initialItems).flatMap((parent) => parent.children.map((child) => child.id))
       setCheckedItems(defaultItems)
     }
-  }, [checkedItems.length, initialItems, previousExportType, exportType])
+  }, [initialItems, previousExportType, exportType])
 
   useEffect(() => {
     const filtered = results
