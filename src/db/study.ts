@@ -224,6 +224,11 @@ const fullStudyInclude = {
           name: true,
           postalCode: true,
           city: true,
+          address: true,
+          establishmentYear: true,
+          etp: true,
+          studentNumber: true,
+          superficy: true,
           cnc: {
             select: {
               id: true,
