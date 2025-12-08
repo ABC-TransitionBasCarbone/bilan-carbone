@@ -163,6 +163,6 @@ export const getDuplicableEnvironments = (environment: Environment): Environment
   return [environment].concat(compatibles)
 }
 
-export const formatValueForExport = (value: number): number => {
-  return Math.round(value)
+export const formatEmissionValueForExport = (value: number, unit: StudyResultUnit): number => {
+  return Math.round(value / STUDY_UNIT_VALUES[unit])
 }
