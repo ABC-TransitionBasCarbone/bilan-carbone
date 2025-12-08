@@ -30,7 +30,7 @@ const DynamicStudyRights = ({ user, study, editionDisabled, userRoleOnStudy, emi
       }
       environmentComponents={{
         [Environment.CUT]: <StudyRightsCut study={study} />,
-        [Environment.CLICKSON]: <StudyRightsClickson study={study} />,
+        [Environment.CLICKSON]: <StudyRightsClickson study={study} editionDisabled={editionDisabled} />,
       }}
     />
   )

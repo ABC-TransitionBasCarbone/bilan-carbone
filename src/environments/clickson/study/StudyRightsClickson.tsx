@@ -2,14 +2,18 @@
 
 import Block from '@/components/base/Block'
 import LinkButton from '@/components/base/LinkButton'
+import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormTextField } from '@/components/form/TextField'
+import StudyContributorsTable from '@/components/study/rights/StudyContributorsTable'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
 import useStudySite from '@/components/study/site/useStudySite'
 import { SiteDependentField } from '@/constants/emissionFactorMap'
 import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { changeStudyEstablishment, getStudySite } from '@/services/serverFunctions/study'
+import { changeStudyDates, changeStudyEstablishment, getStudySite } from '@/services/serverFunctions/study'
 import {
+  ChangeStudyDatesCommand,
+  ChangeStudyDatesCommandValidation,
   ChangeStudyEstablishmentCommand,
   ChangeStudyEstablishmentValidation,
 } from '@/services/serverFunctions/study.command'
@@ -17,6 +21,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Box, CircularProgress } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
+import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './StudyRights.module.css'
@@ -27,11 +32,13 @@ const SiteDataChangeWarningModal = dynamic(() => import('@/components/modals/Sit
 
 interface Props {
   study: FullStudy
+  editionDisabled: boolean
 }
 
-const StudyRightsClickson = ({ study }: Props) => {
+const StudyRightsClickson = ({ study, editionDisabled }: Props) => {
   const t = useTranslations('study.new')
   const tRights = useTranslations('study.rights')
+  const tValidation = useTranslations('validation')
   const { callServerFunction } = useServerFunction()
   const { studySite, setSite } = useStudySite(study)
   const [siteData, setSiteData] = useState<FullStudy['sites'][0] | undefined>()
@@ -50,6 +57,8 @@ const StudyRightsClickson = ({ study }: Props) => {
     superficy: number | null
   } | null>(null)
 
+  const router = useRouter()
+
   const form = useForm<ChangeStudyEstablishmentCommand>({
     resolver: zodResolver(ChangeStudyEstablishmentValidation),
     mode: 'onBlur',
@@ -62,6 +71,30 @@ const StudyRightsClickson = ({ study }: Props) => {
       superficy: siteData?.site.superficy ?? null,
     },
   })
+
+  const dateForm = useForm<ChangeStudyDatesCommand>({
+    resolver: zodResolver(ChangeStudyDatesCommandValidation),
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
+    defaultValues: {
+      studyId: study.id,
+      startDate: study.startDate.toISOString(),
+      endDate: study.endDate.toISOString(),
+      realizationStartDate: study.realizationStartDate?.toISOString(),
+      realizationEndDate: study.realizationEndDate?.toISOString(),
+    },
+  })
+  useEffect(() => {
+    setLoading(true)
+    const currentYear = new Date().getFullYear()
+    // + 1 because january = 0
+    const currentMonth = new Date().getMonth() + 1
+    const startYear = currentMonth >= 9 ? currentYear : currentYear - 1
+    dateForm.setValue('studyId', study.id)
+    dateForm.setValue('startDate', study.startDate.toISOString() ?? new Date(`${startYear}-09-01`).toISOString())
+    dateForm.setValue('endDate', study.endDate.toISOString() ?? new Date(`${startYear + 1}-08-31`).toISOString())
+    setLoading(false)
+  }, [dateForm, study])
 
   useEffect(() => {
     async function setStudySiteData() {
@@ -130,6 +163,28 @@ const StudyRightsClickson = ({ study }: Props) => {
     }
   }
 
+  const handleDateChange = useCallback(async () => {
+    const isValid = await form.trigger()
+    if (isValid) {
+      const values = dateForm.getValues()
+      await callServerFunction(() => changeStudyDates(values), {
+        onSuccess: () => {
+          router.refresh()
+        },
+        onError: () => {
+          router.refresh()
+
+          dateForm.reset({
+            studyId: study.id,
+            startDate: study.startDate.toISOString(),
+            endDate: study.endDate.toISOString(),
+          })
+        },
+        getErrorMessage: (errorMessage: string) => tValidation(errorMessage),
+      })
+    }
+  }, [dateForm, callServerFunction, router, tValidation, study])
+
   const onStudyEstablishmentUpdate = useCallback(() => {
     if (studySite === 'all') {
       return
@@ -150,6 +205,25 @@ const StudyRightsClickson = ({ study }: Props) => {
           <CircularProgress variant="indeterminate" color="primary" size={100} className="flex mt2" />
         ) : (
           <>
+            <div className="flex-col gapped1">
+              <div className={styles.dates}>
+                <FormDatePicker
+                  control={dateForm.control}
+                  translation={t}
+                  name="startDate"
+                  label={t('start')}
+                  onAccept={handleDateChange}
+                />
+                <FormDatePicker
+                  control={dateForm.control}
+                  translation={t}
+                  name="endDate"
+                  label={t('end')}
+                  data-testid="new-study-endDate"
+                  onAccept={handleDateChange}
+                />
+              </div>
+            </div>
             <div className="flex-col gapped1">
               <FormTextField
                 control={form.control}
@@ -216,6 +290,7 @@ const StudyRightsClickson = ({ study }: Props) => {
             questionsBySubPost={pendingSiteChanges.questionsBySubPost}
           />
         )}
+        <StudyContributorsTable study={study} canAddContributor={!editionDisabled} />
       </Block>
     </>
   )
