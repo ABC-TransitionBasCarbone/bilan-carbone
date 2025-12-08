@@ -77,8 +77,7 @@
           "confirmation": "Are you sure you want to remove {email} from this study's students?"
         },
         "role": {
-          "description": "Here you can manage the students to your study. They will have access to certain posts and sub-posts (which you can define) and will be able to fill in certain information for emission sources that you have already created in the study. For more information on the contributor interface, please see our <link>FAQ</link>.",
-          "Contributor": "Élève"
+          "description": "Here you can manage the students to your study. They will have access to certain posts and sub-posts (which you can define) and will be able to fill in certain information for emission sources that you have already created in the study. For more information on the contributor interface, please see our <link>FAQ</link>."
         }
       }
     }

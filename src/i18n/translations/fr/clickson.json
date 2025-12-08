@@ -56,11 +56,11 @@
       "suggestion": {
         "name": "Exemple : empreinte carbone Collège Simone Veil"
       },
-      "inviteContributors": "Inviter les mêmes élèves"
-    },
-    "glossary": {
-      "validatorEmailDescription": "En tant qu'élèves j'ai accès en tant que contributeurice sur un ou plusieurs postes d'émission.",
-      "duplicationOptionsDescription": "Lors de la duplication d'une étude, vous pouvez choisir d'inviter les mêmes membres d'équipe et élèves de l'étude originale dans la nouvelle. Cela permet de maintenir la continuité de la collaboration."
+      "inviteContributors": "Inviter les mêmes élèves",
+      "glossary": {
+        "validatorEmailDescription": "En tant qu'élèves j'ai accès en tant que contributeurice sur un ou plusieurs postes d'émission.",
+        "duplicationOptionsDescription": "Lors de la duplication d'une étude, vous pouvez choisir d'inviter les mêmes membres d'équipe et élèves de l'étude originale dans la nouvelle. Cela permet de maintenir la continuité de la collaboration."
+      }
     },
     "newContributor": {
       "title": "Ajouter un·e élève sur l'étude : {name}"
