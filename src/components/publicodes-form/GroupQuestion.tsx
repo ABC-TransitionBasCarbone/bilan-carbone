@@ -39,7 +39,6 @@ export default function GroupQuestion<RuleName extends string>({
             checked?: boolean
           }
 
-        console.log('checkboxElement:', checkboxElement)
         const isChecked = checkboxElement.checked ?? false
         const isDisabled = !checkboxElement.applicable
 
