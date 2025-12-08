@@ -26,6 +26,8 @@ import LocalPizzaOutlinedIcon from '@mui/icons-material/LocalPizzaOutlined'
 import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined'
 import MapsHomeWorkOutlinedIcon from '@mui/icons-material/MapsHomeWorkOutlined'
 import TrainOutlinedIcon from '@mui/icons-material/TrainOutlined'
+import { DeplacementsClicksonIcon } from './deplacementsClickson'
+import { RestaurationIcon } from './restauration'
 
 interface Props {
   post: Post
@@ -91,6 +93,10 @@ const PostIcon = ({ post, className }: Props) => {
       return <LightbulbOutlinedIcon className={className} />
     case Post.Teletravail:
       return <BoltOutlinedIcon className={className} />
+    case Post.DeplacementsClickson:
+      return <DeplacementsClicksonIcon className={className} />
+    case Post.Restauration:
+      return <RestaurationIcon className={className} />
   }
 }
 
