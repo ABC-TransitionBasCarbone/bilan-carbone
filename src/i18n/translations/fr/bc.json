@@ -422,7 +422,13 @@
       "new": "Donnez un titre à votre nouvelle source d'émission",
       "add": "Ajouter",
       "filters": "Filtres",
-      "sort": "Trier"
+      "sort": "Trier par",
+      "activityData": "Donnée d'activité",
+      "emissionFactor": "Facteur d'émission",
+      "emissions": "Émissions",
+      "uncertainty": "Incertitude (Alpha, %)",
+      "asc": "Ascendant",
+      "desc": "Descendant"
     },
     "organization": {
       "site": "Site",
