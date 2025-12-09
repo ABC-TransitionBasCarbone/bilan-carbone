@@ -29,6 +29,8 @@ const StudyContributorPage = ({ study, userRole }: Props) => {
   const { studySite, setSite } = useStudySite(study)
   const { environment } = useAppEnvironmentStore()
 
+  const subPosts = subPostsByPost[Post.ConstructionDesLocaux]
+
   const emissionSources = useMemo(
     () =>
       study.emissionSources.filter(
@@ -51,7 +53,7 @@ const StudyContributorPage = ({ study, userRole }: Props) => {
           .filter((post: Post) =>
             study.emissionSources.some((emissionSource) => subPostsByPost[post].includes(emissionSource.subPost)),
           )
-          .map((post) => (
+          .map((post: Post) => (
             <Block
               key={post}
               title={
@@ -64,7 +66,7 @@ const StudyContributorPage = ({ study, userRole }: Props) => {
               iconPosition="before"
             >
               <SubPosts
-                post={post}
+                subPosts={subPostsByPost[post]}
                 study={study}
                 withoutDetail
                 emissionSources={emissionSources}
