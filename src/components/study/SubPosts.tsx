@@ -49,6 +49,11 @@ const SubPosts = ({
           studySite={studySite}
           {...(withoutDetail ? { study, withoutDetail: true } : { study, withoutDetail: false })}
           setGlossary={setGlossary}
+          count={emissionSources.filter((emissionSource) => emissionSource.subPost === subPost).length}
+          validated={
+            emissionSources.filter((emissionSource) => emissionSource.subPost === subPost && emissionSource.validated)
+              .length
+          }
         />
       ))}
     </div>

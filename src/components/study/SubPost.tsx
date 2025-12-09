@@ -37,6 +37,8 @@ interface Props {
   emissionSources: FullStudy['emissionSources']
   studySite: string
   setGlossary: (subPost: string) => void
+  count: number
+  validated: number
 }
 
 const SubPost = ({
@@ -48,8 +50,11 @@ const SubPost = ({
   emissionSources,
   studySite,
   setGlossary,
+  count,
+  validated,
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
   const t = useTranslations('study.post')
+  const tStudy = useTranslations('study')
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('study.results.units')
   const { environment } = useAppEnvironmentStore()
@@ -168,6 +173,11 @@ const SubPost = ({
               </span>
             )}
           </p>
+          {count > 0 && (
+            <span className="grow justify-end mr1">
+              {tStudy.rich('validatedSources', { total: count, validated, data: (children) => <>{children}</> })}
+            </span>
+          )}
         </AccordionSummary>
         <AccordionDetails id={`panel-${subPost}-content`} className={styles.subPostDetailsContainer}>
           {emissionSources.map((emissionSource) =>
