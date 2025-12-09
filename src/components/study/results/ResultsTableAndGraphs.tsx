@@ -35,7 +35,7 @@ interface Props<T> {
   title: string
   type: 'tag' | 'post'
   glossary?: string
-  exportType?: string
+  exportType: string
 }
 const ResultsTableAndGraphs = <T extends BasicTypeCharts & { tagFamily?: { id: string; name: string } }>({
   activeTabs = Object.values(TabsPossibilities),

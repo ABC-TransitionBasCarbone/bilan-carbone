@@ -29,6 +29,7 @@ interface Props {
   nonSpecificMonetaryRatio: number
   caUnit?: SiteCAUnit
   computedResultsByTag: ResultsByTag[]
+  exportType: string
 }
 
 const EmissionsAnalysis = ({
@@ -42,6 +43,7 @@ const EmissionsAnalysis = ({
   nonSpecificMonetaryRatio,
   caUnit = SiteCAUnit.K,
   computedResultsByTag,
+  exportType,
 }: Props) => {
   const t = useTranslations('study.results')
   const tGlossary = useTranslations('study')
@@ -125,6 +127,7 @@ const EmissionsAnalysis = ({
             title={t('tagPieChartTitle', { unit: tResultUnits(study.resultsUnit) })}
             type="tag"
             glossary="tagGlossary"
+            exportType={exportType}
           />
         </div>
       </div>
