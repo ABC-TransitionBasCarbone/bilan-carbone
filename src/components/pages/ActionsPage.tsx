@@ -2,8 +2,8 @@
 
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import { FullStudy } from '@/db/study'
+import { ActionWithIndicators } from '@/db/transitionPlan'
 import { customRich } from '@/i18n/customRich'
-import { Action } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Block from '../base/Block'
 import SelectStudySite from '../study/site/SelectStudySite'
@@ -12,7 +12,7 @@ import TransitionPlanOnboarding from '../study/transitionPlan/TransitionPlanOnbo
 
 interface Props {
   study: FullStudy
-  actions: Action[]
+  actions: ActionWithIndicators[]
   transitionPlanId: string
   canEdit: boolean
 }
