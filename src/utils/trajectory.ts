@@ -597,7 +597,6 @@ export const calculateCustomTrajectory = ({
   pastStudies = [],
   overshootAdjustment,
   trajectoryType,
-  maxYear,
 }: CalculateCustomTrajectoryParams): TrajectoryDataPoint[] => {
   if (objectives.length === 0) {
     return []
@@ -639,21 +638,10 @@ export const calculateCustomTrajectory = ({
     const objective = sortedObjectives[i]
     const absoluteReductionRate = Number(objective.reductionRate)
     const yearlyReduction = actualEmissions * absoluteReductionRate
-    const isLastObjective = i === sortedObjectives.length - 1
 
     for (let year = startYear + 1; year <= objective.targetYear; year++) {
       actualEmissions = Math.max(0, actualEmissions - yearlyReduction)
       dataPoints.push({ year, value: actualEmissions })
-    }
-
-    if (isLastObjective && actualEmissions > 0) {
-      let year = objective.targetYear + 1
-
-      while (actualEmissions > 0 && (yearlyReduction > 0 || year <= Math.max(maxYear ?? 0, TARGET_YEAR))) {
-        actualEmissions = Math.max(0, actualEmissions - yearlyReduction)
-        dataPoints.push({ year, value: actualEmissions })
-        year++
-      }
     }
 
     startYear = objective.targetYear
@@ -788,7 +776,6 @@ export const calculateTrajectoriesWithHistory = ({
             })),
             pastStudies,
             trajectoryType: traj.type,
-            maxYear: maxYearFromTrajectories > 0 ? maxYearFromTrajectories : undefined,
           }),
           withinThreshold: true,
         },
@@ -916,7 +903,6 @@ export const calculateTrajectoriesWithHistory = ({
         })),
         pastStudies,
         trajectoryType: traj.type,
-        maxYear: maxYearFromTrajectories > 0 ? maxYearFromTrajectories : undefined,
       })
 
       const referenceEmissionsForStudyStartYear = getTrajectoryEmissionsAtYear(referenceTrajectory, studyStartYear)
@@ -938,7 +924,6 @@ export const calculateTrajectoriesWithHistory = ({
               referenceStudyYear,
             },
         trajectoryType: traj.type,
-        maxYear: maxYearFromTrajectories > 0 ? maxYearFromTrajectories : undefined,
       })
 
       customTrajectoriesData.push({

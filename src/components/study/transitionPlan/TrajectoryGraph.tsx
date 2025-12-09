@@ -78,9 +78,15 @@ const TrajectoryGraph = ({
   const studyStartYearIndex = yearsToDisplay.indexOf(studyStartYear)
 
   const mapDataToYears = useCallback(
-    (dataPoints: TrajectoryDataPoint[]) => {
+    (dataPoints: TrajectoryDataPoint[], customTrajectory = false) => {
+      const maxYear = customTrajectory
+        ? Math.min((Math.max(...yearsToDisplay), Math.max(...dataPoints.map((point) => point.year))))
+        : Math.max(...yearsToDisplay)
+
       const dataMap = new Map(dataPoints.map((d) => [d.year, d.value]))
-      return yearsToDisplay.map((year) => dataMap.get(year) ?? null)
+      return yearsToDisplay.map((year) =>
+        year <= maxYear ? (dataMap.get(year) ?? null) : (dataMap.get(maxYear) ?? null),
+      )
     },
     [yearsToDisplay],
   )
@@ -224,7 +230,7 @@ const TrajectoryGraph = ({
         if (previousTrajectory) {
           if (withinThreshold) {
             series.push({
-              data: mapDataToYears(previousTrajectory),
+              data: mapDataToYears(previousTrajectory, true),
               label: traj.label + ` (${previousTrajectoryReferenceYear})`,
               color: traj.color || `var(--trajectory-custom-${index % 9})`,
               curve: 'linear' as const,
@@ -235,7 +241,7 @@ const TrajectoryGraph = ({
           } else {
             const baseColor = traj.color || `var(--trajectory-custom-${index % 9})`
             series.push({
-              data: mapDataToYears(previousTrajectory),
+              data: mapDataToYears(previousTrajectory, true),
               label: traj.label + ` (${previousTrajectoryReferenceYear})`,
               color: `color-mix(in srgb, ${baseColor} 50%, transparent)`,
               curve: 'linear' as const,
@@ -246,7 +252,7 @@ const TrajectoryGraph = ({
           }
         }
 
-        const currentData = mapDataToYears(currentTrajectory)
+        const currentData = mapDataToYears(currentTrajectory, true)
         const showCurrentTrajectory = !previousTrajectory || !withinThreshold
         if (showCurrentTrajectory) {
           series.push({
