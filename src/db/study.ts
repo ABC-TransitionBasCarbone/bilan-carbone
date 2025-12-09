@@ -1,5 +1,6 @@
 import { StudyContributorDeleteParams } from '@/components/study/rights/StudyContributorsTable'
 import { getEnvVar } from '@/lib/environment'
+import { hasAccessToCreateStudyWithEmissionFactorVersions } from '@/services/permissions/environment'
 import { filterAllowedStudies } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { ChangeStudyCinemaCommand } from '@/services/serverFunctions/study.command'
@@ -42,10 +43,16 @@ export const createStudy = async (
   const client = tx ?? prismaClient
   const dbStudy = await client.study.create({ data })
 
-  if (environment === Environment.CUT || shouldCreateFEVersions) {
+  if (hasAccessToCreateStudyWithEmissionFactorVersions(environment) || shouldCreateFEVersions) {
     let studyEmissionFactorVersions: Prisma.StudyEmissionFactorVersionCreateManyInput[] = []
     if (environment === Environment.CUT) {
       studyEmissionFactorVersions = (await getSourceCutImportVersionIds()).map((importVersion) => ({
+        studyId: dbStudy.id,
+        source: importVersion.source,
+        importVersionId: importVersion.id,
+      }))
+    } else if (environment === Environment.CLICKSON) {
+      studyEmissionFactorVersions = (await getSourceClicksonImportVersionIds()).map((importVersion) => ({
         studyId: dbStudy.id,
         source: importVersion.source,
         importVersionId: importVersion.id,
@@ -786,6 +793,16 @@ export const getSourceCutImportVersionIds = async () =>
         { name: cutFeLegifrance, source: Import.Legifrance },
         { name: cutFeBaseEmpreinte, source: Import.BaseEmpreinte },
       ],
+    },
+    orderBy: { createdAt: 'desc' },
+    distinct: ['source'],
+  })
+
+export const getSourceClicksonImportVersionIds = async () =>
+  prismaClient.emissionFactorImportVersion.findMany({
+    select: { id: true, source: true },
+    where: {
+      source: Import.BaseEmpreinte,
     },
     orderBy: { createdAt: 'desc' },
     distinct: ['source'],

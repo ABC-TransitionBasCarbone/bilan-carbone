@@ -8,6 +8,7 @@ const simplifiedEnvironments: Environment[] = [CUT, CLICKSON]
 const isAdvanced = (environment: Environment) => advancedEnvironments.includes(environment)
 const isBC = (environment: Environment) => environment === BC
 const isTilt = (environment: Environment) => environment === TILT
+const isSimplified = (environment: Environment) => simplifiedEnvironments.includes(environment)
 
 export const hasAccessToEmissionFactor = isAdvanced
 
@@ -50,3 +51,5 @@ export const hasAccessToCarbonResponsibilityIntensities = (environment: Environm
 
 export const hasAccessToMonetaryRatio = (environment: Environment) =>
   ([Environment.BC, Environment.TILT, Environment.CUT] as Environment[]).includes(environment)
+
+export const hasAccessToCreateStudyWithEmissionFactorVersions = isSimplified

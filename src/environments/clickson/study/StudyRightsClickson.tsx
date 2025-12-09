@@ -196,7 +196,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources }: 
           <CircularProgress variant="indeterminate" color="primary" size={100} className="flex mt2" />
         ) : (
           <>
-            <StudyVersions study={study} emissionFactorSources={emissionFactorSources} canUpdate={!editionDisabled} />
+            <StudyVersions study={study} emissionFactorSources={emissionFactorSources} canUpdate={false} />
             <div className="flex-col gapped1 mb1">
               <div className={styles.dates}>
                 <FormDatePicker
