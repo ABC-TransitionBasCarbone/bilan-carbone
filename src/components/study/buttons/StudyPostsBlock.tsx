@@ -59,13 +59,13 @@ const StudyPostsBlock = ({
   return (
     <Block
       title={
-        <div className="flex gapped">
+        <div className="flex grow gapped">
           <DebouncedInput
             className={classNames(styles.searchInput, 'grow')}
             debounce={500}
             value={filters.search}
             onChange={(newValue) => setFilters({ search: newValue })}
-            placeholder={`🔎 ${tStudyPost('search')}`}
+            placeholder={tStudyPost('search')}
             data-testid="emission-source-search-field"
           />
           <StudyPostFilters
