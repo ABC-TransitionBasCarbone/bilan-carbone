@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
-import Engine from "publicodes";
-import rules, { Questions } from "../publicodes-build/index.js";
+import Engine, { Situation } from "publicodes";
+import rules, { RuleName } from "../publicodes-build/index.js";
 
 describe("Poste - Déchets", () => {
   const engine = new Engine(rules);
@@ -8,10 +8,10 @@ describe("Poste - Déchets", () => {
   test("devrait calculer les émissions totales de déchets", () => {
     const localEngine = engine.shallowCopy();
 
-    const situation: Questions = {
-      "déchets . ordinaires . ordures ménagères . nb bennes": 2,
+    const situation: Situation<RuleName> = {
+      "déchets . ordinaires . ordures ménagères . nombre bennes": 2,
       "déchets . ordinaires . ordures ménagères . taille benne": 660,
-      "déchets . exceptionnels . lampe Xenon . nb lampes": 10,
+      "déchets . exceptionnels . lampe xenon . nombre": 10,
     };
 
     localEngine.setSituation(situation);
