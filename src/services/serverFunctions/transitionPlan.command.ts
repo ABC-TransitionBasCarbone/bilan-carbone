@@ -14,7 +14,7 @@ export const ExternalStudyCommandValidation = z.object({
   externalStudyId: z.string().optional(),
   name: z.string().min(1),
   date: z.union([z.string(), z.date()]).transform((val) => (typeof val === 'string' ? val : val.toISOString())),
-  totalCo2: z.number().min(0),
+  totalCo2Kg: z.number().min(0),
 })
 
 export const createExternalStudyCommandValidation = (currentStudyYear: number) => {
@@ -89,7 +89,7 @@ export const AddActionCommandBase = z.object({
   detailedDescription: z.string().min(1),
   transitionPlanId: z.uuid(),
   potentialDeduction: z.enum(ActionPotentialDeduction),
-  reductionValue: z.number().optional().nullable(),
+  reductionValueKg: z.number().optional().nullable(),
   reductionDetails: z.string().optional(),
   reductionStartYear: z.string(),
   reductionEndYear: z.string(),
@@ -114,7 +114,7 @@ export const AddActionCommandBase = z.object({
 
 export const AddActionCommandValidation = AddActionCommandBase.refine((data) => {
   if (data.potentialDeduction === ActionPotentialDeduction.Quantity) {
-    return data.reductionValue !== undefined && data.reductionValue !== null
+    return data.reductionValueKg !== undefined && data.reductionValueKg !== null
   }
   return true
 }, setCustomMessage('required'))

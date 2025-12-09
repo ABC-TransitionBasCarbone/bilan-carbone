@@ -2,7 +2,8 @@ import { TrajectoryDataPoint } from '@/components/study/transitionPlan/Trajector
 import { FullStudy } from '@/db/study'
 import { getStudyTotalCo2Emissions } from '@/services/study'
 import { Translations } from '@/types/translation'
-import { Action, ActionPotentialDeduction, ExternalStudy, TrajectoryType } from '@prisma/client'
+import { convertValue } from '@/utils/study'
+import { Action, ActionPotentialDeduction, ExternalStudy, StudyResultUnit, TrajectoryType } from '@prisma/client'
 import { getYearFromDateStr } from './time'
 
 export type SBTIType = 'SBTI_15' | 'SBTI_WB2C'
@@ -26,16 +27,20 @@ export const convertToPastStudies = (
   externalStudies: ExternalStudy[],
   withDependencies: boolean,
   validatedOnly: boolean,
+  studyUnit: StudyResultUnit,
 ): PastStudy[] => {
   const pastStudies: PastStudy[] = []
 
   linkedStudies.forEach((study) => {
+    const totalCo2InLinkedUnit = getStudyTotalCo2Emissions(study, withDependencies, validatedOnly)
+    const totalCo2 = convertValue(totalCo2InLinkedUnit, study.resultsUnit, studyUnit)
+
     pastStudies.push({
       id: study.id,
       name: study.name,
       type: 'linked',
       year: study.startDate.getFullYear(),
-      totalCo2: getStudyTotalCo2Emissions(study, withDependencies, validatedOnly),
+      totalCo2,
     })
   })
 
@@ -45,7 +50,7 @@ export const convertToPastStudies = (
       name: study.name,
       type: 'external',
       year: study.date.getFullYear(),
-      totalCo2: study.totalCo2,
+      totalCo2: convertValue(study.totalCo2Kg, StudyResultUnit.K, studyUnit),
     })
   })
 
@@ -81,6 +86,7 @@ interface CalculateCustomTrajectoryParams {
 interface CalculateActionBasedTrajectoryParams {
   studyEmissions: number
   studyStartYear: number
+  studyUnit: StudyResultUnit
   actions: Action[]
   pastStudies?: PastStudy[]
   maxYear?: number
@@ -802,6 +808,7 @@ export const calculateTrajectoriesWithHistory = ({
         pastStudies,
         withDependencies,
         maxYear: maxYearFromTrajectories > 0 ? maxYearFromTrajectories : undefined,
+        studyUnit: study.resultsUnit,
       }),
       withinThreshold: true,
     }
@@ -955,6 +962,7 @@ export const calculateTrajectoriesWithHistory = ({
       pastStudies,
       withDependencies,
       maxYear: maxYearFromTrajectories > 0 ? maxYearFromTrajectories : undefined,
+      studyUnit: study.resultsUnit,
     })
 
     const referenceActionValue = getTrajectoryEmissionsAtYear(referenceActionTrajectory, studyStartYear)
@@ -967,6 +975,7 @@ export const calculateTrajectoriesWithHistory = ({
       pastStudies,
       withDependencies,
       maxYear: maxYearFromTrajectories > 0 ? maxYearFromTrajectories : undefined,
+      studyUnit: study.resultsUnit,
     })
 
     const actionBasedData: TrajectoryData = {
@@ -988,6 +997,7 @@ export const calculateTrajectoriesWithHistory = ({
 export const calculateActionBasedTrajectory = ({
   studyEmissions,
   studyStartYear,
+  studyUnit,
   actions,
   pastStudies = [],
   maxYear,
@@ -1006,7 +1016,7 @@ export const calculateActionBasedTrajectory = ({
   const quantitativeActions = filteredActions.filter(
     (action) =>
       action.potentialDeduction === ActionPotentialDeduction.Quantity &&
-      action.reductionValue !== null &&
+      action.reductionValueKg !== null &&
       action.reductionStartYear !== null &&
       action.reductionEndYear !== null,
   )
@@ -1030,7 +1040,8 @@ export const calculateActionBasedTrajectory = ({
 
     if (startYear <= endYear) {
       const actionDuration = Math.max(1, endYear - startYear)
-      const annualReduction = (action.reductionValue ?? 0) / actionDuration
+      const reductionValueInStudyUnit = convertValue(action.reductionValueKg ?? 0, StudyResultUnit.K, studyUnit)
+      const annualReduction = reductionValueInStudyUnit / actionDuration
 
       for (let year = startYear; year <= endYear; year++) {
         const currentYearlyReduction = yearlyReductions[year]

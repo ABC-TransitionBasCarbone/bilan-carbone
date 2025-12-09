@@ -142,8 +142,9 @@ const TrajectoryReductionPage = ({
   }, [callServerFunction, study.id, router])
 
   const pastStudies = useMemo(
-    () => convertToPastStudies(linkedStudies, linkedExternalStudies, withDependencies, validatedOnly),
-    [linkedStudies, linkedExternalStudies, withDependencies, validatedOnly],
+    () =>
+      convertToPastStudies(linkedStudies, linkedExternalStudies, withDependencies, validatedOnly, study.resultsUnit),
+    [linkedStudies, linkedExternalStudies, withDependencies, validatedOnly, study.resultsUnit],
   )
 
   const unvalidatedSourcesInfo = useMemo(() => {
@@ -321,6 +322,7 @@ const TrajectoryReductionPage = ({
               studyYear={study.startDate}
               pastStudies={pastStudies}
               canEdit={canEdit}
+              studyUnit={study.resultsUnit}
             />
           </div>
 
@@ -388,6 +390,7 @@ const TrajectoryReductionPage = ({
 
           <TrajectoryGraph
             studyName={study.name}
+            studyUnit={study.resultsUnit}
             trajectory15Data={trajectoryData.trajectory15Data}
             trajectoryWB2CData={trajectoryData.trajectoryWB2CData}
             customTrajectoriesData={trajectoryData.customTrajectoriesData}

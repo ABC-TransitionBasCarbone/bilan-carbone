@@ -4,7 +4,9 @@ import BaseTable from '@/components/base/Table'
 import { TableActionButton } from '@/components/base/TableActionButton'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteExternalStudy, deleteLinkedStudy } from '@/services/serverFunctions/transitionPlan'
+import { formatNumber } from '@/utils/number'
 import { PastStudy } from '@/utils/trajectory'
+import type { StudyResultUnit } from '@prisma/client'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
@@ -19,9 +21,10 @@ interface Props {
   pastStudies: PastStudy[]
   canEdit: boolean
   onEdit: (study: PastStudy) => void
+  studyUnit: StudyResultUnit
 }
 
-const LinkedStudiesTable = ({ transitionPlanId, pastStudies, canEdit, onEdit }: Props) => {
+const LinkedStudiesTable = ({ transitionPlanId, pastStudies, canEdit, onEdit, studyUnit }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.linkedStudies.table')
   const tDeleteModal = useTranslations('study.transitionPlan.trajectories.linkedStudies.deleteModal')
   const tUnit = useTranslations('study.results.units')
@@ -89,8 +92,7 @@ const LinkedStudiesTable = ({ transitionPlanId, pastStudies, canEdit, onEdit }: 
         header: t('emissions'),
         accessorKey: 'totalCo2',
         cell: ({ row }) => {
-          const value = row.original.totalCo2
-          return `${value.toLocaleString('fr-FR', { maximumFractionDigits: 2 })} ${tUnit('T')}`
+          return `${formatNumber(row.original.totalCo2)} ${tUnit(studyUnit)}`
         },
       },
     ]
@@ -120,7 +122,7 @@ const LinkedStudiesTable = ({ transitionPlanId, pastStudies, canEdit, onEdit }: 
     }
 
     return baseColumns
-  }, [t, tUnit, handleDeleteClick, onEdit, canEdit])
+  }, [t, tUnit, handleDeleteClick, onEdit, canEdit, studyUnit])
 
   const pastStudiesTable = useReactTable({
     columns: mergedColumns,

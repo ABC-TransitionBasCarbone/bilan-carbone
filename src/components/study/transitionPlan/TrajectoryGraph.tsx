@@ -3,6 +3,7 @@
 import { getYearsToDisplay, PastStudy, TrajectoryData } from '@/utils/trajectory'
 import { Alert, Typography } from '@mui/material'
 import { LineChart, LineSeries } from '@mui/x-charts/LineChart'
+import type { StudyResultUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useCallback, useMemo } from 'react'
@@ -15,6 +16,7 @@ export interface TrajectoryDataPoint {
 
 interface Props {
   studyName: string
+  studyUnit: StudyResultUnit
   trajectory15Data: TrajectoryData | null
   trajectoryWB2CData: TrajectoryData | null
   customTrajectoriesData: Array<{
@@ -38,6 +40,7 @@ interface Props {
 
 const TrajectoryGraph = ({
   studyName,
+  studyUnit,
   trajectory15Data,
   trajectoryWB2CData,
   customTrajectoriesData,
@@ -51,6 +54,7 @@ const TrajectoryGraph = ({
   unvalidatedSourcesInfo,
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.graph')
+  const tUnit = useTranslations('study.results.units')
 
   const trajectory15Enabled = selectedSbtiTrajectories.includes('1,5')
   const trajectoryWB2CEnabled = selectedSbtiTrajectories.includes('WB2C')
@@ -398,7 +402,7 @@ const TrajectoryGraph = ({
         height={400}
         yAxis={[
           {
-            label: t('yAxisLabel'),
+            label: `${t('yAxisLabel')} (${tUnit(studyUnit)})`,
           },
         ]}
       />

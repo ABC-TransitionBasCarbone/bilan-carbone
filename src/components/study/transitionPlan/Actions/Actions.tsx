@@ -97,6 +97,7 @@ const Actions = ({ actions, studyUnit, transitionPlanId, canEdit, studyId }: Pro
         openDeleteModal={handleOpenDeleteModal}
         canEdit={canEdit}
         studyId={studyId}
+        studyUnit={studyUnit}
       />
       {isEditModalOpen && (
         <ActionModal
