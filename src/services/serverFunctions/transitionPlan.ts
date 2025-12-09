@@ -23,7 +23,6 @@ import {
   getTransitionPlanByIdWithRelations,
   getTransitionPlanByStudyId,
   saveIndicatorsOnAction,
-  TransitionPlanWithRelations,
   TransitionPlanWithStudies,
   updateAction,
 } from '@/db/transitionPlan'
@@ -99,10 +98,7 @@ export const initializeTransitionPlan = async (studyId: string, sourceTransition
     }
   })
 
-export const duplicateTransitionPlan = async (
-  sourceTransitionPlanId: string,
-  targetStudyId: string,
-): Promise<TransitionPlanWithRelations> => {
+export const duplicateTransitionPlan = async (sourceTransitionPlanId: string, targetStudyId: string) => {
   const sourceTransitionPlan = await getTransitionPlanByIdWithRelations(sourceTransitionPlanId)
 
   if (!sourceTransitionPlan) {
@@ -116,21 +112,16 @@ export const duplicateTransitionPlan = async (
     getStudyById(targetStudyId, null),
   ])
 
-  if (!targetStudy) {
-    console.error('Cannot link studies because target is not found with id ' + targetStudyId)
-    return duplicated
-  }
-
-  if (!sourceStudy) {
-    console.error('Cannot link studies because source is not found with id ' + sourceTransitionPlan.studyId)
-    return duplicated
+  if (!targetStudy || !sourceStudy) {
+    console.error(
+      `Cannot link studies because target or source is not found. Target (id, isFound) : ${targetStudyId}, ${!!targetStudy} ; Source (id, isFound) : ${sourceTransitionPlan.studyId}, ${!!sourceStudy}`,
+    )
+    return
   }
 
   if (targetStudy.startDate.getFullYear() > sourceStudy.startDate.getFullYear()) {
     await linkOldStudy(duplicated.id, sourceStudy.id)
   }
-
-  return duplicated
 }
 
 export const addAction = async (command: AddActionCommand) =>
