@@ -10,6 +10,7 @@ interface UsePublicodesSituationResult<RuleName extends string, S extends Situat
 export default function usePublicodesSituation<RuleName extends string, S extends Situation<RuleName>>(
   engine: Engine<RuleName>,
   initialSituation: S,
+  onSituationChange?: (newSituation: S) => void,
 ): UsePublicodesSituationResult<RuleName, S> {
   const [situation, setSituation] = useState<S>(initialSituation)
 
@@ -18,8 +19,9 @@ export default function usePublicodesSituation<RuleName extends string, S extend
       const newSituation = getUpdatedSituationWithInputValue(engine, situation, ruleName, value)
       engine.setSituation(newSituation)
       setSituation(newSituation as S)
+      onSituationChange?.(newSituation as S)
     },
-    [engine, situation],
+    [engine, situation, onSituationChange],
   )
   return { situation, updateField }
 }
