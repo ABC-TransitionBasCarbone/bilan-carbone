@@ -50,8 +50,6 @@ const StudyRightsClickson = ({ study, editionDisabled }: Props) => {
     pendingData: ChangeStudyEstablishmentCommand
   } | null>(null)
   const [originalValues, setOriginalValues] = useState<{
-    address: string
-    establishmentYear: string
     etp: number
     studentNumber: number
     superficy: number | null
@@ -64,11 +62,9 @@ const StudyRightsClickson = ({ study, editionDisabled }: Props) => {
     mode: 'onBlur',
     reValidateMode: 'onBlur',
     defaultValues: {
-      address: siteData?.site.address ?? '',
-      establishmentYear: siteData?.site.establishmentYear ?? '',
-      etp: siteData?.site.etp ?? 0,
-      studentNumber: siteData?.site.studentNumber ?? 0,
-      superficy: siteData?.site.superficy ?? null,
+      etp: siteData?.etp ?? siteData?.site.etp ?? 0,
+      studentNumber: siteData?.studentNumber ?? siteData?.site.studentNumber ?? 0,
+      superficy: siteData?.superficy ?? siteData?.site.superficy ?? null,
     },
   })
 
@@ -80,8 +76,6 @@ const StudyRightsClickson = ({ study, editionDisabled }: Props) => {
       studyId: study.id,
       startDate: study.startDate.toISOString(),
       endDate: study.endDate.toISOString(),
-      realizationStartDate: study.realizationStartDate?.toISOString(),
-      realizationEndDate: study.realizationEndDate?.toISOString(),
     },
   })
   useEffect(() => {
@@ -107,11 +101,9 @@ const StudyRightsClickson = ({ study, editionDisabled }: Props) => {
           setSiteData(newSiteData)
 
           const initialValues = {
-            address: newSiteData.site.address ?? '',
-            establishmentYear: newSiteData.site.establishmentYear ?? '',
-            etp: newSiteData.site.etp ?? 0,
-            studentNumber: newSiteData.site.studentNumber ?? 0,
-            superficy: newSiteData.site.superficy ?? null,
+            etp: newSiteData.etp ?? newSiteData.site.etp ?? 0,
+            studentNumber: newSiteData.studentNumber ?? newSiteData.site.studentNumber ?? 0,
+            superficy: newSiteData.superficy ?? newSiteData.site.superficy ?? null,
           }
 
           // Store original values for change detection
@@ -130,8 +122,6 @@ const StudyRightsClickson = ({ study, editionDisabled }: Props) => {
     async (data: ChangeStudyEstablishmentCommand) => {
       await callServerFunction(() => changeStudyEstablishment(studySite, data))
       setOriginalValues({
-        address: data.address ?? '',
-        establishmentYear: data.establishmentYear ?? '',
         etp: data.etp ?? 0,
         studentNumber: data.studentNumber ?? 0,
         superficy: data.superficy ?? null,
@@ -153,8 +143,6 @@ const StudyRightsClickson = ({ study, editionDisabled }: Props) => {
       setShowSiteDataWarning(false)
       await callServerFunction(() => changeStudyEstablishment(studySite, pendingSiteChanges.pendingData))
       setOriginalValues({
-        address: pendingSiteChanges.pendingData.address ?? '',
-        establishmentYear: pendingSiteChanges.pendingData.establishmentYear ?? '',
         etp: pendingSiteChanges.pendingData.etp ?? 0,
         studentNumber: pendingSiteChanges.pendingData.studentNumber ?? 0,
         superficy: pendingSiteChanges.pendingData.superficy ?? null,
@@ -205,7 +193,7 @@ const StudyRightsClickson = ({ study, editionDisabled }: Props) => {
           <CircularProgress variant="indeterminate" color="primary" size={100} className="flex mt2" />
         ) : (
           <>
-            <div className="flex-col gapped1">
+            <div className="flex-col gapped1 mb1">
               <div className={styles.dates}>
                 <FormDatePicker
                   control={dateForm.control}
@@ -225,24 +213,6 @@ const StudyRightsClickson = ({ study, editionDisabled }: Props) => {
               </div>
             </div>
             <div className="flex-col gapped1">
-              <FormTextField
-                control={form.control}
-                name="address"
-                data-testid="new-study-number-of-sessions"
-                label={t('address')}
-                type="string"
-                className={styles.formTextField}
-                onBlur={onStudyEstablishmentUpdate}
-              />
-              <FormTextField
-                control={form.control}
-                name="establishmentYear"
-                data-testid="new-study-number-of-tickets"
-                label={t('establishmentYear')}
-                type="string"
-                className={styles.formTextField}
-                onBlur={onStudyEstablishmentUpdate}
-              />
               <FormTextField
                 control={form.control}
                 name="etp"

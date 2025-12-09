@@ -218,6 +218,8 @@ const fullStudyInclude = {
       distanceToParis: true,
       volunteerNumber: true,
       beneficiaryNumber: true,
+      superficy: true,
+      studentNumber: true,
       site: {
         select: {
           id: true,
