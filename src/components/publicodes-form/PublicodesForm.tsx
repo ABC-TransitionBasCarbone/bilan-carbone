@@ -1,6 +1,6 @@
 import { Box } from '@mui/material'
 import Engine, { Situation } from 'publicodes'
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import { getEvaluatedFormLayout } from './layouts/evaluatedFormLayout'
 import { FormLayout } from './layouts/formLayout'
 import PublicodesQuestion from './PublicodesQuestion'
@@ -9,14 +9,15 @@ import {
   areRulesReferencedInApplicability,
   evaluatedLayoutIsApplicable,
   getRuleNamesFromLayout,
-  getUpdatedSituationWithInputValue,
+  OnFieldChange,
 } from './utils'
 
 export interface PublicodesFormProps<RuleName extends string, S extends Situation<RuleName>> {
   engine: Engine<RuleName>
-  formLayouts: FormLayout<RuleName>[]
+  // The situation is needed to trigger React re-render
   situation: S
-  setSituation: (situation: S) => void
+  onFieldChange: OnFieldChange<RuleName>
+  formLayouts: FormLayout<RuleName>[]
 }
 
 /**
@@ -30,9 +31,9 @@ export interface PublicodesFormProps<RuleName extends string, S extends Situatio
  */
 export default function PublicodesForm<RuleName extends string, S extends Situation<RuleName>>({
   engine,
-  formLayouts,
   situation,
-  setSituation,
+  onFieldChange,
+  formLayouts,
 }: PublicodesFormProps<RuleName, S>) {
   const elementsWithRelation = useMemo(() => {
     // FIXME: should manage multiple questions linked to previous ones.
@@ -57,15 +58,6 @@ export default function PublicodesForm<RuleName extends string, S extends Situat
     })
   }, [formLayouts, engine, situation])
 
-  const handleFieldChange = useCallback(
-    (ruleName: RuleName, value: string | number | boolean | undefined) => {
-      const newSituation = getUpdatedSituationWithInputValue(engine, situation, ruleName, value)
-      engine.setSituation(newSituation)
-      setSituation(newSituation as S)
-    },
-    [engine, situation, setSituation],
-  )
-
   return (
     <Box className="dynamic-form">
       <Box>
@@ -73,7 +65,7 @@ export default function PublicodesForm<RuleName extends string, S extends Situat
           return isApplicable ? (
             <Box key={key}>
               {isLinkedToPreviousQuestion && <Box className={styles.relationLine} />}
-              <PublicodesQuestion formLayout={evaluatedFormLayout} onChange={handleFieldChange} />
+              <PublicodesQuestion formLayout={evaluatedFormLayout} onChange={onFieldChange} />
             </Box>
           ) : null
         })}

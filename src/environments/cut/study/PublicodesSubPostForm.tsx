@@ -1,11 +1,12 @@
 'use client'
 
+import usePublicodesSituation from '@/components/publicodes-form/hooks/usePublicodesSituation'
 import PublicodesForm from '@/components/publicodes-form/PublicodesForm'
 import { FullStudy } from '@/db/study'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { Situation } from 'publicodes'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { getCutEngine } from '../publicodes/cut-engine'
 import { studySiteToSituation } from '../publicodes/studySiteToSituation'
 import { getFormLayoutsForSubPost, getPublicodesTarget as getPublicodesTargetRule } from '../publicodes/subPostMapping'
@@ -31,13 +32,14 @@ const PublicodesSubPostForm = ({ subPost, study, studySiteId }: PublicodesSubPos
     return studySiteToSituation(studySite)
   }, [study, studySiteId])
 
-  const [situation, setSituation] = useState<Situation<string>>(initialSituation as Situation<string>)
-
   const cutEngine = useMemo(() => {
-    const engine = getCutEngine()
+    const engine = getCutEngine().shallowCopy()
     engine.setSituation(initialSituation as Situation<string>)
     return engine
   }, [initialSituation])
+
+  const { situation, updateField } = usePublicodesSituation(cutEngine, initialSituation)
+
   const targetRule = getPublicodesTargetRule(subPost)
   const formLayouts = getFormLayoutsForSubPost(subPost)
 
@@ -80,7 +82,7 @@ const PublicodesSubPostForm = ({ subPost, study, studySiteId }: PublicodesSubPos
         engine={cutEngine}
         formLayouts={formLayouts}
         situation={situation}
-        setSituation={setSituation}
+        onFieldChange={updateField}
         // TODO: manage autosave answers
         // subPost={subPost}
         // studyId={study.id}

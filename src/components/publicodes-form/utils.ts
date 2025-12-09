@@ -3,7 +3,7 @@ import Engine, { reduceAST, RuleNode, Situation, utils } from 'publicodes'
 import { EvaluatedFormLayout } from './layouts/evaluatedFormLayout'
 import { FormLayout } from './layouts/formLayout'
 
-export type OnFormInputChange<RuleName extends string> = (
+export type OnFieldChange<RuleName extends string> = (
   ruleName: RuleName,
   value: string | number | boolean | undefined,
 ) => void
