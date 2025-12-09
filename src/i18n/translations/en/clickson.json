@@ -60,7 +60,11 @@
       "glossary": {
         "validatorEmailDescription": "As a student, I have access as a contributor to one or more emission posts.",
         "duplicationOptionsDescription": "When duplicating a study, you can choose to invite the same team members and students from the original study to the new one. This helps maintain collaboration continuity."
-      }
+      },
+      "etp": "Number of staff (teachers and non-teaching staff)",
+      "studentNumber": "Number of students",
+      "superficy": "Establishment area",
+      "goToDataEntry": "Go to data entry"
     },
     "newContributor": {
       "title": "Add on student on study : {name}"
