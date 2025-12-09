@@ -272,18 +272,18 @@ const PDFSummary = ({ study, environment }: Props) => {
                 <p style={{ margin: '0 0 0.5rem 0' }}>
                   Attention, les résultats que vous obtenez ici sont uniquement issus de l'empreinte carbone simplifiée
                   Count, et ne doivent en aucun cas être utilisés comme des résultats Bilan Carbone®. La démarche que
-                  vous avez suivi via l'outil Count n'est PAS une démarche Bilan Carbone®, même si les résultats
-                  obtenus peuvent déjà vous permettre de mieux comprendre comment réduire votre impact, en identifiant
-                  vos activités les plus émissives.
+                  vous avez suivi via l'outil Count n'est PAS une démarche Bilan Carbone®, même si les résultats obtenus
+                  peuvent déjà vous permettre de mieux comprendre comment réduire votre impact, en identifiant vos
+                  activités les plus émissives.
                 </p>
                 <p style={{ margin: '0.5rem 0 0 0' }}>
                   En revanche, cette empreinte carbone simplifiée est le premier pas vers une démarche plus complète
                   comme le Bilan Carbone® ! Pour les années suivantes, vous pouvez ainsi soit renouveler votre mesure
-                  d'empreinte carbone simplifiée avec l'outil Count, soit réaliser un Bilan Carbone®. Un Bilan
-                  Carbone® suit une méthodologie bien précise, et doit répondre à un certain nombre de critères
-                  objectifs. Par exemple, au cours d'un Bilan Carbone®, la direction doit être engagée, les différentes
-                  parties prenantes de l'organisation doivent être mobilisées, des incertitudes doivent être calculées
-                  et associées aux émissions, et surtout, un plan de transition solide doit être construit pour engager
+                  d'empreinte carbone simplifiée avec l'outil Count, soit réaliser un Bilan Carbone®. Un Bilan Carbone®
+                  suit une méthodologie bien précise, et doit répondre à un certain nombre de critères objectifs. Par
+                  exemple, au cours d'un Bilan Carbone®, la direction doit être engagée, les différentes parties
+                  prenantes de l'organisation doivent être mobilisées, des incertitudes doivent être calculées et
+                  associées aux émissions, et surtout, un plan de transition solide doit être construit pour engager
                   l'organisation dans une transition bas carbone. Si vous souhaitez vous lancer dans un Bilan Carbone®
                   dans les années qui viennent, tout commence par{' '}
                   <a href={process.env.NEXT_PUBLIC_FORMATION_URL ?? ''} target="_blank">

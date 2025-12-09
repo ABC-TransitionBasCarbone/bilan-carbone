@@ -1,14 +1,15 @@
 'use client'
 
+import usePublicodesSituation from '@/components/publicodes-form/hooks/usePublicodesSituation'
 import PublicodesForm from '@/components/publicodes-form/PublicodesForm'
 import { FullStudy } from '@/db/study'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { Situation } from 'publicodes'
 import { useMemo } from 'react'
-import { getCutFormBuilder } from '../publicodes/cut-engine'
+import { getCutEngine } from '../publicodes/cut-engine'
 import { studySiteToSituation } from '../publicodes/studySiteToSituation'
-import { getPublicodesTarget as getPublicodesTargetRule } from '../publicodes/subPostMapping'
+import { getFormLayoutsForSubPost, getPublicodesTarget as getPublicodesTargetRule } from '../publicodes/subPostMapping'
 
 export interface PublicodesSubPostFormProps {
   subPost: SubPost
@@ -31,8 +32,16 @@ const PublicodesSubPostForm = ({ subPost, study, studySiteId }: PublicodesSubPos
     return studySiteToSituation(studySite)
   }, [study, studySiteId])
 
-  const cutFormBuilder = getCutFormBuilder()
+  const cutEngine = useMemo(() => {
+    const engine = getCutEngine().shallowCopy()
+    engine.setSituation(initialSituation as Situation<string>)
+    return engine
+  }, [initialSituation])
+
+  const { situation, updateField } = usePublicodesSituation(cutEngine, initialSituation)
+
   const targetRule = getPublicodesTargetRule(subPost)
+  const formLayouts = getFormLayoutsForSubPost(subPost)
 
   // if (error) {
   //   return (
@@ -70,9 +79,10 @@ const PublicodesSubPostForm = ({ subPost, study, studySiteId }: PublicodesSubPos
   return (
     <div className="dynamic-subpost-form">
       <PublicodesForm
-        formBuilder={cutFormBuilder}
-        targetRules={[targetRule]}
-        initialSituation={initialSituation as Situation<string>}
+        engine={cutEngine}
+        formLayouts={formLayouts}
+        situation={situation}
+        onFieldChange={updateField}
         // TODO: manage autosave answers
         // subPost={subPost}
         // studyId={study.id}

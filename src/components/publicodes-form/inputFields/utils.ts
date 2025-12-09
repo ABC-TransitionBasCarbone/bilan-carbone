@@ -1,5 +1,5 @@
-import { EvaluatedFormElement, FormPageElementProp } from '@publicodes/forms'
-import { OnFormInputChange } from '../utils'
+import { EvaluatedFormElement } from '@publicodes/forms'
+import { OnFieldChange } from '../utils'
 
 /**
  * Props shared by all form input components of the {@link PublicodesFormField}.
@@ -7,10 +7,8 @@ import { OnFormInputChange } from '../utils'
 export interface BaseInputProps<RuleName extends string> {
   /** The evaluated form element to render returned by the {@link FormBuilder}. */
   formElement: EvaluatedFormElement
-  /** The HTML props to spread on the form element. */
-  formElementProps: FormPageElementProp
   /** Callback invoked when the input value changes. */
-  onChange: OnFormInputChange<RuleName>
+  onChange: OnFieldChange<RuleName>
   onBlur?: () => void
   errorMessage?: string
   disabled?: boolean
