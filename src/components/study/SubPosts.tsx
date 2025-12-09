@@ -2,6 +2,7 @@
 
 import { FullStudy } from '@/db/study'
 import { StudyWithoutDetail } from '@/services/permissions/study'
+import { Post } from '@/services/posts'
 import { StudyRole, SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import SubPostComponent from './SubPost'
@@ -18,6 +19,7 @@ type StudyWithoutDetailProps = {
 }
 
 interface Props {
+  post: Post
   subPosts: SubPost[]
   userRole: StudyRole | null
   studySite: string
@@ -26,6 +28,7 @@ interface Props {
 }
 
 const SubPosts = ({
+  post,
   subPosts,
   study,
   userRole,
@@ -39,6 +42,7 @@ const SubPosts = ({
       {subPosts.map((subPost) => (
         <SubPostComponent
           emissionSources={emissionSources.filter((emissionSource) => emissionSource.subPost === subPost)}
+          post={post}
           subPost={subPost}
           key={subPost}
           userRoleOnStudy={userRole}

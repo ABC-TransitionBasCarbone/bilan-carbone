@@ -3,11 +3,12 @@
 import { FullStudy } from '@/db/study'
 import { getCaracterisationsBySubPost, getEmissionResults } from '@/services/emissionSource'
 import { StudyWithoutDetail } from '@/services/permissions/study'
+import { Post } from '@/services/posts'
 import { EmissionFactorWithMetaData, getEmissionFactors } from '@/services/serverFunctions/emissionFactor'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
 import { withInfobulle } from '@/utils/post'
-import { STUDY_UNIT_VALUES } from '@/utils/study'
+import { postColors, STUDY_UNIT_VALUES } from '@/utils/study'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
 import { Environment, Import, StudyRole, SubPost as SubPostEnum } from '@prisma/client'
@@ -30,6 +31,7 @@ type StudyWithoutDetailProps = {
 }
 
 interface Props {
+  post: Post
   subPost: SubPostEnum
   userRoleOnStudy: StudyRole | null
   emissionSources: FullStudy['emissionSources']
@@ -38,6 +40,7 @@ interface Props {
 }
 
 const SubPost = ({
+  post,
   subPost,
   withoutDetail,
   study,
@@ -135,9 +138,11 @@ const SubPost = ({
 
   return (!userRoleOnStudy || userRoleOnStudy === StudyRole.Reader) && emissionSources.length === 0 ? null : (
     <div ref={accordionRef} id={`subpost-${subPost}`} className={styles.subPostScrollContainer}>
-      <Accordion expanded={expanded} onChange={(_, isExpanded) => setExpanded(isExpanded)}>
+      <Accordion expanded={expanded} onChange={(_, isExpanded) => setExpanded(isExpanded)} className={styles.accordion}>
         <AccordionSummary
-          className={styles.subPostContainer}
+          className={classNames(styles.subPostContainer, styles[`post-${postColors[post]}`], {
+            [styles.open]: expanded,
+          })}
           expandIcon={<ExpandMoreIcon />}
           aria-controls={`panel-${subPost}-content`}
           data-testid="subpost"
@@ -146,6 +151,7 @@ const SubPost = ({
             {tPost(subPost)}
             {withInfobulle(subPost) && (
               <HelpIcon
+                className={classNames(styles.helpIcon, 'ml-4')}
                 onClick={(e) => {
                   e.stopPropagation()
                   setGlossary(subPost)
