@@ -1,0 +1,135 @@
+{
+  "nav": {
+    "newStudyContributor": "Aggiungi uno studente"
+  },
+  "navigation": {
+    "organizations": "Le mie impronte di carbonio",
+    "organization": "Team pilota",
+    "information": "Il mio istituto",
+    "team": "Team pilota"
+  },
+  "home": {
+    "navigation": {
+      "collaborators": {
+        "title": "Team pilota:",
+        "message": "Trova qui l'elenco degli insegnanti, del personale amministrativo e degli studenti autorizzati a modificare i dati dell'istituto"
+      },
+      "footprints": {
+        "title": "Le mie impronte:",
+        "message": "Crea qui la tua prima impronta. Potrai poi visualizzare le tue impronte o crearne di nuove in qualsiasi momento."
+      },
+      "sites": {
+        "title": "I miei istituti:",
+        "message": "Trova qui l'elenco degli istituti collegati al tuo account"
+      }
+    },
+    "title": "Calcolare la tua impronta di carbonio semplificata ti permetterà di:",
+    "alert": {
+      "info": "Il calcolatore Clickson ti permette di stimare l'impatto climatico della tua attività. È soprattutto uno strumento di sensibilizzazione. Non è un approccio di transizione a basse emissioni di carbonio ma un'impronta semplificata — secondo la <link>Guida alla comunicazione sulla contabilità del carbonio</link> — focalizzata sulle principali fonti di emissione legate all'attività degli istituti."
+    },
+    "info": {
+      "0": "Comprendere la misurazione dell'impatto del tuo istituto",
+      "1": "Identificare le priorità di azione",
+      "2": "A lungo termine, e attraverso un lavoro più approfondito, costruire una traiettoria di riduzione"
+    }
+  },
+  "team": {
+    "table": {
+      "title": "Team pilota"
+    }
+  },
+  "study": {
+    "create": "Aggiungi un’impronta",
+    "myStudies": "Le mie impronte di carbonio",
+    "createFirstStudy": "Crea la mia prima impronta",
+    "see": "Visualizza la mia impronta",
+    "selectSite": "Prima di compilare i dati, seleziona un istituto",
+    "lastStudyTitle": "Ultima impronta",
+    "navigation": {
+      "framing": "Dati generali",
+      "organizations": "I miei istituti",
+      "team": "I miei collaboratori",
+      "title": "La mia impronta"
+    },
+    "validatedOnlyDescription": "Come studente, ho accesso come contributore a una o più categorie di emissione.",
+    "new": {
+      "suggestion": {
+        "name": "Esempio: impronta di carbonio Scuola Media Simone Veil"
+      },
+      "inviteContributors": "Invita gli stessi studenti",
+      "glossary": {
+        "validatorEmailDescription": "Come studente, ho accesso come contributore a una o più categorie di emissione.",
+        "duplicationOptionsDescription": "Duplicando uno studio, puoi scegliere di invitare lo stesso team e gli stessi studenti dello studio originale. Ciò aiuta a mantenere la continuità della collaborazione."
+      }
+    },
+    "newContributor": {
+      "title": "Aggiungi uno studente allo studio: {name}"
+    },
+    "role": {
+      "Contributor": "Studente"
+    },
+    "rights": {
+      "contributorsTable": {
+        "delete": "Rimuovi lo studente",
+        "title": "Studenti",
+        "newContributorLink": "Aggiungi uno studente",
+        "deleting": {
+          "confirmation": "Sei sicuro di voler rimuovere {email} dagli studenti di questo studio?"
+        },
+        "role": {
+          "description": "Qui puoi gestire gli studenti del tuo studio. Avranno accesso a certe categorie e sottocategorie (che puoi definire) e saranno in grado di compilare informazioni per le fonti di emissione che hai già creato. Per maggiori informazioni sull'interfaccia contributore, consulta le nostre <link>FAQ</link>."
+        }
+      }
+    }
+  },
+  "emissionFactors": {
+    "post": {
+      "Restauration": "Ristorazione"
+    }
+  },
+  "organization": {
+    "card": {
+      "myOrganization": "I miei istituti"
+    },
+    "form": {
+      "editTitle": "Modifica i miei istituti"
+    },
+    "sites": {
+      "title": "Quali istituti deve coprire l’impronta?",
+      "noSites": "Nessun istituto configurato",
+      "namePlaceholder": "Nome dell’istituto",
+      "add": "Aggiungi un istituto"
+    }
+  },
+  "login": {
+    "welcome": "Benvenuto su Clickson PEBC",
+    "explanation": "Misuriamo le emissioni di gas serra del tuo istituto!",
+    "form": {
+      "activate": "Crea il mio account"
+    }
+  },
+  "signup": {
+    "description": "Crea un account Clickson con la tua email e un codice postale o nome della scuola",
+    "schoolPostalCodeOrName": "Codice postale o nome della scuola",
+    "schoolPostalCodeOrNamePlaceholder": "Il codice postale o il nome dell’istituto scolastico",
+    "schoolSearchGlossaryTitle": "Trova il tuo istituto scolastico.",
+    "schoolSearchGlossary": "Trova il tuo istituto inserendo il codice postale o il nome, poi selezionandolo dall’elenco.",
+    "close": "Chiudi",
+    "schoolPostalCodeOrNameRequired": "Inserisci il codice postale o il nome della scuola",
+    "validate": "Convalida",
+    "clear": "Cancella valore",
+    "Not authorized": "Questa email è già utilizzata per Clickson oppure c'è un problema con la creazione dell'account. Consulta le <link>FAQ</link> o <support>contatta il supporto</support> se pensi si tratti di un errore.",
+    "Not known school": "Trova e seleziona il tuo istituto.",
+    "validation": {
+      "schoolPostalCodeOrName": "Inserisci il codice postale o il nome della scuola"
+    }
+  },
+  "email": {
+    "subject": {
+      "newUser": "Sei stato invitato su Clickson",
+      "addedActiveUser": "Sei stato invitato in un nuovo ambiente Clickson",
+      "activation": "Hai attivato il tuo account su Clickson",
+      "activationRequest": "Richiesta di accesso alla tua organizzazione Clickson"
+    }
+  }
+}
