@@ -3,11 +3,11 @@ import RadioGroupInput from './inputFields/RadioGroupInput'
 import SelectInput from './inputFields/SelectInput'
 import TextWithUnitInput from './inputFields/TextWithUnitInput'
 import YearPickerInput from './inputFields/YearPickerInput'
-import { OnFormInputChange } from './utils'
+import { OnFieldChange } from './utils'
 
 export interface PublicodesInputFieldProps<RuleName extends string> {
   formElement: EvaluatedFormElement<RuleName>
-  onChange: OnFormInputChange<RuleName>
+  onChange: OnFieldChange<RuleName>
 }
 
 export default function InputField<RuleName extends string>({
