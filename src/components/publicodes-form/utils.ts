@@ -10,7 +10,7 @@ export type OnFieldChange<RuleName extends string> = (
 
 export function getRuleNamesFromLayout<RuleName extends string>(layout: FormLayout<RuleName>): RuleName[] | undefined {
   switch (layout.type) {
-    case 'simple':
+    case 'input':
       return [layout.rule]
     case 'group':
       return layout.rules
@@ -21,7 +21,7 @@ export function getRuleNamesFromLayout<RuleName extends string>(layout: FormLayo
 
 export function evaluatedLayoutIsApplicable<RuleName extends string>(layout: EvaluatedFormLayout<RuleName>): boolean {
   switch (layout.type) {
-    case 'simple':
+    case 'input':
       return layout.evaluatedElement.applicable
     case 'group':
       return layout.evaluatedElements.some((el) => el.applicable)

@@ -9,17 +9,17 @@
  * consumer side.
  */
 export type FormLayout<RuleName extends string = string> =
-  | SimpleLayout<RuleName>
+  | InputLayout<RuleName>
   | GroupLayout<RuleName>
   | TableLayout<RuleName>
 
-export interface SimpleLayout<RuleName extends string> {
-  type: 'simple'
+export interface InputLayout<RuleName extends string> {
+  type: 'input'
   rule: RuleName
 }
 
-export function simpleLayout<RuleName extends string>(rule: RuleName): SimpleLayout<RuleName> {
-  return { type: 'simple', rule }
+export function inputLayout<RuleName extends string>(rule: RuleName): InputLayout<RuleName> {
+  return { type: 'input', rule }
 }
 
 export interface TableLayout<RuleName extends string> {

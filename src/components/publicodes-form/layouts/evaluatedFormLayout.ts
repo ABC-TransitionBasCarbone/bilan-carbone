@@ -1,13 +1,13 @@
 import { EvaluatedFormElement, getEvaluatedFormElement } from '@publicodes/forms'
 import Engine, { Situation } from 'publicodes'
-import { FormLayout, GroupLayout, SimpleLayout, TableLayout } from './formLayout'
+import { FormLayout, GroupLayout, InputLayout, TableLayout } from './formLayout'
 
 export type EvaluatedFormLayout<RuleName extends string> =
-  | EvaluatedSimpleLayout<RuleName>
+  | EvaluatedInputLayout<RuleName>
   | EvaluatedGroupLayout<RuleName>
   | EvaluatedTableLayout<RuleName>
 
-export type EvaluatedSimpleLayout<RuleName extends string> = SimpleLayout<RuleName> & {
+export type EvaluatedInputLayout<RuleName extends string> = InputLayout<RuleName> & {
   evaluatedElement: EvaluatedFormElement<RuleName>
 }
 
@@ -25,7 +25,7 @@ export function getEvaluatedFormLayout<RuleName extends string>(
   situation: Situation<RuleName>,
 ): EvaluatedFormLayout<RuleName> {
   switch (layout.type) {
-    case 'simple':
+    case 'input':
       return { ...layout, evaluatedElement: getEvaluatedFormElement(engine, layout.rule, situation) }
     case 'group':
       return {
