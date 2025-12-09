@@ -6,6 +6,17 @@
       "activate": "Create my account"
     }
   },
+  "signup": {
+    "description": "Create a Tilt account with your email and a Siret",
+    "siret": "Siret",
+    "siretPlaceholder": "Your Siret",
+    "siretRequired": "Please enter a Siret",
+    "Not authorized": "This email is already used for Tilt or there's an issue with the account creation. Please see <link>the FAQ</link> or <support>contact support</support> if you think this is an error.",
+    "Not association SIRET": "This tool is reserved for associations. Please use the classic version of Bilan Carbone®+",
+    "validation": {
+      "siret": "Please enter a Siret"
+    }
+  },
   "exports": {
     "env_specific_export": "Tilt"
   },

@@ -205,66 +205,6 @@
       "email": "Please enter an email"
     }
   },
-  "signupCut": {
-    "description": "Create a CUT account with your email and a Siret/CNC number",
-    "email": "Email",
-    "emailPlaceholder": "Email used during your training",
-    "emailRequired": "Please enter an email",
-    "siretOrCNC": "Siret or CNC",
-    "siretOrCNCPlaceholder": "Your Siret/CNC",
-    "siretOrCNCRequired": "Please enter a Siret/CNC number",
-    "validate": "Validate",
-    "clear": "Clear value",
-    "Unknown CNC": "The CNC number you entered is not recognized. Please check it and try again.",
-    "Unknown SIRET or CNC": "The Siret or CNC number you entered is not recognized. Please check it and try again.",
-    "Not authorized": "This email is already used for CUT or there's an issue with the account creation. Please see <link>the FAQ</link> or <support>contact support</support> if you think this is an error.",
-    "Request sent": "A request has been sent to your colleagues",
-    "Email sent": "You will receive an email to finish your account validation.",
-    "validation": {
-      "email": "Please enter an email",
-      "siretOrCNC": "Please enter a Siret/CNC number"
-    }
-  },
-  "signupTilt": {
-    "description": "Create a Tilt account with your email and a Siret",
-    "email": "Email",
-    "emailPlaceholder": "Email used during your training",
-    "emailRequired": "Please enter an email",
-    "siret": "Siret",
-    "siretPlaceholder": "Your Siret",
-    "siretRequired": "Please enter a Siret",
-    "validate": "Validate",
-    "Not authorized": "This email is already used for Tilt or there's an issue with the account creation. Please see <link>the FAQ</link> or <support>contact support</support> if you think this is an error.",
-    "Not association SIRET": "This tool is reserved for associations. Please use the classic version of Bilan Carbone®+",
-    "Request sent": "A request has been sent to your colleagues",
-    "Email sent": "You will receive an email to finish your account validation.",
-    "validation": {
-      "email": "Please enter an email",
-      "siret": "Please enter a Siret"
-    }
-  },
-  "signupClickson": {
-    "description": "Create a Clickson account with your email and a school postal code or name",
-    "email": "Email",
-    "emailPlaceholder": "Email used during your training",
-    "emailRequired": "Please enter an email",
-    "schoolPostalCodeOrName": "School postal code or name",
-    "schoolPostalCodeOrNamePlaceholder": "The postal code or name of the school establishment",
-    "schoolSearchGlossaryTitle": "Find your school establishment.",
-    "schoolSearchGlossary": "Find your school establishment by entering its postal code or name, then selecting it from the dropdown list.",
-    "close": "Close",
-    "schoolPostalCodeOrNameRequired": "Please enter the school postal code or name",
-    "validate": "Validate",
-    "clear": "Clear value",
-    "Not authorized": "This email is already used for Clickson or there's an issue with the account creation. Please see <link>the FAQ</link> or <support>contact support</support> if you think this is an error.",
-    "Request sent": "A request has been sent to your colleagues",
-    "Email sent": "You will receive an email to finish your account validation.",
-    "Not known school": "Please find and select your establishment.",
-    "validation": {
-      "email": "Please enter an email",
-      "schoolPostalCodeOrName": "Please enter the school postal code or name"
-    }
-  },
   "footer": {
     "message": {
       "0": "",
@@ -510,7 +450,6 @@
       "Validator_description": "Has full rights over the study and can validate the emission sources entered by validators, editors and contributors.",
       "Editor_description": "Has all rights to the study except for validation of emission sources.",
       "Reader_description": "Can only read the study and export its information.",
-      "close": "Close",
       "saved": "New role saved"
     },
     "title": "Study",
@@ -572,8 +511,7 @@
         },
         "role": {
           "information": "Information",
-          "description": "Here you can manage the contributors to your study. They will have access to certain posts and sub-posts (which you can define) and will be able to fill in certain information for emission sources that you have already created in the study. For more information on the contributor interface, please see our <link>FAQ</link>.",
-          "close": "Close"
+          "description": "Here you can manage the contributors to your study. They will have access to certain posts and sub-posts (which you can define) and will be able to fill in certain information for emission sources that you have already created in the study. For more information on the contributor interface, please see our <link>FAQ</link>."
         }
       },
       "table": {
@@ -696,7 +634,6 @@
         "createSitesDescription": "You can also create new sites and duplicate the information to them. These will appear in your general information. Please indicate the number of sites to create on which the information you selected will be duplicated.",
         "numberOfSitesToCreate": "Number of sites to create",
         "cancel": "Cancel",
-        "duplicate": "Duplicate",
         "sitesChanges": {
           "title": "Organisation modification",
           "description": "You have modified some information related to the sites in this study. Would you like to apply these changes to the organisation's information? <error>These changes will not be applied to your other studies.</error>",
@@ -758,7 +695,6 @@
         "missingCaract1": "Uncharacterized emission sources are not accounted for in the BEGES-R, which leads to undue differences with the Bilan Carbone® if you have chosen to visualize unvalidated emission sources.",
         "missingCaract2": "You have not entered the characterizations for all the emission sources in your study. Please edit and add the characterization for the following emission sources:",
         "additionalMissing": "+ {count} other emission {count, plural,  =1 {source} other {sources}}",
-        "close": "Close",
         "unexplainedDifference": "Some differences can not be explained. Please, contact us at the <support>support</support>."
       },
       "noData": "No data to display",
@@ -774,7 +710,6 @@
       },
       "analysis": "Emissions analysis",
       "total": "Emissions total",
-      "close": "Close",
       "intensities": {
         "budget": "budget",
         "etp": "employee",
@@ -1093,7 +1028,6 @@
           "reductionRate": "Annual reduction",
           "actions": "Actions"
         },
-        "delete": "Delete",
         "cancel": "Cancel",
         "deleteTrajectory": {
           "title": "Delete trajectory",
@@ -1372,39 +1306,6 @@
         "BiensEtMatieresEnApprocheMonetaire": "A sub-section is also dedicated to materials for which emission factors in monetary ratios are used.",
         "UtilisationEnResponsabilite": "Products sold by the organization within the timeframe under consideration over their entire lifespan, for which the organization is directly responsible ([in italisque] for a manufacturer of meal trays served on aircraft, the responsible use corresponds to the energy used to cool and heat the meal tray).",
         "UtilisationEnDependance": "Products sold by the organization within the timeframe under consideration over their entire lifespan, for which the organization is not directly responsible but which its activity contributes to emitting ([in italics] For a manufacturer of meal trays served in an aircraft, the dependent use corresponds to the emissions for the entire flight)."
-      },
-      "cutQuestions": {
-        "actions": "Actions",
-        "add": "Add",
-        "delete": "Delete",
-        "duplicate": "Duplicate",
-        "error": "Error while updating the field",
-        "next": "Next sub-post",
-        "previous": "Previous sub-post",
-        "numberOfYears": "Number of years",
-        "bonbons": "Candies - Quantity (packs of {value}g)",
-        "chips": "Chips - Quantity (packs of {value}g)",
-        "Electromenager": "For each of these household appliances, please provide the following information:",
-        "FretCadence": "Freight - Frequency (times/month)",
-        "FretPoids moyen": "Freight - Average weight (kg)",
-        "FretProvenance": "Where is your main supplier based?",
-        "Refrigerateurs": "Refrigerators",
-        "Congelateurs": "Freezers",
-        "Warmers": "Warmers",
-        "Distributeurs": "Snack / drink vending machines",
-        "format": {
-          "text": "Text",
-          "postalCode": "Postal code",
-          "phone": "Phone",
-          "year": "Year",
-          "hour": "Hour",
-          "number": "Number"
-        },
-        "errorLoadingQuestions": "Error loading questions",
-        "retry": "Retry",
-        "finish": "Finish",
-        "noQuestions": "No questions found for this sub-post",
-        "autoSaveError": "The answer could not be saved automatically"
       }
     },
     "create": {
@@ -1443,7 +1344,6 @@
       "subPost": "Sub Post",
       "partType": "Part type",
       "comment": "Comments",
-      "delete": "Delete",
       "clear": "Clear value",
       "glossary": {
         "title": "Glossary",
@@ -1578,7 +1478,6 @@
     "missingQualities": {
       "title": "Add quality for manual emission factors",
       "body": "Hello, according to our information, you added emission factors manually when it was still impossible to enter their uncertainty. By default, for these emission factors, the qualities are considered to be \"Very good\", which corresponds to zero uncertainty on the emission factor. Now that this bug has been resolved, we strongly recommend that you update the emission factors concerned, which are as follows: ",
-      "close": "Close",
       "correct": "Correct"
     }
   },
@@ -1905,7 +1804,6 @@
     "studySites": {
       "title": "You cannot delete these sites",
       "description": "Studies exist with the following sites. <warning>Please delete them from the concerned studies before you can delete them from your organization.</warning>",
-      "close": "Close",
       "existingSite": "<name></name>: <link></link>",
       "existingUnauthorizedSite": "{name} : {count, plural,  =1 {1 study} other { studies}} you do not have access to"
     },
@@ -2164,8 +2062,7 @@
     "body": " If you have 5 minutes, we'd love to hear your feedback on BC+! This will help us to meet your needs as effectively as possible in our future developments. If this isn't a good time, you can delay your answer.",
     "reject": "Do not answer",
     "delay": "Later ({time} days)",
-    "answer": "Let's go",
-    "close": "Close"
+    "answer": "Let's go"
   },
   "form": {
     "validation": {
@@ -2217,11 +2114,6 @@
     "maxTwoDecimals": "The reduction rate must have at most 2 decimal places"
   },
   "common": {
-    "actions": {
-      "edit": "Edit",
-      "duplicate": "Duplicate",
-      "delete": "Delete"
-    },
     "typeToConfirm": "Type \"{name}\" to confirm"
   }
 }

@@ -14,7 +14,7 @@ interface Props {
 }
 
 const DynamicSubPostForm = ({ subPost, study, studySiteId }: Props) => {
-  const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
+  const tCutQuestions = useTranslations('emissionFactors.post.questions')
 
   const [questions, setQuestions] = useState<Question[]>([])
   const [answers, setAnswers] = useState<Answer[]>([])

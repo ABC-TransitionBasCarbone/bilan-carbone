@@ -108,6 +108,22 @@
       "activate": "Créer mon compte"
     }
   },
+  "signup": {
+    "description": "Créez un compte sur Clickson en entrant votre email ainsi que le code postal ou nom de votre établissement scolaire",
+    "schoolPostalCodeOrName": "Code postal ou nom de l'établissement scolaire",
+    "schoolPostalCodeOrNamePlaceholder": "Le code postal ou nom de l'établissement scolaire",
+    "schoolSearchGlossaryTitle": "Retrouvez votre établissement scolaire.",
+    "schoolSearchGlossary": "Retrouvez votre établissement scolaire en entrant son code postal ou son nom, puis en le sélectionnant dans la liste déroulante.",
+    "close": "Fermer",
+    "schoolPostalCodeOrNameRequired": "Veuillez entrer le code postal ou le nom de l'établissement scolaire",
+    "validate": "Valider",
+    "clear": "Supprimer la valeur",
+    "Not authorized": "Cet email est déjà inscrit avec un compte Clickson ou il y a eu un soucis lors de sa création. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
+    "Not known school": "Veuillez chercher et sélectionner votre établissement.",
+    "validation": {
+      "schoolPostalCodeOrName": "Veuillez entrer le code postal ou nom de l'établissement scolaire"
+    }
+  },
   "email": {
     "subject": {
       "newUser": "Vous avez été invité sur Clickson",
