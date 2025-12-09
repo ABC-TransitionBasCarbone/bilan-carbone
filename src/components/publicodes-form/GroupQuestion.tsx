@@ -1,7 +1,7 @@
 import { Checkbox, FormControl, FormControlLabel, styled } from '@mui/material'
 import { EvaluatedFormElement, FormPageElementProp } from '@publicodes/forms'
 import { EvaluatedGroupLayout } from './layouts/evaluatedFormLayout'
-import { OnFormInputChange } from './utils'
+import { OnFieldChange } from './utils'
 
 const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
   backgroundColor: 'white',
@@ -14,7 +14,7 @@ const formatOption = (option: string) => option.replace(/^\d*-/, '')
 
 interface GroupQuestionProps<RuleName extends string> {
   groupLayout: EvaluatedGroupLayout<RuleName>
-  onChange: OnFormInputChange<RuleName>
+  onChange: OnFieldChange<RuleName>
 }
 
 /**

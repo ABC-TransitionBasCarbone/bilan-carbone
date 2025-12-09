@@ -47,7 +47,7 @@ export default function PublicodesForm<RuleName extends string, S extends Situat
         areRulesReferencedInApplicability((rule: RuleName) => engine.getRule(rule), currentRuleNames, previousRuleNames)
 
       const key =
-        formLayout.type === 'simple'
+        formLayout.type === 'input'
           ? formLayout.rule
           : formLayout.type === 'group'
             ? `group-${index}`

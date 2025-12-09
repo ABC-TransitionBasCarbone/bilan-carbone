@@ -5,11 +5,11 @@ import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table
 import { useMemo } from 'react'
 import InputField from './InputField'
 import { EvaluatedTableLayout } from './layouts/evaluatedFormLayout'
-import { OnFormInputChange } from './utils'
+import { OnFieldChange } from './utils'
 
 interface TableLayoutProps<RuleName extends string> {
   tableLayout: EvaluatedTableLayout<RuleName>
-  onChange: OnFormInputChange<RuleName>
+  onChange: OnFieldChange<RuleName>
 }
 
 /**
