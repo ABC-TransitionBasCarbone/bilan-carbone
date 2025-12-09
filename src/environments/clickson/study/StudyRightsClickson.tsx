@@ -5,6 +5,7 @@ import LinkButton from '@/components/base/LinkButton'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormTextField } from '@/components/form/TextField'
 import StudyContributorsTable from '@/components/study/rights/StudyContributorsTable'
+import StudyVersions from '@/components/study/rights/StudyVersions'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
 import useStudySite from '@/components/study/site/useStudySite'
 import { SiteDependentField } from '@/constants/emissionFactorMap'
@@ -19,6 +20,7 @@ import {
 } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Box, CircularProgress } from '@mui/material'
+import { EmissionFactorImportVersion } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
@@ -33,9 +35,10 @@ const SiteDataChangeWarningModal = dynamic(() => import('@/components/modals/Sit
 interface Props {
   study: FullStudy
   editionDisabled: boolean
+  emissionFactorSources: EmissionFactorImportVersion[]
 }
 
-const StudyRightsClickson = ({ study, editionDisabled }: Props) => {
+const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources }: Props) => {
   const t = useTranslations('study.new')
   const tRights = useTranslations('study.rights')
   const tValidation = useTranslations('validation')
@@ -193,6 +196,7 @@ const StudyRightsClickson = ({ study, editionDisabled }: Props) => {
           <CircularProgress variant="indeterminate" color="primary" size={100} className="flex mt2" />
         ) : (
           <>
+            <StudyVersions study={study} emissionFactorSources={emissionFactorSources} canUpdate={!editionDisabled} />
             <div className="flex-col gapped1 mb1">
               <div className={styles.dates}>
                 <FormDatePicker
