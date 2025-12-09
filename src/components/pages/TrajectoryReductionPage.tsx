@@ -355,10 +355,11 @@ const TrajectoryReductionPage = ({
 
             {trajectories.length === 0 ? (
               <Box
-                className={classNames('p125 flex-col gapped075', styles.trajectoryCard, {
-                  [styles.clickableCard]: canEdit,
-                  [styles.disabledCard]: !canEdit,
-                })}
+                className={classNames(
+                  'p125 flex-col gapped075',
+                  styles.trajectoryCard,
+                  canEdit ? styles.clickableCard : styles.disabledCard,
+                )}
                 onClick={canEdit ? () => setShowTrajectoryModal(true) : undefined}
                 role={canEdit ? 'button' : undefined}
                 tabIndex={canEdit ? 0 : undefined}
