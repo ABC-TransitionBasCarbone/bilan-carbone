@@ -66,6 +66,7 @@ const StudyContributorPage = ({ study, userRole }: Props) => {
               iconPosition="before"
             >
               <SubPosts
+                post={post}
                 subPosts={subPostsByPost[post]}
                 study={study}
                 withoutDetail

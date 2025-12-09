@@ -157,6 +157,7 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, use
       >
         {showInfography && <StudyPostInfography study={study} studySite={studySite} user={user} />}
         <SubPosts
+          post={post}
           subPosts={filters.subPosts}
           study={study}
           userRole={userRole}
