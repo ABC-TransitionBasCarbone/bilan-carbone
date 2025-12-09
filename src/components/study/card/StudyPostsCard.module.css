@@ -55,6 +55,10 @@
   width: auto;
   height: 1.5rem;
 
+  path {
+    fill: white;
+  }
+
   @media screen and (max-width: 50rem) {
     display: none;
   }
