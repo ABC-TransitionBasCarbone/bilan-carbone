@@ -7,15 +7,17 @@ import { FormTextField } from '@/components/form/TextField'
 import { getOrganizationVersionAccounts } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { notDisplayingStudyRightModalForAddingContributors } from '@/services/permissions/environment'
 import { newStudyContributor } from '@/services/serverFunctions/study'
 import {
   NewStudyContributorCommand,
   NewStudyContributorCommandValidation,
 } from '@/services/serverFunctions/study.command'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import NewStudyRightModal from './NewStudyRightModal'
 
@@ -32,6 +34,8 @@ const NewStudyContributorForm = ({ study, accounts }: Props) => {
   const [otherOrganizationVersion, setOtherOrganizationVersion] = useState(false)
   const [loading, setLoading] = useState(false)
 
+  const { environment } = useAppEnvironmentStore()
+
   const form = useForm<NewStudyContributorCommand>({
     resolver: zodResolver(NewStudyContributorCommandValidation),
     mode: 'onBlur',
@@ -42,23 +46,31 @@ const NewStudyContributorForm = ({ study, accounts }: Props) => {
     },
   })
 
-  const onSubmit = async (command: NewStudyContributorCommand) => {
-    if (otherOrganizationVersion || accounts.some((account) => account.user.email === form.getValues('email'))) {
-      setLoading(true)
-      await callServerFunction(() => newStudyContributor(command), {
-        getErrorMessage: (error) => t(error),
-        onSuccess: () => {
-          setLoading(false)
-          router.push(`/etudes/${study.id}/cadrage`)
-        },
-        onError: () => {
-          setLoading(false)
-        },
-      })
-    } else {
-      setOtherOrganizationVersion(true)
-    }
-  }
+  const onSubmit = useCallback(
+    async (command: NewStudyContributorCommand) => {
+      if (
+        (environment && notDisplayingStudyRightModalForAddingContributors(environment)) ||
+        otherOrganizationVersion ||
+        accounts.some((account) => account.user.email === form.getValues('email'))
+      ) {
+        setLoading(true)
+        await callServerFunction(() => newStudyContributor(command), {
+          getErrorMessage: (error) => t(error),
+          onSuccess: () => {
+            setLoading(false)
+            router.push(`/etudes/${study.id}/cadrage`)
+          },
+          onError: () => {
+            setLoading(false)
+          },
+        })
+      } else {
+        setOtherOrganizationVersion(true)
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [environment, otherOrganizationVersion, accounts, callServerFunction, study.id],
+  )
 
   return (
     <Form onSubmit={form.handleSubmit(onSubmit)}>

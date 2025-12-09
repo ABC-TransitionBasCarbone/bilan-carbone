@@ -556,10 +556,6 @@ export const changeStudyEstablishment = async (studySiteId: string, data: Change
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (!canChangeOpeningHours(informations.user, informations.studyWithRights)) {
-      throw new Error(NOT_AUTHORIZED)
-    }
-
     await updateStudySiteData(studySiteId, data)
   })
 
