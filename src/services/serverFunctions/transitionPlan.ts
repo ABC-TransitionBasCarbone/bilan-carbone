@@ -23,7 +23,6 @@ import {
   getTransitionPlanByIdWithRelations,
   getTransitionPlanByStudyId,
   saveIndicatorsOnAction,
-  TransitionPlanWithRelations,
   TransitionPlanWithStudies,
   updateAction,
 } from '@/db/transitionPlan'
@@ -68,7 +67,7 @@ export const getAvailableTransitionPlans = async (studyId: string) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const plans = await getOrganizationTransitionPlans(study.organizationVersionId)
+    const plans = await getOrganizationTransitionPlans(study.organizationVersionId, study.startDate.getFullYear())
 
     const accessiblePlans = await Promise.all(
       plans.map(async (plan) => {
@@ -99,17 +98,30 @@ export const initializeTransitionPlan = async (studyId: string, sourceTransition
     }
   })
 
-const duplicateTransitionPlan = async (
-  sourceTransitionPlanId: string,
-  targetStudyId: string,
-): Promise<TransitionPlanWithRelations> => {
+export const duplicateTransitionPlan = async (sourceTransitionPlanId: string, targetStudyId: string) => {
   const sourceTransitionPlan = await getTransitionPlanByIdWithRelations(sourceTransitionPlanId)
 
   if (!sourceTransitionPlan) {
     throw new Error('Source transition plan not found with id ' + sourceTransitionPlanId)
   }
 
-  return duplicateTransitionPlanWithRelations(sourceTransitionPlan, targetStudyId)
+  const duplicated = await duplicateTransitionPlanWithRelations(sourceTransitionPlan, targetStudyId)
+
+  const [sourceStudy, targetStudy] = await Promise.all([
+    getStudyById(sourceTransitionPlan.studyId, null),
+    getStudyById(targetStudyId, null),
+  ])
+
+  if (!targetStudy || !sourceStudy) {
+    console.error(
+      `Cannot link studies because target or source is not found. Target (id, isFound) : ${targetStudyId}, ${!!targetStudy} ; Source (id, isFound) : ${sourceTransitionPlan.studyId}, ${!!sourceStudy}`,
+    )
+    return
+  }
+
+  if (targetStudy.startDate.getFullYear() > sourceStudy.startDate.getFullYear()) {
+    await linkOldStudy(duplicated.id, sourceStudy.id)
+  }
 }
 
 export const addAction = async (command: AddActionCommand) =>

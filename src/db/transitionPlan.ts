@@ -71,11 +71,13 @@ export const getTransitionPlanByStudyId = async (studyId: string): Promise<Trans
 
 export const getOrganizationTransitionPlans = async (
   organizationVersionId: string,
+  maxYear: number,
 ): Promise<TransitionPlanWithStudies[]> => {
   return prismaClient.transitionPlan.findMany({
     where: {
       study: {
         organizationVersionId,
+        startDate: { lt: new Date(maxYear + 1, 0, 1) },
       },
     },
     include: {
@@ -115,7 +117,7 @@ export const duplicateTransitionPlanWithRelations = async (
       data: {
         studyId: targetStudyId,
         transitionPlanStudies: {
-          create: [{ studyId: targetStudyId }, ...linkedStudyIds.map((studyId) => ({ studyId }))],
+          create: linkedStudyIds.map((studyId) => ({ studyId })),
         },
         trajectories: {
           create: sourceTransitionPlan.trajectories.map((trajectory) => ({
