@@ -1,4 +1,4 @@
-import { FormLayout, groupLayout, simpleLayout, tableLayout } from '@/components/publicodes-form/layouts/formLayout'
+import { FormLayout, groupLayout, inputLayout, tableLayout } from '@/components/publicodes-form/layouts/formLayout'
 import { SubPost } from '@prisma/client'
 import { CutRuleName } from './types'
 
@@ -37,7 +37,7 @@ const SUBPOST_TO_RULENAME: Partial<Record<SubPost, CutRuleName>> = {
   CaissesEtBornes: 'billetterie et communication . caisses et bornes',
 } as const
 
-const input = (rule: CutRuleName): FormLayout<CutRuleName> => simpleLayout<CutRuleName>(rule)
+const input = (rule: CutRuleName): FormLayout<CutRuleName> => inputLayout<CutRuleName>(rule)
 const group = (title: string, rules: CutRuleName[]): FormLayout<CutRuleName> => groupLayout<CutRuleName>(title, rules)
 const table = (title: string, headers: string[], rows: CutRuleName[][]): FormLayout<CutRuleName> =>
   tableLayout<CutRuleName>(title, headers, rows)
