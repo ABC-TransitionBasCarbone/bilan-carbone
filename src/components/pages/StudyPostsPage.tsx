@@ -165,6 +165,7 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, use
           studySite={studySite}
           emissionSources={filteredSources}
           setGlossary={setGlossary}
+          hasFilter={!!filters.search}
         />
       </StudyPostsBlock>
     </>

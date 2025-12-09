@@ -32,8 +32,8 @@ const Title = ({
   ) : null
 
   return (
-    <IconLabel icon={iconDiv} iconPosition={iconPosition} className={classNames(styles.title, className)}>
-      <Title id={id} data-testid={dataTestId}>
+    <IconLabel icon={iconDiv} iconPosition={iconPosition} className={classNames(styles.title, 'grow', className)}>
+      <Title id={id} data-testid={dataTestId} className="flex grow">
         {title}
       </Title>
       {children}

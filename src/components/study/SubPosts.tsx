@@ -25,6 +25,7 @@ interface Props {
   studySite: string
   emissionSources: FullStudy['emissionSources']
   setGlossary: (subPost: string) => void
+  hasFilter?: boolean
 }
 
 const SubPosts = ({
@@ -36,6 +37,7 @@ const SubPosts = ({
   emissionSources,
   studySite,
   setGlossary,
+  hasFilter,
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
   return (
     <div className={classNames(styles.subPosts, 'flex-col')}>
@@ -54,6 +56,7 @@ const SubPosts = ({
             emissionSources.filter((emissionSource) => emissionSource.subPost === subPost && emissionSource.validated)
               .length
           }
+          hasFilter={!!hasFilter}
         />
       ))}
     </div>

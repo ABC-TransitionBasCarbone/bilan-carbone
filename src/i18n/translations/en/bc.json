@@ -419,6 +419,7 @@
       "contributors": "{count, plural, =1 {1 contributor} other {contibutors}}",
       "contributorsList": "{count, plural, =1 {Contributor :} other {Contributors :}}",
       "label": "Emission source label",
+      "search": "Search by label, value, unit, ...",
       "new": "Give your new emission source a title",
       "add": "Add",
       "filters": "Filters",
