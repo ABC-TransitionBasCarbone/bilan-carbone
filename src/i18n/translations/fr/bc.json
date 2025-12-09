@@ -419,6 +419,7 @@
       "contributors": "{count, plural, =1 {1 contributeur·rice} other {# contibuteur·rices}}",
       "contributorsList": "{count, plural, =1 {Contributeur·rice :} other {Contributeur·rices :}}",
       "label": "Libellé de la source d'émission",
+      "search": "Rechercher par libellé, valeurs, unités, ...",
       "new": "Donnez un titre à votre nouvelle source d'émission",
       "add": "Ajouter",
       "filters": "Filtres",

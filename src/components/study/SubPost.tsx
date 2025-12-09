@@ -23,11 +23,13 @@ import styles from './SubPosts.module.css'
 type StudyProps = {
   study: FullStudy
   withoutDetail: false
+  hasFilter: boolean
 }
 
 type StudyWithoutDetailProps = {
   study: StudyWithoutDetail
   withoutDetail: true
+  hasFilter: boolean
 }
 
 interface Props {
@@ -52,6 +54,7 @@ const SubPost = ({
   setGlossary,
   count,
   validated,
+  hasFilter,
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
   const t = useTranslations('study.post')
   const tStudy = useTranslations('study')
@@ -94,6 +97,12 @@ const SubPost = ({
       fetchEmissionFactors()
     }
   }, [emissionFactorsForSubPost.length, environment, expanded, importVersions, study.id, subPost])
+
+  useEffect(() => {
+    if (hasFilter && emissionSources.length) {
+      setExpanded(true)
+    }
+  }, [emissionSources.length, hasFilter])
 
   const total = useMemo(() => {
     if (!environment) {
