@@ -18,8 +18,8 @@ interface TranslationObj {
 const translationsToCheck: Record<string, Locale[]> = {
   common: [Locale.EN, Locale.FR, Locale.ES],
   bc: [Locale.EN, Locale.FR],
-  cut: [Locale.EN, Locale.FR, Locale.ES],
-  tilt: [Locale.EN, Locale.FR, Locale.ES],
+  cut: [Locale.EN, Locale.FR],
+  tilt: [Locale.EN, Locale.FR],
   clickson: [Locale.EN, Locale.FR, Locale.ES],
 }
 
