@@ -1,3 +1,5 @@
+'use client'
+
 import Block from '@/components/base/Block'
 import Button from '@/components/base/Button'
 import Stepper from '@/components/base/Stepper'
@@ -10,6 +12,8 @@ import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
+import { CutPublicodesProvider } from '../context/CutPublicodesProvider'
+import CutSaveStatusIndicator from '../study/CutSaveStatusIndicator'
 import PublicodesSubPostForm from '../study/PublicodesSubPostForm'
 
 interface Props {
@@ -48,10 +52,6 @@ const StudyPostsPageCut = ({ post, currentSubPost, study, studySiteId }: Props) 
     }
   }, [activeSubPost, searchParams])
 
-  const tabContent = useMemo(() => {
-    return <PublicodesSubPostForm key={activeSubPost} subPost={activeSubPost} study={study} studySiteId={studySiteId} />
-  }, [activeSubPost, study, studySiteId])
-
   const handleNextStep = () => {
     if (activeStep < subPosts.length - 1) {
       setActiveStep(activeStep + 1)
@@ -72,45 +72,55 @@ const StudyPostsPageCut = ({ post, currentSubPost, study, studySiteId }: Props) 
   const isLastStep = activeStep >= subPosts.length - 1
 
   return (
-    <Block
-      title={tPost(post)}
-      as="h1"
-      actions={[
-        {
-          actionType: 'link',
-          href: `/etudes/${study.id}/comptabilisation/saisie-des-donnees`,
-          children: tInfography('form.backToInfography'),
-        },
-      ]}
-    >
-      <TabsWithGreenStyling
-        tabs={subPosts}
-        t={tPost}
-        content={tabContent}
-        activeTab={activeStep}
-        setActiveTab={setActiveStep}
-      />
-      <Stepper
-        steps={subPosts.length}
-        activeStep={activeStep + 1}
-        fillValidatedSteps={false}
-        nextButton={
-          <Button
-            endIcon={isLastStep ? <CheckIcon /> : <ArrowRightIcon />}
-            onClick={isLastStep ? handleFinish : handleNextStep}
-            disabled={false}
-            variant="contained"
-          >
-            {isLastStep ? tCutQuestions('finish') : tCutQuestions('next')}
-          </Button>
-        }
-        backButton={
-          <Button startIcon={<ArrowLeftIcon />} onClick={handlePreviousStep} disabled={isFirstStep} variant="contained">
-            {tCutQuestions('previous')}
-          </Button>
-        }
-      />
-    </Block>
+    <CutPublicodesProvider studyId={study.id} studySiteId={studySiteId} study={study}>
+      <Block
+        title={tPost(post)}
+        as="h1"
+        actions={[
+          {
+            actionType: 'link',
+            href: `/etudes/${study.id}/comptabilisation/saisie-des-donnees`,
+            children: tInfography('form.backToInfography'),
+          },
+        ]}
+      >
+        <CutSaveStatusIndicator />
+
+        <TabsWithGreenStyling
+          tabs={subPosts}
+          t={tPost}
+          content={<PublicodesSubPostForm subPost={activeSubPost} />}
+          activeTab={activeStep}
+          setActiveTab={setActiveStep}
+        />
+
+        <Stepper
+          steps={subPosts.length}
+          activeStep={activeStep + 1}
+          fillValidatedSteps={false}
+          nextButton={
+            <Button
+              endIcon={isLastStep ? <CheckIcon /> : <ArrowRightIcon />}
+              onClick={isLastStep ? handleFinish : handleNextStep}
+              disabled={false}
+              variant="contained"
+            >
+              {isLastStep ? tCutQuestions('finish') : tCutQuestions('next')}
+            </Button>
+          }
+          backButton={
+            <Button
+              startIcon={<ArrowLeftIcon />}
+              onClick={handlePreviousStep}
+              disabled={isFirstStep}
+              variant="contained"
+            >
+              {tCutQuestions('previous')}
+            </Button>
+          }
+        />
+      </Block>
+    </CutPublicodesProvider>
   )
 }
 

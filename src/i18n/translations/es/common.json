@@ -14,6 +14,12 @@
     "notAuthorized": "Acción no autorizada",
     "Not authorized": "No tiene permiso para realizar esta acción"
   },
+  "saveStatus": {
+    "saving": "Guardando respuestas...",
+    "saved": "Respuestas guardadas",
+    "error": "Error al guardar respuestas",
+    "at": "a las"
+  },
   "signup": {
     "email": "Correo electrónico",
     "emailPlaceholder": "Correo electrónico utilizado durante su formación",

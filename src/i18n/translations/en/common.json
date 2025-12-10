@@ -14,6 +14,12 @@
     "notAuthorized": "Action not authorized",
     "Not authorized": "You are not allowed to do this action"
   },
+  "saveStatus": {
+    "saving": "Saving answers...",
+    "saved": "Answers saved",
+    "error": "Error saving answers",
+    "at": "at"
+  },
   "signup": {
     "email": "Email",
     "emailPlaceholder": "Email used during your training",

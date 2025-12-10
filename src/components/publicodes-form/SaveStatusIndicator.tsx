@@ -1,5 +1,6 @@
 import { CheckCircle, Error } from '@mui/icons-material'
 import { Box, CircularProgress, styled, Typography, useTheme } from '@mui/material'
+import { useTranslations } from 'next-intl'
 
 export interface SaveStatusIndicatorStatus {
   status: 'idle' | 'saving' | 'saved' | 'error'
@@ -14,6 +15,7 @@ interface SaveStatusIndicatorProps {
 
 const SaveStatusIndicator = ({ status, showTime = true }: SaveStatusIndicatorProps) => {
   const theme = useTheme()
+  const t = useTranslations('saveStatus')
 
   const getStatusContent = () => {
     switch (status.status) {
@@ -21,26 +23,26 @@ const SaveStatusIndicator = ({ status, showTime = true }: SaveStatusIndicatorPro
         return {
           icon: <CircularProgress size={16} />,
           color: theme.palette.text.secondary,
-          text: 'Sauvegarde en cours...',
+          text: t('saving'),
         }
       case 'saved':
         return {
           icon: <CheckCircle fontSize="small" />,
           color: theme.palette.success.dark,
-          text: 'Sauvegardé',
+          text: t('saved'),
         }
       case 'error':
         return {
           icon: <Error fontSize="small" />,
           color: theme.palette.error.main,
-          text: 'Erreur de sauvegarde',
+          text: t('error'),
         }
       case 'idle':
       default:
         return {
           icon: <CheckCircle fontSize="small" />,
           color: theme.palette.grey[400],
-          text: 'Prêt',
+          text: t('ready'),
         }
     }
   }
@@ -48,36 +50,46 @@ const SaveStatusIndicator = ({ status, showTime = true }: SaveStatusIndicatorPro
   const statusContent = getStatusContent()
 
   const formatTime = (date?: Date) => {
-    if (!date) return ''
-    return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+    if (!date) {
+      return ''
+    }
+    return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
   }
 
   return (
-    <Container>
-      <StyledIcon statusColor={statusContent.color}>{statusContent.icon}</StyledIcon>
-      <Box>
-        <StatusText sx={{ color: statusContent.color }}>{statusContent.text}</StatusText>
-        {showTime && status.status === 'saved' && status.lastSaved && (
-          <TimeText>à {formatTime(status.lastSaved)}</TimeText>
-        )}
-        {status.status === 'error' && status.error && (
-          <TimeText sx={{ color: theme.palette.error.main }}>{status.error}</TimeText>
-        )}
-      </Box>
-    </Container>
+    <StatusWrapper>
+      {statusContent ? (
+        <Container>
+          <StyledIcon statusColor={statusContent.color}>{statusContent.icon}</StyledIcon>
+          <Box>
+            <StatusText sx={{ color: statusContent.color }}>{statusContent.text}</StatusText>
+            {showTime && status.status === 'saved' && status.lastSaved && (
+              <TimeText>
+                {t('at')} {formatTime(status.lastSaved)}
+              </TimeText>
+            )}
+            {status.status === 'error' && status.error && (
+              <TimeText sx={{ color: theme.palette.error.main }}>{status.error}</TimeText>
+            )}
+          </Box>
+        </Container>
+      ) : null}
+    </StatusWrapper>
   )
 }
 
-const Container = styled(Box)(({ theme }) => ({
+const StatusWrapper = styled(Box)(() => ({
+  minHeight: '50px',
+  marginBottom: '0.5rem',
+}))
+
+const Container = styled(Box)(() => ({
   width: 'fit-content',
   display: 'flex',
   alignItems: 'center',
   gap: '0.5rem',
-  padding: '0.625rem 1rem',
-  borderRadius: '0.5rem',
-  marginBottom: '1rem',
-  border: `1px solid ${theme.palette.divider}`,
-  backgroundColor: theme.palette.background.paper,
+  opacity: 1,
+  transition: 'opacity 0.2s ease-in-out',
 }))
 
 const StyledIcon = styled(Box)<{ statusColor: string }>(({ statusColor }) => ({
