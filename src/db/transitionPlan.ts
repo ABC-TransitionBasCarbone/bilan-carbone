@@ -199,10 +199,6 @@ export const updateAction = async (id: string, data: Prisma.ActionUpdateInput) =
 
 export const deleteAction = async (id: string) => prismaClient.action.delete({ where: { id } })
 
-export type ActionWithIndicators = Action & {
-  indicators: ActionIndicator[]
-}
-
 export type ActionWithRelations = Action & {
   indicators: ActionIndicator[]
   steps: ActionStep[]
