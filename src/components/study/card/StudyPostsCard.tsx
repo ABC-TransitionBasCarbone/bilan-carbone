@@ -2,17 +2,15 @@ import { FullStudy } from '@/db/study'
 import { hasAccessToEmissionSourceValidation } from '@/services/permissions/environment'
 import { Post, subPostsByPost } from '@/services/posts'
 import { withInfobulle } from '@/utils/post'
-import { defaultPostColor, postColors } from '@/utils/study'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { Dispatch, SetStateAction, useMemo } from 'react'
-import widthStyles from '../../base/ProgressBar.module.css'
-import progressStyles from '../infography/PostHeader.module.css'
+import { Dispatch, SetStateAction } from 'react'
 import PostIcon from '../infography/icons/PostIcon'
 import SelectStudySite from '../site/SelectStudySite'
 import styles from './StudyPostsCard.module.css'
+import { StyledPostContainer, StyledProgressLayer } from './StudyPostsCard.styles'
 
 interface Props {
   study: FullStudy
@@ -25,8 +23,6 @@ interface Props {
 const StudyPostsCard = ({ study, post, studySite, setSite, setGlossary, environment }: Props) => {
   const t = useTranslations('study')
   const tPost = useTranslations('emissionFactors.post')
-
-  const postColor = useMemo(() => (post ? postColors[post] : defaultPostColor), [post])
 
   const emissionSources = study.emissionSources.filter(
     (emissionSource) =>
@@ -48,18 +44,9 @@ const StudyPostsCard = ({ study, post, studySite, setSite, setGlossary, environm
       </div>
       <div className={classNames(styles.postContainer, 'grow flex-col gapped')}>
         <div className="grow justify-center">
-          <div className={classNames(styles.post, styles[`post-${postColor}`], 'grow')}>
+          <StyledPostContainer post={post}>
             <div className={classNames(styles.header, 'flex-col align-center grow')}>
-              {percent > 0 && (
-                <div
-                  className={classNames(
-                    styles.progress,
-                    progressStyles.progress,
-                    progressStyles[`progress-${postColor}`],
-                    widthStyles[`w${percent.toFixed(0)}`],
-                  )}
-                />
-              )}
+              {percent > 0 && <StyledProgressLayer post={post} percent={percent} />}
               <div className={classNames(styles.content, 'flex-cc text-center w100')}>
                 <PostIcon className={styles.icon} post={post} />
                 {tPost(post)}
@@ -73,7 +60,7 @@ const StudyPostsCard = ({ study, post, studySite, setSite, setGlossary, environm
                 )}
               </div>
             </div>
-          </div>
+          </StyledPostContainer>
         </div>
         {hasAccessToEmissionSourceValidation(environment) && (
           <div className={classNames({ [styles.allValidated]: percent === 100 }, 'grow flex-cc')}>

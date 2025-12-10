@@ -7,25 +7,6 @@
   margin: 0 2rem;
 }
 
-.post {
-  border-radius: 1rem;
-  color: white;
-  max-width: var(--card-max-length);
-
-  &.post-darkBlue {
-    background-color: var(--post-darkBlue-light);
-  }
-  &.post-green {
-    background-color: var(--post-green-light);
-  }
-  &.post-blue {
-    background-color: var(--post-blue-light);
-  }
-  &.post-orange {
-    background-color: var(--post-orange-light);
-  }
-}
-
 .header {
   position: relative;
   color: white;
@@ -33,10 +14,6 @@
   @media screen and (max-width: 64rem) {
     padding: 1rem 0.5rem;
   }
-}
-
-.progress {
-  border-radius: 1rem;
 }
 
 .content {
@@ -69,13 +46,5 @@
 
   &.success {
     color: var(--success-100);
-  }
-}
-
-.progressBar {
-  background: var(--warning);
-
-  &.success {
-    background: var(--success-100);
   }
 }
