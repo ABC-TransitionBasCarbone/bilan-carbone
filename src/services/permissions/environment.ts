@@ -54,6 +54,8 @@ export const hasAccessToMonetaryRatio = (environment: Environment) =>
 
 export const hasAccessToCreateStudyWithEmissionFactorVersions = isSimplified
 
+export const showResultsInfoText = (environment: Environment) => ([CUT] as Environment[]).includes(environment)
+
 export const notDisplayingStudyRightModalForAddingContributors = (environment: Environment) =>
   ([CLICKSON] as Environment[]).includes(environment)
 

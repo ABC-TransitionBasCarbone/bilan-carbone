@@ -25,6 +25,9 @@ import classNames from 'classnames'
 import Link from 'next/link'
 import styles from './AllResults.module.css'
 
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { showResultsInfoText } from '../../../../services/permissions/environment'
+
 interface Props {
   emissionFactorsWithParts: EmissionFactorWithParts[]
   study: FullStudy
@@ -56,6 +59,9 @@ const tabsLabels = [
 const AllResults = ({ emissionFactorsWithParts, study, validatedOnly, chartOrder = defaultChartOrder }: Props) => {
   const [value, setValue] = useState(0)
   const [pdfLoading, setPdfLoading] = useState(false)
+
+  const { environment } = useAppEnvironmentStore()
+
   const handleChange = (_event: SyntheticEvent, newValue: number) => {
     setValue(newValue)
   }
@@ -154,38 +160,42 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly, chartOrder
         </div>
       }
     >
-      <Box component="section" className="mb2">
-        <Typography>
-          {tResults.rich('cutFeedback', {
-            questionnaire: (children) => (
-              <Link href={process.env.NEXT_PUBLIC_CUT_FEEDBACK_TYPEFORM_LINK ?? ''} target="_blank">
-                <strong>{children}</strong>
-              </Link>
-            ),
-          })}
-        </Typography>
-      </Box>
-      <Box component="section">
-        <Typography className={classNames(styles.infoContainer)}>
-          {tResults.rich('infoWithLinks', {
-            formation: (children) => (
-              <Link href={process.env.NEXT_PUBLIC_FORMATION_URL ?? ''} target="_blank">
-                <strong>{children}</strong>
-              </Link>
-            ),
-            email: (children) => (
-              <Link href={`mailto:${process.env.NEXT_PUBLIC_CUT_SUPPORT_EMAIL ?? ''}`} target="_blank">
-                <strong>{children}</strong>
-              </Link>
-            ),
-            prestataire: (children) => (
-              <Link href={process.env.NEXT_PUBLIC_ACTORS_URL ?? ''} target="_blank">
-                <strong>{children}</strong>
-              </Link>
-            ),
-          })}
-        </Typography>
-      </Box>
+      {environment && showResultsInfoText(environment) && (
+        <>
+          <Box component="section" className="mb2">
+            <Typography>
+              {tResults.rich('cutFeedback', {
+                questionnaire: (children) => (
+                  <Link href={process.env.NEXT_PUBLIC_CUT_FEEDBACK_TYPEFORM_LINK ?? ''} target="_blank">
+                    <strong>{children}</strong>
+                  </Link>
+                ),
+              })}
+            </Typography>
+          </Box>
+          <Box component="section">
+            <Typography className={classNames(styles.infoContainer)}>
+              {tResults.rich('infoWithLinks', {
+                formation: (children) => (
+                  <Link href={process.env.NEXT_PUBLIC_FORMATION_URL ?? ''} target="_blank">
+                    <strong>{children}</strong>
+                  </Link>
+                ),
+                email: (children) => (
+                  <Link href={`mailto:${process.env.NEXT_PUBLIC_CUT_SUPPORT_EMAIL ?? ''}`} target="_blank">
+                    <strong>{children}</strong>
+                  </Link>
+                ),
+                prestataire: (children) => (
+                  <Link href={process.env.NEXT_PUBLIC_ACTORS_URL ?? ''} target="_blank">
+                    <strong>{children}</strong>
+                  </Link>
+                ),
+              })}
+            </Typography>
+          </Box>
+        </>
+      )}
       <Box component="section" sx={{ marginTop: '1rem' }}>
         <Tabs value={value} onChange={handleChange} indicatorColor="secondary" textColor="inherit" variant="fullWidth">
           {orderedTabs.map((t, index) => (
