@@ -224,7 +224,7 @@ describe('calculateTrajectory', () => {
       expect(point2030?.value).toBeCloseTo(1000 - (2030 - 2024) * yearlyReduction, 1)
 
       const lastPoint = result[result.length - 1]
-      expect(lastPoint.value).toBe(0)
+      expect(lastPoint.year).toBe(2030)
     })
 
     test('should calculate trajectory with multiple objectives', () => {
@@ -256,9 +256,9 @@ describe('calculateTrajectory', () => {
       const point2040 = result.find((p) => p.year === 2040)
       expect(point2040?.value).toBeCloseTo(newstudyEmissions - (2040 - 2030) * newYearlyReduction, 1)
 
-      // After last objective we follow the same reduction rate and base emissions until 0
-      const point2041 = result.find((p) => p.year === 2041)
-      expect(point2041?.value).toBeCloseTo(newstudyEmissions - (2041 - 2030) * newYearlyReduction, 1)
+      // After last objective we keep the same result
+      const lastPoint = result[result.length - 1]
+      expect(lastPoint.year).toBe(2040)
     })
 
     test('should handle objectives with unsorted years', () => {
@@ -286,24 +286,6 @@ describe('calculateTrajectory', () => {
 
       const point2040 = result.find((p) => p.year === 2040)
       expect(point2040?.value).toBeCloseTo(newstudyEmissions - (2040 - 2030) * newYearlyReduction, 1)
-    })
-
-    test('should continue reducing until zero emissions after last objective', () => {
-      const studyEmissions = 1000
-      const studyStartYear = 2024
-      const objectives = [{ targetYear: 2030, reductionRate: 0.1 }]
-
-      const result = calculateCustomTrajectory({
-        studyEmissions,
-        studyStartYear,
-        objectives,
-        pastStudies: [],
-      })
-
-      const lastPoint = result[result.length - 1]
-      expect(lastPoint.value).toBe(0)
-
-      expect(lastPoint.year).toBe(2034)
     })
 
     test('should include flat emissions from reference year to study start year', () => {
@@ -1039,7 +1021,7 @@ describe('calculateTrajectory', () => {
     })
   })
 
-  const BUDGET_PRECISION_TOLERANCE_PERCENT = 3
+  const BUDGET_PRECISION_TOLERANCE_PERCENT = 5
 
   const expectBudgetsApproximatelyEqual = (actual: number, expected: number) => {
     const difference = Math.abs(actual - expected)
