@@ -541,7 +541,7 @@ const getObjectivesWithOvershootCompensation = (
     referenceEmissionsAtStudyYear,
     studyYear,
     objectives,
-    1.0,
+    1,
   )
 
   // Reduce future budget to compensate for past overshoot
@@ -549,7 +549,7 @@ const getObjectivesWithOvershootCompensation = (
 
   // Newton-Raphson iteration to find k such that budget(k) = remainingTotalBudget
   const delta = 0.0001
-  let k = 1.0
+  let k = 1
 
   for (let i = 0; i < 10; i++) {
     const budgetAtK = calculateBudgetWithObjectivesAndMultiplier(actualEmissions, studyYear, objectives, k)
@@ -1111,7 +1111,7 @@ const calculateBudgetWithObjectivesAndMultiplier = (
   multiplier: number,
 ): number => {
   const trajectory = buildTrajectoryWithObjectivesAndMultiplier(startEmissions, startYear, objectives, multiplier)
-  const endYear = trajectory[trajectory.length - 1].year
+  const endYear = objectives[objectives.length - 1].targetYear
 
   return calculateTrajectoryIntegral(trajectory, startYear, endYear)
 }
