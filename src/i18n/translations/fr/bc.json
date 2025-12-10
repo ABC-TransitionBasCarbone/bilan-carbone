@@ -148,6 +148,12 @@
   "locale": {
     "en": "English",
     "fr": "Français",
+    "es": "Español",
+    "el": "ελληνικά",
+    "hr": "hrvatski",
+    "hu": "magyar",
+    "it": "Italiano",
+    "ro": "Română",
     "selector": "Langue du site"
   },
   "login": {
