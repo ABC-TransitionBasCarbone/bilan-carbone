@@ -1,7 +1,7 @@
 import LoadingButton from '@/components/base/LoadingButton'
 import Toast, { ToastColors } from '@/components/base/Toast'
 import ModalStepper from '@/components/modals/ModalStepper'
-import { ActionWithIndicators } from '@/db/transitionPlan'
+import { ActionWithRelations } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { getStudyOrganizationMembers } from '@/services/serverFunctions/study'
 import { addAction, editAction } from '@/services/serverFunctions/transitionPlan'
@@ -30,7 +30,7 @@ const toastPosition = { vertical: 'bottom', horizontal: 'left' } as const
 
 interface Props {
   open: boolean
-  action?: ActionWithIndicators
+  action?: ActionWithRelations
   onClose: () => void
   transitionPlanId: string
   studyUnit: StudyResultUnit
@@ -107,6 +107,7 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
         dependenciesOnly: false,
         ...convertedAction,
         indicators: setDefaultIndicators(action?.indicators ?? []),
+        steps: action?.steps ?? [],
       },
     })
 
@@ -121,6 +122,8 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
 
   const onSubmit = async (data: AddActionFormCommand) => {
     const cleanedIndicators = data.indicators?.filter((ind) => ind && ind.type) || []
+    const cleanedSteps =
+      data.steps?.filter((step) => step && step.title?.trim()).map((step, index) => ({ ...step, order: index })) || []
     const priority = calculatePriorityFromRelevance(data.relevance)
     const { reductionValue, ...dataWithoutReductionValue } = data
 
@@ -131,6 +134,7 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
     const dataWithPriority = {
       ...dataWithoutReductionValue,
       indicators: cleanedIndicators,
+      steps: cleanedSteps,
       priority,
       reductionValueKg,
     }
@@ -155,7 +159,7 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
     if (step === 0) {
       return [
         'title',
-        'subSteps',
+        'steps',
         'detailedDescription',
         'potentialDeduction',
         'reductionStartYear',
@@ -221,7 +225,9 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
                 const currentValues = getValues()
                 const cleanedIndicators =
                   currentValues.indicators?.filter((ind) => ind && ind.type && ind.description?.trim()) || []
+                const cleanedSteps = currentValues.steps?.filter((step) => step && step.title?.trim()) || []
                 setValue('indicators', cleanedIndicators)
+                setValue('steps', cleanedSteps)
                 handleSubmit(onSubmit)()
               }}
               loading={formState.isSubmitting}

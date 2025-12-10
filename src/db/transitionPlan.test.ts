@@ -9,7 +9,7 @@ import {
   TransitionPlanStudy,
 } from '@prisma/client'
 import {
-  ActionWithIndicators,
+  ActionWithRelations,
   duplicateTransitionPlanWithRelations,
   TransitionPlanWithRelations,
 } from './transitionPlan'
@@ -68,11 +68,10 @@ const createMockTransitionPlanStudy = (overrides?: Partial<TransitionPlanStudy>)
   ...overrides,
 })
 
-const createMockAction = (overrides?: Partial<ActionWithIndicators>): ActionWithIndicators => ({
+const createMockAction = (overrides?: Partial<ActionWithRelations>): ActionWithRelations => ({
   id: 'action-1',
   transitionPlanId: 'plan-id',
   title: 'Test Action',
-  subSteps: 'Test sub steps',
   detailedDescription: 'Test description',
   potentialDeduction: ActionPotentialDeduction.Quality,
   reductionValueKg: 100,
@@ -94,6 +93,16 @@ const createMockAction = (overrides?: Partial<ActionWithIndicators>): ActionWith
       actionId: 'action-1',
       type: ActionIndicatorType.Implementation,
       description: 'Test implementation',
+      createdAt: new Date('2024-01-01'),
+      updatedAt: new Date('2024-01-01'),
+    },
+  ],
+  steps: [
+    {
+      id: 'step-1',
+      actionId: 'action-1',
+      title: 'Test step 1',
+      order: 0,
       createdAt: new Date('2024-01-01'),
       updatedAt: new Date('2024-01-01'),
     },

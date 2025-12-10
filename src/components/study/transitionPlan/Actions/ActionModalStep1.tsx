@@ -13,6 +13,7 @@ import { useEffect } from 'react'
 import { Control, FieldErrors, UseFormGetValues, UseFormSetValue, useWatch } from 'react-hook-form'
 import textUnitStyles from '../../../dynamic-form/inputFields/TextUnitInput.module.css'
 import styles from './ActionModal.module.css'
+import ActionStepsList from './ActionStepsList'
 
 interface Props {
   studyUnit: StudyResultUnit
@@ -22,7 +23,7 @@ interface Props {
   errors: FieldErrors<AddActionFormCommand>
 }
 
-const ActionModalStep1 = ({ studyUnit, control, setValue }: Props) => {
+const ActionModalStep1 = ({ studyUnit, control, setValue, errors }: Props) => {
   const t = useTranslations('study.transitionPlan.actions.addModal')
   const tUnit = useTranslations('study.results.units')
   const tDeduction = useTranslations('study.transitionPlan.actions.potentialDeduction')
@@ -50,14 +51,7 @@ const ActionModalStep1 = ({ studyUnit, control, setValue }: Props) => {
         placeholder={t('titlePlaceholder')}
         data-testid="add-action-title"
       />
-      <FormTextField
-        control={control}
-        name="subSteps"
-        label={`${t('subSteps')} *`}
-        placeholder={t('subStepsPlaceholder')}
-        multiline
-        data-testid="add-action-subSteps"
-      />
+      <ActionStepsList control={control} errors={errors} />
       <FormTextField
         control={control}
         name="detailedDescription"

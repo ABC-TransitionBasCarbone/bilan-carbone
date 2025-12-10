@@ -1,7 +1,8 @@
-import { ActionIndicatorCommand } from '@/services/serverFunctions/transitionPlan.command'
+import { ActionIndicatorCommand, ActionStepCommand } from '@/services/serverFunctions/transitionPlan.command'
 import {
   Action,
   ActionIndicator,
+  ActionStep,
   ExternalStudy,
   Objective,
   Prisma,
@@ -27,7 +28,7 @@ export type TransitionPlanWithRelations = TransitionPlan & {
     }
   >
   transitionPlanStudies: TransitionPlanStudy[]
-  actions: Array<Action & { indicators: ActionIndicator[] }>
+  actions: Array<ActionWithRelations>
   externalStudies: ExternalStudy[]
 }
 
@@ -54,6 +55,7 @@ export const getTransitionPlanByIdWithRelations = async (id: string): Promise<Tr
       actions: {
         include: {
           indicators: true,
+          steps: true,
         },
       },
       externalStudies: true,
@@ -135,12 +137,18 @@ export const duplicateTransitionPlanWithRelations = async (
         actions: {
           create: sourceTransitionPlan.actions.map(
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            ({ id, transitionPlanId, createdAt, updatedAt, indicators, ...rest }) => ({
+            ({ id, transitionPlanId, createdAt, updatedAt, indicators, steps, ...rest }) => ({
               ...rest,
               indicators: {
                 create: indicators.map((indicator) => ({
                   type: indicator.type,
                   description: indicator.description,
+                })),
+              },
+              steps: {
+                create: steps.map((step) => ({
+                  title: step.title,
+                  order: step.order,
                 })),
               },
             }),
@@ -163,6 +171,7 @@ export const duplicateTransitionPlanWithRelations = async (
         actions: {
           include: {
             indicators: true,
+            steps: true,
           },
         },
         externalStudies: true,
@@ -194,17 +203,22 @@ export type ActionWithIndicators = Action & {
   indicators: ActionIndicator[]
 }
 
-export const getActionById = async (id: string): Promise<ActionWithIndicators | null> =>
+export type ActionWithRelations = Action & {
+  indicators: ActionIndicator[]
+  steps: ActionStep[]
+}
+
+export const getActionById = async (id: string): Promise<ActionWithRelations | null> =>
   prismaClient.action.findUnique({
     where: { id },
-    include: { indicators: { orderBy: { createdAt: 'asc' } } },
+    include: { indicators: { orderBy: { createdAt: 'asc' } }, steps: { orderBy: { order: 'asc' } } },
   })
 
-export const getActions = async (transitionPlanId: string): Promise<ActionWithIndicators[]> =>
+export const getActions = async (transitionPlanId: string): Promise<ActionWithRelations[]> =>
   prismaClient.action.findMany({
     where: { transitionPlanId },
     orderBy: [{ priority: 'asc' }, { createdAt: 'desc' }],
-    include: { indicators: { orderBy: { createdAt: 'asc' } } },
+    include: { indicators: { orderBy: { createdAt: 'asc' } }, steps: { orderBy: { order: 'asc' } } },
   })
 
 export const createTransitionPlanStudy = async (transitionPlanId: string, studyId: string) =>
@@ -429,6 +443,44 @@ export const saveIndicatorsOnAction = async (
             actionId,
             type: ind.type,
             description: ind.description,
+          },
+        })
+      }
+    }),
+  ])
+}
+
+export const saveStepsOnAction = async (
+  actionId: string,
+  stepsToKeep: ActionStepCommand[],
+  stepsToDelete: string[],
+) => {
+  const reorderedSteps = stepsToKeep.map((step, index) => ({
+    ...step,
+    order: index,
+  }))
+
+  await prismaClient.$transaction([
+    prismaClient.actionStep.deleteMany({
+      where: {
+        id: { in: stepsToDelete },
+      },
+    }),
+    ...reorderedSteps.map((step) => {
+      if (step.id) {
+        return prismaClient.actionStep.update({
+          where: { id: step.id },
+          data: {
+            title: step.title,
+            order: step.order,
+          },
+        })
+      } else {
+        return prismaClient.actionStep.create({
+          data: {
+            actionId,
+            title: step.title,
+            order: step.order,
           },
         })
       }

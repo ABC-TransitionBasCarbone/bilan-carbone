@@ -1086,7 +1086,7 @@
           "title": "Action title",
           "titlePlaceholder": "Give your action a title",
           "subSteps": "Sub-steps",
-          "subStepsPlaceholder": "Describe your sub-steps",
+          "stepTitlePlaceholder": "Describe your sub-step",
           "detailedDescription": "Detailed description of the action and stakeholder involvement",
           "detailedDescriptionPlaceholder": "Detailed description",
           "potentialDeduction": "Emission reduction potential",

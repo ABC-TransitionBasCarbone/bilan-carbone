@@ -75,7 +75,7 @@ model Action {
   transitionPlan   TransitionPlan @relation(fields: [transitionPlanId], references: [id], onDelete: Cascade)
 
   title                     String
-  subSteps                  String                   @map("sub_steps")
+  subSteps                  String?                  @map("sub_steps")
   detailedDescription       String                   @map("detailed_description")
   potentialDeduction        ActionPotentialDeduction @map("potential_deduction")
   reductionDetails          String?                  @map("reduction_details")
@@ -100,6 +100,7 @@ model Action {
   enabled                   Boolean                  @default(true) @map("enabled")
   dependenciesOnly          Boolean                  @default(false) @map("dependencies_only")
   indicators                ActionIndicator[]
+  steps                     ActionStep[]
   createdAt                 DateTime                 @default(now()) @map("created_at")
   updatedAt                 DateTime                 @default(now()) @updatedAt @map("updated_at")
 
@@ -118,6 +119,20 @@ model ActionIndicator {
   updatedAt   DateTime            @default(now()) @updatedAt @map("updated_at")
 
   @@map("action_indicators")
+}
+
+model ActionStep {
+  id String @id @default(uuid())
+
+  actionId String @map("action_id")
+  action   Action @relation(fields: [actionId], references: [id], onDelete: Cascade)
+
+  title     String
+  order     Int
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("action_steps")
 }
 
 enum TrajectoryType {
