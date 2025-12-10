@@ -3,16 +3,14 @@ import EnvironmentLoader from '@/environments/core/utils/EnvironmentLoader'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { ClicksonPost, CutPost, subPostsByPost } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
-import { getQuestionProgressBySubPostPerPost, StatsResult } from '@/services/serverFunctions/question'
 import { getEmissionValueString } from '@/utils/study'
 import { styled } from '@mui/material'
-import { UserSession } from 'next-auth'
+import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { SimplifiedPostInfography } from './SimplifiedPostInfography'
 
 interface Props {
-  studySiteId: string
   study: FullStudy
   data: ResultsByPost[]
   user: UserSession
@@ -33,23 +31,19 @@ const AllPostsInfography = ({ studySiteId, study, data, user, posts = CutPost }:
   const { callServerFunction } = useServerFunction()
 
   const tUnits = useTranslations('study.results.units')
-  const [isLoading, setIsLoading] = useState(true)
+  const { engine, situation, isLoading } = useCutPublicodesSituation()
 
-  const getQuestionProgress = useCallback(async () => {
-    await callServerFunction(() => getQuestionProgressBySubPostPerPost({ studySiteId, user, study, posts }), {
-      onSuccess: (value) => {
-        if (value) {
-          setQuestionProgress(value)
-          setIsLoading(false)
-        }
-      },
-    })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [callServerFunction, studySiteId])
-
-  useEffect(() => {
-    getQuestionProgress()
-  }, [studySiteId, getQuestionProgress])
+  const questionProgress = useMemo<StatsResult>(() => {
+    if (!situation) {
+      return {}
+    }
+    return getQuestionProgressBySubPost(
+      engine,
+      situation,
+      getFormLayoutsForSubPost,
+      subPostsByPostCUT as Record<Post, SubPost[]>,
+    )
+  }, [engine, situation])
 
   const renderedInfographies = useMemo(() => {
     return Object.values(posts).map((post) => {
@@ -82,9 +76,10 @@ const AllPostsInfography = ({ studySiteId, study, data, user, posts = CutPost }:
     })
   }, [questionProgress, tUnits, study.resultsUnit, study.id, data])
 
-  if (isLoading || !questionProgress) {
+  if (isLoading) {
     return <EnvironmentLoader />
   }
+
   return <StyledGrid>{renderedInfographies}</StyledGrid>
 }
 
