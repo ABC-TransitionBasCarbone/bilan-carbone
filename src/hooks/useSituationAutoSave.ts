@@ -70,7 +70,9 @@ export const useSituationAutoSave = ({
 
   const saveSituationDebounced = useCallback(
     (situation: Situation<string>) => {
-      if (!enabled) return
+      if (!enabled) {
+        return
+      }
 
       pendingSituation.current = situation
       if (debounceTimer.current) {
