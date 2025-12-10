@@ -63,14 +63,14 @@ const SaveStatusIndicator = ({ status, showTime = true }: SaveStatusIndicatorPro
           <StyledIcon statusColor={statusContent.color}>{statusContent.icon}</StyledIcon>
           <Box>
             <StatusText sx={{ color: statusContent.color }}>{statusContent.text}</StatusText>
-            {showTime && status.status === 'saved' && status.lastSaved && (
+            {showTime && status.status === 'saved' && status.lastSaved ? (
               <TimeText>
                 {t('at')} {formatTime(status.lastSaved)}
               </TimeText>
-            )}
-            {status.status === 'error' && status.error && (
+            ) : null}
+            {status.status === 'error' && status.error ? (
               <TimeText sx={{ color: theme.palette.error.main }}>{status.error}</TimeText>
-            )}
+            ) : null}
           </Box>
         </Container>
       ) : null}

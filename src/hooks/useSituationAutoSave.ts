@@ -23,7 +23,7 @@ export const useSituationAutoSave = ({
   studySiteId,
   modelVersion,
   enabled = true,
-  debounceMs = 1500,
+  debounceMs = 1000,
 }: UseSituationAutoSaveOptions): UseSituationAutoSaveReturn => {
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
   const [lastSaved, setLastSaved] = useState<Date>()

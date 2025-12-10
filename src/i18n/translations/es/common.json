@@ -19,7 +19,8 @@
     "saved": "Respuestas guardadas",
     "error": "Error al guardar respuestas",
     "ready": "Listo para guardar",
-    "at": "a las"
+    "at": "a las",
+    "syncedFromOtherUser": "Datos actualizados por otro usuario"
   },
   "signup": {
     "email": "Correo electrónico",

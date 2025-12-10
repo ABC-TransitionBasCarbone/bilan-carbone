@@ -19,7 +19,8 @@
     "saved": "Answers saved",
     "error": "Error saving answers",
     "ready": "Ready to save",
-    "at": "at"
+    "at": "at",
+    "syncedFromOtherUser": "Data updated by another user"
   },
   "signup": {
     "email": "Email",

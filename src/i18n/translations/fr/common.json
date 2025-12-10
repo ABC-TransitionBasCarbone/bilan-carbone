@@ -19,7 +19,8 @@
     "saved": "Réponses sauvegardées",
     "error": "Erreur de sauvegarde des réponses",
     "ready": "Prêt à sauvegarder",
-    "at": "à"
+    "at": "à",
+    "syncedFromOtherUser": "Données mises à jour par un autre utilisateur"
   },
   "signup": {
     "email": "Email",
