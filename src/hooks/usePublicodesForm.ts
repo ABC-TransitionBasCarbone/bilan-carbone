@@ -1,4 +1,4 @@
-import { getUpdatedSituationWithInputValue } from '@/components/publicodes-form/utils'
+import { getUpdatedSituationWithInputValue, situationsAreEqual } from '@/components/publicodes-form/utils'
 import { loadSituation } from '@/services/serverFunctions/situation'
 import { JsonValue } from '@prisma/client/runtime/library'
 import Engine, { Situation } from 'publicodes'
@@ -9,7 +9,7 @@ export interface UsePublicodesFormOptions<S extends Situation<string>> {
   studyId: string
   studySiteId: string
   modelVersion: string
-  engineFactory: () => Engine
+  engine: Engine
   mergeSituation?: (loadedSituation: S) => S
   autoSaveEnabled?: boolean
   autoSaveDebounceMs?: number
@@ -18,7 +18,7 @@ export interface UsePublicodesFormOptions<S extends Situation<string>> {
 }
 
 export interface UsePublicodesFormReturn<S extends Situation<string>> {
-  engine: Engine | null
+  engine: Engine
   situation: S | null
   updateField: (ruleName: string, value: string | number | boolean | undefined) => void
   isLoading: boolean
@@ -30,19 +30,13 @@ export function usePublicodesForm<S extends Situation<string>>({
   studyId,
   studySiteId,
   modelVersion,
-  engineFactory,
+  engine,
   mergeSituation,
   autoSaveEnabled = true,
   autoSaveDebounceMs = 1500,
   syncIntervalMs = 5000,
   onSyncUpdate,
 }: UsePublicodesFormOptions<S>): UsePublicodesFormReturn<S> {
-  const engineRef = useRef<Engine | null>(null)
-  if (!engineRef.current) {
-    engineRef.current = engineFactory().shallowCopy()
-  }
-  const engine = engineRef.current
-
   const [situation, setSituation] = useState<S | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -56,14 +50,17 @@ export function usePublicodesForm<S extends Situation<string>>({
     debounceMs: autoSaveDebounceMs,
   })
 
-  const setFullSituation = (loadedSituation: JsonValue | undefined, timestamp?: Date) => {
-    const situation = (loadedSituation ?? {}) as S
-    const finalSituation = mergeSituation ? mergeSituation(situation) : situation
+  const setFullSituation = useCallback(
+    (loadedSituation: JsonValue | undefined, timestamp?: Date) => {
+      const situation = (loadedSituation ?? {}) as S
+      const finalSituation = mergeSituation ? mergeSituation(situation) : situation
 
-    engine.setSituation(finalSituation as Situation<string>)
-    setSituation(finalSituation)
-    lastSyncedAt.current = timestamp ?? new Date()
-  }
+      engine.setSituation(finalSituation as Situation<string>)
+      setSituation(finalSituation)
+      lastSyncedAt.current = timestamp ?? new Date()
+    },
+    [engine, mergeSituation],
+  )
 
   useEffect(() => {
     const loadInitialSituationFromDB = async () => {
@@ -86,9 +83,7 @@ export function usePublicodesForm<S extends Situation<string>>({
     }
 
     loadInitialSituationFromDB()
-    // Note: mergeSituation is intentionally not in deps to avoid reloading on every render
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [studySiteId, engine])
+  }, [studySiteId, setFullSituation])
 
   // Periodic sync from database to detect changes by other users
   useEffect(() => {
@@ -97,7 +92,7 @@ export function usePublicodesForm<S extends Situation<string>>({
     }
 
     const syncFromDB = async () => {
-      if (autoSave.hasUnsavedChanges || autoSave.saveStatus === 'saving') {
+      if (autoSave.hasUnsavedChanges) {
         return
       }
 
@@ -108,7 +103,8 @@ export function usePublicodesForm<S extends Situation<string>>({
         }
 
         const dbUpdatedAt = result.data.updatedAt ? new Date(result.data.updatedAt) : null
-        if (dbUpdatedAt && dbUpdatedAt > lastSyncedAt.current) {
+        const situationInDB = (result.data.situation ?? {}) as S
+        if (dbUpdatedAt && dbUpdatedAt > lastSyncedAt.current && !situationsAreEqual(situationInDB, situation ?? {})) {
           setFullSituation(result.data.situation, dbUpdatedAt)
           if (onSyncUpdate) {
             onSyncUpdate()
@@ -125,13 +121,11 @@ export function usePublicodesForm<S extends Situation<string>>({
     return () => {
       clearInterval(interval)
     }
-    // mergeSituation is intentionally not in deps to avoid reloading on every render
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [studySiteId, engine, syncIntervalMs, autoSave.hasUnsavedChanges, autoSave.saveStatus, onSyncUpdate])
+  }, [studySiteId, syncIntervalMs, autoSave.hasUnsavedChanges, onSyncUpdate, setFullSituation, situation])
 
   const updateField = useCallback(
     (ruleName: string, value: string | number | boolean | undefined) => {
-      if (!situation || !engine) {
+      if (!situation) {
         return
       }
 

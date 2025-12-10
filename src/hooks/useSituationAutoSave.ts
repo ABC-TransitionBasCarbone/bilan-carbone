@@ -1,3 +1,4 @@
+import { situationsAreEqual } from '@/components/publicodes-form/utils'
 import { saveSituation } from '@/services/serverFunctions/situation'
 import { Situation } from 'publicodes'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -28,20 +29,15 @@ export const useSituationAutoSave = ({
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
   const [lastSaved, setLastSaved] = useState<Date>()
   const [error, setError] = useState<string>()
+  const [hasPendingChanges, setHasPendingChanges] = useState(false)
 
   const debounceTimer = useRef<NodeJS.Timeout | null>(null)
   const lastSavedSituation = useRef<Situation<string>>({})
-  const pendingSituation = useRef<Situation<string> | null>(null)
-
-  const situationsAreEqual = useCallback((sit1: Situation<string>, sit2: Situation<string>): boolean => {
-    return JSON.stringify(sit1) === JSON.stringify(sit2)
-  }, [])
 
   const performSave = useCallback(
     async (situation: Situation<string>) => {
       if (situationsAreEqual(situation, lastSavedSituation.current)) {
         setSaveStatus('idle')
-        pendingSituation.current = null
         return
       }
 
@@ -52,7 +48,6 @@ export const useSituationAutoSave = ({
 
         if (result.success) {
           lastSavedSituation.current = situation
-          pendingSituation.current = null
           setSaveStatus('saved')
           setLastSaved(new Date())
           setError(undefined)
@@ -65,7 +60,7 @@ export const useSituationAutoSave = ({
         setError(err instanceof Error ? err.message : 'Unknown error')
       }
     },
-    [studyId, studySiteId, modelVersion, situationsAreEqual],
+    [studyId, studySiteId, modelVersion],
   )
 
   const saveSituationDebounced = useCallback(
@@ -74,19 +69,20 @@ export const useSituationAutoSave = ({
         return
       }
 
-      pendingSituation.current = situation
+      setHasPendingChanges(true)
       if (debounceTimer.current) {
         clearTimeout(debounceTimer.current)
       }
 
-      debounceTimer.current = setTimeout(() => {
-        performSave(situation)
+      debounceTimer.current = setTimeout(async () => {
+        await performSave(situation)
+        setHasPendingChanges(false)
       }, debounceMs)
     },
     [enabled, debounceMs, performSave],
   )
 
-  const hasUnsavedChanges = useMemo(() => pendingSituation.current !== null || saveStatus === 'saving', [saveStatus])
+  const hasUnsavedChanges = useMemo(() => hasPendingChanges || saveStatus === 'saving', [saveStatus, hasPendingChanges])
 
   useEffect(() => {
     return () => {

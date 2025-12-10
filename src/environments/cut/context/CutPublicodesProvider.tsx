@@ -24,8 +24,9 @@ export interface CutPublicodesProviderProps {
 export function CutPublicodesProvider({ children, studyId, studySiteId, study }: CutPublicodesProviderProps) {
   const t = useTranslations('saveStatus')
   const { showSuccessToast } = useToast()
-  const studySite = useMemo(() => study.sites.find((site) => site.id === studySiteId), [study.sites, studySiteId])
+  const engine = useMemo(() => getCutEngine().shallowCopy(), [])
 
+  const studySite = useMemo(() => study.sites.find((site) => site.id === studySiteId), [study.sites, studySiteId])
   const mergeSituation = useMemo(
     () => (loadedSituation: CutSituation) => ({
       ...loadedSituation,
@@ -42,7 +43,7 @@ export function CutPublicodesProvider({ children, studyId, studySiteId, study }:
     studyId,
     studySiteId,
     modelVersion: PUBLICODES_COUNT_VERSION,
-    engineFactory: getCutEngine,
+    engine,
     mergeSituation,
     syncIntervalMs: 5000,
     onSyncUpdate: handleSyncUpdate,

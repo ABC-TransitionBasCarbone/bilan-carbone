@@ -41,7 +41,7 @@ const PublicodesSubPostForm = ({ subPost }: PublicodesSubPostFormProps) => {
     )
   }
 
-  if (!engine || !situation) {
+  if (!situation) {
     return null
   }
 

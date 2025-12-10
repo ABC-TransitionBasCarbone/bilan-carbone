@@ -105,3 +105,10 @@ export function getUpdatedSituationWithInputValue<RuleName extends string>(
     [dottedName]: situationValue,
   }
 }
+
+export function situationsAreEqual<RuleName extends string>(
+  sit1: Situation<RuleName>,
+  sit2: Situation<RuleName>,
+): boolean {
+  return JSON.stringify(sit1) === JSON.stringify(sit2)
+}
