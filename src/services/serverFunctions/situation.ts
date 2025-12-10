@@ -1,11 +1,13 @@
 'use server'
 
 import { getSituationByStudySite, upsertSituation } from '@/db/situation'
+import { getStudyById } from '@/db/study'
 import { withServerResponse } from '@/utils/serverResponse'
 import { InputJsonValue } from '@prisma/client/runtime/library'
 import { Situation } from 'publicodes'
 import { dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
+import { canReadStudy } from '../permissions/study'
 
 export const loadSituation = async (studySiteId: string) =>
   withServerResponse('getSituationFromDB', async () => {
@@ -29,16 +31,15 @@ export const saveSituation = async (
       throw new Error(NOT_AUTHORIZED)
     }
 
-    // TODO: Add permission checks
-    // if (!canReadStudy(session.user, studyId)) {
-    //   throw new Error(NOT_AUTHORIZED)
-    // }
-    //
-    // const study = await getStudyById(studyId, session.user.organizationVersionId)
-    // const studySite = study?.sites.find((site) => site.id === studySiteId)
-    // if (!study || !studySite) {
-    //   throw new Error(NOT_AUTHORIZED)
-    // }
+    if (!canReadStudy(session.user, studyId)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    const studySite = study?.sites.find((site) => site.id === studySiteId)
+    if (!study || !studySite) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
     return await upsertSituation(studySiteId, situation as InputJsonValue, modelVersion)
   })
