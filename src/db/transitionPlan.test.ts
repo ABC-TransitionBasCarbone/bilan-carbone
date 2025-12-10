@@ -72,6 +72,7 @@ const createMockAction = (overrides?: Partial<ActionWithRelations>): ActionWithR
   id: 'action-1',
   transitionPlanId: 'plan-id',
   title: 'Test Action',
+  subSteps: null,
   detailedDescription: 'Test description',
   potentialDeduction: ActionPotentialDeduction.Quality,
   reductionValueKg: 100,
@@ -208,6 +209,12 @@ describe('TransitionPlan DB', () => {
                   description: indicator.description,
                 })),
               },
+              steps: {
+                create: action.steps.map((step) => ({
+                  title: step.title,
+                  order: step.order,
+                })),
+              },
             })),
           },
           externalStudies: {
@@ -228,6 +235,7 @@ describe('TransitionPlan DB', () => {
           actions: {
             include: {
               indicators: true,
+              steps: true,
             },
           },
           externalStudies: true,
