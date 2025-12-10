@@ -1150,7 +1150,7 @@
           "ReductionWithinOrganisationCoreBusiness": "Reduction within the organisation's core business (Priority 1/6)",
           "glossaryTitle": "Action relevance levels",
           "information": "Information about relevance levels",
-          "learnMore": "For more information, please visit this page.",
+          "learnMore": "For more information, please visit <link>this page</link>.",
           "close": "Close"
         },
         "onboarding": {

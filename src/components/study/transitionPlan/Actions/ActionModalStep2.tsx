@@ -4,10 +4,11 @@ import { Locale } from '@/i18n/config'
 import { AddActionCommand } from '@/services/serverFunctions/transitionPlan.command'
 import { Translations } from '@/types/translation'
 import { getOrderedActionRelevances } from '@/utils/action'
-import { Link, MenuItem } from '@mui/material'
+import { MenuItem } from '@mui/material'
 import { ActionCategory, ActionNature } from '@prisma/client'
 import { useLocale, useTranslations } from 'next-intl'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useMemo } from 'react'
 import { Control } from 'react-hook-form'
 
@@ -24,12 +25,12 @@ const ActionModalStep1 = ({ control }: Props) => {
 
   const methodologyUrl = useMemo(() => {
     return locale === Locale.FR
-      ? process.env.NEXT_PUBLIC_ACTION_RELEVANCE_DOC_URL_FR
-      : process.env.NEXT_PUBLIC_ACTION_RELEVANCE_DOC_URL_EN
+      ? process.env.NEXT_PUBLIC_ACTION_RELEVANCE_DOC_URL_FR || ''
+      : process.env.NEXT_PUBLIC_ACTION_RELEVANCE_DOC_URL_EN || ''
   }, [locale])
 
   const relevanceImageSrc = useMemo(() => {
-    return locale === Locale.FR ? '/img/action-relevance-fr.avif' : '/img/action-relevance-en.png'
+    return locale === Locale.FR ? '/img/action-relevance-fr.png' : '/img/action-relevance-en.png'
   }, [locale])
 
   const selectors: Record<
@@ -56,10 +57,13 @@ const ActionModalStep1 = ({ control }: Props) => {
             style={{ width: '100%', height: 'auto' }}
           />
           <p>
-            {tRelevance('learnMore')}{' '}
-            <Link href={methodologyUrl} target="_blank" rel="noopener noreferrer">
-              {methodologyUrl}
-            </Link>
+            {tRelevance.rich('learnMore', {
+              link: (children) => (
+                <Link href={methodologyUrl} target="_blank" rel="noreferrer noopener">
+                  {children}
+                </Link>
+              ),
+            })}
           </p>
         </GlossaryIconModal>
       ),
