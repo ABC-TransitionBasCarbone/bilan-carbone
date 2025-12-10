@@ -1,5 +1,7 @@
 import { StudyContributorDeleteParams } from '@/components/study/rights/StudyContributorsTable'
 import { getEnvVar } from '@/lib/environment'
+import { isSourceForEnv } from '@/services/importEmissionFactor/import'
+import { hasAccessToCreateStudyWithEmissionFactorVersions } from '@/services/permissions/environment'
 import { filterAllowedStudies } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { ChangeStudyCinemaCommand } from '@/services/serverFunctions/study.command'
@@ -42,7 +44,7 @@ export const createStudy = async (
   const client = tx ?? prismaClient
   const dbStudy = await client.study.create({ data })
 
-  if (environment === Environment.CUT || shouldCreateFEVersions) {
+  if (hasAccessToCreateStudyWithEmissionFactorVersions(environment) || shouldCreateFEVersions) {
     let studyEmissionFactorVersions: Prisma.StudyEmissionFactorVersionCreateManyInput[] = []
     if (environment === Environment.CUT) {
       studyEmissionFactorVersions = (await getSourceCutImportVersionIds()).map((importVersion) => ({
@@ -50,6 +52,14 @@ export const createStudy = async (
         source: importVersion.source,
         importVersionId: importVersion.id,
       }))
+    } else if (environment === Environment.CLICKSON) {
+      studyEmissionFactorVersions = (await getSourceEnvironmentImportVersionIds(Environment.CLICKSON)).map(
+        (importVersion) => ({
+          studyId: dbStudy.id,
+          source: importVersion.source,
+          importVersionId: importVersion.id,
+        }),
+      )
     } else {
       const sources = Object.values(Import).filter((source) => source !== Import.Manual && source !== Import.CUT)
 
@@ -218,12 +228,19 @@ const fullStudyInclude = {
       distanceToParis: true,
       volunteerNumber: true,
       beneficiaryNumber: true,
+      superficy: true,
+      studentNumber: true,
       site: {
         select: {
           id: true,
           name: true,
           postalCode: true,
           city: true,
+          address: true,
+          establishmentYear: true,
+          etp: true,
+          studentNumber: true,
+          superficy: true,
           cnc: {
             select: {
               id: true,
@@ -783,6 +800,20 @@ export const getSourceCutImportVersionIds = async () =>
     orderBy: { createdAt: 'desc' },
     distinct: ['source'],
   })
+
+export const getSourceEnvironmentImportVersionIds = async (
+  environment: Environment,
+): Promise<{ id: string; source: Import }[]> => {
+  const sources = isSourceForEnv(environment)
+  return prismaClient.emissionFactorImportVersion.findMany({
+    select: { id: true, source: true },
+    where: {
+      source: { in: sources },
+    },
+    orderBy: { createdAt: 'desc' },
+    distinct: ['source'],
+  })
+}
 
 export const getSourcesLatestImportVersionId = async (sources: Import[]) =>
   prismaClient.emissionFactorImportVersion.findMany({
