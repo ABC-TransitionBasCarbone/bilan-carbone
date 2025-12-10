@@ -33,7 +33,7 @@ interface Props {
   action?: ActionWithIndicators
   onClose: () => void
   transitionPlanId: string
-  studyUnit: string
+  studyUnit: StudyResultUnit
 }
 
 const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Props) => {
@@ -85,9 +85,7 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
         ? {
             ...objectWithoutNullAttributes(action),
             reductionValueKg: Math.round(
-              action.reductionValueKg
-                ? convertValue(action.reductionValueKg, StudyResultUnit.K, studyUnit as StudyResultUnit)
-                : 0,
+              action.reductionValueKg ? convertValue(action.reductionValueKg, StudyResultUnit.K, studyUnit) : 0,
             ),
           }
         : {},
@@ -124,10 +122,16 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
   const onSubmit = async (data: AddActionCommand) => {
     const cleanedIndicators = data.indicators?.filter((ind) => ind && ind.type) || []
     const priority = calculatePriorityFromRelevance(data.relevance)
-    const reductionValueKg = data.reductionValueKg
-      ? Math.round(convertValue(data.reductionValueKg, studyUnit as StudyResultUnit, StudyResultUnit.K))
+    const convertedReductionValueKg = data.reductionValueKg
+      ? Math.round(convertValue(data.reductionValueKg, studyUnit, StudyResultUnit.K))
       : null
-    const dataWithPriority = { ...data, indicators: cleanedIndicators, priority, reductionValueKg }
+
+    const dataWithPriority = {
+      ...data,
+      indicators: cleanedIndicators,
+      priority,
+      reductionValueKg: convertedReductionValueKg,
+    }
 
     await callServerFunction(() => (action ? editAction(action.id, dataWithPriority) : addAction(dataWithPriority)), {
       onSuccess: () => {

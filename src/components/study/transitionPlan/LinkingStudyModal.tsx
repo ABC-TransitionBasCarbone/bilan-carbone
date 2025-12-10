@@ -12,7 +12,7 @@ import {
   createExternalStudyCommandValidation,
   ExternalStudyFormInput,
 } from '@/services/serverFunctions/transitionPlan.command'
-import { STUDY_UNIT_VALUES } from '@/utils/study'
+import { convertValue } from '@/utils/study'
 import { PastStudy } from '@/utils/trajectory'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
@@ -32,7 +32,7 @@ interface Props {
   transitionPlanId: string
   studyId: string
   studyYear: Date
-  studyUnit: string
+  studyUnit: StudyResultUnit
   open: boolean
   onClose: () => void
   pastStudyToUpdate: PastStudy | null
@@ -107,13 +107,13 @@ const LinkingStudyModal = ({
   }
 
   const linkExternalStudy = async () => {
-    const { totalCo2Kg, date, ...rest } = getValues()
-    const totalCo2InKg =
-      (totalCo2Kg * STUDY_UNIT_VALUES[studyUnit as StudyResultUnit]) / STUDY_UNIT_VALUES[StudyResultUnit.K]
+    const { totalCo2Kg: totalCo2InStudyUnit, date, ...rest } = getValues()
+    const totalCo2Kg = convertValue(totalCo2InStudyUnit, studyUnit, StudyResultUnit.K)
+
     const data = {
       ...rest,
       date: date instanceof Date ? date.toISOString() : date,
-      totalCo2Kg: totalCo2InKg,
+      totalCo2Kg,
     }
 
     if (pastStudyToUpdate) {

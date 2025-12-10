@@ -28,7 +28,7 @@ interface Props {
   openDeleteModal: (action: ActionWithIndicators) => void
   canEdit: boolean
   studyId: string
-  studyUnit: string
+  studyUnit: StudyResultUnit
 }
 
 const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId, studyUnit }: Props) => {
@@ -69,11 +69,7 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
           return tPotential(ActionPotentialDeduction.Quality)
         case ActionPotentialDeduction.Quantity:
           if (action.reductionValueKg !== null) {
-            const valueInStudyUnit = convertValue(
-              action.reductionValueKg,
-              StudyResultUnit.K,
-              studyUnit as StudyResultUnit,
-            )
+            const valueInStudyUnit = convertValue(action.reductionValueKg, StudyResultUnit.K, studyUnit)
             return `${formatNumber(valueInStudyUnit)} ${tUnit(studyUnit)}`
           }
           return ''
