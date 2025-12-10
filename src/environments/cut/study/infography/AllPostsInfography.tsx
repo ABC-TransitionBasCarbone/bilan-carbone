@@ -1,21 +1,20 @@
 import { FullStudy } from '@/db/study'
 import EnvironmentLoader from '@/environments/core/utils/EnvironmentLoader'
-import { useServerFunction } from '@/hooks/useServerFunction'
-import { CutPost, subPostsByPost } from '@/services/posts'
+import { CutPost, Post, subPostsByPost, subPostsByPostCUT } from '@/services/posts'
+import { getQuestionProgressBySubPost, StatsResult } from '@/services/publicodes/questionProgress'
 import { ResultsByPost } from '@/services/results/consolidated'
-import { getQuestionProgressBySubPostPerPost, StatsResult } from '@/services/serverFunctions/question'
 import { getEmissionValueString } from '@/utils/study'
 import { styled } from '@mui/material'
-import { UserSession } from 'next-auth'
+import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
+import { useCutPublicodesSituation } from '../../context/CutPublicodesSituationProvider'
+import { getFormLayoutsForSubPost } from '../../publicodes/subPostMapping'
 import { CutPostInfography } from './CutPostInfography'
 
 interface Props {
-  studySiteId: string
   study: FullStudy
   data: ResultsByPost[]
-  user: UserSession
 }
 
 const StyledGrid = styled('div')({
@@ -27,28 +26,21 @@ const StyledGrid = styled('div')({
   paddingBottom: '12rem',
 })
 
-const AllPostsInfography = ({ studySiteId, study, data, user }: Props) => {
-  const [questionProgress, setQuestionProgress] = useState<StatsResult>({} as StatsResult)
-  const { callServerFunction } = useServerFunction()
-
+const AllPostsInfography = ({ study, data }: Props) => {
   const tUnits = useTranslations('study.results.units')
-  const [isLoading, setIsLoading] = useState(true)
+  const { engine, situation, isLoading } = useCutPublicodesSituation()
 
-  const getQuestionProgress = useCallback(async () => {
-    await callServerFunction(() => getQuestionProgressBySubPostPerPost({ studySiteId, user, study }), {
-      onSuccess: (value) => {
-        if (value) {
-          setQuestionProgress(value)
-          setIsLoading(false)
-        }
-      },
-    })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [callServerFunction, studySiteId])
-
-  useEffect(() => {
-    getQuestionProgress()
-  }, [studySiteId, getQuestionProgress])
+  const questionProgress = useMemo<StatsResult>(() => {
+    if (!situation) {
+      return {}
+    }
+    return getQuestionProgressBySubPost(
+      engine,
+      situation,
+      getFormLayoutsForSubPost,
+      subPostsByPostCUT as Record<Post, SubPost[]>,
+    )
+  }, [engine, situation])
 
   const renderedInfographies = useMemo(() => {
     return Object.values(CutPost).map((cutPost) => {
@@ -75,15 +67,16 @@ const AllPostsInfography = ({ studySiteId, study, data, user }: Props) => {
           post={cutPost}
           studyId={study.id}
           subPosts={subPostsByPost[cutPost]}
-          questionStats={questionProgress[cutPost]}
+          questionStats={questionProgress[cutPost] ?? {}}
         />
       )
     })
   }, [questionProgress, tUnits, study.resultsUnit, study.id, data])
 
-  if (isLoading || !questionProgress) {
+  if (isLoading) {
     return <EnvironmentLoader />
   }
+
   return <StyledGrid>{renderedInfographies}</StyledGrid>
 }
 

@@ -32,7 +32,7 @@ export function usePublicodesForm<S extends Situation<string>>({
   engine,
   autoSaveEnabled = true,
   autoSaveDebounceMs = 1500,
-  syncIntervalMs = 5000,
+  syncIntervalMs = -1,
   onSyncUpdate,
 }: PublicodesFormOptions): PublicodesFormReturn<S> {
   const [situation, setSituation] = useState<S | null>(null)
