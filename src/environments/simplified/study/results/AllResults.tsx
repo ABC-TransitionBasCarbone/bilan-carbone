@@ -29,6 +29,7 @@ interface Props {
   emissionFactorsWithParts: EmissionFactorWithParts[]
   study: FullStudy
   validatedOnly: boolean
+  chartOrder?: Record<ChartType, number>
 }
 
 const a11yProps = (index: number) => {
@@ -38,7 +39,21 @@ const a11yProps = (index: number) => {
   }
 }
 
-const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) => {
+export type ChartType = 'pie' | 'bar' | 'table'
+
+const defaultChartOrder: Record<ChartType, number> = {
+  table: 0,
+  bar: 1,
+  pie: 2,
+}
+
+const tabsLabels = [
+  { key: 'table', label: 'Tableau' },
+  { key: 'bar', label: 'Diagramme en barres' },
+  { key: 'pie', label: 'Diagramme circulaire' },
+]
+
+const AllResults = ({ emissionFactorsWithParts, study, validatedOnly, chartOrder = defaultChartOrder }: Props) => {
   const [value, setValue] = useState(0)
   const [pdfLoading, setPdfLoading] = useState(false)
   const handleChange = (_event: SyntheticEvent, newValue: number) => {
@@ -90,6 +105,8 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
       ),
     [study, studySite, tPost, tResults, validatedOnly],
   )
+
+  const orderedTabs = [...tabsLabels].sort((a, b) => chartOrder[a.key as ChartType] - chartOrder[b.key as ChartType])
 
   return (
     <Block
@@ -171,15 +188,15 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
       </Box>
       <Box component="section" sx={{ marginTop: '1rem' }}>
         <Tabs value={value} onChange={handleChange} indicatorColor="secondary" textColor="inherit" variant="fullWidth">
-          <Tab label="Tableau" {...a11yProps(0)} />
-          <Tab label="Diagramme en barres" {...a11yProps(1)} />
-          <Tab label="Diagramme circulaire" {...a11yProps(2)} />
+          {orderedTabs.map((t, index) => (
+            <Tab key={t.key} label={t.label} {...a11yProps(index)} />
+          ))}
         </Tabs>
         <Box component="section" sx={{ marginTop: '1rem' }}>
-          <TabPanel value={value} index={0}>
+          <TabPanel value={value} index={chartOrder.table}>
             <ConsolidatedResultsTable resultsUnit={study.resultsUnit} data={computedResultsWithDep} hiddenUncertainty />
           </TabPanel>
-          <TabPanel value={value} index={1}>
+          <TabPanel value={value} index={chartOrder.bar}>
             <BarChart
               results={computedResultsWithDep}
               resultsUnit={study.resultsUnit}
@@ -190,7 +207,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
               type="post"
             />
           </TabPanel>
-          <TabPanel value={value} index={2}>
+          <TabPanel value={value} index={chartOrder.pie}>
             <PieChart
               resultsUnit={study.resultsUnit}
               height={400}
