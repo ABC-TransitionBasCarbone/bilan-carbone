@@ -55,6 +55,8 @@ const FormationView = ({ formations, user, organizationName }: Props) => {
     setOpen(true)
   }
 
+  // Do not remove the open dependency : It is used to recalculate the variable if user closes the modal after the timer's end
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const ended = useMemo(() => formStartTime && new Date().getTime() > formStartTime + timer, [open, formStartTime])
 
   return (
