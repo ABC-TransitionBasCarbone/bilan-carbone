@@ -1,3 +1,4 @@
+import { customRich } from '@/i18n/customRich'
 import { useTranslations } from 'next-intl'
 import styles from './GlossaryDescriptions.module.css'
 
@@ -15,11 +16,11 @@ const EmissionFactorFormDescription = ({ field }: Props) => {
       <div>
         <p className="mb-2">{t('multipleDescription.introduction')}</p>
         <ul className={styles.subPartslist}>
-          <li className="mb-2">{t.rich('multipleDescription.upstream', { b: (children) => <b>{children}</b> })}</li>
-          <li className="mb-2">{t.rich('multipleDescription.combustion', { b: (children) => <b>{children}</b> })}</li>
-          <li className="mb-2">{t.rich('multipleDescription.loss', { b: (children) => <b>{children}</b> })}</li>
+          <li className="mb-2">{customRich(t, 'multipleDescription.upstream')}</li>
+          <li className="mb-2">{customRich(t, 'multipleDescription.combustion')}</li>
+          <li className="mb-2">{customRich(t, 'multipleDescription.loss')}</li>
         </ul>
-        <p>{t.rich('multipleDescription.conclusion', { b: (children) => <b>{children}</b> })}</p>
+        <p>{customRich(t, 'multipleDescription.conclusion')}</p>
       </div>
     )
   }
