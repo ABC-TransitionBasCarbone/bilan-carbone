@@ -1,13 +1,14 @@
 'use client'
 
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
+import { hasHomeAlert } from '@/services/permissions/environment'
 import Groups2OutlinedIcon from '@mui/icons-material/Groups2Outlined'
 import { Alert, Box, BoxProps, styled, Typography } from '@mui/material'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import CinemaOutlinedIcon from '../icons/CinemaOutlinedIcon'
+import CinemaOutlinedIcon from '../../cut/icons/CinemaOutlinedIcon'
 import DiagramOutlinedIcon from '../icons/DiagramOutlinedIcon'
 import LinkCard from './LinkCard'
 import styles from './UserView.module.css'
@@ -28,6 +29,8 @@ const UserView = ({ account }: Props) => {
   const t = useTranslations('home')
   const title = t('title')
   const navigation = useTranslations('home.navigation')
+
+  const hasAlert = hasHomeAlert(account.environment)
 
   return (
     <div className={styles.block}>
@@ -83,19 +86,21 @@ const UserView = ({ account }: Props) => {
             message={navigation('footprints.message')}
           />
         </Box>
-        <Alert severity="info" className="mb-2">
-          {t.rich('alert.info', {
-            link: (chunks) => (
-              <Link
-                href="https://www.guide-communication-climat.fr/definitions/approches-de-comptabilite-carbone"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {chunks}
-              </Link>
-            ),
-          })}
-        </Alert>
+        {hasAlert && (
+          <Alert severity="info" className="mb-2">
+            {t.rich('alert.info', {
+              link: (chunks) => (
+                <Link
+                  href="https://www.guide-communication-climat.fr/definitions/approches-de-comptabilite-carbone"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {chunks}
+                </Link>
+              ),
+            })}
+          </Alert>
+        )}
       </Box>
     </div>
   )
