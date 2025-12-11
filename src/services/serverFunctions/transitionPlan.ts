@@ -33,7 +33,7 @@ import { dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED, NOT_FOUND } from '../permissions/check'
 import { canReadStudy, hasEditAccessOnStudy, hasReadAccessOnStudy } from '../permissions/study'
 import { canEditTransitionPlan, canReadTransitionPlan } from '../permissions/transitionPlan'
-import { AddActionCommand, ExternalStudyCommand } from './transitionPlan.command'
+import { AddActionCommand } from './transitionPlan.command'
 
 export const getStudyTransitionPlan = async (studyId: string): Promise<ApiResponse<TransitionPlan | null>> =>
   withServerResponse('getStudyTransitionPlan', async () => {
@@ -199,6 +199,14 @@ export const linkOldStudy = async (transitionPlanId: string, studyIdToLink: stri
 
     await createTransitionPlanStudy(transitionPlanId, studyIdToLink)
   })
+
+type ExternalStudyCommand = {
+  transitionPlanId: string
+  externalStudyId?: string
+  name: string
+  date: string
+  totalCo2Kg: number
+}
 
 export const addExternalStudy = async (command: ExternalStudyCommand) =>
   withServerResponse('addExternalStudy', async () => {

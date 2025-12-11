@@ -9,7 +9,7 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { getStudyPreviousOccurrences } from '@/services/serverFunctions/study'
 import { addExternalStudy, linkOldStudy, updateExternalStudy } from '@/services/serverFunctions/transitionPlan'
 import {
-  createExternalStudyCommandValidation,
+  createExternalStudyFormValidation,
   ExternalStudyFormInput,
 } from '@/services/serverFunctions/transitionPlan.command'
 import { convertValue } from '@/utils/study'
@@ -64,7 +64,7 @@ const LinkingStudyModal = ({
   const router = useRouter()
 
   const { control, formState, getValues, reset, handleSubmit } = useForm<ExternalStudyFormInput>({
-    resolver: zodResolver(createExternalStudyCommandValidation(currentStudyYear)),
+    resolver: zodResolver(createExternalStudyFormValidation(currentStudyYear)),
     mode: 'onBlur',
     reValidateMode: 'onChange',
     defaultValues: pastStudyToUpdate
@@ -73,7 +73,7 @@ const LinkingStudyModal = ({
           externalStudyId: pastStudyToUpdate.id,
           name: pastStudyToUpdate.name,
           date: new Date(pastStudyToUpdate.year, 0, 1),
-          totalCo2Kg: pastStudyToUpdate.totalCo2,
+          totalCo2Value: pastStudyToUpdate.totalCo2,
         }
       : {
           transitionPlanId,
@@ -107,8 +107,8 @@ const LinkingStudyModal = ({
   }
 
   const linkExternalStudy = async () => {
-    const { totalCo2Kg: totalCo2InStudyUnit, date, ...rest } = getValues()
-    const totalCo2Kg = convertValue(totalCo2InStudyUnit, studyUnit, StudyResultUnit.K)
+    const { totalCo2Value, date, ...rest } = getValues()
+    const totalCo2Kg = convertValue(totalCo2Value, studyUnit, StudyResultUnit.K)
 
     const data = {
       ...rest,
@@ -217,7 +217,7 @@ const LinkingStudyModal = ({
                 <div className="flex grow relative">
                   <FormTextField
                     control={control}
-                    name="totalCo2Kg"
+                    name="totalCo2Value"
                     type="number"
                     className="grow"
                     placeholder={t('totalCo2Placeholder')}

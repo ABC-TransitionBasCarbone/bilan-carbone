@@ -9,16 +9,16 @@ import {
 } from '@prisma/client'
 import z from 'zod'
 
-export const ExternalStudyCommandValidation = z.object({
+export const ExternalStudyFormValidation = z.object({
   transitionPlanId: z.string().min(1),
   externalStudyId: z.string().optional(),
   name: z.string().min(1),
   date: z.union([z.string(), z.date()]).transform((val) => (typeof val === 'string' ? val : val.toISOString())),
-  totalCo2Kg: z.number().min(0),
+  totalCo2Value: z.number().min(0),
 })
 
-export const createExternalStudyCommandValidation = (currentStudyYear: number) => {
-  return ExternalStudyCommandValidation.refine(
+export const createExternalStudyFormValidation = (currentStudyYear: number) => {
+  return ExternalStudyFormValidation.refine(
     (data) => {
       const dateValue = new Date(data.date)
       const studyYear = dateValue.getFullYear()
@@ -31,8 +31,7 @@ export const createExternalStudyCommandValidation = (currentStudyYear: number) =
   )
 }
 
-export type ExternalStudyCommand = z.infer<typeof ExternalStudyCommandValidation>
-export type ExternalStudyFormInput = z.input<typeof ExternalStudyCommandValidation>
+export type ExternalStudyFormInput = z.input<typeof ExternalStudyFormValidation>
 
 export const createObjectiveSchema = () =>
   z
