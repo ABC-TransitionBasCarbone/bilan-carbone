@@ -5,6 +5,8 @@ import { StudyWithoutDetail } from '@/services/permissions/study'
 import { Post } from '@/services/posts'
 import { StudyRole, SubPost } from '@prisma/client'
 import classNames from 'classnames'
+import { useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import SubPostComponent from './SubPost'
 import styles from './SubPosts.module.css'
 
@@ -39,6 +41,29 @@ const SubPosts = ({
   setGlossary,
   hasFilter,
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
+  const searchParams = useSearchParams()
+  const [scroll, setScroll] = useState<string | null>(null)
+
+  useEffect(() => {
+    const scrollTo = searchParams.get('scrollTo')
+    if (scrollTo !== null) {
+      // open subpost
+      setScroll(scrollTo)
+
+      // scroll to subpost
+      const el = document.getElementById(`subpost-${scrollTo}`)
+      if (!el) {
+        return
+      }
+
+      el.scrollIntoView()
+      // take header's height into account
+      const headerHeight = getComputedStyle(document.documentElement).getPropertyValue('--header-height').trim()
+      const offset = parseFloat(headerHeight) * parseFloat(getComputedStyle(document.documentElement).fontSize)
+      window.scrollBy(0, -offset)
+    }
+  }, [searchParams])
+
   return (
     <div className={classNames(styles.subPosts, 'flex-col')}>
       {subPosts.map((subPost) => (
@@ -57,6 +82,7 @@ const SubPosts = ({
               .length
           }
           hasFilter={!!hasFilter}
+          defaultOpen={scroll === subPost}
         />
       ))}
     </div>

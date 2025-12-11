@@ -41,6 +41,7 @@ interface Props {
   setGlossary: (subPost: string) => void
   count: number
   validated: number
+  defaultOpen: boolean
 }
 
 const SubPost = ({
@@ -55,6 +56,7 @@ const SubPost = ({
   count,
   validated,
   hasFilter,
+  defaultOpen,
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
   const t = useTranslations('study.post')
   const tStudy = useTranslations('study')
@@ -62,7 +64,7 @@ const SubPost = ({
   const tUnits = useTranslations('study.results.units')
   const { environment } = useAppEnvironmentStore()
   const [emissionFactorsForSubPost, setEmissionFactorsForSubPost] = useState<EmissionFactorWithMetaData[]>([])
-  const [expanded, setExpanded] = useState(false)
+  const [expanded, setExpanded] = useState(defaultOpen)
   const importVersions = useMemo(
     () => [
       { id: Import.Manual, source: Import.Manual, name: '' },
@@ -149,6 +151,10 @@ const SubPost = ({
       }
     }
   }, [emissionSources, subPost])
+
+  useEffect(() => {
+    setExpanded(defaultOpen)
+  }, [defaultOpen])
 
   return (!userRoleOnStudy || userRoleOnStudy === StudyRole.Reader) && emissionSources.length === 0 ? null : (
     <div ref={accordionRef} id={`subpost-${subPost}`} className={styles.subPostScrollContainer}>

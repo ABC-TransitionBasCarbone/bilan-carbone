@@ -38,11 +38,6 @@ const StudyPostsPageContainer = ({ post, study, userRole, user }: Props) => {
     [study, post, studySite],
   )
 
-  const isCut = useMemo(
-    () => study.organizationVersion.environment === Environment.CUT,
-    [study.organizationVersion.environment],
-  )
-
   const glossaryDescription = useMemo(() => {
     if (!glossary) {
       return ''
