@@ -6,6 +6,7 @@ import CutTopLeftNavBar from '@/environments/cut/navbar/TopLeftNavBar'
 import { signOutEnv } from '@/services/auth'
 import { hasAccessToMethodology, hasAccessToSettings, isTilt } from '@/services/permissions/environment'
 import { hasAccessToFormation } from '@/services/permissions/formations'
+import { hasAccessToAdvancedRessources } from '@/services/permissions/ressources'
 import { getUserActiveAccounts } from '@/services/serverFunctions/user'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
@@ -85,22 +86,27 @@ const Navbar = ({ children, user, environment }: Props) => {
                 )}
 
                 {user.role === Role.SUPER_ADMIN && <NavbarLink href="/super-admin">{t('admin')}</NavbarLink>}
-                <NavbarButton rel="noreferrer noopener" href="/ressources" aria-label={t('help')}>
-                  <HelpOutlineIcon />
-                </NavbarButton>
-                {hasAccessToSettings(user.environment) && (
-                  <NavbarButton aria-label={t('settings')} href="/parametres">
-                    <SettingsIcon />
+                {hasAccessToAdvancedRessources(user.environment, user.level) && (
+                  <NavbarButton rel="noreferrer noopener" href="/ressources" aria-label={t('help')}>
+                    <HelpOutlineIcon />
                   </NavbarButton>
                 )}
+
+                {hasAccessToSettings(user.environment) &&
+                  hasAccessToAdvancedRessources(user.environment, user.level) && (
+                    <NavbarButton aria-label={t('settings')} href="/parametres">
+                      <SettingsIcon />
+                    </NavbarButton>
+                  )}
                 <NavbarButton aria-label={t('profile')} href="/profil">
                   <AccountCircleIcon />
                 </NavbarButton>
-                {hasAccessToMethodology(user.environment) && (
-                  <NavbarButton aria-label={t('methodology')} rel="noreferrer noopener" href={methodologyLink}>
-                    <MenuBookIcon />
-                  </NavbarButton>
-                )}
+                {hasAccessToMethodology(user.environment) &&
+                  hasAccessToAdvancedRessources(user.environment, user.level) && (
+                    <NavbarButton aria-label={t('methodology')} rel="noreferrer noopener" href={methodologyLink}>
+                      <MenuBookIcon />
+                    </NavbarButton>
+                  )}
                 <NavbarButton title={t('logout')} aria-label={t('logout')} onClick={() => signOutEnv(user.environment)}>
                   <PowerSettingsNewIcon />
                 </NavbarButton>
