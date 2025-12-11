@@ -684,6 +684,29 @@ const users = async () => {
     }),
   ])
 
+  await Promise.all(
+    [Role.GESTIONNAIRE, Role.COLLABORATOR].map(async (role) => {
+      return prisma.account.create({
+        data: {
+          organizationVersionId: regularTiltOrganizationVersions[0].id,
+          role,
+          environment: Environment.TILT,
+          status: UserStatus.ACTIVE,
+          userId: (
+            await prisma.user.create({
+              data: {
+                email: `tilt-env-untrained-${role.toLowerCase()}-0@yopmail.com`,
+                firstName: faker.person.firstName(),
+                lastName: faker.person.lastName(),
+                password: await signPassword('password-0'),
+              },
+            })
+          ).id,
+        },
+      })
+    }),
+  )
+
   await prisma.user
     .create({
       data: {
