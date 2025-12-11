@@ -541,7 +541,7 @@ const getObjectivesWithOvershootCompensation = (
     referenceEmissionsAtStudyYear,
     studyYear,
     objectives,
-    1.0,
+    1,
   )
 
   // Reduce future budget to compensate for past overshoot
@@ -549,7 +549,7 @@ const getObjectivesWithOvershootCompensation = (
 
   // Newton-Raphson iteration to find k such that budget(k) = remainingTotalBudget
   const delta = 0.0001
-  let k = 1.0
+  let k = 1
 
   for (let i = 0; i < 10; i++) {
     const budgetAtK = calculateBudgetWithObjectivesAndMultiplier(actualEmissions, studyYear, objectives, k)
@@ -597,7 +597,6 @@ export const calculateCustomTrajectory = ({
   pastStudies = [],
   overshootAdjustment,
   trajectoryType,
-  maxYear,
 }: CalculateCustomTrajectoryParams): TrajectoryDataPoint[] => {
   if (objectives.length === 0) {
     return []
@@ -639,21 +638,10 @@ export const calculateCustomTrajectory = ({
     const objective = sortedObjectives[i]
     const absoluteReductionRate = Number(objective.reductionRate)
     const yearlyReduction = actualEmissions * absoluteReductionRate
-    const isLastObjective = i === sortedObjectives.length - 1
 
     for (let year = startYear + 1; year <= objective.targetYear; year++) {
       actualEmissions = Math.max(0, actualEmissions - yearlyReduction)
       dataPoints.push({ year, value: actualEmissions })
-    }
-
-    if (isLastObjective && actualEmissions > 0) {
-      let year = objective.targetYear + 1
-
-      while (actualEmissions > 0 && (yearlyReduction > 0 || year <= Math.max(maxYear ?? 0, TARGET_YEAR))) {
-        actualEmissions = Math.max(0, actualEmissions - yearlyReduction)
-        dataPoints.push({ year, value: actualEmissions })
-        year++
-      }
     }
 
     startYear = objective.targetYear
@@ -788,7 +776,6 @@ export const calculateTrajectoriesWithHistory = ({
             })),
             pastStudies,
             trajectoryType: traj.type,
-            maxYear: maxYearFromTrajectories > 0 ? maxYearFromTrajectories : undefined,
           }),
           withinThreshold: true,
         },
@@ -916,7 +903,6 @@ export const calculateTrajectoriesWithHistory = ({
         })),
         pastStudies,
         trajectoryType: traj.type,
-        maxYear: maxYearFromTrajectories > 0 ? maxYearFromTrajectories : undefined,
       })
 
       const referenceEmissionsForStudyStartYear = getTrajectoryEmissionsAtYear(referenceTrajectory, studyStartYear)
@@ -938,7 +924,6 @@ export const calculateTrajectoriesWithHistory = ({
               referenceStudyYear,
             },
         trajectoryType: traj.type,
-        maxYear: maxYearFromTrajectories > 0 ? maxYearFromTrajectories : undefined,
       })
 
       customTrajectoriesData.push({
@@ -1126,7 +1111,16 @@ const calculateBudgetWithObjectivesAndMultiplier = (
   multiplier: number,
 ): number => {
   const trajectory = buildTrajectoryWithObjectivesAndMultiplier(startEmissions, startYear, objectives, multiplier)
-  const endYear = trajectory[trajectory.length - 1].year
+  /**
+   * changes made during the ticket https://github.com/ABC-TransitionBasCarbone/bilan-carbone/issues/2078
+   * before : const endYear = trajectory[trajectory.length - 1].year
+   *
+   * We made this change because tests failed "getObjectivesWithOvershootCompensation - budget equality test"
+   * The new calcul method was wrong because for custom trajectories, the correction was calculated on all years (until 2050) instead of years until the 2nd objective
+   *
+   * Do not use on SBTi trajectories
+   */
+  const endYear = objectives[objectives.length - 1].targetYear
 
   return calculateTrajectoryIntegral(trajectory, startYear, endYear)
 }
