@@ -1,4 +1,4 @@
-export const RestaurationIcon = ({ className }: { className?: string }) => {
+export const EnergieClicksonIcon = ({ className }: { className?: string }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -12,9 +12,11 @@ export const RestaurationIcon = ({ className }: { className?: string }) => {
       stroke-linejoin="round"
       className={className}
     >
-      <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" />
-      <path d="M7 2v20" />
-      <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" />
+      <path d="M10 10v4" />
+      <path d="M14 10v4" />
+      <path d="M22 14v-4" />
+      <path d="M6 10v4" />
+      <rect x="2" y="6" width="16" height="12" rx="2" />
     </svg>
   )
 }

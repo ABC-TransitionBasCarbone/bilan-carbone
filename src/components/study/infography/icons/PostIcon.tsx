@@ -26,7 +26,10 @@ import LocalPizzaOutlinedIcon from '@mui/icons-material/LocalPizzaOutlined'
 import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined'
 import MapsHomeWorkOutlinedIcon from '@mui/icons-material/MapsHomeWorkOutlined'
 import TrainOutlinedIcon from '@mui/icons-material/TrainOutlined'
+import { AchatsIcon } from './achats'
 import { DeplacementsClicksonIcon } from './deplacementsClickson'
+import { EnergieClicksonIcon } from './energieClickson'
+import { ImmobilisationsClicksonIcon } from './immobilisationsClickson'
 import { RestaurationIcon } from './restauration'
 
 interface Props {
@@ -42,7 +45,6 @@ const PostIcon = ({ post, className }: Props) => {
       return <DechetsDirectsIcon className={className} />
     case Post.Deplacements:
       return <DeplacementsIcon className={className} />
-    case Post.EnergiesClickson:
     case Post.Energies:
       return <EnergiesIcon className={className} />
     case Post.Immobilisations:
@@ -55,10 +57,8 @@ const PostIcon = ({ post, className }: Props) => {
       return <IntrantsBiensEtMatieresIcon className={className} />
     case Post.Fret:
       return <FretIcon className={className} />
-    case Post.Achats:
     case Post.IntrantsServices:
       return <IntrantsServicesIcon className={className} />
-    case Post.ImmobilisationsClickson:
     case Post.Fonctionnement:
       return <FonctionnementIcon className={className} />
     case Post.MobiliteSpectateurs:
@@ -93,10 +93,16 @@ const PostIcon = ({ post, className }: Props) => {
       return <LightbulbOutlinedIcon className={className} />
     case Post.Teletravail:
       return <BoltOutlinedIcon className={className} />
+    case Post.EnergiesClickson:
+      return <EnergieClicksonIcon className={className} />
     case Post.DeplacementsClickson:
       return <DeplacementsClicksonIcon className={className} />
     case Post.Restauration:
       return <RestaurationIcon className={className} />
+    case Post.Achats:
+      return <AchatsIcon className={className} />
+    case Post.ImmobilisationsClickson:
+      return <ImmobilisationsClicksonIcon className={className} />
   }
 }
 
