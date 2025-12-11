@@ -206,6 +206,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources }: 
                   name="startDate"
                   label={tLabel('start')}
                   onAccept={handleDateChange}
+                  disabled={editionDisabled}
                 />
                 <FormDatePicker
                   control={dateForm.control}
@@ -214,6 +215,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources }: 
                   label={tLabel('end')}
                   data-testid="new-study-endDate"
                   onAccept={handleDateChange}
+                  disabled={editionDisabled}
                 />
               </div>
             </div>
@@ -226,6 +228,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources }: 
                 type="number"
                 className={styles.formTextField}
                 onBlur={onStudyEstablishmentUpdate}
+                disabled={editionDisabled}
               />
               <FormTextField
                 control={form.control}
@@ -235,6 +238,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources }: 
                 type="number"
                 className={styles.formTextField}
                 onBlur={onStudyEstablishmentUpdate}
+                disabled={editionDisabled}
               />
               <FormTextField
                 control={form.control}
@@ -244,6 +248,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources }: 
                 type="number"
                 className={styles.formTextField}
                 onBlur={onStudyEstablishmentUpdate}
+                disabled={editionDisabled}
               />
             </div>
             <Box className="flex justify-start mt1">
