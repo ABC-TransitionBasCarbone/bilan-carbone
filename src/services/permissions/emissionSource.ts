@@ -67,6 +67,8 @@ export const canCreateEmissionSource = async (account: AccountWithUser, emission
       return canCreateEmissionSourceBC(account, emissionSource)
     case 'CUT':
       return canCreateEmissionSourceCUT(account, emissionSource)
+    case 'CLICKSON':
+      return canCreateEmissionSourceCUT(account, emissionSource)
     default:
       return false
   }
@@ -133,6 +135,8 @@ export const canUpdateEmissionSource = async (
     case 'TILT':
       return canUpdateEmissionSourceBC(account, emissionSource, change, study)
     case 'CUT':
+      return canUpdateEmissionSourceCUT(account, emissionSource)
+    case 'CLICKSON':
       return canUpdateEmissionSourceCUT(account, emissionSource)
     default:
       return false
