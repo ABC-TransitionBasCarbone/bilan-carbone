@@ -501,3 +501,6 @@ export const hasEditAccessOnStudy = async (studyId: string) => {
 
   return canEditStudy(session.user, study)
 }
+
+export const hasAccessToStudies = (environment: Environment, userLevel: Level | null) =>
+  environment !== Environment.TILT || userLevel

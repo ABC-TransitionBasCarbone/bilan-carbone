@@ -17,6 +17,7 @@ import NavbarLink from './NavbarLink'
 import NavbarOrganizationMenu from './NavbarOrganizationMenu'
 
 import { signOutEnv } from '@/services/auth'
+import { hasAccessToStudies } from '@/services/permissions/study'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
@@ -118,11 +119,13 @@ const Navbar = ({ children, user, environment }: Props) => {
                           {t('team')}
                         </NavbarLink>
                       </MenuItem>
-                      <MenuItem onClick={handleClose}>
-                        <NavbarLink data-testid="link-organization" href="/organisations" onClick={handleClose}>
-                          {t('organizations')}
-                        </NavbarLink>
-                      </MenuItem>
+                      {hasAccessToStudies(user.environment, user.level) && (
+                        <MenuItem onClick={handleClose}>
+                          <NavbarLink data-testid="link-organization" href="/organisations" onClick={handleClose}>
+                            {t('organizations')}
+                          </NavbarLink>
+                        </MenuItem>
+                      )}
                     </NavbarOrganizationMenu>
                   </Box>
                 )}
