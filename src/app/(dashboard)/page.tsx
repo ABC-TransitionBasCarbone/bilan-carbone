@@ -1,8 +1,8 @@
 import Block from '@/components/base/Block'
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import UserView from '@/components/home/UserView'
-import { default as CUTUserView } from '@/environments/cut/home/UserView'
 import Footer from '@/environments/cut/layout/Footer'
+import SimplifiedUserView from '@/environments/simplified/home/UserView'
 import { Environment } from '@prisma/client'
 import { redirect } from 'next/navigation'
 
@@ -20,7 +20,7 @@ const Home = async ({ user: account }: UserSessionProps) => {
           switch (account.environment) {
             case Environment.CUT:
             case Environment.CLICKSON:
-              return <CUTUserView account={account} />
+              return <SimplifiedUserView account={account} />
             default:
               return <UserView account={account} />
           }

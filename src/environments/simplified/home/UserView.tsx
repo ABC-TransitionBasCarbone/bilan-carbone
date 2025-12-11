@@ -1,15 +1,14 @@
 'use client'
-import { Alert, Box, BoxProps, styled, Typography } from '@mui/material'
 
+import DynamicComponent from '@/environments/core/utils/DynamicComponent'
+import Groups2OutlinedIcon from '@mui/icons-material/Groups2Outlined'
+import { Alert, Box, BoxProps, styled, Typography } from '@mui/material'
 import classNames from 'classnames'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-
-import Groups2OutlinedIcon from '@mui/icons-material/Groups2Outlined'
-import DiagramOutlinedIcon from '../icons/DiagramOutlinedIcon'
-
-import { UserSession } from 'next-auth'
 import CinemaOutlinedIcon from '../icons/CinemaOutlinedIcon'
+import DiagramOutlinedIcon from '../icons/DiagramOutlinedIcon'
 import LinkCard from './LinkCard'
 import styles from './UserView.module.css'
 
@@ -58,7 +57,7 @@ const UserView = ({ account }: Props) => {
             <Link href="/organisations" className={classNames(styles.startButtonLink)}>
               <Box className={classNames('flex-cc', 'px2', 'py1', styles.startButton)} component="button">
                 <Typography variant="h6" className={styles.startButtonText}>
-                  DÉMARRER
+                  {t('start')}
                 </Typography>
               </Box>
             </Link>
@@ -73,13 +72,13 @@ const UserView = ({ account }: Props) => {
           />
           <LinkCard
             href="/equipe"
-            icon={<Groups2OutlinedIcon className={styles.icon} />}
+            icon={<DynamicComponent defaultComponent={<Groups2OutlinedIcon className={styles.icon} />} />}
             title={navigation('collaborators.title')}
             message={navigation('collaborators.message')}
           />
           <LinkCard
             href="/organisations"
-            icon={<DiagramOutlinedIcon className={styles.icon} />}
+            icon={<DynamicComponent defaultComponent={<DiagramOutlinedIcon className={styles.icon} />} />}
             title={navigation('footprints.title')}
             message={navigation('footprints.message')}
           />
