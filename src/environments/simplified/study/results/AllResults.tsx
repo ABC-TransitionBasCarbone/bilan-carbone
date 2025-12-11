@@ -13,7 +13,7 @@ import ConsolidatedResultsTable from '@/components/study/results/consolidated/Co
 import TabPanel from '@/components/tabPanel/tabPanel'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { downloadStudyResults, getDetailedEmissionResults } from '@/services/study'
-import { Environment } from '@prisma/client'
+import { Environment, SiteCAUnit } from '@prisma/client'
 
 import Block from '@/components/base/Block'
 import LoadingButton from '@/components/base/LoadingButton'
@@ -25,6 +25,7 @@ import classNames from 'classnames'
 import Link from 'next/link'
 import styles from './AllResults.module.css'
 
+import EmissionsAnalysisClickson from '@/environments/clickson/study/results/consolidated/EmissionsAnalysisClickson'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { showResultsInfoText } from '../../../../services/permissions/environment'
 
@@ -33,6 +34,7 @@ interface Props {
   study: FullStudy
   validatedOnly: boolean
   chartOrder?: Record<ChartType, number>
+  caUnit?: SiteCAUnit
 }
 
 const a11yProps = (index: number) => {
@@ -56,7 +58,13 @@ const tabsLabels = [
   { key: 'pie', label: 'Diagramme circulaire' },
 ]
 
-const AllResults = ({ emissionFactorsWithParts, study, validatedOnly, chartOrder = defaultChartOrder }: Props) => {
+const AllResults = ({
+  emissionFactorsWithParts,
+  study,
+  validatedOnly,
+  chartOrder = defaultChartOrder,
+  caUnit,
+}: Props) => {
   const [value, setValue] = useState(0)
   const [pdfLoading, setPdfLoading] = useState(false)
 
@@ -196,6 +204,14 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly, chartOrder
           </Box>
         </>
       )}
+      <EmissionsAnalysisClickson
+        study={study}
+        studySite={studySite}
+        withDepValue={value}
+        monetaryRatio={1}
+        nonSpecificMonetaryRatio={1}
+        caUnit={caUnit}
+      />
       <Box component="section" sx={{ marginTop: '1rem' }}>
         <Tabs value={value} onChange={handleChange} indicatorColor="secondary" textColor="inherit" variant="fullWidth">
           {orderedTabs.map((t, index) => (

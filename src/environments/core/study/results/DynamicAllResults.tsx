@@ -38,6 +38,7 @@ const DynamicAllResults = ({ study, rules, emissionFactorsWithParts, validatedOn
             emissionFactorsWithParts={emissionFactorsWithParts}
             study={study}
             validatedOnly={validatedOnly}
+            caUnit={caUnit}
             chartOrder={{
               bar: 0,
               pie: 1,
