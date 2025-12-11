@@ -1154,7 +1154,7 @@
           "ReductionWithinOrganisationCoreBusiness": "Réduction dans le coeur d'activité de l'organisation (Priorité 1/6)",
           "glossaryTitle": "Niveaux de pertinence d'une action",
           "information": "Information sur les niveaux de pertinence",
-          "learnMore": "Pour plus d'information, nous vous invitons à consulter cette page.",
+          "learnMore": "Pour plus d'information, nous vous invitons à consulter <link>cette page</link>.",
           "close": "Fermer"
         },
         "onboarding": {
