@@ -60,3 +60,6 @@ export const notDisplayingStudyRightModalForAddingContributors = (environment: E
   ([CLICKSON] as Environment[]).includes(environment)
 
 export const hasAccessToAllLocales = (environment: Environment) => ([CLICKSON] as Environment[]).includes(environment)
+
+export const hasAccessToSimplifiedEmissionAnalysis = (environment: Environment) =>
+  ([CLICKSON] as Environment[]).includes(environment)

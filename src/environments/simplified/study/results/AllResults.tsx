@@ -27,7 +27,10 @@ import styles from './AllResults.module.css'
 
 import EmissionsAnalysisClickson from '@/environments/clickson/study/results/consolidated/EmissionsAnalysisClickson'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
-import { showResultsInfoText } from '../../../../services/permissions/environment'
+import {
+  hasAccessToSimplifiedEmissionAnalysis,
+  showResultsInfoText,
+} from '../../../../services/permissions/environment'
 
 interface Props {
   emissionFactorsWithParts: EmissionFactorWithParts[]
@@ -107,7 +110,7 @@ const AllResults = ({
     setPdfLoading(false)
   }
 
-  const { computedResultsWithDep } = useMemo(
+  const { computedResultsWithDep, withDepValue } = useMemo(
     () =>
       getDetailedEmissionResults(
         study,
@@ -204,14 +207,9 @@ const AllResults = ({
           </Box>
         </>
       )}
-      <EmissionsAnalysisClickson
-        study={study}
-        studySite={studySite}
-        withDepValue={value}
-        monetaryRatio={1}
-        nonSpecificMonetaryRatio={1}
-        caUnit={caUnit}
-      />
+      {environment && hasAccessToSimplifiedEmissionAnalysis(environment) && (
+        <EmissionsAnalysisClickson study={study} studySite={studySite} withDepValue={withDepValue} caUnit={caUnit} />
+      )}
       <Box component="section" sx={{ marginTop: '1rem' }}>
         <Tabs value={value} onChange={handleChange} indicatorColor="secondary" textColor="inherit" variant="fullWidth">
           {orderedTabs.map((t, index) => (
