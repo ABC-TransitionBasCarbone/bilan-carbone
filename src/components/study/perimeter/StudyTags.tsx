@@ -11,6 +11,7 @@ import GlossaryModal from '@/components/modals/GlossaryModal'
 import { StudyTagColors } from '@/constants/studyTags'
 import { StudyTagFamilyWithTags } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { customRich } from '@/i18n/customRich'
 import { createTag, deleteTag, getTagFamiliesByStudyId, updateTag } from '@/services/serverFunctions/emissionSource'
 import { NewStudyTagCommand, NewStudyTagCommandValidation } from '@/services/serverFunctions/emissionSource.command'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -212,7 +213,7 @@ const StudyTags = ({ studyId }: Props) => {
       )}
       {glossary && (
         <GlossaryModal glossary={glossary} label="post-glossary" t={t} onClose={() => setGlossary('')}>
-          {t.rich('family.glossaryDescription', { br: () => <br /> })}
+          {customRich(t, 'family.glossaryDescription')}
         </GlossaryModal>
       )}
     </Block>
