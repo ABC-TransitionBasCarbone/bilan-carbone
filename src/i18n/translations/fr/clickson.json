@@ -84,6 +84,11 @@
           "description": "Vous pouvez ici gérer les élèves de votre étude. Ceux-ci auront accès à certains postes et sous postes (que vous pouvez définir) et pourront remplir certaines informations pour des sources d'émission que vous aurez déjà créées dans l'étude. Pour plus d'information sur l'interface des élèves, n'hésitez pas à aller voir notre <link>FAQ</link>"
         }
       }
+    },
+    "results": {
+      "intensities": {
+        "studentEmployee": "étudiants & salariés"
+      }
     }
   },
   "emissionFactors": {
