@@ -8,7 +8,7 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { toggleActionEnabled } from '@/services/serverFunctions/transitionPlan'
 import { getYearFromDateStr } from '@/utils/time'
 import { Link, Switch } from '@mui/material'
-import { Action, ActionPotentialDeduction, StudyResultUnit } from '@prisma/client'
+import { ActionPotentialDeduction, StudyResultUnit } from '@prisma/client'
 import {
   ColumnDef,
   getCoreRowModel,
@@ -153,7 +153,7 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
               <></>
             ),
         },
-      ] as ColumnDef<Action>[],
+      ] as ColumnDef<ActionWithIndicators>[],
     [
       t,
       getImplementationPeriod,
