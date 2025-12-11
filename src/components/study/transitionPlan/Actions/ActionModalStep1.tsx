@@ -85,7 +85,7 @@ const ActionModalStep1 = ({ studyUnit, control, setValue }: Props) => {
         {potentialDeduction === ActionPotentialDeduction.Quantity && (
           <div className={styles.reductionValue}>
             <FormTextField
-              label={`${t('reductionValueKg')} *`}
+              label={`${t('reductionValue')} *`}
               type="number"
               control={control}
               name="reductionValue"

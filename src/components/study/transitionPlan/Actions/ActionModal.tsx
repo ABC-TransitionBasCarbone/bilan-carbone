@@ -122,12 +122,14 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
   const onSubmit = async (data: AddActionFormCommand) => {
     const cleanedIndicators = data.indicators?.filter((ind) => ind && ind.type) || []
     const priority = calculatePriorityFromRelevance(data.relevance)
-    const reductionValueKg = data.reductionValue
-      ? Math.round(convertValue(data.reductionValue, studyUnit, StudyResultUnit.K))
+    const { reductionValue, ...dataWithoutReductionValue } = data
+
+    const reductionValueKg = reductionValue
+      ? Math.round(convertValue(reductionValue, studyUnit, StudyResultUnit.K))
       : null
 
     const dataWithPriority = {
-      ...data,
+      ...dataWithoutReductionValue,
       indicators: cleanedIndicators,
       priority,
       reductionValueKg,
