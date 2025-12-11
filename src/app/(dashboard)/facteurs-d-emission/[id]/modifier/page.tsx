@@ -2,7 +2,7 @@ import withAuth from '@/components/hoc/withAuth'
 import EditEmissionFactorPage from '@/components/pages/EditEmissionFactor'
 import NotFound from '@/components/pages/NotFound'
 import { getOrganizationVersionById } from '@/db/organization'
-import { canEditEmissionFactor } from '@/services/permissions/emissionFactor'
+import { canEditEmissionFactor, hasAccessToEmissionFactors } from '@/services/permissions/emissionFactor'
 import { hasAccessToEmissionFactor } from '@/services/permissions/environment'
 import { getDetailedEmissionFactor, getEmissionFactorLocations } from '@/services/serverFunctions/emissionFactor'
 import { hasActiveLicence } from '@/utils/organization'
@@ -21,7 +21,11 @@ const EditEmissionFactor = async (props: Props) => {
     getEmissionFactorLocations(),
   ])
 
-  if (!emissionFactor || !hasAccessToEmissionFactor(props.user.environment)) {
+  if (
+    !emissionFactor ||
+    !hasAccessToEmissionFactor(props.user.environment) ||
+    !hasAccessToEmissionFactors(props.user.environment, props.user.level)
+  ) {
     return <NotFound />
   }
   const userOrganization = await getOrganizationVersionById(props.user.organizationVersionId || '')

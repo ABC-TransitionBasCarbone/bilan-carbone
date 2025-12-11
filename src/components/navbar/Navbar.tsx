@@ -17,6 +17,7 @@ import NavbarLink from './NavbarLink'
 import NavbarOrganizationMenu from './NavbarOrganizationMenu'
 
 import { signOutEnv } from '@/services/auth'
+import { hasAccessToEmissionFactors } from '@/services/permissions/emissionFactor'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
@@ -126,10 +127,13 @@ const Navbar = ({ children, user, environment }: Props) => {
                     </NavbarOrganizationMenu>
                   </Box>
                 )}
-                <NavbarButton href="/facteurs-d-emission" data-testid="navbar-facteur-demission">
-                  <span className={styles.big}>{t('factors')}</span>
-                  <span className={styles.small}>{t('fe')}</span>
-                </NavbarButton>
+                {hasAccessToEmissionFactors(user.environment, user.level) && (
+                  <NavbarButton href="/facteurs-d-emission" data-testid="navbar-facteur-demission">
+                    <span className={styles.big}>{t('factors')}</span>
+                    <span className={styles.small}>{t('fe')}</span>
+                  </NavbarButton>
+                )}
+
                 {hasFormation && <NavbarButton href="/formation">{t('formation')}</NavbarButton>}
               </>
             )}

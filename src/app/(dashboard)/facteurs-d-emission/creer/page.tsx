@@ -2,6 +2,7 @@ import withAuth from '@/components/hoc/withAuth'
 import NewEmissionFactorPage from '@/components/pages/NewEmissionFactor'
 import NotFound from '@/components/pages/NotFound'
 import { getOrganizationVersionById } from '@/db/organization'
+import { hasAccessToEmissionFactors } from '@/services/permissions/emissionFactor'
 import { hasAccessToEmissionFactor } from '@/services/permissions/environment'
 import { getEmissionFactorLocations } from '@/services/serverFunctions/emissionFactor'
 import { hasActiveLicence } from '@/utils/organization'
@@ -13,7 +14,11 @@ interface Props {
 }
 
 const NewEmissionFactor = async ({ user }: Props) => {
-  if (!user.organizationVersionId || !hasAccessToEmissionFactor(user.environment)) {
+  if (
+    !user.organizationVersionId ||
+    !hasAccessToEmissionFactor(user.environment) ||
+    !hasAccessToEmissionFactors(user.environment, user.level)
+  ) {
     return <NotFound />
   }
 
