@@ -88,7 +88,7 @@ export const AddActionCommandBase = z.object({
   detailedDescription: z.string().min(1),
   transitionPlanId: z.uuid(),
   potentialDeduction: z.enum(ActionPotentialDeduction),
-  reductionValueKg: z.number().optional().nullable(),
+  reductionValue: z.number().optional().nullable(),
   reductionDetails: z.string().optional(),
   reductionStartYear: z.string(),
   reductionEndYear: z.string(),
@@ -113,9 +113,12 @@ export const AddActionCommandBase = z.object({
 
 export const AddActionCommandValidation = AddActionCommandBase.refine((data) => {
   if (data.potentialDeduction === ActionPotentialDeduction.Quantity) {
-    return data.reductionValueKg !== undefined && data.reductionValueKg !== null
+    return data.reductionValue !== undefined && data.reductionValue !== null
   }
   return true
 }, setCustomMessage('required'))
 
-export type AddActionCommand = z.infer<typeof AddActionCommandValidation>
+export type AddActionFormCommand = z.infer<typeof AddActionCommandValidation>
+export type AddActionInputCommand = Omit<z.input<typeof AddActionCommandValidation>, 'reductionValue'> & {
+  reductionValueKg: number | null | undefined
+}

@@ -1085,7 +1085,7 @@
           "detailedDescriptionPlaceholder": "Detailed description",
           "potentialDeduction": "Emission reduction potential",
           "potentialDeductionPlaceholder": "Select an option",
-          "reductionValueKg": "Value",
+          "reductionValue": "Value",
           "reductionDetails": "Details and assumptions on the action's reduction potential",
           "reductionDetailsPlaceholder": "Describe the details and assumptions",
           "reductionStartYear": "Year action begins",

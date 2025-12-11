@@ -1085,7 +1085,7 @@
           "detailedDescriptionPlaceholder": "Description détaillée",
           "potentialDeduction": "Potentiel de réduction d'émissions",
           "potentialDeductionPlaceholder": "Sélectionnez une option",
-          "reductionValueKg": "Valeur",
+          "reductionValue": "Valeur",
           "reductionDetails": "Détails et hypothèses sur le potentiel de réduction de l'action",
           "reductionDetailsPlaceholder": "Décrivez les détails et hypothèses",
           "reductionStartYear": "Début de la mise en oeuvre de l'action",

@@ -1,7 +1,7 @@
 import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
-import { AddActionCommand } from '@/services/serverFunctions/transitionPlan.command'
+import { AddActionFormCommand } from '@/services/serverFunctions/transitionPlan.command'
 import { getYearFromDateStr } from '@/utils/time'
 import { Checkbox, FormControlLabel, MenuItem } from '@mui/material'
 import type { StudyResultUnit } from '@prisma/client'
@@ -16,10 +16,10 @@ import styles from './ActionModal.module.css'
 
 interface Props {
   studyUnit: StudyResultUnit
-  control: Control<AddActionCommand>
-  setValue: UseFormSetValue<AddActionCommand>
-  getValues: UseFormGetValues<AddActionCommand>
-  errors: FieldErrors<AddActionCommand>
+  control: Control<AddActionFormCommand>
+  setValue: UseFormSetValue<AddActionFormCommand>
+  getValues: UseFormGetValues<AddActionFormCommand>
+  errors: FieldErrors<AddActionFormCommand>
 }
 
 const ActionModalStep1 = ({ studyUnit, control, setValue }: Props) => {
@@ -88,9 +88,9 @@ const ActionModalStep1 = ({ studyUnit, control, setValue }: Props) => {
               label={`${t('reductionValueKg')} *`}
               type="number"
               control={control}
-              name="reductionValueKg"
+              name="reductionValue"
               endAdornment={<div className={textUnitStyles.unit}>{tUnit(studyUnit)}</div>}
-              data-testid="add-action-reductionValueKg"
+              data-testid="add-action-reductionValue"
             />
           </div>
         )}

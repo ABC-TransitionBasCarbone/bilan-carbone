@@ -7,8 +7,8 @@ import { getStudyOrganizationMembers } from '@/services/serverFunctions/study'
 import { addAction, editAction } from '@/services/serverFunctions/transitionPlan'
 import {
   ActionIndicatorCommand,
-  AddActionCommand,
   AddActionCommandValidation,
+  AddActionFormCommand,
 } from '@/services/serverFunctions/transitionPlan.command'
 import { calculatePriorityFromRelevance } from '@/utils/action'
 import { objectWithoutNullAttributes } from '@/utils/object'
@@ -84,7 +84,7 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
       action
         ? {
             ...objectWithoutNullAttributes(action),
-            reductionValueKg: Math.round(
+            reductionValue: Math.round(
               action.reductionValueKg ? convertValue(action.reductionValueKg, StudyResultUnit.K, studyUnit) : 0,
             ),
           }
@@ -93,7 +93,7 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
   )
 
   const { control, formState, getValues, setValue, reset, handleSubmit, trigger, setError, clearErrors } =
-    useForm<AddActionCommand>({
+    useForm<AddActionFormCommand>({
       resolver: zodResolver(AddActionCommandValidation),
       mode: 'onChange',
       reValidateMode: 'onChange',
@@ -111,26 +111,26 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
     })
 
   const potentialDeduction = useWatch({ control, name: 'potentialDeduction' })
-  const reductionValueKg = useWatch({ control, name: 'reductionValueKg' })
+  const reductionValue = useWatch({ control, name: 'reductionValue' })
 
   useEffect(() => {
     if (potentialDeduction !== ActionPotentialDeduction.Quantity) {
-      clearErrors(['reductionValueKg'])
+      clearErrors(['reductionValue'])
     }
   }, [potentialDeduction, clearErrors])
 
-  const onSubmit = async (data: AddActionCommand) => {
+  const onSubmit = async (data: AddActionFormCommand) => {
     const cleanedIndicators = data.indicators?.filter((ind) => ind && ind.type) || []
     const priority = calculatePriorityFromRelevance(data.relevance)
-    const convertedReductionValueKg = data.reductionValueKg
-      ? Math.round(convertValue(data.reductionValueKg, studyUnit, StudyResultUnit.K))
+    const reductionValueKg = data.reductionValue
+      ? Math.round(convertValue(data.reductionValue, studyUnit, StudyResultUnit.K))
       : null
 
     const dataWithPriority = {
       ...data,
       indicators: cleanedIndicators,
       priority,
-      reductionValueKg: convertedReductionValueKg,
+      reductionValueKg,
     }
 
     await callServerFunction(() => (action ? editAction(action.id, dataWithPriority) : addAction(dataWithPriority)), {
@@ -149,7 +149,7 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
     onClose()
   }
 
-  const getRequiredFieldsForStep = (step: number): (keyof AddActionCommand)[] => {
+  const getRequiredFieldsForStep = (step: number): (keyof AddActionFormCommand)[] => {
     if (step === 0) {
       return [
         'title',
@@ -158,7 +158,7 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
         'potentialDeduction',
         'reductionStartYear',
         'reductionEndYear',
-        'reductionValueKg',
+        'reductionValue',
       ]
     }
     return []
@@ -170,8 +170,8 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
 
     if (activeStep === 0) {
       if (potentialDeduction === ActionPotentialDeduction.Quantity) {
-        if (!reductionValueKg) {
-          setError('reductionValueKg', { message: tValidation('required') })
+        if (!reductionValue) {
+          setError('reductionValue', { message: tValidation('required') })
           isValid = false
           return
         }
