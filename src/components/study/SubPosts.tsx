@@ -47,13 +47,11 @@ const SubPosts = ({
   useEffect(() => {
     const scrollTo = searchParams.get('scrollTo')
     if (scrollTo !== null) {
+      // open subpost
       setScroll(scrollTo)
-    }
-  }, [searchParams])
 
-  useEffect(() => {
-    if (scroll) {
-      const el = document.getElementById(`subpost-${scroll}`)
+      // scroll to subpost
+      const el = document.getElementById(`subpost-${scrollTo}`)
       if (!el) {
         return
       }
@@ -64,7 +62,7 @@ const SubPosts = ({
       const offset = parseFloat(headerHeight) * parseFloat(getComputedStyle(document.documentElement).fontSize)
       window.scrollBy(0, -offset)
     }
-  }, [scroll])
+  }, [searchParams])
 
   return (
     <div className={classNames(styles.subPosts, 'flex-col')}>
