@@ -108,16 +108,12 @@ export const duplicateTransitionPlanWithRelations = async (
   sourceTransitionPlan: TransitionPlanWithRelations,
   targetStudyId: string,
 ): Promise<TransitionPlanWithRelations> => {
-  const linkedStudyIds = sourceTransitionPlan.transitionPlanStudies
-    .map((tps) => tps.studyId)
-    .filter((studyId) => studyId !== sourceTransitionPlan.studyId)
-
   return prismaClient.$transaction(async (tx) => {
     return tx.transitionPlan.create({
       data: {
         studyId: targetStudyId,
         transitionPlanStudies: {
-          create: linkedStudyIds.map((studyId) => ({ studyId })),
+          create: sourceTransitionPlan.transitionPlanStudies.map((tpStudy) => ({ studyId: tpStudy.studyId })),
         },
         trajectories: {
           create: sourceTransitionPlan.trajectories.map((trajectory) => ({

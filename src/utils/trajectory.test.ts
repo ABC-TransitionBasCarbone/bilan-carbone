@@ -711,6 +711,37 @@ describe('calculateTrajectory', () => {
         }
       })
 
+      test('SBTI - reference before 2020 should interpolate to 2020 using current study after 2020', () => {
+        const referenceYear = 2018
+        const referenceEmissions = 1000
+        const currentYear = 2024
+        const currentEmissions = 800
+
+        const pastStudies = createPastStudies([referenceYear, referenceEmissions], [currentYear, currentEmissions])
+
+        const referenceTrajectory = calculateSBTiTrajectory({
+          studyEmissions: referenceEmissions,
+          studyStartYear: referenceYear,
+          reductionRate: SBTI_REDUCTION_RATE_15,
+          pastStudies,
+        })
+
+        const year2018Point = referenceTrajectory.find((p) => p.year === 2018)
+        expect(year2018Point?.value).toBeCloseTo(1000, 1)
+
+        const year2019Point = referenceTrajectory.find((p) => p.year === 2019)
+        const expectedInterpolated2019 = 1000 + (1 / 6) * (800 - 1000)
+        expect(year2019Point?.value).toBeCloseTo(expectedInterpolated2019, 1)
+
+        const year2020Point = referenceTrajectory.find((p) => p.year === 2020)
+        const expectedInterpolated2020 = 1000 + (2 / 6) * (800 - 1000)
+        expect(year2020Point?.value).toBeCloseTo(expectedInterpolated2020, 1)
+
+        const year2021Point = referenceTrajectory.find((p) => p.year === 2021)
+        const expectedReduction2021 = expectedInterpolated2020 - 1 * SBTI_REDUCTION_RATE_15 * expectedInterpolated2020
+        expect(year2021Point?.value).toBeCloseTo(expectedReduction2021, 1)
+      })
+
       test('Custom trajectory with one past study - within threshold', () => {
         const pastStudies = createPastStudies([2022, 1000])
         const currentEmissions = 900
@@ -1202,6 +1233,26 @@ describe('calculateTrajectory', () => {
 
       testSBTiBudgetEquality(2024, 2025, 1000, 1500, SBTI_REDUCTION_RATE_WB2C, createPastStudies([2024, 1000]))
       testSBTiBudgetEquality(2024, 2025, 1000, 2000, SBTI_REDUCTION_RATE_WB2C, createPastStudies([2024, 1000]))
+    })
+
+    test('SBTI - budget equality with past study before 2020, overshoot scenario', () => {
+      testSBTiBudgetEquality(
+        2018,
+        2024,
+        1000,
+        1100,
+        SBTI_REDUCTION_RATE_15,
+        createPastStudies([2018, 1000], [2024, 1100]),
+      )
+
+      testSBTiBudgetEquality(
+        2019,
+        2025,
+        1000,
+        1200,
+        SBTI_REDUCTION_RATE_15,
+        createPastStudies([2019, 1000], [2025, 1200]),
+      )
     })
   })
 })
