@@ -1,8 +1,8 @@
 'use server'
 
-import { prismaClient } from '@/db/client'
 import { getStudyById, getStudyByIds } from '@/db/study'
 import {
+  createActionWithRelations,
   createExternalStudy,
   createTransitionPlan,
   createTransitionPlanStudy,
@@ -132,18 +132,7 @@ export const addAction = async (command: AddActionInputCommand) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const { indicators, steps, ...actionData } = command
-    await prismaClient.action.create({
-      data: {
-        ...actionData,
-        ...(indicators && {
-          indicators: { create: indicators.map((ind) => ({ type: ind.type, description: ind.description })) },
-        }),
-        ...(steps && {
-          steps: { create: steps.map((s) => ({ title: s.title, order: s.order })) },
-        }),
-      },
-    })
+    await createActionWithRelations(command)
   })
 
 const isYearAlreadyLinked = async (transitionPlanId: string, year: number) => {

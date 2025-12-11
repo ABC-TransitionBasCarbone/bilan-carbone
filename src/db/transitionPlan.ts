@@ -1,4 +1,8 @@
-import { ActionIndicatorCommand, ActionStepCommand } from '@/services/serverFunctions/transitionPlan.command'
+import {
+  ActionIndicatorCommand,
+  ActionStepCommand,
+  AddActionCommand,
+} from '@/services/serverFunctions/transitionPlan.command'
 import {
   Action,
   ActionIndicator,
@@ -190,6 +194,22 @@ export const hasTransitionPlan = async (studyId: string): Promise<boolean> => {
 }
 
 export const createAction = async (data: Prisma.ActionUncheckedCreateInput) => prismaClient.action.create({ data })
+
+export const createActionWithRelations = async (command: AddActionCommand) => {
+  const { indicators, steps, ...actionData } = command
+
+  return prismaClient.action.create({
+    data: {
+      ...actionData,
+      ...(indicators && {
+        indicators: { create: indicators },
+      }),
+      ...(steps && {
+        steps: { create: steps },
+      }),
+    },
+  })
+}
 
 export const updateAction = async (id: string, data: Prisma.ActionUpdateInput) =>
   prismaClient.action.update({
@@ -451,18 +471,13 @@ export const saveStepsOnAction = async (
   stepsToKeep: ActionStepCommand[],
   stepsToDelete: string[],
 ) => {
-  const reorderedSteps = stepsToKeep.map((step, index) => ({
-    ...step,
-    order: index,
-  }))
-
   await prismaClient.$transaction([
     prismaClient.actionStep.deleteMany({
       where: {
         id: { in: stepsToDelete },
       },
     }),
-    ...reorderedSteps.map((step) => {
+    ...stepsToKeep.map((step) => {
       if (step.id) {
         return prismaClient.actionStep.update({
           where: { id: step.id },
