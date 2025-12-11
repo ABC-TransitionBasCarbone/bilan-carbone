@@ -1056,6 +1056,10 @@
         "add": "Add an action",
         "table": {
           "enabled": "Enabled",
+          "enabledGlossaryIconLabel": "Enabling and disabling my actions",
+          "enabledGlossaryTitle": "Enabling and disabling my actions",
+          "enabledGlossaryDescription": "The reductions linked to actions you have enabled are taken into account on the <trajectoryLink>Reduction trajectories</trajectoryLink> page in your bottom-up trajectory. Reductions linked to disabled actions will not be visible. Enabling or disabling actions allows you to consider different scenarios to achieve your reduction objectives.",
+          "close": "Close",
           "title": "Title",
           "priority": "Priority",
           "actionType": "Action type",

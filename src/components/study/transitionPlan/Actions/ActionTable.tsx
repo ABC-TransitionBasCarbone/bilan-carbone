@@ -2,11 +2,12 @@
 
 import BaseTable from '@/components/base/Table'
 import { TableActionButton } from '@/components/base/TableActionButton'
+import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import { ActionWithIndicators } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { toggleActionEnabled } from '@/services/serverFunctions/transitionPlan'
 import { getYearFromDateStr } from '@/utils/time'
-import { Switch } from '@mui/material'
+import { Link, Switch } from '@mui/material'
 import { ActionPotentialDeduction, StudyResultUnit } from '@prisma/client'
 import {
   ColumnDef,
@@ -24,9 +25,10 @@ interface Props {
   openEditModal: (action: ActionWithIndicators) => void
   openDeleteModal: (action: ActionWithIndicators) => void
   canEdit: boolean
+  studyId: string
 }
 
-const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit }: Props) => {
+const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId }: Props) => {
   const t = useTranslations('study.transitionPlan.actions.table')
   const tUnit = useTranslations('study.results.units')
   const tCategory = useTranslations('study.transitionPlan.actions.category')
@@ -84,16 +86,38 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit }: Props
     () =>
       [
         {
-          header: t('enabled'),
+          id: 'enabled',
+          header: () => (
+            <div className="flex-cc">
+              <GlossaryIconModal
+                title="enabledGlossaryTitle"
+                iconLabel="enabledGlossaryIconLabel"
+                label="enabled"
+                tModal="study.transitionPlan.actions.table"
+              >
+                <p>
+                  {t.rich('enabledGlossaryDescription', {
+                    trajectoryLink: (children) => (
+                      <Link href={`/etudes/${studyId}/trajectoires`} target="_blank" rel="noreferrer noopener">
+                        {children}
+                      </Link>
+                    ),
+                  })}
+                </p>
+              </GlossaryIconModal>
+            </div>
+          ),
           accessorKey: 'enabled',
           cell: ({ getValue, row }) => (
-            <Switch
-              checked={getValue<boolean>()}
-              onChange={(event) => handleToggleEnabled(row.original.id, event.target.checked)}
-              color="primary"
-              size="small"
-              disabled={!canEdit}
-            />
+            <div className="flex-cc">
+              <Switch
+                checked={getValue<boolean>()}
+                onChange={(event) => handleToggleEnabled(row.original.id, event.target.checked)}
+                color="primary"
+                size="small"
+                disabled={!canEdit}
+              />
+            </div>
           ),
         },
         {
@@ -130,7 +154,17 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit }: Props
             ),
         },
       ] as ColumnDef<ActionWithIndicators>[],
-    [t, getImplementationPeriod, getPotential, canEdit, handleToggleEnabled, tCategory, openEditModal, openDeleteModal],
+    [
+      t,
+      getImplementationPeriod,
+      getPotential,
+      studyId,
+      canEdit,
+      handleToggleEnabled,
+      tCategory,
+      openEditModal,
+      openDeleteModal,
+    ],
   )
 
   const table = useReactTable({
