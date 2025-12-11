@@ -1111,6 +1111,15 @@ const calculateBudgetWithObjectivesAndMultiplier = (
   multiplier: number,
 ): number => {
   const trajectory = buildTrajectoryWithObjectivesAndMultiplier(startEmissions, startYear, objectives, multiplier)
+  /**
+   * changes made during the ticket https://github.com/ABC-TransitionBasCarbone/bilan-carbone/issues/2078
+   * before : const endYear = trajectory[trajectory.length - 1].year
+   *
+   * We made this change because tests failed "getObjectivesWithOvershootCompensation - budget equality test"
+   * The new calcul method was wrong because for custom trajectories, the correction was calculated on all years (until 2050) instead of years until the 2nd objective
+   *
+   * Do not use on SBTi trajectories
+   */
   const endYear = objectives[objectives.length - 1].targetYear
 
   return calculateTrajectoryIntegral(trajectory, startYear, endYear)

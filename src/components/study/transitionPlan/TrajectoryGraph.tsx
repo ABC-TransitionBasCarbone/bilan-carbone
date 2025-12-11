@@ -79,6 +79,7 @@ const TrajectoryGraph = ({
 
   const mapDataToYears = useCallback(
     (dataPoints: TrajectoryDataPoint[], customTrajectory = false) => {
+      // usefull for customTrajectory only
       const maxYear = customTrajectory
         ? Math.min((Math.max(...yearsToDisplay), Math.max(...dataPoints.map((point) => point.year))))
         : Math.max(...yearsToDisplay)
