@@ -58,7 +58,7 @@ export const hasAccessToCreateStudyWithEmissionFactorVersions = isSimplified
 
 export const showResultsInfoText = isCut
 
-export const notDisplayingStudyRightModalForAddingContributors = isClickson
+export const displayingStudyRightModalForAddingContributors = (environment: Environment) => !isClickson(environment)
 
 export const hasHomeAlert = isSimplified
 

@@ -7,7 +7,7 @@ import { FormTextField } from '@/components/form/TextField'
 import { getOrganizationVersionAccounts } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { notDisplayingStudyRightModalForAddingContributors } from '@/services/permissions/environment'
+import { displayingStudyRightModalForAddingContributors } from '@/services/permissions/environment'
 import { newStudyContributor } from '@/services/serverFunctions/study'
 import {
   NewStudyContributorCommand,
@@ -49,7 +49,7 @@ const NewStudyContributorForm = ({ study, accounts }: Props) => {
   const onSubmit = useCallback(
     async (command: NewStudyContributorCommand) => {
       if (
-        (environment && notDisplayingStudyRightModalForAddingContributors(environment)) ||
+        (environment && !displayingStudyRightModalForAddingContributors(environment)) ||
         otherOrganizationVersion ||
         accounts.some((account) => account.user.email === form.getValues('email'))
       ) {

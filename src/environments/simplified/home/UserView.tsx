@@ -34,16 +34,9 @@ const UserView = ({ account }: Props) => {
 
   return (
     <div className={styles.block}>
-      <Box component="section" className={classNames('flex-col', 'h100', 'gapped15')}>
+      <Box component="section" className="flex-col h100 gapped15">
         <StyledBox
-          className={classNames(
-            'align-center',
-            'p2',
-            'gapped1',
-            'hauto',
-            styles.styledBoxContainer,
-            styles.styledBoxInfo,
-          )}
+          className={classNames('align-center p2 gapped1 hauto', styles.styledBoxContainer, styles.styledBoxInfo)}
         >
           <Box className={classNames('flex-col', styles.leftContent)}>
             <Typography data-testid="title" variant="h4" className={styles.titleInBox}>
@@ -57,8 +50,8 @@ const UserView = ({ account }: Props) => {
             ))}
           </Box>
           <Box className="flex align-center">
-            <Link href="/organisations" className={classNames(styles.startButtonLink)}>
-              <Box className={classNames('flex-cc', 'px2', 'py1', styles.startButton)} component="button">
+            <Link href="/organisations" className={styles.startButtonLink}>
+              <Box className={classNames('flex-cc px2 py1', styles.startButton)} component="button">
                 <Typography variant="h6" className={styles.startButtonText}>
                   {t('start')}
                 </Typography>
@@ -66,22 +59,22 @@ const UserView = ({ account }: Props) => {
             </Link>
           </Box>
         </StyledBox>
-        <Box className={classNames('flex', 'gapped1', 'mt1')}>
+        <Box className="flex gapped1 mt1">
           <LinkCard
             href={`/organisations/${account.organizationVersionId}/modifier`}
-            icon={<CinemaOutlinedIcon className={styles.icon} />}
+            icon={<DynamicComponent defaultComponent={<CinemaOutlinedIcon className={styles.icon} />} />}
             title={navigation('sites.title')}
             message={navigation('sites.message')}
           />
           <LinkCard
             href="/equipe"
-            icon={<DynamicComponent defaultComponent={<Groups2OutlinedIcon className={styles.icon} />} />}
+            icon={<Groups2OutlinedIcon className={styles.icon} />}
             title={navigation('collaborators.title')}
             message={navigation('collaborators.message')}
           />
           <LinkCard
             href="/organisations"
-            icon={<DynamicComponent defaultComponent={<DiagramOutlinedIcon className={styles.icon} />} />}
+            icon={<DiagramOutlinedIcon className={styles.icon} />}
             title={navigation('footprints.title')}
             message={navigation('footprints.message')}
           />
