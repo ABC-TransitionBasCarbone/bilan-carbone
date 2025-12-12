@@ -21,8 +21,13 @@ général . nombre de films programmés:
   par défaut: 1
   unité: film
 
+# TODO: Set values for these questions from cinema database
 général . distance depuis paris:
   question: Distance depuis Paris
   par défaut: 100
   unité: km
-  # TODO: How to deal with it ?
+
+général . écrans:
+  question: Nombre d'écrans / salles
+  par défaut: 10
+  unité: écran

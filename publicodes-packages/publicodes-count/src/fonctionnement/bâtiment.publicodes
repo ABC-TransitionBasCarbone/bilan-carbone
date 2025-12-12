@@ -160,7 +160,7 @@ fonctionnement . bâtiment . autre activité:
   unité: kgCO2e
   par défaut: 0
   note: |
-    TODO: Pas d'émissions associées ?
+    Pas d'émissions associées pour le moment car utile pour la partie actions.
   avec:
     surface:
       question: Quelle est la surface totale du bâtiment (cinéma inclus) ?
@@ -183,8 +183,6 @@ fonctionnement . bâtiment . parking:
       - (1 an / amortissement)
   par défaut: 0
   unité: kgCO2e
-  note: |
-    Il semble que le calcul n'est pas bon actuellement en ligne. Il manque la surface par place.
   avec:
     nombre de places:
       question: Si oui, de combien de places ?
