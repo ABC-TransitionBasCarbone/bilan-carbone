@@ -339,10 +339,10 @@ const computeFutureValue = (
 
   // Interpolate the value between study start year and 2020 based on past study before 2020 and actual study included in the historical points
   if (historicalPoints.length > 0 && studyStartYear < thresholdYear) {
-    const futureHistoricalPoints = historicalPoints.filter((p) => p.year >= thresholdYear)
+    const historicalPointsAfterThresholdYear = historicalPoints.filter((p) => p.year >= thresholdYear)
 
-    if (futureHistoricalPoints.length > 0) {
-      const earliestFuturePoint = futureHistoricalPoints.reduce((earliest, current) =>
+    if (historicalPointsAfterThresholdYear.length > 0) {
+      const earliestFuturePoint = historicalPointsAfterThresholdYear.reduce((earliest, current) =>
         current.year < earliest.year ? current : earliest,
       )
 
@@ -873,12 +873,15 @@ export const calculateTrajectoriesWithHistory = ({
     const referenceStudyYear = referenceStudyData.year
     const referenceEmissions = referenceStudyData.totalCo2
 
-    // Including the current study to interpolate the value in 2020 when the trajectories start
+    // Including the current study to interpolate the value in 2020 for reference trajectories that don't have this info
     const pastStudiesWithCurrentStudy =
       referenceStudyYear < SNBC_SBTI_REDUCTION_START_YEAR &&
       studyStartYear > SNBC_SBTI_REDUCTION_START_YEAR &&
       pastStudies.length > 0 // If there are no past studies, we don't need to include the current study
-        ? [...pastStudies, { id: study.id, name: study.name, type: 'linked' as const, year: studyStartYear, totalCo2 }]
+        ? [
+            ...pastStudies,
+            { id: study.id, name: study.name, type: 'linked' as PastStudy['type'], year: studyStartYear, totalCo2 },
+          ]
         : pastStudies
 
     let sbti15Data: TrajectoryData | null = null
