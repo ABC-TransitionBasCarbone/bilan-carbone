@@ -10,7 +10,6 @@ export interface PublicodesFormOptions<S extends Situation<string>> {
   studySiteId: string
   modelVersion: string
   engine: Engine
-  mergeSituation?: (loadedSituation: S) => S
   autoSaveEnabled?: boolean
   autoSaveDebounceMs?: number
   syncIntervalMs?: number
@@ -31,7 +30,6 @@ export function usePublicodesForm<S extends Situation<string>>({
   studySiteId,
   modelVersion,
   engine,
-  mergeSituation,
   autoSaveEnabled = true,
   autoSaveDebounceMs = 1500,
   syncIntervalMs = 5000,
@@ -53,13 +51,12 @@ export function usePublicodesForm<S extends Situation<string>>({
   const setFullSituation = useCallback(
     (loadedSituation: JsonValue | undefined, timestamp?: Date) => {
       const situation = (loadedSituation ?? {}) as S
-      const finalSituation = mergeSituation ? mergeSituation(situation) : situation
 
-      engine.setSituation(finalSituation as Situation<string>)
-      setSituation(finalSituation)
+      engine.setSituation(situation as Situation<string>)
+      setSituation(situation)
       lastSyncedAt.current = timestamp ?? new Date()
     },
-    [engine, mergeSituation],
+    [engine],
   )
 
   useEffect(() => {

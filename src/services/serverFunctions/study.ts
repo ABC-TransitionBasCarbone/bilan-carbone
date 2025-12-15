@@ -35,6 +35,7 @@ import {
   OrganizationVersionWithOrganization,
 } from '@/db/organization'
 import { getAnswerByQuestionId, getQuestionByIdIntern, getQuestionsByIdIntern } from '@/db/question'
+import { upsertSituationFields } from '@/db/situation'
 import {
   clearEmissionSourceEmissionFactor,
   countOrganizationStudiesFromOtherUsers,
@@ -70,6 +71,7 @@ import { getTransitionPlanByStudyId } from '@/db/transitionPlan'
 import { addUser, getUserApplicationSettings, getUserByEmail, getUserSourceById, UserWithAccounts } from '@/db/user'
 import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
+import { studySiteToSituation } from '@/services/studySiteToSituation'
 import { getNestedValue, groupBy } from '@/utils/array'
 import { mapCncToStudySite } from '@/utils/cnc'
 import { calculateDistanceFromParis } from '@/utils/distance'
@@ -527,6 +529,7 @@ export const changeStudyCinema = async (studySiteId: string, cncId: string, data
     await updateNumberOfProgrammedFilms({ cncId, numberOfProgrammedFilms })
     await updateStudyOpeningHours(studySiteId, openingHours, openingHoursHoliday)
     await updateStudySiteData(studySiteId, finalUpdateData)
+    await updateSituationWithStudySiteData(studySiteId, finalUpdateData, informations.user.environment)
 
     // Recalculate emissions for affected emissions if dependent fields changed
     if (changedFields.length > 0 && informations.user.organizationVersionId) {
@@ -534,6 +537,18 @@ export const changeStudyCinema = async (studySiteId: string, cncId: string, data
       await recalculateEmissionsForQuestions(study.id, informations.user.organizationVersionId, affectedQuestionIds)
     }
   })
+
+async function updateSituationWithStudySiteData(
+  studySiteId: string,
+  siteDependentFields: Record<SiteDependentField, number | null | undefined>,
+  environment: Environment,
+) {
+  const situationUpdates = studySiteToSituation(environment, siteDependentFields)
+
+  if (Object.keys(situationUpdates).length > 0) {
+    await upsertSituationFields(studySiteId, situationUpdates)
+  }
+}
 
 export const hasActivityData = async (
   studyId: string,

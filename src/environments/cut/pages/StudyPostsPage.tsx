@@ -72,7 +72,7 @@ const StudyPostsPageCut = ({ post, currentSubPost, study, studySiteId }: Props) 
   const isLastStep = activeStep >= subPosts.length - 1
 
   return (
-    <CutPublicodesProvider studyId={study.id} studySiteId={studySiteId} study={study}>
+    <CutPublicodesProvider studyId={study.id} studySiteId={studySiteId}>
       <Block
         title={tPost(post)}
         as="h1"

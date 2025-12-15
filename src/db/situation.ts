@@ -9,6 +9,19 @@ export async function getSituationByStudySite(studySiteId: string): Promise<Situ
   })
 }
 
+export async function upsertSituationFields(
+  studySiteId: string,
+  fieldsToUpdate: Record<string, unknown>,
+): Promise<void> {
+  const existing = await getSituationByStudySite(studySiteId)
+  if (!existing) return
+
+  const currentSituation = (existing.situation ?? {}) as Record<string, unknown>
+  const updatedSituation = { ...currentSituation, ...fieldsToUpdate }
+
+  await upsertSituation(studySiteId, updatedSituation as InputJsonValue, existing.modelVersion)
+}
+
 export async function upsertSituation(
   studySiteId: string,
   situation: InputJsonValue,

@@ -3,13 +3,11 @@
 import { useToast } from '@/components/base/ToastProvider'
 import { createPublicodesFormContext } from '@/components/publicodes-form/PublicodesFormContext'
 import { PUBLICODES_COUNT_VERSION } from '@/constants/versions'
-import { FullStudy } from '@/db/study'
 import { useBeforeUnload } from '@/hooks/useBeforeUnload'
 import { usePublicodesForm } from '@/hooks/usePublicodesForm'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useCallback, useMemo } from 'react'
 import { getCutEngine } from '../publicodes/cut-engine'
-import { studySiteToSituation } from '../publicodes/studySiteToSituation'
 import { CutSituation } from '../publicodes/types'
 
 const { PublicodesFormProvider, usePublicodesFormContext: useCutPublicodes } =
@@ -19,22 +17,12 @@ export interface CutPublicodesProviderProps {
   children: ReactNode
   studyId: string
   studySiteId: string
-  study: FullStudy
 }
 
-export function CutPublicodesProvider({ children, studyId, studySiteId, study }: CutPublicodesProviderProps) {
+export function CutPublicodesProvider({ children, studyId, studySiteId }: CutPublicodesProviderProps) {
   const t = useTranslations('saveStatus')
   const { showSuccessToast } = useToast()
   const engine = useMemo(() => getCutEngine().shallowCopy(), [])
-
-  const studySite = useMemo(() => study.sites.find((site) => site.id === studySiteId), [study.sites, studySiteId])
-  const mergeSituation = useMemo(
-    () => (loadedSituation: CutSituation) => ({
-      ...loadedSituation,
-      ...studySiteToSituation(studySite),
-    }),
-    [studySite],
-  )
 
   const handleSyncUpdate = useCallback(() => {
     showSuccessToast(t('syncedFromOtherUser'))
@@ -45,7 +33,6 @@ export function CutPublicodesProvider({ children, studyId, studySiteId, study }:
     studySiteId,
     modelVersion: PUBLICODES_COUNT_VERSION,
     engine,
-    mergeSituation,
     syncIntervalMs: 5000,
     onSyncUpdate: handleSyncUpdate,
   })
