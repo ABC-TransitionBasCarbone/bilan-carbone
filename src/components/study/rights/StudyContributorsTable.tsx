@@ -8,7 +8,7 @@ import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { getEnvVar } from '@/lib/environment'
-import { BCPost, Post, subPostsByPost } from '@/services/posts'
+import { Post, subPostsByPost } from '@/services/posts'
 import { deleteStudyContributor } from '@/services/serverFunctions/study'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
@@ -69,7 +69,7 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
 
   const router = useRouter()
 
-  const allPosts = useMemo(() => Object.values(BCPost), [])
+  const allPosts = useMemo(() => Object.values(Post), [])
 
   const toggleRowExpansion = useCallback((email: string) => {
     setExpandedRows((prev) => {
