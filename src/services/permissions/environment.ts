@@ -12,8 +12,6 @@ export const isTilt = (environment: Environment) => environment === TILT
 const isCut = (environment: Environment) => environment === CUT
 const isClickson = (environment: Environment) => environment === CLICKSON
 
-export const hasAccessToEmissionFactor = isAdvanced
-
 export const hasAccessToSettings = isAdvanced
 
 export const hasAccessToActualityCards = isBC

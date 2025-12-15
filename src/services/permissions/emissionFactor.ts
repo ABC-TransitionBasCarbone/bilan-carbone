@@ -1,7 +1,7 @@
 import { AccountWithUser } from '@/db/account'
 import { getOrganizationVersionById } from '@/db/organization'
 import { hasActiveLicence } from '@/utils/organization'
-import { EmissionFactor, Environment, Import, Level } from '@prisma/client'
+import { EmissionFactor, Import } from '@prisma/client'
 import { isFromEmissionFactorOrganization } from '../serverFunctions/emissionFactor'
 
 export const canReadEmissionFactor = (
@@ -24,6 +24,3 @@ export const canEditEmissionFactor = async (id: string) => {
   const emissionFactorRequest = await isFromEmissionFactorOrganization(id)
   return emissionFactorRequest.success && !!emissionFactorRequest.data
 }
-
-export const hasAccessToEmissionFactors = (environment: Environment, userLevel: Level | null) =>
-  environment !== Environment.TILT || userLevel

@@ -1,7 +1,7 @@
 import NavbarButton from '@/components/navbar/NavbarButton'
 import NavbarLink from '@/components/navbar/NavbarLink'
 import NavbarOrganizationMenu from '@/components/navbar/NavbarOrganizationMenu'
-import { hasAccessToEmissionFactors } from '@/services/permissions/emissionFactor'
+import { hasAccessToEmissionFactor } from '@/services/permissions/environmentExtended'
 import { isAdmin } from '@/utils/user'
 import { Box, MenuItem } from '@mui/material'
 import { Role } from '@prisma/client'
@@ -60,7 +60,7 @@ const OrganizationNavbar = ({ user, hasFormation }: Props) => {
           </NavbarOrganizationMenu>
         </Box>
       )}
-      {hasAccessToEmissionFactors(user.environment, user.level) && (
+      {hasAccessToEmissionFactor(user.environment, user.level) && (
         <NavbarButton href="/facteurs-d-emission" data-testid="navbar-facteur-demission">
           <span className={styles.big}>{t('factors')}</span>
           <span className={styles.small}>{t('fe')}</span>
