@@ -7,7 +7,7 @@ interface Props {
   user: UserSession
 }
 
-const OrganizationNavbar = ({ user }: Props) => {
+const TopLeftNavBar = ({ user }: Props) => {
   const t = useTranslations('navigation')
   return (
     <>
@@ -20,4 +20,4 @@ const OrganizationNavbar = ({ user }: Props) => {
   )
 }
 
-export default OrganizationNavbar
+export default TopLeftNavBar

@@ -1,8 +1,8 @@
 'use client'
 
-import OrganizationNavbar from '@/components/navbar/OrganizationNavbar'
+import TopLeftNavBar from '@/components/navbar/TopLeftNavBar'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import CutOrganizationNavbar from '@/environments/cut/navbar/OrganizationNavbar'
+import CutTopLeftNavBar from '@/environments/cut/navbar/TopLeftNavBar'
 import { signOutEnv } from '@/services/auth'
 import { hasAccessToMethodology, hasAccessToSettings, isTilt } from '@/services/permissions/environment'
 import { hasAccessToFormation } from '@/services/permissions/formations'
@@ -70,9 +70,9 @@ const Navbar = ({ children, user, environment }: Props) => {
             </NavbarLink>
             <DynamicComponent
               environmentComponents={{
-                [Environment.CUT]: <CutOrganizationNavbar user={user} />,
+                [Environment.CUT]: <CutTopLeftNavBar user={user} />,
               }}
-              defaultComponent={<OrganizationNavbar user={user} hasFormation={hasFormation} />}
+              defaultComponent={<TopLeftNavBar user={user} hasFormation={hasFormation} />}
             />
           </Box>
           <div className="flex gapped1">

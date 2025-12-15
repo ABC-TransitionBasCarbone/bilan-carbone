@@ -15,7 +15,7 @@ interface Props {
   hasFormation: boolean
 }
 
-const OrganizationNavbar = ({ user, hasFormation }: Props) => {
+const TopLeftNavBar = ({ user, hasFormation }: Props) => {
   const t = useTranslations('navigation')
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
@@ -72,4 +72,4 @@ const OrganizationNavbar = ({ user, hasFormation }: Props) => {
   )
 }
 
-export default OrganizationNavbar
+export default TopLeftNavBar
