@@ -7,11 +7,12 @@ interface ToastData {
   id: string
   message: string
   type: 'success' | 'error'
+  duration?: number
 }
 
 interface ToastContextType {
-  showErrorToast: (message: string) => void
-  showSuccessToast: (message: string) => void
+  showErrorToast: (message: string, duration?: number) => void
+  showSuccessToast: (message: string, duration?: number) => void
 }
 
 const ToastContext = createContext<ToastContextType | undefined>(undefined)
@@ -23,16 +24,16 @@ interface ToastProviderProps {
 export const ToastProvider = ({ children }: ToastProviderProps) => {
   const [toasts, setToasts] = useState<ToastData[]>([])
 
-  const showErrorToast = (message: string) => {
+  const showErrorToast = (message: string, duration?: number) => {
     const id = `error-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
-    const newToast: ToastData = { id, message, type: 'error' }
+    const newToast: ToastData = { id, message, type: 'error', duration }
 
     setToasts((prev) => [...prev, newToast])
   }
 
-  const showSuccessToast = (message: string) => {
+  const showSuccessToast = (message: string, duration?: number) => {
     const id = `success-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
-    const newToast: ToastData = { id, message, type: 'success' }
+    const newToast: ToastData = { id, message, type: 'success', duration }
 
     setToasts((prev) => [...prev, newToast])
   }
@@ -53,6 +54,7 @@ export const ToastProvider = ({ children }: ToastProviderProps) => {
           message={toast.message}
           color={toast.type}
           toastKey={toast.id}
+          duration={toast.duration}
         />
       ))}
     </ToastContext.Provider>

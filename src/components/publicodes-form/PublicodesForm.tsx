@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 import { getEvaluatedFormLayout } from './layouts/evaluatedFormLayout'
 import { FormLayout } from './layouts/formLayout'
 import PublicodesQuestion from './PublicodesQuestion'
-import styles from './styles/DynamicForm.module.css'
+import styles from './styles/PublicodesForm.module.css'
 import {
   areRulesReferencedInApplicability,
   evaluatedLayoutIsApplicable,
