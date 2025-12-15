@@ -3,7 +3,6 @@ import {
   getAllowedStudiesByAccount,
   getAllowedStudiesByUserAndOrganization,
   getExternalAllowedStudiesByUser,
-  getSimplifiedAllowedStudiesByUserAndOrganization,
 } from '@/db/study'
 import { canCreateAStudy } from '@/services/permissions/study'
 import { hasActiveLicence } from '@/utils/organization'
@@ -32,9 +31,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
   const t = await getTranslations('study')
 
   const studies = organizationVersionId
-    ? simplified
-      ? await getSimplifiedAllowedStudiesByUserAndOrganization(user, organizationVersionId)
-      : await getAllowedStudiesByUserAndOrganization(user, organizationVersionId)
+    ? await getAllowedStudiesByUserAndOrganization(user, organizationVersionId, simplified)
     : isCR
       ? await getExternalAllowedStudiesByUser(user)
       : await getAllowedStudiesByAccount(user)

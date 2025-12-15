@@ -137,6 +137,7 @@ model Study {
   realizationStartDate DateTime?       @map("realization_start_date") @db.Date
   realizationEndDate   DateTime?       @map("realization_end_date") @db.Date
   level                Level
+  simplified           Boolean         @default(false)
   resultsUnit          StudyResultUnit @default(T) @map("results_unit")
   exports              StudyExport[]
 
@@ -340,7 +341,7 @@ model StudySite {
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-  
+
   superficy     Float?
   studentNumber Int?   @map("student_number")
 
