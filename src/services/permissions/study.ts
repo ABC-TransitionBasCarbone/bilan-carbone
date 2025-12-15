@@ -11,7 +11,7 @@ import { dbActualizedAuth } from '../auth'
 import { isDeactivableFeatureActiveForEnvironment } from '../serverFunctions/deactivableFeatures'
 import { getUserActiveAccounts } from '../serverFunctions/user'
 import { hasSufficientLevel } from '../study'
-import { hasAccessToDuplicateStudy } from './environment'
+import { hasAccessToDuplicateStudy, isTilt } from './environment'
 import { isInOrgaOrParentFromId } from './organization'
 
 export const isAdminOnStudyOrga = (
@@ -73,9 +73,8 @@ export const filterAllowedStudies = async (user: UserSession, studies: Study[]) 
   return allowedStudies.filter((study) => study !== null)
 }
 
-export const canCreateAStudy = (user: UserSession) => {
-  return user.environment === Environment.CUT || (!!user.level && !!user.organizationVersionId)
-}
+export const canCreateAStudy = (user: UserSession) =>
+  user.environment === Environment.CUT || (!!user.level && !!user.organizationVersionId) || isTilt(user.environment)
 
 const canCreateSpecificStudyCommon = async (accountId: string, organizationVersionId: string) => {
   const dbAccount = await getAccountById(accountId)

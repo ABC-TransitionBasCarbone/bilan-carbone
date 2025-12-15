@@ -17,6 +17,7 @@ import NavbarLink from './NavbarLink'
 import NavbarOrganizationMenu from './NavbarOrganizationMenu'
 
 import { signOutEnv } from '@/services/auth'
+import { hasAccessToSimplifiedStudies } from '@/services/permissions/environment'
 import { hasAccessToStudies } from '@/services/permissions/environmentExtended'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
@@ -123,6 +124,13 @@ const Navbar = ({ children, user, environment }: Props) => {
                         <MenuItem onClick={handleClose}>
                           <NavbarLink data-testid="link-organization" href="/organisations" onClick={handleClose}>
                             {t('organizations')}
+                          </NavbarLink>
+                        </MenuItem>
+                      )}
+                      {hasAccessToSimplifiedStudies(user.environment) && (
+                        <MenuItem onClick={handleClose}>
+                          <NavbarLink data-testid="link-organization" href="/mes-empreintes" onClick={handleClose}>
+                            {t('footprints')}
                           </NavbarLink>
                         </MenuItem>
                       )}

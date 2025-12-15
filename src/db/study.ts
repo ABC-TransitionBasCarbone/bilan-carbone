@@ -474,6 +474,19 @@ export const getAllowedStudiesByUserAndOrganization = async (user: UserSession, 
   return filterAllowedStudies(user, studies)
 }
 
+export const getSimplifiedAllowedStudiesByUserAndOrganization = async (
+  user: UserSession,
+  organizationVersionId: string,
+) => {
+  console.log('organizationVersionId : ', organizationVersionId)
+
+  if (!user.organizationVersionId) {
+    return []
+  }
+
+  return []
+}
+
 export const getStudyById = async (id: string, organizationVersionId: string | null, tx?: Prisma.TransactionClient) => {
   const client = tx ?? prismaClient
   const study = await client.study.findUnique({

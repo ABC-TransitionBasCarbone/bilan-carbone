@@ -3,6 +3,7 @@ import {
   getAllowedStudiesByAccount,
   getAllowedStudiesByUserAndOrganization,
   getExternalAllowedStudiesByUser,
+  getSimplifiedAllowedStudiesByUserAndOrganization,
 } from '@/db/study'
 import { canCreateAStudy } from '@/services/permissions/study'
 import { hasActiveLicence } from '@/utils/organization'
@@ -24,13 +25,16 @@ interface Props {
   user: UserSession
   organizationVersionId?: string
   isCR?: boolean
+  simplified: boolean
 }
 
-const StudiesContainer = async ({ user, organizationVersionId, isCR }: Props) => {
+const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified }: Props) => {
   const t = await getTranslations('study')
 
   const studies = organizationVersionId
-    ? await getAllowedStudiesByUserAndOrganization(user, organizationVersionId)
+    ? simplified
+      ? await getSimplifiedAllowedStudiesByUserAndOrganization(user, organizationVersionId)
+      : await getAllowedStudiesByUserAndOrganization(user, organizationVersionId)
     : isCR
       ? await getExternalAllowedStudiesByUser(user)
       : await getAllowedStudiesByAccount(user)
@@ -47,7 +51,11 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR }: Props) =>
   const mainStudies = isOrgaHomePage ? orgaStudies : studies
   const collaborations = isOrgaHomePage ? otherStudies : []
 
-  const creationUrl = organizationVersionId ? `/organisations/${organizationVersionId}/etudes/creer` : '/etudes/creer'
+  let creationUrl = organizationVersionId ? `/organisations/${organizationVersionId}/etudes/creer` : '/etudes/creer'
+
+  if (simplified) {
+    creationUrl += '?simplified=true'
+  }
 
   const mainStudyOrganizationVersionId = organizationVersionId ?? user.organizationVersionId
 
@@ -73,15 +81,15 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR }: Props) =>
       {!!collaborations.length && <Studies studies={collaborations} canAddStudy={false} user={user} collaborations />}
     </>
   ) : canCreateAStudy(user) && !isCR ? (
-    <MUIBox component="section">
+    <MUIBox component="section" className="mt1">
       <div className="justify-center">
         <Box className={classNames(styles.firstStudyCard, 'flex-col align-center')}>
           <Image src="/img/orga.png" alt="orga.png" width={177} height={119} />
-          <h5>{t('createFirstStudy')}</h5>
-          <p>{t('firstStudyMessage')}</p>
+          <h5>{t(simplified ? 'createFirstSimplifiedStudy' : 'createFirstStudy')}</h5>
+          <p>{t(simplified ? 'firstSimplifiedStudyMessage' : 'firstStudyMessage')}</p>
           <LinkButton data-testid="new-study" className={classNames('w100 justify-center mb1')} href={creationUrl}>
             <AddIcon />
-            {t('createFirstStudy')}
+            {t(simplified ? 'createFirstSimplifiedStudy' : 'createFirstStudy')}
           </LinkButton>
         </Box>
       </div>
