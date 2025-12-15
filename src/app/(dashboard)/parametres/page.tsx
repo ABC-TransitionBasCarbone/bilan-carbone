@@ -4,13 +4,13 @@ import Block from '@/components/base/Block'
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import NotFound from '@/components/pages/NotFound'
 import SettingsPage from '@/components/pages/Settings'
-import { hasAccessToSettings } from '@/services/permissions/environment'
+import { hasAccessToSettings } from '@/services/permissions/environmentExtended'
 import { useTranslations } from 'next-intl'
 
 const Settings = ({ user }: UserSessionProps) => {
   const t = useTranslations('settings')
 
-  if (!hasAccessToSettings(user.environment)) {
+  if (!hasAccessToSettings(user.environment, user.level)) {
     return <NotFound />
   }
   return (

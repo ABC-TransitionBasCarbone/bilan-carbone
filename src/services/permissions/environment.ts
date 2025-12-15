@@ -12,8 +12,6 @@ export const isTilt = (environment: Environment) => environment === TILT
 const isCut = (environment: Environment) => environment === CUT
 const isClickson = (environment: Environment) => environment === CLICKSON
 
-export const hasAccessToSettings = isAdvanced
-
 export const hasAccessToActualityCards = isBC
 
 export const hasAccessToDownloadStudyEmissionSourcesButton = isAdvanced
@@ -63,8 +61,5 @@ export const hasHomeAlert = isSimplified
 export const hasAccessToAllLocales = isClickson
 
 export const hasAccessToSimplifiedEmissionAnalysis = isClickson
-
-export const hasAccessToMethodology = (environment: Environment) =>
-  ([BC, TILT, CLICKSON] as Environment[]).includes(environment)
 
 export const hasAccessToStudyCreation = isSimplified

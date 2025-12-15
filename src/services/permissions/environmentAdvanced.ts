@@ -8,3 +8,9 @@ export const hasAccessToEmissionFactors = (environment: Environment, userLevel: 
 
 export const hasAccessToStudies = (environment: Environment, userLevel: Level | null) =>
   ([BC, CUT, CLICKSON] as Environment[]).includes(environment) || (environment === TILT && !!userLevel)
+
+export const hasAccessToSettings = (environment: Environment, userLevel: Level | null) =>
+  environment === BC || (environment === TILT && !!userLevel)
+
+export const hasAccessToMethodology = (environment: Environment, userLevel: Level | null) =>
+  ([BC, CLICKSON] as Environment[]).includes(environment) || (environment === TILT && !!userLevel)
