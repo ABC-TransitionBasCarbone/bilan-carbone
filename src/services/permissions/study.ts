@@ -5,7 +5,7 @@ import { FullStudy, getStudyById } from '@/db/study'
 import { getAccountByIdWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
 import { canEditOrganizationVersion, hasActiveLicence, isAdminOnOrga, isInOrgaOrParent } from '@/utils/organization'
 import { getAccountRoleOnStudy, getDuplicableEnvironments, hasEditionRights } from '@/utils/study'
-import { DeactivatableFeature, Environment, Level, Prisma, Study, StudyRole, User } from '@prisma/client'
+import { DeactivatableFeature, Environment, Level, Prisma, Role, Study, StudyRole, User } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { dbActualizedAuth } from '../auth'
 import { isDeactivableFeatureActiveForEnvironment } from '../serverFunctions/deactivableFeatures'
@@ -74,7 +74,9 @@ export const filterAllowedStudies = async (user: UserSession, studies: Study[]) 
 }
 
 export const canCreateAStudy = (user: UserSession) =>
-  user.environment === Environment.CUT || (!!user.level && !!user.organizationVersionId) || isTilt(user.environment)
+  user.environment === Environment.CUT ||
+  (!!user.level && !!user.organizationVersionId) ||
+  (isTilt(user.environment) && user.role !== Role.DEFAULT)
 
 const canCreateSpecificStudyCommon = async (accountId: string, organizationVersionId: string) => {
   const dbAccount = await getAccountById(accountId)
