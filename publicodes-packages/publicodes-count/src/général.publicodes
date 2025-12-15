@@ -3,31 +3,25 @@ général:
 
 général . nombre séances:
   question: Nombre de séances
-  par défaut: 1
   unité: séance
 
 général . nombre entrées:
   question: Nombre d'entrées
-  par défaut: 1
   unité: entrée
 
 général . nombre de jours ouverture:
   question: Nombre de jours d'ouverture
-  par défaut: 1
   unité: jour
 
 général . nombre de films programmés:
   question: Nombre de films programmés
-  par défaut: 1
   unité: film
 
 # TODO: Set values for these questions from cinema database
 général . distance depuis paris:
   question: Distance depuis Paris
-  par défaut: 100
   unité: km
 
 général . écrans:
   question: Nombre d'écrans / salles
-  par défaut: 10
   unité: écran
