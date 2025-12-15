@@ -17,7 +17,7 @@ import NavbarLink from './NavbarLink'
 import NavbarOrganizationMenu from './NavbarOrganizationMenu'
 
 import { signOutEnv } from '@/services/auth'
-import { hasAccessToStudies } from '@/services/permissions/study'
+import { hasAccessToStudies } from '@/services/permissions/environmentExtended'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
