@@ -72,3 +72,5 @@ export const hasAccessToStudyHomePage = isAdvanced
 export const hasAccessToSimplifiedStudies = (env: Environment) => {
   return isSimplified(env) || isTilt(env)
 }
+
+export const hasReaderRoleOnStudyAsContributor = isClickson

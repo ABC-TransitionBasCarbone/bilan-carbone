@@ -123,6 +123,25 @@ const canUpdateEmissionSourceBC = async (
 const canUpdateEmissionSourceCUT = (account: AccountWithUser, emissionSource: StudyEmissionSource) =>
   canCreateEmissionSourceCUT(account, emissionSource)
 
+const canUpdateEmissionSourceClickson = async (
+  account: AccountWithUser,
+  emissionSource: StudyEmissionSource,
+  study: FullStudy,
+) => {
+  const canCreateEmissionSource = await canCreateEmissionSourceCUT(account, emissionSource)
+  if (!canCreateEmissionSource) {
+    const contributor = study.contributors.find(
+      (contributor) =>
+        contributor.account.user.email === account.user.email && contributor.subPost === emissionSource.subPost,
+    )
+
+    if (!contributor) {
+      return false
+    }
+    return true
+  }
+}
+
 export const canUpdateEmissionSource = async (
   account: AccountWithUser,
   emissionSource: StudyEmissionSource,
@@ -137,7 +156,7 @@ export const canUpdateEmissionSource = async (
     case 'CUT':
       return canUpdateEmissionSourceCUT(account, emissionSource)
     case 'CLICKSON':
-      return canUpdateEmissionSourceCUT(account, emissionSource)
+      return canUpdateEmissionSourceClickson(account, emissionSource, study)
     default:
       return false
   }

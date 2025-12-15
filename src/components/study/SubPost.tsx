@@ -13,6 +13,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
 import { Environment, Import, StudyRole, SubPost as SubPostEnum } from '@prisma/client'
 import classNames from 'classnames'
+import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import HelpIcon from '../base/HelpIcon'
@@ -65,6 +66,9 @@ const SubPost = ({
   const { environment } = useAppEnvironmentStore()
   const [emissionFactorsForSubPost, setEmissionFactorsForSubPost] = useState<EmissionFactorWithMetaData[]>([])
   const [expanded, setExpanded] = useState(defaultOpen)
+
+  const { data: session } = useSession()
+
   const importVersions = useMemo(
     () => [
       { id: Import.Manual, source: Import.Manual, name: '' },
@@ -208,6 +212,7 @@ const SubPost = ({
                 caracterisations={caracterisations}
                 emissionFactorsForSubPost={emissionFactorsForSubPost}
                 importVersions={importVersions}
+                isContributor={session?.user && contributors?.includes(session?.user.email)}
               />
             ) : (
               <EmissionSource
@@ -220,6 +225,7 @@ const SubPost = ({
                 caracterisations={caracterisations}
                 emissionFactorsForSubPost={emissionFactorsForSubPost}
                 importVersions={importVersions}
+                isContributor={session?.user && contributors?.includes(session?.user.email)}
               />
             ),
           )}

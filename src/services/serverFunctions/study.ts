@@ -116,6 +116,7 @@ import { auth, dbActualizedAuth } from '../auth'
 import { getCaracterisationsBySubPost } from '../emissionSource'
 import { allowedFlowFileTypes, isAllowedFileType } from '../file'
 import { ALREADY_IN_STUDY, NOT_AUTHORIZED } from '../permissions/check'
+import { hasReaderRoleOnStudyAsContributor } from '../permissions/environment'
 import { isInOrgaOrParentFromId } from '../permissions/organization'
 import {
   canAccessFlowFromStudy,
@@ -1003,6 +1004,17 @@ export const newStudyContributor = async ({ email, subPosts, ...command }: NewSt
       session.user,
       existingUser,
     )
+
+    if (
+      hasReaderRoleOnStudyAsContributor(session.user.environment) &&
+      !studyWithRights.allowedUsers.some((allowedUser) => allowedUser.accountId === accountId)
+    ) {
+      await createUserOnStudy({
+        account: { connect: { id: accountId } },
+        study: { connect: { id: studyWithRights.id } },
+        role: StudyRole.Reader,
+      })
+    }
 
     const selectedSubposts = Object.values(subPosts).reduce((res, subPosts) => res.concat(subPosts), [])
     await createContributorOnStudy(accountId, selectedSubposts, command)
