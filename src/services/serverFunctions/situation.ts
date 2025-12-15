@@ -9,9 +9,10 @@ import { dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { hasEditAccessOnStudy, hasReadAccessOnStudy } from '../permissions/study'
 
-export const loadSituation = async (studySiteId: string) =>
+export const loadSituation = async (studyId: string, studySiteId: string) =>
   withServerResponse('getSituationFromDB', async () => {
-    if (!hasReadAccessOnStudy(studySiteId)) {
+    const hasAccess = await hasReadAccessOnStudy(studyId)
+    if (!hasAccess) {
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -30,7 +31,8 @@ export const saveSituation = async (
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (!hasEditAccessOnStudy(studyId)) {
+    const hasEditAccess = await hasEditAccessOnStudy(studyId, session)
+    if (!hasEditAccess) {
       throw new Error(NOT_AUTHORIZED)
     }
 

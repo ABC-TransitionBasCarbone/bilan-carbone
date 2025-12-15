@@ -9,16 +9,24 @@ export async function getSituationByStudySite(studySiteId: string): Promise<Situ
   })
 }
 
-export async function upsertSituationFields(
+export async function updateSituationFields(
   studySiteId: string,
   fieldsToUpdate: Record<string, unknown>,
 ): Promise<void> {
   const existing = await getSituationByStudySite(studySiteId)
-  if (existing) {
-    const currentSituation = (existing.situation ?? {}) as Record<string, unknown>
-    const updatedSituation = { ...currentSituation, ...fieldsToUpdate }
-    await upsertSituation(studySiteId, updatedSituation as InputJsonValue, existing.modelVersion)
+  if (!existing) {
+    return
   }
+
+  const currentSituation = (existing.situation ?? {}) as Record<string, unknown>
+  const updatedSituation = { ...currentSituation, ...fieldsToUpdate }
+  await prismaClient.situation.update({
+    where: { studySiteId },
+    data: {
+      situation: updatedSituation as InputJsonValue,
+      updatedAt: new Date(),
+    },
+  })
 }
 
 export async function upsertSituation(

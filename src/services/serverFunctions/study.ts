@@ -35,7 +35,7 @@ import {
   OrganizationVersionWithOrganization,
 } from '@/db/organization'
 import { getAnswerByQuestionId, getQuestionByIdIntern, getQuestionsByIdIntern } from '@/db/question'
-import { upsertSituationFields } from '@/db/situation'
+import { updateSituationFields } from '@/db/situation'
 import {
   clearEmissionSourceEmissionFactor,
   countOrganizationStudiesFromOtherUsers,
@@ -546,7 +546,7 @@ async function updateSituationWithStudySiteData(
   const situationUpdates = studySiteToSituation(environment, siteDependentFields)
 
   if (Object.keys(situationUpdates).length > 0) {
-    await upsertSituationFields(studySiteId, situationUpdates)
+    await updateSituationFields(studySiteId, situationUpdates)
   }
 }
 

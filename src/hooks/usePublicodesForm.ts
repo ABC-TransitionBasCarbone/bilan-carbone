@@ -65,7 +65,7 @@ export function usePublicodesForm<S extends Situation<string>>({
         setIsLoading(true)
         setError(null)
 
-        const result = await loadSituation(studySiteId)
+        const result = await loadSituation(studyId, studySiteId)
         if (!result.success) {
           throw new Error(result.errorMessage || 'Failed to load situation')
         }
@@ -80,7 +80,7 @@ export function usePublicodesForm<S extends Situation<string>>({
     }
 
     loadInitialSituationFromDB()
-  }, [studySiteId, setFullSituation])
+  }, [studyId, studySiteId, setFullSituation])
 
   // Periodic sync from database to detect changes by other users
   useEffect(() => {
@@ -94,7 +94,7 @@ export function usePublicodesForm<S extends Situation<string>>({
       }
 
       try {
-        const result = await loadSituation(studySiteId)
+        const result = await loadSituation(studyId, studySiteId)
         if (!result.success || !result.data) {
           return
         }
@@ -118,7 +118,7 @@ export function usePublicodesForm<S extends Situation<string>>({
     return () => {
       clearInterval(interval)
     }
-  }, [studySiteId, syncIntervalMs, autoSave.hasUnsavedChanges, onSyncUpdate, setFullSituation, situation])
+  }, [studyId, studySiteId, syncIntervalMs, autoSave.hasUnsavedChanges, onSyncUpdate, setFullSituation, situation])
 
   const updateField = useCallback(
     (ruleName: string, value: string | number | boolean | undefined) => {
