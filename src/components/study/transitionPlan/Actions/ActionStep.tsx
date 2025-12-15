@@ -52,7 +52,11 @@ export const ActionStep = ({ step, index, control, onDelete }: Props) => {
           <Delete fontSize="small" />
         </IconButton>
       </Box>
-      <Box className={classNames('flex-col gapped-2 grow')} onPointerDown={(e) => e.stopPropagation()}>
+      <Box
+        className={classNames('flex-col gapped-2 grow')}
+        onPointerDown={(e) => e.stopPropagation()}
+        onKeyDown={(e) => e.stopPropagation()}
+      >
         <FormTextField
           control={control}
           name={`steps.${index}.title`}
