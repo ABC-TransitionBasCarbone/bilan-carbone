@@ -1,0 +1,135 @@
+{
+  "nav": {
+    "newStudyContributor": "Adaugă un elev"
+  },
+  "navigation": {
+    "organizations": "Amprentele mele de carbon",
+    "organization": "Echipa pilot",
+    "information": "Instituția mea",
+    "team": "Echipa pilot"
+  },
+  "home": {
+    "navigation": {
+      "collaborators": {
+        "title": "Echipa pilot:",
+        "message": "Găsește aici lista profesorilor, personalului administrativ și elevilor autorizați să modifice datele instituției"
+      },
+      "footprints": {
+        "title": "Amprentele mele:",
+        "message": "Creează aici prima ta amprentă. Apoi poți vizualiza amprentele tale sau poți crea altele noi oricând."
+      },
+      "sites": {
+        "title": "Instituțiile mele:",
+        "message": "Găsește aici lista instituțiilor asociate contului tău"
+      }
+    },
+    "title": "Calcularea amprentei tale de carbon simplificate îți va permite să:",
+    "alert": {
+      "info": "Calculatorul Clickson îți permite să estimezi impactul climatic al activității tale. Este în primul rând un instrument de conștientizare. Nu este un demers de tranziție cu emisii reduse de carbon, ci o amprentă simplificată — conform <link>Ghidului de comunicare privind contabilitatea carbonului</link> — concentrată pe principalele surse de emisii legate de activitatea instituțiilor."
+    },
+    "info": {
+      "0": "Înțelegi măsurarea impactului instituției tale",
+      "1": "Identifici prioritățile de acțiune",
+      "2": "Pe termen lung, și printr-o muncă mai aprofundată, construiești o traiectorie de reducere"
+    }
+  },
+  "team": {
+    "table": {
+      "title": "Echipa pilot"
+    }
+  },
+  "study": {
+    "create": "Adaugă o amprentă",
+    "myStudies": "Amprentele mele de carbon",
+    "createFirstStudy": "Creează prima mea amprentă",
+    "see": "Vezi amprenta mea",
+    "selectSite": "Înainte de a completa datele, te rugăm să selectezi o instituție",
+    "lastStudyTitle": "Ultima amprentă",
+    "navigation": {
+      "framing": "Date generale",
+      "organizations": "Instituțiile mele",
+      "team": "Colaboratorii mei",
+      "title": "Amprenta mea"
+    },
+    "validatedOnlyDescription": "Ca elev, am acces ca contributor la unul sau mai multe posturi de emisii.",
+    "new": {
+      "suggestion": {
+        "name": "Exemplu: amprenta de carbon Școala Gimnazială Simone Veil"
+      },
+      "inviteContributors": "Invită aceiași elevi",
+      "glossary": {
+        "validatorEmailDescription": "Ca elev, am acces ca contributor la unul sau mai multe posturi de emisii.",
+        "duplicationOptionsDescription": "Când duplici un studiu, poți alege să inviți aceeași echipă și aceiași elevi din studiul original. Acest lucru ajută la menținerea continuității colaborării."
+      }
+    },
+    "newContributor": {
+      "title": "Adaugă un elev în studiu: {name}"
+    },
+    "role": {
+      "Contributor": "Elev"
+    },
+    "rights": {
+      "contributorsTable": {
+        "delete": "Elimină elevul",
+        "title": "Elevi",
+        "newContributorLink": "Adaugă un elev",
+        "deleting": {
+          "confirmation": "Ești sigur că vrei să-l elimini pe {email} dintre elevii acestui studiu?"
+        },
+        "role": {
+          "description": "Aici poți gestiona elevii studiului tău. Ei vor avea acces la anumite posturi și subposturi (pe care le poți defini) și vor putea completa informații pentru anumite surse de emisii pe care le-ai creat deja în studiu. Pentru mai multe informații despre interfața contributorului, consultă <link>FAQ</link>."
+        }
+      }
+    }
+  },
+  "emissionFactors": {
+    "post": {
+      "Restauration": "Restaurante / Alimentație"
+    }
+  },
+  "organization": {
+    "card": {
+      "myOrganization": "Instituțiile mele"
+    },
+    "form": {
+      "editTitle": "Editează instituțiile mele"
+    },
+    "sites": {
+      "title": "Ce instituții ar trebui să acopere amprenta?",
+      "noSites": "Nicio instituție configurată",
+      "namePlaceholder": "Numele instituției",
+      "add": "Adaugă o instituție"
+    }
+  },
+  "login": {
+    "welcome": "Bun venit pe Clickson PEBC",
+    "explanation": "Să măsurăm emisiile de gaze cu efect de seră ale instituției tale!",
+    "form": {
+      "activate": "Creează-mi contul"
+    }
+  },
+  "signup": {
+    "description": "Creează un cont Clickson cu adresa ta de email și un cod poștal sau numele unei școli",
+    "schoolPostalCodeOrName": "Cod poștal sau numele școlii",
+    "schoolPostalCodeOrNamePlaceholder": "Codul poștal sau numele instituției școlare",
+    "schoolSearchGlossaryTitle": "Găsește instituția ta școlară.",
+    "schoolSearchGlossary": "Găsește instituția introducând codul poștal sau numele, apoi selectând-o din listă.",
+    "close": "Închide",
+    "schoolPostalCodeOrNameRequired": "Te rugăm să introduci codul poștal sau numele școlii",
+    "validate": "Validează",
+    "clear": "Șterge valoarea",
+    "Not authorized": "Această adresă de email este deja folosită pentru Clickson sau există o problemă la crearea contului. Consultă <link>FAQ</link> sau <support>contactează suportul</support> dacă crezi că este o eroare.",
+    "Not known school": "Găsește și selectează instituția ta.",
+    "validation": {
+      "schoolPostalCodeOrName": "Te rugăm să introduci codul poștal sau numele școlii"
+    }
+  },
+  "email": {
+    "subject": {
+      "newUser": "Ai fost invitat pe Clickson",
+      "addedActiveUser": "Ai fost invitat într-un nou mediu Clickson",
+      "activation": "Ți-ai activat contul pe Clickson",
+      "activationRequest": "Cerere de acces la organizația ta Clickson"
+    }
+  }
+}

@@ -56,3 +56,5 @@ export const hasAccessToCreateStudyWithEmissionFactorVersions = isSimplified
 
 export const notDisplayingStudyRightModalForAddingContributors = (environment: Environment) =>
   ([CLICKSON] as Environment[]).includes(environment)
+
+export const hasAccessToAllLocales = (environment: Environment) => ([CLICKSON] as Environment[]).includes(environment)

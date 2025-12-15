@@ -13,6 +13,11 @@ interface TranslationObj {
   fr: Translation
   en?: Translation
   es?: Translation
+  it?: Translation
+  ro?: Translation
+  hr?: Translation
+  hu?: Translation
+  el?: Translation
 }
 
 const translationsToCheck: Record<string, Locale[]> = {
@@ -72,12 +77,27 @@ describe('Translations', () => {
   const translations = loadTranslations()
 
   describe('Translations', () => {
-    translations.forEach(({ name, en, fr, es }) => {
+    translations.forEach(({ name, en, fr, es, it, ro, hr, hu, el }) => {
       if (en) {
         doubleCheck(en, fr, [], name, Locale.EN)
       }
       if (es) {
         doubleCheck(es, fr, [], name, Locale.ES)
+      }
+      if (it) {
+        doubleCheck(it, fr, [], name, Locale.IT)
+      }
+      if (ro) {
+        doubleCheck(ro, fr, [], name, Locale.RO)
+      }
+      if (hr) {
+        doubleCheck(hr, fr, [], name, Locale.HR)
+      }
+      if (hu) {
+        doubleCheck(hu, fr, [], name, Locale.HU)
+      }
+      if (el) {
+        doubleCheck(el, fr, [], name, Locale.EL)
       }
     })
   })

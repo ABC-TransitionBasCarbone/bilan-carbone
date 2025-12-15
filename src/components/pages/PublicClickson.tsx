@@ -27,6 +27,12 @@ const PublicClicksonPage = ({ children }: Props) => {
   const languages = [
     { name: tLocale('en'), code: 'GB', target: Locale.EN },
     { name: tLocale('fr'), code: 'FR', target: Locale.FR },
+    { name: tLocale('es'), code: 'ES', target: Locale.ES },
+    { name: tLocale('el'), code: 'EL', target: Locale.EL },
+    { name: tLocale('hr'), code: 'HR', target: Locale.HR },
+    { name: tLocale('hu'), code: 'HU', target: Locale.HU },
+    { name: tLocale('it'), code: 'IT', target: Locale.IT },
+    { name: tLocale('ro'), code: 'RO', target: Locale.RO },
   ]
 
   return (
