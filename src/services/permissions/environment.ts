@@ -68,3 +68,5 @@ export const hasAccessToStudySiteAddAndSelection = (environment: Environment) =>
   ([BC, TILT, CUT] as Environment[]).includes(environment)
 
 export const hasAccessToStudyHomePage = isAdvanced
+
+export const hasAccessToSimplifiedStudies = isTilt
