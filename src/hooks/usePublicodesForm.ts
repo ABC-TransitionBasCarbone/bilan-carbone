@@ -3,9 +3,9 @@ import { loadSituation } from '@/services/serverFunctions/situation'
 import { JsonValue } from '@prisma/client/runtime/library'
 import Engine, { Situation } from 'publicodes'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useSituationAutoSave, UseSituationAutoSaveReturn } from './useSituationAutoSave'
+import { SituationAutoSaveReturn, useSituationAutoSave } from './useSituationAutoSave'
 
-export interface UsePublicodesFormOptions<S extends Situation<string>> {
+export interface PublicodesFormOptions<S extends Situation<string>> {
   studyId: string
   studySiteId: string
   modelVersion: string
@@ -17,13 +17,13 @@ export interface UsePublicodesFormOptions<S extends Situation<string>> {
   onSyncUpdate?: () => void
 }
 
-export interface UsePublicodesFormReturn<S extends Situation<string>> {
+export interface PublicodesFormReturn<S extends Situation<string>> {
   engine: Engine
   situation: S | null
   updateField: (ruleName: string, value: string | number | boolean | undefined) => void
   isLoading: boolean
   error: string | null
-  autoSave: Omit<UseSituationAutoSaveReturn, 'saveSituation'>
+  autoSave: Omit<SituationAutoSaveReturn, 'saveSituation'>
 }
 
 export function usePublicodesForm<S extends Situation<string>>({
@@ -36,7 +36,7 @@ export function usePublicodesForm<S extends Situation<string>>({
   autoSaveDebounceMs = 1500,
   syncIntervalMs = 5000,
   onSyncUpdate,
-}: UsePublicodesFormOptions<S>): UsePublicodesFormReturn<S> {
+}: PublicodesFormOptions<S>): PublicodesFormReturn<S> {
   const [situation, setSituation] = useState<S | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)

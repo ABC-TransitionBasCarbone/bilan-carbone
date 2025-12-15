@@ -1,30 +1,30 @@
 'use client'
 
-import { UsePublicodesFormReturn } from '@/hooks/usePublicodesForm'
+import { PublicodesFormReturn } from '@/hooks/usePublicodesForm'
 import { Environment } from '@prisma/client'
 import { Situation } from 'publicodes'
 import { createContext, ReactNode, useContext } from 'react'
 
-export type PublicodesFormContextValue<S extends Situation<string> = Situation<string>> = UsePublicodesFormReturn<S>
+export type PublicodesFormContextValue<S extends Situation<string> = Situation<string>> = PublicodesFormReturn<S>
 
 export interface PublicodesFormProviderProps<S extends Situation<string>> {
   children: ReactNode
-  value: UsePublicodesFormReturn<S>
+  value: PublicodesFormReturn<S>
 }
 
 export function createPublicodesFormContext<S extends Situation<string>>(env: Environment) {
-  const EnvironmentContext = createContext<PublicodesFormContextValue<S> | null>(null)
+  const PublicodesFormContext = createContext<PublicodesFormContextValue<S> | null>(null)
 
-  const Provider = ({ children, value }: { children: ReactNode; value: UsePublicodesFormReturn<S> }) => {
+  const PublicodesFormProvider = ({ children, value }: { children: ReactNode; value: PublicodesFormReturn<S> }) => {
     return (
-      <EnvironmentContext.Provider value={value as PublicodesFormContextValue<S>}>
+      <PublicodesFormContext.Provider value={value as PublicodesFormContextValue<S>}>
         {children}
-      </EnvironmentContext.Provider>
+      </PublicodesFormContext.Provider>
     )
   }
 
-  const useContextHook = (): PublicodesFormContextValue<S> => {
-    const context = useContext(EnvironmentContext)
+  const usePublicodesFormContext = (): PublicodesFormContextValue<S> => {
+    const context = useContext(PublicodesFormContext)
     if (!context) {
       throw new Error(`use${env}Publicodes must be used within ${env}PublicodesProvider`)
     }
@@ -32,7 +32,7 @@ export function createPublicodesFormContext<S extends Situation<string>>(env: En
   }
 
   return {
-    Provider,
-    useContext: useContextHook,
+    PublicodesFormProvider,
+    usePublicodesFormContext,
   }
 }

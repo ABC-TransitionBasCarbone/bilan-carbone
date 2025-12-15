@@ -12,7 +12,8 @@ import { getCutEngine } from '../publicodes/cut-engine'
 import { studySiteToSituation } from '../publicodes/studySiteToSituation'
 import { CutSituation } from '../publicodes/types'
 
-const { Provider, useContext: useCutPublicodes } = createPublicodesFormContext<CutSituation>('CUT')
+const { PublicodesFormProvider, usePublicodesFormContext: useCutPublicodes } =
+  createPublicodesFormContext<CutSituation>('CUT')
 
 export interface CutPublicodesProviderProps {
   children: ReactNode
@@ -53,7 +54,7 @@ export function CutPublicodesProvider({ children, studyId, studySiteId, study }:
     when: publicodes.autoSave.hasUnsavedChanges,
   })
 
-  return <Provider value={publicodes}>{children}</Provider>
+  return <PublicodesFormProvider value={publicodes}>{children}</PublicodesFormProvider>
 }
 
 export { useCutPublicodes }
