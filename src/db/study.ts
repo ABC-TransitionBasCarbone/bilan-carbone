@@ -440,7 +440,11 @@ export const getAllowedStudyIdByAccount = async (account: UserSession) => {
   return study?.id
 }
 
-export const getAllowedStudiesByUserAndOrganization = async (user: UserSession, organizationVersionId: string) => {
+export const getAllowedStudiesByUserAndOrganization = async (
+  user: UserSession,
+  organizationVersionId: string,
+  simplified = false,
+) => {
   const organizationVersion = await getOrganizationVersionById(organizationVersionId)
 
   if (!user.organizationVersionId) {
@@ -454,6 +458,7 @@ export const getAllowedStudiesByUserAndOrganization = async (user: UserSession, 
   const studies = await prismaClient.study.findMany({
     where: {
       organizationVersionId,
+      simplified,
       ...(isAdminOnOrga(user, organizationVersion as OrganizationVersionWithOrganization)
         ? {}
         : {
@@ -472,19 +477,6 @@ export const getAllowedStudiesByUserAndOrganization = async (user: UserSession, 
     },
   })
   return filterAllowedStudies(user, studies)
-}
-
-export const getSimplifiedAllowedStudiesByUserAndOrganization = async (
-  user: UserSession,
-  organizationVersionId: string,
-) => {
-  console.log('organizationVersionId : ', organizationVersionId)
-
-  if (!user.organizationVersionId) {
-    return []
-  }
-
-  return []
 }
 
 export const getStudyById = async (id: string, organizationVersionId: string | null, tx?: Prisma.TransactionClient) => {
