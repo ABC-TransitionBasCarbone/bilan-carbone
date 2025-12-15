@@ -1,5 +1,5 @@
 import { FormTextField } from '@/components/form/TextField'
-import { AddActionCommand } from '@/services/serverFunctions/transitionPlan.command'
+import { AddActionFormCommand } from '@/services/serverFunctions/transitionPlan.command'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { IconButton, Typography } from '@mui/material'
@@ -8,13 +8,13 @@ import { useTranslations } from 'next-intl'
 import { Control, useFieldArray, UseFormSetValue } from 'react-hook-form'
 
 interface Props {
-  control: Control<AddActionCommand>
-  setValue: UseFormSetValue<AddActionCommand>
+  control: Control<AddActionFormCommand>
+  setValue: UseFormSetValue<AddActionFormCommand>
   type: ActionIndicatorType
   label: string
 }
 
-const IndicatorList = ({ control, type, label }: Props) => {
+const ActionIndicatorsList = ({ control, type, label }: Props) => {
   const t = useTranslations('study.transitionPlan.actions.addModal')
   const { fields, append, remove } = useFieldArray({
     control,
@@ -77,4 +77,4 @@ const IndicatorList = ({ control, type, label }: Props) => {
   )
 }
 
-export default IndicatorList
+export default ActionIndicatorsList

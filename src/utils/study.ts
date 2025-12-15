@@ -123,6 +123,10 @@ export const STUDY_UNIT_VALUES: Record<StudyResultUnit, number> = {
 
 export const defaultStudyResultUnit = StudyResultUnit.T
 
+export const convertValue = (value: number, fromUnit: StudyResultUnit, toUnit: StudyResultUnit): number => {
+  return (value * STUDY_UNIT_VALUES[fromUnit]) / STUDY_UNIT_VALUES[toUnit]
+}
+
 export const isPostValidated = (data?: ResultsByPost): boolean => {
   if (!data) {
     return false

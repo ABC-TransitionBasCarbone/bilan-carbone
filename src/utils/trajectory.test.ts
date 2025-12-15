@@ -1,6 +1,6 @@
 import { TrajectoryDataPoint } from '@/components/study/transitionPlan/TrajectoryGraph'
 import { expect } from '@jest/globals'
-import { Action, TrajectoryType } from '@prisma/client'
+import { Action, StudyResultUnit, TrajectoryType } from '@prisma/client'
 import {
   calculateActionBasedTrajectory,
   calculateCustomTrajectory,
@@ -333,7 +333,7 @@ describe('calculateTrajectory', () => {
     test('should return base emissions with flat line to 2050 when no quantitative actions', () => {
       const actions = [
         {
-          reductionValue: null,
+          reductionValueKg: null,
           reductionStartYear: '2025-01-01',
           reductionEndYear: '2030-01-01',
           potentialDeduction: 'Quality',
@@ -345,6 +345,7 @@ describe('calculateTrajectory', () => {
         studyStartYear: 2024,
         actions,
         pastStudies: [],
+        studyUnit: StudyResultUnit.K,
       })
 
       expect(result[0]).toEqual({ year: 2020, value: 1000 })
@@ -355,7 +356,7 @@ describe('calculateTrajectory', () => {
     test('should calculate trajectory with single quantitative action', () => {
       const actions = [
         {
-          reductionValue: 100,
+          reductionValueKg: 100,
           reductionStartYear: '2025-01-01',
           reductionEndYear: '2030-01-01',
           potentialDeduction: 'Quantity',
@@ -367,6 +368,7 @@ describe('calculateTrajectory', () => {
         studyStartYear: 2024,
         actions,
         pastStudies: [],
+        studyUnit: StudyResultUnit.K,
       })
 
       const annualReduction = 100 / (2030 - 2025)
@@ -381,13 +383,13 @@ describe('calculateTrajectory', () => {
     test('should calculate trajectory with multiple overlapping actions', () => {
       const actions = [
         {
-          reductionValue: 100,
+          reductionValueKg: 100,
           reductionStartYear: '2025-01-01',
           reductionEndYear: '2030-01-01',
           potentialDeduction: 'Quantity',
         },
         {
-          reductionValue: 50,
+          reductionValueKg: 50,
           reductionStartYear: '2027-01-01',
           reductionEndYear: '2032-01-01',
           potentialDeduction: 'Quantity',
@@ -399,6 +401,7 @@ describe('calculateTrajectory', () => {
         studyStartYear: 2024,
         actions,
         pastStudies: [],
+        studyUnit: StudyResultUnit.K,
       })
 
       const action1AnnualReduction = 100 / (2030 - 2025)
@@ -423,19 +426,19 @@ describe('calculateTrajectory', () => {
     test('should filter out actions with missing data or quality actions', () => {
       const actions = [
         {
-          reductionValue: 100,
+          reductionValueKg: 100,
           reductionStartYear: '2025-01-01',
           reductionEndYear: '2030-01-01',
           potentialDeduction: 'Quality',
         },
         {
-          reductionValue: null,
+          reductionValueKg: null,
           reductionStartYear: '2025-01-01',
           reductionEndYear: '2030-01-01',
           potentialDeduction: 'Quantity',
         },
         {
-          reductionValue: 50,
+          reductionValueKg: 50,
           reductionStartYear: '2026-01-01',
           reductionEndYear: '2030-01-01',
           potentialDeduction: 'Quantity',
@@ -447,6 +450,7 @@ describe('calculateTrajectory', () => {
         studyStartYear: 2024,
         actions,
         pastStudies: [],
+        studyUnit: StudyResultUnit.K,
       })
 
       const annualReduction = 50 / (2030 - 2026)
@@ -460,13 +464,13 @@ describe('calculateTrajectory', () => {
     test('should correctly sum single-year action with multi-year action in the same year', () => {
       const actions = [
         {
-          reductionValue: 100,
+          reductionValueKg: 100,
           reductionStartYear: '2026-01-01',
           reductionEndYear: '2026-01-01',
           potentialDeduction: 'Quantity',
         },
         {
-          reductionValue: 50,
+          reductionValueKg: 50,
           reductionStartYear: '2025-01-01',
           reductionEndYear: '2030-01-01',
           potentialDeduction: 'Quantity',
@@ -478,6 +482,7 @@ describe('calculateTrajectory', () => {
         studyStartYear: 2024,
         actions,
         pastStudies: [],
+        studyUnit: StudyResultUnit.K,
       })
 
       const action2AnnualReduction = 50 / (2030 - 2025)
@@ -493,7 +498,7 @@ describe('calculateTrajectory', () => {
     test('should filter out dependenciesOnly actions when withDependencies is false', () => {
       const actions = [
         {
-          reductionValue: 100,
+          reductionValueKg: 100,
           reductionStartYear: '2025-01-01',
           reductionEndYear: '2030-01-01',
           potentialDeduction: 'Quantity',
@@ -501,7 +506,7 @@ describe('calculateTrajectory', () => {
           enabled: true,
         },
         {
-          reductionValue: 50,
+          reductionValueKg: 50,
           reductionStartYear: '2025-01-01',
           reductionEndYear: '2030-01-01',
           potentialDeduction: 'Quantity',
@@ -516,6 +521,7 @@ describe('calculateTrajectory', () => {
         actions,
         pastStudies: [],
         withDependencies: true,
+        studyUnit: StudyResultUnit.K,
       })
 
       const resultWithoutDeps = calculateActionBasedTrajectory({
@@ -524,6 +530,7 @@ describe('calculateTrajectory', () => {
         actions,
         pastStudies: [],
         withDependencies: false,
+        studyUnit: StudyResultUnit.K,
       })
 
       const action1AnnualReduction = 100 / (2030 - 2025)
@@ -540,7 +547,7 @@ describe('calculateTrajectory', () => {
     test('should include dependenciesOnly actions when withDependencies is true', () => {
       const actions = [
         {
-          reductionValue: 100,
+          reductionValueKg: 100,
           reductionStartYear: '2025-01-01',
           reductionEndYear: '2030-01-01',
           potentialDeduction: 'Quantity',
@@ -554,6 +561,7 @@ describe('calculateTrajectory', () => {
         studyStartYear: 2024,
         actions,
         pastStudies: [],
+        studyUnit: StudyResultUnit.K,
       })
 
       const annualReduction = 100 / (2030 - 2025)
@@ -565,7 +573,7 @@ describe('calculateTrajectory', () => {
     test('should handle mix of dependenciesOnly and regular actions correctly', () => {
       const actions = [
         {
-          reductionValue: 100,
+          reductionValueKg: 100,
           reductionStartYear: '2025-01-01',
           reductionEndYear: '2029-01-01',
           potentialDeduction: 'Quantity',
@@ -573,7 +581,7 @@ describe('calculateTrajectory', () => {
           enabled: true,
         },
         {
-          reductionValue: 60,
+          reductionValueKg: 60,
           reductionStartYear: '2026-01-01',
           reductionEndYear: '2030-01-01',
           potentialDeduction: 'Quantity',
@@ -581,7 +589,7 @@ describe('calculateTrajectory', () => {
           enabled: true,
         },
         {
-          reductionValue: 40,
+          reductionValueKg: 40,
           reductionStartYear: '2027-01-01',
           reductionEndYear: '2031-01-01',
           potentialDeduction: 'Quantity',
@@ -596,6 +604,7 @@ describe('calculateTrajectory', () => {
         actions,
         pastStudies: [],
         withDependencies: true,
+        studyUnit: StudyResultUnit.K,
       })
 
       const resultWithoutDeps = calculateActionBasedTrajectory({
@@ -604,6 +613,7 @@ describe('calculateTrajectory', () => {
         actions,
         pastStudies: [],
         withDependencies: false,
+        studyUnit: StudyResultUnit.K,
       })
 
       const action1AnnualReduction = 100 / (2029 - 2025)
@@ -829,7 +839,7 @@ describe('calculateTrajectory', () => {
         const currentYear = 2024
         const actions = [
           {
-            reductionValue: 100,
+            reductionValueKg: 100,
             reductionStartYear: '2025-01-01',
             reductionEndYear: '2030-01-01',
             potentialDeduction: 'Quantity',
@@ -841,6 +851,7 @@ describe('calculateTrajectory', () => {
           studyStartYear: currentYear,
           actions,
           pastStudies,
+          studyUnit: StudyResultUnit.K,
         })
 
         verifyTrajectoryInterpolation(currentTrajectory, pastStudies, currentYear)
@@ -946,7 +957,7 @@ describe('calculateTrajectory', () => {
         const currentYear = 2024
         const actions = [
           {
-            reductionValue: 50,
+            reductionValueKg: 50,
             reductionStartYear: '2025-01-01',
             reductionEndYear: '2030-01-01',
             potentialDeduction: 'Quantity',
@@ -958,6 +969,7 @@ describe('calculateTrajectory', () => {
           studyStartYear: currentYear,
           actions,
           pastStudies,
+          studyUnit: StudyResultUnit.K,
         })
 
         verifyTrajectoryInterpolation(currentTrajectory, pastStudies, currentYear)

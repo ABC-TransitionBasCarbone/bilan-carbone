@@ -78,8 +78,8 @@ model Action {
   subSteps                  String                   @map("sub_steps")
   detailedDescription       String                   @map("detailed_description")
   potentialDeduction        ActionPotentialDeduction @map("potential_deduction")
-  reductionValue            Int?                     @map("reduction_value")
   reductionDetails          String?                  @map("reduction_details")
+  reductionValueKg          Int?                     @map("reduction_value_kg")
   reductionStartYear        String?                  @map("reduction_start_year")
   reductionEndYear          String?                  @map("reduction_end_year")
   owner                     String?
@@ -154,7 +154,7 @@ model ExternalStudy {
 
   name      String
   date      DateTime
-  totalCo2  Int      @map("total_co2")
+  totalCo2Kg Int     @map("total_co2_kg")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 

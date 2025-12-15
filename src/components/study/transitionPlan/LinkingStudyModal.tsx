@@ -9,12 +9,13 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { getStudyPreviousOccurrences } from '@/services/serverFunctions/study'
 import { addExternalStudy, linkOldStudy, updateExternalStudy } from '@/services/serverFunctions/transitionPlan'
 import {
-  createExternalStudyCommandValidation,
+  createExternalStudyFormValidation,
   ExternalStudyFormInput,
 } from '@/services/serverFunctions/transitionPlan.command'
+import { convertValue } from '@/utils/study'
 import { PastStudy } from '@/utils/trajectory'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { MenuItem, TextField } from '@mui/material'
+import { MenuItem } from '@mui/material'
 import { StudyResultUnit } from '@prisma/client'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
@@ -31,6 +32,7 @@ interface Props {
   transitionPlanId: string
   studyId: string
   studyYear: Date
+  studyUnit: StudyResultUnit
   open: boolean
   onClose: () => void
   pastStudyToUpdate: PastStudy | null
@@ -41,6 +43,7 @@ const LinkingStudyModal = ({
   transitionPlanId,
   studyId,
   studyYear,
+  studyUnit,
   open,
   onClose,
   pastStudyToUpdate,
@@ -60,8 +63,8 @@ const LinkingStudyModal = ({
 
   const router = useRouter()
 
-  const { control, formState, getValues, setValue, reset, handleSubmit } = useForm<ExternalStudyFormInput>({
-    resolver: zodResolver(createExternalStudyCommandValidation(currentStudyYear)),
+  const { control, formState, getValues, reset, handleSubmit } = useForm<ExternalStudyFormInput>({
+    resolver: zodResolver(createExternalStudyFormValidation(currentStudyYear)),
     mode: 'onBlur',
     reValidateMode: 'onChange',
     defaultValues: pastStudyToUpdate
@@ -70,7 +73,7 @@ const LinkingStudyModal = ({
           externalStudyId: pastStudyToUpdate.id,
           name: pastStudyToUpdate.name,
           date: new Date(pastStudyToUpdate.year, 0, 1),
-          totalCo2: pastStudyToUpdate.totalCo2,
+          totalCo2Value: pastStudyToUpdate.totalCo2,
         }
       : {
           transitionPlanId,
@@ -104,10 +107,13 @@ const LinkingStudyModal = ({
   }
 
   const linkExternalStudy = async () => {
-    const formData = getValues()
+    const { totalCo2Value, date, ...rest } = getValues()
+    const totalCo2Kg = convertValue(totalCo2Value, studyUnit, StudyResultUnit.K)
+
     const data = {
-      ...formData,
-      date: formData.date instanceof Date ? formData.date.toISOString() : formData.date,
+      ...rest,
+      date: date instanceof Date ? date.toISOString() : date,
+      totalCo2Kg,
     }
 
     if (pastStudyToUpdate) {
@@ -209,17 +215,19 @@ const LinkingStudyModal = ({
               <div className="flex-col grow">
                 <span className="inputLabel bold mb-2">{`${t('totalCo2')} *`}</span>
                 <div className="flex grow relative">
-                  <TextField
+                  <FormTextField
+                    control={control}
+                    name="totalCo2Value"
                     type="number"
                     className="grow"
                     placeholder={t('totalCo2Placeholder')}
-                    defaultValue={pastStudyToUpdate?.totalCo2}
-                    onBlur={(event) => setValue('totalCo2', Number(event.target.value))}
                     slotProps={{
+                      htmlInput: { step: '1', min: 0 },
                       input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
                     }}
+                    fullWidth
                   />
-                  <div className={textUnitStyles.unit}>{tUnit(StudyResultUnit.T)}</div>
+                  <div className={textUnitStyles.unit}>{tUnit(studyUnit)}</div>
                 </div>
               </div>
               <div className="mt1 justify-end">

@@ -6,6 +6,8 @@ import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import { ActionWithIndicators } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { toggleActionEnabled } from '@/services/serverFunctions/transitionPlan'
+import { formatNumber } from '@/utils/number'
+import { convertValue } from '@/utils/study'
 import { getYearFromDateStr } from '@/utils/time'
 import { Link, Switch } from '@mui/material'
 import { ActionPotentialDeduction, StudyResultUnit } from '@prisma/client'
@@ -26,9 +28,10 @@ interface Props {
   openDeleteModal: (action: ActionWithIndicators) => void
   canEdit: boolean
   studyId: string
+  studyUnit: StudyResultUnit
 }
 
-const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId }: Props) => {
+const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId, studyUnit }: Props) => {
   const t = useTranslations('study.transitionPlan.actions.table')
   const tUnit = useTranslations('study.results.units')
   const tCategory = useTranslations('study.transitionPlan.actions.category')
@@ -65,12 +68,16 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
         case ActionPotentialDeduction.Quality:
           return tPotential(ActionPotentialDeduction.Quality)
         case ActionPotentialDeduction.Quantity:
-          return action.reductionValue ? `${action.reductionValue} ${tUnit(StudyResultUnit.T)}` : ''
+          if (action.reductionValueKg !== null) {
+            const valueInStudyUnit = convertValue(action.reductionValueKg, StudyResultUnit.K, studyUnit)
+            return `${formatNumber(valueInStudyUnit)} ${tUnit(studyUnit)}`
+          }
+          return ''
         default:
           return ''
       }
     },
-    [tPotential, tUnit],
+    [tPotential, tUnit, studyUnit],
   )
 
   const getImplementationPeriod = useCallback((action: ActionWithIndicators) => {

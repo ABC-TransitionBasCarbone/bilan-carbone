@@ -7,17 +7,18 @@ import { getStudyOrganizationMembers } from '@/services/serverFunctions/study'
 import { addAction, editAction } from '@/services/serverFunctions/transitionPlan'
 import {
   ActionIndicatorCommand,
-  AddActionCommand,
   AddActionCommandValidation,
+  AddActionFormCommand,
 } from '@/services/serverFunctions/transitionPlan.command'
 import { calculatePriorityFromRelevance } from '@/utils/action'
 import { objectWithoutNullAttributes } from '@/utils/object'
+import { convertValue } from '@/utils/study'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ActionIndicatorType, ActionPotentialDeduction } from '@prisma/client'
+import { ActionIndicatorType, ActionPotentialDeduction, StudyResultUnit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useParams, useRouter } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import styles from './ActionModal.module.css'
 import Step1 from './ActionModalStep1'
@@ -32,7 +33,7 @@ interface Props {
   action?: ActionWithIndicators
   onClose: () => void
   transitionPlanId: string
-  studyUnit: string
+  studyUnit: StudyResultUnit
 }
 
 const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Props) => {
@@ -78,8 +79,21 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
     return defaultIndicators
   }, [])
 
+  const convertedAction = useMemo(
+    () =>
+      action
+        ? {
+            ...objectWithoutNullAttributes(action),
+            reductionValue: Math.round(
+              action.reductionValueKg ? convertValue(action.reductionValueKg, StudyResultUnit.K, studyUnit) : 0,
+            ),
+          }
+        : {},
+    [action, studyUnit],
+  )
+
   const { control, formState, getValues, setValue, reset, handleSubmit, trigger, setError, clearErrors } =
-    useForm<AddActionCommand>({
+    useForm<AddActionFormCommand>({
       resolver: zodResolver(AddActionCommandValidation),
       mode: 'onChange',
       reValidateMode: 'onChange',
@@ -91,7 +105,7 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
         category: [],
         relevance: [],
         dependenciesOnly: false,
-        ...objectWithoutNullAttributes(action),
+        ...convertedAction,
         indicators: setDefaultIndicators(action?.indicators ?? []),
       },
     })
@@ -105,10 +119,21 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
     }
   }, [potentialDeduction, clearErrors])
 
-  const onSubmit = async (data: AddActionCommand) => {
+  const onSubmit = async (data: AddActionFormCommand) => {
     const cleanedIndicators = data.indicators?.filter((ind) => ind && ind.type) || []
     const priority = calculatePriorityFromRelevance(data.relevance)
-    const dataWithPriority = { ...data, indicators: cleanedIndicators, priority }
+    const { reductionValue, ...dataWithoutReductionValue } = data
+
+    const reductionValueKg = reductionValue
+      ? Math.round(convertValue(reductionValue, studyUnit, StudyResultUnit.K))
+      : null
+
+    const dataWithPriority = {
+      ...dataWithoutReductionValue,
+      indicators: cleanedIndicators,
+      priority,
+      reductionValueKg,
+    }
 
     await callServerFunction(() => (action ? editAction(action.id, dataWithPriority) : addAction(dataWithPriority)), {
       onSuccess: () => {
@@ -126,7 +151,7 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
     onClose()
   }
 
-  const getRequiredFieldsForStep = (step: number): (keyof AddActionCommand)[] => {
+  const getRequiredFieldsForStep = (step: number): (keyof AddActionFormCommand)[] => {
     if (step === 0) {
       return [
         'title',

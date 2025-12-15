@@ -3,6 +3,7 @@
 import { ActionWithIndicators } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteAction } from '@/services/serverFunctions/transitionPlan'
+import type { StudyResultUnit } from '@prisma/client'
 import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
@@ -17,7 +18,7 @@ const ConfirmDeleteModal = dynamic(() => import('@/components/modals/ConfirmDele
 interface Props {
   actions: ActionWithIndicators[]
   transitionPlanId: string
-  studyUnit: string
+  studyUnit: StudyResultUnit
   canEdit: boolean
   studyId: string
 }
@@ -97,6 +98,7 @@ const Actions = ({ actions, studyUnit, transitionPlanId, canEdit, studyId }: Pro
         openDeleteModal={handleOpenDeleteModal}
         canEdit={canEdit}
         studyId={studyId}
+        studyUnit={studyUnit}
       />
       {isEditModalOpen && (
         <ActionModal

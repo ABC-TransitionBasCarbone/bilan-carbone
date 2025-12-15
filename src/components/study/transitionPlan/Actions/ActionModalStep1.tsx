@@ -1,9 +1,10 @@
 import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
-import { AddActionCommand } from '@/services/serverFunctions/transitionPlan.command'
+import { AddActionFormCommand } from '@/services/serverFunctions/transitionPlan.command'
 import { getYearFromDateStr } from '@/utils/time'
 import { Checkbox, FormControlLabel, MenuItem } from '@mui/material'
+import type { StudyResultUnit } from '@prisma/client'
 import { ActionPotentialDeduction } from '@prisma/client'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
@@ -14,11 +15,11 @@ import textUnitStyles from '../../../dynamic-form/inputFields/TextUnitInput.modu
 import styles from './ActionModal.module.css'
 
 interface Props {
-  studyUnit: string
-  control: Control<AddActionCommand>
-  setValue: UseFormSetValue<AddActionCommand>
-  getValues: UseFormGetValues<AddActionCommand>
-  errors: FieldErrors<AddActionCommand>
+  studyUnit: StudyResultUnit
+  control: Control<AddActionFormCommand>
+  setValue: UseFormSetValue<AddActionFormCommand>
+  getValues: UseFormGetValues<AddActionFormCommand>
+  errors: FieldErrors<AddActionFormCommand>
 }
 
 const ActionModalStep1 = ({ studyUnit, control, setValue }: Props) => {

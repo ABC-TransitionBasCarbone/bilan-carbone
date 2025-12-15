@@ -906,7 +906,7 @@
           "subtitle": "Display of reference trajectories and your organization's trajectories",
           "trajectory15": "SBTi 1.5°C",
           "trajectoryWB2C": "SBTi WB2C",
-          "yAxisLabel": "Emissions (tCO2e)",
+          "yAxisLabel": "Emissions",
           "actionBasedTrajectory": "Action-based trajectory",
           "unvalidatedSourcesWarning": "{count, plural, =1 {One emission source is not validated in the current study and is therefore not taken into account in the trajectory calculations.} other {{count} emission sources are not validated in the current study and are therefore not taken into account in the trajectory calculations.}}",
           "unvalidatedSourcesLinkedStudiesWarning": "{count, plural, =1 {One emission source is not validated in the following past study:} other {{count} emission sources are not validated in the following past studies:}}",

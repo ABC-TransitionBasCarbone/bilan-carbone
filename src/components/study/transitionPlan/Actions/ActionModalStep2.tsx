@@ -1,7 +1,7 @@
 import { FormSelect } from '@/components/form/Select'
 import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import { Locale } from '@/i18n/config'
-import { AddActionCommand } from '@/services/serverFunctions/transitionPlan.command'
+import { AddActionFormCommand } from '@/services/serverFunctions/transitionPlan.command'
 import { Translations } from '@/types/translation'
 import { getOrderedActionRelevances } from '@/utils/action'
 import { MenuItem } from '@mui/material'
@@ -13,7 +13,7 @@ import { useMemo } from 'react'
 import { Control } from 'react-hook-form'
 
 interface Props {
-  control: Control<AddActionCommand>
+  control: Control<AddActionFormCommand>
 }
 
 const ActionModalStep1 = ({ control }: Props) => {
@@ -77,7 +77,7 @@ const ActionModalStep1 = ({ control }: Props) => {
           key={selector}
           control={control}
           translation={t}
-          name={selector as keyof AddActionCommand}
+          name={selector as keyof AddActionFormCommand}
           label={t(selector)}
           data-testid={`add-action-${selector}`}
           fullWidth
