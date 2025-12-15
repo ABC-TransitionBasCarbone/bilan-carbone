@@ -88,7 +88,26 @@
   },
   "emissionFactors": {
     "post": {
-      "Restauration": "Restauration"
+      "EnergiesClickson": "Énergies",
+      "Combustibles": "Combustibles",
+      "AutresGaz": "Autres gaz",
+      "Restauration": "Restauration",
+      "TypesDeRepasServis": "Types de repas servis",
+      "DistributeursAutomatiques": "Distributeurs automatiques",
+      "DeplacementsClickson": "Déplacements",
+      "TransportDesEleves": "Transport des élèves",
+      "TransportDuPersonnel": "Transport du personnel",
+      "VoyagesScolaires": "Voyages scolaires",
+      "Fournitures": "Fournitures",
+      "ProduitsChimiques": "Produits chimiques",
+      "EquipementsDeSport": "Équipements de sport",
+      "DechetsRecyclables": "Déchets recyclables",
+      "OrduresMenageresResiduelles": "Ordures ménagères résiduelles",
+      "ImmobilisationsClickson": "Immobilisations",
+      "Construction": "Construction",
+      "Renovation": "Rénovation",
+      "EquipementsInformatiqueAudiovisuel": "Équipements informatiques / audiovisuel",
+      "EquipementsDivers": "Equipements divers (électroménager, équipements professionnels...)"
     }
   },
   "organization": {
