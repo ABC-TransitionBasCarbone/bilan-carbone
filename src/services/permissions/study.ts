@@ -5,7 +5,7 @@ import { FullStudy, getStudyById } from '@/db/study'
 import { getAccountByIdWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
 import { canEditOrganizationVersion, hasActiveLicence, isAdminOnOrga, isInOrgaOrParent } from '@/utils/organization'
 import { getAccountRoleOnStudy, getDuplicableEnvironments, hasEditionRights } from '@/utils/study'
-import { DeactivatableFeature, Environment, Level, Prisma, Study, StudyRole, User } from '@prisma/client'
+import { DeactivatableFeature, Environment, Level, Prisma, Role, Study, StudyRole, User } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { dbActualizedAuth } from '../auth'
 import { isDeactivableFeatureActiveForEnvironment } from '../serverFunctions/deactivableFeatures'
@@ -77,7 +77,7 @@ export const canCreateAStudy = (user: UserSession) => {
   return (
     hasAccessToStudyCreation(user.environment) ||
     (!!user.level && !!user.organizationVersionId) ||
-    isTilt(user.environment)
+    (isTilt(user.environment) && user.role !== Role.DEFAULT)
   )
 }
 
