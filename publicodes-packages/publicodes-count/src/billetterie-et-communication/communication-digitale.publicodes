@@ -38,7 +38,11 @@ billetterie et communication . communication digitale . affichage dynamique:
   titre: Affichage dynamique
   note: |
     TODO: Il semble qu'il manque les 5 ans d'amortissement
-  formule: nombre * FE
+  formule:
+    produit:
+      - FE
+      - nombre
+      - (1 an / amortissement)
   unité: kgCO2e
   par défaut: 0
   avec:
@@ -52,11 +56,17 @@ billetterie et communication . communication digitale . affichage dynamique:
       meta:
         id: 121
 
+    amortissement:
+      valeur: 5
+      unité: an
+
 billetterie et communication . communication digitale . écrans:
   titre: Écrans
-  note: |
-    TODO: Il semble qu'il manque les 5 ans d'amortissement
-  formule: nombre * FE
+  formule:
+    produit:
+      - FE
+      - nombre
+      - (1 an / amortissement)
   par défaut: 0
   unité: kgCO2e
   avec:
@@ -70,11 +80,17 @@ billetterie et communication . communication digitale . écrans:
       meta:
         id: 27006
 
+    amortissement:
+      valeur: 5
+      unité: an
+
 billetterie et communication . communication digitale . affichage extérieur:
   titre: Affichage extérieur
-  note: |
-    TODO: Il semble qu'il manque les 5 ans d'amortissement
-  formule: surface * FE
+  formule:
+    produit:
+      - surface
+      - FE
+      - (1 an / amortissement)
   par défaut: 0
   unité: kgCO2e
   avec:
@@ -87,3 +103,7 @@ billetterie et communication . communication digitale . affichage extérieur:
       unité: kgCO2e/m2
       meta:
         id: 122
+
+    amortissement:
+      valeur: 5
+      unité: an
