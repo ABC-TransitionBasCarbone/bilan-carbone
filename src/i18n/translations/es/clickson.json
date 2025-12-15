@@ -84,11 +84,35 @@
           "description": "Aquí puede gestionar los estudiantes de su estudio. Tendrán acceso a ciertos puestos y subpuestos (que puede definir) y podrán completar cierta información para fuentes de emisión que ya ha creado en el estudio. Para más información sobre la interfaz del colaborador, consulte nuestras <link>Preguntas Frecuentes</link>."
         }
       }
+    },
+    "results": {
+      "intensities": {
+        "studentEmployee": "estudiantes y empleados"
+      }
     }
   },
   "emissionFactors": {
     "post": {
-      "Restauration": "Restauración"
+      "EnergiesClickson": "Energías",
+      "Combustibles": "Combustibles",
+      "AutresGaz": "Otros gases",
+      "Restauration": "Restauración",
+      "TypesDeRepasServis": "Tipos de comidas servidas",
+      "DistributeursAutomatiques": "Distribuidores automáticos",
+      "DeplacementsClickson": "Desplazamientos",
+      "TransportDesEleves": "Transporte de estudiantes",
+      "TransportDuPersonnel": "Transporte del personal",
+      "VoyagesScolaires": "Viajes escolares",
+      "Fournitures": "Suministros",
+      "ProduitsChimiques": "Productos químicos",
+      "EquipementsDeSport": "Equipos deportivos",
+      "DechetsRecyclables": "Residuos reciclables",
+      "OrduresMenageresResiduelles": "Residuos domésticos no reciclables",
+      "ImmobilisationsClickson": "Inmuebles",
+      "Construction": "Construcción",
+      "Renovation": "Renovación",
+      "EquipementsInformatiqueAudiovisuel": "Equipos informáticos / audiovisuales",
+      "EquipementsDivers": "Equipos diversos (electrodomésticos, equipos profesionales...)"
     }
   },
   "organization": {
