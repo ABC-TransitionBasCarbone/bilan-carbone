@@ -14,12 +14,11 @@ export async function upsertSituationFields(
   fieldsToUpdate: Record<string, unknown>,
 ): Promise<void> {
   const existing = await getSituationByStudySite(studySiteId)
-  if (!existing) return
-
-  const currentSituation = (existing.situation ?? {}) as Record<string, unknown>
-  const updatedSituation = { ...currentSituation, ...fieldsToUpdate }
-
-  await upsertSituation(studySiteId, updatedSituation as InputJsonValue, existing.modelVersion)
+  if (existing) {
+    const currentSituation = (existing.situation ?? {}) as Record<string, unknown>
+    const updatedSituation = { ...currentSituation, ...fieldsToUpdate }
+    await upsertSituation(studySiteId, updatedSituation as InputJsonValue, existing.modelVersion)
+  }
 }
 
 export async function upsertSituation(

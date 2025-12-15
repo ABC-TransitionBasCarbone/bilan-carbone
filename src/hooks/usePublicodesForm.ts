@@ -5,7 +5,7 @@ import Engine, { Situation } from 'publicodes'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { SituationAutoSaveReturn, useSituationAutoSave } from './useSituationAutoSave'
 
-export interface PublicodesFormOptions<S extends Situation<string>> {
+export interface PublicodesFormOptions {
   studyId: string
   studySiteId: string
   modelVersion: string
@@ -34,7 +34,7 @@ export function usePublicodesForm<S extends Situation<string>>({
   autoSaveDebounceMs = 1500,
   syncIntervalMs = 5000,
   onSyncUpdate,
-}: PublicodesFormOptions<S>): PublicodesFormReturn<S> {
+}: PublicodesFormOptions): PublicodesFormReturn<S> {
   const [situation, setSituation] = useState<S | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)

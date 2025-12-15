@@ -7,12 +7,11 @@ import { InputJsonValue } from '@prisma/client/runtime/library'
 import { Situation } from 'publicodes'
 import { dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
-import { canReadStudy } from '../permissions/study'
+import { hasEditAccessOnStudy, hasReadAccessOnStudy } from '../permissions/study'
 
 export const loadSituation = async (studySiteId: string) =>
   withServerResponse('getSituationFromDB', async () => {
-    const session = await dbActualizedAuth()
-    if (!session || !session.user) {
+    if (!hasReadAccessOnStudy(studySiteId)) {
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -31,7 +30,7 @@ export const saveSituation = async (
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (!canReadStudy(session.user, studyId)) {
+    if (!hasEditAccessOnStudy(studyId)) {
       throw new Error(NOT_AUTHORIZED)
     }
 
