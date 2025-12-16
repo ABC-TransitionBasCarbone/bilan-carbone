@@ -1,4 +1,4 @@
-import { situationsAreEqual } from '@/components/publicodes-form/utils'
+import { situationsAreEqual } from '@/lib/publicodes/utils'
 import { saveSituation } from '@/services/serverFunctions/situation'
 import { Situation } from 'publicodes'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'

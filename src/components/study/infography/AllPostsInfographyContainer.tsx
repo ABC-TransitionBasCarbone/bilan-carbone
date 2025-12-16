@@ -1,5 +1,6 @@
 import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
+import { CutPublicodesSituationProvider } from '@/environments/cut/context/publicodesContext'
 import AllPostsInfographySimplified from '@/environments/simplified/study/infography/AllPostsInfography'
 import AllPostsInfographyTilt from '@/environments/tilt/study/infography/AllPostsInfography'
 import { ClicksonPost, CutPost, TiltPost } from '@/services/posts'
