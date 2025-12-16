@@ -3,8 +3,8 @@ import Engine, { Situation } from 'publicodes'
 import { useMemo } from 'react'
 import { getEvaluatedFormLayout } from './layouts/evaluatedFormLayout'
 import { FormLayout } from './layouts/formLayout'
+import styles from './PublicodesForm.module.css'
 import PublicodesQuestion from './PublicodesQuestion'
-import styles from './styles/DynamicForm.module.css'
 import {
   areRulesReferencedInApplicability,
   evaluatedLayoutIsApplicable,
@@ -14,21 +14,11 @@ import {
 
 export interface PublicodesFormProps<RuleName extends string, S extends Situation<RuleName>> {
   engine: Engine<RuleName>
-  // The situation is needed to trigger React re-render
   situation: S
   onFieldChange: OnFieldChange<RuleName>
   formLayouts: FormLayout<RuleName>[]
 }
 
-/**
- * A generic form component that dynamically generates form fields based on a
- * Publicodes {@link FormBuilder} and a set of target rules.
- *
- * The target rules are the Publicodes rules that the form aims to evaluate.
- * The form will display the necessary questions to determine the values of
- * these rules based on the provided initial situation and then dynamically
- * update as the user interacts with the form.
- */
 export default function PublicodesForm<RuleName extends string, S extends Situation<RuleName>>({
   engine,
   situation,

@@ -1,7 +1,7 @@
 import { EvaluatedFormElement } from '@publicodes/forms'
+import NumberWithUnitInput from './inputFields/NumberWithUnitInput'
 import RadioGroupInput from './inputFields/RadioGroupInput'
 import SelectInput from './inputFields/SelectInput'
-import TextWithUnitInput from './inputFields/TextWithUnitInput'
 import YearPickerInput from './inputFields/YearPickerInput'
 import { OnFieldChange } from './utils'
 
@@ -22,7 +22,7 @@ export default function InputField<RuleName extends string>({
     case 'input':
       switch (formElement.type) {
         case 'number':
-          return <TextWithUnitInput formElement={formElement} onChange={onChange} />
+          return <NumberWithUnitInput formElement={formElement} onChange={onChange} />
         // TODO: handle month type properly
         // case 'month':
         case 'date':

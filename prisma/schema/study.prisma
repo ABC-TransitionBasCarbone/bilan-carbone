@@ -342,6 +342,7 @@ model StudySite {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   studyAnswers Answer[]
+  situation    Situation?
 
   @@unique([studyId, siteId])
   @@map("study_sites")

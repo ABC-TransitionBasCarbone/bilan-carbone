@@ -1,4 +1,4 @@
-import { FullStudy } from '@/db/study'
+import { StudySiteFields } from '@/services/studySiteToSituation'
 import { CutSituation } from './types'
 
 /**
@@ -6,24 +6,24 @@ import { CutSituation } from './types'
  * depends of this inputs) will be non-applicable by default and won't be shown
  * to the user.
  */
-export function studySiteToSituation(study: FullStudy['sites'][number] | undefined): CutSituation {
-  if (!study) {
+export function studySiteToSituation(studySite: StudySiteFields | undefined): CutSituation {
+  if (!studySite) {
     return {}
   }
 
   const situation: CutSituation = {}
 
-  if (study.distanceToParis !== null) {
-    situation['général . distance depuis paris'] = study.distanceToParis
+  if (studySite.distanceToParis != null) {
+    situation['général . distance depuis paris'] = studySite.distanceToParis
   }
-  if (study.numberOfTickets !== null) {
-    situation['général . nombre entrées'] = study.numberOfTickets
+  if (studySite.numberOfTickets != null) {
+    situation['général . nombre entrées'] = studySite.numberOfTickets
   }
-  if (study.numberOfSessions !== null) {
-    situation['général . nombre séances'] = study.numberOfSessions
+  if (studySite.numberOfSessions != null) {
+    situation['général . nombre séances'] = studySite.numberOfSessions
   }
-  if (study.numberOfOpenDays !== null) {
-    situation['général . nombre de jours ouverture'] = study.numberOfOpenDays
+  if (studySite.numberOfOpenDays != null) {
+    situation['général . nombre de jours ouverture'] = studySite.numberOfOpenDays
   }
 
   return situation

@@ -479,25 +479,25 @@ export const hasAccessToFormationStudy = async (userAccount: Prisma.AccountCreat
   return isFormationStudyFeatureActive.success && isFormationStudyFeatureActive.data
 }
 
-export const hasReadAccessOnStudy = async (studyId: string) => {
-  const session = await dbActualizedAuth()
-  if (!session || !session.user) {
+export const hasReadAccessOnStudy = async (studyId: string, session?: { user: UserSession }) => {
+  const actualSession = session ?? (await dbActualizedAuth())
+  if (!actualSession || !actualSession.user) {
     return false
   }
 
-  return canReadStudy(session.user, studyId)
+  return canReadStudy(actualSession.user, studyId)
 }
 
-export const hasEditAccessOnStudy = async (studyId: string) => {
-  const session = await dbActualizedAuth()
-  if (!session || !session.user) {
+export const hasEditAccessOnStudy = async (studyId: string, session?: { user: UserSession }) => {
+  const actualSession = session ?? (await dbActualizedAuth())
+  if (!actualSession || !actualSession.user) {
     return false
   }
 
-  const study = await getStudyById(studyId, session.user.organizationVersionId)
+  const study = await getStudyById(studyId, actualSession.user.organizationVersionId)
   if (!study) {
     return false
   }
 
-  return canEditStudy(session.user, study)
+  return canEditStudy(actualSession.user, study)
 }

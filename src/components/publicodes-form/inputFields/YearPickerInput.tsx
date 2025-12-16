@@ -2,8 +2,11 @@ import { DatePicker, DatePickerProps } from '@mui/x-date-pickers'
 import { PickerValue } from '@mui/x-date-pickers/internals/models'
 import { EvaluatedStringInput } from '@publicodes/forms'
 import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { InputHTMLAttributes, useCallback, useMemo } from 'react'
 import { BaseInputProps } from './utils'
+
+dayjs.extend(customParseFormat)
 
 interface YearPickerInputProps<RuleName extends string> extends BaseInputProps<RuleName> {
   formElement: EvaluatedStringInput<RuleName>
@@ -18,13 +21,11 @@ const YearPickerInput = <RuleName extends string>({
   ...props
 }: YearPickerInputProps<RuleName> &
   Omit<DatePickerProps & InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | 'onBlur'>) => {
-  const value = formElement.value
-
   const handleYearChange = useCallback(
     (newValue: PickerValue) => {
       if (newValue && newValue.isValid()) {
         const formattedValue = newValue.format('YYYY')
-        onChange(formElement.id, '01/01/' + formattedValue)
+        onChange(formElement.id, formattedValue + '-01-01')
       }
     },
     [onChange, formElement.id],
@@ -37,14 +38,19 @@ const YearPickerInput = <RuleName extends string>({
   }
 
   const convertedValue = useMemo(() => {
-    if (value && typeof value === 'string') {
-      const year = new Date(value).getFullYear()
-      if (!isNaN(year) && year >= 1900 && year <= 2100) {
-        return dayjs().year(year)
+    const val = formElement.value ?? formElement.defaultValue
+    if (val && typeof val === 'string') {
+      // DD/MM/YYYY (Publicodes date format)
+      const parsed = dayjs(val, 'DD/MM/YYYY', true)
+      if (parsed.isValid()) {
+        const year = parsed.year()
+        if (year >= 1900 && year <= 2100) {
+          return dayjs().year(year)
+        }
       }
     }
     return null
-  }, [value])
+  }, [formElement.value, formElement.defaultValue])
 
   return (
     <DatePicker

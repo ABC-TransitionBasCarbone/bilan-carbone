@@ -1,7 +1,7 @@
 import { FormControl, FormHelperText, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { EvaluatedSelect } from '@publicodes/forms'
-import styles from '../styles/DynamicForm.module.css'
+import styles from '../PublicodesForm.module.css'
 import { BaseInputProps } from './utils'
 
 const DisabledText = styled(Typography)({

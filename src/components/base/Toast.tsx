@@ -9,9 +9,12 @@ interface Props {
   open: boolean
   onClose: () => void
   message: string
-  color: 'success' | 'error' | 'info' | 'warning'
+  color: ToastColors
   toastKey: string
   duration?: number
+  slotProps?: {
+    transition?: { onExited?: () => void }
+  }
 }
 
 const backgrounds: Record<ToastColors, string> = {
@@ -21,13 +24,14 @@ const backgrounds: Record<ToastColors, string> = {
   warning: 'var(--warning)',
 }
 
-const Toast = ({ position, open, onClose, message, color, toastKey, duration }: Props) => (
+const Toast = ({ position, open, onClose, message, color, toastKey, duration, slotProps }: Props) => (
   <Snackbar
     key={toastKey}
     anchorOrigin={position}
     open={open}
     onClose={onClose}
     autoHideDuration={duration || 5 * SEC * TIME_IN_MS}
+    slotProps={slotProps}
   >
     <Alert
       onClose={onClose}

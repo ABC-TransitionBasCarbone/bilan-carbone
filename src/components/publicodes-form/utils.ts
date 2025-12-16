@@ -105,3 +105,16 @@ export function getUpdatedSituationWithInputValue<RuleName extends string>(
     [dottedName]: situationValue,
   }
 }
+
+export function situationsAreEqual<RuleName extends string>(
+  sit1: Situation<RuleName>,
+  sit2: Situation<RuleName>,
+): boolean {
+  const keys1 = Object.keys(sit1)
+  const keys2 = Object.keys(sit2)
+  if (keys1.length !== keys2.length) {
+    return false
+  }
+
+  return keys1.every((key) => sit1[key as RuleName] === sit2[key as RuleName])
+}

@@ -20,7 +20,7 @@ export default function PublicodesQuestion<RuleName extends string>({
       const formElement = formLayout.evaluatedElement
 
       return (
-        <Box key={formElement.id} sx={{ mb: 2 }}>
+        <Box key={formElement.id} className="mb2">
           <QuestionContainer label={formElement.label} helperText={formElement.description}>
             <PublicodesInputField formElement={formElement} onChange={onChange} />
           </QuestionContainer>
@@ -29,6 +29,7 @@ export default function PublicodesQuestion<RuleName extends string>({
     }
     case 'group': {
       return (
+        // TODO: handle helper text for layouts
         <QuestionContainer label={formLayout.title}>
           <GroupQuestion groupLayout={formLayout} onChange={onChange} />
         </QuestionContainer>

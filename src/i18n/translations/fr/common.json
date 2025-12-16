@@ -14,6 +14,14 @@
     "notAuthorized": "Action non authorisée",
     "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
   },
+  "saveStatus": {
+    "saving": "Sauvegarde des réponses en cours...",
+    "saved": "Réponses sauvegardées",
+    "error": "Erreur de sauvegarde des réponses",
+    "ready": "Prêt à sauvegarder",
+    "at": "à",
+    "syncedFromOtherUser": "Données mises à jour par un·e autre utilisateur·ice"
+  },
   "signup": {
     "email": "Email",
     "emailPlaceholder": "Email utilisée lors de votre formation",

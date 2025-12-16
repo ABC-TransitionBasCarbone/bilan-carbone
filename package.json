@@ -32,10 +32,10 @@
     "seed": "tsx prisma/seed/index.ts"
   },
   "dependencies": {
+    "@abc-transitionbascarbone/publicodes-count": "file:./publicodes-packages/publicodes-count/",
     "@aws-sdk/client-s3": "^3.946.0",
     "@aws-sdk/s3-request-presigner": "^3.946.0",
-    "@abc-transitionbascarbone/publicodes-count": "file:./publicodes-packages/publicodes-count/",
-    "publicodes": "^1.9.1",
+    "@base-ui-components/react": "^1.0.0-rc.0",
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
@@ -78,6 +78,7 @@
     "postcss-nested": "^7.0.2",
     "postcss-preset-env": "^10.5.0",
     "prisma": "^6.17.1",
+    "publicodes": "^1.9.1",
     "react": "19.2.1",
     "react-countdown": "^2.3.6",
     "react-dom": "19.2.1",
