@@ -4,7 +4,7 @@ import PublicodesForm from '@/components/publicodes-form/PublicodesForm'
 import { CircularProgress } from '@mui/material'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import { useCutPublicodes } from '../context/CutPublicodesFormProvider'
+import { useCutPublicodes } from '../context/publicodesContext'
 import { getFormLayoutsForSubPost } from '../publicodes/subPostMapping'
 
 export interface PublicodesSubPostFormProps {

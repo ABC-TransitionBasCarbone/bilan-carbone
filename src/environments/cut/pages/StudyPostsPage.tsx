@@ -12,7 +12,7 @@ import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
-import { CutPublicodesFormProvider } from '../context/CutPublicodesFormProvider'
+import { CutPublicodesFormProvider } from '../context/publicodesContext'
 import CutSaveStatusIndicator from '../study/CutSaveStatusIndicator'
 import PublicodesSubPostForm from '../study/PublicodesSubPostForm'
 

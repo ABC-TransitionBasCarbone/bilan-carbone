@@ -8,7 +8,7 @@ import { styled } from '@mui/material'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
-import { useCutPublicodesSituation } from '../../context/CutPublicodesSituationProvider'
+import { useCutPublicodesSituation } from '../../context/publicodesContext'
 import { getFormLayoutsForSubPost } from '../../publicodes/subPostMapping'
 import { CutPostInfography } from './CutPostInfography'
 
