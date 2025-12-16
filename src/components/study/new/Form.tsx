@@ -30,6 +30,7 @@ interface Props {
 
 const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudyId, beforeSubmit }: Props) => {
   const router = useRouter()
+  const tLabel = useTranslations('common.label')
   const tError = useTranslations('study.new.error')
   const tGlossary = useTranslations('study.new.glossary')
   const tStudyNewSuggestion = useTranslations('study.new.suggestion')
@@ -89,12 +90,12 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudy
             <span className="inputLabel bold">{t('studyDates')}</span>
           </IconLabel>
           <div className={styles.dates}>
-            <FormDatePicker control={form.control} translation={t} name="startDate" label={t('start')} />
+            <FormDatePicker control={form.control} translation={t} name="startDate" label={tLabel('start')} />
             <FormDatePicker
               control={form.control}
               translation={t}
               name="endDate"
-              label={t('end')}
+              label={tLabel('end')}
               data-testid="new-study-endDate"
             />
           </div>

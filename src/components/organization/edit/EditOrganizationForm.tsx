@@ -38,7 +38,7 @@ const EditOrganizationForm = ({ organizationVersion, caUnit, isCut = false }: Pr
   const router = useRouter()
   const t = useTranslations('organization.form')
   const tStudySites = useTranslations('organization.studySites')
-  const tCommon = useTranslations('common')
+  const tAction = useTranslations('common.action')
 
   const [sitesOnError, setSitesOnError] = useState<StudiesWithSites>(emptySitesOnError)
   const { callServerFunction } = useServerFunction()
@@ -100,7 +100,7 @@ const EditOrganizationForm = ({ organizationVersion, caUnit, isCut = false }: Pr
         title={t('title')}
         onClose={() => setSitesOnError(emptySitesOnError)}
         actions={[
-          { actionType: 'button', onClick: () => setSitesOnError(emptySitesOnError), children: tCommon('close') },
+          { actionType: 'button', onClick: () => setSitesOnError(emptySitesOnError), children: tAction('close') },
         ]}
       >
         <div id="delete-site-with-studies-modal-description" className="flex-col">

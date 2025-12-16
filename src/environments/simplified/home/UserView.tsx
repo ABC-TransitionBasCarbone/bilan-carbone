@@ -28,7 +28,7 @@ const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
 
 const UserView = ({ account }: Props) => {
   const t = useTranslations('home')
-  const tCommon = useTranslations('common')
+  const tAction = useTranslations('common.action')
 
   const title = t('title')
   const navigation = useTranslations('home.navigation')
@@ -56,7 +56,7 @@ const UserView = ({ account }: Props) => {
             <Link href="/organisations" className={styles.startButtonLink}>
               <Box className={classNames('flex-cc px2 py1', styles.startButton)} component="button">
                 <Typography variant="h6" className={styles.startButtonText}>
-                  {tCommon('start')}
+                  {tAction('start')}
                 </Typography>
               </Box>
             </Link>

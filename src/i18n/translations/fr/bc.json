@@ -333,8 +333,6 @@
       "validator": "Email du ou de la validateur·rice",
       "studyDates": "Dates de l'étude",
       "realizationDates": "Date de la réalisation de l'étude",
-      "start": "Début",
-      "end": "Fin",
       "level": "Niveau de maturité du Bilan Carbone®",
       "exports": "Exports",
       "control": "Mode de contrôle",
@@ -2138,8 +2136,5 @@
     "studyYearMustBeBeforeCurrent": "L'année de l'étude doit être antérieure à l'année de l'étude actuelle",
     "studyYearMustBeAfterLinkedStudies": "Impossible de renseigner une date antérieure à celles de vos études liées sur votre plan de transition",
     "maxTwoDecimals": "Le taux de réduction doit avoir au maximum 2 décimales"
-  },
-  "common": {
-    "typeToConfirm": "Tapez \"{name}\" pour confirmer"
   }
 }
