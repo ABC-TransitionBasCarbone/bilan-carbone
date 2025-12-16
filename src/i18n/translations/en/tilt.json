@@ -32,8 +32,7 @@
         "message": "Find here the list of establishments linked to your account"
       }
     },
-    "title": "Calculating your simplified carbon footprint will allow you to:",
-    "start": "Start"
+    "title": "Calculating your simplified carbon footprint will allow you to:"
   },
   "exports": {
     "env_specific_export": "Tilt"

@@ -11,6 +11,7 @@
     "update": "Update",
     "previous": "Previous",
     "next": "Next",
+    "start": "Start",
     "notAuthorized": "Action not authorized",
     "Not authorized": "You are not allowed to do this action"
   },
