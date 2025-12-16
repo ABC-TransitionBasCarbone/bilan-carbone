@@ -6,7 +6,7 @@ import { PUBLICODES_COUNT_VERSION } from '@/constants/versions'
 import { useBeforeUnload } from '@/hooks/useBeforeUnload'
 import { usePublicodesForm } from '@/hooks/usePublicodesForm'
 import { useTranslations } from 'next-intl'
-import { ReactNode, useCallback, useMemo } from 'react'
+import { ReactNode, useMemo } from 'react'
 import { getCutEngine } from '../publicodes/cut-engine'
 import { CutSituation } from '../publicodes/types'
 
@@ -24,17 +24,13 @@ export function CutPublicodesProvider({ children, studyId, studySiteId }: CutPub
   const { showSuccessToast } = useToast()
   const engine = useMemo(() => getCutEngine().shallowCopy(), [])
 
-  const handleSyncUpdate = useCallback(() => {
-    showSuccessToast(t('syncedFromOtherUser'))
-  }, [showSuccessToast, t])
-
   const publicodes = usePublicodesForm<CutSituation>({
     studyId,
     studySiteId,
     modelVersion: PUBLICODES_COUNT_VERSION,
     engine,
     syncIntervalMs: 5000,
-    onSyncUpdate: handleSyncUpdate,
+    onSyncUpdate: () => showSuccessToast(t('syncedFromOtherUser')),
   })
 
   useBeforeUnload({
