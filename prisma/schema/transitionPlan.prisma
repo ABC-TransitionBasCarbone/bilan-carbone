@@ -152,11 +152,11 @@ model ExternalStudy {
   transitionPlanId String         @map("transition_plan_id")
   transitionPlan   TransitionPlan @relation(fields: [transitionPlanId], references: [id], onDelete: Cascade)
 
-  name      String
-  date      DateTime
-  totalCo2Kg Int     @map("total_co2_kg")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  name       String
+  date       DateTime
+  totalCo2Kg Int      @map("total_co2_kg")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("external_studies")
 }

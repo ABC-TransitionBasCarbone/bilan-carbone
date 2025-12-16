@@ -80,7 +80,7 @@ Le CSV est créé manuellement depuis l'excel disponible sur le site de Secten.
 
 - Trouver le fichier <https://www.citepa.org/donnees-air-climat/donnees-gaz-a-effet-de-serre/secten/> > "Données de GES ed X"
 - Télécharger le fichier 01 > Onglet CO2e-UE
-- Extraire les lignes 7 à 14, sauf la ligne 13, dans un autre fichier excel.
+- Copier les valeurs des lignes 7 à 14, sauf la ligne 13, dans le fichier excel template.
 - Puis exporter le fichier excel en CSV avec le delimiter ";" et le format "UTF-8".
 
 ## Prisma Commands
