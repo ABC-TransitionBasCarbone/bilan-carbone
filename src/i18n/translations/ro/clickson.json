@@ -11,15 +11,15 @@
   "home": {
     "navigation": {
       "collaborators": {
-        "title": "Echipa pilot:",
+        "title": "Echipa pilot",
         "message": "Găsește aici lista profesorilor, personalului administrativ și elevilor autorizați să modifice datele instituției"
       },
       "footprints": {
-        "title": "Amprentele mele:",
+        "title": "Amprentele mele",
         "message": "Creează aici prima ta amprentă. Apoi poți vizualiza amprentele tale sau poți crea altele noi oricând."
       },
       "sites": {
-        "title": "Instituțiile mele:",
+        "title": "Instituțiile mele",
         "message": "Găsește aici lista instituțiilor asociate contului tău"
       }
     },

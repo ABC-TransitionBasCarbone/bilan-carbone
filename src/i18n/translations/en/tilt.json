@@ -1,7 +1,7 @@
 {
   "login": {
-    "subtext": "Association specific version",
-    "explanation": "The tool dedicated to associations wishing to apply the Bilan Carbone® method and its sectoral variant for the associative sphere. It came into being thanks to the partnership between the Association for Low Carbon Transition, which is the holder of the Bilan Carbone® method, and Tilt, which accompanies all associations in their low-carbon transition. The tool is freely accessible for all French associations trained in the method.",
+    "subtext": "Non-profit organisation specific version",
+    "explanation": "The tool dedicated to non-profit organisations wishing to apply the Bilan Carbone® method and its sectoral variant for the non-profit sphere. It came into being thanks to the partnership between the Association for Low Carbon Transition, which is the holder of the Bilan Carbone® method, and Tilt, which accompanies all non-profit organisations in their low-carbon transition. The tool is freely accessible for all French non-profit organisations trained in the method.",
     "form": {
       "activate": "Create my account"
     }
@@ -12,7 +12,7 @@
     "siretPlaceholder": "Your Siret",
     "siretRequired": "Please enter a Siret",
     "Not authorized": "This email is already used for Tilt or there's an issue with the account creation. Please see <link>the FAQ</link> or <support>contact support</support> if you think this is an error.",
-    "Not association SIRET": "This tool is reserved for associations. Please use the classic version of Bilan Carbone®+",
+    "Not association SIRET": "This tool is reserved for non-profit organisations. Please use the classic version of Bilan Carbone®+",
     "validation": {
       "siret": "Please enter a Siret"
     }
@@ -20,15 +20,15 @@
   "home": {
     "navigation": {
       "collaborators": {
-        "title": "Pilot Team:",
+        "title": "Pilot Team",
         "message": "Find here the list of teachers, administrative staff and students authorized to modify the establishment's data"
       },
       "footprints": {
-        "title": "My Footprints:",
+        "title": "My Footprints",
         "message": "Create your first footprint here. You can then view your footprints or create new ones at any time."
       },
       "sites": {
-        "title": "My association:",
+        "title": "My Non-profit Organisation",
         "message": "Find here the list of establishments linked to your account"
       }
     },
@@ -64,10 +64,10 @@
   },
   "study": {
     "flow": {
-      "info": "You can download a sample flow mapping to help you build your own. Afterwards, if you wish to submit your flow mapping so that other users can use it as an example and help other associations, please send it to <mail>methodologie@abc-transitionbascarbone.fr</mail>"
+      "info": "You can download a sample flow mapping to help you build your own. Afterwards, if you wish to submit your flow mapping so that other users can use it as an example and help other non-profit organisations, please send it to <mail>methodologie@abc-transitionbascarbone.fr</mail>"
     },
     "dependencyMatrix": {
-      "info": "You can download a sample risk and dependency matrix to help you build your own. Afterwards, if you wish to submit your own matrix to help other associations by providing a working base, please send it to <mail>methodologie@abc-transitionbascarbone.fr</mail>"
+      "info": "You can download a sample risk and dependency matrix to help you build your own. Afterwards, if you wish to submit your own matrix to help other non-profit organisations by providing a working base, please send it to <mail>methodologie@abc-transitionbascarbone.fr</mail>"
     }
   },
   "emissionFactors": {

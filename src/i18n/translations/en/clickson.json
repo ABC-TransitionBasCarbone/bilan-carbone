@@ -11,15 +11,15 @@
   "home": {
     "navigation": {
       "collaborators": {
-        "title": "Pilot Team:",
+        "title": "Pilot Team",
         "message": "Find here the list of teachers, administrative staff and students authorized to modify the establishment's data"
       },
       "footprints": {
-        "title": "My Footprints:",
+        "title": "My Footprints",
         "message": "Create your first footprint here. You can then view your footprints or create new ones at any time."
       },
       "sites": {
-        "title": "My Establishments:",
+        "title": "My Establishments",
         "message": "Find here the list of establishments linked to your account"
       }
     },

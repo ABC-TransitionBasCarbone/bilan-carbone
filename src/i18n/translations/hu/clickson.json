@@ -11,15 +11,15 @@
   "home": {
     "navigation": {
       "collaborators": {
-        "title": "Pilótacsapat:",
+        "title": "Pilótacsapat",
         "message": "Itt található a listája azoknak a tanároknak, adminisztratív dolgozóknak és diákoknak, akik jogosultak módosítani az intézmény adatait"
       },
       "footprints": {
-        "title": "Saját lábnyomaim:",
+        "title": "Saját lábnyomaim",
         "message": "Hozd létre itt az első lábnyomodat. Ezután bármikor megtekintheted vagy létrehozhatsz újakat."
       },
       "sites": {
-        "title": "Intézményeim:",
+        "title": "Intézményeim",
         "message": "Itt található a számládhoz kapcsolt intézmények listája"
       }
     },

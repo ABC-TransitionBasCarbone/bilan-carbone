@@ -11,15 +11,15 @@
   "home": {
     "navigation": {
       "collaborators": {
-        "title": "L'équipe Pilote :",
+        "title": "L'équipe Pilote",
         "message": "Retrouvez ici la liste des enseignants, personnels administratifs et élèves autorisés à modifier les données de l'établissement"
       },
       "footprints": {
-        "title": "Mes Empreintes :",
+        "title": "Mes Empreintes",
         "message": "Créer votre première empreinte ici. Vous pourrez ensuite consulter vos empreintes ou en créer de nouvelles à tout moment."
       },
       "sites": {
-        "title": "Mes Établissements :",
+        "title": "Mes Établissements",
         "message": "Retrouvez ici la liste des établissements rattachés à votre compte"
       }
     },

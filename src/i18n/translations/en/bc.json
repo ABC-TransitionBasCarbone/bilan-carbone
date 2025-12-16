@@ -115,11 +115,11 @@
     "edit": "Edit",
     "studyRights": "Rights",
     "team": "Team",
-    "actualities": "Actualities"
+    "actualities": "News"
   },
   "actuality": {
-    "title": "BC+ actualities",
-    "allActualities": "See all actualities",
+    "title": "BC+ news",
+    "allActualities": "See all news",
     "noItems": "No news at the moment",
     "seeLess": "See less",
     "seeMore": "See more"

@@ -6,14 +6,12 @@
 }
 
 .styledBoxContainer {
-  border-style: solid;
-  border-width: 0.125rem;
-  border-radius: 0.313rem;
-  border-color: var(--mui-palette-primary-main);
-  color: var(--mui-palette-text-primary);
+  border-radius: 0.5rem;
 }
 
 .styledBoxInfo {
+  color: var(--mui-palette-primary-contrastText);
+
   > p {
     font-family: 'Gilroy-Regular', sans-serif;
     font-weight: 400;
@@ -52,8 +50,11 @@
   height: 12rem;
   text-decoration: none;
   font-family: 'Gilroy-Regular', sans-serif;
-  border-radius: 0.5rem;
+  border-style: solid;
+  border-width: 0.125rem;
+  border-color: var(--mui-palette-primary-main);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  color: var(--mui-palette-text-primary);
   background-color: var(--mui-palette-primary-light);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -73,7 +74,6 @@
 }
 
 .styledBoxLink:hover {
-  border-color: var(--mui-palette-primary-dark);
   border-width: 0.25rem;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

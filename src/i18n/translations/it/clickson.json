@@ -11,15 +11,15 @@
   "home": {
     "navigation": {
       "collaborators": {
-        "title": "Team pilota:",
+        "title": "Team pilota",
         "message": "Trova qui l'elenco degli insegnanti, del personale amministrativo e degli studenti autorizzati a modificare i dati dell'istituto"
       },
       "footprints": {
-        "title": "Le mie impronte:",
+        "title": "Le mie impronte",
         "message": "Crea qui la tua prima impronta. Potrai poi visualizzare le tue impronte o crearne di nuove in qualsiasi momento."
       },
       "sites": {
-        "title": "I miei istituti:",
+        "title": "I miei istituti",
         "message": "Trova qui l'elenco degli istituti collegati al tuo account"
       }
     },

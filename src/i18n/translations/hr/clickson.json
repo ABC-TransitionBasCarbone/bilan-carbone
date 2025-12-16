@@ -11,15 +11,15 @@
   "home": {
     "navigation": {
       "collaborators": {
-        "title": "Pilot tim:",
+        "title": "Pilot tim",
         "message": "Ovdje pronađite popis nastavnika, administrativnog osoblja i učenika ovlaštenih za uređivanje podataka ustanove"
       },
       "footprints": {
-        "title": "Moji otisci:",
+        "title": "Moji otisci",
         "message": "Ovdje kreirajte svoj prvi otisak. Zatim ih možete pregledavati ili kreirati nove u bilo kojem trenutku."
       },
       "sites": {
-        "title": "Moje ustanove:",
+        "title": "Moje ustanove",
         "message": "Ovdje pronađite popis ustanova povezanih s vašim računom"
       }
     },
