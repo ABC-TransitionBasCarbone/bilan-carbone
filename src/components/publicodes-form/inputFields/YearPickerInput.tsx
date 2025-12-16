@@ -40,7 +40,7 @@ const YearPickerInput = <RuleName extends string>({
   const convertedValue = useMemo(() => {
     const val = formElement.value ?? formElement.defaultValue
     if (val && typeof val === 'string') {
-      // Parse au format DD/MM/YYYY (format Publicodes)
+      // DD/MM/YYYY (Publicodes date format)
       const parsed = dayjs(val, 'DD/MM/YYYY', true)
       if (parsed.isValid()) {
         const year = parsed.year()

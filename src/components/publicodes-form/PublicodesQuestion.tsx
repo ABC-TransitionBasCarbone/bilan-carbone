@@ -29,6 +29,7 @@ export default function PublicodesQuestion<RuleName extends string>({
     }
     case 'group': {
       return (
+        // TODO: handle helper text for layouts
         <QuestionContainer label={formLayout.title}>
           <GroupQuestion groupLayout={formLayout} onChange={onChange} />
         </QuestionContainer>

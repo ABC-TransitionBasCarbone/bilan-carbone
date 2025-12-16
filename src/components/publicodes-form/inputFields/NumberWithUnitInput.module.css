@@ -1,0 +1,14 @@
+.inputWrapper {
+  max-width: fit-content;
+}
+
+.input {
+  background-color: white;
+  border-radius: 0.5rem;
+  min-width: 5rem;
+}
+
+.input fieldset {
+  border-color: var(--grayscale-300);
+  border-radius: 0.5rem;
+}

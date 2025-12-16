@@ -3,8 +3,8 @@ import Engine, { Situation } from 'publicodes'
 import { useMemo } from 'react'
 import { getEvaluatedFormLayout } from './layouts/evaluatedFormLayout'
 import { FormLayout } from './layouts/formLayout'
+import styles from './PublicodesForm.module.css'
 import PublicodesQuestion from './PublicodesQuestion'
-import styles from './styles/PublicodesForm.module.css'
 import {
   areRulesReferencedInApplicability,
   evaluatedLayoutIsApplicable,
