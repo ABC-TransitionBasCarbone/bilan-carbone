@@ -5,7 +5,7 @@ import { CircularProgress } from '@mui/material'
 import { SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useCutPublicodes } from '../context/CutPublicodesFormProvider'
+import { useCutPublicodes } from '../context/publicodesContext'
 import { getFormLayoutsForSubPost } from '../publicodes/subPostMapping'
 import styles from './PublicodesSubPostForm.module.css'
 
