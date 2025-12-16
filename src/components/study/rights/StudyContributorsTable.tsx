@@ -8,12 +8,14 @@ import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { getEnvVar } from '@/lib/environment'
+import { canAddContributorWithNoSubposts } from '@/services/permissions/environment'
 import { Post, subPostsByPost } from '@/services/posts'
 import { deleteStudyContributor } from '@/services/serverFunctions/study'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { IconButton } from '@mui/material'
-import { Environment } from '@prisma/client'
+import { Environment, StudyRole, SubPost } from '@prisma/client'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -66,6 +68,8 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
   const [deleting, setDeleting] = useState(false)
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
   const { callServerFunction } = useServerFunction()
+
+  const { environment } = useAppEnvironmentStore()
 
   const router = useRouter()
 
@@ -124,7 +128,8 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
       const allPossibleSubPosts = posts.flatMap((p) => subPostsByPost[p.post as Post])
 
       // Check if contributor has access to ALL possible sub-posts
-      const hasAllSubPosts = allPossibleSubPosts.every((sp) => actualSubPosts.includes(sp))
+      const hasAllSubPosts =
+        allPossibleSubPosts.length > 0 && allPossibleSubPosts.every((sp) => actualSubPosts.includes(sp))
 
       if (hasAllSubPosts) {
         return tPost('allSubPost')
@@ -208,16 +213,28 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
 
   // Create flattened data structure with contributor rows and expandable post sub-rows
   const data = useMemo(() => {
-    const contributorData = study.contributors
+    let contributors = study.contributors
+    if (environment && canAddContributorWithNoSubposts(environment)) {
+      contributors = [
+        ...contributors,
+        ...study.allowedUsers
+          .filter((value) => value.role === StudyRole.Reader)
+          .map((value) => ({
+            account: { ...value.account, organizationVersionId: value.account.organizationVersionId || null },
+            accountId: value.accountId,
+            subPost: null as unknown as SubPost,
+          })),
+      ]
+    }
+    const contributorData = contributors
       .filter(
         (contributor, index) =>
-          study.contributors.findIndex((value) => value.account.user.email === contributor.account.user.email) ===
-          index,
+          contributors.findIndex((value) => value.account.user.email === contributor.account.user.email) === index,
       )
       .map((contributor) => ({ accountId: contributor.accountId, email: contributor.account.user.email }))
       .map((contributor) => ({
         ...contributor,
-        subPosts: study.contributors
+        subPosts: contributors
           .filter((studyContributor) => studyContributor.accountId === contributor.accountId)
           .map((studyContributor) => studyContributor.subPost),
       }))
