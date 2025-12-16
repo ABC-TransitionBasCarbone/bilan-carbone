@@ -24,6 +24,7 @@
       }
     },
     "title": "Izračunavanje vašeg pojednostavljenog ugljičnog otiska omogućit će vam da:",
+    "start": "Počni",
     "alert": {
       "info": "Clickson kalkulator omogućuje vam procjenu klimatskog utjecaja vaše aktivnosti. Prije svega je alat za podizanje svijesti. Nije pristup niskougljičnoj tranziciji već pojednostavljeni ugljični otisak — u smislu <link>Vodiča za komunikaciju oko obračuna ugljika</link> — fokusiran na glavne izvore emisija povezane s aktivnošću ustanova."
     },

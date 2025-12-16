@@ -24,6 +24,7 @@
       }
     },
     "title": "A saját egyszerűsített karbonlábnyomod kiszámítása lehetővé teszi, hogy:",
+    "start": "Indítás",
     "alert": {
       "info": "A Clickson kalkulátor lehetővé teszi, hogy becsüld tevékenységed klímahatását. Elsősorban tudatosság növelő eszköz. Nem alacsony szén-dioxid-kibocsátású átállási megközelítés, hanem egyszerűsített karbonlábnyom — a <link>Szén-dioxid elszámolás kommunikációs útmutatója</link> szerint —, az intézmények tevékenységéhez kapcsolódó fő kibocsátási forrásokra összpontosítva."
     },

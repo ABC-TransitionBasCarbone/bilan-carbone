@@ -2,13 +2,15 @@ import { Environment } from '@prisma/client'
 
 const { BC, CUT, TILT, CLICKSON } = Environment
 const advancedEnvironments: Environment[] = [BC, TILT]
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const simplifiedEnvironments: Environment[] = [CUT, CLICKSON]
 
-const isAdvanced = (environment: Environment) => advancedEnvironments.includes(environment)
+export const isAdvanced = (environment: Environment) => advancedEnvironments.includes(environment)
+export const isSimplified = (environment: Environment) => simplifiedEnvironments.includes(environment)
+
 const isBC = (environment: Environment) => environment === BC
 const isTilt = (environment: Environment) => environment === TILT
-const isSimplified = (environment: Environment) => simplifiedEnvironments.includes(environment)
+const isCut = (environment: Environment) => environment === CUT
+const isClickson = (environment: Environment) => environment === CLICKSON
 
 export const hasAccessToEmissionFactor = isAdvanced
 
@@ -47,19 +49,19 @@ export const hasAccessToEmissionSourceValidation = isAdvanced
 export const hasRoleOnStudy = isAdvanced
 
 export const hasAccessToCarbonResponsibilityIntensities = (environment: Environment) =>
-  ([Environment.BC, Environment.TILT, Environment.CUT] as Environment[]).includes(environment)
+  ([BC, TILT, CUT] as Environment[]).includes(environment)
 
 export const hasAccessToMonetaryRatio = (environment: Environment) =>
-  ([Environment.BC, Environment.TILT, Environment.CUT] as Environment[]).includes(environment)
+  ([BC, TILT, CUT] as Environment[]).includes(environment)
 
 export const hasAccessToCreateStudyWithEmissionFactorVersions = isSimplified
 
-export const showResultsInfoText = (environment: Environment) => ([CUT] as Environment[]).includes(environment)
+export const showResultsInfoText = isCut
 
-export const notDisplayingStudyRightModalForAddingContributors = (environment: Environment) =>
-  ([CLICKSON] as Environment[]).includes(environment)
+export const displayingStudyRightModalForAddingContributors = (environment: Environment) => !isClickson(environment)
 
-export const hasAccessToAllLocales = (environment: Environment) => ([CLICKSON] as Environment[]).includes(environment)
+export const hasHomeAlert = isSimplified
 
-export const hasAccessToSimplifiedEmissionAnalysis = (environment: Environment) =>
-  ([CLICKSON] as Environment[]).includes(environment)
+export const hasAccessToAllLocales = isClickson
+
+export const hasAccessToSimplifiedEmissionAnalysis = isClickson
