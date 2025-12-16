@@ -117,6 +117,7 @@
     "jest-environment-jsdom": "^30.0.5",
     "prettier": "^3.7.4",
     "prettier-plugin-organize-imports": "^4.2.0",
+    "prettier-plugin-prisma": "^5.0.0",
     "ts-jest": "^29.4.6",
     "typescript": "^5.9.2"
   },

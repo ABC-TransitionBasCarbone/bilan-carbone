@@ -1,0 +1,32 @@
+model SectenVersion {
+  id          String       @id @default(uuid())
+  name        String
+  sectenInfos SectenInfo[]
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @default(now()) @updatedAt @map("updated_at")
+
+  @@unique([name])
+  @@map("secten_version")
+}
+
+// Values are stored in tCO2e
+model SectenInfo {
+  id             String        @id @default(uuid())
+  year           Int
+  energy         Int?
+  industry       Int?
+  waste          Int?
+  buildings      Int?
+  agriculture    Int?
+  transportation Int?
+  total          Int?
+  versionId      String        @map("version_id")
+  version        SectenVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @default(now()) @updatedAt @map("updated_at")
+
+  @@unique([versionId, year])
+  @@index([versionId])
+  @@index([year])
+  @@map("secten_info")
+}
