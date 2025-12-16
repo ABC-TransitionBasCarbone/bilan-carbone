@@ -4,8 +4,8 @@ const { BC, CUT, TILT, CLICKSON } = Environment
 const advancedEnvironments: Environment[] = [BC, TILT]
 const simplifiedEnvironments: Environment[] = [CUT, CLICKSON]
 
-const isAdvanced = (environment: Environment) => advancedEnvironments.includes(environment)
-const isSimplified = (environment: Environment) => simplifiedEnvironments.includes(environment)
+export const isAdvanced = (environment: Environment) => advancedEnvironments.includes(environment)
+export const isSimplified = (environment: Environment) => simplifiedEnvironments.includes(environment)
 
 const isBC = (environment: Environment) => environment === BC
 const isTilt = (environment: Environment) => environment === TILT
