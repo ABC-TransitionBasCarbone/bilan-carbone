@@ -8,11 +8,9 @@ export const isAdvanced = (environment: Environment) => advancedEnvironments.inc
 export const isSimplified = (environment: Environment) => simplifiedEnvironments.includes(environment)
 
 const isBC = (environment: Environment) => environment === BC
-const isTilt = (environment: Environment) => environment === TILT
+export const isTilt = (environment: Environment) => environment === TILT
 const isCut = (environment: Environment) => environment === CUT
 const isClickson = (environment: Environment) => environment === CLICKSON
-
-export const hasAccessToEmissionFactor = isAdvanced
 
 export const hasAccessToSettings = isAdvanced
 
@@ -65,3 +63,6 @@ export const hasHomeAlert = isSimplified
 export const hasAccessToAllLocales = isClickson
 
 export const hasAccessToSimplifiedEmissionAnalysis = isClickson
+
+export const hasAccessToMethodology = (environment: Environment) =>
+  ([BC, TILT, CLICKSON] as Environment[]).includes(environment)
