@@ -1,7 +1,7 @@
 import NavbarButton from '@/components/navbar/NavbarButton'
 import NavbarLink from '@/components/navbar/NavbarLink'
 import NavbarOrganizationMenu from '@/components/navbar/NavbarOrganizationMenu'
-import { hasAccessToEmissionFactors } from '@/services/permissions/environmentExtended'
+import { hasAccessToEmissionFactors } from '@/services/permissions/environmentAdvanced'
 import { isAdmin } from '@/utils/user'
 import { Box, MenuItem } from '@mui/material'
 import { Role } from '@prisma/client'
