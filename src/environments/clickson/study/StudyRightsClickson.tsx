@@ -155,7 +155,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources }: 
   }
 
   const handleDateChange = useCallback(async () => {
-    const isValid = await form.trigger()
+    const isValid = await dateForm.trigger()
     if (isValid) {
       const values = dateForm.getValues()
       await callServerFunction(() => changeStudyDates(values), {
