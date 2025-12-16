@@ -6,7 +6,6 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { Locale } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
 import { getEmissionResults } from '@/services/emissionSource'
-import { hasReaderRoleOnStudyAsContributor } from '@/services/permissions/environment'
 import { StudyWithoutDetail } from '@/services/permissions/study'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { updateEmissionSource } from '@/services/serverFunctions/emissionSource'
@@ -107,10 +106,7 @@ const EmissionSource = ({
     }
   }, [emissionSource.id, router])
 
-  const canEdit =
-    !emissionSource.validated &&
-    (hasEditionRights(userRoleOnStudy) ||
-      (environment && hasReaderRoleOnStudyAsContributor(environment) && isContributor))
+  const canEdit = !emissionSource.validated && (hasEditionRights(userRoleOnStudy) || isContributor)
   const canValidate = userRoleOnStudy === StudyRole.Validator
 
   const update = useCallback(
