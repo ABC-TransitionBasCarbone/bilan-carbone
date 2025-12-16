@@ -2,7 +2,7 @@ import withAuth from '@/components/hoc/withAuth'
 import EmissionsFactorsPage from '@/components/pages/EmissionFactors'
 import NotFound from '@/components/pages/NotFound'
 import { getOrganizationVersionById } from '@/db/organization'
-import { hasAccessToEmissionFactor } from '@/services/permissions/environmentExtended'
+import { hasAccessToEmissionFactors } from '@/services/permissions/environmentExtended'
 import { UserSession } from 'next-auth'
 
 interface Props {
@@ -12,7 +12,7 @@ interface Props {
 const EmissionFactors = async ({ user }: Props) => {
   const userOrganizationVersion = await getOrganizationVersionById(user.organizationVersionId)
 
-  if (!hasAccessToEmissionFactor(user.environment, user.level)) {
+  if (!hasAccessToEmissionFactors(user.environment, user.level)) {
     return <NotFound />
   }
 
