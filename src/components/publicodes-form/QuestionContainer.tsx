@@ -23,7 +23,7 @@ const QuestionContainer = ({ label, helperText, children }: QuestionContainerPro
   return (
     <StyledQuestionContainer>
       <StyledQuestionHeader>
-        <Box display="flex" alignItems="center" gap={1}>
+        <Box className="align-center gapped1">
           <StyledQuestionTitle>{label}</StyledQuestionTitle>
           {helperText && <HelpIcon className="ml-2" onClick={() => setGlossary('title')} label={tGlossary('title')} />}
         </Box>

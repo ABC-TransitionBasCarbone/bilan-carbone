@@ -1,5 +1,6 @@
 import { FormControl, FormControlLabel, Radio, styled } from '@mui/material'
 import { EvaluatedRadioGroup } from '@publicodes/forms'
+import classNames from 'classnames'
 import { BaseInputProps } from './utils'
 
 const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
@@ -23,7 +24,7 @@ const RadioGroupInput = <RuleName extends string>({
   const flexDirection = formElement.orientation === 'horizontal' ? 'flex-row' : 'flex-col'
 
   return (
-    <FormControl className={`${flexDirection} m2 gapped1`} error={!!errorMessage} disabled={disabled}>
+    <FormControl className={classNames(flexDirection, 'm2', 'gapped1')} error={!!errorMessage} disabled={disabled}>
       {formElement.options.map((option, index) => (
         <StyledFormControlLabel
           key={`box-${index}`}

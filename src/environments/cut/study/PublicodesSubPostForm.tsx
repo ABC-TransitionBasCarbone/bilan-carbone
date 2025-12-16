@@ -3,9 +3,11 @@
 import PublicodesForm from '@/components/publicodes-form/PublicodesForm'
 import { CircularProgress } from '@mui/material'
 import { SubPost } from '@prisma/client'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useCutPublicodes } from '../context/CutPublicodesProvider'
 import { getFormLayoutsForSubPost } from '../publicodes/subPostMapping'
+import styles from './PublicodesSubPostForm.module.css'
 
 export interface PublicodesSubPostFormProps {
   subPost: SubPost
@@ -18,16 +20,16 @@ const PublicodesSubPostForm = ({ subPost }: PublicodesSubPostFormProps) => {
 
   if (error) {
     return (
-      <div className="error-container p-4 border border-red-300 bg-red-50 rounded">
-        <h3 className="text-red-800 font-semibold mb-2">{tCutQuestions('errorLoadingQuestions')}</h3>
-        <p className="text-red-600 mb-3">{error}</p>
+      <div className={classNames(styles.errorContainer, 'p1')}>
+        <h3 className={classNames(styles.errorTitle, 'mb-2')}>{tCutQuestions('errorLoadingQuestions')}</h3>
+        <p className={styles.errorMessage}>{error}</p>
       </div>
     )
   }
 
   if (isLoading) {
     return (
-      <div className="loading-container p-4 text-center">
+      <div className={classNames(styles.loadingContainer, 'p1')}>
         <CircularProgress />
       </div>
     )
@@ -35,8 +37,8 @@ const PublicodesSubPostForm = ({ subPost }: PublicodesSubPostFormProps) => {
 
   if (formLayouts === undefined) {
     return (
-      <div className="no-questions-container p-4 text-center">
-        <p className="text-gray-600">{tCutQuestions('noQuestions')}</p>
+      <div className={classNames(styles.loadingContainer, 'p1')}>
+        <p className={styles.noQuestionsMessage}>{tCutQuestions('noQuestions')}</p>
       </div>
     )
   }
@@ -45,11 +47,7 @@ const PublicodesSubPostForm = ({ subPost }: PublicodesSubPostFormProps) => {
     return null
   }
 
-  return (
-    <div className="dynamic-subpost-form">
-      <PublicodesForm engine={engine} formLayouts={formLayouts} situation={situation} onFieldChange={updateField} />
-    </div>
-  )
+  return <PublicodesForm engine={engine} formLayouts={formLayouts} situation={situation} onFieldChange={updateField} />
 }
 
 export default PublicodesSubPostForm

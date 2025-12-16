@@ -49,6 +49,7 @@ const TextWithUnitInput = <RuleName extends string>({
     <div className={classNames(styles.inputWithUnit, 'flex grow')}>
       <DebouncedInput
         {...props}
+        className={styles.input}
         // Avoid passing label to DebouncedInput to prevent double labels
         label={''}
         error={!!errorMessage}
@@ -60,9 +61,6 @@ const TextWithUnitInput = <RuleName extends string>({
         onChange={handleChange}
         disabled={disabled}
         debounce={300}
-        sx={{
-          minWidth: '6.5rem',
-        }}
         slotProps={{
           htmlInput: inputProps,
           input: {
