@@ -16,15 +16,7 @@ const ForbiddenAccess = ({ environment }: Props) => {
   return (
     <Block title={t('title')} as="h1">
       <div className="flex-col">
-        <p className="mb1">
-          {customRich(t, 'message', {
-            abc: (children) => (
-              <Link href="https://abc-transitionbascarbone.fr/" target="_blank" rel="noreferrer noopener">
-                {children}
-              </Link>
-            ),
-          })}
-        </p>
+        <p className="mb1">{customRich(t, 'message')}</p>
         <Link href="/">{t('backToHome')}</Link>
       </div>
     </Block>
