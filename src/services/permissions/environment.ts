@@ -74,3 +74,5 @@ export const hasAccessToSimplifiedStudies = (env: Environment) => {
 }
 
 export const hasReaderRoleOnStudyAsContributor = isClickson
+
+export const canAddContributorWithNoSubposts = isClickson

@@ -7,7 +7,10 @@ import { FormTextField } from '@/components/form/TextField'
 import { getOrganizationVersionAccounts } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { displayingStudyRightModalForAddingContributors } from '@/services/permissions/environment'
+import {
+  canAddContributorWithNoSubposts,
+  displayingStudyRightModalForAddingContributors,
+} from '@/services/permissions/environment'
 import { newStudyContributor } from '@/services/serverFunctions/study'
 import {
   NewStudyContributorCommand,
@@ -17,7 +20,7 @@ import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import NewStudyRightModal from './NewStudyRightModal'
 
@@ -36,13 +39,18 @@ const NewStudyContributorForm = ({ study, accounts }: Props) => {
 
   const { environment } = useAppEnvironmentStore()
 
+  const allowEmptySubPosts = useMemo(() => environment && canAddContributorWithNoSubposts(environment), [environment])
+
+  const schema = useMemo(() => NewStudyContributorCommandValidation(allowEmptySubPosts || false), [allowEmptySubPosts])
+
   const form = useForm<NewStudyContributorCommand>({
-    resolver: zodResolver(NewStudyContributorCommandValidation),
+    resolver: zodResolver(schema),
     mode: 'onBlur',
     reValidateMode: 'onChange',
     defaultValues: {
       studyId: study.id,
       email: '',
+      subPosts: {},
     },
   })
 
