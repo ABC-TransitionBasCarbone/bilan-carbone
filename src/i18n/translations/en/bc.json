@@ -1839,7 +1839,7 @@
       "myClient": "My client",
       "update": "Update my information",
       "updateClient": "Update my client",
-      "renew": "Your {year} licence is about to expire. Remember to renew it to continue using the services in {nextYear}",
+      "renew": "Your {year} licence is about to expire. Remember to renew it to continue using the services in {nextYear}. Without renewal, you will have access in read-only mode.",
       "renewLink": "Renew"
     },
     "delete": {

@@ -1839,7 +1839,7 @@
       "myClient": "Mon client",
       "update": "Modifier mes informations",
       "updateClient": "Modifier mon client",
-      "renew": "Votre licence {year} touche à sa fin, pensez à la renouveler pour continuer à utiliser les services en {nextYear}.",
+      "renew": "Votre adhésion {year} touche à sa fin, pensez à la renouveler pour continuer à utiliser les services en {nextYear}. Sans réadhérer, vous n'aurez plus accès qu'en lecture à vos études sur le BC+.",
       "renewLink": "Renouveler"
     },
     "delete": {
@@ -2065,7 +2065,7 @@
     "form": "Questionnaire Typeform",
     "forbidden": {
       "title": "Accès bloqué",
-      "message": "Vous n'êtes pas dans notre base de donnée de formés, vous ne pouvez donc pas avoir accès à l'onglet formation pour passer la formation de mise à jour. Si vous pensez que c'est une erreur merci de suivre le processus indiqué dans notre <link>FAQ</link>.",
+      "message": "Vous n'êtes pas dans notre base de donnée de formés, vous ne pouvez donc pas avoir accès à l'onglet formation pour passer la formation de mise à jour. Si vous pensez que c'est une erreur merci de suivre le processus indiqué dans notre <faq>FAQ</faq>.<br></br><br></br> Si vous contacter le <support>support</support>, merci d'avoir en amont <b>créer un compte</b> sur <abc>le site de l'ABC</abc> avec votre mail de connexion au BC+ (aucune adhésion supplémentaire n'est nécessaire, cela permet uniquement de vous ajouter à notre base de données de formés). Merci également d'envoyer au support <b>votre attestation de formation</b> et de préciser le mail avec lequel vous vous connectez sur le BC+.<br></br><br></br> Si vous avez déjà été en contact avec le support et que vous ne voyez pas de changement, merci d'attendre 1h puis de vous <b>déconnectez et vous reconnectez au BC+.</b>",
       "backToHome": "Retour à l'accueil"
     }
   },
