@@ -1,5 +1,5 @@
 import { CustomFormLabel } from '@/components/form/CustomFormLabel'
-import { AddActionCommand } from '@/services/serverFunctions/transitionPlan.command'
+import { AddActionFormCommand } from '@/services/serverFunctions/transitionPlan.command'
 import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core'
 import { SortableContext, rectSortingStrategy } from '@dnd-kit/sortable'
 import { Add, ArrowRight } from '@mui/icons-material'
@@ -11,8 +11,8 @@ import { ActionStep } from './ActionStep'
 import styles from './ActionStepsList.module.css'
 
 interface Props {
-  control: Control<AddActionCommand>
-  errors: FieldErrors<AddActionCommand>
+  control: Control<AddActionFormCommand>
+  errors: FieldErrors<AddActionFormCommand>
 }
 
 const ActionStepsList = ({ control, errors }: Props) => {

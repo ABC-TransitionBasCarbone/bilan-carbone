@@ -1,5 +1,5 @@
 import { FormTextField } from '@/components/form/TextField'
-import { ActionStepCommand, AddActionCommand } from '@/services/serverFunctions/transitionPlan.command'
+import { ActionStepCommand, AddActionFormCommand } from '@/services/serverFunctions/transitionPlan.command'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Delete, DragIndicator } from '@mui/icons-material'
@@ -12,9 +12,9 @@ import styles from './ActionStepsList.module.css'
 interface Props {
   step: ActionStepCommand
   index: number
-  control: Control<AddActionCommand>
+  control: Control<AddActionFormCommand>
   onDelete: (index: number) => void
-  errors: FieldErrors<AddActionCommand>
+  errors: FieldErrors<AddActionFormCommand>
 }
 
 export const ActionStep = ({ step, index, control, onDelete }: Props) => {

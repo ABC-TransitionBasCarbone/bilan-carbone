@@ -1,7 +1,7 @@
 import {
   ActionIndicatorCommand,
   ActionStepCommand,
-  AddActionCommand,
+  AddActionInputCommand,
 } from '@/services/serverFunctions/transitionPlan.command'
 import {
   Action,
@@ -195,7 +195,7 @@ export const hasTransitionPlan = async (studyId: string): Promise<boolean> => {
 
 export const createAction = async (data: Prisma.ActionUncheckedCreateInput) => prismaClient.action.create({ data })
 
-export const createActionWithRelations = async (command: AddActionCommand) => {
+export const createActionWithRelations = async (command: AddActionInputCommand) => {
   const { indicators, steps, ...actionData } = command
 
   return prismaClient.action.create({
