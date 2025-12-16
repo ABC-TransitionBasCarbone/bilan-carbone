@@ -1086,7 +1086,7 @@
           "title": "Intitulé de l'action",
           "titlePlaceholder": "Donnez un titre à votre action",
           "subSteps": "Sous-étapes",
-          "subStepsPlaceholder": "Décrivez vos sous-étapes",
+          "stepTitlePlaceholder": "Décrivez votre sous-étape",
           "detailedDescription": "Description détaillée de l'action et de l'implication des parties prenantes",
           "detailedDescriptionPlaceholder": "Description détaillée",
           "potentialDeduction": "Potentiel de réduction d'émissions",

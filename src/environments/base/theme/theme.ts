@@ -149,11 +149,47 @@ const theme = createTheme(base, {
     MuiTextField: {
       styleOverrides: {
         root: {
+          '& .MuiOutlinedInput-root': {
+            borderRadius: '0.5rem',
+            '& fieldset': {
+              borderRadius: '0.5rem',
+            },
+          },
           '& input': {
             '&:-webkit-autofill': {
               WebkitBoxShadow: '0 0 0 1000px #ffffff inset',
               WebkitTextFillColor: 'inherit',
             },
+          },
+        },
+      },
+    },
+    MuiPickersOutlinedInput: {
+      styleOverrides: {
+        root: {
+          borderRadius: '0.5rem',
+          '& fieldset': {
+            borderRadius: '0.5rem',
+          },
+        },
+      },
+    },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          borderRadius: '0.5rem',
+          '& fieldset': {
+            borderRadius: '0.5rem',
+          },
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          borderRadius: '0.5rem',
+          '& fieldset': {
+            borderRadius: '0.5rem',
           },
         },
       },

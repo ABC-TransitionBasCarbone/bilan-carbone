@@ -1,0 +1,67 @@
+.stepBlock {
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  background: var(--mui-palette-primary-light);
+  cursor: grab;
+  height: 9rem;
+  width: calc((100% - 4rem) / 3);
+  transition: box-shadow 0.2s;
+}
+
+.addStepButtonContainer {
+  height: 8.5rem;
+  border: 2px dashed var(--mui-palette-primary-main);
+  border-radius: 0.5rem;
+  width: calc((100% - 4rem) / 3);
+}
+
+.stepBlock:hover {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+}
+
+.stepBlock:active {
+  cursor: grabbing;
+}
+
+.dragHandle {
+  cursor: grab;
+  color: var(--text-secondary);
+}
+
+.dragHandle:active {
+  cursor: grabbing;
+}
+
+.stepNumber {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--mui-palette-primary-main);
+  margin-left: 0.5rem;
+}
+
+.stepInput {
+  font-size: 0.9375rem;
+}
+
+.arrow {
+  font-size: 1.5rem;
+  color: var(--mui-palette-primary-main);
+  width: 1rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.addStepButton {
+  background-color: var(--mui-palette-primary-main);
+  border-radius: 50%;
+  color: white;
+}
+
+.addStepButton:hover {
+  background-color: var(--mui-palette-primary-dark);
+}
+
+.stepsContainer {
+  column-gap: 0.25rem;
+  row-gap: 1rem;
+}

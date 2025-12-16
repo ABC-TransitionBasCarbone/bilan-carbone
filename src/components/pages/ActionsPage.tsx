@@ -2,7 +2,7 @@
 
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import { FullStudy } from '@/db/study'
-import { ActionWithIndicators } from '@/db/transitionPlan'
+import type { ActionWithRelations } from '@/db/transitionPlan'
 import { customRich } from '@/i18n/customRich'
 import { useTranslations } from 'next-intl'
 import Block from '../base/Block'
@@ -12,7 +12,7 @@ import TransitionPlanOnboarding from '../study/transitionPlan/TransitionPlanOnbo
 
 interface Props {
   study: FullStudy
-  actions: ActionWithIndicators[]
+  actions: ActionWithRelations[]
   transitionPlanId: string
   canEdit: boolean
 }

@@ -3,7 +3,7 @@
 import BaseTable from '@/components/base/Table'
 import { TableActionButton } from '@/components/base/TableActionButton'
 import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
-import { ActionWithIndicators } from '@/db/transitionPlan'
+import { ActionWithRelations } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { toggleActionEnabled } from '@/services/serverFunctions/transitionPlan'
 import { formatNumber } from '@/utils/number'
@@ -23,9 +23,9 @@ import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 interface Props {
-  actions: ActionWithIndicators[]
-  openEditModal: (action: ActionWithIndicators) => void
-  openDeleteModal: (action: ActionWithIndicators) => void
+  actions: ActionWithRelations[]
+  openEditModal: (action: ActionWithRelations) => void
+  openDeleteModal: (action: ActionWithRelations) => void
   canEdit: boolean
   studyId: string
   studyUnit: StudyResultUnit
@@ -40,7 +40,7 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
 
-  const [localActions, setLocalActions] = useState<ActionWithIndicators[]>(actions)
+  const [localActions, setLocalActions] = useState<ActionWithRelations[]>(actions)
 
   useEffect(() => {
     setLocalActions(actions)
@@ -63,7 +63,7 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
   )
 
   const getPotential = useCallback(
-    (action: ActionWithIndicators) => {
+    (action: ActionWithRelations) => {
       switch (action.potentialDeduction) {
         case ActionPotentialDeduction.Quality:
           return tPotential(ActionPotentialDeduction.Quality)
@@ -80,7 +80,7 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
     [tPotential, tUnit, studyUnit],
   )
 
-  const getImplementationPeriod = useCallback((action: ActionWithIndicators) => {
+  const getImplementationPeriod = useCallback((action: ActionWithRelations) => {
     if (!action.reductionStartYear || !action.reductionEndYear) {
       return ''
     }
@@ -160,7 +160,7 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
               <></>
             ),
         },
-      ] as ColumnDef<ActionWithIndicators>[],
+      ] as ColumnDef<ActionWithRelations>[],
     [
       t,
       getImplementationPeriod,
