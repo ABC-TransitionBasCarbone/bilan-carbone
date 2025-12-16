@@ -67,6 +67,7 @@ model Site {
 
   postalCode String? @map("postal_code")
   city       String?
+  address    String?
 
   volunteerNumber   Int @default(0) @map("volunteer_number")
   beneficiaryNumber Int @default(0) @map("beneficiary_number")
@@ -80,6 +81,9 @@ model Site {
 
   establishmentId   String? @map("establishment_id")
   establishmentYear String? @map("establishment_year")
+
+  superficy     Float?
+  studentNumber Int?   @map("student_number")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")

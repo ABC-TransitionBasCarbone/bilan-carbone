@@ -8,14 +8,14 @@ import EditIcon from '@mui/icons-material/Edit'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
+import { SimplifiedPostHeader } from './PostHeader'
 import {
   StyledContainer,
   StyledIconWrapper,
   StyledLink,
   StyledSubPostContainer,
   StyledSubPostItem,
-} from './CutPostInfography.styles'
-import { CutPostHeader } from './PostHeader'
+} from './SimplifiedPostInfography.styles'
 
 interface Props {
   post: Post | SubPost
@@ -28,7 +28,7 @@ interface Props {
   questionStats: Partial<Record<SubPost, QuestionStats>>
 }
 
-export const CutPostInfography = ({
+export const SimplifiedPostInfography = ({
   post,
   mainPost,
   subPosts,
@@ -53,7 +53,7 @@ export const CutPostInfography = ({
       }}
     >
       <StyledLink className="block" href={`/etudes/${studyId}/comptabilisation/saisie-des-donnees/${mainPost}`}>
-        <CutPostHeader post={post} mainPost={mainPost} emissionValue={emissionValue} percent={percent} />
+        <SimplifiedPostHeader post={post} mainPost={mainPost} emissionValue={emissionValue} percent={percent} />
       </StyledLink>
 
       {subPosts && subPosts.length > 0 && (

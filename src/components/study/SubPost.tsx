@@ -3,11 +3,12 @@
 import { FullStudy } from '@/db/study'
 import { getCaracterisationsBySubPost, getEmissionResults } from '@/services/emissionSource'
 import { StudyWithoutDetail } from '@/services/permissions/study'
+import { Post } from '@/services/posts'
 import { EmissionFactorWithMetaData, getEmissionFactors } from '@/services/serverFunctions/emissionFactor'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
 import { withInfobulle } from '@/utils/post'
-import { STUDY_UNIT_VALUES } from '@/utils/study'
+import { postColors, STUDY_UNIT_VALUES } from '@/utils/study'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
 import { Environment, Import, StudyRole, SubPost as SubPostEnum } from '@prisma/client'
@@ -22,22 +23,29 @@ import styles from './SubPosts.module.css'
 type StudyProps = {
   study: FullStudy
   withoutDetail: false
+  hasFilter: boolean
 }
 
 type StudyWithoutDetailProps = {
   study: StudyWithoutDetail
   withoutDetail: true
+  hasFilter: boolean
 }
 
 interface Props {
+  post: Post
   subPost: SubPostEnum
   userRoleOnStudy: StudyRole | null
   emissionSources: FullStudy['emissionSources']
   studySite: string
   setGlossary: (subPost: string) => void
+  count: number
+  validated: number
+  defaultOpen: boolean
 }
 
 const SubPost = ({
+  post,
   subPost,
   withoutDetail,
   study,
@@ -45,13 +53,18 @@ const SubPost = ({
   emissionSources,
   studySite,
   setGlossary,
+  count,
+  validated,
+  hasFilter,
+  defaultOpen,
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
   const t = useTranslations('study.post')
+  const tStudy = useTranslations('study')
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('study.results.units')
   const { environment } = useAppEnvironmentStore()
   const [emissionFactorsForSubPost, setEmissionFactorsForSubPost] = useState<EmissionFactorWithMetaData[]>([])
-  const [expanded, setExpanded] = useState(false)
+  const [expanded, setExpanded] = useState(defaultOpen)
   const importVersions = useMemo(
     () => [
       { id: Import.Manual, source: Import.Manual, name: '' },
@@ -70,7 +83,7 @@ const SubPost = ({
           search: '',
           location: '',
           sources: importVersions.map((iv) => iv.id),
-          units: [],
+          units: ['all'],
           subPosts: [subPost],
         },
         environment as Environment,
@@ -86,6 +99,12 @@ const SubPost = ({
       fetchEmissionFactors()
     }
   }, [emissionFactorsForSubPost.length, environment, expanded, importVersions, study.id, subPost])
+
+  useEffect(() => {
+    if (hasFilter && emissionSources.length) {
+      setExpanded(true)
+    }
+  }, [emissionSources.length, hasFilter])
 
   const total = useMemo(() => {
     if (!environment) {
@@ -133,11 +152,17 @@ const SubPost = ({
     }
   }, [emissionSources, subPost])
 
+  useEffect(() => {
+    setExpanded(defaultOpen)
+  }, [defaultOpen])
+
   return (!userRoleOnStudy || userRoleOnStudy === StudyRole.Reader) && emissionSources.length === 0 ? null : (
     <div ref={accordionRef} id={`subpost-${subPost}`} className={styles.subPostScrollContainer}>
-      <Accordion expanded={expanded} onChange={(_, isExpanded) => setExpanded(isExpanded)}>
+      <Accordion expanded={expanded} onChange={(_, isExpanded) => setExpanded(isExpanded)} className={styles.accordion}>
         <AccordionSummary
-          className={styles.subPostContainer}
+          className={classNames(styles.subPostContainer, styles[`post-${postColors[post]}`], {
+            [styles.open]: expanded,
+          })}
           expandIcon={<ExpandMoreIcon />}
           aria-controls={`panel-${subPost}-content`}
           data-testid="subpost"
@@ -146,6 +171,7 @@ const SubPost = ({
             {tPost(subPost)}
             {withInfobulle(subPost) && (
               <HelpIcon
+                className={classNames(styles.helpIcon, 'ml-4')}
                 onClick={(e) => {
                   e.stopPropagation()
                   setGlossary(subPost)
@@ -162,6 +188,11 @@ const SubPost = ({
               </span>
             )}
           </p>
+          {count > 0 && (
+            <span className="grow justify-end mr1">
+              {tStudy.rich('validatedSources', { total: count, validated, data: (children) => <>{children}</> })}
+            </span>
+          )}
         </AccordionSummary>
         <AccordionDetails id={`panel-${subPost}-content`} className={styles.subPostDetailsContainer}>
           {emissionSources.map((emissionSource) =>

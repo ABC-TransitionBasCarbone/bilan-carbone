@@ -1,8 +1,8 @@
 import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import AllPostsInfographyCut from '@/environments/cut/study/infography/AllPostsInfography'
+import AllPostsInfographySimplified from '@/environments/simplified/study/infography/AllPostsInfography'
 import AllPostsInfographyTilt from '@/environments/tilt/study/infography/AllPostsInfography'
-import { CutPost, TiltPost } from '@/services/posts'
+import { ClicksonPost, CutPost, TiltPost } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { Environment } from '@prisma/client'
@@ -53,8 +53,19 @@ const AllPostsInfographyContainer = ({ study, studySite, user }: Props) => {
     <DynamicComponent
       defaultComponent={<AllPostsInfography study={study} data={data} />}
       environmentComponents={{
-        [Environment.CUT]: <AllPostsInfographyCut study={study} data={data} studySiteId={studySite} user={user} />,
+        [Environment.CUT]: (
+          <AllPostsInfographySimplified study={study} data={data} studySiteId={studySite} user={user} />
+        ),
         [Environment.TILT]: <AllPostsInfographyTilt study={study} data={data} />,
+        [Environment.CLICKSON]: (
+          <AllPostsInfographySimplified
+            posts={ClicksonPost}
+            study={study}
+            data={data}
+            studySiteId={studySite}
+            user={user}
+          />
+        ),
       }}
     />
   )

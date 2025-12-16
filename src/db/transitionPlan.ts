@@ -1,5 +1,12 @@
 import {
+  ActionIndicatorCommand,
+  ActionStepCommand,
+  AddActionInputCommand,
+} from '@/services/serverFunctions/transitionPlan.command'
+import {
   Action,
+  ActionIndicator,
+  ActionStep,
   ExternalStudy,
   Objective,
   Prisma,
@@ -25,7 +32,7 @@ export type TransitionPlanWithRelations = TransitionPlan & {
     }
   >
   transitionPlanStudies: TransitionPlanStudy[]
-  actions: Action[]
+  actions: Array<ActionWithRelations>
   externalStudies: ExternalStudy[]
 }
 
@@ -49,7 +56,12 @@ export const getTransitionPlanByIdWithRelations = async (id: string): Promise<Tr
         },
       },
       transitionPlanStudies: true,
-      actions: true,
+      actions: {
+        include: {
+          indicators: true,
+          steps: true,
+        },
+      },
       externalStudies: true,
     },
   })
@@ -65,11 +77,13 @@ export const getTransitionPlanByStudyId = async (studyId: string): Promise<Trans
 
 export const getOrganizationTransitionPlans = async (
   organizationVersionId: string,
+  maxYear: number,
 ): Promise<TransitionPlanWithStudies[]> => {
   return prismaClient.transitionPlan.findMany({
     where: {
       study: {
         organizationVersionId,
+        startDate: { lt: new Date(maxYear + 1, 0, 1) },
       },
     },
     include: {
@@ -109,7 +123,7 @@ export const duplicateTransitionPlanWithRelations = async (
       data: {
         studyId: targetStudyId,
         transitionPlanStudies: {
-          create: [{ studyId: targetStudyId }, ...linkedStudyIds.map((studyId) => ({ studyId }))],
+          create: linkedStudyIds.map((studyId) => ({ studyId })),
         },
         trajectories: {
           create: sourceTransitionPlan.trajectories.map((trajectory) => ({
@@ -125,8 +139,24 @@ export const duplicateTransitionPlanWithRelations = async (
           })),
         },
         actions: {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          create: sourceTransitionPlan.actions.map(({ id, transitionPlanId, createdAt, updatedAt, ...rest }) => rest),
+          create: sourceTransitionPlan.actions.map(
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            ({ id, transitionPlanId, createdAt, updatedAt, indicators, steps, ...rest }) => ({
+              ...rest,
+              indicators: {
+                create: indicators.map((indicator) => ({
+                  type: indicator.type,
+                  description: indicator.description,
+                })),
+              },
+              steps: {
+                create: steps.map((step) => ({
+                  title: step.title,
+                  order: step.order,
+                })),
+              },
+            }),
+          ),
         },
         externalStudies: {
           create: sourceTransitionPlan.externalStudies.map(
@@ -142,7 +172,12 @@ export const duplicateTransitionPlanWithRelations = async (
           },
         },
         transitionPlanStudies: true,
-        actions: true,
+        actions: {
+          include: {
+            indicators: true,
+            steps: true,
+          },
+        },
         externalStudies: true,
       },
     })
@@ -160,17 +195,46 @@ export const hasTransitionPlan = async (studyId: string): Promise<boolean> => {
 
 export const createAction = async (data: Prisma.ActionUncheckedCreateInput) => prismaClient.action.create({ data })
 
+export const createActionWithRelations = async (command: AddActionInputCommand) => {
+  const { indicators, steps, ...actionData } = command
+
+  return prismaClient.action.create({
+    data: {
+      ...actionData,
+      ...(indicators && {
+        indicators: { create: indicators },
+      }),
+      ...(steps && {
+        steps: { create: steps },
+      }),
+    },
+  })
+}
+
 export const updateAction = async (id: string, data: Prisma.ActionUpdateInput) =>
-  prismaClient.action.update({ where: { id }, data })
+  prismaClient.action.update({
+    where: { id },
+    data,
+  })
 
 export const deleteAction = async (id: string) => prismaClient.action.delete({ where: { id } })
 
-export const getActionById = async (id: string) => prismaClient.action.findUnique({ where: { id } })
+export type ActionWithRelations = Action & {
+  indicators: ActionIndicator[]
+  steps: ActionStep[]
+}
 
-export const getActions = async (transitionPlanId: string) =>
+export const getActionById = async (id: string): Promise<ActionWithRelations | null> =>
+  prismaClient.action.findUnique({
+    where: { id },
+    include: { indicators: { orderBy: { createdAt: 'asc' } }, steps: { orderBy: { order: 'asc' } } },
+  })
+
+export const getActions = async (transitionPlanId: string): Promise<ActionWithRelations[]> =>
   prismaClient.action.findMany({
     where: { transitionPlanId },
     orderBy: [{ priority: 'asc' }, { createdAt: 'desc' }],
+    include: { indicators: { orderBy: { createdAt: 'asc' } }, steps: { orderBy: { order: 'asc' } } },
   })
 
 export const createTransitionPlanStudy = async (transitionPlanId: string, studyId: string) =>
@@ -367,4 +431,70 @@ export const deleteTransitionPlan = async (id: string): Promise<void> => {
   await prismaClient.transitionPlan.delete({
     where: { id },
   })
+}
+
+export const saveIndicatorsOnAction = async (
+  actionId: string,
+  indicatorsToKeep: ActionIndicatorCommand[],
+  indicatorsToDelete: string[],
+) => {
+  await prismaClient.$transaction([
+    prismaClient.actionIndicator.deleteMany({
+      where: {
+        id: { in: indicatorsToDelete },
+      },
+    }),
+    ...indicatorsToKeep.map((ind) => {
+      if (ind.id) {
+        return prismaClient.actionIndicator.update({
+          where: { id: ind.id },
+          data: {
+            description: ind.description,
+            type: ind.type,
+          },
+        })
+      } else {
+        return prismaClient.actionIndicator.create({
+          data: {
+            actionId,
+            type: ind.type,
+            description: ind.description,
+          },
+        })
+      }
+    }),
+  ])
+}
+
+export const saveStepsOnAction = async (
+  actionId: string,
+  stepsToKeep: ActionStepCommand[],
+  stepsToDelete: string[],
+) => {
+  await prismaClient.$transaction([
+    prismaClient.actionStep.deleteMany({
+      where: {
+        id: { in: stepsToDelete },
+      },
+    }),
+    ...stepsToKeep.map((step) => {
+      if (step.id) {
+        return prismaClient.actionStep.update({
+          where: { id: step.id },
+          data: {
+            title: step.title,
+            order: step.order,
+          },
+        })
+      } else {
+        return prismaClient.actionStep.create({
+          data: {
+            actionId,
+            title: step.title,
+            order: step.order,
+          },
+        })
+      }
+    }),
+  ])
 }

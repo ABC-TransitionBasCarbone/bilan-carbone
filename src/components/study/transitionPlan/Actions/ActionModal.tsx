@@ -1,18 +1,24 @@
 import LoadingButton from '@/components/base/LoadingButton'
 import Toast, { ToastColors } from '@/components/base/Toast'
 import ModalStepper from '@/components/modals/ModalStepper'
+import { ActionWithRelations } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { getStudyOrganizationMembers } from '@/services/serverFunctions/study'
 import { addAction, editAction } from '@/services/serverFunctions/transitionPlan'
-import { AddActionCommand, AddActionCommandValidation } from '@/services/serverFunctions/transitionPlan.command'
+import {
+  ActionIndicatorCommand,
+  AddActionCommandValidation,
+  AddActionFormCommand,
+} from '@/services/serverFunctions/transitionPlan.command'
 import { calculatePriorityFromRelevance } from '@/utils/action'
 import { objectWithoutNullAttributes } from '@/utils/object'
+import { convertValue } from '@/utils/study'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Action, ActionPotentialDeduction } from '@prisma/client'
+import { ActionIndicatorType, ActionPotentialDeduction, StudyResultUnit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useParams, useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import styles from './ActionModal.module.css'
 import Step1 from './ActionModalStep1'
@@ -24,10 +30,10 @@ const toastPosition = { vertical: 'bottom', horizontal: 'left' } as const
 
 interface Props {
   open: boolean
-  action?: Action
+  action?: ActionWithRelations
   onClose: () => void
   transitionPlanId: string
-  studyUnit: string
+  studyUnit: StudyResultUnit
 }
 
 const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Props) => {
@@ -56,8 +62,38 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
     }
   }, [open, studyId, callServerFunction])
 
+  const setDefaultIndicators = useCallback((indicators: ActionIndicatorCommand[]) => {
+    const defaultIndicators: ActionIndicatorCommand[] = [...indicators]
+    const requiredTypes = [
+      ActionIndicatorType.Implementation,
+      ActionIndicatorType.FollowUp,
+      ActionIndicatorType.Performance,
+    ]
+
+    requiredTypes.forEach((type) => {
+      if (!indicators.some((ind) => ind.type === type)) {
+        defaultIndicators.push({ type, description: '' })
+      }
+    })
+
+    return defaultIndicators
+  }, [])
+
+  const convertedAction = useMemo(
+    () =>
+      action
+        ? {
+            ...objectWithoutNullAttributes(action),
+            reductionValue: Math.round(
+              action.reductionValueKg ? convertValue(action.reductionValueKg, StudyResultUnit.K, studyUnit) : 0,
+            ),
+          }
+        : {},
+    [action, studyUnit],
+  )
+
   const { control, formState, getValues, setValue, reset, handleSubmit, trigger, setError, clearErrors } =
-    useForm<AddActionCommand>({
+    useForm<AddActionFormCommand>({
       resolver: zodResolver(AddActionCommandValidation),
       mode: 'onChange',
       reValidateMode: 'onChange',
@@ -69,7 +105,9 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
         category: [],
         relevance: [],
         dependenciesOnly: false,
-        ...objectWithoutNullAttributes(action),
+        ...convertedAction,
+        indicators: setDefaultIndicators(action?.indicators ?? []),
+        steps: action?.steps ?? [],
       },
     })
 
@@ -82,19 +120,33 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
     }
   }, [potentialDeduction, clearErrors])
 
-  const onSubmit = async (data: AddActionCommand) => {
+  const onSubmit = async (data: AddActionFormCommand) => {
+    const cleanedIndicators = data.indicators?.filter((ind) => ind && ind.type) || []
+    const cleanedSteps =
+      data.steps?.filter((step) => step && step.title?.trim()).map((step, index) => ({ ...step, order: index })) || []
     const priority = calculatePriorityFromRelevance(data.relevance)
-    const dataWithPriority = { ...data, priority }
+    const { reductionValue, ...dataWithoutReductionValue } = data
 
-    const res = action ? await editAction(action.id, dataWithPriority) : await addAction(dataWithPriority)
-    if (res.success) {
-      reset()
-      setActiveStep(0)
-      onClose()
-      router.refresh()
-    } else {
-      setToast({ text: t(res.errorMessage), color: 'error' })
+    const reductionValueKg = reductionValue
+      ? Math.round(convertValue(reductionValue, studyUnit, StudyResultUnit.K))
+      : null
+
+    const dataWithPriority = {
+      ...dataWithoutReductionValue,
+      indicators: cleanedIndicators,
+      steps: cleanedSteps,
+      priority,
+      reductionValueKg,
     }
+
+    await callServerFunction(() => (action ? editAction(action.id, dataWithPriority) : addAction(dataWithPriority)), {
+      onSuccess: () => {
+        reset()
+        setActiveStep(0)
+        onClose()
+        router.refresh()
+      },
+    })
   }
 
   const handleClose = () => {
@@ -103,11 +155,11 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
     onClose()
   }
 
-  const getRequiredFieldsForStep = (step: number): (keyof AddActionCommand)[] => {
+  const getRequiredFieldsForStep = (step: number): (keyof AddActionFormCommand)[] => {
     if (step === 0) {
       return [
         'title',
-        'subSteps',
+        'steps',
         'detailedDescription',
         'potentialDeduction',
         'reductionStartYear',
@@ -168,7 +220,18 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
         disableNext={!isStepValid()}
         nextButton={
           activeStep === 2 ? (
-            <LoadingButton onClick={handleSubmit(onSubmit)} loading={formState.isSubmitting}>
+            <LoadingButton
+              onClick={() => {
+                const currentValues = getValues()
+                const cleanedIndicators =
+                  currentValues.indicators?.filter((ind) => ind && ind.type && ind.description?.trim()) || []
+                const cleanedSteps = currentValues.steps?.filter((step) => step && step.title?.trim()) || []
+                setValue('indicators', cleanedIndicators)
+                setValue('steps', cleanedSteps)
+                handleSubmit(onSubmit)()
+              }}
+              loading={formState.isSubmitting}
+            >
               {t(action ? 'update' : 'add')}
             </LoadingButton>
           ) : undefined

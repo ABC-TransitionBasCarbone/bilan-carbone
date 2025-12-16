@@ -90,6 +90,13 @@ export const postColors: Record<Post, string> = {
   [Post.EquipementsEtImmobilisations]: 'blue',
   [Post.Utilisation]: 'orange',
   [Post.Teletravail]: 'darkBlue',
+
+  [Post.Restauration]: 'darkBlue',
+  [Post.Achats]: 'darkBlue',
+
+  [Post.EnergiesClickson]: 'darkblue',
+  [Post.DeplacementsClickson]: 'darblue',
+  [Post.ImmobilisationsClickson]: 'darblue',
 }
 
 export const hasEditionRights = (userRoleOnStudy: StudyRole | null) => {
@@ -115,6 +122,10 @@ export const STUDY_UNIT_VALUES: Record<StudyResultUnit, number> = {
 }
 
 export const defaultStudyResultUnit = StudyResultUnit.T
+
+export const convertValue = (value: number, fromUnit: StudyResultUnit, toUnit: StudyResultUnit): number => {
+  return (value * STUDY_UNIT_VALUES[fromUnit]) / STUDY_UNIT_VALUES[toUnit]
+}
 
 export const isPostValidated = (data?: ResultsByPost): boolean => {
   if (!data) {
@@ -160,6 +171,6 @@ export const getDuplicableEnvironments = (environment: Environment): Environment
   return [environment].concat(compatibles)
 }
 
-export const formatValueForExport = (value: number): number => {
-  return Math.round(value)
+export const formatEmissionValueForExport = (value: number, unit: StudyResultUnit): number => {
+  return Math.round(value / STUDY_UNIT_VALUES[unit])
 }

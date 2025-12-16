@@ -1,5 +1,7 @@
 import Box from '@/components/base/Box'
 import { FullStudy } from '@/db/study'
+import { hasAccessToCarbonResponsibilityIntensities } from '@/services/permissions/environment'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { CA_UNIT_VALUES } from '@/utils/number'
 import { Environment, SiteCAUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -18,6 +20,8 @@ const CarbonIntensities = ({ study, studySite, withDep, withoutDep, caUnit }: Pr
   const t = useTranslations('study.results')
   const tCAUnit = useTranslations('settings.caUnit')
   const site = study.sites.find((site) => site.id === studySite)
+
+  const { environment } = useAppEnvironmentStore()
 
   const noValidSite = (!site && studySite !== 'all') || (studySite === 'all' && !study.sites.length)
 
@@ -54,9 +58,11 @@ const CarbonIntensities = ({ study, studySite, withDep, withoutDep, caUnit }: Pr
         <div className="grow justify-center">
           <span className="text-center bold">{t('dependencyIntensity')}</span>
         </div>
-        <div className="grow justify-center">
-          <span className="text-center bold">{t('responsabilityIntensity')}</span>
-        </div>
+        {environment && hasAccessToCarbonResponsibilityIntensities(environment) && (
+          <div className="grow justify-center">
+            <span className="text-center bold">{t('responsibilityIntensity')}</span>
+          </div>
+        )}
       </div>
       <CarbonIntensity
         withDep={withDep}

@@ -64,6 +64,10 @@ export const mockedStudySite = {
   openingHours: [],
   volunteerNumber: 0,
   beneficiaryNumber: 0,
+  superficy: null,
+  studentNumber: null,
+  address: null,
+  establishmentYear: null,
 }
 
 export const mockedDbStudySite = {
@@ -82,6 +86,11 @@ export const mockedDbFullStudySite = {
     postalCode: null,
     city: null,
     cnc: null,
+    etp: 0,
+    superficy: null,
+    studentNumber: null,
+    address: null,
+    establishmentYear: null,
   },
   cncVersion: null,
 }
@@ -161,6 +170,11 @@ export const getMockedDetailedFullStudySite = (
         numberOfProgrammedFilms: 10,
         ecrans: 13,
       },
+      etp: 0,
+      superficy: null,
+      studentNumber: null,
+      address: null,
+      establishmentYear: null,
     },
     cncVersion: {
       id: '1',

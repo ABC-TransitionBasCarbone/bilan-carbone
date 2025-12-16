@@ -183,6 +183,11 @@
   padding-bottom: 0.25rem;
 }
 
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
 .py1 {
   padding-top: 1rem;
   padding-bottom: 1rem;
@@ -215,6 +220,10 @@
 
 .w50 {
   width: 50% !important;
+}
+
+.gapped025 {
+  gap: 0.25rem;
 }
 
 .gapped-2 {

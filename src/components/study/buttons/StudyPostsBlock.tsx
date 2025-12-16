@@ -5,10 +5,15 @@ import { FullStudy } from '@/db/study'
 import { Post } from '@/services/posts'
 import { downloadStudyPost } from '@/services/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { EmissionSourcesFilters, EmissionSourcesSort } from '@/types/filters'
 import DownloadIcon from '@mui/icons-material/Download'
+import { EmissionSourceCaracterisation } from '@prisma/client'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useState } from 'react'
 import styles from '../SubPosts.module.css'
+import StudyPostFilters from './StudyPostFilters'
+import StudyPostSort from './StudyPostSort'
 
 interface Props {
   post: Post
@@ -17,11 +22,26 @@ interface Props {
   setDisplay: (display: boolean) => void
   children: ReactNode
   emissionSources: FullStudy['emissionSources']
-  filter: string
-  setFilter: (value: string) => void
+  filters: EmissionSourcesFilters
+  setFilters: (values: Partial<EmissionSourcesFilters>) => void
+  caracterisationOptions: EmissionSourceCaracterisation[]
+  sort: EmissionSourcesSort
+  setSort: (field: EmissionSourcesSort['field'], order: EmissionSourcesSort['order']) => void
 }
 
-const StudyPostsBlock = ({ post, study, display, setDisplay, children, emissionSources, filter, setFilter }: Props) => {
+const StudyPostsBlock = ({
+  post,
+  study,
+  display,
+  setDisplay,
+  children,
+  emissionSources,
+  filters,
+  setFilters,
+  caracterisationOptions,
+  sort,
+  setSort,
+}: Props) => {
   const { environment } = useAppEnvironmentStore()
   const [downloading, setDownloading] = useState(false)
   const tCaracterisations = useTranslations('categorisations')
@@ -39,16 +59,24 @@ const StudyPostsBlock = ({ post, study, display, setDisplay, children, emissionS
   return (
     <Block
       title={
-        <>
+        <div className="flex grow gapped">
           <DebouncedInput
-            className={styles.searchInput}
+            className={classNames(styles.searchInput, 'grow')}
             debounce={500}
-            value={filter}
-            onChange={(newValue) => setFilter(newValue)}
-            placeholder="🔎"
+            value={filters.search}
+            onChange={(newValue) => setFilters({ search: newValue })}
+            placeholder={tStudyPost('search')}
             data-testid="emission-source-search-field"
           />
-        </>
+          <StudyPostFilters
+            filters={filters}
+            setFilters={setFilters}
+            study={study}
+            post={post}
+            caracterisationOptions={caracterisationOptions}
+          />
+          <StudyPostSort sort={sort} setSort={setSort} />
+        </div>
       }
       actions={[
         {

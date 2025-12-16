@@ -1,46 +1,67 @@
 import { Environment } from '@prisma/client'
 
-export const hasAccessToEmissionFactor = (environment: Environment) =>
-  ([Environment.BC, Environment.TILT] as Environment[]).includes(environment)
+const { BC, CUT, TILT, CLICKSON } = Environment
+const advancedEnvironments: Environment[] = [BC, TILT]
+const simplifiedEnvironments: Environment[] = [CUT, CLICKSON]
 
-export const hasAccessToSettings = (environment: Environment) =>
-  ([Environment.BC, Environment.TILT] as Environment[]).includes(environment)
+export const isAdvanced = (environment: Environment) => advancedEnvironments.includes(environment)
+export const isSimplified = (environment: Environment) => simplifiedEnvironments.includes(environment)
 
-export const hasAccessToActualityCards = (environment: Environment) => environment === Environment.BC
+const isBC = (environment: Environment) => environment === BC
+const isTilt = (environment: Environment) => environment === TILT
+const isCut = (environment: Environment) => environment === CUT
+const isClickson = (environment: Environment) => environment === CLICKSON
 
-export const hasAccessToDownloadStudyEmissionSourcesButton = (environment: Environment) =>
-  ([Environment.BC, Environment.TILT] as Environment[]).includes(environment)
+export const hasAccessToEmissionFactor = isAdvanced
 
-export const hasAccessToStudyCardDetails = (environment: Environment) =>
-  ([Environment.BC, Environment.TILT] as Environment[]).includes(environment)
+export const hasAccessToSettings = isAdvanced
 
-export const hasAccessToCreateOrganization = (environment: Environment) =>
-  ([Environment.TILT, Environment.BC] as Environment[]).includes(environment)
+export const hasAccessToActualityCards = isBC
 
-export const hasAccessToDuplicateStudy = (environment: Environment) =>
-  ([Environment.BC, Environment.TILT] as Environment[]).includes(environment)
+export const hasAccessToDownloadStudyEmissionSourcesButton = isAdvanced
 
-export const hasAccessToCreateStudyTag = async (environment: Environment) =>
-  ([Environment.BC, Environment.TILT] as Environment[]).includes(environment)
+export const hasAccessToStudyCardDetails = isAdvanced
 
-export const hasAccessToStudyFlowExample = (environment: Environment) =>
-  ([Environment.TILT, Environment.BC] as Environment[]).includes(environment)
+export const hasAccessToCreateOrganization = isAdvanced
 
-export const hasWasteImpact = (environment: Environment) =>
-  !([Environment.CUT, Environment.CLICKSON] as Environment[]).includes(environment)
+export const hasAccessToDuplicateStudy = isAdvanced
 
-export const hasAccessToBcExport = (environment: Environment) =>
-  ([Environment.TILT] as Environment[]).includes(environment)
+export const hasAccessToCreateStudyTag = isAdvanced
 
-export const hasAccessToDependencyMatrix = (environment: Environment) =>
-  ([Environment.TILT] as Environment[]).includes(environment)
+export const hasAccessToStudyFlowExample = isAdvanced
+
+export const hasWasteImpact = isAdvanced
+
+export const hasAccessToBcExport = isTilt
+
+export const hasAccessToDependencyMatrix = isTilt
 
 // environnement is not used but kept for consistency
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const hasAccessToDependencyMatrixExample = (environment: Environment) => false
 
-export const hasAccessToPerimeterPage = (environment: Environment) =>
-  !([Environment.CUT, Environment.CLICKSON] as Environment[]).includes(environment)
+export const hasAccessToPerimeterPage = isAdvanced
 
-export const needsLicenceToUseApp = (environment: Environment) =>
-  ([Environment.BC] as Environment[]).includes(environment)
+export const needsLicenceToUseApp = isBC
+
+export const hasAccessToEmissionSourceValidation = isAdvanced
+
+export const hasRoleOnStudy = isAdvanced
+
+export const hasAccessToCarbonResponsibilityIntensities = (environment: Environment) =>
+  ([BC, TILT, CUT] as Environment[]).includes(environment)
+
+export const hasAccessToMonetaryRatio = (environment: Environment) =>
+  ([BC, TILT, CUT] as Environment[]).includes(environment)
+
+export const hasAccessToCreateStudyWithEmissionFactorVersions = isSimplified
+
+export const showResultsInfoText = isCut
+
+export const displayingStudyRightModalForAddingContributors = (environment: Environment) => !isClickson(environment)
+
+export const hasHomeAlert = isSimplified
+
+export const hasAccessToAllLocales = isClickson
+
+export const hasAccessToSimplifiedEmissionAnalysis = isClickson

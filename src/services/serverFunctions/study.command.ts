@@ -148,6 +148,16 @@ export const ChangeStudyCinemaValidation = z.object({
 
 export type ChangeStudyCinemaCommand = z.infer<typeof ChangeStudyCinemaValidation>
 
+export const ChangeStudyEstablishmentValidation = z.object({
+  address: z.string().optional(),
+  establishmentYear: z.string().optional(),
+  etp: z.int().min(0).optional(),
+  studentNumber: z.int().min(0).optional(),
+  superficy: z.number().optional().nullable(),
+})
+
+export type ChangeStudyEstablishmentCommand = z.infer<typeof ChangeStudyEstablishmentValidation>
+
 export const NewStudyRightCommandValidation = z.object({
   studyId: z.string(),
   email: z.email().trim(),

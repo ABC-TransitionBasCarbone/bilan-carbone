@@ -1,0 +1,136 @@
+{
+  "nav": {
+    "newStudyContributor": "Dodaj učenika"
+  },
+  "navigation": {
+    "organizations": "Moji ugljični otisci",
+    "organization": "Pilot tim",
+    "information": "Moja ustanova",
+    "team": "Pilot tim"
+  },
+  "home": {
+    "navigation": {
+      "collaborators": {
+        "title": "Pilot tim:",
+        "message": "Ovdje pronađite popis nastavnika, administrativnog osoblja i učenika ovlaštenih za uređivanje podataka ustanove"
+      },
+      "footprints": {
+        "title": "Moji otisci:",
+        "message": "Ovdje kreirajte svoj prvi otisak. Zatim ih možete pregledavati ili kreirati nove u bilo kojem trenutku."
+      },
+      "sites": {
+        "title": "Moje ustanove:",
+        "message": "Ovdje pronađite popis ustanova povezanih s vašim računom"
+      }
+    },
+    "title": "Izračunavanje vašeg pojednostavljenog ugljičnog otiska omogućit će vam da:",
+    "start": "Počni",
+    "alert": {
+      "info": "Clickson kalkulator omogućuje vam procjenu klimatskog utjecaja vaše aktivnosti. Prije svega je alat za podizanje svijesti. Nije pristup niskougljičnoj tranziciji već pojednostavljeni ugljični otisak — u smislu <link>Vodiča za komunikaciju oko obračuna ugljika</link> — fokusiran na glavne izvore emisija povezane s aktivnošću ustanova."
+    },
+    "info": {
+      "0": "Razumijete mjerenje utjecaja vaše ustanove",
+      "1": "Identificirate prioritete djelovanja",
+      "2": "Dugoročno, kroz detaljniji rad, izgradite putanju smanjenja"
+    }
+  },
+  "team": {
+    "table": {
+      "title": "Pilot tim"
+    }
+  },
+  "study": {
+    "create": "Dodaj otisak",
+    "myStudies": "Moji ugljični otisci",
+    "createFirstStudy": "Kreiraj svoj prvi otisak",
+    "see": "Pogledaj svoj otisak",
+    "selectSite": "Prije unosa podataka odaberite ustanovu",
+    "lastStudyTitle": "Zadnji otisak",
+    "navigation": {
+      "framing": "Opći podaci",
+      "organizations": "Moje ustanove",
+      "team": "Moji suradnici",
+      "title": "Moj otisak"
+    },
+    "validatedOnlyDescription": "Kao učenik imam pristup kao suradnik jednom ili više emisijskih mjesta.",
+    "new": {
+      "suggestion": {
+        "name": "Primjer: ugljični otisak Osnovna škola Simone Veil"
+      },
+      "inviteContributors": "Pozovi iste učenike",
+      "glossary": {
+        "validatorEmailDescription": "Kao učenik imam pristup kao suradnik jednom ili više emisijskih mjesta.",
+        "duplicationOptionsDescription": "Pri dupliciranju studije možete odabrati pozvati iste članove tima i učenike iz izvornog studija u novi. To pomaže održati kontinuitet suradnje."
+      }
+    },
+    "newContributor": {
+      "title": "Dodaj učenika u studiju: {name}"
+    },
+    "role": {
+      "Contributor": "Učenik"
+    },
+    "rights": {
+      "contributorsTable": {
+        "delete": "Ukloni učenika",
+        "title": "Učenici",
+        "newContributorLink": "Dodaj učenika",
+        "deleting": {
+          "confirmation": "Jeste li sigurni da želite ukloniti {email} iz učenika ovog studija?"
+        },
+        "role": {
+          "description": "Ovdje možete upravljati učenicima u svom studiju. Imat će pristup određenim mjestima i podmjestima (koje možete definirati) te će moći popuniti određene informacije za izvore emisija koje ste već kreirali u studiju. Za više informacija o sučelju suradnika pogledajte <link>FAQ</link>."
+        }
+      }
+    }
+  },
+  "emissionFactors": {
+    "post": {
+      "Restauration": "Prehrana / Ugostiteljstvo"
+    }
+  },
+  "organization": {
+    "card": {
+      "myOrganization": "Moje ustanove"
+    },
+    "form": {
+      "editTitle": "Uredi moje ustanove"
+    },
+    "sites": {
+      "title": "Koje ustanove treba pokriti otisak?",
+      "noSites": "Nema konfiguriranih ustanova",
+      "namePlaceholder": "Naziv ustanove",
+      "add": "Dodaj ustanovu"
+    }
+  },
+  "login": {
+    "welcome": "Dobrodošli na Clickson PEBC",
+    "explanation": "Izmjerimo emisije stakleničkih plinova vaše ustanove!",
+    "form": {
+      "activate": "Kreiraj moj račun"
+    }
+  },
+  "signup": {
+    "description": "Kreirajte Clickson račun s vašim e-mailom i poštanskim brojem ili imenom škole",
+    "schoolPostalCodeOrName": "Poštanski broj ili ime škole",
+    "schoolPostalCodeOrNamePlaceholder": "Poštanski broj ili naziv škole",
+    "schoolSearchGlossaryTitle": "Pronađite svoju školu.",
+    "schoolSearchGlossary": "Pronađite školu unosom poštanskog broja ili imena, a zatim je odaberite s padajućeg popisa.",
+    "close": "Zatvori",
+    "schoolPostalCodeOrNameRequired": "Molimo unesite poštanski broj ili ime škole",
+    "validate": "Potvrdi",
+    "clear": "Očisti vrijednost",
+    "Not authorized": "Ovaj e-mail je već korišten za Clickson ili postoji problem s kreiranjem računa. Pogledajte <link>FAQ</link> ili <support>kontaktirajte podršku</support> ako mislite da je greška.",
+    "Not known school": "Pronađite i odaberite svoju ustanovu.",
+    "validation": {
+      "schoolPostalCodeOrName": "Molimo unesite poštanski broj ili ime škole"
+    }
+  },
+  "email": {
+    "subject": {
+      "newUser": "Pozvani ste na Clickson",
+      "addedActiveUser": "Pozvani ste u novo Clickson okruženje",
+      "activation": "Aktivirali ste svoj račun na Clicksonu",
+      "activationRequest": "Zahtjev za pristup vašoj Clickson organizaciji"
+    }
+  }
+}

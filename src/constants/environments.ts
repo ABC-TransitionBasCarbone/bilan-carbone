@@ -8,3 +8,8 @@ export const EnvironmentNames = {
   [Environment.TILT]: 'Tilt',
   [Environment.CLICKSON]: 'ClicksOn',
 }
+
+export enum EnvironmentMode {
+  SIMPLIFIED = 'SIMPLIFIED',
+  ADVANCED = 'ADVANCED',
+}

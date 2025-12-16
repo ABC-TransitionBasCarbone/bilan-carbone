@@ -1,5 +1,6 @@
+import { EmissionSourcesStatus } from '@/services/study'
 import { BCUnit } from '@/services/unit'
-import { SubPost } from '@prisma/client'
+import { EmissionSourceCaracterisation, EmissionSourceType, SubPost } from '@prisma/client'
 
 export type FeFilters = {
   archived: boolean
@@ -8,4 +9,18 @@ export type FeFilters = {
   sources: string[]
   units: (BCUnit | string)[]
   subPosts: (SubPost | 'all')[]
+}
+
+export type EmissionSourcesFilters = {
+  search: string
+  subPosts: SubPost[]
+  tags: string[]
+  activityData: EmissionSourceType[]
+  status: EmissionSourcesStatus[]
+  caracterisations: EmissionSourceCaracterisation[]
+}
+
+export type EmissionSourcesSort = {
+  field: 'activityData' | 'emissionFactor' | 'emissions' | 'uncertainty' | undefined
+  order: 'asc' | 'desc'
 }

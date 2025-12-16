@@ -5,6 +5,19 @@
     "information": "Mes Cinémas",
     "team": "Mes Collaborateur·rices"
   },
+  "signup": {
+    "description": "Créez un compte sur CUT en entrant votre email ainsi qu'un numéro CNC (recommandé) ou Siret",
+    "siretOrCNC": "Numéro CNC (recommandé) ou Siret",
+    "siretOrCNCPlaceholder": "Votre numéro CNC (recommandé) ou Siret",
+    "siretOrCNCRequired": "Veuillez entrer un numéro CNC (recommandé) ou Siret",
+    "clear": "Supprimer la valeur",
+    "Unknown CNC": "Ce code CNC n'est pas reconnu. Veuillez vérifier votre saisie ou contacter le support si vous pensez qu'il s'agit d'une erreur.",
+    "Unknown SIRET or CNC": "Ce Siret ou code CNC n'est pas reconnu. Veuillez vérifier votre saisie ou contacter le support si vous pensez qu'il s'agit d'une erreur.",
+    "Not authorized": "Cet email est déjà inscrit avec un compte CUT ou il y a eu un soucis lors de sa création. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
+    "validation": {
+      "siretOrCNC": "Veuillez entrer un numéro CNC (recommandé) ou Siret"
+    }
+  },
   "home": {
     "navigation": {
       "collaborators": {
@@ -15,12 +28,13 @@
         "title": "Mes Empreintes :",
         "message": "Créer votre première empreinte ici. Vous pourrez ensuite consulter vos empreintes ou en créer de nouvelles à tout moment."
       },
-      "movietheater": {
+      "sites": {
         "title": "Mes Cinémas :",
         "message": "Retrouvez ici la liste des établissements rattachés à votre compte"
       }
     },
     "title": "Calculer votre empreinte carbone simplifiée vous permettra de :",
+    "start": "Démarrer",
     "alert": {
       "info": "Le calculateur Count vous permet d’estimer l’impact sur le climat de votre activité. Il s’agit avant tout d’un outil de sensibilisation. Il ne s'agit pas d'une démarche de transition bas carbone mais d'une empreinte carbone simplifiée — au sens du <link>Guide de communication autour de la comptabilité carbone</link> — centrée sur les principaux postes d’émissions liés à l’activité des salles de cinéma."
     },
@@ -166,6 +180,41 @@
     "glossary": {
       "title": "Informations supplémentaires sur la question",
       "close": "Fermer"
+    }
+  },
+  "emissionFactors": {
+    "post": {
+      "questions": {
+        "actions": "Actions",
+        "add": "Ajouter",
+        "error": "Erreur lors de la mise à jour du champs",
+        "next": "Sous-poste suivant",
+        "previous": "Sous-poste précédent",
+        "numberOfYears": "Nombre d'années",
+        "bonbons": "Bonbons - Nombre (sachets de {value}g)",
+        "chips": "Chips - Nombre (sachets de {value}g)",
+        "Electromenager": "Pour chacun de ces équipements électroménagers, veuillez renseigner :",
+        "FretCadence": "Fret - Cadence (fois/mois)",
+        "FretPoids moyen": "Fret - Poids moyen (kg)",
+        "FretProvenance": "Où est basé votre principal fournisseur ?",
+        "Refrigerateurs": "Réfrigérateurs",
+        "Congelateurs": "Congélateurs",
+        "Warmers": "Warmers",
+        "Distributeurs": "Distributeurs snacks / boisson",
+        "format": {
+          "text": "Texte",
+          "postalCode": "Code postal",
+          "phone": "Téléphone",
+          "year": "Année",
+          "hour": "Heure",
+          "number": "Nombre"
+        },
+        "errorLoadingQuestions": "Erreur lors du chargement des questions",
+        "retry": "Réessayer",
+        "finish": "Terminer",
+        "noQuestions": "Aucune question trouvée pour ce sous-poste",
+        "autoSaveError": "Certaines réponses n'ont pas pu être sauvegardées automatiquement. Veuillez vérifier votre connexion et réessayer."
+      }
     }
   },
   "exports": {

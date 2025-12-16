@@ -1,3 +1,4 @@
+import { customRich } from '@/i18n/customRich'
 import { getEnvVar } from '@/lib/environment'
 import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -15,15 +16,7 @@ const ForbiddenAccess = ({ environment }: Props) => {
   return (
     <Block title={t('title')} as="h1">
       <div className="flex-col">
-        <p className="mb1">
-          {t.rich('message', {
-            link: (children) => (
-              <Link href={FAQLink} target="_blank" rel="noreferrer noopener">
-                {children}
-              </Link>
-            ),
-          })}
-        </p>
+        <p className="mb1">{customRich(t, 'message')}</p>
         <Link href="/">{t('backToHome')}</Link>
       </div>
     </Block>

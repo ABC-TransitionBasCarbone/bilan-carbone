@@ -2,11 +2,15 @@
 
 import BaseTable from '@/components/base/Table'
 import { TableActionButton } from '@/components/base/TableActionButton'
+import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
+import { ActionWithRelations } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { toggleActionEnabled } from '@/services/serverFunctions/transitionPlan'
+import { formatNumber } from '@/utils/number'
+import { convertValue } from '@/utils/study'
 import { getYearFromDateStr } from '@/utils/time'
-import { Switch } from '@mui/material'
-import { Action, ActionPotentialDeduction, StudyResultUnit } from '@prisma/client'
+import { Link, Switch } from '@mui/material'
+import { ActionPotentialDeduction, StudyResultUnit } from '@prisma/client'
 import {
   ColumnDef,
   getCoreRowModel,
@@ -19,13 +23,15 @@ import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 interface Props {
-  actions: Action[]
-  openEditModal: (action: Action) => void
-  openDeleteModal: (action: Action) => void
+  actions: ActionWithRelations[]
+  openEditModal: (action: ActionWithRelations) => void
+  openDeleteModal: (action: ActionWithRelations) => void
   canEdit: boolean
+  studyId: string
+  studyUnit: StudyResultUnit
 }
 
-const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit }: Props) => {
+const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId, studyUnit }: Props) => {
   const t = useTranslations('study.transitionPlan.actions.table')
   const tUnit = useTranslations('study.results.units')
   const tCategory = useTranslations('study.transitionPlan.actions.category')
@@ -34,7 +40,7 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit }: Props
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
 
-  const [localActions, setLocalActions] = useState<Action[]>(actions)
+  const [localActions, setLocalActions] = useState<ActionWithRelations[]>(actions)
 
   useEffect(() => {
     setLocalActions(actions)
@@ -57,20 +63,24 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit }: Props
   )
 
   const getPotential = useCallback(
-    (action: Action) => {
+    (action: ActionWithRelations) => {
       switch (action.potentialDeduction) {
         case ActionPotentialDeduction.Quality:
           return tPotential(ActionPotentialDeduction.Quality)
         case ActionPotentialDeduction.Quantity:
-          return action.reductionValue ? `${action.reductionValue} ${tUnit(StudyResultUnit.T)}` : ''
+          if (action.reductionValueKg !== null) {
+            const valueInStudyUnit = convertValue(action.reductionValueKg, StudyResultUnit.K, studyUnit)
+            return `${formatNumber(valueInStudyUnit)} ${tUnit(studyUnit)}`
+          }
+          return ''
         default:
           return ''
       }
     },
-    [tPotential, tUnit],
+    [tPotential, tUnit, studyUnit],
   )
 
-  const getImplementationPeriod = useCallback((action: Action) => {
+  const getImplementationPeriod = useCallback((action: ActionWithRelations) => {
     if (!action.reductionStartYear || !action.reductionEndYear) {
       return ''
     }
@@ -83,16 +93,38 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit }: Props
     () =>
       [
         {
-          header: t('enabled'),
+          id: 'enabled',
+          header: () => (
+            <div className="flex-cc">
+              <GlossaryIconModal
+                title="enabledGlossaryTitle"
+                iconLabel="enabledGlossaryIconLabel"
+                label="enabled"
+                tModal="study.transitionPlan.actions.table"
+              >
+                <p>
+                  {t.rich('enabledGlossaryDescription', {
+                    trajectoryLink: (children) => (
+                      <Link href={`/etudes/${studyId}/trajectoires`} target="_blank" rel="noreferrer noopener">
+                        {children}
+                      </Link>
+                    ),
+                  })}
+                </p>
+              </GlossaryIconModal>
+            </div>
+          ),
           accessorKey: 'enabled',
           cell: ({ getValue, row }) => (
-            <Switch
-              checked={getValue<boolean>()}
-              onChange={(event) => handleToggleEnabled(row.original.id, event.target.checked)}
-              color="primary"
-              size="small"
-              disabled={!canEdit}
-            />
+            <div className="flex-cc">
+              <Switch
+                checked={getValue<boolean>()}
+                onChange={(event) => handleToggleEnabled(row.original.id, event.target.checked)}
+                color="primary"
+                size="small"
+                disabled={!canEdit}
+              />
+            </div>
           ),
         },
         {
@@ -128,8 +160,18 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit }: Props
               <></>
             ),
         },
-      ] as ColumnDef<Action>[],
-    [t, getImplementationPeriod, getPotential, canEdit, handleToggleEnabled, tCategory, openEditModal, openDeleteModal],
+      ] as ColumnDef<ActionWithRelations>[],
+    [
+      t,
+      getImplementationPeriod,
+      getPotential,
+      studyId,
+      canEdit,
+      handleToggleEnabled,
+      tCategory,
+      openEditModal,
+      openDeleteModal,
+    ],
   )
 
   const table = useReactTable({

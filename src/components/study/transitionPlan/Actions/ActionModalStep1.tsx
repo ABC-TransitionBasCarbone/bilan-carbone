@@ -1,9 +1,10 @@
 import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
-import { AddActionCommand } from '@/services/serverFunctions/transitionPlan.command'
+import { AddActionFormCommand } from '@/services/serverFunctions/transitionPlan.command'
 import { getYearFromDateStr } from '@/utils/time'
 import { Checkbox, FormControlLabel, MenuItem } from '@mui/material'
+import type { StudyResultUnit } from '@prisma/client'
 import { ActionPotentialDeduction } from '@prisma/client'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
@@ -12,16 +13,17 @@ import { useEffect } from 'react'
 import { Control, FieldErrors, UseFormGetValues, UseFormSetValue, useWatch } from 'react-hook-form'
 import textUnitStyles from '../../../dynamic-form/inputFields/TextUnitInput.module.css'
 import styles from './ActionModal.module.css'
+import ActionStepsList from './ActionStepsList'
 
 interface Props {
-  studyUnit: string
-  control: Control<AddActionCommand>
-  setValue: UseFormSetValue<AddActionCommand>
-  getValues: UseFormGetValues<AddActionCommand>
-  errors: FieldErrors<AddActionCommand>
+  studyUnit: StudyResultUnit
+  control: Control<AddActionFormCommand>
+  setValue: UseFormSetValue<AddActionFormCommand>
+  getValues: UseFormGetValues<AddActionFormCommand>
+  errors: FieldErrors<AddActionFormCommand>
 }
 
-const ActionModalStep1 = ({ studyUnit, control, setValue }: Props) => {
+const ActionModalStep1 = ({ studyUnit, control, setValue, errors }: Props) => {
   const t = useTranslations('study.transitionPlan.actions.addModal')
   const tUnit = useTranslations('study.results.units')
   const tDeduction = useTranslations('study.transitionPlan.actions.potentialDeduction')
@@ -49,14 +51,7 @@ const ActionModalStep1 = ({ studyUnit, control, setValue }: Props) => {
         placeholder={t('titlePlaceholder')}
         data-testid="add-action-title"
       />
-      <FormTextField
-        control={control}
-        name="subSteps"
-        label={`${t('subSteps')} *`}
-        placeholder={t('subStepsPlaceholder')}
-        multiline
-        data-testid="add-action-subSteps"
-      />
+      <ActionStepsList control={control} errors={errors} />
       <FormTextField
         control={control}
         name="detailedDescription"
@@ -116,6 +111,15 @@ const ActionModalStep1 = ({ studyUnit, control, setValue }: Props) => {
           />
         </div>
       </div>
+
+      <FormTextField
+        control={control}
+        name="reductionDetails"
+        label={t('reductionDetails')}
+        placeholder={t('reductionDetailsPlaceholder')}
+        multiline
+        data-testid="add-action-reductionDetails"
+      />
 
       <FormControlLabel
         control={

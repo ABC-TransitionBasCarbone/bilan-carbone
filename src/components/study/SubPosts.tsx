@@ -2,11 +2,12 @@
 
 import { FullStudy } from '@/db/study'
 import { StudyWithoutDetail } from '@/services/permissions/study'
-import { Post, subPostsByPost } from '@/services/posts'
-import { StudyRole } from '@prisma/client'
+import { Post } from '@/services/posts'
+import { StudyRole, SubPost } from '@prisma/client'
 import classNames from 'classnames'
-import { useMemo } from 'react'
-import SubPost from './SubPost'
+import { useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import SubPostComponent from './SubPost'
 import styles from './SubPosts.module.css'
 
 type StudyProps = {
@@ -21,34 +22,67 @@ type StudyWithoutDetailProps = {
 
 interface Props {
   post: Post
+  subPosts: SubPost[]
   userRole: StudyRole | null
   studySite: string
   emissionSources: FullStudy['emissionSources']
   setGlossary: (subPost: string) => void
+  hasFilter?: boolean
 }
 
 const SubPosts = ({
   post,
+  subPosts,
   study,
   userRole,
   withoutDetail,
   emissionSources,
   studySite,
   setGlossary,
+  hasFilter,
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
-  const subPosts = useMemo(() => subPostsByPost[post], [post])
+  const searchParams = useSearchParams()
+  const [scroll, setScroll] = useState<string | null>(null)
+
+  useEffect(() => {
+    const scrollTo = searchParams.get('scrollTo')
+    if (scrollTo !== null) {
+      // open subpost
+      setScroll(scrollTo)
+
+      // scroll to subpost
+      const el = document.getElementById(`subpost-${scrollTo}`)
+      if (!el) {
+        return
+      }
+
+      el.scrollIntoView()
+      // take header's height into account
+      const headerHeight = getComputedStyle(document.documentElement).getPropertyValue('--header-height').trim()
+      const offset = parseFloat(headerHeight) * parseFloat(getComputedStyle(document.documentElement).fontSize)
+      window.scrollBy(0, -offset)
+    }
+  }, [searchParams])
 
   return (
     <div className={classNames(styles.subPosts, 'flex-col')}>
       {subPosts.map((subPost) => (
-        <SubPost
+        <SubPostComponent
           emissionSources={emissionSources.filter((emissionSource) => emissionSource.subPost === subPost)}
+          post={post}
           subPost={subPost}
           key={subPost}
           userRoleOnStudy={userRole}
           studySite={studySite}
           {...(withoutDetail ? { study, withoutDetail: true } : { study, withoutDetail: false })}
           setGlossary={setGlossary}
+          count={emissionSources.filter((emissionSource) => emissionSource.subPost === subPost).length}
+          validated={
+            emissionSources.filter((emissionSource) => emissionSource.subPost === subPost && emissionSource.validated)
+              .length
+          }
+          hasFilter={!!hasFilter}
+          defaultOpen={scroll === subPost}
         />
       ))}
     </div>

@@ -2,7 +2,6 @@ import PostIcon from '@/components/study/infography/icons/PostIcon'
 import { Post } from '@/services/posts'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import { CutProgressBar } from './CutProgressBar'
 import {
   StyledContentColumn,
   StyledEmissionValue,
@@ -10,6 +9,7 @@ import {
   StyledPostHeader,
   StyledTitle,
 } from './PostHeader.styles'
+import { SimplifiedProgressBar } from './SimplifiedProgressBar'
 
 interface Props {
   post: Post | SubPost
@@ -18,7 +18,7 @@ interface Props {
   percent: number
 }
 
-export const CutPostHeader = ({ post, mainPost, emissionValue, percent }: Props) => {
+export const SimplifiedPostHeader = ({ post, mainPost, emissionValue, percent }: Props) => {
   const t = useTranslations('emissionFactors.post')
 
   if (!mainPost) {
@@ -34,7 +34,7 @@ export const CutPostHeader = ({ post, mainPost, emissionValue, percent }: Props)
         <StyledTitle>{t(post)}</StyledTitle>
         <StyledEmissionValue>{emissionValue}</StyledEmissionValue>
         <div className="mt-2 w100">
-          <CutProgressBar value={percent} />
+          <SimplifiedProgressBar value={percent} />
         </div>
       </StyledContentColumn>
     </StyledPostHeader>

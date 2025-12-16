@@ -1,65 +1,43 @@
 .card {
   gap: 1rem;
-  padding: 2rem;
 }
 
-.post {
-  padding: 1rem;
-  border-radius: 1rem;
-  gap: 0.5rem;
-  border: 2px solid;
+.postContainer {
+  --card-max-length: 40rem;
+  margin: 0 2rem;
+}
 
-  &.post-darkBlue {
-    border-color: var(--post-darkBlue-dark);
-    color: var(--post-darkBlue-dark);
+.header {
+  position: relative;
+  color: white;
+
+  @media screen and (max-width: 64rem) {
+    padding: 1rem 0.5rem;
   }
-  &.post-green {
-    border-color: var(--post-green-dark);
-    color: var(--post-green-dark);
-  }
-  &.post-blue {
-    border-color: var(--post-blue-dark);
-    color: var(--post-blue-dark);
-  }
-  &.post-orange {
-    border-color: var(--post-orange-dark);
-    color: var(--post-orange-dark);
-  }
+}
+
+.content {
+  position: relative;
+  gap: 0.5rem;
+  padding: 1.5rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.emissionSources {
+  max-width: var(--card-max-length);
 }
 
 .icon {
   width: auto;
   height: 1.5rem;
 
+  path {
+    fill: white;
+  }
+
   @media screen and (max-width: 50rem) {
     display: none;
-  }
-}
-
-.role {
-  padding: 0.5rem 1rem;
-  border-radius: 2rem;
-  min-width: 5rem;
-}
-
-.validator {
-  background-color: var(--validator-background);
-}
-.editor {
-  background-color: var(--editor-background);
-}
-.reader {
-  background-color: var(--reader-background);
-}
-.contributor {
-  background-color: var(--contributor-background);
-}
-
-.emissionSources {
-  border: 2px solid var(--warning);
-
-  &.allValidated {
-    border-color: var(--success-100);
   }
 }
 
@@ -68,13 +46,5 @@
 
   &.success {
     color: var(--success-100);
-  }
-}
-
-.progressBar {
-  background: var(--warning);
-
-  &.success {
-    background: var(--success-100);
   }
 }

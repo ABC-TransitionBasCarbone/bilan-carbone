@@ -273,6 +273,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
                 nonSpecificMonetaryRatio={nonSpecificMonetaryRatio}
                 caUnit={caUnit}
                 computedResultsByTag={computedResultsByTag}
+                exportType={type}
               />
               <ConsolidatedResults
                 computedResults={displayValueWithDep ? computedResultsWithDep : computedResultsWithoutDep}

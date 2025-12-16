@@ -67,7 +67,7 @@ describe('updateTag', () => {
     jest.clearAllMocks()
     mockAuth.mockResolvedValue(mockSession)
     mockGetAccountById.mockResolvedValue(mockAccount)
-    mockHasAccessToCreateStudyTag.mockResolvedValue(true)
+    mockHasAccessToCreateStudyTag.mockReturnValue(true)
     mockUpdateStudyTag.mockResolvedValue({ id: 'tag-id' })
   })
 
@@ -109,7 +109,7 @@ describe('updateTag', () => {
     })
 
     it('should return error when user has no access to create emission source tag', async () => {
-      mockHasAccessToCreateStudyTag.mockResolvedValue(false)
+      mockHasAccessToCreateStudyTag.mockReturnValue(false)
 
       const result = await updateTag('tag-id', 'New Name', '#ff0000', 'family-id')
 

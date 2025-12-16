@@ -1,7 +1,9 @@
 import { FullStudy } from '@/db/study'
-import { getStandardDeviation } from '@/services/emissionSource'
+import { getEmissionResults, getStandardDeviation } from '@/services/emissionSource'
 import { getQualityRating, getSpecificEmissionFactorQuality, getStandardDeviationRating } from '@/services/uncertainty'
+import { EmissionSourcesSort } from '@/types/filters'
 import { Translations } from '@/types/translation'
+import { Environment } from '@prisma/client'
 
 export const getEmissionSourcesFuseOptions = (tQuality: Translations, tUnit: Translations, locale: string) => ({
   keys: [
@@ -54,3 +56,45 @@ export const getEmissionSourcesFuseOptions = (tQuality: Translations, tUnit: Tra
   threshold: 0.3,
   isCaseSensitive: false,
 })
+
+export const getSortedEmissionSources = (
+  emissionSources: FullStudy['emissionSources'],
+  sort: EmissionSourcesSort,
+  environment: Environment,
+  locale: string,
+) => {
+  if (sort.field) {
+    switch (sort.field) {
+      case 'activityData':
+        return emissionSources.sort((a, b) =>
+          sort.order === 'asc' ? (a.value || 0) - (b.value || 0) : (b.value || 0) - (a.value || 0),
+        )
+
+      case 'emissions':
+        return emissionSources.sort((a, b) => {
+          const emissionA = (a.value || 0) * (a.emissionFactor?.totalCo2 || 0)
+          const emissionB = (b.value || 0) * (b.emissionFactor?.totalCo2 || 0)
+          return sort.order === 'asc' ? emissionA - emissionB : emissionB - emissionA
+        })
+
+      case 'emissionFactor':
+        return emissionSources.sort((a, b) => {
+          const emissionFactorA =
+            a.emissionFactor?.metaData.find((metaData) => metaData.language === locale)?.title || ''
+          const emissionFactorB =
+            b.emissionFactor?.metaData.find((metaData) => metaData.language === locale)?.title || ''
+          return sort.order === 'asc'
+            ? emissionFactorA.localeCompare(emissionFactorB)
+            : emissionFactorB.localeCompare(emissionFactorA)
+        })
+
+      case 'uncertainty':
+        return emissionSources.sort((a, b) => {
+          const alphaA = getEmissionResults(a, environment).alpha || 0
+          const alphaB = getEmissionResults(b, environment).alpha || 0
+          return sort.order === 'asc' ? alphaA - alphaB : alphaB - alphaA
+        })
+    }
+  }
+  return emissionSources
+}

@@ -29,6 +29,7 @@
     }
   },
   "categorisations": {
+    "all": "Toutes les categorisations",
     "Operated": "Opéré",
     "NotOperated": "Non opéré",
     "OperatedProcedeed": "Opéré, procédé",
@@ -147,6 +148,12 @@
   "locale": {
     "en": "English",
     "fr": "Français",
+    "es": "Español",
+    "el": "ελληνικά",
+    "hr": "hrvatski",
+    "hu": "magyar",
+    "it": "Italiano",
+    "ro": "Română",
     "selector": "Langue du site"
   },
   "login": {
@@ -202,66 +209,6 @@
     "Email sent": "Vous allez recevoir un mail pour finaliser l'activation de votre compte.",
     "validation": {
       "email": "Veuillez entrer un email"
-    }
-  },
-  "signupCut": {
-    "description": "Créez un compte sur CUT en entrant votre email ainsi qu'un numéro CNC (recommandé) ou Siret",
-    "email": "Email",
-    "emailPlaceholder": "Votre adresse email",
-    "emailRequired": "Veuillez entrer un email",
-    "siretOrCNC": "Numéro CNC (recommandé) ou Siret",
-    "siretOrCNCPlaceholder": "Votre numéro CNC (recommandé) ou Siret",
-    "siretOrCNCRequired": "Veuillez entrer un numéro CNC (recommandé) ou Siret",
-    "validate": "Valider",
-    "clear": "Supprimer la valeur",
-    "Unknown CNC": "Ce code CNC n'est pas reconnu. Veuillez vérifier votre saisie ou contacter le support si vous pensez qu'il s'agit d'une erreur.",
-    "Unknown SIRET or CNC": "Ce Siret ou code CNC n'est pas reconnu. Veuillez vérifier votre saisie ou contacter le support si vous pensez qu'il s'agit d'une erreur.",
-    "Not authorized": "Cet email est déjà inscrit avec un compte CUT ou il y a eu un soucis lors de sa création. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
-    "Request sent": "Une demande d'activation de votre compte a été envoyé à vos collègues",
-    "Email sent": "Vous allez recevoir un mail pour finaliser l'activation de votre compte.",
-    "validation": {
-      "email": "Veuillez entrer un email",
-      "siretOrCNC": "Veuillez entrer un numéro CNC (recommandé) ou Siret"
-    }
-  },
-  "signupTilt": {
-    "description": "Créez un compte sur Tilt en entrant votre email ainsi qu'un Siret",
-    "email": "Email",
-    "emailPlaceholder": "Votre adresse email",
-    "emailRequired": "Veuillez entrer un email",
-    "siret": "Siret",
-    "siretPlaceholder": "Votre Siret",
-    "siretRequired": "Veuillez entrer un Siret",
-    "validate": "Valider",
-    "Not authorized": "Cet email est déjà inscrit avec un compte Tilt ou ce SIRET n'est pas valide. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
-    "Not association SIRET": "L'utilisation de cet outil est réservé aux associations. Veuillez utiliser la version classique du Bilan Carbone®+",
-    "Request sent": "Une demande d'activation de votre compte a été envoyé à vos collègues",
-    "Email sent": "Vous allez recevoir un mail pour finaliser l'activation de votre compte.",
-    "validation": {
-      "email": "Veuillez entrer un email",
-      "siret": "Veuillez entrer un Siret"
-    }
-  },
-  "signupClickson": {
-    "description": "Créez un compte sur Clickson en entrant votre email ainsi que le code postal ou nom de votre établissement scolaire",
-    "email": "Email",
-    "emailPlaceholder": "Votre adresse email",
-    "emailRequired": "Veuillez entrer un email",
-    "schoolPostalCodeOrName": "Code postal ou nom de l'établissement scolaire",
-    "schoolPostalCodeOrNamePlaceholder": "Le code postal ou nom de l'établissement scolaire",
-    "schoolSearchGlossaryTitle": "Retrouvez votre établissement scolaire.",
-    "schoolSearchGlossary": "Retrouvez votre établissement scolaire en entrant son code postal ou son nom, puis en le sélectionnant dans la liste déroulante.",
-    "close": "Fermer",
-    "schoolPostalCodeOrNameRequired": "Veuillez entrer le code postal ou le nom de l'établissement scolaire",
-    "validate": "Valider",
-    "clear": "Supprimer la valeur",
-    "Not authorized": "Cet email est déjà inscrit avec un compte Clickson ou il y a eu un soucis lors de sa création. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
-    "Request sent": "Une demande d'activation de votre compte a été envoyé à vos collègues",
-    "Email sent": "Vous allez recevoir un mail pour finaliser l'activation de votre compte.",
-    "Not known school": "Veuillez chercher et sélectionner votre établissement.",
-    "validation": {
-      "email": "Veuillez entrer un email",
-      "schoolPostalCodeOrName": "Veuillez entrer le code postal ou nom de l'établissement scolaire"
     }
   },
   "footer": {
@@ -478,8 +425,17 @@
       "contributors": "{count, plural, =1 {1 contributeur·rice} other {# contibuteur·rices}}",
       "contributorsList": "{count, plural, =1 {Contributeur·rice :} other {Contributeur·rices :}}",
       "label": "Libellé de la source d'émission",
+      "search": "Rechercher par libellé, valeurs, unités, ...",
       "new": "Donnez un titre à votre nouvelle source d'émission",
-      "add": "Ajouter"
+      "add": "Ajouter",
+      "filters": "Filtres",
+      "sort": "Trier par",
+      "activityData": "Donnée d'activité",
+      "emissionFactor": "Facteur d'émission",
+      "emissions": "Émissions",
+      "uncertainty": "Incertitude (Alpha, %)",
+      "asc": "Ascendant",
+      "desc": "Descendant"
     },
     "organization": {
       "site": "Site",
@@ -507,7 +463,6 @@
       "Validator_description": "A tous les droits sur l'étude et peut valider les sources d'émission qui ont été renseignées par les validateur·rices, éditeur·rices et contributeur·rices.",
       "Editor_description": "A tous les droits sur l'étude à l'exception de la validation des sources d'émission.",
       "Reader_description": "Peut uniquement accéder en lecture à l'étude et exporter les informations de celle-ci.",
-      "close": "Fermer",
       "saved": "Nouveau rôle sauvegardé"
     },
     "title": "Étude",
@@ -569,8 +524,7 @@
         },
         "role": {
           "information": "Informations",
-          "description": "Vous pouvez ici gérer les contributeur·rices de votre étude. Ceux-ci auront accès à certains postes et sous postes (que vous pouvez définir) et pourront remplir certaines informations pour des sources d'émission que vous aurez déjà créées dans l'étude. Pour plus d'information sur l'interface des contributeur·rices, n'hésitez pas à aller voir notre <link>FAQ</link>",
-          "close": "Fermer"
+          "description": "Vous pouvez ici gérer les contributeur·rices de votre étude. Ceux-ci auront accès à certains postes et sous postes (que vous pouvez définir) et pourront remplir certaines informations pour des sources d'émission que vous aurez déjà créées dans l'étude. Pour plus d'information sur l'interface des contributeur·rices, n'hésitez pas à aller voir notre <link>FAQ</link>"
         }
       },
       "table": {
@@ -675,7 +629,8 @@
         "confirm": "Confirmer",
         "glossary": "Famille de tags",
         "close": "Fermer",
-        "glossaryDescription": "Les tags et familles de tags servent à identifier vos sources d'émissions dans le but de visualiser certains résultats par la suite. <br></br>Une fois vos tags créés, vous pourrez les associer à des sources d'émissions au sein de la page \"Saisie des données\". Puis, dans la page \"Résultats\", vous pourrez visualiser les émissions dues à une famille de tags ou à un tag en particulier, mais vous ne pourrez pas visualiser les émissions de deux familles de tags en parallèle, car des double-comptes peuvent être faits entre ces deux familles de tags. <br></br>Pour donner un exemple concret, admettons qu'il existe deux familles de tags : \"Produits vendus\" et \"Publics ciblés\". Ces deux familles et les tags y appartenant vous permettrons de visualiser quelle est la répartition des émissions de votre organisation en fonction des produits vendus, et de même pour les publics ciblés"
+        "glossaryDescription": "Les tags et familles de tags servent à identifier vos sources d'émissions dans le but de visualiser certains résultats par la suite. <br></br>Une fois vos tags créés, vous pourrez les associer à des sources d'émissions au sein de la page \"Saisie des données\". Puis, dans la page \"Résultats\", vous pourrez visualiser les émissions dues à une famille de tags ou à un tag en particulier, mais vous ne pourrez pas visualiser les émissions de deux familles de tags en parallèle, car des double-comptes peuvent être faits entre ces deux familles de tags. <br></br>Pour donner un exemple concret, admettons qu'il existe deux familles de tags : \"Produits vendus\" et \"Publics ciblés\". Ces deux familles et les tags y appartenant vous permettrons de visualiser quelle est la répartition des émissions de votre organisation en fonction des produits vendus, et de même pour les publics ciblés",
+        "allTags": "Tous les tags"
       },
       "duplicate": {
         "title": "Dupliquer le site {name} et ses sources d'émissions",
@@ -692,7 +647,6 @@
         "createSitesDescription": "Vous pouvez également créer de nouveaux sites et y dupliquer les informations. Ceux-ci seront apparaitront dans vos informations générales. Merci d'indiquer le nombre de sites à créer sur lesquels seront dupliquées les informations que vous avez sélectionnées.",
         "numberOfSitesToCreate": "Nombre de sites à créer",
         "cancel": "Annuler",
-        "duplicate": "Dupliquer",
         "sitesChanges": {
           "title": "Modification de l'organisation",
           "description": "Vous avez modifié certaines informations liées aux sites de cette étude. Souhaitez-vous répercuter ces modifications sur les informations de l'organisation ? <error>Ces changements ne seront pas répercutés sur vos autres études.</error>",
@@ -722,7 +676,7 @@
       "withDependencies": "Avec le sous-poste 'Utilisation en dépendance'",
       "withoutDependencies": "Sans le sous-poste 'Utilisation en dépendance'",
       "dependencyIntensity": "Intensités carbone en dépendance",
-      "responsabilityIntensity": "Intensités carbone en responsabilité",
+      "responsibilityIntensity": "Intensités carbone en responsabilité",
       "monetaryRatio": "Ratios monétaires",
       "monetaryRatioEmissions": "d'émissions issues de ratios monétaires",
       "nonSpeMonetaryRatioEmissions": "issues de ratios monétaires non spécifiques",
@@ -754,7 +708,6 @@
         "missingCaract1": "Les sources d'émissions non caractérisées ne sont pas comptabilisées au sein du BEGES-R, ce qui entraine des différences indues avec le Bilan Carbone® dans le cas où vous auriez choisi de visualiser les sources d'émissions non validées.",
         "missingCaract2": "Vous n'avez pas renseigné les caractérisations pour toutes les sources d'émission de votre étude. Merci d'éditer et ajouter la caractérisation pour les sources d'émission suivantes : ",
         "additionalMissing": "+ {count, plural,  =1 {1 autre source} other {# autres sources}} d'émission",
-        "close": "Fermer",
         "unexplainedDifference": "Certaines différences ne peuvent être expliquées pour votre étude et peuvent être liées à des problèmes de calcul de l'outil. Si vous le pouvez, merci de nous contacter à l'adresse <support>support</support>."
       },
       "noData": "Aucune donnée à afficher",
@@ -770,7 +723,6 @@
       },
       "analysis": "Analyse des émissions",
       "total": "Total des émissions",
-      "close": "Fermer",
       "intensities": {
         "budget": "budget",
         "etp": "salarié",
@@ -955,7 +907,7 @@
           "trajectory15": "SBTi 1,5°C",
           "trajectoryWB2C": "SBTi WB2C",
           "actionBasedTrajectory": "Trajectoire bottom-up",
-          "yAxisLabel": "Émissions (tCO2e)",
+          "yAxisLabel": "Émissions",
           "unvalidatedSourcesWarning": "{count, plural, =1 {Une source d'émissions n'est pas validée dans l'étude actuelle et n'est donc pas prise en compte dans le calcul des trajectoires.} other {{count} sources d'émissions ne sont pas validées dans l'étude actuelle et ne sont donc pas prises en compte dans le calcul des trajectoires.}}",
           "unvalidatedSourcesLinkedStudiesWarning": "{count, plural, =1 {Une source d'émissions n'est pas validée dans l' étude passée suivante :} other {{count} sources d'émissions ne sont pas validées dans les études passées suivantes :}}",
           "unvalidatedSourcesLinkedStudyCount": " ({count, plural, =1 {1 source non validée} other {{count} sources non validées}})"
@@ -1089,7 +1041,6 @@
           "reductionRate": "Réduction annuelle",
           "actions": "Actions"
         },
-        "delete": "Supprimer",
         "cancel": "Annuler",
         "deleteTrajectory": {
           "title": "Supprimer la trajectoire",
@@ -1111,6 +1062,10 @@
         "add": "Ajouter une action",
         "table": {
           "enabled": "Activée",
+          "enabledGlossaryIconLabel": "Activation et désactivation de mes actions",
+          "enabledGlossaryTitle": "Activation et désactivation de mes actions",
+          "enabledGlossaryDescription": "Les réductions liées aux actions que vous avez activées sont prises en compte sur la page <trajectoryLink>Trajectoires de réduction</trajectoryLink> dans votre trajectoire bottom-up. Les réductions liées aux actions désactivées ne seront pas visibles. Activer ou désactiver des actions vous permet ainsi d'envisager différents scénarios pour atteindre vos objectifs de réduction.",
+          "close": "Fermer",
           "title": "Titre",
           "priority": "Priorité",
           "actionType": "Type d'action",
@@ -1131,12 +1086,14 @@
           "title": "Intitulé de l'action",
           "titlePlaceholder": "Donnez un titre à votre action",
           "subSteps": "Sous-étapes",
-          "subStepsPlaceholder": "Décrivez vos sous-étapes",
+          "stepTitlePlaceholder": "Décrivez votre sous-étape",
           "detailedDescription": "Description détaillée de l'action et de l'implication des parties prenantes",
           "detailedDescriptionPlaceholder": "Description détaillée",
           "potentialDeduction": "Potentiel de réduction d'émissions",
           "potentialDeductionPlaceholder": "Sélectionnez une option",
           "reductionValue": "Valeur",
+          "reductionDetails": "Détails et hypothèses sur le potentiel de réduction de l'action",
+          "reductionDetailsPlaceholder": "Décrivez les détails et hypothèses",
           "reductionStartYear": "Début de la mise en oeuvre de l'action",
           "reductionEndYear": "Fin de la mise en oeuvre de l'action",
           "dependenciesOnly": "Mon action concerne uniquement le sous poste \"Utilisation en dépendance\"",
@@ -1147,6 +1104,12 @@
           "necesssaryRessources": "Autres ressources necessaire à sa mise en place (humaines, financières, matérielles, ...)",
           "necesssaryRessourcesPlaceholder": "Indiquez les ressources",
           "indicator": "Description des indicateurs",
+          "indicatorTooltipTitle": "Fonctionnalité en cours de développement",
+          "indicatorTooltipLabel": "Information sur les indicateurs",
+          "indicatorTooltipDescription": "Une fonctionnalité de suivi des actions arrive ! Vous pouvez déjà lister vos indicateurs et vous pourrez les quantifier et les suivre une fois la fonctionnalité sortie.",
+          "addIndicator": "Ajouter un indicateur",
+          "removeIndicator": "Retirer l'indicateur",
+          "noIndicators": "Aucun indicateur pour le moment",
           "implementation": "De mise en oeuvre",
           "followUp": "De suivi",
           "performance": "De performance",
@@ -1162,6 +1125,7 @@
             "step2": "Catégorisation",
             "step3": "Détails et responsabilité"
           },
+          "close": "Fermer",
           "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
           "validation": {
             "required": "Champs requis",
@@ -1193,7 +1157,11 @@
           "AvoidanceFinancing": "Financement d'évitement (Priorité 4/6)",
           "ReductionOutsideOrganisationValueChain": "Réduction hors de la chaîne de valeur de l'organisation (Priorité 2/6)",
           "ReductionWithinOrganisationValueChain": "Réduction dans la chaîne de valeur de l'organisation (Priorité 1/6)",
-          "ReductionWithinOrganisationCoreBusiness": "Réduction dans le coeur d'activité de l'organisation (Priorité 1/6)"
+          "ReductionWithinOrganisationCoreBusiness": "Réduction dans le coeur d'activité de l'organisation (Priorité 1/6)",
+          "glossaryTitle": "Niveaux de pertinence d'une action",
+          "information": "Information sur les niveaux de pertinence",
+          "learnMore": "Pour plus d'information, nous vous invitons à consulter <link>cette page</link>.",
+          "close": "Fermer"
         },
         "onboarding": {
           "title": "Construisez un plan d'action afin d'atteindre vos objectifs",
@@ -1364,39 +1332,6 @@
         "BiensEtMatieresEnApprocheMonetaire": "Un sous-poste est également dédié aux matières pour lesquelles des facteurs d'émission en ratios monétaires sont utilisés.",
         "UtilisationEnResponsabilite": "Des produits vendus par l'organisation au sein du périmètre temporel considéré sur l'ensemble de leur durée de vie, dont l'organisation est directement responsable ([en italisque] pour un fabriquant de plateau-repas servi dans un avion, l'utilisation en responsabilité correspond à l'énergie utilisée pour refroidir et réchauffer le plateau-repas).",
         "UtilisationEnDependance": "Des produits vendus par l'organisation au sein du périmètre temporel considéré sur l'ensemble de leur durée de vie, dont l'organisation n'est pas directement reponsable mais que sont activité contribue à émettre ([en italique] Pour un fabriquant de plateau-repas servi dans un avion, l'utilisation en dépendance correspond aux émissions du vol complet)."
-      },
-      "cutQuestions": {
-        "actions": "Actions",
-        "add": "Ajouter",
-        "delete": "Supprimer",
-        "duplicate": "Dupliquer",
-        "error": "Erreur lors de la mise à jour du champs",
-        "next": "Sous-poste suivant",
-        "previous": "Sous-poste précédent",
-        "numberOfYears": "Nombre d'années",
-        "bonbons": "Bonbons - Nombre (sachets de {value}g)",
-        "chips": "Chips - Nombre (sachets de {value}g)",
-        "Electromenager": "Pour chacun de ces équipements électroménagers, veuillez renseigner :",
-        "FretCadence": "Fret - Cadence (fois/mois)",
-        "FretPoids moyen": "Fret - Poids moyen (kg)",
-        "FretProvenance": "Où est basé votre principal fournisseur ?",
-        "Refrigerateurs": "Réfrigérateurs",
-        "Congelateurs": "Congélateurs",
-        "Warmers": "Warmers",
-        "Distributeurs": "Distributeurs snacks / boisson",
-        "format": {
-          "text": "Texte",
-          "postalCode": "Code postal",
-          "phone": "Téléphone",
-          "year": "Année",
-          "hour": "Heure",
-          "number": "Nombre"
-        },
-        "errorLoadingQuestions": "Erreur lors du chargement des questions",
-        "retry": "Réessayer",
-        "finish": "Terminer",
-        "noQuestions": "Aucune question trouvée pour ce sous-poste",
-        "autoSaveError": "Certaines réponses n'ont pas pu être sauvegardées automatiquement. Veuillez vérifier votre connexion et réessayer."
       }
     },
     "create": {
@@ -1435,7 +1370,6 @@
       "missingPost": "Veuillez selectionner un poste",
       "subPost": "Sous Poste",
       "comment": "Commentaires",
-      "delete": "Supprimer",
       "clear": "Supprimer la valeur",
       "glossary": {
         "title": "Glossaire",
@@ -1570,7 +1504,6 @@
     "missingQualities": {
       "title": "Ajout de la qualité pour les facteurs d'émission manuels",
       "body": "Bonjour, d'après nos informations, vous aviez ajouté des facteurs d'émissions manuellement lorsqu'il était encore impossible de renseigner leur incertitude. Par défaut, pour ces facteurs d'émissions, les qualités sont considérées comme étant \"Très bonne\", ce qui correspond à une incertitude nulle sur le facteur d'émission. Ce bug étant dorénavant résolu, nous vous recommandons fortement de mettre à jour les facteurs d'émissions concernés qui sont les suivants :",
-      "close": "Fermer",
       "correct": "Corriger"
     }
   },
@@ -1897,7 +1830,6 @@
     "studySites": {
       "title": "Vous ne pouvez pas supprimer ces sites",
       "description": "Des études existent avec les sites suivants. <warning>Vous devez d'abord les supprimer des études concernées avant de pouvoir les supprimer de votre organisation.</warning>",
-      "close": "Fermer",
       "existingSite": "<name></name> : <link></link>",
       "existingUnauthorizedSite": "{name} : {count, plural,  =1 {1 étude à laquelle} other {#  études auxquelles}} vous n'avez pas accès"
     },
@@ -1907,7 +1839,7 @@
       "myClient": "Mon client",
       "update": "Modifier mes informations",
       "updateClient": "Modifier mon client",
-      "renew": "Votre licence {year} touche à sa fin, pensez à la renouveler pour continuer à utiliser les services en {nextYear}.",
+      "renew": "Votre adhésion {year} touche à sa fin, pensez à la renouveler pour continuer à utiliser les services en {nextYear}. Sans réadhérer, vous n'aurez plus accès qu'en lecture à vos études sur le BC+.",
       "renewLink": "Renouveler"
     },
     "delete": {
@@ -1971,12 +1903,14 @@
     },
     "saving": "Sauvegarde en cours...",
     "status": {
+      "all": "Tous les status",
       "valid": "Validée",
       "waiting": "En complétion",
       "waitingContributor": "En attente d'un·e contributeur·rice",
       "toVerify": "À vérifier"
     },
     "type": {
+      "all": "Tous les types",
       "Physical": "Physique",
       "Accounting": "Comptable",
       "Extrapolated": "Extrapolée",
@@ -2131,7 +2065,7 @@
     "form": "Questionnaire Typeform",
     "forbidden": {
       "title": "Accès bloqué",
-      "message": "Vous n'êtes pas dans notre base de donnée de formés, vous ne pouvez donc pas avoir accès à l'onglet formation pour passer la formation de mise à jour. Si vous pensez que c'est une erreur merci de suivre le processus indiqué dans notre <link>FAQ</link>.",
+      "message": "Vous n'êtes pas dans notre base de donnée de formés, vous ne pouvez donc pas avoir accès à l'onglet formation pour passer la formation de mise à jour. Si vous pensez que c'est une erreur merci de suivre le processus indiqué dans notre <faq>FAQ</faq>.<br></br><br></br> Si vous contacter le <support>support</support>, merci d'avoir en amont <b>créer un compte</b> sur <abc>le site de l'ABC</abc> avec votre mail de connexion au BC+ (aucune adhésion supplémentaire n'est nécessaire, cela permet uniquement de vous ajouter à notre base de données de formés). Merci également d'envoyer au support <b>votre attestation de formation</b> et de préciser le mail avec lequel vous vous connectez sur le BC+.<br></br><br></br> Si vous avez déjà été en contact avec le support et que vous ne voyez pas de changement, merci d'attendre 1h puis de vous <b>déconnectez et vous reconnectez au BC+.</b>",
       "backToHome": "Retour à l'accueil"
     }
   },
@@ -2154,8 +2088,7 @@
     "body": " Si vous avez 5 minutes, nous serions ravis d'avoir vos retours sur le BC+ ! Ceux-ci nous permettront de répondre aux mieux à vos besoins avec nos prochains développements. Si ce n'est pas le bon moment, vous pouvez reportez votre réponse.",
     "reject": "Ne pas répondre",
     "delay": "Plus tard ({time} jours)",
-    "answer": "Je donne mon avis",
-    "close": "Fermer"
+    "answer": "Je donne mon avis"
   },
   "form": {
     "validation": {
@@ -2207,11 +2140,6 @@
     "maxTwoDecimals": "Le taux de réduction doit avoir au maximum 2 décimales"
   },
   "common": {
-    "actions": {
-      "edit": "Modifier",
-      "duplicate": "Dupliquer",
-      "delete": "Supprimer"
-    },
     "typeToConfirm": "Tapez \"{name}\" pour confirmer"
   }
 }
