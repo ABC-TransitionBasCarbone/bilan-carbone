@@ -4,7 +4,8 @@ import TopLeftNavBar from '@/components/navbar/TopLeftNavBar'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import CutTopLeftNavBar from '@/environments/cut/navbar/TopLeftNavBar'
 import { signOutEnv } from '@/services/auth'
-import { hasAccessToMethodology, hasAccessToSettings, isTilt } from '@/services/permissions/environment'
+import { isTilt } from '@/services/permissions/environment'
+import { hasAccessToMethodology, hasAccessToSettings } from '@/services/permissions/environmentAdvanced'
 import { hasAccessToFormation } from '@/services/permissions/formations'
 import { getUserActiveAccounts } from '@/services/serverFunctions/user'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
@@ -88,7 +89,7 @@ const Navbar = ({ children, user, environment }: Props) => {
                 <NavbarButton rel="noreferrer noopener" href="/ressources" aria-label={t('help')}>
                   <HelpOutlineIcon />
                 </NavbarButton>
-                {hasAccessToSettings(user.environment) && (
+                {hasAccessToSettings(user.environment, user.level) && (
                   <NavbarButton aria-label={t('settings')} href="/parametres">
                     <SettingsIcon />
                   </NavbarButton>
@@ -96,7 +97,7 @@ const Navbar = ({ children, user, environment }: Props) => {
                 <NavbarButton aria-label={t('profile')} href="/profil">
                   <AccountCircleIcon />
                 </NavbarButton>
-                {hasAccessToMethodology(user.environment) && (
+                {hasAccessToMethodology(user.environment, user.level) && (
                   <NavbarButton aria-label={t('methodology')} rel="noreferrer noopener" href={methodologyLink}>
                     <MenuBookIcon />
                   </NavbarButton>
