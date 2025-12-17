@@ -267,9 +267,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
             questionsBySubPost={pendingSiteChanges.questionsBySubPost}
           />
         )}
-        {userRoleOnStudy && userRoleOnStudy !== StudyRole.Reader && (
-          <StudyContributorsTable study={study} canAddContributor={!editionDisabled} />
-        )}
+        {!editionDisabled && <StudyContributorsTable study={study} canAddContributor={!editionDisabled} />}
       </Block>
     </>
   )
