@@ -4,6 +4,7 @@ import { ToastProvider } from '@/components/base/ToastProvider'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import 'dayjs/locale/fr'
+import { SessionProvider } from 'next-auth/react'
 import { ReactNode } from 'react'
 
 interface Props {
@@ -14,7 +15,7 @@ const Providers = ({ children }: Props) => {
   return (
     <ToastProvider>
       <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">
-        {children}
+        <SessionProvider>{children}</SessionProvider>
       </LocalizationProvider>
     </ToastProvider>
   )

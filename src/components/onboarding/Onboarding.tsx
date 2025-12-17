@@ -3,7 +3,6 @@
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { setOnboardedOrganizationVersion } from '@/services/serverFunctions/organization'
 import { UserSession } from 'next-auth'
-import { SessionProvider } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import OnboardingModal from './OnboardingModal'
 
@@ -23,11 +22,7 @@ const Onboarding = ({ organizationVersion, user }: Props) => {
 
   const onClose = () => setOpen(false)
 
-  return (
-    <SessionProvider>
-      <OnboardingModal open={open} onClose={onClose} user={user} organizationVersion={organizationVersion} />
-    </SessionProvider>
-  )
+  return <OnboardingModal open={open} onClose={onClose} user={user} organizationVersion={organizationVersion} />
 }
 
 export default Onboarding

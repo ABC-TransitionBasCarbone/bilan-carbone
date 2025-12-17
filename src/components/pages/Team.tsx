@@ -3,7 +3,6 @@
 import { TeamMember } from '@/db/account'
 import { UserStatus } from '@prisma/client'
 import { UserSession } from 'next-auth'
-import { SessionProvider } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import InvitationsToValidate from '../team/InvitationsToValidate'
@@ -20,7 +19,7 @@ const TeamPage = ({ user, team, crOrga = false }: Props) => {
   const tNav = useTranslations('nav')
 
   return (
-    <SessionProvider>
+    <>
       <Breadcrumbs current={tNav('team')} links={[{ label: tNav('home'), link: '/' }]} />
       <InvitationsToValidate
         usersToValidate={team.filter((member) => member.status === UserStatus.PENDING_REQUEST)}
@@ -28,7 +27,7 @@ const TeamPage = ({ user, team, crOrga = false }: Props) => {
       />
       <PendingInvitations team={team.filter((member) => member.status === UserStatus.VALIDATED)} user={user} />
       <Team team={team.filter((member) => member.status === UserStatus.ACTIVE)} user={user} crOrga={crOrga} />
-    </SessionProvider>
+    </>
   )
 }
 

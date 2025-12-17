@@ -5,7 +5,6 @@ import { StudyWithoutDetail } from '@/services/permissions/study'
 import { Post } from '@/services/posts'
 import { StudyRole, SubPost } from '@prisma/client'
 import classNames from 'classnames'
-import { SessionProvider } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import SubPostComponent from './SubPost'
@@ -66,29 +65,27 @@ const SubPosts = ({
   }, [searchParams])
 
   return (
-    <SessionProvider>
-      <div className={classNames(styles.subPosts, 'flex-col')}>
-        {subPosts.map((subPost) => (
-          <SubPostComponent
-            emissionSources={emissionSources.filter((emissionSource) => emissionSource.subPost === subPost)}
-            post={post}
-            subPost={subPost}
-            key={subPost}
-            userRoleOnStudy={userRole}
-            studySite={studySite}
-            {...(withoutDetail ? { study, withoutDetail: true } : { study, withoutDetail: false })}
-            setGlossary={setGlossary}
-            count={emissionSources.filter((emissionSource) => emissionSource.subPost === subPost).length}
-            validated={
-              emissionSources.filter((emissionSource) => emissionSource.subPost === subPost && emissionSource.validated)
-                .length
-            }
-            hasFilter={!!hasFilter}
-            defaultOpen={scroll === subPost}
-          />
-        ))}
-      </div>
-    </SessionProvider>
+    <div className={classNames(styles.subPosts, 'flex-col')}>
+      {subPosts.map((subPost) => (
+        <SubPostComponent
+          emissionSources={emissionSources.filter((emissionSource) => emissionSource.subPost === subPost)}
+          post={post}
+          subPost={subPost}
+          key={subPost}
+          userRoleOnStudy={userRole}
+          studySite={studySite}
+          {...(withoutDetail ? { study, withoutDetail: true } : { study, withoutDetail: false })}
+          setGlossary={setGlossary}
+          count={emissionSources.filter((emissionSource) => emissionSource.subPost === subPost).length}
+          validated={
+            emissionSources.filter((emissionSource) => emissionSource.subPost === subPost && emissionSource.validated)
+              .length
+          }
+          hasFilter={!!hasFilter}
+          defaultOpen={scroll === subPost}
+        />
+      ))}
+    </div>
   )
 }
 
