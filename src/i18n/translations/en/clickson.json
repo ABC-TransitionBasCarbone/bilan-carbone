@@ -87,8 +87,12 @@
     },
     "results": {
       "intensities": {
-        "studentEmployee": "students & employees"
-      }
+        "studentEmployee": "per person"
+      },
+      "dependencyIntensity": "Carbon intensities"
+    },
+    "export": {
+      "export": "Export my footprint"
     }
   },
   "emissionFactors": {

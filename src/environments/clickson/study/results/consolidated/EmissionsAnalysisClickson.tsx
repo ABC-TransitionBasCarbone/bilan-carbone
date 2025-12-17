@@ -30,9 +30,13 @@ const EmissionsAnalysisClickson = ({ study, studySite, withDepValue, caUnit = Si
     <div className="mb2">
       <Title title={t('analysis')} as="h3" className="mb1" />
       <div className={classNames(styles.analysisContainer, 'flex')}>
-        <div className="flex-col grow gapped2">
-          <Box className={classNames(styles.gapped, 'justify-center flex-col')}>
-            <Title as="h6" title={t('total')} className="justify-center" />
+        <div className="flex grow gapped2">
+          <Box className={classNames(styles.gapped, 'justify-center flex-col w50')}>
+            <div className="flex grow">
+              <div className="grow justify-center">
+                <span className="text-center bold">{t('total')}</span>
+              </div>
+            </div>
             <div className="flex-row justify-around">
               <Data
                 value={formatNumber(withDepValue)}
@@ -41,7 +45,7 @@ const EmissionsAnalysisClickson = ({ study, studySite, withDepValue, caUnit = Si
               />
             </div>
           </Box>
-          <Box className="flex-col">
+          <Box className="flex-col w50">
             <div className="flex grow">
               <div className="grow justify-center">
                 <span className="text-center bold">{t('dependencyIntensity')}</span>

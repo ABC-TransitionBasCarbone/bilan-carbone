@@ -87,8 +87,12 @@
     },
     "results": {
       "intensities": {
-        "studentEmployee": "estudiantes y empleados"
-      }
+        "studentEmployee": "per persona"
+      },
+      "dependencyIntensity": "Intensidades de carbono"
+    },
+    "export": {
+      "export": "Exportar mi huella"
     }
   },
   "emissionFactors": {
