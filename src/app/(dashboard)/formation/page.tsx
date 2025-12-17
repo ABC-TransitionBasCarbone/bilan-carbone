@@ -10,7 +10,7 @@ import { hasAccessToFormation, hasLevelForFormation } from '@/services/permissio
 
 const Formation = async () => {
   const session = await auth()
-  if (!session?.user || !(await hasAccessToFormation(session.user.environment))) {
+  if (!session?.user || !(await hasAccessToFormation(session.user))) {
     return <NotFound />
   }
 
