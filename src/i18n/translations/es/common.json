@@ -2,17 +2,28 @@
   "common": {
     "yes": "Sí",
     "no": "No",
-    "edit": "Editar",
-    "duplicate": "Duplicar",
-    "close": "Cerrar",
-    "delete": "Eliminar",
-    "cancel": "Cancelar",
-    "confirm": "Confirmar",
-    "update": "Actualizar",
     "previous": "Anterior",
     "next": "Siguiente",
+    "action": {
+      "create": "Crear",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "add": "Agregar",
+      "duplicate": "Duplicar",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "confirm": "Confirmar",
+      "update": "Actualizar",
+      "start": "Iniciar",
+      "close": "Cerrar"
+    },
+    "label": {
+      "start": "Inicio",
+      "end": "Fin"
+    },
     "notAuthorized": "Acción no autorizada",
-    "Not authorized": "No tiene permiso para realizar esta acción"
+    "Not authorized": "No tiene permisos para realizar esta acción",
+    "typeToConfirm": "Escriba \"{name}\" para confirmar"
   },
   "signup": {
     "email": "Correo electrónico",

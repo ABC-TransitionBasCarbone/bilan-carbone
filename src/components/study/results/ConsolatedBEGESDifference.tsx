@@ -80,7 +80,7 @@ const ConsolatedBEGESDifference = ({
   begesResults,
   studySite,
 }: Props) => {
-  const tCommon = useTranslations('common')
+  const tAction = useTranslations('common.action')
   const t = useTranslations('study.results.difference')
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('study.results.units')
@@ -358,7 +358,7 @@ const ConsolatedBEGESDifference = ({
           )}
 
           <div className={'justify-end'}>
-            <Button onClick={() => setOpen(false)}>{tCommon('close')}</Button>
+            <Button onClick={() => setOpen(false)}>{tAction('close')}</Button>
           </div>
         </div>
       </Modal>

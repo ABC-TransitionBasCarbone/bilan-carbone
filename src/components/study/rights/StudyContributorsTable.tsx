@@ -390,7 +390,7 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
         label="study-contributor"
         title={tRole('information')}
         onClose={() => setDisplayRoles(false)}
-        actions={[{ actionType: 'button', onClick: () => setDisplayRoles(false), children: tCommon('close') }]}
+        actions={[{ actionType: 'button', onClick: () => setDisplayRoles(false), children: tCommon('action.close') }]}
       >
         <p className="mb-2">
           {tRole.rich('description', {

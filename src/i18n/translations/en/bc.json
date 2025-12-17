@@ -115,11 +115,11 @@
     "edit": "Edit",
     "studyRights": "Rights",
     "team": "Team",
-    "actualities": "Actualities"
+    "actualities": "News"
   },
   "actuality": {
-    "title": "BC+ actualities",
-    "allActualities": "See all actualities",
+    "title": "BC+ news",
+    "allActualities": "See all news",
     "noItems": "No news at the moment",
     "seeLess": "See less",
     "seeMore": "See more"
@@ -333,8 +333,6 @@
       "validator": "Validator email",
       "studyDates": "Study dates",
       "realizationDates": "Study completion date",
-      "start": "Start",
-      "end": "End",
       "level": "Bilan Carbone® maturity",
       "exports": "Exports",
       "control": "Control mode",
@@ -2138,8 +2136,5 @@
     "studyYearMustBeBeforeCurrent": "The study year must be before the current study year",
     "studyYearMustBeAfterLinkedStudies": "Cannot set a date earlier than your linked studies in your transition plan",
     "maxTwoDecimals": "The reduction rate must have at most 2 decimal places"
-  },
-  "common": {
-    "typeToConfirm": "Type \"{name}\" to confirm"
   }
 }

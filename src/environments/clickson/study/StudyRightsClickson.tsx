@@ -39,6 +39,7 @@ interface Props {
 }
 
 const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources }: Props) => {
+  const tLabel = useTranslations('common.label')
   const t = useTranslations('study.new')
   const tRights = useTranslations('study.rights')
   const tValidation = useTranslations('validation')
@@ -203,14 +204,14 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources }: 
                   control={dateForm.control}
                   translation={t}
                   name="startDate"
-                  label={t('start')}
+                  label={tLabel('start')}
                   onAccept={handleDateChange}
                 />
                 <FormDatePicker
                   control={dateForm.control}
                   translation={t}
                   name="endDate"
-                  label={t('end')}
+                  label={tLabel('end')}
                   data-testid="new-study-endDate"
                   onAccept={handleDateChange}
                 />
