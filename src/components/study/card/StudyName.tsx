@@ -32,14 +32,14 @@ const getRoleClass = (role: string | null) => {
 
 const StudyName = ({ studyId, name, role }: Props) => {
   const tRole = useTranslations('study.role')
-  const roleClass = getRoleClass(role)
+
   return (
     <StyledChip
       color="success"
       label={name}
       subtitle={role ? tRole(role) : undefined}
       icon={<SpaIcon />}
-      roleClass={roleClass}
+      roleClass={role ? getRoleClass(role) : 'validator'} // Default to validator if no role
       component="a"
       href={`/etudes/${studyId}`}
       clickable

@@ -55,13 +55,11 @@ const StyledChip = <C extends React.ElementType = 'div'>({
   const [showTooltip, setShowTooltip] = useState(false)
   const chipRef = useRef<HTMLDivElement>(null)
 
-  const finalLabel = subtitle ? (
+  const finalLabel = (
     <div className={styles.labelContainer}>
       <span className={styles.title}>{label}</span>
-      <span className={styles.subtitle}>{subtitle}</span>
+      {subtitle && <span className={styles.subtitle}>{subtitle}</span>}
     </div>
-  ) : (
-    label
   )
 
   useEffect(() => {

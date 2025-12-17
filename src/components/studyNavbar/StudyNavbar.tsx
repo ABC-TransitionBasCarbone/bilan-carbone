@@ -65,7 +65,7 @@ const StudyNavbar = ({ environment, studyId, study, isTransitionPlanActive, hasO
         transitionDuration={0}
       >
         <div className={styles.drawerContent}>
-          <div className={styles.titleContainer}>
+          <div className={classNames(styles.titleContainer, { [styles.hasRole]: userRole })}>
             <StudyName studyId={studyId} name={title.label} role={userRole} />
           </div>
 
