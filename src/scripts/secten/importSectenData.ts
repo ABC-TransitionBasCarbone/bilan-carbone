@@ -3,7 +3,7 @@ import * as fs from 'fs'
 import { stdin as input, stdout as output } from 'node:process'
 import * as readline from 'node:readline/promises'
 import { prismaClient } from '../../db/client'
-import { importSectenData } from '../../services/secten/secten'
+import { importSectenData } from './secten'
 
 const program = new Command()
 
