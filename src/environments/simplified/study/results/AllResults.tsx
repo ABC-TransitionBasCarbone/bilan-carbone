@@ -38,6 +38,7 @@ interface Props {
   validatedOnly: boolean
   chartOrder?: Record<ChartType, number>
   caUnit?: SiteCAUnit
+  showSubLevel?: boolean
 }
 
 const a11yProps = (index: number) => {
@@ -67,6 +68,7 @@ const AllResults = ({
   validatedOnly,
   chartOrder = defaultChartOrder,
   caUnit,
+  showSubLevel = false,
 }: Props) => {
   const [value, setValue] = useState(0)
   const [pdfLoading, setPdfLoading] = useState(false)
@@ -227,7 +229,8 @@ const AllResults = ({
               height={400}
               showTitle={false}
               showLegend={true}
-              showLabelsOnBars={true}
+              showSubLevel={showSubLevel}
+              showLabelsOnBars={!showSubLevel}
               type="post"
             />
           </TabPanel>

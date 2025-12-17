@@ -35,6 +35,7 @@ const DynamicAllResults = ({ study, rules, emissionFactorsWithParts, validatedOn
         ),
         [Environment.CLICKSON]: (
           <AllResultsSimplified
+            showSubLevel={true}
             emissionFactorsWithParts={emissionFactorsWithParts}
             study={study}
             validatedOnly={validatedOnly}
