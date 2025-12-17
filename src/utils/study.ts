@@ -47,6 +47,12 @@ export const getAccountRoleOnStudy = (user: UserSession, study: FullStudy) => {
   return null
 }
 
+export const getDisplayedRoleOnStudy = (user: UserSession, study: FullStudy) => {
+  return study.contributors.some((contributor) => contributor.accountId === user.accountId)
+    ? 'Contributor'
+    : getAccountRoleOnStudy(user, study)
+}
+
 export const getAllowedRolesFromDefaultRole = (role: StudyRole) => {
   switch (role) {
     case StudyRole.Validator:

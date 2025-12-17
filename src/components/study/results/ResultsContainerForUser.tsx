@@ -35,6 +35,7 @@ const ResultsContainerForUser = async ({ user, mainStudyOrganizationVersionId }:
 
       {mainStudy ? (
         <StudyResultsContainerSummary
+          user={user}
           study={mainStudy}
           studySite="all"
           showTitle

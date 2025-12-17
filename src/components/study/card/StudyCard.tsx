@@ -2,8 +2,8 @@ import Button from '@/components/base/Button'
 import Label from '@/components/base/Label'
 import ProgressBar from '@/components/base/ProgressBar'
 import { getStudyById, getStudyValidatedEmissionsSources } from '@/db/study'
-import { hasAccessToStudyCardDetails } from '@/services/permissions/environment'
-import { getAccountRoleOnStudy } from '@/utils/study'
+import { hasAccessToStudyCardDetails, hasRoleOnStudy } from '@/services/permissions/environment'
+import { getDisplayedRoleOnStudy } from '@/utils/study'
 import { Study } from '@prisma/client'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
@@ -27,22 +27,22 @@ const StudyCard = async ({ study, user }: Props) => {
     return null
   }
 
-  const accountRoleOnStudy = fullStudy.contributors.some((contributor) => contributor.accountId === user.accountId)
-    ? 'Contributor'
-    : getAccountRoleOnStudy(user, fullStudy)
+  const showRoleInChip = hasRoleOnStudy(user.environment)
+  const accountRoleOnStudy = getDisplayedRoleOnStudy(user, fullStudy)
 
   if (!accountRoleOnStudy) {
     return null
   }
+
   const percent = values.validated ? Math.floor((values.validated / values.total) * 100) : 0
 
   return (
     <li data-testid="study" className="flex">
       <Box className={classNames(styles.card, 'flex-col grow w100')}>
         <div className="justify-center">
-          <StudyName name={study.name} />
+          <StudyName studyId={study.id} name={study.name} role={showRoleInChip ? accountRoleOnStudy : null} />
         </div>
-        {hasAccessToStudyCardDetails(user.environment) && (
+        {hasAccessToStudyCardDetails(user.environment) && !showRoleInChip && (
           <>
             <div className="justify-center">
               <Label className={styles[accountRoleOnStudy.toLowerCase()]}>{t(`role.${accountRoleOnStudy}`)}</Label>

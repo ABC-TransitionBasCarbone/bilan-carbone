@@ -1,4 +1,5 @@
 import { alpha, Chip, ChipProps, styled, Tooltip } from '@mui/material'
+import classNames from 'classnames'
 import { useEffect, useRef, useState } from 'react'
 import styles from './StyledChip.module.css'
 
@@ -6,10 +7,8 @@ const BaseStyledChip = styled(Chip)(({ theme, color = 'default' }) => {
   const baseStyles = {
     maxWidth: '100%',
     height: 'auto',
-    '& .MuiChip-label': {
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-      whiteSpace: 'nowrap',
+    '& .MuiChip-icon': {
+      marginLeft: '0.5rem',
     },
   }
 
@@ -43,15 +42,22 @@ const BaseStyledChip = styled(Chip)(({ theme, color = 'default' }) => {
 type PolymorphicChipProps<C extends React.ElementType = 'div'> = ChipProps<C> & {
   component?: C
   subtitle?: string
+  roleClass?: 'validator' | 'editor' | 'reader' | 'contributor'
 }
 
-const StyledChip = <C extends React.ElementType = 'div'>({ label, subtitle, ...props }: PolymorphicChipProps<C>) => {
+const StyledChip = <C extends React.ElementType = 'div'>({
+  label,
+  subtitle,
+  roleClass,
+  className,
+  ...props
+}: PolymorphicChipProps<C>) => {
   const [showTooltip, setShowTooltip] = useState(false)
   const chipRef = useRef<HTMLDivElement>(null)
 
   const finalLabel = subtitle ? (
     <div className={styles.labelContainer}>
-      <span>{label}</span>
+      <span className={styles.title}>{label}</span>
       <span className={styles.subtitle}>{subtitle}</span>
     </div>
   ) : (
@@ -67,7 +73,14 @@ const StyledChip = <C extends React.ElementType = 'div'>({ label, subtitle, ...p
     }
   }, [label])
 
-  const chip = <BaseStyledChip ref={chipRef} label={finalLabel} {...props} />
+  const chip = (
+    <BaseStyledChip
+      ref={chipRef}
+      label={finalLabel}
+      {...props}
+      className={classNames(styles.chip, roleClass && styles[roleClass], className)}
+    />
+  )
 
   return showTooltip && label ? (
     <Tooltip title={label} arrow>
