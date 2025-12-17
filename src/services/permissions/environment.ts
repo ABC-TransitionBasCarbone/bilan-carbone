@@ -66,3 +66,5 @@ export const hasAccessToSimplifiedEmissionAnalysis = isClickson
 
 export const hasAccessToMethodology = (environment: Environment) =>
   ([BC, TILT, CLICKSON] as Environment[]).includes(environment)
+
+export const hasAccessToStudyCreation = isSimplified
