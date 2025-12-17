@@ -4,6 +4,9 @@ import { createTheme } from '@mui/material/styles'
 
 const clicksonTheme = createTheme(theme, {
   palette: {
+    primary: {
+      contrastText: '#2C303A',
+    },
     success: {
       main: '#94EBBF',
       light: '#63EA9080',
