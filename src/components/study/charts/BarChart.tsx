@@ -27,6 +27,7 @@ interface Props<T> {
   skipAnimation?: boolean
   showSubLevel?: boolean
   type?: 'post' | 'tag'
+  customOrder?: string[]
 }
 
 const BarChart = <T extends BasicTypeCharts>({
@@ -40,6 +41,7 @@ const BarChart = <T extends BasicTypeCharts>({
   skipAnimation = false,
   showSubLevel = false,
   type = 'post',
+  customOrder = [],
 }: Props<T>) => {
   const tResults = useTranslations('study.results')
   const tUnits = useTranslations('study.results.units')
@@ -47,7 +49,7 @@ const BarChart = <T extends BasicTypeCharts>({
   const theme = useTheme()
 
   const { barData, seriesData } = useMemo(() => {
-    return processBarChartData(results, type, showSubLevel, theme, resultsUnit, tPost)
+    return processBarChartData(results, type, showSubLevel, theme, resultsUnit, tPost, customOrder)
   }, [results, type, showSubLevel, theme, resultsUnit, tPost])
 
   const getBarLabel = (item: { value: number | null }) => {

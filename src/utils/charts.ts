@@ -160,12 +160,38 @@ export const processBarChartData = <T extends BasicTypeCharts>(
   theme: Theme,
   resultsUnit: StudyResultUnit,
   tPost?: Translations,
+  customOrder?: string[],
 ): ProcessedBarChartData => {
   const filteredData = results.filter((result) => result.post !== 'total' && result.label !== 'total')
+  let orderedData = filteredData
+
+  if (customOrder?.length) {
+    const orderMap = new Map(customOrder.map((key, index) => [key.toLowerCase(), index]))
+
+    orderedData = [...filteredData].sort((a, b) => {
+      const aKey = (a.post ?? a.label).toLowerCase()
+      const bKey = (b.post ?? b.label).toLowerCase()
+
+      const aIndex = orderMap.get(aKey)
+      const bIndex = orderMap.get(bKey)
+
+      if (aIndex === undefined && bIndex === undefined) {
+        return 0
+      }
+      if (aIndex === undefined) {
+        return 1
+      }
+      if (bIndex === undefined) {
+        return -1
+      }
+
+      return aIndex - bIndex
+    })
+  }
   const isTag = type === 'tag'
 
   if (!showSubLevel) {
-    const data = isTag ? filteredData.flatMap((result) => result.children) : filteredData
+    const data = isTag ? orderedData.flatMap((result) => result.children) : orderedData
     return {
       barData: {
         labels: data.map((item) => getLabel(type, item, tPost)),
@@ -178,14 +204,14 @@ export const processBarChartData = <T extends BasicTypeCharts>(
     }
   }
 
-  const parentLabels = filteredData.map((item) => getLabel(type, item, tPost))
+  const parentLabels = orderedData.map((item) => getLabel(type, item, tPost))
 
   const seriesData: BarChartSeriesData[] = []
 
-  filteredData.forEach((parent, parentIndex) => {
+  orderedData.forEach((parent, parentIndex) => {
     parent.children.forEach((child) => {
       if (child.value > 0) {
-        const data = new Array(filteredData.length).fill(0)
+        const data = new Array(orderedData.length).fill(0)
         data[parentIndex] = child.value / STUDY_UNIT_VALUES[resultsUnit]
 
         seriesData.push({
