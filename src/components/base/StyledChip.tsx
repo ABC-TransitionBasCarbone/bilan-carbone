@@ -42,7 +42,7 @@ const BaseStyledChip = styled(Chip)(({ theme, color = 'default' }) => {
 type PolymorphicChipProps<C extends React.ElementType = 'div'> = ChipProps<C> & {
   component?: C
   subtitle?: string
-  roleClass?: 'validator' | 'editor' | 'reader' | 'contributor'
+  roleClass?: string
 }
 
 const StyledChip = <C extends React.ElementType = 'div'>({

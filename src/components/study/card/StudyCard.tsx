@@ -1,5 +1,4 @@
 import Button from '@/components/base/Button'
-import Label from '@/components/base/Label'
 import ProgressBar from '@/components/base/ProgressBar'
 import { getStudyById, getStudyValidatedEmissionsSources } from '@/db/study'
 import { hasAccessToStudyCardDetails, hasRoleOnStudy } from '@/services/permissions/environment'
@@ -42,38 +41,33 @@ const StudyCard = async ({ study, user }: Props) => {
         <div className="justify-center">
           <StudyName studyId={study.id} name={study.name} role={showRoleInChip ? accountRoleOnStudy : null} />
         </div>
-        {hasAccessToStudyCardDetails(user.environment) && !showRoleInChip && (
-          <>
-            <div className="justify-center">
-              <Label className={styles[accountRoleOnStudy.toLowerCase()]}>{t(`role.${accountRoleOnStudy}`)}</Label>
-            </div>
-            <Box>
-              <p className="mb1 align-center">
-                {t.rich('validatedSources', {
-                  validated: values.validated,
-                  total: values.total,
-                  data: (children) => (
-                    <span className={classNames(styles.validated, 'mr-4', { [styles.success]: percent === 100 })}>
-                      {children}
-                    </span>
-                  ),
-                })}
-                <GlossaryIconModal
-                  title="validatedOnly"
-                  className={`ml-2 ${styles.helpIcon}`}
-                  iconLabel="information"
-                  label="study-card"
-                  tModal="study"
-                >
-                  {t('validatedOnlyDescription')}
-                </GlossaryIconModal>
-              </p>
-              <ProgressBar
-                value={percent}
-                barClass={classNames(styles.progressBar, { [styles.success]: percent === 100 })}
-              />
-            </Box>
-          </>
+        {hasAccessToStudyCardDetails(user.environment) && (
+          <Box>
+            <p className="mb1 align-center">
+              {t.rich('validatedSources', {
+                validated: values.validated,
+                total: values.total,
+                data: (children) => (
+                  <span className={classNames(styles.validated, 'mr-4', { [styles.success]: percent === 100 })}>
+                    {children}
+                  </span>
+                ),
+              })}
+              <GlossaryIconModal
+                title="validatedOnly"
+                className={`ml-2 ${styles.helpIcon}`}
+                iconLabel="information"
+                label="study-card"
+                tModal="study"
+              >
+                {t('validatedOnlyDescription')}
+              </GlossaryIconModal>
+            </p>
+            <ProgressBar
+              value={percent}
+              barClass={classNames(styles.progressBar, { [styles.success]: percent === 100 })}
+            />
+          </Box>
         )}
         <div className="justify-end">
           <Button
