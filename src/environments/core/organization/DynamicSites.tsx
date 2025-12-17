@@ -1,6 +1,7 @@
 'use client'
 
 import SitesBC from '@/environments/base/organization/Sites'
+import SitesClickson from '@/environments/clickson/organization/Sites'
 import SitesCut from '@/environments/cut/organization/Sites'
 import SitesTilt from '@/environments/tilt/organization/Sites'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
@@ -21,6 +22,7 @@ const DynamicSites = <T extends SitesCommand>({ sites, form, withSelection, caUn
       [Environment.CUT]: (
         <SitesCut sites={sites} form={form as UseFormReturn<SitesCommand>} withSelection={withSelection} />
       ),
+      [Environment.CLICKSON]: <SitesClickson sites={sites} form={form} caUnit={caUnit} withSelection={withSelection} />,
       [Environment.TILT]: <SitesTilt sites={sites} form={form} caUnit={caUnit} withSelection={withSelection} />,
     }}
     defaultComponent={<SitesBC sites={sites} form={form} caUnit={caUnit} withSelection={withSelection} />}
