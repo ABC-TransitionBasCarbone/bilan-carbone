@@ -26,9 +26,6 @@ const NavLayout = async ({ children, params, study, user }: Props & StudyProps &
   ])
 
   const showRoleInChip = user && hasRoleOnStudy(user.environment)
-  console.log('showRoleInChip', showRoleInChip)
-  console.log('userRole', userRole)
-
   const isTransitionPlanActive = transitionPlanFeature.success && transitionPlanFeature.data
   const hasObjectives = objectivesResponse.success ? objectivesResponse.data : false
 
