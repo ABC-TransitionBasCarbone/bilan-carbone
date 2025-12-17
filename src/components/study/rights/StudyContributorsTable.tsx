@@ -9,7 +9,7 @@ import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { getEnvVar } from '@/lib/environment'
 import { canAddContributorWithNoSubposts } from '@/services/permissions/environment'
-import { Post, subPostsByPost } from '@/services/posts'
+import { environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
 import { deleteStudyContributor } from '@/services/serverFunctions/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
@@ -73,7 +73,12 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
 
   const router = useRouter()
 
-  const allPosts = useMemo(() => Object.values(Post), [])
+  const allPosts: Post[] = useMemo(() => {
+    if (!environment) {
+      return []
+    }
+    return Object.values(environmentPostMapping[environment])
+  }, [environment])
 
   const toggleRowExpansion = useCallback((email: string) => {
     setExpandedRows((prev) => {

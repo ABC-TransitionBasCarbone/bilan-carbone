@@ -1,9 +1,9 @@
 'use client'
 
 import { Select } from '@/components/base/Select'
-import { BCPost, Post, subPostsByPost } from '@/services/posts'
+import { environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
 import { Checkbox, ListItemText, ListSubheader, MenuItem, SelectChangeEvent } from '@mui/material'
-import { SubPost } from '@prisma/client'
+import { Environment, SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { ALL_SUB_POSTS_VALUE } from './MultiplePosts'
 
@@ -13,6 +13,7 @@ interface Props {
   selectedSubPosts?: SubPost[]
   sortedSubPosts: SubPost[]
   onSelectSubPost: (subPosts: SubPost[]) => void
+  environment?: Environment
 }
 
 type SubPostValue = SubPost | typeof ALL_SUB_POSTS_VALUE
@@ -21,12 +22,21 @@ const isAllSubPostsSelected = (selectedSubPosts: SubPost[] | undefined, allSubPo
   return selectedSubPosts?.length === allSubPosts.length
 }
 
-const SubPostSelector = ({ isAllPosts, post, selectedSubPosts, sortedSubPosts, onSelectSubPost }: Props) => {
+const SubPostSelector = ({
+  isAllPosts,
+  post,
+  selectedSubPosts,
+  sortedSubPosts,
+  onSelectSubPost,
+  environment = Environment.BC,
+}: Props) => {
   const t = useTranslations('emissionFactors.create')
   const tPost = useTranslations('emissionFactors.post')
 
   const allSubPostsValues = isAllPosts
-    ? Object.values(BCPost).flatMap((postKey) => subPostsByPost[postKey])
+    ? Object.values(Object.values(environmentPostMapping[environment])).flatMap(
+        (postKey: Post) => subPostsByPost[postKey],
+      )
     : post
       ? subPostsByPost[post]
       : []
@@ -76,9 +86,9 @@ const SubPostSelector = ({ isAllPosts, post, selectedSubPosts, sortedSubPosts, o
   )
 
   const renderGroupedMenuItems = () => {
-    return Object.values(BCPost)
+    return Object.values(Object.values(environmentPostMapping[environment]))
       .sort((a, b) => tPost(a).localeCompare(tPost(b)))
-      .map((postKey) => [
+      .map((postKey: Post) => [
         <ListSubheader key={`header-${postKey}`} disableSticky>
           {tPost(postKey)}
         </ListSubheader>,
