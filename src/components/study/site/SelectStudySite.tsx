@@ -1,6 +1,8 @@
 'use client'
 
 import type { FullStudy } from '@/db/study'
+import { hasAccessToStudySiteSelection } from '@/services/permissions/environment'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { FormControl, InputLabel, MenuItem, Select, Tooltip } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { Dispatch, SetStateAction, useMemo } from 'react'
@@ -26,6 +28,8 @@ const SelectStudySite = ({
 }: Props) => {
   const t = useTranslations('study.organization')
 
+  const { environment } = useAppEnvironmentStore()
+
   const tooltipMessage = useMemo(() => {
     if (siteSelectionDisabled) {
       if (isTransitionPlan) {
@@ -50,6 +54,10 @@ const SelectStudySite = ({
   const orderedSites = useMemo(() => {
     return sites?.sort((a, b) => a.site.name.localeCompare(b.site.name)) ?? []
   }, [sites])
+
+  if (environment && !hasAccessToStudySiteSelection(environment)) {
+    return null
+  }
 
   return (
     <FormControl>
