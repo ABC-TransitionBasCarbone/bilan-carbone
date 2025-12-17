@@ -11,13 +11,13 @@ type SectenRow = {
 
 export type SectenData = {
   year: number
-  energy?: number
-  industry?: number
-  waste?: number
-  buildings?: number
-  agriculture?: number
-  transportation?: number
-  total?: number
+  energy: number
+  industry: number
+  waste: number
+  buildings: number
+  agriculture: number
+  transportation: number
+  total: number
 }
 
 const SECTOR_MAP: Record<string, keyof Omit<SectenData, 'year'>> = {
@@ -84,7 +84,7 @@ export const parseSectenCSV = async (filePath: string): Promise<SectenData[]> =>
           const result: SectenData[] = []
 
           for (let yearIndex = 0; yearIndex < years.length; yearIndex++) {
-            const yearData: SectenData = { year: years[yearIndex] }
+            const yearData: Partial<SectenData> = { year: years[yearIndex] }
             let hasValues = false
 
             for (const sectorRow of sectorRows) {
@@ -100,7 +100,7 @@ export const parseSectenCSV = async (filePath: string): Promise<SectenData[]> =>
 
             if (hasValues) {
               // Only add years with at least one value
-              result.push(yearData)
+              result.push(yearData as SectenData)
             }
           }
 

@@ -13,13 +13,13 @@ model SectenVersion {
 model SectenInfo {
   id             String        @id @default(uuid())
   year           Int
-  energy         Int?
-  industry       Int?
-  waste          Int?
-  buildings      Int?
-  agriculture    Int?
-  transportation Int?
-  total          Int?
+  energy         Int
+  industry       Int
+  waste          Int
+  buildings      Int
+  agriculture    Int
+  transportation Int
+  total          Int
   versionId      String        @map("version_id")
   version        SectenVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
   createdAt      DateTime      @default(now()) @map("created_at")
