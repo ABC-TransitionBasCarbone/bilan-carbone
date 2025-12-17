@@ -66,3 +66,5 @@ export const hasAccessToStudyCreation = isSimplified
 
 export const hasAccessToStudySiteSelection = (environment: Environment) =>
   ([BC, TILT, CUT] as Environment[]).includes(environment)
+
+export const hasAccessToAddSite = (environment: Environment) => ([BC, TILT, CUT] as Environment[]).includes(environment)

@@ -31,7 +31,7 @@ const Sites = <T extends SitesCommand>({
   withSelection,
   caUnit,
   additionalColumns = [],
-  environment = Environment.BC,
+  environment = Environment.CLICKSON,
   organizationId,
   onDuplicate,
 }: Props<T>) => {
