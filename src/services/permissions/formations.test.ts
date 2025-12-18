@@ -25,22 +25,22 @@ describe('Formation permissions service', () => {
   describe('hasLevelForFormation', () => {
     it('"Advanced" level user should be able to access the formation view', async () => {
       const user = getMockedAuthUser({ level: Level.Advanced })
-      expect(hasLevelForFormation(user)).toBe(true)
+      expect(await hasLevelForFormation(user)).toBe(true)
     })
 
     it('"Standard" level user should be able to access the formation view', async () => {
       const user = getMockedAuthUser({ level: Level.Standard })
-      expect(hasLevelForFormation(user)).toBe(true)
+      expect(await hasLevelForFormation(user)).toBe(true)
     })
 
     it('"Initial" level user should be able to access the formation view', async () => {
       const user = getMockedAuthUser({ level: Level.Initial })
-      expect(hasLevelForFormation(user)).toBe(true)
+      expect(await hasLevelForFormation(user)).toBe(true)
     })
 
     it('Untrained user should not be able to access the formation view', async () => {
       const user = getMockedAuthUser({ level: null })
-      expect(hasLevelForFormation(user)).toBe(false)
+      expect(await hasLevelForFormation(user)).toBe(false)
     })
   })
 
