@@ -104,6 +104,70 @@ describe('Formation permissions service', () => {
         const result = await hasAccessToFormation(user)
         expect(result).toBe(false)
       })
+
+      it('should return true for user from allowed source and environment with active licence for orga', async () => {
+        mockGetUserSource.mockResolvedValue({ success: true, data: UserSource.CRON })
+        const user = getMockedAuthUser({ level: Level.Standard, environment: Environment.BC })
+
+        const result = await hasAccessToFormation(user)
+
+        expect(result).toBe(true)
+      })
+
+      it('"Advanced" level user should be able to access the formation view', async () => {
+        const user = getMockedAuthUser({ level: Level.Advanced })
+        const result = await hasAccessToFormation(user)
+        expect(result).toBe(true)
+      })
+
+      it('"Standard" level user should be able to access the formation view', async () => {
+        const user = getMockedAuthUser({ level: Level.Standard })
+        const result = await hasAccessToFormation(user)
+        expect(result).toBe(true)
+      })
+
+      it('"Initial" level user should be able to access the formation view', async () => {
+        const user = getMockedAuthUser({ level: Level.Initial })
+        const result = await hasAccessToFormation(user)
+        expect(result).toBe(true)
+      })
+
+      it('Untrained user should be able to access the formation view (the pages displays differently depending on the hasLevelForFormation method)', async () => {
+        const user = getMockedAuthUser({ level: null })
+
+        const result = await hasAccessToFormation(user)
+
+        expect(result).toBe(true)
+      })
+
+      it('should return false if organization version is not found', async () => {
+        mockGetUserSource.mockResolvedValue({ success: true, data: UserSource.CRON })
+        mockGetOrganizationVersionById.mockResolvedValue(null)
+        const user = getMockedAuthUser({ level: Level.Standard })
+
+        const result = await hasAccessToFormation(user)
+
+        expect(result).toBe(false)
+      })
+
+      it('should return false if user has no organization version id', async () => {
+        mockGetUserSource.mockResolvedValue({ success: true, data: UserSource.CRON })
+        const user = getMockedAuthUser({ level: Level.Standard, organizationVersionId: null })
+
+        const result = await hasAccessToFormation(user)
+
+        expect(result).toBe(false)
+      })
+
+      it('should return false if organization has no active licence for formation', async () => {
+        mockGetUserSource.mockResolvedValue({ success: true, data: UserSource.CRON })
+        mockHasActiveLicenceForFormation.mockReturnValue(false)
+        const user = getMockedAuthUser({ level: Level.Standard })
+
+        const result = await hasAccessToFormation(user)
+
+        expect(result).toBe(false)
+      })
     })
   })
 })
