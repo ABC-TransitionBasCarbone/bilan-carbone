@@ -64,9 +64,7 @@ export const hasAccessToSimplifiedEmissionAnalysis = isClickson
 
 export const hasAccessToStudyCreation = isSimplified
 
-export const hasAccessToStudySiteSelection = (environment: Environment) =>
+export const hasAccessToStudySiteAddAndSelection = (environment: Environment) =>
   ([BC, TILT, CUT] as Environment[]).includes(environment)
 
-export const hasAccessToAddSite = (environment: Environment) => ([BC, TILT, CUT] as Environment[]).includes(environment)
-
-export const isRedirectedToStudyRight = isSimplified
+export const hasAccessToStudyHomePage = isAdvanced

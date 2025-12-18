@@ -23,7 +23,9 @@
     },
     "notAuthorized": "Acción no autorizada",
     "Not authorized": "No tiene permisos para realizar esta acción",
-    "typeToConfirm": "Escriba \"{name}\" para confirmar"
+    "typeToConfirm": "Escriba \"{name}\" para confirmar",
+    "perPerson": "per persona",
+    "carbonIntensities": "Intensidades de carbono"
   },
   "signup": {
     "email": "Correo electrónico",

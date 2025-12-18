@@ -1,7 +1,7 @@
 'use client'
 
 import type { FullStudy } from '@/db/study'
-import { hasAccessToStudySiteSelection } from '@/services/permissions/environment'
+import { hasAccessToStudySiteAddAndSelection } from '@/services/permissions/environment'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { FormControl, InputLabel, MenuItem, Select, Tooltip } from '@mui/material'
 import { useTranslations } from 'next-intl'
@@ -55,7 +55,7 @@ const SelectStudySite = ({
     return sites?.sort((a, b) => a.site.name.localeCompare(b.site.name)) ?? []
   }, [sites])
 
-  if (environment && !hasAccessToStudySiteSelection(environment)) {
+  if (environment && !hasAccessToStudySiteAddAndSelection(environment)) {
     return null
   }
 

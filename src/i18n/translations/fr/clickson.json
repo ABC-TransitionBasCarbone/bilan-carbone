@@ -85,12 +85,6 @@
         }
       }
     },
-    "results": {
-      "intensities": {
-        "studentEmployee": "par personne"
-      },
-      "dependencyIntensity": "Intensités carbone"
-    },
     "export": {
       "export": "Exporter mon empreinte"
     }

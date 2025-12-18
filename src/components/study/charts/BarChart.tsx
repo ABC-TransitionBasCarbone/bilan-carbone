@@ -50,7 +50,7 @@ const BarChart = <T extends BasicTypeCharts>({
 
   const { barData, seriesData } = useMemo(() => {
     return processBarChartData(results, type, showSubLevel, theme, resultsUnit, tPost, customOrder)
-  }, [results, type, showSubLevel, theme, resultsUnit, tPost])
+  }, [results, type, showSubLevel, theme, resultsUnit, tPost, customOrder])
 
   const getBarLabel = (item: { value: number | null }) => {
     if (!showLabelsOnBars || !item.value) {
