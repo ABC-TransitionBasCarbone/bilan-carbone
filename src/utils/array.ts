@@ -32,3 +32,33 @@ export const groupBy = <T, K extends keyof T>(array: T[], attribute: K): Record<
     arr[value].push(el)
     return arr
   }, {})
+
+export function sortByCustomOrder<T>(items: T[], customOrder: string[], getKey: (item: T) => string | undefined): T[] {
+  if (!customOrder.length) {
+    return items
+  }
+
+  const orderMap = new Map(customOrder.map((key, index) => [key.toLowerCase(), index]))
+
+  return [...items].sort((a, b) => {
+    const aKey = getKey(a)?.toLowerCase()
+    const bKey = getKey(b)?.toLowerCase()
+
+    const aIndex = aKey ? orderMap.get(aKey) : undefined
+    const bIndex = bKey ? orderMap.get(bKey) : undefined
+
+    if (aIndex === undefined && bIndex === undefined) {
+      return 0
+    }
+
+    if (aIndex === undefined) {
+      return 1
+    }
+
+    if (bIndex === undefined) {
+      return -1
+    }
+
+    return aIndex - bIndex
+  })
+}

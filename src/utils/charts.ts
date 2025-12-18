@@ -1,6 +1,7 @@
 import { Translations } from '@/types/translation'
 import { Theme } from '@mui/material'
 import { StudyResultUnit, SubPost } from '@prisma/client'
+import { sortByCustomOrder } from './array'
 import { formatNumber } from './number'
 import { isPost } from './post'
 import { STUDY_UNIT_VALUES } from './study'
@@ -166,27 +167,7 @@ export const processBarChartData = <T extends BasicTypeCharts>(
   let orderedData = filteredData
 
   if (customOrder?.length) {
-    const orderMap = new Map(customOrder.map((key, index) => [key.toLowerCase(), index]))
-
-    orderedData = [...filteredData].sort((a, b) => {
-      const aKey = (a.post ?? a.label).toLowerCase()
-      const bKey = (b.post ?? b.label).toLowerCase()
-
-      const aIndex = orderMap.get(aKey)
-      const bIndex = orderMap.get(bKey)
-
-      if (aIndex === undefined && bIndex === undefined) {
-        return 0
-      }
-      if (aIndex === undefined) {
-        return 1
-      }
-      if (bIndex === undefined) {
-        return -1
-      }
-
-      return aIndex - bIndex
-    })
+    orderedData = sortByCustomOrder(filteredData, customOrder, (item) => item.post ?? item.label)
   }
   const isTag = type === 'tag'
 
