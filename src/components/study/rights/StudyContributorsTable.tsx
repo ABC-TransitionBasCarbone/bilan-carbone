@@ -390,6 +390,7 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
         expIcon
         iconPosition="after"
         isMainContainer={false}
+        grow={false}
         actions={
           canAddContributor
             ? [
