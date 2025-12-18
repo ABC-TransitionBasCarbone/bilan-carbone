@@ -69,7 +69,6 @@ export const canCreateEmissionSource = async (account: AccountWithUser, emission
     case 'TILT':
       return canCreateEmissionSourceBC(account, emissionSource)
     case 'CUT':
-      return canCreateEmissionSourceSimplified(account, emissionSource)
     case 'CLICKSON':
       return canCreateEmissionSourceSimplified(account, emissionSource)
     default:
@@ -140,8 +139,8 @@ const canUpdateEmissionSourceClickson = async (
     if (!contributor) {
       return false
     }
-    return true
   }
+  return true
 }
 
 export const canUpdateEmissionSource = async (

@@ -34,9 +34,7 @@ const SubPostSelector = ({
   const tPost = useTranslations('emissionFactors.post')
 
   const allSubPostsValues = isAllPosts
-    ? Object.values(Object.values(environmentPostMapping[environment])).flatMap(
-        (postKey: Post) => subPostsByPost[postKey],
-      )
+    ? Object.values(environmentPostMapping[environment]).flatMap((postKey: Post) => subPostsByPost[postKey])
     : post
       ? subPostsByPost[post]
       : []
@@ -86,7 +84,7 @@ const SubPostSelector = ({
   )
 
   const renderGroupedMenuItems = () => {
-    return Object.values(Object.values(environmentPostMapping[environment]))
+    return Object.values(environmentPostMapping[environment])
       .sort((a, b) => tPost(a).localeCompare(tPost(b)))
       .map((postKey: Post) => [
         <ListSubheader key={`header-${postKey}`} disableSticky>

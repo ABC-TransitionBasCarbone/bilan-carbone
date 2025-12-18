@@ -138,7 +138,7 @@ const SubPost = ({
 
   const isContributor = useMemo(() => {
     return session?.user && contributors?.includes(session?.user.email)
-  }, [session?.user, contributors, subPost])
+  }, [session?.user, contributors])
 
   const accordionRef = useRef<HTMLDivElement>(null)
 
