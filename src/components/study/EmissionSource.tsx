@@ -108,6 +108,7 @@ const EmissionSource = ({
 
   const canEdit = !emissionSource.validated && (hasEditionRights(userRoleOnStudy) || isContributor)
   const canValidate = userRoleOnStudy === StudyRole.Validator
+  const canDelete = !emissionSource.validated && hasEditionRights(userRoleOnStudy)
 
   const update = useCallback(
     async (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null | string[]) => {
@@ -340,6 +341,7 @@ const EmissionSource = ({
                 studyId={study.id}
                 advanced={study.level === Level.Advanced}
                 canEdit={canEdit}
+                canDelete={canDelete}
                 userRoleOnStudy={userRoleOnStudy}
                 canValidate={canValidate}
                 emissionSource={emissionSource}
