@@ -52,10 +52,6 @@ export const hasActiveLicence = (
 
   const userOrgaVersion = organizationVersion.parent ? organizationVersion.parent : organizationVersion
 
-  if (!userOrgaVersion) {
-    return false
-  }
-
   return isLicenceActiveForDate(userOrgaVersion.activatedLicence)
 }
 
@@ -66,10 +62,6 @@ export const hasActiveLicenceForFormation = (
   >,
 ) => {
   const userOrgaVersion = organizationVersion.parent ? organizationVersion.parent : organizationVersion
-
-  if (!userOrgaVersion) {
-    return false
-  }
 
   return isLicenceActiveForFormation(userOrgaVersion.activatedLicence)
 }
