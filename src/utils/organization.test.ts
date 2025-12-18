@@ -9,6 +9,7 @@ import {
   isAdminOnOrga,
   isInOrgaOrParent,
   isLicenceActiveForDate,
+  isLicenceActiveForFormation,
 } from './organization'
 
 describe('organisation utils', () => {
@@ -189,10 +190,20 @@ describe('organisation utils', () => {
   })
 
   describe('hasActiveLicenceForFormation', () => {
+    beforeEach(() => {
+      jest.useFakeTimers().setSystemTime(new Date('2026-01-15'))
+      process.env.MEMBERSHIP_BLOCKING_DATE = '15/02'
+    })
+
+    afterEach(() => {
+      jest.useRealTimers()
+      delete process.env.MEMBERSHIP_BLOCKING_DATE
+    })
+
     it('should return true if licence is active for orgaVersion', () => {
       expect(
         hasActiveLicenceForFormation({
-          activatedLicence: [new Date().getFullYear()],
+          activatedLicence: [2025],
           parent: null,
           environment: Environment.BC,
         }),
@@ -203,7 +214,7 @@ describe('organisation utils', () => {
       expect(
         hasActiveLicenceForFormation({
           activatedLicence: [],
-          parent: { activatedLicence: [new Date().getFullYear()] },
+          parent: { activatedLicence: [2000, 2025] },
           environment: Environment.BC,
         }),
       ).toBe(true)
@@ -226,7 +237,7 @@ describe('organisation utils', () => {
     })
   })
 
-  describe('isLicenceActiveDate', () => {
+  describe('isLicenceActiveForDate', () => {
     it('should return true if current year is in activatedLicence array', () => {
       process.env.MEMBERSHIP_BLOCKING_DATE = '01/01'
       expect(isLicenceActiveForDate([2022, 2023, new Date().getFullYear() - 1, new Date().getFullYear()])).toBe(true)
@@ -252,21 +263,38 @@ describe('organisation utils', () => {
   })
 
   describe('isLicenceActiveForFormation', () => {
-    it('should return true if 2025 is in activatedLicence array and before blocking date', () => {
-      process.env.MEMBERSHIP_BLOCKING_DATE = '17/12'
+    beforeEach(() => {
+      jest.useFakeTimers().setSystemTime(new Date('2026-01-15'))
+    })
 
-      expect(isLicenceActiveForDate([2025])).toBe(true)
+    afterEach(() => {
+      jest.useRealTimers()
+      delete process.env.MEMBERSHIP_BLOCKING_DATE
+    })
+
+    it('should return true if 2025 is in activatedLicence array and before blocking date', () => {
+      process.env.MEMBERSHIP_BLOCKING_DATE = '31/12'
+
+      expect(isLicenceActiveForFormation([2025])).toBe(true)
+      expect(isLicenceActiveForFormation([2025, 2026])).toBe(true)
     })
 
     it('should return false if 2025 is not in activatedLicence array', () => {
-      expect(isLicenceActiveForDate([2022, 2023, 2026])).toBe(false)
-      expect(isLicenceActiveForDate([])).toBe(false)
+      expect(isLicenceActiveForFormation([2022, 2024, 2026])).toBe(false)
+      expect(isLicenceActiveForFormation([])).toBe(false)
     })
 
-    it('should return true if 2025 is in activatedLicence array and after blocking date', () => {
+    it('should return false if 2025 is in activatedLicence array and after blocking date', () => {
       process.env.MEMBERSHIP_BLOCKING_DATE = '01/01'
+      expect(isLicenceActiveForFormation([2025])).toBe(false)
+      expect(isLicenceActiveForFormation([2025, 2026])).toBe(false)
+    })
 
-      expect(isLicenceActiveForDate([2025])).toBe(true)
+    it('should return true if has 2025 and we are still in 2025', () => {
+      process.env.MEMBERSHIP_BLOCKING_DATE = '01/01'
+      jest.setSystemTime(new Date('2025-12-25'))
+      expect(isLicenceActiveForFormation([2025])).toBe(true)
+      expect(isLicenceActiveForFormation([2025, 2026])).toBe(true)
     })
   })
 })

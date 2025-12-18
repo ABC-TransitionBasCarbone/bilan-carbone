@@ -117,20 +117,11 @@ export const isLicenceActiveForDate = (activatedLicence: number[]): boolean => {
 
 export const isLicenceActiveForFormation = (activatedLicence: number[]): boolean => {
   const now = new Date()
-  const currentYear = now.getFullYear()
-  const previousYear = currentYear - 1
+  const has2025 = activatedLicence.includes(2025)
 
-  const hasCurrentYear = activatedLicence.includes(currentYear)
-  const hasPreviousYear = activatedLicence.includes(previousYear)
-
-  // Before 2025, we don't block access to formations
-  if (previousYear >= 2025 && !hasPreviousYear) {
+  if (!has2025) {
     return false
   }
 
-  if (hasCurrentYear) {
-    return true
-  }
-
-  return isBeforeBlockingDate(now)
+  return now.getFullYear() === 2025 || isBeforeBlockingDate(now)
 }
