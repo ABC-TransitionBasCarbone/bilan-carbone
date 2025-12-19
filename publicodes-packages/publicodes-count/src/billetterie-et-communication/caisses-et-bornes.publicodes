@@ -8,11 +8,7 @@ billetterie et communication . caisses et bornes:
 
 billetterie et communication . caisses et bornes . caisses libre service:
   titre: Caisses libre service
-  formule:
-    produit:
-      - FE
-      - nombre
-      - (1 an / amortissement)
+  formule: FE * nombre / amortissement
   par défaut: 0
   unité: kgCO2e
   avec:
@@ -28,15 +24,11 @@ billetterie et communication . caisses et bornes . caisses libre service:
 
     amortissement:
       valeur: 5
-      unité: an
+      note: Amortissement annuel sous-entendu.
 
 billetterie et communication . caisses et bornes . caisse classique:
   titre: Caisse classique
-  formule:
-    produit:
-      - FE
-      - nombre
-      - (1 an / amortissement)
+  formule: FE * nombre / amortissement
   par défaut: 0
   unité: kgCO2e
   avec:
@@ -52,4 +44,4 @@ billetterie et communication . caisses et bornes . caisse classique:
 
     amortissement:
       valeur: 5
-      unité: an
+      note: Amortissement annuel sous-entendu.
