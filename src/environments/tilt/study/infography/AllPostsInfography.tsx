@@ -86,8 +86,8 @@ const AllPostsInfography = ({ study, data }: Props) => {
           />
           <PostInfography
             studyId={study.id}
-            data={data.find((d) => d.post === TiltPost.Déchets)}
-            post={TiltPost.Déchets}
+            data={data.find((d) => d.post === TiltPost.Dechets)}
+            post={TiltPost.Dechets}
             resultsUnit={study.resultsUnit}
           />
           <PostInfography

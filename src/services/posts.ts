@@ -26,7 +26,7 @@ export enum CutPost {
 export enum TiltPost {
   ConstructionDesLocaux = 'ConstructionDesLocaux',
   Energies = BCPost.Energies,
-  Déchets = BCPost.DechetsDirects,
+  Dechets = 'Dechets',
   FroidEtClim = 'FroidEtClim',
   AutresEmissions = 'AutresEmissions',
   DeplacementsDePersonne = 'DeplacementsDePersonne',
@@ -136,7 +136,7 @@ export const subPostsByPostCUT: Record<CutPost, SubPost[]> = {
 export const subPostsByPostTILT: Record<TiltPost, SubPost[]> = {
   [TiltPost.ConstructionDesLocaux]: [SubPost.Batiments, SubPost.AutresInfrastructures],
   [TiltPost.Energies]: subPostsByPostBC[BCPost.Energies],
-  [TiltPost.Déchets]: subPostsByPostBC[BCPost.DechetsDirects],
+  [TiltPost.Dechets]: subPostsByPostBC[BCPost.DechetsDirects],
   [TiltPost.FroidEtClim]: [SubPost.FroidEtClim],
   [TiltPost.AutresEmissions]: [
     SubPost.ActivitesAgricoles,

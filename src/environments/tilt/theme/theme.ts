@@ -14,7 +14,7 @@ const tiltTheme = createTheme(theme, {
       [TiltPost.TransportDeMarchandises]: { light: '#79C7AB', dark: '#469478' },
       [TiltPost.ConstructionDesLocaux]: { light: '#3F5488', dark: '#0C2155' },
       [TiltPost.Energies]: { light: '#3F5488', dark: '#0C2155' },
-      [TiltPost.Déchets]: { light: '#3F5488', dark: '#0C2155' },
+      [TiltPost.Dechets]: { light: '#3F5488', dark: '#0C2155' },
       [TiltPost.FroidEtClim]: { light: '#3F5488', dark: '#0C2155' },
       [TiltPost.AutresEmissions]: { light: '#3F5488', dark: '#0C2155' },
       [TiltPost.Utilisation]: { light: '#FBBC6B', dark: '#C88938' },
