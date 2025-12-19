@@ -16,19 +16,23 @@ export default function PublicodesQuestion<RuleName extends string>({
   formLayout,
   onChange,
 }: PublicodesQuestionProps<RuleName>) {
-  const translationKey = formLayout.type === 'input' && formLayout.evaluatedElement.id.replace(/\s+.\s+/g, '.')
-
-  const t = useTranslations(`publicodes-rules.${translationKey}`)
-
-  const translatedTitleTest = t('question')
+  const tInput = useTranslations('publicodes-rules')
+  const tLayout = useTranslations('publicodes-layout')
 
   switch (formLayout.type) {
     case 'input': {
       const formElement = formLayout.evaluatedElement
 
+      const translationKey = formElement.id.replace(/\s+.\s+/g, '.')
+
       return (
         <Box key={formElement.id} className="mb2">
-          <QuestionContainer label={translatedTitleTest} helperText={formElement.description}>
+          <QuestionContainer
+            label={tInput(`${translationKey}.question`)}
+            helperText={
+              tInput.has(`${translationKey}.description`) ? tInput(`${translationKey}.description`) : undefined
+            }
+          >
             <PublicodesInputField formElement={formElement} onChange={onChange} />
           </QuestionContainer>
         </Box>
@@ -37,7 +41,7 @@ export default function PublicodesQuestion<RuleName extends string>({
     case 'group': {
       return (
         // TODO: handle helper text for layouts
-        <QuestionContainer label={formLayout.title}>
+        <QuestionContainer label={tLayout(`group.${formLayout.title}`)}>
           <GroupQuestion groupLayout={formLayout} onChange={onChange} />
         </QuestionContainer>
       )
@@ -45,7 +49,7 @@ export default function PublicodesQuestion<RuleName extends string>({
     case 'table': {
       return (
         // TODO: manage helper text for table
-        <QuestionContainer label={formLayout.title}>
+        <QuestionContainer label={tLayout(`table.${formLayout.title}`)}>
           <TableQuestion tableLayout={formLayout} onChange={onChange} />
         </QuestionContainer>
       )

@@ -227,6 +227,50 @@
       "disclaimerExcel6": "Si vous souhaitez vous lancer dans un Bilan Carbone® dans les années qui viennent, tout commence par se faire former à la méthode, ou par nous contacter à l'adresse count@cut-collectif.fr, ou par se faire accompagner par un prestataire Bilan Carbone® !"
     }
   },
+  "publicodes-layout": {
+    "table": {
+      "MobiliteSpectateurs": {
+        "question": "Si vous avez réalisé une enquête, quelles sont les distances parcourues au total sur l'année pour chacun des modes de transport suivants :",
+        "moyenTransport": "Mode de transport",
+        "distance": "Distance (km)"
+      },
+      "Electromenager": {
+        "question": "Pour les différents équipements informatiques utilisés, veuillez indiquer leur nombre et leur date d'achat ou durée de location :",
+        "typeEquipement": "Type d'électroménagers",
+        "nombre": "Nombre",
+        "dateAchat": "Date d'achat",
+        "dureeLocation": "Durée de location (à l'année)"
+      },
+      "DechetsOrdinaires": {
+        "question": "Renseignez ici les quantités de déchets générés chaque semaine",
+        "typeDechet": "Type de déchets",
+        "nbBennes": "Nombre de bennes",
+        "tailleBennes": "Taille des bennes",
+        "frequenceRamassage": "Fréquence de ramassage (par semaine)"
+      },
+      "MaterielDistributeursAffiches": {
+        "question": "Quelle quantité de matériel distributeurs recevez-vous en moyenne par semaine ?",
+        "typeMateriel": "Type de matériel",
+        "quantite": "Quantité"
+      },
+      "MaterielDistributeursPLV": {
+        "question": "Quelle quantité de matériel distributeurs recevez-vous en moyenne par semaine ?",
+        "typeMateriel": "Type de matériel",
+        "quantite": "Quantité"
+      },
+      "MaterielCinema": {
+        "question": "Quelle quantité de matériel produisez-vous chaque mois ?",
+        "typeMateriel": "Type de matériel",
+        "quantite": "Quantité"
+      }
+    },
+    "group": {
+      "BatimentRenovation": {
+        "question": "Parmi les rénovations suivantes, lesquelles avez-vous réalisées durant les dix dernières années ?"
+      }
+    },
+    "list": {}
+  },
   "publicodes-rules": {
     "général": {
       "nombre séances": {

@@ -1,4 +1,48 @@
 {
+  "publicodes-layout": {
+    "table": {
+      "MobiliteSpectateurs": {
+        "question": "[TO_TRANSLATE] Si vous avez réalisé une enquête, quelles sont les distances parcourues au total sur l'année pour chacun des modes de transport suivants :",
+        "moyenTransport": "[TO_TRANSLATE] Mode de transport",
+        "distance": "[TO_TRANSLATE] Distance (km)"
+      },
+      "Electromenager": {
+        "question": "[TO_TRANSLATE] Pour les différents équipements informatiques utilisés, veuillez indiquer leur nombre et leur date d'achat ou durée de location :",
+        "typeEquipement": "[TO_TRANSLATE] Type d'électroménagers",
+        "nombre": "[TO_TRANSLATE] Nombre",
+        "dateAchat": "[TO_TRANSLATE] Date d'achat",
+        "dureeLocation": "[TO_TRANSLATE] Durée de location (à l'année)"
+      },
+      "DechetsOrdinaires": {
+        "question": "[TO_TRANSLATE] Renseignez ici les quantités de déchets générés chaque semaine",
+        "typeDechet": "[TO_TRANSLATE] Type de déchets",
+        "nbBennes": "[TO_TRANSLATE] Nombre de bennes",
+        "tailleBennes": "[TO_TRANSLATE] Taille des bennes",
+        "frequenceRamassage": "[TO_TRANSLATE] Fréquence de ramassage (par semaine)"
+      },
+      "MaterielDistributeursAffiches": {
+        "question": "[TO_TRANSLATE] Quelle quantité de matériel distributeurs recevez-vous en moyenne par semaine ?",
+        "typeMateriel": "[TO_TRANSLATE] Type de matériel",
+        "quantite": "[TO_TRANSLATE] Quantité"
+      },
+      "MaterielDistributeursPLV": {
+        "question": "[TO_TRANSLATE] Quelle quantité de matériel distributeurs recevez-vous en moyenne par semaine ?",
+        "typeMateriel": "[TO_TRANSLATE] Type de matériel",
+        "quantite": "[TO_TRANSLATE] Quantité"
+      },
+      "MaterielCinema": {
+        "question": "[TO_TRANSLATE] Quelle quantité de matériel produisez-vous chaque mois ?",
+        "typeMateriel": "[TO_TRANSLATE] Type de matériel",
+        "quantite": "[TO_TRANSLATE] Quantité"
+      }
+    },
+    "group": {
+      "BatimentRenovation": {
+        "question": "[TO_TRANSLATE] Parmi les rénovations suivantes, lesquelles avez-vous réalisées durant les dix dernières années ?"
+      }
+    },
+    "list": {}
+  },
   "publicodes-rules": {
     "général": {
       "nombre séances": {
