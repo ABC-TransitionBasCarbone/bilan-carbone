@@ -24,17 +24,19 @@ salles et cabines . matériel technique . films . dématérialisés:
     taille fichiers transférés:
       formule:
         somme:
-          - 90 * 2 Go * nombre films dématérialisés
+          - 90 Go/h * 2 h * nombre films dématérialisés
           - 3 Go * nombre films dématérialisés
           - 4 Go * nombre films dématérialisés
       unité: Go
       note: |
-        Formule sombre.. 0,00921*90*2*nombre de films*90% + 1,5*nombre de
-        films*2*0,00921+2*nombre de films*2*0,00921 Manque le 90% ?
-
+        On considère que la durée moyenne d'un film est de 2h, et qu'une heure de film pèse 90 Go. 
+        On associe également 1,5 annonces et 2 films publicitaires par film (1 annonce = 2 Go).
+    poids film:
+      valeur: 90 Go/h
     FE:
       valeur: 0.00921
       unité: kgCO2e/Go
+      note: transfert d'un Go de données via une connexion fixe
       meta:
         id: 142
 

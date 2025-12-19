@@ -110,6 +110,7 @@ describe("Poste - Mobilité Spectateurs", () => {
     const localEngine = engine.shallowCopy();
 
     const situation: Situation = {
+      "général . nombre entrées": 1000,
       "mobilité spectateurs . précision": "'estimation'",
       "mobilité spectateurs . résultat estimé . proximité spectateurs":
         "'majoritairement locaux'",
@@ -125,6 +126,7 @@ describe("Poste - Mobilité Spectateurs", () => {
     const localEngine = engine.shallowCopy();
 
     const situation: Situation = {
+      "général . nombre entrées": 1000,
       "mobilité spectateurs . précision": "'estimation'",
       "mobilité spectateurs . résultat estimé . profil établissement":
         "'distances longues'",
@@ -136,10 +138,11 @@ describe("Poste - Mobilité Spectateurs", () => {
     expect(result.nodeValue).toBe(0);
   });
 
-  test("si besoin d'un profil de cinéma, devrait calculer une empreinte estimée seulement si la degré d'accessibilité de l'établissement est renseigné - 3", () => {
+  test("si besoin d'un profil de cinéma, devrait calculer une empreinte estimée seulement si le degré d'accessibilité de l'établissement est renseigné - 3", () => {
     const localEngine = engine.shallowCopy();
 
     const situation: Situation = {
+      "général . nombre entrées": 1000,
       "mobilité spectateurs . précision": "'estimation'",
       "mobilité spectateurs . résultat estimé . proximité spectateurs":
         "'majoritairement locaux'",

@@ -30,17 +30,13 @@ salles et cabines . matériel technique . cloud . stockage:
 
 salles et cabines . matériel technique . disques durs:
   titre: Disques durs
-  formule:
-    produit:
-      - FE
-      - nombre
-      - (1 an / amortissement)
+  formule: FE * nombre / amortissement
   par défaut: 0
   unité: kgCO2e
   avec:
     amortissement:
       valeur: 5
-      unité: an
+      note: Amortissement annuel sous-entendu.
 
     FE:
       valeur: 200

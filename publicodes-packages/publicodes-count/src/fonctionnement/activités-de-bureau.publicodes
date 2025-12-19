@@ -126,11 +126,7 @@ fonctionnement . activités de bureau . informatique . appareil:
           variations:
             - si: age > amortissement
               alors: 0
-            - sinon:
-                produit:
-                  - nb appareils
-                  - FE
-                  - (1 an / amortissement)
+            - sinon: nb appareils * FE / amortissement
   par défaut: 0
   unité: kgCO2e
   avec:
@@ -159,7 +155,7 @@ fonctionnement . activités de bureau . informatique . appareil:
     amortissement:
       valeur: 5
       unité: an
-      note: La durée d'amortissement est la même pour tous les appareils informatiques.
+      note: La durée d'amortissement est la même pour tous les appareils informatiques et fixée à 5 ans.
 
     FE:
       unité: kgCO2e
