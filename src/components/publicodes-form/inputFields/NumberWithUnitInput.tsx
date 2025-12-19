@@ -1,6 +1,7 @@
 import { NumberField } from '@base-ui-components/react/number-field'
 import { InputAdornment, OutlinedInput } from '@mui/material'
 import { EvaluatedNumberInput } from '@publicodes/forms'
+import { useTranslations } from 'next-intl'
 import { useCallback } from 'react'
 import styles from './NumberWithUnitInput.module.css'
 import { BaseInputProps } from './utils'
@@ -14,7 +15,11 @@ const NumberWithUnitInput = <RuleName extends string>({
   onChange,
   disabled,
 }: NumberWithUnitInputProps<RuleName>) => {
-  const questionUnit = formElement.unit
+  const tInput = useTranslations('publicodes-rules')
+  const unitTranslationKey = `${formElement.id.replace(/\s+.\s+/g, '.')}.unité`
+
+  const questionUnit = tInput.has(unitTranslationKey) ? tInput(unitTranslationKey) : undefined
+
   const value = formElement.value ?? formElement.defaultValue ?? null
   const isDisabled = disabled || !formElement.applicable
 
