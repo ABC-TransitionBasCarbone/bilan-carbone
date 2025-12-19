@@ -12,11 +12,14 @@ const TRANSLATIONS_DIR = path.join(__dirname, '../translations')
 const TO_TRANSLATE_PREFIX = '[TO_TRANSLATE]'
 const UPDATED_PREFIX = '[UPDATED]'
 
-function loadTranslation(locale: string): TranslationRecord {
+const LOCALES = ['fr', 'en', 'es'] as const
+type Locale = (typeof LOCALES)[number]
+
+function loadTranslation(locale: Locale): TranslationRecord {
   return readJSONFile(path.join(TRANSLATIONS_DIR, locale, 'cut.json')) ?? {}
 }
 
-function saveTranslation(locale: string, data: TranslationRecord): void {
+function saveTranslation(locale: Locale, data: TranslationRecord): void {
   writeJSONFile(path.join(TRANSLATIONS_DIR, locale, 'cut.json'), data)
 }
 
@@ -76,86 +79,79 @@ function getNestedObject(
 
 function buildTranslationsFromRules(
   extractedTranslations: Record<string, Partial<Record<TranslationKey, string>>>,
-  existingFR: TranslationRecord,
-  existingEN: TranslationRecord,
-  existingES: TranslationRecord,
-): { updatedFR: TranslationRecord; updatedEN: TranslationRecord; updatedES: TranslationRecord } {
-  const updatedFR: TranslationRecord = {}
-  const updatedEN: TranslationRecord = {}
-  const updatedES: TranslationRecord = {}
+  existingTranslations: Record<Locale, TranslationRecord>,
+): Record<Locale, TranslationRecord> {
+  const updated: Record<Locale, TranslationRecord> = Object.fromEntries(
+    LOCALES.map((locale) => [locale, {}]),
+  ) as Record<Locale, TranslationRecord>
+
+  const otherLocales = LOCALES.filter((l) => l !== 'fr')
 
   for (const [ruleName, translationKeys] of Object.entries(extractedTranslations)) {
     const nameSpaces = ruleName.split(' . ')
     const parentPath = nameSpaces.slice(0, -1)
     const lastNameSpace = nameSpaces[nameSpaces.length - 1]
 
-    const parentFR = getNestedObject(updatedFR, parentPath, true)!
-    const parentEN = getNestedObject(updatedEN, parentPath, true)!
-    const parentES = getNestedObject(updatedES, parentPath, true)!
+    const parents: Record<Locale, TranslationRecord> = {} as Record<Locale, TranslationRecord>
+    const existingParents: Record<Locale, TranslationRecord | undefined> = {} as Record<
+      Locale,
+      TranslationRecord | undefined
+    >
 
-    // Get existing translations for this rule
-    const existingParentFR = getNestedObject(existingFR, parentPath)
-    const existingParentEN = getNestedObject(existingEN, parentPath)
-    const existingParentES = getNestedObject(existingES, parentPath)
-
-    parentFR[lastNameSpace] = {}
-    parentEN[lastNameSpace] = {}
-    parentES[lastNameSpace] = {}
+    for (const locale of LOCALES) {
+      parents[locale] = getNestedObject(updated[locale], parentPath, true)!
+      existingParents[locale] = getNestedObject(existingTranslations[locale], parentPath)
+      parents[locale][lastNameSpace] = {}
+    }
 
     for (const [key, value] of Object.entries(translationKeys)) {
       const trimmedValue = value.trim()
-      const existingFRValue = existingParentFR?.[lastNameSpace]?.[key]
-      const existingENValue = existingParentEN?.[lastNameSpace]?.[key]
-      const existingESValue = existingParentES?.[lastNameSpace]?.[key]
+      const existingFRValue = existingParents.fr?.[lastNameSpace]?.[key]
 
       if (!existingFRValue) {
         // New key
-        parentFR[lastNameSpace][key] = trimmedValue
-        parentEN[lastNameSpace][key] = `${TO_TRANSLATE_PREFIX} ${trimmedValue}`
-        parentES[lastNameSpace][key] = `${TO_TRANSLATE_PREFIX} ${trimmedValue}`
+        parents.fr[lastNameSpace][key] = trimmedValue
+        for (const locale of otherLocales) {
+          parents[locale][lastNameSpace][key] = `${TO_TRANSLATE_PREFIX} ${trimmedValue}`
+        }
       } else if (existingFRValue !== trimmedValue) {
         // Updated key
         console.log(`Updated translation for ${ruleName}.${key}: "${existingFRValue}" -> "${trimmedValue}"`)
-        parentFR[lastNameSpace][key] = trimmedValue
-        parentEN[lastNameSpace][key] = `${UPDATED_PREFIX} ${trimmedValue}`
-        parentES[lastNameSpace][key] = `${UPDATED_PREFIX} ${trimmedValue}`
+        parents.fr[lastNameSpace][key] = trimmedValue
+        for (const locale of otherLocales) {
+          parents[locale][lastNameSpace][key] = `${UPDATED_PREFIX} ${trimmedValue}`
+        }
       } else {
         // Keep existing translations
-        parentFR[lastNameSpace][key] = existingFRValue
-        parentEN[lastNameSpace][key] = existingENValue ?? `${TO_TRANSLATE_PREFIX} ${trimmedValue}`
-        parentES[lastNameSpace][key] = existingESValue ?? `${TO_TRANSLATE_PREFIX} ${trimmedValue}`
+        parents.fr[lastNameSpace][key] = existingFRValue
+        for (const locale of otherLocales) {
+          const existingValue = existingParents[locale]?.[lastNameSpace]?.[key]
+          parents[locale][lastNameSpace][key] = existingValue ?? `${TO_TRANSLATE_PREFIX} ${trimmedValue}`
+        }
       }
     }
   }
 
-  return { updatedFR, updatedEN, updatedES }
+  return updated
 }
 
 function generateNestedTranslationFile(): void {
-  const translationFR = loadTranslation('fr')
-  const translationEN = loadTranslation('en')
-  const translationES = loadTranslation('es')
+  const translations: Record<Locale, TranslationRecord> = {} as Record<Locale, TranslationRecord>
+  const existingRules: Record<Locale, TranslationRecord> = {} as Record<Locale, TranslationRecord>
 
-  const existingFR = translationFR['publicodes-rules'] ?? {}
-  const existingEN = translationEN['publicodes-rules'] ?? {}
-  const existingES = translationES['publicodes-rules'] ?? {}
+  for (const locale of LOCALES) {
+    translations[locale] = loadTranslation(locale)
+    existingRules[locale] = translations[locale]['publicodes-rules'] ?? {}
+  }
 
   const extractedTranslations = extractTranslationKeysFromRules(rules)
 
-  const { updatedFR, updatedEN, updatedES } = buildTranslationsFromRules(
-    extractedTranslations,
-    existingFR,
-    existingEN,
-    existingES,
-  )
+  const updated = buildTranslationsFromRules(extractedTranslations, existingRules)
 
-  removeEmptyObjects(updatedFR)
-  removeEmptyObjects(updatedEN)
-  removeEmptyObjects(updatedES)
-
-  saveTranslation('fr', { ...translationFR, 'publicodes-rules': updatedFR })
-  saveTranslation('en', { ...translationEN, 'publicodes-rules': updatedEN })
-  saveTranslation('es', { ...translationES, 'publicodes-rules': updatedES })
+  for (const locale of LOCALES) {
+    removeEmptyObjects(updated[locale])
+    saveTranslation(locale, { ...translations[locale], 'publicodes-rules': updated[locale] })
+  }
 
   console.log('Translation files updated successfully.')
 }
