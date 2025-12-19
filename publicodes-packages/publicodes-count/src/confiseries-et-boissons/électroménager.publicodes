@@ -33,11 +33,7 @@ confiseries et boissons . électroménager . appareil:
           variations:
             - si: age > amortissement
               alors: 0
-            - sinon:
-                produit:
-                  - nb appareils
-                  - FE
-                  - (1 an / amortissement)
+            - sinon: nb appareils * FE / amortissement
   unité: kgCO2e
   par défaut: 0
   avec:
@@ -63,8 +59,7 @@ confiseries et boissons . électroménager . appareil:
 
     amortissement:
       valeur: 5
-      unité: an
-      note: La durée d'amortissement est la même pour tous les appareils électroménagers.
+      note: La durée d'amortissement est la même pour tous les appareils électroménagers et fixée à 5 ans.
 
     FE:
       unité: kgCO2e

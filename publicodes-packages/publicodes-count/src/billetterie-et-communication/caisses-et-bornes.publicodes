@@ -8,9 +8,7 @@ billetterie et communication . caisses et bornes:
 
 billetterie et communication . caisses et bornes . caisses libre service:
   titre: Caisses libre service
-  note: |
-    TODO: Il semble qu'il manque les 5 ans d'amortissement
-  formule: nombre * FE
+  formule: FE * nombre / amortissement
   par défaut: 0
   unité: kgCO2e
   avec:
@@ -24,11 +22,13 @@ billetterie et communication . caisses et bornes . caisses libre service:
       meta:
         id: 123
 
+    amortissement:
+      valeur: 5
+      note: Amortissement annuel sous-entendu.
+
 billetterie et communication . caisses et bornes . caisse classique:
   titre: Caisse classique
-  note: |
-    TODO: Il semble qu'il manque les 5 ans d'amortissement
-  formule: nombre * FE
+  formule: FE * nombre / amortissement
   par défaut: 0
   unité: kgCO2e
   avec:
@@ -41,3 +41,7 @@ billetterie et communication . caisses et bornes . caisse classique:
       unité: kgCO2e/unité
       meta:
         id: 124
+
+    amortissement:
+      valeur: 5
+      note: Amortissement annuel sous-entendu.

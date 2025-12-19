@@ -139,6 +139,8 @@ mobilité spectateurs . résultat estimé . empreinte établissement lointain:
           - 0.3 * FE TGV
   note: |
     On considère qu'un trajet moyen est 3% de la distance Paris - lieu du cinéma.
+
+    Ce chiffre est issu  des enquêtes réalisées par le groupement de cinémas CINÉO sur la durée moyenne du séjour à Paris des visiteurs du cinéma. On fait le prorata des 2h passées au cinéma sur la durée totale du séjour.
   avec:
     FE voiture longue distance:
       valeur: 0.1092

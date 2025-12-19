@@ -14,11 +14,7 @@ fonctionnement . bâtiment . construction:
     variations:
       - si: age > amortissement
         alors: 0
-      - sinon:
-          produit:
-            - surface
-            - FE
-            - (1 an / amortissement)
+      - sinon: surface * FE / amortissement
   unité: kgCO2e
   par défaut: 0
   avec:
@@ -31,7 +27,7 @@ fonctionnement . bâtiment . construction:
 
     amortissement:
       valeur: 50
-      unité: an
+      note: Amortissement annuel sous-entendu.
 
     année de construction:
       type: date
@@ -100,11 +96,7 @@ fonctionnement . bâtiment . rénovation . empreinte travaux:
       - toutes ces conditions:
           - est défini: type . autres travaux importants
           - type . autres travaux importants
-  formule:
-    produit:
-      - montant
-      - FE
-      - (1 an / amortissement)
+  formule: montant * FE / amortissement
   par défaut: 0
   unité: kgCO2e
   note: Conversion auto €/k€ publicodes.
@@ -121,18 +113,14 @@ fonctionnement . bâtiment . rénovation . empreinte travaux:
 
     amortissement:
       valeur: 10
-      unité: an
+      note: Amortissement annuel sous-entendu.
 
 fonctionnement . bâtiment . rénovation . empreinte extension:
   applicable si:
     toutes ces conditions:
       - est défini: type . extension
       - type . extension
-  formule:
-    produit:
-      - surface
-      - FE
-      - (1 an / amortissement)
+  formule: surface * FE / amortissement
   par défaut: 0
   unité: kgCO2e
   avec:
@@ -148,7 +136,7 @@ fonctionnement . bâtiment . rénovation . empreinte extension:
 
     amortissement:
       valeur: 10
-      unité: an
+      note: Amortissement annuel sous-entendu.
 
 fonctionnement . bâtiment . autre activité:
   applicable si:
@@ -160,7 +148,7 @@ fonctionnement . bâtiment . autre activité:
   unité: kgCO2e
   par défaut: 0
   note: |
-    TODO: Pas d'émissions associées ?
+    Pas d'émissions associées pour le moment car utile pour la partie actions.
   avec:
     surface:
       question: Quelle est la surface totale du bâtiment (cinéma inclus) ?
@@ -175,16 +163,9 @@ fonctionnement . bâtiment . parking:
       - est défini: parking présent
       - parking présent = oui
   titre: Parking
-  formule:
-    produit:
-      - nombre de places
-      - 12 m2/place
-      - FE
-      - (1 an / amortissement)
+  formule: nombre de places * 12 m2/place * FE / amortissement
   par défaut: 0
   unité: kgCO2e
-  note: |
-    Il semble que le calcul n'est pas bon actuellement en ligne. Il manque la surface par place.
   avec:
     nombre de places:
       question: Si oui, de combien de places ?
@@ -198,7 +179,7 @@ fonctionnement . bâtiment . parking:
 
     amortissement:
       valeur: 50
-      unité: an
+      note: Amortissement annuel sous-entendu.
 
 fonctionnement . bâtiment . parking présent:
   question: Le cinéma dispose-t-il d’un parking ?

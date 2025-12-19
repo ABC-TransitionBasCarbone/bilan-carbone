@@ -10,8 +10,6 @@ fonctionnement . énergie:
       - granulés
       - climatisation
       - groupes électrogènes
-  note: |
-    TODO: vérifier les formule pour la climatisation et les groupes électrogènes
   unité: kgCO2e
 
 fonctionnement . énergie . électricité:
@@ -132,21 +130,16 @@ fonctionnement . énergie . climatisation:
       - est équipé climatisation = oui
   formule:
     produit:
-      # - cnc écrans
-      - 1
+      - général . nombre écrans
+      - 1 climatisation/écran
       - FE
   par défaut: 0
   unité: kgCO2e
+  note: On associe une climatisation à un écran.
   avec:
-    cnc écrans:
-      question: Combien de kWh de climatisation ont étés consommés par le cinéma cette année ?
-      type: nombre
-      note: |
-        TODO: comprendre le chiffre à prendre ? CNC.écrans ?
-
     FE:
       valeur: 2332
-      unité: kgCO2e
+      unité: kgCO2e/climatisation
       meta:
         id: 145
 
@@ -161,13 +154,12 @@ fonctionnement . énergie . groupes électrogènes:
       - équipement groupes électrogènes != "aucun"
   formule:
     somme:
-      - fabrication
+      - fabrication / amortissement
       - consommation * FE
   par défaut: 0
   unité: kgCO2e
   avec:
     fabrication:
-      note: Pas d'amortissement  ?
       formule: FE
       avec:
         FE:
@@ -175,6 +167,10 @@ fonctionnement . énergie . groupes électrogènes:
           unité: kgCO2e
           meta:
             id: 20911
+
+    amortissement:
+      valeur: 5
+      note: Amortissement annuel sous-entendu.
 
     consommation:
       applicable si: équipement groupes électrogènes = "utilisation régulière"
