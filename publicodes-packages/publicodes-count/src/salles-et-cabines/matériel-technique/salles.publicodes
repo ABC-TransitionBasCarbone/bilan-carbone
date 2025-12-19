@@ -21,7 +21,10 @@ salles et cabines . matériel technique . salle . projecteur:
     variations:
       - si: age > amortissement
         alors: 0
-      - sinon: FE / amortissement
+      - sinon:
+          produit:
+            - FE
+            - (1 an / amortissement)
   par défaut: 0
   unité: kgCO2e
   avec:
@@ -34,7 +37,8 @@ salles et cabines . matériel technique . salle . projecteur:
 
     amortissement:
       valeur: 10
-      note: La durée d'amortissement est la même pour tous les projecteurs et fixée à 10 ans.
+      unité: an
+      note: La durée d'amortissement est la même pour tous les projecteurs.
 
     année achat:
       question: Année d'acquisition projecteur
@@ -83,7 +87,11 @@ salles et cabines . matériel technique . salle . écran:
     variations:
       - si: age > amortissement
         alors: 0
-      - sinon: FE * surface écran / amortissement
+      - sinon:
+          produit:
+            - FE
+            - surface écran
+            - (1 an / amortissement)
   par défaut: 0
   unité: kgCO2e
   avec:
@@ -96,7 +104,8 @@ salles et cabines . matériel technique . salle . écran:
 
     amortissement:
       valeur: 10
-      note: La durée d'amortissement est la même pour tous les écrans et fixée à 10 ans.
+      unité: an
+      note: La durée d'amortissement est la même pour tous les écrans.
 
     année achat:
       question: Année d'acquisition écran
@@ -152,7 +161,11 @@ salles et cabines . matériel technique . salle . fauteuils:
     variations:
       - si: age > amortissement
         alors: 0
-      - sinon: FE * nombre / amortissement
+      - sinon:
+          produit:
+            - FE
+            - nombre
+            - (1 an / amortissement)
   par défaut: 0
   unité: kgCO2e
   avec:
@@ -165,7 +178,8 @@ salles et cabines . matériel technique . salle . fauteuils:
 
     amortissement:
       valeur: 10
-      note: La durée d'amortissement est la même pour tous les écrans et fixée à 10 ans.
+      unité: an
+      note: La durée d'amortissement est la même pour tous les écrans.
 
     année achat:
       question: Année d'acquisition fauteuils
@@ -220,7 +234,10 @@ salles et cabines . matériel technique . salle . système son:
     variations:
       - si: age > amortissement
         alors: 0
-      - sinon: FE / amortissement
+      - sinon:
+          produit:
+            - FE
+            - (1 an / amortissement)
   par défaut: 0
   unité: kgCO2e
   avec:
@@ -233,7 +250,8 @@ salles et cabines . matériel technique . salle . système son:
 
     amortissement:
       valeur: 10
-      note: La durée d'amortissement est la même pour tous les systèmes son et fixée à 10 ans.
+      unité: an
+      note: La durée d'amortissement est la même pour tous les systèmes son.
 
     année achat:
       question: Année d'acquisition système son
