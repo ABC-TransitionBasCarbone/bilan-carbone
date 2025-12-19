@@ -46,7 +46,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRule
   Batiment: [
     input('fonctionnement . bâtiment . construction . surface'),
     input('fonctionnement . bâtiment . construction . année de construction'),
-    group('Parmi les rénovations suivantes, lesquelles avez-vous réalisées durant les dix dernières années ?', [
+    group('BatimentRenovation.question', [
       'fonctionnement . bâtiment . rénovation . type . rénovation totale',
       'fonctionnement . bâtiment . rénovation . type . extension',
       'fonctionnement . bâtiment . rénovation . type . autres travaux importants',
@@ -80,8 +80,8 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRule
   MobiliteSpectateurs: [
     input('mobilité spectateurs . précision'),
     table(
-      "Si vous avez réalisé une enquête, quelles sont les distances parcourues au total sur l'année pour chacun des modes de transport suivants :",
-      ['Moyen de transport', 'Distance (km)'],
+      'MobiliteSpectateurs.question',
+      ['MobiliteSpectateurs.moyenTransport', 'MobiliteSpectateurs.distance'],
       [
         [
           'mobilité spectateurs . résultat précis . empreinte . RER et transilien',
@@ -156,8 +156,13 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRule
   Fret: [input('confiseries et boissons . fret . distance')],
   Electromenager: [
     table(
-      "Pour les différents équipements informatiques utilisés, veuillez indiquer leur nombre et leur date d'achat ou durée de location :",
-      ["Type d'électroménagers", 'Nombre', "Date d'achat", "Durée de location (à l'année)"],
+      'Electromenager.question',
+      [
+        'Electromenager.typeEquipement',
+        'Electromenager.nombre',
+        'Electromenager.dateAchat',
+        'Electromenager.dureeLocation',
+      ],
       [
         [
           'confiseries et boissons . électroménager . réfrigérateurs',
@@ -188,8 +193,13 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRule
   ],
   DechetsOrdinaires: [
     table(
-      'Renseignez ici les quantités de déchets générés chaque semaine',
-      ['Type de déchets', 'Nombre de bennes', 'Taille des bennes', 'Fréquence de ramassage (par semaine)'],
+      'DechetsOrdinaires.question',
+      [
+        'DechetsOrdinaires.typeDechet',
+        'DechetsOrdinaires.nbBennes',
+        'DechetsOrdinaires.tailleBennes',
+        'DechetsOrdinaires.frequenceRamassage',
+      ],
       [
         [
           'déchets . ordinaires . ordures ménagères',
@@ -224,8 +234,8 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRule
   ],
   MaterielDistributeurs: [
     table(
-      'Quelle quantité de matériel distributeurs recevez-vous en moyenne par semaine ?',
-      ['Type de matériel', 'Quantité'],
+      'MaterielDistributeursAffiches.question',
+      ['MaterielDistributeursAffiches.typeMateriel', 'MaterielDistributeursAffiches.quantite'],
       [
         [
           'billetterie et communication . matériel distributeurs . affiches . affiches 120x160',
@@ -238,8 +248,8 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRule
       ],
     ),
     table(
-      'Quelle quantité de matériel distributeurs recevez-vous en moyenne par mois ?',
-      ['Type de matériel', 'Quantité'],
+      'MaterielDistributeursPLV.question',
+      ['MaterielDistributeursPLV.typeMateriel', 'MaterielDistributeursPLV.quantite'],
       [
         [
           'billetterie et communication . matériel distributeurs . PLV . PLV comptoir',
@@ -254,8 +264,8 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRule
   ],
   MaterielCinema: [
     table(
-      'Quelle quantité de matériel produisez-vous chaque mois ?',
-      ['Type de matériel', 'Quantité'],
+      'MaterielCinema.question',
+      ['MaterielCinema.typeMateriel', 'MaterielCinema.quantite'],
       [
         [
           'billetterie et communication . matériel cinéma . production . programme',

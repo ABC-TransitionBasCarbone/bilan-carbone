@@ -56,7 +56,6 @@ fonctionnement . bâtiment . rénovation:
 
 fonctionnement . bâtiment . rénovation . type:
   titre: Rénovation
-  question: Parmi les rénovations suivantes, lesquelles avez-vous réalisées durant les dix dernières années ?
   avec:
     rénovation totale:
       non applicable si:
@@ -64,6 +63,7 @@ fonctionnement . bâtiment . rénovation . type:
           - est défini: type . aucun
           - type . aucun = oui
       type: booléen
+      # Should be a question
       titre: Rénovation totale (hors agrandissement)
 
     extension:
@@ -72,6 +72,7 @@ fonctionnement . bâtiment . rénovation . type:
           - est défini: type . aucun
           - type . aucun = oui
       type: booléen
+      # Should be a question
       titre: Agrandissement - extension
 
     autres travaux importants:
@@ -80,11 +81,13 @@ fonctionnement . bâtiment . rénovation . type:
           - est défini: type . aucun
           - type . aucun = oui
       type: booléen
+      # Should be a question
       titre: |
         Autres travaux importants (par ex : changement moquette, ravalement,peinture etc)
 
     aucun:
       type: booléen
+      # Should be a question
       titre: Je n'ai pas réalisé ces rénovations durant les dix dernières années
 
 fonctionnement . bâtiment . rénovation . empreinte travaux:

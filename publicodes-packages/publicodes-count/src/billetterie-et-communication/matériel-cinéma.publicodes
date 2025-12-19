@@ -7,7 +7,6 @@ billetterie et communication . matériel cinéma:
 
 billetterie et communication . matériel cinéma . production:
   titre: Production cinéma
-  question: Quelle quantité de matériel produisez-vous chaque mois ?
   formule:
     somme:
       - programme
