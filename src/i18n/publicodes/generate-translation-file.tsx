@@ -55,37 +55,80 @@ function removeEmptyObjects(obj: TranslationRecord): void {
   }
 }
 
-function getOrCreateNestedObject(obj: TranslationRecord, path: string[]): TranslationRecord {
+function getNestedObject(
+  obj: TranslationRecord,
+  path: string[],
+  createIfMissing = false,
+): TranslationRecord | undefined {
   let current = obj
   for (const segment of path) {
     if (!current[segment]) {
-      current[segment] = {}
+      if (createIfMissing) {
+        current[segment] = {}
+      } else {
+        return undefined
+      }
     }
     current = current[segment]
   }
   return current
 }
 
-function updateTranslationValue(
-  frObj: TranslationRecord,
-  enObj: TranslationRecord,
-  esObj: TranslationRecord,
-  key: string,
-  newValue: string,
-  ruleName: string,
-): void {
-  const existingValue = frObj[key]
+function buildTranslationsFromRules(
+  extractedTranslations: Record<string, Partial<Record<TranslationKey, string>>>,
+  existingFR: TranslationRecord,
+  existingEN: TranslationRecord,
+  existingES: TranslationRecord,
+): { updatedFR: TranslationRecord; updatedEN: TranslationRecord; updatedES: TranslationRecord } {
+  const updatedFR: TranslationRecord = {}
+  const updatedEN: TranslationRecord = {}
+  const updatedES: TranslationRecord = {}
 
-  if (!existingValue) {
-    frObj[key] = newValue
-    enObj[key] = `${TO_TRANSLATE_PREFIX} ${newValue}`
-    esObj[key] = `${TO_TRANSLATE_PREFIX} ${newValue}`
-  } else if (existingValue !== newValue) {
-    console.log(`Updated translation for ${ruleName}.${key}: "${existingValue}" -> "${newValue}"`)
-    frObj[key] = newValue
-    enObj[key] = `${UPDATED_PREFIX} ${newValue}`
-    esObj[key] = `${UPDATED_PREFIX} ${newValue}`
+  for (const [ruleName, translationKeys] of Object.entries(extractedTranslations)) {
+    const nameSpaces = ruleName.split(' . ')
+    const parentPath = nameSpaces.slice(0, -1)
+    const lastNameSpace = nameSpaces[nameSpaces.length - 1]
+
+    const parentFR = getNestedObject(updatedFR, parentPath, true)!
+    const parentEN = getNestedObject(updatedEN, parentPath, true)!
+    const parentES = getNestedObject(updatedES, parentPath, true)!
+
+    // Get existing translations for this rule
+    const existingParentFR = getNestedObject(existingFR, parentPath)
+    const existingParentEN = getNestedObject(existingEN, parentPath)
+    const existingParentES = getNestedObject(existingES, parentPath)
+
+    parentFR[lastNameSpace] = {}
+    parentEN[lastNameSpace] = {}
+    parentES[lastNameSpace] = {}
+
+    for (const [key, value] of Object.entries(translationKeys)) {
+      const trimmedValue = value.trim()
+      const existingFRValue = existingParentFR?.[lastNameSpace]?.[key]
+      const existingENValue = existingParentEN?.[lastNameSpace]?.[key]
+      const existingESValue = existingParentES?.[lastNameSpace]?.[key]
+
+      if (!existingFRValue) {
+        // New key
+        parentFR[lastNameSpace][key] = trimmedValue
+        parentEN[lastNameSpace][key] = `${TO_TRANSLATE_PREFIX} ${trimmedValue}`
+        parentES[lastNameSpace][key] = `${TO_TRANSLATE_PREFIX} ${trimmedValue}`
+      } else if (existingFRValue !== trimmedValue) {
+        // Updated key
+        console.log(`Updated translation for ${ruleName}.${key}: "${existingFRValue}" -> "${trimmedValue}"`)
+        parentFR[lastNameSpace][key] = trimmedValue
+        parentEN[lastNameSpace][key] = `${UPDATED_PREFIX} ${trimmedValue}`
+        parentES[lastNameSpace][key] = `${UPDATED_PREFIX} ${trimmedValue}`
+      } else {
+        // Keep existing translations
+        parentFR[lastNameSpace][key] = existingFRValue
+        parentEN[lastNameSpace][key] = existingENValue ?? `${TO_TRANSLATE_PREFIX} ${trimmedValue}`
+        parentES[lastNameSpace][key] = existingESValue ?? `${TO_TRANSLATE_PREFIX} ${trimmedValue}`
+      }
+    }
   }
+
+  return { updatedFR, updatedEN, updatedES }
 }
 
 function generateNestedTranslationFile(): void {
@@ -93,36 +136,18 @@ function generateNestedTranslationFile(): void {
   const translationEN = loadTranslation('en')
   const translationES = loadTranslation('es')
 
-  const updatedFR: TranslationRecord = { ...(translationFR['publicodes-rules'] ?? {}) }
-  const updatedEN: TranslationRecord = { ...(translationEN['publicodes-rules'] ?? {}) }
-  const updatedES: TranslationRecord = { ...(translationES['publicodes-rules'] ?? {}) }
+  const existingFR = translationFR['publicodes-rules'] ?? {}
+  const existingEN = translationEN['publicodes-rules'] ?? {}
+  const existingES = translationES['publicodes-rules'] ?? {}
 
   const extractedTranslations = extractTranslationKeysFromRules(rules)
 
-  for (const [ruleName, translationKeys] of Object.entries(extractedTranslations)) {
-    const nameSpaces = ruleName.split(' . ')
-    const parentPath = nameSpaces.slice(0, -1)
-    const lastNameSpace = nameSpaces[nameSpaces.length - 1]
-
-    const parentFR = getOrCreateNestedObject(updatedFR, parentPath)
-    const parentEN = getOrCreateNestedObject(updatedEN, parentPath)
-    const parentES = getOrCreateNestedObject(updatedES, parentPath)
-
-    if (!parentFR[lastNameSpace]) parentFR[lastNameSpace] = {}
-    if (!parentEN[lastNameSpace]) parentEN[lastNameSpace] = {}
-    if (!parentES[lastNameSpace]) parentES[lastNameSpace] = {}
-
-    for (const [key, value] of Object.entries(translationKeys)) {
-      updateTranslationValue(
-        parentFR[lastNameSpace],
-        parentEN[lastNameSpace],
-        parentES[lastNameSpace],
-        key,
-        value.trim(),
-        ruleName,
-      )
-    }
-  }
+  const { updatedFR, updatedEN, updatedES } = buildTranslationsFromRules(
+    extractedTranslations,
+    existingFR,
+    existingEN,
+    existingES,
+  )
 
   removeEmptyObjects(updatedFR)
   removeEmptyObjects(updatedEN)

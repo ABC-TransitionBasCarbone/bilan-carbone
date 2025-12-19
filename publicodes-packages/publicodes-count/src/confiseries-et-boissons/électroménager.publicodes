@@ -1,11 +1,6 @@
 confiseries et boissons . électroménager:
   titre: Électroménager
   unité: kgCO2e
-  question: |
-    Pour les différents équipements informatiques utilisés, veuillez indiquer leur nombre et leur date d'achat ou durée de location :
-  description: |
-    Si l'équipement concerné est acheté, merci de ne pas remplir le champ "Durée de location". Si l'équipement concerné est loué de manière ponctuelle, merci de ne pas remplir le champ "Date d'achat". Si vous louez un équipement pour de longues durées ou de manière continue, nous vous recommandons de le considérer comme acheté (à la date de la première année de location).
-  note: La durée de location prévaut sur la date d'achat.
   formule:
     somme:
       - réfrigérateurs
@@ -20,6 +15,7 @@ confiseries et boissons . électroménager . appareil:
     son nombre, de sa date d'achat ou de sa durée de location.
 
     Règle de calcul utilisée pour chaque type d'appareil électroménager.
+  note: La durée de location prévaut sur la date d'achat.
   formule:
     variations:
       - si:

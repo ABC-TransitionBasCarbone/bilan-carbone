@@ -20,6 +20,10 @@
       "distance depuis paris": {
         "question": "[TO_TRANSLATE] Distance depuis Paris",
         "unité": "[TO_TRANSLATE] km"
+      },
+      "nombre écrans": {
+        "question": "[TO_TRANSLATE] Nombre d'écrans / salles",
+        "unité": "[TO_TRANSLATE] écran"
       }
     },
     "tournées avant premières": {
@@ -263,11 +267,6 @@
           "consommation": {
             "question": "[TO_TRANSLATE] Combien de kWh issus de la combustion de granulés de bois ont étés consommés par le cinéma cette année ?",
             "unité": "[TO_TRANSLATE] kg"
-          }
-        },
-        "climatisation": {
-          "cnc écrans": {
-            "question": "[TO_TRANSLATE] Combien de kWh de climatisation ont étés consommés par le cinéma cette année ?"
           }
         },
         "est équipé climatisation": {
@@ -569,10 +568,6 @@
     },
     "confiseries et boissons": {
       "électroménager": {
-        "titre": "[TO_TRANSLATE] Électroménager",
-        "description": "[TO_TRANSLATE] Si l'équipement concerné est acheté, merci de ne pas remplir le champ \"Durée de location\". Si l'équipement concerné est loué de manière ponctuelle, merci de ne pas remplir le champ \"Date d'achat\". Si vous louez un équipement pour de longues durées ou de manière continue, nous vous recommandons de le considérer comme acheté (à la date de la première année de location).",
-        "question": "[TO_TRANSLATE] Pour les différents équipements informatiques utilisés, veuillez indiquer leur nombre et leur date d'achat ou durée de location :",
-        "unité": "[TO_TRANSLATE] kgCO2e",
         "appareil": {
           "nb appareils": {
             "question": "[TO_TRANSLATE] Nombre d'appareils"
@@ -657,9 +652,6 @@
     "billetterie et communication": {
       "matériel distributeurs": {
         "affiches": {
-          "titre": "[TO_TRANSLATE] Affiches",
-          "question": "[TO_TRANSLATE] Quelle quantité de matériel distributeurs recevez-vous en moyenne par semaine ?",
-          "unité": "[TO_TRANSLATE] kgCO2e",
           "affiches 120x160": {
             "nombre": {
               "question": "[TO_TRANSLATE] Quantité",
@@ -674,9 +666,6 @@
           }
         },
         "PLV": {
-          "titre": "[TO_TRANSLATE] PLV",
-          "question": "[TO_TRANSLATE] Quelle quantité de matériel distributeurs recevez-vous en moyenne par mois ?",
-          "unité": "[TO_TRANSLATE] kgCO2e",
           "PLV comptoir": {
             "nombre": {
               "question": "[TO_TRANSLATE] Quantité",
@@ -693,9 +682,6 @@
       },
       "matériel cinéma": {
         "production": {
-          "titre": "[TO_TRANSLATE] Production cinéma",
-          "question": "[TO_TRANSLATE] Quelle quantité de matériel produisez-vous chaque mois ?",
-          "unité": "[TO_TRANSLATE] kgCO2e",
           "programme": {
             "nombre": {
               "question": "[TO_TRANSLATE] Quantité",
