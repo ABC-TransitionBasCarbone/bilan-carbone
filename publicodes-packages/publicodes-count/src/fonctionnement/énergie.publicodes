@@ -130,7 +130,7 @@ fonctionnement . énergie . climatisation:
       - est équipé climatisation = oui
   formule:
     produit:
-      - général . écrans
+      - général . nombre écrans
       - 1 climatisation/écran
       - FE
   par défaut: 0

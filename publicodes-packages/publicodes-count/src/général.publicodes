@@ -23,7 +23,7 @@ général . distance depuis paris:
   unité: km
   note: Donnée récupérée depuis les informations du CNC.
 
-général . écrans:
+général . nombre écrans:
   question: Nombre d'écrans / salles
   unité: écran
   note: Donnée récupérée depuis les informations du CNC.
