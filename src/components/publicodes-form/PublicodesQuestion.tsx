@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box'
+import { useTranslations } from 'next-intl'
 import GroupQuestion from './GroupQuestion'
 import PublicodesInputField from './InputField'
 import { EvaluatedFormLayout } from './layouts/evaluatedFormLayout'
@@ -15,13 +16,19 @@ export default function PublicodesQuestion<RuleName extends string>({
   formLayout,
   onChange,
 }: PublicodesQuestionProps<RuleName>) {
+  const translationKey = formLayout.type === 'input' && formLayout.evaluatedElement.id.replace(/\s+.\s+/g, '.')
+
+  const t = useTranslations(`publicodes-rules.${translationKey}`)
+
+  const translatedTitleTest = t('question')
+
   switch (formLayout.type) {
     case 'input': {
       const formElement = formLayout.evaluatedElement
 
       return (
         <Box key={formElement.id} className="mb2">
-          <QuestionContainer label={formElement.label} helperText={formElement.description}>
+          <QuestionContainer label={translatedTitleTest} helperText={formElement.description}>
             <PublicodesInputField formElement={formElement} onChange={onChange} />
           </QuestionContainer>
         </Box>
