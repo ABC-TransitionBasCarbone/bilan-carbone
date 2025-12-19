@@ -226,5 +226,768 @@
       "disclaimerExcel5": "Un Bilan Carbone® suit une méthodologie bien précise, et doit répondre à un certain nombre de critères objectifs. Par exemple, au cours d'un Bilan Carbone®, la direction doit être engagée, les différentes parties prenantes de l'organisation doivent être mobilisées, des incertitudes doivent être calculées et associées aux émissions, et surtout, un plan de transition solide doit être construit pour engager l'organisation dans une transition bas carbone.",
       "disclaimerExcel6": "Si vous souhaitez vous lancer dans un Bilan Carbone® dans les années qui viennent, tout commence par se faire former à la méthode, ou par nous contacter à l'adresse count@cut-collectif.fr, ou par se faire accompagner par un prestataire Bilan Carbone® !"
     }
+  },
+  "publicodes-rules": {
+    "général": {
+      "nombre séances": {
+        "question": "Nombre de séances",
+        "unité": "séance"
+      },
+      "nombre entrées": {
+        "question": "Nombre d'entrées",
+        "unité": "entrée"
+      },
+      "nombre de jours ouverture": {
+        "question": "Nombre de jours d'ouverture",
+        "unité": "jour"
+      },
+      "nombre de films programmés": {
+        "question": "Nombre de films programmés",
+        "unité": "film"
+      },
+      "distance depuis paris": {
+        "question": "Distance depuis Paris",
+        "unité": "km"
+      }
+    },
+    "tournées avant premières": {
+      "équipes reçues": {
+        "nombre équipes": {
+          "question": "Combien d'équipes de films avez-vous reçues en 2025 ?",
+          "unité": "équipe"
+        }
+      }
+    },
+    "salles et cabines": {
+      "autre matériel": {
+        "lunettes 3D": {
+          "nombre": {
+            "question": "De combien de lunettes 3D disposez-vous ?",
+            "unité": "unité"
+          }
+        }
+      },
+      "matériel technique": {
+        "salle": {
+          "projecteur": {
+            "année achat": {
+              "question": "Année d'acquisition projecteur"
+            },
+            "type": {
+              "titre": "Type de projecteur",
+              "question": "Projecteurs"
+            }
+          },
+          "écran": {
+            "année achat": {
+              "question": "Année d'acquisition écran"
+            },
+            "surface écran": {
+              "question": "Surface de l'écran",
+              "unité": "m2"
+            },
+            "type": {
+              "titre": "Type d'écran",
+              "question": "Écrans"
+            }
+          },
+          "fauteuils": {
+            "année achat": {
+              "question": "Année d'acquisition fauteuils"
+            },
+            "nombre": {
+              "question": "Nombre de fauteuils"
+            },
+            "type": {
+              "titre": "Type de fauteuils",
+              "question": "Fauteuils"
+            }
+          },
+          "système son": {
+            "année achat": {
+              "question": "Année d'acquisition système son"
+            },
+            "type": {
+              "titre": "Type de système son",
+              "question": "Systèmes son"
+            }
+          }
+        },
+        "cloud": {
+          "stockage": {
+            "question": "Combien de données stockez-vous dans un cloud externe ?",
+            "unité": "Go"
+          }
+        },
+        "disques durs": {
+          "nombre": {
+            "question": "De combien de disques durs disposez-vous ?",
+            "unité": "unité"
+          }
+        },
+        "films": {
+          "nombre films dématérialisés": {
+            "description": "Vous pouvez par défaut renseigner 90% des films programmés totaux (ce nombre de films est disponible dans vos données générales), qui est la valeur moyenne issue des Bilans Carbone® qui ont étés réalisés sur plusieurs cinémas français. Si vous détenez une information plus précise pour votre cinéma, nous vous invitons à l'utiliser plutôt que la valeur par défaut.",
+            "question": "Combien de films avez-vous reçu en dématérialisé cette année ?"
+          }
+        }
+      }
+    },
+    "mobilité spectateurs": {
+      "résultat précis": {
+        "empreinte": {
+          "RER et transilien": {
+            "distance": {
+              "question": "Distance (km)",
+              "unité": "km"
+            }
+          },
+          "métro ou tram": {
+            "distance": {
+              "question": "Distance (km)",
+              "unité": "km"
+            }
+          },
+          "bus": {
+            "distance": {
+              "question": "Distance (km)",
+              "unité": "km"
+            }
+          },
+          "vélo électrique": {
+            "distance": {
+              "question": "Distance (km)",
+              "unité": "km"
+            }
+          },
+          "vélo classique": {
+            "distance": {
+              "question": "Distance (km)",
+              "unité": "km"
+            }
+          },
+          "marche": {
+            "distance": {
+              "question": "Distance (km)",
+              "unité": "km"
+            }
+          },
+          "voiture diesel": {
+            "distance": {
+              "question": "Distance (km)",
+              "unité": "km"
+            }
+          },
+          "voiture essence": {
+            "distance": {
+              "question": "Distance (km)",
+              "unité": "km"
+            }
+          },
+          "voiture hybride": {
+            "distance": {
+              "question": "Distance (km)",
+              "unité": "km"
+            }
+          },
+          "voiture électrique": {
+            "distance": {
+              "question": "Distance (km)",
+              "unité": "km"
+            }
+          },
+          "moto": {
+            "distance": {
+              "question": "Distance (km)",
+              "unité": "km"
+            }
+          },
+          "scooter": {
+            "distance": {
+              "question": "Distance (km)",
+              "unité": "km"
+            }
+          },
+          "trottinette électrique": {
+            "distance": {
+              "question": "Distance (km)",
+              "unité": "km"
+            }
+          }
+        }
+      },
+      "résultat estimé": {
+        "proximité spectateurs": {
+          "question": "Vos spectateurs sont-ils majoritairement des habitants \"locaux\", c'est à dire résidant à l'année dans les environs ou attirez-vous aussi une part non négligeable de spectateurs de passage dans la région (touristes notamment)"
+        },
+        "profil établissement": {
+          "question": "Si vous souhaitez vous identifier à des profils de cinéma comparable, de quel type de cinéma votre établissement se rapproche le plus"
+        }
+      },
+      "précision": {
+        "question": "Avez-vous déjà réalisé une enquête mobilité spectateurs ?"
+      },
+      "mobilité spectateurs": {
+        "contact": {
+          "question": "Si vous souhaitez réaliser une enquête mobilité spectateur, vous pouvez nous envoyer un mail pour récupérer un modèle d'enquête qui vous permettra de remplir d'ici quelques semaines les informations demandées"
+        }
+      }
+    },
+    "fonctionnement": {
+      "équipe": {
+        "collaborateurs": {
+          "titre": "Collaborateurs",
+          "question": "Quel est le rythme de travail des collaborateurs du cinéma ?",
+          "unité": "kgCO2e"
+        },
+        "collaborateur type": {
+          "nombre de jours par semaine": {
+            "question": "Nombre de jours / semaine",
+            "unité": "jour/semaine"
+          },
+          "transport": {
+            "distance": {
+              "question": "Distance domicile travail (aller-retour)",
+              "unité": "km/jour"
+            },
+            "moyen de transport": {
+              "question": "Moyen de transport"
+            }
+          }
+        }
+      },
+      "énergie": {
+        "électricité": {
+          "consommation": {
+            "question": "Combien de kWh d'électricité ont étés consommés par le cinéma cette année ?",
+            "unité": "kWh"
+          }
+        },
+        "gaz": {
+          "consommation": {
+            "question": "Combien de m³ de gaz ont étés consommés par le cinéma cette année ?",
+            "unité": "m3"
+          }
+        },
+        "fioul": {
+          "consommation": {
+            "question": "Combien de litres de fioul ont étés consommés par le cinéma cette année ?",
+            "unité": "litre"
+          }
+        },
+        "réseau de chaleur": {
+          "consommation": {
+            "question": "Combien de KWh issus de réseau de chaleur ont été consommés par le cinéma cette année ?",
+            "unité": "kWh"
+          }
+        },
+        "réseau de froid": {
+          "consommation": {
+            "question": "Combien de KWh issus de réseau de froid ont été consommés par le cinéma cette année ?",
+            "unité": "kWh"
+          }
+        },
+        "granulés": {
+          "consommation": {
+            "question": "Combien de kWh issus de la combustion de granulés de bois ont étés consommés par le cinéma cette année ?",
+            "unité": "kg"
+          }
+        },
+        "climatisation": {
+          "cnc écrans": {
+            "question": "Combien de kWh de climatisation ont étés consommés par le cinéma cette année ?"
+          }
+        },
+        "est équipé climatisation": {
+          "question": "Votre cinéma est-il équipé de la climatisation ?"
+        },
+        "groupes électrogènes": {
+          "consommation": {
+            "question": "Quelle est votre consommation annuelle de diesel ?",
+            "unité": "litre"
+          }
+        },
+        "équipement groupes électrogènes": {
+          "question": "Le cinéma dispose-t-il d’un ou plusieurs groupes électrogènes ?"
+        }
+      },
+      "déplacements pro": {
+        "déplacements": {
+          "titre": "Déplacements",
+          "description": "Les déplacements professionnels de vos collaborateurs sont tous les déplacements autres que les déplacements domicile-travail, effectués dans le cadre du travail. Ceux-ci incluent par exemple les déplacements pour se rendre à des congrès, conventions, festivals, prévisionnages, etc.",
+          "question": "Décrivez les déplacements professionnels de vos collaborateurs",
+          "unité": "kgCO2e"
+        },
+        "déplacement type": {
+          "nombre participants": {
+            "question": "Nombre de participants"
+          },
+          "nombre occurences": {
+            "question": "Nombre d'occurrences"
+          },
+          "nombre de nuitées": {
+            "question": "Nombre de nuitées",
+            "unité": "nuitée"
+          },
+          "transport": {
+            "distance": {
+              "question": "Distance \"aller-retour\"",
+              "unité": "km"
+            },
+            "moyen de transport": {
+              "question": "Moyen de transport"
+            }
+          },
+          "type hébergement": {
+            "question": "Type d'hébergement"
+          }
+        }
+      },
+      "bâtiment": {
+        "construction": {
+          "année de construction": {
+            "question": "Quand le bâtiment a-t-il été construit ?"
+          },
+          "surface": {
+            "question": "Quelle est la surface plancher du cinéma ? (La somme des surfaces des différents niveaux)",
+            "unité": "m2"
+          }
+        },
+        "rénovation": {
+          "type": {
+            "titre": "Rénovation",
+            "question": "Parmi les rénovations suivantes, lesquelles avez-vous réalisées durant les dix dernières années ?"
+          },
+          "empreinte travaux": {
+            "montant": {
+              "question": "Dans le cas d'une rénovation durant ces 10 dernières années, quel est le montant des dépenses liées à ces travaux de rénovation ?",
+              "unité": "€"
+            }
+          },
+          "empreinte extension": {
+            "surface": {
+              "question": "Dans le cas d'un agrandissement durant ces 10 dernières années, quelle est la surface supplémentaire ajoutée ?",
+              "unité": "m2"
+            }
+          }
+        },
+        "autre activité": {
+          "surface": {
+            "question": "Quelle est la surface totale du bâtiment (cinéma inclus) ?",
+            "unité": "m2"
+          }
+        },
+        "est partagé": {
+          "question": "Le bâtiment est-il partagé avec une autre activité ?"
+        },
+        "parking": {
+          "nombre de places": {
+            "question": "Si oui, de combien de places ?",
+            "unité": "place"
+          }
+        },
+        "parking présent": {
+          "question": "Le cinéma dispose-t-il d’un parking ?"
+        }
+      },
+      "activités de bureau": {
+        "petites fournitures": {
+          "montant": {
+            "question": "Quel montant avez-vous dépensé en petites fournitures de bureau ? (Exemples: crayon, cartouche d’encre, papier hors programme, cahier, etc.)",
+            "unité": "€"
+          }
+        },
+        "services": {
+          "montant": {
+            "description": "Les services incluent par exemple les dépenses de ménage, sécurité, comptabilité, frais bancaires, etc. Vous pouvez utiliser une valeur par défaut pour cette réponse (25286€) qui est issue des Bilans Carbone® qui ont étés réalisés sur plusieurs cinémas français. Si vous détenez une information plus précise pour votre cinéma, nous vous invitons à l'utiliser plutôt que la valeur par défaut.",
+            "question": "Quel montant avez-vous dépensé en services ?",
+            "unité": "€"
+          }
+        },
+        "informatique": {
+          "titre": "Informatique",
+          "description": "Si l'équipement concerné est acheté, merci de ne pas remplir le champ \"Durée de location\". Si l'équipement concerné est loué de manière ponctuelle, merci de ne pas remplir le champ \"Date d'achat\". Si vous louez un équipement pour de longues durées ou de manière continue, nous vous recommandons de le considérer comme acheté (à la date de la première année de location).",
+          "question": "Pour chacun de ces équipements informatiques, veuillez indiquer leur nombre et leur date d'achat ou durée de location",
+          "unité": "kgCO2e",
+          "équipement": {
+            "titre": "Type dd'équipement informatique",
+            "question": "Type d'équipement informatique"
+          },
+          "appareil": {
+            "nb appareils": {
+              "question": "Nombre d'appareils"
+            },
+            "année achat": {
+              "question": "Année d'achat des appareils"
+            },
+            "durée location": {
+              "question": "Durée de location des appareils (jours à l'année)",
+              "unité": "jour"
+            }
+          },
+          "ordinateurs fixes": {
+            "nombre": {
+              "question": "Nombre d'ordinateurs fixes"
+            },
+            "durée location": {
+              "question": "Durée de location des ordinateurs fixes (jours à l'année)",
+              "unité": "jour"
+            },
+            "année achat": {
+              "question": "Année d'achat des ordinateurs fixes"
+            }
+          },
+          "ordinateurs portables": {
+            "nombre": {
+              "question": "Nombre d'ordinateurs portables"
+            },
+            "durée location": {
+              "question": "Durée de location des ordinateurs portables (jours à l'année)",
+              "unité": "jour"
+            },
+            "année achat": {
+              "question": "Année d'achat des ordinateurs portables"
+            }
+          },
+          "photocopieurs": {
+            "nombre": {
+              "question": "Nombre de photocopieurs"
+            },
+            "durée location": {
+              "question": "Durée de location des photocopieurs (jours à l'année)",
+              "unité": "jour"
+            },
+            "année achat": {
+              "question": "Année d'achat des photocopieurs"
+            }
+          },
+          "imprimantes": {
+            "nombre": {
+              "question": "Nombre d'imprimantes"
+            },
+            "durée location": {
+              "question": "Durée de location des imprimantes (jours à l'année)",
+              "unité": "jour"
+            },
+            "année achat": {
+              "question": "Année d'achat des imprimantes"
+            }
+          },
+          "téléphones fixes": {
+            "nombre": {
+              "question": "Nombre de téléphones fixes"
+            },
+            "durée location": {
+              "question": "Durée de location des téléphones fixes (jours à l'année)",
+              "unité": "jour"
+            },
+            "année achat": {
+              "question": "Année d'achat des téléphones fixes"
+            }
+          },
+          "téléphones portables": {
+            "nombre": {
+              "question": "Nombre de téléphones portables"
+            },
+            "durée location": {
+              "question": "Durée de location des téléphones portables (jours à l'année)",
+              "unité": "jour"
+            },
+            "année achat": {
+              "question": "Année d'achat des téléphones portables"
+            }
+          },
+          "tablettes": {
+            "nombre": {
+              "question": "Nombre de tablettes"
+            },
+            "durée location": {
+              "question": "Durée de location des tablettes (jours à l'année)",
+              "unité": "jour"
+            },
+            "année achat": {
+              "question": "Année d'achat des tablettes"
+            }
+          }
+        }
+      }
+    },
+    "déchets": {
+      "ordinaires": {
+        "ordures ménagères": {
+          "nombre bennes": {
+            "question": "Nombre de bennes",
+            "unité": "benne/ramassage"
+          },
+          "taille benne": {
+            "description": "Capacité d'une benne à ordures ménagères.",
+            "question": "Taille de la benne",
+            "unité": "l/benne"
+          },
+          "fréquence ramassage": {
+            "description": "Fréquence de ramassage des ordures ménagères par semaine.",
+            "question": "Fréquence de ramassage",
+            "unité": "ramassage/semaine"
+          }
+        },
+        "emballages et papier": {
+          "nombre bennes": {
+            "question": "Nombre de bennes",
+            "unité": "benne/ramassage"
+          },
+          "taille benne": {
+            "description": "Capacité d'une benne à ordures ménagères.",
+            "question": "Taille de la benne",
+            "unité": "l/benne"
+          },
+          "fréquence ramassage": {
+            "description": "Fréquence de ramassage des ordures ménagères par semaine.",
+            "question": "Fréquence de ramassage",
+            "unité": "ramassage/semaine"
+          }
+        },
+        "biodéchets": {
+          "nombre bennes": {
+            "question": "Nombre de bennes",
+            "unité": "benne/ramassage"
+          },
+          "taille benne": {
+            "description": "Capacité d'une benne à ordures ménagères.",
+            "question": "Taille de la benne",
+            "unité": "l/benne"
+          },
+          "fréquence ramassage": {
+            "description": "Fréquence de ramassage des ordures ménagères par semaine.",
+            "question": "Fréquence de ramassage",
+            "unité": "ramassage/semaine"
+          }
+        },
+        "verre": {
+          "nombre bennes": {
+            "question": "Nombre de bennes",
+            "unité": "benne/ramassage"
+          },
+          "taille benne": {
+            "description": "Capacité d'une benne à ordures ménagères.",
+            "question": "Taille de la benne",
+            "unité": "l/benne"
+          },
+          "fréquence ramassage": {
+            "description": "Fréquence de ramassage des ordures ménagères par semaine.",
+            "question": "Fréquence de ramassage",
+            "unité": "ramassage/semaine"
+          }
+        }
+      },
+      "exceptionnels": {
+        "lampe xenon": {
+          "nombre": {
+            "titre": "Nombre de lampes",
+            "question": "Quelle quantité de lampes Xenon avez vous jeté cette année ?",
+            "unité": "unité"
+          }
+        },
+        "matériel technique": {
+          "quantité": {
+            "question": "Quelle quantité de matériel technique avez vous jeté cette année ?",
+            "unité": "kg"
+          }
+        }
+      }
+    },
+    "confiseries et boissons": {
+      "électroménager": {
+        "titre": "Électroménager",
+        "description": "Si l'équipement concerné est acheté, merci de ne pas remplir le champ \"Durée de location\". Si l'équipement concerné est loué de manière ponctuelle, merci de ne pas remplir le champ \"Date d'achat\". Si vous louez un équipement pour de longues durées ou de manière continue, nous vous recommandons de le considérer comme acheté (à la date de la première année de location).",
+        "question": "Pour les différents équipements informatiques utilisés, veuillez indiquer leur nombre et leur date d'achat ou durée de location :",
+        "unité": "kgCO2e",
+        "appareil": {
+          "nb appareils": {
+            "question": "Nombre d'appareils"
+          },
+          "année achat": {
+            "question": "Année d'achat des appareils"
+          },
+          "durée location": {
+            "question": "Durée de location des appareils (jours à l'année)",
+            "unité": "jour"
+          }
+        },
+        "réfrigérateurs": {
+          "nombre": {
+            "question": "Nombre de réfrigérateurs",
+            "unité": "unité"
+          },
+          "durée location": {
+            "question": "Durée de location des réfrigérateurs (jours à l'année)",
+            "unité": "jour"
+          },
+          "année achat": {
+            "question": "Année d'achat des réfrigérateurs"
+          }
+        },
+        "congélateurs": {
+          "nombre": {
+            "question": "Nombre de congélateurs",
+            "unité": "unité"
+          },
+          "durée location": {
+            "question": "Durée de location des congélateurs (jours à l'année)",
+            "unité": "jour"
+          },
+          "année achat": {
+            "question": "Année d'achat des congélateurs"
+          }
+        },
+        "warmers": {
+          "nombre": {
+            "question": "Nombre de warmers",
+            "unité": "unité"
+          },
+          "durée location": {
+            "question": "Durée de location des warmers (jours à l'année)",
+            "unité": "jour"
+          },
+          "année achat": {
+            "question": "Année d'achat des warmers"
+          }
+        },
+        "distributeurs": {
+          "nombre": {
+            "question": "Nombre de distributeurs snack et boissons",
+            "unité": "unité"
+          },
+          "durée location": {
+            "question": "Durée de location des distributeurs snack et boissons (jours à l'année)",
+            "unité": "jour"
+          },
+          "année achat": {
+            "question": "Année d'achat des distributeurs snack et boissons"
+          }
+        }
+      },
+      "fret": {
+        "distance": {
+          "question": "Quelle est la distance entre votre cinéma et votre principal fournisseur ?",
+          "unité": "km"
+        }
+      },
+      "achats": {
+        "vente sur place": {
+          "titre": "Vente sur place",
+          "question": "Vendez-vous des boissons et des confiseries ?"
+        },
+        "achat type": {
+          "question": "Selon vous, en moyenne, un spectateur achète :"
+        }
+      }
+    },
+    "billetterie et communication": {
+      "matériel distributeurs": {
+        "affiches": {
+          "titre": "Affiches",
+          "question": "Quelle quantité de matériel distributeurs recevez-vous en moyenne par semaine ?",
+          "unité": "kgCO2e",
+          "affiches 120x160": {
+            "nombre": {
+              "question": "Quantité",
+              "unité": "unité/semaine"
+            }
+          },
+          "affiches 40x60": {
+            "nombre": {
+              "question": "Quantité",
+              "unité": "unité/semaine"
+            }
+          }
+        },
+        "PLV": {
+          "titre": "PLV",
+          "question": "Quelle quantité de matériel distributeurs recevez-vous en moyenne par mois ?",
+          "unité": "kgCO2e",
+          "PLV comptoir": {
+            "nombre": {
+              "question": "Quantité",
+              "unité": "unité/mois"
+            }
+          },
+          "PLV grand format": {
+            "nombre": {
+              "question": "Quantité",
+              "unité": "unité/mois"
+            }
+          }
+        }
+      },
+      "matériel cinéma": {
+        "production": {
+          "titre": "Production cinéma",
+          "question": "Quelle quantité de matériel produisez-vous chaque mois ?",
+          "unité": "kgCO2e",
+          "programme": {
+            "nombre": {
+              "question": "Quantité",
+              "unité": "unité/mois"
+            }
+          },
+          "affiches": {
+            "nombre": {
+              "question": "Quantité",
+              "unité": "unité/mois"
+            }
+          },
+          "flyers": {
+            "nombre": {
+              "question": "Quantité",
+              "unité": "unité/mois"
+            }
+          }
+        }
+      },
+      "communication digitale": {
+        "newsletters": {
+          "nombre": {
+            "question": "Combien de newsletters ont été envoyées cette annnée ?",
+            "unité": "newsletter/personne"
+          },
+          "destinataires": {
+            "question": "En moyenne, à combien de personnes sont adressées ces newsletters ?",
+            "unité": "personne"
+          }
+        },
+        "affichage dynamique": {
+          "nombre": {
+            "question": "Combien de caissons d’affichage dynamique sont présents dans le cinéma ?",
+            "unité": "unité"
+          }
+        },
+        "écrans": {
+          "nombre": {
+            "question": "Combien d’écrans se trouvent dans les espaces de circulation ?",
+            "unité": "unité"
+          }
+        },
+        "affichage extérieur": {
+          "surface": {
+            "question": "Si le cinéma dispose d'un affichage extérieur, quelle est sa surface ?",
+            "unité": "m2"
+          }
+        }
+      },
+      "caisses et bornes": {
+        "caisses libre service": {
+          "nombre": {
+            "question": "De combien de bornes de caisse libre-service dispose le cinéma ?",
+            "unité": "unité"
+          }
+        },
+        "caisse classique": {
+          "nombre": {
+            "question": "De combien de systèmes de caisse classique dispose le cinéma ?",
+            "unité": "unité"
+          }
+        }
+      }
+    }
   }
 }
