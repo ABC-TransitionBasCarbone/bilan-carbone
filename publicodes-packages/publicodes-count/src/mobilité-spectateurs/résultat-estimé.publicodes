@@ -22,10 +22,7 @@ mobilité spectateurs . résultat estimé . empreinte:
 mobilité spectateurs . résultat estimé . proximité spectateurs:
   applicable si: mobilité spectateurs . précision = "estimation"
   question: |
-    Vos spectateurs sont-ils majoritairement des habitants "locaux", c'est à
-    dire résidant à l'année dans les environs ou attirez-vous aussi une part
-    non négligeable de spectateurs de passage dans la région (touristes
-    notamment)
+    Vos spectateurs sont-ils majoritairement des habitants "locaux", c'est à dire résidant à l'année dans les environs ou attirez-vous aussi une part non négligeable de spectateurs de passage dans la région (touristes notamment)
   une possibilité:
     - zone très touristique
     - zone moyennement touristique
