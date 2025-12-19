@@ -29,8 +29,8 @@ salles et cabines . matériel technique . films . dématérialisés:
           - 4 Go * nombre films dématérialisés
       unité: Go
       note: |
-        On considère que la durée moyenne d'un film est de 2h, une heure de film pèse 90 Go.
-        On associe également 1,5 annonces par film de 2 Go 2 films publicitaires par film de 2 Go à chaque fois.
+        On considère que la durée moyenne d'un film est de 2h, et qu'une heure de film pèse 90 Go. 
+        On associe également 1,5 annonces et 2 films publicitaires par film (1 annonce = 2 Go).
     poids film:
       valeur: 90 Go/h
     FE:

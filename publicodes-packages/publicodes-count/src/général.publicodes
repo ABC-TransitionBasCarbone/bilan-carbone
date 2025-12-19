@@ -21,7 +21,9 @@ général . nombre de films programmés:
 général . distance depuis paris:
   question: Distance depuis Paris
   unité: km
+  note: Donnée récupérée depuis les informations du CNC.
 
 général . écrans:
   question: Nombre d'écrans / salles
   unité: écran
+  note: Donnée récupérée depuis les informations du CNC.
