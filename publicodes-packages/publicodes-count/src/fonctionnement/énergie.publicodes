@@ -154,7 +154,7 @@ fonctionnement . énergie . groupes électrogènes:
       - équipement groupes électrogènes != "aucun"
   formule:
     somme:
-      - fabrication / (amortissement / 1 an)
+      - fabrication / amortissement
       - consommation * FE
   par défaut: 0
   unité: kgCO2e
@@ -170,7 +170,7 @@ fonctionnement . énergie . groupes électrogènes:
 
     amortissement:
       valeur: 5
-      unité: an
+      note: Amortissement annuel sous-entendu.
 
     consommation:
       applicable si: équipement groupes électrogènes = "utilisation régulière"
