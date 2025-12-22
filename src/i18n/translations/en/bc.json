@@ -1837,7 +1837,7 @@
       "myClient": "My client",
       "update": "Update my information",
       "updateClient": "Update my client",
-      "renew": "Your {year} licence is about to expire. Remember to renew it to continue using the services in {nextYear}. Without renewal, you will have access in read-only mode.",
+      "renew": "Your {year} licence is about to expire. Remember to renew it to continue using the services in {nextYear}. Without a renewed membership, only read access remains available for your studies on BC+.",
       "renewLink": "Renew"
     },
     "delete": {
@@ -2055,6 +2055,7 @@
     "videoExplanation": "Please note that the assessment associated with this 'condensed' training course does not contain any traps if you watch the training carefully. Successful completion will allow you to obtain a free updated training certificate. However, an insufficient result would mean that you will have to reintegrate into the full training course (new Initiation module if you were trained M1 on V8, or new Professional module if you were trained M2 on V8).",
     "evaluation": "Knowledge assessment",
     "evaluationEnded": "You already answered the questionnaire",
+    "evaluationBlocked": "Access to the refresher training course is no longer available for your membership.",
     "evaluationSubtitle": "Please complete the knowledge assessment questionnaire to receive your v9 training attestation. It is limited in time and you will have <error>at most {time} minutes to answer the question. You can only answer the questionnaire once. Once you've started, you can't go back.</error>",
     "acceptation": "I've understood that I'll only be able to launch the questionnaire once and that I'll have a limited amount of time to answer the question. I'm in the right conditions to start my test",
     "answer": "Answer the questionnaire",

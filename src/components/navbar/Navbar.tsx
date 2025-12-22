@@ -37,7 +37,7 @@ const Navbar = ({ children, user, environment }: Props) => {
 
   useEffect(() => {
     const getFormationAccess = async () => {
-      const hasAccess = await hasAccessToFormation(user.environment)
+      const hasAccess = await hasAccessToFormation(user)
       setHasFormation(hasAccess)
     }
 
