@@ -1,0 +1,15 @@
+commun:
+  titre: Règles communes
+
+#TODO: should be imported from package "publicodes-commun"
+commun . nombre de mois par an:
+  titre: Nombre de mois par an
+  description: Nombre de mois pris en compte pour le calcul annuel.
+  valeur: 12
+  unité: mois
+
+commun . nombre de semaines par an:
+  titre: Nombre de semaines par an
+  description: Nombre de semaines prises en compte pour le calcul annuel.
+  valeur: 52
+  unité: semaine
