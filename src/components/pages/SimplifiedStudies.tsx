@@ -1,13 +1,13 @@
 'use server'
 
-import { OrganizationWithSites } from '@/db/account'
+import { OrganizationVersion } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import StudiesContainer from '../study/StudiesContainer'
 
 interface Props {
-  organizationVersion: OrganizationWithSites
+  organizationVersion: { id: OrganizationVersion['id']; organization: { name: string } }
   user: UserSession
 }
 

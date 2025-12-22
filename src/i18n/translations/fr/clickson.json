@@ -42,6 +42,8 @@
     "create": "Ajouter une empreinte",
     "myStudies": "Mes empreintes carbone",
     "createFirstStudy": "Créer ma première empreinte",
+    "createFirstSimplifiedStudy": "Créer ma première Empreinte",
+    "firstSimplifiedStudyMessage": "Il est temps de vous lancer ! Nous vous invitons à créer votre première Empreinte.",
     "see": "Voir mon empreinte",
     "selectSite": "Avant de remplir les données, choisissez un établissement",
     "lastStudyTitle": "Dernière empreinte en date",

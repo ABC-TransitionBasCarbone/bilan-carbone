@@ -24,10 +24,10 @@ interface Props {
   user: UserSession
   organizationVersionId?: string
   isCR?: boolean
-  simplified: boolean
+  simplified?: boolean
 }
 
-const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified }: Props) => {
+const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified = false }: Props) => {
   const t = await getTranslations('study')
 
   const studies = organizationVersionId
@@ -69,7 +69,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
       {!!mainStudies.length && (
         <Studies
           studies={mainStudies}
-          canAddStudy={canCreateAStudy(user) && !isCR && activeLicence}
+          canAddStudy={canCreateAStudy(user, simplified) && !isCR && activeLicence}
           creationUrl={creationUrl}
           user={user}
           collaborations={!organizationVersionId && isCR}
@@ -77,7 +77,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
       )}
       {!!collaborations.length && <Studies studies={collaborations} canAddStudy={false} user={user} collaborations />}
     </>
-  ) : canCreateAStudy(user) && !isCR ? (
+  ) : canCreateAStudy(user, simplified) && !isCR ? (
     <MUIBox component="section" className="mt1">
       <div className="justify-center">
         <Box className={classNames(styles.firstStudyCard, 'flex-col align-center')}>

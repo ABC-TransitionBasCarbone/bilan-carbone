@@ -42,6 +42,8 @@
     "create": "Add a Footprint",
     "myStudies": "My Carbon Footprints",
     "createFirstStudy": "Create My First Footprint",
+    "createFirstSimplifiedStudy": "Create",
+    "firstSimplifiedStudyMessage": "It's time to get started! We invite you to create your first simplified carbon footprint.",
     "see": "View My Footprint",
     "selectSite": "Before filling in data, please select an establishment",
     "lastStudyTitle": "Latest Footprint",

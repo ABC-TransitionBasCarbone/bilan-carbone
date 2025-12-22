@@ -42,6 +42,8 @@
     "create": "Dodaj otisak",
     "myStudies": "Moji ugljični otisci",
     "createFirstStudy": "Kreiraj svoj prvi otisak",
+    "createFirstSimplifiedStudy": "Create",
+    "firstSimplifiedStudyMessage": "It's time to get started! We invite you to create your first simplified carbon footprint.",
     "see": "Pogledaj svoj otisak",
     "selectSite": "Prije unosa podataka odaberite ustanovu",
     "lastStudyTitle": "Zadnji otisak",

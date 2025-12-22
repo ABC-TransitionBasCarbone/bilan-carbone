@@ -42,6 +42,8 @@
     "create": "Adaugă o amprentă",
     "myStudies": "Amprentele mele de carbon",
     "createFirstStudy": "Creează prima mea amprentă",
+    "createFirstSimplifiedStudy": "Create",
+    "firstSimplifiedStudyMessage": "It's time to get started! We invite you to create your first simplified carbon footprint.",
     "see": "Vezi amprenta mea",
     "selectSite": "Înainte de a completa datele, te rugăm să selectezi o instituție",
     "lastStudyTitle": "Ultima amprentă",

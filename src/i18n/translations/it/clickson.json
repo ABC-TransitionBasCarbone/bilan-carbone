@@ -44,6 +44,8 @@
     "createFirstStudy": "Crea la mia prima impronta",
     "see": "Visualizza la mia impronta",
     "selectSite": "Prima di compilare i dati, seleziona un istituto",
+    "createFirstSimplifiedStudy": "Creare",
+    "firstSimplifiedStudyMessage": "È ora di iniziare! Ti invitiamo a creare la tua prima impronta di carbonio semplificata.",
     "lastStudyTitle": "Ultima impronta",
     "navigation": {
       "framing": "Dati generali",

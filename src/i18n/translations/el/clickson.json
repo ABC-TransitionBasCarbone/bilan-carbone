@@ -42,6 +42,8 @@
     "create": "Προσθήκη αποτυπώματος",
     "myStudies": "Τα ανθρακικά αποτυπώματά μου",
     "createFirstStudy": "Δημιουργία πρώτου αποτυπώματος",
+    "createFirstSimplifiedStudy": "Create",
+    "firstSimplifiedStudyMessage": "It's time to get started! We invite you to create your first simplified carbon footprint.",
     "see": "Δείτε το αποτύπωμά μου",
     "selectSite": "Πριν εισάγετε δεδομένα, επιλέξτε ένα ίδρυμα",
     "lastStudyTitle": "Τελευταίο αποτύπωμα",

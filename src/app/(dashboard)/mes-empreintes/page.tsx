@@ -1,7 +1,7 @@
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import NotFound from '@/components/pages/NotFound'
 import SimplifiedStudies from '@/components/pages/SimplifiedStudies'
-import { getAccountOrganizationVersions } from '@/db/account'
+import { getOrganizationVersionById } from '@/db/organization'
 import { hasAccessToSimplifiedStudies } from '@/services/permissions/environment'
 
 const MyFootprints = async ({ user }: UserSessionProps) => {
@@ -9,8 +9,13 @@ const MyFootprints = async ({ user }: UserSessionProps) => {
     return <NotFound />
   }
 
-  const organizationVersions = await getAccountOrganizationVersions(user.accountId)
-  return <SimplifiedStudies organizationVersion={organizationVersions[0]} user={user} />
+  const organizationVersion = await getOrganizationVersionById(user.organizationVersionId)
+
+  if (!organizationVersion) {
+    return <NotFound />
+  }
+
+  return <SimplifiedStudies organizationVersion={organizationVersion} user={user} />
 }
 
 export default withAuth(MyFootprints)
