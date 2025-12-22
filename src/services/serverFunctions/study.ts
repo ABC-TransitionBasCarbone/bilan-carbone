@@ -54,6 +54,8 @@ import {
   getOrganizationStudiesBeforeDate,
   getStudiesSitesFromIds,
   getStudyById,
+  getStudyCommentsCountFromOrganizationVersionId,
+  getStudyCommentsFromOrganizationVersionId,
   getStudyCommentsWithStudyIdAndSubPost,
   getStudyNameById,
   getStudySites,
@@ -2348,6 +2350,29 @@ export const getStudyComments = async (studyId: string, subPost?: SubPost | null
     }
 
     return await getStudyCommentsWithStudyIdAndSubPost(studyId, subPost)
+  })
+
+export const getPendingStudyCommentsCountFromOrganizationVersionId = async (organizationVersionId: string | null) =>
+  withServerResponse('getPendingStudyCommentsCount', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    if (!organizationVersionId) {
+      return 0
+    }
+
+    return await getStudyCommentsCountFromOrganizationVersionId(organizationVersionId, CommentStatus.PENDING)
+  })
+
+export const getPendingStudyCommentsFromOrganizationVersionId = async (organizationVersionId: string) =>
+  withServerResponse('getPendingStudyComments', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return await getStudyCommentsFromOrganizationVersionId(organizationVersionId, CommentStatus.PENDING)
   })
 
 export const approveStudyComment = async (commentId: string, studyId: string) =>

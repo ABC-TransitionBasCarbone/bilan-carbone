@@ -4,7 +4,7 @@ import TopLeftNavBar from '@/components/navbar/TopLeftNavBar'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import CutTopLeftNavBar from '@/environments/cut/navbar/TopLeftNavBar'
 import { signOutEnv } from '@/services/auth'
-import { isTilt } from '@/services/permissions/environment'
+import { hasAccessToStudyComments, isTilt } from '@/services/permissions/environment'
 import { hasAccessToMethodology, hasAccessToSettings } from '@/services/permissions/environmentAdvanced'
 import { hasAccessToFormation } from '@/services/permissions/formations'
 import { getUserActiveAccounts } from '@/services/serverFunctions/user'
@@ -22,6 +22,7 @@ import { useTranslations } from 'next-intl'
 import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { Logo } from '../base/Logo'
 import NavbarButton from './NavbarButton'
+import NavbarComments from './NavbarComments'
 import NavbarLink from './NavbarLink'
 
 interface Props {
@@ -100,6 +101,11 @@ const Navbar = ({ children, user, environment }: Props) => {
                 {hasAccessToMethodology(user.environment, user.level) && (
                   <NavbarButton aria-label={t('methodology')} rel="noreferrer noopener" href={methodologyLink}>
                     <MenuBookIcon />
+                  </NavbarButton>
+                )}
+                {hasAccessToStudyComments(user.environment) && user.organizationVersionId && (
+                  <NavbarButton title={t('comments')} aria-label={t('comments')} href={'/gestion-commentaires'}>
+                    <NavbarComments organizationVersionId={user.organizationVersionId} />
                   </NavbarButton>
                 )}
                 <NavbarButton title={t('logout')} aria-label={t('logout')} onClick={() => signOutEnv(user.environment)}>

@@ -11,6 +11,7 @@ import { isAdminOnOrga } from '@/utils/organization'
 import { getUserRoleOnPublicStudy } from '@/utils/study'
 import { isAdmin } from '@/utils/user'
 import {
+  CommentStatus,
   ControlMode,
   DuplicableStudy,
   Environment,
@@ -966,6 +967,42 @@ export const getStudyCommentsWithStudyIdAndSubPost = async (studyId: string, sub
   })
 }
 export type FullStudyComments = Exclude<AsyncReturnType<typeof getStudyCommentsWithStudyIdAndSubPost>, null>
+
+export const getStudyCommentsFromOrganizationVersionId = async (
+  organizationVersionId: string,
+  status: CommentStatus,
+) => {
+  return prismaClient.studyComment.findMany({
+    where: { study: { organizationVersionId: organizationVersionId }, status },
+    include: {
+      author: {
+        select: {
+          id: true,
+          user: {
+            select: {
+              email: true,
+            },
+          },
+        },
+      },
+    },
+    orderBy: { createdAt: 'asc' },
+  })
+}
+
+export type OrganizationVersionWithStudyComments = Exclude<
+  AsyncReturnType<typeof getStudyCommentsFromOrganizationVersionId>,
+  null
+>
+
+export const getStudyCommentsCountFromOrganizationVersionId = async (
+  organizationVersionId: string,
+  status: CommentStatus,
+) => {
+  return prismaClient.studyComment.count({
+    where: { study: { organizationVersionId: organizationVersionId }, status },
+  })
+}
 
 export const updateStudyComment = async (id: string, data: Prisma.StudyCommentUpdateInput) =>
   prismaClient.studyComment.update({
