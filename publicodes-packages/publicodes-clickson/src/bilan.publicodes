@@ -1,6 +1,5 @@
 bilan:
   formule:
     somme:
-      - todo
-
-todo:
+      - alimentation
+  unité: kgCO2e

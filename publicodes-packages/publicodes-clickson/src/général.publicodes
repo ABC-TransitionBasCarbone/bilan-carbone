@@ -1,0 +1,6 @@
+général:
+
+général . nombre étudiant:
+  question: Nombre d'étudiants
+  par défaut: 300
+  unité: étudiant

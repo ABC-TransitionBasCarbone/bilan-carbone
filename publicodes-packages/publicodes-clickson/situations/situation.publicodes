@@ -1,2 +1,3 @@
 template:
-#   contexte:
+  contexte:
+    général . nombre étudiant: 1000
