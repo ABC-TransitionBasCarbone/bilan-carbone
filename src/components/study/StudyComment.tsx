@@ -2,12 +2,17 @@
 
 import { FullStudyComments } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { createStudyCommentCommand, getStudyComments } from '@/services/serverFunctions/study'
+import {
+  approveStudyComment,
+  createStudyCommentCommand,
+  declineStudyComment,
+  getStudyComments,
+} from '@/services/serverFunctions/study'
 import CheckIcon from '@mui/icons-material/Check'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Card, CardContent, TextField } from '@mui/material'
 import { CommentStatus, SubPost } from '@prisma/client'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Button from '../base/Button'
 
 interface Props {
@@ -15,36 +20,28 @@ interface Props {
   subPost?: SubPost | null
   withField?: boolean
   canValidate?: boolean
-  onApprove?: (commentId: string) => void
-  onDelete?: (commentId: string) => void
 }
 
-const StudyCommentComponent = ({
-  studyId,
-  subPost = null,
-  withField = true,
-  canValidate = false,
-  onApprove,
-  onDelete,
-}: Props) => {
+const StudyCommentComponent = ({ studyId, subPost = null, withField = true, canValidate = false }: Props) => {
   const [newComment, setNewComment] = useState('')
   const [loading, setLoading] = useState(false)
   const [comments, setComments] = useState<FullStudyComments | null>(null)
 
   const { callServerFunction } = useServerFunction()
 
+  const fetchComments = useCallback(async () => {
+    const res = await getStudyComments(studyId, subPost)
+    if (res.success) {
+      const filteredComments = res.data.filter((comment) => comment.status === CommentStatus.VALIDATED || canValidate)
+      setComments(filteredComments)
+    }
+  }, [canValidate, studyId, subPost])
+
   useEffect(() => {
-    const fetchStudies = async () => {
-      const res = await getStudyComments(studyId, subPost)
-      if (res.success) {
-        const filteredComments = res.data.filter((comment) => comment.status === CommentStatus.VALIDATED || canValidate)
-        setComments(filteredComments)
-      }
-    }
     if (comments === null) {
-      fetchStudies()
+      fetchComments()
     }
-  }, [studyId, comments, canValidate])
+  }, [comments, fetchComments])
 
   const handleSubmit = async () => {
     if (newComment) {
@@ -52,10 +49,33 @@ const StudyCommentComponent = ({
       await callServerFunction(() => createStudyCommentCommand(studyId, newComment, CommentStatus.PENDING, subPost), {
         onSuccess: () => {
           setNewComment('')
+          fetchComments()
         },
       })
       setLoading(false)
     }
+  }
+
+  const handleApprove = async (commentId: string) => {
+    if (!canValidate) {
+      return
+    }
+    await callServerFunction(() => approveStudyComment(commentId, studyId), {
+      onSuccess: () => {
+        fetchComments()
+      },
+    })
+  }
+
+  const handleDecline = async (commentId: string) => {
+    if (!canValidate) {
+      return
+    }
+    await callServerFunction(() => declineStudyComment(commentId, studyId), {
+      onSuccess: () => {
+        fetchComments()
+      },
+    })
   }
 
   return (
@@ -100,11 +120,11 @@ const StudyCommentComponent = ({
 
                 {canValidate && comment.status === 'PENDING' && (
                   <div className="flex justify-end gap-2">
-                    <Button color="error" className="mr1" onClick={() => onDelete?.(comment.id)}>
+                    <Button color="error" className="mr1" onClick={() => handleDecline(comment.id)}>
                       <DeleteIcon className="mr-2" />
                       Supprimer
                     </Button>
-                    <Button color="success" onClick={() => onApprove?.(comment.id)}>
+                    <Button color="success" onClick={() => handleApprove(comment.id)}>
                       <CheckIcon className="mr-2" />
                       Approuver
                     </Button>
