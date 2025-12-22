@@ -47,6 +47,8 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
   const isOrgaHomePage = !organizationVersionId && !isCR
   const mainStudies = isOrgaHomePage ? orgaStudies : studies
   const collaborations = isOrgaHomePage ? otherStudies : []
+  const advancedStudies = mainStudies.filter((study) => !study.simplified)
+  const simplifiedStudies = mainStudies.filter((study) => study.simplified)
 
   let creationUrl = organizationVersionId ? `/organisations/${organizationVersionId}/etudes/creer` : '/etudes/creer'
 
@@ -66,13 +68,23 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
           <ResultsContainerForUser user={user} mainStudyOrganizationVersionId={mainStudyOrganizationVersionId} />
         </Suspense>
       )}
-      {!!mainStudies.length && (
+      {!!advancedStudies.length && (
         <Studies
-          studies={mainStudies}
-          canAddStudy={canCreateAStudy(user, simplified) && !isCR && activeLicence}
+          studies={advancedStudies}
+          canAddStudy={canCreateAStudy(user) && !isCR && activeLicence}
           creationUrl={creationUrl}
           user={user}
           collaborations={!organizationVersionId && isCR}
+        />
+      )}
+      {!!simplifiedStudies.length && (
+        <Studies
+          studies={simplifiedStudies}
+          canAddStudy={canCreateAStudy(user, true) && !isCR && activeLicence}
+          creationUrl={creationUrl}
+          user={user}
+          collaborations={!organizationVersionId && isCR}
+          simplified
         />
       )}
       {!!collaborations.length && <Studies studies={collaborations} canAddStudy={false} user={user} collaborations />}

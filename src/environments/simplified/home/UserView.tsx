@@ -1,7 +1,7 @@
 'use client'
 
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import { hasAccessToSimplifiedStudies, hasHomeAlert } from '@/services/permissions/environment'
+import { hasHomeAlert, isTilt } from '@/services/permissions/environment'
 import { hasAccessToStudies } from '@/services/permissions/environmentAdvanced'
 import Groups2OutlinedIcon from '@mui/icons-material/Groups2Outlined'
 import { Alert, Box, BoxProps, styled, Typography } from '@mui/material'
@@ -82,7 +82,7 @@ const UserView = ({ account }: Props) => {
               title={navigation('footprints.title')}
               message={navigation('footprints.message')}
             />
-          ) : hasAccessToSimplifiedStudies(account.environment) ? (
+          ) : isTilt(account.environment) ? (
             <LinkCard
               href="/mes-empreintes"
               icon={<DiagramOutlinedIcon className={styles.icon} />}

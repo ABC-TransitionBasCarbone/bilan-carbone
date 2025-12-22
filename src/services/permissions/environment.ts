@@ -69,4 +69,6 @@ export const hasAccessToStudySiteAddAndSelection = (environment: Environment) =>
 
 export const hasAccessToStudyHomePage = isAdvanced
 
-export const hasAccessToSimplifiedStudies = isSimplified || isTilt
+export const hasAccessToSimplifiedStudies = (env: Environment) => {
+  return isSimplified(env) || isTilt(env)
+}

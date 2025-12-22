@@ -1,5 +1,5 @@
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
-import withStudyDuplication, { StudyDuplicationProps } from '@/components/hoc/withStudyDuplication'
+import withStudyCreation, { StudyCreationProps } from '@/components/hoc/withStudyCreation'
 import NewStudyPage from '@/components/pages/NewStudy'
 import NotFound from '@/components/pages/NotFound'
 import { getAccountOrganizationVersions } from '@/db/account'
@@ -14,13 +14,13 @@ interface Props {
   params: Promise<{ id: string }>
 }
 
-const NewStudyInOrganization = async (props: Props & UserSessionProps & StudyDuplicationProps) => {
+const NewStudyInOrganization = async (props: Props & UserSessionProps & StudyCreationProps) => {
   const [params] = await Promise.all([props.params])
 
   const id = params.id
-  const { user } = props
+  const { user, isSimplified } = props
 
-  if (!id || !canCreateAStudy(user)) {
+  if (!id || !canCreateAStudy(user, isSimplified)) {
     return <NotFound />
   }
 
@@ -53,4 +53,4 @@ const NewStudyInOrganization = async (props: Props & UserSessionProps & StudyDup
   )
 }
 
-export default withAuth(withStudyDuplication(NewStudyInOrganization))
+export default withAuth(withStudyCreation(NewStudyInOrganization))

@@ -70,7 +70,10 @@
       "info": "Vous pouvez télécharger un exemple de matrice de risque et de dépendance pour vous aider à construire la vôtre. Par la suite, si vous souhaitez soumettre votre propre cartographie des flux pour aider d'autres associations en leur fournissant une base de travail, merci de la soumettre à <mail>methodologie@abc-transitionbascarbone.fr</mail>"
     },
     "firstSimplifiedStudyMessage": "Il est temps de vous lancer ! Nous vous invitons à créer votre première Empreinte.",
-    "createFirstSimplifiedStudy": "Créer ma première Empreinte"
+    "createFirstSimplifiedStudy": "Créer ma première Empreinte",
+    "createSimplified": "Créer une Empreinte",
+    "mySimplifiedStudies": "Mes Empreintes",
+    "seeSimplified": "Voir mon Empreinte"
   },
   "emissionFactors": {
     "post": {
@@ -122,5 +125,8 @@
         "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux"
       }
     }
+  },
+  "navigation": {
+    "footprints": "Mes empreintes"
   }
 }
