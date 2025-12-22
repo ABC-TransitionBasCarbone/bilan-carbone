@@ -85,10 +85,8 @@
         }
       }
     },
-    "results": {
-      "intensities": {
-        "studentEmployee": "estudiantes y empleados"
-      }
+    "export": {
+      "export": "Exportar mi huella"
     }
   },
   "emissionFactors": {

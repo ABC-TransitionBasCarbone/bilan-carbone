@@ -6,6 +6,8 @@ import { FormSelect } from '@/components/form/Select'
 import SiteDeselectionWarningModal from '@/components/modals/SiteDeselectionWarningModal'
 import { OrganizationWithSites } from '@/db/account'
 import DynamicSites from '@/environments/core/organization/DynamicSites'
+import { NOT_AUTHORIZED } from '@/services/permissions/check'
+import { hasAccessToStudySiteAddAndSelection } from '@/services/permissions/environment'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
 import { FormHelperText, MenuItem } from '@mui/material'
@@ -57,6 +59,18 @@ const SelectOrganization = ({
       form.setValue('sites', [])
       setOriginalSelectedSites([])
     } else {
+      if (!hasAccessToStudySiteAddAndSelection(user.environment)) {
+        if (sites.length > 0) {
+          form.setValue(
+            'sites',
+            sites.map((site, index) => ({ ...site, selected: index === 0 })),
+          )
+          selectOrganizationVersion(organizationVersion)
+        } else {
+          throw new Error(NOT_AUTHORIZED)
+        }
+        return
+      }
       const newSites = organizationVersion.organization.sites.map((site) => site.id)
       if (JSON.stringify(form.getValues('sites').map((site) => site.id)) !== JSON.stringify(newSites)) {
         form.setValue(

@@ -63,3 +63,8 @@ export const hasAccessToAllLocales = isClickson
 export const hasAccessToSimplifiedEmissionAnalysis = isClickson
 
 export const hasAccessToStudyCreation = isSimplified
+
+export const hasAccessToStudySiteAddAndSelection = (environment: Environment) =>
+  ([BC, TILT, CUT] as Environment[]).includes(environment)
+
+export const hasAccessToStudyHomePage = isAdvanced

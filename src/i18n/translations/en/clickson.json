@@ -85,10 +85,8 @@
         }
       }
     },
-    "results": {
-      "intensities": {
-        "studentEmployee": "students & employees"
-      }
+    "export": {
+      "export": "Export my footprint"
     }
   },
   "emissionFactors": {

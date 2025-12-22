@@ -247,11 +247,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources }: 
               />
             </div>
             <Box className="flex justify-start mt1">
-              <LinkButton
-                color="primary"
-                variant="contained"
-                href={`/etudes/${study.id}/comptabilisation/saisie-des-donnees`}
-              >
+              <LinkButton variant="contained" href={`/etudes/${study.id}/comptabilisation/saisie-des-donnees`}>
                 {t('goToDataEntry')}
               </LinkButton>
             </Box>

@@ -85,10 +85,8 @@
         }
       }
     },
-    "results": {
-      "intensities": {
-        "studentEmployee": "étudiants & salariés"
-      }
+    "export": {
+      "export": "Exporter mon empreinte"
     }
   },
   "emissionFactors": {
