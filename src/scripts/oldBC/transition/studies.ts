@@ -820,8 +820,12 @@ export const uploadStudies = async (
                   nonExistingFEs[studyEmissionSource.emissionFactorOldBCId].push(studyEmissionSource.name)
                 }
                 console.log(
-                  `Impossible de retrouver le facteur d'émission de oldBCId: ${studyEmissionSource.emissionFactorOldBCId} - On crée la source sans FE`,
+                  `Source d'émission ignorée - Impossible de retrouver le facteur d'émission de oldBCId: ${studyEmissionSource.emissionFactorOldBCId}`,
                 )
+                // console.log(
+                //   `Impossible de retrouver le facteur d'émission de oldBCId: ${studyEmissionSource.emissionFactorOldBCId} - On crée la source sans FE. study ${existingStudy.id}, source d'émission : ${studyEmissionSource.name}`,
+                // )
+                return null
               }
             }
 
