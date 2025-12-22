@@ -53,6 +53,7 @@ import {
   getOrganizationStudiesBeforeDate,
   getStudiesSitesFromIds,
   getStudyById,
+  getStudyCommentsWithStudyIdAndSubPost,
   getStudyNameById,
   getStudySites,
   getStudyTemplate,
@@ -2310,7 +2311,7 @@ export const createStudyCommentCommand = async (
   studyId: string,
   comment: string,
   status?: CommentStatus,
-  subPost?: SubPost,
+  subPost?: SubPost | null,
 ) =>
   withServerResponse('createStudyComment', async () => {
     const session = await dbActualizedAuth()
@@ -2332,7 +2333,7 @@ export const createStudyCommentCommand = async (
     })
   })
 
-export const getStudyComments = async (studyId: string) =>
+export const getStudyComments = async (studyId: string, subPost?: SubPost | null) =>
   withServerResponse('getStudyComments', async () => {
     const session = await dbActualizedAuth()
     if (!session || !session.user) {
@@ -2344,20 +2345,5 @@ export const getStudyComments = async (studyId: string) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    return prismaClient.studyComment.findMany({
-      where: { studyId },
-      include: {
-        author: {
-          select: {
-            id: true,
-            user: {
-              select: {
-                email: true,
-              },
-            },
-          },
-        },
-      },
-      orderBy: { createdAt: 'asc' },
-    })
+    return await getStudyCommentsWithStudyIdAndSubPost(studyId, subPost)
   })

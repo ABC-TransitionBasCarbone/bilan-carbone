@@ -946,3 +946,23 @@ export const getOrganizationStudiesBeforeDate = (organizationVersionId: string, 
 
 export const createStudyComment = async (data: Prisma.StudyCommentCreateInput) =>
   prismaClient.studyComment.create({ data })
+
+export const getStudyCommentsWithStudyIdAndSubPost = async (studyId: string, subPost?: SubPost | null) => {
+  return prismaClient.studyComment.findMany({
+    where: { studyId, subPost },
+    include: {
+      author: {
+        select: {
+          id: true,
+          user: {
+            select: {
+              email: true,
+            },
+          },
+        },
+      },
+    },
+    orderBy: { createdAt: 'asc' },
+  })
+}
+export type FullStudyComments = Exclude<AsyncReturnType<typeof getStudyCommentsWithStudyIdAndSubPost>, null>
