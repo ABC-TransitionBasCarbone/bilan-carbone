@@ -72,6 +72,7 @@
     "createFirstSimplifiedStudy": "Create",
     "firstSimplifiedStudyMessage": "It's time to get started! We invite you to create your first simplified carbon footprint.",
     "mySimplifiedStudies": "My footprints",
+    "createSimplified": "Create a footprint",
     "seeSimplified": "See my footprint"
   },
   "emissionFactors": {
