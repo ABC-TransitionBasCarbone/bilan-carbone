@@ -57,6 +57,9 @@ export const OrganizationVersionWithOrganizationSelect = {
           beneficiaryNumber: true,
           establishmentId: true,
           establishmentYear: true,
+          studentNumber: true,
+          superficy: true,
+          address: true,
           cncId: true,
           cnc: {
             select: {
