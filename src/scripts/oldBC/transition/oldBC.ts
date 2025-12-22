@@ -82,5 +82,5 @@ export const uploadOldBCInformations = async (
       }
     },
     { timeout: 100000 },
-  ) // 10 seconds timeout for the transaction
+  ) // 100 seconds timeout for the transaction
 }
