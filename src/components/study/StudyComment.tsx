@@ -1,20 +1,19 @@
 'use client'
 
+import { FullStudyComments } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { createStudyCommentCommand } from '@/services/serverFunctions/study'
+import { createStudyCommentCommand, getStudyComments } from '@/services/serverFunctions/study'
 import CheckIcon from '@mui/icons-material/Check'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Card, CardContent, TextField } from '@mui/material'
-import { CommentStatus, StudyComment } from '@prisma/client'
-import { useMemo, useState } from 'react'
+import { CommentStatus, SubPost } from '@prisma/client'
+import { useEffect, useState } from 'react'
 import Button from '../base/Button'
-
-const fakeComments: StudyComment[] = []
 
 interface Props {
   studyId: string
+  subPost?: SubPost | null
   withField?: boolean
-  comments?: StudyComment[]
   canValidate?: boolean
   onApprove?: (commentId: string) => void
   onDelete?: (commentId: string) => void
@@ -22,26 +21,35 @@ interface Props {
 
 const StudyCommentComponent = ({
   studyId,
+  subPost = null,
   withField = true,
-  comments = fakeComments,
   canValidate = false,
   onApprove,
   onDelete,
 }: Props) => {
   const [newComment, setNewComment] = useState('')
   const [loading, setLoading] = useState(false)
+  const [comments, setComments] = useState<FullStudyComments | null>(null)
 
   const { callServerFunction } = useServerFunction()
 
-  const filteredComments = useMemo(
-    () => comments.filter((comment) => comment.status === CommentStatus.VALIDATED || canValidate),
-    [comments, canValidate],
-  )
+  useEffect(() => {
+    const fetchStudies = async () => {
+      const res = await getStudyComments(studyId, subPost)
+      if (res.success) {
+        const filteredComments = res.data.filter((comment) => comment.status === CommentStatus.VALIDATED || canValidate)
+        setComments(filteredComments)
+      }
+    }
+    if (comments === null) {
+      fetchStudies()
+    }
+  }, [studyId, comments, canValidate])
 
   const handleSubmit = async () => {
     if (newComment) {
       setLoading(true)
-      await callServerFunction(() => createStudyCommentCommand(studyId, newComment), {
+      await callServerFunction(() => createStudyCommentCommand(studyId, newComment, CommentStatus.PENDING, subPost), {
         onSuccess: () => {
           setNewComment('')
         },
@@ -75,33 +83,36 @@ const StudyCommentComponent = ({
       )}
 
       <div className="my1">
-        {filteredComments.map((comment) => (
-          <div key={comment.id}>
-            <Card>
-              <CardContent className="whitespace-pre-wrap">
-                <div className="flex justify-between">
-                  <span className="font-medium">{comment.author.name}</span>
-                  <span className="text-xs text-muted-foreground">{new Date(comment.createdAt).toLocaleString()}</span>
-                  <span>{comment.status}</span>
-                </div>
-                <div>{comment.comment}</div>
-              </CardContent>
+        {comments &&
+          comments.map((comment) => (
+            <div key={comment.id}>
+              <Card>
+                <CardContent className="whitespace-pre-wrap">
+                  <div className="flex justify-between">
+                    <span className="font-medium">{comment.author.user.email}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {new Date(comment.createdAt).toLocaleString()}
+                    </span>
+                    <span>{comment.status}</span>
+                  </div>
+                  <div>{comment.comment}</div>
+                </CardContent>
 
-              {canValidate && comment.status === 'PENDING' && (
-                <div className="flex justify-end gap-2">
-                  <Button color="error" className="mr1" onClick={() => onDelete?.(comment.id)}>
-                    <DeleteIcon className="mr-2" />
-                    Supprimer
-                  </Button>
-                  <Button color="success" onClick={() => onApprove?.(comment.id)}>
-                    <CheckIcon className="mr-2" />
-                    Approuver
-                  </Button>
-                </div>
-              )}
-            </Card>
-          </div>
-        ))}
+                {canValidate && comment.status === 'PENDING' && (
+                  <div className="flex justify-end gap-2">
+                    <Button color="error" className="mr1" onClick={() => onDelete?.(comment.id)}>
+                      <DeleteIcon className="mr-2" />
+                      Supprimer
+                    </Button>
+                    <Button color="success" onClick={() => onApprove?.(comment.id)}>
+                      <CheckIcon className="mr-2" />
+                      Approuver
+                    </Button>
+                  </div>
+                )}
+              </Card>
+            </div>
+          ))}
       </div>
     </div>
   )
