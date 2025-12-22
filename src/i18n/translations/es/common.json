@@ -37,5 +37,8 @@
     "validation": {
       "email": "Por favor, ingrese un correo electrónico"
     }
+  },
+  "navigation": {
+    "comments": "Comentarios"
   }
 }
