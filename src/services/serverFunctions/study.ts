@@ -41,6 +41,7 @@ import {
   createContributorOnStudy,
   createEmissionSourceTags,
   createStudy,
+  createStudyComment,
   createStudyEmissionSource,
   createUserOnStudy,
   deleteAccountOnStudy,
@@ -87,6 +88,7 @@ import { isAdmin } from '@/utils/user'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import {
   Account,
+  CommentStatus,
   ControlMode,
   Document,
   DocumentCategory,
@@ -2302,4 +2304,60 @@ export const getStudyPreviousOccurrences = async (studyId: string) =>
     }
 
     return getOrganizationStudiesBeforeDate(study.organizationVersionId, study.startDate)
+  })
+
+export const createStudyCommentCommand = async (
+  studyId: string,
+  comment: string,
+  status?: CommentStatus,
+  subPost?: SubPost,
+) =>
+  withServerResponse('createStudyComment', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return await createStudyComment({
+      comment,
+      status: status || CommentStatus.PENDING,
+      author: { connect: { id: session.user.accountId } },
+      study: { connect: { id: studyId } },
+      subPost,
+    })
+  })
+
+export const getStudyComments = async (studyId: string) =>
+  withServerResponse('getStudyComments', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return prismaClient.studyComment.findMany({
+      where: { studyId },
+      include: {
+        author: {
+          select: {
+            id: true,
+            user: {
+              select: {
+                email: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: { createdAt: 'asc' },
+    })
   })

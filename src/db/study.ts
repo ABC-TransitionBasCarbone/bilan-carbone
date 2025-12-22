@@ -943,3 +943,6 @@ export const getOrganizationStudiesBeforeDate = (organizationVersionId: string, 
     select: { id: true, name: true },
     where: { organizationVersionId, startDate: { lt: date } },
   })
+
+export const createStudyComment = async (data: Prisma.StudyCommentCreateInput) =>
+  prismaClient.studyComment.create({ data })

@@ -261,7 +261,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
           </>
         )}
 
-        <StudyComment canValidate={true} />
+        <StudyComment studyId={study.id} canValidate={true} />
         {showSiteDataWarning && pendingSiteChanges && (
           <SiteDataChangeWarningModal
             isOpen={showSiteDataWarning}

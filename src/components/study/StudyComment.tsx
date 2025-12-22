@@ -1,68 +1,53 @@
 'use client'
 
+import { useServerFunction } from '@/hooks/useServerFunction'
+import { createStudyCommentCommand } from '@/services/serverFunctions/study'
 import CheckIcon from '@mui/icons-material/Check'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Card, CardContent, TextField } from '@mui/material'
-import { CommentStatus } from '@prisma/client'
+import { CommentStatus, StudyComment } from '@prisma/client'
 import { useMemo, useState } from 'react'
 import Button from '../base/Button'
 
-const fakeComments: StudyComment[] = [
-  {
-    id: '1',
-    comment: 'Ceci est un commentaire en attente de validation.',
-    status: 'PENDING',
-    createdAt: '2024-06-01T10:00:00Z',
-    author: { id: '1', name: 'name1' },
-  },
-  {
-    id: '2',
-    comment: 'Ceci est un commentaire approuvé.',
-    status: 'VALIDATED',
-    createdAt: '2024-06-02T11:30:00Z',
-    author: { id: '2', name: 'name2' },
-  },
-]
-
-interface StudyComment {
-  id: string
-  comment: string
-  status: CommentStatus
-  createdAt: string
-  author: {
-    id: string
-    name: string
-  }
-}
+const fakeComments: StudyComment[] = []
 
 interface Props {
+  studyId: string
   withField?: boolean
   comments?: StudyComment[]
   canValidate?: boolean
-  onCreate?: (comment: string) => void
   onApprove?: (commentId: string) => void
   onDelete?: (commentId: string) => void
 }
 
-const StudyComment = ({
+const StudyCommentComponent = ({
+  studyId,
   withField = true,
   comments = fakeComments,
   canValidate = false,
-  onCreate,
   onApprove,
   onDelete,
 }: Props) => {
   const [newComment, setNewComment] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  const { callServerFunction } = useServerFunction()
 
   const filteredComments = useMemo(
     () => comments.filter((comment) => comment.status === CommentStatus.VALIDATED || canValidate),
     [comments, canValidate],
   )
 
-  const handleSubmit = () => {
-    if (!newComment.trim()) return
-    onCreate?.(newComment)
-    setNewComment('')
+  const handleSubmit = async () => {
+    if (newComment) {
+      setLoading(true)
+      await callServerFunction(() => createStudyCommentCommand(studyId, newComment), {
+        onSuccess: () => {
+          setNewComment('')
+        },
+      })
+      setLoading(false)
+    }
   }
 
   return (
@@ -78,10 +63,13 @@ const StudyComment = ({
               placeholder="Votre commentaire…"
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
+              disabled={loading}
             />
           </CardContent>
           <div className="flex justify-end">
-            <Button onClick={handleSubmit}>Envoyer</Button>
+            <Button disabled={loading} onClick={handleSubmit}>
+              Envoyer
+            </Button>
           </div>
         </Card>
       )}
@@ -119,4 +107,4 @@ const StudyComment = ({
   )
 }
 
-export default StudyComment
+export default StudyCommentComponent
