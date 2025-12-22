@@ -47,6 +47,7 @@ import {
   deleteAccountOnStudy,
   deleteContributor,
   deleteStudy,
+  deleteStudyComment,
   deleteStudyExport,
   downgradeStudyUserRoles,
   FullStudy,
@@ -60,6 +61,7 @@ import {
   getUsersOnStudy,
   updateEmissionSourceEmissionFactor,
   updateStudy,
+  updateStudyComment,
   updateStudyEmissionFactorVersion,
   updateStudyOpeningHours,
   updateStudySiteData,
@@ -2346,4 +2348,44 @@ export const getStudyComments = async (studyId: string, subPost?: SubPost | null
     }
 
     return await getStudyCommentsWithStudyIdAndSubPost(studyId, subPost)
+  })
+
+export const approveStudyComment = async (commentId: string, studyId: string) =>
+  withServerResponse('approveStudyComment', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const userRole = getAccountRoleOnStudy(session.user, study)
+
+    if (!userRole || userRole === StudyRole.Reader) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return await updateStudyComment(commentId, { status: CommentStatus.VALIDATED })
+  })
+
+export const declineStudyComment = async (commentId: string, studyId: string) =>
+  withServerResponse('declineStudyComment', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const userRole = getAccountRoleOnStudy(session.user, study)
+
+    if (!userRole || userRole === StudyRole.Reader) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return await deleteStudyComment(commentId)
   })

@@ -966,3 +966,14 @@ export const getStudyCommentsWithStudyIdAndSubPost = async (studyId: string, sub
   })
 }
 export type FullStudyComments = Exclude<AsyncReturnType<typeof getStudyCommentsWithStudyIdAndSubPost>, null>
+
+export const updateStudyComment = async (id: string, data: Prisma.StudyCommentUpdateInput) =>
+  prismaClient.studyComment.update({
+    where: { id },
+    data,
+  })
+
+export const deleteStudyComment = async (id: string) =>
+  prismaClient.studyComment.delete({
+    where: { id },
+  })
