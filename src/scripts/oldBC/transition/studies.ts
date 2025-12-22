@@ -770,12 +770,16 @@ export const uploadStudies = async (
 
             const existingSiteId = existingSiteIds.get(studyEmissionSource.siteOldBCId)
             if (!existingSiteId) {
-              console.warn(`2 - Impossible de retrouver le site de oldBCId: ${studyEmissionSource.siteOldBCId}`)
+              console.warn(
+                `Source d'émission ignorée - Impossible de retrouver le site de oldBCId: ${studyEmissionSource.siteOldBCId}`,
+              )
               return null
             }
             const studySites = existingStudySites.get(existingStudy.id)
             if (!studySites) {
-              console.warn(`Impossible de retrouver les studySites de studyId: ${existingStudy.id} ${studyOldBCId}`)
+              console.warn(
+                `Source d'émission ignorée - Impossible de retrouver les studySites de studyId: ${existingStudy.id} ${studyOldBCId}`,
+              )
               return null
             }
             const studySite = studySites.find((studySite) => studySite.siteId === existingSiteId)
@@ -816,9 +820,8 @@ export const uploadStudies = async (
                   nonExistingFEs[studyEmissionSource.emissionFactorOldBCId].push(studyEmissionSource.name)
                 }
                 console.log(
-                  `Impossible de retrouver le facteur d'émission de oldBCId: ${studyEmissionSource.emissionFactorOldBCId}`,
+                  `Impossible de retrouver le facteur d'émission de oldBCId: ${studyEmissionSource.emissionFactorOldBCId} - On crée la source sans FE`,
                 )
-                return null
               }
             }
 
@@ -837,9 +840,9 @@ export const uploadStudies = async (
             const canBeValidated = !!(
               emissionFactorId &&
               studyEmissionSource.value &&
-              (!exports.length || caracterisation) &&
+              // (!exports.length || caracterisation) &&
               (!isCAS(studyEmissionSource, emissionFactor) || studyEmissionSource.emissionFactorConsoValue) &&
-              !hasDeprecationPeriod(studyEmissionSource.subPost || studyEmissionSource.deprecation)
+              (!hasDeprecationPeriod(studyEmissionSource.subPost) || studyEmissionSource.deprecation)
             )
 
             return {
