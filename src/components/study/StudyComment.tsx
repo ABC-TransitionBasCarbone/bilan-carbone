@@ -109,11 +109,11 @@ const StudyCommentComponent = ({ studyId, subPost = null, withField = true, canV
               <Card>
                 <CardContent className="whitespace-pre-wrap">
                   <div className="flex justify-between">
-                    <span className="font-medium">{comment.author.user.email}</span>
+                    {canValidate && <span className="font-medium">{comment.author.user.email}</span>}
                     <span className="text-xs text-muted-foreground">
                       {new Date(comment.createdAt).toLocaleString()}
                     </span>
-                    <span>{comment.status}</span>
+                    {canValidate && <span>{comment.status}</span>}
                   </div>
                   <div>{comment.comment}</div>
                 </CardContent>
