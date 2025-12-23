@@ -8,7 +8,7 @@ import StudyContributorsTable from '@/components/study/rights/StudyContributorsT
 import StudyVersions from '@/components/study/rights/StudyVersions'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
 import useStudySite from '@/components/study/site/useStudySite'
-import StudyComment from '@/components/study/StudyComment'
+import StudyComments from '@/components/study/StudyComments'
 import { SiteDependentField } from '@/constants/emissionFactorMap'
 import type { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
@@ -261,7 +261,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
           </>
         )}
 
-        <StudyComment studyId={study.id} canValidate={!editionDisabled} />
+        <StudyComments studyId={study.id} canValidate={!editionDisabled} />
         {showSiteDataWarning && pendingSiteChanges && (
           <SiteDataChangeWarningModal
             isOpen={showSiteDataWarning}

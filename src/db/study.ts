@@ -967,6 +967,7 @@ export const getStudyCommentsWithStudyIdAndSubPost = async (studyId: string, sub
   })
 }
 export type FullStudyComments = Exclude<AsyncReturnType<typeof getStudyCommentsWithStudyIdAndSubPost>, null>
+export type FullStudyComment = FullStudyComments[0]
 
 export const getStudyCommentsFromOrganizationVersionId = async (
   organizationVersionId: string,
@@ -983,6 +984,11 @@ export const getStudyCommentsFromOrganizationVersionId = async (
               email: true,
             },
           },
+        },
+      },
+      study: {
+        select: {
+          name: true,
         },
       },
     },
