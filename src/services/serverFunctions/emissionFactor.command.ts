@@ -16,23 +16,19 @@ const GESschema = z.object({
   otherGES: z.nan().or(z.number().min(0)).optional(),
 })
 
-export const SubPostsCommandValidation = (allowEmptySubPosts: boolean) =>
-  z.object({
-    subPosts: z.record(z.string(), z.array(z.enum(SubPost))).superRefine((val, ctx) => {
-      const entries = Object.entries(val)
+export const SubPostsCommandValidation = z.object({
+  subPosts: z.record(z.string(), z.array(z.enum(SubPost)).min(1)).superRefine((val, ctx) => {
+    if (Object.keys(val).length === 0) {
+      ctx.addIssue(setCustomIssue(['subPosts'], 'subPostRequired'))
+      return
+    }
+    if (Object.values(val).some((arr) => arr.length === 0)) {
+      ctx.addIssue(setCustomIssue(['subPosts'], 'subPostRequired'))
+    }
+  }),
+})
 
-      if (!allowEmptySubPosts && entries.length === 0) {
-        ctx.addIssue(setCustomIssue(['subPosts'], 'subPostRequired'))
-        return
-      }
-
-      if (entries.some(([, arr]) => arr.length === 0)) {
-        ctx.addIssue(setCustomIssue(['subPosts'], 'subPostRequired'))
-      }
-    }),
-  })
-
-export type SubPostsCommand = z.infer<ReturnType<typeof SubPostsCommandValidation>>
+export type SubPostsCommand = z.infer<typeof SubPostsCommandValidation>
 
 export const EmissionFactorCommandValidation = z.intersection(
   GESschema,
@@ -65,7 +61,7 @@ export const EmissionFactorCommandValidation = z.intersection(
         )
         .max(maxParts),
     }),
-    SubPostsCommandValidation(false),
+    SubPostsCommandValidation,
   ),
 )
 

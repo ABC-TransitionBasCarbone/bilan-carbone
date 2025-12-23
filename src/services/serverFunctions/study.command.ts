@@ -166,16 +166,15 @@ export const NewStudyRightCommandValidation = z.object({
 
 export type NewStudyRightCommand = z.infer<typeof NewStudyRightCommandValidation>
 
-export const NewStudyContributorCommandValidation = (allowEmptySubPosts: boolean) =>
-  z.intersection(
-    z.object({
-      studyId: z.string(),
-      email: z.email().trim(),
-    }),
-    SubPostsCommandValidation(allowEmptySubPosts),
-  )
+export const NewStudyContributorCommandValidation = z.intersection(
+  z.object({
+    studyId: z.string(),
+    email: z.email().trim(),
+  }),
+  SubPostsCommandValidation,
+)
 
-export type NewStudyContributorCommand = z.infer<ReturnType<typeof NewStudyContributorCommandValidation>>
+export type NewStudyContributorCommand = z.infer<typeof NewStudyContributorCommandValidation>
 
 export const DeleteCommandValidation = z.object({
   id: z.string(),
