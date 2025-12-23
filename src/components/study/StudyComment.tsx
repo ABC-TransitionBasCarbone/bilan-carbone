@@ -4,10 +4,12 @@ import { FullStudyComment } from '@/db/study'
 import CheckIcon from '@mui/icons-material/Check'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
-import { Card, CardContent, TextField } from '@mui/material'
+import { TextField } from '@mui/material'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import Button from '../base/Button'
+import styles from './StudyComment.module.css'
 
 interface Props {
   canValidate?: boolean
@@ -34,56 +36,57 @@ const StudyCommentComponent = ({ canValidate = false, comment, onApprove, onDecl
   }
 
   return (
-    <div>
-      <Card>
-        <CardContent className="whitespace-pre-wrap">
-          <div className="flex justify-between">
-            {canValidate && <span className="font-medium">{comment.author.user.email}</span>}
-            <span className="text-xs text-muted-foreground">{new Date(comment.createdAt).toLocaleString()}</span>
-            {canValidate && <span>{tComments(comment.status.toLowerCase())}</span>}
-          </div>
-          {isEditing ? (
-            <TextField
-              fullWidth
-              multiline
-              minRows={2}
-              placeholder={tComments('yourComment')}
-              value={editedComment}
-              onChange={(e) => setEditedComment(e.target.value)}
-            />
-          ) : (
-            <div>{comment.comment}</div>
-          )}
-        </CardContent>
-
+    <div className={classNames(styles.comment, 'p1')}>
+      <div>
+        <div className="flex justify-between mb1 bold">
+          {canValidate && <span>{comment.author.user.email}</span>}
+          <span>{new Date(comment.createdAt).toLocaleString()}</span>
+          {canValidate && <span>{tComments(comment.status.toLowerCase())}</span>}
+        </div>
         {isEditing ? (
-          <div className="flex justify-end gap-2 p-4">
-            <Button onClick={handleCancel}>{tCommon('cancel')}</Button>
-            <Button color="success" onClick={handleSaveEdit}>
-              {tCommon('confirm')}
-            </Button>
-          </div>
+          <TextField
+            fullWidth
+            multiline
+            minRows={2}
+            placeholder={tComments('yourComment')}
+            value={editedComment}
+            onChange={(e) => setEditedComment(e.target.value)}
+            className="mb1"
+          />
         ) : (
-          canValidate && (
-            <div className="flex justify-end gap-2 p-4">
-              <Button onClick={() => setIsEditing(true)}>
-                <EditIcon className="mr-2" />
-                {tCommon('edit')}
-              </Button>
-              <Button color="error" onClick={() => onDecline(comment.id)}>
-                <DeleteIcon className="mr-2" />
-                {tCommon('delete')}
-              </Button>
-              {comment.status === 'PENDING' && (
-                <Button color="success" onClick={() => onApprove(comment.id)}>
-                  <CheckIcon className="mr-2" />
-                  {tCommon('approve')}
-                </Button>
-              )}
-            </div>
-          )
+          <div>{comment.comment}</div>
         )}
-      </Card>
+      </div>
+
+      {isEditing ? (
+        <div className="flex justify-end p-4">
+          <Button className="mr-2" onClick={handleCancel}>
+            {tCommon('cancel')}
+          </Button>
+          <Button color="success" onClick={handleSaveEdit}>
+            {tCommon('confirm')}
+          </Button>
+        </div>
+      ) : (
+        canValidate && (
+          <div className="flex justify-end p-4">
+            <Button className="mr-2" onClick={() => setIsEditing(true)}>
+              <EditIcon className="mr-2" />
+              {tCommon('edit')}
+            </Button>
+            <Button color="error" className="mr-2" onClick={() => onDecline(comment.id)}>
+              <DeleteIcon className="mr-2" />
+              {tCommon('delete')}
+            </Button>
+            {comment.status === 'PENDING' && (
+              <Button color="success" onClick={() => onApprove(comment.id)}>
+                <CheckIcon className="mr-2" />
+                {tCommon('approve')}
+              </Button>
+            )}
+          </div>
+        )
+      )}
     </div>
   )
 }
