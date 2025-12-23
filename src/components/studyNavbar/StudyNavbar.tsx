@@ -3,7 +3,6 @@
 import StudyName from '@/components/study/card/StudyName'
 import { getStudyNavbarMenu } from '@/constants/navbar'
 import { FullStudy } from '@/db/study'
-import { hasRoleOnStudy } from '@/services/permissions/environment'
 import MenuIcon from '@mui/icons-material/Menu'
 import MenuOpenIcon from '@mui/icons-material/MenuOpen'
 import { Drawer, Fab } from '@mui/material'
@@ -29,7 +28,6 @@ const StudyNavbar = ({ environment, studyId, study, isTransitionPlanActive, hasO
   const pathName = usePathname()
 
   const t = useTranslations('study.navigation')
-  const tRole = useTranslations('study.role')
   const [open, setOpen] = useState<boolean>(true)
 
   const { title, sections } = getStudyNavbarMenu(
@@ -67,17 +65,8 @@ const StudyNavbar = ({ environment, studyId, study, isTransitionPlanActive, hasO
         transitionDuration={0}
       >
         <div className={styles.drawerContent}>
-          <div className={styles.titleContainer}>
-            <Link className={styles.studyTitle} href={title.href}>
-              <StudyName name={title.label} />
-            </Link>
-            {hasRoleOnStudy(environment) && userRole && (
-              <div className="justify-center">
-                <div className={classNames(styles.role, styles[userRole.toLowerCase()], 'text-center')}>
-                  {tRole(userRole)}
-                </div>
-              </div>
-            )}
+          <div className={classNames(styles.titleContainer, { [styles.hasRole]: userRole })}>
+            <StudyName studyId={studyId} name={title.label} role={userRole} />
           </div>
 
           <div className={styles.menuContainer}>

@@ -30,6 +30,7 @@ interface Props {
 }
 
 const NewStudyForm = ({ user, accounts, form, duplicateStudyId, sourceStudy }: Props) => {
+  const tLabel = useTranslations('common.label')
   const t = useTranslations('study.new')
   const tGlossary = useTranslations('study.new.glossary')
   const [glossary, setGlossary] = useState('')
@@ -71,14 +72,14 @@ const NewStudyForm = ({ user, accounts, form, duplicateStudyId, sourceStudy }: P
               control={form.control}
               translation={t}
               name="realizationStartDate"
-              label={t('start')}
+              label={tLabel('start')}
               clearable
             />
             <FormDatePicker
               control={form.control}
               translation={t}
               name="realizationEndDate"
-              label={t('end')}
+              label={tLabel('end')}
               data-testid="new-study-realizationEndDate"
               clearable
             />

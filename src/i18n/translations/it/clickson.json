@@ -11,20 +11,19 @@
   "home": {
     "navigation": {
       "collaborators": {
-        "title": "Team pilota:",
+        "title": "Team pilota",
         "message": "Trova qui l'elenco degli insegnanti, del personale amministrativo e degli studenti autorizzati a modificare i dati dell'istituto"
       },
       "footprints": {
-        "title": "Le mie impronte:",
+        "title": "Le mie impronte",
         "message": "Crea qui la tua prima impronta. Potrai poi visualizzare le tue impronte o crearne di nuove in qualsiasi momento."
       },
       "sites": {
-        "title": "I miei istituti:",
+        "title": "I miei istituti",
         "message": "Trova qui l'elenco degli istituti collegati al tuo account"
       }
     },
     "title": "Calcolare la tua impronta di carbonio semplificata ti permetterà di:",
-    "start": "Avviare",
     "alert": {
       "info": "Il calcolatore Clickson ti permette di stimare l'impatto climatico della tua attività. È soprattutto uno strumento di sensibilizzazione. Non è un approccio di transizione a basse emissioni di carbonio ma un'impronta semplificata — secondo la <link>Guida alla comunicazione sulla contabilità del carbonio</link> — focalizzata sulle principali fonti di emissione legate all'attività degli istituti."
     },

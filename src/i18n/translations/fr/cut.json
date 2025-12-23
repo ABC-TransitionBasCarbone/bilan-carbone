@@ -21,20 +21,19 @@
   "home": {
     "navigation": {
       "collaborators": {
-        "title": "Mes Collaborateur·rices :",
+        "title": "Mes Collaborateur·rices",
         "message": "Retrouvez ici la liste des personnes autorisées à intervenir sur vos différentes empreintes carbone"
       },
       "footprints": {
-        "title": "Mes Empreintes :",
+        "title": "Mes Empreintes",
         "message": "Créer votre première empreinte ici. Vous pourrez ensuite consulter vos empreintes ou en créer de nouvelles à tout moment."
       },
       "sites": {
-        "title": "Mes Cinémas :",
+        "title": "Mes Cinémas",
         "message": "Retrouvez ici la liste des établissements rattachés à votre compte"
       }
     },
     "title": "Calculer votre empreinte carbone simplifiée vous permettra de :",
-    "start": "Démarrer",
     "alert": {
       "info": "Le calculateur Count vous permet d’estimer l’impact sur le climat de votre activité. Il s’agit avant tout d’un outil de sensibilisation. Il ne s'agit pas d'une démarche de transition bas carbone mais d'une empreinte carbone simplifiée — au sens du <link>Guide de communication autour de la comptabilité carbone</link> — centrée sur les principaux postes d’émissions liés à l’activité des salles de cinéma."
     },

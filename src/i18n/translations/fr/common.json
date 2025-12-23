@@ -2,21 +2,34 @@
   "common": {
     "yes": "Oui",
     "no": "Non",
-    "edit": "Modifier",
-    "duplicate": "Dupliquer",
-    "close": "Fermer",
-    "delete": "Supprimer",
-    "cancel": "Annuler",
-    "confirm": "Confirmer",
-    "update": "Mettre à jour",
     "previous": "Précédent",
     "next": "Suivant",
+    "action": {
+      "create": "Créer",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "add": "Ajouter",
+      "duplicate": "Dupliquer",
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "confirm": "Confirmer",
+      "update": "Mettre à jour",
+      "start": "Démarrer",
+      "close": "Fermer"
+    },
+    "label": {
+      "start": "Début",
+      "end": "Fin"
+    },
     "notAuthorized": "Action non authorisée",
-    "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
+    "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
+    "typeToConfirm": "Tapez \"{name}\" pour confirmer",
+    "perPerson": "par personne",
+    "carbonIntensities": "Intensités carbone"
   },
   "signup": {
     "email": "Email",
-    "emailPlaceholder": "Email utilisée lors de votre formation",
+    "emailPlaceholder": "Email utilisé lors de votre formation",
     "emailRequired": "Veuillez entrer un email",
     "validate": "Valider",
     "Request sent": "Une demande d'activation de votre compte a été envoyé à vos collègues",

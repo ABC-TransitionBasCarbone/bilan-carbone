@@ -26,6 +26,7 @@ import Link from 'next/link'
 import styles from './AllResults.module.css'
 
 import EmissionsAnalysisClickson from '@/environments/clickson/study/results/consolidated/EmissionsAnalysisClickson'
+import { Post } from '@/services/posts'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import {
   hasAccessToSimplifiedEmissionAnalysis,
@@ -38,6 +39,8 @@ interface Props {
   validatedOnly: boolean
   chartOrder?: Record<ChartType, number>
   caUnit?: SiteCAUnit
+  showSubLevel?: boolean
+  customPostOrder?: Post[]
 }
 
 const a11yProps = (index: number) => {
@@ -67,6 +70,8 @@ const AllResults = ({
   validatedOnly,
   chartOrder = defaultChartOrder,
   caUnit,
+  showSubLevel = false,
+  customPostOrder = [],
 }: Props) => {
   const [value, setValue] = useState(0)
   const [pdfLoading, setPdfLoading] = useState(false)
@@ -227,8 +232,10 @@ const AllResults = ({
               height={400}
               showTitle={false}
               showLegend={true}
-              showLabelsOnBars={true}
+              showSubLevel={showSubLevel}
+              showLabelsOnBars={!showSubLevel}
               type="post"
+              customOrder={customPostOrder}
             />
           </TabPanel>
           <TabPanel value={value} index={chartOrder.pie}>

@@ -333,8 +333,6 @@
       "validator": "Email du ou de la validateur·rice",
       "studyDates": "Dates de l'étude",
       "realizationDates": "Date de la réalisation de l'étude",
-      "start": "Début",
-      "end": "Fin",
       "level": "Niveau de maturité du Bilan Carbone®",
       "exports": "Exports",
       "control": "Mode de contrôle",
@@ -1839,7 +1837,7 @@
       "myClient": "Mon client",
       "update": "Modifier mes informations",
       "updateClient": "Modifier mon client",
-      "renew": "Votre adhésion {year} touche à sa fin, pensez à la renouveler pour continuer à utiliser les services en {nextYear}. Sans réadhérer, vous n'aurez plus accès qu'en lecture à vos études sur le BC+.",
+      "renew": "Votre adhésion {year} touche à sa fin, pensez à la renouveler pour continuer à utiliser les services en {nextYear}. Sans adhésion à jour, seul l'accès en lecture reste disponible pour vos études sur le BC+.",
       "renewLink": "Renouveler"
     },
     "delete": {
@@ -2057,6 +2055,7 @@
     "videoExplanation": "Notez bien que l'évaluation associée à cette formation « condensée » ne comporte aucun piège si vous visionnez la formation avec attention. Sa réussite vous permettra d'obtenir gratuitement une attestation de formation mise à jour. En revanche, un résultat insuffisant impliquerait de vous réintégrer au parcours de formation intégral (nouveau module Initiation si vous étiez formé M1 sur la V8, ou nouveau module Professionnel si vous étiez formé M2 sur la V8).",
     "evaluation": "Evaluation des connaissances",
     "evaluationEnded": "Vous avez déjà répondu au questionnaire",
+    "evaluationBlocked": "L'accès à la formation de mise à jour n'est plus disponible pour votre adhésion.",
     "evaluationSubtitle": "Veuillez à présent répondre au questionnaire d'évaluation des connaissances afin de recevoir votre attestation de formation de mise à jour. <b>Ce dernier est chronométré et vous aurez au maximum {time} minutes pour répondre aux questions. Vous ne pouvez répondre au questionnaire qu'une seule fois.</b><error> Une fois lancé, impossible de revenir en arrière. Des exercices pratiques sont présents dans le questionnaire. Nous vous invitons, avant de le commencer, à ouvrir le guide en ligne ainsi que l'outil Excel Bilan Carbone® v9 (pour rappel il est disponible dans votre espace adhérent). Ceux-ci seront utiles et nécessaires pour certaines questions.</error>",
     "acceptation": "J'ai compris que je ne pourrais lancer qu'une seule fois le questionnaire et que je vais avoir un temps limité pour répondre aux questions. Je suis dans les bonnes conditions pour commencer mon test.",
     "answer": "Répondre au questionnaire",
@@ -2138,8 +2137,5 @@
     "studyYearMustBeBeforeCurrent": "L'année de l'étude doit être antérieure à l'année de l'étude actuelle",
     "studyYearMustBeAfterLinkedStudies": "Impossible de renseigner une date antérieure à celles de vos études liées sur votre plan de transition",
     "maxTwoDecimals": "Le taux de réduction doit avoir au maximum 2 décimales"
-  },
-  "common": {
-    "typeToConfirm": "Tapez \"{name}\" pour confirmer"
   }
 }

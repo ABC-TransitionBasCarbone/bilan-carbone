@@ -65,8 +65,8 @@
   --post-orange-dark: #c88938;
   --post-orange-light: #fbbc6b;
 
-  --validator-background: #ffc966;
-  --editor-background: #89d7b0;
-  --reader-background: var(--neutral-200);
-  --contributor-background: var(--grayscale-300);
+  --validator-background: #94ebbf;
+  --editor-background: #c2deff;
+  --contributor-background: #ffe591;
+  --reader-background: #e7e7e7;
 }

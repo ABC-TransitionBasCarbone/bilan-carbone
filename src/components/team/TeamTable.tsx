@@ -33,7 +33,7 @@ type DeletionErrorData = {
 
 const TeamTable = ({ user, team, crOrga }: Props) => {
   const t = useTranslations('team.table')
-  const tCommon = useTranslations('common')
+  const tAction = useTranslations('common.action')
   const tLevel = useTranslations('level')
   const tRole = useTranslations('role')
   const [displayRoles, setDisplayRoles] = useState(false)
@@ -168,7 +168,7 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
             actionType: 'button',
             ['data-testid']: 'organization-roles-cancel',
             onClick: () => setDisplayRoles(false),
-            children: tCommon('close'),
+            children: tAction('close'),
           },
         ]}
       >

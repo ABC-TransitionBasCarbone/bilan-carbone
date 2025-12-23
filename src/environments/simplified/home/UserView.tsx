@@ -2,6 +2,7 @@
 
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import { hasHomeAlert } from '@/services/permissions/environment'
+import { hasAccessToStudies } from '@/services/permissions/environmentAdvanced'
 import Groups2OutlinedIcon from '@mui/icons-material/Groups2Outlined'
 import { Alert, Box, BoxProps, styled, Typography } from '@mui/material'
 import classNames from 'classnames'
@@ -27,6 +28,8 @@ const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
 
 const UserView = ({ account }: Props) => {
   const t = useTranslations('home')
+  const tAction = useTranslations('common.action')
+
   const title = t('title')
   const navigation = useTranslations('home.navigation')
 
@@ -53,7 +56,7 @@ const UserView = ({ account }: Props) => {
             <Link href="/organisations" className={styles.startButtonLink}>
               <Box className={classNames('flex-cc px2 py1', styles.startButton)} component="button">
                 <Typography variant="h6" className={styles.startButtonText}>
-                  {t('start')}
+                  {tAction('start')}
                 </Typography>
               </Box>
             </Link>
@@ -72,12 +75,14 @@ const UserView = ({ account }: Props) => {
             title={navigation('collaborators.title')}
             message={navigation('collaborators.message')}
           />
-          <LinkCard
-            href="/organisations"
-            icon={<DiagramOutlinedIcon className={styles.icon} />}
-            title={navigation('footprints.title')}
-            message={navigation('footprints.message')}
-          />
+          {hasAccessToStudies(account.environment, account.level) && (
+            <LinkCard
+              href="/organisations"
+              icon={<DiagramOutlinedIcon className={styles.icon} />}
+              title={navigation('footprints.title')}
+              message={navigation('footprints.message')}
+            />
+          )}
         </Box>
         {hasAlert && (
           <Alert severity="info" className="mb-2">

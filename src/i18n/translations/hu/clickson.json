@@ -11,20 +11,19 @@
   "home": {
     "navigation": {
       "collaborators": {
-        "title": "Pilótacsapat:",
+        "title": "Pilótacsapat",
         "message": "Itt található a listája azoknak a tanároknak, adminisztratív dolgozóknak és diákoknak, akik jogosultak módosítani az intézmény adatait"
       },
       "footprints": {
-        "title": "Saját lábnyomaim:",
+        "title": "Saját lábnyomaim",
         "message": "Hozd létre itt az első lábnyomodat. Ezután bármikor megtekintheted vagy létrehozhatsz újakat."
       },
       "sites": {
-        "title": "Intézményeim:",
+        "title": "Intézményeim",
         "message": "Itt található a számládhoz kapcsolt intézmények listája"
       }
     },
     "title": "A saját egyszerűsített karbonlábnyomod kiszámítása lehetővé teszi, hogy:",
-    "start": "Indítás",
     "alert": {
       "info": "A Clickson kalkulátor lehetővé teszi, hogy becsüld tevékenységed klímahatását. Elsősorban tudatosság növelő eszköz. Nem alacsony szén-dioxid-kibocsátású átállási megközelítés, hanem egyszerűsített karbonlábnyom — a <link>Szén-dioxid elszámolás kommunikációs útmutatója</link> szerint —, az intézmények tevékenységéhez kapcsolódó fő kibocsátási forrásokra összpontosítva."
     },

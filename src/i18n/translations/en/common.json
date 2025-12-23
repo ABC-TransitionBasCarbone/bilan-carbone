@@ -2,17 +2,30 @@
   "common": {
     "yes": "Yes",
     "no": "No",
-    "edit": "Edit",
-    "duplicate": "Duplicate",
-    "close": "Close",
-    "delete": "Delete",
-    "cancel": "Cancel",
-    "confirm": "Confirm",
-    "update": "Update",
     "previous": "Previous",
     "next": "Next",
+    "action": {
+      "create": "Create",
+      "edit": "Edit",
+      "delete": "Delete",
+      "add": "Add",
+      "duplicate": "Duplicate",
+      "save": "Save",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "update": "Update",
+      "start": "Start",
+      "close": "Close"
+    },
+    "label": {
+      "start": "Start",
+      "end": "End"
+    },
     "notAuthorized": "Action not authorized",
-    "Not authorized": "You are not allowed to do this action"
+    "Not authorized": "You are not allowed to do this action",
+    "typeToConfirm": "Type \"{name}\" to confirm",
+    "perPerson": "per person",
+    "carbonIntensities": "Carbon intensities"
   },
   "signup": {
     "email": "Email",

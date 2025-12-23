@@ -5,6 +5,7 @@ import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import AllResultsSimplified from '@/environments/simplified/study/results/AllResults'
+import { Post } from '@/services/posts'
 import { Environment, ExportRule, SiteCAUnit } from '@prisma/client'
 
 interface Props {
@@ -35,6 +36,7 @@ const DynamicAllResults = ({ study, rules, emissionFactorsWithParts, validatedOn
         ),
         [Environment.CLICKSON]: (
           <AllResultsSimplified
+            showSubLevel={true}
             emissionFactorsWithParts={emissionFactorsWithParts}
             study={study}
             validatedOnly={validatedOnly}
@@ -44,6 +46,13 @@ const DynamicAllResults = ({ study, rules, emissionFactorsWithParts, validatedOn
               pie: 1,
               table: 2,
             }}
+            customPostOrder={[
+              Post.EnergiesClickson,
+              Post.Restauration,
+              Post.DeplacementsClickson,
+              Post.Achats,
+              Post.ImmobilisationsClickson,
+            ]}
           />
         ),
       }}

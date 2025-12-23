@@ -11,20 +11,19 @@
   "home": {
     "navigation": {
       "collaborators": {
-        "title": "Equipo Piloto:",
+        "title": "Equipo Piloto",
         "message": "Encuentre aquí la lista de profesores, personal administrativo y estudiantes autorizados a modificar los datos del establecimiento"
       },
       "footprints": {
-        "title": "Mis Huellas:",
+        "title": "Mis Huellas",
         "message": "Cree su primera huella aquí. Luego podrá ver sus huellas o crear nuevas en cualquier momento."
       },
       "sites": {
-        "title": "Mis Establecimientos:",
+        "title": "Mis Establecimientos",
         "message": "Encuentre aquí la lista de establecimientos vinculados a su cuenta"
       }
     },
     "title": "Calcular su huella de carbono simplificada le permitirá:",
-    "start": "Comenzar",
     "alert": {
       "info": "La calculadora Clickson le permite estimar el impacto climático de su actividad. Es ante todo una herramienta de concienciación. No es un enfoque de transición baja en carbono sino una huella de carbono simplificada — en el sentido de la <link>Guía de comunicación sobre contabilidad de carbono</link> — enfocada en las principales fuentes de emisión relacionadas con la actividad de los establecimientos."
     },
@@ -86,10 +85,8 @@
         }
       }
     },
-    "results": {
-      "intensities": {
-        "studentEmployee": "estudiantes y empleados"
-      }
+    "export": {
+      "export": "Exportar mi huella"
     }
   },
   "emissionFactors": {

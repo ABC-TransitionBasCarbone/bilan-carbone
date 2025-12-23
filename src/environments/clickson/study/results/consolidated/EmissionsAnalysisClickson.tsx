@@ -19,6 +19,7 @@ interface Props {
 
 const EmissionsAnalysisClickson = ({ study, studySite, withDepValue, caUnit = SiteCAUnit.K }: Props) => {
   const t = useTranslations('study.results')
+  const tCommon = useTranslations('common')
   const tResultUnits = useTranslations('study.results.units')
   const tCAUnit = useTranslations('settings.caUnit')
 
@@ -30,9 +31,9 @@ const EmissionsAnalysisClickson = ({ study, studySite, withDepValue, caUnit = Si
     <div className="mb2">
       <Title title={t('analysis')} as="h3" className="mb1" />
       <div className={classNames(styles.analysisContainer, 'flex')}>
-        <div className="flex-col grow gapped2">
-          <Box className={classNames(styles.gapped, 'justify-center flex-col')}>
-            <Title as="h6" title={t('total')} className="justify-center" />
+        <div className="flex grow gapped2">
+          <Box className="gapped1 justify-center flex-col w50">
+            <span className="text-center bold">{t('total')}</span>
             <div className="flex-row justify-around">
               <Data
                 value={formatNumber(withDepValue)}
@@ -41,18 +42,14 @@ const EmissionsAnalysisClickson = ({ study, studySite, withDepValue, caUnit = Si
               />
             </div>
           </Box>
-          <Box className="flex-col">
-            <div className="flex grow">
-              <div className="grow justify-center">
-                <span className="text-center bold">{t('dependencyIntensity')}</span>
-              </div>
-            </div>
+          <Box className="flex-col w50">
+            <span className="text-center bold">{tCommon('carbonIntensities')}</span>
             <CarbonIntensity
               withDep={withDepValue}
               withoutDep={0}
               divider={studentAndEmployees}
               resultsUnit={study.resultsUnit}
-              label={`${tCAUnit(caUnit)} ${t('intensities.studentEmployee')}`}
+              label={`${tCAUnit(caUnit)} ${tCommon('perPerson')}`}
               testId="result-student-employee"
             />
           </Box>

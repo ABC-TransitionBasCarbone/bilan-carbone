@@ -39,6 +39,7 @@ interface Props {
 }
 
 const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources }: Props) => {
+  const tLabel = useTranslations('common.label')
   const t = useTranslations('study.new')
   const tRights = useTranslations('study.rights')
   const tValidation = useTranslations('validation')
@@ -203,14 +204,14 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources }: 
                   control={dateForm.control}
                   translation={t}
                   name="startDate"
-                  label={t('start')}
+                  label={tLabel('start')}
                   onAccept={handleDateChange}
                 />
                 <FormDatePicker
                   control={dateForm.control}
                   translation={t}
                   name="endDate"
-                  label={t('end')}
+                  label={tLabel('end')}
                   data-testid="new-study-endDate"
                   onAccept={handleDateChange}
                 />
@@ -246,11 +247,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources }: 
               />
             </div>
             <Box className="flex justify-start mt1">
-              <LinkButton
-                color="primary"
-                variant="contained"
-                href={`/etudes/${study.id}/comptabilisation/saisie-des-donnees`}
-              >
+              <LinkButton variant="contained" href={`/etudes/${study.id}/comptabilisation/saisie-des-donnees`}>
                 {t('goToDataEntry')}
               </LinkButton>
             </Box>
