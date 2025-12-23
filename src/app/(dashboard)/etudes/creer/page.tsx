@@ -11,7 +11,7 @@ import { hasActiveLicence } from '@/utils/organization'
 import { redirect } from 'next/navigation'
 
 const NewStudy = async ({ user, duplicateStudyId, isSimplified }: UserSessionProps & StudyCreationProps) => {
-  if (!user.organizationVersionId || canCreateAStudy(user, isSimplified)) {
+  if (!user.organizationVersionId || !canCreateAStudy(user, isSimplified)) {
     return <NotFound />
   }
 
