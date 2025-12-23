@@ -95,9 +95,9 @@ const StudyComments = ({ studyId, subPost = null, withField = true, canValidate 
   return (
     <div className="my1">
       {withField && (
-        <Card className="rounded-2xl">
+        <Card className="p1">
           <CardContent>
-            <div className="text-lg font-semibold">{tComments('addComment')}</div>
+            <div className="font-semibold">{tComments('addComment')}</div>
             <TextField
               fullWidth
               multiline
