@@ -5,6 +5,7 @@ import CheckIcon from '@mui/icons-material/Check'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import { Card, CardContent, TextField } from '@mui/material'
+import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import Button from '../base/Button'
 
@@ -17,6 +18,8 @@ interface Props {
 }
 
 const StudyCommentComponent = ({ canValidate = false, comment, onApprove, onDecline, onEdit }: Props) => {
+  const tCommon = useTranslations('common.action')
+  const tComments = useTranslations('comments')
   const [isEditing, setIsEditing] = useState(false)
   const [editedComment, setEditedComment] = useState(comment.comment)
 
@@ -37,14 +40,14 @@ const StudyCommentComponent = ({ canValidate = false, comment, onApprove, onDecl
           <div className="flex justify-between">
             {canValidate && <span className="font-medium">{comment.author.user.email}</span>}
             <span className="text-xs text-muted-foreground">{new Date(comment.createdAt).toLocaleString()}</span>
-            {canValidate && <span>{comment.status}</span>}
+            {canValidate && <span>{tComments(comment.status.toLowerCase())}</span>}
           </div>
           {isEditing ? (
             <TextField
               fullWidth
               multiline
               minRows={2}
-              placeholder="Votre commentaire…"
+              placeholder={tComments('yourComment')}
               value={editedComment}
               onChange={(e) => setEditedComment(e.target.value)}
             />
@@ -55,9 +58,9 @@ const StudyCommentComponent = ({ canValidate = false, comment, onApprove, onDecl
 
         {isEditing ? (
           <div className="flex justify-end gap-2 p-4">
-            <Button onClick={handleCancel}>Annuler</Button>
+            <Button onClick={handleCancel}>{tCommon('cancel')}</Button>
             <Button color="success" onClick={handleSaveEdit}>
-              Enregistrer
+              {tCommon('confirm')}
             </Button>
           </div>
         ) : (
@@ -65,16 +68,16 @@ const StudyCommentComponent = ({ canValidate = false, comment, onApprove, onDecl
             <div className="flex justify-end gap-2 p-4">
               <Button onClick={() => setIsEditing(true)}>
                 <EditIcon className="mr-2" />
-                Éditer
+                {tCommon('edit')}
               </Button>
               <Button color="error" onClick={() => onDecline(comment.id)}>
                 <DeleteIcon className="mr-2" />
-                Supprimer
+                {tCommon('delete')}
               </Button>
               {comment.status === 'PENDING' && (
                 <Button color="success" onClick={() => onApprove(comment.id)}>
                   <CheckIcon className="mr-2" />
-                  Approuver
+                  {tCommon('approve')}
                 </Button>
               )}
             </div>

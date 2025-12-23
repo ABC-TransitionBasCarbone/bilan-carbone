@@ -11,6 +11,7 @@ import {
 } from '@/services/serverFunctions/study'
 import { Card, CardContent, TextField } from '@mui/material'
 import { CommentStatus, SubPost } from '@prisma/client'
+import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useState } from 'react'
 import Button from '../base/Button'
 import StudyCommentComponent from './StudyComment'
@@ -26,6 +27,8 @@ const StudyComments = ({ studyId, subPost = null, withField = true, canValidate 
   const [newComment, setNewComment] = useState('')
   const [loading, setLoading] = useState(false)
   const [comments, setComments] = useState<FullStudyComments | null>(null)
+
+  const tComments = useTranslations('comments')
 
   const { callServerFunction } = useServerFunction()
 
@@ -94,12 +97,12 @@ const StudyComments = ({ studyId, subPost = null, withField = true, canValidate 
       {withField && (
         <Card className="rounded-2xl">
           <CardContent>
-            <div className="text-lg font-semibold">Ajouter un commentaire</div>
+            <div className="text-lg font-semibold">{tComments('addComment')}</div>
             <TextField
               fullWidth
               multiline
               minRows={2}
-              placeholder="Votre commentaire…"
+              placeholder={tComments('yourComment')}
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               disabled={loading}
