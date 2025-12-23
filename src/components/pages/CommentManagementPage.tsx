@@ -4,6 +4,7 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import {
   approveStudyComment,
   declineStudyComment,
+  editStudyComment,
   getPendingStudyCommentsFromOrganizationVersionId,
 } from '@/services/serverFunctions/study'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
@@ -36,6 +37,14 @@ const CommentManagementPage = ({ organizationVersionId }: Props) => {
 
   const handleApprove = async (commentId: string, studyId: string) => {
     await callServerFunction(() => approveStudyComment(commentId, studyId), {
+      onSuccess: () => {
+        fetchComments()
+      },
+    })
+  }
+
+  const handleEdit = async (commentId: string, newComment: string, studyId: string) => {
+    await callServerFunction(() => editStudyComment(commentId, newComment, studyId), {
       onSuccess: () => {
         fetchComments()
       },
@@ -78,6 +87,7 @@ const CommentManagementPage = ({ organizationVersionId }: Props) => {
                 comment={comment}
                 onApprove={(commentId) => handleApprove(commentId, comment.studyId)}
                 onDecline={(commentId) => handleDecline(commentId, comment.studyId)}
+                onEdit={(commentId, newComment) => handleEdit(commentId, newComment, comment.studyId)}
                 canValidate
               />
             ))}

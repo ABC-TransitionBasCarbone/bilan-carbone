@@ -6,6 +6,7 @@ import {
   approveStudyComment,
   createStudyCommentCommand,
   declineStudyComment,
+  editStudyComment,
   getStudyComments,
 } from '@/services/serverFunctions/study'
 import { Card, CardContent, TextField } from '@mui/material'
@@ -77,6 +78,17 @@ const StudyComments = ({ studyId, subPost = null, withField = true, canValidate 
     })
   }
 
+  const handleEdit = async (commentId: string, newComment: string) => {
+    if (!canValidate) {
+      return
+    }
+    await callServerFunction(() => editStudyComment(commentId, newComment, studyId), {
+      onSuccess: () => {
+        fetchComments()
+      },
+    })
+  }
+
   return (
     <div className="my1">
       {withField && (
@@ -109,6 +121,7 @@ const StudyComments = ({ studyId, subPost = null, withField = true, canValidate 
               comment={comment}
               onApprove={handleApprove}
               onDecline={handleDecline}
+              onEdit={handleEdit}
               canValidate={canValidate}
             />
           ))}

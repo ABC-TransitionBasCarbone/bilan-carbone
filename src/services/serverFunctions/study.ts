@@ -2418,3 +2418,25 @@ export const declineStudyComment = async (commentId: string, studyId: string) =>
 
     return await deleteStudyComment(commentId)
   })
+
+export const editStudyComment = async (commentId: string, newComment: string, studyId: string) =>
+  withServerResponse('editStudyComment', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const userRole = getAccountRoleOnStudy(session.user, study)
+
+    if (!userRole || userRole === StudyRole.Reader) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return await updateStudyComment(commentId, {
+      comment: newComment,
+    })
+  })
