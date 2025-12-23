@@ -168,6 +168,10 @@
   },
   "comments": {
     "title": "Comment Management",
-    "noComments": "You have no pending comments"
+    "noComments": "You have no pending comments",
+    "yourComment": "Your comment...",
+    "validated": "Validated",
+    "pending": "Pending",
+    "addComment": "Add a comment"
   }
 }

@@ -15,7 +15,8 @@
       "confirm": "Confirmer",
       "update": "Mettre à jour",
       "start": "Démarrer",
-      "close": "Fermer"
+      "close": "Fermer",
+      "approve": "Approuver"
     },
     "label": {
       "start": "Début",

@@ -15,7 +15,8 @@
       "confirm": "Confirm",
       "update": "Update",
       "start": "Start",
-      "close": "Close"
+      "close": "Close",
+      "approve": "Approve"
     },
     "label": {
       "start": "Start",
