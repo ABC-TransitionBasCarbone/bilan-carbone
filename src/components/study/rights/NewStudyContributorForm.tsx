@@ -43,7 +43,6 @@ const NewStudyContributorForm = ({ study, accounts }: Props) => {
     defaultValues: {
       studyId: study.id,
       email: '',
-      subPosts: {},
     },
   })
 
@@ -82,7 +81,7 @@ const NewStudyContributorForm = ({ study, accounts }: Props) => {
         label={t('email')}
         trim
       />
-      <MultiplePosts form={form} context="studyContributor" />
+      <MultiplePosts form={form} context="studyContributor" selectAll />
       <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="study-contributor-create-button">
         {t('create')}
       </LoadingButton>
