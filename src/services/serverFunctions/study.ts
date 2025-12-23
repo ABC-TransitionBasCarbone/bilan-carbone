@@ -2392,7 +2392,11 @@ export const approveStudyComment = async (commentId: string, studyId: string) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    return await updateStudyComment(commentId, { status: CommentStatus.VALIDATED })
+    return await updateStudyComment(commentId, {
+      validatedBy: { connect: { id: session.user.accountId } },
+      validatedAt: new Date(),
+      status: CommentStatus.VALIDATED,
+    })
   })
 
 export const declineStudyComment = async (commentId: string, studyId: string) =>
