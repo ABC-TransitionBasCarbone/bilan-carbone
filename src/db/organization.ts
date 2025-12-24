@@ -1,6 +1,7 @@
 import { UpdateOrganizationCommand } from '@/services/serverFunctions/organization.command'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { OnboardingCommand } from '@/services/serverFunctions/user.command'
+import { unique } from '@/utils/array'
 import { Environment, Organization, OrganizationVersion, Prisma, Site, UserStatus } from '@prisma/client'
 import { prismaClient } from './client'
 import { deleteStudy } from './study'
@@ -372,7 +373,7 @@ export const createOrUpdateOrganization = async (
     update: {
       isCR: isCR || organizationVersion?.isCR || false,
       updatedAt: new Date(),
-      activatedLicence: activatedLicence || organizationVersion?.activatedLicence,
+      activatedLicence: unique([...(organizationVersion?.activatedLicence ?? []), ...(activatedLicence ?? [])]),
     },
     create: {
       organizationId: updatedOrganization.id,
