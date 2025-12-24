@@ -3,12 +3,11 @@ import { FullStudy } from '@/db/study'
 import { StudyExportsCommand } from '@/services/serverFunctions/study.command'
 import { Translations } from '@/types/translation'
 import { FormControl, FormGroup, FormLabel } from '@mui/material'
-import { Export } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { Control, Controller, UseFormReturn } from 'react-hook-form'
 import formStyles from '../../form/Form.module.css'
-import ExportCheckbox from '../new/ExportCheckbox'
+import ExportCheckboxes from '../new/ExportCheckboxes'
 import styles from './StudyExports.module.css'
 
 interface Props<T extends StudyExportsCommand> {
@@ -60,19 +59,13 @@ const StudyExportsForm = <T extends StudyExportsCommand>({
               )}
             </div>
             <FormGroup>
-              <div className="flex-col">
-                {Object.keys(Export).map((key) => (
-                  <ExportCheckbox
-                    key={key}
-                    id={key as Export}
-                    study={study}
-                    values={value}
-                    setValues={onChange}
-                    disabled={disabled}
-                    duplicateStudyId={duplicateStudyId}
-                  />
-                ))}
-              </div>
+              <ExportCheckboxes
+                values={value}
+                onChange={onChange}
+                study={study}
+                disabled={disabled}
+                duplicateStudyId={duplicateStudyId}
+              />
             </FormGroup>
           </FormControl>
         )}
