@@ -1,5 +1,6 @@
 'use client'
 
+import { SessionProvider } from 'next-auth/react'
 import Profile from '../profile/Profile'
 
 interface Props {
@@ -7,7 +8,11 @@ interface Props {
 }
 
 const ProfilePage = ({ version }: Props) => {
-  return <Profile version={version} />
+  return (
+    <SessionProvider>
+      <Profile version={version} />
+    </SessionProvider>
+  )
 }
 
 export default ProfilePage
