@@ -296,6 +296,7 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
       subPost: SubPost.Achats,
       depreciationPeriod: 5,
       caracterisation: null,
+      constructionYear: null,
       emissionFactorId: null,
       reliability: null,
       technicalRepresentativeness: null,
