@@ -31,6 +31,8 @@ jest.mock('@/services/serverFunctions/study', () => ({
 }))
 
 const mockSetValues = jest.fn()
+const mockOnChange = jest.fn()
+const mockSetControl = jest.fn()
 
 const renderWithTheme = (component: React.ReactElement) => {
   return render(<ThemeProvider theme={theme}>{component}</ThemeProvider>)
@@ -38,19 +40,20 @@ const renderWithTheme = (component: React.ReactElement) => {
 
 const defaultProps = {
   id: Export.Beges,
-  values: { [Export.Beges]: false, [Export.GHGP]: false, [Export.ISO14069]: false } as Record<
-    Export,
-    ControlMode | false
-  >,
-  setValues: mockSetValues,
+  index: 0,
+  values: {
+    exports: [],
+    controlModde: ControlMode.Operational,
+  },
+  onChange: mockOnChange,
+  setControl: mockSetControl,
   disabled: false,
   duplicateStudyId: null,
 }
 
-const getBegesCheckedValues = (): Record<Export, ControlMode | false> => ({
-  [Export.Beges]: ControlMode.Operational,
-  [Export.GHGP]: false as const,
-  [Export.ISO14069]: false as const,
+const getBegesCheckedValues = () => ({
+  exports: [Export.Beges] as Export[],
+  controlModde: ControlMode.Operational,
 })
 
 const getStudyWithCaracterisations = () =>
