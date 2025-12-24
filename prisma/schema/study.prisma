@@ -144,7 +144,7 @@ model Study {
   level                Level
   simplified           Boolean         @default(false)
   resultsUnit          StudyResultUnit @default(T) @map("results_unit")
-  exports              StudyExport[]
+  exports              StudyExport?
 
   organizationVersion   OrganizationVersion @relation(fields: [organizationVersionId], references: [id])
   organizationVersionId String              @map("organization_version_id")
@@ -171,15 +171,16 @@ model Study {
 }
 
 model StudyExport {
-  study   Study       @relation(fields: [studyId], references: [id])
-  studyId String      @map("study_id")
-  type    Export
-  control ControlMode
+  id      String       @id @default(uuid())
+  study   Study        @relation(fields: [studyId], references: [id])
+  studyId String       @map("study_id")
+  types   Export[]     @default([])
+  control ControlMode?
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-  @@id([studyId, type])
+  @@unique([studyId])
   @@map("study_exports")
 }
 
