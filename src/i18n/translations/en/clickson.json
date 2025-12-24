@@ -126,7 +126,13 @@
       "title": "Which establishments should the footprint cover?",
       "noSites": "No establishments configured",
       "namePlaceholder": "Establishment Name",
-      "add": "Add an Establishment"
+      "add": "Add an Establishment",
+      "etp": "Number of staff (teachers and non-teaching staff)",
+      "etpPlaceholder": "Total number of staff",
+      "studentNumber": "Number of students",
+      "studentNumberPlaceholder": "Total number of students",
+      "establishmentYear": "Year of establishment",
+      "establishmentYearPlaceholder": "Year the establishment was founded"
     }
   },
   "login": {

@@ -126,7 +126,13 @@
       "title": "¿Qué establecimientos debe cubrir la huella de carbono?",
       "noSites": "Sin establecimientos configurados",
       "namePlaceholder": "Nombre del Establecimiento",
-      "add": "Añadir un Establecimiento"
+      "add": "Añadir un Establecimiento",
+      "etp": "Número de personal (docentes y personal no docente)",
+      "etpPlaceholder": "Número total de personal",
+      "studentNumber": "Número de estudiantes",
+      "studentNumberPlaceholder": "Número total de estudiantes",
+      "establishmentYear": "Año de fundación",
+      "establishmentYearPlaceholder": "Año en que se fundó el establecimiento"
     }
   },
   "login": {

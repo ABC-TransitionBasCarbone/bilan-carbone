@@ -184,6 +184,7 @@ export const updateOrganization = async (
   if (!organizationVersion) {
     return
   }
+
   return prismaClient.$transaction([
     ...sites.map((site) =>
       prismaClient.site.upsert({
@@ -199,6 +200,8 @@ export const updateOrganization = async (
           cncId: site.cncId || undefined,
           volunteerNumber: site.volunteerNumber || undefined,
           beneficiaryNumber: site.beneficiaryNumber || undefined,
+          studentNumber: site.studentNumber || undefined,
+          establishmentYear: site.establishmentYear,
         },
         update: {
           name: site.name,
@@ -209,6 +212,8 @@ export const updateOrganization = async (
           cncId: site.cncId || undefined,
           volunteerNumber: site.volunteerNumber || undefined,
           beneficiaryNumber: site.beneficiaryNumber || undefined,
+          studentNumber: site.studentNumber || undefined,
+          establishmentYear: site.establishmentYear,
         },
       }),
     ),

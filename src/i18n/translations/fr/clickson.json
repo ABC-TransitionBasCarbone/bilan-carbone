@@ -126,7 +126,13 @@
       "title": "Sur quels établissements doit porter l'empreinte ?",
       "noSites": "Il n'y a pas d'établissements configurés",
       "namePlaceholder": "Nom de l'établissement",
-      "add": "Ajouter un établissement"
+      "add": "Ajouter un établissement",
+      "etp": "Nombre de personnels (enseignants et non-éducatifs)",
+      "etpPlaceholder": "Nombre total de personnels",
+      "studentNumber": "Nombre d'élèves",
+      "studentNumberPlaceholder": "Nombre total d'élèves",
+      "establishmentYear": "Année de construction",
+      "establishmentYearPlaceholder": "Année de construction de l'établissement"
     }
   },
   "login": {

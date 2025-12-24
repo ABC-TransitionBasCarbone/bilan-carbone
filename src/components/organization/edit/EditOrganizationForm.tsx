@@ -59,6 +59,8 @@ const EditOrganizationForm = ({ organizationVersion, caUnit, isCut = false }: Pr
         cncCode: site.cnc?.cncCode || '',
         volunteerNumber: site.volunteerNumber || 0,
         beneficiaryNumber: site.beneficiaryNumber || 0,
+        studentNumber: site.studentNumber || 0,
+        establishmentYear: site.establishmentYear || '',
       })),
     },
   })
