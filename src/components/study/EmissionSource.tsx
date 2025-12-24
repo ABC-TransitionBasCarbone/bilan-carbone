@@ -120,7 +120,7 @@ const EmissionSource = ({
   const canDelete = !emissionSource.validated && hasEditionRights(userRoleOnStudy)
 
   const update = useCallback(
-    async (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null | string[]) => {
+    async (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | Date | null | string[]) => {
       if (key) {
         if (value === emissionSource[key as keyof typeof emissionSource]) {
           return

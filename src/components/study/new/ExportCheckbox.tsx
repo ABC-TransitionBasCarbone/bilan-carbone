@@ -110,6 +110,8 @@ const ExportCheckbox = ({ id, study, values, setValues, disabled, duplicateStudy
     closeBegesDeactivation()
   }
 
+  const isExportAvailable = useMemo(() => ([Export.Beges, Export.GHGP] as Export[]).includes(id), [id])
+
   return (
     <div className={styles.container}>
       <FormControlLabel
@@ -118,14 +120,14 @@ const ExportCheckbox = ({ id, study, values, setValues, disabled, duplicateStudy
           <Checkbox
             checked={!!values[id]}
             className={styles.checkbox}
-            disabled={id !== Export.Beges || disabled}
+            disabled={!isExportAvailable || disabled}
             data-testid={`export-checkbox-${id}`}
           />
         }
         label={
           <span>
             {tExport(id)}
-            {id !== Export.Beges && <em> ({t('coming')})</em>}
+            {!isExportAvailable && <em> ({t('coming')})</em>}
           </span>
         }
         value={!!values[id]}
