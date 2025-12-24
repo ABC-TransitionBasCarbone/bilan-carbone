@@ -11,6 +11,7 @@ jest.mock('./study', () => ({ hasSufficientLevel: jest.fn() }))
 const defaultEmissionSource = {
   id: 'random',
   caracterisation: null,
+  constructionYear: null,
   comment: null,
   emissionFactor: {
     id: 'random',
