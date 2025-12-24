@@ -6,20 +6,24 @@ import { updateCaracterisationsForControlMode } from '@/services/serverFunctions
 import { Checkbox, FormControl, FormControlLabel, MenuItem } from '@mui/material'
 import { ControlMode, Export } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import { Dispatch, SetStateAction, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import styles from './ExportCheckbox.module.css'
 
 interface Props {
   id: Export
+  index: number
   study?: FullStudy
-  values: Record<Export, ControlMode | false>
-  setValues: Dispatch<SetStateAction<Record<Export, ControlMode | false>>>
+  values: {
+    exports: Export[]
+    controlMode?: ControlMode | null
+  }
   onChange: (type: Export, checked: boolean) => void
+  setControl: (value: ControlMode) => void
   disabled?: boolean
   duplicateStudyId?: string | null
 }
 
-const ExportCheckbox = ({ id, study, values, setValues, onChange, disabled, duplicateStudyId }: Props) => {
+const ExportCheckbox = ({ id, index, study, values, onChange, setControl, disabled, duplicateStudyId }: Props) => {
   const t = useTranslations('study.new')
   const tExport = useTranslations('exports')
   const { callServerFunction } = useServerFunction()
@@ -33,7 +37,7 @@ const ExportCheckbox = ({ id, study, values, setValues, onChange, disabled, dupl
   )
 
   const handleControlModeChange = (newControlMode: ControlMode) => {
-    const currentControlMode = values[id] as ControlMode
+    const currentControlMode = values.controlMode as ControlMode
 
     const shouldShowControlModeChangeWarning =
       currentControlMode && currentControlMode !== newControlMode && hasCaracterisations && !isNewStudy
@@ -42,7 +46,7 @@ const ExportCheckbox = ({ id, study, values, setValues, onChange, disabled, dupl
       setPendingControlMode(newControlMode)
       setShowControlModeWarning(true)
     } else {
-      setValues({ ...values, [id]: newControlMode })
+      setControl(newControlMode)
     }
   }
 
@@ -55,12 +59,12 @@ const ExportCheckbox = ({ id, study, values, setValues, onChange, disabled, dupl
     if (pendingControlMode && study) {
       if (duplicateStudyId) {
         // For duplicate studies, don't clear characterizations immediately
-        setValues({ ...values, [id]: pendingControlMode })
+        setControl(pendingControlMode)
       } else {
         // For existing studies, clear characterizations immediately
         await callServerFunction(() => updateCaracterisationsForControlMode(study.id, pendingControlMode), {
           onSuccess: () => {
-            setValues({ ...values, [id]: pendingControlMode })
+            setControl(pendingControlMode)
           },
         })
       }
@@ -76,7 +80,7 @@ const ExportCheckbox = ({ id, study, values, setValues, onChange, disabled, dupl
         className={styles.field}
         control={
           <Checkbox
-            checked={!!values[id]}
+            checked={!!values.exports.includes(id)}
             className={styles.checkbox}
             disabled={!isExportAvailable || disabled}
             data-testid={`export-checkbox-${id}`}
@@ -88,15 +92,15 @@ const ExportCheckbox = ({ id, study, values, setValues, onChange, disabled, dupl
             {!isExportAvailable && <em> ({t('coming')})</em>}
           </span>
         }
-        value={!!values[id]}
+        value={!!values.exports.includes(id)}
         onChange={(_, checked) => onChange(id, checked)}
       />
-      {values[id] && (
+      {index === 0 && !!values.exports.length && (
         <div className={styles.field}>
           <FormControl fullWidth>
             <Select
               size="small"
-              value={values[id]}
+              value={values.controlMode}
               onChange={(event) => handleControlModeChange(event.target.value as ControlMode)}
               disabled={disabled}
             >
@@ -113,7 +117,7 @@ const ExportCheckbox = ({ id, study, values, setValues, onChange, disabled, dupl
       {showControlModeWarning && pendingControlMode && (
         <ControlModeChangeWarningModal
           open
-          currentMode={values[id] as ControlMode}
+          currentMode={values.controlMode as ControlMode}
           newMode={pendingControlMode}
           onConfirm={confirmControlModeChange}
           onCancel={closeControlModeChange}
