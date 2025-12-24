@@ -139,6 +139,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
                 selected: true,
                 postalCode: existingStudySite.site.postalCode ?? '',
                 city: existingStudySite.site.city ?? '',
+                establishmentYear: existingStudySite.site.establishmentYear ?? '',
               }
             : {
                 ...site,
@@ -146,6 +147,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
                 postalCode: site.postalCode ?? '',
                 city: site.city ?? '',
                 cncId: site.cncId ?? '',
+                establishmentYear: site.establishmentYear ?? '',
               }
         })
         .sort((a, b) => a.name.localeCompare(b.name))

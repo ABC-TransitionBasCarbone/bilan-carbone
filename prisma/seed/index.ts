@@ -391,7 +391,7 @@ const users = async () => {
   if (clicksonSite) {
     await prisma.site.update({
       where: { id: clicksonSite.id },
-      data: { establishmentId: '0781494A', name: 'Ecole élémentaire Mansart', establishmentYear: '1965-05-01' },
+      data: { establishmentId: '0781494A', name: 'Ecole élémentaire Mansart', establishmentYear: '1965' },
     })
   }
 
