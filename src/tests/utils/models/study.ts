@@ -44,7 +44,10 @@ export const mockedFullStudy = {
   allowedUsers: [],
   sites: [],
   emissionFactorVersions: [],
-  exports: [],
+  exports: {
+    types: [],
+    control: null,
+  },
   organizationVersion: mockedOrganizationVersion,
   tagFamilies: [],
   cncVersion: {
@@ -244,7 +247,7 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
   simplified: false,
   resultsUnit: StudyResultUnit.K,
   organizationVersionId: TEST_IDS.orgVersion,
-  exports: [{ type: Export.Beges, control: ControlMode.Operational }],
+  exports: { types: [Export.Beges], control: ControlMode.Operational },
   emissionFactorVersions: [
     {
       source: Import.BaseEmpreinte,

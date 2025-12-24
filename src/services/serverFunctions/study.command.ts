@@ -28,11 +28,8 @@ export const SitesCommandValidation = z.object({
 export type SitesCommand = z.infer<typeof SitesCommandValidation>
 
 export const StudyExportsCommandValidation = z.object({
-  exports: z.object({
-    [Export.Beges]: z.enum(ControlMode).or(z.literal(false)),
-    [Export.GHGP]: z.enum(ControlMode).or(z.literal(false)),
-    [Export.ISO14069]: z.enum(ControlMode).or(z.literal(false)),
-  }),
+  exports: z.array(z.enum(Export)),
+  controlMode: z.enum(ControlMode).nullable().optional(),
 })
 
 export type StudyExportsCommand = z.infer<typeof StudyExportsCommandValidation>

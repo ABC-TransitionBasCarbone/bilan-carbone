@@ -13,7 +13,7 @@ import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
 import { zodResolver } from '@hookform/resolvers/zod'
 import CircularProgress from '@mui/material/CircularProgress'
 import Typography from '@mui/material/Typography'
-import { Environment, Export, SiteCAUnit } from '@prisma/client'
+import { Environment, SiteCAUnit } from '@prisma/client'
 import dayjs from 'dayjs'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -78,11 +78,7 @@ const NewStudyPage = ({
           cncCode: site.cnc?.cncCode || '',
           establishmentYear: site.establishmentYear || '',
         })) || [],
-      exports: {
-        [Export.Beges]: false,
-        [Export.GHGP]: false,
-        [Export.ISO14069]: false,
-      },
+      exports: [],
     },
   })
 
