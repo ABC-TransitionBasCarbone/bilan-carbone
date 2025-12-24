@@ -464,6 +464,7 @@ const parseEmissionSources = async (
           emissionFactorImportedId: String(row.emissionFactorImportedId),
           emissionFactorConsoValue: row.emissionFactorConsoValue as number,
           caracterisation: caracterisation as string,
+          constructionYear: null,
           deprecation: (row.amortissement === 1 ? row.immoVal : row.amortissement) as number,
           ...(subPost === SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas && {
             duration: 20,
@@ -975,6 +976,7 @@ export const uploadStudies = async (
               completeness: studyEmissionSource.completeness,
               emissionFactorId: emissionFactorId,
               ...(caracterisation && { caracterisation }),
+              constructionYear: null,
               ...(studyEmissionSource.deprecation && { depreciationPeriod: studyEmissionSource.deprecation }),
               duration: emissionFactor?.unit === Unit.HA_YEAR ? 20 : null,
               hectare: emissionFactor?.unit === Unit.HA_YEAR ? studyEmissionSource.emissionFactorConsoValue / 20 : null,
