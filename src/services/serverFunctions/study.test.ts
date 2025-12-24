@@ -802,6 +802,7 @@ describe('study', () => {
       feTemporalRepresentativeness: null,
       feCompleteness: null,
       caracterisation: null,
+      constructionYear: null,
       validated: true,
       ...overrides,
     })

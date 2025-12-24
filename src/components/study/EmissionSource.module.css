@@ -24,6 +24,14 @@
   padding-left: 14px;
 }
 
+.datePickerInput {
+  background-color: white;
+}
+
+.datePickerInput fieldset {
+  border-color: var(--grayscale-300);
+}
+
 .header {
   .emissionSource {
     width: 25%;

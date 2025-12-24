@@ -16,19 +16,22 @@ import { getConfidenceInterval, getQualityStandardDeviation, getSpecificEmission
 
 type CaracterisationsBySubPost = Partial<Record<SubPost, EmissionSourceCaracterisation[]>>
 
+type EmissionSourceFormType = Pick<
+  StudyEmissionSource,
+  | 'name'
+  | 'type'
+  | 'value'
+  | 'emissionFactorId'
+  | 'caracterisation'
+  | 'constructionYear'
+  | 'subPost'
+  | 'depreciationPeriod'
+  | 'hectare'
+  | 'duration'
+>
+
 export const getEmissionSourceCompletion = (
-  emissionSource: Pick<
-    StudyEmissionSource,
-    | 'name'
-    | 'type'
-    | 'value'
-    | 'emissionFactorId'
-    | 'caracterisation'
-    | 'subPost'
-    | 'depreciationPeriod'
-    | 'hectare'
-    | 'duration'
-  >,
+  emissionSource: EmissionSourceFormType,
   study: FullStudy | StudyWithoutDetail,
   emissionFactor: (FullStudy | StudyWithoutDetail)['emissionSources'][number]['emissionFactor'],
   environment: Environment | undefined,
@@ -37,9 +40,14 @@ export const getEmissionSourceCompletion = (
 
   const caracterisations = getCaracterisationsBySubPost(emissionSource.subPost, study.exports, environment)
 
-  if (study.exports.length > 0 && caracterisations.length > 0) {
+  if (study.exports.some((studyExport) => studyExport.type === Export.Beges) && caracterisations.length > 0) {
     mandatoryFields.push('caracterisation')
   }
+
+  if (study.exports.some((studyExport) => studyExport.type === Export.GHGP)) {
+    mandatoryFields.push('constructionYear')
+  }
+
   if (hasDeprecationPeriod(emissionSource.subPost)) {
     mandatoryFields.push('depreciationPeriod')
   }
@@ -57,18 +65,7 @@ export const getEmissionSourceCompletion = (
 }
 
 export const canBeValidated = (
-  emissionSource: Pick<
-    StudyEmissionSource,
-    | 'name'
-    | 'type'
-    | 'value'
-    | 'emissionFactorId'
-    | 'caracterisation'
-    | 'subPost'
-    | 'depreciationPeriod'
-    | 'hectare'
-    | 'duration'
-  >,
+  emissionSource: EmissionSourceFormType,
   study: FullStudy | StudyWithoutDetail,
   emissionFactor: (FullStudy | StudyWithoutDetail)['emissionSources'][number]['emissionFactor'],
   environment: Environment | undefined,
