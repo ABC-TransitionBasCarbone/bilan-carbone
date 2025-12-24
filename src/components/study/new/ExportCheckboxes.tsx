@@ -9,7 +9,10 @@ import ExportActivationWarningModal from './ExportActivationWarningModal'
 import ExportCheckbox from './ExportCheckbox'
 import ExportDeactivationWarningModal from './ExportDeactivationWarningModal'
 
-type ExportValues = Record<Export, ControlMode | false>
+type ExportValues = {
+  exports: Export[]
+  controlMode?: ControlMode | null
+}
 
 const exportFields: Record<Export, (keyof UpdateEmissionSourceCommand)[]> = {
   [Export.Beges]: ['caracterisation'] as const,
@@ -21,11 +24,12 @@ interface Props {
   study?: FullStudy
   values: ExportValues
   onChange: Dispatch<SetStateAction<ExportValues>>
+  setControl: (value: ControlMode) => void
   disabled?: boolean
   duplicateStudyId?: string | null
 }
 
-const ExportCheckboxes = ({ study, values, onChange, disabled, duplicateStudyId }: Props) => {
+const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, duplicateStudyId }: Props) => {
   const { callServerFunction } = useServerFunction()
   const [pendingExportCheck, setPendingExportCheck] = useState<Export | null>(null)
   const [pendingExportUncheck, setPendingExportUncheck] = useState<Export | null>(null)
@@ -98,13 +102,14 @@ const ExportCheckboxes = ({ study, values, onChange, disabled, duplicateStudyId 
   return (
     <>
       <div className="flex-col">
-        {Object.keys(Export).map((key) => (
+        {Object.keys(Export).map((key, i) => (
           <ExportCheckbox
             key={key}
             id={key as Export}
+            index={i}
             study={study}
             values={values}
-            setValues={onChange}
+            setControl={setControl}
             onChange={onValueChange}
             disabled={disabled}
             duplicateStudyId={duplicateStudyId}
