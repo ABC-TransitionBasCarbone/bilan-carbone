@@ -22,7 +22,6 @@ export const SubPostsCommandValidation = z.object({
       ctx.addIssue(setCustomIssue(['subPosts'], 'subPostRequired'))
       return
     }
-
     if (Object.values(val).some((arr) => arr.length === 0)) {
       ctx.addIssue(setCustomIssue(['subPosts'], 'subPostRequired'))
     }

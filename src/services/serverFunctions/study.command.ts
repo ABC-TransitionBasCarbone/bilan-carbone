@@ -167,7 +167,10 @@ export const NewStudyRightCommandValidation = z.object({
 export type NewStudyRightCommand = z.infer<typeof NewStudyRightCommandValidation>
 
 export const NewStudyContributorCommandValidation = z.intersection(
-  z.object({ studyId: z.string(), email: z.email().trim() }),
+  z.object({
+    studyId: z.string(),
+    email: z.email().trim(),
+  }),
   SubPostsCommandValidation,
 )
 

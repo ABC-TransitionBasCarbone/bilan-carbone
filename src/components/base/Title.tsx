@@ -13,6 +13,7 @@ export interface Props {
   ['data-testid']?: string
   className?: string
   children?: ReactNode
+  grow?: boolean
 }
 
 const Title = ({
@@ -24,6 +25,7 @@ const Title = ({
   'data-testid': dataTestId,
   expIcon,
   className,
+  grow = true,
   children,
 }: Props) => {
   const Title = as || 'h2'
@@ -33,7 +35,7 @@ const Title = ({
 
   return (
     <IconLabel icon={iconDiv} iconPosition={iconPosition} className={classNames(styles.title, 'grow', className)}>
-      <Title id={id} data-testid={dataTestId} className="flex grow">
+      <Title id={id} data-testid={dataTestId} className={classNames('flex', grow ? 'grow' : '')}>
         {title}
       </Title>
       {children}
