@@ -3,7 +3,7 @@
 import Block from '@/components/base/Block'
 import GlobalNewStudyForm from '@/components/study/new/Form'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
-import { Export, Level } from '@prisma/client'
+import { Level } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
@@ -29,11 +29,7 @@ const NewStudyForm = ({ form, duplicateStudyId }: Props) => {
     form.setValue('startDate', new Date(`${startYear}-09-01`).toISOString())
     form.setValue('endDate', new Date(`${startYear + 1}-08-31`).toISOString())
     form.setValue('level', Level.Initial)
-    form.setValue('exports', {
-      [Export.Beges]: false,
-      [Export.GHGP]: false,
-      [Export.ISO14069]: false,
-    })
+    form.setValue('exports', [])
   }, [form])
 
   const beforeSubmit = useCallback(

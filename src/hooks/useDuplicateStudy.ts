@@ -5,7 +5,7 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { getStudy } from '@/services/serverFunctions/study'
 import { CreateStudyCommand, SitesCommand } from '@/services/serverFunctions/study.command'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
-import { ControlMode, Export, SiteCAUnit } from '@prisma/client'
+import { SiteCAUnit } from '@prisma/client'
 import dayjs from 'dayjs'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -89,20 +89,6 @@ export const updateSitesFromSourceStudy = (
   })
 }
 
-export const createExportsRecord = (sourceStudyExports: FullStudy['exports']) => {
-  return sourceStudyExports.reduce(
-    (acc, exp) => {
-      acc[exp.type] = exp.control
-      return acc
-    },
-    {
-      [Export.Beges]: false,
-      [Export.GHGP]: false,
-      [Export.ISO14069]: false,
-    } as Record<Export, false | ControlMode>,
-  )
-}
-
 export const createDuplicateFormData = (
   sourceStudy: FullStudy,
   user: UserSession,
@@ -123,6 +109,7 @@ export const createDuplicateFormData = (
     resultsUnit: sourceStudy.resultsUnit,
     organizationVersionId: sourceStudy.organizationVersionId,
     sites: mergedSites,
-    exports: createExportsRecord(sourceStudy.exports),
+    exports: sourceStudy.exports?.types,
+    controlMode: sourceStudy.exports?.control,
   }
 }
