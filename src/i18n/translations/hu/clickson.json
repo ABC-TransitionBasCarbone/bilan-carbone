@@ -45,6 +45,8 @@
     "see": "Lábnyom megtekintése",
     "selectSite": "Adatok kitöltése előtt kérjük, válassz intézményt",
     "lastStudyTitle": "Legutóbbi lábnyom",
+    "createFirstSimplifiedStudy": "Create",
+    "firstSimplifiedStudyMessage": "It's time to get started! We invite you to create your first simplified carbon footprint.",
     "navigation": {
       "framing": "Általános adatok",
       "organizations": "Intézményeim",

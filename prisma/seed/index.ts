@@ -739,12 +739,11 @@ const users = async () => {
   })
 
   const subPosts = Object.keys(SubPost)
+  const creator = faker.helpers.arrayElement(
+    usersWithAccounts.filter((userWithAccount) => userWithAccount.accounts[0].account.status === UserStatus.ACTIVE),
+  )
   const studies = await Promise.all(
     Array.from({ length: 20 }).map(() => {
-      const creator = faker.helpers.arrayElement(
-        usersWithAccounts.filter((userWithAccount) => userWithAccount.accounts[0].account.status === UserStatus.ACTIVE),
-      )
-
       const organizationVersionSites = sites.filter(
         (site) => site.organizationId === creator.accounts[0].organizationVersion.organizationId,
       )
@@ -774,6 +773,47 @@ const users = async () => {
           },
           allowedUsers: {
             create: { role: StudyRole.Validator, accountId: creator.accounts[0].account.id },
+          },
+        },
+      })
+    }),
+  )
+
+  await Promise.all(
+    regularTiltOrganizationVersions.map(async (organizationVersion) => {
+      const organizationVersionSites = sites.filter(
+        (site) => site.organizationId === organizationVersion.organizationId,
+      )
+      const tiltAccount = usersWithAccounts.find((userWithAccount) =>
+        userWithAccount.accounts.some(
+          (account) =>
+            account.organizationVersion.organizationId === organizationVersion.organizationId &&
+            account.account.environment === Environment.TILT &&
+            account.account.status === UserStatus.ACTIVE,
+        ),
+      )
+      if (!tiltAccount) {
+        return
+      }
+      await prisma.study.create({
+        include: { sites: true },
+        data: {
+          createdById: tiltAccount.accounts[0].account.id,
+          startDate: new Date(),
+          endDate: faker.date.future(),
+          isPublic: true,
+          level: Level.Initial,
+          name: faker.lorem.words({ min: 2, max: 5 }),
+          organizationVersionId: organizationVersion.id,
+          simplified: true,
+          sites: {
+            createMany: {
+              data: organizationVersionSites.map((site) => ({
+                siteId: site.id,
+                etp: 10,
+                ca: 10,
+              })),
+            },
           },
         },
       })

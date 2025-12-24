@@ -1,7 +1,7 @@
 'use client'
 
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import { hasHomeAlert } from '@/services/permissions/environment'
+import { hasHomeAlert, isTilt } from '@/services/permissions/environment'
 import { hasAccessToStudies } from '@/services/permissions/environmentAdvanced'
 import Groups2OutlinedIcon from '@mui/icons-material/Groups2Outlined'
 import { Alert, Box, BoxProps, styled, Typography } from '@mui/material'
@@ -75,14 +75,21 @@ const UserView = ({ account }: Props) => {
             title={navigation('collaborators.title')}
             message={navigation('collaborators.message')}
           />
-          {hasAccessToStudies(account.environment, account.level) && (
+          {hasAccessToStudies(account.environment, account.level) ? (
             <LinkCard
               href="/organisations"
               icon={<DiagramOutlinedIcon className={styles.icon} />}
               title={navigation('footprints.title')}
               message={navigation('footprints.message')}
             />
-          )}
+          ) : isTilt(account.environment) ? (
+            <LinkCard
+              href="/mes-empreintes"
+              icon={<DiagramOutlinedIcon className={styles.icon} />}
+              title={navigation('footprints.title')}
+              message={navigation('footprints.message')}
+            />
+          ) : null}
         </Box>
         {hasAlert && (
           <Alert severity="info" className="mb-2">

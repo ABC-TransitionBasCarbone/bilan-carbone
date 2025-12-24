@@ -11,9 +11,10 @@ import styles from './CRClients.module.css'
 
 interface Props {
   organizationVersions: OrganizationVersionWithOrganization[]
+  canCreateOrga: boolean
 }
 
-const CRClients = ({ organizationVersions }: Props) => {
+const CRClients = ({ organizationVersions, canCreateOrga }: Props) => {
   const t = useTranslations('organization')
   const [showAll, setShowAll] = useState(false)
   const [hiddenRows, setHiddenRows] = useState(false)
@@ -36,14 +37,18 @@ const CRClients = ({ organizationVersions }: Props) => {
     <Block
       title={t('myOrganizations')}
       data-testid="home-organizations"
-      actions={[
-        {
-          actionType: 'link',
-          href: '/organisations/creer',
-          ['data-testid']: 'new-organization',
-          children: t('create'),
-        },
-      ]}
+      actions={
+        canCreateOrga
+          ? [
+              {
+                actionType: 'link',
+                href: '/organisations/creer',
+                ['data-testid']: 'new-organization',
+                children: t('create'),
+              },
+            ]
+          : []
+      }
     >
       <ul
         id="organization-grid"

@@ -42,6 +42,8 @@
     "create": "Añadir una Huella",
     "myStudies": "Mis Huellas de Carbono",
     "createFirstStudy": "Crear Mi Primera Huella",
+    "createFirstSimplifiedStudy": "Crear",
+    "firstSimplifiedStudyMessage": "¡Es hora de empezar! Te invitamos a crear tu primera huella de carbono simplificada.",
     "see": "Ver Mi Huella",
     "selectSite": "Antes de completar datos, seleccione un establecimiento",
     "lastStudyTitle": "Última Huella",
