@@ -24,6 +24,7 @@ import CopyIcon from '@mui/icons-material/ContentCopy'
 import EditIcon from '@mui/icons-material/Edit'
 import HideIcon from '@mui/icons-material/VisibilityOff'
 import { Autocomplete, FormControl, InputLabel, MenuItem, Popper, TextField } from '@mui/material'
+import { DatePicker } from '@mui/x-date-pickers'
 import {
   EmissionSourceCaracterisation,
   EmissionSourceType,
@@ -35,6 +36,7 @@ import {
   Unit,
 } from '@prisma/client'
 import classNames from 'classnames'
+import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -74,6 +76,7 @@ interface Props {
   environment: Environment
   caracterisations: EmissionSourceCaracterisation[]
   mandatoryCaracterisation: boolean
+  mandatoryConstructionYear: boolean
   status: EmissionSourcesStatus
   studySites: FullStudy['sites']
   isFromOldImport: boolean
@@ -97,6 +100,7 @@ const EmissionSourceForm = ({
   selectedFactor,
   caracterisations,
   mandatoryCaracterisation,
+  mandatoryConstructionYear,
   status,
   studySites,
   isFromOldImport,
@@ -350,6 +354,27 @@ const EmissionSourceForm = ({
                 </MenuItem>
               ))}
             </Select>
+          </FormControl>
+        )}
+        {mandatoryConstructionYear && (
+          <FormControl className="grow">
+            <InputLabel id="emission-source-construction-year-label">{`${t('form.constructionYear')} *`}</InputLabel>
+            <DatePicker
+              slotProps={{
+                textField: {
+                  error: !!error,
+                  className: styles.datePickerInput,
+                },
+                field: { clearable: false },
+              }}
+              sx={{ backgroundColor: 'white', flex: '1' }}
+              onChange={(date) => {
+                if (date && date.isValid()) {
+                  update('constructionYear', date.utc(true).format())
+                }
+              }}
+              value={emissionSource.constructionYear ? dayjs(emissionSource.constructionYear) : null}
+            />
           </FormControl>
         )}
       </div>
