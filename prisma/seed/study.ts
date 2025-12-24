@@ -94,7 +94,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       endDate: new Date('2025-12-31'),
       isPublic: true,
       level: Level.Initial,
-      exports: { createMany: { data: [{ type: Export.Beges, control: ControlMode.Operational }] } },
+      exports: { create: { types: [Export.Beges], control: ControlMode.Operational } },
       createdBy: { connect: { id: creator.id } },
       organizationVersion: { connect: { id: creator.organizationVersionId } },
       sites: {

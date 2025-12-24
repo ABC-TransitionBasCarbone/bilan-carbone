@@ -40,11 +40,11 @@ export const getEmissionSourceCompletion = (
 
   const caracterisations = getCaracterisationsBySubPost(emissionSource.subPost, study.exports, environment)
 
-  if (study.exports.length > 0 && caracterisations.length > 0) {
+  if (!!study.exports?.types.length && caracterisations.length > 0) {
     mandatoryFields.push('caracterisation')
   }
 
-  if (study.exports.some((studyExport) => studyExport.type === Export.GHGP)) {
+  if (study.exports?.types.some((studyExport) => studyExport === Export.GHGP)) {
     mandatoryFields.push('constructionYear')
   }
 
@@ -443,12 +443,12 @@ export const getCaracterisationsBySubPost = (
     subPostToUse = bcSubpost
   }
 
-  const begesExport = exports.find((exp) => exp.type === Export.Beges)
+  const begesExport = (exports?.types || []).find((exp) => exp === Export.Beges)
   if (!begesExport) {
     return []
   }
 
-  const controlMode = begesExport.control || 'Operational'
+  const controlMode = exports?.control || 'Operational'
   const caracterisationMap = getAllCaracterisationsBySubPost(controlMode)
   const caracterisations = caracterisationMap[subPostToUse]
 

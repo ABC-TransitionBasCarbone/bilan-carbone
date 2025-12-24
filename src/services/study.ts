@@ -634,7 +634,7 @@ export const downloadStudyResults = async (
     data.push(consolidatedResults)
   }
 
-  if (study.exports.some((exp) => exp.type === Export.Beges)) {
+  if (study.exports?.types.includes(Export.Beges)) {
     data.push(
       formatBegesStudyResultsForExport(
         study,
