@@ -203,7 +203,6 @@ const LinkingStudyModal = ({
                   <FormDatePicker
                     control={control}
                     className="grow"
-                    translation={t}
                     name="date"
                     views={['year']}
                     maxDate={dayjs(previousYear)}
