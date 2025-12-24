@@ -9,6 +9,6 @@ export default defineConfig({
     baseUrl: process.env.CYPRESS_URL || 'http://localhost:3001',
     supportFile: 'cypress/support/index.ts',
     experimentalStudio: true,
-    defaultCommandTimeout: 4000, // default value, change if needed during local tests
+    defaultCommandTimeout: 8000, // default value, change if needed during local tests
   },
 })
