@@ -1,6 +1,7 @@
 import NotFound from '@/components/pages/NotFound'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getUserById } from '@/db/user'
+import { LocaleType } from '@/i18n/config'
 import { Environment } from '@prisma/client'
 import jwt from 'jsonwebtoken'
 import { headers } from 'next/headers'
@@ -9,6 +10,7 @@ import React from 'react'
 export type PdfAuthProps = {
   study: FullStudy
   environment: Environment
+  locale: LocaleType
 }
 
 interface Props {
@@ -31,6 +33,7 @@ const withPdfAuth = (WrappedComponent: React.ComponentType<any & PdfAuthProps>) 
 
     let study: FullStudy | null = null
     let environment: Environment | null = null
+    let locale: LocaleType | null = null
 
     // Only use PDF JWT authentication
     const headersList = await headers()
@@ -53,6 +56,7 @@ const withPdfAuth = (WrappedComponent: React.ComponentType<any & PdfAuthProps>) 
           studyId: string
           organizationVersionId: string
           environment: string
+          locale: string
         }
 
         // Verify token was issued for THIS specific study
@@ -63,6 +67,7 @@ const withPdfAuth = (WrappedComponent: React.ComponentType<any & PdfAuthProps>) 
             // Use the organizationVersionId from the token for proper context
             study = await getStudyById(studyId, payload.organizationVersionId)
             environment = payload.environment as Environment
+            locale = payload.locale as LocaleType
           }
         }
       } catch (error) {
@@ -74,7 +79,7 @@ const withPdfAuth = (WrappedComponent: React.ComponentType<any & PdfAuthProps>) 
       return <NotFound />
     }
 
-    return <WrappedComponent {...props} study={study} environment={environment} />
+    return <WrappedComponent {...props} study={study} environment={environment} locale={locale} />
   }
 
   Component.displayName = 'WithPdfAuth'
