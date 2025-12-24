@@ -226,9 +226,10 @@ model StudyEmissionSource {
   study   Study  @relation(fields: [studyId], references: [id])
   studyId String @map("study_id")
 
-  subPost         SubPost                        @map("sub_post")
-  name            String
-  caracterisation EmissionSourceCaracterisation?
+  subPost          SubPost                        @map("sub_post")
+  name             String
+  caracterisation  EmissionSourceCaracterisation?
+  constructionYear DateTime?                      @map("construction_year")
 
   emissionFactorId String?         @map("emission_factor_id")
   emissionFactor   EmissionFactor? @relation(fields: [emissionFactorId], references: [id])
