@@ -1406,6 +1406,7 @@ const duplicateEmissionSources = async (
           feTemporalRepresentativeness: sourceEmissionSource.feTemporalRepresentativeness,
           feCompleteness: sourceEmissionSource.feCompleteness,
           caracterisation: shouldClearCaracterisations ? null : sourceEmissionSource.caracterisation,
+          constructionYear: sourceEmissionSource.constructionYear,
           studyId: targetStudyId,
           emissionFactorId: sourceEmissionSource.emissionFactor?.id ?? null,
           studySiteId: targetStudySiteId,
