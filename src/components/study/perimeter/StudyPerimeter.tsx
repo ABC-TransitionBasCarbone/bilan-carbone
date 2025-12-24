@@ -306,14 +306,12 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
             <div className={classNames(styles.dates, 'flex')}>
               <FormDatePicker
                 control={form.control}
-                translation={tForm}
                 name="startDate"
                 label={tLabel('start')}
                 onAccept={handleDateChange}
               />
               <FormDatePicker
                 control={form.control}
-                translation={tForm}
                 name="endDate"
                 label={tLabel('end')}
                 data-testid="study-endDate"
@@ -328,7 +326,6 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
             <div className={classNames(styles.dates, 'flex')}>
               <FormDatePicker
                 control={form.control}
-                translation={tForm}
                 name="realizationStartDate"
                 label={tLabel('start')}
                 clearable
@@ -336,7 +333,6 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
               />
               <FormDatePicker
                 control={form.control}
-                translation={tForm}
                 name="realizationEndDate"
                 label={tLabel('end')}
                 data-testid="new-study-realizationEndDate"

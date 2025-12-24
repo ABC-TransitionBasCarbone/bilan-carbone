@@ -203,7 +203,6 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
               <div className={styles.dates}>
                 <FormDatePicker
                   control={dateForm.control}
-                  translation={t}
                   name="startDate"
                   label={tLabel('start')}
                   onAccept={handleDateChange}
@@ -211,7 +210,6 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
                 />
                 <FormDatePicker
                   control={dateForm.control}
-                  translation={t}
                   name="endDate"
                   label={tLabel('end')}
                   data-testid="new-study-endDate"
