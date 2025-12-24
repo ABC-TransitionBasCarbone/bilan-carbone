@@ -297,13 +297,9 @@ export const createStudyCommand = async (
         createMany: { data: rights },
       },
       exports: {
-        createMany: {
-          data: Object.entries(command.exports)
-            .filter(([, value]) => value)
-            .map(([key, value]) => ({
-              type: key as Export,
-              control: value as ControlMode,
-            })),
+        create: {
+          types: command.exports,
+          control: command.controlMode || ControlMode.Operational,
         },
       },
       sites: {
@@ -711,14 +707,8 @@ export const updateCaracterisationsForControlMode = async (studyId: string, newC
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const emissionSources = study.data.emissionSources
-    const exportsWithNewControlMode = study.data.exports.map((exp) => ({
-      ...exp,
-      control: newControlMode,
-    }))
-
     await Promise.all(
-      emissionSources
+      study.data.emissionSources
         .map((emissionSource) => {
           if (!emissionSource.caracterisation && !emissionSource.validated) {
             return null
@@ -726,7 +716,7 @@ export const updateCaracterisationsForControlMode = async (studyId: string, newC
 
           const validCaracterisations = getCaracterisationsBySubPost(
             emissionSource.subPost,
-            exportsWithNewControlMode || [],
+            study.data?.exports || null,
             session.user.environment,
           )
 
@@ -1501,22 +1491,7 @@ export const duplicateStudyCommand = async (
         await updateStudyEmissionFactorVersion(createdStudyId, sourceVersion.source, sourceVersion.importVersionId, tx)
       }
 
-      // Check if control modes have changed to determine if we should clear characterizations
-      const sourceExportsByType = sourceStudy.exports.reduce(
-        (acc, exp) => {
-          acc[exp.type] = exp.control
-          return acc
-        },
-        {} as Record<Export, ControlMode>,
-      )
-
-      const hasControlModeChanged = (exportType: Export) => {
-        const sourceControl = sourceExportsByType[exportType]
-        const newControl = studyCommand.exports[exportType]
-        return sourceControl && newControl && sourceControl !== newControl
-      }
-
-      const shouldClearCaracterisations = Object.values(Export).some(hasControlModeChanged)
+      const shouldClearCaracterisations = studyCommand.controlMode !== sourceStudy.exports?.control
 
       await duplicateEmissionSources(
         tx,
@@ -1699,7 +1674,7 @@ const buildStudyForDuplication = (
     createMany: { data: contributors },
   },
   exports: {
-    createMany: { data: Object.values(study.exports) },
+    create: { types: study.exports?.types, control: study.exports?.control },
   },
   sites: {
     createMany: { data: sites },
