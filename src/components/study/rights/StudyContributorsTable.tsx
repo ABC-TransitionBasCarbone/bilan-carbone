@@ -308,15 +308,26 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
             cell: ({ row }) => {
               const rowData = row.original
               return (
-                <TableActionButton
-                  type="delete"
-                  onClick={() => setToDelete(rowData)}
-                  data-testid={
-                    rowData.type === 'parent'
-                      ? 'delete-study-contributor-button'
-                      : 'delete-study-contributor-post-button'
-                  }
-                />
+                <>
+                  <TableActionButton
+                    type="delete"
+                    onClick={() => setToDelete(rowData)}
+                    data-testid={
+                      rowData.type === 'parent'
+                        ? 'delete-study-contributor-button'
+                        : 'delete-study-contributor-post-button'
+                    }
+                  />
+                  {rowData.type === 'parent' && (
+                    <TableActionButton
+                      type="edit"
+                      onClick={() =>
+                        router.push(`/etudes/${study.id}/cadrage/modifier-contributeur/${rowData.accountId}`)
+                      }
+                      data-testid="edit-study-contributor-button"
+                    />
+                  )}
+                </>
               )
             },
           },
