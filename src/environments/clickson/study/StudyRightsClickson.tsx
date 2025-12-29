@@ -40,7 +40,7 @@ interface Props {
   userRoleOnStudy: StudyRole
 }
 
-const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, userRoleOnStudy }: Props) => {
+const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources }: Props) => {
   const tLabel = useTranslations('common.label')
   const t = useTranslations('study.new')
   const tRights = useTranslations('study.rights')

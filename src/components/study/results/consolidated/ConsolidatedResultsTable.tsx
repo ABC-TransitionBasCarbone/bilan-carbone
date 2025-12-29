@@ -25,7 +25,7 @@ interface Props<T> {
 type tableDataType = {
   label: string
   value: number
-  uncertainty: number
+  uncertainty?: number
   post: string
   children: tableDataType[]
 }
@@ -34,9 +34,9 @@ const ConsolidatedResultsTable = <
   T extends {
     value: number
     label: string
-    uncertainty: number
+    uncertainty?: number
     post: string
-    children: { value: number; label: string; uncertainty: number; post: string }[]
+    children: { value: number; label: string; uncertainty?: number; post: string }[]
   },
 >({
   resultsUnit,

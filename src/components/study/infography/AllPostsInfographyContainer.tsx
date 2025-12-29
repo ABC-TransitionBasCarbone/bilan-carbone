@@ -4,7 +4,7 @@ import { CutPublicodesSituationProvider } from '@/environments/cut/context/publi
 import AllPostsInfographySimplified from '@/environments/simplified/study/infography/AllPostsInfography'
 import AllPostsInfographyTilt from '@/environments/tilt/study/infography/AllPostsInfography'
 import { CutPost, TiltPost } from '@/services/posts'
-import { computeResultsByPost } from '@/services/results/consolidated'
+import { computeResultsByPostFromEmissionSources } from '@/services/results/consolidated'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -36,7 +36,7 @@ const AllPostsInfographyContainer = ({ study, studySite }: Props) => {
 
   const data = useMemo(
     () =>
-      computeResultsByPost(
+      computeResultsByPostFromEmissionSources(
         study,
         tPost,
         studySite,
