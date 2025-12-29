@@ -27,6 +27,12 @@ const PublicClicksonPage = ({ children }: Props) => {
   const languages = [
     { name: tLocale('en'), code: 'GB', target: Locale.EN },
     { name: tLocale('fr'), code: 'FR', target: Locale.FR },
+    { name: tLocale('es'), code: 'ES', target: Locale.ES },
+    { name: tLocale('el'), code: 'EL', target: Locale.EL },
+    { name: tLocale('hr'), code: 'HR', target: Locale.HR },
+    { name: tLocale('hu'), code: 'HU', target: Locale.HU },
+    { name: tLocale('it'), code: 'IT', target: Locale.IT },
+    { name: tLocale('ro'), code: 'RO', target: Locale.RO },
   ]
 
   return (
@@ -36,7 +42,7 @@ const PublicClicksonPage = ({ children }: Props) => {
           <p className="title-h4 mb1">{t('welcome')}</p>
           <p className="title-h6 bold">{t('subtext')}</p>
         </div>
-        <p>{t.rich('explanation', { b: (children) => <b>{children}</b> })}</p>
+        <p>{t('explanation')}</p>
         <div className="flex-cc gapped1 w100 p1">
           <Image
             src="/logos/clickson/logo_clickson.png"

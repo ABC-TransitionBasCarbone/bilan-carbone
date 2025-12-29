@@ -3,6 +3,7 @@ import Modal from '@/components/modals/Modal'
 import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
+import { customRich } from '@/i18n/customRich'
 import { getEnvVar } from '@/lib/environment'
 import { getEmissionResults } from '@/services/emissionSource'
 import { Post } from '@/services/posts'
@@ -18,7 +19,6 @@ import { Alert } from '@mui/material'
 import { SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 import styles from './ConsolatedBEGESDifference.module.css'
@@ -80,7 +80,7 @@ const ConsolatedBEGESDifference = ({
   begesResults,
   studySite,
 }: Props) => {
-  const tCommon = useTranslations('common')
+  const tAction = useTranslations('common.action')
   const t = useTranslations('study.results.difference')
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('study.results.units')
@@ -242,9 +242,7 @@ const ConsolatedBEGESDifference = ({
         {unexplainedDifference && (
           <div className="flex-col mb2">
             <Alert severity="warning">
-              {t.rich('unexplainedDifference', {
-                support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
-              })}
+              {customRich(t, 'unexplainedDifference', {}, study.organizationVersion.environment)}
             </Alert>
           </div>
         )}
@@ -360,7 +358,7 @@ const ConsolatedBEGESDifference = ({
           )}
 
           <div className={'justify-end'}>
-            <Button onClick={() => setOpen(false)}>{tCommon('close')}</Button>
+            <Button onClick={() => setOpen(false)}>{tAction('close')}</Button>
           </div>
         </div>
       </Modal>

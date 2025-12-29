@@ -1,5 +1,6 @@
 'use server'
 
+import { customRich } from '@/i18n/customRich'
 import { getEnvVar } from '@/lib/environment'
 import { Alert } from '@mui/material'
 import { Environment } from '@prisma/client'
@@ -90,9 +91,7 @@ const RessourcesPage = async ({ environment }: Props) => {
     <Block title={t('title')} as="h1">
       {environment === Environment.CUT && (
         <Alert severity="info" className="mb2">
-          {t.rich('description', {
-            br: () => <br />,
-          })}
+          {customRich(t, 'description')}
         </Alert>
       )}
       <div className={classNames(styles.ressources, 'gapped1')}>

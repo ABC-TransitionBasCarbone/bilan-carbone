@@ -7,7 +7,7 @@
 }
 
 .toggleButtonContainer {
-  top: calc(var(--total-header-height) + 1.5rem);
+  top: calc(var(--total-header-height) + 1.75rem);
   left: 1.5rem;
   position: fixed;
   z-index: 100;
@@ -39,8 +39,22 @@
 
 .titleContainer {
   flex-shrink: 0;
-  padding: 0.5rem 0rem;
   border-bottom: 1px solid var(--mui-palette-divider);
+  padding: 1rem 0.75rem 1rem 4.5rem;
+  color: var(--mui-palette-secondary-main);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  max-width: 20rem;
+
+  &.hasRole {
+    padding: 0.75rem 0.75rem 0.75rem 4.5rem;
+  }
+
+  @media screen and (max-width: 1279px) {
+    font-size: 1rem;
+    max-width: 17rem;
+  }
 }
 
 .menuContainer {
@@ -48,22 +62,6 @@
   overflow-y: auto;
   overflow-x: hidden;
   padding: 1rem 0rem 1rem 0rem;
-}
-
-.studyTitle {
-  padding: 0.5rem 1rem 0.5rem 4.5rem;
-  font-size: 1.25rem;
-  font-weight: 800;
-  line-height: 120%;
-  color: var(--mui-palette-secondary-main);
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  max-width: 19rem;
-
-  @media screen and (max-width: 1279px) {
-    font-size: 1rem;
-  }
 }
 
 .sectionHeader {

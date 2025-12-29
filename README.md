@@ -81,6 +81,18 @@ Importer les Donnée cartographie depuis un [CSV du CNC](https://www.cnc.fr/cine
 Supprimer les réponses d'une question :
 `npx tsx src/scripts/questions/deleteAnswersWithCleanup.ts -q "question-intern-id-here"`
 
+### Importer les données de Secten
+
+Importer les données de Secten en créant une nouvelle version ou en mettant à jour une version existante si le nom de la version est déjà utilisé :
+`npx tsx src/scripts/secten/importSectenData.ts -n ${versionName} -f ${pathToCSVFileSecten}`
+
+Le CSV est créé manuellement depuis l'excel disponible sur le site de Secten.
+
+- Trouver le fichier <https://www.citepa.org/donnees-air-climat/donnees-gaz-a-effet-de-serre/secten/> > "Données de GES ed X"
+- Télécharger le fichier 01 > Onglet CO2e-UE
+- Copier les valeurs des lignes 7 à 14, sauf la ligne 13, dans le fichier excel template.
+- Puis exporter le fichier excel en CSV avec le delimiter ";" et le format "UTF-8".
+
 ## Prisma Commands
 
 ```bash

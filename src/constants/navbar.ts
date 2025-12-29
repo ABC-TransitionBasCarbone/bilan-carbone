@@ -54,6 +54,49 @@ export const getStudyNavbarMenu = (
     }
   }
 
+  if (environment === Environment.CLICKSON) {
+    return {
+      title: {
+        href: `/etudes/${studyId}`,
+        label: studyName,
+      },
+      sections: [
+        {
+          header: t('informationDefinition'),
+          links: [
+            {
+              href: `/etudes/${studyId}/cadrage`,
+              label: t('framing'),
+              testId: 'study-cadrage-link',
+            },
+          ],
+        },
+        {
+          header: t('dataAccounting'),
+          links: [
+            {
+              href: `/etudes/${studyId}/comptabilisation/saisie-des-donnees`,
+              label: t('dataEntry'),
+            },
+            {
+              href: `/etudes/${studyId}/comptabilisation/resultats`,
+              label: t('results'),
+            },
+          ],
+        },
+        {
+          header: t('transitionPlan'),
+          links: [
+            {
+              href: 'https://transition.clickson.eu',
+              label: 'Clicks On Act',
+            },
+          ],
+        },
+      ],
+    }
+  }
+
   return {
     title: {
       href: `/etudes/${studyId}`,

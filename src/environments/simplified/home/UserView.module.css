@@ -1,0 +1,108 @@
+.block {
+  min-height: 600px;
+  height: calc(
+    100vh - 48px - 150px - 48px - 32px
+  ); /* 48px top bar + 150px footer + 48px padding top + 32px padding bottom */
+}
+
+.styledBoxContainer {
+  border-radius: 0.5rem;
+}
+
+.styledBoxInfo {
+  color: var(--mui-palette-primary-contrastText);
+
+  > p {
+    font-family: 'Gilroy-Regular', sans-serif;
+    font-weight: 400;
+    font-size: 1.125rem;
+    line-height: 1.2rem;
+    letter-spacing: 0%;
+  }
+  > div:first-child {
+    > div {
+      > p {
+        line-height: 1.2rem;
+      }
+    }
+  }
+}
+
+.startButton {
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  min-width: 8rem;
+  background-color: var(--mui-palette-primary-main);
+}
+
+.startButton:hover {
+  background-color: var(--mui-palette-primary-dark);
+}
+
+.startButtonLink {
+  text-decoration: none !important;
+}
+
+.styledBoxLink {
+  width: 50%;
+  height: 12rem;
+  text-decoration: none;
+  font-family: 'Gilroy-Regular', sans-serif;
+  border-style: solid;
+  border-width: 0.125rem;
+  border-color: var(--mui-palette-primary-main);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  color: var(--mui-palette-text-primary);
+  background-color: var(--mui-palette-primary-light);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  > div {
+    > p {
+      font-weight: 700;
+      font-size: 1.5rem;
+      line-height: 100%;
+      letter-spacing: 0%;
+      text-align: center;
+    }
+    > .linkMessage {
+      margin-top: 0.5rem;
+      text-align: center;
+    }
+  }
+}
+
+.styledBoxLink:hover {
+  border-width: 0.25rem;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.icon {
+  font-size: 3rem;
+}
+
+.startButtonText {
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.titleInBox {
+  margin-bottom: 2rem;
+}
+
+.bulletPoint {
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.bulletPoint:last-child {
+  margin-bottom: 0;
+}
+
+.leftContent {
+  flex: 1;
+}

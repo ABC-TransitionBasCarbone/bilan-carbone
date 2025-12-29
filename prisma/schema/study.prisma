@@ -56,6 +56,11 @@ enum DayOfWeek {
   Sunday
 }
 
+enum CommentStatus {
+  PENDING
+  VALIDATED
+}
+
 model OpeningHours {
   id          String    @id @default(uuid())
   studySite   StudySite @relation(fields: [studySiteId], references: [id])
@@ -137,6 +142,7 @@ model Study {
   realizationStartDate DateTime?       @map("realization_start_date") @db.Date
   realizationEndDate   DateTime?       @map("realization_end_date") @db.Date
   level                Level
+  simplified           Boolean         @default(false)
   resultsUnit          StudyResultUnit @default(T) @map("results_unit")
   exports              StudyExport[]
 
@@ -159,6 +165,7 @@ model Study {
 
   transitionPlan        TransitionPlan?
   transitionPlanStudies TransitionPlanStudy[]
+  StudyComment          StudyComment[]
 
   @@map("studies")
 }
@@ -341,6 +348,9 @@ model StudySite {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
+  superficy     Float?
+  studentNumber Int?   @map("student_number")
+
   studyAnswers Answer[]
   situation    Situation?
 
@@ -359,4 +369,27 @@ model StudyTemplate {
 
   @@unique([environment, template])
   @@map("study_templates")
+}
+
+model StudyComment {
+  id String @id @default(uuid())
+
+  comment String
+
+  status CommentStatus
+
+  validatedAt   DateTime?
+  validatedById String?   @map("validated_by_account_id")
+  validatedBy   Account?  @relation("study_comment_validator", fields: [validatedById], references: [id])
+
+  authorId String  @map("author_account_id")
+  author   Account @relation("study_comment_author", fields: [authorId], references: [id])
+
+  studyId String @map("study_id")
+  study   Study  @relation(fields: [studyId], references: [id])
+
+  subPost SubPost? @map("sub_post")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 }

@@ -1,0 +1,62 @@
+import Box from '@/components/base/Box'
+import Title from '@/components/base/Title'
+import styles from '@/components/study/results/ResultsContainer.module.css'
+import CarbonIntensity from '@/components/study/results/consolidated/CarbonIntensity'
+import Data from '@/components/study/results/consolidated/Data'
+import { FullStudy } from '@/db/study'
+import { formatNumber } from '@/utils/number'
+import { SiteCAUnit } from '@prisma/client'
+import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
+import { useMemo } from 'react'
+
+interface Props {
+  study: FullStudy
+  studySite: string
+  withDepValue: number
+  caUnit?: SiteCAUnit
+}
+
+const EmissionsAnalysisClickson = ({ study, studySite, withDepValue, caUnit = SiteCAUnit.K }: Props) => {
+  const t = useTranslations('study.results')
+  const tCommon = useTranslations('common')
+  const tResultUnits = useTranslations('study.results.units')
+  const tCAUnit = useTranslations('settings.caUnit')
+
+  const studentAndEmployees = useMemo(() => {
+    return study.sites.reduce((res, studySite) => res + (studySite.studentNumber || 0) + (studySite.etp || 0), 0) || 1
+  }, [studySite])
+
+  return (
+    <div className="mb2">
+      <Title title={t('analysis')} as="h3" className="mb1" />
+      <div className={classNames(styles.analysisContainer, 'flex')}>
+        <div className="flex grow gapped2">
+          <Box className="gapped1 justify-center flex-col w50">
+            <span className="text-center bold">{t('total')}</span>
+            <div className="flex-row justify-around">
+              <Data
+                value={formatNumber(withDepValue)}
+                label={tResultUnits(study.resultsUnit)}
+                testId="withDep-total-result"
+              />
+            </div>
+          </Box>
+          <Box className="flex-col w50">
+            <span className="text-center bold">{tCommon('carbonIntensities')}</span>
+            <CarbonIntensity
+              withDep={withDepValue}
+              withoutDep={0}
+              divider={studentAndEmployees}
+              resultsUnit={study.resultsUnit}
+              label={`${tCAUnit(caUnit)} ${tCommon('perPerson')}`}
+              testId="result-student-employee"
+            />
+          </Box>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default EmissionsAnalysisClickson

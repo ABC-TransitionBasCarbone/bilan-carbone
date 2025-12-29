@@ -25,6 +25,7 @@ export const mockedStudy = {
   createdBy: mockedAccountId,
   organizationVersionId: mockedOrganizationVersionId,
   resultsUnit: StudyResultUnit.K,
+  simplified: false,
 }
 
 export const mockedDdStudy = {
@@ -64,6 +65,10 @@ export const mockedStudySite = {
   openingHours: [],
   volunteerNumber: 0,
   beneficiaryNumber: 0,
+  superficy: null,
+  studentNumber: null,
+  address: null,
+  establishmentYear: null,
 }
 
 export const mockedDbStudySite = {
@@ -82,6 +87,11 @@ export const mockedDbFullStudySite = {
     postalCode: null,
     city: null,
     cnc: null,
+    etp: 0,
+    superficy: null,
+    studentNumber: null,
+    address: null,
+    establishmentYear: null,
   },
   cncVersion: null,
 }
@@ -161,6 +171,11 @@ export const getMockedDetailedFullStudySite = (
         numberOfProgrammedFilms: 10,
         ecrans: 13,
       },
+      etp: 0,
+      superficy: null,
+      studentNumber: null,
+      address: null,
+      establishmentYear: null,
     },
     cncVersion: {
       id: '1',
@@ -226,6 +241,7 @@ export const getMockedDuplicateStudyCommand = (overrides = {}) => ({
 export const getMockeFullStudy = (overrides = {}): FullStudy => ({
   id: TEST_IDS.sourceStudy,
   name: 'Source Study',
+  simplified: false,
   resultsUnit: StudyResultUnit.K,
   organizationVersionId: TEST_IDS.orgVersion,
   exports: [{ type: Export.Beges, control: ControlMode.Operational }],

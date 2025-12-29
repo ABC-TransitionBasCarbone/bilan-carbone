@@ -11,15 +11,15 @@
   "home": {
     "navigation": {
       "collaborators": {
-        "title": "L'équipe Pilote :",
+        "title": "L'équipe Pilote",
         "message": "Retrouvez ici la liste des enseignants, personnels administratifs et élèves autorisés à modifier les données de l'établissement"
       },
       "footprints": {
-        "title": "Mes Empreintes :",
+        "title": "Mes Empreintes",
         "message": "Créer votre première empreinte ici. Vous pourrez ensuite consulter vos empreintes ou en créer de nouvelles à tout moment."
       },
       "sites": {
-        "title": "Mes Établissements :",
+        "title": "Mes Établissements",
         "message": "Retrouvez ici la liste des établissements rattachés à votre compte"
       }
     },
@@ -42,11 +42,13 @@
     "create": "Ajouter une empreinte",
     "myStudies": "Mes empreintes carbone",
     "createFirstStudy": "Créer ma première empreinte",
+    "createFirstSimplifiedStudy": "Créer ma première Empreinte",
+    "firstSimplifiedStudyMessage": "Il est temps de vous lancer ! Nous vous invitons à créer votre première Empreinte.",
     "see": "Voir mon empreinte",
     "selectSite": "Avant de remplir les données, choisissez un établissement",
     "lastStudyTitle": "Dernière empreinte en date",
     "navigation": {
-      "framing": "Données générales",
+      "framing": "Profil de l'établissement",
       "organizations": "Mes établissement",
       "team": "Mes Collaborateur·rices",
       "title": "Mon Empreinte"
@@ -60,7 +62,11 @@
       "glossary": {
         "validatorEmailDescription": "En tant qu'élèves j'ai accès en tant que contributeurice sur un ou plusieurs postes d'émission.",
         "duplicationOptionsDescription": "Lors de la duplication d'une étude, vous pouvez choisir d'inviter les mêmes membres d'équipe et élèves de l'étude originale dans la nouvelle. Cela permet de maintenir la continuité de la collaboration."
-      }
+      },
+      "etp": "Nombre de personnels (enseignants et non-éducatifs)",
+      "studentNumber": "Nombre d'élèves",
+      "superficy": "Superficie de l'établissement",
+      "goToDataEntry": "Passer à la saisie des données"
     },
     "newContributor": {
       "title": "Ajouter un·e élève sur l'étude : {name}"
@@ -80,11 +86,33 @@
           "description": "Vous pouvez ici gérer les élèves de votre étude. Ceux-ci auront accès à certains postes et sous postes (que vous pouvez définir) et pourront remplir certaines informations pour des sources d'émission que vous aurez déjà créées dans l'étude. Pour plus d'information sur l'interface des élèves, n'hésitez pas à aller voir notre <link>FAQ</link>"
         }
       }
+    },
+    "export": {
+      "export": "Exporter mon empreinte"
     }
   },
   "emissionFactors": {
     "post": {
-      "Restauration": "Restauration"
+      "EnergiesClickson": "Énergies",
+      "Combustibles": "Combustibles",
+      "AutresGaz": "Autres gaz",
+      "Restauration": "Restauration",
+      "TypesDeRepasServis": "Types de repas servis",
+      "DistributeursAutomatiques": "Distributeurs automatiques",
+      "DeplacementsClickson": "Déplacements",
+      "TransportDesEleves": "Transport des élèves",
+      "TransportDuPersonnel": "Transport du personnel",
+      "VoyagesScolaires": "Voyages scolaires",
+      "Fournitures": "Fournitures",
+      "ProduitsChimiques": "Produits chimiques",
+      "EquipementsDeSport": "Équipements de sport",
+      "DechetsRecyclables": "Déchets recyclables",
+      "OrduresMenageresResiduelles": "Ordures ménagères résiduelles",
+      "ImmobilisationsClickson": "Immobilisations",
+      "Construction": "Construction",
+      "Renovation": "Rénovation",
+      "EquipementsInformatiqueAudiovisuel": "Équipements informatiques / audiovisuel",
+      "EquipementsDivers": "Equipements divers (électroménager, équipements professionnels...)"
     }
   },
   "organization": {
@@ -98,7 +126,13 @@
       "title": "Sur quels établissements doit porter l'empreinte ?",
       "noSites": "Il n'y a pas d'établissements configurés",
       "namePlaceholder": "Nom de l'établissement",
-      "add": "Ajouter un établissement"
+      "add": "Ajouter un établissement",
+      "etp": "Nombre de personnels (enseignants et non-éducatifs)",
+      "etpPlaceholder": "Nombre total de personnels",
+      "studentNumber": "Nombre d'élèves",
+      "studentNumberPlaceholder": "Nombre total d'élèves",
+      "establishmentYear": "Année de construction",
+      "establishmentYearPlaceholder": "Année de construction de l'établissement"
     }
   },
   "login": {
@@ -131,5 +165,13 @@
       "activation": "Vous avez activé votre compte sur Clickson",
       "activationRequest": "Demande d'accès à votre organisation Clickson"
     }
+  },
+  "comments": {
+    "title": "Gestion des commentaires",
+    "noComments": "Vous n'avez aucun commentaire à traiter",
+    "yourComment": "Votre commentaire...",
+    "validated": "Validé",
+    "pending": "En attente",
+    "addComment": "Ajouter un commentaire"
   }
 }

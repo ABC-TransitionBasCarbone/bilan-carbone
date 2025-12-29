@@ -1,0 +1,177 @@
+{
+  "nav": {
+    "newStudyContributor": "Añadir un estudiante"
+  },
+  "navigation": {
+    "organizations": "Mis Huellas de Carbono",
+    "organization": "Equipo Piloto",
+    "information": "Mi Establecimiento",
+    "team": "Equipo Piloto"
+  },
+  "home": {
+    "navigation": {
+      "collaborators": {
+        "title": "Equipo Piloto",
+        "message": "Encuentre aquí la lista de profesores, personal administrativo y estudiantes autorizados a modificar los datos del establecimiento"
+      },
+      "footprints": {
+        "title": "Mis Huellas",
+        "message": "Cree su primera huella aquí. Luego podrá ver sus huellas o crear nuevas en cualquier momento."
+      },
+      "sites": {
+        "title": "Mis Establecimientos",
+        "message": "Encuentre aquí la lista de establecimientos vinculados a su cuenta"
+      }
+    },
+    "title": "Calcular su huella de carbono simplificada le permitirá:",
+    "alert": {
+      "info": "La calculadora Clickson le permite estimar el impacto climático de su actividad. Es ante todo una herramienta de concienciación. No es un enfoque de transición baja en carbono sino una huella de carbono simplificada — en el sentido de la <link>Guía de comunicación sobre contabilidad de carbono</link> — enfocada en las principales fuentes de emisión relacionadas con la actividad de los establecimientos."
+    },
+    "info": {
+      "0": "Comprender la medición del impacto de su establecimiento",
+      "1": "Identificar prioridades de acción",
+      "2": "A largo plazo, y mediante trabajo más profundo, construir una trayectoria de reducción"
+    }
+  },
+  "team": {
+    "table": {
+      "title": "Equipo Piloto"
+    }
+  },
+  "study": {
+    "create": "Añadir una Huella",
+    "myStudies": "Mis Huellas de Carbono",
+    "createFirstStudy": "Crear Mi Primera Huella",
+    "createFirstSimplifiedStudy": "Crear",
+    "firstSimplifiedStudyMessage": "¡Es hora de empezar! Te invitamos a crear tu primera huella de carbono simplificada.",
+    "see": "Ver Mi Huella",
+    "selectSite": "Antes de completar datos, seleccione un establecimiento",
+    "lastStudyTitle": "Última Huella",
+    "navigation": {
+      "framing": "Datos Generales",
+      "organizations": "Mis Establecimientos",
+      "team": "Mis Colaboradores",
+      "title": "Mi Huella"
+    },
+    "validatedOnlyDescription": "Como estudiante, tengo acceso como colaborador a uno o más puestos de emisión.",
+    "new": {
+      "suggestion": {
+        "name": "Ejemplo: huella de carbono Colegio Simone Veil"
+      },
+      "inviteContributors": "Invitar a los mismos estudiantes",
+      "glossary": {
+        "validatorEmailDescription": "Como estudiante, tengo acceso como colaborador a uno o más puestos de emisión.",
+        "duplicationOptionsDescription": "Al duplicar un estudio, puede optar por invitar a los mismos miembros del equipo y estudiantes del estudio original al nuevo. Esto ayuda a mantener la continuidad de la colaboración."
+      },
+      "etp": "Número de personal (docentes y personal no docente)",
+      "studentNumber": "Número de estudiantes",
+      "superficy": "Área del establecimiento",
+      "goToDataEntry": "Ir a la entrada de datos"
+    },
+    "newContributor": {
+      "title": "Añadir un estudiante al estudio: {name}"
+    },
+    "role": {
+      "Contributor": "Estudiante"
+    },
+    "rights": {
+      "contributorsTable": {
+        "delete": "Eliminar el estudiante",
+        "title": "Estudiantes",
+        "newContributorLink": "Añadir un estudiante",
+        "deleting": {
+          "confirmation": "¿Está seguro de que desea eliminar {email} de los estudiantes de este estudio?"
+        },
+        "role": {
+          "description": "Aquí puede gestionar los estudiantes de su estudio. Tendrán acceso a ciertos puestos y subpuestos (que puede definir) y podrán completar cierta información para fuentes de emisión que ya ha creado en el estudio. Para más información sobre la interfaz del colaborador, consulte nuestras <link>Preguntas Frecuentes</link>."
+        }
+      }
+    },
+    "export": {
+      "export": "Exportar mi huella"
+    }
+  },
+  "emissionFactors": {
+    "post": {
+      "EnergiesClickson": "Energías",
+      "Combustibles": "Combustibles",
+      "AutresGaz": "Otros gases",
+      "Restauration": "Restauración",
+      "TypesDeRepasServis": "Tipos de comidas servidas",
+      "DistributeursAutomatiques": "Distribuidores automáticos",
+      "DeplacementsClickson": "Desplazamientos",
+      "TransportDesEleves": "Transporte de estudiantes",
+      "TransportDuPersonnel": "Transporte del personal",
+      "VoyagesScolaires": "Viajes escolares",
+      "Fournitures": "Suministros",
+      "ProduitsChimiques": "Productos químicos",
+      "EquipementsDeSport": "Equipos deportivos",
+      "DechetsRecyclables": "Residuos reciclables",
+      "OrduresMenageresResiduelles": "Residuos domésticos no reciclables",
+      "ImmobilisationsClickson": "Inmuebles",
+      "Construction": "Construcción",
+      "Renovation": "Renovación",
+      "EquipementsInformatiqueAudiovisuel": "Equipos informáticos / audiovisuales",
+      "EquipementsDivers": "Equipos diversos (electrodomésticos, equipos profesionales...)"
+    }
+  },
+  "organization": {
+    "card": {
+      "myOrganization": "Mis Establecimientos"
+    },
+    "form": {
+      "editTitle": "Editar Mis Establecimientos"
+    },
+    "sites": {
+      "title": "¿Qué establecimientos debe cubrir la huella de carbono?",
+      "noSites": "Sin establecimientos configurados",
+      "namePlaceholder": "Nombre del Establecimiento",
+      "add": "Añadir un Establecimiento",
+      "etp": "Número de personal (docentes y personal no docente)",
+      "etpPlaceholder": "Número total de personal",
+      "studentNumber": "Número de estudiantes",
+      "studentNumberPlaceholder": "Número total de estudiantes",
+      "establishmentYear": "Año de fundación",
+      "establishmentYearPlaceholder": "Año en que se fundó el establecimiento"
+    }
+  },
+  "login": {
+    "welcome": "Bienvenido a Clickson PEBC",
+    "explanation": "¡Midamos las emisiones de gases de efecto invernadero de su establecimiento!",
+    "form": {
+      "activate": "Crear mi cuenta"
+    }
+  },
+  "signup": {
+    "description": "Cree una cuenta Clickson con su correo electrónico y un código postal o nombre de escuela",
+    "schoolPostalCodeOrName": "Código postal o nombre de la escuela",
+    "schoolPostalCodeOrNamePlaceholder": "El código postal o nombre del establecimiento escolar",
+    "schoolSearchGlossaryTitle": "Encuentre su establecimiento escolar.",
+    "schoolSearchGlossary": "Encuentre su establecimiento escolar ingresando su código postal o nombre, luego selecciónelo de la lista desplegable.",
+    "close": "Cerrar",
+    "schoolPostalCodeOrNameRequired": "Por favor ingrese el código postal o nombre de la escuela",
+    "validate": "Validar",
+    "clear": "Limpiar valor",
+    "Not authorized": "Este correo ya se utiliza para Clickson o hay un problema con la creación de cuenta. Consulte <link>las Preguntas Frecuentes</link> o <support>póngase en contacto con soporte</support> si cree que esto es un error.",
+    "Not known school": "Por favor, busque y seleccione su establecimiento.",
+    "validation": {
+      "schoolPostalCodeOrName": "Por favor ingrese el código postal o nombre de la escuela"
+    }
+  },
+  "email": {
+    "subject": {
+      "newUser": "Ha sido invitado a Clickson",
+      "addedActiveUser": "Ha sido invitado a un nuevo entorno de Clickson",
+      "activation": "Ha activado su cuenta en Clickson",
+      "activationRequest": "Solicitud de acceso a su organización Clickson"
+    }
+  },
+  "comments": {
+    "title": "Gestión de Comentarios",
+    "noComments": "No tiene comentarios pendientes",
+    "yourComment": "Su comentario...",
+    "validated": "Validado",
+    "pending": "Pendiente",
+    "addComment": "Añadir un comentario"
+  }
+}

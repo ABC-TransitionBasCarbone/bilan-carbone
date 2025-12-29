@@ -57,6 +57,9 @@ model Account {
   flows                      Document[]
   userApplicationSettings    UserApplicationSettings?
 
+  studyCommentsValidated StudyComment[] @relation("study_comment_validator")
+  studyComments          StudyComment[] @relation("study_comment_author")
+
   environment Environment
   status      UserStatus
 

@@ -391,7 +391,7 @@ const users = async () => {
   if (clicksonSite) {
     await prisma.site.update({
       where: { id: clicksonSite.id },
-      data: { establishmentId: '0781494A', name: 'Ecole élémentaire Mansart', establishmentYear: '1965-05-01' },
+      data: { establishmentId: '0781494A', name: 'Ecole élémentaire Mansart', establishmentYear: '1965' },
     })
   }
 
@@ -684,6 +684,29 @@ const users = async () => {
     }),
   ])
 
+  await Promise.all(
+    [Role.GESTIONNAIRE, Role.COLLABORATOR].map(async (role) => {
+      return prisma.account.create({
+        data: {
+          organizationVersionId: regularTiltOrganizationVersions[0].id,
+          role,
+          environment: Environment.TILT,
+          status: UserStatus.ACTIVE,
+          userId: (
+            await prisma.user.create({
+              data: {
+                email: `tilt-env-untrained-${role.toLowerCase()}-0@yopmail.com`,
+                firstName: faker.person.firstName(),
+                lastName: faker.person.lastName(),
+                password: await signPassword('password-0'),
+              },
+            })
+          ).id,
+        },
+      })
+    }),
+  )
+
   await prisma.user
     .create({
       data: {
@@ -716,12 +739,11 @@ const users = async () => {
   })
 
   const subPosts = Object.keys(SubPost)
+  const creator = faker.helpers.arrayElement(
+    usersWithAccounts.filter((userWithAccount) => userWithAccount.accounts[0].account.status === UserStatus.ACTIVE),
+  )
   const studies = await Promise.all(
     Array.from({ length: 20 }).map(() => {
-      const creator = faker.helpers.arrayElement(
-        usersWithAccounts.filter((userWithAccount) => userWithAccount.accounts[0].account.status === UserStatus.ACTIVE),
-      )
-
       const organizationVersionSites = sites.filter(
         (site) => site.organizationId === creator.accounts[0].organizationVersion.organizationId,
       )
@@ -751,6 +773,47 @@ const users = async () => {
           },
           allowedUsers: {
             create: { role: StudyRole.Validator, accountId: creator.accounts[0].account.id },
+          },
+        },
+      })
+    }),
+  )
+
+  await Promise.all(
+    regularTiltOrganizationVersions.map(async (organizationVersion) => {
+      const organizationVersionSites = sites.filter(
+        (site) => site.organizationId === organizationVersion.organizationId,
+      )
+      const tiltAccount = usersWithAccounts.find((userWithAccount) =>
+        userWithAccount.accounts.some(
+          (account) =>
+            account.organizationVersion.organizationId === organizationVersion.organizationId &&
+            account.account.environment === Environment.TILT &&
+            account.account.status === UserStatus.ACTIVE,
+        ),
+      )
+      if (!tiltAccount) {
+        return
+      }
+      await prisma.study.create({
+        include: { sites: true },
+        data: {
+          createdById: tiltAccount.accounts[0].account.id,
+          startDate: new Date(),
+          endDate: faker.date.future(),
+          isPublic: true,
+          level: Level.Initial,
+          name: faker.lorem.words({ min: 2, max: 5 }),
+          organizationVersionId: organizationVersion.id,
+          simplified: true,
+          sites: {
+            createMany: {
+              data: organizationVersionSites.map((site) => ({
+                siteId: site.id,
+                etp: 10,
+                ca: 10,
+              })),
+            },
           },
         },
       })

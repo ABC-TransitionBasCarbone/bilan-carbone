@@ -1,8 +1,8 @@
-import { FormControl, FormHelperText, Typography } from '@mui/material'
+import { FormControl, FormHelperText } from '@mui/material'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
 import { useCallback } from 'react'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
-import IconLabel from '../base/IconLabel'
+import { CustomFormLabel } from './CustomFormLabel'
 import styles from './Form.module.css'
 
 interface Props<T extends FieldValues> {
@@ -14,6 +14,7 @@ interface Props<T extends FieldValues> {
   endAdornment?: React.ReactNode
   customError?: string
   trim?: boolean
+  expandable?: boolean
 }
 
 export const FormTextField = <T extends FieldValues>({
@@ -25,6 +26,7 @@ export const FormTextField = <T extends FieldValues>({
   endAdornment,
   customError,
   trim,
+  expandable = true,
   ...textFieldProps
 }: Props<T> & TextFieldProps) => {
   const iconDiv = icon ? <div className={styles.icon}>{icon}</div> : null
@@ -53,19 +55,7 @@ export const FormTextField = <T extends FieldValues>({
       control={control}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
         <FormControl fullWidth={textFieldProps.fullWidth} error={!!error || !!customError} className="inputContainer">
-          {label ? (
-            <>
-              {iconDiv ? (
-                <IconLabel icon={iconDiv} iconPosition={iconPosition} className="mb-2">
-                  <span className="inputLabel bold">{label}</span>
-                </IconLabel>
-              ) : (
-                <Typography fontWeight="bold" className="mb-2">
-                  {label}
-                </Typography>
-              )}
-            </>
-          ) : null}
+          {label && <CustomFormLabel label={label} icon={iconDiv} iconPosition={iconPosition} />}
           <TextField
             {...textFieldProps}
             error={!!error || !!customError}
@@ -76,7 +66,7 @@ export const FormTextField = <T extends FieldValues>({
                 : value
             }
             minRows={isMultiline ? textFieldProps.rows || 2 : undefined}
-            className={isMultiline ? styles.multilineResizable : undefined}
+            className={isMultiline && expandable ? styles.multilineResizable : undefined}
             slotProps={{
               input: isMultiline
                 ? {

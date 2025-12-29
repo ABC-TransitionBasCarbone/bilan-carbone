@@ -13,6 +13,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
 import { Environment, Import, StudyRole, SubPost as SubPostEnum } from '@prisma/client'
 import classNames from 'classnames'
+import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import HelpIcon from '../base/HelpIcon'
@@ -23,11 +24,13 @@ import styles from './SubPosts.module.css'
 type StudyProps = {
   study: FullStudy
   withoutDetail: false
+  hasFilter: boolean
 }
 
 type StudyWithoutDetailProps = {
   study: StudyWithoutDetail
   withoutDetail: true
+  hasFilter: boolean
 }
 
 interface Props {
@@ -39,6 +42,7 @@ interface Props {
   setGlossary: (subPost: string) => void
   count: number
   validated: number
+  defaultOpen: boolean
 }
 
 const SubPost = ({
@@ -52,6 +56,8 @@ const SubPost = ({
   setGlossary,
   count,
   validated,
+  hasFilter,
+  defaultOpen,
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
   const t = useTranslations('study.post')
   const tStudy = useTranslations('study')
@@ -59,7 +65,10 @@ const SubPost = ({
   const tUnits = useTranslations('study.results.units')
   const { environment } = useAppEnvironmentStore()
   const [emissionFactorsForSubPost, setEmissionFactorsForSubPost] = useState<EmissionFactorWithMetaData[]>([])
-  const [expanded, setExpanded] = useState(false)
+  const [expanded, setExpanded] = useState(defaultOpen)
+
+  const { data: session } = useSession()
+
   const importVersions = useMemo(
     () => [
       { id: Import.Manual, source: Import.Manual, name: '' },
@@ -95,6 +104,12 @@ const SubPost = ({
     }
   }, [emissionFactorsForSubPost.length, environment, expanded, importVersions, study.id, subPost])
 
+  useEffect(() => {
+    if (hasFilter && emissionSources.length) {
+      setExpanded(true)
+    }
+  }, [emissionSources.length, hasFilter])
+
   const total = useMemo(() => {
     if (!environment) {
       return 0
@@ -121,6 +136,10 @@ const SubPost = ({
     [subPost, study.exports, environment],
   )
 
+  const isContributor = useMemo(() => {
+    return session?.user && contributors?.includes(session?.user.email)
+  }, [session?.user, contributors])
+
   const accordionRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -140,6 +159,10 @@ const SubPost = ({
       }
     }
   }, [emissionSources, subPost])
+
+  useEffect(() => {
+    setExpanded(defaultOpen)
+  }, [defaultOpen])
 
   return (!userRoleOnStudy || userRoleOnStudy === StudyRole.Reader) && emissionSources.length === 0 ? null : (
     <div ref={accordionRef} id={`subpost-${subPost}`} className={styles.subPostScrollContainer}>
@@ -193,6 +216,7 @@ const SubPost = ({
                 caracterisations={caracterisations}
                 emissionFactorsForSubPost={emissionFactorsForSubPost}
                 importVersions={importVersions}
+                isContributor={isContributor}
               />
             ) : (
               <EmissionSource
@@ -205,6 +229,7 @@ const SubPost = ({
                 caracterisations={caracterisations}
                 emissionFactorsForSubPost={emissionFactorsForSubPost}
                 importVersions={importVersions}
+                isContributor={isContributor}
               />
             ),
           )}

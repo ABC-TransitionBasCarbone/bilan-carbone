@@ -1,8 +1,8 @@
 'use server'
 
-import { prismaClient } from '@/db/client'
 import { getStudyById, getStudyByIds } from '@/db/study'
 import {
+  createActionWithRelations,
   createExternalStudy,
   createTransitionPlan,
   createTransitionPlanStudy,
@@ -23,6 +23,7 @@ import {
   getTransitionPlanByIdWithRelations,
   getTransitionPlanByStudyId,
   saveIndicatorsOnAction,
+  saveStepsOnAction,
   TransitionPlanWithStudies,
   updateAction,
 } from '@/db/transitionPlan'
@@ -33,7 +34,7 @@ import { dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED, NOT_FOUND } from '../permissions/check'
 import { canReadStudy, hasEditAccessOnStudy, hasReadAccessOnStudy } from '../permissions/study'
 import { canEditTransitionPlan, canReadTransitionPlan } from '../permissions/transitionPlan'
-import { AddActionCommand, ExternalStudyCommand } from './transitionPlan.command'
+import { AddActionInputCommand } from './transitionPlan.command'
 
 export const getStudyTransitionPlan = async (studyId: string): Promise<ApiResponse<TransitionPlan | null>> =>
   withServerResponse('getStudyTransitionPlan', async () => {
@@ -124,22 +125,14 @@ export const duplicateTransitionPlan = async (sourceTransitionPlanId: string, ta
   }
 }
 
-export const addAction = async (command: AddActionCommand) =>
+export const addAction = async (command: AddActionInputCommand) =>
   withServerResponse('addAction', async () => {
     const hasEditAccess = await canEditTransitionPlan(command.transitionPlanId)
     if (!hasEditAccess) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const { indicators, ...actionData } = command
-    await prismaClient.action.create({
-      data: {
-        ...actionData,
-        ...(indicators && {
-          indicators: { create: indicators.map((ind) => ({ type: ind.type, description: ind.description })) },
-        }),
-      },
-    })
+    await createActionWithRelations(command)
   })
 
 const isYearAlreadyLinked = async (transitionPlanId: string, year: number) => {
@@ -199,6 +192,14 @@ export const linkOldStudy = async (transitionPlanId: string, studyIdToLink: stri
 
     await createTransitionPlanStudy(transitionPlanId, studyIdToLink)
   })
+
+type ExternalStudyCommand = {
+  transitionPlanId: string
+  externalStudyId?: string
+  name: string
+  date: string
+  totalCo2Kg: number
+}
 
 export const addExternalStudy = async (command: ExternalStudyCommand) =>
   withServerResponse('addExternalStudy', async () => {
@@ -332,7 +333,7 @@ export const deleteLinkedStudy = async (studyId: string, transitionPlanId: strin
     await dbDeleteLinkedStudy(studyId, transitionPlanId)
   })
 
-export const editAction = async (id: string, command: AddActionCommand) =>
+export const editAction = async (id: string, command: AddActionInputCommand) =>
   withServerResponse('editAction', async () => {
     const hasEditAccess = await canEditTransitionPlan(command.transitionPlanId)
     if (!hasEditAccess) {
@@ -344,7 +345,7 @@ export const editAction = async (id: string, command: AddActionCommand) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const { indicators, ...actionData } = command
+    const { indicators, steps, ...actionData } = command
 
     await updateAction(id, actionData)
 
@@ -354,6 +355,14 @@ export const editAction = async (id: string, command: AddActionCommand) =>
       const indicatorsToDelete = existingIndicatorIds.filter((existingId) => !newIndicatorIds.includes(existingId))
 
       await saveIndicatorsOnAction(id, indicators, indicatorsToDelete)
+    }
+
+    if (steps) {
+      const existingStepIds = action.steps.map((s) => s.id)
+      const newStepIds = steps.map((s) => s.id).filter(Boolean)
+      const stepsToDelete = existingStepIds.filter((existingId) => !newStepIds.includes(existingId))
+
+      await saveStepsOnAction(id, steps, stepsToDelete)
     }
   })
 

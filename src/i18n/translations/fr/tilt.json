@@ -17,6 +17,23 @@
       "siret": "Veuillez entrer un Siret"
     }
   },
+  "home": {
+    "navigation": {
+      "collaborators": {
+        "title": "Mes Collaborateur·rices",
+        "message": "Retrouvez ici la liste des personnes autorisées à intervenir sur vos différentes empreintes carbone"
+      },
+      "footprints": {
+        "title": "Mes Empreintes",
+        "message": "Créer votre première empreinte ici. Vous pourrez ensuite consulter vos empreintes ou en créer de nouvelles à tout moment."
+      },
+      "sites": {
+        "title": "Mon Association",
+        "message": "Retrouvez ici la liste des établissements rattachés à votre compte"
+      }
+    },
+    "title": "Calculer votre empreinte carbone simplifiée vous permettra de :"
+  },
   "exports": {
     "env_specific_export": "Tilt"
   },
@@ -51,7 +68,12 @@
     },
     "dependencyMatrix": {
       "info": "Vous pouvez télécharger un exemple de matrice de risque et de dépendance pour vous aider à construire la vôtre. Par la suite, si vous souhaitez soumettre votre propre cartographie des flux pour aider d'autres associations en leur fournissant une base de travail, merci de la soumettre à <mail>methodologie@abc-transitionbascarbone.fr</mail>"
-    }
+    },
+    "firstSimplifiedStudyMessage": "Il est temps de vous lancer ! Nous vous invitons à créer votre première Empreinte.",
+    "createFirstSimplifiedStudy": "Créer ma première Empreinte",
+    "createSimplified": "Créer une Empreinte",
+    "mySimplifiedStudies": "Mes Empreintes",
+    "seeSimplified": "Voir mon Empreinte"
   },
   "emissionFactors": {
     "post": {
@@ -103,5 +125,8 @@
         "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux"
       }
     }
+  },
+  "navigation": {
+    "footprints": "Mes empreintes"
   }
 }

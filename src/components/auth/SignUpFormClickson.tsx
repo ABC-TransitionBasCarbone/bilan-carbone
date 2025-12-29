@@ -15,7 +15,7 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Form from '../base/Form'
 import LoadingButton from '../base/LoadingButton'
@@ -101,6 +101,18 @@ const SignUpFormClickson = () => {
     }
   }
 
+  const options = useMemo(() => {
+    if (schoolPostalCodeOrName.length < 3) {
+      return []
+    }
+
+    return schools.map((school) => ({
+      label: `${school.nom_etablissement} - ${school.adresse_1} (${school.code_postal})`,
+      value: school.nom_etablissement,
+      testId: `school-option-${school.identifiant_de_l_etablissement}`,
+    }))
+  }, [schools, schoolPostalCodeOrName])
+
   return (
     <Form onSubmit={handleSubmit(onSubmit)} className="grow justify-center">
       <FormControl className={authStyles.form}>
@@ -113,18 +125,11 @@ const SignUpFormClickson = () => {
           data-testid="activation-email"
         />
         <FormAutocomplete
+          filterOptions={(x) => x}
           data-testid="activation-school"
           control={control}
           translation={t}
-          options={
-            schoolPostalCodeOrName.length < 3
-              ? []
-              : schools.map((school) => ({
-                  label: `${school.nom_etablissement} - ${school.adresse_1} (${school.code_postal})`,
-                  value: school.nom_etablissement,
-                  testId: `school-option-${school.identifiant_de_l_etablissement}`,
-                }))
-          }
+          options={options}
           renderOption={(props, option) => {
             const dataTestId = typeof option === 'string' ? undefined : (option as { testId?: string }).testId
             const label = typeof option === 'string' ? option : option.label

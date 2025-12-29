@@ -41,11 +41,11 @@ export enum TiltPost {
 }
 
 export enum ClicksonPost {
-  Energies = BCPost.Energies,
+  EnergiesClickson = 'EnergiesClickson',
   Restauration = 'Restauration',
-  Deplacements = BCPost.Deplacements,
+  DeplacementsClickson = 'DeplacementsClickson',
   Achats = 'Achats',
-  Immobilisations = BCPost.Immobilisations,
+  ImmobilisationsClickson = 'ImmobilisationsClickson',
 }
 
 export const Post = { ...BCPost, ...CutPost, ...TiltPost, ...ClicksonPost }
@@ -188,11 +188,31 @@ export const subPostsByPostTILT: Record<TiltPost, SubPost[]> = {
 }
 
 export const subPostsByPostClickson: Record<ClicksonPost, SubPost[]> = {
-  [ClicksonPost.Energies]: subPostsByPostBC[BCPost.Energies],
-  [ClicksonPost.Restauration]: [],
-  [ClicksonPost.Deplacements]: subPostsByPostBC[BCPost.Deplacements],
-  [ClicksonPost.Achats]: [],
-  [ClicksonPost.Immobilisations]: subPostsByPostBC[BCPost.Immobilisations],
+  [ClicksonPost.EnergiesClickson]: [SubPost.Electricite, SubPost.Combustibles, SubPost.AutresGaz],
+  [ClicksonPost.Restauration]: [
+    SubPost.TypesDeRepasServis,
+    SubPost.DistributeursAutomatiques,
+    SubPost.Fret,
+    SubPost.DechetsOrganiques,
+  ],
+  [ClicksonPost.DeplacementsClickson]: [
+    SubPost.TransportDesEleves,
+    SubPost.TransportDuPersonnel,
+    SubPost.VoyagesScolaires,
+  ],
+  [ClicksonPost.Achats]: [
+    SubPost.Fournitures,
+    SubPost.ProduitsChimiques,
+    SubPost.EquipementsDeSport,
+    SubPost.DechetsRecyclables,
+    SubPost.OrduresMenageresResiduelles,
+  ],
+  [ClicksonPost.ImmobilisationsClickson]: [
+    SubPost.Construction,
+    SubPost.Renovation,
+    SubPost.EquipementsInformatiqueAudiovisuel,
+    SubPost.EquipementsDivers,
+  ],
 }
 
 export const environmentPostMapping = {

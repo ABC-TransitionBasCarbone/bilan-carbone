@@ -39,6 +39,7 @@ const StudyPage = async ({ study, user }: Props) => {
         ].filter((link) => link !== undefined)}
       />
       <StudyDetails
+        user={user}
         study={study}
         canDeleteStudy={canDelete}
         canDuplicateStudy={canDuplicate}
