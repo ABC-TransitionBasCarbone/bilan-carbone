@@ -165,5 +165,13 @@
       "activation": "Vous avez activé votre compte sur Clickson",
       "activationRequest": "Demande d'accès à votre organisation Clickson"
     }
+  },
+  "comments": {
+    "title": "Gestion des commentaires",
+    "noComments": "Vous n'avez aucun commentaire à traiter",
+    "yourComment": "Votre commentaire...",
+    "validated": "Validé",
+    "pending": "En attente",
+    "addComment": "Ajouter un commentaire"
   }
 }

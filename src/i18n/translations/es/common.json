@@ -15,7 +15,8 @@
       "confirm": "Confirmar",
       "update": "Actualizar",
       "start": "Iniciar",
-      "close": "Cerrar"
+      "close": "Cerrar",
+      "approve": "Aprobar"
     },
     "label": {
       "start": "Inicio",
@@ -37,5 +38,8 @@
     "validation": {
       "email": "Por favor, ingrese un correo electrónico"
     }
+  },
+  "navigation": {
+    "comments": "Comentarios"
   }
 }
