@@ -49,12 +49,21 @@ const StudyComments = ({ studyId, subPost = null, withField = true, canValidate 
   const handleSubmit = async () => {
     if (newComment) {
       setLoading(true)
-      await callServerFunction(() => createStudyCommentCommand(studyId, newComment, CommentStatus.PENDING, subPost), {
-        onSuccess: () => {
-          setNewComment('')
-          fetchComments()
+      await callServerFunction(
+        () =>
+          createStudyCommentCommand(
+            studyId,
+            newComment,
+            canValidate ? CommentStatus.VALIDATED : CommentStatus.PENDING,
+            subPost,
+          ),
+        {
+          onSuccess: () => {
+            setNewComment('')
+            fetchComments()
+          },
         },
-      })
+      )
       setLoading(false)
     }
   }
