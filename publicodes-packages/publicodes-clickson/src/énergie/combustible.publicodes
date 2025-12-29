@@ -1,0 +1,101 @@
+énergie . combustible:
+titre: Type de combustible
+formule:
+  somme:
+    - fioul domestique
+    - fioul lourd/commercial
+    - gaz naturel
+    - granulés de bois
+    - biopropane
+    - réseau de chaleur
+unité: kgCO2e
+
+énergie . combustible . fioul domestique:
+  titre: Fioul domestique
+  formule: consommation * FE
+  unité: kgCO2e
+  avec:
+    consommation:
+      question: Consommation annuelle de fioul domestique
+      par défaut: 0
+      unité: L
+    FE:
+      valeur: 3.24
+      unité: kgCO2e/L
+      meta:
+        incertitude: 0
+
+énergie . combustible . fioul lourd commercial:
+  titre: Fioul lourd/commercial
+  formule: consommation * FE
+  unité: kgCO2e
+  avec:
+    consommation:
+      question: Consommation annuelle de fioul lourd/commercial
+      par défaut: 0
+      unité: L
+    FE:
+      valeur: 3.28
+      unité: kgCO2e/L
+      meta:
+        incertitude: 0
+
+énergie . combustible . gaz naturel:
+  titre: Gaz naturel
+  formule: consommation * FE
+  unité: kgCO2e
+  avec:
+    consommation:
+      question: Consommation annuelle de gaz naturel
+      par défaut: 0
+      unité: kWh
+    FE:
+      valeur: 2.32
+      unité: kgCO2e/kWh
+      meta:
+        incertitude: 0
+
+énergie . combustible . granulés de bois:
+  titre: Granulés de bois (8% d'humidité)
+  formule: consommation * FE
+  unité: kgCO2e
+  avec:
+    consommation:
+      question: Consommation annuelle de granulés de bois
+      par défaut: 0
+      unité: kg
+    FE:
+      valeur: 0.027
+      unité: kgCO2e/kg
+      meta:
+        incertitude: 4
+
+énergie . combustible . biopropane:
+  titre: Biopropane
+  formule: consommation * FE
+  unité: kgCO2e
+  avec:
+    consommation:
+      question: Consommation annuelle de biopropane
+      par défaut: 0
+      unité: kg
+    FE:
+      valeur: 0.944
+      unité: kgCO2e/kg
+      meta:
+        incertitude: 1
+
+énergie . combustible . réseau de chaleur:
+  titre: Réseau de chaleur
+  formule: consommation * FE
+  unité: kgCO2e
+  avec:
+    consommation:
+      question: Consommation annuelle de réseau de chaleur
+      par défaut: 0
+      unité: kWh
+    FE:
+      valeur: 0.385
+      unité: kgCO2e/kWh
+      meta:
+        incertitude: 2

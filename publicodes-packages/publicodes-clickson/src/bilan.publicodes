@@ -1,5 +1,8 @@
 bilan:
   formule:
     somme:
-      - alimentation
-  unité: kgCO2e
+    - énergie
+    - restauration
+    - déplacements
+    - achats
+    - immobilisations

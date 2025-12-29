@@ -1,0 +1,149 @@
+restauration . distributeur automatique:
+  titre: Distributeur automatique
+  formule:
+    somme:
+      - bouteille d'eau
+      - soda
+      - biscuits
+      - paquet de chips
+      - café noir
+      - thé infusé
+      - sandwich pain de mie
+      - barre chocolatée
+  unité: kgCO2e
+
+restauration . distributeur automatique . bouteille d'eau:
+  titre: Bouteille d'eau
+  formule: nombre * FE
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: Nombre de bouteille d'eau consommées annuellement
+      unité: bouteille
+    FE:
+      question: Facteur d'émission par bouteille d'eau
+      valeur: 0.18
+      unité: kgCO2e/bouteille
+      note: |
+        Source: Base Carbone®
+      meta:
+        incertitude: 3
+
+restauration . distributeur automatique . soda:
+  titre: Soda
+  formule: nombre * FE
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: Nombre de sodas consommés annuellement
+      unité: canette
+    FE:
+      question: Facteur d'émission par soda
+      valeur: 0.49
+      unité: kgCO2e/canette
+      note: |
+        Source: Base Carbone®
+      meta:
+        incertitude: 2
+
+restauration . distributeur automatique . biscuits:
+  titre: Biscuits
+  formule: nombre * FE
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: Nombre de paquets de biscuits consommés annuellement
+      unité: paquet
+    FE:
+      question: Facteur d'émission par paquet de biscuits
+      valeur: 3.59
+      unité: kgCO2e/paquet
+      note: |
+        Source: Base Carbone®
+      meta:
+        incertitude: 1
+
+restauration . distributeur automatique . paquet de chips:
+  titre: Paquet de chips
+  formule: nombre * FE
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: Nombre de paquets de chips consommés annuellement
+      unité: paquet
+    FE:
+      question: Facteur d'émission par paquet de chips
+      valeur: 0.1
+      unité: kgCO2e/paquet
+      note: |
+        Source: Base Carbone®
+      meta:
+        incertitude: 3
+
+restauration . distributeur automatique . café noir:
+  titre: Café noir
+  formule: nombre * FE
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: Nombre de cafés noirs consommés annuellement
+      unité: tasse
+    FE:
+      question: Facteur d'émission par café noir
+      valeur: 0.6
+      unité: kgCO2e/tasse
+      note: |
+        Source: Base Carbone®
+      meta:
+        incertitude: 3
+
+restauration . distributeur automatique . thé infusé:
+  titre: Thé infusé
+  formule: nombre * FE
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: Nombre de thés infusés consommés annuellement
+      unité: tasse
+    FE:
+      question: Facteur d'émission par thé infusé
+      valeur: 0.04
+      unité: kgCO2e/tasse
+      note: |
+        Source: Base Carbone®
+      meta:
+        incertitude: 3
+
+restauration . distributeur automatique . sandwich pain de mie:
+  titre: Sandwich pain de mie
+  formule: nombre * FE
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: Nombre de sandwichs pain de mie consommés annuellement
+      unité: sandwich
+    FE:
+      question: Facteur d'émission par sandwich pain de mie
+      valeur: 2.57
+      unité: kgCO2e/sandwich
+      note: |
+        Source: Base Carbone®
+      meta:
+        incertitude: 3
+
+restauration . distributeur automatique . barre chocolatée:
+  titre: Barre chocolatée
+  formule: nombre * FE
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: Nombre de barres chocolatées consommées annuellement
+      unité: barre
+    FE:
+      question: Facteur d'émission par barre chocolatée
+      valeur: 7.25
+      unité: kgCO2e/barre
+      note: |
+        Source: Base Carbone®
+      meta:
+        incertitude: 2
