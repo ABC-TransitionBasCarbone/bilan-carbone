@@ -33,7 +33,7 @@ const PDFSummaryContainer = ({ study, environment, locale }: Props) => {
   return (
     <DynamicComponent
       forceEnvironment={environment}
-      environmentComponents={{ [Environment.CLICKSON]: <PDFSummaryClickson study={study} environment={environment} /> }}
+      environmentComponents={{ [Environment.CLICKSON]: <PDFSummaryClickson study={study} /> }}
       defaultComponent={<PDFSummaryCut study={study} environment={environment} />}
     />
   )

@@ -4,8 +4,7 @@ import { ChartsPage } from '@/app/(public)/preview/etudes/[id]/ChartsPage'
 import '@/app/(public)/preview/etudes/[id]/pdf-summary.css'
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import { FullStudy } from '@/db/study'
-import cutTheme from '@/environments/cut/theme/theme'
-import { convertCountToBilanCarbone, CutPost } from '@/services/posts'
+import { ClicksonPost, convertCountToBilanCarbone, Post } from '@/services/posts'
 import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
 import { getDetailedEmissionResults } from '@/services/study'
 import { formatNumber } from '@/utils/number'
@@ -15,24 +14,25 @@ import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import React, { useEffect, useMemo, useState } from 'react'
+import clicksonTheme from '../../theme/theme'
 
 interface SiteData {
   id: string
   fullName: string
   generalData: {
-    screens: number
-    entries: number
-    sessions: number
+    studentNumber: number
+    etp: number
+    superficy: number
+    establishmentYear: string
   }
   results: ResultsByPost[]
 }
 
 interface Props {
   study: FullStudy
-  environment: Environment
 }
 
-const PDFSummary = ({ study, environment }: Props) => {
+const PDFSummary = ({ study }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const tStudy = useTranslations('study.results')
   const tPdf = useTranslations('study.pdf')
@@ -74,10 +74,6 @@ const PDFSummary = ({ study, environment }: Props) => {
     [study, tPost, tStudy],
   )
 
-  const bilanCarboneEquivalent = useMemo(() => {
-    return convertCountToBilanCarbone(computedResultsWithDep)
-  }, [computedResultsWithDep])
-
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -92,8 +88,8 @@ const PDFSummary = ({ study, environment }: Props) => {
             studySite.id,
             true,
             false,
-            CutPost,
-            environment,
+            ClicksonPost,
+            Environment.CLICKSON,
           )
 
           const siteResults = siteComputedResults.map((result) => ({
@@ -109,11 +105,12 @@ const PDFSummary = ({ study, environment }: Props) => {
 
           sitesData.push({
             id: studySite.id,
-            fullName: `${studySite.site.name} - ${studySite.site.city || ''}`,
+            fullName: `${studySite.site.name}`,
             generalData: {
-              screens: studySite.site.cnc?.ecrans || 0,
-              entries: studySite.numberOfTickets || 0,
-              sessions: studySite.numberOfSessions || 0,
+              etp: studySite?.etp ?? studySite?.site.etp ?? 0,
+              studentNumber: studySite?.studentNumber ?? studySite?.site.studentNumber ?? 0,
+              superficy: studySite?.superficy ?? studySite?.site.superficy ?? 0,
+              establishmentYear: studySite.site.establishmentYear || '',
             },
             results: siteResults,
           })
@@ -128,11 +125,13 @@ const PDFSummary = ({ study, environment }: Props) => {
     }
 
     loadData()
-  }, [environment, study, tPost])
+  }, [study, tPost])
+
+  const year = `${study.startDate.getFullYear()} - ${study.endDate.getFullYear()}`
 
   if (isLoading) {
     return (
-      <ThemeProvider theme={cutTheme}>
+      <ThemeProvider theme={clicksonTheme}>
         <div className="pdf-container">
           <div className="pdf-content">
             <div className="pdf-header-section">
@@ -145,26 +144,22 @@ const PDFSummary = ({ study, environment }: Props) => {
   }
 
   return (
-    <ThemeProvider theme={cutTheme}>
+    <ThemeProvider theme={clicksonTheme}>
       <div className="pdf-container" data-testid="pdf-container">
         <div className="pdf-page-header flex align-center justify-center">
-          <Image src="/logos/cut/logo-filled.svg" alt="COUNT Logo" width={100} height={40} />
+          <Image src="/logos/clickson/logo.svg" alt="Clickson Logo" width={100} height={40} />
         </div>
 
         <div className="pdf-page-footer flex align-center justify-between">
           <div className="pdf-page-footer-logos flex align-center">
-            <Image src="/logos/cut/CUT.svg" alt="CUT Logo" width={80} height={30} />
+            <Image src="/logos/clickson/logo.svg" alt="Clickson Logo" width={80} height={30} />
             <Image src="/logos/cut/ABC.svg" alt="ABC Logo" width={80} height={30} />
-            <Image src="/logos/cut/CNC.svg" alt="CNC Logo" width={80} height={30} />
-            <Image src="/logos/cut/France3_2025_blanc.png" alt="France 2030 Logo" width={80} height={30} />
           </div>
         </div>
 
         <div className="pdf-content pdf-page-content">
           <div className="pdf-header-section page-break-avoid">
-            <h1 className="pdf-title">
-              {tPdf('title', { year: `${study.startDate.getFullYear()} - ${study.endDate.getFullYear()}` })}
-            </h1>
+            <h1 className="pdf-title">{tPdf('title', { year })}</h1>
           </div>
 
           <div className="pdf-cinemas-list page-break-avoid">
@@ -182,26 +177,24 @@ const PDFSummary = ({ study, environment }: Props) => {
 
             <div className="pdf-general-data pdf-summary-stats flex justify-between mt2">
               <div className="pdf-data-item">
-                <div className="pdf-data-label">{tPdf('labels.cinemas')}</div>
-                <div className="pdf-data-value">{sitesData.length}</div>
-              </div>
-              <div className="pdf-data-item">
-                <div className="pdf-data-label">{tPdf('labels.screens')}</div>
+                <div className="pdf-data-label">{tPdf('labels.studentNumber')}</div>
                 <div className="pdf-data-value">
-                  {sitesData.reduce((sum, site) => sum + site.generalData.screens, 0)}
+                  {sitesData.reduce((sum, site) => sum + site.generalData.studentNumber, 0)}
                 </div>
               </div>
               <div className="pdf-data-item">
-                <div className="pdf-data-label">{tPdf('labels.entries')}</div>
+                <div className="pdf-data-label">{tPdf('labels.etp')}</div>
+                <div className="pdf-data-value">{sitesData.reduce((sum, site) => sum + site.generalData.etp, 0)}</div>
+              </div>
+              <div className="pdf-data-item">
+                <div className="pdf-data-label">{tPdf('labels.superficy')}</div>
                 <div className="pdf-data-value">
-                  {formatNumber(sitesData.reduce((sum, site) => sum + site.generalData.entries, 0))}
+                  {sitesData.reduce((sum, site) => sum + site.generalData.superficy, 0)}
                 </div>
               </div>
               <div className="pdf-data-item">
-                <div className="pdf-data-label">{tPdf('labels.sessions')}</div>
-                <div className="pdf-data-value">
-                  {formatNumber(sitesData.reduce((sum, site) => sum + site.generalData.sessions, 0))}
-                </div>
+                <div className="pdf-data-label">{tPdf('labels.establishmentYear')}</div>
+                <div className="pdf-data-value">{sitesData[0].generalData.establishmentYear}</div>
               </div>
             </div>
 
@@ -211,19 +204,6 @@ const PDFSummary = ({ study, environment }: Props) => {
               hiddenUncertainty
               hideExpandIcons
             />
-          </div>
-        </div>
-
-        <ChartsPage study={study} studySite="all" siteName="" tPdf={tPdf} isAll />
-
-        <div className="pdf-content page-break-before pdf-page-content">
-          <div className="pdf-section">
-            <h2 className="pdf-totals-header pdf-header-with-border">{tPdf('additionalInfo')}</h2>
-            <div className="pdf-info-section mt2">
-              <div className="pdf-info-text">
-                <p>{tStudy('info')}</p>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -237,16 +217,20 @@ const PDFSummary = ({ study, environment }: Props) => {
 
                 <div className="pdf-general-data flex justify-between">
                   <div className="pdf-data-item">
-                    <div className="pdf-data-label">{tPdf('labels.screens')}</div>
-                    <div className="pdf-data-value">{site.generalData.screens}</div>
+                    <div className="pdf-data-label">{tPdf('labels.studentNumber')}</div>
+                    <div className="pdf-data-value">{site.generalData.studentNumber}</div>
                   </div>
                   <div className="pdf-data-item">
-                    <div className="pdf-data-label">{tPdf('labels.entries')}</div>
-                    <div className="pdf-data-value">{formatNumber(site.generalData.entries)}</div>
+                    <div className="pdf-data-label">{tPdf('labels.etp')}</div>
+                    <div className="pdf-data-value">{site.generalData.etp}</div>
                   </div>
                   <div className="pdf-data-item">
-                    <div className="pdf-data-label">{tPdf('labels.sessions')}</div>
-                    <div className="pdf-data-value">{formatNumber(site.generalData.sessions)}</div>
+                    <div className="pdf-data-label">{tPdf('labels.superficy')}</div>
+                    <div className="pdf-data-value">{formatNumber(site.generalData.superficy)}</div>
+                  </div>
+                  <div className="pdf-data-item">
+                    <div className="pdf-data-label">{tPdf('labels.establishmentYear')}</div>
+                    <div className="pdf-data-value">{site.generalData.establishmentYear}</div>
                   </div>
                 </div>
 
@@ -260,57 +244,23 @@ const PDFSummary = ({ study, environment }: Props) => {
                 />
               </div>
             </div>
-            <ChartsPage study={study} studySite={site.id} siteName={site.fullName} tPdf={tPdf} isAll={false} />
+            <ChartsPage
+              study={study}
+              studySite={site.id}
+              siteName={site.fullName}
+              tPdf={tPdf}
+              isAll={false}
+              year={year}
+              customPostOrder={[
+                Post.EnergiesClickson,
+                Post.Restauration,
+                Post.DeplacementsClickson,
+                Post.Achats,
+                Post.ImmobilisationsClickson,
+              ]}
+            />
           </React.Fragment>
         ))}
-
-        <div className="pdf-content page-break-before pdf-page-content">
-          <div className="pdf-section">
-            <h2 className="pdf-totals-header pdf-header-with-border">{tExports('bc.title')} - Tous cinémas</h2>
-
-            <div className="pdf-info-section" style={{ marginBottom: '2rem' }}>
-              <div className="pdf-info-text">
-                <p style={{ margin: '0 0 0.5rem 0' }}>
-                  Attention, les résultats que vous obtenez ici sont uniquement issus de l'empreinte carbone simplifiée
-                  Count, et ne doivent en aucun cas être utilisés comme des résultats Bilan Carbone®. La démarche que
-                  vous avez suivi via l'outil Count n'est PAS une démarche Bilan Carbone®, même si les résultats obtenus
-                  peuvent déjà vous permettre de mieux comprendre comment réduire votre impact, en identifiant vos
-                  activités les plus émissives.
-                </p>
-                <p style={{ margin: '0.5rem 0 0 0' }}>
-                  En revanche, cette empreinte carbone simplifiée est le premier pas vers une démarche plus complète
-                  comme le Bilan Carbone® ! Pour les années suivantes, vous pouvez ainsi soit renouveler votre mesure
-                  d'empreinte carbone simplifiée avec l'outil Count, soit réaliser un Bilan Carbone®. Un Bilan Carbone®
-                  suit une méthodologie bien précise, et doit répondre à un certain nombre de critères objectifs. Par
-                  exemple, au cours d'un Bilan Carbone®, la direction doit être engagée, les différentes parties
-                  prenantes de l'organisation doivent être mobilisées, des incertitudes doivent être calculées et
-                  associées aux émissions, et surtout, un plan de transition solide doit être construit pour engager
-                  l'organisation dans une transition bas carbone. Si vous souhaitez vous lancer dans un Bilan Carbone®
-                  dans les années qui viennent, tout commence par{' '}
-                  <a href={process.env.NEXT_PUBLIC_FORMATION_URL ?? ''} target="_blank">
-                    se faire former
-                  </a>{' '}
-                  à la méthode, ou par nous contacter à l'adresse{' '}
-                  <a href={`mailto:${process.env.NEXT_PUBLIC_CUT_SUPPORT_EMAIL ?? ''}`}>
-                    {process.env.NEXT_PUBLIC_CUT_SUPPORT_EMAIL ?? ''}
-                  </a>
-                  , ou par se faire accompagner par un{' '}
-                  <a href={process.env.NEXT_PUBLIC_ACTORS_URL ?? ''} target="_blank">
-                    prestataire Bilan Carbone®
-                  </a>{' '}
-                  !
-                </p>
-              </div>
-            </div>
-
-            <ConsolidatedResultsTable
-              resultsUnit={study.resultsUnit}
-              data={createBilanCarboneTableData(bilanCarboneEquivalent)}
-              hiddenUncertainty
-              hideExpandIcons
-            />
-          </div>
-        </div>
 
         {sitesData.map((site) => {
           const { computedResultsWithDep: siteResults } = getDetailedEmissionResults(
@@ -318,7 +268,7 @@ const PDFSummary = ({ study, environment }: Props) => {
             tPost,
             site.id,
             false,
-            environment,
+            Environment.CLICKSON,
             tStudy,
           )
           const siteBilanCarboneEquivalent = convertCountToBilanCarbone(siteResults)
