@@ -1,0 +1,109 @@
+restauration . repas:
+  titre: Type de repas
+  formule:
+    somme:
+      - moyen
+      - végétarien
+      - végétalien
+      - viande rouge
+      - viande blanche
+      - poisson
+  unité: kgCO2e
+
+restauration . repas . moyen:
+  titre: Repas - Moyen
+  formule: nombre * FE
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: Nombre de repas moyens annuels
+      par défaut: général . nombre étudiant * 1 repas/étudiant * 5 * 47
+      unité: repas
+    FE:
+      question: Facteur d'émission par repas moyen
+      valeur: 2.04
+      unité: kgCO2e/repas
+      note: |
+        Source: Base Carbone®
+
+restauration . repas . végétarien:
+  titre: Repas - Végétarien
+  formule: nombre * FE
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: Nombre de repas végétariens annuels
+      par défaut: général . nombre étudiant * 1 repas/étudiant * 5 * 47
+      unité: repas
+    FE:
+      question: Facteur d'émission par repas végétarien
+      valeur: 0.51
+      unité: kgCO2e/repas
+      note: |
+        Source: Base Carbone®
+      meta:
+        incertitude: 4
+
+restauration . repas . végétalien:
+  titre: Repas - Végétalien
+  formule: nombre * FE
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: Nombre de repas végétaliens annuels
+      par défaut: général . nombre étudiant * 1 repas/étudiant * 5 * 47
+      unité: repas
+    FE:
+      question: Facteur d'émission par repas végétalien
+      valeur: 0.39
+      unité: kgCO2e/repas
+      note: |
+        Source: Base Carbone®
+
+restauration . repas . viande rouge:
+  titre: Repas - Viande rouge
+  formule: nombre * FE
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: Nombre de repas à base de viande rouge annuels
+      par défaut: général . nombre étudiant * 1 repas/étudiant * 5 * 47
+      unité: repas
+    FE:
+      question: Facteur d'émission par repas à base de viande rouge
+      valeur: 7.26
+      unité: kgCO2e/repas
+      note: |
+        Source: Base Carbone®
+
+restauration . repas . viande blanche:
+  titre: Repas - Viande blanche
+  formule: nombre * FE
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: Nombre de repas à base de viande blanche annuels
+      par défaut: général . nombre étudiant * 1 repas/étudiant * 5 * 47
+      unité: repas
+    FE:
+      question: Facteur d'émission par repas à base de viande blanche
+      valeur: 1.58
+      unité: kgCO2e/repas
+      note: |
+        Source: Base Carbone®
+
+restauration . repas . poisson:
+  titre: Repas - Poisson
+  formule: nombre * FE
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: Nombre de repas à base de poisson blanc annuels
+      par défaut: général . nombre étudiant * 1 repas/étudiant * 5 * 47
+      unité: repas
+    FE:
+      question: Facteur d'émission par repas à base de poisson blanc
+      valeur: 1.98
+      unité: kgCO2e/repas
+      note: |
+        Source: Base Carbone®

@@ -1,6 +1,6 @@
 # publicodes-clickson
 
-TODO
+Règles de calculs de Clickson!, le calculateur d'empreinte carbone des élèves pour leurs établissements scolaires.
 
 ## Publicodes
 
@@ -10,7 +10,13 @@ Les règles Publicodes sont écrites dans des fichiers au format `.yaml` (extens
 
 ## Le modèle Clickson
 
-TODO
+Le modèle Clickson permet d'estimer l'empreinte carbone d'un établissement scolaire. Il s'appuie sur les postes de la méthode Bilan Carbone® :
+
+- Énergie
+- Restauration
+- Déplacements
+- Achats
+- Immobilisations
 
 ## Tests
 

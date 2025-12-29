@@ -13,3 +13,85 @@ commun . nombre de semaines par an:
   description: Nombre de semaines prises en compte pour le calcul annuel.
   valeur: 52
   unité: semaine
+
+commun . FE . moyen de transport:
+  titre: Facteur d'émission moyens de transport
+  avec:
+    Transilien, RER, Métro, Tramway:
+    titre: Facteur d'émission Transilien, RER, Métro, Tramway
+    valeur: 0.006
+    unité: kgCO2e/km
+    meta:
+      incertitude: 2
+    Vélo à assistance électrique:
+      titre: Facteur d'émission Vélo à assistance électrique
+      valeur: 0.011
+      unité: kgCO2e/km
+      meta:
+        incertitude: 3
+    Trottinette électrique:
+      titre: Facteur d'émission Trottinette électrique
+      valeur: 0.025
+      unité: kgCO2e/km
+      meta:
+        incertitude: 3
+    Moto essence:
+      titre: Facteur d'émission Moto essence
+      valeur: 0.076
+      unité: kgCO2e/km
+      meta:
+        incertitude: 3
+    Véhicule compact électrique:
+      titre: Facteur d'émission Véhicule compact électrique
+      valeur: 0.103
+      unité: kgCO2e/km
+      meta:
+        incertitude: 4
+    Voiture individuelle essence:
+      titre: Facteur d'émission Voiture individuelle – essence
+      valeur: 0.239
+      unité: kgCO2e/km
+      meta:
+        incertitude: 5
+    Voiture individuelle diesel:
+      titre: Facteur d'émission Voiture individuelle – diesel
+      valeur: 0.227
+      unité: kgCO2e/km
+      meta:
+        incertitude: 5
+    Autobus moyen:
+      titre: Facteur d'émission Autobus moyen
+      valeur: 0.15
+      unité: kgCO2e/km
+      meta:
+        incertitude: 5
+    TER:
+      titre: Facteur d'émission TER
+      valeur: 0.028
+      unité: kgCO2e/km
+      meta:
+        incertitude: 5
+    TGV:
+      titre: Facteur d'émission TGV
+      valeur: 0.003
+      unité: kgCO2e/km
+      meta:
+        incertitude: 2
+    Avion Court courrier:
+      titre: Facteur d'émission Avion/Court courrier
+      valeur: 0.258
+      unité: kgCO2e/km
+      meta:
+        incertitude: 5
+    Avion Moyen courrier:
+      titre: Facteur d'émission Avion/Moyen courrier
+      valeur: 0.187
+      unité: kgCO2e/km
+      meta:
+        incertitude: 5
+    Avion Long courrier:
+      titre: Facteur d'émission Avion/Long courrier
+      valeur: 0.152
+      unité: kgCO2e/km
+      meta:
+        incertitude: 5

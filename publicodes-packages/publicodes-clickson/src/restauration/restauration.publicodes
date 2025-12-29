@@ -1,0 +1,7 @@
+restauration:
+  titre: Alimentation
+  formule:
+    somme:
+      - repas
+      - distributeur automatique
+  unité: kgCO2e

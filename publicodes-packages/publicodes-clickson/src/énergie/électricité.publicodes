@@ -1,0 +1,17 @@
+énergie . électricité:
+  titre: Électricité
+  formule: consommation * FE
+  unité: kgCO2e
+  avec:
+    consommation:
+      question: Consommation annuelle d'électricité
+      par défaut: 0
+      unité: kWh
+    FE:
+      question: Facteur d'émission de l'électricité
+      valeur: 0.058
+      unité: kgCO2e/kWh
+      note: |
+        Source: Base Carbone®
+      meta:
+        incertitude: 0
