@@ -15,9 +15,10 @@ import StudyName from './StudyName'
 interface Props {
   study: Study
   user: UserSession
+  simplified?: boolean
 }
 
-const StudyCard = async ({ study, user }: Props) => {
+const StudyCard = async ({ study, user, simplified }: Props) => {
   const t = await getTranslations('study')
   const values = await getStudyValidatedEmissionsSources(study.id)
   const fullStudy = await getStudyById(study.id, user.organizationVersionId)
@@ -74,7 +75,7 @@ const StudyCard = async ({ study, user }: Props) => {
             href={`/etudes/${study.id}${accountRoleOnStudy === 'Contributor' ? '/contributeur' : ''}`}
             data-testid="study-link"
           >
-            {t('see')}
+            {t(simplified ? 'seeSimplified' : 'see')}
           </Button>
         </div>
       </Box>

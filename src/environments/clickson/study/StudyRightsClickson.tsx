@@ -20,7 +20,7 @@ import {
 } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Box, CircularProgress } from '@mui/material'
-import { EmissionFactorImportVersion } from '@prisma/client'
+import { EmissionFactorImportVersion, StudyRole } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
@@ -36,9 +36,10 @@ interface Props {
   study: FullStudy
   editionDisabled: boolean
   emissionFactorSources: EmissionFactorImportVersion[]
+  userRoleOnStudy: StudyRole
 }
 
-const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources }: Props) => {
+const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, userRoleOnStudy }: Props) => {
   const tLabel = useTranslations('common.label')
   const t = useTranslations('study.new')
   const tRights = useTranslations('study.rights')
@@ -206,6 +207,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources }: 
                   name="startDate"
                   label={tLabel('start')}
                   onAccept={handleDateChange}
+                  disabled={editionDisabled}
                 />
                 <FormDatePicker
                   control={dateForm.control}
@@ -214,6 +216,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources }: 
                   label={tLabel('end')}
                   data-testid="new-study-endDate"
                   onAccept={handleDateChange}
+                  disabled={editionDisabled}
                 />
               </div>
             </div>
@@ -226,6 +229,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources }: 
                 type="number"
                 className={styles.formTextField}
                 onBlur={onStudyEstablishmentUpdate}
+                disabled={editionDisabled}
               />
               <FormTextField
                 control={form.control}
@@ -235,6 +239,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources }: 
                 type="number"
                 className={styles.formTextField}
                 onBlur={onStudyEstablishmentUpdate}
+                disabled={editionDisabled}
               />
               <FormTextField
                 control={form.control}
@@ -244,6 +249,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources }: 
                 type="number"
                 className={styles.formTextField}
                 onBlur={onStudyEstablishmentUpdate}
+                disabled={editionDisabled}
               />
             </div>
             <Box className="flex justify-start mt1">
@@ -261,7 +267,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources }: 
             questionsBySubPost={pendingSiteChanges.questionsBySubPost}
           />
         )}
-        <StudyContributorsTable study={study} canAddContributor={!editionDisabled} />
+        {!editionDisabled && <StudyContributorsTable study={study} canAddContributor={!editionDisabled} />}
       </Block>
     </>
   )

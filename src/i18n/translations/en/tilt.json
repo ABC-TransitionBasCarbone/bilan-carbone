@@ -68,7 +68,12 @@
     },
     "dependencyMatrix": {
       "info": "You can download a sample risk and dependency matrix to help you build your own. Afterwards, if you wish to submit your own matrix to help other non-profit organisations by providing a working base, please send it to <mail>methodologie@abc-transitionbascarbone.fr</mail>"
-    }
+    },
+    "createFirstSimplifiedStudy": "Create",
+    "firstSimplifiedStudyMessage": "It's time to get started! We invite you to create your first simplified carbon footprint.",
+    "mySimplifiedStudies": "My footprints",
+    "createSimplified": "Create a footprint",
+    "seeSimplified": "See my footprint"
   },
   "emissionFactors": {
     "post": {
@@ -120,5 +125,8 @@
         "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux"
       }
     }
+  },
+  "navigation": {
+    "footprints": "My Footprints"
   }
 }

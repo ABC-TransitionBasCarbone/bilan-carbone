@@ -165,6 +165,7 @@ const Posts = <T extends SubPostsCommand>({
               selectedSubPosts={selectedSubPosts}
               sortedSubPosts={sortedSubPosts}
               onSelectSubPost={handleSelectSubPost}
+              environment={environment}
             />
             {error && error.message && selectedSubPosts?.length === 0 && (
               <FormHelperText className={styles.errorSubposts} color="red">

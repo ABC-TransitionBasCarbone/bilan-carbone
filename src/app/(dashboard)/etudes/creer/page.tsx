@@ -1,16 +1,17 @@
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
-import withStudyDuplication, { StudyDuplicationProps } from '@/components/hoc/withStudyDuplication'
+import withStudyCreation, { StudyCreationProps } from '@/components/hoc/withStudyCreation'
 import NewStudyPage from '@/components/pages/NewStudy'
 import NotFound from '@/components/pages/NotFound'
 import { getAccountOrganizationVersions } from '@/db/account'
 import { getOrganizationVersionAccounts, getOrganizationVersionById } from '@/db/organization'
+import { canCreateAStudy } from '@/services/permissions/study'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { defaultCAUnit } from '@/utils/number'
 import { hasActiveLicence } from '@/utils/organization'
 import { redirect } from 'next/navigation'
 
-const NewStudy = async ({ user, duplicateStudyId }: UserSessionProps & StudyDuplicationProps) => {
-  if (!user.organizationVersionId || !user.level) {
+const NewStudy = async ({ user, duplicateStudyId, isSimplified }: UserSessionProps & StudyCreationProps) => {
+  if (!user.organizationVersionId || !canCreateAStudy(user, isSimplified)) {
     return <NotFound />
   }
 
@@ -22,6 +23,7 @@ const NewStudy = async ({ user, duplicateStudyId }: UserSessionProps & StudyDupl
   const organizationVersionId = organizationVersions.find(
     (organizationVersion) => organizationVersion.id === user.organizationVersionId,
   )?.id
+
   if (organizationVersionId) {
     const organizationVersion = await getOrganizationVersionById(organizationVersionId)
     if (!organizationVersion || !hasActiveLicence(organizationVersion)) {
@@ -43,4 +45,4 @@ const NewStudy = async ({ user, duplicateStudyId }: UserSessionProps & StudyDupl
   )
 }
 
-export default withAuth(withStudyDuplication(NewStudy))
+export default withAuth(withStudyCreation(NewStudy))

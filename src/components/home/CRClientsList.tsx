@@ -1,6 +1,8 @@
 import { OrganizationVersionWithOrganization } from '@/db/organization'
+import { canCreateOrganization } from '@/services/permissions/organization'
 import AddIcon from '@mui/icons-material/Add'
 import classNames from 'classnames'
+import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Box from '../base/Box'
 import LinkButton from '../base/LinkButton'
@@ -10,11 +12,14 @@ import styles from './CRClientsList.module.css'
 
 interface Props {
   organizationVersions: OrganizationVersionWithOrganization[]
+  account: UserSession
 }
-const CRClientsList = async ({ organizationVersions }: Props) => {
+const CRClientsList = async ({ organizationVersions, account }: Props) => {
   const t = await getTranslations('organization')
+  const canCreateOrga = await canCreateOrganization(account)
+
   return organizationVersions.length ? (
-    <CRClients organizationVersions={organizationVersions} />
+    <CRClients organizationVersions={organizationVersions} canCreateOrga={canCreateOrga} />
   ) : (
     <div className="justify-center text-center">
       <Box className={classNames(styles.firstClientCard, 'flex-col align-center')}>

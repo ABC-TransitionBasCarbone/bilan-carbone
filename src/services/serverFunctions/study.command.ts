@@ -20,6 +20,8 @@ export const SitesCommandValidation = z.object({
       emissionSourcesCount: z.number().optional(),
       volunteerNumber: z.number().optional().nullable(),
       beneficiaryNumber: z.number().optional().nullable(),
+      studentNumber: z.number().optional().nullable(),
+      establishmentYear: z.string().optional(),
     }),
   ),
 })
@@ -167,7 +169,10 @@ export const NewStudyRightCommandValidation = z.object({
 export type NewStudyRightCommand = z.infer<typeof NewStudyRightCommandValidation>
 
 export const NewStudyContributorCommandValidation = z.intersection(
-  z.object({ studyId: z.string(), email: z.email().trim() }),
+  z.object({
+    studyId: z.string(),
+    email: z.email().trim(),
+  }),
   SubPostsCommandValidation,
 )
 

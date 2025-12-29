@@ -46,7 +46,10 @@ const canCreateEmissionSourceBC = async (account: AccountWithUser, emissionSourc
   return hasStudyBasicRights(account, study)
 }
 
-const canCreateEmissionSourceCUT = async (account: AccountWithUser, emissionSource: PartialStudyEmissionSource) => {
+const canCreateEmissionSourceSimplified = async (
+  account: AccountWithUser,
+  emissionSource: PartialStudyEmissionSource,
+) => {
   const { allowed, study } = await canCreateEmissionSourceCommon(account, emissionSource)
   if (!allowed || !study) {
     return false
@@ -66,9 +69,8 @@ export const canCreateEmissionSource = async (account: AccountWithUser, emission
     case 'TILT':
       return canCreateEmissionSourceBC(account, emissionSource)
     case 'CUT':
-      return canCreateEmissionSourceCUT(account, emissionSource)
     case 'CLICKSON':
-      return canCreateEmissionSourceCUT(account, emissionSource)
+      return canCreateEmissionSourceSimplified(account, emissionSource)
     default:
       return false
   }
@@ -121,7 +123,25 @@ const canUpdateEmissionSourceBC = async (
 }
 
 const canUpdateEmissionSourceCUT = (account: AccountWithUser, emissionSource: StudyEmissionSource) =>
-  canCreateEmissionSourceCUT(account, emissionSource)
+  canCreateEmissionSourceSimplified(account, emissionSource)
+
+const canUpdateEmissionSourceClickson = async (
+  account: AccountWithUser,
+  emissionSource: StudyEmissionSource,
+  study: FullStudy,
+) => {
+  const canCreateEmissionSource = await canCreateEmissionSourceSimplified(account, emissionSource)
+  if (!canCreateEmissionSource) {
+    const contributor = study.contributors.find(
+      (contributor) => contributor.accountId === account.id && contributor.subPost === emissionSource.subPost,
+    )
+
+    if (!contributor) {
+      return false
+    }
+  }
+  return true
+}
 
 export const canUpdateEmissionSource = async (
   account: AccountWithUser,
@@ -137,7 +157,7 @@ export const canUpdateEmissionSource = async (
     case 'CUT':
       return canUpdateEmissionSourceCUT(account, emissionSource)
     case 'CLICKSON':
-      return canUpdateEmissionSourceCUT(account, emissionSource)
+      return canUpdateEmissionSourceClickson(account, emissionSource, study)
     default:
       return false
   }

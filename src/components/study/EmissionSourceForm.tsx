@@ -66,6 +66,7 @@ interface Props {
   userRoleOnStudy: StudyRole | null
   canEdit: boolean | null
   canValidate: boolean
+  canDelete: boolean | null
   subPost: SubPost
   selectedFactor?: FullStudy['emissionSources'][0]['emissionFactor'] & {
     metaData: EmissionFactorList['metaData']
@@ -91,6 +92,7 @@ const EmissionSourceForm = ({
   userRoleOnStudy,
   canEdit,
   canValidate,
+  canDelete,
   subPost,
   selectedFactor,
   caracterisations,
@@ -517,7 +519,7 @@ const EmissionSourceForm = ({
           )}
         </div>
         <div className={classNames(styles.button, 'grow justify-end mt1 gapped')}>
-          {canEdit && <DeleteEmissionSource emissionSource={emissionSource} />}
+          {canDelete && <DeleteEmissionSource emissionSource={emissionSource} />}
           {canValidate && (
             <Button
               color={emissionSource.validated ? 'secondary' : 'primary'}

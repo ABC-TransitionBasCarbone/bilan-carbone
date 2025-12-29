@@ -1,10 +1,6 @@
 import { getAccountByEmailAndOrganizationVersionId } from '@/db/account'
 import { prismaClient } from '@/db/client'
-import {
-  getOrganizationVersionById,
-  getOrganizationWithSitesById,
-  OrganizationVersionWithOrganization,
-} from '@/db/organization'
+import { getOrganizationVersionById, getOrganizationWithSitesById } from '@/db/organization'
 import { Environment } from '@prisma/client'
 import { uploadEmissionFactors } from './emissionFactors'
 import { OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
@@ -26,9 +22,7 @@ export const uploadOldBCInformations = async (
     return
   }
 
-  const accountOrganizationVersion = (await getOrganizationVersionById(
-    account.organizationVersionId,
-  )) as OrganizationVersionWithOrganization
+  const accountOrganizationVersion = await getOrganizationVersionById(account.organizationVersionId)
 
   if (!accountOrganizationVersion) {
     throw new Error(`La version de l'organisation de l'utilisateur n'existe pas.`)
@@ -87,6 +81,6 @@ export const uploadOldBCInformations = async (
         throw Error()
       }
     },
-    { timeout: 10000 },
-  ) // 10 seconds timeout for the transaction
+    { timeout: 100000 },
+  ) // 100 seconds timeout for the transaction
 }
