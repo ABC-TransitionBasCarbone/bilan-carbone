@@ -1,19 +1,12 @@
 'use client'
 
-import SelectStudySite from '@/components/study/site/SelectStudySite'
 import useStudySite from '@/components/study/site/useStudySite'
 import { FullStudy } from '@/db/study'
-import DownloadIcon from '@mui/icons-material/Download'
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
-import { Box, Button, Tab, Tabs, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import { SyntheticEvent, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 
-import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
-import TabPanel from '@/components/tabPanel/tabPanel'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
-import { downloadStudyResults, getDetailedEmissionResults } from '@/services/study'
-import { Environment, SiteCAUnit } from '@prisma/client'
+import { SiteCAUnit } from '@prisma/client'
 
 import Block from '@/components/base/Block'
 import LoadingButton from '@/components/base/LoadingButton'
@@ -25,13 +18,10 @@ import classNames from 'classnames'
 import Link from 'next/link'
 import styles from './AllResults.module.css'
 
-import CarbonIntensities from '@/components/study/results/consolidated/CarbonIntensities'
 import EmissionsAnalysisClickson from '@/environments/clickson/study/results/consolidated/EmissionsAnalysisClickson'
-import CarbonIntensitiesCut from '@/environments/cut/study/results/CarbonIntensitiesCut'
+import { Post } from '@/services/posts'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import {
-  hasAccessToAdvancedEmissionAnalysis,
-  hasAccessToResultsRatioTab,
   hasAccessToSimplifiedEmissionAnalysis,
   showResultsInfoText,
 } from '../../../../services/permissions/environment'
@@ -52,16 +42,19 @@ const a11yProps = (index: number) => {
   }
 }
 
-export type ChartType = 'pie' | 'bar' | 'table' | 'ratio'
+export type ChartType = 'pie' | 'bar' | 'table'
 
 const defaultChartOrder: Record<ChartType, number> = {
   table: 0,
   bar: 1,
   pie: 2,
-  ratio: 3,
 }
 
-const tabsLabels: ChartType[] = ['table', 'bar', 'pie', 'ratio']
+const tabsLabels = [
+  { key: 'table', label: 'Tableau' },
+  { key: 'bar', label: 'Diagramme en barres' },
+  { key: 'pie', label: 'Diagramme circulaire' },
+]
 
 const AllResults = ({
   emissionFactorsWithParts,
@@ -71,25 +64,8 @@ const AllResults = ({
   caUnit = SiteCAUnit.K,
   showSubLevel = false,
 }: Props) => {
-  const [value, setValue] = useState(0)
-  const [pdfLoading, setPdfLoading] = useState(false)
-
-  const { environment } = useAppEnvironmentStore()
-
-  const handleChange = (_event: SyntheticEvent, newValue: number) => {
-    setValue(newValue)
-  }
-  const tOrga = useTranslations('study.organization')
   const tPost = useTranslations('emissionFactors.post')
   const tResults = useTranslations('study.results')
-  const tExport = useTranslations('exports')
-  const tQuality = useTranslations('quality')
-  const tBeges = useTranslations('beges')
-  const tUnits = useTranslations('study.results.units')
-  const tExportButton = useTranslations('study.export')
-  const tStudyNav = useTranslations('study.navigation')
-
-  const { callServerFunction } = useServerFunction()
 
   const { studySite, setSite } = useStudySite(study, true)
 
@@ -113,7 +89,7 @@ const AllResults = ({
     setPdfLoading(false)
   }
 
-  const { computedResultsWithDep, withDepValue, withoutDepValue } = useMemo(
+  const { computedResultsWithDep, withDepValue } = useMemo(
     () =>
       getDetailedEmissionResults(
         study,
@@ -133,140 +109,19 @@ const AllResults = ({
   const orderedTabs = [...filteredTabsLabels].sort((a, b) => chartOrder[a as ChartType] - chartOrder[b as ChartType])
 
   return (
-    <Block
-      title={study.name}
-      as="h2"
-      description={tStudyNav('results')}
-      bold
-      descriptionColor="primary"
-      rightComponent={
-        <div className="flex gapped align-center">
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            endIcon={<DownloadIcon />}
-            onClick={() =>
-              downloadStudyResults(
-                study,
-                [],
-                emissionFactorsWithParts,
-                tResults,
-                tExport,
-                tPost,
-                tOrga,
-                tQuality,
-                tBeges,
-                tUnits,
-                Environment.CUT,
-              )
-            }
-          >
-            {tExportButton('export')}
-          </Button>
-          <LoadingButton
-            variant="outlined"
-            color="primary"
-            size="large"
-            endIcon={<PictureAsPdfIcon />}
-            onClick={handlePDFDownload}
-            loading={pdfLoading}
-          >
-            {pdfLoading ? tResults('downloadingPDF') : tResults('downloadPDF')}
-          </LoadingButton>
-          <SelectStudySite sites={study.sites} defaultValue={studySite} setSite={setSite} />
-        </div>
-      }
-    >
-      {environment && showResultsInfoText(environment) && (
-        <>
-          <Box component="section" className="mb2">
-            <Typography>
-              {tResults.rich('cutFeedback', {
-                questionnaire: (children) => (
-                  <Link href={process.env.NEXT_PUBLIC_CUT_FEEDBACK_TYPEFORM_LINK ?? ''} target="_blank">
-                    <strong>{children}</strong>
-                  </Link>
-                ),
-              })}
-            </Typography>
-          </Box>
-          <Box component="section">
-            <Typography className={classNames(styles.infoContainer)}>
-              {tResults.rich('infoWithLinks', {
-                formation: (children) => (
-                  <Link href={process.env.NEXT_PUBLIC_FORMATION_URL ?? ''} target="_blank">
-                    <strong>{children}</strong>
-                  </Link>
-                ),
-                email: (children) => (
-                  <Link href={`mailto:${process.env.NEXT_PUBLIC_CUT_SUPPORT_EMAIL ?? ''}`} target="_blank">
-                    <strong>{children}</strong>
-                  </Link>
-                ),
-                prestataire: (children) => (
-                  <Link href={process.env.NEXT_PUBLIC_ACTORS_URL ?? ''} target="_blank">
-                    <strong>{children}</strong>
-                  </Link>
-                ),
-              })}
-            </Typography>
-          </Box>
-        </>
-      )}
-      {environment && hasAccessToSimplifiedEmissionAnalysis(environment) && (
-        <EmissionsAnalysisClickson study={study} studySite={studySite} withDepValue={withDepValue} caUnit={caUnit} />
-      )}
-      {environment && hasAccessToAdvancedEmissionAnalysis(environment) && (
-        <CarbonIntensities
-          study={study}
-          studySite={studySite}
-          withDep={withDepValue}
-          withoutDep={withoutDepValue}
-          caUnit={caUnit}
-        />
-      )}
-      <Box component="section" sx={{ marginTop: '1rem' }}>
-        <Tabs value={value} onChange={handleChange} indicatorColor="secondary" textColor="inherit" variant="fullWidth">
-          {orderedTabs.map((tab, index) => (
-            <Tab key={tab} label={tResults(`chartTypes.${tab}`)} {...a11yProps(index)} />
-          ))}
-        </Tabs>
-        <Box component="section" sx={{ marginTop: '1rem' }}>
-          <TabPanel value={value} index={chartOrder.table}>
-            <ConsolidatedResultsTable resultsUnit={study.resultsUnit} data={computedResultsWithDep} hiddenUncertainty />
-          </TabPanel>
-          <TabPanel value={value} index={chartOrder.bar}>
-            <BarChart
-              results={computedResultsWithDep}
-              resultsUnit={study.resultsUnit}
-              height={400}
-              showTitle={false}
-              showLegend={true}
-              showSubLevel={showSubLevel}
-              showLabelsOnBars={!showSubLevel}
-              type="post"
-            />
-          </TabPanel>
-          <TabPanel value={value} index={chartOrder.pie}>
-            <PieChart
-              resultsUnit={study.resultsUnit}
-              height={400}
-              showTitle={false}
-              showLabelsOnPie={true}
-              results={computedResultsWithDep}
-              showSubLevel={false}
-              type="post"
-            />
-          </TabPanel>
-          {environment && hasAccessToResultsRatioTab(environment) && (
-            <TabPanel value={value} index={chartOrder.ratio}>
-              <CarbonIntensitiesCut study={study} studySite={studySite} withDepValue={withDepValue} />
-            </TabPanel>
-          )}
-        </Box>
-      </Box>
-    </Block>
+    <AllResultsBase
+      study={study}
+      computedResults={computedResultsWithDep}
+      totalValue={withDepValue}
+      studySite={studySite}
+      setSite={setSite}
+      emissionFactorsWithParts={emissionFactorsWithParts}
+      chartOrder={chartOrder}
+      caUnit={caUnit}
+      showSubLevel={showSubLevel}
+      customPostOrder={customPostOrder}
+      hiddenUncertainty={true}
+    />
   )
 }
 

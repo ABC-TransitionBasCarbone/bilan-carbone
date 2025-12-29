@@ -39,7 +39,9 @@ const AllPostsInfography = ({ study, data, environment }: Props) => {
   }, [engine, situation, config])
 
   const renderedInfographies = useMemo(() => {
-    if (!config) return []
+    if (!config) {
+      return []
+    }
 
     return config.posts.map((post) => {
       const subPostStats = questionProgress[post] ?? {}
