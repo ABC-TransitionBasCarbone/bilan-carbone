@@ -4,12 +4,14 @@ import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import StudyResultsContainerSummaryCut from '@/environments/cut/study/results/StudyResultsContainerSummaryCut'
 import { Environment } from '@prisma/client'
+import { UserSession } from 'next-auth'
 import Block from '../base/Block'
 import StudyResultsContainerSummary from './results/StudyResultsContainerSummary'
 import useStudySite from './site/useStudySite'
 import StudyDetailsHeader from './StudyDetailsHeader'
 
 interface Props {
+  user: UserSession
   canDeleteStudy?: boolean
   canDuplicateStudy?: boolean
   duplicableEnvironments: Environment[]
@@ -19,6 +21,7 @@ interface Props {
 }
 
 const StudyDetails = ({
+  user,
   canDeleteStudy,
   canDuplicateStudy,
   duplicableEnvironments,
@@ -45,7 +48,12 @@ const StudyDetails = ({
             [Environment.CUT]: <StudyResultsContainerSummaryCut study={study} />,
           }}
           defaultComponent={
-            <StudyResultsContainerSummary study={study} studySite={studySite} validatedOnly={validatedOnly} />
+            <StudyResultsContainerSummary
+              user={user}
+              study={study}
+              studySite={studySite}
+              validatedOnly={validatedOnly}
+            />
           }
         />
       </Block>

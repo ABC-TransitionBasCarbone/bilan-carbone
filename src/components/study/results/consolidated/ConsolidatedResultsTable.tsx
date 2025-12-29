@@ -107,14 +107,13 @@ const ConsolidatedResultsTable = <
     return tmpColumns
   }, [hiddenUncertainty, hideExpandIcons, resultsUnit, t, tPost, tQuality, tUnits])
 
-  const tableData = useMemo(
-    () =>
-      data.map((d) => ({
-        ...d,
-        children: d.children.map((child) => ({ ...child, children: [] })),
-      })),
-    [data],
-  )
+  const tableData = useMemo(() => {
+    const mappedData = data.map((d) => ({
+      ...d,
+      children: d.children.map((child) => ({ ...child, children: [] })),
+    }))
+    return mappedData
+  }, [data])
 
   const table = useReactTable({
     columns,

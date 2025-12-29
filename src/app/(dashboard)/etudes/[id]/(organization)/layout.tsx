@@ -2,6 +2,7 @@ import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import { StudyProps } from '@/components/hoc/withStudy'
 import WithStudyDetails from '@/components/hoc/withStudyDetails'
 import StudyNavbar from '@/components/studyNavbar/StudyNavbar'
+import { hasRoleOnStudy } from '@/services/permissions/environment'
 import { isDeactivableFeatureActiveForEnvironment } from '@/services/serverFunctions/deactivableFeatures'
 import { checkStudyHasObjectives } from '@/services/serverFunctions/trajectory'
 import { getAccountRoleOnStudy } from '@/utils/study'
@@ -24,6 +25,7 @@ const NavLayout = async ({ children, params, study, user }: Props & StudyProps &
     getAccountRoleOnStudy(user, study),
   ])
 
+  const showRoleInChip = user && hasRoleOnStudy(user.environment)
   const isTransitionPlanActive = transitionPlanFeature.success && transitionPlanFeature.data
   const hasObjectives = objectivesResponse.success ? objectivesResponse.data : false
 
@@ -36,7 +38,7 @@ const NavLayout = async ({ children, params, study, user }: Props & StudyProps &
           study={study}
           isTransitionPlanActive={isTransitionPlanActive}
           hasObjectives={hasObjectives}
-          userRole={userRole}
+          userRole={showRoleInChip ? userRole : null}
         />
         <div className={styles.children}>{children}</div>
       </div>

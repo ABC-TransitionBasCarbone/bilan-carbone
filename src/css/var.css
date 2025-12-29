@@ -112,6 +112,10 @@
   padding-right: 1rem;
 }
 
+.pr2 {
+  padding-right: 2rem;
+}
+
 .pt1 {
   padding-top: 1rem;
 }
@@ -181,6 +185,11 @@
 .py025 {
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
+}
+
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
 .py1 {

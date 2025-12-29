@@ -1,5 +1,5 @@
 import { expect } from '@jest/globals'
-import { groupBy } from './array'
+import { groupBy, sortByCustomOrder } from './array'
 
 describe('array utils functions', () => {
   describe('groupBy', () => {
@@ -48,6 +48,49 @@ describe('array utils functions', () => {
       expect(groupByName['mocked-name-3'].find((item) => item.id === 1)).not.toBeDefined()
       expect(groupByName['undefined'].find((item) => item.id === 3)).toBeDefined()
       expect(groupByName['undefined'].find((item) => item.id === 4)).not.toBeDefined()
+    })
+  })
+
+  describe('sortByCustomOrder', () => {
+    test('Should sort array based on custom order', () => {
+      const array = [
+        { id: 1, name: 'b' },
+        { id: 2, name: 'c' },
+        { id: 3, name: 'a' },
+      ]
+
+      const customOrder = ['a', 'b', 'c']
+
+      const sorted = sortByCustomOrder(array, customOrder, (item) => item.name)
+
+      expect(sorted.map((item) => item.name)).toEqual(['a', 'b', 'c'])
+    })
+
+    test('Should return original order if no customOrder is provided', () => {
+      const array = [
+        { id: 1, name: 'a' },
+        { id: 2, name: 'b' },
+        { id: 3, name: 'c' },
+      ]
+
+      const sorted = sortByCustomOrder(array, [], (item) => item.name)
+
+      expect(sorted).toEqual(array)
+    })
+
+    test('Should still work with items not in customOrder but ignore them', () => {
+      const array = [
+        { id: 1, name: 'b' },
+        { id: 2, name: 'x' },
+        { id: 3, name: 'a' },
+        { id: 4, name: 'y' },
+      ]
+
+      const customOrder = ['a', 'b', 'c']
+
+      const sorted = sortByCustomOrder(array, customOrder, (item) => item.name)
+
+      expect(sorted.map((item) => item.name)).toEqual(['a', 'b', 'x', 'y'])
     })
   })
 })

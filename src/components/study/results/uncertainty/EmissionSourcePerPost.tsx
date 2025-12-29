@@ -36,7 +36,8 @@ const EmissionSourcePerPost = ({ studyId, resultsUnit, results, validatedOnly }:
   const t = useTranslations('study.results')
   const tPost = useTranslations('emissionFactors.post')
 
-  const filteredResults = results.filter((post) => post.post !== 'total')
+  const filteredResults = results.filter((result) => result.post !== 'total' && result.value > 0)
+
   const numberOfSources = validatedOnly ? 'numberOfValidatedEmissionSource' : 'numberOfEmissionSource'
   const { maxValue, maxSource } = filteredResults.reduce(
     (res, post) => ({

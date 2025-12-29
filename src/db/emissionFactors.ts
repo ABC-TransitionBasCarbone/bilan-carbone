@@ -1,4 +1,5 @@
 import { LocaleType } from '@/i18n/config'
+import { isSourceForEnv } from '@/services/importEmissionFactor/import'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { FeFilters } from '@/types/filters'
 import { unique } from '@/utils/array'
@@ -495,6 +496,17 @@ export const getEmissionFactorImportVersionsBC = async (withArchived?: boolean) 
 
 export const getEmissionFactorImportVersionsCUT = async () => {
   return prismaClient.emissionFactorImportVersion.findMany()
+}
+
+export const getEmissionFactorImportVersionsClickson = async () => {
+  const sources = isSourceForEnv(Environment.CLICKSON)
+  return prismaClient.emissionFactorImportVersion.findMany({
+    where: {
+      source: { in: sources },
+    },
+    orderBy: { createdAt: 'desc' },
+    distinct: ['source'],
+  })
 }
 
 export const getStudyEmissionFactorSources = async (studyId: string, withCut: boolean = false) => {

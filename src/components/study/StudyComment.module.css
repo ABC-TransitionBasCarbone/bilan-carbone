@@ -1,0 +1,8 @@
+.comment {
+  border: 1px solid;
+  border-bottom: none;
+}
+
+.comment:last-of-type {
+  border-bottom: 1px solid;
+}

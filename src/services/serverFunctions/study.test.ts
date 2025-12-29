@@ -711,7 +711,7 @@ describe('study', () => {
                 },
                 organizationVersionId: TEST_IDS.orgVersion,
               },
-              subPost: 'Déchets',
+              subPost: 'Fret',
             },
           ],
         })

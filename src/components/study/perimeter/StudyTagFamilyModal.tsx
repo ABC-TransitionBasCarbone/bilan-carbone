@@ -1,3 +1,4 @@
+import { customRich } from '@/i18n/customRich'
 import { createOrUpdateStudyTagFamily, deleteStudyTagFamily } from '@/services/serverFunctions/emissionSource'
 import {
   NewStudyTagFamilyCommand,
@@ -50,7 +51,7 @@ const StudyTagFamilyModal = ({ action, studyId, family, onClose }: Props) => {
       <Form onSubmit={handleSubmit(onSumbit)}>
         <DialogTitle id="emission-tag-family-modal-title">{t(title)}</DialogTitle>
         <DialogContent id="emission-tag-family-modal-content">
-          {t.rich(content, { name: family?.name || '', red: (children) => <span className="error">{children}</span> })}
+          {customRich(t, content, { name: family?.name || '' })}
           {action === 'edit' && (
             <div className="flex mt1">
               <FormTextField

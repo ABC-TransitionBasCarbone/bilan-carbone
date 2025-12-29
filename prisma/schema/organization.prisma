@@ -11,6 +11,64 @@ enum Environment {
   CLICKSON
 }
 
+enum Country {
+  ALBANIA
+  ANDORRA
+  AUSTRIA
+  BELARUS
+  BELGIUM
+  BOSNIA_AND_HERZEGOVINA
+  BULGARIA
+  CROATIA
+  CYPRUS
+  CZECH_REPUBLIC
+  DENMARK
+  ESTONIA
+  FINLAND
+  FRANCE
+  GERMANY
+  GREECE
+  HUNGARY
+  ICELAND
+  IRELAND
+  ITALY
+  KOSOVO
+  LATVIA
+  LIECHTENSTEIN
+  LITHUANIA
+  LUXEMBOURG
+  MALTA
+  MOLDOVA
+  MONACO
+  MONTENEGRO
+  NETHERLANDS
+  NORTH_MACEDONIA
+  NORWAY
+  POLAND
+  PORTUGAL
+  ROMANIA
+  RUSSIA
+  SAN_MARINO
+  SERBIA
+  SLOVAKIA
+  SLOVENIA
+  SPAIN
+  SWEDEN
+  SWITZERLAND
+  UKRAINE
+  UNITED_KINGDOM
+  VATICAN_CITY
+  OTHER
+}
+
+enum EstablishmentType {
+  COLLEGE
+  LYCEE_GENERAL
+  LYCEE_PRO
+  LYCEE_PRO_AGRICOLE
+  ETABLISSEMENT_FR_ETRANGER
+}
+
 model Organization {
   id               String    @id @default(uuid())
   oldBCId          String?   @map("old_bc_id")
@@ -65,8 +123,10 @@ model Site {
   etp  Int    @default(0)
   ca   Float  @default(0)
 
-  postalCode String? @map("postal_code")
+  postalCode String?  @map("postal_code")
   city       String?
+  address    String?
+  country    Country?
 
   volunteerNumber   Int @default(0) @map("volunteer_number")
   beneficiaryNumber Int @default(0) @map("beneficiary_number")
@@ -80,6 +140,12 @@ model Site {
 
   establishmentId   String? @map("establishment_id")
   establishmentYear String? @map("establishment_year")
+
+  superficy     Float?
+  studentNumber Int?    @map("student_number")
+  academy       String?
+
+  establishmentType EstablishmentType? @map("establishment_type")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
