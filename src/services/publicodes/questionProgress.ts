@@ -6,16 +6,16 @@ import {
 import { FormLayout } from '@/components/publicodes-form/layouts/formLayout'
 import { SubPost } from '@prisma/client'
 import Engine, { Situation } from 'publicodes'
-import { Post } from '../posts'
+import { Post, SimplifiedPost } from '../posts'
 
 export type QuestionStats = { answered: number; total: number }
 export type StatsResult = Partial<Record<Post, Partial<Record<SubPost, QuestionStats>>>>
 
-export function getQuestionProgressBySubPost<RuleName extends string>(
-  engine: Engine<RuleName>,
-  situation: Situation<RuleName>,
-  getSubPostLayouts: (subPost: SubPost) => FormLayout<RuleName>[] | undefined,
-  subPostsByPost: Record<Post, SubPost[]>,
+export function getQuestionProgressBySubPost(
+  engine: Engine,
+  situation: Situation<string>,
+  subPostsByPost: Record<SimplifiedPost, SubPost[]>,
+  getSubPostLayouts: (subPost: SubPost) => FormLayout<string>[] | undefined,
 ): StatsResult {
   const localEngine = engine.shallowCopy()
   localEngine.setSituation(situation)
