@@ -1,5 +1,7 @@
+import { AccountWithUser } from '@/db/account'
 import { getOrganizationVersionAccounts } from '@/db/organization'
 import { FullStudy } from '@/db/study'
+import { SubPost } from '@prisma/client'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
@@ -7,9 +9,11 @@ import NewStudyContributorForm from '../study/rights/NewStudyContributorForm'
 
 interface Props {
   study: FullStudy
+  account: AccountWithUser
+  subPosts: SubPost[]
 }
 
-const EditStudyContributorPage = async ({ study }: Props) => {
+const EditStudyContributorPage = async ({ study, account, subPosts = [] }: Props) => {
   const tNav = await getTranslations('nav')
   const t = await getTranslations('study.rights.newContributor')
   const accounts = await getOrganizationVersionAccounts(study.organizationVersionId)
@@ -17,7 +21,7 @@ const EditStudyContributorPage = async ({ study }: Props) => {
   return (
     <>
       <Breadcrumbs
-        current={tNav('newStudyContributor')}
+        current={tNav('editStudyContributor')}
         links={[
           { label: tNav('home'), link: '/' },
           study.organizationVersion.isCR
@@ -30,8 +34,13 @@ const EditStudyContributorPage = async ({ study }: Props) => {
           { label: tNav('studyRights'), link: `/etudes/${study.id}/cadrage` },
         ].filter((link) => link !== undefined)}
       />
-      <Block title={t('title', { name: study.name })} as="h1">
-        <NewStudyContributorForm study={study} accounts={accounts} />
+      <Block title={t('titleEdit', { name: study.name })} as="h1">
+        <NewStudyContributorForm
+          defaultAccount={account}
+          study={study}
+          accounts={accounts}
+          defaultSubPosts={subPosts}
+        />
       </Block>
     </>
   )
