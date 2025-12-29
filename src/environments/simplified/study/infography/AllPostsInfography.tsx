@@ -1,25 +1,20 @@
 import { FullStudy } from '@/db/study'
 import EnvironmentLoader from '@/environments/core/utils/EnvironmentLoader'
 import { useCutPublicodesSituation } from '@/environments/cut/context/publicodesContext'
-import { getFormLayoutsForSubPost } from '@/environments/cut/publicodes/subPostMapping'
-import { useServerFunction } from '@/hooks/useServerFunction'
-import { ClicksonPost, CutPost, Post, subPostsByPost, subPostsByPostCUT } from '@/services/posts'
-import { getQuestionProgressBySubPost } from '@/services/publicodes/questionProgress'
+import { getQuestionProgressBySubPost, StatsResult } from '@/services/publicodes/questionProgress'
+import { getSimplifiedPublicodesConfig } from '@/services/publicodes/simplifiedPublicodesConfig'
 import { ResultsByPost } from '@/services/results/consolidated'
-import { StatsResult } from '@/services/serverFunctions/question'
 import { getEmissionValueString } from '@/utils/study'
 import { styled } from '@mui/material'
-import { SubPost } from '@prisma/client'
-import { UserSession } from 'next-auth'
+import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { SimplifiedPostInfography } from './SimplifiedPostInfography'
 
 interface Props {
   study: FullStudy
   data: ResultsByPost[]
-  user: UserSession
-  posts?: typeof CutPost | typeof ClicksonPost
+  environment: Environment
 }
 
 const StyledGrid = styled('div')({
@@ -31,28 +26,23 @@ const StyledGrid = styled('div')({
   paddingBottom: '12rem',
 })
 
-const AllPostsInfography = ({ studySiteId, study, data, user, posts = CutPost }: Props) => {
-  const [questionProgress, setQuestionProgress] = useState<StatsResult>({} as StatsResult)
-  const { callServerFunction } = useServerFunction()
-
+const AllPostsInfography = ({ study, data, environment }: Props) => {
   const tUnits = useTranslations('study.results.units')
   const { engine, situation, isLoading } = useCutPublicodesSituation()
+  const config = getSimplifiedPublicodesConfig(environment)
 
   const questionProgress = useMemo<StatsResult>(() => {
-    if (!situation) {
+    if (!situation || !config) {
       return {}
     }
-    return getQuestionProgressBySubPost(
-      engine,
-      situation,
-      getFormLayoutsForSubPost,
-      subPostsByPostCUT as Record<Post, SubPost[]>,
-    )
-  }, [engine, situation])
+    return getQuestionProgressBySubPost(engine, situation, config.subPostsByPost, config.getFormLayout)
+  }, [engine, situation, config])
 
   const renderedInfographies = useMemo(() => {
-    return Object.values(posts).map((post) => {
-      const subPostStats = questionProgress[post as CutPost | ClicksonPost] ?? {}
+    if (!config) return []
+
+    return config.posts.map((post) => {
+      const subPostStats = questionProgress[post] ?? {}
       let allAnswered = 0
       let allTotal = 0
       for (const stats of Object.values(subPostStats)) {
@@ -74,14 +64,14 @@ const AllPostsInfography = ({ studySiteId, study, data, user, posts = CutPost }:
           percent={completionRate}
           post={post}
           studyId={study.id}
-          subPosts={subPostsByPost[post as CutPost | ClicksonPost]}
-          questionStats={questionProgress[post as CutPost | ClicksonPost]}
+          subPosts={config.subPostsByPost[post] ?? null}
+          questionStats={questionProgress[post] ?? {}}
         />
       )
     })
-  }, [questionProgress, tUnits, study.resultsUnit, study.id, data])
+  }, [questionProgress, tUnits, study.resultsUnit, study.id, data, config])
 
-  if (isLoading) {
+  if (!config || isLoading) {
     return <EnvironmentLoader />
   }
 

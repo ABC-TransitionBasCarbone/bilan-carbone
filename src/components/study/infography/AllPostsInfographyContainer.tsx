@@ -3,7 +3,7 @@ import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import { CutPublicodesSituationProvider } from '@/environments/cut/context/publicodesContext'
 import AllPostsInfographySimplified from '@/environments/simplified/study/infography/AllPostsInfography'
 import AllPostsInfographyTilt from '@/environments/tilt/study/infography/AllPostsInfography'
-import { ClicksonPost, CutPost, TiltPost } from '@/services/posts'
+import { CutPost, TiltPost } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { Environment } from '@prisma/client'
@@ -54,18 +54,14 @@ const AllPostsInfographyContainer = ({ study, studySite }: Props) => {
       environmentComponents={{
         [Environment.CUT]: (
           <CutPublicodesSituationProvider studyId={study.id} studySiteId={studySite}>
-            <AllPostsInfographySimplified study={study} data={data} studySiteId={studySite} user={user} />
+            <AllPostsInfographySimplified study={study} data={data} environment={Environment.CUT} />
           </CutPublicodesSituationProvider>
         ),
         [Environment.TILT]: <AllPostsInfographyTilt study={study} data={data} />,
         [Environment.CLICKSON]: (
-          <AllPostsInfographySimplified
-            posts={ClicksonPost}
-            study={study}
-            data={data}
-            studySiteId={studySite}
-            user={user}
-          />
+          // TODO: implement Clickson Publicodes context when available or
+          // adapt the existing one to be parametrized by the current environment.
+          <AllPostsInfographySimplified study={study} data={data} environment={Environment.CLICKSON} />
         ),
       }}
     />

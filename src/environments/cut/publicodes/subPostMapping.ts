@@ -12,7 +12,7 @@ export function hasPublicodesMapping(subPost: SubPost): boolean {
   return SUBPOST_TO_RULENAME[subPost] !== undefined
 }
 
-export function getFormLayoutsForSubPost(subPost: SubPost): FormLayout<CutRuleName>[] {
+export function getFormLayoutsForSubPostCUT(subPost: SubPost): FormLayout<CutRuleName>[] {
   return SUBPOST_TO_FORM_LAYOUTS[subPost] || []
 }
 

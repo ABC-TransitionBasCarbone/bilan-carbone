@@ -49,7 +49,8 @@ export enum ClicksonPost {
 }
 
 export const Post = { ...BCPost, ...CutPost, ...TiltPost, ...ClicksonPost }
-export type Post = BCPost | CutPost | TiltPost | ClicksonPost
+export type SimplifiedPost = CutPost | ClicksonPost
+export type Post = BCPost | TiltPost | SimplifiedPost
 
 export const subPostsByPostBC: Record<BCPost, SubPost[]> = {
   [BCPost.Energies]: [
