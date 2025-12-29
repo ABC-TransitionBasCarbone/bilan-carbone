@@ -89,6 +89,23 @@
     },
     "export": {
       "export": "Export my footprint"
+    },
+    "pdf": {
+      "loading": "Loading data...",
+      "title": "Emissions Summary {year}",
+      "results": {
+        "all": "Results"
+      },
+      "labels": {
+        "studentNumber": "Number of students",
+        "etp": "Number of staff",
+        "superficy": "Area",
+        "establishmentYear": "Year of opening"
+      },
+      "charts": {
+        "siteEmissions": "Emissions in tCO2e of the school establishment {site} in {year}"
+      },
+      "additionalInfo": "The results you obtain here are a simplified calculation of your establishment's carbon footprint and do not meet the requirements of the Carbon Accounting® standard, nor current regulations. These results are intended to assist you in understanding climate issues and identifying your action priorities. Therefore carrying an essentially educational value, the calculation of your establishment's carbon footprint via our tool constitutes a first step in your adaptation to the consequences of climate change."
     }
   },
   "emissionFactors": {
