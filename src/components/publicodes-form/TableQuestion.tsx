@@ -2,6 +2,7 @@ import BaseTable from '@/components/base/Table'
 import { Paper, TableContainer } from '@mui/material'
 import { EvaluatedFormElement } from '@publicodes/forms'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
+import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import InputField from './InputField'
 import { EvaluatedTableLayout } from './layouts/evaluatedFormLayout'
@@ -25,6 +26,7 @@ export default function TableQuestion<RuleName extends string>({
   tableLayout: { title, headers, evaluatedRows },
   onChange,
 }: TableLayoutProps<RuleName>) {
+  const tLayout = useTranslations('publicodes-layout.table')
   const tableData = useMemo<TableRowData<RuleName>[]>(() => {
     return evaluatedRows.map((row, rowIndex) => ({
       id: `row-${rowIndex}`,
@@ -35,7 +37,7 @@ export default function TableQuestion<RuleName extends string>({
   const columns = useMemo<ColumnDef<TableRowData<RuleName>>[]>(() => {
     return headers.map((header, colIndex) => ({
       id: `col-${colIndex}`,
-      header: () => header,
+      header: () => tLayout(header),
       cell: ({ row }) => {
         const formElement = row.original.elements[colIndex]
         if (!formElement) {

@@ -8,7 +8,6 @@ billetterie et communication . matériel distributeurs:
 
 billetterie et communication . matériel distributeurs . affiches:
   titre: Affiches
-  question: Quelle quantité de matériel distributeurs recevez-vous en moyenne par semaine ?
   formule:
     somme:
       - affiches 120x160
@@ -67,7 +66,6 @@ billetterie et communication . matériel distributeurs . affiches . affiches 40x
 
 billetterie et communication . matériel distributeurs . PLV:
   titre: PLV
-  question: Quelle quantité de matériel distributeurs recevez-vous en moyenne par mois ?
   formule:
     somme:
       - PLV comptoir
