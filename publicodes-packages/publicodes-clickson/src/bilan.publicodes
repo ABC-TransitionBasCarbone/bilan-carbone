@@ -1,8 +1,8 @@
 bilan:
   formule:
     somme:
-    - énergie
-    - restauration
-    - déplacements
-    - achats
-    - immobilisations
+      - énergie
+      - restauration
+      - déplacements
+      - achats
+      - immobilisations
