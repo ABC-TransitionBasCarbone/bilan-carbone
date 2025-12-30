@@ -10,7 +10,7 @@
 
 .tagsContainer {
   min-width: 10rem;
-  max-width: 33%;
+  width: 33%;
 }
 
 .tagOptions {

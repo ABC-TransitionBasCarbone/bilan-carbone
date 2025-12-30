@@ -474,15 +474,16 @@ const EmissionSourceForm = ({
             onBlur={(event) => update('source', event.target.value)}
             label={t('form.source')}
           />
-          <TextField
-            className="grow"
-            disabled={!canEdit}
-            data-testid="emission-source-comment"
-            defaultValue={emissionSource.comment}
-            onBlur={(event) => update('comment', event.target.value)}
-            label={t('form.comment')}
-          />
         </div>
+        <TextField
+          multiline
+          className="grow"
+          disabled={!canEdit}
+          data-testid="emission-source-comment"
+          defaultValue={emissionSource.comment}
+          onBlur={(event) => update('comment', event.target.value)}
+          label={t('form.comment')}
+        />
         <QualitySelectGroup
           canEdit={canEdit}
           emissionSource={emissionSource}
