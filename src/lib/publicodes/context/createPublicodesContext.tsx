@@ -136,6 +136,10 @@ export function createPublicodesContext<
 
     const lastSyncedAt = useRef<Date>(new Date())
 
+    // Keep a ref to situation for stable updateField callback
+    const situationRef = useRef(situation)
+    situationRef.current = situation
+
     const autoSave = useSituationAutoSave({
       studyId,
       studySiteId,
@@ -188,16 +192,16 @@ export function createPublicodesContext<
 
     const updateField = useCallback(
       (ruleName: RuleName, value: string | number | boolean | undefined) => {
-        if (!situation) {
+        const currentSituation = situationRef.current
+        if (!currentSituation) {
           return
         }
 
-        const newSituation = getUpdatedSituationWithInputValue(engine, situation, ruleName, value) as S
-        engine.setSituation(newSituation as Situation<string>)
+        const newSituation = getUpdatedSituationWithInputValue(engine, currentSituation, ruleName, value) as S
         setSituation(newSituation)
         autoSave.saveSituation(newSituation)
       },
-      [situation, setSituation, autoSave],
+      [setSituation, autoSave.saveSituation],
     )
 
     const autoSaveState = useMemo<AutoSaveState>(

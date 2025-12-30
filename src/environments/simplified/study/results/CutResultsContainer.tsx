@@ -102,10 +102,6 @@ interface Props {
   customPostOrder?: Post[]
 }
 
-/**
- * Container component for CUT environment results.
- * Manages the study site selection and provides the Publicodes context.
- */
 const CutResultsContainer = ({
   emissionFactorsWithParts,
   study,
