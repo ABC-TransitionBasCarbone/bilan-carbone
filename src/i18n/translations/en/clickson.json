@@ -105,6 +105,26 @@
       "charts": {
         "siteEmissions": "Emissions in tCO2e of the school establishment {site} in {year}"
       },
+      "questions": {
+        "goals-title": "OBJECTIVES",
+        "goals-subtitle": "Present the objectives of your action (awareness, emissions reduction...). Is this a short-term or strategic action?",
+        "shareholders-title": "ACTION LEADERS",
+        "shareholders-subtitle": "Have you designated a team to lead the action on a daily and long-term basis? Indicate their names and role/function",
+        "otherStakeholders-title": "OTHER STAKEHOLDERS",
+        "otherStakeholders-subtitle": "Remember to distinguish internal and external stakeholders here. They will not lead the action daily but will help you by providing electricity bills, for example. This could be your establishment's manager or your local authority.",
+        "ressourcesToBeImplemented-title": "RESOURCES TO BE IMPLEMENTED",
+        "ressourcesToBeImplemented-subtitle": "What are the steps and means to be used? This can be human, material, financial resources... Build this part well, it is essential!",
+        "monitoringIndicators-title": "MONITORING INDICATORS",
+        "monitoringIndicators-subtitle": "Write down indicators here that you can use in 6 months / 1 year to assess the success of your action. An example: % reduction in GHG",
+        "estimatedCarbonImpacts-title": "ESTIMATED CARBON IMPACTS",
+        "estimatedCarbonImpacts-subtitle": "To what extent does your action reduce GHG emissions?",
+        "otherEstimatedEnvironmentalImpacts-title": "OTHER ESTIMATED ENVIRONMENTAL IMPACTS",
+        "otherEstimatedEnvironmentalImpacts-subtitle": "Think here about the positive or negative impacts of your action on biodiversity, water, waste...",
+        "estimatedSocialImpacts-title": "ESTIMATED SOCIAL IMPACTS",
+        "estimatedSocialImpacts-subtitle": "We try here to know if the action helps reduce eco-anxiety, promote learning, reduce school dropout, promote youth integration...",
+        "calendar-title": "TIMELINE",
+        "calendar-subtitle": "Write down the main stages of your action here, choose your time scale well!"
+      },
       "additionalInfo": "The results you obtain here are a simplified calculation of your establishment's carbon footprint and do not meet the requirements of the Carbon Accounting® standard, nor current regulations. These results are intended to assist you in understanding climate issues and identifying your action priorities. Therefore carrying an essentially educational value, the calculation of your establishment's carbon footprint via our tool constitutes a first step in your adaptation to the consequences of climate change."
     }
   },

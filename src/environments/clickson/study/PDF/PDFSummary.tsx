@@ -4,10 +4,9 @@ import { ChartsPage } from '@/app/(public)/preview/etudes/[id]/ChartsPage'
 import '@/app/(public)/preview/etudes/[id]/pdf-summary.css'
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import { FullStudy } from '@/db/study'
-import { ClicksonPost, convertCountToBilanCarbone, Post } from '@/services/posts'
+import { ClicksonPost, Post } from '@/services/posts'
 import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
 import { getDetailedEmissionResults } from '@/services/study'
-import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { ThemeProvider } from '@mui/material/styles'
 import { Environment } from '@prisma/client'
@@ -36,35 +35,6 @@ const PDFSummary = ({ study }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const tStudy = useTranslations('study.results')
   const tPdf = useTranslations('study.pdf')
-  const tExports = useTranslations('exports')
-
-  // Helper function to create ConsolidatedResultsTable data from bilan carbone equivalent results
-  const createBilanCarboneTableData = (bilanCarboneEquivalent: Record<string, number>) => {
-    return [
-      ...Object.entries(bilanCarboneEquivalent).map(([result, value]) => ({
-        post: result,
-        label: result,
-        value: value,
-        monetaryValue: 0,
-        nonSpecificMonetaryValue: 0,
-        numberOfEmissionSource: 0,
-        numberOfValidatedEmissionSource: 0,
-        uncertainty: 1,
-        children: [],
-      })),
-      {
-        post: 'total' as const,
-        label: 'Total',
-        value: Object.values(bilanCarboneEquivalent).reduce((sum, result) => sum + result, 0),
-        monetaryValue: 0,
-        nonSpecificMonetaryValue: 0,
-        numberOfEmissionSource: 0,
-        numberOfValidatedEmissionSource: 0,
-        uncertainty: 1,
-        children: [],
-      },
-    ]
-  }
 
   const [sitesData, setSitesData] = useState<SiteData[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -73,6 +43,26 @@ const PDFSummary = ({ study }: Props) => {
     () => getDetailedEmissionResults(study, tPost, 'all', false, study.organizationVersion.environment, tStudy),
     [study, tPost, tStudy],
   )
+
+  const questions = [
+    'goals',
+    'shareholders',
+    'otherStakeholders',
+    'ressourcesToBeImplemented',
+    'monitoringIndicators',
+    'estimatedCarbonImpacts',
+    'otherEstimatedEnvironmentalImpacts',
+    'estimatedSocialImpacts',
+    'calendar',
+  ]
+
+  const customPostOrder = [
+    Post.EnergiesClickson,
+    Post.Restauration,
+    Post.DeplacementsClickson,
+    Post.Achats,
+    Post.ImmobilisationsClickson,
+  ]
 
   useEffect(() => {
     const loadData = async () => {
@@ -105,7 +95,7 @@ const PDFSummary = ({ study }: Props) => {
 
           sitesData.push({
             id: studySite.id,
-            fullName: `${studySite.site.name}`,
+            fullName: `${studySite.site.name} - ${studySite.site.postalCode}`,
             generalData: {
               etp: studySite?.etp ?? studySite?.site.etp ?? 0,
               studentNumber: studySite?.studentNumber ?? studySite?.site.studentNumber ?? 0,
@@ -203,46 +193,23 @@ const PDFSummary = ({ study }: Props) => {
               data={computedResultsWithDep}
               hiddenUncertainty
               hideExpandIcons
+              customPostOrder={customPostOrder}
             />
           </div>
         </div>
 
         {sitesData.map((site) => (
           <React.Fragment key={site.id}>
-            <div className="pdf-content page-break-before pdf-page-content">
-              <div className="pdf-section">
-                <h2 className="pdf-cinema-header pdf-header-with-border">
-                  {tPdf('results.site', { site: site.fullName })}
-                </h2>
-
-                <div className="pdf-general-data flex justify-between">
-                  <div className="pdf-data-item">
-                    <div className="pdf-data-label">{tPdf('labels.studentNumber')}</div>
-                    <div className="pdf-data-value">{site.generalData.studentNumber}</div>
-                  </div>
-                  <div className="pdf-data-item">
-                    <div className="pdf-data-label">{tPdf('labels.etp')}</div>
-                    <div className="pdf-data-value">{site.generalData.etp}</div>
-                  </div>
-                  <div className="pdf-data-item">
-                    <div className="pdf-data-label">{tPdf('labels.superficy')}</div>
-                    <div className="pdf-data-value">{formatNumber(site.generalData.superficy)}</div>
-                  </div>
-                  <div className="pdf-data-item">
-                    <div className="pdf-data-label">{tPdf('labels.establishmentYear')}</div>
-                    <div className="pdf-data-value">{site.generalData.establishmentYear}</div>
-                  </div>
-                </div>
-
-                <ConsolidatedResultsTable
-                  resultsUnit={study.resultsUnit}
-                  data={site.results}
-                  hiddenUncertainty
-                  expandAll
-                  hideExpandIcons
-                  isCompact
-                />
-              </div>
+            <div className="pdf-content pdf-page-content">
+              <ConsolidatedResultsTable
+                resultsUnit={study.resultsUnit}
+                data={site.results}
+                hiddenUncertainty
+                expandAll
+                hideExpandIcons
+                isCompact
+                customPostOrder={customPostOrder}
+              />
             </div>
             <ChartsPage
               study={study}
@@ -251,44 +218,21 @@ const PDFSummary = ({ study }: Props) => {
               tPdf={tPdf}
               isAll={false}
               year={year}
-              customPostOrder={[
-                Post.EnergiesClickson,
-                Post.Restauration,
-                Post.DeplacementsClickson,
-                Post.Achats,
-                Post.ImmobilisationsClickson,
-              ]}
+              customPostOrder={customPostOrder}
             />
           </React.Fragment>
         ))}
-
-        {sitesData.map((site) => {
-          const { computedResultsWithDep: siteResults } = getDetailedEmissionResults(
-            study,
-            tPost,
-            site.id,
-            false,
-            Environment.CLICKSON,
-            tStudy,
-          )
-          const siteBilanCarboneEquivalent = convertCountToBilanCarbone(siteResults)
-          return (
-            <div key={`bilan-carbone-${site.id}`} className="pdf-content page-break-before pdf-page-content">
-              <div className="pdf-section">
-                <h2 className="pdf-totals-header pdf-header-with-border">
-                  {tExports('bc.title')} - {site.fullName}
-                </h2>
-
-                <ConsolidatedResultsTable
-                  resultsUnit={study.resultsUnit}
-                  data={createBilanCarboneTableData(siteBilanCarboneEquivalent)}
-                  hiddenUncertainty
-                  hideExpandIcons
-                />
+        <div className="pdf-content page-break-before pdf-page-content">
+          <div className="pdf-section">
+            {questions.map((question) => (
+              <div key={question}>
+                <p className="pdf-question-title">{tPdf(`questions.${question}-title`)}</p>
+                <p className="pdf-question-subtitle">{tPdf(`questions.${question}-subtitle`)}</p>
+                <div className="pdf-field" />
               </div>
-            </div>
-          )
-        })}
+            ))}
+          </div>
+        </div>
       </div>
     </ThemeProvider>
   )
