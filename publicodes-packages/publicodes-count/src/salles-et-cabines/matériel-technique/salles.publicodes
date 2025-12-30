@@ -30,10 +30,10 @@ salles et cabines . matériel technique . salle . projecteur:
   avec:
     age:
       durée:
-        unité: an
         depuis: année achat
         jusqu'à: commun . année actuelle
       arrondi: oui
+      unité: an
 
     amortissement:
       valeur: 10
@@ -97,10 +97,10 @@ salles et cabines . matériel technique . salle . écran:
   avec:
     age:
       durée:
-        unité: an
         depuis: année achat
         jusqu'à: commun . année actuelle
       arrondi: oui
+      unité: an
 
     amortissement:
       valeur: 10
@@ -171,10 +171,10 @@ salles et cabines . matériel technique . salle . fauteuils:
   avec:
     age:
       durée:
-        unité: an
         depuis: année achat
         jusqu'à: commun . année actuelle
       arrondi: oui
+      unité: an
 
     amortissement:
       valeur: 10
@@ -243,10 +243,10 @@ salles et cabines . matériel technique . salle . système son:
   avec:
     age:
       durée:
-        unité: an
         depuis: année achat
         jusqu'à: commun . année actuelle
       arrondi: oui
+      unité: an
 
     amortissement:
       valeur: 10
