@@ -3,7 +3,6 @@
 import Block from '@/components/base/Block'
 import Box from '@/components/base/Box'
 import useStudySite from '@/components/study/site/useStudySite'
-import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { CutPublicodesSituationProvider, useCutPublicodesSituation } from '@/environments/cut/context/publicodesContext'
 import { getPostRuleName, getSubPostRuleName } from '@/environments/cut/publicodes/subPostMapping'
@@ -14,11 +13,10 @@ import CircularProgress from '@mui/material/CircularProgress'
 import { SiteCAUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { Dispatch, SetStateAction, useMemo } from 'react'
-import AllResultsBase from './AllResultsBase'
+import AllResults from './AllResults'
 import { ChartType, defaultChartOrder } from './utils'
 
 interface CutAllResultsProps {
-  emissionFactorsWithParts: EmissionFactorWithParts[]
   study: FullStudy
   chartOrder?: Record<ChartType, number>
   caUnit?: SiteCAUnit
@@ -29,7 +27,6 @@ interface CutAllResultsProps {
 }
 
 const CutAllResults = ({
-  emissionFactorsWithParts,
   study,
   chartOrder = defaultChartOrder,
   caUnit,
@@ -73,13 +70,12 @@ const CutAllResults = ({
   }
 
   return (
-    <AllResultsBase
+    <AllResults
       study={study}
       computedResults={computedResults}
       totalValue={totalValue}
       studySite={studySite}
       setSite={setSite}
-      emissionFactorsWithParts={emissionFactorsWithParts}
       chartOrder={chartOrder}
       caUnit={caUnit}
       showSubLevel={showSubLevel}
@@ -90,7 +86,6 @@ const CutAllResults = ({
 }
 
 interface Props {
-  emissionFactorsWithParts: EmissionFactorWithParts[]
   study: FullStudy
   chartOrder?: Record<ChartType, number>
   caUnit?: SiteCAUnit
@@ -99,7 +94,6 @@ interface Props {
 }
 
 const CutResultsContainer = ({
-  emissionFactorsWithParts,
   study,
   chartOrder = defaultChartOrder,
   caUnit,
@@ -115,7 +109,6 @@ const CutResultsContainer = ({
   return (
     <CutPublicodesSituationProvider studyId={study.id} studySiteId={studySite}>
       <CutAllResults
-        emissionFactorsWithParts={emissionFactorsWithParts}
         study={study}
         chartOrder={chartOrder}
         caUnit={caUnit}
