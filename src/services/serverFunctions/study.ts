@@ -2432,3 +2432,23 @@ export const editStudyComment = async (commentId: string, newComment: string, st
       comment: newComment,
     })
   })
+
+export const changeStudyEstablishment = async (studySiteId: string, data: ChangeStudyEstablishmentCommand) =>
+  withServerResponse('changeStudyEstablishment', async () => {
+    const studySites = await getStudiesSitesFromIds([studySiteId])
+    if (!studySites || studySites.length === 0) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const study = studySites[0].study
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const informations = await getStudyRightsInformations(study.id)
+    if (informations === null) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    if (!canChangeOpeningHours(informations.user, informations.studyWithRights)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    await updateStudySiteData(studySiteId, data)
+  })

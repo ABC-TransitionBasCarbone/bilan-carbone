@@ -11,10 +11,14 @@ import { BCPost, ClicksonPost, convertTiltSubPostToBCSubPost, CutPost, Post, sub
 import { AdditionalResultTypes, ResultType } from '../study'
 import { filterWithDependencies, getSiteEmissionSources } from './utils'
 
-export type ResultsByPost = {
+export type BaseResultsByPost = {
   post: Post | SubPost | 'total'
   label: string
   value: number
+  children: BaseResultsByPost[]
+}
+
+export type ResultsByPost = Omit<BaseResultsByPost, 'children'> & {
   monetaryValue: number
   nonSpecificMonetaryValue: number
   numberOfEmissionSource: number
@@ -37,7 +41,7 @@ const computeUncertainty = (uncertaintyToReduce: { value: number; uncertainty?: 
   )
 }
 
-export const computeResultsByPost = (
+export const computeResultsByPostFromEmissionSources = (
   study: FullStudy,
   tPost: (key: string) => string,
   studySite: string,

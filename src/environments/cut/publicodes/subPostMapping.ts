@@ -1,23 +1,35 @@
 import { FormLayout, groupLayout, inputLayout, tableLayout } from '@/components/publicodes-form/layouts/formLayout'
+import { CutPost } from '@/services/posts'
 import { SubPost } from '@prisma/client'
 import { CutRuleName } from './types'
 
-/** Retrieves the Publicodes rule name corresponding to a given {@link SubPost}, if it exists */
-export function getPublicodesTarget(subPost: SubPost): CutRuleName | undefined {
+export function getPostRuleName(post: CutPost): CutRuleName {
+  return POST_TO_RULENAME[post]
+}
+
+export function getSubPostRuleName(subPost: SubPost): CutRuleName | undefined {
   return SUBPOST_TO_RULENAME[subPost]
 }
 
-/** Indicates whether a given {@link SubPost} has a mapping to a Publicodes rule name. */
 export function hasPublicodesMapping(subPost: SubPost): boolean {
   return SUBPOST_TO_RULENAME[subPost] !== undefined
 }
 
-export function getFormLayoutsForSubPost(subPost: SubPost): FormLayout<CutRuleName>[] {
+export function getFormLayoutsForSubPostCUT(subPost: SubPost): FormLayout<CutRuleName>[] {
   return SUBPOST_TO_FORM_LAYOUTS[subPost] || []
 }
 
+const POST_TO_RULENAME: Record<CutPost, CutRuleName> = {
+  [CutPost.Fonctionnement]: 'fonctionnement',
+  [CutPost.MobiliteSpectateurs]: 'mobilité spectateurs',
+  [CutPost.TourneesAvantPremieres]: 'tournées avant premières',
+  [CutPost.SallesEtCabines]: 'salles et cabines',
+  [CutPost.ConfiseriesEtBoissons]: 'confiseries et boissons',
+  [CutPost.Dechets]: 'déchets',
+  [CutPost.BilletterieEtCommunication]: 'billetterie et communication',
+} as const
+
 const SUBPOST_TO_RULENAME: Partial<Record<SubPost, CutRuleName>> = {
-  // CUT
   Batiment: 'fonctionnement . bâtiment',
   Equipe: 'fonctionnement . équipe',
   Energie: 'fonctionnement . énergie',

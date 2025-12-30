@@ -1,22 +1,20 @@
 import { FullStudy } from '@/db/study'
 import EnvironmentLoader from '@/environments/core/utils/EnvironmentLoader'
-import { useServerFunction } from '@/hooks/useServerFunction'
-import { ClicksonPost, CutPost, subPostsByPost } from '@/services/posts'
-import { ResultsByPost } from '@/services/results/consolidated'
-import { getQuestionProgressBySubPostPerPost, StatsResult } from '@/services/serverFunctions/question'
+import { useCutPublicodesSituation } from '@/environments/cut/context/publicodesContext'
+import { getQuestionProgressBySubPost, StatsResult } from '@/services/publicodes/questionProgress'
+import { getSimplifiedPublicodesConfig } from '@/services/publicodes/simplifiedPublicodesConfig'
+import { BaseResultsByPost } from '@/services/results/consolidated'
+import { computeBaseResultsByPostFromEngine } from '@/services/results/publicodes'
 import { getEmissionValueString } from '@/utils/study'
 import { styled } from '@mui/material'
-import { UserSession } from 'next-auth'
+import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { SimplifiedPostInfography } from './SimplifiedPostInfography'
 
 interface Props {
-  studySiteId: string
   study: FullStudy
-  data: ResultsByPost[]
-  user: UserSession
-  posts?: typeof CutPost | typeof ClicksonPost
+  environment: Environment
 }
 
 const StyledGrid = styled('div')({
@@ -28,32 +26,43 @@ const StyledGrid = styled('div')({
   paddingBottom: '12rem',
 })
 
-const AllPostsInfography = ({ studySiteId, study, data, user, posts = CutPost }: Props) => {
-  const [questionProgress, setQuestionProgress] = useState<StatsResult>({} as StatsResult)
-  const { callServerFunction } = useServerFunction()
-
+const AllPostsInfography = ({ study, environment }: Props) => {
   const tUnits = useTranslations('study.results.units')
-  const [isLoading, setIsLoading] = useState(true)
+  const tPost = useTranslations('emissionFactors.post')
+  const { engine, situation, isLoading } = useCutPublicodesSituation()
+  const config = getSimplifiedPublicodesConfig(environment)
 
-  const getQuestionProgress = useCallback(async () => {
-    await callServerFunction(() => getQuestionProgressBySubPostPerPost({ studySiteId, user, study, posts }), {
-      onSuccess: (value) => {
-        if (value) {
-          setQuestionProgress(value)
-          setIsLoading(false)
-        }
-      },
-    })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [callServerFunction, studySiteId])
+  const { questionProgress, publicodesResults } = useMemo<{
+    questionProgress: StatsResult
+    publicodesResults: BaseResultsByPost[]
+  }>(() => {
+    if (!situation || !config) {
+      return {
+        questionProgress: {},
+        publicodesResults: [],
+      }
+    }
 
-  useEffect(() => {
-    getQuestionProgress()
-  }, [studySiteId, getQuestionProgress])
+    return {
+      questionProgress: getQuestionProgressBySubPost(engine, situation, config.subPostsByPost, config.getFormLayout),
+      publicodesResults: computeBaseResultsByPostFromEngine(
+        engine,
+        config.posts,
+        config.subPostsByPost,
+        tPost,
+        config.getPostRuleName,
+        config.getSubPostRuleName,
+      ),
+    }
+  }, [engine, situation, config, tPost])
 
   const renderedInfographies = useMemo(() => {
-    return Object.values(posts).map((post) => {
-      const subPostStats = questionProgress[post as CutPost | ClicksonPost] ?? {}
+    if (!config) {
+      return []
+    }
+
+    return config.posts.map((post) => {
+      const subPostStats = questionProgress[post] ?? {}
       let allAnswered = 0
       let allTotal = 0
       for (const stats of Object.values(subPostStats)) {
@@ -62,10 +71,9 @@ const AllPostsInfography = ({ studySiteId, study, data, user, posts = CutPost }:
       }
 
       const completionRate = allTotal > 0 ? (allAnswered / allTotal) * 100 : 0
-
       const unit = tUnits(study.resultsUnit)
-      const dataByPost = data.find((d) => d.post === post)
-      const emissionValue = getEmissionValueString(dataByPost?.value, study.resultsUnit, unit)
+      const postResult = publicodesResults.find((d) => d.post === post)
+      const emissionValue = getEmissionValueString(postResult?.value, study.resultsUnit, unit)
 
       return (
         <SimplifiedPostInfography
@@ -75,16 +83,17 @@ const AllPostsInfography = ({ studySiteId, study, data, user, posts = CutPost }:
           percent={completionRate}
           post={post}
           studyId={study.id}
-          subPosts={subPostsByPost[post as CutPost | ClicksonPost]}
-          questionStats={questionProgress[post as CutPost | ClicksonPost]}
+          subPosts={config.subPostsByPost[post] ?? null}
+          questionStats={questionProgress[post] ?? {}}
         />
       )
     })
-  }, [questionProgress, tUnits, study.resultsUnit, study.id, data])
+  }, [questionProgress, tUnits, study.resultsUnit, study.id, publicodesResults, config])
 
-  if (isLoading || !questionProgress) {
+  if (!config || isLoading) {
     return <EnvironmentLoader />
   }
+
   return <StyledGrid>{renderedInfographies}</StyledGrid>
 }
 

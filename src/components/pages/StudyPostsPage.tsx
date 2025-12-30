@@ -26,7 +26,7 @@ interface Props {
   setGlossary: (glossary: string) => void
 }
 
-const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, user, setGlossary }: Props) => {
+const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, setGlossary }: Props) => {
   const [showInfography, setShowInfography] = useState(false)
   const tQuality = useTranslations('quality')
   const tUnit = useTranslations('units')
@@ -155,7 +155,7 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, use
         sort={sort}
         setSort={updateSort}
       >
-        {showInfography && <StudyPostInfography study={study} studySite={studySite} user={user} />}
+        {showInfography && <StudyPostInfography study={study} studySite={studySite} />}
         <SubPosts
           post={post}
           subPosts={filters.subPosts}

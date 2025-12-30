@@ -5,8 +5,8 @@ import { CircularProgress } from '@mui/material'
 import { SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useCutPublicodes } from '../context/CutPublicodesProvider'
-import { getFormLayoutsForSubPost } from '../publicodes/subPostMapping'
+import { useCutPublicodes } from '../context/publicodesContext'
+import { getFormLayoutsForSubPostCUT } from '../publicodes/subPostMapping'
 import styles from './PublicodesSubPostForm.module.css'
 
 export interface PublicodesSubPostFormProps {
@@ -16,7 +16,7 @@ export interface PublicodesSubPostFormProps {
 const PublicodesSubPostForm = ({ subPost }: PublicodesSubPostFormProps) => {
   const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
   const { engine, situation, updateField, isLoading, error } = useCutPublicodes()
-  const formLayouts = getFormLayoutsForSubPost(subPost)
+  const formLayouts = getFormLayoutsForSubPostCUT(subPost)
 
   if (error) {
     return (
