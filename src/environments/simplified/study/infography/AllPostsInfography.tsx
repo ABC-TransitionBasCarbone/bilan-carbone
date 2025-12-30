@@ -54,7 +54,7 @@ const AllPostsInfography = ({ study, environment }: Props) => {
         config.getSubPostRuleName,
       ),
     }
-  }, [engine, situation, config])
+  }, [engine, situation, config, tPost])
 
   const renderedInfographies = useMemo(() => {
     if (!config) {
