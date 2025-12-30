@@ -216,3 +216,7 @@
   flex: 0;
   width: 5rem;
 }
+
+.resizable :global(.MuiInputBase-input) {
+  resize: vertical;
+}

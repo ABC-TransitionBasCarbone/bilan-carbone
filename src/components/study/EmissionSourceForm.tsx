@@ -477,7 +477,8 @@ const EmissionSourceForm = ({
         </div>
         <TextField
           multiline
-          className="grow"
+          fullWidth
+          className={classNames('grow', styles.resizable)}
           disabled={!canEdit}
           data-testid="emission-source-comment"
           defaultValue={emissionSource.comment}
