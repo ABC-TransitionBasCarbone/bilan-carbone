@@ -54,7 +54,6 @@ export interface PublicodesSituationProviderProps {
 export interface PublicodesFormProviderProps {
   studyId: string
   studySiteId: string
-  autoSaveDebounceMs?: number
   syncIntervalMs?: number
   children: ReactNode
 }
@@ -129,7 +128,6 @@ export function createPublicodesContext<
   function PublicodesAutoSaveProvider({
     children,
     studyId,
-    autoSaveDebounceMs = 1500,
     syncIntervalMs = 10000,
   }: Omit<PublicodesFormProviderProps, 'studySiteId'>) {
     const t = useTranslations('saveStatus')
@@ -143,7 +141,6 @@ export function createPublicodesContext<
       studySiteId,
       modelVersion,
       enabled: true,
-      debounceMs: autoSaveDebounceMs,
     })
 
     useBeforeUnload({
@@ -232,20 +229,10 @@ export function createPublicodesContext<
     return context
   }
 
-  function PublicodesFormProvider({
-    children,
-    studyId,
-    studySiteId,
-    autoSaveDebounceMs,
-    syncIntervalMs,
-  }: PublicodesFormProviderProps) {
+  function PublicodesFormProvider({ children, studyId, studySiteId, syncIntervalMs }: PublicodesFormProviderProps) {
     return (
       <PublicodesSituationProvider studyId={studyId} studySiteId={studySiteId}>
-        <PublicodesAutoSaveProvider
-          studyId={studyId}
-          autoSaveDebounceMs={autoSaveDebounceMs}
-          syncIntervalMs={syncIntervalMs}
-        >
+        <PublicodesAutoSaveProvider studyId={studyId} syncIntervalMs={syncIntervalMs}>
           {children}
         </PublicodesAutoSaveProvider>
       </PublicodesSituationProvider>
