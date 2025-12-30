@@ -3,7 +3,8 @@ import EnvironmentLoader from '@/environments/core/utils/EnvironmentLoader'
 import { useCutPublicodesSituation } from '@/environments/cut/context/publicodesContext'
 import { getQuestionProgressBySubPost, StatsResult } from '@/services/publicodes/questionProgress'
 import { getSimplifiedPublicodesConfig } from '@/services/publicodes/simplifiedPublicodesConfig'
-import { ResultsByPost } from '@/services/results/consolidated'
+import { BaseResultsByPost } from '@/services/results/consolidated'
+import { computeBaseResultsByPostFromEngine } from '@/services/results/publicodes'
 import { getEmissionValueString } from '@/utils/study'
 import { styled } from '@mui/material'
 import { Environment } from '@prisma/client'
@@ -13,7 +14,6 @@ import { SimplifiedPostInfography } from './SimplifiedPostInfography'
 
 interface Props {
   study: FullStudy
-  data: ResultsByPost[]
   environment: Environment
 }
 
@@ -26,16 +26,34 @@ const StyledGrid = styled('div')({
   paddingBottom: '12rem',
 })
 
-const AllPostsInfography = ({ study, data, environment }: Props) => {
+const AllPostsInfography = ({ study, environment }: Props) => {
   const tUnits = useTranslations('study.results.units')
+  const tPost = useTranslations('emissionFactors.post')
   const { engine, situation, isLoading } = useCutPublicodesSituation()
   const config = getSimplifiedPublicodesConfig(environment)
 
-  const questionProgress = useMemo<StatsResult>(() => {
+  const { questionProgress, publicodesResults } = useMemo<{
+    questionProgress: StatsResult
+    publicodesResults: BaseResultsByPost[]
+  }>(() => {
     if (!situation || !config) {
-      return {}
+      return {
+        questionProgress: {},
+        publicodesResults: [],
+      }
     }
-    return getQuestionProgressBySubPost(engine, situation, config.subPostsByPost, config.getFormLayout)
+
+    return {
+      questionProgress: getQuestionProgressBySubPost(engine, situation, config.subPostsByPost, config.getFormLayout),
+      publicodesResults: computeBaseResultsByPostFromEngine(
+        engine,
+        config.posts,
+        config.subPostsByPost,
+        tPost,
+        config.getPostRuleName,
+        config.getSubPostRuleName,
+      ),
+    }
   }, [engine, situation, config])
 
   const renderedInfographies = useMemo(() => {
@@ -53,10 +71,9 @@ const AllPostsInfography = ({ study, data, environment }: Props) => {
       }
 
       const completionRate = allTotal > 0 ? (allAnswered / allTotal) * 100 : 0
-
       const unit = tUnits(study.resultsUnit)
-      const dataByPost = data.find((d) => d.post === post)
-      const emissionValue = getEmissionValueString(dataByPost?.value, study.resultsUnit, unit)
+      const postResult = publicodesResults.find((d) => d.post === post)
+      const emissionValue = getEmissionValueString(postResult?.value, study.resultsUnit, unit)
 
       return (
         <SimplifiedPostInfography
@@ -71,7 +88,7 @@ const AllPostsInfography = ({ study, data, environment }: Props) => {
         />
       )
     })
-  }, [questionProgress, tUnits, study.resultsUnit, study.id, data, config])
+  }, [questionProgress, tUnits, study.resultsUnit, study.id, publicodesResults, config])
 
   if (!config || isLoading) {
     return <EnvironmentLoader />

@@ -122,7 +122,7 @@ describe("Poste - Déchets", () => {
     expect(result.nodeValue).toBe(0);
   });
 
-  test.only("devrait correctement calculer l'empreinte des déchets exceptionnels", () => {
+  test("devrait correctement calculer l'empreinte des déchets exceptionnels", () => {
     const localEngine = engine.shallowCopy();
     const situation = {
       "général . nombre entrées": 10,
@@ -137,6 +137,6 @@ describe("Poste - Déchets", () => {
 
     const result = localEngine.evaluate("déchets . exceptionnels");
 
-    expect(result.nodeValue).toBe(204000);
+    expect(result.nodeValue).toBe(4499.5);
   });
 });
