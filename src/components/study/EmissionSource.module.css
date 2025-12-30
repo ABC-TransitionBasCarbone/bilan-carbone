@@ -11,6 +11,7 @@
 .tagsContainer {
   min-width: 10rem;
   width: 33%;
+  overflow-x: hidden;
 }
 
 .tagOptions {
