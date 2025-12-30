@@ -91,12 +91,12 @@ export function createPublicodesContext<
           }
 
           const loadedSituation = (result.data?.situation ?? {}) as S
+          setIsLoading(false)
           setSituation(loadedSituation)
         } catch (err) {
+          setIsLoading(false)
           console.error('Failed to load situation:', err)
           setError(err instanceof Error ? err.message : 'Failed to load situation')
-        } finally {
-          setIsLoading(false)
         }
       }
 
@@ -112,7 +112,7 @@ export function createPublicodesContext<
         isLoading,
         error,
       }),
-      [situation, setSituation, studySiteId, isLoading, error],
+      [engine, situation, studySiteId, isLoading, error],
     )
 
     return <PublicodesSituationContext.Provider value={value}>{children}</PublicodesSituationContext.Provider>

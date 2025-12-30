@@ -28,10 +28,6 @@ interface CutAllResultsProps {
   setSite: Dispatch<SetStateAction<string>>
 }
 
-/**
- * Inner component that uses the Publicodes context to compute results.
- * Must be rendered inside CutPublicodesSituationProvider.
- */
 const CutAllResults = ({
   emissionFactorsWithParts,
   study,
@@ -64,7 +60,7 @@ const CutAllResults = ({
     const totalInUnit = total / STUDY_UNIT_VALUES[study.resultsUnit]
 
     return { computedResults: results, totalValue: totalInUnit }
-  }, [engine, situation, tPost, study.resultsUnit])
+  }, [engine, situation, study.resultsUnit])
 
   if (isLoading) {
     return (
@@ -111,6 +107,10 @@ const CutResultsContainer = ({
   customPostOrder = [],
 }: Props) => {
   const { studySite, setSite } = useStudySite(study, false)
+
+  if (studySite === 'all') {
+    return null
+  }
 
   return (
     <CutPublicodesSituationProvider studyId={study.id} studySiteId={studySite}>
