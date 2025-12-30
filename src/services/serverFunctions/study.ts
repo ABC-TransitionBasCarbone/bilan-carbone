@@ -971,7 +971,10 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
     await updateUserOnStudy(existingAccount.id, studyWithRights.id, studyRole)
   })
 
-export const newStudyContributor = async ({ email, subPosts, ...command }: NewStudyContributorCommand) =>
+export const newStudyContributor = async (
+  { email, subPosts, ...command }: NewStudyContributorCommand,
+  toDeleteContributors?: StudyContributorDeleteParams[],
+) =>
   withServerResponse('newStudyContributor', async () => {
     const session = await dbActualizedAuth()
     if (!session || !session.user || !session.user.organizationVersionId) {
@@ -1014,7 +1017,7 @@ export const newStudyContributor = async ({ email, subPosts, ...command }: NewSt
 
     if (
       hasReaderRoleOnStudyAsContributor(session.user.environment) &&
-      !studyWithRights.allowedUsers.some((allowedUser) => allowedUser.accountId === accountId)
+      !studyWithRights.allowedUsers.some((allowedUser: { accountId: string }) => allowedUser.accountId === accountId)
     ) {
       await createUserOnStudy({
         account: { connect: { id: accountId } },
@@ -1024,6 +1027,11 @@ export const newStudyContributor = async ({ email, subPosts, ...command }: NewSt
     }
 
     const selectedSubposts = Object.values(subPosts).reduce((res, subPosts) => res.concat(subPosts), [])
+
+    if (toDeleteContributors && toDeleteContributors.length > 0) {
+      await deleteStudyContributors(command.studyId, toDeleteContributors)
+    }
+
     await createContributorOnStudy(accountId, selectedSubposts, command)
   })
 
@@ -1191,6 +1199,11 @@ export const deleteStudyContributor = async (contributor: StudyContributorDelete
     }
     await deleteContributor(studyId, contributor)
   })
+
+export const deleteStudyContributors = async (studyId: string, contributors: StudyContributorDeleteParams[]) => {
+  const promises = contributors.map((contributor) => deleteContributor(studyId, contributor))
+  return Promise.all(promises)
+}
 
 export const getStudyEmissionFactorImportVersions = async (studyId: string) =>
   withServerResponse('getStudyEmissionFactorImportVersions', async () => {

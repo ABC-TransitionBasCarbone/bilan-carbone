@@ -109,6 +109,7 @@
     "newStudy": "Ajouter une nouvelle étude",
     "studyPerimeter": "Périmètre",
     "newStudyContributor": "Ajouter un·e contributeur·rice",
+    "editStudyContributor": "Modifier un·e contributeur·rice",
     "newStudyRight": "Ajouter une personne",
     "notFound": "Page non trouvée",
     "organization": "Organisation",
@@ -492,11 +493,13 @@
         }
       },
       "newContributor": {
+        "titleEdit": "Modifier un·e contributeur·rice sur l'étude : {name}",
         "title": "Ajouter un·e contributeur·rice sur l'étude : {name}",
         "email": "Email",
         "post": "Poste",
         "subPost": "Sous poste",
         "create": "Ajouter la personne",
+        "edit": "Modifer les droits",
         "Already in study": "Cette personne a déjà accès à l'étude.",
         "Not authorized": "Action non autorisée. N'hésitez pas à consulter la FAQ ou à contacter le support si vous pensez qu'il s'agit d'une erreur.",
         "validation": {

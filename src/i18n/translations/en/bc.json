@@ -109,6 +109,7 @@
     "newStudy": "Add a New Study",
     "studyPerimeter": "Perimeter",
     "newStudyContributor": "Add a contributor",
+    "editStudyContributor": "Edit a contributor",
     "newStudyRight": "Add a Person",
     "notFound": "Page not found",
     "organization": "Organization",
@@ -492,11 +493,13 @@
         }
       },
       "newContributor": {
+        "titleEdit": "Edit contributor on study : {name}",
         "title": "Add on contributor on study : {name}",
         "email": "Email",
         "post": "Post",
         "subPost": "Sub post",
         "create": "Add person",
+        "edit": "Edit rights",
         "Already in study": "This person already has access to the study.",
         "Not authorized": "Action not authorized. You can see the FAQ or contact us if you think it is an error.",
         "validation": {
