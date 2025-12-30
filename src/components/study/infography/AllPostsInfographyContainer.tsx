@@ -54,14 +54,14 @@ const AllPostsInfographyContainer = ({ study, studySite }: Props) => {
       environmentComponents={{
         [Environment.CUT]: (
           <CutPublicodesSituationProvider studyId={study.id} studySiteId={studySite}>
-            <AllPostsInfographySimplified study={study} data={data} environment={Environment.CUT} />
+            <AllPostsInfographySimplified study={study} environment={Environment.CUT} />
           </CutPublicodesSituationProvider>
         ),
         [Environment.TILT]: <AllPostsInfographyTilt study={study} data={data} />,
         [Environment.CLICKSON]: (
           // TODO: implement Clickson Publicodes context when available or
           // adapt the existing one to be parametrized by the current environment.
-          <AllPostsInfographySimplified study={study} data={data} environment={Environment.CLICKSON} />
+          <AllPostsInfographySimplified study={study} environment={Environment.CLICKSON} />
         ),
       }}
     />
