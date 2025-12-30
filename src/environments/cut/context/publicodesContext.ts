@@ -12,6 +12,6 @@ export const {
   usePublicodes: useCutPublicodes,
   usePublicodesAutoSave: useCutPublicodesAutoSave,
 } = createPublicodesContext<CutRuleName, CutSituation>({
-  engine: getCutEngine().shallowCopy(),
+  getEngine: getCutEngine,
   modelVersion: PUBLICODES_COUNT_VERSION,
 })

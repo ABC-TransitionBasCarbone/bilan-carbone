@@ -41,7 +41,7 @@ export type PublicodesFormContextValue<
 > = PublicodesSituationContextValue<RuleName, S> & PublicodesAutoSaveContextValue<RuleName>
 
 export interface CreatePublicodesContextOptions<RuleName extends string> {
-  engine: Engine<RuleName>
+  getEngine: () => Engine<RuleName>
   modelVersion: string
 }
 
@@ -61,7 +61,7 @@ export interface PublicodesFormProviderProps {
 export function createPublicodesContext<
   RuleName extends string = string,
   S extends Situation<RuleName> = Situation<RuleName>,
->({ engine, modelVersion }: CreatePublicodesContextOptions<RuleName>) {
+>({ getEngine, modelVersion }: CreatePublicodesContextOptions<RuleName>) {
   const PublicodesSituationContext = createContext<PublicodesSituationContextValue<RuleName, S> | null>(null)
   const PublicodesAutoSaveContext = createContext<PublicodesAutoSaveContextValue<RuleName> | null>(null)
 
@@ -69,6 +69,7 @@ export function createPublicodesContext<
     const [situation, setSituationState] = useState<S | null>(null)
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
+    const engine = useMemo(() => getEngine().shallowCopy(), [])
 
     const setSituation = useCallback(
       (newSituation: S) => {
@@ -100,7 +101,7 @@ export function createPublicodesContext<
       }
 
       loadInitialSituationFromDB()
-    }, [studyId, studySiteId, setSituation])
+    }, [studyId, studySiteId])
 
     const value = useMemo<PublicodesSituationContextValue<RuleName, S>>(
       () => ({
@@ -132,7 +133,7 @@ export function createPublicodesContext<
   }: Omit<PublicodesFormProviderProps, 'studySiteId'>) {
     const t = useTranslations('saveStatus')
     const { showSuccessToast } = useToast()
-    const { situation, setSituation, studySiteId } = usePublicodesSituation()
+    const { situation, engine, setSituation, studySiteId } = usePublicodesSituation()
 
     const lastSyncedAt = useRef<Date>(new Date())
 
@@ -201,7 +202,7 @@ export function createPublicodesContext<
         setSituation(newSituation)
         autoSave.saveSituation(newSituation)
       },
-      [setSituation, autoSave.saveSituation],
+      [engine, setSituation, autoSave.saveSituation],
     )
 
     const autoSaveState = useMemo<AutoSaveState>(
