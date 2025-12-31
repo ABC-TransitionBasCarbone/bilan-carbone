@@ -104,20 +104,7 @@ const canCreateSpecificStudyCommon = async (accountId: string, organizationVersi
   return { allowed: true, account: dbAccount }
 }
 
-const canCreateSpecificStudyCUT = async (
-  accountId: string,
-  study: Prisma.StudyCreateInput,
-  organizationVersionId: string,
-) => {
-  const { allowed } = await canCreateSpecificStudyCommon(accountId, organizationVersionId)
-  return allowed
-}
-
-const canCreateSpecificStudyClickson = async (
-  accountId: string,
-  study: Prisma.StudyCreateInput,
-  organizationVersionId: string,
-) => {
+const canCreateSpecificStudySimplified = async (accountId: string, organizationVersionId: string) => {
   const { allowed } = await canCreateSpecificStudyCommon(accountId, organizationVersionId)
   return allowed
 }
@@ -139,6 +126,18 @@ const canCreateSpecificStudyBC = async (
   return true
 }
 
+const canCreateSpecificStudyTilt = async (
+  accountId: string,
+  study: Prisma.StudyCreateInput,
+  organizationVersionId: string,
+) => {
+  if (study.simplified) {
+    return canCreateSpecificStudyBC(accountId, study, organizationVersionId)
+  }
+
+  return canCreateSpecificStudySimplified(accountId, organizationVersionId)
+}
+
 export const canCreateSpecificStudy = async (
   user: UserSession,
   study: Prisma.StudyCreateInput,
@@ -146,10 +145,10 @@ export const canCreateSpecificStudy = async (
 ) => {
   switch (user.environment) {
     case Environment.CLICKSON:
-      return canCreateSpecificStudyClickson(user.accountId, study, organizationVersionId)
     case Environment.CUT:
-      return canCreateSpecificStudyCUT(user.accountId, study, organizationVersionId)
+      return canCreateSpecificStudySimplified(user.accountId, organizationVersionId)
     case Environment.TILT:
+      return canCreateSpecificStudyTilt(user.accountId, study, organizationVersionId)
     case Environment.BC:
       return canCreateSpecificStudyBC(user.accountId, study, organizationVersionId)
     default:
