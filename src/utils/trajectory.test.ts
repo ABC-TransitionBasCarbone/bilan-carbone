@@ -371,7 +371,7 @@ describe('calculateTrajectory', () => {
         studyUnit: StudyResultUnit.K,
       })
 
-      const annualReduction = 100 / (2030 - 2025)
+      const annualReduction = 100 / (2030 - 2025 + 1)
 
       expect(result.find((p) => p.year === 2024)).toEqual({ year: 2024, value: 1000 })
       expect(result.find((p) => p.year === 2025)?.value).toBeCloseTo(1000 - annualReduction, 1)
@@ -404,8 +404,8 @@ describe('calculateTrajectory', () => {
         studyUnit: StudyResultUnit.K,
       })
 
-      const action1AnnualReduction = 100 / (2030 - 2025)
-      const action2AnnualReduction = 50 / (2032 - 2027)
+      const action1AnnualReduction = 100 / (2030 - 2025 + 1)
+      const action2AnnualReduction = 50 / (2032 - 2027 + 1)
 
       expect(result.find((p) => p.year === 2024)).toEqual({ year: 2024, value: 1000 })
       expect(result.find((p) => p.year === 2025)?.value).toBeCloseTo(1000 - action1AnnualReduction, 1)
@@ -453,7 +453,7 @@ describe('calculateTrajectory', () => {
         studyUnit: StudyResultUnit.K,
       })
 
-      const annualReduction = 50 / (2030 - 2026)
+      const annualReduction = 50 / (2030 - 2026 + 1)
       const point2026 = result.find((p) => p.year === 2026)
       expect(point2026?.value).toBeCloseTo(1000 - annualReduction, 1)
 
@@ -485,7 +485,7 @@ describe('calculateTrajectory', () => {
         studyUnit: StudyResultUnit.K,
       })
 
-      const action2AnnualReduction = 50 / (2030 - 2025)
+      const action2AnnualReduction = 50 / (2030 - 2025 + 1)
 
       const expectedResult2026 = 1000 - 2 * action2AnnualReduction - 100
 
@@ -533,8 +533,8 @@ describe('calculateTrajectory', () => {
         studyUnit: StudyResultUnit.K,
       })
 
-      const action1AnnualReduction = 100 / (2030 - 2025)
-      const action2AnnualReduction = 50 / (2030 - 2025)
+      const action1AnnualReduction = 100 / (2030 - 2025 + 1)
+      const action2AnnualReduction = 50 / (2030 - 2025 + 1)
 
       expect(resultWithDeps.find((p) => p.year === 2025)?.value).toBeCloseTo(
         1000 - action1AnnualReduction - action2AnnualReduction,
@@ -564,7 +564,7 @@ describe('calculateTrajectory', () => {
         studyUnit: StudyResultUnit.K,
       })
 
-      const annualReduction = 100 / (2030 - 2025)
+      const annualReduction = 100 / (2030 - 2025 + 1)
 
       expect(result.find((p) => p.year === 2025)?.value).toBeCloseTo(1000 - annualReduction, 1)
       expect(result.find((p) => p.year === 2030)?.value).toBeCloseTo(1000 - 6 * annualReduction, 1)
@@ -616,9 +616,9 @@ describe('calculateTrajectory', () => {
         studyUnit: StudyResultUnit.K,
       })
 
-      const action1AnnualReduction = 100 / (2029 - 2025)
-      const action2AnnualReduction = 60 / (2030 - 2026)
-      const action3AnnualReduction = 40 / (2031 - 2027)
+      const action1AnnualReduction = 100 / (2029 - 2025 + 1)
+      const action2AnnualReduction = 60 / (2030 - 2026 + 1)
+      const action3AnnualReduction = 40 / (2031 - 2027 + 1)
 
       expect(resultWithDeps.find((p) => p.year === 2027)?.value).toBeCloseTo(
         1000 - 3 * action1AnnualReduction - 2 * action2AnnualReduction - action3AnnualReduction,
