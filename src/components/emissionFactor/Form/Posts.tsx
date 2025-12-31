@@ -64,7 +64,7 @@ const Posts = <T extends SubPostsCommand>({
 
   const sortedPosts = useMemo(
     () =>
-      Object.keys(environmentPostMapping[environment || Environment.BC]).sort((a, b) =>
+      Object.values(environmentPostMapping[environment || Environment.BC]).sort((a, b) =>
         tPost(a).localeCompare(tPost(b)),
       ),
     [environment, tPost],
