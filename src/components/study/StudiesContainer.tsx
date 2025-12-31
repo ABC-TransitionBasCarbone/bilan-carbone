@@ -50,11 +50,8 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
   const advancedStudies = mainStudies.filter((study) => !study.simplified)
   const simplifiedStudies = mainStudies.filter((study) => study.simplified)
 
-  let creationUrl = organizationVersionId ? `/organisations/${organizationVersionId}/etudes/creer` : '/etudes/creer'
-
-  if (simplified) {
-    creationUrl += '?simplified=true'
-  }
+  const creationUrl = organizationVersionId ? `/organisations/${organizationVersionId}/etudes/creer` : '/etudes/creer'
+  const creationUrlSimplified = `${creationUrl}?simplified=true`
 
   const mainStudyOrganizationVersionId = organizationVersionId ?? user.organizationVersionId
 
@@ -72,7 +69,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
         <Studies
           studies={advancedStudies}
           canAddStudy={canCreateAStudy(user) && !isCR && activeLicence}
-          creationUrl={creationUrl}
+          creationUrl={simplified ? creationUrl : creationUrlSimplified}
           user={user}
           collaborations={!organizationVersionId && isCR}
         />
@@ -81,7 +78,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
         <Studies
           studies={simplifiedStudies}
           canAddStudy={canCreateAStudy(user, true) && !isCR && activeLicence}
-          creationUrl={creationUrl}
+          creationUrl={creationUrlSimplified}
           user={user}
           collaborations={!organizationVersionId && isCR}
           simplified
@@ -96,7 +93,11 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
           <Image src="/img/orga.png" alt="orga.png" width={177} height={119} />
           <h5>{t(simplified ? 'createFirstSimplifiedStudy' : 'createFirstStudy')}</h5>
           <p>{t(simplified ? 'firstSimplifiedStudyMessage' : 'firstStudyMessage')}</p>
-          <LinkButton data-testid="new-study" className={classNames('w100 justify-center mb1')} href={creationUrl}>
+          <LinkButton
+            data-testid="new-study"
+            className={classNames('w100 justify-center mb1')}
+            href={simplified ? creationUrl : creationUrlSimplified}
+          >
             <AddIcon />
             {t(simplified ? 'createFirstSimplifiedStudy' : 'createFirstStudy')}
           </LinkButton>
