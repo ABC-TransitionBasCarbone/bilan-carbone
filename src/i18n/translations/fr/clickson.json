@@ -89,6 +89,9 @@
     },
     "export": {
       "export": "Exporter mon empreinte"
+    },
+    "results": {
+      "carbonIntensities": "Empreinte carbone individuelle"
     }
   },
   "emissionFactors": {

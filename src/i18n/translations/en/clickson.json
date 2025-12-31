@@ -89,6 +89,9 @@
     },
     "export": {
       "export": "Export my footprint"
+    },
+    "results": {
+      "carbonIntensities": "Individual carbon footprint"
     }
   },
   "emissionFactors": {

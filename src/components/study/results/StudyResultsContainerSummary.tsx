@@ -5,12 +5,12 @@ import Button from '@/components/base/Button'
 import HelpIcon from '@/components/base/HelpIcon'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
-import { hasRoleOnStudy } from '@/services/permissions/environment'
+import { hasAccessToStudyResults, hasRoleOnStudy } from '@/services/permissions/environment'
+import { Post } from '@/services/posts'
 import { getDetailedEmissionResults } from '@/services/study'
 import { formatNumber } from '@/utils/number'
 import { getDisplayedRoleOnStudy } from '@/utils/study'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
-import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -27,6 +27,7 @@ interface Props {
   showTitle?: boolean
   validatedOnly?: boolean
   withDependencies?: boolean
+  customPostOrder?: Post[]
 }
 
 const StudyResultsContainerSummary = ({
@@ -36,6 +37,7 @@ const StudyResultsContainerSummary = ({
   showTitle,
   validatedOnly,
   withDependencies,
+  customPostOrder = [],
 }: Props) => {
   const t = useTranslations('study')
   const tPost = useTranslations('emissionFactors.post')
@@ -44,8 +46,6 @@ const StudyResultsContainerSummary = ({
   const [glossary, setGlossary] = useState('')
   const [withDep, setWithDependencies] = useState(!!withDependencies)
   const environment = study.organizationVersion.environment
-
-  const isCut = useMemo(() => environment === Environment.CUT, [environment])
 
   const [
     formattedWithDepValue,
@@ -82,7 +82,7 @@ const StudyResultsContainerSummary = ({
       )}
 
       <div className={styles.container}>
-        {!isCut && (
+        {hasAccessToStudyResults(environment) && (
           <fieldset className={classNames(styles.selector, 'flex grow')} aria-label={t('results.withDependencies')}>
             <label>
               <input
@@ -151,6 +151,7 @@ const StudyResultsContainerSummary = ({
             showTitle={false}
             showLegend={false}
             showLabelsOnBars={false}
+            customOrder={customPostOrder}
           />
         </div>
       </div>
