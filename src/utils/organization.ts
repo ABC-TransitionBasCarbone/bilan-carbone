@@ -89,7 +89,7 @@ const parseBlockingDate = (): { day: number; month: number } => {
   return { day, month }
 }
 
-const isBeforeBlockingDate = (now: Date): boolean => {
+export const isBeforeBlockingDate = (now: Date): boolean => {
   const blockingDate = parseBlockingDate()
   const currentMonth = now.getMonth()
   const currentDay = now.getDate()

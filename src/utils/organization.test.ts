@@ -7,6 +7,7 @@ import {
   hasActiveLicenceForFormation,
   hasEditionRole,
   isAdminOnOrga,
+  isBeforeBlockingDate,
   isInOrgaOrParent,
   isLicenceActiveForDate,
   isLicenceActiveForFormation,
@@ -259,6 +260,33 @@ describe('organisation utils', () => {
       process.env.MEMBERSHIP_BLOCKING_DATE = '01/01'
 
       expect(isLicenceActiveForDate([new Date().getFullYear() - 1])).toBe(false)
+    })
+  })
+
+  describe('isBeforeBlockingDate', () => {
+    beforeEach(() => {
+      process.env.MEMBERSHIP_BLOCKING_DATE = '15/02'
+    })
+
+    it('should return true if is the day before', () => {
+      const date = new Date()
+      date.setDate(14)
+      date.setMonth(1)
+      expect(isBeforeBlockingDate(date)).toBe(true)
+    })
+
+    it('should return true if is the current day', () => {
+      const date = new Date()
+      date.setDate(15)
+      date.setMonth(1)
+      expect(isBeforeBlockingDate(date)).toBe(true)
+    })
+
+    it('should return false if is the day after', () => {
+      const date = new Date()
+      date.setDate(16)
+      date.setMonth(1)
+      expect(isBeforeBlockingDate(date)).toBe(false)
     })
   })
 
