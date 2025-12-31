@@ -1093,7 +1093,7 @@ export const calculateActionBasedTrajectory = ({
     const endYear = action.reductionEndYear ? getYearFromDateStr(action.reductionEndYear) : 0
 
     if (startYear <= endYear) {
-      const actionDuration = Math.max(1, endYear - startYear)
+      const actionDuration = Math.max(1, endYear - startYear + 1) // we count the action on the start and the end year
       const reductionValueInStudyUnit = convertValue(action.reductionValueKg ?? 0, StudyResultUnit.K, studyUnit)
       const annualReduction = reductionValueInStudyUnit / actionDuration
 
