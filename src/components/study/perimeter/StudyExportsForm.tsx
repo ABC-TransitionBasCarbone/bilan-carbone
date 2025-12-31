@@ -3,12 +3,12 @@ import { FullStudy } from '@/db/study'
 import { StudyExportsCommand } from '@/services/serverFunctions/study.command'
 import { Translations } from '@/types/translation'
 import { FormControl, FormGroup, FormLabel } from '@mui/material'
-import { Export } from '@prisma/client'
+import { ControlMode, Export } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { Control, Controller, UseFormReturn } from 'react-hook-form'
+import { Control, Controller, UseFormReturn, UseFormSetValue } from 'react-hook-form'
 import formStyles from '../../form/Form.module.css'
-import ExportCheckbox from '../new/ExportCheckbox'
+import ExportCheckboxes from '../new/ExportCheckboxes'
 import styles from './StudyExports.module.css'
 
 interface Props<T extends StudyExportsCommand> {
@@ -32,12 +32,13 @@ const StudyExportsForm = <T extends StudyExportsCommand>({
 }: Props<T>) => {
   const tGlossary = useTranslations('study.new.glossary')
   const control = form?.control as Control<StudyExportsCommand>
+  const setValue = form?.setValue as UseFormSetValue<StudyExportsCommand>
   return (
     <div className="mt2">
       <Controller
         name="exports"
         control={control}
-        render={({ field: { onChange, value }, fieldState: { error } }) => (
+        render={({ fieldState: { error } }) => (
           <FormControl error={!!error} component="fieldset">
             <div className="flex">
               <FormLabel component="legend" className={styles.exportsLabel}>
@@ -60,19 +61,14 @@ const StudyExportsForm = <T extends StudyExportsCommand>({
               )}
             </div>
             <FormGroup>
-              <div className="flex-col">
-                {Object.keys(Export).map((key) => (
-                  <ExportCheckbox
-                    key={key}
-                    id={key as Export}
-                    study={study}
-                    values={value}
-                    setValues={onChange}
-                    disabled={disabled}
-                    duplicateStudyId={duplicateStudyId}
-                  />
-                ))}
-              </div>
+              <ExportCheckboxes
+                values={form.getValues()}
+                setControl={(value: ControlMode) => setValue('controlMode', value)}
+                onChange={(value: Export[]) => setValue('exports', value)}
+                study={study}
+                disabled={disabled}
+                duplicateStudyId={duplicateStudyId}
+              />
             </FormGroup>
           </FormControl>
         )}

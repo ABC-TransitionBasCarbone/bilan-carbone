@@ -27,10 +27,11 @@ jest.mock('@/hooks/useServerFunction', () => ({
 }))
 
 jest.mock('@/services/serverFunctions/study', () => ({
-  updateCaracterisationsForControlMode: jest.fn(),
+  updateStudySpecificExportFields: jest.fn(),
 }))
 
-const mockSetValues = jest.fn()
+const mockOnChange = jest.fn()
+const mockSetControl = jest.fn()
 
 const renderWithTheme = (component: React.ReactElement) => {
   return render(<ThemeProvider theme={theme}>{component}</ThemeProvider>)
@@ -38,19 +39,20 @@ const renderWithTheme = (component: React.ReactElement) => {
 
 const defaultProps = {
   id: Export.Beges,
-  values: { [Export.Beges]: false, [Export.GHGP]: false, [Export.ISO14069]: false } as Record<
-    Export,
-    ControlMode | false
-  >,
-  setValues: mockSetValues,
+  index: 0,
+  values: {
+    exports: [],
+    controlModde: ControlMode.Operational,
+  },
+  onChange: mockOnChange,
+  setControl: mockSetControl,
   disabled: false,
   duplicateStudyId: null,
 }
 
-const getBegesCheckedValues = (): Record<Export, ControlMode | false> => ({
-  [Export.Beges]: ControlMode.Operational,
-  [Export.GHGP]: false as const,
-  [Export.ISO14069]: false as const,
+const getBegesCheckedValues = () => ({
+  exports: [Export.Beges] as Export[],
+  controlMode: ControlMode.Operational,
 })
 
 const getStudyWithCaracterisations = () =>
@@ -62,6 +64,10 @@ const getStudyWithCaracterisations = () =>
         validated: false,
       }),
     ],
+    exports: {
+      types: [Export.Beges],
+      control: ControlMode.Operational,
+    },
   })
 
 const getStudyWithoutCaracterisations = () =>
@@ -75,28 +81,12 @@ const getStudyWithoutCaracterisations = () =>
     ],
   })
 
-const getStudyWithValidatedSources = () =>
-  getMockedFullStudy({
-    emissionSources: [
-      getMockedFullStudyEmissionSource({
-        id: 'source-1',
-        caracterisation: null,
-        validated: true,
-      }),
-    ],
-  })
-
 const changeControlModeToFinancial = async (user: ReturnType<typeof userEvent.setup>) => {
   const select = screen.getByRole('combobox')
   await user.click(select)
 
   const financialOption = screen.getByRole('option', { name: /Financial/i })
   await user.click(financialOption)
-}
-
-const clickBegesCheckbox = async (user: ReturnType<typeof userEvent.setup>) => {
-  const checkbox = screen.getByTestId(`export-checkbox-${Export.Beges}`)
-  await user.click(checkbox)
 }
 
 describe('ExportCheckbox', () => {
@@ -127,11 +117,7 @@ describe('ExportCheckbox', () => {
       await changeControlModeToFinancial(user)
 
       await waitFor(() => {
-        expect(mockSetValues).toHaveBeenCalledWith({
-          [Export.Beges]: ControlMode.Financial,
-          [Export.GHGP]: false,
-          [Export.ISO14069]: false,
-        })
+        expect(mockSetControl).toHaveBeenCalledWith(ControlMode.Financial)
       })
 
       expect(screen.queryByTestId('control-mode-change-warning-modal')).not.toBeInTheDocument()
@@ -145,11 +131,7 @@ describe('ExportCheckbox', () => {
       await changeControlModeToFinancial(user)
 
       await waitFor(() => {
-        expect(mockSetValues).toHaveBeenCalledWith({
-          [Export.Beges]: ControlMode.Financial,
-          [Export.GHGP]: false,
-          [Export.ISO14069]: false,
-        })
+        expect(mockSetControl).toHaveBeenCalledWith(ControlMode.Financial)
       })
 
       expect(screen.queryByTestId('control-mode-change-warning-modal')).not.toBeInTheDocument()
@@ -172,143 +154,6 @@ describe('ExportCheckbox', () => {
 
       await waitFor(() => {
         expect(screen.getByTestId('control-mode-change-warning-modal')).toBeInTheDocument()
-      })
-    })
-  })
-
-  describe('BegesActivationWarningModal', () => {
-    it('should show warning when checking BEGES with validated sources on existing study', async () => {
-      const user = userEvent.setup()
-      const study = getStudyWithValidatedSources()
-
-      renderWithTheme(<ExportCheckbox {...defaultProps} study={study} />)
-
-      await clickBegesCheckbox(user)
-
-      await waitFor(() => {
-        expect(screen.getByTestId('beges-activation-warning-modal')).toBeInTheDocument()
-      })
-    })
-
-    it('should not show warning when checking BEGES without validated sources', async () => {
-      const user = userEvent.setup()
-      const study = getStudyWithoutCaracterisations()
-
-      renderWithTheme(<ExportCheckbox {...defaultProps} study={study} />)
-
-      await clickBegesCheckbox(user)
-
-      await waitFor(() => {
-        expect(mockSetValues).toHaveBeenCalledWith({
-          [Export.Beges]: ControlMode.Operational,
-          [Export.GHGP]: false,
-          [Export.ISO14069]: false,
-        })
-      })
-
-      expect(screen.queryByTestId('beges-activation-warning-modal')).not.toBeInTheDocument()
-    })
-
-    it('should not show warning when checking BEGES on new study', async () => {
-      const user = userEvent.setup()
-
-      renderWithTheme(<ExportCheckbox {...defaultProps} />)
-
-      await clickBegesCheckbox(user)
-
-      await waitFor(() => {
-        expect(mockSetValues).toHaveBeenCalledWith({
-          [Export.Beges]: ControlMode.Operational,
-          [Export.GHGP]: false,
-          [Export.ISO14069]: false,
-        })
-      })
-
-      expect(screen.queryByTestId('beges-activation-warning-modal')).not.toBeInTheDocument()
-    })
-
-    it('should show warning when checking BEGES on duplicate study', async () => {
-      const user = userEvent.setup()
-      const study = getStudyWithValidatedSources()
-
-      renderWithTheme(<ExportCheckbox {...defaultProps} duplicateStudyId="duplicate-study-id" study={study} />)
-
-      await clickBegesCheckbox(user)
-
-      await waitFor(() => {
-        expect(screen.getByTestId('beges-activation-warning-modal')).toBeInTheDocument()
-      })
-    })
-  })
-
-  describe('BegesDeactivationWarningModal', () => {
-    it('should show warning when unchecking BEGES with caracterisations on existing study', async () => {
-      const user = userEvent.setup()
-      const study = getStudyWithCaracterisations()
-
-      renderWithTheme(<ExportCheckbox {...defaultProps} study={study} values={getBegesCheckedValues()} />)
-
-      await clickBegesCheckbox(user)
-
-      await waitFor(() => {
-        expect(screen.getByTestId('beges-deactivation-warning-modal')).toBeInTheDocument()
-      })
-    })
-
-    it('should not show warning when unchecking BEGES without caracterisations', async () => {
-      const user = userEvent.setup()
-      const study = getStudyWithoutCaracterisations()
-
-      renderWithTheme(<ExportCheckbox {...defaultProps} study={study} values={getBegesCheckedValues()} />)
-
-      await clickBegesCheckbox(user)
-
-      await waitFor(() => {
-        expect(mockSetValues).toHaveBeenCalledWith({
-          [Export.Beges]: false,
-          [Export.GHGP]: false,
-          [Export.ISO14069]: false,
-        })
-      })
-
-      expect(screen.queryByTestId('beges-deactivation-warning-modal')).not.toBeInTheDocument()
-    })
-
-    it('should not show warning when unchecking BEGES on new study', async () => {
-      const user = userEvent.setup()
-
-      renderWithTheme(<ExportCheckbox {...defaultProps} values={getBegesCheckedValues()} />)
-
-      await clickBegesCheckbox(user)
-
-      await waitFor(() => {
-        expect(mockSetValues).toHaveBeenCalledWith({
-          [Export.Beges]: false,
-          [Export.GHGP]: false,
-          [Export.ISO14069]: false,
-        })
-      })
-
-      expect(screen.queryByTestId('beges-deactivation-warning-modal')).not.toBeInTheDocument()
-    })
-
-    it('should show warning when unchecking BEGES with caracterisations on duplicate study', async () => {
-      const user = userEvent.setup()
-      const study = getStudyWithCaracterisations()
-
-      renderWithTheme(
-        <ExportCheckbox
-          {...defaultProps}
-          study={study}
-          values={getBegesCheckedValues()}
-          duplicateStudyId="duplicate-study-id"
-        />,
-      )
-
-      await clickBegesCheckbox(user)
-
-      await waitFor(() => {
-        expect(screen.getByTestId('beges-deactivation-warning-modal')).toBeInTheDocument()
       })
     })
   })

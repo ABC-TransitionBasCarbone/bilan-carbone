@@ -606,15 +606,15 @@
         "continue": "Continuer",
         "cancel": "Annuler"
       },
-      "begesActivationWarning": {
-        "title": "Activation de l'export BEGES",
-        "description": "Vous êtes sur le point d'activer l'export BEGES règlementaire. Lorsque cet export est activé, vous devez renseigner un champ supplémentaire \"Caractérisation\" dans certaines sources d'émissions. En conséquence, <warning>l'activation de cet export dévalidera les sources d'émission concernées</warning>. Voulez-vous continuer ?",
+      "exportActivationWarning": {
+        "title": "Activation de l'export {type}",
+        "description": "Vous êtes sur le point d'activer l'export {type} règlementaire. Lorsque cet export est activé, vous devez renseigner des champs supplémentaires ({fields}) dans certaines sources d'émissions. En conséquence, <warning>l'activation de cet export dévalidera les sources d'émission concernées</warning>. Voulez-vous continuer ?",
         "continue": "Continuer",
         "cancel": "Annuler"
       },
-      "begesDeactivationWarning": {
-        "title": "Désactivation de l'export BEGES",
-        "description": "Vous êtes sur le point de désactiver l'export BEGES règlementaire. <warning>La désactivation de cet export entraînera la perte de toutes les caractérisations renseignées dans les sources d'émission</warning>. Voulez-vous continuer ?",
+      "exportDeactivationWarning": {
+        "title": "Désactivation de l'export {type}",
+        "description": "Vous êtes sur le point de désactiver l'export {type} règlementaire. <warning>La désactivation de cet export entraînera la perte de données renseignées dans certaines sources d'émission ({fields})</warning>. Voulez-vous continuer ?",
         "continue": "Continuer",
         "cancel": "Annuler"
       },

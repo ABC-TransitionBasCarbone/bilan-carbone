@@ -87,7 +87,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   const begesRules = useMemo(() => rules.filter((rule) => rule.export === Export.Beges), [rules])
 
   const allowTypeSelect = useMemo(() => {
-    if (exports.length > 0) {
+    if (exports && exports.types.length > 0) {
       return true
     }
     if (environment && hasAccessToBcExport(environment)) {
@@ -218,7 +218,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     >
       <div className="flex-col gapped2">
         <div className="flex gapped2">
-          {exports.map((exportType) => exportType.type).includes(Export.Beges) && (
+          {exports?.types.includes(Export.Beges) && (
             <ConsolatedBEGESDifference
               study={study}
               emissionFactorsWithParts={emissionFactorsWithParts}
@@ -244,18 +244,19 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
               {environment && hasAccessToBcExport(environment) && (
                 <MenuItem value={AdditionalResultTypes.ENV_SPECIFIC_EXPORT}>{tExport('env_specific_export')}</MenuItem>
               )}
-              {exports.map((exportItem) => (
-                <MenuItem
-                  key={exportItem.type}
-                  value={exportItem.type}
-                  disabled={exportItem.type !== Export.Beges || exportItem.control === ControlMode.CapitalShare}
-                >
-                  {tExport(exportItem.type)}
-                  {(exportItem.type !== Export.Beges || exportItem.control === ControlMode.CapitalShare) && (
-                    <em> ({t('coming')})</em>
-                  )}
-                </MenuItem>
-              ))}
+              {exports &&
+                exports?.types.map((exportItem) => (
+                  <MenuItem
+                    key={exportItem}
+                    value={exportItem}
+                    disabled={exportItem !== Export.Beges || exports.control === ControlMode.CapitalShare}
+                  >
+                    {tExport(exportItem)}
+                    {(exportItem !== Export.Beges || exports.control === ControlMode.CapitalShare) && (
+                      <em> ({t('coming')})</em>
+                    )}
+                  </MenuItem>
+                ))}
             </Select>
           </FormControl>
         </div>

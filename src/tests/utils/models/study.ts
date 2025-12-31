@@ -44,7 +44,10 @@ export const mockedFullStudy = {
   allowedUsers: [],
   sites: [],
   emissionFactorVersions: [],
-  exports: [],
+  exports: {
+    types: [],
+    control: null,
+  },
   organizationVersion: mockedOrganizationVersion,
   tagFamilies: [],
   cncVersion: {
@@ -229,11 +232,8 @@ export const getMockedDuplicateStudyCommand = (overrides = {}) => ({
   isPublic: 'false',
   level: 'Initial' as const,
   sites: [],
-  exports: {
-    Beges: false,
-    GHGP: false,
-    ISO14069: false,
-  },
+  exports: [],
+  controlMode: null,
   ...COMMON_DATES_STR,
   ...overrides,
 })
@@ -244,7 +244,7 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
   simplified: false,
   resultsUnit: StudyResultUnit.K,
   organizationVersionId: TEST_IDS.orgVersion,
-  exports: [{ type: Export.Beges, control: ControlMode.Operational }],
+  exports: { types: [Export.Beges], control: ControlMode.Operational },
   emissionFactorVersions: [
     {
       source: Import.BaseEmpreinte,

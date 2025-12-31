@@ -833,8 +833,9 @@ export const uploadStudies = async (
             const exports = studyExports.get(studyOldBCId) ?? []
             const subPostCaracterisation = getCaracterisationsBySubPost(
               studyEmissionSource.subPost,
-              exports,
+              { types: exports.map((studyExport) => studyExport.type), control: exports[0].control },
               Environment.BC,
+              exports[0].control,
             )
 
             let caracterisation = caracterisationMapping[studyEmissionSource.caracterisation]

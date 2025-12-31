@@ -274,7 +274,7 @@ const fullStudyInclude = {
       },
     },
   },
-  exports: { select: { type: true, control: true } },
+  exports: { select: { types: true, control: true } },
   organizationVersion: {
     select: {
       id: true,
@@ -837,15 +837,12 @@ export const getSourceLatestImportVersionId = async (source: Import, transaction
     orderBy: { createdAt: 'desc' },
   })
 
-export const upsertStudyExport = async (studyId: string, type: Export, control: ControlMode) =>
+export const upsertStudyExport = async (studyId: string, types: Export[], control: ControlMode) =>
   prismaClient.studyExport.upsert({
-    where: { studyId_type: { studyId, type } },
-    update: { control },
-    create: { studyId, type, control },
+    where: { studyId },
+    update: { types, control },
+    create: { studyId, types, control },
   })
-
-export const deleteStudyExport = async (studyId: string, type: Export) =>
-  prismaClient.studyExport.delete({ where: { studyId_type: { studyId, type } } })
 
 export const countOrganizationStudiesFromOtherUsers = async (organizationVersionId: string, accountId: string) =>
   prismaClient.study.count({ where: { organizationVersionId, createdById: { not: accountId } } })

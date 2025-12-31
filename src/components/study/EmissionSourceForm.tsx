@@ -84,7 +84,7 @@ interface Props {
   userOrganizationId?: string
   emissionFactorsForSubPost: EmissionFactorWithMetaData[]
   importVersions: ImportVersionForFilters[]
-  update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null | string[]) => void
+  update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | Date | null | string[]) => void
 }
 
 const EmissionSourceForm = ({
@@ -304,19 +304,21 @@ const EmissionSourceForm = ({
                 </div>
                 {displayConstructionYear && (
                   <FormControl className="grow">
-                    <InputLabel id="emission-source-construction-year-label">{`${t('form.constructionYear')} *`}</InputLabel>
                     <DatePicker
+                      label={`${t('form.constructionYear')} *`}
+                      disabled={!canEdit}
                       slotProps={{
                         textField: {
                           error: !!error,
                           className: styles.datePickerInput,
                         },
-                        field: { clearable: false },
                       }}
+                      maxDate={dayjs(new Date())}
+                      views={['year']}
                       sx={{ backgroundColor: 'white', flex: '1' }}
                       onChange={(date) => {
                         if (date && date.isValid()) {
-                          update('constructionYear', date.utc(true).format())
+                          update('constructionYear', date.toDate())
                         }
                       }}
                       value={emissionSource.constructionYear ? dayjs(emissionSource.constructionYear) : null}

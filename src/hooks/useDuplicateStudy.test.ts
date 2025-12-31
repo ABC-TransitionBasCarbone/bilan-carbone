@@ -138,10 +138,10 @@ describe('useDuplicateStudy utility functions', () => {
         ...COMMON_DATES,
         level: Level.Advanced,
         resultsUnit: StudyResultUnit.K,
-        exports: [
-          { type: Export.Beges, control: ControlMode.Operational },
-          { type: Export.GHGP, control: ControlMode.Operational },
-        ],
+        exports: {
+          types: [Export.Beges, Export.GHGP],
+          control: ControlMode.Operational,
+        },
       })
 
       const result = createDuplicateFormData(sourceStudy, MOCK_USER, MOCK_TRANSLATION, [])
@@ -151,9 +151,10 @@ describe('useDuplicateStudy utility functions', () => {
       expectDateFieldsToMatch(result, sourceStudy)
 
       // Exports
-      expect(result.exports[Export.Beges]).toBe(ControlMode.Operational)
-      expect(result.exports[Export.GHGP]).toBe(ControlMode.Operational)
-      expect(result.exports[Export.ISO14069]).toBe(false)
+      expect(result.exports).toContain(Export.Beges)
+      expect(result.exports).toContain(Export.GHGP)
+      expect(result.exports).not.toContain(Export.ISO14069)
+      expect(result.controlMode).toBe(ControlMode.Operational)
     })
 
     it('should handle missing optional fields gracefully', () => {
@@ -167,7 +168,7 @@ describe('useDuplicateStudy utility functions', () => {
         level: Level.Advanced,
         resultsUnit: undefined,
         organizationVersionId: 'org-version-123',
-        exports: [],
+        exports: { types: [], control: null },
       })
 
       const result = createDuplicateFormData(sourceStudyWithMissingFields, MOCK_USER, MOCK_TRANSLATION, [])

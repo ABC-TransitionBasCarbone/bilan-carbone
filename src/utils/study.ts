@@ -2,10 +2,12 @@ import { FullStudy } from '@/db/study'
 import { isAdminOnStudyOrga } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
+import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { hasSufficientLevel } from '@/services/study'
 import { isAdmin } from '@/utils/user'
-import { Environment, Level, Role, StudyResultUnit, StudyRole, SubPost, Unit } from '@prisma/client'
+import { Environment, Export, Level, Role, StudyResultUnit, StudyRole, SubPost, Unit } from '@prisma/client'
 import { UserSession } from 'next-auth'
+import { unique } from './array'
 import { formatNumber } from './number'
 import { hasActiveLicence, isInOrgaOrParent } from './organization'
 
@@ -180,3 +182,15 @@ export const getDuplicableEnvironments = (environment: Environment): Environment
 export const formatEmissionValueForExport = (value: number, unit: StudyResultUnit): number => {
   return Math.round(value / STUDY_UNIT_VALUES[unit])
 }
+
+export const exportSpecificFields: Record<Export, (keyof UpdateEmissionSourceCommand)[]> = {
+  [Export.Beges]: ['caracterisation'] as const,
+  [Export.GHGP]: ['caracterisation', 'constructionYear'] as const,
+  [Export.ISO14069]: [],
+}
+
+export const allSpecificFieldsForExports = (exportTypes: Export[]) =>
+  Object.values(exportTypes).reduce(
+    (res, exportType) => unique(exportType ? res.concat(exportSpecificFields[exportType as Export]) : res),
+    [] as (keyof UpdateEmissionSourceCommand)[],
+  )

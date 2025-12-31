@@ -606,15 +606,15 @@
         "continue": "Continue",
         "cancel": "Cancel"
       },
-      "begesActivationWarning": {
-        "title": "BEGES Export Activation",
-        "description": "You are about to activate the regulatory BEGES export. When this export is enabled, you must fill in an additional \"Characterization\" field in certain emission sources. As a result, <warning>activating this export will invalidate the affected emission sources</warning>. Do you want to continue?",
+      "exportActivationWarning": {
+        "title": "{type} Export Activation",
+        "description": "You are about to activate the regulatory {type} export. When this export is enabled, you must fill in additionals fields ({fields}) in certain emission sources. As a result, <warning>activating this export will invalidate the affected emission sources</warning>. Do you want to continue?",
         "continue": "Continue",
         "cancel": "Cancel"
       },
-      "begesDeactivationWarning": {
-        "title": "BEGES Export Deactivation",
-        "description": "You are about to deactivate the regulatory BEGES export. <warning>Deactivating this export will result in the loss of all characterizations entered in the emission sources</warning>. Do you want to continue?",
+      "exportDeactivationWarning": {
+        "title": "{type} Export Deactivation",
+        "description": "You are about to deactivate the regulatory {type} export. <warning>Deactivating this export will result in the loss of data entered in some emission sources fields ({fields})</warning>. Do you want to continue?",
         "continue": "Continue",
         "cancel": "Cancel"
       },

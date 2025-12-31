@@ -120,7 +120,7 @@ const EmissionSource = ({
   const canDelete = !emissionSource.validated && hasEditionRights(userRoleOnStudy)
 
   const update = useCallback(
-    async (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null | string[]) => {
+    async (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | Date | null | string[]) => {
       if (key) {
         if (value === emissionSource[key as keyof typeof emissionSource]) {
           return
@@ -344,7 +344,7 @@ const EmissionSource = ({
                 environment={environment}
                 emissionFactorsForSubPost={emissionFactorsForSubPost}
                 importVersions={importVersions}
-                displayConstructionYear={study.exports.some((studyExport) => studyExport.type === Export.GHGP)}
+                displayConstructionYear={!!study.exports?.types.some((studyExport) => studyExport === Export.GHGP)}
               />
             ) : (
               <EmissionSourceForm
@@ -360,8 +360,8 @@ const EmissionSource = ({
                 update={update}
                 environment={environment}
                 caracterisations={caracterisations}
-                displayCaracterisation={study.exports.length > 0}
-                displayConstructionYear={study.exports.some((studyExport) => studyExport.type === Export.GHGP)}
+                displayCaracterisation={!!study.exports?.types.length}
+                displayConstructionYear={!!study.exports?.types.some((studyExport) => studyExport === Export.GHGP)}
                 status={status}
                 studySites={study.sites}
                 isFromOldImport={isFromOldImport}

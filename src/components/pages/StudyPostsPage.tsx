@@ -7,7 +7,7 @@ import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study
 import { EmissionSourcesFilters, EmissionSourcesSort } from '@/types/filters'
 import { unique } from '@/utils/array'
 import { getEmissionSourcesFuseOptions, getSortedEmissionSources } from '@/utils/emissionSources'
-import { EmissionSourceCaracterisation, EmissionSourceType, StudyRole } from '@prisma/client'
+import { ControlMode, EmissionSourceCaracterisation, EmissionSourceType, StudyRole } from '@prisma/client'
 import Fuse from 'fuse.js'
 import { UserSession } from 'next-auth'
 import { useLocale, useTranslations } from 'next-intl'
@@ -46,7 +46,12 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, use
         subPosts.reduce(
           (res, subPost) => [
             ...res,
-            ...getCaracterisationsBySubPost(subPost, study.exports, study.organizationVersion.environment),
+            ...getCaracterisationsBySubPost(
+              subPost,
+              study.exports,
+              study.organizationVersion.environment,
+              study.exports?.control || ControlMode.Operational,
+            ),
           ],
           [] as EmissionSourceCaracterisation[],
         ),
