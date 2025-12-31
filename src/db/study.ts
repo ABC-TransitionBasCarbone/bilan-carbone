@@ -837,28 +837,12 @@ export const getSourceLatestImportVersionId = async (source: Import, transaction
     orderBy: { createdAt: 'desc' },
   })
 
-export const upsertStudyExport = async (studyId: string, type: Export, control: ControlMode) =>
+export const upsertStudyExport = async (studyId: string, types: Export[], control: ControlMode) =>
   prismaClient.studyExport.upsert({
     where: { studyId },
-    update: { control },
-    create: { studyId, types: [type], control },
+    update: { types, control },
+    create: { studyId, types, control },
   })
-
-export const deleteStudyExport = async (studyId: string, type: Export) => {
-  const existing = await prismaClient.studyExport.findUnique({ select: { id: true, types: true }, where: { studyId } })
-  if (existing) {
-    if (existing.types.length === 1 && existing.types[0] === type) {
-      await prismaClient.studyExport.delete({ where: { studyId } })
-    } else {
-      await prismaClient.studyExport.update({
-        where: { id: existing.id },
-        data: {
-          types: existing.types.filter((existingType) => existingType !== type),
-        },
-      })
-    }
-  }
-}
 
 export const countOrganizationStudiesFromOtherUsers = async (organizationVersionId: string, accountId: string) =>
   prismaClient.study.count({ where: { organizationVersionId, createdById: { not: accountId } } })

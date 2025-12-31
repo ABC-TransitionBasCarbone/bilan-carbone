@@ -3,7 +3,7 @@ import { FullStudy } from '@/db/study'
 import { StudyExportsCommand } from '@/services/serverFunctions/study.command'
 import { Translations } from '@/types/translation'
 import { FormControl, FormGroup, FormLabel } from '@mui/material'
-import { ControlMode } from '@prisma/client'
+import { ControlMode, Export } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { Control, Controller, UseFormReturn, UseFormSetValue } from 'react-hook-form'
@@ -38,7 +38,7 @@ const StudyExportsForm = <T extends StudyExportsCommand>({
       <Controller
         name="exports"
         control={control}
-        render={({ field: { onChange }, fieldState: { error } }) => (
+        render={({ fieldState: { error } }) => (
           <FormControl error={!!error} component="fieldset">
             <div className="flex">
               <FormLabel component="legend" className={styles.exportsLabel}>
@@ -64,7 +64,7 @@ const StudyExportsForm = <T extends StudyExportsCommand>({
               <ExportCheckboxes
                 values={form.getValues()}
                 setControl={(value: ControlMode) => setValue('controlMode', value)}
-                onChange={onChange}
+                onChange={(value: Export[]) => setValue('exports', value)}
                 study={study}
                 disabled={disabled}
                 duplicateStudyId={duplicateStudyId}

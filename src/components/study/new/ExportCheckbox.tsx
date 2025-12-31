@@ -62,7 +62,7 @@ const ExportCheckbox = ({ id, index, study, values, onChange, setControl, disabl
         setControl(pendingControlMode)
       } else {
         // For existing studies, clear characterizations immediately
-        await callServerFunction(() => updateCaracterisationsForControlMode(study.id, pendingControlMode), {
+        await callServerFunction(() => updateCaracterisationsForControlMode(study.id), {
           onSuccess: () => {
             setControl(pendingControlMode)
           },
