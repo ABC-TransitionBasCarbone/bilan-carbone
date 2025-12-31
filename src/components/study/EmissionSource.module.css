@@ -10,7 +10,8 @@
 
 .tagsContainer {
   min-width: 10rem;
-  max-width: 33%;
+  width: 33%;
+  overflow-x: hidden;
 }
 
 .tagOptions {
@@ -215,4 +216,8 @@
 .alpha {
   flex: 0;
   width: 5rem;
+}
+
+.resizable :global(.MuiInputBase-input) {
+  resize: vertical;
 }
