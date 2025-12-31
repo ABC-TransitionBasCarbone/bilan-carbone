@@ -27,7 +27,7 @@ jest.mock('@/hooks/useServerFunction', () => ({
 }))
 
 jest.mock('@/services/serverFunctions/study', () => ({
-  updateCaracterisationsForControlMode: jest.fn(),
+  updateStudySpecificExportFields: jest.fn(),
 }))
 
 const mockOnChange = jest.fn()
