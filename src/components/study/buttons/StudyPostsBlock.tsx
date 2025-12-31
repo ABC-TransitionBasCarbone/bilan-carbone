@@ -58,6 +58,7 @@ const StudyPostsBlock = ({
 
   return (
     <Block
+      grow
       title={
         <div className="flex grow gapped">
           <DebouncedInput
