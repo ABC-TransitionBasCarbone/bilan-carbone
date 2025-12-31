@@ -1,9 +1,7 @@
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { updateStudySpecificExportFields } from '@/services/serverFunctions/study'
-import { unique } from '@/utils/array'
-import { exportSpecificFields } from '@/utils/study'
+import { allSpecificFieldsForExports, exportSpecificFields } from '@/utils/study'
 import { ControlMode, Export } from '@prisma/client'
 import { useCallback, useMemo, useState } from 'react'
 import ExportActivationWarningModal from './ExportActivationWarningModal'
@@ -35,15 +33,7 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
     [study],
   )
 
-  const activeFields = useMemo(
-    () =>
-      Object.entries(values).reduce(
-        (res, [exportType, exportValue]) =>
-          unique(exportValue ? res.concat(exportSpecificFields[exportType as Export]) : res),
-        [] as (keyof UpdateEmissionSourceCommand)[],
-      ),
-    [values],
-  )
+  const activeFields = useMemo(() => allSpecificFieldsForExports(values.exports), [values])
 
   const hasSpecificFields = useCallback(
     (type: Export) =>
@@ -55,11 +45,17 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
   )
 
   const shouldShowExportActivationWarning = hasValidatedSources && !isNewStudy
-  const shouldShowExportDeactivationWarning = (type: Export) => hasSpecificFields(type) && !isNewStudy
+  const shouldShowExportDeactivationWarning = (type: Export) => {
+    const newExports = values.exports.filter((exportType) => exportType !== type)
+    const newFields = allSpecificFieldsForExports(newExports)
+    return (
+      hasSpecificFields(type) && exportSpecificFields[type].some((field) => !newFields.includes(field)) && !isNewStudy
+    )
+  }
 
   const onValueChange = (type: Export, checked: boolean) => {
+    const typeFields = exportSpecificFields[type]
     if (checked) {
-      const typeFields = exportSpecificFields[type]
       // Mandatoryfields added, show warning message
       if (typeFields.some((field) => !activeFields.includes(field)) && shouldShowExportActivationWarning) {
         setPendingExportCheck(type)
@@ -123,7 +119,7 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
       {pendingExportCheck && (
         <ExportActivationWarningModal
           type={pendingExportCheck}
-          fields={exportSpecificFields[pendingExportCheck]}
+          activeFields={activeFields || []}
           onConfirm={confirmExportActivation}
           onCancel={() => setPendingExportCheck(null)}
         />
@@ -131,7 +127,7 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
       {pendingExportUncheck && (
         <ExportDeactivationWarningModal
           type={pendingExportUncheck}
-          fields={exportSpecificFields[pendingExportUncheck]}
+          remaining={values.exports.filter((exportType) => exportType !== pendingExportUncheck)}
           onConfirm={confirmExportDeactivation}
           onCancel={() => setPendingExportUncheck(null)}
         />

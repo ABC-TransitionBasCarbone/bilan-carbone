@@ -1,21 +1,26 @@
 'use client'
 
 import Modal from '@/components/modals/Modal'
-import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
+import { allSpecificFieldsForExports, exportSpecificFields } from '@/utils/study'
 import { Export } from '@prisma/client'
 import { useTranslations } from 'next-intl'
+import { useMemo } from 'react'
 
 interface Props {
   type: Export
-  fields: (keyof UpdateEmissionSourceCommand)[]
+  remaining: Export[]
   onConfirm: (type: Export) => void
   onCancel: (type: Export) => void
 }
 
-const ExportDeactivationWarningModal = ({ type, fields, onConfirm, onCancel }: Props) => {
+const ExportDeactivationWarningModal = ({ type, remaining, onConfirm, onCancel }: Props) => {
   const t = useTranslations('study.perimeter.exportDeactivationWarning')
   const tExport = useTranslations('exports')
   const tFields = useTranslations('emissionSource.form')
+
+  const remainingFields = useMemo(() => allSpecificFieldsForExports(remaining), [remaining])
+
+  const fields = exportSpecificFields[type].filter((field) => !remainingFields.includes(field))
 
   return (
     <Modal

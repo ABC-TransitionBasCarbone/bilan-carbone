@@ -7,6 +7,7 @@ import { hasSufficientLevel } from '@/services/study'
 import { isAdmin } from '@/utils/user'
 import { Environment, Export, Level, Role, StudyResultUnit, StudyRole, SubPost, Unit } from '@prisma/client'
 import { UserSession } from 'next-auth'
+import { unique } from './array'
 import { formatNumber } from './number'
 import { hasActiveLicence, isInOrgaOrParent } from './organization'
 
@@ -187,3 +188,9 @@ export const exportSpecificFields: Record<Export, (keyof UpdateEmissionSourceCom
   [Export.GHGP]: ['caracterisation', 'constructionYear'] as const,
   [Export.ISO14069]: [],
 }
+
+export const allSpecificFieldsForExports = (exportTypes: Export[]) =>
+  Object.values(exportTypes).reduce(
+    (res, exportType) => unique(exportType ? res.concat(exportSpecificFields[exportType as Export]) : res),
+    [] as (keyof UpdateEmissionSourceCommand)[],
+  )
