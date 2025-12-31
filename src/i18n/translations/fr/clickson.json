@@ -89,11 +89,48 @@
     },
     "export": {
       "export": "Exporter mon empreinte"
+    },
+    "pdf": {
+      "loading": "Chargement des données...",
+      "title": "Synthèse des émissions {year}",
+      "results": {
+        "all": "Résultats"
+      },
+      "labels": {
+        "studentNumber": "Nombre d'élèves",
+        "etp": "Nombre de personnels",
+        "superficy": "Superficie",
+        "establishmentYear": "Année d'ouverture"
+      },
+      "charts": {
+        "siteEmissions": "Émissions en tCO2e de l'établissement scolaire {site} en {year}"
+      },
+      "questions": {
+        "goals-title": "OBJECTIFS",
+        "goals-subtitle": "Présente les objectifs visés par ton action (sensibilisation, réduction des émissions...). Est-ce une action à court terme ou stratégique ?",
+        "shareholders-title": "PORTEURS DE L'ACTION",
+        "shareholders-subtitle": "As-tu désigné une équipe qui portera l'action au quotidien et sur le long terme ? Indique leurs noms et rôle/fonction",
+        "otherStakeholders-title": "AUTRES PARTIES PRENANTES",
+        "otherStakeholders-subtitle": "Pense à distinguer ici les parties prenantes internes et externes. Ils ne porteront pas l'action au quotidien mais t'aideront pour te fournir des factures d'électricité, par exemple.  Cela peut être le gestionnaire de ton établissement ou encore ta collectivité.",
+        "ressourcesToBeImplemented-title": "MOYENS A METTRE EN OEUVRE",
+        "ressourcesToBeImplemented-subtitle": "Quelles sont les étapes et moyens à employer ? Cela peut être des moyens humains, matériels, financiers... Construis-bien cette partie, elle est essentielle !",
+        "monitoringIndicators-title": "INDICATEURS DE SUIVI",
+        "monitoringIndicators-subtitle": "Inscris ici des indicateurs sur lesquels tu pourras te baser dans 6 mois / 1 an pour évaluer le succès de ton action. Un exemple : % de baisse des GES",
+        "estimatedCarbonImpacts-title": "IMPACTS CARBONE ESTIMES",
+        "estimatedCarbonImpacts-subtitle": "Dans quelle mesure ton action permet de réduire les émissions de GES ? ",
+        "otherEstimatedEnvironmentalImpacts-title": "AUTRES IMPACTS ENVIRONNEMENTAUX ESTIMES",
+        "otherEstimatedEnvironmentalImpacts-subtitle": "Pense ici aux impacts positifs ou négatifs de ton action sur la biodiversité, l'eau, les déchets...",
+        "estimatedSocialImpacts-title": "IMPACTS SOCIAUX ESTIMES",
+        "estimatedSocialImpacts-subtitle": "On essaie ici de savoir si l'action permet de réduire l'éco-anxiété, favoriser l'apprentissage, réduire le décrochage scolaire, favoriser l'insertion de jeunes...",
+        "calendar-title": "CALENDRIER",
+        "calendar-subtitle": "Inscris ici les grandes étapes de ton action, choisis bien ton échelle de temps !"
+      },
+      "additionalInfo": "Les résultats que vous obtenez ici sont un calcul simplifié de l'empreinte carbone de votre établissement et ne répondent par aux exigences du Bilan Carbone®, ni de la réglementation en vigueur.  Ces résultats ont pour objet de vous accompagner dans la compréhension des enjeux climatiques et l'identification de vos priorités d'action.  Portant donc une valeur essentiellement pédagogique, le calcul de l'empreinte carbone de votre établissement via notre outil constitue donc une première étape dans votre adaptation aux conséquences du changement climatique."
     }
   },
   "emissionFactors": {
     "post": {
-      "EnergiesClickson": "Énergies",
+      "EnergiesClickson": "Énergie",
       "Combustibles": "Combustibles",
       "AutresGaz": "Autres gaz",
       "Restauration": "Restauration",

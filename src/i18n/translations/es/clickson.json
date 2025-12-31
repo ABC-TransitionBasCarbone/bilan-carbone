@@ -89,6 +89,43 @@
     },
     "export": {
       "export": "Exportar mi huella"
+    },
+    "pdf": {
+      "loading": "Cargando datos...",
+      "title": "Resumen de emisiones {year}",
+      "results": {
+        "all": "Resultados"
+      },
+      "labels": {
+        "studentNumber": "Número de estudiantes",
+        "etp": "Número de personal",
+        "superficy": "Área",
+        "establishmentYear": "Año de apertura"
+      },
+      "charts": {
+        "siteEmissions": "Emisiones en tCO2e del establecimiento educativo {site} en {year}"
+      },
+      "questions": {
+        "goals-title": "OBJETIVOS",
+        "goals-subtitle": "Presenta los objetivos de tu acción (concienciación, reducción de emisiones...). ¿Es una acción a corto plazo o estratégica?",
+        "shareholders-title": "RESPONSABLES DE LA ACCIÓN",
+        "shareholders-subtitle": "¿Has designado un equipo que llevará a cabo la acción día a día y a largo plazo? Indica sus nombres y rol/función",
+        "otherStakeholders-title": "OTRAS PARTES INTERESADAS",
+        "otherStakeholders-subtitle": "Recuerda distinguir aquí entre las partes interesadas internas y externas. No llevarán a cabo la acción día a día pero te ayudarán a proporcionarte facturas de electricidad, por ejemplo. Puede ser el gestor de tu establecimiento o tu municipio.",
+        "ressourcesToBeImplemented-title": "MEDIOS A IMPLEMENTAR",
+        "ressourcesToBeImplemented-subtitle": "¿Cuáles son las etapas y medios a utilizar? Pueden ser medios humanos, materiales, financieros... ¡Construye bien esta parte, es esencial!",
+        "monitoringIndicators-title": "INDICADORES DE SEGUIMIENTO",
+        "monitoringIndicators-subtitle": "Escribe aquí indicadores en los que puedas basarte en 6 meses / 1 año para evaluar el éxito de tu acción. Un ejemplo: % de reducción de GEI",
+        "estimatedCarbonImpacts-title": "IMPACTOS DE CARBONO ESTIMADOS",
+        "estimatedCarbonImpacts-subtitle": "¿En qué medida tu acción permite reducir las emisiones de GEI?",
+        "otherEstimatedEnvironmentalImpacts-title": "OTROS IMPACTOS AMBIENTALES ESTIMADOS",
+        "otherEstimatedEnvironmentalImpacts-subtitle": "Piensa aquí en los impactos positivos o negativos de tu acción sobre la biodiversidad, el agua, los residuos...",
+        "estimatedSocialImpacts-title": "IMPACTOS SOCIALES ESTIMADOS",
+        "estimatedSocialImpacts-subtitle": "Intentamos aquí saber si la acción permite reducir la eco-ansiedad, favorecer el aprendizaje, reducir el abandono escolar, favorecer la inserción de jóvenes...",
+        "calendar-title": "CALENDARIO",
+        "calendar-subtitle": "Escribe aquí las grandes etapas de tu acción, ¡elige bien tu escala de tiempo!"
+      },
+      "additionalInfo": "Los resultados que obtiene aquí son un cálculo simplificado de la huella de carbono de su establecimiento y no cumplen con los requisitos del Bilan Carbone®, ni con la regulación vigente. Estos resultados tienen como objetivo acompañarlo en la comprensión de los desafíos climáticos y la identificación de sus prioridades de acción. Por lo tanto, con un valor esencialmente pedagógico, el cálculo de la huella de carbono de su establecimiento a través de nuestra herramienta constituye un primer paso en su adaptación a las consecuencias del cambio climático."
     }
   },
   "emissionFactors": {
