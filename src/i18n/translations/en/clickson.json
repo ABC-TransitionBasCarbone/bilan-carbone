@@ -210,5 +210,13 @@
     "validated": "Validated",
     "pending": "Pending",
     "addComment": "Add a comment"
+  },
+  "ressources": {
+    "knowMoreDataCollect": "To learn how to collect data for your establishment:",
+    "guideDataCollect": "Data collection guide",
+    "toolsDataCollect": "Data collection tools:",
+    "modelsDataCollect": "Data collection support templates",
+    "game": "Game: introduction to negotiating your action plan:",
+    "classEarth": "My Earth in class"
   }
 }

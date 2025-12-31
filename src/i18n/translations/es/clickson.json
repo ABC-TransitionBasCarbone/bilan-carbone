@@ -210,5 +210,13 @@
     "validated": "Validado",
     "pending": "Pendiente",
     "addComment": "Añadir un comentario"
+  },
+  "ressources": {
+    "knowMoreDataCollect": "Para saber cómo recopilar datos de su establecimiento:",
+    "guideDataCollect": "Guía de recopilación de datos",
+    "toolsDataCollect": "Las herramientas de recopilación de datos:",
+    "modelsDataCollect": "Modelos de soportes de recopilación de datos",
+    "game": "Juego: iniciación a la negociación de su plan de acción:",
+    "classEarth": "Mi Tierra en clase"
   }
 }
