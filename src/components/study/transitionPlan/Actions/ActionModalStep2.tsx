@@ -16,7 +16,7 @@ interface Props {
   control: Control<AddActionFormCommand>
 }
 
-const ActionModalStep1 = ({ control }: Props) => {
+const ActionModalStep2 = ({ control }: Props) => {
   const locale = useLocale()
   const t = useTranslations('study.transitionPlan.actions.addModal')
   const tNature = useTranslations('study.transitionPlan.actions.nature')
@@ -96,4 +96,4 @@ const ActionModalStep1 = ({ control }: Props) => {
   )
 }
 
-export default ActionModalStep1
+export default ActionModalStep2
