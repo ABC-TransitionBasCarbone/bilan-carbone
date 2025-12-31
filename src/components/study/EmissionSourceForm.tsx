@@ -3,7 +3,6 @@
 import { EmissionFactorList } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { getEmissionResults } from '@/services/emissionSource'
-import { subPostsByPost } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { getTagFamiliesByStudyId } from '@/services/serverFunctions/emissionSource'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
@@ -24,6 +23,7 @@ import CopyIcon from '@mui/icons-material/ContentCopy'
 import EditIcon from '@mui/icons-material/Edit'
 import HideIcon from '@mui/icons-material/VisibilityOff'
 import { Autocomplete, FormControl, InputLabel, MenuItem, Popper, TextField } from '@mui/material'
+import { DatePicker } from '@mui/x-date-pickers'
 import {
   EmissionSourceCaracterisation,
   EmissionSourceType,
@@ -35,6 +35,7 @@ import {
   Unit,
 } from '@prisma/client'
 import classNames from 'classnames'
+import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -73,7 +74,8 @@ interface Props {
   }
   environment: Environment
   caracterisations: EmissionSourceCaracterisation[]
-  mandatoryCaracterisation: boolean
+  displayCaracterisation: boolean
+  displayConstructionYear: boolean
   status: EmissionSourcesStatus
   studySites: FullStudy['sites']
   isFromOldImport: boolean
@@ -96,7 +98,8 @@ const EmissionSourceForm = ({
   subPost,
   selectedFactor,
   caracterisations,
-  mandatoryCaracterisation,
+  displayCaracterisation,
+  displayConstructionYear,
   status,
   studySites,
   isFromOldImport,
@@ -153,10 +156,7 @@ const EmissionSourceForm = ({
 
   const isCas = isCAS(emissionSource)
 
-  const withDeprecationPeriod = useMemo(
-    () => hasDeprecationPeriod(emissionSource.subPost),
-    [subPostsByPost, emissionSource.subPost],
-  )
+  const withDeprecationPeriod = useMemo(() => hasDeprecationPeriod(emissionSource.subPost), [emissionSource.subPost])
 
   useEffect(() => {
     if (isCas) {
@@ -286,21 +286,44 @@ const EmissionSourceForm = ({
               )}
             </div>
             {withDeprecationPeriod && (
-              <div className={classNames(styles.inputWithUnit, 'flex grow')}>
-                <TextField
-                  className="grow"
-                  disabled={!canEdit}
-                  type="number"
-                  defaultValue={emissionSource.depreciationPeriod}
-                  onBlur={(event) => update('depreciationPeriod', Number(event.target.value))}
-                  label={`${t('form.depreciationPeriod')} *`}
-                  slotProps={{
-                    inputLabel: { shrink: true },
-                    input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
-                  }}
-                />
-                <div className={styles.unit}>{t('form.years')}</div>
-              </div>
+              <>
+                <div className={classNames(styles.inputWithUnit, 'flex grow')}>
+                  <TextField
+                    className="grow"
+                    disabled={!canEdit}
+                    type="number"
+                    defaultValue={emissionSource.depreciationPeriod}
+                    onBlur={(event) => update('depreciationPeriod', Number(event.target.value))}
+                    label={`${t('form.depreciationPeriod')} *`}
+                    slotProps={{
+                      inputLabel: { shrink: true },
+                      input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
+                    }}
+                  />
+                  <div className={styles.unit}>{t('form.years')}</div>
+                </div>
+                {displayConstructionYear && (
+                  <FormControl className="grow">
+                    <InputLabel id="emission-source-construction-year-label">{`${t('form.constructionYear')} *`}</InputLabel>
+                    <DatePicker
+                      slotProps={{
+                        textField: {
+                          error: !!error,
+                          className: styles.datePickerInput,
+                        },
+                        field: { clearable: false },
+                      }}
+                      sx={{ backgroundColor: 'white', flex: '1' }}
+                      onChange={(date) => {
+                        if (date && date.isValid()) {
+                          update('constructionYear', date.utc(true).format())
+                        }
+                      }}
+                      value={emissionSource.constructionYear ? dayjs(emissionSource.constructionYear) : null}
+                    />
+                  </FormControl>
+                )}
+              </>
             )}
           </>
         )}
@@ -329,7 +352,7 @@ const EmissionSourceForm = ({
             <HelpIcon className="ml1" onClick={() => setGlossary('type')} label={tGlossary('title')} />
           </div>
         </FormControl>
-        {caracterisations.length > 0 && mandatoryCaracterisation && (
+        {caracterisations.length > 0 && displayCaracterisation && (
           <FormControl className="grow">
             <InputLabel id="emission-source-caracterisation-label">{`${t('form.caracterisation')} *`}</InputLabel>
             <Select

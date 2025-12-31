@@ -11,7 +11,6 @@ interface Props<T extends FieldValues> {
   name: FieldPath<T>
   label?: string
   control: Control<T>
-  translation: (slug: string) => string
   ['data-testid']?: string
   clearable?: boolean
   fullWidth?: boolean
@@ -21,7 +20,6 @@ export const FormDatePicker = <T extends FieldValues>({
   name,
   label,
   control,
-  translation,
   'data-testid': dataTestId,
   clearable = false,
   fullWidth = false,

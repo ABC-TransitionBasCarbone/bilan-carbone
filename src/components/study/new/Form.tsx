@@ -90,10 +90,9 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudy
             <span className="inputLabel bold">{t('studyDates')}</span>
           </IconLabel>
           <div className={styles.dates}>
-            <FormDatePicker control={form.control} translation={t} name="startDate" label={tLabel('start')} />
+            <FormDatePicker control={form.control} name="startDate" label={tLabel('start')} />
             <FormDatePicker
               control={form.control}
-              translation={t}
               name="endDate"
               label={tLabel('end')}
               data-testid="new-study-endDate"

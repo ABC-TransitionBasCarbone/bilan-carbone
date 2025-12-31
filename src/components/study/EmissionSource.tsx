@@ -22,7 +22,16 @@ import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { hasEditionRights, STUDY_UNIT_VALUES } from '@/utils/study'
 import SavedIcon from '@mui/icons-material/CloudUpload'
 import { Alert, CircularProgress, FormLabel, TextField } from '@mui/material'
-import { EmissionSourceCaracterisation, Import, Level, StudyResultUnit, StudyRole, SubPost, Unit } from '@prisma/client'
+import {
+  EmissionSourceCaracterisation,
+  Export,
+  Import,
+  Level,
+  StudyResultUnit,
+  StudyRole,
+  SubPost,
+  Unit,
+} from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -335,6 +344,7 @@ const EmissionSource = ({
                 environment={environment}
                 emissionFactorsForSubPost={emissionFactorsForSubPost}
                 importVersions={importVersions}
+                displayConstructionYear={study.exports.some((studyExport) => studyExport.type === Export.GHGP)}
               />
             ) : (
               <EmissionSourceForm
@@ -350,7 +360,8 @@ const EmissionSource = ({
                 update={update}
                 environment={environment}
                 caracterisations={caracterisations}
-                mandatoryCaracterisation={study.exports.length > 0}
+                displayCaracterisation={study.exports.length > 0}
+                displayConstructionYear={study.exports.some((studyExport) => studyExport.type === Export.GHGP)}
                 status={status}
                 studySites={study.sites}
                 isFromOldImport={isFromOldImport}

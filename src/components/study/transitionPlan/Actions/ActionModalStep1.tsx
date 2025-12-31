@@ -92,7 +92,6 @@ const ActionModalStep1 = ({ studyUnit, control, setValue, errors }: Props) => {
           <FormDatePicker
             label={`${t('reductionStartYear')} *`}
             control={control}
-            translation={t}
             className={styles.reductionYear}
             name="reductionStartYear"
             views={['year']}
@@ -102,7 +101,6 @@ const ActionModalStep1 = ({ studyUnit, control, setValue, errors }: Props) => {
           <FormDatePicker
             label={`${t('reductionEndYear')} *`}
             control={control}
-            translation={t}
             className={styles.reductionYear}
             name="reductionEndYear"
             views={['year']}

@@ -40,6 +40,7 @@ interface Props {
   importVersions: ImportVersionForFilters[]
   studyId: string
   update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null) => void
+  displayConstructionYear: boolean
 }
 
 const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) =>
@@ -58,6 +59,7 @@ const EmissionSourceContributorForm = ({
   importVersions,
   studyId,
   update,
+  displayConstructionYear,
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tResultUnits = useTranslations('study.results.units')
@@ -107,21 +109,32 @@ const EmissionSourceContributorForm = ({
             )}
           </div>
           {hasDeprecationPeriod(emissionSource.subPost) && (
-            <div className={classNames(styles.inputWithUnit, 'flex grow')}>
-              <TextField
-                disabled={!!emissionSource.validated}
-                className="grow"
-                type="number"
-                defaultValue={emissionSource.depreciationPeriod}
-                onBlur={(event) => update('depreciationPeriod', Number(event.target.value))}
-                label={`${t('form.depreciationPeriod')} *`}
-                slotProps={{
-                  inputLabel: { shrink: true },
-                  input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
-                }}
-              />
-              <div className={styles.unit}>{t('form.years')}</div>
-            </div>
+            <>
+              <div className={classNames(styles.inputWithUnit, 'flex grow')}>
+                <TextField
+                  disabled={!!emissionSource.validated}
+                  className="grow"
+                  type="number"
+                  defaultValue={emissionSource.depreciationPeriod}
+                  onBlur={(event) => update('depreciationPeriod', Number(event.target.value))}
+                  label={`${t('form.depreciationPeriod')} *`}
+                  slotProps={{
+                    inputLabel: { shrink: true },
+                    input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
+                  }}
+                />
+                <div className={styles.unit}>{t('form.years')}</div>
+              </div>
+              {displayConstructionYear && (
+                <TextField
+                  disabled={!!emissionSource.validated}
+                  data-testid="emission-source-construction-year"
+                  defaultValue={emissionSource.constructionYear}
+                  onBlur={(event) => update('constructionYear', event.target.value)}
+                  label={t('form.constructionYear')}
+                />
+              )}
+            </>
           )}
         </div>
         <TextField

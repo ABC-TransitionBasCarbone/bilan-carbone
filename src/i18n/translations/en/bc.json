@@ -1931,6 +1931,7 @@
       "validate": "Validated",
       "name": "Name",
       "caracterisation": "Characterization",
+      "constructionYear": "Construction year",
       "emissionFactor": "Emission factor",
       "activity": "Activity",
       "value": "Activity value",
