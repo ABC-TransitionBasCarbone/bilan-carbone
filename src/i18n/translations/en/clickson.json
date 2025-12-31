@@ -19,13 +19,13 @@
         "message": "Create your first footprint here. You can then view your footprints or create new ones at any time."
       },
       "sites": {
-        "title": "My Establishments",
-        "message": "Find here the list of establishments linked to your account"
+        "title": "My Establishment",
+        "message": "Find here the establishment linked to your account"
       }
     },
     "title": "Calculating your simplified carbon footprint will allow you to:",
     "alert": {
-      "info": "The Clickson calculator allows you to estimate the climate impact of your activity. It is above all an awareness tool. It is not a low-carbon transition approach but a simplified carbon footprint — in the sense of the <link>Guide to communication around carbon accounting</link> — focused on the main emission sources related to the activity of establishments."
+      "info": "The Clickson calculator allows you to estimate the climate impact of your activity. It is above all an awareness tool. It is not a low-carbon transition approach but a simplified carbon footprint — in the sense of the <link>Guide to communication around carbon accounting</link> — focused on the main emission sources related to the activity of the establishment."
     },
     "info": {
       "0": "Understand the measurement of your establishment's impact",
@@ -154,13 +154,14 @@
   },
   "organization": {
     "card": {
-      "myOrganization": "My Establishments"
+      "myOrganization": "My Establishment"
     },
     "form": {
-      "editTitle": "Edit My Establishments"
+      "editTitle": "Edit My Establishment",
+      "name": "Establishment name"
     },
     "sites": {
-      "title": "Which establishments should the footprint cover?",
+      "title": "",
       "noSites": "No establishments configured",
       "namePlaceholder": "Establishment Name",
       "add": "Add an Establishment",

@@ -19,13 +19,13 @@
         "message": "Cree su primera huella aquí. Luego podrá ver sus huellas o crear nuevas en cualquier momento."
       },
       "sites": {
-        "title": "Mis Establecimientos",
-        "message": "Encuentre aquí la lista de establecimientos vinculados a su cuenta"
+        "title": "Mi Establecimiento",
+        "message": "Encuentre aquí el establecimiento vinculado a su cuenta"
       }
     },
     "title": "Calcular su huella de carbono simplificada le permitirá:",
     "alert": {
-      "info": "La calculadora Clickson le permite estimar el impacto climático de su actividad. Es ante todo una herramienta de concienciación. No es un enfoque de transición baja en carbono sino una huella de carbono simplificada — en el sentido de la <link>Guía de comunicación sobre contabilidad de carbono</link> — enfocada en las principales fuentes de emisión relacionadas con la actividad de los establecimientos."
+      "info": "La calculadora Clickson le permite estimar el impacto climático de su actividad. Es ante todo una herramienta de concienciación. No es un enfoque de transición baja en carbono sino una huella de carbono simplificada — en el sentido de la <link>Guía de comunicación sobre contabilidad de carbono</link> — enfocada en las principales fuentes de emisión relacionadas con la actividad del establecimiento."
     },
     "info": {
       "0": "Comprender la medición del impacto de su establecimiento",
@@ -154,13 +154,14 @@
   },
   "organization": {
     "card": {
-      "myOrganization": "Mis Establecimientos"
+      "myOrganization": "Mi Establecimiento"
     },
     "form": {
-      "editTitle": "Editar Mis Establecimientos"
+      "editTitle": "Editar Mi Establecimiento",
+      "name": "Nombre del Establecimiento"
     },
     "sites": {
-      "title": "¿Qué establecimientos debe cubrir la huella de carbono?",
+      "title": "",
       "noSites": "Sin establecimientos configurados",
       "namePlaceholder": "Nombre del Establecimiento",
       "add": "Añadir un Establecimiento",
