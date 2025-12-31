@@ -126,13 +126,15 @@ const EmissionSourceContributorForm = ({
                 <div className={styles.unit}>{t('form.years')}</div>
               </div>
               {displayConstructionYear && (
-                <TextField
-                  disabled={!!emissionSource.validated}
-                  data-testid="emission-source-construction-year"
-                  defaultValue={emissionSource.constructionYear}
-                  onBlur={(event) => update('constructionYear', event.target.value)}
-                  label={t('form.constructionYear')}
-                />
+                <div className="flex grow">
+                  <TextField
+                    disabled={!!emissionSource.validated}
+                    data-testid="emission-source-construction-year"
+                    defaultValue={emissionSource.constructionYear}
+                    onBlur={(event) => update('constructionYear', event.target.value)}
+                    label={t('form.constructionYear')}
+                  />
+                </div>
               )}
             </>
           )}
