@@ -1,0 +1,22 @@
+<html>
+  <%- include('../partials/style'); %>
+  <body>
+    <div>
+      <p>Bonjour,</p>
+      <br />
+      <p>Bienvenue sur le calculateur Clicks On Act !</p>
+      <p>
+        Vous avez été ajouté par <span><%= creatorName %></span> en tant que <span><%= role %></span> sur l'empreinte
+        <a href="<%= studyLink %>"><%= studyName %></a> pour l'établissement <span><%= organizationName %></span> sur le calculateur Clicks On Act.
+      </p>
+      <p>
+        Pour avoir acces à l’empreinte, vous pouvez finaliser la création de votre compte sur
+        <a href="<%= link %>">ce lien</a>.
+      </p>
+      <br />
+      <%- include('./partials/faq'); %>
+      <br />
+      <%- include('./partials/signature'); %>
+    </div>
+  </body>
+</html>
