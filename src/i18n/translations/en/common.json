@@ -4,6 +4,7 @@
     "no": "No",
     "previous": "Previous",
     "next": "Next",
+    "close": "Close",
     "action": {
       "create": "Create",
       "edit": "Edit",

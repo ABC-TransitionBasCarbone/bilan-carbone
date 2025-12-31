@@ -1,4 +1,5 @@
 import { Select } from '@/components/base/Select'
+import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import ControlModeChangeWarningModal from '@/components/study/perimeter/ControlModeChangeWarningModal'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
@@ -8,6 +9,7 @@ import { ControlMode, Export } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import styles from './ExportCheckbox.module.css'
+import GHGPGlossaryModal from './GHGPGlossaryModal'
 
 interface Props {
   id: Export
@@ -30,6 +32,8 @@ const ExportCheckbox = ({ id, index, study, values, onChange, setControl, disabl
   const [showControlModeWarning, setShowControlModeWarning] = useState(false)
   const [pendingControlMode, setPendingControlMode] = useState<ControlMode | null>(null)
   const isNewStudy = !study && !duplicateStudyId
+
+  const hasGlossary = useMemo(() => ([Export.GHGP] as Export[]).includes(id), [id])
 
   const hasCaracterisations = useMemo(
     () => !!study && study.emissionSources.some((source) => source.caracterisation !== null),
@@ -90,6 +94,17 @@ const ExportCheckbox = ({ id, index, study, values, onChange, setControl, disabl
           <span>
             {tExport(id)}
             {!isExportAvailable && <em> ({t('coming')})</em>}
+            {hasGlossary && (
+              <GlossaryIconModal
+                title="title"
+                className="ml-2"
+                iconLabel="title"
+                label="export-glossary-modal"
+                tModal={`exports.glossary.${id}`}
+              >
+                {id === Export.GHGP && <GHGPGlossaryModal />}
+              </GlossaryIconModal>
+            )}
           </span>
         }
         value={!!values.exports.includes(id)}
