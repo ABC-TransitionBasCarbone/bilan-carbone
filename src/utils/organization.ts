@@ -89,11 +89,11 @@ const parseBlockingDate = (): { day: number; month: number } => {
   return { day, month }
 }
 
-const isBeforeBlockingDate = (now: Date): boolean => {
+export const isBeforeBlockingDate = (now: Date): boolean => {
   const blockingDate = parseBlockingDate()
   const currentMonth = now.getMonth()
   const currentDay = now.getDate()
-  return currentMonth < blockingDate.month || (currentMonth === blockingDate.month && currentDay < blockingDate.day)
+  return currentMonth < blockingDate.month || (currentMonth === blockingDate.month && currentDay <= blockingDate.day)
 }
 
 export const isLicenceActiveForDate = (activatedLicence: number[]): boolean => {
