@@ -2,7 +2,7 @@ import { Select } from '@/components/base/Select'
 import ControlModeChangeWarningModal from '@/components/study/perimeter/ControlModeChangeWarningModal'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { updateCaracterisationsForControlMode } from '@/services/serverFunctions/study'
+import { updateStudySpecificExportFields } from '@/services/serverFunctions/study'
 import { Checkbox, FormControl, FormControlLabel, MenuItem } from '@mui/material'
 import { ControlMode, Export } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -62,7 +62,7 @@ const ExportCheckbox = ({ id, index, study, values, onChange, setControl, disabl
         setControl(pendingControlMode)
       } else {
         // For existing studies, clear characterizations immediately
-        await callServerFunction(() => updateCaracterisationsForControlMode(study.id), {
+        await callServerFunction(() => updateStudySpecificExportFields(study.id, pendingControlMode), {
           onSuccess: () => {
             setControl(pendingControlMode)
           },
