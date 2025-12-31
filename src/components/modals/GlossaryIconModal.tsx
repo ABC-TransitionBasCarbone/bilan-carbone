@@ -16,17 +16,25 @@ interface Props {
 
 const GlossaryIconModal = ({ title, className, iconLabel, label, tModal, children }: Props) => {
   const t = useTranslations(tModal)
+  const tCommon = useTranslations('common')
   const [open, setOpen] = useState(false)
 
   return (
     <>
-      <HelpIcon className={className} onClick={() => setOpen((prevOpen) => !prevOpen)} label={t(iconLabel)} />
+      <HelpIcon
+        className={className}
+        onClick={(e) => {
+          e.preventDefault()
+          setOpen((prevOpen) => !prevOpen)
+        }}
+        label={t(iconLabel)}
+      />
       <Modal
         open={open}
         label={`${label}-glossary`}
         title={t(title)}
         onClose={() => setOpen(false)}
-        actions={[{ actionType: 'button', onClick: () => setOpen(false), children: t('close') }]}
+        actions={[{ actionType: 'button', onClick: () => setOpen(false), children: tCommon('close') }]}
       >
         {children}
       </Modal>

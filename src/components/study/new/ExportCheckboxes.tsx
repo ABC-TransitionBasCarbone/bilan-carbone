@@ -102,10 +102,10 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
   return (
     <>
       <div className="flex-col">
-        {Object.keys(Export).map((key, i) => (
+        {Object.keys(Export).map((exportType, i) => (
           <ExportCheckbox
-            key={key}
-            id={key as Export}
+            key={exportType}
+            exportType={exportType as Export}
             index={i}
             study={study}
             values={values}

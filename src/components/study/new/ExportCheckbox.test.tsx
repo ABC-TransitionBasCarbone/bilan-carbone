@@ -38,7 +38,7 @@ const renderWithTheme = (component: React.ReactElement) => {
 }
 
 const defaultProps = {
-  id: Export.Beges,
+  exportType: Export.Beges,
   index: 0,
   values: {
     exports: [],

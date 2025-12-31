@@ -26,6 +26,16 @@
       "title": "Bilan Carbone® Equivalence",
       "category": "Bilan Carbone® Category",
       "emissions": "Emissions (tCO2e)"
+    },
+    "glossary": {
+      "GHGP": {
+        "title": "Export to GHG Protocol format",
+        "warning": "Please note that in order for your export to comply with the GHG Protocol, you will need to:",
+        "item1": "That you have taken waste incineration into account in the emissions associated with district heating networks.",
+        "item2": "That under the Fixed Assets post, you have correctly indicated whether the asset in question was constructed in the year of the bilan.",
+        "item3": "Whether you have double accounting for electricity consumption, on the one hand location-based and on the other market-based. To do this, simply account for your kWh of energy consumption twice, <green>once via location-based emission factors</green>, and <purple>a second time via market-based emission factors</purple>. Reminder:<ul><li>The location-based method is based on the use of emission factors representing the average electricity mix over defined geographical and temporal areas. In France, the emission factors used are typically in the form of ‘Average mix - Year concerned - France’. </li><li>The market-based method is based on the use of emission factors representative of the electricity produced by the electricity producers to which the organisation is contractually bound through the purchase of Guarantees of Origin (GO) or the direct sale of electricity (Power Purchase Agreement, or PPA). All electricity not covered by the aforementioned contracts must then be taken into account using emission factors for residual mixes, i.e. emission factors for electricity mixes from which all electricity covered by the aforementioned contracts has been removed.</li></ul>",
+        "conclusion": "Users should also be familiar with all the methodological specifics of the GHG Protocol in order to generate an export that meets the requirements of this method."
+      }
     }
   },
   "categorisations": {
