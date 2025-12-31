@@ -835,6 +835,7 @@ export const uploadStudies = async (
               studyEmissionSource.subPost,
               { types: exports.map((studyExport) => studyExport.type), control: exports[0].control },
               Environment.BC,
+              exports[0].control,
             )
 
             let caracterisation = caracterisationMapping[studyEmissionSource.caracterisation]
