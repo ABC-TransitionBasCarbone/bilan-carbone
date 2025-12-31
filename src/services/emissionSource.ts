@@ -448,7 +448,7 @@ export const getCaracterisationsBySubPost = (
     return []
   }
 
-  const controlMode = exports?.control || 'Operational'
+  const controlMode = exports?.control || ControlMode.Operational
   const caracterisationMap = getAllCaracterisationsBySubPost(controlMode)
   const caracterisations = caracterisationMap[subPostToUse]
 
