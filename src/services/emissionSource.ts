@@ -38,7 +38,12 @@ export const getEmissionSourceCompletion = (
 ) => {
   const mandatoryFields = ['name', 'type', 'value', 'emissionFactorId'] as (keyof typeof emissionSource)[]
 
-  const caracterisations = getCaracterisationsBySubPost(emissionSource.subPost, study.exports, environment)
+  const caracterisations = getCaracterisationsBySubPost(
+    emissionSource.subPost,
+    study.exports,
+    environment,
+    study.exports?.control || ControlMode.Operational,
+  )
 
   if (!!study.exports?.types.length && caracterisations.length > 0) {
     mandatoryFields.push('caracterisation')
@@ -436,6 +441,7 @@ export const getCaracterisationsBySubPost = (
   subPost: SubPost,
   exports: FullStudy['exports'],
   environment: Environment | undefined,
+  controlMode: ControlMode,
 ) => {
   let subPostToUse = subPost
   if (environment === Environment.TILT) {
@@ -443,12 +449,10 @@ export const getCaracterisationsBySubPost = (
     subPostToUse = bcSubpost
   }
 
-  const begesExport = (exports?.types || []).find((exp) => exp === Export.Beges)
-  if (!begesExport) {
+  if (!exports?.types.length) {
     return []
   }
 
-  const controlMode = exports?.control || ControlMode.Operational
   const caracterisationMap = getAllCaracterisationsBySubPost(controlMode)
   const caracterisations = caracterisationMap[subPostToUse]
 

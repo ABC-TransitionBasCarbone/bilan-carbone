@@ -11,7 +11,7 @@ import { withInfobulle } from '@/utils/post'
 import { postColors, STUDY_UNIT_VALUES } from '@/utils/study'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
-import { Environment, Import, StudyRole, SubPost as SubPostEnum } from '@prisma/client'
+import { ControlMode, Environment, Import, StudyRole, SubPost as SubPostEnum } from '@prisma/client'
 import classNames from 'classnames'
 import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
@@ -132,7 +132,13 @@ const SubPost = ({
   )
 
   const caracterisations = useMemo(
-    () => getCaracterisationsBySubPost(subPost, study.exports, environment),
+    () =>
+      getCaracterisationsBySubPost(
+        subPost,
+        study.exports,
+        environment,
+        study.exports?.control || ControlMode.Operational,
+      ),
     [subPost, study.exports, environment],
   )
 

@@ -232,11 +232,8 @@ export const getMockedDuplicateStudyCommand = (overrides = {}) => ({
   isPublic: 'false',
   level: 'Initial' as const,
   sites: [],
-  exports: {
-    Beges: false,
-    GHGP: false,
-    ISO14069: false,
-  },
+  exports: [],
+  controlMode: null,
   ...COMMON_DATES_STR,
   ...overrides,
 })

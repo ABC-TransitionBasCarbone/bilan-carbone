@@ -75,16 +75,18 @@ import { getTransitionPlanByStudyId } from '@/db/transitionPlan'
 import { addUser, getUserApplicationSettings, getUserByEmail, getUserSourceById, UserWithAccounts } from '@/db/user'
 import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
-import { getNestedValue, groupBy } from '@/utils/array'
+import { getNestedValue, groupBy, unique } from '@/utils/array'
 import { mapCncToStudySite } from '@/utils/cnc'
 import { calculateDistanceFromParis } from '@/utils/distance'
 import { CA_UNIT_VALUES, defaultCAUnit, formatNumber } from '@/utils/number'
 import { canEditOrganizationVersion } from '@/utils/organization'
 import { withServerResponse } from '@/utils/serverResponse'
 import {
+  exportSpecificFields,
   getAccountRoleOnStudy,
   getAllowedRolesFromDefaultRole,
   getUserRoleOnPublicStudy,
+  hasDeprecationPeriod,
   hasEditionRights,
 } from '@/utils/study'
 import { formatDateFr } from '@/utils/time'
@@ -145,6 +147,7 @@ import {
 } from '../permissions/study'
 import { deleteFileFromBucket, getFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
 import { getTransEnvironmentSubPost, hasSufficientLevel } from '../study'
+import { UpdateEmissionSourceCommand } from './emissionSource.command'
 import { saveAnswerForQuestion } from './question'
 import {
   ChangeStudyCinemaCommand,
@@ -695,8 +698,31 @@ export const changeStudyExports = async (studyId: string, types: Export[], contr
     return upsertStudyExport(studyId, types, control)
   })
 
-export const updateCaracterisationsForControlMode = async (studyId: string) =>
-  withServerResponse('updateCaracterisationsForControlMode', async () => {
+const getFields = (exportTypes: Export[]) =>
+  unique(
+    exportTypes.reduce(
+      (res, exportType) => [...res, ...exportSpecificFields[exportType]],
+      [] as (keyof UpdateEmissionSourceCommand)[],
+    ),
+  )
+const clearedFieldsValues = (fields: (keyof UpdateEmissionSourceCommand)[]) => {
+  const result: Record<string, null> = {}
+  fields.forEach((field) => {
+    result[field] = null
+  })
+  return result
+}
+
+const filterSpecificFieldsPerSubpost = (fields: (keyof UpdateEmissionSourceCommand)[], subPost: SubPost) => {
+  let filtered = fields
+  if (!hasDeprecationPeriod(subPost)) {
+    filtered = filtered.filter((field) => field !== 'constructionYear')
+  }
+  return filtered
+}
+
+export const updateStudySpecificExportFields = async (studyId: string, controlMode: ControlMode, types?: Export[]) =>
+  withServerResponse('updateStudySpecificExportFields', async () => {
     const [session, study] = await Promise.all([dbActualizedAuth(), getStudy(studyId)])
     if (!session || !session.user || !study.success || !study.data) {
       throw new Error(NOT_AUTHORIZED)
@@ -705,43 +731,58 @@ export const updateCaracterisationsForControlMode = async (studyId: string) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
+    const specificFields = getFields(types || [])
+    const currentFields = getFields(study.data.exports?.types || [])
+    const newSpecificFields = specificFields.filter((field) => !currentFields.includes(field))
+    const clearedFields = getFields(Object.values(Export).filter((field) => !(types || []).includes(field))).filter(
+      (field) => !specificFields.includes(field),
+    )
+
     await Promise.all(
       study.data.emissionSources
         .map((emissionSource) => {
-          if (!emissionSource.caracterisation && !emissionSource.validated) {
+          if (!emissionSource.validated && !clearedFields.length) {
             return null
           }
+
+          const filteredNewFields = filterSpecificFieldsPerSubpost(newSpecificFields, emissionSource.subPost)
+          const filteredClearedFields = filterSpecificFieldsPerSubpost(clearedFields, emissionSource.subPost)
 
           const validCaracterisations = getCaracterisationsBySubPost(
             emissionSource.subPost,
             study.data?.exports || null,
             session.user.environment,
+            controlMode,
           )
 
           const isValidForNewControlMode = validCaracterisations.includes(
             emissionSource.caracterisation as EmissionSourceCaracterisation,
           )
 
+          const shouldKeepValidation =
+            emissionSource.validated &&
+            filteredNewFields.every((field) => emissionSource[field as keyof typeof emissionSource]) &&
+            (isValidForNewControlMode || validCaracterisations.length === 1)
+
+          const dataToUpdate: Prisma.StudyEmissionSourceUpdateInput = {
+            ...clearedFieldsValues(filteredClearedFields),
+          }
+
           if (!isValidForNewControlMode) {
             if (validCaracterisations.length === 1) {
-              const newCaracterisation = validCaracterisations[0]
-              const shouldKeepValidation = emissionSource.caracterisation && emissionSource.validated
-
-              return prismaClient.studyEmissionSource.update({
-                where: { id: emissionSource.id },
-                data: {
-                  caracterisation: newCaracterisation,
-                  validated: shouldKeepValidation,
-                },
-              })
+              dataToUpdate.caracterisation = validCaracterisations[0]
+              dataToUpdate.validated = shouldKeepValidation
             } else {
-              return prismaClient.studyEmissionSource.update({
-                where: { id: emissionSource.id },
-                data: { caracterisation: null, validated: false },
-              })
+              dataToUpdate.validated = false
             }
+          } else if (!shouldKeepValidation) {
+            dataToUpdate.validated = false
           }
-          return null
+
+          return prismaClient.studyEmissionSource.update({
+            where: { id: emissionSource.id },
+            data: dataToUpdate,
+          })
         })
         .filter(Boolean),
     )

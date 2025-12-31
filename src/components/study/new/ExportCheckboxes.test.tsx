@@ -16,6 +16,12 @@ jest.mock('next-intl', () => ({
     return t
   },
 }))
+jest.mock('@/services/file', () => ({ download: jest.fn() }))
+jest.mock('@/services/auth', () => ({ auth: jest.fn() }))
+jest.mock('uuid', () => ({ v4: jest.fn() }))
+jest.mock('next-intl/server', () => ({
+  getTranslations: jest.fn(() => (key: string) => key),
+}))
 
 jest.mock('@/hooks/useServerFunction', () => ({
   useServerFunction: () => ({
@@ -27,7 +33,7 @@ jest.mock('@/hooks/useServerFunction', () => ({
 }))
 
 jest.mock('@/services/serverFunctions/study', () => ({
-  updateCaracterisationsForControlMode: jest.fn(),
+  updateStudySpecificExportFields: jest.fn(),
 }))
 
 const mockOnChange = jest.fn()
