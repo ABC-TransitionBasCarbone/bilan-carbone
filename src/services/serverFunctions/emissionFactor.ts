@@ -12,6 +12,7 @@ import {
   getEmissionFactorById,
   getEmissionFactorDetailsById,
   getEmissionFactorImportVersionsBC,
+  getEmissionFactorImportVersionsClickson,
   getEmissionFactorImportVersionsCUT,
   getManualEmissionFactors,
   setEmissionFactorUnitAsCustom,
@@ -296,6 +297,8 @@ export const getEmissionFactorImportVersions = async (withArchived: boolean = fa
     switch (session.user.environment) {
       case Environment.CUT:
         return getEmissionFactorImportVersionsCUT()
+      case Environment.CLICKSON:
+        return getEmissionFactorImportVersionsClickson()
       case Environment.BC:
       default:
         return getEmissionFactorImportVersionsBC(withArchived)
