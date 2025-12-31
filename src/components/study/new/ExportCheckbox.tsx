@@ -12,7 +12,7 @@ import styles from './ExportCheckbox.module.css'
 import GHGPGlossaryModal from './GHGPGlossaryModal'
 
 interface Props {
-  id: Export
+  exportType: Export
   index: number
   study?: FullStudy
   values: {
@@ -25,7 +25,16 @@ interface Props {
   duplicateStudyId?: string | null
 }
 
-const ExportCheckbox = ({ id, index, study, values, onChange, setControl, disabled, duplicateStudyId }: Props) => {
+const ExportCheckbox = ({
+  exportType,
+  index,
+  study,
+  values,
+  onChange,
+  setControl,
+  disabled,
+  duplicateStudyId,
+}: Props) => {
   const t = useTranslations('study.new')
   const tExport = useTranslations('exports')
   const { callServerFunction } = useServerFunction()
@@ -33,7 +42,7 @@ const ExportCheckbox = ({ id, index, study, values, onChange, setControl, disabl
   const [pendingControlMode, setPendingControlMode] = useState<ControlMode | null>(null)
   const isNewStudy = !study && !duplicateStudyId
 
-  const hasGlossary = useMemo(() => ([Export.GHGP] as Export[]).includes(id), [id])
+  const hasGlossary = useMemo(() => ([Export.GHGP] as Export[]).includes(exportType), [exportType])
 
   const hasCaracterisations = useMemo(
     () => !!study && study.emissionSources.some((source) => source.caracterisation !== null),
@@ -76,7 +85,7 @@ const ExportCheckbox = ({ id, index, study, values, onChange, setControl, disabl
     closeControlModeChange()
   }
 
-  const isExportAvailable = useMemo(() => ([Export.Beges, Export.GHGP] as Export[]).includes(id), [id])
+  const isExportAvailable = useMemo(() => ([Export.Beges, Export.GHGP] as Export[]).includes(exportType), [exportType])
 
   return (
     <div className={styles.container}>
@@ -84,15 +93,15 @@ const ExportCheckbox = ({ id, index, study, values, onChange, setControl, disabl
         className={styles.field}
         control={
           <Checkbox
-            checked={!!values.exports.includes(id)}
+            checked={!!values.exports.includes(exportType)}
             className={styles.checkbox}
             disabled={!isExportAvailable || disabled}
-            data-testid={`export-checkbox-${id}`}
+            data-testid={`export-checkbox-${exportType}`}
           />
         }
         label={
           <span>
-            {tExport(id)}
+            {tExport(exportType)}
             {!isExportAvailable && <em> ({t('coming')})</em>}
             {hasGlossary && (
               <GlossaryIconModal
@@ -100,15 +109,15 @@ const ExportCheckbox = ({ id, index, study, values, onChange, setControl, disabl
                 className="ml-2"
                 iconLabel="title"
                 label="export-glossary-modal"
-                tModal={`exports.glossary.${id}`}
+                tModal={`exports.glossary.${exportType}`}
               >
-                {id === Export.GHGP && <GHGPGlossaryModal />}
+                {exportType === Export.GHGP && <GHGPGlossaryModal />}
               </GlossaryIconModal>
             )}
           </span>
         }
-        value={!!values.exports.includes(id)}
-        onChange={(_, checked) => onChange(id, checked)}
+        value={!!values.exports.includes(exportType)}
+        onChange={(_, checked) => onChange(exportType, checked)}
       />
       {index === 0 && !!values.exports.length && (
         <div className={styles.field}>
