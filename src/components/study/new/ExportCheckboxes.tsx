@@ -4,7 +4,7 @@ import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emission
 import { updateCaracterisationsForControlMode } from '@/services/serverFunctions/study'
 import { unique } from '@/utils/array'
 import { ControlMode, Export } from '@prisma/client'
-import { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import ExportActivationWarningModal from './ExportActivationWarningModal'
 import ExportCheckbox from './ExportCheckbox'
 import ExportDeactivationWarningModal from './ExportDeactivationWarningModal'
@@ -23,7 +23,7 @@ const exportFields: Record<Export, (keyof UpdateEmissionSourceCommand)[]> = {
 interface Props {
   study?: FullStudy
   values: ExportValues
-  onChange: Dispatch<SetStateAction<ExportValues>>
+  onChange: (value: Export[]) => void
   setControl: (value: ControlMode) => void
   disabled?: boolean
   duplicateStudyId?: string | null
@@ -68,23 +68,23 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
       if (typeFields.some((field) => !activeFields.includes(field)) && shouldShowExportActivationWarning) {
         setPendingExportCheck(type)
       } else {
-        onChange({ ...values, [type]: ControlMode.Operational })
+        onChange(values.exports.concat(type))
       }
     } else if (shouldShowExportDeactivationWarning(type)) {
       setPendingExportUncheck(type)
     } else {
-      onChange({ ...values, [type]: checked ? ControlMode.Operational : false })
+      onChange(values.exports.filter((exportType) => exportType !== type))
     }
   }
 
   const confirmExportActivation = async (type: Export) => {
     if (pendingExportCheck) {
       if (!study || duplicateStudyId) {
-        onChange({ ...values, [type]: ControlMode.Operational })
+        onChange(values.exports.concat(type))
       } else {
-        await callServerFunction(() => updateCaracterisationsForControlMode(study.id, ControlMode.Operational), {
+        await callServerFunction(() => updateCaracterisationsForControlMode(study.id), {
           onSuccess: () => {
-            onChange({ ...values, [type]: ControlMode.Operational })
+            onChange(values.exports.concat(type))
           },
         })
       }
@@ -94,7 +94,7 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
 
   const confirmExportDeactivation = async (type: Export) => {
     if (pendingExportUncheck) {
-      onChange({ ...values, [type]: false })
+      onChange(values.exports.filter((exportType) => exportType !== type))
     }
     setPendingExportUncheck(null)
   }
