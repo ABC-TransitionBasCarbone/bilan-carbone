@@ -94,7 +94,8 @@
       "loading": "Chargement des données...",
       "title": "Synthèse des émissions {year}",
       "results": {
-        "all": "Résultats"
+        "all": "Résultats",
+        "carbonIntensities": "Empreinte carbone individuelle"
       },
       "labels": {
         "studentNumber": "Nombre d'élèves",

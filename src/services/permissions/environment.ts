@@ -81,3 +81,5 @@ export const hasAccessToManualImport = (environment: Environment) =>
   ([BC, TILT, CUT] as Environment[]).includes(environment)
 
 export const hasCustomGlossaryTextForEstablishment = isClickson
+
+export const hasAccessToStudyResults = isAdvanced

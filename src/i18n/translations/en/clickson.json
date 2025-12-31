@@ -94,7 +94,8 @@
       "loading": "Loading data...",
       "title": "Emissions Summary {year}",
       "results": {
-        "all": "Results"
+        "all": "Results",
+        "carbonIntensities": "Individual carbon footprint"
       },
       "labels": {
         "studentNumber": "Number of students",
