@@ -1,0 +1,21 @@
+<html>
+  <%- include('../partials/style'); %>
+  <body>
+    <div>
+      <p>Bonjour <span><%= userName %></span>,</p>
+      <br />
+      <p>
+        Vous avez été ajouté par <span><%= creatorName %></span> à l'établissement <%= orga %> et avez donc à présent accès à l'environnement <%= newEnv %> <%= envInfo%>.
+      </p>
+      <br />
+      <p>
+        Vous aviez déjà accès <%= oldEnvs %> sur notre outil. vous pouvez donc vous connecter à ce nouvel environnement avec votre mot de passe habituel sur <a href="<%= link %>">ce lien</a>.
+        En vous connectant, l'application vous demandera dorénavant à quel environnement vous souhaitez accéder. Vous pourrez changer d'environnement à n'importe quel moment via un nouveau bouton sur le bandeau principal de l'outil.
+      </p>
+      <br />
+      <%- include('./partials/faq'); %>
+      <br />
+      <%- include('./partials/signature'); %>
+    </div>
+  </body>
+</html>
