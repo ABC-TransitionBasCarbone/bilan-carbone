@@ -26,6 +26,16 @@
       "title": "Export au format Bilan Carbone®",
       "category": "Catégorie Bilan Carbone®",
       "emissions": "Émissions (tCO2e)"
+    },
+    "glossary": {
+      "GHGP": {
+        "title": "Export au format GHG-Protocol",
+        "warning": "Attention, pour que votre export soit conforme au GHG-Protocol, il faudra :",
+        "item1": "Que vous ayez pris en compte l'incinération des déchets dans les émissions liées aux réseaux de chaleur utilisés.",
+        "item2": "Qu'au sein du poste Immobilisations, vous ayez correctement renseigné si le bien concerné a été construit l'année du bilan.",
+        "item3": "Que vous ayez une double comptabilisation de l'électricité consommée, d'une part en location-based et d'autre part en market-based. Pour cela il vous suffit de comptabiliser deux fois vos kWh d'énergie consommés, <green>une fois via des facteurs d'émission dédiés au location-based</green>, et <purple>une seconde fois via des facteurs d'émission dédiés au market-based</purple>. Pour rappel :<ul><li>La méthode location-based est basée sur l'utilisation de facteurs d'émission représentant le mix électrique moyen sur des périmètres géographiques et temporels définis. En France, les facteurs d'émission utilisés sont typiquement de la forme \"Mix moyen - Année concernée - France\".</li><li>La méthode market-based est basée sur l'utilisation de facteurs d'émission représentatif de l'électricité produite par les producteurs d'électricité auxquels l'organisation est contractuellement liée via des achats de Garanties d'Origine (GO) ou de la vente directe d'électricité (Power Purchase Agreement, ou PPA). Toute l'électricité non couverte pas les contrats mentionnés doit alors être prise en compte via les facteurs d'émission concernant les mix résiduels, c'est-à-dire les facteurs d'émission des mix électriques dont a été retirée tout l'électricité faisant l'objet des contrats mentionnés.</li></ul>",
+        "conclusion": "Il convient par ailleurs que l'utilisateur maîtrise l'ensemble des spécificités méthodologiques liées au GHG-Protocol afin de générer un export qui réponde aux exigences de cette méthode."
+      }
     }
   },
   "categorisations": {
