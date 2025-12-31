@@ -40,7 +40,7 @@ export const getEmissionSourceCompletion = (
 
   const caracterisations = getCaracterisationsBySubPost(emissionSource.subPost, study.exports, environment)
 
-  if (study.exports.some((studyExport) => studyExport.type === Export.Beges) && caracterisations.length > 0) {
+  if (study.exports.length > 0 && caracterisations.length > 0) {
     mandatoryFields.push('caracterisation')
   }
 
