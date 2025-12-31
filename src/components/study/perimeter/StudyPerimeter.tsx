@@ -117,6 +117,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
     },
   })
   const exportsWatch = useWatch(exportsForm).exports
+  const controlWatch = useWatch(exportsForm).controlMode
   const showControl = useMemo(() => !!(exportsWatch && exportsWatch.length), [exportsWatch])
 
   const siteList = useMemo(
@@ -238,26 +239,17 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
   }, [form, callServerFunction, router, tValidation, study])
 
   const updateStudyExport = useCallback(
-    async (exportType: Export, control: ControlMode | false) => {
-      await callServerFunction(() => changeStudyExports(study.id, exportType, control))
+    async (exportTypes: Export[], control: ControlMode) => {
+      await callServerFunction(() => changeStudyExports(study.id, exportTypes, control))
     },
     [callServerFunction, study.id],
   )
 
-  // useEffect(() => {
-  //   if (exportsValues && exportsForm.getValues().exports) {
-  //     Object.entries(exportsForm.getValues().exports).forEach(([exportType, value]) => {
-  //       if (exportsValues[exportType as Export] !== value) {
-  //         updateStudyExport(exportType as Export, value)
-  //       }
-  //     })
-  //   }
-  //   setExportsValues(exportsForm.getValues().exports)
-  // }, [exportsForm, exportsValues, exportsWatch, updateStudyExport])
-
   useEffect(() => {
-    console.log('exportsForm : ', exportsForm.getValues())
-  }, [exportsForm])
+    if (exportsWatch) {
+      updateStudyExport(exportsForm.getValues().exports, controlWatch || ControlMode.Operational)
+    }
+  }, [exportsForm, exportsWatch, controlWatch, updateStudyExport])
 
   const handleDuplicateSite = async (data: DuplicateFormData) => {
     if (!duplicatingSiteId) {
