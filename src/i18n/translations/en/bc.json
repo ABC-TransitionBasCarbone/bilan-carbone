@@ -1512,7 +1512,8 @@
   "level": {
     "Initial": "Initial",
     "Standard": "Standard",
-    "Advanced": "Advanced"
+    "Advanced": "Advanced",
+    "noLevel": "No formation"
   },
   "role": {
     "SUPER_ADMIN": "Global Administrator",

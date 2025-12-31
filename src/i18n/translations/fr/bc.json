@@ -1512,7 +1512,8 @@
   "level": {
     "Initial": "Initial",
     "Standard": "Standard",
-    "Advanced": "Avancé"
+    "Advanced": "Avancé",
+    "noLevel": "Non formé·e"
   },
   "role": {
     "SUPER_ADMIN": "Administrateur·rice Global",
