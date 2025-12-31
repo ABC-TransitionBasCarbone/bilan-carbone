@@ -50,7 +50,6 @@ import {
   deleteContributor,
   deleteStudy,
   deleteStudyComment,
-  deleteStudyExport,
   downgradeStudyUserRoles,
   FullStudy,
   getEngagementActionById,
@@ -689,7 +688,7 @@ export const changeStudySites = async (studyId: string, { organizationId, ...com
     await updateStudySites(studyId, selectedSites, deletedSiteIds)
   })
 
-export const changeStudyExports = async (studyId: string, type: Export, control: ControlMode | false) =>
+export const changeStudyExports = async (studyId: string, types: Export[], control: ControlMode | false) =>
   withServerResponse('changeStudyExports', async () => {
     const [session, study] = await Promise.all([dbActualizedAuth(), getStudy(studyId)])
     if (!session || !session.user || !study.success || !study.data) {
@@ -699,12 +698,12 @@ export const changeStudyExports = async (studyId: string, type: Export, control:
       throw new Error(NOT_AUTHORIZED)
     }
     if (control === false) {
-      return deleteStudyExport(studyId, type)
+      return upsertStudyExport(studyId, [], ControlMode.Operational)
     }
-    return upsertStudyExport(studyId, type, control)
+    return upsertStudyExport(studyId, types, control)
   })
 
-export const updateCaracterisationsForControlMode = async (studyId: string, newControlMode: ControlMode) =>
+export const updateCaracterisationsForControlMode = async (studyId: string) =>
   withServerResponse('updateCaracterisationsForControlMode', async () => {
     const [session, study] = await Promise.all([dbActualizedAuth(), getStudy(studyId)])
     if (!session || !session.user || !study.success || !study.data) {
