@@ -76,3 +76,5 @@ export const hasAccessToSimplifiedStudies = (env: Environment) => {
 export const hasReaderRoleOnStudyAsContributor = isClickson
 
 export const hasAccessToStudyComments = isClickson
+
+export const hasAccessToStudyResults = isAdvanced

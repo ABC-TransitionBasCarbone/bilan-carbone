@@ -21,7 +21,6 @@ const EmissionsAnalysisClickson = ({ study, studySite, withDepValue, caUnit = Si
   const t = useTranslations('study.results')
   const tCommon = useTranslations('common')
   const tResultUnits = useTranslations('study.results.units')
-  const tCAUnit = useTranslations('settings.caUnit')
 
   const studentAndEmployees = useMemo(() => {
     return study.sites.reduce((res, studySite) => res + (studySite.studentNumber || 0) + (studySite.etp || 0), 0) || 1
@@ -43,13 +42,13 @@ const EmissionsAnalysisClickson = ({ study, studySite, withDepValue, caUnit = Si
             </div>
           </Box>
           <Box className="flex-col w50">
-            <span className="text-center bold">{tCommon('carbonIntensities')}</span>
+            <span className="text-center bold">{t('carbonIntensities')}</span>
             <CarbonIntensity
               withDep={withDepValue}
               withoutDep={0}
               divider={studentAndEmployees}
               resultsUnit={study.resultsUnit}
-              label={`${tCAUnit(caUnit)} ${tCommon('perPerson')}`}
+              label={`${tCommon('perPerson')}`}
               testId="result-student-employee"
             />
           </Box>
