@@ -69,7 +69,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
         <Studies
           studies={advancedStudies}
           canAddStudy={canCreateAStudy(user) && !isCR && activeLicence}
-          creationUrl={simplified ? creationUrl : creationUrlSimplified}
+          creationUrl={creationUrl}
           user={user}
           collaborations={!organizationVersionId && isCR}
         />
