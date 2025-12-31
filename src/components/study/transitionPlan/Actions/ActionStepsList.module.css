@@ -6,6 +6,7 @@
   height: 9rem;
   width: calc((100% - 4rem) / 3);
   transition: box-shadow 0.2s;
+  height: fit-content;
 }
 
 .addStepButtonContainer {
@@ -64,4 +65,6 @@
 .stepsContainer {
   column-gap: 0.25rem;
   row-gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
 }
