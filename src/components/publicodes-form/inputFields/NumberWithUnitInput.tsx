@@ -22,12 +22,6 @@ const NumberWithUnitInput = <RuleName extends string>({
   const previousCommittedValue = useRef(committedValue)
   const uncommittedValue = useRef<number | null>(null)
 
-  // Keep a ref to onChange and formElement.id for use in cleanup
-  const onChangeRef = useRef(onChange)
-  onChangeRef.current = onChange
-  const formElementIdRef = useRef(formElement.id)
-  formElementIdRef.current = formElement.id
-
   // Sync local value when the committed value changes from outside (e.g., from DB sync)
   useEffect(() => {
     if (previousCommittedValue.current !== committedValue && committedValue !== localValue) {
@@ -40,10 +34,10 @@ const NumberWithUnitInput = <RuleName extends string>({
   useEffect(() => {
     return () => {
       if (uncommittedValue.current !== null) {
-        onChangeRef.current(formElementIdRef.current, String(uncommittedValue.current ?? ''))
+        onChange(formElement.id, String(uncommittedValue.current ?? ''))
       }
     }
-  }, [])
+  }, [onChange, formElement.id])
 
   const handleValueChange = useCallback((newValue: number | null) => {
     setLocalValue(newValue)
