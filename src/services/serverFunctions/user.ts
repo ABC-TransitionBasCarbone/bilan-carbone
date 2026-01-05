@@ -780,9 +780,10 @@ export const signUpWithSchool = async (email: string, country: Country, school: 
         name: school.nom_etablissement || '',
         postalCode: school.code_postal || '',
         establishmentId: school.identifiant_de_l_etablissement,
-        establishmentYear: school.date_ouverture || '',
+        establishmentYear: school.date_ouverture?.slice(0, 4) || '',
         country,
-        city: school.city,
+        city: school.city || school.adresse_3?.slice(5) || '',
+        academy: school.libelle_academie,
         organization: { connect: { id: organizationVersion.organizationId } },
       })
     }

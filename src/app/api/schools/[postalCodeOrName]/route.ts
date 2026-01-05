@@ -7,13 +7,16 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ pos
   const { postalCodeOrName } = await params
   const input = postalCodeOrName?.trim()
 
+  const select =
+    'nom_etablissement,adresse_1,adresse_3, code_postal,identifiant_de_l_etablissement,date_ouverture, libelle_academie'
+
   if (!input) {
     return Response.json([], { status: 200 })
   }
 
   if (/^\d{5}$/.test(input)) {
     const query = {
-      select: 'nom_etablissement,adresse_1,code_postal,identifiant_de_l_etablissement,date_ouverture',
+      select,
       where: `code_postal="${input}" AND (libelle_nature="COLLEGE" OR libelle_nature="LYCEE" OR libelle_nature="ECOLE DE NIVEAU ELEMENTAIRE")`,
       limit: 99,
     }
@@ -37,7 +40,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ pos
   `.trim()
 
   const query = {
-    select: 'nom_etablissement,adresse_1,code_postal,identifiant_de_l_etablissement,date_ouverture',
+    select,
     where,
     limit: 99,
   }
