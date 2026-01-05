@@ -84,10 +84,6 @@ const getStudyWithoutCaracterisations = () =>
         validated: false,
       }),
     ],
-    exports: {
-      types: [],
-      control: null,
-    },
   })
 
 const getStudyWithValidatedSources = () =>
