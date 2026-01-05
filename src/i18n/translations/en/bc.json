@@ -338,7 +338,7 @@
       "realizationDates": "Study completion date",
       "level": "Bilan Carbone® maturity",
       "exports": "Exports",
-      "control": "Control mode",
+      "control": "Exports' Control mode",
       "CapitalShare": "Capital share",
       "Financial": "Financial",
       "Operational": "Operational",
@@ -398,8 +398,8 @@
         "visibilityDescription": "Choose whether your study should be public, i.e. accessible to all your colleagues entered on the My organization > my team page (link to the page), or private, i.e. only accessible to the people you add on the study framework page. Your organization's admins have access to all studies, whether public or private.",
         "exports": "Exports",
         "exportsDescription": "By default, the results are returned in Bilan Carbone® format, but it is possible to obtain the results in the formats required by several other carbon accounting methods, such as the Bilan GES règlementaire, which is the French regulatory method.",
-        "control": "Control mode",
-        "controlDescription": "The control mode is a data item required by certain carbon accounting methods, such as the regulatory GHG Balance or the GHG Protocol. In order to obtain the results in the formats requested by these methods, you will need to characterise the different sources of emissions when you enter them, which will determine into which of the existing categories within these methods (the equivalent of the posts and sub-posts within the Bilan Carbone® method) the emissions will be broken down. Depending on the control mode selected, the characterizations available for the different sources of emissions vary. For more details on the control modes, please consult the methodological guides for the methods in question. We strongly recommend that you use the \"Operational Control\" control mode, which is by far the most common.",
+        "control": "Exports' Control mode",
+        "controlDescription": "The control mode is a data item required by certain carbon accounting methods, such as the regulatory GHG Balance or the GHG Protocol. In order to obtain the results in the formats requested by these methods, you will need to characterise the different sources of emissions when you enter them, which will determine into which of the existing categories within these methods (the equivalent of the posts and sub-posts within the Bilan Carbone® method) the emissions will be broken down. The control mode applies to all the exports you have selected. Depending on the control mode selected, the characterizations available for the different sources of emissions vary. For more details on the control modes, please consult the methodological guides for the methods in question. We strongly recommend that you use the \"Operational Control\" control mode, which is by far the most common.",
         "duplicationOptions": "Duplication options",
         "duplicationOptionsDescription": "When duplicating a study, you can choose to invite the same team members and contributors from the original study to the new one. This helps maintain collaboration continuity.",
         "close": "Close"
@@ -583,7 +583,7 @@
         "proceed": "Confirm changes"
       },
       "exports": "Exports",
-      "control": "Control mode",
+      "control": "Exports' Control mode",
       "emissionSourceTagFamily": "Family",
       "emissionSourceTags": "Tags",
       "emissionSourceTagLabel": "Label",
