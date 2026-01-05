@@ -150,6 +150,8 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
                 city: site.city ?? '',
                 cncId: site.cncId ?? '',
                 establishmentYear: site?.establishmentYear ? parseInt(site?.establishmentYear) : 0,
+                academy: site.academy ?? '',
+                establishmentType: site.establishmentType ?? '',
               }
         })
         .sort((a, b) => a.name.localeCompare(b.name))

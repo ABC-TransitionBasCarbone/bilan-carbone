@@ -264,7 +264,6 @@ export const updateOrganizationSites = async (
           cncId: site.cncId || undefined,
           volunteerNumber: site.volunteerNumber || undefined,
           beneficiaryNumber: site.beneficiaryNumber || undefined,
-          city: site.city,
         },
       }),
     ),

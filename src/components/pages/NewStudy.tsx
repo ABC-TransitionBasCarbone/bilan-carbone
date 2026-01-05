@@ -77,6 +77,8 @@ const NewStudyPage = ({
           cncId: site.cncId ?? '',
           cncCode: site.cnc?.cncCode || '',
           establishmentYear: site?.establishmentYear ? parseInt(site?.establishmentYear) : 0,
+          establishmentType: site.establishmentType ?? undefined,
+          academy: site.establishmentType ?? undefined,
         })) || [],
       exports: {
         [Export.Beges]: false,
