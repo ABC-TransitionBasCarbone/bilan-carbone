@@ -1,7 +1,7 @@
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { updateStudySpecificExportFields } from '@/services/serverFunctions/study'
-import { allSpecificFieldsForExports, exportSpecificFields } from '@/utils/study'
+import { exportSpecificFields, getAllSpecificFieldsForExports } from '@/utils/study'
 import { ControlMode, Export } from '@prisma/client'
 import { useCallback, useMemo, useState } from 'react'
 import ExportActivationWarningModal from './ExportActivationWarningModal'
@@ -33,7 +33,7 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
     [study],
   )
 
-  const activeFields = useMemo(() => allSpecificFieldsForExports(values.exports), [values])
+  const activeFields = useMemo(() => getAllSpecificFieldsForExports(values.exports), [values])
 
   const hasSpecificFields = useCallback(
     (type: Export) =>
@@ -44,10 +44,9 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
     [study],
   )
 
-  const shouldShowExportActivationWarning = hasValidatedSources && !isNewStudy
   const shouldShowExportDeactivationWarning = (type: Export) => {
     const newExports = values.exports.filter((exportType) => exportType !== type)
-    const newFields = allSpecificFieldsForExports(newExports)
+    const newFields = getAllSpecificFieldsForExports(newExports)
     return (
       hasSpecificFields(type) && exportSpecificFields[type].some((field) => !newFields.includes(field)) && !isNewStudy
     )
@@ -57,7 +56,7 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
     const typeFields = exportSpecificFields[type]
     if (checked) {
       // Mandatoryfields added, show warning message
-      if (typeFields.some((field) => !activeFields.includes(field)) && shouldShowExportActivationWarning) {
+      if (typeFields.some((field) => !activeFields.includes(field)) && hasValidatedSources) {
         setPendingExportCheck(type)
       } else {
         onChange(values.exports.concat(type))

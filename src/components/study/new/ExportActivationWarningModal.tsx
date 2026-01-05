@@ -5,6 +5,7 @@ import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emission
 import { exportSpecificFields } from '@/utils/study'
 import { Export } from '@prisma/client'
 import { useTranslations } from 'next-intl'
+import { useMemo } from 'react'
 
 interface Props {
   type: Export
@@ -18,10 +19,10 @@ const ExportActivationWarningModal = ({ type, activeFields, onConfirm, onCancel 
   const tExport = useTranslations('exports')
   const tFields = useTranslations('emissionSource.form')
 
-  console.log('activeFields : ', activeFields)
-  console.log('specific : ', exportSpecificFields[type])
-
-  const fields = exportSpecificFields[type].filter((field) => !activeFields.includes(field))
+  const fields = useMemo(
+    () => exportSpecificFields[type].filter((field) => !activeFields.includes(field)),
+    [activeFields, type],
+  )
 
   return (
     <Modal

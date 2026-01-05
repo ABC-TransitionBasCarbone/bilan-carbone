@@ -12,8 +12,10 @@ import { formatEmissionFactorNumber } from '@/utils/number'
 import { hasDeprecationPeriod } from '@/utils/study'
 import AddIcon from '@mui/icons-material/Add'
 import { TextField } from '@mui/material'
+import { DatePicker } from '@mui/x-date-pickers'
 import { Environment, StudyResultUnit, SubPost, Unit } from '@prisma/client'
 import classNames from 'classnames'
+import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -39,7 +41,7 @@ interface Props {
   emissionFactorsForSubPost: EmissionFactorWithMetaData[]
   importVersions: ImportVersionForFilters[]
   studyId: string
-  update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null) => void
+  update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | Date | null) => void
   displayConstructionYear: boolean
 }
 
@@ -126,15 +128,23 @@ const EmissionSourceContributorForm = ({
                 <div className={styles.unit}>{t('form.years')}</div>
               </div>
               {displayConstructionYear && (
-                <div className="flex grow">
-                  <TextField
-                    disabled={!!emissionSource.validated}
-                    data-testid="emission-source-construction-year"
-                    defaultValue={emissionSource.constructionYear}
-                    onBlur={(event) => update('constructionYear', event.target.value)}
-                    label={t('form.constructionYear')}
-                  />
-                </div>
+                <DatePicker
+                  label={`${t('form.constructionYear')} *`}
+                  slotProps={{
+                    textField: {
+                      className: styles.datePickerInput,
+                    },
+                  }}
+                  maxDate={dayjs(new Date())}
+                  views={['year']}
+                  sx={{ backgroundColor: 'white', flex: '1' }}
+                  onChange={(date) => {
+                    if (date && date.isValid()) {
+                      update('constructionYear', date.toDate())
+                    }
+                  }}
+                  value={emissionSource.constructionYear ? dayjs(emissionSource.constructionYear) : null}
+                />
               )}
             </>
           )}
