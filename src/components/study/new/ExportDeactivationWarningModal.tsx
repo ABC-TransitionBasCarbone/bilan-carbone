@@ -25,7 +25,7 @@ const ExportDeactivationWarningModal = ({ type, remaining, onConfirm, onCancel }
   return (
     <Modal
       open
-      label="beges-deactivation-warning"
+      label={`${type.toLowerCase()}-deactivation-warning`}
       title={t('title', { type: tExport(type) })}
       onClose={() => onCancel(type)}
       actions={[
