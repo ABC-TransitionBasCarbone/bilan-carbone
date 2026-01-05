@@ -125,14 +125,20 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, organizatio
           cell: ({ row, getValue }) =>
             form ? (
               <FormTextField
-                data-testid="organization-sites-establishmentYear"
+                data-testid="organization-sites-beneficiary-number"
+                type="number"
                 control={control}
                 name={`sites.${row.index}.establishmentYear`}
                 placeholder={t('establishmentYearPlaceholder')}
+                slotProps={{
+                  htmlInput: { type: 'number', min: 0 },
+                  input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
+                }}
+                fullWidth
                 size="small"
               />
             ) : (
-              getValue<string>()
+              getValue<number>()
             ),
         },
         {

@@ -58,6 +58,7 @@ import {
   Country,
   DeactivatableFeature,
   Environment,
+  Level,
   Organization,
   Role,
   User,
@@ -736,6 +737,7 @@ export const signUpWithSchool = async (email: string, country: Country, school: 
     if (!user) {
       user = (await addUser({
         email: trimmedEmail,
+        level: Level.Initial,
         firstName: '',
         lastName: '',
         accounts: {

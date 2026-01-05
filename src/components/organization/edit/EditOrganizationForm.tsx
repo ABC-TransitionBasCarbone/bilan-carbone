@@ -60,7 +60,7 @@ const EditOrganizationForm = ({ organizationVersion, caUnit, isCut = false }: Pr
         volunteerNumber: site.volunteerNumber || 0,
         beneficiaryNumber: site.beneficiaryNumber || 0,
         studentNumber: site.studentNumber || 0,
-        establishmentYear: site.establishmentYear || '',
+        establishmentYear: site?.establishmentYear ? parseInt(site?.establishmentYear) : 0,
         academy: site.academy ?? '',
       })),
     },

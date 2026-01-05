@@ -203,7 +203,7 @@ export const updateOrganization = async (
           volunteerNumber: site.volunteerNumber || undefined,
           beneficiaryNumber: site.beneficiaryNumber || undefined,
           studentNumber: site.studentNumber || undefined,
-          establishmentYear: site.establishmentYear,
+          establishmentYear: site.establishmentYear?.toString() || undefined,
           academy: site.academy,
         },
         update: {
@@ -216,7 +216,7 @@ export const updateOrganization = async (
           volunteerNumber: site.volunteerNumber || undefined,
           beneficiaryNumber: site.beneficiaryNumber || undefined,
           studentNumber: site.studentNumber || undefined,
-          establishmentYear: site.establishmentYear,
+          establishmentYear: site.establishmentYear?.toString() || undefined,
           academy: site.academy,
         },
       }),

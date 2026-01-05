@@ -21,7 +21,8 @@ export const SitesCommandValidation = z.object({
       volunteerNumber: z.number().optional().nullable(),
       beneficiaryNumber: z.number().optional().nullable(),
       studentNumber: z.number().optional().nullable(),
-      establishmentYear: z.string().optional(),
+      establishmentYear: z.number().int().max(new Date().getFullYear()).optional().nullable(),
+
       academy: z.string().optional(),
     }),
   ),
