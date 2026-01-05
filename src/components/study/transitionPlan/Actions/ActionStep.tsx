@@ -34,7 +34,7 @@ export const ActionStep = ({ step, index, control, onDelete }: Props) => {
   }
 
   return (
-    <div className="flex flex-row grow align-center justify-center">
+    <div className={classNames('flex flex-row grow align-center justify-center', (index + 1) % 3 === 0 && 'pr2')}>
       <Box
         ref={setNodeRef}
         style={styleProps}
@@ -70,7 +70,7 @@ export const ActionStep = ({ step, index, control, onDelete }: Props) => {
           />
         </Box>
       </Box>
-      {index + (1 % 3) !== 0 && <ArrowRight key={`arrow-${index}`} />}
+      {(index + 1) % 3 !== 0 && <ArrowRight className={styles.arrowRight} key={`arrow-${index}`} />}
     </div>
   )
 }

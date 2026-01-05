@@ -9,11 +9,19 @@
   height: fit-content;
 }
 
+.arrowRight {
+  width: 2rem;
+}
+
 .addStepButtonContainer {
   height: 8.5rem;
+  width: calc((100% - 4rem) / 3);
+  padding-right: 2rem;
+}
+.addStepButtonBox {
   border: 2px dashed var(--mui-palette-primary-main);
   border-radius: 0.5rem;
-  width: calc((100% - 4rem) / 3);
+  height: inherit;
 }
 
 .stepBlock:hover {

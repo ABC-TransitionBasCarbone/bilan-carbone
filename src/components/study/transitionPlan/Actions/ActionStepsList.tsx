@@ -61,9 +61,11 @@ const ActionStepsList = ({ control, errors }: Props) => {
               />
             ))}
             <Box className={classNames(styles.addStepButtonContainer, 'flex-cc w100')}>
-              <IconButton onClick={handleAdd} className={styles.addStepButton}>
-                <Add />
-              </IconButton>
+              <Box className={classNames(styles.addStepButtonBox, 'flex-cc w100')}>
+                <IconButton onClick={handleAdd} className={styles.addStepButton}>
+                  <Add />
+                </IconButton>
+              </Box>
             </Box>
           </Box>
         </SortableContext>
