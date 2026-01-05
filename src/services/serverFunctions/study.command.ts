@@ -22,6 +22,7 @@ export const SitesCommandValidation = z.object({
       beneficiaryNumber: z.number().optional().nullable(),
       studentNumber: z.number().optional().nullable(),
       establishmentYear: z.string().optional(),
+      academy: z.string().optional(),
     }),
   ),
 })

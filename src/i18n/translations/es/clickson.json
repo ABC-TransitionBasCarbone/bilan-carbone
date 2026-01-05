@@ -171,6 +171,8 @@
       "studentNumberPlaceholder": "Número total de estudiantes",
       "establishmentYear": "Año de fundación",
       "establishmentYearPlaceholder": "Año en que se fundó el establecimiento",
+      "academy": "Academia",
+      "academyPlaceholder": "Academia del establecimiento",
       "glossary": {
         "informations": "Es necesario proporcionar esta información antes de continuar con su proceso. Esta información impacta efectivamente el cálculo de su huella de carbono (en particular, el apartado de inmuebles)"
       }

@@ -135,6 +135,40 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, organizatio
               getValue<string>()
             ),
         },
+        {
+          id: 'city',
+          header: t('city'),
+          accessorKey: 'city',
+          cell: ({ row, getValue }) =>
+            form ? (
+              <FormTextField
+                data-testid="organization-sites-city"
+                control={control}
+                name={`sites.${row.index}.city`}
+                placeholder={t('cityPlaceholder')}
+                size="small"
+              />
+            ) : (
+              getValue<string>()
+            ),
+        },
+        {
+          id: 'academy',
+          header: t('academy'),
+          accessorKey: 'academy',
+          cell: ({ row, getValue }) =>
+            form ? (
+              <FormTextField
+                data-testid="organization-sites-academy"
+                control={control}
+                name={`sites.${row.index}.academy`}
+                placeholder={t('academyPlaceholder')}
+                size="small"
+              />
+            ) : (
+              getValue<string>()
+            ),
+        },
       ] as ColumnDef<SitesCommand['sites'][number]>[],
     [form],
   )
