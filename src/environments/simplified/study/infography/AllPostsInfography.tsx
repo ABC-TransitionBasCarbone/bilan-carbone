@@ -44,7 +44,7 @@ const AllPostsInfography = ({ study, environment }: Props) => {
     }
 
     return {
-      questionProgress: getQuestionProgressBySubPost(engine, situation, config.subPostsByPost, config.getFormLayout),
+      questionProgress: getQuestionProgressBySubPost(engine, config.subPostsByPost, config.getFormLayout),
       publicodesResults: computeBaseResultsByPostFromEngine(
         engine,
         config.posts,

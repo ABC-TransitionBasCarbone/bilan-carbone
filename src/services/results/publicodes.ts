@@ -12,7 +12,7 @@ function safeEvaluate(engine: Engine, ruleName: string | undefined): number {
     const result = engine.evaluate(ruleName)
     const value = result.nodeValue
 
-    if (value === null || value === undefined || value === false) {
+    if (!value) {
       return 0
     }
 
