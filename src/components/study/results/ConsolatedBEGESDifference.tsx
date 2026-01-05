@@ -6,8 +6,9 @@ import { FullStudy } from '@/db/study'
 import { customRich } from '@/i18n/customRich'
 import { getEmissionResults } from '@/services/emissionSource'
 import { Post } from '@/services/posts'
-import { BegesPostInfos, getBegesEmissionTotal } from '@/services/results/beges'
+import { getBegesEmissionTotal } from '@/services/results/beges'
 import { ResultsByPost } from '@/services/results/consolidated'
+import { PostInfos } from '@/services/results/exports'
 import { formatNumber } from '@/utils/number'
 import { getPost } from '@/utils/post'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
@@ -27,7 +28,7 @@ interface Props {
   emissionFactorsWithParts: EmissionFactorWithParts[]
   validatedOnly: boolean
   results: ResultsByPost[]
-  begesResults: BegesPostInfos[]
+  begesResults: PostInfos[]
   studySite: string
 }
 
