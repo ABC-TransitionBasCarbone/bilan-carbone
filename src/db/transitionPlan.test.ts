@@ -72,7 +72,6 @@ const createMockAction = (overrides?: Partial<ActionWithRelations>): ActionWithR
   id: 'action-1',
   transitionPlanId: 'plan-id',
   title: 'Test Action',
-  subSteps: null,
   detailedDescription: 'Test description',
   potentialDeduction: ActionPotentialDeduction.Quality,
   reductionValueKg: 100,
@@ -82,12 +81,6 @@ const createMockAction = (overrides?: Partial<ActionWithRelations>): ActionWithR
   owner: 'Test Owner',
   necessaryBudget: 10000,
   necesssaryRessources: 'Test resources',
-  implementationDescription: 'Test implementation',
-  implementationGoal: 50,
-  followUpDescription: 'Test follow up',
-  followUpGoal: 75,
-  performanceDescription: 'Test performance',
-  performanceGoal: 100,
   indicators: [
     {
       id: 'indicator-1',
@@ -179,7 +172,6 @@ describe('TransitionPlan DB', () => {
           actions: {
             create: sourceTransitionPlan.actions.map((action) => ({
               title: action.title,
-              subSteps: action.subSteps,
               detailedDescription: action.detailedDescription,
               potentialDeduction: action.potentialDeduction,
               reductionValueKg: action.reductionValueKg,
@@ -189,12 +181,6 @@ describe('TransitionPlan DB', () => {
               owner: action.owner,
               necessaryBudget: action.necessaryBudget,
               necesssaryRessources: action.necesssaryRessources,
-              implementationDescription: action.implementationDescription,
-              implementationGoal: action.implementationGoal,
-              followUpDescription: action.followUpDescription,
-              followUpGoal: action.followUpGoal,
-              performanceDescription: action.performanceDescription,
-              performanceGoal: action.performanceGoal,
               facilitatorsAndObstacles: action.facilitatorsAndObstacles,
               additionalInformation: action.additionalInformation,
               priority: action.priority,
