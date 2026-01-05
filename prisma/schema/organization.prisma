@@ -134,7 +134,8 @@ model Site {
   establishmentYear String? @map("establishment_year")
 
   superficy     Float?
-  studentNumber Int?   @map("student_number")
+  studentNumber Int?    @map("student_number")
+  academy       String?
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
