@@ -51,12 +51,12 @@ export const getEmissionSourceCompletion = (
     mandatoryFields.push('caracterisation')
   }
 
-  if (study.exports?.types.some((studyExport) => studyExport === Export.GHGP)) {
-    mandatoryFields.push('constructionYear')
-  }
-
   if (hasDeprecationPeriod(emissionSource.subPost)) {
     mandatoryFields.push('depreciationPeriod')
+
+    if (study.exports?.types.some((studyExport) => studyExport === Export.GHGP)) {
+      mandatoryFields.push('constructionYear')
+    }
   }
 
   if (
