@@ -2,12 +2,7 @@ import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { hasDeprecationPeriod } from '@/utils/study'
 import { EmissionSourceCaracterisation, ExportRule } from '@prisma/client'
-import { convertTiltSubPostToBCSubPost } from '../posts'
-import {
-  getSquaredStandardDeviationForEmissionSource,
-  getSquaredStandardDeviationForEmissionSourceArray,
-} from '../uncertainty'
-import { filterWithDependencies, getSiteEmissionSources } from './utils'
+import { computeResult, EmissionFactor, EmissionSource, getEmissionTotal, PostInfos } from './exports'
 
 const allRules = [
   '1.1',
@@ -43,31 +38,6 @@ export const rulesSpans: Record<string, number> = {
   '6': 2,
   total: 1,
 }
-
-export type BegesPostInfos = {
-  rule: string
-  co2: number
-  ch4: number
-  n2o: number
-  other: number
-  total: number
-  co2b: number
-  squaredStandardDeviation: number
-}
-
-interface EmissionFactor {
-  ch4f: number | null
-  co2b: number | null
-  co2f: number | null
-  n2o: number | null
-  pfc: number | null
-  hfc: number | null
-  sf6: number | null
-  otherGES: number | null
-  totalCo2: number | null
-}
-
-type EmissionSource = Pick<FullStudy['emissionSources'][0], 'value' | 'subPost' | 'depreciationPeriod'>
 
 const getRulePost = (caracterisation: EmissionSourceCaracterisation | null, rule?: ExportRule) => {
   if (caracterisation === null || !rule) {
@@ -122,55 +92,7 @@ export const getBegesEmissionValue = (emissionSource: EmissionSource): number =>
 }
 
 export const getBegesEmissionTotal = (emissionSource: EmissionSource, emissionFactor: EmissionFactor) =>
-  getBegesLine(getBegesEmissionValue(emissionSource), emissionFactor).total
-
-const getBegesLine = (
-  value: number,
-  emissionFactor: EmissionFactor,
-): Omit<BegesPostInfos, 'rule' | 'squaredStandardDeviation'> => {
-  const ch4 = emissionFactor.ch4f || 0
-  const n2o = emissionFactor.n2o || 0
-  const other =
-    (emissionFactor.otherGES || 0) + (emissionFactor.pfc || 0) + (emissionFactor.hfc || 0) + (emissionFactor.sf6 || 0)
-  const totalOtherGas = ch4 + n2o + other
-
-  // co2f is not always available
-  const co2 = (emissionFactor.totalCo2 || 0) - totalOtherGas
-  const co2b = emissionFactor.co2b || 0
-
-  return {
-    co2: value * co2,
-    ch4: value * ch4,
-    n2o: value * n2o,
-    other: value * other,
-    total: value * (totalOtherGas + co2),
-    co2b: value * co2b,
-  }
-}
-
-const sumLines = (lines: Omit<BegesPostInfos, 'rule'>[]) => {
-  const total = lines.reduce((acc, line) => acc + line.total, 0)
-  return {
-    co2: lines.reduce((acc, line) => acc + line.co2, 0),
-    ch4: lines.reduce((acc, line) => acc + line.ch4, 0),
-    n2o: lines.reduce((acc, line) => acc + line.n2o, 0),
-    other: lines.reduce((acc, line) => acc + line.other, 0),
-    total,
-    co2b: lines.reduce((acc, line) => acc + line.co2b, 0),
-    squaredStandardDeviation: getSquaredStandardDeviationForEmissionSourceArray(
-      lines.map((line) => ({ emissionValue: line.total, squaredStandardDeviation: line.squaredStandardDeviation })),
-    ),
-  }
-}
-
-const getDefaultRule = (rules: ExportRule[], caracterisation: EmissionSourceCaracterisation | null) => {
-  const rule = rules.find((rule) => rule.type === null)
-  if (!rule) {
-    return null
-  }
-
-  return getRulePost(caracterisation, rule)
-}
+  getEmissionTotal(emissionSource, emissionFactor, getBegesEmissionValue)
 
 export const computeBegesResult = (
   study: FullStudy,
@@ -179,82 +101,15 @@ export const computeBegesResult = (
   studySite: string,
   withDependencies: boolean,
   validatedOnly: boolean = true,
-): BegesPostInfos[] => {
-  const results: Record<string, Omit<BegesPostInfos, 'rule' | 'BegesPostInfos'>[]> = allRules.reduce(
-    (acc, rule) => ({ ...acc, [rule]: [] }),
-    {},
+): PostInfos[] =>
+  computeResult(
+    study,
+    rules,
+    emissionFactorsWithParts,
+    studySite,
+    withDependencies,
+    validatedOnly,
+    allRules,
+    getBegesEmissionValue,
+    getRulePost,
   )
-  const siteEmissionSources = getSiteEmissionSources(study.emissionSources, studySite)
-
-  siteEmissionSources
-    .map((emissionSource) => ({ ...emissionSource, subPost: convertTiltSubPostToBCSubPost(emissionSource.subPost) }))
-    .filter((emissionSource) => filterWithDependencies(emissionSource.subPost, withDependencies))
-    .forEach((emissionSource) => {
-      if (
-        emissionSource.emissionFactor === null ||
-        !emissionSource.value ||
-        (validatedOnly && !emissionSource.validated)
-      ) {
-        return
-      }
-
-      const id = emissionSource.emissionFactor.id
-      const caracterisation = emissionSource.caracterisation
-
-      const value = getBegesEmissionValue(emissionSource)
-
-      const emissionFactor = emissionFactorsWithParts.find(
-        (emissionFactorsWithParts) => emissionFactorsWithParts.id === id,
-      )
-
-      if (!emissionFactor) {
-        return
-      }
-
-      const subPostRules = rules.filter((rule) => rule.subPost === emissionSource.subPost)
-      if (subPostRules.length === 0) {
-        return
-      }
-
-      // l'incertitude est globale, peu importe
-      const squaredStandardDeviation = getSquaredStandardDeviationForEmissionSource(emissionSource)
-
-      if (emissionFactor.emissionFactorParts.length === 0) {
-        // Pas de decomposition => on ventile selon la regle par default
-        const post = getDefaultRule(subPostRules, caracterisation)
-        if (post) {
-          results[post].push({ ...getBegesLine(value, emissionFactor), squaredStandardDeviation })
-        }
-      } else {
-        emissionFactor.emissionFactorParts.forEach((part) => {
-          const rule = subPostRules.find((rule) => rule.type === part.type)
-          let post = getRulePost(caracterisation, rule)
-
-          if (!post) {
-            // On a pas de regle specifique pour cette composante => on ventile selon la regle par default
-            post = getDefaultRule(subPostRules, caracterisation)
-          }
-
-          if (post) {
-            // Et on ajoute la valeur selon la composante quoi qu'il arrive
-            results[post].push({ ...getBegesLine(value, part), squaredStandardDeviation })
-          }
-        })
-      }
-    })
-
-  const lines: BegesPostInfos[] = Object.entries(results).map(([rule, result]) => ({
-    rule,
-    ...sumLines(result),
-  }))
-  lines.push({ rule: 'total', ...sumLines(Object.values(lines)) })
-  Array.from({ length: 6 }).map((_, index) => {
-    const rule = (index + 1).toString()
-    lines.push({
-      rule: rule + '.total',
-      ...sumLines(Object.values(lines).filter((line) => line.rule.startsWith(rule))),
-    })
-  })
-
-  return lines.sort((a, b) => a.rule.localeCompare(b.rule))
-}
