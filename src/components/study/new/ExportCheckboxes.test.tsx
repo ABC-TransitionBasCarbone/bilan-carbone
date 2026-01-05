@@ -1,6 +1,8 @@
 import theme from '@/environments/base/theme/theme'
+import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
 import { getMockedFullStudy } from '@/tests/utils/models/study'
+import { getAllSpecificFieldsForExports } from '@/utils/study'
 import { expect } from '@jest/globals'
 import { ThemeProvider } from '@mui/material/styles'
 import { ControlMode, EmissionSourceCaracterisation, Export } from '@prisma/client'
@@ -36,6 +38,32 @@ jest.mock('@/services/serverFunctions/study', () => ({
   updateStudySpecificExportFields: jest.fn(),
 }))
 
+jest.mock('@/utils/study', () => ({
+  getAllSpecificFieldsForExports: jest.fn(),
+  exportSpecificFields: {
+    Beges: ['caracterisation'],
+    GHGP: ['caracterisation', 'constructionYear'],
+    ISO14069: [],
+  },
+}))
+
+const mockGetAllSpecificFieldsForExports = getAllSpecificFieldsForExports as jest.MockedFunction<
+  typeof getAllSpecificFieldsForExports
+>
+
+mockGetAllSpecificFieldsForExports.mockImplementation((exports: Export[]): (keyof UpdateEmissionSourceCommand)[] => {
+  const exportsKey = JSON.stringify(exports.sort())
+
+  const mockResults: Record<string, string[]> = {
+    [JSON.stringify(['Beges'])]: ['caracterisation'],
+    [JSON.stringify(['GHGP'])]: ['caracterisation', 'constructionYear'],
+    [JSON.stringify(['Beges', 'GHGP'].sort())]: ['caracterisation', 'constructionYear'],
+    [JSON.stringify([])]: [],
+  }
+
+  return (mockResults[exportsKey] as (keyof UpdateEmissionSourceCommand)[]) || []
+})
+
 const mockOnChange = jest.fn()
 const mockSetControl = jest.fn()
 
@@ -55,12 +83,12 @@ const defaultProps = {
   duplicateStudyId: null,
 }
 
-const getBegesCheckedValues = () => ({
-  exports: [Export.Beges] as Export[],
+const getExportCheckedValues = (exports: Export[]) => ({
+  exports,
   controlMode: ControlMode.Operational,
 })
 
-const getStudyWithCaracterisations = () =>
+const getStudyWithCaracterisations = (exportTypes = [Export.Beges]) =>
   getMockedFullStudy({
     emissionSources: [
       getMockedFullStudyEmissionSource({
@@ -70,7 +98,7 @@ const getStudyWithCaracterisations = () =>
       }),
     ],
     exports: {
-      types: [Export.Beges],
+      types: exportTypes,
       control: ControlMode.Operational,
     },
   })
@@ -86,6 +114,21 @@ const getStudyWithoutCaracterisations = () =>
     ],
   })
 
+const getStudyWithValidatedSourcesAndCaracterisations = (exportTypes: Export[]) =>
+  getMockedFullStudy({
+    emissionSources: [
+      getMockedFullStudyEmissionSource({
+        id: 'source-1',
+        caracterisation: EmissionSourceCaracterisation.Operated,
+        validated: true,
+      }),
+    ],
+    exports: {
+      types: exportTypes,
+      control: ControlMode.Operational,
+    },
+  })
+
 const getStudyWithValidatedSources = () =>
   getMockedFullStudy({
     emissionSources: [
@@ -97,8 +140,8 @@ const getStudyWithValidatedSources = () =>
     ],
   })
 
-const clickBegesCheckbox = async (user: ReturnType<typeof userEvent.setup>) => {
-  const checkbox = screen.getByTestId(`export-checkbox-${Export.Beges}`)
+const clickExportCheckbox = async (user: ReturnType<typeof userEvent.setup>, exportType: Export) => {
+  const checkbox = screen.getByTestId(`export-checkbox-${exportType}`)
   await user.click(checkbox)
 }
 
@@ -114,11 +157,30 @@ describe('ExportCheckboxes', () => {
 
       renderWithTheme(<ExportCheckboxes {...defaultProps} study={study} />)
 
-      await clickBegesCheckbox(user)
+      await clickExportCheckbox(user, Export.Beges)
 
       await waitFor(() => {
         expect(screen.getByTestId('beges-activation-warning-modal')).toBeInTheDocument()
       })
+    })
+
+    it('should not show warning when checking BEGES with validated sources and active GHG-P export on existing study', async () => {
+      const user = userEvent.setup()
+      const study = getStudyWithValidatedSourcesAndCaracterisations([Export.GHGP])
+      const values = {
+        exports: study.exports?.types as Export[],
+        controlMode: study.exports?.control as ControlMode,
+      }
+
+      renderWithTheme(<ExportCheckboxes {...defaultProps} study={study} values={values} />)
+
+      await clickExportCheckbox(user, Export.Beges)
+
+      await waitFor(() => {
+        expect(mockOnChange).toHaveBeenCalledWith([Export.GHGP, Export.Beges])
+      })
+
+      expect(screen.queryByTestId('beges-activation-warning-modal')).not.toBeInTheDocument()
     })
 
     it('should not show warning when checking BEGES without validated sources', async () => {
@@ -127,7 +189,7 @@ describe('ExportCheckboxes', () => {
 
       renderWithTheme(<ExportCheckboxes {...defaultProps} study={study} />)
 
-      await clickBegesCheckbox(user)
+      await clickExportCheckbox(user, Export.Beges)
 
       await waitFor(() => {
         expect(mockOnChange).toHaveBeenCalledWith([Export.Beges])
@@ -141,7 +203,7 @@ describe('ExportCheckboxes', () => {
 
       renderWithTheme(<ExportCheckboxes {...defaultProps} />)
 
-      await clickBegesCheckbox(user)
+      await clickExportCheckbox(user, Export.Beges)
 
       await waitFor(() => {
         expect(mockOnChange).toHaveBeenCalledWith([Export.Beges])
@@ -156,10 +218,42 @@ describe('ExportCheckboxes', () => {
 
       renderWithTheme(<ExportCheckboxes {...defaultProps} duplicateStudyId="duplicate-study-id" study={study} />)
 
-      await clickBegesCheckbox(user)
+      await clickExportCheckbox(user, Export.Beges)
 
       await waitFor(() => {
         expect(screen.getByTestId('beges-activation-warning-modal')).toBeInTheDocument()
+      })
+    })
+  })
+
+  describe('GHGPActivationWarningModal', () => {
+    it('should show warning when checking GHGP with validated sources on existing study', async () => {
+      const user = userEvent.setup()
+      const study = getStudyWithValidatedSources()
+
+      renderWithTheme(<ExportCheckboxes {...defaultProps} study={study} />)
+
+      await clickExportCheckbox(user, Export.GHGP)
+
+      await waitFor(() => {
+        expect(screen.getByTestId('ghgp-activation-warning-modal')).toBeInTheDocument()
+      })
+    })
+
+    it('should show warning when checking GHGP with validated sources and active Beges export on existing study', async () => {
+      const user = userEvent.setup()
+      const study = getStudyWithValidatedSourcesAndCaracterisations([Export.Beges])
+      const values = {
+        exports: study.exports?.types as Export[],
+        controlMode: study.exports?.control as ControlMode,
+      }
+
+      renderWithTheme(<ExportCheckboxes {...defaultProps} study={study} values={values} />)
+
+      await clickExportCheckbox(user, Export.GHGP)
+
+      await waitFor(() => {
+        expect(screen.getByTestId('ghgp-activation-warning-modal')).toBeInTheDocument()
       })
     })
   })
@@ -169,22 +263,47 @@ describe('ExportCheckboxes', () => {
       const user = userEvent.setup()
       const study = getStudyWithCaracterisations()
 
-      renderWithTheme(<ExportCheckboxes {...defaultProps} study={study} values={getBegesCheckedValues()} />)
+      renderWithTheme(
+        <ExportCheckboxes {...defaultProps} study={study} values={getExportCheckedValues([Export.Beges])} />,
+      )
 
-      await clickBegesCheckbox(user)
+      await clickExportCheckbox(user, Export.Beges)
 
       await waitFor(() => {
         expect(screen.getByTestId('beges-deactivation-warning-modal')).toBeInTheDocument()
       })
     })
 
+    it('should not show warning when unchecking BEGES with validated sources and active GHG-P export on existing study', async () => {
+      const user = userEvent.setup()
+      const study = getStudyWithValidatedSourcesAndCaracterisations([Export.GHGP, Export.Beges])
+
+      renderWithTheme(
+        <ExportCheckboxes
+          {...defaultProps}
+          study={study}
+          values={getExportCheckedValues([Export.Beges, Export.GHGP])}
+        />,
+      )
+
+      await clickExportCheckbox(user, Export.Beges)
+
+      await waitFor(() => {
+        expect(mockOnChange).toHaveBeenCalledWith([Export.GHGP])
+      })
+
+      expect(screen.queryByTestId('beges-activation-warning-modal')).not.toBeInTheDocument()
+    })
+
     it('should not show warning when unchecking BEGES without caracterisations', async () => {
       const user = userEvent.setup()
       const study = getStudyWithoutCaracterisations()
 
-      renderWithTheme(<ExportCheckboxes {...defaultProps} study={study} values={getBegesCheckedValues()} />)
+      renderWithTheme(
+        <ExportCheckboxes {...defaultProps} study={study} values={getExportCheckedValues([Export.Beges])} />,
+      )
 
-      await clickBegesCheckbox(user)
+      await clickExportCheckbox(user, Export.Beges)
 
       await waitFor(() => {
         expect(mockOnChange).toHaveBeenCalledWith([])
@@ -196,9 +315,9 @@ describe('ExportCheckboxes', () => {
     it('should not show warning when unchecking BEGES on new study', async () => {
       const user = userEvent.setup()
 
-      renderWithTheme(<ExportCheckboxes {...defaultProps} values={getBegesCheckedValues()} />)
+      renderWithTheme(<ExportCheckboxes {...defaultProps} values={getExportCheckedValues([Export.Beges])} />)
 
-      await clickBegesCheckbox(user)
+      await clickExportCheckbox(user, Export.Beges)
 
       await waitFor(() => {
         expect(mockOnChange).toHaveBeenCalledWith([])
@@ -215,15 +334,51 @@ describe('ExportCheckboxes', () => {
         <ExportCheckboxes
           {...defaultProps}
           study={study}
-          values={getBegesCheckedValues()}
+          values={getExportCheckedValues([Export.Beges])}
           duplicateStudyId="duplicate-study-id"
         />,
       )
 
-      await clickBegesCheckbox(user)
+      await clickExportCheckbox(user, Export.Beges)
 
       await waitFor(() => {
         expect(screen.getByTestId('beges-deactivation-warning-modal')).toBeInTheDocument()
+      })
+    })
+  })
+
+  describe('GHGPDeactivationWarningModal', () => {
+    it('should show warning when unchecking GHG-P with caracterisations on existing study', async () => {
+      const user = userEvent.setup()
+      const study = getStudyWithCaracterisations()
+
+      renderWithTheme(
+        <ExportCheckboxes {...defaultProps} study={study} values={getExportCheckedValues([Export.GHGP])} />,
+      )
+
+      await clickExportCheckbox(user, Export.GHGP)
+
+      await waitFor(() => {
+        expect(screen.getByTestId('ghgp-deactivation-warning-modal')).toBeInTheDocument()
+      })
+    })
+
+    it('should show warning when unchecking GHG-P with validated sources and active Beges export on existing study', async () => {
+      const user = userEvent.setup()
+      const study = getStudyWithValidatedSourcesAndCaracterisations([Export.GHGP, Export.Beges])
+
+      renderWithTheme(
+        <ExportCheckboxes
+          {...defaultProps}
+          study={study}
+          values={getExportCheckedValues([Export.Beges, Export.GHGP])}
+        />,
+      )
+
+      await clickExportCheckbox(user, Export.GHGP)
+
+      await waitFor(() => {
+        expect(screen.getByTestId('ghgp-deactivation-warning-modal')).toBeInTheDocument()
       })
     })
   })
