@@ -1,3 +1,39 @@
+test déchets:
+  contexte:
+    déchets . exceptionnels . lampe xenon . nombre: "100"
+    déchets . exceptionnels . matériel technique . quantité: "100"
+    déchets . ordinaires . ordures ménagères . nombre bennes: "10"
+    général . nombre de jours ouverture: 250
+    général . nombre entrées: 10
+    général . nombre séances: 10
+
+test fonctionnement:
+  contexte:
+    déchets . exceptionnels . lampe xenon . nombre: "0"
+    déchets . exceptionnels . matériel technique . quantité: "0"
+    déchets . ordinaires . biodéchets . fréquence ramassage: "1"
+    déchets . ordinaires . biodéchets . nombre bennes: "100"
+    déchets . ordinaires . biodéchets . taille benne: "100"
+    déchets . ordinaires . emballages et papier . fréquence ramassage: "1"
+    déchets . ordinaires . emballages et papier . nombre bennes: "100"
+    déchets . ordinaires . emballages et papier . taille benne: "100"
+    déchets . ordinaires . ordures ménagères . fréquence ramassage: "10"
+    déchets . ordinaires . ordures ménagères . nombre bennes: "100"
+    déchets . ordinaires . ordures ménagères . taille benne: "101"
+    déchets . ordinaires . verre . fréquence ramassage: "1"
+    déchets . ordinaires . verre . nombre bennes: "100"
+    déchets . ordinaires . verre . taille benne: "100"
+    fonctionnement . bâtiment . construction . année de construction: "01/01/2002"
+    fonctionnement . bâtiment . construction . surface: "10000"
+    fonctionnement . bâtiment . est partagé: "non"
+    fonctionnement . bâtiment . parking présent: "non"
+    fonctionnement . bâtiment . rénovation . type . aucun: "oui"
+    fonctionnement . bâtiment . rénovation . type . extension: "non"
+    fonctionnement . bâtiment . rénovation . type . rénovation totale: "non"
+    général . nombre de jours ouverture: 250
+    général . nombre entrées: 10
+    général . nombre séances: 10
+
 cine test:
   contexte:
     général . nombre séances: 1200

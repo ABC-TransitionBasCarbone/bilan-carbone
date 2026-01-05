@@ -13,21 +13,13 @@ import { ComponentType } from 'react'
 import { CutPost, SimplifiedPost, subPostsByPostCUT } from '../posts'
 
 export interface SimplifiedPublicodesConfig {
-  /** List of posts for this environment */
   posts: SimplifiedPost[]
-  /** Mapping of posts to their sub-posts */
   subPostsByPost: Record<SimplifiedPost, SubPost[]>
-  /** Function to get the form layout for a sub-post */
   getFormLayout: (subPost: SubPost) => FormLayout<string>[]
-  /** Function to get the Publicodes rule name for a post */
   getPostRuleName: (post: SimplifiedPost) => string
-  /** Function to get the Publicodes rule name for a sub-post */
   getSubPostRuleName: (subPost: SubPost) => string | undefined
-  /** The Publicodes engine for this environment */
   getEngine: () => Engine<string>
-  /** The Publicodes Situation Provider component for this environment */
   SituationProvider: ComponentType<PublicodesSituationProviderProps>
-  /** Hook to access the Publicodes situation context */
   useSituation: () => {
     engine: Engine<string>
     situation: Record<string, unknown> | null
@@ -53,6 +45,6 @@ const simplifiedPublicodesConfigMap: Partial<Record<Environment, SimplifiedPubli
   // [Environment.CLICKSON]: clicksonConfig,
 }
 
-export function getSimplifiedPublicodesConfig(env: Environment): SimplifiedPublicodesConfig | undefined {
+export const getSimplifiedPublicodesConfig = (env: Environment): SimplifiedPublicodesConfig | undefined => {
   return simplifiedPublicodesConfigMap[env]
 }
