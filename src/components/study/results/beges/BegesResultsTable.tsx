@@ -2,20 +2,22 @@
 
 import BaseTable from '@/components/base/Table'
 import { FullStudy } from '@/db/study'
-import { BegesPostInfos, rulesSpans } from '@/services/results/beges'
+import { rulesSpans } from '@/services/results/beges'
+import { PostInfos } from '@/services/results/exports'
 import { getQualitativeUncertaintyFromSquaredStandardDeviation } from '@/services/uncertainty'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
+import { Export } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, Row, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
-import TotalCarbonBeges from '../consolidated/TotalCarbonBeges'
+import TotalCarbonExport from '../consolidated/TotalCarbonExport'
 import styles from './BegesResultsTable.module.css'
 
 interface Props {
   study: FullStudy
   withDepValue: number
-  data: BegesPostInfos[]
+  data: PostInfos[]
 }
 
 const BegesResultsTable = ({ study, withDepValue, data }: Props) => {
@@ -87,7 +89,7 @@ const BegesResultsTable = ({ study, withDepValue, data }: Props) => {
               ? tQuality(getQualitativeUncertaintyFromSquaredStandardDeviation(squaredStandardDeviation).toString())
               : '',
         },
-      ] as ColumnDef<BegesPostInfos>[],
+      ] as ColumnDef<PostInfos>[],
     [t, tQuality, tUnits, study.resultsUnit],
   )
 
@@ -97,7 +99,7 @@ const BegesResultsTable = ({ study, withDepValue, data }: Props) => {
     getCoreRowModel: getCoreRowModel(),
   })
 
-  const Row = (row: Row<BegesPostInfos>) => {
+  const Row = (row: Row<PostInfos>) => {
     const rule = row.original.rule.split('.')
     const category = rule[0]
     const isTotal = category === 'total'
@@ -152,9 +154,10 @@ const BegesResultsTable = ({ study, withDepValue, data }: Props) => {
 
   return (
     <>
-      <TotalCarbonBeges
+      <TotalCarbonExport
+        type={Export.Beges}
         resultUnit={study.resultsUnit}
-        totalBeges={(data.find((d) => d.rule === 'total')?.total ?? 0) / STUDY_UNIT_VALUES[study.resultsUnit]}
+        total={(data.find((d) => d.rule === 'total')?.total ?? 0) / STUDY_UNIT_VALUES[study.resultsUnit]}
         totalCarbon={withDepValue}
       />
       <BaseTable table={table} className={styles.begesTable} customRow={Row} testId="beges-results" size="small" />
