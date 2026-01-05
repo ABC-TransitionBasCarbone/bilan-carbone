@@ -42,20 +42,22 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, use
 
   const initialCaracterisations = useMemo(
     () =>
-      unique(
-        subPosts.reduce(
-          (res, subPost) => [
-            ...res,
-            ...getCaracterisationsBySubPost(
-              subPost,
-              study.exports,
-              study.organizationVersion.environment,
-              study.exports?.control || ControlMode.Operational,
+      study.exports && study.exports.types.length
+        ? unique(
+            subPosts.reduce(
+              (res, subPost) => [
+                ...res,
+                ...getCaracterisationsBySubPost(
+                  subPost,
+                  study.organizationVersion.environment,
+                  study.exports?.types || [],
+                  study.exports?.control || ControlMode.Operational,
+                ),
+              ],
+              [] as EmissionSourceCaracterisation[],
             ),
-          ],
-          [] as EmissionSourceCaracterisation[],
-        ),
-      ),
+          )
+        : [],
 
     [study.exports, study.organizationVersion.environment, subPosts],
   )

@@ -1,7 +1,7 @@
 'use client'
 
 import Modal from '@/components/modals/Modal'
-import { allSpecificFieldsForExports, exportSpecificFields } from '@/utils/study'
+import { exportSpecificFields, getAllSpecificFieldsForExports } from '@/utils/study'
 import { Export } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
@@ -18,7 +18,7 @@ const ExportDeactivationWarningModal = ({ type, remaining, onConfirm, onCancel }
   const tExport = useTranslations('exports')
   const tFields = useTranslations('emissionSource.form')
 
-  const remainingFields = useMemo(() => allSpecificFieldsForExports(remaining), [remaining])
+  const remainingFields = useMemo(() => getAllSpecificFieldsForExports(remaining), [remaining])
 
   const fields = exportSpecificFields[type].filter((field) => !remainingFields.includes(field))
 
