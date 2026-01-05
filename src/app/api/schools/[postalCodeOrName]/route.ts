@@ -8,7 +8,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ pos
   const input = postalCodeOrName?.trim()
 
   const select =
-    'nom_etablissement,adresse_1,adresse_3, code_postal,identifiant_de_l_etablissement,date_ouverture, libelle_academie'
+    'nom_etablissement,adresse_1,adresse_3, code_postal,identifiant_de_l_etablissement,date_ouverture, libelle_academie, libelle_nature'
 
   if (!input) {
     return Response.json([], { status: 200 })

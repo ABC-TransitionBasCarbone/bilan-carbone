@@ -93,7 +93,7 @@ import {
   UNKNOWN_SIRET_OR_CNC,
 } from '../permissions/check'
 import { canAddMember, canChangeRole, canDeleteMember, canEditSelfRole } from '../permissions/user'
-import { School } from '../schoolApi'
+import { establishmentTypeMap, School } from '../schoolApi'
 import { getDeactivableFeatureRestrictions } from './deactivableFeatures'
 import { AddMemberCommand, EditProfileCommand, EditSettingsCommand } from './user.command'
 
@@ -786,6 +786,7 @@ export const signUpWithSchool = async (email: string, country: Country, school: 
         country,
         city: school.city || school.adresse_3?.slice(5) || '',
         academy: school.libelle_academie,
+        establishmentType: establishmentTypeMap[school.libelle_nature],
         organization: { connect: { id: organizationVersion.organizationId } },
       })
     }
