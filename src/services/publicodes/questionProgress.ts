@@ -11,12 +11,12 @@ import { Post, SimplifiedPost } from '../posts'
 export type QuestionStats = { answered: number; total: number }
 export type StatsResult = Partial<Record<Post, Partial<Record<SubPost, QuestionStats>>>>
 
-export function getQuestionProgressBySubPost(
+export const getQuestionProgressBySubPost = (
   engine: Engine,
   situation: Situation<string>,
   subPostsByPost: Record<SimplifiedPost, SubPost[]>,
   getSubPostLayouts: (subPost: SubPost) => FormLayout<string>[] | undefined,
-): StatsResult {
+): StatsResult => {
   const localEngine = engine.shallowCopy()
   localEngine.setSituation(situation)
 
