@@ -6,7 +6,7 @@ import DownloadIcon from '@mui/icons-material/Download'
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
 import { Box, Button, Tab, Tabs, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import { Dispatch, ReactNode, SetStateAction, SyntheticEvent, useState } from 'react'
+import { Dispatch, SetStateAction, SyntheticEvent, useState } from 'react'
 
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import TabPanel from '@/components/tabPanel/tabPanel'
@@ -51,7 +51,6 @@ const AllResults = ({
   studySite,
   setSite,
   caUnit,
-  headerSlot,
   chartOrder = defaultChartOrder,
   showSubLevel = false,
 }: Props) => {
@@ -187,9 +186,6 @@ const AllResults = ({
           </Box>
         </>
       )}
-
-      {/* Optional header slot for custom content */}
-      {headerSlot}
 
       {/* Emissions analysis for environments that have it */}
       {environment && hasAccessToSimplifiedEmissionAnalysis(environment) && (
