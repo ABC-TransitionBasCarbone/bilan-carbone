@@ -1,7 +1,10 @@
 'use client'
 
 import BaseTable from '@/components/base/Table'
-import { hasAccessToStudySiteAddAndSelection } from '@/services/permissions/environment'
+import {
+  hasAccessToStudySiteAddAndSelection,
+  hasCustomGlossaryTextForEstablishment,
+} from '@/services/permissions/environment'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { defaultCAUnit } from '@/utils/number'
 import { Environment, SiteCAUnit } from '@prisma/client'
@@ -75,16 +78,23 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, columns, ca
         label="create-emission-factor"
         t={tGlossary}
       >
-        <p className="mb-2">
-          <b>{tGlossary('etp')} :</b> {tGlossary('etpDescription')}
-        </p>
-        <p className="mb-2">
-          <b>{tGlossary('ca', { unit: headerCAUnit })} :</b> {tGlossary('caDescription', { unit: headerCAUnit })}
-        </p>
-        {environment === Environment.TILT && (
-          <p className="mb-2">
-            <b>{tGlossary('volunteer')} :</b> {tGlossary('volunteerDescription')}
-          </p>
+        {' '}
+        {hasCustomGlossaryTextForEstablishment(environment) ? (
+          <p>{tGlossary('informations')}</p>
+        ) : (
+          <>
+            <p className="mb-2">
+              <b>{tGlossary('etp')} :</b> {tGlossary('etpDescription')}
+            </p>
+            <p className="mb-2">
+              <b>{tGlossary('ca', { unit: headerCAUnit })} :</b> {tGlossary('caDescription', { unit: headerCAUnit })}
+            </p>
+            {environment === Environment.TILT && (
+              <p className="mb-2">
+                <b>{tGlossary('volunteer')} :</b> {tGlossary('volunteerDescription')}
+              </p>
+            )}
+          </>
         )}
       </GlossaryModal>
     </div>

@@ -170,7 +170,10 @@
       "studentNumber": "Number of students",
       "studentNumberPlaceholder": "Total number of students",
       "establishmentYear": "Year of establishment",
-      "establishmentYearPlaceholder": "Year the establishment was founded"
+      "establishmentYearPlaceholder": "Year the establishment was founded",
+      "glossary": {
+        "informations": "It is necessary to provide this information before proceeding further with your approach. This information does indeed impact the calculation of your carbon footprint (in particular, the fixed assets post)"
+      }
     }
   },
   "login": {

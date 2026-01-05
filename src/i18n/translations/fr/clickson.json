@@ -170,7 +170,10 @@
       "studentNumber": "Nombre d'élèves",
       "studentNumberPlaceholder": "Nombre total d'élèves",
       "establishmentYear": "Année de construction",
-      "establishmentYearPlaceholder": "Année de construction de l'établissement"
+      "establishmentYearPlaceholder": "Année de construction de l'établissement",
+      "glossary": {
+        "informations": "Il est nécessaire de renseigner ces informations avant d'aller plus loin dans votre démarche. Ces informations impactent effectivement le calcul de votre empreinte carbone (en particulier, le poste immobilisations)"
+      }
     }
   },
   "login": {
