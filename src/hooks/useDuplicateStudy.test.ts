@@ -168,7 +168,6 @@ describe('useDuplicateStudy utility functions', () => {
         level: Level.Advanced,
         resultsUnit: undefined,
         organizationVersionId: 'org-version-123',
-        exports: { types: [], control: null },
       })
 
       const result = createDuplicateFormData(sourceStudyWithMissingFields, MOCK_USER, MOCK_TRANSLATION, [])
