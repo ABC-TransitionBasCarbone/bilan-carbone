@@ -4,6 +4,7 @@ import {
   getEvaluatedFormLayout,
 } from '@/components/publicodes-form/layouts/evaluatedFormLayout'
 import { FormLayout } from '@/components/publicodes-form/layouts/formLayout'
+import { typedEntries } from '@/utils/object'
 import { SubPost } from '@prisma/client'
 import Engine from 'publicodes'
 import { Post, SimplifiedPost } from '../posts'
@@ -16,58 +17,54 @@ export const getQuestionProgressBySubPost = (
   subPostsByPost: Record<SimplifiedPost, SubPost[]>,
   getSubPostLayouts: (subPost: SubPost) => FormLayout<string>[] | undefined,
 ): StatsResult => {
-  return Object.fromEntries(
-    Object.entries(subPostsByPost).map(([post, subPosts]) => {
-      return [
-        post,
-        Object.fromEntries(
-          subPosts.map((subPost) => {
-            const layouts = getSubPostLayouts(SubPost[subPost])
+  return typedEntries(subPostsByPost).reduce<StatsResult>((postAcc, [post, subPosts]) => {
+    postAcc[post] = subPosts.reduce<Partial<Record<SubPost, QuestionStats>>>((subPostAcc, subPost) => {
+      const layouts = getSubPostLayouts(SubPost[subPost])
 
-            if (!layouts || layouts.length === 0) {
-              return [subPost, { answered: 0, total: 0 }]
-            }
+      if (!layouts || layouts.length === 0) {
+        subPostAcc[subPost] = { answered: 0, total: 0 }
+        return subPostAcc
+      }
 
-            const evaluatedFormLayouts = layouts.map((layout) => getEvaluatedFormLayout(engine, layout))
-            const stats = evaluatedFormLayouts.reduce(
-              (acc, evaluatedLayout) => {
-                switch (evaluatedLayout.type) {
-                  case 'input':
-                    if (evaluatedLayout.evaluatedElement.applicable) {
-                      acc.total += 1
-                      if (evaluatedLayout.evaluatedElement.answered) {
-                        acc.answered += 1
-                      }
-                    }
-                    break
-                  case 'group':
-                    if (isGroupLayoutApplicable(evaluatedLayout)) {
-                      acc.total += 1
-                      if (isGroupLayoutAnswered(evaluatedLayout)) {
-                        acc.answered += 1
-                      }
-                    }
-                    break
-                  case 'table':
-                    if (isTableLayoutApplicable(evaluatedLayout)) {
-                      acc.total += 1
-                      if (isTableLayoutAnswered(evaluatedLayout)) {
-                        acc.answered += 1
-                      }
-                    }
-                    break
+      const evaluatedFormLayouts = layouts.map((layout) => getEvaluatedFormLayout(engine, layout))
+      const stats = evaluatedFormLayouts.reduce(
+        (acc, evaluatedLayout) => {
+          switch (evaluatedLayout.type) {
+            case 'input':
+              if (evaluatedLayout.evaluatedElement.applicable) {
+                acc.total += 1
+                if (evaluatedLayout.evaluatedElement.answered) {
+                  acc.answered += 1
                 }
-                return acc
-              },
-              { answered: 0, total: 0 },
-            )
+              }
+              break
+            case 'group':
+              if (isGroupLayoutApplicable(evaluatedLayout)) {
+                acc.total += 1
+                if (isGroupLayoutAnswered(evaluatedLayout)) {
+                  acc.answered += 1
+                }
+              }
+              break
+            case 'table':
+              if (isTableLayoutApplicable(evaluatedLayout)) {
+                acc.total += 1
+                if (isTableLayoutAnswered(evaluatedLayout)) {
+                  acc.answered += 1
+                }
+              }
+              break
+          }
+          return acc
+        },
+        { answered: 0, total: 0 },
+      )
 
-            return [subPost, stats]
-          }),
-        ),
-      ]
-    }),
-  )
+      subPostAcc[subPost] = stats
+      return subPostAcc
+    }, {})
+    return postAcc
+  }, {})
 }
 
 function isGroupLayoutApplicable(layout: EvaluatedGroupLayout<string>): boolean {
