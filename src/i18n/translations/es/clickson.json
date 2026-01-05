@@ -173,6 +173,12 @@
       "establishmentYearPlaceholder": "Año en que se fundó el establecimiento",
       "academy": "Academia",
       "academyPlaceholder": "Academia del establecimiento",
+      "establishmentType": {
+        "title": "Tipo de establecimiento",
+        "ELEMENTAIRE": "Escuela primaria",
+        "COLLEGE": "Escuela secundaria",
+        "LYCEE": "Escuela preparatoria"
+      },
       "glossary": {
         "informations": "Es necesario proporcionar esta información antes de continuar con su proceso. Esta información impacta efectivamente el cálculo de su huella de carbono (en particular, el apartado de inmuebles)"
       }

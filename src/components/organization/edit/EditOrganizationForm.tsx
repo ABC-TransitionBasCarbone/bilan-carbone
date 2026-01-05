@@ -62,6 +62,7 @@ const EditOrganizationForm = ({ organizationVersion, caUnit, isCut = false }: Pr
         studentNumber: site.studentNumber || 0,
         establishmentYear: site?.establishmentYear ? parseInt(site?.establishmentYear) : 0,
         academy: site.academy ?? '',
+        establishmentType: site.establishmentType ?? '',
       })),
     },
   })

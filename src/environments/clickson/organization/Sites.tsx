@@ -2,12 +2,14 @@
 
 import LinkButton from '@/components/base/LinkButton'
 import { FormCheckbox } from '@/components/form/Checkbox'
+import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
 import GlobalSites from '@/components/organization/Sites'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { formatNumber } from '@/utils/number'
 import EditIcon from '@mui/icons-material/Edit'
-import { Environment } from '@prisma/client'
+import { MenuItem } from '@mui/material'
+import { Environment, EstablishmentType } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
@@ -26,6 +28,30 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, organizatio
   const columns = useMemo(
     () =>
       [
+        {
+          id: 'establishmentType',
+          header: t('establishmentType.title'),
+          accessorKey: 'establishmentType',
+          cell: ({ row, getValue }) =>
+            form ? (
+              <FormSelect
+                data-testid="organization-sites-volunteer-number"
+                type="string"
+                control={control}
+                name={`sites.${row.index}.establishmentType`}
+                placeholder={t('establishmentTypePlaceholder')}
+                fullWidth
+              >
+                {Object.values(EstablishmentType).map((establishmentType) => (
+                  <MenuItem key={establishmentType} value={establishmentType}>
+                    {t(`establishmentType.${establishmentType}`)}
+                  </MenuItem>
+                ))}
+              </FormSelect>
+            ) : (
+              formatNumber(getValue<number>(), 2)
+            ),
+        },
         {
           id: 'name',
           header: () => (

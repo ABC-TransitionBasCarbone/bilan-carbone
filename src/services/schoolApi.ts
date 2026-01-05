@@ -1,4 +1,4 @@
-import { EstablishmentType } from "@prisma/client"
+import { EstablishmentType } from '@prisma/client'
 
 export interface School {
   identifiant_de_l_etablissement?: string
@@ -13,9 +13,9 @@ export interface School {
 }
 
 export const establishmentTypeMap: Record<string, EstablishmentType> = {
-  "ECOLE DE NIVEAU ELEMENTAIRE": EstablishmentType.ELEMENTAIRE,
-  'COLLEGE': EstablishmentType.COLLEGE,
-  "LYCEE": EstablishmentType.LYCEE,
+  'ECOLE DE NIVEAU ELEMENTAIRE': EstablishmentType.ELEMENTAIRE,
+  COLLEGE: EstablishmentType.COLLEGE,
+  LYCEE: EstablishmentType.LYCEE,
 }
 
 export const getSchoolsFromPostalCodeOrName = async (postalCodeOrName: string): Promise<School[]> => {

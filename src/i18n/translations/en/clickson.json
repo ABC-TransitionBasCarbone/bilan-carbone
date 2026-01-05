@@ -173,6 +173,12 @@
       "establishmentYearPlaceholder": "Year the establishment was founded",
       "academy": "academy",
       "academyPlaceholder": "Establishment's academy",
+      "establishmentType": {
+        "title": "Type of establishment",
+        "ELEMENTAIRE": "Primary school",
+        "COLLEGE": "Middle school",
+        "LYCEE": "High school"
+      },
       "glossary": {
         "informations": "It is necessary to provide this information before proceeding further with your approach. This information does indeed impact the calculation of your carbon footprint (in particular, the fixed assets post)"
       }

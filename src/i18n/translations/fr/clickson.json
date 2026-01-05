@@ -173,6 +173,12 @@
       "establishmentYearPlaceholder": "Année de construction de l'établissement",
       "academy": "Académie",
       "academyPlaceholder": "Académie de l'établissement",
+      "establishmentType": {
+        "title": "Type d'établissement",
+        "ELEMENTAIRE": "École élémentaire",
+        "COLLEGE": "Collège",
+        "LYCEE": "Lycée"
+      },
       "glossary": {
         "informations": "Il est nécessaire de renseigner ces informations avant d'aller plus loin dans votre démarche. Ces informations impactent effectivement le calcul de votre empreinte carbone (en particulier, le poste immobilisations)"
       }
