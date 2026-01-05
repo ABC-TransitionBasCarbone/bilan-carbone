@@ -3,19 +3,19 @@ import { CutPost } from '@/services/posts'
 import { SubPost } from '@prisma/client'
 import { CutRuleName } from './types'
 
-export function getPostRuleName(post: CutPost): CutRuleName {
+export const getPostRuleName = (post: CutPost): CutRuleName => {
   return POST_TO_RULENAME[post]
 }
 
-export function getSubPostRuleName(subPost: SubPost): CutRuleName | undefined {
+export const getSubPostRuleName = (subPost: SubPost): CutRuleName | undefined => {
   return SUBPOST_TO_RULENAME[subPost]
 }
 
-export function hasPublicodesMapping(subPost: SubPost): boolean {
+export const hasPublicodesMapping = (subPost: SubPost): boolean => {
   return SUBPOST_TO_RULENAME[subPost] !== undefined
 }
 
-export function getFormLayoutsForSubPostCUT(subPost: SubPost): FormLayout<CutRuleName>[] {
+export const getFormLayoutsForSubPostCUT = (subPost: SubPost): FormLayout<CutRuleName>[] => {
   return SUBPOST_TO_FORM_LAYOUTS[subPost] || []
 }
 
