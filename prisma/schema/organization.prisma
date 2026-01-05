@@ -61,6 +61,14 @@ enum Country {
   OTHER
 }
 
+enum EstablishmentType {
+  ELEMENTAIRE
+  COLLEGE
+  LYCEE_GENERAL
+  LYCEE_PRO
+  ETABLISSEMENT_FR_ETRANGER
+}
+
 model Organization {
   id               String    @id @default(uuid())
   oldBCId          String?   @map("old_bc_id")
@@ -136,6 +144,8 @@ model Site {
   superficy     Float?
   studentNumber Int?    @map("student_number")
   academy       String?
+
+  establishmentType EstablishmentType? @map("establishment_type")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
