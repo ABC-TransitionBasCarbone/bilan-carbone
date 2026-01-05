@@ -135,8 +135,8 @@ const SubPost = ({
     () =>
       getCaracterisationsBySubPost(
         subPost,
-        study.exports,
         environment,
+        study.exports?.types || [],
         study.exports?.control || ControlMode.Operational,
       ),
     [subPost, study.exports, environment],
