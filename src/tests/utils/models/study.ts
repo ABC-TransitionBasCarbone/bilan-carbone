@@ -46,7 +46,7 @@ export const mockedFullStudy = {
   emissionFactorVersions: [],
   exports: {
     types: [],
-    control: null,
+    control: ControlMode.Operational,
   },
   organizationVersion: mockedOrganizationVersion,
   tagFamilies: [],

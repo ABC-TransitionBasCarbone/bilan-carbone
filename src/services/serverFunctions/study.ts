@@ -81,16 +81,16 @@ import { getTransitionPlanByStudyId } from '@/db/transitionPlan'
 import { addUser, getUserApplicationSettings, getUserByEmail, getUserSourceById, UserWithAccounts } from '@/db/user'
 import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
-import { getNestedValue, groupBy, unique } from '@/utils/array'
+import { getNestedValue, groupBy } from '@/utils/array'
 import { mapCncToStudySite } from '@/utils/cnc'
 import { calculateDistanceFromParis } from '@/utils/distance'
 import { CA_UNIT_VALUES, defaultCAUnit, formatNumber } from '@/utils/number'
 import { canEditOrganizationVersion } from '@/utils/organization'
 import { withServerResponse } from '@/utils/serverResponse'
 import {
-  exportSpecificFields,
   getAccountRoleOnStudy,
   getAllowedRolesFromDefaultRole,
+  getAllSpecificFieldsForExports,
   getUserRoleOnPublicStudy,
   hasDeprecationPeriod,
   hasEditionRights,
@@ -691,7 +691,7 @@ export const changeStudySites = async (studyId: string, { organizationId, ...com
     await updateStudySites(studyId, selectedSites, deletedSiteIds)
   })
 
-export const changeStudyExports = async (studyId: string, types: Export[], control: ControlMode | false) =>
+export const changeStudyExports = async (studyId: string, types: Export[], control: ControlMode) =>
   withServerResponse('changeStudyExports', async () => {
     const [session, study] = await Promise.all([dbActualizedAuth(), getStudy(studyId)])
     if (!session || !session.user || !study.success || !study.data) {
@@ -700,19 +700,9 @@ export const changeStudyExports = async (studyId: string, types: Export[], contr
     if (!hasEditionRights(getAccountRoleOnStudy(session.user, study.data))) {
       throw new Error(NOT_AUTHORIZED)
     }
-    if (control === false) {
-      return upsertStudyExport(studyId, [], ControlMode.Operational)
-    }
     return upsertStudyExport(studyId, types, control)
   })
 
-const getFields = (exportTypes: Export[]) =>
-  unique(
-    exportTypes.reduce(
-      (res, exportType) => [...res, ...exportSpecificFields[exportType]],
-      [] as (keyof UpdateEmissionSourceCommand)[],
-    ),
-  )
 const clearedFieldsValues = (fields: (keyof UpdateEmissionSourceCommand)[]) => {
   const result: Record<string, null> = {}
   fields.forEach((field) => {
@@ -739,12 +729,14 @@ export const updateStudySpecificExportFields = async (studyId: string, controlMo
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const specificFields = getFields(types || [])
-    const currentFields = getFields(study.data.exports?.types || [])
-    const newSpecificFields = specificFields.filter((field) => !currentFields.includes(field))
-    const clearedFields = getFields(Object.values(Export).filter((field) => !(types || []).includes(field))).filter(
-      (field) => !specificFields.includes(field),
+    const specificFieldsForNewExportTypes = getAllSpecificFieldsForExports(types || [])
+    const specificFieldsForOldExportTypes = getAllSpecificFieldsForExports(study.data.exports?.types || [])
+    const newSpecificFields = specificFieldsForNewExportTypes.filter(
+      (field) => !specificFieldsForOldExportTypes.includes(field),
     )
+    const clearedFields = getAllSpecificFieldsForExports(
+      Object.values(Export).filter((field) => !(types || []).includes(field)),
+    ).filter((field) => !specificFieldsForNewExportTypes.includes(field))
 
     await Promise.all(
       study.data.emissionSources
@@ -758,8 +750,8 @@ export const updateStudySpecificExportFields = async (studyId: string, controlMo
 
           const validCaracterisations = getCaracterisationsBySubPost(
             emissionSource.subPost,
-            study.data?.exports || null,
             session.user.environment,
+            study.data?.exports?.types || [],
             controlMode,
           )
 

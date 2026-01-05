@@ -199,8 +199,8 @@ export const exportSpecificFields: Record<Export, (keyof UpdateEmissionSourceCom
   [Export.ISO14069]: [],
 }
 
-export const allSpecificFieldsForExports = (exportTypes: Export[]) =>
-  Object.values(exportTypes).reduce(
+export const getAllSpecificFieldsForExports = (exportTypes: Export[]) =>
+  exportTypes.reduce(
     (res, exportType) => unique(exportType ? res.concat(exportSpecificFields[exportType as Export]) : res),
     [] as (keyof UpdateEmissionSourceCommand)[],
   )
