@@ -65,7 +65,7 @@ const NewStudyContributorForm = ({ study, accounts, defaultAccount, defaultSubPo
         if (environment && defaultSubPosts && defaultSubPosts.length > 0 && defaultAccount) {
           const selectedSubposts = form.getValues('subPosts') || {}
           for (const subPost of defaultSubPosts) {
-            const post = Object.keys(environmentPostMapping[environment]).find((postKey) =>
+            const post = Object.values(environmentPostMapping[environment]).find((postKey) =>
               subPostsByPost?.[postKey as Post]?.includes(subPost),
             ) as Post
             if ((post && !(post in selectedSubposts)) || !selectedSubposts[post]?.includes(subPost)) {

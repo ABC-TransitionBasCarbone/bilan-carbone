@@ -49,7 +49,7 @@ const MultiplePosts = <T extends SubPostsCommand>({ form, context, selectAll = f
 
   const availablePosts: Post[] = useMemo(
     () =>
-      Object.keys(environmentPostMapping[environment || Environment.BC])
+      Object.values(environmentPostMapping[environment || Environment.BC])
         .sort((a, b) => tPost(a).localeCompare(tPost(b)))
         .filter((postKey) => !Object.keys(selectedPosts).includes(postKey)) as Post[],
     [environment, selectedPosts, tPost],
@@ -73,7 +73,7 @@ const MultiplePosts = <T extends SubPostsCommand>({ form, context, selectAll = f
     if (defaultSubPosts) {
       const defaultSelectedSubPosts = defaultSubPosts.reduce<Record<Post, SubPost[]>>(
         (acc, subPost) => {
-          const post = Object.keys(environmentPostMapping[environment]).find((postKey) =>
+          const post = Object.values(environmentPostMapping[environment]).find((postKey) =>
             subPostsByPost?.[postKey as Post]?.includes(subPost),
           ) as Post
 
