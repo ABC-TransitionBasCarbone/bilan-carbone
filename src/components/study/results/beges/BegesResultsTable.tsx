@@ -8,10 +8,12 @@ import { getQualitativeUncertaintyFromSquaredStandardDeviation } from '@/service
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { Export } from '@prisma/client'
-import { ColumnDef, flexRender, getCoreRowModel, Row, useReactTable } from '@tanstack/react-table'
+import { ColumnDef, flexRender, getCoreRowModel, Getter, Row, useReactTable } from '@tanstack/react-table'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import TotalCarbonExport from '../consolidated/TotalCarbonExport'
+import commonStyles from '../ExportResultsTable.module.css'
 import styles from './BegesResultsTable.module.css'
 
 interface Props {
@@ -24,6 +26,11 @@ const BegesResultsTable = ({ study, withDepValue, data }: Props) => {
   const t = useTranslations('beges')
   const tQuality = useTranslations('quality')
   const tUnits = useTranslations('study.results.units')
+
+  const formatEmission = useCallback(
+    (getValue: Getter<number>) => formatNumber(getValue() / STUDY_UNIT_VALUES[study.resultsUnit]),
+    [study.resultsUnit],
+  )
 
   const columns = useMemo(
     () =>
@@ -48,39 +55,13 @@ const BegesResultsTable = ({ study, withDepValue, data }: Props) => {
         },
         {
           header: t('ges', { unit: tUnits(study.resultsUnit) }),
-          columns: [
-            {
-              header: 'CO2',
-              accessorKey: 'co2',
-              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[study.resultsUnit]),
-            },
-            {
-              header: 'CH4',
-              accessorKey: 'ch4',
-              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[study.resultsUnit]),
-            },
-            {
-              header: 'N20',
-              accessorKey: 'n2o',
-              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[study.resultsUnit]),
-            },
-            {
-              header: t('other'),
-              accessorKey: 'other',
-              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[study.resultsUnit]),
-            },
-            {
-              header: t('total'),
-              accessorKey: 'total',
-              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[study.resultsUnit]),
-            },
-            {
-              header: 'CO2b',
-              accessorKey: 'co2b',
-              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[study.resultsUnit]),
-            },
-          ],
+          columns: [{ header: 'CO2', accessorKey: 'co2', cell: ({ getValue }) => formatEmission(getValue) }],
         },
+        { header: 'CH4', accessorKey: 'ch4', cell: ({ getValue }) => formatEmission(getValue) },
+        { header: 'N20', accessorKey: 'n2o', cell: ({ getValue }) => formatEmission(getValue) },
+        { header: t('other'), accessorKey: 'other', cell: ({ getValue }) => formatEmission(getValue) },
+        { header: t('total'), accessorKey: 'total', cell: ({ getValue }) => formatEmission(getValue) },
+        { header: 'CO2b', accessorKey: 'co2b', cell: ({ getValue }) => formatEmission(getValue) },
         {
           id: 'uncertainty',
           header: t('uncertainty'),
@@ -90,7 +71,7 @@ const BegesResultsTable = ({ study, withDepValue, data }: Props) => {
               : '',
         },
       ] as ColumnDef<PostInfos>[],
-    [t, tQuality, tUnits, study.resultsUnit],
+    [t, tUnits, tQuality, study.resultsUnit, formatEmission],
   )
 
   const table = useReactTable({
@@ -110,7 +91,7 @@ const BegesResultsTable = ({ study, withDepValue, data }: Props) => {
         key={row.id}
         data-testid="beges-results-table-row"
         data-category={category}
-        className={isCategorieFirstRow ? styles.categoryFirstRow : ''}
+        className={isCategorieFirstRow ? commonStyles.categoryFirstRow : ''}
       >
         {row.getVisibleCells().map((cell) => {
           const shouldRenderCell = cell.column.id !== 'category' || isCategorieFirstRow
@@ -124,17 +105,17 @@ const BegesResultsTable = ({ study, withDepValue, data }: Props) => {
           const isTotalColumn = cell.column.id === 'total'
 
           if (cell.column.id === 'category') {
-            cellClass = `${styles.categoryCell} ${styles.categoryBold}`
+            cellClass = `${styles.categoryCell} ${commonStyles.categoryBold}`
           } else if (isTotal) {
             cellClass = styles.totalRow
           } else if (isSubtotal) {
-            cellClass = `${styles.postCell} ${styles.subtotalRow}`
+            cellClass = `${styles.postCell} ${commonStyles.subtotalRow}`
           } else {
             cellClass = styles.postCell
           }
 
           if (isTotalColumn) {
-            cellClass += ` ${styles.totalColumn}`
+            cellClass += ` ${commonStyles.totalColumn}`
           }
 
           return (
@@ -160,7 +141,13 @@ const BegesResultsTable = ({ study, withDepValue, data }: Props) => {
         total={(data.find((d) => d.rule === 'total')?.total ?? 0) / STUDY_UNIT_VALUES[study.resultsUnit]}
         totalCarbon={withDepValue}
       />
-      <BaseTable table={table} className={styles.begesTable} customRow={Row} testId="beges-results" size="small" />
+      <BaseTable
+        table={table}
+        className={classNames(commonStyles.Table, styles.begesTable)}
+        customRow={Row}
+        testId="beges-results"
+        size="small"
+      />
     </>
   )
 }
