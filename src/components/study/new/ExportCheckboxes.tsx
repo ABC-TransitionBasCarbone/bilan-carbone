@@ -33,9 +33,9 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
     [study],
   )
 
-  const activeFields = useMemo(() => getAllSpecificFieldsForExports(values.exports), [values])
+  const currentStudySpecificFields = useMemo(() => getAllSpecificFieldsForExports(values.exports), [values])
 
-  const hasSpecificFields = useCallback(
+  const hasSomeEmissionSourceWithSpecificFieldsFilled = useCallback(
     (type: Export) =>
       !!study &&
       study.emissionSources.some((source) =>
@@ -46,9 +46,11 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
 
   const shouldShowExportDeactivationWarning = (type: Export) => {
     const newExports = values.exports.filter((exportType) => exportType !== type)
-    const newFields = getAllSpecificFieldsForExports(newExports)
+    const newExportsSpecificFields = getAllSpecificFieldsForExports(newExports)
     return (
-      hasSpecificFields(type) && exportSpecificFields[type].some((field) => !newFields.includes(field)) && !isNewStudy
+      hasSomeEmissionSourceWithSpecificFieldsFilled(type) &&
+      exportSpecificFields[type].some((field) => !newExportsSpecificFields.includes(field)) &&
+      !isNewStudy
     )
   }
 
@@ -56,7 +58,7 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
     const typeFields = exportSpecificFields[type]
     if (checked) {
       // Mandatoryfields added, show warning message
-      if (typeFields.some((field) => !activeFields.includes(field)) && hasValidatedSources) {
+      if (typeFields.some((field) => !currentStudySpecificFields.includes(field)) && hasValidatedSources) {
         setPendingExportCheck(type)
       } else {
         onChange(values.exports.concat(type))
@@ -118,7 +120,7 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
       {pendingExportCheck && (
         <ExportActivationWarningModal
           type={pendingExportCheck}
-          activeFields={activeFields || []}
+          activeFields={currentStudySpecificFields || []}
           onConfirm={confirmExportActivation}
           onCancel={() => setPendingExportCheck(null)}
         />
@@ -126,7 +128,7 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
       {pendingExportUncheck && (
         <ExportDeactivationWarningModal
           type={pendingExportUncheck}
-          remaining={values.exports.filter((exportType) => exportType !== pendingExportUncheck)}
+          remainingExports={values.exports.filter((exportType) => exportType !== pendingExportUncheck)}
           onConfirm={confirmExportDeactivation}
           onCancel={() => setPendingExportUncheck(null)}
         />
