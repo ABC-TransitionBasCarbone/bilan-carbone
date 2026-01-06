@@ -1,3 +1,4 @@
+import { TOTAL_RULE } from '@/constants/publicodes'
 import { SubPost } from '@prisma/client'
 import Engine from 'publicodes'
 import { Post } from '../posts'
@@ -57,19 +58,22 @@ export function computeBaseResultsByPostFromEngine<P extends Post>(
     })
     .sort((a, b) => a.label.localeCompare(b.label))
 
-  return [...postResults, computeTotalForBaseResults(postResults, tPost)]
+  return [...postResults, computeTotalForBaseResults(engine, postResults, tPost)]
 }
 
 export function computeTotalForBaseResults(
+  engine: Engine,
   postResults: BaseResultsByPost[],
   tPost: (key: string) => string,
 ): BaseResultsByPost {
-  const totalValue = postResults.reduce((acc, post) => acc + post.value, 0)
+  let value = engine.getRule(TOTAL_RULE)
+    ? safeEvaluate(engine, TOTAL_RULE)
+    : postResults.reduce((acc, post) => acc + post.value, 0)
 
   return {
     post: 'total',
     label: tPost('total'),
-    value: totalValue,
     children: [],
+    value,
   }
 }
