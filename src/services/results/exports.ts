@@ -1,7 +1,7 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { toCamelCase } from '@/utils/string'
-import { EmissionSourceCaracterisation, ExportRule } from '@prisma/client'
+import { EmissionSourceCaracterisation, ExportRule, Import } from '@prisma/client'
 import { convertTiltSubPostToBCSubPost } from '../posts'
 import {
   getSquaredStandardDeviationForEmissionSource,
@@ -34,6 +34,8 @@ export interface ExportEmissionFactor {
   sf6?: number | null
   otherGES: number | null
   totalCo2: number | null
+  importedFrom?: Import
+  importedId?: string | null
 }
 
 const getRulePost = (caracterisation: EmissionSourceCaracterisation | null, rule?: ExportRule) => {
