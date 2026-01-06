@@ -50,10 +50,10 @@ export function computeBaseResultsByPostFromEngine<P extends Post>(
               label: tPost(subPost),
               value: subPostValue,
               children: [],
-            } as BaseResultsByPost
+            }
           })
           .sort((a, b) => a.label.localeCompare(b.label)),
-      } as BaseResultsByPost
+      }
     })
     .sort((a, b) => a.label.localeCompare(b.label))
 
