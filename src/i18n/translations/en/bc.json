@@ -111,6 +111,55 @@
     "uncertainty": "Uncertainty",
     "ges": "GHG emissions ({unit})"
   },
+  "ghgp": {
+    "rule": "Rule",
+    "subTotal": "Subtotal",
+    "category": {
+      "title": "Category",
+      "1": "Scope 1",
+      "2": "Scope 2",
+      "3": "Upstream Scope 3",
+      "4": "Downstream Scope 3"
+    },
+    "post": {
+      "title": "Emission Post",
+      "1": {
+        "1": "Stationary combustion",
+        "2": "Mobile combustion",
+        "3": "Process emissions",
+        "4": "Fugitive emissions"
+      },
+      "2": {
+        "1": "Indirect emissions related to consumption",
+        "2": "Indirect emissions related to steam consumption"
+      },
+      "3": {
+        "1": "Purchased Goods and Services",
+        "2": "Capital Goods",
+        "3": "Fuel and Energy-Related Activities not included in Scope 1 or Scope 2",
+        "4": "Upstream transportation and distribution",
+        "5": "Waste generated in operations",
+        "6": "Business travel",
+        "7": "Employee Commuting",
+        "8": "Upstream leased assets",
+        "other": "Other upstream indirect emissions"
+      },
+      "4": {
+        "09": "Downstream transportation and distribution",
+        "10": "Processing of sold products",
+        "11": "Use of sold products",
+        "12": "End-of-life treatment of sold products",
+        "13": "Downstream leased assets",
+        "14": "Franchises",
+        "15": "Investments",
+        "other": "Other downstream indirect emissions"
+      }
+    },
+    "other": "Other gases",
+    "total": "Total",
+    "uncertainty": "Uncertainty",
+    "ges": "GHG emissions ({unit})"
+  },
   "nav": {
     "backToHome": "Back to home",
     "emissionFactors": "Emission Factors",
@@ -683,8 +732,9 @@
       "emissions": "Emissions",
       "uncertainty": "Uncertainty",
       "emissionSources": "Number of emission sources",
-      "bilanCarbone": "Résultats Bilan Carbone®",
-      "beges": "Résultats BEGES",
+      "bilanCarbone": "Bilan Carbone® Results",
+      "beges": "BEGES Results",
+      "ghgp": "GHG-P ",
       "withDependencies": "With dependencies",
       "withoutDependencies": "Without dependencies",
       "dependencyIntensity": "Carbon intensities in dependency",

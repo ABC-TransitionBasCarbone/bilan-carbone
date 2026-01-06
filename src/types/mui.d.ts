@@ -110,5 +110,10 @@ declare module '@mui/material/styles' {
       main?: string
       light?: string
     }
+    ghgp?: {
+      main?: string
+      totalColumn?: string
+      co2bColumn?: string
+    }
   }
 }
