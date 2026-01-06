@@ -72,14 +72,19 @@ function isGroupLayoutApplicable(layout: EvaluatedGroupLayout<string>): boolean 
 }
 
 function isGroupLayoutAnswered(layout: EvaluatedGroupLayout<string>): boolean {
-  return layout.evaluatedElements.some((el) => el.applicable && el.answered)
+  return layout.evaluatedElements.some((el) => !el.applicable || el.answered)
 }
 
-// TODO: we might want to consider a table as answered only if all applicable rows are answered
 function isTableLayoutApplicable(layout: EvaluatedTableLayout<string>): boolean {
   return layout.evaluatedRows.flat().some((el) => el.applicable)
 }
 
 function isTableLayoutAnswered(layout: EvaluatedTableLayout<string>): boolean {
-  return layout.evaluatedRows.flat().some((el) => el.applicable && el.answered)
+  return layout.evaluatedRows.some((row) =>
+    row.every(
+      (el, i) =>
+        // NOTE: the first column is the label, so we consider it answered
+        i === 0 || !el.applicable || el.answered,
+    ),
+  )
 }
