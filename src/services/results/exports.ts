@@ -13,6 +13,9 @@ export type PostInfos = {
   co2: number
   ch4: number
   n2o: number
+  hfc?: number
+  pfc?: number
+  sf6?: number
   other: number
   total: number
   co2b: number
@@ -20,48 +23,75 @@ export type PostInfos = {
 }
 
 export interface EmissionFactor {
+  ch4b: number | null
   ch4f: number | null
   co2b: number | null
   co2f: number | null
   n2o: number | null
-  pfc: number | null
-  hfc: number | null
-  sf6: number | null
+  pfc?: number | null
+  hfc?: number | null
+  sf6?: number | null
   otherGES: number | null
   totalCo2: number | null
 }
 
-export type EmissionSource = Pick<FullStudy['emissionSources'][0], 'value' | 'subPost' | 'depreciationPeriod'>
+const getRulePost = (caracterisation: EmissionSourceCaracterisation | null, rule?: ExportRule) => {
+  if (caracterisation === null || !rule) {
+    return null
+  }
+
+  switch (caracterisation) {
+    case EmissionSourceCaracterisation.Operated:
+      return rule.operated
+    case EmissionSourceCaracterisation.NotOperated:
+      return rule.notOperated
+    case EmissionSourceCaracterisation.NotOperatedSupported:
+      return rule.notOperatedSupported
+    case EmissionSourceCaracterisation.NotOperatedNotSupported:
+      return rule.notOperatedNotSupported
+    case EmissionSourceCaracterisation.OperatedFugitive:
+      return rule.operatedFugitive
+    case EmissionSourceCaracterisation.OperatedProcedeed:
+      return rule.operatedProcedeed
+    case EmissionSourceCaracterisation.Rented:
+      return rule.rented
+    case EmissionSourceCaracterisation.FinalClient:
+      return rule.finalClient
+    case EmissionSourceCaracterisation.Held:
+      return rule.held
+    case EmissionSourceCaracterisation.NotHeldSimpleRent:
+      return rule.notHeldSimpleRent
+    case EmissionSourceCaracterisation.NotHeldOther:
+      return rule.notHeldOther
+    case EmissionSourceCaracterisation.HeldProcedeed:
+      return rule.heldProcedeed
+    case EmissionSourceCaracterisation.HeldFugitive:
+      return rule.heldFugitive
+    case EmissionSourceCaracterisation.NotHeldSupported:
+      return rule.notHeldSupported
+    case EmissionSourceCaracterisation.NotHeldNotSupported:
+      return rule.notHeldNotSupported
+    case EmissionSourceCaracterisation.UsedByIntermediary:
+      return rule.usedByIntermediary
+  }
+}
+
+export type EmissionSource = Pick<
+  FullStudy['emissionSources'][0],
+  'value' | 'subPost' | 'depreciationPeriod' | 'constructionYear'
+>
+
+type GetLineFunctionType = (
+  value: number,
+  emissionFactor: EmissionFactor,
+) => Omit<PostInfos, 'rule' | 'squaredStandardDeviation'>
 
 export const getEmissionTotal = (
   emissionSource: EmissionSource,
   emissionFactor: EmissionFactor,
   getEmissionValue: (source: EmissionSource) => number,
+  getLine: GetLineFunctionType,
 ) => getLine(getEmissionValue(emissionSource), emissionFactor).total
-
-export const getLine = (
-  value: number,
-  emissionFactor: EmissionFactor,
-): Omit<PostInfos, 'rule' | 'squaredStandardDeviation'> => {
-  const ch4 = emissionFactor.ch4f || 0
-  const n2o = emissionFactor.n2o || 0
-  const other =
-    (emissionFactor.otherGES || 0) + (emissionFactor.pfc || 0) + (emissionFactor.hfc || 0) + (emissionFactor.sf6 || 0)
-  const totalOtherGas = ch4 + n2o + other
-
-  // co2f is not always available
-  const co2 = (emissionFactor.totalCo2 || 0) - totalOtherGas
-  const co2b = emissionFactor.co2b || 0
-
-  return {
-    co2: value * co2,
-    ch4: value * ch4,
-    n2o: value * n2o,
-    other: value * other,
-    total: value * (totalOtherGas + co2),
-    co2b: value * co2b,
-  }
-}
 
 export const sumLines = (lines: Omit<PostInfos, 'rule'>[]) => {
   const total = lines.reduce((acc, line) => acc + line.total, 0)
@@ -69,6 +99,9 @@ export const sumLines = (lines: Omit<PostInfos, 'rule'>[]) => {
     co2: lines.reduce((acc, line) => acc + line.co2, 0),
     ch4: lines.reduce((acc, line) => acc + line.ch4, 0),
     n2o: lines.reduce((acc, line) => acc + line.n2o, 0),
+    hfc: lines.reduce((acc, line) => acc + (line.hfc || 0), 0),
+    pfc: lines.reduce((acc, line) => acc + (line.pfc || 0), 0),
+    sf6: lines.reduce((acc, line) => acc + (line.sf6 || 0), 0),
     other: lines.reduce((acc, line) => acc + line.other, 0),
     total,
     co2b: lines.reduce((acc, line) => acc + line.co2b, 0),
@@ -78,11 +111,7 @@ export const sumLines = (lines: Omit<PostInfos, 'rule'>[]) => {
   }
 }
 
-export const getDefaultRule = (
-  rules: ExportRule[],
-  caracterisation: EmissionSourceCaracterisation | null,
-  getRulePost: (caracterisation: EmissionSourceCaracterisation | null, rule?: ExportRule) => string | null,
-) => {
+const getDefaultRule = (rules: ExportRule[], caracterisation: EmissionSourceCaracterisation | null) => {
   const rule = rules.find((rule) => rule.type === null)
   if (!rule) {
     return null
@@ -90,6 +119,8 @@ export const getDefaultRule = (
 
   return getRulePost(caracterisation, rule)
 }
+
+const getRulesCount = (allRules: string[]) => new Set(allRules.map((rule) => rule.split('.')[0])).size
 
 export const computeResult = (
   study: FullStudy,
@@ -100,7 +131,7 @@ export const computeResult = (
   validatedOnly: boolean,
   allRules: string[],
   getEmissionValue: (emissionSource: EmissionSource) => number,
-  getRulePost: (caracterisation: EmissionSourceCaracterisation | null, rule?: ExportRule) => string | null,
+  getLine: GetLineFunctionType,
 ): PostInfos[] => {
   const results: Record<string, Omit<PostInfos, 'rule' | 'PostInfos'>[]> = allRules.reduce(
     (acc, rule) => ({ ...acc, [rule]: [] }),
@@ -143,7 +174,7 @@ export const computeResult = (
 
       if (emissionFactor.emissionFactorParts.length === 0) {
         // Pas de decomposition => on ventile selon la regle par default
-        const post = getDefaultRule(subPostRules, caracterisation, getRulePost)
+        const post = getDefaultRule(subPostRules, caracterisation)
         if (post) {
           results[post].push({ ...getLine(value, emissionFactor), squaredStandardDeviation })
         }
@@ -154,7 +185,7 @@ export const computeResult = (
 
           if (!post) {
             // On a pas de regle specifique pour cette composante => on ventile selon la regle par default
-            post = getDefaultRule(subPostRules, caracterisation, getRulePost)
+            post = getDefaultRule(subPostRules, caracterisation)
           }
 
           if (post) {
@@ -170,7 +201,7 @@ export const computeResult = (
     ...sumLines(result),
   }))
   lines.push({ rule: 'total', ...sumLines(Object.values(lines)) })
-  Array.from({ length: 6 }).map((_, index) => {
+  Array.from({ length: getRulesCount(allRules) }).map((_, index) => {
     const rule = (index + 1).toString()
     lines.push({
       rule: rule + '.total',
