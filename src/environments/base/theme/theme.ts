@@ -70,8 +70,8 @@ const base = createTheme({
       light: '#F2F3F4',
     },
     ghgp: {
-      main: '#009999',
-      totalColumn: '#b7dee8',
+      main: '#0a7e76',
+      totalColumn: '#00c6b9',
       co2bColumn: '#ccc0da',
     },
   },
