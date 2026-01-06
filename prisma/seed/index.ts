@@ -1,6 +1,6 @@
 import { environmentsWithChecklist } from '@/constants/environments'
 import { DefaultStudyTags } from '@/constants/studyTags'
-import { reCreateBegesRules } from '@/db/beges'
+import { reCreateBegesRules, reCreateGHGPRules } from '@/db/exports'
 import { signPassword } from '@/services/auth'
 import { getEmissionFactorsFromAPI } from '@/services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromAPI'
 import { getAllowedLevels } from '@/services/study'
@@ -1044,7 +1044,7 @@ const actualities = async () => {
 }
 
 const main = async (params: Params) => {
-  await Promise.all([actualities(), users(), reCreateBegesRules()])
+  await Promise.all([actualities(), users(), reCreateBegesRules(), reCreateGHGPRules()])
   if (params.importFactors) {
     await getEmissionFactorsFromAPI(params.importFactors)
   }
