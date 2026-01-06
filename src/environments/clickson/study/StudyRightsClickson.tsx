@@ -21,7 +21,8 @@ import {
 } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Box, CircularProgress } from '@mui/material'
-import { EmissionFactorImportVersion, StudyRole } from '@prisma/client'
+import { EmissionFactorImportVersion } from '@prisma/client'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
@@ -37,10 +38,10 @@ interface Props {
   study: FullStudy
   editionDisabled: boolean
   emissionFactorSources: EmissionFactorImportVersion[]
-  userRoleOnStudy: StudyRole
+  user: UserSession
 }
 
-const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, userRoleOnStudy }: Props) => {
+const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, user }: Props) => {
   const tLabel = useTranslations('common.label')
   const t = useTranslations('study.new')
   const tRights = useTranslations('study.rights')
@@ -261,7 +262,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
           </>
         )}
 
-        <StudyComments studyId={study.id} canValidate={!editionDisabled} />
+        <StudyComments user={user} studyId={study.id} canValidate={!editionDisabled} />
         {showSiteDataWarning && pendingSiteChanges && (
           <SiteDataChangeWarningModal
             isOpen={showSiteDataWarning}
