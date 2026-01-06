@@ -2,9 +2,8 @@ import { EmissionFactorPartType, ExportRule, SubPost } from '@prisma/client'
 
 export const ghgpRules = [
   {
-    // TO DO non décomposé
     subPost: SubPost.CombustiblesFossiles,
-    operated: '3.3',
+    operated: '1.1',
     notOperated: '3.other',
     held: '1.1',
     notHeldSimpleRent: '3.8',
@@ -65,7 +64,6 @@ export const ghgpRules = [
     notHeldOther: '3.other',
   },
   {
-    // TO DO non décomposé
     subPost: SubPost.CombustiblesOrganiques,
     operated: '1.1',
     notOperated: '3.other',
@@ -128,7 +126,6 @@ export const ghgpRules = [
     notHeldOther: '3.other',
   },
   {
-    // TO DO non décomposé
     subPost: SubPost.ReseauxDeChaleurEtDeVapeur,
     operated: '2.2',
     notOperated: '3.other',
@@ -164,7 +161,6 @@ export const ghgpRules = [
     notHeldOther: '3.other',
   },
   {
-    // TO DO non décomposé
     subPost: SubPost.ReseauxDeFroid,
     operated: '2.2',
     notOperated: '3.other',
@@ -200,11 +196,10 @@ export const ghgpRules = [
     notHeldOther: '3.other',
   },
   {
-    // TO DO non décomposé
     subPost: SubPost.Electricite,
-    operated: '3.1',
+    operated: '2.1',
     notOperated: '3.other',
-    held: '3.1',
+    held: '2.1',
     notHeldSimpleRent: '3.8',
     notHeldOther: '3.other',
   },
@@ -254,15 +249,12 @@ export const ghgpRules = [
     notHeldOther: '3.other',
   },
   {
-    // TO DO non décomposé
     subPost: SubPost.Agriculture,
     operatedProcedeed: '1.3',
     operatedFugitive: '1.4',
-    // operatedCAS:  '3.other',
     notOperated: '3.other',
     heldProcedeed: '1.3',
     heldFugitive: '1.4',
-    // heldCAS:  '3.other',
     notHeldSimpleRent: '3.8',
     notHeldOther: '3.other',
   },
@@ -306,15 +298,12 @@ export const ghgpRules = [
     subPost: SubPost.AutresEmissionsNonEnergetiques,
     operatedProcedeed: '1.3',
     operatedFugitive: '1.4',
-    // operatedCAS:  '3.other',
     notOperated: '3.other',
     heldProcedeed: '1.3',
     heldFugitive: '1.4',
-    // heldCAS:  '3.other',
     notHeldSimpleRent: '3.8',
     notHeldOther: '3.other',
   },
-  // TO DO non décomposé
   { subPost: SubPost.MetauxPlastiquesEtVerre, operated: '3.1', held: '3.1' },
   { subPost: SubPost.PapiersCartons, operated: '3.1', held: '3.1' },
   { subPost: SubPost.MateriauxDeConstruction, operated: '3.1', held: '3.1' },
@@ -328,14 +317,13 @@ export const ghgpRules = [
   { subPost: SubPost.UsagesNumeriques, operated: '3.1', held: '3.1' },
   { subPost: SubPost.ServicesEnApprocheMonetaire, operated: '3.1', held: '3.1' },
   {
-    // TO DO non décomposé
     subPost: SubPost.FretEntrant,
     operated: '1.2',
-    notOperatedSupported: '3.1',
-    notOperatedNotSupported: '3.2',
+    notOperatedSupported: '3.4',
+    notOperatedNotSupported: '4.09',
     held: '1.2',
-    notHeldSupported: '3.1',
-    notHeldNotSupported: '3.2',
+    notHeldSupported: '3.4',
+    notHeldNotSupported: '4.09',
   },
   {
     subPost: SubPost.FretEntrant,
@@ -388,14 +376,13 @@ export const ghgpRules = [
     notHeldNotSupported: '4.09',
   },
   {
-    // TO DO non décomposé
     subPost: SubPost.FretInterne,
     operated: '1.2',
-    notOperatedSupported: '3.1',
-    notOperatedNotSupported: '3.2',
+    notOperatedSupported: '3.4',
+    notOperatedNotSupported: '4.09',
     held: '1.2',
-    notHeldSupported: '3.1',
-    notHeldNotSupported: '3.2',
+    notHeldSupported: '3.4',
+    notHeldNotSupported: '4.09',
   },
   {
     subPost: SubPost.FretInterne,
@@ -448,14 +435,13 @@ export const ghgpRules = [
     notHeldNotSupported: '4.09',
   },
   {
-    // TO DO non décomposé
     subPost: SubPost.FretSortant,
     operated: '1.2',
-    notOperatedSupported: '3.1',
-    notOperatedNotSupported: '3.2',
+    notOperatedSupported: '3.4',
+    notOperatedNotSupported: '4.09',
     held: '1.2',
-    notHeldSupported: '3.1',
-    notHeldNotSupported: '3.2',
+    notHeldSupported: '3.4',
+    notHeldNotSupported: '4.09',
   },
   {
     subPost: SubPost.FretSortant,
@@ -508,11 +494,10 @@ export const ghgpRules = [
     notHeldNotSupported: '4.09',
   },
   {
-    // TO DO non décomposé
     subPost: SubPost.DeplacementsDomicileTravail,
-    operated: '3.1',
+    operated: '1.2',
     notOperated: '3.7',
-    held: '3.1',
+    held: '1.2',
     notHeldSimpleRent: '3.8',
     notHeldOther: '3.7',
   },
@@ -562,7 +547,6 @@ export const ghgpRules = [
     notHeldOther: '3.7',
   },
   {
-    // TO DO non décomposé
     subPost: SubPost.DeplacementsProfessionnels,
     operated: '1.2',
     notOperated: '3.6',
@@ -616,13 +600,12 @@ export const ghgpRules = [
     notHeldOther: '3.6',
   },
   {
-    // TO DO non décomposé
     subPost: SubPost.DeplacementsVisiteurs,
     operated: '1.2',
-    notOperated: '3.4',
+    notOperated: '4.other',
     held: '1.2',
     notHeldSimpleRent: '3.8',
-    notHeldOther: '3.4',
+    notHeldOther: '4.other',
   },
   {
     subPost: SubPost.DeplacementsVisiteurs,
@@ -685,7 +668,7 @@ export const ghgpRules = [
     subPost: SubPost.UtilisationEnResponsabilite,
     rented: '4.13',
     finalClient: '4.11',
-    usedByIntermediary: '4.11',
+    usedByIntermediary: '4.10',
   },
   { subPost: SubPost.UtilisationEnDependance, operated: '4.other', held: '4.other' },
   { subPost: SubPost.InvestissementsFinanciersRealises, operated: '4.15', held: '4.15' },
