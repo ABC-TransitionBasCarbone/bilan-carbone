@@ -726,19 +726,23 @@ export const updateStudySpecificExportFields = async (studyId: string, controlMo
     const newSpecificFields = specificFieldsForNewExportTypes.filter(
       (field) => !specificFieldsForOldExportTypes.includes(field),
     )
-    const clearedFields = getAllSpecificFieldsForExports(
-      Object.values(Export).filter((field) => !(types || []).includes(field)),
-    ).filter((field) => !specificFieldsForNewExportTypes.includes(field))
+
+    const nonSelectedExportsSpecificFields = getAllSpecificFieldsForExports(
+      Object.values(Export).filter((exportType) => !(types || []).includes(exportType)),
+    )
+    const fieldsToClear = nonSelectedExportsSpecificFields.filter(
+      (field) => !specificFieldsForNewExportTypes.includes(field),
+    )
 
     await Promise.all(
       study.data.emissionSources
         .map((emissionSource) => {
-          if (!emissionSource.validated && !clearedFields.length) {
+          if (!emissionSource.validated && !fieldsToClear.length) {
             return null
           }
 
           const filteredNewFields = filterSpecificFieldsPerSubpost(newSpecificFields, emissionSource.subPost)
-          const filteredClearedFields = filterSpecificFieldsPerSubpost(clearedFields, emissionSource.subPost)
+          const filteredClearedFields = filterSpecificFieldsPerSubpost(fieldsToClear, emissionSource.subPost)
 
           const validCaracterisations = getCaracterisationsBySubPost(
             emissionSource.subPost,
@@ -747,29 +751,37 @@ export const updateStudySpecificExportFields = async (studyId: string, controlMo
             controlMode,
           )
 
-          const isValidForNewControlMode = validCaracterisations.includes(
+          const isCaracterisarionValidForNewControlMode = validCaracterisations.includes(
             emissionSource.caracterisation as EmissionSourceCaracterisation,
           )
 
           const shouldKeepValidation =
             emissionSource.validated &&
             filteredNewFields.every((field) => emissionSource[field as keyof typeof emissionSource]) &&
-            (isValidForNewControlMode || validCaracterisations.length === 1)
+            (isCaracterisarionValidForNewControlMode || validCaracterisations.length === 1)
 
           const dataToUpdate: Prisma.StudyEmissionSourceUpdateInput = {
             ...clearedFieldsValues(filteredClearedFields),
+            validated: shouldKeepValidation,
           }
 
-          if (!isValidForNewControlMode) {
-            if (validCaracterisations.length === 1) {
-              dataToUpdate.caracterisation = validCaracterisations[0]
-              dataToUpdate.validated = shouldKeepValidation
-            } else {
-              dataToUpdate.validated = false
-            }
-          } else if (!shouldKeepValidation) {
-            dataToUpdate.validated = false
+          if (!isCaracterisarionValidForNewControlMode && validCaracterisations.length === 1) {
+            dataToUpdate.caracterisation = validCaracterisations[0]
           }
+
+          // TO DO : clear after test
+          // const dataToUpdate: Prisma.StudyEmissionSourceUpdateInput = {
+          //   ...clearedFieldsValues(filteredClearedFields),
+          // }
+
+          // if (!isCaracterisarionValidForNewControlMode) {
+          //   if (validCaracterisations.length === 1) {
+          //     dataToUpdate.caracterisation = validCaracterisations[0]
+          //   }
+          //   dataToUpdate.validated = shouldKeepValidation
+          // } else if (!shouldKeepValidation) {
+          //   dataToUpdate.validated = false
+          // }
 
           return prismaClient.studyEmissionSource.update({
             where: { id: emissionSource.id },

@@ -8,19 +8,19 @@ import { useMemo } from 'react'
 
 interface Props {
   type: Export
-  remaining: Export[]
+  remainingExports: Export[]
   onConfirm: (type: Export) => void
   onCancel: (type: Export) => void
 }
 
-const ExportDeactivationWarningModal = ({ type, remaining, onConfirm, onCancel }: Props) => {
+const ExportDeactivationWarningModal = ({ type, remainingExports, onConfirm, onCancel }: Props) => {
   const t = useTranslations('study.perimeter.exportDeactivationWarning')
   const tExport = useTranslations('exports')
   const tFields = useTranslations('emissionSource.form')
 
-  const remainingFields = useMemo(() => getAllSpecificFieldsForExports(remaining), [remaining])
+  const remainingSpecificFields = useMemo(() => getAllSpecificFieldsForExports(remainingExports), [remainingExports])
 
-  const fields = exportSpecificFields[type].filter((field) => !remainingFields.includes(field))
+  const fields = exportSpecificFields[type].filter((field) => !remainingSpecificFields.includes(field))
 
   return (
     <Modal
