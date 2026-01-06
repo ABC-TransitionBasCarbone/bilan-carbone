@@ -1,9 +1,7 @@
 'use client'
 
 import BaseTable from '@/components/base/Table'
-import { Post } from '@/services/posts'
 import { getStandardDeviationRating } from '@/services/uncertainty'
-import { sortByCustomOrder } from '@/utils/array'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
@@ -22,7 +20,6 @@ interface Props<T> {
   expandAll?: boolean
   hideExpandIcons?: boolean
   isCompact?: boolean
-  customPostOrder?: Post[]
 }
 
 type tableDataType = {
@@ -48,7 +45,6 @@ const ConsolidatedResultsTable = <
   expandAll,
   hideExpandIcons,
   isCompact,
-  customPostOrder,
 }: Props<T>) => {
   const t = useTranslations('study.results')
   const tQuality = useTranslations('quality')
@@ -116,10 +112,6 @@ const ConsolidatedResultsTable = <
       ...d,
       children: d.children.map((child) => ({ ...child, children: [] })),
     }))
-
-    if (customPostOrder?.length) {
-      return sortByCustomOrder(mappedData, customPostOrder, (item) => item.post ?? item.label)
-    }
     return mappedData
   }, [data])
 

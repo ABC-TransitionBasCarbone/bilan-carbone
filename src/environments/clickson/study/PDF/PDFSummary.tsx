@@ -4,7 +4,7 @@ import { ChartsPage } from '@/app/(public)/preview/etudes/[id]/ChartsPage'
 import '@/app/(public)/preview/etudes/[id]/pdf-summary.css'
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import { FullStudy } from '@/db/study'
-import { ClicksonPost, Post } from '@/services/posts'
+import { ClicksonPost } from '@/services/posts'
 import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
 import { getDetailedEmissionResults } from '@/services/study'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
@@ -54,14 +54,6 @@ const PDFSummary = ({ study }: Props) => {
     'otherEstimatedEnvironmentalImpacts',
     'estimatedSocialImpacts',
     'calendar',
-  ]
-
-  const customPostOrder = [
-    Post.EnergiesClickson,
-    Post.Restauration,
-    Post.DeplacementsClickson,
-    Post.Achats,
-    Post.ImmobilisationsClickson,
   ]
 
   useEffect(() => {
@@ -193,7 +185,6 @@ const PDFSummary = ({ study }: Props) => {
               data={computedResultsWithDep}
               hiddenUncertainty
               hideExpandIcons
-              customPostOrder={customPostOrder}
             />
           </div>
         </div>
@@ -208,7 +199,6 @@ const PDFSummary = ({ study }: Props) => {
                 expandAll
                 hideExpandIcons
                 isCompact
-                customPostOrder={customPostOrder}
               />
             </div>
             <ChartsPage
@@ -218,7 +208,6 @@ const PDFSummary = ({ study }: Props) => {
               tPdf={tPdf}
               isAll={false}
               year={year}
-              customPostOrder={customPostOrder}
             />
           </React.Fragment>
         ))}

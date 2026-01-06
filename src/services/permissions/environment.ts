@@ -83,3 +83,5 @@ export const hasAccessToManualImport = (environment: Environment) =>
 export const hasCustomGlossaryTextForEstablishment = isClickson
 
 export const hasAccessToStudyResults = isAdvanced
+
+export const hasCustomPostOrder = isClickson

@@ -6,7 +6,6 @@ import HelpIcon from '@/components/base/HelpIcon'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
 import { hasAccessToStudyResults, hasRoleOnStudy } from '@/services/permissions/environment'
-import { Post } from '@/services/posts'
 import { getDetailedEmissionResults } from '@/services/study'
 import { formatNumber } from '@/utils/number'
 import { getDisplayedRoleOnStudy } from '@/utils/study'
@@ -27,7 +26,6 @@ interface Props {
   showTitle?: boolean
   validatedOnly?: boolean
   withDependencies?: boolean
-  customPostOrder?: Post[]
 }
 
 const StudyResultsContainerSummary = ({
@@ -37,7 +35,6 @@ const StudyResultsContainerSummary = ({
   showTitle,
   validatedOnly,
   withDependencies,
-  customPostOrder = [],
 }: Props) => {
   const t = useTranslations('study')
   const tPost = useTranslations('emissionFactors.post')
@@ -151,7 +148,6 @@ const StudyResultsContainerSummary = ({
             showTitle={false}
             showLegend={false}
             showLabelsOnBars={false}
-            customOrder={customPostOrder}
           />
         </div>
       </div>
