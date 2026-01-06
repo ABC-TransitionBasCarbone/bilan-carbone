@@ -1,7 +1,7 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { hasDeprecationPeriod } from '@/utils/study'
-import { EmissionSourceCaracterisation, ExportRule } from '@prisma/client'
+import { ExportRule } from '@prisma/client'
 import { computeResult, EmissionFactor, EmissionSource, getEmissionTotal, PostInfos } from './exports'
 
 const allRules = [
@@ -39,43 +39,27 @@ export const rulesSpans: Record<string, number> = {
   total: 1,
 }
 
-const getRulePost = (caracterisation: EmissionSourceCaracterisation | null, rule?: ExportRule) => {
-  if (caracterisation === null || !rule) {
-    return null
-  }
-  switch (caracterisation) {
-    case EmissionSourceCaracterisation.Operated:
-      return rule.operated
-    case EmissionSourceCaracterisation.NotOperated:
-      return rule.notOperated
-    case EmissionSourceCaracterisation.NotOperatedSupported:
-      return rule.notOperatedSupported
-    case EmissionSourceCaracterisation.NotOperatedNotSupported:
-      return rule.notOperatedNotSupported
-    case EmissionSourceCaracterisation.OperatedFugitive:
-      return rule.operatedFugitive
-    case EmissionSourceCaracterisation.OperatedProcedeed:
-      return rule.operatedProcedeed
-    case EmissionSourceCaracterisation.Rented:
-      return rule.rented
-    case EmissionSourceCaracterisation.FinalClient:
-      return rule.finalClient
-    case EmissionSourceCaracterisation.Held:
-      return rule.held
-    case EmissionSourceCaracterisation.NotHeldSimpleRent:
-      return rule.notHeldSimpleRent
-    case EmissionSourceCaracterisation.NotHeldOther:
-      return rule.notHeldOther
-    case EmissionSourceCaracterisation.HeldProcedeed:
-      return rule.heldProcedeed
-    case EmissionSourceCaracterisation.HeldFugitive:
-      return rule.heldFugitive
-    case EmissionSourceCaracterisation.NotHeldSupported:
-      return rule.notHeldSupported
-    case EmissionSourceCaracterisation.NotHeldNotSupported:
-      return rule.notHeldNotSupported
-    case EmissionSourceCaracterisation.UsedByIntermediary:
-      return rule.usedByIntermediary
+const getLine = (
+  value: number,
+  emissionFactor: EmissionFactor,
+): Omit<PostInfos, 'rule' | 'squaredStandardDeviation'> => {
+  const ch4 = emissionFactor.ch4f || 0
+  const n2o = emissionFactor.n2o || 0
+  const other =
+    (emissionFactor.otherGES || 0) + (emissionFactor.pfc || 0) + (emissionFactor.hfc || 0) + (emissionFactor.sf6 || 0)
+  const totalOtherGas = ch4 + n2o + other
+
+  // co2f is not always available
+  const co2 = (emissionFactor.totalCo2 || 0) - totalOtherGas
+  const co2b = emissionFactor.co2b || 0
+
+  return {
+    co2: value * co2,
+    ch4: value * ch4,
+    n2o: value * n2o,
+    other: value * other,
+    total: value * (totalOtherGas + co2),
+    co2b: value * co2b,
   }
 }
 
@@ -92,7 +76,7 @@ export const getBegesEmissionValue = (emissionSource: EmissionSource): number =>
 }
 
 export const getBegesEmissionTotal = (emissionSource: EmissionSource, emissionFactor: EmissionFactor) =>
-  getEmissionTotal(emissionSource, emissionFactor, getBegesEmissionValue)
+  getEmissionTotal(emissionSource, emissionFactor, getBegesEmissionValue, getLine)
 
 export const computeBegesResult = (
   study: FullStudy,
@@ -111,5 +95,5 @@ export const computeBegesResult = (
     validatedOnly,
     allRules,
     getBegesEmissionValue,
-    getRulePost,
+    getLine,
   )

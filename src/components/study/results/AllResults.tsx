@@ -10,6 +10,7 @@ import { hasAccessToBcExport, hasAccessToDownloadStudyEmissionSourcesButton } fr
 import { environmentPostMapping } from '@/services/posts'
 import { computeBegesResult } from '@/services/results/beges'
 import { computeResultsByPost, computeResultsByTag } from '@/services/results/consolidated'
+import { computeGHGPResult } from '@/services/results/ghgp'
 import { getSiteEmissionSources } from '@/services/results/utils'
 import { isDeactivableFeatureActiveForEnvironment } from '@/services/serverFunctions/deactivableFeatures'
 import { prepareReport } from '@/services/serverFunctions/study'
@@ -43,6 +44,7 @@ import BegesResultsTable from './beges/BegesResultsTable'
 import ConsolatedBEGESDifference from './ConsolatedBEGESDifference'
 import ConsolidatedResults from './consolidated/ConsolidatedResults'
 import EmissionsAnalysis from './consolidated/EmissionsAnalysis'
+import GHGPResultsTable from './ghgp/GHGPResultsTable'
 import ResultFilters from './ResultFilters'
 import UncertaintyAnalytics from './uncertainty/UncertaintyAnalytics'
 
@@ -100,6 +102,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   const { studySite, setSite } = useStudySite(study, true)
 
   const begesRules = useMemo(() => rules.filter((rule) => rule.export === Export.Beges), [rules])
+  const ghgpRules = useMemo(() => rules.filter((rule) => rule.export === Export.GHGP), [rules])
 
   const allowTypeSelect = useMemo(() => {
     if (exports && exports.types.length > 0) {
@@ -269,6 +272,11 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     [study, begesRules, emissionFactorsWithParts, studySite, validatedOnly],
   )
 
+  const computedGHGPData = useMemo(
+    () => computeGHGPResult(study, ghgpRules, emissionFactorsWithParts, studySite, false, validatedOnly),
+    [study, ghgpRules, emissionFactorsWithParts, studySite, validatedOnly],
+  )
+
   const downloadReport = useCallback(async () => {
     callServerFunction(() => prepareReport(study, { monetaryRatio, nonSpecificMonetaryRatio }), {
       onSuccess: (data) => {
@@ -381,15 +389,9 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
               )}
               {exports &&
                 exports?.types.map((exportItem) => (
-                  <MenuItem
-                    key={exportItem}
-                    value={exportItem}
-                    disabled={exportItem !== Export.Beges || exports.control === ControlMode.CapitalShare}
-                  >
+                  <MenuItem key={exportItem} value={exportItem} disabled={exports.control === ControlMode.CapitalShare}>
                     {tExport(exportItem)}
-                    {(exportItem !== Export.Beges || exports.control === ControlMode.CapitalShare) && (
-                      <em> ({t('coming')})</em>
-                    )}
+                    {exports.control === ControlMode.CapitalShare && <em> ({t('coming')})</em>}
                   </MenuItem>
                 ))}
             </Select>
@@ -418,7 +420,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
             />
           )}
         <div className="mt1">
-          {type !== Export.Beges && (
+          {type === AdditionalResultTypes.CONSOLIDATED && (
             <>
               <EmissionsAnalysis
                 study={study}
@@ -436,8 +438,11 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
           {type === Export.Beges && (
             <BegesResultsTable study={study} withDepValue={withDepValue} data={computedBegesData} />
           )}
+          {type === Export.GHGP && (
+            <GHGPResultsTable study={study} withDepValue={withDepValue} data={computedGHGPData} />
+          )}
         </div>
-        {type !== Export.Beges && (
+        {type === AdditionalResultTypes.CONSOLIDATED && (
           <UncertaintyAnalytics
             filteredResults={filteredResultsByPost}
             studyId={study.id}
