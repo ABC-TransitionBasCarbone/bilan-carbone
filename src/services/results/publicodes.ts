@@ -77,3 +77,18 @@ export function computeTotalForBaseResults(
     value,
   }
 }
+
+export function aggregateBaseResultsByPost(resultsList: BaseResultsByPost[][]): BaseResultsByPost[] {
+  if (resultsList.length === 0) return []
+
+  return resultsList.reduce((postResultsAcc, results) =>
+    postResultsAcc.map((postResultAcc, i) => ({
+      ...postResultAcc,
+      value: postResultAcc.value + results[i].value,
+      children: postResultAcc.children.map((postResultChildAcc, j) => ({
+        ...postResultChildAcc,
+        value: postResultChildAcc.value + results[i].children[j].value,
+      })),
+    })),
+  )
+}
