@@ -165,7 +165,7 @@
       "noSites": "Il n'y a pas d'établissements configurés",
       "namePlaceholder": "Nom de l'établissement",
       "add": "Ajouter un établissement",
-      "etp": "Nombre de personnels (enseignants et non-éducatifs)",
+      "etp": "Nombre de personnels",
       "etpPlaceholder": "Nombre total de personnels",
       "studentNumber": "Nombre d'élèves",
       "studentNumberPlaceholder": "Nombre total d'élèves",
@@ -177,7 +177,9 @@
         "title": "Type d'établissement",
         "ELEMENTAIRE": "École élémentaire",
         "COLLEGE": "Collège",
-        "LYCEE": "Lycée"
+        "LYCEE_GENERAL": "Lycée Général et Technologique",
+        "LYCEE_PRO": "Lycée Professionnel",
+        "ETABLISSEMENT_FR_ETRANGER": "Etablissement d'enseignement français à l'étranger"
       },
       "glossary": {
         "informations": "Il est nécessaire de renseigner ces informations avant d'aller plus loin dans votre démarche. Ces informations impactent effectivement le calcul de votre empreinte carbone (en particulier, le poste immobilisations)"

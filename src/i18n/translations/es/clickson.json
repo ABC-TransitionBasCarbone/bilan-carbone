@@ -165,7 +165,7 @@
       "noSites": "Sin establecimientos configurados",
       "namePlaceholder": "Nombre del Establecimiento",
       "add": "Añadir un Establecimiento",
-      "etp": "Número de personal (docentes y personal no docente)",
+      "etp": "Número de personal",
       "etpPlaceholder": "Número total de personal",
       "studentNumber": "Número de estudiantes",
       "studentNumberPlaceholder": "Número total de estudiantes",
@@ -176,8 +176,10 @@
       "establishmentType": {
         "title": "Tipo de establecimiento",
         "ELEMENTAIRE": "Escuela primaria",
-        "COLLEGE": "Escuela secundaria",
-        "LYCEE": "Escuela preparatoria"
+        "COLLEGE": "Colegio",
+        "LYCEE_GENERAL": "Liceo General y Tecnológico",
+        "LYCEE_PRO": "Liceo Profesional",
+        "ETABLISSEMENT_FR_ETRANGER": "Establecimiento de enseñanza francesa en el extranjero"
       },
       "glossary": {
         "informations": "Es necesario proporcionar esta información antes de continuar con su proceso. Esta información impacta efectivamente el cálculo de su huella de carbono (en particular, el apartado de inmuebles)"
