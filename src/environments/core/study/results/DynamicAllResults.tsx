@@ -20,7 +20,7 @@ const DynamicAllResults = ({ study, rules, emissionFactorsWithParts, validatedOn
   return (
     <DynamicComponent
       environmentComponents={{
-        [Environment.CUT]: <CutResultsContainer study={study} />,
+        [Environment.CUT]: <AllResultsPublicodes study={study} />,
         [Environment.CLICKSON]: (
           <AllResultsSimplified
             showSubLevel={true}
