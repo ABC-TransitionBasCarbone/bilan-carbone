@@ -1,2 +1,11 @@
 achats:
   titre: Achats
+    - équipements de sport
+    - fournitures
+    - produits chimiques
+  formule:
+    somme:
+      - achats . équipements de sport
+      - achats . fournitures
+      - achats . produits chimiques
+  unité: kgCO2e

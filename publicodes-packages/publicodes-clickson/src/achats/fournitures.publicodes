@@ -1,0 +1,9 @@
+achats . fournitures
+
+"label"	"value"	"uncertainty"	"type"	"unit"	"depreciationPeriod"
+"Petites fournitures (stylos...)"	0.367	3	"Fournitures"	"€"	
+"Livres"	1.1	4	"Fournitures"	"unité"	
+"Papier (ramette)"	2.29	2	"Fournitures"	"unité"	
+"Consommables (cartouches d'encre…)"	0.917	1	"Fournitures"	"€"	0
+"Piles AAA (alcalines)"	0.065	4	"Fournitures"	"unité"	0
+"Piles AA (alcalines)"	0.137	4	"Fournitures"	"unité"	0
