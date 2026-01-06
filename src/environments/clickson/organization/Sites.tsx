@@ -14,6 +14,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { Control, UseFormReturn } from 'react-hook-form'
+import styles from './Sites.module.css'
 
 interface Props<T extends SitesCommand> {
   form?: UseFormReturn<T>
@@ -35,12 +36,13 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, organizatio
           cell: ({ row, getValue }) =>
             form ? (
               <FormSelect
+                translation={t}
                 data-testid="organization-sites-volunteer-number"
                 type="string"
                 control={control}
                 name={`sites.${row.index}.establishmentType`}
-                placeholder={t('establishmentTypePlaceholder')}
                 fullWidth
+                className={styles.select}
               >
                 {Object.values(EstablishmentType).map((establishmentType) => (
                   <MenuItem key={establishmentType} value={establishmentType}>

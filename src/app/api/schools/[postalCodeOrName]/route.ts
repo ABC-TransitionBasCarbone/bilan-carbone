@@ -10,6 +10,9 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ pos
   const select =
     'nom_etablissement,adresse_1,adresse_3, code_postal,identifiant_de_l_etablissement,date_ouverture, libelle_academie, libelle_nature'
 
+  const commonWhere =
+    '(libelle_nature="COLLEGE" OR libelle_nature like "*LYCEE*" OR libelle_nature="ECOLE DE NIVEAU ELEMENTAIRE")'
+
   if (!input) {
     return Response.json([], { status: 200 })
   }
@@ -17,7 +20,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ pos
   if (/^\d{5}$/.test(input)) {
     const query = {
       select,
-      where: `code_postal="${input}" AND (libelle_nature="COLLEGE" OR libelle_nature="LYCEE" OR libelle_nature="ECOLE DE NIVEAU ELEMENTAIRE")`,
+      where: `code_postal="${input}" AND ${commonWhere}`,
       limit: 99,
     }
 
@@ -36,7 +39,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ pos
 
   const where = `
     ${likeConditions.join(' AND ')}
-    AND (libelle_nature="COLLEGE" OR libelle_nature="LYCEE" OR libelle_nature="ECOLE DE NIVEAU ELEMENTAIRE")
+    AND ${commonWhere}
   `.trim()
 
   const query = {
