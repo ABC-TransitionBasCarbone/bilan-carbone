@@ -1,5 +1,6 @@
 'use client'
 
+import { hasAccessToManualImport } from '@/services/permissions/environment'
 import { getEmissionFactorImportVersions, getFELocations } from '@/services/serverFunctions/emissionFactor'
 import { EmissionFactorImportVersion, Environment, Import } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -43,25 +44,29 @@ const EmissionFactors = ({ userOrganizationId, environment, hasActiveLicence }: 
       const selectedImportVersionsArray = Object.values(selectedImportVersions)
 
       setLocationOptions(locationFromBdd.filter((loc) => !!loc).map((loc) => loc.location) ?? [])
-      const manualImport = { id: Import.Manual, source: Import.Manual, name: '' }
-      setImportVersions([
-        manualImport as EmissionFactorImportVersion,
-        ...importVersionsFromBdd.sort((a, b) => {
-          if (a.source === b.source) {
-            return b.createdAt.getTime() - a.createdAt.getTime()
-          } else {
-            return `${a.source} ${a.name}`.localeCompare(`${b.source} ${b.name}`)
-          }
-        }),
-      ])
-      setInitialImportVersions(
-        importVersionsFromBdd.length > 0
-          ? [
-              Import.Manual,
-              ...importVersionsFromBdd.map((iv) => iv.id).filter((id) => selectedImportVersionsArray.includes(id)),
-            ]
-          : [Import.Manual],
-      )
+
+      const importVersions = importVersionsFromBdd.sort((a, b) => {
+        if (a.source === b.source) {
+          return b.createdAt.getTime() - a.createdAt.getTime()
+        } else {
+          return `${a.source} ${a.name}`.localeCompare(`${b.source} ${b.name}`)
+        }
+      })
+
+      const initialImportVersions = importVersionsFromBdd
+        .map((iv) => iv.id)
+        .filter((id) => selectedImportVersionsArray.includes(id))
+
+      if (hasAccessToManualImport(environment)) {
+        setInitialImportVersions(
+          importVersionsFromBdd.length > 0 ? [Import.Manual, ...initialImportVersions] : [Import.Manual],
+        )
+        const manualImport = { id: Import.Manual, source: Import.Manual, name: '' }
+        setImportVersions([manualImport as EmissionFactorImportVersion, ...importVersions])
+      } else {
+        setImportVersions(importVersions)
+        setInitialImportVersions(initialImportVersions || [])
+      }
     }
 
     fetchFiltersInfos()
