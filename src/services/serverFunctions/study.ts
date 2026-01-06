@@ -52,6 +52,7 @@ import {
   downgradeStudyUserRoles,
   FullStudy,
   getOrganizationStudiesBeforeDate,
+  getPendingStudyCommentsCountFromAuthor,
   getStudiesSitesFromIds,
   getStudyById,
   getStudyCommentsCountFromOrganizationVersionId,
@@ -122,7 +123,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { auth, dbActualizedAuth } from '../auth'
 import { getCaracterisationsBySubPost } from '../emissionSource'
 import { allowedFlowFileTypes, isAllowedFileType } from '../file'
-import { ALREADY_IN_STUDY, NOT_AUTHORIZED } from '../permissions/check'
+import { ALREADY_IN_STUDY, NOT_AUTHORIZED, TOO_MANY_COMMENTS } from '../permissions/check'
 import { hasReaderRoleOnStudyAsContributor } from '../permissions/environment'
 import { isInOrgaOrParentFromId } from '../permissions/organization'
 import {
@@ -2339,6 +2340,11 @@ export const createStudyCommentCommand = async (
     const study = await getStudyById(studyId, session.user.organizationVersionId)
     if (!study) {
       throw new Error(NOT_AUTHORIZED)
+    }
+
+    const commentCount = await getPendingStudyCommentsCountFromAuthor(session.user.accountId)
+    if (!status || (status === CommentStatus.PENDING && commentCount >= 3)) {
+      throw new Error(TOO_MANY_COMMENTS)
     }
 
     return await createStudyComment({
