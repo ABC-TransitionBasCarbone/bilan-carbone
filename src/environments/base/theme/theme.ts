@@ -69,6 +69,11 @@ const base = createTheme({
       main: '#57585a',
       light: '#F2F3F4',
     },
+    ghgp: {
+      main: '#009999',
+      totalColumn: '#b7dee8',
+      co2bColumn: '#ccc0da',
+    },
   },
   typography: {
     fontFamily: 'gilroy-regular, sans-serif',
