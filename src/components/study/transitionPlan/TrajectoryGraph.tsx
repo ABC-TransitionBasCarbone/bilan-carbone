@@ -1,5 +1,10 @@
 'use client'
 
+import {
+  TRAJECTORY_15_ID,
+  TRAJECTORY_SNBC_GENERAL_ID,
+  TRAJECTORY_WB2C_ID,
+} from '@/components/pages/TrajectoryReductionPage'
 import { getYearsToDisplay, PastStudy, TrajectoryData } from '@/utils/trajectory'
 import { Alert, Typography } from '@mui/material'
 import { LineChart, LineSeries } from '@mui/x-charts/LineChart'
@@ -19,6 +24,7 @@ interface Props {
   studyUnit: StudyResultUnit
   trajectory15Data: TrajectoryData | null
   trajectoryWB2CData: TrajectoryData | null
+  snbcData: TrajectoryData | null
   customTrajectoriesData: Array<{
     trajectoryData: TrajectoryData | null
     label: string
@@ -26,6 +32,7 @@ interface Props {
   }>
   actionBasedTrajectoryData: TrajectoryData | null
   studyStartYear: number
+  selectedSnbcTrajectories: string[]
   selectedSbtiTrajectories: string[]
   withDependencies: boolean
   setWithDependencies: (value: boolean) => void
@@ -43,9 +50,11 @@ const TrajectoryGraph = ({
   studyUnit,
   trajectory15Data,
   trajectoryWB2CData,
+  snbcData,
   customTrajectoriesData,
   actionBasedTrajectoryData,
   studyStartYear,
+  selectedSnbcTrajectories,
   selectedSbtiTrajectories,
   withDependencies,
   setWithDependencies,
@@ -56,26 +65,31 @@ const TrajectoryGraph = ({
   const t = useTranslations('study.transitionPlan.trajectories.graph')
   const tUnit = useTranslations('study.results.units')
 
-  const trajectory15Enabled = selectedSbtiTrajectories.includes('1,5')
-  const trajectoryWB2CEnabled = selectedSbtiTrajectories.includes('WB2C')
+  const trajectory15Enabled = selectedSbtiTrajectories.includes(TRAJECTORY_15_ID)
+  const trajectoryWB2CEnabled = selectedSbtiTrajectories.includes(TRAJECTORY_WB2C_ID)
+  const trajectorySnbcEnabled = selectedSnbcTrajectories.includes(TRAJECTORY_SNBC_GENERAL_ID)
 
   const yearsToDisplay = useMemo(
     () =>
       getYearsToDisplay(
         trajectory15Data,
         trajectoryWB2CData,
+        snbcData,
         customTrajectoriesData.map((values) => values.trajectoryData),
         actionBasedTrajectoryData,
         trajectory15Enabled,
         trajectoryWB2CEnabled,
+        trajectorySnbcEnabled,
       ),
     [
       trajectory15Data,
       trajectoryWB2CData,
+      snbcData,
       customTrajectoriesData,
       actionBasedTrajectoryData,
       trajectory15Enabled,
       trajectoryWB2CEnabled,
+      trajectorySnbcEnabled,
     ],
   )
 
@@ -227,6 +241,58 @@ const TrajectoryGraph = ({
       }
     }
 
+    if (trajectorySnbcEnabled && snbcData) {
+      const { previousTrajectory, previousTrajectoryReferenceYear, currentTrajectory, withinThreshold } = snbcData
+
+      if (previousTrajectory) {
+        if (withinThreshold) {
+          series.push({
+            data: mapDataToYears(previousTrajectory),
+            label: t('trajectorySNBC'),
+            color: 'var(--trajectory-snbc)',
+            curve: 'linear' as const,
+            connectNulls: false,
+            showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
+            valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
+          })
+        } else {
+          series.push({
+            data: mapDataToYears(previousTrajectory),
+            label: t('trajectorySNBC') + ` (${previousTrajectoryReferenceYear})`,
+            color: 'color-mix(in srgb, var(--trajectory-snbc) 50%, transparent)',
+            curve: 'linear' as const,
+            connectNulls: false,
+            showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
+            valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
+          })
+        }
+      }
+
+      const currentData = mapDataToYears(currentTrajectory)
+      const showCurrentTrajectory = !previousTrajectory || !withinThreshold
+      if (showCurrentTrajectory) {
+        series.push({
+          data: currentData,
+          label: snbcData.previousTrajectory ? t('trajectorySNBC') + ` (${studyStartYear})` : t('trajectorySNBC'),
+          color: 'var(--trajectory-snbc)',
+          curve: 'linear' as const,
+          connectNulls: false,
+          showMark: ({ index }: { index: number }) => shouldShowMark(index),
+          valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
+        })
+      } else {
+        series.push({
+          data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
+          label: t('trajectorySNBC') + ` (${studyStartYear})`,
+          color: 'var(--trajectory-snbc)',
+          curve: 'linear' as const,
+          connectNulls: false,
+          showMark: true,
+          valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
+        })
+      }
+    }
+
     customTrajectoriesData.forEach((traj, index) => {
       if (traj.trajectoryData) {
         const { previousTrajectory, previousTrajectoryReferenceYear, currentTrajectory, withinThreshold } =
@@ -344,6 +410,8 @@ const TrajectoryGraph = ({
     trajectory15Data,
     trajectoryWB2CEnabled,
     trajectoryWB2CData,
+    trajectorySnbcEnabled,
+    snbcData,
     customTrajectoriesData,
     actionBasedTrajectoryData,
     mapDataToYears,

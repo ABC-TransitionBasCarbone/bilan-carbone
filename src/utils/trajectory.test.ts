@@ -19,6 +19,11 @@ jest.mock('../services/file', () => ({ download: jest.fn() }))
 jest.mock('../services/auth', () => ({ auth: jest.fn() }))
 jest.mock('uuid', () => ({ v4: jest.fn() }))
 jest.mock('next-intl/server', () => ({ getTranslations: jest.fn(() => (key: string) => key) }))
+jest.mock('../components/pages/TrajectoryReductionPage', () => ({
+  TRAJECTORY_15_ID: 'sbti-15',
+  TRAJECTORY_WB2C_ID: 'sbti-wb2c',
+  TRAJECTORY_SNBC_GENERAL_ID: 'snbc-general',
+}))
 
 const DEFAULT_LINEAR_REDUCTION_15C = 42
 const DEFAULT_LINEAR_REDUCTION_WB2C = 25

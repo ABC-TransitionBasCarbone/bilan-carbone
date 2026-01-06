@@ -895,10 +895,19 @@
           "confirm": "Supprimer",
           "cancel": "Annuler"
         },
+        "snbcCard": {
+          "title": "Trajectoires SNBC",
+          "description": "La Stratégie Nationale Bas Carbone (SNBC) définit un objectif de réduction de 40% entre 1990 et 2030, et divise par 6 les émissions entre 1990 et 2050.",
+          "methodLabel": "Méthodes",
+          "general": "Générale",
+          "sectoral": "Par secteur d'activité",
+          "placeholder": "Aucune trajectoire sélectionnée"
+        },
         "sbtiCard": {
           "title": "Trajectoires SBTi",
           "description": "La Science Based Targets Initiative définit deux trajectoires visant à limiter le réchauffement climatique à 1,5°C (SBTi 1.5°C) ou \"Well below 2 degrees\" (SBTi WB2C).",
           "methodLabel": "Méthodes",
+          "optionSNBC": "SNBC",
           "option15": "SBTi 1,5°C",
           "optionWB2C": "SBTi WB2C",
           "placeholder": "Aucune trajectoire sélectionnée"
@@ -908,6 +917,7 @@
           "subtitle": "Affichage des trajectoires de référence et des trajectoires de votre organisation",
           "trajectory15": "SBTi 1,5°C",
           "trajectoryWB2C": "SBTi WB2C",
+          "trajectorySNBC": "SNBC",
           "actionBasedTrajectory": "Trajectoire bottom-up",
           "yAxisLabel": "Émissions",
           "unvalidatedSourcesWarning": "{count, plural, =1 {Une source d'émissions n'est pas validée dans l'étude actuelle et n'est donc pas prise en compte dans le calcul des trajectoires.} other {{count} sources d'émissions ne sont pas validées dans l'étude actuelle et ne sont donc pas prises en compte dans le calcul des trajectoires.}}",
