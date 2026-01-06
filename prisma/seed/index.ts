@@ -23,7 +23,7 @@ import {
 import { Command } from 'commander'
 import { ACTUALITIES } from '../legacy_data/actualities'
 import { createRealStudy } from './study'
-import { getCutRoleFromBase } from './utils'
+import { getClicksonRoleFromBase, getCutRoleFromBase, getRolesFromEnvironment } from './utils'
 
 const program = new Command()
 type Params = {
@@ -507,7 +507,7 @@ const users = async () => {
           const account = await prisma.account.create({
             data: {
               organizationVersionId: organizationVersionArray[index % organizationVersionArray.length].id,
-              role: environment === Environment.CUT ? getCutRoleFromBase(role as Role) : (role as Role),
+              role: getRolesFromEnvironment(environment as Environment, role as Role),
               userId: user.id,
               environment: environment as Environment,
               status: UserStatus.ACTIVE,
@@ -559,7 +559,7 @@ const users = async () => {
           },
           {
             organizationVersionId: organizationVersionsClickson[index % organizationVersionsClickson.length].id,
-            role: role as Role,
+            role: getClicksonRoleFromBase(role as Role),
             userId: user.id,
             environment: Environment.CLICKSON,
             status: UserStatus.ACTIVE,
