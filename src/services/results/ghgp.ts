@@ -1,7 +1,9 @@
+import { wasteImpact } from '@/constants/emissions'
+import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { hasDeprecationPeriod } from '@/utils/study'
-import { ExportRule } from '@prisma/client'
+import { EmissionFactor, ExportRule, Import, EmissionFactor as PrismaEmissionFactor } from '@prisma/client'
 import { computeResult, EmissionSource, ExportEmissionFactor, getEmissionTotal, PostInfos } from './exports'
 
 const allRules = [
@@ -36,6 +38,21 @@ export const rulesSpans: Record<string, number> = {
   total: 1,
 }
 
+const getEmissionFactorValue = (
+  emissionFactor: Pick<EmissionFactor, 'importedFrom' | 'importedId' | 'totalCo2' | 'otherGES'>,
+) => {
+  if (
+    emissionFactor.importedFrom === Import.BaseEmpreinte &&
+    emissionFactor.importedId &&
+    wasteEmissionFactors[emissionFactor.importedId]
+  ) {
+    return wasteImpact
+  }
+
+  // otherGES are not taken into account in ghgp table
+  return emissionFactor.totalCo2 - (emissionFactor.otherGES || 0)
+}
+
 const getLine = (value: number, emissionFactor: ExportEmissionFactor): Omit<PostInfos, 'rule' | 'uncertainty'> => {
   const hfc = emissionFactor.hfc || 0
   const pfc = emissionFactor.pfc || 0
@@ -45,8 +62,10 @@ const getLine = (value: number, emissionFactor: ExportEmissionFactor): Omit<Post
   const other = emissionFactor.otherGES || 0
   const co2b = emissionFactor.co2b || 0
 
-  // otherGES are not taken into account in ghgp table
-  const total = (emissionFactor.totalCo2 || 0) - other
+  const total =
+    emissionFactor.importedFrom && emissionFactor.importedId
+      ? getEmissionFactorValue(emissionFactor as PrismaEmissionFactor)
+      : (emissionFactor.totalCo2 || 0) - other // otherGES are not taken into account in ghgp table
   const co2 = total - (hfc + pfc + sf6 + ch4 + n2o)
 
   return {

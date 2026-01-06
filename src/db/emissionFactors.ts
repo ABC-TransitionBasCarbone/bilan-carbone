@@ -456,6 +456,8 @@ export const getEmissionFactorsWithPartsInIds = async (ids: string[]) =>
       geographicRepresentativeness: true,
       temporalRepresentativeness: true,
       completeness: true,
+      importedId: true,
+      importedFrom: true,
       emissionFactorParts: {
         select: {
           ...gazColumns,
