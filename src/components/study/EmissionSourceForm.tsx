@@ -421,79 +421,83 @@ const EmissionSourceForm = ({
       )}
 
       <p className={classNames(styles.subTitle, 'mt1 mb-2')}>{t('optionalFields')}</p>
-      <div className={classNames(styles.row, 'flex', expandedQuality || !canShrink ? 'flex-col' : '')}>
-        <div className={classNames(styles.optionnalFields, 'grow flex gapped')}>
-          <Autocomplete
-            className={styles.tagsContainer}
-            multiple
-            disabled={!canEdit}
-            data-testid="emission-source-tag"
-            options={tags
-              .filter(
-                (tag) => !emissionSource.emissionSourceTags.some((sourceTagLink) => tag.id === sourceTagLink.tag.id),
-              )
-              .map((tag) => ({ label: tag.name, value: tag.id, color: tag.color }))}
-            value={emissionSource.emissionSourceTags.map((emissionSourceTag) => ({
-              label: emissionSourceTag.tag.name,
-              value: emissionSourceTag.tag.id,
-              color: emissionSourceTag.tag.color,
-            }))}
-            onChange={(_, options: Option[]) => {
-              update(
-                'emissionSourceTags',
-                options.map((tag) => tag.value),
-              )
-            }}
-            renderOption={(props, option) => {
-              const { key, ...optionProps } = props
+      <div className={classNames(styles.row, 'flex flex-col')}>
+        <div className={classNames(styles.row, 'flex', expandedQuality || !canShrink ? 'flex-col' : '')}>
+          <div className={classNames(styles.optionnalFields, 'grow flex gapped')}>
+            <Autocomplete
+              className={styles.tagsContainer}
+              multiple
+              disabled={!canEdit}
+              data-testid="emission-source-tag"
+              options={tags
+                .filter(
+                  (tag) => !emissionSource.emissionSourceTags.some((sourceTagLink) => tag.id === sourceTagLink.tag.id),
+                )
+                .map((tag) => ({ label: tag.name, value: tag.id, color: tag.color }))}
+              value={emissionSource.emissionSourceTags.map((emissionSourceTag) => ({
+                label: emissionSourceTag.tag.name,
+                value: emissionSourceTag.tag.id,
+                color: emissionSourceTag.tag.color,
+              }))}
+              onChange={(_, options: Option[]) => {
+                update(
+                  'emissionSourceTags',
+                  options.map((tag) => tag.value),
+                )
+              }}
+              renderOption={(props, option) => {
+                const { key, ...optionProps } = props
 
-              return (
-                <li key={key} {...optionProps}>
-                  <TagChip name={option.label} color={option.color} size="small" data-testid="tag-option" />
-                </li>
-              )
-            }}
-            slots={{
-              popper: (props) => <Popper {...props} placement="bottom-start" />,
-            }}
-            renderInput={(params) => <TextField {...params} label={t('form.tag')} />}
-            renderValue={(value: Option[], getItemProps) => (
-              <div className={classNames('flex wrap align-center gapped-2', styles.tagOptions)}>
-                {value.map((option: Option, index: number) => {
-                  const { key, ...itemProps } = getItemProps({ index })
-                  return <TagChip name={option.label} color={option.color} key={key} {...itemProps} />
-                })}
-              </div>
-            )}
-          />
-          <TextField
-            className="grow"
-            disabled={!canEdit}
-            data-testid="emission-source-source"
-            defaultValue={emissionSource.source}
-            onBlur={(event) => update('source', event.target.value)}
-            label={t('form.source')}
-          />
-          <TextField
-            className="grow"
-            disabled={!canEdit}
-            data-testid="emission-source-comment"
-            defaultValue={emissionSource.comment}
-            onBlur={(event) => update('comment', event.target.value)}
-            label={t('form.comment')}
+                return (
+                  <li key={key} {...optionProps}>
+                    <TagChip name={option.label} color={option.color} size="small" data-testid="tag-option" />
+                  </li>
+                )
+              }}
+              slots={{
+                popper: (props) => <Popper {...props} placement="bottom-start" />,
+              }}
+              renderInput={(params) => <TextField {...params} label={t('form.tag')} />}
+              renderValue={(value: Option[], getItemProps) => (
+                <div className={classNames('flex wrap align-center gapped-2', styles.tagOptions)}>
+                  {value.map((option: Option, index: number) => {
+                    const { key, ...itemProps } = getItemProps({ index })
+                    return <TagChip name={option.label} color={option.color} key={key} {...itemProps} />
+                  })}
+                </div>
+              )}
+            />
+            <TextField
+              className="grow"
+              disabled={!canEdit}
+              data-testid="emission-source-source"
+              defaultValue={emissionSource.source}
+              onBlur={(event) => update('source', event.target.value)}
+              label={t('form.source')}
+            />
+          </div>
+          <QualitySelectGroup
+            canEdit={canEdit}
+            emissionSource={emissionSource}
+            update={update}
+            advanced={advanced}
+            setGlossary={setGlossary}
+            expanded={expandedQuality || !canShrink}
+            setExpanded={setExpandedQuality}
+            canShrink={canShrink}
+            defaultQuality={defaultQuality}
+            clearable
           />
         </div>
-        <QualitySelectGroup
-          canEdit={canEdit}
-          emissionSource={emissionSource}
-          update={update}
-          advanced={advanced}
-          setGlossary={setGlossary}
-          expanded={expandedQuality || !canShrink}
-          setExpanded={setExpandedQuality}
-          canShrink={canShrink}
-          defaultQuality={defaultQuality}
-          clearable
+        <TextField
+          multiline
+          fullWidth
+          className={classNames('grow', styles.resizable)}
+          disabled={!canEdit}
+          data-testid="emission-source-comment"
+          defaultValue={emissionSource.comment}
+          onBlur={(event) => update('comment', event.target.value)}
+          label={t('form.comment')}
         />
       </div>
       <div className="flex-row justify-between">

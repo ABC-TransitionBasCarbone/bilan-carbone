@@ -88,9 +88,8 @@ export const getStudyNavbarMenu = (
           header: t('transitionPlan'),
           links: [
             {
-              href: '#',
-              label: t('commingSoon'),
-              disabled: true,
+              href: 'https://transition.clickson.eu',
+              label: 'Clicks On Act',
             },
           ],
         },

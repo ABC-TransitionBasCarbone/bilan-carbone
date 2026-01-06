@@ -1,5 +1,7 @@
 'use client'
 
+import { ChartsPage } from '@/app/(public)/preview/etudes/[id]/ChartsPage'
+import '@/app/(public)/preview/etudes/[id]/pdf-summary.css'
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import { FullStudy } from '@/db/study'
 import cutTheme from '@/environments/cut/theme/theme'
@@ -13,8 +15,6 @@ import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import React, { useEffect, useMemo, useState } from 'react'
-import { ChartsPage } from './ChartsPage'
-import './pdf-summary.css'
 
 interface SiteData {
   id: string

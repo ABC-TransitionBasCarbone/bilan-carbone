@@ -4,6 +4,7 @@ import { dbActualizedAuth } from '@/services/auth'
 import { withServerResponse } from '@/utils/serverResponse'
 import axios, { isAxiosError } from 'axios'
 import jwt from 'jsonwebtoken'
+import { getLocale } from 'next-intl/server'
 import { NOT_AUTHORIZED, SERVER_ERROR } from '../permissions/check'
 
 export const generateStudySummaryPDF = async (studyId: string, studyName: string, referenceYear: number) =>
@@ -22,6 +23,8 @@ export const generateStudySummaryPDF = async (studyId: string, studyName: string
       throw new Error(SERVER_ERROR)
     }
 
+    const locale = await getLocale()
+
     try {
       const token = jwt.sign(
         {
@@ -30,6 +33,7 @@ export const generateStudySummaryPDF = async (studyId: string, studyName: string
           organizationVersionId: session.user.organizationVersionId,
           environment: session.user.environment,
           exp: Math.floor(Date.now() / 1000) + 1 * 60, // 1 minute
+          locale,
         },
         JWT_KEY,
       )

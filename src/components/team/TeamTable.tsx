@@ -61,7 +61,7 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
     if (!isCut) {
       col.push({
         header: t('level'),
-        accessorFn: (member: TeamMember) => (member.user.level ? tLevel(member.user.level) : ''),
+        accessorFn: (member: TeamMember) => tLevel(member.user.level ? member.user.level : 'noLevel'),
       })
     }
 

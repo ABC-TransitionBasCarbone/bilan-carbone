@@ -1,7 +1,9 @@
 'use client'
 
 import BaseTable from '@/components/base/Table'
+import { Post } from '@/services/posts'
 import { getStandardDeviationRating } from '@/services/uncertainty'
+import { sortByCustomOrder } from '@/utils/array'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
@@ -20,6 +22,7 @@ interface Props<T> {
   expandAll?: boolean
   hideExpandIcons?: boolean
   isCompact?: boolean
+  customPostOrder?: Post[]
 }
 
 type tableDataType = {
@@ -45,6 +48,7 @@ const ConsolidatedResultsTable = <
   expandAll,
   hideExpandIcons,
   isCompact,
+  customPostOrder,
 }: Props<T>) => {
   const t = useTranslations('study.results')
   const tQuality = useTranslations('quality')
@@ -107,14 +111,17 @@ const ConsolidatedResultsTable = <
     return tmpColumns
   }, [hiddenUncertainty, hideExpandIcons, resultsUnit, t, tPost, tQuality, tUnits])
 
-  const tableData = useMemo(
-    () =>
-      data.map((d) => ({
-        ...d,
-        children: d.children.map((child) => ({ ...child, children: [] })),
-      })),
-    [data],
-  )
+  const tableData = useMemo(() => {
+    const mappedData = data.map((d) => ({
+      ...d,
+      children: d.children.map((child) => ({ ...child, children: [] })),
+    }))
+
+    if (customPostOrder?.length) {
+      return sortByCustomOrder(mappedData, customPostOrder, (item) => item.post ?? item.label)
+    }
+    return mappedData
+  }, [data])
 
   const table = useReactTable({
     columns,

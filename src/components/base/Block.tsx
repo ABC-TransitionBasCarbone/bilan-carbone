@@ -48,7 +48,7 @@ const Block = ({
   fullSize = true,
   rightComponent,
   isMainContainer = true,
-  grow = true,
+  grow = false,
   ...rest
 }: Props) => {
   const titleDiv = (
