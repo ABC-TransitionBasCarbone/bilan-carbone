@@ -111,6 +111,55 @@
     "uncertainty": "Incertitude",
     "ges": "Émissions de GES ({unit})"
   },
+  "ghgp": {
+    "rule": "Règle",
+    "subTotal": "Sous-total",
+    "category": {
+      "title": "Catégorie",
+      "1": "Scope 1",
+      "2": "Scope 2",
+      "3": "Scope 3 amont",
+      "4": "Scope 3 aval"
+    },
+    "post": {
+      "title": "Poste d'émission",
+      "1": {
+        "1": "Émissions directes des sources fixes de combustion",
+        "2": "Émissions directes des sources mobiles de combustion",
+        "3": "Émissions directes des procédés",
+        "4": "Émissions directes fugitives"
+      },
+      "2": {
+        "1": "Émissions indirectes liées à la consommation",
+        "2": "Émissions indirectes liées à la consommation de vapeur"
+      },
+      "3": {
+        "1": "Produits et services achetés",
+        "2": "Bien immobilisés",
+        "3": "Émissions liées aux combustions et à l'énergie (non inclus dans le scope 1 ou le scope 2)",
+        "4": "Transport de marchandise amont et distribution",
+        "5": "Déchets générés",
+        "6": "Déplacements professionnels",
+        "7": "Déplacements domicile travail",
+        "8": "Actifs en leasing amont",
+        "other": "Autres émissions indirectes amont"
+      },
+      "4": {
+        "09": "Transport de marchandise aval et distribution",
+        "10": "Transformation des produits vendus",
+        "11": "Utilisation des produits vendus",
+        "12": "Fin de vie des produits vendus",
+        "13": "Actifs en leasing aval",
+        "14": "Franchises",
+        "15": "Investissements",
+        "other": "Autres émissions indirectes aval"
+      }
+    },
+    "other": "Autres gaz",
+    "total": "Total",
+    "uncertainty": "Incertitude",
+    "ges": "Émissions de GES ({unit})"
+  },
   "nav": {
     "backToHome": "Retour à l'accueil",
     "emissionFactors": "Facteurs d'émission",
@@ -686,6 +735,7 @@
       "emissionSources": "Nombre de sources d'émission",
       "bilanCarbone": "Résultats Bilan Carbone®",
       "beges": "Résultats BEGES",
+      "ghgp": "Résultats GHG-P",
       "withDependencies": "Avec le sous-poste 'Utilisation en dépendance'",
       "withoutDependencies": "Sans le sous-poste 'Utilisation en dépendance'",
       "dependencyIntensity": "Intensités carbone en dépendance",
