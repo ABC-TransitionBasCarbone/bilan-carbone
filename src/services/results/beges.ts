@@ -2,7 +2,7 @@ import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { hasDeprecationPeriod } from '@/utils/study'
 import { ExportRule } from '@prisma/client'
-import { computeResult, EmissionFactor, EmissionSource, getEmissionTotal, PostInfos } from './exports'
+import { computeResult, EmissionSource, ExportEmissionFactor, getEmissionTotal, PostInfos } from './exports'
 
 const allRules = [
   '1.1',
@@ -39,7 +39,7 @@ export const rulesSpans: Record<string, number> = {
   total: 1,
 }
 
-const getLine = (value: number, emissionFactor: EmissionFactor): Omit<PostInfos, 'rule' | 'uncertainty'> => {
+const getLine = (value: number, emissionFactor: ExportEmissionFactor): Omit<PostInfos, 'rule' | 'uncertainty'> => {
   const ch4 = emissionFactor.ch4f || 0
   const n2o = emissionFactor.n2o || 0
   const other =
@@ -72,7 +72,7 @@ export const getBegesEmissionValue = (emissionSource: EmissionSource): number =>
   return value
 }
 
-export const getBegesEmissionTotal = (emissionSource: EmissionSource, emissionFactor: EmissionFactor) =>
+export const getBegesEmissionTotal = (emissionSource: EmissionSource, emissionFactor: ExportEmissionFactor) =>
   getEmissionTotal(emissionSource, emissionFactor, getBegesEmissionValue, getLine)
 
 export const computeBegesResult = (
