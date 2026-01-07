@@ -22,7 +22,7 @@ export type PostInfos = {
   squaredStandardDeviation: number
 }
 
-export interface EmissionFactor {
+export interface ExportEmissionFactor {
   ch4b: number | null
   ch4f: number | null
   co2b: number | null
@@ -83,12 +83,12 @@ export type EmissionSource = Pick<
 
 type GetLineFunctionType = (
   value: number,
-  emissionFactor: EmissionFactor,
+  emissionFactor: ExportEmissionFactor,
 ) => Omit<PostInfos, 'rule' | 'squaredStandardDeviation'>
 
 export const getEmissionTotal = (
   emissionSource: EmissionSource,
-  emissionFactor: EmissionFactor,
+  emissionFactor: ExportEmissionFactor,
   getEmissionValue: (source: EmissionSource) => number,
   getLine: GetLineFunctionType,
 ) => getLine(getEmissionValue(emissionSource), emissionFactor).total
