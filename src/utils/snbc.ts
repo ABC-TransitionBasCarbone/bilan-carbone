@@ -23,8 +23,6 @@ interface CalculateTrajectoryParams {
   pastStudies?: PastStudy[]
   displayCurrentStudyValueOnTrajectory?: boolean
   overshootAdjustment?: OvershootAdjustment
-  rateCalculationStartYear?: number
-  rateCalculationStartEmissions?: number
 }
 
 export const getSectenEmissionsByYear = (sectenData: SectenInfo[], year: number): number | null => {
@@ -79,43 +77,49 @@ const getSectenYearlyReductionRates = (sectenData: SectenInfo[]): Map<number, nu
   return rates
 }
 
-const reconstructEmissionsBackward = (
-  studyEmissions: number,
-  studyYear: number,
-  targetYear: number,
+/**
+ * Interpolate all past emission values based on Secten data and reduction rates.
+ */
+const interpolatePastEmissions = (
+  fromEmissions: number,
+  fromYear: number, // Most recent year to interpolate from
+  toYear: number, // Earliest year to interpolate to
   reductionRates: Map<number, number>,
   rateTo2030?: number,
-): number => {
-  if (targetYear >= studyYear) {
-    return studyEmissions
+): Map<number, number> => {
+  const interpolatedEmissions = new Map<number, number>()
+
+  if (toYear >= fromYear) {
+    return interpolatedEmissions
   }
 
-  let emissions = studyEmissions
+  const interpolationEarliestYear = Math.max(toYear, SNBC_REFERENCE_YEAR)
+  let emissions = fromEmissions
   const latestSectenYear = reductionRates.size > 0 ? Math.max(...reductionRates.keys()) : null
 
-  for (let year = studyYear; year > targetYear; year--) {
-    let rate = reductionRates.get(year)
+  for (let year = fromYear - 1; year >= interpolationEarliestYear; year--) {
+    let rate = reductionRates.get(year + 1)
 
-    // Use reduction rate to 2030 for years after last available secten year
-    if (rate === undefined && rateTo2030 !== undefined && latestSectenYear !== null && year > latestSectenYear) {
+    // Special case: Use reduction rate to 2030 for years after last available secten year
+    if (rate === undefined && rateTo2030 !== undefined && latestSectenYear !== null && year >= latestSectenYear) {
       rate = rateTo2030
     }
 
-    // Avoid division by zero for 100% reduction rate
     if (rate !== undefined && rate !== 1) {
+      // From reduction formula E_n = E_n-1 * (1 - rate) => E_n-1 = E_n / (1 - rate)
       emissions = emissions / (1 - rate)
     }
+
+    interpolatedEmissions.set(year, emissions)
   }
 
-  return emissions
+  return interpolatedEmissions
 }
 
-/**
- * Calculate the annual reduction rate needed to reach sectenTarget2030 from the given year and emissions
- */
 const calculateAnnualRateTo2030 = (sectenTarget2030: number, fromYear: number, fromEmissions: number): number => {
   const yearsTo2030 = SNBC_MID_TARGET_YEAR - fromYear
-  if (yearsTo2030 <= 0) {
+
+  if (yearsTo2030 <= 0 || fromEmissions <= 0) {
     return 0
   }
 
@@ -123,50 +127,15 @@ const calculateAnnualRateTo2030 = (sectenTarget2030: number, fromYear: number, f
   return remainingReduction / yearsTo2030
 }
 
-/**
- * Interpolate the 2030 target and 2050 target to get the annual reduction rate in the segment 2030-2050
- */
 const calculateAnnualRateFrom2030To2050 = (sectenTarget2030: number, sectenTarget2050: number): number | null => {
   if (sectenTarget2030 <= 0) {
     return null
   }
 
-  const totalReduction = (sectenTarget2030 - sectenTarget2050) / sectenTarget2030
   const years = SNBC_FINAL_TARGET_YEAR - SNBC_MID_TARGET_YEAR
+  const totalReduction = 1 - sectenTarget2050 / sectenTarget2030
 
   return totalReduction / years
-}
-
-interface GetObjectivesParams {
-  sectenTarget2030: number
-  rateTo2030: number
-  rateFrom2030To2050: number
-  fromYear?: number
-  fromEmissions?: number
-}
-
-/**
- * Calculate SNBC objectives (reduction rates for 2030 and 2050 targets)
- * fromYear and fromEmissions are provided when the trajectory is not based on a reference study
- * Otherwise, the overshoot compensation is applied to the base reduction rate
- */
-const getObjectives = ({
-  sectenTarget2030,
-  rateTo2030,
-  rateFrom2030To2050,
-  fromYear,
-  fromEmissions,
-}: GetObjectivesParams): Array<{ targetYear: number; reductionRate: number }> => {
-  let rate2030: number = rateTo2030
-
-  if (fromYear !== undefined && fromEmissions !== undefined) {
-    rate2030 = calculateAnnualRateTo2030(sectenTarget2030, fromYear, fromEmissions)
-  }
-
-  return [
-    { targetYear: SNBC_MID_TARGET_YEAR, reductionRate: rate2030 },
-    { targetYear: SNBC_FINAL_TARGET_YEAR, reductionRate: rateFrom2030To2050 },
-  ]
 }
 
 /**
@@ -195,8 +164,6 @@ export const calculateSNBCTrajectory = ({
   pastStudies = [],
   displayCurrentStudyValueOnTrajectory = true,
   overshootAdjustment,
-  rateCalculationStartYear,
-  rateCalculationStartEmissions,
 }: CalculateTrajectoryParams): TrajectoryDataPoint[] => {
   const dataPoints: TrajectoryDataPoint[] = []
 
@@ -204,6 +171,8 @@ export const calculateSNBCTrajectory = ({
     return dataPoints
   }
 
+  // Calculate the Secten targets and rates, fixed for a Secten version
+  // TODO:https://github.com/ABC-TransitionBasCarbone/bilan-carbone/issues/2344
   const sectenTarget2030 = calculateSectenTarget2030(sectenData)
   const sectenTarget2050 = calculateSectenTarget2050(sectenData)
   const latestSectenYear = getLatestSectenYear(sectenData)
@@ -218,9 +187,20 @@ export const calculateSNBCTrajectory = ({
     return dataPoints
   }
 
-  const sectenRateTo2030 = calculateAnnualRateTo2030(sectenTarget2030, latestSectenYear, latestSectenEmissions)
+  const sectenYearForRateCalculation = Math.min(studyStartYear, latestSectenYear)
+  const sectenEmissionsForRateCalculation = getSectenEmissionsByYear(sectenData, sectenYearForRateCalculation)
+  if (sectenEmissionsForRateCalculation === null) {
+    return dataPoints
+  }
+
+  const sectenRateTo2030 = calculateAnnualRateTo2030(
+    sectenTarget2030,
+    sectenYearForRateCalculation,
+    sectenEmissionsForRateCalculation,
+  )
+
   const sectenRateFrom2030To2050 = calculateAnnualRateFrom2030To2050(sectenTarget2030, sectenTarget2050)
-  if (sectenRateTo2030 === null || sectenRateFrom2030To2050 === null) {
+  if (sectenRateFrom2030To2050 === null) {
     return dataPoints
   }
 
@@ -240,31 +220,33 @@ export const calculateSNBCTrajectory = ({
         dataPoints.push({ year, value: studyEmissions })
       }
     }
-  }
-
-  if (studyStartYear > SNBC_REFERENCE_YEAR) {
+  } else {
     const earliestPastStudyYear = pastStudies.length > 0 ? Math.min(...pastStudies.map((s) => s.year)) : null
-    const reconstructionEndYear = earliestPastStudyYear !== null ? earliestPastStudyYear : studyStartYear
+    const sectenInterpolationFromYear = earliestPastStudyYear !== null ? earliestPastStudyYear : studyStartYear
+
+    const sectenInterpolationFromEmissions =
+      earliestPastStudyYear !== null
+        ? pastStudies.find((s) => s.year === earliestPastStudyYear)!.totalCo2
+        : studyEmissions
+
+    const interpolatedPastEmissions = interpolatePastEmissions(
+      sectenInterpolationFromEmissions,
+      sectenInterpolationFromYear,
+      graphStartYear,
+      reductionRates,
+      sectenRateTo2030,
+    )
 
     for (let year = graphStartYear; year < studyStartYear; year++) {
-      if (year < reconstructionEndYear) {
+      if (year < sectenInterpolationFromYear) {
         const pastStudyAtYear = pastStudies.find((s) => s.year === year)
         if (pastStudyAtYear) {
           dataPoints.push({ year, value: pastStudyAtYear.totalCo2 })
         } else {
-          // Reconstruct emissions backward from the earliest past study or study start
-          const emissionsForBackwardReconstruction =
-            earliestPastStudyYear !== null
-              ? pastStudies.find((s) => s.year === earliestPastStudyYear)!.totalCo2
-              : studyEmissions
-          const reconstructed = reconstructEmissionsBackward(
-            emissionsForBackwardReconstruction,
-            reconstructionEndYear,
-            year,
-            reductionRates,
-            sectenRateTo2030,
-          )
-          dataPoints.push({ year, value: reconstructed })
+          const interpolatedYearlyEmissions = interpolatedPastEmissions.get(year)
+          if (interpolatedYearlyEmissions !== undefined) {
+            dataPoints.push({ year, value: interpolatedYearlyEmissions })
+          }
         }
       } else {
         const value = computePastOrPresentValue(year, historicalPoints, studyEmissions, studyStartYear, true)
@@ -279,13 +261,10 @@ export const calculateSNBCTrajectory = ({
     dataPoints.push({ year: studyStartYear, value: studyEmissions })
   }
 
-  let objectives = getObjectives({
-    sectenTarget2030,
-    rateTo2030: sectenRateTo2030,
-    rateFrom2030To2050: sectenRateFrom2030To2050,
-    fromYear: rateCalculationStartYear,
-    fromEmissions: rateCalculationStartEmissions,
-  })
+  let objectives = [
+    { targetYear: SNBC_MID_TARGET_YEAR, reductionRate: sectenRateTo2030 },
+    { targetYear: SNBC_FINAL_TARGET_YEAR, reductionRate: sectenRateFrom2030To2050 },
+  ]
 
   if (overshootAdjustment) {
     objectives = getObjectivesWithOvershootCompensation(
@@ -297,25 +276,22 @@ export const calculateSNBCTrajectory = ({
     )
   }
 
-  // Apply objectives to build the trajectory
   let currentEmissions = studyEmissions
   const startYearForReduction = Math.max(studyStartYear, SNBC_REFERENCE_YEAR)
 
   // Segment 1: From start year + 1 to 2030
   const annualReductionRateTo2030 = objectives[0].reductionRate
+  const yearlyReductionTo2030 = currentEmissions * annualReductionRateTo2030
   for (let year = startYearForReduction + 1; year <= SNBC_MID_TARGET_YEAR; year++) {
-    const yearlyReduction = currentEmissions * annualReductionRateTo2030
-    currentEmissions = Math.max(0, currentEmissions - yearlyReduction)
+    currentEmissions = Math.max(0, currentEmissions - yearlyReductionTo2030)
     dataPoints.push({ year, value: currentEmissions })
   }
 
-  const emissionsAt2030 = currentEmissions
-
-  // Segment 2: From 2030 to 2050
+  // Segment 2: From 2031 to 2050
   const annualReductionRateTo2050 = objectives[1].reductionRate
+  const yearlyReductionTo2050 = currentEmissions * annualReductionRateTo2050
   for (let year = SNBC_MID_TARGET_YEAR + 1; year <= SNBC_FINAL_TARGET_YEAR; year++) {
-    const yearlyReduction = emissionsAt2030 * annualReductionRateTo2050
-    currentEmissions = Math.max(0, currentEmissions - yearlyReduction)
+    currentEmissions = Math.max(0, currentEmissions - yearlyReductionTo2050)
     dataPoints.push({ year, value: currentEmissions })
   }
 

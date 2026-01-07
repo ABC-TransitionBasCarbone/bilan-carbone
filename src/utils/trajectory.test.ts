@@ -1105,7 +1105,7 @@ describe('calculateTrajectory', () => {
     })
   })
 
-  const BUDGET_PRECISION_TOLERANCE_PERCENT = 5
+  const BUDGET_PRECISION_TOLERANCE_PERCENT = 1
 
   const expectBudgetsApproximatelyEqual = (actual: number, expected: number) => {
     const difference = Math.abs(actual - expected)

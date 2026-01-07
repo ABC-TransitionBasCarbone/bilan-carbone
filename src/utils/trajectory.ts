@@ -16,7 +16,7 @@ import {
   StudyResultUnit,
   TrajectoryType,
 } from '@prisma/client'
-import { calculateSNBCTrajectory, getSectenEmissionsByYear } from './snbc'
+import { calculateSNBCTrajectory } from './snbc'
 import { getYearFromDateStr } from './time'
 
 export type SBTIType = 'SBTI_15' | 'SBTI_WB2C'
@@ -763,8 +763,6 @@ export const getSNBCData = (
   }
 
   if (!referenceStudyData) {
-    const sectenEmissionsAtStudyYear = getSectenEmissionsByYear(sectenData, studyStartYear)
-
     return {
       previousTrajectoryReferenceYear: null,
       previousTrajectory: null,
@@ -773,22 +771,16 @@ export const getSNBCData = (
         studyStartYear,
         sectenData,
         pastStudies,
-        rateCalculationStartYear: studyStartYear,
-        rateCalculationStartEmissions: sectenEmissionsAtStudyYear ?? undefined,
       }),
       withinThreshold: true,
     }
   }
-
-  const sectenEmissionsAtReferenceYear = getSectenEmissionsByYear(sectenData, referenceStudyData.year)
 
   const referenceTrajectory = calculateSNBCTrajectory({
     studyEmissions: referenceStudyData.totalCo2,
     studyStartYear: referenceStudyData.year,
     sectenData,
     pastStudies: pastStudies.filter((s) => s.year < referenceStudyData.year),
-    rateCalculationStartYear: referenceStudyData.year,
-    rateCalculationStartEmissions: sectenEmissionsAtReferenceYear ?? undefined,
   })
 
   const referenceEmissionsForStudyStartYear = getTrajectoryEmissionsAtYear(referenceTrajectory, studyStartYear)
@@ -810,8 +802,6 @@ export const getSNBCData = (
         referenceTrajectory,
         referenceStudyYear: referenceStudyData.year,
       },
-      rateCalculationStartYear: referenceStudyData.year,
-      rateCalculationStartEmissions: sectenEmissionsAtReferenceYear ?? undefined,
     })
   }
 
@@ -1232,11 +1222,12 @@ export const calculateActionBasedTrajectory = ({
 }
 
 // Build trajectory with a given rate multiplier applied to the objectives
+// This must match the trajectory building logic in calculateCustomTrajectory and calculateSNBCTrajectory
 const buildTrajectoryWithObjectivesAndMultiplier = (
   startEmissions: number,
   startYear: number,
   objectives: Array<{ targetYear: number; reductionRate: number }>,
-  multiplier: number,
+  multiplier: number = 1,
 ): TrajectoryDataPoint[] => {
   const trajectory: TrajectoryDataPoint[] = [{ year: startYear, value: startEmissions }]
   let currentEmissions = startEmissions
@@ -1253,11 +1244,11 @@ const buildTrajectoryWithObjectivesAndMultiplier = (
 
       for (let j = 0; j < yearsInSegment; j++) {
         const year = effectiveStart + j
-        const emissionThisYear = currentEmissions - j * yearlyReduction
+        const emissionThisYear = Math.max(0, currentEmissions - (j + 1) * yearlyReduction)
         trajectory.push({ year, value: emissionThisYear })
       }
 
-      currentEmissions = currentEmissions - yearsInSegment * yearlyReduction
+      currentEmissions = Math.max(0, currentEmissions - yearsInSegment * yearlyReduction)
       previousSegmentEnd = objective.targetYear
     }
   }
@@ -1272,7 +1263,8 @@ const buildTrajectoryWithObjectivesAndMultiplier = (
 
       for (let j = 0; j < Math.ceil(yearsToZero); j++) {
         const year = previousSegmentEnd + 1 + j
-        const emissionThisYear = Math.max(0, currentEmissions - j * lastYearlyReduction)
+        // We need + 1 because we are counting the start year
+        const emissionThisYear = Math.max(0, currentEmissions - (j + 1) * lastYearlyReduction)
         trajectory.push({ year, value: emissionThisYear })
       }
     }
