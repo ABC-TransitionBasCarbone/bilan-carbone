@@ -2,7 +2,7 @@ import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { hasDeprecationPeriod } from '@/utils/study'
 import { ExportRule } from '@prisma/client'
-import { computeResult, EmissionFactor, EmissionSource, getEmissionTotal, PostInfos } from './exports'
+import { computeResult, EmissionSource, ExportEmissionFactor, getEmissionTotal, PostInfos } from './exports'
 
 const allRules = [
   '1.1',
@@ -36,7 +36,7 @@ export const rulesSpans: Record<string, number> = {
   total: 1,
 }
 
-const getLine = (value: number, emissionFactor: EmissionFactor): Omit<PostInfos, 'rule' | 'uncertainty'> => {
+const getLine = (value: number, emissionFactor: ExportEmissionFactor): Omit<PostInfos, 'rule' | 'uncertainty'> => {
   const hfc = emissionFactor.hfc || 0
   const pfc = emissionFactor.pfc || 0
   const sf6 = emissionFactor.sf6 || 0
@@ -79,7 +79,7 @@ export const getGHGPEmissionValue = (studyDate: Date) => (emissionSource: Emissi
 
 export const getGHGPEmissionTotal = (
   emissionSource: EmissionSource,
-  emissionFactor: EmissionFactor,
+  emissionFactor: ExportEmissionFactor,
   studyStartDate: Date,
 ) => getEmissionTotal(emissionSource, emissionFactor, getGHGPEmissionValue(studyStartDate), getLine)
 
