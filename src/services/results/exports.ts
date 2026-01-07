@@ -19,7 +19,7 @@ export type PostInfos = {
   uncertainty: number | null
 }
 
-export interface EmissionFactor {
+export interface ExportEmissionFactor {
   ch4b: number | null
   ch4f: number | null
   co2b: number | null
@@ -78,11 +78,14 @@ export type EmissionSource = Pick<
   'value' | 'subPost' | 'depreciationPeriod' | 'constructionYear'
 >
 
-type GetLineFunctionType = (value: number, emissionFactor: EmissionFactor) => Omit<PostInfos, 'rule' | 'uncertainty'>
+type GetLineFunctionType = (
+  value: number,
+  emissionFactor: ExportEmissionFactor,
+) => Omit<PostInfos, 'rule' | 'uncertainty'>
 
 export const getEmissionTotal = (
   emissionSource: EmissionSource,
-  emissionFactor: EmissionFactor,
+  emissionFactor: ExportEmissionFactor,
   getEmissionValue: (source: EmissionSource) => number,
   getLine: GetLineFunctionType,
 ) => getLine(getEmissionValue(emissionSource), emissionFactor).total
