@@ -1,5 +1,6 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
+import { toCamelCase } from '@/utils/string'
 import { EmissionSourceCaracterisation, ExportRule } from '@prisma/client'
 import { getStandardDeviation, sumStandardDeviations } from '../emissionSource'
 import { convertTiltSubPostToBCSubPost } from '../posts'
@@ -37,40 +38,7 @@ const getRulePost = (caracterisation: EmissionSourceCaracterisation | null, rule
     return null
   }
 
-  switch (caracterisation) {
-    case EmissionSourceCaracterisation.Operated:
-      return rule.operated
-    case EmissionSourceCaracterisation.NotOperated:
-      return rule.notOperated
-    case EmissionSourceCaracterisation.NotOperatedSupported:
-      return rule.notOperatedSupported
-    case EmissionSourceCaracterisation.NotOperatedNotSupported:
-      return rule.notOperatedNotSupported
-    case EmissionSourceCaracterisation.OperatedFugitive:
-      return rule.operatedFugitive
-    case EmissionSourceCaracterisation.OperatedProcedeed:
-      return rule.operatedProcedeed
-    case EmissionSourceCaracterisation.Rented:
-      return rule.rented
-    case EmissionSourceCaracterisation.FinalClient:
-      return rule.finalClient
-    case EmissionSourceCaracterisation.Held:
-      return rule.held
-    case EmissionSourceCaracterisation.NotHeldSimpleRent:
-      return rule.notHeldSimpleRent
-    case EmissionSourceCaracterisation.NotHeldOther:
-      return rule.notHeldOther
-    case EmissionSourceCaracterisation.HeldProcedeed:
-      return rule.heldProcedeed
-    case EmissionSourceCaracterisation.HeldFugitive:
-      return rule.heldFugitive
-    case EmissionSourceCaracterisation.NotHeldSupported:
-      return rule.notHeldSupported
-    case EmissionSourceCaracterisation.NotHeldNotSupported:
-      return rule.notHeldNotSupported
-    case EmissionSourceCaracterisation.UsedByIntermediary:
-      return rule.usedByIntermediary
-  }
+  return rule[toCamelCase(caracterisation) as keyof typeof rule] as string | undefined
 }
 
 export type EmissionSource = Pick<
@@ -108,7 +76,7 @@ const sumLines = (lines: Omit<PostInfos, 'rule'>[]) => {
   }
 }
 
-const getDefaultRule = (rules: ExportRule[], caracterisation: EmissionSourceCaracterisation | null) => {
+export const getDefaultRule = (rules: ExportRule[], caracterisation: EmissionSourceCaracterisation | null) => {
   const rule = rules.find((rule) => rule.type === null)
   if (!rule) {
     return null
@@ -162,7 +130,7 @@ export const computeResult = (
         return
       }
 
-      // l'incertitude est globale, peu importe
+      // The uncertainty is on the emissionFactor, so we use the same for emission factor and emission factor part
       const uncertainty = getStandardDeviation(emissionSource)
 
       if (emissionFactor.emissionFactorParts.length === 0) {
