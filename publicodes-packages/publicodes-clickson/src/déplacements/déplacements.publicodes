@@ -2,7 +2,7 @@ déplacements:
   titre: Déplacements
   formule:
     somme:
-    - transport des élèves
-    - transport du personnel
-    - voyages scolaires
+      - transport des élèves
+      - transport du personnel
+      - voyages scolaires
   unité: kgCO2e

@@ -12,7 +12,7 @@ immobilisations . construction:
 
 immobilisations . construction . bâtiment scolaire structure béton:
   titre: "Bâtiment scolaire (structure béton)"
-  formule: 
+  formule:
     variations:
       - si: age > amortissement
         alors: 0
