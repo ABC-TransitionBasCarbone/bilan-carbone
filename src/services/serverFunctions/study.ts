@@ -296,13 +296,13 @@ export const createStudyCommand = async (
       ],
     }
 
-    const { exports, controlMode, ...studyCommand } = command
+    const { exports, controlMode, isPublic, ...studyCommand } = command
 
     const study = {
       ...studyCommand,
       createdBy: { connect: { id: session.user.accountId } },
       organizationVersion: { connect: { id: organizationVersionId } },
-      isPublic: studyCommand.isPublic === 'true',
+      isPublic: isPublic === 'true',
       resultsUnit: resultsUnit || StudyResultUnit.T,
       allowedUsers: {
         createMany: { data: rights },
