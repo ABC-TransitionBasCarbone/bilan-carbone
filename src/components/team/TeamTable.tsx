@@ -4,10 +4,11 @@ import HelpIcon from '@/components/base/HelpIcon'
 import BaseTable from '@/components/base/Table'
 import { TeamMember } from '@/db/account'
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { isAdvanced } from '@/services/permissions/environment'
 import { deleteOrganizationMember } from '@/services/serverFunctions/organization'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { canEditMemberRole, getEnvironmentRoles } from '@/utils/user'
-import { Environment, Role } from '@prisma/client'
+import { Role } from '@prisma/client'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -46,7 +47,6 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
   const router = useRouter()
 
   const { environment } = useAppEnvironmentStore()
-  const isCut = useMemo(() => environment === Environment.CUT, [environment])
 
   const columns = useMemo(() => {
     const col: ColumnDef<TeamMember>[] = [
@@ -58,7 +58,7 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
       { header: t('email'), accessorKey: 'user.email' },
     ]
 
-    if (!isCut) {
+    if (environment && isAdvanced(environment)) {
       col.push({
         header: t('level'),
         accessorFn: (member: TeamMember) => tLevel(member.user.level ? member.user.level : 'noLevel'),
@@ -100,7 +100,7 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
       })
     }
     return col
-  }, [t, isCut, canUpdateTeam, tLevel, user.email, user.environment, tRole])
+  }, [t, environment, canUpdateTeam, tLevel, user.email, user.environment, tRole])
 
   const table = useReactTable({
     columns,
