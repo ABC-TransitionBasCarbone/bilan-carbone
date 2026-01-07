@@ -737,6 +737,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         caracterisation: EmissionSourceCaracterisation.Operated,
         value: 750,
         depreciationPeriod: 30,
+        constructionYear: new Date('01/06/2024'),
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '20731')?.id,
       },
       {
@@ -750,6 +751,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         caracterisation: EmissionSourceCaracterisation.Operated,
         value: 500,
         depreciationPeriod: 30,
+        constructionYear: new Date('01/06/2024'),
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '26011')?.id,
       },
       {
@@ -763,6 +765,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         caracterisation: EmissionSourceCaracterisation.Operated,
         value: 1500,
         depreciationPeriod: 10,
+        constructionYear: new Date('01/06/2024'),
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '20906')?.id,
       },
       {
@@ -776,6 +779,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         caracterisation: EmissionSourceCaracterisation.Operated,
         value: 2,
         depreciationPeriod: 10,
+        constructionYear: new Date('01/06/2024'),
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '20907')?.id,
       },
       {
@@ -789,6 +793,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         caracterisation: EmissionSourceCaracterisation.Operated,
         value: 15,
         depreciationPeriod: 3,
+        constructionYear: new Date('01/06/2024'),
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '27002')?.id,
       },
       {
@@ -802,6 +807,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         caracterisation: EmissionSourceCaracterisation.Operated,
         value: 10,
         depreciationPeriod: 3,
+        constructionYear: new Date('01/06/2024'),
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '27003')?.id,
       },
       {
@@ -815,6 +821,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         caracterisation: EmissionSourceCaracterisation.Operated,
         value: 5,
         depreciationPeriod: 5,
+        constructionYear: new Date('01/06/2024'),
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '27025')?.id,
       },
       {
@@ -828,6 +835,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         caracterisation: EmissionSourceCaracterisation.Operated,
         value: 2,
         depreciationPeriod: 7,
+        constructionYear: new Date('01/06/2024'),
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '20591')?.id,
       },
     ],
