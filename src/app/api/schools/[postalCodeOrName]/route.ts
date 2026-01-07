@@ -10,8 +10,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ pos
   const select =
     'nom_etablissement,adresse_1,adresse_3, code_postal,identifiant_de_l_etablissement,date_ouverture, libelle_academie, libelle_nature'
 
-  const commonWhere =
-    '(libelle_nature="COLLEGE" OR libelle_nature like "*LYCEE*" OR libelle_nature="ECOLE DE NIVEAU ELEMENTAIRE")'
+  const commonWhere = '(libelle_nature="COLLEGE" OR libelle_nature like "*LYCEE*")'
 
   if (!input) {
     return Response.json([], { status: 200 })

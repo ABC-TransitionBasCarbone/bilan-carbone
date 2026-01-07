@@ -13,12 +13,12 @@ export interface School {
 }
 
 export const establishmentTypeMap: Record<string, EstablishmentType> = {
-  'ECOLE DE NIVEAU ELEMENTAIRE': EstablishmentType.ELEMENTAIRE,
   COLLEGE: EstablishmentType.COLLEGE,
   'LYCEE PROFESSIONNEL': EstablishmentType.LYCEE_PRO,
-  'LYCEE POLYVALENT': EstablishmentType.LYCEE_GENERAL,
   'LYCEE ENSEIGNT GENERAL ET TECHNOLOGIQUE': EstablishmentType.LYCEE_GENERAL,
   'LYCEE D ENSEIGNEMENT GENERAL': EstablishmentType.LYCEE_GENERAL,
+  'LYCEE D ENSEIGNEMENT TECHNOLOGIQUE': EstablishmentType.LYCEE_GENERAL,
+  'LYCEE ENS GENERAL TECHNO PROF AGRICOLE': EstablishmentType.LYCEE_PRO_AGRICOLE,
 }
 
 export const getSchoolsFromPostalCodeOrName = async (postalCodeOrName: string): Promise<School[]> => {

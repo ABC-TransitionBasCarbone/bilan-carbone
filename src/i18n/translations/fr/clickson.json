@@ -175,10 +175,10 @@
       "academyPlaceholder": "Académie de l'établissement",
       "establishmentType": {
         "title": "Type d'établissement",
-        "ELEMENTAIRE": "École élémentaire",
         "COLLEGE": "Collège",
         "LYCEE_GENERAL": "Lycée Général et Technologique",
         "LYCEE_PRO": "Lycée Professionnel",
+        "LYCEE_PRO_AGRICOLE": "Lycée Professionnel Agricole",
         "ETABLISSEMENT_FR_ETRANGER": "Etablissement d'enseignement français à l'étranger"
       },
       "glossary": {

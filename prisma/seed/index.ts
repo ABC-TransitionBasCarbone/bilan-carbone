@@ -391,7 +391,11 @@ const users = async () => {
   if (clicksonSite) {
     await prisma.site.update({
       where: { id: clicksonSite.id },
-      data: { establishmentId: '0781494A', name: 'Ecole élémentaire Mansart', establishmentYear: '1965' },
+      data: {
+        establishmentId: '0922798S',
+        name: 'Ecole secondaire privée  international scolaire - Open Sky International',
+        establishmentYear: '2017',
+      },
     })
   }
 

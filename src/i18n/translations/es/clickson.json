@@ -175,10 +175,10 @@
       "academyPlaceholder": "Academia del establecimiento",
       "establishmentType": {
         "title": "Tipo de establecimiento",
-        "ELEMENTAIRE": "Escuela primaria",
         "COLLEGE": "Colegio",
         "LYCEE_GENERAL": "Liceo General y Tecnológico",
         "LYCEE_PRO": "Liceo Profesional",
+        "LYCEE_PRO_AGRICOLE": "Liceo Profesional Agrícola",
         "ETABLISSEMENT_FR_ETRANGER": "Establecimiento de enseñanza francesa en el extranjero"
       },
       "glossary": {

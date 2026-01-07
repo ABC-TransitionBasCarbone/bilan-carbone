@@ -175,10 +175,10 @@
       "academyPlaceholder": "Establishment's academy",
       "establishmentType": {
         "title": "Type of Establishment",
-        "ELEMENTAIRE": "Elementary School",
         "COLLEGE": "Middle School",
         "LYCEE_GENERAL": "General and Technological High School",
         "LYCEE_PRO": "Vocational High School",
+        "LYCEE_PRO_AGRICOLE": "Agricultural Vocational High School",
         "ETABLISSEMENT_FR_ETRANGER": "French Educational Establishment Abroad"
       },
       "glossary": {
