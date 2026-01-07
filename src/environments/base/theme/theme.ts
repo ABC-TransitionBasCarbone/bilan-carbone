@@ -71,6 +71,7 @@ const base = createTheme({
     },
     ghgp: {
       main: '#0a7e76',
+      light: '#daeef3',
       totalColumn: '#00c6b9',
       co2bColumn: '#ccc0da',
     },
