@@ -191,6 +191,12 @@
     "clear": "Clear value",
     "Not authorized": "This email is already used for Clickson or there's an issue with the account creation. Please see <link>the FAQ</link> or <support>contact support</support> if you think this is an error.",
     "Not known school": "Please find and select your establishment.",
+    "country": "Your country",
+    "schoolName": "School name",
+    "schoolNamePlaceholder": "Name of the school establishment",
+    "city": "City",
+    "cityPlaceholder": "City where the school establishment is located",
+
     "validation": {
       "schoolPostalCodeOrName": "Please enter the school postal code or name"
     }
