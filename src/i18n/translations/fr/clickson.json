@@ -191,6 +191,11 @@
     "clear": "Supprimer la valeur",
     "Not authorized": "Cet email est déjà inscrit avec un compte Clickson ou il y a eu un soucis lors de sa création. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
     "Not known school": "Veuillez chercher et sélectionner votre établissement.",
+    "country": "Votre pays",
+    "schoolName": "Nom de l'établissement scolaire",
+    "schoolNamePlaceholder": "Nom de l'établissement scolaire",
+    "city": "Ville",
+    "cityPlaceholder": "Ville où se situe l'établissement scolaire",
     "validation": {
       "schoolPostalCodeOrName": "Veuillez entrer le code postal ou nom de l'établissement scolaire"
     }
