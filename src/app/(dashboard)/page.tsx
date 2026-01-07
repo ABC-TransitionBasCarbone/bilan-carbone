@@ -2,8 +2,9 @@ import Block from '@/components/base/Block'
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import UserView from '@/components/home/UserView'
 import { default as ClicksonUserView } from '@/environments/clickson/home/UserView'
+import FooterClickson from '@/environments/clickson/layout/Footer'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import Footer from '@/environments/cut/layout/Footer'
+import FooterCut from '@/environments/cut/layout/Footer'
 import SimplifiedUserView from '@/environments/simplified/home/UserView'
 import { Environment } from '@prisma/client'
 
@@ -22,8 +23,12 @@ const Home = async ({ user: account }: UserSessionProps) => (
         forceEnvironment={account.environment}
       />
     </Block>
-
-    {account.environment === Environment.CUT && <Footer />}
+    <DynamicComponent
+      environmentComponents={{
+        [Environment.CUT]: <FooterCut />,
+        [Environment.CLICKSON]: <FooterClickson />,
+      }}
+    />
   </>
 )
 

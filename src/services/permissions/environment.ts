@@ -10,7 +10,7 @@ export const isSimplified = (environment: Environment) => simplifiedEnvironments
 const isBC = (environment: Environment) => environment === BC
 export const isTilt = (environment: Environment) => environment === TILT
 const isCut = (environment: Environment) => environment === CUT
-const isClickson = (environment: Environment) => environment === CLICKSON
+export const isClickson = (environment: Environment) => environment === CLICKSON
 
 export const hasAccessToActualityCards = isBC
 
