@@ -1,12 +1,12 @@
 achats . fournitures:
   formule:
     somme:
-      - achats . fournitures . petites fournitures
-      - achats . fournitures . livres
-      - achats . fournitures . papier ramette
-      - achats . fournitures . consommables
-      - achats . fournitures . piles aaa
-      - achats . fournitures . piles aa
+      - petites fournitures
+      - livres
+      - papier ramette
+      - consommables
+      - piles aaa
+      - piles aa
   unité: kgCO2e
 
 achats . fournitures . petites fournitures:

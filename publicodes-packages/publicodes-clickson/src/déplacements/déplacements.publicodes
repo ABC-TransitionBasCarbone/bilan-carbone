@@ -1,5 +1,7 @@
 déplacements:
   titre: Déplacements
+  formule:
+    somme:
     - transport des élèves
     - transport du personnel
     - voyages scolaires
