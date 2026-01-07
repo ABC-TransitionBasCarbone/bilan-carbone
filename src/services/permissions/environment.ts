@@ -76,3 +76,6 @@ export const hasAccessToSimplifiedStudies = (env: Environment) => {
 export const hasReaderRoleOnStudyAsContributor = isClickson
 
 export const hasAccessToStudyComments = isClickson
+
+export const hasAccessToManualImport = (environment: Environment) =>
+  ([BC, TILT, CUT] as Environment[]).includes(environment)
