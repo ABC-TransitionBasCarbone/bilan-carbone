@@ -12,10 +12,23 @@ immobilisations . construction:
 
 immobilisations . construction . bâtiment scolaire structure béton:
   titre: "Bâtiment scolaire (structure béton)"
-  formule: nombre * FE
+  formule: 
+    variations:
+      - si: age > amortissement
+        alors: 0
+      - sinon: surface * FE / amortissement
   unité: kgCO2e
   avec:
-    nombre:
+    age:
+      durée:
+        unité: an
+        depuis: général . année de construction
+        jusqu'à: commun . année actuelle
+      arrondi: oui
+    amortissement:
+      valeur: 50
+      note: Amortissement annuel sous-entendu.
+    surface:
       question: "Quelle surface de bâtiment scolaire (structure béton) avez-vous construite ?"
       unité: m²
       par défaut: 0
@@ -30,10 +43,10 @@ immobilisations . construction . bâtiment scolaire structure béton:
 
 immobilisations . construction . parking bâtiment structure béton:
   titre: "Parking (bâtiment - structure béton)"
-  formule: nombre * FE
+  formule: surface * FE
   unité: kgCO2e
   avec:
-    nombre:
+    surface:
       question: "Quelle surface de parking (bâtiment - structure béton) avez-vous construite ?"
       unité: m²
       par défaut: 0

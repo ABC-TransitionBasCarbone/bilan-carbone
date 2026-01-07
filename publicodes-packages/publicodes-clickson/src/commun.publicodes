@@ -14,6 +14,12 @@ commun . nombre de semaines par an:
   valeur: 52
   unité: semaine
 
+commun . année actuelle:
+  titre: Année actuelle
+  description: Année de référence pour le calcul des amortissements.
+  type: date
+  valeur: 01/2026
+
 commun . FE:
   titre: Facteur d'émission communs
   description: Facteurs d'émission communs à plusieurs sous postes.

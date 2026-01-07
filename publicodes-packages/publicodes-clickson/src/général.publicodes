@@ -2,5 +2,13 @@ général:
 
 général . nombre étudiant:
   question: Nombre d'étudiants
-  par défaut: 300
   unité: étudiant
+
+général . nombre personnel:
+  question: Nombre de personnel (enseignants et non enseignants)
+  unité: personne
+
+général . année de construction:
+  question: Année de construction du bâtiment principal
+  unité: année
+
