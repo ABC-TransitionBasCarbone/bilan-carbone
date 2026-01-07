@@ -6,6 +6,7 @@ import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emission
 import { hasSufficientLevel } from '@/services/study'
 import { isAdmin } from '@/utils/user'
 import { Environment, Export, Level, Role, StudyResultUnit, StudyRole, SubPost, Unit } from '@prisma/client'
+import { Getter } from '@tanstack/react-table'
 import { UserSession } from 'next-auth'
 import { unique } from './array'
 import { formatNumber } from './number'
@@ -204,3 +205,6 @@ export const getAllSpecificFieldsForExports = (exportTypes: Export[]) =>
     (res, exportType) => unique(exportType ? res.concat(exportSpecificFields[exportType as Export]) : res),
     [] as (keyof UpdateEmissionSourceCommand)[],
   )
+
+export const formatEmission = (getValue: Getter<number>, resultsUnit: StudyResultUnit) =>
+  formatNumber(getValue() / STUDY_UNIT_VALUES[resultsUnit])
