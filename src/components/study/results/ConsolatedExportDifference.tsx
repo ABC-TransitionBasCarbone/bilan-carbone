@@ -1,14 +1,16 @@
 import Button from '@/components/base/Button'
 import Modal from '@/components/modals/Modal'
+import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { customRich } from '@/i18n/customRich'
+import { getEmissionResults } from '@/services/emissionSource'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { PostInfos } from '@/services/results/exports'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import LightbulbIcon from '@mui/icons-material/LightbulbOutlined'
 import { Alert } from '@mui/material'
-import { Export, SubPost } from '@prisma/client'
+import { Environment, Export, SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useMemo, useState } from 'react'
@@ -51,6 +53,26 @@ export const EmissionSourceList = ({ studySite, emissionSources, onClick }: Emis
     </div>
   )
 }
+
+export const calculEmissionSourcesDifference = (
+  emissionSources: FullStudy['emissionSources'],
+  emissionFactorsWithParts: EmissionFactorWithParts[],
+  environment: Environment,
+  unitValue: number,
+) =>
+  emissionSources.reduce((total, emissionSource) => {
+    if (!emissionSource.emissionFactor || !emissionSource.value) {
+      return total
+    }
+
+    const emissionFactor = emissionFactorsWithParts.find((ef) => ef.id === emissionSource.emissionFactor?.id)
+    if (!emissionFactor) {
+      return total
+    }
+
+    const bcEmissionTotal = Math.round(getEmissionResults(emissionSource, environment).emissionValue / unitValue)
+    return total - bcEmissionTotal
+  }, 0)
 
 interface Props {
   study: FullStudy

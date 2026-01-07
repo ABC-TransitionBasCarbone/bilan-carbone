@@ -42,6 +42,7 @@ import SelectStudySite from '../site/SelectStudySite'
 import useStudySite from '../site/useStudySite'
 import BegesResultsTable from './beges/BegesResultsTable'
 import ConsolatedBEGESDifference from './ConsolatedBEGESDifference'
+import ConsolatedGHGPDifference from './ConsolatedGHGPDifference'
 import ConsolidatedResults from './consolidated/ConsolidatedResults'
 import EmissionsAnalysis from './consolidated/EmissionsAnalysis'
 import GHGPResultsTable from './ghgp/GHGPResultsTable'
@@ -396,7 +397,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
                 ))}
             </Select>
           </FormControl>
-          {exports?.types.includes(Export.Beges) && (
+          {exports?.types.includes(Export.Beges) && type === Export.Beges && (
             <ConsolatedBEGESDifference
               study={study}
               emissionFactorsWithParts={emissionFactorsWithParts}
@@ -404,6 +405,17 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
               results={filteredResultsByPost}
               begesResults={computedBegesData}
               studySite={studySite}
+            />
+          )}
+          {exports?.types.includes(Export.GHGP) && type === Export.GHGP && (
+            <ConsolatedGHGPDifference
+              study={study}
+              emissionFactorsWithParts={emissionFactorsWithParts}
+              validatedOnly={validatedOnly}
+              results={filteredResultsByPost}
+              ghgpResults={computedGHGPData}
+              studySite={studySite}
+              ghgpRules={ghgpRules}
             />
           )}
         </div>
