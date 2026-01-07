@@ -759,7 +759,7 @@
       "tagGlossaryDescription": "Les sources d'émission peuvent avoir plusieurs tags, celles ci sont donc sur ce graphique comptabilisé dans chacun des tags. Il est donc normal que vous ayez ici un total plus grand que sur votre étude",
       "info": "Cette empreinte carbone simplifiée vise à estimer les émissions de gaz à effet de serre de votre activité, et par conséquent votre contribution au dérèglement climatique ainsi que vos potentielles dépendance aux énergies fossiles qui sont des vulnérabilités. \n\nL'Union Européenne s'est engagée, en ratifiant l'Accord de Paris, à la neutralité carbone d'ici 2050. Pour contribuer à cet objectif, votre cinéma devrait réduire son impact de 5% par an. \n\nNous vous invitons donc à refaire cette empreinte carbone simplifiée l'année prochaine pour vérifier que vous êtes sur la bonne trajectoire !",
       "difference": {
-        "button": "Explication des différences entre le Bilan Carbone® et l'export Beges",
+        "button": "Explication des différences entre le Bilan Carbone® et l'export {type}",
         "modalTitle": "Explication de la différence entre les résultats",
         "dependanceTitle": "Utilisation en dépendance",
         "wasteTitle": "Traitement des déchets",
