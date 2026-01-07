@@ -73,7 +73,6 @@ const getRulePost = (caracterisation: EmissionSourceCaracterisation | null, rule
   if (caracterisation === null || !rule) {
     return null
   }
-
   switch (caracterisation) {
     case EmissionSourceCaracterisation.Operated:
       return rule.operated

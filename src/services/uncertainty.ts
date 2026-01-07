@@ -58,6 +58,7 @@ const coeffs: Record<keyof Quality, number[]> = {
   completeness: [1.2, 1.1, 1.05, 1.02, 1],
 }
 
+// TODO : A changer, par défaut si on ne trouve pas on met très mauvais
 export const getSquaredStandardDeviationForQuality = (quality: Quality) => {
   const qualities = Object.entries(coeffs)
     .map(([key, values]) => {
@@ -104,22 +105,29 @@ export const getSquaredStandardDeviationForEmissionSource = (
   )
 }
 
+//TODO : idem ici changer pour prendre le cas très mauvais si ssd est pas défini
 export const getSquaredStandardDeviationForEmissionSourceArray = (
-  emissionSources: { value: number | null; squaredStandardDeviation?: number | null }[],
+  emissionSources: { emissionValue?: number | null; value?: number | null; squaredStandardDeviation?: number | null }[],
 ) => {
-  const total = emissionSources.reduce((acc, es) => (es.value ? acc + es.value : acc), 0)
+  const newEmissionSources = emissionSources.map((es) => ({
+    ...es,
+    value: es.emissionValue ? es.emissionValue : es.value,
+  }))
+  const total = newEmissionSources.reduce((acc, es) => (es.value ? acc + es.value : acc), 0)
 
-  return Math.exp(
+  const standardDeviation = Math.exp(
     Math.sqrt(
-      emissionSources.reduce((acc, es) => {
+      newEmissionSources.reduce((acc, es) => {
         if (!es.value) {
           return acc
         }
 
-        return acc + Math.pow(es.value / total, 2) * Math.pow(Math.log(es.squaredStandardDeviation || 1), 2)
+        return acc + Math.pow(es.value / total, 2) * Math.pow(Math.log(Math.sqrt(es.squaredStandardDeviation || 1)), 2)
       }, 0),
     ),
   )
+
+  return Math.pow(standardDeviation, 2)
 }
 
 export const uncertaintyValues = [1.1199, 1.2621, 1.6361, 2.5164]
