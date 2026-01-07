@@ -296,19 +296,21 @@ export const createStudyCommand = async (
       ],
     }
 
+    const { exports, controlMode, ...studyCommand } = command
+
     const study = {
-      ...command,
+      ...studyCommand,
       createdBy: { connect: { id: session.user.accountId } },
       organizationVersion: { connect: { id: organizationVersionId } },
-      isPublic: command.isPublic === 'true',
+      isPublic: studyCommand.isPublic === 'true',
       resultsUnit: resultsUnit || StudyResultUnit.T,
       allowedUsers: {
         createMany: { data: rights },
       },
       exports: {
         create: {
-          types: command.exports,
-          control: command.controlMode || ControlMode.Operational,
+          types: exports,
+          control: controlMode || ControlMode.Operational,
         },
       },
       sites: {
