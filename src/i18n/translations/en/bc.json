@@ -759,7 +759,7 @@
       "tagGlossaryDescription": "Emission sources can have multiple tags, so these are counted in each tag on this graph. It is therefore normal that you have a larger total here than in your study.",
       "info": "",
       "difference": {
-        "button": "Explanation of the differences between Bilan Carbone® and Beges export",
+        "button": "Explanation of the differences between Bilan Carbone® and {type} export",
         "modalTitle": "Explanation of the difference between the results",
         "dependanceTitle": "Dependent use",
         "wasteTitle": "Waste treatment",

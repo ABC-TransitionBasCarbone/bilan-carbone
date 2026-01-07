@@ -1,0 +1,113 @@
+import Button from '@/components/base/Button'
+import Modal from '@/components/modals/Modal'
+import { FullStudy } from '@/db/study'
+import { customRich } from '@/i18n/customRich'
+import { ResultsByPost } from '@/services/results/consolidated'
+import { PostInfos } from '@/services/results/exports'
+import { formatNumber } from '@/utils/number'
+import { STUDY_UNIT_VALUES } from '@/utils/study'
+import LightbulbIcon from '@mui/icons-material/LightbulbOutlined'
+import { Alert } from '@mui/material'
+import { Export, SubPost } from '@prisma/client'
+import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
+import { ReactNode, useMemo, useState } from 'react'
+import styles from './ConsolatedExportDifference.module.css'
+
+interface EmissionSourceListProps {
+  studySite: string
+  emissionSources: FullStudy['emissionSources']
+  onClick: (sourceId: string, subPost: SubPost) => void
+}
+
+export const EmissionSourceList = ({ studySite, emissionSources, onClick }: EmissionSourceListProps) => {
+  const t = useTranslations('study.results.difference')
+  const maxButtonEmissionSources = 10
+
+  return (
+    <div className={classNames(styles.missingSourcesList, 'wrap')}>
+      {emissionSources
+        .filter((_, i) => i < maxButtonEmissionSources)
+        .map((emissionSource) => (
+          <Button
+            key={`emission-source-${emissionSource.id}`}
+            onClick={() => onClick(emissionSource.id, emissionSource.subPost)}
+            color="secondary"
+            variant="outlined"
+            size="small"
+            className={styles.missingSourceButton}
+          >
+            {emissionSource.name}
+            {studySite === 'all' && ` (${emissionSource.studySite.site.name})`}
+          </Button>
+        ))}
+      {emissionSources.length > maxButtonEmissionSources && (
+        <div className={classNames(styles.additionalMissingSources, 'mt-2')}>
+          {t('additionalMissing', {
+            count: emissionSources.length - 10,
+          })}
+        </div>
+      )}
+    </div>
+  )
+}
+
+interface Props {
+  study: FullStudy
+  results: ResultsByPost[]
+  exportResults: PostInfos[]
+  type: Export
+  exportDifference: number
+  children: ReactNode
+}
+
+const ConsolatedExportDifference = ({ study, results, exportResults, type, exportDifference, children }: Props) => {
+  const tAction = useTranslations('common.action')
+  const t = useTranslations('study.results.difference')
+  const tExports = useTranslations('exports')
+  const unitValue = STUDY_UNIT_VALUES[study.resultsUnit]
+  const [open, setOpen] = useState(false)
+
+  const exportTotalNumber = (exportResults.find((result) => result.rule === 'total')?.total || 0) / unitValue
+  const computedTotalNumber = (results.find((result) => result.post === 'total')?.value || 0) / unitValue
+  const exportTotal = formatNumber(exportTotalNumber, 0)
+  const computedTotal = formatNumber(computedTotalNumber, 0)
+
+  const unexplainedDifference = useMemo(() => {
+    return Math.abs(Math.floor(exportTotalNumber) + 1 - Math.floor(computedTotalNumber + exportDifference)) > 1
+  }, [exportTotalNumber, computedTotalNumber, exportDifference])
+
+  return exportTotal !== computedTotal ? (
+    <>
+      <div className={classNames(styles.button, 'flex-cc p-2 px1')} onClick={() => setOpen(true)}>
+        <LightbulbIcon />
+        {t('button', { type: tExports(type) })}
+      </div>
+      <Modal
+        open={open}
+        title={t('modalTitle')}
+        label={`computed-${type.toLowerCase()}-difference`}
+        onClose={() => setOpen(false)}
+      >
+        {unexplainedDifference && (
+          <div className="flex-col mb2">
+            <Alert severity="warning">
+              {customRich(t, 'unexplainedDifference', {}, study.organizationVersion.environment)}
+            </Alert>
+          </div>
+        )}
+        <div className={classNames(styles.modalContent, 'flex-col')}>
+          {children}
+
+          <div className={'justify-end'}>
+            <Button onClick={() => setOpen(false)}>{tAction('close')}</Button>
+          </div>
+        </div>
+      </Modal>
+    </>
+  ) : (
+    <></>
+  )
+}
+
+export default ConsolatedExportDifference
