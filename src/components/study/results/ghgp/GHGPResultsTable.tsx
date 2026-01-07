@@ -43,6 +43,11 @@ const GHGPResultsTable = ({ study, withDepValue, data }: Props) => {
             if (rule === 'total') {
               return t('total')
             }
+            /**
+             * The structure is not designed to handle 3.X rules separated into two scopes.
+             * So it's separated into 3.X and 4.X and then corrected them to display what we want.
+             * That way, the processing is done automatically (cf allRules).
+             */
             let prefix = `${rule} - `
             if (prefix.substring(0, 1) === '4') {
               prefix = `3${prefix.substring(1)}`
