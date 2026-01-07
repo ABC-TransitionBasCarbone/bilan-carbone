@@ -1,2 +1,7 @@
 immobilisations:
   titre: Immobilisations
+  formule:
+    somme:
+      - construction
+      - équipements
+  unité: kgCO2e

@@ -1,13 +1,176 @@
-achats . équipements de sport
+achats . équipements de sport:
+  titre: Équipements de sport
+  formule:
+    somme:
+      - ballon de volley
+      - ballon de handball
+      - kimono judo
+      - shorts tous sports
+      - maillots tous sports
+      - t-shirt polyester
+      - ballon de rugby
+      - ballon de basket
+      - ballon de football
+  unité: kgCO2e
 
+achats . équipements de sport . ballon de volley:
+  titre: "Ballon de volley"
+  formule: nombre * FE
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: "Combien de ballons de volley avez-vous achetés ?"
+      unité: unité
+      par défaut: 0
+    FE:
+      question: "Facteur d'émission par ballon de volley"
+      valeur: 2.25
+      unité: kgCO2e/unité
+      note: |
+        Source: Base Carbone®
+      meta:
+        incertitude: 3
 
-"label"	"value"	"uncertainty"	"type"	"unit"	"depreciationPeriod"
-"Ballon de volley"	2.25	3	"Équipements de sport"	"unité"	
-"Ballon de handball"	2.5	3	"Équipements de sport"	"unité"	
-"Kimono (judo)"	16	3	"Équipements de sport"	"unité"	0
-"Shorts tous sports"	0.8	3	"Équipements de sport"	"unité"	0
-"Maillots tous sports"	1	3	"Équipements de sport"	"unité"	0
-"T-shirt en polyester"	5.5	2	"Équipements de sport"	"unité"	0
-"Ballon de rugby"	4.12	3	"Équipements de sport"	"unité"	0
-"Ballon de basket"	4.6	3	"Équipements de sport"	"unité"	
-"Ballon de football"	4.12	3	"Équipements de sport"	"unité"	
+achats . équipements de sport . ballon de handball:
+  titre: "Ballon de handball"
+  formule: nombre * FE
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: "Combien de ballons de handball avez-vous achetés ?"
+      unité: unité
+      par défaut: 0
+    FE:
+      question: "Facteur d'émission par ballon de handball"
+      valeur: 2.5
+      unité: kgCO2e/unité
+      note: |
+        Source: Base Carbone®
+      meta:
+        incertitude: 3
+
+achats . équipements de sport . kimono judo:
+  titre: "Kimono (judo)"
+  formule: nombre * FE
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: "Combien de kimonos de judo avez-vous achetés ?"
+      unité: unité
+      par défaut: 0
+    FE:
+      question: "Facteur d'émission par kimono (judo)"
+      valeur: 16
+      unité: kgCO2e/unité
+      note: |
+        Source: Base Carbone®
+      meta:
+        incertitude: 3
+
+achats . équipements de sport . shorts tous sports:
+  titre: "Shorts tous sports"
+  formule: nombre * FE
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: "Combien de shorts tous sports avez-vous achetés ?"
+      unité: unité
+      par défaut: 0
+    FE:
+      question: "Facteur d'émission par short tous sports"
+      valeur: 0.8
+      unité: kgCO2e/unité
+      note: |
+        Source: Base Carbone®
+      meta:
+        incertitude: 3
+
+achats . équipements de sport . maillots tous sports:
+  titre: "Maillots tous sports"
+  formule: nombre * FE
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: "Combien de maillots tous sports avez-vous achetés ?"
+      unité: unité
+      par défaut: 0
+    FE:
+      question: "Facteur d'émission par maillot tous sports"
+      valeur: 1
+      unité: kgCO2e/unité
+      note: |
+        Source: Base Carbone®
+      meta:
+        incertitude: 3
+
+achats . équipements de sport . t-shirt polyester:
+  titre: "T-shirt en polyester"
+  formule: nombre * FE
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: "Combien de t-shirts en polyester avez-vous achetés ?"
+      unité: unité
+      par défaut: 0
+    FE:
+      question: "Facteur d'émission par t-shirt en polyester"
+      valeur: 5.5
+      unité: kgCO2e/unité
+      note: |
+        Source: Base Carbone®
+      meta:
+        incertitude: 2
+
+achats . équipements de sport . ballon de rugby:
+  titre: "Ballon de rugby"
+  formule: nombre * FE
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: "Combien de ballons de rugby avez-vous achetés ?"
+      unité: unité
+      par défaut: 0
+    FE:
+      question: "Facteur d'émission par ballon de rugby"
+      valeur: 4.12
+      unité: kgCO2e/unité
+      note: |
+        Source: Base Carbone®
+      meta:
+        incertitude: 3
+
+achats . équipements de sport . ballon de basket:
+  titre: "Ballon de basket"
+  formule: nombre * FE
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: "Combien de ballons de basket avez-vous achetés ?"
+      unité: unité
+      par défaut: 0
+    FE:
+      question: "Facteur d'émission par ballon de basket"
+      valeur: 4.6
+      unité: kgCO2e/unité
+      note: |
+        Source: Base Carbone®
+      meta:
+        incertitude: 3
+
+achats . équipements de sport . ballon de football:
+  titre: "Ballon de football"
+  formule: nombre * FE
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: "Combien de ballons de football avez-vous achetés ?"
+      unité: unité
+      par défaut: 0
+    FE:
+      question: "Facteur d'émission par ballon de football"
+      valeur: 4.12
+      unité: kgCO2e/unité
+      note: |
+        Source: Base Carbone®
+      meta:
+        incertitude: 3

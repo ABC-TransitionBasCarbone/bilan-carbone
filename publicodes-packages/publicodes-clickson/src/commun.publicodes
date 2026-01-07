@@ -14,15 +14,25 @@ commun . nombre de semaines par an:
   valeur: 52
   unité: semaine
 
+commun . FE:
+  titre: Facteur d'émission communs
+  description: Facteurs d'émission communs à plusieurs sous postes.
+
 commun . FE . moyen de transport:
   titre: Facteur d'émission moyens de transport
   avec:
-    Transilien, RER, Métro, Tramway:
-    titre: Facteur d'émission Transilien, RER, Métro, Tramway
-    valeur: 0.006
-    unité: kgCO2e/km
-    meta:
-      incertitude: 2
+    RER et transilien:
+      titre: Facteur d'émission Transilien, RER
+      valeur: 0.006
+      unité: kgCO2e/km
+      meta:
+        incertitude: 2
+    métro ou tram:
+      titre: Facteur d'émission Métro ou Tram
+      valeur: 0.006
+      unité: kgCO2e/km
+      meta:
+        incertitude: 2
     Vélo à assistance électrique:
       titre: Facteur d'émission Vélo à assistance électrique
       valeur: 0.011

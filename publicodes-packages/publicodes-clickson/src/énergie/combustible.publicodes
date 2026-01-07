@@ -1,14 +1,13 @@
 énergie . combustible:
-titre: Type de combustible
-formule:
-  somme:
-    - fioul domestique
-    - fioul lourd/commercial
-    - gaz naturel
-    - granulés de bois
-    - biopropane
-    - réseau de chaleur
-unité: kgCO2e
+  titre: Type de combustible
+  formule:
+    somme:
+      - fioul domestique
+      - fioul lourd
+      - gaz naturel
+      - granulés de bois
+      - biopropane
+      - réseau de chaleur
 
 énergie . combustible . fioul domestique:
   titre: Fioul domestique
@@ -25,7 +24,7 @@ unité: kgCO2e
       meta:
         incertitude: 0
 
-énergie . combustible . fioul lourd commercial:
+énergie . combustible . fioul lourd:
   titre: Fioul lourd/commercial
   formule: consommation * FE
   unité: kgCO2e

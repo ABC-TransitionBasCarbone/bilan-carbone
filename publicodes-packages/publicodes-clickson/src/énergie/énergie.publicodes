@@ -2,6 +2,6 @@
   titre: Énergie
   formule:
     somme:
-      - énergie . électricité
-      - énergie . combustible
+      - électricité
+      - combustible
   unité: kgCO2e
