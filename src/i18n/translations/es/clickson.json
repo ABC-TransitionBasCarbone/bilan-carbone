@@ -218,5 +218,8 @@
     "modelsDataCollect": "Modelos de soportes de recopilación de datos",
     "game": "Juego: iniciación a la negociación de su plan de acción:",
     "classEarth": "Mi Tierra en clase"
+  },
+  "error": {
+    "Too many comments": "Ya existen demasiados comentarios pendientes."
   }
 }

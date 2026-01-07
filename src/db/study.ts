@@ -1010,6 +1010,12 @@ export const getStudyCommentsCountFromOrganizationVersionId = async (
   })
 }
 
+export const getPendingStudyCommentsCountFromAuthor = async (authorId: string) => {
+  return prismaClient.studyComment.count({
+    where: { authorId, status: CommentStatus.PENDING },
+  })
+}
+
 export const updateStudyComment = async (id: string, data: Prisma.StudyCommentUpdateInput) =>
   prismaClient.studyComment.update({
     where: { id },

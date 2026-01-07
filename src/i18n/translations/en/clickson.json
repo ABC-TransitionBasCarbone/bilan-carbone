@@ -218,5 +218,8 @@
     "modelsDataCollect": "Data collection support templates",
     "game": "Game: introduction to negotiating your action plan:",
     "classEarth": "My Earth in class"
+  },
+  "error": {
+    "Too many comments": "Too many pending comments already exist."
   }
 }
