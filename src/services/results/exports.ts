@@ -36,7 +36,7 @@ export interface EmissionFactor {
 }
 
 const getRulePost = (caracterisation: EmissionSourceCaracterisation | null, rule?: ExportRule) => {
-  if (caracterisation === null || !rule) {
+  if (!caracterisation || !rule) {
     return null
   }
 
@@ -143,11 +143,7 @@ export const computeResult = (
     .map((emissionSource) => ({ ...emissionSource, subPost: convertTiltSubPostToBCSubPost(emissionSource.subPost) }))
     .filter((emissionSource) => filterWithDependencies(emissionSource.subPost, withDependencies))
     .forEach((emissionSource) => {
-      if (
-        emissionSource.emissionFactor === null ||
-        !emissionSource.value ||
-        (validatedOnly && !emissionSource.validated)
-      ) {
+      if (!emissionSource.emissionFactor || !emissionSource.value || (validatedOnly && !emissionSource.validated)) {
         return
       }
 
