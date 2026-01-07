@@ -62,10 +62,10 @@ enum Country {
 }
 
 enum EstablishmentType {
-  ELEMENTAIRE
   COLLEGE
   LYCEE_GENERAL
   LYCEE_PRO
+  LYCEE_PRO_AGRICOLE
   ETABLISSEMENT_FR_ETRANGER
 }
 
