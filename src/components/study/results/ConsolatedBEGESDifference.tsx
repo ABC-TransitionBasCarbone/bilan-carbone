@@ -16,7 +16,10 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useMemo } from 'react'
-import ConsolatedExportDifference, { EmissionSourceList } from './ConsolatedExportDifference'
+import ConsolatedExportDifference, {
+  calculEmissionSourcesDifference,
+  EmissionSourceList,
+} from './ConsolatedExportDifference'
 import styles from './ConsolatedExportDifference.module.css'
 
 interface Props {
@@ -126,9 +129,10 @@ const ConsolatedBEGESDifference = ({
       .filter((item): item is NonNullable<typeof item> => item !== null && Math.abs(Math.round(item.difference)) >= 1)
   }, [wasteEmissionSources, emissionFactorsWithParts, validatedOnly, tPost, unitValue, environment])
 
-  const wasteTotalDifference = useMemo(() => {
-    return wasteSourcesWithDifferences.reduce((total, item) => total + item.difference, 0)
-  }, [wasteSourcesWithDifferences])
+  const wasteTotalDifference = useMemo(
+    () => wasteSourcesWithDifferences.reduce((total, item) => total + item.difference, 0),
+    [wasteSourcesWithDifferences],
+  )
 
   const missingCaract = useMemo(
     () =>
@@ -150,20 +154,7 @@ const ConsolatedBEGESDifference = ({
   )
 
   const missingCaractDifference = useMemo(
-    () =>
-      missingCaract.reduce((total, emissionSource) => {
-        if (!emissionSource.emissionFactor || !emissionSource.value) {
-          return total
-        }
-
-        const emissionFactor = emissionFactorsWithParts.find((ef) => ef.id === emissionSource.emissionFactor?.id)
-        if (!emissionFactor) {
-          return total
-        }
-
-        const bcEmissionTotal = Math.round(getEmissionResults(emissionSource, environment).emissionValue / unitValue)
-        return total - bcEmissionTotal
-      }, 0),
+    () => calculEmissionSourcesDifference(missingCaract, emissionFactorsWithParts, environment, unitValue),
     [missingCaract, emissionFactorsWithParts, unitValue, environment],
   )
 
