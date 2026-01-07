@@ -1,9 +1,10 @@
 export interface School {
-  identifiant_de_l_etablissement: string
-  code_postal: string
-  adresse_1: string
+  identifiant_de_l_etablissement?: string
+  code_postal?: string
+  adresse_1?: string
+  city?: string
   nom_etablissement: string
-  date_ouverture: string
+  date_ouverture?: string
 }
 
 export const getSchoolsFromPostalCodeOrName = async (postalCodeOrName: string): Promise<School[]> => {
