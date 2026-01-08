@@ -19,13 +19,13 @@
         "message": "Create your first footprint here. You can then view your footprints or create new ones at any time."
       },
       "sites": {
-        "title": "My Establishments",
-        "message": "Find here the list of establishments linked to your account"
+        "title": "My Establishment",
+        "message": "Find here the establishment linked to your account"
       }
     },
     "title": "Calculating your simplified carbon footprint will allow you to:",
     "alert": {
-      "info": "The Clickson calculator allows you to estimate the climate impact of your activity. It is above all an awareness tool. It is not a low-carbon transition approach but a simplified carbon footprint — in the sense of the <link>Guide to communication around carbon accounting</link> — focused on the main emission sources related to the activity of establishments."
+      "info": "The Clickson calculator allows you to estimate the climate impact of your activity. It is above all an awareness tool. It is not a low-carbon transition approach but a simplified carbon footprint — in the sense of the <link>Guide to communication around carbon accounting</link> — focused on the main emission sources related to the activity of the establishment."
     },
     "info": {
       "0": "Understand the measurement of your establishment's impact",
@@ -154,22 +154,36 @@
   },
   "organization": {
     "card": {
-      "myOrganization": "My Establishments"
+      "myOrganization": "My Establishment"
     },
     "form": {
-      "editTitle": "Edit My Establishments"
+      "editTitle": "Edit My Establishment",
+      "name": "Establishment name"
     },
     "sites": {
-      "title": "Which establishments should the footprint cover?",
+      "title": "",
       "noSites": "No establishments configured",
       "namePlaceholder": "Establishment Name",
       "add": "Add an Establishment",
-      "etp": "Number of staff (teachers and non-teaching staff)",
+      "etp": "Number of staff",
       "etpPlaceholder": "Total number of staff",
       "studentNumber": "Number of students",
       "studentNumberPlaceholder": "Total number of students",
       "establishmentYear": "Year of establishment",
-      "establishmentYearPlaceholder": "Year the establishment was founded"
+      "establishmentYearPlaceholder": "Year the establishment was founded",
+      "academy": "academy",
+      "academyPlaceholder": "Establishment's academy",
+      "establishmentType": {
+        "title": "Type of Establishment",
+        "COLLEGE": "Middle School",
+        "LYCEE_GENERAL": "General and Technological High School",
+        "LYCEE_PRO": "Vocational High School",
+        "LYCEE_PRO_AGRICOLE": "Agricultural Vocational High School",
+        "ETABLISSEMENT_FR_ETRANGER": "French Educational Establishment Abroad"
+      },
+      "glossary": {
+        "informations": "It is necessary to provide this information before proceeding further with your approach. This information does indeed impact the calculation of your carbon footprint (in particular, the fixed assets post)"
+      }
     }
   },
   "login": {

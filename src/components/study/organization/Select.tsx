@@ -83,7 +83,9 @@ const SelectOrganization = ({
             city: site.city ?? '',
             cncId: site.cncId ?? '',
             cncCode: site.cnc?.cncCode || '',
-            establishmentYear: site.establishmentYear || '',
+            establishmentYear: site?.establishmentYear ? parseInt(site?.establishmentYear) : 0,
+            academy: site.academy ?? '',
+            establishmentType: site.establishmentType ?? undefined,
           })),
         )
       }

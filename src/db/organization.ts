@@ -2,7 +2,15 @@ import { UpdateOrganizationCommand } from '@/services/serverFunctions/organizati
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { OnboardingCommand } from '@/services/serverFunctions/user.command'
 import { unique } from '@/utils/array'
-import { Environment, Organization, OrganizationVersion, Prisma, Site, UserStatus } from '@prisma/client'
+import {
+  Environment,
+  EstablishmentType,
+  Organization,
+  OrganizationVersion,
+  Prisma,
+  Site,
+  UserStatus,
+} from '@prisma/client'
 import { prismaClient } from './client'
 import { deleteStudy } from './study'
 
@@ -59,6 +67,8 @@ export const OrganizationVersionWithOrganizationSelect = {
           establishmentId: true,
           establishmentYear: true,
           studentNumber: true,
+          academy: true,
+          establishmentType: true,
           superficy: true,
           address: true,
           cncId: true,
@@ -202,7 +212,9 @@ export const updateOrganization = async (
           volunteerNumber: site.volunteerNumber || undefined,
           beneficiaryNumber: site.beneficiaryNumber || undefined,
           studentNumber: site.studentNumber || undefined,
-          establishmentYear: site.establishmentYear,
+          establishmentYear: site.establishmentYear?.toString() || undefined,
+          academy: site.academy,
+          establishmentType: site.establishmentType as EstablishmentType,
         },
         update: {
           name: site.name,
@@ -214,7 +226,9 @@ export const updateOrganization = async (
           volunteerNumber: site.volunteerNumber || undefined,
           beneficiaryNumber: site.beneficiaryNumber || undefined,
           studentNumber: site.studentNumber || undefined,
-          establishmentYear: site.establishmentYear,
+          establishmentYear: site.establishmentYear?.toString() || undefined,
+          academy: site.academy,
+          establishmentType: site.establishmentType as EstablishmentType,
         },
       }),
     ),

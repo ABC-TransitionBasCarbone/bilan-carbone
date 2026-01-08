@@ -2,16 +2,19 @@
 
 import LinkButton from '@/components/base/LinkButton'
 import { FormCheckbox } from '@/components/form/Checkbox'
+import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
 import GlobalSites from '@/components/organization/Sites'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { formatNumber } from '@/utils/number'
 import EditIcon from '@mui/icons-material/Edit'
-import { Environment } from '@prisma/client'
+import { MenuItem } from '@mui/material'
+import { Environment, EstablishmentType } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { Control, UseFormReturn } from 'react-hook-form'
+import styles from './Sites.module.css'
 
 interface Props<T extends SitesCommand> {
   form?: UseFormReturn<T>
@@ -26,6 +29,31 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, organizatio
   const columns = useMemo(
     () =>
       [
+        {
+          id: 'establishmentType',
+          header: t('establishmentType.title'),
+          accessorKey: 'establishmentType',
+          cell: ({ row, getValue }) =>
+            form ? (
+              <FormSelect
+                translation={t}
+                data-testid="organization-sites-volunteer-number"
+                type="string"
+                control={control}
+                name={`sites.${row.index}.establishmentType`}
+                fullWidth
+                className={styles.select}
+              >
+                {Object.values(EstablishmentType).map((establishmentType) => (
+                  <MenuItem key={establishmentType} value={establishmentType}>
+                    {t(`establishmentType.${establishmentType}`)}
+                  </MenuItem>
+                ))}
+              </FormSelect>
+            ) : (
+              formatNumber(getValue<number>(), 2)
+            ),
+        },
         {
           id: 'name',
           header: () => (
@@ -125,10 +153,50 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, organizatio
           cell: ({ row, getValue }) =>
             form ? (
               <FormTextField
-                data-testid="organization-sites-establishmentYear"
+                data-testid="organization-sites-beneficiary-number"
+                type="number"
                 control={control}
                 name={`sites.${row.index}.establishmentYear`}
                 placeholder={t('establishmentYearPlaceholder')}
+                slotProps={{
+                  htmlInput: { type: 'number', min: 0 },
+                  input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
+                }}
+                fullWidth
+                size="small"
+              />
+            ) : (
+              getValue<number>()
+            ),
+        },
+        {
+          id: 'city',
+          header: t('city'),
+          accessorKey: 'city',
+          cell: ({ row, getValue }) =>
+            form ? (
+              <FormTextField
+                data-testid="organization-sites-city"
+                control={control}
+                name={`sites.${row.index}.city`}
+                placeholder={t('cityPlaceholder')}
+                size="small"
+              />
+            ) : (
+              getValue<string>()
+            ),
+        },
+        {
+          id: 'academy',
+          header: t('academy'),
+          accessorKey: 'academy',
+          cell: ({ row, getValue }) =>
+            form ? (
+              <FormTextField
+                data-testid="organization-sites-academy"
+                control={control}
+                name={`sites.${row.index}.academy`}
+                placeholder={t('academyPlaceholder')}
                 size="small"
               />
             ) : (

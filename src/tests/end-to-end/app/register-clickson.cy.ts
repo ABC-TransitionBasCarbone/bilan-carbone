@@ -54,9 +54,9 @@ describe('Register clickson', () => {
     cy.visit('/clickson/register')
     cy.getByTestId('activation-email').type('clickson-school-pending@yopmail.com')
     cy.intercept('GET', '/api/schools/*').as('getSchools')
-    cy.getByTestId('activation-school').type('78600', { delay: 200 })
+    cy.getByTestId('activation-school').type('92100', { delay: 200 })
     cy.wait('@getSchools')
-    cy.get('[data-testid="school-option-0781494A"]').click()
+    cy.get('[data-testid="school-option-0922798S"]').click()
     cy.getByTestId('activation-button').click()
     cy.wait('@signupClickson')
 

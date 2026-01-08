@@ -19,13 +19,13 @@
         "message": "Créer votre première empreinte ici. Vous pourrez ensuite consulter vos empreintes ou en créer de nouvelles à tout moment."
       },
       "sites": {
-        "title": "Mes Établissements",
-        "message": "Retrouvez ici la liste des établissements rattachés à votre compte"
+        "title": "Mon Établissement",
+        "message": "Retrouvez ici l'établissement rattaché à votre compte"
       }
     },
     "title": "Calculer votre empreinte carbone simplifiée vous permettra de :",
     "alert": {
-      "info": "Le calculateur Clickson vous permet d’estimer l’impact sur le climat de votre activité. Il s’agit avant tout d’un outil de sensibilisation. Il ne s'agit pas d'une démarche de transition bas carbone mais d'une empreinte carbone simplifiée — au sens du <link>Guide de communication autour de la comptabilité carbone</link> — centrée sur les principaux postes d’émissions liés à l’activité des établissements."
+      "info": "Le calculateur Clickson vous permet d’estimer l’impact sur le climat de votre activité. Il s’agit avant tout d’un outil de sensibilisation. Il ne s'agit pas d'une démarche de transition bas carbone mais d'une empreinte carbone simplifiée — au sens du <link>Guide de communication autour de la comptabilité carbone</link> — centrée sur les principaux postes d’émissions liés à l’activité de l'établissement."
     },
     "info": {
       "0": "Comprendre la mesure d’impact de votre établissement",
@@ -154,22 +154,36 @@
   },
   "organization": {
     "card": {
-      "myOrganization": "Mes établissements"
+      "myOrganization": "Mon établissement"
     },
     "form": {
-      "editTitle": "Modifier mes établissements"
+      "editTitle": "Modifier mon établissement",
+      "name": "Nom de l'établissement"
     },
     "sites": {
-      "title": "Sur quels établissements doit porter l'empreinte ?",
+      "title": "",
       "noSites": "Il n'y a pas d'établissements configurés",
       "namePlaceholder": "Nom de l'établissement",
       "add": "Ajouter un établissement",
-      "etp": "Nombre de personnels (enseignants et non-éducatifs)",
+      "etp": "Nombre de personnels",
       "etpPlaceholder": "Nombre total de personnels",
       "studentNumber": "Nombre d'élèves",
       "studentNumberPlaceholder": "Nombre total d'élèves",
       "establishmentYear": "Année de construction",
-      "establishmentYearPlaceholder": "Année de construction de l'établissement"
+      "establishmentYearPlaceholder": "Année de construction de l'établissement",
+      "academy": "Académie",
+      "academyPlaceholder": "Académie de l'établissement",
+      "establishmentType": {
+        "title": "Type d'établissement",
+        "COLLEGE": "Collège",
+        "LYCEE_GENERAL": "Lycée Général et Technologique",
+        "LYCEE_PRO": "Lycée Professionnel",
+        "LYCEE_PRO_AGRICOLE": "Lycée Professionnel Agricole",
+        "ETABLISSEMENT_FR_ETRANGER": "Etablissement d'enseignement français à l'étranger"
+      },
+      "glossary": {
+        "informations": "Il est nécessaire de renseigner ces informations avant d'aller plus loin dans votre démarche. Ces informations impactent effectivement le calcul de votre empreinte carbone (en particulier, le poste immobilisations)"
+      }
     }
   },
   "login": {

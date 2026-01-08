@@ -19,13 +19,13 @@
         "message": "Cree su primera huella aquí. Luego podrá ver sus huellas o crear nuevas en cualquier momento."
       },
       "sites": {
-        "title": "Mis Establecimientos",
-        "message": "Encuentre aquí la lista de establecimientos vinculados a su cuenta"
+        "title": "Mi Establecimiento",
+        "message": "Encuentre aquí el establecimiento vinculado a su cuenta"
       }
     },
     "title": "Calcular su huella de carbono simplificada le permitirá:",
     "alert": {
-      "info": "La calculadora Clickson le permite estimar el impacto climático de su actividad. Es ante todo una herramienta de concienciación. No es un enfoque de transición baja en carbono sino una huella de carbono simplificada — en el sentido de la <link>Guía de comunicación sobre contabilidad de carbono</link> — enfocada en las principales fuentes de emisión relacionadas con la actividad de los establecimientos."
+      "info": "La calculadora Clickson le permite estimar el impacto climático de su actividad. Es ante todo una herramienta de concienciación. No es un enfoque de transición baja en carbono sino una huella de carbono simplificada — en el sentido de la <link>Guía de comunicación sobre contabilidad de carbono</link> — enfocada en las principales fuentes de emisión relacionadas con la actividad del establecimiento."
     },
     "info": {
       "0": "Comprender la medición del impacto de su establecimiento",
@@ -154,22 +154,36 @@
   },
   "organization": {
     "card": {
-      "myOrganization": "Mis Establecimientos"
+      "myOrganization": "Mi Establecimiento"
     },
     "form": {
-      "editTitle": "Editar Mis Establecimientos"
+      "editTitle": "Editar Mi Establecimiento",
+      "name": "Nombre del Establecimiento"
     },
     "sites": {
-      "title": "¿Qué establecimientos debe cubrir la huella de carbono?",
+      "title": "",
       "noSites": "Sin establecimientos configurados",
       "namePlaceholder": "Nombre del Establecimiento",
       "add": "Añadir un Establecimiento",
-      "etp": "Número de personal (docentes y personal no docente)",
+      "etp": "Número de personal",
       "etpPlaceholder": "Número total de personal",
       "studentNumber": "Número de estudiantes",
       "studentNumberPlaceholder": "Número total de estudiantes",
       "establishmentYear": "Año de fundación",
-      "establishmentYearPlaceholder": "Año en que se fundó el establecimiento"
+      "establishmentYearPlaceholder": "Año en que se fundó el establecimiento",
+      "academy": "Academia",
+      "academyPlaceholder": "Academia del establecimiento",
+      "establishmentType": {
+        "title": "Tipo de establecimiento",
+        "COLLEGE": "Colegio",
+        "LYCEE_GENERAL": "Liceo General y Tecnológico",
+        "LYCEE_PRO": "Liceo Profesional",
+        "LYCEE_PRO_AGRICOLE": "Liceo Profesional Agrícola",
+        "ETABLISSEMENT_FR_ETRANGER": "Establecimiento de enseñanza francesa en el extranjero"
+      },
+      "glossary": {
+        "informations": "Es necesario proporcionar esta información antes de continuar con su proceso. Esta información impacta efectivamente el cálculo de su huella de carbono (en particular, el apartado de inmuebles)"
+      }
     }
   },
   "login": {

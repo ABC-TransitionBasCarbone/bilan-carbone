@@ -58,6 +58,7 @@ import {
   Country,
   DeactivatableFeature,
   Environment,
+  Level,
   Organization,
   Role,
   User,
@@ -92,7 +93,7 @@ import {
   UNKNOWN_SIRET_OR_CNC,
 } from '../permissions/check'
 import { canAddMember, canChangeRole, canDeleteMember, canEditSelfRole } from '../permissions/user'
-import { School } from '../schoolApi'
+import { establishmentTypeMap, School } from '../schoolApi'
 import { getDeactivableFeatureRestrictions } from './deactivableFeatures'
 import { AddMemberCommand, EditProfileCommand, EditSettingsCommand } from './user.command'
 
@@ -736,6 +737,7 @@ export const signUpWithSchool = async (email: string, country: Country, school: 
     if (!user) {
       user = (await addUser({
         email: trimmedEmail,
+        level: Level.Initial,
         firstName: '',
         lastName: '',
         accounts: {
@@ -780,9 +782,11 @@ export const signUpWithSchool = async (email: string, country: Country, school: 
         name: school.nom_etablissement || '',
         postalCode: school.code_postal || '',
         establishmentId: school.identifiant_de_l_etablissement,
-        establishmentYear: school.date_ouverture || '',
+        establishmentYear: school.date_ouverture?.slice(0, 4) || '',
         country,
-        city: school.city,
+        city: school.city || school.adresse_3?.slice(5) || '',
+        academy: school.libelle_academie,
+        establishmentType: school?.libelle_nature ? establishmentTypeMap[school.libelle_nature] : undefined,
         organization: { connect: { id: organizationVersion.organizationId } },
       })
     }
