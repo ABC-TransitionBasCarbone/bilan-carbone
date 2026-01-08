@@ -1,7 +1,6 @@
 import BarChart from '@/components/study/charts/BarChart'
 import PieChart from '@/components/study/charts/PieChart'
 import { FullStudy } from '@/db/study'
-import { Post } from '@/services/posts'
 import { getDetailedEmissionResults } from '@/services/study'
 import { Translations } from '@/types/translation'
 import { useTranslations } from 'next-intl'
@@ -14,10 +13,9 @@ interface Props {
   tPdf: Translations
   isAll: boolean
   year?: string
-  customPostOrder?: Post[]
 }
 
-export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll, year = '', customPostOrder = [] }: Props) => {
+export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll, year = '' }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const tStudyResults = useTranslations('study.results')
 
@@ -44,7 +42,6 @@ export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll, year = '',
           showLabelsOnBars={true}
           skipAnimation={true}
           type="post"
-          customOrder={customPostOrder}
         />
 
         <PieChart

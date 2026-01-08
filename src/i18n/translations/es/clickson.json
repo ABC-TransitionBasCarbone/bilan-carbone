@@ -94,7 +94,8 @@
       "loading": "Cargando datos...",
       "title": "Resumen de emisiones {year}",
       "results": {
-        "all": "Resultados"
+        "all": "Resultados",
+        "carbonIntensities": "Huella de carbono individual"
       },
       "labels": {
         "studentNumber": "Número de estudiantes",
