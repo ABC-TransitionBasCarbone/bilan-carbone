@@ -170,6 +170,7 @@ export const getMockedDetailedFullStudySite = (
         id: '1',
         numberOfProgrammedFilms: 10,
         ecrans: 13,
+        fauteuils: 10,
       },
       etp: 0,
       superficy: null,

@@ -44,8 +44,7 @@ export const hasAccessToEmissionSourceValidation = isAdvanced
 
 export const hasRoleOnStudy = isAdvanced
 
-export const hasAccessToCarbonResponsibilityIntensities = (environment: Environment) =>
-  ([BC, TILT, CUT] as Environment[]).includes(environment)
+export const hasAccessToCarbonResponsibilityIntensities = isAdvanced
 
 export const hasAccessToMonetaryRatio = (environment: Environment) =>
   ([BC, TILT, CUT] as Environment[]).includes(environment)

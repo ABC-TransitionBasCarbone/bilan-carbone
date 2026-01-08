@@ -26,6 +26,8 @@ import Link from 'next/link'
 import styles from './AllResults.module.css'
 
 import EmissionsAnalysisClickson from '@/environments/clickson/study/results/consolidated/EmissionsAnalysisClickson'
+import CarbonIntensitiesCut from '@/environments/cut/study/results/CarbonIntensitiesCut'
+import { Post } from '@/services/posts'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import {
   hasAccessToResultsRatioTab,
@@ -248,7 +250,9 @@ const AllResults = ({
             />
           </TabPanel>
           {environment && hasAccessToResultsRatioTab(environment) && (
-            <TabPanel value={value} index={chartOrder.ratio}></TabPanel>
+            <TabPanel value={value} index={chartOrder.ratio}>
+              <CarbonIntensitiesCut study={study} studySite={studySite} withDepValue={withDepValue} />
+            </TabPanel>
           )}
         </Box>
       </Box>

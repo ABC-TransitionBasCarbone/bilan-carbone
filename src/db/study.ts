@@ -247,6 +247,7 @@ const fullStudyInclude = {
               id: true,
               numberOfProgrammedFilms: true,
               ecrans: true,
+              fauteuils: true,
             },
           },
         },
