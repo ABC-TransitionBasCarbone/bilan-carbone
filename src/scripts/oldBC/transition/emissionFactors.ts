@@ -115,6 +115,13 @@ export const uploadEmissionFactors = async (
         const unit = unitsMatrix[getStringValue(ef.Unité_Nom)]
 
         if (!unit) {
+          console.log('ignoré car unit non trouvé', unit, ef.EF_VAL_LIB, ef.Unité_Nom)
+          return null
+        }
+
+        const subPosts = getSubPosts(row, postAndSubPostsOldNewMapping)
+
+        if (!subPosts || subPosts?.length === 0) {
           return null
         }
 
@@ -129,8 +136,6 @@ export const uploadEmissionFactors = async (
         })
 
         const isMonetary = isMonetaryEmissionFactor({ unit })
-
-        const subPosts = getSubPosts(row, postAndSubPostsOldNewMapping)
 
         return {
           id,
@@ -157,7 +162,7 @@ export const uploadEmissionFactors = async (
           otherGES: (ef.Autre_gaz as number) + (ef.NF3 as number),
           source: getStringValue(ef.Source_Nom),
           location: getStringValue(ef.NOM_CONTINENT),
-          ...(subPosts?.length ? { subPosts } : {}),
+          subPosts,
         }
       })
       .filter((data) => data !== null),
