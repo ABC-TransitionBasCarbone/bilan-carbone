@@ -61,10 +61,10 @@ immobilisations . construction . parking bâtiment structure béton:
 
 immobilisations . construction . parking surface bitume:
   titre: "Parking (surface bitume)"
-  formule: nombre * FE
+  formule: surface * FE
   unité: kgCO2e
   avec:
-    nombre:
+    surface:
       question: "Quelle surface de parking (surface bitume) avez-vous construite ?"
       unité: m²
       par défaut: 0
@@ -79,10 +79,10 @@ immobilisations . construction . parking surface bitume:
 
 immobilisations . construction . parking surface semi-dure:
   titre: "Parking (surface semi-dure)"
-  formule: nombre * FE
+  formule: surface * FE
   unité: kgCO2e
   avec:
-    nombre:
+    surface:
       question: "Quelle surface de parking (surface semi-dure) avez-vous construite ?"
       unité: m²
       par défaut: 0
@@ -97,10 +97,10 @@ immobilisations . construction . parking surface semi-dure:
 
 immobilisations . construction . garage structure béton:
   titre: "Garage (structure béton)"
-  formule: nombre * FE
+  formule: surface * FE
   unité: kgCO2e
   avec:
-    nombre:
+    surface:
       question: "Quelle surface de garage (structure béton) avez-vous construite ?"
       unité: m²
       par défaut: 0
@@ -115,10 +115,10 @@ immobilisations . construction . garage structure béton:
 
 immobilisations . construction . garage structure métal:
   titre: "Garage (structure métal)"
-  formule: nombre * FE
+  formule: surface * FE
   unité: kgCO2e
   avec:
-    nombre:
+    surface:
       question: "Quelle surface de garage (structure métal) avez-vous construite ?"
       unité: m²
       par défaut: 0

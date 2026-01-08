@@ -1,3 +1,89 @@
 template:
   contexte:
     général . nombre étudiant: 1000
+    général . nombre personnel: 100
+    général . année de construction: "'01/1985'"
+
+    immobilisations . construction . bâtiment scolaire structure béton . surface: 5151
+    immobilisations . construction . parking bâtiment structure béton . surface: 12
+    immobilisations . construction . parking surface bitume . surface: 212
+    immobilisations . construction . parking surface semi-dure . surface: 12
+    immobilisations . construction . garage structure béton . surface: 21
+    immobilisations . construction . garage structure métal . surface: 21
+
+    immobilisations . équipements . ordinateur de bureau . nombre: 25
+    immobilisations . équipements . ordinateur portable . nombre: 40
+    immobilisations . équipements . tablette . nombre: 15
+    immobilisations . équipements . imprimante . nombre: 10
+    immobilisations . équipements . photocopieur . nombre: 5
+    immobilisations . équipements . vidéoprojecteur . nombre: 8
+    immobilisations . équipements . serveur informatique . nombre: 3
+    immobilisations . équipements . télévision 40-49 pouces . nombre: 6
+    immobilisations . équipements . rack de serveur . nombre: 2
+    immobilisations . équipements . télécommande universelle sans piles 80g . nombre: 12
+    immobilisations . équipements . stéréo classique . nombre: 4
+    immobilisations . équipements . enceinte Bluetooth . nombre: 7
+    immobilisations . équipements . smartphone 5 pouces . nombre: 30
+    immobilisations . équipements . écran 23,8 pouces . nombre: 20
+
+    énergie . électricité . consommation: 90000
+
+    énergie . combustible . fioul domestique . consommation: 0
+    énergie . combustible . fioul lourd . consommation: 0
+    énergie . combustible . gaz naturel . consommation: 12000
+    énergie . combustible . granulés de bois . consommation: 0
+    énergie . combustible . biopropane . consommation: 0
+    énergie . combustible . réseau de chaleur . consommation: 0
+
+    restauration . repas . moyen . nombre: 5000
+    restauration . repas . végétarien . nombre: 1500
+    restauration . repas . viande rouge . nombre: 1000
+    restauration . repas . viande blanche . nombre: 1800
+    restauration . repas . poisson . nombre: 700
+
+    restauration . distributeur automatique . bouteille d'eau . nombre: 300
+    restauration . distributeur automatique . soda . nombre: 600
+    restauration . distributeur automatique . biscuits . nombre: 200
+    restauration . distributeur automatique . paquet de chips . nombre: 150
+    restauration . distributeur automatique . café noir . nombre: 100
+    restauration . distributeur automatique . thé infusé . nombre: 80
+    restauration . distributeur automatique . sandwich pain de mie . nombre: 250
+    restauration . distributeur automatique . barre chocolatée . nombre: 180
+
+    déplacements . transport du personnel . distance: général . nombre personnel * 30 km/jour * 220 jours/an
+    déplacements . transport des élèves . distance: général . nombre étudiant * 30 km/jour * 220 jours/an
+    déplacements . voyages scolaires . distance: général . nombre étudiant * 500 km/an
+
+    achats . fournitures . petites fournitures . montant: 1200
+    achats . fournitures . livres . nombre: 80
+    achats . fournitures . papier ramette . nombre: 150
+    achats . fournitures . consommables . montant: 900
+    achats . fournitures . piles aaa . nombre: 40
+    achats . fournitures . piles aa . nombre: 60
+
+    achats . produits chimiques . produit vaisselle liquide . consommation: 30
+    achats . produits chimiques . savon liquide . consommation: 25
+    achats . produits chimiques . produit vitre . consommation: 10
+    achats . produits chimiques . nettoyant sols . consommation: 15
+    achats . produits chimiques . nettoyant multi-usages . consommation: 20
+    achats . produits chimiques . détergent sanitaire . consommation: 12
+    achats . produits chimiques . désinfectant . consommation: 8
+    achats . produits chimiques . chlore . consommation: 5
+    achats . produits chimiques . bicarbonate de soude . consommation: 3
+    achats . produits chimiques . savon solide . consommation: 7
+    achats . produits chimiques . vinaigre blanc . consommation: 18
+    achats . produits chimiques . soude solide . consommation: 2
+    achats . produits chimiques . acide sulfurique . consommation: 1
+    achats . produits chimiques . acide chlorhydrique . consommation: 1
+    achats . produits chimiques . peinture revêtement mural intérieur . consommation: 10
+    achats . produits chimiques . peinture revêtement mural extérieur . consommation: 5
+
+    achats . équipements de sport . ballon de volley . nombre: 10
+    achats . équipements de sport . ballon de handball . nombre: 8
+    achats . équipements de sport . kimono judo . nombre: 5
+    achats . équipements de sport . shorts tous sports . nombre: 30
+    achats . équipements de sport . maillots tous sports . nombre: 25
+    achats . équipements de sport . t-shirt polyester . nombre: 20
+    achats . équipements de sport . ballon de rugby . nombre: 6
+    achats . équipements de sport . ballon de basket . nombre: 7
+    achats . équipements de sport . ballon de football . nombre: 12

@@ -1,5 +1,5 @@
 énergie . combustible:
-  titre: Type de combustible
+  titre: Combustibles fossiles
   formule:
     somme:
       - fioul domestique

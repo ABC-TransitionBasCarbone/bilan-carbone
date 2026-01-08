@@ -5,8 +5,9 @@
   avec:
     consommation:
       question: Consommation annuelle d'électricité
-      par défaut: 0
       unité: kWh
+      note: |
+        Indiquez la consommation totale d'électricité de l'établissement sur une année.
     FE:
       question: Facteur d'émission de l'électricité
       valeur: 0.058
