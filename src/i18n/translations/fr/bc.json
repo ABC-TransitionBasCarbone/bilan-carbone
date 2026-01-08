@@ -774,6 +774,10 @@
         "entries": "Entrées",
         "sessions": "Séances"
       },
+      "ratios": {
+        "all": "Ratios - Tous cinémas",
+        "site": "Ratios - {site}"
+      },
       "additionalInfo": "Informations complémentaires"
     },
     "export": {
