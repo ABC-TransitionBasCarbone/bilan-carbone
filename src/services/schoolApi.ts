@@ -4,12 +4,12 @@ export interface School {
   identifiant_de_l_etablissement?: string
   code_postal?: string
   adresse_1?: string
-  adresse_3: string
+  adresse_3?: string
   city?: string
   nom_etablissement: string
   date_ouverture?: string
-  libelle_academie: string
-  libelle_nature: string
+  libelle_academie?: string
+  libelle_nature?: string
 }
 
 export const establishmentTypeMap: Record<string, EstablishmentType> = {

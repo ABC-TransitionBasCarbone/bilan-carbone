@@ -786,7 +786,7 @@ export const signUpWithSchool = async (email: string, country: Country, school: 
         country,
         city: school.city || school.adresse_3?.slice(5) || '',
         academy: school.libelle_academie,
-        establishmentType: establishmentTypeMap[school.libelle_nature],
+        establishmentType: school?.libelle_nature ? establishmentTypeMap[school.libelle_nature] : undefined,
         organization: { connect: { id: organizationVersion.organizationId } },
       })
     }
