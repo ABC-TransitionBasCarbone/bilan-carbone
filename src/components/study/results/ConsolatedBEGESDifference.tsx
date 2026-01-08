@@ -151,7 +151,10 @@ const ConsolatedBEGESDifference = ({
     }
 
     return wasteEmissionSources
-      .filter((emissionSource) => (emissionSource.validated || !validatedOnly) && emissionSource.value)
+      .filter(
+        (emissionSource) =>
+          (emissionSource.validated || !validatedOnly) && emissionSource.value && emissionSource.caracterisation,
+      )
       .map((emissionSource) => {
         const emissionFactor = emissionFactorsWithParts.find((ef) => ef.id === emissionSource.emissionFactor?.id)
         if (!emissionFactor || !emissionSource.value) {
