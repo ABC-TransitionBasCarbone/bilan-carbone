@@ -86,3 +86,5 @@ export const hasAccessToStudyResults = isAdvanced
 export const hasCustomPostOrder = isClickson
 
 export const hasAccessToResultsRatioTab = isCut
+
+export const hasAccessToAdvancedEmissionAnalysis = isTilt

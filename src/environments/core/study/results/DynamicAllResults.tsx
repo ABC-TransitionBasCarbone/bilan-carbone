@@ -5,6 +5,7 @@ import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import AllResultsSimplified from '@/environments/simplified/study/results/AllResults'
+import AllResultsTilt from '@/environments/tilt/study/results/AllResults'
 import { Environment, ExportRule, SiteCAUnit } from '@prisma/client'
 
 interface Props {
@@ -46,6 +47,15 @@ const DynamicAllResults = ({ study, rules, emissionFactorsWithParts, validatedOn
               table: 2,
               ratio: 3,
             }}
+          />
+        ),
+        [Environment.TILT]: (
+          <AllResultsTilt
+            study={study}
+            rules={rules}
+            emissionFactorsWithParts={emissionFactorsWithParts}
+            validatedOnly={validatedOnly}
+            caUnit={caUnit}
           />
         ),
       }}

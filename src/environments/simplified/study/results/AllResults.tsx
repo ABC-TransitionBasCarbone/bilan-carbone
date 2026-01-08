@@ -25,11 +25,12 @@ import classNames from 'classnames'
 import Link from 'next/link'
 import styles from './AllResults.module.css'
 
+import CarbonIntensities from '@/components/study/results/consolidated/CarbonIntensities'
 import EmissionsAnalysisClickson from '@/environments/clickson/study/results/consolidated/EmissionsAnalysisClickson'
 import CarbonIntensitiesCut from '@/environments/cut/study/results/CarbonIntensitiesCut'
-import { Post } from '@/services/posts'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import {
+  hasAccessToAdvancedEmissionAnalysis,
   hasAccessToResultsRatioTab,
   hasAccessToSimplifiedEmissionAnalysis,
   showResultsInfoText,
@@ -67,7 +68,7 @@ const AllResults = ({
   study,
   validatedOnly,
   chartOrder = defaultChartOrder,
-  caUnit,
+  caUnit = SiteCAUnit.K,
   showSubLevel = false,
 }: Props) => {
   const [value, setValue] = useState(0)
@@ -112,7 +113,7 @@ const AllResults = ({
     setPdfLoading(false)
   }
 
-  const { computedResultsWithDep, withDepValue } = useMemo(
+  const { computedResultsWithDep, withDepValue, withoutDepValue } = useMemo(
     () =>
       getDetailedEmissionResults(
         study,
@@ -215,6 +216,15 @@ const AllResults = ({
       )}
       {environment && hasAccessToSimplifiedEmissionAnalysis(environment) && (
         <EmissionsAnalysisClickson study={study} studySite={studySite} withDepValue={withDepValue} caUnit={caUnit} />
+      )}
+      {environment && hasAccessToAdvancedEmissionAnalysis(environment) && (
+        <CarbonIntensities
+          study={study}
+          studySite={studySite}
+          withDep={withDepValue}
+          withoutDep={withoutDepValue}
+          caUnit={caUnit}
+        />
       )}
       <Box component="section" sx={{ marginTop: '1rem' }}>
         <Tabs value={value} onChange={handleChange} indicatorColor="secondary" textColor="inherit" variant="fullWidth">
