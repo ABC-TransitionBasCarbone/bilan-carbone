@@ -1,4 +1,4 @@
-const postcssImport = require('postcss-import');
+const postcssImport = require('postcss-import')
 
 module.exports = {
   plugins: [
@@ -18,4 +18,4 @@ module.exports = {
       },
     }),
   ],
-};
+}
