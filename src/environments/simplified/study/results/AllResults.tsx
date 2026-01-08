@@ -28,6 +28,7 @@ import styles from './AllResults.module.css'
 import EmissionsAnalysisClickson from '@/environments/clickson/study/results/consolidated/EmissionsAnalysisClickson'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import {
+  hasAccessToResultsRatioTab,
   hasAccessToSimplifiedEmissionAnalysis,
   showResultsInfoText,
 } from '../../../../services/permissions/environment'
@@ -48,19 +49,16 @@ const a11yProps = (index: number) => {
   }
 }
 
-export type ChartType = 'pie' | 'bar' | 'table'
+export type ChartType = 'pie' | 'bar' | 'table' | 'ratio'
 
 const defaultChartOrder: Record<ChartType, number> = {
   table: 0,
   bar: 1,
   pie: 2,
+  ratio: 3,
 }
 
-const tabsLabels = [
-  { key: 'table', label: 'Tableau' },
-  { key: 'bar', label: 'Diagramme en barres' },
-  { key: 'pie', label: 'Diagramme circulaire' },
-]
+const tabsLabels: ChartType[] = ['table', 'bar', 'pie', 'ratio']
 
 const AllResults = ({
   emissionFactorsWithParts,
@@ -125,7 +123,11 @@ const AllResults = ({
     [study, studySite, tPost, tResults, validatedOnly],
   )
 
-  const orderedTabs = [...tabsLabels].sort((a, b) => chartOrder[a.key as ChartType] - chartOrder[b.key as ChartType])
+  const filteredTabsLabels = useMemo(() => {
+    return tabsLabels.filter((tab) => tab !== 'ratio' || (environment && hasAccessToResultsRatioTab(environment)))
+  }, [environment])
+
+  const orderedTabs = [...filteredTabsLabels].sort((a, b) => chartOrder[a as ChartType] - chartOrder[b as ChartType])
 
   return (
     <Block
@@ -214,8 +216,8 @@ const AllResults = ({
       )}
       <Box component="section" sx={{ marginTop: '1rem' }}>
         <Tabs value={value} onChange={handleChange} indicatorColor="secondary" textColor="inherit" variant="fullWidth">
-          {orderedTabs.map((t, index) => (
-            <Tab key={t.key} label={t.label} {...a11yProps(index)} />
+          {orderedTabs.map((tab, index) => (
+            <Tab key={tab} label={tResults(`chartTypes.${tab}`)} {...a11yProps(index)} />
           ))}
         </Tabs>
         <Box component="section" sx={{ marginTop: '1rem' }}>
@@ -245,6 +247,9 @@ const AllResults = ({
               type="post"
             />
           </TabPanel>
+          {environment && hasAccessToResultsRatioTab(environment) && (
+            <TabPanel value={value} index={chartOrder.ratio}></TabPanel>
+          )}
         </Box>
       </Box>
     </Block>

@@ -44,6 +44,7 @@ const DynamicAllResults = ({ study, rules, emissionFactorsWithParts, validatedOn
               bar: 0,
               pie: 1,
               table: 2,
+              ratio: 3,
             }}
           />
         ),
