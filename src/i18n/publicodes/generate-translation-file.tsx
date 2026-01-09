@@ -1,30 +1,24 @@
-import rules, { RuleName } from '@abc-transitionbascarbone/publicodes-count'
-import path from 'path'
 import { Rule } from 'publicodes'
-import { readJSONFile, writeJSONFile } from './utils'
+import {
+  getArgs,
+  KEYS_TO_TRANSLATE,
+  loadRulesForModel,
+  loadTranslation,
+  Locale,
+  Model,
+  saveTranslation,
+  TO_TRANSLATE_PREFIX,
+  TranslationKey,
+  TranslationRecord,
+  UPDATED_PREFIX,
+} from './utils'
 
-type TranslationKey = 'titre' | 'description' | 'question' | 'unité'
-type TranslationRecord = Record<string, any>
+const { model, destLang } = getArgs()
 
-const KEYS_TO_TRANSLATE: TranslationKey[] = ['titre', 'description', 'question', 'unité']
-const TRANSLATIONS_DIR = path.join(__dirname, '../translations')
-
-const TO_TRANSLATE_PREFIX = '[TO_TRANSLATE]'
-const UPDATED_PREFIX = '[UPDATED]'
-
-const LOCALES = ['fr', 'en', 'es'] as const
-type Locale = (typeof LOCALES)[number]
-
-function loadTranslation(locale: Locale): TranslationRecord {
-  return readJSONFile(path.join(TRANSLATIONS_DIR, locale, 'cut.json')) ?? {}
-}
-
-function saveTranslation(locale: Locale, data: TranslationRecord): void {
-  writeJSONFile(path.join(TRANSLATIONS_DIR, locale, 'cut.json'), data)
-}
+const LOCALES = ['fr', ...destLang] as Locale[]
 
 function extractTranslationKeysFromRules(
-  rulesMap: Record<RuleName, Rule>,
+  rulesMap: Record<string, Rule>,
 ): Record<string, Partial<Record<TranslationKey, string>>> {
   const translations: Record<string, Partial<Record<TranslationKey, string>>> = {}
 
@@ -135,12 +129,14 @@ function buildTranslationsFromRules(
   return updated
 }
 
-function generateNestedTranslationFile(): void {
+async function generateNestedTranslationFile(): Promise<void> {
+  const rules = await loadRulesForModel(model as Model)
+
   const translations: Record<Locale, TranslationRecord> = {} as Record<Locale, TranslationRecord>
   const existingRules: Record<Locale, TranslationRecord> = {} as Record<Locale, TranslationRecord>
 
   for (const locale of LOCALES) {
-    translations[locale] = loadTranslation(locale)
+    translations[locale] = loadTranslation(locale, model as Model)
     existingRules[locale] = translations[locale]['publicodes-rules'] ?? {}
   }
 
@@ -150,7 +146,7 @@ function generateNestedTranslationFile(): void {
 
   for (const locale of LOCALES) {
     removeEmptyObjects(updated[locale])
-    saveTranslation(locale, { ...translations[locale], 'publicodes-rules': updated[locale] })
+    saveTranslation(locale, model as Model, { ...translations[locale], 'publicodes-rules': updated[locale] })
   }
 
   console.log('Translation files updated successfully.')
