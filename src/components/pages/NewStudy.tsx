@@ -76,6 +76,7 @@ const NewStudyPage = ({
           city: site.city ?? '',
           cncId: site.cncId ?? '',
           cncCode: site.cnc?.cncCode || '',
+          establishmentYear: site.establishmentYear || '',
         })) || [],
       exports: {
         [Export.Beges]: false,

@@ -90,7 +90,6 @@ export const uploadEmissionFactors = async (
   const metaData = [] as Prisma.EmissionFactorMetaDataCreateManyInput[]
   const emissionFactorsToCreate = emissionFactorsWorksheet
     .getRows()
-    .filter((row) => !row.FE_BCPlus)
     .filter((row) => row.EF_TYPE === 'Consolidé')
     .filter((row) => existingEmissionFactors.every((ef) => ef.oldBCId !== row.EFV_GUID))
 

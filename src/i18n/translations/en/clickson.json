@@ -11,15 +11,15 @@
   "home": {
     "navigation": {
       "collaborators": {
-        "title": "Pilot Team:",
+        "title": "Pilot Team",
         "message": "Find here the list of teachers, administrative staff and students authorized to modify the establishment's data"
       },
       "footprints": {
-        "title": "My Footprints:",
+        "title": "My Footprints",
         "message": "Create your first footprint here. You can then view your footprints or create new ones at any time."
       },
       "sites": {
-        "title": "My Establishments:",
+        "title": "My Establishments",
         "message": "Find here the list of establishments linked to your account"
       }
     },
@@ -42,11 +42,13 @@
     "create": "Add a Footprint",
     "myStudies": "My Carbon Footprints",
     "createFirstStudy": "Create My First Footprint",
+    "createFirstSimplifiedStudy": "Create",
+    "firstSimplifiedStudyMessage": "It's time to get started! We invite you to create your first simplified carbon footprint.",
     "see": "View My Footprint",
     "selectSite": "Before filling in data, please select an establishment",
     "lastStudyTitle": "Latest Footprint",
     "navigation": {
-      "framing": "General Data",
+      "framing": "Establishment Profile",
       "organizations": "My Establishments",
       "team": "My Collaborators",
       "title": "My Footprint"
@@ -60,7 +62,11 @@
       "glossary": {
         "validatorEmailDescription": "As a student, I have access as a contributor to one or more emission posts.",
         "duplicationOptionsDescription": "When duplicating a study, you can choose to invite the same team members and students from the original study to the new one. This helps maintain collaboration continuity."
-      }
+      },
+      "etp": "Number of staff (teachers and non-teaching staff)",
+      "studentNumber": "Number of students",
+      "superficy": "Establishment area",
+      "goToDataEntry": "Go to data entry"
     },
     "newContributor": {
       "title": "Add on student on study : {name}"
@@ -80,11 +86,33 @@
           "description": "Here you can manage the students to your study. They will have access to certain posts and sub-posts (which you can define) and will be able to fill in certain information for emission sources that you have already created in the study. For more information on the contributor interface, please see our <link>FAQ</link>."
         }
       }
+    },
+    "export": {
+      "export": "Export my footprint"
     }
   },
   "emissionFactors": {
     "post": {
-      "Restauration": "Restauration"
+      "EnergiesClickson": "Energy",
+      "Combustibles": "Fuels",
+      "AutresGaz": "Other gases",
+      "Restauration": "Catering",
+      "TypesDeRepasServis": "Types of meals served",
+      "DistributeursAutomatiques": "Vending machines",
+      "DeplacementsClickson": "Travel",
+      "TransportDesEleves": "Student transport",
+      "TransportDuPersonnel": "Staff transport",
+      "VoyagesScolaires": "School trips",
+      "Fournitures": "Supplies",
+      "ProduitsChimiques": "Chemical products",
+      "EquipementsDeSport": "Sports equipment",
+      "DechetsRecyclables": "Recyclable waste",
+      "OrduresMenageresResiduelles": "Residual household waste",
+      "ImmobilisationsClickson": "Fixed assets",
+      "Construction": "Construction",
+      "Renovation": "Renovation",
+      "EquipementsInformatiqueAudiovisuel": "IT / Audiovisual equipment",
+      "EquipementsDivers": "Miscellaneous equipment (appliances, professional equipment...)"
     }
   },
   "organization": {
@@ -98,7 +126,13 @@
       "title": "Which establishments should the footprint cover?",
       "noSites": "No establishments configured",
       "namePlaceholder": "Establishment Name",
-      "add": "Add an Establishment"
+      "add": "Add an Establishment",
+      "etp": "Number of staff (teachers and non-teaching staff)",
+      "etpPlaceholder": "Total number of staff",
+      "studentNumber": "Number of students",
+      "studentNumberPlaceholder": "Total number of students",
+      "establishmentYear": "Year of establishment",
+      "establishmentYearPlaceholder": "Year the establishment was founded"
     }
   },
   "login": {
@@ -131,5 +165,13 @@
       "activation": "You have activated you account on Clickson",
       "activationRequest": "Access request to your Clickson organization"
     }
+  },
+  "comments": {
+    "title": "Comment Management",
+    "noComments": "You have no pending comments",
+    "yourComment": "Your comment...",
+    "validated": "Validated",
+    "pending": "Pending",
+    "addComment": "Add a comment"
   }
 }

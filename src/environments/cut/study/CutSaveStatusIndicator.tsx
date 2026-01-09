@@ -4,7 +4,7 @@ import { useToast } from '@/components/base/ToastProvider'
 import { SEC, TIME_IN_MS } from '@/utils/time'
 import { useTranslations } from 'next-intl'
 import { useEffect, useRef } from 'react'
-import { useCutPublicodes } from '../context/CutPublicodesProvider'
+import { useCutPublicodes } from '../context/publicodesContext'
 
 const TOAST_DURATION = 2 * SEC * TIME_IN_MS
 

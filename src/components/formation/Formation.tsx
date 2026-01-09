@@ -55,15 +55,14 @@ const FormationView = ({ formations, user, organizationName }: Props) => {
     setOpen(true)
   }
 
+  // Do not remove the open dependency : It is used to recalculate the variable if user closes the modal after the timer's end
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const ended = useMemo(() => formStartTime && new Date().getTime() > formStartTime + timer, [open, formStartTime])
 
   return (
     <>
       <div className={classNames(styles.subTitle, 'mb2')}>
-        {t.rich('explanation', {
-          b: (children) => <span className="bold">{children}</span>,
-          time: timer / (MIN * TIME_IN_MS),
-        })}
+        {customRich(t, 'explanation', { time: timer / (MIN * TIME_IN_MS) })}
       </div>
       <h3 className="mb1">{t('warning')}</h3>
       <div className={classNames(styles.subTitle, 'mb2')}>
@@ -74,7 +73,7 @@ const FormationView = ({ formations, user, organizationName }: Props) => {
         })}
       </div>
       <h3 className="mb1">{t('videos')}</h3>
-      <div className={classNames(styles.subTitle, 'mb2')}>{t.rich('videoExplanation')}</div>
+      <div className={classNames(styles.subTitle, 'mb2')}>{t('videoExplanation')}</div>
       <div className={classNames(styles.videos, 'justify-center mb2')}>
         {formations.map((formation) => (
           <Video key={formation.id} formation={formation} />
@@ -87,11 +86,7 @@ const FormationView = ({ formations, user, organizationName }: Props) => {
       ) : (
         <>
           <div className={classNames(styles.subTitle, 'mb2')}>
-            {t.rich('evaluationSubtitle', {
-              time: timer / (MIN * TIME_IN_MS),
-              red: (children) => <span className="error">{children}</span>,
-              b: (children) => <span className="bold">{children}</span>,
-            })}
+            {customRich(t, 'evaluationSubtitle', { time: timer / (MIN * TIME_IN_MS) })}
           </div>
           {!formStartTime && (
             <>

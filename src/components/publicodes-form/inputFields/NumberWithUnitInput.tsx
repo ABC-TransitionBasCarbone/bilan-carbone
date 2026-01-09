@@ -23,8 +23,35 @@ const NumberWithUnitInput = <RuleName extends string>({
   const value = formElement.value ?? formElement.defaultValue ?? null
   const isDisabled = disabled || !formElement.applicable
 
+  const [localValue, setLocalValue] = useState<number | null>(committedValue)
+  const previousCommittedValue = useRef(committedValue)
+  const uncommittedValue = useRef<number | null>(null)
+
+  // Sync local value when the committed value changes from outside (e.g., from DB sync)
+  useEffect(() => {
+    if (previousCommittedValue.current !== committedValue && committedValue !== localValue) {
+      setLocalValue(committedValue)
+    }
+    previousCommittedValue.current = committedValue
+  }, [committedValue, localValue])
+
+  // Flush uncommitted changes on unmount
+  useEffect(() => {
+    return () => {
+      if (uncommittedValue.current !== null) {
+        onChange(formElement.id, String(uncommittedValue.current ?? ''))
+      }
+    }
+  }, [onChange, formElement.id])
+
+  const handleValueChange = useCallback((newValue: number | null) => {
+    setLocalValue(newValue)
+    uncommittedValue.current = newValue
+  }, [])
+
   const handleValueCommitted = useCallback(
     (newValue: number | null) => {
+      uncommittedValue.current = null
       onChange(formElement.id, String(newValue ?? ''))
     },
     [onChange, formElement.id],
@@ -33,7 +60,8 @@ const NumberWithUnitInput = <RuleName extends string>({
   return (
     <NumberField.Root
       className={styles.inputWrapper}
-      value={value}
+      value={localValue}
+      onValueChange={handleValueChange}
       onValueCommitted={handleValueCommitted}
       disabled={isDisabled}
     >

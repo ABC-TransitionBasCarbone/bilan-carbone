@@ -9,6 +9,12 @@ export async function getSituationByStudySite(studySiteId: string): Promise<Situ
   })
 }
 
+export async function getSituationsByStudySites(studySiteIds: string[]): Promise<SituationSchema[]> {
+  return await prismaClient.situation.findMany({
+    where: { studySiteId: { in: studySiteIds } },
+  })
+}
+
 export async function updateSituationFields(
   studySiteId: string,
   fieldsToUpdate: Record<string, unknown>,

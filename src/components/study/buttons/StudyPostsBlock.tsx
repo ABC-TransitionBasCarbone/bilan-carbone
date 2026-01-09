@@ -8,6 +8,7 @@ import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { EmissionSourcesFilters, EmissionSourcesSort } from '@/types/filters'
 import DownloadIcon from '@mui/icons-material/Download'
 import { EmissionSourceCaracterisation } from '@prisma/client'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useState } from 'react'
 import styles from '../SubPosts.module.css'
@@ -58,13 +59,13 @@ const StudyPostsBlock = ({
   return (
     <Block
       title={
-        <div className="flex gapped">
+        <div className="flex grow gapped">
           <DebouncedInput
-            className={styles.searchInput}
+            className={classNames(styles.searchInput, 'grow')}
             debounce={500}
             value={filters.search}
             onChange={(newValue) => setFilters({ search: newValue })}
-            placeholder="🔎"
+            placeholder={tStudyPost('search')}
             data-testid="emission-source-search-field"
           />
           <StudyPostFilters

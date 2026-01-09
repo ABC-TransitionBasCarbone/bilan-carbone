@@ -3,6 +3,7 @@
 import { getYearsToDisplay, PastStudy, TrajectoryData } from '@/utils/trajectory'
 import { Alert, Typography } from '@mui/material'
 import { LineChart, LineSeries } from '@mui/x-charts/LineChart'
+import type { StudyResultUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useCallback, useMemo } from 'react'
@@ -15,6 +16,7 @@ export interface TrajectoryDataPoint {
 
 interface Props {
   studyName: string
+  studyUnit: StudyResultUnit
   trajectory15Data: TrajectoryData | null
   trajectoryWB2CData: TrajectoryData | null
   customTrajectoriesData: Array<{
@@ -38,6 +40,7 @@ interface Props {
 
 const TrajectoryGraph = ({
   studyName,
+  studyUnit,
   trajectory15Data,
   trajectoryWB2CData,
   customTrajectoriesData,
@@ -51,6 +54,7 @@ const TrajectoryGraph = ({
   unvalidatedSourcesInfo,
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.graph')
+  const tUnit = useTranslations('study.results.units')
 
   const trajectory15Enabled = selectedSbtiTrajectories.includes('1,5')
   const trajectoryWB2CEnabled = selectedSbtiTrajectories.includes('WB2C')
@@ -78,9 +82,16 @@ const TrajectoryGraph = ({
   const studyStartYearIndex = yearsToDisplay.indexOf(studyStartYear)
 
   const mapDataToYears = useCallback(
-    (dataPoints: TrajectoryDataPoint[]) => {
+    (dataPoints: TrajectoryDataPoint[], customTrajectory = false) => {
+      // usefull for customTrajectory only
+      const maxYear = customTrajectory
+        ? Math.min((Math.max(...yearsToDisplay), Math.max(...dataPoints.map((point) => point.year))))
+        : Math.max(...yearsToDisplay)
+
       const dataMap = new Map(dataPoints.map((d) => [d.year, d.value]))
-      return yearsToDisplay.map((year) => dataMap.get(year) ?? null)
+      return yearsToDisplay.map((year) =>
+        year <= maxYear ? (dataMap.get(year) ?? null) : (dataMap.get(maxYear) ?? null),
+      )
     },
     [yearsToDisplay],
   )
@@ -224,7 +235,7 @@ const TrajectoryGraph = ({
         if (previousTrajectory) {
           if (withinThreshold) {
             series.push({
-              data: mapDataToYears(previousTrajectory),
+              data: mapDataToYears(previousTrajectory, true),
               label: traj.label + ` (${previousTrajectoryReferenceYear})`,
               color: traj.color || `var(--trajectory-custom-${index % 9})`,
               curve: 'linear' as const,
@@ -235,7 +246,7 @@ const TrajectoryGraph = ({
           } else {
             const baseColor = traj.color || `var(--trajectory-custom-${index % 9})`
             series.push({
-              data: mapDataToYears(previousTrajectory),
+              data: mapDataToYears(previousTrajectory, true),
               label: traj.label + ` (${previousTrajectoryReferenceYear})`,
               color: `color-mix(in srgb, ${baseColor} 50%, transparent)`,
               curve: 'linear' as const,
@@ -246,7 +257,7 @@ const TrajectoryGraph = ({
           }
         }
 
-        const currentData = mapDataToYears(currentTrajectory)
+        const currentData = mapDataToYears(currentTrajectory, true)
         const showCurrentTrajectory = !previousTrajectory || !withinThreshold
         if (showCurrentTrajectory) {
           series.push({
@@ -391,7 +402,7 @@ const TrajectoryGraph = ({
         height={400}
         yAxis={[
           {
-            label: t('yAxisLabel'),
+            label: `${t('yAxisLabel')} (${tUnit(studyUnit)})`,
           },
         ]}
       />

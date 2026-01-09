@@ -28,6 +28,7 @@ export interface Props {
   fullSize?: boolean
   rightComponent?: ReactNode
   isMainContainer?: boolean
+  grow?: boolean
 }
 
 const Block = ({
@@ -47,6 +48,7 @@ const Block = ({
   fullSize = true,
   rightComponent,
   isMainContainer = true,
+  grow = true,
   ...rest
 }: Props) => {
   const titleDiv = (
@@ -58,6 +60,7 @@ const Block = ({
       as={as}
       id={id}
       data-testid={dataTestId}
+      grow={grow}
     />
   )
 

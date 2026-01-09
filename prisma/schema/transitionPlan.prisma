@@ -75,11 +75,11 @@ model Action {
   transitionPlan   TransitionPlan @relation(fields: [transitionPlanId], references: [id], onDelete: Cascade)
 
   title                     String
-  subSteps                  String                   @map("sub_steps")
+  subSteps                  String?                  @map("sub_steps")
   detailedDescription       String                   @map("detailed_description")
   potentialDeduction        ActionPotentialDeduction @map("potential_deduction")
-  reductionValue            Int?                     @map("reduction_value")
   reductionDetails          String?                  @map("reduction_details")
+  reductionValueKg          Int?                     @map("reduction_value_kg")
   reductionStartYear        String?                  @map("reduction_start_year")
   reductionEndYear          String?                  @map("reduction_end_year")
   owner                     String?
@@ -100,6 +100,7 @@ model Action {
   enabled                   Boolean                  @default(true) @map("enabled")
   dependenciesOnly          Boolean                  @default(false) @map("dependencies_only")
   indicators                ActionIndicator[]
+  steps                     ActionStep[]
   createdAt                 DateTime                 @default(now()) @map("created_at")
   updatedAt                 DateTime                 @default(now()) @updatedAt @map("updated_at")
 
@@ -118,6 +119,20 @@ model ActionIndicator {
   updatedAt   DateTime            @default(now()) @updatedAt @map("updated_at")
 
   @@map("action_indicators")
+}
+
+model ActionStep {
+  id String @id @default(uuid())
+
+  actionId String @map("action_id")
+  action   Action @relation(fields: [actionId], references: [id], onDelete: Cascade)
+
+  title     String
+  order     Int
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("action_steps")
 }
 
 enum TrajectoryType {
@@ -152,11 +167,11 @@ model ExternalStudy {
   transitionPlanId String         @map("transition_plan_id")
   transitionPlan   TransitionPlan @relation(fields: [transitionPlanId], references: [id], onDelete: Cascade)
 
-  name      String
-  date      DateTime
-  totalCo2  Int      @map("total_co2")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  name       String
+  date       DateTime
+  totalCo2Kg Int      @map("total_co2_kg")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("external_studies")
 }

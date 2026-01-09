@@ -7,8 +7,6 @@ import { FullStudy } from '@/db/study'
 import { getDetailedEmissionResults } from '@/services/study'
 import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import Link from 'next/link'
-import styles from './ResultsContainer.module.css'
 
 interface Props {
   study: FullStudy
@@ -33,9 +31,7 @@ const StudyResultsContainerSummaryCut = ({ study }: Props) => {
   return (
     <>
       <div className="justify-between mb2">
-        <Link className={styles.studyNameLink} href={`/etudes/${study.id}`}>
-          <StudyName name={study.name} />
-        </Link>
+        <StudyName studyId={study.id} name={study.name} role={null} />
         <LinkButton href={`/etudes/${study.id}/comptabilisation/resultats`}>{t('seeResults')}</LinkButton>
       </div>
       <div className="grow">

@@ -1,6 +1,7 @@
 'use client'
 
 import BaseTable from '@/components/base/Table'
+import { hasAccessToStudySiteAddAndSelection } from '@/services/permissions/environment'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { defaultCAUnit } from '@/utils/number'
 import { Environment, SiteCAUnit } from '@prisma/client'
@@ -60,7 +61,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, columns, ca
               </span>
             )}
           </p>
-          {form && !withSelection && (
+          {form && !withSelection && hasAccessToStudySiteAddAndSelection(environment) && (
             <Button onClick={() => setValue('sites', [...sites, newSite()])} data-testid="add-site-button">
               {t('add')}
             </Button>

@@ -16,14 +16,24 @@ interface Props {
   creationUrl?: string
   user: UserSession
   collaborations?: boolean
+  simplified?: boolean
 }
 
-const Studies = async ({ studies, canAddStudy, creationUrl, user, collaborations }: Props) => {
+const Studies = async ({ studies, canAddStudy, creationUrl, user, collaborations, simplified }: Props) => {
   const t = await getTranslations('study')
+
+  let title = ''
+  if (collaborations) {
+    title = t('myCollaborations')
+  } else if (simplified) {
+    title = t('mySimplifiedStudies')
+  } else {
+    title = t('myStudies')
+  }
 
   return (
     <Block
-      title={t(collaborations ? 'myCollaborations' : 'myStudies')}
+      title={title}
       data-testid="home-studies"
       actions={
         canAddStudy
@@ -37,7 +47,7 @@ const Studies = async ({ studies, canAddStudy, creationUrl, user, collaborations
                 children: (
                   <>
                     <AddIcon />
-                    {t('create')}
+                    {t(simplified ? 'createSimplified' : 'create')}
                   </>
                 ),
               },
@@ -50,7 +60,7 @@ const Studies = async ({ studies, canAddStudy, creationUrl, user, collaborations
           <ul className={styles.grid}>
             {studies.map((study) => (
               <Suspense key={study.id}>
-                <StudyCard study={study} user={user} />
+                <StudyCard study={study} user={user} simplified={simplified} />
               </Suspense>
             ))}
           </ul>

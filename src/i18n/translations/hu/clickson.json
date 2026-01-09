@@ -1,0 +1,137 @@
+{
+  "nav": {
+    "newStudyContributor": "Diák hozzáadása"
+  },
+  "navigation": {
+    "organizations": "Saját karbonlábnyomaim",
+    "organization": "Pilótacsapat",
+    "information": "Intézményem",
+    "team": "Pilótacsapat"
+  },
+  "home": {
+    "navigation": {
+      "collaborators": {
+        "title": "Pilótacsapat",
+        "message": "Itt található a listája azoknak a tanároknak, adminisztratív dolgozóknak és diákoknak, akik jogosultak módosítani az intézmény adatait"
+      },
+      "footprints": {
+        "title": "Saját lábnyomaim",
+        "message": "Hozd létre itt az első lábnyomodat. Ezután bármikor megtekintheted vagy létrehozhatsz újakat."
+      },
+      "sites": {
+        "title": "Intézményeim",
+        "message": "Itt található a számládhoz kapcsolt intézmények listája"
+      }
+    },
+    "title": "A saját egyszerűsített karbonlábnyomod kiszámítása lehetővé teszi, hogy:",
+    "alert": {
+      "info": "A Clickson kalkulátor lehetővé teszi, hogy becsüld tevékenységed klímahatását. Elsősorban tudatosság növelő eszköz. Nem alacsony szén-dioxid-kibocsátású átállási megközelítés, hanem egyszerűsített karbonlábnyom — a <link>Szén-dioxid elszámolás kommunikációs útmutatója</link> szerint —, az intézmények tevékenységéhez kapcsolódó fő kibocsátási forrásokra összpontosítva."
+    },
+    "info": {
+      "0": "Megérteni az intézményed hatásának mérését",
+      "1": "Az intézkedési prioritások azonosítása",
+      "2": "Hosszú távon, alaposabb munkával, egy csökkentési pálya felépítése"
+    }
+  },
+  "team": {
+    "table": {
+      "title": "Pilótacsapat"
+    }
+  },
+  "study": {
+    "create": "Lábnyom hozzáadása",
+    "myStudies": "Saját karbonlábnyomaim",
+    "createFirstStudy": "Első lábnyom létrehozása",
+    "see": "Lábnyom megtekintése",
+    "selectSite": "Adatok kitöltése előtt kérjük, válassz intézményt",
+    "lastStudyTitle": "Legutóbbi lábnyom",
+    "createFirstSimplifiedStudy": "Create",
+    "firstSimplifiedStudyMessage": "It's time to get started! We invite you to create your first simplified carbon footprint.",
+    "navigation": {
+      "framing": "Általános adatok",
+      "organizations": "Intézményeim",
+      "team": "Munkatársaim",
+      "title": "Saját lábnyom"
+    },
+    "validatedOnlyDescription": "Diákként hozzáférésem van, mint közreműködő, egy vagy több kibocsátási ponthoz.",
+    "new": {
+      "suggestion": {
+        "name": "Példa: karbonlábnyom Simone Veil Középiskola"
+      },
+      "inviteContributors": "Ugyanazok a diákok meghívása",
+      "glossary": {
+        "validatorEmailDescription": "Diákként hozzáférésem van, mint közreműködő, egy vagy több kibocsátási ponthoz.",
+        "duplicationOptionsDescription": "Tanulmány másolásakor kiválaszthatod, hogy az eredeti tanulmányból ugyanazokat a csapattagokat és diákokat hívd meg az új tanulmányhoz. Ez segít a kollaboráció folytonosságának fenntartásában."
+      }
+    },
+    "newContributor": {
+      "title": "Diák hozzáadása a tanulmányhoz: {name}"
+    },
+    "role": {
+      "Contributor": "Diák"
+    },
+    "rights": {
+      "contributorsTable": {
+        "delete": "Diák eltávolítása",
+        "title": "Diákok",
+        "newContributorLink": "Diák hozzáadása",
+        "deleting": {
+          "confirmation": "Biztosan el akarod távolítani {email}-t a tanulmány diákjai közül?"
+        },
+        "role": {
+          "description": "Itt kezelheted a tanulmány diákjait. Hozzáférést kapnak bizonyos ponthoz és alponthoz (amit meghatározhatsz), és kitölthetik az általad már létrehozott kibocsátási források adatait. További információkért a közreműködői felületről, lásd a <link>GYIK</link>."
+        }
+      }
+    }
+  },
+  "emissionFactors": {
+    "post": {
+      "Restauration": "Ételkészítés / Vendéglátás"
+    }
+  },
+  "organization": {
+    "card": {
+      "myOrganization": "Intézményeim"
+    },
+    "form": {
+      "editTitle": "Intézményeim szerkesztése"
+    },
+    "sites": {
+      "title": "Mely intézményeket kell lefednie a lábnyomnak?",
+      "noSites": "Nincs beállított intézmény",
+      "namePlaceholder": "Intézmény neve",
+      "add": "Intézmény hozzáadása"
+    }
+  },
+  "login": {
+    "welcome": "Üdv a Clickson PEBC-n",
+    "explanation": "Mérjük az intézményed üvegházhatású gázkibocsátását!",
+    "form": {
+      "activate": "Fiókom létrehozása"
+    }
+  },
+  "signup": {
+    "description": "Hozz létre egy Clickson fiókot az e-mail címeddel és egy iskola irányítószámával vagy nevével",
+    "schoolPostalCodeOrName": "Iskola irányítószáma vagy neve",
+    "schoolPostalCodeOrNamePlaceholder": "Az iskola intézmény irányítószáma vagy neve",
+    "schoolSearchGlossaryTitle": "Találd meg az iskola intézményedet.",
+    "schoolSearchGlossary": "Találd meg az intézményed az irányítószám vagy név megadásával, majd válaszd ki a legördülő listából.",
+    "close": "Bezárás",
+    "schoolPostalCodeOrNameRequired": "Kérjük, add meg az iskola irányítószámát vagy nevét",
+    "validate": "Érvényesítés",
+    "clear": "Érték törlése",
+    "Not authorized": "Ez az e-mail már használatban van a Clicksonon, vagy probléma merült fel a fiók létrehozásakor. Kérjük, nézd meg a <link>GYIK</link>-et, vagy <support>lépj kapcsolatba a támogatással</support>, ha hibát észlelsz.",
+    "Not known school": "Kérjük, keresd meg és válaszd ki az intézményedet.",
+    "validation": {
+      "schoolPostalCodeOrName": "Kérjük, add meg az iskola irányítószámát vagy nevét"
+    }
+  },
+  "email": {
+    "subject": {
+      "newUser": "Meghívást kaptál a Clicksonon",
+      "addedActiveUser": "Meghívást kaptál egy új Clickson környezetbe",
+      "activation": "Aktiváltad a fiókodat a Clicksonon",
+      "activationRequest": "Hozzáférési kérelem a Clickson szervezetedhez"
+    }
+  }
+}

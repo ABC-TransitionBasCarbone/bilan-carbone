@@ -115,11 +115,11 @@
     "edit": "Edit",
     "studyRights": "Rights",
     "team": "Team",
-    "actualities": "Actualities"
+    "actualities": "News"
   },
   "actuality": {
-    "title": "BC+ actualities",
-    "allActualities": "See all actualities",
+    "title": "BC+ news",
+    "allActualities": "See all news",
     "noItems": "No news at the moment",
     "seeLess": "See less",
     "seeMore": "See more"
@@ -148,6 +148,12 @@
   "locale": {
     "en": "English",
     "fr": "French",
+    "es": "Español",
+    "el": "ελληνικά",
+    "hr": "hrvatski",
+    "hu": "magyar",
+    "it": "Italiano",
+    "ro": "Română",
     "selector": "Site language"
   },
   "login": {
@@ -225,7 +231,8 @@
     "transition": "BC+ transition",
     "logout": "Log out",
     "methodology": "Methodology",
-    "organizations": "My carbon assessments",
+    "organizations": "My carbon footprints",
+    "footprints": "Mes Empreintes",
     "settings": "Settings",
     "team": "My team",
     "information": "Global informations",
@@ -327,8 +334,6 @@
       "validator": "Validator email",
       "studyDates": "Study dates",
       "realizationDates": "Study completion date",
-      "start": "Start",
-      "end": "End",
       "level": "Bilan Carbone® maturity",
       "exports": "Exports",
       "control": "Control mode",
@@ -419,6 +424,7 @@
       "contributors": "{count, plural, =1 {1 contributor} other {contibutors}}",
       "contributorsList": "{count, plural, =1 {Contributor :} other {Contributors :}}",
       "label": "Emission source label",
+      "search": "Search by label, value, unit, ...",
       "new": "Give your new emission source a title",
       "add": "Add",
       "filters": "Filters",
@@ -899,7 +905,7 @@
           "subtitle": "Display of reference trajectories and your organization's trajectories",
           "trajectory15": "SBTi 1.5°C",
           "trajectoryWB2C": "SBTi WB2C",
-          "yAxisLabel": "Emissions (tCO2e)",
+          "yAxisLabel": "Emissions",
           "actionBasedTrajectory": "Action-based trajectory",
           "unvalidatedSourcesWarning": "{count, plural, =1 {One emission source is not validated in the current study and is therefore not taken into account in the trajectory calculations.} other {{count} emission sources are not validated in the current study and are therefore not taken into account in the trajectory calculations.}}",
           "unvalidatedSourcesLinkedStudiesWarning": "{count, plural, =1 {One emission source is not validated in the following past study:} other {{count} emission sources are not validated in the following past studies:}}",
@@ -1055,6 +1061,10 @@
         "add": "Add an action",
         "table": {
           "enabled": "Enabled",
+          "enabledGlossaryIconLabel": "Enabling and disabling my actions",
+          "enabledGlossaryTitle": "Enabling and disabling my actions",
+          "enabledGlossaryDescription": "The reductions linked to actions you have enabled are taken into account on the <trajectoryLink>Reduction trajectories</trajectoryLink> page in your bottom-up trajectory. Reductions linked to disabled actions will not be visible. Enabling or disabling actions allows you to consider different scenarios to achieve your reduction objectives.",
+          "close": "Close",
           "title": "Title",
           "priority": "Priority",
           "actionType": "Action type",
@@ -1075,7 +1085,7 @@
           "title": "Action title",
           "titlePlaceholder": "Give your action a title",
           "subSteps": "Sub-steps",
-          "subStepsPlaceholder": "Describe your sub-steps",
+          "stepTitlePlaceholder": "Describe your sub-step",
           "detailedDescription": "Detailed description of the action and stakeholder involvement",
           "detailedDescriptionPlaceholder": "Detailed description",
           "potentialDeduction": "Emission reduction potential",
@@ -1149,7 +1159,7 @@
           "ReductionWithinOrganisationCoreBusiness": "Reduction within the organisation's core business (Priority 1/6)",
           "glossaryTitle": "Action relevance levels",
           "information": "Information about relevance levels",
-          "learnMore": "For more information, please visit this page.",
+          "learnMore": "For more information, please visit <link>this page</link>.",
           "close": "Close"
         },
         "onboarding": {
@@ -1828,7 +1838,7 @@
       "myClient": "My client",
       "update": "Update my information",
       "updateClient": "Update my client",
-      "renew": "Your {year} licence is about to expire. Remember to renew it to continue using the services in {nextYear}",
+      "renew": "Your {year} licence is about to expire. Remember to renew it to continue using the services in {nextYear}. Without a renewed membership, only read access remains available for your studies on BC+.",
       "renewLink": "Renew"
     },
     "delete": {
@@ -2046,6 +2056,7 @@
     "videoExplanation": "Please note that the assessment associated with this 'condensed' training course does not contain any traps if you watch the training carefully. Successful completion will allow you to obtain a free updated training certificate. However, an insufficient result would mean that you will have to reintegrate into the full training course (new Initiation module if you were trained M1 on V8, or new Professional module if you were trained M2 on V8).",
     "evaluation": "Knowledge assessment",
     "evaluationEnded": "You already answered the questionnaire",
+    "evaluationBlocked": "Access to the refresher training course is no longer available for your membership.",
     "evaluationSubtitle": "Please complete the knowledge assessment questionnaire to receive your v9 training attestation. It is limited in time and you will have <error>at most {time} minutes to answer the question. You can only answer the questionnaire once. Once you've started, you can't go back.</error>",
     "acceptation": "I've understood that I'll only be able to launch the questionnaire once and that I'll have a limited amount of time to answer the question. I'm in the right conditions to start my test",
     "answer": "Answer the questionnaire",
@@ -2127,8 +2138,5 @@
     "studyYearMustBeBeforeCurrent": "The study year must be before the current study year",
     "studyYearMustBeAfterLinkedStudies": "Cannot set a date earlier than your linked studies in your transition plan",
     "maxTwoDecimals": "The reduction rate must have at most 2 decimal places"
-  },
-  "common": {
-    "typeToConfirm": "Type \"{name}\" to confirm"
   }
 }

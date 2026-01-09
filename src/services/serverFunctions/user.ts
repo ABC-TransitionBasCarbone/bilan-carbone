@@ -548,6 +548,7 @@ export const answerFeeback = async () =>
 
 export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, environment: Environment) =>
   withServerResponse('signUpWithSiretOrCNC', async () => {
+    const trimmedEmail = email.trim().toLowerCase()
     const deactivatedFeaturesRestrictions = await getDeactivableFeatureRestrictions(DeactivatableFeature.Creation)
     if (
       deactivatedFeaturesRestrictions?.active &&
@@ -556,10 +557,10 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const accountAlreadyCreated = await getAccountByEmailAndEnvironment(email, environment)
+    const accountAlreadyCreated = await getAccountByEmailAndEnvironment(trimmedEmail, environment)
     if (accountAlreadyCreated && accountAlreadyCreated.organizationVersionId) {
       if (environment === Environment.TILT && accountAlreadyCreated.status !== UserStatus.ACTIVE) {
-        const activation = await activateEmail(email.toLowerCase(), environment)
+        const activation = await activateEmail(trimmedEmail, environment)
         if (!activation.success) {
           throw new Error(activation.errorMessage)
         }
@@ -568,13 +569,13 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
       throw new Error(NOT_AUTHORIZED)
     }
 
-    let user = (await getUserByEmail(email)) as UserWithAccounts
+    let user = (await getUserByEmail(trimmedEmail)) as UserWithAccounts
     let organization = null
     let account = null
 
     if (!user) {
       user = (await addUser({
-        email,
+        email: trimmedEmail,
         firstName: '',
         lastName: '',
         accounts: {
@@ -684,7 +685,7 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
 
       await sendActivationRequest(
         accounts.filter((a) => a.role === Role.GESTIONNAIRE || a.role === Role.ADMIN).map((a) => a.user.email),
-        email.toLowerCase(),
+        trimmedEmail,
         `${user.firstName} ${user.lastName}`,
         environment,
       )
@@ -692,13 +693,14 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
       return REQUEST_SENT
     } else {
       await validateUser(account.id)
-      await sendActivation(email, false, environment)
+      await sendActivation(trimmedEmail, false, environment)
     }
     return EMAIL_SENT
   })
 
 export const signUpWithSchool = async (email: string, school: School, environment: Environment) =>
   withServerResponse('signUpWithSchool', async () => {
+    const trimmedEmail = email.trim().toLowerCase()
     if (!school || !school.identifiant_de_l_etablissement) {
       throw new Error(UNKNOWN_SCHOOL)
     }
@@ -710,18 +712,18 @@ export const signUpWithSchool = async (email: string, school: School, environmen
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const accountAlreadyCreated = await getAccountByEmailAndEnvironment(email, environment)
+    const accountAlreadyCreated = await getAccountByEmailAndEnvironment(trimmedEmail, environment)
     if (accountAlreadyCreated && accountAlreadyCreated.organizationVersionId) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    let user = (await getUserByEmail(email)) as UserWithAccounts
+    let user = (await getUserByEmail(trimmedEmail)) as UserWithAccounts
     let organization = null
     let account = null
 
     if (!user) {
       user = (await addUser({
-        email,
+        email: trimmedEmail,
         firstName: '',
         lastName: '',
         accounts: {
@@ -784,7 +786,7 @@ export const signUpWithSchool = async (email: string, school: School, environmen
 
       await sendActivationRequest(
         accounts.filter((a) => a.role === Role.GESTIONNAIRE || a.role === Role.ADMIN).map((a) => a.user.email),
-        email.toLowerCase(),
+        trimmedEmail,
         `${user.firstName} ${user.lastName}`,
         environment,
       )
@@ -792,7 +794,7 @@ export const signUpWithSchool = async (email: string, school: School, environmen
       return REQUEST_SENT
     } else {
       await validateUser(account.id)
-      await sendActivation(email, false, environment)
+      await sendActivation(trimmedEmail, false, environment)
     }
     return EMAIL_SENT
   })

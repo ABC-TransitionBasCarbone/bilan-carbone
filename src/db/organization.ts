@@ -1,6 +1,7 @@
 import { UpdateOrganizationCommand } from '@/services/serverFunctions/organization.command'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { OnboardingCommand } from '@/services/serverFunctions/user.command'
+import { unique } from '@/utils/array'
 import { Environment, Organization, OrganizationVersion, Prisma, Site, UserStatus } from '@prisma/client'
 import { prismaClient } from './client'
 import { deleteStudy } from './study'
@@ -57,6 +58,9 @@ export const OrganizationVersionWithOrganizationSelect = {
           beneficiaryNumber: true,
           establishmentId: true,
           establishmentYear: true,
+          studentNumber: true,
+          superficy: true,
+          address: true,
           cncId: true,
           cnc: {
             select: {
@@ -181,6 +185,7 @@ export const updateOrganization = async (
   if (!organizationVersion) {
     return
   }
+
   return prismaClient.$transaction([
     ...sites.map((site) =>
       prismaClient.site.upsert({
@@ -196,6 +201,8 @@ export const updateOrganization = async (
           cncId: site.cncId || undefined,
           volunteerNumber: site.volunteerNumber || undefined,
           beneficiaryNumber: site.beneficiaryNumber || undefined,
+          studentNumber: site.studentNumber || undefined,
+          establishmentYear: site.establishmentYear,
         },
         update: {
           name: site.name,
@@ -206,6 +213,8 @@ export const updateOrganization = async (
           cncId: site.cncId || undefined,
           volunteerNumber: site.volunteerNumber || undefined,
           beneficiaryNumber: site.beneficiaryNumber || undefined,
+          studentNumber: site.studentNumber || undefined,
+          establishmentYear: site.establishmentYear,
         },
       }),
     ),
@@ -364,7 +373,7 @@ export const createOrUpdateOrganization = async (
     update: {
       isCR: isCR || organizationVersion?.isCR || false,
       updatedAt: new Date(),
-      activatedLicence: activatedLicence || organizationVersion?.activatedLicence,
+      activatedLicence: unique([...(organizationVersion?.activatedLicence ?? []), ...(activatedLicence ?? [])]),
     },
     create: {
       organizationId: updatedOrganization.id,

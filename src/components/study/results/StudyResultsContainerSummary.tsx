@@ -3,22 +3,25 @@
 import Box from '@/components/base/Box'
 import Button from '@/components/base/Button'
 import HelpIcon from '@/components/base/HelpIcon'
-import StyledChip from '@/components/base/StyledChip'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
+import { hasRoleOnStudy } from '@/services/permissions/environment'
 import { getDetailedEmissionResults } from '@/services/study'
 import { formatNumber } from '@/utils/number'
+import { getDisplayedRoleOnStudy } from '@/utils/study'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
-import SpaIcon from '@mui/icons-material/Spa'
 import { Environment } from '@prisma/client'
 import classNames from 'classnames'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
+import StudyName from '../card/StudyName'
 import BarChart from '../charts/BarChart'
 import styles from './ResultsContainer.module.css'
 
 interface Props {
+  user: UserSession
   study: FullStudy
   studySite: string
   showTitle?: boolean
@@ -26,7 +29,14 @@ interface Props {
   withDependencies?: boolean
 }
 
-const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOnly, withDependencies }: Props) => {
+const StudyResultsContainerSummary = ({
+  user,
+  study,
+  studySite,
+  showTitle,
+  validatedOnly,
+  withDependencies,
+}: Props) => {
   const t = useTranslations('study')
   const tPost = useTranslations('emissionFactors.post')
   const tResultUnits = useTranslations('study.results.units')
@@ -55,19 +65,15 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
     ]
   }, [environment, study, studySite, tPost, tResults, validatedOnly])
 
+  const showRoleInChip = user && hasRoleOnStudy(user.environment)
+  const accountRoleOnStudy = user && getDisplayedRoleOnStudy(user, study)
+
   return (
     <>
       {withDependencies === undefined && showTitle && (
         <div className={`${styles.header} flex justify-between mb1`}>
           <div className={styles.studyNameContainer}>
-            <StyledChip
-              icon={<SpaIcon />}
-              color="success"
-              label={study.name}
-              component="a"
-              href={`/etudes/${study.id}`}
-              clickable
-            />
+            <StudyName studyId={study.id} name={study.name} role={showRoleInChip ? accountRoleOnStudy : null} />
           </div>
           <Button className={styles.seeResultsButton} href={`/etudes/${study.id}/comptabilisation/resultats`}>
             {t('seeResults')}

@@ -21,15 +21,15 @@
   "home": {
     "navigation": {
       "collaborators": {
-        "title": "Mes Collaborateur·rices :",
+        "title": "Mes Collaborateur·rices",
         "message": "Retrouvez ici la liste des personnes autorisées à intervenir sur vos différentes empreintes carbone"
       },
       "footprints": {
-        "title": "Mes Empreintes :",
+        "title": "Mes Empreintes",
         "message": "Créer votre première empreinte ici. Vous pourrez ensuite consulter vos empreintes ou en créer de nouvelles à tout moment."
       },
       "sites": {
-        "title": "Mes Cinémas :",
+        "title": "Mes Cinémas",
         "message": "Retrouvez ici la liste des établissements rattachés à votre compte"
       }
     },
@@ -48,6 +48,8 @@
     "myCollaborations": "Mes collaborations",
     "myStudies": "Mes empreintes",
     "createFirstStudy": "Créer ma première empreinte",
+    "createFirstSimplifiedStudy": "Créer ma première Empreinte",
+    "firstSimplifiedStudyMessage": "Il est temps de vous lancer ! Nous vous invitons à créer votre première Empreinte.",
     "see": "Voir mon empreinte",
     "validatedSources": "<data>{validated} / {total}</data> Questions répondues",
     "validatedOnlyDescription": "Pour chaque empreinte, un ou plusieurs validateur·rices peuvent être définis. Ceux-ci ont la responsabilité de valider les sources d'émission lorsque celles-ci auront été renseignées par les contributeur·rices et éditeur·rices de l'étude. Par défaut, seules les émissions validées apparaissent au sein de vos résultats, mais vous pouvez changer ce comportement via le menu \"Paramètres\".",

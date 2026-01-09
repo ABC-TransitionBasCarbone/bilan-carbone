@@ -21,6 +21,7 @@ const ResultsContainerForUser = async ({ user, mainStudyOrganizationVersionId }:
     getOrganizationVersionStudiesOrderedByStartDate(mainStudyOrganizationVersionId),
     getUserApplicationSettings(user.accountId),
   ])
+
   let mainStudy = null
   for (const study of studies) {
     const result = await canReadStudy(user, study.id)
@@ -29,12 +30,14 @@ const ResultsContainerForUser = async ({ user, mainStudyOrganizationVersionId }:
       break
     }
   }
+
   return (
     <Block>
       {environment === Environment.CUT && <h2 className="pb2">{t('lastStudyTitle')}</h2>}
 
       {mainStudy ? (
         <StudyResultsContainerSummary
+          user={user}
           study={mainStudy}
           studySite="all"
           showTitle

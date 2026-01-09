@@ -9,16 +9,16 @@ import {
 } from '@prisma/client'
 import z from 'zod'
 
-export const ExternalStudyCommandValidation = z.object({
+export const ExternalStudyFormValidation = z.object({
   transitionPlanId: z.string().min(1),
   externalStudyId: z.string().optional(),
   name: z.string().min(1),
   date: z.union([z.string(), z.date()]).transform((val) => (typeof val === 'string' ? val : val.toISOString())),
-  totalCo2: z.number().min(0),
+  totalCo2Value: z.number().min(0),
 })
 
-export const createExternalStudyCommandValidation = (currentStudyYear: number) => {
-  return ExternalStudyCommandValidation.refine(
+export const createExternalStudyFormValidation = (currentStudyYear: number) => {
+  return ExternalStudyFormValidation.refine(
     (data) => {
       const dateValue = new Date(data.date)
       const studyYear = dateValue.getFullYear()
@@ -31,8 +31,7 @@ export const createExternalStudyCommandValidation = (currentStudyYear: number) =
   )
 }
 
-export type ExternalStudyCommand = z.infer<typeof ExternalStudyCommandValidation>
-export type ExternalStudyFormInput = z.input<typeof ExternalStudyCommandValidation>
+export type ExternalStudyFormInput = z.input<typeof ExternalStudyFormValidation>
 
 export const createObjectiveSchema = () =>
   z
@@ -83,9 +82,16 @@ export const ActionIndicatorSchema = z.object({
 
 export type ActionIndicatorCommand = z.infer<typeof ActionIndicatorSchema>
 
+export const ActionStepSchema = z.object({
+  id: z.string().optional(),
+  title: z.string().min(1),
+  order: z.number().int(),
+})
+
+export type ActionStepCommand = z.infer<typeof ActionStepSchema>
+
 export const AddActionCommandBase = z.object({
   title: z.string().min(1),
-  subSteps: z.string().min(1),
   detailedDescription: z.string().min(1),
   transitionPlanId: z.uuid(),
   potentialDeduction: z.enum(ActionPotentialDeduction),
@@ -103,6 +109,7 @@ export const AddActionCommandBase = z.object({
   performanceDescription: z.string().optional(),
   performanceGoal: z.number().optional(),
   indicators: z.array(ActionIndicatorSchema).optional(),
+  steps: z.array(ActionStepSchema).min(1),
   facilitatorsAndObstacles: z.string().optional(),
   additionalInformation: z.string().optional(),
   nature: z.array(z.enum(ActionNature)).min(0),
@@ -112,11 +119,20 @@ export const AddActionCommandBase = z.object({
   dependenciesOnly: z.boolean().optional(),
 })
 
-export const AddActionCommandValidation = AddActionCommandBase.refine((data) => {
-  if (data.potentialDeduction === ActionPotentialDeduction.Quantity) {
-    return data.reductionValue !== undefined && data.reductionValue !== null
-  }
-  return true
-}, setCustomMessage('required'))
+export const AddActionCommandValidation = AddActionCommandBase.refine(
+  (data) => {
+    if (data.potentialDeduction === ActionPotentialDeduction.Quantity) {
+      return data.reductionValue !== undefined && data.reductionValue !== null
+    }
+    return true
+  },
+  {
+    ...setCustomMessage('required'),
+    path: ['reductionValue'],
+  },
+)
 
-export type AddActionCommand = z.infer<typeof AddActionCommandValidation>
+export type AddActionFormCommand = z.infer<typeof AddActionCommandValidation>
+export type AddActionInputCommand = Omit<z.input<typeof AddActionCommandValidation>, 'reductionValue'> & {
+  reductionValueKg: number | null | undefined
+}
