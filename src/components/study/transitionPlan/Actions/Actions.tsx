@@ -1,8 +1,9 @@
 'use client'
 
-import { ActionWithIndicators } from '@/db/transitionPlan'
+import type { ActionWithRelations } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteAction } from '@/services/serverFunctions/transitionPlan'
+import type { StudyResultUnit } from '@prisma/client'
 import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
@@ -15,10 +16,11 @@ const ActionModal = dynamic(() => import('./ActionModal'))
 const ConfirmDeleteModal = dynamic(() => import('@/components/modals/ConfirmDeleteModal'))
 
 interface Props {
-  actions: ActionWithIndicators[]
+  actions: ActionWithRelations[]
   transitionPlanId: string
-  studyUnit: string
+  studyUnit: StudyResultUnit
   canEdit: boolean
+  studyId: string
 }
 
 const fuseOptions = {
@@ -27,20 +29,20 @@ const fuseOptions = {
   isCaseSensitive: false,
 }
 
-const Actions = ({ actions, studyUnit, transitionPlanId, canEdit }: Props) => {
+const Actions = ({ actions, studyUnit, transitionPlanId, canEdit, studyId }: Props) => {
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
   const t = useTranslations('study.transitionPlan.actions')
 
   const [filter, setFilter] = useState('')
-  const [editingAction, setEditingAction] = useState<ActionWithIndicators | undefined>(undefined)
+  const [editingAction, setEditingAction] = useState<ActionWithRelations | undefined>(undefined)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-  const [deletingAction, setDeletingAction] = useState<ActionWithIndicators | undefined>(undefined)
+  const [deletingAction, setDeletingAction] = useState<ActionWithRelations | undefined>(undefined)
 
   const fuse = useMemo(() => new Fuse(actions, fuseOptions), [actions])
 
-  const searchedActions: ActionWithIndicators[] = useMemo(() => {
+  const searchedActions: ActionWithRelations[] = useMemo(() => {
     if (!filter) {
       return actions
     }
@@ -54,7 +56,7 @@ const Actions = ({ actions, studyUnit, transitionPlanId, canEdit }: Props) => {
     setIsEditModalOpen(true)
   }
 
-  const handleOpenEditModal = (action: ActionWithIndicators) => {
+  const handleOpenEditModal = (action: ActionWithRelations) => {
     setEditingAction(action)
     setIsEditModalOpen(true)
   }
@@ -64,7 +66,7 @@ const Actions = ({ actions, studyUnit, transitionPlanId, canEdit }: Props) => {
     setEditingAction(undefined)
   }
 
-  const handleOpenDeleteModal = (action: ActionWithIndicators) => {
+  const handleOpenDeleteModal = (action: ActionWithRelations) => {
     setDeletingAction(action)
     setIsDeleteModalOpen(true)
   }
@@ -95,6 +97,8 @@ const Actions = ({ actions, studyUnit, transitionPlanId, canEdit }: Props) => {
         openEditModal={handleOpenEditModal}
         openDeleteModal={handleOpenDeleteModal}
         canEdit={canEdit}
+        studyId={studyId}
+        studyUnit={studyUnit}
       />
       {isEditModalOpen && (
         <ActionModal

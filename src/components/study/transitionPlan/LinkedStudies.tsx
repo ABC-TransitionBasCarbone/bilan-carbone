@@ -6,6 +6,7 @@ import { PastStudy } from '@/utils/trajectory'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import LinkIcon from '@mui/icons-material/Link'
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material'
+import type { StudyResultUnit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
@@ -23,9 +24,10 @@ interface Props {
   studyYear: Date
   pastStudies: PastStudy[]
   canEdit: boolean
+  studyUnit: StudyResultUnit
 }
 
-const LinkedStudies = ({ transitionPlanId, studyId, studyYear, pastStudies, canEdit }: Props) => {
+const LinkedStudies = ({ transitionPlanId, studyId, studyYear, pastStudies, canEdit, studyUnit }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.linkedStudies')
   const [linking, setLinking] = useState(false)
   const [expanded, setExpanded] = useState(false)
@@ -103,6 +105,7 @@ const LinkedStudies = ({ transitionPlanId, studyId, studyYear, pastStudies, canE
                 pastStudies={pastStudies}
                 onEdit={(study) => setEditTarget(study)}
                 canEdit={canEdit}
+                studyUnit={studyUnit}
               />
             </>
           )}
@@ -113,6 +116,7 @@ const LinkedStudies = ({ transitionPlanId, studyId, studyYear, pastStudies, canE
           transitionPlanId={transitionPlanId}
           studyId={studyId}
           studyYear={studyYear}
+          studyUnit={studyUnit}
           open={linking || !!editTarget}
           onClose={() => {
             setLinking(false)

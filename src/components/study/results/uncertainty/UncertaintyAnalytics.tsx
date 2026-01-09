@@ -17,23 +17,25 @@ import UncertaintyPerPost from './UncertaintyPerPost'
 interface Props {
   studyId: string
   resultsUnit: StudyResultUnit
-  computedResults: ResultsByPost[]
+  filteredResults: ResultsByPost[]
   emissionSources: FullStudy['emissionSources']
   environment: Environment
   validatedOnly: boolean
+  selectedPostIds: string[]
 }
 
 const UncertaintyAnalytics = ({
   studyId,
   resultsUnit,
-  computedResults,
+  filteredResults,
   emissionSources,
   environment,
   validatedOnly,
+  selectedPostIds,
 }: Props) => {
   const t = useTranslations('study.results.uncertainties')
 
-  const totalResults = computedResults.find((res) => res.post === 'total')
+  const totalResults = filteredResults.find((res) => res.post === 'total')
   const confidenceInterval = getConfidenceInterval(totalResults?.value ?? 0, totalResults?.uncertainty ?? 1)
   const percent = useMemo(() => {
     const [min, max] = confidenceInterval
@@ -46,6 +48,13 @@ const UncertaintyAnalytics = ({
     return realPercent
   }, [confidenceInterval])
 
+  const filteredEmissionSources = useMemo(() => {
+    if (selectedPostIds.length === 0) {
+      return []
+    }
+    return emissionSources.filter((emissionSource) => selectedPostIds.includes(String(emissionSource.subPost)))
+  }, [selectedPostIds, emissionSources])
+
   return (
     <div className="my2">
       <Title title={t('title')} as="h3" />
@@ -54,18 +63,18 @@ const UncertaintyAnalytics = ({
           <ConfidenceIntervalCharts confidenceInterval={confidenceInterval} unit={resultsUnit} percent={percent} />
         </div>
         <div className={classNames(styles.container2, 'grow2 flex-cc')}>
-          <UncertaintyGauge uncertainty={computedResults.find((res) => res.post === 'total')?.uncertainty} />
-          <MostUncertainPostsChart computedResults={computedResults} />
+          <UncertaintyGauge uncertainty={filteredResults.find((res) => res.post === 'total')?.uncertainty} />
+          <MostUncertainPostsChart computedResults={filteredResults} />
         </div>
       </div>
       <UncertaintyPerPost
         studyId={studyId}
         resultsUnit={resultsUnit}
-        computedResults={computedResults}
+        computedResults={filteredResults}
         validatedOnly={validatedOnly}
       />
       <UncertaintyPerEmissionSource
-        emissionSources={emissionSources}
+        emissionSources={filteredEmissionSources}
         studyId={studyId}
         resultsUnit={resultsUnit}
         environment={environment}
@@ -74,7 +83,7 @@ const UncertaintyAnalytics = ({
       <EmissionSourcePerPost
         studyId={studyId}
         resultsUnit={resultsUnit}
-        results={computedResults}
+        results={filteredResults}
         validatedOnly={validatedOnly}
       />
     </div>

@@ -25,7 +25,7 @@ interface Props<T> {
 type tableDataType = {
   label: string
   value: number
-  uncertainty: number
+  uncertainty?: number
   post: string
   children: tableDataType[]
 }
@@ -34,9 +34,9 @@ const ConsolidatedResultsTable = <
   T extends {
     value: number
     label: string
-    uncertainty: number
+    uncertainty?: number
     post: string
-    children: { value: number; label: string; uncertainty: number; post: string }[]
+    children: { value: number; label: string; uncertainty?: number; post: string }[]
   },
 >({
   resultsUnit,
@@ -107,14 +107,13 @@ const ConsolidatedResultsTable = <
     return tmpColumns
   }, [hiddenUncertainty, hideExpandIcons, resultsUnit, t, tPost, tQuality, tUnits])
 
-  const tableData = useMemo(
-    () =>
-      data.map((d) => ({
-        ...d,
-        children: d.children.map((child) => ({ ...child, children: [] })),
-      })),
-    [data],
-  )
+  const tableData = useMemo(() => {
+    const mappedData = data.map((d) => ({
+      ...d,
+      children: d.children.map((child) => ({ ...child, children: [] })),
+    }))
+    return mappedData
+  }, [data])
 
   const table = useReactTable({
     columns,

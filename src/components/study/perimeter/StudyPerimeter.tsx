@@ -66,6 +66,7 @@ const dateFormat = { year: 'numeric', month: 'long', day: 'numeric' } as const
 
 const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, user }: Props) => {
   const format = useFormatter()
+  const tLabel = useTranslations('common.label')
   const tForm = useTranslations('study.new')
   const tGlossary = useTranslations('study.new.glossary')
   const tValidation = useTranslations('validation')
@@ -138,6 +139,9 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
                 selected: true,
                 postalCode: existingStudySite.site.postalCode ?? '',
                 city: existingStudySite.site.city ?? '',
+                establishmentYear: existingStudySite.site?.establishmentYear
+                  ? parseInt(existingStudySite.site?.establishmentYear)
+                  : 0,
               }
             : {
                 ...site,
@@ -145,6 +149,9 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
                 postalCode: site.postalCode ?? '',
                 city: site.city ?? '',
                 cncId: site.cncId ?? '',
+                establishmentYear: site?.establishmentYear ? parseInt(site?.establishmentYear) : 0,
+                academy: site.academy ?? '',
+                establishmentType: site.establishmentType ?? undefined,
               }
         })
         .sort((a, b) => a.name.localeCompare(b.name))
@@ -305,14 +312,14 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
                 control={form.control}
                 translation={tForm}
                 name="startDate"
-                label={tForm('start')}
+                label={tLabel('start')}
                 onAccept={handleDateChange}
               />
               <FormDatePicker
                 control={form.control}
                 translation={tForm}
                 name="endDate"
-                label={tForm('end')}
+                label={tLabel('end')}
                 data-testid="study-endDate"
                 onAccept={handleDateChange}
               />
@@ -327,7 +334,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
                 control={form.control}
                 translation={tForm}
                 name="realizationStartDate"
-                label={tForm('start')}
+                label={tLabel('start')}
                 clearable
                 onAccept={handleDateChange}
               />
@@ -335,7 +342,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
                 control={form.control}
                 translation={tForm}
                 name="realizationEndDate"
-                label={tForm('end')}
+                label={tLabel('end')}
                 data-testid="new-study-realizationEndDate"
                 clearable
                 onAccept={handleDateChange}

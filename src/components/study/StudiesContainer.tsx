@@ -24,13 +24,14 @@ interface Props {
   user: UserSession
   organizationVersionId?: string
   isCR?: boolean
+  simplified?: boolean
 }
 
-const StudiesContainer = async ({ user, organizationVersionId, isCR }: Props) => {
+const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified = false }: Props) => {
   const t = await getTranslations('study')
 
   const studies = organizationVersionId
-    ? await getAllowedStudiesByUserAndOrganization(user, organizationVersionId)
+    ? await getAllowedStudiesByUserAndOrganization(user, organizationVersionId, simplified)
     : isCR
       ? await getExternalAllowedStudiesByUser(user)
       : await getAllowedStudiesByAccount(user)
@@ -46,8 +47,14 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR }: Props) =>
   const isOrgaHomePage = !organizationVersionId && !isCR
   const mainStudies = isOrgaHomePage ? orgaStudies : studies
   const collaborations = isOrgaHomePage ? otherStudies : []
+  const advancedStudies = mainStudies.filter((study) => !study.simplified)
+  const simplifiedStudies = mainStudies.filter((study) => study.simplified)
 
-  const creationUrl = organizationVersionId ? `/organisations/${organizationVersionId}/etudes/creer` : '/etudes/creer'
+  let creationUrl = organizationVersionId ? `/organisations/${organizationVersionId}/etudes/creer` : '/etudes/creer'
+
+  if (simplified) {
+    creationUrl += '?simplified=true'
+  }
 
   const mainStudyOrganizationVersionId = organizationVersionId ?? user.organizationVersionId
 
@@ -61,27 +68,37 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR }: Props) =>
           <ResultsContainerForUser user={user} mainStudyOrganizationVersionId={mainStudyOrganizationVersionId} />
         </Suspense>
       )}
-      {!!mainStudies.length && (
+      {!!advancedStudies.length && (
         <Studies
-          studies={mainStudies}
+          studies={advancedStudies}
           canAddStudy={canCreateAStudy(user) && !isCR && activeLicence}
           creationUrl={creationUrl}
           user={user}
           collaborations={!organizationVersionId && isCR}
         />
       )}
+      {!!simplifiedStudies.length && (
+        <Studies
+          studies={simplifiedStudies}
+          canAddStudy={canCreateAStudy(user, true) && !isCR && activeLicence}
+          creationUrl={creationUrl}
+          user={user}
+          collaborations={!organizationVersionId && isCR}
+          simplified
+        />
+      )}
       {!!collaborations.length && <Studies studies={collaborations} canAddStudy={false} user={user} collaborations />}
     </>
-  ) : canCreateAStudy(user) && !isCR ? (
-    <MUIBox component="section">
+  ) : canCreateAStudy(user, simplified) && !isCR ? (
+    <MUIBox component="section" className="mt1">
       <div className="justify-center">
         <Box className={classNames(styles.firstStudyCard, 'flex-col align-center')}>
           <Image src="/img/orga.png" alt="orga.png" width={177} height={119} />
-          <h5>{t('createFirstStudy')}</h5>
-          <p>{t('firstStudyMessage')}</p>
+          <h5>{t(simplified ? 'createFirstSimplifiedStudy' : 'createFirstStudy')}</h5>
+          <p>{t(simplified ? 'firstSimplifiedStudyMessage' : 'firstStudyMessage')}</p>
           <LinkButton data-testid="new-study" className={classNames('w100 justify-center mb1')} href={creationUrl}>
             <AddIcon />
-            {t('createFirstStudy')}
+            {t(simplified ? 'createFirstSimplifiedStudy' : 'createFirstStudy')}
           </LinkButton>
         </Box>
       </div>

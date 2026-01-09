@@ -1,0 +1,9 @@
+.formControl {
+  min-width: 8rem;
+  max-width: 12rem;
+}
+
+.filters {
+  max-height: 30rem;
+  width: 20rem;
+}

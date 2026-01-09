@@ -5,21 +5,45 @@ const schoolApi = process.env.SCHOOL_API_URL!
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ postalCodeOrName: string }> }) {
   const { postalCodeOrName } = await params
+  const input = postalCodeOrName?.trim()
 
-  let trimmedPostalCode
-  let where = ''
-  if (!postalCodeOrName) {
+  const select =
+    'nom_etablissement,adresse_1,adresse_3, code_postal,identifiant_de_l_etablissement,date_ouverture, libelle_academie, libelle_nature'
+
+  const commonWhere = '(libelle_nature="COLLEGE" OR libelle_nature like "*LYCEE*")'
+
+  if (!input) {
     return Response.json([], { status: 200 })
-  } else if (/^\d{5}$/.test(postalCodeOrName.trim())) {
-    trimmedPostalCode = postalCodeOrName.trim()
-    where = `code_postal="${trimmedPostalCode}"`
-  } else {
-    where = `nom_etablissement like "*${postalCodeOrName}*"`
   }
 
+  if (/^\d{5}$/.test(input)) {
+    const query = {
+      select,
+      where: `code_postal="${input}" AND ${commonWhere}`,
+      limit: 99,
+    }
+
+    try {
+      const { data } = await axios.get(schoolApi, { params: query })
+      return Response.json(data.results)
+    } catch (error) {
+      console.error(error)
+      return Response.json({ error: 'API Éducation Nationale indisponible' }, { status: 500 })
+    }
+  }
+
+  const words = input.split(/\s+/).filter(Boolean)
+
+  const likeConditions = words.map((w) => `(nom_etablissement LIKE "*${w}*" OR code_postal LIKE "*${w}*")`)
+
+  const where = `
+    ${likeConditions.join(' AND ')}
+    AND ${commonWhere}
+  `.trim()
+
   const query = {
-    select: 'nom_etablissement,adresse_1,code_postal,identifiant_de_l_etablissement,date_ouverture',
-    where: `${where} AND (libelle_nature="COLLEGE" OR libelle_nature="LYCEE" OR libelle_nature="ECOLE DE NIVEAU ELEMENTAIRE")`,
+    select,
+    where,
     limit: 99,
   }
 

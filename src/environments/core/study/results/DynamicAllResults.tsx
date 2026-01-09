@@ -4,7 +4,8 @@ import AllResults from '@/components/study/results/AllResults'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import AllResultsCUT from '@/environments/cut/study/results/AllResults'
+import AllResultsSimplified from '@/environments/simplified/study/results/AllResults'
+import { Post } from '@/services/posts'
 import { Environment, ExportRule, SiteCAUnit } from '@prisma/client'
 
 interface Props {
@@ -19,11 +20,28 @@ const DynamicAllResults = ({ study, rules, emissionFactorsWithParts, validatedOn
   return (
     <DynamicComponent
       environmentComponents={{
-        [Environment.CUT]: (
-          <AllResultsCUT
-            emissionFactorsWithParts={emissionFactorsWithParts}
+        [Environment.CUT]: <AllResultsPublicodes study={study} />,
+        [Environment.CLICKSON]: (
+          <AllResultsSimplified
+            showSubLevel={true}
             study={study}
             validatedOnly={validatedOnly}
+            caUnit={caUnit}
+            chartOrder={{
+              bar: 0,
+              pie: 1,
+              table: 2,
+              ratio: 3,
+            }}
+          />
+        ),
+        [Environment.TILT]: (
+          <AllResultsTilt
+            study={study}
+            rules={rules}
+            emissionFactorsWithParts={emissionFactorsWithParts}
+            validatedOnly={validatedOnly}
+            caUnit={caUnit}
           />
         ),
       }}
