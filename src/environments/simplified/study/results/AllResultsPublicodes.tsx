@@ -31,11 +31,10 @@ const AllResultsPublicodes = ({
 }: Props) => {
   const tStudyNav = useTranslations('study.navigation')
   const { studySite, setSite } = useStudySite(study, true)
-  const allStudySiteIds = useMemo(() => study.sites.map((s) => s.id).toSorted(), [study.sites])
 
   const { aggregatedResults, resultsBySiteId, isLoading, error } = usePublicodesResults(
-    study.id,
-    allStudySiteIds,
+    study,
+    'all',
     study.organizationVersion.environment,
   )
 
