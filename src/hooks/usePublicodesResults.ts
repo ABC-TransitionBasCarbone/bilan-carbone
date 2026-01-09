@@ -12,29 +12,39 @@ import { Situation } from 'publicodes'
 import { useEffect, useMemo, useState } from 'react'
 
 interface UsePublicodesResultsReturn {
-  results: BaseResultsByPost[]
+  aggregatedResults: BaseResultsByPost[]
+  resultsBySiteId: Record<string, BaseResultsByPost[]>
   isLoading: boolean
   error: string | null
 }
 
-const computeResultsFromSituations = (
-  situations: Situation<string>[],
+const computeResultsForAllSitesFromSituations = (
+  situations: Record<string, Situation<string>>,
   config: SimplifiedPublicodesConfig,
   tPost: (key: string) => string,
-): BaseResultsByPost[] => {
-  const allResults = situations.map((situation) => {
-    const engine = config.getEngine().shallowCopy()
-    engine.setSituation(situation)
-    return computeBaseResultsByPostFromEngine(
-      engine,
-      config.posts,
-      config.subPostsByPost,
-      tPost,
-      config.getPostRuleName,
-      config.getSubPostRuleName,
-    )
-  })
-  return allResults.length <= 1 ? (allResults[0] ?? []) : aggregateBaseResultsByPost(allResults)
+): Pick<UsePublicodesResultsReturn, 'aggregatedResults' | 'resultsBySiteId'> => {
+  const resultsBySiteId = Object.entries(situations).reduce(
+    (resultsBySiteId, [siteId, situation]) => {
+      const engine = config.getEngine().shallowCopy()
+      engine.setSituation(situation)
+      resultsBySiteId[siteId] = computeBaseResultsByPostFromEngine(
+        engine,
+        config.posts,
+        config.subPostsByPost,
+        tPost,
+        config.getPostRuleName,
+        config.getSubPostRuleName,
+      )
+
+      return resultsBySiteId
+    },
+    {} as Record<string, BaseResultsByPost[]>,
+  )
+
+  return {
+    aggregatedResults: aggregateBaseResultsByPost(Object.values(resultsBySiteId)),
+    resultsBySiteId,
+  }
 }
 
 export function usePublicodesResults(
@@ -43,10 +53,11 @@ export function usePublicodesResults(
   environment: Environment,
 ): UsePublicodesResultsReturn {
   const tPost = useTranslations('emissionFactors.post')
-  const [situations, setSituations] = useState<Situation<string>[]>([])
+  const [situationBySiteId, setSituationsBySiteId] = useState<Record<string, Situation<string>>>({})
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const config = useMemo(() => getSimplifiedPublicodesConfig(environment), [environment])
+  const studySiteIdsKey = useMemo(() => studySiteIds.join(','), [studySiteIds])
 
   useEffect(() => {
     const load = async () => {
@@ -64,8 +75,17 @@ export function usePublicodesResults(
           throw new Error(result.errorMessage || 'Failed to load situations')
         }
 
-        const loadedSituations = (result.data ?? []).map((s) => s.situation as Situation<string>).filter(Boolean)
-        setSituations(loadedSituations)
+        const loadedSituationBySiteId = (result.data ?? []).reduce(
+          (acc, situation) => {
+            if (situation.situation) {
+              acc[situation.studySiteId] = situation.situation as Situation<string>
+            }
+            return acc
+          },
+          {} as Record<string, Situation<string>>,
+        )
+
+        setSituationsBySiteId(loadedSituationBySiteId)
         setIsLoading(false)
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load situations')
@@ -73,14 +93,14 @@ export function usePublicodesResults(
       }
     }
     load()
-  }, [studyId, studySiteIds, config])
+  }, [studyId, studySiteIdsKey, config])
 
   const results = useMemo(() => {
-    if (!config || situations.length === 0) {
-      return []
+    if (!config || Object.keys(situationBySiteId).length === 0) {
+      return { aggregatedResults: [], resultsBySiteId: {} }
     }
-    return computeResultsFromSituations(situations, config, tPost)
-  }, [config, situations, tPost])
+    return computeResultsForAllSitesFromSituations(situationBySiteId, config, tPost)
+  }, [config, situationBySiteId, tPost])
 
-  return { results, isLoading, error }
+  return { ...results, isLoading, error }
 }

@@ -31,22 +31,30 @@ const AllResultsPublicodes = ({
 }: Props) => {
   const tStudyNav = useTranslations('study.navigation')
   const { studySite, setSite } = useStudySite(study, true)
+  const allStudySiteIds = useMemo(() => study.sites.map((s) => s.id).toSorted(), [study.sites])
 
-  const studySiteIds = useMemo(
-    () => (studySite === 'all' ? study.sites.map((s) => s.id) : [studySite]),
-    [studySite, study.sites],
-  )
-
-  const { results, isLoading, error } = usePublicodesResults(
+  const { aggregatedResults, resultsBySiteId, isLoading, error } = usePublicodesResults(
     study.id,
-    studySiteIds,
+    allStudySiteIds,
     study.organizationVersion.environment,
   )
 
+  // NOTE: results for all sites are computed one time, so we just need to
+  // select the right one here based on the selected study site. However,
+  // if the site's situation is updated in the database, the results won't
+  // be updated here until a full re-computation is done (e.g., by refreshing
+  // the page). I assume that it's acceptable for now.
+  const selectedResults = useMemo(() => {
+    if (studySite === 'all') {
+      return aggregatedResults
+    }
+    return resultsBySiteId[studySite] ?? []
+  }, [aggregatedResults, resultsBySiteId, studySite])
+
   const totalValue = useMemo(() => {
-    const total = results.find((r) => r.post === 'total')?.value ?? 0
+    const total = selectedResults.find((r) => r.post === 'total')?.value ?? 0
     return total / STUDY_UNIT_VALUES[study.resultsUnit]
-  }, [results, study.resultsUnit])
+  }, [selectedResults, study.resultsUnit])
 
   if (isLoading || error) {
     return (
@@ -61,7 +69,7 @@ const AllResultsPublicodes = ({
   return (
     <AllResults
       study={study}
-      computedResults={results}
+      computedResults={selectedResults}
       totalValue={totalValue}
       studySite={studySite}
       setSite={setSite}
