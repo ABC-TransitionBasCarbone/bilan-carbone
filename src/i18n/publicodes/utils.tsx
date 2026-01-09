@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import prettier from 'prettier'
 import { Rule } from 'publicodes'
 import yargs from 'yargs'
 
@@ -48,9 +49,16 @@ export function readJSONFile(filePath: string): Record<string, unknown> | undefi
 }
 
 // Helper to write json file
-export function writeJSONFile(filePath: string, data: Record<string, unknown>): void {
+export async function writeJSONFile(filePath: string, data: Record<string, unknown>): Promise<void> {
   try {
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8')
+    const config = await prettier.resolveConfig(filePath, { editorconfig: true })
+    const formatted = await prettier.format(JSON.stringify(data), {
+      ...config,
+      filepath: filePath,
+      plugins: [],
+      printWidth: 1,
+    })
+    fs.writeFileSync(filePath, formatted, 'utf-8')
   } catch (error) {
     console.error(`Error writing JSON file at ${filePath}:`, error)
   }
@@ -60,8 +68,8 @@ export function loadTranslation(locale: Locale, model: Model): TranslationRecord
   return readJSONFile(path.join(TRANSLATIONS_DIR, locale, `${model}/publicodes-rules.json`)) ?? {}
 }
 
-export function saveTranslation(locale: Locale, model: Model, data: TranslationRecord): void {
-  writeJSONFile(path.join(TRANSLATIONS_DIR, locale, `${model}/publicodes-rules.json`), data)
+export async function saveTranslation(locale: Locale, model: Model, data: TranslationRecord): Promise<void> {
+  await writeJSONFile(path.join(TRANSLATIONS_DIR, locale, `${model}/publicodes-rules.json`), data)
 }
 
 // Helper to check for arguments within script

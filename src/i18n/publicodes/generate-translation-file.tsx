@@ -146,7 +146,7 @@ async function generateNestedTranslationFile(): Promise<void> {
 
   for (const locale of LOCALES) {
     removeEmptyObjects(updated[locale])
-    saveTranslation(locale, model as Model, { ...translations[locale], 'publicodes-rules': updated[locale] })
+    await saveTranslation(locale, model as Model, { ...translations[locale], 'publicodes-rules': updated[locale] })
   }
 
   console.log('Translation files updated successfully.')
