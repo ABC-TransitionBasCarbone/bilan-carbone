@@ -25,7 +25,12 @@ import {
   subPostBCToSubPostTiltMapping,
 } from './posts'
 import { computeBegesResult } from './results/beges'
-import { computeResultsByPostFromEmissionSources, computeResultsByTag, ResultsByPost } from './results/consolidated'
+import {
+  BaseResultsBySite,
+  computeResultsByPostFromEmissionSources,
+  computeResultsByTag,
+  ResultsByPost,
+} from './results/consolidated'
 import { filterWithDependencies } from './results/utils'
 import { EmissionFactorWithMetaData, getEmissionFactorsByIds } from './serverFunctions/emissionFactor'
 import { prepareExcel } from './serverFunctions/file'
@@ -527,17 +532,14 @@ export const formatBegesStudyResultsForExport = (
   return { name: tExport('Beges'), data: dataForExport, options: sheetOptions }
 }
 
-export const formatBCResultsForCutExport = (
+const formatBCResultsForCutExport = (
   study: FullStudy,
   siteList: { name: string; id: string }[],
+  computedResults: BaseResultsBySite,
   tExport: Translations,
   tPost: Translations,
-  tStudy: Translations,
-  studyUnitValues: Record<string, number>,
-  environment: Environment,
 ) => {
   const data: (string | number)[][] = []
-
   data.push([tExport('bc.disclaimerExcel1')])
   data.push([tExport('bc.disclaimerExcel2')])
   data.push([tExport('bc.disclaimerExcel3')])
@@ -547,15 +549,16 @@ export const formatBCResultsForCutExport = (
   data.push([])
 
   for (const site of siteList) {
-    const { computedResultsWithDep } = getDetailedEmissionResults(study, tPost, site.id, false, environment, tStudy)
-    const bilanCarboneEquivalent = convertCountToBilanCarbone(computedResultsWithDep)
+    const results = site.id === 'all' ? computedResults.aggregated : computedResults.bySite[site.id]
+    // TODO: use a more generic conversion function to be used by all simplified environments
+    const bilanCarboneEquivalent = convertCountToBilanCarbone(results ?? [])
 
     data.push([site.name])
     data.push([tExport('bc.category'), tExport('bc.emissions')])
 
     let siteTotal = 0
     Object.entries(bilanCarboneEquivalent).forEach(([result, value]) => {
-      const roundedValue = Math.round(value / studyUnitValues[study.resultsUnit])
+      const roundedValue = Math.round(value / STUDY_UNIT_VALUES[study.resultsUnit])
       data.push([tPost(result), roundedValue])
       siteTotal += roundedValue
     })
@@ -574,6 +577,47 @@ export const formatBCResultsForCutExport = (
   }
 }
 
+export const formatComputedResultsForExport = (
+  study: FullStudy,
+  siteList: { name: string; id: string }[],
+  computedResults: BaseResultsBySite,
+  tStudy: Translations,
+  tExport: Translations,
+  tUnits: Translations,
+  environment: Environment,
+) => {
+  const dataForExport: (string | number)[][] = []
+  const formattedHeaders = getFormattedHeadersForEnv(environment, tStudy, tUnits, study.resultsUnit)
+
+  for (const site of siteList) {
+    dataForExport.push([site.name])
+    dataForExport.push(formattedHeaders)
+    const results = site.id === 'all' ? computedResults.aggregated : computedResults.bySite[site.id]
+
+    for (const result of results) {
+      dataForExport.push([result.label, '', formatEmissionValueForExport(result.value ?? 0, study.resultsUnit)])
+
+      if (result.post !== 'total') {
+        for (const subPostResult of result.children) {
+          dataForExport.push([
+            '',
+            subPostResult.label,
+            formatEmissionValueForExport(subPostResult.value ?? 0, study.resultsUnit),
+          ])
+        }
+      }
+    }
+  }
+
+  dataForExport.push([])
+
+  return {
+    name: tExport(AdditionalResultTypes.ENV_SPECIFIC_EXPORT),
+    data: dataForExport,
+    options: { '!cols': [{ wch: 30 }, { wch: 15 }, { wch: 20 }] },
+  }
+}
+
 export const downloadStudyResults = async (
   study: FullStudy,
   rules: ExportRule[],
@@ -586,6 +630,7 @@ export const downloadStudyResults = async (
   tBeges: Translations,
   tUnits: Translations,
   environment: Environment = Environment.BC,
+  computedResults?: BaseResultsBySite,
 ) => {
   const data = []
 
@@ -600,20 +645,33 @@ export const downloadStudyResults = async (
     : undefined
 
   if (environment !== Environment.BC) {
-    const environmentResults = formatConsolidatedStudyResultsForExport(
-      study,
-      siteList,
-      tStudy,
-      tExport,
-      tPost,
-      tQuality,
-      tUnits,
-      validatedEmissionSourcesOnly,
-      environment,
-      AdditionalResultTypes.ENV_SPECIFIC_EXPORT,
-    )
-
-    data.push(environmentResults)
+    // Use precomputed results from publicodes if available (for simplified environments)
+    if (computedResults !== undefined) {
+      const environmentResults = formatComputedResultsForExport(
+        study,
+        siteList,
+        computedResults,
+        tStudy,
+        tExport,
+        tUnits,
+        environment,
+      )
+      data.push(environmentResults)
+    } else {
+      const environmentResults = formatConsolidatedStudyResultsForExport(
+        study,
+        siteList,
+        tStudy,
+        tExport,
+        tPost,
+        tQuality,
+        tUnits,
+        validatedEmissionSourcesOnly,
+        environment,
+        AdditionalResultTypes.ENV_SPECIFIC_EXPORT,
+      )
+      data.push(environmentResults)
+    }
   }
 
   if (hasAccessToBcExport(environment) || environment === Environment.BC) {
@@ -648,8 +706,8 @@ export const downloadStudyResults = async (
     )
   }
 
-  if (environment === Environment.CUT) {
-    data.push(formatBCResultsForCutExport(study, siteList, tExport, tPost, tStudy, STUDY_UNIT_VALUES, environment))
+  if (environment === Environment.CUT && computedResults) {
+    data.push(formatBCResultsForCutExport(study, siteList, computedResults, tExport, tPost))
   }
 
   const buffer = await prepareExcel(data)

@@ -25,7 +25,7 @@ import styles from './AllResults.module.css'
 
 import EmissionsAnalysisClickson from '@/environments/clickson/study/results/consolidated/EmissionsAnalysisClickson'
 import { Post } from '@/services/posts'
-import { BaseResultsByPost } from '@/services/results/consolidated'
+import { BaseResultsByPost, BaseResultsBySite } from '@/services/results/consolidated'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import {
   hasAccessToSimplifiedEmissionAnalysis,
@@ -35,10 +35,11 @@ import { a11yProps, ChartType, defaultChartOrder, tabsLabels } from './utils'
 
 interface Props {
   study: FullStudy
-  computedResults: BaseResultsByPost[]
   totalValue: number
   studySite: string
   setSite: Dispatch<SetStateAction<string>>
+  computedResultsBySite: BaseResultsBySite
+  computedResults: BaseResultsByPost[]
   chartOrder?: Record<ChartType, number>
   caUnit?: SiteCAUnit
   showSubLevel?: boolean
@@ -49,6 +50,7 @@ interface Props {
 const AllResults = ({
   study,
   computedResults,
+  computedResultsBySite,
   totalValue,
   studySite,
   setSite,
@@ -128,6 +130,7 @@ const AllResults = ({
                 tBeges,
                 tUnits,
                 environment ?? Environment.CUT,
+                computedResultsBySite,
               )
             }
           >
