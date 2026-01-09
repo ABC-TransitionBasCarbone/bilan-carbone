@@ -72,7 +72,7 @@ function isGroupLayoutApplicable(layout: EvaluatedGroupLayout<string>): boolean 
 }
 
 function isGroupLayoutAnswered(layout: EvaluatedGroupLayout<string>): boolean {
-  return layout.evaluatedElements.some((el) => !el.applicable || el.answered)
+  return layout.evaluatedElements.some((el) => el.applicable && el.answered)
 }
 
 function isTableLayoutApplicable(layout: EvaluatedTableLayout<string>): boolean {
