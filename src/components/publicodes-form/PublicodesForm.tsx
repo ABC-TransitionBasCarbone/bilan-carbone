@@ -28,7 +28,7 @@ export default function PublicodesForm<RuleName extends string, S extends Situat
   const elementsWithRelation = useMemo(() => {
     // FIXME: should manage multiple questions linked to previous ones.
     return formLayouts.map((formLayout, index) => {
-      const evaluatedFormLayout = getEvaluatedFormLayout(engine, formLayout, situation)
+      const evaluatedFormLayout = getEvaluatedFormLayout(engine, formLayout)
       const currentRuleNames = getRuleNamesFromLayout(formLayout)
       const previousRuleNames = index > 0 ? getRuleNamesFromLayout(formLayouts[index - 1]) : undefined
       const isLinkedToPreviousQuestion =

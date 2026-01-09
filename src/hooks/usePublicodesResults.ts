@@ -1,4 +1,5 @@
 'use client'
+import { FullStudy } from '@/db/study'
 import {
   getSimplifiedPublicodesConfig,
   SimplifiedPublicodesConfig,
@@ -48,8 +49,8 @@ const computeResultsForAllSitesFromSituations = (
 }
 
 export function usePublicodesResults(
-  studyId: string,
-  studySiteIds: string[],
+  study: FullStudy,
+  studySite: string | 'all',
   environment: Environment,
 ): UsePublicodesResultsReturn {
   const tPost = useTranslations('emissionFactors.post')
@@ -57,6 +58,12 @@ export function usePublicodesResults(
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const config = useMemo(() => getSimplifiedPublicodesConfig(environment), [environment])
+  const studySiteIds = useMemo(() => {
+    if (studySite === 'all') {
+      return study.sites.map((s) => s.id).toSorted()
+    }
+    return [studySite]
+  }, [study.sites, studySite])
   const studySiteIdsKey = useMemo(() => studySiteIds.join(','), [studySiteIds])
 
   useEffect(() => {
@@ -70,7 +77,7 @@ export function usePublicodesResults(
         setIsLoading(true)
         setError(null)
 
-        const result = await loadSituations(studyId, studySiteIds)
+        const result = await loadSituations(study.id, studySiteIds)
         if (!result.success) {
           throw new Error(result.errorMessage || 'Failed to load situations')
         }
@@ -93,7 +100,7 @@ export function usePublicodesResults(
       }
     }
     load()
-  }, [studyId, studySiteIdsKey, config])
+  }, [study.id, studySiteIdsKey, config])
 
   const results = useMemo(() => {
     if (!config || Object.keys(situationBySiteId).length === 0) {
