@@ -21,6 +21,11 @@ export type BaseResultsByPost = {
   children: BaseResultsByPost[]
 }
 
+export interface BaseResultsBySite {
+  aggregated: BaseResultsByPost[]
+  bySite: Record<string, BaseResultsByPost[]>
+}
+
 export type ResultsByPost = Omit<BaseResultsByPost, 'children'> & {
   monetaryValue: number
   nonSpecificMonetaryValue: number

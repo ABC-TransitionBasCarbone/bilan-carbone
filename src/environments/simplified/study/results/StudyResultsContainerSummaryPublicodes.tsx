@@ -15,11 +15,7 @@ interface Props {
 
 const StudyResultsContainerSummaryPublicodes = ({ study }: Props) => {
   const t = useTranslations('study')
-  const { aggregatedResults, isLoading, error } = usePublicodesResults(
-    study,
-    'all',
-    study.organizationVersion.environment,
-  )
+  const { aggregated, isLoading, error } = usePublicodesResults(study, 'all', study.organizationVersion.environment)
 
   return (
     <>
@@ -40,7 +36,7 @@ const StudyResultsContainerSummaryPublicodes = ({ study }: Props) => {
         {!isLoading && !error ? (
           <div className="grow">
             <BarChart
-              results={aggregatedResults}
+              results={aggregated}
               resultsUnit={study.resultsUnit}
               height={450}
               showTitle={false}
