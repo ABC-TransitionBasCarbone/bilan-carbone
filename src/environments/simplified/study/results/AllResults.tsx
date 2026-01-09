@@ -128,7 +128,6 @@ const AllResults = ({
                 tBeges,
                 tUnits,
                 environment ?? Environment.CUT,
-                computedResults,
               )
             }
           >
