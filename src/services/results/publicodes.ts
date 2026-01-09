@@ -66,7 +66,7 @@ export function computeTotalForBaseResults(
   postResults: BaseResultsByPost[],
   tPost: (key: string) => string,
 ): BaseResultsByPost {
-  let value = engine.getRule(TOTAL_RULE)
+  const value = engine.getRule(TOTAL_RULE)
     ? safeEvaluate(engine, TOTAL_RULE)
     : postResults.reduce((acc, post) => acc + post.value, 0)
 
@@ -79,7 +79,9 @@ export function computeTotalForBaseResults(
 }
 
 export function aggregateBaseResultsByPost(resultsList: BaseResultsByPost[][]): BaseResultsByPost[] {
-  if (resultsList.length === 0) return []
+  if (resultsList.length === 0) {
+    return []
+  }
 
   return resultsList.reduce((postResultsAcc, results) =>
     postResultsAcc.map((postResultAcc, i) => ({
