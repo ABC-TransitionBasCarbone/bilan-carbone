@@ -75,7 +75,14 @@
     "createSimplified": "Create a footprint",
     "seeSimplified": "See my footprint",
     "cannotCreateStudy": "To create a Carbon Footprint® you must be trained in the method! <link>Learn more</link>",
-    "canCreateFootPrint": "You can however create a <link>carbon footprint</link> allowing you to estimate your impact"
+    "canCreateFootPrint": "You can however create a <link>carbon footprint</link> allowing you to estimate your impact",
+    "export": {
+      "export": "Export my results"
+    },
+    "results": {
+      "simplifiedFeedback": "Congratulations! You have just completed the simplified carbon footprint of your non-profit organisation. This is an excellent introduction to carbon accounting! We would appreciate it if you could fill out <questionnaire>this questionnaire</questionnaire> to help us improve the tool and fix any potential bugs!",
+      "infoWithLinks": "The European Union has committed, by ratifying the Paris Agreement, to carbon neutrality by 2050. To contribute to this objective, your non-profit organisation should reduce its impact by 5% per year. The simplified carbon footprint you have just obtained can already help you better understand how to reduce your impact by identifying your most emission-intensive activities.\n\nWe invite you to redo this simplified carbon footprint next year to verify that you are on the right track, or, better yet, to establish a comprehensive Bilan Carbone® to gain precision in estimating your emissions and develop a real transition plan! To get started, it's very simple, you just need to <formation>train</formation> in the method, or contact us at <email>count@cut-collectif.fr</email>, or get in touch with another <prestataire>Bilan Carbone® service provider</prestataire>."
+    }
   },
   "emissionFactors": {
     "post": {
