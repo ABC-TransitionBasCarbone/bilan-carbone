@@ -116,14 +116,18 @@ const interpolatePastEmissions = (
   return interpolatedEmissions
 }
 
-const calculateAnnualRateTo2030 = (sectenTarget2030: number, fromYear: number, fromEmissions: number): number => {
-  const yearsTo2030 = SNBC_MID_TARGET_YEAR - fromYear
+const calculateSectenAnnualRateTo2030 = (
+  sectenTarget2030: number,
+  fromSectenYear: number,
+  fromSectenEmissions: number,
+): number | null => {
+  const yearsTo2030 = SNBC_MID_TARGET_YEAR - fromSectenYear
 
-  if (yearsTo2030 <= 0 || fromEmissions <= 0) {
-    return 0
+  if (yearsTo2030 <= 0 || fromSectenEmissions <= 0) {
+    return null
   }
 
-  const remainingReduction = 1 - sectenTarget2030 / fromEmissions
+  const remainingReduction = (fromSectenEmissions - sectenTarget2030) / fromSectenEmissions
   return remainingReduction / yearsTo2030
 }
 
@@ -133,7 +137,7 @@ const calculateAnnualRateFrom2030To2050 = (sectenTarget2030: number, sectenTarge
   }
 
   const years = SNBC_FINAL_TARGET_YEAR - SNBC_MID_TARGET_YEAR
-  const totalReduction = 1 - sectenTarget2050 / sectenTarget2030
+  const totalReduction = (sectenTarget2030 - sectenTarget2050) / sectenTarget2030
 
   return totalReduction / years
 }
@@ -193,11 +197,14 @@ export const calculateSNBCTrajectory = ({
     return dataPoints
   }
 
-  const sectenRateTo2030 = calculateAnnualRateTo2030(
+  const sectenRateTo2030 = calculateSectenAnnualRateTo2030(
     sectenTarget2030,
     sectenYearForRateCalculation,
     sectenEmissionsForRateCalculation,
   )
+  if (sectenRateTo2030 === null) {
+    return dataPoints
+  }
 
   const sectenRateFrom2030To2050 = calculateAnnualRateFrom2030To2050(sectenTarget2030, sectenTarget2050)
   if (sectenRateFrom2030To2050 === null) {
@@ -206,11 +213,11 @@ export const calculateSNBCTrajectory = ({
 
   const reductionRates = getSectenYearlyReductionRates(sectenData)
   const historicalPoints = getAllHistoricalStudyPoints(pastStudies)
-  const baseYear = studyStartYear < SNBC_REFERENCE_YEAR ? studyStartYear : SNBC_REFERENCE_YEAR
+  const baseYear = Math.min(studyStartYear, SNBC_REFERENCE_YEAR)
   const graphStartYear = getGraphStartYear(pastStudies, baseYear)
 
   if (studyStartYear < SNBC_REFERENCE_YEAR) {
-    for (let year = graphStartYear; year < SNBC_REFERENCE_YEAR; year++) {
+    for (let year = graphStartYear; year <= SNBC_REFERENCE_YEAR; year++) {
       if (year <= studyStartYear) {
         const value = computePastOrPresentValue(year, historicalPoints, studyEmissions, studyStartYear, true)
         if (value !== null) {
@@ -239,14 +246,9 @@ export const calculateSNBCTrajectory = ({
 
     for (let year = graphStartYear; year < studyStartYear; year++) {
       if (year < sectenInterpolationFromYear) {
-        const pastStudyAtYear = pastStudies.find((s) => s.year === year)
-        if (pastStudyAtYear) {
-          dataPoints.push({ year, value: pastStudyAtYear.totalCo2 })
-        } else {
-          const interpolatedYearlyEmissions = interpolatedPastEmissions.get(year)
-          if (interpolatedYearlyEmissions !== undefined) {
-            dataPoints.push({ year, value: interpolatedYearlyEmissions })
-          }
+        const interpolatedYearlyEmissions = interpolatedPastEmissions.get(year)
+        if (interpolatedYearlyEmissions !== undefined) {
+          dataPoints.push({ year, value: interpolatedYearlyEmissions })
         }
       } else {
         const value = computePastOrPresentValue(year, historicalPoints, studyEmissions, studyStartYear, true)
