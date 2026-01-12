@@ -152,6 +152,7 @@ import { saveAnswerForQuestion } from './question'
 import {
   ChangeStudyCinemaCommand,
   ChangeStudyDatesCommand,
+  ChangeStudyEstablishmentCommand,
   ChangeStudyLevelCommand,
   ChangeStudyNameCommand,
   ChangeStudyPublicStatusCommand,
