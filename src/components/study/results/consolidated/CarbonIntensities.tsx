@@ -54,16 +54,16 @@ const CarbonIntensities = ({ study, studySite, withDep, withoutDep, caUnit }: Pr
 
   return (
     <Box className="flex-col">
-      <div className="flex grow">
-        <div className="grow justify-center">
-          <span className="text-center bold">{t('dependencyIntensity')}</span>
-        </div>
-        {environment && hasAccessToCarbonResponsibilityIntensitiesAdvanced(environment, study.simplified) && (
+      {environment && hasAccessToCarbonResponsibilityIntensitiesAdvanced(environment, study.simplified) && (
+        <div className="flex grow">
+          <div className="grow justify-center">
+            <span className="text-center bold">{t('dependencyIntensity')}</span>
+          </div>
           <div className="grow justify-center">
             <span className="text-center bold">{t('responsibilityIntensity')}</span>
           </div>
-        )}
-      </div>
+        </div>
+      )}
       <div
         className={
           environment && hasAccessToCarbonResponsibilityIntensitiesAdvanced(environment, study.simplified)

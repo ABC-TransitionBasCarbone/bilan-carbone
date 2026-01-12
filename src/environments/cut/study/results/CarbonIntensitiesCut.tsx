@@ -1,10 +1,8 @@
-import Box from '@/components/base/Box'
 import CarbonIntensity from '@/components/study/results/consolidated/CarbonIntensity'
 import Data from '@/components/study/results/consolidated/Data'
 import { FullStudy } from '@/db/study'
 import { CA_UNIT_VALUES, formatNumber } from '@/utils/number'
 import { SiteCAUnit, StudyResultUnit } from '@prisma/client'
-import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import styles from './ResultsContainer.module.css'
@@ -56,18 +54,17 @@ const CarbonIntensitiesCut = ({ study, studySite, withDepValue, caUnit = SiteCAU
 
   return (
     <div className={'flex'}>
-      <div className="flex grow gapped2 wrap">
-        <Box className={classNames(styles.carbonIntensityContainer, 'gapped1 justify-center')}>
-          <span className="text-center bold">{t('total')}</span>
-          <div className="flex-row justify-around">
+      <div className="flex grow gapped2 wrap justify-center">
+        <div className={styles.carbonIntensityContainer}>
+          <div className="flex grow mt1">
             <Data
               value={formatNumber(withDepValue)}
               label={tResultUnits(StudyResultUnit.T)}
               testId="withDep-total-result"
             />
           </div>
-        </Box>
-        <Box className={styles.carbonIntensityContainer}>
+        </div>
+        <div className={styles.carbonIntensityContainer}>
           <CarbonIntensity
             withDep={withDepValue}
             withoutDep={0}
@@ -76,8 +73,8 @@ const CarbonIntensitiesCut = ({ study, studySite, withDepValue, caUnit = SiteCAU
             label={t('intensities.etp')}
             testId="result-etp"
           />
-        </Box>
-        <Box className={styles.carbonIntensityContainer}>
+        </div>
+        <div className={styles.carbonIntensityContainer}>
           <CarbonIntensity
             withDep={withDepValue}
             withoutDep={0}
@@ -86,8 +83,8 @@ const CarbonIntensitiesCut = ({ study, studySite, withDepValue, caUnit = SiteCAU
             label={t('intensities.screen')}
             testId="result-screens"
           />
-        </Box>
-        <Box className={styles.carbonIntensityContainer}>
+        </div>
+        <div className={styles.carbonIntensityContainer}>
           <CarbonIntensity
             withDep={withDepValue}
             withoutDep={0}
@@ -96,8 +93,8 @@ const CarbonIntensitiesCut = ({ study, studySite, withDepValue, caUnit = SiteCAU
             label={t('intensities.entrie')}
             testId="result-entries"
           />
-        </Box>
-        <Box className={styles.carbonIntensityContainer}>
+        </div>
+        <div className={styles.carbonIntensityContainer}>
           <CarbonIntensity
             withDep={withDepValue}
             withoutDep={0}
@@ -106,8 +103,8 @@ const CarbonIntensitiesCut = ({ study, studySite, withDepValue, caUnit = SiteCAU
             label={t('intensities.superficy')}
             testId="result-superficy"
           />
-        </Box>
-        <Box className={styles.carbonIntensityContainer}>
+        </div>
+        <div className={styles.carbonIntensityContainer}>
           <CarbonIntensity
             withDep={withDepValue}
             withoutDep={0}
@@ -116,8 +113,8 @@ const CarbonIntensitiesCut = ({ study, studySite, withDepValue, caUnit = SiteCAU
             label={t('intensities.session')}
             testId="result-sessions"
           />
-        </Box>
-        <Box className={styles.carbonIntensityContainer}>
+        </div>
+        <div className={styles.carbonIntensityContainer}>
           <CarbonIntensity
             withDep={withDepValue}
             withoutDep={0}
@@ -126,8 +123,8 @@ const CarbonIntensitiesCut = ({ study, studySite, withDepValue, caUnit = SiteCAU
             label={t('intensities.movie')}
             testId="result-movies"
           />
-        </Box>
-        <Box className={styles.carbonIntensityContainer}>
+        </div>
+        <div className={styles.carbonIntensityContainer}>
           <CarbonIntensity
             withDep={withDepValue}
             withoutDep={0}
@@ -136,8 +133,8 @@ const CarbonIntensitiesCut = ({ study, studySite, withDepValue, caUnit = SiteCAU
             label={t('intensities.chair')}
             testId="result-chairs"
           />
-        </Box>
-        <Box className={styles.carbonIntensityContainer}>
+        </div>
+        <div className={styles.carbonIntensityContainer}>
           <CarbonIntensity
             withDep={withDepValue}
             withoutDep={0}
@@ -146,7 +143,7 @@ const CarbonIntensitiesCut = ({ study, studySite, withDepValue, caUnit = SiteCAU
             label={t('intensities.ca')}
             testId="result-ca"
           />
-        </Box>
+        </div>
       </div>
     </div>
   )
