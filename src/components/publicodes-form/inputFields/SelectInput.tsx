@@ -1,3 +1,4 @@
+import { usePublicodesRuleTranslation } from '@/hooks/usePublicodesRuleTranslation'
 import { FormControl, FormHelperText, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { EvaluatedSelect } from '@publicodes/forms'
@@ -30,6 +31,8 @@ const SelectInput = <RuleName extends string>({
   // TODO: handle table
   // table,
 }: SelectInputProps<RuleName>) => {
+  const { getOptionLabel } = usePublicodesRuleTranslation(formElement.id)
+
   const handleChange = (event: SelectChangeEvent<string>) => {
     onChange(formElement.id, event.target.value)
   }
@@ -61,7 +64,7 @@ const SelectInput = <RuleName extends string>({
             value={typeof option.value === 'boolean' ? (option.value ? 'oui' : 'non') : option.value}
             className={styles.selectMenuItem}
           >
-            {option.label}
+            {getOptionLabel(option.value)}
           </MenuItem>
         ))}
       </Select>

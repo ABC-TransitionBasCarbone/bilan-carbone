@@ -1,3 +1,4 @@
+import { usePublicodesRuleTranslation } from '@/hooks/usePublicodesRuleTranslation'
 import { FormControl, FormControlLabel, Radio, styled } from '@mui/material'
 import { EvaluatedRadioGroup } from '@publicodes/forms'
 import classNames from 'classnames'
@@ -21,6 +22,7 @@ const RadioGroupInput = <RuleName extends string>({
   errorMessage,
   disabled,
 }: RadioGroupInputProps<RuleName>) => {
+  const { getOptionLabel } = usePublicodesRuleTranslation(formElement.id)
   const flexDirection = formElement.orientation === 'horizontal' ? 'flex-row' : 'flex-col'
 
   return (
@@ -29,7 +31,7 @@ const RadioGroupInput = <RuleName extends string>({
         <StyledFormControlLabel
           key={`box-${index}`}
           className="p-2 pr1 flex-row align-center mb1"
-          label={option.label}
+          label={getOptionLabel(option.value)}
           control={
             <Radio
               onBlur={onBlur}

@@ -52,12 +52,16 @@ export default getRequestConfig(async () => {
   let publicodesRules = {}
   try {
     publicodesRules = (await import(`./translations/${locale}/publicodes/${envLower}-rules.json`)).default
-  } catch {}
+  } catch {
+    console.log(`No publicodes rules translation file for locale: ${locale} and environment: ${environment}`)
+  }
 
   let publicodesLayout = {}
   try {
     publicodesLayout = (await import(`./translations/${locale}/publicodes/${envLower}-layout.json`)).default
-  } catch {}
+  } catch {
+    console.log(`No publicodes layout translation file for locale: ${locale} and environment: ${environment}`)
+  }
 
   return {
     locale,
