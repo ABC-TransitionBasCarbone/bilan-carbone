@@ -1,4 +1,4 @@
-import { Post, subPostsByPost } from '@/services/posts'
+import { Post } from '@/services/posts'
 import { BCUnit, useUnitLabel } from '@/services/unit'
 import { FeFilters } from '@/types/filters'
 import {
@@ -20,6 +20,7 @@ import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from '
 import Button from '../base/Button'
 import DebouncedInput from '../base/DebouncedInput'
 import MultiSelectAll from '../base/MultiSelectAll'
+import { PostSubPostFilter } from '../form/PostSubPostFilter'
 import styles from './EmissionFactorsTable.module.css'
 
 export type ImportVersionForFilters = Pick<EmissionFactorImportVersion, 'id' | 'source' | 'name'>
@@ -44,7 +45,6 @@ export const EmissionFactorsFilters = ({
   setFilters,
 }: Props) => {
   const t = useTranslations('emissionFactors.table')
-  const tPosts = useTranslations('emissionFactors.post')
   const [displayFilters, setDisplayFilters] = useState(true)
   const [displayHideButton, setDisplayHideButton] = useState(false)
   const getUnitLabel = useUnitLabel()
@@ -92,39 +92,6 @@ export const EmissionFactorsFilters = ({
       : filters.units.length === 0
         ? t('none')
         : filters.units.map((unit) => getUnitLabel(unit)).join(', ')
-
-  const allSelectedSubPosts = useMemo(
-    () => filters.subPosts.length === envSubPosts.length,
-    [filters.subPosts, envSubPosts],
-  )
-
-  const subPostsSelectorRenderValue = () =>
-    allSelectedSubPosts
-      ? tPosts('all')
-      : filters.subPosts.length === 0
-        ? tPosts('none')
-        : filters.subPosts.map((subPosts) => tPosts(subPosts)).join(', ')
-
-  const areAllSelected = (post: Post) => !subPostsByPost[post].some((subPost) => !filters.subPosts.includes(subPost))
-
-  const selectAllSubPosts = () =>
-    setFilters((prevFilters) => ({ ...prevFilters, subPosts: allSelectedSubPosts ? [] : envSubPosts }))
-
-  const selectPost = (post: Post) => {
-    const newValue = areAllSelected(post)
-      ? filters.subPosts.filter(
-          (filteredSubPost) => filteredSubPost === 'all' || !subPostsByPost[post].includes(filteredSubPost),
-        )
-      : filters.subPosts.concat(subPostsByPost[post].filter((a) => !filters.subPosts.includes(a)))
-    setFilters((prevFilters) => ({ ...prevFilters, subPosts: newValue }))
-  }
-
-  const selectSubPost = (subPost: SubPost) => {
-    const newValue = filters.subPosts.includes(subPost)
-      ? filters.subPosts.filter((filteredSubPost) => filteredSubPost !== subPost)
-      : filters.subPosts.concat([subPost])
-    setFilters((prevFilters) => ({ ...prevFilters, subPosts: newValue }))
-  }
 
   return (
     <div ref={filtersRef} className={classNames(styles.filters, 'align-center wrap mt-2 mb1')}>
@@ -193,42 +160,14 @@ export const EmissionFactorsFilters = ({
               setValues={(values) => setFilters((prevFilters) => ({ ...prevFilters, units: values }))}
             />
           </FormControl>
-          <FormControl className={styles.selector}>
-            <FormLabel id="emissions-subposts-selector" component="legend">
-              {t('subPosts')}
-            </FormLabel>
-            <Select
-              id="emissions-subposts-selector"
-              labelId="emissions-subposts-selector"
-              value={filters.subPosts}
-              renderValue={subPostsSelectorRenderValue}
-              multiple
-            >
-              <MenuItem key="subpost-item-all" selected={allSelectedSubPosts} onClick={selectAllSubPosts}>
-                <Checkbox checked={allSelectedSubPosts} />
-                <ListItemText primary={tPosts(allSelectedSubPosts ? 'unselectAll' : 'selectAll')} />
-              </MenuItem>
-              {Object.values(envPosts).map((post) => (
-                <div key={`subpostGroup-${post}`}>
-                  <MenuItem key={`subpost-${post}`} selected={areAllSelected(post)} onClick={() => selectPost(post)}>
-                    <Checkbox checked={areAllSelected(post)} />
-                    <ListItemText primary={tPosts(post)} />
-                  </MenuItem>
-                  {subPostsByPost[post].map((subPost) => (
-                    <MenuItem
-                      key={`subpost-${subPost}`}
-                      className={styles.subPostItem}
-                      selected={filters.subPosts.includes(subPost)}
-                      onClick={() => selectSubPost(subPost)}
-                    >
-                      <Checkbox checked={filters.subPosts.includes(subPost)} />
-                      <ListItemText primary={tPosts(subPost)} />
-                    </MenuItem>
-                  ))}
-                </div>
-              ))}
-            </Select>
-          </FormControl>
+          <PostSubPostFilter
+            envPosts={envPosts}
+            envSubPosts={envSubPosts}
+            selectedSubPosts={filters.subPosts.filter((sp): sp is SubPost => sp !== 'all')}
+            onChange={(subPosts) => setFilters((prevFilters) => ({ ...prevFilters, subPosts }))}
+            showSeparateLabel={true}
+            className={styles.selector}
+          />
           <FormControl className={styles.selector}>
             <FormLabel id="archived-emissions-factors-radio-group-label" component="legend">
               {t('displayArchived')}
