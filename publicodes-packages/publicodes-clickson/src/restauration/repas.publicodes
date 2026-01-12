@@ -14,10 +14,12 @@ restauration . repas . moyen:
   titre: Repas - Moyen
   formule: nombre * FE
   unité: kgCO2e
+  par défaut: 0
+
   avec:
     nombre:
       question: Nombre de repas moyens annuels
-      par défaut: général . nombre étudiant * 1 repas/étudiant * 5 * 47
+      par défaut: général . nombre étudiant * 1 repas/étudiant * commun . nombre de jours dans une semaine scolaire * commun . nombre de semaines scolaire par an
       unité: repas
     FE:
       question: Facteur d'émission par repas moyen
@@ -33,7 +35,7 @@ restauration . repas . végétarien:
   avec:
     nombre:
       question: Nombre de repas végétariens annuels
-      par défaut: général . nombre étudiant * 1 repas/étudiant * 5 * 47
+      par défaut: général . nombre étudiant * 1 repas/étudiant * commun . nombre de jours dans une semaine scolaire * commun . nombre de semaines scolaire par an
       unité: repas
     FE:
       question: Facteur d'émission par repas végétarien
@@ -83,7 +85,7 @@ restauration . repas . viande blanche:
   avec:
     nombre:
       question: Nombre de repas à base de viande blanche annuels
-      par défaut: général . nombre étudiant * 1 repas/étudiant * 5 * 47
+      par défaut: général . nombre étudiant * 1 repas/étudiant * commun . nombre de jours dans une semaine scolaire * commun . nombre de semaines scolaire par an
       unité: repas
     FE:
       question: Facteur d'émission par repas à base de viande blanche
@@ -99,7 +101,7 @@ restauration . repas . poisson:
   avec:
     nombre:
       question: Nombre de repas à base de poisson blanc annuels
-      par défaut: général . nombre étudiant * 1 repas/étudiant * 5 * 47
+      par défaut: général . nombre étudiant * 1 repas/étudiant * commun . nombre de jours dans une semaine scolaire * commun . nombre de semaines scolaire par an
       unité: repas
     FE:
       question: Facteur d'émission par repas à base de poisson blanc

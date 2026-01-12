@@ -24,6 +24,7 @@ achats . produits chimiques . produit vaisselle liquide:
   titre: Produit vaisselle liquide
   formule: consommation * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     consommation:
       question: Consommation annuelle de produit vaisselle liquide
@@ -39,6 +40,7 @@ achats . produits chimiques . savon liquide:
   titre: Savon liquide
   formule: consommation * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     consommation:
       question: Consommation annuelle de savon liquide
@@ -54,6 +56,7 @@ achats . produits chimiques . produit vitre:
   titre: Produit vitre
   formule: consommation * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     consommation:
       question: Consommation annuelle de produit vitre
@@ -69,6 +72,7 @@ achats . produits chimiques . nettoyant sols:
   titre: Nettoyant sols
   formule: consommation * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     consommation:
       question: Consommation annuelle de nettoyant sols
@@ -84,6 +88,7 @@ achats . produits chimiques . nettoyant multi-usages:
   titre: Nettoyant multi-usages
   formule: consommation * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     consommation:
       question: Consommation annuelle de nettoyant multi-usages
@@ -99,6 +104,7 @@ achats . produits chimiques . détergent sanitaire:
   titre: Détergent sanitaire
   formule: consommation * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     consommation:
       question: Consommation annuelle de détergent sanitaire
@@ -114,6 +120,7 @@ achats . produits chimiques . désinfectant:
   titre: Désinfectant
   formule: consommation * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     consommation:
       question: Consommation annuelle de désinfectant
@@ -129,6 +136,7 @@ achats . produits chimiques . chlore:
   titre: Chlore
   formule: consommation * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     consommation:
       question: Consommation annuelle de chlore
@@ -144,6 +152,7 @@ achats . produits chimiques . bicarbonate de soude:
   titre: Bicarbonate de soude
   formule: consommation * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     consommation:
       question: Consommation annuelle de bicarbonate de soude
@@ -159,6 +168,7 @@ achats . produits chimiques . peinture revêtement mural intérieur:
   titre: Peinture - revêtement mural intérieur
   formule: consommation * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     consommation:
       question: Consommation annuelle de peinture - revêtement mural intérieur
@@ -174,6 +184,7 @@ achats . produits chimiques . peinture revêtement mural extérieur:
   titre: Peinture - revêtement mural extérieur
   formule: consommation * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     consommation:
       question: Consommation annuelle de peinture - revêtement mural extérieur
@@ -189,6 +200,7 @@ achats . produits chimiques . savon solide:
   titre: Savon solide
   formule: consommation * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     consommation:
       question: Consommation annuelle de savon solide
@@ -204,6 +216,7 @@ achats . produits chimiques . vinaigre blanc:
   titre: Vinaigre blanc
   formule: consommation * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     consommation:
       question: Consommation annuelle de vinaigre blanc
@@ -219,6 +232,7 @@ achats . produits chimiques . soude solide:
   titre: Soude solide (poudre, granulés)
   formule: consommation * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     consommation:
       question: Consommation annuelle de soude solide (poudre, granulés)
@@ -234,6 +248,7 @@ achats . produits chimiques . acide sulfurique:
   titre: Acide sulfurique
   formule: consommation * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     consommation:
       question: Consommation annuelle d'acide sulfurique
@@ -249,6 +264,7 @@ achats . produits chimiques . acide chlorhydrique:
   titre: Acide chlorhydrique
   formule: consommation * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     consommation:
       question: Consommation annuelle d'acide chlorhydrique

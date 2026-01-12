@@ -1,5 +1,5 @@
 restauration:
-  titre: Alimentation
+  titre: Restauration
   formule:
     somme:
       - repas

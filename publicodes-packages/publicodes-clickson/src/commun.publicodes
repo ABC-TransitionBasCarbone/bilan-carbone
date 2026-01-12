@@ -8,10 +8,22 @@ commun . nombre de mois par an:
   valeur: 12
   unité: mois
 
+commun . nombre de jours dans une semaine scolaire:
+  titre: Nombre de jours dans une semaine scolaire
+  description: Nombre de jours pris en compte pour le calcul hebdomadaire.
+  valeur: 5
+  unité: jour
+
 commun . nombre de semaines par an:
   titre: Nombre de semaines par an
   description: Nombre de semaines prises en compte pour le calcul annuel.
   valeur: 52
+  unité: semaine
+
+commun . nombre de semaines scolaire par an:
+  titre: Nombre de semaines scolaire par an
+  description: Nombre de semaines scolaires prises en compte pour le calcul annuel.
+  valeur: 36
   unité: semaine
 
 commun . année actuelle:

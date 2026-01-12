@@ -13,6 +13,7 @@ achats . fournitures . petites fournitures:
   titre: "Petites fournitures (stylos...)"
   formule: montant * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     montant:
       question: "Quel est le montant dépensé en petites fournitures (stylos, etc.) ?"
@@ -31,6 +32,7 @@ achats . fournitures . livres:
   titre: "Livres"
   formule: nombre * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     nombre:
       question: "Combien de livres avez-vous achetés ?"
@@ -49,6 +51,7 @@ achats . fournitures . papier ramette:
   titre: "Papier (ramette)"
   formule: nombre * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     nombre:
       question: "Combien de ramettes de papier avez-vous achetées ?"
@@ -67,6 +70,7 @@ achats . fournitures . consommables:
   titre: "Consommables (cartouches d'encre…)"
   formule: montant * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     montant:
       question: "Quel est le montant dépensé en consommables (cartouches d'encre, etc.) ?"
@@ -85,6 +89,7 @@ achats . fournitures . piles aaa:
   titre: "Piles AAA (alcalines)"
   formule: nombre * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     nombre:
       question: "Combien de piles AAA (alcalines) avez-vous achetées ?"
@@ -103,6 +108,7 @@ achats . fournitures . piles aa:
   titre: "Piles AA (alcalines)"
   formule: nombre * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     nombre:
       question: "Combien de piles AA (alcalines) avez-vous achetées ?"

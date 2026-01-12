@@ -17,6 +17,7 @@ achats . équipements de sport . ballon de volley:
   titre: "Ballon de volley"
   formule: nombre * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     nombre:
       question: "Combien de ballons de volley avez-vous achetés ?"
@@ -35,6 +36,7 @@ achats . équipements de sport . ballon de handball:
   titre: "Ballon de handball"
   formule: nombre * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     nombre:
       question: "Combien de ballons de handball avez-vous achetés ?"
@@ -53,6 +55,7 @@ achats . équipements de sport . kimono judo:
   titre: "Kimono (judo)"
   formule: nombre * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     nombre:
       question: "Combien de kimonos de judo avez-vous achetés ?"
@@ -71,6 +74,7 @@ achats . équipements de sport . shorts tous sports:
   titre: "Shorts tous sports"
   formule: nombre * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     nombre:
       question: "Combien de shorts tous sports avez-vous achetés ?"
@@ -89,6 +93,7 @@ achats . équipements de sport . maillots tous sports:
   titre: "Maillots tous sports"
   formule: nombre * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     nombre:
       question: "Combien de maillots tous sports avez-vous achetés ?"
@@ -107,6 +112,7 @@ achats . équipements de sport . t-shirt polyester:
   titre: "T-shirt en polyester"
   formule: nombre * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     nombre:
       question: "Combien de t-shirts en polyester avez-vous achetés ?"
@@ -125,6 +131,7 @@ achats . équipements de sport . ballon de rugby:
   titre: "Ballon de rugby"
   formule: nombre * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     nombre:
       question: "Combien de ballons de rugby avez-vous achetés ?"
@@ -143,6 +150,7 @@ achats . équipements de sport . ballon de basket:
   titre: "Ballon de basket"
   formule: nombre * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     nombre:
       question: "Combien de ballons de basket avez-vous achetés ?"
@@ -161,6 +169,7 @@ achats . équipements de sport . ballon de football:
   titre: "Ballon de football"
   formule: nombre * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     nombre:
       question: "Combien de ballons de football avez-vous achetés ?"
