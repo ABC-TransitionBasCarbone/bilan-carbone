@@ -67,12 +67,12 @@ export async function writeJSONFile(filePath: string, data: Record<string, unkno
 }
 
 export function loadTranslation(locale: Locale, model: Model): TranslationRecord {
-  return (readJSONFile(path.join(TRANSLATIONS_DIR, locale, `${model}/publicodes-rules.json`)) ??
+  return (readJSONFile(path.join(TRANSLATIONS_DIR, locale, `publicodes/${model}-rules.json`)) ??
     {}) as TranslationRecord
 }
 
 export async function saveTranslation(locale: Locale, model: Model, data: TranslationRecord): Promise<void> {
-  await writeJSONFile(path.join(TRANSLATIONS_DIR, locale, `${model}/publicodes-rules.json`), data)
+  await writeJSONFile(path.join(TRANSLATIONS_DIR, locale, `publicodes/${model}-rules.json`), data)
 }
 
 // Helper to check for arguments within script

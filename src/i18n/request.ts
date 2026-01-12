@@ -39,11 +39,9 @@ export default getRequestConfig(async () => {
     }
   }
 
-  const overrideFilePath = path.join(
-    process.cwd(),
-    'src/i18n/translations',
-    `${locale}/${environment.toLocaleLowerCase()}.json`,
-  )
+  const envLower = environment.toLocaleLowerCase()
+  const overrideFilePath = path.join(process.cwd(), 'src/i18n/translations', `${locale}/${envLower}.json`)
+
   let overrideMessages = {}
   if (fs.existsSync(overrideFilePath)) {
     overrideMessages = JSON.parse(fs.readFileSync(overrideFilePath, 'utf-8'))
@@ -51,8 +49,18 @@ export default getRequestConfig(async () => {
     console.log(`No translation files at: ${overrideFilePath}`)
   }
 
+  let publicodesRules = {}
+  try {
+    publicodesRules = (await import(`./translations/${locale}/publicodes/${envLower}-rules.json`)).default
+  } catch {}
+
+  let publicodesLayout = {}
+  try {
+    publicodesLayout = (await import(`./translations/${locale}/publicodes/${envLower}-layout.json`)).default
+  } catch {}
+
   return {
     locale,
-    messages: mergeObjects({}, baseMessages, overrideMessages),
+    messages: mergeObjects({}, baseMessages, overrideMessages, publicodesRules, publicodesLayout),
   }
 })
