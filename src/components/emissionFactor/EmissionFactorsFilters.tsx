@@ -163,7 +163,7 @@ export const EmissionFactorsFilters = ({
           <PostSubPostFilter
             envPosts={envPosts}
             envSubPosts={envSubPosts}
-            selectedSubPosts={filters.subPosts.filter((sp): sp is SubPost => sp !== 'all')}
+            selectedSubPosts={filters.subPosts.filter((sp) => sp !== 'all')}
             onChange={(subPosts) => setFilters((prevFilters) => ({ ...prevFilters, subPosts }))}
             showSeparateLabel={true}
             className={styles.selector}
