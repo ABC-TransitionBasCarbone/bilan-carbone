@@ -1,4 +1,5 @@
 import { Environment, SubPost } from '@prisma/client'
+import { BaseResultsByPost } from './results/consolidated'
 
 export enum BCPost {
   Energies = 'Energies',
@@ -290,9 +291,7 @@ const getSubPostBCToSubPostTiltMapping = (): Partial<Record<SubPost, SubPost[]>>
 
 export const subPostBCToSubPostTiltMapping = getSubPostBCToSubPostTiltMapping()
 
-export const convertCountToBilanCarbone = (
-  results: { post: string; children: { post: string; value: number }[] }[],
-): { [key: string]: number } => {
+export const convertCountToBilanCarbone = (results: BaseResultsByPost[]): { [key: string]: number } => {
   const allPossibleCategories = new Set(Object.values(cutSubPostToBCPostMapping))
   const aggregatedResults: { [key: string]: number } = {}
 

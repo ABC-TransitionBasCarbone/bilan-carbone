@@ -31,8 +31,7 @@ const AllResultsPublicodes = ({
 }: Props) => {
   const tStudyNav = useTranslations('study.navigation')
   const { studySite, setSite } = useStudySite(study, true)
-
-  const { aggregatedResults, resultsBySiteId, isLoading, error } = usePublicodesResults(
+  const { aggregated, bySite, isLoading, error } = usePublicodesResults(
     study,
     'all',
     study.organizationVersion.environment,
@@ -45,10 +44,10 @@ const AllResultsPublicodes = ({
   // the page). I assume that it's acceptable for now.
   const selectedResults = useMemo(() => {
     if (studySite === 'all') {
-      return aggregatedResults
+      return aggregated
     }
-    return resultsBySiteId[studySite] ?? []
-  }, [aggregatedResults, resultsBySiteId, studySite])
+    return bySite[studySite] ?? []
+  }, [aggregated, bySite, studySite])
 
   const totalValue = useMemo(() => {
     const total = selectedResults.find((r) => r.post === 'total')?.value ?? 0
@@ -69,6 +68,10 @@ const AllResultsPublicodes = ({
     <AllResults
       study={study}
       computedResults={selectedResults}
+      computedResultsBySite={{
+        aggregated,
+        bySite,
+      }}
       totalValue={totalValue}
       studySite={studySite}
       setSite={setSite}
