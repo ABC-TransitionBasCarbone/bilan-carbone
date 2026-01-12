@@ -4,9 +4,9 @@ import prettier from 'prettier'
 import { Rule } from 'publicodes'
 import yargs from 'yargs'
 
-export type TranslationKey = 'titre' | 'description' | 'question' | 'unité'
+export type TranslationKey = 'titre' | 'description' | 'question' | 'unité' | 'options'
 export interface TranslationRecord {
-  [key: string]: string | TranslationRecord
+  [key: string]: string | TranslationRecord | Record<string, string>
 }
 
 export const KEYS_TO_TRANSLATE: TranslationKey[] = ['titre', 'description', 'question', 'unité']
@@ -22,7 +22,13 @@ export const AVAILABLE_MODELS = ['cut'] as const
 export type Model = (typeof AVAILABLE_MODELS)[number]
 
 const MODEL_PACKAGES: Record<Model, string> = {
-  cut: '@abc-transitionbascarbone/publicodes-count/publicodes-build/publicodes-count.model.json',
+  cut:
+    process.env.NODE_ENV === 'production'
+      ? '@abc-transitionbascarbone/publicodes-count/publicodes-build/publicodes-count.model.json'
+      : path.join(
+          __dirname,
+          '../../../publicodes-packages/publicodes-count/publicodes-build/publicodes-count.model.json',
+        ),
 }
 
 // Helper to load publicodes rules from a given model
