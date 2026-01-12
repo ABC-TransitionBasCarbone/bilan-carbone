@@ -3196,6 +3196,10 @@
   resolved "https://registry.yarnpkg.com/@prisma/prisma-schema-wasm/-/prisma-schema-wasm-4.17.0-26.6b0aef69b7cdfc787f822ecd7cdc76d5f1991584.tgz#58398a22a15d0a11ae7c8756de2b793bb8abfca3"
   integrity sha512-JFdsnSgBPN8reDTLOI9Vh/6ccCb2aD1LbY/LWQnkcIgNo6IdpzvuM+qRVbBuA6IZP2SdqQI8Lu6RL2P8EFBQUA==
 
+"@publicodes/forms@https://pkg.pr.new/publicodes/publicodes/@publicodes/forms@c67ec32":
+  version "0.6.0"
+  resolved "https://pkg.pr.new/publicodes/publicodes/@publicodes/forms@c67ec32#0937cb560be1d179153cdadd7df460575fbb38d2"
+
 "@rtsao/scc@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@rtsao/scc/-/scc-1.1.0.tgz#927dd2fae9bc3361403ac2c7a00c32ddce9ad7e8"
