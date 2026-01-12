@@ -791,6 +791,11 @@ export const uploadStudies = async (
               return null
             }
 
+            // TODO : dépend des gens
+            if (!studyEmissionSource.value) {
+              return null
+            }
+
             let emissionFactor: EmissionFactor | null = null
             let emissionFactorId: string | null = null
             if (studyEmissionSource.emissionFactorImportedId !== '0') {
@@ -844,7 +849,7 @@ export const uploadStudies = async (
             const canBeValidated = !!(
               emissionFactorId &&
               studyEmissionSource.value &&
-              // (!exports.length || caracterisation) &&
+              // (!exports.length || caracterisation) && // on peut le commenter si on nous demande de valider un maximum de sources d'émission.
               (!isCAS(studyEmissionSource, emissionFactor) || studyEmissionSource.emissionFactorConsoValue) &&
               (!hasDeprecationPeriod(studyEmissionSource.subPost) || studyEmissionSource.deprecation)
             )
