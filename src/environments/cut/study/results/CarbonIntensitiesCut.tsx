@@ -52,6 +52,57 @@ const CarbonIntensitiesCut = ({ study, studySite, withDepValue, caUnit = SiteCAU
     return [1, 1, 1, 1, 1, 1, 1, 1]
   }, [studySite])
 
+  const intensities = [
+    {
+      key: 'etp',
+      divider: etp,
+      unit: StudyResultUnit.T,
+      label: t('intensities.etp'),
+    },
+    {
+      key: 'screens',
+      divider: screens,
+      unit: StudyResultUnit.T,
+      label: t('intensities.screen'),
+    },
+    {
+      key: 'entries',
+      divider: entries,
+      unit: StudyResultUnit.K,
+      label: t('intensities.entrie'),
+    },
+    {
+      key: 'superficy',
+      divider: superficy,
+      unit: StudyResultUnit.K,
+      label: t('intensities.superficy'),
+    },
+    {
+      key: 'sessions',
+      divider: sessions,
+      unit: StudyResultUnit.K,
+      label: t('intensities.session'),
+    },
+    {
+      key: 'movies',
+      divider: movies,
+      unit: StudyResultUnit.K,
+      label: t('intensities.movie'),
+    },
+    {
+      key: 'chairs',
+      divider: chairs,
+      unit: StudyResultUnit.K,
+      label: t('intensities.chair'),
+    },
+    {
+      key: 'ca',
+      divider: ca,
+      unit: StudyResultUnit.K,
+      label: t('intensities.ca'),
+    },
+  ]
+
   return (
     <div className={'flex'}>
       <div className="flex grow gapped2 wrap justify-center">
@@ -64,86 +115,18 @@ const CarbonIntensitiesCut = ({ study, studySite, withDepValue, caUnit = SiteCAU
             />
           </div>
         </div>
-        <div className={styles.carbonIntensityContainer}>
-          <CarbonIntensity
-            withDep={withDepValue}
-            withoutDep={0}
-            divider={etp}
-            resultsUnit={StudyResultUnit.T}
-            label={t('intensities.etp')}
-            testId="result-etp"
-          />
-        </div>
-        <div className={styles.carbonIntensityContainer}>
-          <CarbonIntensity
-            withDep={withDepValue}
-            withoutDep={0}
-            divider={screens}
-            resultsUnit={StudyResultUnit.T}
-            label={t('intensities.screen')}
-            testId="result-screens"
-          />
-        </div>
-        <div className={styles.carbonIntensityContainer}>
-          <CarbonIntensity
-            withDep={withDepValue}
-            withoutDep={0}
-            divider={entries}
-            resultsUnit={StudyResultUnit.K}
-            label={t('intensities.entrie')}
-            testId="result-entries"
-          />
-        </div>
-        <div className={styles.carbonIntensityContainer}>
-          <CarbonIntensity
-            withDep={withDepValue}
-            withoutDep={0}
-            divider={superficy}
-            resultsUnit={StudyResultUnit.K}
-            label={t('intensities.superficy')}
-            testId="result-superficy"
-          />
-        </div>
-        <div className={styles.carbonIntensityContainer}>
-          <CarbonIntensity
-            withDep={withDepValue}
-            withoutDep={0}
-            divider={sessions}
-            resultsUnit={StudyResultUnit.K}
-            label={t('intensities.session')}
-            testId="result-sessions"
-          />
-        </div>
-        <div className={styles.carbonIntensityContainer}>
-          <CarbonIntensity
-            withDep={withDepValue}
-            withoutDep={0}
-            divider={movies}
-            resultsUnit={StudyResultUnit.K}
-            label={t('intensities.movie')}
-            testId="result-movies"
-          />
-        </div>
-        <div className={styles.carbonIntensityContainer}>
-          <CarbonIntensity
-            withDep={withDepValue}
-            withoutDep={0}
-            divider={chairs}
-            resultsUnit={StudyResultUnit.K}
-            label={t('intensities.chair')}
-            testId="result-chairs"
-          />
-        </div>
-        <div className={styles.carbonIntensityContainer}>
-          <CarbonIntensity
-            withDep={withDepValue}
-            withoutDep={0}
-            divider={ca}
-            resultsUnit={StudyResultUnit.K}
-            label={t('intensities.ca')}
-            testId="result-ca"
-          />
-        </div>
+        {intensities.map(({ key, divider, unit, label }) => (
+          <div key={key} className={styles.carbonIntensityContainer}>
+            <CarbonIntensity
+              withDep={withDepValue}
+              withoutDep={0}
+              divider={divider}
+              resultsUnit={unit}
+              label={label}
+              testId={`result-${key}`}
+            />
+          </div>
+        ))}
       </div>
     </div>
   )
