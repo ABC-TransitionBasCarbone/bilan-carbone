@@ -5,7 +5,9 @@ import { Rule } from 'publicodes'
 import yargs from 'yargs'
 
 export type TranslationKey = 'titre' | 'description' | 'question' | 'unité'
-export type TranslationRecord = Record<string, any>
+export interface TranslationRecord {
+  [key: string]: string | TranslationRecord
+}
 
 export const KEYS_TO_TRANSLATE: TranslationKey[] = ['titre', 'description', 'question', 'unité']
 export const TRANSLATIONS_DIR = path.join(__dirname, '../translations')
@@ -26,8 +28,8 @@ const MODEL_PACKAGES: Record<Model, string> = {
 // Helper to load publicodes rules from a given model
 export async function loadRulesForModel(model: Model): Promise<Record<string, Rule>> {
   const packageName = MODEL_PACKAGES[model]
-  const module = await import(packageName)
-  return module.default
+  const packageModule = await import(packageName)
+  return packageModule.default
 }
 
 // Helper to read json file (or create it if it doesn't exist)
@@ -65,7 +67,8 @@ export async function writeJSONFile(filePath: string, data: Record<string, unkno
 }
 
 export function loadTranslation(locale: Locale, model: Model): TranslationRecord {
-  return readJSONFile(path.join(TRANSLATIONS_DIR, locale, `${model}/publicodes-rules.json`)) ?? {}
+  return (readJSONFile(path.join(TRANSLATIONS_DIR, locale, `${model}/publicodes-rules.json`)) ??
+    {}) as TranslationRecord
 }
 
 export async function saveTranslation(locale: Locale, model: Model, data: TranslationRecord): Promise<void> {
