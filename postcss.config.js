@@ -1,13 +1,16 @@
-const postcssImport = require('postcss-import')
+import postcssFlexbugsFixes from 'postcss-flexbugs-fixes'
+import postcssImport from 'postcss-import'
+import postcssNested from 'postcss-nested'
+import postcssPresetEnv from 'postcss-preset-env'
 
-module.exports = {
+export default {
   plugins: [
     postcssImport({
       filter: () => false,
     }),
-    require('postcss-nested'),
-    require('postcss-flexbugs-fixes'),
-    require('postcss-preset-env')({
+    postcssNested,
+    postcssFlexbugsFixes,
+    postcssPresetEnv({
       autoprefixer: {
         flexbox: 'no-2009',
         grid: 'autoplace',
