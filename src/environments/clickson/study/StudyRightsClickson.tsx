@@ -21,7 +21,7 @@ import {
 } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Box, CircularProgress } from '@mui/material'
-import { EmissionFactorImportVersion, StudyRole } from '@prisma/client'
+import { EmissionFactorImportVersion } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
@@ -37,10 +37,9 @@ interface Props {
   study: FullStudy
   editionDisabled: boolean
   emissionFactorSources: EmissionFactorImportVersion[]
-  userRoleOnStudy: StudyRole
 }
 
-const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, userRoleOnStudy }: Props) => {
+const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources }: Props) => {
   const tLabel = useTranslations('common.label')
   const t = useTranslations('study.new')
   const tRights = useTranslations('study.rights')

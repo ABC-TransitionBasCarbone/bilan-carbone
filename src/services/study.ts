@@ -25,7 +25,7 @@ import {
   subPostBCToSubPostTiltMapping,
 } from './posts'
 import { computeBegesResult } from './results/beges'
-import { computeResultsByPost, computeResultsByTag, ResultsByPost } from './results/consolidated'
+import { computeResultsByPostFromEmissionSources, computeResultsByTag, ResultsByPost } from './results/consolidated'
 import { filterWithDependencies } from './results/utils'
 import { EmissionFactorWithMetaData, getEmissionFactorsByIds } from './serverFunctions/emissionFactor'
 import { prepareExcel } from './serverFunctions/file'
@@ -391,7 +391,7 @@ export const formatConsolidatedStudyResultsForExport = (
   const headersForEnv = getHeadersForEnv(environment)
 
   for (const site of siteList) {
-    const resultList = computeResultsByPost(
+    const resultList = computeResultsByPostFromEmissionSources(
       study,
       tPost,
       site.id,
@@ -679,7 +679,7 @@ export const getDetailedEmissionResults = (
   withDependencies: boolean = true,
   type?: ResultType,
 ) => {
-  const computedResultsWithDep = computeResultsByPost(
+  const computedResultsWithDep = computeResultsByPostFromEmissionSources(
     study,
     tPost,
     studySite,
@@ -690,7 +690,7 @@ export const getDetailedEmissionResults = (
     type,
   )
 
-  const computedResultsWithoutDep = computeResultsByPost(
+  const computedResultsWithoutDep = computeResultsByPostFromEmissionSources(
     study,
     tPost,
     studySite,

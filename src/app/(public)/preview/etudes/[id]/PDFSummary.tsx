@@ -4,7 +4,7 @@ import ConsolidatedResultsTable from '@/components/study/results/consolidated/Co
 import { FullStudy } from '@/db/study'
 import cutTheme from '@/environments/cut/theme/theme'
 import { convertCountToBilanCarbone, CutPost } from '@/services/posts'
-import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
+import { computeResultsByPostFromEmissionSources, ResultsByPost } from '@/services/results/consolidated'
 import { getDetailedEmissionResults } from '@/services/study'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
@@ -86,7 +86,7 @@ const PDFSummary = ({ study, environment }: Props) => {
         const sitesData: SiteData[] = []
 
         for (const studySite of study.sites) {
-          const siteComputedResults = computeResultsByPost(
+          const siteComputedResults = computeResultsByPostFromEmissionSources(
             study,
             tPost,
             studySite.id,

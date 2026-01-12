@@ -20,10 +20,10 @@ fonctionnement . bâtiment . construction:
   avec:
     age:
       durée:
-        unité: an
         depuis: année de construction
         jusqu'à: commun . année actuelle
       arrondi: oui
+      unité: an
 
     amortissement:
       valeur: 50
