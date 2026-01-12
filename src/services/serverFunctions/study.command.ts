@@ -58,6 +58,7 @@ const BaseStudyValidation = z.object({
   realizationEndDate: optionalDateValidation(),
   level: z.enum(Level),
   isPublic: z.string(),
+  simplified: z.boolean().optional(),
 })
 
 export const CreateStudyCommandValidation = z

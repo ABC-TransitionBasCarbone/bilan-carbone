@@ -132,10 +132,9 @@ const canCreateSpecificStudyTilt = async (
   organizationVersionId: string,
 ) => {
   if (study.simplified) {
-    return canCreateSpecificStudyBC(accountId, study, organizationVersionId)
+    return canCreateSpecificStudySimplified(accountId, organizationVersionId)
   }
-
-  return canCreateSpecificStudySimplified(accountId, organizationVersionId)
+  return canCreateSpecificStudyBC(accountId, study, organizationVersionId)
 }
 
 export const canCreateSpecificStudy = async (

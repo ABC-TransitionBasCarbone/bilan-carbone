@@ -37,6 +37,7 @@ const NewStudyFormTilt = ({ user, accounts, form, duplicateStudyId, sourceStudy,
         [Export.GHGP]: false,
         [Export.ISO14069]: false,
       })
+      form.setValue('simplified', simplified)
     }
   }, [form, simplified])
 
