@@ -45,6 +45,7 @@ export default function TableQuestion<RuleName extends string>({
         }
 
         // TODO: could we have a cleaner way to distinguish between value and inputs ?
+        // FIXME: the first column isn't translated for now
         return colIndex === 0 ? (
           <p>{formElement.label}</p>
         ) : (

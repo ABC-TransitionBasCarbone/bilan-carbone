@@ -1,4 +1,6 @@
+import { usePublicodesRuleTranslation } from '@/hooks/usePublicodesRuleTranslation'
 import Box from '@mui/material/Box'
+import { EvaluatedFormElement } from '@publicodes/forms'
 import { useTranslations } from 'next-intl'
 import GroupQuestion from './GroupQuestion'
 import PublicodesInputField from './InputField'
@@ -6,6 +8,23 @@ import { EvaluatedFormLayout } from './layouts/evaluatedFormLayout'
 import QuestionContainer from './QuestionContainer'
 import TableQuestion from './TableQuestion'
 import { OnFieldChange } from './utils'
+
+interface InputQuestionProps<RuleName extends string> {
+  formElement: EvaluatedFormElement<RuleName>
+  onChange: OnFieldChange<RuleName>
+}
+
+function InputQuestion<RuleName extends string>({ formElement, onChange }: InputQuestionProps<RuleName>) {
+  const { question, description } = usePublicodesRuleTranslation(formElement.id)
+
+  return (
+    <Box key={formElement.id} className="mb2">
+      <QuestionContainer label={question} helperText={description}>
+        <PublicodesInputField formElement={formElement} onChange={onChange} />
+      </QuestionContainer>
+    </Box>
+  )
+}
 
 export interface PublicodesQuestionProps<RuleName extends string> {
   formLayout: EvaluatedFormLayout<RuleName>
@@ -16,26 +35,11 @@ export default function PublicodesQuestion<RuleName extends string>({
   formLayout,
   onChange,
 }: PublicodesQuestionProps<RuleName>) {
-  const tInput = useTranslations('publicodes-rules')
   const tLayout = useTranslations('publicodes-layout')
 
   switch (formLayout.type) {
     case 'input': {
-      const formElement = formLayout.evaluatedElement
-      const translationKey = formElement.id.replace(/\s+.\s+/g, '.')
-
-      return (
-        <Box key={formElement.id} className="mb2">
-          <QuestionContainer
-            label={tInput(`${translationKey}.question`)}
-            helperText={
-              tInput.has(`${translationKey}.description`) ? tInput(`${translationKey}.description`) : undefined
-            }
-          >
-            <PublicodesInputField formElement={formElement} onChange={onChange} />
-          </QuestionContainer>
-        </Box>
-      )
+      return <InputQuestion formElement={formLayout.evaluatedElement} onChange={onChange} />
     }
     case 'group': {
       return (
