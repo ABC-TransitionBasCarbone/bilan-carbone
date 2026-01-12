@@ -191,7 +191,11 @@ export const calculateSNBCTrajectory = ({
     return dataPoints
   }
 
-  const sectenYearForRateCalculation = Math.min(studyStartYear, latestSectenYear)
+  // When study start year is before 1990, use 1990 (SNBC_REFERENCE_YEAR) for rate calculation
+  // since SNBC trajectories are always based on 1990 emissions
+  const sectenYearForRateCalculation =
+    studyStartYear < SNBC_REFERENCE_YEAR ? SNBC_REFERENCE_YEAR : Math.min(studyStartYear, latestSectenYear)
+
   const sectenEmissionsForRateCalculation = getSectenEmissionsByYear(sectenData, sectenYearForRateCalculation)
   if (sectenEmissionsForRateCalculation === null) {
     return dataPoints
