@@ -90,5 +90,15 @@
     "UNITED_KINGDOM": "United Kingdom",
     "VATICAN_CITY": "Vatican City",
     "OTHER": "Other"
+  },
+  "study": {
+    "results": {
+      "chartTypes": {
+        "table": "Table",
+        "bar": "Bar chart",
+        "pie": "Pie chart",
+        "ratio": "Ratios"
+      }
+    }
   }
 }

@@ -44,8 +44,7 @@ export const hasAccessToEmissionSourceValidation = isAdvanced
 
 export const hasRoleOnStudy = isAdvanced
 
-export const hasAccessToCarbonResponsibilityIntensities = (environment: Environment) =>
-  ([BC, TILT, CUT] as Environment[]).includes(environment)
+export const hasAccessToCarbonResponsibilityIntensities = isAdvanced
 
 export const hasAccessToMonetaryRatio = (environment: Environment) =>
   ([BC, TILT, CUT] as Environment[]).includes(environment)
@@ -85,3 +84,7 @@ export const hasCustomGlossaryTextForEstablishment = isClickson
 export const hasAccessToStudyResults = isAdvanced
 
 export const hasCustomPostOrder = isClickson
+
+export const hasAccessToResultsRatioTab = isCut
+
+export const hasAccessToAdvancedEmissionAnalysis = isTilt

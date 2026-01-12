@@ -25,9 +25,13 @@ import classNames from 'classnames'
 import Link from 'next/link'
 import styles from './AllResults.module.css'
 
+import CarbonIntensities from '@/components/study/results/consolidated/CarbonIntensities'
 import EmissionsAnalysisClickson from '@/environments/clickson/study/results/consolidated/EmissionsAnalysisClickson'
+import CarbonIntensitiesCut from '@/environments/cut/study/results/CarbonIntensitiesCut'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import {
+  hasAccessToAdvancedEmissionAnalysis,
+  hasAccessToResultsRatioTab,
   hasAccessToSimplifiedEmissionAnalysis,
   showResultsInfoText,
 } from '../../../../services/permissions/environment'
@@ -48,26 +52,23 @@ const a11yProps = (index: number) => {
   }
 }
 
-export type ChartType = 'pie' | 'bar' | 'table'
+export type ChartType = 'pie' | 'bar' | 'table' | 'ratio'
 
 const defaultChartOrder: Record<ChartType, number> = {
   table: 0,
   bar: 1,
   pie: 2,
+  ratio: 3,
 }
 
-const tabsLabels = [
-  { key: 'table', label: 'Tableau' },
-  { key: 'bar', label: 'Diagramme en barres' },
-  { key: 'pie', label: 'Diagramme circulaire' },
-]
+const tabsLabels: ChartType[] = ['table', 'bar', 'pie', 'ratio']
 
 const AllResults = ({
   emissionFactorsWithParts,
   study,
   validatedOnly,
   chartOrder = defaultChartOrder,
-  caUnit,
+  caUnit = SiteCAUnit.K,
   showSubLevel = false,
 }: Props) => {
   const [value, setValue] = useState(0)
@@ -112,7 +113,7 @@ const AllResults = ({
     setPdfLoading(false)
   }
 
-  const { computedResultsWithDep, withDepValue } = useMemo(
+  const { computedResultsWithDep, withDepValue, withoutDepValue } = useMemo(
     () =>
       getDetailedEmissionResults(
         study,
@@ -125,7 +126,11 @@ const AllResults = ({
     [study, studySite, tPost, tResults, validatedOnly],
   )
 
-  const orderedTabs = [...tabsLabels].sort((a, b) => chartOrder[a.key as ChartType] - chartOrder[b.key as ChartType])
+  const filteredTabsLabels = useMemo(() => {
+    return tabsLabels.filter((tab) => tab !== 'ratio' || (environment && hasAccessToResultsRatioTab(environment)))
+  }, [environment])
+
+  const orderedTabs = [...filteredTabsLabels].sort((a, b) => chartOrder[a as ChartType] - chartOrder[b as ChartType])
 
   return (
     <Block
@@ -212,10 +217,19 @@ const AllResults = ({
       {environment && hasAccessToSimplifiedEmissionAnalysis(environment) && (
         <EmissionsAnalysisClickson study={study} studySite={studySite} withDepValue={withDepValue} caUnit={caUnit} />
       )}
+      {environment && hasAccessToAdvancedEmissionAnalysis(environment) && (
+        <CarbonIntensities
+          study={study}
+          studySite={studySite}
+          withDep={withDepValue}
+          withoutDep={withoutDepValue}
+          caUnit={caUnit}
+        />
+      )}
       <Box component="section" sx={{ marginTop: '1rem' }}>
         <Tabs value={value} onChange={handleChange} indicatorColor="secondary" textColor="inherit" variant="fullWidth">
-          {orderedTabs.map((t, index) => (
-            <Tab key={t.key} label={t.label} {...a11yProps(index)} />
+          {orderedTabs.map((tab, index) => (
+            <Tab key={tab} label={tResults(`chartTypes.${tab}`)} {...a11yProps(index)} />
           ))}
         </Tabs>
         <Box component="section" sx={{ marginTop: '1rem' }}>
@@ -245,6 +259,11 @@ const AllResults = ({
               type="post"
             />
           </TabPanel>
+          {environment && hasAccessToResultsRatioTab(environment) && (
+            <TabPanel value={value} index={chartOrder.ratio}>
+              <CarbonIntensitiesCut study={study} studySite={studySite} withDepValue={withDepValue} />
+            </TabPanel>
+          )}
         </Box>
       </Box>
     </Block>
