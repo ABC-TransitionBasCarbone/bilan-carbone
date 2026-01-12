@@ -2,7 +2,7 @@ import NavbarButton from '@/components/navbar/NavbarButton'
 import NavbarLink from '@/components/navbar/NavbarLink'
 import NavbarOrganizationMenu from '@/components/navbar/NavbarOrganizationMenu'
 import { isTilt } from '@/services/permissions/environment'
-import { hasAccessToEmissionFactors, hasAccessToStudies } from '@/services/permissions/environmentAdvanced'
+import { hasAccessToEmissionFactors } from '@/services/permissions/environmentAdvanced'
 import { isAdmin } from '@/utils/user'
 import { Box, MenuItem } from '@mui/material'
 import { Role } from '@prisma/client'
@@ -53,13 +53,11 @@ const TopLeftNavBar = ({ user, hasFormation }: Props) => {
                 {t('team')}
               </NavbarLink>
             </MenuItem>
-            {hasAccessToStudies(user.environment, user.level) && (
-              <MenuItem onClick={handleClose}>
-                <NavbarLink data-testid="link-organization" href="/organisations" onClick={handleClose}>
-                  {t('organizations')}
-                </NavbarLink>
-              </MenuItem>
-            )}
+            <MenuItem onClick={handleClose}>
+              <NavbarLink data-testid="link-organization" href="/organisations" onClick={handleClose}>
+                {t('organizations')}
+              </NavbarLink>
+            </MenuItem>
             {isTilt(user.environment) && (
               <MenuItem onClick={handleClose}>
                 <NavbarLink data-testid="link-organization" href="/mes-empreintes" onClick={handleClose}>

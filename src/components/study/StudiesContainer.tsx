@@ -7,11 +7,12 @@ import {
 import { canCreateAStudy } from '@/services/permissions/study'
 import { hasActiveLicence } from '@/utils/organization'
 import AddIcon from '@mui/icons-material/Add'
-import { Box as MUIBox } from '@mui/material'
+import { Alert, Box as MUIBox } from '@mui/material'
 import { Study } from '@prisma/client'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
+import Link from 'next/link'
 import { Suspense } from 'react'
 import Box from '../base/Box'
 import LinkButton from '../base/LinkButton'
@@ -68,7 +69,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
           <ResultsContainerForUser user={user} mainStudyOrganizationVersionId={mainStudyOrganizationVersionId} />
         </Suspense>
       )}
-      {!!advancedStudies.length && (
+      {advancedStudies.length ? (
         <Studies
           studies={advancedStudies}
           canAddStudy={canCreateAStudy(user) && !isCR && activeLicence}
@@ -76,6 +77,12 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
           user={user}
           collaborations={!organizationVersionId && isCR}
         />
+      ) : canCreateAStudy(user) ? null : (
+        <Alert severity="info">
+          {t.rich('cannotCreateStudy', {
+            link: (children) => <Link href="/ressources">{children}</Link>,
+          })}
+        </Alert>
       )}
       {!!simplifiedStudies.length && (
         <Studies
