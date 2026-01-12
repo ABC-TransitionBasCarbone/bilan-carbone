@@ -22,7 +22,6 @@ export default function PublicodesQuestion<RuleName extends string>({
   switch (formLayout.type) {
     case 'input': {
       const formElement = formLayout.evaluatedElement
-
       const translationKey = formElement.id.replace(/\s+.\s+/g, '.')
 
       return (

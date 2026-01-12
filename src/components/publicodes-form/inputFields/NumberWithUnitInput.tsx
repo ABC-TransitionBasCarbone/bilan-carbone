@@ -2,7 +2,7 @@ import { NumberField } from '@base-ui-components/react/number-field'
 import { InputAdornment, OutlinedInput } from '@mui/material'
 import { EvaluatedNumberInput } from '@publicodes/forms'
 import { useTranslations } from 'next-intl'
-import { useCallback } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import styles from './NumberWithUnitInput.module.css'
 import { BaseInputProps } from './utils'
 
@@ -19,8 +19,7 @@ const NumberWithUnitInput = <RuleName extends string>({
   const unitTranslationKey = `${formElement.id.replace(/\s+.\s+/g, '.')}.unité`
 
   const questionUnit = tInput.has(unitTranslationKey) ? tInput(unitTranslationKey) : undefined
-
-  const value = formElement.value ?? formElement.defaultValue ?? null
+  const committedValue = formElement.value ?? formElement.defaultValue ?? null
   const isDisabled = disabled || !formElement.applicable
 
   const [localValue, setLocalValue] = useState<number | null>(committedValue)
