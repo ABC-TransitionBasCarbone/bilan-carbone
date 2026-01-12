@@ -18,6 +18,7 @@ immobilisations . construction . bâtiment scolaire structure béton:
         alors: 0
       - sinon: surface * FE / amortissement
   unité: kgCO2e
+  par défaut: 0
   avec:
     age:
       durée:
@@ -31,7 +32,6 @@ immobilisations . construction . bâtiment scolaire structure béton:
     surface:
       question: "Quelle surface de bâtiment scolaire (structure béton) avez-vous construite ?"
       unité: m2
-      par défaut: 0
     FE:
       question: "Facteur d'émission par m² de bâtiment scolaire (structure béton)"
       valeur: 440
@@ -50,7 +50,6 @@ immobilisations . construction . parking bâtiment structure béton:
     surface:
       question: "Quelle surface de parking (bâtiment - structure béton) avez-vous construite ?"
       unité: m2
-      par défaut: 0
     FE:
       question: "Facteur d'émission par m² de parking (bâtiment - structure béton)"
       valeur: 319
@@ -69,7 +68,6 @@ immobilisations . construction . parking surface bitume:
     surface:
       question: "Quelle surface de parking (surface bitume) avez-vous construite ?"
       unité: m2
-      par défaut: 0
     FE:
       question: "Facteur d'émission par m² de parking (surface bitume)"
       valeur: 73
@@ -88,7 +86,6 @@ immobilisations . construction . parking surface semi-dure:
     surface:
       question: "Quelle surface de parking (surface semi-dure) avez-vous construite ?"
       unité: m2
-      par défaut: 0
     FE:
       question: "Facteur d'émission par m² de parking (surface semi-dure)"
       valeur: 165
@@ -107,7 +104,6 @@ immobilisations . construction . garage structure béton:
     surface:
       question: "Quelle surface de garage (structure béton) avez-vous construite ?"
       unité: m2
-      par défaut: 0
     FE:
       question: "Facteur d'émission par m² de garage (structure béton)"
       valeur: 656
@@ -121,11 +117,11 @@ immobilisations . construction . garage structure métal:
   titre: "Garage (structure métal)"
   formule: surface * FE
   unité: kgCO2e
+  par défaut: 0
   avec:
     surface:
       question: "Quelle surface de garage (structure métal) avez-vous construite ?"
       unité: m2
-      par défaut: 0
     FE:
       question: "Facteur d'émission par m² de garage (structure métal)"
       valeur: 220
