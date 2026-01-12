@@ -45,10 +45,10 @@ confiseries et boissons . électroménager . appareil:
   avec:
     age:
       durée:
-        unité: an
         depuis: année achat
         jusqu'à: commun . année actuelle
       arrondi: oui
+      unité: an
 
     nb appareils:
       question: Nombre d'appareils

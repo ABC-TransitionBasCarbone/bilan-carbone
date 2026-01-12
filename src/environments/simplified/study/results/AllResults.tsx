@@ -1,18 +1,16 @@
 'use client'
 
 import SelectStudySite from '@/components/study/site/SelectStudySite'
-import useStudySite from '@/components/study/site/useStudySite'
 import { FullStudy } from '@/db/study'
 import DownloadIcon from '@mui/icons-material/Download'
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
 import { Box, Button, Tab, Tabs, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import { SyntheticEvent, useMemo, useState } from 'react'
+import { Dispatch, SetStateAction, SyntheticEvent, useState } from 'react'
 
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import TabPanel from '@/components/tabPanel/tabPanel'
-import { EmissionFactorWithParts } from '@/db/emissionFactors'
-import { downloadStudyResults, getDetailedEmissionResults } from '@/services/study'
+import { downloadStudyResults } from '@/services/study'
 import { Environment, SiteCAUnit } from '@prisma/client'
 
 import Block from '@/components/base/Block'
@@ -25,60 +23,46 @@ import classNames from 'classnames'
 import Link from 'next/link'
 import styles from './AllResults.module.css'
 
-import CarbonIntensities from '@/components/study/results/consolidated/CarbonIntensities'
 import EmissionsAnalysisClickson from '@/environments/clickson/study/results/consolidated/EmissionsAnalysisClickson'
-import CarbonIntensitiesCut from '@/environments/cut/study/results/CarbonIntensitiesCut'
+import { Post } from '@/services/posts'
+import { BaseResultsByPost } from '@/services/results/consolidated'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import {
-  hasAccessToAdvancedEmissionAnalysis,
-  hasAccessToResultsRatioTab,
   hasAccessToSimplifiedEmissionAnalysis,
   showResultsInfoText,
 } from '../../../../services/permissions/environment'
+import { a11yProps, ChartType, defaultChartOrder, tabsLabels } from './utils'
 
 interface Props {
-  emissionFactorsWithParts: EmissionFactorWithParts[]
   study: FullStudy
-  validatedOnly: boolean
+  computedResults: BaseResultsByPost[]
+  totalValue: number
+  studySite: string
+  setSite: Dispatch<SetStateAction<string>>
   chartOrder?: Record<ChartType, number>
   caUnit?: SiteCAUnit
   showSubLevel?: boolean
 }
 
-const a11yProps = (index: number) => {
-  return {
-    id: `full-width-tab-${index}`,
-    'aria-controls': `full-width-tabpanel-${index}`,
-  }
-}
-
-export type ChartType = 'pie' | 'bar' | 'table' | 'ratio'
-
-const defaultChartOrder: Record<ChartType, number> = {
-  table: 0,
-  bar: 1,
-  pie: 2,
-  ratio: 3,
-}
-
-const tabsLabels: ChartType[] = ['table', 'bar', 'pie', 'ratio']
-
 const AllResults = ({
-  emissionFactorsWithParts,
   study,
-  validatedOnly,
+  computedResults,
+  totalValue,
+  studySite,
+  setSite,
+  caUnit,
   chartOrder = defaultChartOrder,
-  caUnit = SiteCAUnit.K,
   showSubLevel = false,
 }: Props) => {
-  const [value, setValue] = useState(0)
+  const [tabValue, setTabValue] = useState(0)
   const [pdfLoading, setPdfLoading] = useState(false)
 
   const { environment } = useAppEnvironmentStore()
 
   const handleChange = (_event: SyntheticEvent, newValue: number) => {
-    setValue(newValue)
+    setTabValue(newValue)
   }
+
   const tOrga = useTranslations('study.organization')
   const tPost = useTranslations('emissionFactors.post')
   const tResults = useTranslations('study.results')
@@ -90,8 +74,6 @@ const AllResults = ({
   const tStudyNav = useTranslations('study.navigation')
 
   const { callServerFunction } = useServerFunction()
-
-  const { studySite, setSite } = useStudySite(study, true)
 
   const handlePDFDownload = async () => {
     setPdfLoading(true)
@@ -113,18 +95,7 @@ const AllResults = ({
     setPdfLoading(false)
   }
 
-  const { computedResultsWithDep, withDepValue, withoutDepValue } = useMemo(
-    () =>
-      getDetailedEmissionResults(
-        study,
-        tPost,
-        studySite,
-        !!validatedOnly,
-        study.organizationVersion.environment,
-        tResults,
-      ),
-    [study, studySite, tPost, tResults, validatedOnly],
-  )
+  const orderedTabs = [...tabsLabels].sort((a, b) => chartOrder[a.key as ChartType] - chartOrder[b.key as ChartType])
 
   const filteredTabsLabels = useMemo(() => {
     return tabsLabels.filter((tab) => tab !== 'ratio' || (environment && hasAccessToResultsRatioTab(environment)))
@@ -150,7 +121,7 @@ const AllResults = ({
               downloadStudyResults(
                 study,
                 [],
-                emissionFactorsWithParts,
+                [],
                 tResults,
                 tExport,
                 tPost,
@@ -158,7 +129,7 @@ const AllResults = ({
                 tQuality,
                 tBeges,
                 tUnits,
-                Environment.CUT,
+                environment ?? Environment.CUT,
               )
             }
           >
@@ -178,6 +149,7 @@ const AllResults = ({
         </div>
       }
     >
+      {/* Default info text for environments that show it */}
       {environment && showResultsInfoText(environment) && (
         <>
           <Box component="section" className="mb2">
@@ -214,31 +186,36 @@ const AllResults = ({
           </Box>
         </>
       )}
+
+      {/* Emissions analysis for environments that have it */}
       {environment && hasAccessToSimplifiedEmissionAnalysis(environment) && (
-        <EmissionsAnalysisClickson study={study} studySite={studySite} withDepValue={withDepValue} caUnit={caUnit} />
+        <EmissionsAnalysisClickson study={study} studySite={studySite} withDepValue={totalValue} caUnit={caUnit} />
       )}
-      {environment && hasAccessToAdvancedEmissionAnalysis(environment) && (
-        <CarbonIntensities
-          study={study}
-          studySite={studySite}
-          withDep={withDepValue}
-          withoutDep={withoutDepValue}
-          caUnit={caUnit}
-        />
-      )}
+
+      {/* Results tabs */}
       <Box component="section" sx={{ marginTop: '1rem' }}>
-        <Tabs value={value} onChange={handleChange} indicatorColor="secondary" textColor="inherit" variant="fullWidth">
-          {orderedTabs.map((tab, index) => (
-            <Tab key={tab} label={tResults(`chartTypes.${tab}`)} {...a11yProps(index)} />
+        <Tabs
+          value={tabValue}
+          onChange={handleChange}
+          indicatorColor="secondary"
+          textColor="inherit"
+          variant="fullWidth"
+        >
+          {orderedTabs.map((t, index) => (
+            <Tab key={t.key} label={t.label} {...a11yProps(index)} />
           ))}
         </Tabs>
         <Box component="section" sx={{ marginTop: '1rem' }}>
-          <TabPanel value={value} index={chartOrder.table}>
-            <ConsolidatedResultsTable resultsUnit={study.resultsUnit} data={computedResultsWithDep} hiddenUncertainty />
+          <TabPanel value={tabValue} index={chartOrder.table}>
+            <ConsolidatedResultsTable
+              resultsUnit={study.resultsUnit}
+              data={computedResults}
+              hiddenUncertainty={hiddenUncertainty}
+            />
           </TabPanel>
-          <TabPanel value={value} index={chartOrder.bar}>
+          <TabPanel value={tabValue} index={chartOrder.bar}>
             <BarChart
-              results={computedResultsWithDep}
+              results={computedResults}
               resultsUnit={study.resultsUnit}
               height={400}
               showTitle={false}
@@ -246,24 +223,20 @@ const AllResults = ({
               showSubLevel={showSubLevel}
               showLabelsOnBars={!showSubLevel}
               type="post"
+              customOrder={customPostOrder}
             />
           </TabPanel>
-          <TabPanel value={value} index={chartOrder.pie}>
+          <TabPanel value={tabValue} index={chartOrder.pie}>
             <PieChart
               resultsUnit={study.resultsUnit}
               height={400}
               showTitle={false}
               showLabelsOnPie={true}
-              results={computedResultsWithDep}
+              results={computedResults}
               showSubLevel={false}
               type="post"
             />
           </TabPanel>
-          {environment && hasAccessToResultsRatioTab(environment) && (
-            <TabPanel value={value} index={chartOrder.ratio}>
-              <CarbonIntensitiesCut study={study} studySite={studySite} withDepValue={withDepValue} />
-            </TabPanel>
-          )}
         </Box>
       </Box>
     </Block>

@@ -5,7 +5,7 @@ import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import AllResultsSimplified from '@/environments/simplified/study/results/AllResults'
-import AllResultsTilt from '@/environments/tilt/study/results/AllResults'
+import { Post } from '@/services/posts'
 import { Environment, ExportRule, SiteCAUnit } from '@prisma/client'
 
 interface Props {
@@ -16,28 +16,14 @@ interface Props {
   caUnit?: SiteCAUnit
 }
 
-const a11yProps = (index: number) => {
-  return {
-    id: `full-width-tab-${index}`,
-    'aria-controls': `full-width-tabpanel-${index}`,
-  }
-}
-
 const DynamicAllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caUnit }: Props) => {
   return (
     <DynamicComponent
       environmentComponents={{
-        [Environment.CUT]: (
-          <AllResultsSimplified
-            emissionFactorsWithParts={emissionFactorsWithParts}
-            study={study}
-            validatedOnly={validatedOnly}
-          />
-        ),
+        [Environment.CUT]: <AllResultsPublicodes study={study} />,
         [Environment.CLICKSON]: (
           <AllResultsSimplified
             showSubLevel={true}
-            emissionFactorsWithParts={emissionFactorsWithParts}
             study={study}
             validatedOnly={validatedOnly}
             caUnit={caUnit}

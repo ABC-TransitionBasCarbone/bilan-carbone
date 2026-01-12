@@ -121,4 +121,22 @@ describe("Poste - Déchets", () => {
     // Vérifier que le total est nul.
     expect(result.nodeValue).toBe(0);
   });
+
+  test("devrait correctement calculer l'empreinte des déchets exceptionnels", () => {
+    const localEngine = engine.shallowCopy();
+    const situation = {
+      "général . nombre entrées": 10,
+      "général . nombre séances": 10,
+      "général . nombre de jours ouverture": 250,
+      "déchets . exceptionnels . lampe xenon . nombre": "100",
+      "déchets . ordinaires . ordures ménagères . nombre bennes": "10",
+      "déchets . exceptionnels . matériel technique . quantité": "100",
+    };
+
+    localEngine.setSituation(situation as PublicodesSituation<RuleName>);
+
+    const result = localEngine.evaluate("déchets . exceptionnels");
+
+    expect(result.nodeValue).toBe(4499.5);
+  });
 });
