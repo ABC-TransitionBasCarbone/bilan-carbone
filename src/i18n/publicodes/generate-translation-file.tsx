@@ -1,4 +1,4 @@
-import { Rule } from 'publicodes'
+import Engine, { Rule } from 'publicodes'
 import {
   getArgs,
   KEYS_TO_TRANSLATE,
@@ -18,16 +18,17 @@ const { model, destLang } = getArgs()
 const LOCALES = ['fr', ...destLang] as Locale[]
 
 function extractTranslationKeysFromRules(
+  engine: Engine,
   rulesMap: Record<string, Rule>,
-): Record<string, Partial<Record<TranslationKey, string>>> {
-  const translations: Record<string, Partial<Record<TranslationKey, string>>> = {}
+): Record<string, Partial<TranslationRecord>> {
+  const translations: Record<string, Partial<TranslationRecord>> = {}
 
   for (const [ruleName, rule] of Object.entries(rulesMap)) {
     if (!rule?.question) {
       continue
     }
 
-    const ruleTranslations: Partial<Record<TranslationKey, string>> = {}
+    const ruleTranslations: Partial<TranslationRecord> = {}
     for (const key of KEYS_TO_TRANSLATE) {
       if (rule[key]) {
         ruleTranslations[key] = rule[key] as string
@@ -36,6 +37,15 @@ function extractTranslationKeysFromRules(
 
     if (Object.keys(ruleTranslations).length > 0) {
       translations[ruleName] = ruleTranslations
+    }
+
+    const possibilities = engine.getPossibilitiesFor(ruleName)
+    if (possibilities !== null && possibilities.length > 0) {
+      const options = {} as Record<string, string>
+      for (const possibility of possibilities) {
+        options[possibility.nodeValue] = possibility.title ?? String(possibility.nodeValue)
+      }
+      ruleTranslations.options = options
     }
   }
 
@@ -95,8 +105,51 @@ function setStringValue(obj: TranslationRecord, path: string[], value: string): 
   parent[path[path.length - 1]] = value
 }
 
+type TranslationValue = string | Record<string, string>
+
+function processTranslationValue(
+  value: TranslationValue,
+  path: string[],
+  parents: Record<Locale, TranslationRecord>,
+  existingParents: Record<Locale, TranslationRecord | undefined>,
+  otherLocales: Locale[],
+  ruleName: string,
+): void {
+  if (typeof value === 'string') {
+    const trimmedValue = value.trim()
+    const existingFRValue = getStringValue(existingParents.fr ?? {}, path)
+
+    if (!existingFRValue) {
+      // New key
+      setStringValue(parents.fr, path, trimmedValue)
+      for (const locale of otherLocales) {
+        setStringValue(parents[locale], path, `${TO_TRANSLATE_PREFIX} ${trimmedValue}`)
+      }
+    } else if (existingFRValue !== trimmedValue) {
+      // Updated key
+      console.log(`Updated translation for ${ruleName}.${path.join('.')}: "${existingFRValue}" -> "${trimmedValue}"`)
+      setStringValue(parents.fr, path, trimmedValue)
+      for (const locale of otherLocales) {
+        setStringValue(parents[locale], path, `${UPDATED_PREFIX} ${trimmedValue}`)
+      }
+    } else {
+      // Keep existing translations
+      setStringValue(parents.fr, path, existingFRValue)
+      for (const locale of otherLocales) {
+        const existingValue = getStringValue(existingParents[locale] ?? {}, path)
+        setStringValue(parents[locale], path, existingValue ?? `${TO_TRANSLATE_PREFIX} ${trimmedValue}`)
+      }
+    }
+  } else {
+    // Record<string, string> - iterate over each entry
+    for (const [subKey, subValue] of Object.entries(value)) {
+      processTranslationValue(subValue, [...path, subKey], parents, existingParents, otherLocales, ruleName)
+    }
+  }
+}
+
 function buildTranslationsFromRules(
-  extractedTranslations: Record<string, Partial<Record<TranslationKey, string>>>,
+  extractedTranslations: Record<string, Partial<Record<TranslationKey, TranslationValue>>>,
   existingTranslations: Record<Locale, TranslationRecord>,
 ): Record<Locale, TranslationRecord> {
   const updated: Record<Locale, TranslationRecord> = Object.fromEntries(
@@ -123,34 +176,7 @@ function buildTranslationsFromRules(
     }
 
     for (const [key, value] of Object.entries(translationKeys)) {
-      const trimmedValue = value.trim()
-      const existingFRValue = getStringValue(existingParents.fr ?? {}, [lastNameSpace, key])
-
-      if (!existingFRValue) {
-        // New key
-        setStringValue(parents.fr, [lastNameSpace, key], trimmedValue)
-        for (const locale of otherLocales) {
-          setStringValue(parents[locale], [lastNameSpace, key], `${TO_TRANSLATE_PREFIX} ${trimmedValue}`)
-        }
-      } else if (existingFRValue !== trimmedValue) {
-        // Updated key
-        console.log(`Updated translation for ${ruleName}.${key}: "${existingFRValue}" -> "${trimmedValue}"`)
-        setStringValue(parents.fr, [lastNameSpace, key], trimmedValue)
-        for (const locale of otherLocales) {
-          setStringValue(parents[locale], [lastNameSpace, key], `${UPDATED_PREFIX} ${trimmedValue}`)
-        }
-      } else {
-        // Keep existing translations
-        setStringValue(parents.fr, [lastNameSpace, key], existingFRValue)
-        for (const locale of otherLocales) {
-          const existingValue = getStringValue(existingParents[locale] ?? {}, [lastNameSpace, key])
-          setStringValue(
-            parents[locale],
-            [lastNameSpace, key],
-            existingValue ?? `${TO_TRANSLATE_PREFIX} ${trimmedValue}`,
-          )
-        }
-      }
+      processTranslationValue(value, [lastNameSpace, key], parents, existingParents, otherLocales, ruleName)
     }
   }
 
@@ -159,6 +185,7 @@ function buildTranslationsFromRules(
 
 async function generateNestedTranslationFile(): Promise<void> {
   const rules = await loadRulesForModel(model as Model)
+  const engine = new Engine(rules)
 
   const translations = {} as Record<Locale, TranslationRecord>
   const existingRules = {} as Record<Locale, TranslationRecord>
@@ -168,7 +195,7 @@ async function generateNestedTranslationFile(): Promise<void> {
     existingRules[locale] = (translations[locale]['publicodes-rules'] ?? {}) as TranslationRecord
   }
 
-  const extractedTranslations = extractTranslationKeysFromRules(rules)
+  const extractedTranslations = extractTranslationKeysFromRules(engine, rules)
 
   const updated = buildTranslationsFromRules(extractedTranslations, existingRules)
 

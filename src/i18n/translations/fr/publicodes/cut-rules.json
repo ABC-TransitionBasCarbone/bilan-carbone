@@ -51,7 +51,11 @@
             },
             "type": {
               "titre": "Type de projecteur",
-              "question": "Projecteurs"
+              "question": "Projecteurs",
+              "options": {
+                "xénon": "Projecteur xénon",
+                "laser": "Projecteur laser"
+              }
             }
           },
           "écran": {
@@ -64,7 +68,11 @@
             },
             "type": {
               "titre": "Type d'écran",
-              "question": "Écrans"
+              "question": "Écrans",
+              "options": {
+                "écran 2D": "Écran 2D",
+                "écran 3D": "Écran 3D"
+              }
             }
           },
           "fauteuils": {
@@ -76,7 +84,11 @@
             },
             "type": {
               "titre": "Type de fauteuils",
-              "question": "Fauteuils"
+              "question": "Fauteuils",
+              "options": {
+                "fauteuils classiques": "Fauteuils classiques",
+                "fauteuils 4DX": "Fauteuils 4DX"
+              }
             }
           },
           "système son": {
@@ -85,7 +97,16 @@
             },
             "type": {
               "titre": "Type de système son",
-              "question": "Systèmes son"
+              "question": "Systèmes son",
+              "options": {
+                "stéréo": "Son Stéréo",
+                "dolby 51": "Dolby 5.1",
+                "dolby 71": "Dolby 7.1",
+                "dolby atmos": "Dolby Atmos",
+                "imax": "IMAX",
+                "auro 3dIce": "Auro 3D / Ice",
+                "dtsx": "DTS : X"
+              }
             }
           }
         },
@@ -194,14 +215,31 @@
       },
       "résultat estimé": {
         "proximité spectateurs": {
-          "question": "Vos spectateurs sont-ils majoritairement des habitants \"locaux\", c'est à dire résidant à l'année dans les environs ou attirez-vous aussi une part non négligeable de spectateurs de passage dans la région (touristes notamment)"
+          "question": "Vos spectateurs sont-ils majoritairement des habitants \"locaux\", c'est à dire résidant à l'année dans les environs ou attirez-vous aussi une part non négligeable de spectateurs de passage dans la région (touristes notamment)",
+          "options": {
+            "zone très touristique": "Le cinéma est situé dans une zone touristique et 80% ou + des spectateurs ne résident pas à proximité du cinéma à l'année.",
+            "zone moyennement touristique": "Le cinéma est situé dans une ville de destination de week-end et / ou station balnéaire attirant environ 25% de spectateurs \"non-locaux\".",
+            "majoritairement locaux": "Le cinéma accueille majoritairement des spectateurs locaux"
+          }
         },
         "profil établissement": {
-          "question": "Si vous souhaitez vous identifier à des profils de cinéma comparable, de quel type de cinéma votre établissement se rapproche le plus"
+          "question": "Si vous souhaitez vous identifier à des profils de cinéma comparable, de quel type de cinéma votre établissement se rapproche le plus",
+          "options": {
+            "distances courtes": "Les spectateurs parcourent des distances très courtes pour venir au cinéma (moins de 10km aller-retour). Très peu viennent en voiture (- de 10%) et la grande majorité des spectateurs vient à pied ou en transports en commun.",
+            "distances moyennes": "Les spectateurs parcourent autour de 10 km aller-retour pour se rendre\nau cinéma. Il s'agit essentiellement d'un public de proximité venant en\ngrande partie en voiture. Autour de 25% d'entre eux viennent à pied.",
+            "distances longues": "Les spectateurs parcourent autour de 20-25 km aller-retour pour se\nrendre au cinéma. Il s'agit essentiellement d'un public de proximité\nvenant en grande partie en voiture. Autour de 25% d'entre eux viennent\nà pied.",
+            "majoritairement en voiture": "Plus de 80% des spectateurs viennent en voiture. Pas ou peu viennent en\ntransports en commun, peu viennent à pied. La distance moyenne\nparcourue est autour de 15 km aller-retour.",
+            "uniquement accessible en voiture": "Le cinéma n'est accessible qu'en voiture."
+          }
         }
       },
       "précision": {
-        "question": "Avez-vous déjà réalisé une enquête mobilité spectateurs ?"
+        "question": "Avez-vous déjà réalisé une enquête mobilité spectateurs ?",
+        "options": {
+          "résultat précis": "Oui et je peux entrer les résultats",
+          "besoin": "Non mais je voudrais le faire pour estimer l'impact du cinéma",
+          "estimation": "Non mais je préfère m'identifier dans des profils de cinéma comparables"
+        }
       },
       "mobilité spectateurs": {
         "contact": {
@@ -227,7 +265,22 @@
               "unité": "km/jour"
             },
             "moyen de transport": {
-              "question": "Moyen de transport"
+              "question": "Moyen de transport",
+              "options": {
+                "RER et transilien": "RER et transilien",
+                "métro ou tram": "Métro ou tram",
+                "bus": "Bus",
+                "vélo électrique": "Vélo électrique",
+                "vélo classique": "Vélo classique",
+                "marche": "Marche",
+                "voiture diesel": "Voiture diesel",
+                "voiture essence": "Voiture essence",
+                "voiture hybride": "Voiture hybride",
+                "voiture électrique": "Voiture électrique",
+                "moto": "Moto",
+                "scooter": "Scooter",
+                "trottinette électrique": "Trottinette électrique"
+              }
             }
           }
         }
@@ -279,7 +332,12 @@
           }
         },
         "équipement groupes électrogènes": {
-          "question": "Le cinéma dispose-t-il d’un ou plusieurs groupes électrogènes ?"
+          "question": "Le cinéma dispose-t-il d’un ou plusieurs groupes électrogènes ?",
+          "options": {
+            "utilisation régulière": "Oui et je l’utilise plusieurs fois par an",
+            "équipé sans utilisation": "Oui mais je ne l'utilise pas",
+            "aucun": "Non"
+          }
         }
       },
       "déplacements pro": {
@@ -306,11 +364,34 @@
               "unité": "km"
             },
             "moyen de transport": {
-              "question": "Moyen de transport"
+              "question": "Moyen de transport",
+              "options": {
+                "RER et transilien": "RER et transilien",
+                "métro ou tram": "Métro ou tram",
+                "bus": "Bus",
+                "vélo électrique": "Vélo électrique",
+                "voiture diesel": "Voiture diesel",
+                "voiture essence": "Voiture essence",
+                "voiture hybride": "Voiture hybride",
+                "voiture électrique": "Voiture électrique",
+                "moto": "Moto",
+                "scooter": "Scooter",
+                "trottinette électrique": "Trottinette électrique",
+                "TGV": "TGV",
+                "avion": "Avion"
+              }
             }
           },
           "type hébergement": {
-            "question": "Type d'hébergement"
+            "question": "Type d'hébergement",
+            "options": {
+              "appartement": "Appartement",
+              "hotel 1 étoile": "Hôtel 1*",
+              "hotel 2 étoiles": "Hôtel 2*",
+              "hotel 3 étoiles": "Hôtel 3*",
+              "hotel 4 étoiles": "Hôtel 4*",
+              "hotel 5 étoiles": "Hôtel 5*"
+            }
           }
         }
       },
@@ -325,6 +406,20 @@
           }
         },
         "rénovation": {
+          "type": {
+            "rénovation totale": {
+              "question": "Rénovation totale (hors agrandissement)"
+            },
+            "extension": {
+              "question": "Agrandissement - extension"
+            },
+            "autres travaux importants": {
+              "question": "Autres travaux importants (par ex : changement moquette, ravalement,peinture etc)"
+            },
+            "aucun": {
+              "question": "Je n'ai pas réalisé ces rénovations durant les dix dernières années"
+            }
+          },
           "empreinte travaux": {
             "montant": {
               "question": "Dans le cas d'une rénovation durant ces 10 dernières années, quel est le montant des dépenses liées à ces travaux de rénovation ?",
@@ -378,7 +473,16 @@
           "unité": "kgCO2e",
           "équipement": {
             "titre": "Type dd'équipement informatique",
-            "question": "Type d'équipement informatique"
+            "question": "Type d'équipement informatique",
+            "options": {
+              "ordinateurs fixes": "Ordinateurs fixes",
+              "ordinateurs portables": "Ordinateurs portables",
+              "photocopieurs": "Photocopieurs",
+              "imprimantes": "Imprimantes",
+              "téléphones fixes": "Téléphones fixes",
+              "téléphones portables": "Téléphones portables",
+              "tablettes": "Tablettes"
+            }
           },
           "appareil": {
             "nb appareils": {
@@ -641,7 +745,12 @@
           "question": "Vendez-vous des boissons et des confiseries ?"
         },
         "achat type": {
-          "question": "Selon vous, en moyenne, un spectateur achète :"
+          "question": "Selon vous, en moyenne, un spectateur achète :",
+          "options": {
+            "un peu": "Un peu de confiseries et de boissons (~30g)",
+            "standard": "Une part standard de confiseries et de boissons (~120g)",
+            "significatif": "Une part significative de confiseries et de boissons (~200g)"
+          }
         }
       }
     },

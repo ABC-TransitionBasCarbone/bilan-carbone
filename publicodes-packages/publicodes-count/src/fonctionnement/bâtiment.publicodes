@@ -58,13 +58,14 @@ fonctionnement . bâtiment . rénovation . type:
   titre: Rénovation
   avec:
     rénovation totale:
+      type: booléen
       non applicable si:
         toutes ces conditions:
           - est défini: type . aucun
           - type . aucun = oui
-      type: booléen
-      # Should be a question
-      titre: Rénovation totale (hors agrandissement)
+      question: Rénovation totale (hors agrandissement)
+      form:
+        saisie: case à cocher
 
     extension:
       non applicable si:
@@ -72,8 +73,9 @@ fonctionnement . bâtiment . rénovation . type:
           - est défini: type . aucun
           - type . aucun = oui
       type: booléen
-      # Should be a question
-      titre: Agrandissement - extension
+      question: Agrandissement - extension
+      form:
+        saisie: case à cocher
 
     autres travaux importants:
       non applicable si:
@@ -81,14 +83,16 @@ fonctionnement . bâtiment . rénovation . type:
           - est défini: type . aucun
           - type . aucun = oui
       type: booléen
-      # Should be a question
-      titre: |
+      question: |
         Autres travaux importants (par ex : changement moquette, ravalement,peinture etc)
+      form:
+        saisie: case à cocher
 
     aucun:
       type: booléen
-      # Should be a question
-      titre: Je n'ai pas réalisé ces rénovations durant les dix dernières années
+      question: Je n'ai pas réalisé ces rénovations durant les dix dernières années
+      form:
+        saisie: case à cocher
 
 fonctionnement . bâtiment . rénovation . empreinte travaux:
   applicable si:

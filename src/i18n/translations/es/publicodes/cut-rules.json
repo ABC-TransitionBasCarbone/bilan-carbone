@@ -51,7 +51,11 @@
             },
             "type": {
               "titre": "[TO_TRANSLATE] Type de projecteur",
-              "question": "[TO_TRANSLATE] Projecteurs"
+              "question": "[TO_TRANSLATE] Projecteurs",
+              "options": {
+                "xénon": "[TO_TRANSLATE] Projecteur xénon",
+                "laser": "[TO_TRANSLATE] Projecteur laser"
+              }
             }
           },
           "écran": {
@@ -64,7 +68,11 @@
             },
             "type": {
               "titre": "[TO_TRANSLATE] Type d'écran",
-              "question": "[TO_TRANSLATE] Écrans"
+              "question": "[TO_TRANSLATE] Écrans",
+              "options": {
+                "écran 2D": "[TO_TRANSLATE] Écran 2D",
+                "écran 3D": "[TO_TRANSLATE] Écran 3D"
+              }
             }
           },
           "fauteuils": {
@@ -76,7 +84,11 @@
             },
             "type": {
               "titre": "[TO_TRANSLATE] Type de fauteuils",
-              "question": "[TO_TRANSLATE] Fauteuils"
+              "question": "[TO_TRANSLATE] Fauteuils",
+              "options": {
+                "fauteuils classiques": "[TO_TRANSLATE] Fauteuils classiques",
+                "fauteuils 4DX": "[TO_TRANSLATE] Fauteuils 4DX"
+              }
             }
           },
           "système son": {
@@ -85,7 +97,16 @@
             },
             "type": {
               "titre": "[TO_TRANSLATE] Type de système son",
-              "question": "[TO_TRANSLATE] Systèmes son"
+              "question": "[TO_TRANSLATE] Systèmes son",
+              "options": {
+                "stéréo": "[TO_TRANSLATE] Son Stéréo",
+                "dolby 51": "[TO_TRANSLATE] Dolby 5.1",
+                "dolby 71": "[TO_TRANSLATE] Dolby 7.1",
+                "dolby atmos": "[TO_TRANSLATE] Dolby Atmos",
+                "imax": "[TO_TRANSLATE] IMAX",
+                "auro 3dIce": "[TO_TRANSLATE] Auro 3D / Ice",
+                "dtsx": "[TO_TRANSLATE] DTS : X"
+              }
             }
           }
         },
@@ -194,14 +215,31 @@
       },
       "résultat estimé": {
         "proximité spectateurs": {
-          "question": "[TO_TRANSLATE] Vos spectateurs sont-ils majoritairement des habitants \"locaux\", c'est à dire résidant à l'année dans les environs ou attirez-vous aussi une part non négligeable de spectateurs de passage dans la région (touristes notamment)"
+          "question": "[TO_TRANSLATE] Vos spectateurs sont-ils majoritairement des habitants \"locaux\", c'est à dire résidant à l'année dans les environs ou attirez-vous aussi une part non négligeable de spectateurs de passage dans la région (touristes notamment)",
+          "options": {
+            "zone très touristique": "[TO_TRANSLATE] Le cinéma est situé dans une zone touristique et 80% ou + des spectateurs ne résident pas à proximité du cinéma à l'année.",
+            "zone moyennement touristique": "[TO_TRANSLATE] Le cinéma est situé dans une ville de destination de week-end et / ou station balnéaire attirant environ 25% de spectateurs \"non-locaux\".",
+            "majoritairement locaux": "[TO_TRANSLATE] Le cinéma accueille majoritairement des spectateurs locaux"
+          }
         },
         "profil établissement": {
-          "question": "[TO_TRANSLATE] Si vous souhaitez vous identifier à des profils de cinéma comparable, de quel type de cinéma votre établissement se rapproche le plus"
+          "question": "[TO_TRANSLATE] Si vous souhaitez vous identifier à des profils de cinéma comparable, de quel type de cinéma votre établissement se rapproche le plus",
+          "options": {
+            "distances courtes": "[TO_TRANSLATE] Les spectateurs parcourent des distances très courtes pour venir au cinéma (moins de 10km aller-retour). Très peu viennent en voiture (- de 10%) et la grande majorité des spectateurs vient à pied ou en transports en commun.",
+            "distances moyennes": "[TO_TRANSLATE] Les spectateurs parcourent autour de 10 km aller-retour pour se rendre\nau cinéma. Il s'agit essentiellement d'un public de proximité venant en\ngrande partie en voiture. Autour de 25% d'entre eux viennent à pied.",
+            "distances longues": "[TO_TRANSLATE] Les spectateurs parcourent autour de 20-25 km aller-retour pour se\nrendre au cinéma. Il s'agit essentiellement d'un public de proximité\nvenant en grande partie en voiture. Autour de 25% d'entre eux viennent\nà pied.",
+            "majoritairement en voiture": "[TO_TRANSLATE] Plus de 80% des spectateurs viennent en voiture. Pas ou peu viennent en\ntransports en commun, peu viennent à pied. La distance moyenne\nparcourue est autour de 15 km aller-retour.",
+            "uniquement accessible en voiture": "[TO_TRANSLATE] Le cinéma n'est accessible qu'en voiture."
+          }
         }
       },
       "précision": {
-        "question": "[TO_TRANSLATE] Avez-vous déjà réalisé une enquête mobilité spectateurs ?"
+        "question": "[TO_TRANSLATE] Avez-vous déjà réalisé une enquête mobilité spectateurs ?",
+        "options": {
+          "résultat précis": "[TO_TRANSLATE] Oui et je peux entrer les résultats",
+          "besoin": "[TO_TRANSLATE] Non mais je voudrais le faire pour estimer l'impact du cinéma",
+          "estimation": "[TO_TRANSLATE] Non mais je préfère m'identifier dans des profils de cinéma comparables"
+        }
       },
       "mobilité spectateurs": {
         "contact": {
@@ -227,7 +265,22 @@
               "unité": "[TO_TRANSLATE] km/jour"
             },
             "moyen de transport": {
-              "question": "[TO_TRANSLATE] Moyen de transport"
+              "question": "[TO_TRANSLATE] Moyen de transport",
+              "options": {
+                "RER et transilien": "[TO_TRANSLATE] RER et transilien",
+                "métro ou tram": "[TO_TRANSLATE] Métro ou tram",
+                "bus": "[TO_TRANSLATE] Bus",
+                "vélo électrique": "[TO_TRANSLATE] Vélo électrique",
+                "vélo classique": "[TO_TRANSLATE] Vélo classique",
+                "marche": "[TO_TRANSLATE] Marche",
+                "voiture diesel": "[TO_TRANSLATE] Voiture diesel",
+                "voiture essence": "[TO_TRANSLATE] Voiture essence",
+                "voiture hybride": "[TO_TRANSLATE] Voiture hybride",
+                "voiture électrique": "[TO_TRANSLATE] Voiture électrique",
+                "moto": "[TO_TRANSLATE] Moto",
+                "scooter": "[TO_TRANSLATE] Scooter",
+                "trottinette électrique": "[TO_TRANSLATE] Trottinette électrique"
+              }
             }
           }
         }
@@ -279,7 +332,12 @@
           }
         },
         "équipement groupes électrogènes": {
-          "question": "[TO_TRANSLATE] Le cinéma dispose-t-il d’un ou plusieurs groupes électrogènes ?"
+          "question": "[TO_TRANSLATE] Le cinéma dispose-t-il d’un ou plusieurs groupes électrogènes ?",
+          "options": {
+            "utilisation régulière": "[TO_TRANSLATE] Oui et je l’utilise plusieurs fois par an",
+            "équipé sans utilisation": "[TO_TRANSLATE] Oui mais je ne l'utilise pas",
+            "aucun": "[TO_TRANSLATE] Non"
+          }
         }
       },
       "déplacements pro": {
@@ -306,11 +364,34 @@
               "unité": "[TO_TRANSLATE] km"
             },
             "moyen de transport": {
-              "question": "[TO_TRANSLATE] Moyen de transport"
+              "question": "[TO_TRANSLATE] Moyen de transport",
+              "options": {
+                "RER et transilien": "[TO_TRANSLATE] RER et transilien",
+                "métro ou tram": "[TO_TRANSLATE] Métro ou tram",
+                "bus": "[TO_TRANSLATE] Bus",
+                "vélo électrique": "[TO_TRANSLATE] Vélo électrique",
+                "voiture diesel": "[TO_TRANSLATE] Voiture diesel",
+                "voiture essence": "[TO_TRANSLATE] Voiture essence",
+                "voiture hybride": "[TO_TRANSLATE] Voiture hybride",
+                "voiture électrique": "[TO_TRANSLATE] Voiture électrique",
+                "moto": "[TO_TRANSLATE] Moto",
+                "scooter": "[TO_TRANSLATE] Scooter",
+                "trottinette électrique": "[TO_TRANSLATE] Trottinette électrique",
+                "TGV": "[TO_TRANSLATE] TGV",
+                "avion": "[TO_TRANSLATE] Avion"
+              }
             }
           },
           "type hébergement": {
-            "question": "[TO_TRANSLATE] Type d'hébergement"
+            "question": "[TO_TRANSLATE] Type d'hébergement",
+            "options": {
+              "appartement": "[TO_TRANSLATE] Appartement",
+              "hotel 1 étoile": "[TO_TRANSLATE] Hôtel 1*",
+              "hotel 2 étoiles": "[TO_TRANSLATE] Hôtel 2*",
+              "hotel 3 étoiles": "[TO_TRANSLATE] Hôtel 3*",
+              "hotel 4 étoiles": "[TO_TRANSLATE] Hôtel 4*",
+              "hotel 5 étoiles": "[TO_TRANSLATE] Hôtel 5*"
+            }
           }
         }
       },
@@ -325,6 +406,20 @@
           }
         },
         "rénovation": {
+          "type": {
+            "rénovation totale": {
+              "question": "[TO_TRANSLATE] Rénovation totale (hors agrandissement)"
+            },
+            "extension": {
+              "question": "[TO_TRANSLATE] Agrandissement - extension"
+            },
+            "autres travaux importants": {
+              "question": "[TO_TRANSLATE] Autres travaux importants (par ex : changement moquette, ravalement,peinture etc)"
+            },
+            "aucun": {
+              "question": "[TO_TRANSLATE] Je n'ai pas réalisé ces rénovations durant les dix dernières années"
+            }
+          },
           "empreinte travaux": {
             "montant": {
               "question": "[TO_TRANSLATE] Dans le cas d'une rénovation durant ces 10 dernières années, quel est le montant des dépenses liées à ces travaux de rénovation ?",
@@ -378,7 +473,16 @@
           "unité": "[TO_TRANSLATE] kgCO2e",
           "équipement": {
             "titre": "[TO_TRANSLATE] Type dd'équipement informatique",
-            "question": "[TO_TRANSLATE] Type d'équipement informatique"
+            "question": "[TO_TRANSLATE] Type d'équipement informatique",
+            "options": {
+              "ordinateurs fixes": "[TO_TRANSLATE] Ordinateurs fixes",
+              "ordinateurs portables": "[TO_TRANSLATE] Ordinateurs portables",
+              "photocopieurs": "[TO_TRANSLATE] Photocopieurs",
+              "imprimantes": "[TO_TRANSLATE] Imprimantes",
+              "téléphones fixes": "[TO_TRANSLATE] Téléphones fixes",
+              "téléphones portables": "[TO_TRANSLATE] Téléphones portables",
+              "tablettes": "[TO_TRANSLATE] Tablettes"
+            }
           },
           "appareil": {
             "nb appareils": {
@@ -641,7 +745,12 @@
           "question": "[TO_TRANSLATE] Vendez-vous des boissons et des confiseries ?"
         },
         "achat type": {
-          "question": "[TO_TRANSLATE] Selon vous, en moyenne, un spectateur achète :"
+          "question": "[TO_TRANSLATE] Selon vous, en moyenne, un spectateur achète :",
+          "options": {
+            "un peu": "[TO_TRANSLATE] Un peu de confiseries et de boissons (~30g)",
+            "standard": "[TO_TRANSLATE] Une part standard de confiseries et de boissons (~120g)",
+            "significatif": "[TO_TRANSLATE] Une part significative de confiseries et de boissons (~200g)"
+          }
         }
       }
     },
