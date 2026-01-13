@@ -42,7 +42,7 @@ export const PostSubPostFilter = ({
     return selectedSubPosts.map((subPost) => tPosts(subPost)).join(', ')
   }
 
-  const areAllSelected = (post: Post) => !subPostsByPost[post].some((subPost) => !selectedSubPosts.includes(subPost))
+  const areAllSelected = (post: Post) => subPostsByPost[post].every((subPost) => selectedSubPosts.includes(subPost))
 
   const selectAllSubPosts = () => {
     onChange(allSelectedSubPosts ? [] : envSubPosts)
@@ -64,12 +64,11 @@ export const PostSubPostFilter = ({
 
   return (
     <FormControl className={classNames(styles.formControl, className)}>
-      {showSeparateLabel && (
+      {showSeparateLabel ? (
         <FormLabel id={'subposts-selector-label'} component="legend">
           {label}
         </FormLabel>
-      )}
-      {!showSeparateLabel && (
+      ) : (
         <InputLabel id={'subposts-selector-label'} shrink={true}>
           {label}
         </InputLabel>
@@ -80,14 +79,11 @@ export const PostSubPostFilter = ({
         value={selectedSubPosts}
         className={styles.select}
         displayEmpty
-        renderValue={() => {
-          const displayValue = subPostsSelectorRenderValue()
-          return (
-            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
-              {displayValue}
-            </span>
-          )
-        }}
+        renderValue={() => (
+          <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
+            {subPostsSelectorRenderValue()}
+          </span>
+        )}
         label={!showSeparateLabel ? label : undefined}
         multiple
       >

@@ -18,12 +18,7 @@ const MostUncertainPostsChart = ({ computedResults }: Props) => {
   const tUncertainties = useTranslations('study.results.uncertainties')
 
   const threeMostUncertainPosts = [...computedResults]
-    .filter((post) => {
-      if (post.post === 'total') {
-        return false
-      }
-      return post.value > 0
-    })
+    .filter((result) => result.post !== 'total' && result.value > 0)
     .sort((a, b) => {
       if (!a.uncertainty || !b.uncertainty) {
         if (!a.uncertainty && b.uncertainty) {
