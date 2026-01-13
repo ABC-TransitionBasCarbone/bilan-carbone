@@ -1,4 +1,5 @@
 import { TrajectoryDataPoint } from '@/components/study/transitionPlan/TrajectoryGraph'
+import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { expect } from '@jest/globals'
 import { Action, StudyResultUnit, TrajectoryType } from '@prisma/client'
 import {
@@ -6,12 +7,14 @@ import {
   calculateCustomTrajectory,
   calculateSBTiTrajectory,
   calculateTrajectoryIntegral,
+  calculateTrajectoryYearBounds,
   getReductionRatePerType,
   getTrajectoryEmissionsAtYear,
   isWithinThreshold,
   PastStudy,
   SBTI_REDUCTION_RATE_15,
   SBTI_REDUCTION_RATE_WB2C,
+  TARGET_YEAR,
 } from './trajectory'
 
 // TODO: ESM module issue with Jest. Remove these mocks when moving to Vitest
@@ -1410,6 +1413,56 @@ describe('calculateTrajectory', () => {
         SBTI_REDUCTION_RATE_15,
         createPastStudies([2019, 1000], [2025, 1200]),
       )
+    })
+  })
+
+  describe('calculateTrajectoryYearBounds', () => {
+    test('when SNBC is enabled, min should be 1990 and max year should be 2060 when last objective of custom trajectory is in 2060', () => {
+      const snbcEnabled = true
+      const pastStudies: PastStudy[] = []
+      const trajectories = [
+        {
+          id: 'custom-trajectory-1',
+          referenceYear: 2020,
+          objectives: [
+            { id: 'obj-1', targetYear: 2030, reductionRate: 0.05 },
+            { id: 'obj-2', targetYear: 2060, reductionRate: 0.08 },
+          ],
+        },
+      ] as TrajectoryWithObjectives[]
+      const selectedCustomTrajectoryIds = ['custom-trajectory-1']
+      const actions: Action[] = []
+
+      const result = calculateTrajectoryYearBounds(
+        snbcEnabled,
+        pastStudies,
+        trajectories,
+        selectedCustomTrajectoryIds,
+        actions,
+      )
+
+      expect(result.minYear).toBe(1990)
+      expect(result.maxYear).toBe(2060)
+    })
+
+    test('when there is only SBTI 1.5°C, it should be 2020 to 2050', () => {
+      const snbcEnabled = false
+      const pastStudies: PastStudy[] = []
+      const trajectories: TrajectoryWithObjectives[] = []
+      const selectedCustomTrajectoryIds: string[] = []
+      const actions: Action[] = []
+
+      const result = calculateTrajectoryYearBounds(
+        snbcEnabled,
+        pastStudies,
+        trajectories,
+        selectedCustomTrajectoryIds,
+        actions,
+      )
+
+      expect(result.minYear).toBe(2020)
+      expect(result.maxYear).toBe(TARGET_YEAR)
+      expect(result.maxYear).toBe(2050)
     })
   })
 })

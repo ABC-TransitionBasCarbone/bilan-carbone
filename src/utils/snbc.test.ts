@@ -90,7 +90,7 @@ describe('SNBC Trajectory', () => {
       const studyEmissions = 1000
       const studyStartYear = 2020
 
-      const result = getSNBCData(true, sectenData, null, [], studyStartYear, studyEmissions)
+      const result = getSNBCData(true, sectenData, null, [], studyStartYear, studyEmissions, 2050)
       const trajectory = result!.currentTrajectory
 
       // Expected values calculated based on previous secten data
@@ -110,7 +110,7 @@ describe('SNBC Trajectory', () => {
       const studyEmissions = STANDARD_STUDY_EMISSIONS
       const studyStartYear = 2025
 
-      const result = getSNBCData(true, sectenData, null, [], studyStartYear, studyEmissions)
+      const result = getSNBCData(true, sectenData, null, [], studyStartYear, studyEmissions, 2050)
 
       const trajectory = result!.currentTrajectory
 
@@ -130,7 +130,7 @@ describe('SNBC Trajectory', () => {
       const studyStartYear = 2024
       const pastStudies = [createPastStudy(2020, STANDARD_STUDY_EMISSIONS)]
 
-      const result = getSNBCData(true, sectenData, null, pastStudies, studyStartYear, studyEmissions)
+      const result = getSNBCData(true, sectenData, null, pastStudies, studyStartYear, studyEmissions, 2050)
       const trajectory = result!.currentTrajectory
 
       expect(trajectory.find((p) => p.year === 1990)?.value).toBeCloseTo(1381.31, 0)
@@ -147,7 +147,7 @@ describe('SNBC Trajectory', () => {
       const studyStartYear = 2025
       const pastStudies = [createPastStudy(2022, STANDARD_STUDY_EMISSIONS + 60)]
 
-      const result = getSNBCData(true, sectenData, null, pastStudies, studyStartYear, studyEmissions)
+      const result = getSNBCData(true, sectenData, null, pastStudies, studyStartYear, studyEmissions, 2050)
       const trajectory = result!.currentTrajectory
 
       expect(trajectory.find((p) => p.year === 2022)?.value).toBe(STANDARD_STUDY_EMISSIONS + 60)
@@ -163,7 +163,7 @@ describe('SNBC Trajectory', () => {
       const studyStartYear = 2024
       const pastStudies = [createPastStudy(2018, 1200), createPastStudy(2021, STANDARD_STUDY_EMISSIONS)]
 
-      const result = getSNBCData(true, sectenData, null, pastStudies, studyStartYear, studyEmissions)
+      const result = getSNBCData(true, sectenData, null, pastStudies, studyStartYear, studyEmissions, 2050)
 
       const trajectory = result!.currentTrajectory
 
@@ -185,7 +185,7 @@ describe('SNBC Trajectory', () => {
       const studyStartYear = 2025
       const studyEmissions = 1200
 
-      const result = getSNBCData(true, sectenData, referenceStudy, [], studyStartYear, studyEmissions)
+      const result = getSNBCData(true, sectenData, referenceStudy, [], studyStartYear, studyEmissions, 2050)
 
       expect(result!.withinThreshold).toBe(false)
       expect(result!.previousTrajectory).not.toBeNull()
@@ -213,7 +213,7 @@ describe('SNBC Trajectory', () => {
       ]
 
       testCases.forEach(({ year, emissions }) => {
-        const result = getSNBCData(true, sectenData, referenceStudy, [], year, emissions)
+        const result = getSNBCData(true, sectenData, referenceStudy, [], year, emissions, 2050)
 
         if (result!.withinThreshold) {
           return

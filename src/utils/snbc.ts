@@ -23,6 +23,7 @@ interface CalculateTrajectoryParams {
   pastStudies?: PastStudy[]
   displayCurrentStudyValueOnTrajectory?: boolean
   overshootAdjustment?: OvershootAdjustment
+  maxYear?: number
 }
 
 export const getSectenEmissionsByYear = (sectenData: SectenInfo[], year: number): number | null => {
@@ -168,6 +169,7 @@ export const calculateSNBCTrajectory = ({
   pastStudies = [],
   displayCurrentStudyValueOnTrajectory = true,
   overshootAdjustment,
+  maxYear,
 }: CalculateTrajectoryParams): TrajectoryDataPoint[] => {
   const dataPoints: TrajectoryDataPoint[] = []
 
@@ -299,6 +301,13 @@ export const calculateSNBCTrajectory = ({
   for (let year = SNBC_MID_TARGET_YEAR + 1; year <= SNBC_FINAL_TARGET_YEAR; year++) {
     currentEmissions = Math.max(0, currentEmissions - yearlyReductionTo2050)
     dataPoints.push({ year, value: currentEmissions })
+  }
+
+  // Flat trajectory after 2050 funtil max year
+  if (maxYear && maxYear > SNBC_FINAL_TARGET_YEAR) {
+    for (let year = SNBC_FINAL_TARGET_YEAR + 1; year <= maxYear; year++) {
+      dataPoints.push({ year, value: currentEmissions })
+    }
   }
 
   return dataPoints.sort((a, b) => a.year - b.year)
