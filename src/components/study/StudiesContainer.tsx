@@ -99,7 +99,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
           <LinkButton
             data-testid="new-study"
             className={classNames('w100 justify-center mb1')}
-            href={simplified ? creationUrl : creationUrlSimplified}
+            href={simplified ? creationUrlSimplified : creationUrl}
           >
             <AddIcon />
             {t(simplified ? 'createFirstSimplifiedStudy' : 'createFirstStudy')}
