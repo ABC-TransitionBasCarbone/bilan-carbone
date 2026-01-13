@@ -128,6 +128,7 @@
     }
   },
   "navigation": {
-    "footprints": "Mes empreintes"
+    "footprints": "Mes empreintes",
+    "information": "Mon Association"
   }
 }
