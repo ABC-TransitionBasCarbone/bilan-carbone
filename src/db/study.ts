@@ -516,6 +516,19 @@ export const getStudyNameById = async (id: string) => {
   return study.name
 }
 
+export const getStudyStartDate = async (id: string) => {
+  const study = await prismaClient.study.findUnique({
+    where: { id },
+    select: { startDate: true },
+  })
+
+  if (!study) {
+    return null
+  }
+
+  return study.startDate
+}
+
 export const createUserOnStudy = async (right: Prisma.UserOnStudyCreateInput, tx?: Prisma.TransactionClient) =>
   (tx ?? prismaClient).userOnStudy.create({
     data: right,

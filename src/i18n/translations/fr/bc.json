@@ -1027,6 +1027,9 @@
         "namePlaceholder": "Donner un nom à ma trajectoire",
         "description": "Description de ma trajectoire",
         "descriptionPlaceholder": "Décrivez votre trajectoire",
+        "referenceYear": {
+          "label": "Année de départ de la trajectoire (optionnel)"
+        },
         "objectives": {
           "title": "Objectifs de réduction",
           "sbtiDescription": "Ces objectifs de réduction sont liés à la trajectoire de référence SBTi et sont prédéfinis. Vous pourrez ajouter des objectifs intermédiaires dans la rubrique \"Mes objectifs de réduction\"",
@@ -1053,6 +1056,7 @@
         "table": {
           "name": "Nom",
           "type": "Type",
+          "startYear": "Année de départ",
           "targetYear": "Année cible",
           "reductionRate": "Réduction annuelle",
           "actions": "Actions"
@@ -2154,6 +2158,7 @@
     "tooBig": "Veuillez saisir une valeur plus petite",
     "studyYearMustBeBeforeCurrent": "L'année de l'étude doit être antérieure à l'année de l'étude actuelle",
     "studyYearMustBeAfterLinkedStudies": "Impossible de renseigner une date antérieure à celles de vos études liées sur votre plan de transition",
-    "maxTwoDecimals": "Le taux de réduction doit avoir au maximum 2 décimales"
+    "maxTwoDecimals": "Le taux de réduction doit avoir au maximum 2 décimales",
+    "referenceYearMustBeBeforeOrEqualToStudyYear": "L'année de référence doit être inférieure à l'année de l'étude"
   }
 }

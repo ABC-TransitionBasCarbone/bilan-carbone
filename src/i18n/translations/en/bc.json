@@ -1027,6 +1027,9 @@
         "namePlaceholder": "Give your trajectory a name",
         "description": "My trajectory description",
         "descriptionPlaceholder": "Describe your trajectory",
+        "referenceYear": {
+          "label": "Trajectory Start Year (optional)"
+        },
         "objectives": {
           "title": "Reduction objectives",
           "sbtiDescription": "These reduction objectives are linked to the SBTi reference trajectory and are predefined. You can add intermediate objectives in the \"My reduction objectives\" section",
@@ -1053,6 +1056,7 @@
         "table": {
           "name": "Name",
           "type": "Type",
+          "startYear": "Start year",
           "targetYear": "Target year",
           "reductionRate": "Annual reduction",
           "actions": "Actions"
@@ -2154,6 +2158,7 @@
     "tooBig": "Please enter a smaller value",
     "studyYearMustBeBeforeCurrent": "The study year must be before the current study year",
     "studyYearMustBeAfterLinkedStudies": "Cannot set a date earlier than your linked studies in your transition plan",
-    "maxTwoDecimals": "The reduction rate must have at most 2 decimal places"
+    "maxTwoDecimals": "The reduction rate must have at most 2 decimal places",
+    "referenceYearMustBeBeforeOrEqualToStudyYear": "Reference year must be less than the study year"
   }
 }

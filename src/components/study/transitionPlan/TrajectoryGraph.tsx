@@ -299,6 +299,16 @@ const TrajectoryGraph = ({
           traj.trajectoryData
 
         if (previousTrajectory) {
+          // Get the index of the reference year if it exists
+          const referenceYearIndex =
+            previousTrajectoryReferenceYear !== null ? yearsToDisplay.indexOf(previousTrajectoryReferenceYear) : -1
+
+          // Only show mark for the reference year, not for past studies
+          const referenceTrajectoryMarkIndices = new Set<number>()
+          if (referenceYearIndex !== -1) {
+            referenceTrajectoryMarkIndices.add(referenceYearIndex)
+          }
+
           if (withinThreshold) {
             series.push({
               data: mapDataToYears(previousTrajectory, true),
@@ -306,7 +316,7 @@ const TrajectoryGraph = ({
               color: traj.color || `var(--trajectory-custom-${index % 9})`,
               curve: 'linear' as const,
               connectNulls: false,
-              showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
+              showMark: ({ index }: { index: number }) => referenceTrajectoryMarkIndices.has(index),
               valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
             })
           } else {
@@ -317,7 +327,7 @@ const TrajectoryGraph = ({
               color: `color-mix(in srgb, ${baseColor} 50%, transparent)`,
               curve: 'linear' as const,
               connectNulls: false,
-              showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
+              showMark: ({ index }: { index: number }) => referenceTrajectoryMarkIndices.has(index),
               valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
             })
           }
@@ -421,6 +431,7 @@ const TrajectoryGraph = ({
     studyStartYear,
     studyStartYearIndex,
     studyName,
+    yearsToDisplay,
   ])
 
   return (

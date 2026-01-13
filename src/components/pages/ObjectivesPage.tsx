@@ -69,6 +69,7 @@ const ObjectivesPage = ({ study, canEdit, trajectories, transitionPlanId }: Prop
               canEdit={canEdit}
               transitionPlanId={transitionPlanId}
               studyId={study.id}
+              studyYear={study.startDate.getFullYear()}
               searchFilter={searchFilter}
             />
           </div>
