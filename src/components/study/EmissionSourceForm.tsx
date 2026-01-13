@@ -159,6 +159,9 @@ const EmissionSourceForm = ({
   const isCas = isCAS(emissionSource)
 
   const withDeprecationPeriod = useMemo(() => hasDeprecationPeriod(emissionSource.subPost), [emissionSource.subPost])
+  const constructionYearLabel = ([SubPost.Equipements, SubPost.Informatique] as SubPost[]).includes(subPost)
+    ? 'acquisitionYear'
+    : 'constructionYear'
 
   useEffect(() => {
     if (isCas) {
@@ -307,7 +310,7 @@ const EmissionSourceForm = ({
                 {displayConstructionYear && (
                   <FormControl className="grow">
                     <DatePicker
-                      label={`${t('form.constructionYear')} *`}
+                      label={`${t(`form.${constructionYearLabel}`)} *`}
                       disabled={!canEdit}
                       slotProps={{
                         textField: {
