@@ -4,6 +4,9 @@
     "no": "No",
     "previous": "Anterior",
     "next": "Siguiente",
+    "all": "Todos",
+    "none": "Ninguno",
+    "subPosts": "Sub-posts",
     "action": {
       "create": "Crear",
       "edit": "Editar",
@@ -16,7 +19,9 @@
       "update": "Actualizar",
       "start": "Iniciar",
       "close": "Cerrar",
-      "approve": "Aprobar"
+      "approve": "Aprobar",
+      "selectAll": "Seleccionar todos",
+      "unselectAll": "Deseleccionar todos"
     },
     "label": {
       "start": "Inicio",

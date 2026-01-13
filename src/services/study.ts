@@ -4,7 +4,13 @@ import { FullStudy, getStudyById } from '@/db/study'
 import { Translations } from '@/types/translation'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { getPost } from '@/utils/post'
-import { formatEmissionValueForExport, hasDeprecationPeriod, isCAS, STUDY_UNIT_VALUES } from '@/utils/study'
+import {
+  calculateMonetaryRatio,
+  formatEmissionValueForExport,
+  hasDeprecationPeriod,
+  isCAS,
+  STUDY_UNIT_VALUES,
+} from '@/utils/study'
 import { Environment, Export, ExportRule, Level, StudyResultUnit, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import {
@@ -720,8 +726,8 @@ export const getDetailedEmissionResults = (
     (computedResultsWithoutDep.find((result) => result.post === 'total')?.value || 0) /
     STUDY_UNIT_VALUES[study.resultsUnit]
 
-  const monetaryRatio = (monetaryTotal / total) * 100
-  const nonSpecificMonetaryRatio = (nonSpecificMonetaryTotal / total) * 100
+  const monetaryRatio = calculateMonetaryRatio(monetaryTotal, total)
+  const nonSpecificMonetaryRatio = calculateMonetaryRatio(nonSpecificMonetaryTotal, total)
 
   return {
     computedResultsWithDep,

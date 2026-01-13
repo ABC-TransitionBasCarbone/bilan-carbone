@@ -688,6 +688,12 @@
         "K": "kgCO₂e",
         "T": "tCO₂e"
       },
+      "pageFilters": {
+        "title": "Filters",
+        "posts": "Posts and sub-posts",
+        "tags": "Tags",
+        "noFiltersSelected": "No filter selected"
+      },
       "tagGlossary": "Double count on charts by tags",
       "tagGlossaryDescription": "Emission sources can have multiple tags, so these are counted in each tag on this graph. It is therefore normal that you have a larger total here than in your study.",
       "info": "",
@@ -1195,10 +1201,6 @@
   "emissionFactors": {
     "add": "Add an emission factor",
     "post": {
-      "all": "All",
-      "none": "None",
-      "selectAll": "Select all",
-      "unselectAll": "Unselect all",
       "total": "Total",
       "allPost": "All posts",
       "allSubPost": "All sub posts",

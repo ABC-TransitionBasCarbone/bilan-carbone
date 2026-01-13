@@ -18,7 +18,7 @@ const MostUncertainPostsChart = ({ computedResults }: Props) => {
   const tUncertainties = useTranslations('study.results.uncertainties')
 
   const threeMostUncertainPosts = [...computedResults]
-    .filter((post) => post.post !== 'total')
+    .filter((result) => result.post !== 'total' && result.value > 0)
     .sort((a, b) => {
       if (!a.uncertainty || !b.uncertainty) {
         if (!a.uncertainty && b.uncertainty) {
@@ -52,10 +52,10 @@ const MostUncertainPostsChart = ({ computedResults }: Props) => {
     <div className={classNames(styles.container, 'grow flex-col h100')}>
       <div className="grow align-center">
         <div>
-          <PostInfo post={threeMostUncertainPosts[0]} />
+          {threeMostUncertainPosts[0] && <PostInfo post={threeMostUncertainPosts[0]} />}
           <div className="flex-row grow">
-            <PostInfo post={threeMostUncertainPosts[1]} />
-            <PostInfo post={threeMostUncertainPosts[2]} />
+            {threeMostUncertainPosts[1] && <PostInfo post={threeMostUncertainPosts[1]} />}
+            {threeMostUncertainPosts[2] && <PostInfo post={threeMostUncertainPosts[2]} />}
           </div>
         </div>
       </div>
