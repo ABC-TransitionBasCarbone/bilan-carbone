@@ -399,10 +399,23 @@ const parseEmissionSources = async (
       const begesRules = rules.filter((rule) => rule.export === StudyExport.Beges)
       const hasCaract =
         row.caracterisation && row.caracterisation !== 'NULL' && row.caracterisation !== 'Sans caractérisation'
+
+      if (
+        (row.caracterisation === 'Opérée, fugitives' || row.caracterisation === 'Opérée, procédés') &&
+        (subPost === SubPost.EmissionsLieesALaProductionDeFroid ||
+          subPost === SubPost.EmissionsLieesAuxProcedesIndustriels)
+      ) {
+        subPost =
+          row.caracterisation === 'Opérée, fugitives'
+            ? SubPost.EmissionsLieesALaProductionDeFroid
+            : SubPost.EmissionsLieesAuxProcedesIndustriels
+        row.caracterisation = 'Opéré'
+      }
+
       if (hasCaract) {
         const subPostRules = begesRules.filter((rule) => rule.subPost === subPost)
         if (subPostRules && subPostRules.length !== 0) {
-          const subPostRule = rules.find((rule) => rule.type === null)
+          const subPostRule = subPostRules.find((rule) => rule.type === null)
           if (subPostRule) {
             const caractRule = getRulePost(
               caracterisationMapping[row.caracterisation as string] as EmissionSourceCaracterisation,
