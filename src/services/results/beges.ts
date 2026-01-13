@@ -39,16 +39,14 @@ export const rulesSpans: Record<string, number> = {
   total: 1,
 }
 
-const getLine = (value: number, emissionFactor: ExportEmissionFactor): Omit<PostInfos, 'rule' | 'uncertainty'> => {
-  const ch4 = emissionFactor.ch4f || 0
-  const n2o = emissionFactor.n2o || 0
-  const other =
-    (emissionFactor.otherGES || 0) + (emissionFactor.pfc || 0) + (emissionFactor.hfc || 0) + (emissionFactor.sf6 || 0)
+const getLine = (value: number, EFOrEFPart: ExportEmissionFactor): Omit<PostInfos, 'rule' | 'uncertainty'> => {
+  const ch4 = EFOrEFPart.ch4f || 0
+  const n2o = EFOrEFPart.n2o || 0
+  const other = (EFOrEFPart.otherGES || 0) + (EFOrEFPart.pfc || 0) + (EFOrEFPart.hfc || 0) + (EFOrEFPart.sf6 || 0)
   const totalOtherGas = ch4 + n2o + other
 
-  // co2f is not always available
-  const co2 = (emissionFactor.totalCo2 || 0) - totalOtherGas
-  const co2b = emissionFactor.co2b || 0
+  const co2 = (EFOrEFPart.totalCo2 || 0) - totalOtherGas
+  const co2b = EFOrEFPart.co2b || 0
 
   return {
     co2: value * co2,
