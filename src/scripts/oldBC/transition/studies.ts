@@ -1,3 +1,4 @@
+import { getExportRules } from '@/db/exportRule'
 import { getSourceLatestImportVersionId } from '@/db/study'
 import { getCaracterisationsBySubPost } from '@/services/emissionSource'
 import { getEmissionQuality } from '@/services/importEmissionFactor/import'
@@ -8,6 +9,7 @@ import {
   EmissionFactor as EmissionFactorPrismaModel,
   EmissionSourceCaracterisation,
   Environment,
+  ExportRule,
   Import,
   Level,
   Prisma,
@@ -305,12 +307,65 @@ const buildEmissionSourceName = (
   return !name ? `${newPostAndSubPost.newPost} - ${newPostAndSubPost.newSubPost}` : name
 }
 
-const parseEmissionSources = (
+const getRulePost = (caracterisation: EmissionSourceCaracterisation | null, rule?: ExportRule) => {
+  if (caracterisation === null || !rule) {
+    return null
+  }
+
+  switch (caracterisation) {
+    case EmissionSourceCaracterisation.Operated:
+      return rule.operated
+    case EmissionSourceCaracterisation.NotOperated:
+      return rule.notOperated
+    case EmissionSourceCaracterisation.NotOperatedSupported:
+      return rule.notOperatedSupported
+    case EmissionSourceCaracterisation.NotOperatedNotSupported:
+      return rule.notOperatedNotSupported
+    case EmissionSourceCaracterisation.OperatedFugitive:
+      return rule.operatedFugitive
+    case EmissionSourceCaracterisation.OperatedProcedeed:
+      return rule.operatedProcedeed
+    case EmissionSourceCaracterisation.Rented:
+      return rule.rented
+    case EmissionSourceCaracterisation.FinalClient:
+      return rule.finalClient
+    case EmissionSourceCaracterisation.Held:
+      return rule.held
+    case EmissionSourceCaracterisation.NotHeldSimpleRent:
+      return rule.notHeldSimpleRent
+    case EmissionSourceCaracterisation.NotHeldOther:
+      return rule.notHeldOther
+    case EmissionSourceCaracterisation.HeldProcedeed:
+      return rule.heldProcedeed
+    case EmissionSourceCaracterisation.HeldFugitive:
+      return rule.heldFugitive
+    case EmissionSourceCaracterisation.NotHeldSupported:
+      return rule.notHeldSupported
+    case EmissionSourceCaracterisation.NotHeldNotSupported:
+      return rule.notHeldNotSupported
+    case EmissionSourceCaracterisation.UsedByIntermediary:
+      return rule.usedByIntermediary
+  }
+}
+
+const parseEmissionSources = async (
   postAndSubPostsOldNewMapping: OldNewPostAndSubPostsMapping,
   studyEmissionSourcesWorkSheet: EmissionSourceRow[],
   emissionFactorsNames: Map<string, { name: string; id: string }>,
-): [Map<string, EmissionSource[]>, { oldPost: string; reason: string }[]] => {
+): Promise<
+  [
+    Map<string, EmissionSource[]>,
+    { oldPost: string; reason: string }[],
+    Record<string, Record<string, { studyId: string; emissionFactor: string }[]>>,
+  ]
+> => {
+  const rules = await getExportRules()
+  if (!rules) {
+    throw new Error('Export rules not found')
+  }
+
   const skippedEmissionSource: { oldPost: string; reason: string }[] = []
+  const skippedCaract: Record<string, Record<string, { studyId: string; emissionFactor: string }[]>> = {}
   const emissionsSources = studyEmissionSourcesWorkSheet
     .map<[string, EmissionSource] | null>((row) => {
       if (row.siteOldBCId === '00000000-0000-0000-0000-000000000000' || row.idefType !== 1) {
@@ -340,6 +395,43 @@ const parseEmissionSources = (
 
       const incertitudeDA = getEmissionQuality((row.incertitudeDA as number) * 100)
 
+      let caracterisation: string | undefined
+      const begesRules = rules.filter((rule) => rule.export === StudyExport.Beges)
+      const hasCaract =
+        row.caracterisation && row.caracterisation !== 'NULL' && row.caracterisation !== 'Sans caractérisation'
+      if (hasCaract) {
+        const subPostRules = begesRules.filter((rule) => rule.subPost === subPost)
+        if (subPostRules && subPostRules.length !== 0) {
+          const subPostRule = rules.find((rule) => rule.type === null)
+          if (subPostRule) {
+            const caractRule = getRulePost(
+              caracterisationMapping[row.caracterisation as string] as EmissionSourceCaracterisation,
+              subPostRule,
+            )
+            if (caractRule) {
+              caracterisation = row.caracterisation as string
+            }
+          }
+        }
+      }
+
+      if (!caracterisation && hasCaract) {
+        if (!skippedCaract[row.caracterisation as string]) {
+          skippedCaract[row.caracterisation as string] = {
+            [subPost]: [{ studyId: row.studyOldBCId as string, emissionFactor: row.emissionFactorOldBCId as string }],
+          }
+        } else if (!skippedCaract[row.caracterisation as string][subPost]) {
+          skippedCaract[row.caracterisation as string][subPost] = [
+            { studyId: row.studyOldBCId as string, emissionFactor: row.emissionFactorOldBCId as string },
+          ]
+        } else {
+          skippedCaract[row.caracterisation as string][subPost].push({
+            studyId: row.studyOldBCId as string,
+            emissionFactor: row.emissionFactorOldBCId as string,
+          })
+        }
+      }
+
       return [
         row.studyOldBCId as string,
         {
@@ -350,7 +442,7 @@ const parseEmissionSources = (
           validated: (row.validationDASaisie as number) === 1,
           emissionFactorOldBCId: row.emissionFactorOldBCId as string,
           value: row.daTotalValue as number,
-          subPost: subPost,
+          subPost,
           reliability: incertitudeDA,
           technicalRepresentativeness: incertitudeDA,
           geographicRepresentativeness: incertitudeDA,
@@ -358,7 +450,7 @@ const parseEmissionSources = (
           completeness: incertitudeDA,
           emissionFactorImportedId: String(row.emissionFactorImportedId),
           emissionFactorConsoValue: row.emissionFactorConsoValue as number,
-          caracterisation: row.caracterisation as string,
+          caracterisation: caracterisation as string,
           deprecation: (row.amortissement === 1 ? row.immoVal : row.amortissement) as number,
           ...(subPost === SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas && {
             duration: 20,
@@ -380,7 +472,7 @@ const parseEmissionSources = (
       return accumulator
     }, new Map<string, EmissionSource[]>())
 
-  return [emissionsSources, skippedEmissionSource]
+  return [emissionsSources, skippedEmissionSource, skippedCaract]
 }
 
 const getExistingStudies = async (
@@ -563,7 +655,7 @@ export const uploadStudies = async (
     .getRows()
     .filter((row) => row.studyOldBCId !== '00000000-0000-0000-0000-000000000000')
 
-  const [studyEmissionSources, skippedEmissionSource] = parseEmissionSources(
+  const [studyEmissionSources, skippedEmissionSource, skippedCaract] = await parseEmissionSources(
     postAndSubPostsOldNewMapping,
     studyEmissionSourcesWorksheet,
     existingEmissionFactorNames,
@@ -1001,6 +1093,9 @@ export const uploadStudies = async (
   if (skippedEmissionSource.length) {
     console.log('sous poste en erreur', new Set(skippedEmissionSource.map((e) => e.oldPost)))
     console.log('raisons des sous postes en erreur', new Set(skippedEmissionSource.map((e) => e.reason)))
+  }
+  if (Object.keys(skippedCaract).length) {
+    console.log('caractérisation en erreur', JSON.stringify(skippedCaract))
   }
   if (Object.keys(emissionSourceWithoutFe).length) {
     console.log('emissionSourceWithoutFe', JSON.stringify(emissionSourceWithoutFe))
