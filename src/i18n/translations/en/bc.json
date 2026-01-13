@@ -1494,6 +1494,7 @@
       "BaseEmpreinte": "Footprint Base",
       "NegaOctet": "NegaOctet",
       "Legifrance": "Légifrance",
+      "AIB": "AIB",
       "displayArchived": "Display archived factors",
       "goTo": "Go to page",
       "items": "Items per page",
@@ -1525,6 +1526,7 @@
         "baseEmpreinte": "Base Empreinte logo",
         "legifrance": "Légifrance logo",
         "negaOctet": "NegaOctet logo",
+        "aib": "Association of Issuing Bodies logo",
         "manual": "Manual"
       },
       "post": "Posts",
