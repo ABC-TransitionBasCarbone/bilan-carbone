@@ -1,3 +1,4 @@
+import { usePublicodesRuleTranslation } from '@/hooks/usePublicodesRuleTranslation'
 import { NumberField } from '@base-ui-components/react/number-field'
 import { InputAdornment, OutlinedInput } from '@mui/material'
 import { EvaluatedNumberInput } from '@publicodes/forms'
@@ -14,7 +15,7 @@ const NumberWithUnitInput = <RuleName extends string>({
   onChange,
   disabled,
 }: NumberWithUnitInputProps<RuleName>) => {
-  const questionUnit = formElement.unit
+  const { unit } = usePublicodesRuleTranslation(formElement.id)
   const committedValue = formElement.value ?? formElement.defaultValue ?? null
   const isDisabled = disabled || !formElement.applicable
 
@@ -63,9 +64,7 @@ const NumberWithUnitInput = <RuleName extends string>({
       <NumberField.Input
         className={styles.input}
         render={
-          <OutlinedInput
-            endAdornment={questionUnit ? <InputAdornment position="end">{questionUnit}</InputAdornment> : undefined}
-          />
+          <OutlinedInput endAdornment={unit ? <InputAdornment position="end">{unit}</InputAdornment> : undefined} />
         }
       />
     </NumberField.Root>

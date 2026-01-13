@@ -20,6 +20,7 @@
     "publicodes-count:compile": "cd publicodes-packages/publicodes-count && yarn run compile",
     "publicodes-count:watch": "cd publicodes-packages/publicodes-count && yarn run watch",
     "publicodes-count:test": "cd publicodes-packages/publicodes-count && yarn test",
+    "publicodes-count:translate": "yarn run publicodes-count:compile && npx tsx src/i18n/publicodes/generate-translation-file.tsx -m cut",
     "cypress": "cypress run",
     "cypress:gui": "cypress open",
     "db:test:reset": "dotenv -e .env.test -- prisma migrate reset --force",
@@ -50,7 +51,7 @@
     "@mui/x-charts": "^8.23.0",
     "@mui/x-date-pickers": "^8.23.0",
     "@prisma/client": "^6.17.1",
-    "@publicodes/forms": "^0.6.0",
+    "@publicodes/forms": "https://pkg.pr.new/publicodes/publicodes/@publicodes/forms@c67ec32",
     "@tanstack/react-table": "^8.21.3",
     "@types/react-gauge-chart": "^0.5.0",
     "axios": "^1.13.2",
@@ -131,7 +132,8 @@
     "prettier-plugin-organize-imports": "^4.2.0",
     "prettier-plugin-prisma": "^5.0.0",
     "ts-jest": "^29.4.6",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "yargs": "^18.0.0"
   },
   "resolutions": {
     "qs": ">=6.14.1"
