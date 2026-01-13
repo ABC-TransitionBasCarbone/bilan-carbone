@@ -24,7 +24,7 @@ describe('Create emission factor', () => {
     cy.getByTestId('emission-factor-post').click()
     cy.get('[data-value="Energies"]').click()
     cy.getByTestId('emission-factor-subPost').click()
-    cy.get('[data-value="Electricite"]').click()
+    cy.get('[data-value="CombustiblesOrganiques"]').click()
     cy.get('body').type('{esc}')
 
     cy.getByTestId('emission-factor-valid-button').click()
@@ -99,7 +99,7 @@ describe('Create emission factor', () => {
     cy.getByTestId('emission-factor-post').click()
     cy.get('[data-value="Energies"]').click()
     cy.getByTestId('emission-factor-subPost').click()
-    cy.get('[data-value="Electricite"]').click()
+    cy.get('[data-value="CombustiblesOrganiques"]').click()
     cy.get('body').type('{esc}')
 
     cy.getByTestId('emission-factor-valid-button').click()
@@ -171,7 +171,7 @@ describe('Create emission factor', () => {
     cy.getByTestId('emission-factor-post').click()
     cy.get('[data-value="Energies"]').click()
     cy.getByTestId('emission-factor-subPost').click()
-    cy.get('[data-value="Electricite"]').click()
+    cy.get('[data-value="CombustiblesOrganiques"]').click()
     cy.get('body').type('{esc}')
 
     cy.getByTestId('emission-factor-valid-button').click()
@@ -269,7 +269,7 @@ describe('Create emission factor', () => {
     cy.getByTestId('emission-factor-post').click()
     cy.get('[data-value="Energies"]').click()
     cy.getByTestId('emission-factor-subPost').click()
-    cy.get('[data-value="Electricite"]').click()
+    cy.get('[data-value="CombustiblesOrganiques"]').click()
     cy.get('body').type('{esc}')
 
     cy.getByTestId('emission-factor-valid-button').click()
@@ -451,7 +451,7 @@ describe('Create emission factor', () => {
     cy.getByTestId('emission-factor-post').click()
     cy.get('[data-value="Energies"]').click()
     cy.getByTestId('emission-factor-subPost').click()
-    cy.get('[data-value="Electricite"]').click()
+    cy.get('[data-value="CombustiblesOrganiques"]').click()
     cy.get('body').type('{esc}')
 
     cy.getByTestId('emission-factor-valid-button').click()
