@@ -313,7 +313,6 @@
       "homepage": "Accueil",
       "framing": "Cadrage",
       "scope": "Périmètre",
-      "mobilisation": "Mobilisation",
       "accounting": "Comptabilisation",
       "dataEntry": "Saisie des données",
       "results": "Résultats",
@@ -327,7 +326,9 @@
       "trajectories": "Trajectoires de réduction",
       "objectives": "Objectifs de réduction",
       "actionPlan": "Plan d'action",
-      "commingSoon": "À venir"
+      "commingSoon": "À venir",
+      "engagement": "Mobilisation",
+      "carriedActions": "Actions menées"
     },
     "new": {
       "title": "Informations sur la nouvelle étude",
@@ -1189,6 +1190,56 @@
           "message": "Êtes-vous sûr de vouloir supprimer cette action de manière définitive ?",
           "confirm": "Supprimer"
         }
+      }
+    },
+    "engagementActions": {
+      "title": "Actions menées",
+      "table": {
+        "name": "Nom",
+        "description": "Description",
+        "steps": "Étape",
+        "target": "Cibles",
+        "phase": "Phase de mobilisation",
+        "date": "Date"
+      },
+      "modal": {
+        "add": "Ajouter une action",
+        "update": "Modifier une action",
+        "clear": "Supprimer la valeur",
+        "name": "Nom",
+        "namePlaceholder": "Donnez un nom à votre action",
+        "description": "Description (nombres de participants, format, déroulé, etc)",
+        "descriptionPlaceholder": "Décrivez votre action",
+        "steps": "Étape de la démarche concernée",
+        "stepsPlaceholder": "Choississez les étapes de votre action",
+        "target": "Cibles",
+        "phase": "Phase de mobilisation",
+        "date": "Date",
+        "validate": "Valider"
+      },
+      "targets": {
+        "TEAM_PROJECT": "Équipe projet",
+        "DIRECTION": "Direction",
+        "OTHER_INTERNAL_COLLABORATORS": "Autres collaborateurs internes",
+        "FURNISHERS": "Fournisseurs",
+        "CLIENTS": "Clients",
+        "PARTNERS": "Partenaires",
+        "OTHERS_EXTERNAL": "Autres partenaires externes"
+      },
+      "steps": {
+        "AT_LAUNCH_OF_APPROACH": "Au lancement de la démarche",
+        "AT_LAUNCH_OF_DATA_COLLECTION": "Au lancement de la collecte de données",
+        "DURING_DATA_COLLECTION": "Durant la collecte de données",
+        "BEFORE_RESULTS_RESTITUTION": "Avant restitution des résultats",
+        "AT_LAUNCH_OF_TRANSITION_PLAN_CONSTRUCTION": "Au lancement de la construction du plan de transition",
+        "DURING_TRANSITION_PLAN_CONSTRUCTION": "Durant la construction du plan de transition",
+        "IN_SUMMARY_OF_APPROACH": "Dans le résumé de la démarche"
+      },
+      "phases": {
+        "AwarnessAndOutreach": "Mobilisation et sensibilisation",
+        "Empowerment": "Responsabilisation",
+        "CoConstruction": "Co-construction",
+        "FeedbackAndCommunication": "Retours et communication"
       }
     }
   },

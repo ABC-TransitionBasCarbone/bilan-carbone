@@ -313,7 +313,6 @@
       "homepage": "Homepage",
       "framing": "Framing",
       "scope": "Scope",
-      "mobilisation": "Mobilization",
       "accounting": "Accounting",
       "dataEntry": "Data entry",
       "results": "Results",
@@ -327,7 +326,9 @@
       "trajectories": "Reduction trajectories",
       "objectives": "Reduction objectives",
       "actionPlan": "Action plan",
-      "commingSoon": "Coming soon"
+      "commingSoon": "Coming soon",
+      "engagement": "Engagement",
+      "carriedActions": "Carried actions"
     },
     "new": {
       "title": "Information about the new study",
@@ -1189,6 +1190,56 @@
           "message": "Are you sure you want to delete this action definitively?",
           "confirm": "Delete"
         }
+      }
+    },
+    "engagementActions": {
+      "title": "Carries Actions",
+      "table": {
+        "name": "Name",
+        "description": "Description",
+        "steps": "Steps",
+        "target": "Target",
+        "phase": "Phase",
+        "date": "Date"
+      },
+      "modal": {
+        "add": "Add an action",
+        "update": "Modify an action",
+        "clear": "Clear value",
+        "name": "Name",
+        "namePlaceholder": "Give a name to your action",
+        "description": "Description (number of participants, format, procedure, etc)",
+        "descriptionPlaceholder": "Describe your action",
+        "steps": "Step of the process concerned",
+        "stepsPlaceholder": "Choose the steps of your action",
+        "target": "Targets",
+        "phase": "Mobilization phase",
+        "date": "Date",
+        "validate": "Validate"
+      },
+      "targets": {
+        "TEAM_PROJECT": "Project team",
+        "DIRECTION": "Direction",
+        "OTHER_INTERNAL_COLLABORATORS": "Other internal collaborators",
+        "FURNISHERS": "Suppliers",
+        "CLIENTS": "Clients",
+        "PARTNERS": "Partners",
+        "OTHERS_EXTERNAL": "Others external partners"
+      },
+      "steps": {
+        "AT_LAUNCH_OF_APPROACH": "At the launch of the approach",
+        "AT_LAUNCH_OF_DATA_COLLECTION": "At the launch of data collection",
+        "DURING_DATA_COLLECTION": "During data collection",
+        "BEFORE_RESULTS_RESTITUTION": "Before results restitution",
+        "AT_LAUNCH_OF_TRANSITION_PLAN_CONSTRUCTION": "At the launch of transition plan construction",
+        "DURING_TRANSITION_PLAN_CONSTRUCTION": "During transition plan construction",
+        "IN_SUMMARY_OF_APPROACH": "In summary of the approach"
+      },
+      "phases": {
+        "AwarnessAndOutreach": "Awareness and outreach",
+        "Empowerment": "Empowerment",
+        "CoConstruction": "Co-construction",
+        "FeedbackAndCommunication": "Feedback and communication"
       }
     }
   },
