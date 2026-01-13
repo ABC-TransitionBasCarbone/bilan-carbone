@@ -2065,6 +2065,7 @@
       "name": "Nom",
       "caracterisation": "Caractérisation",
       "constructionYear": "Année de construction",
+      "acquisitionYear": "Année d'acquisition",
       "emissionFactor": "Facteur d'émission",
       "activity": "Donnée d'activité",
       "value": "Valeur donnée d'activité",
