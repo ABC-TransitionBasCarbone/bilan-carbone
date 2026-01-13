@@ -1,7 +1,7 @@
 import NavbarButton from '@/components/navbar/NavbarButton'
 import NavbarLink from '@/components/navbar/NavbarLink'
 import NavbarOrganizationMenu from '@/components/navbar/NavbarOrganizationMenu'
-import { isTilt } from '@/services/permissions/environment'
+import { hasAlwaysAccessToOrganizationVersion, isTilt } from '@/services/permissions/environment'
 import { hasAccessToEmissionFactors } from '@/services/permissions/environmentAdvanced'
 import { isAdmin } from '@/utils/user'
 import { Box, MenuItem } from '@mui/material'
@@ -37,7 +37,9 @@ const TopLeftNavBar = ({ user, hasFormation }: Props) => {
             onClose={handleClose}
             slotProps={{ list: { onMouseLeave: handleClose } }}
           >
-            {(isAdmin(user.role) || user.role === Role.GESTIONNAIRE) && (
+            {(isAdmin(user.role) ||
+              user.role === Role.GESTIONNAIRE ||
+              hasAlwaysAccessToOrganizationVersion(user.environment)) && (
               <MenuItem>
                 <NavbarLink
                   data-testid="link-edit-organisation"

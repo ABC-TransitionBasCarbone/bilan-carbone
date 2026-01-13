@@ -26,9 +26,18 @@ interface Props<T extends SitesCommand> {
   columns: ColumnDef<TypeDef>[]
   caUnit?: SiteCAUnit
   environment: Environment
+  disabled?: boolean
 }
 
-const Sites = <T extends SitesCommand>({ sites, form, withSelection, columns, caUnit, environment }: Props<T>) => {
+const Sites = <T extends SitesCommand>({
+  sites,
+  form,
+  withSelection,
+  columns,
+  caUnit,
+  environment,
+  disabled,
+}: Props<T>) => {
   const t = useTranslations('organization.sites')
   const tGlossary = useTranslations('organization.sites.glossary')
   const tUnit = useTranslations('settings.caUnit')
@@ -64,7 +73,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, columns, ca
               </span>
             )}
           </p>
-          {form && !withSelection && hasAccessToStudySiteAddAndSelection(environment) && (
+          {!disabled && form && !withSelection && hasAccessToStudySiteAddAndSelection(environment) && (
             <Button onClick={() => setValue('sites', [...sites, newSite()])} data-testid="add-site-button">
               {t('add')}
             </Button>

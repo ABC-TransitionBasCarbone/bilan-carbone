@@ -17,6 +17,7 @@ interface Props<T extends SitesCommand> {
   caUnit: SiteCAUnit
   organizationId?: string
   onDuplicate?: (studySiteId: string) => void
+  disabled?: boolean
 }
 
 const Sites = <T extends SitesCommand>({
@@ -26,6 +27,7 @@ const Sites = <T extends SitesCommand>({
   caUnit,
   organizationId,
   onDuplicate,
+  disabled = false,
 }: Props<T>) => {
   const t = useTranslations('organization.sites')
   const control = form?.control as Control<SitesCommand>
@@ -37,7 +39,7 @@ const Sites = <T extends SitesCommand>({
           header: t('volunteerNumber'),
           accessorKey: 'volunteerNumber',
           cell: ({ row, getValue }) =>
-            form ? (
+            form && !disabled ? (
               <FormTextField
                 data-testid="organization-sites-volunteer-number"
                 type="number"
@@ -60,7 +62,7 @@ const Sites = <T extends SitesCommand>({
           header: t('beneficiaryNumber'),
           accessorKey: 'beneficiaryNumber',
           cell: ({ row, getValue }) =>
-            form ? (
+            form && !disabled ? (
               <FormTextField
                 data-testid="organization-sites-beneficiary-number"
                 type="number"
@@ -79,7 +81,7 @@ const Sites = <T extends SitesCommand>({
             ),
         },
       ] as ColumnDef<SitesCommand['sites'][number]>[],
-    [form],
+    [form, disabled],
   )
 
   return (
@@ -92,6 +94,7 @@ const Sites = <T extends SitesCommand>({
       environment={Environment.TILT}
       organizationId={organizationId}
       onDuplicate={onDuplicate}
+      disabled={disabled}
     />
   )
 }

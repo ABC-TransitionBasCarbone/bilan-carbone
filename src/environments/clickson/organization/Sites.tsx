@@ -21,9 +21,10 @@ interface Props<T extends SitesCommand> {
   sites: SitesCommand['sites']
   withSelection?: boolean
   organizationId?: string
+  disabled?: boolean
 }
 
-const Sites = <T extends SitesCommand>({ sites, form, withSelection, organizationId }: Props<T>) => {
+const Sites = <T extends SitesCommand>({ sites, form, withSelection, organizationId, disabled = false }: Props<T>) => {
   const t = useTranslations('organization.sites')
   const control = form?.control as Control<SitesCommand>
   const columns = useMemo(
@@ -34,7 +35,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, organizatio
           header: t('establishmentType.title'),
           accessorKey: 'establishmentType',
           cell: ({ row, getValue }) =>
-            form ? (
+            !disabled && form ? (
               <FormSelect
                 translation={t}
                 data-testid="organization-sites-volunteer-number"
@@ -72,7 +73,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, organizatio
           ),
           accessorKey: 'name',
           cell: ({ row, getValue }) =>
-            form ? (
+            !disabled && form ? (
               <>
                 {withSelection ? (
                   <div className="align-center">
@@ -105,7 +106,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, organizatio
           header: t('etp'),
           accessorKey: 'etp',
           cell: ({ row, getValue }) =>
-            form ? (
+            !disabled && form ? (
               <FormTextField
                 data-testid="organization-sites-volunteer-number"
                 type="number"
@@ -128,7 +129,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, organizatio
           header: t('studentNumber'),
           accessorKey: 'studentNumber',
           cell: ({ row, getValue }) =>
-            form ? (
+            !disabled && form ? (
               <FormTextField
                 data-testid="organization-sites-beneficiary-number"
                 type="number"
@@ -151,7 +152,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, organizatio
           header: t('establishmentYear'),
           accessorKey: 'establishmentYear',
           cell: ({ row, getValue }) =>
-            form ? (
+            !disabled && form ? (
               <FormTextField
                 data-testid="organization-sites-beneficiary-number"
                 type="number"
@@ -174,7 +175,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, organizatio
           header: t('city'),
           accessorKey: 'city',
           cell: ({ row, getValue }) =>
-            form ? (
+            !disabled && form ? (
               <FormTextField
                 data-testid="organization-sites-city"
                 control={control}
@@ -191,7 +192,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, organizatio
           header: t('academy'),
           accessorKey: 'academy',
           cell: ({ row, getValue }) =>
-            form ? (
+            !disabled && form ? (
               <FormTextField
                 data-testid="organization-sites-academy"
                 control={control}
