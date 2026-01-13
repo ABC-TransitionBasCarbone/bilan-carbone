@@ -1549,6 +1549,7 @@
       "BaseEmpreinte": "Base Empreinte",
       "NegaOctet": "NegaOctet",
       "Legifrance": "Légifrance",
+      "AIB": "AIB",
       "displayArchived": "Afficher les facteurs archivés",
       "goTo": "Aller à la page",
       "items": "Élements par page",
@@ -1581,6 +1582,7 @@
         "baseEmpreinte": "Logo de la Base Empreinte",
         "legifrance": "Logo de Légifrance",
         "negaOctet": "Logo de NegaOctet",
+        "aib": "Logo de l'Association of Issuing Bodies",
         "manual": "Manuel"
       },
       "post": "Postes",

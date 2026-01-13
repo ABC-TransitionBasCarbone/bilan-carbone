@@ -30,6 +30,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
     data: [
       { internId: 'Legifrance_Test.csv', name: 'test', source: Import.Legifrance },
       { internId: 'Negaoctet_Test.csv', name: 'test', source: Import.NegaOctet },
+      { internId: 'AIB_Test.csv', name: 'test', source: Import.AIB },
     ],
   })
 

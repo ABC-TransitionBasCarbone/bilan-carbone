@@ -26,6 +26,7 @@ enum Import {
   Manual
   CUT
   CLICKSON
+  AIB
 }
 
 enum EmissionFactorStatus {
