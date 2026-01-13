@@ -7,12 +7,14 @@ import {
 import { canCreateAStudy } from '@/services/permissions/study'
 import { hasActiveLicence } from '@/utils/organization'
 import AddIcon from '@mui/icons-material/Add'
-import { Box as MUIBox } from '@mui/material'
+import { Alert, Box as MUIBox } from '@mui/material'
 import { Study } from '@prisma/client'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
+import Link from 'next/link'
 import { Suspense } from 'react'
+import Block from '../base/Block'
 import Box from '../base/Box'
 import LinkButton from '../base/LinkButton'
 import Image from '../document/Image'
@@ -77,6 +79,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
           collaborations={!organizationVersionId && isCR}
         />
       )}
+
       {!!simplifiedStudies.length && (
         <Studies
           studies={simplifiedStudies}
@@ -103,7 +106,22 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
         </Box>
       </div>
     </MUIBox>
-  ) : null
+  ) : (
+    <Block>
+      <Alert className="p0" severity="info">
+        <p>
+          {t.rich('cannotCreateStudy', {
+            link: (children) => <Link href="/ressources">{children}</Link>,
+          })}
+        </p>
+        <p>
+          {t.rich('canCreateFootPrint', {
+            link: (children) => <Link href="/mes-empreintes">{children}</Link>,
+          })}
+        </p>
+      </Alert>
+    </Block>
+  )
 }
 
 export default StudiesContainer

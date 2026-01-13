@@ -73,7 +73,9 @@
     "createFirstSimplifiedStudy": "Créer ma première Empreinte",
     "createSimplified": "Créer une Empreinte",
     "mySimplifiedStudies": "Mes Empreintes",
-    "seeSimplified": "Voir mon Empreinte"
+    "seeSimplified": "Voir mon Empreinte",
+    "cannotCreateStudy": "Pour pouvoir faire des Bilans Carbone® il faut être formé à la méthode ! <link>En savoir plus</link>",
+    "canCreateFootPrint": "Vous pouvez cependant faire <link>une empreinte carbone</link> vous permettant d'effectuer une estimation de votre impact"
   },
   "emissionFactors": {
     "post": {
@@ -127,6 +129,7 @@
     }
   },
   "navigation": {
-    "footprints": "Mes empreintes"
+    "footprints": "Mes empreintes",
+    "information": "Mon Association"
   }
 }

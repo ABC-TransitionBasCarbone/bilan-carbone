@@ -689,7 +689,7 @@ const users = async () => {
   ])
 
   await Promise.all(
-    [Role.GESTIONNAIRE, Role.COLLABORATOR].map(async (role) => {
+    [Role.GESTIONNAIRE, Role.DEFAULT].map(async (role) => {
       return prisma.account.create({
         data: {
           organizationVersionId: regularTiltOrganizationVersions[0].id,
