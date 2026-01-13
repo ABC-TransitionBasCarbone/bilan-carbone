@@ -3,7 +3,7 @@ import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { hasDeprecationPeriod } from '@/utils/study'
-import { EmissionFactor, ExportRule, Import, EmissionFactor as PrismaEmissionFactor } from '@prisma/client'
+import { ExportRule, Import } from '@prisma/client'
 import { computeResult, EmissionSource, ExportEmissionFactor, getEmissionTotal, PostInfos } from './exports'
 
 const allRules = [
@@ -39,7 +39,7 @@ export const rulesSpans: Record<string, number> = {
 }
 
 const getEmissionFactorValue = (
-  emissionFactor: Pick<EmissionFactor, 'importedFrom' | 'importedId' | 'totalCo2' | 'otherGES'>,
+  emissionFactor: Pick<ExportEmissionFactor, 'importedFrom' | 'importedId' | 'totalCo2' | 'otherGES'>,
 ) => {
   if (
     emissionFactor.importedFrom === Import.BaseEmpreinte &&
@@ -50,22 +50,23 @@ const getEmissionFactorValue = (
   }
 
   // otherGES are not taken into account in ghgp table
-  return emissionFactor.totalCo2 - (emissionFactor.otherGES || 0)
+  return (emissionFactor.totalCo2 || 0) - (emissionFactor.otherGES || 0)
 }
 
-const getLine = (value: number, emissionFactor: ExportEmissionFactor): Omit<PostInfos, 'rule' | 'uncertainty'> => {
-  const hfc = emissionFactor.hfc || 0
-  const pfc = emissionFactor.pfc || 0
-  const sf6 = emissionFactor.sf6 || 0
-  const ch4 = (emissionFactor.ch4f || 0) + (emissionFactor.ch4b || 0)
-  const n2o = emissionFactor.n2o || 0
-  const other = emissionFactor.otherGES || 0
-  const co2b = emissionFactor.co2b || 0
+const getLine = (value: number, EFOrEFPart: ExportEmissionFactor): Omit<PostInfos, 'rule' | 'uncertainty'> => {
+  const hfc = EFOrEFPart.hfc || 0
+  const pfc = EFOrEFPart.pfc || 0
+  const sf6 = EFOrEFPart.sf6 || 0
+  const ch4 = (EFOrEFPart.ch4f || 0) + (EFOrEFPart.ch4b || 0)
+  const n2o = EFOrEFPart.n2o || 0
+  const other = EFOrEFPart.otherGES || 0
+  const co2b = EFOrEFPart.co2b || 0
 
-  const total =
-    emissionFactor.importedFrom && emissionFactor.importedId
-      ? getEmissionFactorValue(emissionFactor as PrismaEmissionFactor)
-      : (emissionFactor.totalCo2 || 0) - other // otherGES are not taken into account in ghgp table
+  const isFEPart = !EFOrEFPart.importedFrom || !EFOrEFPart.importedId
+  const total = isFEPart
+    ? (EFOrEFPart.totalCo2 || 0) - other // otherGES are not taken into account in ghgp table
+    : getEmissionFactorValue(EFOrEFPart)
+
   const co2 = total - (hfc + pfc + sf6 + ch4 + n2o)
 
   return {
