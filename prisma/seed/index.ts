@@ -7,6 +7,7 @@ import { getAllowedLevels } from '@/services/study'
 import { faker } from '@faker-js/faker'
 import {
   Account,
+  EmissionFactorBase,
   EmissionFactorStatus,
   Environment,
   Import,
@@ -862,6 +863,7 @@ const users = async () => {
       unit: Unit.GWH,
       isMonetary: false,
       source: 'Magic',
+      base: EmissionFactorBase.LocationBased,
       subPosts: [SubPost.Electricite],
       organizationId: defaultUserWithAccount.accounts[0].organizationVersion.organizationId,
       emissionFactorParts: {
