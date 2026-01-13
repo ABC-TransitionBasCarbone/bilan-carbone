@@ -1,0 +1,26 @@
+.ghgpTable thead tr th {
+  background-color: var(--mui-palette-ghgp-main);
+  color: white !important;
+}
+
+.ghgpTable tbody tr td.categoryCell {
+  background-color: var(--mui-palette-ghgp-main);
+  color: white;
+}
+
+.ghgpTable tbody tr td.postCell {
+  background-color: var(--mui-palette-ghgp-light);
+}
+
+.ghgpTable tbody tr td.totalColumn {
+  background-color: var(--mui-palette-ghgp-totalColumn);
+}
+
+.ghgpTable tbody tr td.co2bColumn {
+  background-color: var(--mui-palette-ghgp-co2bColumn);
+}
+
+.totalRow {
+  background-color: var(--mui-palette-ghgp-main);
+  color: white;
+}

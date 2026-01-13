@@ -289,19 +289,21 @@ export const createStudyCommand = async (
       ],
     }
 
+    const { exports, controlMode, isPublic, ...studyCommand } = command
+
     const study = {
-      ...command,
+      ...studyCommand,
       createdBy: { connect: { id: session.user.accountId } },
       organizationVersion: { connect: { id: organizationVersionId } },
-      isPublic: command.isPublic === 'true',
+      isPublic: isPublic === 'true',
       resultsUnit: resultsUnit || StudyResultUnit.T,
       allowedUsers: {
         createMany: { data: rights },
       },
       exports: {
         create: {
-          types: command.exports,
-          control: command.controlMode || ControlMode.Operational,
+          types: exports,
+          control: controlMode || ControlMode.Operational,
         },
       },
       sites: {
@@ -769,20 +771,6 @@ export const updateStudySpecificExportFields = async (studyId: string, controlMo
           if (!isCaracterisarionValidForNewControlMode && validCaracterisations.length === 1) {
             dataToUpdate.caracterisation = validCaracterisations[0]
           }
-
-          // TO DO : clear after test
-          // const dataToUpdate: Prisma.StudyEmissionSourceUpdateInput = {
-          //   ...clearedFieldsValues(filteredClearedFields),
-          // }
-
-          // if (!isCaracterisarionValidForNewControlMode) {
-          //   if (validCaracterisations.length === 1) {
-          //     dataToUpdate.caracterisation = validCaracterisations[0]
-          //   }
-          //   dataToUpdate.validated = shouldKeepValidation
-          // } else if (!shouldKeepValidation) {
-          //   dataToUpdate.validated = false
-          // }
 
           return prismaClient.studyEmissionSource.update({
             where: { id: emissionSource.id },
