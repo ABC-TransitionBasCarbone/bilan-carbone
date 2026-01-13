@@ -171,6 +171,15 @@ export const getStudyNavbarMenu = (
               },
             ],
       },
+      {
+        header: t('engagement'),
+        links: [
+          {
+            href: `/etudes/${studyId}/actions-de-mobilisation`,
+            label: t('carriedActions'),
+          },
+        ],
+      },
     ],
   }
 }
