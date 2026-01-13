@@ -45,8 +45,9 @@ const getLine = (value: number, emissionFactor: ExportEmissionFactor): Omit<Post
   const other = emissionFactor.otherGES || 0
   const co2b = emissionFactor.co2b || 0
 
-  const total = emissionFactor.totalCo2 || 0
-  const co2 = total - (hfc + pfc + sf6 + ch4 + n2o + other)
+  // otherGES are not taken into account in ghgp table
+  const total = (emissionFactor.totalCo2 || 0) - other
+  const co2 = total - (hfc + pfc + sf6 + ch4 + n2o)
 
   return {
     co2: value * co2,
