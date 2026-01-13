@@ -5,7 +5,6 @@ import Box from '@/components/base/Box'
 import useStudySite from '@/components/study/site/useStudySite'
 import { FullStudy } from '@/db/study'
 import { usePublicodesResults } from '@/hooks/usePublicodesResults'
-import { Post } from '@/services/posts'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import CircularProgress from '@mui/material/CircularProgress'
 import { SiteCAUnit } from '@prisma/client'
@@ -19,16 +18,9 @@ interface Props {
   chartOrder?: Record<ChartType, number>
   caUnit?: SiteCAUnit
   showSubLevel?: boolean
-  customPostOrder?: Post[]
 }
 
-const AllResultsPublicodes = ({
-  study,
-  chartOrder = defaultChartOrder,
-  caUnit,
-  showSubLevel = false,
-  customPostOrder = [],
-}: Props) => {
+const AllResultsPublicodes = ({ study, chartOrder = defaultChartOrder, caUnit, showSubLevel = false }: Props) => {
   const tStudyNav = useTranslations('study.navigation')
   const { studySite, setSite } = useStudySite(study, true)
   const { aggregated, bySite, isLoading, error } = usePublicodesResults(
@@ -78,8 +70,6 @@ const AllResultsPublicodes = ({
       chartOrder={chartOrder}
       caUnit={caUnit}
       showSubLevel={showSubLevel}
-      customPostOrder={customPostOrder}
-      hiddenUncertainty={true}
     />
   )
 }

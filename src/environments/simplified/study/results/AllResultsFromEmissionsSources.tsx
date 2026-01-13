@@ -1,35 +1,33 @@
 'use client'
 
 import useStudySite from '@/components/study/site/useStudySite'
+import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
-import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
-
-import { SiteCAUnit } from '@prisma/client'
-
-import { Post } from '@/services/posts'
 import { BaseResultsByPost, BaseResultsBySite } from '@/services/results/consolidated'
 import { getDetailedEmissionResults } from '@/services/study'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
+import { SiteCAUnit } from '@prisma/client'
+import { useTranslations } from 'next-intl'
+import { useMemo } from 'react'
 import AllResults from './AllResults'
 import { ChartType, defaultChartOrder } from './utils'
 
 interface Props {
+  emissionFactorsWithParts: EmissionFactorWithParts[]
   study: FullStudy
   validatedOnly: boolean
   chartOrder?: Record<ChartType, number>
   caUnit?: SiteCAUnit
   showSubLevel?: boolean
-  customPostOrder?: Post[]
 }
 
 const AllResultsFromEmissionsSources = ({
+  emissionFactorsWithParts,
   study,
   validatedOnly,
   chartOrder = defaultChartOrder,
   caUnit,
   showSubLevel = false,
-  customPostOrder = [],
 }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const tResults = useTranslations('study.results')
@@ -87,9 +85,8 @@ const AllResultsFromEmissionsSources = ({
       setSite={setSite}
       chartOrder={chartOrder}
       caUnit={caUnit}
+      emissionFactorsWithPart={emissionFactorsWithParts}
       showSubLevel={showSubLevel}
-      customPostOrder={customPostOrder}
-      hiddenUncertainty={true}
     />
   )
 }

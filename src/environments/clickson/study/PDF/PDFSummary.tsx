@@ -5,7 +5,7 @@ import '@/app/(public)/preview/etudes/[id]/pdf-summary.css'
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import { FullStudy } from '@/db/study'
 import { ClicksonPost } from '@/services/posts'
-import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
+import { computeResultsByPostFromEmissionSources, ResultsByPost } from '@/services/results/consolidated'
 import { getDetailedEmissionResults } from '@/services/study'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { ThemeProvider } from '@mui/material/styles'
@@ -64,7 +64,7 @@ const PDFSummary = ({ study }: Props) => {
         const sitesData: SiteData[] = []
 
         for (const studySite of study.sites) {
-          const siteComputedResults = computeResultsByPost(
+          const siteComputedResults = computeResultsByPostFromEmissionSources(
             study,
             tPost,
             studySite.id,

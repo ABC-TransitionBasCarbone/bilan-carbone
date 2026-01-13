@@ -9,7 +9,7 @@ import { download } from '@/services/file'
 import { hasAccessToBcExport, hasAccessToDownloadStudyEmissionSourcesButton } from '@/services/permissions/environment'
 import { environmentPostMapping } from '@/services/posts'
 import { computeBegesResult } from '@/services/results/beges'
-import { computeResultsByPost, computeResultsByTag } from '@/services/results/consolidated'
+import { computeResultsByPostFromEmissionSources, computeResultsByTag } from '@/services/results/consolidated'
 import { getSiteEmissionSources } from '@/services/results/utils'
 import { isDeactivableFeatureActiveForEnvironment } from '@/services/serverFunctions/deactivableFeatures'
 import { prepareReport } from '@/services/serverFunctions/study'
@@ -166,7 +166,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
 
     const filteredStudy = { ...study, emissionSources: filteredEmissionSources }
 
-    const filteredWithDep = computeResultsByPost(
+    const filteredWithDep = computeResultsByPostFromEmissionSources(
       filteredStudy,
       tPost,
       studySite,
@@ -177,7 +177,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       type,
     )
 
-    const filteredWithoutDep = computeResultsByPost(
+    const filteredWithoutDep = computeResultsByPostFromEmissionSources(
       filteredStudy,
       tPost,
       studySite,

@@ -1,7 +1,8 @@
 import AllResultsAdvanced from '@/components/study/results/AllResults'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
-import AllResultsSimplified, { ChartType } from '@/environments/simplified/study/results/AllResults'
+import AllResultsSimplifiedFromEmissionsSources from '@/environments/simplified/study/results/AllResultsFromEmissionsSources'
+import { ChartType } from '@/environments/simplified/study/results/utils'
 import { ExportRule, SiteCAUnit } from '@prisma/client'
 
 interface Props {
@@ -25,7 +26,7 @@ const AllResults = ({
 }: Props) => {
   if (study.simplified) {
     return (
-      <AllResultsSimplified
+      <AllResultsSimplifiedFromEmissionsSources
         showSubLevel={showSubLevel}
         emissionFactorsWithParts={emissionFactorsWithParts}
         study={study}

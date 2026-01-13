@@ -6,7 +6,7 @@ import DownloadIcon from '@mui/icons-material/Download'
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
 import { Box, Button, Tab, Tabs, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import { Dispatch, SetStateAction, SyntheticEvent, useState } from 'react'
+import { Dispatch, SetStateAction, SyntheticEvent, useMemo, useState } from 'react'
 
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import TabPanel from '@/components/tabPanel/tabPanel'
@@ -23,37 +23,40 @@ import classNames from 'classnames'
 import Link from 'next/link'
 import styles from './AllResults.module.css'
 
+import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import EmissionsAnalysisClickson from '@/environments/clickson/study/results/consolidated/EmissionsAnalysisClickson'
-import { Post } from '@/services/posts'
-import { BaseResultsByPost, BaseResultsBySite } from '@/services/results/consolidated'
-import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import {
+  hasAccessToResultsRatioTab,
   hasAccessToSimplifiedEmissionAnalysis,
   showResultsInfoText,
-} from '../../../../services/permissions/environment'
+} from '@/services/permissions/environment'
+import { BaseResultsByPost, BaseResultsBySite } from '@/services/results/consolidated'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { a11yProps, ChartType, defaultChartOrder, tabsLabels } from './utils'
 
 interface Props {
-  study: FullStudy
-  totalValue: number
-  studySite: string
-  setSite: Dispatch<SetStateAction<string>>
-  computedResultsBySite: BaseResultsBySite
   computedResults: BaseResultsByPost[]
-  chartOrder?: Record<ChartType, number>
+  computedResultsBySite: BaseResultsBySite
+  setSite: Dispatch<SetStateAction<string>>
+  study: FullStudy
+  studySite: string
+  totalValue: number
   caUnit?: SiteCAUnit
+  chartOrder?: Record<ChartType, number>
+  emissionFactorsWithPart?: EmissionFactorWithParts[]
   showSubLevel?: boolean
 }
 
 const AllResults = ({
-  study,
   computedResults,
   computedResultsBySite,
-  totalValue,
-  studySite,
   setSite,
+  study,
+  studySite,
+  totalValue,
   caUnit,
   chartOrder = defaultChartOrder,
+  emissionFactorsWithPart = [],
   showSubLevel = false,
 }: Props) => {
   const [tabValue, setTabValue] = useState(0)
@@ -97,8 +100,6 @@ const AllResults = ({
     setPdfLoading(false)
   }
 
-  const orderedTabs = [...tabsLabels].sort((a, b) => chartOrder[a.key as ChartType] - chartOrder[b.key as ChartType])
-
   const filteredTabsLabels = useMemo(() => {
     return tabsLabels.filter((tab) => tab !== 'ratio' || (environment && hasAccessToResultsRatioTab(environment)))
   }, [environment])
@@ -123,7 +124,7 @@ const AllResults = ({
               downloadStudyResults(
                 study,
                 [],
-                [],
+                emissionFactorsWithPart,
                 tResults,
                 tExport,
                 tPost,
@@ -204,17 +205,13 @@ const AllResults = ({
           textColor="inherit"
           variant="fullWidth"
         >
-          {orderedTabs.map((t, index) => (
-            <Tab key={t.key} label={t.label} {...a11yProps(index)} />
+          {orderedTabs.map((tab, index) => (
+            <Tab key={tab} label={tResults(`chartTypes.${tab}`)} {...a11yProps(index)} />
           ))}
         </Tabs>
         <Box component="section" sx={{ marginTop: '1rem' }}>
           <TabPanel value={tabValue} index={chartOrder.table}>
-            <ConsolidatedResultsTable
-              resultsUnit={study.resultsUnit}
-              data={computedResults}
-              hiddenUncertainty={hiddenUncertainty}
-            />
+            <ConsolidatedResultsTable resultsUnit={study.resultsUnit} data={computedResults} hiddenUncertainty />
           </TabPanel>
           <TabPanel value={tabValue} index={chartOrder.bar}>
             <BarChart
@@ -226,7 +223,6 @@ const AllResults = ({
               showSubLevel={showSubLevel}
               showLabelsOnBars={!showSubLevel}
               type="post"
-              customOrder={customPostOrder}
             />
           </TabPanel>
           <TabPanel value={tabValue} index={chartOrder.pie}>
@@ -240,6 +236,9 @@ const AllResults = ({
               type="post"
             />
           </TabPanel>
+          {environment && hasAccessToResultsRatioTab(environment) ? (
+            <TabPanel value={tabValue} index={chartOrder.ratio} />
+          ) : null}
         </Box>
       </Box>
     </Block>
