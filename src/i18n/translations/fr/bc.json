@@ -1452,6 +1452,16 @@
       "subPost": "Sous Poste",
       "comment": "Commentaires",
       "clear": "Supprimer la valeur",
+      "base": "Base",
+      "MarketBased": "market-based",
+      "LocationBased": "location-based",
+      "baseModal": {
+        "title": "Information pour les exports GHG-P",
+        "description": "Vous devez ici indiquer si votre FE s'applique dans le cadre de la méthode location-based, ou dans le cas de la méthode market-based. Cette distinction ne s'appliquera que si votre FE est utilisé au sein du sous-poste Électricité du poste Énergie. Pour rappel :",
+        "location": "La méthode location-based est basée sur l'utilisation de facteurs d'émission représentant le mix électrique moyen sur des périmètres géographiques et temporels définis. En France, les facteurs d'émission utilisés sont typiquement de la forme \"Mix moyen - Année concernée - France\".",
+        "market": "La méthode market-based est basée sur l'utilisation de facteurs d'émission représentatif de l'électricité produite par les producteurs d'électricité auxquels l'organisation est contractuellement liée via des achats de Garanties d'Origine (GO) ou de la vente directe d'électricité (Power Purchase Agreement, ou PPA). Toute l'électricité non couverte pas les contrats mentionnés doit alors être prise en compte via les facteurs d'émission concernant les mix résiduels, c'est-à-dire les facteurs d'émission des mix électriques dont a été retirée tout l'électricité faisant l'objet des contrats mentionnés.",
+        "conclusion": "Le Bilan Carbone® et le Bilan GES réglementaire n'autorisent que la méthode location-based, l'ISO 14064-1 autorise l'usage des deux méthodes, tandis que le GHG Protocol exige une double comptabilisation de l'électricité consommée, d'une part en location-based et d'autre part en market-based."
+      },
       "glossary": {
         "title": "Glossaire",
         "detailedGES": "Décomposition des GES",
