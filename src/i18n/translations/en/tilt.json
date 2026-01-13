@@ -74,7 +74,8 @@
     "mySimplifiedStudies": "My footprints",
     "createSimplified": "Create a footprint",
     "seeSimplified": "See my footprint",
-    "cannotCreateStudy": "To create a Carbon Footprint® you must be trained in the method! <link>Learn more</link>"
+    "cannotCreateStudy": "To create a Carbon Footprint® you must be trained in the method! <link>Learn more</link>",
+    "canCreateFootPrint": "You can however create a <link>carbon footprint</link> allowing you to estimate your impact"
   },
   "emissionFactors": {
     "post": {

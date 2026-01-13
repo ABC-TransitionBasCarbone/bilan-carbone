@@ -14,6 +14,7 @@ import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 import { Suspense } from 'react'
+import Block from '../base/Block'
 import Box from '../base/Box'
 import LinkButton from '../base/LinkButton'
 import Image from '../document/Image'
@@ -69,7 +70,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
           <ResultsContainerForUser user={user} mainStudyOrganizationVersionId={mainStudyOrganizationVersionId} />
         </Suspense>
       )}
-      {advancedStudies.length ? (
+      {!!advancedStudies.length && (
         <Studies
           studies={advancedStudies}
           canAddStudy={canCreateAStudy(user) && !isCR && activeLicence}
@@ -77,13 +78,8 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
           user={user}
           collaborations={!organizationVersionId && isCR}
         />
-      ) : canCreateAStudy(user) ? null : (
-        <Alert severity="info">
-          {t.rich('cannotCreateStudy', {
-            link: (children) => <Link href="/ressources">{children}</Link>,
-          })}
-        </Alert>
       )}
+
       {!!simplifiedStudies.length && (
         <Studies
           studies={simplifiedStudies}
@@ -110,7 +106,22 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
         </Box>
       </div>
     </MUIBox>
-  ) : null
+  ) : (
+    <Block>
+      <Alert className="p0" severity="info">
+        <p>
+          {t.rich('cannotCreateStudy', {
+            link: (children) => <Link href="/ressources">{children}</Link>,
+          })}
+        </p>
+        <p>
+          {t.rich('canCreateFootPrint', {
+            link: (children) => <Link href="/mes-empreintes">{children}</Link>,
+          })}
+        </p>
+      </Alert>
+    </Block>
+  )
 }
 
 export default StudiesContainer
