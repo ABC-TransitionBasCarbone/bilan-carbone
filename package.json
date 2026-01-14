@@ -83,7 +83,7 @@
     "postcss-nested": "^7.0.2",
     "postcss-preset-env": "^10.6.0",
     "prisma": "^6.17.1",
-    "publicodes": "^1.9.1",
+    "publicodes": "https://pkg.pr.new/publicodes/publicodes@4c20c4e",
     "react": "19.2.3",
     "react-countdown": "^2.3.6",
     "react-dom": "19.2.3",
