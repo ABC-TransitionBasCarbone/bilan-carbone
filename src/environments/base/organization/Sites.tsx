@@ -23,6 +23,7 @@ interface Props<T extends SitesCommand> {
   environment?: Environment
   organizationId?: string
   onDuplicate?: (studySiteId: string) => void
+  disabled?: boolean
 }
 
 const Sites = <T extends SitesCommand>({
@@ -34,6 +35,7 @@ const Sites = <T extends SitesCommand>({
   environment = Environment.BC,
   organizationId,
   onDuplicate,
+  disabled = false,
 }: Props<T>) => {
   const t = useTranslations('organization.sites')
   const tUnit = useTranslations('settings.caUnit')
@@ -60,7 +62,7 @@ const Sites = <T extends SitesCommand>({
         ),
         accessorKey: 'name',
         cell: ({ row, getValue }) =>
-          form ? (
+          form && !disabled ? (
             <>
               {withSelection ? (
                 <div className="align-center">
@@ -93,7 +95,7 @@ const Sites = <T extends SitesCommand>({
         header: t('etp'),
         accessorKey: 'etp',
         cell: ({ row, getValue }) =>
-          form ? (
+          form && !disabled ? (
             <FormTextField
               data-testid="organization-sites-etp"
               type="number"
@@ -116,7 +118,7 @@ const Sites = <T extends SitesCommand>({
         header: t('ca', { unit: headerCAUnit }),
         accessorKey: 'ca',
         cell: ({ row, getValue }) =>
-          form ? (
+          form && !disabled ? (
             <FormTextField
               data-testid="organization-sites-ca"
               size="small"
@@ -137,7 +139,7 @@ const Sites = <T extends SitesCommand>({
       ...additionalColumns,
     ] as ColumnDef<SitesCommand['sites'][0]>[]
 
-    if ((form && !withSelection) || (!form && onDuplicate)) {
+    if (!disabled && ((form && !withSelection) || (!form && onDuplicate))) {
       columns.push({
         id: 'actions',
         header: '',
@@ -185,6 +187,7 @@ const Sites = <T extends SitesCommand>({
       withSelection={withSelection}
       caUnit={caUnit}
       environment={environment}
+      disabled={disabled}
     />
   )
 }

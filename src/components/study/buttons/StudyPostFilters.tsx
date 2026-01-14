@@ -120,30 +120,35 @@ const StudyPostFilters = ({ study, post, filters, setFilters, caracterisationOpt
         </div>
         <div>
           {/* Tags */}
-          <MenuItem
-            className="p0"
-            key="tag-item-all"
-            onClick={() =>
-              onMasterClick(
-                'tags',
-                areAllTagsSelected,
-                tagsOptions.map((tag) => tag.value),
-              )
-            }
-          >
-            <Checkbox checked={areAllTagsSelected} />
-            <ListItemText primary={<span className="bold">{tTag('allTags')}</span>} />
-          </MenuItem>
-          {tagsOptions.map((tag) => (
-            <MenuItem
-              key={`tags-${tag.value}`}
-              className={classNames('p0', styles.subItem)}
-              onClick={() => onItemClick('tags', tag.value)}
-            >
-              <Checkbox checked={filters.tags.includes(tag.value)} />
-              <ListItemText primary={tag.label} />
-            </MenuItem>
-          ))}
+          {!!tagsOptions.length && (
+            <>
+              <MenuItem
+                className="p0"
+                key="tag-item-all"
+                onClick={() =>
+                  onMasterClick(
+                    'tags',
+                    areAllTagsSelected,
+                    tagsOptions.map((tag) => tag.value),
+                  )
+                }
+              >
+                <Checkbox checked={areAllTagsSelected} />
+                <ListItemText primary={<span className="bold">{tTag('allTags')}</span>} />
+              </MenuItem>
+              {tagsOptions.map((tag) => (
+                <MenuItem
+                  key={`tags-${tag.value}`}
+                  className={classNames('p0', styles.subItem)}
+                  onClick={() => onItemClick('tags', tag.value)}
+                >
+                  <Checkbox checked={filters.tags.includes(tag.value)} />
+                  <ListItemText primary={tag.label} />
+                </MenuItem>
+              ))}
+            </>
+          )}
+
           {/* activityData */}
           <MenuItem
             className="p0 mt1"

@@ -12,9 +12,10 @@ interface Props {
   siteName: string
   tPdf: Translations
   isAll: boolean
+  year?: string
 }
 
-export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll }: Props) => {
+export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll, year = '' }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const tStudyResults = useTranslations('study.results')
 
@@ -36,7 +37,7 @@ export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll }: Props) =
           results={computedResultsWithDep}
           height={350}
           showTitle={true}
-          title={isAll ? tPdf('charts.allEmissions') : tPdf('charts.siteEmissions', { site: siteName })}
+          title={isAll ? tPdf('charts.allEmissions') : tPdf('charts.siteEmissions', { site: siteName, year })}
           showLegend={false}
           showLabelsOnBars={true}
           skipAnimation={true}
@@ -47,7 +48,7 @@ export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll }: Props) =
           resultsUnit={study.resultsUnit}
           height={400}
           showTitle={true}
-          title={isAll ? tPdf('charts.allEmissions') : tPdf('charts.siteEmissions', { site: siteName })}
+          title={isAll ? tPdf('charts.allEmissions') : tPdf('charts.siteEmissions', { site: siteName, year })}
           showLabelsOnPie={true}
           skipAnimation={true}
           results={computedResultsWithDep}

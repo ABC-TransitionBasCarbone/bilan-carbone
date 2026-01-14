@@ -8,8 +8,9 @@ import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { getEnvVar } from '@/lib/environment'
-import { BCPost, Post, subPostsByPost } from '@/services/posts'
+import { environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
 import { deleteStudyContributor } from '@/services/serverFunctions/study'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { IconButton } from '@mui/material'
@@ -67,9 +68,16 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
   const { callServerFunction } = useServerFunction()
 
+  const { environment } = useAppEnvironmentStore()
+
   const router = useRouter()
 
-  const allPosts = useMemo(() => Object.values(BCPost), [])
+  const allPosts: Post[] = useMemo(() => {
+    if (!environment) {
+      return []
+    }
+    return Object.values(environmentPostMapping[environment])
+  }, [environment])
 
   const toggleRowExpansion = useCallback((email: string) => {
     setExpandedRows((prev) => {
@@ -300,15 +308,26 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
             cell: ({ row }) => {
               const rowData = row.original
               return (
-                <TableActionButton
-                  type="delete"
-                  onClick={() => setToDelete(rowData)}
-                  data-testid={
-                    rowData.type === 'parent'
-                      ? 'delete-study-contributor-button'
-                      : 'delete-study-contributor-post-button'
-                  }
-                />
+                <>
+                  <TableActionButton
+                    type="delete"
+                    onClick={() => setToDelete(rowData)}
+                    data-testid={
+                      rowData.type === 'parent'
+                        ? 'delete-study-contributor-button'
+                        : 'delete-study-contributor-post-button'
+                    }
+                  />
+                  {rowData.type === 'parent' && (
+                    <TableActionButton
+                      type="edit"
+                      onClick={() =>
+                        router.push(`/etudes/${study.id}/cadrage/modifier-contributeur/${rowData.accountId}`)
+                      }
+                      data-testid="edit-study-contributor-button"
+                    />
+                  )}
+                </>
               )
             },
           },
@@ -390,7 +409,7 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
         label="study-contributor"
         title={tRole('information')}
         onClose={() => setDisplayRoles(false)}
-        actions={[{ actionType: 'button', onClick: () => setDisplayRoles(false), children: tCommon('close') }]}
+        actions={[{ actionType: 'button', onClick: () => setDisplayRoles(false), children: tCommon('action.close') }]}
       >
         <p className="mb-2">
           {tRole.rich('description', {

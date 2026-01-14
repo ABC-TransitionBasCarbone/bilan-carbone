@@ -14,7 +14,7 @@ import {
   UpdateEmissionSourceCommandValidation,
 } from '@/services/serverFunctions/emissionSource.command'
 import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study'
-import { getStandardDeviationRating } from '@/services/uncertainty'
+import { getQualitativeUncertaintyFromSquaredStandardDeviation } from '@/services/uncertainty'
 import { useUnitLabel } from '@/services/unit'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
@@ -52,6 +52,7 @@ interface Props {
   caracterisations: EmissionSourceCaracterisation[]
   emissionFactorsForSubPost: EmissionFactorWithMetaData[]
   importVersions: ImportVersionForFilters[]
+  isContributor?: boolean
 }
 
 const EmissionSource = ({
@@ -63,6 +64,7 @@ const EmissionSource = ({
   caracterisations,
   emissionFactorsForSubPost,
   importVersions,
+  isContributor = false,
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
   const { environment } = useAppEnvironmentStore()
   const ref = useRef<HTMLDivElement>(null)
@@ -104,8 +106,9 @@ const EmissionSource = ({
     }
   }, [emissionSource.id, router])
 
-  const canEdit = !emissionSource.validated && hasEditionRights(userRoleOnStudy)
+  const canEdit = !emissionSource.validated && (hasEditionRights(userRoleOnStudy) || isContributor)
   const canValidate = userRoleOnStudy === StudyRole.Validator
+  const canDelete = !emissionSource.validated && hasEditionRights(userRoleOnStudy)
 
   const update = useCallback(
     async (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null | string[]) => {
@@ -172,7 +175,7 @@ const EmissionSource = ({
   )
   const emissionResults = useMemo(() => {
     if (!environment) {
-      return { emissionValue: 0, standardDeviation: 0 }
+      return { emissionValue: 0, squaredStandardDeviation: 0 }
     }
 
     return getEmissionResults(emissionSource, environment)
@@ -266,13 +269,17 @@ const EmissionSource = ({
               <p className={styles.resultText} data-testid="emission-source-value">
                 {`${formatNumber(emissionResults.emissionValue / STUDY_UNIT_VALUES[study.resultsUnit])} ${tResultstUnits(study.resultsUnit)}`}
               </p>
-              {emissionResults.standardDeviation && (
+              {emissionResults.emissionValue && (
                 <p
                   className={classNames(styles.resultQuality, styles.resultText)}
                   data-testid="emission-source-quality"
                 >
                   {tQuality('name')}{' '}
-                  {tQuality(getStandardDeviationRating(emissionResults.standardDeviation).toString())}
+                  {tQuality(
+                    getQualitativeUncertaintyFromSquaredStandardDeviation(
+                      emissionResults.squaredStandardDeviation,
+                    ).toString(),
+                  )}
                 </p>
               )}
             </div>
@@ -338,6 +345,7 @@ const EmissionSource = ({
                 studyId={study.id}
                 advanced={study.level === Level.Advanced}
                 canEdit={canEdit}
+                canDelete={canDelete}
                 userRoleOnStudy={userRoleOnStudy}
                 canValidate={canValidate}
                 emissionSource={emissionSource}

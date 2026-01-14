@@ -1,16 +1,16 @@
 import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormTextField } from '@/components/form/TextField'
 import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
-import { AddActionCommand } from '@/services/serverFunctions/transitionPlan.command'
+import { AddActionFormCommand } from '@/services/serverFunctions/transitionPlan.command'
 import { ActionIndicatorType } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { SyntheticEvent } from 'react'
 import { Control, UseFormSetValue } from 'react-hook-form'
-import IndicatorList from './IndicatorList'
+import ActionIndicatorsList from './ActionIndicatorsList'
 
 interface Props {
-  control: Control<AddActionCommand>
-  setValue: UseFormSetValue<AddActionCommand>
+  control: Control<AddActionFormCommand>
+  setValue: UseFormSetValue<AddActionFormCommand>
   organizationMembers: { label: string; value: string }[]
 }
 
@@ -68,19 +68,19 @@ const ActionModalStep3 = ({ control, setValue, organizationMembers }: Props) => 
             <p>{t('indicatorTooltipDescription')}</p>
           </GlossaryIconModal>
         </div>
-        <IndicatorList
+        <ActionIndicatorsList
           control={control}
           setValue={setValue}
           type={ActionIndicatorType.Implementation}
           label={t('implementation')}
         />
-        <IndicatorList
+        <ActionIndicatorsList
           control={control}
           setValue={setValue}
           type={ActionIndicatorType.FollowUp}
           label={t('followUp')}
         />
-        <IndicatorList
+        <ActionIndicatorsList
           control={control}
           setValue={setValue}
           type={ActionIndicatorType.Performance}

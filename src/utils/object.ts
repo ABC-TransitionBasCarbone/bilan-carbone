@@ -43,3 +43,7 @@ export const objectWithoutNullAttributes = (object?: Record<string, any>) => {
   })
   return object
 }
+
+export const typedEntries = <K extends string, V>(obj: Record<K, V>): Array<[K, V]> => {
+  return Object.entries(obj) as Array<[K, V]>
+}

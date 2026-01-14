@@ -54,7 +54,17 @@ import { withServerResponse } from '@/utils/serverResponse'
 import { DAY, HOUR, MIN, TIME_IN_MS, YEAR } from '@/utils/time'
 import { getRoleToSetForUntrained } from '@/utils/user'
 import { accountWithUserToUserSession, userSessionToDbUser } from '@/utils/userAccounts'
-import { DeactivatableFeature, Environment, Organization, Role, User, UserChecklist, UserStatus } from '@prisma/client'
+import {
+  Country,
+  DeactivatableFeature,
+  Environment,
+  Level,
+  Organization,
+  Role,
+  User,
+  UserChecklist,
+  UserStatus,
+} from '@prisma/client'
 import jwt from 'jsonwebtoken'
 import { UserSession } from 'next-auth'
 import { getCompanyName, getValidAssociationNameBySiret } from '../associationApi'
@@ -83,7 +93,7 @@ import {
   UNKNOWN_SIRET_OR_CNC,
 } from '../permissions/check'
 import { canAddMember, canChangeRole, canDeleteMember, canEditSelfRole } from '../permissions/user'
-import { School } from '../schoolApi'
+import { establishmentTypeMap, School } from '../schoolApi'
 import { getDeactivableFeatureRestrictions } from './deactivableFeatures'
 import { AddMemberCommand, EditProfileCommand, EditSettingsCommand } from './user.command'
 
@@ -548,6 +558,7 @@ export const answerFeeback = async () =>
 
 export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, environment: Environment) =>
   withServerResponse('signUpWithSiretOrCNC', async () => {
+    const trimmedEmail = email.trim().toLowerCase()
     const deactivatedFeaturesRestrictions = await getDeactivableFeatureRestrictions(DeactivatableFeature.Creation)
     if (
       deactivatedFeaturesRestrictions?.active &&
@@ -556,10 +567,10 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const accountAlreadyCreated = await getAccountByEmailAndEnvironment(email, environment)
+    const accountAlreadyCreated = await getAccountByEmailAndEnvironment(trimmedEmail, environment)
     if (accountAlreadyCreated && accountAlreadyCreated.organizationVersionId) {
       if (environment === Environment.TILT && accountAlreadyCreated.status !== UserStatus.ACTIVE) {
-        const activation = await activateEmail(email.toLowerCase(), environment)
+        const activation = await activateEmail(trimmedEmail, environment)
         if (!activation.success) {
           throw new Error(activation.errorMessage)
         }
@@ -568,13 +579,13 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
       throw new Error(NOT_AUTHORIZED)
     }
 
-    let user = (await getUserByEmail(email)) as UserWithAccounts
+    let user = (await getUserByEmail(trimmedEmail)) as UserWithAccounts
     let organization = null
     let account = null
 
     if (!user) {
       user = (await addUser({
-        email,
+        email: trimmedEmail,
         firstName: '',
         lastName: '',
         accounts: {
@@ -684,7 +695,7 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
 
       await sendActivationRequest(
         accounts.filter((a) => a.role === Role.GESTIONNAIRE || a.role === Role.ADMIN).map((a) => a.user.email),
-        email.toLowerCase(),
+        trimmedEmail,
         `${user.firstName} ${user.lastName}`,
         environment,
       )
@@ -692,14 +703,18 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
       return REQUEST_SENT
     } else {
       await validateUser(account.id)
-      await sendActivation(email, false, environment)
+      await sendActivation(trimmedEmail, false, environment)
     }
     return EMAIL_SENT
   })
 
-export const signUpWithSchool = async (email: string, school: School, environment: Environment) =>
+export const signUpWithSchool = async (email: string, country: Country, school: School, environment: Environment) =>
   withServerResponse('signUpWithSchool', async () => {
-    if (!school || !school.identifiant_de_l_etablissement) {
+    const trimmedEmail = email.trim().toLowerCase()
+    if (!school) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    if (country === Country.FRANCE && !school.identifiant_de_l_etablissement) {
       throw new Error(UNKNOWN_SCHOOL)
     }
     const deactivatedFeaturesRestrictions = await getDeactivableFeatureRestrictions(DeactivatableFeature.Creation)
@@ -710,18 +725,19 @@ export const signUpWithSchool = async (email: string, school: School, environmen
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const accountAlreadyCreated = await getAccountByEmailAndEnvironment(email, environment)
+    const accountAlreadyCreated = await getAccountByEmailAndEnvironment(trimmedEmail, environment)
     if (accountAlreadyCreated && accountAlreadyCreated.organizationVersionId) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    let user = (await getUserByEmail(email)) as UserWithAccounts
+    let user = (await getUserByEmail(trimmedEmail)) as UserWithAccounts
     let organization = null
     let account = null
 
     if (!user) {
       user = (await addUser({
-        email,
+        email: trimmedEmail,
+        level: Level.Initial,
         firstName: '',
         lastName: '',
         accounts: {
@@ -749,7 +765,9 @@ export const signUpWithSchool = async (email: string, school: School, environmen
 
     let organizationVersion = null
 
-    organization = await getRawOrganizationBySiteEstablishmentId(school.identifiant_de_l_etablissement)
+    organization = school.identifiant_de_l_etablissement
+      ? await getRawOrganizationBySiteEstablishmentId(school.identifiant_de_l_etablissement)
+      : null
     organizationVersion = organization?.id
       ? await getOrganizationVersionByOrganizationIdAndEnvironment(organization.id, environment)
       : null
@@ -764,7 +782,11 @@ export const signUpWithSchool = async (email: string, school: School, environmen
         name: school.nom_etablissement || '',
         postalCode: school.code_postal || '',
         establishmentId: school.identifiant_de_l_etablissement,
-        establishmentYear: school.date_ouverture || '',
+        establishmentYear: school.date_ouverture?.slice(0, 4) || '',
+        country,
+        city: school.city || school.adresse_3?.slice(5) || '',
+        academy: school.libelle_academie,
+        establishmentType: school?.libelle_nature ? establishmentTypeMap[school.libelle_nature] : undefined,
         organization: { connect: { id: organizationVersion.organizationId } },
       })
     }
@@ -784,7 +806,7 @@ export const signUpWithSchool = async (email: string, school: School, environmen
 
       await sendActivationRequest(
         accounts.filter((a) => a.role === Role.GESTIONNAIRE || a.role === Role.ADMIN).map((a) => a.user.email),
-        email.toLowerCase(),
+        trimmedEmail,
         `${user.firstName} ${user.lastName}`,
         environment,
       )
@@ -792,7 +814,7 @@ export const signUpWithSchool = async (email: string, school: School, environmen
       return REQUEST_SENT
     } else {
       await validateUser(account.id)
-      await sendActivation(email, false, environment)
+      await sendActivation(trimmedEmail, false, environment)
     }
     return EMAIL_SENT
   })

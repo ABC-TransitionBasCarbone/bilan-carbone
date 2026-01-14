@@ -1,5 +1,6 @@
 'use client'
 
+import { customRich } from '@/i18n/customRich'
 import { duplicateStudyInOtherEnvironment } from '@/services/serverFunctions/study'
 import { MenuItem } from '@mui/material'
 import { Environment } from '@prisma/client'
@@ -80,9 +81,8 @@ const DuplicateStudyModal = ({
       >
         <>
           <span data-testid="duplication-modale-text">
-            {t.rich(isOtherEnvironment ? 'otherEnvironnment' : 'description', {
+            {customRich(t, isOtherEnvironment ? 'otherEnvironnment' : 'description', {
               environment: tEnv(targetEnvironment),
-              br: () => <br />,
             })}
           </span>
           {environments.length > 1 && (

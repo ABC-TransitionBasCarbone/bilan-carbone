@@ -1,4 +1,5 @@
 import { Environment, SubPost } from '@prisma/client'
+import { BaseResultsByPost } from './results/consolidated'
 
 export enum BCPost {
   Energies = 'Energies',
@@ -26,7 +27,7 @@ export enum CutPost {
 export enum TiltPost {
   ConstructionDesLocaux = 'ConstructionDesLocaux',
   Energies = BCPost.Energies,
-  Déchets = BCPost.DechetsDirects,
+  DechetsDirects = BCPost.DechetsDirects,
   FroidEtClim = 'FroidEtClim',
   AutresEmissions = 'AutresEmissions',
   DeplacementsDePersonne = 'DeplacementsDePersonne',
@@ -41,15 +42,16 @@ export enum TiltPost {
 }
 
 export enum ClicksonPost {
-  Energies = BCPost.Energies,
+  EnergiesClickson = 'EnergiesClickson',
   Restauration = 'Restauration',
-  Deplacements = BCPost.Deplacements,
+  DeplacementsClickson = 'DeplacementsClickson',
   Achats = 'Achats',
-  Immobilisations = BCPost.Immobilisations,
+  ImmobilisationsClickson = 'ImmobilisationsClickson',
 }
 
 export const Post = { ...BCPost, ...CutPost, ...TiltPost, ...ClicksonPost }
-export type Post = BCPost | CutPost | TiltPost | ClicksonPost
+export type SimplifiedPost = CutPost | ClicksonPost
+export type Post = BCPost | TiltPost | SimplifiedPost
 
 export const subPostsByPostBC: Record<BCPost, SubPost[]> = {
   [BCPost.Energies]: [
@@ -136,7 +138,7 @@ export const subPostsByPostCUT: Record<CutPost, SubPost[]> = {
 export const subPostsByPostTILT: Record<TiltPost, SubPost[]> = {
   [TiltPost.ConstructionDesLocaux]: [SubPost.Batiments, SubPost.AutresInfrastructures],
   [TiltPost.Energies]: subPostsByPostBC[BCPost.Energies],
-  [TiltPost.Déchets]: subPostsByPostBC[BCPost.DechetsDirects],
+  [TiltPost.DechetsDirects]: subPostsByPostBC[BCPost.DechetsDirects],
   [TiltPost.FroidEtClim]: [SubPost.FroidEtClim],
   [TiltPost.AutresEmissions]: [
     SubPost.ActivitesAgricoles,
@@ -188,11 +190,31 @@ export const subPostsByPostTILT: Record<TiltPost, SubPost[]> = {
 }
 
 export const subPostsByPostClickson: Record<ClicksonPost, SubPost[]> = {
-  [ClicksonPost.Energies]: subPostsByPostBC[BCPost.Energies],
-  [ClicksonPost.Restauration]: [],
-  [ClicksonPost.Deplacements]: subPostsByPostBC[BCPost.Deplacements],
-  [ClicksonPost.Achats]: [],
-  [ClicksonPost.Immobilisations]: subPostsByPostBC[BCPost.Immobilisations],
+  [ClicksonPost.EnergiesClickson]: [SubPost.Electricite, SubPost.Combustibles, SubPost.AutresGaz],
+  [ClicksonPost.Restauration]: [
+    SubPost.TypesDeRepasServis,
+    SubPost.DistributeursAutomatiques,
+    SubPost.Fret,
+    SubPost.DechetsOrganiques,
+  ],
+  [ClicksonPost.DeplacementsClickson]: [
+    SubPost.TransportDesEleves,
+    SubPost.TransportDuPersonnel,
+    SubPost.VoyagesScolaires,
+  ],
+  [ClicksonPost.Achats]: [
+    SubPost.Fournitures,
+    SubPost.ProduitsChimiques,
+    SubPost.EquipementsDeSport,
+    SubPost.DechetsRecyclables,
+    SubPost.OrduresMenageresResiduelles,
+  ],
+  [ClicksonPost.ImmobilisationsClickson]: [
+    SubPost.Construction,
+    SubPost.Renovation,
+    SubPost.EquipementsInformatiqueAudiovisuel,
+    SubPost.EquipementsDivers,
+  ],
 }
 
 export const environmentPostMapping = {
@@ -269,9 +291,7 @@ const getSubPostBCToSubPostTiltMapping = (): Partial<Record<SubPost, SubPost[]>>
 
 export const subPostBCToSubPostTiltMapping = getSubPostBCToSubPostTiltMapping()
 
-export const convertCountToBilanCarbone = (
-  results: { post: string; children: { post: string; value: number }[] }[],
-): { [key: string]: number } => {
+export const convertCountToBilanCarbone = (results: BaseResultsByPost[]): { [key: string]: number } => {
   const allPossibleCategories = new Set(Object.values(cutSubPostToBCPostMapping))
   const aggregatedResults: { [key: string]: number } = {}
 

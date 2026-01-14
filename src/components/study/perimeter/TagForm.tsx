@@ -1,6 +1,7 @@
 'use client'
 
 import ColorPicker from '@/components/base/ColorPicker'
+import { CustomFormLabel } from '@/components/form/CustomFormLabel'
 import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
 import { StudyTagFamilyWithTags } from '@/db/study'
@@ -36,9 +37,7 @@ const TagForm = ({
   return (
     <div className="flex gapped my-2">
       <div className="flex-col">
-        <div className="mb-2">
-          <span className="inputLabel bold">{t('color')}</span>
-        </div>
+        <CustomFormLabel label={t('color')} />
         <ColorPicker color={color} onChange={onColorChange} disabled={!families.length} />
       </div>
       <div className={styles.familySelector}>

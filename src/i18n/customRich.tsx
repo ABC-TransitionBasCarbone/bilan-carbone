@@ -22,6 +22,7 @@ export const customRich = (
 ) => {
   const faq = getEnvVar('FAQ_LINK', env)
   const support = getEnvVar('SUPPORT_EMAIL', Environment.BC)
+  const abc = getEnvVar('ABC_SITE', Environment.BC)
 
   return t.rich(key, {
     error: (children: ReactNode) => <span className={classNames('error', styles.error)}>{children}</span>,
@@ -34,6 +35,11 @@ export const customRich = (
     ),
     support: (children: ReactNode) => (
       <Link href={`mailto:${support}`} className={styles.support}>
+        {children}
+      </Link>
+    ),
+    abc: (children) => (
+      <Link href={abc} target="_blank" rel="noreferrer noopener">
         {children}
       </Link>
     ),
