@@ -181,6 +181,21 @@ const ConsolatedGHGPDifference = ({
     [otherGas, emissionFactorsWithParts, unitValue, environment],
   )
 
+  console.log('\ndata à vérifier : ')
+  console.log('utilisationEnDependance : ', utilisationEnDependanceValue)
+  console.log('missingCaract : ', missingCaractDifference)
+  console.log('immobilisation : ', immobilisationDifference)
+  console.log('3.other & 4.other : ', otherEmissionsDifference)
+  console.log('otherGas : ', otherGasDifference)
+  console.log(
+    'total : ',
+    utilisationEnDependanceValue +
+      missingCaractDifference +
+      immobilisationDifference +
+      otherEmissionsDifference +
+      otherGasDifference,
+  )
+
   return (
     <ConsolatedExportDifference
       study={study}
@@ -225,7 +240,7 @@ const ConsolatedGHGPDifference = ({
               <WarningAmberIcon className={styles.cardIcon} />
               <h4>{t('missingCaractTitle')}</h4>
             </div>
-            <div className={'align-center'}>
+            <div className="align-center">
               <span className={styles.differenceValueNegative}>
                 {formatNumber(missingCaractDifference, 0)} {unit}
               </span>
