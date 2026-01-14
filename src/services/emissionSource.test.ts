@@ -1,6 +1,6 @@
 import { FullStudy } from '@/db/study'
 import { expect } from '@jest/globals'
-import { Environment, SubPost, Unit } from '@prisma/client'
+import { EmissionFactorBase, Environment, SubPost, Unit } from '@prisma/client'
 import { getEmissionResults } from './emissionSource'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
@@ -24,6 +24,7 @@ const defaultEmissionSource = {
     completeness: null,
     importedFrom: 'BaseEmpreinte',
     importedId: '123',
+    base: EmissionFactorBase.LocationBased,
     isMonetary: false,
     location: '',
     customUnit: null,

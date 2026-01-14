@@ -72,6 +72,7 @@ export const OrganizationVersionWithOrganizationSelect = {
           superficy: true,
           address: true,
           cncId: true,
+          country: true,
           cnc: {
             select: {
               cncCode: true,
