@@ -1594,6 +1594,10 @@
       "CombustionALaCentrale": "Combustion at the plant",
       "Pertes": "Losses"
     },
+    "base": {
+      "LocationBased": "location-based",
+      "MarketBased": "market-based"
+    },
     "missingQualities": {
       "title": "Add quality for manual emission factors",
       "body": "Hello, according to our information, you added emission factors manually when it was still impossible to enter their uncertainty. By default, for these emission factors, the qualities are considered to be \"Very good\", which corresponds to zero uncertainty on the emission factor. Now that this bug has been resolved, we strongly recommend that you update the emission factors concerned, which are as follows: ",
