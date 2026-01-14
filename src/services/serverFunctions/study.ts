@@ -41,24 +41,36 @@ import {
   countOrganizationStudiesFromOtherUsers,
   createContributorOnStudy,
   createEmissionSourceTags,
+  createEngagementAction,
   createStudy,
+  createStudyComment,
   createStudyEmissionSource,
   createUserOnStudy,
+  deleteEngagementAction as dbDeleteEngagementAction,
   deleteAccountOnStudy,
   deleteContributor,
   deleteStudy,
-  deleteStudyExport,
+  deleteStudyComment,
   downgradeStudyUserRoles,
   FullStudy,
+  getEngagementActionById,
+  getEngagementActions,
   getOrganizationStudiesBeforeDate,
+  getPendingStudyCommentsCountFromAuthor,
+  getSourcesLatestImportVersionId,
   getStudiesSitesFromIds,
   getStudyById,
+  getStudyCommentsCountFromOrganizationVersionId,
+  getStudyCommentsFromOrganizationVersionId,
+  getStudyCommentsWithStudyIdAndSubPost,
   getStudyNameById,
   getStudySites,
   getStudyTemplate,
   getUsersOnStudy,
   updateEmissionSourceEmissionFactor,
+  updateEngagementAction,
   updateStudy,
+  updateStudyComment,
   updateStudyEmissionFactorVersion,
   updateStudyOpeningHours,
   updateStudySiteData,
@@ -77,11 +89,13 @@ import { mapCncToStudySite } from '@/utils/cnc'
 import { calculateDistanceFromParis } from '@/utils/distance'
 import { CA_UNIT_VALUES, defaultCAUnit, formatNumber } from '@/utils/number'
 import { canEditOrganizationVersion } from '@/utils/organization'
-import { withServerResponse } from '@/utils/serverResponse'
+import { IsSuccess, withServerResponse } from '@/utils/serverResponse'
 import {
   getAccountRoleOnStudy,
   getAllowedRolesFromDefaultRole,
+  getAllSpecificFieldsForExports,
   getUserRoleOnPublicStudy,
+  hasDeprecationPeriod,
   hasEditionRights,
 } from '@/utils/study'
 import { formatDateFr } from '@/utils/time'
@@ -89,6 +103,7 @@ import { isAdmin } from '@/utils/user'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import {
   Account,
+  CommentStatus,
   ControlMode,
   Document,
   DocumentCategory,
@@ -117,7 +132,9 @@ import { v4 as uuidv4 } from 'uuid'
 import { auth, dbActualizedAuth } from '../auth'
 import { getCaracterisationsBySubPost } from '../emissionSource'
 import { allowedFlowFileTypes, isAllowedFileType } from '../file'
-import { ALREADY_IN_STUDY, NOT_AUTHORIZED } from '../permissions/check'
+import { ALREADY_IN_STUDY, NOT_AUTHORIZED, TOO_MANY_COMMENTS } from '../permissions/check'
+import { hasReaderRoleOnStudyAsContributor } from '../permissions/environment'
+import { hasAccessToEngagementActions } from '../permissions/environmentAdvanced'
 import { isInOrgaOrParentFromId } from '../permissions/organization'
 import {
   canAccessFlowFromStudy,
@@ -140,10 +157,13 @@ import {
 } from '../permissions/study'
 import { deleteFileFromBucket, getFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
 import { getTransEnvironmentSubPost, hasSufficientLevel } from '../study'
+import { UpdateEmissionSourceCommand } from './emissionSource.command'
 import { saveAnswerForQuestion } from './question'
 import {
+  AddEngagementActionCommand,
   ChangeStudyCinemaCommand,
   ChangeStudyDatesCommand,
+  ChangeStudyEstablishmentCommand,
   ChangeStudyLevelCommand,
   ChangeStudyNameCommand,
   ChangeStudyPublicStatusCommand,
@@ -279,23 +299,21 @@ export const createStudyCommand = async (
       ],
     }
 
+    const { exports, controlMode, isPublic, ...studyCommand } = command
+
     const study = {
-      ...command,
+      ...studyCommand,
       createdBy: { connect: { id: session.user.accountId } },
       organizationVersion: { connect: { id: organizationVersionId } },
-      isPublic: command.isPublic === 'true',
+      isPublic: isPublic === 'true',
       resultsUnit: resultsUnit || StudyResultUnit.T,
       allowedUsers: {
         createMany: { data: rights },
       },
       exports: {
-        createMany: {
-          data: Object.entries(command.exports)
-            .filter(([, value]) => value)
-            .map(([key, value]) => ({
-              type: key as Export,
-              control: value as ControlMode,
-            })),
+        create: {
+          types: exports,
+          control: controlMode || ControlMode.Operational,
         },
       },
       sites: {
@@ -668,7 +686,7 @@ export const changeStudySites = async (studyId: string, { organizationId, ...com
     await updateStudySites(studyId, selectedSites, deletedSiteIds)
   })
 
-export const changeStudyExports = async (studyId: string, type: Export, control: ControlMode | false) =>
+export const changeStudyExports = async (studyId: string, types: Export[], control: ControlMode) =>
   withServerResponse('changeStudyExports', async () => {
     const [session, study] = await Promise.all([dbActualizedAuth(), getStudy(studyId)])
     if (!session || !session.user || !study.success || !study.data) {
@@ -677,14 +695,27 @@ export const changeStudyExports = async (studyId: string, type: Export, control:
     if (!hasEditionRights(getAccountRoleOnStudy(session.user, study.data))) {
       throw new Error(NOT_AUTHORIZED)
     }
-    if (control === false) {
-      return deleteStudyExport(studyId, type)
-    }
-    return upsertStudyExport(studyId, type, control)
+    return upsertStudyExport(studyId, types, control)
   })
 
-export const updateCaracterisationsForControlMode = async (studyId: string, newControlMode: ControlMode) =>
-  withServerResponse('updateCaracterisationsForControlMode', async () => {
+const clearedFieldsValues = (fields: (keyof UpdateEmissionSourceCommand)[]) => {
+  const result: Record<string, null> = {}
+  fields.forEach((field) => {
+    result[field] = null
+  })
+  return result
+}
+
+const filterSpecificFieldsPerSubpost = (fields: (keyof UpdateEmissionSourceCommand)[], subPost: SubPost) => {
+  let filtered = fields
+  if (!hasDeprecationPeriod(subPost)) {
+    filtered = filtered.filter((field) => field !== 'constructionYear')
+  }
+  return filtered
+}
+
+export const updateStudySpecificExportFields = async (studyId: string, controlMode: ControlMode, types?: Export[]) =>
+  withServerResponse('updateStudySpecificExportFields', async () => {
     const [session, study] = await Promise.all([dbActualizedAuth(), getStudy(studyId)])
     if (!session || !session.user || !study.success || !study.data) {
       throw new Error(NOT_AUTHORIZED)
@@ -693,49 +724,58 @@ export const updateCaracterisationsForControlMode = async (studyId: string, newC
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const emissionSources = study.data.emissionSources
-    const exportsWithNewControlMode = study.data.exports.map((exp) => ({
-      ...exp,
-      control: newControlMode,
-    }))
+    const specificFieldsForNewExportTypes = getAllSpecificFieldsForExports(types || [])
+    const specificFieldsForOldExportTypes = getAllSpecificFieldsForExports(study.data.exports?.types || [])
+    const newSpecificFields = specificFieldsForNewExportTypes.filter(
+      (field) => !specificFieldsForOldExportTypes.includes(field),
+    )
+
+    const nonSelectedExportsSpecificFields = getAllSpecificFieldsForExports(
+      Object.values(Export).filter((exportType) => !(types || []).includes(exportType)),
+    )
+    const fieldsToClear = nonSelectedExportsSpecificFields.filter(
+      (field) => !specificFieldsForNewExportTypes.includes(field),
+    )
 
     await Promise.all(
-      emissionSources
+      study.data.emissionSources
         .map((emissionSource) => {
-          if (!emissionSource.caracterisation && !emissionSource.validated) {
+          if (!emissionSource.validated && !fieldsToClear.length) {
             return null
           }
 
+          const filteredNewFields = filterSpecificFieldsPerSubpost(newSpecificFields, emissionSource.subPost)
+          const filteredClearedFields = filterSpecificFieldsPerSubpost(fieldsToClear, emissionSource.subPost)
+
           const validCaracterisations = getCaracterisationsBySubPost(
             emissionSource.subPost,
-            exportsWithNewControlMode || [],
             session.user.environment,
+            study.data?.exports?.types || [],
+            controlMode,
           )
 
-          const isValidForNewControlMode = validCaracterisations.includes(
+          const isCaracterisarionValidForNewControlMode = validCaracterisations.includes(
             emissionSource.caracterisation as EmissionSourceCaracterisation,
           )
 
-          if (!isValidForNewControlMode) {
-            if (validCaracterisations.length === 1) {
-              const newCaracterisation = validCaracterisations[0]
-              const shouldKeepValidation = emissionSource.caracterisation && emissionSource.validated
+          const shouldKeepValidation =
+            emissionSource.validated &&
+            filteredNewFields.every((field) => emissionSource[field as keyof typeof emissionSource]) &&
+            (isCaracterisarionValidForNewControlMode || validCaracterisations.length === 1)
 
-              return prismaClient.studyEmissionSource.update({
-                where: { id: emissionSource.id },
-                data: {
-                  caracterisation: newCaracterisation,
-                  validated: shouldKeepValidation,
-                },
-              })
-            } else {
-              return prismaClient.studyEmissionSource.update({
-                where: { id: emissionSource.id },
-                data: { caracterisation: null, validated: false },
-              })
-            }
+          const dataToUpdate: Prisma.StudyEmissionSourceUpdateInput = {
+            ...clearedFieldsValues(filteredClearedFields),
+            validated: shouldKeepValidation,
           }
-          return null
+
+          if (!isCaracterisarionValidForNewControlMode && validCaracterisations.length === 1) {
+            dataToUpdate.caracterisation = validCaracterisations[0]
+          }
+
+          return prismaClient.studyEmissionSource.update({
+            where: { id: emissionSource.id },
+            data: dataToUpdate,
+          })
         })
         .filter(Boolean),
     )
@@ -954,7 +994,10 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
     await updateUserOnStudy(existingAccount.id, studyWithRights.id, studyRole)
   })
 
-export const newStudyContributor = async ({ email, subPosts, ...command }: NewStudyContributorCommand) =>
+export const newStudyContributor = async (
+  { email, subPosts, ...command }: NewStudyContributorCommand,
+  toDeleteContributors?: StudyContributorDeleteParams[],
+) =>
   withServerResponse('newStudyContributor', async () => {
     const session = await dbActualizedAuth()
     if (!session || !session.user || !session.user.organizationVersionId) {
@@ -995,7 +1038,23 @@ export const newStudyContributor = async ({ email, subPosts, ...command }: NewSt
       existingUser,
     )
 
+    if (
+      hasReaderRoleOnStudyAsContributor(session.user.environment) &&
+      !studyWithRights.allowedUsers.some((allowedUser: { accountId: string }) => allowedUser.accountId === accountId)
+    ) {
+      await createUserOnStudy({
+        account: { connect: { id: accountId } },
+        study: { connect: { id: studyWithRights.id } },
+        role: StudyRole.Reader,
+      })
+    }
+
     const selectedSubposts = Object.values(subPosts).reduce((res, subPosts) => res.concat(subPosts), [])
+
+    if (toDeleteContributors && toDeleteContributors.length > 0) {
+      await deleteStudyContributors(command.studyId, toDeleteContributors)
+    }
+
     await createContributorOnStudy(accountId, selectedSubposts, command)
   })
 
@@ -1163,6 +1222,11 @@ export const deleteStudyContributor = async (contributor: StudyContributorDelete
     }
     await deleteContributor(studyId, contributor)
   })
+
+export const deleteStudyContributors = async (studyId: string, contributors: StudyContributorDeleteParams[]) => {
+  const promises = contributors.map((contributor) => deleteContributor(studyId, contributor))
+  return Promise.all(promises)
+}
 
 export const getStudyEmissionFactorImportVersions = async (studyId: string) =>
   withServerResponse('getStudyEmissionFactorImportVersions', async () => {
@@ -1364,6 +1428,7 @@ const duplicateEmissionSources = async (
           feTemporalRepresentativeness: sourceEmissionSource.feTemporalRepresentativeness,
           feCompleteness: sourceEmissionSource.feCompleteness,
           caracterisation: shouldClearCaracterisations ? null : sourceEmissionSource.caracterisation,
+          constructionYear: sourceEmissionSource.constructionYear,
           studyId: targetStudyId,
           emissionFactorId: sourceEmissionSource.emissionFactor?.id ?? null,
           studySiteId: targetStudySiteId,
@@ -1458,22 +1523,7 @@ export const duplicateStudyCommand = async (
         await updateStudyEmissionFactorVersion(createdStudyId, sourceVersion.source, sourceVersion.importVersionId, tx)
       }
 
-      // Check if control modes have changed to determine if we should clear characterizations
-      const sourceExportsByType = sourceStudy.exports.reduce(
-        (acc, exp) => {
-          acc[exp.type] = exp.control
-          return acc
-        },
-        {} as Record<Export, ControlMode>,
-      )
-
-      const hasControlModeChanged = (exportType: Export) => {
-        const sourceControl = sourceExportsByType[exportType]
-        const newControl = studyCommand.exports[exportType]
-        return sourceControl && newControl && sourceControl !== newControl
-      }
-
-      const shouldClearCaracterisations = Object.values(Export).some(hasControlModeChanged)
+      const shouldClearCaracterisations = studyCommand.controlMode !== sourceStudy.exports?.control
 
       await duplicateEmissionSources(
         tx,
@@ -1656,7 +1706,7 @@ const buildStudyForDuplication = (
     createMany: { data: contributors },
   },
   exports: {
-    createMany: { data: Object.values(study.exports) },
+    create: { types: study.exports?.types, control: study.exports?.control },
   },
   sites: {
     createMany: { data: sites },
@@ -2281,4 +2331,159 @@ export const getStudyPreviousOccurrences = async (studyId: string) =>
     }
 
     return getOrganizationStudiesBeforeDate(study.organizationVersionId, study.startDate)
+  })
+
+export const createStudyCommentCommand = async (
+  studyId: string,
+  comment: string,
+  status?: CommentStatus,
+  subPost?: SubPost | null,
+) =>
+  withServerResponse('createStudyComment', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const commentCount = await getPendingStudyCommentsCountFromAuthor(session.user.accountId)
+    if (!status || (status === CommentStatus.PENDING && commentCount >= 3)) {
+      throw new Error(TOO_MANY_COMMENTS)
+    }
+
+    return await createStudyComment({
+      comment,
+      status: status || CommentStatus.PENDING,
+      author: { connect: { id: session.user.accountId } },
+      study: { connect: { id: studyId } },
+      subPost,
+    })
+  })
+
+export const getStudyComments = async (studyId: string, subPost?: SubPost | null) =>
+  withServerResponse('getStudyComments', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return await getStudyCommentsWithStudyIdAndSubPost(studyId, subPost)
+  })
+
+export const getPendingStudyCommentsCountFromOrganizationVersionId = async (organizationVersionId: string | null) =>
+  withServerResponse('getPendingStudyCommentsCount', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    if (!organizationVersionId) {
+      return 0
+    }
+
+    return await getStudyCommentsCountFromOrganizationVersionId(organizationVersionId, CommentStatus.PENDING)
+  })
+
+export const getPendingStudyCommentsFromOrganizationVersionId = async (organizationVersionId: string) =>
+  withServerResponse('getPendingStudyComments', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return await getStudyCommentsFromOrganizationVersionId(organizationVersionId, CommentStatus.PENDING)
+  })
+
+export const approveStudyComment = async (commentId: string, studyId: string) =>
+  withServerResponse('approveStudyComment', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const userRole = getAccountRoleOnStudy(session.user, study)
+
+    if (!userRole || userRole === StudyRole.Reader) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return await updateStudyComment(commentId, {
+      validatedBy: { connect: { id: session.user.accountId } },
+      validatedAt: new Date(),
+      status: CommentStatus.VALIDATED,
+    })
+  })
+
+export const declineStudyComment = async (commentId: string, studyId: string) =>
+  withServerResponse('declineStudyComment', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const userRole = getAccountRoleOnStudy(session.user, study)
+
+    if (!userRole || userRole === StudyRole.Reader) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return await deleteStudyComment(commentId)
+  })
+
+export const editStudyComment = async (commentId: string, newComment: string, studyId: string) =>
+  withServerResponse('editStudyComment', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const userRole = getAccountRoleOnStudy(session.user, study)
+
+    if (!userRole || userRole === StudyRole.Reader) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return await updateStudyComment(commentId, {
+      comment: newComment,
+    })
+  })
+
+export const changeStudyEstablishment = async (studySiteId: string, data: ChangeStudyEstablishmentCommand) =>
+  withServerResponse('changeStudyEstablishment', async () => {
+    const studySites = await getStudiesSitesFromIds([studySiteId])
+    if (!studySites || studySites.length === 0) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const study = studySites[0].study
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const informations = await getStudyRightsInformations(study.id)
+    if (informations === null) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    if (!canChangeOpeningHours(informations.user, informations.studyWithRights)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    await updateStudySiteData(studySiteId, data)
   })

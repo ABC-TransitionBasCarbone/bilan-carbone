@@ -11,7 +11,7 @@ interface Props extends Omit<IconButtonProps, 'type'> {
 }
 
 export const TableActionButton = ({ type, size = 'medium', ...props }: Props) => {
-  const t = useTranslations('common')
+  const t = useTranslations('common.action')
 
   const IconComponent = useMemo(() => {
     switch (type) {

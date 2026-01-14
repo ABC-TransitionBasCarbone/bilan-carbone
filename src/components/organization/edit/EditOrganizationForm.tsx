@@ -28,17 +28,18 @@ interface Props {
   organizationVersion: OrganizationVersionWithOrganization
   caUnit: SiteCAUnit
   isCut?: boolean
+  disabled?: boolean
 }
 
 type StudiesWithSites = IsSuccess<AsyncReturnType<typeof findStudiesWithSites>>
 
 const emptySitesOnError = { authorizedStudySites: [], unauthorizedStudySites: [] }
 
-const EditOrganizationForm = ({ organizationVersion, caUnit, isCut = false }: Props) => {
+const EditOrganizationForm = ({ organizationVersion, caUnit, isCut = false, disabled = false }: Props) => {
   const router = useRouter()
   const t = useTranslations('organization.form')
   const tStudySites = useTranslations('organization.studySites')
-  const tCommon = useTranslations('common')
+  const tAction = useTranslations('common.action')
 
   const [sitesOnError, setSitesOnError] = useState<StudiesWithSites>(emptySitesOnError)
   const { callServerFunction } = useServerFunction()
@@ -59,6 +60,10 @@ const EditOrganizationForm = ({ organizationVersion, caUnit, isCut = false }: Pr
         cncCode: site.cnc?.cncCode || '',
         volunteerNumber: site.volunteerNumber || 0,
         beneficiaryNumber: site.beneficiaryNumber || 0,
+        studentNumber: site.studentNumber || 0,
+        establishmentYear: site?.establishmentYear ? parseInt(site?.establishmentYear) : 0,
+        academy: site.academy ?? '',
+        establishmentType: site.establishmentType ?? undefined,
       })),
     },
   })
@@ -88,19 +93,27 @@ const EditOrganizationForm = ({ organizationVersion, caUnit, isCut = false }: Pr
   return (
     <Form onSubmit={form.handleSubmit(onSubmit)}>
       {!isCut && (
-        <FormTextField data-testid="edit-organization-name" control={form.control} name="name" label={t('name')} />
+        <FormTextField
+          disabled={disabled}
+          data-testid="edit-organization-name"
+          control={form.control}
+          name="name"
+          label={t('name')}
+        />
       )}
-      <DynamicSites sites={sites} form={form} caUnit={caUnit} />
-      <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="edit-organization-button">
-        {t('edit')}
-      </LoadingButton>
+      <DynamicSites disabled={disabled} sites={sites} form={form} caUnit={caUnit} />
+      {!disabled && (
+        <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="edit-organization-button">
+          {t('edit')}
+        </LoadingButton>
+      )}
       <Modal
         open={!!sitesOnError.authorizedStudySites.length || !!sitesOnError.unauthorizedStudySites.length}
         label="delete-site-with-studies"
         title={t('title')}
         onClose={() => setSitesOnError(emptySitesOnError)}
         actions={[
-          { actionType: 'button', onClick: () => setSitesOnError(emptySitesOnError), children: tCommon('close') },
+          { actionType: 'button', onClick: () => setSitesOnError(emptySitesOnError), children: tAction('close') },
         ]}
       >
         <div id="delete-site-with-studies-modal-description" className="flex-col">

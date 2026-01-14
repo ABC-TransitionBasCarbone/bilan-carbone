@@ -69,6 +69,12 @@ const base = createTheme({
       main: '#57585a',
       light: '#F2F3F4',
     },
+    ghgp: {
+      main: '#0a7e76',
+      light: '#daeef3',
+      totalColumn: '#00c6b9',
+      complementary: '#f58189',
+    },
   },
   typography: {
     fontFamily: 'gilroy-regular, sans-serif',
@@ -149,11 +155,47 @@ const theme = createTheme(base, {
     MuiTextField: {
       styleOverrides: {
         root: {
+          '& .MuiOutlinedInput-root': {
+            borderRadius: '0.5rem',
+            '& fieldset': {
+              borderRadius: '0.5rem',
+            },
+          },
           '& input': {
             '&:-webkit-autofill': {
               WebkitBoxShadow: '0 0 0 1000px #ffffff inset',
               WebkitTextFillColor: 'inherit',
             },
+          },
+        },
+      },
+    },
+    MuiPickersOutlinedInput: {
+      styleOverrides: {
+        root: {
+          borderRadius: '0.5rem',
+          '& fieldset': {
+            borderRadius: '0.5rem',
+          },
+        },
+      },
+    },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          borderRadius: '0.5rem',
+          '& fieldset': {
+            borderRadius: '0.5rem',
+          },
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          borderRadius: '0.5rem',
+          '& fieldset': {
+            borderRadius: '0.5rem',
           },
         },
       },
@@ -215,10 +257,6 @@ const theme = createTheme(base, {
       [Post.Fret]: { light: '#79C7AB', dark: '#469478' },
       [Post.FinDeVie]: { light: '#FBBC6B', dark: '#C88938' },
       [Post.UtilisationEtDependance]: { light: '#FBBC6B', dark: '#C88938' },
-
-      // CLICKSON
-      [Post.Achats]: { light: '#79C7AB', dark: '#469478' },
-      [Post.Restauration]: { light: '#79C7AB', dark: '#469478' },
     },
     subPostColors: {
       // Energies subposts - variations of #3F5488

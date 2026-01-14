@@ -37,7 +37,7 @@ const PublicTiltPage = ({ children }: Props) => {
           <p className="title-h4 mb1">{t('welcome')}</p>
           <p className="title-h6 bold">{t('subtext')}</p>
         </div>
-        <p>{t.rich('explanation', { b: (children) => <b>{children}</b> })}</p>
+        <p>{t('explanation')}</p>
         <div className="flex-cc gapped1 w100 p1">
           <Image src="/logos/abc/logo_abc.png" alt="ABC logo" fill className="w50 hauto" />
           <CloseIcon />

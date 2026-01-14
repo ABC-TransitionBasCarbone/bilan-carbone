@@ -1,5 +1,5 @@
 import { setCustomIssue } from '@/lib/zod.config'
-import { EmissionFactorPartType, SubPost, Unit } from '@prisma/client'
+import { EmissionFactorBase, EmissionFactorPartType, SubPost, Unit } from '@prisma/client'
 import z from 'zod'
 
 export const maxParts = 5
@@ -22,7 +22,6 @@ export const SubPostsCommandValidation = z.object({
       ctx.addIssue(setCustomIssue(['subPosts'], 'subPostRequired'))
       return
     }
-
     if (Object.values(val).some((arr) => arr.length === 0)) {
       ctx.addIssue(setCustomIssue(['subPosts'], 'subPostRequired'))
     }
@@ -33,37 +32,45 @@ export type SubPostsCommand = z.infer<typeof SubPostsCommandValidation>
 
 export const EmissionFactorCommandValidation = z.intersection(
   GESschema,
-  z.intersection(
-    z.object({
-      name: z.string().trim().min(1),
-      unit: z.enum(Unit),
-      customUnit: z.string().nullable().optional(),
-      isMonetary: z.boolean(),
-      source: z.string().trim().min(1),
-      location: z.string().trim().optional(),
-      totalCo2: z.number().min(0),
-      reliability: z.number(),
-      technicalRepresentativeness: z.number(),
-      geographicRepresentativeness: z.number(),
-      temporalRepresentativeness: z.number(),
-      completeness: z.number(),
-      attribute: z.string().optional(),
-      comment: z.string().optional(),
-      parts: z
-        .array(
-          z.intersection(
-            GESschema,
-            z.object({
-              name: z.string().trim().min(1).max(64),
-              type: z.enum(EmissionFactorPartType),
-              totalCo2: z.number().min(0),
-            }),
-          ),
-        )
-        .max(maxParts),
+  z
+    .intersection(
+      z.object({
+        name: z.string().trim().min(1),
+        unit: z.enum(Unit),
+        customUnit: z.string().nullable().optional(),
+        isMonetary: z.boolean(),
+        source: z.string().trim().min(1),
+        location: z.string().trim().optional(),
+        totalCo2: z.number().min(0),
+        reliability: z.number(),
+        technicalRepresentativeness: z.number(),
+        geographicRepresentativeness: z.number(),
+        temporalRepresentativeness: z.number(),
+        completeness: z.number(),
+        attribute: z.string().optional(),
+        comment: z.string().optional(),
+        parts: z
+          .array(
+            z.intersection(
+              GESschema,
+              z.object({
+                name: z.string().trim().min(1).max(64),
+                type: z.enum(EmissionFactorPartType),
+                totalCo2: z.number().min(0),
+              }),
+            ),
+          )
+          .max(maxParts),
+        base: z.enum(EmissionFactorBase).nullable(),
+      }),
+      SubPostsCommandValidation,
+    )
+    .superRefine((data, ctx) => {
+      const subPostsValues = Object.values(data.subPosts ?? {}).flat()
+      if (subPostsValues.includes(SubPost.Electricite) && !data.base) {
+        ctx.addIssue({ path: ['base'], code: 'custom', message: 'required' })
+      }
     }),
-    SubPostsCommandValidation,
-  ),
 )
 
 export type EmissionFactorCommand = z.infer<typeof EmissionFactorCommandValidation>

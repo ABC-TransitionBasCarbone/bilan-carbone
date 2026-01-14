@@ -1,3 +1,4 @@
+import { hasAccessToEngagementActions } from '@/services/permissions/environmentAdvanced'
 import { Translations } from '@/types/translation'
 import { Environment } from '@prisma/client'
 
@@ -25,6 +26,7 @@ export const getStudyNavbarMenu = (
   studyName: string,
   isTransitionPlanActive: boolean = false,
   hasObjectives: boolean = false,
+  studySimplified: boolean = false,
 ): Menu => {
   if (environment === Environment.CUT) {
     return {
@@ -54,6 +56,49 @@ export const getStudyNavbarMenu = (
     }
   }
 
+  if (environment === Environment.CLICKSON) {
+    return {
+      title: {
+        href: `/etudes/${studyId}`,
+        label: studyName,
+      },
+      sections: [
+        {
+          header: t('informationDefinition'),
+          links: [
+            {
+              href: `/etudes/${studyId}/cadrage`,
+              label: t('framing'),
+              testId: 'study-cadrage-link',
+            },
+          ],
+        },
+        {
+          header: t('dataAccounting'),
+          links: [
+            {
+              href: `/etudes/${studyId}/comptabilisation/saisie-des-donnees`,
+              label: t('dataEntry'),
+            },
+            {
+              href: `/etudes/${studyId}/comptabilisation/resultats`,
+              label: t('results'),
+            },
+          ],
+        },
+        {
+          header: t('transitionPlan'),
+          links: [
+            {
+              href: 'https://transition.clickson.eu',
+              label: 'Clicks On Act',
+            },
+          ],
+        },
+      ],
+    }
+  }
+
   return {
     title: {
       href: `/etudes/${studyId}`,
@@ -61,12 +106,12 @@ export const getStudyNavbarMenu = (
     },
     sections: [
       {
-        header: t('mobilisation'),
+        header: t('engagement'),
         links: [
           {
-            href: '#',
-            label: t('commingSoon'),
-            disabled: true,
+            disabled: !hasAccessToEngagementActions(environment, studySimplified),
+            href: `/etudes/${studyId}/actions-de-mobilisation`,
+            label: t('carriedActions'),
           },
         ],
       },

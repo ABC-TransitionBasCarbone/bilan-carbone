@@ -1,16 +1,7 @@
-import { Checkbox, FormControl, FormControlLabel, styled } from '@mui/material'
-import { EvaluatedFormElement, FormPageElementProp } from '@publicodes/forms'
+import { FormControl } from '@mui/material'
+import CheckboxInput from './inputFields/CheckboxInput'
 import { EvaluatedGroupLayout } from './layouts/evaluatedFormLayout'
 import { OnFieldChange } from './utils'
-
-const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
-  backgroundColor: 'white',
-  border: `solid 1px ${theme.custom.box.borderColor}`,
-  borderRadius: '1rem',
-  width: 'fit-content',
-}))
-
-const formatOption = (option: string) => option.replace(/^\d*-/, '')
 
 interface GroupQuestionProps<RuleName extends string> {
   groupLayout: EvaluatedGroupLayout<RuleName>
@@ -32,30 +23,12 @@ export default function GroupQuestion<RuleName extends string>({
           return null
         }
 
-        // Type assertion for checkbox elements
-        const checkboxElement = element as EvaluatedFormElement<RuleName> &
-          FormPageElementProp & {
-            element: 'input'
-            type: 'checkbox'
-            checked?: boolean
-          }
-
-        const isChecked = checkboxElement.checked ?? false
-        const isDisabled = !checkboxElement.applicable
-
         return (
-          <StyledFormControlLabel
-            key={`box-${checkboxElement.id}-${index}`}
-            className="p-2 pr1 flex-row align-center mb1"
-            control={
-              <Checkbox
-                name={String(checkboxElement.id)}
-                checked={isChecked}
-                disabled={isDisabled}
-                onChange={(e) => onChange(checkboxElement.id, e.target.checked)}
-              />
-            }
-            label={formatOption(checkboxElement.label)}
+          <CheckboxInput
+            key={`box-${element.id}-${index}`}
+            evaluatedElement={element}
+            index={index}
+            onChange={onChange}
           />
         )
       })}

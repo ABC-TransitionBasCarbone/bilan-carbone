@@ -23,13 +23,10 @@ interface Props {
   studySite: string
   withDepValue: number
   withoutDepValue: number
-  displayValueWithDep: boolean
-  setDisplayValueWithDep: (displayValueWithDep: boolean) => void
   monetaryRatio: number
   nonSpecificMonetaryRatio: number
   caUnit?: SiteCAUnit
   computedResultsByTag: ResultsByTag[]
-  exportType: string
 }
 
 const EmissionsAnalysis = ({
@@ -37,17 +34,15 @@ const EmissionsAnalysis = ({
   studySite,
   withDepValue,
   withoutDepValue,
-  displayValueWithDep,
-  setDisplayValueWithDep,
   monetaryRatio,
   nonSpecificMonetaryRatio,
   caUnit = SiteCAUnit.K,
   computedResultsByTag,
-  exportType,
 }: Props) => {
   const t = useTranslations('study.results')
   const tGlossary = useTranslations('study')
   const tResultUnits = useTranslations('study.results.units')
+  const tDocumentation = useTranslations('documentationUrl')
   const [glossary, setGlossary] = useState('')
 
   const { environment } = useAppEnvironmentStore()
@@ -60,12 +55,7 @@ const EmissionsAnalysis = ({
           <Box className={classNames(styles.gapped, 'justify-center flex-col')}>
             <Title as="h6" title={t('total')} className="justify-center" />
             <div className="flex-row justify-around">
-              <Box
-                className="pointer align-center flex-col relative mr1"
-                color="secondary"
-                selected={displayValueWithDep}
-                onClick={() => setDisplayValueWithDep(true)}
-              >
+              <Box className="align-center flex-col relative mr1" color="secondary">
                 <HelpOutlineOutlinedIcon
                   color="secondary"
                   className={`ml-4 ${styles.helpIcon} absolute r1`}
@@ -78,12 +68,7 @@ const EmissionsAnalysis = ({
                 />
                 <span className="align-center text-center">{t('withDependencies')}</span>
               </Box>
-              <Box
-                className="pointer align-center flex-col"
-                color="secondary"
-                selected={!displayValueWithDep}
-                onClick={() => setDisplayValueWithDep(false)}
-              >
+              <Box className="align-center flex-col" color="secondary">
                 <Data
                   value={formatNumber(withoutDepValue)}
                   label={tResultUnits(study.resultsUnit)}
@@ -127,7 +112,6 @@ const EmissionsAnalysis = ({
             title={t('tagPieChartTitle', { unit: tResultUnits(study.resultsUnit) })}
             type="tag"
             glossary="tagGlossary"
-            exportType={exportType}
           />
         </div>
       </div>
@@ -136,11 +120,7 @@ const EmissionsAnalysis = ({
           <span>
             {tGlossary.rich(`${glossary}Description`, {
               link: (children) => (
-                <Link
-                  href="https://www.bilancarbone-methode.com/annexes/annexes/annexe-1-grands-principes-de-comptabilisation-du-bilan-carbone-r#zoom-sur-les-sous-postes-utilisation-en-responsabilite-et-utilisation-en-dependance"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
+                <Link href={tDocumentation('dependencyAndReponsability')} target="_blank" rel="noreferrer noopener">
                   {children}
                 </Link>
               ),

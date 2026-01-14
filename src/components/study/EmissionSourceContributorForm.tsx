@@ -12,8 +12,10 @@ import { formatEmissionFactorNumber } from '@/utils/number'
 import { hasDeprecationPeriod } from '@/utils/study'
 import AddIcon from '@mui/icons-material/Add'
 import { TextField } from '@mui/material'
+import { DatePicker } from '@mui/x-date-pickers'
 import { Environment, StudyResultUnit, SubPost, Unit } from '@prisma/client'
 import classNames from 'classnames'
+import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -39,7 +41,8 @@ interface Props {
   emissionFactorsForSubPost: EmissionFactorWithMetaData[]
   importVersions: ImportVersionForFilters[]
   studyId: string
-  update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null) => void
+  update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | Date | null) => void
+  hasGHGPExport: boolean
 }
 
 const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) =>
@@ -58,10 +61,12 @@ const EmissionSourceContributorForm = ({
   importVersions,
   studyId,
   update,
+  hasGHGPExport,
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tResultUnits = useTranslations('study.results.units')
   const tGlossary = useTranslations('emissionSource.glossary')
+  const tDocumentation = useTranslations('documentationUrl')
   const getUnitLabel = useUnitLabel()
   const [expandedQuality, setExpandedQuality] = useState(!!advanced)
   const [glossary, setGlossary] = useState('')
@@ -107,21 +112,42 @@ const EmissionSourceContributorForm = ({
             )}
           </div>
           {hasDeprecationPeriod(emissionSource.subPost) && (
-            <div className={classNames(styles.inputWithUnit, 'flex grow')}>
-              <TextField
-                disabled={!!emissionSource.validated}
-                className="grow"
-                type="number"
-                defaultValue={emissionSource.depreciationPeriod}
-                onBlur={(event) => update('depreciationPeriod', Number(event.target.value))}
-                label={`${t('form.depreciationPeriod')} *`}
-                slotProps={{
-                  inputLabel: { shrink: true },
-                  input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
-                }}
-              />
-              <div className={styles.unit}>{t('form.years')}</div>
-            </div>
+            <>
+              <div className={classNames(styles.inputWithUnit, 'flex grow')}>
+                <TextField
+                  disabled={!!emissionSource.validated}
+                  className="grow"
+                  type="number"
+                  defaultValue={emissionSource.depreciationPeriod}
+                  onBlur={(event) => update('depreciationPeriod', Number(event.target.value))}
+                  label={`${t('form.depreciationPeriod')} *`}
+                  slotProps={{
+                    inputLabel: { shrink: true },
+                    input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
+                  }}
+                />
+                <div className={styles.unit}>{t('form.years')}</div>
+              </div>
+              {hasGHGPExport && (
+                <DatePicker
+                  label={`${t('form.constructionYear')} *`}
+                  slotProps={{
+                    textField: {
+                      className: styles.datePickerInput,
+                    },
+                  }}
+                  maxDate={dayjs(new Date())}
+                  views={['year']}
+                  sx={{ backgroundColor: 'white', flex: '1' }}
+                  onChange={(date) => {
+                    if (date && date.isValid()) {
+                      update('constructionYear', date.toDate())
+                    }
+                  }}
+                  value={emissionSource.constructionYear ? dayjs(emissionSource.constructionYear) : null}
+                />
+              )}
+            </>
           )}
         </div>
         <TextField
@@ -172,11 +198,7 @@ const EmissionSourceContributorForm = ({
           <p className="mb-2">
             {tGlossary.rich(`${glossary}Description`, {
               link: (children) => (
-                <Link
-                  href="https://www.bilancarbone-methode.com/4-comptabilisation/4.4-methode-destimation-des-incertitudes/4.4.2-comment-les-determiner#determination-qualitative"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
+                <Link href={tDocumentation('uncertainties')} target="_blank" rel="noreferrer noopener">
                   {children}
                 </Link>
               ),
