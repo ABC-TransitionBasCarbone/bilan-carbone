@@ -1,6 +1,7 @@
 import { FullStudy } from '@/db/study'
 import { getEmissionSourceEmission } from '@/services/emissionSource'
 import { EmissionFactorBase, Environment, Export } from '@prisma/client'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import GlossaryIconModal from '../modals/GlossaryIconModal'
 
@@ -9,6 +10,7 @@ interface Props {
   validatedOnly?: boolean
   environment: Environment
   exports?: Export[]
+  className?: string
 }
 
 const filterEmissionSources = (emissionSources: FullStudy['emissionSources'], base: EmissionFactorBase) =>
@@ -23,7 +25,13 @@ const getValue = (emissionSources: FullStudy['emissionSources'], validatedOnly: 
     )
   }, 0)
 
-const ElectricityBaseDifference = ({ emissionSources, validatedOnly = false, environment, exports }: Props) => {
+const ElectricityBaseDifference = ({
+  emissionSources,
+  validatedOnly = false,
+  environment,
+  exports,
+  className,
+}: Props) => {
   const t = useTranslations('emissionFactors.base.difference')
 
   const locationSources = filterEmissionSources(emissionSources, EmissionFactorBase.LocationBased)
@@ -33,20 +41,18 @@ const ElectricityBaseDifference = ({ emissionSources, validatedOnly = false, env
   const marketValue = getValue(marketSources, validatedOnly, environment)
 
   return exports && exports.includes(Export.GHGP) && locationValue !== marketValue ? (
-    <>
-      <div className="flex align-end mt1 warning">
-        <span className="mr-2">{t('warning')}</span>
-        <GlossaryIconModal
-          title="title"
-          iconLabel="explanation"
-          label="electricity-base-difference"
-          tModal="emissionFactors.base.difference"
-          className="warning"
-        >
-          {t('description')}
-        </GlossaryIconModal>
-      </div>
-    </>
+    <div className={classNames(className, 'flex warning')}>
+      <span className="mr-2">{t('warning')}</span>
+      <GlossaryIconModal
+        title="title"
+        iconLabel="explanation"
+        label="electricity-base-difference"
+        tModal="emissionFactors.base.difference"
+        className="warning"
+      >
+        {t('description')}
+      </GlossaryIconModal>
+    </div>
   ) : null
 }
 

@@ -1682,7 +1682,7 @@
       "LocationBased": "location-based",
       "MarketBased": "market-based",
       "difference": {
-        "warning": "Attention, vos KWH market based ne sont pas égales à celles en location based.",
+        "warning": "Attention, vos kWh market based ne sont pas égaux à ceux en location based.",
         "explanation": "Explication",
         "title": "titre Gabriel",
         "description": "description Gabriel"

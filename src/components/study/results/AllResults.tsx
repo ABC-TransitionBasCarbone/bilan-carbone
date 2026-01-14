@@ -40,6 +40,7 @@ import {
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { MouseEvent, useCallback, useEffect, useMemo, useState } from 'react'
+import ElectricityBaseDifference from '../ElectricityBaseDifference'
 import SelectStudySite from '../site/SelectStudySite'
 import useStudySite from '../site/useStudySite'
 import BegesResultsTable from './beges/BegesResultsTable'
@@ -431,6 +432,16 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
               studySite={studySite}
               ghgpRules={ghgpRules}
               navigateToEmissionSource={navigateToEmissionSource}
+            />
+          )}
+          {type === Export.GHGP && (
+            <ElectricityBaseDifference
+              emissionSources={study.emissionSources.filter(
+                (emissionSource) => emissionSource.subPost === SubPost.Electricite,
+              )}
+              environment={environment}
+              exports={study.exports?.types}
+              className="align-center"
             />
           )}
         </div>
