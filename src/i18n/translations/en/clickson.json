@@ -11,21 +11,21 @@
   "home": {
     "navigation": {
       "collaborators": {
-        "title": "Pilot Team:",
+        "title": "Pilot Team",
         "message": "Find here the list of teachers, administrative staff and students authorized to modify the establishment's data"
       },
       "footprints": {
-        "title": "My Footprints:",
+        "title": "My Footprints",
         "message": "Create your first footprint here. You can then view your footprints or create new ones at any time."
       },
       "sites": {
-        "title": "My Establishments:",
-        "message": "Find here the list of establishments linked to your account"
+        "title": "My Establishment",
+        "message": "Find here the establishment linked to your account"
       }
     },
     "title": "Calculating your simplified carbon footprint will allow you to:",
     "alert": {
-      "info": "The Clickson calculator allows you to estimate the climate impact of your activity. It is above all an awareness tool. It is not a low-carbon transition approach but a simplified carbon footprint — in the sense of the <link>Guide to communication around carbon accounting</link> — focused on the main emission sources related to the activity of establishments."
+      "info": "The Clickson calculator allows you to estimate the climate impact of your activity. It is above all an awareness tool. It is not a low-carbon transition approach but a simplified carbon footprint — in the sense of the <link>Guide to communication around carbon accounting</link> — focused on the main emission sources related to the activity of the establishment."
     },
     "info": {
       "0": "Understand the measurement of your establishment's impact",
@@ -42,11 +42,13 @@
     "create": "Add a Footprint",
     "myStudies": "My Carbon Footprints",
     "createFirstStudy": "Create My First Footprint",
+    "createFirstSimplifiedStudy": "Create",
+    "firstSimplifiedStudyMessage": "It's time to get started! We invite you to create your first simplified carbon footprint.",
     "see": "View My Footprint",
     "selectSite": "Before filling in data, please select an establishment",
     "lastStudyTitle": "Latest Footprint",
     "navigation": {
-      "framing": "General Data",
+      "framing": "Establishment Profile",
       "organizations": "My Establishments",
       "team": "My Collaborators",
       "title": "My Footprint"
@@ -60,7 +62,11 @@
       "glossary": {
         "validatorEmailDescription": "As a student, I have access as a contributor to one or more emission posts.",
         "duplicationOptionsDescription": "When duplicating a study, you can choose to invite the same team members and students from the original study to the new one. This helps maintain collaboration continuity."
-      }
+      },
+      "etp": "Number of staff (teachers and non-teaching staff)",
+      "studentNumber": "Number of students",
+      "superficy": "Establishment area",
+      "goToDataEntry": "Go to data entry"
     },
     "newContributor": {
       "title": "Add on student on study : {name}"
@@ -80,25 +86,107 @@
           "description": "Here you can manage the students to your study. They will have access to certain posts and sub-posts (which you can define) and will be able to fill in certain information for emission sources that you have already created in the study. For more information on the contributor interface, please see our <link>FAQ</link>."
         }
       }
+    },
+    "export": {
+      "export": "Export my footprint"
+    },
+    "pdf": {
+      "loading": "Loading data...",
+      "title": "Emissions Summary {year}",
+      "results": {
+        "all": "Results"
+      },
+      "labels": {
+        "studentNumber": "Number of students",
+        "etp": "Number of staff",
+        "superficy": "Area",
+        "establishmentYear": "Year of opening"
+      },
+      "charts": {
+        "siteEmissions": "Emissions in tCO2e of the school establishment {site} in {year}"
+      },
+      "questions": {
+        "goals-title": "OBJECTIVES",
+        "goals-subtitle": "Present the objectives of your action (awareness, emissions reduction...). Is this a short-term or strategic action?",
+        "shareholders-title": "ACTION LEADERS",
+        "shareholders-subtitle": "Have you designated a team to lead the action on a daily and long-term basis? Indicate their names and role/function",
+        "otherStakeholders-title": "OTHER STAKEHOLDERS",
+        "otherStakeholders-subtitle": "Remember to distinguish internal and external stakeholders here. They will not lead the action daily but will help you by providing electricity bills, for example. This could be your establishment's manager or your local authority.",
+        "ressourcesToBeImplemented-title": "RESOURCES TO BE IMPLEMENTED",
+        "ressourcesToBeImplemented-subtitle": "What are the steps and means to be used? This can be human, material, financial resources... Build this part well, it is essential!",
+        "monitoringIndicators-title": "MONITORING INDICATORS",
+        "monitoringIndicators-subtitle": "Write down indicators here that you can use in 6 months / 1 year to assess the success of your action. An example: % reduction in GHG",
+        "estimatedCarbonImpacts-title": "ESTIMATED CARBON IMPACTS",
+        "estimatedCarbonImpacts-subtitle": "To what extent does your action reduce GHG emissions?",
+        "otherEstimatedEnvironmentalImpacts-title": "OTHER ESTIMATED ENVIRONMENTAL IMPACTS",
+        "otherEstimatedEnvironmentalImpacts-subtitle": "Think here about the positive or negative impacts of your action on biodiversity, water, waste...",
+        "estimatedSocialImpacts-title": "ESTIMATED SOCIAL IMPACTS",
+        "estimatedSocialImpacts-subtitle": "We try here to know if the action helps reduce eco-anxiety, promote learning, reduce school dropout, promote youth integration...",
+        "calendar-title": "TIMELINE",
+        "calendar-subtitle": "Write down the main stages of your action here, choose your time scale well!"
+      },
+      "additionalInfo": "The results you obtain here are a simplified calculation of your establishment's carbon footprint and do not meet the requirements of the Carbon Accounting® standard, nor current regulations. These results are intended to assist you in understanding climate issues and identifying your action priorities. Therefore carrying an essentially educational value, the calculation of your establishment's carbon footprint via our tool constitutes a first step in your adaptation to the consequences of climate change."
+    },
+    "results": {
+      "carbonIntensities": "Individual carbon footprint"
     }
   },
   "emissionFactors": {
     "post": {
-      "Restauration": "Restauration"
+      "EnergiesClickson": "Energy",
+      "Combustibles": "Fuels",
+      "AutresGaz": "Other gases",
+      "Restauration": "Catering",
+      "TypesDeRepasServis": "Types of meals served",
+      "DistributeursAutomatiques": "Vending machines",
+      "DeplacementsClickson": "Travel",
+      "TransportDesEleves": "Student transport",
+      "TransportDuPersonnel": "Staff transport",
+      "VoyagesScolaires": "School trips",
+      "Fournitures": "Supplies",
+      "ProduitsChimiques": "Chemical products",
+      "EquipementsDeSport": "Sports equipment",
+      "DechetsRecyclables": "Recyclable waste",
+      "OrduresMenageresResiduelles": "Residual household waste",
+      "ImmobilisationsClickson": "Fixed assets",
+      "Construction": "Construction",
+      "Renovation": "Renovation",
+      "EquipementsInformatiqueAudiovisuel": "IT / Audiovisual equipment",
+      "EquipementsDivers": "Miscellaneous equipment (appliances, professional equipment...)"
     }
   },
   "organization": {
     "card": {
-      "myOrganization": "My Establishments"
+      "myOrganization": "My Establishment"
     },
     "form": {
-      "editTitle": "Edit My Establishments"
+      "editTitle": "Edit My Establishment",
+      "name": "Establishment name"
     },
     "sites": {
-      "title": "Which establishments should the footprint cover?",
+      "title": "",
       "noSites": "No establishments configured",
       "namePlaceholder": "Establishment Name",
-      "add": "Add an Establishment"
+      "add": "Add an Establishment",
+      "etp": "Number of staff",
+      "etpPlaceholder": "Total number of staff",
+      "studentNumber": "Number of students",
+      "studentNumberPlaceholder": "Total number of students",
+      "establishmentYear": "Year of establishment",
+      "establishmentYearPlaceholder": "Year the establishment was founded",
+      "academy": "academy",
+      "academyPlaceholder": "Establishment's academy",
+      "establishmentType": {
+        "title": "Type of Establishment",
+        "COLLEGE": "Middle School",
+        "LYCEE_GENERAL": "General and Technological High School",
+        "LYCEE_PRO": "Vocational High School",
+        "LYCEE_PRO_AGRICOLE": "Agricultural Vocational High School",
+        "ETABLISSEMENT_FR_ETRANGER": "French Educational Establishment Abroad"
+      },
+      "glossary": {
+        "informations": "It is necessary to provide this information before proceeding further with your approach. This information does indeed impact the calculation of your carbon footprint (in particular, the fixed assets post)"
+      }
     }
   },
   "login": {
@@ -120,6 +208,12 @@
     "clear": "Clear value",
     "Not authorized": "This email is already used for Clickson or there's an issue with the account creation. Please see <link>the FAQ</link> or <support>contact support</support> if you think this is an error.",
     "Not known school": "Please find and select your establishment.",
+    "country": "Your country",
+    "schoolName": "School name",
+    "schoolNamePlaceholder": "Name of the school establishment",
+    "city": "City",
+    "cityPlaceholder": "City where the school establishment is located",
+
     "validation": {
       "schoolPostalCodeOrName": "Please enter the school postal code or name"
     }
@@ -131,5 +225,24 @@
       "activation": "You have activated you account on Clickson",
       "activationRequest": "Access request to your Clickson organization"
     }
+  },
+  "comments": {
+    "title": "Comment Management",
+    "noComments": "You have no pending comments",
+    "yourComment": "Your comment...",
+    "validated": "Validated",
+    "pending": "Pending",
+    "addComment": "Add a comment"
+  },
+  "ressources": {
+    "knowMoreDataCollect": "To learn how to collect data for your establishment:",
+    "guideDataCollect": "Data collection guide",
+    "toolsDataCollect": "Data collection tools:",
+    "modelsDataCollect": "Data collection support templates",
+    "game": "Game: introduction to negotiating your action plan:",
+    "classEarth": "My Earth in class"
+  },
+  "error": {
+    "Too many comments": "Too many pending comments already exist."
   }
 }

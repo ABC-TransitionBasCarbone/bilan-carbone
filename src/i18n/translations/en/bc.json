@@ -26,6 +26,16 @@
       "title": "Bilan Carbone® Equivalence",
       "category": "Bilan Carbone® Category",
       "emissions": "Emissions (tCO2e)"
+    },
+    "glossary": {
+      "GHGP": {
+        "title": "Export to GHG Protocol format",
+        "warning": "Please note that in order for your export to comply with the GHG Protocol, you will need to:",
+        "item1": "That you have taken waste incineration into account in the emissions associated with district heating networks.",
+        "item2": "That under the Fixed Assets post, you have correctly indicated whether the asset in question was constructed in the year of the bilan.",
+        "item3": "Whether you have double accounting for electricity consumption, on the one hand location-based and on the other market-based. To do this, simply account for your kWh of energy consumption twice, <green>once via location-based emission factors</green>, and <purple>a second time via market-based emission factors</purple>. Reminder:<ul><li>The location-based method is based on the use of emission factors representing the average electricity mix over defined geographical and temporal areas. In France, the emission factors used are typically in the form of ‘Average mix - Year concerned - France’. </li><li>The market-based method is based on the use of emission factors representative of the electricity produced by the electricity producers to which the organisation is contractually bound through the purchase of Guarantees of Origin (GO) or the direct sale of electricity (Power Purchase Agreement, or PPA). All electricity not covered by the aforementioned contracts must then be taken into account using emission factors for residual mixes, i.e. emission factors for electricity mixes from which all electricity covered by the aforementioned contracts has been removed.</li></ul>",
+        "conclusion": "Users should also be familiar with all the methodological specifics of the GHG Protocol in order to generate an export that meets the requirements of this method."
+      }
     }
   },
   "categorisations": {
@@ -34,15 +44,17 @@
     "NotOperated": "Not operated",
     "OperatedProcedeed": "Operated, procedeed",
     "OperatedFugitive": "Operated, fugitive",
+    "OperatedCAS": "Operated, LUC",
     "NotOperatedSupported": "Not operated, supported",
     "NotOperatedNotSupported": "Not operated, not supported",
     "Rented": "Rented",
-    "FinalClient": "By the final client or an intermediary",
+    "FinalClient": "By the final client",
     "Held": "Held",
     "NotHeldSimpleRent": "Not held, simple rent",
     "NotHeldOther": "Not held, other",
     "HeldProcedeed": "Held, procedeed",
     "HeldFugitive": "Held, fugitive",
+    "HeldCAS": "Held, LUC",
     "NotHeldSupported": "Not held, supported",
     "NotHeldNotSupported": "Not held, not supported",
     "UsedByIntermediary": "Used by an intermediary"
@@ -101,6 +113,55 @@
     "uncertainty": "Uncertainty",
     "ges": "GHG emissions ({unit})"
   },
+  "ghgp": {
+    "rule": "Rule",
+    "subTotal": "Subtotal",
+    "category": {
+      "title": "Category",
+      "1": "Scope 1",
+      "2": "Scope 2",
+      "3": "Upstream Scope 3",
+      "4": "Downstream Scope 3"
+    },
+    "post": {
+      "title": "Emission Post",
+      "1": {
+        "1": "Stationary combustion",
+        "2": "Mobile combustion",
+        "3": "Process emissions",
+        "4": "Fugitive emissions"
+      },
+      "2": {
+        "1": "Indirect emissions related to consumption",
+        "2": "Indirect emissions related to steam consumption"
+      },
+      "3": {
+        "1": "Purchased Goods and Services",
+        "2": "Capital Goods",
+        "3": "Fuel and Energy-Related Activities not included in Scope 1 or Scope 2",
+        "4": "Upstream transportation and distribution",
+        "5": "Waste generated in operations",
+        "6": "Business travel",
+        "7": "Employee Commuting",
+        "8": "Upstream leased assets",
+        "other": "Other upstream indirect emissions"
+      },
+      "4": {
+        "09": "Downstream transportation and distribution",
+        "10": "Processing of sold products",
+        "11": "Use of sold products",
+        "12": "End-of-life treatment of sold products",
+        "13": "Downstream leased assets",
+        "14": "Franchises",
+        "15": "Investments",
+        "other": "Other downstream indirect emissions"
+      }
+    },
+    "other": "Other gases",
+    "total": "Total",
+    "uncertainty": "Uncertainty",
+    "ges": "GHG emissions ({unit})"
+  },
   "nav": {
     "backToHome": "Back to home",
     "emissionFactors": "Emission Factors",
@@ -109,17 +170,18 @@
     "newStudy": "Add a New Study",
     "studyPerimeter": "Perimeter",
     "newStudyContributor": "Add a contributor",
+    "editStudyContributor": "Edit a contributor",
     "newStudyRight": "Add a Person",
     "notFound": "Page not found",
     "organization": "Organization",
     "edit": "Edit",
     "studyRights": "Rights",
     "team": "Team",
-    "actualities": "Actualities"
+    "actualities": "News"
   },
   "actuality": {
-    "title": "BC+ actualities",
-    "allActualities": "See all actualities",
+    "title": "BC+ news",
+    "allActualities": "See all news",
     "noItems": "No news at the moment",
     "seeLess": "See less",
     "seeMore": "See more"
@@ -148,6 +210,12 @@
   "locale": {
     "en": "English",
     "fr": "French",
+    "es": "Español",
+    "el": "ελληνικά",
+    "hr": "hrvatski",
+    "hu": "magyar",
+    "it": "Italiano",
+    "ro": "Română",
     "selector": "Site language"
   },
   "login": {
@@ -225,7 +293,8 @@
     "transition": "BC+ transition",
     "logout": "Log out",
     "methodology": "Methodology",
-    "organizations": "My carbon assessments",
+    "organizations": "My carbon footprints",
+    "footprints": "Mes Empreintes",
     "settings": "Settings",
     "team": "My team",
     "information": "Global informations",
@@ -305,7 +374,6 @@
       "homepage": "Homepage",
       "framing": "Framing",
       "scope": "Scope",
-      "mobilisation": "Mobilization",
       "accounting": "Accounting",
       "dataEntry": "Data entry",
       "results": "Results",
@@ -319,7 +387,9 @@
       "trajectories": "Reduction trajectories",
       "objectives": "Reduction objectives",
       "actionPlan": "Action plan",
-      "commingSoon": "Coming soon"
+      "commingSoon": "Coming soon",
+      "engagement": "Engagement",
+      "carriedActions": "Carried actions"
     },
     "new": {
       "title": "Information about the new study",
@@ -327,11 +397,9 @@
       "validator": "Validator email",
       "studyDates": "Study dates",
       "realizationDates": "Study completion date",
-      "start": "Start",
-      "end": "End",
       "level": "Bilan Carbone® maturity",
       "exports": "Exports",
-      "control": "Control mode",
+      "control": "Exports' Control mode",
       "CapitalShare": "Capital share",
       "Financial": "Financial",
       "Operational": "Operational",
@@ -391,8 +459,8 @@
         "visibilityDescription": "Choose whether your study should be public, i.e. accessible to all your colleagues entered on the My organization > my team page (link to the page), or private, i.e. only accessible to the people you add on the study framework page. Your organization's admins have access to all studies, whether public or private.",
         "exports": "Exports",
         "exportsDescription": "By default, the results are returned in Bilan Carbone® format, but it is possible to obtain the results in the formats required by several other carbon accounting methods, such as the Bilan GES règlementaire, which is the French regulatory method.",
-        "control": "Control mode",
-        "controlDescription": "The control mode is a data item required by certain carbon accounting methods, such as the regulatory GHG Balance or the GHG Protocol. In order to obtain the results in the formats requested by these methods, you will need to characterise the different sources of emissions when you enter them, which will determine into which of the existing categories within these methods (the equivalent of the posts and sub-posts within the Bilan Carbone® method) the emissions will be broken down. Depending on the control mode selected, the characterizations available for the different sources of emissions vary. For more details on the control modes, please consult the methodological guides for the methods in question. We strongly recommend that you use the \"Operational Control\" control mode, which is by far the most common.",
+        "control": "Exports' Control mode",
+        "controlDescription": "The control mode is a data item required by certain carbon accounting methods, such as the regulatory GHG Balance or the GHG Protocol. In order to obtain the results in the formats requested by these methods, you will need to characterise the different sources of emissions when you enter them, which will determine into which of the existing categories within these methods (the equivalent of the posts and sub-posts within the Bilan Carbone® method) the emissions will be broken down. The control mode applies to all the exports you have selected. Depending on the control mode selected, the characterizations available for the different sources of emissions vary. For more details on the control modes, please consult the methodological guides for the methods in question. We strongly recommend that you use the \"Operational Control\" control mode, which is by far the most common.",
         "duplicationOptions": "Duplication options",
         "duplicationOptionsDescription": "When duplicating a study, you can choose to invite the same team members and contributors from the original study to the new one. This helps maintain collaboration continuity.",
         "close": "Close"
@@ -419,6 +487,7 @@
       "contributors": "{count, plural, =1 {1 contributor} other {contibutors}}",
       "contributorsList": "{count, plural, =1 {Contributor :} other {Contributors :}}",
       "label": "Emission source label",
+      "search": "Search by label, value, unit, ...",
       "new": "Give your new emission source a title",
       "add": "Add",
       "filters": "Filters",
@@ -486,11 +555,13 @@
         }
       },
       "newContributor": {
+        "titleEdit": "Edit contributor on study : {name}",
         "title": "Add on contributor on study : {name}",
         "email": "Email",
         "post": "Post",
         "subPost": "Sub post",
         "create": "Add person",
+        "edit": "Edit rights",
         "Already in study": "This person already has access to the study.",
         "Not authorized": "Action not authorized. You can see the FAQ or contact us if you think it is an error.",
         "validation": {
@@ -573,7 +644,7 @@
         "proceed": "Confirm changes"
       },
       "exports": "Exports",
-      "control": "Control mode",
+      "control": "Exports' Control mode",
       "emissionSourceTagFamily": "Family",
       "emissionSourceTags": "Tags",
       "emissionSourceTagLabel": "Label",
@@ -597,15 +668,16 @@
         "continue": "Continue",
         "cancel": "Cancel"
       },
-      "begesActivationWarning": {
-        "title": "BEGES Export Activation",
-        "description": "You are about to activate the regulatory BEGES export. When this export is enabled, you must fill in an additional \"Characterization\" field in certain emission sources. As a result, <warning>activating this export will invalidate the affected emission sources</warning>. Do you want to continue?",
+      "exportActivationWarning": {
+        "title": "{type} Export Activation",
+        "description": "You are about to activate the regulatory {type} export. When this export is enabled, you must fill in additionals fields ({fields}) in certain emission sources. As a result, <warning>activating this export will invalidate the affected emission sources</warning>. Do you want to continue?",
+        "finalClientDescription": "If you have emission sources characterised as \"By the final client or an intermediary\", we invite you to verify them, as GHG-P exports require greater precision. By default, the characterisation used is \"By the final client\".",
         "continue": "Continue",
         "cancel": "Cancel"
       },
-      "begesDeactivationWarning": {
-        "title": "BEGES Export Deactivation",
-        "description": "You are about to deactivate the regulatory BEGES export. <warning>Deactivating this export will result in the loss of all characterizations entered in the emission sources</warning>. Do you want to continue?",
+      "exportDeactivationWarning": {
+        "title": "{type} Export Deactivation",
+        "description": "You are about to deactivate the regulatory {type} export. <warning>Deactivating this export will result in the loss of data entered in some emission sources fields ({fields})</warning>. Do you want to continue?",
         "continue": "Continue",
         "cancel": "Cancel"
       },
@@ -647,7 +719,7 @@
           "replicate": "Change the overall organisation"
         }
       },
-      "information": "For more information on this section, you can refer to this documentation: "
+      "information": "For more information on this section, you can refer to this documentation: <link></link>"
     },
     "results": {
       "type": "Type",
@@ -664,8 +736,9 @@
       "emissions": "Emissions",
       "uncertainty": "Uncertainty",
       "emissionSources": "Number of emission sources",
-      "bilanCarbone": "Résultats Bilan Carbone®",
-      "beges": "Résultats BEGES",
+      "bilanCarbone": "Bilan Carbone® Results",
+      "beges": "BEGES Results",
+      "ghgp": "GHG-P ",
       "withDependencies": "With dependencies",
       "withoutDependencies": "Without dependencies",
       "dependencyIntensity": "Carbon intensities in dependency",
@@ -679,27 +752,42 @@
         "K": "kgCO₂e",
         "T": "tCO₂e"
       },
+      "pageFilters": {
+        "title": "Filters",
+        "posts": "Posts and sub-posts",
+        "tags": "Tags",
+        "noFiltersSelected": "No filter selected"
+      },
       "tagGlossary": "Double count on charts by tags",
       "tagGlossaryDescription": "Emission sources can have multiple tags, so these are counted in each tag on this graph. It is therefore normal that you have a larger total here than in your study.",
       "info": "",
       "difference": {
-        "button": "Explanation of the differences between Bilan Carbone® and Beges export",
+        "button": "Explanation of the differences between Bilan Carbone® and {type} export",
         "modalTitle": "Explanation of the difference between the results",
         "dependanceTitle": "Dependent use",
         "wasteTitle": "Waste treatment",
         "missingCaractTitle": "Missing characterizations",
+        "immobilisationTitle": "Not applicable immobilisation",
+        "otherEmissionsTitle": "Other upstream and downstream emissions",
+        "otherGasTitle": "The emission factors emits in the \"Other gases\" category",
+        "marketBasedTitle": "The \"market-based\" emissions are not equal to the \"location-based\" emissions",
         "tableHeaders": {
           "emissionSource": "Emission source",
           "post": "Post",
           "bilanCarbone": "Bilan Carbone®",
           "beges": "BEGES",
+          "ghgp": "GHG-P",
           "difference": "Difference"
         },
-        "dependance": "The regulatory GHG balance does not include the sub-item \"Dependent use\", as the concept of dependence does not exist in the BEGES-R method",
+        "dependance": "The regulatory GHG balance does not include the sub-item \"Dependent use\", as the concept of dependence does not exist in the {type} method",
         "goToSubPost": "Go to sub-post",
         "waste": "The regulatory Bilan GES includes all emissions due to waste recycling in the waste emitter's balance sheet, whereas the Bilan Carbone® only includes the weight of waste collection and transport in the waste emitter's balance sheet. Thus, the emission factors with a value of 41 kgCO₂e/t within the tool are those used for the Bilan Carbone®, while the values incorporating the regeneration of materials (the recycling process, for the emission factors \"Recycling\" or \"Average end of life\") are used for the BEGES-R. The emission factor displayed on the BC+ is only that used for the Bilan Carbone®, but the BEGES-R export calculations are made using the ADEME emission factors linked to recycling or average end-of-life. Here are the sources of emissions related to this topic: ",
-        "missingCaract1": "Uncharacterized emission sources are not accounted for in the BEGES-R, which leads to undue differences with the Bilan Carbone® if you have chosen to visualize unvalidated emission sources.",
+        "missingCaract1": "Uncharacterized emission sources are not accounted for in the {type}, which leads to undue differences with the Bilan Carbone® if you have chosen to visualize unvalidated emission sources.",
         "missingCaract2": "You have not entered the characterizations for all the emission sources in your study. Please edit and add the characterization for the following emission sources:",
+        "immobilisation1": "à compléter - Gabriel",
+        "otherEmissions1": "à compléter - Gabriel",
+        "otherGas1": "à compléter - Gabriel",
+        "marketBased": "à compléter - Gabriel",
         "additionalMissing": "+ {count} other emission {count, plural,  =1 {source} other {sources}}",
         "unexplainedDifference": "Some differences can not be explained. Please, contact us at the <support>support</support>."
       },
@@ -765,6 +853,10 @@
         "entries": "Entries",
         "sessions": "Sessions"
       },
+      "ratios": {
+        "all": "Carbon intensities - All cinemas",
+        "site": "Carbon intensities - {site}"
+      },
       "additionalInfo": "Additional information"
     },
     "export": {
@@ -778,6 +870,7 @@
       "emissionQuality": "EF quality",
       "emissionSource": "EF source",
       "emissionUnit": "EF unit",
+      "emissionBase": "EF base",
       "emissionValue": "EF value",
       "no": "No",
       "noFactor": "No emission factor",
@@ -788,6 +881,7 @@
       "sourceDeprecation": "Depreciation duration (years)",
       "sourceDuration": "Duration (years)",
       "sourceName": "Emission source name",
+      "sourceConstructionYear": "Acquisition year",
       "sourceQuality": "Emission source quality",
       "sourceSurface": "Surface (ha)",
       "sourceUnit": "Emission source unit",
@@ -886,10 +980,19 @@
           "confirm": "Delete",
           "cancel": "Cancel"
         },
+        "snbcCard": {
+          "title": "SNBC Trajectories",
+          "description": "The National Low-Carbon Strategy (SNBC) is France's roadmap to fight climate change, defining a GHG reduction trajectory until 2030 and 2050 targets. Abroad, we advise relying on local strategies if they exist.",
+          "methodLabel": "Methods",
+          "general": "General",
+          "sectoral": "Sectoral",
+          "placeholder": "No trajectory selected"
+        },
         "sbtiCard": {
           "title": "SBTi Trajectories",
           "description": "The Science Based Targets Initiative defines two reference trajectories, aiming to limit global warming to 1.5°C (SBTi 1.5°C) or \"Well below 2 degrees\" (SBTi WB2C).",
           "methodLabel": "Methods",
+          "optionSNBC": "SNBC",
           "option15": "SBTi 1.5°C",
           "optionWB2C": "SBTi WB2C",
           "placeholder": "No trajectory selected"
@@ -899,11 +1002,17 @@
           "subtitle": "Display of reference trajectories and your organization's trajectories",
           "trajectory15": "SBTi 1.5°C",
           "trajectoryWB2C": "SBTi WB2C",
-          "yAxisLabel": "Emissions (tCO2e)",
+          "trajectorySNBC": "SNBC",
+          "yAxisLabel": "Emissions",
           "actionBasedTrajectory": "Action-based trajectory",
           "unvalidatedSourcesWarning": "{count, plural, =1 {One emission source is not validated in the current study and is therefore not taken into account in the trajectory calculations.} other {{count} emission sources are not validated in the current study and are therefore not taken into account in the trajectory calculations.}}",
           "unvalidatedSourcesLinkedStudiesWarning": "{count, plural, =1 {One emission source is not validated in the following past study:} other {{count} emission sources are not validated in the following past studies:}}",
-          "unvalidatedSourcesLinkedStudyCount": " ({count, plural, =1 {1 unvalidated source} other {{count} unvalidated sources}})"
+          "unvalidatedSourcesLinkedStudyCount": " ({count, plural, =1 {1 unvalidated source} other {{count} unvalidated sources}})",
+          "yearRangeLabel": "Visualization period",
+          "sbtiSnbc": "SBTI/SNBC Trajectories",
+          "custom": "My custom Trajectories",
+          "previousTrajectories": "Reference trajectories",
+          "currentTrajectories": "Current trajectories"
         },
         "linkedStudies": {
           "linked": "Linked studies",
@@ -995,18 +1104,27 @@
           "15": "1.5°C aligned",
           "wb2c": "WB2C (Well below 2 degrees)"
         },
+        "snbcType": {
+          "title": "SNBC trajectory type",
+          "generale": "General",
+          "sectorielle": "Sectoral"
+        },
         "selectedTrajectory": {
           "SBTI_15": "I follow the SBTi reference trajectory",
           "SBTI_WB2C": "I follow the SBTi reference trajectory",
+          "SNBC_GENERAL": "I follow the SNBC reference trajectory",
+          "SNBC_SECTORAL": "I follow the SNBC reference trajectory",
           "CUSTOM": "I follow my own trajectory"
         },
         "name": "My trajectory name",
         "namePlaceholder": "Give your trajectory a name",
         "description": "My trajectory description",
         "descriptionPlaceholder": "Describe your trajectory",
+        "referenceYear": "Trajectory reference year (optional)",
         "objectives": {
           "title": "Reduction objectives",
           "sbtiDescription": "These reduction objectives are linked to the SBTi reference trajectory and are predefined. You can add intermediate objectives in the \"My reduction objectives\" section",
+          "snbcDescription": "These reduction objectives are linked to the SNBC reference trajectory and are predefined. You can add intermediate objectives in the \"My reduction objectives\" section",
           "global": "GLOBAL OBJECTIVE",
           "horizon2030": "2030 Horizon",
           "horizon2050": "2050 Horizon",
@@ -1019,17 +1137,26 @@
           "required": "Required field",
           "objectiveBothRequired": "Both year and reduction rate are required",
           "atLeastOneObjective": "At least one complete objective is required for custom trajectories"
+        },
+        "glossary": {
+          "title": "Glossary",
+          "close": "Close",
+          "referenceYear": "Reference Year",
+          "referenceYearDescription": "The reference year corresponds to the starting year of your reduction trajectory. This year serves as the starting point for calculating reduction objectives. For SBTi and SNBC trajectories, the reference year is predefined and cannot be modified. For custom trajectories, you can freely choose this year."
         }
       },
       "objectives": {
         "title": "Reduction objectives",
         "custom": "Custom",
+        "snbcGeneral": "SNBC General",
+        "snbcSectoral": "SNBC Sectoral",
         "objectiveNumber": "Objective {number}",
         "search": "Search for a trajectory",
         "add": "Add a trajectory",
         "table": {
           "name": "Name",
           "type": "Type",
+          "startYear": "Start year",
           "targetYear": "Target year",
           "reductionRate": "Annual reduction",
           "actions": "Actions"
@@ -1047,6 +1174,12 @@
           "title": "Add a trajectory or reduction objectives",
           "description": "You have already created a reference trajectory but want to add others to test different hypotheses and ambition levels? You can create new trajectories, or add intermediate objectives for more detailed tracking without losing sight of the final goal!",
           "detailedInfo": "When you enter your first top-down trajectory, the associated objectives for 2030 and 2050 will be recorded in this table. You can then detail these objectives by adding additional intermediate targets, which can apply either to all categories and sites of the Carbon Assessment® (in which case the reductions will be calculated automatically to maintain consistency with the 2030 and 2050 objectives), or to specific categories and sites. You can also enter your projected revenue growth to obtain annual reductions that account for this growth. Finally, you can add other top-down trajectories, particularly to visualize different trajectories on the previous page before choosing the one you will follow."
+        },
+        "glossary": {
+          "label": "Glossary",
+          "title": "titre gabriel",
+          "description": "description gabriel",
+          "close": "Close"
         }
       },
       "actions": {
@@ -1055,6 +1188,10 @@
         "add": "Add an action",
         "table": {
           "enabled": "Enabled",
+          "enabledGlossaryIconLabel": "Enabling and disabling my actions",
+          "enabledGlossaryTitle": "Enabling and disabling my actions",
+          "enabledGlossaryDescription": "The reductions linked to actions you have enabled are taken into account on the <trajectoryLink>Reduction trajectories</trajectoryLink> page in your bottom-up trajectory. Reductions linked to disabled actions will not be visible. Enabling or disabling actions allows you to consider different scenarios to achieve your reduction objectives.",
+          "close": "Close",
           "title": "Title",
           "priority": "Priority",
           "actionType": "Action type",
@@ -1062,7 +1199,8 @@
           "potential": "Reduction potential",
           "owner": "Owner",
           "budget": "Budget",
-          "errorChangingEnabled": "Error changing action status"
+          "errorChangingEnabled": "Error changing action status",
+          "relevance": "Relevance levels"
         },
         "addModal": {
           "add": "Add an action",
@@ -1075,7 +1213,7 @@
           "title": "Action title",
           "titlePlaceholder": "Give your action a title",
           "subSteps": "Sub-steps",
-          "subStepsPlaceholder": "Describe your sub-steps",
+          "stepTitlePlaceholder": "Describe your sub-step",
           "detailedDescription": "Detailed description of the action and stakeholder involvement",
           "detailedDescriptionPlaceholder": "Detailed description",
           "potentialDeduction": "Emission reduction potential",
@@ -1149,7 +1287,7 @@
           "ReductionWithinOrganisationCoreBusiness": "Reduction within the organisation's core business (Priority 1/6)",
           "glossaryTitle": "Action relevance levels",
           "information": "Information about relevance levels",
-          "learnMore": "For more information, please visit this page.",
+          "learnMore": "For more information, please visit <link>this page</link>.",
           "close": "Close"
         },
         "onboarding": {
@@ -1163,15 +1301,62 @@
           "confirm": "Delete"
         }
       }
+    },
+    "engagementActions": {
+      "title": "Carries Actions",
+      "table": {
+        "name": "Name",
+        "description": "Description",
+        "steps": "Steps",
+        "target": "Target",
+        "phase": "Phase",
+        "date": "Date",
+        "sites": "Sites"
+      },
+      "modal": {
+        "add": "Add an action",
+        "update": "Modify an action",
+        "clear": "Clear value",
+        "name": "Name",
+        "namePlaceholder": "Give a name to your action",
+        "description": "Description (number of participants, format, procedure, etc)",
+        "descriptionPlaceholder": "Describe your action",
+        "steps": "Step of the process concerned",
+        "stepsPlaceholder": "Choose the steps of your action",
+        "target": "Targets",
+        "phase": "Mobilization phase",
+        "date": "Date",
+        "sites": "Sites",
+        "validate": "Validate"
+      },
+      "targets": {
+        "TEAM_PROJECT": "Project team",
+        "DIRECTION": "Direction",
+        "OTHER_INTERNAL_COLLABORATORS": "Other internal collaborators",
+        "FURNISHERS": "Suppliers",
+        "CLIENTS": "Clients",
+        "PARTNERS": "Partners",
+        "OTHERS_EXTERNAL": "Others external partners"
+      },
+      "steps": {
+        "AT_LAUNCH_OF_APPROACH": "At the launch of the approach of carbon footprint",
+        "AT_LAUNCH_OF_DATA_COLLECTION": "At the launch of data collection ",
+        "FOR_GES_PROFILE_CONSTRUCTION": "For GES profile construction",
+        "FOR_TRANSITION_PLAN_CONSTRUCTION": "For transition plan construction",
+        "IN_SUMMARY_OF_APPROACH": "In summary approach",
+        "FOR_APPROACH_EVALUATION": "For approach evaluation"
+      },
+      "phases": {
+        "AwarnessAndOutreach": "Awareness and outreach",
+        "Empowerment": "Empowerment",
+        "CoConstruction": "Co-construction",
+        "FeedbackAndCommunication": "Feedback and communication"
+      }
     }
   },
   "emissionFactors": {
     "add": "Add an emission factor",
     "post": {
-      "all": "All",
-      "none": "None",
-      "selectAll": "Select all",
-      "unselectAll": "Unselect all",
       "total": "Total",
       "allPost": "All posts",
       "allSubPost": "All sub posts",
@@ -1192,7 +1377,6 @@
       "SallesEtCabines": "Rooms and Booths",
       "ConfiseriesEtBoissons": "Confectionery and Drinks",
       "Dechets": "Waste",
-      "Déchets": "Waste",
       "BilletterieEtCommunication": "Ticketing and Communication",
       "CombustiblesFossiles": "Fossil fuels",
       "CombustiblesOrganiques": "Organic fuels",
@@ -1360,6 +1544,14 @@
       "partType": "Part type",
       "comment": "Comments",
       "clear": "Clear value",
+      "base": "Base",
+      "baseModal": {
+        "title": "GHG-P exports information",
+        "description": "Here, you must indicate whether your FE applies within the framework of the location-based method or the market-based method. This distinction will only apply if your FE is used within the Electricity sub-item of the Energy item. As a reminder:",
+        "location": "The location-based method is based on the use of emission factors representing the average electricity mix over defined geographical and temporal areas. In France, the emission factors used are typically of the form \"Average mix - Year concerned - France\".",
+        "market": "The market-based method is based on the use of emission factors representative of the electricity produced by electricity producers with whom the organisation has a contractual relationship through the purchase of Guarantees of Origin (GOs) or the direct sale of electricity (Power Purchase Agreement, or PPA). All electricity not covered by the aforementioned contracts must then be taken into account using emission factors for the residual mix, i.e. the emission factors for the electricity mix from which all electricity covered by the aforementioned contracts has been removed.",
+        "conclusion": "The Bilan Carbone® and the regulatory GHG assessment only allow the location-based method, ISO 14064-1 allows the use of both methods, while the GHG Protocol requires double counting of electricity consumption, on the one hand location-based and on the other hand market-based."
+      },
       "glossary": {
         "title": "Glossary",
         "detailedGES": "Breakdown of GHG",
@@ -1406,6 +1598,7 @@
       "BaseEmpreinte": "Footprint Base",
       "NegaOctet": "NegaOctet",
       "Legifrance": "Légifrance",
+      "AIB": "AIB",
       "displayArchived": "Display archived factors",
       "goTo": "Go to page",
       "items": "Items per page",
@@ -1437,6 +1630,7 @@
         "baseEmpreinte": "Base Empreinte logo",
         "legifrance": "Légifrance logo",
         "negaOctet": "NegaOctet logo",
+        "aib": "Association of Issuing Bodies logo",
         "manual": "Manual"
       },
       "post": "Posts",
@@ -1488,7 +1682,18 @@
       "Fuites": "Leaks",
       "Transport": "Transport",
       "CombustionALaCentrale": "Combustion at the plant",
+      "AutresEmissionsLieesALaConsommationDElectriciteBarrage": "Other emissions related to electricity consumption (dam?)",
       "Pertes": "Losses"
+    },
+    "base": {
+      "LocationBased": "location-based",
+      "MarketBased": "market-based",
+      "difference": {
+        "warning": "Warning, your market based kWh are not equal to the location based ones.",
+        "explanation": "Explanation",
+        "title": "Error - The number of kWh taken into account differs between the location-based method and the market-based method",
+        "description": "The GHG-Protocol requires you to double count your electricity consumption, once using location-based factors and once using market-based factors. To do this, you simply need to account for your kWh of energy consumed twice, once using emission factors dedicated to <green>location-based</green> consumption, and a second time using emission factors dedicated to <purple>market-based</purple> consumption. You must account for the same number of kWh in both methods, which is not currently the case."
+      }
     },
     "missingQualities": {
       "title": "Add quality for manual emission factors",
@@ -1499,7 +1704,8 @@
   "level": {
     "Initial": "Initial",
     "Standard": "Standard",
-    "Advanced": "Advanced"
+    "Advanced": "Advanced",
+    "noLevel": "No formation"
   },
   "role": {
     "SUPER_ADMIN": "Global Administrator",
@@ -1698,6 +1904,7 @@
     "TEP": "tep",
     "TEP_PCI": "tep PCI",
     "TEP_PCS": "tep PCS",
+    "TEU_KM": "TEU.km",
     "TON_KM": "t.km",
     "TON": "{count, plural, one {ton} other {tons}}",
     "TON_WITH_BONES": "{count, plural, one {ton with bones} other {tons with bones}}",
@@ -1828,7 +2035,7 @@
       "myClient": "My client",
       "update": "Update my information",
       "updateClient": "Update my client",
-      "renew": "Your {year} licence is about to expire. Remember to renew it to continue using the services in {nextYear}",
+      "renew": "Your {year} licence is about to expire. Remember to renew it to continue using the services in {nextYear}. Without a renewed membership, only read access remains available for your studies on BC+.",
       "renewLink": "Renew"
     },
     "delete": {
@@ -1917,6 +2124,7 @@
       "validate": "Validated",
       "name": "Name",
       "caracterisation": "Characterization",
+      "constructionYear": "Acquisition year",
       "emissionFactor": "Emission factor",
       "activity": "Activity",
       "value": "Activity value",
@@ -2046,6 +2254,7 @@
     "videoExplanation": "Please note that the assessment associated with this 'condensed' training course does not contain any traps if you watch the training carefully. Successful completion will allow you to obtain a free updated training certificate. However, an insufficient result would mean that you will have to reintegrate into the full training course (new Initiation module if you were trained M1 on V8, or new Professional module if you were trained M2 on V8).",
     "evaluation": "Knowledge assessment",
     "evaluationEnded": "You already answered the questionnaire",
+    "evaluationBlocked": "Access to the refresher training course is no longer available for your membership.",
     "evaluationSubtitle": "Please complete the knowledge assessment questionnaire to receive your v9 training attestation. It is limited in time and you will have <error>at most {time} minutes to answer the question. You can only answer the questionnaire once. Once you've started, you can't go back.</error>",
     "acceptation": "I've understood that I'll only be able to launch the questionnaire once and that I'll have a limited amount of time to answer the question. I'm in the right conditions to start my test",
     "answer": "Answer the questionnaire",
@@ -2126,9 +2335,17 @@
     "tooBig": "Please enter a smaller value",
     "studyYearMustBeBeforeCurrent": "The study year must be before the current study year",
     "studyYearMustBeAfterLinkedStudies": "Cannot set a date earlier than your linked studies in your transition plan",
-    "maxTwoDecimals": "The reduction rate must have at most 2 decimal places"
+    "maxTwoDecimals": "The reduction rate must have at most 2 decimal places",
+    "referenceYearMustBeBeforeOrEqualToStudyYear": "Reference year must be less than or equal to the study year"
   },
-  "common": {
-    "typeToConfirm": "Type \"{name}\" to confirm"
+  "documentationUrl": {
+    "dependencyMatrix": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/2-scope-of-the-approach/2.5-identification-of-transition-risks-and-opportunities",
+    "flows": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/2-scope-of-the-approach/2.4-operational-boundary",
+    "actionRelevance": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/5-transition-plan/5.2-building-the-action-plan#characterise-the-relevance-of-the-action",
+    "dataType": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/4-accounting/4.2-method-for-collecting-activity-data",
+    "maturity": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/1-framing-the-approach/1.1-define-your-bilan-carbone-r-maturity-level",
+    "monetaryRatio": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/4-accounting/4.3-method-for-selecting-emission-factors#efs-in-monetary-ratios",
+    "dependencyAndResponsability": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/annexes/annexes/annex-1-key-accounting-principles-of-bilan-carbone-r#use-and-dependency",
+    "uncertainties": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/4-accounting/4.4-method-for-estimating-uncertainties/4.4.2-how-to-determine-them"
   }
 }

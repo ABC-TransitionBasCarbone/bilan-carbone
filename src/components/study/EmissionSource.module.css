@@ -10,7 +10,8 @@
 
 .tagsContainer {
   min-width: 10rem;
-  max-width: 33%;
+  width: 33%;
+  overflow-x: hidden;
 }
 
 .tagOptions {
@@ -21,6 +22,14 @@
 .emissionsSourceName {
   /* Useful because we want to align the validated text with text in input (padding added by mui) */
   padding-left: 14px;
+}
+
+.datePickerInput {
+  background-color: white;
+}
+
+.datePickerInput fieldset {
+  border-color: var(--grayscale-300);
 }
 
 .header {
@@ -215,4 +224,8 @@
 .alpha {
   flex: 0;
   width: 5rem;
+}
+
+.resizable :global(.MuiInputBase-input) {
+  resize: vertical;
 }

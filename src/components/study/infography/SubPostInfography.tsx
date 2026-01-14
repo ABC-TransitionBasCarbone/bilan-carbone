@@ -27,7 +27,7 @@ export const SubPostInfography = ({ subPosts, ref, studyId, mainPost }: Props) =
             {subPosts.map((subPost) => (
               <li className="align-center" key={subPost}>
                 <Link
-                  href={`/etudes/${studyId}/comptabilisation/saisie-des-donnees/${mainPost}#subpost-${subPost}`}
+                  href={`/etudes/${studyId}/comptabilisation/saisie-des-donnees/${mainPost}?scrollTo=${subPost}`}
                   onClick={(e) => e.stopPropagation()}
                   className={classNames(styles.subPostLink, 'flex align-center')}
                 >

@@ -47,6 +47,7 @@ const UserView = async ({ account }: Props) => {
               (organizationVersion) => organizationVersion.id !== account.organizationVersionId,
             ) as OrganizationVersionWithOrganization[]
           }
+          account={account}
         />
       )}
       <StudiesContainer user={account} isCR={isCR} />

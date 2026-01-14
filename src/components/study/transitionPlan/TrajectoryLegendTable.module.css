@@ -1,0 +1,7 @@
+.borderRight {
+  border-right: 1px solid;
+}
+
+.unselected {
+  opacity: 0.5;
+}

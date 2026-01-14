@@ -197,6 +197,8 @@ const getType = (value: string) => {
       return EmissionFactorPartType.CombustionALaCentrale
     case 'Pertes':
       return EmissionFactorPartType.Pertes
+    case 'Autres émissions liées à la consommation d?électricité (barrage?)':
+      return EmissionFactorPartType.AutresEmissionsLieesALaConsommationDElectriciteBarrage
     default:
       throw new Error(`Emission factor type not found: ${value}`)
   }

@@ -148,7 +148,7 @@ jest.mock('../../services/study', () => ({
   hasSufficientLevel: jest.fn(),
 }))
 jest.mock('../results/consolidated', () => ({
-  computeResultsByPost: jest.fn(),
+  computeResultsByPostFromEmissionSources: jest.fn(),
 }))
 jest.mock('./study', () => ({}))
 
@@ -711,7 +711,7 @@ describe('study', () => {
                 },
                 organizationVersionId: TEST_IDS.orgVersion,
               },
-              subPost: 'Déchets',
+              subPost: 'Fret',
             },
           ],
         })
@@ -802,6 +802,7 @@ describe('study', () => {
       feTemporalRepresentativeness: null,
       feCompleteness: null,
       caracterisation: null,
+      constructionYear: null,
       validated: true,
       ...overrides,
     })

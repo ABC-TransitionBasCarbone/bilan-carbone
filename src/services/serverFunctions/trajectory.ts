@@ -1,6 +1,7 @@
 'use server'
 
 import { prismaClient } from '@/db/client'
+import { getStudyStartDate } from '@/db/study'
 import {
   createTrajectoryWithObjectives as dbCreateTrajectoryWithObjectives,
   deleteObjective as dbDeleteObjective,
@@ -17,11 +18,25 @@ import { TrajectoryType } from '@prisma/client'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { hasEditAccessOnStudy, hasReadAccessOnStudy } from '../permissions/study'
 
+const validateTrajectoryInput = async (referenceYear: number | null | undefined, studyId: string): Promise<void> => {
+  // Validate referenceYear is strictly less than study year
+  if (referenceYear !== undefined && referenceYear !== null) {
+    const studyStartDate = await getStudyStartDate(studyId)
+    if (studyStartDate) {
+      const studyYear = studyStartDate.getFullYear()
+      if (referenceYear > studyYear) {
+        throw new Error('referenceYearMustBeBeforeOrEqualToStudyYear')
+      }
+    }
+  }
+}
+
 export interface CreateTrajectoryInput {
   transitionPlanId: string
   name: string
   description?: string
   type: TrajectoryType
+  referenceYear?: number | null
   objectives?: {
     targetYear: number
     reductionRate: number
@@ -40,18 +55,21 @@ export const createTrajectoryWithObjectives = async (input: CreateTrajectoryInpu
       throw new Error(NOT_AUTHORIZED)
     }
 
+    await validateTrajectoryInput(input.referenceYear, transitionPlan.studyId)
+
     let objectives: { targetYear: number; reductionRate: number }[]
 
-    const defaultObjectives = getDefaultObjectivesForTrajectoryType(input.type)
-    if (defaultObjectives) {
-      objectives = defaultObjectives
-    } else if (input.type === TrajectoryType.CUSTOM) {
-      if (!input.objectives || input.objectives.length < 1) {
-        throw new Error('Custom trajectory must have at least 1 objective')
-      }
+    if (input.objectives && input.objectives.length > 0) {
+      // Use provided objectives, used for SNBC and CUSTOM trajectories where objectives are defined client side
       objectives = input.objectives
     } else {
-      throw new Error(`${input.type} mode is not yet supported`)
+      // Try to get default objectives for this trajectory type
+      const defaultObjectives = getDefaultObjectivesForTrajectoryType(input.type)
+      if (defaultObjectives) {
+        objectives = defaultObjectives
+      } else {
+        throw new Error(`${input.type} trajectory must have at least 1 objective`)
+      }
     }
 
     return dbCreateTrajectoryWithObjectives({
@@ -63,6 +81,7 @@ export const createTrajectoryWithObjectives = async (input: CreateTrajectoryInpu
       name: input.name,
       description: input.description,
       type: input.type,
+      referenceYear: input.referenceYear,
       objectives: {
         createMany: {
           data: objectives,
@@ -100,6 +119,7 @@ export const updateTrajectory = async (
     name?: string
     description?: string
     type?: TrajectoryType
+    referenceYear?: number | null
     objectives?: Array<{ id?: string; targetYear: number; reductionRate: number }>
   },
 ) =>
@@ -117,6 +137,8 @@ export const updateTrajectory = async (
     if (!hasEditAccess) {
       throw new Error(NOT_AUTHORIZED)
     }
+
+    await validateTrajectoryInput(data.referenceYear, trajectory.transitionPlan.studyId)
 
     const typeChanged = data.type && data.type !== trajectory.type
 
@@ -140,6 +162,7 @@ export const updateTrajectory = async (
               type: data.type,
               name: data.name,
               description: data.description,
+              referenceYear: data.referenceYear,
             },
           })
         })
@@ -193,6 +216,7 @@ export const updateTrajectory = async (
             name: data.name,
             description: data.description,
             type: data.type,
+            referenceYear: data.referenceYear,
           },
         })
       })
@@ -206,6 +230,7 @@ export const updateTrajectory = async (
     return dbUpdateTrajectoryWithObjectives(id, {
       name: data.name,
       description: data.description,
+      referenceYear: data.referenceYear,
     })
   })
 

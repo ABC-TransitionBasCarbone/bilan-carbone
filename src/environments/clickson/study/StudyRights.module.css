@@ -1,0 +1,8 @@
+.formTextField {
+  width: 200px;
+}
+
+.dates {
+  display: flex;
+  gap: 1rem;
+}

@@ -1,12 +1,13 @@
 import { environmentsWithChecklist } from '@/constants/environments'
 import { DefaultStudyTags } from '@/constants/studyTags'
-import { reCreateBegesRules } from '@/db/beges'
+import { reCreateBegesRules, reCreateGHGPRules } from '@/db/exports'
 import { signPassword } from '@/services/auth'
 import { getEmissionFactorsFromAPI } from '@/services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromAPI'
 import { getAllowedLevels } from '@/services/study'
 import { faker } from '@faker-js/faker'
 import {
   Account,
+  EmissionFactorBase,
   EmissionFactorStatus,
   Environment,
   Import,
@@ -23,7 +24,7 @@ import {
 import { Command } from 'commander'
 import { ACTUALITIES } from '../legacy_data/actualities'
 import { createRealStudy } from './study'
-import { getCutRoleFromBase } from './utils'
+import { getClicksonRoleFromBase, getCutRoleFromBase, getRolesFromEnvironment } from './utils'
 
 const program = new Command()
 type Params = {
@@ -391,7 +392,11 @@ const users = async () => {
   if (clicksonSite) {
     await prisma.site.update({
       where: { id: clicksonSite.id },
-      data: { establishmentId: '0781494A', name: 'Ecole élémentaire Mansart', establishmentYear: '1965-05-01' },
+      data: {
+        establishmentId: '0922798S',
+        name: 'Ecole secondaire privée  international scolaire - Open Sky International',
+        establishmentYear: '2017',
+      },
     })
   }
 
@@ -507,7 +512,7 @@ const users = async () => {
           const account = await prisma.account.create({
             data: {
               organizationVersionId: organizationVersionArray[index % organizationVersionArray.length].id,
-              role: environment === Environment.CUT ? getCutRoleFromBase(role as Role) : (role as Role),
+              role: getRolesFromEnvironment(environment as Environment, role as Role),
               userId: user.id,
               environment: environment as Environment,
               status: UserStatus.ACTIVE,
@@ -559,7 +564,7 @@ const users = async () => {
           },
           {
             organizationVersionId: organizationVersionsClickson[index % organizationVersionsClickson.length].id,
-            role: role as Role,
+            role: getClicksonRoleFromBase(role as Role),
             userId: user.id,
             environment: Environment.CLICKSON,
             status: UserStatus.ACTIVE,
@@ -684,6 +689,29 @@ const users = async () => {
     }),
   ])
 
+  await Promise.all(
+    [Role.GESTIONNAIRE, Role.DEFAULT].map(async (role) => {
+      return prisma.account.create({
+        data: {
+          organizationVersionId: regularTiltOrganizationVersions[0].id,
+          role,
+          environment: Environment.TILT,
+          status: UserStatus.ACTIVE,
+          userId: (
+            await prisma.user.create({
+              data: {
+                email: `tilt-env-untrained-${role.toLowerCase()}-0@yopmail.com`,
+                firstName: faker.person.firstName(),
+                lastName: faker.person.lastName(),
+                password: await signPassword('password-0'),
+              },
+            })
+          ).id,
+        },
+      })
+    }),
+  )
+
   await prisma.user
     .create({
       data: {
@@ -716,12 +744,11 @@ const users = async () => {
   })
 
   const subPosts = Object.keys(SubPost)
+  const creator = faker.helpers.arrayElement(
+    usersWithAccounts.filter((userWithAccount) => userWithAccount.accounts[0].account.status === UserStatus.ACTIVE),
+  )
   const studies = await Promise.all(
     Array.from({ length: 20 }).map(() => {
-      const creator = faker.helpers.arrayElement(
-        usersWithAccounts.filter((userWithAccount) => userWithAccount.accounts[0].account.status === UserStatus.ACTIVE),
-      )
-
       const organizationVersionSites = sites.filter(
         (site) => site.organizationId === creator.accounts[0].organizationVersion.organizationId,
       )
@@ -751,6 +778,47 @@ const users = async () => {
           },
           allowedUsers: {
             create: { role: StudyRole.Validator, accountId: creator.accounts[0].account.id },
+          },
+        },
+      })
+    }),
+  )
+
+  await Promise.all(
+    regularTiltOrganizationVersions.map(async (organizationVersion) => {
+      const organizationVersionSites = sites.filter(
+        (site) => site.organizationId === organizationVersion.organizationId,
+      )
+      const tiltAccount = usersWithAccounts.find((userWithAccount) =>
+        userWithAccount.accounts.some(
+          (account) =>
+            account.organizationVersion.organizationId === organizationVersion.organizationId &&
+            account.account.environment === Environment.TILT &&
+            account.account.status === UserStatus.ACTIVE,
+        ),
+      )
+      if (!tiltAccount) {
+        return
+      }
+      await prisma.study.create({
+        include: { sites: true },
+        data: {
+          createdById: tiltAccount.accounts[0].account.id,
+          startDate: new Date(),
+          endDate: faker.date.future(),
+          isPublic: true,
+          level: Level.Initial,
+          name: faker.lorem.words({ min: 2, max: 5 }),
+          organizationVersionId: organizationVersion.id,
+          simplified: true,
+          sites: {
+            createMany: {
+              data: organizationVersionSites.map((site) => ({
+                siteId: site.id,
+                etp: 10,
+                ca: 10,
+              })),
+            },
           },
         },
       })
@@ -795,6 +863,7 @@ const users = async () => {
       unit: Unit.GWH,
       isMonetary: false,
       source: 'Magic',
+      base: EmissionFactorBase.LocationBased,
       subPosts: [SubPost.Electricite],
       organizationId: defaultUserWithAccount.accounts[0].organizationVersion.organizationId,
       emissionFactorParts: {
@@ -977,7 +1046,7 @@ const actualities = async () => {
 }
 
 const main = async (params: Params) => {
-  await Promise.all([actualities(), users(), reCreateBegesRules()])
+  await Promise.all([actualities(), users(), reCreateBegesRules(), reCreateGHGPRules()])
   if (params.importFactors) {
     await getEmissionFactorsFromAPI(params.importFactors)
   }

@@ -1,4 +1,4 @@
-import { Role, SiteCAUnit } from '@prisma/client'
+import { Country, Role, SiteCAUnit } from '@prisma/client'
 import z from 'zod'
 
 export const AddMemberCommandValidation = z.object({
@@ -101,7 +101,9 @@ export const SignUpClicksonCommandValidation = z.object({
     .email()
     .trim()
     .transform((email) => email.toLowerCase()),
-  schoolName: z.string(),
+  schoolName: z.string().min(1),
+  city: z.string().optional(),
+  country: z.enum(Country).optional().nullable(),
 })
 
 export type SignUpClicksonCommand = z.infer<typeof SignUpClicksonCommandValidation>

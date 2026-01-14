@@ -10,10 +10,15 @@ import {
   updateTrajectory,
 } from '@/services/serverFunctions/trajectory'
 import { createTrajectorySchema, TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
+import { calculateSNBCReductionRates, getSNBCReductionRates } from '@/utils/snbc'
 import { getYearFromDateStr } from '@/utils/time'
-import { getDefaultObjectivesForTrajectoryType } from '@/utils/trajectory'
+import {
+  getDefaultObjectivesForTrajectoryType,
+  getDisplayedReferenceYearForTrajectoryType,
+  SBTI_START_YEAR,
+} from '@/utils/trajectory'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { TrajectoryType } from '@prisma/client'
+import { SectenInfo, TrajectoryType } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
@@ -30,13 +35,19 @@ interface Props {
   onSuccess: (trajectoryId: string) => void
   trajectory: TrajectoryWithObjectives | null
   isFirstCreation?: boolean
+  studyYear: number
+  sectenData: SectenInfo[]
 }
 
 const defaultValues: TrajectoryFormData = {
   trajectoryType: TrajectoryType.SBTI_15,
   name: '',
   description: '',
-  objectives: [],
+  referenceYear: SBTI_START_YEAR.toString(),
+  objectives: Array.from({ length: 2 }).map(() => ({
+    targetYear: null,
+    reductionRate: null,
+  })),
 }
 
 const TrajectoryCreationModal = ({
@@ -46,12 +57,16 @@ const TrajectoryCreationModal = ({
   onSuccess,
   trajectory,
   isFirstCreation = true,
+  studyYear,
+  sectenData,
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectoryModal')
   const isEditMode = !!trajectory
   const [activeStep, setActiveStep] = useState(isEditMode || !isFirstCreation ? 1 : 0)
   const [isLoading, setIsLoading] = useState(false)
   const { callServerFunction } = useServerFunction()
+
+  const snbcRates = isEditMode ? getSNBCReductionRates(trajectory) : calculateSNBCReductionRates(sectenData, studyYear)
 
   const trajectorySchema = createTrajectorySchema()
 
@@ -74,6 +89,7 @@ const TrajectoryCreationModal = ({
         trajectoryType: trajectory.type,
         name: trajectory.name,
         description: trajectory.description || '',
+        referenceYear: trajectory.referenceYear?.toString(),
         objectives: trajectory.objectives.map((obj) => ({
           targetYear: obj.targetYear.toString(),
           reductionRate: Number((obj.reductionRate * 100).toFixed(2)),
@@ -97,6 +113,9 @@ const TrajectoryCreationModal = ({
 
   const handleModeSelect = (type: TrajectoryType) => {
     setValue('trajectoryType', type, { shouldValidate: true })
+
+    const defaultReferenceYear = getDisplayedReferenceYearForTrajectoryType(type, studyYear)
+    setValue('referenceYear', defaultReferenceYear.toString(), { shouldValidate: true })
   }
 
   const onSubmit = async (data: TrajectoryFormData) => {
@@ -105,6 +124,8 @@ const TrajectoryCreationModal = ({
       setIsLoading(false)
       return
     }
+
+    const referenceYear = data.referenceYear ? getYearFromDateStr(data.referenceYear) : null
 
     if (isEditMode && trajectory) {
       const objectives = data.objectives
@@ -121,6 +142,7 @@ const TrajectoryCreationModal = ({
             name: data.name,
             description: data.description,
             type: data.trajectoryType,
+            referenceYear,
             objectives,
           }),
         {
@@ -144,6 +166,7 @@ const TrajectoryCreationModal = ({
       name: data.name,
       description: data.description,
       type: data.trajectoryType,
+      referenceYear,
     }
 
     if (data.trajectoryType === TrajectoryType.CUSTOM) {
@@ -155,6 +178,15 @@ const TrajectoryCreationModal = ({
       input.objectives = getDefaultObjectivesForTrajectoryType(TrajectoryType.SBTI_15)
     } else if (data.trajectoryType === TrajectoryType.SBTI_WB2C) {
       input.objectives = getDefaultObjectivesForTrajectoryType(TrajectoryType.SBTI_WB2C)
+    } else if (data.trajectoryType === TrajectoryType.SNBC_GENERAL) {
+      if (!snbcRates) {
+        setIsLoading(false)
+        throw new Error('Unable to calculate SNBC reduction rates. Secten data may be insufficient.')
+      }
+      input.objectives = [
+        { targetYear: 2030, reductionRate: snbcRates.rateTo2030 },
+        { targetYear: 2050, reductionRate: snbcRates.rateFrom2030To2050 },
+      ]
     }
 
     await callServerFunction(() => createTrajectoryWithObjectives(input), {
@@ -172,6 +204,7 @@ const TrajectoryCreationModal = ({
   }
 
   const isSBTI = trajectoryType === TrajectoryType.SBTI_15 || trajectoryType === TrajectoryType.SBTI_WB2C
+  const isSNBC = trajectoryType === TrajectoryType.SNBC_GENERAL || trajectoryType === TrajectoryType.SNBC_SECTORAL
   const isStep1Valid = trajectoryType !== null
 
   if (isEditMode || !isFirstCreation) {
@@ -201,10 +234,13 @@ const TrajectoryCreationModal = ({
         {trajectoryType && (
           <TrajectoryCreationStep2
             isSBTI={isSBTI}
+            isSNBC={isSNBC}
             trajectoryType={trajectoryType}
             control={control}
             showTrajectoryTypeSelector={!isEditMode}
             handleModeSelect={handleModeSelect}
+            studyYear={studyYear}
+            snbcRates={snbcRates}
           />
         )}
       </Modal>
@@ -241,10 +277,13 @@ const TrajectoryCreationModal = ({
       {activeStep === 1 && trajectoryType && (
         <TrajectoryCreationStep2
           isSBTI={isSBTI}
+          isSNBC={isSNBC}
           trajectoryType={trajectoryType}
           control={control}
           showTrajectoryTypeSelector={false}
           handleModeSelect={handleModeSelect}
+          studyYear={studyYear}
+          snbcRates={snbcRates}
         />
       )}
     </ModalStepper>

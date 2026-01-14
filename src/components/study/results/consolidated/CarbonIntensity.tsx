@@ -1,6 +1,7 @@
-import { hasAccessToCarbonResponsibilityIntensities } from '@/services/permissions/environment'
+import { hasAccessToCarbonResponsibilityIntensitiesAdvanced } from '@/services/permissions/environmentAdvanced'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Data from './Data'
 
@@ -11,20 +12,21 @@ interface Props {
   resultsUnit: string
   label: string
   testId: string
+  simplified?: boolean | null
 }
 
-const CarbonIntensity = ({ withDep, withoutDep, divider, resultsUnit, label, testId }: Props) => {
+const CarbonIntensity = ({ withDep, withoutDep, divider, resultsUnit, label, testId, simplified }: Props) => {
   const tResultUnits = useTranslations('study.results.units')
   const { environment } = useAppEnvironmentStore()
 
   return (
-    <div className="flex grow mt1">
+    <div className={classNames('flex grow', !simplified && 'mt1')}>
       <Data
         value={formatNumber(withDep / divider)}
         label={`${tResultUnits(resultsUnit)}/${label}`}
         testId={`dependency-${testId}`}
       />
-      {environment && hasAccessToCarbonResponsibilityIntensities(environment) && (
+      {environment && hasAccessToCarbonResponsibilityIntensitiesAdvanced(environment, simplified) && (
         <Data
           value={formatNumber(withoutDep / divider)}
           label={`${tResultUnits(resultsUnit)}/${label}`}
