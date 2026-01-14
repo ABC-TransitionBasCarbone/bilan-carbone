@@ -70,7 +70,7 @@ export const calculEmissionSourcesDifference = (
       return total
     }
 
-    const bcEmissionTotal = Math.round(getEmissionResults(emissionSource, environment).emissionValue / unitValue)
+    const bcEmissionTotal = getEmissionResults(emissionSource, environment).emissionValue / unitValue
     return total - bcEmissionTotal
   }, 0)
 
@@ -95,9 +95,16 @@ const ConsolatedExportDifference = ({ study, results, exportResults, type, expor
   const exportTotal = formatNumber(exportTotalNumber, 0)
   const computedTotal = formatNumber(computedTotalNumber, 0)
 
-  const unexplainedDifference = useMemo(() => {
-    return Math.abs(Math.floor(exportTotalNumber) + 1 - Math.floor(computedTotalNumber + exportDifference)) > 1
-  }, [exportTotalNumber, computedTotalNumber, exportDifference])
+  const unexplainedDifference = useMemo(
+    () => Math.abs(exportTotalNumber - (computedTotalNumber + exportDifference)) > 1,
+    [exportTotalNumber, computedTotalNumber, exportDifference],
+  )
+
+  console.log('\n', type, ' : ', exportTotalNumber)
+  console.log('consolidé : ', computedTotalNumber)
+  console.log('différence : ', exportDifference)
+  console.log('consolidé + différence : ', computedTotalNumber + exportDifference)
+  console.log('différence non expliquée : ', exportTotalNumber - (computedTotalNumber + exportDifference))
 
   return exportTotal !== computedTotal ? (
     <>
