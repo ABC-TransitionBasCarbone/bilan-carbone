@@ -178,6 +178,7 @@ const SubPost = ({
           emissionSources={emissionSources}
           environment={environment}
           exports={study.exports?.types}
+          className="align-end mt1"
         />
       )}
       <div ref={accordionRef} id={`subpost-${subPost}`} className={styles.subPostScrollContainer}>
