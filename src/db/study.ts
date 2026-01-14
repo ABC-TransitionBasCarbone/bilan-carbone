@@ -128,6 +128,7 @@ const fullStudyInclude = {
           completeness: true,
           importedFrom: true,
           importedId: true,
+          base: true,
           location: true,
           metaData: {
             select: {
