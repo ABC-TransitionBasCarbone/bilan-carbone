@@ -13,3 +13,16 @@
   width: 15rem;
   margin: 0 !important;
 }
+
+.list {
+  list-style-position: inside;
+  list-style-type: initial;
+}
+
+.subList {
+  ul {
+    padding-left: 1rem;
+    list-style-position: inside;
+    list-style-type: circle;
+  }
+}

@@ -1,0 +1,91 @@
+.Table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 0.25rem;
+  box-shadow: none !important;
+}
+
+.Table thead th {
+  font-weight: 600;
+  padding: 0.75rem;
+  text-align: center;
+  vertical-align: middle;
+  background-color: var(--mui-palette-grey-100);
+}
+
+.Table thead th:first-child {
+  font-size: 0.875rem;
+  color: var(--mui-palette-grey-600);
+}
+
+.Table thead th:not(:first-child) {
+  font-size: 0.875rem;
+}
+
+.Table thead th[rowspan='2'] {
+  font-size: 1rem;
+  color: var(--mui-palette-text-primary);
+  font-weight: 600;
+}
+
+.Table thead tr:first-child th {
+  font-size: 0.875rem;
+  color: var(--mui-palette-grey-600);
+  padding-bottom: 0.375rem;
+}
+
+.Table thead tr:first-child th[rowspan='2'] {
+  font-size: 1rem;
+  color: var(--mui-palette-text-primary);
+  padding-bottom: 0.75rem;
+}
+
+.Table thead tr:last-child th {
+  font-size: 0.875rem;
+  padding-top: 0.375rem;
+}
+
+.Table tbody tr td {
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid white;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.Table tbody tr td.totalRow {
+  background-color: var(--mui-palette-grey-100) !important;
+  font-weight: 600;
+  border-top: 0.5rem solid white;
+}
+
+.Table tbody tr td.categoryCell:not([data-category='total']) {
+  color: var(--mui-palette-common-white);
+  border-right: 0.5rem solid white;
+  font-weight: 600;
+}
+
+.Table tbody tr td.categoryBold {
+  font-weight: 600;
+}
+
+.Table tbody tr td.subtotalRow {
+  font-weight: 600;
+}
+
+.Table tbody tr td.totalColumn {
+  font-weight: 600;
+}
+
+.Table tbody tr td.categoryCell[data-category='total'] {
+  background-color: var(--mui-palette-grey-100);
+}
+
+.Table tbody tr td:last-child {
+  padding-left: 0rem;
+  padding-right: 0rem;
+}
+
+.Table tbody tr.categoryFirstRow td {
+  border-top: 0.5rem solid white;
+}

@@ -6,6 +6,7 @@ import NewStudyForm from '@/environments/base/study/new/Form'
 import NewStudyFormClickson from '@/environments/clickson/study/new/Form'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import NewStudyFormCut from '@/environments/cut/study/new/Form'
+import NewStudyFormTilt from '@/environments/tilt/study/new/Form'
 import { useDuplicateStudy } from '@/hooks/useDuplicateStudy'
 import { hasAccessToDuplicateStudy } from '@/services/permissions/environment'
 import { CreateStudyCommand, CreateStudyCommandValidation } from '@/services/serverFunctions/study.command'
@@ -13,7 +14,7 @@ import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
 import { zodResolver } from '@hookform/resolvers/zod'
 import CircularProgress from '@mui/material/CircularProgress'
 import Typography from '@mui/material/Typography'
-import { Environment, Export, SiteCAUnit } from '@prisma/client'
+import { Environment, SiteCAUnit } from '@prisma/client'
 import dayjs from 'dayjs'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -41,6 +42,7 @@ const NewStudyPage = ({
   duplicateStudyId,
 }: Props) => {
   const [organizationVersion, setOrganizationVersion] = useState<OrganizationWithSites>()
+  const [simplified, setSimplified] = useState<boolean>(false)
   const router = useRouter()
   const tNav = useTranslations('nav')
   const tStudy = useTranslations('study')
@@ -55,6 +57,12 @@ const NewStudyPage = ({
       }
     }
   }, [user.environment, router])
+
+  useEffect(() => {
+    const url = new URL(window.location.href)
+    const simplifiedParam = url.searchParams.get('simplified')
+    setSimplified(simplifiedParam === 'true')
+  }, [router])
 
   const form = useForm<CreateStudyCommand>({
     resolver: zodResolver(CreateStudyCommandValidation),
@@ -80,13 +88,12 @@ const NewStudyPage = ({
           establishmentType: site.establishmentType ?? undefined,
           academy: site.establishmentType ?? undefined,
         })) || [],
-      exports: {
-        [Export.Beges]: false,
-        [Export.GHGP]: false,
-        [Export.ISO14069]: false,
-      },
+      exports: [],
     },
   })
+
+  // DO NOT REMOVE. Necessary to keep form up to date after controlMode change
+  form.watch('controlMode')
 
   const { isLoading, sourceStudy } = useDuplicateStudy({ duplicateStudyId, form, user, caUnit })
 
@@ -118,6 +125,16 @@ const NewStudyPage = ({
           environmentComponents={{
             [Environment.CUT]: <NewStudyFormCut form={form} />,
             [Environment.CLICKSON]: <NewStudyFormClickson form={form} />,
+            [Environment.TILT]: (
+              <NewStudyFormTilt
+                user={user}
+                accounts={accounts}
+                form={form}
+                duplicateStudyId={duplicateStudyId}
+                sourceStudy={sourceStudy}
+                simplified={simplified}
+              />
+            ),
           }}
           defaultComponent={
             <NewStudyForm

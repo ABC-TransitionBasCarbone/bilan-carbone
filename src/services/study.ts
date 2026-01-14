@@ -3,6 +3,7 @@ import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy, getStudyById } from '@/db/study'
 import { Translations } from '@/types/translation'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
+import { getGHGPRuleName } from '@/utils/ghgp'
 import { getPost } from '@/utils/post'
 import {
   calculateMonetaryRatio,
@@ -11,14 +12,13 @@ import {
   isCAS,
   STUDY_UNIT_VALUES,
 } from '@/utils/study'
-import { Environment, Export, ExportRule, Level, StudyResultUnit, SubPost } from '@prisma/client'
+import { EmissionFactorBase, Environment, Export, ExportRule, Level, StudyResultUnit, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import {
   canBeValidated,
   getEmissionResults,
   getEmissionSourceEmission,
   getEmissionSourcesTotalCo2,
-  getStandardDeviation,
 } from './emissionSource'
 import { download } from './file'
 import { hasAccessToBcExport } from './permissions/environment'
@@ -30,22 +30,20 @@ import {
   Post,
   subPostBCToSubPostTiltMapping,
 } from './posts'
-import { computeBegesResult } from './results/beges'
-import {
-  BaseResultsBySite,
-  computeResultsByPostFromEmissionSources,
-  computeResultsByTag,
-  ResultsByPost,
-} from './results/consolidated'
+import { rulesSpans as begesRulesSpans, computeBegesResult } from './results/beges'
+import { computeResultsByPost, computeResultsByTag, ResultsByPost } from './results/consolidated'
+import { PostInfos } from './results/exports'
+import { computeGHGPResult, rulesSpans as ghgpRulesSpans } from './results/ghgp'
 import { filterWithDependencies } from './results/utils'
 import { EmissionFactorWithMetaData, getEmissionFactorsByIds } from './serverFunctions/emissionFactor'
 import { prepareExcel } from './serverFunctions/file'
 import { getUserSettings } from './serverFunctions/user'
 import {
-  getEmissionSourcesGlobalUncertainty,
-  getQualityRating,
-  getStandardDeviationRating,
-  sumQualities,
+  getEmissionSourcesConfidenceInterval,
+  getQualitativeUncertaintyForEmissionSources,
+  getQualitativeUncertaintyFromQuality,
+  getQualitativeUncertaintyFromSquaredStandardDeviation,
+  getSquaredStandardDeviationForEmissionSource,
 } from './uncertainty'
 
 export enum AdditionalResultTypes {
@@ -54,7 +52,7 @@ export enum AdditionalResultTypes {
 }
 export type ResultType = Export | AdditionalResultTypes
 
-const getQuality = (quality: ReturnType<typeof getQualityRating>, t: Translations) => {
+const getQuality = (quality: ReturnType<typeof getQualitativeUncertaintyFromQuality>, t: Translations) => {
   return quality === null ? t('unknown') : t(quality.toString())
 }
 
@@ -122,6 +120,7 @@ const getEmissionSourcesRows = (
   tQuality: Translations,
   tUnit: Translations,
   tResultUnits: Translations,
+  tBase: Translations,
   type?: 'Post' | 'Study',
   environment?: Environment,
 ) => {
@@ -137,6 +136,7 @@ const getEmissionSourcesRows = (
       'validation',
       'sourceName',
       'sourceCharacterization',
+      'sourceConstructionYear',
       'sourceValue',
       'sourceDeprecation',
       'sourceSurface',
@@ -153,6 +153,7 @@ const getEmissionSourcesRows = (
       'emissionUnit',
       'emissionQuality',
       'emissionSource',
+      'emissionBase',
     ])
     .map((key) => t(key))
     .join(';')
@@ -169,7 +170,7 @@ const getEmissionSourcesRows = (
         initCols.push(tPost(post || ''))
         initCols.push(tPost(emissionSource.subPost))
       }
-      const emissionSourceSD = getStandardDeviation(emissionSource)
+      const emissionSourceSD = getSquaredStandardDeviationForEmissionSource(emissionSource)
 
       const withDeprecation = hasDeprecationPeriod(emissionSource.subPost)
 
@@ -178,24 +179,28 @@ const getEmissionSourcesRows = (
           emissionSource.validated ? t('yes') : t('no'),
           emissionSource.name || '',
           emissionSource.caracterisation ? tCaracterisations(emissionSource.caracterisation) : '',
+          emissionSource.constructionYear ? emissionSource.constructionYear.getFullYear() : '',
           formatEmissionValueForExport(getEmissionSourceEmission(emissionSource, environment) || 0, resultsUnit),
           withDeprecation ? emissionSource.depreciationPeriod || '1' : ' ',
           isCAS(emissionSource) ? emissionSource.hectare || '1' : ' ',
           isCAS(emissionSource) ? emissionSource.duration || '1' : ' ',
           tResultUnits(resultsUnit),
-          emissionSourceSD ? getQuality(getStandardDeviationRating(emissionSourceSD), tQuality) : '',
+          emissionSourceSD
+            ? getQuality(getQualitativeUncertaintyFromSquaredStandardDeviation(emissionSourceSD), tQuality)
+            : '',
           emissionSource.emissionSourceTags.map((emissionSourceTag) => emissionSourceTag.tag.name).join(', ') || '',
           emissionSource.value?.toLocaleString('fr-FR', { useGrouping: false }) || '0',
           emissionFactor?.unit ? tUnit(emissionFactor.unit, { count: 1 }) : '',
-          getQuality(getQualityRating(emissionSource), tQuality),
+          getQuality(getQualitativeUncertaintyFromQuality(emissionSource), tQuality),
           emissionSource.comment || '',
           emissionFactor?.metaData?.title || t('noFactor'),
           emissionFactor
             ? getEmissionFactorValue(emissionFactor, environment).toLocaleString('fr-FR', { useGrouping: false })
             : '',
           emissionFactor?.unit ? `${tResultUnits(StudyResultUnit.K)}/${tUnit(emissionFactor.unit, { count: 1 })}` : '',
-          emissionFactor ? getQuality(getQualityRating(emissionFactor), tQuality) : '',
+          emissionFactor ? getQuality(getQualitativeUncertaintyFromQuality(emissionFactor), tQuality) : '',
           emissionFactor?.source || '',
+          emissionFactor?.base ? tBase(emissionFactor.base) : '',
         ])
         .map((field) => encodeCSVField(field))
         .join(';')
@@ -233,6 +238,7 @@ const getEmissionSourcesCSVContent = (
   tQuality: Translations,
   tUnit: Translations,
   tResultUnits: Translations,
+  tBase: Translations,
   environment: Environment,
   type?: 'Post' | 'Study',
 ) => {
@@ -246,6 +252,7 @@ const getEmissionSourcesCSVContent = (
     tQuality,
     tUnit,
     tResultUnits,
+    tBase,
     type,
     environment,
   )
@@ -263,16 +270,15 @@ const getEmissionSourcesCSVContent = (
   )
   const totalRow = [t('total'), ...emptyFields(emptyFieldsCount + 1), totalEmissions].join(';')
 
-  const qualities = emissionSources.map((emissionSource) => getStandardDeviation(emissionSource))
-  const quality = getQuality(getStandardDeviationRating(sumQualities(qualities)), tQuality)
+  const quality = getQuality(getQualitativeUncertaintyForEmissionSources(emissionSourcesWithEmission), tQuality)
   const qualityRow = [t('quality'), ...emptyFields(emptyFieldsCount + 1), quality].join(';')
 
-  const uncertainty = getEmissionSourcesGlobalUncertainty(emissionSourcesWithEmission)
+  const confidenceInterval = getEmissionSourcesConfidenceInterval(emissionSourcesWithEmission)
   const uncertaintyRow = [
     t('uncertainty'),
     ...emptyFields(emptyFieldsCount),
-    formatEmissionValueForExport(uncertainty[0], resultsUnit),
-    formatEmissionValueForExport(uncertainty[1], resultsUnit),
+    formatEmissionValueForExport(confidenceInterval[0], resultsUnit),
+    formatEmissionValueForExport(confidenceInterval[1], resultsUnit),
   ].join(';')
 
   return [columns, ...rows, totalRow, qualityRow, uncertaintyRow].join('\n')
@@ -288,6 +294,7 @@ export const downloadStudyPost = async (
   tQuality: Translations,
   tUnit: Translations,
   tResultUnits: Translations,
+  tBase: Translations,
   environment: Environment,
 ) => {
   const emissionFactorIds = emissionSources
@@ -307,6 +314,7 @@ export const downloadStudyPost = async (
     tQuality,
     tUnit,
     tResultUnits,
+    tBase,
     environment,
     'Post',
   )
@@ -322,6 +330,7 @@ export const downloadStudyEmissionSources = async (
   tQuality: Translations,
   tUnit: Translations,
   tResultUnits: Translations,
+  tBase: Translations,
   environment: Environment,
 ) => {
   const emissionSources = [...study.emissionSources].sort((a, b) => a.subPost.localeCompare(b.subPost))
@@ -343,6 +352,7 @@ export const downloadStudyEmissionSources = async (
     tQuality,
     tUnit,
     tResultUnits,
+    tBase,
     environment,
     'Study',
   )
@@ -380,7 +390,11 @@ const handleLine = (
 ) => {
   const resultLine = []
   if (headersForEnv.includes('uncertainty')) {
-    resultLine.push(result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '')
+    resultLine.push(
+      result.squaredStandardDeviation
+        ? tQuality(getQualitativeUncertaintyFromSquaredStandardDeviation(result.squaredStandardDeviation).toString())
+        : '',
+    )
   }
 
   return [...resultLine, formatEmissionValueForExport(result.value ?? 0, resultsUnits)]
@@ -443,19 +457,71 @@ export const formatConsolidatedStudyResultsForExport = (
     options: { '!cols': [{ wch: 30 }, { wch: 15 }, { wch: 20 }] },
   }
 }
+interface IExportData {
+  rulesSpans: Record<string, number>
+  gasCols: (t: Translations) => string[]
+  gasFields: (keyof PostInfos)[]
+  getRuleName: (rule: string) => string
+  getCategoryName: (cateogy: string, t: Translations) => string
+}
 
-export const formatBegesStudyResultsForExport = (
+const exportsData: Partial<Record<Export, IExportData>> = {
+  [Export.Beges]: {
+    rulesSpans: begesRulesSpans,
+    gasCols: (t: Translations) => ['CO2', 'CH4', 'N2O', t('other')],
+    gasFields: ['co2', 'ch4', 'n2o', 'other', 'total', 'co2b'] as const,
+    getRuleName: (rule: string) => rule,
+    getCategoryName: (category: string, t: Translations) => `${category}. ${t(`category.${category}`)}`,
+  },
+  [Export.GHGP]: {
+    rulesSpans: ghgpRulesSpans,
+    gasCols: () => ['CO2', 'CH4', 'N2O', 'HFC', 'PFC', 'SF6'],
+    gasFields: ['co2', 'ch4', 'n2o', 'hfc', 'pfc', 'sf6', 'total', 'co2b'] as const,
+    getRuleName: getGHGPRuleName,
+    getCategoryName: (category: string, t: Translations) => t(`category.${category}`),
+  },
+}
+
+type Merge = {
+  s: { c: number; r: number }
+  e: { c: number; r: number }
+}
+
+const buildMerges = (rulesSpans: Record<number, number>, startRow: number, column = 0): Merge[] => {
+  const merges: Merge[] = []
+  let currentRow = startRow
+
+  for (const key of Object.keys(rulesSpans).sort((a, b) => Number(a) - Number(b))) {
+    const span = rulesSpans[Number(key)]
+
+    merges.push({
+      s: { c: column, r: currentRow },
+      e: { c: column, r: currentRow + span - 1 },
+    })
+
+    currentRow += span
+  }
+
+  return merges
+}
+
+export const formatStudyExportResultsForExport = (
   study: FullStudy,
-  rules: ExportRule[],
-  emissionFactorsWithParts: EmissionFactorWithParts[],
   siteList: { name: string; id: string }[],
-  tExport: Translations,
   tQuality: Translations,
-  tBeges: Translations,
+  tSpecificExport: Translations,
   tUnits: Translations,
-  validatedEmissionSourcesOnly?: boolean,
+  exportType: Export,
+  exportName: string,
+  getResults: (siteId: string) => PostInfos[],
 ) => {
-  const lengthOfBeges = 33
+  const data = exportsData[exportType]
+  if (!data) {
+    return { name: tSpecificExport(exportType), data: [], options: { '!merges': [], '!cols': [] } }
+  }
+  const rulesSpans = data.rulesSpans
+  delete rulesSpans.total
+  const length = Object.values(rulesSpans).reduce((res, rule) => res + rule, 0) + 5
   const dataForExport = []
 
   const sheetOptions: { '!merges': object[]; '!cols': object[] } = {
@@ -463,79 +529,61 @@ export const formatBegesStudyResultsForExport = (
     '!cols': [
       { wch: 50 },
       { wch: 60 },
-      { wch: 15 },
-      { wch: 15 },
-      { wch: 15 },
-      { wch: 15 },
-      { wch: 15 },
-      { wch: 15 },
+      ...Array.from({ length: data.gasFields.length }, () => ({ wch: 15 })),
       { wch: 20 },
     ],
   }
 
   for (let i = 0; i < siteList.length; i++) {
     const site = siteList[i]
-    const resultList = computeBegesResult(
-      study,
-      rules,
-      emissionFactorsWithParts,
-      site.id,
-      true,
-      validatedEmissionSourcesOnly,
-    )
+    const resultList = getResults(site.id)
 
     // Merge cells
-    sheetOptions['!merges'].push(
-      { s: { c: 0, r: 3 + i * lengthOfBeges }, e: { c: 0, r: 8 + i * lengthOfBeges } },
-      { s: { c: 0, r: 9 + i * lengthOfBeges }, e: { c: 0, r: 11 + i * lengthOfBeges } },
-      { s: { c: 0, r: 12 + i * lengthOfBeges }, e: { c: 0, r: 17 + i * lengthOfBeges } },
-      { s: { c: 0, r: 18 + i * lengthOfBeges }, e: { c: 0, r: 23 + i * lengthOfBeges } },
-      { s: { c: 0, r: 24 + i * lengthOfBeges }, e: { c: 0, r: 28 + i * lengthOfBeges } },
-      { s: { c: 0, r: 29 + i * lengthOfBeges }, e: { c: 0, r: 30 + i * lengthOfBeges } },
-    )
+    sheetOptions['!merges'].push(...buildMerges(rulesSpans, 3 + i * length))
 
     dataForExport.push([site.name])
-    dataForExport.push([tBeges('rule'), '', tBeges('ges', { unit: tUnits(study.resultsUnit) })])
+    dataForExport.push([tSpecificExport('rule'), '', tSpecificExport('ges', { unit: tUnits(study.resultsUnit) })])
     dataForExport.push([
-      tBeges('category.title'),
-      tBeges('post.title'),
-      'CO2',
-      'CH4',
-      'N2O',
-      tBeges('other'),
-      tBeges('total'),
+      tSpecificExport('category.title'),
+      tSpecificExport('post.title'),
+      ...data.gasCols(tSpecificExport),
+      tSpecificExport('total'),
       'CO2b',
-      tBeges('uncertainty'),
+      tSpecificExport('uncertainty'),
     ])
 
-    const gasFields = ['co2', 'ch4', 'n2o', 'other', 'total', 'co2b'] as const
+    const gasFields = data.gasFields
 
     for (const result of resultList) {
       const category = result.rule.split('.')[0]
       const rule = result.rule
       let post
       if (rule === 'total') {
-        post = tBeges('total')
+        post = tSpecificExport('total')
       } else if (result.rule.includes('.total')) {
-        post = tBeges('subTotal')
+        post = tSpecificExport('subTotal')
       } else {
-        post = `${rule}. ${tBeges(`post.${rule}`)}`
+        post = `${data.getRuleName(rule)}. ${tSpecificExport(`post.${rule}`)}`
       }
 
-      const gasValues = gasFields.map((field) => formatEmissionValueForExport(result[field], study.resultsUnit))
+      const gasValues = gasFields.map((field) =>
+        formatEmissionValueForExport((result[field] as number) || 0, study.resultsUnit),
+      )
 
       dataForExport.push([
-        category === 'total' ? '' : `${category}. ${tBeges(`category.${category}`)}`,
+        category === 'total' ? '' : data.getCategoryName(category, tSpecificExport),
         post,
         ...gasValues,
-        result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '',
+        result.squaredStandardDeviation
+          ? tQuality(getQualitativeUncertaintyFromSquaredStandardDeviation(result.squaredStandardDeviation).toString())
+          : '',
       ])
     }
 
     dataForExport.push([])
   }
 
-  return { name: tExport('Beges'), data: dataForExport, options: sheetOptions }
+  return { name: exportName, data: dataForExport, options: sheetOptions }
 }
 
 const formatBCResultsForCutExport = (
@@ -626,7 +674,8 @@ export const formatComputedResultsForExport = (
 
 export const downloadStudyResults = async (
   study: FullStudy,
-  rules: ExportRule[],
+  begesRules: ExportRule[],
+  ghgpRules: ExportRule[],
   emissionFactorsWithParts: EmissionFactorWithParts[],
   tStudy: Translations,
   tExport: Translations,
@@ -634,7 +683,9 @@ export const downloadStudyResults = async (
   tOrga: Translations,
   tQuality: Translations,
   tBeges: Translations,
+  tGHGP: Translations,
   tUnits: Translations,
+  tBase: Translations,
   environment: Environment = Environment.BC,
   computedResults?: BaseResultsBySite,
 ) => {
@@ -696,18 +747,63 @@ export const downloadStudyResults = async (
     data.push(consolidatedResults)
   }
 
-  if (study.exports.some((exp) => exp.type === Export.Beges)) {
+  if (study.exports?.types.includes(Export.Beges)) {
     data.push(
-      formatBegesStudyResultsForExport(
+      formatStudyExportResultsForExport(
         study,
-        rules,
-        emissionFactorsWithParts,
         siteList,
-        tExport,
         tQuality,
         tBeges,
         tUnits,
-        validatedEmissionSourcesOnly,
+        Export.Beges,
+        tExport(Export.Beges),
+        (siteId: string) =>
+          computeBegesResult(study, begesRules, emissionFactorsWithParts, siteId, true, validatedEmissionSourcesOnly),
+      ),
+    )
+  }
+
+  if (study.exports?.types.includes(Export.GHGP)) {
+    data.push(
+      formatStudyExportResultsForExport(
+        study,
+        siteList,
+        tQuality,
+        tGHGP,
+        tUnits,
+        Export.GHGP,
+        `${tExport(Export.GHGP)} - ${tBase(EmissionFactorBase.LocationBased)}`,
+        (siteId: string) =>
+          computeGHGPResult(
+            study,
+            ghgpRules,
+            emissionFactorsWithParts,
+            siteId,
+            true,
+            validatedEmissionSourcesOnly,
+            EmissionFactorBase.LocationBased,
+          ),
+      ),
+    )
+    data.push(
+      formatStudyExportResultsForExport(
+        study,
+        siteList,
+        tQuality,
+        tGHGP,
+        tUnits,
+        Export.GHGP,
+        `${tExport(Export.GHGP)} - ${tBase(EmissionFactorBase.MarketBased)}`,
+        (siteId: string) =>
+          computeGHGPResult(
+            study,
+            ghgpRules,
+            emissionFactorsWithParts,
+            siteId,
+            true,
+            validatedEmissionSourcesOnly,
+            EmissionFactorBase.MarketBased,
+          ),
       ),
     )
   }

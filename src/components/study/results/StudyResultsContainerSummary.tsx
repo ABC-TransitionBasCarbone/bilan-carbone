@@ -40,6 +40,7 @@ const StudyResultsContainerSummary = ({
   const tPost = useTranslations('emissionFactors.post')
   const tResultUnits = useTranslations('study.results.units')
   const tResults = useTranslations('study.results')
+  const tDocumentation = useTranslations('documentationUrl')
   const [glossary, setGlossary] = useState('')
   const [withDep, setWithDependencies] = useState(!!withDependencies)
   const environment = study.organizationVersion.environment
@@ -162,20 +163,12 @@ const StudyResultsContainerSummary = ({
             <>
               {t.rich(`${glossary}Description`, {
                 link: (children) => (
-                  <Link
-                    href="https://www.bilancarbone-methode.com/annexes/annexes/annexe-1-grands-principes-de-comptabilisation-du-bilan-carbone-r#zoom-sur-les-sous-postes-utilisation-en-responsabilite-et-utilisation-en-dependance"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
+                  <Link href={tDocumentation('dependencyAndResponsability')} target="_blank" rel="noreferrer noopener">
                     {children}
                   </Link>
                 ),
                 monetaryLink: (children) => (
-                  <Link
-                    href="https://www.bilancarbone-methode.com/4-comptabilisation/4.3-methode-de-selection-des-facteurs-demission#fe-en-ratios-monetaires"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
+                  <Link href={tDocumentation('monetaryRatio')} target="_blank" rel="noreferrer noopener">
                     {children}
                   </Link>
                 ),

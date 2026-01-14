@@ -4,6 +4,7 @@
     "no": "No",
     "previous": "Previous",
     "next": "Next",
+    "close": "Close",
     "all": "All",
     "none": "None",
     "subPosts": "Sub posts",
@@ -110,7 +111,7 @@
         "table": "Table",
         "bar": "Bar chart",
         "pie": "Pie chart",
-        "ratio": "Ratios"
+        "ratio": "Carbon intensities"
       }
     }
   }

@@ -74,9 +74,11 @@ const AllResults = ({
   const tExport = useTranslations('exports')
   const tQuality = useTranslations('quality')
   const tBeges = useTranslations('beges')
+  const tGHGP = useTranslations('ghgp')
   const tUnits = useTranslations('study.results.units')
   const tExportButton = useTranslations('study.export')
   const tStudyNav = useTranslations('study.navigation')
+  const tBase = useTranslations('emissionFactors.base')
 
   const { callServerFunction } = useServerFunction()
 
@@ -124,15 +126,18 @@ const AllResults = ({
               downloadStudyResults(
                 study,
                 [],
-                emissionFactorsWithPart,
+                [],
+                emissionFactorsWithParts,
                 tResults,
                 tExport,
                 tPost,
                 tOrga,
                 tQuality,
                 tBeges,
+                tGHGP,
                 tUnits,
-                environment ?? Environment.CUT,
+                tBase,
+                Environment.CUT,
                 computedResultsBySite,
               )
             }
@@ -158,7 +163,7 @@ const AllResults = ({
         <>
           <Box component="section" className="mb2">
             <Typography>
-              {tResults.rich('cutFeedback', {
+              {tResults.rich('simplifiedFeedback', {
                 questionnaire: (children) => (
                   <Link href={process.env.NEXT_PUBLIC_CUT_FEEDBACK_TYPEFORM_LINK ?? ''} target="_blank">
                     <strong>{children}</strong>
