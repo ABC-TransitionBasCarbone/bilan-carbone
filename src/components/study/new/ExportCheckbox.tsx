@@ -1,49 +1,56 @@
 import { Select } from '@/components/base/Select'
+import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import ControlModeChangeWarningModal from '@/components/study/perimeter/ControlModeChangeWarningModal'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { updateCaracterisationsForControlMode } from '@/services/serverFunctions/study'
+import { updateStudySpecificExportFields } from '@/services/serverFunctions/study'
 import { Checkbox, FormControl, FormControlLabel, MenuItem } from '@mui/material'
 import { ControlMode, Export } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import { Dispatch, SetStateAction, useMemo, useState } from 'react'
-import BegesActivationWarningModal from './BegesActivationWarningModal'
-import BegesDeactivationWarningModal from './BegesDeactivationWarningModal'
+import { useMemo, useState } from 'react'
 import styles from './ExportCheckbox.module.css'
+import GHGPGlossaryModal from './GHGPGlossaryModal'
 
 interface Props {
-  id: Export
+  exportType: Export
+  index: number
   study?: FullStudy
-  values: Record<Export, ControlMode | false>
-  setValues: Dispatch<SetStateAction<Record<Export, ControlMode | false>>>
+  values: {
+    exports: Export[]
+    controlMode?: ControlMode | null
+  }
+  onChange: (type: Export, checked: boolean) => void
+  setControl: (value: ControlMode) => void
   disabled?: boolean
   duplicateStudyId?: string | null
 }
 
-const ExportCheckbox = ({ id, study, values, setValues, disabled, duplicateStudyId }: Props) => {
+const ExportCheckbox = ({
+  exportType,
+  index,
+  study,
+  values,
+  onChange,
+  setControl,
+  disabled,
+  duplicateStudyId,
+}: Props) => {
   const t = useTranslations('study.new')
   const tExport = useTranslations('exports')
   const { callServerFunction } = useServerFunction()
   const [showControlModeWarning, setShowControlModeWarning] = useState(false)
   const [pendingControlMode, setPendingControlMode] = useState<ControlMode | null>(null)
-  const [showBegesActivationWarning, setShowBegesActivationWarning] = useState(false)
-  const [pendingBegesCheck, setPendingBegesCheck] = useState<boolean>(false)
-  const [showBegesDeactivationWarning, setShowBegesDeactivationWarning] = useState(false)
-  const [pendingBegesUncheck, setPendingBegesUncheck] = useState<boolean>(false)
   const isNewStudy = !study && !duplicateStudyId
+
+  const hasGlossary = useMemo(() => ([Export.GHGP] as Export[]).includes(exportType), [exportType])
 
   const hasCaracterisations = useMemo(
     () => !!study && study.emissionSources.some((source) => source.caracterisation !== null),
     [study],
   )
 
-  const hasValidatedSources = useMemo(
-    () => !!study && study.emissionSources.some((source) => source.validated),
-    [study],
-  )
-
   const handleControlModeChange = (newControlMode: ControlMode) => {
-    const currentControlMode = values[id] as ControlMode
+    const currentControlMode = values.controlMode as ControlMode
 
     const shouldShowControlModeChangeWarning =
       currentControlMode && currentControlMode !== newControlMode && hasCaracterisations && !isNewStudy
@@ -52,7 +59,7 @@ const ExportCheckbox = ({ id, study, values, setValues, disabled, duplicateStudy
       setPendingControlMode(newControlMode)
       setShowControlModeWarning(true)
     } else {
-      setValues({ ...values, [id]: newControlMode })
+      setControl(newControlMode)
     }
   }
 
@@ -61,26 +68,16 @@ const ExportCheckbox = ({ id, study, values, setValues, disabled, duplicateStudy
     setPendingControlMode(null)
   }
 
-  const closeBegesActivation = () => {
-    setShowBegesActivationWarning(false)
-    setPendingBegesCheck(false)
-  }
-
-  const closeBegesDeactivation = () => {
-    setShowBegesDeactivationWarning(false)
-    setPendingBegesUncheck(false)
-  }
-
   const confirmControlModeChange = async () => {
     if (pendingControlMode && study) {
       if (duplicateStudyId) {
         // For duplicate studies, don't clear characterizations immediately
-        setValues({ ...values, [id]: pendingControlMode })
+        setControl(pendingControlMode)
       } else {
         // For existing studies, clear characterizations immediately
-        await callServerFunction(() => updateCaracterisationsForControlMode(study.id, pendingControlMode), {
+        await callServerFunction(() => updateStudySpecificExportFields(study.id, pendingControlMode), {
           onSuccess: () => {
-            setValues({ ...values, [id]: pendingControlMode })
+            setControl(pendingControlMode)
           },
         })
       }
@@ -88,27 +85,7 @@ const ExportCheckbox = ({ id, study, values, setValues, disabled, duplicateStudy
     closeControlModeChange()
   }
 
-  const confirmBegesActivation = async () => {
-    if (pendingBegesCheck) {
-      if (!study || duplicateStudyId) {
-        setValues({ ...values, [id]: ControlMode.Operational })
-      } else {
-        await callServerFunction(() => updateCaracterisationsForControlMode(study.id, ControlMode.Operational), {
-          onSuccess: () => {
-            setValues({ ...values, [id]: ControlMode.Operational })
-          },
-        })
-      }
-    }
-    closeBegesActivation()
-  }
-
-  const confirmBegesDeactivation = async () => {
-    if (pendingBegesUncheck) {
-      setValues({ ...values, [id]: false })
-    }
-    closeBegesDeactivation()
-  }
+  const isExportAvailable = useMemo(() => ([Export.Beges, Export.GHGP] as Export[]).includes(exportType), [exportType])
 
   return (
     <div className={styles.container}>
@@ -116,50 +93,38 @@ const ExportCheckbox = ({ id, study, values, setValues, disabled, duplicateStudy
         className={styles.field}
         control={
           <Checkbox
-            checked={!!values[id]}
+            checked={!!values.exports.includes(exportType)}
             className={styles.checkbox}
-            disabled={id !== Export.Beges || disabled}
-            data-testid={`export-checkbox-${id}`}
+            disabled={!isExportAvailable || disabled}
+            data-testid={`export-checkbox-${exportType}`}
           />
         }
         label={
           <span>
-            {tExport(id)}
-            {id !== Export.Beges && <em> ({t('coming')})</em>}
+            {tExport(exportType)}
+            {!isExportAvailable && <em> ({t('coming')})</em>}
+            {hasGlossary && (
+              <GlossaryIconModal
+                title="title"
+                className="ml-2"
+                iconLabel="title"
+                label="export-glossary-modal"
+                tModal={`exports.glossary.${exportType}`}
+              >
+                {exportType === Export.GHGP && <GHGPGlossaryModal />}
+              </GlossaryIconModal>
+            )}
           </span>
         }
-        value={!!values[id]}
-        onChange={(_, checked) => {
-          const shouldShowBegesActivationWarning = hasValidatedSources && !isNewStudy
-          const shouldShowBegesDeactivationWarning = hasCaracterisations && !isNewStudy
-
-          if (checked && id === Export.Beges && !values[id]) {
-            // Show warning when checking BEGES export
-            if (shouldShowBegesActivationWarning) {
-              setPendingBegesCheck(true)
-              setShowBegesActivationWarning(true)
-            } else {
-              setValues({ ...values, [id]: ControlMode.Operational })
-            }
-          } else if (!checked && id === Export.Beges && values[id]) {
-            // Show warning when unchecking BEGES export
-            if (shouldShowBegesDeactivationWarning) {
-              setPendingBegesUncheck(true)
-              setShowBegesDeactivationWarning(true)
-            } else {
-              setValues({ ...values, [id]: false })
-            }
-          } else {
-            setValues({ ...values, [id]: checked ? ControlMode.Operational : false })
-          }
-        }}
+        value={!!values.exports.includes(exportType)}
+        onChange={(_, checked) => onChange(exportType, checked)}
       />
-      {values[id] && (
+      {index === 0 && !!values.exports.length && (
         <div className={styles.field}>
           <FormControl fullWidth>
             <Select
               size="small"
-              value={values[id]}
+              value={values.controlMode}
               onChange={(event) => handleControlModeChange(event.target.value as ControlMode)}
               disabled={disabled}
             >
@@ -175,25 +140,11 @@ const ExportCheckbox = ({ id, study, values, setValues, disabled, duplicateStudy
       )}
       {showControlModeWarning && pendingControlMode && (
         <ControlModeChangeWarningModal
-          open={showControlModeWarning}
-          currentMode={values[id] as ControlMode}
+          open
+          currentMode={values.controlMode as ControlMode}
           newMode={pendingControlMode}
           onConfirm={confirmControlModeChange}
           onCancel={closeControlModeChange}
-        />
-      )}
-      {showBegesActivationWarning && pendingBegesCheck && (
-        <BegesActivationWarningModal
-          open={showBegesActivationWarning}
-          onConfirm={confirmBegesActivation}
-          onCancel={closeBegesActivation}
-        />
-      )}
-      {showBegesDeactivationWarning && pendingBegesUncheck && (
-        <BegesDeactivationWarningModal
-          open={showBegesDeactivationWarning}
-          onConfirm={confirmBegesDeactivation}
-          onCancel={closeBegesDeactivation}
         />
       )}
     </div>

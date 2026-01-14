@@ -1,0 +1,272 @@
+immobilisations . équipements informatique audiovisuel:
+  titre: Équipements
+  formule:
+    somme:
+      - ordinateur de bureau
+      - ordinateur portable
+      - tablette
+      - imprimante
+      - photocopieur
+      - vidéoprojecteur
+      - serveur informatique
+      - télévision 40-49 pouces
+      - rack de serveur
+      - télécommande universelle sans piles 80g
+      - stéréo classique
+      - enceinte Bluetooth
+      - smartphone 5 pouces
+      - écran 23,8 pouces
+  unité: kgCO2e
+  avec:
+    ordinateur de bureau:
+      titre: "Ordinateur de bureau"
+      formule: nombre * FE
+      unité: kgCO2e
+      avec:
+        nombre:
+          question: "Combien d'ordinateurs de bureau avez-vous achetés ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par ordinateur de bureau"
+          valeur: 169
+          unité: kgCO2e/unité
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 4
+
+    ordinateur portable:
+      titre: "Ordinateur portable"
+      formule: nombre * FE
+      unité: kgCO2e
+      avec:
+        nombre:
+          question: "Combien d'ordinateurs portables avez-vous achetés ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par ordinateur portable"
+          valeur: 156
+          unité: kgCO2e/unité
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 4
+
+    tablette:
+      titre: "Tablette"
+      formule: nombre * FE
+      unité: kgCO2e
+      avec:
+        nombre:
+          question: "Combien de tablettes avez-vous achetées ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par tablette"
+          valeur: 63.2
+          unité: kgCO2e/unité
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 4
+
+    imprimante:
+      titre: "Imprimante"
+      formule: nombre * FE
+      unité: kgCO2e
+      avec:
+        nombre:
+          question: "Combien d'imprimantes avez-vous achetées ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par imprimante"
+          valeur: 87.3
+          unité: kgCO2e/unité
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 4
+
+    photocopieur:
+      titre: "Photocopieur"
+      formule: nombre * FE
+      unité: kgCO2e
+      avec:
+        nombre:
+          question: "Combien de photocopieurs avez-vous achetés ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par photocopieur"
+          valeur: 2935
+          unité: kgCO2e/unité
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 4
+
+    vidéoprojecteur:
+      titre: "Vidéoprojecteur"
+      formule: nombre * FE
+      unité: kgCO2e
+      avec:
+        nombre:
+          question: "Combien de vidéoprojecteurs avez-vous achetés ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par vidéoprojecteur"
+          valeur: 145
+          unité: kgCO2e/unité
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 5
+
+    serveur informatique:
+      titre: "Serveur informatique"
+      formule: nombre * FE
+      unité: kgCO2e
+      avec:
+        nombre:
+          question: "Combien de serveurs informatiques avez-vous achetés ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par serveur informatique"
+          valeur: 600
+          unité: kgCO2e/unité
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 5
+
+    télévision 40-49 pouces:
+      titre: "Télévision 40-49 pouces"
+      formule: nombre * FE
+      unité: kgCO2e
+      avec:
+        nombre:
+          question: "Combien de télévisions 40-49 pouces avez-vous achetées ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par télévision 40-49 pouces"
+          valeur: 371
+          unité: kgCO2e/unité
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 4
+
+    rack de serveur:
+      titre: "Rack de serveur"
+      formule: nombre * FE
+      unité: kgCO2e
+      avec:
+        nombre:
+          question: "Combien de racks de serveur avez-vous achetés ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par rack de serveur"
+          valeur: 500
+          unité: kgCO2e/unité
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 2
+
+    télécommande universelle sans piles 80g:
+      titre: "Télécommande universelle sans piles 80g"
+      formule: nombre * FE
+      unité: kgCO2e
+      avec:
+        nombre:
+          question: "Combien de télécommandes universelles sans piles (80g) avez-vous achetées ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par télécommande universelle sans piles 80g"
+          valeur: 2.78
+          unité: kgCO2e/unité
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 5
+
+    stéréo classique:
+      titre: "Stéréo classique"
+      formule: nombre * FE
+      unité: kgCO2e
+      avec:
+        nombre:
+          question: "Combien de stéréos classiques avez-vous achetées ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par stéréo classique"
+          valeur: 123
+          unité: kgCO2e/unité
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 4
+
+    enceinte Bluetooth:
+      titre: "Enceinte Bluetooth"
+      formule: nombre * FE
+      unité: kgCO2e
+      avec:
+        nombre:
+          question: "Combien d'enceintes Bluetooth avez-vous achetées ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par enceinte Bluetooth"
+          valeur: 8.98
+          unité: kgCO2e/unité
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 4
+
+    smartphone 5 pouces:
+      titre: "Smartphone 5 pouces"
+      formule: nombre * FE
+      unité: kgCO2e
+      avec:
+        nombre:
+          question: "Combien de smartphones 5 pouces avez-vous achetés ?"
+          # FIXME: pourquoi l'unité ne s'affiche-t-elle pas correctement ici dans NumberWithUnit ?
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par smartphone 5 pouces"
+          valeur: 33
+          unité: kgCO2e/unité
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 4
+
+    écran 23,8 pouces:
+      titre: "Écran 23,8 pouces"
+      formule: nombre * FE
+      unité: kgCO2e
+      avec:
+        nombre:
+          question: "Combien d'écrans 23,8 pouces avez-vous achetés ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par écran 23,8 pouces"
+          valeur: 248
+          unité: kgCO2e/unité
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 4

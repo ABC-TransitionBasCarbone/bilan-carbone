@@ -42,6 +42,12 @@ const ResultsContainerForUser = async ({ user, mainStudyOrganizationVersionId }:
               {mainStudy ? <StudyResultsContainerSummaryPublicodes study={mainStudy} /> : null}
             </>
           ),
+          [Environment.CLICKSON]: (
+            <>
+              <h2 className="pb2">{t('lastStudyTitle')}</h2>
+              {mainStudy ? <StudyResultsContainerSummaryPublicodes study={mainStudy} /> : null}
+            </>
+          ),
         }}
         defaultComponent={
           mainStudy ? (

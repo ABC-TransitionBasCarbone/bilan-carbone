@@ -18,7 +18,7 @@ export const UPDATED_PREFIX = '[UPDATED]'
 export const AVAILABLE_LOCALES = ['en', 'es'] as const
 export type Locale = (typeof AVAILABLE_LOCALES)[number] | 'fr'
 
-export const AVAILABLE_MODELS = ['cut'] as const
+export const AVAILABLE_MODELS = ['cut', 'clickson'] as const
 export type Model = (typeof AVAILABLE_MODELS)[number]
 
 const MODEL_PACKAGES: Record<Model, string> = {
@@ -28,6 +28,13 @@ const MODEL_PACKAGES: Record<Model, string> = {
       : path.join(
           __dirname,
           '../../../publicodes-packages/publicodes-count/publicodes-build/publicodes-count.model.json',
+        ),
+  clickson:
+    process.env.NODE_ENV === 'production'
+      ? '@abc-transitionbascarbone/publicodes-clickson/publicodes-build/publicodes-clickson.model.json'
+      : path.join(
+          __dirname,
+          '../../../publicodes-packages/publicodes-clickson/publicodes-build/publicodes-clickson.model.json',
         ),
 }
 

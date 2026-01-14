@@ -13,11 +13,16 @@ jest.mock('../auth', () => ({ auth: jest.fn() }))
 jest.mock('uuid', () => ({ v4: jest.fn() }))
 
 jest.mock('../permissions/study', () => ({ canReadStudy: jest.fn() }))
-jest.mock('../../utils/study', () => ({ getAccountRoleOnStudy: jest.fn(), hasDeprecationPeriod: jest.fn() }))
+jest.mock('../../utils/study', () => ({
+  getAccountRoleOnStudy: jest.fn(),
+  hasDeprecationPeriod: jest.fn(),
+  getBaseFilteredEmissionSources: jest.fn(),
+}))
 jest.mock('next-intl/server', () => ({
   getTranslations: jest.fn(() => (key: string) => key),
 }))
 const mockHasDeprecationPeriod = studyUtilsModule.hasDeprecationPeriod as jest.Mock
+const mockGetBaseFilteredEmissionSources = studyUtilsModule.getBaseFilteredEmissionSources as jest.Mock
 
 const tags = [
   { id: 'test', name: 'test', familyId: 'familyTag1', color: '#000000', createdAt: new Date(), updatedAt: new Date() },
@@ -166,6 +171,7 @@ describe('consolidated function', () => {
           value: 0,
         }),
       ]
+      mockGetBaseFilteredEmissionSources.mockReturnValue(emissionSources)
 
       const study = getMockeFullStudy({ emissionSources, tagFamilies })
 
@@ -183,21 +189,21 @@ describe('consolidated function', () => {
           familyId: 'familyTag1',
           label: 'Family Tag 1',
           value: 1950,
-          uncertainty: 1.1150550922754328,
+          squaredStandardDeviation: 1.3999694270664895,
           children: [
             {
               label: 'test',
               tagFamily: 'familyTag1',
               value: 1000,
               color: '#000000',
-              uncertainty: 1.2365959919080918,
+              squaredStandardDeviation: 1.2365959919080918,
             },
             {
               label: 'test2',
               tagFamily: 'familyTag1',
               value: 950,
               color: '#000000',
-              uncertainty: 1,
+              squaredStandardDeviation: 1.9221220661098113,
             },
           ],
         },
@@ -205,14 +211,14 @@ describe('consolidated function', () => {
           familyId: 'familyTag2',
           label: 'Family Tag 2',
           value: 1500,
-          uncertainty: 1.1520868590878348,
+          squaredStandardDeviation: 1.4030105100238242,
           children: [
             {
               label: 'test21',
               tagFamily: 'familyTag2',
               value: 1500,
               color: '#000000',
-              uncertainty: 1.1520868590878348,
+              squaredStandardDeviation: 1.4030105100238242,
             },
           ],
         },
@@ -220,14 +226,14 @@ describe('consolidated function', () => {
           familyId: 'familyTag3',
           label: 'Family Tag 3',
           value: 1000,
-          uncertainty: 1.2365959919080918,
+          squaredStandardDeviation: 1.2365959919080918,
           children: [
             {
               label: 'test31',
               tagFamily: 'familyTag3',
               value: 1000,
               color: '#000000',
-              uncertainty: 1.2365959919080918,
+              squaredStandardDeviation: 1.2365959919080918,
             },
           ],
         },
@@ -235,8 +241,16 @@ describe('consolidated function', () => {
           label: 'other',
           familyId: 'otherFamily',
           value: 800,
-          uncertainty: 1,
-          children: [{ label: 'other', tagFamily: 'otherFamily', value: 800, color: '', uncertainty: 1 }],
+          squaredStandardDeviation: 2.516356601259095,
+          children: [
+            {
+              label: 'other',
+              tagFamily: 'otherFamily',
+              value: 800,
+              color: '',
+              squaredStandardDeviation: 2.516356601259095,
+            },
+          ],
         },
       ])
     })
@@ -248,14 +262,29 @@ describe('consolidated function', () => {
           studySite,
           emissionSourceTags: [tags[0], tags[4], tags[8]].map((tag) => ({ tag })),
           value: 100,
+          reliability: 5,
+          technicalRepresentativeness: 5,
+          geographicRepresentativeness: 5,
+          temporalRepresentativeness: 5,
+          completeness: 5,
         }),
         getMockedFullStudyEmissionSource({
+          reliability: 5,
+          technicalRepresentativeness: 5,
+          geographicRepresentativeness: 5,
+          temporalRepresentativeness: 5,
+          completeness: 5,
           validated: true,
           studySite,
           emissionSourceTags: [tags[1]].map((tag) => ({ tag })),
           value: 45,
         }),
         getMockedFullStudyEmissionSource({
+          reliability: 5,
+          technicalRepresentativeness: 5,
+          geographicRepresentativeness: 5,
+          temporalRepresentativeness: 5,
+          completeness: 5,
           validated: true,
           studySite,
           emissionSourceTags: [tags[1]].map((tag) => ({ tag })),
@@ -263,20 +292,55 @@ describe('consolidated function', () => {
           subPost: SubPost.UtilisationEnDependance,
         }),
         getMockedFullStudyEmissionSource({
+          reliability: 5,
+          technicalRepresentativeness: 5,
+          geographicRepresentativeness: 5,
+          temporalRepresentativeness: 5,
+          completeness: 5,
           studySite,
           emissionSourceTags: [tags[1]].map((tag) => ({ tag })),
           value: 45,
           validated: false,
         }),
         getMockedFullStudyEmissionSource({
+          reliability: 5,
+          technicalRepresentativeness: 5,
+          geographicRepresentativeness: 5,
+          temporalRepresentativeness: 5,
+          completeness: 5,
           validated: true,
           studySite,
           emissionSourceTags: [tags[1], tags[4]].map((tag) => ({ tag })),
           value: 50,
         }),
-        getMockedFullStudyEmissionSource({ validated: true, studySite, emissionSourceTags: [], value: 80 }),
-        getMockedFullStudyEmissionSource({ validated: true, studySite, emissionSourceTags: [], value: 0 }),
         getMockedFullStudyEmissionSource({
+          reliability: 5,
+          technicalRepresentativeness: 5,
+          geographicRepresentativeness: 5,
+          temporalRepresentativeness: 5,
+          completeness: 5,
+          validated: true,
+          studySite,
+          emissionSourceTags: [],
+          value: 80,
+        }),
+        getMockedFullStudyEmissionSource({
+          reliability: 5,
+          technicalRepresentativeness: 5,
+          geographicRepresentativeness: 5,
+          temporalRepresentativeness: 5,
+          completeness: 5,
+          validated: true,
+          studySite,
+          emissionSourceTags: [],
+          value: 0,
+        }),
+        getMockedFullStudyEmissionSource({
+          reliability: 5,
+          technicalRepresentativeness: 5,
+          geographicRepresentativeness: 5,
+          temporalRepresentativeness: 5,
+          completeness: 5,
           validated: true,
           studySite,
           emissionFactor: null,
@@ -285,6 +349,7 @@ describe('consolidated function', () => {
           value: 450,
         }),
       ]
+      mockGetBaseFilteredEmissionSources.mockReturnValue(emissionSources)
 
       const study = getMockeFullStudy({ emissionSources, tagFamilies })
 
@@ -302,21 +367,21 @@ describe('consolidated function', () => {
           familyId: 'familyTag1',
           label: 'Family Tag 1',
           value: 2500,
-          uncertainty: 1,
+          squaredStandardDeviation: 1,
           children: [
             {
               label: 'test',
               tagFamily: 'familyTag1',
               value: 1000,
               color: '#000000',
-              uncertainty: 1,
+              squaredStandardDeviation: 1,
             },
             {
               label: 'test2',
               tagFamily: 'familyTag1',
               value: 1500,
               color: '#000000',
-              uncertainty: 1,
+              squaredStandardDeviation: 1,
             },
           ],
         },
@@ -324,14 +389,14 @@ describe('consolidated function', () => {
           familyId: 'familyTag2',
           label: 'Family Tag 2',
           value: 1500,
-          uncertainty: 1,
+          squaredStandardDeviation: 1,
           children: [
             {
               label: 'test21',
               tagFamily: 'familyTag2',
               value: 1500,
               color: '#000000',
-              uncertainty: 1,
+              squaredStandardDeviation: 1,
             },
           ],
         },
@@ -339,14 +404,14 @@ describe('consolidated function', () => {
           familyId: 'familyTag3',
           label: 'Family Tag 3',
           value: 1000,
-          uncertainty: 1,
+          squaredStandardDeviation: 1,
           children: [
             {
               label: 'test31',
               tagFamily: 'familyTag3',
               value: 1000,
               color: '#000000',
-              uncertainty: 1,
+              squaredStandardDeviation: 1,
             },
           ],
         },
@@ -354,14 +419,15 @@ describe('consolidated function', () => {
           label: 'other',
           familyId: 'otherFamily',
           value: 800,
-          uncertainty: 1,
-          children: [{ label: 'other', tagFamily: 'otherFamily', value: 800, color: '', uncertainty: 1 }],
+          squaredStandardDeviation: 1,
+          children: [{ label: 'other', tagFamily: 'otherFamily', value: 800, color: '', squaredStandardDeviation: 1 }],
         },
       ])
     })
 
     test('should handle empty value', () => {
       const emissionSources = [] as FullStudy['emissionSources']
+      mockGetBaseFilteredEmissionSources.mockReturnValue(emissionSources)
 
       const study = getMockeFullStudy({ emissionSources, tagFamilies })
 

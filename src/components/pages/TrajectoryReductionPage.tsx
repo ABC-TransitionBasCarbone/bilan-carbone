@@ -104,6 +104,7 @@ const TrajectoryReductionPage = ({
   }, [study.id])
 
   useLocalStorageSync(`trajectory-sbti-selected-${study.id}`, selectedSbtiTrajectories, mounted)
+  useLocalStorageSync(`trajectory-snbc-selected-${study.id}`, selectedSnbcTrajectories, mounted)
   useLocalStorageSync(`trajectory-with-dependencies-${study.id}`, withDependencies, mounted)
   useLocalStorageSync(`trajectory-custom-selected-${study.id}`, selectedCustomTrajectories, mounted)
 
@@ -448,6 +449,8 @@ const TrajectoryReductionPage = ({
               onSuccess={handleCreateTrajectorySuccess}
               trajectory={null}
               isFirstCreation={trajectories.length === 0}
+              studyYear={study.startDate.getFullYear()}
+              sectenData={sectenData}
             />
           )}
 

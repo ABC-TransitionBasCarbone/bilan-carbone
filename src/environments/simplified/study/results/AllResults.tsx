@@ -23,9 +23,12 @@ import classNames from 'classnames'
 import Link from 'next/link'
 import styles from './AllResults.module.css'
 
+import CarbonIntensities from '@/components/study/results/consolidated/CarbonIntensities'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import EmissionsAnalysisClickson from '@/environments/clickson/study/results/consolidated/EmissionsAnalysisClickson'
+import CarbonIntensitiesCut from '@/environments/cut/study/results/CarbonIntensitiesCut'
 import {
+  hasAccessToAdvancedEmissionAnalysis,
   hasAccessToResultsRatioTab,
   hasAccessToSimplifiedEmissionAnalysis,
   showResultsInfoText,
@@ -35,12 +38,14 @@ import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { a11yProps, ChartType, defaultChartOrder, tabsLabels } from './utils'
 
 interface Props {
-  computedResults: BaseResultsByPost[]
-  computedResultsBySite: BaseResultsBySite
   setSite: Dispatch<SetStateAction<string>>
   study: FullStudy
   studySite: string
+  // equivalent to previous `withDepValue`
   totalValue: number
+  computedResults: BaseResultsByPost[]
+  computedResultsBySite?: BaseResultsBySite
+  totalValueWithoutDep?: number
   caUnit?: SiteCAUnit
   chartOrder?: Record<ChartType, number>
   emissionFactorsWithPart?: EmissionFactorWithParts[]
@@ -48,13 +53,14 @@ interface Props {
 }
 
 const AllResults = ({
-  computedResults,
-  computedResultsBySite,
   setSite,
   study,
   studySite,
   totalValue,
-  caUnit,
+  computedResults,
+  computedResultsBySite,
+  totalValueWithoutDep = totalValue,
+  caUnit = SiteCAUnit.K,
   chartOrder = defaultChartOrder,
   emissionFactorsWithPart = [],
   showSubLevel = false,
@@ -74,9 +80,11 @@ const AllResults = ({
   const tExport = useTranslations('exports')
   const tQuality = useTranslations('quality')
   const tBeges = useTranslations('beges')
+  const tGHGP = useTranslations('ghgp')
   const tUnits = useTranslations('study.results.units')
   const tExportButton = useTranslations('study.export')
   const tStudyNav = useTranslations('study.navigation')
+  const tBase = useTranslations('emissionFactors.base')
 
   const { callServerFunction } = useServerFunction()
 
@@ -124,6 +132,7 @@ const AllResults = ({
               downloadStudyResults(
                 study,
                 [],
+                [],
                 emissionFactorsWithPart,
                 tResults,
                 tExport,
@@ -131,8 +140,10 @@ const AllResults = ({
                 tOrga,
                 tQuality,
                 tBeges,
+                tGHGP,
                 tUnits,
-                environment ?? Environment.CUT,
+                tBase,
+                Environment.CUT,
                 computedResultsBySite,
               )
             }
@@ -158,7 +169,7 @@ const AllResults = ({
         <>
           <Box component="section" className="mb2">
             <Typography>
-              {tResults.rich('cutFeedback', {
+              {tResults.rich('simplifiedFeedback', {
                 questionnaire: (children) => (
                   <Link href={process.env.NEXT_PUBLIC_CUT_FEEDBACK_TYPEFORM_LINK ?? ''} target="_blank">
                     <strong>{children}</strong>
@@ -192,9 +203,19 @@ const AllResults = ({
       )}
 
       {/* Emissions analysis for environments that have it */}
-      {environment && hasAccessToSimplifiedEmissionAnalysis(environment) && (
-        <EmissionsAnalysisClickson study={study} studySite={studySite} withDepValue={totalValue} caUnit={caUnit} />
-      )}
+      {environment && hasAccessToSimplifiedEmissionAnalysis(environment) ? (
+        <EmissionsAnalysisClickson study={study} studySite={studySite} totalValue={totalValue} />
+      ) : null}
+
+      {environment && hasAccessToAdvancedEmissionAnalysis(environment) ? (
+        <CarbonIntensities
+          study={study}
+          studySite={studySite}
+          withDep={totalValue}
+          withoutDep={totalValueWithoutDep}
+          caUnit={caUnit}
+        />
+      ) : null}
 
       {/* Results tabs */}
       <Box component="section" sx={{ marginTop: '1rem' }}>
@@ -237,7 +258,9 @@ const AllResults = ({
             />
           </TabPanel>
           {environment && hasAccessToResultsRatioTab(environment) ? (
-            <TabPanel value={tabValue} index={chartOrder.ratio} />
+            <TabPanel value={tabValue} index={chartOrder.ratio}>
+              <CarbonIntensitiesCut study={study} studySite={studySite} withDepValue={totalValue} />
+            </TabPanel>
           ) : null}
         </Box>
       </Box>

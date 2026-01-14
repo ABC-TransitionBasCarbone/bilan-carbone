@@ -1,6 +1,7 @@
 import { FullStudy } from '@/db/study'
 import {
   ControlMode,
+  EmissionFactorBase,
   Export,
   Import,
   Level,
@@ -13,6 +14,43 @@ import {
 } from '@prisma/client'
 import { mockedOrganizationVersion, mockedOrganizationVersionId } from './organization'
 import { mockedAccountId, mockedUser } from './user'
+
+export const COMMON_DATES = {
+  startDate: new Date('2024-01-01'),
+  endDate: new Date('2024-12-31'),
+  realizationStartDate: new Date('2024-02-01'),
+  realizationEndDate: new Date('2024-11-30'),
+}
+
+export const COMMON_DATES_STR = {
+  startDate: '2024-01-01',
+  endDate: '2024-12-31',
+  realizationStartDate: '2024-02-01',
+  realizationEndDate: '2024-11-30',
+}
+
+export const TEST_IDS = {
+  sourceStudy: 'source-study-id',
+  newStudy: 'new-study-id',
+  orgVersion: 'org-version-id',
+  studySite: 'study-site-id',
+  newStudySite: 'new-study-site-id',
+  site: 'site-id',
+  emissionSource: 'emission-source-id',
+  emissionFactor: 'emission-factor-id',
+  importVersion: 'import-version-id',
+  userStudy: 'user-study-id',
+  contributorStudy: 'contributor-study-id',
+  account: 'account-id',
+  tag: 'tag-id',
+}
+
+export const TEST_EMAILS = {
+  currentUser: 'current@example.com',
+  validator: 'validator@example.com',
+  teamMember: 'team@example.com',
+  contributor: 'contributor@example.com',
+}
 
 export const mockedStudy = {
   id: 'mocked-study-id',
@@ -44,7 +82,10 @@ export const mockedFullStudy = {
   allowedUsers: [],
   sites: [],
   emissionFactorVersions: [],
-  exports: [],
+  exports: {
+    types: [],
+    control: ControlMode.Operational,
+  },
   organizationVersion: mockedOrganizationVersion,
   tagFamilies: [],
   cncVersion: {
@@ -94,6 +135,36 @@ export const mockedDbFullStudySite = {
     establishmentYear: null,
   },
   cncVersion: null,
+}
+
+export const mockedEmissionSourceEmissionFactor = {
+  id: TEST_IDS.emissionFactor,
+  importedFrom: Import.Manual,
+  totalCo2: 81,
+  geographicRepresentativeness: 5,
+  completeness: 5,
+  reliability: 5,
+  technicalRepresentativeness: 5,
+  temporalRepresentativeness: 5,
+  importedId: '4',
+  base: EmissionFactorBase.LocationBased,
+  unit: Unit.GWH,
+  isMonetary: false,
+  location: '',
+  customUnit: null,
+  version: {
+    id: 'version-id',
+  },
+  metaData: [
+    {
+      language: 'fr',
+      frontiere: 'Mocked Frontiere',
+      location: 'Mocked Location',
+      title: 'Mocked Emission Factor',
+      attribute: 'Mocked Attribute',
+      comment: 'Mocked Comment',
+    },
+  ],
 }
 
 export const getMockedStudy = (
@@ -186,43 +257,6 @@ export const getMockedDetailedFullStudySite = (
   }),
 })
 
-export const COMMON_DATES = {
-  startDate: new Date('2024-01-01'),
-  endDate: new Date('2024-12-31'),
-  realizationStartDate: new Date('2024-02-01'),
-  realizationEndDate: new Date('2024-11-30'),
-}
-
-export const COMMON_DATES_STR = {
-  startDate: '2024-01-01',
-  endDate: '2024-12-31',
-  realizationStartDate: '2024-02-01',
-  realizationEndDate: '2024-11-30',
-}
-
-export const TEST_IDS = {
-  sourceStudy: 'source-study-id',
-  newStudy: 'new-study-id',
-  orgVersion: 'org-version-id',
-  studySite: 'study-site-id',
-  newStudySite: 'new-study-site-id',
-  site: 'site-id',
-  emissionSource: 'emission-source-id',
-  emissionFactor: 'emission-factor-id',
-  importVersion: 'import-version-id',
-  userStudy: 'user-study-id',
-  contributorStudy: 'contributor-study-id',
-  account: 'account-id',
-  tag: 'tag-id',
-}
-
-export const TEST_EMAILS = {
-  currentUser: 'current@example.com',
-  validator: 'validator@example.com',
-  teamMember: 'team@example.com',
-  contributor: 'contributor@example.com',
-}
-
 export const getMockedDuplicateStudyCommand = (overrides = {}) => ({
   name: 'Duplicated Study',
   organizationVersionId: TEST_IDS.orgVersion,
@@ -230,11 +264,8 @@ export const getMockedDuplicateStudyCommand = (overrides = {}) => ({
   isPublic: 'false',
   level: 'Initial' as const,
   sites: [],
-  exports: {
-    Beges: false,
-    GHGP: false,
-    ISO14069: false,
-  },
+  exports: [],
+  controlMode: null,
   ...COMMON_DATES_STR,
   ...overrides,
 })
@@ -245,7 +276,7 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
   simplified: false,
   resultsUnit: StudyResultUnit.K,
   organizationVersionId: TEST_IDS.orgVersion,
-  exports: [{ type: Export.Beges, control: ControlMode.Operational }],
+  exports: { types: [Export.Beges], control: ControlMode.Operational },
   emissionFactorVersions: [
     {
       source: Import.BaseEmpreinte,
@@ -263,39 +294,13 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
         id: TEST_IDS.studySite,
         site: { id: TEST_IDS.site, name: 'Test Site' },
       },
-      emissionFactor: {
-        id: TEST_IDS.emissionFactor,
-        importedFrom: Import.Manual,
-        totalCo2: 81,
-        geographicRepresentativeness: 5,
-        completeness: 5,
-        reliability: 5,
-        technicalRepresentativeness: 5,
-        temporalRepresentativeness: 5,
-        importedId: '4',
-        unit: Unit.GWH,
-        isMonetary: false,
-        location: '',
-        customUnit: null,
-        version: {
-          id: 'version-id',
-        },
-        metaData: [
-          {
-            language: 'fr',
-            frontiere: 'Mocked Frontiere',
-            location: 'Mocked Location',
-            title: 'Mocked Emission Factor',
-            attribute: 'Mocked Attribute',
-            comment: 'Mocked Comment',
-          },
-        ],
-      },
+      emissionFactor: mockedEmissionSourceEmissionFactor,
       emissionSourceTags: [],
       validated: true,
       subPost: SubPost.Achats,
       depreciationPeriod: 5,
       caracterisation: null,
+      constructionYear: null,
       emissionFactorId: null,
       reliability: null,
       technicalRepresentativeness: null,

@@ -27,7 +27,6 @@ interface Props {
   nonSpecificMonetaryRatio: number
   caUnit?: SiteCAUnit
   computedResultsByTag: ResultsByTag[]
-  exportType: string
 }
 
 const EmissionsAnalysis = ({
@@ -39,11 +38,11 @@ const EmissionsAnalysis = ({
   nonSpecificMonetaryRatio,
   caUnit = SiteCAUnit.K,
   computedResultsByTag,
-  exportType,
 }: Props) => {
   const t = useTranslations('study.results')
   const tGlossary = useTranslations('study')
   const tResultUnits = useTranslations('study.results.units')
+  const tDocumentation = useTranslations('documentationUrl')
   const [glossary, setGlossary] = useState('')
 
   const { environment } = useAppEnvironmentStore()
@@ -121,11 +120,7 @@ const EmissionsAnalysis = ({
           <span>
             {tGlossary.rich(`${glossary}Description`, {
               link: (children) => (
-                <Link
-                  href="https://www.bilancarbone-methode.com/annexes/annexes/annexe-1-grands-principes-de-comptabilisation-du-bilan-carbone-r#zoom-sur-les-sous-postes-utilisation-en-responsabilite-et-utilisation-en-dependance"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
+                <Link href={tDocumentation('dependencyAndReponsability')} target="_blank" rel="noreferrer noopener">
                   {children}
                 </Link>
               ),

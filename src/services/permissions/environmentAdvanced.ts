@@ -22,3 +22,6 @@ export const hasAccessToCarbonResponsibilityIntensitiesAdvanced = (
   environment: Environment,
   simplified?: boolean | null,
 ) => !isTiltSimplified(environment, simplified) && hasAccessToCarbonResponsibilityIntensities(environment)
+
+export const hasAccessToEngagementActions = (environment: Environment, simplified?: boolean | null) =>
+  ([BC, TILT] as Environment[]).includes(environment) && !isTiltSimplified(environment, simplified)

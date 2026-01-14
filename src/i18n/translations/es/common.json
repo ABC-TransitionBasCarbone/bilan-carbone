@@ -4,6 +4,7 @@
     "no": "No",
     "previous": "Anterior",
     "next": "Siguiente",
+    "close": "Cerrar",
     "all": "Todos",
     "none": "Ninguno",
     "subPosts": "Sub-posts",
@@ -112,6 +113,32 @@
         "pie": "Gráfico circular",
         "ratio": "Ratios"
       }
+    },
+    "infography": {
+      "form": {
+        "backToInfography": "Afficher les postes"
+      }
+    },
+    "questions": {
+      "actions": "Actions",
+      "add": "Ajouter",
+      "error": "Erreur lors de la mise à jour du champs",
+      "next": "Sous-poste suivant",
+      "previous": "Sous-poste précédent",
+      "numberOfYears": "Nombre d'années",
+      "format": {
+        "text": "Texte",
+        "postalCode": "Code postal",
+        "phone": "Téléphone",
+        "year": "Année",
+        "hour": "Heure",
+        "number": "Nombre"
+      },
+      "errorLoadingQuestions": "Erreur lors du chargement des questions",
+      "retry": "Réessayer",
+      "finish": "Terminer",
+      "noQuestions": "Aucune question trouvée pour ce sous-poste",
+      "autoSaveError": "Certaines réponses n'ont pas pu être sauvegardées automatiquement. Veuillez vérifier votre connexion et réessayer."
     }
   }
 }

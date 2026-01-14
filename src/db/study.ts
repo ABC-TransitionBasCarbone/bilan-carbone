@@ -86,6 +86,7 @@ const fullStudyInclude = {
       subPost: true,
       name: true,
       caracterisation: true,
+      constructionYear: true,
       value: true,
       reliability: true,
       technicalRepresentativeness: true,
@@ -127,6 +128,7 @@ const fullStudyInclude = {
           completeness: true,
           importedFrom: true,
           importedId: true,
+          base: true,
           location: true,
           metaData: {
             select: {
@@ -274,7 +276,7 @@ const fullStudyInclude = {
       },
     },
   },
-  exports: { select: { type: true, control: true } },
+  exports: { select: { types: true, control: true } },
   organizationVersion: {
     select: {
       id: true,
@@ -514,6 +516,19 @@ export const getStudyNameById = async (id: string) => {
     return null
   }
   return study.name
+}
+
+export const getStudyStartDate = async (id: string) => {
+  const study = await prismaClient.study.findUnique({
+    where: { id },
+    select: { startDate: true },
+  })
+
+  if (!study) {
+    return null
+  }
+
+  return study.startDate
 }
 
 export const createUserOnStudy = async (right: Prisma.UserOnStudyCreateInput, tx?: Prisma.TransactionClient) =>
@@ -837,15 +852,12 @@ export const getSourceLatestImportVersionId = async (source: Import, transaction
     orderBy: { createdAt: 'desc' },
   })
 
-export const upsertStudyExport = async (studyId: string, type: Export, control: ControlMode) =>
+export const upsertStudyExport = async (studyId: string, types: Export[], control: ControlMode) =>
   prismaClient.studyExport.upsert({
-    where: { studyId_type: { studyId, type } },
-    update: { control },
-    create: { studyId, type, control },
+    where: { studyId },
+    update: { types, control },
+    create: { studyId, types, control },
   })
-
-export const deleteStudyExport = async (studyId: string, type: Export) =>
-  prismaClient.studyExport.delete({ where: { studyId_type: { studyId, type } } })
 
 export const countOrganizationStudiesFromOtherUsers = async (organizationVersionId: string, accountId: string) =>
   prismaClient.study.count({ where: { organizationVersionId, createdById: { not: accountId } } })
@@ -1027,3 +1039,22 @@ export const deleteStudyComment = async (id: string) =>
   prismaClient.studyComment.delete({
     where: { id },
   })
+
+export const getEngagementActions = (studyId: string) =>
+  prismaClient.engagementAction.findMany({
+    where: { studyId },
+    include: { sites: { include: { site: true } } },
+  })
+
+export const getEngagementActionById = (id: string) =>
+  prismaClient.engagementAction.findUnique({
+    where: { id },
+  })
+
+export const createEngagementAction = async (data: Prisma.EngagementActionCreateInput) =>
+  prismaClient.engagementAction.create({ data })
+
+export const updateEngagementAction = async (id: string, data: Prisma.EngagementActionUpdateInput) =>
+  prismaClient.engagementAction.update({ where: { id }, data })
+
+export const deleteEngagementAction = async (id: string) => prismaClient.engagementAction.delete({ where: { id } })

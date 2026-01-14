@@ -11,9 +11,10 @@ import EditOrganizationForm from '../organization/edit/EditOrganizationForm'
 interface Props {
   organizationVersion: OrganizationVersionWithOrganization
   user: UserSession
+  disabled?: boolean
 }
 
-const EditOrganizationPage = async ({ organizationVersion, user }: Props) => {
+const EditOrganizationPage = async ({ organizationVersion, user, disabled = false }: Props) => {
   const tNav = await getTranslations('nav')
   const t = await getTranslations('organization.form')
 
@@ -33,6 +34,7 @@ const EditOrganizationPage = async ({ organizationVersion, user }: Props) => {
           organizationVersion={organizationVersion}
           caUnit={caUnit}
           isCut={user.environment === Environment.CUT}
+          disabled={disabled}
         />
       </Block>
     </>

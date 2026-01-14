@@ -68,16 +68,9 @@ const NewStudyForm = ({ user, accounts, form, duplicateStudyId, sourceStudy }: P
             <span className="inputLabel bold">{t('realizationDates')}</span>
           </IconLabel>
           <div className={styles.dates}>
+            <FormDatePicker control={form.control} name="realizationStartDate" label={tLabel('start')} clearable />
             <FormDatePicker
               control={form.control}
-              translation={t}
-              name="realizationStartDate"
-              label={tLabel('start')}
-              clearable
-            />
-            <FormDatePicker
-              control={form.control}
-              translation={t}
               name="realizationEndDate"
               label={tLabel('end')}
               data-testid="new-study-realizationEndDate"

@@ -29,6 +29,7 @@ const StudyLevel = ({ user, study, disabled }: Props) => {
   const t = useTranslations('study.new')
   const tGlossary = useTranslations('study.new.glossary')
   const tLevel = useTranslations('level')
+  const tDocumentation = useTranslations('documentationUrl')
   const [glossary, setGlossary] = useState('')
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
@@ -83,11 +84,7 @@ const StudyLevel = ({ user, study, disabled }: Props) => {
         <span>
           {t.rich('glossary.typeDescription', {
             link: (children) => (
-              <Link
-                href="https://www.bilancarbone-methode.com/1-cadrage-de-la-demarche/1.1-definir-son-niveau-de-maturite-bilan-carbone-r"
-                target="_blank"
-                rel="noreferrer noopener"
-              >
+              <Link href={tDocumentation('maturity')} target="_blank" rel="noreferrer noopener">
                 {children}
               </Link>
             ),

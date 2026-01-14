@@ -100,9 +100,14 @@ const Navbar = ({ children, user, environment }: Props) => {
                   <AccountCircleIcon />
                 </NavbarButton>
                 {hasAccessToMethodology(user.environment, user.level) && (
-                  <NavbarButton aria-label={t('methodology')} rel="noreferrer noopener" href={methodologyLink}>
+                  <NavbarLink
+                    aria-label={t('methodology')}
+                    rel="noreferrer noopener"
+                    target="_blank"
+                    href={methodologyLink}
+                  >
                     <MenuBookIcon />
-                  </NavbarButton>
+                  </NavbarLink>
                 )}
                 {hasAccessToStudyComments(user.environment) && user.organizationVersionId && (
                   <NavbarButton title={t('comments')} aria-label={t('comments')} href={'/gestion-commentaires'}>

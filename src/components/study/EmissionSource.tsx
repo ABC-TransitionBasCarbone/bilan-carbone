@@ -14,7 +14,7 @@ import {
   UpdateEmissionSourceCommandValidation,
 } from '@/services/serverFunctions/emissionSource.command'
 import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study'
-import { getStandardDeviationRating } from '@/services/uncertainty'
+import { getQualitativeUncertaintyFromSquaredStandardDeviation } from '@/services/uncertainty'
 import { useUnitLabel } from '@/services/unit'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
@@ -22,13 +22,23 @@ import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { hasEditionRights, STUDY_UNIT_VALUES } from '@/utils/study'
 import SavedIcon from '@mui/icons-material/CloudUpload'
 import { Alert, CircularProgress, FormLabel, TextField } from '@mui/material'
-import { EmissionSourceCaracterisation, Import, Level, StudyResultUnit, StudyRole, SubPost, Unit } from '@prisma/client'
+import {
+  EmissionSourceCaracterisation,
+  Export,
+  Import,
+  Level,
+  StudyResultUnit,
+  StudyRole,
+  SubPost,
+  Unit,
+} from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Path } from 'react-hook-form'
 import Label from '../base/Label'
+import BaseChip from '../emissionFactor/BaseChip'
 import { ImportVersionForFilters } from '../emissionFactor/EmissionFactorsFilters'
 import styles from './EmissionSource.module.css'
 import EmissionSourceContributorForm from './EmissionSourceContributorForm'
@@ -111,7 +121,7 @@ const EmissionSource = ({
   const canDelete = !emissionSource.validated && hasEditionRights(userRoleOnStudy)
 
   const update = useCallback(
-    async (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null | string[]) => {
+    async (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | Date | null | string[]) => {
       if (key) {
         if (value === emissionSource[key as keyof typeof emissionSource]) {
           return
@@ -175,7 +185,7 @@ const EmissionSource = ({
   )
   const emissionResults = useMemo(() => {
     if (!environment) {
-      return { emissionValue: 0, standardDeviation: 0 }
+      return { emissionValue: 0, squaredStandardDeviation: 0 }
     }
 
     return getEmissionResults(emissionSource, environment)
@@ -250,8 +260,8 @@ const EmissionSource = ({
             </div>
             {/* emission factor */}
             {selectedFactor && (
-              <div className={classNames(styles.emissionFactor, 'flex-col justify-center align-center text-center')}>
-                <>
+              <div className="flex">
+                <div className={classNames(styles.emissionFactor, 'flex-col justify-center align-center text-center')}>
                   <p className="text-center">
                     {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor, environment))}
                   </p>
@@ -261,7 +271,12 @@ const EmissionSource = ({
                       ? selectedFactor.customUnit
                       : getUnitLabel(selectedFactor.unit)}
                   </p>
-                </>
+                </div>
+                {study.exports?.types.includes(Export.GHGP) && selectedFactor.base && (
+                  <div className="ml-2">
+                    <BaseChip base={selectedFactor.base} />
+                  </div>
+                )}
               </div>
             )}
             {/* result */}
@@ -269,13 +284,17 @@ const EmissionSource = ({
               <p className={styles.resultText} data-testid="emission-source-value">
                 {`${formatNumber(emissionResults.emissionValue / STUDY_UNIT_VALUES[study.resultsUnit])} ${tResultstUnits(study.resultsUnit)}`}
               </p>
-              {emissionResults.standardDeviation && (
+              {!!emissionResults.emissionValue && (
                 <p
                   className={classNames(styles.resultQuality, styles.resultText)}
                   data-testid="emission-source-quality"
                 >
                   {tQuality('name')}{' '}
-                  {tQuality(getStandardDeviationRating(emissionResults.standardDeviation).toString())}
+                  {tQuality(
+                    getQualitativeUncertaintyFromSquaredStandardDeviation(
+                      emissionResults.squaredStandardDeviation,
+                    ).toString(),
+                  )}
                 </p>
               )}
             </div>
@@ -335,6 +354,7 @@ const EmissionSource = ({
                 environment={environment}
                 emissionFactorsForSubPost={emissionFactorsForSubPost}
                 importVersions={importVersions}
+                hasGHGPExport={!!study.exports?.types.some((studyExport) => studyExport === Export.GHGP)}
               />
             ) : (
               <EmissionSourceForm
@@ -350,7 +370,8 @@ const EmissionSource = ({
                 update={update}
                 environment={environment}
                 caracterisations={caracterisations}
-                mandatoryCaracterisation={study.exports.length > 0}
+                displayCaracterisation={!!study.exports?.types.length}
+                hasGHGPExport={!!study.exports?.types.some((studyExport) => studyExport === Export.GHGP)}
                 status={status}
                 studySites={study.sites}
                 isFromOldImport={isFromOldImport}

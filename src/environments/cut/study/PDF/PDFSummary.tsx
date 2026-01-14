@@ -50,7 +50,7 @@ const PDFSummary = ({ study, environment }: Props) => {
         nonSpecificMonetaryValue: 0,
         numberOfEmissionSource: 0,
         numberOfValidatedEmissionSource: 0,
-        uncertainty: 1,
+        squaredStandardDeviation: 1,
         children: [],
       })),
       {
@@ -61,7 +61,7 @@ const PDFSummary = ({ study, environment }: Props) => {
         nonSpecificMonetaryValue: 0,
         numberOfEmissionSource: 0,
         numberOfValidatedEmissionSource: 0,
-        uncertainty: 1,
+        squaredStandardDeviation: 1,
         children: [],
       },
     ]
