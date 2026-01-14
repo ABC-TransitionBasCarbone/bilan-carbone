@@ -1,7 +1,6 @@
 import { FormLayout, inputLayout, tableLayout } from '@/components/publicodes-form/layouts/formLayout'
 import { ClicksonPost } from '@/services/posts'
 import { SubPost } from '@prisma/client'
-
 import { ClicksonRuleName } from './types'
 
 export const getPostRuleName = (post: ClicksonPost): ClicksonRuleName => {
@@ -21,7 +20,7 @@ export const getFormLayoutsForSubPostClickson = (subPost: SubPost): FormLayout<C
 }
 
 const POST_TO_RULENAME: Record<ClicksonPost, ClicksonRuleName> = {
-  EnergiesClickson: 'énergies',
+  EnergiesClickson: 'énergie',
   Restauration: 'restauration',
   DeplacementsClickson: 'déplacements',
   Achats: 'achats',
@@ -45,7 +44,7 @@ const SUBPOST_TO_RULENAME: Partial<Record<SubPost, ClicksonRuleName>> = {
   DechetsRecyclables: 'achats . déchets recyclables',
   OrduresMenageresResiduelles: 'achats . ordures ménagères résiduelles',
   Construction: 'immobilisations . construction',
-  Renovation: 'immobilisations . renovation',
+  Renovation: 'immobilisations . rénovation',
   EquipementsInformatiqueAudiovisuel: 'immobilisations . équipements informatique audiovisuel',
   EquipementsDivers: 'immobilisations . équipements divers',
 } as const
@@ -168,12 +167,12 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<Clickso
     input('immobilisations . construction . garage structure métal . surface'),
   ],
   Renovation: [
-    input('immobilisations . renovation . bâtiment scolaire structure béton rénové . surface'),
-    input('immobilisations . renovation . parking bâtiment structure béton rénové . surface'),
-    input('immobilisations . renovation . parking surface bitume rénové . surface'),
-    input('immobilisations . renovation . parking surface semi-dure rénové . surface'),
-    input('immobilisations . renovation . garage structure béton rénové . surface'),
-    input('immobilisations . renovation . garage structure métal rénové . surface'),
+    input('immobilisations . rénovation . bâtiment scolaire structure béton rénové . surface'),
+    input('immobilisations . rénovation . parking bâtiment structure béton rénové . surface'),
+    input('immobilisations . rénovation . parking surface bitume rénové . surface'),
+    input('immobilisations . rénovation . parking surface semi-dure rénové . surface'),
+    input('immobilisations . rénovation . garage structure béton rénové . surface'),
+    input('immobilisations . rénovation . garage structure métal rénové . surface'),
   ],
   EquipementsInformatiqueAudiovisuel: [
     table(
