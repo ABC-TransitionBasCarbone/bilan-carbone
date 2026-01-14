@@ -28,6 +28,7 @@ import {
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo } from 'react'
+import BaseChip from './BaseChip'
 import EmissionFactorDetails from './EmissionFactorDetails'
 import styles from './EmissionFactorsTable.module.css'
 import { EmissionFactorActionCell } from './tableCells/EmissionFactorActionCell'
@@ -120,7 +121,14 @@ export const EmissionFactorsTable = ({
         header: '',
         accessorKey: 'id',
         cell: ({ row }) => (
-          <EmissionFactorActionCell emissionFactor={row.original} selectEmissionFactor={selectEmissionFactor} />
+          <div className="flex">
+            {!!row.original.base && (
+              <div className="mr-2">
+                <BaseChip base={row.original.base} />
+              </div>
+            )}
+            <EmissionFactorActionCell emissionFactor={row.original} selectEmissionFactor={selectEmissionFactor} />
+          </div>
         ),
       })
     }
