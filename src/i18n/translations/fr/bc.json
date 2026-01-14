@@ -907,7 +907,7 @@
         },
         "snbcCard": {
           "title": "Trajectoires SNBC",
-          "description": "La Stratégie Nationale Bas Carbone (SNBC) définit un objectif de réduction de 40% entre 1990 et 2030, et divise par 6 les émissions entre 1990 et 2050.",
+          "description": "La Stratégie Nationale Bas-Carbone (SNBC) est la feuille de route de la France pour lutter contre le changement climatique. Elle définit une trajectoire de réduction des émissions de gaz à effet de serre jusqu’à 2050 et fixe des objectifs à horizon 2030.",
           "methodLabel": "Méthodes",
           "general": "Générale",
           "sectoral": "Par secteur d'activité",
