@@ -52,6 +52,7 @@ interface Props {
   caracterisations: EmissionSourceCaracterisation[]
   emissionFactorsForSubPost: EmissionFactorWithMetaData[]
   importVersions: ImportVersionForFilters[]
+  isContributor?: boolean
 }
 
 const EmissionSource = ({
@@ -63,6 +64,7 @@ const EmissionSource = ({
   caracterisations,
   emissionFactorsForSubPost,
   importVersions,
+  isContributor = false,
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
   const { environment } = useAppEnvironmentStore()
   const ref = useRef<HTMLDivElement>(null)
@@ -104,8 +106,9 @@ const EmissionSource = ({
     }
   }, [emissionSource.id, router])
 
-  const canEdit = !emissionSource.validated && hasEditionRights(userRoleOnStudy)
+  const canEdit = !emissionSource.validated && (hasEditionRights(userRoleOnStudy) || isContributor)
   const canValidate = userRoleOnStudy === StudyRole.Validator
+  const canDelete = !emissionSource.validated && hasEditionRights(userRoleOnStudy)
 
   const update = useCallback(
     async (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null | string[]) => {
@@ -338,6 +341,7 @@ const EmissionSource = ({
                 studyId={study.id}
                 advanced={study.level === Level.Advanced}
                 canEdit={canEdit}
+                canDelete={canDelete}
                 userRoleOnStudy={userRoleOnStudy}
                 canValidate={canValidate}
                 emissionSource={emissionSource}

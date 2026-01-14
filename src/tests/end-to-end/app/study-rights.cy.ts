@@ -8,6 +8,7 @@ describe('Study Rights', () => {
   beforeEach(() => {
     cy.intercept('POST', '/etudes/*/cadrage/ajouter').as('create')
     cy.intercept('POST', '/etudes/*/cadrage/ajouter-contributeur').as('createContributor')
+    cy.intercept('POST', '/etudes/*/cadrage/modifier-contributeur/*').as('editContributor')
     cy.intercept('POST', '/etudes/*/cadrage').as('update')
   })
 
@@ -322,6 +323,47 @@ describe('Study Rights', () => {
       cy.getByTestId('study-contributors-table-row').first().scrollIntoView()
       cy.getByTestId('delete-study-contributor-button').should('not.exist')
     })
+  })
+
+  it('study contributors edition rights', () => {
+    cy.login('bc-admin-1@yopmail.com', 'password-1')
+    cy.getByTestId('new-study').click()
+    cy.getByTestId('organization-sites-checkbox').first().click()
+    cy.getByTestId('new-study-organization-button').click()
+    cy.getByTestId('new-study-name').scrollIntoView()
+    cy.getByTestId('new-study-name').type('Study with contributor deletion rights')
+    cy.getByTestId('new-study-level').click()
+    cy.get('[data-value="Standard"]').click()
+    cy.getByTestId('new-validator-name').type('bc-admin-1@yopmail.com')
+    cy.get('[data-option-index="0"]').click()
+    cy.getByTestId('new-study-endDate').within(() => {
+      cy.get('span').first().type(dayjs().add(1, 'y').format('DD/MM/YYYY'))
+    })
+    cy.getByTestId('new-study-create-button').click()
+    cy.getByTestId('study-cadrage-link').click()
+    cy.getByTestId('study-rights-add-contributor').scrollIntoView()
+    cy.getByTestId('study-rights-add-contributor').click()
+    cy.getByTestId('study-contributor-email').type('contributor-to-edit@yopmail.com')
+    cy.get('#mui-component-select-post').click()
+    cy.get('[data-value="AutresEmissionsNonEnergetiques"]').click()
+    cy.getByTestId('emission-factor-subPost').click()
+    cy.get('[data-value="Agriculture"]').click()
+    cy.get('body').click(0, 0)
+    cy.getByTestId('study-contributor-create-button').click()
+    cy.getByTestId('new-study-right-modal-accept').click()
+
+    cy.wait('@createContributor')
+
+    cy.getByTestId('study-contributors-table-row').first().scrollIntoView()
+    cy.getByTestId('edit-study-contributor-button').first().click()
+
+    cy.get('#mui-component-select-post').click()
+    cy.get('[data-value="IntrantsBiensEtMatieres"]').click()
+    cy.getByTestId('emission-factor-subPost').click()
+    cy.get('[data-value="MetauxPlastiquesEtVerre"]').click()
+    cy.get('body').click(0, 0)
+    cy.getByTestId('study-contributor-create-button').click()
+    cy.wait('@editContributor')
   })
 
   it('admin user default role is validator', () => {

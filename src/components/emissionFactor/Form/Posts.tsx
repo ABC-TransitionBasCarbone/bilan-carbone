@@ -49,7 +49,7 @@ const Posts = <T extends SubPostsCommand>({
   post: initialPost,
   postOptions,
 }: Props<T>) => {
-  const tCommon = useTranslations('common')
+  const tAction = useTranslations('common.action')
   const t = useTranslations('emissionFactors.create')
   const tPost = useTranslations('emissionFactors.post')
   const [selectedSubPosts, setSelectedSubPosts] = useState<SubPost[] | undefined>(initalSubPosts)
@@ -64,7 +64,7 @@ const Posts = <T extends SubPostsCommand>({
 
   const sortedPosts = useMemo(
     () =>
-      Object.keys(environmentPostMapping[environment || Environment.BC]).sort((a, b) =>
+      Object.values(environmentPostMapping[environment || Environment.BC]).sort((a, b) =>
         tPost(a).localeCompare(tPost(b)),
       ),
     [environment, tPost],
@@ -165,6 +165,7 @@ const Posts = <T extends SubPostsCommand>({
               selectedSubPosts={selectedSubPosts}
               sortedSubPosts={sortedSubPosts}
               onSelectSubPost={handleSelectSubPost}
+              environment={environment}
             />
             {error && error.message && selectedSubPosts?.length === 0 && (
               <FormHelperText className={styles.errorSubposts} color="red">
@@ -177,8 +178,8 @@ const Posts = <T extends SubPostsCommand>({
       <Button
         className={styles.deleteButton}
         data-testid="delete-site-button"
-        title={tCommon('delete')}
-        aria-label={tCommon('delete')}
+        title={tAction('delete')}
+        aria-label={tAction('delete')}
         onClick={handleDelete}
       >
         <DeleteIcon />

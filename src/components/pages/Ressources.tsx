@@ -1,5 +1,6 @@
 'use server'
 
+import { customRich } from '@/i18n/customRich'
 import { getEnvVar } from '@/lib/environment'
 import { Alert } from '@mui/material'
 import { Environment } from '@prisma/client'
@@ -86,17 +87,55 @@ const RessourcesPage = async ({ environment }: Props) => {
     })
   }
 
+  const clicksonRessources = [
+    {
+      title: t('knowMoreDataCollect'),
+      links: [
+        {
+          title: t('guideDataCollect'),
+          link: 'https://clickson.eu/wp-content/uploads/2021/11/Aide-recolte-de-donnees-.pdf',
+        },
+      ],
+    },
+
+    {
+      title: t('toolsDataCollect'),
+      links: [
+        {
+          title: t('modelsDataCollect'),
+          link: 'https://clickson.eu/wp-content/uploads/2023/01/Exemple_collecte.zip',
+        },
+      ],
+    },
+    {
+      title: t('game'),
+      links: [
+        {
+          title: t('classEarth'),
+          link: 'https://www.materre-enclasse.org',
+        },
+      ],
+    },
+  ]
+
+  const getRessources = (environment: Environment) => {
+    switch (environment) {
+      case Environment.CLICKSON:
+        return clicksonRessources
+      default:
+        return ressources
+    }
+  }
+
   return (
     <Block title={t('title')} as="h1">
       {environment === Environment.CUT && (
         <Alert severity="info" className="mb2">
-          {t.rich('description', {
-            br: () => <br />,
-          })}
+          {customRich(t, 'description')}
         </Alert>
       )}
       <div className={classNames(styles.ressources, 'gapped1')}>
-        {ressources.map(({ title, links }) => (
+        {getRessources(environment).map(({ title, links }) => (
           <RessourceLinks key={title} title={title} links={links} />
         ))}
       </div>

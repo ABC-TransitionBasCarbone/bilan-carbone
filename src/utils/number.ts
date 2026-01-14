@@ -4,6 +4,21 @@ import Big from 'big.js'
 export const formatNumber = (value?: number, dec = 0) =>
   (value || 0).toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: dec })
 
+export const parseFloatString = (value: string): number | undefined => {
+  if (!value || value.trim() === '') {
+    return undefined
+  }
+
+  const normalizedValue = value.replace(',', '.')
+  const parsed = parseFloat(normalizedValue)
+
+  if (isNaN(parsed)) {
+    return undefined
+  }
+
+  return parsed
+}
+
 const countZerosAfterDecimal = (value: number): number => {
   if (value >= 1 || value <= -1) {
     return 0

@@ -1,6 +1,7 @@
 'use client'
 
 import Modal from '@/components/modals/Modal'
+import { customRich } from '@/i18n/customRich'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import styles from './DuplicateSiteModal.module.css'
@@ -29,11 +30,7 @@ const ReplicateSitesChangesModal = ({ replicate }: Props) => {
       ]}
     >
       <div className={classNames('flex-col gapped1', styles.modalContent)}>
-        <p className={styles.sectionDescription}>
-          {t.rich('description', {
-            error: (children) => <span className="error">{children}</span>,
-          })}
-        </p>
+        <p className={styles.sectionDescription}>{customRich(t, 'description')}</p>
       </div>
     </Modal>
   )

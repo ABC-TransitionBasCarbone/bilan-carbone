@@ -1,6 +1,7 @@
 'use client'
 
 import theme from '@/environments/base/theme/theme'
+import clicksonTheme from '@/environments/clickson/theme/theme'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import cutTheme from '@/environments/cut/theme/theme'
 import tiltTheme from '@/environments/tilt/theme/theme'
@@ -20,6 +21,7 @@ const DynamicTheme = ({ children, environment }: Props) => {
       environmentComponents={{
         [Environment.CUT]: <ThemeProvider theme={cutTheme}>{children}</ThemeProvider>,
         [Environment.TILT]: <ThemeProvider theme={tiltTheme}>{children}</ThemeProvider>,
+        [Environment.CLICKSON]: <ThemeProvider theme={clicksonTheme}>{children}</ThemeProvider>,
       }}
       forceEnvironment={environment}
     />

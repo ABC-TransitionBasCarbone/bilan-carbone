@@ -42,23 +42,30 @@ import {
   createContributorOnStudy,
   createEmissionSourceTags,
   createStudy,
+  createStudyComment,
   createStudyEmissionSource,
   createUserOnStudy,
   deleteAccountOnStudy,
   deleteContributor,
   deleteStudy,
+  deleteStudyComment,
   deleteStudyExport,
   downgradeStudyUserRoles,
   FullStudy,
   getOrganizationStudiesBeforeDate,
+  getPendingStudyCommentsCountFromAuthor,
   getStudiesSitesFromIds,
   getStudyById,
+  getStudyCommentsCountFromOrganizationVersionId,
+  getStudyCommentsFromOrganizationVersionId,
+  getStudyCommentsWithStudyIdAndSubPost,
   getStudyNameById,
   getStudySites,
   getStudyTemplate,
   getUsersOnStudy,
   updateEmissionSourceEmissionFactor,
   updateStudy,
+  updateStudyComment,
   updateStudyEmissionFactorVersion,
   updateStudyOpeningHours,
   updateStudySiteData,
@@ -89,6 +96,7 @@ import { isAdmin } from '@/utils/user'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import {
   Account,
+  CommentStatus,
   ControlMode,
   Document,
   DocumentCategory,
@@ -117,7 +125,8 @@ import { v4 as uuidv4 } from 'uuid'
 import { auth, dbActualizedAuth } from '../auth'
 import { getCaracterisationsBySubPost } from '../emissionSource'
 import { allowedFlowFileTypes, isAllowedFileType } from '../file'
-import { ALREADY_IN_STUDY, NOT_AUTHORIZED } from '../permissions/check'
+import { ALREADY_IN_STUDY, NOT_AUTHORIZED, TOO_MANY_COMMENTS } from '../permissions/check'
+import { hasReaderRoleOnStudyAsContributor } from '../permissions/environment'
 import { isInOrgaOrParentFromId } from '../permissions/organization'
 import {
   canAccessFlowFromStudy,
@@ -144,6 +153,7 @@ import { saveAnswerForQuestion } from './question'
 import {
   ChangeStudyCinemaCommand,
   ChangeStudyDatesCommand,
+  ChangeStudyEstablishmentCommand,
   ChangeStudyLevelCommand,
   ChangeStudyNameCommand,
   ChangeStudyPublicStatusCommand,
@@ -954,7 +964,10 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
     await updateUserOnStudy(existingAccount.id, studyWithRights.id, studyRole)
   })
 
-export const newStudyContributor = async ({ email, subPosts, ...command }: NewStudyContributorCommand) =>
+export const newStudyContributor = async (
+  { email, subPosts, ...command }: NewStudyContributorCommand,
+  toDeleteContributors?: StudyContributorDeleteParams[],
+) =>
   withServerResponse('newStudyContributor', async () => {
     const session = await dbActualizedAuth()
     if (!session || !session.user || !session.user.organizationVersionId) {
@@ -995,7 +1008,23 @@ export const newStudyContributor = async ({ email, subPosts, ...command }: NewSt
       existingUser,
     )
 
+    if (
+      hasReaderRoleOnStudyAsContributor(session.user.environment) &&
+      !studyWithRights.allowedUsers.some((allowedUser: { accountId: string }) => allowedUser.accountId === accountId)
+    ) {
+      await createUserOnStudy({
+        account: { connect: { id: accountId } },
+        study: { connect: { id: studyWithRights.id } },
+        role: StudyRole.Reader,
+      })
+    }
+
     const selectedSubposts = Object.values(subPosts).reduce((res, subPosts) => res.concat(subPosts), [])
+
+    if (toDeleteContributors && toDeleteContributors.length > 0) {
+      await deleteStudyContributors(command.studyId, toDeleteContributors)
+    }
+
     await createContributorOnStudy(accountId, selectedSubposts, command)
   })
 
@@ -1163,6 +1192,11 @@ export const deleteStudyContributor = async (contributor: StudyContributorDelete
     }
     await deleteContributor(studyId, contributor)
   })
+
+export const deleteStudyContributors = async (studyId: string, contributors: StudyContributorDeleteParams[]) => {
+  const promises = contributors.map((contributor) => deleteContributor(studyId, contributor))
+  return Promise.all(promises)
+}
 
 export const getStudyEmissionFactorImportVersions = async (studyId: string) =>
   withServerResponse('getStudyEmissionFactorImportVersions', async () => {
@@ -2281,4 +2315,159 @@ export const getStudyPreviousOccurrences = async (studyId: string) =>
     }
 
     return getOrganizationStudiesBeforeDate(study.organizationVersionId, study.startDate)
+  })
+
+export const createStudyCommentCommand = async (
+  studyId: string,
+  comment: string,
+  status?: CommentStatus,
+  subPost?: SubPost | null,
+) =>
+  withServerResponse('createStudyComment', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const commentCount = await getPendingStudyCommentsCountFromAuthor(session.user.accountId)
+    if (!status || (status === CommentStatus.PENDING && commentCount >= 3)) {
+      throw new Error(TOO_MANY_COMMENTS)
+    }
+
+    return await createStudyComment({
+      comment,
+      status: status || CommentStatus.PENDING,
+      author: { connect: { id: session.user.accountId } },
+      study: { connect: { id: studyId } },
+      subPost,
+    })
+  })
+
+export const getStudyComments = async (studyId: string, subPost?: SubPost | null) =>
+  withServerResponse('getStudyComments', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return await getStudyCommentsWithStudyIdAndSubPost(studyId, subPost)
+  })
+
+export const getPendingStudyCommentsCountFromOrganizationVersionId = async (organizationVersionId: string | null) =>
+  withServerResponse('getPendingStudyCommentsCount', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    if (!organizationVersionId) {
+      return 0
+    }
+
+    return await getStudyCommentsCountFromOrganizationVersionId(organizationVersionId, CommentStatus.PENDING)
+  })
+
+export const getPendingStudyCommentsFromOrganizationVersionId = async (organizationVersionId: string) =>
+  withServerResponse('getPendingStudyComments', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return await getStudyCommentsFromOrganizationVersionId(organizationVersionId, CommentStatus.PENDING)
+  })
+
+export const approveStudyComment = async (commentId: string, studyId: string) =>
+  withServerResponse('approveStudyComment', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const userRole = getAccountRoleOnStudy(session.user, study)
+
+    if (!userRole || userRole === StudyRole.Reader) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return await updateStudyComment(commentId, {
+      validatedBy: { connect: { id: session.user.accountId } },
+      validatedAt: new Date(),
+      status: CommentStatus.VALIDATED,
+    })
+  })
+
+export const declineStudyComment = async (commentId: string, studyId: string) =>
+  withServerResponse('declineStudyComment', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const userRole = getAccountRoleOnStudy(session.user, study)
+
+    if (!userRole || userRole === StudyRole.Reader) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return await deleteStudyComment(commentId)
+  })
+
+export const editStudyComment = async (commentId: string, newComment: string, studyId: string) =>
+  withServerResponse('editStudyComment', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const userRole = getAccountRoleOnStudy(session.user, study)
+
+    if (!userRole || userRole === StudyRole.Reader) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return await updateStudyComment(commentId, {
+      comment: newComment,
+    })
+  })
+
+export const changeStudyEstablishment = async (studySiteId: string, data: ChangeStudyEstablishmentCommand) =>
+  withServerResponse('changeStudyEstablishment', async () => {
+    const studySites = await getStudiesSitesFromIds([studySiteId])
+    if (!studySites || studySites.length === 0) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const study = studySites[0].study
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const informations = await getStudyRightsInformations(study.id)
+    if (informations === null) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    if (!canChangeOpeningHours(informations.user, informations.studyWithRights)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    await updateStudySiteData(studySiteId, data)
   })

@@ -1,5 +1,5 @@
 import { setCustomIssue, setCustomMessage } from '@/lib/zod.config'
-import { ControlMode, DayOfWeek, Export, Level, StudyResultUnit, StudyRole } from '@prisma/client'
+import { ControlMode, DayOfWeek, EstablishmentType, Export, Level, StudyResultUnit, StudyRole } from '@prisma/client'
 import dayjs from 'dayjs'
 import z from 'zod'
 import { HolidayOpeningHoursValidation, OpeningHoursValidation } from '../hours'
@@ -20,6 +20,10 @@ export const SitesCommandValidation = z.object({
       emissionSourcesCount: z.number().optional(),
       volunteerNumber: z.number().optional().nullable(),
       beneficiaryNumber: z.number().optional().nullable(),
+      studentNumber: z.number().optional().nullable(),
+      establishmentYear: z.number().int().max(new Date().getFullYear()).optional().nullable(),
+      academy: z.string().optional(),
+      establishmentType: z.enum(EstablishmentType).optional(),
     }),
   ),
 })
@@ -54,6 +58,7 @@ const BaseStudyValidation = z.object({
   realizationEndDate: optionalDateValidation(),
   level: z.enum(Level),
   isPublic: z.string(),
+  simplified: z.boolean().optional(),
 })
 
 export const CreateStudyCommandValidation = z
@@ -148,6 +153,16 @@ export const ChangeStudyCinemaValidation = z.object({
 
 export type ChangeStudyCinemaCommand = z.infer<typeof ChangeStudyCinemaValidation>
 
+export const ChangeStudyEstablishmentValidation = z.object({
+  address: z.string().optional(),
+  establishmentYear: z.string().optional(),
+  etp: z.int().min(0).optional(),
+  studentNumber: z.int().min(0).optional(),
+  superficy: z.number().optional().nullable(),
+})
+
+export type ChangeStudyEstablishmentCommand = z.infer<typeof ChangeStudyEstablishmentValidation>
+
 export const NewStudyRightCommandValidation = z.object({
   studyId: z.string(),
   email: z.email().trim(),
@@ -157,7 +172,10 @@ export const NewStudyRightCommandValidation = z.object({
 export type NewStudyRightCommand = z.infer<typeof NewStudyRightCommandValidation>
 
 export const NewStudyContributorCommandValidation = z.intersection(
-  z.object({ studyId: z.string(), email: z.email().trim() }),
+  z.object({
+    studyId: z.string(),
+    email: z.email().trim(),
+  }),
   SubPostsCommandValidation,
 )
 

@@ -3,6 +3,8 @@
 import Block from '@/components/base/Block'
 import { getOrganizationVersionStudiesOrderedByStartDate } from '@/db/study'
 import { getUserApplicationSettings } from '@/db/user'
+import DynamicComponent from '@/environments/core/utils/DynamicComponent'
+import StudyResultsContainerSummaryPublicodes from '@/environments/simplified/study/results/StudyResultsContainerSummaryPublicodes'
 import { canReadStudy } from '@/services/permissions/study'
 import { Environment } from '@prisma/client'
 import { UserSession } from 'next-auth'
@@ -15,12 +17,12 @@ interface Props {
 }
 
 const ResultsContainerForUser = async ({ user, mainStudyOrganizationVersionId }: Props) => {
-  const environment = user.environment
   const t = await getTranslations('study')
   const [studies, settings] = await Promise.all([
     getOrganizationVersionStudiesOrderedByStartDate(mainStudyOrganizationVersionId),
     getUserApplicationSettings(user.accountId),
   ])
+
   let mainStudy = null
   for (const study of studies) {
     const result = await canReadStudy(user, study.id)
@@ -29,18 +31,30 @@ const ResultsContainerForUser = async ({ user, mainStudyOrganizationVersionId }:
       break
     }
   }
+
   return (
     <Block>
-      {environment === Environment.CUT && <h2 className="pb2">{t('lastStudyTitle')}</h2>}
-
-      {mainStudy ? (
-        <StudyResultsContainerSummary
-          study={mainStudy}
-          studySite="all"
-          showTitle
-          validatedOnly={settings.validatedEmissionSourcesOnly}
-        />
-      ) : null}
+      <DynamicComponent
+        environmentComponents={{
+          [Environment.CUT]: (
+            <>
+              <h2 className="pb2">{t('lastStudyTitle')}</h2>
+              {mainStudy ? <StudyResultsContainerSummaryPublicodes study={mainStudy} /> : null}
+            </>
+          ),
+        }}
+        defaultComponent={
+          mainStudy ? (
+            <StudyResultsContainerSummary
+              user={user}
+              study={mainStudy}
+              studySite="all"
+              showTitle
+              validatedOnly={settings.validatedEmissionSourcesOnly}
+            />
+          ) : null
+        }
+      />
     </Block>
   )
 }

@@ -1,6 +1,6 @@
 'use server'
 
-import { getSituationByStudySite, upsertSituation } from '@/db/situation'
+import { getSituationByStudySite, getSituationsByStudySites, upsertSituation } from '@/db/situation'
 import { getStudyById } from '@/db/study'
 import { withServerResponse } from '@/utils/serverResponse'
 import { InputJsonValue } from '@prisma/client/runtime/library'
@@ -17,6 +17,16 @@ export const loadSituation = async (studyId: string, studySiteId: string) =>
     }
 
     return await getSituationByStudySite(studySiteId)
+  })
+
+export const loadSituations = async (studyId: string, studySiteIds: string[]) =>
+  withServerResponse('getSituationsFromDB', async () => {
+    const hasAccess = await hasReadAccessOnStudy(studyId)
+    if (!hasAccess) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return await getSituationsByStudySites(studySiteIds)
   })
 
 export const saveSituation = async (

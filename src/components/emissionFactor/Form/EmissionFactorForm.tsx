@@ -45,7 +45,7 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
   setPartsCount,
   button,
 }: Props<T>) => {
-  const tCommon = useTranslations('common')
+  const tAction = useTranslations('common.action')
   const t = useTranslations('emissionFactors.create')
   const tGlossary = useTranslations('emissionSource.glossary')
   const getUnitLabel = useUnitLabel()
@@ -187,7 +187,7 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
       <div className={classNames({ ['justify-between']: button === 'update' })}>
         {button === 'update' && (
           <LinkButton data-testid="emission-factor-cancel-update" href="/facteurs-d-emission">
-            {tCommon('cancel')}
+            {tAction('cancel')}
           </LinkButton>
         )}
         <div className="justify-end">

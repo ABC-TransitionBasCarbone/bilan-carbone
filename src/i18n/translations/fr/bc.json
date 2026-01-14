@@ -109,6 +109,7 @@
     "newStudy": "Ajouter une nouvelle étude",
     "studyPerimeter": "Périmètre",
     "newStudyContributor": "Ajouter un·e contributeur·rice",
+    "editStudyContributor": "Modifier un·e contributeur·rice",
     "newStudyRight": "Ajouter une personne",
     "notFound": "Page non trouvée",
     "organization": "Organisation",
@@ -148,6 +149,12 @@
   "locale": {
     "en": "English",
     "fr": "Français",
+    "es": "Español",
+    "el": "ελληνικά",
+    "hr": "hrvatski",
+    "hu": "magyar",
+    "it": "Italiano",
+    "ro": "Română",
     "selector": "Langue du site"
   },
   "login": {
@@ -226,6 +233,7 @@
     "logout": "Se déconnecter",
     "methodology": "Méthodologie",
     "organizations": "Mes Bilans Carbone®",
+    "footprints": "Mes Empreintes",
     "settings": "Paramètres",
     "team": "Mon équipe",
     "information": "Informations générales",
@@ -327,8 +335,6 @@
       "validator": "Email du ou de la validateur·rice",
       "studyDates": "Dates de l'étude",
       "realizationDates": "Date de la réalisation de l'étude",
-      "start": "Début",
-      "end": "Fin",
       "level": "Niveau de maturité du Bilan Carbone®",
       "exports": "Exports",
       "control": "Mode de contrôle",
@@ -419,6 +425,7 @@
       "contributors": "{count, plural, =1 {1 contributeur·rice} other {# contibuteur·rices}}",
       "contributorsList": "{count, plural, =1 {Contributeur·rice :} other {Contributeur·rices :}}",
       "label": "Libellé de la source d'émission",
+      "search": "Rechercher par libellé, valeurs, unités, ...",
       "new": "Donnez un titre à votre nouvelle source d'émission",
       "add": "Ajouter",
       "filters": "Filtres",
@@ -486,11 +493,13 @@
         }
       },
       "newContributor": {
+        "titleEdit": "Modifier un·e contributeur·rice sur l'étude : {name}",
         "title": "Ajouter un·e contributeur·rice sur l'étude : {name}",
         "email": "Email",
         "post": "Poste",
         "subPost": "Sous poste",
         "create": "Ajouter la personne",
+        "edit": "Modifer les droits",
         "Already in study": "Cette personne a déjà accès à l'étude.",
         "Not authorized": "Action non autorisée. N'hésitez pas à consulter la FAQ ou à contacter le support si vous pensez qu'il s'agit d'une erreur.",
         "validation": {
@@ -679,6 +688,12 @@
         "K": "kgCO₂e",
         "T": "tCO₂e"
       },
+      "pageFilters": {
+        "title": "Filtres",
+        "posts": "Sous-postes",
+        "tags": "Tags",
+        "noFiltersSelected": "Aucun filtre sélectionné"
+      },
       "tagGlossary": "Double compte sur les graphiques par tags",
       "tagGlossaryDescription": "Les sources d'émission peuvent avoir plusieurs tags, celles ci sont donc sur ce graphique comptabilisé dans chacun des tags. Il est donc normal que vous ayez ici un total plus grand que sur votre étude",
       "info": "Cette empreinte carbone simplifiée vise à estimer les émissions de gaz à effet de serre de votre activité, et par conséquent votre contribution au dérèglement climatique ainsi que vos potentielles dépendance aux énergies fossiles qui sont des vulnérabilités. \n\nL'Union Européenne s'est engagée, en ratifiant l'Accord de Paris, à la neutralité carbone d'ici 2050. Pour contribuer à cet objectif, votre cinéma devrait réduire son impact de 5% par an. \n\nNous vous invitons donc à refaire cette empreinte carbone simplifiée l'année prochaine pour vérifier que vous êtes sur la bonne trajectoire !",
@@ -764,6 +779,10 @@
         "screens": "Écrans",
         "entries": "Entrées",
         "sessions": "Séances"
+      },
+      "ratios": {
+        "all": "Ratios - Tous cinémas",
+        "site": "Ratios - {site}"
       },
       "additionalInfo": "Informations complémentaires"
     },
@@ -886,10 +905,19 @@
           "confirm": "Supprimer",
           "cancel": "Annuler"
         },
+        "snbcCard": {
+          "title": "Trajectoires SNBC",
+          "description": "La Stratégie Nationale Bas Carbone (SNBC) définit un objectif de réduction de 40% entre 1990 et 2030, et divise par 6 les émissions entre 1990 et 2050.",
+          "methodLabel": "Méthodes",
+          "general": "Générale",
+          "sectoral": "Par secteur d'activité",
+          "placeholder": "Aucune trajectoire sélectionnée"
+        },
         "sbtiCard": {
           "title": "Trajectoires SBTi",
           "description": "La Science Based Targets Initiative définit deux trajectoires visant à limiter le réchauffement climatique à 1,5°C (SBTi 1.5°C) ou \"Well below 2 degrees\" (SBTi WB2C).",
           "methodLabel": "Méthodes",
+          "optionSNBC": "SNBC",
           "option15": "SBTi 1,5°C",
           "optionWB2C": "SBTi WB2C",
           "placeholder": "Aucune trajectoire sélectionnée"
@@ -899,8 +927,9 @@
           "subtitle": "Affichage des trajectoires de référence et des trajectoires de votre organisation",
           "trajectory15": "SBTi 1,5°C",
           "trajectoryWB2C": "SBTi WB2C",
+          "trajectorySNBC": "SNBC",
           "actionBasedTrajectory": "Trajectoire bottom-up",
-          "yAxisLabel": "Émissions (tCO2e)",
+          "yAxisLabel": "Émissions",
           "unvalidatedSourcesWarning": "{count, plural, =1 {Une source d'émissions n'est pas validée dans l'étude actuelle et n'est donc pas prise en compte dans le calcul des trajectoires.} other {{count} sources d'émissions ne sont pas validées dans l'étude actuelle et ne sont donc pas prises en compte dans le calcul des trajectoires.}}",
           "unvalidatedSourcesLinkedStudiesWarning": "{count, plural, =1 {Une source d'émissions n'est pas validée dans l' étude passée suivante :} other {{count} sources d'émissions ne sont pas validées dans les études passées suivantes :}}",
           "unvalidatedSourcesLinkedStudyCount": " ({count, plural, =1 {1 source non validée} other {{count} sources non validées}})"
@@ -1055,6 +1084,10 @@
         "add": "Ajouter une action",
         "table": {
           "enabled": "Activée",
+          "enabledGlossaryIconLabel": "Activation et désactivation de mes actions",
+          "enabledGlossaryTitle": "Activation et désactivation de mes actions",
+          "enabledGlossaryDescription": "Les réductions liées aux actions que vous avez activées sont prises en compte sur la page <trajectoryLink>Trajectoires de réduction</trajectoryLink> dans votre trajectoire bottom-up. Les réductions liées aux actions désactivées ne seront pas visibles. Activer ou désactiver des actions vous permet ainsi d'envisager différents scénarios pour atteindre vos objectifs de réduction.",
+          "close": "Fermer",
           "title": "Titre",
           "priority": "Priorité",
           "actionType": "Type d'action",
@@ -1075,7 +1108,7 @@
           "title": "Intitulé de l'action",
           "titlePlaceholder": "Donnez un titre à votre action",
           "subSteps": "Sous-étapes",
-          "subStepsPlaceholder": "Décrivez vos sous-étapes",
+          "stepTitlePlaceholder": "Décrivez votre sous-étape",
           "detailedDescription": "Description détaillée de l'action et de l'implication des parties prenantes",
           "detailedDescriptionPlaceholder": "Description détaillée",
           "potentialDeduction": "Potentiel de réduction d'émissions",
@@ -1149,7 +1182,7 @@
           "ReductionWithinOrganisationCoreBusiness": "Réduction dans le coeur d'activité de l'organisation (Priorité 1/6)",
           "glossaryTitle": "Niveaux de pertinence d'une action",
           "information": "Information sur les niveaux de pertinence",
-          "learnMore": "Pour plus d'information, nous vous invitons à consulter cette page.",
+          "learnMore": "Pour plus d'information, nous vous invitons à consulter <link>cette page</link>.",
           "close": "Fermer"
         },
         "onboarding": {
@@ -1168,10 +1201,6 @@
   "emissionFactors": {
     "add": "Ajouter un facteur d'émission",
     "post": {
-      "all": "Tous",
-      "none": "Aucun",
-      "selectAll": "Tout sélectionner",
-      "unselectAll": "Tout désélectionner",
       "total": "Total",
       "allPost": "Tous les postes",
       "allSubPost": "Tous les sous postes",
@@ -1192,7 +1221,6 @@
       "SallesEtCabines": "Salles et cabines",
       "ConfiseriesEtBoissons": "Confiseries et boissons",
       "Dechets": "Déchets",
-      "Déchets": "Déchets",
       "BilletterieEtCommunication": "Billetterie et communication",
       "CombustiblesFossiles": "Combustibles fossiles",
       "CombustiblesOrganiques": "Combustibles organiques",
@@ -1499,7 +1527,8 @@
   "level": {
     "Initial": "Initial",
     "Standard": "Standard",
-    "Advanced": "Avancé"
+    "Advanced": "Avancé",
+    "noLevel": "Non formé·e"
   },
   "role": {
     "SUPER_ADMIN": "Administrateur·rice Global",
@@ -1828,7 +1857,7 @@
       "myClient": "Mon client",
       "update": "Modifier mes informations",
       "updateClient": "Modifier mon client",
-      "renew": "Votre licence {year} touche à sa fin, pensez à la renouveler pour continuer à utiliser les services en {nextYear}.",
+      "renew": "Votre adhésion {year} touche à sa fin, pensez à la renouveler pour continuer à utiliser les services en {nextYear}. Sans adhésion à jour, seul l'accès en lecture reste disponible pour vos études sur le BC+.",
       "renewLink": "Renouveler"
     },
     "delete": {
@@ -2046,6 +2075,7 @@
     "videoExplanation": "Notez bien que l'évaluation associée à cette formation « condensée » ne comporte aucun piège si vous visionnez la formation avec attention. Sa réussite vous permettra d'obtenir gratuitement une attestation de formation mise à jour. En revanche, un résultat insuffisant impliquerait de vous réintégrer au parcours de formation intégral (nouveau module Initiation si vous étiez formé M1 sur la V8, ou nouveau module Professionnel si vous étiez formé M2 sur la V8).",
     "evaluation": "Evaluation des connaissances",
     "evaluationEnded": "Vous avez déjà répondu au questionnaire",
+    "evaluationBlocked": "L'accès à la formation de mise à jour n'est plus disponible pour votre adhésion.",
     "evaluationSubtitle": "Veuillez à présent répondre au questionnaire d'évaluation des connaissances afin de recevoir votre attestation de formation de mise à jour. <b>Ce dernier est chronométré et vous aurez au maximum {time} minutes pour répondre aux questions. Vous ne pouvez répondre au questionnaire qu'une seule fois.</b><error> Une fois lancé, impossible de revenir en arrière. Des exercices pratiques sont présents dans le questionnaire. Nous vous invitons, avant de le commencer, à ouvrir le guide en ligne ainsi que l'outil Excel Bilan Carbone® v9 (pour rappel il est disponible dans votre espace adhérent). Ceux-ci seront utiles et nécessaires pour certaines questions.</error>",
     "acceptation": "J'ai compris que je ne pourrais lancer qu'une seule fois le questionnaire et que je vais avoir un temps limité pour répondre aux questions. Je suis dans les bonnes conditions pour commencer mon test.",
     "answer": "Répondre au questionnaire",
@@ -2054,7 +2084,7 @@
     "form": "Questionnaire Typeform",
     "forbidden": {
       "title": "Accès bloqué",
-      "message": "Vous n'êtes pas dans notre base de donnée de formés, vous ne pouvez donc pas avoir accès à l'onglet formation pour passer la formation de mise à jour. Si vous pensez que c'est une erreur merci de suivre le processus indiqué dans notre <link>FAQ</link>.",
+      "message": "Vous n'êtes pas dans notre base de donnée de formés, vous ne pouvez donc pas avoir accès à l'onglet formation pour passer la formation de mise à jour. Si vous pensez que c'est une erreur merci de suivre le processus indiqué dans notre <faq>FAQ</faq>.<br></br><br></br> Si vous contacter le <support>support</support>, merci d'avoir en amont <b>créer un compte</b> sur <abc>le site de l'ABC</abc> avec votre mail de connexion au BC+ (aucune adhésion supplémentaire n'est nécessaire, cela permet uniquement de vous ajouter à notre base de données de formés). Merci également d'envoyer au support <b>votre attestation de formation</b> et de préciser le mail avec lequel vous vous connectez sur le BC+.<br></br><br></br> Si vous avez déjà été en contact avec le support et que vous ne voyez pas de changement, merci d'attendre 1h puis de vous <b>déconnectez et vous reconnectez au BC+.</b>",
       "backToHome": "Retour à l'accueil"
     }
   },
@@ -2127,8 +2157,5 @@
     "studyYearMustBeBeforeCurrent": "L'année de l'étude doit être antérieure à l'année de l'étude actuelle",
     "studyYearMustBeAfterLinkedStudies": "Impossible de renseigner une date antérieure à celles de vos études liées sur votre plan de transition",
     "maxTwoDecimals": "Le taux de réduction doit avoir au maximum 2 décimales"
-  },
-  "common": {
-    "typeToConfirm": "Tapez \"{name}\" pour confirmer"
   }
 }

@@ -47,6 +47,12 @@ export const getAccountRoleOnStudy = (user: UserSession, study: FullStudy) => {
   return null
 }
 
+export const getDisplayedRoleOnStudy = (user: UserSession, study: FullStudy) => {
+  return study.contributors.some((contributor) => contributor.accountId === user.accountId)
+    ? 'Contributor'
+    : getAccountRoleOnStudy(user, study)
+}
+
 export const getAllowedRolesFromDefaultRole = (role: StudyRole) => {
   switch (role) {
     case StudyRole.Validator:
@@ -93,6 +99,10 @@ export const postColors: Record<Post, string> = {
 
   [Post.Restauration]: 'darkBlue',
   [Post.Achats]: 'darkBlue',
+
+  [Post.EnergiesClickson]: 'darkblue',
+  [Post.DeplacementsClickson]: 'darblue',
+  [Post.ImmobilisationsClickson]: 'darblue',
 }
 
 export const hasEditionRights = (userRoleOnStudy: StudyRole | null) => {
@@ -118,6 +128,10 @@ export const STUDY_UNIT_VALUES: Record<StudyResultUnit, number> = {
 }
 
 export const defaultStudyResultUnit = StudyResultUnit.T
+
+export const convertValue = (value: number, fromUnit: StudyResultUnit, toUnit: StudyResultUnit): number => {
+  return (value * STUDY_UNIT_VALUES[fromUnit]) / STUDY_UNIT_VALUES[toUnit]
+}
 
 export const isPostValidated = (data?: ResultsByPost): boolean => {
   if (!data) {
@@ -165,4 +179,14 @@ export const getDuplicableEnvironments = (environment: Environment): Environment
 
 export const formatEmissionValueForExport = (value: number, unit: StudyResultUnit): number => {
   return Math.round(value / STUDY_UNIT_VALUES[unit])
+}
+
+/**
+ * Calculates the monetary ratio percentage from monetary value and total value
+ */
+export const calculateMonetaryRatio = (monetaryValue: number, totalValue: number): number => {
+  if (totalValue === 0) {
+    return 0
+  }
+  return (monetaryValue / totalValue) * 100
 }

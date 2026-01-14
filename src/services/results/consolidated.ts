@@ -1,5 +1,7 @@
 import { FullStudy } from '@/db/study'
+import { customPostOrder } from '@/environments/clickson/utils/constant'
 import { Translations } from '@/types/translation'
+import { sortByCustomOrder } from '@/utils/array'
 import { Environment, SubPost } from '@prisma/client'
 import {
   getEmissionResults,
@@ -7,14 +9,24 @@ import {
   getEmissionSourcesTotalMonetaryCo2,
   sumEmissionSourcesUncertainty,
 } from '../emissionSource'
+import { hasCustomPostOrder } from '../permissions/environment'
 import { BCPost, ClicksonPost, convertTiltSubPostToBCSubPost, CutPost, Post, subPostsByPost, TiltPost } from '../posts'
 import { AdditionalResultTypes, ResultType } from '../study'
 import { filterWithDependencies, getSiteEmissionSources } from './utils'
 
-export type ResultsByPost = {
+export type BaseResultsByPost = {
   post: Post | SubPost | 'total'
   label: string
   value: number
+  children: BaseResultsByPost[]
+}
+
+export interface BaseResultsBySite {
+  aggregated: BaseResultsByPost[]
+  bySite: Record<string, BaseResultsByPost[]>
+}
+
+export type ResultsByPost = Omit<BaseResultsByPost, 'children'> & {
   monetaryValue: number
   nonSpecificMonetaryValue: number
   numberOfEmissionSource: number
@@ -37,7 +49,7 @@ const computeUncertainty = (uncertaintyToReduce: { value: number; uncertainty?: 
   )
 }
 
-export const computeResultsByPost = (
+export const computeResultsByPostFromEmissionSources = (
   study: FullStudy,
   tPost: (key: string) => string,
   studySite: string,
@@ -60,53 +72,57 @@ export const computeResultsByPost = (
     ...getEmissionResults(emissionSource, environment),
   }))
 
-  const postInfos = Object.values(convertToBc ? BCPost : postValues)
-    .map((post: Post) => {
-      const subPosts = subPostsByPost[post]
-        .filter((subPost) => filterWithDependencies(subPost, withDependencies))
-        .map((subPost) => {
-          const emissionSources = emissionSourceWithEmissionValue.filter(
-            (emissionSource) => emissionSource.subPost === subPost,
-          )
-          const validatedEmissionSources = emissionSources.filter((emissionSource) => emissionSource.validated)
-          const emissionSourcesToUse = validatedOnly ? validatedEmissionSources : emissionSources
+  const postInfos = Object.values(convertToBc ? BCPost : postValues).map((post: Post) => {
+    const subPosts = subPostsByPost[post]
+      .filter((subPost) => filterWithDependencies(subPost, withDependencies))
+      .map((subPost) => {
+        const emissionSources = emissionSourceWithEmissionValue.filter(
+          (emissionSource) => emissionSource.subPost === subPost,
+        )
+        const validatedEmissionSources = emissionSources.filter((emissionSource) => emissionSource.validated)
+        const emissionSourcesToUse = validatedOnly ? validatedEmissionSources : emissionSources
 
-          return {
-            post: subPost,
-            label: tPost(subPost),
-            value: getEmissionSourcesTotalCo2(emissionSourcesToUse),
-            monetaryValue: getEmissionSourcesTotalMonetaryCo2(emissionSourcesToUse, false),
-            nonSpecificMonetaryValue: getEmissionSourcesTotalMonetaryCo2(emissionSourcesToUse, true),
-            numberOfEmissionSource: emissionSources.length,
-            numberOfValidatedEmissionSource: validatedEmissionSources.length,
-            uncertainty: sumEmissionSourcesUncertainty(emissionSourcesToUse),
-          }
-        })
+        return {
+          post: subPost,
+          label: tPost(subPost),
+          value: getEmissionSourcesTotalCo2(emissionSourcesToUse),
+          monetaryValue: getEmissionSourcesTotalMonetaryCo2(emissionSourcesToUse, false),
+          nonSpecificMonetaryValue: getEmissionSourcesTotalMonetaryCo2(emissionSourcesToUse, true),
+          numberOfEmissionSource: emissionSources.length,
+          numberOfValidatedEmissionSource: validatedEmissionSources.length,
+          uncertainty: sumEmissionSourcesUncertainty(emissionSourcesToUse),
+        }
+      })
 
-      const value = subPosts.flatMap((subPost) => subPost).reduce((acc, subPost) => acc + subPost.value, 0)
-      const monetaryValue = subPosts
-        .flatMap((subPost) => subPost)
-        .reduce((acc, subPost) => acc + subPost.monetaryValue, 0)
-      const nonSpecificMonetaryValue = subPosts
-        .flatMap((subPost) => subPost)
-        .reduce((acc, subPost) => acc + subPost.nonSpecificMonetaryValue, 0)
+    const value = subPosts.flatMap((subPost) => subPost).reduce((acc, subPost) => acc + subPost.value, 0)
+    const monetaryValue = subPosts
+      .flatMap((subPost) => subPost)
+      .reduce((acc, subPost) => acc + subPost.monetaryValue, 0)
+    const nonSpecificMonetaryValue = subPosts
+      .flatMap((subPost) => subPost)
+      .reduce((acc, subPost) => acc + subPost.nonSpecificMonetaryValue, 0)
 
-      return {
-        post,
-        label: tPost(post),
-        value,
-        monetaryValue,
-        nonSpecificMonetaryValue,
-        uncertainty: subPosts.length > 0 ? computeUncertainty(subPosts, value) : undefined,
-        children: subPosts.sort((a, b) => tPost(a.post).localeCompare(tPost(b.post))),
-        numberOfEmissionSource: subPosts.reduce((acc, subPost) => acc + subPost.numberOfEmissionSource, 0),
-        numberOfValidatedEmissionSource: subPosts.reduce(
-          (acc, subPost) => acc + subPost.numberOfValidatedEmissionSource,
-          0,
-        ),
-      } as ResultsByPost
-    })
-    .sort((a, b) => a.label.localeCompare(b.label))
+    return {
+      post,
+      label: tPost(post),
+      value,
+      monetaryValue,
+      nonSpecificMonetaryValue,
+      uncertainty: subPosts.length > 0 ? computeUncertainty(subPosts, value) : undefined,
+      children: subPosts.sort((a, b) => tPost(a.post).localeCompare(tPost(b.post))),
+      numberOfEmissionSource: subPosts.reduce((acc, subPost) => acc + subPost.numberOfEmissionSource, 0),
+      numberOfValidatedEmissionSource: subPosts.reduce(
+        (acc, subPost) => acc + subPost.numberOfValidatedEmissionSource,
+        0,
+      ),
+    } as ResultsByPost
+  })
+
+  if (hasCustomPostOrder(environment)) {
+    return sortByCustomOrder(postInfos, customPostOrder, (item) => item.post)
+  } else {
+    postInfos.sort((a, b) => a.label.localeCompare(b.label))
+  }
 
   return [...postInfos, computeTotalForPosts(postInfos, tPost)]
 }

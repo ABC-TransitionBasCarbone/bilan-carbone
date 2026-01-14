@@ -1,0 +1,19 @@
+<html>
+  <%- include('../partials/style'); %>
+  <body>
+    <div>
+      <p>Bonjour,</p>
+      <br />
+      <p>
+        Vous avez une demande d'accès au compte sur le calculateur Clicks On Act de votre établissement de la part de <span><%= userToActivate %></span> (mail: <span><%= emailToActivate %></span>).
+        Vous pouvez retrouver les demandes d'accès dans votre compte dans la page "L'équipe pilote".
+        En acceptant sa demande d'accès, vous lui définirez un rôle sur votre établissement.
+        Il aura alors accès suivant son rôle aux informations et actions correspondantes de votre compte.
+        Si vous refusez, il n'aura pas accès au compte de votre établissement.
+      </p>
+      <%- include('./partials/faq'); %>
+      <br />
+      <%- include('./partials/signature'); %>
+    </div>
+  </body>
+</html>

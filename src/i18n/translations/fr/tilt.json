@@ -17,6 +17,23 @@
       "siret": "Veuillez entrer un Siret"
     }
   },
+  "home": {
+    "navigation": {
+      "collaborators": {
+        "title": "Mes Collaborateur·rices",
+        "message": "Retrouvez ici la liste des personnes autorisées à intervenir sur vos différentes empreintes carbone"
+      },
+      "footprints": {
+        "title": "Mes Empreintes",
+        "message": "Créer votre première empreinte ici. Vous pourrez ensuite consulter vos empreintes ou en créer de nouvelles à tout moment."
+      },
+      "sites": {
+        "title": "Mon Association",
+        "message": "Retrouvez ici la liste des établissements rattachés à votre compte"
+      }
+    },
+    "title": "Calculer votre empreinte carbone simplifiée vous permettra de :"
+  },
   "exports": {
     "env_specific_export": "Tilt"
   },
@@ -51,6 +68,20 @@
     },
     "dependencyMatrix": {
       "info": "Vous pouvez télécharger un exemple de matrice de risque et de dépendance pour vous aider à construire la vôtre. Par la suite, si vous souhaitez soumettre votre propre cartographie des flux pour aider d'autres associations en leur fournissant une base de travail, merci de la soumettre à <mail>methodologie@abc-transitionbascarbone.fr</mail>"
+    },
+    "firstSimplifiedStudyMessage": "Il est temps de vous lancer ! Nous vous invitons à créer votre première Empreinte.",
+    "createFirstSimplifiedStudy": "Créer ma première Empreinte",
+    "createSimplified": "Créer une Empreinte",
+    "mySimplifiedStudies": "Mes Empreintes",
+    "seeSimplified": "Voir mon Empreinte",
+    "cannotCreateStudy": "Pour pouvoir faire des Bilans Carbone® il faut être formé à la méthode ! <link>En savoir plus</link>",
+    "canCreateFootPrint": "Vous pouvez cependant faire <link>une empreinte carbone</link> vous permettant d'effectuer une estimation de votre impact",
+    "export": {
+      "export": "Exporter mes résultats"
+    },
+    "results": {
+      "simplifiedFeedback": "Bravo ! Vous venez de réaliser l'empreinte carbone simplifiée de votre cinéma. C'est une excellente initiation à la comptabilité carbone ! Nous vous remercions de bien vouloir remplir <questionnaire>ce questionnaire</questionnaire>, afin de nous aider à améliorer l'outil et à corriger d'éventuels bugs !",
+      "infoWithLinks": "L'Union Européenne s'est engagée, en ratifiant l'Accord de Paris, à la neutralité carbone d'ici 2050. Pour contribuer à cet objectif, votre cinéma devrait réduire son impact de 5% par an. L'empreinte carbone simplifiée que vous venez d'obtenir peut déjà vous permettre de mieux comprendre comment réduire votre impact, en identifiant vos activités les plus émissives.\n\nNous vous invitons à refaire cette empreinte carbone simplifiée l'année prochaine pour vérifier que vous êtes sur la bonne trajectoire, ou, mieux encore, à établir un véritable Bilan Carbone® afin de gagner en précision dans l'estimation de vos émissions et établir un véritable plan de transition ! Pour commencer, rien de plus simple, il vous suffit de <formation>vous former</formation> à la méthode, ou de nous contacter à l'adresse <email>count@cut-collectif.fr</email>, ou encore de prendre contact avec un autre <prestataire>prestataire Bilan Carbone®</prestataire>."
     }
   },
   "emissionFactors": {
@@ -103,5 +134,9 @@
         "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux"
       }
     }
+  },
+  "navigation": {
+    "footprints": "Mes empreintes",
+    "information": "Mon Association"
   }
 }

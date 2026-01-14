@@ -39,7 +39,7 @@
 
 .selector {
   flex-direction: column;
-  padding: 0 2rem;
+  padding-right: 2rem;
   gap: 1rem;
 
   @media screen and (max-width: 60rem) {
