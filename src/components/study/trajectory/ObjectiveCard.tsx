@@ -1,6 +1,8 @@
 import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormTextField } from '@/components/form/TextField'
-import { TrajectoryFormData } from '@/services/serverFunctions/transitionPlan.command'
+import { TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
+import DeleteIcon from '@mui/icons-material/Delete'
+import { IconButton } from '@mui/material'
 import Typography from '@mui/material/Typography'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
@@ -14,16 +16,24 @@ interface Props {
   isEditable: boolean
   control: Control<TrajectoryFormData>
   index: number
+  onDelete?: () => void
 }
 
-const ObjectiveCard = ({ reductionRate, name, isEditable, control, index }: Props) => {
+const ObjectiveCard = ({ reductionRate, name, isEditable, control, index, onDelete }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectoryModal')
 
   return (
     <div className={classNames(styles.objectiveCard, 'grow px15 py1')}>
-      <Typography className={styles.objectiveLabel} color="textSecondary">
-        {t('objectives.global')}
-      </Typography>
+      <div className="flex justify-between">
+        <Typography className={styles.objectiveLabel} color="textSecondary">
+          {t('objectives.global')}
+        </Typography>
+        {isEditable && !!onDelete && (
+          <IconButton color="error" onClick={onDelete}>
+            <DeleteIcon className="cursor-pointer" />
+          </IconButton>
+        )}
+      </div>
       <div className="flex gapped1 align-end">
         <div className="grow">
           {!isEditable ? (
@@ -42,7 +52,6 @@ const ObjectiveCard = ({ reductionRate, name, isEditable, control, index }: Prop
                 name={`objectives.${index}.targetYear`}
                 label={t('objectives.year')}
                 control={control}
-                translation={t}
                 className="w100"
                 views={['year']}
                 data-testid="objective-year-picker"

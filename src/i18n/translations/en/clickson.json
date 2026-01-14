@@ -94,8 +94,7 @@
       "loading": "Loading data...",
       "title": "Emissions Summary {year}",
       "results": {
-        "all": "Results",
-        "carbonIntensities": "Individual carbon footprint"
+        "all": "Results"
       },
       "labels": {
         "studentNumber": "Number of students",
@@ -127,6 +126,9 @@
         "calendar-subtitle": "Write down the main stages of your action here, choose your time scale well!"
       },
       "additionalInfo": "The results you obtain here are a simplified calculation of your establishment's carbon footprint and do not meet the requirements of the Carbon Accounting® standard, nor current regulations. These results are intended to assist you in understanding climate issues and identifying your action priorities. Therefore carrying an essentially educational value, the calculation of your establishment's carbon footprint via our tool constitutes a first step in your adaptation to the consequences of climate change."
+    },
+    "results": {
+      "carbonIntensities": "Individual carbon footprint"
     }
   },
   "emissionFactors": {

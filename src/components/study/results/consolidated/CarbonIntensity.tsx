@@ -1,6 +1,7 @@
 import { hasAccessToCarbonResponsibilityIntensitiesAdvanced } from '@/services/permissions/environmentAdvanced'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Data from './Data'
 
@@ -19,7 +20,7 @@ const CarbonIntensity = ({ withDep, withoutDep, divider, resultsUnit, label, tes
   const { environment } = useAppEnvironmentStore()
 
   return (
-    <div className="flex grow mt1">
+    <div className={classNames('flex grow', !simplified && 'mt1')}>
       <Data
         value={formatNumber(withDep / divider)}
         label={`${tResultUnits(resultsUnit)}/${label}`}

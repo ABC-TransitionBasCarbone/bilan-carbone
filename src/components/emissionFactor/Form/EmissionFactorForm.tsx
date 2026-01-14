@@ -17,6 +17,7 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { Control, UseFormReturn, UseFormSetValue, useWatch } from 'react-hook-form'
+import Base from './Base'
 import DetailedGES from './DetailedGES'
 import MultiplePosts from './MultiplePosts'
 
@@ -48,6 +49,7 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
   const tAction = useTranslations('common.action')
   const t = useTranslations('emissionFactors.create')
   const tGlossary = useTranslations('emissionSource.glossary')
+  const tDocumentation = useTranslations('documentationUrl')
   const getUnitLabel = useUnitLabel()
   const units = useMemo(
     () => Object.values(ManualEmissionFactorUnitList).sort((a, b) => getUnitLabel(a).localeCompare(getUnitLabel(b))),
@@ -183,6 +185,7 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         mandatory
       />
       <MultiplePosts form={form} context="emissionFactor" />
+      <Base form={form} />
       <FormTextField control={control} name="comment" label={t('comment')} multiline />
       <div className={classNames({ ['justify-between']: button === 'update' })}>
         {button === 'update' && (
@@ -201,11 +204,7 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
           <p className="mb-2">
             {tGlossary.rich(`${glossary}Description`, {
               link: (children) => (
-                <Link
-                  href="https://www.bilancarbone-methode.com/4-comptabilisation/4.4-methode-destimation-des-incertitudes/4.4.2-comment-les-determiner#determination-qualitative"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
+                <Link href={tDocumentation('uncertainties')} target="_blank" rel="noreferrer noopener">
                   {children}
                 </Link>
               ),

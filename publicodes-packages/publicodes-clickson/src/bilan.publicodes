@@ -1,0 +1,9 @@
+bilan:
+  formule:
+    somme:
+      - énergie
+      - restauration
+      - déplacements
+      - achats
+      - immobilisations
+  unité: "kgCO2e"

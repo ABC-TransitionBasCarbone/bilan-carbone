@@ -1,0 +1,27 @@
+{
+  "name": "@abc-transitionbascarbone/publicodes-clickson",
+  "description": "Règles de calculs de Clickson.",
+  "version": "0.1.0",
+  "author": "Emile Rolley <emile@calinou.coop>",
+  "license": "MIT",
+  "type": "module",
+  "main": "publicodes-build/index.js",
+  "types": "publicodes-build/index.d.ts",
+  "files": [
+    "publicodes-build"
+  ],
+  "scripts": {
+    "compile": "publicodes compile",
+    "watch": "publicodes compile --watch",
+    "dev": "publicodes dev",
+    "pretest": "yarn run compile",
+    "test": "vitest run --reporter=tree"
+  },
+  "dependencies": {
+    "publicodes": "^1.9.1"
+  },
+  "devDependencies": {
+    "@publicodes/tools": "^1.8.0",
+    "vitest": "^4.0.9"
+  }
+}

@@ -1,12 +1,13 @@
 import { environmentsWithChecklist } from '@/constants/environments'
 import { DefaultStudyTags } from '@/constants/studyTags'
-import { reCreateBegesRules } from '@/db/beges'
+import { reCreateBegesRules, reCreateGHGPRules } from '@/db/exports'
 import { signPassword } from '@/services/auth'
 import { getEmissionFactorsFromAPI } from '@/services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromAPI'
 import { getAllowedLevels } from '@/services/study'
 import { faker } from '@faker-js/faker'
 import {
   Account,
+  EmissionFactorBase,
   EmissionFactorStatus,
   Environment,
   Import,
@@ -689,7 +690,7 @@ const users = async () => {
   ])
 
   await Promise.all(
-    [Role.GESTIONNAIRE, Role.COLLABORATOR].map(async (role) => {
+    [Role.GESTIONNAIRE, Role.DEFAULT].map(async (role) => {
       return prisma.account.create({
         data: {
           organizationVersionId: regularTiltOrganizationVersions[0].id,
@@ -862,6 +863,7 @@ const users = async () => {
       unit: Unit.GWH,
       isMonetary: false,
       source: 'Magic',
+      base: EmissionFactorBase.LocationBased,
       subPosts: [SubPost.Electricite],
       organizationId: defaultUserWithAccount.accounts[0].organizationVersion.organizationId,
       emissionFactorParts: {
@@ -1044,7 +1046,7 @@ const actualities = async () => {
 }
 
 const main = async (params: Params) => {
-  await Promise.all([actualities(), users(), reCreateBegesRules()])
+  await Promise.all([actualities(), users(), reCreateBegesRules(), reCreateGHGPRules()])
   if (params.importFactors) {
     await getEmissionFactorsFromAPI(params.importFactors)
   }

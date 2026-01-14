@@ -1,0 +1,185 @@
+achats . déchets recyclables:
+  titre: Déchets recyclables
+  formule:
+    somme:
+      - papier
+      - carton
+      - plastique
+      - verre
+      - métal
+      - bois
+      - textiles
+      - DEEE
+      - autres
+  unité: kgCO2e
+  avec:
+    papier:
+      titre: "Papier recyclé"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Quantité de papier recyclé (en kg) ?"
+          unité: kg
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission du papier recyclé"
+          valeur: 0.05
+          unité: kgCO2e/kg
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 10
+
+    carton:
+      titre: "Carton recyclé"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Quantité de carton recyclé (en kg) ?"
+          unité: kg
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission du carton recyclé"
+          valeur: 0.04
+          unité: kgCO2e/kg
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 10
+
+    plastique:
+      titre: "Plastique recyclé"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Quantité de plastique recyclé (en kg) ?"
+          unité: kg
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission du plastique recyclé"
+          valeur: 0.08
+          unité: kgCO2e/kg
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 15
+
+    verre:
+      titre: "Verre recyclé"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Quantité de verre recyclé (en kg) ?"
+          unité: kg
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission du verre recyclé"
+          valeur: 0.02
+          unité: kgCO2e/kg
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 10
+
+    métal:
+      titre: "Métal recyclé"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Quantité de métal recyclé (en kg) ?"
+          unité: kg
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission du métal recyclé"
+          valeur: 0.09
+          unité: kgCO2e/kg
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 12
+
+    bois:
+      titre: "Bois recyclé"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Quantité de bois recyclé (en kg) ?"
+          unité: kg
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission du bois recyclé"
+          valeur: 0.03
+          unité: kgCO2e/kg
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 10
+
+    textiles:
+      titre: "Textiles recyclés"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Quantité de textiles recyclés (en kg) ?"
+          unité: kg
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission des textiles recyclés"
+          valeur: 0.06
+          unité: kgCO2e/kg
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 15
+
+    DEEE:
+      titre: "DEEE recyclés"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Quantité de DEEE recyclés (en kg) ?"
+          unité: kg
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission des DEEE recyclés"
+          valeur: 0.12
+          unité: kgCO2e/kg
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 20
+
+    autres:
+      titre: "Autres déchets recyclés"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Quantité d'autres déchets recyclés (en kg) ?"
+          unité: kg
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission des autres déchets recyclés"
+          valeur: 0.07
+          unité: kgCO2e/kg
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 20
