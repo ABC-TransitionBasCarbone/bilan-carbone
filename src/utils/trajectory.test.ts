@@ -315,6 +315,129 @@ describe('calculateTrajectory', () => {
       expect(point2022?.value).toBe(1000)
       expect(point2023?.value).toBe(1000)
     })
+
+    describe('custom trajectory with reference year', () => {
+      test('reference year 2015 - custom type should decrease from 2016', () => {
+        const referenceYear = 2015
+        const referenceEmissions = 1000
+        const objectives = [{ targetYear: 2030, reductionRate: 0.05 }]
+
+        const result = calculateCustomTrajectory({
+          studyEmissions: referenceEmissions,
+          studyStartYear: referenceYear,
+          objectives,
+          pastStudies: [],
+          trajectoryType: TrajectoryType.CUSTOM,
+          minYear: referenceYear,
+        })
+
+        const point2015 = result.find((p) => p.year === 2015)
+        expect(point2015?.value).toBe(1000)
+
+        const point2016 = result.find((p) => p.year === 2016)
+        const yearlyReduction = referenceEmissions * 0.05
+        expect(point2016?.value).toBeCloseTo(1000 - yearlyReduction, 1)
+
+        const point2017 = result.find((p) => p.year === 2017)
+        expect(point2017?.value).toBeCloseTo(1000 - 2 * yearlyReduction, 1)
+      })
+
+      test('reference year 2015 - custom SBTi type should decrease after 2020', () => {
+        const referenceYear = 2015
+        const referenceEmissions = 1000
+        const objectives = [
+          { targetYear: 2030, reductionRate: SBTI_REDUCTION_RATE_15 },
+          { targetYear: 2050, reductionRate: SBTI_REDUCTION_RATE_15 },
+        ]
+
+        const result = calculateCustomTrajectory({
+          studyEmissions: referenceEmissions,
+          studyStartYear: referenceYear,
+          objectives,
+          pastStudies: [],
+          trajectoryType: TrajectoryType.SBTI_15,
+          minYear: referenceYear,
+        })
+
+        const point2015 = result.find((p) => p.year === 2015)
+        expect(point2015?.value).toBeCloseTo(1000, 1)
+
+        // Should stay flat until 2020
+        const point2019 = result.find((p) => p.year === 2019)
+        expect(point2019?.value).toBeCloseTo(1000, 1)
+
+        const point2020 = result.find((p) => p.year === 2020)
+        expect(point2020?.value).toBeCloseTo(1000, 1)
+
+        // Should start decreasing from 2021
+        const point2021 = result.find((p) => p.year === 2021)
+        const expected2021 = 1000 - 1 * SBTI_REDUCTION_RATE_15 * 1000
+        expect(point2021?.value).toBeCloseTo(expected2021, 1)
+
+        const point2022 = result.find((p) => p.year === 2022)
+        const expected2022 = 1000 - 2 * SBTI_REDUCTION_RATE_15 * 1000
+        expect(point2022?.value).toBeCloseTo(expected2022, 1)
+      })
+
+      test('reference year 2022 - custom type should decrease from 2023', () => {
+        const referenceYear = 2022
+        const referenceEmissions = 1000
+        const objectives = [{ targetYear: 2030, reductionRate: 0.05 }]
+
+        const result = calculateCustomTrajectory({
+          studyEmissions: referenceEmissions,
+          studyStartYear: referenceYear,
+          objectives,
+          pastStudies: [],
+          trajectoryType: TrajectoryType.CUSTOM,
+          minYear: referenceYear,
+        })
+
+        const point2022 = result.find((p) => p.year === 2022)
+        expect(point2022?.value).toBe(1000)
+
+        const point2023 = result.find((p) => p.year === 2023)
+        const yearlyReduction = referenceEmissions * 0.05
+        expect(point2023?.value).toBeCloseTo(1000 - yearlyReduction, 1)
+
+        const point2024 = result.find((p) => p.year === 2024)
+        expect(point2024?.value).toBeCloseTo(1000 - 2 * yearlyReduction, 1)
+      })
+
+      test('reference year 2022 - custom SBTi type should decrease from 2023', () => {
+        const referenceYear = 2022
+        const referenceEmissions = 1000
+        const objectives = [
+          { targetYear: 2030, reductionRate: SBTI_REDUCTION_RATE_15 },
+          { targetYear: 2050, reductionRate: SBTI_REDUCTION_RATE_15 },
+        ]
+
+        const result = calculateCustomTrajectory({
+          studyEmissions: referenceEmissions,
+          studyStartYear: referenceYear,
+          objectives,
+          pastStudies: [],
+          trajectoryType: TrajectoryType.SBTI_15,
+          minYear: referenceYear,
+        })
+
+        const point2022 = result.find((p) => p.year === 2022)
+        expect(point2022?.value).toBeCloseTo(1000, 1)
+
+        // Should start decreasing from 2023 (referenceYear + 1)
+        // Note: When studyStartYear > 2020, overshoot compensation is applied,
+        // so the reduction rate may differ from the base SBTI_REDUCTION_RATE_15
+        const point2023 = result.find((p) => p.year === 2023)
+        expect(point2023).toBeDefined()
+        expect(point2023?.value).toBeLessThan(1000)
+        expect(point2023?.value).toBeGreaterThan(0)
+
+        const point2024 = result.find((p) => p.year === 2024)
+        expect(point2024).toBeDefined()
+        expect(point2024?.value).toBeLessThan(point2023?.value ?? 0)
+        expect(point2024?.value).toBeGreaterThan(0)
+      })
+    })
   })
 
   describe('getReductionRatePerType', () => {
@@ -661,7 +784,6 @@ describe('calculateTrajectory', () => {
           studyStartYear: currentYear,
           reductionRate: SBTI_REDUCTION_RATE_15,
           pastStudies,
-          displayCurrentStudyValueOnTrajectory: withinThreshold,
         })
 
         verifyTrajectoryInterpolation(currentTrajectory, pastStudies, currentYear)

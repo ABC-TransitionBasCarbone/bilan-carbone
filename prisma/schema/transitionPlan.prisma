@@ -143,9 +143,10 @@ model Trajectory {
   transitionPlanId String         @map("transition_plan_id")
   transitionPlan   TransitionPlan @relation(fields: [transitionPlanId], references: [id], onDelete: Cascade)
 
-  name        String
-  description String?
-  type        TrajectoryType
+  name          String
+  description   String?
+  type          TrajectoryType
+  referenceYear Int?           @map("reference_year")
 
   objectives Objective[]
   createdAt  DateTime    @default(now()) @map("created_at")

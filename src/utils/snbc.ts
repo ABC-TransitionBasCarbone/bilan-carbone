@@ -223,7 +223,7 @@ export const calculateSNBCTrajectory = ({
   if (studyStartYear < SNBC_REFERENCE_YEAR) {
     for (let year = graphStartYear; year <= SNBC_REFERENCE_YEAR; year++) {
       if (year <= studyStartYear) {
-        const value = computePastOrPresentValue(year, historicalPoints, studyEmissions, studyStartYear, true)
+        const value = computePastOrPresentValue(year, historicalPoints, studyEmissions, studyStartYear)
         if (value !== null) {
           dataPoints.push({ year, value })
         }
@@ -255,7 +255,7 @@ export const calculateSNBCTrajectory = ({
           dataPoints.push({ year, value: interpolatedYearlyEmissions })
         }
       } else {
-        const value = computePastOrPresentValue(year, historicalPoints, studyEmissions, studyStartYear, true)
+        const value = computePastOrPresentValue(year, historicalPoints, studyEmissions, studyStartYear)
         if (value !== null) {
           dataPoints.push({ year, value })
         }
