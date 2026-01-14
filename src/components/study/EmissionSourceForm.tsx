@@ -46,6 +46,7 @@ import HelpIcon from '../base/HelpIcon'
 import LinkButton from '../base/LinkButton'
 import { Select } from '../base/Select'
 import TagChip from '../base/TagChip'
+import BaseChip from '../emissionFactor/BaseChip'
 import { ImportVersionForFilters } from '../emissionFactor/EmissionFactorsFilters'
 import GlossaryModal from '../modals/GlossaryModal'
 import Modal from '../modals/Modal'
@@ -413,6 +414,11 @@ const EmissionSourceForm = ({
                   />
                 )}
               </>
+            )}
+            {!!selectedFactor.base && (
+              <div className="ml-2">
+                <BaseChip base={selectedFactor.base} />
+              </div>
             )}
           </p>
           {selectedFactor.metaData && (
