@@ -18,6 +18,19 @@ import { TrajectoryType } from '@prisma/client'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { hasEditAccessOnStudy, hasReadAccessOnStudy } from '../permissions/study'
 
+const validateTrajectoryInput = async (referenceYear: number | null | undefined, studyId: string): Promise<void> => {
+  // Validate referenceYear is strictly less than study year
+  if (referenceYear !== undefined && referenceYear !== null) {
+    const studyStartDate = await getStudyStartDate(studyId)
+    if (studyStartDate) {
+      const studyYear = studyStartDate.getFullYear()
+      if (referenceYear >= studyYear) {
+        throw new Error('referenceYearMustBeBeforeOrEqualToStudyYear')
+      }
+    }
+  }
+}
+
 export interface CreateTrajectoryInput {
   transitionPlanId: string
   name: string
@@ -42,16 +55,7 @@ export const createTrajectoryWithObjectives = async (input: CreateTrajectoryInpu
       throw new Error(NOT_AUTHORIZED)
     }
 
-    // Validate referenceYear is strictly less than study year
-    if (input.referenceYear !== undefined && input.referenceYear !== null) {
-      const studyStartDate = await getStudyStartDate(transitionPlan.studyId)
-      if (studyStartDate) {
-        const studyYear = studyStartDate.getFullYear()
-        if (input.referenceYear >= studyYear) {
-          throw new Error('referenceYearMustBeBeforeOrEqualToStudyYear')
-        }
-      }
-    }
+    await validateTrajectoryInput(input.referenceYear, transitionPlan.studyId)
 
     let objectives: { targetYear: number; reductionRate: number }[]
 
@@ -133,16 +137,7 @@ export const updateTrajectory = async (
       throw new Error(NOT_AUTHORIZED)
     }
 
-    // Validate referenceYear is strictly less than study year
-    if (data.referenceYear !== undefined && data.referenceYear !== null) {
-      const studyStartDate = await getStudyStartDate(trajectory.transitionPlan.studyId)
-      if (studyStartDate) {
-        const studyYear = studyStartDate.getFullYear()
-        if (data.referenceYear >= studyYear) {
-          throw new Error('referenceYearMustBeBeforeOrEqualToStudyYear')
-        }
-      }
-    }
+    await validateTrajectoryInput(data.referenceYear, trajectory.transitionPlan.studyId)
 
     const typeChanged = data.type && data.type !== trajectory.type
 

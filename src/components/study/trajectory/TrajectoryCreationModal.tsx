@@ -11,7 +11,7 @@ import {
 } from '@/services/serverFunctions/trajectory'
 import { createTrajectorySchema, TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
 import { getYearFromDateStr } from '@/utils/time'
-import { getDefaultObjectivesForTrajectoryType, SNBC_SBTI_REDUCTION_START_YEAR } from '@/utils/trajectory'
+import { getDefaultObjectivesForTrajectoryType, SBTI_START_YEAR } from '@/utils/trajectory'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { TrajectoryType } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -37,7 +37,7 @@ const defaultValues: TrajectoryFormData = {
   trajectoryType: TrajectoryType.SBTI_15,
   name: '',
   description: '',
-  referenceYear: SNBC_SBTI_REDUCTION_START_YEAR.toString(),
+  referenceYear: SBTI_START_YEAR.toString(),
   objectives: [],
 }
 
@@ -119,10 +119,7 @@ const TrajectoryCreationModal = ({
           reductionRate: Number((obj.reductionRate! / 100).toFixed(4)), // Keep precision of 2 digits percentage so 0.01% = 0.0001 => 4 digits
         }))
 
-      const referenceYear =
-        data.referenceYear && data.referenceYear !== '' && data.referenceYear !== null
-          ? getYearFromDateStr(data.referenceYear)
-          : null
+      const referenceYear = data.referenceYear ? getYearFromDateStr(data.referenceYear) : null
 
       await callServerFunction(
         () =>
@@ -149,10 +146,7 @@ const TrajectoryCreationModal = ({
       return
     }
 
-    const referenceYear =
-      data.referenceYear && data.referenceYear !== '' && data.referenceYear !== null
-        ? getYearFromDateStr(data.referenceYear)
-        : null
+    const referenceYear = data.referenceYear ? getYearFromDateStr(data.referenceYear) : null
 
     const input: CreateTrajectoryInput = {
       transitionPlanId,
