@@ -158,7 +158,7 @@ const AllResults = ({
         <>
           <Box component="section" className="mb2">
             <Typography>
-              {tResults.rich('cutFeedback', {
+              {tResults.rich('simplifiedFeedback', {
                 questionnaire: (children) => (
                   <Link href={process.env.NEXT_PUBLIC_CUT_FEEDBACK_TYPEFORM_LINK ?? ''} target="_blank">
                     <strong>{children}</strong>
