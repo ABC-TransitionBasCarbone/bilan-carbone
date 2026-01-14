@@ -1,6 +1,7 @@
 import { FullStudy } from '@/db/study'
 import {
   ControlMode,
+  EmissionFactorBase,
   Export,
   Import,
   Level,
@@ -273,6 +274,7 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
         technicalRepresentativeness: 5,
         temporalRepresentativeness: 5,
         importedId: '4',
+        base: EmissionFactorBase.LocationBased,
         unit: Unit.GWH,
         isMonetary: false,
         location: '',
