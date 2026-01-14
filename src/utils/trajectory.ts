@@ -1458,12 +1458,12 @@ const calculateBudgetWithObjectivesAndMultiplier = (
   return calculateTrajectoryIntegral(trajectory, startYear, endYear)
 }
 
-type TrajectoriesForGraph = {
-  currentTrajectory: { year: number; value: number }[]
-  previousTrajectory: { year: number; value: number }[] | null
+type TrajectoriesForYear = {
+  currentTrajectory: { year: number }[]
+  previousTrajectory: { year: number }[] | null
 }
 
-const extractYearsFromTrajectory = (data: TrajectoriesForGraph | null): number[] => {
+const extractYearsFromTrajectory = (data: TrajectoriesForYear | null): number[] => {
   if (!data) {
     return []
   }
@@ -1471,19 +1471,9 @@ const extractYearsFromTrajectory = (data: TrajectoriesForGraph | null): number[]
   return [...data.currentTrajectory.map((d) => d.year), ...(data.previousTrajectory?.map((d) => d.year) ?? [])]
 }
 
-const extractMaxEmissionsFromTrajectory = (data: TrajectoriesForGraph): number => {
-  return Math.max(
-    ...data.currentTrajectory.map((d) => d.value),
-    ...(data.previousTrajectory?.map((d) => d.value) ?? []),
-  )
-}
-
-export const getGraphRange = (trajectories: TrajectoryData[]): { years: number[]; maxEmissions: number } => {
+export const getYearsToDisplay = (trajectories: TrajectoryData[]): number[] => {
   const allYears = trajectories.flatMap((traj) => extractYearsFromTrajectory(traj))
-  const years = Array.from(new Set(allYears)).sort((a, b) => a - b)
-
-  const maxEmissions = Math.max(...trajectories.map((traj) => extractMaxEmissionsFromTrajectory(traj)))
-  return { years, maxEmissions }
+  return Array.from(new Set(allYears)).sort((a, b) => a - b)
 }
 
 export const getMaxYearFromTrajectories = (maxYear: number, trajectories: (TrajectoryData | null)[]): number => {

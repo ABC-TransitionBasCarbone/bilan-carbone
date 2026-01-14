@@ -5,7 +5,7 @@ import {
   TRAJECTORY_SNBC_GENERAL_ID,
   TRAJECTORY_WB2C_ID,
 } from '@/components/pages/TrajectoryReductionPage'
-import { getGraphRange, PastStudy, TrajectoryData } from '@/utils/trajectory'
+import { getYearsToDisplay, PastStudy, TrajectoryData } from '@/utils/trajectory'
 import { Alert, Slider, Typography } from '@mui/material'
 import { LineChart, LineSeries } from '@mui/x-charts/LineChart'
 import type { StudyResultUnit } from '@prisma/client'
@@ -71,9 +71,9 @@ const TrajectoryGraph = ({
   const trajectoryWB2CEnabled = selectedSbtiTrajectories.includes(TRAJECTORY_WB2C_ID)
   const trajectorySnbcEnabled = selectedSnbcTrajectories.includes(TRAJECTORY_SNBC_GENERAL_ID)
 
-  const { years: allYearsToDisplay } = useMemo(
+  const allYearsToDisplay = useMemo(
     () =>
-      getGraphRange(
+      getYearsToDisplay(
         [
           trajectory15Data,
           trajectoryWB2CData,
