@@ -9773,6 +9773,10 @@ publicodes@^1.9.1:
   resolved "https://registry.yarnpkg.com/publicodes/-/publicodes-1.9.1.tgz#0c5031337e4515af81e5079fae29d34fbc8c0768"
   integrity sha512-sXBgGuAH/bIehF8waXm4Pp/EnqjFmxZJb6FNSAZ9FRO1neACHRYKv34lxFM3qZNyJ2RaI5jwtOupGlozMW0fcA==
 
+"publicodes@https://pkg.pr.new/publicodes/publicodes@4c20c4e":
+  version "1.9.1"
+  resolved "https://pkg.pr.new/publicodes/publicodes@4c20c4e#fe6b4d052161a32f195b5b305a5588193f213b8c"
+
 pump@^3.0.0:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/pump/-/pump-3.0.3.tgz#151d979f1a29668dc0025ec589a455b53282268d"
