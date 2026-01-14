@@ -100,12 +100,6 @@ const ConsolatedExportDifference = ({ study, results, exportResults, type, expor
     [exportTotalNumber, computedTotalNumber, exportDifference],
   )
 
-  console.log('\n', type, ' : ', exportTotalNumber)
-  console.log('consolidé : ', computedTotalNumber)
-  console.log('différence : ', exportDifference)
-  console.log('consolidé + différence : ', computedTotalNumber + exportDifference)
-  console.log('différence non expliquée : ', exportTotalNumber - (computedTotalNumber + exportDifference))
-
   return exportTotal !== computedTotal ? (
     <>
       <div className={classNames(styles.button, 'flex-cc p-2 px1')} onClick={() => setOpen(true)}>
@@ -134,9 +128,7 @@ const ConsolatedExportDifference = ({ study, results, exportResults, type, expor
         </div>
       </Modal>
     </>
-  ) : (
-    <></>
-  )
+  ) : null
 }
 
 export default ConsolatedExportDifference
