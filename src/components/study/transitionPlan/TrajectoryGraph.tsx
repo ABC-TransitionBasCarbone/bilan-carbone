@@ -352,12 +352,8 @@ const TrajectoryGraph = ({
     })
 
     if (actionBasedTrajectoryData && actionBasedTrajectoryData.currentTrajectory.length > 0) {
-      const {
-        previousTrajectory,
-        previousTrajectoryStartYear: previousTrajectoryStartYear,
-        currentTrajectory,
-        withinThreshold,
-      } = actionBasedTrajectoryData
+      const { previousTrajectory, previousTrajectoryStartYear, currentTrajectory, withinThreshold } =
+        actionBasedTrajectoryData
 
       if (previousTrajectory) {
         if (withinThreshold) {
