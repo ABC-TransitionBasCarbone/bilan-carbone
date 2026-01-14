@@ -37,6 +37,7 @@ const StudyNavbar = ({ environment, studyId, study, isTransitionPlanActive, hasO
     study.name,
     isTransitionPlanActive,
     hasObjectives,
+    study.simplified,
   )
   return (
     <>

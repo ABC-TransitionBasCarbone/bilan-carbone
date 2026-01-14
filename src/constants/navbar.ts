@@ -1,3 +1,4 @@
+import { hasAccessToEngagementActions } from '@/services/permissions/environmentAdvanced'
 import { Translations } from '@/types/translation'
 import { Environment } from '@prisma/client'
 
@@ -25,6 +26,7 @@ export const getStudyNavbarMenu = (
   studyName: string,
   isTransitionPlanActive: boolean = false,
   hasObjectives: boolean = false,
+  studySimplified: boolean = false,
 ): Menu => {
   if (environment === Environment.CUT) {
     return {
@@ -104,12 +106,12 @@ export const getStudyNavbarMenu = (
     },
     sections: [
       {
-        header: t('mobilisation'),
+        header: t('engagement'),
         links: [
           {
-            href: '#',
-            label: t('commingSoon'),
-            disabled: true,
+            disabled: !hasAccessToEngagementActions(environment, studySimplified),
+            href: `/etudes/${studyId}/actions-de-mobilisation`,
+            label: t('carriedActions'),
           },
         ],
       },
@@ -170,15 +172,6 @@ export const getStudyNavbarMenu = (
                 label: t('commingSoon'),
               },
             ],
-      },
-      {
-        header: t('engagement'),
-        links: [
-          {
-            href: `/etudes/${studyId}/actions-de-mobilisation`,
-            label: t('carriedActions'),
-          },
-        ],
       },
     ],
   }
