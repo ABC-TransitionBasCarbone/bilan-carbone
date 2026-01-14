@@ -1,18 +1,18 @@
+import LinkButton from '@/components/base/LinkButton'
+import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
-import { hasAccessToEmissionSourceValidation } from '@/services/permissions/environment'
+import { hasAccessToEmissionSourceValidation, hasAccessToPostTypeform } from '@/services/permissions/environment'
 import { Post, subPostsByPost } from '@/services/posts'
 import { withInfobulle } from '@/utils/post'
-import { defaultPostColor, postColors } from '@/utils/study'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { Dispatch, SetStateAction, useMemo } from 'react'
-import widthStyles from '../../base/ProgressBar.module.css'
-import progressStyles from '../infography/PostHeader.module.css'
+import { Dispatch, SetStateAction, useMemo, useState } from 'react'
 import PostIcon from '../infography/icons/PostIcon'
 import SelectStudySite from '../site/SelectStudySite'
 import styles from './StudyPostsCard.module.css'
+import { StyledPostContainer, StyledProgressLayer } from './StudyPostsCard.styles'
 
 interface Props {
   study: FullStudy
@@ -26,7 +26,7 @@ const StudyPostsCard = ({ study, post, studySite, setSite, setGlossary, environm
   const t = useTranslations('study')
   const tPost = useTranslations('emissionFactors.post')
 
-  const postColor = useMemo(() => (post ? postColors[post] : defaultPostColor), [post])
+  const [glossaryTypeform, setGlossaryTypeform] = useState('')
 
   const emissionSources = study.emissionSources.filter(
     (emissionSource) =>
@@ -35,8 +35,31 @@ const StudyPostsCard = ({ study, post, studySite, setSite, setGlossary, environm
   const validated = emissionSources.filter((emissionSource) => emissionSource.validated).length
   const percent = emissionSources.length ? Math.floor((validated / emissionSources.length) * 100) : 0
 
+  const showTypeformLink = useMemo(() => {
+    const typeformPosts: Post[] = [Post.DeplacementsDePersonne, Post.TransportDeMarchandises]
+    return (
+      process.env.NEXT_PUBLIC_TYPEFORM_DEPLACEMENTS_LINK &&
+      hasAccessToPostTypeform(environment) &&
+      typeformPosts.includes(post as Post)
+    )
+  }, [post, environment])
+
   return (
     <div className={classNames(styles.card, 'flex-col px1')}>
+      {showTypeformLink && (
+        <div className="justify-end align-center">
+          <LinkButton href={process.env.NEXT_PUBLIC_TYPEFORM_DEPLACEMENTS_LINK} rel="noreferrer noopener">
+            {tPost('seeTypeform')}
+          </LinkButton>
+          <HelpOutlineIcon
+            color="secondary"
+            className="pointer ml-2"
+            onClick={() => setGlossaryTypeform(tPost('seeTypeformDescription'))}
+            aria-label={tPost('seeTypeform')}
+            titleAccess={tPost('seeTypeform')}
+          />
+        </div>
+      )}
       <div className="justify-end align-center">
         <SelectStudySite
           sites={study.sites}
@@ -48,18 +71,9 @@ const StudyPostsCard = ({ study, post, studySite, setSite, setGlossary, environm
       </div>
       <div className={classNames(styles.postContainer, 'grow flex-col gapped')}>
         <div className="grow justify-center">
-          <div className={classNames(styles.post, styles[`post-${postColor}`], 'grow')}>
+          <StyledPostContainer post={post}>
             <div className={classNames(styles.header, 'flex-col align-center grow')}>
-              {percent > 0 && (
-                <div
-                  className={classNames(
-                    styles.progress,
-                    progressStyles.progress,
-                    progressStyles[`progress-${postColor}`],
-                    widthStyles[`w${percent.toFixed(0)}`],
-                  )}
-                />
-              )}
+              {percent > 0 && <StyledProgressLayer post={post} percent={percent} />}
               <div className={classNames(styles.content, 'flex-cc text-center w100')}>
                 <PostIcon className={styles.icon} post={post} />
                 {tPost(post)}
@@ -73,7 +87,7 @@ const StudyPostsCard = ({ study, post, studySite, setSite, setGlossary, environm
                 )}
               </div>
             </div>
-          </div>
+          </StyledPostContainer>
         </div>
         {hasAccessToEmissionSourceValidation(environment) && (
           <div className={classNames({ [styles.allValidated]: percent === 100 }, 'grow flex-cc')}>
@@ -91,6 +105,16 @@ const StudyPostsCard = ({ study, post, studySite, setSite, setGlossary, environm
           </div>
         )}
       </div>
+      {glossaryTypeform && (
+        <GlossaryModal
+          glossary={'seeTypeform'}
+          label="typeform-glossary"
+          t={tPost}
+          onClose={() => setGlossaryTypeform('')}
+        >
+          {glossaryTypeform}
+        </GlossaryModal>
+      )}
     </div>
   )
 }

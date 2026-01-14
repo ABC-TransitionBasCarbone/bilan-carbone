@@ -11,7 +11,7 @@ import {
 } from '@/services/serverFunctions/trajectory'
 import { createTrajectorySchema, TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
 import { getYearFromDateStr } from '@/utils/time'
-import { getDefaultObjectivesForTrajectoryType } from '@/utils/trajectory'
+import { getDefaultObjectivesForTrajectoryType, SBTI_START_YEAR } from '@/utils/trajectory'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { TrajectoryType } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -30,12 +30,14 @@ interface Props {
   onSuccess: (trajectoryId: string) => void
   trajectory: TrajectoryWithObjectives | null
   isFirstCreation?: boolean
+  studyYear: number
 }
 
 const defaultValues: TrajectoryFormData = {
   trajectoryType: TrajectoryType.SBTI_15,
   name: '',
   description: '',
+  referenceYear: SBTI_START_YEAR.toString(),
   objectives: [],
 }
 
@@ -46,6 +48,7 @@ const TrajectoryCreationModal = ({
   onSuccess,
   trajectory,
   isFirstCreation = true,
+  studyYear,
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectoryModal')
   const isEditMode = !!trajectory
@@ -74,6 +77,7 @@ const TrajectoryCreationModal = ({
         trajectoryType: trajectory.type,
         name: trajectory.name,
         description: trajectory.description || '',
+        referenceYear: trajectory.referenceYear?.toString(),
         objectives: trajectory.objectives.map((obj) => ({
           targetYear: obj.targetYear.toString(),
           reductionRate: Number((obj.reductionRate * 100).toFixed(2)),
@@ -115,12 +119,15 @@ const TrajectoryCreationModal = ({
           reductionRate: Number((obj.reductionRate! / 100).toFixed(4)), // Keep precision of 2 digits percentage so 0.01% = 0.0001 => 4 digits
         }))
 
+      const referenceYear = data.referenceYear ? getYearFromDateStr(data.referenceYear) : null
+
       await callServerFunction(
         () =>
           updateTrajectory(trajectory.id, {
             name: data.name,
             description: data.description,
             type: data.trajectoryType,
+            referenceYear,
             objectives,
           }),
         {
@@ -139,11 +146,14 @@ const TrajectoryCreationModal = ({
       return
     }
 
+    const referenceYear = data.referenceYear ? getYearFromDateStr(data.referenceYear) : null
+
     const input: CreateTrajectoryInput = {
       transitionPlanId,
       name: data.name,
       description: data.description,
       type: data.trajectoryType,
+      referenceYear,
     }
 
     if (data.trajectoryType === TrajectoryType.CUSTOM) {
@@ -205,6 +215,7 @@ const TrajectoryCreationModal = ({
             control={control}
             showTrajectoryTypeSelector={!isEditMode}
             handleModeSelect={handleModeSelect}
+            studyYear={studyYear}
           />
         )}
       </Modal>
@@ -245,6 +256,7 @@ const TrajectoryCreationModal = ({
           control={control}
           showTrajectoryTypeSelector={false}
           handleModeSelect={handleModeSelect}
+          studyYear={studyYear}
         />
       )}
     </ModalStepper>

@@ -1,13 +1,12 @@
 import { FullStudy } from '@/db/study'
-import AllPostsInfographyClickson from '@/environments/clickson/study/infography/AllPostsInfography'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import AllPostsInfographyCut from '@/environments/cut/study/infography/AllPostsInfography'
+import { CutPublicodesSituationProvider } from '@/environments/cut/context/publicodesContext'
+import AllPostsInfographySimplified from '@/environments/simplified/study/infography/AllPostsInfography'
 import AllPostsInfographyTilt from '@/environments/tilt/study/infography/AllPostsInfography'
 import { CutPost, TiltPost } from '@/services/posts'
-import { computeResultsByPost } from '@/services/results/consolidated'
+import { computeResultsByPostFromEmissionSources } from '@/services/results/consolidated'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { Environment } from '@prisma/client'
-import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
 import AllPostsInfography from './AllPostsInfography'
@@ -15,10 +14,9 @@ import AllPostsInfography from './AllPostsInfography'
 interface Props {
   study: FullStudy
   studySite: string
-  user: UserSession
 }
 
-const AllPostsInfographyContainer = ({ study, studySite, user }: Props) => {
+const AllPostsInfographyContainer = ({ study, studySite }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const [validatedOnly, setValidatedOnly] = useState(true)
 
@@ -38,7 +36,7 @@ const AllPostsInfographyContainer = ({ study, studySite, user }: Props) => {
 
   const data = useMemo(
     () =>
-      computeResultsByPost(
+      computeResultsByPostFromEmissionSources(
         study,
         tPost,
         studySite,
@@ -54,9 +52,17 @@ const AllPostsInfographyContainer = ({ study, studySite, user }: Props) => {
     <DynamicComponent
       defaultComponent={<AllPostsInfography study={study} data={data} />}
       environmentComponents={{
-        [Environment.CUT]: <AllPostsInfographyCut study={study} data={data} studySiteId={studySite} user={user} />,
+        [Environment.CUT]: (
+          <CutPublicodesSituationProvider studyId={study.id} studySiteId={studySite}>
+            <AllPostsInfographySimplified study={study} environment={Environment.CUT} />
+          </CutPublicodesSituationProvider>
+        ),
         [Environment.TILT]: <AllPostsInfographyTilt study={study} data={data} />,
-        [Environment.CLICKSON]: <AllPostsInfographyClickson study={study} data={data} />,
+        [Environment.CLICKSON]: (
+          // TODO: implement Clickson Publicodes context when available or
+          // adapt the existing one to be parametrized by the current environment.
+          <AllPostsInfographySimplified study={study} environment={Environment.CLICKSON} />
+        ),
       }}
     />
   )

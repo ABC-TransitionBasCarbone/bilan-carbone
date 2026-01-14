@@ -4,7 +4,13 @@ import { FullStudy, getStudyById } from '@/db/study'
 import { Translations } from '@/types/translation'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { getPost } from '@/utils/post'
-import { formatEmissionValueForExport, hasDeprecationPeriod, isCAS, STUDY_UNIT_VALUES } from '@/utils/study'
+import {
+  calculateMonetaryRatio,
+  formatEmissionValueForExport,
+  hasDeprecationPeriod,
+  isCAS,
+  STUDY_UNIT_VALUES,
+} from '@/utils/study'
 import { Environment, Export, ExportRule, Level, StudyResultUnit, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import {
@@ -12,7 +18,6 @@ import {
   getEmissionResults,
   getEmissionSourceEmission,
   getEmissionSourcesTotalCo2,
-  getStandardDeviation,
 } from './emissionSource'
 import { download } from './file'
 import { hasAccessToBcExport } from './permissions/environment'
@@ -25,16 +30,22 @@ import {
   subPostBCToSubPostTiltMapping,
 } from './posts'
 import { computeBegesResult } from './results/beges'
-import { computeResultsByPost, computeResultsByTag, ResultsByPost } from './results/consolidated'
+import {
+  BaseResultsBySite,
+  computeResultsByPostFromEmissionSources,
+  computeResultsByTag,
+  ResultsByPost,
+} from './results/consolidated'
 import { filterWithDependencies } from './results/utils'
 import { EmissionFactorWithMetaData, getEmissionFactorsByIds } from './serverFunctions/emissionFactor'
 import { prepareExcel } from './serverFunctions/file'
 import { getUserSettings } from './serverFunctions/user'
 import {
-  getEmissionSourcesGlobalUncertainty,
-  getQualityRating,
-  getStandardDeviationRating,
-  sumQualities,
+  getEmissionSourcesConfidenceInterval,
+  getQualitativeUncertaintyForEmissionSources,
+  getQualitativeUncertaintyFromQuality,
+  getQualitativeUncertaintyFromSquaredStandardDeviation,
+  getSquaredStandardDeviationForEmissionSource,
 } from './uncertainty'
 
 export enum AdditionalResultTypes {
@@ -43,7 +54,7 @@ export enum AdditionalResultTypes {
 }
 export type ResultType = Export | AdditionalResultTypes
 
-const getQuality = (quality: ReturnType<typeof getQualityRating>, t: Translations) => {
+const getQuality = (quality: ReturnType<typeof getQualitativeUncertaintyFromQuality>, t: Translations) => {
   return quality === null ? t('unknown') : t(quality.toString())
 }
 
@@ -158,7 +169,7 @@ const getEmissionSourcesRows = (
         initCols.push(tPost(post || ''))
         initCols.push(tPost(emissionSource.subPost))
       }
-      const emissionSourceSD = getStandardDeviation(emissionSource)
+      const emissionSourceSD = getSquaredStandardDeviationForEmissionSource(emissionSource)
 
       const withDeprecation = hasDeprecationPeriod(emissionSource.subPost)
 
@@ -172,18 +183,20 @@ const getEmissionSourcesRows = (
           isCAS(emissionSource) ? emissionSource.hectare || '1' : ' ',
           isCAS(emissionSource) ? emissionSource.duration || '1' : ' ',
           tResultUnits(resultsUnit),
-          emissionSourceSD ? getQuality(getStandardDeviationRating(emissionSourceSD), tQuality) : '',
+          emissionSourceSD
+            ? getQuality(getQualitativeUncertaintyFromSquaredStandardDeviation(emissionSourceSD), tQuality)
+            : '',
           emissionSource.emissionSourceTags.map((emissionSourceTag) => emissionSourceTag.tag.name).join(', ') || '',
           emissionSource.value?.toLocaleString('fr-FR', { useGrouping: false }) || '0',
           emissionFactor?.unit ? tUnit(emissionFactor.unit, { count: 1 }) : '',
-          getQuality(getQualityRating(emissionSource), tQuality),
+          getQuality(getQualitativeUncertaintyFromQuality(emissionSource), tQuality),
           emissionSource.comment || '',
           emissionFactor?.metaData?.title || t('noFactor'),
           emissionFactor
             ? getEmissionFactorValue(emissionFactor, environment).toLocaleString('fr-FR', { useGrouping: false })
             : '',
           emissionFactor?.unit ? `${tResultUnits(StudyResultUnit.K)}/${tUnit(emissionFactor.unit, { count: 1 })}` : '',
-          emissionFactor ? getQuality(getQualityRating(emissionFactor), tQuality) : '',
+          emissionFactor ? getQuality(getQualitativeUncertaintyFromQuality(emissionFactor), tQuality) : '',
           emissionFactor?.source || '',
         ])
         .map((field) => encodeCSVField(field))
@@ -252,16 +265,15 @@ const getEmissionSourcesCSVContent = (
   )
   const totalRow = [t('total'), ...emptyFields(emptyFieldsCount + 1), totalEmissions].join(';')
 
-  const qualities = emissionSources.map((emissionSource) => getStandardDeviation(emissionSource))
-  const quality = getQuality(getStandardDeviationRating(sumQualities(qualities)), tQuality)
+  const quality = getQuality(getQualitativeUncertaintyForEmissionSources(emissionSourcesWithEmission), tQuality)
   const qualityRow = [t('quality'), ...emptyFields(emptyFieldsCount + 1), quality].join(';')
 
-  const uncertainty = getEmissionSourcesGlobalUncertainty(emissionSourcesWithEmission)
+  const confidenceInterval = getEmissionSourcesConfidenceInterval(emissionSourcesWithEmission)
   const uncertaintyRow = [
     t('uncertainty'),
     ...emptyFields(emptyFieldsCount),
-    formatEmissionValueForExport(uncertainty[0], resultsUnit),
-    formatEmissionValueForExport(uncertainty[1], resultsUnit),
+    formatEmissionValueForExport(confidenceInterval[0], resultsUnit),
+    formatEmissionValueForExport(confidenceInterval[1], resultsUnit),
   ].join(';')
 
   return [columns, ...rows, totalRow, qualityRow, uncertaintyRow].join('\n')
@@ -369,7 +381,11 @@ const handleLine = (
 ) => {
   const resultLine = []
   if (headersForEnv.includes('uncertainty')) {
-    resultLine.push(result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '')
+    resultLine.push(
+      result.squaredStandardDeviation
+        ? tQuality(getQualitativeUncertaintyFromSquaredStandardDeviation(result.squaredStandardDeviation).toString())
+        : '',
+    )
   }
 
   return [...resultLine, formatEmissionValueForExport(result.value ?? 0, resultsUnits)]
@@ -391,7 +407,7 @@ export const formatConsolidatedStudyResultsForExport = (
   const headersForEnv = getHeadersForEnv(environment)
 
   for (const site of siteList) {
-    const resultList = computeResultsByPost(
+    const resultList = computeResultsByPostFromEmissionSources(
       study,
       tPost,
       site.id,
@@ -517,7 +533,9 @@ export const formatBegesStudyResultsForExport = (
         category === 'total' ? '' : `${category}. ${tBeges(`category.${category}`)}`,
         post,
         ...gasValues,
-        result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '',
+        result.squaredStandardDeviation
+          ? tQuality(getQualitativeUncertaintyFromSquaredStandardDeviation(result.squaredStandardDeviation).toString())
+          : '',
       ])
     }
 
@@ -527,17 +545,14 @@ export const formatBegesStudyResultsForExport = (
   return { name: tExport('Beges'), data: dataForExport, options: sheetOptions }
 }
 
-export const formatBCResultsForCutExport = (
+const formatBCResultsForCutExport = (
   study: FullStudy,
   siteList: { name: string; id: string }[],
+  computedResults: BaseResultsBySite,
   tExport: Translations,
   tPost: Translations,
-  tStudy: Translations,
-  studyUnitValues: Record<string, number>,
-  environment: Environment,
 ) => {
   const data: (string | number)[][] = []
-
   data.push([tExport('bc.disclaimerExcel1')])
   data.push([tExport('bc.disclaimerExcel2')])
   data.push([tExport('bc.disclaimerExcel3')])
@@ -547,15 +562,16 @@ export const formatBCResultsForCutExport = (
   data.push([])
 
   for (const site of siteList) {
-    const { computedResultsWithDep } = getDetailedEmissionResults(study, tPost, site.id, false, environment, tStudy)
-    const bilanCarboneEquivalent = convertCountToBilanCarbone(computedResultsWithDep)
+    const results = site.id === 'all' ? computedResults.aggregated : computedResults.bySite[site.id]
+    // TODO: use a more generic conversion function to be used by all simplified environments
+    const bilanCarboneEquivalent = convertCountToBilanCarbone(results ?? [])
 
     data.push([site.name])
     data.push([tExport('bc.category'), tExport('bc.emissions')])
 
     let siteTotal = 0
     Object.entries(bilanCarboneEquivalent).forEach(([result, value]) => {
-      const roundedValue = Math.round(value / studyUnitValues[study.resultsUnit])
+      const roundedValue = Math.round(value / STUDY_UNIT_VALUES[study.resultsUnit])
       data.push([tPost(result), roundedValue])
       siteTotal += roundedValue
     })
@@ -574,6 +590,47 @@ export const formatBCResultsForCutExport = (
   }
 }
 
+export const formatComputedResultsForExport = (
+  study: FullStudy,
+  siteList: { name: string; id: string }[],
+  computedResults: BaseResultsBySite,
+  tStudy: Translations,
+  tExport: Translations,
+  tUnits: Translations,
+  environment: Environment,
+) => {
+  const dataForExport: (string | number)[][] = []
+  const formattedHeaders = getFormattedHeadersForEnv(environment, tStudy, tUnits, study.resultsUnit)
+
+  for (const site of siteList) {
+    dataForExport.push([site.name])
+    dataForExport.push(formattedHeaders)
+    const results = site.id === 'all' ? computedResults.aggregated : computedResults.bySite[site.id]
+
+    for (const result of results) {
+      dataForExport.push([result.label, '', formatEmissionValueForExport(result.value ?? 0, study.resultsUnit)])
+
+      if (result.post !== 'total') {
+        for (const subPostResult of result.children) {
+          dataForExport.push([
+            '',
+            subPostResult.label,
+            formatEmissionValueForExport(subPostResult.value ?? 0, study.resultsUnit),
+          ])
+        }
+      }
+    }
+  }
+
+  dataForExport.push([])
+
+  return {
+    name: tExport(AdditionalResultTypes.ENV_SPECIFIC_EXPORT),
+    data: dataForExport,
+    options: { '!cols': [{ wch: 30 }, { wch: 15 }, { wch: 20 }] },
+  }
+}
+
 export const downloadStudyResults = async (
   study: FullStudy,
   rules: ExportRule[],
@@ -586,6 +643,7 @@ export const downloadStudyResults = async (
   tBeges: Translations,
   tUnits: Translations,
   environment: Environment = Environment.BC,
+  computedResults?: BaseResultsBySite,
 ) => {
   const data = []
 
@@ -600,20 +658,33 @@ export const downloadStudyResults = async (
     : undefined
 
   if (environment !== Environment.BC) {
-    const environmentResults = formatConsolidatedStudyResultsForExport(
-      study,
-      siteList,
-      tStudy,
-      tExport,
-      tPost,
-      tQuality,
-      tUnits,
-      validatedEmissionSourcesOnly,
-      environment,
-      AdditionalResultTypes.ENV_SPECIFIC_EXPORT,
-    )
-
-    data.push(environmentResults)
+    // Use precomputed results from publicodes if available (for simplified environments)
+    if (computedResults !== undefined) {
+      const environmentResults = formatComputedResultsForExport(
+        study,
+        siteList,
+        computedResults,
+        tStudy,
+        tExport,
+        tUnits,
+        environment,
+      )
+      data.push(environmentResults)
+    } else {
+      const environmentResults = formatConsolidatedStudyResultsForExport(
+        study,
+        siteList,
+        tStudy,
+        tExport,
+        tPost,
+        tQuality,
+        tUnits,
+        validatedEmissionSourcesOnly,
+        environment,
+        AdditionalResultTypes.ENV_SPECIFIC_EXPORT,
+      )
+      data.push(environmentResults)
+    }
   }
 
   if (hasAccessToBcExport(environment) || environment === Environment.BC) {
@@ -648,8 +719,8 @@ export const downloadStudyResults = async (
     )
   }
 
-  if (environment === Environment.CUT) {
-    data.push(formatBCResultsForCutExport(study, siteList, tExport, tPost, tStudy, STUDY_UNIT_VALUES, environment))
+  if (environment === Environment.CUT && computedResults) {
+    data.push(formatBCResultsForCutExport(study, siteList, computedResults, tExport, tPost))
   }
 
   const buffer = await prepareExcel(data)
@@ -679,7 +750,7 @@ export const getDetailedEmissionResults = (
   withDependencies: boolean = true,
   type?: ResultType,
 ) => {
-  const computedResultsWithDep = computeResultsByPost(
+  const computedResultsWithDep = computeResultsByPostFromEmissionSources(
     study,
     tPost,
     studySite,
@@ -690,7 +761,7 @@ export const getDetailedEmissionResults = (
     type,
   )
 
-  const computedResultsWithoutDep = computeResultsByPost(
+  const computedResultsWithoutDep = computeResultsByPostFromEmissionSources(
     study,
     tPost,
     studySite,
@@ -720,8 +791,8 @@ export const getDetailedEmissionResults = (
     (computedResultsWithoutDep.find((result) => result.post === 'total')?.value || 0) /
     STUDY_UNIT_VALUES[study.resultsUnit]
 
-  const monetaryRatio = (monetaryTotal / total) * 100
-  const nonSpecificMonetaryRatio = (nonSpecificMonetaryTotal / total) * 100
+  const monetaryRatio = calculateMonetaryRatio(monetaryTotal, total)
+  const nonSpecificMonetaryRatio = calculateMonetaryRatio(nonSpecificMonetaryTotal, total)
 
   return {
     computedResultsWithDep,

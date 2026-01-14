@@ -1,6 +1,6 @@
 import Box from '@/components/base/Box'
 import { FullStudy } from '@/db/study'
-import { hasAccessToCarbonResponsibilityIntensities } from '@/services/permissions/environment'
+import { hasAccessToCarbonResponsibilityIntensitiesAdvanced } from '@/services/permissions/environmentAdvanced'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { CA_UNIT_VALUES } from '@/utils/number'
 import { Environment, SiteCAUnit } from '@prisma/client'
@@ -54,57 +54,69 @@ const CarbonIntensities = ({ study, studySite, withDep, withoutDep, caUnit }: Pr
 
   return (
     <Box className="flex-col">
-      <div className="flex grow">
-        <div className="grow justify-center">
-          <span className="text-center bold">{t('dependencyIntensity')}</span>
-        </div>
-        {environment && hasAccessToCarbonResponsibilityIntensities(environment) && (
+      {environment && hasAccessToCarbonResponsibilityIntensitiesAdvanced(environment, study.simplified) && (
+        <div className="flex grow">
+          <div className="grow justify-center">
+            <span className="text-center bold">{t('dependencyIntensity')}</span>
+          </div>
           <div className="grow justify-center">
             <span className="text-center bold">{t('responsibilityIntensity')}</span>
           </div>
+        </div>
+      )}
+      <div
+        className={
+          environment && hasAccessToCarbonResponsibilityIntensitiesAdvanced(environment, study.simplified)
+            ? 'flex-col'
+            : 'flex'
+        }
+      >
+        <CarbonIntensity
+          withDep={withDep}
+          withoutDep={withoutDep}
+          divider={ca}
+          resultsUnit={study.resultsUnit}
+          label={`${tCAUnit(caUnit)} ${t('intensities.budget')}`}
+          testId="result-budget"
+          simplified={study.simplified}
+        />
+        <CarbonIntensity
+          withDep={withDep}
+          withoutDep={withoutDep}
+          divider={etp}
+          resultsUnit={study.resultsUnit}
+          label={t('intensities.etp')}
+          testId="result-etp"
+          simplified={study.simplified}
+        />
+        {study.organizationVersion.environment === Environment.TILT && (
+          <>
+            {volunteer && (
+              <CarbonIntensity
+                withDep={withDep}
+                withoutDep={withoutDep}
+                divider={volunteer}
+                resultsUnit={study.resultsUnit}
+                label={t('intensities.volunteer')}
+                testId="result-budget"
+                simplified={study.simplified}
+              />
+            )}
+
+            {beneficiary && (
+              <CarbonIntensity
+                withDep={withDep}
+                withoutDep={withoutDep}
+                divider={beneficiary}
+                resultsUnit={study.resultsUnit}
+                label={t('intensities.beneficiary')}
+                testId="result-budget"
+                simplified={study.simplified}
+              />
+            )}
+          </>
         )}
       </div>
-      <CarbonIntensity
-        withDep={withDep}
-        withoutDep={withoutDep}
-        divider={ca}
-        resultsUnit={study.resultsUnit}
-        label={`${tCAUnit(caUnit)} ${t('intensities.budget')}`}
-        testId="result-budget"
-      />
-      <CarbonIntensity
-        withDep={withDep}
-        withoutDep={withoutDep}
-        divider={etp}
-        resultsUnit={study.resultsUnit}
-        label={t('intensities.etp')}
-        testId="result-etp"
-      />
-      {study.organizationVersion.environment === Environment.TILT && (
-        <>
-          {volunteer && (
-            <CarbonIntensity
-              withDep={withDep}
-              withoutDep={withoutDep}
-              divider={volunteer}
-              resultsUnit={study.resultsUnit}
-              label={t('intensities.volunteer')}
-              testId="result-budget"
-            />
-          )}
-
-          {beneficiary && (
-            <CarbonIntensity
-              withDep={withDep}
-              withoutDep={withoutDep}
-              divider={beneficiary}
-              resultsUnit={study.resultsUnit}
-              label={t('intensities.beneficiary')}
-              testId="result-budget"
-            />
-          )}
-        </>
-      )}
     </Box>
   )
 }

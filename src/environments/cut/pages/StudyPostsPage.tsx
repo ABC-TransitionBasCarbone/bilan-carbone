@@ -12,7 +12,7 @@ import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
-import { CutPublicodesProvider } from '../context/CutPublicodesProvider'
+import { CutPublicodesFormProvider } from '../context/publicodesContext'
 import CutSaveStatusIndicator from '../study/CutSaveStatusIndicator'
 import PublicodesSubPostForm from '../study/PublicodesSubPostForm'
 
@@ -72,7 +72,7 @@ const StudyPostsPageCut = ({ post, currentSubPost, study, studySiteId }: Props) 
   const isLastStep = activeStep >= subPosts.length - 1
 
   return (
-    <CutPublicodesProvider studyId={study.id} studySiteId={studySiteId}>
+    <CutPublicodesFormProvider studyId={study.id} studySiteId={studySiteId}>
       <Block
         title={tPost(post)}
         as="h1"
@@ -120,7 +120,7 @@ const StudyPostsPageCut = ({ post, currentSubPost, study, studySiteId }: Props) 
           }
         />
       </Block>
-    </CutPublicodesProvider>
+    </CutPublicodesFormProvider>
   )
 }
 

@@ -1,6 +1,11 @@
 import { FullStudy } from '@/db/study'
-import { getEmissionResults, getStandardDeviation } from '@/services/emissionSource'
-import { getQualityRating, getSpecificEmissionFactorQuality, getStandardDeviationRating } from '@/services/uncertainty'
+import { getEmissionResults } from '@/services/emissionSource'
+import {
+  getQualitativeUncertaintyFromSquaredStandardDeviation,
+  getSpecificEmissionFactorQuality,
+  getSquaredStandardDeviationForEmissionSource,
+  getSquaredStandardDeviationForQuality,
+} from '@/services/uncertainty'
 import { EmissionSourcesSort } from '@/types/filters'
 import { Translations } from '@/types/translation'
 import { Environment } from '@prisma/client'
@@ -14,8 +19,11 @@ export const getEmissionSourcesFuseOptions = (tQuality: Translations, tUnit: Tra
     {
       name: 'quality',
       getFn: (emissionSource: FullStudy['emissionSources'][number]) => {
-        const standardD = getStandardDeviation(emissionSource) || 0
-        return tQuality(getStandardDeviationRating(standardD).toString())
+        return tQuality(
+          getQualitativeUncertaintyFromSquaredStandardDeviation(
+            getSquaredStandardDeviationForEmissionSource(emissionSource),
+          ).toString(),
+        )
       },
       weight: 0.3,
     },
@@ -47,7 +55,10 @@ export const getEmissionSourcesFuseOptions = (tQuality: Translations, tUnit: Tra
     {
       name: 'emissionFactorQuality',
       getFn: (emissionSource: FullStudy['emissionSources'][number]) => {
-        const qualityRating = getQualityRating(getSpecificEmissionFactorQuality(emissionSource)) || 'unknown'
+        const qualityRating =
+          getQualitativeUncertaintyFromSquaredStandardDeviation(
+            getSquaredStandardDeviationForQuality(getSpecificEmissionFactorQuality(emissionSource)),
+          ) || 'unknown'
         return tQuality(qualityRating.toString())
       },
       weight: 0.3,

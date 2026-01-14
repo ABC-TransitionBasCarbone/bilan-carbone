@@ -123,6 +123,7 @@ enum Unit {
   TEP
   TEP_PCI
   TEP_PCS
+  TEU_KM
   TON_KM
   TON
   TON_WITH_BONES

@@ -1,5 +1,7 @@
 import { StudyContributorDeleteParams } from '@/components/study/rights/StudyContributorsTable'
 import { getEnvVar } from '@/lib/environment'
+import { isSourceForEnv } from '@/services/importEmissionFactor/import'
+import { hasAccessToCreateStudyWithEmissionFactorVersions } from '@/services/permissions/environment'
 import { filterAllowedStudies } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { ChangeStudyCinemaCommand } from '@/services/serverFunctions/study.command'
@@ -9,6 +11,7 @@ import { isAdminOnOrga } from '@/utils/organization'
 import { getUserRoleOnPublicStudy } from '@/utils/study'
 import { isAdmin } from '@/utils/user'
 import {
+  CommentStatus,
   ControlMode,
   DuplicableStudy,
   Environment,
@@ -42,7 +45,7 @@ export const createStudy = async (
   const client = tx ?? prismaClient
   const dbStudy = await client.study.create({ data })
 
-  if (environment === Environment.CUT || shouldCreateFEVersions) {
+  if (hasAccessToCreateStudyWithEmissionFactorVersions(environment) || shouldCreateFEVersions) {
     let studyEmissionFactorVersions: Prisma.StudyEmissionFactorVersionCreateManyInput[] = []
     if (environment === Environment.CUT) {
       studyEmissionFactorVersions = (await getSourceCutImportVersionIds()).map((importVersion) => ({
@@ -50,6 +53,14 @@ export const createStudy = async (
         source: importVersion.source,
         importVersionId: importVersion.id,
       }))
+    } else if (environment === Environment.CLICKSON) {
+      studyEmissionFactorVersions = (await getSourceEnvironmentImportVersionIds(Environment.CLICKSON)).map(
+        (importVersion) => ({
+          studyId: dbStudy.id,
+          source: importVersion.source,
+          importVersionId: importVersion.id,
+        }),
+      )
     } else {
       const sources = Object.values(Import).filter((source) => source !== Import.Manual && source !== Import.CUT)
 
@@ -218,17 +229,25 @@ const fullStudyInclude = {
       distanceToParis: true,
       volunteerNumber: true,
       beneficiaryNumber: true,
+      superficy: true,
+      studentNumber: true,
       site: {
         select: {
           id: true,
           name: true,
           postalCode: true,
           city: true,
+          address: true,
+          establishmentYear: true,
+          etp: true,
+          studentNumber: true,
+          superficy: true,
           cnc: {
             select: {
               id: true,
               numberOfProgrammedFilms: true,
               ecrans: true,
+              fauteuils: true,
             },
           },
         },
@@ -423,7 +442,11 @@ export const getAllowedStudyIdByAccount = async (account: UserSession) => {
   return study?.id
 }
 
-export const getAllowedStudiesByUserAndOrganization = async (user: UserSession, organizationVersionId: string) => {
+export const getAllowedStudiesByUserAndOrganization = async (
+  user: UserSession,
+  organizationVersionId: string,
+  simplified = false,
+) => {
   const organizationVersion = await getOrganizationVersionById(organizationVersionId)
 
   if (!user.organizationVersionId) {
@@ -437,6 +460,7 @@ export const getAllowedStudiesByUserAndOrganization = async (user: UserSession, 
   const studies = await prismaClient.study.findMany({
     where: {
       organizationVersionId,
+      simplified,
       ...(isAdminOnOrga(user, organizationVersion as OrganizationVersionWithOrganization)
         ? {}
         : {
@@ -490,6 +514,19 @@ export const getStudyNameById = async (id: string) => {
     return null
   }
   return study.name
+}
+
+export const getStudyStartDate = async (id: string) => {
+  const study = await prismaClient.study.findUnique({
+    where: { id },
+    select: { startDate: true },
+  })
+
+  if (!study) {
+    return null
+  }
+
+  return study.startDate
 }
 
 export const createUserOnStudy = async (right: Prisma.UserOnStudyCreateInput, tx?: Prisma.TransactionClient) =>
@@ -784,6 +821,20 @@ export const getSourceCutImportVersionIds = async () =>
     distinct: ['source'],
   })
 
+export const getSourceEnvironmentImportVersionIds = async (
+  environment: Environment,
+): Promise<{ id: string; source: Import }[]> => {
+  const sources = isSourceForEnv(environment)
+  return prismaClient.emissionFactorImportVersion.findMany({
+    select: { id: true, source: true },
+    where: {
+      source: { in: sources },
+    },
+    orderBy: { createdAt: 'desc' },
+    distinct: ['source'],
+  })
+}
+
 export const getSourcesLatestImportVersionId = async (sources: Import[]) =>
   prismaClient.emissionFactorImportVersion.findMany({
     select: { id: true, source: true },
@@ -907,3 +958,103 @@ export const getOrganizationStudiesBeforeDate = (organizationVersionId: string, 
     select: { id: true, name: true },
     where: { organizationVersionId, startDate: { lt: date } },
   })
+
+export const createStudyComment = async (data: Prisma.StudyCommentCreateInput) =>
+  prismaClient.studyComment.create({ data })
+
+export const getStudyCommentsWithStudyIdAndSubPost = async (studyId: string, subPost?: SubPost | null) => {
+  return prismaClient.studyComment.findMany({
+    where: { studyId, subPost },
+    include: {
+      author: {
+        select: {
+          id: true,
+          user: {
+            select: {
+              email: true,
+            },
+          },
+        },
+      },
+    },
+    orderBy: { createdAt: 'asc' },
+  })
+}
+export type FullStudyComments = Exclude<AsyncReturnType<typeof getStudyCommentsWithStudyIdAndSubPost>, null>
+export type FullStudyComment = FullStudyComments[0]
+
+export const getStudyCommentsFromOrganizationVersionId = async (
+  organizationVersionId: string,
+  status: CommentStatus,
+) => {
+  return prismaClient.studyComment.findMany({
+    where: { study: { organizationVersionId: organizationVersionId }, status },
+    include: {
+      author: {
+        select: {
+          id: true,
+          user: {
+            select: {
+              email: true,
+            },
+          },
+        },
+      },
+      study: {
+        select: {
+          name: true,
+        },
+      },
+    },
+    orderBy: { createdAt: 'asc' },
+  })
+}
+
+export type OrganizationVersionWithStudyComments = Exclude<
+  AsyncReturnType<typeof getStudyCommentsFromOrganizationVersionId>,
+  null
+>
+
+export const getStudyCommentsCountFromOrganizationVersionId = async (
+  organizationVersionId: string,
+  status: CommentStatus,
+) => {
+  return prismaClient.studyComment.count({
+    where: { study: { organizationVersionId: organizationVersionId }, status },
+  })
+}
+
+export const getPendingStudyCommentsCountFromAuthor = async (authorId: string) => {
+  return prismaClient.studyComment.count({
+    where: { authorId, status: CommentStatus.PENDING },
+  })
+}
+
+export const updateStudyComment = async (id: string, data: Prisma.StudyCommentUpdateInput) =>
+  prismaClient.studyComment.update({
+    where: { id },
+    data,
+  })
+
+export const deleteStudyComment = async (id: string) =>
+  prismaClient.studyComment.delete({
+    where: { id },
+  })
+
+export const getEngagementActions = (studyId: string) =>
+  prismaClient.engagementAction.findMany({
+    where: { studyId },
+  })
+
+export const getEngagementActionById = (id: string) =>
+  prismaClient.engagementAction.findUnique({
+    where: { id },
+  })
+
+export const createEngagementAction = async (data: Prisma.EngagementActionCreateInput) =>
+  prismaClient.engagementAction.create({ data })
+
+export const updateEngagementAction = async (id: string, data: Prisma.EngagementActionUpdateInput) =>
+  prismaClient.engagementAction.update({ where: { id }, data })
+
+export const deleteEngagementAction = async (id: string) => prismaClient.engagementAction.delete({ where: { id } })

@@ -15,9 +15,17 @@ interface Props {
   transitionPlanId: string
   onTrajectoryCreation: () => void
   canEdit: boolean
+  studyYear: number
 }
 
-const ObjectivesFilters = ({ search, setSearch, transitionPlanId, onTrajectoryCreation, canEdit }: Props) => {
+const ObjectivesFilters = ({
+  search,
+  setSearch,
+  transitionPlanId,
+  onTrajectoryCreation,
+  canEdit,
+  studyYear,
+}: Props) => {
   const t = useTranslations('study.transitionPlan.objectives')
   const [creationModalOpened, setCreationModalOpened] = useState(false)
 
@@ -50,6 +58,7 @@ const ObjectivesFilters = ({ search, setSearch, transitionPlanId, onTrajectoryCr
           onSuccess={handleSuccess}
           trajectory={null}
           isFirstCreation={false}
+          studyYear={studyYear}
         />
       )}
     </div>

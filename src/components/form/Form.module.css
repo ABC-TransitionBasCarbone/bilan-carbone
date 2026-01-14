@@ -40,18 +40,18 @@
 }
 
 .textFieldInput {
-  border-radius: 0.75rem;
-  border-color: var(--grayscale-300);
   color: black;
 }
 
+.textFieldInput fieldset {
+  border-color: var(--grayscale-300);
+}
+
 .datePickerInput {
-  border-radius: 0.75rem;
   background-color: white;
 }
 
 .datePickerInput fieldset {
-  border-radius: 0.75rem;
   border-color: var(--grayscale-300);
 }
 

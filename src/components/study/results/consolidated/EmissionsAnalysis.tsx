@@ -23,8 +23,6 @@ interface Props {
   studySite: string
   withDepValue: number
   withoutDepValue: number
-  displayValueWithDep: boolean
-  setDisplayValueWithDep: (displayValueWithDep: boolean) => void
   monetaryRatio: number
   nonSpecificMonetaryRatio: number
   caUnit?: SiteCAUnit
@@ -37,8 +35,6 @@ const EmissionsAnalysis = ({
   studySite,
   withDepValue,
   withoutDepValue,
-  displayValueWithDep,
-  setDisplayValueWithDep,
   monetaryRatio,
   nonSpecificMonetaryRatio,
   caUnit = SiteCAUnit.K,
@@ -60,12 +56,7 @@ const EmissionsAnalysis = ({
           <Box className={classNames(styles.gapped, 'justify-center flex-col')}>
             <Title as="h6" title={t('total')} className="justify-center" />
             <div className="flex-row justify-around">
-              <Box
-                className="pointer align-center flex-col relative mr1"
-                color="secondary"
-                selected={displayValueWithDep}
-                onClick={() => setDisplayValueWithDep(true)}
-              >
+              <Box className="align-center flex-col relative mr1" color="secondary">
                 <HelpOutlineOutlinedIcon
                   color="secondary"
                   className={`ml-4 ${styles.helpIcon} absolute r1`}
@@ -78,12 +69,7 @@ const EmissionsAnalysis = ({
                 />
                 <span className="align-center text-center">{t('withDependencies')}</span>
               </Box>
-              <Box
-                className="pointer align-center flex-col"
-                color="secondary"
-                selected={!displayValueWithDep}
-                onClick={() => setDisplayValueWithDep(false)}
-              >
+              <Box className="align-center flex-col" color="secondary">
                 <Data
                   value={formatNumber(withoutDepValue)}
                   label={tResultUnits(study.resultsUnit)}
@@ -127,7 +113,6 @@ const EmissionsAnalysis = ({
             title={t('tagPieChartTitle', { unit: tResultUnits(study.resultsUnit) })}
             type="tag"
             glossary="tagGlossary"
-            exportType={exportType}
           />
         </div>
       </div>
