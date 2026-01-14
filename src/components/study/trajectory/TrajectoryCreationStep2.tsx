@@ -32,7 +32,7 @@ const TrajectoryCreationStep2 = ({
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectoryModal')
   const reductionRate = getReductionRatePerType(trajectoryType)
-  const maxReferenceDate = dayjs().year(studyYear - 1)
+  const maxReferenceDate = dayjs().year(studyYear)
 
   const getMainTrajectoryType = () => {
     if (trajectoryType === TrajectoryType.SBTI_15 || trajectoryType === TrajectoryType.SBTI_WB2C) {

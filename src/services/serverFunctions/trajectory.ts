@@ -24,7 +24,7 @@ const validateTrajectoryInput = async (referenceYear: number | null | undefined,
     const studyStartDate = await getStudyStartDate(studyId)
     if (studyStartDate) {
       const studyYear = studyStartDate.getFullYear()
-      if (referenceYear >= studyYear) {
+      if (referenceYear > studyYear) {
         throw new Error('referenceYearMustBeBeforeOrEqualToStudyYear')
       }
     }
