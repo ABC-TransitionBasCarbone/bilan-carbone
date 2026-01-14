@@ -1458,12 +1458,12 @@ const calculateBudgetWithObjectivesAndMultiplier = (
   return calculateTrajectoryIntegral(trajectory, startYear, endYear)
 }
 
-type TrajectoriesForYear = {
-  currentTrajectory: { year: number }[]
-  previousTrajectory: { year: number }[] | null
+type TrajectoriesForGraph = {
+  currentTrajectory: { year: number; value: number }[]
+  previousTrajectory: { year: number; value: number }[] | null
 }
 
-const extractYearsFromTrajectory = (data: TrajectoriesForYear | null): number[] => {
+const extractYearsFromTrajectory = (data: TrajectoriesForGraph | null): number[] => {
   if (!data) {
     return []
   }
@@ -1471,24 +1471,19 @@ const extractYearsFromTrajectory = (data: TrajectoriesForYear | null): number[] 
   return [...data.currentTrajectory.map((d) => d.year), ...(data.previousTrajectory?.map((d) => d.year) ?? [])]
 }
 
-export const getYearsToDisplay = (
-  trajectory15Data: TrajectoriesForYear | null,
-  trajectoryWB2CData: TrajectoriesForYear | null,
-  snbcData: TrajectoriesForYear | null,
-  customTrajectoriesData: (TrajectoriesForYear | null)[],
-  actionBasedTrajectoryData: TrajectoriesForYear | null,
-  trajectory15Enabled: boolean,
-  trajectoryWB2CEnabled: boolean,
-  trajectorySnbcEnabled: boolean,
-): number[] => {
-  const allYears = [
-    ...(trajectory15Enabled ? extractYearsFromTrajectory(trajectory15Data) : []),
-    ...(trajectoryWB2CEnabled ? extractYearsFromTrajectory(trajectoryWB2CData) : []),
-    ...(trajectorySnbcEnabled ? extractYearsFromTrajectory(snbcData) : []),
-    ...customTrajectoriesData.flatMap((trajData) => extractYearsFromTrajectory(trajData)),
-    ...extractYearsFromTrajectory(actionBasedTrajectoryData),
-  ]
-  return Array.from(new Set(allYears)).sort((a, b) => a - b)
+const extractMaxEmissionsFromTrajectory = (data: TrajectoriesForGraph): number => {
+  return Math.max(
+    ...data.currentTrajectory.map((d) => d.value),
+    ...(data.previousTrajectory?.map((d) => d.value) ?? []),
+  )
+}
+
+export const getGraphRange = (trajectories: TrajectoryData[]): { years: number[]; maxEmissions: number } => {
+  const allYears = trajectories.flatMap((traj) => extractYearsFromTrajectory(traj))
+  const years = Array.from(new Set(allYears)).sort((a, b) => a - b)
+
+  const maxEmissions = Math.max(...trajectories.map((traj) => extractMaxEmissionsFromTrajectory(traj)))
+  return { years, maxEmissions }
 }
 
 export const getMaxYearFromTrajectories = (maxYear: number, trajectories: (TrajectoryData | null)[]): number => {

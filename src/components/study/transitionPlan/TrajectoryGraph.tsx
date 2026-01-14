@@ -5,13 +5,13 @@ import {
   TRAJECTORY_SNBC_GENERAL_ID,
   TRAJECTORY_WB2C_ID,
 } from '@/components/pages/TrajectoryReductionPage'
-import { getYearsToDisplay, PastStudy, TrajectoryData } from '@/utils/trajectory'
-import { Alert, Typography } from '@mui/material'
+import { getGraphRange, PastStudy, TrajectoryData } from '@/utils/trajectory'
+import { Alert, Slider, Typography } from '@mui/material'
 import { LineChart, LineSeries } from '@mui/x-charts/LineChart'
 import type { StudyResultUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import DependenciesSwitch from '../results/DependenciesSwitch'
 
 export interface TrajectoryDataPoint {
@@ -69,29 +69,119 @@ const TrajectoryGraph = ({
   const trajectoryWB2CEnabled = selectedSbtiTrajectories.includes(TRAJECTORY_WB2C_ID)
   const trajectorySnbcEnabled = selectedSnbcTrajectories.includes(TRAJECTORY_SNBC_GENERAL_ID)
 
-  const yearsToDisplay = useMemo(
+  const { years: allYearsToDisplay, maxEmissions } = useMemo(
     () =>
-      getYearsToDisplay(
-        trajectory15Data,
-        trajectoryWB2CData,
-        snbcData,
-        customTrajectoriesData.map((values) => values.trajectoryData),
-        actionBasedTrajectoryData,
-        trajectory15Enabled,
-        trajectoryWB2CEnabled,
-        trajectorySnbcEnabled,
+      getGraphRange(
+        [
+          trajectory15Data,
+          trajectoryWB2CData,
+          snbcData,
+          ...customTrajectoriesData.map((values) => values.trajectoryData),
+          actionBasedTrajectoryData,
+        ].filter((traj) => traj !== null),
       ),
-    [
-      trajectory15Data,
-      trajectoryWB2CData,
-      snbcData,
-      customTrajectoriesData,
-      actionBasedTrajectoryData,
-      trajectory15Enabled,
-      trajectoryWB2CEnabled,
-      trajectorySnbcEnabled,
-    ],
+    [trajectory15Data, trajectoryWB2CData, snbcData, customTrajectoriesData, actionBasedTrajectoryData],
   )
+
+  const minYear = allYearsToDisplay[0] ?? 2020
+  const maxYear = allYearsToDisplay[allYearsToDisplay.length - 1] ?? 2050
+
+  const [yearRange, setYearRange] = useState<number[]>([1990, 2100])
+  const [emissionRange, setEmissionRange] = useState<number[]>([0, maxEmissions])
+
+  // Calculate min/max y values from series data filtered by zoom range
+  const yAxisMinMax = useMemo(() => {
+    const allValues: number[] = []
+
+    const collectValues = (data: TrajectoryDataPoint[]) => {
+      data.forEach((point) => {
+        // Only include values for years within the zoom range
+        if (
+          point.year >= yearRange[0] &&
+          point.year <= yearRange[1] &&
+          point.value !== null &&
+          point.value !== undefined &&
+          !isNaN(point.value)
+        ) {
+          allValues.push(point.value)
+        }
+      })
+    }
+
+    if (trajectory15Enabled && trajectory15Data) {
+      if (trajectory15Data.previousTrajectory) {
+        collectValues(trajectory15Data.previousTrajectory)
+      }
+      collectValues(trajectory15Data.currentTrajectory)
+    }
+    if (trajectoryWB2CEnabled && trajectoryWB2CData) {
+      if (trajectoryWB2CData.previousTrajectory) {
+        collectValues(trajectoryWB2CData.previousTrajectory)
+      }
+      collectValues(trajectoryWB2CData.currentTrajectory)
+    }
+    if (trajectorySnbcEnabled && snbcData) {
+      if (snbcData.previousTrajectory) {
+        collectValues(snbcData.previousTrajectory)
+      }
+      collectValues(snbcData.currentTrajectory)
+    }
+    customTrajectoriesData.forEach((traj) => {
+      if (traj.trajectoryData) {
+        if (traj.trajectoryData.previousTrajectory) {
+          collectValues(traj.trajectoryData.previousTrajectory)
+        }
+        collectValues(traj.trajectoryData.currentTrajectory)
+      }
+    })
+    if (actionBasedTrajectoryData) {
+      if (actionBasedTrajectoryData.previousTrajectory) {
+        collectValues(actionBasedTrajectoryData.previousTrajectory)
+      }
+      collectValues(actionBasedTrajectoryData.currentTrajectory)
+    }
+
+    if (allValues.length === 0) {
+      return { min: 0, max: 100 }
+    }
+
+    const min = Math.min(...allValues)
+    const max = Math.max(...allValues)
+    const padding = (max - min) * 0.1 // 10% padding
+
+    return {
+      min: Math.max(0, min - padding),
+      max: max + padding,
+    }
+  }, [
+    yearRange,
+    trajectory15Enabled,
+    trajectory15Data,
+    trajectoryWB2CEnabled,
+    trajectoryWB2CData,
+    trajectorySnbcEnabled,
+    snbcData,
+    customTrajectoriesData,
+    actionBasedTrajectoryData,
+  ])
+
+  // Update zoom range when available years change
+  useEffect(() => {
+    if (minYear && maxYear && minYear <= maxYear) {
+      setYearRange([minYear, maxYear])
+    }
+  }, [minYear, maxYear])
+
+  // Update y-axis zoom range when y-axis min/max changes
+  useEffect(() => {
+    if (yAxisMinMax.min !== undefined && yAxisMinMax.max !== undefined) {
+      setEmissionRange([yAxisMinMax.min, yAxisMinMax.max])
+    }
+  }, [yAxisMinMax])
+
+  const yearsToDisplay = useMemo(() => {
+    return allYearsToDisplay.filter((year) => year >= yearRange[0] && year <= yearRange[1])
+  }, [allYearsToDisplay, yearRange])
 
   const studyStartYearIndex = yearsToDisplay.indexOf(studyStartYear)
 
@@ -460,6 +550,23 @@ const TrajectoryGraph = ({
         {t('subtitle')}
       </Typography>
 
+      {/* <Slider
+          className="h100"
+          orientation="vertical"
+          getAriaLabel={() => 'Emissions range'}
+          getAriaValueText={(value) => Math.round(value).toString()}
+          value={emissionRange}
+          onChange={(_, newValue) => {
+            if (Array.isArray(newValue) && newValue.length === 2) {
+              setEmissionRange(newValue as number[])
+            }
+          }}
+          min={yAxisMinMax.min}
+          max={yAxisMinMax.max}
+          valueLabelDisplay="on"
+          valueLabelFormat={(value) => Math.round(value).toString()}
+        /> */}
+
       <LineChart
         xAxis={[
           {
@@ -474,9 +581,28 @@ const TrajectoryGraph = ({
         yAxis={[
           {
             label: `${t('yAxisLabel')} (${tUnit(studyUnit)})`,
+            min: emissionRange[0] || undefined,
+            max: emissionRange[1] || undefined,
           },
         ]}
       />
+      <div className="flex justify-center w100">
+        <Slider
+          className="w50"
+          getAriaLabel={() => 'Year range'}
+          getAriaValueText={(value) => value.toString()}
+          value={yearRange}
+          onChange={(_, newValue) => {
+            if (Array.isArray(newValue) && newValue.length === 2) {
+              setYearRange(newValue as number[])
+            }
+          }}
+          min={minYear}
+          max={maxYear}
+          valueLabelDisplay="on"
+          valueLabelFormat={(value) => value.toString()}
+        />
+      </div>
     </div>
   )
 }
