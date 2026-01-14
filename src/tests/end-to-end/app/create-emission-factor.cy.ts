@@ -21,11 +21,20 @@ describe('Create emission factor', () => {
     cy.getByTestId('emission-factor-totalCo2').type('12')
     cy.getByTestId('emission-source-quality-select').click()
     cy.get('[data-value="5"]').click()
+
+    // unique test : base field should appear only if subposts includes Electricite
+    cy.getByTestId('emission-factor-base').should('not.exist')
+
     cy.getByTestId('emission-factor-post').click()
     cy.get('[data-value="Energies"]').click()
     cy.getByTestId('emission-factor-subPost').click()
-    cy.get('[data-value="CombustiblesOrganiques"]').click()
+    cy.get('[data-value="Electricite"]').click()
     cy.get('body').type('{esc}')
+
+    cy.getByTestId('emission-factor-base').should('be.visible')
+
+    cy.getByTestId('emission-factor-base').click()
+    cy.get('[data-value="LocationBased"]').click()
 
     cy.getByTestId('emission-factor-valid-button').click()
 
