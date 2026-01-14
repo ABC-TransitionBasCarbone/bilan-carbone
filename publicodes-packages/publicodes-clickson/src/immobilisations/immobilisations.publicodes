@@ -3,5 +3,7 @@ immobilisations:
   formule:
     somme:
       - construction
-      - équipements
+      - rénovation
+      - équipements informatique audiovisuel
+      - équipements divers
   unité: kgCO2e

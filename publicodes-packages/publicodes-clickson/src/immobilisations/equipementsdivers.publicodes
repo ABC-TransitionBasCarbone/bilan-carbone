@@ -1,0 +1,100 @@
+immobilisations . équipements divers:
+  titre: "Équipements divers"
+  formule:
+    somme:
+      - chaise de bureau
+      - table de réunion
+      - armoire de rangement
+      - fauteuil d'accueil
+      - étagère
+  unité: kgCO2e
+  avec:
+    chaise de bureau:
+      titre: "Chaise de bureau"
+      formule: nombre * FE
+      unité: kgCO2e
+      avec:
+        nombre:
+          question: "Combien de chaises de bureau avez-vous achetées ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par chaise de bureau"
+          valeur: 35
+          unité: kgCO2e/unité
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 10
+
+    table de réunion:
+      titre: "Table de réunion"
+      formule: nombre * FE
+      unité: kgCO2e
+      avec:
+        nombre:
+          question: "Combien de tables de réunion avez-vous achetées ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par table de réunion"
+          valeur: 90
+          unité: kgCO2e/unité
+          note: |
+            Source: Base Carbone® (exemple)
+          meta:
+            incertitude: 15
+
+    armoire de rangement:
+      titre: "Armoire de rangement"
+      formule: nombre * FE
+      unité: kgCO2e
+      avec:
+        nombre:
+          question: "Combien d'armoires de rangement avez-vous achetées ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par armoire de rangement"
+          valeur: 120
+          unité: kgCO2e/unité
+          note: |
+            Source: Base Carbone® (exemple)
+          meta:
+            incertitude: 20
+
+    fauteuil d'accueil:
+      titre: "Fauteuil d'accueil"
+      formule: nombre * FE
+      unité: kgCO2e
+      avec:
+        nombre:
+          question: "Combien de fauteuils d'accueil avez-vous achetés ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par fauteuil d'accueil"
+          valeur: 50
+          unité: kgCO2e/unité
+          note: |
+            Source: Base Carbone® (exemple)
+          meta:
+            incertitude: 12
+
+    étagère:
+      titre: "Étagère"
+      formule: nombre * FE
+      unité: kgCO2e
+      avec:
+        nombre:
+          question: "Combien d'étagères avez-vous achetées ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par étagère"
+          valeur: 60
+          unité: kgCO2e/unité
+          note: |
+            Source: Base Carbone® (exemple)
+          meta:
+            incertitude: 15

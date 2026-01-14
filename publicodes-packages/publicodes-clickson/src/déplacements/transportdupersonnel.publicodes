@@ -41,36 +41,35 @@ déplacements . transport du personnel:
             alors: commun . FE . moyen de transport . Avion Moyen courrier
           - si: moyen de transport = "Avion Long courrier"
             alors: commun . FE . moyen de transport . Avion Long courrier
-
-déplacements . transport du personnel . moyen de transport:
-  question: Moyen de transport
-  une possibilité:
-    - RER et transilien
-    - métro ou tram
-    - Vélo à assistance électrique
-    - Trottinette électrique
-    - Moto essence
-    - Véhicule compact électrique
-    - Voiture individuelle essence
-    - Voiture individuelle diesel
-    - Autobus moyen
-    - TER
-    - TGV
-    - Avion Court courrier
-    - Avion Moyen courrier
-    - Avion Long courrier
-  avec:
-    RER et transilien:
-    métro ou tram:
-    Vélo à assistance électrique:
-    Trottinette électrique:
-    Moto essence:
-    Véhicule compact électrique:
-    Voiture individuelle essence:
-    Voiture individuelle diesel:
-    Autobus moyen:
-    TER:
-    TGV:
-    Avion Court courrier:
-    Avion Moyen courrier:
-    Avion Long courrier:
+    moyen de transport:
+      question: Moyen de transport
+      une possibilité:
+        - RER et transilien
+        - métro ou tram
+        - Vélo à assistance électrique
+        - Trottinette électrique
+        - Moto essence
+        - Véhicule compact électrique
+        - Voiture individuelle essence
+        - Voiture individuelle diesel
+        - Autobus moyen
+        - TER
+        - TGV
+        - Avion Court courrier
+        - Avion Moyen courrier
+        - Avion Long courrier
+      avec:
+        RER et transilien:
+        métro ou tram:
+        Vélo à assistance électrique:
+        Trottinette électrique:
+        Moto essence:
+        Véhicule compact électrique:
+        Voiture individuelle essence:
+        Voiture individuelle diesel:
+        Autobus moyen:
+        TER:
+        TGV:
+        Avion Court courrier:
+        Avion Moyen courrier:
+        Avion Long courrier:
