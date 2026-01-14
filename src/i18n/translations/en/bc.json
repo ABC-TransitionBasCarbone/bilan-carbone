@@ -1453,8 +1453,6 @@
       "comment": "Comments",
       "clear": "Clear value",
       "base": "Base",
-      "MarketBased": "market-based",
-      "LocationBased": "location-based",
       "baseModal": {
         "title": "GHG-P exports information",
         "description": "Here, you must indicate whether your FE applies within the framework of the location-based method or the market-based method. This distinction will only apply if your FE is used within the Electricity sub-item of the Energy item. As a reminder:",
