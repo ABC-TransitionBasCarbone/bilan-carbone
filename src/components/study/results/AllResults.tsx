@@ -354,7 +354,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
                 ))}
             </Select>
           </FormControl>
-          {exports?.types.includes(Export.Beges) && type === Export.Beges && (
+          {type === Export.Beges && (
             <ConsolatedBEGESDifference
               study={study}
               emissionFactorsWithParts={emissionFactorsWithParts}
@@ -364,7 +364,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
               studySite={studySite}
             />
           )}
-          {exports?.types.includes(Export.GHGP) && type === Export.GHGP && (
+          {type === Export.GHGP && (
             <ConsolatedGHGPDifference
               study={study}
               emissionFactorsWithParts={emissionFactorsWithParts}
