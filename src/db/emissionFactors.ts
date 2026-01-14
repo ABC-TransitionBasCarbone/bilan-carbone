@@ -5,7 +5,7 @@ import { FeFilters } from '@/types/filters'
 import { unique } from '@/utils/array'
 import { getEmissionFactorSubPostsMap, isMonetaryEmissionFactor } from '@/utils/emissionFactors'
 import { flattenSubposts } from '@/utils/post'
-import { EmissionFactorStatus, Environment, Import, Prisma, SubPost, Unit } from '@prisma/client'
+import { EmissionFactorBase, EmissionFactorStatus, Environment, Import, Prisma, SubPost, Unit } from '@prisma/client'
 import { Session } from 'next-auth'
 import { prismaClient } from './client'
 import { getOrganizationVersionById } from './organization'
@@ -21,6 +21,7 @@ const otherSelectEmissionFactor = {
   isMonetary: true,
   importedFrom: true,
   importedId: true,
+  base: true,
   organizationId: true,
   reliability: true,
   technicalRepresentativeness: true,
@@ -106,6 +107,7 @@ export type EmissionFactorList = {
   isMonetary: boolean
   importedFrom: Import
   importedId: string | null
+  base: EmissionFactorBase | null
   organizationId: string | null
   reliability: number | null
   technicalRepresentativeness: number | null
