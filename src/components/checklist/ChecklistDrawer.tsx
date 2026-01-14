@@ -1,9 +1,8 @@
-import { getEnvVar } from '@/lib/environment'
+import { customRich } from '@/i18n/customRich'
 import { getUserCheckList, mandatoryParentSteps } from '@/services/checklist'
 import { Level, OrganizationVersion, Role, UserChecklist } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import Link from 'next/link'
 import { useMemo } from 'react'
 import Stepper from '../base/Stepper'
 import styles from './Checklist.module.css'
@@ -31,7 +30,6 @@ const ChecklistDrawer = ({
   studyId,
 }: Props) => {
   const environment = accountOrganizationVersion.environment
-  const faq = getEnvVar('FAQ_LINK', environment)
   const t = useTranslations('checklist')
   const steps = useMemo(
     () => getUserCheckList(userRole, accountOrganizationVersion.isCR, userLevel),
@@ -70,17 +68,7 @@ const ChecklistDrawer = ({
             />
           ))}
       </div>
-      {finished && (
-        <p className="px-2">
-          {t.rich('finished', {
-            faq: (children) => (
-              <Link href={faq} target="_blank" rel="noreferrer noopener">
-                {children}
-              </Link>
-            ),
-          })}
-        </p>
-      )}
+      {finished && <p className="px-2">{customRich(t, 'finished', {}, environment)}</p>}
     </div>
   )
 }

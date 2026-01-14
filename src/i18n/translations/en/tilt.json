@@ -1,7 +1,7 @@
 {
   "login": {
-    "subtext": "Association specific version",
-    "explanation": "The tool dedicated to associations wishing to apply the Bilan Carbone® method and its sectoral variant for the associative sphere. It came into being thanks to the partnership between the Association for Low Carbon Transition, which is the holder of the Bilan Carbone® method, and Tilt, which accompanies all associations in their low-carbon transition. The tool is freely accessible for all French associations trained in the method.",
+    "subtext": "Non-profit organisation specific version",
+    "explanation": "The tool dedicated to non-profit organisations wishing to apply the Bilan Carbone® method and its sectoral variant for the non-profit sphere. It came into being thanks to the partnership between the Association for Low Carbon Transition, which is the holder of the Bilan Carbone® method, and Tilt, which accompanies all non-profit organisations in their low-carbon transition. The tool is freely accessible for all French non-profit organisations trained in the method.",
     "form": {
       "activate": "Create my account"
     }
@@ -12,10 +12,27 @@
     "siretPlaceholder": "Your Siret",
     "siretRequired": "Please enter a Siret",
     "Not authorized": "This email is already used for Tilt or there's an issue with the account creation. Please see <link>the FAQ</link> or <support>contact support</support> if you think this is an error.",
-    "Not association SIRET": "This tool is reserved for associations. Please use the classic version of Bilan Carbone®+",
+    "Not association SIRET": "This tool is reserved for non-profit organisations. Please use the classic version of Bilan Carbone®+",
     "validation": {
       "siret": "Please enter a Siret"
     }
+  },
+  "home": {
+    "navigation": {
+      "collaborators": {
+        "title": "Pilot Team",
+        "message": "Find here the list of teachers, administrative staff and students authorized to modify the establishment's data"
+      },
+      "footprints": {
+        "title": "My Footprints",
+        "message": "Create your first footprint here. You can then view your footprints or create new ones at any time."
+      },
+      "sites": {
+        "title": "My Non-profit Organisation",
+        "message": "Find here the list of establishments linked to your account"
+      }
+    },
+    "title": "Calculating your simplified carbon footprint will allow you to:"
   },
   "exports": {
     "env_specific_export": "Tilt"
@@ -47,14 +64,30 @@
   },
   "study": {
     "flow": {
-      "info": "You can download a sample flow mapping to help you build your own. Afterwards, if you wish to submit your flow mapping so that other users can use it as an example and help other associations, please send it to <mail>methodologie@abc-transitionbascarbone.fr</mail>"
+      "info": "You can download a sample flow mapping to help you build your own. Afterwards, if you wish to submit your flow mapping so that other users can use it as an example and help other non-profit organisations, please send it to <mail>methodologie@abc-transitionbascarbone.fr</mail>"
     },
     "dependencyMatrix": {
-      "info": "You can download a sample risk and dependency matrix to help you build your own. Afterwards, if you wish to submit your own matrix to help other associations by providing a working base, please send it to <mail>methodologie@abc-transitionbascarbone.fr</mail>"
+      "info": "You can download a sample risk and dependency matrix to help you build your own. Afterwards, if you wish to submit your own matrix to help other non-profit organisations by providing a working base, please send it to <mail>methodologie@abc-transitionbascarbone.fr</mail>"
+    },
+    "createFirstSimplifiedStudy": "Create",
+    "firstSimplifiedStudyMessage": "It's time to get started! We invite you to create your first simplified carbon footprint.",
+    "mySimplifiedStudies": "My footprints",
+    "createSimplified": "Create a footprint",
+    "seeSimplified": "See my footprint",
+    "cannotCreateStudy": "To create a Carbon Footprint® you must be trained in the method! <link>Learn more</link>",
+    "canCreateFootPrint": "You can however create a <link>carbon footprint</link> allowing you to estimate your impact",
+    "export": {
+      "export": "Export my results"
+    },
+    "results": {
+      "simplifiedFeedback": "Congratulations! You have just completed the simplified carbon footprint of your non-profit organisation. This is an excellent introduction to carbon accounting! We would appreciate it if you could fill out <questionnaire>this questionnaire</questionnaire> to help us improve the tool and fix any potential bugs!",
+      "infoWithLinks": "The European Union has committed, by ratifying the Paris Agreement, to carbon neutrality by 2050. To contribute to this objective, your non-profit organisation should reduce its impact by 5% per year. The simplified carbon footprint you have just obtained can already help you better understand how to reduce your impact by identifying your most emission-intensive activities.\n\nWe invite you to redo this simplified carbon footprint next year to verify that you are on the right track, or, better yet, to establish a comprehensive Bilan Carbone® to gain precision in estimating your emissions and develop a real transition plan! To get started, it's very simple, you just need to <formation>train</formation> in the method, or contact us at <email>count@cut-collectif.fr</email>, or get in touch with another <prestataire>Bilan Carbone® service provider</prestataire>."
     }
   },
   "emissionFactors": {
     "post": {
+      "seeTypeform": "See the typeform",
+      "seeTypeformDescription": "This tool allows you to have an example of a typeform to send to your stakeholders to collect data on their professional travel.",
       "glossaryDescription": {
         "postInfo": "Infos on this post",
         "close": "Close",
@@ -103,5 +136,9 @@
         "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux"
       }
     }
+  },
+  "navigation": {
+    "footprints": "My Footprints",
+    "information": "My Association"
   }
 }

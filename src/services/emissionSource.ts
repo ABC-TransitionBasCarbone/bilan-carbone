@@ -12,36 +12,51 @@ import {
 } from '@prisma/client'
 import { StudyWithoutDetail } from './permissions/study'
 import { convertTiltSubPostToBCSubPost } from './posts'
-import { getConfidenceInterval, getQualityStandardDeviation, getSpecificEmissionFactorQuality } from './uncertainty'
+import { getConfidenceInterval, getSquaredStandardDeviationForEmissionSource } from './uncertainty'
 
 type CaracterisationsBySubPost = Partial<Record<SubPost, EmissionSourceCaracterisation[]>>
 
+type EmissionSourceFormType = Pick<
+  StudyEmissionSource,
+  | 'name'
+  | 'type'
+  | 'value'
+  | 'emissionFactorId'
+  | 'caracterisation'
+  | 'constructionYear'
+  | 'subPost'
+  | 'depreciationPeriod'
+  | 'hectare'
+  | 'duration'
+>
+
 export const getEmissionSourceCompletion = (
-  emissionSource: Pick<
-    StudyEmissionSource,
-    | 'name'
-    | 'type'
-    | 'value'
-    | 'emissionFactorId'
-    | 'caracterisation'
-    | 'subPost'
-    | 'depreciationPeriod'
-    | 'hectare'
-    | 'duration'
-  >,
+  emissionSource: EmissionSourceFormType,
   study: FullStudy | StudyWithoutDetail,
   emissionFactor: (FullStudy | StudyWithoutDetail)['emissionSources'][number]['emissionFactor'],
   environment: Environment | undefined,
 ) => {
   const mandatoryFields = ['name', 'type', 'value', 'emissionFactorId'] as (keyof typeof emissionSource)[]
 
-  const caracterisations = getCaracterisationsBySubPost(emissionSource.subPost, study.exports, environment)
+  const caracterisations = study.exports?.types.length
+    ? getCaracterisationsBySubPost(
+        emissionSource.subPost,
+        environment,
+        study.exports?.types || [],
+        study.exports?.control || ControlMode.Operational,
+      )
+    : []
 
-  if (study.exports.length > 0 && caracterisations.length > 0) {
+  if (study.exports?.types && study.exports.types.length > 0 && caracterisations.length > 0) {
     mandatoryFields.push('caracterisation')
   }
+
   if (hasDeprecationPeriod(emissionSource.subPost)) {
     mandatoryFields.push('depreciationPeriod')
+
+    if (study.exports?.types.some((studyExport) => studyExport === Export.GHGP)) {
+      mandatoryFields.push('constructionYear')
+    }
   }
 
   if (
@@ -57,18 +72,7 @@ export const getEmissionSourceCompletion = (
 }
 
 export const canBeValidated = (
-  emissionSource: Pick<
-    StudyEmissionSource,
-    | 'name'
-    | 'type'
-    | 'value'
-    | 'emissionFactorId'
-    | 'caracterisation'
-    | 'subPost'
-    | 'depreciationPeriod'
-    | 'hectare'
-    | 'duration'
-  >,
+  emissionSource: EmissionSourceFormType,
   study: FullStudy | StudyWithoutDetail,
   emissionFactor: (FullStudy | StudyWithoutDetail)['emissionSources'][number]['emissionFactor'],
   environment: Environment | undefined,
@@ -76,30 +80,7 @@ export const canBeValidated = (
   return getEmissionSourceCompletion(emissionSource, study, emissionFactor, environment) === 1
 }
 
-export const getStandardDeviation = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][number]) => {
-  if (!emissionSource.emissionFactor || emissionSource.value === null) {
-    return null
-  }
-  const emissionStandardDeviation = getQualityStandardDeviation(emissionSource)
-  const factorStandardDeviation = getQualityStandardDeviation(getSpecificEmissionFactorQuality(emissionSource))
-  if (emissionStandardDeviation === null || factorStandardDeviation === null) {
-    return null
-  }
-
-  return Math.exp(
-    2 *
-      Math.sqrt(
-        Math.pow(Math.log(Math.sqrt(factorStandardDeviation)), 2) +
-          Math.pow(Math.log(Math.sqrt(emissionStandardDeviation)), 2),
-      ),
-  )
-}
-
-export const getAlpha = (emission: number | null, confidenceInterval: number[] | null) => {
-  if (emission === null || confidenceInterval === null || confidenceInterval[1] === undefined) {
-    return null
-  }
-
+export const getAlpha = (emission: number, confidenceInterval: number[]) => {
   return (confidenceInterval[1] - emission) / emission
 }
 
@@ -137,46 +118,18 @@ export const getEmissionResults = (
   emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][number],
   environment: Environment,
 ) => {
-  const emission = getEmissionSourceEmission(emissionSource, environment)
-  if (emission === null) {
-    return { emissionValue: 0, standardDeviation: null, confidenceInterval: null, alpha: null }
-  }
+  const emission = getEmissionSourceEmission(emissionSource, environment) ?? 0
 
-  const standardDeviation = getStandardDeviation(emissionSource)
-  const confidenceInterval = standardDeviation ? getConfidenceInterval(emission, standardDeviation) : null
+  const squaredStandardDeviation = getSquaredStandardDeviationForEmissionSource(emissionSource)
+  const confidenceInterval = getConfidenceInterval(emission, squaredStandardDeviation)
   const alpha = getAlpha(emission, confidenceInterval)
 
   return {
-    emissionValue: emission ?? 0,
-    standardDeviation,
+    emissionValue: emission,
+    squaredStandardDeviation,
     confidenceInterval,
     alpha,
   }
-}
-
-export const sumStandardDeviations = (results: { value: number; standardDeviation: number | null }[]) => {
-  const totalValue = results.reduce((acc, { value }) => acc + value, 0)
-
-  return Math.exp(
-    Math.sqrt(
-      results.reduce((acc, { value, standardDeviation }) => {
-        const sensibility = value / totalValue
-        const sd = Math.log(standardDeviation || 1)
-        return acc + sensibility * sensibility * sd * sd
-      }, 0),
-    ),
-  )
-}
-
-export const sumEmissionSourcesUncertainty = (
-  emissionSources: { emissionValue: number; standardDeviation: number | null }[],
-) => {
-  const results = emissionSources.map((result) => ({
-    value: result.emissionValue,
-    standardDeviation: result.standardDeviation,
-  }))
-
-  return sumStandardDeviations(results)
 }
 
 export const getEmissionSourcesTotalCo2 = (emissionSources: { emissionValue: number }[]) =>
@@ -203,11 +156,11 @@ export const operationalCaracterisations: CaracterisationsBySubPost = {
   [SubPost.Agriculture]: [
     EmissionSourceCaracterisation.OperatedProcedeed,
     EmissionSourceCaracterisation.OperatedFugitive,
+    EmissionSourceCaracterisation.OperatedCAS,
     EmissionSourceCaracterisation.NotOperated,
   ],
   [SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas]: [
-    EmissionSourceCaracterisation.OperatedProcedeed,
-    EmissionSourceCaracterisation.OperatedFugitive,
+    EmissionSourceCaracterisation.Operated,
     EmissionSourceCaracterisation.NotOperated,
   ],
   [SubPost.EmissionsLieesALaProductionDeFroid]: [
@@ -221,6 +174,7 @@ export const operationalCaracterisations: CaracterisationsBySubPost = {
   [SubPost.AutresEmissionsNonEnergetiques]: [
     EmissionSourceCaracterisation.OperatedProcedeed,
     EmissionSourceCaracterisation.OperatedFugitive,
+    EmissionSourceCaracterisation.OperatedCAS,
     EmissionSourceCaracterisation.NotOperated,
   ],
   [SubPost.MetauxPlastiquesEtVerre]: [EmissionSourceCaracterisation.Operated],
@@ -273,6 +227,7 @@ export const operationalCaracterisations: CaracterisationsBySubPost = {
   [SubPost.UtilisationEnResponsabilite]: [
     EmissionSourceCaracterisation.Rented,
     EmissionSourceCaracterisation.FinalClient,
+    EmissionSourceCaracterisation.UsedByIntermediary,
   ],
   [SubPost.UtilisationEnDependance]: [],
   [SubPost.InvestissementsFinanciersRealises]: [EmissionSourceCaracterisation.Operated],
@@ -323,6 +278,7 @@ export const financialCaracterisations: CaracterisationsBySubPost = {
   [SubPost.Agriculture]: [
     EmissionSourceCaracterisation.HeldProcedeed,
     EmissionSourceCaracterisation.HeldFugitive,
+    EmissionSourceCaracterisation.HeldCAS,
     EmissionSourceCaracterisation.NotHeldSimpleRent,
     EmissionSourceCaracterisation.NotHeldOther,
   ],
@@ -344,6 +300,7 @@ export const financialCaracterisations: CaracterisationsBySubPost = {
   [SubPost.AutresEmissionsNonEnergetiques]: [
     EmissionSourceCaracterisation.HeldProcedeed,
     EmissionSourceCaracterisation.HeldFugitive,
+    EmissionSourceCaracterisation.HeldCAS,
     EmissionSourceCaracterisation.NotHeldSimpleRent,
     EmissionSourceCaracterisation.NotHeldOther,
   ],
@@ -403,6 +360,7 @@ export const financialCaracterisations: CaracterisationsBySubPost = {
   [SubPost.UtilisationEnResponsabilite]: [
     EmissionSourceCaracterisation.Rented,
     EmissionSourceCaracterisation.FinalClient,
+    EmissionSourceCaracterisation.UsedByIntermediary,
   ],
   [SubPost.UtilisationEnDependance]: [],
   [SubPost.InvestissementsFinanciersRealises]: [EmissionSourceCaracterisation.Held],
@@ -437,8 +395,9 @@ export const getAllCaracterisationsBySubPost = (controlMode: ControlMode): Carac
 
 export const getCaracterisationsBySubPost = (
   subPost: SubPost,
-  exports: FullStudy['exports'],
   environment: Environment | undefined,
+  exportTypes: Export[],
+  controlMode: ControlMode,
 ) => {
   let subPostToUse = subPost
   if (environment === Environment.TILT) {
@@ -446,12 +405,10 @@ export const getCaracterisationsBySubPost = (
     subPostToUse = bcSubpost
   }
 
-  const begesExport = exports.find((exp) => exp.type === Export.Beges)
-  if (!begesExport) {
+  if (!exportTypes) {
     return []
   }
 
-  const controlMode = begesExport.control || 'Operational'
   const caracterisationMap = getAllCaracterisationsBySubPost(controlMode)
   const caracterisations = caracterisationMap[subPostToUse]
 

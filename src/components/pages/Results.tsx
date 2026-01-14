@@ -5,6 +5,7 @@ import { addUserChecklistItem } from '@/services/serverFunctions/user'
 import { ExportRule, SiteCAUnit, UserChecklist } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
+
 interface Props {
   study: FullStudy
   rules: ExportRule[]

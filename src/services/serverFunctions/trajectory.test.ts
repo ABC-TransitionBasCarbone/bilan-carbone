@@ -10,6 +10,11 @@ import { CreateTrajectoryInput, createTrajectoryWithObjectives } from './traject
 jest.mock('../file', () => ({ download: jest.fn() }))
 jest.mock('uuid', () => ({ v4: jest.fn() }))
 jest.mock('next-intl/server', () => ({ getTranslations: jest.fn(() => (key: string) => key) }))
+jest.mock('@/components/pages/TrajectoryReductionPage', () => ({
+  TRAJECTORY_15_ID: 'sbti-15',
+  TRAJECTORY_WB2C_ID: 'sbti-wb2c',
+  TRAJECTORY_SNBC_GENERAL_ID: 'snbc-general',
+}))
 
 jest.mock('../auth', () => ({
   auth: jest.fn(),
@@ -178,7 +183,7 @@ describe('Trajectory Server Functions', () => {
 
       expect(result.success).toBe(false)
       expect((result as { errorMessage: string }).errorMessage).toContain(
-        'Custom trajectory must have at least 1 objective',
+        'CUSTOM trajectory must have at least 1 objective',
       )
     })
   })

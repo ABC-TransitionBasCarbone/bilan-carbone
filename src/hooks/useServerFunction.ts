@@ -21,6 +21,7 @@ export const useServerFunction = () => {
 
   const { showErrorToast, showSuccessToast } = useToast()
   const tGeneralError = useTranslations('error')
+  const tValidation = useTranslations('validation')
   const defaultErrorMessage = tGeneralError('default')
 
   const callServerFunction = useCallback(
@@ -49,6 +50,9 @@ export const useServerFunction = () => {
         // Check if we have a valid custom error message (not a next-intl fallback like "namespace.key")
         if (customErrorMessage && !customErrorMessage.endsWith(`.${resultErrorMessage}`)) {
           errorMessage = customErrorMessage
+        } else if (tValidation.has(resultErrorMessage)) {
+          // Fallback to validation translations
+          errorMessage = tValidation(resultErrorMessage)
         } else if (tGeneralError.has(resultErrorMessage)) {
           // Fallback to general error translations
           errorMessage = tGeneralError(resultErrorMessage)
@@ -60,7 +64,7 @@ export const useServerFunction = () => {
 
       return result
     },
-    [defaultErrorMessage, showErrorToast, showSuccessToast, tGeneralError],
+    [defaultErrorMessage, showErrorToast, showSuccessToast, tGeneralError, tValidation],
   )
 
   return { callServerFunction }

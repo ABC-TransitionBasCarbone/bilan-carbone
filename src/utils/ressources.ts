@@ -1,0 +1,108 @@
+import { getEnvVar } from '@/lib/environment'
+import { Translations } from '@/types/translation'
+import { Environment } from '@prisma/client'
+
+export const getEnvironnementRessources = (env: Environment, t: Translations) => {
+  const methodUrl = getEnvVar('METHOD_URL', env)
+  const contactForm = getEnvVar('CONTACT_FORM_URL', env)
+  const faq = getEnvVar('FAQ_LINK', env)
+  const supportEmail = getEnvVar('SUPPORT_EMAIL', env)
+
+  const commonRessources = [
+    {
+      title: t('questionMethodo'),
+      links: [
+        { title: t('openCarbonPractice'), link: 'https://www.opencarbonpractice.com/rejoindre-la-communaute' },
+        {
+          title: t('contacterViaFormulaire', { supportEmail }),
+          link: contactForm,
+          isTranslated: true,
+        },
+      ],
+    },
+    {
+      title: t('questionTechnique'),
+      links: [
+        { title: t('lireLaFAQ'), link: faq },
+        {
+          title: t('ecrireMail', { supportEmail }),
+          link: `mailto:${supportEmail}`,
+          isTranslated: true,
+        },
+      ],
+    },
+  ]
+
+  const methodBC = {
+    title: t('enSavoirPlusBilan'),
+    links: [{ title: t('methodeBilanCarbone'), link: methodUrl }],
+  }
+
+  switch (env) {
+    case Environment.CUT:
+      return [
+        {
+          title: t('countMethods'),
+          links: [
+            {
+              title: t('countMethodLink'),
+              downloadKey: 'SCW_CUT_METHOD_KEY',
+            },
+            {
+              title: t('resilioMethodLink'),
+              downloadKey: 'SCW_RESILIO_METHOD_KEY',
+            },
+          ],
+        },
+        ...commonRessources,
+        methodBC,
+      ]
+    case Environment.CLICKSON:
+      return [
+        {
+          title: t('knowMoreDataCollect'),
+          links: [
+            {
+              title: t('guideDataCollect'),
+              link: 'https://clickson.eu/wp-content/uploads/2021/11/Aide-recolte-de-donnees-.pdf',
+            },
+          ],
+        },
+
+        {
+          title: t('toolsDataCollect'),
+          links: [
+            {
+              title: t('modelsDataCollect'),
+              link: 'https://clickson.eu/wp-content/uploads/2023/01/Exemple_collecte.zip',
+            },
+          ],
+        },
+        {
+          title: t('game'),
+          links: [
+            {
+              title: t('classEarth'),
+              link: 'https://www.materre-enclasse.org',
+            },
+          ],
+        },
+      ]
+    case Environment.TILT:
+      return [
+        {
+          title: t('methodeAssociative'),
+          links: [
+            {
+              title: t('sphereAssociative'),
+              link: 'https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative',
+            },
+          ],
+        },
+        methodBC,
+        ...commonRessources,
+      ]
+    default:
+      return [methodBC, ...commonRessources]
+  }
+}

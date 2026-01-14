@@ -1,7 +1,7 @@
 import HelpIcon from '@/components/base/HelpIcon'
 import { Select } from '@/components/base/Select'
 import GlossaryModal from '@/components/modals/GlossaryModal'
-import { environmentPostMapping, Post } from '@/services/posts'
+import { environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
 import { SubPostsCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { Box, FormControl, FormHelperText, MenuItem, SelectChangeEvent } from '@mui/material'
@@ -15,13 +15,15 @@ import styles from './Posts.module.css'
 interface Props<T extends SubPostsCommand> {
   form: UseFormReturn<T>
   context: 'emissionFactor' | 'studyContributor'
+  selectAll?: boolean
+  defaultSubPosts?: SubPost[]
 }
 
 // Constants
 export const ALL_POSTS_VALUE = 'ALL_POSTS'
 export const ALL_SUB_POSTS_VALUE = 'ALL_SUB_POSTS'
 
-const MultiplePosts = <T extends SubPostsCommand>({ form, context }: Props<T>) => {
+const MultiplePosts = <T extends SubPostsCommand>({ form, context, selectAll = false, defaultSubPosts }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
   const tPost = useTranslations('emissionFactors.post')
   const tGlossary = useTranslations('emissionFactors.create.glossary')
@@ -47,7 +49,7 @@ const MultiplePosts = <T extends SubPostsCommand>({ form, context }: Props<T>) =
 
   const availablePosts: Post[] = useMemo(
     () =>
-      Object.keys(environmentPostMapping[environment || Environment.BC])
+      Object.values(environmentPostMapping[environment || Environment.BC])
         .sort((a, b) => tPost(a).localeCompare(tPost(b)))
         .filter((postKey) => !Object.keys(selectedPosts).includes(postKey)) as Post[],
     [environment, selectedPosts, tPost],
@@ -63,6 +65,45 @@ const MultiplePosts = <T extends SubPostsCommand>({ form, context }: Props<T>) =
 
     setValue('subPosts', currentSubPosts as Record<string, SubPost[]>)
   }
+
+  useEffect(() => {
+    if (!environment) {
+      return
+    }
+    if (defaultSubPosts) {
+      const defaultSelectedSubPosts = defaultSubPosts.reduce<Record<Post, SubPost[]>>(
+        (acc, subPost) => {
+          const post = Object.values(environmentPostMapping[environment]).find((postKey) =>
+            subPostsByPost?.[postKey as Post]?.includes(subPost),
+          ) as Post
+
+          if (post) {
+            return {
+              ...acc,
+              [post]: [...(acc[post] || []), subPost],
+            }
+          }
+          return acc
+        },
+        {} as Record<Post, SubPost[]>,
+      )
+
+      setValue('subPosts', defaultSelectedSubPosts as Record<string, SubPost[]>)
+      return
+    }
+
+    if (!selectAll) {
+      return
+    }
+
+    const currentSubPosts = {
+      [ALL_POSTS_VALUE]: Object.values(environmentPostMapping[environment]).flatMap(
+        (postKey: Post) => subPostsByPost[postKey],
+      ),
+    }
+
+    setValue('subPosts', currentSubPosts as Record<string, SubPost[]>)
+  }, [environment, selectAll, defaultSubPosts])
 
   // Check if "All posts" is already selected
   const hasAllPosts = useMemo(() => Object.keys(selectedPosts).includes(ALL_POSTS_VALUE), [selectedPosts])

@@ -110,6 +110,7 @@ export const unitsMatrix: Record<string, Unit> = {
   tep: Unit.TEP,
   'tep PCI': Unit.TEP_PCI,
   'tep PCS': Unit.TEP_PCS,
+  'TEU.km': Unit.TEU_KM,
   't.km': Unit.TON_KM,
   tonne: Unit.TON,
   'tonne avec os': Unit.TON_WITH_BONES,

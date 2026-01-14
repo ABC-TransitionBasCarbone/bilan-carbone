@@ -53,7 +53,7 @@ import { UserSession } from 'next-auth'
 import { dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canReadStudy, canReadStudyDetail } from '../permissions/study'
-import { CutPost, subPostsByPost } from '../posts'
+import { ClicksonPost, CutPost, subPostsByPost } from '../posts'
 import { createEmissionSource, updateEmissionSource } from './emissionSource'
 
 const cleanupTableEmissionSources = async (tableAnswer: TableAnswer, existingAnswer: Answer) => {
@@ -524,28 +524,30 @@ const getEmissionFactorByIdIntern = (idIntern: string, response: Prisma.InputJso
 }
 
 export type QuestionStats = { answered: number; total: number }
-export type StatsResult = Record<CutPost, Partial<Record<SubPost, QuestionStats>>>
+export type StatsResult = Record<CutPost | ClicksonPost, Partial<Record<SubPost, QuestionStats>>>
 type CompletedTableInfo = Partial<Record<SubPost, number>>
 
 export const getQuestionProgressBySubPostPerPost = async ({
   study,
   studySiteId,
   user,
+  posts = CutPost,
 }: {
   study: FullStudy
   studySiteId: string
   user: UserSession
+  posts?: typeof CutPost | typeof ClicksonPost
 }) =>
   withServerResponse('getQuestionProgressBySubPostPerPost', async () => {
     if (!canReadStudyDetail(user, study)) {
       return
     }
 
-    const cutSubPosts = Object.values(CutPost).flatMap((cutPost) => subPostsByPost[cutPost])
+    const subPosts = Object.values(posts).flatMap((post) => subPostsByPost[post as CutPost | ClicksonPost])
 
     const questions = await prismaClient.question.findMany({
       where: {
-        subPost: { in: cutSubPosts },
+        subPost: { in: subPosts },
       },
       select: {
         idIntern: true,
@@ -574,7 +576,7 @@ export const getQuestionProgressBySubPostPerPost = async ({
           not: '',
         },
         question: {
-          subPost: { in: cutSubPosts },
+          subPost: { in: subPosts },
         },
       },
       select: {
@@ -653,10 +655,10 @@ export const getQuestionProgressBySubPostPerPost = async ({
 
     const result: StatsResult = {} as StatsResult
 
-    for (const cutPost of Object.values(CutPost)) {
-      result[cutPost] = {} as Partial<Record<SubPost, QuestionStats>>
+    for (const post of Object.values(posts)) {
+      result[post as CutPost | ClicksonPost] = {} as Partial<Record<SubPost, QuestionStats>>
 
-      for (const subPost of subPostsByPost[cutPost]) {
+      for (const subPost of subPostsByPost[post as CutPost | ClicksonPost]) {
         let total = totalCountBySubPost[subPost] ?? 0
         const answered = answeredCountBySubPost[subPost] ?? 0
 
@@ -667,7 +669,7 @@ export const getQuestionProgressBySubPostPerPost = async ({
           total = answered
         }
 
-        result[cutPost][subPost] = {
+        result[post as CutPost | ClicksonPost][subPost] = {
           total,
           answered,
         }

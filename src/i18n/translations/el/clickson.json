@@ -1,0 +1,247 @@
+{
+  "nav": {
+    "newStudyContributor": "Προσθήκη μαθητή"
+  },
+  "navigation": {
+    "organizations": "Τα ανθρακικά αποτυπώματά μου",
+    "organization": "Ομάδα πιλοτικής εφαρμογής",
+    "information": "Το ίδρυμά μου",
+    "team": "Ομάδα πιλοτικής εφαρμογής"
+  },
+  "home": {
+    "navigation": {
+      "collaborators": {
+        "title": "Ομάδα πιλοτικής εφαρμογής",
+        "message": "Βρείτε εδώ τη λίστα καθηγητών, διοικητικού προσωπικού και μαθητών που έχουν δικαίωμα να τροποποιούν τα δεδομένα του ιδρύματος"
+      },
+      "footprints": {
+        "title": "Τα αποτυπώματά μου",
+        "message": "Δημιουργήστε εδώ το πρώτο σας αποτύπωμα. Στη συνέχεια μπορείτε να δείτε ή να δημιουργήσετε νέα οποιαδήποτε στιγμή."
+      },
+      "sites": {
+        "title": "Τα ιδρύματά μου",
+        "message": "Βρείτε εδώ τη λίστα των ιδρυμάτων που συνδέονται με τον λογαριασμό σας"
+      }
+    },
+    "title": "Ο υπολογισμός του απλουστευμένου ανθρακικού σας αποτυπώματος θα σας επιτρέψει να:",
+    "alert": {
+      "info": "Ο υπολογιστής Clickson σας επιτρέπει να εκτιμήσετε τον κλιματικό αντίκτυπο της δραστηριότητάς σας. Είναι κυρίως ένα εργαλείο ευαισθητοποίησης. Δεν αποτελεί προσέγγιση χαμηλού άνθρακα, αλλά απλουστευμένο ανθρακικό αποτύπωμα — σύμφωνα με τον <link>Οδηγό επικοινωνίας γύρω από την καταγραφή του άνθρακα</link> — εστιάζοντας στις κύριες πηγές εκπομπών που σχετίζονται με τη δραστηριότητα των ιδρυμάτων."
+    },
+    "info": {
+      "0": "Κατανόηση της μέτρησης του αντίκτυπου του ιδρύματός σας",
+      "1": "Ταυτοποίηση προτεραιοτήτων δράσης",
+      "2": "Μακροπρόθεσμα, μέσω πιο εις βάθος εργασίας, δημιουργία πορείας μείωσης"
+    }
+  },
+  "team": {
+    "table": {
+      "title": "Ομάδα πιλοτικής εφαρμογής"
+    }
+  },
+  "study": {
+    "create": "Προσθήκη αποτυπώματος",
+    "myStudies": "Τα ανθρακικά αποτυπώματά μου",
+    "createFirstStudy": "Δημιουργία πρώτου αποτυπώματος",
+    "createFirstSimplifiedStudy": "Create",
+    "firstSimplifiedStudyMessage": "It's time to get started! We invite you to create your first simplified carbon footprint.",
+    "see": "Δείτε το αποτύπωμά μου",
+    "selectSite": "Πριν εισάγετε δεδομένα, επιλέξτε ένα ίδρυμα",
+    "lastStudyTitle": "Τελευταίο αποτύπωμα",
+    "navigation": {
+      "framing": "Γενικά δεδομένα",
+      "organizations": "Τα ιδρύματά μου",
+      "team": "Οι συνεργάτες μου",
+      "title": "Το αποτύπωμά μου"
+    },
+    "validatedOnlyDescription": "Ως μαθητής, έχω πρόσβαση ως συνεισφέρων σε μία ή περισσότερες θέσεις εκπομπών.",
+    "new": {
+      "suggestion": {
+        "name": "Παράδειγμα: ανθρακικό αποτύπωμα Γυμνάσιο Simone Veil"
+      },
+      "inviteContributors": "Προσκαλέστε τους ίδιους μαθητές",
+      "glossary": {
+        "validatorEmailDescription": "Ως μαθητής, έχω πρόσβαση ως συνεισφέρων σε μία ή περισσότερες θέσεις εκπομπών.",
+        "duplicationOptionsDescription": "Κατά την αντιγραφή μιας μελέτης, μπορείτε να επιλέξετε να προσκαλέσετε τα ίδια μέλη της ομάδας και μαθητές από την αρχική μελέτη στη νέα. Αυτό βοηθά στη διατήρηση της συνέχειας της συνεργασίας."
+      },
+      "etp": "Nombre de personnels (enseignants et non-éducatifs)",
+      "goToDataEntry": "Passer à la saisie des données",
+      "studentNumber": "Nombre d'élèves",
+      "superficy": "Superficie de l'établissement"
+    },
+    "newContributor": {
+      "title": "Προσθήκη μαθητή στη μελέτη: {name}"
+    },
+    "role": {
+      "Contributor": "Μαθητής"
+    },
+    "rights": {
+      "contributorsTable": {
+        "delete": "Αφαίρεση μαθητή",
+        "title": "Μαθητές",
+        "newContributorLink": "Προσθήκη μαθητή",
+        "deleting": {
+          "confirmation": "Είστε βέβαιοι ότι θέλετε να αφαιρέσετε το {email} από τους μαθητές αυτής της μελέτης;"
+        },
+        "role": {
+          "description": "Εδώ μπορείτε να διαχειριστείτε τους μαθητές στη μελέτη σας. Θα έχουν πρόσβαση σε ορισμένες θέσεις και υποθέσεις (που μπορείτε να ορίσετε) και θα μπορούν να συμπληρώνουν ορισμένες πληροφορίες για τις πηγές εκπομπών που έχετε ήδη δημιουργήσει στη μελέτη. Για περισσότερες πληροφορίες σχετικά με το περιβάλλον του συνεισφέροντα, δείτε τις <link>Συχνές Ερωτήσεις (FAQ)</link>."
+        }
+      }
+    },
+    "export": {
+      "export": "Exporter mon empreinte"
+    },
+    "pdf": {
+      "loading": "Chargement des données...",
+      "title": "Synthèse des émissions {year}",
+      "results": {
+        "all": "Résultats"
+      },
+      "labels": {
+        "studentNumber": "Nombre d'élèves",
+        "etp": "Nombre de personnels",
+        "superficy": "Superficie",
+        "establishmentYear": "Année d'ouverture"
+      },
+      "charts": {
+        "siteEmissions": "Émissions en tCO2e de l'établissement scolaire {site} en {year}"
+      },
+      "questions": {
+        "goals-title": "OBJECTIFS",
+        "goals-subtitle": "Présente les objectifs visés par ton action (sensibilisation, réduction des émissions...). Est-ce une action à court terme ou stratégique ?",
+        "shareholders-title": "PORTEURS DE L'ACTION",
+        "shareholders-subtitle": "As-tu désigné une équipe qui portera l'action au quotidien et sur le long terme ? Indique leurs noms et rôle/fonction",
+        "otherStakeholders-title": "AUTRES PARTIES PRENANTES",
+        "otherStakeholders-subtitle": "Pense à distinguer ici les parties prenantes internes et externes. Ils ne porteront pas l'action au quotidien mais t'aideront pour te fournir des factures d'électricité, par exemple.  Cela peut être le gestionnaire de ton établissement ou encore ta collectivité.",
+        "ressourcesToBeImplemented-title": "MOYENS A METTRE EN OEUVRE",
+        "ressourcesToBeImplemented-subtitle": "Quelles sont les étapes et moyens à employer ? Cela peut être des moyens humains, matériels, financiers... Construis-bien cette partie, elle est essentielle !",
+        "monitoringIndicators-title": "INDICATEURS DE SUIVI",
+        "monitoringIndicators-subtitle": "Inscris ici des indicateurs sur lesquels tu pourras te baser dans 6 mois / 1 an pour évaluer le succès de ton action. Un exemple : % de baisse des GES",
+        "estimatedCarbonImpacts-title": "IMPACTS CARBONE ESTIMES",
+        "estimatedCarbonImpacts-subtitle": "Dans quelle mesure ton action permet de réduire les émissions de GES ? ",
+        "otherEstimatedEnvironmentalImpacts-title": "AUTRES IMPACTS ENVIRONNEMENTAUX ESTIMES",
+        "otherEstimatedEnvironmentalImpacts-subtitle": "Pense ici aux impacts positifs ou négatifs de ton action sur la biodiversité, l'eau, les déchets...",
+        "estimatedSocialImpacts-title": "IMPACTS SOCIAUX ESTIMES",
+        "estimatedSocialImpacts-subtitle": "On essaie ici de savoir si l'action permet de réduire l'éco-anxiété, favoriser l'apprentissage, réduire le décrochage scolaire, favoriser l'insertion de jeunes...",
+        "calendar-title": "CALENDRIER",
+        "calendar-subtitle": "Inscris ici les grandes étapes de ton action, choisis bien ton échelle de temps !"
+      },
+      "additionalInfo": "Les résultats que vous obtenez ici sont un calcul simplifié de l'empreinte carbone de votre établissement et ne répondent par aux exigences du Bilan Carbone®, ni de la réglementation en vigueur.  Ces résultats ont pour objet de vous accompagner dans la compréhension des enjeux climatiques et l'identification de vos priorités d'action.  Portant donc une valeur essentiellement pédagogique, le calcul de l'empreinte carbone de votre établissement via notre outil constitue donc une première étape dans votre adaptation aux conséquences du changement climatique."
+    },
+    "results": {
+      "carbonIntensities": "Empreinte carbone individuelle"
+    }
+  },
+  "emissionFactors": {
+    "post": {
+      "Restauration": "Εστίαση / Εστιατόρια",
+      "AutresGaz": "Autres gaz",
+      "Combustibles": "Combustibles",
+      "Construction": "Construction",
+      "DechetsRecyclables": "Déchets recyclables",
+      "DeplacementsClickson": "Déplacements",
+      "DistributeursAutomatiques": "Distributeurs automatiques",
+      "EnergiesClickson": "Énergie",
+      "EquipementsDeSport": "Équipements de sport",
+      "EquipementsDivers": "Equipements divers (électroménager, équipements professionnels...)",
+      "EquipementsInformatiqueAudiovisuel": "Équipements informatiques / audiovisuel",
+      "Fournitures": "Fournitures",
+      "ImmobilisationsClickson": "Immobilisations",
+      "OrduresMenageresResiduelles": "Ordures ménagères résiduelles",
+      "ProduitsChimiques": "Produits chimiques",
+      "Renovation": "Rénovation",
+      "TransportDesEleves": "Transport des élèves",
+      "TransportDuPersonnel": "Transport du personnel",
+      "TypesDeRepasServis": "Types de repas servis",
+      "VoyagesScolaires": "Voyages scolaires"
+    }
+  },
+  "organization": {
+    "card": {
+      "myOrganization": "Τα ιδρύματά μου"
+    },
+    "form": {
+      "editTitle": "Επεξεργασία των ιδρυμάτων μου",
+      "name": "Nom de l'établissement"
+    },
+    "sites": {
+      "title": "Ποια ιδρύματα πρέπει να καλύψει το αποτύπωμα;",
+      "noSites": "Δεν υπάρχουν ρυθμισμένα ιδρύματα",
+      "namePlaceholder": "Όνομα ιδρύματος",
+      "add": "Προσθήκη ιδρύματος",
+      "academy": "Académie",
+      "academyPlaceholder": "Académie de l'établissement",
+      "establishmentType": {
+        "title": "Type d'établissement",
+        "COLLEGE": "Collège",
+        "LYCEE_GENERAL": "Lycée Général et Technologique",
+        "LYCEE_PRO": "Lycée Professionnel",
+        "LYCEE_PRO_AGRICOLE": "Lycée Professionnel Agricole",
+        "ETABLISSEMENT_FR_ETRANGER": "Etablissement d'enseignement français à l'étranger"
+      },
+      "establishmentYear": "Année de construction",
+      "establishmentYearPlaceholder": "Année de construction de l'établissement",
+      "etp": "Nombre de personnels",
+      "etpPlaceholder": "Nombre total de personnels",
+      "glossary": {
+        "informations": "Il est nécessaire de renseigner ces informations avant d'aller plus loin dans votre démarche. Ces informations impactent effectivement le calcul de votre empreinte carbone (en particulier, le poste immobilisations)"
+      },
+      "studentNumber": "Nombre d'élèves",
+      "studentNumberPlaceholder": "Nombre total d'élèves"
+    }
+  },
+  "login": {
+    "welcome": "Καλώς ήρθατε στο Clickson PEBC",
+    "explanation": "Ας μετρήσουμε τις εκπομπές αερίων θερμοκηπίου του ιδρύματός σας!",
+    "form": {
+      "activate": "Δημιουργία του λογαριασμού μου"
+    }
+  },
+  "signup": {
+    "description": "Δημιουργήστε λογαριασμό Clickson με το email σας και έναν ταχυδρομικό κωδικό ή όνομα σχολείου",
+    "schoolPostalCodeOrName": "Ταχυδρομικός κωδικός ή όνομα σχολείου",
+    "schoolPostalCodeOrNamePlaceholder": "Ο ταχυδρομικός κωδικός ή το όνομα του σχολείου",
+    "schoolSearchGlossaryTitle": "Βρείτε το σχολείο σας.",
+    "schoolSearchGlossary": "Βρείτε το σχολείο σας εισάγοντας τον ταχυδρομικό κωδικό ή το όνομα και επιλέγοντάς το από τη λίστα.",
+    "close": "Κλείσιμο",
+    "schoolPostalCodeOrNameRequired": "Παρακαλώ εισάγετε ταχυδρομικό κωδικό ή όνομα σχολείου",
+    "validate": "Επιβεβαίωση",
+    "clear": "Καθαρισμός τιμής",
+    "Not authorized": "Αυτό το email χρησιμοποιείται ήδη στο Clickson ή υπάρχει πρόβλημα με τη δημιουργία λογαριασμού. Δείτε τις <link>Συχνές Ερωτήσεις (FAQ)</link> ή <support>επικοινωνήστε με την υποστήριξη</support> αν νομίζετε ότι πρόκειται για σφάλμα.",
+    "Not known school": "Βρείτε και επιλέξτε το σχολείο σας.",
+    "validation": {
+      "schoolPostalCodeOrName": "Παρακαλώ εισάγετε ταχυδρομικό κωδικό ή όνομα σχολείου"
+    },
+    "city": "Ville",
+    "cityPlaceholder": "Ville où se situe l'établissement scolaire",
+    "country": "Votre pays",
+    "schoolName": "Nom de l'établissement scolaire",
+    "schoolNamePlaceholder": "Nom de l'établissement scolaire"
+  },
+  "email": {
+    "subject": {
+      "newUser": "Έχετε προσκληθεί στο Clickson",
+      "addedActiveUser": "Έχετε προσκληθεί σε νέο περιβάλλον Clickson",
+      "activation": "Έχετε ενεργοποιήσει τον λογαριασμό σας στο Clickson",
+      "activationRequest": "Αίτημα πρόσβασης στον οργανισμό σας στο Clickson"
+    }
+  },
+  "comments": {
+    "title": "Gestion des commentaires",
+    "noComments": "Vous n'avez aucun commentaire à traiter",
+    "yourComment": "Votre commentaire...",
+    "validated": "Validé",
+    "pending": "En attente",
+    "addComment": "Ajouter un commentaire"
+  },
+  "error": {
+    "Too many comments": "Vous avez déjà trop de commentaire en attente"
+  },
+  "ressources": {
+    "knowMoreDataCollect": "Pour savoir comment collecter les données de son établissement :",
+    "guideDataCollect": "Guide de collecte de données",
+    "toolsDataCollect": "Les outils de collecte de données :",
+    "modelsDataCollect": "Modèles de supports de collecte de données",
+    "game": "Jeu : initiation à la négociation de son plan d'action :",
+    "classEarth": "Ma Terre en classe"
+  }
+}

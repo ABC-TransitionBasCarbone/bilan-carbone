@@ -96,6 +96,7 @@ const EditEmissionFactorForm = ({ emissionFactor, locations }: Props) => {
       geographicRepresentativeness: emissionFactor.geographicRepresentativeness || undefined,
       temporalRepresentativeness: emissionFactor.temporalRepresentativeness || undefined,
       completeness: emissionFactor.completeness || undefined,
+      base: emissionFactor.base,
     },
   })
 

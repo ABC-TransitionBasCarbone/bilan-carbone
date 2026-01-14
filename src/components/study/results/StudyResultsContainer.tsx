@@ -2,17 +2,19 @@
 
 import Block from '@/components/base/Block'
 import { FullStudy } from '@/db/study'
+import { UserSession } from 'next-auth'
 import StudyResultsContainerSummary from './StudyResultsContainerSummary'
 
 interface Props {
+  user: UserSession
   study: FullStudy
   validatedOnly: boolean
 }
 
-const StudyResultsContainer = ({ study, validatedOnly }: Props) => {
+const StudyResultsContainer = ({ user, study, validatedOnly }: Props) => {
   return (
     <Block>
-      <StudyResultsContainerSummary study={study} validatedOnly={validatedOnly} studySite={'all'} />
+      <StudyResultsContainerSummary user={user} study={study} validatedOnly={validatedOnly} studySite={'all'} />
     </Block>
   )
 }

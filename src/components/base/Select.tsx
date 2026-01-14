@@ -1,7 +1,7 @@
 import { Translations } from '@/types/translation'
 import ClearIcon from '@mui/icons-material/Clear'
 import { IconButton, InputAdornment, Select as MUISelect, SelectChangeEvent, SelectProps } from '@mui/material'
-import IconLabel from './IconLabel'
+import { CustomFormLabel } from '../form/CustomFormLabel'
 
 interface Props {
   icon?: React.ReactNode
@@ -25,11 +25,7 @@ export const Select = ({
 }: Props & SelectProps) => {
   return (
     <>
-      {label && withLabel && (
-        <IconLabel icon={icon} iconPosition={iconPosition} className="mb-2">
-          <span className="inputLabel bold">{label}</span>
-        </IconLabel>
-      )}
+      {label && withLabel && <CustomFormLabel label={label} icon={icon} iconPosition={iconPosition} />}
       <MUISelect
         {...selectProps}
         labelId={`${name}-select-label}`}

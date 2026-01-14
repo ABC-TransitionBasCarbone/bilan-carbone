@@ -162,6 +162,7 @@ export const processBarChartData = <T extends BasicTypeCharts>(
   tPost?: Translations,
 ): ProcessedBarChartData => {
   const filteredData = results.filter((result) => result.post !== 'total' && result.label !== 'total')
+
   const isTag = type === 'tag'
 
   if (!showSubLevel) {
