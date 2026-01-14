@@ -31,6 +31,7 @@ interface Props<T extends EmissionFactorCommand> {
 const Base = <T extends EmissionFactorCommand>({ form }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
   const tValidation = useTranslations('validation')
+  const tBase = useTranslations('emissionFactors.base')
 
   const control = form.control as Control<EmissionFactorCommand>
   const setValue = form.setValue as UseFormSetValue<EmissionFactorCommand>
@@ -77,7 +78,7 @@ const Base = <T extends EmissionFactorCommand>({ form }: Props<T>) => {
               >
                 {Object.values(EmissionFactorBase).map((base) => (
                   <MenuItem key={base} value={base}>
-                    {t(base)}
+                    {tBase(base)}
                   </MenuItem>
                 ))}
               </Select>
