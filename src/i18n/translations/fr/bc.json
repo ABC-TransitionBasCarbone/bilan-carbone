@@ -1504,8 +1504,6 @@
       "comment": "Commentaires",
       "clear": "Supprimer la valeur",
       "base": "Base",
-      "MarketBased": "market-based",
-      "LocationBased": "location-based",
       "baseModal": {
         "title": "Information pour les exports GHG-P",
         "description": "Vous devez ici indiquer si votre FE s'applique dans le cadre de la méthode location-based, ou dans le cas de la méthode market-based. Cette distinction ne s'appliquera que si votre FE est utilisé au sein du sous-poste Électricité du poste Énergie. Pour rappel :",
