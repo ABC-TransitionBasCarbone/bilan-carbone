@@ -8,7 +8,7 @@ import { getOrganizationVersionAccounts } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import NewStudyForm from '@/environments/base/study/new/Form'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
-import { Export, Level } from '@prisma/client'
+import { Level } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
@@ -32,11 +32,7 @@ const NewStudyFormTilt = ({ user, accounts, form, duplicateStudyId, sourceStudy,
   useEffect(() => {
     if (simplified) {
       form.setValue('level', Level.Initial)
-      form.setValue('exports', {
-        [Export.Beges]: false,
-        [Export.GHGP]: false,
-        [Export.ISO14069]: false,
-      })
+      form.setValue('exports', [])
       form.setValue('simplified', simplified)
     }
   }, [form, simplified])
@@ -71,16 +67,9 @@ const NewStudyFormTilt = ({ user, accounts, form, duplicateStudyId, sourceStudy,
             <span className="inputLabel bold">{t('realizationDates')}</span>
           </IconLabel>
           <div className="flex gapped1">
+            <FormDatePicker control={form.control} name="realizationStartDate" label={tLabel('start')} clearable />
             <FormDatePicker
               control={form.control}
-              translation={t}
-              name="realizationStartDate"
-              label={tLabel('start')}
-              clearable
-            />
-            <FormDatePicker
-              control={form.control}
-              translation={t}
               name="realizationEndDate"
               label={tLabel('end')}
               data-testid="new-study-realizationEndDate"
