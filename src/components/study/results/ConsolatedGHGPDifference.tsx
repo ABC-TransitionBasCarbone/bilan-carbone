@@ -176,25 +176,27 @@ const ConsolatedGHGPDifference = ({
     [emissionFactorsWithParts, emissionSourcesForSelectedSite, validatedOnly],
   )
 
-  const otherGasDifference = useMemo(
-    () => calculEmissionSourcesDifference(otherGas, emissionFactorsWithParts, environment, unitValue),
-    [otherGas, emissionFactorsWithParts, unitValue, environment],
-  )
+  const otherGasDifference = useMemo(() => {
+    return otherGas.reduce((total, emissionSource) => {
+      if (!emissionSource.emissionFactor || !emissionSource.value) {
+        return total
+      }
 
-  console.log('\ndata à vérifier : ')
-  console.log('utilisationEnDependance : ', utilisationEnDependanceValue)
-  console.log('missingCaract : ', missingCaractDifference)
-  console.log('immobilisation : ', immobilisationDifference)
-  console.log('3.other & 4.other : ', otherEmissionsDifference)
-  console.log('otherGas : ', otherGasDifference)
-  console.log(
-    'total : ',
-    utilisationEnDependanceValue +
-      missingCaractDifference +
-      immobilisationDifference +
-      otherEmissionsDifference +
-      otherGasDifference,
-  )
+      const emissionFactor = emissionFactorsWithParts.find((ef) => ef.id === emissionSource.emissionFactor?.id)
+      if (!emissionFactor) {
+        return total
+      }
+
+      const otherGasEmission = emissionFactor.emissionFactorParts.length
+        ? emissionFactor.emissionFactorParts.reduce(
+            (res, emissionFactorPart) => res + (emissionFactorPart.otherGES || 0) * (emissionSource.value || 0),
+            0,
+          )
+        : emissionSource.value * (emissionFactor.otherGES || 0)
+
+      return total - otherGasEmission / unitValue
+    }, 0)
+  }, [otherGas, emissionFactorsWithParts, unitValue])
 
   return (
     <ConsolatedExportDifference
