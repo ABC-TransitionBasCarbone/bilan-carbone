@@ -1655,7 +1655,13 @@
     },
     "base": {
       "LocationBased": "location-based",
-      "MarketBased": "market-based"
+      "MarketBased": "market-based",
+      "difference": {
+        "warning": "Attention, vos KWH market based ne sont pas égales à celles en location based.",
+        "explanation": "Explication",
+        "title": "titre Gabriel",
+        "description": "description Gabriel"
+      }
     },
     "missingQualities": {
       "title": "Ajout de la qualité pour les facteurs d'émission manuels",
