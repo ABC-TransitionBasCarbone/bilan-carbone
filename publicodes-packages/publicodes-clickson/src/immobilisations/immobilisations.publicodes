@@ -1,0 +1,9 @@
+immobilisations:
+  titre: Immobilisations
+  formule:
+    somme:
+      - construction
+      - rénovation
+      - équipements informatique audiovisuel
+      - équipements divers
+  unité: kgCO2e

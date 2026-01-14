@@ -313,7 +313,6 @@
       "homepage": "Accueil",
       "framing": "Cadrage",
       "scope": "Périmètre",
-      "mobilisation": "Mobilisation",
       "accounting": "Comptabilisation",
       "dataEntry": "Saisie des données",
       "results": "Résultats",
@@ -327,7 +326,9 @@
       "trajectories": "Trajectoires de réduction",
       "objectives": "Objectifs de réduction",
       "actionPlan": "Plan d'action",
-      "commingSoon": "À venir"
+      "commingSoon": "À venir",
+      "engagement": "Mobilisation",
+      "carriedActions": "Actions menées"
     },
     "new": {
       "title": "Informations sur la nouvelle étude",
@@ -781,8 +782,8 @@
         "sessions": "Séances"
       },
       "ratios": {
-        "all": "Ratios - Tous cinémas",
-        "site": "Ratios - {site}"
+        "all": "Intensités carbone - Tous cinémas",
+        "site": "Intensités carbone - {site}"
       },
       "additionalInfo": "Informations complémentaires"
     },
@@ -907,7 +908,7 @@
         },
         "snbcCard": {
           "title": "Trajectoires SNBC",
-          "description": "La Stratégie Nationale Bas Carbone (SNBC) définit un objectif de réduction de 40% entre 1990 et 2030, et divise par 6 les émissions entre 1990 et 2050.",
+          "description": "La Stratégie Nationale Bas-Carbone (SNBC) est la feuille de route de la France pour lutter contre le changement climatique. Elle définit une trajectoire de réduction des émissions de gaz à effet de serre jusqu’à 2050 et fixe des objectifs à horizon 2030.",
           "methodLabel": "Méthodes",
           "general": "Générale",
           "sectoral": "Par secteur d'activité",
@@ -1033,6 +1034,9 @@
         "namePlaceholder": "Donner un nom à ma trajectoire",
         "description": "Description de ma trajectoire",
         "descriptionPlaceholder": "Décrivez votre trajectoire",
+        "referenceYear": {
+          "label": "Année de départ de la trajectoire (optionnel)"
+        },
         "objectives": {
           "title": "Objectifs de réduction",
           "sbtiDescription": "Ces objectifs de réduction sont liés à la trajectoire de référence SBTi et sont prédéfinis. Vous pourrez ajouter des objectifs intermédiaires dans la rubrique \"Mes objectifs de réduction\"",
@@ -1059,6 +1063,7 @@
         "table": {
           "name": "Nom",
           "type": "Type",
+          "startYear": "Année de départ",
           "targetYear": "Année cible",
           "reductionRate": "Réduction annuelle",
           "actions": "Actions"
@@ -1095,7 +1100,8 @@
           "potential": "Potentiel de réduction",
           "owner": "Responsable",
           "budget": "Budget",
-          "errorChangingEnabled": "Erreur lors du changement de statut de l'action"
+          "errorChangingEnabled": "Erreur lors du changement de statut de l'action",
+          "relevance": "Niveaux de pertinence"
         },
         "addModal": {
           "add": "Ajouter une action",
@@ -1195,6 +1201,56 @@
           "message": "Êtes-vous sûr de vouloir supprimer cette action de manière définitive ?",
           "confirm": "Supprimer"
         }
+      }
+    },
+    "engagementActions": {
+      "title": "Actions menées",
+      "table": {
+        "name": "Nom",
+        "description": "Description",
+        "steps": "Étape",
+        "target": "Cibles",
+        "phase": "Phase de mobilisation",
+        "date": "Date"
+      },
+      "modal": {
+        "add": "Ajouter une action",
+        "update": "Modifier une action",
+        "clear": "Supprimer la valeur",
+        "name": "Nom",
+        "namePlaceholder": "Donnez un nom à votre action",
+        "description": "Description (nombres de participants, format, déroulé, etc)",
+        "descriptionPlaceholder": "Décrivez votre action",
+        "steps": "Étape de la démarche concernée",
+        "stepsPlaceholder": "Choississez les étapes de votre action",
+        "target": "Cibles",
+        "phase": "Phase de mobilisation",
+        "date": "Date",
+        "validate": "Valider"
+      },
+      "targets": {
+        "TEAM_PROJECT": "Équipe projet",
+        "DIRECTION": "Direction",
+        "OTHER_INTERNAL_COLLABORATORS": "Autres collaborateurs internes",
+        "FURNISHERS": "Fournisseurs",
+        "CLIENTS": "Clients",
+        "PARTNERS": "Partenaires",
+        "OTHERS_EXTERNAL": "Autres partenaires externes"
+      },
+      "steps": {
+        "AT_LAUNCH_OF_APPROACH": "Au lancement de la démarche",
+        "AT_LAUNCH_OF_DATA_COLLECTION": "Au lancement de la collecte de données",
+        "DURING_DATA_COLLECTION": "Durant la collecte de données",
+        "BEFORE_RESULTS_RESTITUTION": "Avant restitution des résultats",
+        "AT_LAUNCH_OF_TRANSITION_PLAN_CONSTRUCTION": "Au lancement de la construction du plan de transition",
+        "DURING_TRANSITION_PLAN_CONSTRUCTION": "Durant la construction du plan de transition",
+        "IN_SUMMARY_OF_APPROACH": "Dans le résumé de la démarche"
+      },
+      "phases": {
+        "AwarnessAndOutreach": "Mobilisation et sensibilisation",
+        "Empowerment": "Responsabilisation",
+        "CoConstruction": "Co-construction",
+        "FeedbackAndCommunication": "Retours et communication"
       }
     }
   },
@@ -1516,6 +1572,7 @@
       "Fuites": "Fuites",
       "Transport": "Transport",
       "CombustionALaCentrale": "Combustion à la centrale",
+      "AutresEmissionsLieesALaConsommationDElectriciteBarrage": "Autres émissions liées à la consommation d?électricité (barrage?)",
       "Pertes": "Pertes"
     },
     "missingQualities": {
@@ -1727,6 +1784,7 @@
     "TEP": "tep",
     "TEP_PCI": "tep PCI",
     "TEP_PCS": "tep PCS",
+    "TEU_KM": "TEU.km",
     "TON_KM": "t.km",
     "TON": "{count, plural, =0 {tonne} one {tonne} other {tonnes}}",
     "TON_WITH_BONES": "{count, plural, =0 {tonne avec os} one {tonne avec os} other {tonnes avec os}}",
@@ -2156,6 +2214,7 @@
     "tooBig": "Veuillez saisir une valeur plus petite",
     "studyYearMustBeBeforeCurrent": "L'année de l'étude doit être antérieure à l'année de l'étude actuelle",
     "studyYearMustBeAfterLinkedStudies": "Impossible de renseigner une date antérieure à celles de vos études liées sur votre plan de transition",
-    "maxTwoDecimals": "Le taux de réduction doit avoir au maximum 2 décimales"
+    "maxTwoDecimals": "Le taux de réduction doit avoir au maximum 2 décimales",
+    "referenceYearMustBeBeforeOrEqualToStudyYear": "L'année de référence doit être inférieure ou égale à l'année de l'étude"
   }
 }

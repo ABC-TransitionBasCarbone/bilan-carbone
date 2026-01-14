@@ -23,7 +23,7 @@ export function getEvaluatedFormLayout<RuleName extends string>(
   engine: Engine<RuleName>,
   layout: FormLayout<RuleName>,
 ): EvaluatedFormLayout<RuleName> {
-  const evaluateRule = (rule: RuleName) => getEvaluatedFormElement(engine, rule, engine.getSituation())
+  const evaluateRule = (rule: RuleName) => getEvaluatedFormElement(engine, rule)
 
   switch (layout.type) {
     case 'input':

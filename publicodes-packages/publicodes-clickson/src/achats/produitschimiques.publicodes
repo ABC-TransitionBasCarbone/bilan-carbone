@@ -1,0 +1,277 @@
+achats . produits chimiques:
+  titre: Produits chimiques
+  formule:
+    somme:
+      - produit vaisselle liquide
+      - savon liquide
+      - produit vitre
+      - nettoyant sols
+      - nettoyant multi-usages
+      - détergent sanitaire
+      - désinfectant
+      - chlore
+      - bicarbonate de soude
+      - savon solide
+      - vinaigre blanc
+      - soude solide
+      - acide sulfurique
+      - acide chlorhydrique
+      - peinture revêtement mural intérieur
+      - peinture revêtement mural extérieur
+  unité: kgCO2e
+  avec:
+    produit vaisselle liquide:
+      titre: Produit vaisselle liquide
+      formule: consommation * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        consommation:
+          question: Consommation annuelle de produit vaisselle liquide
+          par défaut: 0
+          unité: litre
+        FE:
+          valeur: 1.47
+          unité: kgCO2e/litre
+          meta:
+            incertitude: 5
+
+    savon liquide:
+      titre: Savon liquide
+      formule: consommation * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        consommation:
+          question: Consommation annuelle de savon liquide
+          par défaut: 0
+          unité: litre
+        FE:
+          valeur: 0.472
+          unité: kgCO2e/litre
+          meta:
+            incertitude: 5
+
+    produit vitre:
+      titre: Produit vitre
+      formule: consommation * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        consommation:
+          question: Consommation annuelle de produit vitre
+          par défaut: 0
+          unité: litre
+        FE:
+          valeur: 0.22
+          unité: kgCO2e/litre
+          meta:
+            incertitude: 5
+
+    nettoyant sols:
+      titre: Nettoyant sols
+      formule: consommation * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        consommation:
+          question: Consommation annuelle de nettoyant sols
+          par défaut: 0
+          unité: litre
+        FE:
+          valeur: 0.535
+          unité: kgCO2e/litre
+          meta:
+            incertitude: 5
+
+    nettoyant multi-usages:
+      titre: Nettoyant multi-usages
+      formule: consommation * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        consommation:
+          question: Consommation annuelle de nettoyant multi-usages
+          par défaut: 0
+          unité: litre
+        FE:
+          valeur: 0.637
+          unité: kgCO2e/litre
+          meta:
+            incertitude: 5
+
+    détergent sanitaire:
+      titre: Détergent sanitaire
+      formule: consommation * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        consommation:
+          question: Consommation annuelle de détergent sanitaire
+          par défaut: 0
+          unité: litre
+        FE:
+          valeur: 0.547
+          unité: kgCO2e/litre
+          meta:
+            incertitude: 5
+
+    désinfectant:
+      titre: Désinfectant
+      formule: consommation * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        consommation:
+          question: Consommation annuelle de désinfectant
+          par défaut: 0
+          unité: litre
+        FE:
+          valeur: 4.18
+          unité: kgCO2e/litre
+          meta:
+            incertitude: 5
+
+    chlore:
+      titre: Chlore
+      formule: consommation * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        consommation:
+          question: Consommation annuelle de chlore
+          par défaut: 0
+          unité: litre
+        FE:
+          valeur: 1.23
+          unité: kgCO2e/litre
+          meta:
+            incertitude: 5
+
+    bicarbonate de soude:
+      titre: Bicarbonate de soude
+      formule: consommation * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        consommation:
+          question: Consommation annuelle de bicarbonate de soude
+          par défaut: 0
+          unité: litre
+        FE:
+          valeur: 1.18
+          unité: kgCO2e/litre
+          meta:
+            incertitude: 5
+
+    peinture revêtement mural intérieur:
+      titre: Peinture - revêtement mural intérieur
+      formule: consommation * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        consommation:
+          question: Consommation annuelle de peinture - revêtement mural intérieur
+          par défaut: 0
+          unité: kg
+        FE:
+          valeur: 1.31
+          unité: kgCO2e/kg
+          meta:
+            incertitude: 5
+
+    peinture revêtement mural extérieur:
+      titre: Peinture - revêtement mural extérieur
+      formule: consommation * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        consommation:
+          question: Consommation annuelle de peinture - revêtement mural extérieur
+          par défaut: 0
+          unité: kg
+        FE:
+          valeur: 2.29
+          unité: kgCO2e/kg
+          meta:
+            incertitude: 5
+
+    savon solide:
+      titre: Savon solide
+      formule: consommation * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        consommation:
+          question: Consommation annuelle de savon solide
+          par défaut: 0
+          unité: kg
+        FE:
+          valeur: 0.129
+          unité: kgCO2e/kg
+          meta:
+            incertitude: 5
+
+    vinaigre blanc:
+      titre: Vinaigre blanc
+      formule: consommation * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        consommation:
+          question: Consommation annuelle de vinaigre blanc
+          par défaut: 0
+          unité: litre
+        FE:
+          valeur: 0.215
+          unité: kgCO2e/litre
+          meta:
+            incertitude: 5
+
+    soude solide:
+      titre: Soude solide (poudre, granulés)
+      formule: consommation * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        consommation:
+          question: Consommation annuelle de soude solide (poudre, granulés)
+          par défaut: 0
+          unité: kg
+        FE:
+          valeur: 458
+          unité: kgCO2e/kg
+          meta:
+            incertitude: 5
+
+    acide sulfurique:
+      titre: Acide sulfurique
+      formule: consommation * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        consommation:
+          question: Consommation annuelle d'acide sulfurique
+          par défaut: 0
+          unité: litre
+        FE:
+          valeur: 2.2
+          unité: kgCO2e/litre
+          meta:
+            incertitude: 4
+
+    acide chlorhydrique:
+      titre: Acide chlorhydrique
+      formule: consommation * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        consommation:
+          question: Consommation annuelle d'acide chlorhydrique
+          par défaut: 0
+          unité: litre
+        FE:
+          valeur: 1.44
+          unité: kgCO2e/litre
+          meta:
+            incertitude: 4

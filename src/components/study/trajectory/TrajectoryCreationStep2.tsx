@@ -1,11 +1,13 @@
+import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormTextField } from '@/components/form/TextField'
 import { customRich } from '@/i18n/customRich'
-import { TrajectoryFormData } from '@/services/serverFunctions/transitionPlan.command'
+import { TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
 import { toTitleCase } from '@/utils/string'
 import { getReductionRatePerType } from '@/utils/trajectory'
 import { FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material'
 import { TrajectoryType } from '@prisma/client'
 import classNames from 'classnames'
+import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import { Control, Controller } from 'react-hook-form'
 import ObjectiveCard from './ObjectiveCard'
@@ -17,6 +19,7 @@ interface Props {
   control: Control<TrajectoryFormData>
   showTrajectoryTypeSelector: boolean
   handleModeSelect: (type: TrajectoryType) => void
+  studyYear: number
 }
 
 const TrajectoryCreationStep2 = ({
@@ -25,9 +28,11 @@ const TrajectoryCreationStep2 = ({
   control,
   showTrajectoryTypeSelector,
   handleModeSelect,
+  studyYear,
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectoryModal')
   const reductionRate = getReductionRatePerType(trajectoryType)
+  const maxReferenceDate = dayjs().year(studyYear)
 
   const getMainTrajectoryType = () => {
     if (trajectoryType === TrajectoryType.SBTI_15 || trajectoryType === TrajectoryType.SBTI_WB2C) {
@@ -85,6 +90,18 @@ const TrajectoryCreationStep2 = ({
         placeholder={t('descriptionPlaceholder')}
         fullWidth
         multiline
+      />
+
+      <FormDatePicker
+        name="referenceYear"
+        label={t('referenceYear.label')}
+        control={control}
+        translation={t}
+        views={['year']}
+        minDate={dayjs('1990-01-01')}
+        maxDate={maxReferenceDate}
+        clearable
+        fullWidth
       />
 
       {isSBTI && (

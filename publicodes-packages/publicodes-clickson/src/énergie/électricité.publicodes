@@ -1,0 +1,18 @@
+énergie . électricité:
+  titre: Électricité
+  formule: consommation * FE
+  unité: kgCO2e
+  avec:
+    consommation:
+      question: Consommation annuelle d'électricité
+      unité: kWh
+      note: |
+        Indiquez la consommation totale d'électricité de l'établissement sur une année.
+    FE:
+      question: Facteur d'émission de l'électricité
+      valeur: 0.058
+      unité: kgCO2e/kWh
+      note: |
+        Source: Base Carbone®
+      meta:
+        incertitude: 0

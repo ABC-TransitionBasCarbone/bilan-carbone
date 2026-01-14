@@ -2,6 +2,7 @@ import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import EditOrganizationPage from '@/components/pages/EditOrganization'
 import NotFound from '@/components/pages/NotFound'
 import { getOrganizationVersionWithSitesById, OrganizationVersionWithOrganization } from '@/db/organization'
+import { hasAlwaysAccessToOrganizationVersion } from '@/services/permissions/environment'
 import { canEditOrganizationVersion } from '@/utils/organization'
 import { UUID } from 'crypto'
 
@@ -18,11 +19,14 @@ const OrganizationView = async (props: Props & UserSessionProps) => {
   }
 
   const organizationVersion = (await getOrganizationVersionWithSitesById(id)) as OrganizationVersionWithOrganization
-  if (!organizationVersion || !canEditOrganizationVersion(props.user, organizationVersion)) {
+  const canEditOrganization = canEditOrganizationVersion(props.user, organizationVersion)
+  if (!organizationVersion || (!canEditOrganization && !hasAlwaysAccessToOrganizationVersion(props.user.environment))) {
     return <NotFound />
   }
 
-  return <EditOrganizationPage organizationVersion={organizationVersion} user={props.user} />
+  return (
+    <EditOrganizationPage organizationVersion={organizationVersion} user={props.user} disabled={!canEditOrganization} />
+  )
 }
 
 export default withAuth(OrganizationView)
