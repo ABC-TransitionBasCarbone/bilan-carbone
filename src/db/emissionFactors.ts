@@ -58,6 +58,7 @@ const selectEmissionFactor = {
   isMonetary: true,
   importedFrom: true,
   importedId: true,
+  base: true,
   organizationId: true,
   reliability: true,
   technicalRepresentativeness: true,
