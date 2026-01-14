@@ -1653,7 +1653,13 @@
     },
     "base": {
       "LocationBased": "location-based",
-      "MarketBased": "market-based"
+      "MarketBased": "market-based",
+      "difference": {
+        "warning": "Warning, your market based kWh are not equal to the location based ones.",
+        "explanation": "Explanation",
+        "title": "titre Gabriel",
+        "description": "description Gabriel"
+      }
     },
     "missingQualities": {
       "title": "Add quality for manual emission factors",
