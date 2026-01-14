@@ -7,12 +7,14 @@ import {
 import { canCreateAStudy } from '@/services/permissions/study'
 import { hasActiveLicence } from '@/utils/organization'
 import AddIcon from '@mui/icons-material/Add'
-import { Box as MUIBox } from '@mui/material'
+import { Alert, Box as MUIBox } from '@mui/material'
 import { Study } from '@prisma/client'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
+import Link from 'next/link'
 import { Suspense } from 'react'
+import Block from '../base/Block'
 import Box from '../base/Box'
 import LinkButton from '../base/LinkButton'
 import Image from '../document/Image'
@@ -50,11 +52,8 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
   const advancedStudies = mainStudies.filter((study) => !study.simplified)
   const simplifiedStudies = mainStudies.filter((study) => study.simplified)
 
-  let creationUrl = organizationVersionId ? `/organisations/${organizationVersionId}/etudes/creer` : '/etudes/creer'
-
-  if (simplified) {
-    creationUrl += '?simplified=true'
-  }
+  const creationUrl = organizationVersionId ? `/organisations/${organizationVersionId}/etudes/creer` : '/etudes/creer'
+  const creationUrlSimplified = `${creationUrl}?simplified=true`
 
   const mainStudyOrganizationVersionId = organizationVersionId ?? user.organizationVersionId
 
@@ -77,11 +76,12 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
           collaborations={!organizationVersionId && isCR}
         />
       )}
+
       {!!simplifiedStudies.length && (
         <Studies
           studies={simplifiedStudies}
           canAddStudy={canCreateAStudy(user, true) && !isCR && activeLicence}
-          creationUrl={creationUrl}
+          creationUrl={creationUrlSimplified}
           user={user}
           collaborations={!organizationVersionId && isCR}
           simplified
@@ -89,21 +89,42 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
       )}
       {!!collaborations.length && <Studies studies={collaborations} canAddStudy={false} user={user} collaborations />}
     </>
-  ) : canCreateAStudy(user, simplified) && !isCR ? (
-    <MUIBox component="section" className="mt1">
-      <div className="justify-center">
-        <Box className={classNames(styles.firstStudyCard, 'flex-col align-center')}>
-          <Image src="/img/orga.png" alt="orga.png" width={177} height={119} />
-          <h5>{t(simplified ? 'createFirstSimplifiedStudy' : 'createFirstStudy')}</h5>
-          <p>{t(simplified ? 'firstSimplifiedStudyMessage' : 'firstStudyMessage')}</p>
-          <LinkButton data-testid="new-study" className={classNames('w100 justify-center mb1')} href={creationUrl}>
-            <AddIcon />
-            {t(simplified ? 'createFirstSimplifiedStudy' : 'createFirstStudy')}
-          </LinkButton>
-        </Box>
-      </div>
-    </MUIBox>
-  ) : null
+  ) : canCreateAStudy(user, simplified) ? (
+    !isCR && (
+      <MUIBox component="section" className="mt1">
+        <div className="justify-center">
+          <Box className={classNames(styles.firstStudyCard, 'flex-col align-center')}>
+            <Image src="/img/orga.png" alt="orga.png" width={177} height={119} />
+            <h5>{t(simplified ? 'createFirstSimplifiedStudy' : 'createFirstStudy')}</h5>
+            <p>{t(simplified ? 'firstSimplifiedStudyMessage' : 'firstStudyMessage')}</p>
+            <LinkButton
+              data-testid="new-study"
+              className={classNames('w100 justify-center mb1')}
+              href={simplified ? creationUrlSimplified : creationUrl}
+            >
+              <AddIcon />
+              {t(simplified ? 'createFirstSimplifiedStudy' : 'createFirstStudy')}
+            </LinkButton>
+          </Box>
+        </div>
+      </MUIBox>
+    )
+  ) : (
+    <Block>
+      <Alert className="p0" severity="info">
+        <p>
+          {t.rich('cannotCreateStudy', {
+            link: (children) => <Link href="/ressources">{children}</Link>,
+          })}
+        </p>
+        <p>
+          {t.rich('canCreateFootPrint', {
+            link: (children) => <Link href="/mes-empreintes">{children}</Link>,
+          })}
+        </p>
+      </Alert>
+    </Block>
+  )
 }
 
 export default StudiesContainer

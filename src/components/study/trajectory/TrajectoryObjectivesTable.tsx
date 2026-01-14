@@ -52,6 +52,7 @@ interface Props {
   canEdit: boolean
   transitionPlanId: string
   studyId: string
+  studyYear: number
   searchFilter?: string
 }
 
@@ -61,7 +62,14 @@ const fuseOptions = {
   isCaseSensitive: false,
 }
 
-const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, studyId, searchFilter = '' }: Props) => {
+const TrajectoryObjectivesTable = ({
+  trajectories,
+  canEdit,
+  transitionPlanId,
+  studyId,
+  studyYear,
+  searchFilter = '',
+}: Props) => {
   const tAction = useTranslations('common.action')
   const t = useTranslations('study.transitionPlan.objectives')
   const router = useRouter()
@@ -316,6 +324,7 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, st
           transitionPlanId={transitionPlanId}
           onSuccess={handleEditSuccess}
           trajectory={editTrajectory}
+          studyYear={studyYear}
         />
       )}
     </>

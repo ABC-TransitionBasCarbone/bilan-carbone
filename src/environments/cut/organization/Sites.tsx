@@ -19,9 +19,10 @@ interface Props {
   form: UseFormReturn<SitesCommand>
   sites: SitesCommand['sites']
   withSelection?: boolean
+  disabled?: boolean
 }
 
-const Sites = ({ sites, form, withSelection }: Props) => {
+const Sites = ({ sites, form, withSelection, disabled = false }: Props) => {
   const t = useTranslations('organization.sites')
   const { callServerFunction } = useServerFunction()
   const [cncs, setCNCs] = useState<Cnc[] | null>(null)
@@ -104,7 +105,7 @@ const Sites = ({ sites, form, withSelection }: Props) => {
         header: t('cnc'),
         accessorKey: 'cncId',
         cell: ({ row, getValue }) =>
-          form ? (
+          !disabled && form ? (
             <>
               {withSelection ? (
                 <div className="align-center">
@@ -186,7 +187,7 @@ const Sites = ({ sites, form, withSelection }: Props) => {
         header: t('namePlaceholder'),
         accessorKey: 'name',
         cell: ({ row, getValue }) =>
-          row.original.cncId && form ? (
+          row.original.cncId && !disabled && form ? (
             <>
               {withSelection ? (
                 <div className="align-center">{getValue<string>()}</div>
@@ -209,7 +210,7 @@ const Sites = ({ sites, form, withSelection }: Props) => {
         header: t('postalCode'),
         accessorKey: 'postalCode',
         cell: ({ row, getValue }) =>
-          row.original.cncId && form ? (
+          row.original.cncId && !disabled && form ? (
             <>
               {withSelection ? (
                 <div className="align-center">{getValue<string>()}</div>
@@ -232,7 +233,7 @@ const Sites = ({ sites, form, withSelection }: Props) => {
         header: t('city'),
         accessorKey: 'city',
         cell: ({ row, getValue }) =>
-          row.original.cncId && form ? (
+          row.original.cncId && !disabled && form ? (
             <>
               {withSelection ? (
                 <div className="align-center">{getValue<string>()}</div>

@@ -35,6 +35,7 @@ export const createTrajectorySchema = () => {
       trajectoryType: z.enum(TrajectoryType),
       name: z.string().min(1),
       description: z.string().optional(),
+      referenceYear: z.string().optional().nullable(),
       objectives: z.array(objectiveSchema),
     })
     .transform((data) => ({
@@ -48,13 +49,9 @@ export const createTrajectorySchema = () => {
       ),
     }))
     .refine(
-      (data) => {
-        if (data.trajectoryType !== TrajectoryType.CUSTOM) {
-          return true
-        }
-        return data.objectives.length > 0
-      },
+      (data) => data.trajectoryType !== TrajectoryType.CUSTOM || data.objectives.length > 0,
       setCustomIssue(['objectives'], 'atLeastOneObjective'),
     )
 }
+
 export type TrajectoryFormData = z.infer<ReturnType<typeof createTrajectorySchema>>
