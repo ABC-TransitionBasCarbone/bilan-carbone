@@ -4,6 +4,7 @@
     "no": "Non",
     "previous": "Précédent",
     "next": "Suivant",
+    "close": "Fermer",
     "all": "Tous",
     "none": "Aucun",
     "subPosts": "Sous postes",
@@ -110,7 +111,7 @@
         "table": "Tableau",
         "bar": "Diagramme en barres",
         "pie": "Diagramme circulaire",
-        "ratio": "Ratios"
+        "ratio": "Intensités carbone"
       }
     }
   }

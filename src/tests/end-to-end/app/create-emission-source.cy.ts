@@ -60,7 +60,7 @@ describe('Create study emission source', () => {
     cy.getByTestId('emission-source-My emission source name').within(() => {
       cy.get('[data-testid="emission-source-status"] > div').invoke('text').should('contain', 'À vérifier')
       cy.getByTestId('emission-source-value').should('have.text', '1 008 tCO₂e')
-      cy.getByTestId('emission-source-quality').should('not.exist')
+      cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Très mauvaise')
     })
 
     cy.get('body').then(($body) => {
@@ -79,23 +79,23 @@ describe('Create study emission source', () => {
     cy.getByTestId('emission-source-My emission source name').within(() => {
       cy.getByTestId('emission-source-status').invoke('text').should('contain', 'À vérifier')
       cy.getByTestId('emission-source-value').should('have.text', '1 008 tCO₂e')
-      cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Bonne')
+      cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Mauvaise')
     })
     cy.getByTestId('emission-source-quality-expand-button').should('not.exist')
     cy.getByTestId('emission-source-result').should(
       'have.text',
-      'Intervalle de confiance à 95% :[900; 1 129] (en tCO₂e)Alpha :11,99%',
+      'Intervalle de confiance à 95% :[437; 2 328] (en tCO₂e)Alpha :130,87%',
     )
     cy.getByTestId('emission-source-technicalRepresentativeness').click()
     cy.get('[data-value="1"]').click()
     cy.getByTestId('emission-source-result').should(
       'have.text',
-      'Intervalle de confiance à 95% :[499; 2 035] (en tCO₂e)Alpha :101,85%',
+      'Intervalle de confiance à 95% :[437; 2 328] (en tCO₂e)Alpha :130,87%',
     )
     cy.getByTestId('emission-source-geographicRepresentativeness').click()
-    cy.get('[data-value="2"]').click()
+    cy.get('[data-value="4"]').click()
     cy.getByTestId('emission-source-temporalRepresentativeness').click()
-    cy.get('[data-value="3"]').click()
+    cy.get('[data-value="4"]').click()
     cy.getByTestId('emission-source-completeness').click()
     cy.get('[data-value="5"]').click()
     cy.getByTestId('emission-source-comment').type('My comment')

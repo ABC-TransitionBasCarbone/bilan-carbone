@@ -67,13 +67,11 @@ const dateFormat = { year: 'numeric', month: 'long', day: 'numeric' } as const
 const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, user }: Props) => {
   const format = useFormatter()
   const tLabel = useTranslations('common.label')
-  const tForm = useTranslations('study.new')
   const tGlossary = useTranslations('study.new.glossary')
   const tValidation = useTranslations('validation')
   const t = useTranslations('study.perimeter')
   const [open, setOpen] = useState(false)
   const [glossary, setGlossary] = useState('')
-  const [exportsValues, setExportsValues] = useState<Record<Export, ControlMode | false> | undefined>(undefined)
   const [isEditing, setIsEditing] = useState(false)
   const [replicateSitesChanges, setReplicateSitesChanges] = useState(false)
   const [deleting, setDeleting] = useState(0)
@@ -114,17 +112,13 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
     mode: 'onSubmit',
     reValidateMode: 'onChange',
     defaultValues: {
-      exports: Object.values(Export).reduce(
-        (acc, exportType) => ({
-          ...acc,
-          [exportType]: study.exports.find((studyExport) => studyExport.type === exportType)?.control || false,
-        }),
-        {},
-      ),
+      exports: study.exports?.types,
+      controlMode: study.exports?.control,
     },
   })
   const exportsWatch = useWatch(exportsForm).exports
-  const showControl = useMemo(() => Object.values(exportsWatch || {}).some((value) => value), [exportsWatch])
+  const controlWatch = useWatch(exportsForm).controlMode
+  const showControl = useMemo(() => !!(exportsWatch && exportsWatch.length), [exportsWatch])
 
   const siteList = useMemo(
     () =>
@@ -249,22 +243,17 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
   }, [form, callServerFunction, router, tValidation, study])
 
   const updateStudyExport = useCallback(
-    async (exportType: Export, control: ControlMode | false) => {
-      await callServerFunction(() => changeStudyExports(study.id, exportType, control))
+    async (exportTypes: Export[], control: ControlMode) => {
+      await callServerFunction(() => changeStudyExports(study.id, exportTypes, control))
     },
     [callServerFunction, study.id],
   )
 
   useEffect(() => {
-    if (exportsValues && exportsForm.getValues().exports) {
-      Object.entries(exportsForm.getValues().exports).forEach(([exportType, value]) => {
-        if (exportsValues[exportType as Export] !== value) {
-          updateStudyExport(exportType as Export, value)
-        }
-      })
+    if (exportsWatch) {
+      updateStudyExport(exportsForm.getValues().exports, controlWatch || ControlMode.Operational)
     }
-    setExportsValues(exportsForm.getValues().exports)
-  }, [exportsForm, exportsValues, exportsWatch, updateStudyExport])
+  }, [exportsForm, exportsWatch, controlWatch, updateStudyExport])
 
   const handleDuplicateSite = async (data: DuplicateFormData) => {
     if (!duplicatingSiteId) {
@@ -310,14 +299,12 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
             <div className={classNames(styles.dates, 'flex')}>
               <FormDatePicker
                 control={form.control}
-                translation={tForm}
                 name="startDate"
                 label={tLabel('start')}
                 onAccept={handleDateChange}
               />
               <FormDatePicker
                 control={form.control}
-                translation={tForm}
                 name="endDate"
                 label={tLabel('end')}
                 data-testid="study-endDate"
@@ -332,7 +319,6 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
             <div className={classNames(styles.dates, 'flex')}>
               <FormDatePicker
                 control={form.control}
-                translation={tForm}
                 name="realizationStartDate"
                 label={tLabel('start')}
                 clearable
@@ -340,7 +326,6 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
               />
               <FormDatePicker
                 control={form.control}
-                translation={tForm}
                 name="realizationEndDate"
                 label={tLabel('end')}
                 data-testid="new-study-realizationEndDate"

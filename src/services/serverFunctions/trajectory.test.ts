@@ -183,7 +183,7 @@ describe('Trajectory Server Functions', () => {
 
       expect(result.success).toBe(false)
       expect((result as { errorMessage: string }).errorMessage).toContain(
-        'Custom trajectory must have at least 1 objective',
+        'CUSTOM trajectory must have at least 1 objective',
       )
     })
   })

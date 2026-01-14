@@ -16,6 +16,7 @@ enum EmissionFactorPartType {
   Transport
   CombustionALaCentrale
   Pertes
+  AutresEmissionsLieesALaConsommationDElectriciteBarrage
 }
 
 enum Import {
@@ -25,6 +26,7 @@ enum Import {
   Manual
   CUT
   CLICKSON
+  AIB
 }
 
 enum EmissionFactorStatus {
@@ -206,6 +208,11 @@ enum SubPost {
   EquipementsDivers
 }
 
+enum EmissionFactorBase {
+  LocationBased
+  MarketBased
+}
+
 model EmissionFactorImportVersion {
   id       String @id @default(uuid())
   internId String @map("intern_id")
@@ -239,6 +246,8 @@ model EmissionFactor {
   importedId     String?       @map("imported_id")
   organizationId String?       @map("organization_id")
   organization   Organization? @relation(fields: [organizationId], references: [id])
+
+  base EmissionFactorBase?
 
   status   EmissionFactorStatus
   metaData EmissionFactorMetaData[]

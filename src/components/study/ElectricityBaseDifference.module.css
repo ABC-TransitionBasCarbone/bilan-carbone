@@ -1,0 +1,6 @@
+.helpIcon {
+  color: var(--error-100);
+  &:hover {
+    color: var(--error-100);
+  }
+}

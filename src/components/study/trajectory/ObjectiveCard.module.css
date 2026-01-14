@@ -1,5 +1,4 @@
 .objectiveCard {
-  min-width: 14rem;
   border-radius: 0.75rem;
   background-color: var(--mui-palette-primary-light);
 }

@@ -37,6 +37,7 @@ const StudyNavbar = ({ environment, studyId, study, isTransitionPlanActive, hasO
     study.name,
     isTransitionPlanActive,
     hasObjectives,
+    study.simplified,
   )
   return (
     <>
@@ -82,7 +83,9 @@ const StudyNavbar = ({ environment, studyId, study, isTransitionPlanActive, hasO
                     ) : (
                       <Link
                         key={linkIndex}
-                        className={classNames(styles.link, { [styles.active]: pathName.includes(link.href) })}
+                        className={classNames(styles.link, {
+                          [styles.active]: pathName === link.href || pathName.startsWith(`${link.href}/`),
+                        })}
                         href={link.href || '#'}
                         {...(link.testId && { 'data-testid': link.testId })}
                       >

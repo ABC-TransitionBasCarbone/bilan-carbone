@@ -11,12 +11,13 @@ import { withInfobulle } from '@/utils/post'
 import { postColors, STUDY_UNIT_VALUES } from '@/utils/study'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
-import { Environment, Import, StudyRole, SubPost as SubPostEnum } from '@prisma/client'
+import { ControlMode, Environment, Import, StudyRole, SubPost as SubPostEnum } from '@prisma/client'
 import classNames from 'classnames'
 import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import HelpIcon from '../base/HelpIcon'
+import ElectricityBaseDifference from './ElectricityBaseDifference'
 import EmissionSource from './EmissionSource'
 import NewEmissionSource from './NewEmissionSource'
 import styles from './SubPosts.module.css'
@@ -132,7 +133,13 @@ const SubPost = ({
   )
 
   const caracterisations = useMemo(
-    () => getCaracterisationsBySubPost(subPost, study.exports, environment),
+    () =>
+      getCaracterisationsBySubPost(
+        subPost,
+        environment,
+        study.exports?.types || [],
+        study.exports?.control || ControlMode.Operational,
+      ),
     [subPost, study.exports, environment],
   )
 
@@ -165,87 +172,100 @@ const SubPost = ({
   }, [defaultOpen])
 
   return (!userRoleOnStudy || userRoleOnStudy === StudyRole.Reader) && emissionSources.length === 0 ? null : (
-    <div ref={accordionRef} id={`subpost-${subPost}`} className={styles.subPostScrollContainer}>
-      <Accordion expanded={expanded} onChange={(_, isExpanded) => setExpanded(isExpanded)} className={styles.accordion}>
-        <AccordionSummary
-          className={classNames(styles.subPostContainer, styles[`post-${postColors[post]}`], {
-            [styles.open]: expanded,
-          })}
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls={`panel-${subPost}-content`}
-          data-testid="subpost"
+    <>
+      {subPost === SubPostEnum.Electricite && environment && (
+        <ElectricityBaseDifference
+          emissionSources={emissionSources}
+          exports={study.exports?.types}
+          className="align-end mt1"
+        />
+      )}
+      <div ref={accordionRef} id={`subpost-${subPost}`} className={styles.subPostScrollContainer}>
+        <Accordion
+          expanded={expanded}
+          onChange={(_, isExpanded) => setExpanded(isExpanded)}
+          className={styles.accordion}
         >
-          <p>
-            {tPost(subPost)}
-            {withInfobulle(subPost) && (
-              <HelpIcon
-                className={classNames(styles.helpIcon, 'ml-4')}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setGlossary(subPost)
-                }}
-                label={tPost('glossary')}
-              />
-            )}
-            <span className={classNames(styles.value, 'ml1')}>
-              {formatNumber(total / STUDY_UNIT_VALUES[study.resultsUnit])} {tUnits(study.resultsUnit)}
-            </span>
-            {contributors && contributors.length > 0 && (
-              <span className={classNames(styles.contributors, 'ml1')}>
-                {t('contributorsList', { count: contributors.length })} {contributors.join(', ')}
+          <AccordionSummary
+            className={classNames(styles.subPostContainer, styles[`post-${postColors[post]}`], {
+              [styles.open]: expanded,
+            })}
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls={`panel-${subPost}-content`}
+            data-testid="subpost"
+          >
+            <p>
+              {tPost(subPost)}
+              {withInfobulle(subPost) && (
+                <HelpIcon
+                  className={classNames(styles.helpIcon, 'ml-4')}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setGlossary(subPost)
+                  }}
+                  label={tPost('glossary')}
+                />
+              )}
+              <span className={classNames(styles.value, 'ml1')}>
+                {formatNumber(total / STUDY_UNIT_VALUES[study.resultsUnit])} {tUnits(study.resultsUnit)}
+              </span>
+              {contributors && contributors.length > 0 && (
+                <span className={classNames(styles.contributors, 'ml1')}>
+                  {t('contributorsList', { count: contributors.length })} {contributors.join(', ')}
+                </span>
+              )}
+            </p>
+            {count > 0 && (
+              <span className="grow justify-end mr1">
+                {tStudy.rich('validatedSources', { total: count, validated, data: (children) => <>{children}</> })}
               </span>
             )}
-          </p>
-          {count > 0 && (
-            <span className="grow justify-end mr1">
-              {tStudy.rich('validatedSources', { total: count, validated, data: (children) => <>{children}</> })}
-            </span>
-          )}
-        </AccordionSummary>
-        <AccordionDetails id={`panel-${subPost}-content`} className={styles.subPostDetailsContainer}>
-          {emissionSources.map((emissionSource) =>
-            // Dirty hack to force type on EmissionSource
-            withoutDetail ? (
-              <EmissionSource
-                study={study}
-                emissionSource={emissionSource}
-                key={emissionSource.id}
-                subPost={subPost}
-                userRoleOnStudy={userRoleOnStudy}
-                withoutDetail
-                caracterisations={caracterisations}
-                emissionFactorsForSubPost={emissionFactorsForSubPost}
-                importVersions={importVersions}
-                isContributor={isContributor}
-              />
-            ) : (
-              <EmissionSource
-                study={study}
-                emissionSource={emissionSource}
-                key={emissionSource.id}
-                subPost={subPost}
-                userRoleOnStudy={userRoleOnStudy}
-                withoutDetail={false}
-                caracterisations={caracterisations}
-                emissionFactorsForSubPost={emissionFactorsForSubPost}
-                importVersions={importVersions}
-                isContributor={isContributor}
-              />
-            ),
-          )}
-          {!withoutDetail && userRoleOnStudy && userRoleOnStudy !== StudyRole.Reader && (
-            <div className="mt2">
-              <NewEmissionSource
-                study={study}
-                subPost={subPost}
-                caracterisations={caracterisations}
-                studySite={studySite}
-              />
-            </div>
-          )}
-        </AccordionDetails>
-      </Accordion>
-    </div>
+          </AccordionSummary>
+          <AccordionDetails id={`panel-${subPost}-content`} className={styles.subPostDetailsContainer}>
+            {emissionSources.map((emissionSource) =>
+              // Dirty hack to force type on EmissionSource
+              withoutDetail ? (
+                <EmissionSource
+                  study={study}
+                  emissionSource={emissionSource}
+                  key={emissionSource.id}
+                  subPost={subPost}
+                  userRoleOnStudy={userRoleOnStudy}
+                  withoutDetail
+                  caracterisations={caracterisations}
+                  emissionFactorsForSubPost={emissionFactorsForSubPost}
+                  importVersions={importVersions}
+                  isContributor={isContributor}
+                />
+              ) : (
+                <EmissionSource
+                  study={study}
+                  emissionSource={emissionSource}
+                  key={emissionSource.id}
+                  subPost={subPost}
+                  userRoleOnStudy={userRoleOnStudy}
+                  withoutDetail={false}
+                  caracterisations={caracterisations}
+                  emissionFactorsForSubPost={emissionFactorsForSubPost}
+                  importVersions={importVersions}
+                  isContributor={isContributor}
+                />
+              ),
+            )}
+            {!withoutDetail && userRoleOnStudy && userRoleOnStudy !== StudyRole.Reader && (
+              <div className="mt2">
+                <NewEmissionSource
+                  study={study}
+                  subPost={subPost}
+                  caracterisations={caracterisations}
+                  studySite={studySite}
+                />
+              </div>
+            )}
+          </AccordionDetails>
+        </Accordion>
+      </div>
+    </>
   )
 }
 
