@@ -5,13 +5,13 @@ import { FullStudy, getStudyById } from '@/db/study'
 import { getAccountByIdWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
 import { canEditOrganizationVersion, hasActiveLicence, isAdminOnOrga, isInOrgaOrParent } from '@/utils/organization'
 import { getAccountRoleOnStudy, getDuplicableEnvironments, hasEditionRights } from '@/utils/study'
-import { DeactivatableFeature, Environment, Level, Prisma, Study, StudyRole, User } from '@prisma/client'
+import { DeactivatableFeature, Environment, Level, Prisma, Role, Study, StudyRole, User } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { dbActualizedAuth } from '../auth'
 import { isDeactivableFeatureActiveForEnvironment } from '../serverFunctions/deactivableFeatures'
 import { getUserActiveAccounts } from '../serverFunctions/user'
 import { hasSufficientLevel } from '../study'
-import { hasAccessToDuplicateStudy } from './environment'
+import { canCreateStudyWithoutSpecificRights, hasAccessToDuplicateStudy, isTilt } from './environment'
 import { isInOrgaOrParentFromId } from './organization'
 
 export const isAdminOnStudyOrga = (
@@ -73,8 +73,16 @@ export const filterAllowedStudies = async (user: UserSession, studies: Study[]) 
   return allowedStudies.filter((study) => study !== null)
 }
 
-export const canCreateAStudy = (user: UserSession) => {
-  return user.environment === Environment.CUT || (!!user.level && !!user.organizationVersionId)
+export const canCreateAStudy = (user: UserSession, simplified: boolean = false) => {
+  const studyIsSimplifiedAndCreationAuthorized = simplified && user.role !== Role.DEFAULT && isTilt(user.environment)
+  const canCreateAdvancedStudy = !!user.level && user.role !== Role.DEFAULT
+
+  return (
+    !!user.organizationVersionId &&
+    (canCreateAdvancedStudy ||
+      canCreateStudyWithoutSpecificRights(user.environment) ||
+      studyIsSimplifiedAndCreationAuthorized)
+  )
 }
 
 const canCreateSpecificStudyCommon = async (accountId: string, organizationVersionId: string) => {
@@ -96,20 +104,7 @@ const canCreateSpecificStudyCommon = async (accountId: string, organizationVersi
   return { allowed: true, account: dbAccount }
 }
 
-const canCreateSpecificStudyCUT = async (
-  accountId: string,
-  study: Prisma.StudyCreateInput,
-  organizationVersionId: string,
-) => {
-  const { allowed } = await canCreateSpecificStudyCommon(accountId, organizationVersionId)
-  return allowed
-}
-
-const canCreateSpecificStudyClickson = async (
-  accountId: string,
-  study: Prisma.StudyCreateInput,
-  organizationVersionId: string,
-) => {
+const canCreateSpecificStudySimplified = async (accountId: string, organizationVersionId: string) => {
   const { allowed } = await canCreateSpecificStudyCommon(accountId, organizationVersionId)
   return allowed
 }
@@ -131,6 +126,17 @@ const canCreateSpecificStudyBC = async (
   return true
 }
 
+const canCreateSpecificStudyTilt = async (
+  accountId: string,
+  study: Prisma.StudyCreateInput,
+  organizationVersionId: string,
+) => {
+  if (study.simplified) {
+    return canCreateSpecificStudySimplified(accountId, organizationVersionId)
+  }
+  return canCreateSpecificStudyBC(accountId, study, organizationVersionId)
+}
+
 export const canCreateSpecificStudy = async (
   user: UserSession,
   study: Prisma.StudyCreateInput,
@@ -138,10 +144,10 @@ export const canCreateSpecificStudy = async (
 ) => {
   switch (user.environment) {
     case Environment.CLICKSON:
-      return canCreateSpecificStudyClickson(user.accountId, study, organizationVersionId)
     case Environment.CUT:
-      return canCreateSpecificStudyCUT(user.accountId, study, organizationVersionId)
+      return canCreateSpecificStudySimplified(user.accountId, organizationVersionId)
     case Environment.TILT:
+      return canCreateSpecificStudyTilt(user.accountId, study, organizationVersionId)
     case Environment.BC:
       return canCreateSpecificStudyBC(user.accountId, study, organizationVersionId)
     default:
@@ -389,6 +395,7 @@ export const filterStudyDetail = (user: UserSession, study: FullStudy) => {
         source: emissionSource.source,
         type: emissionSource.type,
         caracterisation: emissionSource.caracterisation,
+        constructionYear: emissionSource.constructionYear,
         studySite: emissionSource.studySite,
         depreciationPeriod: emissionSource.depreciationPeriod,
         hectare: emissionSource.hectare,

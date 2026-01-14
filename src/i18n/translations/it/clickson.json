@@ -1,0 +1,247 @@
+{
+  "nav": {
+    "newStudyContributor": "Aggiungi uno studente"
+  },
+  "navigation": {
+    "organizations": "Le mie impronte di carbonio",
+    "organization": "Team pilota",
+    "information": "Il mio istituto",
+    "team": "Team pilota"
+  },
+  "home": {
+    "navigation": {
+      "collaborators": {
+        "title": "Team pilota",
+        "message": "Trova qui l'elenco degli insegnanti, del personale amministrativo e degli studenti autorizzati a modificare i dati dell'istituto"
+      },
+      "footprints": {
+        "title": "Le mie impronte",
+        "message": "Crea qui la tua prima impronta. Potrai poi visualizzare le tue impronte o crearne di nuove in qualsiasi momento."
+      },
+      "sites": {
+        "title": "I miei istituti",
+        "message": "Trova qui l'elenco degli istituti collegati al tuo account"
+      }
+    },
+    "title": "Calcolare la tua impronta di carbonio semplificata ti permetterà di:",
+    "alert": {
+      "info": "Il calcolatore Clickson ti permette di stimare l'impatto climatico della tua attività. È soprattutto uno strumento di sensibilizzazione. Non è un approccio di transizione a basse emissioni di carbonio ma un'impronta semplificata — secondo la <link>Guida alla comunicazione sulla contabilità del carbonio</link> — focalizzata sulle principali fonti di emissione legate all'attività degli istituti."
+    },
+    "info": {
+      "0": "Comprendere la misurazione dell'impatto del tuo istituto",
+      "1": "Identificare le priorità di azione",
+      "2": "A lungo termine, e attraverso un lavoro più approfondito, costruire una traiettoria di riduzione"
+    }
+  },
+  "team": {
+    "table": {
+      "title": "Team pilota"
+    }
+  },
+  "study": {
+    "create": "Aggiungi un’impronta",
+    "myStudies": "Le mie impronte di carbonio",
+    "createFirstStudy": "Crea la mia prima impronta",
+    "see": "Visualizza la mia impronta",
+    "selectSite": "Prima di compilare i dati, seleziona un istituto",
+    "createFirstSimplifiedStudy": "Creare",
+    "firstSimplifiedStudyMessage": "È ora di iniziare! Ti invitiamo a creare la tua prima impronta di carbonio semplificata.",
+    "lastStudyTitle": "Ultima impronta",
+    "navigation": {
+      "framing": "Dati generali",
+      "organizations": "I miei istituti",
+      "team": "I miei collaboratori",
+      "title": "La mia impronta"
+    },
+    "validatedOnlyDescription": "Come studente, ho accesso come contributore a una o più categorie di emissione.",
+    "new": {
+      "suggestion": {
+        "name": "Esempio: impronta di carbonio Scuola Media Simone Veil"
+      },
+      "inviteContributors": "Invita gli stessi studenti",
+      "glossary": {
+        "validatorEmailDescription": "Come studente, ho accesso come contributore a una o più categorie di emissione.",
+        "duplicationOptionsDescription": "Duplicando uno studio, puoi scegliere di invitare lo stesso team e gli stessi studenti dello studio originale. Ciò aiuta a mantenere la continuità della collaborazione."
+      },
+      "etp": "Nombre de personnels (enseignants et non-éducatifs)",
+      "goToDataEntry": "Passer à la saisie des données",
+      "studentNumber": "Nombre d'élèves",
+      "superficy": "Superficie de l'établissement"
+    },
+    "newContributor": {
+      "title": "Aggiungi uno studente allo studio: {name}"
+    },
+    "role": {
+      "Contributor": "Studente"
+    },
+    "rights": {
+      "contributorsTable": {
+        "delete": "Rimuovi lo studente",
+        "title": "Studenti",
+        "newContributorLink": "Aggiungi uno studente",
+        "deleting": {
+          "confirmation": "Sei sicuro di voler rimuovere {email} dagli studenti di questo studio?"
+        },
+        "role": {
+          "description": "Qui puoi gestire gli studenti del tuo studio. Avranno accesso a certe categorie e sottocategorie (che puoi definire) e saranno in grado di compilare informazioni per le fonti di emissione che hai già creato. Per maggiori informazioni sull'interfaccia contributore, consulta le nostre <link>FAQ</link>."
+        }
+      }
+    },
+    "export": {
+      "export": "Exporter mon empreinte"
+    },
+    "pdf": {
+      "loading": "Chargement des données...",
+      "title": "Synthèse des émissions {year}",
+      "results": {
+        "all": "Résultats"
+      },
+      "labels": {
+        "studentNumber": "Nombre d'élèves",
+        "etp": "Nombre de personnels",
+        "superficy": "Superficie",
+        "establishmentYear": "Année d'ouverture"
+      },
+      "charts": {
+        "siteEmissions": "Émissions en tCO2e de l'établissement scolaire {site} en {year}"
+      },
+      "questions": {
+        "goals-title": "OBJECTIFS",
+        "goals-subtitle": "Présente les objectifs visés par ton action (sensibilisation, réduction des émissions...). Est-ce une action à court terme ou stratégique ?",
+        "shareholders-title": "PORTEURS DE L'ACTION",
+        "shareholders-subtitle": "As-tu désigné une équipe qui portera l'action au quotidien et sur le long terme ? Indique leurs noms et rôle/fonction",
+        "otherStakeholders-title": "AUTRES PARTIES PRENANTES",
+        "otherStakeholders-subtitle": "Pense à distinguer ici les parties prenantes internes et externes. Ils ne porteront pas l'action au quotidien mais t'aideront pour te fournir des factures d'électricité, par exemple.  Cela peut être le gestionnaire de ton établissement ou encore ta collectivité.",
+        "ressourcesToBeImplemented-title": "MOYENS A METTRE EN OEUVRE",
+        "ressourcesToBeImplemented-subtitle": "Quelles sont les étapes et moyens à employer ? Cela peut être des moyens humains, matériels, financiers... Construis-bien cette partie, elle est essentielle !",
+        "monitoringIndicators-title": "INDICATEURS DE SUIVI",
+        "monitoringIndicators-subtitle": "Inscris ici des indicateurs sur lesquels tu pourras te baser dans 6 mois / 1 an pour évaluer le succès de ton action. Un exemple : % de baisse des GES",
+        "estimatedCarbonImpacts-title": "IMPACTS CARBONE ESTIMES",
+        "estimatedCarbonImpacts-subtitle": "Dans quelle mesure ton action permet de réduire les émissions de GES ? ",
+        "otherEstimatedEnvironmentalImpacts-title": "AUTRES IMPACTS ENVIRONNEMENTAUX ESTIMES",
+        "otherEstimatedEnvironmentalImpacts-subtitle": "Pense ici aux impacts positifs ou négatifs de ton action sur la biodiversité, l'eau, les déchets...",
+        "estimatedSocialImpacts-title": "IMPACTS SOCIAUX ESTIMES",
+        "estimatedSocialImpacts-subtitle": "On essaie ici de savoir si l'action permet de réduire l'éco-anxiété, favoriser l'apprentissage, réduire le décrochage scolaire, favoriser l'insertion de jeunes...",
+        "calendar-title": "CALENDRIER",
+        "calendar-subtitle": "Inscris ici les grandes étapes de ton action, choisis bien ton échelle de temps !"
+      },
+      "additionalInfo": "Les résultats que vous obtenez ici sont un calcul simplifié de l'empreinte carbone de votre établissement et ne répondent par aux exigences du Bilan Carbone®, ni de la réglementation en vigueur.  Ces résultats ont pour objet de vous accompagner dans la compréhension des enjeux climatiques et l'identification de vos priorités d'action.  Portant donc une valeur essentiellement pédagogique, le calcul de l'empreinte carbone de votre établissement via notre outil constitue donc une première étape dans votre adaptation aux conséquences du changement climatique."
+    },
+    "results": {
+      "carbonIntensities": "Empreinte carbone individuelle"
+    }
+  },
+  "emissionFactors": {
+    "post": {
+      "Restauration": "Ristorazione",
+      "AutresGaz": "Autres gaz",
+      "Combustibles": "Combustibles",
+      "Construction": "Construction",
+      "DechetsRecyclables": "Déchets recyclables",
+      "DeplacementsClickson": "Déplacements",
+      "DistributeursAutomatiques": "Distributeurs automatiques",
+      "EnergiesClickson": "Énergie",
+      "EquipementsDeSport": "Équipements de sport",
+      "EquipementsDivers": "Equipements divers (électroménager, équipements professionnels...)",
+      "EquipementsInformatiqueAudiovisuel": "Équipements informatiques / audiovisuel",
+      "Fournitures": "Fournitures",
+      "ImmobilisationsClickson": "Immobilisations",
+      "OrduresMenageresResiduelles": "Ordures ménagères résiduelles",
+      "ProduitsChimiques": "Produits chimiques",
+      "Renovation": "Rénovation",
+      "TransportDesEleves": "Transport des élèves",
+      "TransportDuPersonnel": "Transport du personnel",
+      "TypesDeRepasServis": "Types de repas servis",
+      "VoyagesScolaires": "Voyages scolaires"
+    }
+  },
+  "organization": {
+    "card": {
+      "myOrganization": "I miei istituti"
+    },
+    "form": {
+      "editTitle": "Modifica i miei istituti",
+      "name": "Nom de l'établissement"
+    },
+    "sites": {
+      "title": "Quali istituti deve coprire l’impronta?",
+      "noSites": "Nessun istituto configurato",
+      "namePlaceholder": "Nome dell’istituto",
+      "add": "Aggiungi un istituto",
+      "academy": "Académie",
+      "academyPlaceholder": "Académie de l'établissement",
+      "establishmentType": {
+        "title": "Type d'établissement",
+        "COLLEGE": "Collège",
+        "LYCEE_GENERAL": "Lycée Général et Technologique",
+        "LYCEE_PRO": "Lycée Professionnel",
+        "LYCEE_PRO_AGRICOLE": "Lycée Professionnel Agricole",
+        "ETABLISSEMENT_FR_ETRANGER": "Etablissement d'enseignement français à l'étranger"
+      },
+      "establishmentYear": "Année de construction",
+      "establishmentYearPlaceholder": "Année de construction de l'établissement",
+      "etp": "Nombre de personnels",
+      "etpPlaceholder": "Nombre total de personnels",
+      "glossary": {
+        "informations": "Il est nécessaire de renseigner ces informations avant d'aller plus loin dans votre démarche. Ces informations impactent effectivement le calcul de votre empreinte carbone (en particulier, le poste immobilisations)"
+      },
+      "studentNumber": "Nombre d'élèves",
+      "studentNumberPlaceholder": "Nombre total d'élèves"
+    }
+  },
+  "login": {
+    "welcome": "Benvenuto su Clickson PEBC",
+    "explanation": "Misuriamo le emissioni di gas serra del tuo istituto!",
+    "form": {
+      "activate": "Crea il mio account"
+    }
+  },
+  "signup": {
+    "description": "Crea un account Clickson con la tua email e un codice postale o nome della scuola",
+    "schoolPostalCodeOrName": "Codice postale o nome della scuola",
+    "schoolPostalCodeOrNamePlaceholder": "Il codice postale o il nome dell’istituto scolastico",
+    "schoolSearchGlossaryTitle": "Trova il tuo istituto scolastico.",
+    "schoolSearchGlossary": "Trova il tuo istituto inserendo il codice postale o il nome, poi selezionandolo dall’elenco.",
+    "close": "Chiudi",
+    "schoolPostalCodeOrNameRequired": "Inserisci il codice postale o il nome della scuola",
+    "validate": "Convalida",
+    "clear": "Cancella valore",
+    "Not authorized": "Questa email è già utilizzata per Clickson oppure c'è un problema con la creazione dell'account. Consulta le <link>FAQ</link> o <support>contatta il supporto</support> se pensi si tratti di un errore.",
+    "Not known school": "Trova e seleziona il tuo istituto.",
+    "validation": {
+      "schoolPostalCodeOrName": "Inserisci il codice postale o il nome della scuola"
+    },
+    "city": "Ville",
+    "cityPlaceholder": "Ville où se situe l'établissement scolaire",
+    "country": "Votre pays",
+    "schoolName": "Nom de l'établissement scolaire",
+    "schoolNamePlaceholder": "Nom de l'établissement scolaire"
+  },
+  "email": {
+    "subject": {
+      "newUser": "Sei stato invitato su Clickson",
+      "addedActiveUser": "Sei stato invitato in un nuovo ambiente Clickson",
+      "activation": "Hai attivato il tuo account su Clickson",
+      "activationRequest": "Richiesta di accesso alla tua organizzazione Clickson"
+    }
+  },
+  "comments": {
+    "title": "Gestion des commentaires",
+    "noComments": "Vous n'avez aucun commentaire à traiter",
+    "yourComment": "Votre commentaire...",
+    "validated": "Validé",
+    "pending": "En attente",
+    "addComment": "Ajouter un commentaire"
+  },
+  "error": {
+    "Too many comments": "Vous avez déjà trop de commentaire en attente"
+  },
+  "ressources": {
+    "knowMoreDataCollect": "Pour savoir comment collecter les données de son établissement :",
+    "guideDataCollect": "Guide de collecte de données",
+    "toolsDataCollect": "Les outils de collecte de données :",
+    "modelsDataCollect": "Modèles de supports de collecte de données",
+    "game": "Jeu : initiation à la négociation de son plan d'action :",
+    "classEarth": "Ma Terre en classe"
+  }
+}

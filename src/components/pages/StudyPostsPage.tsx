@@ -7,7 +7,7 @@ import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study
 import { EmissionSourcesFilters, EmissionSourcesSort } from '@/types/filters'
 import { unique } from '@/utils/array'
 import { getEmissionSourcesFuseOptions, getSortedEmissionSources } from '@/utils/emissionSources'
-import { EmissionSourceCaracterisation, EmissionSourceType, StudyRole } from '@prisma/client'
+import { ControlMode, EmissionSourceCaracterisation, EmissionSourceType, StudyRole } from '@prisma/client'
 import Fuse from 'fuse.js'
 import { UserSession } from 'next-auth'
 import { useLocale, useTranslations } from 'next-intl'
@@ -26,7 +26,7 @@ interface Props {
   setGlossary: (glossary: string) => void
 }
 
-const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, user, setGlossary }: Props) => {
+const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, setGlossary }: Props) => {
   const [showInfography, setShowInfography] = useState(false)
   const tQuality = useTranslations('quality')
   const tUnit = useTranslations('units')
@@ -42,15 +42,22 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, use
 
   const initialCaracterisations = useMemo(
     () =>
-      unique(
-        subPosts.reduce(
-          (res, subPost) => [
-            ...res,
-            ...getCaracterisationsBySubPost(subPost, study.exports, study.organizationVersion.environment),
-          ],
-          [] as EmissionSourceCaracterisation[],
-        ),
-      ),
+      study.exports && study.exports.types.length
+        ? unique(
+            subPosts.reduce(
+              (res, subPost) => [
+                ...res,
+                ...getCaracterisationsBySubPost(
+                  subPost,
+                  study.organizationVersion.environment,
+                  study.exports?.types || [],
+                  study.exports?.control || ControlMode.Operational,
+                ),
+              ],
+              [] as EmissionSourceCaracterisation[],
+            ),
+          )
+        : [],
 
     [study.exports, study.organizationVersion.environment, subPosts],
   )
@@ -155,7 +162,7 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, use
         sort={sort}
         setSort={updateSort}
       >
-        {showInfography && <StudyPostInfography study={study} studySite={studySite} user={user} />}
+        {showInfography && <StudyPostInfography study={study} studySite={studySite} />}
         <SubPosts
           post={post}
           subPosts={filters.subPosts}
@@ -165,6 +172,7 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, use
           studySite={studySite}
           emissionSources={filteredSources}
           setGlossary={setGlossary}
+          hasFilter={!!filters.search}
         />
       </StudyPostsBlock>
     </>

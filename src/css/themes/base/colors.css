@@ -65,15 +65,16 @@
   --post-orange-dark: #c88938;
   --post-orange-light: #fbbc6b;
 
-  --validator-background: #ffc966;
-  --editor-background: #89d7b0;
-  --reader-background: var(--neutral-200);
-  --contributor-background: var(--grayscale-300);
+  --validator-background: #94ebbf;
+  --editor-background: #c2deff;
+  --contributor-background: #ffe591;
+  --reader-background: #e7e7e7;
 
   --error-background: #f6b8b8;
 
   --trajectory-sbti-15: #199e73;
   --trajectory-sbti-wb2c: #60e6bc;
+  --trajectory-snbc: #03bbe0;
 
   --trajectory-custom-0: #fad98d;
   --trajectory-custom-1: #f8c151;

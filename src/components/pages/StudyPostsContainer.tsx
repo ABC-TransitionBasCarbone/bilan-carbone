@@ -1,7 +1,7 @@
 'use client'
 import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import StudyPostsPageCut from '@/environments/cut/pages/StudyPostsPage'
+import SimplifiedStudyPostsPage from '@/environments/simplified/study/SimplifiedStudyPostsPage'
 import { Post, subPostsByPost } from '@/services/posts'
 import { Environment, StudyRole, SubPost } from '@prisma/client'
 import { UserSession } from 'next-auth'
@@ -37,11 +37,6 @@ const StudyPostsPageContainer = ({ post, currentSubPost, study, userRole, user }
           subPostsByPost[post].includes(emissionSource.subPost) && emissionSource.studySite.id === studySite,
       ) as FullStudy['emissionSources'],
     [study, post, studySite],
-  )
-
-  const isCut = useMemo(
-    () => study.organizationVersion.environment === Environment.CUT,
-    [study.organizationVersion.environment],
   )
 
   const glossaryDescription = useMemo(() => {
@@ -104,7 +99,22 @@ const StudyPostsPageContainer = ({ post, currentSubPost, study, userRole, user }
         }
         environmentComponents={{
           [Environment.CUT]: (
-            <StudyPostsPageCut currentSubPost={currentSubPost} post={post} study={study} studySiteId={studySite} />
+            <SimplifiedStudyPostsPage
+              environment={Environment.CUT}
+              currentSubPost={currentSubPost}
+              post={post}
+              study={study}
+              studySiteId={studySite}
+            />
+          ),
+          [Environment.CLICKSON]: (
+            <SimplifiedStudyPostsPage
+              environment={Environment.CLICKSON}
+              currentSubPost={currentSubPost}
+              post={post}
+              study={study}
+              studySiteId={studySite}
+            />
           ),
         }}
       />

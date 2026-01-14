@@ -1,0 +1,247 @@
+{
+  "nav": {
+    "newStudyContributor": "Diák hozzáadása"
+  },
+  "navigation": {
+    "organizations": "Saját karbonlábnyomaim",
+    "organization": "Pilótacsapat",
+    "information": "Intézményem",
+    "team": "Pilótacsapat"
+  },
+  "home": {
+    "navigation": {
+      "collaborators": {
+        "title": "Pilótacsapat",
+        "message": "Itt található a listája azoknak a tanároknak, adminisztratív dolgozóknak és diákoknak, akik jogosultak módosítani az intézmény adatait"
+      },
+      "footprints": {
+        "title": "Saját lábnyomaim",
+        "message": "Hozd létre itt az első lábnyomodat. Ezután bármikor megtekintheted vagy létrehozhatsz újakat."
+      },
+      "sites": {
+        "title": "Intézményeim",
+        "message": "Itt található a számládhoz kapcsolt intézmények listája"
+      }
+    },
+    "title": "A saját egyszerűsített karbonlábnyomod kiszámítása lehetővé teszi, hogy:",
+    "alert": {
+      "info": "A Clickson kalkulátor lehetővé teszi, hogy becsüld tevékenységed klímahatását. Elsősorban tudatosság növelő eszköz. Nem alacsony szén-dioxid-kibocsátású átállási megközelítés, hanem egyszerűsített karbonlábnyom — a <link>Szén-dioxid elszámolás kommunikációs útmutatója</link> szerint —, az intézmények tevékenységéhez kapcsolódó fő kibocsátási forrásokra összpontosítva."
+    },
+    "info": {
+      "0": "Megérteni az intézményed hatásának mérését",
+      "1": "Az intézkedési prioritások azonosítása",
+      "2": "Hosszú távon, alaposabb munkával, egy csökkentési pálya felépítése"
+    }
+  },
+  "team": {
+    "table": {
+      "title": "Pilótacsapat"
+    }
+  },
+  "study": {
+    "create": "Lábnyom hozzáadása",
+    "myStudies": "Saját karbonlábnyomaim",
+    "createFirstStudy": "Első lábnyom létrehozása",
+    "see": "Lábnyom megtekintése",
+    "selectSite": "Adatok kitöltése előtt kérjük, válassz intézményt",
+    "lastStudyTitle": "Legutóbbi lábnyom",
+    "createFirstSimplifiedStudy": "Create",
+    "firstSimplifiedStudyMessage": "It's time to get started! We invite you to create your first simplified carbon footprint.",
+    "navigation": {
+      "framing": "Általános adatok",
+      "organizations": "Intézményeim",
+      "team": "Munkatársaim",
+      "title": "Saját lábnyom"
+    },
+    "validatedOnlyDescription": "Diákként hozzáférésem van, mint közreműködő, egy vagy több kibocsátási ponthoz.",
+    "new": {
+      "suggestion": {
+        "name": "Példa: karbonlábnyom Simone Veil Középiskola"
+      },
+      "inviteContributors": "Ugyanazok a diákok meghívása",
+      "glossary": {
+        "validatorEmailDescription": "Diákként hozzáférésem van, mint közreműködő, egy vagy több kibocsátási ponthoz.",
+        "duplicationOptionsDescription": "Tanulmány másolásakor kiválaszthatod, hogy az eredeti tanulmányból ugyanazokat a csapattagokat és diákokat hívd meg az új tanulmányhoz. Ez segít a kollaboráció folytonosságának fenntartásában."
+      },
+      "etp": "Nombre de personnels (enseignants et non-éducatifs)",
+      "goToDataEntry": "Passer à la saisie des données",
+      "studentNumber": "Nombre d'élèves",
+      "superficy": "Superficie de l'établissement"
+    },
+    "newContributor": {
+      "title": "Diák hozzáadása a tanulmányhoz: {name}"
+    },
+    "role": {
+      "Contributor": "Diák"
+    },
+    "rights": {
+      "contributorsTable": {
+        "delete": "Diák eltávolítása",
+        "title": "Diákok",
+        "newContributorLink": "Diák hozzáadása",
+        "deleting": {
+          "confirmation": "Biztosan el akarod távolítani {email}-t a tanulmány diákjai közül?"
+        },
+        "role": {
+          "description": "Itt kezelheted a tanulmány diákjait. Hozzáférést kapnak bizonyos ponthoz és alponthoz (amit meghatározhatsz), és kitölthetik az általad már létrehozott kibocsátási források adatait. További információkért a közreműködői felületről, lásd a <link>GYIK</link>."
+        }
+      }
+    },
+    "export": {
+      "export": "Exporter mon empreinte"
+    },
+    "pdf": {
+      "loading": "Chargement des données...",
+      "title": "Synthèse des émissions {year}",
+      "results": {
+        "all": "Résultats"
+      },
+      "labels": {
+        "studentNumber": "Nombre d'élèves",
+        "etp": "Nombre de personnels",
+        "superficy": "Superficie",
+        "establishmentYear": "Année d'ouverture"
+      },
+      "charts": {
+        "siteEmissions": "Émissions en tCO2e de l'établissement scolaire {site} en {year}"
+      },
+      "questions": {
+        "goals-title": "OBJECTIFS",
+        "goals-subtitle": "Présente les objectifs visés par ton action (sensibilisation, réduction des émissions...). Est-ce une action à court terme ou stratégique ?",
+        "shareholders-title": "PORTEURS DE L'ACTION",
+        "shareholders-subtitle": "As-tu désigné une équipe qui portera l'action au quotidien et sur le long terme ? Indique leurs noms et rôle/fonction",
+        "otherStakeholders-title": "AUTRES PARTIES PRENANTES",
+        "otherStakeholders-subtitle": "Pense à distinguer ici les parties prenantes internes et externes. Ils ne porteront pas l'action au quotidien mais t'aideront pour te fournir des factures d'électricité, par exemple.  Cela peut être le gestionnaire de ton établissement ou encore ta collectivité.",
+        "ressourcesToBeImplemented-title": "MOYENS A METTRE EN OEUVRE",
+        "ressourcesToBeImplemented-subtitle": "Quelles sont les étapes et moyens à employer ? Cela peut être des moyens humains, matériels, financiers... Construis-bien cette partie, elle est essentielle !",
+        "monitoringIndicators-title": "INDICATEURS DE SUIVI",
+        "monitoringIndicators-subtitle": "Inscris ici des indicateurs sur lesquels tu pourras te baser dans 6 mois / 1 an pour évaluer le succès de ton action. Un exemple : % de baisse des GES",
+        "estimatedCarbonImpacts-title": "IMPACTS CARBONE ESTIMES",
+        "estimatedCarbonImpacts-subtitle": "Dans quelle mesure ton action permet de réduire les émissions de GES ? ",
+        "otherEstimatedEnvironmentalImpacts-title": "AUTRES IMPACTS ENVIRONNEMENTAUX ESTIMES",
+        "otherEstimatedEnvironmentalImpacts-subtitle": "Pense ici aux impacts positifs ou négatifs de ton action sur la biodiversité, l'eau, les déchets...",
+        "estimatedSocialImpacts-title": "IMPACTS SOCIAUX ESTIMES",
+        "estimatedSocialImpacts-subtitle": "On essaie ici de savoir si l'action permet de réduire l'éco-anxiété, favoriser l'apprentissage, réduire le décrochage scolaire, favoriser l'insertion de jeunes...",
+        "calendar-title": "CALENDRIER",
+        "calendar-subtitle": "Inscris ici les grandes étapes de ton action, choisis bien ton échelle de temps !"
+      },
+      "additionalInfo": "Les résultats que vous obtenez ici sont un calcul simplifié de l'empreinte carbone de votre établissement et ne répondent par aux exigences du Bilan Carbone®, ni de la réglementation en vigueur.  Ces résultats ont pour objet de vous accompagner dans la compréhension des enjeux climatiques et l'identification de vos priorités d'action.  Portant donc une valeur essentiellement pédagogique, le calcul de l'empreinte carbone de votre établissement via notre outil constitue donc une première étape dans votre adaptation aux conséquences du changement climatique."
+    },
+    "results": {
+      "carbonIntensities": "Empreinte carbone individuelle"
+    }
+  },
+  "emissionFactors": {
+    "post": {
+      "Restauration": "Ételkészítés / Vendéglátás",
+      "AutresGaz": "Autres gaz",
+      "Combustibles": "Combustibles",
+      "Construction": "Construction",
+      "DechetsRecyclables": "Déchets recyclables",
+      "DeplacementsClickson": "Déplacements",
+      "DistributeursAutomatiques": "Distributeurs automatiques",
+      "EnergiesClickson": "Énergie",
+      "EquipementsDeSport": "Équipements de sport",
+      "EquipementsDivers": "Equipements divers (électroménager, équipements professionnels...)",
+      "EquipementsInformatiqueAudiovisuel": "Équipements informatiques / audiovisuel",
+      "Fournitures": "Fournitures",
+      "ImmobilisationsClickson": "Immobilisations",
+      "OrduresMenageresResiduelles": "Ordures ménagères résiduelles",
+      "ProduitsChimiques": "Produits chimiques",
+      "Renovation": "Rénovation",
+      "TransportDesEleves": "Transport des élèves",
+      "TransportDuPersonnel": "Transport du personnel",
+      "TypesDeRepasServis": "Types de repas servis",
+      "VoyagesScolaires": "Voyages scolaires"
+    }
+  },
+  "organization": {
+    "card": {
+      "myOrganization": "Intézményeim"
+    },
+    "form": {
+      "editTitle": "Intézményeim szerkesztése",
+      "name": "Nom de l'établissement"
+    },
+    "sites": {
+      "title": "Mely intézményeket kell lefednie a lábnyomnak?",
+      "noSites": "Nincs beállított intézmény",
+      "namePlaceholder": "Intézmény neve",
+      "add": "Intézmény hozzáadása",
+      "academy": "Académie",
+      "academyPlaceholder": "Académie de l'établissement",
+      "establishmentType": {
+        "title": "Type d'établissement",
+        "COLLEGE": "Collège",
+        "LYCEE_GENERAL": "Lycée Général et Technologique",
+        "LYCEE_PRO": "Lycée Professionnel",
+        "LYCEE_PRO_AGRICOLE": "Lycée Professionnel Agricole",
+        "ETABLISSEMENT_FR_ETRANGER": "Etablissement d'enseignement français à l'étranger"
+      },
+      "establishmentYear": "Année de construction",
+      "establishmentYearPlaceholder": "Année de construction de l'établissement",
+      "etp": "Nombre de personnels",
+      "etpPlaceholder": "Nombre total de personnels",
+      "glossary": {
+        "informations": "Il est nécessaire de renseigner ces informations avant d'aller plus loin dans votre démarche. Ces informations impactent effectivement le calcul de votre empreinte carbone (en particulier, le poste immobilisations)"
+      },
+      "studentNumber": "Nombre d'élèves",
+      "studentNumberPlaceholder": "Nombre total d'élèves"
+    }
+  },
+  "login": {
+    "welcome": "Üdv a Clickson PEBC-n",
+    "explanation": "Mérjük az intézményed üvegházhatású gázkibocsátását!",
+    "form": {
+      "activate": "Fiókom létrehozása"
+    }
+  },
+  "signup": {
+    "description": "Hozz létre egy Clickson fiókot az e-mail címeddel és egy iskola irányítószámával vagy nevével",
+    "schoolPostalCodeOrName": "Iskola irányítószáma vagy neve",
+    "schoolPostalCodeOrNamePlaceholder": "Az iskola intézmény irányítószáma vagy neve",
+    "schoolSearchGlossaryTitle": "Találd meg az iskola intézményedet.",
+    "schoolSearchGlossary": "Találd meg az intézményed az irányítószám vagy név megadásával, majd válaszd ki a legördülő listából.",
+    "close": "Bezárás",
+    "schoolPostalCodeOrNameRequired": "Kérjük, add meg az iskola irányítószámát vagy nevét",
+    "validate": "Érvényesítés",
+    "clear": "Érték törlése",
+    "Not authorized": "Ez az e-mail már használatban van a Clicksonon, vagy probléma merült fel a fiók létrehozásakor. Kérjük, nézd meg a <link>GYIK</link>-et, vagy <support>lépj kapcsolatba a támogatással</support>, ha hibát észlelsz.",
+    "Not known school": "Kérjük, keresd meg és válaszd ki az intézményedet.",
+    "validation": {
+      "schoolPostalCodeOrName": "Kérjük, add meg az iskola irányítószámát vagy nevét"
+    },
+    "city": "Ville",
+    "cityPlaceholder": "Ville où se situe l'établissement scolaire",
+    "country": "Votre pays",
+    "schoolName": "Nom de l'établissement scolaire",
+    "schoolNamePlaceholder": "Nom de l'établissement scolaire"
+  },
+  "email": {
+    "subject": {
+      "newUser": "Meghívást kaptál a Clicksonon",
+      "addedActiveUser": "Meghívást kaptál egy új Clickson környezetbe",
+      "activation": "Aktiváltad a fiókodat a Clicksonon",
+      "activationRequest": "Hozzáférési kérelem a Clickson szervezetedhez"
+    }
+  },
+  "comments": {
+    "title": "Gestion des commentaires",
+    "noComments": "Vous n'avez aucun commentaire à traiter",
+    "yourComment": "Votre commentaire...",
+    "validated": "Validé",
+    "pending": "En attente",
+    "addComment": "Ajouter un commentaire"
+  },
+  "error": {
+    "Too many comments": "Vous avez déjà trop de commentaire en attente"
+  },
+  "ressources": {
+    "knowMoreDataCollect": "Pour savoir comment collecter les données de son établissement :",
+    "guideDataCollect": "Guide de collecte de données",
+    "toolsDataCollect": "Les outils de collecte de données :",
+    "modelsDataCollect": "Modèles de supports de collecte de données",
+    "game": "Jeu : initiation à la négociation de son plan d'action :",
+    "classEarth": "Ma Terre en classe"
+  }
+}

@@ -82,6 +82,12 @@ export const EmissionFactorSourceCell = ({
           />
         </div>
       )
+    case Import.AIB:
+      return (
+        <div className="flex-cc">
+          <img className={styles.importFrom} src="/logos/AIB_logo.jpg" title={t('importedFrom.aib')} alt="AIB" />
+        </div>
+      )
     default:
       return (
         <span className={classNames(styles.importFrom, 'flex-cc')}>

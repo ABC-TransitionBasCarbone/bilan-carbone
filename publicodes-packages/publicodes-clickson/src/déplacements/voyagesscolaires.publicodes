@@ -1,76 +1,146 @@
 déplacements . voyages scolaires:
   titre: Voyages scolaires
   formule:
-    produit:
-      - distance
-      - FE
+    somme:
+      - avion court courrier
+      - avion long courrier
+      - avion moyen courrier
+      - bus
+      - métro ou tram
+      - moto essence
+      - RER et transilien
+      - TER
+      - TGV
+      - trottinette électrique
+      - véhicule compact électrique
+      - vélo électrique
+      - voiture individuelle diesel
+      - voiture individuelle essence
   par défaut: 0
   unité: kgCO2e
   avec:
-    distance:
-      question: Distance des transport scolaire des élèves sur une année
-      unité: km/jour
-    FE:
-      formule:
-        variations:
-          - si: moyen de transport = "RER et transilien"
-            alors: commun . FE . moyen de transport . RER et transilien
-          - si: moyen de transport = "métro ou tram"
-            alors: commun . FE . moyen de transport . métro ou tram
-          - si: moyen de transport = "Vélo à assistance électrique"
-            alors: commun . FE . moyen de transport . Vélo à assistance électrique
-          - si: moyen de transport = "Trottinette électrique"
-            alors: commun . FE . moyen de transport . Trottinette électrique
-          - si: moyen de transport = "Moto essence"
-            alors: commun . FE . moyen de transport . Moto essence
-          - si: moyen de transport = "Véhicule compact électrique"
-            alors: commun . FE . moyen de transport . Véhicule compact électrique
-          - si: moyen de transport = "Voiture individuelle essence"
-            alors: commun . FE . moyen de transport . Voiture individuelle essence
-          - si: moyen de transport = "Voiture individuelle diesel"
-            alors: commun . FE . moyen de transport . Voiture individuelle diesel
-          - si: moyen de transport = "Autobus moyen"
-            alors: commun . FE . moyen de transport . Autobus moyen
-          - si: moyen de transport = "TER"
-            alors: commun . FE . moyen de transport . TER
-          - si: moyen de transport = "TGV"
-            alors: commun . FE . moyen de transport . TGV
-          - si: moyen de transport = "Avion Court courrier"
-            alors: commun . FE . moyen de transport . Avion Court courrier
-          - si: moyen de transport = "Avion Moyen courrier"
-            alors: commun . FE . moyen de transport . Avion Moyen courrier
-          - si: moyen de transport = "Avion Long courrier"
-            alors: commun . FE . moyen de transport . Avion Long courrier
-
-déplacements . voyages scolaires . moyen de transport:
-  question: Moyen de transport
-  une possibilité:
-    - RER et transilien
-    - métro ou tram
-    - Vélo à assistance électrique
-    - Trottinette électrique
-    - Moto essence
-    - Véhicule compact électrique
-    - Voiture individuelle essence
-    - Voiture individuelle diesel
-    - Autobus moyen
-    - TER
-    - TGV
-    - Avion Court courrier
-    - Avion Moyen courrier
-    - Avion Long courrier
-  avec:
     RER et transilien:
+      titre: RER et transilien
+      formule: distance * commun . FE . moyen de transport . RER et transilien
+      avec:
+        distance:
+          question: Distance (km)
+          unité: km
+          par défaut: 0
+
     métro ou tram:
-    Vélo à assistance électrique:
-    Trottinette électrique:
-    Moto essence:
-    Véhicule compact électrique:
-    Voiture individuelle essence:
-    Voiture individuelle diesel:
-    Autobus moyen:
+      titre: Métro, tramway
+      formule: distance * commun . FE . moyen de transport . métro ou tram
+      avec:
+        distance:
+          question: Distance (km)
+          unité: km
+          par défaut: 0
+
+    vélo électrique:
+      titre: Vélo électrique
+      formule: distance * commun . FE . moyen de transport . vélo électrique
+      avec:
+        distance:
+          question: Distance (km)
+          unité: km
+          par défaut: 0
+
+    trottinette électrique:
+      titre: Trottinette électrique
+      formule: distance * commun . FE . moyen de transport . trottinette électrique
+      avec:
+        distance:
+          question: Distance (km)
+          unité: km
+          par défaut: 0
+
+    moto essence:
+      titre: Moto essence
+      formule: distance * commun . FE . moyen de transport . moto essence
+      avec:
+        distance:
+          question: Distance (km)
+          unité: km
+          par défaut: 0
+
+    véhicule compact électrique:
+      titre: Véhicule compact électrique
+      formule: distance * commun . FE . moyen de transport . véhicule compact électrique
+      avec:
+        distance:
+          question: Distance (km)
+          unité: km
+          par défaut: 0
+
+    voiture individuelle essence:
+      titre: Voiture individuelle essence
+      formule: distance * commun . FE . moyen de transport . voiture individuelle essence
+      avec:
+        distance:
+          question: Distance (km)
+          unité: km
+          par défaut: 0
+
+    voiture individuelle diesel:
+      titre: Voiture individuelle diesel
+      formule: distance * commun . FE . moyen de transport . voiture individuelle diesel
+      avec:
+        distance:
+          question: Distance (km)
+          unité: km
+          par défaut: 0
+
+    bus:
+      titre: Autobus
+      formule: distance * commun . FE . moyen de transport . autobus moyen
+      avec:
+        distance:
+          question: Distance (km)
+          unité: km
+          par défaut: 0
+
     TER:
+      titre: TER
+      formule: distance * commun . FE . moyen de transport . TER
+      avec:
+        distance:
+          question: Distance (km)
+          unité: km
+          par défaut: 0
+
     TGV:
-    Avion Court courrier:
-    Avion Moyen courrier:
-    Avion Long courrier:
+      titre: TGV
+      formule: distance * commun . FE . moyen de transport . TGV
+      avec:
+        distance:
+          question: Distance (km)
+          unité: km
+          par défaut: 0
+
+    avion court courrier:
+      titre: Avion Court courrier
+      formule: distance * commun . FE . moyen de transport . avion court courrier
+      avec:
+        distance:
+          question: Distance (km)
+          unité: km
+          par défaut: 0
+
+    avion moyen courrier:
+      titre: Avion Moyen courrier
+      formule: distance * commun . FE . moyen de transport . avion moyen courrier
+      avec:
+        distance:
+          question: Distance (km)
+          unité: km
+          par défaut: 0
+
+    avion long courrier:
+      titre: Avion Long courrier
+      formule: distance * commun . FE . moyen de transport . avion long courrier
+      avec:
+        distance:
+          question: Distance (km)
+          unité: km
+          par défaut: 0

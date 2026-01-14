@@ -1,13 +1,25 @@
-import { studySiteToSituation as cutStudySiteToSituation } from '@/environments/cut/publicodes/studySiteToSituation'
+import { studySiteToClicksonSituation } from '@/environments/clickson/publicodes/studySiteToSituation'
+import { studySiteToCutSituation } from '@/environments/cut/publicodes/studySiteToSituation'
 import { Environment } from '@prisma/client'
 import { Situation } from 'publicodes'
+import { SimplifiedEnvironment } from './publicodes/simplifiedPublicodesConfig'
 
-export type StudySiteFields = {
+export interface CutStudySiteFields {
   distanceToParis?: number | null
   numberOfTickets?: number | null
   numberOfSessions?: number | null
   numberOfOpenDays?: number | null
 }
+
+export interface ClicksonStudySiteFields {
+  etp?: number | undefined
+  studentNumber?: number | undefined
+  superficy?: number | null | undefined
+  // constructionYear?: number | null
+  // renovationYear?: number | null
+}
+
+export interface StudySiteFields extends CutStudySiteFields, ClicksonStudySiteFields {}
 
 export type StudySiteToSituationFn = (studySite: StudySiteFields | undefined) => Situation<string>
 
@@ -15,17 +27,18 @@ export type StudySiteToSituationFn = (studySite: StudySiteFields | undefined) =>
  * Registry of studySiteToSituation functions by environment.
  * Each environment can define its own mapping from StudySite fields to Publicodes situation keys.
  */
-const studySiteToSituationByEnvironment: Partial<Record<Environment, StudySiteToSituationFn>> = {
-  [Environment.CUT]: cutStudySiteToSituation,
+const studySiteToSituationByEnvironment: Record<SimplifiedEnvironment, StudySiteToSituationFn> = {
+  [Environment.CUT]: studySiteToCutSituation,
+  [Environment.CLICKSON]: studySiteToClicksonSituation,
 }
 
-export function getStudySiteToSituation(environment: Environment): StudySiteToSituationFn | undefined {
+export function getStudySiteToSituation(environment: SimplifiedEnvironment): StudySiteToSituationFn | undefined {
   return studySiteToSituationByEnvironment[environment]
 }
 
 export function studySiteToSituation(
-  environment: Environment,
-  studySite: StudySiteFields | undefined,
+  environment: SimplifiedEnvironment,
+  studySite: ClicksonStudySiteFields | undefined,
 ): Situation<string> {
   const fn = getStudySiteToSituation(environment)
   return fn ? fn(studySite) : {}

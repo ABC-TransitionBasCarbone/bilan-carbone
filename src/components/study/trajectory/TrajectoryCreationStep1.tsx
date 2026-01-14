@@ -8,6 +8,7 @@ interface Props {
 
 const TrajectoryCreationStep1 = ({ trajectoryType, handleModeSelect }: Props) => {
   const isSBTI = trajectoryType === TrajectoryType.SBTI_15 || trajectoryType === TrajectoryType.SBTI_WB2C
+  const isSNBC = trajectoryType === TrajectoryType.SNBC_GENERAL || trajectoryType === TrajectoryType.SNBC_SECTORAL
 
   return (
     <div className="flex-col gapped1">
@@ -21,12 +22,11 @@ const TrajectoryCreationStep1 = ({ trajectoryType, handleModeSelect }: Props) =>
       />
 
       <TrajectoryOption
-        type={TrajectoryType.SNBC}
+        type={TrajectoryType.SNBC_GENERAL}
         titleKey="snbc.title"
         subtitleKey="snbc.subtitle"
         benefits={['snbc.benefit1', 'snbc.benefit2', 'snbc.benefit3']}
-        isSelected={false}
-        disabled
+        isSelected={isSNBC}
         handleModeSelect={handleModeSelect}
       />
 

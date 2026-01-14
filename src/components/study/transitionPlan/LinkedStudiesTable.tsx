@@ -4,7 +4,9 @@ import BaseTable from '@/components/base/Table'
 import { TableActionButton } from '@/components/base/TableActionButton'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteExternalStudy, deleteLinkedStudy } from '@/services/serverFunctions/transitionPlan'
+import { formatNumber } from '@/utils/number'
 import { PastStudy } from '@/utils/trajectory'
+import type { StudyResultUnit } from '@prisma/client'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
@@ -19,9 +21,10 @@ interface Props {
   pastStudies: PastStudy[]
   canEdit: boolean
   onEdit: (study: PastStudy) => void
+  studyUnit: StudyResultUnit
 }
 
-const LinkedStudiesTable = ({ transitionPlanId, pastStudies, canEdit, onEdit }: Props) => {
+const LinkedStudiesTable = ({ transitionPlanId, pastStudies, canEdit, onEdit, studyUnit }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.linkedStudies.table')
   const tDeleteModal = useTranslations('study.transitionPlan.trajectories.linkedStudies.deleteModal')
   const tUnit = useTranslations('study.results.units')
@@ -61,65 +64,65 @@ const LinkedStudiesTable = ({ transitionPlanId, pastStudies, canEdit, onEdit }: 
     }
   }
 
-  const mergedColumns = useMemo(
-    () =>
-      [
-        {
-          header: t('name'),
-          accessorKey: 'name',
-          cell: ({ row }) => {
-            if (row.original.type === 'linked') {
-              return (
-                <Link href={`/etudes/${row.original.id}`} className="link">
-                  {row.original.name}
-                </Link>
-              )
-            }
-            return row.original.name
-          },
+  const mergedColumns = useMemo<ColumnDef<PastStudy>[]>(() => {
+    const baseColumns: ColumnDef<PastStudy>[] = [
+      {
+        header: t('name'),
+        accessorKey: 'name',
+        cell: ({ row }) => {
+          if (row.original.type === 'linked') {
+            return (
+              <Link href={`/etudes/${row.original.id}`} className="link">
+                {row.original.name}
+              </Link>
+            )
+          }
+          return row.original.name
         },
-        { header: t('year'), accessorKey: 'year' },
-        {
-          header: t('type'),
-          accessorKey: 'type',
-          cell: ({ row }) => {
-            return row.original.type === 'linked' ? t('typeLinked') : t('typeExternal')
-          },
+      },
+      { header: t('year'), accessorKey: 'year' },
+      {
+        header: t('type'),
+        accessorKey: 'type',
+        cell: ({ row }) => {
+          return row.original.type === 'linked' ? t('typeLinked') : t('typeExternal')
         },
-        {
-          header: t('emissions'),
-          accessorKey: 'totalCo2',
-          cell: ({ row }) => {
-            const value = row.original.totalCo2
-            return `${value.toLocaleString('fr-FR', { maximumFractionDigits: 2 })} ${tUnit('T')}`
-          },
+      },
+      {
+        header: t('emissions'),
+        accessorKey: 'totalCo2',
+        cell: ({ row }) => {
+          return `${formatNumber(row.original.totalCo2)} ${tUnit(studyUnit)}`
         },
-        canEdit
-          ? {
-              id: 'actions',
-              header: '',
-              accessorKey: 'id',
-              cell: ({ row }) => (
-                <div className="flex justify-end gapped-2">
-                  {row.original.type === 'external' && (
-                    <TableActionButton
-                      type="edit"
-                      onClick={() => onEdit(row.original)}
-                      data-testid={`edit-${row.original.type}-study-button`}
-                    />
-                  )}
-                  <TableActionButton
-                    type="delete"
-                    onClick={() => handleDeleteClick(row.original.type, row.original.id, row.original.name)}
-                    data-testid={`delete-${row.original.type}-study-button`}
-                  />
-                </div>
-              ),
-            }
-          : null,
-      ] as ColumnDef<PastStudy>[],
-    [t, tUnit, handleDeleteClick, onEdit, canEdit],
-  )
+      },
+    ]
+
+    if (canEdit) {
+      baseColumns.push({
+        id: 'actions',
+        header: '',
+        accessorKey: 'id',
+        cell: ({ row }) => (
+          <div className="flex justify-end gapped-2">
+            {row.original.type === 'external' && (
+              <TableActionButton
+                type="edit"
+                onClick={() => onEdit(row.original)}
+                data-testid={`edit-${row.original.type}-study-button`}
+              />
+            )}
+            <TableActionButton
+              type="delete"
+              onClick={() => handleDeleteClick(row.original.type, row.original.id, row.original.name)}
+              data-testid={`delete-${row.original.type}-study-button`}
+            />
+          </div>
+        ),
+      })
+    }
+
+    return baseColumns
+  }, [t, tUnit, handleDeleteClick, onEdit, canEdit, studyUnit])
 
   const pastStudiesTable = useReactTable({
     columns: mergedColumns,

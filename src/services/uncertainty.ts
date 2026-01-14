@@ -2,7 +2,7 @@
 
 import { FullStudy } from '@/db/study'
 import { EmissionFactor } from '@prisma/client'
-import { getEmissionSourcesTotalCo2, sumEmissionSourcesUncertainty } from './emissionSource'
+import { getEmissionSourcesTotalCo2 } from './emissionSource'
 import { StudyWithoutDetail } from './permissions/study'
 
 export const qualityKeys = [
@@ -30,19 +30,32 @@ export const specificFEQualityKeysLinks: Record<(typeof qualityKeys)[number], (t
     completeness: 'feCompleteness',
   }
 
-const getQualityValue = (
-  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
-  column: (typeof qualityKeys)[number],
-) =>
+type specificFEQualities = Pick<
+  FullStudy['emissionSources'][0],
+  | 'feCompleteness'
+  | 'feTechnicalRepresentativeness'
+  | 'feGeographicRepresentativeness'
+  | 'feReliability'
+  | 'feTemporalRepresentativeness'
+> & {
+  emissionFactor: Pick<
+    EmissionFactor,
+    | 'completeness'
+    | 'technicalRepresentativeness'
+    | 'geographicRepresentativeness'
+    | 'reliability'
+    | 'temporalRepresentativeness'
+  > | null
+}
+
+const getQualityValue = (emissionSource: specificFEQualities, column: (typeof qualityKeys)[number]) =>
   emissionSource[specificFEQualityKeysLinks[column]]
     ? emissionSource[specificFEQualityKeysLinks[column]]
     : emissionSource.emissionFactor
       ? emissionSource.emissionFactor[column]
-      : null
+      : 1
 
-export const getSpecificEmissionFactorQuality = (
-  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
-) =>
+export const getSpecificEmissionFactorQuality = (emissionSource: specificFEQualities) =>
   qualityKeys.reduce(
     (res, column) => ({ ...res, [column]: getQualityValue(emissionSource, column) }),
     {} as Record<(typeof qualityKeys)[number], number>,
@@ -58,62 +71,95 @@ const coeffs: Record<keyof Quality, number[]> = {
   completeness: [1.2, 1.1, 1.05, 1.02, 1],
 }
 
-export const sumQualities = (qualities: (number | null)[]) =>
-  Math.exp(
+export const getSquaredStandardDeviationForQuality = (quality: Quality | null) => {
+  const qualities = Object.entries(coeffs).map(([key, values]) => {
+    const value = Number(quality?.[key as keyof Quality]) || 1
+
+    // -1 because the values are 0-indexed
+    return values[value - 1]
+  })
+
+  return Math.exp(Math.sqrt(qualities.reduce((acc, value) => acc + Math.pow(Math.log(value), 2), 0)))
+}
+
+export const getSquaredStandardDeviationForEmissionSource = (
+  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][number],
+) => {
+  const emissionSquaredStandardDeviation = getSquaredStandardDeviationForQuality(emissionSource)
+  const factorSquaredStandardDeviation = getSquaredStandardDeviationForQuality(
+    getSpecificEmissionFactorQuality(emissionSource),
+  )
+
+  return Math.exp(
+    2 *
+      Math.sqrt(
+        Math.pow(Math.log(Math.sqrt(factorSquaredStandardDeviation)), 2) +
+          Math.pow(Math.log(Math.sqrt(emissionSquaredStandardDeviation)), 2),
+      ),
+  )
+}
+export const getSquaredStandardDeviationForEmissionSourceArray = (
+  emissionSources: { emissionValue: number | null; squaredStandardDeviation: number }[],
+) => {
+  const total = emissionSources.reduce((acc, es) => (es.emissionValue ? acc + es.emissionValue : acc), 0)
+
+  const standardDeviation = Math.exp(
     Math.sqrt(
-      qualities.filter((value) => value !== null).reduce((acc, value) => acc + Math.pow(Math.log(value), 2), 0),
+      emissionSources.reduce((acc, es) => {
+        if (!es.emissionValue) {
+          return acc
+        }
+
+        return (
+          acc + Math.pow(es.emissionValue / total, 2) * Math.pow(Math.log(Math.sqrt(es.squaredStandardDeviation)), 2)
+        )
+      }, 0),
     ),
   )
 
-export const getQualityStandardDeviation = (quality: Quality) => {
-  const qualities = Object.entries(coeffs)
-    .map(([key, values]) => {
-      const value = Number(quality[key as keyof Quality])
-      if (!value || Number.isNaN(value)) {
-        return undefined
-      }
-      // -1 because the values are 0-indexed
-      return values[value - 1]
-    })
-    .filter((value) => value !== undefined)
-  return qualities.length > 0 ? sumQualities(qualities) : null
+  return Math.pow(standardDeviation, 2)
 }
 
-export const uncertaintyValues = [1.1199, 1.2621, 1.6361, 2.5164]
-export const getStandardDeviationRating = (standardDeviation: number) => {
-  if (standardDeviation < uncertaintyValues[0]) {
+export const uncertaintyValues = [1.1199, 1.2621, 1.6361, 2.5163]
+export const getQualitativeUncertaintyFromSquaredStandardDeviation = (squaredStandardDeviation: number) => {
+  if (squaredStandardDeviation < uncertaintyValues[0]) {
     return 5
-  } else if (standardDeviation < uncertaintyValues[1]) {
+  } else if (squaredStandardDeviation < uncertaintyValues[1]) {
     return 4
-  } else if (standardDeviation < uncertaintyValues[2]) {
+  } else if (squaredStandardDeviation < uncertaintyValues[2]) {
     return 3
-  } else if (standardDeviation < uncertaintyValues[3]) {
+  } else if (squaredStandardDeviation < uncertaintyValues[3]) {
     return 2
-  } else {
-    return 1
   }
+
+  return 1
 }
 
-export const getQualityRating = (quality: Quality) => {
-  const standardDeviation = getQualityStandardDeviation(quality)
-  if (!standardDeviation) {
-    return null
-  }
-  return getStandardDeviationRating(standardDeviation)
+export const getQualitativeUncertaintyFromQuality = (quality: Quality) => {
+  const squaredStandardDeviation = getSquaredStandardDeviationForQuality(quality)
+
+  return getQualitativeUncertaintyFromSquaredStandardDeviation(squaredStandardDeviation)
 }
 
-export const getEmissionSourcesGlobalUncertainty = (
+export const getEmissionSourcesConfidenceInterval = (
   emissionSources: (Pick<FullStudy['emissionSources'][number], 'emissionFactor'> & {
     emissionValue: number
-    standardDeviation: number | null
+    squaredStandardDeviation: number
   })[],
 ) => {
   const totalEmissions = getEmissionSourcesTotalCo2(emissionSources)
-  const gsd = sumEmissionSourcesUncertainty(emissionSources)
+  const gsd = getSquaredStandardDeviationForEmissionSourceArray(emissionSources)
   return getConfidenceInterval(totalEmissions, gsd)
 }
 
-export const getConfidenceInterval = (emission: number, standardDeviation: number) => [
-  emission / standardDeviation,
-  emission * standardDeviation,
+export const getConfidenceInterval = (emission: number, squaredStandardDeviation: number) => [
+  emission / squaredStandardDeviation,
+  emission * squaredStandardDeviation,
 ]
+
+export const getQualitativeUncertaintyForEmissionSources = (
+  emissionSources: { emissionValue: number | null; squaredStandardDeviation: number }[],
+) =>
+  getQualitativeUncertaintyFromSquaredStandardDeviation(
+    getSquaredStandardDeviationForEmissionSourceArray(emissionSources),
+  )

@@ -11,7 +11,7 @@ import { getTrajectoryTypeLabel } from '@/utils/trajectory'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { Chip } from '@mui/material'
-import { TrajectoryType } from '@prisma/client'
+import { SectenInfo, TrajectoryType } from '@prisma/client'
 import { ColumnDef, getCoreRowModel, getExpandedRowModel, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
 import Fuse from 'fuse.js'
@@ -52,7 +52,9 @@ interface Props {
   canEdit: boolean
   transitionPlanId: string
   studyId: string
+  studyYear: number
   searchFilter?: string
+  sectenData: SectenInfo[]
 }
 
 const fuseOptions = {
@@ -61,8 +63,16 @@ const fuseOptions = {
   isCaseSensitive: false,
 }
 
-const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, studyId, searchFilter = '' }: Props) => {
-  const tCommon = useTranslations('common')
+const TrajectoryObjectivesTable = ({
+  trajectories,
+  canEdit,
+  transitionPlanId,
+  studyId,
+  studyYear,
+  searchFilter = '',
+  sectenData,
+}: Props) => {
+  const tAction = useTranslations('common.action')
   const t = useTranslations('study.transitionPlan.objectives')
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
@@ -193,7 +203,7 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, st
             return null
           }
 
-          return rate !== undefined ? `${formatNumber(rate * 100, 2)}%` : null
+          return rate !== undefined ? `${formatNumber(rate * 100, 1)}%` : null
         },
       },
       {
@@ -296,8 +306,8 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, st
               ? customRich(t, 'deleteTrajectory.message')
               : customRich(t, 'deleteObjective.message')
           }
-          confirmText={tCommon('delete')}
-          cancelText={tCommon('cancel')}
+          confirmText={tAction('delete')}
+          cancelText={tAction('cancel')}
           requireNameMatch={deleteTarget?.type === 'trajectory' ? deleteTarget.name : undefined}
           onConfirm={handleConfirmDelete}
           onCancel={() => {
@@ -316,6 +326,8 @@ const TrajectoryObjectivesTable = ({ trajectories, canEdit, transitionPlanId, st
           transitionPlanId={transitionPlanId}
           onSuccess={handleEditSuccess}
           trajectory={editTrajectory}
+          studyYear={studyYear}
+          sectenData={sectenData}
         />
       )}
     </>

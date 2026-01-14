@@ -1,0 +1,52 @@
+.yearRangeSlider {
+  margin-top: -2rem;
+  height: 2px;
+}
+
+.yearRangeSlider :global(.MuiSlider-thumb) {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.yearRangeSlider :global(.MuiSlider-thumb) input {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  pointer-events: none !important; /* Prevents the ghost input from stealing clicks */
+  opacity: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.valueLabel {
+  top: 3rem !important;
+  font-size: 0.75rem !important;
+  background-color: transparent !important;
+  color: inherit !important;
+}
+
+.rangeTitle {
+  margin-top: -1.75rem;
+  margin-right: 2rem;
+}
+
+.filtersAccordion {
+  background: var(--mui-palette-primary-light);
+  border-radius: 0.5rem;
+}
+
+.filtersAccordion :global(.MuiAccordionSummary-root) {
+  transition: padding 0.2s ease;
+  min-height: auto;
+}
+
+.filtersAccordion:not(.expanded) :global(.MuiAccordionSummary-root) {
+  padding: 1rem 1.5rem;
+}
+
+.filtersAccordion.expanded :global(.MuiAccordionSummary-root) {
+  padding: 1.5rem;
+}
+
+.filtersAccordion :global(.MuiAccordionSummary-content) {
+  margin: 0;
+}

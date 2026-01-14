@@ -4,6 +4,7 @@ import withStudyDetails from '@/components/hoc/withStudyDetails'
 import withTransitionPlan, { TransitionPlanProps } from '@/components/hoc/withTransitionPlan'
 import TrajectoryReductionPage from '@/components/pages/TrajectoryReductionPage'
 import { getUserApplicationSettings } from '@/db/user'
+import { getSectenData } from '@/services/serverFunctions/secten'
 import { getTrajectories } from '@/services/serverFunctions/trajectory'
 import {
   getLinkedAndExternalStudies,
@@ -30,10 +31,11 @@ const TrajectoryReduction = async ({ study, canEdit, user }: StudyProps & UserSe
 
   const transitionPlan = transitionPlanResponse.data
 
-  const [trajectoriesResponse, linkedStudiesResponse, actionsResponse] = await Promise.all([
+  const [trajectoriesResponse, linkedStudiesResponse, actionsResponse, sectenDataResponse] = await Promise.all([
     getTrajectories(study.id, transitionPlan.id),
     getLinkedAndExternalStudies(transitionPlan.id),
     getStudyActions(study.id),
+    getSectenData(),
   ])
 
   return (
@@ -46,6 +48,7 @@ const TrajectoryReduction = async ({ study, canEdit, user }: StudyProps & UserSe
       linkedExternalStudies={linkedStudiesResponse.success ? linkedStudiesResponse.data.externalStudies : []}
       actions={actionsResponse.success ? actionsResponse.data : []}
       validatedOnly={settings.validatedEmissionSourcesOnly}
+      sectenData={sectenDataResponse.success ? sectenDataResponse.data : []}
     />
   )
 }

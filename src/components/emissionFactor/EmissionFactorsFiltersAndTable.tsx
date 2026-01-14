@@ -3,9 +3,10 @@
 import { EmissionFactorList } from '@/db/emissionFactors'
 import { environmentSubPostsMapping, Post, subPostsByPost } from '@/services/posts'
 import { EmissionFactorWithMetaData, getEmissionFactors } from '@/services/serverFunctions/emissionFactor'
+import { getStudyExports } from '@/services/serverFunctions/study'
 import { BCUnit } from '@/services/unit'
 import { FeFilters } from '@/types/filters'
-import { Environment, SubPost } from '@prisma/client'
+import { Environment, Export, SubPost } from '@prisma/client'
 import { PaginationState } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
@@ -41,6 +42,7 @@ const EmissionFactorsFiltersAndTable = ({
   const [action, setAction] = useState<'edit' | 'delete' | undefined>(undefined)
   const [targetedEmission, setTargetedEmission] = useState('')
   const [emissionFactors, setEmissionFactors] = useState<EmissionFactorList[]>([])
+  const [hasGHGPExport, setHasGHGPExport] = useState(false)
   const [skip, setSkip] = useState(0)
   const [totalCount, setTotalCount] = useState(0)
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
@@ -120,6 +122,16 @@ const EmissionFactorsFiltersAndTable = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters.archived, filters.search, filters.location, filters.sources, filters.units, filters.subPosts, studyId])
 
+  useEffect(() => {
+    const fetchStudyExports = async () => {
+      const studyExports = await getStudyExports(studyId)
+      if (studyExports.success) {
+        setHasGHGPExport(studyExports.data.includes(Export.GHGP))
+      }
+    }
+    fetchStudyExports()
+  }, [studyId])
+
   return (
     <>
       {!fromModal && t('subTitle')}
@@ -144,6 +156,7 @@ const EmissionFactorsFiltersAndTable = ({
         setPagination={setPagination}
         selectEmissionFactor={selectEmissionFactor}
         hasActiveLicence={hasActiveLicence}
+        hasGHGPExport={hasGHGPExport}
       />
       <EditEmissionFactorModal
         emissionFactorId={targetedEmission}

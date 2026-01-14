@@ -20,10 +20,10 @@ fonctionnement . bâtiment . construction:
   avec:
     age:
       durée:
-        unité: an
         depuis: année de construction
         jusqu'à: commun . année actuelle
       arrondi: oui
+      unité: an
 
     amortissement:
       valeur: 50
@@ -56,15 +56,16 @@ fonctionnement . bâtiment . rénovation:
 
 fonctionnement . bâtiment . rénovation . type:
   titre: Rénovation
-  question: Parmi les rénovations suivantes, lesquelles avez-vous réalisées durant les dix dernières années ?
   avec:
     rénovation totale:
+      type: booléen
       non applicable si:
         toutes ces conditions:
           - est défini: type . aucun
           - type . aucun = oui
-      type: booléen
-      titre: Rénovation totale (hors agrandissement)
+      question: Rénovation totale (hors agrandissement)
+      form:
+        saisie: case à cocher
 
     extension:
       non applicable si:
@@ -72,7 +73,9 @@ fonctionnement . bâtiment . rénovation . type:
           - est défini: type . aucun
           - type . aucun = oui
       type: booléen
-      titre: Agrandissement - extension
+      question: Agrandissement - extension
+      form:
+        saisie: case à cocher
 
     autres travaux importants:
       non applicable si:
@@ -80,12 +83,16 @@ fonctionnement . bâtiment . rénovation . type:
           - est défini: type . aucun
           - type . aucun = oui
       type: booléen
-      titre: |
+      question: |
         Autres travaux importants (par ex : changement moquette, ravalement,peinture etc)
+      form:
+        saisie: case à cocher
 
     aucun:
       type: booléen
-      titre: Je n'ai pas réalisé ces rénovations durant les dix dernières années
+      question: Je n'ai pas réalisé ces rénovations durant les dix dernières années
+      form:
+        saisie: case à cocher
 
 fonctionnement . bâtiment . rénovation . empreinte travaux:
   applicable si:
