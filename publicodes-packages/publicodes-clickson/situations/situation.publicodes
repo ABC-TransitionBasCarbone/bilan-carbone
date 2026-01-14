@@ -1,6 +1,7 @@
 template:
   contexte:
     # Énergie
+    # inputs
     énergie . électricité . consommation: 10000
     énergie . combustibles . fioul domestique . consommation: 100
     énergie . combustibles . fioul lourd . consommation: 50
@@ -12,6 +13,7 @@ template:
     énergie . autres gaz . gaz hfc spécifique . PRG: 1430
 
     # Immobilisations
+    # inputs or groups
     immobilisations . construction . bâtiment scolaire structure béton . surface: 1000
     immobilisations . construction . parking bâtiment structure béton . surface: 100
     immobilisations . construction . parking surface bitume . surface: 50
@@ -45,6 +47,7 @@ template:
     immobilisations . équipements divers . étagère . nombre: 1
 
     # Restauration
+    # inputs
     restauration . types de repas servis . moyen . nombre: 1000
     restauration . types de repas servis . végétarien . nombre: 200
     restauration . types de repas servis . végétalien . nombre: 50
@@ -68,13 +71,16 @@ template:
     restauration . déchets organiques . biodéchets enfouis . quantité: 5
 
     # Déplacements
+    # inputs
     déplacements . transport du personnel . distance: 10000
     déplacements . transport du personnel . moyen de transport: "Voiture individuelle essence"
     déplacements . transport des élèves . distance: 20000
     déplacements . transport des élèves . moyen de transport: "Autobus moyen"
     déplacements . voyages scolaires . distance: 5000
     déplacements . voyages scolaires . moyen de transport: "TGV"
+
     # Achats
+    # tables
     achats . fournitures . petites fournitures . montant: 500
     achats . fournitures . livres . nombre: 20
     achats . fournitures . papier ramette . nombre: 10
