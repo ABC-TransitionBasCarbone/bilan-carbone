@@ -1520,6 +1520,7 @@
       "Fuites": "Fuites",
       "Transport": "Transport",
       "CombustionALaCentrale": "Combustion à la centrale",
+      "AutresEmissionsLieesALaConsommationDElectriciteBarrage": "Autres émissions liées à la consommation d?électricité (barrage?)",
       "Pertes": "Pertes"
     },
     "missingQualities": {
@@ -1731,6 +1732,7 @@
     "TEP": "tep",
     "TEP_PCI": "tep PCI",
     "TEP_PCS": "tep PCS",
+    "TEU_KM": "TEU.km",
     "TON_KM": "t.km",
     "TON": "{count, plural, =0 {tonne} one {tonne} other {tonnes}}",
     "TON_WITH_BONES": "{count, plural, =0 {tonne avec os} one {tonne avec os} other {tonnes avec os}}",

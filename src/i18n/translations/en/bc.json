@@ -1520,6 +1520,7 @@
       "Fuites": "Leaks",
       "Transport": "Transport",
       "CombustionALaCentrale": "Combustion at the plant",
+      "AutresEmissionsLieesALaConsommationDElectriciteBarrage": "Other emissions related to electricity consumption (dam?)",
       "Pertes": "Losses"
     },
     "missingQualities": {
@@ -1731,6 +1732,7 @@
     "TEP": "tep",
     "TEP_PCI": "tep PCI",
     "TEP_PCS": "tep PCS",
+    "TEU_KM": "TEU.km",
     "TON_KM": "t.km",
     "TON": "{count, plural, one {ton} other {tons}}",
     "TON_WITH_BONES": "{count, plural, one {ton with bones} other {tons with bones}}",
