@@ -96,7 +96,6 @@ const TrajectoryCreationStep2 = ({
         name="referenceYear"
         label={t('referenceYear.label')}
         control={control}
-        translation={t}
         views={['year']}
         minDate={dayjs('1990-01-01')}
         maxDate={maxReferenceDate}
