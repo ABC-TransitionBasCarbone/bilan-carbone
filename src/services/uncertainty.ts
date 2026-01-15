@@ -107,22 +107,21 @@ export const getSquaredStandardDeviationForEmissionSource = (
 
 //TODO : idem ici changer pour prendre le cas très mauvais si ssd est pas défini
 export const getSquaredStandardDeviationForEmissionSourceArray = (
-  emissionSources: { emissionValue?: number | null; value?: number | null; squaredStandardDeviation?: number | null }[],
+  emissionSources: { emissionValue: number | null; squaredStandardDeviation: number | null }[],
 ) => {
-  const newEmissionSources = emissionSources.map((es) => ({
-    ...es,
-    value: es.emissionValue ? es.emissionValue : es.value,
-  }))
-  const total = newEmissionSources.reduce((acc, es) => (es.value ? acc + es.value : acc), 0)
+  const total = emissionSources.reduce((acc, es) => (es.emissionValue ? acc + es.emissionValue : acc), 0)
 
   const standardDeviation = Math.exp(
     Math.sqrt(
-      newEmissionSources.reduce((acc, es) => {
-        if (!es.value) {
+      emissionSources.reduce((acc, es) => {
+        if (!es.emissionValue) {
           return acc
         }
 
-        return acc + Math.pow(es.value / total, 2) * Math.pow(Math.log(Math.sqrt(es.squaredStandardDeviation || 1)), 2)
+        return (
+          acc +
+          Math.pow(es.emissionValue / total, 2) * Math.pow(Math.log(Math.sqrt(es.squaredStandardDeviation || 1)), 2)
+        )
       }, 0),
     ),
   )
@@ -160,12 +159,7 @@ export const getEmissionSourcesConfidenceInterval = (
   })[],
 ) => {
   const totalEmissions = getEmissionSourcesTotalCo2(emissionSources)
-  const gsd = getSquaredStandardDeviationForEmissionSourceArray(
-    emissionSources.map((es) => ({
-      value: es.emissionValue,
-      squaredStandardDeviation: es.squaredStandardDeviation,
-    })),
-  )
+  const gsd = getSquaredStandardDeviationForEmissionSourceArray(emissionSources)
   return getConfidenceInterval(totalEmissions, gsd)
 }
 
@@ -175,7 +169,7 @@ export const getConfidenceInterval = (emission: number, squaredStandardDeviation
 ]
 
 export const getQualitativeUncertaintyForEmissionSources = (
-  emissionSources: { value: number | null; squaredStandardDeviation?: number | null }[],
+  emissionSources: { emissionValue: number | null; squaredStandardDeviation: number | null }[],
 ) =>
   getQualitativeUncertaintyFromSquaredStandardDeviation(
     getSquaredStandardDeviationForEmissionSourceArray(emissionSources),

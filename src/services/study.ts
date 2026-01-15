@@ -260,7 +260,7 @@ const getEmissionSourcesCSVContent = (
   )
   const totalRow = [t('total'), ...emptyFields(emptyFieldsCount + 1), totalEmissions].join(';')
 
-  const quality = getQuality(getQualitativeUncertaintyForEmissionSources(emissionSources), tQuality)
+  const quality = getQuality(getQualitativeUncertaintyForEmissionSources(emissionSourcesWithEmission), tQuality)
   const qualityRow = [t('quality'), ...emptyFields(emptyFieldsCount + 1), quality].join(';')
 
   const confidenceInterval = getEmissionSourcesConfidenceInterval(emissionSourcesWithEmission)

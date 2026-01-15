@@ -159,7 +159,7 @@ const sumLines = (lines: Omit<BegesPostInfos, 'rule'>[]) => {
     co2b: lines.reduce((acc, line) => acc + line.co2b, 0),
     squaredStandardDeviation: total
       ? getSquaredStandardDeviationForEmissionSourceArray(
-          lines.map((line) => ({ value: line.total, squaredStandardDeviation: line.squaredStandardDeviation })),
+          lines.map((line) => ({ emissionValue: line.total, squaredStandardDeviation: line.squaredStandardDeviation })),
         )
       : null,
   }

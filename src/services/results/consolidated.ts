@@ -82,7 +82,11 @@ export const computeResultsByPost = (
       monetaryValue,
       nonSpecificMonetaryValue,
       squaredStandardDeviation:
-        subPosts.length > 0 ? getSquaredStandardDeviationForEmissionSourceArray(subPosts) : undefined,
+        subPosts.length > 0
+          ? getSquaredStandardDeviationForEmissionSourceArray(
+              subPosts.map((sp) => ({ ...sp, emissionValue: sp.value })),
+            )
+          : undefined,
       children: subPosts.sort((a, b) => tPost(a.post).localeCompare(tPost(b.post))),
       numberOfEmissionSource: subPosts.reduce((acc, subPost) => acc + subPost.numberOfEmissionSource, 0),
       numberOfValidatedEmissionSource: subPosts.reduce(
@@ -111,7 +115,9 @@ export const computeTotalForPosts = (postInfos: ResultsByPost[], tPost: (key: st
     monetaryValue: postInfos.reduce((acc, post) => acc + post.monetaryValue, 0),
     nonSpecificMonetaryValue: postInfos.reduce((acc, post) => acc + post.nonSpecificMonetaryValue, 0),
     children: [],
-    squaredStandardDeviation: getSquaredStandardDeviationForEmissionSourceArray(postInfos),
+    squaredStandardDeviation: getSquaredStandardDeviationForEmissionSourceArray(
+      postInfos.map((post) => ({ ...post, emissionValue: post.value })),
+    ),
     numberOfEmissionSource: postInfos.reduce((acc, post) => acc + post.numberOfEmissionSource, 0),
     numberOfValidatedEmissionSource: postInfos.reduce((acc, post) => acc + post.numberOfValidatedEmissionSource, 0),
   }
@@ -183,7 +189,9 @@ export const computeResultsByTag = (
         label: tagFamily.name,
         value,
         children: tagInfos.filter((tag) => tag.value > 0),
-        squaredStandardDeviation: getSquaredStandardDeviationForEmissionSourceArray(tagInfos),
+        squaredStandardDeviation: getSquaredStandardDeviationForEmissionSourceArray(
+          tagInfos.map((tag) => ({ ...tag, emissionValue: tag.value })),
+        ),
       }
     })
     .filter((family) => family.value > 0)
