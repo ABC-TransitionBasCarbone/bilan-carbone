@@ -53,7 +53,7 @@ const getQualityValue = (emissionSource: specificFEQualities, column: (typeof qu
     ? emissionSource[specificFEQualityKeysLinks[column]]
     : emissionSource.emissionFactor
       ? emissionSource.emissionFactor[column]
-      : null
+      : 1
 
 export const getSpecificEmissionFactorQuality = (emissionSource: specificFEQualities) =>
   qualityKeys.reduce(
@@ -72,16 +72,12 @@ const coeffs: Record<keyof Quality, number[]> = {
 }
 
 export const getSquaredStandardDeviationForQuality = (quality: Quality | null) => {
-  const qualities = Object.entries(coeffs)
-    .map(([key, values]) => {
-      const value = quality ? Number(quality[key as keyof Quality]) : null
-      if (!value || Number.isNaN(value)) {
-        return 1 // if quality is not defined, we consider the worst case
-      }
-      // -1 because the values are 0-indexed
-      return values[value - 1]
-    })
-    .filter((value) => value !== undefined)
+  const qualities = Object.entries(coeffs).map(([key, values]) => {
+    const value = Number(quality?.[key as keyof Quality]) || 1
+
+    // -1 because the values are 0-indexed
+    return values[value - 1]
+  })
 
   return Math.exp(Math.sqrt(qualities.reduce((acc, value) => acc + Math.pow(Math.log(value), 2), 0)))
 }
@@ -102,8 +98,6 @@ export const getSquaredStandardDeviationForEmissionSource = (
       ),
   )
 }
-
-//TODO : idem ici changer pour prendre le cas très mauvais si ssd est pas défini
 export const getSquaredStandardDeviationForEmissionSourceArray = (
   emissionSources: { emissionValue: number | null; squaredStandardDeviation: number }[],
 ) => {
@@ -126,7 +120,7 @@ export const getSquaredStandardDeviationForEmissionSourceArray = (
   return Math.pow(standardDeviation, 2)
 }
 
-export const uncertaintyValues = [1.1199, 1.2621, 1.6361, 2.5164]
+export const uncertaintyValues = [1.1199, 1.2621, 1.6361, 2.5163]
 export const getQualitativeUncertaintyFromSquaredStandardDeviation = (squaredStandardDeviation: number) => {
   if (squaredStandardDeviation < uncertaintyValues[0]) {
     return 5
@@ -143,9 +137,7 @@ export const getQualitativeUncertaintyFromSquaredStandardDeviation = (squaredSta
 
 export const getQualitativeUncertaintyFromQuality = (quality: Quality) => {
   const squaredStandardDeviation = getSquaredStandardDeviationForQuality(quality)
-  if (!squaredStandardDeviation) {
-    return null
-  }
+
   return getQualitativeUncertaintyFromSquaredStandardDeviation(squaredStandardDeviation)
 }
 

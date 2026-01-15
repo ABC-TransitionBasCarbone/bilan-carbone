@@ -76,11 +76,7 @@ export const canBeValidated = (
   return getEmissionSourceCompletion(emissionSource, study, emissionFactor, environment) === 1
 }
 
-export const getAlpha = (emission: number | null, confidenceInterval: number[] | null) => {
-  if (emission === null || confidenceInterval === null || confidenceInterval[1] === undefined) {
-    return null
-  }
-
+export const getAlpha = (emission: number, confidenceInterval: number[]) => {
   return (confidenceInterval[1] - emission) / emission
 }
 
@@ -121,7 +117,7 @@ export const getEmissionResults = (
   const emission = getEmissionSourceEmission(emissionSource, environment) ?? 0
 
   const squaredStandardDeviation = getSquaredStandardDeviationForEmissionSource(emissionSource)
-  const confidenceInterval = squaredStandardDeviation ? getConfidenceInterval(emission, squaredStandardDeviation) : null
+  const confidenceInterval = getConfidenceInterval(emission, squaredStandardDeviation)
   const alpha = getAlpha(emission, confidenceInterval)
 
   return {
