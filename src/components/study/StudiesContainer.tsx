@@ -89,24 +89,26 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
       )}
       {!!collaborations.length && <Studies studies={collaborations} canAddStudy={false} user={user} collaborations />}
     </>
-  ) : canCreateAStudy(user, simplified) && !isCR ? (
-    <MUIBox component="section" className="mt1">
-      <div className="justify-center">
-        <Box className={classNames(styles.firstStudyCard, 'flex-col align-center')}>
-          <Image src="/img/orga.png" alt="orga.png" width={177} height={119} />
-          <h5>{t(simplified ? 'createFirstSimplifiedStudy' : 'createFirstStudy')}</h5>
-          <p>{t(simplified ? 'firstSimplifiedStudyMessage' : 'firstStudyMessage')}</p>
-          <LinkButton
-            data-testid="new-study"
-            className={classNames('w100 justify-center mb1')}
-            href={simplified ? creationUrlSimplified : creationUrl}
-          >
-            <AddIcon />
-            {t(simplified ? 'createFirstSimplifiedStudy' : 'createFirstStudy')}
-          </LinkButton>
-        </Box>
-      </div>
-    </MUIBox>
+  ) : canCreateAStudy(user, simplified) ? (
+    !isCR && (
+      <MUIBox component="section" className="mt1">
+        <div className="justify-center">
+          <Box className={classNames(styles.firstStudyCard, 'flex-col align-center')}>
+            <Image src="/img/orga.png" alt="orga.png" width={177} height={119} />
+            <h5>{t(simplified ? 'createFirstSimplifiedStudy' : 'createFirstStudy')}</h5>
+            <p>{t(simplified ? 'firstSimplifiedStudyMessage' : 'firstStudyMessage')}</p>
+            <LinkButton
+              data-testid="new-study"
+              className={classNames('w100 justify-center mb1')}
+              href={simplified ? creationUrlSimplified : creationUrl}
+            >
+              <AddIcon />
+              {t(simplified ? 'createFirstSimplifiedStudy' : 'createFirstStudy')}
+            </LinkButton>
+          </Box>
+        </div>
+      </MUIBox>
+    )
   ) : (
     <Block>
       <Alert className="p0" severity="info">
