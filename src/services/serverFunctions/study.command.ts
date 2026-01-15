@@ -1,5 +1,14 @@
 import { setCustomIssue, setCustomMessage } from '@/lib/zod.config'
-import { ControlMode, DayOfWeek, EstablishmentType, Export, Level, StudyResultUnit, StudyRole } from '@prisma/client'
+import {
+  ControlMode,
+  DayOfWeek,
+  EngagementPhase,
+  EstablishmentType,
+  Export,
+  Level,
+  StudyResultUnit,
+  StudyRole,
+} from '@prisma/client'
 import dayjs from 'dayjs'
 import z from 'zod'
 import { HolidayOpeningHoursValidation, OpeningHoursValidation } from '../hours'
@@ -197,3 +206,15 @@ export const DuplicateSiteCommandValidation = z.object({
 })
 
 export type DuplicateSiteCommand = z.infer<typeof DuplicateSiteCommandValidation>
+
+export const AddEngagementActionCommandValidation = z.object({
+  studyId: z.uuid(),
+  name: z.string().min(1),
+  date: dateValidation(),
+  target: z.string(),
+  steps: z.string(),
+  phase: z.enum(EngagementPhase),
+  description: z.string(),
+})
+
+export type AddEngagementActionCommand = z.infer<typeof AddEngagementActionCommandValidation>

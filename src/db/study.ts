@@ -1040,3 +1040,21 @@ export const deleteStudyComment = async (id: string) =>
   prismaClient.studyComment.delete({
     where: { id },
   })
+
+export const getEngagementActions = (studyId: string) =>
+  prismaClient.engagementAction.findMany({
+    where: { studyId },
+  })
+
+export const getEngagementActionById = (id: string) =>
+  prismaClient.engagementAction.findUnique({
+    where: { id },
+  })
+
+export const createEngagementAction = async (data: Prisma.EngagementActionCreateInput) =>
+  prismaClient.engagementAction.create({ data })
+
+export const updateEngagementAction = async (id: string, data: Prisma.EngagementActionUpdateInput) =>
+  prismaClient.engagementAction.update({ where: { id }, data })
+
+export const deleteEngagementAction = async (id: string) => prismaClient.engagementAction.delete({ where: { id } })
