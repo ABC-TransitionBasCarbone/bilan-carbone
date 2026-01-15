@@ -144,6 +144,57 @@ const calculateAnnualRateFrom2030To2050 = (sectenTarget2030: number, sectenTarge
 }
 
 /**
+ * Calculate SNBC reduction rates for 2030 and 2050 based on Secten data
+ * Returns null if Secten data is insufficient or invalid
+ */
+export const calculateSNBCReductionRates = (
+  sectenData: SectenInfo[],
+  studyStartYear: number,
+): { rateTo2030: number; rateFrom2030To2050: number } | null => {
+  if (sectenData.length === 0) {
+    return null
+  }
+
+  const sectenTarget2030 = calculateSectenTarget2030(sectenData)
+  const sectenTarget2050 = calculateSectenTarget2050(sectenData)
+  const latestSectenYear = getLatestSectenYear(sectenData)
+  const latestSectenEmissions = getLatestSectenEmissions(sectenData)
+
+  if (
+    sectenTarget2030 === null ||
+    sectenTarget2050 === null ||
+    latestSectenYear === null ||
+    latestSectenEmissions === null
+  ) {
+    return null
+  }
+
+  const sectenYearForRateCalculation =
+    studyStartYear < SNBC_REFERENCE_YEAR ? SNBC_REFERENCE_YEAR : Math.min(studyStartYear, latestSectenYear)
+
+  const sectenEmissionsForRateCalculation = getSectenEmissionsByYear(sectenData, sectenYearForRateCalculation)
+  if (sectenEmissionsForRateCalculation === null) {
+    return null
+  }
+
+  const rateTo2030 = calculateSectenAnnualRateTo2030(
+    sectenTarget2030,
+    sectenYearForRateCalculation,
+    sectenEmissionsForRateCalculation,
+  )
+  if (rateTo2030 === null) {
+    return null
+  }
+
+  const rateFrom2030To2050 = calculateAnnualRateFrom2030To2050(sectenTarget2030, sectenTarget2050)
+  if (rateFrom2030To2050 === null) {
+    return null
+  }
+
+  return { rateTo2030, rateFrom2030To2050 }
+}
+
+/**
  * Calculate the SNBC trajectory in the segments 1990-2030 and 2030-2050 with the following rules:
  * 1. Segment 1990-2030:
  *   - If the study start year is before 1990, stay flat until 1990 and then use the Secten data and objectives to calculate the trajectory
@@ -177,43 +228,17 @@ export const calculateSNBCTrajectory = ({
     return dataPoints
   }
 
-  // Calculate the Secten targets and rates, fixed for a Secten version
-  // TODO:https://github.com/ABC-TransitionBasCarbone/bilan-carbone/issues/2344
-  const sectenTarget2030 = calculateSectenTarget2030(sectenData)
-  const sectenTarget2050 = calculateSectenTarget2050(sectenData)
+  const rates = calculateSNBCReductionRates(sectenData, studyStartYear)
+  if (rates === null) {
+    return dataPoints
+  }
+
+  const { rateTo2030: sectenRateTo2030, rateFrom2030To2050: sectenRateFrom2030To2050 } = rates
+
   const latestSectenYear = getLatestSectenYear(sectenData)
   const latestSectenEmissions = getLatestSectenEmissions(sectenData)
 
-  if (
-    sectenTarget2030 === null ||
-    sectenTarget2050 === null ||
-    latestSectenYear === null ||
-    latestSectenEmissions === null
-  ) {
-    return dataPoints
-  }
-
-  // When study start year is before 1990, use 1990 (SNBC_REFERENCE_YEAR) for rate calculation
-  // since SNBC trajectories are always based on 1990 emissions
-  const sectenYearForRateCalculation =
-    studyStartYear < SNBC_REFERENCE_YEAR ? SNBC_REFERENCE_YEAR : Math.min(studyStartYear, latestSectenYear)
-
-  const sectenEmissionsForRateCalculation = getSectenEmissionsByYear(sectenData, sectenYearForRateCalculation)
-  if (sectenEmissionsForRateCalculation === null) {
-    return dataPoints
-  }
-
-  const sectenRateTo2030 = calculateSectenAnnualRateTo2030(
-    sectenTarget2030,
-    sectenYearForRateCalculation,
-    sectenEmissionsForRateCalculation,
-  )
-  if (sectenRateTo2030 === null) {
-    return dataPoints
-  }
-
-  const sectenRateFrom2030To2050 = calculateAnnualRateFrom2030To2050(sectenTarget2030, sectenTarget2050)
-  if (sectenRateFrom2030To2050 === null) {
+  if (latestSectenYear === null || latestSectenEmissions === null) {
     return dataPoints
   }
 

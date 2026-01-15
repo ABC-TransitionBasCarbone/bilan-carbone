@@ -11,7 +11,7 @@ import { getTrajectoryTypeLabel } from '@/utils/trajectory'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { Chip } from '@mui/material'
-import { TrajectoryType } from '@prisma/client'
+import { SectenInfo, TrajectoryType } from '@prisma/client'
 import { ColumnDef, getCoreRowModel, getExpandedRowModel, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
 import Fuse from 'fuse.js'
@@ -54,6 +54,7 @@ interface Props {
   studyId: string
   studyYear: number
   searchFilter?: string
+  sectenData: SectenInfo[]
 }
 
 const fuseOptions = {
@@ -69,6 +70,7 @@ const TrajectoryObjectivesTable = ({
   studyId,
   studyYear,
   searchFilter = '',
+  sectenData,
 }: Props) => {
   const tAction = useTranslations('common.action')
   const t = useTranslations('study.transitionPlan.objectives')
@@ -201,7 +203,7 @@ const TrajectoryObjectivesTable = ({
             return null
           }
 
-          return rate !== undefined ? `${formatNumber(rate * 100, 2)}%` : null
+          return rate !== undefined ? `${formatNumber(rate * 100, 1)}%` : null
         },
       },
       {
@@ -325,6 +327,7 @@ const TrajectoryObjectivesTable = ({
           onSuccess={handleEditSuccess}
           trajectory={editTrajectory}
           studyYear={studyYear}
+          sectenData={sectenData}
         />
       )}
     </>

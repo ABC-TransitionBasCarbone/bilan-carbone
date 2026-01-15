@@ -96,6 +96,7 @@ interface CalculateCustomTrajectoryParams {
   trajectoryType?: TrajectoryType
   minYear?: number
   maxYear?: number
+  sectenData?: SectenInfo[]
 }
 
 interface CalculateActionBasedTrajectoryParams {
@@ -152,10 +153,19 @@ export const calculateTrajectoryYearBounds = (
   const selectedCustomTrajectories = trajectories.filter((t) => selectedCustomTrajectoryIds.includes(t.id))
   if (selectedCustomTrajectories.length > 0) {
     // Get earliest reference year for min year
-    const earliestReferenceYear = Math.min(
-      ...selectedCustomTrajectories.map((t) => t.referenceYear!).filter((year) => year !== null),
+    const referenceYears = selectedCustomTrajectories.map((t) => t.referenceYear).filter((year) => year !== null)
+    if (referenceYears.length > 0) {
+      const earliestReferenceYear = Math.min(...referenceYears)
+      minYear = Math.min(minYear, earliestReferenceYear)
+    }
+
+    // For custom SNBC trajectories without a referenceYear, use SNBC_REFERENCE_YEAR (1990)
+    const hasCustomSNBCWithoutReferenceYear = selectedCustomTrajectories.some(
+      (t) => (t.type === 'SNBC_GENERAL' || t.type === 'SNBC_SECTORAL') && t.referenceYear === null,
     )
-    minYear = Math.min(minYear, earliestReferenceYear)
+    if (hasCustomSNBCWithoutReferenceYear) {
+      minYear = Math.min(minYear, SNBC_REFERENCE_YEAR)
+    }
 
     // Get latest objective year for max year
     const latestObjectiveYear = Math.max(
@@ -222,6 +232,7 @@ const getCustomTrajectoryEmissionsForYear = (
   pastStudies: PastStudy[],
   studyStartYear: number,
   studyEmissions: number,
+  sectenData: SectenInfo[],
 ): number | null => {
   const baseTrajectoryWithoutOvershoot = calculateCustomTrajectory({
     studyEmissions,
@@ -231,6 +242,7 @@ const getCustomTrajectoryEmissionsForYear = (
     trajectoryType: trajectory.type,
     minYear: Math.min(year, SBTI_START_YEAR),
     maxYear: undefined,
+    sectenData,
   })
 
   return getTrajectoryEmissionsAtYear(baseTrajectoryWithoutOvershoot, year)
@@ -740,6 +752,7 @@ export const calculateCustomTrajectory = ({
   trajectoryType,
   minYear,
   maxYear,
+  sectenData = [],
 }: CalculateCustomTrajectoryParams): TrajectoryDataPoint[] => {
   if (objectives.length === 0) {
     return []
@@ -757,6 +770,18 @@ export const calculateCustomTrajectory = ({
         maxYear,
       })
     }
+  }
+
+  if (trajectoryType === TrajectoryType.SNBC_GENERAL) {
+    return calculateSNBCTrajectory({
+      studyEmissions,
+      studyStartYear,
+      sectenData,
+      pastStudies,
+      displayCurrentStudyValueOnTrajectory: true,
+      overshootAdjustment: undefined,
+      maxYear,
+    })
   }
 
   const dataPoints: TrajectoryDataPoint[] = []
@@ -819,8 +844,10 @@ export const getTrajectoryTypeLabel = (type: TrajectoryType, t: Translations) =>
       return 'SBTi 1.5°C'
     case TrajectoryType.SBTI_WB2C:
       return 'SBTi WB2C'
-    case TrajectoryType.SNBC:
-      return 'SNBC'
+    case TrajectoryType.SNBC_GENERAL:
+      return t('snbcGeneral')
+    case TrajectoryType.SNBC_SECTORAL:
+      return t('snbcSectoral')
     case TrajectoryType.CUSTOM:
       return t('custom')
     default:
@@ -1064,6 +1091,7 @@ export const getCustomData = (
   pastStudyReference: PastStudy | null,
   minYear: number,
   maxYear: number,
+  sectenData: SectenInfo[],
 ): Array<{ id: string; data: TrajectoryData }> => {
   const customTrajectoriesData: Array<{ id: string; data: TrajectoryData }> = []
   const selectedCustomTrajectories = trajectories.filter((t) => selectedCustomTrajectoryIds.includes(t.id))
@@ -1080,6 +1108,7 @@ export const getCustomData = (
         pastStudies,
         studyStartYear,
         totalCo2,
+        sectenData,
       )
     } else if (pastStudyReference) {
       referenceYear = pastStudyReference.year
@@ -1108,6 +1137,7 @@ export const getCustomData = (
             trajectoryType: customTrajectory.type,
             minYear,
             maxYear,
+            sectenData,
           }),
           withinThreshold: true,
         },
@@ -1125,6 +1155,7 @@ export const getCustomData = (
         trajectoryType: customTrajectory.type,
         minYear,
         maxYear,
+        sectenData,
       })
 
       const referenceEmissionsForStudyStartYear = getTrajectoryEmissionsAtYear(referenceTrajectory, studyStartYear)
@@ -1148,6 +1179,7 @@ export const getCustomData = (
         trajectoryType: customTrajectory.type,
         minYear,
         maxYear,
+        sectenData,
       })
 
       customTrajectoriesData.push({
@@ -1290,6 +1322,7 @@ export const calculateTrajectoriesWithHistory = ({
     referenceStudyData,
     minYear,
     maxYear,
+    sectenData,
   )
 
   const actionBasedData = getActionBasedData(

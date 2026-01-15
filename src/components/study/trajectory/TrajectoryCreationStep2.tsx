@@ -15,28 +15,38 @@ import styles from './TrajectoryCreationModal.module.css'
 
 interface Props {
   isSBTI: boolean
+  isSNBC: boolean
   trajectoryType: TrajectoryType
   control: Control<TrajectoryFormData>
   showTrajectoryTypeSelector: boolean
   handleModeSelect: (type: TrajectoryType) => void
   studyYear: number
+  snbcRates: { rateTo2030: number; rateFrom2030To2050: number } | null
 }
 
 const TrajectoryCreationStep2 = ({
   isSBTI,
+  isSNBC,
   trajectoryType,
   control,
   showTrajectoryTypeSelector,
   handleModeSelect,
   studyYear,
+  snbcRates,
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectoryModal')
   const reductionRate = getReductionRatePerType(trajectoryType)
   const maxReferenceDate = dayjs().year(studyYear)
 
+  const snbcReductionRate2030 = snbcRates?.rateTo2030
+  const snbcReductionRate2050 = snbcRates?.rateFrom2030To2050
+
   const getMainTrajectoryType = () => {
     if (trajectoryType === TrajectoryType.SBTI_15 || trajectoryType === TrajectoryType.SBTI_WB2C) {
       return 'SBTI'
+    }
+    if (trajectoryType === TrajectoryType.SNBC_GENERAL || trajectoryType === TrajectoryType.SNBC_SECTORAL) {
+      return 'SNBC'
     }
     return trajectoryType
   }
@@ -44,6 +54,8 @@ const TrajectoryCreationStep2 = ({
   const handleMainTypeChange = (value: string) => {
     if (value === 'SBTI') {
       handleModeSelect(TrajectoryType.SBTI_15)
+    } else if (value === 'SNBC') {
+      handleModeSelect(TrajectoryType.SNBC_GENERAL)
     } else {
       handleModeSelect(value as TrajectoryType)
     }
@@ -58,7 +70,7 @@ const TrajectoryCreationStep2 = ({
           </Typography>
           <RadioGroup row value={getMainTrajectoryType()} onChange={(e) => handleMainTypeChange(e.target.value)}>
             <FormControlLabel value="SBTI" control={<Radio />} label={t('sbti.title')} />
-            <FormControlLabel value={TrajectoryType.SNBC} control={<Radio />} label={t('snbc.title')} disabled />
+            <FormControlLabel value="SNBC" control={<Radio />} label={t('snbc.title')} />
             <FormControlLabel
               value={TrajectoryType.CUSTOM}
               control={<Radio />}
@@ -69,7 +81,7 @@ const TrajectoryCreationStep2 = ({
       ) : (
         <div className={classNames(styles.trajectoryOptionSelected, 'p1 wfit')}>
           <Typography variant="body1" fontWeight={600}>
-            {isSBTI ? t(`selectedTrajectory.${trajectoryType}`) : t('selectedTrajectory.CUSTOM')}
+            {isSBTI || isSNBC ? t(`selectedTrajectory.${trajectoryType}`) : t('selectedTrajectory.CUSTOM')}
           </Typography>
         </div>
       )}
@@ -122,6 +134,33 @@ const TrajectoryCreationStep2 = ({
         />
       )}
 
+      {isSNBC && (
+        <Controller
+          name="trajectoryType"
+          control={control}
+          render={({ field }) => (
+            <div>
+              <Typography variant="body1" fontWeight={600}>
+                {t('snbcType.title')}
+              </Typography>
+              <RadioGroup row value={field.value} onChange={(e) => field.onChange(e.target.value)}>
+                <FormControlLabel
+                  value={TrajectoryType.SNBC_GENERAL}
+                  control={<Radio />}
+                  label={t('snbcType.generale')}
+                />
+                <FormControlLabel
+                  value={TrajectoryType.SNBC_SECTORAL}
+                  control={<Radio />}
+                  label={t('snbcType.sectorielle')}
+                  disabled
+                />
+              </RadioGroup>
+            </div>
+          )}
+        />
+      )}
+
       <div>
         <Typography variant="body1" fontWeight="bold" className="mb1">
           {t('objectives.title')}
@@ -131,20 +170,25 @@ const TrajectoryCreationStep2 = ({
             {customRich(t, 'objectives.sbtiDescription')}
           </Typography>
         )}
+        {isSNBC && (
+          <Typography variant="body2" color="textSecondary" className="mb1">
+            {customRich(t, 'objectives.snbcDescription')}
+          </Typography>
+        )}
 
         <div className="flex gapped15">
           <ObjectiveCard
-            name={isSBTI ? t('objectives.horizon2030') : ''}
-            reductionRate={reductionRate}
-            isEditable={!isSBTI}
+            name={isSBTI || isSNBC ? t('objectives.horizon2030') : ''}
+            reductionRate={isSNBC ? snbcReductionRate2030 : reductionRate}
+            isEditable={!isSBTI && !isSNBC}
             control={control}
             index={0}
           />
 
           <ObjectiveCard
-            name={isSBTI ? t('objectives.horizon2050') : ''}
-            reductionRate={reductionRate}
-            isEditable={!isSBTI}
+            name={isSBTI || isSNBC ? t('objectives.horizon2050') : ''}
+            reductionRate={isSNBC ? snbcReductionRate2050 : reductionRate}
+            isEditable={!isSBTI && !isSNBC}
             control={control}
             index={1}
           />

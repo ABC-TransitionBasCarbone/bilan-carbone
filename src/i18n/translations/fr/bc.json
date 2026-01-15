@@ -1025,9 +1025,16 @@
           "15": "Alignée 1,5°C",
           "wb2c": "WB2C (Well below 2 degrees)"
         },
+        "snbcType": {
+          "title": "Type de trajectoire SNBC",
+          "generale": "Générale",
+          "sectorielle": "Sectorielle"
+        },
         "selectedTrajectory": {
           "SBTI_15": "Je suis la trajectoire de référence SBTi",
           "SBTI_WB2C": "Je suis la trajectoire de référence SBTi",
+          "SNBC_GENERAL": "Je suis la trajectoire de référence SNBC",
+          "SNBC_SECTORAL": "Je suis la trajectoire de référence SNBC",
           "CUSTOM": "Je suis ma propre trajectoire"
         },
         "name": "Nom de ma trajectoire",
@@ -1040,6 +1047,7 @@
         "objectives": {
           "title": "Objectifs de réduction",
           "sbtiDescription": "Ces objectifs de réduction sont liés à la trajectoire de référence SBTi et sont prédéfinis. Vous pourrez ajouter des objectifs intermédiaires dans la rubrique \"Mes objectifs de réduction\"",
+          "snbcDescription": "Ces objectifs de réduction sont liés à la trajectoire de référence SNBC et sont prédéfinis. Vous pourrez ajouter des objectifs intermédiaires dans la rubrique \"Mes objectifs de réduction\"",
           "global": "OBJECTIF GLOBAL",
           "horizon2030": "Horizon 2030",
           "horizon2050": "Horizon 2050",
@@ -1057,6 +1065,8 @@
       "objectives": {
         "title": "Objectifs de réduction",
         "custom": "Personnalisée",
+        "snbcGeneral": "SNBC Générale",
+        "snbcSectoral": "SNBC Sectorielle",
         "objectiveNumber": "Objectif {number}",
         "search": "Cherchez une trajectoire",
         "add": "Ajouter une trajectoire",

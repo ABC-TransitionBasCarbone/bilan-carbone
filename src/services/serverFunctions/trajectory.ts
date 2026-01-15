@@ -59,16 +59,17 @@ export const createTrajectoryWithObjectives = async (input: CreateTrajectoryInpu
 
     let objectives: { targetYear: number; reductionRate: number }[]
 
-    const defaultObjectives = getDefaultObjectivesForTrajectoryType(input.type)
-    if (defaultObjectives) {
-      objectives = defaultObjectives
-    } else if (input.type === TrajectoryType.CUSTOM) {
-      if (!input.objectives || input.objectives.length < 1) {
-        throw new Error('Custom trajectory must have at least 1 objective')
-      }
+    if (input.objectives && input.objectives.length > 0) {
+      // Use provided objectives, for now only relevamt for SNBC_GENERAL where objectives are calculated client side
       objectives = input.objectives
     } else {
-      throw new Error(`${input.type} mode is not yet supported`)
+      // Try to get default objectives for this trajectory type
+      const defaultObjectives = getDefaultObjectivesForTrajectoryType(input.type)
+      if (defaultObjectives) {
+        objectives = defaultObjectives
+      } else {
+        throw new Error(`${input.type} mode requires objectives to be provided`)
+      }
     }
 
     return dbCreateTrajectoryWithObjectives({

@@ -131,7 +131,8 @@ model ActionStep {
 enum TrajectoryType {
   SBTI_15
   SBTI_WB2C
-  SNBC
+  SNBC_GENERAL
+  SNBC_SECTORAL
   CUSTOM
 
   @@map("trajectory_type")
