@@ -7,7 +7,7 @@ jest.mock('./study', () => ({ hasSufficientLevel: jest.fn() }))
 
 describe('Uncertainty Service', () => {
   describe('getSquaredStandardDeviationForQuality', () => {
-    it('should return null if no quality is present', () => {
+    it('should return worst standard deviation if no quality is present', () => {
       const result = getSquaredStandardDeviationForQuality({
         completeness: null,
         geographicRepresentativeness: null,
@@ -15,7 +15,7 @@ describe('Uncertainty Service', () => {
         technicalRepresentativeness: null,
         temporalRepresentativeness: null,
       })
-      expect(result).toBe(null)
+      expect(result).toBe(1.0894117517)
     })
 
     it('should compute standard deviation based on available inputs', () => {

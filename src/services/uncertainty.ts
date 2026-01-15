@@ -30,19 +30,32 @@ export const specificFEQualityKeysLinks: Record<(typeof qualityKeys)[number], (t
     completeness: 'feCompleteness',
   }
 
-const getQualityValue = (
-  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
-  column: (typeof qualityKeys)[number],
-) =>
+type specificFEQualities = Pick<
+  FullStudy['emissionSources'][0],
+  | 'feCompleteness'
+  | 'feTechnicalRepresentativeness'
+  | 'feGeographicRepresentativeness'
+  | 'feReliability'
+  | 'feTemporalRepresentativeness'
+> & {
+  emissionFactor: Pick<
+    EmissionFactor,
+    | 'completeness'
+    | 'technicalRepresentativeness'
+    | 'geographicRepresentativeness'
+    | 'reliability'
+    | 'temporalRepresentativeness'
+  > | null
+}
+
+const getQualityValue = (emissionSource: specificFEQualities, column: (typeof qualityKeys)[number]) =>
   emissionSource[specificFEQualityKeysLinks[column]]
     ? emissionSource[specificFEQualityKeysLinks[column]]
     : emissionSource.emissionFactor
       ? emissionSource.emissionFactor[column]
       : null
 
-export const getSpecificEmissionFactorQuality = (
-  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
-) =>
+export const getSpecificEmissionFactorQuality = (emissionSource: specificFEQualities) =>
   qualityKeys.reduce(
     (res, column) => ({ ...res, [column]: getQualityValue(emissionSource, column) }),
     {} as Record<(typeof qualityKeys)[number], number>,
@@ -58,43 +71,28 @@ const coeffs: Record<keyof Quality, number[]> = {
   completeness: [1.2, 1.1, 1.05, 1.02, 1],
 }
 
-// TODO : A changer, par défaut si on ne trouve pas on met très mauvais
-export const getSquaredStandardDeviationForQuality = (quality: Quality) => {
+export const getSquaredStandardDeviationForQuality = (quality: Quality | null) => {
   const qualities = Object.entries(coeffs)
     .map(([key, values]) => {
-      const value = Number(quality[key as keyof Quality])
+      const value = quality ? Number(quality[key as keyof Quality]) : null
       if (!value || Number.isNaN(value)) {
-        return undefined
+        return 1 // if quality is not defined, we consider the worst case
       }
       // -1 because the values are 0-indexed
       return values[value - 1]
     })
     .filter((value) => value !== undefined)
 
-  if (qualities.length === 0) {
-    return null
-  }
-
-  return Math.exp(
-    Math.sqrt(
-      qualities.filter((value) => value !== null).reduce((acc, value) => acc + Math.pow(Math.log(value), 2), 0),
-    ),
-  )
+  return Math.exp(Math.sqrt(qualities.reduce((acc, value) => acc + Math.pow(Math.log(value), 2), 0)))
 }
 
 export const getSquaredStandardDeviationForEmissionSource = (
   emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][number],
 ) => {
-  if (!emissionSource.emissionFactor || emissionSource.value === null) {
-    return null
-  }
   const emissionSquaredStandardDeviation = getSquaredStandardDeviationForQuality(emissionSource)
   const factorSquaredStandardDeviation = getSquaredStandardDeviationForQuality(
     getSpecificEmissionFactorQuality(emissionSource),
   )
-  if (emissionSquaredStandardDeviation === null || factorSquaredStandardDeviation === null) {
-    return null
-  }
 
   return Math.exp(
     2 *
@@ -107,7 +105,7 @@ export const getSquaredStandardDeviationForEmissionSource = (
 
 //TODO : idem ici changer pour prendre le cas très mauvais si ssd est pas défini
 export const getSquaredStandardDeviationForEmissionSourceArray = (
-  emissionSources: { emissionValue: number | null; squaredStandardDeviation: number | null }[],
+  emissionSources: { emissionValue: number | null; squaredStandardDeviation: number }[],
 ) => {
   const total = emissionSources.reduce((acc, es) => (es.emissionValue ? acc + es.emissionValue : acc), 0)
 
@@ -119,8 +117,7 @@ export const getSquaredStandardDeviationForEmissionSourceArray = (
         }
 
         return (
-          acc +
-          Math.pow(es.emissionValue / total, 2) * Math.pow(Math.log(Math.sqrt(es.squaredStandardDeviation || 1)), 2)
+          acc + Math.pow(es.emissionValue / total, 2) * Math.pow(Math.log(Math.sqrt(es.squaredStandardDeviation)), 2)
         )
       }, 0),
     ),
@@ -155,7 +152,7 @@ export const getQualitativeUncertaintyFromQuality = (quality: Quality) => {
 export const getEmissionSourcesConfidenceInterval = (
   emissionSources: (Pick<FullStudy['emissionSources'][number], 'emissionFactor'> & {
     emissionValue: number
-    squaredStandardDeviation: number | null
+    squaredStandardDeviation: number
   })[],
 ) => {
   const totalEmissions = getEmissionSourcesTotalCo2(emissionSources)
@@ -169,7 +166,7 @@ export const getConfidenceInterval = (emission: number, squaredStandardDeviation
 ]
 
 export const getQualitativeUncertaintyForEmissionSources = (
-  emissionSources: { emissionValue: number | null; squaredStandardDeviation: number | null }[],
+  emissionSources: { emissionValue: number | null; squaredStandardDeviation: number }[],
 ) =>
   getQualitativeUncertaintyFromSquaredStandardDeviation(
     getSquaredStandardDeviationForEmissionSourceArray(emissionSources),

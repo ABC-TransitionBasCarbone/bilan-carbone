@@ -52,7 +52,7 @@ export type BegesPostInfos = {
   other: number
   total: number
   co2b: number
-  squaredStandardDeviation: number | null
+  squaredStandardDeviation: number
 }
 
 interface EmissionFactor {
@@ -157,11 +157,9 @@ const sumLines = (lines: Omit<BegesPostInfos, 'rule'>[]) => {
     other: lines.reduce((acc, line) => acc + line.other, 0),
     total,
     co2b: lines.reduce((acc, line) => acc + line.co2b, 0),
-    squaredStandardDeviation: total
-      ? getSquaredStandardDeviationForEmissionSourceArray(
-          lines.map((line) => ({ emissionValue: line.total, squaredStandardDeviation: line.squaredStandardDeviation })),
-        )
-      : null,
+    squaredStandardDeviation: getSquaredStandardDeviationForEmissionSourceArray(
+      lines.map((line) => ({ emissionValue: line.total, squaredStandardDeviation: line.squaredStandardDeviation })),
+    ),
   }
 }
 
