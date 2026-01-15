@@ -1100,7 +1100,8 @@
           "potential": "Potentiel de réduction",
           "owner": "Responsable",
           "budget": "Budget",
-          "errorChangingEnabled": "Erreur lors du changement de statut de l'action"
+          "errorChangingEnabled": "Erreur lors du changement de statut de l'action",
+          "relevance": "Niveaux de pertinence"
         },
         "addModal": {
           "add": "Ajouter une action",

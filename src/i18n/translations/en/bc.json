@@ -1100,7 +1100,8 @@
           "potential": "Reduction potential",
           "owner": "Owner",
           "budget": "Budget",
-          "errorChangingEnabled": "Error changing action status"
+          "errorChangingEnabled": "Error changing action status",
+          "relevance": "Relevance levels"
         },
         "addModal": {
           "add": "Add an action",
