@@ -117,6 +117,8 @@ const EngagementActionModal = ({ action, open, onClose }: Props) => {
             label={`${t('description')} *`}
             placeholder={t('descriptionPlaceholder')}
             data-testid="add-action-description"
+            multiline
+            minRows={2}
           />
           <FormDatePicker control={control} translation={t} name="date" label={`${t('date')} *`} />
           <FormAutocomplete
