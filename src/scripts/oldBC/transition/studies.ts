@@ -199,7 +199,7 @@ const parseStudySites = (studySitesWorksheet: StudySitesWorkSheet): Map<string, 
     }, new Map<string, StudySite[]>())
 }
 
-const getType = (type: string) => {
+const getType = (type: string): StudyExport | null => {
   if (type.startsWith('BEGES')) {
     return StudyExport.Beges
   } else if (type === 'GHG-P') {
@@ -223,44 +223,38 @@ const getControl = (control: string) => {
   }
 }
 
-const parseStudyExports = (studyExportsWorksheet: StudyExportsWorkSheet): Map<string, Export[]> => {
-  return studyExportsWorksheet
-    .getRows()
-    .filter((row) => row.type !== 'NULL')
-    .map<[string, Export | null]>((row) => {
-      const type = getType(row.type as string)
-      const control = getControl(row.control as string)
-      if (!type) {
-        console.warn(`Type ${type} invalide`)
-        return [row.studyOldBCId as string, null]
-      }
-      if (!control) {
-        console.warn(`Control ${control} invalide`)
-        return [row.studyOldBCId as string, null]
-      }
-      return [
-        row.studyOldBCId as string,
-        {
-          type: type,
-          control: control,
-        },
-      ]
-    })
-    .reduce((accumulator, currentValue) => {
-      const currentExport = currentValue[1]
-      if (currentExport === null) {
-        return accumulator
-      }
-      const exports = accumulator.get(currentValue[0])
-      if (exports) {
-        if (!exports.some((e) => e.type === currentExport.type)) {
-          exports.push(currentExport)
+const parseStudyExports = (
+  studyExportsWorksheet: StudyExportsWorkSheet,
+): Record<string, { types: StudyExport[]; control: ControlMode }> => {
+  const studiesExport: Record<string, { types: StudyExport[]; control: ControlMode }> = {}
+
+  const rows = studyExportsWorksheet.getRows().filter((row) => row.type !== 'NULL')
+
+  for (const currentRow of rows) {
+    const type = getType(currentRow.type as string)
+    const control = getControl(currentRow.control as string)
+
+    if (!type) {
+      console.warn(`Type ${type} invalide`)
+    } else if (!control) {
+      console.warn(`Control ${control} invalide`)
+    } else {
+      if (studiesExport[currentRow.studyOldBCId]) {
+        if (studiesExport[currentRow.studyOldBCId].control !== control) {
+          console.warn('mode de controle différent pour une même étude', currentRow.studyOldBCId)
+        } else {
+          studiesExport[currentRow.studyOldBCId].types.push(type)
         }
       } else {
-        accumulator.set(currentValue[0], [currentExport])
+        studiesExport[currentRow.studyOldBCId] = {
+          types: [type],
+          control: control,
+        }
       }
-      return accumulator
-    }, new Map<string, Export[]>())
+    }
+  }
+
+  return studiesExport
 }
 
 const mapToSubPost = (newSubPost: string) => {
@@ -783,7 +777,7 @@ export const uploadStudies = async (
 
   const createdStudyExport = await transaction.studyExport.createMany({
     data: Array.from(
-      studyExports.entries().flatMap(([studyOldBCId, exportsForThisStudy]) => {
+      Object.entries(studyExports).flatMap(([studyOldBCId, exportForThisStudy]) => {
         // N'importer que les exports d'études nouvelles.
         if (!newStudies.some((newStudy) => newStudy.oldBCId === studyOldBCId)) {
           return []
@@ -797,12 +791,10 @@ export const uploadStudies = async (
           return []
         }
 
-        return exportsForThisStudy
-          .map((studyExport) => ({
-            ...studyExport,
-            studyId: existingStudy.id,
-          }))
-          .filter((studyExport) => studyExport !== null)
+        return {
+          ...exportForThisStudy,
+          studyId: existingStudy.id,
+        }
       }),
     ),
   })
@@ -940,12 +932,12 @@ export const uploadStudies = async (
               }
             }
 
-            const exports = studyExports.get(studyOldBCId) ?? []
+            const exports = studyExports[studyOldBCId] ?? []
             const subPostCaracterisation = getCaracterisationsBySubPost(
               studyEmissionSource.subPost,
               Environment.BC,
-              exports.map((studyExport) => studyExport.type),
-              exports[0].control,
+              exports.types,
+              exports.control,
             )
 
             let caracterisation = caracterisationMapping[studyEmissionSource.caracterisation]
