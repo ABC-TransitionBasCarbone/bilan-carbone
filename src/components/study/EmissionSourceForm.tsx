@@ -129,7 +129,7 @@ const EmissionSourceForm = ({
 
   const emissionResults = useMemo(() => getEmissionResults(emissionSource, environment), [emissionSource, environment])
 
-  const qualityRating = useMemo(
+  const feQualityRating = useMemo(
     () =>
       selectedFactor ? getQualitativeUncertaintyFromQuality(getSpecificEmissionFactorQuality(emissionSource)) : null,
     [selectedFactor, emissionSource],
@@ -369,9 +369,9 @@ const EmissionSourceForm = ({
             {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor, environment))}
             {tResultUnits(StudyResultUnit.K)}/
             {selectedFactor.unit === Unit.CUSTOM ? selectedFactor.customUnit : getUnitLabel(selectedFactor.unit || '')}{' '}
-            {qualityRating && (
+            {feQualityRating && (
               <>
-                - {tQuality('name')} {tQuality(qualityRating.toString())}
+                - {tQuality('name')} {tQuality(feQualityRating.toString())}
                 {editSpecificQuality ? (
                   <HideIcon
                     className={classNames(styles.editFEQualityButton, 'ml-4')}
