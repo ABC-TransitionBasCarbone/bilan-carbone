@@ -1,7 +1,8 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { toCamelCase } from '@/utils/string'
-import { EmissionSourceCaracterisation, ExportRule, Import } from '@prisma/client'
+import { getBaseFilteredEmissionSources } from '@/utils/study'
+import { EmissionFactorBase, EmissionSourceCaracterisation, ExportRule, Import } from '@prisma/client'
 import { convertTiltSubPostToBCSubPost } from '../posts'
 import {
   getSquaredStandardDeviationForEmissionSource,
@@ -102,12 +103,16 @@ export const computeResult = (
   allRules: string[],
   getEmissionValue: (emissionSource: EmissionSource) => number,
   getLine: GetLineFunctionType,
+  base?: EmissionFactorBase,
 ): PostInfos[] => {
   const results: Record<string, Omit<PostInfos, 'rule' | 'PostInfos'>[]> = allRules.reduce(
     (acc, rule) => ({ ...acc, [rule]: [] }),
     {},
   )
-  const siteEmissionSources = getSiteEmissionSources(study.emissionSources, studySite)
+  const siteEmissionSources = getBaseFilteredEmissionSources(
+    getSiteEmissionSources(study.emissionSources, studySite),
+    base,
+  )
 
   siteEmissionSources
     .map((emissionSource) => ({ ...emissionSource, subPost: convertTiltSubPostToBCSubPost(emissionSource.subPost) }))
