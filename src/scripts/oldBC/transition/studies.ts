@@ -199,7 +199,7 @@ const parseStudySites = (studySitesWorksheet: StudySitesWorkSheet): Map<string, 
     }, new Map<string, StudySite[]>())
 }
 
-const getType = (type: string): StudyExport | null => {
+const getType = (type: string) => {
   if (type.startsWith('BEGES')) {
     return StudyExport.Beges
   } else if (type === 'GHG-P') {
