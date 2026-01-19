@@ -782,8 +782,8 @@
         "sessions": "Sessions"
       },
       "ratios": {
-        "all": "Ratios - All cinemas",
-        "site": "Ratios - {site}"
+        "all": "Carbon intensities - All cinemas",
+        "site": "Carbon intensities - {site}"
       },
       "additionalInfo": "Additional information"
     },

@@ -782,8 +782,8 @@
         "sessions": "Séances"
       },
       "ratios": {
-        "all": "Ratios - Tous cinémas",
-        "site": "Ratios - {site}"
+        "all": "Intensités carbone - Tous cinémas",
+        "site": "Intensités carbone - {site}"
       },
       "additionalInfo": "Informations complémentaires"
     },
