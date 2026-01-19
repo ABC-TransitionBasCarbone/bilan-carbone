@@ -6,11 +6,11 @@ import { getCutEngine } from '../publicodes/cut-engine'
 import { CutRuleName, CutSituation } from '../publicodes/types'
 
 export const {
-  PublicodesSituationProvider: CutPublicodesSituationProvider,
-  usePublicodesSituation: useCutPublicodesSituation,
-  PublicodesFormProvider: CutPublicodesFormProvider,
+  PublicodesSituationProvider: CutSituationProvider,
+  usePublicodesSituation: useCutSituation,
+  PublicodesFormProvider: CutFormProvider,
   usePublicodes: useCutPublicodes,
-  usePublicodesAutoSave: useCutPublicodesAutoSave,
+  usePublicodesAutoSave: useCutAutoSave,
 } = createPublicodesContext<CutRuleName, CutSituation>({
   getEngine: getCutEngine,
   modelVersion: PUBLICODES_COUNT_VERSION,

@@ -1,6 +1,5 @@
 import { FullStudy } from '@/db/study'
 import EnvironmentLoader from '@/environments/core/utils/EnvironmentLoader'
-import { useCutPublicodesSituation } from '@/environments/cut/context/publicodesContext'
 import { getQuestionProgressBySubPost, StatsResult } from '@/services/publicodes/questionProgress'
 import { getSimplifiedPublicodesConfig } from '@/services/publicodes/simplifiedPublicodesConfig'
 import { BaseResultsByPost } from '@/services/results/consolidated'
@@ -29,8 +28,9 @@ const StyledGrid = styled('div')({
 const AllPostsInfography = ({ study, environment }: Props) => {
   const tUnits = useTranslations('study.results.units')
   const tPost = useTranslations('emissionFactors.post')
-  const { engine, situation, isLoading } = useCutPublicodesSituation()
-  const config = getSimplifiedPublicodesConfig(environment)
+  // TODO: handle more properly the case where config does not exist
+  const config = getSimplifiedPublicodesConfig(environment)!
+  const { engine, situation, isLoading } = config.useSituation()
 
   const { questionProgress, publicodesResults } = useMemo<{
     questionProgress: StatsResult

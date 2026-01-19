@@ -1,6 +1,7 @@
 import { FullStudy } from '@/db/study'
+import { ClicksonSituationProvider } from '@/environments/clickson/context/publicodesContext'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import { CutPublicodesSituationProvider } from '@/environments/cut/context/publicodesContext'
+import { CutSituationProvider } from '@/environments/cut/context/publicodesContext'
 import AllPostsInfographySimplified from '@/environments/simplified/study/infography/AllPostsInfography'
 import AllPostsInfographyTilt from '@/environments/tilt/study/infography/AllPostsInfography'
 import { CutPost, TiltPost } from '@/services/posts'
@@ -53,16 +54,16 @@ const AllPostsInfographyContainer = ({ study, studySite }: Props) => {
       defaultComponent={<AllPostsInfography study={study} data={data} />}
       environmentComponents={{
         [Environment.CUT]: (
-          <CutPublicodesSituationProvider studyId={study.id} studySiteId={studySite}>
+          <CutSituationProvider studyId={study.id} studySiteId={studySite}>
             <AllPostsInfographySimplified study={study} environment={Environment.CUT} />
-          </CutPublicodesSituationProvider>
+          </CutSituationProvider>
+        ),
+        [Environment.CLICKSON]: (
+          <ClicksonSituationProvider studyId={study.id} studySiteId={studySite}>
+            <AllPostsInfographySimplified study={study} environment={Environment.CLICKSON} />
+          </ClicksonSituationProvider>
         ),
         [Environment.TILT]: <AllPostsInfographyTilt study={study} data={data} />,
-        [Environment.CLICKSON]: (
-          // TODO: implement Clickson Publicodes context when available or
-          // adapt the existing one to be parametrized by the current environment.
-          <AllPostsInfographySimplified study={study} environment={Environment.CLICKSON} />
-        ),
       }}
     />
   )

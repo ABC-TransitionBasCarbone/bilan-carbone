@@ -1,18 +1,31 @@
 import { FormLayout } from '@/components/publicodes-form/layouts/formLayout'
-import { CutPublicodesSituationProvider, useCutPublicodesSituation } from '@/environments/cut/context/publicodesContext'
+import { ClicksonSituationProvider, useClicksonSituation } from '@/environments/clickson/context/publicodesContext'
+import { getClicksonEngine } from '@/environments/clickson/publicodes/clickson-engine'
+import {
+  getFormLayoutsForSubPostClickson,
+  getPostRuleNameClickson,
+  getSubPostRuleNameClickson,
+} from '@/environments/clickson/publicodes/subPostMapping'
+import { CutSituationProvider, useCutSituation } from '@/environments/cut/context/publicodesContext'
 import { getCutEngine } from '@/environments/cut/publicodes/cut-engine'
 import {
-  getPostRuleName as getCutPostRuleName,
-  getSubPostRuleName as getCutSubPostRuleName,
   getFormLayoutsForSubPostCUT,
+  getPostRuleNameCut,
+  getSubPostRuleNameCut,
 } from '@/environments/cut/publicodes/subPostMapping'
-import { PublicodesSituationProviderProps } from '@/lib/publicodes/context/createPublicodesContext'
+import {
+  PublicodesSituationContextValue,
+  PublicodesSituationProviderProps,
+} from '@/lib/publicodes/context/createPublicodesContext'
 import { Environment, SubPost } from '@prisma/client'
-import Engine from 'publicodes'
+import Engine, { Situation } from 'publicodes'
 import { ComponentType } from 'react'
-import { CutPost, SimplifiedPost, subPostsByPostCUT } from '../posts'
+import { ClicksonPost, CutPost, SimplifiedPost, subPostsByPostClickson, subPostsByPostCUT } from '../posts'
 
-export interface SimplifiedPublicodesConfig {
+export interface SimplifiedPublicodesConfig<
+  RuleName extends string = string,
+  S extends Situation<RuleName> = Situation<string>,
+> {
   posts: SimplifiedPost[]
   subPostsByPost: Record<SimplifiedPost, SubPost[]>
   getFormLayout: (subPost: SubPost) => FormLayout<string>[]
@@ -20,31 +33,38 @@ export interface SimplifiedPublicodesConfig {
   getSubPostRuleName: (subPost: SubPost) => string | undefined
   getEngine: () => Engine<string>
   SituationProvider: ComponentType<PublicodesSituationProviderProps>
-  useSituation: () => {
-    engine: Engine<string>
-    situation: Record<string, unknown> | null
-    isLoading: boolean
-    error: string | null
-  }
+  useSituation: () => PublicodesSituationContextValue<RuleName, S>
 }
 
 const cutConfig: SimplifiedPublicodesConfig = {
   posts: Object.values(CutPost),
   subPostsByPost: subPostsByPostCUT as Record<SimplifiedPost, SubPost[]>,
   getFormLayout: getFormLayoutsForSubPostCUT,
-  getPostRuleName: getCutPostRuleName as (post: SimplifiedPost) => string,
-  getSubPostRuleName: getCutSubPostRuleName,
+  getPostRuleName: getPostRuleNameCut as (post: SimplifiedPost) => string,
+  getSubPostRuleName: getSubPostRuleNameCut,
   getEngine: getCutEngine,
-  SituationProvider: CutPublicodesSituationProvider,
-  useSituation: useCutPublicodesSituation,
+  SituationProvider: CutSituationProvider,
+  useSituation: useCutSituation,
 }
 
-const simplifiedPublicodesConfigMap: Partial<Record<Environment, SimplifiedPublicodesConfig>> = {
+const clicksonConfig: SimplifiedPublicodesConfig = {
+  posts: Object.values(ClicksonPost),
+  subPostsByPost: subPostsByPostClickson as Record<SimplifiedPost, SubPost[]>,
+  // TODO:
+  getFormLayout: getFormLayoutsForSubPostClickson,
+  // TODO:
+  getPostRuleName: getPostRuleNameClickson as (post: SimplifiedPost) => string,
+  getSubPostRuleName: getSubPostRuleNameClickson,
+  getEngine: getClicksonEngine,
+  SituationProvider: ClicksonSituationProvider,
+  useSituation: useClicksonSituation,
+}
+
+const SIMPLIFIED_PUBLICODES_CONFIGS: Partial<Record<Environment, SimplifiedPublicodesConfig>> = {
   [Environment.CUT]: cutConfig,
-  // TODO: add Clickson config when available
-  // [Environment.CLICKSON]: clicksonConfig,
+  [Environment.CLICKSON]: clicksonConfig,
 }
 
 export const getSimplifiedPublicodesConfig = (env: Environment): SimplifiedPublicodesConfig | undefined => {
-  return simplifiedPublicodesConfigMap[env]
+  return SIMPLIFIED_PUBLICODES_CONFIGS[env]
 }

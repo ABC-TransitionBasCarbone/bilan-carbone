@@ -3,11 +3,11 @@ import { CutPost } from '@/services/posts'
 import { SubPost } from '@prisma/client'
 import { CutRuleName } from './types'
 
-export const getPostRuleName = (post: CutPost): CutRuleName => {
+export const getPostRuleNameCut = (post: CutPost): CutRuleName => {
   return POST_TO_RULENAME[post]
 }
 
-export const getSubPostRuleName = (subPost: SubPost): CutRuleName | undefined => {
+export const getSubPostRuleNameCut = (subPost: SubPost): CutRuleName | undefined => {
   return SUBPOST_TO_RULENAME[subPost]
 }
 
