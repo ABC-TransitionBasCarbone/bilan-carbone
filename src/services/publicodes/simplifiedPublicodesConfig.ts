@@ -1,12 +1,22 @@
 import { FormLayout } from '@/components/publicodes-form/layouts/formLayout'
-import { ClicksonSituationProvider, useClicksonSituation } from '@/environments/clickson/context/publicodesContext'
+import {
+  ClicksonFormProvider,
+  ClicksonSituationProvider,
+  useClicksonPublicodes,
+  useClicksonSituation,
+} from '@/environments/clickson/context/publicodesContext'
 import { getClicksonEngine } from '@/environments/clickson/publicodes/clickson-engine'
 import {
   getFormLayoutsForSubPostClickson,
   getPostRuleNameClickson,
   getSubPostRuleNameClickson,
 } from '@/environments/clickson/publicodes/subPostMapping'
-import { CutSituationProvider, useCutSituation } from '@/environments/cut/context/publicodesContext'
+import {
+  CutFormProvider,
+  CutSituationProvider,
+  useCutPublicodes,
+  useCutSituation,
+} from '@/environments/cut/context/publicodesContext'
 import { getCutEngine } from '@/environments/cut/publicodes/cut-engine'
 import {
   getFormLayoutsForSubPostCUT,
@@ -14,6 +24,8 @@ import {
   getSubPostRuleNameCut,
 } from '@/environments/cut/publicodes/subPostMapping'
 import {
+  PublicodesFormContextValue,
+  PublicodesFormProviderProps,
   PublicodesSituationContextValue,
   PublicodesSituationProviderProps,
 } from '@/lib/publicodes/context/createPublicodesContext'
@@ -34,35 +46,35 @@ export interface SimplifiedPublicodesConfig<
   getEngine: () => Engine<string>
   SituationProvider: ComponentType<PublicodesSituationProviderProps>
   useSituation: () => PublicodesSituationContextValue<RuleName, S>
-}
-
-const cutConfig: SimplifiedPublicodesConfig = {
-  posts: Object.values(CutPost),
-  subPostsByPost: subPostsByPostCUT as Record<SimplifiedPost, SubPost[]>,
-  getFormLayout: getFormLayoutsForSubPostCUT,
-  getPostRuleName: getPostRuleNameCut as (post: SimplifiedPost) => string,
-  getSubPostRuleName: getSubPostRuleNameCut,
-  getEngine: getCutEngine,
-  SituationProvider: CutSituationProvider,
-  useSituation: useCutSituation,
-}
-
-const clicksonConfig: SimplifiedPublicodesConfig = {
-  posts: Object.values(ClicksonPost),
-  subPostsByPost: subPostsByPostClickson as Record<SimplifiedPost, SubPost[]>,
-  // TODO:
-  getFormLayout: getFormLayoutsForSubPostClickson,
-  // TODO:
-  getPostRuleName: getPostRuleNameClickson as (post: SimplifiedPost) => string,
-  getSubPostRuleName: getSubPostRuleNameClickson,
-  getEngine: getClicksonEngine,
-  SituationProvider: ClicksonSituationProvider,
-  useSituation: useClicksonSituation,
+  FormProvider: ComponentType<PublicodesFormProviderProps>
+  usePublicodesForm: () => PublicodesFormContextValue<RuleName, S>
 }
 
 const SIMPLIFIED_PUBLICODES_CONFIGS: Partial<Record<Environment, SimplifiedPublicodesConfig>> = {
-  [Environment.CUT]: cutConfig,
-  [Environment.CLICKSON]: clicksonConfig,
+  [Environment.CUT]: {
+    posts: Object.values(CutPost),
+    subPostsByPost: subPostsByPostCUT as Record<SimplifiedPost, SubPost[]>,
+    getFormLayout: getFormLayoutsForSubPostCUT,
+    getPostRuleName: getPostRuleNameCut as (post: SimplifiedPost) => string,
+    getSubPostRuleName: getSubPostRuleNameCut,
+    getEngine: getCutEngine,
+    SituationProvider: CutSituationProvider,
+    useSituation: useCutSituation,
+    FormProvider: CutFormProvider,
+    usePublicodesForm: useCutPublicodes,
+  } as SimplifiedPublicodesConfig,
+  [Environment.CLICKSON]: {
+    posts: Object.values(ClicksonPost),
+    subPostsByPost: subPostsByPostClickson as Record<SimplifiedPost, SubPost[]>,
+    getFormLayout: getFormLayoutsForSubPostClickson,
+    getPostRuleName: getPostRuleNameClickson as (post: SimplifiedPost) => string,
+    getSubPostRuleName: getSubPostRuleNameClickson,
+    getEngine: getClicksonEngine,
+    SituationProvider: ClicksonSituationProvider,
+    useSituation: useClicksonSituation,
+    FormProvider: ClicksonFormProvider,
+    usePublicodesForm: useClicksonPublicodes,
+  } as SimplifiedPublicodesConfig,
 }
 
 export const getSimplifiedPublicodesConfig = (env: Environment): SimplifiedPublicodesConfig | undefined => {
