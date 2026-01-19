@@ -13,11 +13,16 @@ jest.mock('../auth', () => ({ auth: jest.fn() }))
 jest.mock('uuid', () => ({ v4: jest.fn() }))
 
 jest.mock('../permissions/study', () => ({ canReadStudy: jest.fn() }))
-jest.mock('../../utils/study', () => ({ getAccountRoleOnStudy: jest.fn(), hasDeprecationPeriod: jest.fn() }))
+jest.mock('../../utils/study', () => ({
+  getAccountRoleOnStudy: jest.fn(),
+  hasDeprecationPeriod: jest.fn(),
+  getBaseFilteredEmissionSources: jest.fn(),
+}))
 jest.mock('next-intl/server', () => ({
   getTranslations: jest.fn(() => (key: string) => key),
 }))
 const mockHasDeprecationPeriod = studyUtilsModule.hasDeprecationPeriod as jest.Mock
+const mockGetBaseFilteredEmissionSources = studyUtilsModule.getBaseFilteredEmissionSources as jest.Mock
 
 const tags = [
   { id: 'test', name: 'test', familyId: 'familyTag1', color: '#000000', createdAt: new Date(), updatedAt: new Date() },
@@ -166,6 +171,7 @@ describe('consolidated function', () => {
           value: 0,
         }),
       ]
+      mockGetBaseFilteredEmissionSources.mockReturnValue(emissionSources)
 
       const study = getMockeFullStudy({ emissionSources, tagFamilies })
 
@@ -343,6 +349,7 @@ describe('consolidated function', () => {
           value: 450,
         }),
       ]
+      mockGetBaseFilteredEmissionSources.mockReturnValue(emissionSources)
 
       const study = getMockeFullStudy({ emissionSources, tagFamilies })
 
@@ -420,6 +427,7 @@ describe('consolidated function', () => {
 
     test('should handle empty value', () => {
       const emissionSources = [] as FullStudy['emissionSources']
+      mockGetBaseFilteredEmissionSources.mockReturnValue(emissionSources)
 
       const study = getMockeFullStudy({ emissionSources, tagFamilies })
 
