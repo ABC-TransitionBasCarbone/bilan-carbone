@@ -1,6 +1,5 @@
 import { FullStudy } from '@/db/study'
-import { getEmissionSourceEmission } from '@/services/emissionSource'
-import { EmissionFactorBase, Environment, Export } from '@prisma/client'
+import { EmissionFactorBase, Export, Unit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import GlossaryIconModal from '../modals/GlossaryIconModal'
@@ -8,7 +7,6 @@ import GlossaryIconModal from '../modals/GlossaryIconModal'
 interface Props {
   emissionSources: FullStudy['emissionSources']
   validatedOnly?: boolean
-  environment: Environment
   exports?: Export[]
   className?: string
 }
@@ -17,28 +15,24 @@ const filterEmissionSources = (emissionSources: FullStudy['emissionSources'], ba
   emissionSources.filter(
     (emissionSource) => emissionSource.emissionFactor && emissionSource.emissionFactor.base === base,
   )
-const getValue = (emissionSources: FullStudy['emissionSources'], validatedOnly: boolean, environment: Environment) =>
-  emissionSources.reduce((res, emissionSource) => {
-    return (
+const getValue = (emissionSources: FullStudy['emissionSources'], validatedOnly: boolean) =>
+  emissionSources.reduce(
+    (res, emissionSource) =>
       res +
-      (emissionSource.validated || !validatedOnly ? getEmissionSourceEmission(emissionSource, environment) || 0 : 0)
-    )
-  }, 0)
+      ((emissionSource.validated || !validatedOnly) && emissionSource.emissionFactor?.unit === Unit.KWH
+        ? emissionSource.value || 0
+        : 0),
+    0,
+  )
 
-const ElectricityBaseDifference = ({
-  emissionSources,
-  validatedOnly = false,
-  environment,
-  exports,
-  className,
-}: Props) => {
+const ElectricityBaseDifference = ({ emissionSources, validatedOnly = false, exports, className }: Props) => {
   const t = useTranslations('emissionFactors.base.difference')
 
   const locationSources = filterEmissionSources(emissionSources, EmissionFactorBase.LocationBased)
   const marketSources = filterEmissionSources(emissionSources, EmissionFactorBase.MarketBased)
 
-  const locationValue = getValue(locationSources, validatedOnly, environment)
-  const marketValue = getValue(marketSources, validatedOnly, environment)
+  const locationValue = getValue(locationSources, validatedOnly)
+  const marketValue = getValue(marketSources, validatedOnly)
 
   return exports && exports.includes(Export.GHGP) && locationValue !== marketValue ? (
     <div className={classNames(className, 'flex warning')}>
