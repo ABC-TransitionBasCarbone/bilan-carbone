@@ -1,3 +1,5 @@
+import { addMissingSourceToStudies } from '@/services/serverFunctions/study'
+import { Import } from '@prisma/client'
 import { Command } from 'commander'
 import { getEmissionFactorsFromCSV } from '../../services/importEmissionFactor/aib/getEmissionFactors'
 
@@ -13,4 +15,6 @@ program
 
 const params = program.opts()
 
-getEmissionFactorsFromCSV(params.name, params.file)
+getEmissionFactorsFromCSV(params.name, params.file).then(() => {
+  addMissingSourceToStudies(Import.AIB)
+})
