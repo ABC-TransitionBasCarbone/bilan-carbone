@@ -11,7 +11,7 @@ import { LineChart, LineSeries } from '@mui/x-charts/LineChart'
 import type { StudyResultUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import DependenciesSwitch from '../results/DependenciesSwitch'
 import styles from './TrajectoryGraph.module.css'
 
@@ -66,6 +66,8 @@ const TrajectoryGraph = ({
   const t = useTranslations('study.transitionPlan.trajectories.graph')
   const tUnit = useTranslations('study.results.units')
   const [yearRange, setYearRange] = useState<number[] | null>(null)
+  const [displayedYearRange, setDisplayedYearRange] = useState<number[] | null>(null)
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
 
   const trajectory15Enabled = selectedSbtiTrajectories.includes(TRAJECTORY_15_ID)
   const trajectoryWB2CEnabled = selectedSbtiTrajectories.includes(TRAJECTORY_WB2C_ID)
@@ -100,16 +102,37 @@ const TrajectoryGraph = ({
 
   useEffect(() => {
     if (minYear && maxYear) {
-      setYearRange([minYear, maxYear])
+      const newRange = [minYear, maxYear]
+      setYearRange(newRange)
+      setDisplayedYearRange(newRange)
     }
   }, [minYear, maxYear])
 
+  // Debounce the displayed year range to smooth out chart transitions
+  useEffect(() => {
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current)
+    }
+
+    if (yearRange) {
+      debounceTimerRef.current = setTimeout(() => {
+        setDisplayedYearRange(yearRange)
+      }, 150)
+    }
+
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current)
+      }
+    }
+  }, [yearRange])
+
   const yearsToDisplay = useMemo(() => {
-    if (!yearRange) {
+    if (!displayedYearRange) {
       return allYearsToDisplay
     }
-    return allYearsToDisplay.filter((year) => year >= yearRange[0] && year <= yearRange[1])
-  }, [allYearsToDisplay, yearRange])
+    return allYearsToDisplay.filter((year) => year >= displayedYearRange[0] && year <= displayedYearRange[1])
+  }, [allYearsToDisplay, displayedYearRange])
 
   const studyStartYearIndex = yearsToDisplay.indexOf(studyStartYear)
 
