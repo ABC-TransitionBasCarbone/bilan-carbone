@@ -22,6 +22,7 @@ import {
   ResultType,
 } from '@/services/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { getPost } from '@/utils/post'
 import { calculateMonetaryRatio, convertValue } from '@/utils/study'
 import DownloadIcon from '@mui/icons-material/Download'
 import SummarizeIcon from '@mui/icons-material/Summarize'
@@ -37,14 +38,15 @@ import {
   SubPost,
 } from '@prisma/client'
 import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
 import { MouseEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import SelectStudySite from '../site/SelectStudySite'
 import useStudySite from '../site/useStudySite'
 import BegesResultsTable from './beges/BegesResultsTable'
-import ConsolatedBEGESDifference from './ConsolatedBEGESDifference'
-import ConsolatedGHGPDifference from './ConsolatedGHGPDifference'
 import ConsolidatedResults from './consolidated/ConsolidatedResults'
 import EmissionsAnalysis from './consolidated/EmissionsAnalysis'
+import ConsolatedBEGESDifference from './ConsolidatedBEGESDifference'
+import ConsolatedGHGPDifference from './ConsolidatedGHGPDifference'
 import GHGPResultsTable from './ghgp/GHGPResultsTable'
 import ResultFilters from './ResultFilters'
 import UncertaintyAnalytics from './uncertainty/UncertaintyAnalytics'
@@ -77,6 +79,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   const [isDownloadReportActive, setIsDownloadReportActive] = useState(false)
   const [selectedSubposts, setSelectedSubposts] = useState<string[]>([])
   const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const router = useRouter()
 
   useEffect(() => {
     if (environment && environment !== Environment.BC) {
@@ -289,6 +292,16 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     e.stopPropagation()
   }
 
+  const navigateToEmissionSource = (emissionSourceId: string, subPost: SubPost) => {
+    const post = getPost(subPost)
+    if (post) {
+      const emissionSource = study.emissionSources.find((es) => es.id === emissionSourceId)
+      const targetSite = emissionSource?.studySite.id
+      const url = `/etudes/${study.id}/comptabilisation/saisie-des-donnees/${post}?site=${targetSite}#emission-source-${emissionSourceId}`
+      router.push(url)
+    }
+  }
+
   return (
     <Block
       title={tStudyNav('results')}
@@ -359,9 +372,10 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
               study={study}
               emissionFactorsWithParts={emissionFactorsWithParts}
               validatedOnly={validatedOnly}
-              results={filteredResultsByPost}
+              consolidatedResults={filteredResultsByPost}
               begesResults={computedBegesData}
               studySite={studySite}
+              navigateToEmissionSource={navigateToEmissionSource}
             />
           )}
           {type === Export.GHGP && (
@@ -369,10 +383,11 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
               study={study}
               emissionFactorsWithParts={emissionFactorsWithParts}
               validatedOnly={validatedOnly}
-              results={filteredResultsByPost}
+              consolidatedResults={filteredResultsByPost}
               ghgpResults={computedGHGPData}
               studySite={studySite}
               ghgpRules={ghgpRules}
+              navigateToEmissionSource={navigateToEmissionSource}
             />
           )}
         </div>

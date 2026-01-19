@@ -98,3 +98,8 @@ export const getSortedEmissionSources = (
   }
   return emissionSources
 }
+
+export const getEmissionFactor = <T extends { id: string }>(
+  emissionSource: FullStudy['emissionSources'][number],
+  emissionFactors: T[],
+) => emissionFactors.find((ef) => ef.id === emissionSource.emissionFactor?.id)

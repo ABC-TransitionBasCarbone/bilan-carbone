@@ -14,7 +14,7 @@ import { Environment, Export, SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useMemo, useState } from 'react'
-import styles from './ConsolatedExportDifference.module.css'
+import styles from './ConsolidatedExportDifference.module.css'
 
 interface EmissionSourceListProps {
   studySite: string
@@ -54,7 +54,7 @@ export const EmissionSourceList = ({ studySite, emissionSources, onClick }: Emis
   )
 }
 
-export const calculEmissionSourcesDifference = (
+export const calculateEmissionSourcesDifference = (
   emissionSources: FullStudy['emissionSources'],
   emissionFactorsWithParts: EmissionFactorWithParts[],
   environment: Environment,
@@ -76,14 +76,21 @@ export const calculEmissionSourcesDifference = (
 
 interface Props {
   study: FullStudy
-  results: ResultsByPost[]
+  consolidatedResults: ResultsByPost[]
   exportResults: PostInfos[]
   type: Export
   exportDifference: number
   children: ReactNode
 }
 
-const ConsolatedExportDifference = ({ study, results, exportResults, type, exportDifference, children }: Props) => {
+const ConsolidatedExportDifference = ({
+  study,
+  consolidatedResults,
+  exportResults,
+  type,
+  exportDifference,
+  children,
+}: Props) => {
   const tAction = useTranslations('common.action')
   const t = useTranslations('study.results.difference')
   const tExports = useTranslations('exports')
@@ -91,7 +98,7 @@ const ConsolatedExportDifference = ({ study, results, exportResults, type, expor
   const [open, setOpen] = useState(false)
 
   const exportTotalNumber = (exportResults.find((result) => result.rule === 'total')?.total || 0) / unitValue
-  const computedTotalNumber = (results.find((result) => result.post === 'total')?.value || 0) / unitValue
+  const computedTotalNumber = (consolidatedResults.find((result) => result.post === 'total')?.value || 0) / unitValue
   const exportTotal = formatNumber(exportTotalNumber, 0)
   const computedTotal = formatNumber(computedTotalNumber, 0)
 
@@ -131,4 +138,4 @@ const ConsolatedExportDifference = ({ study, results, exportResults, type, expor
   ) : null
 }
 
-export default ConsolatedExportDifference
+export default ConsolidatedExportDifference
