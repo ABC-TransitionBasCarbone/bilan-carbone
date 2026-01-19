@@ -92,3 +92,5 @@ export const hasAccessToAdvancedEmissionAnalysis = isTilt
 export const hasAlwaysAccessToOrganizationVersion = isTilt
 
 export const hasStartLinkOnFootprints = isTilt
+
+export const hasAccessToPostTypeform = isTilt

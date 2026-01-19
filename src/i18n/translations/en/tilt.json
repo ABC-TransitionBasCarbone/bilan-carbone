@@ -86,6 +86,8 @@
   },
   "emissionFactors": {
     "post": {
+      "seeTypeform": "See the typeform",
+      "seeTypeformDescription": "This tool allows you to have an example of a typeform to send to your stakeholders to collect data on their professional travel.",
       "glossaryDescription": {
         "postInfo": "Infos on this post",
         "close": "Close",
