@@ -1,0 +1,9 @@
+restauration:
+  titre: Restauration
+  formule:
+    somme:
+      - types de repas servis
+      - distributeur automatiques
+      - fret
+      - déchets organiques
+  unité: kgCO2e
