@@ -19,8 +19,8 @@ const defaultEmissionSource = {
     reliability: 5,
     technicalRepresentativeness: 3,
     temporalRepresentativeness: 1,
-    geographicRepresentativeness: null,
-    completeness: null,
+    geographicRepresentativeness: 5,
+    completeness: 5,
     importedFrom: 'BaseEmpreinte',
     importedId: '123',
     isMonetary: false,
@@ -52,7 +52,7 @@ const defaultEmissionSource = {
   technicalRepresentativeness: 1,
   temporalRepresentativeness: 2,
   geographicRepresentativeness: 4,
-  completeness: null,
+  completeness: 5,
   feReliability: 5,
   feTechnicalRepresentativeness: 3,
   feTemporalRepresentativeness: 1,
@@ -74,11 +74,11 @@ describe('emissionSource Service', () => {
         emissionValue: 1200,
         confidenceInterval: [516.2597423212065, 2789.2936093088983],
         alpha: 1.3244113410907485,
-        standardDeviation: 2.3244113410907485,
+        squaredStandardDeviation: 2.3244113410907485,
       })
     })
 
-    it('should return null values is not defined', () => {
+    it('should not be null even if value is not defined', () => {
       const result = getEmissionResults(
         {
           ...defaultEmissionSource,
@@ -86,10 +86,12 @@ describe('emissionSource Service', () => {
         },
         Environment.BC,
       )
-      expect(result).toEqual({ emissionValue: 0, standardDeviation: null, confidenceInterval: null, alpha: null })
+      expect(result.squaredStandardDeviation).not.toBe(null)
+      expect(result.confidenceInterval).not.toBe(null)
+      expect(result.alpha).not.toBe(null)
     })
 
-    it('should return null if emission factor is not defined', () => {
+    it('should not be null even if emission factor is not defined', () => {
       const result = getEmissionResults(
         {
           ...defaultEmissionSource,
@@ -97,7 +99,10 @@ describe('emissionSource Service', () => {
         },
         Environment.BC,
       )
-      expect(result).toEqual({ emissionValue: 0, standardDeviation: null, confidenceInterval: null, alpha: null })
+
+      expect(result.squaredStandardDeviation).not.toBe(null)
+      expect(result.confidenceInterval).not.toBe(null)
+      expect(result.alpha).not.toBe(null)
     })
   })
 })

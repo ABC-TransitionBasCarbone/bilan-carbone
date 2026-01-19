@@ -14,7 +14,7 @@ import {
   UpdateEmissionSourceCommandValidation,
 } from '@/services/serverFunctions/emissionSource.command'
 import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study'
-import { getStandardDeviationRating } from '@/services/uncertainty'
+import { getQualitativeUncertaintyFromSquaredStandardDeviation } from '@/services/uncertainty'
 import { useUnitLabel } from '@/services/unit'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
@@ -175,7 +175,7 @@ const EmissionSource = ({
   )
   const emissionResults = useMemo(() => {
     if (!environment) {
-      return { emissionValue: 0, standardDeviation: 0 }
+      return { emissionValue: 0, squaredStandardDeviation: 0 }
     }
 
     return getEmissionResults(emissionSource, environment)
@@ -269,13 +269,17 @@ const EmissionSource = ({
               <p className={styles.resultText} data-testid="emission-source-value">
                 {`${formatNumber(emissionResults.emissionValue / STUDY_UNIT_VALUES[study.resultsUnit])} ${tResultstUnits(study.resultsUnit)}`}
               </p>
-              {emissionResults.standardDeviation && (
+              {emissionResults.emissionValue && (
                 <p
                   className={classNames(styles.resultQuality, styles.resultText)}
                   data-testid="emission-source-quality"
                 >
                   {tQuality('name')}{' '}
-                  {tQuality(getStandardDeviationRating(emissionResults.standardDeviation).toString())}
+                  {tQuality(
+                    getQualitativeUncertaintyFromSquaredStandardDeviation(
+                      emissionResults.squaredStandardDeviation,
+                    ).toString(),
+                  )}
                 </p>
               )}
             </div>

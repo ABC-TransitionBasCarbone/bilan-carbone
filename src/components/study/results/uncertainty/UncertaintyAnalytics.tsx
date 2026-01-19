@@ -36,7 +36,10 @@ const UncertaintyAnalytics = ({
   const t = useTranslations('study.results.uncertainties')
 
   const totalResults = filteredResults.find((res) => res.post === 'total')
-  const confidenceInterval = getConfidenceInterval(totalResults?.value ?? 0, totalResults?.uncertainty ?? 1)
+  const confidenceInterval = getConfidenceInterval(
+    totalResults?.value ?? 0,
+    totalResults?.squaredStandardDeviation ?? 1,
+  )
   const percent = useMemo(() => {
     const [min, max] = confidenceInterval
 
@@ -63,7 +66,9 @@ const UncertaintyAnalytics = ({
           <ConfidenceIntervalCharts confidenceInterval={confidenceInterval} unit={resultsUnit} percent={percent} />
         </div>
         <div className={classNames(styles.container2, 'grow2 flex-cc')}>
-          <UncertaintyGauge uncertainty={filteredResults.find((res) => res.post === 'total')?.uncertainty} />
+          <UncertaintyGauge
+            squaredStandardDeviation={filteredResults.find((res) => res.post === 'total')?.squaredStandardDeviation}
+          />
           <MostUncertainPostsChart computedResults={filteredResults} />
         </div>
       </div>
