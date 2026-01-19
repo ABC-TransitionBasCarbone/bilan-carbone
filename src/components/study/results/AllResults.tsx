@@ -396,7 +396,6 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
               emissionSources={study.emissionSources.filter(
                 (emissionSource) => emissionSource.subPost === SubPost.Electricite,
               )}
-              environment={environment}
               exports={study.exports?.types}
               className="align-center"
             />
