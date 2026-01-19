@@ -6,66 +6,51 @@ import { Post } from '@/services/posts'
 import { getBegesEmissionTotal } from '@/services/results/beges'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { PostInfos } from '@/services/results/exports'
+import { getSiteEmissionSources } from '@/services/results/utils'
 import { formatNumber } from '@/utils/number'
-import { getPost } from '@/utils/post'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import TrendingUpIcon from '@mui/icons-material/TrendingUpOutlined'
-import WarningAmberIcon from '@mui/icons-material/WarningAmberOutlined'
 import { Export, SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useRouter } from 'next/navigation'
 import { useMemo } from 'react'
-import ConsolatedExportDifference, {
-  calculEmissionSourcesDifference,
-  EmissionSourceList,
-} from './ConsolatedExportDifference'
-import styles from './ConsolatedExportDifference.module.css'
+import ConsolidatedExportDifference, { calculateEmissionSourcesDifference } from './ConsolidatedExportDifference'
+import styles from './ConsolidatedExportDifference.module.css'
+import ExportDifferenceItems from './ExportDifferenceItems'
 
 interface Props {
   study: FullStudy
   emissionFactorsWithParts: EmissionFactorWithParts[]
   validatedOnly: boolean
-  results: ResultsByPost[]
+  consolidatedResults: ResultsByPost[]
   begesResults: PostInfos[]
   studySite: string
+  navigateToEmissionSource: (emissionSourceId: string, subPost: SubPost) => void
 }
 
 const ConsolatedBEGESDifference = ({
   study,
   emissionFactorsWithParts,
   validatedOnly,
-  results,
+  consolidatedResults,
   begesResults,
   studySite,
+  navigateToEmissionSource,
 }: Props) => {
   const t = useTranslations('study.results.difference')
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('study.results.units')
   const unit = tUnits(study.resultsUnit)
   const unitValue = STUDY_UNIT_VALUES[study.resultsUnit]
-  const router = useRouter()
 
   const environment = useMemo(() => study.organizationVersion.environment, [study])
 
-  const navigateToEmissionSource = (emissionSourceId: string, subPost: SubPost) => {
-    const post = getPost(subPost)
-    if (post) {
-      const emissionSource = study.emissionSources.find((es) => es.id === emissionSourceId)
-      const targetSite = emissionSource?.studySite.id
-      const url = `/etudes/${study.id}/comptabilisation/saisie-des-donnees/${post}?site=${targetSite}#emission-source-${emissionSourceId}`
-      router.push(url)
-    }
-  }
+  const emissionSourcesForSelectedSite = useMemo(
+    () => getSiteEmissionSources(study.emissionSources, studySite),
+    [study.emissionSources, studySite],
+  )
 
-  const emissionSourcesForSelectedSite = useMemo(() => {
-    if (studySite === 'all') {
-      return study.emissionSources
-    }
-    return study.emissionSources.filter((es) => es.studySite.id === studySite)
-  }, [study.emissionSources, studySite])
-
-  const utilisationEnDependanceInfos = results
+  const utilisationEnDependanceInfos = consolidatedResults
     .find((result) => result.post === Post.UtilisationEtDependance)
     ?.children.find((subPost) => subPost.post === SubPost.UtilisationEnDependance)
   const hasUtilisationEnDependance = !!utilisationEnDependanceInfos && utilisationEnDependanceInfos.value !== 0
@@ -154,40 +139,28 @@ const ConsolatedBEGESDifference = ({
   )
 
   const missingCaractDifference = useMemo(
-    () => calculEmissionSourcesDifference(missingCaract, emissionFactorsWithParts, environment, unitValue),
+    () => calculateEmissionSourcesDifference(missingCaract, emissionFactorsWithParts, environment, unitValue),
     [missingCaract, emissionFactorsWithParts, unitValue, environment],
   )
 
   return (
-    <ConsolatedExportDifference
+    <ConsolidatedExportDifference
       study={study}
-      results={results}
+      consolidatedResults={consolidatedResults}
       exportResults={begesResults}
       type={Export.Beges}
       exportDifference={utilisationEnDependanceValue + wasteTotalDifference + missingCaractDifference}
     >
       {hasUtilisationEnDependance && (
-        <div className={styles.differenceCard}>
-          <div className={classNames(styles.cardHeaderWithValue, 'align-center justify-between')}>
-            <div className={classNames(styles.cardHeaderLeft, 'align-center')}>
-              <TrendingUpIcon className={styles.cardIcon} />
-              <h4>{t('dependanceTitle')}</h4>
-            </div>
-            <div className={'align-center'}>
-              <span className={styles.differenceValueNegative}>
-                {utilisationEnDependanceValueToDisplay} {unit}
-              </span>
-            </div>
-          </div>
-          <div className={classNames(styles.cardContent, 'flex-col')}>
-            <p className={styles.cardDescription}>{t('dependance')}</p>
-            <EmissionSourceList
-              studySite={studySite}
-              emissionSources={utilisationEnDependanceEmissionSources}
-              onClick={navigateToEmissionSource}
-            />
-          </div>
-        </div>
+        <ExportDifferenceItems
+          title="dependanceTitle"
+          descriptions={['dependance']}
+          emissionSources={utilisationEnDependanceEmissionSources}
+          studySite={studySite}
+          value={utilisationEnDependanceValueToDisplay}
+          resultsUnit={study.resultsUnit}
+          navigateToEmissionSource={navigateToEmissionSource}
+        />
       )}
 
       {!!wasteSourcesWithDifferences.length && (
@@ -249,33 +222,17 @@ const ConsolatedBEGESDifference = ({
       )}
 
       {!!missingCaract.length && (
-        <div className={styles.differenceCard}>
-          <div className={classNames(styles.cardHeaderWithValue, 'align-center justify-between')}>
-            <div className={classNames(styles.cardHeaderLeft, 'align-center')}>
-              <WarningAmberIcon className={styles.cardIcon} />
-              <h4>{t('missingCaractTitle')}</h4>
-            </div>
-            <div className={'align-center'}>
-              <span className={styles.differenceValueNegative}>
-                {formatNumber(missingCaractDifference, 0)} {unit}
-              </span>
-            </div>
-          </div>
-          <div className={classNames(styles.cardContent, 'flex-col')}>
-            <p className={styles.cardDescription}>
-              {t('missingCaract1')}
-              <br />
-              {t('missingCaract2')}
-            </p>
-            <EmissionSourceList
-              studySite={studySite}
-              emissionSources={missingCaract}
-              onClick={navigateToEmissionSource}
-            />
-          </div>
-        </div>
+        <ExportDifferenceItems
+          title="missingCaractTitle"
+          descriptions={['missingCaract1', 'missingCaract2']}
+          emissionSources={missingCaract}
+          studySite={studySite}
+          value={formatNumber(missingCaractDifference, 0)}
+          resultsUnit={study.resultsUnit}
+          navigateToEmissionSource={navigateToEmissionSource}
+        />
       )}
-    </ConsolatedExportDifference>
+    </ConsolidatedExportDifference>
   )
 }
 
