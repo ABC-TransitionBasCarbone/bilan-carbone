@@ -120,7 +120,7 @@ const EngagementActionModal = ({ action, open, onClose }: Props) => {
             multiline
             minRows={2}
           />
-          <FormDatePicker control={control} translation={t} name="date" label={`${t('date')} *`} />
+          <FormDatePicker control={control} name="date" label={`${t('date')} *`} />
           <FormAutocomplete
             data-testid="engagement-action-target"
             control={control}
