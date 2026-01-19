@@ -2,6 +2,11 @@
   text-decoration: none;
 }
 
+.resultsContainer {
+  display: flex;
+  justify-self: center;
+}
+
 .carbonIntensityContainer {
   display: flex;
   flex-direction: column;
