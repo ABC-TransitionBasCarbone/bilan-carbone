@@ -3,11 +3,11 @@ import { ClicksonPost } from '@/services/posts'
 import { SubPost } from '@prisma/client'
 import { ClicksonRuleName } from './types'
 
-export const getPostRuleName = (post: ClicksonPost): ClicksonRuleName => {
+export const getPostRuleNameClickson = (post: ClicksonPost): ClicksonRuleName => {
   return POST_TO_RULENAME[post]
 }
 
-export const getSubPostRuleName = (subPost: SubPost): ClicksonRuleName | undefined => {
+export const getSubPostRuleNameClickson = (subPost: SubPost): ClicksonRuleName | undefined => {
   return SUBPOST_TO_RULENAME[subPost]
 }
 
