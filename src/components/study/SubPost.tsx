@@ -176,7 +176,6 @@ const SubPost = ({
       {subPost === SubPostEnum.Electricite && environment && (
         <ElectricityBaseDifference
           emissionSources={emissionSources}
-          environment={environment}
           exports={study.exports?.types}
           className="align-end mt1"
         />
