@@ -7,7 +7,7 @@
     "yarn": "1.22"
   },
   "scripts": {
-    "postinstall": "cd publicodes-packages/publicodes-count && yarn install && yarn run compile",
+    "postinstall": "cd publicodes-packages/publicodes-count && yarn install && yarn run compile && cd ../../ && cd publicodes-packages/publicodes-clickson && yarn install && yarn run compile",
     "dev": "next dev --turbopack",
     "dev:test": "dotenv -e .env.test -- next dev --turbopack --port 3001",
     "build": "next build",
@@ -18,9 +18,13 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "publicodes-count:compile": "cd publicodes-packages/publicodes-count && yarn run compile",
-    "publicodes-count:watch": "cd publicodes-packages/publicodes-count && yarn run watch",
+    "publicodes-count:watch": "cd publicodes-packages/publicodes-count && yarn run watch ",
     "publicodes-count:test": "cd publicodes-packages/publicodes-count && yarn test",
     "publicodes-count:translate": "yarn run publicodes-count:compile && npx tsx src/i18n/publicodes/generate-translation-file.tsx -m cut",
+    "publicodes-clickson:compile": "cd publicodes-packages/publicodes-clickson && yarn run compile",
+    "publicodes-clickson:watch": "cd publicodes-packages/publicodes-clickson && yarn run watch ",
+    "publicodes-clickson:test": "cd publicodes-packages/publicodes-clickson && yarn test",
+    "publicodes-clickson:translate": "yarn run publicodes-clickson:compile && npx tsx src/i18n/publicodes/generate-translation-file.tsx -m cut",
     "cypress": "cypress run",
     "cypress:gui": "cypress open",
     "db:test:reset": "dotenv -e .env.test -- prisma migrate reset --force",
@@ -35,6 +39,7 @@
   },
   "dependencies": {
     "@abc-transitionbascarbone/publicodes-count": "file:./publicodes-packages/publicodes-count/",
+    "@abc-transitionbascarbone/publicodes-clickson": "file:./publicodes-packages/publicodes-clickson/",
     "@base-ui-components/react": "^1.0.0-rc.0",
     "@aws-sdk/client-s3": "^3.962.0",
     "@aws-sdk/s3-request-presigner": "^3.962.0",
@@ -136,6 +141,7 @@
     "yargs": "^18.0.0"
   },
   "resolutions": {
-    "qs": ">=6.14.1"
+    "js-yaml": ">=4.1.1",
+    "glob": ">=10.5.0"
   }
 }

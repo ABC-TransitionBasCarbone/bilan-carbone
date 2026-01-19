@@ -1,0 +1,75 @@
+déplacements . transport des élèves:
+  titre: Transport des élèves
+  formule:
+    produit:
+      - distance
+      - FE
+  par défaut: 0
+  unité: kgCO2e
+  avec:
+    distance:
+      question: Distance de transport des élèves sur une année
+      unité: km/jour
+    FE:
+      formule:
+        variations:
+          - si: moyen de transport = "RER et transilien"
+            alors: commun . FE . moyen de transport . RER et transilien
+          - si: moyen de transport = "métro ou tram"
+            alors: commun . FE . moyen de transport . métro ou tram
+          - si: moyen de transport = "Vélo à assistance électrique"
+            alors: commun . FE . moyen de transport . Vélo à assistance électrique
+          - si: moyen de transport = "Trottinette électrique"
+            alors: commun . FE . moyen de transport . Trottinette électrique
+          - si: moyen de transport = "Moto essence"
+            alors: commun . FE . moyen de transport . Moto essence
+          - si: moyen de transport = "Véhicule compact électrique"
+            alors: commun . FE . moyen de transport . Véhicule compact électrique
+          - si: moyen de transport = "Voiture individuelle essence"
+            alors: commun . FE . moyen de transport . Voiture individuelle essence
+          - si: moyen de transport = "Voiture individuelle diesel"
+            alors: commun . FE . moyen de transport . Voiture individuelle diesel
+          - si: moyen de transport = "Autobus moyen"
+            alors: commun . FE . moyen de transport . Autobus moyen
+          - si: moyen de transport = "TER"
+            alors: commun . FE . moyen de transport . TER
+          - si: moyen de transport = "TGV"
+            alors: commun . FE . moyen de transport . TGV
+          - si: moyen de transport = "Avion Court courrier"
+            alors: commun . FE . moyen de transport . Avion Court courrier
+          - si: moyen de transport = "Avion Moyen courrier"
+            alors: commun . FE . moyen de transport . Avion Moyen courrier
+          - si: moyen de transport = "Avion Long courrier"
+            alors: commun . FE . moyen de transport . Avion Long courrier
+    moyen de transport:
+      question: Moyen de transport
+      une possibilité:
+        - RER et transilien
+        - métro ou tram
+        - Vélo à assistance électrique
+        - Trottinette électrique
+        - Moto essence
+        - Véhicule compact électrique
+        - Voiture individuelle essence
+        - Voiture individuelle diesel
+        - Autobus moyen
+        - TER
+        - TGV
+        - Avion Court courrier
+        - Avion Moyen courrier
+        - Avion Long courrier
+      avec:
+        RER et transilien:
+        métro ou tram:
+        Vélo à assistance électrique:
+        Trottinette électrique:
+        Moto essence:
+        Véhicule compact électrique:
+        Voiture individuelle essence:
+        Voiture individuelle diesel:
+        Autobus moyen:
+        TER:
+        TGV:
+        Avion Court courrier:
+        Avion Moyen courrier:
+        Avion Long courrier:

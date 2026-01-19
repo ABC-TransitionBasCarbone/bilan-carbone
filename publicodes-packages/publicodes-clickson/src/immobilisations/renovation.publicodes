@@ -1,0 +1,132 @@
+immobilisations . rénovation:
+  titre: Rénovation
+  formule:
+    somme:
+      - bâtiment scolaire structure béton rénové
+      - parking bâtiment structure béton rénové
+      - parking surface bitume rénové
+      - parking surface semi-dure rénové
+      - garage structure béton rénové
+      - garage structure métal rénové
+  unité: kgCO2e
+  avec:
+    bâtiment scolaire structure béton rénové:
+      titre: "Bâtiment scolaire rénové (structure béton)"
+      formule:
+        variations:
+          - si: age > amortissement
+            alors: 0
+          - sinon: surface * FE / amortissement
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        age:
+          durée:
+            unité: an
+            depuis: général . année de rénovation
+            jusqu'à: commun . année actuelle
+          arrondi: oui
+        amortissement:
+          valeur: 25
+          note: Amortissement annuel sous-entendu (rénovation).
+        surface:
+          question: "Quelle surface de bâtiment scolaire (structure béton) avez-vous rénovée ?"
+          unité: m2
+        FE:
+          question: "Facteur d'émission par m² de bâtiment scolaire rénové (structure béton)"
+          valeur: 220
+          unité: kgCO2e/m2
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 4
+
+    parking bâtiment structure béton rénové:
+      titre: "Parking rénové (bâtiment - structure béton)"
+      formule: surface * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        surface:
+          question: "Quelle surface de parking (bâtiment - structure béton) avez-vous rénovée ?"
+          unité: m2
+        FE:
+          question: "Facteur d'émission par m² de parking rénové (bâtiment - structure béton)"
+          valeur: 160
+          unité: kgCO2e/m2
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 2
+
+    parking surface bitume rénové:
+      titre: "Parking rénové (surface bitume)"
+      formule: surface * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        surface:
+          question: "Quelle surface de parking (surface bitume) avez-vous rénovée ?"
+          unité: m2
+        FE:
+          question: "Facteur d'émission par m² de parking rénové (surface bitume)"
+          valeur: 36
+          unité: kgCO2e/m2
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 2
+
+    parking surface semi-dure rénové:
+      titre: "Parking rénové (surface semi-dure)"
+      formule: surface * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        surface:
+          question: "Quelle surface de parking (surface semi-dure) avez-vous rénovée ?"
+          unité: m2
+        FE:
+          question: "Facteur d'émission par m² de parking rénové (surface semi-dure)"
+          valeur: 83
+          unité: kgCO2e/m2
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 2
+
+    garage structure béton rénové:
+      titre: "Garage rénové (structure béton)"
+      formule: surface * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        surface:
+          question: "Quelle surface de garage (structure béton) avez-vous rénovée ?"
+          unité: m2
+        FE:
+          question: "Facteur d'émission par m² de garage rénové (structure béton)"
+          valeur: 328
+          unité: kgCO2e/m2
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 4
+
+    garage structure métal rénové:
+      titre: "Garage rénové (structure métal)"
+      formule: surface * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        surface:
+          question: "Quelle surface de garage (structure métal) avez-vous rénovée ?"
+          unité: m2
+        FE:
+          question: "Facteur d'émission par m² de garage rénové (structure métal)"
+          valeur: 110
+          unité: kgCO2e/m2
+          note: |
+            Source: Base Carbone®
+          meta:
+            incertitude: 4

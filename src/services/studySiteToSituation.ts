@@ -7,6 +7,10 @@ export type StudySiteFields = {
   numberOfTickets?: number | null
   numberOfSessions?: number | null
   numberOfOpenDays?: number | null
+  numberOfStudents?: number | null
+  numberOfStaff?: number | null
+  constructionYear?: number | null
+  renovationYear?: number | null
 }
 
 export type StudySiteToSituationFn = (studySite: StudySiteFields | undefined) => Situation<string>

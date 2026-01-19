@@ -1,0 +1,123 @@
+template:
+  contexte:
+    # Énergie
+    # inputs
+    énergie . électricité . consommation: 10000
+    énergie . combustibles . fioul domestique . consommation: 100
+    énergie . combustibles . fioul lourd . consommation: 50
+    énergie . combustibles . gaz naturel . consommation: 200
+    énergie . combustibles . granulés de bois . consommation: 0
+    énergie . combustibles . biopropane . consommation: 0
+    énergie . combustibles . réseau de chaleur . consommation: 0
+    énergie . autres gaz . gaz hfc spécifique . consommation: 10
+    énergie . autres gaz . gaz hfc spécifique . PRG: 1430
+
+    # Immobilisations
+    # inputs or groups
+    immobilisations . construction . bâtiment scolaire structure béton . surface: 1000
+    immobilisations . construction . parking bâtiment structure béton . surface: 100
+    immobilisations . construction . parking surface bitume . surface: 50
+    immobilisations . construction . parking surface semi-dure . surface: 20
+    immobilisations . construction . garage structure béton . surface: 30
+    immobilisations . construction . garage structure métal . surface: 10
+    immobilisations . renovation . bâtiment scolaire structure béton rénové . surface: 200
+    immobilisations . renovation . parking bâtiment structure béton rénové . surface: 10
+    immobilisations . renovation . parking surface bitume rénové . surface: 5
+    immobilisations . renovation . parking surface semi-dure rénové . surface: 2
+    immobilisations . renovation . garage structure béton rénové . surface: 3
+    immobilisations . renovation . garage structure métal rénové . surface: 1
+    immobilisations . équipements informatique audiovisuel . ordinateur de bureau . nombre: 10
+    immobilisations . équipements informatique audiovisuel . ordinateur portable . nombre: 5
+    immobilisations . équipements informatique audiovisuel . tablette . nombre: 2
+    immobilisations . équipements informatique audiovisuel . imprimante . nombre: 1
+    immobilisations . équipements informatique audiovisuel . photocopieur . nombre: 1
+    immobilisations . équipements informatique audiovisuel . vidéoprojecteur . nombre: 1
+    immobilisations . équipements informatique audiovisuel . serveur informatique . nombre: 1
+    immobilisations . équipements informatique audiovisuel . télévision 40-49 pouces . nombre: 1
+    immobilisations . équipements informatique audiovisuel . rack de serveur . nombre: 1
+    immobilisations . équipements informatique audiovisuel . télécommande universelle sans piles 80g . nombre: 1
+    immobilisations . équipements informatique audiovisuel . stéréo classique . nombre: 1
+    immobilisations . équipements informatique audiovisuel . enceinte Bluetooth . nombre: 1
+    immobilisations . équipements informatique audiovisuel . smartphone 5 pouces . nombre: 1
+    immobilisations . équipements informatique audiovisuel . écran 23,8 pouces . nombre: 1
+    immobilisations . équipements divers . chaise de bureau . nombre: 5
+    immobilisations . équipements divers . table de réunion . nombre: 2
+    immobilisations . équipements divers . armoire de rangement . nombre: 1
+    immobilisations . équipements divers . fauteuil d'accueil . nombre: 1
+    immobilisations . équipements divers . étagère . nombre: 1
+
+    # Restauration
+    # inputs
+    restauration . types de repas servis . moyen . nombre: 1000
+    restauration . types de repas servis . végétarien . nombre: 200
+    restauration . types de repas servis . végétalien . nombre: 50
+    restauration . types de repas servis . viande rouge . nombre: 100
+    restauration . types de repas servis . viande blanche . nombre: 150
+    restauration . types de repas servis . poisson . nombre: 80
+    restauration . distributeur automatiques . bouteille d'eau . nombre: 100
+    restauration . distributeur automatiques . soda . nombre: 50
+    restauration . distributeur automatiques . biscuits . nombre: 30
+    restauration . distributeur automatiques . paquet de chips . nombre: 20
+    restauration . distributeur automatiques . café noir . nombre: 10
+    restauration . distributeur automatiques . thé infusé . nombre: 5
+    restauration . distributeur automatiques . sandwich pain de mie . nombre: 15
+    restauration . distributeur automatiques . barre chocolatée . nombre: 8
+    restauration . fret . routier . consommation: 100
+    restauration . fret . ferroviaire . consommation: 20
+    restauration . fret . maritime . consommation: 10
+    restauration . déchets organiques . biodéchets compostés . quantité: 50
+    restauration . déchets organiques . biodéchets méthanisés . quantité: 20
+    restauration . déchets organiques . biodéchets incinérés . quantité: 10
+    restauration . déchets organiques . biodéchets enfouis . quantité: 5
+
+    # Déplacements
+    # inputs
+    déplacements . transport du personnel . distance: 10000
+    déplacements . transport du personnel . moyen de transport: "Voiture individuelle essence"
+    déplacements . transport des élèves . distance: 20000
+    déplacements . transport des élèves . moyen de transport: "Autobus moyen"
+    déplacements . voyages scolaires . distance: 5000
+    déplacements . voyages scolaires . moyen de transport: "TGV"
+
+    # Achats
+    # tables
+    achats . fournitures . petites fournitures . montant: 500
+    achats . fournitures . livres . nombre: 20
+    achats . fournitures . papier ramette . nombre: 10
+    achats . fournitures . consommables . montant: 100
+    achats . fournitures . piles aaa . nombre: 5
+    achats . fournitures . piles aa . nombre: 5
+    achats . produits chimiques . produit vaisselle liquide . consommation: 10
+    achats . produits chimiques . savon liquide . consommation: 5
+    achats . produits chimiques . produit vitre . consommation: 2
+    achats . produits chimiques . nettoyant sols . consommation: 3
+    achats . produits chimiques . nettoyant multi-usages . consommation: 4
+    achats . produits chimiques . détergent sanitaire . consommation: 2
+    achats . produits chimiques . désinfectant . consommation: 1
+    achats . produits chimiques . chlore . consommation: 1
+    achats . produits chimiques . bicarbonate de soude . consommation: 1
+    achats . produits chimiques . savon solide . consommation: 1
+    achats . produits chimiques . vinaigre blanc . consommation: 1
+    achats . produits chimiques . soude solide . consommation: 1
+    achats . produits chimiques . acide sulfurique . consommation: 1
+    achats . produits chimiques . acide chlorhydrique . consommation: 1
+    achats . produits chimiques . peinture revêtement mural intérieur . consommation: 1
+    achats . produits chimiques . peinture revêtement mural extérieur . consommation: 1
+    achats . équipements de sport . ballon de volley . nombre: 2
+    achats . équipements de sport . ballon de handball . nombre: 2
+    achats . équipements de sport . kimono judo . nombre: 1
+    achats . équipements de sport . shorts tous sports . nombre: 5
+    achats . équipements de sport . maillots tous sports . nombre: 5
+    achats . équipements de sport . t-shirt polyester . nombre: 5
+    achats . équipements de sport . ballon de rugby . nombre: 1
+    achats . équipements de sport . ballon de basket . nombre: 1
+    achats . équipements de sport . ballon de football . nombre: 1
+    achats . déchets recyclables . papier . nombre: 10
+    achats . déchets recyclables . carton . nombre: 5
+    achats . déchets recyclables . plastique . nombre: 3
+    achats . déchets recyclables . verre . nombre: 2
+    achats . déchets recyclables . métal . nombre: 1
+    achats . déchets recyclables . bois . nombre: 1
+    achats . déchets recyclables . textiles . nombre: 1
+    achats . déchets recyclables . DEEE . nombre: 1
+    achats . ordures ménagères résiduelles . ordures ménagères résiduelles . nombre: 10
