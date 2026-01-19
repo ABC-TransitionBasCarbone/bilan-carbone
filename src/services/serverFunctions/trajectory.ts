@@ -68,7 +68,7 @@ export const createTrajectoryWithObjectives = async (input: CreateTrajectoryInpu
       if (defaultObjectives) {
         objectives = defaultObjectives
       } else {
-        throw new Error(`${input.type} mode requires objectives to be provided`)
+        throw new Error(`${input.type} trajectory must have at least 1 objective`)
       }
     }
 

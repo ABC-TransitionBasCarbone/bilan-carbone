@@ -1,4 +1,5 @@
 import { TrajectoryDataPoint } from '@/components/study/transitionPlan/TrajectoryGraph'
+import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import type { SectenInfo } from '@prisma/client'
 import {
   OvershootAdjustment,
@@ -192,6 +193,21 @@ export const calculateSNBCReductionRates = (
   }
 
   return { rateTo2030, rateFrom2030To2050 }
+}
+
+export const getSNBCReductionRates = (
+  trajectory: TrajectoryWithObjectives,
+): { rateTo2030: number; rateFrom2030To2050: number } | null => {
+  const objective2030 = trajectory.objectives.find((obj) => obj.targetYear === 2030)
+  const objective2050 = trajectory.objectives.find((obj) => obj.targetYear === 2050)
+  if (objective2030 && objective2050) {
+    return {
+      rateTo2030: objective2030.reductionRate,
+      rateFrom2030To2050: objective2050.reductionRate,
+    }
+  }
+
+  return null
 }
 
 /**

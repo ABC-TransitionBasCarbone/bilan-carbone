@@ -35,11 +35,14 @@ const TrajectoryCreationStep2 = ({
   snbcRates,
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectoryModal')
-  const reductionRate = getReductionRatePerType(trajectoryType)
+  const sbtiReductionRate = getReductionRatePerType(trajectoryType)
   const maxReferenceDate = dayjs().year(studyYear)
 
   const snbcReductionRate2030 = snbcRates?.rateTo2030
   const snbcReductionRate2050 = snbcRates?.rateFrom2030To2050
+
+  const rateTo2030 = isSNBC ? snbcReductionRate2030 : isSBTI ? sbtiReductionRate : undefined
+  const rateFrom2030To2050 = isSNBC ? snbcReductionRate2050 : isSBTI ? sbtiReductionRate : undefined
 
   const getMainTrajectoryType = () => {
     if (trajectoryType === TrajectoryType.SBTI_15 || trajectoryType === TrajectoryType.SBTI_WB2C) {
@@ -179,7 +182,7 @@ const TrajectoryCreationStep2 = ({
         <div className="flex gapped15">
           <ObjectiveCard
             name={isSBTI || isSNBC ? t('objectives.horizon2030') : ''}
-            reductionRate={isSNBC ? snbcReductionRate2030 : reductionRate}
+            reductionRate={rateTo2030}
             isEditable={!isSBTI && !isSNBC}
             control={control}
             index={0}
@@ -187,7 +190,7 @@ const TrajectoryCreationStep2 = ({
 
           <ObjectiveCard
             name={isSBTI || isSNBC ? t('objectives.horizon2050') : ''}
-            reductionRate={isSNBC ? snbcReductionRate2050 : reductionRate}
+            reductionRate={rateFrom2030To2050}
             isEditable={!isSBTI && !isSNBC}
             control={control}
             index={1}

@@ -10,7 +10,7 @@ import {
   updateTrajectory,
 } from '@/services/serverFunctions/trajectory'
 import { createTrajectorySchema, TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
-import { calculateSNBCReductionRates } from '@/utils/snbc'
+import { calculateSNBCReductionRates, getSNBCReductionRates } from '@/utils/snbc'
 import { getYearFromDateStr } from '@/utils/time'
 import { getDefaultObjectivesForTrajectoryType, SBTI_START_YEAR } from '@/utils/trajectory'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -59,7 +59,7 @@ const TrajectoryCreationModal = ({
   const [isLoading, setIsLoading] = useState(false)
   const { callServerFunction } = useServerFunction()
 
-  const snbcRates = isEditMode ? null : calculateSNBCReductionRates(sectenData, studyYear)
+  const snbcRates = isEditMode ? getSNBCReductionRates(trajectory) : calculateSNBCReductionRates(sectenData, studyYear)
 
   const trajectorySchema = createTrajectorySchema()
 
