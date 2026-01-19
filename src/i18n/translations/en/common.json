@@ -113,6 +113,32 @@
         "pie": "Pie chart",
         "ratio": "Carbon intensities"
       }
+    },
+    "questions": {
+      "actions": "Actions",
+      "add": "Add a question",
+      "error": "Error during saving",
+      "next": "Next sub-post",
+      "previous": "Previous sub-post",
+      "numberOfYears": "Number of years",
+      "format": {
+        "text": "Text",
+        "postalCode": "Postal code",
+        "phone": "Phone number",
+        "year": "Year",
+        "hour": "Hour",
+        "number": "Number"
+      },
+      "errorLoadingQuestions": "Error while loading questions",
+      "retry": "Retry",
+      "finish": "Finish",
+      "noQuestions": "No questions available for this sub-post.",
+      "autoSaveError": "Some answers could not be saved automatically. Please check your connection and try again."
+    },
+    "infography": {
+      "form": {
+        "backToInfography": "Afficher les postes"
+      }
     }
   }
 }
