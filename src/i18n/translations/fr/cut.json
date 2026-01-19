@@ -115,11 +115,6 @@
       "validation": {
         "sites": "Veuillez selectionner au moins un cinéma concerné par l'étude"
       }
-    },
-    "infography": {
-      "form": {
-        "backToInfography": "Afficher les postes"
-      }
     }
   },
   "organization": {
@@ -195,11 +190,6 @@
   "emissionFactors": {
     "post": {
       "questions": {
-        "actions": "Actions",
-        "add": "Ajouter",
-        "error": "Erreur lors de la mise à jour du champs",
-        "next": "Sous-poste suivant",
-        "previous": "Sous-poste précédent",
         "numberOfYears": "Nombre d'années",
         "bonbons": "Bonbons - Nombre (sachets de {value}g)",
         "chips": "Chips - Nombre (sachets de {value}g)",
@@ -210,20 +200,7 @@
         "Refrigerateurs": "Réfrigérateurs",
         "Congelateurs": "Congélateurs",
         "Warmers": "Warmers",
-        "Distributeurs": "Distributeurs snacks / boisson",
-        "format": {
-          "text": "Texte",
-          "postalCode": "Code postal",
-          "phone": "Téléphone",
-          "year": "Année",
-          "hour": "Heure",
-          "number": "Nombre"
-        },
-        "errorLoadingQuestions": "Erreur lors du chargement des questions",
-        "retry": "Réessayer",
-        "finish": "Terminer",
-        "noQuestions": "Aucune question trouvée pour ce sous-poste",
-        "autoSaveError": "Certaines réponses n'ont pas pu être sauvegardées automatiquement. Veuillez vérifier votre connexion et réessayer."
+        "Distributeurs": "Distributeurs snacks / boisson"
       }
     }
   },
