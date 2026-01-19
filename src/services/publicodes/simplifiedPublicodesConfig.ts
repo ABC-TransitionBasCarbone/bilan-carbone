@@ -1,56 +1,34 @@
 import { FormLayout } from '@/components/publicodes-form/layouts/formLayout'
-import {
-  ClicksonFormProvider,
-  ClicksonSituationProvider,
-  useClicksonPublicodes,
-  useClicksonSituation,
-} from '@/environments/clickson/context/publicodesContext'
+import { PUBLICODES_CLICKSON_VERSION, PUBLICODES_COUNT_VERSION } from '@/constants/versions'
 import { getClicksonEngine } from '@/environments/clickson/publicodes/clickson-engine'
 import {
   getFormLayoutsForSubPostClickson,
   getPostRuleNameClickson,
   getSubPostRuleNameClickson,
 } from '@/environments/clickson/publicodes/subPostMapping'
-import {
-  CutFormProvider,
-  CutSituationProvider,
-  useCutPublicodes,
-  useCutSituation,
-} from '@/environments/cut/context/publicodesContext'
 import { getCutEngine } from '@/environments/cut/publicodes/cut-engine'
 import {
   getFormLayoutsForSubPostCUT,
   getPostRuleNameCut,
   getSubPostRuleNameCut,
 } from '@/environments/cut/publicodes/subPostMapping'
-import {
-  PublicodesFormContextValue,
-  PublicodesFormProviderProps,
-  PublicodesSituationContextValue,
-  PublicodesSituationProviderProps,
-} from '@/lib/publicodes/context/createPublicodesContext'
 import { Environment, SubPost } from '@prisma/client'
-import Engine, { Situation } from 'publicodes'
-import { ComponentType } from 'react'
+import Engine from 'publicodes'
 import { ClicksonPost, CutPost, SimplifiedPost, subPostsByPostClickson, subPostsByPostCUT } from '../posts'
 
-export interface SimplifiedPublicodesConfig<
-  RuleName extends string = string,
-  S extends Situation<RuleName> = Situation<string>,
-> {
+export type SimplifiedEnvironment = 'CUT' | 'CLICKSON'
+
+export interface SimplifiedPublicodesConfig<RuleName extends string = string> {
   posts: SimplifiedPost[]
   subPostsByPost: Record<SimplifiedPost, SubPost[]>
   getFormLayout: (subPost: SubPost) => FormLayout<string>[]
   getPostRuleName: (post: SimplifiedPost) => string
   getSubPostRuleName: (subPost: SubPost) => string | undefined
-  getEngine: () => Engine<string>
-  SituationProvider: ComponentType<PublicodesSituationProviderProps>
-  useSituation: () => PublicodesSituationContextValue<RuleName, S>
-  FormProvider: ComponentType<PublicodesFormProviderProps>
-  usePublicodesForm: () => PublicodesFormContextValue<RuleName, S>
+  getEngine: () => Engine<RuleName>
+  modelVersion: string
 }
 
-const SIMPLIFIED_PUBLICODES_CONFIGS: Partial<Record<Environment, SimplifiedPublicodesConfig>> = {
+const SIMPLIFIED_PUBLICODES_CONFIGS = {
   [Environment.CUT]: {
     posts: Object.values(CutPost),
     subPostsByPost: subPostsByPostCUT as Record<SimplifiedPost, SubPost[]>,
@@ -58,11 +36,8 @@ const SIMPLIFIED_PUBLICODES_CONFIGS: Partial<Record<Environment, SimplifiedPubli
     getPostRuleName: getPostRuleNameCut as (post: SimplifiedPost) => string,
     getSubPostRuleName: getSubPostRuleNameCut,
     getEngine: getCutEngine,
-    SituationProvider: CutSituationProvider,
-    useSituation: useCutSituation,
-    FormProvider: CutFormProvider,
-    usePublicodesForm: useCutPublicodes,
-  } as SimplifiedPublicodesConfig,
+    modelVersion: PUBLICODES_COUNT_VERSION,
+  } satisfies SimplifiedPublicodesConfig,
   [Environment.CLICKSON]: {
     posts: Object.values(ClicksonPost),
     subPostsByPost: subPostsByPostClickson as Record<SimplifiedPost, SubPost[]>,
@@ -70,13 +45,10 @@ const SIMPLIFIED_PUBLICODES_CONFIGS: Partial<Record<Environment, SimplifiedPubli
     getPostRuleName: getPostRuleNameClickson as (post: SimplifiedPost) => string,
     getSubPostRuleName: getSubPostRuleNameClickson,
     getEngine: getClicksonEngine,
-    SituationProvider: ClicksonSituationProvider,
-    useSituation: useClicksonSituation,
-    FormProvider: ClicksonFormProvider,
-    usePublicodesForm: useClicksonPublicodes,
-  } as SimplifiedPublicodesConfig,
-}
+    modelVersion: PUBLICODES_CLICKSON_VERSION,
+  } satisfies SimplifiedPublicodesConfig,
+} satisfies Record<SimplifiedEnvironment, SimplifiedPublicodesConfig>
 
-export const getSimplifiedPublicodesConfig = (env: Environment): SimplifiedPublicodesConfig | undefined => {
+export const getSimplifiedPublicodesConfig = (env: SimplifiedEnvironment): SimplifiedPublicodesConfig => {
   return SIMPLIFIED_PUBLICODES_CONFIGS[env]
 }

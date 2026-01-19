@@ -2,23 +2,19 @@
 
 import { SubPost } from '@/components/dynamic-form/types/questionTypes'
 import PublicodesForm from '@/components/publicodes-form/PublicodesForm'
-import { getSimplifiedPublicodesConfig } from '@/services/publicodes/simplifiedPublicodesConfig'
+import { usePublicodesForm } from '@/lib/publicodes/context'
 import { CircularProgress } from '@mui/material'
-import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import styles from './PublicodesSubPostForm.module.css'
 
 export interface PublicodesSubPostFormProps {
-  environment: Environment
   subPost: SubPost
 }
 
-const PublicodesSubPostForm = ({ subPost, environment }: PublicodesSubPostFormProps) => {
+const PublicodesSubPostForm = ({ subPost }: PublicodesSubPostFormProps) => {
   const tQuestions = useTranslations('emissionFactors.post.questions')
-  // TODO: handle the case where config is undefined
-  const config = getSimplifiedPublicodesConfig(environment)!
-  const { engine, situation, updateField, isLoading, error } = config.usePublicodesForm()
+  const { engine, situation, updateField, isLoading, error, config } = usePublicodesForm()
   const formLayouts = config.getFormLayout(subPost)
 
   if (error) {
