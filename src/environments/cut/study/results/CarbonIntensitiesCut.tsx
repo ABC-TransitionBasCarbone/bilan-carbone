@@ -68,37 +68,37 @@ const CarbonIntensitiesCut = ({ study, studySite, withDepValue, caUnit = SiteCAU
     {
       key: 'entries',
       divider: entries,
-      unit: StudyResultUnit.K,
+      unit: StudyResultUnit.T,
       label: t('intensities.entrie'),
     },
     {
       key: 'superficy',
       divider: superficy,
-      unit: StudyResultUnit.K,
+      unit: StudyResultUnit.T,
       label: t('intensities.superficy'),
     },
     {
       key: 'sessions',
       divider: sessions,
-      unit: StudyResultUnit.K,
+      unit: StudyResultUnit.T,
       label: t('intensities.session'),
     },
     {
       key: 'movies',
       divider: movies,
-      unit: StudyResultUnit.K,
+      unit: StudyResultUnit.T,
       label: t('intensities.movie'),
     },
     {
       key: 'chairs',
       divider: chairs,
-      unit: StudyResultUnit.K,
+      unit: StudyResultUnit.T,
       label: t('intensities.chair'),
     },
     {
       key: 'ca',
       divider: ca,
-      unit: StudyResultUnit.K,
+      unit: StudyResultUnit.T,
       label: t('intensities.ca'),
     },
   ]
