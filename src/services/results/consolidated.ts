@@ -2,6 +2,7 @@ import { FullStudy } from '@/db/study'
 import { customPostOrder } from '@/environments/clickson/utils/constant'
 import { Translations } from '@/types/translation'
 import { sortByCustomOrder } from '@/utils/array'
+import { getBaseFilteredEmissionSources } from '@/utils/study'
 import { Environment, SubPost } from '@prisma/client'
 import { getEmissionResults, getEmissionSourcesTotalCo2, getEmissionSourcesTotalMonetaryCo2 } from '../emissionSource'
 import { hasCustomPostOrder } from '../permissions/environment'
@@ -32,7 +33,7 @@ export const computeResultsByPost = (
   environment: Environment,
   type?: ResultType,
 ): ResultsByPost[] => {
-  const siteEmissionSources = getSiteEmissionSources(study.emissionSources, studySite)
+  const siteEmissionSources = getBaseFilteredEmissionSources(getSiteEmissionSources(study.emissionSources, studySite))
   const convertToBc = type === AdditionalResultTypes.CONSOLIDATED && environment !== Environment.BC
   const convertedSiteEmissionSources = convertToBc
     ? siteEmissionSources.map((emissionSource) => {
@@ -142,7 +143,7 @@ export const computeResultsByTag = (
   environment: Environment,
   t: Translations,
 ): ResultsByTag[] => {
-  const siteEmissionSources = getSiteEmissionSources(study.emissionSources, studySite)
+  const siteEmissionSources = getBaseFilteredEmissionSources(getSiteEmissionSources(study.emissionSources, studySite))
   const emissionSourceWithEmissionValue = siteEmissionSources
     .filter((emissionSource) => filterWithDependencies(emissionSource.subPost, withDependencies))
     .map((emissionSource) => ({

@@ -5,7 +5,17 @@ import { ResultsByPost } from '@/services/results/consolidated'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { hasSufficientLevel } from '@/services/study'
 import { isAdmin } from '@/utils/user'
-import { Environment, Export, Level, Role, StudyResultUnit, StudyRole, SubPost, Unit } from '@prisma/client'
+import {
+  EmissionFactorBase,
+  Environment,
+  Export,
+  Level,
+  Role,
+  StudyResultUnit,
+  StudyRole,
+  SubPost,
+  Unit,
+} from '@prisma/client'
 import { Getter } from '@tanstack/react-table'
 import { UserSession } from 'next-auth'
 import { unique } from './array'
@@ -208,3 +218,14 @@ export const getAllSpecificFieldsForExports = (exportTypes: Export[]) =>
 
 export const formatEmission = (getValue: Getter<number>, resultsUnit: StudyResultUnit) =>
   formatNumber(getValue() / STUDY_UNIT_VALUES[resultsUnit])
+
+export const getBaseFilteredEmissionSources = (
+  emissionSources: FullStudy['emissionSources'],
+  base: EmissionFactorBase = EmissionFactorBase.LocationBased,
+) =>
+  emissionSources.filter(
+    (emissionSource) =>
+      !emissionSource.emissionFactor ||
+      !emissionSource.emissionFactor.base ||
+      emissionSource.emissionFactor.base === base,
+  )
