@@ -7,13 +7,14 @@ import { customRich } from '@/i18n/customRich'
 import { TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
 import { toTitleCase } from '@/utils/string'
 import { getReductionRatePerType } from '@/utils/trajectory'
+import AddIcon from '@mui/icons-material/Add'
 import { FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material'
 import { TrajectoryType } from '@prisma/client'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
-import { Control, Controller } from 'react-hook-form'
+import { Control, Controller, useFieldArray } from 'react-hook-form'
 import ObjectiveCard from './ObjectiveCard'
 import styles from './TrajectoryCreationModal.module.css'
 
@@ -49,6 +50,14 @@ const TrajectoryCreationStep2 = ({
 
   const rateTo2030 = isSNBC ? snbcReductionRate2030 : isSBTI ? sbtiReductionRate : undefined
   const rateFrom2030To2050 = isSNBC ? snbcReductionRate2050 : isSBTI ? sbtiReductionRate : undefined
+  const {
+    fields: objectives,
+    append,
+    remove,
+  } = useFieldArray({
+    control,
+    name: 'objectives',
+  })
 
   const getMainTrajectoryType = () => {
     if (trajectoryType === TrajectoryType.SBTI_15 || trajectoryType === TrajectoryType.SBTI_WB2C) {
@@ -196,22 +205,45 @@ const TrajectoryCreationStep2 = ({
           </Typography>
         )}
 
-        <div className="flex gapped15">
-          <ObjectiveCard
-            name={isSBTI || isSNBC ? t('objectives.horizon2030') : ''}
-            reductionRate={rateTo2030}
-            isEditable={!isSBTI && !isSNBC}
-            control={control}
-            index={0}
-          />
+        <div className="wrap gapped15">
+          {isSBTI || isSNBC ? (
+            <>
+              <ObjectiveCard
+                name={t('objectives.horizon2030')}
+                reductionRate={rateTo2030}
+                isEditable={false}
+                control={control}
+                index={0}
+              />
 
-          <ObjectiveCard
-            name={isSBTI || isSNBC ? t('objectives.horizon2050') : ''}
-            reductionRate={rateFrom2030To2050}
-            isEditable={!isSBTI && !isSNBC}
-            control={control}
-            index={1}
-          />
+              <ObjectiveCard
+                name={t('objectives.horizon2050')}
+                reductionRate={rateFrom2030To2050}
+                isEditable={false}
+                control={control}
+                index={1}
+              />
+            </>
+          ) : (
+            <>
+              {objectives.map((objective, index) => (
+                <ObjectiveCard
+                  key={objective.id}
+                  isEditable
+                  control={control}
+                  index={index}
+                  onDelete={() => remove(index)}
+                />
+              ))}
+
+              <div
+                onClick={() => append({ targetYear: null, reductionRate: null })}
+                className={styles.addObjectiveButton}
+              >
+                <AddIcon fontSize="large" />
+              </div>
+            </>
+          )}
         </div>
       </div>
       {glossary && (

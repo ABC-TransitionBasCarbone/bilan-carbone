@@ -44,7 +44,10 @@ const defaultValues: TrajectoryFormData = {
   name: '',
   description: '',
   referenceYear: SBTI_START_YEAR.toString(),
-  objectives: [],
+  objectives: Array.from({ length: 2 }).map(() => ({
+    targetYear: null,
+    reductionRate: null,
+  })),
 }
 
 const TrajectoryCreationModal = ({
