@@ -1,10 +1,10 @@
 import { FullStudy } from '@/db/study'
-import { ClicksonSituationProvider } from '@/environments/clickson/context/publicodesContext'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import { CutSituationProvider } from '@/environments/cut/context/publicodesContext'
 import AllPostsInfographySimplified from '@/environments/simplified/study/infography/AllPostsInfography'
 import AllPostsInfographyTilt from '@/environments/tilt/study/infography/AllPostsInfography'
+import { PublicodesSituationProvider } from '@/lib/publicodes/context'
 import { CutPost, TiltPost } from '@/services/posts'
+import { SimplifiedEnvironment } from '@/services/publicodes/simplifiedPublicodesConfig'
 import { computeResultsByPostFromEmissionSources } from '@/services/results/consolidated'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { Environment } from '@prisma/client'
@@ -54,14 +54,22 @@ const AllPostsInfographyContainer = ({ study, studySite }: Props) => {
       defaultComponent={<AllPostsInfography study={study} data={data} />}
       environmentComponents={{
         [Environment.CUT]: (
-          <CutSituationProvider studyId={study.id} studySiteId={studySite}>
-            <AllPostsInfographySimplified study={study} environment={Environment.CUT} />
-          </CutSituationProvider>
+          <PublicodesSituationProvider
+            environment={Environment.CUT as SimplifiedEnvironment}
+            studyId={study.id}
+            studySiteId={studySite}
+          >
+            <AllPostsInfographySimplified study={study} />
+          </PublicodesSituationProvider>
         ),
         [Environment.CLICKSON]: (
-          <ClicksonSituationProvider studyId={study.id} studySiteId={studySite}>
-            <AllPostsInfographySimplified study={study} environment={Environment.CLICKSON} />
-          </ClicksonSituationProvider>
+          <PublicodesSituationProvider
+            environment={Environment.CLICKSON as SimplifiedEnvironment}
+            studyId={study.id}
+            studySiteId={studySite}
+          >
+            <AllPostsInfographySimplified study={study} />
+          </PublicodesSituationProvider>
         ),
         [Environment.TILT]: <AllPostsInfographyTilt study={study} data={data} />,
       }}

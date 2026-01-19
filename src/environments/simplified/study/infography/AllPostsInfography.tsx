@@ -1,19 +1,17 @@
 import { FullStudy } from '@/db/study'
 import EnvironmentLoader from '@/environments/core/utils/EnvironmentLoader'
+import { usePublicodesSituation } from '@/lib/publicodes/context'
 import { getQuestionProgressBySubPost, StatsResult } from '@/services/publicodes/questionProgress'
-import { getSimplifiedPublicodesConfig } from '@/services/publicodes/simplifiedPublicodesConfig'
 import { BaseResultsByPost } from '@/services/results/consolidated'
 import { computeBaseResultsByPostFromEngine } from '@/services/results/publicodes'
 import { getEmissionValueString } from '@/utils/study'
 import { styled } from '@mui/material'
-import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { SimplifiedPostInfography } from './SimplifiedPostInfography'
 
 interface Props {
   study: FullStudy
-  environment: Environment
 }
 
 const StyledGrid = styled('div')({
@@ -25,12 +23,10 @@ const StyledGrid = styled('div')({
   paddingBottom: '12rem',
 })
 
-const AllPostsInfography = ({ study, environment }: Props) => {
+const AllPostsInfography = ({ study }: Props) => {
   const tUnits = useTranslations('study.results.units')
   const tPost = useTranslations('emissionFactors.post')
-  // TODO: handle more properly the case where config does not exist
-  const config = getSimplifiedPublicodesConfig(environment)!
-  const { engine, situation, isLoading } = config.useSituation()
+  const { engine, situation, config, isLoading } = usePublicodesSituation()
 
   const { questionProgress, publicodesResults } = useMemo<{
     questionProgress: StatsResult
