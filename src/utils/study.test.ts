@@ -1,9 +1,11 @@
 import * as StudyServiceModule from '@/services/study'
+import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
+import { mockedEmissionSourceEmissionFactor } from '@/tests/utils/models/study'
 import { getMockedAuthUser } from '@/tests/utils/models/user'
 import * as UserUtilsModule from '@/utils/user'
 import { expect } from '@jest/globals'
-import { Environment, Level, Role } from '@prisma/client'
-import { getDuplicableEnvironments, getUserRoleOnPublicStudy } from './study'
+import { EmissionFactorBase, Environment, Level, Role } from '@prisma/client'
+import { getBaseFilteredEmissionSources, getDuplicableEnvironments, getUserRoleOnPublicStudy } from './study'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('../services/file', () => ({ download: jest.fn() }))
@@ -14,6 +16,34 @@ jest.mock('@/utils/user', () => ({ isAdmin: jest.fn() }))
 
 const mockHasSufficientLevel = StudyServiceModule.hasSufficientLevel as jest.Mock
 const mockIsAdmin = UserUtilsModule.isAdmin as unknown as jest.Mock
+
+const emissionSources = [
+  getMockedFullStudyEmissionSource({
+    id: '1',
+    emissionFactor: undefined,
+  }),
+  getMockedFullStudyEmissionSource({
+    id: '2',
+    emissionFactor: {
+      ...mockedEmissionSourceEmissionFactor,
+      base: null,
+    },
+  }),
+  getMockedFullStudyEmissionSource({
+    id: '3',
+    emissionFactor: {
+      ...mockedEmissionSourceEmissionFactor,
+      base: EmissionFactorBase.LocationBased,
+    },
+  }),
+  getMockedFullStudyEmissionSource({
+    id: '4',
+    emissionFactor: {
+      ...mockedEmissionSourceEmissionFactor,
+      base: EmissionFactorBase.MarketBased,
+    },
+  }),
+]
 
 const userMock = getMockedAuthUser()
 
@@ -94,6 +124,32 @@ describe('StudyUtils functions', () => {
       const res = getUserRoleOnPublicStudy(user, Level.Initial)
 
       expect(res).toBe('Reader')
+    })
+  })
+
+  describe('getBaseFilteredEmissionSources', () => {
+    it('Should filter market-based emission source by default', () => {
+      const res = getBaseFilteredEmissionSources(emissionSources)
+      expect(res).toHaveLength(3)
+      expect(res[0].id).toBe('1')
+      expect(res[1].id).toBe('2')
+      expect(res[2].id).toBe('3')
+    })
+
+    it('Should filter market-based emission source', () => {
+      const res = getBaseFilteredEmissionSources(emissionSources, EmissionFactorBase.LocationBased)
+      expect(res).toHaveLength(3)
+      expect(res[0].id).toBe('1')
+      expect(res[1].id).toBe('2')
+      expect(res[2].id).toBe('3')
+    })
+
+    it('Should filter location-based emission source', () => {
+      const res = getBaseFilteredEmissionSources(emissionSources, EmissionFactorBase.MarketBased)
+      expect(res).toHaveLength(3)
+      expect(res[0].id).toBe('1')
+      expect(res[1].id).toBe('2')
+      expect(res[2].id).toBe('4')
     })
   })
 })
