@@ -12,7 +12,11 @@ import {
 import { createTrajectorySchema, TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
 import { calculateSNBCReductionRates, getSNBCReductionRates } from '@/utils/snbc'
 import { getYearFromDateStr } from '@/utils/time'
-import { getDefaultObjectivesForTrajectoryType, SBTI_START_YEAR } from '@/utils/trajectory'
+import {
+  getDefaultObjectivesForTrajectoryType,
+  getDefaultReferenceYearForTrajectoryType,
+  SBTI_START_YEAR,
+} from '@/utils/trajectory'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { SectenInfo, TrajectoryType } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -107,13 +111,8 @@ const TrajectoryCreationModal = ({
   const handleModeSelect = (type: TrajectoryType) => {
     setValue('trajectoryType', type, { shouldValidate: true })
 
-    // Clear referenceYear for SNBC types
-    if (type === TrajectoryType.SNBC_GENERAL || type === TrajectoryType.SNBC_SECTORAL) {
-      setValue('referenceYear', '', { shouldValidate: true })
-    } else if (type === TrajectoryType.SBTI_15 || type === TrajectoryType.SBTI_WB2C) {
-      // Set default reference year for SBTI
-      setValue('referenceYear', SBTI_START_YEAR.toString(), { shouldValidate: true })
-    }
+    const defaultReferenceYear = getDefaultReferenceYearForTrajectoryType(type, studyYear)
+    setValue('referenceYear', defaultReferenceYear.toString(), { shouldValidate: true })
   }
 
   const onSubmit = async (data: TrajectoryFormData) => {
@@ -123,6 +122,8 @@ const TrajectoryCreationModal = ({
       return
     }
 
+    const referenceYear = data.referenceYear ? getYearFromDateStr(data.referenceYear) : null
+
     if (isEditMode && trajectory) {
       const objectives = data.objectives
         .filter((obj) => obj.targetYear && obj.reductionRate !== null && obj.reductionRate !== undefined)
@@ -131,8 +132,6 @@ const TrajectoryCreationModal = ({
           targetYear: getYearFromDateStr(obj.targetYear!),
           reductionRate: Number((obj.reductionRate! / 100).toFixed(4)), // Keep precision of 2 digits percentage so 0.01% = 0.0001 => 4 digits
         }))
-
-      const referenceYear = data.referenceYear ? getYearFromDateStr(data.referenceYear) : null
 
       await callServerFunction(
         () =>
@@ -158,8 +157,6 @@ const TrajectoryCreationModal = ({
       )
       return
     }
-
-    const referenceYear = data.referenceYear ? getYearFromDateStr(data.referenceYear) : null
 
     const input: CreateTrajectoryInput = {
       transitionPlanId,

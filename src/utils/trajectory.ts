@@ -1528,3 +1528,12 @@ export const getMaxYearFromTrajectories = (maxYear: number, trajectories: (Traje
   const years = trajectories.flatMap((trajectory) => extractYearsFromTrajectory(trajectory))
   return Math.max(maxYear, Math.max(...years))
 }
+
+export const getDefaultReferenceYearForTrajectoryType = (type: TrajectoryType, studyYear: number): number => {
+  if (type === TrajectoryType.SBTI_15 || type === TrajectoryType.SBTI_WB2C) {
+    return SBTI_START_YEAR
+  }
+
+  // For SNBC or custom trajectories, use the study year as reference year
+  return studyYear
+}

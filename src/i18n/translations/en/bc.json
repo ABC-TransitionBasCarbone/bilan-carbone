@@ -1041,9 +1041,7 @@
         "namePlaceholder": "Give your trajectory a name",
         "description": "My trajectory description",
         "descriptionPlaceholder": "Describe your trajectory",
-        "referenceYear": {
-          "label": "Trajectory Start Year (optional)"
-        },
+        "referenceYear": "Trajectory reference year (optional)",
         "objectives": {
           "title": "Reduction objectives",
           "sbtiDescription": "These reduction objectives are linked to the SBTi reference trajectory and are predefined. You can add intermediate objectives in the \"My reduction objectives\" section",
@@ -1060,6 +1058,12 @@
           "required": "Required field",
           "objectiveBothRequired": "Both year and reduction rate are required",
           "atLeastOneObjective": "At least one complete objective is required for custom trajectories"
+        },
+        "glossary": {
+          "title": "Glossary",
+          "close": "Close",
+          "referenceYear": "Reference Year",
+          "referenceYearDescription": "The reference year corresponds to the starting year of your reduction trajectory. This year serves as the starting point for calculating reduction objectives. For SBTi and SNBC trajectories, the reference year is predefined and cannot be modified. For custom trajectories, you can freely choose this year."
         }
       },
       "objectives": {

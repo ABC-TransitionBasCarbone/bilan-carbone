@@ -1041,9 +1041,7 @@
         "namePlaceholder": "Donner un nom à ma trajectoire",
         "description": "Description de ma trajectoire",
         "descriptionPlaceholder": "Décrivez votre trajectoire",
-        "referenceYear": {
-          "label": "Année de départ de la trajectoire (optionnel)"
-        },
+        "referenceYear": "Année de référence (optionnel)",
         "objectives": {
           "title": "Objectifs de réduction",
           "sbtiDescription": "Ces objectifs de réduction sont liés à la trajectoire de référence SBTi et sont prédéfinis. Vous pourrez ajouter des objectifs intermédiaires dans la rubrique \"Mes objectifs de réduction\"",
@@ -1060,6 +1058,12 @@
           "required": "Champs requis",
           "objectiveBothRequired": "L'année et le taux de réduction sont tous les deux requis",
           "atLeastOneObjective": "Au moins un objectif complet est requis pour les trajectoires personnalisées"
+        },
+        "glossary": {
+          "title": "Glossaire",
+          "close": "Fermer",
+          "referenceYear": "Année de référence",
+          "referenceYearDescription": "L'année de référence correspond à l'année de départ de votre trajectoire de réduction. Cette année sert de point de départ pour calculer les objectifs de réduction. Pour les trajectoires SBTi et SNBC, l'année de référence est prédéfinie et ne peut pas être modifiée. Pour les trajectoires personnalisées, vous pouvez choisir librement cette année."
         }
       },
       "objectives": {

@@ -1,5 +1,8 @@
+import HelpIcon from '@/components/base/HelpIcon'
+import IconLabel from '@/components/base/IconLabel'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormTextField } from '@/components/form/TextField'
+import GlossaryModal from '@/components/modals/GlossaryModal'
 import { customRich } from '@/i18n/customRich'
 import { TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
 import { toTitleCase } from '@/utils/string'
@@ -9,6 +12,7 @@ import { TrajectoryType } from '@prisma/client'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
+import { useState } from 'react'
 import { Control, Controller } from 'react-hook-form'
 import ObjectiveCard from './ObjectiveCard'
 import styles from './TrajectoryCreationModal.module.css'
@@ -35,6 +39,8 @@ const TrajectoryCreationStep2 = ({
   snbcRates,
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectoryModal')
+  const tGlossary = useTranslations('study.transitionPlan.trajectoryModal.glossary')
+  const [glossary, setGlossary] = useState('')
   const sbtiReductionRate = getReductionRatePerType(trajectoryType)
   const maxReferenceDate = dayjs().year(studyYear)
 
@@ -51,7 +57,11 @@ const TrajectoryCreationStep2 = ({
     if (trajectoryType === TrajectoryType.SNBC_GENERAL || trajectoryType === TrajectoryType.SNBC_SECTORAL) {
       return 'SNBC'
     }
-    return trajectoryType
+    if (trajectoryType === TrajectoryType.CUSTOM) {
+      return TrajectoryType.CUSTOM
+    }
+    // Default to SBTI if trajectoryType
+    return 'SBTI'
   }
 
   const handleMainTypeChange = (value: string) => {
@@ -107,17 +117,26 @@ const TrajectoryCreationStep2 = ({
         multiline
       />
 
-      <FormDatePicker
-        name="referenceYear"
-        label={t('referenceYear.label')}
-        control={control}
-        translation={t}
-        views={['year']}
-        minDate={dayjs('1990-01-01')}
-        maxDate={maxReferenceDate}
-        clearable
-        fullWidth
-      />
+      <div>
+        <IconLabel
+          icon={<HelpIcon onClick={() => setGlossary('referenceYear')} label={tGlossary('title')} />}
+          iconPosition="after"
+          className="mb-2"
+        >
+          <Typography fontWeight="bold">{t('referenceYear')}</Typography>
+        </IconLabel>
+        <FormDatePicker
+          name="referenceYear"
+          control={control}
+          translation={t}
+          views={['year']}
+          minDate={dayjs('1990-01-01')}
+          maxDate={maxReferenceDate}
+          clearable
+          fullWidth
+          disabled={isSBTI || isSNBC}
+        />
+      </div>
 
       {isSBTI && (
         <Controller
@@ -197,6 +216,16 @@ const TrajectoryCreationStep2 = ({
           />
         </div>
       </div>
+      {glossary && (
+        <GlossaryModal
+          glossary={glossary}
+          label="trajectory-reference-year"
+          t={tGlossary}
+          onClose={() => setGlossary('')}
+        >
+          {tGlossary(`${glossary}Description`)}
+        </GlossaryModal>
+      )}
     </div>
   )
 }
