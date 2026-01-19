@@ -60,7 +60,7 @@ export const createTrajectoryWithObjectives = async (input: CreateTrajectoryInpu
     let objectives: { targetYear: number; reductionRate: number }[]
 
     if (input.objectives && input.objectives.length > 0) {
-      // Use provided objectives, for now only relevamt for SNBC_GENERAL where objectives are calculated client side
+      // Use provided objectives, used for SNBC and CUSTOM trajectories where objectives are defined client side
       objectives = input.objectives
     } else {
       // Try to get default objectives for this trajectory type

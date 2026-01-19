@@ -159,9 +159,9 @@ export const calculateTrajectoryYearBounds = (
       minYear = Math.min(minYear, earliestReferenceYear)
     }
 
-    // For custom SNBC trajectories without a referenceYear, use SNBC_REFERENCE_YEAR (1990)
+    // For custom SNBC trajectories, use SNBC_REFERENCE_YEAR (1990) as min year
     const hasCustomSNBCWithoutReferenceYear = selectedCustomTrajectories.some(
-      (t) => (t.type === 'SNBC_GENERAL' || t.type === 'SNBC_SECTORAL') && t.referenceYear === null,
+      (t) => t.type === TrajectoryType.SNBC_GENERAL || t.type === TrajectoryType.SNBC_SECTORAL,
     )
     if (hasCustomSNBCWithoutReferenceYear) {
       minYear = Math.min(minYear, SNBC_REFERENCE_YEAR)
@@ -1100,7 +1100,14 @@ export const getCustomData = (
     let referenceYear: number | null = null
     let referenceEmissions: number | null = null
 
-    if (customTrajectory.referenceYear) {
+    if (
+      !pastStudyReference &&
+      (customTrajectory.type === TrajectoryType.SNBC_GENERAL || customTrajectory.type === TrajectoryType.SNBC_SECTORAL)
+    ) {
+      // For SNBC, default reference is 1990 but we use study start year to build the expected trajectory
+      referenceYear = studyStartYear
+      referenceEmissions = totalCo2
+    } else if (customTrajectory.referenceYear) {
       referenceYear = customTrajectory.referenceYear
       referenceEmissions = getCustomTrajectoryEmissionsForYear(
         customTrajectory,
@@ -1532,8 +1539,10 @@ export const getMaxYearFromTrajectories = (maxYear: number, trajectories: (Traje
 export const getDefaultReferenceYearForTrajectoryType = (type: TrajectoryType, studyYear: number): number => {
   if (type === TrajectoryType.SBTI_15 || type === TrajectoryType.SBTI_WB2C) {
     return SBTI_START_YEAR
+  } else if (type === TrajectoryType.SNBC_GENERAL || type === TrajectoryType.SNBC_SECTORAL) {
+    return SNBC_REFERENCE_YEAR
   }
 
-  // For SNBC or custom trajectories, use the study year as reference year
+  // For custom trajectories, use the study year as reference year
   return studyYear
 }
