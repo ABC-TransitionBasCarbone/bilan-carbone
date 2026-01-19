@@ -1,6 +1,7 @@
 'use client'
 
 import Block from '@/components/base/Block'
+import Box from '@/components/base/Box'
 import Button from '@/components/base/Button'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
@@ -26,10 +27,11 @@ import { getPost } from '@/utils/post'
 import { calculateMonetaryRatio, convertValue } from '@/utils/study'
 import DownloadIcon from '@mui/icons-material/Download'
 import SummarizeIcon from '@mui/icons-material/Summarize'
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
+import { FormControl, InputLabel, MenuItem, Select, Tab, Tabs } from '@mui/material'
 import {
   ControlMode,
   DeactivatableFeature,
+  EmissionFactorBase,
   Environment,
   Export,
   ExportRule,
@@ -74,12 +76,14 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   const tStudyExport = useTranslations('study.export')
   const tCaracterisations = useTranslations('categorisations')
   const tStudyNav = useTranslations('study.navigation')
+  const tBase = useTranslations('emissionFactors.base')
   const { environment } = useAppEnvironmentStore()
   const [type, setType] = useState<ResultType>(AdditionalResultTypes.CONSOLIDATED)
   const exports = useMemo(() => study.exports, [study.exports])
   const [isDownloadReportActive, setIsDownloadReportActive] = useState(false)
   const [selectedSubposts, setSelectedSubposts] = useState<string[]>([])
   const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const [ghgpTabSelected, setGHGPTabSelected] = useState<EmissionFactorBase>(EmissionFactorBase.LocationBased)
   const router = useRouter()
 
   useEffect(() => {
@@ -278,8 +282,9 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   )
 
   const computedGHGPData = useMemo(
-    () => computeGHGPResult(study, ghgpRules, emissionFactorsWithParts, studySite, false, validatedOnly),
-    [study, ghgpRules, emissionFactorsWithParts, studySite, validatedOnly],
+    () =>
+      computeGHGPResult(study, ghgpRules, emissionFactorsWithParts, studySite, false, validatedOnly, ghgpTabSelected),
+    [study, ghgpRules, emissionFactorsWithParts, studySite, validatedOnly, ghgpTabSelected],
   )
 
   const downloadReport = useCallback(async () => {
@@ -476,7 +481,16 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
             <BegesResultsTable study={study} withDepValue={withDepValue} data={computedBegesData} />
           )}
           {type === Export.GHGP && (
-            <GHGPResultsTable study={study} withDepValue={withDepValue} data={computedGHGPData} />
+            <Box>
+              <div className="flex-row justify-between align-center mb1">
+                <Tabs value={ghgpTabSelected} onChange={(_e, v) => setGHGPTabSelected(v)}>
+                  {Object.values(EmissionFactorBase).map((tab) => (
+                    <Tab key={tab} value={tab} label={tBase(tab)} data-testid={`$ghg-${tab}-tab`} />
+                  ))}
+                </Tabs>
+              </div>
+              <GHGPResultsTable study={study} withDepValue={withDepValue} data={computedGHGPData} />
+            </Box>
           )}
         </div>
         {type === AdditionalResultTypes.CONSOLIDATED && (
