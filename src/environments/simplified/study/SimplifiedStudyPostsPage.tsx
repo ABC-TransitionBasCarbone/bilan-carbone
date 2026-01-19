@@ -8,12 +8,13 @@ import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import CheckIcon from '@mui/icons-material/Check'
 import { ArrowLeftIcon, ArrowRightIcon } from '@mui/x-date-pickers'
-import { SubPost } from '@prisma/client'
+import { Environment, SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
-import { CutFormProvider } from '../context/publicodesContext'
-import CutSaveStatusIndicator from '../study/CutSaveStatusIndicator'
+// import { CutFormProvider } from '../context/publicodesContext'
+// import CutSaveStatusIndicator from '../study/CutSaveStatusIndicator'
+import { getSimplifiedPublicodesConfig } from '@/services/publicodes/simplifiedPublicodesConfig'
 import PublicodesSubPostForm from '../study/PublicodesSubPostForm'
 
 interface Props {
@@ -21,15 +22,18 @@ interface Props {
   currentSubPost: SubPost | undefined
   study: FullStudy
   studySiteId: string
+  environment: Environment
 }
 
-const StudyPostsPageCut = ({ post, currentSubPost, study, studySiteId }: Props) => {
+const SimplifiedStudyPostsPage = ({ post, currentSubPost, study, studySiteId, environment }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
-  const tCutQuestions = useTranslations('emissionFactors.post.questions')
+  const tStudyQuestions = useTranslations('study.questions')
   const tInfography = useTranslations('study.infography')
   const router = useRouter()
   const searchParams = useSearchParams()
   const subPosts = useMemo(() => subPostsByPost[post], [post])
+  const config = getSimplifiedPublicodesConfig(environment)!
+  const { FormProvider } = config
 
   const initialStep = useMemo(() => {
     if (currentSubPost) {
@@ -71,8 +75,9 @@ const StudyPostsPageCut = ({ post, currentSubPost, study, studySiteId }: Props) 
   const isFirstStep = activeStep === 0
   const isLastStep = activeStep >= subPosts.length - 1
 
+  // TODO: <CutSaveStatusIndicator />
   return (
-    <CutFormProvider studyId={study.id} studySiteId={studySiteId}>
+    <FormProvider studyId={study.id} studySiteId={studySiteId}>
       <Block
         title={tPost(post)}
         as="h1"
@@ -84,12 +89,10 @@ const StudyPostsPageCut = ({ post, currentSubPost, study, studySiteId }: Props) 
           },
         ]}
       >
-        <CutSaveStatusIndicator />
-
         <TabsWithGreenStyling
           tabs={subPosts}
           t={tPost}
-          content={<PublicodesSubPostForm subPost={activeSubPost} />}
+          content={<PublicodesSubPostForm environment={environment} subPost={activeSubPost} />}
           activeTab={activeStep}
           setActiveTab={setActiveStep}
         />
@@ -105,7 +108,7 @@ const StudyPostsPageCut = ({ post, currentSubPost, study, studySiteId }: Props) 
               disabled={false}
               variant="contained"
             >
-              {isLastStep ? tCutQuestions('finish') : tCutQuestions('next')}
+              {isLastStep ? tStudyQuestions('finish') : tStudyQuestions('next')}
             </Button>
           }
           backButton={
@@ -115,13 +118,13 @@ const StudyPostsPageCut = ({ post, currentSubPost, study, studySiteId }: Props) 
               disabled={isFirstStep}
               variant="contained"
             >
-              {tCutQuestions('previous')}
+              {tStudyQuestions('previous')}
             </Button>
           }
         />
       </Block>
-    </CutFormProvider>
+    </FormProvider>
   )
 }
 
-export default StudyPostsPageCut
+export default SimplifiedStudyPostsPage
