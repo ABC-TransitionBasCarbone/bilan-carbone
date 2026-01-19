@@ -176,23 +176,65 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<Clickso
   ],
   EquipementsInformatiqueAudiovisuel: [
     table(
-      'Équipements informatiques et audiovisuels',
-      ['Équipement', 'Nombre'],
+      'EquipementsInformatiqueAudiovisuel.question',
+      ['EquipementsInformatiqueAudiovisuel.equipement', 'EquipementsInformatiqueAudiovisuel.nombre'],
       [
-        ['immobilisations . équipements informatique audiovisuel . ordinateur de bureau . nombre'],
-        ['immobilisations . équipements informatique audiovisuel . ordinateur portable . nombre'],
-        ['immobilisations . équipements informatique audiovisuel . tablette . nombre'],
-        ['immobilisations . équipements informatique audiovisuel . imprimante . nombre'],
-        ['immobilisations . équipements informatique audiovisuel . photocopieur . nombre'],
-        ['immobilisations . équipements informatique audiovisuel . vidéoprojecteur . nombre'],
-        ['immobilisations . équipements informatique audiovisuel . serveur informatique . nombre'],
-        ['immobilisations . équipements informatique audiovisuel . télévision 40-49 pouces . nombre'],
-        ['immobilisations . équipements informatique audiovisuel . rack de serveur . nombre'],
-        ['immobilisations . équipements informatique audiovisuel . télécommande universelle sans piles 80g . nombre'],
-        ['immobilisations . équipements informatique audiovisuel . stéréo classique . nombre'],
-        ['immobilisations . équipements informatique audiovisuel . enceinte Bluetooth . nombre'],
-        ['immobilisations . équipements informatique audiovisuel . smartphone 5 pouces . nombre'],
-        ['immobilisations . équipements informatique audiovisuel . écran 23,8 pouces . nombre'],
+        [
+          'immobilisations . équipements informatique audiovisuel . ordinateur de bureau',
+          'immobilisations . équipements informatique audiovisuel . ordinateur de bureau . nombre',
+        ],
+        [
+          'immobilisations . équipements informatique audiovisuel . ordinateur portable',
+          'immobilisations . équipements informatique audiovisuel . ordinateur portable . nombre',
+        ],
+        [
+          'immobilisations . équipements informatique audiovisuel . tablette',
+          'immobilisations . équipements informatique audiovisuel . tablette . nombre',
+        ],
+        [
+          'immobilisations . équipements informatique audiovisuel . imprimante',
+          'immobilisations . équipements informatique audiovisuel . imprimante . nombre',
+        ],
+        [
+          'immobilisations . équipements informatique audiovisuel . photocopieur',
+          'immobilisations . équipements informatique audiovisuel . photocopieur . nombre',
+        ],
+        [
+          'immobilisations . équipements informatique audiovisuel . vidéoprojecteur',
+          'immobilisations . équipements informatique audiovisuel . vidéoprojecteur . nombre',
+        ],
+        [
+          'immobilisations . équipements informatique audiovisuel . serveur informatique',
+          'immobilisations . équipements informatique audiovisuel . serveur informatique . nombre',
+        ],
+        [
+          'immobilisations . équipements informatique audiovisuel . télévision 40-49 pouces',
+          'immobilisations . équipements informatique audiovisuel . télévision 40-49 pouces . nombre',
+        ],
+        [
+          'immobilisations . équipements informatique audiovisuel . rack de serveur',
+          'immobilisations . équipements informatique audiovisuel . rack de serveur . nombre',
+        ],
+        [
+          'immobilisations . équipements informatique audiovisuel . télécommande universelle sans piles 80g',
+          'immobilisations . équipements informatique audiovisuel . télécommande universelle sans piles 80g . nombre',
+        ],
+        [
+          'immobilisations . équipements informatique audiovisuel . stéréo classique',
+          'immobilisations . équipements informatique audiovisuel . stéréo classique . nombre',
+        ],
+        [
+          'immobilisations . équipements informatique audiovisuel . enceinte Bluetooth',
+          'immobilisations . équipements informatique audiovisuel . enceinte Bluetooth . nombre',
+        ],
+        [
+          'immobilisations . équipements informatique audiovisuel . smartphone 5 pouces',
+          'immobilisations . équipements informatique audiovisuel . smartphone 5 pouces . nombre',
+        ],
+        [
+          'immobilisations . équipements informatique audiovisuel . écran 23,8 pouces',
+          'immobilisations . équipements informatique audiovisuel . écran 23,8 pouces . nombre',
+        ],
       ],
     ),
   ],
