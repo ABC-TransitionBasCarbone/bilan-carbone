@@ -41,20 +41,16 @@ import {
   countOrganizationStudiesFromOtherUsers,
   createContributorOnStudy,
   createEmissionSourceTags,
-  createEngagementAction,
   createStudy,
   createStudyComment,
   createStudyEmissionSource,
   createUserOnStudy,
-  deleteEngagementAction as dbDeleteEngagementAction,
   deleteAccountOnStudy,
   deleteContributor,
   deleteStudy,
   deleteStudyComment,
   downgradeStudyUserRoles,
   FullStudy,
-  getEngagementActionById,
-  getEngagementActions,
   getOrganizationStudiesBeforeDate,
   getPendingStudyCommentsCountFromAuthor,
   getSourcesLatestImportVersionId,
@@ -68,7 +64,6 @@ import {
   getStudyTemplate,
   getUsersOnStudy,
   updateEmissionSourceEmissionFactor,
-  updateEngagementAction,
   updateStudy,
   updateStudyComment,
   updateStudyEmissionFactorVersion,
@@ -134,7 +129,6 @@ import { getCaracterisationsBySubPost } from '../emissionSource'
 import { allowedFlowFileTypes, isAllowedFileType } from '../file'
 import { ALREADY_IN_STUDY, NOT_AUTHORIZED, TOO_MANY_COMMENTS } from '../permissions/check'
 import { hasReaderRoleOnStudyAsContributor } from '../permissions/environment'
-import { hasAccessToEngagementActions } from '../permissions/environmentAdvanced'
 import { isInOrgaOrParentFromId } from '../permissions/organization'
 import {
   canAccessFlowFromStudy,
@@ -160,7 +154,6 @@ import { getTransEnvironmentSubPost, hasSufficientLevel } from '../study'
 import { UpdateEmissionSourceCommand } from './emissionSource.command'
 import { saveAnswerForQuestion } from './question'
 import {
-  AddEngagementActionCommand,
   ChangeStudyCinemaCommand,
   ChangeStudyDatesCommand,
   ChangeStudyEstablishmentCommand,

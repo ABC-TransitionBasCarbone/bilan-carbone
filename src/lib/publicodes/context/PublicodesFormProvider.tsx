@@ -111,7 +111,7 @@ function PublicodesAutoSaveProvider<RuleName extends string = string>({
     return () => {
       clearInterval(interval)
     }
-  }, [studySiteId, syncIntervalMs, autoSave.hasUnsavedChanges, setSituation, situation, showSuccessToast, t])
+  }, [studyId, studySiteId, syncIntervalMs, autoSave.hasUnsavedChanges, setSituation, situation, showSuccessToast, t])
 
   const updateField = useCallback(
     (ruleName: RuleName, value: string | number | boolean | undefined) => {
