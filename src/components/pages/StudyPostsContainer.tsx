@@ -2,7 +2,6 @@
 import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import SimplifiedStudyPostsPage from '@/environments/simplified/study/SimplifiedStudyPostsPage'
-import { PublicodesFormProvider } from '@/lib/publicodes/context'
 import { Post, subPostsByPost } from '@/services/posts'
 import { Environment, StudyRole, SubPost } from '@prisma/client'
 import { UserSession } from 'next-auth'
@@ -100,14 +99,22 @@ const StudyPostsPageContainer = ({ post, currentSubPost, study, userRole, user }
         }
         environmentComponents={{
           [Environment.CUT]: (
-            <PublicodesFormProvider environment={Environment.CUT} studyId={study.id} studySiteId={studySite}>
-              <SimplifiedStudyPostsPage currentSubPost={currentSubPost} post={post} study={study} />
-            </PublicodesFormProvider>
+            <SimplifiedStudyPostsPage
+              environment={Environment.CUT}
+              currentSubPost={currentSubPost}
+              post={post}
+              study={study}
+              studySiteId={studySite}
+            />
           ),
           [Environment.CLICKSON]: (
-            <PublicodesFormProvider environment={Environment.CLICKSON} studyId={study.id} studySiteId={studySite}>
-              <SimplifiedStudyPostsPage currentSubPost={currentSubPost} post={post} study={study} />
-            </PublicodesFormProvider>
+            <SimplifiedStudyPostsPage
+              environment={Environment.CLICKSON}
+              currentSubPost={currentSubPost}
+              post={post}
+              study={study}
+              studySiteId={studySite}
+            />
           ),
         }}
       />
