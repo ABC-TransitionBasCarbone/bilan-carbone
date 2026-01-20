@@ -767,6 +767,7 @@
         "immobilisationTitle": "Immobilisation non applicable",
         "otherEmissionsTitle": "Autres émissions amont et aval",
         "otherGasTitle": "Le facteur d'émission emet dans la catégorie \"Autres gaz\"",
+        "marketBasedTitle": "Les émissions \"market-based\" non sont pas égales aux émissions \"location-based\"",
         "tableHeaders": {
           "emissionSource": "Source d'émission",
           "post": "Poste",
@@ -783,6 +784,7 @@
         "immobilisation1": "à compléter - Gabriel",
         "otherEmissions1": "à compléter - Gabriel",
         "otherGas1": "à compléter - Gabriel",
+        "marketBased": "à compléter - Gabriel",
         "additionalMissing": "+ {count, plural,  =1 {1 autre source} other {# autres sources}} d'émission",
         "unexplainedDifference": "Certaines différences ne peuvent être expliquées pour votre étude et peuvent être liées à des problèmes de calcul de l'outil. Si vous le pouvez, merci de nous contacter à l'adresse <support>support</support>."
       },

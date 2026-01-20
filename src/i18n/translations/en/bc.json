@@ -767,6 +767,7 @@
         "immobilisationTitle": "Not applicable immobilisation",
         "otherEmissionsTitle": "Other upstream and downstream emissions",
         "otherGasTitle": "The emission factors emits in the \"Other gases\" category",
+        "marketBasedTitle": "The \"market-based\" emissions are not equal to the \"location-based\" emissions",
         "tableHeaders": {
           "emissionSource": "Emission source",
           "post": "Post",
@@ -783,6 +784,7 @@
         "immobilisation1": "à compléter - Gabriel",
         "otherEmissions1": "à compléter - Gabriel",
         "otherGas1": "à compléter - Gabriel",
+        "marketBased": "à compléter - Gabriel",
         "additionalMissing": "+ {count} other emission {count, plural,  =1 {source} other {sources}}",
         "unexplainedDifference": "Some differences can not be explained. Please, contact us at the <support>support</support>."
       },
