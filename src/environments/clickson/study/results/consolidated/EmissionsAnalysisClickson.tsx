@@ -5,7 +5,6 @@ import CarbonIntensity from '@/components/study/results/consolidated/CarbonInten
 import Data from '@/components/study/results/consolidated/Data'
 import { FullStudy } from '@/db/study'
 import { formatNumber } from '@/utils/number'
-import { SiteCAUnit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
@@ -13,15 +12,15 @@ import { useMemo } from 'react'
 interface Props {
   study: FullStudy
   studySite: string
-  withDepValue: number
-  caUnit?: SiteCAUnit
+  totalValue: number
 }
 
-const EmissionsAnalysisClickson = ({ study, studySite, withDepValue, caUnit = SiteCAUnit.K }: Props) => {
+const EmissionsAnalysisClickson = ({ study, studySite, totalValue }: Props) => {
   const t = useTranslations('study.results')
   const tCommon = useTranslations('common')
   const tResultUnits = useTranslations('study.results.units')
 
+  console.log({ totalValue })
   const studentAndEmployees = useMemo(() => {
     return study.sites.reduce((res, studySite) => res + (studySite.studentNumber || 0) + (studySite.etp || 0), 0) || 1
   }, [studySite])
@@ -35,7 +34,7 @@ const EmissionsAnalysisClickson = ({ study, studySite, withDepValue, caUnit = Si
             <span className="text-center bold">{t('total')}</span>
             <div className="flex-row justify-around">
               <Data
-                value={formatNumber(withDepValue)}
+                value={formatNumber(totalValue)}
                 label={tResultUnits(study.resultsUnit)}
                 testId="withDep-total-result"
               />
@@ -44,7 +43,7 @@ const EmissionsAnalysisClickson = ({ study, studySite, withDepValue, caUnit = Si
           <Box className="flex-col w50">
             <span className="text-center bold">{t('carbonIntensities')}</span>
             <CarbonIntensity
-              withDep={withDepValue}
+              withDep={totalValue}
               withoutDep={0}
               divider={studentAndEmployees}
               resultsUnit={study.resultsUnit}
