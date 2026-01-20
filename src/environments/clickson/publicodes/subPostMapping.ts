@@ -1,5 +1,5 @@
 import { FormLayout, inputLayout, tableLayout } from '@/components/publicodes-form/layouts/formLayout'
-import { ClicksonPost } from '@/services/posts'
+import { ClicksonPost } from '@/services/posts.enums'
 import { SubPost } from '@prisma/client'
 import { ClicksonRuleName } from './types'
 
