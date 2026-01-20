@@ -272,6 +272,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
         tQuality,
         tUnit,
         tResultUnits,
+        tBase,
         environment,
       )
     }
