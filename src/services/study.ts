@@ -520,11 +520,11 @@ const buildMerges = (rulesSpans: Record<number, number>, startRow: number, colum
 export const formatStudyExportResultsForExport = (
   study: FullStudy,
   siteList: { name: string; id: string }[],
-  tExport: Translations,
   tQuality: Translations,
   tSpecificExport: Translations,
   tUnits: Translations,
   exportType: Export,
+  exportName: string,
   getResults: (siteId: string) => PostInfos[],
 ) => {
   const data = exportsData[exportType]
@@ -596,7 +596,7 @@ export const formatStudyExportResultsForExport = (
     dataForExport.push([])
   }
 
-  return { name: tExport(exportType), data: dataForExport, options: sheetOptions }
+  return { name: exportName, data: dataForExport, options: sheetOptions }
 }
 
 export const formatBCResultsForCutExport = (
@@ -659,8 +659,8 @@ export const downloadStudyResults = async (
   tBeges: Translations,
   tGHGP: Translations,
   tUnits: Translations,
+  tBase: Translations,
   environment: Environment = Environment.BC,
-  base: EmissionFactorBase = EmissionFactorBase.LocationBased,
 ) => {
   const data = []
 
@@ -712,11 +712,11 @@ export const downloadStudyResults = async (
       formatStudyExportResultsForExport(
         study,
         siteList,
-        tExport,
         tQuality,
         tBeges,
         tUnits,
         Export.Beges,
+        tExport(Export.Beges),
         (siteId: string) =>
           computeBegesResult(study, begesRules, emissionFactorsWithParts, siteId, true, validatedEmissionSourcesOnly),
       ),
@@ -728,11 +728,11 @@ export const downloadStudyResults = async (
       formatStudyExportResultsForExport(
         study,
         siteList,
-        tExport,
         tQuality,
         tGHGP,
         tUnits,
         Export.GHGP,
+        `${tExport(Export.GHGP)} - ${tBase(EmissionFactorBase.LocationBased)}`,
         (siteId: string) =>
           computeGHGPResult(
             study,
@@ -741,7 +741,28 @@ export const downloadStudyResults = async (
             siteId,
             true,
             validatedEmissionSourcesOnly,
-            base,
+            EmissionFactorBase.LocationBased,
+          ),
+      ),
+    )
+    data.push(
+      formatStudyExportResultsForExport(
+        study,
+        siteList,
+        tQuality,
+        tGHGP,
+        tUnits,
+        Export.GHGP,
+        `${tExport(Export.GHGP)} - ${tBase(EmissionFactorBase.MarketBased)}`,
+        (siteId: string) =>
+          computeGHGPResult(
+            study,
+            ghgpRules,
+            emissionFactorsWithParts,
+            siteId,
+            true,
+            validatedEmissionSourcesOnly,
+            EmissionFactorBase.MarketBased,
           ),
       ),
     )
