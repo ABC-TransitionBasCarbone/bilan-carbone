@@ -867,6 +867,7 @@
       "emissionQuality": "EF quality",
       "emissionSource": "EF source",
       "emissionUnit": "EF unit",
+      "emissionBase": "EF base",
       "emissionValue": "EF value",
       "no": "No",
       "noFactor": "No emission factor",

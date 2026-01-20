@@ -866,6 +866,7 @@
       "emissionName": "Nom du FE (facteur d'émission)",
       "emissionQuality": "Qualité du FE",
       "emissionSource": "Source du FE",
+      "emissionBase": "base du FE",
       "emissionUnit": "Unité du FE",
       "emissionValue": "Valeur du FE",
       "no": "Non",

@@ -119,6 +119,7 @@ const getEmissionSourcesRows = (
   tQuality: Translations,
   tUnit: Translations,
   tResultUnits: Translations,
+  tBase: Translations,
   type?: 'Post' | 'Study',
   environment?: Environment,
 ) => {
@@ -151,6 +152,7 @@ const getEmissionSourcesRows = (
       'emissionUnit',
       'emissionQuality',
       'emissionSource',
+      'emissionBase',
     ])
     .map((key) => t(key))
     .join(';')
@@ -197,6 +199,7 @@ const getEmissionSourcesRows = (
           emissionFactor?.unit ? `${tResultUnits(StudyResultUnit.K)}/${tUnit(emissionFactor.unit, { count: 1 })}` : '',
           emissionFactor ? getQuality(getQualitativeUncertaintyFromQuality(emissionFactor), tQuality) : '',
           emissionFactor?.source || '',
+          emissionFactor?.base ? tBase(emissionFactor.base) : '',
         ])
         .map((field) => encodeCSVField(field))
         .join(';')
@@ -234,6 +237,7 @@ const getEmissionSourcesCSVContent = (
   tQuality: Translations,
   tUnit: Translations,
   tResultUnits: Translations,
+  tBase: Translations,
   environment: Environment,
   type?: 'Post' | 'Study',
 ) => {
@@ -247,6 +251,7 @@ const getEmissionSourcesCSVContent = (
     tQuality,
     tUnit,
     tResultUnits,
+    tBase,
     type,
     environment,
   )
@@ -288,6 +293,7 @@ export const downloadStudyPost = async (
   tQuality: Translations,
   tUnit: Translations,
   tResultUnits: Translations,
+  tBase: Translations,
   environment: Environment,
 ) => {
   const emissionFactorIds = emissionSources
@@ -307,6 +313,7 @@ export const downloadStudyPost = async (
     tQuality,
     tUnit,
     tResultUnits,
+    tBase,
     environment,
     'Post',
   )
@@ -322,6 +329,7 @@ export const downloadStudyEmissionSources = async (
   tQuality: Translations,
   tUnit: Translations,
   tResultUnits: Translations,
+  tBase: Translations,
   environment: Environment,
 ) => {
   const emissionSources = [...study.emissionSources].sort((a, b) => a.subPost.localeCompare(b.subPost))
@@ -343,6 +351,7 @@ export const downloadStudyEmissionSources = async (
     tQuality,
     tUnit,
     tResultUnits,
+    tBase,
     environment,
     'Study',
   )
