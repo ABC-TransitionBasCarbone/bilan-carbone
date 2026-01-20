@@ -1,4 +1,5 @@
 import { Chip, Typography } from '@mui/material'
+import { useTranslations } from 'next-intl'
 import { DataType } from './TrajectoryGraph'
 
 interface Props {
@@ -8,11 +9,12 @@ interface Props {
 }
 
 const TrajectoryLegendTable = ({ title, data, onClick }: Props) => {
+  const t = useTranslations('study.transitionPlan.trajectories.graph')
   const previousTrajectories = data.filter((d) => d.dataType === 'previous')
   const currentTrajectories = data.filter((d) => d.dataType === 'current')
   const trajectories = [
-    { title: 'Previous trajectories', data: previousTrajectories },
-    { title: 'Current trajectories', data: currentTrajectories },
+    { title: 'previousTrajectories', data: previousTrajectories },
+    { title: 'currentTrajectories', data: currentTrajectories },
   ]
 
   return (
@@ -26,7 +28,7 @@ const TrajectoryLegendTable = ({ title, data, onClick }: Props) => {
             group.data.length > 0 && (
               <div className="flex-col gapped1" key={group.title}>
                 <Typography fontWeight="bold" variant="h6">
-                  {group.title}
+                  {t(group.title)}
                 </Typography>
                 {group.data.map((item) => (
                   <Chip

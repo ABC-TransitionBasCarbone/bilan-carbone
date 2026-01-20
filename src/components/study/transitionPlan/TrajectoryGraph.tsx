@@ -638,7 +638,7 @@ const TrajectoryGraph = ({
         <AccordionDetails>
           <div className="flex justify-between">
             <TrajectoryLegendTable
-              title={'SBTI/SNBC'}
+              title={t('sbtiSnbc')}
               data={seriesCreated
                 .filter(
                   (serie) =>
@@ -653,7 +653,7 @@ const TrajectoryGraph = ({
               onClick={onFilterSeries}
             />
             <TrajectoryLegendTable
-              title={'CUSTOM'}
+              title={t('custom')}
               data={seriesCreated
                 .filter(
                   (serie) =>
