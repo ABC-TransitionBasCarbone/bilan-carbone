@@ -2220,6 +2220,11 @@
   "documentationUrl": {
     "dependencyMatrix":"https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/2-scope-of-the-approach/2.5-identification-of-transition-risks-and-opportunities",
     "flows": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/2-scope-of-the-approach/2.4-operational-boundary",
-    "actionRelevance": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/5-transition-plan/5.2-building-the-action-plan#characterise-the-relevance-of-the-action"
+    "actionRelevance": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/5-transition-plan/5.2-building-the-action-plan#characterise-the-relevance-of-the-action",
+    "dataType": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/4-accounting/4.2-method-for-collecting-activity-data",
+    "maturity": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/1-framing-the-approach/1.1-define-your-bilan-carbone-r-maturity-level",
+    "monetaryRatio": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/4-accounting/4.3-method-for-selecting-emission-factors#efs-in-monetary-ratios",
+    "dependencyAndResponsability": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/annexes/annexes/annex-1-key-accounting-principles-of-bilan-carbone-r#use-and-dependency",
+    "uncertainties": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/4-accounting/4.4-method-for-estimating-uncertainties/4.4.2-how-to-determine-them"
   }
 }

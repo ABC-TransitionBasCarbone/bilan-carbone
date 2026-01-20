@@ -34,6 +34,7 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudy
   const tError = useTranslations('study.new.error')
   const tGlossary = useTranslations('study.new.glossary')
   const tStudyNewSuggestion = useTranslations('study.new.suggestion')
+  const tDocumentation = useTranslations('documentationUrl')
   const { callServerFunction } = useServerFunction()
   const [inviteOptions, setInviteOptions] = useState<InviteOptions>({
     team: true,
@@ -122,11 +123,7 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudy
           <p className="mb-2">
             {tGlossary.rich(`${glossary}Description`, {
               link: (children) => (
-                <Link
-                  href="https://www.bilancarbone-methode.com/1-cadrage-de-la-demarche/1.1-definir-son-niveau-de-maturite-bilan-carbone-r"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
+                <Link href={tDocumentation('maturity')} target="_blank" rel="noreferrer noopener">
                   {children}
                 </Link>
               ),

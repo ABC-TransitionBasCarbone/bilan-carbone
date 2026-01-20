@@ -62,6 +62,7 @@ const EmissionSourceContributorForm = ({
   const t = useTranslations('emissionSource')
   const tResultUnits = useTranslations('study.results.units')
   const tGlossary = useTranslations('emissionSource.glossary')
+  const tDocumentation = useTranslations('documentationUrl')
   const getUnitLabel = useUnitLabel()
   const [expandedQuality, setExpandedQuality] = useState(!!advanced)
   const [glossary, setGlossary] = useState('')
@@ -172,11 +173,7 @@ const EmissionSourceContributorForm = ({
           <p className="mb-2">
             {tGlossary.rich(`${glossary}Description`, {
               link: (children) => (
-                <Link
-                  href="https://www.bilancarbone-methode.com/4-comptabilisation/4.4-methode-destimation-des-incertitudes/4.4.2-comment-les-determiner#determination-qualitative"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
+                <Link href={tDocumentation('uncertainties')} target="_blank" rel="noreferrer noopener">
                   {children}
                 </Link>
               ),
