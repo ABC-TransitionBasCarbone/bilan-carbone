@@ -1,0 +1,11 @@
+{
+  "publicodes-layout": {
+    "table": {
+      "EquipementsInformatiqueAudiovisuel": {
+        "question": "Équipements informatiques et audiovisuels utilisés",
+        "equipement": "Équipement",
+        "nombre": "Nombre"
+      }
+    }
+  }
+}
