@@ -28,3 +28,25 @@
   margin-top: -1.75rem;
   margin-right: 2rem;
 }
+
+.filtersAccordion {
+  background: var(--mui-palette-primary-light);
+  border-radius: 0.5rem;
+}
+
+.filtersAccordion :global(.MuiAccordionSummary-root) {
+  transition: padding 0.2s ease;
+  min-height: auto;
+}
+
+.filtersAccordion:not(.expanded) :global(.MuiAccordionSummary-root) {
+  padding: 1rem 1.5rem;
+}
+
+.filtersAccordion.expanded :global(.MuiAccordionSummary-root) {
+  padding: 1.5rem;
+}
+
+.filtersAccordion :global(.MuiAccordionSummary-content) {
+  margin: 0;
+}
