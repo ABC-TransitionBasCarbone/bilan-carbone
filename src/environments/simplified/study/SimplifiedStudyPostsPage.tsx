@@ -5,7 +5,9 @@ import Button from '@/components/base/Button'
 import Stepper from '@/components/base/Stepper'
 import TabsWithGreenStyling from '@/components/dynamic-form/TabsWithGreenStyling'
 import { FullStudy } from '@/db/study'
+import { PublicodesFormProvider } from '@/lib/publicodes/context'
 import { Post, subPostsByPost } from '@/services/posts'
+import { SimplifiedEnvironment } from '@/services/publicodes/simplifiedPublicodesConfig'
 import CheckIcon from '@mui/icons-material/Check'
 import { ArrowLeftIcon, ArrowRightIcon } from '@mui/x-date-pickers'
 import { SubPost } from '@prisma/client'
@@ -16,12 +18,14 @@ import PublicodesSubPostForm from '../study/PublicodesSubPostForm'
 import SaveStatusIndicator from '../study/SaveStatusIndicator'
 
 interface Props {
+  environment: SimplifiedEnvironment
   post: Post
   currentSubPost: SubPost | undefined
   study: FullStudy
+  studySiteId: string
 }
 
-const SimplifiedStudyPostsPage = ({ post, currentSubPost, study }: Props) => {
+const SimplifiedStudyPostsPage = ({ environment, post, currentSubPost, study, studySiteId }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const tStudyQuestions = useTranslations('study.questions')
   const tInfography = useTranslations('study.infography')
@@ -70,48 +74,55 @@ const SimplifiedStudyPostsPage = ({ post, currentSubPost, study }: Props) => {
   const isLastStep = activeStep >= subPosts.length - 1
 
   return (
-    <Block
-      title={tPost(post)}
-      as="h1"
-      actions={[
-        {
-          actionType: 'link',
-          href: `/etudes/${study.id}/comptabilisation/saisie-des-donnees`,
-          children: tInfography('form.backToInfography'),
-        },
-      ]}
-    >
-      <SaveStatusIndicator />
+    <PublicodesFormProvider environment={environment} studyId={study.id} studySiteId={studySiteId}>
+      <Block
+        title={tPost(post)}
+        as="h1"
+        actions={[
+          {
+            actionType: 'link',
+            href: `/etudes/${study.id}/comptabilisation/saisie-des-donnees`,
+            children: tInfography('form.backToInfography'),
+          },
+        ]}
+      >
+        <SaveStatusIndicator />
 
-      <TabsWithGreenStyling
-        tabs={subPosts}
-        t={tPost}
-        content={<PublicodesSubPostForm subPost={activeSubPost} />}
-        activeTab={activeStep}
-        setActiveTab={setActiveStep}
-      />
+        <TabsWithGreenStyling
+          tabs={subPosts}
+          t={tPost}
+          content={<PublicodesSubPostForm subPost={activeSubPost} />}
+          activeTab={activeStep}
+          setActiveTab={setActiveStep}
+        />
 
-      <Stepper
-        steps={subPosts.length}
-        activeStep={activeStep + 1}
-        fillValidatedSteps={false}
-        nextButton={
-          <Button
-            endIcon={isLastStep ? <CheckIcon /> : <ArrowRightIcon />}
-            onClick={isLastStep ? handleFinish : handleNextStep}
-            disabled={false}
-            variant="contained"
-          >
-            {isLastStep ? tStudyQuestions('finish') : tStudyQuestions('next')}
-          </Button>
-        }
-        backButton={
-          <Button startIcon={<ArrowLeftIcon />} onClick={handlePreviousStep} disabled={isFirstStep} variant="contained">
-            {tStudyQuestions('previous')}
-          </Button>
-        }
-      />
-    </Block>
+        <Stepper
+          steps={subPosts.length}
+          activeStep={activeStep + 1}
+          fillValidatedSteps={false}
+          nextButton={
+            <Button
+              endIcon={isLastStep ? <CheckIcon /> : <ArrowRightIcon />}
+              onClick={isLastStep ? handleFinish : handleNextStep}
+              disabled={false}
+              variant="contained"
+            >
+              {isLastStep ? tStudyQuestions('finish') : tStudyQuestions('next')}
+            </Button>
+          }
+          backButton={
+            <Button
+              startIcon={<ArrowLeftIcon />}
+              onClick={handlePreviousStep}
+              disabled={isFirstStep}
+              variant="contained"
+            >
+              {tStudyQuestions('previous')}
+            </Button>
+          }
+        />
+      </Block>
+    </PublicodesFormProvider>
   )
 }
 
