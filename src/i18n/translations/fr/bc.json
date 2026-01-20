@@ -657,7 +657,7 @@
           "replicate": "Modifier l'organisation globale"
         }
       },
-      "information": "Pour plus d'information sur cette section, vous pouvez vous référer à cette documentation : "
+      "information": "Pour plus d'information sur cette section, vous pouvez vous référer à cette documentation : <link></link>"
     },
     "results": {
       "type": "Type",
@@ -2216,5 +2216,10 @@
     "studyYearMustBeAfterLinkedStudies": "Impossible de renseigner une date antérieure à celles de vos études liées sur votre plan de transition",
     "maxTwoDecimals": "Le taux de réduction doit avoir au maximum 2 décimales",
     "referenceYearMustBeBeforeOrEqualToStudyYear": "L'année de référence doit être inférieure ou égale à l'année de l'étude"
-  }
+  },
+  "documentationUrl": {
+    "dependencyMatrix": "https://www.bilancarbone-methode.com/2-perimetre-de-la-demarche/2.5-identification-des-risques-et-opportunites-de-transition",
+    "flows": "https://www.bilancarbone-methode.com/2-perimetre-de-la-demarche/2.4-perimetre-operationnel",
+    "actionRelevance": "https://www.bilancarbone-methode.com/5-plan-de-transition/5.2-construction-du-plan-daction#caracteriser-la-pertinence-de-laction"
+   }
 }

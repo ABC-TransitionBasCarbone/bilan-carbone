@@ -46,6 +46,7 @@ const StudyDocument = ({ title, t, study, documents, canUpload = true, documentC
   const router = useRouter()
   const tUpload = useTranslations('upload')
   const tPerimeter = useTranslations('study.perimeter')
+  const tDocumentation = useTranslations('documentationUrl')
   const initialDocument = documents.length > 0 ? documents[0] : undefined
 
   const [uploading, setUploading] = useState(false)
@@ -126,14 +127,14 @@ const StudyDocument = ({ title, t, study, documents, canUpload = true, documentC
       return {
         glossaryTitleKey: 'dependencyMatrices',
         label: 'study-dependency-matrices',
-        documentationUrl: process.env.NEXT_PUBLIC_DEPENDENCY_MATRIX_DOC_URL ?? '',
+        documentationUrl: 'dependencyMatrix',
       }
     }
 
     return {
       glossaryTitleKey: 'flows',
       label: 'study-flows',
-      documentationUrl: process.env.NEXT_PUBLIC_FLOW_DOC_URL ?? '',
+      documentationUrl: 'flows',
     }
   }, [documentCategory])
 
@@ -148,10 +149,13 @@ const StudyDocument = ({ title, t, study, documents, canUpload = true, documentC
         tModal={documentCategory === DocumentCategory.DependencyMatrix ? 'study.dependencyMatrix' : 'study.flow'}
       >
         <p>
-          {tPerimeter('information')}
-          <Link href={glossaryConfig.documentationUrl} target="_blank" rel="noopener noreferrer">
-            {glossaryConfig.documentationUrl}
-          </Link>
+          {tPerimeter.rich('information', {
+            link: () => (
+              <Link href={tDocumentation(glossaryConfig.documentationUrl)} target="_blank" rel="noopener noreferrer">
+                {tDocumentation(glossaryConfig.documentationUrl)}
+              </Link>
+            ),
+          })}
         </p>
       </GlossaryIconModal>
     </>
