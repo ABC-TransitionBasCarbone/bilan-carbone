@@ -53,7 +53,10 @@ const getEmissionFactorValue = (
   return (emissionFactor.totalCo2 || 0) - (emissionFactor.otherGES || 0)
 }
 
-const getLine = (value: number, EFOrEFPart: ExportEmissionFactor): Omit<PostInfos, 'rule' | 'uncertainty'> => {
+const getLine = (
+  value: number,
+  EFOrEFPart: ExportEmissionFactor,
+): Omit<PostInfos, 'rule' | 'squaredStandardDeviation'> => {
   const hfc = EFOrEFPart.hfc || 0
   const pfc = EFOrEFPart.pfc || 0
   const sf6 = EFOrEFPart.sf6 || 0
