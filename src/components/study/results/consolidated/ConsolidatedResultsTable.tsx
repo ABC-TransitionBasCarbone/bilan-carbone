@@ -22,23 +22,15 @@ interface Props<T> {
   isCompact?: boolean
 }
 
-type tableDataType = {
+type TableDataType = {
   label: string
   value: number
-  squaredStandardDeviation: number
   post: string
-  children: tableDataType[]
+  children: TableDataType[]
+  squaredStandardDeviation?: number
 }
 
-const ConsolidatedResultsTable = <
-  T extends {
-    value: number
-    label: string
-    squaredStandardDeviation: number
-    post: string
-    children: { value: number; label: string; squaredStandardDeviation: number; post: string }[]
-  },
->({
+const ConsolidatedResultsTable = <T extends TableDataType>({
   resultsUnit,
   data,
   hiddenUncertainty,
@@ -86,7 +78,7 @@ const ConsolidatedResultsTable = <
           )
         },
       },
-    ] as ColumnDef<tableDataType>[]
+    ] as ColumnDef<TableDataType>[]
 
     if (!hiddenUncertainty) {
       tmpColumns.push({

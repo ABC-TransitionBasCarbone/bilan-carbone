@@ -2487,3 +2487,87 @@ export const changeStudyEstablishment = async (studySiteId: string, data: Change
     }
     await updateStudySiteData(studySiteId, data)
   })
+
+export const addEngagementAction = async ({ studyId, ...command }: AddEngagementActionCommand) =>
+  withServerResponse('addEngagementAction', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!hasAccessToEngagementActions(session.user.environment, study.simplified)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await createEngagementAction({
+      study: { connect: { id: studyId } },
+      ...command,
+    })
+  })
+
+export const getEngagementActionsWithStudyId = async (studyId: string) =>
+  withServerResponse('getEngagementActions', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!hasAccessToEngagementActions(session.user.environment, study.simplified)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return await getEngagementActions(studyId)
+  })
+
+export const editEngagementAction = async (id: string, { studyId, ...command }: AddEngagementActionCommand) =>
+  withServerResponse('editEngagementAction', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!hasAccessToEngagementActions(session.user.environment, study.simplified)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await updateEngagementAction(id, command)
+  })
+
+export const deleteEngagementAction = async (id: string, studyId: string) =>
+  withServerResponse('deleteEngagementAction', async () => {
+    const session = await dbActualizedAuth()
+    const action = await getEngagementActionById(id)
+    if (!action) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!hasAccessToEngagementActions(session.user.environment, study.simplified)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await dbDeleteEngagementAction(id)
+  })
