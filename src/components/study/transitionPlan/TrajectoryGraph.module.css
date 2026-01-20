@@ -1,0 +1,30 @@
+.yearRangeSlider {
+  margin-top: -2rem;
+  height: 2px;
+}
+
+.yearRangeSlider :global(.MuiSlider-thumb) {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.yearRangeSlider :global(.MuiSlider-thumb) input {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  pointer-events: none !important; /* Prevents the ghost input from stealing clicks */
+  opacity: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.valueLabel {
+  top: 3rem !important;
+  font-size: 0.75rem !important;
+  background-color: transparent !important;
+  color: inherit !important;
+}
+
+.rangeTitle {
+  margin-top: -1.75rem;
+  margin-right: 2rem;
+}

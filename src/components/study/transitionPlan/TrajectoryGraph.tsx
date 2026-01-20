@@ -6,13 +6,14 @@ import {
   TRAJECTORY_WB2C_ID,
 } from '@/components/pages/TrajectoryReductionPage'
 import { getYearsToDisplay, PastStudy, TrajectoryData } from '@/utils/trajectory'
-import { Alert, Typography } from '@mui/material'
+import { Alert, Slider, Typography } from '@mui/material'
 import { LineChart, LineSeries } from '@mui/x-charts/LineChart'
 import type { StudyResultUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import DependenciesSwitch from '../results/DependenciesSwitch'
+import styles from './TrajectoryGraph.module.css'
 
 export interface TrajectoryDataPoint {
   year: number
@@ -64,34 +65,74 @@ const TrajectoryGraph = ({
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.graph')
   const tUnit = useTranslations('study.results.units')
+  const [yearRange, setYearRange] = useState<number[] | null>(null)
+  const [displayedYearRange, setDisplayedYearRange] = useState<number[] | null>(null)
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
 
   const trajectory15Enabled = selectedSbtiTrajectories.includes(TRAJECTORY_15_ID)
   const trajectoryWB2CEnabled = selectedSbtiTrajectories.includes(TRAJECTORY_WB2C_ID)
   const trajectorySnbcEnabled = selectedSnbcTrajectories.includes(TRAJECTORY_SNBC_GENERAL_ID)
 
-  const yearsToDisplay = useMemo(
+  const allYearsToDisplay = useMemo(
     () =>
       getYearsToDisplay(
-        trajectory15Data,
-        trajectoryWB2CData,
-        snbcData,
-        customTrajectoriesData.map((values) => values.trajectoryData),
-        actionBasedTrajectoryData,
-        trajectory15Enabled,
-        trajectoryWB2CEnabled,
-        trajectorySnbcEnabled,
+        [
+          trajectory15Data,
+          trajectoryWB2CData,
+          snbcData,
+          ...customTrajectoriesData.map((values) => values.trajectoryData),
+          actionBasedTrajectoryData,
+        ].filter((traj) => traj !== null),
       ),
-    [
-      trajectory15Data,
-      trajectoryWB2CData,
-      snbcData,
-      customTrajectoriesData,
-      actionBasedTrajectoryData,
-      trajectory15Enabled,
-      trajectoryWB2CEnabled,
-      trajectorySnbcEnabled,
-    ],
+    [trajectory15Data, trajectoryWB2CData, snbcData, customTrajectoriesData, actionBasedTrajectoryData],
   )
+
+  const { minYear, maxYear } = useMemo(() => {
+    if (allYearsToDisplay && allYearsToDisplay.length > 1) {
+      return {
+        minYear: allYearsToDisplay[0],
+        maxYear: allYearsToDisplay[allYearsToDisplay.length - 1],
+      }
+    }
+    return {
+      minYear: 2020,
+      maxYear: 2050,
+    }
+  }, [allYearsToDisplay])
+
+  useEffect(() => {
+    if (minYear && maxYear) {
+      const newRange = [minYear, maxYear]
+      setYearRange(newRange)
+      setDisplayedYearRange(newRange)
+    }
+  }, [minYear, maxYear])
+
+  // Debounce the displayed year range to smooth out chart transitions
+  useEffect(() => {
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current)
+    }
+
+    if (yearRange) {
+      debounceTimerRef.current = setTimeout(() => {
+        setDisplayedYearRange(yearRange)
+      }, 150)
+    }
+
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current)
+      }
+    }
+  }, [yearRange])
+
+  const yearsToDisplay = useMemo(() => {
+    if (!displayedYearRange) {
+      return allYearsToDisplay
+    }
+    return allYearsToDisplay.filter((year) => year >= displayedYearRange[0] && year <= displayedYearRange[1])
+  }, [allYearsToDisplay, displayedYearRange])
 
   const studyStartYearIndex = yearsToDisplay.indexOf(studyStartYear)
 
@@ -459,14 +500,17 @@ const TrajectoryGraph = ({
       <Typography variant="body2" color="text.secondary">
         {t('subtitle')}
       </Typography>
-
       <LineChart
         xAxis={[
           {
             data: yearsToDisplay,
             scaleType: 'linear',
             valueFormatter: (value) => value.toString(),
-            tickInterval: [yearsToDisplay[0], ...yearsToDisplay.filter((year) => year % 5 === 0)],
+            tickInterval: (() => {
+              const range = yearsToDisplay[yearsToDisplay.length - 1] - yearsToDisplay[0]
+              const interval = range < 20 ? 1 : 5
+              return [yearsToDisplay[0], ...yearsToDisplay.filter((year) => year % interval === 0)]
+            })(),
           },
         ]}
         series={seriesCreated}
@@ -477,6 +521,37 @@ const TrajectoryGraph = ({
           },
         ]}
       />
+      <div className="flex justify-center w100">
+        <Typography variant="body2" color="text.secondary" className={styles.rangeTitle}>
+          {t('yearRangeLabel')}
+        </Typography>
+        {yearRange && (
+          <Slider
+            className={`w50 ${styles.yearRangeSlider}`}
+            getAriaLabel={() => 'Year range'}
+            getAriaValueText={(value) => value.toString()}
+            value={yearRange}
+            onChange={(_, newValue) => {
+              if (Array.isArray(newValue) && newValue.length === 2) {
+                setYearRange(newValue as number[])
+              }
+            }}
+            min={minYear}
+            max={maxYear}
+            valueLabelDisplay="on"
+            valueLabelFormat={(value) => value.toString()}
+            slotProps={{
+              valueLabel: {
+                className: styles.valueLabel,
+              },
+              input: {
+                autoComplete: 'off',
+                'aria-hidden': true,
+              },
+            }}
+          />
+        )}
+      </div>
     </div>
   )
 }

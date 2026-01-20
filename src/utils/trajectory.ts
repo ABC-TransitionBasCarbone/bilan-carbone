@@ -1471,23 +1471,8 @@ const extractYearsFromTrajectory = (data: TrajectoriesForYear | null): number[] 
   return [...data.currentTrajectory.map((d) => d.year), ...(data.previousTrajectory?.map((d) => d.year) ?? [])]
 }
 
-export const getYearsToDisplay = (
-  trajectory15Data: TrajectoriesForYear | null,
-  trajectoryWB2CData: TrajectoriesForYear | null,
-  snbcData: TrajectoriesForYear | null,
-  customTrajectoriesData: (TrajectoriesForYear | null)[],
-  actionBasedTrajectoryData: TrajectoriesForYear | null,
-  trajectory15Enabled: boolean,
-  trajectoryWB2CEnabled: boolean,
-  trajectorySnbcEnabled: boolean,
-): number[] => {
-  const allYears = [
-    ...(trajectory15Enabled ? extractYearsFromTrajectory(trajectory15Data) : []),
-    ...(trajectoryWB2CEnabled ? extractYearsFromTrajectory(trajectoryWB2CData) : []),
-    ...(trajectorySnbcEnabled ? extractYearsFromTrajectory(snbcData) : []),
-    ...customTrajectoriesData.flatMap((trajData) => extractYearsFromTrajectory(trajData)),
-    ...extractYearsFromTrajectory(actionBasedTrajectoryData),
-  ]
+export const getYearsToDisplay = (trajectories: TrajectoryData[]): number[] => {
+  const allYears = trajectories.flatMap((traj) => extractYearsFromTrajectory(traj))
   return Array.from(new Set(allYears)).sort((a, b) => a - b)
 }
 
