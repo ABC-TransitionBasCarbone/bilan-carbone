@@ -97,10 +97,6 @@ const GHGPResultsTable = ({ study, withDepValue, data }: Props) => {
         cellClass += ` ${styles.totalColumn}`
       }
     }
-
-    if (isCO2bColumn && !isTotal) {
-      cellClass += ` ${styles.co2bColumn}`
-    }
     return cellClass
   }
 

@@ -16,10 +16,6 @@
   background-color: var(--mui-palette-ghgp-totalColumn);
 }
 
-.ghgpTable tbody tr td.co2bColumn {
-  background-color: var(--mui-palette-ghgp-co2bColumn);
-}
-
 .totalRow {
   background-color: var(--mui-palette-ghgp-main);
   color: white;

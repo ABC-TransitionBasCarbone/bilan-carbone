@@ -13,8 +13,8 @@ const GHGPGlossaryModal = () => {
         <li>{t('item2')}</li>
         <li className={styles.subList}>
           {t.rich('item3', {
-            green: (children) => <span style={{ color: 'green' }}>{children}</span>,
-            purple: (children) => <span style={{ color: 'purple' }}>{children}</span>,
+            green: (children) => <span style={{ color: 'var(--mui-palette-ghgp-main)' }}>{children}</span>,
+            purple: (children) => <span style={{ color: 'var(--mui-palette-ghgp-complementary)' }}>{children}</span>,
             ul: (children) => <ul>{children}</ul>,
             li: (children) => <li>{children}</li>,
           })}
