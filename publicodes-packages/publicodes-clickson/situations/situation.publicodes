@@ -1,3 +1,13 @@
+test alimentation:
+  contexte:
+    général . nombre personnel: 30
+    général . nombre étudiant: 5000
+    restauration . types de repas servis . moyen . nombre: 100000
+    restauration . types de repas servis . viande rouge . nombre: 100000
+    restauration . types de repas servis . végétarien . nombre: 50000
+    achats . produits chimiques . produit vaisselle liquide . consommation: 10
+    immobilisations . équipements informatique audiovisuel . ordinateur de bureau . nombre: 1000
+
 template:
   contexte:
     # Énergie
@@ -20,12 +30,12 @@ template:
     immobilisations . construction . parking surface semi-dure . surface: 20
     immobilisations . construction . garage structure béton . surface: 30
     immobilisations . construction . garage structure métal . surface: 10
-    immobilisations . renovation . bâtiment scolaire structure béton rénové . surface: 200
-    immobilisations . renovation . parking bâtiment structure béton rénové . surface: 10
-    immobilisations . renovation . parking surface bitume rénové . surface: 5
-    immobilisations . renovation . parking surface semi-dure rénové . surface: 2
-    immobilisations . renovation . garage structure béton rénové . surface: 3
-    immobilisations . renovation . garage structure métal rénové . surface: 1
+    immobilisations . rénovation . bâtiment scolaire structure béton rénové . surface: 200
+    immobilisations . rénovation . parking bâtiment structure béton rénové . surface: 10
+    immobilisations . rénovation . parking surface bitume rénové . surface: 5
+    immobilisations . rénovation . parking surface semi-dure rénové . surface: 2
+    immobilisations . rénovation . garage structure béton rénové . surface: 3
+    immobilisations . rénovation . garage structure métal rénové . surface: 1
     immobilisations . équipements informatique audiovisuel . ordinateur de bureau . nombre: 10
     immobilisations . équipements informatique audiovisuel . ordinateur portable . nombre: 5
     immobilisations . équipements informatique audiovisuel . tablette . nombre: 2
@@ -73,11 +83,11 @@ template:
     # Déplacements
     # inputs
     déplacements . transport du personnel . distance: 10000
-    déplacements . transport du personnel . moyen de transport: "Voiture individuelle essence"
+    déplacements . transport du personnel . moyen de transport: "'Voiture individuelle essence'"
     déplacements . transport des élèves . distance: 20000
-    déplacements . transport des élèves . moyen de transport: "Autobus moyen"
+    déplacements . transport des élèves . moyen de transport: "'Autobus moyen'"
     déplacements . voyages scolaires . distance: 5000
-    déplacements . voyages scolaires . moyen de transport: "TGV"
+    déplacements . voyages scolaires . moyen de transport: "'TGV'"
 
     # Achats
     # tables
