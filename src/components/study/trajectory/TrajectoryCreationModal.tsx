@@ -14,7 +14,7 @@ import { calculateSNBCReductionRates, getSNBCReductionRates } from '@/utils/snbc
 import { getYearFromDateStr } from '@/utils/time'
 import {
   getDefaultObjectivesForTrajectoryType,
-  getDefaultReferenceYearForTrajectoryType,
+  getDisplayedReferenceYearForTrajectoryType,
   SBTI_START_YEAR,
 } from '@/utils/trajectory'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -111,7 +111,7 @@ const TrajectoryCreationModal = ({
   const handleModeSelect = (type: TrajectoryType) => {
     setValue('trajectoryType', type, { shouldValidate: true })
 
-    const defaultReferenceYear = getDefaultReferenceYearForTrajectoryType(type, studyYear)
+    const defaultReferenceYear = getDisplayedReferenceYearForTrajectoryType(type, studyYear)
     setValue('referenceYear', defaultReferenceYear.toString(), { shouldValidate: true })
   }
 

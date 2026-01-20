@@ -54,14 +54,12 @@ const TrajectoryCreationStep2 = ({
     if (trajectoryType === TrajectoryType.SBTI_15 || trajectoryType === TrajectoryType.SBTI_WB2C) {
       return 'SBTI'
     }
+
     if (trajectoryType === TrajectoryType.SNBC_GENERAL || trajectoryType === TrajectoryType.SNBC_SECTORAL) {
       return 'SNBC'
     }
-    if (trajectoryType === TrajectoryType.CUSTOM) {
-      return TrajectoryType.CUSTOM
-    }
-    // Default to SBTI if trajectoryType
-    return 'SBTI'
+
+    return TrajectoryType.CUSTOM
   }
 
   const handleMainTypeChange = (value: string) => {

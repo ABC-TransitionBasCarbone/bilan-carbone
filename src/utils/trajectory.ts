@@ -128,7 +128,7 @@ export interface TrajectoryYearBounds {
   maxYear: number
 }
 
-const SNBC_REFERENCE_YEAR = 1990
+const SNBC_DISPLAYED_REFERENCE_YEAR = 1990
 
 /**
  * Calculate consistent min and max years for all trajectory graphs
@@ -147,7 +147,7 @@ export const calculateTrajectoryYearBounds = (
   minYear = earliestPastStudyYear !== null ? Math.min(SBTI_START_YEAR, earliestPastStudyYear) : SBTI_START_YEAR
 
   if (snbcEnabled) {
-    minYear = Math.min(minYear, SNBC_REFERENCE_YEAR)
+    minYear = Math.min(minYear, SNBC_DISPLAYED_REFERENCE_YEAR)
   }
 
   const selectedCustomTrajectories = trajectories.filter((t) => selectedCustomTrajectoryIds.includes(t.id))
@@ -160,11 +160,11 @@ export const calculateTrajectoryYearBounds = (
     }
 
     // For custom SNBC trajectories, use SNBC_REFERENCE_YEAR (1990) as min year
-    const hasCustomSNBCWithoutReferenceYear = selectedCustomTrajectories.some(
+    const hasCustomSNBC = selectedCustomTrajectories.some(
       (t) => t.type === TrajectoryType.SNBC_GENERAL || t.type === TrajectoryType.SNBC_SECTORAL,
     )
-    if (hasCustomSNBCWithoutReferenceYear) {
-      minYear = Math.min(minYear, SNBC_REFERENCE_YEAR)
+    if (hasCustomSNBC) {
+      minYear = Math.min(minYear, SNBC_DISPLAYED_REFERENCE_YEAR)
     }
 
     // Get latest objective year for max year
@@ -1536,11 +1536,11 @@ export const getMaxYearFromTrajectories = (maxYear: number, trajectories: (Traje
   return Math.max(maxYear, Math.max(...years))
 }
 
-export const getDefaultReferenceYearForTrajectoryType = (type: TrajectoryType, studyYear: number): number => {
+export const getDisplayedReferenceYearForTrajectoryType = (type: TrajectoryType, studyYear: number): number => {
   if (type === TrajectoryType.SBTI_15 || type === TrajectoryType.SBTI_WB2C) {
     return SBTI_START_YEAR
   } else if (type === TrajectoryType.SNBC_GENERAL || type === TrajectoryType.SNBC_SECTORAL) {
-    return SNBC_REFERENCE_YEAR
+    return SNBC_DISPLAYED_REFERENCE_YEAR
   }
 
   // For custom trajectories, use the study year as reference year
