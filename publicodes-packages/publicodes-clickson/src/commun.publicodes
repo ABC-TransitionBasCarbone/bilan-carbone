@@ -12,7 +12,7 @@ commun . nombre de jours dans une semaine scolaire:
   titre: Nombre de jours dans une semaine scolaire
   description: Nombre de jours pris en compte pour le calcul hebdomadaire.
   valeur: 5
-  unité: jour
+  unité: jour/semaine
 
 commun . nombre de semaines par an:
   titre: Nombre de semaines par an
@@ -24,7 +24,7 @@ commun . nombre de semaines scolaire par an:
   titre: Nombre de semaines scolaire par an
   description: Nombre de semaines scolaires prises en compte pour le calcul annuel.
   valeur: 36
-  unité: semaine
+  unité: semaine/an
 
 commun . année actuelle:
   titre: Année actuelle

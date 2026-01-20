@@ -11,7 +11,6 @@ restauration . distributeur automatiques:
       - sandwich pain de mie
       - barre chocolatée
   unité: kgCO2e
-  par défaut: 0
   avec:
     bouteille d'eau:
       titre: Bouteille d'eau
@@ -21,6 +20,7 @@ restauration . distributeur automatiques:
         nombre:
           question: Nombre de bouteille d'eau consommées annuellement
           unité: bouteille
+          par défaut: 0
         FE:
           question: Facteur d'émission par bouteille d'eau
           valeur: 0.18
@@ -38,6 +38,7 @@ restauration . distributeur automatiques:
         nombre:
           question: Nombre de sodas consommés annuellement
           unité: canette
+          par défaut: 0
         FE:
           question: Facteur d'émission par soda
           valeur: 0.49
@@ -55,6 +56,7 @@ restauration . distributeur automatiques:
         nombre:
           question: Nombre de paquets de biscuits consommés annuellement
           unité: paquet
+          par défaut: 0
         FE:
           question: Facteur d'émission par paquet de biscuits
           valeur: 3.59
@@ -72,6 +74,7 @@ restauration . distributeur automatiques:
         nombre:
           question: Nombre de paquets de chips consommés annuellement
           unité: paquet
+          par défaut: 0
         FE:
           question: Facteur d'émission par paquet de chips
           valeur: 0.1
@@ -89,6 +92,7 @@ restauration . distributeur automatiques:
         nombre:
           question: Nombre de cafés noirs consommés annuellement
           unité: tasse
+          par défaut: 0
         FE:
           question: Facteur d'émission par café noir
           valeur: 0.6
@@ -106,6 +110,7 @@ restauration . distributeur automatiques:
         nombre:
           question: Nombre de thés infusés consommés annuellement
           unité: tasse
+          par défaut: 0
         FE:
           question: Facteur d'émission par thé infusé
           valeur: 0.04
@@ -123,6 +128,7 @@ restauration . distributeur automatiques:
         nombre:
           question: Nombre de sandwichs pain de mie consommés annuellement
           unité: sandwich
+          par défaut: 0
         FE:
           question: Facteur d'émission par sandwich pain de mie
           valeur: 2.57
@@ -140,6 +146,7 @@ restauration . distributeur automatiques:
         nombre:
           question: Nombre de barres chocolatées consommées annuellement
           unité: barre
+          par défaut: 0
         FE:
           question: Facteur d'émission par barre chocolatée
           valeur: 7.25
