@@ -375,6 +375,25 @@ const buildPastTrajectory = (
   return dataPoints
 }
 
+/**
+ * Calculate the SNBC trajectory in the segments 1990-2030 and 2030-2050 with the following rules:
+ * 1. Segment 1990-2030:
+ *   - If the study start year is before 1990, stay flat until 1990 and then use the Secten data and objectives to calculate the trajectory
+ *   - If the study start year is between 1990 and 2030:
+ *     - If there are no past studies before the study start year:
+ *         1. Reconstruct the emissions backward from the study start year to 1990
+ *         2. Calculate the reduction rate from study start year to 2030 using the Secten data and objectives
+ *         3. Build the trajectory from study start year to 2030 using this reduction rate
+ *     - If there are past studies before the study start year
+ *         1. Reconstruct the emissions backward from the reference past study to 1990
+ *         2. Calculate the reference trajectory reduction rate from reference year to 2030 using the Secten data and objectives
+ *         3. Calculate the actual trajectory from reference year to study start year with linear interpolation
+ *         4. Apply overshoot compensation to get the new reduction rates from study start year to 2030
+ *
+ * 2. Segment 2030-2050:
+ *   1. Calculate the reduction rate from 2030 to 2050 using the Secten objectives and potential overshoot compensation
+ *   2. Build the trajectory from 2030 to 2050 using this reduction rate
+ */
 export const calculateSNBCTrajectory = (
   params: CalculateTrajectoryParams,
   sector?: SectenSector,
