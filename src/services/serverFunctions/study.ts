@@ -83,7 +83,7 @@ import { getTransitionPlanByStudyId } from '@/db/transitionPlan'
 import { addUser, getUserApplicationSettings, getUserByEmail, getUserSourceById, UserWithAccounts } from '@/db/user'
 import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
-import { studySiteToSituation } from '@/services/studySiteToSituation'
+import { StudySiteFields, studySiteToSituation } from '@/services/studySiteToSituation'
 import { getNestedValue, groupBy } from '@/utils/array'
 import { mapCncToStudySite } from '@/utils/cnc'
 import { calculateDistanceFromParis } from '@/utils/distance'
@@ -155,6 +155,7 @@ import {
   getEnvironmentsForDuplication,
   isAdminOnStudyOrga,
 } from '../permissions/study'
+import { isSimplifiedEnvironment } from '../publicodes/simplifiedPublicodesConfig'
 import { deleteFileFromBucket, getFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
 import { getTransEnvironmentSubPost, hasSufficientLevel } from '../study'
 import { UpdateEmissionSourceCommand } from './emissionSource.command'
@@ -558,13 +559,15 @@ export const changeStudyCinema = async (studySiteId: string, cncId: string, data
 
 async function updateSituationWithStudySiteData(
   studySiteId: string,
-  siteDependentFields: Record<SiteDependentField, number | null | undefined>,
+  siteDependentFields: StudySiteFields,
   environment: Environment,
 ) {
-  const situationUpdates = studySiteToSituation(environment, siteDependentFields)
+  if (isSimplifiedEnvironment(environment)) {
+    const situationUpdates = studySiteToSituation(environment, siteDependentFields)
 
-  if (Object.keys(situationUpdates).length > 0) {
-    await updateSituationFields(studySiteId, situationUpdates)
+    if (Object.keys(situationUpdates).length > 0) {
+      await updateSituationFields(studySiteId, situationUpdates)
+    }
   }
 }
 
@@ -2474,10 +2477,12 @@ export const changeStudyEstablishment = async (studySiteId: string, data: Change
     if (!studySites || studySites.length === 0) {
       throw new Error(NOT_AUTHORIZED)
     }
+
     const study = studySites[0].study
     if (!study) {
       throw new Error(NOT_AUTHORIZED)
     }
+
     const informations = await getStudyRightsInformations(study.id)
     if (informations === null) {
       throw new Error(NOT_AUTHORIZED)
@@ -2485,7 +2490,9 @@ export const changeStudyEstablishment = async (studySiteId: string, data: Change
     if (!canChangeOpeningHours(informations.user, informations.studyWithRights)) {
       throw new Error(NOT_AUTHORIZED)
     }
+
     await updateStudySiteData(studySiteId, data)
+    await updateSituationWithStudySiteData(studySiteId, data, informations.user.environment)
   })
 
 export const addEngagementAction = async ({ studyId, ...command }: AddEngagementActionCommand) =>

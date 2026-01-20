@@ -6,7 +6,7 @@ import { CutSituation } from './types'
  * depends of this inputs) will be non-applicable by default and won't be shown
  * to the user.
  */
-export function studySiteToSituation(studySite: StudySiteFields | undefined): CutSituation {
+export function studySiteToCutSituation(studySite: StudySiteFields | undefined): CutSituation {
   if (!studySite) {
     return {}
   }

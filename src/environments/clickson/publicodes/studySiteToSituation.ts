@@ -6,25 +6,26 @@ import { ClicksonSituation } from './types'
  * depends of this inputs) will be non-applicable by default and won't be shown
  * to the user.
  */
-export function studySiteToSituation(studySite: StudySiteFields | undefined): ClicksonSituation {
+export function studySiteToClicksonSituation(studySite: StudySiteFields | undefined): ClicksonSituation {
   if (!studySite) {
     return {}
   }
 
   const situation: ClicksonSituation = {}
 
-  if (studySite.numberOfStudents != null) {
-    situation['général . nombre étudiant'] = studySite.numberOfStudents
+  if (studySite.studentNumber != null) {
+    situation['général . nombre étudiant'] = studySite.studentNumber
   }
-  if (studySite.numberOfStaff != null) {
-    situation['général . nombre personnel'] = studySite.numberOfStaff
+  if (studySite.etp != null) {
+    situation['général . nombre personnel'] = studySite.etp
   }
-  if (studySite.constructionYear != null) {
-    situation['général . année de construction'] = studySite.constructionYear
-  }
-  if (studySite.renovationYear != null) {
-    situation['général . année de rénovation'] = studySite.renovationYear
-  }
+  // TODO: not available yet for Clickson
+  // if (studySite.constructionYear != null) {
+  //   situation['général . année de construction'] = studySite.constructionYear
+  // }
+  // if (studySite.renovationYear != null) {
+  //   situation['général . année de rénovation'] = studySite.renovationYear
+  // }
 
   return situation
 }
