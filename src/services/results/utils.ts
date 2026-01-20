@@ -1,7 +1,20 @@
 import { FullStudy } from '@/db/study'
+import { getBaseFilteredEmissionSources } from '@/utils/study'
 import { SubPost } from '@prisma/client'
 
-export const getSiteEmissionSources = <T extends Pick<FullStudy['emissionSources'][number], 'studySite'>>(
+export const getSiteEmissionSourcesWithoutMarketBase = <
+  T extends Pick<FullStudy['emissionSources'][number], 'studySite' | 'emissionFactor'>,
+>(
+  emissionSources: T[],
+  studySite: string,
+): T[] =>
+  getBaseFilteredEmissionSources(
+    studySite === 'all'
+      ? emissionSources
+      : emissionSources.filter((emissionSource) => emissionSource.studySite.id === studySite),
+  )
+
+export const getAllSiteEmissionSources = <T extends Pick<FullStudy['emissionSources'][number], 'studySite'>>(
   emissionSources: T[],
   studySite: string,
 ): T[] =>
