@@ -1,11 +1,10 @@
 .chip {
   border-radius: 1rem;
+  color: var(--primary-50);
   &.LocationBased {
-    color: var(--primary-50);
     background-color: var(--mui-palette-ghgp-main);
   }
   &.MarketBased {
-    color: var(--primary-950);
-    background-color: var(--mui-palette-ghgp-co2bColumn);
+    background-color: var(--mui-palette-ghgp-complementary);
   }
 }
