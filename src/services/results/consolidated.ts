@@ -31,7 +31,7 @@ export type ResultsByPost = Omit<BaseResultsByPost, 'children'> & {
   children: ResultsByPost[]
 }
 
-export const computeResultsByPost = (
+export const computeResultsByPostFromEmissionSources = (
   study: FullStudy,
   tPost: (key: string) => string,
   studySite: string,
