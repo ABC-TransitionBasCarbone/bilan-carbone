@@ -1,14 +1,14 @@
 import { TrajectoryDataPoint } from '@/components/study/transitionPlan/TrajectoryGraph'
-import { SNBC_SECTOR_TARGET_EMISSIONS, SectenSector } from '@/constants/trajectories'
+import { SectenSector, SNBC_SECTOR_TARGET_EMISSIONS } from '@/constants/trajectories'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import type { SectenInfo } from '@prisma/client'
 import {
-  CalculateTrajectoryParams,
-  PastStudy,
   computePastOrPresentValue,
   getAllHistoricalStudyPoints,
   getGraphStartYear,
   getObjectivesWithOvershootCompensation,
+  OvershootAdjustment,
+  PastStudy,
 } from './trajectory'
 
 // SNBC trajectory constants
@@ -18,6 +18,16 @@ const SNBC_MID_TARGET_YEAR = 2030
 const SNBC_FINAL_TARGET_YEAR = 2050
 const SNBC_2030_REDUCTION_RATE = 0.4 // 40% reduction from 1990 to 2030
 const SNBC_2050_REDUCTION_RATE = 5 / 6 // ~83% reduction from 1990 to 2050 (target is 1/6th of 1990 emissions)
+
+interface CalculateTrajectoryParams {
+  studyEmissions: number
+  studyStartYear: number
+  sectenData: SectenInfo[]
+  pastStudies?: PastStudy[]
+  displayCurrentStudyValueOnTrajectory?: boolean
+  overshootAdjustment?: OvershootAdjustment
+  maxYear?: number
+}
 
 interface TrajectorySegment {
   startYear: number
@@ -451,7 +461,7 @@ export const calculateSNBCTrajectory = (
     objectives.push({ targetYear: SNBC_MID_TARGET_YEAR, reductionRate: futurReductionRates.rateTo2030 })
     objectives.push({ targetYear: SNBC_FINAL_TARGET_YEAR, reductionRate: futurReductionRates.rateTo2050 })
 
-    const compensatedObjectives = getObjectivesWithOvershootCompensation(
+    const correctedObjectives = getObjectivesWithOvershootCompensation(
       studyEmissions,
       studyStartYear,
       objectives,
@@ -460,10 +470,9 @@ export const calculateSNBCTrajectory = (
     )
 
     adjustedRates = {
-      rateTo2015:
-        compensatedObjectives.find((o) => o?.targetYear === SNBC_SECTOR_FIRST_TARGET_YEAR)?.reductionRate ?? 0,
-      rateTo2030: compensatedObjectives.find((o) => o?.targetYear === SNBC_MID_TARGET_YEAR)?.reductionRate ?? 0,
-      rateTo2050: compensatedObjectives.find((o) => o?.targetYear === SNBC_FINAL_TARGET_YEAR)?.reductionRate ?? 0,
+      rateTo2015: correctedObjectives.find((o) => o?.targetYear === SNBC_SECTOR_FIRST_TARGET_YEAR)?.reductionRate ?? 0,
+      rateTo2030: correctedObjectives.find((o) => o?.targetYear === SNBC_MID_TARGET_YEAR)?.reductionRate ?? 0,
+      rateTo2050: correctedObjectives.find((o) => o?.targetYear === SNBC_FINAL_TARGET_YEAR)?.reductionRate ?? 0,
     }
   }
 
