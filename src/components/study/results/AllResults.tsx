@@ -219,7 +219,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       type,
     )
 
-    // Compute results with dependencies using real filtered values
+    // Compute results using real filtered values
     const filteredResult = computeResultsByPost(
       filteredStudy,
       tPost,
