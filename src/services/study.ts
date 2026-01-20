@@ -29,9 +29,10 @@ import {
   Post,
   subPostBCToSubPostTiltMapping,
 } from './posts'
-import { computeBegesResult } from './results/beges'
+import { rulesSpans as begesRulesSpans, computeBegesResult } from './results/beges'
 import { computeResultsByPost, computeResultsByTag, ResultsByPost } from './results/consolidated'
-import { computeGHGPResult } from './results/ghgp'
+import { PostInfos } from './results/exports'
+import { computeGHGPResult, rulesSpans as ghgpRulesSpans } from './results/ghgp'
 import { filterWithDependencies } from './results/utils'
 import { EmissionFactorWithMetaData, getEmissionFactorsByIds } from './serverFunctions/emissionFactor'
 import { prepareExcel } from './serverFunctions/file'
@@ -446,116 +447,84 @@ export const formatConsolidatedStudyResultsForExport = (
     options: { '!cols': [{ wch: 30 }, { wch: 15 }, { wch: 20 }] },
   }
 }
-
-export const formatBegesStudyResultsForExport = (
-  study: FullStudy,
-  rules: ExportRule[],
-  emissionFactorsWithParts: EmissionFactorWithParts[],
-  siteList: { name: string; id: string }[],
-  tExport: Translations,
-  tQuality: Translations,
-  tBeges: Translations,
-  tUnits: Translations,
-  validatedEmissionSourcesOnly?: boolean,
-) => {
-  const lengthOfBeges = 33
-  const dataForExport = []
-
-  const sheetOptions: { '!merges': object[]; '!cols': object[] } = {
-    '!merges': [],
-    '!cols': [
-      { wch: 50 },
-      { wch: 60 },
-      { wch: 15 },
-      { wch: 15 },
-      { wch: 15 },
-      { wch: 15 },
-      { wch: 15 },
-      { wch: 15 },
-      { wch: 20 },
-    ],
-  }
-
-  for (let i = 0; i < siteList.length; i++) {
-    const site = siteList[i]
-    const resultList = computeBegesResult(
-      study,
-      rules,
-      emissionFactorsWithParts,
-      site.id,
-      true,
-      validatedEmissionSourcesOnly,
-    )
-
-    // Merge cells
-    sheetOptions['!merges'].push(
-      { s: { c: 0, r: 3 + i * lengthOfBeges }, e: { c: 0, r: 8 + i * lengthOfBeges } },
-      { s: { c: 0, r: 9 + i * lengthOfBeges }, e: { c: 0, r: 11 + i * lengthOfBeges } },
-      { s: { c: 0, r: 12 + i * lengthOfBeges }, e: { c: 0, r: 17 + i * lengthOfBeges } },
-      { s: { c: 0, r: 18 + i * lengthOfBeges }, e: { c: 0, r: 23 + i * lengthOfBeges } },
-      { s: { c: 0, r: 24 + i * lengthOfBeges }, e: { c: 0, r: 28 + i * lengthOfBeges } },
-      { s: { c: 0, r: 29 + i * lengthOfBeges }, e: { c: 0, r: 30 + i * lengthOfBeges } },
-    )
-
-    dataForExport.push([site.name])
-    dataForExport.push([tBeges('rule'), '', tBeges('ges', { unit: tUnits(study.resultsUnit) })])
-    dataForExport.push([
-      tBeges('category.title'),
-      tBeges('post.title'),
-      'CO2',
-      'CH4',
-      'N2O',
-      tBeges('other'),
-      tBeges('total'),
-      'CO2b',
-      tBeges('uncertainty'),
-    ])
-
-    const gasFields = ['co2', 'ch4', 'n2o', 'other', 'total', 'co2b'] as const
-
-    for (const result of resultList) {
-      const category = result.rule.split('.')[0]
-      const rule = result.rule
-      let post
-      if (rule === 'total') {
-        post = tBeges('total')
-      } else if (result.rule.includes('.total')) {
-        post = tBeges('subTotal')
-      } else {
-        post = `${rule}. ${tBeges(`post.${rule}`)}`
-      }
-
-      const gasValues = gasFields.map((field) => formatEmissionValueForExport(result[field], study.resultsUnit))
-
-      dataForExport.push([
-        category === 'total' ? '' : `${category}. ${tBeges(`category.${category}`)}`,
-        post,
-        ...gasValues,
-        result.squaredStandardDeviation
-          ? tQuality(getQualitativeUncertaintyFromSquaredStandardDeviation(result.squaredStandardDeviation).toString())
-          : '',
-      ])
-    }
-
-    dataForExport.push([])
-  }
-
-  return { name: tExport('Beges'), data: dataForExport, options: sheetOptions }
+interface IExportData {
+  rulesSpans: Record<string, number>
+  gasCols: (t: Translations) => string[]
+  gasFields: (keyof PostInfos)[]
+  getRuleName: (rule: string) => string
+  getCategoryName: (cateogy: string, t: Translations) => string
 }
 
-export const formatGHGPStudyResultsForExport = (
+const exportsData: Partial<Record<Export, IExportData>> = {
+  [Export.Beges]: {
+    rulesSpans: begesRulesSpans,
+    gasCols: (t: Translations) => ['CO2', 'CH4', 'N2O', t('other')],
+    gasFields: ['co2', 'ch4', 'n2o', 'other', 'total', 'co2b'] as const,
+    getRuleName: (rule: string) => rule,
+    getCategoryName: (category: string, t: Translations) => `${category}. ${t(`category.${category}`)}`,
+  },
+  [Export.GHGP]: {
+    rulesSpans: ghgpRulesSpans,
+    gasCols: () => ['CO2', 'CH4', 'N2O', 'HFC', 'PFC', 'SF6'],
+    gasFields: ['co2', 'ch4', 'n2o', 'hfc', 'pfc', 'sf6', 'total', 'co2b'] as const,
+    getRuleName: (rule: string) => {
+      let prefix = rule
+      if (prefix.substring(0, 1) === '4') {
+        prefix = `3${prefix.substring(1)}`
+      }
+      // specific case 3.09 (0 is added to put it before 3.10)
+      if (prefix.substring(2, 3) === '0') {
+        prefix = `3.${prefix.substring(3)}`
+      }
+      if (prefix.split('.')[1].includes('other')) {
+        prefix = ''
+      }
+      return prefix
+    },
+    getCategoryName: (category: string, t: Translations) => t(`category.${category}`),
+  },
+}
+
+type Merge = {
+  s: { c: number; r: number }
+  e: { c: number; r: number }
+}
+
+const buildMerges = (rulesSpans: Record<number, number>, startRow: number, column = 0): Merge[] => {
+  const merges: Merge[] = []
+  let currentRow = startRow
+
+  for (const key of Object.keys(rulesSpans).sort((a, b) => Number(a) - Number(b))) {
+    const span = rulesSpans[Number(key)]
+
+    merges.push({
+      s: { c: column, r: currentRow },
+      e: { c: column, r: currentRow + span - 1 },
+    })
+
+    currentRow += span
+  }
+
+  return merges
+}
+
+export const formatStudyExportResultsForExport = (
   study: FullStudy,
-  rules: ExportRule[],
-  emissionFactorsWithParts: EmissionFactorWithParts[],
   siteList: { name: string; id: string }[],
-  base: EmissionFactorBase,
   tExport: Translations,
   tQuality: Translations,
-  tGHGP: Translations,
+  tSpecificExport: Translations,
   tUnits: Translations,
-  validatedEmissionSourcesOnly?: boolean,
+  exportType: Export,
+  getResults: (siteId: string) => PostInfos[],
 ) => {
-  const lengthOfGHGP = 30
+  const data = exportsData[exportType]
+  if (!data) {
+    return { name: tSpecificExport(exportType), data: [], options: { '!merges': [], '!cols': [] } }
+  }
+  const rulesSpans = data.rulesSpans
+  delete rulesSpans.total
+  const length = Object.values(rulesSpans).reduce((res, rule) => res + rule, 0) + 5
   const dataForExport = []
 
   const sheetOptions: { '!merges': object[]; '!cols': object[] } = {
@@ -563,84 +532,50 @@ export const formatGHGPStudyResultsForExport = (
     '!cols': [
       { wch: 50 },
       { wch: 60 },
-      { wch: 15 },
-      { wch: 15 },
-      { wch: 15 },
-      { wch: 15 },
-      { wch: 15 },
-      { wch: 15 },
-      { wch: 15 },
-      { wch: 15 },
+      ...Array.from({ length: data.gasFields.length }, () => ({ wch: 15 })),
       { wch: 20 },
     ],
   }
 
   for (let i = 0; i < siteList.length; i++) {
     const site = siteList[i]
-    const resultList = computeGHGPResult(
-      study,
-      rules,
-      emissionFactorsWithParts,
-      site.id,
-      true,
-      validatedEmissionSourcesOnly,
-      base,
-    )
+    const resultList = getResults(site.id)
 
     // Merge cells
-    sheetOptions['!merges'].push(
-      { s: { c: 0, r: 3 + i * lengthOfGHGP }, e: { c: 0, r: 7 + i * lengthOfGHGP } },
-      { s: { c: 0, r: 8 + i * lengthOfGHGP }, e: { c: 0, r: 10 + i * lengthOfGHGP } },
-      { s: { c: 0, r: 11 + i * lengthOfGHGP }, e: { c: 0, r: 19 + i * lengthOfGHGP } },
-      { s: { c: 0, r: 20 + i * lengthOfGHGP }, e: { c: 0, r: 27 + i * lengthOfGHGP } },
-    )
+    sheetOptions['!merges'].push(...buildMerges(rulesSpans, 3 + i * length))
 
     dataForExport.push([site.name])
-    dataForExport.push([tGHGP('rule'), '', tGHGP('ges', { unit: tUnits(study.resultsUnit) })])
+    dataForExport.push([tSpecificExport('rule'), '', tSpecificExport('ges', { unit: tUnits(study.resultsUnit) })])
     dataForExport.push([
-      tGHGP('category.title'),
-      tGHGP('post.title'),
-      'CO2',
-      'CH4',
-      'N2O',
-      'HFC',
-      'PFC',
-      'SF6',
-      tGHGP('total'),
+      tSpecificExport('category.title'),
+      tSpecificExport('post.title'),
+      ...data.gasCols(tSpecificExport),
+      tSpecificExport('total'),
       'CO2b',
-      tGHGP('uncertainty'),
+      tSpecificExport('uncertainty'),
     ])
 
-    const gasFields = ['co2', 'ch4', 'n2o', 'hfc', 'pfc', 'sf6', 'total', 'co2b'] as const
+    const gasFields = data.gasFields
 
     for (const result of resultList) {
       const category = result.rule.split('.')[0]
       const rule = result.rule
       let post
       if (rule === 'total') {
-        post = tGHGP('total')
+        post = tSpecificExport('total')
       } else if (result.rule.includes('.total')) {
-        post = tGHGP('subTotal')
+        post = tSpecificExport('subTotal')
       } else {
-        let prefix = rule
-        if (prefix.substring(0, 1) === '4') {
-          prefix = `3${prefix.substring(1)}`
-        }
-        // specific case 3.09 (0 is added to put it before 3.10)
-        if (prefix.substring(2, 3) === '0') {
-          prefix = `3.${prefix.substring(3)}`
-        }
-        if (prefix.split('.')[1].includes('other')) {
-          prefix = ''
-        }
-
-        post = `${prefix}. ${tGHGP(`post.${rule}`)}`
+        post = `${data.getRuleName(rule)}. ${tSpecificExport(`post.${rule}`)}`
       }
 
-      const gasValues = gasFields.map((field) => formatEmissionValueForExport(result[field] || 0, study.resultsUnit))
+      const gasValues = gasFields.map((field) => {
+        const value = (result[field] as number) || undefined
+        return formatEmissionValueForExport(value || 0, study.resultsUnit)
+      })
 
       dataForExport.push([
-        category === 'total' ? '' : tGHGP(`category.${category}`),
+        category === 'total' ? '' : data.getCategoryName(category, tSpecificExport),
         post,
         ...gasValues,
         result.squaredStandardDeviation
@@ -652,7 +587,7 @@ export const formatGHGPStudyResultsForExport = (
     dataForExport.push([])
   }
 
-  return { name: tExport('GHGP'), data: dataForExport, options: sheetOptions }
+  return { name: tExport(exportType), data: dataForExport, options: sheetOptions }
 }
 
 export const formatBCResultsForCutExport = (
@@ -765,33 +700,40 @@ export const downloadStudyResults = async (
 
   if (study.exports?.types.includes(Export.Beges)) {
     data.push(
-      formatBegesStudyResultsForExport(
+      formatStudyExportResultsForExport(
         study,
-        begesRules,
-        emissionFactorsWithParts,
         siteList,
         tExport,
         tQuality,
         tBeges,
         tUnits,
-        validatedEmissionSourcesOnly,
+        Export.Beges,
+        (siteId: string) =>
+          computeBegesResult(study, begesRules, emissionFactorsWithParts, siteId, true, validatedEmissionSourcesOnly),
       ),
     )
   }
 
   if (study.exports?.types.includes(Export.GHGP)) {
     data.push(
-      formatGHGPStudyResultsForExport(
+      formatStudyExportResultsForExport(
         study,
-        ghgpRules,
-        emissionFactorsWithParts,
         siteList,
-        base,
         tExport,
         tQuality,
         tGHGP,
         tUnits,
-        validatedEmissionSourcesOnly,
+        Export.GHGP,
+        (siteId: string) =>
+          computeGHGPResult(
+            study,
+            ghgpRules,
+            emissionFactorsWithParts,
+            siteId,
+            true,
+            validatedEmissionSourcesOnly,
+            base,
+          ),
       ),
     )
   }
