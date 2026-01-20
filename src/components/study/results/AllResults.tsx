@@ -293,8 +293,8 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       tBeges,
       tGHGP,
       tUnits,
+      tBase,
       environment,
-      selectedGHGPTable,
     )
   }
 

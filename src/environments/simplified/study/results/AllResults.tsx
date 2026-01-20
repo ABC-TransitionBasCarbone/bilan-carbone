@@ -89,6 +89,7 @@ const AllResults = ({
   const tUnits = useTranslations('study.results.units')
   const tExportButton = useTranslations('study.export')
   const tStudyNav = useTranslations('study.navigation')
+  const tBase = useTranslations('emissionFactors.base')
 
   const { callServerFunction } = useServerFunction()
 
@@ -161,6 +162,7 @@ const AllResults = ({
                 tBeges,
                 tGHGP,
                 tUnits,
+                tBase,
                 Environment.CUT,
               )
             }
