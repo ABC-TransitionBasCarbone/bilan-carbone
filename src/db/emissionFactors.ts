@@ -461,6 +461,7 @@ export const getEmissionFactorsWithPartsInIds = async (ids: string[]) =>
       completeness: true,
       importedId: true,
       importedFrom: true,
+      base: true,
       emissionFactorParts: {
         select: {
           ...gazColumns,
