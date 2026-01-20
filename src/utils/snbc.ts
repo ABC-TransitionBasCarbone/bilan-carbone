@@ -17,6 +17,8 @@ const SNBC_FINAL_TARGET_YEAR = 2050
 const SNBC_2030_REDUCTION_RATE = 0.4 // 40% reduction from 1990 to 2030
 const SNBC_2050_REDUCTION_RATE = 5 / 6 // ~83% reduction from 1990 to 2050 (target is 1/6th of 1990 emissions)
 
+export type SectenSector = 'energy' | 'industry' | 'waste' | 'buildings' | 'agriculture' | 'transportation'
+
 interface CalculateTrajectoryParams {
   studyEmissions: number
   studyStartYear: number
@@ -27,9 +29,16 @@ interface CalculateTrajectoryParams {
   maxYear?: number
 }
 
-export const getSectenEmissionsByYear = (sectenData: SectenInfo[], year: number): number | null => {
+export const getSectenEmissionsByYear = (
+  sectenData: SectenInfo[],
+  year: number,
+  sector?: SectenSector,
+): number | null => {
   const info = sectenData.find((d) => d.year === year)
-  return info ? info.total : null
+  if (!info) {
+    return null
+  }
+  return sector ? info[sector] : info.total
 }
 
 const getLatestSectenYear = (sectenData: SectenInfo[]): number | null => {
@@ -39,40 +48,40 @@ const getLatestSectenYear = (sectenData: SectenInfo[]): number | null => {
   return Math.max(...sectenData.map((d) => d.year))
 }
 
-const getLatestSectenEmissions = (sectenData: SectenInfo[]): number | null => {
+const getLatestSectenEmissions = (sectenData: SectenInfo[], sector?: SectenSector): number | null => {
   const latestYear = getLatestSectenYear(sectenData)
   if (latestYear === null) {
     return null
   }
-  return getSectenEmissionsByYear(sectenData, latestYear)
+  return getSectenEmissionsByYear(sectenData, latestYear, sector)
 }
 
-const calculateSectenTarget2030 = (sectenData: SectenInfo[]): number | null => {
-  const emissions1990 = getSectenEmissionsByYear(sectenData, SNBC_REFERENCE_YEAR)
+const calculateSectenTarget2030 = (sectenData: SectenInfo[], sector?: SectenSector): number | null => {
+  const emissions1990 = getSectenEmissionsByYear(sectenData, SNBC_REFERENCE_YEAR, sector)
   if (emissions1990 === null) {
     return null
   }
   return emissions1990 * (1 - SNBC_2030_REDUCTION_RATE)
 }
 
-const calculateSectenTarget2050 = (sectenData: SectenInfo[]): number | null => {
-  const emissions1990 = getSectenEmissionsByYear(sectenData, SNBC_REFERENCE_YEAR)
+const calculateSectenTarget2050 = (sectenData: SectenInfo[], sector?: SectenSector): number | null => {
+  const emissions1990 = getSectenEmissionsByYear(sectenData, SNBC_REFERENCE_YEAR, sector)
   if (emissions1990 === null) {
     return null
   }
   return emissions1990 * (1 - SNBC_2050_REDUCTION_RATE)
 }
 
-const getSectenYearlyReductionRates = (sectenData: SectenInfo[]): Map<number, number> => {
+const getSectenYearlyReductionRates = (sectenData: SectenInfo[], sector?: SectenSector): Map<number, number> => {
   const rates = new Map<number, number>()
 
   for (let i = 1; i < sectenData.length; i++) {
-    const prevYear = sectenData[i - 1]
-    const currYear = sectenData[i]
+    const prevEmissions = getSectenEmissionsByYear(sectenData, sectenData[i - 1].year, sector)
+    const currEmissions = getSectenEmissionsByYear(sectenData, sectenData[i].year, sector)
 
-    if (prevYear.total > 0) {
-      const reductionRate = (prevYear.total - currYear.total) / prevYear.total
-      rates.set(currYear.year, reductionRate)
+    if (prevEmissions !== null && currEmissions !== null && prevEmissions > 0) {
+      const reductionRate = (prevEmissions - currEmissions) / prevEmissions
+      rates.set(sectenData[i].year, reductionRate)
     }
   }
 
@@ -120,6 +129,7 @@ const interpolatePastEmissions = (
 
 const calculateSectenAnnualRateTo2030 = (
   sectenTarget2030: number,
+  sectenTarget2050: number, // Used if target 2030 is already reached
   fromSectenYear: number,
   fromSectenEmissions: number,
 ): number | null => {
@@ -127,6 +137,16 @@ const calculateSectenAnnualRateTo2030 = (
 
   if (yearsTo2030 <= 0 || fromSectenEmissions <= 0) {
     return null
+  }
+
+  if (fromSectenEmissions <= sectenTarget2030) {
+    // If target 2030 is already reached, calculate the reduction rate from study year to 2050
+    const yearsTo2050 = SNBC_FINAL_TARGET_YEAR - fromSectenYear
+    if (fromSectenEmissions <= sectenTarget2050) {
+      return 0
+    }
+    const totalReduction = (fromSectenEmissions - sectenTarget2050) / fromSectenEmissions
+    return totalReduction / yearsTo2050
   }
 
   const remainingReduction = (fromSectenEmissions - sectenTarget2030) / fromSectenEmissions
@@ -151,15 +171,16 @@ const calculateAnnualRateFrom2030To2050 = (sectenTarget2030: number, sectenTarge
 export const calculateSNBCReductionRates = (
   sectenData: SectenInfo[],
   studyStartYear: number,
+  sector?: SectenSector,
 ): { rateTo2030: number; rateFrom2030To2050: number } | null => {
   if (sectenData.length === 0) {
     return null
   }
 
-  const sectenTarget2030 = calculateSectenTarget2030(sectenData)
-  const sectenTarget2050 = calculateSectenTarget2050(sectenData)
+  const sectenTarget2030 = calculateSectenTarget2030(sectenData, sector)
+  const sectenTarget2050 = calculateSectenTarget2050(sectenData, sector)
   const latestSectenYear = getLatestSectenYear(sectenData)
-  const latestSectenEmissions = getLatestSectenEmissions(sectenData)
+  const latestSectenEmissions = getLatestSectenEmissions(sectenData, sector)
 
   if (
     sectenTarget2030 === null ||
@@ -173,13 +194,14 @@ export const calculateSNBCReductionRates = (
   const sectenYearForRateCalculation =
     studyStartYear < SNBC_REFERENCE_YEAR ? SNBC_REFERENCE_YEAR : Math.min(studyStartYear, latestSectenYear)
 
-  const sectenEmissionsForRateCalculation = getSectenEmissionsByYear(sectenData, sectenYearForRateCalculation)
+  const sectenEmissionsForRateCalculation = getSectenEmissionsByYear(sectenData, sectenYearForRateCalculation, sector)
   if (sectenEmissionsForRateCalculation === null) {
     return null
   }
 
   const rateTo2030 = calculateSectenAnnualRateTo2030(
     sectenTarget2030,
+    sectenTarget2050,
     sectenYearForRateCalculation,
     sectenEmissionsForRateCalculation,
   )
@@ -229,22 +251,27 @@ export const getSNBCReductionRates = (
  *   1. Calculate the reduction rate from 2030 to 2050 using the Secten objectives and potential overshoot compensation
  *   2. Build the trajectory from 2030 to 2050 using this reduction rate
  */
-export const calculateSNBCTrajectory = ({
-  studyEmissions,
-  studyStartYear,
-  sectenData,
-  pastStudies = [],
-  displayCurrentStudyValueOnTrajectory = true,
-  overshootAdjustment,
-  maxYear,
-}: CalculateTrajectoryParams): TrajectoryDataPoint[] => {
+export const calculateSNBCTrajectory = (
+  params: CalculateTrajectoryParams,
+  sector?: SectenSector,
+): TrajectoryDataPoint[] => {
+  const {
+    studyEmissions,
+    studyStartYear,
+    sectenData,
+    pastStudies = [],
+    displayCurrentStudyValueOnTrajectory = true,
+    overshootAdjustment,
+    maxYear,
+  } = params
+
   const dataPoints: TrajectoryDataPoint[] = []
 
   if (sectenData.length === 0) {
     return dataPoints
   }
 
-  const rates = calculateSNBCReductionRates(sectenData, studyStartYear)
+  const rates = calculateSNBCReductionRates(sectenData, studyStartYear, sector)
   if (rates === null) {
     return dataPoints
   }
@@ -252,13 +279,13 @@ export const calculateSNBCTrajectory = ({
   const { rateTo2030: sectenRateTo2030, rateFrom2030To2050: sectenRateFrom2030To2050 } = rates
 
   const latestSectenYear = getLatestSectenYear(sectenData)
-  const latestSectenEmissions = getLatestSectenEmissions(sectenData)
+  const latestSectenEmissions = getLatestSectenEmissions(sectenData, sector)
 
   if (latestSectenYear === null || latestSectenEmissions === null) {
     return dataPoints
   }
 
-  const reductionRates = getSectenYearlyReductionRates(sectenData)
+  const reductionRates = getSectenYearlyReductionRates(sectenData, sector)
   const historicalPoints = getAllHistoricalStudyPoints(pastStudies)
   const baseYear = Math.min(studyStartYear, SNBC_REFERENCE_YEAR)
   const graphStartYear = getGraphStartYear(pastStudies, baseYear)

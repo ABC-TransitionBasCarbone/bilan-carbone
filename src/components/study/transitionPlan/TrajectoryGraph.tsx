@@ -2,10 +2,11 @@
 
 import TagChip from '@/components/base/TagChip'
 import {
+  SNBC_SECTOR_COLORS,
   TRAJECTORY_15_ID,
   TRAJECTORY_SNBC_GENERAL_ID,
   TRAJECTORY_WB2C_ID,
-} from '@/components/pages/TrajectoryReductionPage'
+} from '@/constants/trajectories'
 import { getYearsToDisplay, PastStudy, TrajectoryData } from '@/utils/trajectory'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary, Alert, Slider, Typography } from '@mui/material'
@@ -31,7 +32,7 @@ interface Props {
   studyUnit: StudyResultUnit
   trajectory15Data: TrajectoryData | null
   trajectoryWB2CData: TrajectoryData | null
-  snbcData: TrajectoryData | null
+  snbcData: { [trajectoryId: string]: TrajectoryData | null }
   customTrajectoriesData: Array<{
     trajectoryData: TrajectoryData | null
     label: string
@@ -74,10 +75,11 @@ const TrajectoryGraph = ({
   const [yearRange, setYearRange] = useState<number[] | null>(null)
   const [displayedYearRange, setDisplayedYearRange] = useState<number[] | null>(null)
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const tSnbc = useTranslations('study.transitionPlan.trajectories.snbcCard')
 
   const trajectory15Enabled = selectedSbtiTrajectories.includes(TRAJECTORY_15_ID)
   const trajectoryWB2CEnabled = selectedSbtiTrajectories.includes(TRAJECTORY_WB2C_ID)
-  const trajectorySnbcEnabled = selectedSnbcTrajectories.includes(TRAJECTORY_SNBC_GENERAL_ID)
+  const snbcTrajectoryDataArray = useMemo(() => Object.values(snbcData), [snbcData])
 
   const allYearsToDisplay = useMemo(
     () =>
@@ -85,12 +87,12 @@ const TrajectoryGraph = ({
         [
           trajectory15Data,
           trajectoryWB2CData,
-          snbcData,
+          ...snbcTrajectoryDataArray,
           ...customTrajectoriesData.map((values) => values.trajectoryData),
           actionBasedTrajectoryData,
         ].filter((traj) => traj !== null),
       ),
-    [trajectory15Data, trajectoryWB2CData, snbcData, customTrajectoriesData, actionBasedTrajectoryData],
+    [trajectory15Data, trajectoryWB2CData, snbcTrajectoryDataArray, customTrajectoriesData, actionBasedTrajectoryData],
   )
 
   const { minYear, maxYear } = useMemo(() => {
@@ -302,65 +304,73 @@ const TrajectoryGraph = ({
       }
     }
 
-    if (trajectorySnbcEnabled && snbcData) {
-      const { previousTrajectory, previousTrajectoryStartYear, currentTrajectory, withinThreshold } = snbcData
+    Object.entries(snbcData).forEach(([trajectoryId, trajectoryData]) => {
+      if (selectedSnbcTrajectories.includes(trajectoryId) && trajectoryData) {
+        const { previousTrajectory, previousTrajectoryStartYear, currentTrajectory, withinThreshold } = trajectoryData
 
-      if (previousTrajectory) {
-        if (withinThreshold) {
+        const color = SNBC_SECTOR_COLORS[trajectoryId] || 'var(--trajectory-snbc)'
+        const label =
+          trajectoryId === TRAJECTORY_SNBC_GENERAL_ID
+            ? t('trajectorySNBC')
+            : `${t('trajectorySNBC')} - ${tSnbc(trajectoryId.toLowerCase().replace('snbc_', ''))}`
+
+        if (previousTrajectory) {
+          if (withinThreshold) {
+            series.push({
+              dataType: 'previous',
+              trajectoryType: TrajectoryType.SNBC_GENERAL,
+              data: mapDataToYears(previousTrajectory),
+              label,
+              color,
+              curve: 'linear' as const,
+              connectNulls: false,
+              showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
+              valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
+            })
+          } else {
+            series.push({
+              dataType: 'previous',
+              trajectoryType: TrajectoryType.SNBC_GENERAL,
+              data: mapDataToYears(previousTrajectory),
+              label: label + ` (${previousTrajectoryStartYear})`,
+              color: `color-mix(in srgb, ${color} 50%, transparent)`,
+              curve: 'linear' as const,
+              connectNulls: false,
+              showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
+              valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
+            })
+          }
+        }
+
+        const currentData = mapDataToYears(currentTrajectory)
+        const showCurrentTrajectory = !previousTrajectory || !withinThreshold
+        if (showCurrentTrajectory) {
           series.push({
-            dataType: 'previous',
+            dataType: 'current',
             trajectoryType: TrajectoryType.SNBC_GENERAL,
-            data: mapDataToYears(previousTrajectory),
-            label: t('trajectorySNBC'),
-            color: 'var(--trajectory-snbc)',
+            data: currentData,
+            label: trajectoryData.previousTrajectory ? label + ` (${studyStartYear})` : label,
+            color,
             curve: 'linear' as const,
             connectNulls: false,
-            showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
+            showMark: ({ index }: { index: number }) => shouldShowMark(index),
             valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
           })
         } else {
           series.push({
-            dataType: 'previous',
+            dataType: 'current',
             trajectoryType: TrajectoryType.SNBC_GENERAL,
-            data: mapDataToYears(previousTrajectory),
-            label: t('trajectorySNBC') + ` (${previousTrajectoryStartYear})`,
-            color: 'color-mix(in srgb, var(--trajectory-snbc) 50%, transparent)',
+            data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
+            label: label + ` (${studyStartYear})`,
+            color,
             curve: 'linear' as const,
             connectNulls: false,
-            showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
+            showMark: true,
             valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
           })
         }
       }
-
-      const currentData = mapDataToYears(currentTrajectory)
-      const showCurrentTrajectory = !previousTrajectory || !withinThreshold
-      if (showCurrentTrajectory) {
-        series.push({
-          dataType: 'current',
-          trajectoryType: TrajectoryType.SNBC_GENERAL,
-          data: currentData,
-          label: snbcData.previousTrajectory ? t('trajectorySNBC') + ` (${studyStartYear})` : t('trajectorySNBC'),
-          color: 'var(--trajectory-snbc)',
-          curve: 'linear' as const,
-          connectNulls: false,
-          showMark: ({ index }: { index: number }) => shouldShowMark(index),
-          valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
-        })
-      } else {
-        series.push({
-          dataType: 'current',
-          trajectoryType: TrajectoryType.SNBC_GENERAL,
-          data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
-          label: t('trajectorySNBC') + ` (${studyStartYear})`,
-          color: 'var(--trajectory-snbc)',
-          curve: 'linear' as const,
-          connectNulls: false,
-          showMark: true,
-          valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
-        })
-      }
-    }
+    })
 
     customTrajectoriesData.forEach((traj, index) => {
       if (traj.trajectoryData) {
@@ -499,12 +509,13 @@ const TrajectoryGraph = ({
     trajectory15Data,
     trajectoryWB2CEnabled,
     trajectoryWB2CData,
-    trajectorySnbcEnabled,
+    selectedSnbcTrajectories,
     snbcData,
     customTrajectoriesData,
     actionBasedTrajectoryData,
     mapDataToYears,
     t,
+    tSnbc,
     historicalStudyYearIndices,
     shouldShowMark,
     studyStartYear,
@@ -528,7 +539,7 @@ const TrajectoryGraph = ({
         return [...prev, label]
       }
     })
-  }, seriesCreated)
+  }, [])
 
   return (
     <div className="w100 flex-col gapped1 mb2">

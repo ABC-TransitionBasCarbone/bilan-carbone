@@ -12,6 +12,7 @@ jest.mock('../components/pages/TrajectoryReductionPage', () => ({
 }))
 
 import { TrajectoryDataPoint } from '@/components/study/transitionPlan/TrajectoryGraph'
+import { TRAJECTORY_SNBC_GENERAL_ID } from '@/constants/trajectories'
 import { createSectenData } from './secten.test-utils'
 import { calculateTrajectoryIntegral, getSNBCData, PastStudy } from './trajectory'
 
@@ -37,8 +38,16 @@ describe('SNBC Trajectory', () => {
       const studyEmissions = 1000
       const studyStartYear = 2020
 
-      const result = getSNBCData(true, sectenData, null, [], studyStartYear, studyEmissions, 2050)
-      const trajectory = result!.currentTrajectory
+      const result = getSNBCData(
+        [TRAJECTORY_SNBC_GENERAL_ID],
+        sectenData,
+        null,
+        [],
+        studyStartYear,
+        studyEmissions,
+        2050,
+      )
+      const trajectory = result![TRAJECTORY_SNBC_GENERAL_ID]!.currentTrajectory
 
       // Expected values calculated based on previous secten data
       expect(getValue(trajectory, 1990)).toBeCloseTo(1381.31, 0)
@@ -57,9 +66,17 @@ describe('SNBC Trajectory', () => {
       const studyEmissions = STANDARD_STUDY_EMISSIONS
       const studyStartYear = 2025
 
-      const result = getSNBCData(true, sectenData, null, [], studyStartYear, studyEmissions, 2050)
+      const result = getSNBCData(
+        [TRAJECTORY_SNBC_GENERAL_ID],
+        sectenData,
+        null,
+        [],
+        studyStartYear,
+        studyEmissions,
+        2050,
+      )
 
-      const trajectory = result!.currentTrajectory
+      const trajectory = result![TRAJECTORY_SNBC_GENERAL_ID]!.currentTrajectory
 
       // Expected values for reconstruction and forward trajectory
       expect(trajectory.find((p) => p.year === 2025)?.value).toBe(studyEmissions)
@@ -74,8 +91,16 @@ describe('SNBC Trajectory', () => {
       const studyEmissions = STANDARD_STUDY_EMISSIONS
       const studyStartYear = 2025
 
-      const result = getSNBCData(true, sectenData, null, [], studyStartYear, studyEmissions, 2050)
-      const trajectory = result!.currentTrajectory
+      const result = getSNBCData(
+        [TRAJECTORY_SNBC_GENERAL_ID],
+        sectenData,
+        null,
+        [],
+        studyStartYear,
+        studyEmissions,
+        2050,
+      )
+      const trajectory = result![TRAJECTORY_SNBC_GENERAL_ID]!.currentTrajectory
 
       expect(getValue(trajectory, 2025)).toBe(studyEmissions)
       expect(getValue(trajectory, 1990)).toBeCloseTo(1510.22, 0)
@@ -92,8 +117,16 @@ describe('SNBC Trajectory', () => {
       const studyStartYear = 2024
       const pastStudies = [createPastStudy(2020, STANDARD_STUDY_EMISSIONS)]
 
-      const result = getSNBCData(true, sectenData, null, pastStudies, studyStartYear, studyEmissions, 2050)
-      const trajectory = result!.currentTrajectory
+      const result = getSNBCData(
+        [TRAJECTORY_SNBC_GENERAL_ID],
+        sectenData,
+        null,
+        pastStudies,
+        studyStartYear,
+        studyEmissions,
+        2050,
+      )
+      const trajectory = result![TRAJECTORY_SNBC_GENERAL_ID]!.currentTrajectory
 
       expect(trajectory.find((p) => p.year === 1990)?.value).toBeCloseTo(1381.31, 0)
       expect(trajectory.find((p) => p.year === 2010)?.value).toBeCloseTo(1295.45, 0)
@@ -109,8 +142,16 @@ describe('SNBC Trajectory', () => {
       const studyStartYear = 2025
       const pastStudies = [createPastStudy(2022, STANDARD_STUDY_EMISSIONS + 60)]
 
-      const result = getSNBCData(true, sectenData, null, pastStudies, studyStartYear, studyEmissions, 2050)
-      const trajectory = result!.currentTrajectory
+      const result = getSNBCData(
+        [TRAJECTORY_SNBC_GENERAL_ID],
+        sectenData,
+        null,
+        pastStudies,
+        studyStartYear,
+        studyEmissions,
+        2050,
+      )
+      const trajectory = result![TRAJECTORY_SNBC_GENERAL_ID]!.currentTrajectory
 
       expect(trajectory.find((p) => p.year === 2022)?.value).toBe(STANDARD_STUDY_EMISSIONS + 60)
       expect(trajectory.find((p) => p.year === 2023)?.value).toBeCloseTo(STANDARD_STUDY_EMISSIONS + 40, 0)
@@ -125,9 +166,17 @@ describe('SNBC Trajectory', () => {
       const studyStartYear = 2024
       const pastStudies = [createPastStudy(2018, 1200), createPastStudy(2021, STANDARD_STUDY_EMISSIONS)]
 
-      const result = getSNBCData(true, sectenData, null, pastStudies, studyStartYear, studyEmissions, 2050)
+      const result = getSNBCData(
+        [TRAJECTORY_SNBC_GENERAL_ID],
+        sectenData,
+        null,
+        pastStudies,
+        studyStartYear,
+        studyEmissions,
+        2050,
+      )
 
-      const trajectory = result!.currentTrajectory
+      const trajectory = result![TRAJECTORY_SNBC_GENERAL_ID]!.currentTrajectory
 
       // Past study points
       expect(trajectory.find((p) => p.year === 2018)?.value).toBe(1200)
@@ -147,13 +196,21 @@ describe('SNBC Trajectory', () => {
       const studyStartYear = 2025
       const studyEmissions = 1200
 
-      const result = getSNBCData(true, sectenData, referenceStudy, [], studyStartYear, studyEmissions, 2050)
+      const result = getSNBCData(
+        [TRAJECTORY_SNBC_GENERAL_ID],
+        sectenData,
+        referenceStudy,
+        [],
+        studyStartYear,
+        studyEmissions,
+        2050,
+      )
 
-      expect(result!.withinThreshold).toBe(false)
-      expect(result!.previousTrajectory).not.toBeNull()
+      expect(result![TRAJECTORY_SNBC_GENERAL_ID]!.withinThreshold).toBe(false)
+      expect(result![TRAJECTORY_SNBC_GENERAL_ID]!.previousTrajectory).not.toBeNull()
 
-      const referenceTrajectory = result!.previousTrajectory!
-      const currentTrajectory = result!.currentTrajectory
+      const referenceTrajectory = result![TRAJECTORY_SNBC_GENERAL_ID]!.previousTrajectory!
+      const currentTrajectory = result![TRAJECTORY_SNBC_GENERAL_ID]!.currentTrajectory
 
       const referenceBudget = calculateTrajectoryIntegral(referenceTrajectory, 2022, 2050)
       const currentBudget = calculateTrajectoryIntegral(currentTrajectory, 2022, 2050)
@@ -175,14 +232,14 @@ describe('SNBC Trajectory', () => {
       ]
 
       testCases.forEach(({ year, emissions }) => {
-        const result = getSNBCData(true, sectenData, referenceStudy, [], year, emissions, 2050)
+        const result = getSNBCData([TRAJECTORY_SNBC_GENERAL_ID], sectenData, referenceStudy, [], year, emissions, 2050)
 
-        if (result!.withinThreshold) {
+        if (result![TRAJECTORY_SNBC_GENERAL_ID]!.withinThreshold) {
           return
         }
 
-        const referenceTrajectory = result!.previousTrajectory!
-        const currentTrajectory = result!.currentTrajectory
+        const referenceTrajectory = result![TRAJECTORY_SNBC_GENERAL_ID]!.previousTrajectory!
+        const currentTrajectory = result![TRAJECTORY_SNBC_GENERAL_ID]!.currentTrajectory
 
         const referenceBudget = calculateTrajectoryIntegral(referenceTrajectory, 2022, 2050)
         const currentBudget = calculateTrajectoryIntegral(currentTrajectory, 2022, 2050)

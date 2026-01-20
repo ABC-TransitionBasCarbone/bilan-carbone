@@ -75,6 +75,12 @@
   --trajectory-sbti-15: #199e73;
   --trajectory-sbti-wb2c: #60e6bc;
   --trajectory-snbc: #03bbe0;
+  --trajectory-snbc-energy: #ff6b6b;
+  --trajectory-snbc-industry: #cf14fe;
+  --trajectory-snbc-waste: #30f852;
+  --trajectory-snbc-buildings: #ff9ff3;
+  --trajectory-snbc-agriculture: #54a0ff;
+  --trajectory-snbc-transportation: #00d2d3;
 
   --trajectory-custom-0: #fad98d;
   --trajectory-custom-1: #f8c151;
