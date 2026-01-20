@@ -6,10 +6,11 @@ import { Post } from '@/services/posts'
 import { getBegesEmissionTotal } from '@/services/results/beges'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { PostInfos } from '@/services/results/exports'
-import { getSiteEmissionSources } from '@/services/results/utils'
+import { getSiteEmissionSourcesWithoutMarketBase } from '@/services/results/utils'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import TrendingUpIcon from '@mui/icons-material/TrendingUpOutlined'
+import WarningAmberIcon from '@mui/icons-material/WarningAmberOutlined'
 import { Export, SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -46,7 +47,7 @@ const ConsolatedBEGESDifference = ({
   const environment = useMemo(() => study.organizationVersion.environment, [study])
 
   const emissionSourcesForSelectedSite = useMemo(
-    () => getSiteEmissionSources(study.emissionSources, studySite),
+    () => getSiteEmissionSourcesWithoutMarketBase(study.emissionSources, studySite),
     [study.emissionSources, studySite],
   )
 
@@ -156,6 +157,7 @@ const ConsolatedBEGESDifference = ({
           title="dependanceTitle"
           descriptions={['dependance']}
           emissionSources={utilisationEnDependanceEmissionSources}
+          exportType={Export.Beges}
           studySite={studySite}
           value={utilisationEnDependanceValueToDisplay}
           resultsUnit={study.resultsUnit}
@@ -226,10 +228,12 @@ const ConsolatedBEGESDifference = ({
           title="missingCaractTitle"
           descriptions={['missingCaract1', 'missingCaract2']}
           emissionSources={missingCaract}
+          exportType={Export.Beges}
           studySite={studySite}
           value={formatNumber(missingCaractDifference, 0)}
           resultsUnit={study.resultsUnit}
           navigateToEmissionSource={navigateToEmissionSource}
+          Icon={WarningAmberIcon}
         />
       )}
     </ConsolidatedExportDifference>

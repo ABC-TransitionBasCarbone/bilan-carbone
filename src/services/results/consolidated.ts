@@ -2,14 +2,13 @@ import { FullStudy } from '@/db/study'
 import { customPostOrder } from '@/environments/clickson/utils/constant'
 import { Translations } from '@/types/translation'
 import { sortByCustomOrder } from '@/utils/array'
-import { getBaseFilteredEmissionSources } from '@/utils/study'
 import { Environment, SubPost } from '@prisma/client'
 import { getEmissionResults, getEmissionSourcesTotalCo2, getEmissionSourcesTotalMonetaryCo2 } from '../emissionSource'
 import { hasCustomPostOrder } from '../permissions/environment'
 import { BCPost, ClicksonPost, convertTiltSubPostToBCSubPost, CutPost, Post, subPostsByPost, TiltPost } from '../posts'
 import { AdditionalResultTypes, ResultType } from '../study'
 import { getSquaredStandardDeviationForEmissionSourceArray } from '../uncertainty'
-import { filterWithDependencies, getSiteEmissionSources } from './utils'
+import { filterWithDependencies, getSiteEmissionSourcesWithoutMarketBase } from './utils'
 
 export type ResultsByPost = {
   post: Post | SubPost | 'total'
@@ -33,7 +32,7 @@ export const computeResultsByPost = (
   environment: Environment,
   type?: ResultType,
 ): ResultsByPost[] => {
-  const siteEmissionSources = getBaseFilteredEmissionSources(getSiteEmissionSources(study.emissionSources, studySite))
+  const siteEmissionSources = getSiteEmissionSourcesWithoutMarketBase(study.emissionSources, studySite)
   const convertToBc = type === AdditionalResultTypes.CONSOLIDATED && environment !== Environment.BC
   const convertedSiteEmissionSources = convertToBc
     ? siteEmissionSources.map((emissionSource) => {
@@ -143,7 +142,7 @@ export const computeResultsByTag = (
   environment: Environment,
   t: Translations,
 ): ResultsByTag[] => {
-  const siteEmissionSources = getBaseFilteredEmissionSources(getSiteEmissionSources(study.emissionSources, studySite))
+  const siteEmissionSources = getSiteEmissionSourcesWithoutMarketBase(study.emissionSources, studySite)
   const emissionSourceWithEmissionValue = siteEmissionSources
     .filter((emissionSource) => filterWithDependencies(emissionSource.subPost, withDependencies))
     .map((emissionSource) => ({
