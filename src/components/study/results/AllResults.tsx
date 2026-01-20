@@ -12,7 +12,7 @@ import { environmentPostMapping } from '@/services/posts'
 import { computeBegesResult } from '@/services/results/beges'
 import { computeResultsByPost, computeResultsByTag } from '@/services/results/consolidated'
 import { computeGHGPResult } from '@/services/results/ghgp'
-import { getSiteEmissionSources } from '@/services/results/utils'
+import { getSiteEmissionSourcesWithoutMarketBase } from '@/services/results/utils'
 import { isDeactivableFeatureActiveForEnvironment } from '@/services/serverFunctions/deactivableFeatures'
 import { prepareReport } from '@/services/serverFunctions/study'
 import {
@@ -163,7 +163,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     }
 
     // Filter emission sources by selected subposts and tags
-    const siteEmissionSources = getSiteEmissionSources(study.emissionSources, studySite)
+    const siteEmissionSources = getSiteEmissionSourcesWithoutMarketBase(study.emissionSources, studySite)
     const filteredEmissionSources = siteEmissionSources.filter((emissionSource) => {
       const subPostStr = String(emissionSource.subPost)
       const matchesSubPost = selectedSubposts.length > 0 && selectedSubposts.includes(subPostStr)

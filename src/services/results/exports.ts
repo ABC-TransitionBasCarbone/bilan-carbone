@@ -8,7 +8,7 @@ import {
   getSquaredStandardDeviationForEmissionSource,
   getSquaredStandardDeviationForEmissionSourceArray,
 } from '../uncertainty'
-import { filterWithDependencies, getSiteEmissionSources } from './utils'
+import { filterWithDependencies, getAllSiteEmissionSources } from './utils'
 
 export type PostInfos = {
   rule: string
@@ -110,7 +110,7 @@ export const computeResult = (
     {},
   )
   const siteEmissionSources = getBaseFilteredEmissionSources(
-    getSiteEmissionSources(study.emissionSources, studySite),
+    getAllSiteEmissionSources(study.emissionSources, studySite),
     base,
   )
 
