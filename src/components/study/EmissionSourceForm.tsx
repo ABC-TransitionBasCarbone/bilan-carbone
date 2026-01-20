@@ -10,7 +10,7 @@ import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emission
 import { duplicateStudyEmissionSource } from '@/services/serverFunctions/study'
 import { EmissionSourcesStatus } from '@/services/study'
 import {
-  getQualityRating,
+  getQualitativeUncertaintyFromQuality,
   getSpecificEmissionFactorQuality,
   qualityKeys,
   specificFEQualityKeys,
@@ -129,8 +129,9 @@ const EmissionSourceForm = ({
 
   const emissionResults = useMemo(() => getEmissionResults(emissionSource, environment), [emissionSource, environment])
 
-  const qualityRating = useMemo(
-    () => (selectedFactor ? getQualityRating(getSpecificEmissionFactorQuality(emissionSource)) : null),
+  const feQualityRating = useMemo(
+    () =>
+      selectedFactor ? getQualitativeUncertaintyFromQuality(getSpecificEmissionFactorQuality(emissionSource)) : null,
     [selectedFactor, emissionSource],
   )
 
@@ -368,9 +369,9 @@ const EmissionSourceForm = ({
             {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor, environment))}
             {tResultUnits(StudyResultUnit.K)}/
             {selectedFactor.unit === Unit.CUSTOM ? selectedFactor.customUnit : getUnitLabel(selectedFactor.unit || '')}{' '}
-            {qualityRating && (
+            {feQualityRating && (
               <>
-                - {tQuality('name')} {tQuality(qualityRating.toString())}
+                - {tQuality('name')} {tQuality(feQualityRating.toString())}
                 {editSpecificQuality ? (
                   <HideIcon
                     className={classNames(styles.editFEQualityButton, 'ml-4')}

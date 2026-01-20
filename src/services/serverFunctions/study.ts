@@ -40,10 +40,12 @@ import {
   countOrganizationStudiesFromOtherUsers,
   createContributorOnStudy,
   createEmissionSourceTags,
+  createEngagementAction,
   createStudy,
   createStudyComment,
   createStudyEmissionSource,
   createUserOnStudy,
+  deleteEngagementAction as dbDeleteEngagementAction,
   deleteAccountOnStudy,
   deleteContributor,
   deleteStudy,
@@ -51,7 +53,10 @@ import {
   deleteStudyExport,
   downgradeStudyUserRoles,
   FullStudy,
+  getEngagementActionById,
+  getEngagementActions,
   getOrganizationStudiesBeforeDate,
+  getPendingStudyCommentsCountFromAuthor,
   getStudiesSitesFromIds,
   getStudyById,
   getStudyCommentsCountFromOrganizationVersionId,
@@ -62,6 +67,7 @@ import {
   getStudyTemplate,
   getUsersOnStudy,
   updateEmissionSourceEmissionFactor,
+  updateEngagementAction,
   updateStudy,
   updateStudyComment,
   updateStudyEmissionFactorVersion,
@@ -122,8 +128,9 @@ import { v4 as uuidv4 } from 'uuid'
 import { auth, dbActualizedAuth } from '../auth'
 import { getCaracterisationsBySubPost } from '../emissionSource'
 import { allowedFlowFileTypes, isAllowedFileType } from '../file'
-import { ALREADY_IN_STUDY, NOT_AUTHORIZED } from '../permissions/check'
+import { ALREADY_IN_STUDY, NOT_AUTHORIZED, TOO_MANY_COMMENTS } from '../permissions/check'
 import { hasReaderRoleOnStudyAsContributor } from '../permissions/environment'
+import { hasAccessToEngagementActions } from '../permissions/environmentAdvanced'
 import { isInOrgaOrParentFromId } from '../permissions/organization'
 import {
   canAccessFlowFromStudy,
@@ -148,6 +155,7 @@ import { deleteFileFromBucket, getFileFromBucket, uploadFileToBucket } from '../
 import { getTransEnvironmentSubPost, hasSufficientLevel } from '../study'
 import { saveAnswerForQuestion } from './question'
 import {
+  AddEngagementActionCommand,
   ChangeStudyCinemaCommand,
   ChangeStudyDatesCommand,
   ChangeStudyEstablishmentCommand,
@@ -2341,6 +2349,11 @@ export const createStudyCommentCommand = async (
       throw new Error(NOT_AUTHORIZED)
     }
 
+    const commentCount = await getPendingStudyCommentsCountFromAuthor(session.user.accountId)
+    if (!status || (status === CommentStatus.PENDING && commentCount >= 3)) {
+      throw new Error(TOO_MANY_COMMENTS)
+    }
+
     return await createStudyComment({
       comment,
       status: status || CommentStatus.PENDING,
@@ -2452,4 +2465,88 @@ export const editStudyComment = async (commentId: string, newComment: string, st
     return await updateStudyComment(commentId, {
       comment: newComment,
     })
+  })
+
+export const addEngagementAction = async ({ studyId, ...command }: AddEngagementActionCommand) =>
+  withServerResponse('addEngagementAction', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!hasAccessToEngagementActions(session.user.environment, study.simplified)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await createEngagementAction({
+      study: { connect: { id: studyId } },
+      ...command,
+    })
+  })
+
+export const getEngagementActionsWithStudyId = async (studyId: string) =>
+  withServerResponse('getEngagementActions', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!hasAccessToEngagementActions(session.user.environment, study.simplified)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return await getEngagementActions(studyId)
+  })
+
+export const editEngagementAction = async (id: string, { studyId, ...command }: AddEngagementActionCommand) =>
+  withServerResponse('editEngagementAction', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!hasAccessToEngagementActions(session.user.environment, study.simplified)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await updateEngagementAction(id, command)
+  })
+
+export const deleteEngagementAction = async (id: string, studyId: string) =>
+  withServerResponse('deleteEngagementAction', async () => {
+    const session = await dbActualizedAuth()
+    const action = await getEngagementActionById(id)
+    if (!action) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!hasAccessToEngagementActions(session.user.environment, study.simplified)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await dbDeleteEngagementAction(id)
   })

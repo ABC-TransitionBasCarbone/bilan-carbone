@@ -3,21 +3,29 @@
 import BaseTable from '@/components/base/Table'
 import { TableActionButton } from '@/components/base/TableActionButton'
 import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
+import commonStyles from '@/components/study/results/commonTable.module.css'
 import { ActionWithRelations } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { toggleActionEnabled } from '@/services/serverFunctions/transitionPlan'
 import { formatNumber } from '@/utils/number'
 import { convertValue } from '@/utils/study'
 import { getYearFromDateStr } from '@/utils/time'
-import { Link, Switch } from '@mui/material'
+import ArrowRight from '@mui/icons-material/ArrowRight'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
+import { Link, Switch, TableCell, TableRow } from '@mui/material'
 import { ActionPotentialDeduction, StudyResultUnit } from '@prisma/client'
 import {
   ColumnDef,
+  flexRender,
   getCoreRowModel,
+  getExpandedRowModel,
   getPaginationRowModel,
   PaginationState,
+  Row,
   useReactTable,
 } from '@tanstack/react-table'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -33,6 +41,7 @@ interface Props {
 
 const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId, studyUnit }: Props) => {
   const t = useTranslations('study.transitionPlan.actions.table')
+  const tAction = useTranslations('study.transitionPlan.actions')
   const tUnit = useTranslations('study.results.units')
   const tCategory = useTranslations('study.transitionPlan.actions.category')
   const tPotential = useTranslations('study.transitionPlan.actions.potentialDeduction')
@@ -92,6 +101,19 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
   const columns = useMemo(
     () =>
       [
+        {
+          id: 'expand',
+          header: '',
+          accessorFn: () => '',
+          cell: ({ row }) => (
+            <button
+              onClick={row.getToggleExpandedHandler()}
+              className={classNames('align-center', commonStyles.expandable)}
+            >
+              {row.getIsExpanded() ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
+            </button>
+          ),
+        },
         {
           id: 'enabled',
           header: () => (
@@ -180,10 +202,57 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
+    getRowCanExpand: () => true,
+    getExpandedRowModel: getExpandedRowModel(),
     state: { pagination },
   })
 
-  return <BaseTable table={table} paginations={[10, 25, 50, 100]} testId="actions" />
+  const Row = (row: Row<ActionWithRelations>) => (
+    <>
+      <TableRow key={row.id} className={commonStyles.line} data-testid="actions-table-row">
+        {row.getVisibleCells().map((cell) => (
+          <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+        ))}
+      </TableRow>
+
+      {row.getIsExpanded() && (
+        <TableRow>
+          <TableCell colSpan={row.getVisibleCells().length}>
+            <p className="italic mb1">{row.original.detailedDescription}</p>
+            <p className="bold">{tAction('addModal.subSteps')} :</p>
+            <p className="mb1 flex">
+              {row.original.steps.map((step, index) => (
+                <div key={step.id} className="flex align-center">
+                  <span>{step.title}</span>
+                  {index < row.original.steps.length - 1 && <ArrowRight />}
+                </div>
+              ))}
+            </p>
+            {!!row.original.nature.length && (
+              <p className="mb1">
+                <span className="bold">{tAction('addModal.nature')} : </span>
+                {row.original.nature.map((n) => tAction(`nature.${n}`)).join(', ')}
+              </p>
+            )}
+            {!!row.original.category.length && (
+              <p className="mb1">
+                <span className="bold">{tAction('addModal.category')} : </span>
+                {row.original.category.map((c) => tAction(`category.${c}`)).join(', ')}
+              </p>
+            )}
+            {!!row.original.relevance.length && (
+              <p>
+                <span className="bold">{t('relevance')} : </span>
+                {row.original.relevance.map((r) => tAction(`relevance.${r}`)).join(', ')}
+              </p>
+            )}
+          </TableCell>
+        </TableRow>
+      )}
+    </>
+  )
+
+  return <BaseTable customRow={Row} table={table} paginations={[10, 25, 50, 100]} testId="actions" />
 }
 
 export default ActionTable

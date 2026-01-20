@@ -15,6 +15,7 @@ import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import React, { useEffect, useMemo, useState } from 'react'
+import CarbonIntensitiesCut from '../results/CarbonIntensitiesCut'
 
 interface SiteData {
   id: string
@@ -49,7 +50,7 @@ const PDFSummary = ({ study, environment }: Props) => {
         nonSpecificMonetaryValue: 0,
         numberOfEmissionSource: 0,
         numberOfValidatedEmissionSource: 0,
-        uncertainty: 1,
+        squaredStandardDeviation: 1,
         children: [],
       })),
       {
@@ -60,7 +61,7 @@ const PDFSummary = ({ study, environment }: Props) => {
         nonSpecificMonetaryValue: 0,
         numberOfEmissionSource: 0,
         numberOfValidatedEmissionSource: 0,
-        uncertainty: 1,
+        squaredStandardDeviation: 1,
         children: [],
       },
     ]
@@ -69,7 +70,7 @@ const PDFSummary = ({ study, environment }: Props) => {
   const [sitesData, setSitesData] = useState<SiteData[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
-  const { computedResultsWithDep } = useMemo(
+  const { computedResultsWithDep, withDepValue } = useMemo(
     () => getDetailedEmissionResults(study, tPost, 'all', false, study.organizationVersion.environment, tStudy),
     [study, tPost, tStudy],
   )
@@ -214,6 +215,12 @@ const PDFSummary = ({ study, environment }: Props) => {
         </div>
 
         <ChartsPage study={study} studySite="all" siteName="" tPdf={tPdf} isAll />
+        <div className="pdf-content page-break-before pdf-page-content">
+          <div className="pdf-section">
+            <h2 className="pdf-totals-header pdf-header-with-border">{tPdf('ratios.all')}</h2>
+            <CarbonIntensitiesCut study={study} studySite="all" withDepValue={withDepValue} />
+          </div>
+        </div>
 
         <div className="pdf-content page-break-before pdf-page-content">
           <div className="pdf-section">
@@ -226,42 +233,61 @@ const PDFSummary = ({ study, environment }: Props) => {
           </div>
         </div>
 
-        {sitesData.map((site) => (
-          <React.Fragment key={site.id}>
-            <div className="pdf-content page-break-before pdf-page-content">
-              <div className="pdf-section">
-                <h2 className="pdf-cinema-header pdf-header-with-border">
-                  {tPdf('results.site', { site: site.fullName })}
-                </h2>
+        {sitesData.map((site) => {
+          const { withDepValue: siteWithDepValue } = getDetailedEmissionResults(
+            study,
+            tPost,
+            site.id,
+            false,
+            environment,
+            tStudy,
+          )
 
-                <div className="pdf-general-data flex justify-between">
-                  <div className="pdf-data-item">
-                    <div className="pdf-data-label">{tPdf('labels.screens')}</div>
-                    <div className="pdf-data-value">{site.generalData.screens}</div>
+          return (
+            <React.Fragment key={site.id}>
+              <div className="pdf-content page-break-before pdf-page-content">
+                <div className="pdf-section">
+                  <h2 className="pdf-cinema-header pdf-header-with-border">
+                    {tPdf('results.site', { site: site.fullName })}
+                  </h2>
+
+                  <div className="pdf-general-data flex justify-between">
+                    <div className="pdf-data-item">
+                      <div className="pdf-data-label">{tPdf('labels.screens')}</div>
+                      <div className="pdf-data-value">{site.generalData.screens}</div>
+                    </div>
+                    <div className="pdf-data-item">
+                      <div className="pdf-data-label">{tPdf('labels.entries')}</div>
+                      <div className="pdf-data-value">{formatNumber(site.generalData.entries)}</div>
+                    </div>
+                    <div className="pdf-data-item">
+                      <div className="pdf-data-label">{tPdf('labels.sessions')}</div>
+                      <div className="pdf-data-value">{formatNumber(site.generalData.sessions)}</div>
+                    </div>
                   </div>
-                  <div className="pdf-data-item">
-                    <div className="pdf-data-label">{tPdf('labels.entries')}</div>
-                    <div className="pdf-data-value">{formatNumber(site.generalData.entries)}</div>
-                  </div>
-                  <div className="pdf-data-item">
-                    <div className="pdf-data-label">{tPdf('labels.sessions')}</div>
-                    <div className="pdf-data-value">{formatNumber(site.generalData.sessions)}</div>
-                  </div>
+
+                  <ConsolidatedResultsTable
+                    resultsUnit={study.resultsUnit}
+                    data={site.results}
+                    hiddenUncertainty
+                    expandAll
+                    hideExpandIcons
+                    isCompact
+                  />
                 </div>
-
-                <ConsolidatedResultsTable
-                  resultsUnit={study.resultsUnit}
-                  data={site.results}
-                  hiddenUncertainty
-                  expandAll
-                  hideExpandIcons
-                  isCompact
-                />
               </div>
-            </div>
-            <ChartsPage study={study} studySite={site.id} siteName={site.fullName} tPdf={tPdf} isAll={false} />
-          </React.Fragment>
-        ))}
+              <ChartsPage study={study} studySite={site.id} siteName={site.fullName} tPdf={tPdf} isAll={false} />
+              <div className="pdf-content page-break-before pdf-page-content">
+                <div className="pdf-section">
+                  <h2 className="pdf-totals-header pdf-header-with-border">
+                    {tPdf('ratios.site', { site: site.fullName })}
+                  </h2>
+                  <CarbonIntensitiesCut study={study} studySite={site.id} withDepValue={siteWithDepValue} />
+                </div>
+              </div>
+            </React.Fragment>
+          )
+        })}
 
         <div className="pdf-content page-break-before pdf-page-content">
           <div className="pdf-section">

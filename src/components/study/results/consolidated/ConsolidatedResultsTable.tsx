@@ -1,9 +1,7 @@
 'use client'
 
 import BaseTable from '@/components/base/Table'
-import { Post } from '@/services/posts'
-import { getStandardDeviationRating } from '@/services/uncertainty'
-import { sortByCustomOrder } from '@/utils/array'
+import { getQualitativeUncertaintyFromSquaredStandardDeviation } from '@/services/uncertainty'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
@@ -22,13 +20,12 @@ interface Props<T> {
   expandAll?: boolean
   hideExpandIcons?: boolean
   isCompact?: boolean
-  customPostOrder?: Post[]
 }
 
 type tableDataType = {
   label: string
   value: number
-  uncertainty: number
+  squaredStandardDeviation: number
   post: string
   children: tableDataType[]
 }
@@ -37,9 +34,9 @@ const ConsolidatedResultsTable = <
   T extends {
     value: number
     label: string
-    uncertainty: number
+    squaredStandardDeviation: number
     post: string
-    children: { value: number; label: string; uncertainty: number; post: string }[]
+    children: { value: number; label: string; squaredStandardDeviation: number; post: string }[]
   },
 >({
   resultsUnit,
@@ -48,7 +45,6 @@ const ConsolidatedResultsTable = <
   expandAll,
   hideExpandIcons,
   isCompact,
-  customPostOrder,
 }: Props<T>) => {
   const t = useTranslations('study.results')
   const tQuality = useTranslations('quality')
@@ -95,8 +91,10 @@ const ConsolidatedResultsTable = <
     if (!hiddenUncertainty) {
       tmpColumns.push({
         header: t('uncertainty'),
-        accessorFn: ({ uncertainty }) =>
-          uncertainty ? tQuality(getStandardDeviationRating(uncertainty).toString()) : '',
+        accessorFn: ({ squaredStandardDeviation }) =>
+          squaredStandardDeviation
+            ? tQuality(getQualitativeUncertaintyFromSquaredStandardDeviation(squaredStandardDeviation).toString())
+            : '',
       })
     }
 
@@ -116,10 +114,6 @@ const ConsolidatedResultsTable = <
       ...d,
       children: d.children.map((child) => ({ ...child, children: [] })),
     }))
-
-    if (customPostOrder?.length) {
-      return sortByCustomOrder(mappedData, customPostOrder, (item) => item.post ?? item.label)
-    }
     return mappedData
   }, [data])
 

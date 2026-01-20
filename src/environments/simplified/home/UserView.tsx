@@ -1,7 +1,7 @@
 'use client'
 
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import { hasHomeAlert, isTilt } from '@/services/permissions/environment'
+import { hasHomeAlert, hasStartLinkOnFootprints, isTilt } from '@/services/permissions/environment'
 import { hasAccessToStudies } from '@/services/permissions/environmentAdvanced'
 import Groups2OutlinedIcon from '@mui/icons-material/Groups2Outlined'
 import { Alert, Box, BoxProps, styled, Typography } from '@mui/material'
@@ -53,7 +53,10 @@ const UserView = ({ account }: Props) => {
             ))}
           </Box>
           <Box className="flex align-center">
-            <Link href="/organisations" className={styles.startButtonLink}>
+            <Link
+              href={hasStartLinkOnFootprints(account.environment) ? 'mes-empreintes' : '/organisations'}
+              className={styles.startButtonLink}
+            >
               <Box className={classNames('flex-cc px2 py1', styles.startButton)} component="button">
                 <Typography variant="h6" className={styles.startButtonText}>
                   {tAction('start')}

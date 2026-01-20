@@ -313,7 +313,6 @@
       "homepage": "Accueil",
       "framing": "Cadrage",
       "scope": "Périmètre",
-      "mobilisation": "Mobilisation",
       "accounting": "Comptabilisation",
       "dataEntry": "Saisie des données",
       "results": "Résultats",
@@ -327,7 +326,9 @@
       "trajectories": "Trajectoires de réduction",
       "objectives": "Objectifs de réduction",
       "actionPlan": "Plan d'action",
-      "commingSoon": "À venir"
+      "commingSoon": "À venir",
+      "engagement": "Mobilisation",
+      "carriedActions": "Actions menées"
     },
     "new": {
       "title": "Informations sur la nouvelle étude",
@@ -688,6 +689,12 @@
         "K": "kgCO₂e",
         "T": "tCO₂e"
       },
+      "pageFilters": {
+        "title": "Filtres",
+        "posts": "Sous-postes",
+        "tags": "Tags",
+        "noFiltersSelected": "Aucun filtre sélectionné"
+      },
       "tagGlossary": "Double compte sur les graphiques par tags",
       "tagGlossaryDescription": "Les sources d'émission peuvent avoir plusieurs tags, celles ci sont donc sur ce graphique comptabilisé dans chacun des tags. Il est donc normal que vous ayez ici un total plus grand que sur votre étude",
       "info": "Cette empreinte carbone simplifiée vise à estimer les émissions de gaz à effet de serre de votre activité, et par conséquent votre contribution au dérèglement climatique ainsi que vos potentielles dépendance aux énergies fossiles qui sont des vulnérabilités. \n\nL'Union Européenne s'est engagée, en ratifiant l'Accord de Paris, à la neutralité carbone d'ici 2050. Pour contribuer à cet objectif, votre cinéma devrait réduire son impact de 5% par an. \n\nNous vous invitons donc à refaire cette empreinte carbone simplifiée l'année prochaine pour vérifier que vous êtes sur la bonne trajectoire !",
@@ -773,6 +780,10 @@
         "screens": "Écrans",
         "entries": "Entrées",
         "sessions": "Séances"
+      },
+      "ratios": {
+        "all": "Intensités carbone - Tous cinémas",
+        "site": "Intensités carbone - {site}"
       },
       "additionalInfo": "Informations complémentaires"
     },
@@ -895,10 +906,19 @@
           "confirm": "Supprimer",
           "cancel": "Annuler"
         },
+        "snbcCard": {
+          "title": "Trajectoires SNBC",
+          "description": "La Stratégie Nationale Bas-Carbone (SNBC) est la feuille de route de la France pour lutter contre le changement climatique. Elle définit une trajectoire de réduction des émissions de gaz à effet de serre jusqu’à 2050 et fixe des objectifs à horizon 2030.",
+          "methodLabel": "Méthodes",
+          "general": "Générale",
+          "sectoral": "Par secteur d'activité",
+          "placeholder": "Aucune trajectoire sélectionnée"
+        },
         "sbtiCard": {
           "title": "Trajectoires SBTi",
           "description": "La Science Based Targets Initiative définit deux trajectoires visant à limiter le réchauffement climatique à 1,5°C (SBTi 1.5°C) ou \"Well below 2 degrees\" (SBTi WB2C).",
           "methodLabel": "Méthodes",
+          "optionSNBC": "SNBC",
           "option15": "SBTi 1,5°C",
           "optionWB2C": "SBTi WB2C",
           "placeholder": "Aucune trajectoire sélectionnée"
@@ -908,6 +928,7 @@
           "subtitle": "Affichage des trajectoires de référence et des trajectoires de votre organisation",
           "trajectory15": "SBTi 1,5°C",
           "trajectoryWB2C": "SBTi WB2C",
+          "trajectorySNBC": "SNBC",
           "actionBasedTrajectory": "Trajectoire bottom-up",
           "yAxisLabel": "Émissions",
           "unvalidatedSourcesWarning": "{count, plural, =1 {Une source d'émissions n'est pas validée dans l'étude actuelle et n'est donc pas prise en compte dans le calcul des trajectoires.} other {{count} sources d'émissions ne sont pas validées dans l'étude actuelle et ne sont donc pas prises en compte dans le calcul des trajectoires.}}",
@@ -1013,6 +1034,9 @@
         "namePlaceholder": "Donner un nom à ma trajectoire",
         "description": "Description de ma trajectoire",
         "descriptionPlaceholder": "Décrivez votre trajectoire",
+        "referenceYear": {
+          "label": "Année de départ de la trajectoire (optionnel)"
+        },
         "objectives": {
           "title": "Objectifs de réduction",
           "sbtiDescription": "Ces objectifs de réduction sont liés à la trajectoire de référence SBTi et sont prédéfinis. Vous pourrez ajouter des objectifs intermédiaires dans la rubrique \"Mes objectifs de réduction\"",
@@ -1039,6 +1063,7 @@
         "table": {
           "name": "Nom",
           "type": "Type",
+          "startYear": "Année de départ",
           "targetYear": "Année cible",
           "reductionRate": "Réduction annuelle",
           "actions": "Actions"
@@ -1075,7 +1100,8 @@
           "potential": "Potentiel de réduction",
           "owner": "Responsable",
           "budget": "Budget",
-          "errorChangingEnabled": "Erreur lors du changement de statut de l'action"
+          "errorChangingEnabled": "Erreur lors du changement de statut de l'action",
+          "relevance": "Niveaux de pertinence"
         },
         "addModal": {
           "add": "Ajouter une action",
@@ -1176,15 +1202,61 @@
           "confirm": "Supprimer"
         }
       }
+    },
+    "engagementActions": {
+      "title": "Actions menées",
+      "table": {
+        "name": "Nom",
+        "description": "Description",
+        "steps": "Étape",
+        "target": "Cibles",
+        "phase": "Phase de mobilisation",
+        "date": "Date"
+      },
+      "modal": {
+        "add": "Ajouter une action",
+        "update": "Modifier une action",
+        "clear": "Supprimer la valeur",
+        "name": "Nom",
+        "namePlaceholder": "Donnez un nom à votre action",
+        "description": "Description (nombres de participants, format, déroulé, etc)",
+        "descriptionPlaceholder": "Décrivez votre action",
+        "steps": "Étape de la démarche concernée",
+        "stepsPlaceholder": "Choississez les étapes de votre action",
+        "target": "Cibles",
+        "phase": "Phase de mobilisation",
+        "date": "Date",
+        "validate": "Valider"
+      },
+      "targets": {
+        "TEAM_PROJECT": "Équipe projet",
+        "DIRECTION": "Direction",
+        "OTHER_INTERNAL_COLLABORATORS": "Autres collaborateurs internes",
+        "FURNISHERS": "Fournisseurs",
+        "CLIENTS": "Clients",
+        "PARTNERS": "Partenaires",
+        "OTHERS_EXTERNAL": "Autres partenaires externes"
+      },
+      "steps": {
+        "AT_LAUNCH_OF_APPROACH": "Au lancement de la démarche",
+        "AT_LAUNCH_OF_DATA_COLLECTION": "Au lancement de la collecte de données",
+        "DURING_DATA_COLLECTION": "Durant la collecte de données",
+        "BEFORE_RESULTS_RESTITUTION": "Avant restitution des résultats",
+        "AT_LAUNCH_OF_TRANSITION_PLAN_CONSTRUCTION": "Au lancement de la construction du plan de transition",
+        "DURING_TRANSITION_PLAN_CONSTRUCTION": "Durant la construction du plan de transition",
+        "IN_SUMMARY_OF_APPROACH": "Dans le résumé de la démarche"
+      },
+      "phases": {
+        "AwarnessAndOutreach": "Mobilisation et sensibilisation",
+        "Empowerment": "Responsabilisation",
+        "CoConstruction": "Co-construction",
+        "FeedbackAndCommunication": "Retours et communication"
+      }
     }
   },
   "emissionFactors": {
     "add": "Ajouter un facteur d'émission",
     "post": {
-      "all": "Tous",
-      "none": "Aucun",
-      "selectAll": "Tout sélectionner",
-      "unselectAll": "Tout désélectionner",
       "total": "Total",
       "allPost": "Tous les postes",
       "allSubPost": "Tous les sous postes",
@@ -1500,6 +1572,7 @@
       "Fuites": "Fuites",
       "Transport": "Transport",
       "CombustionALaCentrale": "Combustion à la centrale",
+      "AutresEmissionsLieesALaConsommationDElectriciteBarrage": "Autres émissions liées à la consommation d?électricité (barrage?)",
       "Pertes": "Pertes"
     },
     "missingQualities": {
@@ -1711,6 +1784,7 @@
     "TEP": "tep",
     "TEP_PCI": "tep PCI",
     "TEP_PCS": "tep PCS",
+    "TEU_KM": "TEU.km",
     "TON_KM": "t.km",
     "TON": "{count, plural, =0 {tonne} one {tonne} other {tonnes}}",
     "TON_WITH_BONES": "{count, plural, =0 {tonne avec os} one {tonne avec os} other {tonnes avec os}}",
@@ -2140,6 +2214,7 @@
     "tooBig": "Veuillez saisir une valeur plus petite",
     "studyYearMustBeBeforeCurrent": "L'année de l'étude doit être antérieure à l'année de l'étude actuelle",
     "studyYearMustBeAfterLinkedStudies": "Impossible de renseigner une date antérieure à celles de vos études liées sur votre plan de transition",
-    "maxTwoDecimals": "Le taux de réduction doit avoir au maximum 2 décimales"
+    "maxTwoDecimals": "Le taux de réduction doit avoir au maximum 2 décimales",
+    "referenceYearMustBeBeforeOrEqualToStudyYear": "L'année de référence doit être inférieure ou égale à l'année de l'étude"
   }
 }

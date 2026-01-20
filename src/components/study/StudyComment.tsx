@@ -5,6 +5,7 @@ import CheckIcon from '@mui/icons-material/Check'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import { TextField } from '@mui/material'
+import { CommentStatus } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
@@ -41,7 +42,9 @@ const StudyCommentComponent = ({ canValidate = false, comment, onApprove, onDecl
         <div className="flex justify-between mb1 bold">
           {canValidate && <span>{comment.author.user.email}</span>}
           <span>{new Date(comment.createdAt).toLocaleString()}</span>
-          {canValidate && <span>{tComments(comment.status.toLowerCase())}</span>}
+          {(canValidate || comment.status !== CommentStatus.VALIDATED) && (
+            <span>{tComments(comment.status.toLowerCase())}</span>
+          )}
         </div>
         {isEditing ? (
           <TextField

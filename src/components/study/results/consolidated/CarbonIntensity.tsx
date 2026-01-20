@@ -1,4 +1,4 @@
-import { hasAccessToCarbonResponsibilityIntensities } from '@/services/permissions/environment'
+import { hasAccessToCarbonResponsibilityIntensitiesAdvanced } from '@/services/permissions/environmentAdvanced'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
 import { useTranslations } from 'next-intl'
@@ -11,9 +11,10 @@ interface Props {
   resultsUnit: string
   label: string
   testId: string
+  simplified?: boolean | null
 }
 
-const CarbonIntensity = ({ withDep, withoutDep, divider, resultsUnit, label, testId }: Props) => {
+const CarbonIntensity = ({ withDep, withoutDep, divider, resultsUnit, label, testId, simplified }: Props) => {
   const tResultUnits = useTranslations('study.results.units')
   const { environment } = useAppEnvironmentStore()
 
@@ -24,7 +25,7 @@ const CarbonIntensity = ({ withDep, withoutDep, divider, resultsUnit, label, tes
         label={`${tResultUnits(resultsUnit)}/${label}`}
         testId={`dependency-${testId}`}
       />
-      {environment && hasAccessToCarbonResponsibilityIntensities(environment) && (
+      {environment && hasAccessToCarbonResponsibilityIntensitiesAdvanced(environment, simplified) && (
         <Data
           value={formatNumber(withoutDep / divider)}
           label={`${tResultUnits(resultsUnit)}/${label}`}

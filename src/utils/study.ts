@@ -180,3 +180,13 @@ export const getDuplicableEnvironments = (environment: Environment): Environment
 export const formatEmissionValueForExport = (value: number, unit: StudyResultUnit): number => {
   return Math.round(value / STUDY_UNIT_VALUES[unit])
 }
+
+/**
+ * Calculates the monetary ratio percentage from monetary value and total value
+ */
+export const calculateMonetaryRatio = (monetaryValue: number, totalValue: number): number => {
+  if (totalValue === 0) {
+    return 0
+  }
+  return (monetaryValue / totalValue) * 100
+}

@@ -54,7 +54,17 @@ import { withServerResponse } from '@/utils/serverResponse'
 import { DAY, HOUR, MIN, TIME_IN_MS, YEAR } from '@/utils/time'
 import { getRoleToSetForUntrained } from '@/utils/user'
 import { accountWithUserToUserSession, userSessionToDbUser } from '@/utils/userAccounts'
-import { DeactivatableFeature, Environment, Organization, Role, User, UserChecklist, UserStatus } from '@prisma/client'
+import {
+  Country,
+  DeactivatableFeature,
+  Environment,
+  Level,
+  Organization,
+  Role,
+  User,
+  UserChecklist,
+  UserStatus,
+} from '@prisma/client'
 import jwt from 'jsonwebtoken'
 import { UserSession } from 'next-auth'
 import { getCompanyName, getValidAssociationNameBySiret } from '../associationApi'
@@ -83,7 +93,7 @@ import {
   UNKNOWN_SIRET_OR_CNC,
 } from '../permissions/check'
 import { canAddMember, canChangeRole, canDeleteMember, canEditSelfRole } from '../permissions/user'
-import { School } from '../schoolApi'
+import { establishmentTypeMap, School } from '../schoolApi'
 import { getDeactivableFeatureRestrictions } from './deactivableFeatures'
 import { AddMemberCommand, EditProfileCommand, EditSettingsCommand } from './user.command'
 
@@ -698,10 +708,13 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
     return EMAIL_SENT
   })
 
-export const signUpWithSchool = async (email: string, school: School, environment: Environment) =>
+export const signUpWithSchool = async (email: string, country: Country, school: School, environment: Environment) =>
   withServerResponse('signUpWithSchool', async () => {
     const trimmedEmail = email.trim().toLowerCase()
-    if (!school || !school.identifiant_de_l_etablissement) {
+    if (!school) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    if (country === Country.FRANCE && !school.identifiant_de_l_etablissement) {
       throw new Error(UNKNOWN_SCHOOL)
     }
     const deactivatedFeaturesRestrictions = await getDeactivableFeatureRestrictions(DeactivatableFeature.Creation)
@@ -724,6 +737,7 @@ export const signUpWithSchool = async (email: string, school: School, environmen
     if (!user) {
       user = (await addUser({
         email: trimmedEmail,
+        level: Level.Initial,
         firstName: '',
         lastName: '',
         accounts: {
@@ -751,7 +765,9 @@ export const signUpWithSchool = async (email: string, school: School, environmen
 
     let organizationVersion = null
 
-    organization = await getRawOrganizationBySiteEstablishmentId(school.identifiant_de_l_etablissement)
+    organization = school.identifiant_de_l_etablissement
+      ? await getRawOrganizationBySiteEstablishmentId(school.identifiant_de_l_etablissement)
+      : null
     organizationVersion = organization?.id
       ? await getOrganizationVersionByOrganizationIdAndEnvironment(organization.id, environment)
       : null
@@ -766,7 +782,11 @@ export const signUpWithSchool = async (email: string, school: School, environmen
         name: school.nom_etablissement || '',
         postalCode: school.code_postal || '',
         establishmentId: school.identifiant_de_l_etablissement,
-        establishmentYear: school.date_ouverture || '',
+        establishmentYear: school.date_ouverture?.slice(0, 4) || '',
+        country,
+        city: school.city || school.adresse_3?.slice(5) || '',
+        academy: school.libelle_academie,
+        establishmentType: school?.libelle_nature ? establishmentTypeMap[school.libelle_nature] : undefined,
         organization: { connect: { id: organizationVersion.organizationId } },
       })
     }

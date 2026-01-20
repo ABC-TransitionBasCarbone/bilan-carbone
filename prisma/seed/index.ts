@@ -23,7 +23,7 @@ import {
 import { Command } from 'commander'
 import { ACTUALITIES } from '../legacy_data/actualities'
 import { createRealStudy } from './study'
-import { getCutRoleFromBase } from './utils'
+import { getClicksonRoleFromBase, getCutRoleFromBase, getRolesFromEnvironment } from './utils'
 
 const program = new Command()
 type Params = {
@@ -391,7 +391,11 @@ const users = async () => {
   if (clicksonSite) {
     await prisma.site.update({
       where: { id: clicksonSite.id },
-      data: { establishmentId: '0781494A', name: 'Ecole élémentaire Mansart', establishmentYear: '1965' },
+      data: {
+        establishmentId: '0922798S',
+        name: 'Ecole secondaire privée  international scolaire - Open Sky International',
+        establishmentYear: '2017',
+      },
     })
   }
 
@@ -507,7 +511,7 @@ const users = async () => {
           const account = await prisma.account.create({
             data: {
               organizationVersionId: organizationVersionArray[index % organizationVersionArray.length].id,
-              role: environment === Environment.CUT ? getCutRoleFromBase(role as Role) : (role as Role),
+              role: getRolesFromEnvironment(environment as Environment, role as Role),
               userId: user.id,
               environment: environment as Environment,
               status: UserStatus.ACTIVE,
@@ -559,7 +563,7 @@ const users = async () => {
           },
           {
             organizationVersionId: organizationVersionsClickson[index % organizationVersionsClickson.length].id,
-            role: role as Role,
+            role: getClicksonRoleFromBase(role as Role),
             userId: user.id,
             environment: Environment.CLICKSON,
             status: UserStatus.ACTIVE,
@@ -685,7 +689,7 @@ const users = async () => {
   ])
 
   await Promise.all(
-    [Role.GESTIONNAIRE, Role.COLLABORATOR].map(async (role) => {
+    [Role.GESTIONNAIRE, Role.DEFAULT].map(async (role) => {
       return prisma.account.create({
         data: {
           organizationVersionId: regularTiltOrganizationVersions[0].id,

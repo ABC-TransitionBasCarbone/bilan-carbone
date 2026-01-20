@@ -4,7 +4,7 @@ import TopLeftNavBar from '@/components/navbar/TopLeftNavBar'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import CutTopLeftNavBar from '@/environments/cut/navbar/TopLeftNavBar'
 import { signOutEnv } from '@/services/auth'
-import { hasAccessToStudyComments, isTilt } from '@/services/permissions/environment'
+import { hasAccessToStudyComments, isClickson, isTilt } from '@/services/permissions/environment'
 import { hasAccessToMethodology, hasAccessToSettings } from '@/services/permissions/environmentAdvanced'
 import { hasAccessToFormation } from '@/services/permissions/formations'
 import { getUserActiveAccounts } from '@/services/serverFunctions/user'
@@ -19,6 +19,7 @@ import { Environment, Role } from '@prisma/client'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
+import Image from 'next/image'
 import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { Logo } from '../base/Logo'
 import NavbarButton from './NavbarButton'
@@ -116,6 +117,13 @@ const Navbar = ({ children, user, environment }: Props) => {
             {isTilt(user.environment) && (
               <NavbarLink href="/" aria-label={t('home')} title={t('home')}>
                 <Logo />
+              </NavbarLink>
+            )}
+            {isClickson(user.environment) && (
+              <NavbarLink href="/" aria-label={t('home')} title={t('home')}>
+                <div className="h100 align-center gapped1">
+                  <Image src={'/logos/clickson/PEBC.png'} alt={'PEBC'} width={128} height={40} />
+                </div>
               </NavbarLink>
             )}
           </div>

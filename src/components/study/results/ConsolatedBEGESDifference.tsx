@@ -4,7 +4,6 @@ import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { customRich } from '@/i18n/customRich'
-import { getEnvVar } from '@/lib/environment'
 import { getEmissionResults } from '@/services/emissionSource'
 import { Post } from '@/services/posts'
 import { BegesPostInfos, getBegesEmissionTotal } from '@/services/results/beges'
@@ -89,8 +88,6 @@ const ConsolatedBEGESDifference = ({
   const [open, setOpen] = useState(false)
   const router = useRouter()
 
-  const contactMail = getEnvVar('SUPPORT_EMAIL', study.organizationVersion.environment)
-
   const environment = useMemo(() => study.organizationVersion.environment, [study])
 
   const navigateToEmissionSource = (emissionSourceId: string, subPost: SubPost) => {
@@ -151,7 +148,10 @@ const ConsolatedBEGESDifference = ({
     }
 
     return wasteEmissionSources
-      .filter((emissionSource) => (emissionSource.validated || !validatedOnly) && emissionSource.value)
+      .filter(
+        (emissionSource) =>
+          (emissionSource.validated || !validatedOnly) && emissionSource.value && emissionSource.caracterisation,
+      )
       .map((emissionSource) => {
         const emissionFactor = emissionFactorsWithParts.find((ef) => ef.id === emissionSource.emissionFactor?.id)
         if (!emissionFactor || !emissionSource.value) {
@@ -217,12 +217,13 @@ const ConsolatedBEGESDifference = ({
 
   const unexplainedDifference = useMemo(() => {
     return (
-      Math.floor(begesTotalNumber) +
-        1 -
-        Math.floor(
-          computedTotalNumber + utilisationEnDependanceValue + wasteTotalDifference + missingCaractDifference,
-        ) >
-      1
+      Math.abs(
+        Math.floor(begesTotalNumber) +
+          1 -
+          Math.floor(
+            computedTotalNumber + utilisationEnDependanceValue + wasteTotalDifference + missingCaractDifference,
+          ),
+      ) > 1
     )
   }, [
     begesTotalNumber,

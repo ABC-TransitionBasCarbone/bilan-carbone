@@ -126,6 +126,7 @@ export const duplicateTransitionPlanWithRelations = async (
             name: trajectory.name,
             description: trajectory.description,
             type: trajectory.type,
+            referenceYear: trajectory.referenceYear,
             objectives: {
               create: trajectory.objectives.map((objective) => ({
                 targetYear: objective.targetYear,
@@ -347,23 +348,6 @@ export const deleteTrajectory = async (id: string): Promise<void> => {
   })
 }
 
-export const updateTrajectory = async (
-  id: string,
-  data: { name?: string; description?: string },
-): Promise<TrajectoryWithObjectives> => {
-  return prismaClient.trajectory.update({
-    where: { id },
-    data,
-    include: {
-      objectives: {
-        orderBy: {
-          targetYear: 'asc',
-        },
-      },
-    },
-  })
-}
-
 export const deleteObjective = async (id: string): Promise<Objective> => {
   return prismaClient.objective.delete({
     where: { id },
@@ -385,6 +369,7 @@ export const updateTrajectoryWithObjectives = async (
   data: {
     name?: string
     description?: string
+    referenceYear?: number | null
     objectives?: Array<{ id: string; targetYear: number; reductionRate: number }>
   },
 ): Promise<TrajectoryWithObjectives> => {
@@ -412,6 +397,7 @@ export const updateTrajectoryWithObjectives = async (
     data: {
       name: data.name,
       description: data.description,
+      referenceYear: data.referenceYear,
     },
     include: {
       objectives: {

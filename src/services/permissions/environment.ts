@@ -10,7 +10,7 @@ export const isSimplified = (environment: Environment) => simplifiedEnvironments
 const isBC = (environment: Environment) => environment === BC
 export const isTilt = (environment: Environment) => environment === TILT
 const isCut = (environment: Environment) => environment === CUT
-const isClickson = (environment: Environment) => environment === CLICKSON
+export const isClickson = (environment: Environment) => environment === CLICKSON
 
 export const hasAccessToActualityCards = isBC
 
@@ -44,8 +44,7 @@ export const hasAccessToEmissionSourceValidation = isAdvanced
 
 export const hasRoleOnStudy = isAdvanced
 
-export const hasAccessToCarbonResponsibilityIntensities = (environment: Environment) =>
-  ([BC, TILT, CUT] as Environment[]).includes(environment)
+export const hasAccessToCarbonResponsibilityIntensities = isAdvanced
 
 export const hasAccessToMonetaryRatio = (environment: Environment) =>
   ([BC, TILT, CUT] as Environment[]).includes(environment)
@@ -76,3 +75,22 @@ export const hasAccessToSimplifiedStudies = (env: Environment) => {
 export const hasReaderRoleOnStudyAsContributor = isClickson
 
 export const hasAccessToStudyComments = isClickson
+
+export const hasAccessToManualImport = (environment: Environment) =>
+  ([BC, TILT, CUT] as Environment[]).includes(environment)
+
+export const hasCustomGlossaryTextForEstablishment = isClickson
+
+export const hasAccessToStudyResults = isAdvanced
+
+export const hasCustomPostOrder = isClickson
+
+export const hasAccessToResultsRatioTab = isCut
+
+export const hasAccessToAdvancedEmissionAnalysis = isTilt
+
+export const hasAlwaysAccessToOrganizationVersion = isTilt
+
+export const hasStartLinkOnFootprints = isTilt
+
+export const hasAccessToPostTypeform = isTilt

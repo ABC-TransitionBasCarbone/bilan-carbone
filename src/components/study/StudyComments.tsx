@@ -11,6 +11,7 @@ import {
 } from '@/services/serverFunctions/study'
 import { Card, CardContent, TextField } from '@mui/material'
 import { CommentStatus, SubPost } from '@prisma/client'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useState } from 'react'
 import Button from '../base/Button'
@@ -21,9 +22,10 @@ interface Props {
   subPost?: SubPost | null
   withField?: boolean
   canValidate?: boolean
+  user: UserSession
 }
 
-const StudyComments = ({ studyId, subPost = null, withField = true, canValidate = false }: Props) => {
+const StudyComments = ({ studyId, subPost = null, withField = true, canValidate = false, user }: Props) => {
   const [newComment, setNewComment] = useState('')
   const [loading, setLoading] = useState(false)
   const [comments, setComments] = useState<FullStudyComments | null>(null)
@@ -35,10 +37,12 @@ const StudyComments = ({ studyId, subPost = null, withField = true, canValidate 
   const fetchComments = useCallback(async () => {
     const res = await getStudyComments(studyId, subPost)
     if (res.success) {
-      const filteredComments = res.data.filter((comment) => comment.status === CommentStatus.VALIDATED || canValidate)
+      const filteredComments = res.data.filter(
+        (comment) => comment.status === CommentStatus.VALIDATED || canValidate || comment.authorId === user.accountId,
+      )
       setComments(filteredComments)
     }
-  }, [canValidate, studyId, subPost])
+  }, [canValidate, studyId, subPost, user])
 
   useEffect(() => {
     if (comments === null) {

@@ -16,7 +16,7 @@ import { calculateTrajectoriesWithHistory, convertToPastStudies } from '@/utils/
 import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Typography } from '@mui/material'
-import { Action, ExternalStudy, TransitionPlan } from '@prisma/client'
+import type { Action, ExternalStudy, SectenInfo, TransitionPlan } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
@@ -37,8 +37,10 @@ const TransitionPlanSelectionModal = dynamic(
 const TrajectoryCreationModal = dynamic(() => import('@/components/study/trajectory/TrajectoryCreationModal'))
 const ConfirmDeleteModal = dynamic(() => import('@/components/modals/ConfirmDeleteModal'))
 
-const TRAJECTORY_15_ID = '1,5'
-const TRAJECTORY_WB2C_ID = 'WB2C'
+export const TRAJECTORY_SNBC_GENERAL_ID = 'SNBC_GENERAL'
+export const TRAJECTORY_SNBC_SECTORAL_ID = 'SNBC_SECTORAL'
+export const TRAJECTORY_15_ID = '1,5'
+export const TRAJECTORY_WB2C_ID = 'WB2C'
 
 interface Props {
   study: FullStudy
@@ -49,6 +51,7 @@ interface Props {
   linkedExternalStudies?: ExternalStudy[]
   actions?: Action[]
   validatedOnly: boolean
+  sectenData?: SectenInfo[]
 }
 
 const TrajectoryReductionPage = ({
@@ -60,6 +63,7 @@ const TrajectoryReductionPage = ({
   linkedExternalStudies = [],
   actions = [],
   validatedOnly,
+  sectenData = [],
 }: Props) => {
   const t = useTranslations('study.transitionPlan')
   const tNav = useTranslations('nav')
@@ -70,6 +74,7 @@ const TrajectoryReductionPage = ({
   const [showTrajectoryModal, setShowTrajectoryModal] = useState(false)
   const [showSuccessToast, setShowSuccessToast] = useState(false)
   const [selectedCustomTrajectories, setSelectedCustomTrajectories] = useState<string[]>([])
+  const [selectedSnbcTrajectories, setSelectedSnbcTrajectories] = useState<string[]>([TRAJECTORY_SNBC_GENERAL_ID])
   const [selectedSbtiTrajectories, setSelectedSbtiTrajectories] = useState<string[]>([TRAJECTORY_15_ID])
   const [withDependencies, setWithDependencies] = useState<boolean>(true)
   const [mounted, setMounted] = useState(false)
@@ -81,10 +86,17 @@ const TrajectoryReductionPage = ({
     if (storedCustom) {
       setSelectedCustomTrajectories(JSON.parse(storedCustom))
     }
+
+    const storedSnbc = localStorage.getItem(`trajectory-snbc-selected-${study.id}`)
+    if (storedSnbc) {
+      setSelectedSnbcTrajectories(JSON.parse(storedSnbc))
+    }
+
     const storedSbti = localStorage.getItem(`trajectory-sbti-selected-${study.id}`)
     if (storedSbti) {
       setSelectedSbtiTrajectories(JSON.parse(storedSbti))
     }
+
     const storedDependencies = localStorage.getItem(`trajectory-with-dependencies-${study.id}`)
     if (storedDependencies) {
       setWithDependencies(JSON.parse(storedDependencies))
@@ -92,6 +104,7 @@ const TrajectoryReductionPage = ({
   }, [study.id])
 
   useLocalStorageSync(`trajectory-sbti-selected-${study.id}`, selectedSbtiTrajectories, mounted)
+  useLocalStorageSync(`trajectory-snbc-selected-${study.id}`, selectedSnbcTrajectories, mounted)
   useLocalStorageSync(`trajectory-with-dependencies-${study.id}`, withDependencies, mounted)
   useLocalStorageSync(`trajectory-custom-selected-${study.id}`, selectedCustomTrajectories, mounted)
 
@@ -181,6 +194,7 @@ const TrajectoryReductionPage = ({
       return {
         trajectory15Data: null,
         trajectoryWB2CData: null,
+        snbcData: null,
         customTrajectoriesData: [],
         actionBasedTrajectoryData: null,
         studyStartYear,
@@ -194,8 +208,10 @@ const TrajectoryReductionPage = ({
       trajectories,
       actions,
       pastStudies,
+      selectedSnbcTrajectories,
       selectedSbtiTrajectories,
       selectedCustomTrajectoryIds: selectedCustomTrajectories,
+      sectenData,
     })
 
     const customTrajectoriesData = trajectoryResult.customTrajectories.map((trajData) => {
@@ -210,6 +226,7 @@ const TrajectoryReductionPage = ({
     return {
       trajectory15Data: trajectoryResult.sbti15,
       trajectoryWB2CData: trajectoryResult.sbtiWB2C,
+      snbcData: trajectoryResult.snbc,
       customTrajectoriesData,
       actionBasedTrajectoryData: trajectoryResult.actionBased,
       studyStartYear,
@@ -222,8 +239,10 @@ const TrajectoryReductionPage = ({
     trajectories,
     actions,
     pastStudies,
+    selectedSnbcTrajectories,
     selectedSbtiTrajectories,
     selectedCustomTrajectories,
+    sectenData,
   ])
 
   if (!transitionPlan) {
@@ -327,10 +346,26 @@ const TrajectoryReductionPage = ({
           </div>
 
           <div className={styles.trajectoryCardsGrid}>
-            <Box className={classNames('p125', styles.trajectoryCard, styles.disabledCard)}>
-              <Typography variant="h5" component="h2" fontWeight={600}>
-                {t('trajectories.snbcButton')}
-              </Typography>
+            <Box className={classNames('p125 flex-col justify-between gapped2', styles.trajectoryCard)}>
+              <div className="flex-col gapped-2">
+                <Typography variant="h5" component="h2" fontWeight={600}>
+                  {t('trajectories.snbcCard.title')}
+                </Typography>
+                <Typography variant="body1">{t('trajectories.snbcCard.description')}</Typography>
+              </div>
+
+              <div className="w100 flex-col gapped-2">
+                <MultiSelect
+                  label={t('trajectories.snbcCard.methodLabel')}
+                  value={selectedSnbcTrajectories}
+                  onChange={setSelectedSnbcTrajectories}
+                  options={[
+                    { label: t('trajectories.snbcCard.general'), value: TRAJECTORY_SNBC_GENERAL_ID },
+                    { label: t('trajectories.snbcCard.sectoral'), value: TRAJECTORY_SNBC_SECTORAL_ID },
+                  ]}
+                  placeholder={t('trajectories.sbtiCard.placeholder')}
+                />
+              </div>
             </Box>
 
             <Box className={classNames('p125 flex-col justify-between gapped2', styles.trajectoryCard)}>
@@ -393,9 +428,11 @@ const TrajectoryReductionPage = ({
             studyUnit={study.resultsUnit}
             trajectory15Data={trajectoryData.trajectory15Data}
             trajectoryWB2CData={trajectoryData.trajectoryWB2CData}
+            snbcData={trajectoryData.snbcData}
             customTrajectoriesData={trajectoryData.customTrajectoriesData}
             actionBasedTrajectoryData={trajectoryData.actionBasedTrajectoryData}
             studyStartYear={trajectoryData.studyStartYear}
+            selectedSnbcTrajectories={selectedSnbcTrajectories}
             selectedSbtiTrajectories={selectedSbtiTrajectories}
             withDependencies={withDependencies}
             setWithDependencies={setWithDependencies}
@@ -412,6 +449,7 @@ const TrajectoryReductionPage = ({
               onSuccess={handleCreateTrajectorySuccess}
               trajectory={null}
               isFirstCreation={trajectories.length === 0}
+              studyYear={study.startDate.getFullYear()}
             />
           )}
 

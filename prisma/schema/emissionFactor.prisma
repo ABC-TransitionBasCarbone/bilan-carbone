@@ -16,6 +16,7 @@ enum EmissionFactorPartType {
   Transport
   CombustionALaCentrale
   Pertes
+  AutresEmissionsLieesALaConsommationDElectriciteBarrage
 }
 
 enum Import {

@@ -1,4 +1,4 @@
-import { CutRoles } from '@/services/roles'
+import { ClicksonRoles, CutRoles } from '@/services/roles'
 import { Environment, Prisma, Role, UserStatus } from '@prisma/client'
 import { UserSession } from 'next-auth'
 
@@ -26,10 +26,14 @@ export const findUserInfo = (user: UserSession) =>
   }) satisfies Prisma.AccountFindManyArgs
 
 export const getEnvironmentRoles = (environment: Environment) => {
-  if (environment === Environment.CUT) {
-    return CutRoles
+  switch (environment) {
+    case Environment.CUT:
+      return CutRoles
+    case Environment.CLICKSON:
+      return ClicksonRoles
+    default:
+      return Role
   }
-  return Role
 }
 
 export const getRoleToSetForUntrained = (role: Exclude<Role, 'SUPER_ADMIN'>, environment: Environment) => {

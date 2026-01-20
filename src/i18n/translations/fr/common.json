@@ -4,6 +4,9 @@
     "no": "Non",
     "previous": "Précédent",
     "next": "Suivant",
+    "all": "Tous",
+    "none": "Aucun",
+    "subPosts": "Sous postes",
     "action": {
       "create": "Créer",
       "edit": "Modifier",
@@ -16,7 +19,9 @@
       "update": "Mettre à jour",
       "start": "Démarrer",
       "close": "Fermer",
-      "approve": "Approuver"
+      "approve": "Approuver",
+      "selectAll": "Tout sélectionner",
+      "unselectAll": "Tout désélectionner"
     },
     "label": {
       "start": "Début",
@@ -41,5 +46,64 @@
   },
   "navigation": {
     "comments": "Commentaires"
+  },
+  "country": {
+    "ALBANIA": "Albanie",
+    "ANDORRA": "Andorre",
+    "AUSTRIA": "Autriche",
+    "BELARUS": "Biélorussie",
+    "BELGIUM": "Belgique",
+    "BOSNIA_AND_HERZEGOVINA": "Bosnie-Herzégovine",
+    "BULGARIA": "Bulgarie",
+    "CROATIA": "Croatie",
+    "CYPRUS": "Chypre",
+    "CZECH_REPUBLIC": "République tchèque",
+    "DENMARK": "Danemark",
+    "ESTONIA": "Estonie",
+    "FINLAND": "Finlande",
+    "FRANCE": "France",
+    "GERMANY": "Allemagne",
+    "GREECE": "Grèce",
+    "HUNGARY": "Hongrie",
+    "ICELAND": "Islande",
+    "IRELAND": "Irlande",
+    "ITALY": "Italie",
+    "KOSOVO": "Kosovo",
+    "LATVIA": "Lettonie",
+    "LIECHTENSTEIN": "Liechtenstein",
+    "LITHUANIA": "Lituanie",
+    "LUXEMBOURG": "Luxembourg",
+    "MALTA": "Malte",
+    "MOLDOVA": "Moldavie",
+    "MONACO": "Monaco",
+    "MONTENEGRO": "Monténégro",
+    "NETHERLANDS": "Pays-Bas",
+    "NORTH_MACEDONIA": "Macédoine du Nord",
+    "NORWAY": "Norvège",
+    "POLAND": "Pologne",
+    "PORTUGAL": "Portugal",
+    "ROMANIA": "Roumanie",
+    "RUSSIA": "Russie",
+    "SAN_MARINO": "Saint-Marin",
+    "SERBIA": "Serbie",
+    "SLOVAKIA": "Slovaquie",
+    "SLOVENIA": "Slovénie",
+    "SPAIN": "Espagne",
+    "SWEDEN": "Suède",
+    "SWITZERLAND": "Suisse",
+    "UKRAINE": "Ukraine",
+    "UNITED_KINGDOM": "Royaume-Uni",
+    "VATICAN_CITY": "Cité du Vatican",
+    "OTHER": "Autre"
+  },
+  "study": {
+    "results": {
+      "chartTypes": {
+        "table": "Tableau",
+        "bar": "Diagramme en barres",
+        "pie": "Diagramme circulaire",
+        "ratio": "Intensités carbone"
+      }
+    }
   }
 }

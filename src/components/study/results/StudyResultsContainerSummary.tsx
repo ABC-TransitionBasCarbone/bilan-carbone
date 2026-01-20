@@ -5,12 +5,11 @@ import Button from '@/components/base/Button'
 import HelpIcon from '@/components/base/HelpIcon'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
-import { hasRoleOnStudy } from '@/services/permissions/environment'
+import { hasAccessToStudyResults, hasRoleOnStudy } from '@/services/permissions/environment'
 import { getDetailedEmissionResults } from '@/services/study'
 import { formatNumber } from '@/utils/number'
 import { getDisplayedRoleOnStudy } from '@/utils/study'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
-import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -44,8 +43,6 @@ const StudyResultsContainerSummary = ({
   const [glossary, setGlossary] = useState('')
   const [withDep, setWithDependencies] = useState(!!withDependencies)
   const environment = study.organizationVersion.environment
-
-  const isCut = useMemo(() => environment === Environment.CUT, [environment])
 
   const [
     formattedWithDepValue,
@@ -82,7 +79,7 @@ const StudyResultsContainerSummary = ({
       )}
 
       <div className={styles.container}>
-        {!isCut && (
+        {hasAccessToStudyResults(environment) && (
           <fieldset className={classNames(styles.selector, 'flex grow')} aria-label={t('results.withDependencies')}>
             <label>
               <input

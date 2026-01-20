@@ -115,6 +115,13 @@ export const uploadEmissionFactors = async (
         const unit = unitsMatrix[getStringValue(ef.Unité_Nom)]
 
         if (!unit) {
+          console.log('ignoré car unit non trouvé', unit, ef.EF_VAL_LIB, ef.Unité_Nom)
+          return null
+        }
+
+        const subPosts = getSubPosts(row, postAndSubPostsOldNewMapping)
+
+        if (!subPosts || subPosts?.length === 0) {
           return null
         }
 
@@ -129,8 +136,6 @@ export const uploadEmissionFactors = async (
         })
 
         const isMonetary = isMonetaryEmissionFactor({ unit })
-
-        const subPosts = getSubPosts(row, postAndSubPostsOldNewMapping)
 
         return {
           id,
@@ -157,7 +162,7 @@ export const uploadEmissionFactors = async (
           otherGES: (ef.Autre_gaz as number) + (ef.NF3 as number),
           source: getStringValue(ef.Source_Nom),
           location: getStringValue(ef.NOM_CONTINENT),
-          ...(subPosts?.length ? { subPosts } : {}),
+          subPosts,
         }
       })
       .filter((data) => data !== null),
@@ -212,6 +217,7 @@ export const uploadEmissionFactors = async (
 
   emissionFactorPartsToCreate.forEach((row) => {
     const guid = getStringValue(row.GUID)
+
     if (!sumByGuid[guid]) {
       sumByGuid[guid] = { totalCo2: 0, co2f: 0, ch4f: 0, ch4b: 0, n2o: 0, co2b: 0, sf6: 0, hfc: 0, pfc: 0, otherGES: 0 }
     }
@@ -229,24 +235,33 @@ export const uploadEmissionFactors = async (
   })
 
   const inconsistentGuids = Object.entries(sumByGuid).filter(([guid, sum]) => {
-    const emissionFactor = allEmissionFactors.find((ef) => ef.oldBCId === guid)
+    const excelParentFE = emissionFactorsToCreate.find((ef) => ef.GUID === guid && ef.EF_TYPE === 'Consolidé')
+
+    if (!excelParentFE) {
+      console.log("Pas de facteur d'émission parent trouvé pour la partie avec GUID :", guid)
+      return false
+    }
+
+    const emissionFactor = allEmissionFactors.find((ef) => ef.oldBCId === excelParentFE.EFV_GUID)
     return (
-      emissionFactor &&
-      (emissionFactor.totalCo2 !== sum.totalCo2 ||
-        emissionFactor.co2f !== sum.co2f ||
-        emissionFactor.ch4f !== sum.ch4f ||
-        emissionFactor.ch4b !== sum.ch4b ||
-        emissionFactor.n2o !== sum.n2o ||
-        emissionFactor.co2b !== sum.co2b ||
-        emissionFactor.sf6 !== sum.sf6 ||
-        emissionFactor.hfc !== sum.hfc ||
-        emissionFactor.pfc !== sum.pfc ||
-        emissionFactor.otherGES !== sum.otherGES)
+      !emissionFactor ||
+      emissionFactor.totalCo2.toFixed(6) !== sum.totalCo2.toFixed(6) ||
+      emissionFactor.co2f?.toFixed(6) !== sum.co2f.toFixed(6) ||
+      emissionFactor.ch4f?.toFixed(6) !== sum.ch4f.toFixed(6) ||
+      emissionFactor.ch4b?.toFixed(6) !== sum.ch4b.toFixed(6) ||
+      emissionFactor.n2o?.toFixed(6) !== sum.n2o.toFixed(6) ||
+      emissionFactor.co2b?.toFixed(6) !== sum.co2b.toFixed(6) ||
+      emissionFactor.sf6?.toFixed(6) !== sum.sf6.toFixed(6) ||
+      emissionFactor.hfc?.toFixed(6) !== sum.hfc.toFixed(6) ||
+      emissionFactor.pfc?.toFixed(6) !== sum.pfc.toFixed(6) ||
+      emissionFactor.otherGES?.toFixed(6) !== sum.otherGES.toFixed(6)
     )
   })
 
   if (inconsistentGuids.length > 0) {
-    throw new Error(`${inconsistentGuids.length} facteurs d'émissions avec des parties incohérentes, donc ignorées`)
+    console.log(
+      `${inconsistentGuids.length} facteurs d'émissions avec des parties incohérentes, donc ignorées, ${inconsistentGuids}`,
+    )
   }
 
   const filteredEmissionFactorPartsToCreate = emissionFactorPartsToCreate.filter((row) =>

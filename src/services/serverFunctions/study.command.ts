@@ -1,5 +1,14 @@
 import { setCustomIssue, setCustomMessage } from '@/lib/zod.config'
-import { ControlMode, DayOfWeek, Export, Level, StudyResultUnit, StudyRole } from '@prisma/client'
+import {
+  ControlMode,
+  DayOfWeek,
+  EngagementPhase,
+  EstablishmentType,
+  Export,
+  Level,
+  StudyResultUnit,
+  StudyRole,
+} from '@prisma/client'
 import dayjs from 'dayjs'
 import z from 'zod'
 import { HolidayOpeningHoursValidation, OpeningHoursValidation } from '../hours'
@@ -21,7 +30,9 @@ export const SitesCommandValidation = z.object({
       volunteerNumber: z.number().optional().nullable(),
       beneficiaryNumber: z.number().optional().nullable(),
       studentNumber: z.number().optional().nullable(),
-      establishmentYear: z.string().optional(),
+      establishmentYear: z.number().int().max(new Date().getFullYear()).optional().nullable(),
+      academy: z.string().optional(),
+      establishmentType: z.enum(EstablishmentType).optional(),
     }),
   ),
 })
@@ -56,6 +67,7 @@ const BaseStudyValidation = z.object({
   realizationEndDate: optionalDateValidation(),
   level: z.enum(Level),
   isPublic: z.string(),
+  simplified: z.boolean().optional(),
 })
 
 export const CreateStudyCommandValidation = z
@@ -194,3 +206,15 @@ export const DuplicateSiteCommandValidation = z.object({
 })
 
 export type DuplicateSiteCommand = z.infer<typeof DuplicateSiteCommandValidation>
+
+export const AddEngagementActionCommandValidation = z.object({
+  studyId: z.uuid(),
+  name: z.string().min(1),
+  date: dateValidation(),
+  target: z.string(),
+  steps: z.string(),
+  phase: z.enum(EngagementPhase),
+  description: z.string(),
+})
+
+export type AddEngagementActionCommand = z.infer<typeof AddEngagementActionCommandValidation>

@@ -10,13 +10,13 @@ import { SignUpClicksonCommand, SignUpClicksonCommandValidation } from '@/servic
 import { zodResolver } from '@hookform/resolvers/zod'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import { FormControl } from '@mui/material'
-import { Environment } from '@prisma/client'
+import { Country, Environment } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import Form from '../base/Form'
 import LoadingButton from '../base/LoadingButton'
 import { FormAutocomplete } from '../form/Autocomplete'
@@ -30,6 +30,7 @@ const SignUpFormClickson = () => {
 
   const t = useTranslations('signup')
   const tForm = useTranslations('login.form')
+  const tCountry = useTranslations('country')
   const [submitting, setSubmitting] = useState(false)
   const [message, setMessage] = useState('')
   const [success, setSuccess] = useState(false)
@@ -47,8 +48,11 @@ const SignUpFormClickson = () => {
     defaultValues: {
       email: searchParams.get('email') ?? '',
       schoolName: '',
+      country: Country.FRANCE,
     },
   })
+
+  const country = useWatch({ control, name: 'country' })
 
   useEffect(() => {
     const fetchSchools = async () => {
@@ -81,15 +85,26 @@ const SignUpFormClickson = () => {
     setMessage('')
     setSubmitting(true)
 
-    const school = schools.find((s) => s.nom_etablissement === getValues().schoolName)
-    if (!school) {
-      setSubmitting(false)
-      setSuccess(false)
-      setMessage(UNKNOWN_SCHOOL)
-      return
+    let school: School | undefined
+
+    if (country === Country.FRANCE) {
+      school = schools.find((s) => s.nom_etablissement === getValues().schoolName)
+      if (!school) {
+        setSubmitting(false)
+        setSuccess(false)
+        setMessage(UNKNOWN_SCHOOL)
+        return
+      }
+    } else {
+      school = { nom_etablissement: getValues().schoolName, city: getValues().city }
     }
 
-    const activation = await signUpWithSchool(getValues().email, school, Environment.CLICKSON)
+    const activation = await signUpWithSchool(
+      getValues().email,
+      getValues().country as Country,
+      school,
+      Environment.CLICKSON,
+    )
     setSubmitting(false)
 
     if (activation.success) {
@@ -125,39 +140,72 @@ const SignUpFormClickson = () => {
           data-testid="activation-email"
         />
         <FormAutocomplete
-          filterOptions={(x) => x}
-          data-testid="activation-school"
           control={control}
           translation={t}
-          options={options}
-          renderOption={(props, option) => {
-            const dataTestId = typeof option === 'string' ? undefined : (option as { testId?: string }).testId
-            const label = typeof option === 'string' ? option : option.label
-            return (
-              <li {...props} data-testid={dataTestId}>
-                {label}
-              </li>
-            )
-          }}
-          name="schoolName"
-          label={
-            <span className="align-center text-center">
-              {t('schoolPostalCodeOrName')}
-              <HelpOutlineOutlinedIcon
-                color="secondary"
-                className={`ml-4 pointer`}
-                onClick={() => setGlossary('schoolSearchGlossaryTitle')}
-              />
-            </span>
-          }
-          helperText={t('schoolPostalCodeOrNamePlaceholder')}
-          freeSolo
-          disableClearable
-          onInputChange={(_, value) => {
-            setSchoolPostalCodeOrName(value)
-            setValue('schoolName', value)
-          }}
+          name="country"
+          label={t('country')}
+          data-testid="activation-country"
+          options={Object.keys(Country).map((country) => ({
+            label: tCountry(country),
+            value: country,
+          }))}
+          renderValue={(country) => (country ? tCountry(country as Country) : '')}
         />
+        {country === Country.FRANCE ? (
+          <FormAutocomplete
+            filterOptions={(x) => x}
+            data-testid="activation-school"
+            control={control}
+            translation={t}
+            options={options}
+            renderOption={(props, option) => {
+              const dataTestId = typeof option === 'string' ? undefined : (option as { testId?: string }).testId
+              const label = typeof option === 'string' ? option : option.label
+              return (
+                <li {...props} data-testid={dataTestId}>
+                  {label}
+                </li>
+              )
+            }}
+            name="schoolName"
+            label={
+              <span className="align-center text-center">
+                {t('schoolPostalCodeOrName')}
+                <HelpOutlineOutlinedIcon
+                  color="secondary"
+                  className={`ml-4 pointer`}
+                  onClick={() => setGlossary('schoolSearchGlossaryTitle')}
+                />
+              </span>
+            }
+            helperText={t('schoolPostalCodeOrNamePlaceholder')}
+            freeSolo
+            disableClearable
+            onInputChange={(_, value) => {
+              setSchoolPostalCodeOrName(value)
+              setValue('schoolName', value)
+            }}
+          />
+        ) : (
+          <>
+            <FormTextField
+              control={control}
+              name="schoolName"
+              className={authStyles.input}
+              label={t('schoolName')}
+              placeholder={t('schoolNamePlaceholder')}
+              data-testid="activation-schoolName"
+            />
+            <FormTextField
+              control={control}
+              name="city"
+              className={authStyles.input}
+              label={t('city')}
+              placeholder={t('cityPlaceholder')}
+              data-testid="activation-city"
+            />
+          </>
+        )}
         <LoadingButton data-testid="activation-button" type="submit" loading={submitting} variant="contained" fullWidth>
           {t('validate')}
         </LoadingButton>

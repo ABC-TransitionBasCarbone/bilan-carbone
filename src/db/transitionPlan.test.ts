@@ -37,6 +37,7 @@ const createMockTrajectory = (
   name: 'Test Trajectory',
   description: 'A test trajectory',
   type: TrajectoryType.CUSTOM,
+  referenceYear: null,
   createdAt: new Date('2024-01-01'),
   updatedAt: new Date('2024-01-01'),
   objectives: [
@@ -161,6 +162,7 @@ describe('TransitionPlan DB', () => {
               name: trajectory.name,
               description: trajectory.description,
               type: trajectory.type,
+              referenceYear: trajectory.referenceYear,
               objectives: {
                 create: trajectory.objectives.map((objective) => ({
                   targetYear: objective.targetYear,

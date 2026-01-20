@@ -1,7 +1,6 @@
 import { Translations } from '@/types/translation'
 import { Theme } from '@mui/material'
 import { StudyResultUnit, SubPost } from '@prisma/client'
-import { sortByCustomOrder } from './array'
 import { formatNumber } from './number'
 import { isPost } from './post'
 import { STUDY_UNIT_VALUES } from './study'
@@ -161,18 +160,13 @@ export const processBarChartData = <T extends BasicTypeCharts>(
   theme: Theme,
   resultsUnit: StudyResultUnit,
   tPost?: Translations,
-  customOrder?: string[],
 ): ProcessedBarChartData => {
   const filteredData = results.filter((result) => result.post !== 'total' && result.label !== 'total')
-  let orderedData = filteredData
 
-  if (customOrder?.length) {
-    orderedData = sortByCustomOrder(filteredData, customOrder, (item) => item.post ?? item.label)
-  }
   const isTag = type === 'tag'
 
   if (!showSubLevel) {
-    const data = isTag ? orderedData.flatMap((result) => result.children) : orderedData
+    const data = isTag ? filteredData.flatMap((result) => result.children) : filteredData
     return {
       barData: {
         labels: data.map((item) => getLabel(type, item, tPost)),
@@ -185,14 +179,14 @@ export const processBarChartData = <T extends BasicTypeCharts>(
     }
   }
 
-  const parentLabels = orderedData.map((item) => getLabel(type, item, tPost))
+  const parentLabels = filteredData.map((item) => getLabel(type, item, tPost))
 
   const seriesData: BarChartSeriesData[] = []
 
-  orderedData.forEach((parent, parentIndex) => {
+  filteredData.forEach((parent, parentIndex) => {
     parent.children.forEach((child) => {
       if (child.value > 0) {
-        const data = new Array(orderedData.length).fill(0)
+        const data = new Array(filteredData.length).fill(0)
         data[parentIndex] = child.value / STUDY_UNIT_VALUES[resultsUnit]
 
         seriesData.push({

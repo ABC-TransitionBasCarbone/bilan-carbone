@@ -61,6 +61,13 @@ enum CommentStatus {
   VALIDATED
 }
 
+enum EngagementPhase {
+  AwarnessAndOutreach
+  Empowerment
+  CoConstruction
+  FeedbackAndCommunication
+}
+
 model OpeningHours {
   id          String    @id @default(uuid())
   studySite   StudySite @relation(fields: [studySiteId], references: [id])
@@ -166,6 +173,8 @@ model Study {
   transitionPlan        TransitionPlan?
   transitionPlanStudies TransitionPlanStudy[]
   StudyComment          StudyComment[]
+
+  engagementActions EngagementAction[]
 
   @@map("studies")
 }
@@ -388,6 +397,25 @@ model StudyComment {
   study   Study  @relation(fields: [studyId], references: [id])
 
   subPost SubPost? @map("sub_post")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model EngagementAction {
+  id String @id @default(uuid())
+
+  name String
+
+  date   DateTime
+  target String
+  steps  String
+  phase  EngagementPhase
+
+  description String
+
+  studyId String @map("study_id")
+  study   Study  @relation(fields: [studyId], references: [id])
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")

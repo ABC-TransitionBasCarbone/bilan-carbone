@@ -4,6 +4,9 @@
     "no": "No",
     "previous": "Anterior",
     "next": "Siguiente",
+    "all": "Todos",
+    "none": "Ninguno",
+    "subPosts": "Sub-posts",
     "action": {
       "create": "Crear",
       "edit": "Editar",
@@ -16,7 +19,9 @@
       "update": "Actualizar",
       "start": "Iniciar",
       "close": "Cerrar",
-      "approve": "Aprobar"
+      "approve": "Aprobar",
+      "selectAll": "Seleccionar todos",
+      "unselectAll": "Deseleccionar todos"
     },
     "label": {
       "start": "Inicio",
@@ -41,5 +46,64 @@
   },
   "navigation": {
     "comments": "Comentarios"
+  },
+  "country": {
+    "ALBANIA": "Albania",
+    "ANDORRA": "Andorra",
+    "AUSTRIA": "Austria",
+    "BELARUS": "Bielorrusia",
+    "BELGIUM": "Bélgica",
+    "BOSNIA_AND_HERZEGOVINA": "Bosnia y Herzegovina",
+    "BULGARIA": "Bulgaria",
+    "CROATIA": "Croacia",
+    "CYPRUS": "Chipre",
+    "CZECH_REPUBLIC": "República Checa",
+    "DENMARK": "Dinamarca",
+    "ESTONIA": "Estonia",
+    "FINLAND": "Finlandia",
+    "FRANCE": "Francia",
+    "GERMANY": "Alemania",
+    "GREECE": "Grecia",
+    "HUNGARY": "Hungría",
+    "ICELAND": "Islandia",
+    "IRELAND": "Irlanda",
+    "ITALY": "Italia",
+    "KOSOVO": "Kosovo",
+    "LATVIA": "Letonia",
+    "LIECHTENSTEIN": "Liechtenstein",
+    "LITHUANIA": "Lituania",
+    "LUXEMBOURG": "Luxemburgo",
+    "MALTA": "Malta",
+    "MOLDOVA": "Moldavia",
+    "MONACO": "Mónaco",
+    "MONTENEGRO": "Montenegro",
+    "NETHERLANDS": "Países Bajos",
+    "NORTH_MACEDONIA": "Macedonia del Norte",
+    "NORWAY": "Noruega",
+    "POLAND": "Polonia",
+    "PORTUGAL": "Portugal",
+    "ROMANIA": "Rumanía",
+    "RUSSIA": "Rusia",
+    "SAN_MARINO": "San Marino",
+    "SERBIA": "Serbia",
+    "SLOVAKIA": "Eslovaquia",
+    "SLOVENIA": "Eslovenia",
+    "SPAIN": "España",
+    "SWEDEN": "Suecia",
+    "SWITZERLAND": "Suiza",
+    "UKRAINE": "Ucrania",
+    "UNITED_KINGDOM": "Reino Unido",
+    "VATICAN_CITY": "Ciudad del Vaticano",
+    "OTHER": "Otro"
+  },
+  "study": {
+    "results": {
+      "chartTypes": {
+        "table": "Tabla",
+        "bar": "Gráfico de barras",
+        "pie": "Gráfico circular",
+        "ratio": "Ratios"
+      }
+    }
   }
 }
