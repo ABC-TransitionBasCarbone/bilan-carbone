@@ -18,6 +18,10 @@ import { ClicksonPost, CutPost, SimplifiedPost, subPostsByPostClickson, subPosts
 
 export type SimplifiedEnvironment = 'CUT' | 'CLICKSON'
 
+export const isSimplifiedEnvironment = (env: Environment): env is SimplifiedEnvironment => {
+  return env === Environment.CUT || env === Environment.CLICKSON
+}
+
 export interface SimplifiedPublicodesConfig<RuleName extends string = string> {
   posts: SimplifiedPost[]
   subPostsByPost: Record<SimplifiedPost, SubPost[]>

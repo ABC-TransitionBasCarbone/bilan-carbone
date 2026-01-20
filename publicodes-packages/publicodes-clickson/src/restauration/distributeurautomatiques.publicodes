@@ -11,6 +11,7 @@ restauration . distributeur automatiques:
       - sandwich pain de mie
       - barre chocolatée
   unité: kgCO2e
+  par défaut: 0
   avec:
     bouteille d'eau:
       titre: Bouteille d'eau
