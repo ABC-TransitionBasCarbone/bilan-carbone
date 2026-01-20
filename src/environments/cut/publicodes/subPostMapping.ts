@@ -1,5 +1,5 @@
 import { FormLayout, groupLayout, inputLayout, tableLayout } from '@/components/publicodes-form/layouts/formLayout'
-import { CutPost } from '@/services/posts'
+import { CutPost } from '@/services/posts.enums'
 import { SubPost } from '@prisma/client'
 import { CutRuleName } from './types'
 

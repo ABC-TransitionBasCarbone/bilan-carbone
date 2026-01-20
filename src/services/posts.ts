@@ -1,53 +1,9 @@
 import { Environment, SubPost } from '@prisma/client'
+import { BCPost, ClicksonPost, CutPost, TiltPost } from './posts.enums'
 import { BaseResultsByPost } from './results/consolidated'
 
-export enum BCPost {
-  Energies = 'Energies',
-  AutresEmissionsNonEnergetiques = 'AutresEmissionsNonEnergetiques',
-  IntrantsBiensEtMatieres = 'IntrantsBiensEtMatieres',
-  IntrantsServices = 'IntrantsServices',
-  DechetsDirects = 'DechetsDirects',
-  Fret = 'Fret',
-  Deplacements = 'Deplacements',
-  Immobilisations = 'Immobilisations',
-  UtilisationEtDependance = 'UtilisationEtDependance',
-  FinDeVie = 'FinDeVie',
-}
-
-export enum CutPost {
-  Fonctionnement = 'Fonctionnement',
-  MobiliteSpectateurs = 'MobiliteSpectateurs',
-  TourneesAvantPremieres = 'TourneesAvantPremieres',
-  SallesEtCabines = 'SallesEtCabines',
-  ConfiseriesEtBoissons = 'ConfiseriesEtBoissons',
-  Dechets = 'Dechets',
-  BilletterieEtCommunication = 'BilletterieEtCommunication',
-}
-
-export enum TiltPost {
-  ConstructionDesLocaux = 'ConstructionDesLocaux',
-  Energies = BCPost.Energies,
-  DechetsDirects = BCPost.DechetsDirects,
-  FroidEtClim = 'FroidEtClim',
-  AutresEmissions = 'AutresEmissions',
-  DeplacementsDePersonne = 'DeplacementsDePersonne',
-  TransportDeMarchandises = 'TransportDeMarchandises',
-  IntrantsBiensEtMatieresTilt = 'IntrantsBiensEtMatieresTilt',
-  Alimentation = 'Alimentation',
-  IntrantsServices = BCPost.IntrantsServices,
-  EquipementsEtImmobilisations = 'EquipementsEtImmobilisations',
-  Utilisation = 'Utilisation',
-  FinDeVie = BCPost.FinDeVie,
-  Teletravail = 'Teletravail',
-}
-
-export enum ClicksonPost {
-  EnergiesClickson = 'EnergiesClickson',
-  Restauration = 'Restauration',
-  DeplacementsClickson = 'DeplacementsClickson',
-  Achats = 'Achats',
-  ImmobilisationsClickson = 'ImmobilisationsClickson',
-}
+// Re-export enums for backward compatibility
+export { BCPost, ClicksonPost, CutPost, TiltPost }
 
 export const Post = { ...BCPost, ...CutPost, ...TiltPost, ...ClicksonPost }
 export type SimplifiedPost = CutPost | ClicksonPost

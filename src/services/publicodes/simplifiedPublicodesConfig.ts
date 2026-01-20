@@ -14,7 +14,8 @@ import {
 } from '@/environments/cut/publicodes/subPostMapping'
 import { Environment, SubPost } from '@prisma/client'
 import Engine from 'publicodes'
-import { ClicksonPost, CutPost, SimplifiedPost, subPostsByPostClickson, subPostsByPostCUT } from '../posts'
+import { SimplifiedPost, subPostsByPostClickson, subPostsByPostCUT } from '../posts'
+import { ClicksonPost, CutPost } from '../posts.enums'
 
 export type SimplifiedEnvironment = 'CUT' | 'CLICKSON'
 
