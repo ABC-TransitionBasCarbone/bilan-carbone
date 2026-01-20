@@ -83,7 +83,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   const [isDownloadReportActive, setIsDownloadReportActive] = useState(false)
   const [selectedSubposts, setSelectedSubposts] = useState<string[]>([])
   const [selectedTags, setSelectedTags] = useState<string[]>([])
-  const [ghgpTabSelected, setGHGPTabSelected] = useState<EmissionFactorBase>(EmissionFactorBase.LocationBased)
+  const [selectedGHGPTable, setSelectedGHGPTable] = useState<EmissionFactorBase>(EmissionFactorBase.LocationBased)
   const router = useRouter()
 
   useEffect(() => {
@@ -240,8 +240,8 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
 
   const computedGHGPData = useMemo(
     () =>
-      computeGHGPResult(study, ghgpRules, emissionFactorsWithParts, studySite, false, validatedOnly, ghgpTabSelected),
-    [study, ghgpRules, emissionFactorsWithParts, studySite, validatedOnly, ghgpTabSelected],
+      computeGHGPResult(study, ghgpRules, emissionFactorsWithParts, studySite, false, validatedOnly, selectedGHGPTable),
+    [study, ghgpRules, emissionFactorsWithParts, studySite, validatedOnly, selectedGHGPTable],
   )
 
   const downloadReport = useCallback(async () => {
@@ -441,7 +441,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
           {type === Export.GHGP && (
             <Box>
               <div className="flex-row justify-between align-center mb1">
-                <Tabs value={ghgpTabSelected} onChange={(_e, v) => setGHGPTabSelected(v)}>
+                <Tabs value={selectedGHGPTable} onChange={(_e, v) => setSelectedGHGPTable(v)}>
                   {Object.values(EmissionFactorBase).map((tab) => (
                     <Tab key={tab} value={tab} label={tBase(tab)} data-testid={`$ghg-${tab}-tab`} />
                   ))}
