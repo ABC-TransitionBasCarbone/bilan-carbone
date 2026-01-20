@@ -71,6 +71,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   const tExport = useTranslations('exports')
   const tQuality = useTranslations('quality')
   const tBeges = useTranslations('beges')
+  const tGHGP = useTranslations('ghgp')
   const tUnits = useTranslations('study.results.units')
   const tResultUnits = useTranslations('study.results.units')
   const tStudyExport = useTranslations('study.export')
@@ -324,6 +325,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     await downloadStudyResults(
       study,
       begesRules,
+      ghgpRules,
       emissionFactorsWithParts,
       t,
       tExport,
@@ -331,8 +333,10 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       tOrga,
       tQuality,
       tBeges,
+      tGHGP,
       tUnits,
       environment,
+      selectedGHGPTable,
     )
   }
 
@@ -428,26 +432,26 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
             />
           )}
           {type === Export.GHGP && (
-            <ConsolatedGHGPDifference
-              study={study}
-              emissionFactorsWithParts={emissionFactorsWithParts}
-              validatedOnly={validatedOnly}
-              consolidatedResults={filteredResultsByPost}
-              ghgpResults={computedGHGPData}
-              studySite={studySite}
-              ghgpRules={ghgpRules}
-              navigateToEmissionSource={navigateToEmissionSource}
-              base={selectedGHGPTable}
-            />
-          )}
-          {type === Export.GHGP && (
-            <ElectricityBaseDifference
-              emissionSources={study.emissionSources.filter(
-                (emissionSource) => emissionSource.subPost === SubPost.Electricite,
-              )}
-              exports={study.exports?.types}
-              className="align-center"
-            />
+            <>
+              <ConsolatedGHGPDifference
+                study={study}
+                emissionFactorsWithParts={emissionFactorsWithParts}
+                validatedOnly={validatedOnly}
+                consolidatedResults={filteredResultsByPost}
+                ghgpResults={computedGHGPData}
+                studySite={studySite}
+                ghgpRules={ghgpRules}
+                navigateToEmissionSource={navigateToEmissionSource}
+                base={selectedGHGPTable}
+              />
+              <ElectricityBaseDifference
+                emissionSources={study.emissionSources.filter(
+                  (emissionSource) => emissionSource.subPost === SubPost.Electricite,
+                )}
+                exports={study.exports?.types}
+                className="align-center"
+              />
+            </>
           )}
         </div>
         {type !== Export.Beges &&
