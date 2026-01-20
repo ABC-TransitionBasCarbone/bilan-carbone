@@ -2218,7 +2218,7 @@
     "referenceYearMustBeBeforeOrEqualToStudyYear": "Reference year must be less than or equal to the study year"
   },
   "documentationUrl": {
-    "dependencyMatrix":"https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/2-scope-of-the-approach/2.5-identification-of-transition-risks-and-opportunities",
+    "dependencyMatrix": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/2-scope-of-the-approach/2.5-identification-of-transition-risks-and-opportunities",
     "flows": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/2-scope-of-the-approach/2.4-operational-boundary",
     "actionRelevance": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/5-transition-plan/5.2-building-the-action-plan#characterise-the-relevance-of-the-action",
     "dataType": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/4-accounting/4.2-method-for-collecting-activity-data",
