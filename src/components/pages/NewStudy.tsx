@@ -92,6 +92,9 @@ const NewStudyPage = ({
     },
   })
 
+  // DO NOT REMOVE. Necessary to keep form up to date after controlMode change
+  form.watch('controlMode')
+
   const { isLoading, sourceStudy } = useDuplicateStudy({ duplicateStudyId, form, user, caUnit })
 
   if (isLoading) {
