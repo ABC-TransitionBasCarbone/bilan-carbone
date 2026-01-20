@@ -1,5 +1,6 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
+import { getEmissionResults } from '@/services/emissionSource'
 import { Post } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { getDefaultRule, PostInfos } from '@/services/results/exports'
@@ -8,8 +9,9 @@ import { getEmissionFactor } from '@/utils/emissionSources'
 import { formatNumber } from '@/utils/number'
 import { hasDeprecationPeriod, STUDY_UNIT_VALUES } from '@/utils/study'
 import WarningAmberIcon from '@mui/icons-material/WarningAmberOutlined'
-import { Export, ExportRule, SubPost } from '@prisma/client'
+import { EmissionFactorBase, Export, ExportRule, SubPost } from '@prisma/client'
 import { useCallback, useMemo } from 'react'
+import { EnergiesIcon } from '../infography/icons/energies'
 import ConsolidatedExportDifference, { calculateEmissionSourcesDifference } from './ConsolidatedExportDifference'
 import ExportDifferenceItems from './ExportDifferenceItems'
 
@@ -22,6 +24,7 @@ interface Props {
   studySite: string
   ghgpRules: ExportRule[]
   navigateToEmissionSource: (emissionSourceId: string, subPost: SubPost) => void
+  base: EmissionFactorBase
 }
 
 const ConsolatedGHGPDifference = ({
@@ -33,6 +36,7 @@ const ConsolatedGHGPDifference = ({
   studySite,
   ghgpRules,
   navigateToEmissionSource,
+  base,
 }: Props) => {
   const unitValue = STUDY_UNIT_VALUES[study.resultsUnit]
 
@@ -110,8 +114,6 @@ const ConsolatedGHGPDifference = ({
     [emissionSourcesForSelectedSite, isEmissionSourceFiltered, study.startDate],
   )
 
-  console.log('immobilisation : ', immobilisation)
-
   const immobilisationDifference = useMemo(
     () => calculateEmissionSourcesDifference(immobilisation, emissionFactorsWithParts, environment, unitValue),
     [immobilisation, emissionFactorsWithParts, unitValue, environment],
@@ -173,6 +175,53 @@ const ConsolatedGHGPDifference = ({
     }, 0)
   }, [otherGas, emissionFactorsWithParts, unitValue])
 
+  const marketBased = useMemo(
+    () =>
+      emissionSourcesForSelectedSite.filter((emissionSource) => {
+        if (isEmissionSourceFiltered(emissionSource)) {
+          return false
+        }
+
+        const emissionFactor = getEmissionFactor<EmissionFactorWithParts>(emissionSource, emissionFactorsWithParts)
+        return emissionFactor && emissionFactor.base && emissionFactor.base === EmissionFactorBase.MarketBased
+      }),
+    [emissionFactorsWithParts, emissionSourcesForSelectedSite, isEmissionSourceFiltered],
+  )
+
+  const marketBasedDifference = useMemo(() => {
+    if (base === EmissionFactorBase.LocationBased) {
+      return 0
+    }
+    const locationBased = emissionSourcesForSelectedSite.filter((emissionSource) => {
+      if (isEmissionSourceFiltered(emissionSource)) {
+        return false
+      }
+
+      const emissionFactor = getEmissionFactor<EmissionFactorWithParts>(emissionSource, emissionFactorsWithParts)
+      return emissionFactor && emissionFactor.base && emissionFactor.base === EmissionFactorBase.LocationBased
+    })
+
+    const locationBasedValue = locationBased.reduce(
+      (total, emissionSource) => total + getEmissionResults(emissionSource, environment).emissionValue,
+      0,
+    )
+
+    const marketBasedValue = marketBased.reduce(
+      (total, emissionSource) => total + getEmissionResults(emissionSource, environment).emissionValue,
+      0,
+    )
+
+    return (marketBasedValue - locationBasedValue) / unitValue
+  }, [
+    base,
+    emissionSourcesForSelectedSite,
+    marketBased,
+    unitValue,
+    isEmissionSourceFiltered,
+    emissionFactorsWithParts,
+    environment,
+  ])
+
   return (
     <ConsolidatedExportDifference
       study={study}
@@ -184,7 +233,8 @@ const ConsolatedGHGPDifference = ({
         missingCaractDifference +
         immobilisationDifference +
         otherEmissionsDifference +
-        otherGasDifference
+        otherGasDifference +
+        marketBasedDifference
       }
     >
       {hasUtilisationEnDependance && (
@@ -246,6 +296,19 @@ const ConsolatedGHGPDifference = ({
           value={formatNumber(otherGasDifference, 0)}
           resultsUnit={study.resultsUnit}
           navigateToEmissionSource={navigateToEmissionSource}
+        />
+      )}
+      {marketBasedDifference > 0 && (
+        <ExportDifferenceItems
+          title="marketBasedTitle"
+          descriptions={['marketBased']}
+          emissionSources={marketBased}
+          exportType={Export.GHGP}
+          studySite={studySite}
+          value={formatNumber(marketBasedDifference, 0)}
+          resultsUnit={study.resultsUnit}
+          navigateToEmissionSource={navigateToEmissionSource}
+          Icon={EnergiesIcon}
         />
       )}
     </ConsolidatedExportDifference>

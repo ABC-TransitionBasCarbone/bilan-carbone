@@ -394,6 +394,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
               studySite={studySite}
               ghgpRules={ghgpRules}
               navigateToEmissionSource={navigateToEmissionSource}
+              base={selectedGHGPTable}
             />
           )}
           {type === Export.GHGP && (
