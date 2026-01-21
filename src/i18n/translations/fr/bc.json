@@ -1691,8 +1691,8 @@
       "difference": {
         "warning": "Attention, vos kWh market based ne sont pas égaux à ceux en location based.",
         "explanation": "Explication",
-        "title": "titre Gabriel",
-        "description": "description Gabriel"
+        "title": "Erreur - Le nombre de kWh pris en compte diffère entre la méthode location-based et la méthode market-based",
+        "description": "Le GHG Protocol exige que vous ayez une double comptabilisation de l'électricité consommée, d'une part en location-based et d'autre part en market-based. Pour cela il vous suffit de comptabiliser deux fois vos kWh d'énergie consommés, une fois via des facteurs d'émission dédiés au <green>location-based</green>, et une seconde fois via des facteurs d'émission dédiés au <purple>market-based</purple>. Vous devez comptabiliser le même nombre de kWh dans les deux méthodes, ce qui n'est pas le cas actuellement."
       }
     },
     "missingQualities": {
