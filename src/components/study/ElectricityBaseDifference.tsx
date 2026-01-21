@@ -44,7 +44,12 @@ const ElectricityBaseDifference = ({ emissionSources, validatedOnly = false, exp
         tModal="emissionFactors.base.difference"
         className={styles.helpIcon}
       >
-        {t('description')}
+        <p>
+          {t.rich('description', {
+            green: (children) => <span style={{ color: 'var(--mui-palette-ghgp-main)' }}>{children}</span>,
+            purple: (children) => <span style={{ color: 'var(--mui-palette-ghgp-complementary)' }}>{children}</span>,
+          })}
+        </p>
       </GlossaryIconModal>
     </div>
   ) : null

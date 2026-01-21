@@ -1666,8 +1666,8 @@
       "difference": {
         "warning": "Warning, your market based kWh are not equal to the location based ones.",
         "explanation": "Explanation",
-        "title": "titre Gabriel",
-        "description": "description Gabriel"
+        "title": "Error - The number of kWh taken into account differs between the location-based method and the market-based method",
+        "description": "The GHG-Protocol requires you to double count your electricity consumption, once using location-based factors and once using market-based factors. To do this, you simply need to account for your kWh of energy consumed twice, once using emission factors dedicated to <green>location-based</green> consumption, and a second time using emission factors dedicated to <purple>market-based</purple> consumption. You must account for the same number of kWh in both methods, which is not currently the case."
       }
     },
     "missingQualities": {
