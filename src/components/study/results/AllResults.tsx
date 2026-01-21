@@ -124,9 +124,9 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     return false
   }, [environment, exports])
 
-  // Get withDepValue for BEGES table (only needed if BEGES export exists)
+  // Get withDepValue for Export tables (only needed if at least 1 export exists)
   const { withDepValue } = useMemo(() => {
-    if (!exports?.types?.includes(Export.Beges)) {
+    if (!exports?.types?.length) {
       return { withDepValue: 0 }
     }
     return getDetailedEmissionResults(
