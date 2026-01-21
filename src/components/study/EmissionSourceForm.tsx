@@ -76,7 +76,7 @@ interface Props {
   environment: Environment
   caracterisations: EmissionSourceCaracterisation[]
   displayCaracterisation: boolean
-  displayConstructionYear: boolean
+  hasGHGPExport: boolean
   status: EmissionSourcesStatus
   studySites: FullStudy['sites']
   isFromOldImport: boolean
@@ -100,7 +100,7 @@ const EmissionSourceForm = ({
   selectedFactor,
   caracterisations,
   displayCaracterisation,
-  displayConstructionYear,
+  hasGHGPExport,
   status,
   studySites,
   isFromOldImport,
@@ -305,7 +305,7 @@ const EmissionSourceForm = ({
                   />
                   <div className={styles.unit}>{t('form.years')}</div>
                 </div>
-                {displayConstructionYear && (
+                {hasGHGPExport && (
                   <FormControl className="grow">
                     <DatePicker
                       label={`${t('form.constructionYear')} *`}
@@ -412,7 +412,7 @@ const EmissionSourceForm = ({
                 )}
               </>
             )}
-            {!!selectedFactor.base && (
+            {hasGHGPExport && !!selectedFactor.base && (
               <div className="ml-2">
                 <BaseChip base={selectedFactor.base} />
               </div>

@@ -42,7 +42,7 @@ interface Props {
   importVersions: ImportVersionForFilters[]
   studyId: string
   update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | Date | null) => void
-  displayConstructionYear: boolean
+  hasGHGPExport: boolean
 }
 
 const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) =>
@@ -61,7 +61,7 @@ const EmissionSourceContributorForm = ({
   importVersions,
   studyId,
   update,
-  displayConstructionYear,
+  hasGHGPExport,
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tResultUnits = useTranslations('study.results.units')
@@ -128,7 +128,7 @@ const EmissionSourceContributorForm = ({
                 />
                 <div className={styles.unit}>{t('form.years')}</div>
               </div>
-              {displayConstructionYear && (
+              {hasGHGPExport && (
                 <DatePicker
                   label={`${t('form.constructionYear')} *`}
                   slotProps={{

@@ -47,6 +47,7 @@ interface Props {
   setAction: (action: 'edit' | 'delete' | undefined) => void
   selectEmissionFactor?: (emissionFactor: EmissionFactorWithMetaData) => void
   hasActiveLicence: boolean
+  hasGHGPExport: boolean
 }
 export const EmissionFactorsTable = ({
   data,
@@ -59,6 +60,7 @@ export const EmissionFactorsTable = ({
   setAction,
   selectEmissionFactor,
   hasActiveLicence,
+  hasGHGPExport,
 }: Props) => {
   const t = useTranslations('emissionFactors.table')
   const tResultUnits = useTranslations('study.results.units')
@@ -122,7 +124,7 @@ export const EmissionFactorsTable = ({
         accessorKey: 'id',
         cell: ({ row }) => (
           <div className="flex">
-            {!!row.original.base && (
+            {hasGHGPExport && !!row.original.base && (
               <div className="mr-2">
                 <BaseChip base={row.original.base} />
               </div>
@@ -146,6 +148,7 @@ export const EmissionFactorsTable = ({
     setTargetedEmission,
     setAction,
     hasActiveLicence,
+    hasGHGPExport,
   ])
 
   const table = useReactTable({
