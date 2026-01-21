@@ -12,8 +12,14 @@ jest.mock('../components/pages/TrajectoryReductionPage', () => ({
 }))
 
 import { TrajectoryDataPoint } from '@/components/study/transitionPlan/TrajectoryGraph'
-import { TRAJECTORY_SNBC_GENERAL_ID } from '@/constants/trajectories'
-import { createSectenData } from './secten.test-utils'
+import {
+  SNBC_SECTOR_TARGET_EMISSIONS,
+  TRAJECTORY_SNBC_ENERGY_ID,
+  TRAJECTORY_SNBC_GENERAL_ID,
+  TRAJECTORY_SNBC_TRANSPORTATION_ID,
+} from '@/constants/trajectories'
+import { createSectenData, createSectenDataWithSectors } from './secten.test-utils'
+import { calculateSNBCTrajectory } from './snbc'
 import { calculateTrajectoryIntegral, getSNBCData, PastStudy } from './trajectory'
 
 const STANDARD_STUDY_EMISSIONS = 1000
@@ -248,6 +254,101 @@ describe('SNBC Trajectory', () => {
 
         expect(relativeDifference).toBeLessThan(1)
       })
+    })
+  })
+
+  describe('SNBC Sectoral Trajectories', () => {
+    test('energy sector trajectory has 2015 as intermediate target year', () => {
+      const sectenData = createSectenDataWithSectors()
+      const studyEmissions = STANDARD_STUDY_EMISSIONS
+      const studyStartYear = 2010
+      const energyTargetEmissions = SNBC_SECTOR_TARGET_EMISSIONS[TRAJECTORY_SNBC_ENERGY_ID]
+
+      const secten2010 = sectenData.find((s) => s.year === 2010)
+      if (!secten2010) {
+        throw new Error('Secten 2010 not found')
+      }
+
+      const expectedEnergyReductionRates = {
+        rateTo2015: (secten2010.energy - energyTargetEmissions[2015]) / secten2010.energy / (2015 - 2010),
+        rateTo2030:
+          (energyTargetEmissions[2015] - energyTargetEmissions[2030]) / energyTargetEmissions[2015] / (2030 - 2015),
+        rateTo2050:
+          (energyTargetEmissions[2030] - energyTargetEmissions[2050]) / energyTargetEmissions[2030] / (2050 - 2030),
+      }
+
+      const yearlyReduction2015 = studyEmissions * expectedEnergyReductionRates.rateTo2015
+      const expectedValue2015 = studyEmissions - yearlyReduction2015 * (2015 - 2010)
+
+      const yearlyReduction2030 = expectedValue2015 * expectedEnergyReductionRates.rateTo2030
+      const expectedValue2030 = expectedValue2015 - yearlyReduction2030 * (2030 - 2015)
+
+      const yearlyReduction2050 = expectedValue2030 * expectedEnergyReductionRates.rateTo2050
+      const expectedValue2050 = expectedValue2030 - yearlyReduction2050 * (2050 - 2030)
+
+      const trajectory = calculateSNBCTrajectory(
+        {
+          studyEmissions,
+          studyStartYear,
+          sectenData,
+          pastStudies: [],
+          displayCurrentStudyValueOnTrajectory: true,
+        },
+        'energy',
+      )
+
+      expect(trajectory.length).toBeGreaterThan(0)
+      const value2015 = getValue(trajectory, 2015)
+      const value2030 = getValue(trajectory, 2030)
+      const value2050 = getValue(trajectory, 2050)
+
+      expect(value2015).toBeCloseTo(expectedValue2015, 0)
+      expect(value2030).toBeCloseTo(expectedValue2030, 0)
+      expect(value2050).toBeCloseTo(expectedValue2050, 0)
+    })
+
+    test('transportation sector after 2015 applies proper sector reduction rates', () => {
+      const sectenData = createSectenDataWithSectors()
+      const studyEmissions = STANDARD_STUDY_EMISSIONS
+      const studyStartYear = 2020
+      const transportationTargetEmissions = SNBC_SECTOR_TARGET_EMISSIONS[TRAJECTORY_SNBC_TRANSPORTATION_ID]
+
+      const expectedTransportationReductionRates = {
+        rateTo2030:
+          (transportationTargetEmissions[2015] - transportationTargetEmissions[2030]) /
+          transportationTargetEmissions[2015] /
+          (2030 - 2015),
+        rateTo2050:
+          (transportationTargetEmissions[2030] - transportationTargetEmissions[2050]) /
+          transportationTargetEmissions[2030] /
+          (2050 - 2030),
+      }
+
+      const yearlyReduction2030 = studyEmissions * expectedTransportationReductionRates.rateTo2030
+      const expectedValue2030 = studyEmissions - yearlyReduction2030 * (2030 - 2020)
+
+      const yearlyReduction2050 = expectedValue2030 * expectedTransportationReductionRates.rateTo2050
+      const expectedValue2050 = expectedValue2030 - yearlyReduction2050 * (2050 - 2030)
+
+      const trajectory = calculateSNBCTrajectory(
+        {
+          studyEmissions,
+          studyStartYear,
+          sectenData,
+          pastStudies: [],
+          displayCurrentStudyValueOnTrajectory: true,
+        },
+        'transportation',
+      )
+
+      expect(trajectory.length).toBeGreaterThan(0)
+      const value2020 = getValue(trajectory, 2020)
+      const value2030 = getValue(trajectory, 2030)
+      const value2050 = getValue(trajectory, 2050)
+
+      expect(value2020).toBe(studyEmissions)
+      expect(value2030).toBeCloseTo(expectedValue2030, 0)
+      expect(value2050).toBeCloseTo(expectedValue2050, 0)
     })
   })
 })
