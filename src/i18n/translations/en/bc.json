@@ -934,7 +934,11 @@
           "unvalidatedSourcesWarning": "{count, plural, =1 {One emission source is not validated in the current study and is therefore not taken into account in the trajectory calculations.} other {{count} emission sources are not validated in the current study and are therefore not taken into account in the trajectory calculations.}}",
           "unvalidatedSourcesLinkedStudiesWarning": "{count, plural, =1 {One emission source is not validated in the following past study:} other {{count} emission sources are not validated in the following past studies:}}",
           "unvalidatedSourcesLinkedStudyCount": " ({count, plural, =1 {1 unvalidated source} other {{count} unvalidated sources}})",
-          "yearRangeLabel": "Visualization period"
+          "yearRangeLabel": "Visualization period",
+          "sbtiSnbc": "SBTI/SNBC Trajectories",
+          "custom": "My custom Trajectories",
+          "previousTrajectories": "Reference trajectories",
+          "currentTrajectories": "Current trajectories"
         },
         "linkedStudies": {
           "linked": "Linked studies",
