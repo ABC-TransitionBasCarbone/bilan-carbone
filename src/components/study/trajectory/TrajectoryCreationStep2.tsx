@@ -1,5 +1,8 @@
+import HelpIcon from '@/components/base/HelpIcon'
+import IconLabel from '@/components/base/IconLabel'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormTextField } from '@/components/form/TextField'
+import GlossaryModal from '@/components/modals/GlossaryModal'
 import { customRich } from '@/i18n/customRich'
 import { TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
 import { toTitleCase } from '@/utils/string'
@@ -9,41 +12,61 @@ import { TrajectoryType } from '@prisma/client'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
+import { useState } from 'react'
 import { Control, Controller } from 'react-hook-form'
 import ObjectiveCard from './ObjectiveCard'
 import styles from './TrajectoryCreationModal.module.css'
 
 interface Props {
   isSBTI: boolean
+  isSNBC: boolean
   trajectoryType: TrajectoryType
   control: Control<TrajectoryFormData>
   showTrajectoryTypeSelector: boolean
   handleModeSelect: (type: TrajectoryType) => void
   studyYear: number
+  snbcRates: { rateTo2030: number; rateFrom2030To2050: number } | null
 }
 
 const TrajectoryCreationStep2 = ({
   isSBTI,
+  isSNBC,
   trajectoryType,
   control,
   showTrajectoryTypeSelector,
   handleModeSelect,
   studyYear,
+  snbcRates,
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectoryModal')
-  const reductionRate = getReductionRatePerType(trajectoryType)
+  const tGlossary = useTranslations('study.transitionPlan.trajectoryModal.glossary')
+  const [glossary, setGlossary] = useState('')
+  const sbtiReductionRate = getReductionRatePerType(trajectoryType)
   const maxReferenceDate = dayjs().year(studyYear)
+
+  const snbcReductionRate2030 = snbcRates?.rateTo2030
+  const snbcReductionRate2050 = snbcRates?.rateFrom2030To2050
+
+  const rateTo2030 = isSNBC ? snbcReductionRate2030 : isSBTI ? sbtiReductionRate : undefined
+  const rateFrom2030To2050 = isSNBC ? snbcReductionRate2050 : isSBTI ? sbtiReductionRate : undefined
 
   const getMainTrajectoryType = () => {
     if (trajectoryType === TrajectoryType.SBTI_15 || trajectoryType === TrajectoryType.SBTI_WB2C) {
       return 'SBTI'
     }
-    return trajectoryType
+
+    if (trajectoryType === TrajectoryType.SNBC_GENERAL || trajectoryType === TrajectoryType.SNBC_SECTORAL) {
+      return 'SNBC'
+    }
+
+    return TrajectoryType.CUSTOM
   }
 
   const handleMainTypeChange = (value: string) => {
     if (value === 'SBTI') {
       handleModeSelect(TrajectoryType.SBTI_15)
+    } else if (value === 'SNBC') {
+      handleModeSelect(TrajectoryType.SNBC_GENERAL)
     } else {
       handleModeSelect(value as TrajectoryType)
     }
@@ -58,7 +81,7 @@ const TrajectoryCreationStep2 = ({
           </Typography>
           <RadioGroup row value={getMainTrajectoryType()} onChange={(e) => handleMainTypeChange(e.target.value)}>
             <FormControlLabel value="SBTI" control={<Radio />} label={t('sbti.title')} />
-            <FormControlLabel value={TrajectoryType.SNBC} control={<Radio />} label={t('snbc.title')} disabled />
+            <FormControlLabel value="SNBC" control={<Radio />} label={t('snbc.title')} />
             <FormControlLabel
               value={TrajectoryType.CUSTOM}
               control={<Radio />}
@@ -69,7 +92,7 @@ const TrajectoryCreationStep2 = ({
       ) : (
         <div className={classNames(styles.trajectoryOptionSelected, 'p1 wfit')}>
           <Typography variant="body1" fontWeight={600}>
-            {isSBTI ? t(`selectedTrajectory.${trajectoryType}`) : t('selectedTrajectory.CUSTOM')}
+            {isSBTI || isSNBC ? t(`selectedTrajectory.${trajectoryType}`) : t('selectedTrajectory.CUSTOM')}
           </Typography>
         </div>
       )}
@@ -92,17 +115,26 @@ const TrajectoryCreationStep2 = ({
         multiline
       />
 
-      <FormDatePicker
-        name="referenceYear"
-        label={t('referenceYear.label')}
-        control={control}
-        translation={t}
-        views={['year']}
-        minDate={dayjs('1990-01-01')}
-        maxDate={maxReferenceDate}
-        clearable
-        fullWidth
-      />
+      <div>
+        <IconLabel
+          icon={<HelpIcon onClick={() => setGlossary('referenceYear')} label={tGlossary('title')} />}
+          iconPosition="after"
+          className="mb-2"
+        >
+          <Typography fontWeight="bold">{t('referenceYear')}</Typography>
+        </IconLabel>
+        <FormDatePicker
+          name="referenceYear"
+          control={control}
+          translation={t}
+          views={['year']}
+          minDate={dayjs('1990-01-01')}
+          maxDate={maxReferenceDate}
+          clearable
+          fullWidth
+          disabled={isSBTI || isSNBC}
+        />
+      </div>
 
       {isSBTI && (
         <Controller
@@ -122,6 +154,33 @@ const TrajectoryCreationStep2 = ({
         />
       )}
 
+      {isSNBC && (
+        <Controller
+          name="trajectoryType"
+          control={control}
+          render={({ field }) => (
+            <div>
+              <Typography variant="body1" fontWeight={600}>
+                {t('snbcType.title')}
+              </Typography>
+              <RadioGroup row value={field.value} onChange={(e) => field.onChange(e.target.value)}>
+                <FormControlLabel
+                  value={TrajectoryType.SNBC_GENERAL}
+                  control={<Radio />}
+                  label={t('snbcType.generale')}
+                />
+                <FormControlLabel
+                  value={TrajectoryType.SNBC_SECTORAL}
+                  control={<Radio />}
+                  label={t('snbcType.sectorielle')}
+                  disabled
+                />
+              </RadioGroup>
+            </div>
+          )}
+        />
+      )}
+
       <div>
         <Typography variant="body1" fontWeight="bold" className="mb1">
           {t('objectives.title')}
@@ -131,25 +190,40 @@ const TrajectoryCreationStep2 = ({
             {customRich(t, 'objectives.sbtiDescription')}
           </Typography>
         )}
+        {isSNBC && (
+          <Typography variant="body2" color="textSecondary" className="mb1">
+            {customRich(t, 'objectives.snbcDescription')}
+          </Typography>
+        )}
 
         <div className="flex gapped15">
           <ObjectiveCard
-            name={isSBTI ? t('objectives.horizon2030') : ''}
-            reductionRate={reductionRate}
-            isEditable={!isSBTI}
+            name={isSBTI || isSNBC ? t('objectives.horizon2030') : ''}
+            reductionRate={rateTo2030}
+            isEditable={!isSBTI && !isSNBC}
             control={control}
             index={0}
           />
 
           <ObjectiveCard
-            name={isSBTI ? t('objectives.horizon2050') : ''}
-            reductionRate={reductionRate}
-            isEditable={!isSBTI}
+            name={isSBTI || isSNBC ? t('objectives.horizon2050') : ''}
+            reductionRate={rateFrom2030To2050}
+            isEditable={!isSBTI && !isSNBC}
             control={control}
             index={1}
           />
         </div>
       </div>
+      {glossary && (
+        <GlossaryModal
+          glossary={glossary}
+          label="trajectory-reference-year"
+          t={tGlossary}
+          onClose={() => setGlossary('')}
+        >
+          {tGlossary(`${glossary}Description`)}
+        </GlossaryModal>
+      )}
     </div>
   )
 }

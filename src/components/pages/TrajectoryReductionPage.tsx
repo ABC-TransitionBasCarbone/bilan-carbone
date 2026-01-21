@@ -450,6 +450,7 @@ const TrajectoryReductionPage = ({
               trajectory={null}
               isFirstCreation={trajectories.length === 0}
               studyYear={study.startDate.getFullYear()}
+              sectenData={sectenData}
             />
           )}
 

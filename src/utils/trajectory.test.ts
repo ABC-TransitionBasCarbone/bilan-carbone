@@ -458,6 +458,11 @@ describe('calculateTrajectory', () => {
       const rate = getReductionRatePerType(TrajectoryType.CUSTOM)
       expect(rate).toBeUndefined()
     })
+
+    test('should return undefined for SNBC_GENERAL type', () => {
+      const rate = getReductionRatePerType(TrajectoryType.SNBC_GENERAL)
+      expect(rate).toBeUndefined()
+    })
   })
 
   describe('calculateActionBasedTrajectory', () => {

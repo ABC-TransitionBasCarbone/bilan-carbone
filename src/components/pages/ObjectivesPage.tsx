@@ -4,6 +4,7 @@ import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { customRich } from '@/i18n/customRich'
+import { SectenInfo } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -18,9 +19,10 @@ interface Props {
   canEdit: boolean
   trajectories: TrajectoryWithObjectives[]
   transitionPlanId: string
+  sectenData: SectenInfo[]
 }
 
-const ObjectivesPage = ({ study, canEdit, trajectories, transitionPlanId }: Props) => {
+const ObjectivesPage = ({ study, canEdit, trajectories, transitionPlanId, sectenData }: Props) => {
   const t = useTranslations('study.transitionPlan.objectives')
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
@@ -63,6 +65,7 @@ const ObjectivesPage = ({ study, canEdit, trajectories, transitionPlanId }: Prop
               onTrajectoryCreation={() => router.refresh()}
               canEdit={canEdit}
               studyYear={study.startDate.getFullYear()}
+              sectenData={sectenData}
             />
 
             <TrajectoryObjectivesTable
@@ -72,6 +75,7 @@ const ObjectivesPage = ({ study, canEdit, trajectories, transitionPlanId }: Prop
               studyId={study.id}
               studyYear={study.startDate.getFullYear()}
               searchFilter={searchFilter}
+              sectenData={sectenData}
             />
           </div>
         </div>
