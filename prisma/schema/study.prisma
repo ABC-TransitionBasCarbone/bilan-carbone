@@ -44,6 +44,8 @@ enum EmissionSourceCaracterisation {
   NotHeldSupported
   NotHeldNotSupported
   UsedByIntermediary
+  OperatedCAS
+  HeldCAS
 }
 
 enum DayOfWeek {
@@ -306,6 +308,8 @@ model ExportRule {
   notHeldSupported        String? @map("not_held_supported")
   notHeldNotSupported     String? @map("not_held_not_supported")
   usedByIntermediary      String? @map("used_by_intermediary")
+  operatedCAS             String? @map("operated_cas")
+  heldCAS                 String? @map("held_cas")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")

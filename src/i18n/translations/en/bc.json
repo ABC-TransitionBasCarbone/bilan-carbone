@@ -44,6 +44,7 @@
     "NotOperated": "Not operated",
     "OperatedProcedeed": "Operated, procedeed",
     "OperatedFugitive": "Operated, fugitive",
+    "OperatedCAS": "Operated, LUC",
     "NotOperatedSupported": "Not operated, supported",
     "NotOperatedNotSupported": "Not operated, not supported",
     "Rented": "Rented",
@@ -53,6 +54,7 @@
     "NotHeldOther": "Not held, other",
     "HeldProcedeed": "Held, procedeed",
     "HeldFugitive": "Held, fugitive",
+    "HeldCAS": "Held, LUC",
     "NotHeldSupported": "Not held, supported",
     "NotHeldNotSupported": "Not held, not supported",
     "UsedByIntermediary": "Used by an intermediary"

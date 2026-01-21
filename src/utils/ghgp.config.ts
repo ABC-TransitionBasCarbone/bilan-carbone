@@ -257,6 +257,8 @@ export const ghgpRules = [
     heldFugitive: '1.4',
     notHeldSimpleRent: '3.8',
     notHeldOther: '3.other',
+    operatedCAS: '3.other',
+    heldCAS: '3.other',
   },
   {
     subPost: SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas,
@@ -299,6 +301,8 @@ export const ghgpRules = [
     heldFugitive: '1.4',
     notHeldSimpleRent: '3.8',
     notHeldOther: '3.other',
+    operatedCAS: '3.other',
+    heldCAS: '3.other',
   },
   { subPost: SubPost.MetauxPlastiquesEtVerre, operated: '3.1', held: '3.1' },
   { subPost: SubPost.PapiersCartons, operated: '3.1', held: '3.1' },

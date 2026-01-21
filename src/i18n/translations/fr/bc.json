@@ -44,6 +44,7 @@
     "NotOperated": "Non opéré",
     "OperatedProcedeed": "Opéré, procédé",
     "OperatedFugitive": "Opéré, fugitive",
+    "OperatedCAS": "Opéré, CAS",
     "NotOperatedSupported": "Non opéré, supporté",
     "NotOperatedNotSupported": "Non opéré, non supporté",
     "Rented": "Mis en location",
@@ -53,6 +54,7 @@
     "NotHeldOther": "Non détenu, autre",
     "HeldProcedeed": "Détenue, procédés",
     "HeldFugitive": "Détenue, fugitives",
+    "HeldCAS": "Détenue, CAS",
     "NotHeldSupported": "Non détenu, supporté",
     "NotHeldNotSupported": "Non détenue, non supporté",
     "UsedByIntermediary": "Utilisé par un intermédiaire"
