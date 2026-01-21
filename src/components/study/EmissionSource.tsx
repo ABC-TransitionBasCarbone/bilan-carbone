@@ -348,7 +348,7 @@ const EmissionSource = ({
                 environment={environment}
                 emissionFactorsForSubPost={emissionFactorsForSubPost}
                 importVersions={importVersions}
-                displayConstructionYear={!!study.exports?.types.some((studyExport) => studyExport === Export.GHGP)}
+                hasGHGPExport={!!study.exports?.types.some((studyExport) => studyExport === Export.GHGP)}
               />
             ) : (
               <EmissionSourceForm
@@ -365,7 +365,7 @@ const EmissionSource = ({
                 environment={environment}
                 caracterisations={caracterisations}
                 displayCaracterisation={!!study.exports?.types.length}
-                displayConstructionYear={!!study.exports?.types.some((studyExport) => studyExport === Export.GHGP)}
+                hasGHGPExport={!!study.exports?.types.some((studyExport) => studyExport === Export.GHGP)}
                 status={status}
                 studySites={study.sites}
                 isFromOldImport={isFromOldImport}

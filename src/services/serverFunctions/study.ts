@@ -2578,3 +2578,21 @@ export const addMissingSourceToStudies = async (source: Import) => {
     })),
   })
 }
+
+export const getStudyExports = async (studyId: string | undefined) =>
+  withServerResponse('getStudyExports', async () => {
+    if (!studyId) {
+      return []
+    }
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return study.exports?.types || []
+  })
