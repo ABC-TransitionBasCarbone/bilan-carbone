@@ -156,6 +156,7 @@ export const operationalCaracterisations: CaracterisationsBySubPost = {
   [SubPost.Agriculture]: [
     EmissionSourceCaracterisation.OperatedProcedeed,
     EmissionSourceCaracterisation.OperatedFugitive,
+    EmissionSourceCaracterisation.OperatedCAS,
     EmissionSourceCaracterisation.NotOperated,
   ],
   [SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas]: [
@@ -173,6 +174,7 @@ export const operationalCaracterisations: CaracterisationsBySubPost = {
   [SubPost.AutresEmissionsNonEnergetiques]: [
     EmissionSourceCaracterisation.OperatedProcedeed,
     EmissionSourceCaracterisation.OperatedFugitive,
+    EmissionSourceCaracterisation.OperatedCAS,
     EmissionSourceCaracterisation.NotOperated,
   ],
   [SubPost.MetauxPlastiquesEtVerre]: [EmissionSourceCaracterisation.Operated],
@@ -275,6 +277,7 @@ export const financialCaracterisations: CaracterisationsBySubPost = {
   [SubPost.Agriculture]: [
     EmissionSourceCaracterisation.HeldProcedeed,
     EmissionSourceCaracterisation.HeldFugitive,
+    EmissionSourceCaracterisation.HeldCAS,
     EmissionSourceCaracterisation.NotHeldSimpleRent,
     EmissionSourceCaracterisation.NotHeldOther,
   ],
@@ -296,6 +299,7 @@ export const financialCaracterisations: CaracterisationsBySubPost = {
   [SubPost.AutresEmissionsNonEnergetiques]: [
     EmissionSourceCaracterisation.HeldProcedeed,
     EmissionSourceCaracterisation.HeldFugitive,
+    EmissionSourceCaracterisation.HeldCAS,
     EmissionSourceCaracterisation.NotHeldSimpleRent,
     EmissionSourceCaracterisation.NotHeldOther,
   ],
