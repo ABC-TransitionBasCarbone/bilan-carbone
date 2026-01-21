@@ -1,5 +1,6 @@
 'use client'
 
+import TagChip from '@/components/base/TagChip'
 import {
   TRAJECTORY_15_ID,
   TRAJECTORY_SNBC_GENERAL_ID,
@@ -7,9 +8,10 @@ import {
 } from '@/components/pages/TrajectoryReductionPage'
 import { getYearsToDisplay, PastStudy, TrajectoryData } from '@/utils/trajectory'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { Accordion, AccordionDetails, AccordionSummary, Alert, Chip, Typography, Slider } from '@mui/material'
+import { Accordion, AccordionDetails, AccordionSummary, Alert, Slider, Typography } from '@mui/material'
 import { LineChart, LineSeries } from '@mui/x-charts/LineChart'
 import { TrajectoryType, type StudyResultUnit } from '@prisma/client'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -436,6 +438,7 @@ const TrajectoryGraph = ({
         if (withinThreshold) {
           series.push({
             dataType: 'previous',
+            trajectoryType: TrajectoryType.CUSTOM,
             data: mapDataToYears(previousTrajectory),
             label: t('actionBasedTrajectory') + ` (${previousTrajectoryStartYear})`,
             color: 'var(--mui-palette-primary-main)',
@@ -447,6 +450,7 @@ const TrajectoryGraph = ({
         } else {
           series.push({
             dataType: 'previous',
+            trajectoryType: TrajectoryType.CUSTOM,
             data: mapDataToYears(previousTrajectory),
             label: t('actionBasedTrajectory') + ` (${previousTrajectoryStartYear})`,
             color: 'color-mix(in srgb, var(--mui-palette-primary-main) 50%, transparent)',
@@ -463,6 +467,7 @@ const TrajectoryGraph = ({
       if (showCurrentTrajectory) {
         series.push({
           dataType: 'current',
+          trajectoryType: TrajectoryType.CUSTOM,
           data: currentData,
           label: actionBasedTrajectoryData.previousTrajectory
             ? t('actionBasedTrajectory') + ` (${studyStartYear})`
@@ -476,6 +481,7 @@ const TrajectoryGraph = ({
       } else {
         series.push({
           dataType: 'current',
+          trajectoryType: TrajectoryType.CUSTOM,
           data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
           label: studyName + ` (${studyStartYear})`,
           color: 'var(--mui-palette-primary-main)',
@@ -614,18 +620,18 @@ const TrajectoryGraph = ({
       <Accordion
         expanded={expandedFilters}
         onChange={() => setExpandedFilters(!expandedFilters)}
-        className={styles.filtersAccordion}
+        className={classNames(styles.filtersAccordion, 'mt1')}
       >
         <AccordionSummary expandIcon={<ExpandMoreIcon fontSize="large" />}>
           <div className="flex gapped1 wrap">
             {seriesCreated
               .filter((serie) => !filteredSeriesLabels.includes(serie.label as string))
               .map((serie: LineSeries) => (
-                <Chip
+                <TagChip
                   className="bold"
                   key={serie.label as string}
-                  label={serie.label as string}
-                  style={{ backgroundColor: serie.color }}
+                  name={serie.label as string}
+                  color={serie.color}
                   onDelete={
                     filteredSeriesLabels.includes(serie.label as string)
                       ? undefined
@@ -638,28 +644,25 @@ const TrajectoryGraph = ({
         <AccordionDetails>
           <div className="flex justify-between">
             <TrajectoryLegendTable
+              filteredSeriesLabels={filteredSeriesLabels}
+              studyStartYear={studyStartYear}
               title={t('sbtiSnbc')}
               data={seriesCreated
-                .filter(
-                  (serie) =>
-                    filteredSeriesLabels.includes(serie.label as string) &&
-                    serie.trajectoryType !== TrajectoryType.CUSTOM,
-                )
+                .filter((serie) => serie.trajectoryType !== TrajectoryType.CUSTOM)
                 .map((serie) => ({
                   label: serie.label as string,
                   dataType: serie.dataType,
                   color: serie.color as string,
                 }))}
               onClick={onFilterSeries}
+              border
             />
             <TrajectoryLegendTable
+              filteredSeriesLabels={filteredSeriesLabels}
+              studyStartYear={studyStartYear}
               title={t('custom')}
               data={seriesCreated
-                .filter(
-                  (serie) =>
-                    filteredSeriesLabels.includes(serie.label as string) &&
-                    serie.trajectoryType === TrajectoryType.CUSTOM,
-                )
+                .filter((serie) => serie.trajectoryType === TrajectoryType.CUSTOM)
                 .map((serie) => ({
                   label: serie.label as string,
                   dataType: serie.dataType,

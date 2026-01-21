@@ -1,24 +1,30 @@
-import { Chip, Typography } from '@mui/material'
+import TagChip from '@/components/base/TagChip'
+import { Typography } from '@mui/material'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { DataType } from './TrajectoryGraph'
+import styles from './TrajectoryLegendTable.module.css'
 
 interface Props {
+  studyStartYear: number
   title: string
   data: { label: string; dataType: DataType; color: string }[]
+  filteredSeriesLabels: string[]
   onClick: (label: string) => void
+  border?: boolean
 }
 
-const TrajectoryLegendTable = ({ title, data, onClick }: Props) => {
+const TrajectoryLegendTable = ({ title, data, onClick, studyStartYear, border, filteredSeriesLabels }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.graph')
   const previousTrajectories = data.filter((d) => d.dataType === 'previous')
   const currentTrajectories = data.filter((d) => d.dataType === 'current')
   const trajectories = [
-    { title: 'previousTrajectories', data: previousTrajectories },
-    { title: 'currentTrajectories', data: currentTrajectories },
+    { title: t('previousTrajectories'), data: previousTrajectories },
+    { title: `${t('currentTrajectories')} (${studyStartYear})`, data: currentTrajectories },
   ]
 
   return (
-    <div className="w50">
+    <div className={classNames('w50', border && styles.borderRight)}>
       <Typography variant="h5" component="h2" fontWeight={600} className="text-center mb-2">
         {title}
       </Typography>
@@ -28,14 +34,14 @@ const TrajectoryLegendTable = ({ title, data, onClick }: Props) => {
             group.data.length > 0 && (
               <div className="flex-col gapped1" key={group.title}>
                 <Typography fontWeight="bold" variant="h6">
-                  {t(group.title)}
+                  {group.title}
                 </Typography>
                 {group.data.map((item) => (
-                  <Chip
-                    className="bold"
+                  <TagChip
+                    className={classNames('bold', filteredSeriesLabels.includes(item.label) && styles.unselected)}
                     key={item.label as string}
-                    label={item.label as string}
-                    style={{ backgroundColor: item.color }}
+                    name={item.label as string}
+                    color={item.color}
                     onClick={() => onClick(item.label)}
                   />
                 ))}
