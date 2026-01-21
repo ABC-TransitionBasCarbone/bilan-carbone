@@ -94,3 +94,5 @@ export const hasAlwaysAccessToOrganizationVersion = isTilt
 export const hasStartLinkOnFootprints = isTilt
 
 export const hasAccessToPostTypeform = isTilt
+
+export const hasAccessToReductionObjectivesGlossary = isTilt
