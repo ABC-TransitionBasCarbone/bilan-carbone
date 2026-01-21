@@ -9,12 +9,19 @@ import { useMemo } from 'react'
 
 interface Props {
   type: Export
+  hasFinalClientCaracterisation: boolean
   activeFields: (keyof UpdateEmissionSourceCommand)[]
   onConfirm: (type: Export) => void
   onCancel: (type: Export) => void
 }
 
-const ExportActivationWarningModal = ({ type, activeFields, onConfirm, onCancel }: Props) => {
+const ExportActivationWarningModal = ({
+  type,
+  hasFinalClientCaracterisation,
+  activeFields,
+  onConfirm,
+  onCancel,
+}: Props) => {
   const t = useTranslations('study.perimeter.exportActivationWarning')
   const tExport = useTranslations('exports')
   const tFields = useTranslations('emissionSource.form')
@@ -54,7 +61,7 @@ const ExportActivationWarningModal = ({ type, activeFields, onConfirm, onCancel 
             warning: (children) => <span className="userWarning">{children}</span>,
           })}
         </p>
-        {type === Export.GHGP && <p className="mt-2">{t('finalClientDescription')}</p>}
+        {type === Export.GHGP && hasFinalClientCaracterisation && <p className="mt-2">{t('finalClientDescription')}</p>}
       </div>
     </Modal>
   )
