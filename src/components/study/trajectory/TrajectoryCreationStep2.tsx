@@ -26,7 +26,7 @@ interface Props {
   showTrajectoryTypeSelector: boolean
   handleModeSelect: (type: TrajectoryType) => void
   studyYear: number
-  snbcRates: { rateTo2030: number; rateFrom2030To2050: number } | null
+  snbcRates: { rateTo2030: number; rateTo2050: number } | null
 }
 
 const TrajectoryCreationStep2 = ({
@@ -46,7 +46,7 @@ const TrajectoryCreationStep2 = ({
   const maxReferenceDate = dayjs().year(studyYear)
 
   const snbcReductionRate2030 = snbcRates?.rateTo2030
-  const snbcReductionRate2050 = snbcRates?.rateFrom2030To2050
+  const snbcReductionRate2050 = snbcRates?.rateTo2050
 
   const rateTo2030 = isSNBC ? snbcReductionRate2030 : isSBTI ? sbtiReductionRate : undefined
   const rateFrom2030To2050 = isSNBC ? snbcReductionRate2050 : isSBTI ? sbtiReductionRate : undefined

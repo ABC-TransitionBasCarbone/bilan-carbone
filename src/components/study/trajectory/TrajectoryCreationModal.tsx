@@ -187,7 +187,7 @@ const TrajectoryCreationModal = ({
       }
       input.objectives = [
         { targetYear: 2030, reductionRate: snbcRates.rateTo2030 },
-        { targetYear: 2050, reductionRate: snbcRates.rateFrom2030To2050 },
+        { targetYear: 2050, reductionRate: snbcRates.rateTo2050 },
       ]
     }
 
