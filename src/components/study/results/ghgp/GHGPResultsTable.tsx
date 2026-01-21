@@ -45,7 +45,7 @@ const GHGPResultsTable = ({ study, withDepValue, data }: Props) => {
               return t('total')
             }
             const prefix = getGHGPRuleName(rule)
-            return rule.includes('.total') ? t('subTotal') : `${prefix}${t(`post.${rule}`)}`
+            return rule.includes('.total') ? t('subTotal') : `${prefix} ${t(`post.${rule}`)}`
           },
         },
         {
@@ -79,7 +79,6 @@ const GHGPResultsTable = ({ study, withDepValue, data }: Props) => {
     let cellClass = ''
     const isSubtotal = row.original.rule.includes('.total')
     const isTotalColumn = cell.column.id === 'total'
-    const isCO2bColumn = cell.column.id === 'co2b'
 
     if (cell.column.id === 'category') {
       cellClass = `${styles.categoryCell} ${commonStyles.categoryBold}`
