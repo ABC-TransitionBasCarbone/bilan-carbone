@@ -48,7 +48,7 @@
     "NotOperatedSupported": "Non opéré, supporté",
     "NotOperatedNotSupported": "Non opéré, non supporté",
     "Rented": "Mis en location",
-    "FinalClient": "Par le client final ou un intermédiaire",
+    "FinalClient": "Par le client final",
     "Held": "Détenu",
     "NotHeldSimpleRent": "Non détenu location simple",
     "NotHeldOther": "Non détenu, autre",

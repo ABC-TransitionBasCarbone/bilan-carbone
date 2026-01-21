@@ -227,6 +227,7 @@ export const operationalCaracterisations: CaracterisationsBySubPost = {
   [SubPost.UtilisationEnResponsabilite]: [
     EmissionSourceCaracterisation.Rented,
     EmissionSourceCaracterisation.FinalClient,
+    EmissionSourceCaracterisation.UsedByIntermediary,
   ],
   [SubPost.UtilisationEnDependance]: [],
   [SubPost.InvestissementsFinanciersRealises]: [EmissionSourceCaracterisation.Operated],
@@ -359,6 +360,7 @@ export const financialCaracterisations: CaracterisationsBySubPost = {
   [SubPost.UtilisationEnResponsabilite]: [
     EmissionSourceCaracterisation.Rented,
     EmissionSourceCaracterisation.FinalClient,
+    EmissionSourceCaracterisation.UsedByIntermediary,
   ],
   [SubPost.UtilisationEnDependance]: [],
   [SubPost.InvestissementsFinanciersRealises]: [EmissionSourceCaracterisation.Held],
