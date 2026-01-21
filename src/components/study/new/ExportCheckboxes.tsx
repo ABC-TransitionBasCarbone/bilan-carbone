@@ -37,7 +37,7 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
   const hasFinalClientCaracterisation = useMemo(
     () =>
       !!study &&
-      ghgpActivation &&
+      !!ghgpActivation &&
       study.createdAt < new Date(ghgpActivation) &&
       study.emissionSources.some((source) => source.caracterisation === EmissionSourceCaracterisation.FinalClient),
     [study],
@@ -133,6 +133,7 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
       {pendingExportCheck && (
         <ExportActivationWarningModal
           type={pendingExportCheck}
+          hasFinalClientCaracterisation={hasFinalClientCaracterisation}
           activeFields={currentStudySpecificFields || []}
           onConfirm={confirmExportActivation}
           onCancel={() => setPendingExportCheck(null)}
