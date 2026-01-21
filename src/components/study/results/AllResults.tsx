@@ -385,7 +385,6 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
                 nonSpecificMonetaryRatio={nonSpecificMonetaryRatio}
                 caUnit={caUnit}
                 computedResultsByTag={filteredResultsByTag}
-                exportType={type}
               />
               <ConsolidatedResults computedResults={filteredResultsByPost} resultsUnit={study.resultsUnit} />
             </>

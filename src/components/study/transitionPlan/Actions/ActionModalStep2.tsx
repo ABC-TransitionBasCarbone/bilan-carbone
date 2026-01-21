@@ -22,12 +22,7 @@ const ActionModalStep2 = ({ control }: Props) => {
   const tNature = useTranslations('study.transitionPlan.actions.nature')
   const tCategory = useTranslations('study.transitionPlan.actions.category')
   const tRelevance = useTranslations('study.transitionPlan.actions.relevance')
-
-  const methodologyUrl = useMemo(() => {
-    return locale === Locale.FR
-      ? process.env.NEXT_PUBLIC_ACTION_RELEVANCE_DOC_URL_FR || ''
-      : process.env.NEXT_PUBLIC_ACTION_RELEVANCE_DOC_URL_EN || ''
-  }, [locale])
+  const tDocumentation = useTranslations('documentationUrl')
 
   const relevanceImageSrc = useMemo(() => {
     return locale === Locale.FR ? '/img/action-relevance-fr.png' : '/img/action-relevance-en.png'
@@ -65,7 +60,7 @@ const ActionModalStep2 = ({ control }: Props) => {
           <p>
             {tRelevance.rich('learnMore', {
               link: (children) => (
-                <Link href={methodologyUrl} target="_blank" rel="noreferrer noopener">
+                <Link href={tDocumentation('actionRelevance')} target="_blank" rel="noreferrer noopener">
                   {children}
                 </Link>
               ),

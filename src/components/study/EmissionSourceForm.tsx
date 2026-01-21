@@ -112,6 +112,7 @@ const EmissionSourceForm = ({
   const tCategorisations = useTranslations('categorisations')
   const tGlossary = useTranslations('emissionSource.glossary')
   const tResultUnits = useTranslations('study.results.units')
+  const tDocumentation = useTranslations('documentationUrl')
   const tQuality = useTranslations('quality')
   const getUnitLabel = useUnitLabel()
   const [glossary, setGlossary] = useState('')
@@ -184,9 +185,9 @@ const EmissionSourceForm = ({
   const glossaryLink = useMemo(() => {
     switch (glossary) {
       case 'type':
-        return 'https://www.bilancarbone-methode.com/4-comptabilisation/4.2-methode-de-collecte-des-donnees-dactivite#les-differents-types-de-donnees-dactivite'
+        return 'dataType'
       case 'quality':
-        return 'https://www.bilancarbone-methode.com/4-comptabilisation/4.4-methode-destimation-des-incertitudes/4.4.2-comment-les-determiner#determination-qualitative'
+        return 'uncertainties'
       default:
         return ''
     }
@@ -542,7 +543,7 @@ const EmissionSourceForm = ({
           <p className="mb-2">
             {tGlossary.rich(`${glossary}Description`, {
               link: (children) => (
-                <Link href={glossaryLink} target="_blank" rel="noreferrer noopener">
+                <Link href={tDocumentation(glossaryLink)} target="_blank" rel="noreferrer noopener">
                   {children}
                 </Link>
               ),
