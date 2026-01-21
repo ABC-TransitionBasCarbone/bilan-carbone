@@ -38,6 +38,7 @@ import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Path } from 'react-hook-form'
 import Label from '../base/Label'
+import BaseChip from '../emissionFactor/BaseChip'
 import { ImportVersionForFilters } from '../emissionFactor/EmissionFactorsFilters'
 import styles from './EmissionSource.module.css'
 import EmissionSourceContributorForm from './EmissionSourceContributorForm'
@@ -259,8 +260,8 @@ const EmissionSource = ({
             </div>
             {/* emission factor */}
             {selectedFactor && (
-              <div className={classNames(styles.emissionFactor, 'flex-col justify-center align-center text-center')}>
-                <>
+              <div className="flex">
+                <div className={classNames(styles.emissionFactor, 'flex-col justify-center align-center text-center')}>
                   <p className="text-center">
                     {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor, environment))}
                   </p>
@@ -270,7 +271,12 @@ const EmissionSource = ({
                       ? selectedFactor.customUnit
                       : getUnitLabel(selectedFactor.unit)}
                   </p>
-                </>
+                </div>
+                {selectedFactor.base && (
+                  <div className="ml-2">
+                    <BaseChip base={selectedFactor.base} />
+                  </div>
+                )}
               </div>
             )}
             {/* result */}
