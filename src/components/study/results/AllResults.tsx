@@ -152,7 +152,24 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
 
     // Filter emission sources by selected subposts and tags
     const siteEmissionSources = getSiteEmissionSources(study.emissionSources, studySite)
-    const filteredEmissionSources = siteEmissionSources.filter((emissionSource) => {
+
+    // Helper function to filter emission sources
+    const filterEmissionSources = (
+      emissionSource: (typeof siteEmissionSources)[number],
+      utilisationEnDependanceMode: 'normal' | 'forceInclude' | 'forceExclude',
+    ): boolean => {
+      const isUtilisationEnDependance = emissionSource.subPost === SubPost.UtilisationEnDependance
+
+      if (isUtilisationEnDependance) {
+        if (utilisationEnDependanceMode === 'forceInclude') {
+          return true
+        }
+        if (utilisationEnDependanceMode === 'forceExclude') {
+          return false
+        }
+        // 'normal' mode: continue with normal filtering
+      }
+
       const subPostStr = String(emissionSource.subPost)
       const matchesSubPost = selectedSubposts.length > 0 && selectedSubposts.includes(subPostStr)
 
@@ -162,12 +179,26 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       const matchesTag = (hasNoTags && untaggedLabelSelected) || hasSomeSelectedTag
 
       return matchesSubPost && matchesTag
-    })
+    }
 
+    // Real filtered values
+    const filteredEmissionSources = siteEmissionSources.filter((es) => filterEmissionSources(es, 'normal'))
     const filteredStudy = { ...study, emissionSources: filteredEmissionSources }
 
-    const filteredWithDep = computeResultsByPost(
-      filteredStudy,
+    // Exclude UtilisationEnDependance even if it matches filters
+    const filteredEmissionSourcesWithoutDepForced = siteEmissionSources.filter((es) =>
+      filterEmissionSources(es, 'forceExclude'),
+    )
+    const filteredStudyWithoutDepForced = { ...study, emissionSources: filteredEmissionSourcesWithoutDepForced }
+
+    // Include UtilisationEnDependance even if not in filters
+    const filteredEmissionSourcesWithDepForced = siteEmissionSources.filter((es) =>
+      filterEmissionSources(es, 'forceInclude'),
+    )
+    const filteredStudyWithDepForced = { ...study, emissionSources: filteredEmissionSourcesWithDepForced }
+
+    const filteredResultWithDep = computeResultsByPost(
+      filteredStudyWithDepForced,
       tPost,
       studySite,
       true,
@@ -177,11 +208,23 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       type,
     )
 
-    const filteredWithoutDep = computeResultsByPost(
-      filteredStudy,
+    const filteredResultWithoutDep = computeResultsByPost(
+      filteredStudyWithoutDepForced,
       tPost,
       studySite,
       false,
+      !!validatedOnly,
+      environmentPostMapping[study.organizationVersion.environment],
+      study.organizationVersion.environment,
+      type,
+    )
+
+    // Compute results using real filtered values
+    const filteredResult = computeResultsByPost(
+      filteredStudy,
+      tPost,
+      studySite,
+      true,
       !!validatedOnly,
       environmentPostMapping[study.organizationVersion.environment],
       study.organizationVersion.environment,
@@ -197,14 +240,14 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       t,
     )
 
-    const withDepForcedValue = filteredWithDep.find((r) => r.post === 'total')?.value || 0
+    const withDepForcedValue = filteredResultWithDep.find((r) => r.post === 'total')?.value || 0
     const withDepForced = convertValue(withDepForcedValue, StudyResultUnit.K, study.resultsUnit)
 
-    const withoutDepForcedValue = filteredWithoutDep.find((r) => r.post === 'total')?.value || 0
+    const withoutDepForcedValue = filteredResultWithoutDep.find((r) => r.post === 'total')?.value || 0
     const withoutDepForced = convertValue(withoutDepForcedValue, StudyResultUnit.K, study.resultsUnit)
 
     const isUtilisationEnDependanceSelected = selectedSubposts.includes(SubPost.UtilisationEnDependance)
-    const filteredResultsByPost = isUtilisationEnDependanceSelected ? filteredWithDep : filteredWithoutDep
+    const filteredResultsByPost = isUtilisationEnDependanceSelected ? filteredResult : filteredResultWithoutDep
 
     const total = filteredResultsByPost.find((r) => r.post === 'total')
     const monetaryRatio = calculateMonetaryRatio(total?.monetaryValue || 0, total?.value || 0)
