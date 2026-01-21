@@ -305,8 +305,7 @@ export const begesRules = [
   },
   {
     subPost: SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas,
-    operatedProcedeed: '1.5',
-    operatedFugitive: '1.5',
+    operated: '1.5',
     notOperated: '1.5',
     held: '1.5',
     notHeldSimpleRent: '4.4',

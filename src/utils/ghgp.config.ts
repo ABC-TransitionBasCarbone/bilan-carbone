@@ -261,13 +261,9 @@ export const ghgpRules = [
   {
     subPost: SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas,
     operated: '3.other',
-    operatedProcedeed: '3.other',
-    operatedFugitive: '3.other',
     notOperated: '3.other',
     held: '3.other',
-    heldProcedeed: '3.other',
-    heldFugitive: '3.other',
-    notHeldSimpleRent: '3.8',
+    notHeldSimpleRent: '3.other',
     notHeldOther: '3.other',
   },
   {
