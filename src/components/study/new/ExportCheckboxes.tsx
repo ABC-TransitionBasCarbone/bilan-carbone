@@ -2,7 +2,7 @@ import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { updateStudySpecificExportFields } from '@/services/serverFunctions/study'
 import { exportSpecificFields, getAllSpecificFieldsForExports } from '@/utils/study'
-import { ControlMode, Export } from '@prisma/client'
+import { ControlMode, EmissionSourceCaracterisation, Export } from '@prisma/client'
 import { useCallback, useMemo, useState } from 'react'
 import ExportActivationWarningModal from './ExportActivationWarningModal'
 import ExportCheckbox from './ExportCheckbox'
@@ -22,6 +22,8 @@ interface Props {
   duplicateStudyId?: string | null
 }
 
+const ghgpActivation = process.env.NEXT_PUBLIC_GHGP_ACTIVATION_DATE
+
 const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, duplicateStudyId }: Props) => {
   const { callServerFunction } = useServerFunction()
   const [pendingExportCheck, setPendingExportCheck] = useState<Export | null>(null)
@@ -30,6 +32,14 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
 
   const hasValidatedSources = useMemo(
     () => !!study && study.emissionSources.some((source) => source.validated),
+    [study],
+  )
+  const hasFinalClientCaracterisation = useMemo(
+    () =>
+      !!study &&
+      ghgpActivation &&
+      study.createdAt < new Date(ghgpActivation) &&
+      study.emissionSources.some((source) => source.caracterisation === EmissionSourceCaracterisation.FinalClient),
     [study],
   )
 
@@ -58,7 +68,10 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
     const typeFields = exportSpecificFields[type]
     if (checked) {
       // Mandatoryfields added, show warning message
-      if (typeFields.some((field) => !currentStudySpecificFields.includes(field)) && hasValidatedSources) {
+      if (
+        (typeFields.some((field) => !currentStudySpecificFields.includes(field)) && hasValidatedSources) ||
+        (type === Export.GHGP && hasFinalClientCaracterisation)
+      ) {
         setPendingExportCheck(type)
       } else {
         onChange(values.exports.concat(type))
