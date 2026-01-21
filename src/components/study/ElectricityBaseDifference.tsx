@@ -3,7 +3,7 @@ import { EmissionFactorBase, Export, Unit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import GlossaryIconModal from '../modals/GlossaryIconModal'
-
+import styles from './ElectricityBaseDifference.module.css'
 interface Props {
   emissionSources: FullStudy['emissionSources']
   validatedOnly?: boolean
@@ -35,14 +35,14 @@ const ElectricityBaseDifference = ({ emissionSources, validatedOnly = false, exp
   const marketValue = getValue(marketSources, validatedOnly)
 
   return exports && exports.includes(Export.GHGP) && locationValue !== marketValue ? (
-    <div className={classNames(className, 'flex warning')}>
+    <div className={classNames(className, 'flex error bold')}>
       <span className="mr-2">{t('warning')}</span>
       <GlossaryIconModal
         title="title"
         iconLabel="explanation"
         label="electricity-base-difference"
         tModal="emissionFactors.base.difference"
-        className="warning"
+        className={styles.helpIcon}
       >
         {t('description')}
       </GlossaryIconModal>
