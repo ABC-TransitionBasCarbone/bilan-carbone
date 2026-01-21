@@ -671,6 +671,7 @@
       "exportActivationWarning": {
         "title": "{type} Export Activation",
         "description": "You are about to activate the regulatory {type} export. When this export is enabled, you must fill in additionals fields ({fields}) in certain emission sources. As a result, <warning>activating this export will invalidate the affected emission sources</warning>. Do you want to continue?",
+        "finalClientDescription": "If you have emission sources characterised as \"By the final client or an intermediary\", we invite you to verify them, as GHG-P exports require greater precision. By default, the characterisation used is \"By the final client\".",
         "continue": "Continue",
         "cancel": "Cancel"
       },

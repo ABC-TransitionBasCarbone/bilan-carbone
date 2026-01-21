@@ -47,11 +47,14 @@ const ExportActivationWarningModal = ({ type, activeFields, onConfirm, onCancel 
       ]}
     >
       <div>
-        {t.rich('description', {
-          type: tExport(type),
-          fields: fields.map((field) => tFields(field)).join(', '),
-          warning: (children) => <span className="userWarning">{children}</span>,
-        })}
+        <p>
+          {t.rich('description', {
+            type: tExport(type),
+            fields: fields.map((field) => tFields(field)).join(', '),
+            warning: (children) => <span className="userWarning">{children}</span>,
+          })}
+        </p>
+        {type === Export.GHGP && <p className="mt-2">{t('finalClientDescription')}</p>}
       </div>
     </Modal>
   )

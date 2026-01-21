@@ -671,6 +671,7 @@
       "exportActivationWarning": {
         "title": "Activation de l'export {type}",
         "description": "Vous êtes sur le point d'activer l'export {type} règlementaire. Lorsque cet export est activé, vous devez renseigner des champs supplémentaires ({fields}) dans certaines sources d'émissions. En conséquence, <warning>l'activation de cet export dévalidera les sources d'émission concernées</warning>. Voulez-vous continuer ?",
+        "finalClientDescription": "Si vous avez des sources d'émission avec la caractérisation \"Par le client final ou un intermédiaire\", nous nous invitons à aller les vérifier car l'export GHG-P demande plus de précision. Par défaut, la caratérisation retenue est \"Par le client final\".",
         "continue": "Continuer",
         "cancel": "Annuler"
       },
