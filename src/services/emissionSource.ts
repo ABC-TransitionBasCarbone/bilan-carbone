@@ -159,8 +159,7 @@ export const operationalCaracterisations: CaracterisationsBySubPost = {
     EmissionSourceCaracterisation.NotOperated,
   ],
   [SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas]: [
-    EmissionSourceCaracterisation.OperatedProcedeed,
-    EmissionSourceCaracterisation.OperatedFugitive,
+    EmissionSourceCaracterisation.Operated,
     EmissionSourceCaracterisation.NotOperated,
   ],
   [SubPost.EmissionsLieesALaProductionDeFroid]: [
