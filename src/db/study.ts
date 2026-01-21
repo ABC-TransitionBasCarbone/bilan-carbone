@@ -1044,6 +1044,7 @@ export const deleteStudyComment = async (id: string) =>
 export const getEngagementActions = (studyId: string) =>
   prismaClient.engagementAction.findMany({
     where: { studyId },
+    include: { sites: { include: { site: true } } },
   })
 
 export const getEngagementActionById = (id: string) =>

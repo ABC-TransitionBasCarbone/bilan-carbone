@@ -87,7 +87,7 @@ import { mapCncToStudySite } from '@/utils/cnc'
 import { calculateDistanceFromParis } from '@/utils/distance'
 import { CA_UNIT_VALUES, defaultCAUnit, formatNumber } from '@/utils/number'
 import { canEditOrganizationVersion } from '@/utils/organization'
-import { withServerResponse } from '@/utils/serverResponse'
+import { IsSuccess, withServerResponse } from '@/utils/serverResponse'
 import {
   getAccountRoleOnStudy,
   getAllowedRolesFromDefaultRole,
@@ -2467,7 +2467,7 @@ export const editStudyComment = async (commentId: string, newComment: string, st
     })
   })
 
-export const addEngagementAction = async ({ studyId, ...command }: AddEngagementActionCommand) =>
+export const addEngagementAction = async ({ studyId, sites, ...command }: AddEngagementActionCommand) =>
   withServerResponse('addEngagementAction', async () => {
     const session = await dbActualizedAuth()
     if (!session || !session.user) {
@@ -2482,9 +2482,13 @@ export const addEngagementAction = async ({ studyId, ...command }: AddEngagement
     if (!hasAccessToEngagementActions(session.user.environment, study.simplified)) {
       throw new Error(NOT_AUTHORIZED)
     }
+    if (sites.length === 0) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
     await createEngagementAction({
       study: { connect: { id: studyId } },
+      sites: { connect: sites.map((siteId) => ({ id: siteId })) },
       ...command,
     })
   })
@@ -2508,7 +2512,9 @@ export const getEngagementActionsWithStudyId = async (studyId: string) =>
     return await getEngagementActions(studyId)
   })
 
-export const editEngagementAction = async (id: string, { studyId, ...command }: AddEngagementActionCommand) =>
+export type EngagementActionWithSites = IsSuccess<AsyncReturnType<typeof getEngagementActionsWithStudyId>>[number]
+
+export const editEngagementAction = async (id: string, { studyId, sites, ...command }: AddEngagementActionCommand) =>
   withServerResponse('editEngagementAction', async () => {
     const session = await dbActualizedAuth()
     if (!session || !session.user) {
@@ -2524,7 +2530,14 @@ export const editEngagementAction = async (id: string, { studyId, ...command }: 
       throw new Error(NOT_AUTHORIZED)
     }
 
-    await updateEngagementAction(id, command)
+    if (sites.length === 0) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await updateEngagementAction(id, {
+      sites: { set: sites.map((siteId) => ({ id: siteId })) },
+      ...command,
+    })
   })
 
 export const deleteEngagementAction = async (id: string, studyId: string) =>

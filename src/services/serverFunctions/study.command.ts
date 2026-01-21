@@ -215,6 +215,7 @@ export const AddEngagementActionCommandValidation = z.object({
   steps: z.string(),
   phase: z.enum(EngagementPhase),
   description: z.string(),
+  sites: z.array(z.uuid()).min(1),
 })
 
 export type AddEngagementActionCommand = z.infer<typeof AddEngagementActionCommandValidation>

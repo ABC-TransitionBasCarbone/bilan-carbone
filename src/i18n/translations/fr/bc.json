@@ -1212,6 +1212,7 @@
         "steps": "Étape",
         "target": "Cibles",
         "phase": "Phase de mobilisation",
+        "sites": "Sites",
         "date": "Date"
       },
       "modal": {
@@ -1226,6 +1227,7 @@
         "stepsPlaceholder": "Choississez les étapes de votre action",
         "target": "Cibles",
         "phase": "Phase de mobilisation",
+        "sites": "Sites",
         "date": "Date",
         "validate": "Valider"
       },

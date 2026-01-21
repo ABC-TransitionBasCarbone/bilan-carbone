@@ -2,7 +2,7 @@
 
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import { FullStudy } from '@/db/study'
-import { EngagementAction } from '@prisma/client'
+import { EngagementActionWithSites } from '@/services/serverFunctions/study'
 import { useTranslations } from 'next-intl'
 import Block from '../base/Block'
 import EngagementActions from '../study/engagement/EngagementActions'
@@ -10,7 +10,7 @@ import SelectStudySite from '../study/site/SelectStudySite'
 
 interface Props {
   study: FullStudy
-  actions: EngagementAction[]
+  actions: EngagementActionWithSites[]
 }
 
 const EngagementActionsPage = ({ study, actions }: Props) => {
@@ -35,7 +35,7 @@ const EngagementActionsPage = ({ study, actions }: Props) => {
       />
       <Block title={t('title')} as="h2" rightComponent={<SelectStudySite sites={study.sites} siteSelectionDisabled />}>
         <div className="flex-col gapped2">
-          <EngagementActions actions={actions} studyId={study.id} />
+          <EngagementActions actions={actions} study={study} />
         </div>
       </Block>
     </>

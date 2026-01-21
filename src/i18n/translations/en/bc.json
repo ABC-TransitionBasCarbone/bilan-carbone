@@ -1212,7 +1212,8 @@
         "steps": "Steps",
         "target": "Target",
         "phase": "Phase",
-        "date": "Date"
+        "date": "Date",
+        "sites": "Sites"
       },
       "modal": {
         "add": "Add an action",
@@ -1227,6 +1228,7 @@
         "target": "Targets",
         "phase": "Mobilization phase",
         "date": "Date",
+        "sites": "Sites",
         "validate": "Validate"
       },
       "targets": {
