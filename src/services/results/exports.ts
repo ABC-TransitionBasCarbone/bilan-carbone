@@ -146,7 +146,7 @@ export const computeResult = (
       if (emissionFactor.emissionFactorParts.length === 0) {
         // Pas de decomposition => on ventile selon la regle par default
         const post = getDefaultRule(subPostRules, caracterisation)
-        if (post) {
+        if (post && results[post]) {
           results[post].push({ ...getLine(value, emissionFactor), squaredStandardDeviation })
         }
       } else {
@@ -159,7 +159,7 @@ export const computeResult = (
             post = getDefaultRule(subPostRules, caracterisation)
           }
 
-          if (post) {
+          if (post && results[post]) {
             // Et on ajoute la valeur selon la composante quoi qu'il arrive
             results[post].push({ ...getLine(value, part), squaredStandardDeviation })
           }
