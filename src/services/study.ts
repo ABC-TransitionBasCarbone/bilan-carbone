@@ -3,6 +3,7 @@ import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy, getStudyById } from '@/db/study'
 import { Translations } from '@/types/translation'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
+import { getGHGPRuleName } from '@/utils/ghgp'
 import { getPost } from '@/utils/post'
 import {
   calculateMonetaryRatio,
@@ -476,20 +477,7 @@ const exportsData: Partial<Record<Export, IExportData>> = {
     rulesSpans: ghgpRulesSpans,
     gasCols: () => ['CO2', 'CH4', 'N2O', 'HFC', 'PFC', 'SF6'],
     gasFields: ['co2', 'ch4', 'n2o', 'hfc', 'pfc', 'sf6', 'total', 'co2b'] as const,
-    getRuleName: (rule: string) => {
-      let prefix = rule
-      if (prefix.substring(0, 1) === '4') {
-        prefix = `3${prefix.substring(1)}`
-      }
-      // specific case 3.09 (0 is added to put it before 3.10)
-      if (prefix.substring(2, 3) === '0') {
-        prefix = `3.${prefix.substring(3)}`
-      }
-      if (prefix.split('.')[1].includes('other')) {
-        prefix = ''
-      }
-      return prefix
-    },
+    getRuleName: getGHGPRuleName,
     getCategoryName: (category: string, t: Translations) => t(`category.${category}`),
   },
 }
@@ -578,10 +566,9 @@ export const formatStudyExportResultsForExport = (
         post = `${data.getRuleName(rule)}. ${tSpecificExport(`post.${rule}`)}`
       }
 
-      const gasValues = gasFields.map((field) => {
-        const value = (result[field] as number) || undefined
-        return formatEmissionValueForExport(value || 0, study.resultsUnit)
-      })
+      const gasValues = gasFields.map((field) =>
+        formatEmissionValueForExport((result[field] as number) || 0, study.resultsUnit),
+      )
 
       dataForExport.push([
         category === 'total' ? '' : data.getCategoryName(category, tSpecificExport),
