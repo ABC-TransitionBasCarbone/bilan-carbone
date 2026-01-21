@@ -51,6 +51,7 @@ const StudyPostsBlock = ({
   const tStudyPost = useTranslations('study.post')
   const tUnit = useTranslations('units')
   const tResultUnits = useTranslations('study.results.units')
+  const tBase = useTranslations('emissionFactors.base')
 
   if (!environment) {
     return null
@@ -93,6 +94,7 @@ const StudyPostsBlock = ({
               tPost,
               tQuality,
               tUnit,
+              tBase,
               tResultUnits,
               environment,
             )

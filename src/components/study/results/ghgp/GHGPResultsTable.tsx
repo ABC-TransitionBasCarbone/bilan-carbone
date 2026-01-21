@@ -4,6 +4,7 @@ import BaseTable from '@/components/base/Table'
 import { FullStudy } from '@/db/study'
 import { PostInfos } from '@/services/results/exports'
 import { rulesSpans } from '@/services/results/ghgp'
+import { getGHGPRuleName } from '@/utils/ghgp'
 import { formatEmission, STUDY_UNIT_VALUES } from '@/utils/study'
 import { Export } from '@prisma/client'
 import { Cell, ColumnDef, getCoreRowModel, Row, useReactTable } from '@tanstack/react-table'
@@ -43,22 +44,7 @@ const GHGPResultsTable = ({ study, withDepValue, data }: Props) => {
             if (rule === 'total') {
               return t('total')
             }
-            /**
-             * The structure is not designed to handle 3.X rules separated into two scopes.
-             * So it's separated into 3.X and 4.X and then corrected them to display what we want.
-             * That way, the processing is done automatically (cf allRules).
-             */
-            let prefix = `${rule} - `
-            if (prefix.substring(0, 1) === '4') {
-              prefix = `3${prefix.substring(1)}`
-            }
-            // specific case 3.09 (0 is added to put it before 3.10)
-            if (prefix.substring(2, 3) === '0') {
-              prefix = `3.${prefix.substring(3)}`
-            }
-            if (prefix.split('.')[1].includes('other')) {
-              prefix = ''
-            }
+            const prefix = getGHGPRuleName(rule)
             return rule.includes('.total') ? t('subTotal') : `${prefix}${t(`post.${rule}`)}`
           },
         },
