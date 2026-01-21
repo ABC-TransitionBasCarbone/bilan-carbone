@@ -28,9 +28,14 @@ const TagChip = ({
       key={id}
       className={classNames(styles.tag, className)}
       data-testid={dataTestId}
+      sx={{
+        '& [data-color-circle]': {
+          backgroundColor,
+        },
+      }}
       label={
         <div className="align-center gapped-2" style={{ minWidth: 0 }}>
-          <div className={classNames(styles.colorCircle, 'flex-cc')} style={{ backgroundColor }} />
+          <div data-color-circle className={classNames(styles.colorCircle, 'flex-cc')} />
           <span className={styles.tagText}>{name}</span>
         </div>
       }
