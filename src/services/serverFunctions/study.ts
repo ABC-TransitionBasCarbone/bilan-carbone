@@ -2607,5 +2607,9 @@ export const getStudyExports = async (studyId: string | undefined) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
+    if (!study || !getAccountRoleOnStudy(session.user, study)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
     return study.exports?.types || []
   })
