@@ -62,9 +62,6 @@ const EngagementActionModal = ({ action, open, onClose }: Props) => {
     reValidateMode: 'onChange',
     defaultValues: {
       studyId: studyId,
-      steps: '',
-      target: '',
-      description: '',
       date: new Date().toISOString(),
       ...convertedEngagementAction,
     },
@@ -135,7 +132,7 @@ const EngagementActionModal = ({ action, open, onClose }: Props) => {
                 : target || ''
             }
             name="target"
-            label={t('target')}
+            label={`${t('target')} *`}
             freeSolo
             onInputChange={(_, value) => {
               setValue('target', value || '')
@@ -155,7 +152,7 @@ const EngagementActionModal = ({ action, open, onClose }: Props) => {
                 : steps || ''
             }
             name="steps"
-            label={t('steps')}
+            label={`${t('steps')} *`}
             freeSolo
             onInputChange={(_, value) => {
               setValue('steps', value || '')
