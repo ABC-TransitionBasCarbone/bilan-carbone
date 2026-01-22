@@ -97,16 +97,169 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<Clickso
     input('restauration . déchets organiques . biodéchets enfouis . quantité'),
   ],
   TransportDesEleves: [
-    input('déplacements . transport des élèves . distance'),
-    input('déplacements . transport des élèves . moyen de transport'),
+    table(
+      'TransportDesEleves.question',
+      ['TransportDesEleves.moyenTransport', 'TransportDesEleves.distance'],
+      [
+        [
+          'déplacements . transport des élèves . avion court courrier',
+          'déplacements . transport des élèves . avion court courrier . distance',
+        ],
+        [
+          'déplacements . transport des élèves . avion moyen courrier',
+          'déplacements . transport des élèves . avion moyen courrier . distance',
+        ],
+        [
+          'déplacements . transport des élèves . avion long courrier',
+          'déplacements . transport des élèves . avion long courrier . distance',
+        ],
+        ['déplacements . transport des élèves . bus', 'déplacements . transport des élèves . bus . distance'],
+        [
+          'déplacements . transport des élèves . métro ou tram',
+          'déplacements . transport des élèves . métro ou tram . distance',
+        ],
+        [
+          'déplacements . transport des élèves . moto essence',
+          'déplacements . transport des élèves . moto essence . distance',
+        ],
+        [
+          'déplacements . transport des élèves . RER et transilien',
+          'déplacements . transport des élèves . RER et transilien . distance',
+        ],
+        ['déplacements . transport des élèves . TER', 'déplacements . transport des élèves . TER . distance'],
+        ['déplacements . transport des élèves . TGV', 'déplacements . transport des élèves . TGV . distance'],
+        [
+          'déplacements . transport des élèves . trottinette électrique',
+          'déplacements . transport des élèves . trottinette électrique . distance',
+        ],
+        [
+          'déplacements . transport des élèves . véhicule compact électrique',
+          'déplacements . transport des élèves . véhicule compact électrique . distance',
+        ],
+        [
+          'déplacements . transport des élèves . vélo électrique',
+          'déplacements . transport des élèves . vélo électrique . distance',
+        ],
+        [
+          'déplacements . transport des élèves . voiture individuelle diesel',
+          'déplacements . transport des élèves . voiture individuelle diesel . distance',
+        ],
+        [
+          'déplacements . transport des élèves . voiture individuelle essence',
+          'déplacements . transport des élèves . voiture individuelle essence . distance',
+        ],
+      ],
+    ),
   ],
   TransportDuPersonnel: [
-    input('déplacements . transport du personnel . distance'),
-    input('déplacements . transport du personnel . moyen de transport'),
+    table(
+      'TransportDuPersonnel.question',
+      ['TransportDuPersonnel.moyenTransport', 'TransportDuPersonnel.distance'],
+      [
+        [
+          'déplacements . transport du personnel . avion court courrier',
+          'déplacements . transport du personnel . avion court courrier . distance',
+        ],
+        [
+          'déplacements . transport du personnel . avion moyen courrier',
+          'déplacements . transport du personnel . avion moyen courrier . distance',
+        ],
+        [
+          'déplacements . transport du personnel . avion long courrier',
+          'déplacements . transport du personnel . avion long courrier . distance',
+        ],
+        ['déplacements . transport du personnel . bus', 'déplacements . transport du personnel . bus . distance'],
+        [
+          'déplacements . transport du personnel . métro ou tram',
+          'déplacements . transport du personnel . métro ou tram . distance',
+        ],
+        [
+          'déplacements . transport du personnel . moto essence',
+          'déplacements . transport du personnel . moto essence . distance',
+        ],
+        [
+          'déplacements . transport du personnel . RER et transilien',
+          'déplacements . transport du personnel . RER et transilien . distance',
+        ],
+        ['déplacements . transport du personnel . TER', 'déplacements . transport du personnel . TER . distance'],
+        ['déplacements . transport du personnel . TGV', 'déplacements . transport du personnel . TGV . distance'],
+        [
+          'déplacements . transport du personnel . trottinette électrique',
+          'déplacements . transport du personnel . trottinette électrique . distance',
+        ],
+        [
+          'déplacements . transport du personnel . véhicule compact électrique',
+          'déplacements . transport du personnel . véhicule compact électrique . distance',
+        ],
+        [
+          'déplacements . transport du personnel . vélo électrique',
+          'déplacements . transport du personnel . vélo électrique . distance',
+        ],
+        [
+          'déplacements . transport du personnel . voiture individuelle diesel',
+          'déplacements . transport du personnel . voiture individuelle diesel . distance',
+        ],
+        [
+          'déplacements . transport du personnel . voiture individuelle essence',
+          'déplacements . transport du personnel . voiture individuelle essence . distance',
+        ],
+      ],
+    ),
   ],
   VoyagesScolaires: [
-    input('déplacements . voyages scolaires . distance'),
-    input('déplacements . voyages scolaires . moyen de transport'),
+    table(
+      'VoyagesScolaires.question',
+      ['VoyagesScolaires.moyenTransport', 'VoyagesScolaires.distance'],
+      [
+        [
+          'déplacements . voyages scolaires . avion court courrier',
+          'déplacements . voyages scolaires . avion court courrier . distance',
+        ],
+        [
+          'déplacements . voyages scolaires . avion moyen courrier',
+          'déplacements . voyages scolaires . avion moyen courrier . distance',
+        ],
+        [
+          'déplacements . voyages scolaires . avion long courrier',
+          'déplacements . voyages scolaires . avion long courrier . distance',
+        ],
+        ['déplacements . voyages scolaires . bus', 'déplacements . voyages scolaires . bus . distance'],
+        [
+          'déplacements . voyages scolaires . métro ou tram',
+          'déplacements . voyages scolaires . métro ou tram . distance',
+        ],
+        [
+          'déplacements . voyages scolaires . moto essence',
+          'déplacements . voyages scolaires . moto essence . distance',
+        ],
+        [
+          'déplacements . voyages scolaires . RER et transilien',
+          'déplacements . voyages scolaires . RER et transilien . distance',
+        ],
+        ['déplacements . voyages scolaires . TER', 'déplacements . voyages scolaires . TER . distance'],
+        ['déplacements . voyages scolaires . TGV', 'déplacements . voyages scolaires . TGV . distance'],
+        [
+          'déplacements . voyages scolaires . trottinette électrique',
+          'déplacements . voyages scolaires . trottinette électrique . distance',
+        ],
+        [
+          'déplacements . voyages scolaires . véhicule compact électrique',
+          'déplacements . voyages scolaires . véhicule compact électrique . distance',
+        ],
+        [
+          'déplacements . voyages scolaires . vélo électrique',
+          'déplacements . voyages scolaires . vélo électrique . distance',
+        ],
+        [
+          'déplacements . voyages scolaires . voiture individuelle diesel',
+          'déplacements . voyages scolaires . voiture individuelle diesel . distance',
+        ],
+        [
+          'déplacements . voyages scolaires . voiture individuelle essence',
+          'déplacements . voyages scolaires . voiture individuelle essence . distance',
+        ],
+      ],
+    ),
   ],
   Fournitures: [
     input('achats . fournitures . petites fournitures . montant'),
