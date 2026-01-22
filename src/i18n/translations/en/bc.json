@@ -1100,6 +1100,12 @@
           "title": "Add a trajectory or reduction objectives",
           "description": "You have already created a reference trajectory but want to add others to test different hypotheses and ambition levels? You can create new trajectories, or add intermediate objectives for more detailed tracking without losing sight of the final goal!",
           "detailedInfo": "When you enter your first top-down trajectory, the associated objectives for 2030 and 2050 will be recorded in this table. You can then detail these objectives by adding additional intermediate targets, which can apply either to all categories and sites of the Carbon Assessment® (in which case the reductions will be calculated automatically to maintain consistency with the 2030 and 2050 objectives), or to specific categories and sites. You can also enter your projected revenue growth to obtain annual reductions that account for this growth. Finally, you can add other top-down trajectories, particularly to visualize different trajectories on the previous page before choosing the one you will follow."
+        },
+        "glossary": {
+          "label": "Glossary",
+          "title": "titre gabriel",
+          "description": "description gabriel",
+          "close": "Close"
         }
       },
       "actions": {
