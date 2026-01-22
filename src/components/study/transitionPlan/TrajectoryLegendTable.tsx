@@ -25,7 +25,7 @@ const TrajectoryLegendTable = ({ title, data, onClick, studyStartYear, border, f
 
   return (
     <div className={classNames('w50', border && styles.borderRight)}>
-      <Typography variant="h5" component="h2" fontWeight={600} className="text-center mb-2">
+      <Typography variant="body1" fontWeight={600} className="text-center mb-2">
         {title}
       </Typography>
       <div className="flex justify-around">
@@ -33,12 +33,19 @@ const TrajectoryLegendTable = ({ title, data, onClick, studyStartYear, border, f
           (group) =>
             group.data.length > 0 && (
               <div className="flex-col gapped1" key={group.title}>
-                <Typography fontWeight="bold" variant="h6">
+                <Typography fontWeight="bold" variant="body1">
                   {group.title}
                 </Typography>
                 {group.data.map((item) => (
                   <TagChip
-                    className={classNames('bold', filteredSeriesLabels.includes(item.label) && styles.unselected)}
+                    size="small"
+                    circleSize="0.8rem"
+                    fontSize="1rem"
+                    className={classNames(
+                      'bold',
+                      styles.chip,
+                      filteredSeriesLabels.includes(item.label) && styles.unselected,
+                    )}
                     key={item.label as string}
                     name={item.label as string}
                     color={item.color}
