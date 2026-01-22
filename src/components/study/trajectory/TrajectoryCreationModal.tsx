@@ -13,16 +13,20 @@ import { createTrajectorySchema, TrajectoryFormData } from '@/services/serverFun
 import { calculateSNBCReductionRates, getSNBCGeneralDisplayedReductionRates } from '@/utils/snbc'
 import { getYearFromDateStr } from '@/utils/time'
 import {
+  BaseObjective,
+  getCompensatedObjectives,
   getDefaultObjectivesForTrajectoryType,
   getDisplayedReferenceYearForTrajectoryType,
+  getReductionRatePerType,
+  PastStudy,
   SBTI_START_YEAR,
 } from '@/utils/trajectory'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { SectenInfo, TrajectoryType } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
-import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useEffect, useMemo, useState } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
 import TrajectoryCreationStep2 from './TrajectoryCreationStep2'
 
 const TrajectoryCreationStep1 = dynamic(() => import('./TrajectoryCreationStep1'), { ssr: false })
@@ -37,6 +41,8 @@ interface Props {
   isFirstCreation?: boolean
   studyYear: number
   sectenData: SectenInfo[]
+  studyEmissions?: number
+  pastStudies?: PastStudy[]
 }
 
 const defaultValues: TrajectoryFormData = {
@@ -59,6 +65,8 @@ const TrajectoryCreationModal = ({
   isFirstCreation = true,
   studyYear,
   sectenData,
+  studyEmissions = 0,
+  pastStudies = [],
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectoryModal')
   const isEditMode = !!trajectory
@@ -66,9 +74,13 @@ const TrajectoryCreationModal = ({
   const [isLoading, setIsLoading] = useState(false)
   const { callServerFunction } = useServerFunction()
 
-  const snbcRates = isEditMode
-    ? getSNBCGeneralDisplayedReductionRates(trajectory)
-    : calculateSNBCReductionRates(sectenData, studyYear)
+  const snbcRates = useMemo(
+    () =>
+      isEditMode
+        ? getSNBCGeneralDisplayedReductionRates(trajectory)
+        : calculateSNBCReductionRates(sectenData, studyYear),
+    [isEditMode, trajectory, sectenData, studyYear],
+  )
 
   const trajectorySchema = createTrajectorySchema()
 
@@ -101,6 +113,84 @@ const TrajectoryCreationModal = ({
   }, [trajectory, reset])
 
   const trajectoryType = watch('trajectoryType')
+
+  const isSBTI = trajectoryType === TrajectoryType.SBTI_15 || trajectoryType === TrajectoryType.SBTI_WB2C
+  const isSNBC = trajectoryType === TrajectoryType.SNBC_GENERAL || trajectoryType === TrajectoryType.SNBC_SECTORAL
+  const isCustom = trajectoryType === TrajectoryType.CUSTOM
+
+  const referenceYearStr = watch('referenceYear')
+  const referenceYear = referenceYearStr ? getYearFromDateStr(referenceYearStr) : null
+  // Use useWatch with control to properly track nested field changes
+  const objectives = useWatch({ control, name: 'objectives' })
+
+  const compensatedObjectives = useMemo(() => {
+    // For SBTI and SNBC, build objectives from rates since form objectives are empty
+    let objectivesToUse = objectives
+    if (isSBTI || isSNBC) {
+      const rateTo2030 = isSNBC ? snbcRates?.rateTo2030 : isSBTI ? getReductionRatePerType(trajectoryType) : undefined
+      const rateTo2050 = isSNBC ? snbcRates?.rateTo2050 : isSBTI ? getReductionRatePerType(trajectoryType) : undefined
+
+      if (rateTo2030 !== undefined && rateTo2050 !== undefined) {
+        objectivesToUse = [
+          { targetYear: '2030', reductionRate: rateTo2030 * 100 },
+          { targetYear: '2050', reductionRate: rateTo2050 * 100 },
+        ]
+      } else {
+        return null
+      }
+    }
+
+    const compensated = getCompensatedObjectives(
+      studyYear,
+      studyEmissions,
+      objectivesToUse,
+      trajectoryType,
+      pastStudies,
+      referenceYear,
+      isSBTI,
+      isSNBC,
+      isCustom,
+      sectenData,
+    )
+
+    if (!compensated) {
+      return null
+    }
+
+    // For SBTI/SNBC, return compensated directly (they only have 2 objectives and don't need to be mapped back)
+    if (isSBTI || isSNBC) {
+      return compensated
+    }
+
+    // For custom trajectories, map compensated objectives back to their original positions
+    // This ensures empty objectives get null, maintaining correct indexing
+    const result: (BaseObjective | null)[] = []
+    let compensatedIndex = 0
+
+    objectives.forEach((obj) => {
+      if (obj.targetYear && obj.reductionRate !== null && obj.reductionRate !== undefined) {
+        result.push(compensated[compensatedIndex] || null)
+        compensatedIndex++
+      } else {
+        result.push(null)
+      }
+    })
+
+    return result
+  }, [
+    studyYear,
+    studyEmissions,
+    objectives,
+    trajectoryType,
+    pastStudies,
+    referenceYear,
+    isSBTI,
+    isSNBC,
+    isCustom,
+    sectenData,
+    snbcRates?.rateTo2030,
+    snbcRates?.rateTo2050,
+  ])
 
   const steps = [t('steps.chooseTrajectory'), t('steps.defineObjectives')]
 
@@ -205,8 +295,6 @@ const TrajectoryCreationModal = ({
     })
   }
 
-  const isSBTI = trajectoryType === TrajectoryType.SBTI_15 || trajectoryType === TrajectoryType.SBTI_WB2C
-  const isSNBC = trajectoryType === TrajectoryType.SNBC_GENERAL || trajectoryType === TrajectoryType.SNBC_SECTORAL
   const isStep1Valid = trajectoryType !== null
 
   if (isEditMode || !isFirstCreation) {
@@ -243,6 +331,7 @@ const TrajectoryCreationModal = ({
             handleModeSelect={handleModeSelect}
             studyYear={studyYear}
             snbcRates={snbcRates}
+            compensatedObjectives={compensatedObjectives}
           />
         )}
       </Modal>
@@ -286,6 +375,7 @@ const TrajectoryCreationModal = ({
           handleModeSelect={handleModeSelect}
           studyYear={studyYear}
           snbcRates={snbcRates}
+          compensatedObjectives={compensatedObjectives}
         />
       )}
     </ModalStepper>

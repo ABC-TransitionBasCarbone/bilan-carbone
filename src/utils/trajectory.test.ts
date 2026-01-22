@@ -3,6 +3,7 @@ import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { expect } from '@jest/globals'
 import { Action, StudyResultUnit, TrajectoryType } from '@prisma/client'
 import {
+  BaseObjective,
   calculateActionBasedTrajectory,
   calculateCustomTrajectory,
   calculateSBTiTrajectory,
@@ -1294,7 +1295,7 @@ describe('calculateTrajectory', () => {
       currentYear: number,
       referenceEmissions: number,
       currentEmissions: number,
-      objectives: Array<{ targetYear: number; reductionRate: number }>,
+      objectives: BaseObjective[],
       pastStudies: PastStudy[],
     ) => {
       const referenceTrajectory = calculateCustomTrajectory({

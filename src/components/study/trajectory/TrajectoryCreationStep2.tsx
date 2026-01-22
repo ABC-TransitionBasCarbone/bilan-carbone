@@ -6,13 +6,14 @@ import GlossaryModal from '@/components/modals/GlossaryModal'
 import { customRich } from '@/i18n/customRich'
 import { TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
 import { toTitleCase } from '@/utils/string'
-import { getReductionRatePerType } from '@/utils/trajectory'
+import { BaseObjective, getReductionRatePerType } from '@/utils/trajectory'
 import AddIcon from '@mui/icons-material/Add'
 import { FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material'
 import { TrajectoryType } from '@prisma/client'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
 import { useState } from 'react'
 import { Control, Controller, useFieldArray } from 'react-hook-form'
 import ObjectiveCard from './ObjectiveCard'
@@ -27,6 +28,7 @@ interface Props {
   handleModeSelect: (type: TrajectoryType) => void
   studyYear: number
   snbcRates: { rateTo2030: number; rateTo2050: number } | null
+  compensatedObjectives: (BaseObjective | null)[] | null
 }
 
 const TrajectoryCreationStep2 = ({
@@ -38,6 +40,7 @@ const TrajectoryCreationStep2 = ({
   handleModeSelect,
   studyYear,
   snbcRates,
+  compensatedObjectives,
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectoryModal')
   const tGlossary = useTranslations('study.transitionPlan.trajectoryModal.glossary')
@@ -125,13 +128,24 @@ const TrajectoryCreationStep2 = ({
       />
 
       <div>
-        <IconLabel
-          icon={<HelpIcon onClick={() => setGlossary('referenceYear')} label={tGlossary('title')} />}
-          iconPosition="after"
-          className="mb-2"
-        >
-          <Typography fontWeight="bold">{t('referenceYear')}</Typography>
-        </IconLabel>
+        {(() => {
+          const getReferenceYearGlossaryKey = () => {
+            if (isSBTI || isSNBC) {
+              return 'referenceYearMethod'
+            }
+            return 'referenceYear'
+          }
+
+          return (
+            <IconLabel
+              icon={<HelpIcon onClick={() => setGlossary(getReferenceYearGlossaryKey())} label={tGlossary('title')} />}
+              iconPosition="after"
+              className="mb-2"
+            >
+              <Typography fontWeight="bold">{t('referenceYear')}</Typography>
+            </IconLabel>
+          )
+        })()}
         <FormDatePicker
           name="referenceYear"
           control={control}
@@ -210,6 +224,7 @@ const TrajectoryCreationStep2 = ({
               <ObjectiveCard
                 name={t('objectives.horizon2030')}
                 reductionRate={rateTo2030}
+                compensatedObjective={compensatedObjectives?.[0] || null}
                 isEditable={false}
                 control={control}
                 index={0}
@@ -218,6 +233,7 @@ const TrajectoryCreationStep2 = ({
               <ObjectiveCard
                 name={t('objectives.horizon2050')}
                 reductionRate={rateFrom2030To2050}
+                compensatedObjective={compensatedObjectives?.[1] || null}
                 isEditable={false}
                 control={control}
                 index={1}
@@ -229,6 +245,7 @@ const TrajectoryCreationStep2 = ({
                 <ObjectiveCard
                   key={objective.id}
                   isEditable
+                  compensatedObjective={compensatedObjectives?.[index] || null}
                   control={control}
                   index={index}
                   onDelete={() => remove(index)}
@@ -247,12 +264,34 @@ const TrajectoryCreationStep2 = ({
       </div>
       {glossary && (
         <GlossaryModal
-          glossary={glossary}
+          glossary={glossary === 'referenceYearMethod' ? 'referenceYearMethod' : glossary}
           label="trajectory-reference-year"
           t={tGlossary}
           onClose={() => setGlossary('')}
+          titleParams={
+            glossary === 'referenceYearMethod'
+              ? {
+                  method: isSBTI ? 'SBTI' : 'SNBC',
+                }
+              : undefined
+          }
         >
-          {tGlossary(`${glossary}Description`)}
+          {glossary === 'referenceYearMethod' ? (
+            <p>
+              {tGlossary('referenceYearMethodDescription', {
+                method: isSBTI ? 'SBTI' : 'SNBC',
+              })}{' '}
+              <Link
+                href={isSBTI ? process.env.NEXT_PUBLIC_SBTI_DOC_URL || '' : process.env.NEXT_PUBLIC_SNBC_DOC_URL || ''}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {tGlossary('referenceYearMethodLink')}
+              </Link>
+            </p>
+          ) : (
+            tGlossary(`${glossary}Description`)
+          )}
         </GlossaryModal>
       )}
     </div>
