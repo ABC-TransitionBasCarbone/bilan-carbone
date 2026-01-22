@@ -85,9 +85,11 @@ const AllResults = ({
   const tExport = useTranslations('exports')
   const tQuality = useTranslations('quality')
   const tBeges = useTranslations('beges')
+  const tGHGP = useTranslations('ghgp')
   const tUnits = useTranslations('study.results.units')
   const tExportButton = useTranslations('study.export')
   const tStudyNav = useTranslations('study.navigation')
+  const tBase = useTranslations('emissionFactors.base')
 
   const { callServerFunction } = useServerFunction()
 
@@ -150,6 +152,7 @@ const AllResults = ({
               downloadStudyResults(
                 study,
                 [],
+                [],
                 emissionFactorsWithParts,
                 tResults,
                 tExport,
@@ -157,7 +160,9 @@ const AllResults = ({
                 tOrga,
                 tQuality,
                 tBeges,
+                tGHGP,
                 tUnits,
+                tBase,
                 Environment.CUT,
               )
             }

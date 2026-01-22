@@ -135,7 +135,6 @@ const TrajectoryCreationStep2 = ({
         <FormDatePicker
           name="referenceYear"
           control={control}
-          translation={t}
           views={['year']}
           minDate={dayjs('1990-01-01')}
           maxDate={maxReferenceDate}

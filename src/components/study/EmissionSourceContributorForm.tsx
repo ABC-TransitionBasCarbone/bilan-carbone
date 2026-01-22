@@ -12,8 +12,10 @@ import { formatEmissionFactorNumber } from '@/utils/number'
 import { hasDeprecationPeriod } from '@/utils/study'
 import AddIcon from '@mui/icons-material/Add'
 import { TextField } from '@mui/material'
+import { DatePicker } from '@mui/x-date-pickers'
 import { Environment, StudyResultUnit, SubPost, Unit } from '@prisma/client'
 import classNames from 'classnames'
+import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -39,7 +41,8 @@ interface Props {
   emissionFactorsForSubPost: EmissionFactorWithMetaData[]
   importVersions: ImportVersionForFilters[]
   studyId: string
-  update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null) => void
+  update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | Date | null) => void
+  hasGHGPExport: boolean
 }
 
 const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) =>
@@ -58,6 +61,7 @@ const EmissionSourceContributorForm = ({
   importVersions,
   studyId,
   update,
+  hasGHGPExport,
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tResultUnits = useTranslations('study.results.units')
@@ -108,21 +112,42 @@ const EmissionSourceContributorForm = ({
             )}
           </div>
           {hasDeprecationPeriod(emissionSource.subPost) && (
-            <div className={classNames(styles.inputWithUnit, 'flex grow')}>
-              <TextField
-                disabled={!!emissionSource.validated}
-                className="grow"
-                type="number"
-                defaultValue={emissionSource.depreciationPeriod}
-                onBlur={(event) => update('depreciationPeriod', Number(event.target.value))}
-                label={`${t('form.depreciationPeriod')} *`}
-                slotProps={{
-                  inputLabel: { shrink: true },
-                  input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
-                }}
-              />
-              <div className={styles.unit}>{t('form.years')}</div>
-            </div>
+            <>
+              <div className={classNames(styles.inputWithUnit, 'flex grow')}>
+                <TextField
+                  disabled={!!emissionSource.validated}
+                  className="grow"
+                  type="number"
+                  defaultValue={emissionSource.depreciationPeriod}
+                  onBlur={(event) => update('depreciationPeriod', Number(event.target.value))}
+                  label={`${t('form.depreciationPeriod')} *`}
+                  slotProps={{
+                    inputLabel: { shrink: true },
+                    input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
+                  }}
+                />
+                <div className={styles.unit}>{t('form.years')}</div>
+              </div>
+              {hasGHGPExport && (
+                <DatePicker
+                  label={`${t('form.constructionYear')} *`}
+                  slotProps={{
+                    textField: {
+                      className: styles.datePickerInput,
+                    },
+                  }}
+                  maxDate={dayjs(new Date())}
+                  views={['year']}
+                  sx={{ backgroundColor: 'white', flex: '1' }}
+                  onChange={(date) => {
+                    if (date && date.isValid()) {
+                      update('constructionYear', date.toDate())
+                    }
+                  }}
+                  value={emissionSource.constructionYear ? dayjs(emissionSource.constructionYear) : null}
+                />
+              )}
+            </>
           )}
         </div>
         <TextField

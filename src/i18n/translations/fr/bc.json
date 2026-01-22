@@ -26,6 +26,16 @@
       "title": "Export au format Bilan Carbone®",
       "category": "Catégorie Bilan Carbone®",
       "emissions": "Émissions (tCO2e)"
+    },
+    "glossary": {
+      "GHGP": {
+        "title": "Export au format GHG-Protocol",
+        "warning": "Attention, pour que votre export soit conforme au GHG-Protocol, il faudra :",
+        "item1": "Que vous ayez pris en compte l'incinération des déchets dans les émissions liées aux réseaux de chaleur utilisés.",
+        "item2": "Qu'au sein du poste Immobilisations, vous ayez correctement renseigné si le bien concerné a été construit l'année du bilan.",
+        "item3": "Que vous ayez une double comptabilisation de l'électricité consommée, d'une part en location-based et d'autre part en market-based. Pour cela il vous suffit de comptabiliser deux fois vos kWh d'énergie consommés, <green>une fois via des facteurs d'émission dédiés au location-based</green>, et <purple>une seconde fois via des facteurs d'émission dédiés au market-based</purple>. Pour rappel :<ul><li>La méthode location-based est basée sur l'utilisation de facteurs d'émission représentant le mix électrique moyen sur des périmètres géographiques et temporels définis. En France, les facteurs d'émission utilisés sont typiquement de la forme \"Mix moyen - Année concernée - France\".</li><li>La méthode market-based est basée sur l'utilisation de facteurs d'émission représentatif de l'électricité produite par les producteurs d'électricité auxquels l'organisation est contractuellement liée via des achats de Garanties d'Origine (GO) ou de la vente directe d'électricité (Power Purchase Agreement, ou PPA). Toute l'électricité non couverte pas les contrats mentionnés doit alors être prise en compte via les facteurs d'émission concernant les mix résiduels, c'est-à-dire les facteurs d'émission des mix électriques dont a été retirée tout l'électricité faisant l'objet des contrats mentionnés.</li></ul>",
+        "conclusion": "Il convient par ailleurs que l'utilisateur maîtrise l'ensemble des spécificités méthodologiques liées au GHG-Protocol afin de générer un export qui réponde aux exigences de cette méthode."
+      }
     }
   },
   "categorisations": {
@@ -34,15 +44,17 @@
     "NotOperated": "Non opéré",
     "OperatedProcedeed": "Opéré, procédé",
     "OperatedFugitive": "Opéré, fugitive",
+    "OperatedCAS": "Opéré, CAS",
     "NotOperatedSupported": "Non opéré, supporté",
     "NotOperatedNotSupported": "Non opéré, non supporté",
     "Rented": "Mis en location",
-    "FinalClient": "Par le client final ou un intermédiaire",
+    "FinalClient": "Par le client final",
     "Held": "Détenu",
     "NotHeldSimpleRent": "Non détenu location simple",
     "NotHeldOther": "Non détenu, autre",
     "HeldProcedeed": "Détenue, procédés",
     "HeldFugitive": "Détenue, fugitives",
+    "HeldCAS": "Détenue, CAS",
     "NotHeldSupported": "Non détenu, supporté",
     "NotHeldNotSupported": "Non détenue, non supporté",
     "UsedByIntermediary": "Utilisé par un intermédiaire"
@@ -94,6 +106,55 @@
       },
       "6": {
         "1": "Autres émissions indirectes"
+      }
+    },
+    "other": "Autres gaz",
+    "total": "Total",
+    "uncertainty": "Incertitude",
+    "ges": "Émissions de GES ({unit})"
+  },
+  "ghgp": {
+    "rule": "Règle",
+    "subTotal": "Sous-total",
+    "category": {
+      "title": "Catégorie",
+      "1": "Scope 1",
+      "2": "Scope 2",
+      "3": "Scope 3 amont",
+      "4": "Scope 3 aval"
+    },
+    "post": {
+      "title": "Poste d'émission",
+      "1": {
+        "1": "Émissions directes des sources fixes de combustion",
+        "2": "Émissions directes des sources mobiles de combustion",
+        "3": "Émissions directes des procédés",
+        "4": "Émissions directes fugitives"
+      },
+      "2": {
+        "1": "Émissions indirectes liées à la consommation",
+        "2": "Émissions indirectes liées à la consommation de vapeur"
+      },
+      "3": {
+        "1": "Produits et services achetés",
+        "2": "Bien immobilisés",
+        "3": "Émissions liées aux combustions et à l'énergie (non inclus dans le scope 1 ou le scope 2)",
+        "4": "Transport de marchandise amont et distribution",
+        "5": "Déchets générés",
+        "6": "Déplacements professionnels",
+        "7": "Déplacements domicile travail",
+        "8": "Actifs en leasing amont",
+        "other": "Autres émissions indirectes amont"
+      },
+      "4": {
+        "09": "Transport de marchandise aval et distribution",
+        "10": "Transformation des produits vendus",
+        "11": "Utilisation des produits vendus",
+        "12": "Fin de vie des produits vendus",
+        "13": "Actifs en leasing aval",
+        "14": "Franchises",
+        "15": "Investissements",
+        "other": "Autres émissions indirectes aval"
       }
     },
     "other": "Autres gaz",
@@ -338,7 +399,7 @@
       "realizationDates": "Date de la réalisation de l'étude",
       "level": "Niveau de maturité du Bilan Carbone®",
       "exports": "Exports",
-      "control": "Mode de contrôle",
+      "control": "Mode de contrôle des exports",
       "CapitalShare": "Part de capital",
       "Financial": "Financier",
       "Operational": "Opérationnel",
@@ -398,8 +459,8 @@
         "visibilityDescription": "Choisissez si votre étude doit être publique, c'est à dire accessible à tous vos collègues renseigné sur la page Mon organisation > mon equipe (lien vers la page), ou privé, c'est à dire uniquement accessible aux personnes que vous rajouterez dans la page cadrage de votre étude. Les admins de votre organisation ont accès à toutes les études qu'elles soient publiques ou privées.",
         "exports": "Exports",
         "exportsDescription": "Les résultats sont par défaut restitués au format Bilan Carbone®, mais il est possible d'obtenir les résultats sous les formats demandés par plusieurs autres méthodes de comptabilité carbone, comme le Bilan GES règlementaire, qui est la méthode règlementaire française.",
-        "control": "Mode de contrôle",
-        "controlDescription": "Le mode de contrôle est une donnée demandée par certaines méthodes de comptabilité carbone, comme le Bilan GES règlementaire ou le GHG Protocol. Pour obtenir les résultats sous les formats demandés par ces méthodes, vous devrez caractériser les différentes sources d'émission lors de votre saisie, ce qui déterminera dans quelle catégories existantes au sein de ces méthodes (l'équivalent des postes et sous-postes au sein de la méthode Bilan Carbone®) les émissions vont se ventiler. En fonction du mode de contrôle sélectionné, les caractérisations disponibles pour les différentes sources d'émission varient. Pour plus de détail sur les modes de contrôle, nous vous invitons à consulter les guides méthodologiques des méthodes en question. Nous vous recommandons vivement d'utiliser le mode de contrôle \"Contrôle Opérationnel\", qui est de loin le plus courant.",
+        "control": "Mode de contrôle des exports",
+        "controlDescription": "Le mode de contrôle est une donnée demandée par certaines méthodes de comptabilité carbone, comme le Bilan GES règlementaire ou le GHG Protocol. Pour obtenir les résultats sous les formats demandés par ces méthodes, vous devrez caractériser les différentes sources d'émission lors de votre saisie, ce qui déterminera dans quelle catégories existantes au sein de ces méthodes (l'équivalent des postes et sous-postes au sein de la méthode Bilan Carbone®) les émissions vont se ventiler. Le mode de contrôle s'applique bien à tous les exports que vous avez sélectionnés. En fonction du mode de contrôle sélectionné, les caractérisations disponibles pour les différentes sources d'émission varient. Pour plus de détail sur les modes de contrôle, nous vous invitons à consulter les guides méthodologiques des méthodes en question. Nous vous recommandons vivement d'utiliser le mode de contrôle \"Contrôle Opérationnel\", qui est de loin le plus courant.",
         "duplicationOptions": "Options de duplication",
         "duplicationOptionsDescription": "Lors de la duplication d'une étude, vous pouvez choisir d'inviter les mêmes membres d'équipe et contributeurs de l'étude originale dans la nouvelle. Cela permet de maintenir la continuité de la collaboration.",
         "close": "Fermer"
@@ -583,7 +644,7 @@
         "proceed": "Confirmer les changements"
       },
       "exports": "Exports",
-      "control": "Mode de contrôle",
+      "control": "Mode de contrôle des exports",
       "emissionSourceTagFamily": "Famille",
       "emissionSourceTags": "Tags",
       "emissionSourceTagLabel": "Libellé",
@@ -607,15 +668,16 @@
         "continue": "Continuer",
         "cancel": "Annuler"
       },
-      "begesActivationWarning": {
-        "title": "Activation de l'export BEGES",
-        "description": "Vous êtes sur le point d'activer l'export BEGES règlementaire. Lorsque cet export est activé, vous devez renseigner un champ supplémentaire \"Caractérisation\" dans certaines sources d'émissions. En conséquence, <warning>l'activation de cet export dévalidera les sources d'émission concernées</warning>. Voulez-vous continuer ?",
+      "exportActivationWarning": {
+        "title": "Activation de l'export {type}",
+        "description": "Vous êtes sur le point d'activer l'export {type} règlementaire. Lorsque cet export est activé, vous devez renseigner des champs supplémentaires ({fields}) dans certaines sources d'émissions. En conséquence, <warning>l'activation de cet export dévalidera les sources d'émission concernées</warning>. Voulez-vous continuer ?",
+        "finalClientDescription": "Si vous avez des sources d'émission avec la caractérisation \"Par le client final ou un intermédiaire\", nous nous invitons à aller les vérifier car l'export GHG-P demande plus de précision. Par défaut, la caratérisation retenue est \"Par le client final\".",
         "continue": "Continuer",
         "cancel": "Annuler"
       },
-      "begesDeactivationWarning": {
-        "title": "Désactivation de l'export BEGES",
-        "description": "Vous êtes sur le point de désactiver l'export BEGES règlementaire. <warning>La désactivation de cet export entraînera la perte de toutes les caractérisations renseignées dans les sources d'émission</warning>. Voulez-vous continuer ?",
+      "exportDeactivationWarning": {
+        "title": "Désactivation de l'export {type}",
+        "description": "Vous êtes sur le point de désactiver l'export {type} règlementaire. <warning>La désactivation de cet export entraînera la perte de données renseignées dans certaines sources d'émission ({fields})</warning>. Voulez-vous continuer ?",
         "continue": "Continuer",
         "cancel": "Annuler"
       },
@@ -676,6 +738,7 @@
       "emissionSources": "Nombre de sources d'émission",
       "bilanCarbone": "Résultats Bilan Carbone®",
       "beges": "Résultats BEGES",
+      "ghgp": "Résultats GHG-P",
       "withDependencies": "Avec le sous-poste 'Utilisation en dépendance'",
       "withoutDependencies": "Sans le sous-poste 'Utilisation en dépendance'",
       "dependencyIntensity": "Intensités carbone en dépendance",
@@ -699,23 +762,32 @@
       "tagGlossaryDescription": "Les sources d'émission peuvent avoir plusieurs tags, celles ci sont donc sur ce graphique comptabilisé dans chacun des tags. Il est donc normal que vous ayez ici un total plus grand que sur votre étude",
       "info": "Cette empreinte carbone simplifiée vise à estimer les émissions de gaz à effet de serre de votre activité, et par conséquent votre contribution au dérèglement climatique ainsi que vos potentielles dépendance aux énergies fossiles qui sont des vulnérabilités. \n\nL'Union Européenne s'est engagée, en ratifiant l'Accord de Paris, à la neutralité carbone d'ici 2050. Pour contribuer à cet objectif, votre cinéma devrait réduire son impact de 5% par an. \n\nNous vous invitons donc à refaire cette empreinte carbone simplifiée l'année prochaine pour vérifier que vous êtes sur la bonne trajectoire !",
       "difference": {
-        "button": "Explication des différences entre le Bilan Carbone® et l'export Beges",
+        "button": "Explication des différences entre le Bilan Carbone® et l'export {type}",
         "modalTitle": "Explication de la différence entre les résultats",
         "dependanceTitle": "Utilisation en dépendance",
         "wasteTitle": "Traitement des déchets",
         "missingCaractTitle": "Caractérisations manquantes",
+        "immobilisationTitle": "Immobilisation non applicable",
+        "otherEmissionsTitle": "Autres émissions amont et aval",
+        "otherGasTitle": "Le facteur d'émission emet dans la catégorie \"Autres gaz\"",
+        "marketBasedTitle": "Les émissions \"market-based\" non sont pas égales aux émissions \"location-based\"",
         "tableHeaders": {
           "emissionSource": "Source d'émission",
           "post": "Poste",
           "bilanCarbone": "Bilan Carbone®",
           "beges": "BEGES",
+          "ghgp": "GHG-P",
           "difference": "Différence"
         },
-        "dependance": "Le Bilan GES règlementaire n'intègre pas le sous-poste \"Utilisation en dépendance\", car la notion de dépendance n'est pas existante dans la méthode BEGES-R",
+        "dependance": "Le Bilan GES règlementaire n'intègre pas le sous-poste \"Utilisation en dépendance\", car la notion de dépendance n'est pas existante dans la méthode {type}",
         "goToSubPost": "Aller au sous-poste",
         "waste": "Le Bilan GES règlementaire intègre l'ensemble des émissions dues au recyclage des déchets dans le bilan de l'émetteur des déchets, tandis que le Bilan Carbone® ne fait porter sur l'émetteur des déchets que le poids de la collecte et du transport des déchets. Ainsi, les facteurs d'émission ayant pour valeur 41 kgCO₂e/t au sein de l'outil sont ceux utilisés pour le Bilan Carbone®, tandis que les valeurs intégrant la régénération des matériaux (le processus de recyclage, pour les facteur d'émission \"Recyclage\" ou \"Fin de vie moyenne\") sont utilisés pour le BEGES-R. Le facteur d'émission affiché sur le BC+ est uniquement celui utilisé pour le Bilan Carbone®, mais les calculs de l'export BEGES-R se font bien avec les facteurs d'émission liés au recyclage ou à la fin de vie moyenne de l'ADEME. Voici les sources d'émissions liées à ce sujet : ",
-        "missingCaract1": "Les sources d'émissions non caractérisées ne sont pas comptabilisées au sein du BEGES-R, ce qui entraine des différences indues avec le Bilan Carbone® dans le cas où vous auriez choisi de visualiser les sources d'émissions non validées.",
+        "missingCaract1": "Les sources d'émissions non caractérisées ne sont pas comptabilisées au sein du {type}, ce qui entraine des différences indues avec le Bilan Carbone® dans le cas où vous auriez choisi de visualiser les sources d'émissions non validées.",
         "missingCaract2": "Vous n'avez pas renseigné les caractérisations pour toutes les sources d'émission de votre étude. Merci d'éditer et ajouter la caractérisation pour les sources d'émission suivantes : ",
+        "immobilisation1": "à compléter - Gabriel",
+        "otherEmissions1": "à compléter - Gabriel",
+        "otherGas1": "à compléter - Gabriel",
+        "marketBased": "à compléter - Gabriel",
         "additionalMissing": "+ {count, plural,  =1 {1 autre source} other {# autres sources}} d'émission",
         "unexplainedDifference": "Certaines différences ne peuvent être expliquées pour votre étude et peuvent être liées à des problèmes de calcul de l'outil. Si vous le pouvez, merci de nous contacter à l'adresse <support>support</support>."
       },
@@ -797,6 +869,7 @@
       "emissionName": "Nom du FE (facteur d'émission)",
       "emissionQuality": "Qualité du FE",
       "emissionSource": "Source du FE",
+      "emissionBase": "base du FE",
       "emissionUnit": "Unité du FE",
       "emissionValue": "Valeur du FE",
       "no": "Non",
@@ -808,6 +881,7 @@
       "sourceDuration": "Durée (années)",
       "sourceDeprecation": "Durée d'amortissement (années)",
       "sourceName": "Nom de la source d'émission",
+      "sourceConstructionYear": "Année d'acquisition",
       "sourceQuality": "Qualité de la source d'émission",
       "sourceSurface": "Surface (ha)",
       "sourceUnit": "Unité de la source d'émission",
@@ -1470,6 +1544,14 @@
       "subPost": "Sous Poste",
       "comment": "Commentaires",
       "clear": "Supprimer la valeur",
+      "base": "Base",
+      "baseModal": {
+        "title": "Information pour les exports GHG-P",
+        "description": "Vous devez ici indiquer si votre FE s'applique dans le cadre de la méthode location-based, ou dans le cas de la méthode market-based. Cette distinction ne s'appliquera que si votre FE est utilisé au sein du sous-poste Électricité du poste Énergie. Pour rappel :",
+        "location": "La méthode location-based est basée sur l'utilisation de facteurs d'émission représentant le mix électrique moyen sur des périmètres géographiques et temporels définis. En France, les facteurs d'émission utilisés sont typiquement de la forme \"Mix moyen - Année concernée - France\".",
+        "market": "La méthode market-based est basée sur l'utilisation de facteurs d'émission représentatif de l'électricité produite par les producteurs d'électricité auxquels l'organisation est contractuellement liée via des achats de Garanties d'Origine (GO) ou de la vente directe d'électricité (Power Purchase Agreement, ou PPA). Toute l'électricité non couverte pas les contrats mentionnés doit alors être prise en compte via les facteurs d'émission concernant les mix résiduels, c'est-à-dire les facteurs d'émission des mix électriques dont a été retirée tout l'électricité faisant l'objet des contrats mentionnés.",
+        "conclusion": "Le Bilan Carbone® et le Bilan GES réglementaire n'autorisent que la méthode location-based, l'ISO 14064-1 autorise l'usage des deux méthodes, tandis que le GHG Protocol exige une double comptabilisation de l'électricité consommée, d'une part en location-based et d'autre part en market-based."
+      },
       "glossary": {
         "title": "Glossaire",
         "detailedGES": "Décomposition des GES",
@@ -1516,6 +1598,7 @@
       "BaseEmpreinte": "Base Empreinte",
       "NegaOctet": "NegaOctet",
       "Legifrance": "Légifrance",
+      "AIB": "AIB",
       "displayArchived": "Afficher les facteurs archivés",
       "goTo": "Aller à la page",
       "items": "Élements par page",
@@ -1548,6 +1631,7 @@
         "baseEmpreinte": "Logo de la Base Empreinte",
         "legifrance": "Logo de Légifrance",
         "negaOctet": "Logo de NegaOctet",
+        "aib": "Logo de l'Association of Issuing Bodies",
         "manual": "Manuel"
       },
       "post": "Postes",
@@ -1600,6 +1684,16 @@
       "CombustionALaCentrale": "Combustion à la centrale",
       "AutresEmissionsLieesALaConsommationDElectriciteBarrage": "Autres émissions liées à la consommation d?électricité (barrage?)",
       "Pertes": "Pertes"
+    },
+    "base": {
+      "LocationBased": "location-based",
+      "MarketBased": "market-based",
+      "difference": {
+        "warning": "Attention, vos kWh market based ne sont pas égaux à ceux en location based.",
+        "explanation": "Explication",
+        "title": "Erreur - Le nombre de kWh pris en compte diffère entre la méthode location-based et la méthode market-based",
+        "description": "Le GHG Protocol exige que vous ayez une double comptabilisation de l'électricité consommée, d'une part en location-based et d'autre part en market-based. Pour cela il vous suffit de comptabiliser deux fois vos kWh d'énergie consommés, une fois via des facteurs d'émission dédiés au <green>location-based</green>, et une seconde fois via des facteurs d'émission dédiés au <purple>market-based</purple>. Vous devez comptabiliser le même nombre de kWh dans les deux méthodes, ce qui n'est pas le cas actuellement."
+      }
     },
     "missingQualities": {
       "title": "Ajout de la qualité pour les facteurs d'émission manuels",
@@ -2030,6 +2124,7 @@
       "validate": "Validée",
       "name": "Nom",
       "caracterisation": "Caractérisation",
+      "constructionYear": "Année d'acquisition",
       "emissionFactor": "Facteur d'émission",
       "activity": "Donnée d'activité",
       "value": "Valeur donnée d'activité",

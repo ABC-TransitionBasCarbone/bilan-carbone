@@ -17,6 +17,7 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { Control, UseFormReturn, UseFormSetValue, useWatch } from 'react-hook-form'
+import Base from './Base'
 import DetailedGES from './DetailedGES'
 import MultiplePosts from './MultiplePosts'
 
@@ -184,6 +185,7 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         mandatory
       />
       <MultiplePosts form={form} context="emissionFactor" />
+      <Base form={form} />
       <FormTextField control={control} name="comment" label={t('comment')} multiline />
       <div className={classNames({ ['justify-between']: button === 'update' })}>
         {button === 'update' && (

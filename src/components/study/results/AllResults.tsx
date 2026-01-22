@@ -1,6 +1,7 @@
 'use client'
 
 import Block from '@/components/base/Block'
+import Box from '@/components/base/Box'
 import Button from '@/components/base/Button'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
@@ -10,7 +11,8 @@ import { hasAccessToBcExport, hasAccessToDownloadStudyEmissionSourcesButton } fr
 import { environmentPostMapping } from '@/services/posts'
 import { computeBegesResult } from '@/services/results/beges'
 import { computeResultsByPost, computeResultsByTag } from '@/services/results/consolidated'
-import { getSiteEmissionSources } from '@/services/results/utils'
+import { computeGHGPResult } from '@/services/results/ghgp'
+import { getSiteEmissionSourcesWithoutMarketBase } from '@/services/results/utils'
 import { isDeactivableFeatureActiveForEnvironment } from '@/services/serverFunctions/deactivableFeatures'
 import { prepareReport } from '@/services/serverFunctions/study'
 import {
@@ -21,13 +23,15 @@ import {
   ResultType,
 } from '@/services/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { getPost } from '@/utils/post'
 import { calculateMonetaryRatio, convertValue } from '@/utils/study'
 import DownloadIcon from '@mui/icons-material/Download'
 import SummarizeIcon from '@mui/icons-material/Summarize'
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
+import { FormControl, InputLabel, MenuItem, Select, Tab, Tabs } from '@mui/material'
 import {
   ControlMode,
   DeactivatableFeature,
+  EmissionFactorBase,
   Environment,
   Export,
   ExportRule,
@@ -36,13 +40,17 @@ import {
   SubPost,
 } from '@prisma/client'
 import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
 import { MouseEvent, useCallback, useEffect, useMemo, useState } from 'react'
+import ElectricityBaseDifference from '../ElectricityBaseDifference'
 import SelectStudySite from '../site/SelectStudySite'
 import useStudySite from '../site/useStudySite'
 import BegesResultsTable from './beges/BegesResultsTable'
-import ConsolatedBEGESDifference from './ConsolatedBEGESDifference'
 import ConsolidatedResults from './consolidated/ConsolidatedResults'
 import EmissionsAnalysis from './consolidated/EmissionsAnalysis'
+import ConsolatedBEGESDifference from './ConsolidatedBEGESDifference'
+import ConsolatedGHGPDifference from './ConsolidatedGHGPDifference'
+import GHGPResultsTable from './ghgp/GHGPResultsTable'
 import ResultFilters from './ResultFilters'
 import UncertaintyAnalytics from './uncertainty/UncertaintyAnalytics'
 
@@ -63,17 +71,21 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   const tExport = useTranslations('exports')
   const tQuality = useTranslations('quality')
   const tBeges = useTranslations('beges')
+  const tGHGP = useTranslations('ghgp')
   const tUnits = useTranslations('study.results.units')
   const tResultUnits = useTranslations('study.results.units')
   const tStudyExport = useTranslations('study.export')
   const tCaracterisations = useTranslations('categorisations')
   const tStudyNav = useTranslations('study.navigation')
+  const tBase = useTranslations('emissionFactors.base')
   const { environment } = useAppEnvironmentStore()
   const [type, setType] = useState<ResultType>(AdditionalResultTypes.CONSOLIDATED)
   const exports = useMemo(() => study.exports, [study.exports])
   const [isDownloadReportActive, setIsDownloadReportActive] = useState(false)
   const [selectedSubposts, setSelectedSubposts] = useState<string[]>([])
   const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const [selectedGHGPTable, setSelectedGHGPTable] = useState<EmissionFactorBase>(EmissionFactorBase.LocationBased)
+  const router = useRouter()
 
   useEffect(() => {
     if (environment && environment !== Environment.BC) {
@@ -100,9 +112,10 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   const { studySite, setSite } = useStudySite(study, true)
 
   const begesRules = useMemo(() => rules.filter((rule) => rule.export === Export.Beges), [rules])
+  const ghgpRules = useMemo(() => rules.filter((rule) => rule.export === Export.GHGP), [rules])
 
   const allowTypeSelect = useMemo(() => {
-    if (exports.length > 0) {
+    if (exports && exports.types.length > 0) {
       return true
     }
     if (environment && hasAccessToBcExport(environment)) {
@@ -111,9 +124,9 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     return false
   }, [environment, exports])
 
-  // Get withDepValue for BEGES table (only needed if BEGES export exists)
+  // Get withDepValue for Export tables (only needed if at least 1 export exists)
   const { withDepValue } = useMemo(() => {
-    if (!exports.map((exportType) => exportType.type).includes(Export.Beges)) {
+    if (!exports?.types?.length) {
       return { withDepValue: 0 }
     }
     return getDetailedEmissionResults(
@@ -151,7 +164,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     }
 
     // Filter emission sources by selected subposts and tags
-    const siteEmissionSources = getSiteEmissionSources(study.emissionSources, studySite)
+    const siteEmissionSources = getSiteEmissionSourcesWithoutMarketBase(study.emissionSources, studySite)
 
     // Helper function to filter emission sources
     const filterEmissionSources = (
@@ -269,6 +282,12 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     [study, begesRules, emissionFactorsWithParts, studySite, validatedOnly],
   )
 
+  const computedGHGPData = useMemo(
+    () =>
+      computeGHGPResult(study, ghgpRules, emissionFactorsWithParts, studySite, false, validatedOnly, selectedGHGPTable),
+    [study, ghgpRules, emissionFactorsWithParts, studySite, validatedOnly, selectedGHGPTable],
+  )
+
   const downloadReport = useCallback(async () => {
     callServerFunction(() => prepareReport(study, { monetaryRatio, nonSpecificMonetaryRatio }), {
       onSuccess: (data) => {
@@ -296,6 +315,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
         tQuality,
         tUnit,
         tResultUnits,
+        tBase,
         environment,
       )
     }
@@ -306,6 +326,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     await downloadStudyResults(
       study,
       begesRules,
+      ghgpRules,
       emissionFactorsWithParts,
       t,
       tExport,
@@ -313,7 +334,9 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       tOrga,
       tQuality,
       tBeges,
+      tGHGP,
       tUnits,
+      tBase,
       environment,
     )
   }
@@ -321,6 +344,16 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   const preventClose = (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
     e.preventDefault()
     e.stopPropagation()
+  }
+
+  const navigateToEmissionSource = (emissionSourceId: string, subPost: SubPost) => {
+    const post = getPost(subPost)
+    if (post) {
+      const emissionSource = study.emissionSources.find((es) => es.id === emissionSourceId)
+      const targetSite = emissionSource?.studySite.id
+      const url = `/etudes/${study.id}/comptabilisation/saisie-des-donnees/${post}?site=${targetSite}#emission-source-${emissionSourceId}`
+      router.push(url)
+    }
   }
 
   return (
@@ -379,29 +412,47 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
               {environment && hasAccessToBcExport(environment) && (
                 <MenuItem value={AdditionalResultTypes.ENV_SPECIFIC_EXPORT}>{tExport('env_specific_export')}</MenuItem>
               )}
-              {exports.map((exportItem) => (
-                <MenuItem
-                  key={exportItem.type}
-                  value={exportItem.type}
-                  disabled={exportItem.type !== Export.Beges || exportItem.control === ControlMode.CapitalShare}
-                >
-                  {tExport(exportItem.type)}
-                  {(exportItem.type !== Export.Beges || exportItem.control === ControlMode.CapitalShare) && (
-                    <em> ({t('coming')})</em>
-                  )}
-                </MenuItem>
-              ))}
+              {exports &&
+                exports?.types.map((exportItem) => (
+                  <MenuItem key={exportItem} value={exportItem} disabled={exports.control === ControlMode.CapitalShare}>
+                    {tExport(exportItem)}
+                    {exports.control === ControlMode.CapitalShare && <em> ({t('coming')})</em>}
+                  </MenuItem>
+                ))}
             </Select>
           </FormControl>
-          {exports.map((exportType) => exportType.type).includes(Export.Beges) && (
+          {type === Export.Beges && (
             <ConsolatedBEGESDifference
               study={study}
               emissionFactorsWithParts={emissionFactorsWithParts}
               validatedOnly={validatedOnly}
-              results={filteredResultsByPost}
+              consolidatedResults={filteredResultsByPost}
               begesResults={computedBegesData}
               studySite={studySite}
+              navigateToEmissionSource={navigateToEmissionSource}
             />
+          )}
+          {type === Export.GHGP && (
+            <>
+              <ConsolatedGHGPDifference
+                study={study}
+                emissionFactorsWithParts={emissionFactorsWithParts}
+                validatedOnly={validatedOnly}
+                consolidatedResults={filteredResultsByPost}
+                ghgpResults={computedGHGPData}
+                studySite={studySite}
+                ghgpRules={ghgpRules}
+                navigateToEmissionSource={navigateToEmissionSource}
+                base={selectedGHGPTable}
+              />
+              <ElectricityBaseDifference
+                emissionSources={study.emissionSources.filter(
+                  (emissionSource) => emissionSource.subPost === SubPost.Electricite,
+                )}
+                exports={study.exports?.types}
+                className="align-center"
+              />
+            </>
           )}
         </div>
         {type !== Export.Beges &&
@@ -417,7 +468,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
             />
           )}
         <div className="mt1">
-          {type !== Export.Beges && (
+          {type === AdditionalResultTypes.CONSOLIDATED && (
             <>
               <EmissionsAnalysis
                 study={study}
@@ -435,8 +486,20 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
           {type === Export.Beges && (
             <BegesResultsTable study={study} withDepValue={withDepValue} data={computedBegesData} />
           )}
+          {type === Export.GHGP && (
+            <Box>
+              <div className="flex-row justify-between align-center mb1">
+                <Tabs value={selectedGHGPTable} onChange={(_e, v) => setSelectedGHGPTable(v)}>
+                  {Object.values(EmissionFactorBase).map((tab) => (
+                    <Tab key={tab} value={tab} label={tBase(tab)} data-testid={`$ghg-${tab}-tab`} />
+                  ))}
+                </Tabs>
+              </div>
+              <GHGPResultsTable study={study} withDepValue={withDepValue} data={computedGHGPData} />
+            </Box>
+          )}
         </div>
-        {type !== Export.Beges && (
+        {type === AdditionalResultTypes.CONSOLIDATED && (
           <UncertaintyAnalytics
             filteredResults={filteredResultsByPost}
             studyId={study.id}

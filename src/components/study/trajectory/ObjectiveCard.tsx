@@ -52,7 +52,6 @@ const ObjectiveCard = ({ reductionRate, name, isEditable, control, index, onDele
                 name={`objectives.${index}.targetYear`}
                 label={t('objectives.year')}
                 control={control}
-                translation={t}
                 className="w100"
                 views={['year']}
                 data-testid="objective-year-picker"
