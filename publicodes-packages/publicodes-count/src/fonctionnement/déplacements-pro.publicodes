@@ -15,6 +15,10 @@ fonctionnement . déplacements pro . déplacements:
   par défaut: 0
   unité: kgCO2e
 
+fonctionnement . déplacements pro . déplacements . nom:
+  question: Déplacement
+  type: texte
+
 fonctionnement . déplacements pro . déplacement type:
   formule:
     somme:
