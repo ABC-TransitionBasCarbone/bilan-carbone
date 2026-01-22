@@ -309,7 +309,7 @@ const TrajectoryGraph = ({
         if (withinThreshold) {
           series.push({
             dataType: 'previous',
-            trajectoryType: TrajectoryType.SNBC,
+            trajectoryType: TrajectoryType.SNBC_GENERAL,
             data: mapDataToYears(previousTrajectory),
             label: t('trajectorySNBC'),
             color: 'var(--trajectory-snbc)',
@@ -321,7 +321,7 @@ const TrajectoryGraph = ({
         } else {
           series.push({
             dataType: 'previous',
-            trajectoryType: TrajectoryType.SNBC,
+            trajectoryType: TrajectoryType.SNBC_GENERAL,
             data: mapDataToYears(previousTrajectory),
             label: t('trajectorySNBC') + ` (${previousTrajectoryStartYear})`,
             color: 'color-mix(in srgb, var(--trajectory-snbc) 50%, transparent)',
@@ -338,7 +338,7 @@ const TrajectoryGraph = ({
       if (showCurrentTrajectory) {
         series.push({
           dataType: 'current',
-          trajectoryType: TrajectoryType.SNBC,
+          trajectoryType: TrajectoryType.SNBC_GENERAL,
           data: currentData,
           label: snbcData.previousTrajectory ? t('trajectorySNBC') + ` (${studyStartYear})` : t('trajectorySNBC'),
           color: 'var(--trajectory-snbc)',
@@ -350,7 +350,7 @@ const TrajectoryGraph = ({
       } else {
         series.push({
           dataType: 'current',
-          trajectoryType: TrajectoryType.SNBC,
+          trajectoryType: TrajectoryType.SNBC_GENERAL,
           data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
           label: t('trajectorySNBC') + ` (${studyStartYear})`,
           color: 'var(--trajectory-snbc)',
