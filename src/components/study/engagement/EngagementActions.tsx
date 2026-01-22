@@ -1,9 +1,9 @@
 'use client'
 
 import ConfirmDeleteModal from '@/components/modals/ConfirmDeleteModal'
+import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { deleteEngagementAction } from '@/services/serverFunctions/study'
-import { EngagementAction } from '@prisma/client'
+import { deleteEngagementAction, EngagementActionWithSites } from '@/services/serverFunctions/study'
 import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -13,8 +13,8 @@ import EngagementActionModal from './EngagementActionModal'
 import EngagementActionTable from './EngagementActionTable'
 
 interface Props {
-  actions: EngagementAction[]
-  studyId: string
+  actions: EngagementActionWithSites[]
+  study: FullStudy
 }
 
 const fuseOptions = {
@@ -23,20 +23,20 @@ const fuseOptions = {
   isCaseSensitive: false,
 }
 
-const EngagementActions = ({ actions, studyId }: Props) => {
+const EngagementActions = ({ actions, study }: Props) => {
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
   const t = useTranslations('study.transitionPlan.actions')
 
   const [filter, setFilter] = useState('')
-  const [editingAction, setEditingAction] = useState<EngagementAction | undefined>(undefined)
+  const [editingAction, setEditingAction] = useState<EngagementActionWithSites | undefined>(undefined)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-  const [deletingAction, setDeletingAction] = useState<EngagementAction | undefined>(undefined)
+  const [deletingAction, setDeletingAction] = useState<EngagementActionWithSites | undefined>(undefined)
 
   const fuse = useMemo(() => new Fuse(actions, fuseOptions), [actions])
 
-  const searchedActions: EngagementAction[] = useMemo(() => {
+  const searchedActions: EngagementActionWithSites[] = useMemo(() => {
     if (!filter) {
       return actions
     }
@@ -50,7 +50,7 @@ const EngagementActions = ({ actions, studyId }: Props) => {
     setIsEditModalOpen(true)
   }
 
-  const handleOpenEditModal = (action: EngagementAction) => {
+  const handleOpenEditModal = (action: EngagementActionWithSites) => {
     setEditingAction(action)
     setIsEditModalOpen(true)
   }
@@ -60,7 +60,7 @@ const EngagementActions = ({ actions, studyId }: Props) => {
     setEditingAction(undefined)
   }
 
-  const handleOpenDeleteModal = (action: EngagementAction) => {
+  const handleOpenDeleteModal = (action: EngagementActionWithSites) => {
     setDeletingAction(action)
     setIsDeleteModalOpen(true)
   }
@@ -75,7 +75,7 @@ const EngagementActions = ({ actions, studyId }: Props) => {
       return
     }
 
-    await callServerFunction(() => deleteEngagementAction(deletingAction.id, studyId), {
+    await callServerFunction(() => deleteEngagementAction(deletingAction.id, study.id), {
       onSuccess: () => {
         router.refresh()
       },
@@ -91,7 +91,9 @@ const EngagementActions = ({ actions, studyId }: Props) => {
         openEditModal={handleOpenEditModal}
         openDeleteModal={handleOpenDeleteModal}
       />
-      {isEditModalOpen && <EngagementActionModal open onClose={handleCloseEditModal} action={editingAction} />}
+      {isEditModalOpen && (
+        <EngagementActionModal open onClose={handleCloseEditModal} action={editingAction} study={study} />
+      )}
 
       {isDeleteModalOpen && (
         <ConfirmDeleteModal

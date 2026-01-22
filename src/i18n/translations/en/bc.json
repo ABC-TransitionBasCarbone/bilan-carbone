@@ -1230,7 +1230,8 @@
         "steps": "Steps",
         "target": "Target",
         "phase": "Phase",
-        "date": "Date"
+        "date": "Date",
+        "sites": "Sites"
       },
       "modal": {
         "add": "Add an action",
@@ -1245,6 +1246,7 @@
         "target": "Targets",
         "phase": "Mobilization phase",
         "date": "Date",
+        "sites": "Sites",
         "validate": "Validate"
       },
       "targets": {
@@ -1257,13 +1259,12 @@
         "OTHERS_EXTERNAL": "Others external partners"
       },
       "steps": {
-        "AT_LAUNCH_OF_APPROACH": "At the launch of the approach",
-        "AT_LAUNCH_OF_DATA_COLLECTION": "At the launch of data collection",
-        "DURING_DATA_COLLECTION": "During data collection",
-        "BEFORE_RESULTS_RESTITUTION": "Before results restitution",
-        "AT_LAUNCH_OF_TRANSITION_PLAN_CONSTRUCTION": "At the launch of transition plan construction",
-        "DURING_TRANSITION_PLAN_CONSTRUCTION": "During transition plan construction",
-        "IN_SUMMARY_OF_APPROACH": "In summary of the approach"
+        "AT_LAUNCH_OF_APPROACH": "At the launch of the approach of carbon footprint",
+        "AT_LAUNCH_OF_DATA_COLLECTION": "At the launch of data collection ",
+        "FOR_GES_PROFILE_CONSTRUCTION": "For GES profile construction",
+        "FOR_TRANSITION_PLAN_CONSTRUCTION": "For transition plan construction",
+        "IN_SUMMARY_OF_APPROACH": "In summary approach",
+        "FOR_APPROACH_EVALUATION": "For approach evaluation"
       },
       "phases": {
         "AwarnessAndOutreach": "Awareness and outreach",

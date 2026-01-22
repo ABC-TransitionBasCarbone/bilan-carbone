@@ -3,20 +3,23 @@ import LoadingButton from '@/components/base/LoadingButton'
 import Toast, { ToastColors } from '@/components/base/Toast'
 import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormDatePicker } from '@/components/form/DatePicker'
+import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
 import Modal from '@/components/modals/Modal'
 import { EngagementActionSteps, EngagementActionTargets } from '@/constants/engagementActions'
+import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { addEngagementAction, editEngagementAction } from '@/services/serverFunctions/study'
+import { addEngagementAction, editEngagementAction, EngagementActionWithSites } from '@/services/serverFunctions/study'
 import {
   AddEngagementActionCommand,
   AddEngagementActionCommandValidation,
 } from '@/services/serverFunctions/study.command'
 import { objectWithoutNullAttributes } from '@/utils/object'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { EngagementAction, EngagementPhase } from '@prisma/client'
+import { MenuItem } from '@mui/material'
+import { EngagementPhase } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import { useParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import styles from './EngagementActionModal.module.css'
@@ -26,11 +29,12 @@ const toastPosition = { vertical: 'bottom', horizontal: 'left' } as const
 
 interface Props {
   open: boolean
-  action?: EngagementAction
+  action?: EngagementActionWithSites
   onClose: () => void
+  study: FullStudy
 }
 
-const EngagementActionModal = ({ action, open, onClose }: Props) => {
+const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
   const [toast, setToast] = useState<{ text: string; color: ToastColors }>(emptyToast)
   const t = useTranslations('study.engagementActions.modal')
   const tTargets = useTranslations('study.engagementActions.targets')
@@ -38,12 +42,7 @@ const EngagementActionModal = ({ action, open, onClose }: Props) => {
   const tPhases = useTranslations('study.engagementActions.phases')
   const [submitting, setSubmitting] = useState(false)
   const { callServerFunction } = useServerFunction()
-  const params = useParams()
-  const studyId = params.id as string
-
   const router = useRouter()
-
-  console.log('EngagementActionModal render', { action })
 
   const convertedEngagementAction = useMemo(
     () =>
@@ -51,6 +50,7 @@ const EngagementActionModal = ({ action, open, onClose }: Props) => {
         ? {
             ...objectWithoutNullAttributes(action),
             date: action.date.toISOString(),
+            sites: action?.sites?.map((site) => site.id) || [],
           }
         : {},
     [action],
@@ -61,17 +61,16 @@ const EngagementActionModal = ({ action, open, onClose }: Props) => {
     mode: 'onChange',
     reValidateMode: 'onChange',
     defaultValues: {
-      studyId: studyId,
-      steps: '',
-      target: '',
-      description: '',
+      studyId: study.id,
       date: new Date().toISOString(),
+      sites: [],
       ...convertedEngagementAction,
     },
   })
 
   const target = useWatch({ control, name: 'target' })
   const steps = useWatch({ control, name: 'steps' })
+  const sites = useWatch({ control, name: 'sites' })
 
   const onSubmit = async () => {
     setSubmitting(true)
@@ -135,7 +134,7 @@ const EngagementActionModal = ({ action, open, onClose }: Props) => {
                 : target || ''
             }
             name="target"
-            label={t('target')}
+            label={`${t('target')} *`}
             freeSolo
             onInputChange={(_, value) => {
               setValue('target', value || '')
@@ -155,7 +154,7 @@ const EngagementActionModal = ({ action, open, onClose }: Props) => {
                 : steps || ''
             }
             name="steps"
-            label={t('steps')}
+            label={`${t('steps')} *`}
             freeSolo
             onInputChange={(_, value) => {
               setValue('steps', value || '')
@@ -172,6 +171,22 @@ const EngagementActionModal = ({ action, open, onClose }: Props) => {
             name="phase"
             label={`${t('phase')} *`}
           />
+          <FormSelect
+            control={control}
+            translation={t}
+            name={'sites'}
+            label={`${t('sites')} *`}
+            data-testid={`engagement-action-sites`}
+            fullWidth
+            multiple
+            value={sites}
+          >
+            {study.sites.map((site) => (
+              <MenuItem key={site.id} value={site.id}>
+                {site.site.name}
+              </MenuItem>
+            ))}
+          </FormSelect>
           <LoadingButton
             data-testid="activation-button"
             type="submit"

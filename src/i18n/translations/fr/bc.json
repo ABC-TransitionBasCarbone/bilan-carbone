@@ -1230,6 +1230,7 @@
         "steps": "Étape",
         "target": "Cibles",
         "phase": "Phase de mobilisation",
+        "sites": "Sites",
         "date": "Date"
       },
       "modal": {
@@ -1244,6 +1245,7 @@
         "stepsPlaceholder": "Choississez les étapes de votre action",
         "target": "Cibles",
         "phase": "Phase de mobilisation",
+        "sites": "Sites",
         "date": "Date",
         "validate": "Valider"
       },
@@ -1257,13 +1259,12 @@
         "OTHERS_EXTERNAL": "Autres partenaires externes"
       },
       "steps": {
-        "AT_LAUNCH_OF_APPROACH": "Au lancement de la démarche",
-        "AT_LAUNCH_OF_DATA_COLLECTION": "Au lancement de la collecte de données",
-        "DURING_DATA_COLLECTION": "Durant la collecte de données",
-        "BEFORE_RESULTS_RESTITUTION": "Avant restitution des résultats",
-        "AT_LAUNCH_OF_TRANSITION_PLAN_CONSTRUCTION": "Au lancement de la construction du plan de transition",
-        "DURING_TRANSITION_PLAN_CONSTRUCTION": "Durant la construction du plan de transition",
-        "IN_SUMMARY_OF_APPROACH": "Dans le résumé de la démarche"
+        "AT_LAUNCH_OF_APPROACH": "Au lancement et cadrage du Bilan Carbone",
+        "AT_LAUNCH_OF_DATA_COLLECTION": "Au lancement de la collecte des données",
+        "FOR_GES_PROFILE_CONSTRUCTION": "Pour la construction du profil GES",
+        "FOR_TRANSITION_PLAN_CONSTRUCTION": "Pour la construction du plan de transition",
+        "IN_SUMMARY_OF_APPROACH": "En synthèse de la démarche",
+        "FOR_APPROACH_EVALUATION": "Pour l'évaluation de la démarche"
       },
       "phases": {
         "AwarnessAndOutreach": "Mobilisation et sensibilisation",
