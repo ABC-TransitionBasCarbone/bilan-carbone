@@ -6,17 +6,26 @@
 import { prismaClient } from '@/db/client'
 import { getCutEngine } from '@/environments/cut/publicodes/cut-engine'
 import { studySiteToSituation } from '@/environments/cut/publicodes/studySiteToSituation'
-import { CutSituation } from '@/environments/cut/publicodes/types'
+import { CutRuleName, CutSituation } from '@/environments/cut/publicodes/types'
 import { Answer, QuestionType, Unit } from '@prisma/client'
-import { CutSituationKey, InternQuestionId, questionsPublicodesMapping } from './questionsPublicodesMapping'
-// Find all study sites that have CNC data but missing fields
+import {
+  CutSituationKey,
+  InternQuestionId,
+  listQuestionsIds,
+  questionsPublicodesMapping,
+} from './questionsPublicodesMapping'
 
 // Pour chaque answers:
 // 1. Récupérer la question associée
 // 2. Faire le mapping avec l'entrée dans la situation correspondante
 // 3. Ajouter l'entrée dans la situation du record
 
-const studySiteSituationMap: Record<string, CutSituation> = {}
+type stuationWithListLayout = {
+  mainSituation: CutSituation
+  listLayoutSituations: Record<CutRuleName, CutSituation[]> | {}
+}
+
+const studySiteSituationMap: Record<string, stuationWithListLayout> = {}
 
 const mappedQuestions = Object.values(questionsPublicodesMapping).flatMap((mapping) => Object.keys(mapping || {}))
 
@@ -45,10 +54,13 @@ function formatToPublicodesValue(
       break
     case 'NUMBER':
       situationKey = questionsPublicodesMapping.NUMBER?.[questionInternId] as CutSituationKey
-      situationValue = parseFloat(value)
+      situationValue = parseFloat(value as string)
       break
     case 'TEXT':
       situationKey = questionsPublicodesMapping.TEXT?.[questionInternId] as CutSituationKey
+      if (value === 'Invalid Date') {
+        return null
+      }
       situationValue = unit === 'YEAR' ? `'01/${value}'` : `'${value}'`
       break
     case 'SELECT':
@@ -61,7 +73,7 @@ function formatToPublicodesValue(
       break
     case 'QCM':
       // convert value string like "[option1, option2]" to array
-      const selectedOptions = JSON.parse(value)
+      const selectedOptions = JSON.parse(value as string)
       for (const option of selectedOptions) {
         const key =
           questionsPublicodesMapping.QCM?.[questionInternId]?.[
@@ -82,45 +94,105 @@ function formatToPublicodesValue(
     }
     situationState[situationKey] = situationValue
   }
-
   return situationState
 }
 
-async function processAnswer(answerCourante: Answer) {
-  const questionCourante = await prismaClient.question.findUnique({
-    where: { id: answerCourante.questionId },
-  })
+async function processTableAnswer(answerCourante: Answer, questionCourante: { idIntern: string; type: QuestionType }) {
+  const questionInternId = questionCourante.idIntern
+  const value = answerCourante.response
+
+  // @ts-ignore: Ignore dynamic key access
+  const rows = value?.rows?.map((row) => row.data)
+  for (const row of rows ?? []) {
+    const selectQuestionInternId = questionInternId.replace('10-', '11-') as InternQuestionId
+    const publicodesKey = // @ts-ignore: Ignore dynamic key access
+      questionsPublicodesMapping.SELECT?.[selectQuestionInternId]?.[1][row[selectQuestionInternId]]?.replaceAll(
+        ' ',
+        '_',
+      )
+
+    if (!publicodesKey) {
+      console.warn(
+        `Skipping unmapped table row for question ID intern ${questionInternId} (question ID: ${answerCourante.id})`,
+      )
+      continue
+    }
+
+    for (const questionId of Object.keys(row ?? {})) {
+      if (questionId.startsWith('11-')) {
+        continue
+      }
+
+      await processAnswer(
+        {
+          id: answerCourante.id,
+          questionId: questionId,
+          studySiteId: answerCourante.studySiteId,
+          response: row[questionId],
+        } as Answer,
+        `${questionId}-${publicodesKey}`,
+      )
+    }
+  }
+
+  return null
+}
+
+async function processAnswer(answerCourante: Answer, mappingInternId?: string) {
+  // Si mappingInternId est fourni, c'est un traitement récursif et questionId est en fait un idIntern
+  const questionCourante = mappingInternId
+    ? await prismaClient.question.findUnique({
+        where: { idIntern: answerCourante.questionId },
+      })
+    : await prismaClient.question.findUnique({
+        where: { id: answerCourante.questionId },
+      })
 
   if (!questionCourante) {
     throw new Error(`Question with ID ${answerCourante.questionId} not found for answer ID ${answerCourante.id}`)
   }
 
-  if (!mappedQuestions.includes(questionCourante.idIntern)) {
+  if (listQuestionsIds.has(questionCourante.idIntern as InternQuestionId)) {
+    // console.log(`Skipping list layout question ID intern ${questionCourante.idIntern} (question ID: ${answerCourante.id})`)
+    return
+  }
+
+  if (mappingInternId && !mappedQuestions.includes(mappingInternId)) {
+    console.warn(`Skipping unmapped table question ID ${mappingInternId} for answer ID ${answerCourante.id}`)
+    return
+  }
+
+  if (!mappingInternId && !mappedQuestions.includes(questionCourante.idIntern)) {
     console.warn(`Skipping unmapped question ID ${questionCourante.idIntern} for answer ID ${answerCourante.id}`)
     return
   }
 
   // Initialiser la situation du studySite si pas encore fait
   if (!studySiteSituationMap[answerCourante.studySiteId]) {
-    studySiteSituationMap[answerCourante.studySiteId] = {}
+    studySiteSituationMap[answerCourante.studySiteId] = { mainSituation: {}, listLayoutSituations: {} }
+  }
+
+  if (questionCourante.type === 'TABLE') {
+    await processTableAnswer(answerCourante, questionCourante)
+    return
   }
 
   const situationState = formatToPublicodesValue(
     answerCourante.response as string,
     questionCourante.type,
     questionCourante.unit,
-    questionCourante.idIntern as InternQuestionId,
+    (mappingInternId ?? questionCourante.idIntern) as InternQuestionId,
   )
 
   if (!situationState || Object.keys(situationState).length === 0) {
-    console.log(
-      `Skipping empty response for question ID intern ${questionCourante.idIntern} (question ID: ${answerCourante.id})`,
-    )
+    // console.log(
+    //   `Skipping empty response for question ID intern ${questionCourante.idIntern} (question ID: ${answerCourante.id})`,
+    // )
     return
   }
 
-  studySiteSituationMap[answerCourante.studySiteId] = {
-    ...studySiteSituationMap[answerCourante.studySiteId],
+  studySiteSituationMap[answerCourante.studySiteId].mainSituation = {
+    ...studySiteSituationMap[answerCourante.studySiteId].mainSituation,
     ...situationState,
   }
 }
@@ -138,21 +210,20 @@ async function main() {
 
   for (const site of studySiteInfo) {
     const additionalSituation = studySiteToSituation(site)
-    studySiteSituationMap[site.id] = {
-      ...studySiteSituationMap[site.id],
+    studySiteSituationMap[site.id].mainSituation = {
+      ...studySiteSituationMap[site.id].mainSituation,
       ...additionalSituation,
     }
   }
 
   console.log('Mapped situation for study site:', studySiteSituationMap)
 
-  // check dans l'engine avant de save la situation
-
+  // Check dans l'engine avant de save la situation
   const engine = getCutEngine()
 
   for (const [studySiteId, situation] of Object.entries(studySiteSituationMap)) {
     try {
-      engine.setSituation(situation)
+      engine.setSituation(situation.mainSituation)
       engine.evaluate('bilan')
     } catch (e) {
       console.error(`Error evaluating situation for study site ID ${studySiteId}:`, e)

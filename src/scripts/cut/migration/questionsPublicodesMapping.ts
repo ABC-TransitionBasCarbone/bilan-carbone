@@ -10,17 +10,26 @@ export type QuestionsPublicodesMappingType = Partial<
     QuestionType,
     Partial<
       Record<
-        InternQuestionId,
+        InternQuestionId | `${InternQuestionId}-${string}`, // Prefixing the key with the InternQuestionId
         CutSituationKey | Record<string, CutSituationKey> | [CutSituationKey, Record<string, string>]
       >
     >
   >
 >
 
+export const listQuestionsIds = new Set<InternQuestionId>([
+  '10-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer',
+  '10-decrivez-les-deplacements-professionnels-de-vos-collaborateurs',
+  '10-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema',
+  '10-decrivez-les-differentes-salles-du-cinema',
+
+  // Visiblement, ces questions n'existent plus
+  // '10-comment-stockez-vous-les-films',
+])
+
 export const questionsPublicodesMapping: QuestionsPublicodesMappingType = {
   NUMBER: {
     'quelle-est-la-surface-totale-du-batiment': 'fonctionnement . bâtiment . autre activité . surface',
-    'reseaux-urbains-chaleur': 'fonctionnement . énergie . réseau de chaleur . consommation',
     'de-combien-de-bornes-de-caisse-libre-service-dispose-le-cinema':
       'billetterie et communication . caisses et bornes . caisses libre service . nombre',
     'quelle-est-la-surface-plancher-du-cinema': 'fonctionnement . bâtiment . construction . surface',
@@ -44,8 +53,9 @@ export const questionsPublicodesMapping: QuestionsPublicodesMappingType = {
     fuel: 'fonctionnement . énergie . fioul . consommation',
     'de-combien-de-disques-durs-disposez-vous': 'salles et cabines . matériel technique . disques durs . nombre',
     'quelle-quantite-de-lampes-xenon-jetez-vous-par-an': 'déchets . exceptionnels . lampe xenon . nombre',
-    //TODO vérifier si chaleur ou froid
-    'reseaux-urbains-chaleurfroid': 'fonctionnement . énergie . réseau de chaleur . consommation',
+    'reseaux-urbains-chaleur': 'fonctionnement . énergie . réseau de chaleur . consommation',
+    'reseaux-urbains-froid': 'fonctionnement . énergie . réseau de froid . consommation',
+    'reseaux-urbains-chaleurfroid': 'fonctionnement . énergie . réseau de froid . consommation',
     'combien-dequipes-de-films-avez-vous-recu-en': 'tournées avant premières . équipes reçues . nombre équipes',
     'bois-granules': 'fonctionnement . énergie . granulés . consommation',
     'de-combien-de-lunettes-3d-disposez-vous': 'salles et cabines . autre matériel . lunettes 3D . nombre',
@@ -63,15 +73,137 @@ export const questionsPublicodesMapping: QuestionsPublicodesMappingType = {
     'quel-montant-avez-vous-depense-en-petites-fournitures-de-bureau':
       'fonctionnement . activités de bureau . petites fournitures . montant',
     'si-oui-de-combien-de-places': 'fonctionnement . bâtiment . parking . nombre de places',
+    '105-decrivez-les-differentes-salles-du-cinema':
+      'salles et cabines . matériel technique . salle . écran . surface écran',
+    '13-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema':
+      'fonctionnement . équipe . collaborateur type . transport . distance',
+    '12-decrivez-les-deplacements-professionnels-de-vos-collaborateurs':
+      'fonctionnement . déplacements pro . déplacement type . transport . distance',
+    '17-decrivez-les-deplacements-professionnels-de-vos-collaborateurs':
+      'fonctionnement . déplacements pro . déplacement type . nombre de nuitées',
+    '15-decrivez-les-deplacements-professionnels-de-vos-collaborateurs':
+      'fonctionnement . déplacements pro . déplacement type . nombre occurences',
+    '13-decrivez-les-deplacements-professionnels-de-vos-collaborateurs':
+      'fonctionnement . déplacements pro . déplacement type . nombre participants',
+    '12-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema':
+      'fonctionnement . équipe . collaborateur type . nombre de jours par semaine',
+    '12-veuillez-renseigner-les-dechets-generes-par-semaine-ordures_ménagères':
+      'déchets . ordinaires . ordures ménagères . nombre bennes',
+    '12-veuillez-renseigner-les-dechets-generes-par-semaine-emballages_et_papier':
+      'déchets . ordinaires . emballages et papier . nombre bennes',
+    '12-veuillez-renseigner-les-dechets-generes-par-semaine-biodéchets':
+      'déchets . ordinaires . biodéchets . nombre bennes',
+    '12-veuillez-renseigner-les-dechets-generes-par-semaine-verre': 'déchets . ordinaires . verre . nombre bennes',
+    '13-veuillez-renseigner-les-dechets-generes-par-semaine-ordures_ménagères':
+      'déchets . ordinaires . ordures ménagères . taille benne',
+    '13-veuillez-renseigner-les-dechets-generes-par-semaine-emballages_et_papier':
+      'déchets . ordinaires . emballages et papier . taille benne',
+    '13-veuillez-renseigner-les-dechets-generes-par-semaine-biodéchets':
+      'déchets . ordinaires . biodéchets . taille benne',
+    '13-veuillez-renseigner-les-dechets-generes-par-semaine-verre': 'déchets . ordinaires . verre . taille benne',
+    '14-veuillez-renseigner-les-dechets-generes-par-semaine-ordures_ménagères':
+      'déchets . ordinaires . ordures ménagères . fréquence ramassage',
+    '14-veuillez-renseigner-les-dechets-generes-par-semaine-emballages_et_papier':
+      'déchets . ordinaires . emballages et papier . fréquence ramassage',
+    '14-veuillez-renseigner-les-dechets-generes-par-semaine-biodéchets':
+      'déchets . ordinaires . biodéchets . fréquence ramassage',
+    '14-veuillez-renseigner-les-dechets-generes-par-semaine-verre':
+      'déchets . ordinaires . verre . fréquence ramassage',
+    '12-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner-réfrigérateurs':
+      'confiseries et boissons . électroménager . réfrigérateurs . nombre',
+    '12-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner-congélateurs':
+      'confiseries et boissons . électroménager . congélateurs . nombre',
+    '12-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner-warmers':
+      'confiseries et boissons . électroménager . warmers . nombre',
+    '12-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner-distributeurs':
+      'confiseries et boissons . électroménager . distributeurs . nombre',
+    '12-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine-affiches_120x160':
+      'billetterie et communication . matériel distributeurs . affiches . affiches 120x160 . nombre',
+    '12-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine-affiches_40x60':
+      'billetterie et communication . matériel distributeurs . affiches . affiches 40x60 . nombre',
+    '12-quelles-sont-les-distances-parcourues-au-total-sur-lannee-pour-chacun-des-modes-de-transport-suivants-RER_et_transilien':
+      'mobilité spectateurs . résultat précis . empreinte . RER et transilien . distance',
+    '12-quelles-sont-les-distances-parcourues-au-total-sur-lannee-pour-chacun-des-modes-de-transport-suivants-métro_ou_tram':
+      'mobilité spectateurs . résultat précis . empreinte . métro ou tram . distance',
+    '12-quelles-sont-les-distances-parcourues-au-total-sur-lannee-pour-chacun-des-modes-de-transport-suivants-bus':
+      'mobilité spectateurs . résultat précis . empreinte . bus . distance',
+    '12-quelles-sont-les-distances-parcourues-au-total-sur-lannee-pour-chacun-des-modes-de-transport-suivants-vélo_électrique':
+      'mobilité spectateurs . résultat précis . empreinte . vélo électrique . distance',
+    '12-quelles-sont-les-distances-parcourues-au-total-sur-lannee-pour-chacun-des-modes-de-transport-suivants-vélo_classique':
+      'mobilité spectateurs . résultat précis . empreinte . vélo classique . distance',
+    '12-quelles-sont-les-distances-parcourues-au-total-sur-lannee-pour-chacun-des-modes-de-transport-suivants-marche':
+      'mobilité spectateurs . résultat précis . empreinte . marche . distance',
+    '12-quelles-sont-les-distances-parcourues-au-total-sur-lannee-pour-chacun-des-modes-de-transport-suivants-voiture_diesel':
+      'mobilité spectateurs . résultat précis . empreinte . voiture diesel . distance',
+    '12-quelles-sont-les-distances-parcourues-au-total-sur-lannee-pour-chacun-des-modes-de-transport-suivants-voiture_essence':
+      'mobilité spectateurs . résultat précis . empreinte . voiture essence . distance',
+    '12-quelles-sont-les-distances-parcourues-au-total-sur-lannee-pour-chacun-des-modes-de-transport-suivants-voiture_hybride':
+      'mobilité spectateurs . résultat précis . empreinte . voiture hybride . distance',
+    '12-quelles-sont-les-distances-parcourues-au-total-sur-lannee-pour-chacun-des-modes-de-transport-suivants-voiture_électrique':
+      'mobilité spectateurs . résultat précis . empreinte . voiture électrique . distance',
+    '12-quelles-sont-les-distances-parcourues-au-total-sur-lannee-pour-chacun-des-modes-de-transport-suivants-moto':
+      'mobilité spectateurs . résultat précis . empreinte . moto . distance',
+    '12-quelles-sont-les-distances-parcourues-au-total-sur-lannee-pour-chacun-des-modes-de-transport-suivants-scooter':
+      'mobilité spectateurs . résultat précis . empreinte . scooter . distance',
+    '12-quelles-sont-les-distances-parcourues-au-total-sur-lannee-pour-chacun-des-modes-de-transport-suivants-trottinette_électrique':
+      'mobilité spectateurs . résultat précis . empreinte . trottinette électrique . distance',
+    '12-quelle-quantite-de-materiel-produisez-vous-chaque-mois-affiches':
+      'billetterie et communication . matériel cinéma . production . affiches . nombre',
+    '12-quelle-quantite-de-materiel-produisez-vous-chaque-mois-programme':
+      'billetterie et communication . matériel cinéma . production . programme . nombre',
+    '12-quelle-quantite-de-materiel-produisez-vous-chaque-mois-flyers':
+      'billetterie et communication . matériel cinéma . production . flyers . nombre',
+    '12-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-mois-PLV_comptoir':
+      'billetterie et communication . matériel distributeurs . PLV . PLV comptoir . nombre',
+    '12-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-mois-PLV_grand_format':
+      'billetterie et communication . matériel distributeurs . PLV . PLV grand format . nombre',
+    // '14-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer'
+    // '108-decrivez-les-differentes-salles-du-cinema'
+    // '13-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer'
   },
   TEXT: {
     'quand-le-batiment-a-t-il-ete-construit': 'fonctionnement . bâtiment . construction . année de construction',
+    '101-decrivez-les-differentes-salles-du-cinema': 'salles et cabines . matériel technique . salle . nom',
+    '12-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer':
+      'fonctionnement . activités de bureau . informatique . appareil . année achat',
+    '111-decrivez-les-differentes-salles-du-cinema':
+      'salles et cabines . matériel technique . salle . système son . année achat',
+    '11-decrivez-les-deplacements-professionnels-de-vos-collaborateurs':
+      'fonctionnement . déplacements pro . déplacements . nom',
+    '13-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner-réfrigérateurs':
+      'confiseries et boissons . électroménager . réfrigérateurs . année achat',
+    '14-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner-réfrigérateurs':
+      'confiseries et boissons . électroménager . réfrigérateurs . durée location',
+    '13-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner-congélateurs':
+      'confiseries et boissons . électroménager . congélateurs . année achat',
+    '14-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner-congélateurs':
+      'confiseries et boissons . électroménager . congélateurs . durée location',
+    '13-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner-warmers':
+      'confiseries et boissons . électroménager . warmers . année achat',
+    '14-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner-warmers':
+      'confiseries et boissons . électroménager . warmers . durée location',
+    '13-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner-distributeurs':
+      'confiseries et boissons . électroménager . distributeurs . année achat',
+    '14-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner-distributeurs':
+      'confiseries et boissons . électroménager . distributeurs . durée location',
+    '11-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': 'fonctionnement . équipe . collaborateurs . nom',
+    '109-decrivez-les-differentes-salles-du-cinema':
+      'salles et cabines . matériel technique . salle . fauteuils . année achat',
+    '103-decrivez-les-differentes-salles-du-cinema':
+      'salles et cabines . matériel technique . salle . projecteur . année achat',
+    '106-decrivez-les-differentes-salles-du-cinema':
+      'salles et cabines . matériel technique . salle . écran . année achat',
+    // Visiblement, cette question n'existe plus
+    // '10-comment-stockez-vous-les-films': ''
   },
   QCU: {
     'le-cinema-dispose-t-il-dun-parking': 'fonctionnement . bâtiment . parking présent',
     'vendez-vous-des-boissons-et-des-confiseries': 'confiseries et boissons . achats . vente sur place',
     'le-batiment-est-il-partage-avec-une-autre-activite': 'fonctionnement . bâtiment . est partagé',
     'votre-cinema-est-il-equipe-de-la-climatisation': 'fonctionnement . énergie . est équipé climatisation',
+    // Visiblement, cette question n'existe plus
+    // '12-comment-stockez-vous-les-films': ''
+    // '11-comment-stockez-vous-les-films': ''
   },
   QCM: {
     'de-quel-type-de-renovation-sagit-il': {
@@ -141,11 +273,31 @@ export const questionsPublicodesMapping: QuestionsPublicodesMappingType = {
         'Projecteur Laser': 'laser',
       },
     ],
-    '11-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine': [
-      'billetterie et communication . matériel distributeurs . affiches',
+    '107-decrivez-les-differentes-salles-du-cinema': [
+      'salles et cabines . matériel technique . salle . fauteuils . type',
       {
-        'Affiches 120x160': 'affiches 120x160',
-        'Affiches 40x60': 'affiches 40x60',
+        'Fauteuils classiques': 'fauteuils classiques',
+        'Fauteuils 4DX': 'fauteuils 4DX',
+      },
+    ],
+    '14-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': [
+      'fonctionnement . équipe . collaborateur type . transport . moyen de transport',
+      {
+        'RER et Transilien': 'RER et transilien',
+        'Métro, tramway': 'métro ou tram',
+        Bus: 'bus',
+        'Vélo électrique': 'vélo électrique',
+        'Vélo classique': 'vélo classique',
+        Marche: 'marche',
+        'Voiture diesel': 'voiture diesel',
+        'Voiture essence': 'voiture essence',
+        'Voiture hybride': 'voiture hybride',
+        'Voiture électrique': 'voiture électrique',
+        Moto: 'moto',
+        Scooter: 'scooter',
+        TGV: 'TGV',
+        'Trottinette électrique': 'trottinette électrique',
+        'Avion moyen courrier': 'avion moyen courrier',
       },
     ],
     '14-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': [
@@ -191,22 +343,7 @@ export const questionsPublicodesMapping: QuestionsPublicodesMappingType = {
         'Auro 3D / Ice': 'auro 3dIce',
         'DTS : X': 'dtsx',
         // visblement, l'option n'est plus possible
-        THX: '',
-      },
-    ],
-    '11-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-mois': [
-      'billetterie et communication . matériel distributeurs . PLV',
-      {
-        'PLV comptoir': 'PLV comptoir',
-        'PLV grand format': 'PLV grand format',
-      },
-    ],
-    '11-quelle-quantite-de-materiel-produisez-vous-chaque-mois': [
-      'billetterie et communication . matériel cinéma . production',
-      {
-        Affiches: 'affiches',
-        Programmes: 'programme',
-        Flyers: 'flyers',
+        // THX: '',
       },
     ],
     '16-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': [
@@ -227,5 +364,77 @@ export const questionsPublicodesMapping: QuestionsPublicodesMappingType = {
         'Ecran 3D': 'écran 3D',
       },
     ],
+    '11-veuillez-renseigner-les-dechets-generes-par-semaine': [
+      'déchets . ordinaires',
+      {
+        'Ordures ménagères (déchets non triés / sans filière)': 'ordures ménagères',
+        'Emballages et papier (plastique, métal, papier et carton)': 'emballages et papier',
+        'Biodéchets (restes alimentaires)': 'biodéchets',
+        'Déchets verre': 'verre',
+      },
+    ],
+    '11-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': [
+      'confiseries et boissons . électroménager . appareil',
+      {
+        Réfrigérateurs: 'réfrigérateurs',
+        Congélateurs: 'congélateurs',
+        Warmers: 'warmers',
+        'Distributeurs snacks / boisson': 'distributeurs',
+      },
+    ],
+    '11-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine': [
+      'billetterie et communication . matériel distributeurs . affiches',
+      {
+        'Affiches 120x160': 'affiches 120x160',
+        'Affiches 40x60': 'affiches 40x60',
+      },
+    ],
+    '11-quelles-sont-les-distances-parcourues-au-total-sur-lannee-pour-chacun-des-modes-de-transport-suivants': [
+      'mobilité spectateurs . résultat précis . empreinte',
+      {
+        'RER et Transilien': 'RER et transilien',
+        'Métro, tramway': 'métro ou tram',
+        Bus: 'bus',
+        'Vélo électrique': 'vélo électrique',
+        'Vélo classique': 'vélo classique',
+        Marche: 'marche',
+        'Voiture diesel': 'voiture diesel',
+        'Voiture essence': 'voiture essence',
+        'Voiture hybride': 'voiture hybride',
+        'Voiture électrique': 'voiture électrique',
+        Moto: 'moto',
+        Scooter: 'scooter',
+        TGV: 'TGV',
+        'Trottinette électrique': 'trottinette électrique',
+        'Avion moyen courrier': 'avion moyen courrier',
+      },
+    ],
+    '11-quelle-quantite-de-materiel-produisez-vous-chaque-mois': [
+      'billetterie et communication . matériel cinéma . production',
+      {
+        Affiches: 'affiches',
+        Programme: 'programme',
+        Flyers: 'flyers',
+      },
+    ],
+    '11-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-mois': [
+      'billetterie et communication . matériel distributeurs . PLV',
+      {
+        'PLV comptoir': 'PLV comptoir',
+        'PLV grand format': 'PLV grand format',
+      },
+    ],
+  },
+  TABLE: {
+    '10-veuillez-renseigner-les-dechets-generes-par-semaine': 'déchets . ordinaires',
+    '10-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': 'confiseries et boissons . électroménager',
+    '10-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine':
+      'billetterie et communication . matériel distributeurs . affiches',
+    '10-quelles-sont-les-distances-parcourues-au-total-sur-lannee-pour-chacun-des-modes-de-transport-suivants':
+      'mobilité spectateurs . résultat précis . empreinte',
+    '10-quelle-quantite-de-materiel-produisez-vous-chaque-mois':
+      'billetterie et communication . matériel cinéma . production',
+    '10-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-mois':
+      'billetterie et communication . matériel distributeurs . PLV',
   },
 }
