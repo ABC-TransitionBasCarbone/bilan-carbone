@@ -12,7 +12,7 @@ commun . nombre de jours dans une semaine scolaire:
   titre: Nombre de jours dans une semaine scolaire
   description: Nombre de jours pris en compte pour le calcul hebdomadaire.
   valeur: 5
-  unité: jour
+  unité: jour/semaine
 
 commun . nombre de semaines par an:
   titre: Nombre de semaines par an
@@ -24,7 +24,7 @@ commun . nombre de semaines scolaire par an:
   titre: Nombre de semaines scolaire par an
   description: Nombre de semaines scolaires prises en compte pour le calcul annuel.
   valeur: 36
-  unité: semaine
+  unité: semaine/an
 
 commun . année actuelle:
   titre: Année actuelle
@@ -36,6 +36,7 @@ commun . FE:
   titre: Facteur d'émission communs
   description: Facteurs d'émission communs à plusieurs sous postes.
 
+# TODO: à factoriser avec `publicodes-count` ?
 commun . FE . moyen de transport:
   titre: Facteur d'émission moyens de transport
   avec:
@@ -51,43 +52,43 @@ commun . FE . moyen de transport:
       unité: kgCO2e/km
       meta:
         incertitude: 2
-    Vélo à assistance électrique:
+    vélo électrique:
       titre: Facteur d'émission Vélo à assistance électrique
       valeur: 0.011
       unité: kgCO2e/km
       meta:
         incertitude: 3
-    Trottinette électrique:
+    trottinette électrique:
       titre: Facteur d'émission Trottinette électrique
       valeur: 0.025
       unité: kgCO2e/km
       meta:
         incertitude: 3
-    Moto essence:
+    moto essence:
       titre: Facteur d'émission Moto essence
       valeur: 0.076
       unité: kgCO2e/km
       meta:
         incertitude: 3
-    Véhicule compact électrique:
+    véhicule compact électrique:
       titre: Facteur d'émission Véhicule compact électrique
       valeur: 0.103
       unité: kgCO2e/km
       meta:
         incertitude: 4
-    Voiture individuelle essence:
+    voiture individuelle essence:
       titre: Facteur d'émission Voiture individuelle – essence
       valeur: 0.239
       unité: kgCO2e/km
       meta:
         incertitude: 5
-    Voiture individuelle diesel:
+    voiture individuelle diesel:
       titre: Facteur d'émission Voiture individuelle – diesel
       valeur: 0.227
       unité: kgCO2e/km
       meta:
         incertitude: 5
-    Autobus moyen:
+    autobus moyen:
       titre: Facteur d'émission Autobus moyen
       valeur: 0.15
       unité: kgCO2e/km
@@ -105,19 +106,19 @@ commun . FE . moyen de transport:
       unité: kgCO2e/km
       meta:
         incertitude: 2
-    Avion Court courrier:
+    avion court courrier:
       titre: Facteur d'émission Avion/Court courrier
       valeur: 0.258
       unité: kgCO2e/km
       meta:
         incertitude: 5
-    Avion Moyen courrier:
+    avion moyen courrier:
       titre: Facteur d'émission Avion/Moyen courrier
       valeur: 0.187
       unité: kgCO2e/km
       meta:
         incertitude: 5
-    Avion Long courrier:
+    avion long courrier:
       titre: Facteur d'émission Avion/Long courrier
       valeur: 0.152
       unité: kgCO2e/km

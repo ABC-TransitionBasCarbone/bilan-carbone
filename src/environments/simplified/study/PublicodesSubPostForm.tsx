@@ -2,11 +2,10 @@
 
 import { SubPost } from '@/components/dynamic-form/types/questionTypes'
 import PublicodesForm from '@/components/publicodes-form/PublicodesForm'
+import { usePublicodesForm } from '@/lib/publicodes/context'
 import { CircularProgress } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useCutPublicodes } from '../context/publicodesContext'
-import { getFormLayoutsForSubPostCUT } from '../publicodes/subPostMapping'
 import styles from './PublicodesSubPostForm.module.css'
 
 export interface PublicodesSubPostFormProps {
@@ -14,14 +13,14 @@ export interface PublicodesSubPostFormProps {
 }
 
 const PublicodesSubPostForm = ({ subPost }: PublicodesSubPostFormProps) => {
-  const tCutQuestions = useTranslations('emissionFactors.post.questions')
-  const { engine, situation, updateField, isLoading, error } = useCutPublicodes()
-  const formLayouts = getFormLayoutsForSubPostCUT(subPost)
+  const tQuestions = useTranslations('emissionFactors.post.questions')
+  const { engine, situation, updateField, isLoading, error, config } = usePublicodesForm()
+  const formLayouts = config.getFormLayout(subPost)
 
   if (error) {
     return (
       <div className={classNames(styles.errorContainer, 'p1')}>
-        <h3 className={classNames(styles.errorTitle, 'mb-2')}>{tCutQuestions('errorLoadingQuestions')}</h3>
+        <h3 className={classNames(styles.errorTitle, 'mb-2')}>{tQuestions('errorLoadingQuestions')}</h3>
         <p className={styles.errorMessage}>{error}</p>
       </div>
     )
@@ -38,7 +37,7 @@ const PublicodesSubPostForm = ({ subPost }: PublicodesSubPostFormProps) => {
   if (formLayouts === undefined) {
     return (
       <div className={classNames(styles.loadingContainer, 'p1')}>
-        <p className={styles.noQuestionsMessage}>{tCutQuestions('noQuestions')}</p>
+        <p className={styles.noQuestionsMessage}>{tQuestions('noQuestions')}</p>
       </div>
     )
   }

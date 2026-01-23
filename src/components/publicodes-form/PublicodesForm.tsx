@@ -46,7 +46,12 @@ export default function PublicodesForm<RuleName extends string, S extends Situat
       const isApplicable = evaluatedLayoutIsApplicable(evaluatedFormLayout)
       return { evaluatedFormLayout, isLinkedToPreviousQuestion, key, isApplicable }
     })
-  }, [formLayouts, engine, situation])
+  }, [
+    formLayouts,
+    engine,
+    // NOTE: the situation needs to be a dependency to re-evaluate applicability when it changes
+    situation,
+  ])
 
   return (
     <Box className="dynamic-form">

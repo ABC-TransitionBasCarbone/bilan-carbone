@@ -199,7 +199,7 @@ const AllResults = ({
 
       {/* Emissions analysis for environments that have it */}
       {environment && hasAccessToSimplifiedEmissionAnalysis(environment) ? (
-        <EmissionsAnalysisClickson study={study} studySite={studySite} withDepValue={totalValue} caUnit={caUnit} />
+        <EmissionsAnalysisClickson study={study} studySite={studySite} totalValue={totalValue} />
       ) : null}
 
       {environment && hasAccessToAdvancedEmissionAnalysis(environment) ? (

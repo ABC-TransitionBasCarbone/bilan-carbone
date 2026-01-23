@@ -2,6 +2,7 @@
 import { FullStudy } from '@/db/study'
 import {
   getSimplifiedPublicodesConfig,
+  SimplifiedEnvironment,
   SimplifiedPublicodesConfig,
 } from '@/services/publicodes/simplifiedPublicodesConfig'
 import { BaseResultsByPost, BaseResultsBySite } from '@/services/results/consolidated'
@@ -55,7 +56,7 @@ export function usePublicodesResults(
   const [situationBySiteId, setSituationsBySiteId] = useState<Record<string, Situation<string>>>({})
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const config = useMemo(() => getSimplifiedPublicodesConfig(environment), [environment])
+  const config = useMemo(() => getSimplifiedPublicodesConfig(environment as SimplifiedEnvironment), [environment])
   const studySiteIds = useMemo(() => {
     if (studySite === 'all') {
       return study.sites.map((s) => s.id).toSorted()

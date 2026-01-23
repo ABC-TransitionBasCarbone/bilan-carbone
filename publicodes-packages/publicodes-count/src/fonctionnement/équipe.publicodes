@@ -21,6 +21,7 @@ fonctionnement . équipe . collaborateur type . nombre de jours par semaine:
   question: Nombre de jours / semaine
   unité: jour/semaine
 
+# NOTE: pourquoi on parle de repas ici ?
 fonctionnement . équipe . collaborateur type . repas:
   formule:
     produit:
