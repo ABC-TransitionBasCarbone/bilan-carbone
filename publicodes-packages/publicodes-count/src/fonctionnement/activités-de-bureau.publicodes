@@ -82,7 +82,7 @@ fonctionnement . activités de bureau . informatique . empreinte équipement:
   unité: kgCO2e
 
 fonctionnement . activités de bureau . informatique . équipement:
-  titre: Type dd'équipement informatique
+  titre: Type d'équipement informatique
   question: Type d'équipement informatique
   une possibilité:
     - ordinateurs fixes
