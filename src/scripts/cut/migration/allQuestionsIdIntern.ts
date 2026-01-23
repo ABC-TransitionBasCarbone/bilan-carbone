@@ -55,6 +55,7 @@ export const allQuestionsIdIntern = [
   'de-combien-de-disques-durs-disposez-vous',
   'quelle-quantite-de-lampes-xenon-jetez-vous-par-an',
   '13-veuillez-renseigner-les-dechets-generes-par-semaine',
+  'reseaux-urbains-froid',
   'reseaux-urbains-chaleurfroid',
   'selon-vous-en-moyenne-un-spectateur-achete',
   '11-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
