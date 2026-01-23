@@ -1,5 +1,4 @@
 import { getOrCreateEngine } from '@/lib/publicodes/singletons'
-import rules from '@abc-transitionbascarbone/publicodes-clickson'
 import Engine from 'publicodes'
 import { ClicksonPublicodesEngine } from './types'
 
@@ -9,6 +8,7 @@ import { ClicksonPublicodesEngine } from './types'
  */
 export function getClicksonEngine(): ClicksonPublicodesEngine {
   return getOrCreateEngine('CLICKSON', () => {
+    const rules = require('@abc-transitionbascarbone/publicodes-clickson').default
     return new Engine(rules, {
       flag: {
         // option required by @publicodes/forms.

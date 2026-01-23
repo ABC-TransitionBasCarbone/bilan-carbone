@@ -1,5 +1,4 @@
 import { getOrCreateEngine } from '@/lib/publicodes/singletons'
-import rules from '@abc-transitionbascarbone/publicodes-count'
 import Engine from 'publicodes'
 import { CutPublicodesEngine } from './types'
 
@@ -9,6 +8,8 @@ import { CutPublicodesEngine } from './types'
  */
 export function getCutEngine(): CutPublicodesEngine {
   return getOrCreateEngine('CUT', () => {
+    const rules = require('@abc-transitionbascarbone/publicodes-count').default
+    console.log('rule')
     return new Engine(rules, {
       flag: {
         // option required by @publicodes/forms.
