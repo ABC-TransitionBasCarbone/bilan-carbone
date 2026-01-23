@@ -241,6 +241,7 @@ immobilisations . équipements informatique audiovisuel:
       avec:
         nombre:
           question: "Combien de smartphones 5 pouces avez-vous achetés ?"
+          # FIXME: pourquoi l'unité ne s'affiche-t-elle pas correctement ici dans NumberWithUnit ?
           unité: unité
           par défaut: 0
         FE:

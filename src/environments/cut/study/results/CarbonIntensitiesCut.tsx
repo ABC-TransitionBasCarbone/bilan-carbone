@@ -2,7 +2,7 @@ import CarbonIntensity from '@/components/study/results/consolidated/CarbonInten
 import Data from '@/components/study/results/consolidated/Data'
 import { FullStudy } from '@/db/study'
 import { formatNumber } from '@/utils/number'
-import { SiteCAUnit, StudyResultUnit } from '@prisma/client'
+import { StudyResultUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import styles from './ResultsContainer.module.css'
@@ -11,10 +11,9 @@ interface Props {
   study: FullStudy
   studySite: string
   withDepValue: number
-  caUnit?: SiteCAUnit
 }
 
-const CarbonIntensitiesCut = ({ study, studySite, withDepValue, caUnit = SiteCAUnit.K }: Props) => {
+const CarbonIntensitiesCut = ({ study, studySite, withDepValue }: Props) => {
   const t = useTranslations('study.results')
   const tResultUnits = useTranslations('study.results.units')
   const site = study.sites.find((site) => site.id === studySite)
