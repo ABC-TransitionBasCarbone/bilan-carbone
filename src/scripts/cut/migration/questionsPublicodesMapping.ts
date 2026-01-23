@@ -134,5 +134,98 @@ export const questionsPublicodesMapping: QuestionsPublicodesMappingType = {
           'Le cinéma accueille majoritairement des spectateurs locaux': 'majoritairement locaux',
         },
       ],
+    '102-decrivez-les-differentes-salles-du-cinema': [
+      'salles et cabines . matériel technique . salle . projecteur . type',
+      {
+        'Projecteur Xénon': 'xénon',
+        'Projecteur Laser': 'laser',
+      },
+    ],
+    '11-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine': [
+      'billetterie et communication . matériel distributeurs . affiches',
+      {
+        'Affiches 120x160': 'affiches 120x160',
+        'Affiches 40x60': 'affiches 40x60',
+      },
+    ],
+    '14-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': [
+      'fonctionnement . déplacements pro . déplacement type . transport . moyen de transport',
+      {
+        'RER et Transilien': 'RER et transilien',
+        'Métro, tramway': 'métro ou tram',
+        Bus: 'bus',
+        'Vélo électrique': 'vélo électrique',
+        'Vélo classique': 'vélo classique',
+        Marche: 'marche',
+        'Voiture diesel': 'voiture diesel',
+        'Voiture essence': 'voiture essence',
+        'Voiture hybride': 'voiture hybride',
+        'Voiture électrique': 'voiture électrique',
+        Moto: 'moto',
+        Scooter: 'scooter',
+        TGV: 'TGV',
+        'Trottinette électrique': 'trottinette électrique',
+        'Avion moyen courrier': 'avion moyen courrier',
+      },
+    ],
+    '11-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer': [
+      'fonctionnement . activités de bureau . informatique . équipement',
+      {
+        'Ordinateurs fixes': 'ordinateurs fixes',
+        'Ordinateurs portables': 'ordinateurs portables',
+        Photocopieurs: 'photocopieurs',
+        Imprimantes: 'imprimantes',
+        'Téléphones fixes': 'téléphones fixes',
+        'Téléphones portables': 'téléphones portables',
+        Tablettes: 'tablettes',
+      },
+    ],
+    '110-decrivez-les-differentes-salles-du-cinema': [
+      'salles et cabines . matériel technique . salle . système son . type',
+      {
+        'Son Stéréo': 'stéréo',
+        'Dolby 5.1': 'dolby 51',
+        'Dolby 7.1': 'dolby 71',
+        'Dolby Atmos': 'dolby atmos',
+        IMAX: 'imax',
+        'Auro 3D / Ice': 'auro 3dIce',
+        'DTS : X': 'dtsx',
+        // visblement, l'option n'est plus possible
+        THX: '',
+      },
+    ],
+    '11-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-mois': [
+      'billetterie et communication . matériel distributeurs . PLV',
+      {
+        'PLV comptoir': 'PLV comptoir',
+        'PLV grand format': 'PLV grand format',
+      },
+    ],
+    '11-quelle-quantite-de-materiel-produisez-vous-chaque-mois': [
+      'billetterie et communication . matériel cinéma . production',
+      {
+        Affiches: 'affiches',
+        Programmes: 'programme',
+        Flyers: 'flyers',
+      },
+    ],
+    '16-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': [
+      'fonctionnement . déplacements pro . déplacement type . type hébergement',
+      {
+        appartement: 'appartement',
+        'hôtel 1*': 'hotel 1 étoile',
+        'hôtel 2*': 'hotel 2 étoiles',
+        'hôtel 3*': 'hotel 3 étoiles',
+        'hôtel 4*': 'hotel 4 étoiles',
+        'hôtel 5*': 'hotel 5 étoiles',
+      },
+    ],
+    '104-decrivez-les-differentes-salles-du-cinema': [
+      'salles et cabines . matériel technique . salle . écran . type',
+      {
+        'Ecran 2D': 'écran 2D',
+        'Ecran 3D': 'écran 3D',
+      },
+    ],
   },
 }
