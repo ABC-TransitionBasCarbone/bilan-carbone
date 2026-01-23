@@ -10,22 +10,16 @@ export type QuestionsPublicodesMappingType = Partial<
     QuestionType,
     Partial<
       Record<
-        InternQuestionId | `${InternQuestionId}-${string}`, // Prefixing the key with the InternQuestionId
-        CutSituationKey | Record<string, CutSituationKey> | [CutSituationKey, Record<string, string>]
+        InternQuestionId | `${InternQuestionId}-${string}`,
+        | CutSituationKey
+        | Record<string, CutSituationKey>
+        | [CutSituationKey, Record<string, string>]
+        | ['LISTE', CutSituationKey]
+        | 'TABLEAU'
       >
     >
   >
 >
-
-export const listQuestionsIds = new Set<InternQuestionId>([
-  '10-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer',
-  '10-decrivez-les-deplacements-professionnels-de-vos-collaborateurs',
-  '10-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema',
-  '10-decrivez-les-differentes-salles-du-cinema',
-
-  // Visiblement, ces questions n'existent plus
-  // '10-comment-stockez-vous-les-films',
-])
 
 export const questionsPublicodesMapping: QuestionsPublicodesMappingType = {
   NUMBER: {
@@ -157,9 +151,12 @@ export const questionsPublicodesMapping: QuestionsPublicodesMappingType = {
       'billetterie et communication . matériel distributeurs . PLV . PLV comptoir . nombre',
     '12-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-mois-PLV_grand_format':
       'billetterie et communication . matériel distributeurs . PLV . PLV grand format . nombre',
-    // '14-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer'
-    // '108-decrivez-les-differentes-salles-du-cinema'
-    // '13-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer'
+    '14-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer':
+      'fonctionnement . activités de bureau . informatique . appareil . durée location',
+    '13-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer':
+      'fonctionnement . activités de bureau . informatique . appareil . nombre',
+    '108-decrivez-les-differentes-salles-du-cinema':
+      'salles et cabines . matériel technique . salle . fauteuils . nombre',
   },
   TEXT: {
     'quand-le-batiment-a-t-il-ete-construit': 'fonctionnement . bâtiment . construction . année de construction',
@@ -426,15 +423,28 @@ export const questionsPublicodesMapping: QuestionsPublicodesMappingType = {
     ],
   },
   TABLE: {
-    '10-veuillez-renseigner-les-dechets-generes-par-semaine': 'déchets . ordinaires',
-    '10-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': 'confiseries et boissons . électroménager',
-    '10-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine':
-      'billetterie et communication . matériel distributeurs . affiches',
+    '10-veuillez-renseigner-les-dechets-generes-par-semaine': 'TABLEAU',
+    '10-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': 'TABLEAU',
+    '10-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine': 'TABLEAU',
     '10-quelles-sont-les-distances-parcourues-au-total-sur-lannee-pour-chacun-des-modes-de-transport-suivants':
-      'mobilité spectateurs . résultat précis . empreinte',
-    '10-quelle-quantite-de-materiel-produisez-vous-chaque-mois':
-      'billetterie et communication . matériel cinéma . production',
-    '10-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-mois':
-      'billetterie et communication . matériel distributeurs . PLV',
+      'TABLEAU',
+    '10-quelle-quantite-de-materiel-produisez-vous-chaque-mois': 'TABLEAU',
+    '10-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-mois': 'TABLEAU',
+    '10-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer': [
+      'LISTE',
+      'fonctionnement . activités de bureau . informatique . appareil',
+    ],
+    '10-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': [
+      'LISTE',
+      'fonctionnement . déplacements pro . déplacement type',
+    ],
+    '10-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': [
+      'LISTE',
+      'fonctionnement . équipe . collaborateur type',
+    ],
+    '10-decrivez-les-differentes-salles-du-cinema': ['LISTE', 'salles et cabines . matériel technique . salle'],
+
+    // Visiblement, ces questions n'existent plus
+    // '10-comment-stockez-vous-les-films',
   },
 }

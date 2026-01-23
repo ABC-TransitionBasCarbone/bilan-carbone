@@ -8,12 +8,7 @@ import { getCutEngine } from '@/environments/cut/publicodes/cut-engine'
 import { studySiteToSituation } from '@/environments/cut/publicodes/studySiteToSituation'
 import { CutRuleName, CutSituation } from '@/environments/cut/publicodes/types'
 import { Answer, QuestionType, Unit } from '@prisma/client'
-import {
-  CutSituationKey,
-  InternQuestionId,
-  listQuestionsIds,
-  questionsPublicodesMapping,
-} from './questionsPublicodesMapping'
+import { CutSituationKey, InternQuestionId, questionsPublicodesMapping } from './questionsPublicodesMapping'
 
 // Pour chaque answers:
 // 1. Récupérer la question associée
@@ -22,7 +17,7 @@ import {
 
 type stuationWithListLayout = {
   mainSituation: CutSituation
-  listLayoutSituations: Record<CutRuleName, CutSituation[]> | {}
+  listLayoutSituations: Record<CutRuleName, CutSituation[]>
 }
 
 const studySiteSituationMap: Record<string, stuationWithListLayout> = {}
@@ -65,11 +60,11 @@ function formatToPublicodesValue(
       break
     case 'SELECT':
       situationKey = questionsPublicodesMapping.SELECT?.[questionInternId]![0]
-      situationValue = `'${
+      const unformattedSituationValue =
         questionsPublicodesMapping.SELECT?.[questionInternId]![1][
           value as keyof (typeof questionsPublicodesMapping.SELECT)[InternQuestionId]
         ]
-      }'`
+      situationValue = unformattedSituationValue ? `'${unformattedSituationValue}'` : null
       break
     case 'QCM':
       // convert value string like "[option1, option2]" to array
@@ -94,6 +89,7 @@ function formatToPublicodesValue(
     }
     situationState[situationKey] = situationValue
   }
+
   return situationState
 }
 
@@ -123,57 +119,99 @@ async function processTableAnswer(answerCourante: Answer, questionCourante: { id
         continue
       }
 
-      await processAnswer(
-        {
+      await processAnswer({
+        answerCourante: {
           id: answerCourante.id,
-          questionId: questionId,
           studySiteId: answerCourante.studySiteId,
           response: row[questionId],
         } as Answer,
-        `${questionId}-${publicodesKey}`,
-      )
+        questionInternId: questionId as InternQuestionId,
+        mappingInternId: `${questionId}-${publicodesKey}`,
+      })
     }
   }
 
   return null
 }
 
-async function processAnswer(answerCourante: Answer, mappingInternId?: string) {
+async function processListAnswer(answerCourante: Answer, listRule: string) {
+  const value = answerCourante.response
+
+  // @ts-ignore: Ignore dynamic key access
+  for (const row of value?.rows ?? []) {
+    for (const questionId of Object.keys(row.data ?? {})) {
+      await processAnswer({
+        answerCourante: {
+          id: answerCourante.id,
+          studySiteId: answerCourante.studySiteId,
+          response: row.data[questionId],
+        } as Answer,
+        questionInternId: questionId as InternQuestionId,
+        isListItemFrom: `${listRule} | ${row.id}`,
+      })
+    }
+  }
+
+  return null
+}
+
+async function processAnswer({
+  answerCourante,
+  questionInternId,
+  mappingInternId,
+  isListItemFrom,
+}: {
+  answerCourante: Answer
+  questionInternId?: InternQuestionId
+  mappingInternId?: string
+  isListItemFrom?: string
+}) {
   // Si mappingInternId est fourni, c'est un traitement récursif et questionId est en fait un idIntern
-  const questionCourante = mappingInternId
+  const questionCourante = questionInternId
     ? await prismaClient.question.findUnique({
-        where: { idIntern: answerCourante.questionId },
+        where: { idIntern: questionInternId },
       })
     : await prismaClient.question.findUnique({
         where: { id: answerCourante.questionId },
       })
 
   if (!questionCourante) {
-    throw new Error(`Question with ID ${answerCourante.questionId} not found for answer ID ${answerCourante.id}`)
-  }
-
-  if (listQuestionsIds.has(questionCourante.idIntern as InternQuestionId)) {
-    // console.log(`Skipping list layout question ID intern ${questionCourante.idIntern} (question ID: ${answerCourante.id})`)
-    return
+    throw new Error(`Question not found for answer ID ${answerCourante.id}`)
   }
 
   if (mappingInternId && !mappedQuestions.includes(mappingInternId)) {
     console.warn(`Skipping unmapped table question ID ${mappingInternId} for answer ID ${answerCourante.id}`)
     return
   }
-
-  if (!mappingInternId && !mappedQuestions.includes(questionCourante.idIntern)) {
+  if (!mappingInternId && !mappedQuestions.includes(questionCourante.idIntern ?? questionInternId)) {
     console.warn(`Skipping unmapped question ID ${questionCourante.idIntern} for answer ID ${answerCourante.id}`)
     return
   }
 
   // Initialiser la situation du studySite si pas encore fait
   if (!studySiteSituationMap[answerCourante.studySiteId]) {
-    studySiteSituationMap[answerCourante.studySiteId] = { mainSituation: {}, listLayoutSituations: {} }
+    studySiteSituationMap[answerCourante.studySiteId] = {
+      mainSituation: {},
+      listLayoutSituations: {} as Record<CutRuleName, CutSituation[]>,
+    }
   }
 
-  if (questionCourante.type === 'TABLE') {
+  if (
+    questionCourante.type === 'TABLE' &&
+    questionsPublicodesMapping.TABLE?.[questionCourante.idIntern as InternQuestionId] === 'TABLEAU'
+  ) {
     await processTableAnswer(answerCourante, questionCourante)
+    return
+  }
+
+  if (
+    questionCourante.type === 'TABLE' &&
+    questionsPublicodesMapping.TABLE?.[questionCourante.idIntern as InternQuestionId]?.[0] === 'LISTE'
+  ) {
+    const listRule = questionsPublicodesMapping.TABLE?.[questionCourante.idIntern as InternQuestionId]?.[1]
+    if (typeof listRule === 'string') {
+      await processListAnswer(answerCourante, listRule)
+    }
     return
   }
 
@@ -191,16 +229,27 @@ async function processAnswer(answerCourante: Answer, mappingInternId?: string) {
     return
   }
 
-  studySiteSituationMap[answerCourante.studySiteId].mainSituation = {
-    ...studySiteSituationMap[answerCourante.studySiteId].mainSituation,
-    ...situationState,
+  if (isListItemFrom) {
+    // we add the item to the correct list layout situation according to the isListItemFrom key
+    if (!studySiteSituationMap[answerCourante.studySiteId].listLayoutSituations[isListItemFrom as CutRuleName]) {
+      studySiteSituationMap[answerCourante.studySiteId].listLayoutSituations[isListItemFrom as CutRuleName] = []
+    }
+    // we merge the new situation state into the last item of the list but we only keep one item per list entry
+    const list = studySiteSituationMap[answerCourante.studySiteId].listLayoutSituations[isListItemFrom as CutRuleName]
+    if (list.length === 0) {
+      list.push({})
+    }
+    Object.assign(list[list.length - 1], situationState)
+  } else {
+    // Merge la situation formatée dans la situation principale du studySite
+    Object.assign(studySiteSituationMap[answerCourante.studySiteId].mainSituation, situationState)
   }
 }
 
 async function main() {
   const allAnswers = await prismaClient.answer.findMany({})
 
-  await Promise.all(allAnswers.map((answer) => processAnswer(answer)))
+  await Promise.all(allAnswers.map((answer) => processAnswer({ answerCourante: answer })))
 
   const studySiteInfo = await prismaClient.studySite.findMany({
     where: {
@@ -216,6 +265,23 @@ async function main() {
     }
   }
 
+  // Group list layout situations by rule and drop row IDs
+
+  Object.entries(studySiteSituationMap).forEach(([, site]) => {
+    const formattedListLayout: Record<CutRuleName, CutSituation[]> = {} as Record<CutRuleName, CutSituation[]>
+    for (const [key, situationArray] of Object.entries(site.listLayoutSituations)) {
+      const [ruleName] = key.split(' | ')
+      if (!formattedListLayout[ruleName as CutRuleName]) {
+        formattedListLayout[ruleName as CutRuleName] = []
+      }
+      // Flatten per-row arrays (usually length 1) into the aggregated list
+      for (const item of situationArray as CutSituation[]) {
+        formattedListLayout[ruleName as CutRuleName].push(item)
+      }
+    }
+    site.listLayoutSituations = formattedListLayout
+  })
+
   console.log('Mapped situation for study site:', studySiteSituationMap)
 
   // Check dans l'engine avant de save la situation
@@ -225,6 +291,13 @@ async function main() {
     try {
       engine.setSituation(situation.mainSituation)
       engine.evaluate('bilan')
+
+      for (const [listRule, listSituation] of Object.entries(situation.listLayoutSituations)) {
+        engine.setSituation({
+          [listRule]: listSituation,
+        })
+        engine.evaluate(listRule)
+      }
     } catch (e) {
       console.error(`Error evaluating situation for study site ID ${studySiteId}:`, e)
     }
@@ -236,4 +309,9 @@ async function main() {
   // ))
 }
 
-main().then(() => console.log('done'))
+console.log('Startig migration')
+const startTime = Date.now()
+main().then(() => {
+  const duration = Date.now() - startTime
+  console.log(`Migration done successfully (${duration}ms)`)
+})
