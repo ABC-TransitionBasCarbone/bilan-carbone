@@ -115,6 +115,8 @@ declare module '@mui/material/styles' {
       light?: string
       totalColumn?: string
       complementary?: string
+      complementaryLight?: string
+      complementaryTotalColumn?: string
     }
   }
 }

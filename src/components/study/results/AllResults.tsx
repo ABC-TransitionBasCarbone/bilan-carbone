@@ -22,6 +22,7 @@ import {
   getDetailedEmissionResults,
   ResultType,
 } from '@/services/study'
+import { sortAlphabetically } from '@/services/utils'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { getPost } from '@/utils/post'
 import { calculateMonetaryRatio, convertValue } from '@/utils/study'
@@ -413,7 +414,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
                 <MenuItem value={AdditionalResultTypes.ENV_SPECIFIC_EXPORT}>{tExport('env_specific_export')}</MenuItem>
               )}
               {exports &&
-                exports?.types.map((exportItem) => (
+                exports?.types.sort(sortAlphabetically).map((exportItem) => (
                   <MenuItem key={exportItem} value={exportItem} disabled={exports.control === ControlMode.CapitalShare}>
                     {tExport(exportItem)}
                     {exports.control === ControlMode.CapitalShare && <em> ({t('coming')})</em>}
@@ -495,7 +496,12 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
                   ))}
                 </Tabs>
               </div>
-              <GHGPResultsTable study={study} withDepValue={withDepValue} data={computedGHGPData} />
+              <GHGPResultsTable
+                study={study}
+                withDepValue={withDepValue}
+                data={computedGHGPData}
+                base={selectedGHGPTable}
+              />
             </Box>
           )}
         </div>

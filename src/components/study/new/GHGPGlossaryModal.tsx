@@ -19,6 +19,7 @@ const GHGPGlossaryModal = () => {
             li: (children) => <li>{children}</li>,
           })}
         </li>
+        <li>{t('item4')}</li>
       </ul>
 
       <span>{t('conclusion')}</span>

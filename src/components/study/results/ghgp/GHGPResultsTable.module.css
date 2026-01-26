@@ -1,22 +1,48 @@
-.ghgpTable thead tr th {
-  background-color: var(--mui-palette-ghgp-main);
-  color: white !important;
+.ghgpTable {
+  thead tr th {
+    background-color: var(--mui-palette-ghgp-main);
+    color: white !important;
+  }
+
+  tbody tr td.categoryCell {
+    background-color: var(--mui-palette-ghgp-main);
+    color: white;
+  }
+
+  tbody tr td.postCell {
+    background-color: var(--mui-palette-ghgp-light);
+  }
+
+  tbody tr td.totalColumn {
+    background-color: var(--mui-palette-ghgp-totalColumn);
+  }
+  .totalRow {
+    background-color: var(--mui-palette-ghgp-main);
+    color: white;
+  }
 }
 
-.ghgpTable tbody tr td.categoryCell {
-  background-color: var(--mui-palette-ghgp-main);
-  color: white;
-}
+.ghgpTableComplementary {
+  thead tr th {
+    background-color: var(--mui-palette-ghgp-complementary);
+    color: white !important;
+  }
 
-.ghgpTable tbody tr td.postCell {
-  background-color: var(--mui-palette-ghgp-light);
-}
+  tbody tr td.categoryCell {
+    background-color: var(--mui-palette-ghgp-complementary);
+    color: white;
+  }
 
-.ghgpTable tbody tr td.totalColumn {
-  background-color: var(--mui-palette-ghgp-totalColumn);
-}
+  tbody tr td.postCell {
+    background-color: var(--mui-palette-ghgp-complementaryLight);
+  }
 
-.totalRow {
-  background-color: var(--mui-palette-ghgp-main);
-  color: white;
+  tbody tr td.totalColumn {
+    background-color: var(--mui-palette-ghgp-complementaryTotalColumn);
+  }
+
+  .totalRow {
+    background-color: var(--mui-palette-ghgp-complementary);
+    color: white;
+  }
 }

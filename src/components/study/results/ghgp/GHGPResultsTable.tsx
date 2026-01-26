@@ -6,7 +6,7 @@ import { PostInfos } from '@/services/results/exports'
 import { rulesSpans } from '@/services/results/ghgp'
 import { getGHGPRuleName } from '@/utils/ghgp'
 import { formatEmission, STUDY_UNIT_VALUES } from '@/utils/study'
-import { Export } from '@prisma/client'
+import { EmissionFactorBase, Export } from '@prisma/client'
 import { Cell, ColumnDef, getCoreRowModel, Row, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -20,9 +20,10 @@ interface Props {
   study: FullStudy
   withDepValue: number
   data: PostInfos[]
+  base: EmissionFactorBase
 }
 
-const GHGPResultsTable = ({ study, withDepValue, data }: Props) => {
+const GHGPResultsTable = ({ study, withDepValue, data, base }: Props) => {
   const t = useTranslations('ghgp')
   const tUnits = useTranslations('study.results.units')
 
@@ -109,7 +110,10 @@ const GHGPResultsTable = ({ study, withDepValue, data }: Props) => {
       />
       <BaseTable
         table={table}
-        className={classNames(commonStyles.Table, styles.ghgpTable)}
+        className={classNames(
+          commonStyles.Table,
+          base === EmissionFactorBase.LocationBased ? styles.ghgpTable : styles.ghgpTableComplementary,
+        )}
         customRow={(row: Row<PostInfos>) => TableRow(row, getCellClass, rulesSpans, 'ghgp')}
         testId="ghgp-results"
         size="small"
