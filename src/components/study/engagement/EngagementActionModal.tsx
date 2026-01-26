@@ -20,7 +20,7 @@ import { MenuItem } from '@mui/material'
 import { EngagementPhase } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import styles from './EngagementActionModal.module.css'
 
@@ -92,6 +92,19 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
     reset()
     onClose()
   }
+
+  useEffect(() => {
+    if (sites.includes('all')) {
+      if (sites.length === study.sites.length + 1) {
+        setValue('sites', [])
+      } else {
+        setValue(
+          'sites',
+          study.sites.map((site) => site.id),
+        )
+      }
+    }
+  }, [sites, study])
 
   return (
     <>
@@ -181,6 +194,7 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
             multiple
             value={sites}
           >
+            <MenuItem value={'all'}>{t('allSites')}</MenuItem>
             {study.sites.map((site) => (
               <MenuItem key={site.id} value={site.id}>
                 {site.site.name}
