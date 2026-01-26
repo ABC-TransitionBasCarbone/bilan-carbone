@@ -206,6 +206,7 @@ export interface TrajectoryData {
   previousTrajectory: TrajectoryDataPoint[] | null
   currentTrajectory: TrajectoryDataPoint[]
   withinThreshold: boolean
+  isFailed?: boolean
 }
 
 export interface TrajectoryResult {
@@ -938,11 +939,14 @@ export const getSNBCData = (
         })
       }
 
+      const isFailed = isFailedTrajectory(studyStartYear, referenceStudyData.year, referenceTrajectory, currentTrajectory)
+
       result[sectorId] = {
         previousTrajectoryStartYear: referenceStudyData.year,
         previousTrajectory: referenceTrajectory,
         currentTrajectory,
         withinThreshold,
+        isFailed,
       }
     }
   }
@@ -989,37 +993,59 @@ export const getDefaultSBTiData = (
         })
       : null
 
-    sbti15Data = sbti15Enabled
-      ? {
-          previousTrajectoryStartYear: SBTI_START_YEAR,
-          previousTrajectory: theoreticalSbti15Reference,
-          currentTrajectory: calculateSBTiTrajectory({
-            studyEmissions: totalCo2,
-            studyStartYear,
-            reductionRate: SBTI_REDUCTION_RATE_15,
-            pastStudies,
-            minYear,
-            maxYear,
-          }),
-          withinThreshold: false,
-        }
-      : null
+    let sbti15Data = null
+    if (sbti15Enabled) {
+      const currentTrajectory = calculateSBTiTrajectory({
+        studyEmissions: totalCo2,
+        studyStartYear,
+        reductionRate: SBTI_REDUCTION_RATE_15,
+        pastStudies,
+        minYear,
+        maxYear,
+      })
 
-    sbtiWB2CData = sbtiWB2CEnabled
-      ? {
-          previousTrajectoryStartYear: SBTI_START_YEAR,
-          previousTrajectory: theoreticalSbtiWB2CReference,
-          currentTrajectory: calculateSBTiTrajectory({
-            studyEmissions: totalCo2,
-            studyStartYear,
-            reductionRate: SBTI_REDUCTION_RATE_WB2C,
-            pastStudies,
-            minYear,
-            maxYear,
-          }),
-          withinThreshold: false,
-        }
-      : null
+      const isFailed = isFailedTrajectory(
+        studyStartYear,
+        SBTI_START_YEAR,
+        theoreticalSbti15Reference,
+        currentTrajectory,
+      )
+
+      sbti15Data = {
+        previousTrajectoryStartYear: SBTI_START_YEAR,
+        previousTrajectory: theoreticalSbti15Reference,
+        currentTrajectory,
+        withinThreshold: false,
+        isFailed,
+      }
+    }
+
+    let sbtiWB2CData = null
+    if (sbtiWB2CEnabled) {
+      const currentTrajectory = calculateSBTiTrajectory({
+        studyEmissions: totalCo2,
+        studyStartYear,
+        reductionRate: SBTI_REDUCTION_RATE_WB2C,
+        pastStudies,
+        minYear,
+        maxYear,
+      })
+
+      const isFailed = isFailedTrajectory(
+        studyStartYear,
+        SBTI_START_YEAR,
+        theoreticalSbtiWB2CReference,
+        currentTrajectory,
+      )
+
+      sbtiWB2CData = {
+        previousTrajectoryStartYear: SBTI_START_YEAR,
+        previousTrajectory: theoreticalSbtiWB2CReference,
+        withinThreshold: false,
+        currentTrajectory: currentTrajectory,
+        isFailed,
+      }
+    }
 
     return { sbti15Data, sbtiWB2CData }
   } else {
@@ -1066,12 +1092,14 @@ export const getDefaultSBTiData = (
           maxYear,
         })
       }
+      const isFailed = isFailedTrajectory(studyStartYear, referenceStudyYear, referenceTrajectory, currentTrajectory)
 
       sbti15Data = {
         previousTrajectoryStartYear: referenceStudyYear,
         previousTrajectory: referenceTrajectory,
         currentTrajectory,
         withinThreshold,
+        isFailed,
       }
     }
 
@@ -1098,11 +1126,14 @@ export const getDefaultSBTiData = (
         maxYear,
       })
 
+      const isFailed = isFailedTrajectory(studyStartYear, referenceStudyYear, referenceTrajectory, currentTrajectory)
+
       sbtiWB2CData = {
         previousTrajectoryStartYear: referenceStudyYear,
         previousTrajectory: referenceTrajectory,
         currentTrajectory,
         withinThreshold,
+        isFailed,
       }
     }
   }
@@ -1217,6 +1248,7 @@ export const getCustomData = (
         sectenData,
       })
 
+      const isFailed = isFailedTrajectory(studyStartYear, referenceYear, referenceTrajectory, currentTrajectory)
       customTrajectoriesData.push({
         id: customTrajectory.id,
         data: {
@@ -1224,6 +1256,7 @@ export const getCustomData = (
           previousTrajectory: referenceTrajectory,
           currentTrajectory,
           withinThreshold,
+          isFailed,
         },
       })
     }
@@ -1289,11 +1322,14 @@ export const getActionBasedData = (
       studyUnit,
     })
 
+    const previousTrajectory = actionWithinThreshold ? null : referenceActionTrajectory
+    const isFailed = isFailedTrajectory(studyStartYear, referenceYear, previousTrajectory, currentActionTrajectory)
     return {
       previousTrajectoryStartYear: referenceYear,
-      previousTrajectory: actionWithinThreshold ? null : referenceActionTrajectory,
+      previousTrajectory: previousTrajectory,
       currentTrajectory: currentActionTrajectory,
       withinThreshold: actionWithinThreshold,
+      isFailed,
     }
   }
 }
@@ -1558,4 +1594,19 @@ export const getDisplayedReferenceYearForTrajectoryType = (type: TrajectoryType,
 
   // For custom trajectories, use the study year as reference year
   return studyYear
+}
+
+const isFailedTrajectory = (
+  studyStartYear: number,
+  referenceTrajectoryStartYear: number,
+  referenceTrajectory: TrajectoryDataPoint[] | null,
+  currentTrajectory: TrajectoryDataPoint[],
+): boolean => {
+  if (!referenceTrajectory) {
+    return false
+  }
+  const referenceBudget = calculateTrajectoryIntegral(referenceTrajectory, referenceTrajectoryStartYear, studyStartYear)
+  const currentBudget = calculateTrajectoryIntegral(currentTrajectory, referenceTrajectoryStartYear, studyStartYear)
+  const isFailed = currentBudget > referenceBudget * (1 + 5 / 100)
+  return isFailed
 }
