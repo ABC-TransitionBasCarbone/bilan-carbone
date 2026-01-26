@@ -41,6 +41,13 @@
         "question": "Parmi les rénovations suivantes, lesquelles avez-vous réalisées durant les dix dernières années ?"
       }
     },
-    "list": {}
+    "list": {
+      "Equipe": {
+        "question": "Quel est le rythme de travail des collaborateurs du cinéma ?",
+        "nbJours": "Nombre de jours / semaine",
+        "moyenTransport": "Moyen de Transport",
+        "distance": "Distance domicile travail (aller-retour)"
+      }
+    }
   }
 }

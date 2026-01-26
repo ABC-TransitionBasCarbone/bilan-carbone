@@ -43,6 +43,12 @@ export type SaveStatus = 'idle' | 'saving' | 'saved' | 'error'
 
 export interface PublicodesAutoSaveContextValue<RuleName extends string = string> {
   updateField: (ruleName: RuleName, value: string | number | boolean | undefined) => void
+  updateListLayoutSituation: (
+    targetRule: RuleName,
+    situationId: string,
+    rule: RuleName,
+    value: string | number | boolean | undefined,
+  ) => void
   isSaving: boolean
   saveStatus: SaveStatus
   hasUnsavedChanges: boolean
@@ -59,7 +65,7 @@ function PublicodesAutoSaveProvider<RuleName extends string = string>({
 }: Omit<PublicodesFormProviderProps, 'studySiteId'>) {
   const t = useTranslations('saveStatus')
   const { showSuccessToast } = useToast()
-  const { situation, engine, setSituation, studySiteId, config } = usePublicodesSituation()
+  const { engine, situation, listLayoutSituations, setSituation, studySiteId, config } = usePublicodesSituation()
 
   const lastSyncedAt = useRef<Date>(new Date())
 
@@ -126,15 +132,70 @@ function PublicodesAutoSaveProvider<RuleName extends string = string>({
         ruleName,
         value,
       ) as Situation<RuleName>
-      setSituation(newSituation)
-      autoSave.saveSituation(newSituation)
+
+      // NOTE: listLayoutSituations should be in deps or use via ref?
+      setSituation(newSituation, listLayoutSituations)
+      autoSave.saveSituation(newSituation, listLayoutSituations)
     },
     [engine, setSituation, autoSave.saveSituation],
+  )
+
+  const updateListLayoutSituation = useCallback(
+    (targetRule: RuleName, situationId: string, rule: RuleName, value: string | number | boolean | undefined) => {
+      const currentSituationList =
+        listLayoutSituations[targetRule]?.find(({ id }) => id === situationId)?.situation ?? {}
+
+      // Update the specific situation in the list layout situations (e.g. the
+      // updated row)
+      const newSituationList = getUpdatedSituationWithInputValue(
+        engine,
+        currentSituationList,
+        rule,
+        value,
+      ) as Situation<RuleName>
+      const newListLayoutSituations = {
+        ...listLayoutSituations,
+        [targetRule]: listLayoutSituations[targetRule]?.map((situationEntry) =>
+          situationEntry.id === situationId ? { ...situationEntry, situation: newSituationList } : situationEntry,
+        ) ??
+          // If there was no entry for this targetRule, create it
+          [{ id: situationId, situation: newSituationList }],
+      }
+
+      // Update the main situation with the new aggregated value for the target
+      // rule of the list layout
+      const aggregatedTargetValue = Object.values(newListLayoutSituations[targetRule] ?? [])
+        .map(({ situation }) => situation)
+        .reduce((acc, situation) => {
+          const localEngine = engine.shallowCopy()
+          localEngine.setSituation({ ...situation })
+          const evaluatedTarget = localEngine.evaluate(targetRule)
+          const targetValue = evaluatedTarget.nodeValue
+          return typeof targetValue === 'number' ? acc + targetValue : acc
+        }, 0)
+
+      const newSituation = {
+        ...situation,
+        [targetRule]: aggregatedTargetValue,
+      } as Situation<RuleName>
+
+      setSituation(newSituation, newListLayoutSituations)
+      autoSave.saveSituation(newSituation, newListLayoutSituations)
+    },
+    [
+      engine,
+      listLayoutSituations,
+      // NOTE: should it be in deps? Risk of infinite loop?
+      situation,
+      setSituation,
+      autoSave.saveSituation,
+    ],
   )
 
   const value = useMemo<PublicodesAutoSaveContextValue<RuleName>>(
     () => ({
       updateField,
+      updateListLayoutSituation,
       isSaving: autoSave.saveStatus === 'saving',
       saveStatus: autoSave.saveStatus,
       hasUnsavedChanges: autoSave.hasUnsavedChanges,

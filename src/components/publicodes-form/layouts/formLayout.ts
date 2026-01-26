@@ -12,6 +12,7 @@ export type FormLayout<RuleName extends string = string> =
   | InputLayout<RuleName>
   | GroupLayout<RuleName>
   | TableLayout<RuleName>
+  | ListLayout<RuleName>
 
 export interface InputLayout<RuleName extends string> {
   type: 'input'
@@ -45,4 +46,21 @@ export interface GroupLayout<RuleName extends string> {
 
 export function groupLayout<RuleName extends string>(title: string, rules: RuleName[]): GroupLayout<RuleName> {
   return { type: 'group', title, rules }
+}
+
+export interface ListLayout<RuleName extends string> {
+  type: 'list'
+  title: string
+  headers: string[]
+  targetRule: RuleName
+  rules: RuleName[]
+}
+
+export function listLayout<RuleName extends string>(
+  title: string,
+  headers: string[],
+  targetRule: RuleName,
+  rules: RuleName[],
+): ListLayout<RuleName> {
+  return { type: 'list', title, headers, targetRule, rules }
 }

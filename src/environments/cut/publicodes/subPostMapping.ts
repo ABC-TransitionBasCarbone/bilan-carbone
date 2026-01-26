@@ -1,4 +1,10 @@
-import { FormLayout, groupLayout, inputLayout, tableLayout } from '@/components/publicodes-form/layouts/formLayout'
+import {
+  FormLayout,
+  groupLayout,
+  inputLayout,
+  listLayout,
+  tableLayout,
+} from '@/components/publicodes-form/layouts/formLayout'
 import { CutPost } from '@/services/posts.enums'
 import { SubPost } from '@prisma/client'
 import { CutRuleName } from './types'
@@ -53,6 +59,12 @@ const input = (rule: CutRuleName): FormLayout<CutRuleName> => inputLayout<CutRul
 const group = (title: string, rules: CutRuleName[]): FormLayout<CutRuleName> => groupLayout<CutRuleName>(title, rules)
 const table = (title: string, headers: string[], rows: CutRuleName[][]): FormLayout<CutRuleName> =>
   tableLayout<CutRuleName>(title, headers, rows)
+const list = (
+  title: string,
+  headers: string[],
+  targetRule: CutRuleName,
+  rules: CutRuleName[],
+): FormLayout<CutRuleName> => listLayout<CutRuleName>(title, headers, targetRule, rules)
 
 export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRuleName>[]>> = {
   Batiment: [
@@ -72,7 +84,18 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRule
     input('fonctionnement . bâtiment . parking . nombre de places'),
   ],
   // TODO: support list layout
-  Equipe: [],
+  Equipe: [
+    list(
+      'Equipe.question',
+      ['Equipe.nbJours', 'Equipe.moyenTransport', 'Equipe.distance'],
+      'fonctionnement . équipe . collaborateurs',
+      [
+        'fonctionnement . équipe . collaborateur type . nombre de jours par semaine',
+        'fonctionnement . équipe . collaborateur type . transport . moyen de transport',
+        'fonctionnement . équipe . collaborateur type . transport . distance',
+      ],
+    ),
+  ],
   Energie: [
     input('fonctionnement . énergie . électricité . consommation'),
     input('fonctionnement . énergie . gaz . consommation'),

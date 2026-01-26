@@ -1,7 +1,8 @@
 import { situationsAreEqual } from '@/lib/publicodes/utils'
-import { saveSituation } from '@/services/serverFunctions/situation'
+import { saveSituation as saveSituationInDB } from '@/services/serverFunctions/situation'
 import { Situation } from 'publicodes'
 import { useCallback, useRef, useState } from 'react'
+import { ListLayoutSituations } from '../context'
 
 export interface SituationAutoSaveOptions {
   studyId: string
@@ -11,7 +12,7 @@ export interface SituationAutoSaveOptions {
 }
 
 export interface SituationAutoSaveReturn {
-  saveSituation: (situation: Situation<string>) => void
+  saveSituation: (situation: Situation<string>, listLayoutSituation: ListLayoutSituations<string>) => void
   hasUnsavedChanges: boolean
   saveStatus: 'idle' | 'saving' | 'saved' | 'error'
   lastSaved?: Date
@@ -31,7 +32,7 @@ export const useSituationAutoSave = ({
   const lastSavedSituation = useRef<Situation<string>>({})
 
   const performSave = useCallback(
-    async (situation: Situation<string>) => {
+    async (situation: Situation<string>, listLayoutSituations: ListLayoutSituations<string>) => {
       if (!enabled) {
         return
       }
@@ -43,8 +44,7 @@ export const useSituationAutoSave = ({
 
       try {
         setSaveStatus('saving')
-
-        const result = await saveSituation(studyId, studySiteId, situation, modelVersion)
+        const result = await saveSituationInDB(studyId, studySiteId, situation, listLayoutSituations, modelVersion)
 
         if (result.success) {
           lastSavedSituation.current = situation

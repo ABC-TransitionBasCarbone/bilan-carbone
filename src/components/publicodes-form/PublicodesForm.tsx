@@ -1,34 +1,23 @@
+import { usePublicodesForm } from '@/lib/publicodes/context'
 import { Box } from '@mui/material'
-import Engine, { Situation } from 'publicodes'
 import { useMemo } from 'react'
 import { getEvaluatedFormLayout } from './layouts/evaluatedFormLayout'
 import { FormLayout } from './layouts/formLayout'
 import styles from './PublicodesForm.module.css'
 import PublicodesQuestion from './PublicodesQuestion'
-import {
-  areRulesReferencedInApplicability,
-  evaluatedLayoutIsApplicable,
-  getRuleNamesFromLayout,
-  OnFieldChange,
-} from './utils'
+import { areRulesReferencedInApplicability, evaluatedLayoutIsApplicable, getRuleNamesFromLayout } from './utils'
 
-export interface PublicodesFormProps<RuleName extends string, S extends Situation<RuleName>> {
-  engine: Engine<RuleName>
-  situation: S
-  onFieldChange: OnFieldChange<RuleName>
+export interface PublicodesFormProps<RuleName extends string> {
   formLayouts: FormLayout<RuleName>[]
 }
 
-export default function PublicodesForm<RuleName extends string, S extends Situation<RuleName>>({
-  engine,
-  situation,
-  onFieldChange,
-  formLayouts,
-}: PublicodesFormProps<RuleName, S>) {
+export default function PublicodesForm<RuleName extends string>({ formLayouts }: PublicodesFormProps<RuleName>) {
+  const { engine, situation, listLayoutSituations, updateField } = usePublicodesForm<RuleName>()
+
   const elementsWithRelation = useMemo(() => {
     // FIXME: should manage multiple questions linked to previous ones.
     return formLayouts.map((formLayout, index) => {
-      const evaluatedFormLayout = getEvaluatedFormLayout(engine, formLayout)
+      const evaluatedFormLayout = getEvaluatedFormLayout(engine, formLayout, listLayoutSituations)
       const currentRuleNames = getRuleNamesFromLayout(formLayout)
       const previousRuleNames = index > 0 ? getRuleNamesFromLayout(formLayouts[index - 1]) : undefined
       const isLinkedToPreviousQuestion =
@@ -41,7 +30,9 @@ export default function PublicodesForm<RuleName extends string, S extends Situat
           ? formLayout.rule
           : formLayout.type === 'group'
             ? `group-${index}`
-            : `table-${formLayout.title}-${index}`
+            : formLayout.type === 'list'
+              ? `list-${formLayout.title}-${index}`
+              : `table-${formLayout.title}-${index}`
 
       const isApplicable = evaluatedLayoutIsApplicable(evaluatedFormLayout)
       return { evaluatedFormLayout, isLinkedToPreviousQuestion, key, isApplicable }
@@ -60,7 +51,7 @@ export default function PublicodesForm<RuleName extends string, S extends Situat
           return isApplicable ? (
             <Box key={key}>
               {isLinkedToPreviousQuestion && <Box className={styles.relationLine} />}
-              <PublicodesQuestion formLayout={evaluatedFormLayout} onChange={onFieldChange} />
+              <PublicodesQuestion formLayout={evaluatedFormLayout} onChange={updateField} />
             </Box>
           ) : null
         })}

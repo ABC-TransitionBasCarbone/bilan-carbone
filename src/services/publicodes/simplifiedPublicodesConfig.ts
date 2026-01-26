@@ -27,8 +27,8 @@ export interface SimplifiedPublicodesConfig<RuleName extends string = string> {
   posts: SimplifiedPost[]
   subPostsByPost: Record<SimplifiedPost, SubPost[]>
   getFormLayout: (subPost: SubPost) => FormLayout<string>[]
-  getPostRuleName: (post: SimplifiedPost) => string
-  getSubPostRuleName: (subPost: SubPost) => string | undefined
+  getPostRuleName: (post: SimplifiedPost) => RuleName
+  getSubPostRuleName: (subPost: SubPost) => RuleName | undefined
   getEngine: () => Engine<RuleName>
   modelVersion: string
 }

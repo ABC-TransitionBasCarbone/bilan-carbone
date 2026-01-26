@@ -1,5 +1,6 @@
 import {
   EvaluatedGroupLayout,
+  EvaluatedListLayout,
   EvaluatedTableLayout,
   getEvaluatedFormLayout,
 } from '@/components/publicodes-form/layouts/evaluatedFormLayout'
@@ -34,6 +35,14 @@ export const getQuestionProgressBySubPost = (
               if (evaluatedLayout.evaluatedElement.applicable) {
                 acc.total += 1
                 if (evaluatedLayout.evaluatedElement.answered) {
+                  acc.answered += 1
+                }
+              }
+              break
+            case 'list':
+              if (isListLayoutApplicable(evaluatedLayout)) {
+                acc.total += 1
+                if (isListLayoutAnswered(evaluatedLayout)) {
                   acc.answered += 1
                 }
               }
@@ -73,6 +82,16 @@ function isGroupLayoutApplicable(layout: EvaluatedGroupLayout<string>): boolean 
 
 function isGroupLayoutAnswered(layout: EvaluatedGroupLayout<string>): boolean {
   return layout.evaluatedElements.some((el) => el.applicable && el.answered)
+}
+
+function isListLayoutApplicable(layout: EvaluatedListLayout<string>): boolean {
+  return layout.evaluatedListRows.some((el) => el.elements.every((e) => e.applicable))
+}
+
+// TODO: we might have a more complex logic for lists in the future, as they
+// the rules will probably not be answered directly in the main situation.
+function isListLayoutAnswered({ evaluatedTargetElement }: EvaluatedListLayout<string>): boolean {
+  return evaluatedTargetElement.applicable && evaluatedTargetElement.answered
 }
 
 function isTableLayoutApplicable(layout: EvaluatedTableLayout<string>): boolean {

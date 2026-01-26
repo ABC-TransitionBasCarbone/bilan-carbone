@@ -14,6 +14,7 @@ export function getRuleNamesFromLayout<RuleName extends string>(layout: FormLayo
     case 'input':
       return [layout.rule]
     case 'group':
+    case 'list':
       return layout.rules
     case 'table':
       return layout.rows.flat()
@@ -28,6 +29,8 @@ export function evaluatedLayoutIsApplicable<RuleName extends string>(layout: Eva
       return layout.evaluatedElements.some((el) => el.applicable)
     case 'table':
       return layout.evaluatedRows.flat().some((el) => el.applicable)
+    case 'list':
+      return layout.evaluatedListRows.some((row) => row.elements.some((el) => el.applicable))
   }
 }
 

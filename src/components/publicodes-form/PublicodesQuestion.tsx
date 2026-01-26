@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl'
 import GroupQuestion from './GroupQuestion'
 import PublicodesInputField from './InputField'
 import { EvaluatedFormLayout } from './layouts/evaluatedFormLayout'
+import ListQuestion from './ListQuestion'
 import QuestionContainer from './QuestionContainer'
 import TableQuestion from './TableQuestion'
 import { OnFieldChange } from './utils'
@@ -54,6 +55,13 @@ export default function PublicodesQuestion<RuleName extends string>({
         // TODO: manage helper text for table
         <QuestionContainer label={tLayout(`table.${formLayout.title}`)}>
           <TableQuestion tableLayout={formLayout} onChange={onChange} />
+        </QuestionContainer>
+      )
+    }
+    case 'list': {
+      return (
+        <QuestionContainer label={tLayout(`list.${formLayout.title}`)}>
+          <ListQuestion listLayout={formLayout} onChange={onChange} />
         </QuestionContainer>
       )
     }

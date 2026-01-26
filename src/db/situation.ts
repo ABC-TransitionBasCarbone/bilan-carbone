@@ -38,13 +38,16 @@ export async function updateSituationFields(
 export async function upsertSituation(
   studySiteId: string,
   situation: InputJsonValue,
+  listLayoutSituations: InputJsonValue,
   modelVersion: string,
 ): Promise<SituationSchema> {
+  console.log('Upserting situation for studySiteId:', { studySiteId, situation, listLayoutSituations })
   return await prismaClient.situation.upsert({
     where: { studySiteId },
     create: {
       studySiteId,
       situation,
+      listLayoutSituations,
       modelVersion,
       publicodesVersion: PUBLICODES_ENGINE_VERSION,
       createdAt: new Date(),
@@ -52,6 +55,7 @@ export async function upsertSituation(
     },
     update: {
       situation,
+      listLayoutSituations,
       updatedAt: new Date(),
       modelVersion,
       publicodesVersion: PUBLICODES_ENGINE_VERSION,
