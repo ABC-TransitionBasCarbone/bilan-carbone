@@ -26,3 +26,7 @@
 .actions {
   gap: 1rem;
 }
+
+.noPadding {
+  padding-top: 0 !important;
+}
