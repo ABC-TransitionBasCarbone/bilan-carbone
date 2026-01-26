@@ -48,7 +48,7 @@
     "NotOperatedSupported": "Not operated, supported",
     "NotOperatedNotSupported": "Not operated, not supported",
     "Rented": "Rented",
-    "FinalClient": "By the final client",
+    "FinalClient": "Used by the final client",
     "Held": "Held",
     "NotHeldSimpleRent": "Not held, simple rent",
     "NotHeldOther": "Not held, other",
