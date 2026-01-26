@@ -16,7 +16,30 @@
   background-color: var(--mui-palette-ghgp-totalColumn);
 }
 
-.totalRow {
+.ghgpTable .totalRow {
   background-color: var(--mui-palette-ghgp-main);
+  color: white;
+}
+
+.ghgpTableComplementary thead tr th {
+  background-color: var(--mui-palette-ghgp-complementary);
+  color: white !important;
+}
+
+.ghgpTableComplementary tbody tr td.categoryCell {
+  background-color: var(--mui-palette-ghgp-complementary);
+  color: white;
+}
+
+.ghgpTableComplementary tbody tr td.postCell {
+  background-color: var(--mui-palette-ghgp-complementaryLight);
+}
+
+.ghgpTableComplementary tbody tr td.totalColumn {
+  background-color: var(--mui-palette-ghgp-complementaryTotalColumn);
+}
+
+.ghgpTableComplementary .totalRow {
+  background-color: var(--mui-palette-ghgp-complementary);
   color: white;
 }

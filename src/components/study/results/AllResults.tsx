@@ -495,7 +495,12 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
                   ))}
                 </Tabs>
               </div>
-              <GHGPResultsTable study={study} withDepValue={withDepValue} data={computedGHGPData} />
+              <GHGPResultsTable
+                study={study}
+                withDepValue={withDepValue}
+                data={computedGHGPData}
+                base={selectedGHGPTable}
+              />
             </Box>
           )}
         </div>
