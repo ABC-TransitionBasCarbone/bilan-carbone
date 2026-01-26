@@ -1,4 +1,8 @@
 import { getOrCreateEngine } from '@/lib/publicodes/singletons'
+// PERF: for now we always load publicodes rules for each simplified
+// environment as they are quite small (<100k unzip) and avoid propagating
+// async code all over the app. If they grow significantly in the future, or
+// there is more environments, we might want to lazy load them instead.
 import rules from '@abc-transitionbascarbone/publicodes-count'
 import Engine from 'publicodes'
 import { CutPublicodesEngine } from './types'
