@@ -1,9 +1,10 @@
 import Box from '@/components/base/Box'
 import { FullStudy } from '@/db/study'
+import { isTilt } from '@/services/permissions/environment'
 import { hasAccessToCarbonResponsibilityIntensitiesAdvanced } from '@/services/permissions/environmentAdvanced'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { CA_UNIT_VALUES } from '@/utils/number'
-import { Environment, SiteCAUnit } from '@prisma/client'
+import { SiteCAUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import CarbonIntensity from './CarbonIntensity'
@@ -89,7 +90,7 @@ const CarbonIntensities = ({ study, studySite, withDep, withoutDep, caUnit }: Pr
           testId="result-etp"
           simplified={study.simplified}
         />
-        {study.organizationVersion.environment === Environment.TILT && (
+        {isTilt(study.organizationVersion.environment) && (
           <>
             {volunteer && (
               <CarbonIntensity
