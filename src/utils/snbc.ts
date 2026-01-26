@@ -1,9 +1,9 @@
 import { TrajectoryDataPoint } from '@/components/study/transitionPlan/TrajectoryGraph'
-import { SNBC_SECTOR_MAP, SNBC_SECTOR_TARGET_EMISSIONS } from '@/constants/trajectories'
+import { SNBC_SECTOR_TARGET_EMISSIONS, SectenSector } from '@/constants/trajectories'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import type { SectenInfo } from '@prisma/client'
 import {
-  OvershootAdjustment,
+  CalculateTrajectoryParams,
   PastStudy,
   computePastOrPresentValue,
   getAllHistoricalStudyPoints,
@@ -18,18 +18,6 @@ const SNBC_MID_TARGET_YEAR = 2030
 const SNBC_FINAL_TARGET_YEAR = 2050
 const SNBC_2030_REDUCTION_RATE = 0.4 // 40% reduction from 1990 to 2030
 const SNBC_2050_REDUCTION_RATE = 5 / 6 // ~83% reduction from 1990 to 2050 (target is 1/6th of 1990 emissions)
-
-export type SectenSector = 'energy' | 'industry' | 'waste' | 'buildings' | 'agriculture' | 'transportation'
-
-interface CalculateTrajectoryParams {
-  studyEmissions: number
-  studyStartYear: number
-  sectenData: SectenInfo[]
-  pastStudies?: PastStudy[]
-  displayCurrentStudyValueOnTrajectory?: boolean
-  overshootAdjustment?: OvershootAdjustment
-  maxYear?: number
-}
 
 interface TrajectorySegment {
   startYear: number
@@ -92,30 +80,12 @@ const getSectenYearlyReductionRates = (sectenData: SectenInfo[], sector?: Secten
   return rates
 }
 
-const getSectorTargetEmissions = (sector: SectenSector): { 2015: number; 2030: number; 2050: number } | null => {
-  const trajectoryId = Object.entries(SNBC_SECTOR_MAP).find(([, s]) => s === sector)?.[0]
-  if (!trajectoryId) {
-    return null
-  }
-  return SNBC_SECTOR_TARGET_EMISSIONS[trajectoryId]
-}
-
 const getTrajectoryTargetEmissions = (
   sectenData: SectenInfo[],
   sector?: SectenSector,
 ): TrajectoryTargetEmissions | null => {
   if (sector) {
-    const targetEmissions = getSectorTargetEmissions(sector)
-
-    if (!targetEmissions) {
-      return null
-    }
-
-    return {
-      2015: targetEmissions[2015],
-      2030: targetEmissions[2030],
-      2050: targetEmissions[2050],
-    }
+    return SNBC_SECTOR_TARGET_EMISSIONS[sector]
   }
 
   const emissions1990 = getSectenEmissionsByYear(sectenData, SNBC_REFERENCE_YEAR)
@@ -135,17 +105,13 @@ const calculateRateForSegment = (
   fromYear: number,
   toYear: number,
 ): number | null => {
-  if (fromEmissions <= toEmissions) {
+  if (fromEmissions <= 0 || fromEmissions <= toEmissions) {
     return 0
   }
 
   const years = toYear - fromYear
-  if (fromEmissions <= 0 || years <= 0) {
+  if (years <= 0) {
     return null
-  }
-
-  if (fromEmissions <= toEmissions) {
-    return 0
   }
 
   const totalReduction = (fromEmissions - toEmissions) / fromEmissions

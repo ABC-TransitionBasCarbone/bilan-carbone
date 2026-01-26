@@ -1,6 +1,7 @@
 import { TrajectoryDataPoint } from '@/components/study/transitionPlan/TrajectoryGraph'
 import {
-  SNBC_SECTOR_MAP,
+  SECTEN_SECTORS,
+  SectenSector,
   TRAJECTORY_15_ID,
   TRAJECTORY_SNBC_GENERAL_ID,
   TRAJECTORY_WB2C_ID,
@@ -86,6 +87,16 @@ interface CalculateSbtiTrajectoryParams {
   minYear?: number
   maxYear?: number
   pastStudies?: PastStudy[]
+}
+
+export interface CalculateTrajectoryParams {
+  studyEmissions: number
+  studyStartYear: number
+  sectenData: SectenInfo[]
+  pastStudies?: PastStudy[]
+  displayCurrentStudyValueOnTrajectory?: boolean
+  overshootAdjustment?: OvershootAdjustment
+  maxYear?: number
 }
 
 interface CalculateCustomTrajectoryParams {
@@ -856,6 +867,20 @@ export const getTrajectoryTypeLabel = (type: TrajectoryType, t: Translations) =>
   }
 }
 
+const isSectenSector = (sectorId: string): sectorId is SectenSector => {
+  return SECTEN_SECTORS.includes(sectorId as SectenSector)
+}
+
+const calculateSNBCTrajectoryByType = (sectorId: string, params: CalculateTrajectoryParams): TrajectoryDataPoint[] => {
+  if (sectorId === TRAJECTORY_SNBC_GENERAL_ID) {
+    return calculateSNBCTrajectory(params)
+  }
+  if (isSectenSector(sectorId)) {
+    return calculateSNBCTrajectory(params, sectorId)
+  }
+  return []
+}
+
 export const getSNBCData = (
   selectedSnbcTrajectories: string[],
   sectenData: SectenInfo[],
@@ -864,35 +889,15 @@ export const getSNBCData = (
   studyStartYear: number,
   totalCo2: number,
   maxYear: number,
-): { [trajectoryId: string]: TrajectoryData | null } => {
-  const result: { [trajectoryId: string]: TrajectoryData | null } = {}
+): { [sectorId: string]: TrajectoryData | null } => {
+  const result: { [sectorId: string]: TrajectoryData | null } = {}
 
-  for (const trajectoryId of selectedSnbcTrajectories) {
-    const calculateTrajectoryFn = (params: {
-      studyEmissions: number
-      studyStartYear: number
-      sectenData: SectenInfo[]
-      pastStudies: PastStudy[]
-      maxYear: number
-      displayCurrentStudyValueOnTrajectory?: boolean
-      overshootAdjustment?: {
-        referenceTrajectory: TrajectoryDataPoint[]
-        referenceStudyYear: number
-      }
-    }): TrajectoryDataPoint[] => {
-      if (trajectoryId === TRAJECTORY_SNBC_GENERAL_ID) {
-        return calculateSNBCTrajectory(params)
-      } else if (trajectoryId in SNBC_SECTOR_MAP) {
-        return calculateSNBCTrajectory(params, SNBC_SECTOR_MAP[trajectoryId])
-      }
-      return []
-    }
-
+  for (const sectorId of selectedSnbcTrajectories) {
     if (!referenceStudyData) {
-      result[trajectoryId] = {
+      result[sectorId] = {
         previousTrajectoryStartYear: null,
         previousTrajectory: null,
-        currentTrajectory: calculateTrajectoryFn({
+        currentTrajectory: calculateSNBCTrajectoryByType(sectorId, {
           studyEmissions: totalCo2,
           studyStartYear,
           sectenData,
@@ -902,7 +907,7 @@ export const getSNBCData = (
         withinThreshold: true,
       }
     } else {
-      const referenceTrajectory = calculateTrajectoryFn({
+      const referenceTrajectory = calculateSNBCTrajectoryByType(sectorId, {
         studyEmissions: referenceStudyData.totalCo2,
         studyStartYear: referenceStudyData.year,
         sectenData,
@@ -919,7 +924,7 @@ export const getSNBCData = (
       if (withinThreshold) {
         currentTrajectory = [{ year: studyStartYear, value: totalCo2 }]
       } else {
-        currentTrajectory = calculateTrajectoryFn({
+        currentTrajectory = calculateSNBCTrajectoryByType(sectorId, {
           studyEmissions: totalCo2,
           studyStartYear,
           sectenData,
@@ -933,7 +938,7 @@ export const getSNBCData = (
         })
       }
 
-      result[trajectoryId] = {
+      result[sectorId] = {
         previousTrajectoryStartYear: referenceStudyData.year,
         previousTrajectory: referenceTrajectory,
         currentTrajectory,
