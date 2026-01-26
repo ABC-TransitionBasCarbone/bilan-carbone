@@ -623,11 +623,14 @@ const TrajectoryGraph = ({
         className={classNames(styles.filtersAccordion, 'mt1')}
       >
         <AccordionSummary expandIcon={<ExpandMoreIcon fontSize="large" />}>
-          <div className="flex gapped1 wrap">
+          <div className="flex gapped-2 wrap">
             {seriesCreated
               .filter((serie) => !filteredSeriesLabels.includes(serie.label as string))
               .map((serie: LineSeries) => (
                 <TagChip
+                  size="small"
+                  circleSize="0.8rem"
+                  fontSize="1rem"
                   className="bold"
                   key={serie.label as string}
                   name={serie.label as string}

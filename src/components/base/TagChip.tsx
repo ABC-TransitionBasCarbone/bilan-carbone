@@ -11,6 +11,8 @@ interface Props {
   color?: string | null
   className?: string
   'data-testid'?: string
+  circleSize?: string
+  fontSize?: string
 }
 
 const TagChip = ({
@@ -19,6 +21,8 @@ const TagChip = ({
   color,
   className,
   'data-testid': dataTestId,
+  circleSize,
+  fontSize,
   ...props
 }: Props & Omit<ChipProps, 'color'>) => {
   const backgroundColor = color || StudyTagColors.DEFAULT
@@ -31,12 +35,19 @@ const TagChip = ({
       sx={{
         '& [data-color-circle]': {
           backgroundColor,
+          width: circleSize,
+          height: circleSize,
+        },
+        '& [data-chip-name]': {
+          fontSize: fontSize,
         },
       }}
       label={
         <div className="align-center gapped-2" style={{ minWidth: 0 }}>
           <div data-color-circle className={classNames(styles.colorCircle, 'flex-cc')} />
-          <span className={styles.tagText}>{name}</span>
+          <span data-chip-name className={styles.tagText}>
+            {name}
+          </span>
         </div>
       }
       {...props}
