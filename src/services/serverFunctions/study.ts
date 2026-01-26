@@ -2495,7 +2495,7 @@ export const changeStudyEstablishment = async (studySiteId: string, data: Change
     await updateSituationWithStudySiteData(studySiteId, data, informations.user.environment)
   })
 
-export const addEngagementAction = async ({ studyId, ...command }: AddEngagementActionCommand) =>
+export const addEngagementAction = async ({ studyId, sites, ...command }: AddEngagementActionCommand) =>
   withServerResponse('addEngagementAction', async () => {
     const session = await dbActualizedAuth()
     if (!session || !session.user) {
@@ -2510,9 +2510,13 @@ export const addEngagementAction = async ({ studyId, ...command }: AddEngagement
     if (!hasAccessToEngagementActions(session.user.environment, study.simplified)) {
       throw new Error(NOT_AUTHORIZED)
     }
+    if (sites.length === 0) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
     await createEngagementAction({
       study: { connect: { id: studyId } },
+      sites: { connect: sites.map((siteId) => ({ id: siteId })) },
       ...command,
     })
   })
@@ -2536,7 +2540,9 @@ export const getEngagementActionsWithStudyId = async (studyId: string) =>
     return await getEngagementActions(studyId)
   })
 
-export const editEngagementAction = async (id: string, { studyId, ...command }: AddEngagementActionCommand) =>
+export type EngagementActionWithSites = IsSuccess<AsyncReturnType<typeof getEngagementActionsWithStudyId>>[number]
+
+export const editEngagementAction = async (id: string, { studyId, sites, ...command }: AddEngagementActionCommand) =>
   withServerResponse('editEngagementAction', async () => {
     const session = await dbActualizedAuth()
     if (!session || !session.user) {
@@ -2552,7 +2558,14 @@ export const editEngagementAction = async (id: string, { studyId, ...command }: 
       throw new Error(NOT_AUTHORIZED)
     }
 
-    await updateEngagementAction(id, command)
+    if (sites.length === 0) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await updateEngagementAction(id, {
+      sites: { set: sites.map((siteId) => ({ id: siteId })) },
+      ...command,
+    })
   })
 
 export const deleteEngagementAction = async (id: string, studyId: string) =>
@@ -2577,4 +2590,45 @@ export const deleteEngagementAction = async (id: string, studyId: string) =>
     }
 
     await dbDeleteEngagementAction(id)
+  })
+
+export const addMissingSourceToStudies = async (source: Import) => {
+  const version = (await getSourcesLatestImportVersionId([source]))[0]
+  if (!version) {
+    throw new Error('No imported emission factor version for this source : ' + source)
+  }
+  const studies = await prismaClient.study.findMany({ select: { id: true, emissionFactorVersions: true } })
+  const withMissingSources = studies.filter(
+    (study) =>
+      !study.emissionFactorVersions.some((studyEmissionFactorVersion) => studyEmissionFactorVersion.source === source),
+  )
+  return prismaClient.studyEmissionFactorVersion.createMany({
+    data: withMissingSources.map((study) => ({
+      source,
+      studyId: study.id,
+      importVersionId: version.id,
+    })),
+  })
+}
+
+export const getStudyExports = async (studyId: string | undefined) =>
+  withServerResponse('getStudyExports', async () => {
+    if (!studyId) {
+      return []
+    }
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!study || !getAccountRoleOnStudy(session.user, study)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return study.exports?.types || []
   })

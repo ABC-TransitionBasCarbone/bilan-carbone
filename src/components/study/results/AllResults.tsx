@@ -10,7 +10,7 @@ import { download } from '@/services/file'
 import { hasAccessToBcExport, hasAccessToDownloadStudyEmissionSourcesButton } from '@/services/permissions/environment'
 import { environmentPostMapping } from '@/services/posts'
 import { computeBegesResult } from '@/services/results/beges'
-import { computeResultsByPost, computeResultsByTag } from '@/services/results/consolidated'
+import { computeResultsByPostFromEmissionSources, computeResultsByTag } from '@/services/results/consolidated'
 import { computeGHGPResult } from '@/services/results/ghgp'
 import { getSiteEmissionSourcesWithoutMarketBase } from '@/services/results/utils'
 import { isDeactivableFeatureActiveForEnvironment } from '@/services/serverFunctions/deactivableFeatures'
@@ -198,8 +198,20 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     const filteredEmissionSources = siteEmissionSources.filter((es) => filterEmissionSources(es, 'normal'))
     const filteredStudy = { ...study, emissionSources: filteredEmissionSources }
 
-    const filteredWithDep = computeResultsByPostFromEmissionSources(
-      filteredStudy,
+    // Exclude UtilisationEnDependance even if it matches filters
+    const filteredEmissionSourcesWithoutDepForced = siteEmissionSources.filter((es) =>
+      filterEmissionSources(es, 'forceExclude'),
+    )
+    const filteredStudyWithoutDepForced = { ...study, emissionSources: filteredEmissionSourcesWithoutDepForced }
+
+    // Include UtilisationEnDependance even if not in filters
+    const filteredEmissionSourcesWithDepForced = siteEmissionSources.filter((es) =>
+      filterEmissionSources(es, 'forceInclude'),
+    )
+    const filteredStudyWithDepForced = { ...study, emissionSources: filteredEmissionSourcesWithDepForced }
+
+    const filteredResultWithDep = computeResultsByPostFromEmissionSources(
+      filteredStudyWithDepForced,
       tPost,
       studySite,
       true,
@@ -209,7 +221,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       type,
     )
 
-    const filteredResultWithoutDep = computeResultsByPost(
+    const filteredResultWithoutDep = computeResultsByPostFromEmissionSources(
       filteredStudyWithoutDepForced,
       tPost,
       studySite,
@@ -221,7 +233,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
     )
 
     // Compute results using real filtered values
-    const filteredResult = computeResultsByPost(
+    const filteredResult = computeResultsByPostFromEmissionSources(
       filteredStudy,
       tPost,
       studySite,

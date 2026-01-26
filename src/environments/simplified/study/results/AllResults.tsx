@@ -133,7 +133,7 @@ const AllResults = ({
                 study,
                 [],
                 [],
-                emissionFactorsWithParts,
+                emissionFactorsWithPart,
                 tResults,
                 tExport,
                 tPost,

@@ -31,7 +31,12 @@ import {
   subPostBCToSubPostTiltMapping,
 } from './posts'
 import { rulesSpans as begesRulesSpans, computeBegesResult } from './results/beges'
-import { computeResultsByPost, computeResultsByTag, ResultsByPost } from './results/consolidated'
+import {
+  BaseResultsBySite,
+  computeResultsByPostFromEmissionSources,
+  computeResultsByTag,
+  ResultsByPost,
+} from './results/consolidated'
 import { PostInfos } from './results/exports'
 import { computeGHGPResult, rulesSpans as ghgpRulesSpans } from './results/ghgp'
 import { filterWithDependencies } from './results/utils'
