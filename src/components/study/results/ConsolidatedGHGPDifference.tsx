@@ -119,8 +119,8 @@ const ConsolatedGHGPDifference = ({
     [immobilisation, emissionFactorsWithParts, unitValue, environment],
   )
 
-  const otherEmissions = useMemo(
-    () =>
+  const getOtherEmissions = useCallback(
+    (isAmont: boolean) =>
       emissionSourcesForSelectedSite.filter((emissionSource) => {
         if (isEmissionSourceFiltered(emissionSource)) {
           return false
@@ -131,14 +131,28 @@ const ConsolatedGHGPDifference = ({
           return false
         }
         const rule = getDefaultRule(subPostRules, emissionSource.caracterisation)
-        return rule && rule.includes('other')
+
+        if (isAmont) {
+          return rule === '3.other'
+        } else {
+          return rule === '4.other'
+        }
       }),
     [emissionSourcesForSelectedSite, ghgpRules, isEmissionSourceFiltered],
   )
 
-  const otherEmissionsDifference = useMemo(
-    () => calculateEmissionSourcesDifference(otherEmissions, emissionFactorsWithParts, environment, unitValue),
-    [otherEmissions, emissionFactorsWithParts, unitValue, environment],
+  const otherEmissionsAval = useMemo(() => getOtherEmissions(true), [getOtherEmissions])
+
+  const otherEmissionsAvalDifference = useMemo(
+    () => calculateEmissionSourcesDifference(otherEmissionsAval, emissionFactorsWithParts, environment, unitValue),
+    [otherEmissionsAval, emissionFactorsWithParts, unitValue, environment],
+  )
+
+  const otherEmissionsAmont = useMemo(() => getOtherEmissions(false), [getOtherEmissions])
+
+  const otherEmissionsAmontDifference = useMemo(
+    () => calculateEmissionSourcesDifference(otherEmissionsAmont, emissionFactorsWithParts, environment, unitValue),
+    [otherEmissionsAmont, emissionFactorsWithParts, unitValue, environment],
   )
 
   const otherGas = useMemo(
@@ -232,7 +246,8 @@ const ConsolatedGHGPDifference = ({
         utilisationEnDependanceValue +
         missingCaractDifference +
         immobilisationDifference +
-        otherEmissionsDifference +
+        otherEmissionsAvalDifference +
+        otherEmissionsAmontDifference +
         otherGasDifference +
         marketBasedDifference
       }
@@ -274,14 +289,26 @@ const ConsolatedGHGPDifference = ({
           navigateToEmissionSource={navigateToEmissionSource}
         />
       )}
-      {!!otherEmissions.length && (
+      {!!otherEmissionsAval.length && (
         <ExportDifferenceItems
-          title="otherEmissionsTitle"
-          descriptions={['otherEmissions1']}
-          emissionSources={otherEmissions}
+          title="otherEmissionsAvalTitle"
+          descriptions={['otherEmissionsAval']}
+          emissionSources={otherEmissionsAval}
           exportType={Export.GHGP}
           studySite={studySite}
-          value={formatNumber(otherEmissionsDifference, 0)}
+          value={formatNumber(otherEmissionsAvalDifference, 0)}
+          resultsUnit={study.resultsUnit}
+          navigateToEmissionSource={navigateToEmissionSource}
+        />
+      )}
+      {!!otherEmissionsAmont.length && (
+        <ExportDifferenceItems
+          title="otherEmissionsAmontTitle"
+          descriptions={['otherEmissionsAmont']}
+          emissionSources={otherEmissionsAmont}
+          exportType={Export.GHGP}
+          studySite={studySite}
+          value={formatNumber(otherEmissionsAmontDifference, 0)}
           resultsUnit={study.resultsUnit}
           navigateToEmissionSource={navigateToEmissionSource}
         />
