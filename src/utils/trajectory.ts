@@ -939,7 +939,7 @@ export const getSNBCData = (
         })
       }
 
-      const isFailed = isFailedTrajectory(studyStartYear, referenceStudyData.year, referenceTrajectory, currentTrajectory)
+      const isFailed = isFailedTrajectory(maxYear, referenceStudyData.year, referenceTrajectory, currentTrajectory)
 
       result[sectorId] = {
         previousTrajectoryStartYear: referenceStudyData.year,
@@ -1004,12 +1004,7 @@ export const getDefaultSBTiData = (
         maxYear,
       })
 
-      const isFailed = isFailedTrajectory(
-        studyStartYear,
-        SBTI_START_YEAR,
-        theoreticalSbti15Reference,
-        currentTrajectory,
-      )
+      const isFailed = isFailedTrajectory(maxYear, SBTI_START_YEAR, theoreticalSbti15Reference, currentTrajectory)
 
       sbti15Data = {
         previousTrajectoryStartYear: SBTI_START_YEAR,
@@ -1031,12 +1026,7 @@ export const getDefaultSBTiData = (
         maxYear,
       })
 
-      const isFailed = isFailedTrajectory(
-        studyStartYear,
-        SBTI_START_YEAR,
-        theoreticalSbtiWB2CReference,
-        currentTrajectory,
-      )
+      const isFailed = isFailedTrajectory(maxYear, SBTI_START_YEAR, theoreticalSbtiWB2CReference, currentTrajectory)
 
       sbtiWB2CData = {
         previousTrajectoryStartYear: SBTI_START_YEAR,
@@ -1092,7 +1082,7 @@ export const getDefaultSBTiData = (
           maxYear,
         })
       }
-      const isFailed = isFailedTrajectory(studyStartYear, referenceStudyYear, referenceTrajectory, currentTrajectory)
+      const isFailed = isFailedTrajectory(maxYear, referenceStudyYear, referenceTrajectory, currentTrajectory)
 
       sbti15Data = {
         previousTrajectoryStartYear: referenceStudyYear,
@@ -1126,7 +1116,7 @@ export const getDefaultSBTiData = (
         maxYear,
       })
 
-      const isFailed = isFailedTrajectory(studyStartYear, referenceStudyYear, referenceTrajectory, currentTrajectory)
+      const isFailed = isFailedTrajectory(maxYear, referenceStudyYear, referenceTrajectory, currentTrajectory)
 
       sbtiWB2CData = {
         previousTrajectoryStartYear: referenceStudyYear,
@@ -1248,7 +1238,7 @@ export const getCustomData = (
         sectenData,
       })
 
-      const isFailed = isFailedTrajectory(studyStartYear, referenceYear, referenceTrajectory, currentTrajectory)
+      const isFailed = isFailedTrajectory(maxYear, referenceYear, referenceTrajectory, currentTrajectory)
       customTrajectoriesData.push({
         id: customTrajectory.id,
         data: {
@@ -1323,7 +1313,7 @@ export const getActionBasedData = (
     })
 
     const previousTrajectory = actionWithinThreshold ? null : referenceActionTrajectory
-    const isFailed = isFailedTrajectory(studyStartYear, referenceYear, previousTrajectory, currentActionTrajectory)
+    const isFailed = isFailedTrajectory(maxYear, referenceYear, previousTrajectory, currentActionTrajectory)
     return {
       previousTrajectoryStartYear: referenceYear,
       previousTrajectory: previousTrajectory,
@@ -1597,7 +1587,7 @@ export const getDisplayedReferenceYearForTrajectoryType = (type: TrajectoryType,
 }
 
 const isFailedTrajectory = (
-  studyStartYear: number,
+  maxYear: number,
   referenceTrajectoryStartYear: number,
   referenceTrajectory: TrajectoryDataPoint[] | null,
   currentTrajectory: TrajectoryDataPoint[],
@@ -1605,8 +1595,8 @@ const isFailedTrajectory = (
   if (!referenceTrajectory) {
     return false
   }
-  const referenceBudget = calculateTrajectoryIntegral(referenceTrajectory, referenceTrajectoryStartYear, studyStartYear)
-  const currentBudget = calculateTrajectoryIntegral(currentTrajectory, referenceTrajectoryStartYear, studyStartYear)
+  const referenceBudget = calculateTrajectoryIntegral(referenceTrajectory, referenceTrajectoryStartYear, maxYear)
+  const currentBudget = calculateTrajectoryIntegral(currentTrajectory, referenceTrajectoryStartYear, maxYear)
   const isFailed = currentBudget > referenceBudget * (1 + 5 / 100)
   return isFailed
 }
