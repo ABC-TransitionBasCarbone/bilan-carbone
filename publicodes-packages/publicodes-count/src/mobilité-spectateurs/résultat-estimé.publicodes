@@ -2,7 +2,10 @@ mobilité spectateurs . résultat estimé:
   description: Calcul de l'empreinte basé sur des profils types de cinémas comparables
 
 mobilité spectateurs . résultat estimé . empreinte:
-  applicable si: mobilité spectateurs . précision = "estimation"
+  applicable si:
+    toutes ces conditions:
+      - est défini: mobilité spectateurs . précision
+      - mobilité spectateurs . précision = "estimation"
   titre: Empreinte estimée
   formule:
     variations:
@@ -20,7 +23,10 @@ mobilité spectateurs . résultat estimé . empreinte:
         alors: empreinte établissement proche
 
 mobilité spectateurs . résultat estimé . proximité spectateurs:
-  applicable si: mobilité spectateurs . précision = "estimation"
+  applicable si:
+    toutes ces conditions:
+      - est défini: mobilité spectateurs . précision
+      - mobilité spectateurs . précision = "estimation"
   question: |
     Vos spectateurs sont-ils majoritairement des habitants "locaux", c'est à dire résidant à l'année dans les environs ou attirez-vous aussi une part non négligeable de spectateurs de passage dans la région (touristes notamment)
   une possibilité:
@@ -55,7 +61,10 @@ mobilité spectateurs . résultat estimé . empreinte établissement proche:
         alors: profil établissement . uniquement accessible en voiture . empreinte
 
 mobilité spectateurs . résultat estimé . profil établissement:
-  applicable si: mobilité spectateurs . précision = "estimation"
+  applicable si:
+    toutes ces conditions:
+      - est défini: mobilité spectateurs . précision
+      - mobilité spectateurs . précision = "estimation"
   question: Si vous souhaitez vous identifier à des profils de cinéma comparable, de quel type de cinéma votre établissement se rapproche le plus
   une possibilité:
     - distances courtes

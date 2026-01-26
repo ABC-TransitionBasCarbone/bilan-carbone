@@ -2,7 +2,10 @@ mobilité spectateurs . résultat précis:
   description: Calcul de l'empreinte basé sur les résultats d'une enquête mobilité spectateur·ices
 
 mobilité spectateurs . résultat précis . empreinte:
-  applicable si: mobilité spectateurs . précision = "résultat précis"
+  applicable si:
+    toutes ces conditions:
+      - est défini: mobilité spectateurs . précision
+      - mobilité spectateurs . précision = "résultat précis"
   unité: kgCO2e
   formule:
     somme:

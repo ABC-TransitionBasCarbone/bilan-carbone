@@ -34,7 +34,10 @@ mobilité spectateurs . précision:
       titre: Non mais je préfère m'identifier dans des profils de cinéma comparables
 
 mobilité spectateurs . mobilité spectateurs . contact:
-  applicable si: précision = "besoin"
+  applicable si:
+    toutes ces conditions:
+      - est défini: précision
+      - précision = "besoin"
   question: |
     Si vous souhaitez réaliser une enquête mobilité spectateur, vous pouvez nous envoyer un mail pour récupérer un modèle d'enquête qui vous permettra de remplir d'ici quelques semaines les informations demandées
   texte: |

@@ -162,4 +162,15 @@ describe("Poste - Mobilité Spectateurs", () => {
     // Vérifier l'unité
     expect(result.unit?.numerators).toContain("kgCO2e");
   });
+
+  test("les paramètres de distances devraient être non-applicable tant que la précision n'est pas renseignée", () => {
+    const localEngine = engine.shallowCopy();
+
+    expect(
+      localEngine.evaluate({
+        "est applicable":
+          "mobilité spectateurs . résultat précis . empreinte . RER et transilien . distance",
+      }).nodeValue,
+    ).toBe(false);
+  });
 });
