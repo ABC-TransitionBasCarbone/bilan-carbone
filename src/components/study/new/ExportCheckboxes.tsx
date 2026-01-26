@@ -1,6 +1,7 @@
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { updateStudySpecificExportFields } from '@/services/serverFunctions/study'
+import { sortAlphabetically } from '@/services/utils'
 import { exportSpecificFields, getAllSpecificFieldsForExports } from '@/utils/study'
 import { ControlMode, EmissionSourceCaracterisation, Export } from '@prisma/client'
 import { useCallback, useMemo, useState } from 'react'
@@ -116,19 +117,21 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
   return (
     <>
       <div className="flex-col">
-        {Object.keys(Export).map((exportType, i) => (
-          <ExportCheckbox
-            key={exportType}
-            exportType={exportType as Export}
-            index={i}
-            study={study}
-            values={values}
-            setControl={setControl}
-            onChange={onValueChange}
-            disabled={disabled}
-            duplicateStudyId={duplicateStudyId}
-          />
-        ))}
+        {Object.keys(Export)
+          .sort(sortAlphabetically)
+          .map((exportType, i) => (
+            <ExportCheckbox
+              key={exportType}
+              exportType={exportType as Export}
+              index={i}
+              study={study}
+              values={values}
+              setControl={setControl}
+              onChange={onValueChange}
+              disabled={disabled}
+              duplicateStudyId={duplicateStudyId}
+            />
+          ))}
       </div>
       {pendingExportCheck && (
         <ExportActivationWarningModal
