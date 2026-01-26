@@ -1134,8 +1134,8 @@
         "referenceYear": "Reference year",
         "objectives": {
           "title": "Reduction objectives",
-          "sbtiDescription": "These reduction objectives are linked to the SBTi reference trajectory and are predefined. You can add intermediate objectives in the \"My reduction objectives\" section",
-          "snbcDescription": "These reduction objectives are linked to the SNBC reference trajectory and are predefined. You can add intermediate objectives in the \"My reduction objectives\" section",
+          "sbtiDescription": "These reduction objectives are linked to the SBTi reference trajectory and are predefined. You can add intermediate objectives in the \"My reduction objectives\" section.",
+          "snbcDescription": "These reduction objectives are linked to the SNBC reference trajectory and are predefined. You can add intermediate objectives in the \"My reduction objectives\" section.",
           "global": "GLOBAL OBJECTIVE",
           "horizon2030": "2030 Horizon",
           "horizon2050": "2050 Horizon",
@@ -1144,7 +1144,7 @@
           "reductionRate": "Annual reduction percentage",
           "reductionRatePlaceholder": "Give a reduction % (e.g., 2.5)",
           "referenceRate": "Reference rate",
-          "compensatedRate": "Compensated rate",
+          "correctedRate": "Corrected rate",
           "overshootInfo": "Rate adjusted to compensate for overshoot"
         },
         "validation": {
@@ -1160,8 +1160,8 @@
           "referenceYearMethod": "{method} Reference Year",
           "referenceYearMethodDescription": "You cannot modify the reference date for a {method} trajectory as it is dictated by the method.",
           "referenceYearMethodLink": "For more info, click here.",
-          "compensatedRate": "Year N Rate Calculation",
-          "compensatedRateDescription": "The Year N rate takes into account your desired rate as well as emissions between your reference year and your study year. If your emissions did not follow your desired rate, we calculate the excess emissions (overshoot) and apply a new rate to allow you to catch up on the excess emissions."
+          "correctedRate": "Year N Rate Calculation",
+          "correctedRateDescription": "The Year N rate takes into account your desired rate as well as emissions between your reference year and your study year. If your emissions did not follow your desired rate, we calculate the excess emissions (overshoot) and apply a new rate to allow you to catch up on the excess emissions."
         }
       },
       "objectives": {
@@ -1179,7 +1179,7 @@
           "targetYear": "Target year",
           "reductionRate": "Annual reduction",
           "referenceYear": "Reference year",
-          "compensatedRate": "Compensated annual reduction",
+          "correctedRate": "Corrected annual reduction",
           "referenceReduction": "Reference annual reduction",
           "actions": "Actions"
         },

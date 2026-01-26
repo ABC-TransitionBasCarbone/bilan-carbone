@@ -28,7 +28,7 @@ interface Props {
   handleModeSelect: (type: TrajectoryType) => void
   studyYear: number
   snbcRates: { rateTo2030: number; rateTo2050: number } | null
-  compensatedObjectives: (BaseObjective | null)[] | null
+  correctedObjectives: (BaseObjective | null)[] | null
 }
 
 const TrajectoryCreationStep2 = ({
@@ -40,7 +40,7 @@ const TrajectoryCreationStep2 = ({
   handleModeSelect,
   studyYear,
   snbcRates,
-  compensatedObjectives,
+  correctedObjectives,
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectoryModal')
   const tGlossary = useTranslations('study.transitionPlan.trajectoryModal.glossary')
@@ -224,7 +224,7 @@ const TrajectoryCreationStep2 = ({
               <ObjectiveCard
                 name={t('objectives.horizon2030')}
                 reductionRate={rateTo2030}
-                compensatedObjective={compensatedObjectives?.[0] || null}
+                correctedObjective={correctedObjectives?.[0] || null}
                 isEditable={false}
                 control={control}
                 index={0}
@@ -233,7 +233,7 @@ const TrajectoryCreationStep2 = ({
               <ObjectiveCard
                 name={t('objectives.horizon2050')}
                 reductionRate={rateFrom2030To2050}
-                compensatedObjective={compensatedObjectives?.[1] || null}
+                correctedObjective={correctedObjectives?.[1] || null}
                 isEditable={false}
                 control={control}
                 index={1}
@@ -245,7 +245,7 @@ const TrajectoryCreationStep2 = ({
                 <ObjectiveCard
                   key={objective.id}
                   isEditable
-                  compensatedObjective={compensatedObjectives?.[index] || null}
+                  correctedObjective={correctedObjectives?.[index] || null}
                   control={control}
                   index={index}
                   onDelete={() => remove(index)}

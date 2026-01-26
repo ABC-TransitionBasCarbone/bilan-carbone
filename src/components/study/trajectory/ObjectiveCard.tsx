@@ -21,10 +21,10 @@ interface Props {
   control: Control<TrajectoryFormData>
   index: number
   onDelete?: () => void
-  compensatedObjective: BaseObjective | null
+  correctedObjective: BaseObjective | null
 }
 
-const ObjectiveCard = ({ reductionRate, name, isEditable, control, index, onDelete, compensatedObjective }: Props) => {
+const ObjectiveCard = ({ reductionRate, name, isEditable, control, index, onDelete, correctedObjective }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectoryModal')
   const tGlossary = useTranslations('study.transitionPlan.trajectoryModal.glossary')
   const [showOvershootInfo, setShowOvershootInfo] = useState(false)
@@ -57,17 +57,17 @@ const ObjectiveCard = ({ reductionRate, name, isEditable, control, index, onDele
                   {reductionRate ? `-${(reductionRate * 100).toFixed(1)}%` : ''}
                 </Typography>
               </div>
-              {compensatedObjective && (
+              {correctedObjective && (
                 <div>
                   <div className="flex align-center gapped-2">
                     <Typography variant="body2" color="warning.main">
-                      {t('objectives.compensatedRate')}
+                      {t('objectives.correctedRate')}
                     </Typography>
                     <HelpIcon onClick={() => setShowOvershootInfo(true)} label={t('objectives.overshootInfo')} />
                   </div>
 
                   <Typography color="warning.main" fontWeight="bold">
-                    {(compensatedObjective.reductionRate * 100).toFixed(1)}%
+                    {(correctedObjective.reductionRate * 100).toFixed(1)}%
                   </Typography>
                 </div>
               )}
@@ -93,16 +93,16 @@ const ObjectiveCard = ({ reductionRate, name, isEditable, control, index, onDele
                 placeholder={t('objectives.reductionRatePlaceholder')}
                 data-testid="objective-reduction-rate-input"
               />
-              {compensatedObjective && (
+              {correctedObjective && (
                 <div>
                   <div className="flex align-center gapped-2">
                     <Typography variant="body2" color="warning.main">
-                      {t('objectives.compensatedRate')}
+                      {t('objectives.correctedRate')}
                     </Typography>
                     <HelpIcon onClick={() => setShowOvershootInfo(true)} label={t('objectives.overshootInfo')} />
                   </div>
                   <Typography color="warning.main" fontWeight="bold">
-                    {(compensatedObjective.reductionRate * 100).toFixed(1)}%
+                    {(correctedObjective.reductionRate * 100).toFixed(1)}%
                   </Typography>
                 </div>
               )}
@@ -112,12 +112,12 @@ const ObjectiveCard = ({ reductionRate, name, isEditable, control, index, onDele
       </div>
       {showOvershootInfo && (
         <GlossaryModal
-          glossary="compensatedRate"
-          label="compensated-rate"
+          glossary="correctedRate"
+          label="corrected-rate"
           t={tGlossary}
           onClose={() => setShowOvershootInfo(false)}
         >
-          {tGlossary('compensatedRateDescription')}
+          {tGlossary('correctedRateDescription')}
         </GlossaryModal>
       )}
     </div>

@@ -22,6 +22,7 @@ import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
+import { getStudyTotalCo2Emissions } from '@/services/study'
 import { deleteTransitionPlan, initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
 import { calculateTrajectoriesWithHistory, convertToPastStudies } from '@/utils/trajectory'
 import AddIcon from '@mui/icons-material/Add'
@@ -165,6 +166,10 @@ const TrajectoryReductionPage = ({
       convertToPastStudies(linkedStudies, linkedExternalStudies, withDependencies, validatedOnly, study.resultsUnit),
     [linkedStudies, linkedExternalStudies, withDependencies, validatedOnly, study.resultsUnit],
   )
+
+  const studyTotalEmissions = useMemo(() => {
+    return getStudyTotalCo2Emissions(study, true, validatedOnly)
+  }, [study, validatedOnly])
 
   const unvalidatedSourcesInfo = useMemo(() => {
     let totalCount = 0
@@ -462,6 +467,8 @@ const TrajectoryReductionPage = ({
               isFirstCreation={trajectories.length === 0}
               studyYear={study.startDate.getFullYear()}
               sectenData={sectenData}
+              studyEmissions={studyTotalEmissions}
+              pastStudies={pastStudies}
             />
           )}
 

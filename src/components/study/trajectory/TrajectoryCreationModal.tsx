@@ -14,7 +14,7 @@ import { calculateSNBCReductionRates, getSNBCGeneralDisplayedReductionRates } fr
 import { getYearFromDateStr } from '@/utils/time'
 import {
   BaseObjective,
-  getCompensatedObjectives,
+  getCorrectedObjectives,
   getDefaultObjectivesForTrajectoryType,
   getDisplayedReferenceYearForTrajectoryType,
   getReductionRatePerType,
@@ -123,7 +123,7 @@ const TrajectoryCreationModal = ({
   // Use useWatch with control to properly track nested field changes
   const objectives = useWatch({ control, name: 'objectives' })
 
-  const compensatedObjectives = useMemo(() => {
+  const correctedObjectives = useMemo(() => {
     // For SBTI and SNBC, build objectives from rates since form objectives are empty
     let objectivesToUse = objectives
     if (isSBTI || isSNBC) {
@@ -140,7 +140,7 @@ const TrajectoryCreationModal = ({
       }
     }
 
-    const compensated = getCompensatedObjectives(
+    const corrected = getCorrectedObjectives(
       studyYear,
       studyEmissions,
       objectivesToUse,
@@ -153,24 +153,24 @@ const TrajectoryCreationModal = ({
       sectenData,
     )
 
-    if (!compensated) {
+    if (!corrected) {
       return null
     }
 
-    // For SBTI/SNBC, return compensated directly (they only have 2 objectives and don't need to be mapped back)
+    // For SBTI/SNBC, return corrected directly (they only have 2 objectives and don't need to be mapped back)
     if (isSBTI || isSNBC) {
-      return compensated
+      return corrected
     }
 
-    // For custom trajectories, map compensated objectives back to their original positions
+    // For custom trajectories, map corrected objectives back to their original positions
     // This ensures empty objectives get null, maintaining correct indexing
     const result: (BaseObjective | null)[] = []
-    let compensatedIndex = 0
+    let correctedIndex = 0
 
     objectives.forEach((obj) => {
       if (obj.targetYear && obj.reductionRate !== null && obj.reductionRate !== undefined) {
-        result.push(compensated[compensatedIndex] || null)
-        compensatedIndex++
+        result.push(corrected[correctedIndex] || null)
+        correctedIndex++
       } else {
         result.push(null)
       }
@@ -331,7 +331,7 @@ const TrajectoryCreationModal = ({
             handleModeSelect={handleModeSelect}
             studyYear={studyYear}
             snbcRates={snbcRates}
-            compensatedObjectives={compensatedObjectives}
+            correctedObjectives={correctedObjectives}
           />
         )}
       </Modal>
@@ -375,7 +375,7 @@ const TrajectoryCreationModal = ({
           handleModeSelect={handleModeSelect}
           studyYear={studyYear}
           snbcRates={snbcRates}
-          compensatedObjectives={compensatedObjectives}
+          correctedObjectives={correctedObjectives}
         />
       )}
     </ModalStepper>
