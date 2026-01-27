@@ -1,5 +1,3 @@
-// SCRIPT A RELIRE
-
 import { prismaClient } from '@/db/client'
 import { getOrganizationVersionById } from '@/db/organization'
 import { getStudyById } from '@/db/study'
@@ -16,7 +14,11 @@ program
   .requiredOption('--newOrga, --new-orga-version-id <value>', 'new organization link to the study')
   .requiredOption('-s, --study-id <value>', 'Id of the study')
   .option(
-    '--studyOrga, --new-organization-version-id-for-study <value>',
+    '--oldStudyOrga, --old-organization-version-id-for-study <value>',
+    'id of the old organization for the study if old orga version is CR',
+  )
+  .option(
+    '--newStudyOrga, --new-organization-version-id-for-study <value>',
     'id of the new organization for the study if new orga version is CR',
   )
   .parse(process.argv)
@@ -24,31 +26,45 @@ program
 const params = program.opts()
 
 const checkOnstudyAndOrgaBeforeSwitch = async () => {
-  const { oldOrgaVersionId, newOrgaVersionId, studyId, newOrganizationVersionIdForStudy } = params
+  const {
+    oldOrgaVersionId,
+    newOrgaVersionId,
+    studyId,
+    newOrganizationVersionIdForStudy,
+    oldOrganizationVersionIdForStudy,
+  } = params
+
+  const newChildOrgaVersion = newOrganizationVersionIdForStudy ?? newOrgaVersionId
+  const oldChildOrgaVersion = oldOrganizationVersionIdForStudy ?? oldOrgaVersionId
 
   const oldOrgaVersion = await getOrganizationVersionById(oldOrgaVersionId)
   const newOrgaVersion = await getOrganizationVersionById(newOrgaVersionId)
   const study = await getStudyById(studyId, newOrgaVersionId)
 
   if (!oldOrgaVersion || !newOrgaVersion || !study) {
-    console.log('❌ One of the organization does not exist.')
+    console.log('❌ One of the organization does not exist.', oldOrgaVersion, newOrgaVersion, study)
     return { error: true, data: null }
   }
 
-  if (study.organizationVersionId !== oldOrgaVersionId) {
+  if (study.organizationVersionId !== oldChildOrgaVersion) {
     console.log('❌ The study is not linked to the old organization.')
     return { error: true, data: null }
   }
 
-  if (newOrgaVersion.isCR && !newOrganizationVersionIdForStudy) {
-    console.log('❌ The new organization is a CR orga. Please provide the id of the new organization for the study.')
+  if (
+    (newOrgaVersion.isCR && !newOrganizationVersionIdForStudy) ||
+    (oldOrgaVersion.isCR && !oldOrganizationVersionIdForStudy)
+  ) {
+    console.log(
+      '❌ The new or old organization is a CR orga. Please provide the id of the new or old organization for the study.',
+    )
     return { error: true, data: null }
   }
 
   let newOrganizationVersionForStudy
   let newOrganizationForStudyName
   if (newOrgaVersion.isCR) {
-    newOrganizationVersionForStudy = await getOrganizationVersionById(newOrganizationVersionIdForStudy)
+    newOrganizationVersionForStudy = await getOrganizationVersionById(newChildOrgaVersion)
 
     if (!newOrganizationVersionForStudy) {
       console.log('❌ The new organization version for the study does not exist.')
@@ -61,15 +77,21 @@ const checkOnstudyAndOrgaBeforeSwitch = async () => {
     newOrganizationForStudyName = newOrgaVersion.organization.name
   }
 
-  const usersFromNewOrga = study.allowedUsers.filter((user) => user.account.organizationVersionId === newOrgaVersionId)
-  if (usersFromNewOrga.length === 0) {
-    console.log('❌ No user from the new orga have access to the study. Please add at least one user.')
-    return { error: true, data: null }
-  }
+  if (newOrgaVersion.id !== oldOrgaVersion.id) {
+    const usersFromNewOrga = study.allowedUsers.filter(
+      (user) => user.account.organizationVersionId === newOrgaVersionId,
+    )
+    if (usersFromNewOrga.length === 0) {
+      console.log('❌ No user from the new orga have access to the study. Please add at least one user.')
+      return { error: true, data: null }
+    }
 
-  if (!usersFromNewOrga.some((user) => !!user.account.user.level)) {
-    console.log('❌ No user added to the study has a level of formation in the new orga. Please add at least one user.')
-    return { error: true, data: null }
+    if (!usersFromNewOrga.some((user) => !!user.account.user.level)) {
+      console.log(
+        '❌ No user added to the study has a level of formation in the new orga. Please add at least one user.',
+      )
+      return { error: true, data: null }
+    }
   }
 
   const studySites = study.sites.map((site) => site.site.name)
@@ -101,11 +123,19 @@ const switchStudiesOfOrganization = async () => {
     output: process.stdout,
   })
 
+  const { oldOrgaVersionId, oldOrganizationVersionIdForStudy } = params
+
+  const oldOrgaVersion = await getOrganizationVersionById(oldOrgaVersionId)
+  const oldStudyOrgaVersion = await getOrganizationVersionById(oldOrganizationVersionIdForStudy)
+
   const userConfirmation = await new Promise((resolve) => {
-    rl.question('Do you have the authorization from the orga that own the study ? y(es)/n(o) ', (answer) => {
-      rl.close()
-      resolve(answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes')
-    })
+    rl.question(
+      `Do you have the authorization from the orga that own the study : ${oldOrgaVersion?.organization.name} ? y(es)/n(o):`,
+      (answer) => {
+        rl.close()
+        resolve(answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes')
+      },
+    )
   })
 
   if (!userConfirmation) {
@@ -129,10 +159,15 @@ const switchStudiesOfOrganization = async () => {
       })
       const userConfirmationOfOrgas = await new Promise((resolve) => {
         rl2.question(
-          `You do want to move the study from orga ${oldOrgaVersion.organization.name} to ${newOrgaVersion.organization.name} ${
+          `You do want to move the study from orga ${oldOrgaVersion.organization.name} ${
+            oldOrgaVersion.isCR
+              ? `(CR orga), today in the child orga:
+            ${oldStudyOrgaVersion?.organization.name}`
+              : ''
+          } to ${newOrgaVersion.organization.name} ${
             newOrgaVersion.isCR
-              ? `, CR orga, the study will be put to this orga:
-            ${newOrganizationForStudyName} included in the CR orga`
+              ? `(CR orga), the study will be put to this orga:
+            ${newOrganizationForStudyName}`
               : ''
           } y(es)/n(o) ? `,
           (answer) => {
@@ -172,7 +207,7 @@ const switchStudiesOfOrganization = async () => {
 
       console.log(`✅ Study moved to the new organization: ${newOrganizationForStudyName}`)
     },
-    { timeout: 10000 },
+    { timeout: 100000 },
   )
 }
 
