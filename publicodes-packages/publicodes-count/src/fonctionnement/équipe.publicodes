@@ -21,6 +21,13 @@ fonctionnement . équipe . collaborateur type:
   formule: repas + transport
   unité: kgCO2e
 
+fonctionnement . équipe . collaborateur type . libellé:
+  type: texte
+  question: "Libellé"
+  note: |
+    Règle uniquement utilisée pour l'UI, à voir si on ne veut pas trouver une
+    solution plus élégante, mais pour l'instant c'est la plus rapide.
+
 fonctionnement . équipe . collaborateur type . nombre de jours par semaine:
   question: Nombre de jours / semaine
   unité: jour/semaine
