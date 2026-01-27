@@ -133,6 +133,11 @@ const fullStudyInclude = {
           importedId: true,
           base: true,
           location: true,
+          emissionFactorParts: {
+            select: {
+              type: true,
+            },
+          },
           metaData: {
             select: {
               language: true,

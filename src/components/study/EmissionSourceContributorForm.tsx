@@ -9,16 +9,16 @@ import { qualityKeys } from '@/services/uncertainty'
 import { useUnitLabel } from '@/services/unit'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
-import { hasDeprecationPeriod } from '@/utils/study'
+import { hasDeprecationPeriod, isFabrication } from '@/utils/study'
 import AddIcon from '@mui/icons-material/Add'
 import { TextField } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
-import { Environment, StudyResultUnit, SubPost, Unit } from '@prisma/client'
+import { EmissionSourceCaracterisation, Environment, StudyResultUnit, SubPost, Unit } from '@prisma/client'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Path } from 'react-hook-form'
 import LinkButton from '../base/LinkButton'
 import { ImportVersionForFilters } from '../emissionFactor/EmissionFactorsFilters'
@@ -75,6 +75,8 @@ const EmissionSourceContributorForm = ({
   const defaultQuality = qualities.find((quality) => quality)
   const canShrink = !defaultQuality || qualities.every((quality) => quality === defaultQuality)
 
+  const isFabricationFE = useMemo(() => isFabrication(selectedFactor), [selectedFactor])
+
   return (
     <>
       <div className={classNames(styles.row, 'flex')}>
@@ -111,7 +113,7 @@ const EmissionSourceContributorForm = ({
               </div>
             )}
           </div>
-          {hasDeprecationPeriod(emissionSource.subPost) && (
+          {(hasDeprecationPeriod(emissionSource.subPost) || (isFabricationFE && hasGHGPExport)) && (
             <>
               <div className={classNames(styles.inputWithUnit, 'flex grow')}>
                 <TextField
@@ -128,7 +130,7 @@ const EmissionSourceContributorForm = ({
                 />
                 <div className={styles.unit}>{t('form.years')}</div>
               </div>
-              {hasGHGPExport && (
+              {hasGHGPExport && emissionSource.caracterisation === EmissionSourceCaracterisation.Operated && (
                 <DatePicker
                   label={`${t('form.constructionYear')} *`}
                   slotProps={{

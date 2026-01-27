@@ -17,7 +17,7 @@ import {
 import { useUnitLabel } from '@/services/unit'
 import { emissionFactorDefautQualityStar, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
-import { formatEmissionFromNumber, hasDeprecationPeriod, hasEditionRights, isCAS } from '@/utils/study'
+import {formatEmissionFromNumber, hasDeprecationPeriod, hasEditionRights, isCAS, isFabrication } from '@/utils/study'
 import AddIcon from '@mui/icons-material/Add'
 import CopyIcon from '@mui/icons-material/ContentCopy'
 import EditIcon from '@mui/icons-material/Edit'
@@ -159,6 +159,8 @@ const EmissionSourceForm = ({
 
   const isCas = isCAS(emissionSource)
 
+  const isFabricationFE = useMemo(() => isFabrication(selectedFactor), [selectedFactor])
+
   const withDeprecationPeriod = useMemo(() => hasDeprecationPeriod(emissionSource.subPost), [emissionSource.subPost])
 
   useEffect(() => {
@@ -288,7 +290,7 @@ const EmissionSourceForm = ({
                 </div>
               )}
             </div>
-            {withDeprecationPeriod && (
+            {(withDeprecationPeriod || (isFabricationFE && hasGHGPExport)) && (
               <>
                 <div className={classNames(styles.inputWithUnit, 'flex grow')}>
                   <TextField
@@ -305,7 +307,7 @@ const EmissionSourceForm = ({
                   />
                   <div className={styles.unit}>{t('form.years')}</div>
                 </div>
-                {hasGHGPExport && (
+                {hasGHGPExport && emissionSource.caracterisation === EmissionSourceCaracterisation.Operated && (
                   <FormControl className="grow">
                     <DatePicker
                       label={`${t('form.constructionYear')} *`}
