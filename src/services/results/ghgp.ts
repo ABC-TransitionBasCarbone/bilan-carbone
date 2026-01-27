@@ -2,7 +2,7 @@ import { wasteImpact } from '@/constants/emissions'
 import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
-import { hasDeprecationPeriod } from '@/utils/study'
+import { hasDeprecationPeriod, isFabrication } from '@/utils/study'
 import { EmissionFactorBase, ExportRule, Import } from '@prisma/client'
 import { computeResult, EmissionSource, ExportEmissionFactor, getEmissionTotal, PostInfos } from './exports'
 
@@ -92,7 +92,7 @@ export const getGHGPEmissionValue = (studyDate: Date) => (emissionSource: Emissi
 
   let value = emissionSource.value
   if (
-    hasDeprecationPeriod(emissionSource.subPost) &&
+    (hasDeprecationPeriod(emissionSource.subPost) || isFabrication(emissionSource.emissionFactor)) &&
     emissionSource.constructionYear &&
     emissionSource.constructionYear.getFullYear() !== studyDate.getFullYear()
   ) {

@@ -49,7 +49,7 @@ const getRulePost = (caracterisation: EmissionSourceCaracterisation | null, rule
 
 export type EmissionSource = Pick<
   FullStudy['emissionSources'][0],
-  'value' | 'subPost' | 'depreciationPeriod' | 'constructionYear'
+  'value' | 'subPost' | 'depreciationPeriod' | 'constructionYear' | 'emissionFactor'
 >
 
 type GetLineFunctionType = (
