@@ -77,6 +77,7 @@ export const getMockedFullStudyEmissionSource = (
         comment: 'Mocked Comment',
       },
     ],
+    emissionFactorParts: [],
   },
   studySite: {
     id: 'mocked-study-site-id',

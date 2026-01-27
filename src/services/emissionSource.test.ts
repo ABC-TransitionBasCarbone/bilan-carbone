@@ -41,6 +41,7 @@ const defaultEmissionSource = {
         comment: 'Mocked Comment',
       },
     ],
+    emissionFactorParts: [],
   },
   studySite: { id: 'siteId', site: { id: 'siteId', name: 'mocked-site' } },
   emissionFactorId: 'emissionFactor',
