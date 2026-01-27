@@ -11,9 +11,19 @@ import {
   formatEmissionValueForExport,
   hasDeprecationPeriod,
   isCAS,
+  isFabrication,
   STUDY_UNIT_VALUES,
 } from '@/utils/study'
-import { EmissionFactorBase, Environment, Export, ExportRule, Level, StudyResultUnit, SubPost } from '@prisma/client'
+import {
+  EmissionFactorBase,
+  EmissionSourceCaracterisation,
+  Environment,
+  Export,
+  ExportRule,
+  Level,
+  StudyResultUnit,
+  SubPost,
+} from '@prisma/client'
 import dayjs from 'dayjs'
 import {
   canBeValidated,
@@ -86,6 +96,17 @@ export const getEmissionSourceStatus = (
   emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
   environment: Environment | undefined,
 ) => {
+  const hasGHGPExport = !!study.exports?.types.some((studyExport) => studyExport === Export.GHGP)
+  const isFabricationFE = isFabrication(emissionSource.emissionFactor)
+  if (
+    hasGHGPExport &&
+    isFabricationFE &&
+    emissionSource.caracterisation === EmissionSourceCaracterisation.Operated &&
+    !emissionSource.constructionYear
+  ) {
+    return EmissionSourcesStatus.Waiting
+  }
+
   if (emissionSource.validated) {
     return EmissionSourcesStatus.Valid
   }
