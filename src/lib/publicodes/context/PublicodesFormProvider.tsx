@@ -8,7 +8,7 @@ import { useTranslations } from 'next-intl'
 import { Situation } from 'publicodes'
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
 import { useSituationAutoSave } from '../hooks/useSituationAutoSave'
-import { aggregateSituationValues, getUpdatedSituationWithNewSituationList } from '../utils'
+import { aggregateSituationValues } from '../utils'
 import {
   PublicodesSituationContextValue,
   PublicodesSituationProvider,
@@ -51,6 +51,8 @@ export interface PublicodesAutoSaveContextValue<RuleName extends string = string
     rule: RuleName,
     value: string | number | boolean | undefined,
   ) => void
+  createNewListLayoutSituation: (targetRule: RuleName, situationId?: string) => void
+  deleteListLayoutSituation: (targetRule: RuleName, situationId: string) => void
   isSaving: boolean
   saveStatus: SaveStatus
   hasUnsavedChanges: boolean
@@ -135,46 +137,61 @@ function PublicodesAutoSaveProvider<RuleName extends string = string>({
     [engine, setSituation, autoSave.saveSituation],
   )
 
+  const patchListLayoutSituation = (
+    patchFn: (
+      prevRows: Array<{ id: string; situation: Situation<RuleName> }>,
+      targetRule: RuleName,
+    ) => Array<{ id: string; situation: Situation<RuleName> }>,
+    targetRule: RuleName,
+  ) => {
+    const prevRows = currentListLayoutSituationsRef.current[targetRule] ?? []
+    const newRows = patchFn(prevRows, targetRule)
+    const newListLayoutSituations = { ...currentListLayoutSituationsRef.current, [targetRule]: newRows }
+    const aggregatedTargetValue = aggregateSituationValues(engine, targetRule, newRows)
+    const newSituation = { ...currentSituationRef.current, [targetRule]: aggregatedTargetValue }
+
+    setSituation(newSituation, newListLayoutSituations)
+    autoSave.saveSituation(newSituation, newListLayoutSituations)
+  }
+
   const updateListLayoutSituation = useCallback(
     (targetRule: RuleName, situationId: string, rule: RuleName, value: string | number | boolean | undefined) => {
-      const currentListLayoutSituations = currentListLayoutSituationsRef.current
-      const currentSituation = currentSituationRef.current
-      const currentSituationList =
-        currentListLayoutSituations[targetRule]?.find(({ id }) => id === situationId)?.situation ?? {}
-
-      // Update the specific situation in the list layout situations (e.g. the
-      // updated row)
-      const newSituationList = getUpdatedSituationWithInputValue(engine, currentSituationList, rule, value)
-
-      const newListLayoutSituations = getUpdatedSituationWithNewSituationList(
-        currentListLayoutSituations,
-        targetRule,
-        situationId,
-        newSituationList,
-      )
-
-      // Update the main situation with the new aggregated value for the target
-      // rule of the list layout
-      const aggregatedTargetValue = aggregateSituationValues(
-        engine,
-        targetRule,
-        newListLayoutSituations[targetRule] ?? [],
-      )
-      const newSituation = {
-        ...currentSituation,
-        [targetRule]: aggregatedTargetValue,
-      }
-
-      setSituation(newSituation, newListLayoutSituations)
-      autoSave.saveSituation(newSituation, newListLayoutSituations)
+      patchListLayoutSituation((prevRows) => {
+        return prevRows.map(({ id, situation }) => {
+          if (id !== situationId) {
+            return { id, situation }
+          }
+          const newSituation = getUpdatedSituationWithInputValue(engine, situation, rule, value)
+          return { id, situation: newSituation }
+        })
+      }, targetRule)
     },
-    [engine, setSituation, autoSave.saveSituation],
+    [engine],
   )
+
+  const createNewListLayoutSituation = useCallback((targetRule: RuleName, situationId?: string) => {
+    patchListLayoutSituation((prevRows) => {
+      const prevSituation = prevRows.find(({ id }) => id === situationId)?.situation ?? {}
+      const newSituationListEntry = {
+        id: crypto.randomUUID(),
+        situation: situationId ? prevSituation : {},
+      }
+      return [...prevRows, newSituationListEntry]
+    }, targetRule)
+  }, [])
+
+  const deleteListLayoutSituation = useCallback((targetRule: RuleName, situationId: string) => {
+    patchListLayoutSituation((prevRows) => {
+      return prevRows.filter(({ id }) => id !== situationId)
+    }, targetRule)
+  }, [])
 
   const value = useMemo<PublicodesAutoSaveContextValue<RuleName>>(
     () => ({
       updateField,
       updateListLayoutSituation,
+      createNewListLayoutSituation,
+      deleteListLayoutSituation,
       isSaving: autoSave.saveStatus === 'saving',
       saveStatus: autoSave.saveStatus,
       hasUnsavedChanges: autoSave.hasUnsavedChanges,

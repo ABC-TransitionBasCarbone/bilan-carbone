@@ -1,11 +1,13 @@
 import BaseTable from '@/components/base/Table'
 import { usePublicodesForm } from '@/lib/publicodes/context'
-import { Paper, TableContainer } from '@mui/material'
+import { ContentCopy, Delete } from '@mui/icons-material'
+import { Box, IconButton, Paper, TableContainer } from '@mui/material'
 import { EvaluatedFormElement } from '@publicodes/forms'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { Situation } from 'publicodes'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
+import Button from '../base/Button'
 import InputField from './InputField'
 import { EvaluatedListLayout } from './layouts/evaluatedFormLayout'
 import { OnFieldChange } from './utils'
@@ -29,8 +31,16 @@ export default function ListQuestion<RuleName extends string>({
   listLayout: { title, headers, targetRule, evaluatedListRows },
   onChange,
 }: ListLayoutProps<RuleName>) {
+  const tAction = useTranslations('common.action')
+  const tStudyQuestions = useTranslations('study.questions')
   const tLayout = useTranslations('publicodes-layout.list')
-  const { updateListLayoutSituation } = usePublicodesForm()
+  const { updateListLayoutSituation, createNewListLayoutSituation, deleteListLayoutSituation } = usePublicodesForm()
+
+  useEffect(() => {
+    if (evaluatedListRows.length === 0) {
+      createNewListLayoutSituation(targetRule)
+    }
+  }, [evaluatedListRows, createNewListLayoutSituation, targetRule])
 
   const onListChange = useCallback(
     (situationId: string, ruleName: RuleName, value: string | number | boolean | undefined) => {
@@ -39,16 +49,26 @@ export default function ListQuestion<RuleName extends string>({
     [updateListLayoutSituation, targetRule],
   )
 
-  const tableData = useMemo<TableRowData<RuleName>[]>(() => {
-    return evaluatedListRows.map(({ id, situation, elements }) => ({
-      id: `row-${id}`,
-      situation,
-      elements,
-    }))
-  }, [evaluatedListRows])
+  const handleAddRow = useCallback(() => {
+    createNewListLayoutSituation(targetRule)
+  }, [createNewListLayoutSituation, targetRule])
+
+  const handleDeleteRow = useCallback(
+    (rowId: string) => {
+      deleteListLayoutSituation(targetRule, rowId)
+    },
+    [deleteListLayoutSituation, targetRule],
+  )
+
+  const handleDuplicateRow = useCallback(
+    (rowId: string) => {
+      createNewListLayoutSituation(targetRule, rowId)
+    },
+    [evaluatedListRows, createNewListLayoutSituation, targetRule],
+  )
 
   const columns = useMemo<ColumnDef<TableRowData<RuleName>>[]>(() => {
-    return headers.map((header, colIndex) => ({
+    const columns: ColumnDef<TableRowData<RuleName>>[] = headers.map((header, colIndex) => ({
       id: `col-${colIndex}`,
       header: () => tLayout(header),
       cell: ({ row }) => {
@@ -56,24 +76,61 @@ export default function ListQuestion<RuleName extends string>({
         if (!formElement) {
           return null
         }
+
         const onChange = (ruleName: RuleName, value: string | number | boolean | undefined) => {
-          onListChange(row.original.id.replace('row-', ''), ruleName, value)
+          onListChange(row.original.id, ruleName, value)
         }
         return <InputField key={`${row.id}-col-${formElement.id}`} formElement={formElement} onChange={onChange} />
       },
     }))
+
+    const columnAction: ColumnDef<TableRowData<RuleName>> = {
+      id: 'col-actions',
+      header: () => tStudyQuestions('actions'),
+      cell: ({ row }) => {
+        const tableRow = row.original as TableRowData<RuleName>
+        return (
+          <Box display="flex">
+            <IconButton
+              title={tAction('duplicate')}
+              aria-label="duplicate"
+              color="primary"
+              onClick={() => handleDuplicateRow(tableRow.id)}
+            >
+              <ContentCopy />
+            </IconButton>
+            <IconButton
+              title={tAction('delete')}
+              aria-label="delete"
+              color="error"
+              onClick={() => handleDeleteRow(tableRow.id)}
+            >
+              <Delete />
+            </IconButton>
+          </Box>
+        )
+      },
+    }
+
+    columns.push(columnAction)
+    return columns
   }, [headers, onChange])
 
   const table = useReactTable<TableRowData<RuleName>>({
-    data: tableData,
+    data: evaluatedListRows,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getRowId: (row) => row.id,
   })
 
   return (
-    <TableContainer component={Paper} className="mt1">
-      <BaseTable table={table} testId={`table-${title}`} size="medium" />
-    </TableContainer>
+    <Box>
+      <Button className="align" onClick={handleAddRow}>
+        {tStudyQuestions('add')}
+      </Button>
+      <TableContainer component={Paper} className="mt1">
+        <BaseTable table={table} testId={`table-${title}`} size="medium" />
+      </TableContainer>
+    </Box>
   )
 }

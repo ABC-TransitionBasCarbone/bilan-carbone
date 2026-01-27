@@ -52,21 +52,15 @@ export function getEvaluatedFormLayout<RuleName extends string>(
       return { ...layout, evaluatedElement: evaluateRule(layout.rule) }
     case 'list':
       const situations = listLayoutSituations?.[layout.targetRule] ?? []
-
       return {
         ...layout,
         evaluatedTargetElement: evaluateRule(layout.targetRule),
-        evaluatedListRows: situations.map(({ id, situation }) => ({
-          id,
-          situation,
-          elements: layout.rules.map((rule) => evaluateRuleWithSituation(rule, situation)),
-        })) ?? [
-          {
-            id: crypto.randomUUID(),
-            situation: {} as Situation<RuleName>,
-            elements: layout.rules.map((rule) => evaluateRule(rule)),
-          },
-        ],
+        evaluatedListRows:
+          situations.map(({ id, situation }) => ({
+            id,
+            situation,
+            elements: layout.rules.map((rule) => evaluateRuleWithSituation(rule, situation)),
+          })) ?? [],
       }
     case 'group':
       return {

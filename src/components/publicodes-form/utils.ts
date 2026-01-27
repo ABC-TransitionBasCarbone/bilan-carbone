@@ -30,7 +30,7 @@ export function evaluatedLayoutIsApplicable<RuleName extends string>(layout: Eva
     case 'table':
       return layout.evaluatedRows.flat().some((el) => el.applicable)
     case 'list':
-      return layout.evaluatedListRows.some((row) => row.elements.some((el) => el.applicable))
+      return layout.evaluatedTargetElement.applicable
   }
 }
 
