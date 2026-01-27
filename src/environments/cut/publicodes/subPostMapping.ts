@@ -87,9 +87,10 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRule
   Equipe: [
     list(
       'Equipe.question',
-      ['Equipe.nbJours', 'Equipe.moyenTransport', 'Equipe.distance'],
+      ['Equipe.nbJours', 'Equipe.nbJours', 'Equipe.moyenTransport', 'Equipe.distance'],
       'fonctionnement . équipe . collaborateurs',
       [
+        'fonctionnement . équipe . collaborateur type . libellé',
         'fonctionnement . équipe . collaborateur type . nombre de jours par semaine',
         'fonctionnement . équipe . collaborateur type . transport . moyen de transport',
         'fonctionnement . équipe . collaborateur type . transport . distance',

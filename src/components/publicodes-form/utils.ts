@@ -4,7 +4,7 @@ import { FormLayout } from './layouts/formLayout'
 
 export { getUpdatedSituationWithInputValue, situationsAreEqual } from '@/lib/publicodes/utils'
 
-export type OnFieldChange<RuleName extends string> = (
+export type OnFieldChange<RuleName extends string = string> = (
   ruleName: RuleName,
   value: string | number | boolean | undefined,
 ) => void

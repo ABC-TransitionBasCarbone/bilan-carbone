@@ -59,7 +59,7 @@ export default function ListQuestion<RuleName extends string>({
         const onChange = (ruleName: RuleName, value: string | number | boolean | undefined) => {
           onListChange(row.original.id.replace('row-', ''), ruleName, value)
         }
-        return <InputField formElement={formElement} onChange={onChange} />
+        return <InputField key={`${row.id}-col-${formElement.id}`} formElement={formElement} onChange={onChange} />
       },
     }))
   }, [headers, onChange])

@@ -1,35 +1,35 @@
 import { usePublicodesRuleTranslation } from '@/hooks/usePublicodesRuleTranslation'
 import { NumberField } from '@base-ui-components/react/number-field'
-import { InputAdornment, OutlinedInput } from '@mui/material'
-import { EvaluatedNumberInput } from '@publicodes/forms'
+import { InputAdornment, OutlinedInput, TextField } from '@mui/material'
+import { EvaluatedStringInput } from '@publicodes/forms'
 import { OnFieldChange } from '../utils'
 import { useSimpleInputState } from './hooks/useSimpleInputState'
 import styles from './NumberWithUnitInput.module.css'
 import { BaseInputProps } from './utils'
 
-interface NumberWithUnitInputProps<RuleName extends string> extends BaseInputProps<RuleName> {
-  formElement: EvaluatedNumberInput<RuleName>
+interface TextInputProps<RuleName extends string> extends BaseInputProps<RuleName> {
+  formElement: EvaluatedStringInput<RuleName>
 }
 
-const NumberWithUnitInput = <RuleName extends string>({
-  formElement,
-  onChange,
-  disabled,
-}: NumberWithUnitInputProps<RuleName>) => {
+const TextInput = <RuleName extends string>({ formElement, onChange, disabled }: TextInputProps<RuleName>) => {
   const { unit } = usePublicodesRuleTranslation(formElement.id)
   const isDisabled = disabled || !formElement.applicable
-  const { localValue, handleValueChange, handleValueCommitted, handleFocus } = useSimpleInputState<number>(
+  const { localValue, handleValueChange, handleValueCommitted, handleFocus } = useSimpleInputState<string>(
     formElement,
     onChange as OnFieldChange,
   )
 
   return (
-    <NumberField.Root
+    <TextField
       className={styles.inputWrapper}
       value={localValue}
       onFocus={handleFocus}
-      onValueChange={handleValueChange}
-      onValueCommitted={handleValueCommitted}
+      onChange={(event) => {
+        handleValueChange(event.target.value === '' ? null : event.target.value)
+      }}
+      onBlur={(event) => {
+        handleValueCommitted(event.target.value === '' ? null : event.target.value)
+      }}
       disabled={isDisabled}
     >
       <NumberField.Input
@@ -38,8 +38,8 @@ const NumberWithUnitInput = <RuleName extends string>({
           <OutlinedInput endAdornment={unit ? <InputAdornment position="end">{unit}</InputAdornment> : undefined} />
         }
       />
-    </NumberField.Root>
+    </TextField>
   )
 }
 
-export default NumberWithUnitInput
+export default TextInput
