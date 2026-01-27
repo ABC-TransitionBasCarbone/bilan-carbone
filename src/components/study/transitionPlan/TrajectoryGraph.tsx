@@ -470,7 +470,7 @@ const TrajectoryGraph = ({
     })
 
     if (actionBasedTrajectoryData && actionBasedTrajectoryData.currentTrajectory.length > 0) {
-      const { previousTrajectory, previousTrajectoryStartYear, currentTrajectory, withinThreshold, isFailed } =
+      const { previousTrajectory, previousTrajectoryStartYear, currentTrajectory, withinThreshold } =
         actionBasedTrajectoryData
 
       if (previousTrajectory) {
@@ -479,10 +479,9 @@ const TrajectoryGraph = ({
             dataType: 'previous',
             isCustom: true,
             trajectoryType: TrajectoryType.CUSTOM,
-            isFailed,
-            data: mapDataToYears(previousTrajectory, false, isFailed),
+            data: mapDataToYears(previousTrajectory),
             label: t('actionBasedTrajectory') + ` (${previousTrajectoryStartYear})`,
-            color: isFailed ? 'var(--error-50)' : 'var(--mui-palette-primary-main)',
+            color: 'var(--mui-palette-primary-main)',
             curve: 'linear' as const,
             connectNulls: false,
             showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
@@ -493,12 +492,9 @@ const TrajectoryGraph = ({
             dataType: 'previous',
             isCustom: true,
             trajectoryType: TrajectoryType.CUSTOM,
-            isFailed,
-            data: mapDataToYears(previousTrajectory, false, isFailed),
+            data: mapDataToYears(previousTrajectory),
             label: t('actionBasedTrajectory') + ` (${previousTrajectoryStartYear})`,
-            color: isFailed
-              ? 'var(--error-50)'
-              : 'color-mix(in srgb, var(--mui-palette-primary-main) 50%, transparent)',
+            color: 'color-mix(in srgb, var(--mui-palette-primary-main) 50%, transparent)',
             curve: 'linear' as const,
             connectNulls: false,
             showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
@@ -507,19 +503,18 @@ const TrajectoryGraph = ({
         }
       }
 
-      const currentData = mapDataToYears(currentTrajectory, false, isFailed)
+      const currentData = mapDataToYears(currentTrajectory)
       const showCurrentTrajectory = !previousTrajectory || !withinThreshold
       if (showCurrentTrajectory) {
         series.push({
           dataType: 'current',
           isCustom: true,
           trajectoryType: TrajectoryType.CUSTOM,
-          isFailed,
           data: currentData,
           label: actionBasedTrajectoryData.previousTrajectory
             ? t('actionBasedTrajectory') + ` (${studyStartYear})`
             : t('actionBasedTrajectory'),
-          color: isFailed ? 'var(--error-100)' : 'var(--mui-palette-primary-main)',
+          color: 'var(--mui-palette-primary-main)',
           curve: 'linear' as const,
           connectNulls: false,
           showMark: ({ index }: { index: number }) => shouldShowMark(index),
@@ -530,10 +525,9 @@ const TrajectoryGraph = ({
           dataType: 'current',
           isCustom: true,
           trajectoryType: TrajectoryType.CUSTOM,
-          isFailed,
           data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
           label: studyName + ` (${studyStartYear})`,
-          color: isFailed ? 'var(--error-100)' : 'var(--mui-palette-primary-main)',
+          color: 'var(--mui-palette-primary-main)',
           curve: 'linear' as const,
           connectNulls: false,
           showMark: true,

@@ -1312,14 +1312,11 @@ export const getActionBasedData = (
       studyUnit,
     })
 
-    const previousTrajectory = actionWithinThreshold ? null : referenceActionTrajectory
-    const isFailed = isFailedTrajectory(maxYear, referenceYear, previousTrajectory, currentActionTrajectory)
     return {
       previousTrajectoryStartYear: referenceYear,
-      previousTrajectory: previousTrajectory,
+      previousTrajectory: actionWithinThreshold ? null : referenceActionTrajectory,
       currentTrajectory: currentActionTrajectory,
       withinThreshold: actionWithinThreshold,
-      isFailed,
     }
   }
 }
