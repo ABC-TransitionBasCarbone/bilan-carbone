@@ -609,7 +609,7 @@ const TrajectoryGraph = ({
         </Alert>
       )}
       {!!failedTrajectories.length && (
-        <Alert severity="warning" sx={{ mb: 2 }}>
+        <Alert severity="warning" className="mb1">
           <Typography variant="body2">{t('failedTrajectories')}</Typography>
           {failedTrajectories.map((trajectory) => (
             <Typography key={trajectory} variant="body2">

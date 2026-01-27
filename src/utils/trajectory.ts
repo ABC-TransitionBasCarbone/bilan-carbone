@@ -1594,6 +1594,6 @@ const isFailedTrajectory = (
   }
   const referenceBudget = calculateTrajectoryIntegral(referenceTrajectory, referenceTrajectoryStartYear, maxYear)
   const currentBudget = calculateTrajectoryIntegral(currentTrajectory, referenceTrajectoryStartYear, maxYear)
-  const isFailed = currentBudget > referenceBudget * (1 + 5 / 100)
+  const isFailed = currentBudget > referenceBudget * (1 + OVERSHOOT_THRESHOLD)
   return isFailed
 }
