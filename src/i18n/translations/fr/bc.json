@@ -1330,7 +1330,8 @@
         "phase": "Phase de mobilisation",
         "sites": "Sites",
         "date": "Date",
-        "validate": "Valider"
+        "validate": "Valider",
+        "allSites": "Tous les sites"
       },
       "targets": {
         "TEAM_PROJECT": "Équipe projet",
