@@ -222,6 +222,11 @@ export const formatEmission = (getValue: Getter<number>, resultsUnit: StudyResul
 export const formatEmissionFromNumber = (value: number, resultsUnit: StudyResultUnit) =>
   formatNumber(value / STUDY_UNIT_VALUES[resultsUnit])
 
+export const formatConfidenceInterval = (confidenceInterval: number[], resultsUnit: StudyResultUnit) => {
+  return `[${formatEmissionFromNumber(confidenceInterval[0], resultsUnit)} ;
+                                  ${formatEmissionFromNumber(confidenceInterval[1], resultsUnit)}]`
+}
+
 export const getBaseFilteredEmissionSources = <T extends Pick<FullStudy['emissionSources'][number], 'emissionFactor'>>(
   emissionSources: T[],
   base: EmissionFactorBase = EmissionFactorBase.LocationBased,

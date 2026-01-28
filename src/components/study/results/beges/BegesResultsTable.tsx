@@ -5,7 +5,7 @@ import { FullStudy } from '@/db/study'
 import { rulesSpans } from '@/services/results/beges'
 import { PostInfos } from '@/services/results/exports'
 import { getConfidenceInterval, getQualitativeUncertaintyFromSquaredStandardDeviation } from '@/services/uncertainty'
-import { formatEmission, formatEmissionFromNumber, STUDY_UNIT_VALUES } from '@/utils/study'
+import { formatConfidenceInterval, formatEmission, STUDY_UNIT_VALUES } from '@/utils/study'
 import { Export } from '@prisma/client'
 import { Cell, ColumnDef, getCoreRowModel, Row, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
@@ -76,8 +76,7 @@ const BegesResultsTable = ({ study, withDepValue, data }: Props) => {
           header: tResults('confidenceIntervalTitle'),
           accessorFn: ({ total, squaredStandardDeviation }) => {
             const confidenceInterval = getConfidenceInterval(total, squaredStandardDeviation)
-            return `[${formatEmissionFromNumber(confidenceInterval[0], study.resultsUnit)};
-                            ${formatEmissionFromNumber(confidenceInterval[1], study.resultsUnit)}]`
+            return formatConfidenceInterval(confidenceInterval, study.resultsUnit)
           },
         },
       ] as ColumnDef<PostInfos>[],

@@ -6,7 +6,7 @@ import { PostInfos } from '@/services/results/exports'
 import { rulesSpans } from '@/services/results/ghgp'
 import { getConfidenceInterval } from '@/services/uncertainty'
 import { getGHGPRuleName } from '@/utils/ghgp'
-import { formatEmission, formatEmissionFromNumber, STUDY_UNIT_VALUES } from '@/utils/study'
+import { formatConfidenceInterval, formatEmission, STUDY_UNIT_VALUES } from '@/utils/study'
 import { EmissionFactorBase, Export } from '@prisma/client'
 import { Cell, ColumnDef, getCoreRowModel, Row, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
@@ -68,8 +68,7 @@ const GHGPResultsTable = ({ study, withDepValue, data, base }: Props) => {
           header: tStudyResults('confidenceIntervalTitle'),
           accessorFn: ({ total, squaredStandardDeviation }) => {
             const confidenceInterval = getConfidenceInterval(total, squaredStandardDeviation)
-            return `[${formatEmissionFromNumber(confidenceInterval[0], study.resultsUnit)};
-                                  ${formatEmissionFromNumber(confidenceInterval[1], study.resultsUnit)}]`
+            return formatConfidenceInterval(confidenceInterval, study.resultsUnit)
           },
         },
       ] as ColumnDef<PostInfos>[],

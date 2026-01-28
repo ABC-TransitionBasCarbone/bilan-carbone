@@ -1,9 +1,8 @@
 'use client'
 
 import BaseTable from '@/components/base/Table'
-import { getQualitativeUncertaintyFromSquaredStandardDeviation } from '@/services/uncertainty'
-import { formatNumber } from '@/utils/number'
-import { STUDY_UNIT_VALUES } from '@/utils/study'
+import { getConfidenceInterval, getQualitativeUncertaintyFromSquaredStandardDeviation } from '@/services/uncertainty'
+import { formatConfidenceInterval, formatEmission } from '@/utils/study'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { StudyResultUnit } from '@prisma/client'
@@ -101,10 +100,20 @@ const ConsolidatedResultsTable = <
     tmpColumns.push({
       header: t('value', { unit: tUnits(resultsUnit) }),
       accessorKey: 'value',
-      cell: ({ getValue }) => (
-        <p className={commonStyles.number}>{formatNumber(getValue<number>() / STUDY_UNIT_VALUES[resultsUnit])}</p>
-      ),
+      cell: ({ getValue }) => <p className={commonStyles.number}>{formatEmission(getValue, resultsUnit)}</p>,
     })
+
+    if (!hiddenUncertainty) {
+      tmpColumns.push({
+        id: 'confidenceInterval',
+        header: t('confidenceIntervalTitle'),
+        accessorFn: ({ value, squaredStandardDeviation }) => {
+          const confidenceInterval = getConfidenceInterval(value, squaredStandardDeviation)
+          return formatConfidenceInterval(confidenceInterval, resultsUnit)
+        },
+        cell: ({ getValue }) => <p className={commonStyles.number}>{getValue<string>()}</p>,
+      })
+    }
 
     return tmpColumns
   }, [hiddenUncertainty, hideExpandIcons, resultsUnit, t, tPost, tQuality, tUnits])
