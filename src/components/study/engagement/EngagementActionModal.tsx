@@ -173,17 +173,20 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
               setValue('steps', value || '')
             }}
           />
-          <FormAutocomplete
+          <FormSelect
             data-testid="engagement-action-phase"
             control={control}
             translation={t}
-            options={Object.values(EngagementPhase).map((phase) => ({
-              label: tPhases(`${phase}`),
-              value: phase,
-            }))}
             name="phase"
             label={`${t('phase')} *`}
-          />
+            fullWidth
+          >
+            {Object.values(EngagementPhase).map((phase) => (
+              <MenuItem key={phase} value={phase}>
+                {tPhases(phase)}
+              </MenuItem>
+            ))}
+          </FormSelect>
           <FormSelect
             control={control}
             translation={t}
