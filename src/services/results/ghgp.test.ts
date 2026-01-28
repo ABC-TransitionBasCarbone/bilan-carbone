@@ -1,11 +1,11 @@
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
 import * as studyUtilsModule from '@/utils/study'
 import { expect } from '@jest/globals'
+import { SubPost } from '@prisma/client'
 import { getGHGPEmissionValue } from './ghgp'
 
 jest.mock('../../utils/study', () => ({ hasDeprecationPeriod: jest.fn(), hasFabricationPart: jest.fn() }))
 const mockHasDeprecationPeriod = studyUtilsModule.hasDeprecationPeriod as jest.Mock
-const mockhasFabricationPart = studyUtilsModule.hasFabricationPart as jest.Mock
 
 const getGHGPValue = getGHGPEmissionValue(new Date('01/06/2025'))
 
@@ -51,9 +51,8 @@ describe('GHGP service functions', () => {
       expect(emissionSource.value).toEqual(100)
     })
 
-    test('Should return emission source value if is not concerned by deprecation period or fabrication', () => {
+    test('Should return emission source value if is not concerned by deprecation period', () => {
       mockHasDeprecationPeriod.mockReturnValue(false)
-      mockhasFabricationPart.mockReturnValue(false)
 
       const previousYearEmissionSource = getMockedFullStudyEmissionSource({
         value: 50,
@@ -72,6 +71,20 @@ describe('GHGP service functions', () => {
 
       expect(defaultResult).toEqual(sameYearEmissionSource.value)
       expect(sameYearEmissionSource.value).toEqual(99)
+    })
+
+    test('Should not return emission source value if is concerned by depecration period', () => {
+      mockHasDeprecationPeriod.mockReturnValue(true)
+
+      const previousYearEmissionSource = getMockedFullStudyEmissionSource({
+        value: 50,
+        constructionYear: new Date('01/06/2024'),
+        subPost: SubPost.Electromenager,
+      })
+      const result = getGHGPValue(previousYearEmissionSource)
+
+      expect(result).toEqual(0)
+      expect(previousYearEmissionSource.value).toEqual(50)
     })
   })
 })
