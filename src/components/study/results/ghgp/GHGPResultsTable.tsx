@@ -4,7 +4,9 @@ import BaseTable from '@/components/base/Table'
 import { FullStudy } from '@/db/study'
 import { PostInfos } from '@/services/results/exports'
 import { rulesSpans } from '@/services/results/ghgp'
+import { getConfidenceInterval } from '@/services/uncertainty'
 import { getGHGPRuleName } from '@/utils/ghgp'
+import { formatNumber } from '@/utils/number'
 import { formatEmission, STUDY_UNIT_VALUES } from '@/utils/study'
 import { EmissionFactorBase, Export } from '@prisma/client'
 import { Cell, ColumnDef, getCoreRowModel, Row, useReactTable } from '@tanstack/react-table'
@@ -26,6 +28,7 @@ interface Props {
 const GHGPResultsTable = ({ study, withDepValue, data, base }: Props) => {
   const t = useTranslations('ghgp')
   const tUnits = useTranslations('study.results.units')
+  const tEmissionSource = useTranslations('emissionSource')
 
   const columns = useMemo(
     () =>
@@ -49,12 +52,7 @@ const GHGPResultsTable = ({ study, withDepValue, data, base }: Props) => {
             return rule.includes('.total') ? t('subTotal') : `${prefix} ${t(`post.${rule}`)}`
           },
         },
-        {
-          header: t('ges', { unit: tUnits(study.resultsUnit) }),
-          columns: [
-            { header: 'CO2', accessorKey: 'co2', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
-          ],
-        },
+        { header: 'CO2', accessorKey: 'co2', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
         { header: 'CH4', accessorKey: 'ch4', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
         { header: 'N20', accessorKey: 'n2o', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
         { header: 'HFC', accessorKey: 'hfc', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
@@ -66,8 +64,17 @@ const GHGPResultsTable = ({ study, withDepValue, data, base }: Props) => {
           cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit),
         },
         { header: 'CO2b', accessorKey: 'co2b', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
+        {
+          id: 'confidenceInterval',
+          header: tEmissionSource('results.confiance'),
+          accessorFn: ({ total, squaredStandardDeviation }) => {
+            const confidenceInterval = getConfidenceInterval(total, squaredStandardDeviation)
+            return `[${formatNumber(confidenceInterval[0] / STUDY_UNIT_VALUES[study.resultsUnit])};
+                                  ${formatNumber(confidenceInterval[1] / STUDY_UNIT_VALUES[study.resultsUnit])}]`
+          },
+        },
       ] as ColumnDef<PostInfos>[],
-    [t, tUnits, study.resultsUnit],
+    [t, tEmissionSource, study.resultsUnit],
   )
 
   const table = useReactTable({
@@ -117,6 +124,7 @@ const GHGPResultsTable = ({ study, withDepValue, data, base }: Props) => {
         customRow={(row: Row<PostInfos>) => TableRow(row, getCellClass, rulesSpans, 'ghgp')}
         testId="ghgp-results"
         size="small"
+        firstHeader={<div>{t('ges', { unit: tUnits(study.resultsUnit) })}</div>}
       />
     </>
   )

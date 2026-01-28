@@ -4,7 +4,8 @@ import BaseTable from '@/components/base/Table'
 import { FullStudy } from '@/db/study'
 import { rulesSpans } from '@/services/results/beges'
 import { PostInfos } from '@/services/results/exports'
-import { getQualitativeUncertaintyFromSquaredStandardDeviation } from '@/services/uncertainty'
+import { getConfidenceInterval, getQualitativeUncertaintyFromSquaredStandardDeviation } from '@/services/uncertainty'
+import { formatNumber } from '@/utils/number'
 import { formatEmission, STUDY_UNIT_VALUES } from '@/utils/study'
 import { Export } from '@prisma/client'
 import { Cell, ColumnDef, getCoreRowModel, Row, useReactTable } from '@tanstack/react-table'
@@ -26,6 +27,7 @@ const BegesResultsTable = ({ study, withDepValue, data }: Props) => {
   const t = useTranslations('beges')
   const tQuality = useTranslations('quality')
   const tUnits = useTranslations('study.results.units')
+  const tEmissionSource = useTranslations('emissionSource')
 
   const columns = useMemo(
     () =>
@@ -48,12 +50,7 @@ const BegesResultsTable = ({ study, withDepValue, data }: Props) => {
             return rule.includes('.total') ? t('subTotal') : `${rule}. ${t(`post.${rule}`)}`
           },
         },
-        {
-          header: t('ges', { unit: tUnits(study.resultsUnit) }),
-          columns: [
-            { header: 'CO2', accessorKey: 'co2', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
-          ],
-        },
+        { header: 'CO2', accessorKey: 'co2', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
         { header: 'CH4', accessorKey: 'ch4', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
         { header: 'N20', accessorKey: 'n2o', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
         {
@@ -75,8 +72,17 @@ const BegesResultsTable = ({ study, withDepValue, data }: Props) => {
               ? tQuality(getQualitativeUncertaintyFromSquaredStandardDeviation(squaredStandardDeviation).toString())
               : '',
         },
+        {
+          id: 'confidenceInterval',
+          header: tEmissionSource('results.confiance'),
+          accessorFn: ({ total, squaredStandardDeviation }) => {
+            const confidenceInterval = getConfidenceInterval(total, squaredStandardDeviation)
+            return `[${formatNumber(confidenceInterval[0] / STUDY_UNIT_VALUES[study.resultsUnit])};
+                            ${formatNumber(confidenceInterval[1] / STUDY_UNIT_VALUES[study.resultsUnit])}]`
+          },
+        },
       ] as ColumnDef<PostInfos>[],
-    [t, tUnits, tQuality, study.resultsUnit],
+    [t, study.resultsUnit, tEmissionSource, tQuality],
   )
 
   const table = useReactTable({
@@ -120,6 +126,7 @@ const BegesResultsTable = ({ study, withDepValue, data }: Props) => {
         customRow={(row: Row<PostInfos>) => TableRow(row, getCellClass, rulesSpans, 'beges')}
         testId="beges-results"
         size="small"
+        firstHeader={<div>{t('ges', { unit: tUnits(study.resultsUnit) })}</div>}
       />
     </>
   )

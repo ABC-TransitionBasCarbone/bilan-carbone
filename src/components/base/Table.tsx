@@ -14,6 +14,7 @@ interface Props<TData> {
   customRow?: (row: Row<TData>) => React.ReactNode
   testId: string
   size?: 'small' | 'medium'
+  firstHeader?: ReactNode
 }
 
 const Table = <TData,>({
@@ -25,6 +26,7 @@ const Table = <TData,>({
   customRow,
   testId,
   size = 'medium',
+  firstHeader,
 }: Props<TData>) => {
   const totalRows = table.getRowCount()
   const shouldShowPagination = !!paginations && totalRows > Math.min(...paginations)
@@ -39,6 +41,11 @@ const Table = <TData,>({
           className={classNames(styles.tableWrapper, { [styles.small]: size === 'small' })}
         >
           <TableHead>
+            {firstHeader ? (
+              <TableRow>
+                <TableCell colSpan={table.getAllColumns().length}>{firstHeader}</TableCell>
+              </TableRow>
+            ) : null}
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
