@@ -40,6 +40,7 @@ const createMockTrajectory = (
   referenceYear: null,
   createdAt: new Date('2024-01-01'),
   updatedAt: new Date('2024-01-01'),
+  sectorPercentages: {},
   objectives: [
     {
       id: 'objective-1',
