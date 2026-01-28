@@ -219,6 +219,9 @@ export const getAllSpecificFieldsForExports = (exportTypes: Export[]) =>
 export const formatEmission = (getValue: Getter<number>, resultsUnit: StudyResultUnit) =>
   formatNumber(getValue() / STUDY_UNIT_VALUES[resultsUnit])
 
+export const formatEmissionFromNumber = (value: number, resultsUnit: StudyResultUnit) =>
+  formatNumber(value / STUDY_UNIT_VALUES[resultsUnit])
+
 export const getBaseFilteredEmissionSources = <T extends Pick<FullStudy['emissionSources'][number], 'emissionFactor'>>(
   emissionSources: T[],
   base: EmissionFactorBase = EmissionFactorBase.LocationBased,

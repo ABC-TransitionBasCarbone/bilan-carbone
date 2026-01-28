@@ -17,7 +17,7 @@ import {
 import { useUnitLabel } from '@/services/unit'
 import { emissionFactorDefautQualityStar, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
-import { hasDeprecationPeriod, hasEditionRights, isCAS, STUDY_UNIT_VALUES } from '@/utils/study'
+import { formatEmissionFromNumber, hasDeprecationPeriod, hasEditionRights, isCAS } from '@/utils/study'
 import AddIcon from '@mui/icons-material/Add'
 import CopyIcon from '@mui/icons-material/ContentCopy'
 import EditIcon from '@mui/icons-material/Edit'
@@ -542,8 +542,8 @@ const EmissionSourceForm = ({
             <div className="flex-col">
               <p>{t('results.confiance')}</p>
               <p>
-                [{formatNumber(emissionResults.confidenceInterval[0] / STUDY_UNIT_VALUES[studyUnit])};{' '}
-                {formatNumber(emissionResults.confidenceInterval[1] / STUDY_UNIT_VALUES[studyUnit])}] ({t('in')}
+                [{formatEmissionFromNumber(emissionResults.confidenceInterval[0], studyUnit)};{' '}
+                {formatEmissionFromNumber(emissionResults.confidenceInterval[1], studyUnit)}] ({t('in')}
                 {tResultUnits(studyUnit)})
               </p>
             </div>

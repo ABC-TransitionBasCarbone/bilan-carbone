@@ -6,8 +6,7 @@ import { PostInfos } from '@/services/results/exports'
 import { rulesSpans } from '@/services/results/ghgp'
 import { getConfidenceInterval } from '@/services/uncertainty'
 import { getGHGPRuleName } from '@/utils/ghgp'
-import { formatNumber } from '@/utils/number'
-import { formatEmission, STUDY_UNIT_VALUES } from '@/utils/study'
+import { formatEmission, formatEmissionFromNumber, STUDY_UNIT_VALUES } from '@/utils/study'
 import { EmissionFactorBase, Export } from '@prisma/client'
 import { Cell, ColumnDef, getCoreRowModel, Row, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
@@ -28,7 +27,7 @@ interface Props {
 const GHGPResultsTable = ({ study, withDepValue, data, base }: Props) => {
   const t = useTranslations('ghgp')
   const tUnits = useTranslations('study.results.units')
-  const tEmissionSource = useTranslations('emissionSource')
+  const tStudyResults = useTranslations('study.results')
 
   const columns = useMemo(
     () =>
@@ -66,15 +65,15 @@ const GHGPResultsTable = ({ study, withDepValue, data, base }: Props) => {
         { header: 'CO2b', accessorKey: 'co2b', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
         {
           id: 'confidenceInterval',
-          header: tEmissionSource('results.confiance'),
+          header: tStudyResults('confidenceIntervalTitle'),
           accessorFn: ({ total, squaredStandardDeviation }) => {
             const confidenceInterval = getConfidenceInterval(total, squaredStandardDeviation)
-            return `[${formatNumber(confidenceInterval[0] / STUDY_UNIT_VALUES[study.resultsUnit])};
-                                  ${formatNumber(confidenceInterval[1] / STUDY_UNIT_VALUES[study.resultsUnit])}]`
+            return `[${formatEmissionFromNumber(confidenceInterval[0], study.resultsUnit)};
+                                  ${formatEmissionFromNumber(confidenceInterval[1], study.resultsUnit)}]`
           },
         },
       ] as ColumnDef<PostInfos>[],
-    [t, tEmissionSource, study.resultsUnit],
+    [t, tStudyResults, study.resultsUnit],
   )
 
   const table = useReactTable({

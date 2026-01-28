@@ -749,6 +749,7 @@
       "nonSpeMonetaryRatioEmissions": "resulting from unspecific monetary ratios",
       "ofWhich": "of which",
       "coming": "coming",
+      "confidenceIntervalTitle": "95% confidence interval",
       "units": {
         "K": "kgCO₂e",
         "T": "tCO₂e"
@@ -797,7 +798,6 @@
       "noData": "No data to display",
       "uncertainties": {
         "title": "Uncertainties analytics",
-        "confidenceIntervalTitle": "95% confidence interval",
         "gaugeTitle": "qualitative uncertainty gauge",
         "uncertainPostsTitle": "Posts with the greatest uncertainties within the Bilan Carbone®",
         "veryWeak": "Very weak",

@@ -5,8 +5,7 @@ import { FullStudy } from '@/db/study'
 import { rulesSpans } from '@/services/results/beges'
 import { PostInfos } from '@/services/results/exports'
 import { getConfidenceInterval, getQualitativeUncertaintyFromSquaredStandardDeviation } from '@/services/uncertainty'
-import { formatNumber } from '@/utils/number'
-import { formatEmission, STUDY_UNIT_VALUES } from '@/utils/study'
+import { formatEmission, formatEmissionFromNumber, STUDY_UNIT_VALUES } from '@/utils/study'
 import { Export } from '@prisma/client'
 import { Cell, ColumnDef, getCoreRowModel, Row, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
@@ -27,7 +26,7 @@ const BegesResultsTable = ({ study, withDepValue, data }: Props) => {
   const t = useTranslations('beges')
   const tQuality = useTranslations('quality')
   const tUnits = useTranslations('study.results.units')
-  const tEmissionSource = useTranslations('emissionSource')
+  const tResults = useTranslations('study.results')
 
   const columns = useMemo(
     () =>
@@ -74,15 +73,15 @@ const BegesResultsTable = ({ study, withDepValue, data }: Props) => {
         },
         {
           id: 'confidenceInterval',
-          header: tEmissionSource('results.confiance'),
+          header: tResults('confidenceIntervalTitle'),
           accessorFn: ({ total, squaredStandardDeviation }) => {
             const confidenceInterval = getConfidenceInterval(total, squaredStandardDeviation)
-            return `[${formatNumber(confidenceInterval[0] / STUDY_UNIT_VALUES[study.resultsUnit])};
-                            ${formatNumber(confidenceInterval[1] / STUDY_UNIT_VALUES[study.resultsUnit])}]`
+            return `[${formatEmissionFromNumber(confidenceInterval[0], study.resultsUnit)};
+                            ${formatEmissionFromNumber(confidenceInterval[1], study.resultsUnit)}]`
           },
         },
       ] as ColumnDef<PostInfos>[],
-    [t, study.resultsUnit, tEmissionSource, tQuality],
+    [t, study.resultsUnit, tResults, tQuality],
   )
 
   const table = useReactTable({
