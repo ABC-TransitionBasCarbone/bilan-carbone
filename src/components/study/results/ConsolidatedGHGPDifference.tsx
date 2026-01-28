@@ -8,7 +8,7 @@ import { getGHGPEmissionValue, getLine } from '@/services/results/ghgp'
 import { getAllSiteEmissionSources } from '@/services/results/utils'
 import { getEmissionFactor } from '@/utils/emissionSources'
 import { formatNumber } from '@/utils/number'
-import { hasDeprecationPeriod, isFabrication, STUDY_UNIT_VALUES } from '@/utils/study'
+import { hasDeprecationPeriod, hasFabricationPart, STUDY_UNIT_VALUES } from '@/utils/study'
 import WarningAmberIcon from '@mui/icons-material/WarningAmberOutlined'
 import {
   EmissionFactorBase,
@@ -252,7 +252,7 @@ const ConsolatedGHGPDifference = ({
         }
 
         return (
-          isFabrication(emissionSource.emissionFactor) &&
+          hasFabricationPart(emissionSource.emissionFactor) &&
           emissionSource.caracterisation === EmissionSourceCaracterisation.Operated &&
           (!emissionSource.constructionYear ||
             emissionSource.constructionYear?.getFullYear() !== study.startDate.getFullYear())

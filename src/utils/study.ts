@@ -128,7 +128,7 @@ export const isCAS = (emissionSource: FullStudy['emissionSources'][number]) =>
   emissionSource.emissionFactor &&
   emissionSource.emissionFactor.unit === Unit.HA_YEAR
 
-export const isFabrication = (emissionFactor?: FullStudy['emissionSources'][number]['emissionFactor']) =>
+export const hasFabricationPart = (emissionFactor?: FullStudy['emissionSources'][number]['emissionFactor']) =>
   emissionFactor?.emissionFactorParts.some((part) => part.type === EmissionFactorPartType.Fabrication) || false
 
 export const hasDeprecationPeriod = (subPost: SubPost) =>

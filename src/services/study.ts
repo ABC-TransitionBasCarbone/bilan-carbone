@@ -10,8 +10,8 @@ import {
   formatEmissionFromNumber,
   formatEmissionValueForExport,
   hasDeprecationPeriod,
+  hasFabricationPart,
   isCAS,
-  isFabrication,
   STUDY_UNIT_VALUES,
 } from '@/utils/study'
 import {
@@ -97,10 +97,10 @@ export const getEmissionSourceStatus = (
   environment: Environment | undefined,
 ) => {
   const hasGHGPExport = !!study.exports?.types.some((studyExport) => studyExport === Export.GHGP)
-  const isFabricationFE = isFabrication(emissionSource.emissionFactor)
+  const hasFabricationPartFe = hasFabricationPart(emissionSource.emissionFactor)
   if (
     hasGHGPExport &&
-    isFabricationFE &&
+    hasFabricationPartFe &&
     emissionSource.caracterisation === EmissionSourceCaracterisation.Operated &&
     !emissionSource.constructionYear
   ) {

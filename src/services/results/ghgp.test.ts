@@ -3,9 +3,9 @@ import * as studyUtilsModule from '@/utils/study'
 import { expect } from '@jest/globals'
 import { getGHGPEmissionValue } from './ghgp'
 
-jest.mock('../../utils/study', () => ({ hasDeprecationPeriod: jest.fn(), isFabrication: jest.fn() }))
+jest.mock('../../utils/study', () => ({ hasDeprecationPeriod: jest.fn(), hasFabricationPart: jest.fn() }))
 const mockHasDeprecationPeriod = studyUtilsModule.hasDeprecationPeriod as jest.Mock
-const mockIsFabrication = studyUtilsModule.isFabrication as jest.Mock
+const mockhasFabricationPart = studyUtilsModule.hasFabricationPart as jest.Mock
 
 const getGHGPValue = getGHGPEmissionValue(new Date('01/06/2025'))
 
@@ -53,7 +53,7 @@ describe('GHGP service functions', () => {
 
     test('Should return emission source value if is not concerned by deprecation period or fabrication', () => {
       mockHasDeprecationPeriod.mockReturnValue(false)
-      mockIsFabrication.mockReturnValue(false)
+      mockhasFabricationPart.mockReturnValue(false)
 
       const previousYearEmissionSource = getMockedFullStudyEmissionSource({
         value: 50,

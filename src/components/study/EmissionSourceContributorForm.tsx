@@ -9,7 +9,7 @@ import { qualityKeys } from '@/services/uncertainty'
 import { useUnitLabel } from '@/services/unit'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
-import { hasDeprecationPeriod, isFabrication } from '@/utils/study'
+import { hasDeprecationPeriod, hasFabricationPart } from '@/utils/study'
 import AddIcon from '@mui/icons-material/Add'
 import { TextField } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
@@ -75,7 +75,7 @@ const EmissionSourceContributorForm = ({
   const defaultQuality = qualities.find((quality) => quality)
   const canShrink = !defaultQuality || qualities.every((quality) => quality === defaultQuality)
 
-  const isFabricationFE = useMemo(() => isFabrication(selectedFactor), [selectedFactor])
+  const hasFabricationPartFE = useMemo(() => hasFabricationPart(selectedFactor), [selectedFactor])
 
   return (
     <>
@@ -132,7 +132,7 @@ const EmissionSourceContributorForm = ({
           )}
           {hasGHGPExport &&
             (hasDeprecationPeriod(emissionSource.subPost) ||
-              (isFabricationFE && emissionSource.caracterisation === EmissionSourceCaracterisation.Operated)) && (
+              (hasFabricationPartFE && emissionSource.caracterisation === EmissionSourceCaracterisation.Operated)) && (
               <DatePicker
                 label={`${t('form.constructionYear')} *`}
                 slotProps={{
