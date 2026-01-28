@@ -85,7 +85,7 @@ const TagsResultsTable = ({ resultsUnit, data }: Props) => {
       table={table}
       testId="tags-results"
       size="small"
-      firstHeader={<div className="text-center">{t('ges', { unit: tUnits(resultsUnit) })}</div>}
+      firstHeader={<div className="text-center">{t('gesTag', { unit: tUnits(resultsUnit) })}</div>}
     />
   )
 }

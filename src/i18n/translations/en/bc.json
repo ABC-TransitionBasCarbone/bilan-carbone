@@ -750,6 +750,7 @@
       "coming": "coming",
       "confidenceIntervalTitle": "95% confidence interval",
       "ges": "GHG emissions ({unit})",
+      "gesTag": "GHG emissions by tag ({unit})",
       "units": {
         "K": "kgCO₂e",
         "T": "tCO₂e"
