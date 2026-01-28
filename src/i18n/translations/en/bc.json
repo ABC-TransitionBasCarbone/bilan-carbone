@@ -1122,6 +1122,21 @@
           "generale": "General",
           "sectorielle": "Sectoral"
         },
+        "sectorAllocation": {
+          "title": "Sector Allocation",
+          "description": "Define the emission percentage per sector. The rest will be allocated to the general SNBC trajectory."
+        },
+        "sectors": {
+          "energy": "Energy",
+          "industry": "Industry",
+          "waste": "Waste",
+          "buildings": "Buildings",
+          "agriculture": "Agriculture",
+          "transportation": "Transportation",
+          "remainingGeneral": "Remaining general emissions",
+          "errorOverLimit": "Total cannot exceed 100%",
+          "placeholder": "0-100"
+        },
         "selectedTrajectory": {
           "SBTI_15": "I follow the SBTi reference trajectory",
           "SBTI_WB2C": "I follow the SBTi reference trajectory",
@@ -2362,7 +2377,9 @@
     "studyYearMustBeBeforeCurrent": "The study year must be before the current study year",
     "studyYearMustBeAfterLinkedStudies": "Cannot set a date earlier than your linked studies in your transition plan",
     "maxTwoDecimals": "The reduction rate must have at most 2 decimal places",
-    "referenceYearMustBeBeforeOrEqualToStudyYear": "Reference year must be less than or equal to the study year"
+    "referenceYearMustBeBeforeOrEqualToStudyYear": "Reference year must be less than or equal to the study year",
+    "sectorPercentagesTotalExceeds100": "Total sector percentages cannot exceed 100%",
+    "sectorPercentagesRequired": "Sector percentages are required"
   },
   "documentationUrl": {
     "dependencyMatrix": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/2-scope-of-the-approach/2.5-identification-of-transition-risks-and-opportunities",

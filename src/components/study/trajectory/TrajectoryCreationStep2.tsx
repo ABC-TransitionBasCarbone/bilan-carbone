@@ -5,6 +5,7 @@ import { FormTextField } from '@/components/form/TextField'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { customRich } from '@/i18n/customRich'
 import { TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
+import { ReductionRates } from '@/utils/snbc'
 import { toTitleCase } from '@/utils/string'
 import { BaseObjective, getDefaultSBTIReductionRate } from '@/utils/trajectory'
 import AddIcon from '@mui/icons-material/Add'
@@ -17,6 +18,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { Control, Controller, useFieldArray } from 'react-hook-form'
 import ObjectiveCard from './ObjectiveCard'
+import SectorPercentageInputs from './SectorPercentageInputs'
 import styles from './TrajectoryCreationModal.module.css'
 
 interface Props {
@@ -27,7 +29,7 @@ interface Props {
   showTrajectoryTypeSelector: boolean
   handleModeSelect: (type: TrajectoryType) => void
   studyYear: number
-  snbcRates: { rateTo2030: number; rateTo2050: number } | null
+  snbcRates: ReductionRates | null
   correctedObjectives: (BaseObjective | null)[] | null
 }
 
@@ -51,6 +53,7 @@ const TrajectoryCreationStep2 = ({
   const snbcReductionRate2030 = snbcRates?.rateTo2030
   const snbcReductionRate2050 = snbcRates?.rateTo2050
 
+  const rateTo2015 = isSNBC ? snbcRates?.rateTo2015 : undefined
   const rateTo2030 = isSNBC ? snbcReductionRate2030 : isSBTI ? sbtiReductionRate : undefined
   const rateFrom2030To2050 = isSNBC ? snbcReductionRate2050 : isSBTI ? sbtiReductionRate : undefined
   const {
@@ -191,12 +194,24 @@ const TrajectoryCreationStep2 = ({
                   value={TrajectoryType.SNBC_SECTORAL}
                   control={<Radio />}
                   label={t('snbcType.sectorielle')}
-                  disabled
                 />
               </RadioGroup>
             </div>
           )}
         />
+      )}
+
+      {trajectoryType === TrajectoryType.SNBC_SECTORAL && (
+        <div>
+          <Typography variant="body1" fontWeight="bold" className="mb1">
+            {t('sectorAllocation.title')}
+          </Typography>
+          <Typography variant="body2" color="textSecondary" className="mb1">
+            {t('sectorAllocation.description')}
+          </Typography>
+
+          <SectorPercentageInputs control={control} />
+        </div>
       )}
 
       <div>
@@ -217,13 +232,23 @@ const TrajectoryCreationStep2 = ({
         <div className="wrap gapped15">
           {isSBTI || isSNBC ? (
             <>
+              {rateTo2015 && (
+                <ObjectiveCard
+                  name={t('objectives.horizon2015')}
+                  reductionRate={rateTo2015}
+                  correctedObjective={correctedObjectives?.[0] || null}
+                  isEditable={false}
+                  control={control}
+                  index={0}
+                />
+              )}
               <ObjectiveCard
                 name={t('objectives.horizon2030')}
                 reductionRate={rateTo2030}
                 correctedObjective={correctedObjectives?.[0] || null}
                 isEditable={false}
                 control={control}
-                index={0}
+                index={rateTo2015 ? 1 : 0}
               />
 
               <ObjectiveCard
@@ -232,7 +257,7 @@ const TrajectoryCreationStep2 = ({
                 correctedObjective={correctedObjectives?.[1] || null}
                 isEditable={false}
                 control={control}
-                index={1}
+                index={rateTo2015 ? 2 : 1}
               />
             </>
           ) : (
