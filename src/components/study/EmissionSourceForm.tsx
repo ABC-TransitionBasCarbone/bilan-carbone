@@ -290,48 +290,50 @@ const EmissionSourceForm = ({
                 </div>
               )}
             </div>
-            {(withDeprecationPeriod || (isFabricationFE && hasGHGPExport)) && (
-              <>
-                <div className={classNames(styles.inputWithUnit, 'flex grow')}>
-                  <TextField
-                    className="grow"
-                    disabled={!canEdit}
-                    type="number"
-                    defaultValue={emissionSource.depreciationPeriod}
-                    onBlur={(event) => update('depreciationPeriod', Number(event.target.value))}
-                    label={`${t('form.depreciationPeriod')} *`}
-                    slotProps={{
-                      inputLabel: { shrink: true },
-                      input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
-                    }}
-                  />
-                  <div className={styles.unit}>{t('form.years')}</div>
-                </div>
-                {hasGHGPExport && emissionSource.caracterisation === EmissionSourceCaracterisation.Operated && (
-                  <FormControl className="grow">
-                    <DatePicker
-                      label={`${t('form.constructionYear')} *`}
-                      disabled={!canEdit}
-                      slotProps={{
-                        textField: {
-                          error: !!error,
-                          className: styles.datePickerInput,
-                        },
-                      }}
-                      maxDate={dayjs(new Date())}
-                      views={['year']}
-                      sx={{ backgroundColor: 'white', flex: '1' }}
-                      onChange={(date) => {
-                        if (date && date.isValid()) {
-                          update('constructionYear', date.toDate())
-                        }
-                      }}
-                      value={emissionSource.constructionYear ? dayjs(emissionSource.constructionYear) : null}
-                    />
-                  </FormControl>
-                )}
-              </>
+            {withDeprecationPeriod && (
+              <div className={classNames(styles.inputWithUnit, 'flex grow')}>
+                <TextField
+                  className="grow"
+                  disabled={!canEdit}
+                  type="number"
+                  defaultValue={emissionSource.depreciationPeriod}
+                  onBlur={(event) => update('depreciationPeriod', Number(event.target.value))}
+                  label={`${t('form.depreciationPeriod')} *`}
+                  slotProps={{
+                    inputLabel: { shrink: true },
+                    input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
+                  }}
+                />
+                <div className={styles.unit}>{t('form.years')}</div>
+              </div>
             )}
+            {hasGHGPExport &&
+              (withDeprecationPeriod ||
+                (isFabricationFE &&
+                  hasGHGPExport &&
+                  emissionSource.caracterisation === EmissionSourceCaracterisation.Operated)) && (
+                <FormControl className="grow">
+                  <DatePicker
+                    label={`${t('form.constructionYear')} *`}
+                    disabled={!canEdit}
+                    slotProps={{
+                      textField: {
+                        error: !!error,
+                        className: styles.datePickerInput,
+                      },
+                    }}
+                    maxDate={dayjs(new Date())}
+                    views={['year']}
+                    sx={{ backgroundColor: 'white', flex: '1' }}
+                    onChange={(date) => {
+                      if (date && date.isValid()) {
+                        update('constructionYear', date.toDate())
+                      }
+                    }}
+                    value={emissionSource.constructionYear ? dayjs(emissionSource.constructionYear) : null}
+                  />
+                </FormControl>
+              )}
           </>
         )}
         <FormControl>

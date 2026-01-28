@@ -113,44 +113,44 @@ const EmissionSourceContributorForm = ({
               </div>
             )}
           </div>
-          {(hasDeprecationPeriod(emissionSource.subPost) || (isFabricationFE && hasGHGPExport)) && (
-            <>
-              <div className={classNames(styles.inputWithUnit, 'flex grow')}>
-                <TextField
-                  disabled={!!emissionSource.validated}
-                  className="grow"
-                  type="number"
-                  defaultValue={emissionSource.depreciationPeriod}
-                  onBlur={(event) => update('depreciationPeriod', Number(event.target.value))}
-                  label={`${t('form.depreciationPeriod')} *`}
-                  slotProps={{
-                    inputLabel: { shrink: true },
-                    input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
-                  }}
-                />
-                <div className={styles.unit}>{t('form.years')}</div>
-              </div>
-              {hasGHGPExport && emissionSource.caracterisation === EmissionSourceCaracterisation.Operated && (
-                <DatePicker
-                  label={`${t('form.constructionYear')} *`}
-                  slotProps={{
-                    textField: {
-                      className: styles.datePickerInput,
-                    },
-                  }}
-                  maxDate={dayjs(new Date())}
-                  views={['year']}
-                  sx={{ backgroundColor: 'white', flex: '1' }}
-                  onChange={(date) => {
-                    if (date && date.isValid()) {
-                      update('constructionYear', date.toDate())
-                    }
-                  }}
-                  value={emissionSource.constructionYear ? dayjs(emissionSource.constructionYear) : null}
-                />
-              )}
-            </>
+          {hasDeprecationPeriod(emissionSource.subPost) && (
+            <div className={classNames(styles.inputWithUnit, 'flex grow')}>
+              <TextField
+                disabled={!!emissionSource.validated}
+                className="grow"
+                type="number"
+                defaultValue={emissionSource.depreciationPeriod}
+                onBlur={(event) => update('depreciationPeriod', Number(event.target.value))}
+                label={`${t('form.depreciationPeriod')} *`}
+                slotProps={{
+                  inputLabel: { shrink: true },
+                  input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
+                }}
+              />
+              <div className={styles.unit}>{t('form.years')}</div>
+            </div>
           )}
+          {hasGHGPExport &&
+            (hasDeprecationPeriod(emissionSource.subPost) ||
+              (isFabricationFE && emissionSource.caracterisation === EmissionSourceCaracterisation.Operated)) && (
+              <DatePicker
+                label={`${t('form.constructionYear')} *`}
+                slotProps={{
+                  textField: {
+                    className: styles.datePickerInput,
+                  },
+                }}
+                maxDate={dayjs(new Date())}
+                views={['year']}
+                sx={{ backgroundColor: 'white', flex: '1' }}
+                onChange={(date) => {
+                  if (date && date.isValid()) {
+                    update('constructionYear', date.toDate())
+                  }
+                }}
+                value={emissionSource.constructionYear ? dayjs(emissionSource.constructionYear) : null}
+              />
+            )}
         </div>
         <TextField
           disabled={!!emissionSource.validated}
