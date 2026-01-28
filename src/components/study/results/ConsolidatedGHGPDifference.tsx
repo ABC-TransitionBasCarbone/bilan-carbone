@@ -4,12 +4,20 @@ import { getEmissionResults } from '@/services/emissionSource'
 import { Post } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { getDefaultRule, PostInfos } from '@/services/results/exports'
+import { getGHGPEmissionValue, getLine } from '@/services/results/ghgp'
 import { getAllSiteEmissionSources } from '@/services/results/utils'
 import { getEmissionFactor } from '@/utils/emissionSources'
 import { formatNumber } from '@/utils/number'
-import { hasDeprecationPeriod, STUDY_UNIT_VALUES } from '@/utils/study'
+import { hasDeprecationPeriod, isFabrication, STUDY_UNIT_VALUES } from '@/utils/study'
 import WarningAmberIcon from '@mui/icons-material/WarningAmberOutlined'
-import { EmissionFactorBase, Export, ExportRule, SubPost } from '@prisma/client'
+import {
+  EmissionFactorBase,
+  EmissionFactorPartType,
+  EmissionSourceCaracterisation,
+  Export,
+  ExportRule,
+  SubPost,
+} from '@prisma/client'
 import { useCallback, useMemo } from 'react'
 import { EnergiesIcon } from '../infography/icons/energies'
 import ConsolidatedExportDifference, { calculateEmissionSourcesDifference } from './ConsolidatedExportDifference'
@@ -236,6 +244,46 @@ const ConsolatedGHGPDifference = ({
     environment,
   ])
 
+  const fabrication = useMemo(
+    () =>
+      emissionSourcesForSelectedSite.filter((emissionSource) => {
+        if (isEmissionSourceFiltered(emissionSource)) {
+          return false
+        }
+
+        return (
+          isFabrication(emissionSource.emissionFactor) &&
+          emissionSource.caracterisation === EmissionSourceCaracterisation.Operated &&
+          (!emissionSource.constructionYear ||
+            emissionSource.constructionYear?.getFullYear() !== study.startDate.getFullYear())
+        )
+      }),
+    [emissionSourcesForSelectedSite, isEmissionSourceFiltered, study.startDate],
+  )
+
+  const fabricationDifference = useMemo(() => {
+    let value = 0
+    fabrication.forEach((emissionSource) => {
+      if (!emissionSource.emissionFactor || !emissionSource.value) {
+        return
+      }
+      const id = emissionSource.emissionFactor.id
+      const emissionFactor = emissionFactorsWithParts.find(
+        (emissionFactorsWithParts) => emissionFactorsWithParts.id === id,
+      )
+
+      if (!emissionFactor || emissionFactor.emissionFactorParts.length === 0) {
+        return
+      }
+      const parts = emissionFactor.emissionFactorParts.filter((p) => p.type === EmissionFactorPartType.Fabrication)
+      parts.forEach((part) => {
+        const emissionTotal = getGHGPEmissionValue(study.startDate)(emissionSource)
+        value = value - getLine(emissionTotal, part).co2 / unitValue
+      })
+    })
+    return value
+  }, [fabrication, emissionFactorsWithParts, unitValue, environment, ghgpRules])
+
   return (
     <ConsolidatedExportDifference
       study={study}
@@ -249,7 +297,8 @@ const ConsolatedGHGPDifference = ({
         otherEmissionsAvalDifference +
         otherEmissionsAmontDifference +
         otherGasDifference +
-        marketBasedDifference
+        marketBasedDifference +
+        fabricationDifference
       }
     >
       {hasUtilisationEnDependance && (
@@ -336,6 +385,18 @@ const ConsolatedGHGPDifference = ({
           resultsUnit={study.resultsUnit}
           navigateToEmissionSource={navigateToEmissionSource}
           Icon={EnergiesIcon}
+        />
+      )}
+      {!!fabrication.length && (
+        <ExportDifferenceItems
+          title="fabricationTitle"
+          descriptions={['fabrication']}
+          emissionSources={fabrication}
+          exportType={Export.GHGP}
+          studySite={studySite}
+          value={formatNumber(fabricationDifference, 0)}
+          resultsUnit={study.resultsUnit}
+          navigateToEmissionSource={navigateToEmissionSource}
         />
       )}
     </ConsolidatedExportDifference>

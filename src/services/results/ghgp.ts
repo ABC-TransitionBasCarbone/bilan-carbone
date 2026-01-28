@@ -2,7 +2,7 @@ import { wasteImpact } from '@/constants/emissions'
 import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
-import { hasDeprecationPeriod, isFabrication } from '@/utils/study'
+import { hasDeprecationPeriod } from '@/utils/study'
 import { EmissionFactorBase, ExportRule, Import } from '@prisma/client'
 import { computeResult, EmissionSource, ExportEmissionFactor, getEmissionTotal, PostInfos } from './exports'
 
@@ -53,7 +53,7 @@ const getEmissionFactorValue = (
   return (emissionFactor.totalCo2 || 0) - (emissionFactor.otherGES || 0)
 }
 
-const getLine = (
+export const getLine = (
   value: number,
   EFOrEFPart: ExportEmissionFactor,
 ): Omit<PostInfos, 'rule' | 'squaredStandardDeviation'> => {

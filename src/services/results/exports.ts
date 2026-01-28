@@ -2,7 +2,13 @@ import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { toCamelCase } from '@/utils/string'
 import { getBaseFilteredEmissionSources } from '@/utils/study'
-import { EmissionFactorBase, EmissionFactorPartType, EmissionSourceCaracterisation, ExportRule, Import } from '@prisma/client'
+import {
+  EmissionFactorBase,
+  EmissionFactorPartType,
+  EmissionSourceCaracterisation,
+  ExportRule,
+  Import,
+} from '@prisma/client'
 import { convertTiltSubPostToBCSubPost } from '../posts'
 import {
   getSquaredStandardDeviationForEmissionSource,
@@ -60,9 +66,9 @@ type GetLineFunctionType = (
 export const getEmissionTotal = (
   emissionSource: EmissionSource,
   emissionFactor: ExportEmissionFactor,
-  getEmissionValue: (source: EmissionSource) => number,
+  getEmissionActivityValue: (source: EmissionSource) => number,
   getLine: GetLineFunctionType,
-) => getLine(getEmissionValue(emissionSource), emissionFactor).total
+) => getLine(getEmissionActivityValue(emissionSource), emissionFactor).total
 
 export const sumLines = (lines: Omit<PostInfos, 'rule'>[]) => {
   const total = lines.reduce((acc, line) => acc + line.total, 0)
@@ -101,7 +107,7 @@ export const computeResult = (
   withDependencies: boolean,
   validatedOnly: boolean,
   allRules: string[],
-  getEmissionValue: (emissionSource: EmissionSource) => number,
+  getEmissionActivityValue: (emissionSource: EmissionSource) => number,
   getLine: GetLineFunctionType,
   base?: EmissionFactorBase,
 ): PostInfos[] => {
@@ -125,7 +131,7 @@ export const computeResult = (
       const id = emissionSource.emissionFactor.id
       const caracterisation = emissionSource.caracterisation
 
-      const value = getEmissionValue(emissionSource)
+      const value = getEmissionActivityValue(emissionSource)
 
       const emissionFactor = emissionFactorsWithParts.find(
         (emissionFactorsWithParts) => emissionFactorsWithParts.id === id,
@@ -153,11 +159,14 @@ export const computeResult = (
         emissionFactor.emissionFactorParts.forEach((part) => {
           const rule = subPostRules.find((rule) => rule.type === part.type)
           let post = getRulePost(caracterisation, rule)
-        let updatedValue = value
-        if (part.type === EmissionFactorPartType.Fabrication && caracterisation === EmissionSourceCaracterisation.Operated && emissionSource.constructionYear?.getFullYear() !== study.startDate.getFullYear()) {
-          updatedValue = 0
-        }
-
+          let updatedValue = value
+          if (
+            part.type === EmissionFactorPartType.Fabrication &&
+            caracterisation === EmissionSourceCaracterisation.Operated &&
+            emissionSource.constructionYear?.getFullYear() !== study.startDate.getFullYear()
+          ) {
+            updatedValue = 0
+          }
 
           if (!post) {
             // On a pas de regle specifique pour cette composante => on ventile selon la regle par default

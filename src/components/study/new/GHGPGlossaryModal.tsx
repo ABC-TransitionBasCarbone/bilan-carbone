@@ -21,8 +21,6 @@ const GHGPGlossaryModal = () => {
         </li>
         <li>{t('item4')}</li>
       </ul>
-      <p className="title-h5 my1">{t('title2')}</p>
-      <p className="mb1">{t('description')}</p>
 
       <span>{t('conclusion')}</span>
     </div>
