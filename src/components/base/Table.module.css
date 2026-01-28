@@ -11,14 +11,13 @@
 
 .headers {
   th {
-  text-align: center !important;
+    text-align: center !important;
   }
 
   th:first-child {
     text-align: left !important;
   }
 }
-
 
 .pagination {
   gap: 0.5rem;
