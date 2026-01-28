@@ -415,10 +415,10 @@ model EngagementAction {
 
   name String
 
-  date   DateTime
-  target String
-  steps  String
-  phase  EngagementPhase
+  date    DateTime
+  targets String[]
+  steps   String
+  phase   EngagementPhase
 
   description String
 
