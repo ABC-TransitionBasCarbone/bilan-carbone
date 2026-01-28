@@ -1,6 +1,6 @@
 import { FullStudy } from '@/db/study'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
-import { hasDeprecationPeriod } from '@/utils/study'
+import { hasDeprecationPeriod, hasFabricationPart } from '@/utils/study'
 import {
   ControlMode,
   EmissionSourceCaracterisation,
@@ -51,12 +51,22 @@ export const getEmissionSourceCompletion = (
     mandatoryFields.push('caracterisation')
   }
 
+  const hasGHGPExport = study.exports?.types.some((studyExport) => studyExport === Export.GHGP)
   if (hasDeprecationPeriod(emissionSource.subPost)) {
     mandatoryFields.push('depreciationPeriod')
 
     if (study.exports?.types.some((studyExport) => studyExport === Export.GHGP)) {
       mandatoryFields.push('constructionYear')
     }
+  }
+  const hasFabricationPartFe = hasFabricationPart(emissionFactor)
+  if (
+    hasGHGPExport &&
+    hasFabricationPartFe &&
+    emissionSource.caracterisation === EmissionSourceCaracterisation.Operated &&
+    !emissionSource.constructionYear
+  ) {
+    mandatoryFields.push('constructionYear')
   }
 
   if (

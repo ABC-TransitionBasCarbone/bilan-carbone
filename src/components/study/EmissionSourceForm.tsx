@@ -17,7 +17,7 @@ import {
 import { useUnitLabel } from '@/services/unit'
 import { emissionFactorDefautQualityStar, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
-import { formatEmissionFromNumber, hasDeprecationPeriod, hasEditionRights, hasFabricationPart, isCAS } from '@/utils/study'
+import { formatEmissionFromNumber ,hasDeprecationPeriod, hasEditionRights, hasFabricationPart, isCAS } from '@/utils/study'
 import AddIcon from '@mui/icons-material/Add'
 import CopyIcon from '@mui/icons-material/ContentCopy'
 import EditIcon from '@mui/icons-material/Edit'
