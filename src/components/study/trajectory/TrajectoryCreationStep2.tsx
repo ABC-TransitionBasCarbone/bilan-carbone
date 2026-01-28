@@ -6,7 +6,7 @@ import GlossaryModal from '@/components/modals/GlossaryModal'
 import { customRich } from '@/i18n/customRich'
 import { TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
 import { toTitleCase } from '@/utils/string'
-import { BaseObjective, getReductionRatePerType } from '@/utils/trajectory'
+import { BaseObjective, getDefaultSBTIReductionRate } from '@/utils/trajectory'
 import AddIcon from '@mui/icons-material/Add'
 import { FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material'
 import { TrajectoryType } from '@prisma/client'
@@ -45,7 +45,7 @@ const TrajectoryCreationStep2 = ({
   const t = useTranslations('study.transitionPlan.trajectoryModal')
   const tGlossary = useTranslations('study.transitionPlan.trajectoryModal.glossary')
   const [glossary, setGlossary] = useState('')
-  const sbtiReductionRate = getReductionRatePerType(trajectoryType)
+  const sbtiReductionRate = getDefaultSBTIReductionRate(trajectoryType)
   const maxReferenceDate = dayjs().year(studyYear)
 
   const snbcReductionRate2030 = snbcRates?.rateTo2030
@@ -128,24 +128,20 @@ const TrajectoryCreationStep2 = ({
       />
 
       <div>
-        {(() => {
-          const getReferenceYearGlossaryKey = () => {
-            if (isSBTI || isSNBC) {
-              return 'referenceYearMethod'
+        {
+          <IconLabel
+            icon={
+              <HelpIcon
+                onClick={() => setGlossary(isSBTI || isSNBC ? 'referenceYearMethod' : 'referenceYear')}
+                label={tGlossary('title')}
+              />
             }
-            return 'referenceYear'
-          }
-
-          return (
-            <IconLabel
-              icon={<HelpIcon onClick={() => setGlossary(getReferenceYearGlossaryKey())} label={tGlossary('title')} />}
-              iconPosition="after"
-              className="mb-2"
-            >
-              <Typography fontWeight="bold">{t('referenceYear')}</Typography>
-            </IconLabel>
-          )
-        })()}
+            iconPosition="after"
+            className="mb-2"
+          >
+            <Typography fontWeight="bold">{t('referenceYear')}</Typography>
+          </IconLabel>
+        }
         <FormDatePicker
           name="referenceYear"
           control={control}
@@ -264,7 +260,7 @@ const TrajectoryCreationStep2 = ({
       </div>
       {glossary && (
         <GlossaryModal
-          glossary={glossary === 'referenceYearMethod' ? 'referenceYearMethod' : glossary}
+          glossary={glossary}
           label="trajectory-reference-year"
           t={tGlossary}
           onClose={() => setGlossary('')}

@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Control } from 'react-hook-form'
 import styles from './ObjectiveCard.module.css'
 
@@ -28,6 +28,26 @@ const ObjectiveCard = ({ reductionRate, name, isEditable, control, index, onDele
   const t = useTranslations('study.transitionPlan.trajectoryModal')
   const tGlossary = useTranslations('study.transitionPlan.trajectoryModal.glossary')
   const [showOvershootInfo, setShowOvershootInfo] = useState(false)
+
+  const correctedRates = useMemo(() => {
+    if (!correctedObjective) {
+      return null
+    }
+
+    return (
+      <div>
+        <div className="flex align-center gapped-2">
+          <Typography variant="body1" color="warning">
+            {t('objectives.correctedRate')}
+          </Typography>
+          <HelpIcon color="warning" onClick={() => setShowOvershootInfo(true)} label={t('objectives.overshootInfo')} />
+        </div>
+        <Typography color="warning" fontWeight="bold">
+          {(correctedObjective.reductionRate * 100).toFixed(1)}%
+        </Typography>
+      </div>
+    )
+  }, [correctedObjective, setShowOvershootInfo, t])
 
   return (
     <div className={classNames(styles.objectiveCard, 'grow px15 py1')}>
@@ -50,27 +70,14 @@ const ObjectiveCard = ({ reductionRate, name, isEditable, control, index, onDele
               </Typography>
 
               <div>
-                <Typography variant="body2" color="textSecondary">
+                <Typography variant="body1" color="textSecondary">
                   {t('objectives.referenceRate')}
                 </Typography>
                 <Typography fontWeight="bold" color="primary">
                   {reductionRate ? `-${(reductionRate * 100).toFixed(1)}%` : ''}
                 </Typography>
               </div>
-              {correctedObjective && (
-                <div>
-                  <div className="flex align-center gapped-2">
-                    <Typography variant="body2" color="warning.main">
-                      {t('objectives.correctedRate')}
-                    </Typography>
-                    <HelpIcon onClick={() => setShowOvershootInfo(true)} label={t('objectives.overshootInfo')} />
-                  </div>
-
-                  <Typography color="warning.main" fontWeight="bold">
-                    {(correctedObjective.reductionRate * 100).toFixed(1)}%
-                  </Typography>
-                </div>
-              )}
+              {correctedRates}
             </div>
           ) : (
             <div className="flex-col gapped1">
@@ -93,19 +100,7 @@ const ObjectiveCard = ({ reductionRate, name, isEditable, control, index, onDele
                 placeholder={t('objectives.reductionRatePlaceholder')}
                 data-testid="objective-reduction-rate-input"
               />
-              {correctedObjective && (
-                <div>
-                  <div className="flex align-center gapped-2">
-                    <Typography variant="body2" color="warning.main">
-                      {t('objectives.correctedRate')}
-                    </Typography>
-                    <HelpIcon onClick={() => setShowOvershootInfo(true)} label={t('objectives.overshootInfo')} />
-                  </div>
-                  <Typography color="warning.main" fontWeight="bold">
-                    {(correctedObjective.reductionRate * 100).toFixed(1)}%
-                  </Typography>
-                </div>
-              )}
+              {correctedRates}
             </div>
           )}
         </div>

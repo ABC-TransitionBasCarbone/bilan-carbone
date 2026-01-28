@@ -16,8 +16,8 @@ import {
   BaseObjective,
   getCorrectedObjectives,
   getDefaultObjectivesForTrajectoryType,
+  getDefaultSBTIReductionRate,
   getDisplayedReferenceYearForTrajectoryType,
-  getReductionRatePerType,
   PastStudy,
   SBTI_START_YEAR,
 } from '@/utils/trajectory'
@@ -127,8 +127,16 @@ const TrajectoryCreationModal = ({
     // For SBTI and SNBC, build objectives from rates since form objectives are empty
     let objectivesToUse = objectives
     if (isSBTI || isSNBC) {
-      const rateTo2030 = isSNBC ? snbcRates?.rateTo2030 : isSBTI ? getReductionRatePerType(trajectoryType) : undefined
-      const rateTo2050 = isSNBC ? snbcRates?.rateTo2050 : isSBTI ? getReductionRatePerType(trajectoryType) : undefined
+      const rateTo2030 = isSNBC
+        ? snbcRates?.rateTo2030
+        : isSBTI
+          ? getDefaultSBTIReductionRate(trajectoryType)
+          : undefined
+      const rateTo2050 = isSNBC
+        ? snbcRates?.rateTo2050
+        : isSBTI
+          ? getDefaultSBTIReductionRate(trajectoryType)
+          : undefined
 
       if (rateTo2030 !== undefined && rateTo2050 !== undefined) {
         objectivesToUse = [
