@@ -56,11 +56,15 @@ const EngagementActionTable = ({ actions, openEditModal, openDeleteModal }: Prop
         },
         {
           header: t('target'),
-          accessorKey: 'target',
+          accessorKey: 'targets',
           accessorFn: (row) =>
-            Object.values(EngagementActionTargets).includes(row.target as EngagementActionTargets)
-              ? tTargets(row.target)
-              : row.target,
+            row.targets
+              ?.map((target) =>
+                Object.values(EngagementActionTargets).includes(target as EngagementActionTargets)
+                  ? tTargets(target)
+                  : target,
+              )
+              .join(', '),
         },
         {
           header: t('phase'),

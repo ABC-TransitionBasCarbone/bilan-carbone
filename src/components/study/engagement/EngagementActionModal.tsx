@@ -16,7 +16,7 @@ import {
 } from '@/services/serverFunctions/study.command'
 import { objectWithoutNullAttributes } from '@/utils/object'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { MenuItem } from '@mui/material'
+import { Checkbox, ListItemText, MenuItem } from '@mui/material'
 import { EngagementPhase } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -64,11 +64,12 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
       studyId: study.id,
       date: new Date().toISOString(),
       sites: [],
+      targets: [],
       ...convertedEngagementAction,
     },
   })
 
-  const target = useWatch({ control, name: 'target' })
+  const targets = useWatch({ control, name: 'targets' })
   const steps = useWatch({ control, name: 'steps' })
   const sites = useWatch({ control, name: 'sites' })
 
@@ -133,26 +134,31 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
             minRows={2}
           />
           <FormDatePicker control={control} name="date" label={`${t('date')} *`} />
-          <FormAutocomplete
-            data-testid="engagement-action-target"
+          <FormSelect
             control={control}
             translation={t}
-            options={Object.values(EngagementActionTargets).map((target) => ({
-              label: tTargets(`${target}`),
-              value: target,
-            }))}
-            inputValue={
-              Object.values(EngagementActionTargets).includes(target as EngagementActionTargets)
-                ? tTargets(target as string)
-                : target || ''
-            }
-            name="target"
+            name="targets"
             label={`${t('target')} *`}
-            freeSolo
-            onInputChange={(_, value) => {
-              setValue('target', value || '')
+            data-testid="engagement-action-targets"
+            fullWidth
+            multiple
+            renderValue={() => {
+              return targets
+                .map((value) =>
+                  Object.values(EngagementActionTargets).includes(value as EngagementActionTargets)
+                    ? tTargets(value as string)
+                    : value || '',
+                )
+                .join(', ')
             }}
-          />
+          >
+            {Object.values(EngagementActionTargets).map((target) => (
+              <MenuItem key={target} value={target}>
+                <Checkbox checked={targets?.includes(target)} />
+                <ListItemText primary={tTargets(target)} />
+              </MenuItem>
+            ))}
+          </FormSelect>
           <FormAutocomplete
             data-testid="engagement-action-steps"
             control={control}
