@@ -164,6 +164,7 @@ describe('TransitionPlan DB', () => {
               description: trajectory.description,
               type: trajectory.type,
               referenceYear: trajectory.referenceYear,
+              sectorPercentages: trajectory.sectorPercentages,
               objectives: {
                 create: trajectory.objectives.map((objective) => ({
                   targetYear: objective.targetYear,
