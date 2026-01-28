@@ -2,7 +2,7 @@ import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { toCamelCase } from '@/utils/string'
 import { getBaseFilteredEmissionSources } from '@/utils/study'
-import { EmissionFactorBase, EmissionSourceCaracterisation, ExportRule, Import } from '@prisma/client'
+import { EmissionFactorBase, EmissionFactorPartType, EmissionSourceCaracterisation, ExportRule, Import } from '@prisma/client'
 import { convertTiltSubPostToBCSubPost } from '../posts'
 import {
   getSquaredStandardDeviationForEmissionSource,
@@ -153,6 +153,11 @@ export const computeResult = (
         emissionFactor.emissionFactorParts.forEach((part) => {
           const rule = subPostRules.find((rule) => rule.type === part.type)
           let post = getRulePost(caracterisation, rule)
+        let updatedValue = value
+        if (part.type === EmissionFactorPartType.Fabrication && caracterisation === EmissionSourceCaracterisation.Operated && emissionSource.constructionYear?.getFullYear() !== study.startDate.getFullYear()) {
+          updatedValue = 0
+        }
+
 
           if (!post) {
             // On a pas de regle specifique pour cette composante => on ventile selon la regle par default
@@ -161,7 +166,7 @@ export const computeResult = (
 
           if (post && results[post]) {
             // Et on ajoute la valeur selon la composante quoi qu'il arrive
-            results[post].push({ ...getLine(value, part), squaredStandardDeviation })
+            results[post].push({ ...getLine(updatedValue, part), squaredStandardDeviation })
           }
         })
       }

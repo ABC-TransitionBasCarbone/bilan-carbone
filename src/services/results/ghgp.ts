@@ -92,7 +92,7 @@ export const getGHGPEmissionValue = (studyDate: Date) => (emissionSource: Emissi
 
   let value = emissionSource.value
   if (
-    (hasDeprecationPeriod(emissionSource.subPost) || isFabrication(emissionSource.emissionFactor)) &&
+    hasDeprecationPeriod(emissionSource.subPost) &&
     emissionSource.constructionYear &&
     emissionSource.constructionYear.getFullYear() !== studyDate.getFullYear()
   ) {
