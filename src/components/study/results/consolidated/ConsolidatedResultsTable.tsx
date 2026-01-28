@@ -2,7 +2,7 @@
 
 import BaseTable from '@/components/base/Table'
 import { getConfidenceInterval, getQualitativeUncertaintyFromSquaredStandardDeviation } from '@/services/uncertainty'
-import { formatConfidenceInterval, formatEmission } from '@/utils/study'
+import { formatConfidenceInterval, formatEmissionFromNumber } from '@/utils/study'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { StudyResultUnit } from '@prisma/client'
@@ -98,9 +98,9 @@ const ConsolidatedResultsTable = <
     }
 
     tmpColumns.push({
-      header: t('value', { unit: tUnits(resultsUnit) }),
+      header: t('emissions'),
       accessorKey: 'value',
-      cell: ({ getValue }) => <p className={commonStyles.number}>{formatEmission(getValue, resultsUnit)}</p>,
+      accessorFn: ({ value }) => formatEmissionFromNumber(value, resultsUnit),
     })
 
     if (!hiddenUncertainty) {
@@ -111,12 +111,12 @@ const ConsolidatedResultsTable = <
           const confidenceInterval = getConfidenceInterval(value, squaredStandardDeviation)
           return formatConfidenceInterval(confidenceInterval, resultsUnit)
         },
-        cell: ({ getValue }) => <p className={commonStyles.number}>{getValue<string>()}</p>,
+        cell: ({ getValue }) => <p>{getValue<string>()}</p>,
       })
     }
 
     return tmpColumns
-  }, [hiddenUncertainty, hideExpandIcons, resultsUnit, t, tPost, tQuality, tUnits])
+  }, [hiddenUncertainty, hideExpandIcons, resultsUnit, t, tPost, tQuality])
 
   const tableData = useMemo(() => {
     const mappedData = data.map((d) => ({
@@ -138,9 +138,10 @@ const ConsolidatedResultsTable = <
   return (
     <BaseTable
       table={table}
-      className={classNames(commonStyles.headers, { [commonStyles.compact]: isCompact })}
+      className={classNames({ [commonStyles.compact]: isCompact })}
       testId="consolidated-results"
       size="small"
+      firstHeader={<div className="text-center">{t('ges', { unit: tUnits(resultsUnit) })}</div>}
     />
   )
 }

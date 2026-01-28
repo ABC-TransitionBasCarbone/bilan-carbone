@@ -733,7 +733,6 @@
       "downloadReport": "Download report",
       "downloadPDF": "Download the summary",
       "downloadingPDF": "Downloading (at least 15 seconds)...",
-      "value": "Emissions ({unit})",
       "emissions": "Emissions",
       "uncertainty": "Uncertainty",
       "emissionSources": "Number of emission sources",
@@ -750,6 +749,7 @@
       "ofWhich": "of which",
       "coming": "coming",
       "confidenceIntervalTitle": "95% confidence interval",
+      "ges": "GHG emissions ({unit})",
       "units": {
         "K": "kgCO₂e",
         "T": "tCO₂e"

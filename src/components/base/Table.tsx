@@ -47,9 +47,12 @@ const Table = <TData,>({
               </TableRow>
             ) : null}
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className={classNames(styles.headers)}>
                 {headerGroup.headers.map((header) => (
-                  <TableCell key={header.id} className={header.id === 'actions' ? styles.actionsColumn : undefined}>
+                  <TableCell
+                    key={header.id}
+                    className={classNames(header.id === 'actions' ? styles.actionsColumn : undefined)}
+                  >
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableCell>
                 ))}
