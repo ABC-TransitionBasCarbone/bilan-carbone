@@ -197,7 +197,7 @@ export const updateTrajectory = async (id: string, data: UpdateTrajectoryInput) 
       }
     }
 
-    if (data.objectives && trajectory.type === TrajectoryType.CUSTOM) {
+    if (data.objectives) {
       const existingObjectiveIds = trajectory.objectives.map((obj) => obj.id)
       const submittedObjectiveIds = data.objectives.filter((obj) => obj.id).map((obj) => obj.id!)
       const objectivesToDelete = existingObjectiveIds.filter((id) => !submittedObjectiveIds.includes(id))

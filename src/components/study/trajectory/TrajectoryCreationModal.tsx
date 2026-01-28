@@ -279,55 +279,56 @@ const TrajectoryCreationModal = ({
     const referenceYear = data.referenceYear ? getYearFromDateStr(data.referenceYear) : null
 
     if (isEditMode && trajectory) {
-      // let objectives
+      let objectives
 
-      // if (data.trajectoryType === TrajectoryType.SNBC_SECTORAL) {
-      //   if (!snbcRates) {
-      //     setIsLoading(false)
-      //     throw new Error('Unable to calculate SNBC reduction rates')
-      //   }
+      if (data.trajectoryType === TrajectoryType.SNBC_SECTORAL || data.trajectoryType === TrajectoryType.SNBC_GENERAL) {
+        if (!snbcRates) {
+          setIsLoading(false)
+          throw new Error('Unable to calculate SNBC reduction rates')
+        }
 
-      //   const objectivesArray: { targetYear: number; reductionRate: number }[] = []
+        const objectivesArray: { targetYear: number; reductionRate: number }[] = []
 
-      //   if (snbcRates.rateTo2015 !== undefined) {
-      //     objectivesArray.push({ targetYear: 2015, reductionRate: snbcRates.rateTo2015 })
-      //   }
+        if (snbcRates.rateTo2015 !== undefined) {
+          objectivesArray.push({ targetYear: 2015, reductionRate: snbcRates.rateTo2015 })
+        }
 
-      //   objectivesArray.push({ targetYear: 2030, reductionRate: snbcRates.rateTo2030 })
-      //   objectivesArray.push({ targetYear: 2050, reductionRate: snbcRates.rateTo2050 })
+        objectivesArray.push({ targetYear: 2030, reductionRate: snbcRates.rateTo2030 })
+        objectivesArray.push({ targetYear: 2050, reductionRate: snbcRates.rateTo2050 })
 
-      //   objectives = objectivesArray.map((obj, index) => ({
-      //     id: trajectory.objectives[index]?.id,
-      //     targetYear: obj.targetYear,
-      //     reductionRate: Number(obj.reductionRate.toFixed(4)),
-      //   }))
-      // } else if (data.trajectoryType === TrajectoryType.SNBC_GENERAL) {
-      //   if (!snbcRates) {
-      //     setIsLoading(false)
-      //     throw new Error('Unable to calculate SNBC reduction rates')
-      //   }
-
-      //   objectives = [
-      //     {
-      //       id: trajectory.objectives[0]?.id,
-      //       targetYear: 2030,
-      //       reductionRate: Number(snbcRates.rateTo2030.toFixed(4)),
-      //     },
-      //     {
-      //       id: trajectory.objectives[1]?.id,
-      //       targetYear: 2050,
-      //       reductionRate: Number(snbcRates.rateTo2050.toFixed(4)),
-      //     },
-      //   ]
-      // } else {
-      const objectives = data.objectives
-        .filter((obj) => obj.targetYear && obj.reductionRate !== null && obj.reductionRate !== undefined)
-        .map((obj) => ({
-          id: obj.id,
-          targetYear: getYearFromDateStr(obj.targetYear!),
-          reductionRate: Number((obj.reductionRate! / 100).toFixed(4)), // Keep precision of 2 digits percentage so 0.01% = 0.0001 => 4 digits
+        objectives = objectivesArray.map((obj, index) => ({
+          id: trajectory.objectives[index]?.id,
+          targetYear: obj.targetYear,
+          reductionRate: Number(obj.reductionRate.toFixed(4)),
         }))
-      // }
+      } else if (data.trajectoryType === TrajectoryType.SBTI_15 || data.trajectoryType === TrajectoryType.SBTI_WB2C) {
+        const baseRate = getDefaultSBTIReductionRate(data.trajectoryType)
+        if (!baseRate) {
+          setIsLoading(false)
+          throw new Error('Unable to get SBTI reduction rate')
+        }
+
+        objectives = [
+          {
+            id: trajectory.objectives[0]?.id,
+            targetYear: 2030,
+            reductionRate: Number(baseRate.toFixed(4)),
+          },
+          {
+            id: trajectory.objectives[1]?.id,
+            targetYear: 2050,
+            reductionRate: Number(baseRate.toFixed(4)),
+          },
+        ]
+      } else {
+        objectives = data.objectives
+          .filter((obj) => obj.targetYear && obj.reductionRate !== null && obj.reductionRate !== undefined)
+          .map((obj) => ({
+            id: obj.id,
+            targetYear: getYearFromDateStr(obj.targetYear!),
+            reductionRate: Number((obj.reductionRate! / 100).toFixed(4)),
+          }))
+      }
 
       await callServerFunction(
         () =>
