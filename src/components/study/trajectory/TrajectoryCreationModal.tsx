@@ -10,7 +10,7 @@ import {
   updateTrajectory,
 } from '@/services/serverFunctions/trajectory'
 import { createTrajectorySchema, TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
-import { calculateSNBCReductionRates, getSNBCReductionRates } from '@/utils/snbc'
+import { calculateSNBCReductionRates, getSNBCGeneralDisplayedReductionRates } from '@/utils/snbc'
 import { getYearFromDateStr } from '@/utils/time'
 import {
   getDefaultObjectivesForTrajectoryType,
@@ -66,7 +66,9 @@ const TrajectoryCreationModal = ({
   const [isLoading, setIsLoading] = useState(false)
   const { callServerFunction } = useServerFunction()
 
-  const snbcRates = isEditMode ? getSNBCReductionRates(trajectory) : calculateSNBCReductionRates(sectenData, studyYear)
+  const snbcRates = isEditMode
+    ? getSNBCGeneralDisplayedReductionRates(trajectory)
+    : calculateSNBCReductionRates(sectenData, studyYear)
 
   const trajectorySchema = createTrajectorySchema()
 
@@ -185,7 +187,7 @@ const TrajectoryCreationModal = ({
       }
       input.objectives = [
         { targetYear: 2030, reductionRate: snbcRates.rateTo2030 },
-        { targetYear: 2050, reductionRate: snbcRates.rateFrom2030To2050 },
+        { targetYear: 2050, reductionRate: snbcRates.rateTo2050 },
       ]
     }
 

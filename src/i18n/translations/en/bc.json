@@ -988,7 +988,12 @@
           "description": "The National Low-Carbon Strategy (SNBC) is France's roadmap to fight climate change, defining a GHG reduction trajectory until 2030 and 2050 targets. Abroad, we advise relying on local strategies if they exist.",
           "methodLabel": "Methods",
           "general": "General",
-          "sectoral": "Sectoral",
+          "energy": "Energy",
+          "industry": "Industry",
+          "waste": "Waste",
+          "buildings": "Buildings",
+          "agriculture": "Agriculture",
+          "transportation": "Transportation",
           "placeholder": "No trajectory selected"
         },
         "sbtiCard": {

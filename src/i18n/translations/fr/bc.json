@@ -988,7 +988,12 @@
           "description": "La Stratégie Nationale Bas-Carbone (SNBC) est la feuille de route de la France pour lutter contre le changement climatique. Elle définit une trajectoire de réduction des émissions de gaz à effet de serre jusqu’à 2050 et fixe des objectifs à horizon 2030.",
           "methodLabel": "Méthodes",
           "general": "Générale",
-          "sectoral": "Par secteur d'activité",
+          "energy": "Énergie",
+          "industry": "Industrie",
+          "waste": "Déchets",
+          "buildings": "Bâtiments",
+          "agriculture": "Agriculture",
+          "transportation": "Transports",
           "placeholder": "Aucune trajectoire sélectionnée"
         },
         "sbtiCard": {
