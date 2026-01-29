@@ -81,7 +81,14 @@ import {
   upsertStudyTemplate,
 } from '@/db/study'
 import { getTransitionPlanByStudyId } from '@/db/transitionPlan'
-import { addUser, getUserApplicationSettings, getUserByEmail, getUserSourceById, UserWithAccounts } from '@/db/user'
+import {
+  addUser,
+  getUserApplicationSettings,
+  getUserByEmail,
+  getUserSourceById,
+  updateAccount,
+  UserWithAccounts,
+} from '@/db/user'
 import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
 import { getNestedValue, groupBy } from '@/utils/array'
@@ -866,6 +873,13 @@ const getOrCreateUserAndSendStudyInvite = async (
         environment: organizationVersion.environment,
         status: UserStatus.VALIDATED,
       })) as AccountWithUser
+    } else if (account.status === UserStatus.IMPORTED) {
+      await updateAccount(account.id, {
+        organizationVersion: { disconnect: true },
+        status: UserStatus.VALIDATED,
+        role: Role.COLLABORATOR,
+      })
+      account = (await getAccountByEmailAndEnvironment(email, organizationVersion.environment)) as AccountWithUser
     }
 
     if (!skipInviteEmail) {
