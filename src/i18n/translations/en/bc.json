@@ -1021,7 +1021,8 @@
           "sbtiSnbc": "SBTI/SNBC Trajectories",
           "custom": "My custom Trajectories",
           "previousTrajectories": "Reference trajectories",
-          "currentTrajectories": "Current trajectories"
+          "currentTrajectories": "Current trajectories",
+          "failedTrajectories": "The following trajectories cannot be displayed correctly in the future because you have already consumed the entire carbon budget provided by these:"
         },
         "linkedStudies": {
           "linked": "Linked studies",
