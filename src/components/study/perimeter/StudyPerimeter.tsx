@@ -388,9 +388,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
               form={isEditing ? (siteForm as unknown as UseFormReturn<SitesCommand>) : undefined}
               caUnit={caUnit}
               withSelection
-              onDuplicate={
-                !isEditing && hasEditionRole && isFromStudyOrganizationOrParent ? setDuplicatingSiteId : undefined
-              }
+              onDuplicate={!isEditing && hasEditionRole ? setDuplicatingSiteId : undefined}
               organizationId={isFromStudyOrganizationOrParent ? study.organizationVersion.id : undefined}
             />
           ),
@@ -401,9 +399,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
             form={isEditing ? (siteForm as unknown as UseFormReturn<SitesCommand>) : undefined}
             caUnit={caUnit}
             withSelection
-            onDuplicate={
-              !isEditing && hasEditionRole && isFromStudyOrganizationOrParent ? setDuplicatingSiteId : undefined
-            }
+            onDuplicate={!isEditing && hasEditionRole ? setDuplicatingSiteId : undefined}
             organizationId={isFromStudyOrganizationOrParent ? study.organizationVersion.id : undefined}
           />
         }
