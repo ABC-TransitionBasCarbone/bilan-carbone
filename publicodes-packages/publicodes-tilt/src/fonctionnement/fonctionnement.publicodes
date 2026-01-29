@@ -1,0 +1,10 @@
+fonctionnement:
+  titre: Fonctionnement
+  formule:
+    somme:
+      - bâtiment
+      - équipe
+      - déplacements pro
+      - énergie
+      - activités de bureau
+  unité: kgCO2e
