@@ -45,6 +45,9 @@
       },
       "matériel technique": {
         "salle": {
+          "nom": {
+            "question": "[TO_TRANSLATE] Nom de la salle"
+          },
           "projecteur": {
             "année achat": {
               "question": "[TO_TRANSLATE] Année d'acquisition projecteur"
@@ -93,7 +96,7 @@
           },
           "système son": {
             "année achat": {
-              "question": "[TO_TRANSLATE] Année d'acquisition système son"
+              "question": "[UPDATED] Année d'acquisition système de son"
             },
             "type": {
               "titre": "[TO_TRANSLATE] Type de système son",
@@ -255,6 +258,9 @@
           "unité": "[TO_TRANSLATE] kgCO2e"
         },
         "collaborateur type": {
+          "nom": {
+            "question": "[TO_TRANSLATE] Libellé"
+          },
           "nombre de jours par semaine": {
             "question": "[TO_TRANSLATE] Nombre de jours / semaine",
             "unité": "[TO_TRANSLATE] jour/semaine"
@@ -348,6 +354,9 @@
           "unité": "[TO_TRANSLATE] kgCO2e"
         },
         "déplacement type": {
+          "nom": {
+            "question": "[TO_TRANSLATE] Déplacement"
+          },
           "nombre participants": {
             "question": "[TO_TRANSLATE] Nombre de participants"
           },
@@ -471,21 +480,8 @@
           "description": "[TO_TRANSLATE] Si l'équipement concerné est acheté, merci de ne pas remplir le champ \"Durée de location\". Si l'équipement concerné est loué de manière ponctuelle, merci de ne pas remplir le champ \"Date d'achat\". Si vous louez un équipement pour de longues durées ou de manière continue, nous vous recommandons de le considérer comme acheté (à la date de la première année de location).",
           "question": "[TO_TRANSLATE] Pour chacun de ces équipements informatiques, veuillez indiquer leur nombre et leur date d'achat ou durée de location",
           "unité": "[TO_TRANSLATE] kgCO2e",
-          "équipement": {
-            "titre": "[TO_TRANSLATE] Type dd'équipement informatique",
-            "question": "[TO_TRANSLATE] Type d'équipement informatique",
-            "options": {
-              "ordinateurs fixes": "[TO_TRANSLATE] Ordinateurs fixes",
-              "ordinateurs portables": "[TO_TRANSLATE] Ordinateurs portables",
-              "photocopieurs": "[TO_TRANSLATE] Photocopieurs",
-              "imprimantes": "[TO_TRANSLATE] Imprimantes",
-              "téléphones fixes": "[TO_TRANSLATE] Téléphones fixes",
-              "téléphones portables": "[TO_TRANSLATE] Téléphones portables",
-              "tablettes": "[TO_TRANSLATE] Tablettes"
-            }
-          },
           "appareil": {
-            "nb appareils": {
+            "nombre": {
               "question": "[TO_TRANSLATE] Nombre d'appareils"
             },
             "année achat": {
@@ -496,88 +492,17 @@
               "unité": "[TO_TRANSLATE] jour"
             }
           },
-          "ordinateurs fixes": {
-            "nombre": {
-              "question": "[TO_TRANSLATE] Nombre d'ordinateurs fixes"
-            },
-            "durée location": {
-              "question": "[TO_TRANSLATE] Durée de location des ordinateurs fixes (jours à l'année)",
-              "unité": "[TO_TRANSLATE] jour"
-            },
-            "année achat": {
-              "question": "[TO_TRANSLATE] Année d'achat des ordinateurs fixes"
-            }
-          },
-          "ordinateurs portables": {
-            "nombre": {
-              "question": "[TO_TRANSLATE] Nombre d'ordinateurs portables"
-            },
-            "durée location": {
-              "question": "[TO_TRANSLATE] Durée de location des ordinateurs portables (jours à l'année)",
-              "unité": "[TO_TRANSLATE] jour"
-            },
-            "année achat": {
-              "question": "[TO_TRANSLATE] Année d'achat des ordinateurs portables"
-            }
-          },
-          "photocopieurs": {
-            "nombre": {
-              "question": "[TO_TRANSLATE] Nombre de photocopieurs"
-            },
-            "durée location": {
-              "question": "[TO_TRANSLATE] Durée de location des photocopieurs (jours à l'année)",
-              "unité": "[TO_TRANSLATE] jour"
-            },
-            "année achat": {
-              "question": "[TO_TRANSLATE] Année d'achat des photocopieurs"
-            }
-          },
-          "imprimantes": {
-            "nombre": {
-              "question": "[TO_TRANSLATE] Nombre d'imprimantes"
-            },
-            "durée location": {
-              "question": "[TO_TRANSLATE] Durée de location des imprimantes (jours à l'année)",
-              "unité": "[TO_TRANSLATE] jour"
-            },
-            "année achat": {
-              "question": "[TO_TRANSLATE] Année d'achat des imprimantes"
-            }
-          },
-          "téléphones fixes": {
-            "nombre": {
-              "question": "[TO_TRANSLATE] Nombre de téléphones fixes"
-            },
-            "durée location": {
-              "question": "[TO_TRANSLATE] Durée de location des téléphones fixes (jours à l'année)",
-              "unité": "[TO_TRANSLATE] jour"
-            },
-            "année achat": {
-              "question": "[TO_TRANSLATE] Année d'achat des téléphones fixes"
-            }
-          },
-          "téléphones portables": {
-            "nombre": {
-              "question": "[TO_TRANSLATE] Nombre de téléphones portables"
-            },
-            "durée location": {
-              "question": "[TO_TRANSLATE] Durée de location des téléphones portables (jours à l'année)",
-              "unité": "[TO_TRANSLATE] jour"
-            },
-            "année achat": {
-              "question": "[TO_TRANSLATE] Année d'achat des téléphones portables"
-            }
-          },
-          "tablettes": {
-            "nombre": {
-              "question": "[TO_TRANSLATE] Nombre de tablettes"
-            },
-            "durée location": {
-              "question": "[TO_TRANSLATE] Durée de location des tablettes (jours à l'année)",
-              "unité": "[TO_TRANSLATE] jour"
-            },
-            "année achat": {
-              "question": "[TO_TRANSLATE] Année d'achat des tablettes"
+          "équipement": {
+            "titre": "[UPDATED] Type d'équipement informatique",
+            "question": "[TO_TRANSLATE] Type d'équipement informatique",
+            "options": {
+              "ordinateurs fixes": "[TO_TRANSLATE] Ordinateurs fixes",
+              "ordinateurs portables": "[TO_TRANSLATE] Ordinateurs portables",
+              "photocopieurs": "[TO_TRANSLATE] Photocopieurs",
+              "imprimantes": "[TO_TRANSLATE] Imprimantes",
+              "téléphones fixes": "[TO_TRANSLATE] Téléphones fixes",
+              "téléphones portables": "[TO_TRANSLATE] Téléphones portables",
+              "tablettes": "[TO_TRANSLATE] Tablettes"
             }
           }
         }
@@ -670,7 +595,8 @@
       "électroménager": {
         "appareil": {
           "nb appareils": {
-            "question": "[TO_TRANSLATE] Nombre d'appareils"
+            "question": "[TO_TRANSLATE] Nombre d'appareils",
+            "unité": "[TO_TRANSLATE] unité"
           },
           "année achat": {
             "question": "[TO_TRANSLATE] Année d'achat des appareils"

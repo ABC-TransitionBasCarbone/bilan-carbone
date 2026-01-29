@@ -45,6 +45,9 @@
       },
       "matériel technique": {
         "salle": {
+          "nom": {
+            "question": "Nom de la salle"
+          },
           "projecteur": {
             "année achat": {
               "question": "Année d'acquisition projecteur"
@@ -93,7 +96,7 @@
           },
           "système son": {
             "année achat": {
-              "question": "Année d'acquisition système son"
+              "question": "Année d'acquisition système de son"
             },
             "type": {
               "titre": "Type de système son",
@@ -255,6 +258,9 @@
           "unité": "kgCO2e"
         },
         "collaborateur type": {
+          "nom": {
+            "question": "Libellé"
+          },
           "nombre de jours par semaine": {
             "question": "Nombre de jours / semaine",
             "unité": "jour/semaine"
@@ -348,6 +354,9 @@
           "unité": "kgCO2e"
         },
         "déplacement type": {
+          "nom": {
+            "question": "Déplacement"
+          },
           "nombre participants": {
             "question": "Nombre de participants"
           },
@@ -471,21 +480,8 @@
           "description": "Si l'équipement concerné est acheté, merci de ne pas remplir le champ \"Durée de location\". Si l'équipement concerné est loué de manière ponctuelle, merci de ne pas remplir le champ \"Date d'achat\". Si vous louez un équipement pour de longues durées ou de manière continue, nous vous recommandons de le considérer comme acheté (à la date de la première année de location).",
           "question": "Pour chacun de ces équipements informatiques, veuillez indiquer leur nombre et leur date d'achat ou durée de location",
           "unité": "kgCO2e",
-          "équipement": {
-            "titre": "Type dd'équipement informatique",
-            "question": "Type d'équipement informatique",
-            "options": {
-              "ordinateurs fixes": "Ordinateurs fixes",
-              "ordinateurs portables": "Ordinateurs portables",
-              "photocopieurs": "Photocopieurs",
-              "imprimantes": "Imprimantes",
-              "téléphones fixes": "Téléphones fixes",
-              "téléphones portables": "Téléphones portables",
-              "tablettes": "Tablettes"
-            }
-          },
           "appareil": {
-            "nb appareils": {
+            "nombre": {
               "question": "Nombre d'appareils"
             },
             "année achat": {
@@ -496,88 +492,17 @@
               "unité": "jour"
             }
           },
-          "ordinateurs fixes": {
-            "nombre": {
-              "question": "Nombre d'ordinateurs fixes"
-            },
-            "durée location": {
-              "question": "Durée de location des ordinateurs fixes (jours à l'année)",
-              "unité": "jour"
-            },
-            "année achat": {
-              "question": "Année d'achat des ordinateurs fixes"
-            }
-          },
-          "ordinateurs portables": {
-            "nombre": {
-              "question": "Nombre d'ordinateurs portables"
-            },
-            "durée location": {
-              "question": "Durée de location des ordinateurs portables (jours à l'année)",
-              "unité": "jour"
-            },
-            "année achat": {
-              "question": "Année d'achat des ordinateurs portables"
-            }
-          },
-          "photocopieurs": {
-            "nombre": {
-              "question": "Nombre de photocopieurs"
-            },
-            "durée location": {
-              "question": "Durée de location des photocopieurs (jours à l'année)",
-              "unité": "jour"
-            },
-            "année achat": {
-              "question": "Année d'achat des photocopieurs"
-            }
-          },
-          "imprimantes": {
-            "nombre": {
-              "question": "Nombre d'imprimantes"
-            },
-            "durée location": {
-              "question": "Durée de location des imprimantes (jours à l'année)",
-              "unité": "jour"
-            },
-            "année achat": {
-              "question": "Année d'achat des imprimantes"
-            }
-          },
-          "téléphones fixes": {
-            "nombre": {
-              "question": "Nombre de téléphones fixes"
-            },
-            "durée location": {
-              "question": "Durée de location des téléphones fixes (jours à l'année)",
-              "unité": "jour"
-            },
-            "année achat": {
-              "question": "Année d'achat des téléphones fixes"
-            }
-          },
-          "téléphones portables": {
-            "nombre": {
-              "question": "Nombre de téléphones portables"
-            },
-            "durée location": {
-              "question": "Durée de location des téléphones portables (jours à l'année)",
-              "unité": "jour"
-            },
-            "année achat": {
-              "question": "Année d'achat des téléphones portables"
-            }
-          },
-          "tablettes": {
-            "nombre": {
-              "question": "Nombre de tablettes"
-            },
-            "durée location": {
-              "question": "Durée de location des tablettes (jours à l'année)",
-              "unité": "jour"
-            },
-            "année achat": {
-              "question": "Année d'achat des tablettes"
+          "équipement": {
+            "titre": "Type d'équipement informatique",
+            "question": "Type d'équipement informatique",
+            "options": {
+              "ordinateurs fixes": "Ordinateurs fixes",
+              "ordinateurs portables": "Ordinateurs portables",
+              "photocopieurs": "Photocopieurs",
+              "imprimantes": "Imprimantes",
+              "téléphones fixes": "Téléphones fixes",
+              "téléphones portables": "Téléphones portables",
+              "tablettes": "Tablettes"
             }
           }
         }
@@ -670,7 +595,8 @@
       "électroménager": {
         "appareil": {
           "nb appareils": {
-            "question": "Nombre d'appareils"
+            "question": "Nombre d'appareils",
+            "unité": "unité"
           },
           "année achat": {
             "question": "Année d'achat des appareils"

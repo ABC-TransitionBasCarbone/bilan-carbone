@@ -89,11 +89,15 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRule
     ]),
   ],
   DeplacementsProfessionnels: [
-    list(
-      'fonctionnement . déplacements pro . déplacements',
-      // TODO: to be filled with relevant rules
-      [],
-    ),
+    list('fonctionnement . déplacements pro . déplacements', [
+      'fonctionnement . déplacements pro . déplacement type . nom',
+      'fonctionnement . déplacements pro . déplacement type . transport . distance',
+      'fonctionnement . déplacements pro . déplacement type . nombre participants',
+      'fonctionnement . déplacements pro . déplacement type . transport . moyen de transport',
+      'fonctionnement . déplacements pro . déplacement type . nombre occurences',
+      'fonctionnement . déplacements pro . déplacement type . type hébergement',
+      'fonctionnement . déplacements pro . déplacement type . nombre de nuitées',
+    ]),
   ],
   Energie: [
     input('fonctionnement . énergie . électricité . consommation'),

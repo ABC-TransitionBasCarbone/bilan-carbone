@@ -13,17 +13,13 @@ fonctionnement . équipe . collaborateurs:
   par défaut: 0
   unité: kgCO2e
 
-fonctionnement . équipe . collaborateurs . nom:
-  question: Libellé
-  type: texte
-
 fonctionnement . équipe . collaborateur type:
   formule: repas + transport
   unité: kgCO2e
 
-fonctionnement . équipe . collaborateur type . libellé:
+fonctionnement . équipe . collaborateur type . nom:
   type: texte
-  question: "Libellé"
+  question: Libellé
   note: |
     Règle uniquement utilisée pour l'UI, à voir si on ne veut pas trouver une
     solution plus élégante, mais pour l'instant c'est la plus rapide.
