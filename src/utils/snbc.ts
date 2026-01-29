@@ -469,9 +469,6 @@ export const calculateSNBCTrajectory = (
     objectives.push({ targetYear: SNBC_MID_TARGET_YEAR, reductionRate: futurReductionRates.rateTo2030 })
     objectives.push({ targetYear: SNBC_FINAL_TARGET_YEAR, reductionRate: futurReductionRates.rateTo2050 })
 
-    if (isSectoral && overshootAdjustment) {
-      console.log('🔵 SNBC objectives:', objectives)
-    }
     const correctedObjectives = getObjectivesWithOvershootCompensation(
       studyEmissions,
       studyStartYear,
@@ -479,10 +476,6 @@ export const calculateSNBCTrajectory = (
       overshootAdjustment,
       pastStudies,
     )
-
-    if (isSectoral && overshootAdjustment) {
-      console.log('🔵 SNBC corrected objectives:', correctedObjectives)
-    }
 
     adjustedRates = {
       rateTo2015: correctedObjectives.find((o) => o?.targetYear === SNBC_SECTOR_FIRST_TARGET_YEAR)?.reductionRate ?? 0,
@@ -549,8 +542,8 @@ export const calculateSectoralSNBCReductionRates = (
   return rates
 }
 
-// Create fractional past studies for each sector based on percentages
-const createFractionalPastStudies = (pastStudies: PastStudy[] | undefined, percentage: number): PastStudy[] => {
+// Create proportional past studies for each sector based on percentages
+const createPercentageBasedPastStudies = (pastStudies: PastStudy[] | undefined, percentage: number): PastStudy[] => {
   if (!pastStudies) {
     return []
   }
@@ -576,7 +569,7 @@ export const calculateCustomSNBCSectoralTrajectory = (
   for (const sector of allSectors) {
     const percentage = sector === 'general' ? generalPercentage : sectorPercentages[sector]
     const sectorEmissions = params.studyEmissions * (percentage / 100)
-    const fractionalPastStudies = createFractionalPastStudies(params.pastStudies, percentage)
+    const percentageBasedPastStudies = createPercentageBasedPastStudies(params.pastStudies, percentage)
 
     let sectorOvershootAdjustment: OvershootAdjustment | undefined
 
@@ -586,7 +579,7 @@ export const calculateCustomSNBCSectoralTrajectory = (
 
       if (referenceStudyTotalEmissions) {
         const referenceSectorEmissions = referenceStudyTotalEmissions * (percentage / 100)
-        const referenceFractionalPastStudies = createFractionalPastStudies(
+        const referencePercentageBasedPastStudies = createPercentageBasedPastStudies(
           params.pastStudies?.filter((s) => s.year < referenceStudyYear),
           percentage,
         )
@@ -596,7 +589,7 @@ export const calculateCustomSNBCSectoralTrajectory = (
             studyEmissions: referenceSectorEmissions,
             studyStartYear: referenceStudyYear,
             sectenData: params.sectenData,
-            pastStudies: referenceFractionalPastStudies,
+            pastStudies: referencePercentageBasedPastStudies,
             displayCurrentStudyValueOnTrajectory: true,
             overshootAdjustment: undefined,
             maxYear: params.maxYear,
@@ -617,7 +610,7 @@ export const calculateCustomSNBCSectoralTrajectory = (
         {
           ...params,
           studyEmissions: sectorEmissions,
-          pastStudies: fractionalPastStudies,
+          pastStudies: percentageBasedPastStudies,
           overshootAdjustment: sectorOvershootAdjustment,
         },
         sector === 'general' ? undefined : sector,
