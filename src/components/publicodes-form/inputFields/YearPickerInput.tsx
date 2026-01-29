@@ -1,26 +1,21 @@
-import { DatePicker, DatePickerProps } from '@mui/x-date-pickers'
+import { DatePicker } from '@mui/x-date-pickers'
 import { PickerValue } from '@mui/x-date-pickers/internals/models'
 import { EvaluatedStringInput } from '@publicodes/forms'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
-import { InputHTMLAttributes, useCallback, useMemo } from 'react'
-import { BaseInputProps } from './utils'
+import { useCallback, useMemo } from 'react'
 
 dayjs.extend(customParseFormat)
 
-interface YearPickerInputProps<RuleName extends string> extends BaseInputProps<RuleName> {
+interface YearPickerInputProps<RuleName extends string = string> {
   formElement: EvaluatedStringInput<RuleName>
+  onChange: (rule: RuleName, value: string) => void
 }
 
-const YearPickerInput = <RuleName extends string>({
+const YearPickerInput = <RuleName extends string = string>({
   formElement,
   onChange,
-  onBlur,
-  errorMessage,
-  disabled,
-  ...props
-}: YearPickerInputProps<RuleName> &
-  Omit<DatePickerProps & InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | 'onBlur'>) => {
+}: YearPickerInputProps<RuleName>) => {
   const handleYearChange = useCallback(
     (newValue: PickerValue) => {
       if (newValue && newValue.isValid()) {
@@ -30,12 +25,6 @@ const YearPickerInput = <RuleName extends string>({
     },
     [onChange, formElement.id],
   )
-
-  const handleAccept = () => {
-    if (onBlur) {
-      onBlur()
-    }
-  }
 
   const convertedValue = useMemo(() => {
     const val = formElement.value ?? formElement.defaultValue
@@ -54,22 +43,18 @@ const YearPickerInput = <RuleName extends string>({
 
   return (
     <DatePicker
-      {...props}
       label={''}
       value={convertedValue}
       onChange={handleYearChange}
-      onAccept={handleAccept}
-      disabled={disabled}
+      disabled={formElement.applicable === false}
       views={['year']}
       openTo="year"
       slotProps={{
         textField: {
-          error: !!errorMessage,
-          helperText: errorMessage,
-          onBlur: onBlur,
           sx: {
             backgroundColor: 'white',
             width: '6.5rem',
+            borderRadius: '0.5rem',
           },
         },
       }}
