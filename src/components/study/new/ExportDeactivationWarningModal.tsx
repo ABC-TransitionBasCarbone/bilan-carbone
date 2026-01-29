@@ -49,6 +49,7 @@ const ExportDeactivationWarningModal = ({ type, remainingExports, onConfirm, onC
           type: tExport(type),
           fields: fields.map((field) => tFields(field)).join(', '),
           warning: (children) => <span className="userWarning">{children}</span>,
+          additionnalInfos: type === Export.GHGP ? t('ghgpDeactivationAdditionnalInfos') : '',
         })}
       </div>
     </Modal>

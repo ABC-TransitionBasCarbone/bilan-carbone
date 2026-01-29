@@ -58,9 +58,11 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
   const shouldShowExportDeactivationWarning = (type: Export) => {
     const newExports = values.exports.filter((exportType) => exportType !== type)
     const newExportsSpecificFields = getAllSpecificFieldsForExports(newExports)
+
     return (
-      hasSomeEmissionSourceWithSpecificFieldsFilled(type) &&
-      exportSpecificFields[type].some((field) => !newExportsSpecificFields.includes(field)) &&
+      (type === Export.GHGP ||
+        (hasSomeEmissionSourceWithSpecificFieldsFilled(type) &&
+          exportSpecificFields[type].some((field) => !newExportsSpecificFields.includes(field)))) &&
       !isNewStudy
     )
   }
@@ -71,7 +73,7 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
       // Mandatoryfields added, show warning message
       if (
         (typeFields.some((field) => !currentStudySpecificFields.includes(field)) && hasValidatedSources) ||
-        (type === Export.GHGP && hasFinalClientCaracterisation)
+        type === Export.GHGP
       ) {
         setPendingExportCheck(type)
       } else {

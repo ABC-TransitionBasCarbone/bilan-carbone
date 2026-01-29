@@ -678,9 +678,10 @@
       },
       "exportDeactivationWarning": {
         "title": "Désactivation de l'export {type}",
-        "description": "Vous êtes sur le point de désactiver l'export {type} règlementaire. <warning>La désactivation de cet export entraînera la perte de données renseignées dans certaines sources d'émission ({fields})</warning>. Voulez-vous continuer ?",
+        "description": "Vous êtes sur le point de désactiver l'export {type} règlementaire. <warning>La désactivation de cet export entraînera la perte de données renseignées dans certaines sources d'émission ({fields}) {additionnalInfos}</warning>. Voulez-vous continuer ?",
         "continue": "Continuer",
-        "cancel": "Annuler"
+        "cancel": "Annuler",
+        "ghgpDeactivationAdditionnalInfos": "et les facteurs d'émission en market based seront supprimées des sources d'émissions concernées"
       },
       "family": {
         "title": "Famille de tags",

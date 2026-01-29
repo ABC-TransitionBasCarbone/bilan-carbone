@@ -36,6 +36,7 @@ import {
 } from '@/db/organization'
 import { getAnswerByQuestionId, getQuestionByIdIntern, getQuestionsByIdIntern } from '@/db/question'
 import {
+  addSourceToStudy,
   clearEmissionSourceEmissionFactor,
   countOrganizationStudiesFromOtherUsers,
   createContributorOnStudy,
@@ -66,6 +67,7 @@ import {
   getStudySites,
   getStudyTemplate,
   getUsersOnStudy,
+  removeSourceToStudy,
   updateEmissionSourceEmissionFactor,
   updateEngagementAction,
   updateStudy,
@@ -722,6 +724,22 @@ const filterSpecificFieldsPerSubpost = (fields: (keyof UpdateEmissionSourceComma
   return filtered
 }
 
+export const adaptFeSourceWithExport = async (studyId: string, types: Export[]) => {
+  const [session, study] = await Promise.all([dbActualizedAuth(), getStudy(studyId)])
+  if (!session || !session.user || !study.success || !study.data) {
+    throw new Error(NOT_AUTHORIZED)
+  }
+  if (!hasEditionRights(getAccountRoleOnStudy(session.user, study.data))) {
+    throw new Error(NOT_AUTHORIZED)
+  }
+
+  if (study.data.exports?.types.includes(Export.GHGP) && (!types || !types.includes(Export.GHGP))) {
+    removeSourceToStudy(Import.AIB, studyId)
+  } else if (!study.data.exports?.types.includes(Export.GHGP) && types && types.includes(Export.GHGP)) {
+    addSourceToStudy(Import.AIB, studyId)
+  }
+}
+
 export const updateStudySpecificExportFields = async (studyId: string, controlMode: ControlMode, types?: Export[]) =>
   withServerResponse('updateStudySpecificExportFields', async () => {
     const [session, study] = await Promise.all([dbActualizedAuth(), getStudy(studyId)])
@@ -731,6 +749,8 @@ export const updateStudySpecificExportFields = async (studyId: string, controlMo
     if (!hasEditionRights(getAccountRoleOnStudy(session.user, study.data))) {
       throw new Error(NOT_AUTHORIZED)
     }
+
+    await adaptFeSourceWithExport(studyId, types || [])
 
     const specificFieldsForNewExportTypes = getAllSpecificFieldsForExports(types || [])
     const specificFieldsForOldExportTypes = getAllSpecificFieldsForExports(study.data.exports?.types || [])

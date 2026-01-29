@@ -678,9 +678,10 @@
       },
       "exportDeactivationWarning": {
         "title": "{type} Export Deactivation",
-        "description": "You are about to deactivate the regulatory {type} export. <warning>Deactivating this export will result in the loss of data entered in some emission sources fields ({fields})</warning>. Do you want to continue?",
+        "description": "You are about to deactivate the regulatory {type} export. <warning>Deactivating this export will result in the loss of data entered in some emission sources fields ({fields}) {additionnalInfos}</warning>. Do you want to continue?",
         "continue": "Continue",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "ghgpDeactivationAdditionnalInfos": "and market based emission factor will be removed from emission sources"
       },
       "family": {
         "title": "Tags family",
