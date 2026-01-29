@@ -11,6 +11,7 @@ import Box from '../../base/Box'
 import GlossaryIconModal from '../../modals/GlossaryIconModal'
 import styles from './StudyCard.module.css'
 import StudyName from './StudyName'
+import { customRich } from '@/i18n/customRich'
 
 interface Props {
   study: Study
@@ -45,7 +46,7 @@ const StudyCard = async ({ study, user, simplified }: Props) => {
         {hasAccessToStudyCardDetails(user.environment) && (
           <Box>
             <p className="mb1 align-center">
-              {t.rich('validatedSources', {
+              {customRich(t,'validatedSources', {
                 validated: values.validated,
                 total: values.total,
                 data: (children) => (

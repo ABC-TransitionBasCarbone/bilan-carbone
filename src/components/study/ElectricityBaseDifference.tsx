@@ -4,6 +4,7 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import GlossaryIconModal from '../modals/GlossaryIconModal'
 import styles from './ElectricityBaseDifference.module.css'
+import { customRich } from '@/i18n/customRich'
 interface Props {
   emissionSources: FullStudy['emissionSources']
   validatedOnly?: boolean
@@ -36,7 +37,7 @@ const ElectricityBaseDifference = ({ emissionSources, validatedOnly = false, exp
 
   return exports && exports.includes(Export.GHGP) && locationValue !== marketValue ? (
     <div className={classNames(className, 'flex error bold')}>
-      <span className="mr-2">{t('warning')}</span>
+      <span className="mr-2">{customRich(t,'warning')}</span>
       <GlossaryIconModal
         title="title"
         iconLabel="explanation"
@@ -45,10 +46,7 @@ const ElectricityBaseDifference = ({ emissionSources, validatedOnly = false, exp
         className={styles.helpIcon}
       >
         <p>
-          {t.rich('description', {
-            green: (children) => <span style={{ color: 'var(--mui-palette-ghgp-main)' }}>{children}</span>,
-            purple: (children) => <span style={{ color: 'var(--mui-palette-ghgp-complementary)' }}>{children}</span>,
-          })}
+          {customRich(t,'description')}
         </p>
       </GlossaryIconModal>
     </div>

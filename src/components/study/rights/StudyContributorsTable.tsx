@@ -21,6 +21,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useCallback, useMemo, useState } from 'react'
 import styles from './StudyContributorsTable.module.css'
+import { customRich } from '@/i18n/customRich'
 
 interface Props {
   study: FullStudy
@@ -412,7 +413,7 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
         actions={[{ actionType: 'button', onClick: () => setDisplayRoles(false), children: tCommon('action.close') }]}
       >
         <p className="mb-2">
-          {tRole.rich('description', {
+          {customRich(tRole,'description', {
             link: (children) => (
               <Link href={faq} target="_blank" rel="noreferrer noopener">
                 {children}

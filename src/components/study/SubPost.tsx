@@ -21,6 +21,7 @@ import ElectricityBaseDifference from './ElectricityBaseDifference'
 import EmissionSource from './EmissionSource'
 import NewEmissionSource from './NewEmissionSource'
 import styles from './SubPosts.module.css'
+import { customRich } from '@/i18n/customRich'
 
 type StudyProps = {
   study: FullStudy
@@ -217,7 +218,7 @@ const SubPost = ({
             </p>
             {count > 0 && (
               <span className="grow justify-end mr1">
-                {tStudy.rich('validatedSources', { total: count, validated, data: (children) => <>{children}</> })}
+                {customRich(tStudy,'validatedSources', { total: count, validated, data: (children) => <>{children}</> })}
               </span>
             )}
           </AccordionSummary>

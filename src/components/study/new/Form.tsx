@@ -17,6 +17,7 @@ import { useMemo, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import HelpIcon from '../../base/HelpIcon'
 import styles from './Form.module.css'
+import { customRich } from '@/i18n/customRich'
 
 interface Props {
   form: UseFormReturn<CreateStudyCommand>
@@ -68,7 +69,7 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudy
   const studyNamePlaceHolder = useMemo(
     () =>
       `${
-        tStudyNewSuggestion.rich('name', {
+        customRich(tStudyNewSuggestion,'name', {
           studyStartDate: new Date().getFullYear(),
           orga: form.getValues('sites')[0]?.name || tStudyNewSuggestion('yourOrga'),
         }) || ''
@@ -120,7 +121,7 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudy
           t={tGlossary}
         >
           <p className="mb-2">
-            {tGlossary.rich(`${glossary}Description`, {
+            {customRich(tGlossary,`${glossary}Description`, {
               link: (children) => (
                 <Link href={tDocumentation('maturity')} target="_blank" rel="noreferrer noopener">
                   {children}

@@ -1,6 +1,7 @@
 import { FormSelect } from '@/components/form/Select'
 import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import { Locale } from '@/i18n/config'
+import { customRich } from '@/i18n/customRich'
 import { AddActionFormCommand } from '@/services/serverFunctions/transitionPlan.command'
 import { Translations } from '@/types/translation'
 import { getOrderedActionRelevances } from '@/utils/action'
@@ -58,7 +59,7 @@ const ActionModalStep2 = ({ control }: Props) => {
             style={{ width: '100%', height: 'auto' }}
           />
           <p>
-            {tRelevance.rich('learnMore', {
+            {customRich(tRelevance,'learnMore', {
               link: (children) => (
                 <Link href={tDocumentation('actionRelevance')} target="_blank" rel="noreferrer noopener">
                   {children}

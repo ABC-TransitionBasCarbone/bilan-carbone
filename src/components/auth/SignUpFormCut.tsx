@@ -20,6 +20,7 @@ import LoadingButton from '../base/LoadingButton'
 import { FormAutocomplete } from '../form/Autocomplete'
 import { FormTextField } from '../form/TextField'
 import authStyles from './Auth.module.css'
+import { customRich } from '@/i18n/customRich'
 
 const SignUpFormCut = () => {
   const contactMail = getEnvVar('SUPPORT_EMAIL', Environment.CUT)
@@ -118,7 +119,7 @@ const SignUpFormCut = () => {
         </LoadingButton>
         {message && (
           <p className={classNames(!success ? 'error' : '')} data-testid="activation-form-message">
-            {t.rich(message, {
+            {customRich(t,message, {
               support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
               link: (children) => (
                 <Link href={faq} target="_blank" rel="noreferrer noopener">

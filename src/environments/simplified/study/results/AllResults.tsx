@@ -35,6 +35,7 @@ import {
   hasAccessToSimplifiedEmissionAnalysis,
   showResultsInfoText,
 } from '../../../../services/permissions/environment'
+import { customRich } from '@/i18n/customRich'
 
 interface Props {
   emissionFactorsWithParts: EmissionFactorWithParts[]
@@ -187,7 +188,7 @@ const AllResults = ({
         <>
           <Box component="section" className="mb2">
             <Typography>
-              {tResults.rich('simplifiedFeedback', {
+              {customRich(tResults,'simplifiedFeedback', {
                 questionnaire: (children) => (
                   <Link href={process.env.NEXT_PUBLIC_CUT_FEEDBACK_TYPEFORM_LINK ?? ''} target="_blank">
                     <strong>{children}</strong>
@@ -198,7 +199,7 @@ const AllResults = ({
           </Box>
           <Box component="section">
             <Typography className={classNames(styles.infoContainer)}>
-              {tResults.rich('infoWithLinks', {
+              {customRich(tResults,'infoWithLinks', {
                 formation: (children) => (
                   <Link href={process.env.NEXT_PUBLIC_FORMATION_URL ?? ''} target="_blank">
                     <strong>{children}</strong>

@@ -30,12 +30,12 @@
     "glossary": {
       "GHGP": {
         "title": "Export to GHG Protocol format",
-        "warning": "Please note that in order for your export to comply with the GHG Protocol, you will need to:",
-        "item1": "That you have taken waste incineration into account in the emissions associated with district heating networks.",
-        "item2": "That under the Fixed Assets post, you have correctly indicated whether the asset in question was constructed in the year of the bilan.",
-        "item3": "Whether you have double accounting for electricity consumption, on the one hand location-based and on the other market-based. To do this, simply account for your kWh of energy consumption twice, <green>once via location-based emission factors</green>, and <purple>a second time via market-based emission factors</purple>. Reminder:<ul><li>The location-based method is based on the use of emission factors representing the average electricity mix over defined geographical and temporal areas. In France, the emission factors used are typically in the form of ‘Average mix - Year concerned - France’. </li><li>The market-based method is based on the use of emission factors representative of the electricity produced by the electricity producers to which the organisation is contractually bound through the purchase of Guarantees of Origin (GO) or the direct sale of electricity (Power Purchase Agreement, or PPA). All electricity not covered by the aforementioned contracts must then be taken into account using emission factors for residual mixes, i.e. emission factors for electricity mixes from which all electricity covered by the aforementioned contracts has been removed.</li></ul>",
-        "item4": "The manufacturing portion of vehicles is not included by default in the GHG Protocol for the Travel and Fixed Assets categories. You must therefore enter it in the Fixed Assets category only if the vehicle was manufactured during the year in question.",
-        "conclusion": "Users should also be familiar with all the methodological specifics of the GHG Protocol in order to generate an export that meets the requirements of this method."
+        "warning": "Please note that in order for your export to comply with the GHG Protocol, you will need to :",
+        "item1": "Take into account waste incineration in the emissions associated with the steam and heating networks.",
+        "item2": "Correctly indicate in the Capital goods category whether the assets were acquired in the year of the Bilan Carbone® or not.",
+        "item3": "Have a double-accounting for consumed electricity, once with the <b><green>location-based method (LBM)</green></b> and once with the <b><purple>market-based method (MBM)</purple></b>. To do this, account for your kWh of energy consumption twice, <green>once via <b>location-based</b> emission factors</green>, and <purple>a second time via <b>market-based</b> emission factors</purple>. Reminder :<ul><li>The <b><green>location-based method</green></b> reflects the average emissions intensity of grids on which energy consumption occurs (using mostly grid-average emission factor data). </li><li>The <b><purple>market-based method</purple></b> reflects emissions from electricity that companies have purposefully chosen (or their lack of choice). It derives emission factors from contractual instruments such as Guarantees of Origin (GO), Renewable Energy Certificated in the US, Power Purchase Agreements (PPAs, VPPAs), etc. All electricity not covered by the aforementioned contracts must then be taken into account using <b>residual mixes emission factors</b>, i.e. emission factors for electricity mixes from which all electricity covered by the aforementioned contracts has been removed.</li></ul>",
+        "item4": "The capital goods portion of vehicles construction is not included by default in the GHG Protocol for the Travel and Commute and Freight categories. You must therefore account for it in the Capital goods category, only if the vehicle was manufactured during the year of the Bilan Carbone®.",
+        "conclusion": "<b>Users should also be familiar with all the methodological specifics of the GHG Protocol in order to generate an export that meets the requirements of this method.</b>"
       }
     }
   },
@@ -766,16 +766,17 @@
       "tagGlossaryDescription": "Emission sources can have multiple tags, so these are counted in each tag on this graph. It is therefore normal that you have a larger total here than in your study.",
       "info": "",
       "difference": {
-        "button": "Explanation of the differences between Bilan Carbone® and {type} export",
+        "button": "Explanation of the differences between Bilan Carbone® and {type}",
         "modalTitle": "Explanation of the difference between the results",
         "dependanceTitle": "Dependent use",
+        "dependanceGHGTitle": "Dependent use",
         "wasteTitle": "Waste treatment",
         "missingCaractTitle": "Missing characterizations",
-        "immobilisationTitle": "Not applicable immobilisation",
-        "otherEmissionsAvalTitle": "Other downstream emissions",
-        "otherEmissionsAmontTitle": "Other upstream emissions",
-        "otherGasTitle": "The emission factors emits in the \"Other gases\" category",
-        "marketBasedTitle": "The \"market-based\" emissions are not equal to the \"location-based\" emissions",
+        "immobilisationTitle": "Capital goods accounting",
+        "otherEmissionsAvalTitle": "Downstream emissions unaccounted for in GHG Protocol (visitors and clients travels)",
+        "otherEmissionsAmontTitle": "Upstream emissions unaccounted for in GHG Protocol",
+        "otherGasTitle": "Some greenhouse gases are not accounted for in GHG Protocol",
+        "marketBasedTitle": "The \"location-based\" emissions are not equal to the \"market-based\" emissions",
         "fabricationTitle": "Vehicles manifacturing",
         "tableHeaders": {
           "emissionSource": "Emission source",
@@ -785,16 +786,17 @@
           "ghgp": "GHG-P",
           "difference": "Difference"
         },
-        "dependance": "The regulatory GHG balance does not include the sub-item \"Dependent use\", as the concept of dependence does not exist in the {type} method",
-        "goToSubPost": "Go to sub-post",
+        "dependance": "The regulatory GHG assessment does not include the subcategory \"Dependent use\", as the concept of dependence does not exist in this method.",
+        "dependanceGHG": "The GHG Protocol does not include the subcategory \"Dependent use\", as the concept of dependence does not exist in this method.",
+        "goToSubPost": "Go to subcategory",
         "waste": "The regulatory Bilan GES includes all emissions due to waste recycling in the waste emitter's balance sheet, whereas the Bilan Carbone® only includes the weight of waste collection and transport in the waste emitter's balance sheet. Thus, the emission factors with a value of 41 kgCO₂e/t within the tool are those used for the Bilan Carbone®, while the values incorporating the regeneration of materials (the recycling process, for the emission factors \"Recycling\" or \"Average end of life\") are used for the BEGES-R. The emission factor displayed on the BC+ is only that used for the Bilan Carbone®, but the BEGES-R export calculations are made using the ADEME emission factors linked to recycling or average end-of-life. Here are the sources of emissions related to this topic: ",
         "missingCaract1": "Uncharacterized emission sources are not accounted for in the {type}, which leads to undue differences with the Bilan Carbone® if you have chosen to visualize unvalidated emission sources.",
         "missingCaract2": "You have not entered the characterizations for all the emission sources in your study. Please edit and add the characterization for the following emission sources:",
-        "immobilisation1": "à compléter - Gabriel",
-        "otherEmissionsAval": "à compléter - Gabriel",
-        "otherEmissionsAmont": "à compléter - Gabriel",
-        "otherGas1": "à compléter - Gabriel",
-        "marketBased": "à compléter - Gabriel",
+        "immobilisation1": "The difference shown here stems from the fact that, according to GHG Protocol, and unlike in the Bilan Carbone®, organizations should not depreciate, discount, or amortize the emissions from the production of capital goods over time. The cradle-to-gate emissions are therefore accounted for in the year of acquisition.",
+        "otherEmissionsAval": "Travels from visitors or clients may be accounted for according to GHG Protocol. If those emissions are calculated, not operated ones will not be accounted for in this format, due to the lack of a suitable subcategory.",
+        "otherEmissionsAmont": "Some emissions are not accounted for in the GHG Protocol format, especially if the activites concerned are not directly operated by the organization. This happens for instance with the transport and distribution losses for electricity, or the original emissions that stem from building the power capacities. In the regulatory GHG assessment format, these emissions are accounted for in subcategory 6.1, but GHG Protocol lacks a suitable subcategory for these emissions.",
+        "otherGas1": "Only greenhouse gases that are part of the Kyoto Protocol agreement (CO2, CH4, N2O, HFC, PFC, SF6) are accounted for in the GHG Protocol. Other GHG emissions (contrails, NF3, other air conditioning or industrial gases) are accounted for in the Bilan Carbone®, but not in the GHG Protocol.",
+        "marketBased": "Part of the differences between market-based GHG Protocol and Bilan Carbone® simply stems from the difference between the results of the <green>location-based method</green> and the <purple>market-based method</purple>.",
         "fabrication": "à compléter - Gabriel",
         "additionalMissing": "+ {count} other emission {count, plural,  =1 {source} other {sources}}",
         "unexplainedDifference": "Some differences can not be explained. Please, contact us at the <support>support</support>."
@@ -1407,7 +1409,7 @@
       "IntrantsServices": "Service inputs",
       "DechetsDirects": "Direct waste",
       "Fret": "Freight",
-      "Deplacements": "Travel",
+      "Deplacements": "Travel & Commuting",
       "Immobilisations": "Fixed assets",
       "UtilisationEtDependance": "Use and dependence",
       "FinDeVie": "End of life",
@@ -1530,6 +1532,8 @@
         "DeplacementsDomicileTravail": "Commuting to and from work for employees working within the organization, including temporary staff, subcontractors and contractors.",
         "DeplacementsProfessionnels": "Business travel by employees in the course of their professional activity, whether or not the organization owns the means of transport, and whether or not the travel takes place during working hours.",
         "DeplacementsVisiteurs": "Customers, users, beneficiaries...",
+        "IntrantsServices": "This post covers all services and services provisions that the organization benefits from, aswell as its digital usages. Services are often accounted for either directly through the informations disclosed by the providers, either through spend-based emission factors.",
+        "Energies": "This post covers all energy consumptions from stationnary sources : facilities, machines, etc. Emissions arising from energy consumption in facilities or other goods <b>used</b> by the organization shall be included in a Bilan Carbone®, whether those are owned or loaned. Energy consumption from vehicles or other mobile sources (fossil or organic fuels, electricity, ...) should be accounted for in the posts Freight and Travels rather than Energy.",
         "CombustiblesFossiles": "For heating, industrial processes, electricity or steam production.",
         "CombustiblesOrganiques": "For heating, industrial processes, electricity or steam production.",
         "ReseauxDeChaleurEtDeVapeur": "For heating and industrial processes.",
@@ -1727,13 +1731,13 @@
       "Pertes": "Losses"
     },
     "base": {
-      "LocationBased": "location-based",
-      "MarketBased": "market-based",
+      "LocationBased": "Location-based",
+      "MarketBased": "Market-based",
       "difference": {
-        "warning": "Warning, your market based kWh are not equal to the location based ones.",
+        "warning": "The kWh accounted for through the location-based method and the market-based method are different.",
         "explanation": "Explanation",
-        "title": "Error - The number of kWh taken into account differs between the location-based method and the market-based method",
-        "description": "The GHG-Protocol requires you to double count your electricity consumption, once using location-based factors and once using market-based factors. To do this, you simply need to account for your kWh of energy consumed twice, once using emission factors dedicated to <green>location-based</green> consumption, and a second time using emission factors dedicated to <purple>market-based</purple> consumption. You must account for the same number of kWh in both methods, which is not currently the case."
+        "title": "The kWh accounted for through the <green>location-based method</green> and the <purple>market-based method</purple> are different.",
+        "description": "According to GHG Protocol, organizations shall account for their Scope 2 emissions <b>once using the <green>location-based method (LBM)</green> and once using the <purple>market-based (market-based method, MBM)</purple></b>. To do this, you simply need to account for your kWh of energy consumed twice, once using <b><green>location-based</green></b> emission factors, and a second time using <b><purple>market-based</purple></b> emission factors. You must account for the same number of kWh in both methods."
       }
     },
     "missingQualities": {

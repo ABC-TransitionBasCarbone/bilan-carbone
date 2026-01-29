@@ -21,6 +21,7 @@ import Image from '../document/Image'
 import ResultsContainerForUser from './results/ResultsContainerForUser'
 import Studies from './Studies'
 import styles from './StudiesContainer.module.css'
+import { customRich } from '@/i18n/customRich'
 
 interface Props {
   user: UserSession
@@ -113,12 +114,12 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
     <Block>
       <Alert className="p0" severity="info">
         <p>
-          {t.rich('cannotCreateStudy', {
+          {customRich(t,'cannotCreateStudy', {
             link: (children) => <Link href="/ressources">{children}</Link>,
           })}
         </p>
         <p>
-          {t.rich('canCreateFootPrint', {
+          {customRich(t,'canCreateFootPrint', {
             link: (children) => <Link href="/mes-empreintes">{children}</Link>,
           })}
         </p>

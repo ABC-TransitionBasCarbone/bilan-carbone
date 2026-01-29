@@ -61,6 +61,7 @@ import styles from './EmissionSource.module.css'
 import EmissionSourceFactor from './EmissionSourceFactor'
 import emissionFactorStyles from './EmissionSourceFactor.module.css'
 import QualitySelectGroup from './QualitySelectGroup'
+import { customRich } from '@/i18n/customRich'
 
 type Option = { label: string; value: string; color?: string | null }
 
@@ -581,7 +582,7 @@ const EmissionSourceForm = ({
       {glossary && (
         <GlossaryModal glossary={glossary} onClose={() => setGlossary('')} label="emission-source" t={tGlossary}>
           <p className="mb-2">
-            {tGlossary.rich(`${glossary}Description`, {
+            {customRich(tGlossary,`${glossary}Description`, {
               link: (children) => (
                 <Link href={tDocumentation(glossaryLink)} target="_blank" rel="noreferrer noopener">
                   {children}

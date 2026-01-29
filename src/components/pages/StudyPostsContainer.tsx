@@ -15,6 +15,7 @@ import StudyPostsCard from '../study/card/StudyPostsCard'
 import useStudySite from '../study/site/useStudySite'
 import StudyPostsPage from './StudyPostsPage'
 import styles from './StudyPostsPage.module.css'
+import { customRich } from '@/i18n/customRich'
 
 interface Props {
   post: Post
@@ -49,7 +50,7 @@ const StudyPostsPageContainer = ({ post, study, userRole, user }: Props) => {
       ? `glossaryDescription.${glossary}${study.organizationVersion.environment.toLowerCase()}`
       : `glossaryDescription.${glossary}`
 
-    return tPost.rich(textForGlossary, {
+    return customRich(tPost,textForGlossary, {
       link: (children) => (
         <Link className={styles.link} href={tPost(`${textForGlossary}Link`)} target="_blank" rel="noreferrer noopener">
           {children}

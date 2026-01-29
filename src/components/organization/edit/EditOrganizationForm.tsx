@@ -7,6 +7,7 @@ import Modal from '@/components/modals/Modal'
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import DynamicSites from '@/environments/core/organization/DynamicSites'
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { customRich } from '@/i18n/customRich'
 import { updateOrganizationCommand } from '@/services/serverFunctions/organization'
 import {
   UpdateOrganizationCommand,
@@ -122,7 +123,7 @@ const EditOrganizationForm = ({ organizationVersion, caUnit, isCut = false, disa
             {sitesOnError &&
               sitesOnError.authorizedStudySites.map((studySite) => (
                 <li key={studySite.id}>
-                  {tStudySites.rich('existingSite', {
+                  {customRich(tStudySites,'existingSite', {
                     name: () =>
                       `${studySite.site.name}${studySite.study.organizationVersion.isCR ? ` (${studySite.site.organization.name})` : ''}`,
                     link: () => <Link href={`/etudes/${studySite.studyId}/perimetre`}>{studySite.study.name}</Link>,

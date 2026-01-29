@@ -17,6 +17,7 @@ import ResultsTableAndGraphs from '../ResultsTableAndGraphs'
 import TagsResultsTable from '../tags/TagsResultsTable'
 import CarbonIntensities from './CarbonIntensities'
 import Data from './Data'
+import { customRich } from '@/i18n/customRich'
 
 interface Props {
   study: FullStudy
@@ -118,7 +119,7 @@ const EmissionsAnalysis = ({
       {glossary && (
         <GlossaryModal glossary={glossary} label="results-analysis" t={t} onClose={() => setGlossary('')}>
           <span>
-            {tGlossary.rich(`${glossary}Description`, {
+            {customRich(tGlossary,`${glossary}Description`, {
               link: (children) => (
                 <Link href={tDocumentation('dependencyAndReponsability')} target="_blank" rel="noreferrer noopener">
                   {children}

@@ -26,6 +26,7 @@ import GlossaryModal from '../modals/GlossaryModal'
 import styles from './EmissionSource.module.css'
 import EmissionSourceFactor from './EmissionSourceFactor'
 import QualitySelectGroup from './QualitySelectGroup'
+import { customRich } from '@/i18n/customRich'
 
 interface Props {
   emissionSource: StudyWithoutDetail['emissionSources'][0]
@@ -198,7 +199,7 @@ const EmissionSourceContributorForm = ({
       {glossary && (
         <GlossaryModal glossary={glossary} onClose={() => setGlossary('')} label="emission-source" t={tGlossary}>
           <p className="mb-2">
-            {tGlossary.rich(`${glossary}Description`, {
+            {customRich(tGlossary,`${glossary}Description`, {
               link: (children) => (
                 <Link href={tDocumentation('uncertainties')} target="_blank" rel="noreferrer noopener">
                   {children}

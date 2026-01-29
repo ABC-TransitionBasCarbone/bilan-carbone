@@ -1,6 +1,7 @@
 'use client'
 
 import Modal from '@/components/modals/Modal'
+import { customRich } from '@/i18n/customRich'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { exportSpecificFields } from '@/utils/study'
 import { Export } from '@prisma/client'
@@ -55,7 +56,7 @@ const ExportActivationWarningModal = ({
     >
       <div>
         <p>
-          {t.rich('description', {
+          {customRich(t,'description', {
             type: tExport(type),
             fields: fields.map((field) => tFields(field)).join(', '),
             warning: (children) => <span className="userWarning">{children}</span>,

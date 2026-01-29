@@ -33,9 +33,9 @@
         "warning": "Attention, pour que votre export soit conforme au GHG-Protocol, il faudra :",
         "item1": "Que vous ayez pris en compte l'incinération des déchets dans les émissions liées aux réseaux de chaleur utilisés.",
         "item2": "Qu'au sein du poste Immobilisations, vous ayez correctement renseigné si le bien concerné a été construit l'année du bilan.",
-        "item3": "Que vous ayez une double comptabilisation de l'électricité consommée, d'une part en location-based et d'autre part en market-based. Pour cela il vous suffit de comptabiliser deux fois vos kWh d'énergie consommés, <green>une fois via des facteurs d'émission dédiés au location-based</green>, et <purple>une seconde fois via des facteurs d'émission dédiés au market-based</purple>. Pour rappel :<ul><li>La méthode location-based est basée sur l'utilisation de facteurs d'émission représentant le mix électrique moyen sur des périmètres géographiques et temporels définis. En France, les facteurs d'émission utilisés sont typiquement de la forme \"Mix moyen - Année concernée - France\".</li><li>La méthode market-based est basée sur l'utilisation de facteurs d'émission représentatif de l'électricité produite par les producteurs d'électricité auxquels l'organisation est contractuellement liée via des achats de Garanties d'Origine (GO) ou de la vente directe d'électricité (Power Purchase Agreement, ou PPA). Toute l'électricité non couverte pas les contrats mentionnés doit alors être prise en compte via les facteurs d'émission concernant les mix résiduels, c'est-à-dire les facteurs d'émission des mix électriques dont a été retirée tout l'électricité faisant l'objet des contrats mentionnés.</li></ul>",
-        "item4": "La partie fabrication des véhicules n'est par défaut pas prise en compte dans le GHG Protocol pour les postes Déplacements et Immobilisations. Vous devez donc la renseigner dans le poste Immobilisations, uniquement si le véhicule a été fabriqué au cours de l'année considérée.",
-        "conclusion": "Il convient par ailleurs que l'utilisateur maîtrise l'ensemble des spécificités méthodologiques liées au GHG-Protocol afin de générer un export qui réponde aux exigences de cette méthode."
+        "item3": "Que vous ayez une double comptabilisation de l'électricité consommée, d'une part en <b><green>location-based (location-based method, LBM)</green></b> et d'autre part en <b><purple>market-based (market-based method, MBM)</purple></b>. Pour cela il vous suffit de <b>comptabiliser deux fois vos kWh d'énergie consommés</b>, <green>une fois via des facteurs d'émission dédiés au <b>location-based</b></green>, et <purple>une seconde fois via des facteurs d'émission dédiés au <b>market-based</b></purple>. Pour rappel :<ul><li>La méthode <b><green>location-based</green></b> est basée sur l'utilisation de facteurs d'émission représentant le mix électrique moyen sur des périmètres géographiques et temporels définis. En France, les facteurs d'émission utilisés sont typiquement de la forme \"Mix moyen - Année concernée - France\".</li><li>La méthode <b><purple>market-based</purple></b> est basée sur l'utilisation de facteurs d'émission représentatif de l'électricité produite par les producteurs d'électricité auxquels l'organisation est contractuellement liée via des achats de Garanties d'Origine (GOs) ou de Renewable Energy Certificates (RECs) aux États-Unis, des Power Purchase Agreement (PPAs, VPPAs), etc. Toute l'électricité non couverte pas les contrats mentionnés doit alors être prise en compte via les facteurs d'émission concernant les mix résiduels, c'est-à-dire les facteurs d'émission des mix électriques dont a été retirée tout l'électricité faisant l'objet des contrats mentionnés.</li></ul>",
+        "item4": "La partie fabrication des véhicules n'est par défaut pas prise en compte dans le GHG Protocol pour les postes Déplacements et Fret. Vous devez donc la renseigner dans le poste Immobilisations, uniquement si le véhicule a été fabriqué au cours de l'année considérée.",
+        "conclusion": "<b>Il convient par ailleurs que l'utilisateur maîtrise l'ensemble des spécificités méthodologiques liées au GHG-Protocol afin de générer un export qui réponde aux exigences de cette méthode.</b>"
       }
     }
   },
@@ -767,13 +767,14 @@
         "button": "Explication des différences entre le Bilan Carbone® et l'export {type}",
         "modalTitle": "Explication de la différence entre les résultats",
         "dependanceTitle": "Utilisation en dépendance",
+        "dependanceGHGTitle": "Utilisation en dépendance",
         "wasteTitle": "Traitement des déchets",
-        "missingCaractTitle": "Caractérisations manquantes",
-        "immobilisationTitle": "Immobilisation non applicable",
-        "otherEmissionsAmontTitle": "Autres émissions amont",
-        "otherEmissionsAvalTitle": "Autres émissions aval",
-        "otherGasTitle": "Le facteur d'émission emet dans la catégorie \"Autres gaz\"",
-        "marketBasedTitle": "Les émissions \"market-based\" non sont pas égales aux émissions \"location-based\"",
+        "missingCaractTitle": "Certaines caractérisations sont manquantes",
+        "immobilisationTitle": "Prise en compte des immobilisations",
+        "otherEmissionsAmontTitle": "Prise en compte d'autres émissions amont",
+        "otherEmissionsAvalTitle": "Prise en compte d'autres émissions aval - Déplacements des visiteurs et des clients",
+        "otherGasTitle": "GES non comptabilisés dans le GHG Protocol",
+        "marketBasedTitle": "Les émissions sont différentes en <green>\"location-based\"</green> et en <purple>\"market-based\"</purple>",
         "fabricationTitle": "Fabrication des véhicules",
         "tableHeaders": {
           "emissionSource": "Source d'émission",
@@ -783,16 +784,17 @@
           "ghgp": "GHG-P",
           "difference": "Différence"
         },
-        "dependance": "Le Bilan GES règlementaire n'intègre pas le sous-poste \"Utilisation en dépendance\", car la notion de dépendance n'est pas existante dans la méthode {type}",
+        "dependance": "Le Bilan GES règlementaire n'intègre pas le sous-poste \"Utilisation en dépendance\", car la notion de dépendance n'est pas abordée dans cette méthode.",
+        "dependanceGHG": "Le GHG Protocol n'intègre pas le sous-poste \"Utilisation en dépendance\", car la notion de dépendance n'est pas abordée dans cette méthode.",
         "goToSubPost": "Aller au sous-poste",
         "waste": "Le Bilan GES règlementaire intègre l'ensemble des émissions dues au recyclage des déchets dans le bilan de l'émetteur des déchets, tandis que le Bilan Carbone® ne fait porter sur l'émetteur des déchets que le poids de la collecte et du transport des déchets. Ainsi, les facteurs d'émission ayant pour valeur 41 kgCO₂e/t au sein de l'outil sont ceux utilisés pour le Bilan Carbone®, tandis que les valeurs intégrant la régénération des matériaux (le processus de recyclage, pour les facteur d'émission \"Recyclage\" ou \"Fin de vie moyenne\") sont utilisés pour le BEGES-R. Le facteur d'émission affiché sur le BC+ est uniquement celui utilisé pour le Bilan Carbone®, mais les calculs de l'export BEGES-R se font bien avec les facteurs d'émission liés au recyclage ou à la fin de vie moyenne de l'ADEME. Voici les sources d'émissions liées à ce sujet : ",
         "missingCaract1": "Les sources d'émissions non caractérisées ne sont pas comptabilisées au sein du {type}, ce qui entraine des différences indues avec le Bilan Carbone® dans le cas où vous auriez choisi de visualiser les sources d'émissions non validées.",
         "missingCaract2": "Vous n'avez pas renseigné les caractérisations pour toutes les sources d'émission de votre étude. Merci d'éditer et ajouter la caractérisation pour les sources d'émission suivantes : ",
-        "immobilisation1": "à compléter - Gabriel",
-        "otherEmissionsAval": "à compléter - Gabriel",
-        "otherEmissionsAmont": "à compléter - Gabriel",
-        "otherGas1": "à compléter - Gabriel",
-        "marketBased": "à compléter - Gabriel",
+        "immobilisation1": "Le GHG Protocol prend en compte l'ensemble des émissions liées à la construction d'un bien l'année de son acquisition. Le Bilan Carbone®, lui, amortit les émissions sur plusieurs années, ce qui explique une partie des différences entre ces deux formats.",
+        "otherEmissionsAval": "La prise en compte des déplacements des visiteurs ou des clients de l'organisation est facultative au sein du GHG Protocol. Si ces émissions sont néanmoins calculées et ne sont pas opérées, elles ne seront pas comptabilisées au sein de cet export, car il n'existe pas de poste adapté dans lequel les restituer.",
+        "otherEmissionsAmont": "Certaines émissions ne sont pas prises en compte au sein du GHG Protocol, notamment si les activités associées ne sont pas opérées par l'organisation. C'est par exemple le cas de l'amont de la production et des pertes en lignes de l'électricité. Dans le Bilan GES réglementaire, celles-ci sont bien comptabilisées dans le poste 6.1 qui est dédié aux autres émissions indirectes, mais comme il n'existe pas d'équivalent de ce poste au sein du GHG Protocol, ces émissions ne sont pas prises en compte.",
+        "otherGas1": "Seuls les GES faisant partie du Protocole de Kyoto (CO2, CH4, N2O, HFC, PFC, SF6) sont comptabilisés au sein du GHG Protocol. Les émissions liées aux autres GES (traînées de condensation, NF3, autres GES de climatisation ou de procédés) sont donc comptabilisées au sein du Bilan Carbone®, mais pas au sein du GHG Protocol.",
+        "marketBased": "Une partie des différences entre le GHG Protocol en market-based et le Bilan Carbone® provient simplement de la différence de résultats entre les méthodes <green>location-based</green> et <purple>market-based</purple>.",
         "fabrication": "à compléter - Gabriel",
         "additionalMissing": "+ {count, plural,  =1 {1 autre source} other {# autres sources}} d'émission",
         "unexplainedDifference": "Certaines différences ne peuvent être expliquées pour votre étude et peuvent être liées à des problèmes de calcul de l'outil. Si vous le pouvez, merci de nous contacter à l'adresse <support>support</support>."
@@ -1342,7 +1344,7 @@
       }
     },
     "engagementActions": {
-      "title": "Actions menées",
+      "title": "Actions de mobilisation",
       "table": {
         "name": "Nom",
         "description": "Description",
@@ -1530,6 +1532,8 @@
         "DeplacementsDomicileTravail": "Déplacements domicile-travail des collaborateur.ices présent.es au sein de l'organisation, y compris intérimaires, sous-traitants et contractuels.",
         "DeplacementsProfessionnels": "Déplacements professionnels des collaborateur.ices dans le cadre de leur activité professionnelle, que l'organisation soit propriétaire ou non du moyen de transport, et que le déplacement ait lieu ou non pendant les heures ouvrées.",
         "DeplacementsVisiteurs": "Clients, usagers, bénéficiaires...",
+        "IntrantsServices": "Ce poste recouvre les services reçus par l'organisation et ses usages numériques. Les services sont souvent pris en compte soit via les informations GES transmises par les prestataires de l'organisation, soit via des facteurs d'émissions en ratios monétaires.",
+        "Energies": "Ce poste regroupe les consommations énergétiques de sources dites « fixes » : locaux, machines, etc. Dans un Bilan Carbone®, les émissions associées aux consommations d'énergie des biens ou locaux <b>utilisés</b> par l'organisation sont à prendre en compte, qu'elle soit propriétaire ou locataire. La consommation d'énergie des véhicules ou autres sources « mobiles » (combustibles fossiles, combustibles organiques, électricité) ne sont normalement pas à prendre en compte dans le poste Énergie, mais dans les postes Fret et Déplacements.",
         "CombustiblesFossiles": "Pour le chauffage, les procéés industriels, la production d'électricité ou de vapeur.",
         "CombustiblesOrganiques": "Pour le chauffage, les procéés industriels, la production d'électricité ou de vapeur.",
         "ReseauxDeChaleurEtDeVapeur": "Pour le chauffage et les procédés industriels.",
@@ -1584,13 +1588,13 @@
       "subPost": "Sous Poste",
       "comment": "Commentaires",
       "clear": "Supprimer la valeur",
-      "base": "Base",
+      "base": "Approche pour le scope 2 (GHG Protocol)",
       "baseModal": {
         "title": "Information pour les exports GHG-P",
-        "description": "Vous devez ici indiquer si votre FE s'applique dans le cadre de la méthode location-based, ou dans le cas de la méthode market-based. Cette distinction ne s'appliquera que si votre FE est utilisé au sein du sous-poste Électricité du poste Énergie. Pour rappel :",
-        "location": "La méthode location-based est basée sur l'utilisation de facteurs d'émission représentant le mix électrique moyen sur des périmètres géographiques et temporels définis. En France, les facteurs d'émission utilisés sont typiquement de la forme \"Mix moyen - Année concernée - France\".",
-        "market": "La méthode market-based est basée sur l'utilisation de facteurs d'émission représentatif de l'électricité produite par les producteurs d'électricité auxquels l'organisation est contractuellement liée via des achats de Garanties d'Origine (GO) ou de la vente directe d'électricité (Power Purchase Agreement, ou PPA). Toute l'électricité non couverte pas les contrats mentionnés doit alors être prise en compte via les facteurs d'émission concernant les mix résiduels, c'est-à-dire les facteurs d'émission des mix électriques dont a été retirée tout l'électricité faisant l'objet des contrats mentionnés.",
-        "conclusion": "Le Bilan Carbone® et le Bilan GES réglementaire n'autorisent que la méthode location-based, l'ISO 14064-1 autorise l'usage des deux méthodes, tandis que le GHG Protocol exige une double comptabilisation de l'électricité consommée, d'une part en location-based et d'autre part en market-based."
+        "description": "Vous devez indiquer ici si votre FE s'applique dans le cadre de la méthode <b><green>location-based</green></b>, ou dans le cas de la méthode <b><purple>market-based</purple></b>. Cette distinction ne s'appliquera que si votre FE est utilisé au sein du sous-poste Électricité du poste Énergie. Pour rappel :",
+        "location": "La méthode <b><green>location-based</green></b> est basée sur l'utilisation de facteurs d'émission représentant le mix électrique moyen sur des périmètres géographiques et temporels définis. En France, les facteurs d'émission utilisés sont typiquement de la forme \"Mix moyen - Année concernée - France\".",
+        "market": "La méthode <purple><b>market-based</b></purple> est basée sur l'utilisation de facteurs d'émission représentatif de l'électricité produite par les producteurs d'électricité auxquels l'organisation est contractuellement liée via des achats de Garanties d'Origine (GOs) Garanties d'Origine (GOs) ou de Renewable Energy Certificates (RECs) aux États-Unis, des Power Purchase Agreement (PPAs, VPPAs), etc. Toute l'électricité non couverte pas les contrats mentionnés doit alors être prise en compte via les facteurs d'émission concernant les mix résiduels, c'est-à-dire les facteurs d'émission des mix électriques dont a été retirée tout l'électricité faisant l'objet des contrats mentionnés.",
+        "conclusion": "<b>Le Bilan Carbone® et le Bilan GES réglementaire n'autorisent que la méthode <green>location-based</green></b>, l'ISO 14064-1 autorise l'usage des deux méthodes, tandis que le GHG Protocol exige une double comptabilisation de l'électricité consommée, d'une part en <green>location-based</green> et d'autre part en <purple>market-based</purple>."
       },
       "glossary": {
         "title": "Glossaire",
@@ -1727,13 +1731,13 @@
       "Pertes": "Pertes"
     },
     "base": {
-      "LocationBased": "location-based",
-      "MarketBased": "market-based",
+      "LocationBased": "Location-based",
+      "MarketBased": "Market-based",
       "difference": {
-        "warning": "Attention, vos kWh market based ne sont pas égaux à ceux en location based.",
+        "warning": "Attention, vos kWh en market-based ne sont pas égaux à ceux en location-based.",
         "explanation": "Explication",
-        "title": "Erreur - Le nombre de kWh pris en compte diffère entre la méthode location-based et la méthode market-based",
-        "description": "Le GHG Protocol exige que vous ayez une double comptabilisation de l'électricité consommée, d'une part en location-based et d'autre part en market-based. Pour cela il vous suffit de comptabiliser deux fois vos kWh d'énergie consommés, une fois via des facteurs d'émission dédiés au <green>location-based</green>, et une seconde fois via des facteurs d'émission dédiés au <purple>market-based</purple>. Vous devez comptabiliser le même nombre de kWh dans les deux méthodes, ce qui n'est pas le cas actuellement."
+        "title": "Attention - Le nombre de kWh pris en compte diffère entre la méthode <green>location-based</green> et la méthode <purple>market-based</purple>",
+        "description": "Le GHG Protocol exige que vous ayez une double comptabilisation de l'électricité consommée, <b>d'une part via la méthode <green>location-based (location-based method, LBM)</green> et d'autre part en <purple>market-based (market-based method, MBM)</purple></b>. Pour cela il vous suffit de comptabiliser deux fois vos kWh d'énergie consommés, une fois via des facteurs d'émission dédiés au <b><green>location-based</green></b>, et une seconde fois via des facteurs d'émission dédiés au <b><purple>market-based</purple></b>. Vous devez comptabiliser le même nombre de kWh dans les deux méthodes."
       }
     },
     "missingQualities": {

@@ -7,6 +7,7 @@ import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import commonStyles from '@/components/study/results/commonTable.module.css'
 import { ActionWithRelations } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { customRich } from '@/i18n/customRich'
 import { toggleActionEnabled } from '@/services/serverFunctions/transitionPlan'
 import { formatNumber } from '@/utils/number'
 import { convertValue } from '@/utils/study'
@@ -126,7 +127,7 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
                 tModal="study.transitionPlan.actions.table"
               >
                 <p>
-                  {t.rich('enabledGlossaryDescription', {
+                  {customRich(t,'enabledGlossaryDescription', {
                     trajectoryLink: (children) => (
                       <Link href={`/etudes/${studyId}/trajectoires`} target="_blank" rel="noreferrer noopener">
                         {children}

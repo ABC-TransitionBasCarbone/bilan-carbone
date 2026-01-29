@@ -9,17 +9,18 @@ import { useTranslations } from 'next-intl'
 import { useEffect, useMemo } from 'react'
 import { Control, Controller, UseFormReturn, UseFormSetValue } from 'react-hook-form'
 import styles from './Base.module.css'
+import { customRich } from '@/i18n/customRich'
 
 const GlossaryModal = () => {
   const t = useTranslations('emissionFactors.create.baseModal')
   return (
     <div className="flex-col gapped">
-      <p>{t('description')}</p>
+      <p>{customRich(t,'description')}</p>
       <ul className={styles.list}>
-        <li>{t('location')}</li>
-        <li>{t('market')}</li>
+        <li>{customRich(t,'location')}</li>
+        <li>{customRich(t,'market')}</li>
       </ul>
-      <p>{t('conclusion')}</p>
+      <p>{customRich(t,'conclusion')}</p>
     </div>
   )
 }
