@@ -55,6 +55,20 @@
         "dateAchat": "Date achat",
         "duree": "Durée de location (à l'année)",
         "nombre": "Nombre (unité)"
+      },
+      "MaterielTechniqueEquipement": {
+        "question": "Décrivez les différentes salles du cinéma",
+        "nom": "Nom de la salle",
+        "projecteurs": "Projecteurs",
+        "anneeAchatProjecteur": "Année d'acquisition projecteur",
+        "ecran": "Écran",
+        "surfaceEcran": "Surface de l'écran",
+        "anneeAchatEcran": "Année d'acquisition écran",
+        "fauteuils": "Fauteuils",
+        "nbFauteuils": "Nombre de fauteuils",
+        "anneeAchatFauteuils": "Année d'acquisition fauteuils",
+        "systemeSon": "Système de son",
+        "anneeAchatSystemeSon": "Année d'acquisition système de son"
       }
     }
   }

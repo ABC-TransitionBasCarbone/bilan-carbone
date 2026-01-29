@@ -119,7 +119,6 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRule
         'ActivitesDeBureauEquipementInformatique.nombre',
       ],
       'fonctionnement . activités de bureau . informatique',
-      // TODO: support list layout
       [
         'fonctionnement . activités de bureau . informatique . équipement',
         'fonctionnement . activités de bureau . informatique . appareil . année achat',
@@ -194,7 +193,36 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRule
   ],
   EquipesRecues: [input('tournées avant premières . équipes reçues . nombre équipes')],
   MaterielTechnique: [
-    // TODO: support list layout
+    list(
+      'MaterielTechniqueEquipement.question',
+      [
+        'MaterielTechniqueEquipement.nom',
+        'MaterielTechniqueEquipement.projecteurs',
+        'MaterielTechniqueEquipement.anneeAchatProjecteur',
+        'MaterielTechniqueEquipement.ecran',
+        'MaterielTechniqueEquipement.surfaceEcran',
+        'MaterielTechniqueEquipement.anneeAchatEcran',
+        'MaterielTechniqueEquipement.fauteuils',
+        'MaterielTechniqueEquipement.nbFauteuils',
+        'MaterielTechniqueEquipement.anneeAchatFauteuils',
+        'MaterielTechniqueEquipement.systemeSon',
+        'MaterielTechniqueEquipement.anneeAchatSystemeSon',
+      ],
+      'salles et cabines . matériel technique . salles',
+      [
+        'salles et cabines . matériel technique . salle . nom',
+        'salles et cabines . matériel technique . salle . projecteur . type',
+        'salles et cabines . matériel technique . salle . projecteur . année achat',
+        'salles et cabines . matériel technique . salle . écran . type',
+        'salles et cabines . matériel technique . salle . écran . surface écran',
+        'salles et cabines . matériel technique . salle . écran . année achat',
+        'salles et cabines . matériel technique . salle . fauteuils . type',
+        'salles et cabines . matériel technique . salle . fauteuils . nombre',
+        'salles et cabines . matériel technique . salle . fauteuils . année achat',
+        'salles et cabines . matériel technique . salle . système son . type',
+        'salles et cabines . matériel technique . salle . système son . année achat',
+      ],
+    ),
     input('salles et cabines . matériel technique . films . nombre films dématérialisés'),
     input('salles et cabines . matériel technique . cloud . stockage'),
     input('salles et cabines . matériel technique . disques durs . nombre'),
