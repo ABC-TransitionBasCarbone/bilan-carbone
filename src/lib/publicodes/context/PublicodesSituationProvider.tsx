@@ -45,7 +45,11 @@ export function PublicodesSituationProvider<RuleName extends string = string>({
   const setSituation = useCallback(
     (newSituation: Situation<RuleName>, listLayoutSituations?: ListLayoutSituations<RuleName>) => {
       engine.setSituation(newSituation)
-      setSituationState(newSituation)
+      setSituationState(
+        // NOTE: We get the filtered situation from the engine to ensure that only
+        // valid situation entries are stored.
+        engine.getSituation(),
+      )
       if (listLayoutSituations) {
         // NOTE: there is no sync with the main situation here, it's done by
         // the [udpateListLayoutSituation] function of the
