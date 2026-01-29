@@ -224,6 +224,9 @@ const getBaseFilterForEmissionFactors = (
                 OR: [{ unit: { in: filters.units as Unit[] } }, { customUnit: { in: filters.units as string[] } }],
               }
             : {},
+          filters.base && filters.base.length !== Object.values(EmissionFactorBase).length
+            ? { base: { in: filters.base } }
+            : {},
           importedFromCondition,
         ],
       },

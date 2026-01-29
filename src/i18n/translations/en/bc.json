@@ -1618,6 +1618,7 @@
       "location": "Location",
       "locationSearch": "Search by location",
       "locationSearchPlaceholder": "e.g. Europe",
+      "base": "Base",
       "Manual": "Manual",
       "edit": "Edit emission factor",
       "delete": "Delete emission factor",
