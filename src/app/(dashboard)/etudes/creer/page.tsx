@@ -2,8 +2,10 @@ import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import withStudyCreation, { StudyCreationProps } from '@/components/hoc/withStudyCreation'
 import NewStudyPage from '@/components/pages/NewStudy'
 import NotFound from '@/components/pages/NotFound'
+import TiltSimplifiedComingSoon from '@/components/pages/TiltSimplifiedComingSoon'
 import { getAccountOrganizationVersions } from '@/db/account'
 import { getOrganizationVersionAccounts, getOrganizationVersionById } from '@/db/organization'
+import { isTilt, isTiltSimplifiedFeatureActive } from '@/services/permissions/environment'
 import { canCreateAStudy } from '@/services/permissions/study'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { defaultCAUnit } from '@/utils/number'
@@ -11,7 +13,14 @@ import { hasActiveLicence } from '@/utils/organization'
 import { redirect } from 'next/navigation'
 
 const NewStudy = async ({ user, duplicateStudyId, isSimplified }: UserSessionProps & StudyCreationProps) => {
-  if (!user.organizationVersionId || !canCreateAStudy(user, isSimplified)) {
+  if (!user.level && isTilt(user.environment)) {
+    const isTiltSimplifiedActive = await isTiltSimplifiedFeatureActive(user.environment)
+    if (!isTiltSimplifiedActive) {
+      return <TiltSimplifiedComingSoon />
+    }
+  }
+
+  if (!user.organizationVersionId || !(await canCreateAStudy(user, isSimplified))) {
     return <NotFound />
   }
 

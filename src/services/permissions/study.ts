@@ -11,7 +11,12 @@ import { dbActualizedAuth } from '../auth'
 import { isDeactivableFeatureActiveForEnvironment } from '../serverFunctions/deactivableFeatures'
 import { getUserActiveAccounts } from '../serverFunctions/user'
 import { hasSufficientLevel } from '../study'
-import { canCreateStudyWithoutSpecificRights, hasAccessToDuplicateStudy, isTilt } from './environment'
+import {
+  canCreateStudyWithoutSpecificRights,
+  hasAccessToDuplicateStudy,
+  isTilt,
+  isTiltSimplifiedFeatureActive,
+} from './environment'
 import { isInOrgaOrParentFromId } from './organization'
 
 export const isAdminOnStudyOrga = (
@@ -73,7 +78,14 @@ export const filterAllowedStudies = async (user: UserSession, studies: Study[]) 
   return allowedStudies.filter((study) => study !== null)
 }
 
-export const canCreateAStudy = (user: UserSession, simplified: boolean = false) => {
+export const canCreateAStudy = async (user: UserSession, simplified: boolean = false) => {
+  if (simplified && !user.level && isTilt(user.environment)) {
+    const isTiltSimplifiedActive = await isTiltSimplifiedFeatureActive(user.environment)
+    if (!isTiltSimplifiedActive) {
+      return false
+    }
+  }
+
   const studyIsSimplifiedAndCreationAuthorized = simplified && user.role !== Role.DEFAULT && isTilt(user.environment)
   const canCreateAdvancedStudy = !!user.level && user.role !== Role.DEFAULT
 

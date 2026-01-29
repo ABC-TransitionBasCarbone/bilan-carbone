@@ -2284,11 +2284,18 @@
     "DownloadReport": "Téléchargement du rapport Bilan Carbone®",
     "FormationStudy": "Étude de formation",
     "TransitionPlan": "Plan de transition",
+    "TiltSimplified": "TILT Mode Simplifié",
     "source": "Sources",
     "environment": "Environnements",
     "true": "Active",
     "false": "Désactivée",
     "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
+  },
+  "tiltSimplified": {
+    "comingSoon": {
+      "title": "Bientôt disponible",
+      "message": "Le calculateur d'empreinte simplifié pour les associations est en cours de construction, et sera disponible d'ici quelques mois. Merci de votre patience !"
+    }
   },
   "feedback": {
     "title": "Donnez votre avis sur le BC+ !",

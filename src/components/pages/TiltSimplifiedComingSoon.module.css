@@ -1,0 +1,7 @@
+.content {
+  text-align: center;
+  max-width: 40rem;
+  background-color: var(--color-background-secondary);
+  border-radius: 0.5rem;
+  border: 0.0625rem solid var(--color-border);
+}

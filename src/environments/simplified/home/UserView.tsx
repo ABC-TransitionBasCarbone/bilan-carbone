@@ -1,13 +1,16 @@
-'use client'
-
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import { hasHomeAlert, hasStartLinkOnFootprints, isTilt } from '@/services/permissions/environment'
+import {
+  hasHomeAlert,
+  hasStartLinkOnFootprints,
+  isTilt,
+  isTiltSimplifiedFeatureActive,
+} from '@/services/permissions/environment'
 import { hasAccessToStudies } from '@/services/permissions/environmentAdvanced'
 import Groups2OutlinedIcon from '@mui/icons-material/Groups2Outlined'
-import { Alert, Box, BoxProps, styled, Typography } from '@mui/material'
+import { Alert, Box, Typography } from '@mui/material'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 import CinemaOutlinedIcon from '../../cut/icons/CinemaOutlinedIcon'
 import DiagramOutlinedIcon from '../icons/DiagramOutlinedIcon'
@@ -20,27 +23,24 @@ interface Props {
 
 const infoLength = 3
 
-const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
-  borderColor: theme.palette.primary.main,
-  backgroundColor: theme.palette.secondary.light,
-  color: theme.palette.text.primary,
-}))
-
-const UserView = ({ account }: Props) => {
-  const t = useTranslations('home')
-  const tAction = useTranslations('common.action')
+const UserView = async ({ account }: Props) => {
+  const t = await getTranslations('home')
+  const tAction = await getTranslations('common.action')
 
   const title = t('title')
-  const navigation = useTranslations('home.navigation')
+  const navigation = await getTranslations('home.navigation')
 
   const hasAlert = hasHomeAlert(account.environment)
+
+  let isTiltSimplifiedEnabled = false
+  if (!account.level && isTilt(account.environment)) {
+    isTiltSimplifiedEnabled = await isTiltSimplifiedFeatureActive(account.environment)
+  }
 
   return (
     <div className={styles.block}>
       <Box component="section" className="flex-col h100 gapped15">
-        <StyledBox
-          className={classNames('align-center p2 gapped1 hauto', styles.styledBoxContainer, styles.styledBoxInfo)}
-        >
+        <Box className={classNames('align-center p2 gapped1 hauto', styles.styledBoxContainer, styles.styledBoxInfo)}>
           <Box className={classNames('flex-col', styles.leftContent)}>
             <Typography data-testid="title" variant="h4" className={styles.titleInBox}>
               {title}
@@ -52,19 +52,21 @@ const UserView = ({ account }: Props) => {
               </Box>
             ))}
           </Box>
-          <Box className="flex align-center">
-            <Link
-              href={hasStartLinkOnFootprints(account.environment) ? 'mes-empreintes' : '/organisations'}
-              className={styles.startButtonLink}
-            >
-              <Box className={classNames('flex-cc px2 py1', styles.startButton)} component="button">
-                <Typography variant="h6" className={styles.startButtonText}>
-                  {tAction('start')}
-                </Typography>
-              </Box>
-            </Link>
-          </Box>
-        </StyledBox>
+          {isTiltSimplifiedEnabled && (
+            <Box className="flex align-center">
+              <Link
+                href={hasStartLinkOnFootprints(account.environment) ? 'mes-empreintes' : '/organisations'}
+                className={styles.startButtonLink}
+              >
+                <Box className={classNames('flex-cc px2 py1', styles.startButton)} component="button">
+                  <Typography variant="h6" className={styles.startButtonText}>
+                    {tAction('start')}
+                  </Typography>
+                </Box>
+              </Link>
+            </Box>
+          )}
+        </Box>
         <Box className="flex gapped1 mt1">
           <LinkCard
             href={`/organisations/${account.organizationVersionId}/modifier`}
@@ -85,7 +87,7 @@ const UserView = ({ account }: Props) => {
               title={navigation('footprints.title')}
               message={navigation('footprints.message')}
             />
-          ) : isTilt(account.environment) ? (
+          ) : isTilt(account.environment) && isTiltSimplifiedEnabled ? (
             <LinkCard
               href="/mes-empreintes"
               icon={<DiagramOutlinedIcon className={styles.icon} />}

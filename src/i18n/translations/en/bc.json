@@ -2290,6 +2290,12 @@
     "false": "Deactivated",
     "Not authorized": "You are not allowed to do this action"
   },
+  "tiltSimplified": {
+    "comingSoon": {
+      "title": "Coming Soon",
+      "message": "The simplified footprint calculator for associations is currently under construction and will be available in a few months. Thank you for your patience!"
+    }
+  },
   "feedback": {
     "title": "Give your opinion about BC+ !",
     "body": " If you have 5 minutes, we'd love to hear your feedback on BC+! This will help us to meet your needs as effectively as possible in our future developments. If this isn't a good time, you can delay your answer.",

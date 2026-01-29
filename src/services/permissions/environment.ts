@@ -1,4 +1,5 @@
-import { Environment } from '@prisma/client'
+import { isFeatureActiveForEnvironment } from '@/db/deactivableFeatures'
+import { DeactivatableFeature, Environment } from '@prisma/client'
 
 const { BC, CUT, TILT, CLICKSON } = Environment
 const advancedEnvironments: Environment[] = [BC, TILT]
@@ -96,3 +97,11 @@ export const hasStartLinkOnFootprints = isTilt
 export const hasAccessToPostTypeform = isTilt
 
 export const hasAccessToReductionObjectivesGlossary = isTilt
+
+export const isTiltSimplifiedFeatureActive = async (environment: Environment) => {
+  if (!isTilt(environment)) {
+    return true
+  }
+
+  return isFeatureActiveForEnvironment(DeactivatableFeature.TiltSimplified, environment)
+}
