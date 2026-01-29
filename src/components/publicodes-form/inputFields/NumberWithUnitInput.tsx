@@ -1,4 +1,4 @@
-import { usePublicodesRuleTranslation } from '@/hooks/usePublicodesTranslation'
+import { usePublicodesUnitTranslation } from '@/hooks/usePublicodesTranslation'
 import { NumberField } from '@base-ui-components/react/number-field'
 import { InputAdornment, OutlinedInput } from '@mui/material'
 import { EvaluatedNumberInput } from '@publicodes/forms'
@@ -16,7 +16,7 @@ const NumberWithUnitInput = <RuleName extends string>({
   onChange,
   disabled,
 }: NumberWithUnitInputProps<RuleName>) => {
-  const { unit } = usePublicodesRuleTranslation(formElement.id)
+  const unit = usePublicodesUnitTranslation(formElement.unit)
   const isDisabled = disabled || !formElement.applicable
   const { localValue, handleValueChange, handleValueCommitted, handleFocus } = useSimpleInputState<number>(
     formElement,

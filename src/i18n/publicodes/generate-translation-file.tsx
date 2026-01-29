@@ -14,12 +14,12 @@ import {
 } from './utils'
 
 const { model, destLang } = getArgs()
-
 const LOCALES = ['fr', ...destLang] as Locale[]
 
 function extractTranslationKeysFromRules(
   engine: Engine,
   rulesMap: Record<string, Rule>,
+  unitsSet: Set<string>,
 ): Record<string, Partial<TranslationRecord>> {
   const translations: Record<string, Partial<TranslationRecord>> = {}
 
@@ -27,18 +27,21 @@ function extractTranslationKeysFromRules(
     if (!rule?.question) {
       continue
     }
-
     const ruleTranslations: Partial<TranslationRecord> = {}
     for (const key of KEYS_TO_TRANSLATE) {
+      if (key === 'unité') {
+        if (rule[key]) {
+          unitsSet.add(rule[key] as string)
+        }
+        continue
+      }
       if (rule[key]) {
         ruleTranslations[key] = rule[key] as string
       }
     }
-
     if (Object.keys(ruleTranslations).length > 0) {
       translations[ruleName] = ruleTranslations
     }
-
     const possibilities = engine.getPossibilitiesFor(ruleName)
     if (possibilities !== null && possibilities.length > 0) {
       const options = {} as Record<string, string>
@@ -48,7 +51,6 @@ function extractTranslationKeysFromRules(
       ruleTranslations.options = options
     }
   }
-
   return translations
 }
 
@@ -70,7 +72,6 @@ function getNestedObject(
   createIfMissing = false,
 ): TranslationRecord | undefined {
   let current = obj
-
   for (const segment of path) {
     if (!current[segment]) {
       if (createIfMissing) {
@@ -81,7 +82,6 @@ function getNestedObject(
     }
     current = current[segment] as TranslationRecord
   }
-
   return current
 }
 
@@ -89,10 +89,8 @@ function getStringValue(obj: TranslationRecord, path: string[]): string | undefi
   if (path.length === 0) {
     return
   }
-
   const parent = getNestedObject(obj, path.slice(0, -1))
   const value = parent?.[path[path.length - 1]]
-
   return typeof value === 'string' ? value : undefined
 }
 
@@ -100,7 +98,6 @@ function setStringValue(obj: TranslationRecord, path: string[], value: string): 
   if (path.length === 0) {
     return
   }
-
   const parent = getNestedObject(obj, path.slice(0, -1), true)!
   parent[path[path.length - 1]] = value
 }
@@ -113,27 +110,21 @@ function processTranslationValue(
   parents: Record<Locale, TranslationRecord>,
   existingParents: Record<Locale, TranslationRecord | undefined>,
   otherLocales: Locale[],
-  ruleName: string,
 ): void {
   if (typeof value === 'string') {
     const trimmedValue = value.trim()
     const existingFRValue = getStringValue(existingParents.fr ?? {}, path)
-
     if (!existingFRValue) {
-      // New key
       setStringValue(parents.fr, path, trimmedValue)
       for (const locale of otherLocales) {
         setStringValue(parents[locale], path, `${TO_TRANSLATE_PREFIX} ${trimmedValue}`)
       }
     } else if (existingFRValue !== trimmedValue) {
-      // Updated key
-      console.log(`Updated translation for ${ruleName}.${path.join('.')}: "${existingFRValue}" -> "${trimmedValue}"`)
       setStringValue(parents.fr, path, trimmedValue)
       for (const locale of otherLocales) {
         setStringValue(parents[locale], path, `${UPDATED_PREFIX} ${trimmedValue}`)
       }
     } else {
-      // Keep existing translations
       setStringValue(parents.fr, path, existingFRValue)
       for (const locale of otherLocales) {
         const existingValue = getStringValue(existingParents[locale] ?? {}, path)
@@ -141,9 +132,8 @@ function processTranslationValue(
       }
     }
   } else {
-    // Record<string, string> - iterate over each entry
     for (const [subKey, subValue] of Object.entries(value)) {
-      processTranslationValue(subValue, [...path, subKey], parents, existingParents, otherLocales, ruleName)
+      processTranslationValue(subValue, [...path, subKey], parents, existingParents, otherLocales)
     }
   }
 }
@@ -155,55 +145,82 @@ function buildTranslationsFromRules(
   const updated: Record<Locale, TranslationRecord> = Object.fromEntries(
     LOCALES.map((locale) => [locale, {}]),
   ) as Record<Locale, TranslationRecord>
-
   const otherLocales = LOCALES.filter((l) => l !== 'fr')
-
   for (const [ruleName, translationKeys] of Object.entries(extractedTranslations)) {
     const nameSpaces = ruleName.split(' . ')
     const parentPath = nameSpaces.slice(0, -1)
     const lastNameSpace = nameSpaces[nameSpaces.length - 1]
-
     const parents: Record<Locale, TranslationRecord> = {} as Record<Locale, TranslationRecord>
     const existingParents: Record<Locale, TranslationRecord | undefined> = {} as Record<
       Locale,
       TranslationRecord | undefined
     >
-
     for (const locale of LOCALES) {
       parents[locale] = getNestedObject(updated[locale], parentPath, true)!
       existingParents[locale] = getNestedObject(existingTranslations[locale], parentPath)
       parents[locale][lastNameSpace] = {}
     }
-
     for (const [key, value] of Object.entries(translationKeys)) {
-      processTranslationValue(value, [lastNameSpace, key], parents, existingParents, otherLocales, ruleName)
+      processTranslationValue(value, [lastNameSpace, key], parents, existingParents, otherLocales)
     }
   }
-
   return updated
+}
+
+function buildUnitsFromTranslations(
+  unitsSet: Set<string>,
+  existingUnits: Record<Locale, TranslationRecord>,
+): Record<Locale, Record<string, string>> {
+  const unitsByLocale: Record<Locale, Record<string, string>> = Object.fromEntries(
+    LOCALES.map((locale) => [locale, {}]),
+  ) as Record<Locale, Record<string, string>>
+
+  // FR: valeur brute
+  for (const unit of unitsSet) {
+    unitsByLocale.fr[unit] = unit
+  }
+  for (const locale of LOCALES) {
+    if (locale === 'fr') continue
+    for (const unit of unitsSet) {
+      const prev = existingUnits[locale]?.[unit]
+      if (!prev || typeof prev !== 'string') {
+        unitsByLocale[locale][unit] = `${TO_TRANSLATE_PREFIX} ${unit}`
+      } else if (prev.replace(/^\[.*?\]\s*/, '') !== unit) {
+        unitsByLocale[locale][unit] = `${UPDATED_PREFIX} ${unit}`
+      } else {
+        unitsByLocale[locale][unit] = prev
+      }
+    }
+  }
+  return unitsByLocale
 }
 
 async function generateNestedTranslationFile(): Promise<void> {
   const rules = await loadRulesForModel(model as Model)
   const engine = new Engine(rules)
-
   const translations = {} as Record<Locale, TranslationRecord>
   const existingRules = {} as Record<Locale, TranslationRecord>
+  const existingUnits = {} as Record<Locale, TranslationRecord>
 
   for (const locale of LOCALES) {
     translations[locale] = loadTranslation(locale, model as Model)
     existingRules[locale] = (translations[locale]['publicodes-rules'] ?? {}) as TranslationRecord
+    existingUnits[locale] = (translations[locale]['publicodes-units'] ?? {}) as TranslationRecord
   }
 
-  const extractedTranslations = extractTranslationKeysFromRules(engine, rules)
-
+  const unitsSet = new Set<string>()
+  const extractedTranslations = extractTranslationKeysFromRules(engine, rules, unitsSet)
+  const unitsByLocale = buildUnitsFromTranslations(unitsSet, existingUnits)
   const updated = buildTranslationsFromRules(extractedTranslations, existingRules)
 
   for (const locale of LOCALES) {
     removeEmptyObjects(updated[locale])
-    await saveTranslation(locale, model as Model, { ...translations[locale], 'publicodes-rules': updated[locale] })
+    await saveTranslation(locale, model as Model, {
+      ...translations[locale],
+      'publicodes-units': unitsByLocale[locale],
+      'publicodes-rules': updated[locale],
+    })
   }
-
   console.log('Translation files updated successfully.')
 }
 

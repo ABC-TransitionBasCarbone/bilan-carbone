@@ -2,35 +2,28 @@
   "publicodes-rules": {
     "général": {
       "nombre séances": {
-        "question": "[TO_TRANSLATE] Nombre de séances",
-        "unité": "[TO_TRANSLATE] séance"
+        "question": "[TO_TRANSLATE] Nombre de séances"
       },
       "nombre entrées": {
-        "question": "[TO_TRANSLATE] Nombre d'entrées",
-        "unité": "[TO_TRANSLATE] entrée"
+        "question": "[TO_TRANSLATE] Nombre d'entrées"
       },
       "nombre de jours ouverture": {
-        "question": "[TO_TRANSLATE] Nombre de jours d'ouverture",
-        "unité": "[TO_TRANSLATE] jour"
+        "question": "[TO_TRANSLATE] Nombre de jours d'ouverture"
       },
       "nombre de films programmés": {
-        "question": "[TO_TRANSLATE] Nombre de films programmés",
-        "unité": "[TO_TRANSLATE] film"
+        "question": "[TO_TRANSLATE] Nombre de films programmés"
       },
       "distance depuis paris": {
-        "question": "[TO_TRANSLATE] Distance depuis Paris",
-        "unité": "[TO_TRANSLATE] km"
+        "question": "[TO_TRANSLATE] Distance depuis Paris"
       },
       "nombre écrans": {
-        "question": "[TO_TRANSLATE] Nombre d'écrans / salles",
-        "unité": "[TO_TRANSLATE] écran"
+        "question": "[TO_TRANSLATE] Nombre d'écrans / salles"
       }
     },
     "tournées avant premières": {
       "équipes reçues": {
         "nombre équipes": {
-          "question": "[TO_TRANSLATE] Combien d'équipes de films avez-vous reçues en 2025 ?",
-          "unité": "[TO_TRANSLATE] équipe"
+          "question": "[TO_TRANSLATE] Combien d'équipes de films avez-vous reçues en 2025 ?"
         }
       }
     },
@@ -38,16 +31,14 @@
       "autre matériel": {
         "lunettes 3D": {
           "nombre": {
-            "question": "[TO_TRANSLATE] De combien de lunettes 3D disposez-vous ?",
-            "unité": "[TO_TRANSLATE] unité"
+            "question": "[TO_TRANSLATE] De combien de lunettes 3D disposez-vous ?"
           }
         }
       },
       "matériel technique": {
         "salles": {
           "titre": "[TO_TRANSLATE] Salles",
-          "question": "[TO_TRANSLATE] Décrivez les différentes salles du cinéma",
-          "unité": "[TO_TRANSLATE] kgCO2e"
+          "question": "[TO_TRANSLATE] Décrivez les différentes salles du cinéma"
         },
         "salle": {
           "nom": {
@@ -71,8 +62,7 @@
               "question": "[TO_TRANSLATE] Année d'acquisition écran"
             },
             "surface écran": {
-              "question": "[TO_TRANSLATE] Surface de l'écran",
-              "unité": "[TO_TRANSLATE] m2"
+              "question": "[TO_TRANSLATE] Surface de l'écran"
             },
             "type": {
               "titre": "[TO_TRANSLATE] Type d'écran",
@@ -120,14 +110,12 @@
         },
         "cloud": {
           "stockage": {
-            "question": "[TO_TRANSLATE] Combien de données stockez-vous dans un cloud externe ?",
-            "unité": "[TO_TRANSLATE] Go"
+            "question": "[TO_TRANSLATE] Combien de données stockez-vous dans un cloud externe ?"
           }
         },
         "disques durs": {
           "nombre": {
-            "question": "[TO_TRANSLATE] De combien de disques durs disposez-vous ?",
-            "unité": "[TO_TRANSLATE] unité"
+            "question": "[TO_TRANSLATE] De combien de disques durs disposez-vous ?"
           }
         },
         "films": {
@@ -143,80 +131,67 @@
         "empreinte": {
           "RER et transilien": {
             "distance": {
-              "question": "[TO_TRANSLATE] Distance (km)",
-              "unité": "[TO_TRANSLATE] km"
+              "question": "[TO_TRANSLATE] Distance (km)"
             }
           },
           "métro ou tram": {
             "distance": {
-              "question": "[TO_TRANSLATE] Distance (km)",
-              "unité": "[TO_TRANSLATE] km"
+              "question": "[TO_TRANSLATE] Distance (km)"
             }
           },
           "bus": {
             "distance": {
-              "question": "[TO_TRANSLATE] Distance (km)",
-              "unité": "[TO_TRANSLATE] km"
+              "question": "[TO_TRANSLATE] Distance (km)"
             }
           },
           "vélo électrique": {
             "distance": {
-              "question": "[TO_TRANSLATE] Distance (km)",
-              "unité": "[TO_TRANSLATE] km"
+              "question": "[TO_TRANSLATE] Distance (km)"
             }
           },
           "vélo classique": {
             "distance": {
-              "question": "[TO_TRANSLATE] Distance (km)",
-              "unité": "[TO_TRANSLATE] km"
+              "question": "[TO_TRANSLATE] Distance (km)"
             }
           },
           "marche": {
             "distance": {
-              "question": "[TO_TRANSLATE] Distance (km)",
-              "unité": "[TO_TRANSLATE] km"
+              "question": "[TO_TRANSLATE] Distance (km)"
             }
           },
           "voiture diesel": {
             "distance": {
-              "question": "[TO_TRANSLATE] Distance (km)",
-              "unité": "[TO_TRANSLATE] km"
+              "question": "[TO_TRANSLATE] Distance (km)"
             }
           },
           "voiture essence": {
             "distance": {
-              "question": "[TO_TRANSLATE] Distance (km)",
-              "unité": "[TO_TRANSLATE] km"
+              "question": "[TO_TRANSLATE] Distance (km)"
             }
           },
           "voiture hybride": {
             "distance": {
-              "question": "[TO_TRANSLATE] Distance (km)",
-              "unité": "[TO_TRANSLATE] km"
+              "question": "[TO_TRANSLATE] Distance (km)"
             }
           },
           "voiture électrique": {
             "distance": {
-              "question": "[TO_TRANSLATE] Distance (km)",
-              "unité": "[TO_TRANSLATE] km"
+              "question": "[TO_TRANSLATE] Distance (km)"
             }
           },
           "moto": {
             "distance": {
-              "question": "[TO_TRANSLATE] Distance (km)",
-              "unité": "[TO_TRANSLATE] km"
+              "question": "[TO_TRANSLATE] Distance (km)"
             }
           },
           "scooter": {
             "distance": {
-              "question": "[TO_TRANSLATE] Distance (km)",
-              "unité": "[TO_TRANSLATE] km"
+              "question": "[TO_TRANSLATE] Distance (km)"
             }
           },
           "trottinette électrique": {
             "distance": {
-              "question": "[TO_TRANSLATE] Distance (km)",
-              "unité": "[TO_TRANSLATE] km"
+              "question": "[TO_TRANSLATE] Distance (km)"
             }
           }
         }
@@ -259,21 +234,18 @@
       "équipe": {
         "collaborateurs": {
           "titre": "[TO_TRANSLATE] Collaborateurs",
-          "question": "[TO_TRANSLATE] Quel est le rythme de travail des collaborateurs du cinéma ?",
-          "unité": "[TO_TRANSLATE] kgCO2e"
+          "question": "[TO_TRANSLATE] Quel est le rythme de travail des collaborateurs du cinéma ?"
         },
         "collaborateur type": {
           "nom": {
             "question": "[TO_TRANSLATE] Libellé"
           },
           "nombre de jours par semaine": {
-            "question": "[TO_TRANSLATE] Nombre de jours / semaine",
-            "unité": "[TO_TRANSLATE] jour/semaine"
+            "question": "[TO_TRANSLATE] Nombre de jours / semaine"
           },
           "transport": {
             "distance": {
-              "question": "[TO_TRANSLATE] Distance domicile travail (aller-retour)",
-              "unité": "[TO_TRANSLATE] km/jour"
+              "question": "[TO_TRANSLATE] Distance domicile travail (aller-retour)"
             },
             "moyen de transport": {
               "question": "[TO_TRANSLATE] Moyen de transport",
@@ -299,38 +271,32 @@
       "énergie": {
         "électricité": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Combien de kWh d'électricité ont étés consommés par le cinéma cette année ?",
-            "unité": "[TO_TRANSLATE] kWh"
+            "question": "[TO_TRANSLATE] Combien de kWh d'électricité ont étés consommés par le cinéma cette année ?"
           }
         },
         "gaz": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Combien de m³ de gaz ont étés consommés par le cinéma cette année ?",
-            "unité": "[TO_TRANSLATE] m3"
+            "question": "[TO_TRANSLATE] Combien de m³ de gaz ont étés consommés par le cinéma cette année ?"
           }
         },
         "fioul": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Combien de litres de fioul ont étés consommés par le cinéma cette année ?",
-            "unité": "[TO_TRANSLATE] litre"
+            "question": "[TO_TRANSLATE] Combien de litres de fioul ont étés consommés par le cinéma cette année ?"
           }
         },
         "réseau de chaleur": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Combien de KWh issus de réseau de chaleur ont été consommés par le cinéma cette année ?",
-            "unité": "[TO_TRANSLATE] kWh"
+            "question": "[TO_TRANSLATE] Combien de KWh issus de réseau de chaleur ont été consommés par le cinéma cette année ?"
           }
         },
         "réseau de froid": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Combien de KWh issus de réseau de froid ont été consommés par le cinéma cette année ?",
-            "unité": "[TO_TRANSLATE] kWh"
+            "question": "[TO_TRANSLATE] Combien de KWh issus de réseau de froid ont été consommés par le cinéma cette année ?"
           }
         },
         "granulés": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Combien de kWh issus de la combustion de granulés de bois ont étés consommés par le cinéma cette année ?",
-            "unité": "[TO_TRANSLATE] kg"
+            "question": "[TO_TRANSLATE] Combien de kWh issus de la combustion de granulés de bois ont étés consommés par le cinéma cette année ?"
           }
         },
         "est équipé climatisation": {
@@ -338,8 +304,7 @@
         },
         "groupes électrogènes": {
           "consommation": {
-            "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de diesel ?",
-            "unité": "[TO_TRANSLATE] litre"
+            "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de diesel ?"
           }
         },
         "équipement groupes électrogènes": {
@@ -355,8 +320,7 @@
         "déplacements": {
           "titre": "[TO_TRANSLATE] Déplacements",
           "description": "[TO_TRANSLATE] Les déplacements professionnels de vos collaborateurs sont tous les déplacements autres que les déplacements domicile-travail, effectués dans le cadre du travail. Ceux-ci incluent par exemple les déplacements pour se rendre à des congrès, conventions, festivals, prévisionnages, etc.",
-          "question": "[TO_TRANSLATE] Décrivez les déplacements professionnels de vos collaborateurs",
-          "unité": "[TO_TRANSLATE] kgCO2e"
+          "question": "[TO_TRANSLATE] Décrivez les déplacements professionnels de vos collaborateurs"
         },
         "déplacement type": {
           "nom": {
@@ -369,13 +333,11 @@
             "question": "[TO_TRANSLATE] Nombre d'occurrences"
           },
           "nombre de nuitées": {
-            "question": "[TO_TRANSLATE] Nombre de nuitées",
-            "unité": "[TO_TRANSLATE] nuitée"
+            "question": "[TO_TRANSLATE] Nombre de nuitées"
           },
           "transport": {
             "distance": {
-              "question": "[TO_TRANSLATE] Distance \"aller-retour\"",
-              "unité": "[TO_TRANSLATE] km"
+              "question": "[TO_TRANSLATE] Distance \"aller-retour\""
             },
             "moyen de transport": {
               "question": "[TO_TRANSLATE] Moyen de transport",
@@ -415,8 +377,7 @@
             "question": "[TO_TRANSLATE] Quand le bâtiment a-t-il été construit ?"
           },
           "surface": {
-            "question": "[TO_TRANSLATE] Quelle est la surface plancher du cinéma ? (La somme des surfaces des différents niveaux)",
-            "unité": "[TO_TRANSLATE] m2"
+            "question": "[TO_TRANSLATE] Quelle est la surface plancher du cinéma ? (La somme des surfaces des différents niveaux)"
           }
         },
         "rénovation": {
@@ -436,21 +397,18 @@
           },
           "empreinte travaux": {
             "montant": {
-              "question": "[TO_TRANSLATE] Dans le cas d'une rénovation durant ces 10 dernières années, quel est le montant des dépenses liées à ces travaux de rénovation ?",
-              "unité": "[TO_TRANSLATE] €"
+              "question": "[TO_TRANSLATE] Dans le cas d'une rénovation durant ces 10 dernières années, quel est le montant des dépenses liées à ces travaux de rénovation ?"
             }
           },
           "empreinte extension": {
             "surface": {
-              "question": "[TO_TRANSLATE] Dans le cas d'un agrandissement durant ces 10 dernières années, quelle est la surface supplémentaire ajoutée ?",
-              "unité": "[TO_TRANSLATE] m2"
+              "question": "[TO_TRANSLATE] Dans le cas d'un agrandissement durant ces 10 dernières années, quelle est la surface supplémentaire ajoutée ?"
             }
           }
         },
         "autre activité": {
           "surface": {
-            "question": "[TO_TRANSLATE] Quelle est la surface totale du bâtiment (cinéma inclus) ?",
-            "unité": "[TO_TRANSLATE] m2"
+            "question": "[TO_TRANSLATE] Quelle est la surface totale du bâtiment (cinéma inclus) ?"
           }
         },
         "est partagé": {
@@ -458,8 +416,7 @@
         },
         "parking": {
           "nombre de places": {
-            "question": "[TO_TRANSLATE] Si oui, de combien de places ?",
-            "unité": "[TO_TRANSLATE] place"
+            "question": "[TO_TRANSLATE] Si oui, de combien de places ?"
           }
         },
         "parking présent": {
@@ -469,22 +426,19 @@
       "activités de bureau": {
         "petites fournitures": {
           "montant": {
-            "question": "[TO_TRANSLATE] Quel montant avez-vous dépensé en petites fournitures de bureau ? (Exemples: crayon, cartouche d’encre, papier hors programme, cahier, etc.)",
-            "unité": "[TO_TRANSLATE] €"
+            "question": "[TO_TRANSLATE] Quel montant avez-vous dépensé en petites fournitures de bureau ? (Exemples: crayon, cartouche d’encre, papier hors programme, cahier, etc.)"
           }
         },
         "services": {
           "montant": {
             "description": "[TO_TRANSLATE] Les services incluent par exemple les dépenses de ménage, sécurité, comptabilité, frais bancaires, etc. Vous pouvez utiliser une valeur par défaut pour cette réponse (25286€) qui est issue des Bilans Carbone® qui ont étés réalisés sur plusieurs cinémas français. Si vous détenez une information plus précise pour votre cinéma, nous vous invitons à l'utiliser plutôt que la valeur par défaut.",
-            "question": "[TO_TRANSLATE] Quel montant avez-vous dépensé en services ?",
-            "unité": "[TO_TRANSLATE] €"
+            "question": "[TO_TRANSLATE] Quel montant avez-vous dépensé en services ?"
           }
         },
         "informatique": {
           "titre": "[TO_TRANSLATE] Informatique",
           "description": "[TO_TRANSLATE] Si l'équipement concerné est acheté, merci de ne pas remplir le champ \"Durée de location\". Si l'équipement concerné est loué de manière ponctuelle, merci de ne pas remplir le champ \"Date d'achat\". Si vous louez un équipement pour de longues durées ou de manière continue, nous vous recommandons de le considérer comme acheté (à la date de la première année de location).",
           "question": "[TO_TRANSLATE] Pour chacun de ces équipements informatiques, veuillez indiquer leur nombre et leur date d'achat ou durée de location",
-          "unité": "[TO_TRANSLATE] kgCO2e",
           "appareil": {
             "nombre": {
               "question": "[TO_TRANSLATE] Nombre d'appareils"
@@ -493,8 +447,7 @@
               "question": "[TO_TRANSLATE] Année d'achat des appareils"
             },
             "durée location": {
-              "question": "[TO_TRANSLATE] Durée de location des appareils (jours à l'année)",
-              "unité": "[TO_TRANSLATE] jour"
+              "question": "[TO_TRANSLATE] Durée de location des appareils (jours à l'année)"
             }
           },
           "équipement": {
@@ -517,66 +470,54 @@
       "ordinaires": {
         "ordures ménagères": {
           "nombre bennes": {
-            "question": "[TO_TRANSLATE] Nombre de bennes",
-            "unité": "[TO_TRANSLATE] benne/ramassage"
+            "question": "[TO_TRANSLATE] Nombre de bennes"
           },
           "taille benne": {
             "description": "[TO_TRANSLATE] Capacité d'une benne à ordures ménagères.",
-            "question": "[TO_TRANSLATE] Taille de la benne",
-            "unité": "[TO_TRANSLATE] l/benne"
+            "question": "[TO_TRANSLATE] Taille de la benne"
           },
           "fréquence ramassage": {
             "description": "[TO_TRANSLATE] Fréquence de ramassage des ordures ménagères par semaine.",
-            "question": "[TO_TRANSLATE] Fréquence de ramassage",
-            "unité": "[TO_TRANSLATE] ramassage/semaine"
+            "question": "[TO_TRANSLATE] Fréquence de ramassage"
           }
         },
         "emballages et papier": {
           "nombre bennes": {
-            "question": "[TO_TRANSLATE] Nombre de bennes",
-            "unité": "[TO_TRANSLATE] benne/ramassage"
+            "question": "[TO_TRANSLATE] Nombre de bennes"
           },
           "taille benne": {
             "description": "[TO_TRANSLATE] Capacité d'une benne à ordures ménagères.",
-            "question": "[TO_TRANSLATE] Taille de la benne",
-            "unité": "[TO_TRANSLATE] l/benne"
+            "question": "[TO_TRANSLATE] Taille de la benne"
           },
           "fréquence ramassage": {
             "description": "[TO_TRANSLATE] Fréquence de ramassage des ordures ménagères par semaine.",
-            "question": "[TO_TRANSLATE] Fréquence de ramassage",
-            "unité": "[TO_TRANSLATE] ramassage/semaine"
+            "question": "[TO_TRANSLATE] Fréquence de ramassage"
           }
         },
         "biodéchets": {
           "nombre bennes": {
-            "question": "[TO_TRANSLATE] Nombre de bennes",
-            "unité": "[TO_TRANSLATE] benne/ramassage"
+            "question": "[TO_TRANSLATE] Nombre de bennes"
           },
           "taille benne": {
             "description": "[TO_TRANSLATE] Capacité d'une benne à ordures ménagères.",
-            "question": "[TO_TRANSLATE] Taille de la benne",
-            "unité": "[TO_TRANSLATE] l/benne"
+            "question": "[TO_TRANSLATE] Taille de la benne"
           },
           "fréquence ramassage": {
             "description": "[TO_TRANSLATE] Fréquence de ramassage des ordures ménagères par semaine.",
-            "question": "[TO_TRANSLATE] Fréquence de ramassage",
-            "unité": "[TO_TRANSLATE] ramassage/semaine"
+            "question": "[TO_TRANSLATE] Fréquence de ramassage"
           }
         },
         "verre": {
           "nombre bennes": {
-            "question": "[TO_TRANSLATE] Nombre de bennes",
-            "unité": "[TO_TRANSLATE] benne/ramassage"
+            "question": "[TO_TRANSLATE] Nombre de bennes"
           },
           "taille benne": {
             "description": "[TO_TRANSLATE] Capacité d'une benne à ordures ménagères.",
-            "question": "[TO_TRANSLATE] Taille de la benne",
-            "unité": "[TO_TRANSLATE] l/benne"
+            "question": "[TO_TRANSLATE] Taille de la benne"
           },
           "fréquence ramassage": {
             "description": "[TO_TRANSLATE] Fréquence de ramassage des ordures ménagères par semaine.",
-            "question": "[TO_TRANSLATE] Fréquence de ramassage",
-            "unité": "[TO_TRANSLATE] ramassage/semaine"
+            "question": "[TO_TRANSLATE] Fréquence de ramassage"
           }
         }
       },
@@ -584,14 +525,12 @@
         "lampe xenon": {
           "nombre": {
             "titre": "[TO_TRANSLATE] Nombre de lampes",
-            "question": "[TO_TRANSLATE] Quelle quantité de lampes Xenon avez vous jeté cette année ?",
-            "unité": "[TO_TRANSLATE] unité"
+            "question": "[TO_TRANSLATE] Quelle quantité de lampes Xenon avez vous jeté cette année ?"
           }
         },
         "matériel technique": {
           "quantité": {
-            "question": "[TO_TRANSLATE] Quelle quantité de matériel technique avez vous jeté cette année ?",
-            "unité": "[TO_TRANSLATE] kg"
+            "question": "[TO_TRANSLATE] Quelle quantité de matériel technique avez vous jeté cette année ?"
           }
         }
       }
@@ -600,25 +539,21 @@
       "électroménager": {
         "appareil": {
           "nb appareils": {
-            "question": "[TO_TRANSLATE] Nombre d'appareils",
-            "unité": "[TO_TRANSLATE] unité"
+            "question": "[TO_TRANSLATE] Nombre d'appareils"
           },
           "année achat": {
             "question": "[TO_TRANSLATE] Année d'achat des appareils"
           },
           "durée location": {
-            "question": "[TO_TRANSLATE] Durée de location des appareils (jours à l'année)",
-            "unité": "[TO_TRANSLATE] jour"
+            "question": "[TO_TRANSLATE] Durée de location des appareils (jours à l'année)"
           }
         },
         "réfrigérateurs": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de réfrigérateurs",
-            "unité": "[TO_TRANSLATE] unité"
+            "question": "[TO_TRANSLATE] Nombre de réfrigérateurs"
           },
           "durée location": {
-            "question": "[TO_TRANSLATE] Durée de location des réfrigérateurs (jours à l'année)",
-            "unité": "[TO_TRANSLATE] jour"
+            "question": "[TO_TRANSLATE] Durée de location des réfrigérateurs (jours à l'année)"
           },
           "année achat": {
             "question": "[TO_TRANSLATE] Année d'achat des réfrigérateurs"
@@ -626,12 +561,10 @@
         },
         "congélateurs": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de congélateurs",
-            "unité": "[TO_TRANSLATE] unité"
+            "question": "[TO_TRANSLATE] Nombre de congélateurs"
           },
           "durée location": {
-            "question": "[TO_TRANSLATE] Durée de location des congélateurs (jours à l'année)",
-            "unité": "[TO_TRANSLATE] jour"
+            "question": "[TO_TRANSLATE] Durée de location des congélateurs (jours à l'année)"
           },
           "année achat": {
             "question": "[TO_TRANSLATE] Année d'achat des congélateurs"
@@ -639,12 +572,10 @@
         },
         "warmers": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de warmers",
-            "unité": "[TO_TRANSLATE] unité"
+            "question": "[TO_TRANSLATE] Nombre de warmers"
           },
           "durée location": {
-            "question": "[TO_TRANSLATE] Durée de location des warmers (jours à l'année)",
-            "unité": "[TO_TRANSLATE] jour"
+            "question": "[TO_TRANSLATE] Durée de location des warmers (jours à l'année)"
           },
           "année achat": {
             "question": "[TO_TRANSLATE] Année d'achat des warmers"
@@ -652,12 +583,10 @@
         },
         "distributeurs": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Nombre de distributeurs snack et boissons",
-            "unité": "[TO_TRANSLATE] unité"
+            "question": "[TO_TRANSLATE] Nombre de distributeurs snack et boissons"
           },
           "durée location": {
-            "question": "[TO_TRANSLATE] Durée de location des distributeurs snack et boissons (jours à l'année)",
-            "unité": "[TO_TRANSLATE] jour"
+            "question": "[TO_TRANSLATE] Durée de location des distributeurs snack et boissons (jours à l'année)"
           },
           "année achat": {
             "question": "[TO_TRANSLATE] Année d'achat des distributeurs snack et boissons"
@@ -666,8 +595,7 @@
       },
       "fret": {
         "distance": {
-          "question": "[TO_TRANSLATE] Quelle est la distance entre votre cinéma et votre principal fournisseur ?",
-          "unité": "[TO_TRANSLATE] km"
+          "question": "[TO_TRANSLATE] Quelle est la distance entre votre cinéma et votre principal fournisseur ?"
         }
       },
       "achats": {
@@ -690,28 +618,24 @@
         "affiches": {
           "affiches 120x160": {
             "nombre": {
-              "question": "[TO_TRANSLATE] Quantité",
-              "unité": "[TO_TRANSLATE] unité/semaine"
+              "question": "[TO_TRANSLATE] Quantité"
             }
           },
           "affiches 40x60": {
             "nombre": {
-              "question": "[TO_TRANSLATE] Quantité",
-              "unité": "[TO_TRANSLATE] unité/semaine"
+              "question": "[TO_TRANSLATE] Quantité"
             }
           }
         },
         "PLV": {
           "PLV comptoir": {
             "nombre": {
-              "question": "[TO_TRANSLATE] Quantité",
-              "unité": "[TO_TRANSLATE] unité/mois"
+              "question": "[TO_TRANSLATE] Quantité"
             }
           },
           "PLV grand format": {
             "nombre": {
-              "question": "[TO_TRANSLATE] Quantité",
-              "unité": "[TO_TRANSLATE] unité/mois"
+              "question": "[TO_TRANSLATE] Quantité"
             }
           }
         }
@@ -720,20 +644,17 @@
         "production": {
           "programme": {
             "nombre": {
-              "question": "[TO_TRANSLATE] Quantité",
-              "unité": "[TO_TRANSLATE] unité/mois"
+              "question": "[TO_TRANSLATE] Quantité"
             }
           },
           "affiches": {
             "nombre": {
-              "question": "[TO_TRANSLATE] Quantité",
-              "unité": "[TO_TRANSLATE] unité/mois"
+              "question": "[TO_TRANSLATE] Quantité"
             }
           },
           "flyers": {
             "nombre": {
-              "question": "[TO_TRANSLATE] Quantité",
-              "unité": "[TO_TRANSLATE] unité/mois"
+              "question": "[TO_TRANSLATE] Quantité"
             }
           }
         }
@@ -741,47 +662,69 @@
       "communication digitale": {
         "newsletters": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de newsletters ont été envoyées cette annnée ?",
-            "unité": "[TO_TRANSLATE] newsletter/personne"
+            "question": "[TO_TRANSLATE] Combien de newsletters ont été envoyées cette annnée ?"
           },
           "destinataires": {
-            "question": "[TO_TRANSLATE] En moyenne, à combien de personnes sont adressées ces newsletters ?",
-            "unité": "[TO_TRANSLATE] personne"
+            "question": "[TO_TRANSLATE] En moyenne, à combien de personnes sont adressées ces newsletters ?"
           }
         },
         "affichage dynamique": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de caissons d’affichage dynamique sont présents dans le cinéma ?",
-            "unité": "[TO_TRANSLATE] unité"
+            "question": "[TO_TRANSLATE] Combien de caissons d’affichage dynamique sont présents dans le cinéma ?"
           }
         },
         "écrans": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien d’écrans se trouvent dans les espaces de circulation ?",
-            "unité": "[TO_TRANSLATE] unité"
+            "question": "[TO_TRANSLATE] Combien d’écrans se trouvent dans les espaces de circulation ?"
           }
         },
         "affichage extérieur": {
           "surface": {
-            "question": "[TO_TRANSLATE] Si le cinéma dispose d'un affichage extérieur, quelle est sa surface ?",
-            "unité": "[TO_TRANSLATE] m2"
+            "question": "[TO_TRANSLATE] Si le cinéma dispose d'un affichage extérieur, quelle est sa surface ?"
           }
         }
       },
       "caisses et bornes": {
         "caisses libre service": {
           "nombre": {
-            "question": "[TO_TRANSLATE] De combien de bornes de caisse libre-service dispose le cinéma ?",
-            "unité": "[TO_TRANSLATE] unité"
+            "question": "[TO_TRANSLATE] De combien de bornes de caisse libre-service dispose le cinéma ?"
           }
         },
         "caisse classique": {
           "nombre": {
-            "question": "[TO_TRANSLATE] De combien de systèmes de caisse classique dispose le cinéma ?",
-            "unité": "[TO_TRANSLATE] unité"
+            "question": "[TO_TRANSLATE] De combien de systèmes de caisse classique dispose le cinéma ?"
           }
         }
       }
     }
+  },
+  "publicodes-units": {
+    "séance": "[TO_TRANSLATE] séance",
+    "entrée": "[TO_TRANSLATE] entrée",
+    "jour": "[TO_TRANSLATE] jour",
+    "film": "[TO_TRANSLATE] film",
+    "km": "[TO_TRANSLATE] km",
+    "écran": "[TO_TRANSLATE] écran",
+    "équipe": "[TO_TRANSLATE] équipe",
+    "unité": "[TO_TRANSLATE] unité",
+    "kgCO2e": "[TO_TRANSLATE] kgCO2e",
+    "m2": "[TO_TRANSLATE] m2",
+    "Go": "[TO_TRANSLATE] Go",
+    "jour/semaine": "[TO_TRANSLATE] jour/semaine",
+    "km/jour": "[TO_TRANSLATE] km/jour",
+    "kWh": "[TO_TRANSLATE] kWh",
+    "m3": "[TO_TRANSLATE] m3",
+    "litre": "[TO_TRANSLATE] litre",
+    "kg": "[TO_TRANSLATE] kg",
+    "nuitée": "[TO_TRANSLATE] nuitée",
+    "€": "[TO_TRANSLATE] €",
+    "place": "[TO_TRANSLATE] place",
+    "benne/ramassage": "[TO_TRANSLATE] benne/ramassage",
+    "l/benne": "[TO_TRANSLATE] l/benne",
+    "ramassage/semaine": "[TO_TRANSLATE] ramassage/semaine",
+    "unité/semaine": "[TO_TRANSLATE] unité/semaine",
+    "unité/mois": "[TO_TRANSLATE] unité/mois",
+    "newsletter/personne": "[TO_TRANSLATE] newsletter/personne",
+    "personne": "[TO_TRANSLATE] personne"
   }
 }

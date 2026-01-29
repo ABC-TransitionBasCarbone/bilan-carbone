@@ -9,6 +9,11 @@ export function usePublicodesTranslation() {
   }
 }
 
+export function usePublicodesUnitTranslation(unit: string | undefined): string | undefined {
+  const tUnits = useTranslations('publicodes-units')
+  return unit && tUnits.has(unit) ? tUnits(unit) : unit
+}
+
 export function usePublicodesRuleTranslation(ruleName: string) {
   const ruleKey = normalizeRuleName(ruleName)
   const tCommon = useTranslations('common')
@@ -18,7 +23,6 @@ export function usePublicodesRuleTranslation(ruleName: string) {
   return {
     question: tRules(`${ruleKey}.question`),
     description: tRules.has(`${ruleKey}.description`) ? tRules(`${ruleKey}.description`) : undefined,
-    unit: tRules.has(`${ruleKey}.unité`) ? tRules(`${ruleKey}.unité`) : undefined,
     getOptionLabel: (value: string | boolean | number): string =>
       typeof value === 'boolean' ? tCommon(value ? 'yes' : 'no') : tOptions(String(value)),
   }

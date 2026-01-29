@@ -2,80 +2,66 @@
   "publicodes-rules": {
     "général": {
       "nombre étudiant": {
-        "question": "Nombre d'étudiants",
-        "unité": "étudiant"
+        "question": "Nombre d'étudiants"
       },
       "nombre personnel": {
-        "question": "Nombre de personnel (enseignants et non enseignants)",
-        "unité": "personne"
+        "question": "Nombre de personnel (enseignants et non enseignants)"
       },
       "année de construction": {
-        "question": "Année de construction du bâtiment principal",
-        "unité": "année"
+        "question": "Année de construction du bâtiment principal"
       },
       "année de rénovation": {
-        "question": "Année de rénovation du bâtiment principal",
-        "unité": "année"
+        "question": "Année de rénovation du bâtiment principal"
       }
     },
     "énergie": {
       "électricité": {
         "consommation": {
-          "question": "Consommation annuelle d'électricité",
-          "unité": "kWh"
+          "question": "Consommation annuelle d'électricité"
         },
         "FE": {
-          "question": "Facteur d'émission de l'électricité",
-          "unité": "kgCO2e/kWh"
+          "question": "Facteur d'émission de l'électricité"
         }
       },
       "combustibles": {
         "fioul domestique": {
           "consommation": {
-            "question": "Consommation annuelle de fioul domestique",
-            "unité": "L"
+            "question": "Consommation annuelle de fioul domestique"
           }
         },
         "fioul lourd": {
           "consommation": {
-            "question": "Consommation annuelle de fioul lourd/commercial",
-            "unité": "L"
+            "question": "Consommation annuelle de fioul lourd/commercial"
           }
         },
         "gaz naturel": {
           "consommation": {
-            "question": "Consommation annuelle de gaz naturel",
-            "unité": "kWh"
+            "question": "Consommation annuelle de gaz naturel"
           }
         },
         "granulés de bois": {
           "consommation": {
-            "question": "Consommation annuelle de granulés de bois",
-            "unité": "kg"
+            "question": "Consommation annuelle de granulés de bois"
           }
         },
         "biopropane": {
           "consommation": {
-            "question": "Consommation annuelle de biopropane",
-            "unité": "kg"
+            "question": "Consommation annuelle de biopropane"
           }
         },
         "réseau de chaleur": {
           "consommation": {
-            "question": "Consommation annuelle de réseau de chaleur",
-            "unité": "kWh"
+            "question": "Consommation annuelle de réseau de chaleur"
           }
         }
       },
       "autres gaz": {
         "gaz hfc spécifique": {
           "consommation": {
-            "question": "Consommation annuelle de ce gaz HFC",
-            "unité": "kg"
+            "question": "Consommation annuelle de ce gaz HFC"
           },
           "PRG": {
-            "question": "Pouvoir de Réchauffement Global (PRG) du gaz HFC",
-            "unité": "kgCO2e/kg"
+            "question": "Pouvoir de Réchauffement Global (PRG) du gaz HFC"
           }
         }
       }
@@ -84,190 +70,155 @@
       "types de repas servis": {
         "moyen": {
           "nombre": {
-            "question": "Nombre de repas moyens annuels",
-            "unité": "repas"
+            "question": "Nombre de repas moyens annuels"
           },
           "FE": {
-            "question": "Facteur d'émission par repas moyen",
-            "unité": "kgCO2e/repas"
+            "question": "Facteur d'émission par repas moyen"
           }
         },
         "végétarien": {
           "nombre": {
-            "question": "Nombre de repas végétariens annuels",
-            "unité": "repas"
+            "question": "Nombre de repas végétariens annuels"
           },
           "FE": {
-            "question": "Facteur d'émission par repas végétarien",
-            "unité": "kgCO2e/repas"
+            "question": "Facteur d'émission par repas végétarien"
           }
         },
         "végétalien": {
           "nombre": {
-            "question": "Nombre de repas végétaliens annuels",
-            "unité": "repas"
+            "question": "Nombre de repas végétaliens annuels"
           },
           "FE": {
-            "question": "Facteur d'émission par repas végétalien",
-            "unité": "kgCO2e/repas"
+            "question": "Facteur d'émission par repas végétalien"
           }
         },
         "viande rouge": {
           "nombre": {
-            "question": "Nombre de repas à base de viande rouge annuels",
-            "unité": "repas"
+            "question": "Nombre de repas à base de viande rouge annuels"
           },
           "FE": {
-            "question": "Facteur d'émission par repas à base de viande rouge",
-            "unité": "kgCO2e/repas"
+            "question": "Facteur d'émission par repas à base de viande rouge"
           }
         },
         "viande blanche": {
           "nombre": {
-            "question": "Nombre de repas à base de viande blanche annuels",
-            "unité": "repas"
+            "question": "Nombre de repas à base de viande blanche annuels"
           },
           "FE": {
-            "question": "Facteur d'émission par repas à base de viande blanche",
-            "unité": "kgCO2e/repas"
+            "question": "Facteur d'émission par repas à base de viande blanche"
           }
         },
         "poisson": {
           "nombre": {
-            "question": "Nombre de repas à base de poisson blanc annuels",
-            "unité": "repas"
+            "question": "Nombre de repas à base de poisson blanc annuels"
           },
           "FE": {
-            "question": "Facteur d'émission par repas à base de poisson blanc",
-            "unité": "kgCO2e/repas"
+            "question": "Facteur d'émission par repas à base de poisson blanc"
           }
         }
       },
       "fret": {
         "routier": {
           "consommation": {
-            "question": "Distance parcourue en fret routier",
-            "unité": "t.km"
+            "question": "Distance parcourue en fret routier"
           }
         },
         "ferroviaire": {
           "consommation": {
-            "question": "Distance parcourue en fret ferroviaire",
-            "unité": "t.km"
+            "question": "Distance parcourue en fret ferroviaire"
           }
         },
         "maritime": {
           "consommation": {
-            "question": "Distance parcourue en fret maritime",
-            "unité": "t.km"
+            "question": "Distance parcourue en fret maritime"
           }
         }
       },
       "distributeur automatiques": {
         "bouteille d'eau": {
           "nombre": {
-            "question": "Nombre de bouteille d'eau consommées annuellement",
-            "unité": "bouteille"
+            "question": "Nombre de bouteille d'eau consommées annuellement"
           },
           "FE": {
-            "question": "Facteur d'émission par bouteille d'eau",
-            "unité": "kgCO2e/bouteille"
+            "question": "Facteur d'émission par bouteille d'eau"
           }
         },
         "soda": {
           "nombre": {
-            "question": "Nombre de sodas consommés annuellement",
-            "unité": "canette"
+            "question": "Nombre de sodas consommés annuellement"
           },
           "FE": {
-            "question": "Facteur d'émission par soda",
-            "unité": "kgCO2e/canette"
+            "question": "Facteur d'émission par soda"
           }
         },
         "biscuits": {
           "nombre": {
-            "question": "Nombre de paquets de biscuits consommés annuellement",
-            "unité": "paquet"
+            "question": "Nombre de paquets de biscuits consommés annuellement"
           },
           "FE": {
-            "question": "Facteur d'émission par paquet de biscuits",
-            "unité": "kgCO2e/paquet"
+            "question": "Facteur d'émission par paquet de biscuits"
           }
         },
         "paquet de chips": {
           "nombre": {
-            "question": "Nombre de paquets de chips consommés annuellement",
-            "unité": "paquet"
+            "question": "Nombre de paquets de chips consommés annuellement"
           },
           "FE": {
-            "question": "Facteur d'émission par paquet de chips",
-            "unité": "kgCO2e/paquet"
+            "question": "Facteur d'émission par paquet de chips"
           }
         },
         "café noir": {
           "nombre": {
-            "question": "Nombre de cafés noirs consommés annuellement",
-            "unité": "tasse"
+            "question": "Nombre de cafés noirs consommés annuellement"
           },
           "FE": {
-            "question": "Facteur d'émission par café noir",
-            "unité": "kgCO2e/tasse"
+            "question": "Facteur d'émission par café noir"
           }
         },
         "thé infusé": {
           "nombre": {
-            "question": "Nombre de thés infusés consommés annuellement",
-            "unité": "tasse"
+            "question": "Nombre de thés infusés consommés annuellement"
           },
           "FE": {
-            "question": "Facteur d'émission par thé infusé",
-            "unité": "kgCO2e/tasse"
+            "question": "Facteur d'émission par thé infusé"
           }
         },
         "sandwich pain de mie": {
           "nombre": {
-            "question": "Nombre de sandwichs pain de mie consommés annuellement",
-            "unité": "sandwich"
+            "question": "Nombre de sandwichs pain de mie consommés annuellement"
           },
           "FE": {
-            "question": "Facteur d'émission par sandwich pain de mie",
-            "unité": "kgCO2e/sandwich"
+            "question": "Facteur d'émission par sandwich pain de mie"
           }
         },
         "barre chocolatée": {
           "nombre": {
-            "question": "Nombre de barres chocolatées consommées annuellement",
-            "unité": "barre"
+            "question": "Nombre de barres chocolatées consommées annuellement"
           },
           "FE": {
-            "question": "Facteur d'émission par barre chocolatée",
-            "unité": "kgCO2e/barre"
+            "question": "Facteur d'émission par barre chocolatée"
           }
         }
       },
       "déchets organiques": {
         "biodéchets compostés": {
           "quantité": {
-            "question": "Quantité de biodéchets compostés",
-            "unité": "kg"
+            "question": "Quantité de biodéchets compostés"
           }
         },
         "biodéchets méthanisés": {
           "quantité": {
-            "question": "Quantité de biodéchets méthanisés",
-            "unité": "kg"
+            "question": "Quantité de biodéchets méthanisés"
           }
         },
         "biodéchets incinérés": {
           "quantité": {
-            "question": "Quantité de biodéchets incinérés",
-            "unité": "kg"
+            "question": "Quantité de biodéchets incinérés"
           }
         },
         "biodéchets enfouis": {
           "quantité": {
-            "question": "Quantité de biodéchets enfouis",
-            "unité": "kg"
+            "question": "Quantité de biodéchets enfouis"
           }
         }
       }
@@ -276,395 +227,474 @@
       "rénovation": {
         "bâtiment scolaire structure béton rénové": {
           "surface": {
-            "question": "Quelle surface de bâtiment scolaire (structure béton) avez-vous rénovée ?",
-            "unité": "m2"
+            "question": "Quelle surface de bâtiment scolaire (structure béton) avez-vous rénovée ?"
           },
           "FE": {
-            "question": "Facteur d'émission par m² de bâtiment scolaire rénové (structure béton)",
-            "unité": "kgCO2e/m2"
+            "question": "Facteur d'émission par m² de bâtiment scolaire rénové (structure béton)"
           }
         },
         "parking bâtiment structure béton rénové": {
           "surface": {
-            "question": "Quelle surface de parking (bâtiment - structure béton) avez-vous rénovée ?",
-            "unité": "m2"
+            "question": "Quelle surface de parking (bâtiment - structure béton) avez-vous rénovée ?"
           },
           "FE": {
-            "question": "Facteur d'émission par m² de parking rénové (bâtiment - structure béton)",
-            "unité": "kgCO2e/m2"
+            "question": "Facteur d'émission par m² de parking rénové (bâtiment - structure béton)"
           }
         },
         "parking surface bitume rénové": {
           "surface": {
-            "question": "Quelle surface de parking (surface bitume) avez-vous rénovée ?",
-            "unité": "m2"
+            "question": "Quelle surface de parking (surface bitume) avez-vous rénovée ?"
           },
           "FE": {
-            "question": "Facteur d'émission par m² de parking rénové (surface bitume)",
-            "unité": "kgCO2e/m2"
+            "question": "Facteur d'émission par m² de parking rénové (surface bitume)"
           }
         },
         "parking surface semi-dure rénové": {
           "surface": {
-            "question": "Quelle surface de parking (surface semi-dure) avez-vous rénovée ?",
-            "unité": "m2"
+            "question": "Quelle surface de parking (surface semi-dure) avez-vous rénovée ?"
           },
           "FE": {
-            "question": "Facteur d'émission par m² de parking rénové (surface semi-dure)",
-            "unité": "kgCO2e/m2"
+            "question": "Facteur d'émission par m² de parking rénové (surface semi-dure)"
           }
         },
         "garage structure béton rénové": {
           "surface": {
-            "question": "Quelle surface de garage (structure béton) avez-vous rénovée ?",
-            "unité": "m2"
+            "question": "Quelle surface de garage (structure béton) avez-vous rénovée ?"
           },
           "FE": {
-            "question": "Facteur d'émission par m² de garage rénové (structure béton)",
-            "unité": "kgCO2e/m2"
+            "question": "Facteur d'émission par m² de garage rénové (structure béton)"
           }
         },
         "garage structure métal rénové": {
           "surface": {
-            "question": "Quelle surface de garage (structure métal) avez-vous rénovée ?",
-            "unité": "m2"
+            "question": "Quelle surface de garage (structure métal) avez-vous rénovée ?"
           },
           "FE": {
-            "question": "Facteur d'émission par m² de garage rénové (structure métal)",
-            "unité": "kgCO2e/m2"
+            "question": "Facteur d'émission par m² de garage rénové (structure métal)"
           }
         }
       },
       "équipements informatique audiovisuel": {
         "ordinateur de bureau": {
           "nombre": {
-            "question": "Combien d'ordinateurs de bureau avez-vous achetés ?",
-            "unité": "unité"
+            "question": "Combien d'ordinateurs de bureau avez-vous achetés ?"
           },
           "FE": {
-            "question": "Facteur d'émission par ordinateur de bureau",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par ordinateur de bureau"
           }
         },
         "ordinateur portable": {
           "nombre": {
-            "question": "Combien d'ordinateurs portables avez-vous achetés ?",
-            "unité": "unité"
+            "question": "Combien d'ordinateurs portables avez-vous achetés ?"
           },
           "FE": {
-            "question": "Facteur d'émission par ordinateur portable",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par ordinateur portable"
           }
         },
         "tablette": {
           "nombre": {
-            "question": "Combien de tablettes avez-vous achetées ?",
-            "unité": "unité"
+            "question": "Combien de tablettes avez-vous achetées ?"
           },
           "FE": {
-            "question": "Facteur d'émission par tablette",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par tablette"
           }
         },
         "imprimante": {
           "nombre": {
-            "question": "Combien d'imprimantes avez-vous achetées ?",
-            "unité": "unité"
+            "question": "Combien d'imprimantes avez-vous achetées ?"
           },
           "FE": {
-            "question": "Facteur d'émission par imprimante",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par imprimante"
           }
         },
         "photocopieur": {
           "nombre": {
-            "question": "Combien de photocopieurs avez-vous achetés ?",
-            "unité": "unité"
+            "question": "Combien de photocopieurs avez-vous achetés ?"
           },
           "FE": {
-            "question": "Facteur d'émission par photocopieur",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par photocopieur"
           }
         },
         "vidéoprojecteur": {
           "nombre": {
-            "question": "Combien de vidéoprojecteurs avez-vous achetés ?",
-            "unité": "unité"
+            "question": "Combien de vidéoprojecteurs avez-vous achetés ?"
           },
           "FE": {
-            "question": "Facteur d'émission par vidéoprojecteur",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par vidéoprojecteur"
           }
         },
         "serveur informatique": {
           "nombre": {
-            "question": "Combien de serveurs informatiques avez-vous achetés ?",
-            "unité": "unité"
+            "question": "Combien de serveurs informatiques avez-vous achetés ?"
           },
           "FE": {
-            "question": "Facteur d'émission par serveur informatique",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par serveur informatique"
           }
         },
         "télévision 40-49 pouces": {
           "nombre": {
-            "question": "Combien de télévisions 40-49 pouces avez-vous achetées ?",
-            "unité": "unité"
+            "question": "Combien de télévisions 40-49 pouces avez-vous achetées ?"
           },
           "FE": {
-            "question": "Facteur d'émission par télévision 40-49 pouces",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par télévision 40-49 pouces"
           }
         },
         "rack de serveur": {
           "nombre": {
-            "question": "Combien de racks de serveur avez-vous achetés ?",
-            "unité": "unité"
+            "question": "Combien de racks de serveur avez-vous achetés ?"
           },
           "FE": {
-            "question": "Facteur d'émission par rack de serveur",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par rack de serveur"
           }
         },
         "télécommande universelle sans piles 80g": {
           "nombre": {
-            "question": "Combien de télécommandes universelles sans piles (80g) avez-vous achetées ?",
-            "unité": "unité"
+            "question": "Combien de télécommandes universelles sans piles (80g) avez-vous achetées ?"
           },
           "FE": {
-            "question": "Facteur d'émission par télécommande universelle sans piles 80g",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par télécommande universelle sans piles 80g"
           }
         },
         "stéréo classique": {
           "nombre": {
-            "question": "Combien de stéréos classiques avez-vous achetées ?",
-            "unité": "unité"
+            "question": "Combien de stéréos classiques avez-vous achetées ?"
           },
           "FE": {
-            "question": "Facteur d'émission par stéréo classique",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par stéréo classique"
           }
         },
         "enceinte Bluetooth": {
           "nombre": {
-            "question": "Combien d'enceintes Bluetooth avez-vous achetées ?",
-            "unité": "unité"
+            "question": "Combien d'enceintes Bluetooth avez-vous achetées ?"
           },
           "FE": {
-            "question": "Facteur d'émission par enceinte Bluetooth",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par enceinte Bluetooth"
           }
         },
         "smartphone 5 pouces": {
           "nombre": {
-            "question": "Combien de smartphones 5 pouces avez-vous achetés ?",
-            "unité": "unité"
+            "question": "Combien de smartphones 5 pouces avez-vous achetés ?"
           },
           "FE": {
-            "question": "Facteur d'émission par smartphone 5 pouces",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par smartphone 5 pouces"
           }
         },
         "écran 23,8 pouces": {
           "nombre": {
-            "question": "Combien d'écrans 23,8 pouces avez-vous achetés ?",
-            "unité": "unité"
+            "question": "Combien d'écrans 23,8 pouces avez-vous achetés ?"
           },
           "FE": {
-            "question": "Facteur d'émission par écran 23,8 pouces",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par écran 23,8 pouces"
           }
         }
       },
       "équipements divers": {
         "chaise de bureau": {
           "nombre": {
-            "question": "Combien de chaises de bureau avez-vous achetées ?",
-            "unité": "unité"
+            "question": "Combien de chaises de bureau avez-vous achetées ?"
           },
           "FE": {
-            "question": "Facteur d'émission par chaise de bureau",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par chaise de bureau"
           }
         },
         "table de réunion": {
           "nombre": {
-            "question": "Combien de tables de réunion avez-vous achetées ?",
-            "unité": "unité"
+            "question": "Combien de tables de réunion avez-vous achetées ?"
           },
           "FE": {
-            "question": "Facteur d'émission par table de réunion",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par table de réunion"
           }
         },
         "armoire de rangement": {
           "nombre": {
-            "question": "Combien d'armoires de rangement avez-vous achetées ?",
-            "unité": "unité"
+            "question": "Combien d'armoires de rangement avez-vous achetées ?"
           },
           "FE": {
-            "question": "Facteur d'émission par armoire de rangement",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par armoire de rangement"
           }
         },
         "fauteuil d'accueil": {
           "nombre": {
-            "question": "Combien de fauteuils d'accueil avez-vous achetés ?",
-            "unité": "unité"
+            "question": "Combien de fauteuils d'accueil avez-vous achetés ?"
           },
           "FE": {
-            "question": "Facteur d'émission par fauteuil d'accueil",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par fauteuil d'accueil"
           }
         },
         "étagère": {
           "nombre": {
-            "question": "Combien d'étagères avez-vous achetées ?",
-            "unité": "unité"
+            "question": "Combien d'étagères avez-vous achetées ?"
           },
           "FE": {
-            "question": "Facteur d'émission par étagère",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par étagère"
           }
         }
       },
       "construction": {
         "bâtiment scolaire structure béton": {
           "surface": {
-            "question": "Quelle surface de bâtiment scolaire (structure béton) avez-vous construite ?",
-            "unité": "m2"
+            "question": "Quelle surface de bâtiment scolaire (structure béton) avez-vous construite ?"
           },
           "FE": {
-            "question": "Facteur d'émission par m² de bâtiment scolaire (structure béton)",
-            "unité": "kgCO2e/m2"
+            "question": "Facteur d'émission par m² de bâtiment scolaire (structure béton)"
           }
         },
         "parking bâtiment structure béton": {
           "surface": {
-            "question": "Quelle surface de parking (bâtiment - structure béton) avez-vous construite ?",
-            "unité": "m2"
+            "question": "Quelle surface de parking (bâtiment - structure béton) avez-vous construite ?"
           },
           "FE": {
-            "question": "Facteur d'émission par m² de parking (bâtiment - structure béton)",
-            "unité": "kgCO2e/m2"
+            "question": "Facteur d'émission par m² de parking (bâtiment - structure béton)"
           }
         },
         "parking surface bitume": {
           "surface": {
-            "question": "Quelle surface de parking (surface bitume) avez-vous construite ?",
-            "unité": "m2"
+            "question": "Quelle surface de parking (surface bitume) avez-vous construite ?"
           },
           "FE": {
-            "question": "Facteur d'émission par m² de parking (surface bitume)",
-            "unité": "kgCO2e/m2"
+            "question": "Facteur d'émission par m² de parking (surface bitume)"
           }
         },
         "parking surface semi-dure": {
           "surface": {
-            "question": "Quelle surface de parking (surface semi-dure) avez-vous construite ?",
-            "unité": "m2"
+            "question": "Quelle surface de parking (surface semi-dure) avez-vous construite ?"
           },
           "FE": {
-            "question": "Facteur d'émission par m² de parking (surface semi-dure)",
-            "unité": "kgCO2e/m2"
+            "question": "Facteur d'émission par m² de parking (surface semi-dure)"
           }
         },
         "garage structure béton": {
           "surface": {
-            "question": "Quelle surface de garage (structure béton) avez-vous construite ?",
-            "unité": "m2"
+            "question": "Quelle surface de garage (structure béton) avez-vous construite ?"
           },
           "FE": {
-            "question": "Facteur d'émission par m² de garage (structure béton)",
-            "unité": "kgCO2e/m2"
+            "question": "Facteur d'émission par m² de garage (structure béton)"
           }
         },
         "garage structure métal": {
           "surface": {
-            "question": "Quelle surface de garage (structure métal) avez-vous construite ?",
-            "unité": "m2"
+            "question": "Quelle surface de garage (structure métal) avez-vous construite ?"
           },
           "FE": {
-            "question": "Facteur d'émission par m² de garage (structure métal)",
-            "unité": "kgCO2e/m2"
+            "question": "Facteur d'émission par m² de garage (structure métal)"
           }
         }
       }
     },
     "déplacements": {
       "voyages scolaires": {
-        "distance": {
-          "question": "Distance des transport scolaire des élèves sur une année",
-          "unité": "km/jour"
+        "RER et transilien": {
+          "distance": {
+            "question": "Distance (km)"
+          }
         },
-        "moyen de transport": {
-          "question": "Moyen de transport",
-          "options": {
-            "RER et transilien": "RER et transilien",
-            "métro ou tram": "Métro ou tram",
-            "Vélo à assistance électrique": "Vélo à assistance électrique",
-            "Trottinette électrique": "Trottinette électrique",
-            "Moto essence": "Moto essence",
-            "Véhicule compact électrique": "Véhicule compact électrique",
-            "Voiture individuelle essence": "Voiture individuelle essence",
-            "Voiture individuelle diesel": "Voiture individuelle diesel",
-            "Autobus moyen": "Autobus moyen",
-            "TER": "TER",
-            "TGV": "TGV",
-            "Avion Court courrier": "Avion Court courrier",
-            "Avion Moyen courrier": "Avion Moyen courrier",
-            "Avion Long courrier": "Avion Long courrier"
+        "métro ou tram": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "vélo électrique": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "trottinette électrique": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "moto essence": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "véhicule compact électrique": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "voiture individuelle essence": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "voiture individuelle diesel": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "bus": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "TER": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "TGV": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "avion court courrier": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "avion moyen courrier": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "avion long courrier": {
+          "distance": {
+            "question": "Distance (km)"
           }
         }
       },
       "transport des élèves": {
-        "distance": {
-          "question": "Distance de transport des élèves sur une année",
-          "unité": "km/jour"
+        "RER et transilien": {
+          "distance": {
+            "question": "Distance (km)"
+          }
         },
-        "moyen de transport": {
-          "question": "Moyen de transport",
-          "options": {
-            "RER et transilien": "RER et transilien",
-            "métro ou tram": "Métro ou tram",
-            "Vélo à assistance électrique": "Vélo à assistance électrique",
-            "Trottinette électrique": "Trottinette électrique",
-            "Moto essence": "Moto essence",
-            "Véhicule compact électrique": "Véhicule compact électrique",
-            "Voiture individuelle essence": "Voiture individuelle essence",
-            "Voiture individuelle diesel": "Voiture individuelle diesel",
-            "Autobus moyen": "Autobus moyen",
-            "TER": "TER",
-            "TGV": "TGV",
-            "Avion Court courrier": "Avion Court courrier",
-            "Avion Moyen courrier": "Avion Moyen courrier",
-            "Avion Long courrier": "Avion Long courrier"
+        "métro ou tram": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "vélo électrique": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "trottinette électrique": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "moto essence": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "véhicule compact électrique": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "voiture individuelle essence": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "voiture individuelle diesel": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "bus": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "TER": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "TGV": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "avion court courrier": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "avion moyen courrier": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "avion long courrier": {
+          "distance": {
+            "question": "Distance (km)"
           }
         }
       },
       "transport du personnel": {
-        "distance": {
-          "question": "Distance des transport du personnel sur une année",
-          "unité": "km/jour"
+        "RER et transilien": {
+          "distance": {
+            "question": "Distance (km)"
+          }
         },
-        "moyen de transport": {
-          "question": "Moyen de transport",
-          "options": {
-            "RER et transilien": "RER et transilien",
-            "métro ou tram": "Métro ou tram",
-            "Vélo à assistance électrique": "Vélo à assistance électrique",
-            "Trottinette électrique": "Trottinette électrique",
-            "Moto essence": "Moto essence",
-            "Véhicule compact électrique": "Véhicule compact électrique",
-            "Voiture individuelle essence": "Voiture individuelle essence",
-            "Voiture individuelle diesel": "Voiture individuelle diesel",
-            "Autobus moyen": "Autobus moyen",
-            "TER": "TER",
-            "TGV": "TGV",
-            "Avion Court courrier": "Avion Court courrier",
-            "Avion Moyen courrier": "Avion Moyen courrier",
-            "Avion Long courrier": "Avion Long courrier"
+        "métro ou tram": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "vélo électrique": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "trottinette électrique": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "moto essence": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "véhicule compact électrique": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "voiture individuelle essence": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "voiture individuelle diesel": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "bus": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "TER": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "TGV": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "avion court courrier": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "avion moyen courrier": {
+          "distance": {
+            "question": "Distance (km)"
+          }
+        },
+        "avion long courrier": {
+          "distance": {
+            "question": "Distance (km)"
           }
         }
       }
@@ -673,359 +703,326 @@
       "produits chimiques": {
         "produit vaisselle liquide": {
           "consommation": {
-            "question": "Consommation annuelle de produit vaisselle liquide",
-            "unité": "litre"
+            "question": "Consommation annuelle de produit vaisselle liquide"
           }
         },
         "savon liquide": {
           "consommation": {
-            "question": "Consommation annuelle de savon liquide",
-            "unité": "litre"
+            "question": "Consommation annuelle de savon liquide"
           }
         },
         "produit vitre": {
           "consommation": {
-            "question": "Consommation annuelle de produit vitre",
-            "unité": "litre"
+            "question": "Consommation annuelle de produit vitre"
           }
         },
         "nettoyant sols": {
           "consommation": {
-            "question": "Consommation annuelle de nettoyant sols",
-            "unité": "litre"
+            "question": "Consommation annuelle de nettoyant sols"
           }
         },
         "nettoyant multi-usages": {
           "consommation": {
-            "question": "Consommation annuelle de nettoyant multi-usages",
-            "unité": "litre"
+            "question": "Consommation annuelle de nettoyant multi-usages"
           }
         },
         "détergent sanitaire": {
           "consommation": {
-            "question": "Consommation annuelle de détergent sanitaire",
-            "unité": "litre"
+            "question": "Consommation annuelle de détergent sanitaire"
           }
         },
         "désinfectant": {
           "consommation": {
-            "question": "Consommation annuelle de désinfectant",
-            "unité": "litre"
+            "question": "Consommation annuelle de désinfectant"
           }
         },
         "chlore": {
           "consommation": {
-            "question": "Consommation annuelle de chlore",
-            "unité": "litre"
+            "question": "Consommation annuelle de chlore"
           }
         },
         "bicarbonate de soude": {
           "consommation": {
-            "question": "Consommation annuelle de bicarbonate de soude",
-            "unité": "litre"
+            "question": "Consommation annuelle de bicarbonate de soude"
           }
         },
         "peinture revêtement mural intérieur": {
           "consommation": {
-            "question": "Consommation annuelle de peinture - revêtement mural intérieur",
-            "unité": "kg"
+            "question": "Consommation annuelle de peinture - revêtement mural intérieur"
           }
         },
         "peinture revêtement mural extérieur": {
           "consommation": {
-            "question": "Consommation annuelle de peinture - revêtement mural extérieur",
-            "unité": "kg"
+            "question": "Consommation annuelle de peinture - revêtement mural extérieur"
           }
         },
         "savon solide": {
           "consommation": {
-            "question": "Consommation annuelle de savon solide",
-            "unité": "kg"
+            "question": "Consommation annuelle de savon solide"
           }
         },
         "vinaigre blanc": {
           "consommation": {
-            "question": "Consommation annuelle de vinaigre blanc",
-            "unité": "litre"
+            "question": "Consommation annuelle de vinaigre blanc"
           }
         },
         "soude solide": {
           "consommation": {
-            "question": "Consommation annuelle de soude solide (poudre, granulés)",
-            "unité": "kg"
+            "question": "Consommation annuelle de soude solide (poudre, granulés)"
           }
         },
         "acide sulfurique": {
           "consommation": {
-            "question": "Consommation annuelle d'acide sulfurique",
-            "unité": "litre"
+            "question": "Consommation annuelle d'acide sulfurique"
           }
         },
         "acide chlorhydrique": {
           "consommation": {
-            "question": "Consommation annuelle d'acide chlorhydrique",
-            "unité": "litre"
+            "question": "Consommation annuelle d'acide chlorhydrique"
           }
         }
       },
       "ordures ménagères résiduelles": {
         "ordures ménagères résiduelles": {
           "nombre": {
-            "question": "Combien de kg d'ordures ménagères résiduelles avez-vous achetés ou générés ?",
-            "unité": "kg"
+            "question": "Combien de kg d'ordures ménagères résiduelles avez-vous achetés ou générés ?"
           },
           "FE": {
-            "question": "Facteur d'émission des ordures ménagères résiduelles",
-            "unité": "kgCO2e/kg"
+            "question": "Facteur d'émission des ordures ménagères résiduelles"
           }
         }
       },
       "fournitures": {
         "petites fournitures": {
           "montant": {
-            "question": "Quel est le montant dépensé en petites fournitures (stylos, etc.) ?",
-            "unité": "€"
+            "question": "Quel est le montant dépensé en petites fournitures (stylos, etc.) ?"
           },
           "FE": {
-            "question": "Facteur d'émission par euro de petites fournitures",
-            "unité": "kgCO2e/€"
+            "question": "Facteur d'émission par euro de petites fournitures"
           }
         },
         "livres": {
           "nombre": {
-            "question": "Combien de livres avez-vous achetés ?",
-            "unité": "unité"
+            "question": "Combien de livres avez-vous achetés ?"
           },
           "FE": {
-            "question": "Facteur d'émission par livre",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par livre"
           }
         },
         "papier ramette": {
           "nombre": {
-            "question": "Combien de ramettes de papier avez-vous achetées ?",
-            "unité": "unité"
+            "question": "Combien de ramettes de papier avez-vous achetées ?"
           },
           "FE": {
-            "question": "Facteur d'émission par ramette de papier",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par ramette de papier"
           }
         },
         "consommables": {
           "montant": {
-            "question": "Quel est le montant dépensé en consommables (cartouches d'encre, etc.) ?",
-            "unité": "€"
+            "question": "Quel est le montant dépensé en consommables (cartouches d'encre, etc.) ?"
           },
           "FE": {
-            "question": "Facteur d'émission par euro de consommables",
-            "unité": "kgCO2e/€"
+            "question": "Facteur d'émission par euro de consommables"
           }
         },
         "piles aaa": {
           "nombre": {
-            "question": "Combien de piles AAA (alcalines) avez-vous achetées ?",
-            "unité": "unité"
+            "question": "Combien de piles AAA (alcalines) avez-vous achetées ?"
           },
           "FE": {
-            "question": "Facteur d'émission par pile AAA",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par pile AAA"
           }
         },
         "piles aa": {
           "nombre": {
-            "question": "Combien de piles AA (alcalines) avez-vous achetées ?",
-            "unité": "unité"
+            "question": "Combien de piles AA (alcalines) avez-vous achetées ?"
           },
           "FE": {
-            "question": "Facteur d'émission par pile AA",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par pile AA"
           }
         }
       },
       "équipements de sport": {
         "ballon de volley": {
           "nombre": {
-            "question": "Combien de ballons de volley avez-vous achetés ?",
-            "unité": "unité"
+            "question": "Combien de ballons de volley avez-vous achetés ?"
           },
           "FE": {
-            "question": "Facteur d'émission par ballon de volley",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par ballon de volley"
           }
         },
         "ballon de handball": {
           "nombre": {
-            "question": "Combien de ballons de handball avez-vous achetés ?",
-            "unité": "unité"
+            "question": "Combien de ballons de handball avez-vous achetés ?"
           },
           "FE": {
-            "question": "Facteur d'émission par ballon de handball",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par ballon de handball"
           }
         },
         "kimono judo": {
           "nombre": {
-            "question": "Combien de kimonos de judo avez-vous achetés ?",
-            "unité": "unité"
+            "question": "Combien de kimonos de judo avez-vous achetés ?"
           },
           "FE": {
-            "question": "Facteur d'émission par kimono (judo)",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par kimono (judo)"
           }
         },
         "shorts tous sports": {
           "nombre": {
-            "question": "Combien de shorts tous sports avez-vous achetés ?",
-            "unité": "unité"
+            "question": "Combien de shorts tous sports avez-vous achetés ?"
           },
           "FE": {
-            "question": "Facteur d'émission par short tous sports",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par short tous sports"
           }
         },
         "maillots tous sports": {
           "nombre": {
-            "question": "Combien de maillots tous sports avez-vous achetés ?",
-            "unité": "unité"
+            "question": "Combien de maillots tous sports avez-vous achetés ?"
           },
           "FE": {
-            "question": "Facteur d'émission par maillot tous sports",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par maillot tous sports"
           }
         },
         "t-shirt polyester": {
           "nombre": {
-            "question": "Combien de t-shirts en polyester avez-vous achetés ?",
-            "unité": "unité"
+            "question": "Combien de t-shirts en polyester avez-vous achetés ?"
           },
           "FE": {
-            "question": "Facteur d'émission par t-shirt en polyester",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par t-shirt en polyester"
           }
         },
         "ballon de rugby": {
           "nombre": {
-            "question": "Combien de ballons de rugby avez-vous achetés ?",
-            "unité": "unité"
+            "question": "Combien de ballons de rugby avez-vous achetés ?"
           },
           "FE": {
-            "question": "Facteur d'émission par ballon de rugby",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par ballon de rugby"
           }
         },
         "ballon de basket": {
           "nombre": {
-            "question": "Combien de ballons de basket avez-vous achetés ?",
-            "unité": "unité"
+            "question": "Combien de ballons de basket avez-vous achetés ?"
           },
           "FE": {
-            "question": "Facteur d'émission par ballon de basket",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par ballon de basket"
           }
         },
         "ballon de football": {
           "nombre": {
-            "question": "Combien de ballons de football avez-vous achetés ?",
-            "unité": "unité"
+            "question": "Combien de ballons de football avez-vous achetés ?"
           },
           "FE": {
-            "question": "Facteur d'émission par ballon de football",
-            "unité": "kgCO2e/unité"
+            "question": "Facteur d'émission par ballon de football"
           }
         }
       },
       "déchets recyclables": {
         "papier": {
           "nombre": {
-            "question": "Quantité de papier recyclé (en kg) ?",
-            "unité": "kg"
+            "question": "Quantité de papier recyclé (en kg) ?"
           },
           "FE": {
-            "question": "Facteur d'émission du papier recyclé",
-            "unité": "kgCO2e/kg"
+            "question": "Facteur d'émission du papier recyclé"
           }
         },
         "carton": {
           "nombre": {
-            "question": "Quantité de carton recyclé (en kg) ?",
-            "unité": "kg"
+            "question": "Quantité de carton recyclé (en kg) ?"
           },
           "FE": {
-            "question": "Facteur d'émission du carton recyclé",
-            "unité": "kgCO2e/kg"
+            "question": "Facteur d'émission du carton recyclé"
           }
         },
         "plastique": {
           "nombre": {
-            "question": "Quantité de plastique recyclé (en kg) ?",
-            "unité": "kg"
+            "question": "Quantité de plastique recyclé (en kg) ?"
           },
           "FE": {
-            "question": "Facteur d'émission du plastique recyclé",
-            "unité": "kgCO2e/kg"
+            "question": "Facteur d'émission du plastique recyclé"
           }
         },
         "verre": {
           "nombre": {
-            "question": "Quantité de verre recyclé (en kg) ?",
-            "unité": "kg"
+            "question": "Quantité de verre recyclé (en kg) ?"
           },
           "FE": {
-            "question": "Facteur d'émission du verre recyclé",
-            "unité": "kgCO2e/kg"
+            "question": "Facteur d'émission du verre recyclé"
           }
         },
         "métal": {
           "nombre": {
-            "question": "Quantité de métal recyclé (en kg) ?",
-            "unité": "kg"
+            "question": "Quantité de métal recyclé (en kg) ?"
           },
           "FE": {
-            "question": "Facteur d'émission du métal recyclé",
-            "unité": "kgCO2e/kg"
+            "question": "Facteur d'émission du métal recyclé"
           }
         },
         "bois": {
           "nombre": {
-            "question": "Quantité de bois recyclé (en kg) ?",
-            "unité": "kg"
+            "question": "Quantité de bois recyclé (en kg) ?"
           },
           "FE": {
-            "question": "Facteur d'émission du bois recyclé",
-            "unité": "kgCO2e/kg"
+            "question": "Facteur d'émission du bois recyclé"
           }
         },
         "textiles": {
           "nombre": {
-            "question": "Quantité de textiles recyclés (en kg) ?",
-            "unité": "kg"
+            "question": "Quantité de textiles recyclés (en kg) ?"
           },
           "FE": {
-            "question": "Facteur d'émission des textiles recyclés",
-            "unité": "kgCO2e/kg"
+            "question": "Facteur d'émission des textiles recyclés"
           }
         },
         "DEEE": {
           "nombre": {
-            "question": "Quantité de DEEE recyclés (en kg) ?",
-            "unité": "kg"
+            "question": "Quantité de DEEE recyclés (en kg) ?"
           },
           "FE": {
-            "question": "Facteur d'émission des DEEE recyclés",
-            "unité": "kgCO2e/kg"
+            "question": "Facteur d'émission des DEEE recyclés"
           }
         },
         "autres": {
           "nombre": {
-            "question": "Quantité d'autres déchets recyclés (en kg) ?",
-            "unité": "kg"
+            "question": "Quantité d'autres déchets recyclés (en kg) ?"
           },
           "FE": {
-            "question": "Facteur d'émission des autres déchets recyclés",
-            "unité": "kgCO2e/kg"
+            "question": "Facteur d'émission des autres déchets recyclés"
           }
         }
       }
     }
+  },
+  "publicodes-units": {
+    "étudiant": "étudiant",
+    "personne": "personne",
+    "année": "année",
+    "kWh": "kWh",
+    "kgCO2e/kWh": "kgCO2e/kWh",
+    "L": "L",
+    "kg": "kg",
+    "kgCO2e/kg": "kgCO2e/kg",
+    "repas": "repas",
+    "kgCO2e/repas": "kgCO2e/repas",
+    "t.km": "t.km",
+    "bouteille": "bouteille",
+    "kgCO2e/bouteille": "kgCO2e/bouteille",
+    "canette": "canette",
+    "kgCO2e/canette": "kgCO2e/canette",
+    "paquet": "paquet",
+    "kgCO2e/paquet": "kgCO2e/paquet",
+    "tasse": "tasse",
+    "kgCO2e/tasse": "kgCO2e/tasse",
+    "sandwich": "sandwich",
+    "kgCO2e/sandwich": "kgCO2e/sandwich",
+    "barre": "barre",
+    "kgCO2e/barre": "kgCO2e/barre",
+    "m2": "m2",
+    "kgCO2e/m2": "kgCO2e/m2",
+    "unité": "unité",
+    "kgCO2e/unité": "kgCO2e/unité",
+    "km": "km",
+    "litre": "litre",
+    "€": "€",
+    "kgCO2e/€": "kgCO2e/€"
   }
 }
