@@ -1,0 +1,8 @@
+confiseries et boissons:
+  titre: Confiseries et boissons
+  valeur:
+    somme:
+      - achats
+      - fret
+      - électroménager
+  unité: kgCO2e

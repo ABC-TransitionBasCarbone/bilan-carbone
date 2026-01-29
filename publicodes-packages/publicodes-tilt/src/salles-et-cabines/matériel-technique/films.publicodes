@@ -1,0 +1,60 @@
+salles et cabines . matériel technique . films:
+  titre: Films dématérialisés et physiques
+  formule:
+    somme:
+      - dématérialisés
+      - DCP
+  unité: kgCO2e
+
+salles et cabines . matériel technique . films . nombre films dématérialisés:
+  question: Combien de films avez-vous reçu en dématérialisé cette année ?
+  plafond: général . nombre de films programmés / 1 film
+  note: |
+    Nous avons changé de wording de la question pour ne pas faire apparaître la date en dur (old: Combien de films avez-vous reçu en dématérialisé en 2025 ?)
+    Il semble que la question "Combien de films recevez vous sur DCP physique par an ?" n'est plus posée et est déduite du nombre de films programmés totaux moins le nombre de films dématérialisés.
+  description: |
+    Vous pouvez par défaut renseigner 90% des films programmés totaux (ce nombre de films est disponible dans vos données générales), qui est la valeur moyenne issue des Bilans Carbone® qui ont étés réalisés sur plusieurs cinémas français. Si vous détenez une information plus précise pour votre cinéma, nous vous invitons à l'utiliser plutôt que la valeur par défaut.
+
+salles et cabines . matériel technique . films . dématérialisés:
+  titre: Films dématérialisés
+  formule: taille fichiers transférés * FE
+  par défaut: 0
+  unité: kgCO2e
+  avec:
+    taille fichiers transférés:
+      formule:
+        somme:
+          - 90 Go/h * 2 h * nombre films dématérialisés
+          - 3 Go * nombre films dématérialisés
+          - 4 Go * nombre films dématérialisés
+      unité: Go
+      note: |
+        On considère que la durée moyenne d'un film est de 2h, et qu'une heure de film pèse 90 Go. 
+        On associe également 1,5 annonces et 2 films publicitaires par film (1 annonce = 2 Go).
+    poids film:
+      valeur: 90 Go/h
+    FE:
+      valeur: 0.00921
+      unité: kgCO2e/Go
+      note: transfert d'un Go de données via une connexion fixe
+      meta:
+        id: 142
+
+salles et cabines . matériel technique . films . DCP:
+  titre: Film phyisque (Digital Cinema Package)
+  note: |
+    Le facteur 1000 ne semble pas présent dans l'excel ?
+  formule:
+    produit:
+      - général . nombre de films programmés / 1 film - nombre films dématérialisés
+      - FE
+      - général . distance depuis paris
+      - 0.001
+  par défaut: 0
+  unité: kgCO2e
+  avec:
+    FE:
+      valeur: 0.402
+      unité: kgCO2e
+      meta:
+        id: 143
