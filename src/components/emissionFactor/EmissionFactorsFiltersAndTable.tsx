@@ -66,11 +66,6 @@ const EmissionFactorsFiltersAndTable = ({
   const shouldShowBase =
     hasGHGPExport && (defaultSubPost?.includes(SubPost.Electricite) || filters.subPosts.includes(SubPost.Electricite))
 
-  console.log(
-    hasGHGPExport,
-    defaultSubPost?.includes(SubPost.Electricite),
-    filters.subPosts.includes(SubPost.Electricite),
-  )
   useEffect(() => {
     setFilters((prevFilters) => {
       if (shouldShowBase) {
