@@ -50,7 +50,7 @@ export function getEvaluatedFormLayout<RuleName extends string>(
   switch (layout.type) {
     case 'input':
       return { ...layout, evaluatedElement: evaluateRule(layout.rule) }
-    case 'list':
+    case 'list': {
       const situations = listLayoutSituations?.[layout.targetRule] ?? []
       return {
         ...layout,
@@ -62,6 +62,7 @@ export function getEvaluatedFormLayout<RuleName extends string>(
             elements: layout.rules.map((rule) => evaluateRuleWithSituation(rule, situation)),
           })) ?? [],
       }
+    }
     case 'group':
       return {
         ...layout,

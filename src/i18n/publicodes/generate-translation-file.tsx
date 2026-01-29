@@ -27,7 +27,7 @@ const LOCALES_CLICKSON = [
   Locale.EL,
 ] as const
 const LOCALES_CUT = [Locale.FR, Locale.EN, Locale.ES] as const
-const LOCALES = model === 'clickson' ? LOCALES_CLICKSON : LOCALES_CUT
+const LOCALES = [model === 'clickson' ? LOCALES_CLICKSON : LOCALES_CUT, destLang].flat()
 
 function extractTranslationKeysFromRules(
   engine: Engine,
@@ -188,12 +188,13 @@ function buildUnitsFromTranslations(
     LOCALES.map((locale) => [locale, {}]),
   ) as Record<Locale, Record<string, string>>
 
-  // FR: valeur brute
   for (const unit of unitsSet) {
     unitsByLocale.fr[unit] = unit
   }
   for (const locale of LOCALES) {
-    if (locale === 'fr') continue
+    if (locale === 'fr') {
+      continue
+    }
     for (const unit of unitsSet) {
       const prev = existingUnits[locale]?.[unit]
       if (!prev || typeof prev !== 'string') {
