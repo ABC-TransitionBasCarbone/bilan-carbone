@@ -1345,6 +1345,7 @@
     },
     "engagementActions": {
       "title": "Actions de mobilisation",
+      "export": "Exporter en CSV",
       "table": {
         "name": "Nom",
         "description": "Description",
