@@ -14,7 +14,20 @@ import {
 } from './utils'
 
 const { model, destLang } = getArgs()
-const LOCALES = ['fr', ...destLang] as Locale[]
+
+// Définition statique des locales prises en charge pour chaque modèle
+const LOCALES_CLICKSON = [
+  Locale.FR,
+  Locale.EN,
+  Locale.ES,
+  Locale.RO,
+  Locale.IT,
+  Locale.HU,
+  Locale.HR,
+  Locale.EL,
+] as const
+const LOCALES_CUT = [Locale.FR, Locale.EN, Locale.ES] as const
+const LOCALES = model === 'clickson' ? LOCALES_CLICKSON : LOCALES_CUT
 
 function extractTranslationKeysFromRules(
   engine: Engine,
