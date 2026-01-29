@@ -107,7 +107,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRule
     input('fonctionnement . énergie . réseau de froid . consommation'),
     input('fonctionnement . énergie . granulés . consommation'),
     input('fonctionnement . énergie . est équipé climatisation'),
-    input('fonctionnement . énergie . groupes électrogènes'),
+    input('fonctionnement . énergie . équipement groupes électrogènes'),
     input('fonctionnement . énergie . groupes électrogènes . consommation'),
   ],
   ActivitesDeBureau: [

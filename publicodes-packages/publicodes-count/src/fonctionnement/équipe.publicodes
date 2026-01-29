@@ -6,7 +6,6 @@ fonctionnement . équipe:
   unité: kgCO2e
 
 fonctionnement . équipe . collaborateurs:
-  # TODO: Should be a liste of types of collaborators
   titre: Collaborateurs
   question: Quel est le rythme de travail des collaborateurs du cinéma ?
   formule: collaborateur type

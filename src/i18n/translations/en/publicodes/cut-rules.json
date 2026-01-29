@@ -44,6 +44,11 @@
         }
       },
       "matériel technique": {
+        "salles": {
+          "titre": "[TO_TRANSLATE] Salles",
+          "question": "[TO_TRANSLATE] Décrivez les différentes salles du cinéma",
+          "unité": "[TO_TRANSLATE] kgCO2e"
+        },
         "salle": {
           "nom": {
             "question": "[TO_TRANSLATE] Nom de la salle"

@@ -44,6 +44,11 @@
         }
       },
       "matériel technique": {
+        "salles": {
+          "titre": "Salles",
+          "question": "Décrivez les différentes salles du cinéma",
+          "unité": "kgCO2e"
+        },
         "salle": {
           "nom": {
             "question": "Nom de la salle"

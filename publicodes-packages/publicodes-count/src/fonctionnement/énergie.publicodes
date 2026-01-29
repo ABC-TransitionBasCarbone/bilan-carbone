@@ -189,6 +189,8 @@ fonctionnement . énergie . équipement groupes électrogènes:
     - utilisation régulière
     - équipé sans utilisation
     - aucun
+  form:
+    saisie: menu déroulant
   avec:
     utilisation régulière:
       titre: Oui et je l’utilise plusieurs fois par an

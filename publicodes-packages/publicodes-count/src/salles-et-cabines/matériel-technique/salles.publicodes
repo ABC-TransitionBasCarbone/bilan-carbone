@@ -1,5 +1,6 @@
 salles et cabines . matériel technique . salles:
   titre: Salles
+  question: Décrivez les différentes salles du cinéma
   formule: salle
   par défaut: 0
   unité: kgCO2e
