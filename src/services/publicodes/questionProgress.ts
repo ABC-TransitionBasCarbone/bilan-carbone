@@ -5,6 +5,7 @@ import {
   getEvaluatedFormLayout,
 } from '@/components/publicodes-form/layouts/evaluatedFormLayout'
 import { FormLayout } from '@/components/publicodes-form/layouts/formLayout'
+import { ListLayoutSituations } from '@/lib/publicodes/context'
 import { typedEntries } from '@/utils/object'
 import { SubPost } from '@prisma/client'
 import Engine from 'publicodes'
@@ -13,10 +14,11 @@ import { Post, SimplifiedPost } from '../posts'
 export type QuestionStats = { answered: number; total: number }
 export type StatsResult = Partial<Record<Post, Partial<Record<SubPost, QuestionStats>>>>
 
-export const getQuestionProgressBySubPost = (
-  engine: Engine,
+export const getQuestionProgressBySubPost = <RuleName extends string = string>(
+  engine: Engine<RuleName>,
+  listLayoutSituations: ListLayoutSituations<RuleName>,
   subPostsByPost: Record<SimplifiedPost, SubPost[]>,
-  getSubPostLayouts: (subPost: SubPost) => FormLayout<string>[] | undefined,
+  getSubPostLayouts: (subPost: SubPost) => FormLayout<RuleName>[] | undefined,
 ): StatsResult => {
   return typedEntries(subPostsByPost).reduce<StatsResult>((postAcc, [post, subPosts]) => {
     postAcc[post] = subPosts.reduce<Partial<Record<SubPost, QuestionStats>>>((subPostAcc, subPost) => {
@@ -27,7 +29,7 @@ export const getQuestionProgressBySubPost = (
         return subPostAcc
       }
 
-      const evaluatedFormLayouts = layouts.map((layout) => getEvaluatedFormLayout(engine, layout))
+      const evaluatedFormLayouts = layouts.map((layout) => getEvaluatedFormLayout(engine, layout, listLayoutSituations))
       const stats = evaluatedFormLayouts.reduce(
         (acc, evaluatedLayout) => {
           switch (evaluatedLayout.type) {

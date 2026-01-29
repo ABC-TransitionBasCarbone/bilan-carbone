@@ -4,7 +4,6 @@ import AllPostsInfographySimplified from '@/environments/simplified/study/infogr
 import AllPostsInfographyTilt from '@/environments/tilt/study/infography/AllPostsInfography'
 import { PublicodesSituationProvider } from '@/lib/publicodes/context'
 import { CutPost, TiltPost } from '@/services/posts'
-import { SimplifiedEnvironment } from '@/services/publicodes/simplifiedPublicodesConfig'
 import { computeResultsByPostFromEmissionSources } from '@/services/results/consolidated'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { Environment } from '@prisma/client'
@@ -54,20 +53,12 @@ const AllPostsInfographyContainer = ({ study, studySite }: Props) => {
       defaultComponent={<AllPostsInfography study={study} data={data} />}
       environmentComponents={{
         [Environment.CUT]: (
-          <PublicodesSituationProvider
-            environment={Environment.CUT as SimplifiedEnvironment}
-            studyId={study.id}
-            studySiteId={studySite}
-          >
+          <PublicodesSituationProvider environment={Environment.CUT} studyId={study.id} studySiteId={studySite}>
             <AllPostsInfographySimplified study={study} />
           </PublicodesSituationProvider>
         ),
         [Environment.CLICKSON]: (
-          <PublicodesSituationProvider
-            environment={Environment.CLICKSON as SimplifiedEnvironment}
-            studyId={study.id}
-            studySiteId={studySite}
-          >
+          <PublicodesSituationProvider environment={Environment.CLICKSON} studyId={study.id} studySiteId={studySite}>
             <AllPostsInfographySimplified study={study} />
           </PublicodesSituationProvider>
         ),

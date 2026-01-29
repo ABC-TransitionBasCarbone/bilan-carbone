@@ -31,7 +31,7 @@ export default function PublicodesForm<RuleName extends string>({ formLayouts }:
           : formLayout.type === 'group'
             ? `group-${index}`
             : formLayout.type === 'list'
-              ? `list-${formLayout.title}-${index}`
+              ? `list-${formLayout.targetRule}-${index}`
               : `table-${formLayout.title}-${index}`
 
       const isApplicable = evaluatedLayoutIsApplicable(evaluatedFormLayout)

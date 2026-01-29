@@ -75,8 +75,7 @@ export function PublicodesSituationProvider<RuleName extends string = string>({
         const loadedSituation = (result.data?.situation ?? {}) as Situation<RuleName>
         const loadedListLayoutSituations = (result.data?.listLayoutSituations ?? {}) as ListLayoutSituations<RuleName>
         setIsLoading(false)
-        setSituationState(loadedSituation)
-        setListLayoutSituationsState(loadedListLayoutSituations)
+        setSituation(loadedSituation, loadedListLayoutSituations)
       } catch (err) {
         setIsLoading(false)
         console.error('Failed to load situation:', err)
