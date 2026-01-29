@@ -1,25 +1,16 @@
 import { CutSituation } from '@/environments/cut/publicodes/types'
-import { QuestionType } from '@prisma/client'
 import { allQuestionsIdIntern } from './allQuestionsIdIntern'
 
 export type InternQuestionId = (typeof allQuestionsIdIntern)[number]
 export type CutSituationKey = keyof CutSituation
-
-export type QuestionsPublicodesMappingType = Partial<
-  Record<
-    QuestionType,
-    Partial<
-      Record<
-        InternQuestionId | `${InternQuestionId}-${string}`,
-        | CutSituationKey
-        | Record<string, CutSituationKey>
-        | [CutSituationKey, Record<string, string>]
-        | ['LISTE', CutSituationKey]
-        | 'TABLEAU'
-      >
-    >
-  >
->
+export type QuestionsPublicodesMappingType = {
+  NUMBER: Partial<Record<InternQuestionId | `${InternQuestionId}-${string}`, CutSituationKey>>
+  TEXT: Partial<Record<InternQuestionId | `${InternQuestionId}-${string}`, CutSituationKey>>
+  QCU: Partial<Record<InternQuestionId, CutSituationKey>>
+  QCM: Partial<Record<InternQuestionId, Record<string, CutSituationKey>>>
+  SELECT: Partial<Record<InternQuestionId, [CutSituationKey, Record<string, string>]>>
+  TABLE: Partial<Record<InternQuestionId, 'TABLEAU' | ['LISTE', CutSituationKey]>>
+}
 
 export const questionsPublicodesMapping: QuestionsPublicodesMappingType = {
   NUMBER: {
@@ -166,7 +157,7 @@ export const questionsPublicodesMapping: QuestionsPublicodesMappingType = {
     '111-decrivez-les-differentes-salles-du-cinema':
       'salles et cabines . matériel technique . salle . système son . année achat',
     '11-decrivez-les-deplacements-professionnels-de-vos-collaborateurs':
-      'fonctionnement . déplacements pro . déplacements . nom',
+      'fonctionnement . déplacements pro . déplacement type . nom',
     '13-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner-réfrigérateurs':
       'confiseries et boissons . électroménager . réfrigérateurs . année achat',
     '14-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner-réfrigérateurs':
@@ -183,7 +174,8 @@ export const questionsPublicodesMapping: QuestionsPublicodesMappingType = {
       'confiseries et boissons . électroménager . distributeurs . année achat',
     '14-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner-distributeurs':
       'confiseries et boissons . électroménager . distributeurs . durée location',
-    '11-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': 'fonctionnement . équipe . collaborateurs . nom',
+    '11-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema':
+      'fonctionnement . équipe . collaborateur type . nom',
     '109-decrivez-les-differentes-salles-du-cinema':
       'salles et cabines . matériel technique . salle . fauteuils . année achat',
     '103-decrivez-les-differentes-salles-du-cinema':

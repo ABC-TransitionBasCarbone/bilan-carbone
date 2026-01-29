@@ -5,8 +5,9 @@
 
 import { prismaClient } from '@/db/client'
 import { getCutEngine } from '@/environments/cut/publicodes/cut-engine'
-import { studySiteToSituation } from '@/environments/cut/publicodes/studySiteToSituation'
+import { studySiteToCutSituation } from '@/environments/cut/publicodes/studySiteToSituation'
 import { CutRuleName, CutSituation } from '@/environments/cut/publicodes/types'
+import { CutStudySiteFields } from '@/services/studySiteToSituation'
 import { Answer, QuestionType, Unit } from '@prisma/client'
 import { CutSituationKey, InternQuestionId, questionsPublicodesMapping } from './questionsPublicodesMapping'
 
@@ -29,16 +30,16 @@ function formatToPublicodesValue(
   type: QuestionType,
   unit: Unit | null,
   questionInternId: InternQuestionId,
-): { situationKey: string; situationValue: number | string } | {} | null {
+): Record<string, string | number> | null {
   if (!value) {
     return null
   }
-  let situationState: Record<string, string | number> = {}
+  const situationState: Record<string, string | number> = {}
   let situationKey = null
   let situationValue = null
 
   switch (type) {
-    case 'QCU':
+    case 'QCU': {
       situationKey = questionsPublicodesMapping.QCU?.[questionInternId] as CutSituationKey
       if (value === '11-Oui') {
         situationValue = 'oui'
@@ -47,18 +48,21 @@ function formatToPublicodesValue(
         situationValue = 'non'
       }
       break
-    case 'NUMBER':
+    }
+    case 'NUMBER': {
       situationKey = questionsPublicodesMapping.NUMBER?.[questionInternId] as CutSituationKey
       situationValue = parseFloat(value as string)
       break
-    case 'TEXT':
+    }
+    case 'TEXT': {
       situationKey = questionsPublicodesMapping.TEXT?.[questionInternId] as CutSituationKey
       if (value === 'Invalid Date') {
         return null
       }
       situationValue = unit === 'YEAR' ? `'01/${value}'` : `'${value}'`
       break
-    case 'SELECT':
+    }
+    case 'SELECT': {
       situationKey = questionsPublicodesMapping.SELECT?.[questionInternId]![0]
       const unformattedSituationValue =
         questionsPublicodesMapping.SELECT?.[questionInternId]![1][
@@ -66,7 +70,8 @@ function formatToPublicodesValue(
         ]
       situationValue = unformattedSituationValue ? `'${unformattedSituationValue}'` : null
       break
-    case 'QCM':
+    }
+    case 'QCM': {
       // convert value string like "[option1, option2]" to array
       const selectedOptions = JSON.parse(value as string)
       for (const option of selectedOptions) {
@@ -79,9 +84,11 @@ function formatToPublicodesValue(
         }
       }
       break
-    default:
+    }
+    default: {
       console.log(`Unsupported question type ${type} for question ID intern ${questionInternId}`)
       return null
+    }
   }
   if (Object.keys(situationState).length === 0) {
     if (!situationKey || !situationValue) {
@@ -95,17 +102,14 @@ function formatToPublicodesValue(
 
 async function processTableAnswer(answerCourante: Answer, questionCourante: { idIntern: string; type: QuestionType }) {
   const questionInternId = questionCourante.idIntern
-  const value = answerCourante.response
+  const value = answerCourante.response as { rows?: { data: Record<string, string> }[] } | null
 
-  // @ts-ignore: Ignore dynamic key access
   const rows = value?.rows?.map((row) => row.data)
   for (const row of rows ?? []) {
     const selectQuestionInternId = questionInternId.replace('10-', '11-') as InternQuestionId
-    const publicodesKey = // @ts-ignore: Ignore dynamic key access
-      questionsPublicodesMapping.SELECT?.[selectQuestionInternId]?.[1][row[selectQuestionInternId]]?.replaceAll(
-        ' ',
-        '_',
-      )
+    const publicodesKey = questionsPublicodesMapping.SELECT?.[selectQuestionInternId]?.[1][
+      row[selectQuestionInternId]
+    ]?.replaceAll(' ', '_')
 
     if (!publicodesKey) {
       console.warn(
@@ -135,9 +139,8 @@ async function processTableAnswer(answerCourante: Answer, questionCourante: { id
 }
 
 async function processListAnswer(answerCourante: Answer, listRule: string) {
-  const value = answerCourante.response
+  const value = answerCourante.response as { rows?: { id: string; data: Record<string, string> }[] } | null
 
-  // @ts-ignore: Ignore dynamic key access
   for (const row of value?.rows ?? []) {
     for (const questionId of Object.keys(row.data ?? {})) {
       await processAnswer({
@@ -258,7 +261,7 @@ async function main() {
   })
 
   for (const site of studySiteInfo) {
-    const additionalSituation = studySiteToSituation(site)
+    const additionalSituation = studySiteToCutSituation(site as CutStudySiteFields)
     studySiteSituationMap[site.id].mainSituation = {
       ...studySiteSituationMap[site.id].mainSituation,
       ...additionalSituation,
