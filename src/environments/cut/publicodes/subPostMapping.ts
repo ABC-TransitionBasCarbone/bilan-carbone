@@ -83,7 +83,6 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRule
     input('fonctionnement . bâtiment . parking présent'),
     input('fonctionnement . bâtiment . parking . nombre de places'),
   ],
-  // TODO: support list layout
   Equipe: [
     list(
       'Equipe.question',
@@ -111,7 +110,18 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRule
   ActivitesDeBureau: [
     input('fonctionnement . activités de bureau . petites fournitures . montant'),
     input('fonctionnement . activités de bureau . services . montant'),
-    // TODO: support list layout
+    list(
+      'ActivitesDeBureauEquipementInformatique.question',
+      [
+        'ActivitesDeBureauEquipementInformatique.type',
+        'ActivitesDeBureauEquipementInformatique.dateAchat',
+        'ActivitesDeBureauEquipementInformatique.duree',
+        'ActivitesDeBureauEquipementInformatique.nombre',
+      ],
+      'fonctionnement . activités de bureau . informatique',
+      // TODO: support list layout
+      [],
+    ),
   ],
   MobiliteSpectateurs: [
     input('mobilité spectateurs . précision'),
