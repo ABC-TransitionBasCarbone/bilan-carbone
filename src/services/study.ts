@@ -7,6 +7,7 @@ import { getGHGPRuleName } from '@/utils/ghgp'
 import { getPost } from '@/utils/post'
 import {
   calculateMonetaryRatio,
+  formatEmissionFromNumber,
   formatEmissionValueForExport,
   hasDeprecationPeriod,
   isCAS,
@@ -39,6 +40,7 @@ import { EmissionFactorWithMetaData, getEmissionFactorsByIds } from './serverFun
 import { prepareExcel } from './serverFunctions/file'
 import { getUserSettings } from './serverFunctions/user'
 import {
+  getConfidenceInterval,
   getEmissionSourcesConfidenceInterval,
   getQualitativeUncertaintyForEmissionSources,
   getQualitativeUncertaintyFromQuality,
@@ -386,7 +388,7 @@ const handleLine = (
   headersForEnv: string[],
   result: ResultsByPost,
   tQuality: Translations,
-  resultsUnits: StudyResultUnit,
+  resultsUnit: StudyResultUnit,
 ) => {
   const resultLine = []
   if (headersForEnv.includes('uncertainty')) {
@@ -397,7 +399,17 @@ const handleLine = (
     )
   }
 
-  return [...resultLine, formatEmissionValueForExport(result.value ?? 0, resultsUnits)]
+  resultLine.push(formatEmissionValueForExport(result.value ?? 0, resultsUnit))
+
+  if (headersForEnv.includes('confidenceIntervalTitle')) {
+    const confidenceInterval = getConfidenceInterval(result.value, result.squaredStandardDeviation)
+
+    resultLine.push(
+      `[${formatEmissionFromNumber(confidenceInterval[0], resultsUnit)};${formatEmissionFromNumber(confidenceInterval[1], resultsUnit)}]`,
+    )
+  }
+
+  return resultLine
 }
 
 export const formatConsolidatedStudyResultsForExport = (
@@ -508,6 +520,7 @@ const buildMerges = (rulesSpans: Record<number, number>, startRow: number, colum
 export const formatStudyExportResultsForExport = (
   study: FullStudy,
   siteList: { name: string; id: string }[],
+  tStudy: Translations,
   tQuality: Translations,
   tSpecificExport: Translations,
   tUnits: Translations,
@@ -550,6 +563,7 @@ export const formatStudyExportResultsForExport = (
       tSpecificExport('total'),
       'CO2b',
       tSpecificExport('uncertainty'),
+      tStudy('confidenceIntervalTitle'),
     ])
 
     const gasFields = data.gasFields
@@ -570,6 +584,8 @@ export const formatStudyExportResultsForExport = (
         formatEmissionValueForExport((result[field] as number) || 0, study.resultsUnit),
       )
 
+      const confidenceInterval = getConfidenceInterval(result.total, result.squaredStandardDeviation)
+
       dataForExport.push([
         category === 'total' ? '' : data.getCategoryName(category, tSpecificExport),
         post,
@@ -577,6 +593,7 @@ export const formatStudyExportResultsForExport = (
         result.squaredStandardDeviation
           ? tQuality(getQualitativeUncertaintyFromSquaredStandardDeviation(result.squaredStandardDeviation).toString())
           : '',
+        `[${formatEmissionFromNumber(confidenceInterval[0], study.resultsUnit)};${formatEmissionFromNumber(confidenceInterval[1], study.resultsUnit)}]`,
       ])
     }
 
@@ -699,6 +716,7 @@ export const downloadStudyResults = async (
       formatStudyExportResultsForExport(
         study,
         siteList,
+        tStudy,
         tQuality,
         tBeges,
         tUnits,
@@ -715,6 +733,7 @@ export const downloadStudyResults = async (
       formatStudyExportResultsForExport(
         study,
         siteList,
+        tStudy,
         tQuality,
         tGHGP,
         tUnits,
@@ -736,6 +755,7 @@ export const downloadStudyResults = async (
       formatStudyExportResultsForExport(
         study,
         siteList,
+        tStudy,
         tQuality,
         tGHGP,
         tUnits,

@@ -25,6 +25,7 @@ interface Props {
 const TagsResultsTable = ({ resultsUnit, data }: Props) => {
   const t = useTranslations('study.results')
   const tQuality = useTranslations('quality')
+  const tUnits = useTranslations('study.results.units')
 
   const columns = useMemo(() => {
     return [
@@ -57,9 +58,7 @@ const TagsResultsTable = ({ resultsUnit, data }: Props) => {
       {
         header: t('emissions'),
         accessorKey: 'value',
-        cell: ({ getValue }) => (
-          <p className={commonStyles.number}>{formatNumber(getValue<number>() / STUDY_UNIT_VALUES[resultsUnit])}</p>
-        ),
+        cell: ({ getValue }) => <p>{formatNumber(getValue<number>() / STUDY_UNIT_VALUES[resultsUnit])}</p>,
       },
     ]
   }, [resultsUnit, t, tQuality]) as ColumnDef<tableDataType>[]
@@ -81,7 +80,14 @@ const TagsResultsTable = ({ resultsUnit, data }: Props) => {
     getCoreRowModel: getCoreRowModel(),
   })
 
-  return <BaseTable table={table} testId="tags-results" className={commonStyles.headers} size="small" />
+  return (
+    <BaseTable
+      table={table}
+      testId="tags-results"
+      size="small"
+      firstHeader={<div className="text-center">{t('gesTag', { unit: tUnits(resultsUnit) })}</div>}
+    />
+  )
 }
 
 export default TagsResultsTable

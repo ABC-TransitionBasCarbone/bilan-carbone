@@ -14,7 +14,7 @@ interface Props {
 }
 
 const ConfidenceIntervalCharts = ({ confidenceInterval, unit, percent }: Props) => {
-  const t = useTranslations('study.results.uncertainties')
+  const t = useTranslations('study.results')
   const tResultUnits = useTranslations('study.results.units')
 
   return (
