@@ -38,6 +38,7 @@ const POST_TO_RULENAME: Record<CutPost, CutRuleName> = {
 const SUBPOST_TO_RULENAME: Partial<Record<SubPost, CutRuleName>> = {
   Batiment: 'fonctionnement . bâtiment',
   Equipe: 'fonctionnement . équipe',
+  DeplacementsProfessionnels: 'fonctionnement . déplacements pro',
   Energie: 'fonctionnement . énergie',
   ActivitesDeBureau: 'fonctionnement . activités de bureau',
   MobiliteSpectateurs: 'mobilité spectateurs . mobilité spectateurs',
@@ -59,12 +60,8 @@ const input = (rule: CutRuleName): FormLayout<CutRuleName> => inputLayout<CutRul
 const group = (title: string, rules: CutRuleName[]): FormLayout<CutRuleName> => groupLayout<CutRuleName>(title, rules)
 const table = (title: string, headers: string[], rows: CutRuleName[][]): FormLayout<CutRuleName> =>
   tableLayout<CutRuleName>(title, headers, rows)
-const list = (
-  title: string,
-  headers: string[],
-  targetRule: CutRuleName,
-  rules: CutRuleName[],
-): FormLayout<CutRuleName> => listLayout<CutRuleName>(title, headers, targetRule, rules)
+const list = (targetRule: CutRuleName, rules: CutRuleName[]): FormLayout<CutRuleName> =>
+  listLayout<CutRuleName>(targetRule, rules)
 
 export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRuleName>[]>> = {
   Batiment: [
@@ -84,16 +81,18 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRule
     input('fonctionnement . bâtiment . parking . nombre de places'),
   ],
   Equipe: [
+    list('fonctionnement . équipe . collaborateurs', [
+      'fonctionnement . équipe . collaborateur type . nom',
+      'fonctionnement . équipe . collaborateur type . nombre de jours par semaine',
+      'fonctionnement . équipe . collaborateur type . transport . moyen de transport',
+      'fonctionnement . équipe . collaborateur type . transport . distance',
+    ]),
+  ],
+  DeplacementsProfessionnels: [
     list(
-      'Equipe.question',
-      ['Equipe.libelle', 'Equipe.nbJours', 'Equipe.moyenTransport', 'Equipe.distance'],
-      'fonctionnement . équipe . collaborateurs',
-      [
-        'fonctionnement . équipe . collaborateur type . libellé',
-        'fonctionnement . équipe . collaborateur type . nombre de jours par semaine',
-        'fonctionnement . équipe . collaborateur type . transport . moyen de transport',
-        'fonctionnement . équipe . collaborateur type . transport . distance',
-      ],
+      'fonctionnement . déplacements pro . déplacements',
+      // TODO: to be filled with relevant rules
+      [],
     ),
   ],
   Energie: [
@@ -110,22 +109,12 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRule
   ActivitesDeBureau: [
     input('fonctionnement . activités de bureau . petites fournitures . montant'),
     input('fonctionnement . activités de bureau . services . montant'),
-    list(
-      'ActivitesDeBureauEquipementInformatique.question',
-      [
-        'ActivitesDeBureauEquipementInformatique.type',
-        'ActivitesDeBureauEquipementInformatique.dateAchat',
-        'ActivitesDeBureauEquipementInformatique.duree',
-        'ActivitesDeBureauEquipementInformatique.nombre',
-      ],
-      'fonctionnement . activités de bureau . informatique',
-      [
-        'fonctionnement . activités de bureau . informatique . équipement',
-        'fonctionnement . activités de bureau . informatique . appareil . année achat',
-        'fonctionnement . activités de bureau . informatique . appareil . durée location',
-        'fonctionnement . activités de bureau . informatique . appareil . nombre',
-      ],
-    ),
+    list('fonctionnement . activités de bureau . informatique', [
+      'fonctionnement . activités de bureau . informatique . équipement',
+      'fonctionnement . activités de bureau . informatique . appareil . année achat',
+      'fonctionnement . activités de bureau . informatique . appareil . durée location',
+      'fonctionnement . activités de bureau . informatique . appareil . nombre',
+    ]),
   ],
   MobiliteSpectateurs: [
     input('mobilité spectateurs . précision'),
@@ -193,36 +182,19 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRule
   ],
   EquipesRecues: [input('tournées avant premières . équipes reçues . nombre équipes')],
   MaterielTechnique: [
-    list(
-      'MaterielTechniqueEquipement.question',
-      [
-        'MaterielTechniqueEquipement.nom',
-        'MaterielTechniqueEquipement.projecteurs',
-        'MaterielTechniqueEquipement.anneeAchatProjecteur',
-        'MaterielTechniqueEquipement.ecran',
-        'MaterielTechniqueEquipement.surfaceEcran',
-        'MaterielTechniqueEquipement.anneeAchatEcran',
-        'MaterielTechniqueEquipement.fauteuils',
-        'MaterielTechniqueEquipement.nbFauteuils',
-        'MaterielTechniqueEquipement.anneeAchatFauteuils',
-        'MaterielTechniqueEquipement.systemeSon',
-        'MaterielTechniqueEquipement.anneeAchatSystemeSon',
-      ],
-      'salles et cabines . matériel technique . salles',
-      [
-        'salles et cabines . matériel technique . salle . nom',
-        'salles et cabines . matériel technique . salle . projecteur . type',
-        'salles et cabines . matériel technique . salle . projecteur . année achat',
-        'salles et cabines . matériel technique . salle . écran . type',
-        'salles et cabines . matériel technique . salle . écran . surface écran',
-        'salles et cabines . matériel technique . salle . écran . année achat',
-        'salles et cabines . matériel technique . salle . fauteuils . type',
-        'salles et cabines . matériel technique . salle . fauteuils . nombre',
-        'salles et cabines . matériel technique . salle . fauteuils . année achat',
-        'salles et cabines . matériel technique . salle . système son . type',
-        'salles et cabines . matériel technique . salle . système son . année achat',
-      ],
-    ),
+    list('salles et cabines . matériel technique . salles', [
+      'salles et cabines . matériel technique . salle . nom',
+      'salles et cabines . matériel technique . salle . projecteur . type',
+      'salles et cabines . matériel technique . salle . projecteur . année achat',
+      'salles et cabines . matériel technique . salle . écran . type',
+      'salles et cabines . matériel technique . salle . écran . surface écran',
+      'salles et cabines . matériel technique . salle . écran . année achat',
+      'salles et cabines . matériel technique . salle . fauteuils . type',
+      'salles et cabines . matériel technique . salle . fauteuils . nombre',
+      'salles et cabines . matériel technique . salle . fauteuils . année achat',
+      'salles et cabines . matériel technique . salle . système son . type',
+      'salles et cabines . matériel technique . salle . système son . année achat',
+    ]),
     input('salles et cabines . matériel technique . films . nombre films dématérialisés'),
     input('salles et cabines . matériel technique . cloud . stockage'),
     input('salles et cabines . matériel technique . disques durs . nombre'),

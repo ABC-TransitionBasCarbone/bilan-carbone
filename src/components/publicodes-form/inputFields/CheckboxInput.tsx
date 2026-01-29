@@ -1,4 +1,4 @@
-import { usePublicodesRuleTranslation } from '@/hooks/usePublicodesRuleTranslation'
+import { usePublicodesRuleTranslation } from '@/hooks/usePublicodesTranslation'
 import { Checkbox, FormControlLabel, styled } from '@mui/material'
 import { EvaluatedCheckbox } from '@publicodes/forms'
 import { OnFieldChange } from '../utils'

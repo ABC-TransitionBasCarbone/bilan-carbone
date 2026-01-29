@@ -1,4 +1,4 @@
-import { usePublicodesRuleTranslation } from '@/hooks/usePublicodesRuleTranslation'
+import { usePublicodesRuleTranslation } from '@/hooks/usePublicodesTranslation'
 import { NumberField } from '@base-ui-components/react/number-field'
 import { InputAdornment, OutlinedInput, TextField } from '@mui/material'
 import { EvaluatedStringInput } from '@publicodes/forms'

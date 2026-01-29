@@ -1,4 +1,5 @@
 import BaseTable from '@/components/base/Table'
+import { usePublicodesTranslation } from '@/hooks/usePublicodesTranslation'
 import { usePublicodesForm } from '@/lib/publicodes/context'
 import { ContentCopy, Delete } from '@mui/icons-material'
 import { Box, IconButton, Paper, TableContainer } from '@mui/material'
@@ -28,12 +29,12 @@ type TableRowData<RuleName extends string> = {
 }
 
 export default function ListQuestion<RuleName extends string>({
-  listLayout: { title, headers, targetRule, evaluatedListRows },
+  listLayout: { targetRule, evaluatedListRows, rules },
   onChange,
 }: ListLayoutProps<RuleName>) {
   const tAction = useTranslations('common.action')
   const tStudyQuestions = useTranslations('study.questions')
-  const tLayout = useTranslations('publicodes-layout.list')
+  const { getQuestion } = usePublicodesTranslation()
   const { updateListLayoutSituation, createNewListLayoutSituation, deleteListLayoutSituation } = usePublicodesForm()
 
   useEffect(() => {
@@ -68,9 +69,9 @@ export default function ListQuestion<RuleName extends string>({
   )
 
   const columns = useMemo<ColumnDef<TableRowData<RuleName>>[]>(() => {
-    const columns: ColumnDef<TableRowData<RuleName>>[] = headers.map((header, colIndex) => ({
+    const columns: ColumnDef<TableRowData<RuleName>>[] = rules.map((rule, colIndex) => ({
       id: `col-${colIndex}`,
-      header: () => tLayout(header),
+      header: () => getQuestion(rule),
       cell: ({ row }) => {
         const formElement = row.original.elements[colIndex]
         if (!formElement) {
@@ -114,7 +115,7 @@ export default function ListQuestion<RuleName extends string>({
 
     columns.push(columnAction)
     return columns
-  }, [headers, onChange])
+  }, [rules, onChange])
 
   const table = useReactTable<TableRowData<RuleName>>({
     data: evaluatedListRows,
@@ -129,7 +130,7 @@ export default function ListQuestion<RuleName extends string>({
         {tStudyQuestions('add')}
       </Button>
       <TableContainer component={Paper} className="mt1">
-        <BaseTable table={table} testId={`table-${title}`} size="medium" />
+        <BaseTable table={table} testId={`table-${targetRule}`} size="medium" />
       </TableContainer>
     </Box>
   )
