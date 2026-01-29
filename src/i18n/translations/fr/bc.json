@@ -1739,7 +1739,8 @@
   "environment": {
     "BC": "BC+ 2.0",
     "CUT": "Count",
-    "TILT": "Tilt"
+    "TILT": "Tilt",
+    "CLICKSON": "ClicksOn"
   },
   "source": {
     "CRON": "Cron",

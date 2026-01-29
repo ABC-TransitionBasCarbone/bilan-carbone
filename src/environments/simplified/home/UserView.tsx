@@ -32,9 +32,11 @@ const UserView = async ({ account }: Props) => {
 
   const hasAlert = hasHomeAlert(account.environment)
 
-  let isTiltSimplifiedEnabled = false
-  if (!account.level && isTilt(account.environment)) {
-    isTiltSimplifiedEnabled = await isTiltSimplifiedFeatureActive(account.environment)
+  let isFootprintsEnabled = false
+  if (!isTilt(account.environment) || account.level) {
+    isFootprintsEnabled = true
+  } else {
+    isFootprintsEnabled = await isTiltSimplifiedFeatureActive(account.environment)
   }
 
   return (
@@ -52,7 +54,7 @@ const UserView = async ({ account }: Props) => {
               </Box>
             ))}
           </Box>
-          {isTiltSimplifiedEnabled && (
+          {isFootprintsEnabled && (
             <Box className="flex align-center">
               <Link
                 href={hasStartLinkOnFootprints(account.environment) ? 'mes-empreintes' : '/organisations'}
@@ -87,7 +89,7 @@ const UserView = async ({ account }: Props) => {
               title={navigation('footprints.title')}
               message={navigation('footprints.message')}
             />
-          ) : isTilt(account.environment) && isTiltSimplifiedEnabled ? (
+          ) : isFootprintsEnabled ? (
             <LinkCard
               href="/mes-empreintes"
               icon={<DiagramOutlinedIcon className={styles.icon} />}
