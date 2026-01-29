@@ -47,7 +47,7 @@ const Table = <TData,>({
               </TableRow>
             ) : null}
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className={classNames(styles.headers)}>
+              <TableRow key={headerGroup.id} className={styles.headers}>
                 {headerGroup.headers.map((header) => (
                   <TableCell
                     key={header.id}

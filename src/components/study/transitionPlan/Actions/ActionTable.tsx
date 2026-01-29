@@ -1,6 +1,7 @@
 'use client'
 
 import BaseTable from '@/components/base/Table'
+import styles from '@/components/base/Table.module.css'
 import { TableActionButton } from '@/components/base/TableActionButton'
 import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import commonStyles from '@/components/study/results/commonTable.module.css'
@@ -209,7 +210,7 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
 
   const Row = (row: Row<ActionWithRelations>) => (
     <>
-      <TableRow key={row.id} className={commonStyles.line} data-testid="actions-table-row">
+      <TableRow key={row.id} className={styles.line} data-testid="actions-table-row">
         {row.getVisibleCells().map((cell) => (
           <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
         ))}

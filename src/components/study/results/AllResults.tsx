@@ -78,9 +78,9 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   const tCaracterisations = useTranslations('categorisations')
   const tStudyNav = useTranslations('study.navigation')
   const tBase = useTranslations('emissionFactors.base')
-  const environment = useMemo(() => study.organizationVersion.environment, [study.organizationVersion.environment])
+  const environment = study.organizationVersion.environment
+  const exports = study.exports
   const [type, setType] = useState<ResultType>(AdditionalResultTypes.CONSOLIDATED)
-  const exports = useMemo(() => study.exports, [study.exports])
   const [isDownloadReportActive, setIsDownloadReportActive] = useState(false)
   const [selectedSubposts, setSelectedSubposts] = useState<string[]>([])
   const [selectedTags, setSelectedTags] = useState<string[]>([])
