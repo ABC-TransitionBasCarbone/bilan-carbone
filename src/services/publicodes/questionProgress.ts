@@ -90,10 +90,8 @@ function isListLayoutApplicable(layout: EvaluatedListLayout<string>): boolean {
   return layout.evaluatedListRows.some((el) => el.elements.every((e) => e.applicable))
 }
 
-// TODO: we might have a more complex logic for lists in the future, as they
-// the rules will probably not be answered directly in the main situation.
-function isListLayoutAnswered({ evaluatedTargetElement }: EvaluatedListLayout<string>): boolean {
-  return evaluatedTargetElement.applicable && evaluatedTargetElement.answered
+function isListLayoutAnswered(layout: EvaluatedListLayout<string>): boolean {
+  return layout.evaluatedListRows.some((el) => el.elements.every((e) => !e.applicable || e.answered))
 }
 
 function isTableLayoutApplicable(layout: EvaluatedTableLayout<string>): boolean {
