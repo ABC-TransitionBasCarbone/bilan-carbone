@@ -48,6 +48,13 @@
         "nbJours": "Nombre de jours / semaine",
         "moyenTransport": "Moyen de Transport",
         "distance": "Distance domicile travail (aller-retour)"
+      },
+      "ActivitesDeBureauEquipementInformatique": {
+        "question": "Pour chacun de ces équipements informatiques, veuillez indiquer leur nombre et leur date d'achat ou durée de location",
+        "type": "Type d'équipement informatique",
+        "dateAchat": "Date achat",
+        "duree": "Durée de location (à l'année)",
+        "nombre": "Nombre (unité)"
       }
     }
   }

@@ -90,6 +90,7 @@ fonctionnement . activités de bureau . informatique . appareil:
       unité: an
 
     nombre:
+      type: nombre
       question: Nombre d'appareils
 
     année achat:

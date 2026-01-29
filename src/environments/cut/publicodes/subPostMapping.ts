@@ -120,7 +120,12 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRule
       ],
       'fonctionnement . activités de bureau . informatique',
       // TODO: support list layout
-      [],
+      [
+        'fonctionnement . activités de bureau . informatique . équipement',
+        'fonctionnement . activités de bureau . informatique . appareil . année achat',
+        'fonctionnement . activités de bureau . informatique . appareil . durée location',
+        'fonctionnement . activités de bureau . informatique . appareil . nombre',
+      ],
     ),
   ],
   MobiliteSpectateurs: [
