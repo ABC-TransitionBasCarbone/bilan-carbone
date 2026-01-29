@@ -246,7 +246,7 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
             multiple
             value={sites}
           >
-            <MenuItem value={'all'}>{t('allSites')}</MenuItem>
+            {study.sites.length > 1 && <MenuItem value={'all'}>{t('allSites')}</MenuItem>}
             {study.sites.map((site) => (
               <MenuItem key={site.id} value={site.id}>
                 {site.site.name}
