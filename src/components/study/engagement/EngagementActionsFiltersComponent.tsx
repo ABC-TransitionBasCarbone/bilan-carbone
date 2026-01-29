@@ -1,0 +1,219 @@
+'use client'
+
+import Button from '@/components/base/Button'
+import DebouncedInput from '@/components/base/DebouncedInput'
+import MultiSelectAll from '@/components/base/MultiSelectAll'
+import { EngagementActionSteps, EngagementActionTargets } from '@/constants/engagementActions'
+import { EngagementActionsFilters } from '@/types/filters'
+import { FormControl, FormLabel } from '@mui/material'
+import { DatePicker } from '@mui/x-date-pickers'
+import { EngagementPhase } from '@prisma/client'
+import dayjs, { Dayjs } from 'dayjs'
+import { useTranslations } from 'next-intl'
+import { Dispatch, SetStateAction, useCallback, useMemo } from 'react'
+import styles from './EngagementActionsFilters.module.css'
+
+interface Props {
+  filters: EngagementActionsFilters
+  setFilters: Dispatch<SetStateAction<EngagementActionsFilters>>
+  siteOptions: string[]
+  openAddModal: () => void
+  canEdit: boolean
+}
+
+const EngagementActionsFiltersComponent = ({ filters, setFilters, siteOptions, openAddModal, canEdit }: Props) => {
+  const t = useTranslations('study.engagementActions.filters')
+  const tTable = useTranslations('study.engagementActions.table')
+  const tCommon = useTranslations('common')
+  const tCommonAction = useTranslations('common.action')
+  const tCommonLabel = useTranslations('common.label')
+  const tSteps = useTranslations('study.engagementActions.steps')
+  const tTargets = useTranslations('study.engagementActions.targets')
+  const tPhases = useTranslations('study.engagementActions.phases')
+
+  const stepsValues = useMemo(() => Object.values(EngagementActionSteps) as string[], [])
+  const targetsValues = useMemo(() => Object.values(EngagementActionTargets) as string[], [])
+  const phasesValues = useMemo(() => Object.values(EngagementPhase) as string[], [])
+
+  const createRenderValue = useCallback(
+    (filterArray: string[], allSelected: boolean, translate?: (value: string) => string) => () => {
+      if (allSelected) {
+        return tCommon('all')
+      }
+      if (filterArray.length === 0) {
+        return tCommon('none')
+      }
+      const items = filterArray
+        .filter((item) => item !== 'all')
+        .map((item) => (translate ? translate(item) : item))
+        .filter(Boolean)
+      return items.join(', ')
+    },
+    [tCommon],
+  )
+
+  const allStepsSelected = useMemo(
+    () => (filters.steps as string[]).filter((step) => step !== 'all').length === stepsValues.length,
+    [filters.steps, stepsValues.length],
+  )
+  const stepsRenderValue = useMemo(
+    () =>
+      createRenderValue(filters.steps as string[], allStepsSelected, (step) => tSteps(step as EngagementActionSteps)),
+    [createRenderValue, filters.steps, allStepsSelected, tSteps],
+  )
+
+  const allTargetsSelected = useMemo(
+    () => (filters.targets as string[]).filter((target) => target !== 'all').length === targetsValues.length,
+    [filters.targets, targetsValues.length],
+  )
+  const targetsRenderValue = createRenderValue(filters.targets as string[], allTargetsSelected, (target) =>
+    tTargets(target as EngagementActionTargets),
+  )
+
+  const allPhasesSelected = useMemo(
+    () => (filters.phases as string[]).filter((phase) => phase !== 'all').length === phasesValues.length,
+    [filters.phases, phasesValues.length],
+  )
+  const phasesRenderValue = createRenderValue(filters.phases as string[], allPhasesSelected, (phase) =>
+    tPhases(phase as EngagementPhase),
+  )
+
+  const allSitesSelected = useMemo(
+    () => filters.sites.filter((site) => site !== 'all').length === siteOptions.length,
+    [filters.sites, siteOptions.length],
+  )
+  const sitesRenderValue = createRenderValue(filters.sites, allSitesSelected)
+
+  return (
+    <div className="flex-row gapped-2 justify-between align-end">
+      <div className="align-center wrap gapped-2">
+        <FormControl>
+          <FormLabel id="engagement-actions-filter-search" component="legend">
+            {t('search')}
+          </FormLabel>
+          <DebouncedInput
+            className={'grow'}
+            debounce={500}
+            value={filters.search}
+            onChange={(newValue) => setFilters((prevFilters) => ({ ...prevFilters, search: newValue }))}
+            placeholder={t('searchPlaceholder')}
+          />
+        </FormControl>
+
+        <FormControl className={'grow'}>
+          <FormLabel id="engagement-actions-steps-selector" component="legend">
+            {tTable('steps')}
+          </FormLabel>
+          <MultiSelectAll
+            id="engagement-actions-steps"
+            renderValue={stepsRenderValue}
+            value={filters.steps as string[]}
+            allValues={stepsValues}
+            setValues={(values) =>
+              setFilters((prevFilters) => ({ ...prevFilters, steps: values as (EngagementActionSteps | 'all')[] }))
+            }
+            getLabel={(step) => tSteps(step)}
+          />
+        </FormControl>
+
+        <FormControl className={'grow'}>
+          <FormLabel id="engagement-actions-targets-selector" component="legend">
+            {tTable('target')}
+          </FormLabel>
+          <MultiSelectAll
+            id="engagement-actions-targets"
+            renderValue={targetsRenderValue}
+            value={filters.targets as string[]}
+            allValues={targetsValues}
+            setValues={(values) => {
+              setFilters((prevFilters) => ({
+                ...prevFilters,
+                targets: values as (EngagementActionTargets | 'all')[],
+              }))
+            }}
+            getLabel={(target) => tTargets(target)}
+          />
+        </FormControl>
+
+        <FormControl className={'grow'}>
+          <FormLabel id="engagement-actions-phases-selector" component="legend">
+            {tTable('phase')}
+          </FormLabel>
+          <MultiSelectAll
+            id="engagement-actions-phases"
+            renderValue={phasesRenderValue}
+            value={filters.phases as string[]}
+            allValues={phasesValues}
+            setValues={(values) => {
+              setFilters((prevFilters) => ({
+                ...prevFilters,
+                phases: values as (EngagementPhase | 'all')[],
+              }))
+            }}
+            getLabel={(phase) => tPhases(phase)}
+          />
+        </FormControl>
+
+        <FormControl className={'grow'}>
+          <FormLabel id="engagement-actions-sites-selector" component="legend">
+            {tCommonLabel('sites')}
+          </FormLabel>
+          <MultiSelectAll
+            id="engagement-actions-sites"
+            renderValue={sitesRenderValue}
+            value={filters.sites}
+            allValues={siteOptions}
+            setValues={(values) => setFilters((prevFilters) => ({ ...prevFilters, sites: values }))}
+            getLabel={(site) => site}
+          />
+        </FormControl>
+
+        <FormControl className={'grow'}>
+          <FormLabel id="engagement-actions-start-date-selector" component="legend">
+            {tCommonLabel('start')}
+          </FormLabel>
+          <DatePicker
+            value={filters.dateRange.startDate ? dayjs(filters.dateRange.startDate) : null}
+            onChange={(date: Dayjs | null) =>
+              setFilters((prevFilters) => ({
+                ...prevFilters,
+                dateRange: {
+                  ...prevFilters.dateRange,
+                  startDate: date ? date.format('YYYY-MM-DD') : null,
+                },
+              }))
+            }
+          />
+        </FormControl>
+
+        <FormControl className={'grow'}>
+          <FormLabel id="engagement-actions-end-date-selector" component="legend">
+            {tCommonLabel('end')}
+          </FormLabel>
+          <DatePicker
+            value={filters.dateRange.endDate ? dayjs(filters.dateRange.endDate) : null}
+            onChange={(date: Dayjs | null) =>
+              setFilters((prevFilters) => ({
+                ...prevFilters,
+                dateRange: {
+                  ...prevFilters.dateRange,
+                  endDate: date ? date.format('YYYY-MM-DD') : null,
+                },
+              }))
+            }
+          />
+        </FormControl>
+      </div>
+
+      {canEdit && (
+        <div className={'justify-end'}>
+          <Button onClick={openAddModal} className={styles.addButton}>
+            {tCommonAction('add')}
+          </Button>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default EngagementActionsFiltersComponent

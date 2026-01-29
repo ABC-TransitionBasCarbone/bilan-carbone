@@ -1,3 +1,4 @@
+import { EngagementActionSteps, EngagementActionTargets } from '@/constants/engagementActions'
 import { EmissionSourcesStatus } from '@/services/study'
 import { BCUnit } from '@/services/unit'
 import { EmissionFactorBase, EmissionSourceCaracterisation, EmissionSourceType, SubPost } from '@prisma/client'
@@ -24,4 +25,16 @@ export type EmissionSourcesFilters = {
 export type EmissionSourcesSort = {
   field: 'activityData' | 'emissionFactor' | 'emissions' | 'uncertainty' | undefined
   order: 'asc' | 'desc'
+}
+
+export type EngagementActionsFilters = {
+  search: string
+  steps: (EngagementActionSteps | 'all')[]
+  targets: (EngagementActionTargets | 'all')[]
+  phases: (EngagementPhase | 'all')[]
+  sites: (string | 'all')[]
+  dateRange: {
+    startDate: string | null
+    endDate: string | null
+  }
 }

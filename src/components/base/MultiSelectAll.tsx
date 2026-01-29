@@ -1,18 +1,22 @@
-import { useUnitLabel } from '@/services/unit'
-import { Translations } from '@/types/translation'
 import { Checkbox, ListItemText, MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { useTranslations } from 'next-intl'
+import { useMemo } from 'react'
 
 interface Props<T> {
   id: string
   values: T[]
   allValues: T[]
   setValues: (allValues: T[]) => void
-  t: Translations | ReturnType<typeof useUnitLabel>
+  getLabel: (value: string) => string
 }
 
-const MultiSelect = <T extends string>({ id, values, allValues, setValues, t }: Props<T>) => {
+const MultiSelectAll = <T extends string>({ id, values, allValues, setValues, getLabel }: Props<T>) => {
   const tCommon = useTranslations('common')
+  const allSelected = useMemo(
+    () => values.filter((item) => item !== 'all').length === allValues.length,
+    [values, allValues],
+  )
+
   const valuesWithAllHandled = (allValues.length === values.length ? [...values, 'all'] : values) as (T | 'all')[]
 
   const renderValue = () => {
@@ -22,7 +26,7 @@ const MultiSelect = <T extends string>({ id, values, allValues, setValues, t }: 
       return tCommon('none')
     }
 
-    return valuesWithAllHandled.map((v) => t(v)).join(', ')
+    return valuesWithAllHandled.map((v) => getLabel(v)).join(', ')
   }
 
   const onChange = (event: SelectChangeEvent<string | (T | 'all')[]>) => {
@@ -58,22 +62,20 @@ const MultiSelect = <T extends string>({ id, values, allValues, setValues, t }: 
       displayEmpty
     >
       <MenuItem key={`${id}-item-all`} value="all">
-        <Checkbox checked={valuesWithAllHandled.includes('all')} />
-        <ListItemText
-          primary={tCommon(valuesWithAllHandled.includes('all') ? 'action.unselectAll' : 'action.selectAll')}
-        />
+        <Checkbox checked={allSelected} />
+        <ListItemText primary={allSelected ? tCommon('unselectAll') : tCommon('selectAll')} />
       </MenuItem>
       {allValues
         .filter((option) => option !== '')
-        .sort((a, b) => t(a).localeCompare(t(b)))
+        .sort((a, b) => getLabel(a).localeCompare(getLabel(b)))
         .map((option) => (
           <MenuItem key={`${id}-item-${option}`} value={option || ''}>
             <Checkbox checked={valuesWithAllHandled.includes(option)} />
-            <ListItemText primary={t(option)} />
+            <ListItemText primary={getLabel(option)} />
           </MenuItem>
         ))}
     </Select>
   )
 }
 
-export default MultiSelect
+export default MultiSelectAll

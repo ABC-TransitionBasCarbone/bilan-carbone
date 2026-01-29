@@ -1346,12 +1346,16 @@
     "engagementActions": {
       "title": "Actions de mobilisation",
       "export": "Exporter en CSV",
+      "filters": {
+        "search": "Recherche",
+        "searchPlaceholder": "Par nom, description..."
+      },
       "table": {
         "name": "Nom",
         "description": "Description",
         "steps": "Étape",
         "target": "Cibles",
-        "phase": "Phase de mobilisation",
+        "phase": "Phase",
         "sites": "Sites",
         "date": "Date"
       },
