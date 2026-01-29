@@ -110,6 +110,7 @@ export const computeResult = (
   getEmissionActivityValue: (emissionSource: EmissionSource) => number,
   getLine: GetLineFunctionType,
   base?: EmissionFactorBase,
+  isGHGP?: boolean,
 ): PostInfos[] => {
   const results: Record<string, Omit<PostInfos, 'rule' | 'PostInfos'>[]> = allRules.reduce(
     (acc, rule) => ({ ...acc, [rule]: [] }),
@@ -159,13 +160,13 @@ export const computeResult = (
         emissionFactor.emissionFactorParts.forEach((part) => {
           const rule = subPostRules.find((rule) => rule.type === part.type)
           let post = getRulePost(caracterisation, rule)
-          let updatedValue = value
           if (
+            isGHGP &&
             part.type === EmissionFactorPartType.Fabrication &&
             caracterisation === EmissionSourceCaracterisation.Operated &&
             emissionSource.constructionYear?.getFullYear() !== study.startDate.getFullYear()
           ) {
-            updatedValue = 0
+            return
           }
 
           if (!post) {
@@ -175,7 +176,7 @@ export const computeResult = (
 
           if (post && results[post]) {
             // Et on ajoute la valeur selon la composante quoi qu'il arrive
-            results[post].push({ ...getLine(updatedValue, part), squaredStandardDeviation })
+            results[post].push({ ...getLine(value, part), squaredStandardDeviation })
           }
         })
       }

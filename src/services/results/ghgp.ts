@@ -127,4 +127,5 @@ export const computeGHGPResult = (
     getGHGPEmissionValue(study.startDate),
     getLine,
     base,
+    true,
   )

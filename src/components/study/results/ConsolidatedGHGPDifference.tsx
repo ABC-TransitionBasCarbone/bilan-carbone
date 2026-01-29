@@ -244,7 +244,7 @@ const ConsolatedGHGPDifference = ({
     environment,
   ])
 
-  const fabrication = useMemo(
+  const fabricationEmissionSources = useMemo(
     () =>
       emissionSourcesForSelectedSite.filter((emissionSource) => {
         if (isEmissionSourceFiltered(emissionSource)) {
@@ -261,9 +261,9 @@ const ConsolatedGHGPDifference = ({
     [emissionSourcesForSelectedSite, isEmissionSourceFiltered, study.startDate],
   )
 
-  const fabricationDifference = useMemo(() => {
+  const fabricationEmissionSourcesDifference = useMemo(() => {
     let value = 0
-    fabrication.forEach((emissionSource) => {
+    fabricationEmissionSources.forEach((emissionSource) => {
       if (!emissionSource.emissionFactor || !emissionSource.value) {
         return
       }
@@ -278,11 +278,11 @@ const ConsolatedGHGPDifference = ({
       const parts = emissionFactor.emissionFactorParts.filter((p) => p.type === EmissionFactorPartType.Fabrication)
       parts.forEach((part) => {
         const emissionTotal = getGHGPEmissionValue(study.startDate)(emissionSource)
-        value = value - getLine(emissionTotal, part).co2 / unitValue
+        value = value - getLine(emissionTotal, part).total / unitValue
       })
     })
     return value
-  }, [fabrication, emissionFactorsWithParts, unitValue, environment, ghgpRules])
+  }, [fabricationEmissionSources, emissionFactorsWithParts, unitValue, environment, ghgpRules])
 
   return (
     <ConsolidatedExportDifference
@@ -298,7 +298,7 @@ const ConsolatedGHGPDifference = ({
         otherEmissionsAmontDifference +
         otherGasDifference +
         marketBasedDifference +
-        fabricationDifference
+        fabricationEmissionSourcesDifference
       }
     >
       {hasUtilisationEnDependance && (
@@ -387,14 +387,14 @@ const ConsolatedGHGPDifference = ({
           Icon={EnergiesIcon}
         />
       )}
-      {!!fabrication.length && (
+      {!!fabricationEmissionSources.length && (
         <ExportDifferenceItems
           title="fabricationTitle"
           descriptions={['fabrication']}
-          emissionSources={fabrication}
+          emissionSources={fabricationEmissionSources}
           exportType={Export.GHGP}
           studySite={studySite}
-          value={formatNumber(fabricationDifference, 0)}
+          value={formatNumber(fabricationEmissionSourcesDifference, 0)}
           resultsUnit={study.resultsUnit}
           navigateToEmissionSource={navigateToEmissionSource}
         />
