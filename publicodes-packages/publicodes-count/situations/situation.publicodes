@@ -116,8 +116,8 @@ cine test:
 
     fonctionnement . activités de bureau . informatique . équipement: "'ordinateurs portables'"
 
-    fonctionnement . activités de bureau . informatique . ordinateurs portables . nombre: 10
-    fonctionnement . activités de bureau . informatique . ordinateurs portables . année achat: "'01/2021'"
+    fonctionnement . activités de bureau . informatique . appareil . nombre: 10
+    fonctionnement . activités de bureau . informatique . appareil . année achat: "'01/2021'"
 
     déchets . ordinaires . ordures ménagères . nombre bennes: 2
     déchets . ordinaires . ordures ménagères . taille benne: 660

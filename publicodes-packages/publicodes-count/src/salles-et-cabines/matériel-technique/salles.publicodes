@@ -15,6 +15,10 @@ salles et cabines . matériel technique . salle:
       - système son
   unité: kgCO2e
 
+salles et cabines . matériel technique . salle . nom:
+  question: Nom de la salle
+  type: texte
+
 salles et cabines . matériel technique . salle . projecteur:
   titre: Projecteur
   formule:
@@ -254,7 +258,7 @@ salles et cabines . matériel technique . salle . système son:
       note: La durée d'amortissement est la même pour tous les systèmes son.
 
     année achat:
-      question: Année d'acquisition système son
+      question: Année d'acquisition système de son
       type: date
       form:
         saisie: année

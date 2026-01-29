@@ -24,7 +24,7 @@ confiseries et boissons . électroménager . appareil:
           produit:
             - nb appareils
             - FE
-            - (durée location / (commun . nombre de jours par an * 1 /an * amortissement))
+            - (durée location / (commun . nombre de jours par an * amortissement))
       - sinon:
           variations:
             - si: age > amortissement
@@ -42,6 +42,7 @@ confiseries et boissons . électroménager . appareil:
 
     nb appareils:
       question: Nombre d'appareils
+      unité: unité
 
     année achat:
       non applicable si:
@@ -58,7 +59,7 @@ confiseries et boissons . électroménager . appareil:
       note: La durée d'amortissement est la même pour tous les appareils électroménagers et fixée à 5 ans.
 
     FE:
-      unité: kgCO2e
+      unité: kgCO2e/unité
 
 confiseries et boissons . électroménager . réfrigérateurs:
   titre: Réfrigérateurs
@@ -71,7 +72,7 @@ confiseries et boissons . électroménager . réfrigérateurs:
   avec:
     FE:
       valeur: 257.3
-      unité: kgCO2e
+      unité: kgCO2e/unité
       meta:
         id: 26976
 
@@ -103,7 +104,7 @@ confiseries et boissons . électroménager . congélateurs:
   avec:
     FE:
       valeur: 301.4
-      unité: kgCO2e
+      unité: kgCO2e/unité
       meta:
         id: 26978
 
@@ -135,7 +136,7 @@ confiseries et boissons . électroménager . warmers:
   avec:
     FE:
       valeur: 217.59
-      unité: kgCO2e
+      unité: kgCO2e/unité
       meta:
         id: 26986
 
@@ -167,7 +168,7 @@ confiseries et boissons . électroménager . distributeurs:
   avec:
     FE:
       valeur: 257.3
-      unité: kgCO2e
+      unité: kgCO2e/unité
       meta:
         id: 26976
 

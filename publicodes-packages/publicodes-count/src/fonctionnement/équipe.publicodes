@@ -13,6 +13,10 @@ fonctionnement . équipe . collaborateurs:
   par défaut: 0
   unité: kgCO2e
 
+fonctionnement . équipe . collaborateurs . nom:
+  question: Libellé
+  type: texte
+
 fonctionnement . équipe . collaborateur type:
   formule: repas + transport
   unité: kgCO2e
