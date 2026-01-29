@@ -16,6 +16,7 @@ const StyledFormControl = styled(FormControl, {
   maxWidth: table ? '12.5rem' : '100%',
   width: '100%',
   boxSizing: 'border-box',
+  minWidth: '8rem',
 }))
 
 interface SelectInputProps<RuleName extends string> extends BaseInputProps<RuleName> {

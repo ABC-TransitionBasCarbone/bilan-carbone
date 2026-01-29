@@ -1,5 +1,6 @@
 .inputWrapper {
   max-width: fit-content;
+  min-width: 8rem;
 }
 
 .input {
