@@ -1336,7 +1336,8 @@
         "sites": "Sites",
         "date": "Date",
         "validate": "Valider",
-        "allSites": "Tous les sites"
+        "allSites": "Tous les sites",
+        "addCustomTarget": "Ajouter une cible personalisée"
       },
       "targets": {
         "TEAM_PROJECT": "Équipe projet",

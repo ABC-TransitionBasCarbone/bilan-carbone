@@ -16,11 +16,11 @@ import {
 } from '@/services/serverFunctions/study.command'
 import { objectWithoutNullAttributes } from '@/utils/object'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Checkbox, ListItemText, MenuItem } from '@mui/material'
+import { Checkbox, ListItemText, MenuItem, TextField } from '@mui/material'
 import { EngagementPhase } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useEffect, useMemo, useState } from 'react'
+import { ChangeEvent, useEffect, useMemo, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import styles from './EngagementActionModal.module.css'
 
@@ -41,6 +41,9 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
   const tSteps = useTranslations('study.engagementActions.steps')
   const tPhases = useTranslations('study.engagementActions.phases')
   const [submitting, setSubmitting] = useState(false)
+  const [addCustomTarget, setAddCustomTarget] = useState(false)
+  const [currentCustomTarget, setCurrentCustomTarget] = useState<string>('')
+  const [customTargets, setCustomTargets] = useState<string[]>([])
   const { callServerFunction } = useServerFunction()
   const router = useRouter()
 
@@ -94,6 +97,18 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
     onClose()
   }
 
+  const handleCloseCustomTarget = () => {
+    setAddCustomTarget(false)
+    setCurrentCustomTarget('')
+  }
+
+  const handleAddCustomTarget = () => {
+    setCustomTargets((targets) => [...targets, currentCustomTarget])
+    setValue('targets', [...targets, currentCustomTarget])
+    setAddCustomTarget(false)
+    setCurrentCustomTarget('')
+  }
+
   useEffect(() => {
     if (sites.includes('all')) {
       if (sites.length === study.sites.length + 1) {
@@ -106,6 +121,25 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
       }
     }
   }, [sites, study])
+
+  useEffect(() => {
+    if (targets.includes('add_custom_target')) {
+      setAddCustomTarget(true)
+      setValue(
+        'targets',
+        targets.filter((target) => target !== 'add_custom_target'),
+      )
+    }
+  }, [targets])
+
+  useEffect(() => {
+    if (!customTargets.length) {
+      const tmpCustomTargets = targets.filter(
+        (target) => !(Object.values(EngagementActionTargets) as string[]).includes(target),
+      )
+      setCustomTargets(tmpCustomTargets)
+    }
+  }, [customTargets, targets])
 
   return (
     <>
@@ -152,12 +186,21 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
                 .join(', ')
             }}
           >
-            {Object.values(EngagementActionTargets).map((target) => (
+            {[...customTargets, ...Object.values(EngagementActionTargets)].map((target) => (
               <MenuItem key={target} value={target}>
                 <Checkbox checked={targets?.includes(target)} />
-                <ListItemText primary={tTargets(target)} />
+                <ListItemText
+                  primary={
+                    Object.values(EngagementActionTargets).includes(target as EngagementActionTargets)
+                      ? tTargets(target)
+                      : target
+                  }
+                />
               </MenuItem>
             ))}
+            <MenuItem value="add_custom_target">
+              <ListItemText primary={`+ ${t('addCustomTarget')}`} />
+            </MenuItem>
           </FormSelect>
           <FormAutocomplete
             data-testid="engagement-action-steps"
@@ -231,6 +274,27 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
           open
         />
       )}
+      <Modal
+        open={addCustomTarget}
+        label={'custom target'}
+        title={t('addCustomTarget')}
+        onClose={handleCloseCustomTarget}
+        actions={[
+          {
+            actionType: 'submit',
+            onClick: handleAddCustomTarget,
+            loading: false,
+            disabled: !currentCustomTarget,
+            children: t('addCustomTarget'),
+          },
+        ]}
+      >
+        <TextField
+          value={currentCustomTarget}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setCurrentCustomTarget(e.target.value)}
+          required
+        />
+      </Modal>
     </>
   )
 }
