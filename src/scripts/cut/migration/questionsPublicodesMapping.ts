@@ -424,17 +424,17 @@ export const questionsPublicodesMapping: QuestionsPublicodesMappingType = {
     '10-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-mois': 'TABLEAU',
     '10-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer': [
       'LISTE',
-      'fonctionnement . activités de bureau . informatique . appareil',
+      'fonctionnement . activités de bureau . informatique',
     ],
     '10-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': [
       'LISTE',
-      'fonctionnement . déplacements pro . déplacement type',
+      'fonctionnement . déplacements pro . déplacements',
     ],
     '10-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': [
       'LISTE',
-      'fonctionnement . équipe . collaborateur type',
+      'fonctionnement . équipe . collaborateurs',
     ],
-    '10-decrivez-les-differentes-salles-du-cinema': ['LISTE', 'salles et cabines . matériel technique . salle'],
+    '10-decrivez-les-differentes-salles-du-cinema': ['LISTE', 'salles et cabines . matériel technique . salles'],
 
     // Visiblement, ces questions n'existent plus
     // '10-comment-stockez-vous-les-films',

@@ -3,12 +3,17 @@
 
 'use server'
 
+import { PUBLICODES_COUNT_VERSION } from '@/constants/versions'
 import { prismaClient } from '@/db/client'
+import { upsertSituation } from '@/db/situation'
 import { getCutEngine } from '@/environments/cut/publicodes/cut-engine'
 import { studySiteToCutSituation } from '@/environments/cut/publicodes/studySiteToSituation'
 import { CutRuleName, CutSituation } from '@/environments/cut/publicodes/types'
+import { ListLayoutSituations } from '@/lib/publicodes/context/types'
+import { aggregateSituationValues } from '@/lib/publicodes/utils'
 import { CutStudySiteFields } from '@/services/studySiteToSituation'
 import { Answer, QuestionType, Unit } from '@prisma/client'
+import { InputJsonValue } from '@prisma/client/runtime/library'
 import { CutSituationKey, InternQuestionId, questionsPublicodesMapping } from './questionsPublicodesMapping'
 
 // Pour chaque answers:
@@ -18,7 +23,7 @@ import { CutSituationKey, InternQuestionId, questionsPublicodesMapping } from '.
 
 type stuationWithListLayout = {
   mainSituation: CutSituation
-  listLayoutSituations: Record<CutRuleName, CutSituation[]>
+  listLayoutSituations: ListLayoutSituations<CutRuleName>
 }
 
 const studySiteSituationMap: Record<string, stuationWithListLayout> = {}
@@ -59,7 +64,7 @@ function formatToPublicodesValue(
       if (value === 'Invalid Date') {
         return null
       }
-      situationValue = unit === 'YEAR' ? `'01/${value}'` : `'${value}'`
+      situationValue = unit === 'YEAR' ? `01/${value}` : `'${value}'`
       break
     }
     case 'SELECT': {
@@ -195,7 +200,7 @@ async function processAnswer({
   if (!studySiteSituationMap[answerCourante.studySiteId]) {
     studySiteSituationMap[answerCourante.studySiteId] = {
       mainSituation: {},
-      listLayoutSituations: {} as Record<CutRuleName, CutSituation[]>,
+      listLayoutSituations: {},
     }
   }
 
@@ -234,15 +239,20 @@ async function processAnswer({
 
   if (isListItemFrom) {
     // we add the item to the correct list layout situation according to the isListItemFrom key
-    if (!studySiteSituationMap[answerCourante.studySiteId].listLayoutSituations[isListItemFrom as CutRuleName]) {
-      studySiteSituationMap[answerCourante.studySiteId].listLayoutSituations[isListItemFrom as CutRuleName] = []
+    const [ruleName, rowId] = isListItemFrom.split(' | ')
+    if (!studySiteSituationMap[answerCourante.studySiteId].listLayoutSituations[ruleName as CutRuleName]) {
+      studySiteSituationMap[answerCourante.studySiteId].listLayoutSituations[ruleName as CutRuleName] = []
     }
-    // we merge the new situation state into the last item of the list but we only keep one item per list entry
-    const list = studySiteSituationMap[answerCourante.studySiteId].listLayoutSituations[isListItemFrom as CutRuleName]
-    if (list.length === 0) {
-      list.push({})
+    // Find or create the item with the matching rowId
+    const list = studySiteSituationMap[answerCourante.studySiteId].listLayoutSituations[ruleName as CutRuleName]
+    if (list) {
+      let existingItem = list.find((item) => item.id === rowId)
+      if (!existingItem) {
+        existingItem = { id: rowId, situation: {} as CutSituation }
+        list.push(existingItem)
+      }
+      Object.assign(existingItem.situation, situationState)
     }
-    Object.assign(list[list.length - 1], situationState)
   } else {
     // Merge la situation formatée dans la situation principale du studySite
     Object.assign(studySiteSituationMap[answerCourante.studySiteId].mainSituation, situationState)
@@ -268,28 +278,24 @@ async function main() {
     }
   }
 
-  // Group list layout situations by rule and drop row IDs
-
-  Object.entries(studySiteSituationMap).forEach(([, site]) => {
-    const formattedListLayout: Record<CutRuleName, CutSituation[]> = {} as Record<CutRuleName, CutSituation[]>
-    for (const [key, situationArray] of Object.entries(site.listLayoutSituations)) {
-      const [ruleName] = key.split(' | ')
-      if (!formattedListLayout[ruleName as CutRuleName]) {
-        formattedListLayout[ruleName as CutRuleName] = []
-      }
-      // Flatten per-row arrays (usually length 1) into the aggregated list
-      for (const item of situationArray as CutSituation[]) {
-        formattedListLayout[ruleName as CutRuleName].push(item)
-      }
-    }
-    site.listLayoutSituations = formattedListLayout
-  })
-
-  console.log('Mapped situation for study site:', studySiteSituationMap)
-
-  // Check dans l'engine avant de save la situation
+  // Calculate list evaluation parent value from list items situations
   const engine = getCutEngine()
 
+  Object.entries(studySiteSituationMap).forEach(([, site]) => {
+    // use aggregateSituationValues like in patchListLayoutSituations
+    for (const [listRule, listSituations] of Object.entries(site.listLayoutSituations)) {
+      const aggregatedValue = aggregateSituationValues(
+        engine,
+        listRule as CutRuleName,
+        listSituations as Array<{ id: string; situation: CutSituation }>,
+      )
+      site.mainSituation[listRule as CutRuleName] = aggregatedValue
+    }
+  })
+
+  console.log('Mapped situation for study site:', JSON.stringify(studySiteSituationMap))
+
+  // Check dans l'engine avant de save la situation
   for (const [studySiteId, situation] of Object.entries(studySiteSituationMap)) {
     try {
       engine.setSituation(situation.mainSituation)
@@ -307,12 +313,19 @@ async function main() {
   }
 
   // Sauvegader la situation
-  //   await Promise.all(Object.entries(studySiteSituationMap).map(([studySiteId, situation]) =>
-  //      upsertSituation(studySiteId, situation as InputJsonValue, PUBLICODES_COUNT_VERSION)
-  // ))
+  await Promise.all(
+    Object.entries(studySiteSituationMap).map(([studySiteId, situation]) =>
+      upsertSituation(
+        studySiteId,
+        situation.mainSituation as InputJsonValue,
+        situation.listLayoutSituations as InputJsonValue,
+        PUBLICODES_COUNT_VERSION,
+      ),
+    ),
+  )
 }
 
-console.log('Startig migration')
+console.log('Starting migration')
 const startTime = Date.now()
 main().then(() => {
   const duration = Date.now() - startTime
