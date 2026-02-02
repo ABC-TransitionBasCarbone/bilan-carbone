@@ -18,7 +18,7 @@ import {
   TRAJECTORY_SNBC_GENERAL_ID,
   TRAJECTORY_SNBC_TRANSPORTATION_ID,
 } from '@/constants/trajectories'
-import { createSectenData, createSectenDataWithSectors } from './secten.test-utils'
+import { createGeneralSectenData, createSectenDataWithSectors } from './secten.test-utils'
 import { calculateSNBCTrajectory } from './snbc'
 import { calculateTrajectoryIntegral, getSNBCData, PastStudy } from './trajectory'
 
@@ -40,7 +40,7 @@ const getValue = (trajectory: TrajectoryDataPoint[], year: number) => {
 describe('SNBC Trajectory', () => {
   describe('getSNBCData - without past studies', () => {
     test('study in 2020: rate based on Secten 2020 emissions, objectives reached', () => {
-      const sectenData = createSectenData()
+      const sectenData = createGeneralSectenData()
       const studyEmissions = 1000
       const studyStartYear = 2020
 
@@ -68,7 +68,7 @@ describe('SNBC Trajectory', () => {
     })
 
     test('study in 2025 (after last Secten): rate based on Secten 2024, reconstruction uses rateTo2030', () => {
-      const sectenData = createSectenData()
+      const sectenData = createGeneralSectenData()
       const studyEmissions = STANDARD_STUDY_EMISSIONS
       const studyStartYear = 2025
 
@@ -93,7 +93,7 @@ describe('SNBC Trajectory', () => {
     })
 
     test('study in 2025 via calculateCustomTrajectory with SNBC_GENERAL type', () => {
-      const sectenData = createSectenData()
+      const sectenData = createGeneralSectenData()
       const studyEmissions = STANDARD_STUDY_EMISSIONS
       const studyStartYear = 2025
 
@@ -118,7 +118,7 @@ describe('SNBC Trajectory', () => {
 
   describe('getSNBCData - with past studies (no overshoot)', () => {
     test('past study in 2020, current study in 2024: linear interpolation, Secten reconstruction before 2020', () => {
-      const sectenData = createSectenData()
+      const sectenData = createGeneralSectenData()
       const studyEmissions = 900
       const studyStartYear = 2024
       const pastStudies = [createPastStudy(2020, STANDARD_STUDY_EMISSIONS)]
@@ -143,7 +143,7 @@ describe('SNBC Trajectory', () => {
     })
 
     test('past study in 2022, current study in 2025: linear interpolation, correct rate after 2025', () => {
-      const sectenData = createSectenData()
+      const sectenData = createGeneralSectenData()
       const studyEmissions = STANDARD_STUDY_EMISSIONS
       const studyStartYear = 2025
       const pastStudies = [createPastStudy(2022, STANDARD_STUDY_EMISSIONS + 60)]
@@ -167,7 +167,7 @@ describe('SNBC Trajectory', () => {
     })
 
     test('multiple past studies (2018, 2021), current study in 2024: interpolation between all points, Secten reconstruction before 2018', () => {
-      const sectenData = createSectenData()
+      const sectenData = createGeneralSectenData()
       const studyEmissions = 800
       const studyStartYear = 2024
       const pastStudies = [createPastStudy(2018, 1200), createPastStudy(2021, STANDARD_STUDY_EMISSIONS)]
@@ -197,7 +197,7 @@ describe('SNBC Trajectory', () => {
 
   describe('SNBC - budget equality test with overshoot compensation', () => {
     test('overshoot compensation ensures equal total budget', () => {
-      const sectenData = createSectenData()
+      const sectenData = createGeneralSectenData()
       const referenceStudy = createPastStudy(2022, STANDARD_STUDY_EMISSIONS)
       const studyStartYear = 2025
       const studyEmissions = 1200
@@ -228,7 +228,7 @@ describe('SNBC Trajectory', () => {
     })
 
     test('multiple overshoot scenarios maintain budget equality', () => {
-      const sectenData = createSectenData()
+      const sectenData = createGeneralSectenData()
       const referenceStudy = createPastStudy(2022, STANDARD_STUDY_EMISSIONS)
 
       const testCases = [

@@ -38,7 +38,7 @@ export const createSectenInfo = (params: CreateSectenInfoParams): SectenInfo => 
   }
 }
 
-export const createSectenData = (): SectenInfo[] => [
+export const createGeneralSectenData = (): SectenInfo[] => [
   createSectenInfo({ year: 1990, total: 547000 }),
   createSectenInfo({ year: 1991, total: 572000 }),
   createSectenInfo({ year: 1992, total: 561000 }),

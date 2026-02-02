@@ -9,8 +9,17 @@ import {
   createTrajectoryWithObjectives,
   updateTrajectory,
 } from '@/services/serverFunctions/trajectory'
-import { createTrajectorySchema, TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
-import { calculateSNBCReductionRates, getSNBCGeneralDisplayedReductionRates } from '@/utils/snbc'
+import {
+  createTrajectorySchema,
+  SectorPercentages,
+  TrajectoryFormData,
+} from '@/services/serverFunctions/trajectory.command'
+import {
+  calculateBaseSNBCReductionRates,
+  calculateSectoralSNBCReductionRates,
+  extractSNBCReductionRatesFromObjectives,
+  SNBC_FINAL_TARGET_YEAR,
+} from '@/utils/snbc'
 import { getYearFromDateStr } from '@/utils/time'
 import {
   BaseObjective,
@@ -54,6 +63,14 @@ const defaultValues: TrajectoryFormData = {
     targetYear: null,
     reductionRate: null,
   })),
+  sectorPercentages: {
+    energy: 0,
+    industry: 0,
+    waste: 0,
+    buildings: 0,
+    agriculture: 0,
+    transportation: 0,
+  },
 }
 
 const TrajectoryCreationModal = ({
@@ -73,15 +90,6 @@ const TrajectoryCreationModal = ({
   const [activeStep, setActiveStep] = useState(isEditMode || !isFirstCreation ? 1 : 0)
   const [isLoading, setIsLoading] = useState(false)
   const { callServerFunction } = useServerFunction()
-
-  const snbcRates = useMemo(
-    () =>
-      isEditMode
-        ? getSNBCGeneralDisplayedReductionRates(trajectory)
-        : calculateSNBCReductionRates(sectenData, studyYear),
-    [isEditMode, trajectory, sectenData, studyYear],
-  )
-
   const trajectorySchema = createTrajectorySchema()
 
   const {
@@ -97,6 +105,33 @@ const TrajectoryCreationModal = ({
     mode: 'onChange',
   })
 
+  const trajectoryType = watch('trajectoryType')
+  const sectorPercentages = useWatch({ control, name: 'sectorPercentages' })
+
+  const snbcRates = useMemo(() => {
+    // For SNBC_SECTORAL (both create and edit), calculate based on sector percentages
+    if (trajectoryType === TrajectoryType.SNBC_SECTORAL && sectorPercentages) {
+      const rates = calculateSectoralSNBCReductionRates(
+        {
+          studyEmissions,
+          studyStartYear: studyYear,
+          sectenData,
+          pastStudies,
+          displayCurrentStudyValueOnTrajectory: true,
+          maxYear: SNBC_FINAL_TARGET_YEAR,
+        },
+        sectorPercentages,
+      )
+      return rates
+    } else if (trajectoryType === TrajectoryType.SNBC_GENERAL) {
+      if (isEditMode) {
+        return extractSNBCReductionRatesFromObjectives(trajectory.objectives)
+      }
+      return calculateBaseSNBCReductionRates(sectenData, studyYear)
+    }
+    return null
+  }, [trajectoryType, sectorPercentages, studyEmissions, studyYear, sectenData, pastStudies, isEditMode, trajectory])
+
   useEffect(() => {
     if (trajectory) {
       reset({
@@ -108,11 +143,19 @@ const TrajectoryCreationModal = ({
           targetYear: obj.targetYear.toString(),
           reductionRate: Number((obj.reductionRate * 100).toFixed(2)),
         })),
+        sectorPercentages: trajectory.sectorPercentages
+          ? (trajectory.sectorPercentages as SectorPercentages)
+          : {
+              energy: 0,
+              industry: 0,
+              waste: 0,
+              buildings: 0,
+              agriculture: 0,
+              transportation: 0,
+            },
       })
     }
   }, [trajectory, reset])
-
-  const trajectoryType = watch('trajectoryType')
 
   const isSBTI = trajectoryType === TrajectoryType.SBTI_15 || trajectoryType === TrajectoryType.SBTI_WB2C
   const isSNBC = trajectoryType === TrajectoryType.SNBC_GENERAL || trajectoryType === TrajectoryType.SNBC_SECTORAL
@@ -126,26 +169,31 @@ const TrajectoryCreationModal = ({
   const correctedObjectives = useMemo(() => {
     // For SBTI and SNBC, build objectives from rates since form objectives are empty
     let objectivesToUse = objectives
-    if (isSBTI || isSNBC) {
-      const rateTo2030 = isSNBC
-        ? snbcRates?.rateTo2030
-        : isSBTI
-          ? getDefaultSBTIReductionRate(trajectoryType)
-          : undefined
-      const rateTo2050 = isSNBC
-        ? snbcRates?.rateTo2050
-        : isSBTI
-          ? getDefaultSBTIReductionRate(trajectoryType)
-          : undefined
+    let rateTo2015 = null
+    let rateTo2030 = null
+    let rateTo2050 = null
 
-      if (rateTo2030 !== undefined && rateTo2050 !== undefined) {
-        objectivesToUse = [
-          { targetYear: '2030', reductionRate: rateTo2030 * 100 },
-          { targetYear: '2050', reductionRate: rateTo2050 * 100 },
-        ]
-      } else {
-        return null
+    if (isSBTI) {
+      const singleRate = getDefaultSBTIReductionRate(trajectoryType)
+      rateTo2030 = singleRate
+      rateTo2050 = singleRate
+    } else if (isSNBC) {
+      rateTo2015 = snbcRates?.rateTo2015
+      rateTo2030 = snbcRates?.rateTo2030
+      rateTo2050 = snbcRates?.rateTo2050
+    }
+
+    if (rateTo2030 !== null && rateTo2030 !== undefined && rateTo2050 !== null && rateTo2050 !== undefined) {
+      objectivesToUse = []
+
+      if (rateTo2015 !== null && rateTo2015 !== undefined) {
+        objectivesToUse.push({ targetYear: '2015', reductionRate: rateTo2015 * 100 })
       }
+
+      objectivesToUse.push(
+        { targetYear: '2030', reductionRate: rateTo2030 * 100 },
+        { targetYear: '2050', reductionRate: rateTo2050 * 100 },
+      )
     }
 
     const corrected = getCorrectedObjectives(
@@ -159,6 +207,7 @@ const TrajectoryCreationModal = ({
       isSNBC,
       isCustom,
       sectenData,
+      trajectoryType === TrajectoryType.SNBC_SECTORAL ? sectorPercentages : undefined,
     )
 
     if (!corrected) {
@@ -196,8 +245,10 @@ const TrajectoryCreationModal = ({
     isSNBC,
     isCustom,
     sectenData,
+    snbcRates?.rateTo2015,
     snbcRates?.rateTo2030,
     snbcRates?.rateTo2050,
+    sectorPercentages,
   ])
 
   const steps = [t('steps.chooseTrajectory'), t('steps.defineObjectives')]
@@ -228,13 +279,56 @@ const TrajectoryCreationModal = ({
     const referenceYear = data.referenceYear ? getYearFromDateStr(data.referenceYear) : null
 
     if (isEditMode && trajectory) {
-      const objectives = data.objectives
-        .filter((obj) => obj.targetYear && obj.reductionRate !== null && obj.reductionRate !== undefined)
-        .map((obj) => ({
-          id: obj.id,
-          targetYear: getYearFromDateStr(obj.targetYear!),
-          reductionRate: Number((obj.reductionRate! / 100).toFixed(4)), // Keep precision of 2 digits percentage so 0.01% = 0.0001 => 4 digits
+      let objectives
+
+      if (data.trajectoryType === TrajectoryType.SNBC_SECTORAL || data.trajectoryType === TrajectoryType.SNBC_GENERAL) {
+        if (!snbcRates) {
+          setIsLoading(false)
+          throw new Error('Unable to calculate SNBC reduction rates')
+        }
+
+        const objectivesArray: { targetYear: number; reductionRate: number }[] = []
+
+        if (snbcRates.rateTo2015 !== undefined) {
+          objectivesArray.push({ targetYear: 2015, reductionRate: snbcRates.rateTo2015 })
+        }
+
+        objectivesArray.push({ targetYear: 2030, reductionRate: snbcRates.rateTo2030 })
+        objectivesArray.push({ targetYear: 2050, reductionRate: snbcRates.rateTo2050 })
+
+        objectives = objectivesArray.map((obj, index) => ({
+          id: trajectory.objectives[index]?.id,
+          targetYear: obj.targetYear,
+          reductionRate: Number(obj.reductionRate.toFixed(4)),
         }))
+      } else if (data.trajectoryType === TrajectoryType.SBTI_15 || data.trajectoryType === TrajectoryType.SBTI_WB2C) {
+        const baseRate = getDefaultSBTIReductionRate(data.trajectoryType)
+        if (!baseRate) {
+          setIsLoading(false)
+          throw new Error('Unable to get SBTI reduction rate')
+        }
+
+        objectives = [
+          {
+            id: trajectory.objectives[0]?.id,
+            targetYear: 2030,
+            reductionRate: Number(baseRate.toFixed(4)),
+          },
+          {
+            id: trajectory.objectives[1]?.id,
+            targetYear: 2050,
+            reductionRate: Number(baseRate.toFixed(4)),
+          },
+        ]
+      } else {
+        objectives = data.objectives
+          .filter((obj) => obj.targetYear && obj.reductionRate !== null && obj.reductionRate !== undefined)
+          .map((obj) => ({
+            id: obj.id,
+            targetYear: getYearFromDateStr(obj.targetYear!),
+            reductionRate: Number((obj.reductionRate! / 100).toFixed(4)),
+          }))
+      }
 
       await callServerFunction(
         () =>
@@ -243,6 +337,7 @@ const TrajectoryCreationModal = ({
             description: data.description,
             type: data.trajectoryType,
             referenceYear,
+            sectorPercentages: data.sectorPercentages,
             objectives,
           }),
         {
@@ -287,6 +382,29 @@ const TrajectoryCreationModal = ({
         { targetYear: 2030, reductionRate: snbcRates.rateTo2030 },
         { targetYear: 2050, reductionRate: snbcRates.rateTo2050 },
       ]
+    } else if (data.trajectoryType === TrajectoryType.SNBC_SECTORAL) {
+      if (!data.sectorPercentages) {
+        setIsLoading(false)
+        throw new Error('Sector percentages are required')
+      }
+
+      if (!snbcRates) {
+        setIsLoading(false)
+        throw new Error('Unable to calculate SNBC reduction rates')
+      }
+
+      input.sectorPercentages = data.sectorPercentages
+
+      const objectives: { targetYear: number; reductionRate: number }[] = []
+
+      if (snbcRates.rateTo2015 !== undefined) {
+        objectives.push({ targetYear: 2015, reductionRate: snbcRates.rateTo2015 })
+      }
+
+      objectives.push({ targetYear: 2030, reductionRate: snbcRates.rateTo2030 })
+      objectives.push({ targetYear: 2050, reductionRate: snbcRates.rateTo2050 })
+
+      input.objectives = objectives
     }
 
     await callServerFunction(() => createTrajectoryWithObjectives(input), {

@@ -6,6 +6,7 @@ import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
 import { deleteObjective, deleteTrajectory } from '@/services/serverFunctions/trajectory'
+import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
 import { formatNumber } from '@/utils/number'
 import {
   getCorrectedObjectives,
@@ -135,6 +136,9 @@ const TrajectoryObjectivesTable = ({
         isSNBC,
         isCustom,
         sectenData,
+        traj.type === TrajectoryType.SNBC_SECTORAL
+          ? (traj.sectorPercentages as SectorPercentages | undefined)
+          : undefined,
       )
 
       if (correctedObjectives) {

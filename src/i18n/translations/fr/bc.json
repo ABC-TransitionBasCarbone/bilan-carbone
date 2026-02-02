@@ -1122,6 +1122,21 @@
           "generale": "Générale",
           "sectorielle": "Sectorielle"
         },
+        "sectorAllocation": {
+          "title": "Allocation par secteur",
+          "description": "Définissez le pourcentage d'émissions à attribuer à chaque secteur. Le reste sera attribué à au secteur général."
+        },
+        "sectors": {
+          "energy": "Énergie",
+          "industry": "Industrie",
+          "waste": "Déchets",
+          "buildings": "Bâtiments",
+          "agriculture": "Agriculture",
+          "transportation": "Transport",
+          "remainingGeneral": "Émissions générales restantes",
+          "errorOverLimit": "Le total des pourcentages ne peut pas dépasser 100%",
+          "placeholder": "0-100"
+        },
         "selectedTrajectory": {
           "SBTI_15": "Je suis la trajectoire de référence SBTi",
           "SBTI_WB2C": "Je suis la trajectoire de référence SBTi",
@@ -2370,7 +2385,9 @@
     "studyYearMustBeBeforeCurrent": "L'année de l'étude doit être antérieure à l'année de l'étude actuelle",
     "studyYearMustBeAfterLinkedStudies": "Impossible de renseigner une date antérieure à celles de vos études liées sur votre plan de transition",
     "maxTwoDecimals": "Le taux de réduction doit avoir au maximum 2 décimales",
-    "referenceYearMustBeBeforeOrEqualToStudyYear": "L'année de référence doit être inférieure ou égale à l'année de l'étude"
+    "referenceYearMustBeBeforeOrEqualToStudyYear": "L'année de référence doit être inférieure ou égale à l'année de l'étude",
+    "sectorPercentagesTotalExceeds100": "Le total des pourcentages ne peut pas dépasser 100%",
+    "sectorPercentagesRequired": "Les pourcentages des secteurs sont requis"
   },
   "documentationUrl": {
     "dependencyMatrix": "https://www.bilancarbone-methode.com/2-perimetre-de-la-demarche/2.5-identification-des-risques-et-opportunites-de-transition",

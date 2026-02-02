@@ -2,6 +2,22 @@ import { setCustomIssue, setCustomMessage } from '@/lib/zod.config'
 import { TrajectoryType } from '@prisma/client'
 import { z } from 'zod'
 
+export const sectorPercentagesSchema = z
+  .object({
+    energy: z.number().min(0).max(100),
+    industry: z.number().min(0).max(100),
+    waste: z.number().min(0).max(100),
+    buildings: z.number().min(0).max(100),
+    agriculture: z.number().min(0).max(100),
+    transportation: z.number().min(0).max(100),
+  })
+  .refine((data) => {
+    const total = Object.values(data).reduce((sum, val) => sum + val, 0)
+    return total <= 100
+  }, setCustomMessage('sectorPercentagesTotalExceeds100'))
+
+export type SectorPercentages = z.infer<typeof sectorPercentagesSchema>
+
 export const createObjectiveSchema = () =>
   z
     .object({
@@ -37,6 +53,7 @@ export const createTrajectorySchema = () => {
       description: z.string().optional(),
       referenceYear: z.string().optional().nullable(),
       objectives: z.array(objectiveSchema),
+      sectorPercentages: sectorPercentagesSchema.optional().nullable(),
     })
     .transform((data) => ({
       ...data,
@@ -51,6 +68,12 @@ export const createTrajectorySchema = () => {
     .refine(
       (data) => data.trajectoryType !== TrajectoryType.CUSTOM || data.objectives.length > 0,
       setCustomIssue(['objectives'], 'atLeastOneObjective'),
+    )
+    .refine(
+      (data) =>
+        data.trajectoryType !== TrajectoryType.SNBC_SECTORAL ||
+        (data.sectorPercentages !== null && data.sectorPercentages !== undefined),
+      setCustomIssue(['sectorPercentages'], 'sectorPercentagesRequired'),
     )
 }
 

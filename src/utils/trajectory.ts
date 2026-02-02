@@ -8,6 +8,7 @@ import {
 } from '@/constants/trajectories'
 import { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
+import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
 import { getStudyTotalCo2Emissions } from '@/services/study'
 import { Translations } from '@/types/translation'
 import { convertValue } from '@/utils/study'
@@ -19,7 +20,11 @@ import {
   StudyResultUnit,
   TrajectoryType,
 } from '@prisma/client'
-import { calculateSNBCTrajectory } from './snbc'
+import {
+  calculateCustomSNBCSectoralTrajectory,
+  calculateSectoralSNBCReductionRates,
+  calculateSNBCTrajectory,
+} from './snbc'
 import { getYearFromDateStr } from './time'
 
 export type SBTIType = 'SBTI_15' | 'SBTI_WB2C'
@@ -80,6 +85,7 @@ interface CalculateCustomTrajectoryParams {
   minYear?: number
   maxYear?: number
   sectenData?: SectenInfo[]
+  sectorPercentages?: SectorPercentages | null
 }
 
 interface CalculateActionBasedTrajectoryParams {
@@ -721,6 +727,8 @@ export const getObjectivesWithOvershootCompensation = (
   }
 
   // Calculate future budget if we were at reference emissions
+  // Use objectives directly since they represent the actual trajectory behavior
+  // (for SNBC_SECTORAL, objectives are derived from the combined sectoral trajectory)
   const referenceFutureBudget = calculateBudgetWithObjectivesAndMultiplier(
     referenceEmissionsAtStudyYear,
     studyYear,
@@ -784,6 +792,7 @@ export const calculateCustomTrajectory = ({
   minYear,
   maxYear,
   sectenData = [],
+  sectorPercentages,
 }: CalculateCustomTrajectoryParams): TrajectoryDataPoint[] => {
   if (objectives.length === 0) {
     return []
@@ -803,7 +812,26 @@ export const calculateCustomTrajectory = ({
     }
   }
 
-  if (trajectoryType === TrajectoryType.SNBC_GENERAL || trajectoryType === TrajectoryType.SNBC_SECTORAL) {
+  if (trajectoryType === TrajectoryType.SNBC_SECTORAL) {
+    if (!sectorPercentages) {
+      throw new Error('Sector percentages required for SNBC_SECTORAL trajectory')
+    }
+
+    return calculateCustomSNBCSectoralTrajectory(
+      {
+        studyEmissions,
+        studyStartYear,
+        sectenData,
+        pastStudies,
+        displayCurrentStudyValueOnTrajectory: true,
+        overshootAdjustment,
+        maxYear,
+      },
+      sectorPercentages,
+    )
+  }
+
+  if (trajectoryType === TrajectoryType.SNBC_GENERAL) {
     return calculateSNBCTrajectory({
       studyEmissions,
       studyStartYear,
@@ -1217,6 +1245,7 @@ export const getCustomData = (
             minYear,
             maxYear,
             sectenData,
+            sectorPercentages: customTrajectory.sectorPercentages as SectorPercentages | undefined,
           }),
           withinThreshold: true,
         },
@@ -1235,6 +1264,7 @@ export const getCustomData = (
         minYear,
         maxYear,
         sectenData,
+        sectorPercentages: customTrajectory.sectorPercentages as SectorPercentages | undefined,
       })
 
       const referenceEmissionsForStudyStartYear = getTrajectoryEmissionsAtYear(referenceTrajectory, studyStartYear)
@@ -1259,6 +1289,7 @@ export const getCustomData = (
         minYear,
         maxYear,
         sectenData,
+        sectorPercentages: customTrajectory.sectorPercentages as SectorPercentages | undefined,
       })
 
       const isFailed = isFailedTrajectory(maxYear, referenceYear, referenceTrajectory, currentTrajectory)
@@ -1636,6 +1667,7 @@ export const getCorrectedObjectives = (
   isSNBC: boolean,
   isCustom: boolean,
   sectenData: SectenInfo[],
+  sectorPercentages?: SectorPercentages | null,
 ): BaseObjective[] | null => {
   const nonEmptyObjectives = objectives
     .filter((obj) => obj.targetYear && obj.reductionRate !== null && obj.reductionRate !== undefined)
@@ -1669,15 +1701,69 @@ export const getCorrectedObjectives = (
       return null
     }
 
-    const referenceTrajectory = calculateSNBCTrajectory({
-      studyEmissions: latestPastStudy.totalCo2,
-      studyStartYear: latestPastStudy.year,
-      sectenData,
-      pastStudies,
-      displayCurrentStudyValueOnTrajectory: true,
-      overshootAdjustment: undefined,
-      maxYear: studyYear,
-    })
+    let referenceTrajectory: TrajectoryDataPoint[]
+
+    if (trajectoryType === TrajectoryType.SNBC_SECTORAL) {
+      if (!sectorPercentages) {
+        return null
+      }
+
+      referenceTrajectory = calculateCustomSNBCSectoralTrajectory(
+        {
+          studyEmissions: latestPastStudy.totalCo2,
+          studyStartYear: latestPastStudy.year,
+          sectenData,
+          pastStudies: pastStudies.filter((s) => s.year < latestPastStudy.year),
+          displayCurrentStudyValueOnTrajectory: true,
+          overshootAdjustment: undefined,
+          maxYear: 2050,
+        },
+        sectorPercentages,
+      )
+
+      const referenceEmissionsAtStudyYear = getTrajectoryEmissionsAtYear(referenceTrajectory, studyYear)
+      if (referenceEmissionsAtStudyYear !== null && isWithinThreshold(studyEmissions, referenceEmissionsAtStudyYear)) {
+        return null
+      }
+
+      const correctedRates = calculateSectoralSNBCReductionRates(
+        {
+          studyEmissions,
+          studyStartYear: studyYear,
+          sectenData,
+          pastStudies,
+          displayCurrentStudyValueOnTrajectory: true,
+          overshootAdjustment: {
+            referenceTrajectory,
+            referenceStudyYear: latestPastStudy.year,
+          },
+          maxYear: 2050,
+        },
+        sectorPercentages,
+      )
+
+      if (correctedRates) {
+        const correctedObjectives: BaseObjective[] = []
+        if (correctedRates.rateTo2015 !== undefined) {
+          correctedObjectives.push({ targetYear: 2015, reductionRate: correctedRates.rateTo2015 })
+        }
+        correctedObjectives.push({ targetYear: 2030, reductionRate: correctedRates.rateTo2030 })
+        correctedObjectives.push({ targetYear: 2050, reductionRate: correctedRates.rateTo2050 })
+        return correctedObjectives
+      }
+
+      return null
+    } else {
+      referenceTrajectory = calculateSNBCTrajectory({
+        studyEmissions: latestPastStudy.totalCo2,
+        studyStartYear: latestPastStudy.year,
+        sectenData,
+        pastStudies,
+        displayCurrentStudyValueOnTrajectory: true,
+        overshootAdjustment: undefined,
+        maxYear: studyYear,
+      })
+    }
 
     const referenceEmissionsAtStudyYear = getTrajectoryEmissionsAtYear(referenceTrajectory, studyYear)
     if (referenceEmissionsAtStudyYear !== null && isWithinThreshold(studyEmissions, referenceEmissionsAtStudyYear)) {
@@ -1707,6 +1793,8 @@ export const getCorrectedObjectives = (
       trajectoryType: trajectoryType,
       minYear: referenceYear,
       maxYear: studyYear,
+      sectenData,
+      sectorPercentages,
     })
 
     const referenceEmissionsAtStudyYear = getTrajectoryEmissionsAtYear(referenceTrajectory, studyYear)
