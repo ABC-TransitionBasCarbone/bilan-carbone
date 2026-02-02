@@ -503,15 +503,13 @@ describe('Real use case: BC V8_10', () => {
     cy.getByTestId('ghgp-results-table-row')
       .eq(9)
       .within(() => {
-        cy.get('td').eq(1).should('have.text', '10') // 9.9
-        // TO DO : theorical value, current 10 is due to specific waste value
-        // cy.get('td').eq(1).should('have.text', '0')
+        cy.get('td').eq(1).should('have.text', '9')
         cy.get('td').eq(2).should('have.text', '0')
         cy.get('td').eq(3).should('have.text', '0')
         cy.get('td').eq(4).should('have.text', '0')
         cy.get('td').eq(5).should('have.text', '0')
         cy.get('td').eq(6).should('have.text', '0')
-        cy.get('td').eq(7).should('have.text', '10')
+        cy.get('td').eq(7).should('have.text', '9')
         cy.get('td').eq(8).should('have.text', '0')
       })
     cy.getByTestId('ghgp-results-table-row')
@@ -592,13 +590,13 @@ describe('Real use case: BC V8_10', () => {
     cy.getByTestId('ghgp-results-table-row')
       .eq(16)
       .within(() => {
-        cy.get('td').eq(1).should('have.text', '198') // 197.8
+        cy.get('td').eq(1).should('have.text', '197')
         cy.get('td').eq(2).should('have.text', '0')
         cy.get('td').eq(3).should('have.text', '0')
         cy.get('td').eq(4).should('have.text', '0')
         cy.get('td').eq(5).should('have.text', '0')
         cy.get('td').eq(6).should('have.text', '0')
-        cy.get('td').eq(7).should('have.text', '198') // 197.8
+        cy.get('td').eq(7).should('have.text', '197')
         cy.get('td').eq(8).should('have.text', '-34') // -33.9
       })
     // 3.aval
@@ -711,7 +709,7 @@ describe('Real use case: BC V8_10', () => {
         cy.get('td').eq(5).should('have.text', '0')
         cy.get('td').eq(6).should('have.text', '0')
         cy.get('td').eq(7).should('have.text', '0')
-        cy.get('td').eq(8).should('have.text', '268') // 268.3
+        cy.get('td').eq(8).should('have.text', '267')
         cy.get('td').eq(9).should('have.text', '1') // 0.9
       })
   })

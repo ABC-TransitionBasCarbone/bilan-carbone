@@ -9,16 +9,16 @@ import { qualityKeys } from '@/services/uncertainty'
 import { useUnitLabel } from '@/services/unit'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
-import { hasDeprecationPeriod } from '@/utils/study'
+import { hasDeprecationPeriod, hasFabricationPart } from '@/utils/study'
 import AddIcon from '@mui/icons-material/Add'
 import { TextField } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
-import { Environment, StudyResultUnit, SubPost, Unit } from '@prisma/client'
+import { EmissionSourceCaracterisation, Environment, StudyResultUnit, SubPost, Unit } from '@prisma/client'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Path } from 'react-hook-form'
 import LinkButton from '../base/LinkButton'
 import { ImportVersionForFilters } from '../emissionFactor/EmissionFactorsFilters'
@@ -75,6 +75,8 @@ const EmissionSourceContributorForm = ({
   const defaultQuality = qualities.find((quality) => quality)
   const canShrink = !defaultQuality || qualities.every((quality) => quality === defaultQuality)
 
+  const hasFabricationPartFE = useMemo(() => hasFabricationPart(selectedFactor), [selectedFactor])
+
   return (
     <>
       <div className={classNames(styles.row, 'flex')}>
@@ -112,43 +114,43 @@ const EmissionSourceContributorForm = ({
             )}
           </div>
           {hasDeprecationPeriod(emissionSource.subPost) && (
-            <>
-              <div className={classNames(styles.inputWithUnit, 'flex grow')}>
-                <TextField
-                  disabled={!!emissionSource.validated}
-                  className="grow"
-                  type="number"
-                  defaultValue={emissionSource.depreciationPeriod}
-                  onBlur={(event) => update('depreciationPeriod', Number(event.target.value))}
-                  label={`${t('form.depreciationPeriod')} *`}
-                  slotProps={{
-                    inputLabel: { shrink: true },
-                    input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
-                  }}
-                />
-                <div className={styles.unit}>{t('form.years')}</div>
-              </div>
-              {hasGHGPExport && (
-                <DatePicker
-                  label={`${t('form.constructionYear')} *`}
-                  slotProps={{
-                    textField: {
-                      className: styles.datePickerInput,
-                    },
-                  }}
-                  maxDate={dayjs(new Date())}
-                  views={['year']}
-                  sx={{ backgroundColor: 'white', flex: '1' }}
-                  onChange={(date) => {
-                    if (date && date.isValid()) {
-                      update('constructionYear', date.toDate())
-                    }
-                  }}
-                  value={emissionSource.constructionYear ? dayjs(emissionSource.constructionYear) : null}
-                />
-              )}
-            </>
+            <div className={classNames(styles.inputWithUnit, 'flex grow')}>
+              <TextField
+                disabled={!!emissionSource.validated}
+                className="grow"
+                type="number"
+                defaultValue={emissionSource.depreciationPeriod}
+                onBlur={(event) => update('depreciationPeriod', Number(event.target.value))}
+                label={`${t('form.depreciationPeriod')} *`}
+                slotProps={{
+                  inputLabel: { shrink: true },
+                  input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
+                }}
+              />
+              <div className={styles.unit}>{t('form.years')}</div>
+            </div>
           )}
+          {hasGHGPExport &&
+            (hasDeprecationPeriod(emissionSource.subPost) ||
+              (hasFabricationPartFE && emissionSource.caracterisation === EmissionSourceCaracterisation.Operated)) && (
+              <DatePicker
+                label={`${t('form.constructionYear')} *`}
+                slotProps={{
+                  textField: {
+                    className: styles.datePickerInput,
+                  },
+                }}
+                maxDate={dayjs(new Date())}
+                views={['year']}
+                sx={{ backgroundColor: 'white', flex: '1' }}
+                onChange={(date) => {
+                  if (date && date.isValid()) {
+                    update('constructionYear', date.toDate())
+                  }
+                }}
+                value={emissionSource.constructionYear ? dayjs(emissionSource.constructionYear) : null}
+              />
+            )}
         </div>
         <TextField
           disabled={!!emissionSource.validated}

@@ -17,7 +17,13 @@ import {
 import { useUnitLabel } from '@/services/unit'
 import { emissionFactorDefautQualityStar, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
-import { formatEmissionFromNumber, hasDeprecationPeriod, hasEditionRights, isCAS } from '@/utils/study'
+import {
+  formatEmissionFromNumber,
+  hasDeprecationPeriod,
+  hasEditionRights,
+  hasFabricationPart,
+  isCAS,
+} from '@/utils/study'
 import AddIcon from '@mui/icons-material/Add'
 import CopyIcon from '@mui/icons-material/ContentCopy'
 import EditIcon from '@mui/icons-material/Edit'
@@ -159,6 +165,8 @@ const EmissionSourceForm = ({
 
   const isCas = isCAS(emissionSource)
 
+  const hasFabricationPartFE = useMemo(() => hasFabricationPart(selectedFactor), [selectedFactor])
+
   const withDeprecationPeriod = useMemo(() => hasDeprecationPeriod(emissionSource.subPost), [emissionSource.subPost])
 
   useEffect(() => {
@@ -289,47 +297,48 @@ const EmissionSourceForm = ({
               )}
             </div>
             {withDeprecationPeriod && (
-              <>
-                <div className={classNames(styles.inputWithUnit, 'flex grow')}>
-                  <TextField
-                    className="grow"
-                    disabled={!canEdit}
-                    type="number"
-                    defaultValue={emissionSource.depreciationPeriod}
-                    onBlur={(event) => update('depreciationPeriod', Number(event.target.value))}
-                    label={`${t('form.depreciationPeriod')} *`}
-                    slotProps={{
-                      inputLabel: { shrink: true },
-                      input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
-                    }}
-                  />
-                  <div className={styles.unit}>{t('form.years')}</div>
-                </div>
-                {hasGHGPExport && (
-                  <FormControl className="grow">
-                    <DatePicker
-                      label={`${t('form.constructionYear')} *`}
-                      disabled={!canEdit}
-                      slotProps={{
-                        textField: {
-                          error: !!error,
-                          className: styles.datePickerInput,
-                        },
-                      }}
-                      maxDate={dayjs(new Date())}
-                      views={['year']}
-                      sx={{ backgroundColor: 'white', flex: '1' }}
-                      onChange={(date) => {
-                        if (date && date.isValid()) {
-                          update('constructionYear', date.toDate())
-                        }
-                      }}
-                      value={emissionSource.constructionYear ? dayjs(emissionSource.constructionYear) : null}
-                    />
-                  </FormControl>
-                )}
-              </>
+              <div className={classNames(styles.inputWithUnit, 'flex grow')}>
+                <TextField
+                  className="grow"
+                  disabled={!canEdit}
+                  type="number"
+                  defaultValue={emissionSource.depreciationPeriod}
+                  onBlur={(event) => update('depreciationPeriod', Number(event.target.value))}
+                  label={`${t('form.depreciationPeriod')} *`}
+                  slotProps={{
+                    inputLabel: { shrink: true },
+                    input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
+                  }}
+                />
+                <div className={styles.unit}>{t('form.years')}</div>
+              </div>
             )}
+            {hasGHGPExport &&
+              (withDeprecationPeriod ||
+                (hasFabricationPartFE &&
+                  emissionSource.caracterisation === EmissionSourceCaracterisation.Operated)) && (
+                <FormControl className="grow">
+                  <DatePicker
+                    label={`${t('form.constructionYear')} *`}
+                    disabled={!canEdit}
+                    slotProps={{
+                      textField: {
+                        error: !!error,
+                        className: styles.datePickerInput,
+                      },
+                    }}
+                    maxDate={dayjs(new Date())}
+                    views={['year']}
+                    sx={{ backgroundColor: 'white', flex: '1' }}
+                    onChange={(date) => {
+                      if (date && date.isValid()) {
+                        update('constructionYear', date.toDate())
+                      }
+                    }}
+                    value={emissionSource.constructionYear ? dayjs(emissionSource.constructionYear) : null}
+                  />
+                </FormControl>
+              )}
           </>
         )}
         <FormControl>

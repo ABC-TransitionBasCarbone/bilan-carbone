@@ -776,6 +776,7 @@
         "otherEmissionsAmontTitle": "Other upstream emissions",
         "otherGasTitle": "The emission factors emits in the \"Other gases\" category",
         "marketBasedTitle": "The \"market-based\" emissions are not equal to the \"location-based\" emissions",
+        "fabricationTitle": "Vehicles manifacturing",
         "tableHeaders": {
           "emissionSource": "Emission source",
           "post": "Post",
@@ -794,6 +795,7 @@
         "otherEmissionsAmont": "à compléter - Gabriel",
         "otherGas1": "à compléter - Gabriel",
         "marketBased": "à compléter - Gabriel",
+        "fabrication": "à compléter - Gabriel",
         "additionalMissing": "+ {count} other emission {count, plural,  =1 {source} other {sources}}",
         "unexplainedDifference": "Some differences can not be explained. Please, contact us at the <support>support</support>."
       },

@@ -165,6 +165,7 @@ export const mockedEmissionSourceEmissionFactor = {
       comment: 'Mocked Comment',
     },
   ],
+  emissionFactorParts: [],
 }
 
 export const getMockedStudy = (

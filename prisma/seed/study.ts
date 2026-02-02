@@ -689,6 +689,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
         subPost: SubPost.DeplacementsProfessionnels,
         caracterisation: EmissionSourceCaracterisation.Operated,
         value: 220000,
+        constructionYear: new Date('01/06/2025'),
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '27966')?.id,
       },
       {
