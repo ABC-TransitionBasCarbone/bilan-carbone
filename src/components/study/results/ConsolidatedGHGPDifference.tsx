@@ -4,11 +4,12 @@ import { getEmissionResults } from '@/services/emissionSource'
 import { Post } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { getDefaultRule, PostInfos } from '@/services/results/exports'
-import { getGHGPEmissionValue, getLine } from '@/services/results/ghgp'
+import { getGHGPEmissionTotal, getGHGPEmissionValue, getLine } from '@/services/results/ghgp'
 import { getAllSiteEmissionSources } from '@/services/results/utils'
 import { getEmissionFactor } from '@/utils/emissionSources'
 import { formatNumber } from '@/utils/number'
 import { hasDeprecationPeriod, hasFabricationPart, STUDY_UNIT_VALUES } from '@/utils/study'
+import TrendingUpIcon from '@mui/icons-material/TrendingUpOutlined'
 import WarningAmberIcon from '@mui/icons-material/WarningAmberOutlined'
 import {
   EmissionFactorBase,
@@ -18,9 +19,12 @@ import {
   ExportRule,
   SubPost,
 } from '@prisma/client'
+import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
 import { useCallback, useMemo } from 'react'
 import { EnergiesIcon } from '../infography/icons/energies'
 import ConsolidatedExportDifference, { calculateEmissionSourcesDifference } from './ConsolidatedExportDifference'
+import styles from './ConsolidatedExportDifference.module.css'
 import ExportDifferenceItems from './ExportDifferenceItems'
 
 interface Props {
@@ -47,7 +51,11 @@ const ConsolatedGHGPDifference = ({
   base,
 }: Props) => {
   const unitValue = STUDY_UNIT_VALUES[study.resultsUnit]
+  const t = useTranslations('study.results.difference')
+  const tUnits = useTranslations('study.results.units')
+  const tPost = useTranslations('emissionFactors.post')
 
+  const unit = tUnits(study.resultsUnit)
   const environment = useMemo(() => study.organizationVersion.environment, [study])
 
   const emissionSourcesForSelectedSite = useMemo(
@@ -108,23 +116,50 @@ const ConsolatedGHGPDifference = ({
 
   const immobilisation = useMemo(
     () =>
-      emissionSourcesForSelectedSite.filter((emissionSource) => {
-        if (isEmissionSourceFiltered(emissionSource)) {
-          return false
-        }
+      emissionSourcesForSelectedSite
+        .filter((emissionSource) => {
+          if (isEmissionSourceFiltered(emissionSource)) {
+            return false
+          }
 
-        return (
-          hasDeprecationPeriod(emissionSource.subPost) &&
-          (!emissionSource.constructionYear ||
-            emissionSource.constructionYear?.getFullYear() !== study.startDate.getFullYear())
-        )
-      }),
-    [emissionSourcesForSelectedSite, isEmissionSourceFiltered, study.startDate],
+          return hasDeprecationPeriod(emissionSource.subPost)
+        })
+        .map((emissionSource) => {
+          const emissionFactor = emissionFactorsWithParts.find((ef) => ef.id === emissionSource.emissionFactor?.id)
+          if (!emissionFactor || !emissionSource.value) {
+            return null
+          }
+
+          const GHGPValue = getGHGPEmissionTotal(emissionSource, emissionFactor, study.startDate) / unitValue
+          const consolidatedValue = getEmissionResults(emissionSource, environment).emissionValue / unitValue
+          const GHGPValueToDisplay = formatNumber(Math.round(GHGPValue), 0)
+          const consolidatedValueToDisplay = formatNumber(Math.round(consolidatedValue), 0)
+          const difference = GHGPValue - consolidatedValue
+
+          return {
+            source: emissionSource,
+            post: tPost(emissionSource.subPost),
+            difference,
+            differenceToDisplay: formatNumber(Math.round(difference), 0),
+            consolidatedValueToDisplay,
+            GHGPValueToDisplay,
+          }
+        })
+        .filter((item) => !!item),
+    [
+      emissionFactorsWithParts,
+      emissionSourcesForSelectedSite,
+      environment,
+      isEmissionSourceFiltered,
+      study.startDate,
+      tPost,
+      unitValue,
+    ],
   )
 
   const immobilisationDifference = useMemo(
-    () => calculateEmissionSourcesDifference(immobilisation, emissionFactorsWithParts, environment, unitValue),
-    [immobilisation, emissionFactorsWithParts, unitValue, environment],
+    () => immobilisation.reduce((total, item) => total + item.difference, 0),
+    [immobilisation],
   )
 
   const getOtherEmissions = useCallback(
@@ -327,16 +362,61 @@ const ConsolatedGHGPDifference = ({
         />
       )}
       {!!immobilisation.length && (
-        <ExportDifferenceItems
-          title="immobilisationTitle"
-          descriptions={['immobilisation1']}
-          emissionSources={immobilisation}
-          exportType={Export.GHGP}
-          studySite={studySite}
-          value={formatNumber(immobilisationDifference, 0)}
-          resultsUnit={study.resultsUnit}
-          navigateToEmissionSource={navigateToEmissionSource}
-        />
+        <div className={styles.differenceCard}>
+          <div className={classNames(styles.cardHeaderWithValue, 'align-center justify-between')}>
+            <div className={classNames(styles.cardHeaderLeft, 'align-center')}>
+              <TrendingUpIcon className={styles.cardIcon} />
+              <h4>{t('immobilisationTitle')}</h4>
+            </div>
+            <div className={'align-center'}>
+              <span className={immobilisationDifference >= 0 ? styles.differenceValue : styles.differenceValueNegative}>
+                {immobilisationDifference > 0 ? '+' : ''}
+                {formatNumber(immobilisationDifference, 0)} {unit}
+              </span>
+            </div>
+          </div>
+          <div className={classNames(styles.cardContent, 'flex-col')}>
+            <p className={styles.cardDescription}>{t('immobilisation1')}</p>
+            <div className={styles.wasteTable}>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>{t('tableHeaders.emissionSource')}</th>
+                    <th>{t('tableHeaders.post')}</th>
+                    <th>{t('tableHeaders.bilanCarbone')}</th>
+                    <th>{t('tableHeaders.ghgp')}</th>
+                    <th>{t('tableHeaders.difference')}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {immobilisation.map((item) => (
+                    <tr
+                      key={`immobilisation-emission-source-${item.source.id}`}
+                      className={styles.clickableRow}
+                      onClick={() => navigateToEmissionSource(item.source.id, item.source.subPost)}
+                    >
+                      <td className={styles.sourceName}>
+                        {item.source.name}
+                        {studySite === 'all' && ` (${item.source.studySite.site.name})`}
+                      </td>
+                      <td className={styles.sourcePost}>{item.post}</td>
+                      <td className={styles.metricValue}>
+                        {item.consolidatedValueToDisplay} {unit}
+                      </td>
+                      <td>
+                        {item.GHGPValueToDisplay} {unit}
+                      </td>
+                      <td className={item.difference >= 0 ? styles.differenceCell : styles.differenceCellNegative}>
+                        {item.difference > 0 ? '+' : ''}
+                        {item.differenceToDisplay} {unit}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       )}
       {!!otherEmissionsAval.length && (
         <ExportDifferenceItems
