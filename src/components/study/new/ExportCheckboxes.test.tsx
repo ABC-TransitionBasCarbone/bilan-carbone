@@ -36,6 +36,7 @@ jest.mock('@/hooks/useServerFunction', () => ({
 
 jest.mock('@/services/serverFunctions/study', () => ({
   updateStudySpecificExportFields: jest.fn(),
+  adaptFeSourceWithExport: jest.fn(),
 }))
 
 jest.mock('@/utils/study', () => ({
@@ -88,7 +89,7 @@ const getExportCheckedValues = (exports: Export[]) => ({
   controlMode: ControlMode.Operational,
 })
 
-const getStudyWithCaracterisations = (exportTypes = [Export.Beges]) =>
+const getStudyWithCaracterisations = (exportTypes: Export[] = [Export.Beges]) =>
   getMockedFullStudy({
     emissionSources: [
       getMockedFullStudyEmissionSource({
@@ -121,6 +122,22 @@ const getStudyWithValidatedSourcesAndCaracterisations = (exportTypes: Export[]) 
         id: 'source-1',
         caracterisation: EmissionSourceCaracterisation.Operated,
         validated: true,
+      }),
+    ],
+    exports: {
+      types: exportTypes,
+      control: ControlMode.Operational,
+    },
+  })
+
+const getStudyWithValidatedSourcesAndCaracterisationsAndConsructionYear = (exportTypes: Export[]) =>
+  getMockedFullStudy({
+    emissionSources: [
+      getMockedFullStudyEmissionSource({
+        id: 'source-1',
+        caracterisation: EmissionSourceCaracterisation.Operated,
+        validated: true,
+        constructionYear: new Date('2025'),
       }),
     ],
     exports: {
@@ -350,7 +367,7 @@ describe('ExportCheckboxes', () => {
   describe('GHGPDeactivationWarningModal', () => {
     it('should show warning when unchecking GHG-P with caracterisations on existing study', async () => {
       const user = userEvent.setup()
-      const study = getStudyWithCaracterisations()
+      const study = getStudyWithCaracterisations([Export.GHGP])
 
       renderWithTheme(
         <ExportCheckboxes {...defaultProps} study={study} values={getExportCheckedValues([Export.GHGP])} />,
@@ -365,7 +382,7 @@ describe('ExportCheckboxes', () => {
 
     it('should show warning when unchecking GHG-P with validated sources and active Beges export on existing study', async () => {
       const user = userEvent.setup()
-      const study = getStudyWithValidatedSourcesAndCaracterisations([Export.GHGP, Export.Beges])
+      const study = getStudyWithValidatedSourcesAndCaracterisationsAndConsructionYear([Export.GHGP, Export.Beges])
 
       renderWithTheme(
         <ExportCheckboxes

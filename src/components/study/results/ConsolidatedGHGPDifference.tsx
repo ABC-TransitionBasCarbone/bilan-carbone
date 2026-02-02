@@ -7,6 +7,7 @@ import { getDefaultRule, PostInfos } from '@/services/results/exports'
 import { getGHGPEmissionValue, getLine } from '@/services/results/ghgp'
 import { getAllSiteEmissionSources } from '@/services/results/utils'
 import { getEmissionFactor } from '@/utils/emissionSources'
+import { computeDifferenceForTableEmissions, formatDifferenceTableEmissions } from '@/utils/exports'
 import { formatNumber } from '@/utils/number'
 import { hasDeprecationPeriod, hasFabricationPart, STUDY_UNIT_VALUES } from '@/utils/study'
 import WarningAmberIcon from '@mui/icons-material/WarningAmberOutlined'
@@ -18,10 +19,12 @@ import {
   ExportRule,
   SubPost,
 } from '@prisma/client'
+import { useTranslations } from 'next-intl'
 import { useCallback, useMemo } from 'react'
 import { EnergiesIcon } from '../infography/icons/energies'
 import ConsolidatedExportDifference, { calculateEmissionSourcesDifference } from './ConsolidatedExportDifference'
 import ExportDifferenceItems from './ExportDifferenceItems'
+import { ExportDifferenceTable } from './ExportDifferenceTable'
 
 interface Props {
   study: FullStudy
@@ -47,7 +50,7 @@ const ConsolatedGHGPDifference = ({
   base,
 }: Props) => {
   const unitValue = STUDY_UNIT_VALUES[study.resultsUnit]
-
+  const tPost = useTranslations('emissionFactors.post')
   const environment = useMemo(() => study.organizationVersion.environment, [study])
 
   const emissionSourcesForSelectedSite = useMemo(
@@ -106,26 +109,35 @@ const ConsolatedGHGPDifference = ({
     [validatedOnly],
   )
 
-  const immobilisation = useMemo(
-    () =>
-      emissionSourcesForSelectedSite.filter((emissionSource) => {
-        if (isEmissionSourceFiltered(emissionSource)) {
-          return false
-        }
+  const immobilisation = useMemo(() => {
+    const filtered = emissionSourcesForSelectedSite.filter((emissionSource) => {
+      if (isEmissionSourceFiltered(emissionSource)) {
+        return false
+      }
 
-        return (
-          hasDeprecationPeriod(emissionSource.subPost) &&
-          (!emissionSource.constructionYear ||
-            emissionSource.constructionYear?.getFullYear() !== study.startDate.getFullYear())
-        )
-      }),
-    [emissionSourcesForSelectedSite, isEmissionSourceFiltered, study.startDate],
-  )
+      return hasDeprecationPeriod(emissionSource.subPost)
+    })
 
-  const immobilisationDifference = useMemo(
-    () => calculateEmissionSourcesDifference(immobilisation, emissionFactorsWithParts, environment, unitValue),
-    [immobilisation, emissionFactorsWithParts, unitValue, environment],
-  )
+    return formatDifferenceTableEmissions(
+      filtered,
+      emissionFactorsWithParts,
+      study.resultsUnit,
+      environment,
+      tPost,
+      Export.GHGP,
+      study.startDate,
+    )
+  }, [
+    emissionFactorsWithParts,
+    emissionSourcesForSelectedSite,
+    environment,
+    isEmissionSourceFiltered,
+    study.resultsUnit,
+    study.startDate,
+    tPost,
+  ])
+
+  const immobilisationDifference = useMemo(() => computeDifferenceForTableEmissions(immobilisation), [immobilisation])
 
   const getOtherEmissions = useCallback(
     (isAmont: boolean) =>
@@ -282,7 +294,7 @@ const ConsolatedGHGPDifference = ({
       })
     })
     return value
-  }, [fabricationEmissionSources, emissionFactorsWithParts, unitValue, environment, ghgpRules])
+  }, [fabricationEmissionSources, emissionFactorsWithParts, study.startDate, unitValue])
 
   return (
     <ConsolidatedExportDifference
@@ -327,15 +339,15 @@ const ConsolatedGHGPDifference = ({
         />
       )}
       {!!immobilisation.length && (
-        <ExportDifferenceItems
-          title="immobilisationTitle"
-          descriptions={['immobilisation1']}
-          emissionSources={immobilisation}
-          exportType={Export.GHGP}
-          studySite={studySite}
-          value={formatNumber(immobilisationDifference, 0)}
+        <ExportDifferenceTable
+          difference={immobilisationDifference}
           resultsUnit={study.resultsUnit}
+          emissionSources={immobilisation}
+          studySite={studySite}
           navigateToEmissionSource={navigateToEmissionSource}
+          title="immobilisationTitle"
+          description="immobilisation1"
+          columnTitle="ghgp"
         />
       )}
       {!!otherEmissionsAval.length && (
