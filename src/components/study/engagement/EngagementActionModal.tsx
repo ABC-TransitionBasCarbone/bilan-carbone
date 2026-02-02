@@ -1,5 +1,4 @@
 import Form from '@/components/base/Form'
-import LoadingButton from '@/components/base/LoadingButton'
 import Toast, { ToastColors } from '@/components/base/Toast'
 import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormDatePicker } from '@/components/form/DatePicker'
@@ -16,7 +15,7 @@ import {
 } from '@/services/serverFunctions/study.command'
 import { objectWithoutNullAttributes } from '@/utils/object'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Checkbox, ListItemText, MenuItem, TextField } from '@mui/material'
+import { ListItemText, MenuItem, TextField } from '@mui/material'
 import { EngagementPhase } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -40,7 +39,6 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
   const tTargets = useTranslations('study.engagementActions.targets')
   const tSteps = useTranslations('study.engagementActions.steps')
   const tPhases = useTranslations('study.engagementActions.phases')
-  const [submitting, setSubmitting] = useState(false)
   const [addCustomTarget, setAddCustomTarget] = useState(false)
   const [currentCustomTarget, setCurrentCustomTarget] = useState<string>('')
   const [customTargets, setCustomTargets] = useState<string[]>([])
@@ -59,7 +57,7 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
     [action],
   )
 
-  const { control, getValues, setValue, reset, handleSubmit } = useForm<AddEngagementActionCommand>({
+  const { control, getValues, setValue, reset, handleSubmit, formState } = useForm<AddEngagementActionCommand>({
     resolver: zodResolver(AddEngagementActionCommandValidation),
     mode: 'onChange',
     reValidateMode: 'onChange',
@@ -77,19 +75,15 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
   const sites = useWatch({ control, name: 'sites' })
 
   const onSubmit = async () => {
-    setSubmitting(true)
-
     await callServerFunction(
       () => (action ? editEngagementAction(action.id, getValues()) : addEngagementAction(getValues())),
       {
         onSuccess: () => {
-          setSubmitting(false)
           handleClose()
           router.refresh()
         },
       },
     )
-    setSubmitting(false)
   }
 
   const handleClose = () => {
@@ -150,6 +144,15 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
         onClose={handleClose}
         title={t(action ? 'update' : 'add')}
         className={styles.actionModal}
+        actions={[
+          {
+            actionType: 'submit',
+            onClick: handleSubmit(onSubmit),
+            loading: formState.isSubmitting,
+            disabled: !formState.isValid,
+            children: t('validate'),
+          },
+        ]}
       >
         <Form onSubmit={handleSubmit(onSubmit)} className="flex-col gapped1">
           <FormTextField
@@ -162,7 +165,7 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
           <FormTextField
             control={control}
             name="description"
-            label={`${t('description')} *`}
+            label={`${t('description')}`}
             placeholder={t('descriptionPlaceholder')}
             data-testid="add-action-description"
             multiline
@@ -189,7 +192,6 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
           >
             {[...customTargets, ...Object.values(EngagementActionTargets)].map((target) => (
               <MenuItem key={target} value={target}>
-                <Checkbox checked={targets?.includes(target)} />
                 <ListItemText
                   primary={
                     Object.values(EngagementActionTargets).includes(target as EngagementActionTargets)
@@ -254,15 +256,6 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
               </MenuItem>
             ))}
           </FormSelect>
-          <LoadingButton
-            data-testid="activation-button"
-            type="submit"
-            loading={submitting}
-            variant="contained"
-            fullWidth
-          >
-            {t('validate')}
-          </LoadingButton>
         </Form>
       </Modal>
       {toast.text && (
