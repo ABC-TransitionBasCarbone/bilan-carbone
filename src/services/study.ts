@@ -517,6 +517,11 @@ const buildMerges = (rulesSpans: Record<number, number>, startRow: number, colum
   return merges
 }
 
+const buildRowMerge = (row: number, startCol: number, span: number): Merge => ({
+  s: { r: row, c: startCol },
+  e: { r: row, c: startCol + span - 1 },
+})
+
 export const formatStudyExportResultsForExport = (
   study: FullStudy,
   siteList: { name: string; id: string }[],
@@ -550,12 +555,19 @@ export const formatStudyExportResultsForExport = (
   for (let i = 0; i < siteList.length; i++) {
     const site = siteList[i]
     const resultList = getResults(site.id)
+    const gasFields = data.gasFields
 
     // Merge cells
     sheetOptions['!merges'].push(...buildMerges(rulesSpans, 3 + i * length))
 
     dataForExport.push([site.name])
-    dataForExport.push([tSpecificExport('rule'), '', tSpecificExport('ges', { unit: tUnits(study.resultsUnit) })])
+
+    const rowIndex = dataForExport.length
+    const totalCols = gasFields.length + 2
+    dataForExport.push(Array(totalCols).fill(''))
+    dataForExport[rowIndex][2] = tSpecificExport('ges', { unit: tUnits(study.resultsUnit) })
+    sheetOptions['!merges'].push(buildRowMerge(rowIndex, 2, totalCols))
+
     dataForExport.push([
       tSpecificExport('category.title'),
       tSpecificExport('post.title'),
@@ -565,8 +577,6 @@ export const formatStudyExportResultsForExport = (
       tSpecificExport('uncertainty'),
       tStudy('confidenceIntervalTitle'),
     ])
-
-    const gasFields = data.gasFields
 
     for (const result of resultList) {
       const category = result.rule.split('.')[0]
