@@ -33,13 +33,13 @@ const ExportDeactivationWarningModal = ({ type, remainingExports, onConfirm, onC
           actionType: 'button',
           onClick: () => onCancel(type),
           children: t('cancel'),
-          ['data-testid']: 'beges-deactivation-cancel',
+          ['data-testid']: 'export-deactivation-cancel',
         },
         {
           actionType: 'button',
           onClick: () => onConfirm(type),
           children: t('continue'),
-          ['data-testid']: 'beges-deactivation-confirm',
+          ['data-testid']: 'export-deactivation-confirm',
           color: 'error',
         },
       ]}

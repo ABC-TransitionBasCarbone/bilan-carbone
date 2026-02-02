@@ -42,13 +42,13 @@ const ExportActivationWarningModal = ({
           actionType: 'button',
           onClick: () => onCancel(type),
           children: t('cancel'),
-          ['data-testid']: 'beges-activation-cancel',
+          ['data-testid']: 'export-activation-cancel',
         },
         {
           actionType: 'button',
           onClick: () => onConfirm(type),
           children: t('continue'),
-          ['data-testid']: 'beges-activation-confirm',
+          ['data-testid']: 'export-activation-confirm',
           color: 'error',
         },
       ]}

@@ -73,7 +73,7 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
     )
   }
 
-  const onValueChange = (type: Export, checked: boolean) => {
+  const onValueChange = async (type: Export, checked: boolean) => {
     const typeFields = exportSpecificFields[type]
     if (checked) {
       // Mandatoryfields added, show warning message
@@ -83,7 +83,7 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
         const newExports = values.exports.concat(type)
         onChange(newExports)
         if (study) {
-          adaptFeSourceWithExport(study?.id, newExports)
+          await adaptFeSourceWithExport(study?.id, newExports)
         }
       }
     } else if (shouldShowExportDeactivationWarning(type)) {
@@ -92,7 +92,7 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
       const newExports = values.exports.filter((exportType) => exportType !== type)
       onChange(newExports)
       if (study) {
-        adaptFeSourceWithExport(study?.id, newExports)
+        await adaptFeSourceWithExport(study?.id, newExports)
       }
     }
   }
