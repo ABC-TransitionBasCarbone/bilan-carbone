@@ -71,12 +71,25 @@ const EmissionSourceContributorForm = ({
   const getUnitLabel = useUnitLabel()
   const [expandedQuality, setExpandedQuality] = useState(!!advanced)
   const [glossary, setGlossary] = useState('')
+  const [error, setError] = useState('')
 
   const qualities = qualityKeys.map((column) => emissionSource[column])
   const defaultQuality = qualities.find((quality) => quality)
   const canShrink = !defaultQuality || qualities.every((quality) => quality === defaultQuality)
 
   const hasFabricationPartFE = useMemo(() => hasFabricationPart(selectedFactor), [selectedFactor])
+
+  const handleUpdate = (event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (Number(event.target.value) >= 0) {
+      setError('')
+      update('value', Number(event.target.value))
+      event.target.value = `${Number(event.target.value)}`
+    } else {
+      setError(`${t('form.sign')}`)
+      event.target.value = ''
+      update('value', null)
+    }
+  }
 
   return (
     <>
@@ -102,9 +115,11 @@ const EmissionSourceContributorForm = ({
               type="number"
               data-testid="emission-source-value-da"
               defaultValue={emissionSource.value}
-              onBlur={(event) => update('value', Number(event.target.value))}
+              onBlur={(event) => handleUpdate(event)}
               label={`${t('form.value')} *`}
               slotProps={{ input: { onWheel: (event) => (event.target as HTMLInputElement).blur() } }}
+              helperText={error}
+              error={!!error}
             />
             {selectedFactor && (
               <div className={styles.unit}>

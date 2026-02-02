@@ -9,7 +9,7 @@ export const CreateEmissionSourceCommandValidation = z.object({
   caracterisation: z.enum(EmissionSourceCaracterisation).optional(),
   constructionYear: z.date().nullable().optional(),
   emissionFactorId: z.string().nullable().optional(),
-  value: z.number().optional(),
+  value: z.number().optional().nullable(),
   type: z.enum(EmissionSourceType).optional().nullable(),
   depreciationPeriod: z.number().optional(),
 })
@@ -21,7 +21,7 @@ export const UpdateEmissionSourceCommandValidation = z.object({
   emissionFactorId: z.string().trim().optional().nullable(),
   caracterisation: z.enum(EmissionSourceCaracterisation).optional().nullable(),
   constructionYear: z.date().nullable().optional(),
-  value: z.number().optional(),
+  value: z.number().optional().nullable(),
   source: z.string().trim().optional(),
   type: z.enum(EmissionSourceType).optional().nullable(),
   reliability: z.number().optional(),

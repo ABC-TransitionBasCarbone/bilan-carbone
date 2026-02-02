@@ -155,12 +155,14 @@ const EmissionSourceForm = ({
     !specificFEDefaultQuality || specificFEQualities.every((quality) => quality === specificFEDefaultQuality)
 
   const handleUpdate = (event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    if (Number(event.target.value) > 0) {
+    if (Number(event.target.value) >= 0) {
       setError('')
       update('value', Number(event.target.value))
+      event.target.value = `${Number(event.target.value)}`
     } else {
       setError(`${t('form.sign')}`)
       event.target.value = ''
+      update('value', null)
     }
   }
 
