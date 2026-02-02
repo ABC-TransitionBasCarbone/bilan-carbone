@@ -313,32 +313,29 @@ const EmissionSourceForm = ({
                 <div className={styles.unit}>{t('form.years')}</div>
               </div>
             )}
-            {hasGHGPExport &&
-              (withDeprecationPeriod ||
-                (hasFabricationPartFE &&
-                  emissionSource.caracterisation === EmissionSourceCaracterisation.Operated)) && (
-                <FormControl className="grow">
-                  <DatePicker
-                    label={`${t('form.constructionYear')} *`}
-                    disabled={!canEdit}
-                    slotProps={{
-                      textField: {
-                        error: !!error,
-                        className: styles.datePickerInput,
-                      },
-                    }}
-                    maxDate={dayjs(new Date())}
-                    views={['year']}
-                    sx={{ backgroundColor: 'white', flex: '1' }}
-                    onChange={(date) => {
-                      if (date && date.isValid()) {
-                        update('constructionYear', date.toDate())
-                      }
-                    }}
-                    value={emissionSource.constructionYear ? dayjs(emissionSource.constructionYear) : null}
-                  />
-                </FormControl>
-              )}
+            {hasGHGPExport && withDeprecationPeriod && (
+              <FormControl className="grow">
+                <DatePicker
+                  label={`${t('form.constructionYear')} *`}
+                  disabled={!canEdit}
+                  slotProps={{
+                    textField: {
+                      error: !!error,
+                      className: styles.datePickerInput,
+                    },
+                  }}
+                  maxDate={dayjs(new Date())}
+                  views={['year']}
+                  sx={{ backgroundColor: 'white', flex: '1' }}
+                  onChange={(date) => {
+                    if (date && date.isValid()) {
+                      update('constructionYear', date.toDate())
+                    }
+                  }}
+                  value={emissionSource.constructionYear ? dayjs(emissionSource.constructionYear) : null}
+                />
+              </FormControl>
+            )}
           </>
         )}
         <FormControl>

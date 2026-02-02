@@ -13,7 +13,7 @@ import { hasDeprecationPeriod, hasFabricationPart } from '@/utils/study'
 import AddIcon from '@mui/icons-material/Add'
 import { TextField } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
-import { EmissionSourceCaracterisation, Environment, StudyResultUnit, SubPost, Unit } from '@prisma/client'
+import { Environment, StudyResultUnit, SubPost, Unit } from '@prisma/client'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
@@ -130,27 +130,25 @@ const EmissionSourceContributorForm = ({
               <div className={styles.unit}>{t('form.years')}</div>
             </div>
           )}
-          {hasGHGPExport &&
-            (hasDeprecationPeriod(emissionSource.subPost) ||
-              (hasFabricationPartFE && emissionSource.caracterisation === EmissionSourceCaracterisation.Operated)) && (
-              <DatePicker
-                label={`${t('form.constructionYear')} *`}
-                slotProps={{
-                  textField: {
-                    className: styles.datePickerInput,
-                  },
-                }}
-                maxDate={dayjs(new Date())}
-                views={['year']}
-                sx={{ backgroundColor: 'white', flex: '1' }}
-                onChange={(date) => {
-                  if (date && date.isValid()) {
-                    update('constructionYear', date.toDate())
-                  }
-                }}
-                value={emissionSource.constructionYear ? dayjs(emissionSource.constructionYear) : null}
-              />
-            )}
+          {hasGHGPExport && hasDeprecationPeriod(emissionSource.subPost) && (
+            <DatePicker
+              label={`${t('form.constructionYear')} *`}
+              slotProps={{
+                textField: {
+                  className: styles.datePickerInput,
+                },
+              }}
+              maxDate={dayjs(new Date())}
+              views={['year']}
+              sx={{ backgroundColor: 'white', flex: '1' }}
+              onChange={(date) => {
+                if (date && date.isValid()) {
+                  update('constructionYear', date.toDate())
+                }
+              }}
+              value={emissionSource.constructionYear ? dayjs(emissionSource.constructionYear) : null}
+            />
+          )}
         </div>
         <TextField
           disabled={!!emissionSource.validated}
