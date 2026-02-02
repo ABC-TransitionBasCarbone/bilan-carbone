@@ -734,9 +734,9 @@ export const adaptFeSourceWithExport = async (studyId: string, types: Export[]) 
   }
 
   if (study.data.exports?.types.includes(Export.GHGP) && (!types || !types.includes(Export.GHGP))) {
-    removeSourceToStudy(Import.AIB, studyId)
+    await removeSourceToStudy(Import.AIB, studyId)
   } else if (!study.data.exports?.types.includes(Export.GHGP) && types && types.includes(Export.GHGP)) {
-    addSourceToStudy(Import.AIB, studyId)
+    await addSourceToStudy(Import.AIB, studyId)
   }
 }
 
