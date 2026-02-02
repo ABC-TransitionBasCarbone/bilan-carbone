@@ -30,10 +30,10 @@
     "glossary": {
       "GHGP": {
         "title": "Export to GHG Protocol format",
-        "warning": "Please note that in order for your export to comply with the GHG Protocol, you will need to :",
+        "warning": "Please note that in order for your export to comply with the GHG Protocol, you will need to:",
         "item1": "Take into account waste incineration in the emissions associated with the steam and heating networks.",
         "item2": "Correctly indicate in the Capital goods category whether the assets were acquired in the year of the Bilan Carbone® or not.",
-        "item3": "Have a double-accounting for consumed electricity, once with the <b><green>location-based method (LBM)</green></b> and once with the <b><purple>market-based method (MBM)</purple></b>. To do this, account for your kWh of energy consumption twice, <green>once via <b>location-based</b> emission factors</green>, and <purple>a second time via <b>market-based</b> emission factors</purple>. Reminder :<ul><li>The <b><green>location-based method</green></b> reflects the average emissions intensity of grids on which energy consumption occurs (using mostly grid-average emission factor data). </li><li>The <b><purple>market-based method</purple></b> reflects emissions from electricity that companies have purposefully chosen (or their lack of choice). It derives emission factors from contractual instruments such as Guarantees of Origin (GO), Renewable Energy Certificated in the US, Power Purchase Agreements (PPAs, VPPAs), etc. All electricity not covered by the aforementioned contracts must then be taken into account using <b>residual mixes emission factors</b>, i.e. emission factors for electricity mixes from which all electricity covered by the aforementioned contracts has been removed.</li></ul>",
+        "item3": "Have a double-accounting for consumed electricity, once with the <b><green>location-based method (LBM)</green></b> and once with the <b><purple>market-based method (MBM)</purple></b>. To do this, account for your kWh of energy consumption twice, <green>once via <b>location-based</b> emission factors</green>, and <purple>a second time via <b>market-based</b> emission factors</purple>. Reminder :<ul><li>The <b><green>location-based method</green></b> reflects the average emissions intensity of grids on which energy consumption occurs (using mostly grid-average emission factor data). </li><li>The <b><purple>market-based method</purple></b> reflects emissions from electricity that companies have purposefully chosen (or their lack of choice). It derives emission factors from contractual instruments such as Guarantees of Origin (GO), Renewable Energy Certificates in the US, Power Purchase Agreements (PPAs, VPPAs), etc. All electricity not covered by the aforementioned contracts must then be taken into account using <b>residual mixes emission factors</b>, i.e. emission factors for electricity mixes from which all electricity covered by the aforementioned contracts has been removed.</li></ul>",
         "item4": "The capital goods portion of vehicles construction is not included by default in the GHG Protocol for the Travel and Commute and Freight categories. You must therefore account for it in the Capital goods category, only if the vehicle was manufactured during the year of the Bilan Carbone®.",
         "conclusion": "<b>Users should also be familiar with all the methodological specifics of the GHG Protocol in order to generate an export that meets the requirements of this method.</b>"
       }
@@ -73,7 +73,7 @@
       "6": "Other indirect emissions"
     },
     "post": {
-      "title": "Emission post",
+      "title": "Emission category",
       "1": {
         "1": "Direct emissions from stationary combustion sources",
         "2": "Direct emissions from mobile combustion sources",
@@ -1344,7 +1344,7 @@
       }
     },
     "engagementActions": {
-      "title": "Carries Actions",
+      "title": "Engagement actions summary",
       "table": {
         "name": "Name",
         "description": "Description",
@@ -1588,13 +1588,13 @@
       "partType": "Part type",
       "comment": "Comments",
       "clear": "Clear value",
-      "base": "Base",
+      "base": "Scope 2 approach (GHG Protocol)",
       "baseModal": {
         "title": "GHG-P exports information",
-        "description": "Here, you must indicate whether your FE applies within the framework of the location-based method or the market-based method. This distinction will only apply if your FE is used within the Electricity sub-item of the Energy item. As a reminder:",
-        "location": "The location-based method is based on the use of emission factors representing the average electricity mix over defined geographical and temporal areas. In France, the emission factors used are typically of the form \"Average mix - Year concerned - France\".",
-        "market": "The market-based method is based on the use of emission factors representative of the electricity produced by electricity producers with whom the organisation has a contractual relationship through the purchase of Guarantees of Origin (GOs) or the direct sale of electricity (Power Purchase Agreement, or PPA). All electricity not covered by the aforementioned contracts must then be taken into account using emission factors for the residual mix, i.e. the emission factors for the electricity mix from which all electricity covered by the aforementioned contracts has been removed.",
-        "conclusion": "The Bilan Carbone® and the regulatory GHG assessment only allow the location-based method, ISO 14064-1 allows the use of both methods, while the GHG Protocol requires double counting of electricity consumption, on the one hand location-based and on the other hand market-based."
+        "description": "You must indicate whether your EF applies for the <b><green>location-based</b></green> method or the <b><purple>market-based method</b></purple>. This distinction will only apply if your EF is used within the Electricity subcategory (Energy category). As a reminder:",
+        "location": "The <b><green>location-based method</b></green> uses grid-average emission factor.",
+        "market": "The <b><purple>market-based method</b></purple> uses emission factors derived from contractual agreements such as Guarantees of Origin (GOs), Renewable Energy Certificates in the US, Power Purchase Agreements (PPAs, VPPAs, ...), and residual mixes emission factor for all the consumption which is not covered by the aforementioned contractual agreements.",
+        "conclusion": "It is mandatory to use the location-based method for Bilan Carbone® and the regulatory GHG assessment. ISO 14064-1 allows the use of both methods, while the GHG Protocol requires double counting of electricity consumption, once with each method."
       },
       "glossary": {
         "title": "Glossary",
