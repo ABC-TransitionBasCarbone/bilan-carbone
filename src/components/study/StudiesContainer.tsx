@@ -4,6 +4,7 @@ import {
   getAllowedStudiesByUserAndOrganization,
   getExternalAllowedStudiesByUser,
 } from '@/db/study'
+import { customRich } from '@/i18n/customRich'
 import { canCreateAStudy } from '@/services/permissions/study'
 import { hasActiveLicence } from '@/utils/organization'
 import AddIcon from '@mui/icons-material/Add'
@@ -113,12 +114,12 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
     <Block>
       <Alert className="p0" severity="info">
         <p>
-          {t.rich('cannotCreateStudy', {
+          {customRich(t, 'cannotCreateStudy', {
             link: (children) => <Link href="/ressources">{children}</Link>,
           })}
         </p>
         <p>
-          {t.rich('canCreateFootPrint', {
+          {customRich(t, 'canCreateFootPrint', {
             link: (children) => <Link href="/mes-empreintes">{children}</Link>,
           })}
         </p>

@@ -1,4 +1,5 @@
 import { FullStudy } from '@/db/study'
+import { customRich } from '@/i18n/customRich'
 import { hasAccessToEmissionSourceValidation } from '@/services/permissions/environment'
 import { Post, subPostsByPost } from '@/services/posts'
 import { withInfobulle } from '@/utils/post'
@@ -65,7 +66,7 @@ const StudyPostsCard = ({ study, post, studySite, setSite, setGlossary, environm
         {hasAccessToEmissionSourceValidation(environment) && (
           <div className={classNames({ [styles.allValidated]: percent === 100 }, 'grow flex-cc')}>
             <p className={classNames(styles.emissionSources, 'mb1 justify-end grow')}>
-              {t.rich('validatedSources', {
+              {customRich(t, 'validatedSources', {
                 validated: validated,
                 total: emissionSources.length,
                 data: (children) => (

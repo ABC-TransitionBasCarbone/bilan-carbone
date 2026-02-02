@@ -2,6 +2,7 @@
 
 import { EmissionFactorList } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
+import { customRich } from '@/i18n/customRich'
 import { StudyWithoutDetail } from '@/services/permissions/study'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
@@ -196,7 +197,7 @@ const EmissionSourceContributorForm = ({
       {glossary && (
         <GlossaryModal glossary={glossary} onClose={() => setGlossary('')} label="emission-source" t={tGlossary}>
           <p className="mb-2">
-            {tGlossary.rich(`${glossary}Description`, {
+            {customRich(tGlossary, `${glossary}Description`, {
               link: (children) => (
                 <Link href={tDocumentation('uncertainties')} target="_blank" rel="noreferrer noopener">
                   {children}

@@ -1,6 +1,7 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
+import { customRich } from '@/i18n/customRich'
 import { getCaracterisationsBySubPost, getEmissionResults } from '@/services/emissionSource'
 import { StudyWithoutDetail } from '@/services/permissions/study'
 import { Post } from '@/services/posts'
@@ -217,7 +218,11 @@ const SubPost = ({
             </p>
             {count > 0 && (
               <span className="grow justify-end mr1">
-                {tStudy.rich('validatedSources', { total: count, validated, data: (children) => <>{children}</> })}
+                {customRich(tStudy, 'validatedSources', {
+                  total: count,
+                  validated,
+                  data: (children) => <>{children}</>,
+                })}
               </span>
             )}
           </AccordionSummary>

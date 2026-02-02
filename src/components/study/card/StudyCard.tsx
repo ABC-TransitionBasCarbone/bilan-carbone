@@ -1,6 +1,7 @@
 import Button from '@/components/base/Button'
 import ProgressBar from '@/components/base/ProgressBar'
 import { getStudyById, getStudyValidatedEmissionsSources } from '@/db/study'
+import { customRich } from '@/i18n/customRich'
 import { hasAccessToStudyCardDetails, hasRoleOnStudy } from '@/services/permissions/environment'
 import { getDisplayedRoleOnStudy } from '@/utils/study'
 import { Study } from '@prisma/client'
@@ -45,7 +46,7 @@ const StudyCard = async ({ study, user, simplified }: Props) => {
         {hasAccessToStudyCardDetails(user.environment) && (
           <Box>
             <p className="mb1 align-center">
-              {t.rich('validatedSources', {
+              {customRich(t, 'validatedSources', {
                 validated: values.validated,
                 total: values.total,
                 data: (children) => (

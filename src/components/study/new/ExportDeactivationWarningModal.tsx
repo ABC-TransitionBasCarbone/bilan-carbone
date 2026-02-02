@@ -1,6 +1,7 @@
 'use client'
 
 import Modal from '@/components/modals/Modal'
+import { customRich } from '@/i18n/customRich'
 import { exportSpecificFields, getAllSpecificFieldsForExports } from '@/utils/study'
 import { Export } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -45,7 +46,7 @@ const ExportDeactivationWarningModal = ({ type, remainingExports, onConfirm, onC
       ]}
     >
       <div>
-        {t.rich('description', {
+        {customRich(t, 'description', {
           type: tExport(type),
           fields: fields.map((field) => tFields(field)).join(', '),
           warning: (children) => <span className="userWarning">{children}</span>,

@@ -1,6 +1,7 @@
 'use client'
 
 import Modal from '@/components/modals/Modal'
+import { customRich } from '@/i18n/customRich'
 import { ControlMode } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 
@@ -39,7 +40,7 @@ const ControlModeChangeWarningModal = ({ open, currentMode, newMode, onConfirm, 
       ]}
     >
       <div>
-        {t.rich('description', {
+        {customRich(t, 'description', {
           currentMode: tControlModes(currentMode),
           newMode: tControlModes(newMode),
           warning: (children) => <span className="userWarning">{children}</span>,

@@ -161,14 +161,14 @@ const ConsolatedGHGPDifference = ({
     [emissionSourcesForSelectedSite, ghgpRules, isEmissionSourceFiltered],
   )
 
-  const otherEmissionsAval = useMemo(() => getOtherEmissions(true), [getOtherEmissions])
+  const otherEmissionsAval = useMemo(() => getOtherEmissions(false), [getOtherEmissions])
 
   const otherEmissionsAvalDifference = useMemo(
     () => calculateEmissionSourcesDifference(otherEmissionsAval, emissionFactorsWithParts, environment, unitValue),
     [otherEmissionsAval, emissionFactorsWithParts, unitValue, environment],
   )
 
-  const otherEmissionsAmont = useMemo(() => getOtherEmissions(false), [getOtherEmissions])
+  const otherEmissionsAmont = useMemo(() => getOtherEmissions(true), [getOtherEmissions])
 
   const otherEmissionsAmontDifference = useMemo(
     () => calculateEmissionSourcesDifference(otherEmissionsAmont, emissionFactorsWithParts, environment, unitValue),
@@ -313,8 +313,8 @@ const ConsolatedGHGPDifference = ({
     >
       {hasUtilisationEnDependance && (
         <ExportDifferenceItems
-          title="dependanceTitle"
-          descriptions={['dependance']}
+          title="dependanceGHGTitle"
+          descriptions={['dependanceGHG']}
           emissionSources={utilisationEnDependanceEmissionSources}
           exportType={Export.GHGP}
           studySite={studySite}

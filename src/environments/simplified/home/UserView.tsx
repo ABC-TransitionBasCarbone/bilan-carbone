@@ -1,4 +1,5 @@
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
+import { customRich } from '@/i18n/customRich'
 import {
   hasHomeAlert,
   hasStartLinkOnFootprints,
@@ -100,7 +101,7 @@ const UserView = async ({ account }: Props) => {
         </Box>
         {hasAlert && (
           <Alert severity="info" className="mb-2">
-            {t.rich('alert.info', {
+            {customRich(t, 'alert.info', {
               link: (chunks) => (
                 <Link
                   href="https://www.guide-communication-climat.fr/definitions/approches-de-comptabilite-carbone"
