@@ -214,11 +214,15 @@ export const exportSpecificFields: Record<Export, (keyof UpdateEmissionSourceCom
   [Export.ISO14069]: [],
 }
 
-export const getAllSpecificFieldsForExports = (exportTypes: Export[]) =>
-  exportTypes.reduce(
+export const getAllSpecificFieldsForExports = (exportTypes: Export[]) => {
+  if (!exportTypes) {
+    return []
+  }
+  return exportTypes.reduce(
     (res, exportType) => unique(exportType ? res.concat(exportSpecificFields[exportType as Export]) : res),
     [] as (keyof UpdateEmissionSourceCommand)[],
   )
+}
 
 export const formatEmission = (getValue: Getter<number>, resultsUnit: StudyResultUnit) =>
   formatNumber(getValue() / STUDY_UNIT_VALUES[resultsUnit])
