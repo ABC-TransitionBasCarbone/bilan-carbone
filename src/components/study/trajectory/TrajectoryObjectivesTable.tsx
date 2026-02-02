@@ -7,10 +7,15 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
 import { deleteObjective, deleteTrajectory } from '@/services/serverFunctions/trajectory'
 import { formatNumber } from '@/utils/number'
-import { getTrajectoryTypeLabel } from '@/utils/trajectory'
+import {
+  getCorrectedObjectives,
+  getDisplayedReferenceYearForTrajectoryType,
+  getTrajectoryTypeLabel,
+  PastStudy,
+} from '@/utils/trajectory'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
-import { Chip } from '@mui/material'
+import { Chip, Typography } from '@mui/material'
 import { SectenInfo, TrajectoryType } from '@prisma/client'
 import { ColumnDef, getCoreRowModel, getExpandedRowModel, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
@@ -30,6 +35,8 @@ type TrajectoryRow = {
   type: TrajectoryType
   targetYear?: number
   reductionRate?: number
+  referenceYear?: number
+  correctedRate?: number
   isTrajectory: true
   trajectory: TrajectoryWithObjectives
   children: ObjectiveRow[]
@@ -40,6 +47,8 @@ type ObjectiveRow = {
   name: string
   targetYear: number
   reductionRate: number
+  referenceYear: number
+  correctedRate?: number
   isTrajectory: false
   trajectoryId: string
   children?: never
@@ -55,6 +64,8 @@ interface Props {
   studyYear: number
   searchFilter?: string
   sectenData: SectenInfo[]
+  studyEmissions?: number
+  pastStudies?: PastStudy[]
 }
 
 const fuseOptions = {
@@ -71,6 +82,8 @@ const TrajectoryObjectivesTable = ({
   studyYear,
   searchFilter = '',
   sectenData,
+  studyEmissions = 0,
+  pastStudies = [],
 }: Props) => {
   const tAction = useTranslations('common.action')
   const t = useTranslations('study.transitionPlan.objectives')
@@ -86,6 +99,61 @@ const TrajectoryObjectivesTable = ({
   const [editTrajectory, setEditTrajectory] = useState<TrajectoryWithObjectives | null>(null)
 
   const fuse = useMemo(() => new Fuse(trajectories, fuseOptions), [trajectories])
+
+  // Calculate corrected rates for all trajectories
+  const correctedRatesMap = useMemo(() => {
+    const ratesMap = new Map<string, { correctedRate: number }>()
+
+    if (studyEmissions <= 0 || pastStudies.length === 0) {
+      return ratesMap
+    }
+
+    trajectories.forEach((traj) => {
+      const isSBTI = traj.type === TrajectoryType.SBTI_15 || traj.type === TrajectoryType.SBTI_WB2C
+      const isSNBC = traj.type === TrajectoryType.SNBC_GENERAL || traj.type === TrajectoryType.SNBC_SECTORAL
+      const isCustom = traj.type === TrajectoryType.CUSTOM
+
+      const refYear = traj.referenceYear || getDisplayedReferenceYearForTrajectoryType(traj.type, studyYear)
+
+      if (studyYear <= refYear) {
+        return
+      }
+
+      const formObjectives = traj.objectives.map((obj) => ({
+        targetYear: obj.targetYear.toString(),
+        reductionRate: obj.reductionRate * 100,
+      }))
+
+      const correctedObjectives = getCorrectedObjectives(
+        studyYear,
+        studyEmissions,
+        formObjectives,
+        traj.type,
+        pastStudies,
+        refYear,
+        isSBTI,
+        isSNBC,
+        isCustom,
+        sectenData,
+      )
+
+      if (correctedObjectives) {
+        // Map corrected objectives back to original objectives by index
+        // correctedObjectives array maintains the same length and indexing as traj.objectives
+        correctedObjectives.forEach((correctedObjective, index) => {
+          const originalObjective = traj.objectives[index]
+          // Only process if there's a corrected objective (not null) and a corresponding original objective
+          if (correctedObjective && originalObjective) {
+            ratesMap.set(originalObjective.id, {
+              correctedRate: correctedObjective.reductionRate,
+            })
+          }
+        })
+      }
+    })
+
+    return ratesMap
+  }, [trajectories, studyYear, studyEmissions, pastStudies, sectenData])
 
   const handleDeleteClick = (type: 'trajectory' | 'objective', id: string, name: string) => {
     setDeleteTarget({ type, id, name })
@@ -177,6 +245,14 @@ const TrajectoryObjectivesTable = ({
         },
       },
       {
+        header: t('table.referenceYear'),
+        accessorFn: (row) => row.referenceYear,
+        cell: ({ getValue }) => {
+          const refYear = getValue<number | undefined>()
+          return refYear || null
+        },
+      },
+      {
         header: t('table.targetYear'),
         accessorFn: ({ targetYear }) => targetYear,
         cell: ({ getValue, row }) => {
@@ -192,7 +268,7 @@ const TrajectoryObjectivesTable = ({
         },
       },
       {
-        header: t('table.reductionRate'),
+        header: t('table.referenceReduction'),
         accessorFn: ({ reductionRate }) => reductionRate,
         cell: ({ getValue, row }) => {
           const rate = getValue<number | undefined>()
@@ -204,6 +280,27 @@ const TrajectoryObjectivesTable = ({
           }
 
           return rate !== undefined ? `${formatNumber(rate * 100, 1)}%` : null
+        },
+      },
+      {
+        header: t('table.correctedRate'),
+        accessorFn: (row) => row,
+        cell: ({ getValue, row }) => {
+          const data = getValue<TableDataType>()
+          const isExpanded = row.getIsExpanded()
+          const isTrajectory = data.isTrajectory
+
+          // Hide column content when trajectory is expanded (like other columns)
+          if (isTrajectory && isExpanded) {
+            return null
+          }
+
+          // Always display if correctedRate exists (even if same as original)
+          if (data.correctedRate === undefined) {
+            return null
+          }
+
+          return <Typography color="warning.main">{formatNumber(data.correctedRate * 100, 1)}%</Typography>
         },
       },
       {
@@ -259,27 +356,41 @@ const TrajectoryObjectivesTable = ({
 
     return filteredTrajectories.map((trajectory) => {
       const sortedObjectives = [...trajectory.objectives].sort((a, b) => a.targetYear - b.targetYear)
-      const lastObjective = sortedObjectives[sortedObjectives.length - 1]
+      const closestObjective = sortedObjectives[0]
+
+      const refYear = trajectory.referenceYear || getDisplayedReferenceYearForTrajectoryType(trajectory.type, studyYear)
+
+      // Get corrected rate for closest objective (displayed when collapsed)
+      const closestCorrectedObjective = closestObjective ? correctedRatesMap.get(closestObjective.id) : undefined
 
       return {
         id: trajectory.id,
         name: trajectory.name,
         type: trajectory.type,
-        targetYear: lastObjective?.targetYear,
-        reductionRate: lastObjective?.reductionRate,
+        targetYear: closestObjective?.targetYear,
+        reductionRate: closestObjective?.reductionRate,
+        referenceYear: refYear,
+        correctedRate: closestCorrectedObjective?.correctedRate,
         isTrajectory: true as const,
         trajectory,
-        children: sortedObjectives.map((objective, index) => ({
-          id: objective.id,
-          name: t('objectiveNumber', { number: index + 1 }),
-          targetYear: objective.targetYear,
-          reductionRate: objective.reductionRate,
-          isTrajectory: false as const,
-          trajectoryId: trajectory.id,
-        })),
+        children: sortedObjectives.map((objective, index) => {
+          const prevObjYear = index > 0 ? sortedObjectives[index - 1].targetYear : refYear
+          const correctedObjective = correctedRatesMap.get(objective.id)
+
+          return {
+            id: objective.id,
+            name: t('objectiveNumber', { number: index + 1 }),
+            targetYear: objective.targetYear,
+            reductionRate: objective.reductionRate,
+            referenceYear: prevObjYear,
+            correctedRate: correctedObjective?.correctedRate,
+            isTrajectory: false as const,
+            trajectoryId: trajectory.id,
+          }
+        }),
       }
     })
-  }, [trajectories, t, searchFilter, fuse])
+  }, [trajectories, t, searchFilter, fuse, correctedRatesMap, studyYear])
 
   const table = useReactTable({
     columns,
@@ -328,6 +439,8 @@ const TrajectoryObjectivesTable = ({
           trajectory={editTrajectory}
           studyYear={studyYear}
           sectenData={sectenData}
+          studyEmissions={studyEmissions}
+          pastStudies={pastStudies}
         />
       )}
     </>

@@ -1133,18 +1133,21 @@
         "namePlaceholder": "Donner un nom à ma trajectoire",
         "description": "Description de ma trajectoire",
         "descriptionPlaceholder": "Décrivez votre trajectoire",
-        "referenceYear": "Année de référence (optionnel)",
+        "referenceYear": "Année de référence",
         "objectives": {
           "title": "Objectifs de réduction",
-          "sbtiDescription": "Ces objectifs de réduction sont liés à la trajectoire de référence SBTi et sont prédéfinis. Vous pourrez ajouter des objectifs intermédiaires dans la rubrique \"Mes objectifs de réduction\"",
-          "snbcDescription": "Ces objectifs de réduction sont liés à la trajectoire de référence SNBC et sont prédéfinis. Vous pourrez ajouter des objectifs intermédiaires dans la rubrique \"Mes objectifs de réduction\"",
+          "sbtiDescription": "Ces objectifs de réduction sont liés à la trajectoire de référence SBTi et sont prédéfinis. Vous pourrez ajouter des objectifs intermédiaires dans la rubrique \"Mes objectifs de réduction\".",
+          "snbcDescription": "Ces objectifs de réduction sont liés à la trajectoire de référence SNBC et sont prédéfinis. Vous pourrez ajouter des objectifs intermédiaires dans la rubrique \"Mes objectifs de réduction\".",
           "global": "OBJECTIF GLOBAL",
           "horizon2030": "Horizon 2030",
           "horizon2050": "Horizon 2050",
           "year": "Année de l'objectif",
           "yearPlaceholder": "Choisir une année",
           "reductionRate": "Pourcentage de réduction annuel",
-          "reductionRatePlaceholder": "Donnez un % de réduction (ex: 2.5)"
+          "reductionRatePlaceholder": "Donnez un % de réduction (ex: 2.5)",
+          "referenceRate": "Taux de référence",
+          "correctedRate": "Taux corrigé",
+          "overshootInfo": "Taux ajusté pour compenser l'overshoot"
         },
         "validation": {
           "required": "Champs requis",
@@ -1155,7 +1158,12 @@
           "title": "Glossaire",
           "close": "Fermer",
           "referenceYear": "Année de référence",
-          "referenceYearDescription": "L'année de référence correspond à l'année de départ de votre trajectoire de réduction. Cette année sert de point de départ pour calculer les objectifs de réduction. Pour les trajectoires SBTi et SNBC, l'année de référence est prédéfinie et ne peut pas être modifiée. Pour les trajectoires personnalisées, vous pouvez choisir librement cette année."
+          "referenceYearDescription": "L'année de référence correspond à l'année de départ de votre trajectoire de réduction. Cette année sert de point de départ pour calculer les objectifs de réduction. Pour les trajectoires SBTi et SNBC, l'année de référence est prédéfinie et ne peut pas être modifiée. Pour les trajectoires personnalisées, vous pouvez choisir librement cette année.",
+          "referenceYearMethod": "Année de référence {method}",
+          "referenceYearMethodDescription": "Vous ne pouvez pas modifier la date de référence pour une trajectoire de type {method} car celle-ci est dictée par la méthode.",
+          "referenceYearMethodLink": "Pour plus d'informations, cliquez ici.",
+          "correctedRate": "Calcul du taux corrigé",
+          "correctedRateDescription": "Le taux à l'année N prend en compte votre taux voulu ainsi que les émissions entre votre année de référence et l'année de votre étude. Si vos émissions n'ont pas suivi votre taux souhaité, nous calculons les émissions émises en trop (overshoot) et appliquons un nouveau taux pour vous permettre de rattraper les émissions émises en trop."
         }
       },
       "objectives": {
@@ -1172,6 +1180,9 @@
           "startYear": "Année de départ",
           "targetYear": "Année cible",
           "reductionRate": "Réduction annuelle",
+          "referenceYear": "Année de référence",
+          "correctedRate": "Réduction annuelle compensée",
+          "referenceReduction": "Réduction annuelle de référence",
           "actions": "Actions"
         },
         "cancel": "Annuler",
