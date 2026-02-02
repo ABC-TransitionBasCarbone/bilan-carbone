@@ -70,7 +70,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
       {!!advancedStudies.length && (
         <Studies
           studies={advancedStudies}
-          canAddStudy={canCreateAStudy(user) && !isCR && activeLicence}
+          canAddStudy={(await canCreateAStudy(user)) && !isCR && activeLicence}
           creationUrl={creationUrl}
           user={user}
           collaborations={!organizationVersionId && isCR}
@@ -80,7 +80,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
       {!!simplifiedStudies.length && (
         <Studies
           studies={simplifiedStudies}
-          canAddStudy={canCreateAStudy(user, true) && !isCR && activeLicence}
+          canAddStudy={(await canCreateAStudy(user, true)) && !isCR && activeLicence}
           creationUrl={creationUrlSimplified}
           user={user}
           collaborations={!organizationVersionId && isCR}
@@ -89,7 +89,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
       )}
       {!!collaborations.length && <Studies studies={collaborations} canAddStudy={false} user={user} collaborations />}
     </>
-  ) : canCreateAStudy(user, simplified) ? (
+  ) : (await canCreateAStudy(user, simplified)) ? (
     !isCR && (
       <MUIBox component="section" className="mt1">
         <div className="justify-center">

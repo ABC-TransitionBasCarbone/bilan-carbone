@@ -1756,7 +1756,8 @@
   "environment": {
     "BC": "BC+ 2.0",
     "CUT": "Count",
-    "TILT": "Tilt"
+    "TILT": "Tilt",
+    "CLICKSON": "ClicksOn"
   },
   "source": {
     "CRON": "Cron",
@@ -2302,10 +2303,17 @@
     "FormationStudy": "Formation study",
     "TransitionPlan": "Transition plan",
     "source": "Sources",
+    "TiltSimplified": "TILT Simplified",
     "environment": "Environments",
     "true": "Activated",
     "false": "Deactivated",
     "Not authorized": "You are not allowed to do this action"
+  },
+  "tiltSimplified": {
+    "comingSoon": {
+      "title": "Coming Soon",
+      "message": "The simplified footprint calculator for associations is currently under construction and will be available in a few months. Thank you for your patience!"
+    }
   },
   "feedback": {
     "title": "Give your opinion about BC+ !",

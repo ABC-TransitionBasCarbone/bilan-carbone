@@ -96,6 +96,10 @@
   padding: 2rem;
 }
 
+.p3 {
+  padding: 3rem;
+}
+
 .p10 {
   padding: 10rem;
 }
@@ -264,4 +268,8 @@
 
 .pointer {
   cursor: pointer;
+}
+
+.bold {
+  font-weight: bold;
 }
