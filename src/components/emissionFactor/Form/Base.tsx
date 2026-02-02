@@ -2,6 +2,7 @@
 
 import { Select } from '@/components/base/Select'
 import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
+import { customRich } from '@/i18n/customRich'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { FormControl, FormHelperText, MenuItem } from '@mui/material'
 import { EmissionFactorBase, SubPost } from '@prisma/client'
@@ -9,18 +10,17 @@ import { useTranslations } from 'next-intl'
 import { useEffect, useMemo } from 'react'
 import { Control, Controller, UseFormReturn, UseFormSetValue } from 'react-hook-form'
 import styles from './Base.module.css'
-import { customRich } from '@/i18n/customRich'
 
 const GlossaryModal = () => {
   const t = useTranslations('emissionFactors.create.baseModal')
   return (
     <div className="flex-col gapped">
-      <p>{customRich(t,'description')}</p>
+      <p>{customRich(t, 'description')}</p>
       <ul className={styles.list}>
-        <li>{customRich(t,'location')}</li>
-        <li>{customRich(t,'market')}</li>
+        <li>{customRich(t, 'location')}</li>
+        <li>{customRich(t, 'market')}</li>
       </ul>
-      <p>{customRich(t,'conclusion')}</p>
+      <p>{customRich(t, 'conclusion')}</p>
     </div>
   )
 }

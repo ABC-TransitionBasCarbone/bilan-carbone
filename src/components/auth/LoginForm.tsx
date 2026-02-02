@@ -1,5 +1,6 @@
 'use client'
 
+import { customRich } from '@/i18n/customRich'
 import { getEnvVar } from '@/lib/environment'
 import { getEnvRoute } from '@/services/email/utils'
 import { LoginCommand, LoginCommandValidation } from '@/services/serverFunctions/user.command'
@@ -20,7 +21,6 @@ import LoadingButton from '../base/LoadingButton'
 import { FormTextField } from '../form/TextField'
 import authStyles from './Auth.module.css'
 import styles from './LoginForm.module.css'
-import { customRich } from '@/i18n/customRich'
 
 interface Props {
   environment?: Environment
@@ -119,7 +119,7 @@ const LoginForm = ({ environment = Environment.BC }: Props) => {
         </LoadingButton>
         {errorMessage && (
           <p className="error">
-            {customRich(t,errorMessage, {
+            {customRich(t, errorMessage, {
               link: (children) => <Link href={`mailto:${support}`}>{children}</Link>,
             })}
           </p>

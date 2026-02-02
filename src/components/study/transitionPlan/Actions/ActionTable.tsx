@@ -127,7 +127,7 @@ const ActionTable = ({ actions, openEditModal, openDeleteModal, canEdit, studyId
                 tModal="study.transitionPlan.actions.table"
               >
                 <p>
-                  {customRich(t,'enabledGlossaryDescription', {
+                  {customRich(t, 'enabledGlossaryDescription', {
                     trajectoryLink: (children) => (
                       <Link href={`/etudes/${studyId}/trajectoires`} target="_blank" rel="noreferrer noopener">
                         {children}

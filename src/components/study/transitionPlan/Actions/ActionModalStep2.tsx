@@ -59,7 +59,7 @@ const ActionModalStep2 = ({ control }: Props) => {
             style={{ width: '100%', height: 'auto' }}
           />
           <p>
-            {customRich(tRelevance,'learnMore', {
+            {customRich(tRelevance, 'learnMore', {
               link: (children) => (
                 <Link href={tDocumentation('actionRelevance')} target="_blank" rel="noreferrer noopener">
                   {children}

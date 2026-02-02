@@ -123,7 +123,7 @@ const EditOrganizationForm = ({ organizationVersion, caUnit, isCut = false, disa
             {sitesOnError &&
               sitesOnError.authorizedStudySites.map((studySite) => (
                 <li key={studySite.id}>
-                  {customRich(tStudySites,'existingSite', {
+                  {customRich(tStudySites, 'existingSite', {
                     name: () =>
                       `${studySite.site.name}${studySite.study.organizationVersion.isCR ? ` (${studySite.site.organization.name})` : ''}`,
                     link: () => <Link href={`/etudes/${studySite.studyId}/perimetre`}>{studySite.study.name}</Link>,

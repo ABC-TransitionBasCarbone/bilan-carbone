@@ -8,6 +8,7 @@ import { FormTextField } from '@/components/form/TextField'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import StudyDuplicationForm, { InviteOptions } from '@/components/study/duplication/StudyDuplicationForm'
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { customRich } from '@/i18n/customRich'
 import { createStudyCommand, duplicateStudyCommand } from '@/services/serverFunctions/study'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { useTranslations } from 'next-intl'
@@ -17,7 +18,6 @@ import { useMemo, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import HelpIcon from '../../base/HelpIcon'
 import styles from './Form.module.css'
-import { customRich } from '@/i18n/customRich'
 
 interface Props {
   form: UseFormReturn<CreateStudyCommand>
@@ -69,7 +69,7 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudy
   const studyNamePlaceHolder = useMemo(
     () =>
       `${
-        customRich(tStudyNewSuggestion,'name', {
+        customRich(tStudyNewSuggestion, 'name', {
           studyStartDate: new Date().getFullYear(),
           orga: form.getValues('sites')[0]?.name || tStudyNewSuggestion('yourOrga'),
         }) || ''
@@ -121,7 +121,7 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudy
           t={tGlossary}
         >
           <p className="mb-2">
-            {customRich(tGlossary,`${glossary}Description`, {
+            {customRich(tGlossary, `${glossary}Description`, {
               link: (children) => (
                 <Link href={tDocumentation('maturity')} target="_blank" rel="noreferrer noopener">
                   {children}

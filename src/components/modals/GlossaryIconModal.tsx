@@ -1,10 +1,10 @@
 'use client'
 
+import { customRich } from '@/i18n/customRich'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import HelpIcon from '../base/HelpIcon'
 import Modal from './Modal'
-import { customRich } from '@/i18n/customRich'
 
 interface Props {
   title: string
@@ -33,7 +33,7 @@ const GlossaryIconModal = ({ title, className, iconLabel, label, tModal, childre
       <Modal
         open={open}
         label={`${label}-glossary`}
-        title={customRich(t,title)}
+        title={customRich(t, title)}
         onClose={() => setOpen(false)}
         actions={[{ actionType: 'button', onClick: () => setOpen(false), children: tCommon('close') }]}
       >

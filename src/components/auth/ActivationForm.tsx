@@ -1,5 +1,6 @@
 'use client'
 
+import { customRich } from '@/i18n/customRich'
 import { getEnvVar } from '@/lib/environment'
 import { activateEmail } from '@/services/serverFunctions/user'
 import { EmailCommand, EmailCommandValidation } from '@/services/serverFunctions/user.command'
@@ -16,7 +17,6 @@ import Form from '../base/Form'
 import LoadingButton from '../base/LoadingButton'
 import { FormTextField } from '../form/TextField'
 import authStyles from './Auth.module.css'
-import { customRich } from '@/i18n/customRich'
 
 interface Props {
   environment?: Environment
@@ -84,7 +84,7 @@ const ActivationForm = ({ environment = Environment.BC }: Props) => {
         </LoadingButton>
         {message && (
           <p className={classNames(!success ? 'error' : '')} data-testid="activation-form-message">
-            {customRich(t,message, {
+            {customRich(t, message, {
               support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
               link: (children) => (
                 <Link href={faq} target="_blank" rel="noreferrer noopener">

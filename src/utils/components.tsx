@@ -2,5 +2,5 @@ import { customRich } from '@/i18n/customRich'
 import { Translations } from '@/types/translation'
 
 export const handleWarningText = (t: Translations, text: string) => {
-  return <span>{customRich(t,text, { warning: (children) => <span className="userWarning">{children}</span> })}</span>
+  return <span>{customRich(t, text, { warning: (children) => <span className="userWarning">{children}</span> })}</span>
 }

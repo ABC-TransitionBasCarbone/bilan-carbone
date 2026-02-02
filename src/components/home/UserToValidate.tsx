@@ -7,7 +7,7 @@ const UserToValidate = () => {
   const t = useTranslations('home')
   return (
     <Alert severity="info">
-      {customRich(t,'userToValidate', {
+      {customRich(t, 'userToValidate', {
         link: (children) => <Link href="/equipe">{children}</Link>,
       })}
     </Alert>

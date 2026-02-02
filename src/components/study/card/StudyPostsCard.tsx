@@ -1,4 +1,5 @@
 import { FullStudy } from '@/db/study'
+import { customRich } from '@/i18n/customRich'
 import { hasAccessToEmissionSourceValidation } from '@/services/permissions/environment'
 import { Post, subPostsByPost } from '@/services/posts'
 import { withInfobulle } from '@/utils/post'
@@ -11,7 +12,6 @@ import PostIcon from '../infography/icons/PostIcon'
 import SelectStudySite from '../site/SelectStudySite'
 import styles from './StudyPostsCard.module.css'
 import { StyledPostContainer, StyledProgressLayer } from './StudyPostsCard.styles'
-import { customRich } from '@/i18n/customRich'
 
 interface Props {
   study: FullStudy
@@ -66,7 +66,7 @@ const StudyPostsCard = ({ study, post, studySite, setSite, setGlossary, environm
         {hasAccessToEmissionSourceValidation(environment) && (
           <div className={classNames({ [styles.allValidated]: percent === 100 }, 'grow flex-cc')}>
             <p className={classNames(styles.emissionSources, 'mb1 justify-end grow')}>
-              {customRich(t,'validatedSources', {
+              {customRich(t, 'validatedSources', {
                 validated: validated,
                 total: emissionSources.length,
                 data: (children) => (

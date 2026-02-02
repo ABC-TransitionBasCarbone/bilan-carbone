@@ -5,6 +5,7 @@ import Button from '@/components/base/Button'
 import HelpIcon from '@/components/base/HelpIcon'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
+import { customRich } from '@/i18n/customRich'
 import { hasAccessToStudyResults, hasRoleOnStudy } from '@/services/permissions/environment'
 import { getDetailedEmissionResults } from '@/services/study'
 import { formatNumber } from '@/utils/number'
@@ -18,7 +19,6 @@ import { useMemo, useState } from 'react'
 import StudyName from '../card/StudyName'
 import BarChart from '../charts/BarChart'
 import styles from './ResultsContainer.module.css'
-import { customRich } from '@/i18n/customRich'
 
 interface Props {
   user: UserSession
@@ -162,7 +162,7 @@ const StudyResultsContainerSummary = ({
         <span>
           {glossary && (
             <>
-              {customRich(t,`${glossary}Description`, {
+              {customRich(t, `${glossary}Description`, {
                 link: (children) => (
                   <Link href={tDocumentation('dependencyAndResponsability')} target="_blank" rel="noreferrer noopener">
                     {children}

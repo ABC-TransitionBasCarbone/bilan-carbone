@@ -40,7 +40,7 @@ const ControlModeChangeWarningModal = ({ open, currentMode, newMode, onConfirm, 
       ]}
     >
       <div>
-        {customRich(t,'description', {
+        {customRich(t, 'description', {
           currentMode: tControlModes(currentMode),
           newMode: tControlModes(newMode),
           warning: (children) => <span className="userWarning">{children}</span>,

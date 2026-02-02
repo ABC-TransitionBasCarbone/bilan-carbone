@@ -1,6 +1,7 @@
 'use client'
 
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { customRich } from '@/i18n/customRich'
 import { getEnvVar } from '@/lib/environment'
 import { getEnvRoute } from '@/services/email/utils'
 import { UNKNOWN_SCHOOL } from '@/services/permissions/check'
@@ -23,7 +24,6 @@ import { FormAutocomplete } from '../form/Autocomplete'
 import { FormTextField } from '../form/TextField'
 import GlossaryModal from '../modals/GlossaryModal'
 import authStyles from './Auth.module.css'
-import { customRich } from '@/i18n/customRich'
 
 const SignUpFormClickson = () => {
   const contactMail = getEnvVar('SUPPORT_EMAIL', Environment.CLICKSON)
@@ -212,7 +212,7 @@ const SignUpFormClickson = () => {
         </LoadingButton>
         {message && (
           <p className={classNames(!success ? 'error' : '')} data-testid="activation-form-message">
-            {customRich(t,message, {
+            {customRich(t, message, {
               support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
               link: (children) => (
                 <Link href={faq} target="_blank" rel="noreferrer noopener">

@@ -4,6 +4,7 @@ import {
   getAllowedStudiesByUserAndOrganization,
   getExternalAllowedStudiesByUser,
 } from '@/db/study'
+import { customRich } from '@/i18n/customRich'
 import { canCreateAStudy } from '@/services/permissions/study'
 import { hasActiveLicence } from '@/utils/organization'
 import AddIcon from '@mui/icons-material/Add'
@@ -21,7 +22,6 @@ import Image from '../document/Image'
 import ResultsContainerForUser from './results/ResultsContainerForUser'
 import Studies from './Studies'
 import styles from './StudiesContainer.module.css'
-import { customRich } from '@/i18n/customRich'
 
 interface Props {
   user: UserSession
@@ -114,12 +114,12 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
     <Block>
       <Alert className="p0" severity="info">
         <p>
-          {customRich(t,'cannotCreateStudy', {
+          {customRich(t, 'cannotCreateStudy', {
             link: (children) => <Link href="/ressources">{children}</Link>,
           })}
         </p>
         <p>
-          {customRich(t,'canCreateFootPrint', {
+          {customRich(t, 'canCreateFootPrint', {
             link: (children) => <Link href="/mes-empreintes">{children}</Link>,
           })}
         </p>

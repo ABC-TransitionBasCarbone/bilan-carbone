@@ -30,7 +30,7 @@ const DeleteStudySiteModal = ({ open, confirmDeletion, cancelDeletion, deleting 
         },
       ]}
     >
-      {customRich(t,'description', {
+      {customRich(t, 'description', {
         count: deleting,
         warning: (children) => <span className="userWarning">{children}</span>,
       })}

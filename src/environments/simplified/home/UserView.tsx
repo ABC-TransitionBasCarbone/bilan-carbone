@@ -1,4 +1,5 @@
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
+import { customRich } from '@/i18n/customRich'
 import {
   hasHomeAlert,
   hasStartLinkOnFootprints,
@@ -16,7 +17,6 @@ import CinemaOutlinedIcon from '../../cut/icons/CinemaOutlinedIcon'
 import DiagramOutlinedIcon from '../icons/DiagramOutlinedIcon'
 import LinkCard from './LinkCard'
 import styles from './UserView.module.css'
-import { customRich } from '@/i18n/customRich'
 
 interface Props {
   account: UserSession
@@ -101,7 +101,7 @@ const UserView = async ({ account }: Props) => {
         </Box>
         {hasAlert && (
           <Alert severity="info" className="mb-2">
-            {customRich(t,'alert.info', {
+            {customRich(t, 'alert.info', {
               link: (chunks) => (
                 <Link
                   href="https://www.guide-communication-climat.fr/definitions/approches-de-comptabilite-carbone"

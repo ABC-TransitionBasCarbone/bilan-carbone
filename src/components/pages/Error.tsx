@@ -14,7 +14,7 @@ const Error = () => {
   const t = useTranslations('error')
   return (
     <Block title={t('error')} as="h1">
-      {customRich(t,'contactSupport', {
+      {customRich(t, 'contactSupport', {
         p: (children) => <p>{children}</p>,
         link: (children) => <Link href="/">{children}</Link>,
         m: () => <Link href={`mailto:${support}`}>{support}</Link>,

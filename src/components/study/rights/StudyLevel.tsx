@@ -5,6 +5,7 @@ import { FormSelect } from '@/components/form/Select'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { customRich } from '@/i18n/customRich'
 import { changeStudyLevel } from '@/services/serverFunctions/study'
 import { ChangeStudyLevelCommand, ChangeStudyLevelCommandValidation } from '@/services/serverFunctions/study.command'
 import { getAllowedLevels } from '@/services/study'
@@ -18,7 +19,6 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './StudyParams.module.css'
-import { customRich } from '@/i18n/customRich'
 
 interface Props {
   user: UserSession
@@ -83,7 +83,7 @@ const StudyLevel = ({ user, study, disabled }: Props) => {
       </FormSelect>
       <GlossaryModal label="study-type" glossary={glossary} onClose={() => setGlossary('')} t={tGlossary}>
         <span>
-          {customRich(t,'glossary.typeDescription', {
+          {customRich(t, 'glossary.typeDescription', {
             link: (children) => (
               <Link href={tDocumentation('maturity')} target="_blank" rel="noreferrer noopener">
                 {children}

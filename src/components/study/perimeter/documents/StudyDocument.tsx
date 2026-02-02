@@ -7,6 +7,7 @@ import { useToast } from '@/components/base/ToastProvider'
 import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { customRich } from '@/i18n/customRich'
 import { DEFAULT_SAMPLE_TITLE, SAMPLE_TITLES } from '@/services/documents'
 import { allowedFlowFileTypes, downloadFromUrl, maxAllowedFileSize, MB } from '@/services/file'
 import {
@@ -30,7 +31,6 @@ import { useEffect, useMemo, useState } from 'react'
 import DocumentSelector from './DocumentSelector'
 import DocumentViewer from './DocumentViewer'
 import styles from './StudyFlow.module.css'
-import { customRich } from '@/i18n/customRich'
 
 interface Props {
   title: string
@@ -150,7 +150,7 @@ const StudyDocument = ({ title, t, study, documents, canUpload = true, documentC
         tModal={documentCategory === DocumentCategory.DependencyMatrix ? 'study.dependencyMatrix' : 'study.flow'}
       >
         <p>
-          {customRich(tPerimeter,'information', {
+          {customRich(tPerimeter, 'information', {
             link: () => (
               <Link href={tDocumentation(glossaryConfig.documentationUrl)} target="_blank" rel="noopener noreferrer">
                 {tDocumentation(glossaryConfig.documentationUrl)}
@@ -195,7 +195,7 @@ const StudyDocument = ({ title, t, study, documents, canUpload = true, documentC
       {environment && canDownloadSample && (
         <div className="mb-2">
           <Alert severity="info" className="mb-2">
-            {customRich(t,'info', {
+            {customRich(t, 'info', {
               mail: (children) => <Link href={`mailto:methodologie@abc-transitionbascarbone.fr`}>{children}</Link>,
             })}
           </Alert>

@@ -1,4 +1,5 @@
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { customRich } from '@/i18n/customRich'
 import { getLink } from '@/services/checklist'
 import { addUserChecklistItem } from '@/services/serverFunctions/user'
 import ValidatedIcon from '@mui/icons-material/CheckCircle'
@@ -13,7 +14,6 @@ import { useMemo, useState } from 'react'
 import Button from '../base/Button'
 import LinkButton from '../base/LinkButton'
 import styles from './Checklist.module.css'
-import { customRich } from '@/i18n/customRich'
 
 interface Props {
   step: UserChecklist
@@ -84,7 +84,7 @@ const ChecklistItem = ({
         </AccordionSummary>
         <AccordionDetails>
           <p>
-            {customRich(t,`${step}Details`, {
+            {customRich(t, `${step}Details`, {
               orga: (children) => (
                 <Link href={`/organisations/${organizationVersionId}/modifier`} onClick={onClose}>
                   {children}

@@ -46,7 +46,7 @@ const ExportDeactivationWarningModal = ({ type, remainingExports, onConfirm, onC
       ]}
     >
       <div>
-        {customRich(t,'description', {
+        {customRich(t, 'description', {
           type: tExport(type),
           fields: fields.map((field) => tFields(field)).join(', '),
           warning: (children) => <span className="userWarning">{children}</span>,
