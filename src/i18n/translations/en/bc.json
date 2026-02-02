@@ -1369,7 +1369,8 @@
         "date": "Date",
         "sites": "Sites",
         "validate": "Validate",
-        "allSites": "All Sites"
+        "allSites": "All Sites",
+        "addCustomTarget": "Add a custom target"
       },
       "targets": {
         "TEAM_PROJECT": "Project team",

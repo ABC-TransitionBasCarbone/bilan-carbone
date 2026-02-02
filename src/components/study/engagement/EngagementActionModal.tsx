@@ -16,11 +16,11 @@ import {
 } from '@/services/serverFunctions/study.command'
 import { objectWithoutNullAttributes } from '@/utils/object'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { MenuItem } from '@mui/material'
+import { Checkbox, ListItemText, MenuItem, TextField } from '@mui/material'
 import { EngagementPhase } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useEffect, useMemo, useState } from 'react'
+import { ChangeEvent, useEffect, useMemo, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import styles from './EngagementActionModal.module.css'
 
@@ -41,6 +41,9 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
   const tSteps = useTranslations('study.engagementActions.steps')
   const tPhases = useTranslations('study.engagementActions.phases')
   const [submitting, setSubmitting] = useState(false)
+  const [addCustomTarget, setAddCustomTarget] = useState(false)
+  const [currentCustomTarget, setCurrentCustomTarget] = useState<string>('')
+  const [customTargets, setCustomTargets] = useState<string[]>([])
   const { callServerFunction } = useServerFunction()
   const router = useRouter()
 
@@ -64,11 +67,12 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
       studyId: study.id,
       date: new Date().toISOString(),
       sites: [],
+      targets: [],
       ...convertedEngagementAction,
     },
   })
 
-  const target = useWatch({ control, name: 'target' })
+  const targets = useWatch({ control, name: 'targets' })
   const steps = useWatch({ control, name: 'steps' })
   const sites = useWatch({ control, name: 'sites' })
 
@@ -93,6 +97,18 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
     onClose()
   }
 
+  const handleCloseCustomTarget = () => {
+    setAddCustomTarget(false)
+    setCurrentCustomTarget('')
+  }
+
+  const handleAddCustomTarget = () => {
+    setCustomTargets((targets) => [...targets, currentCustomTarget])
+    setValue('targets', [...targets, currentCustomTarget])
+    setAddCustomTarget(false)
+    setCurrentCustomTarget('')
+  }
+
   useEffect(() => {
     if (sites.includes('all')) {
       if (sites.length === study.sites.length + 1) {
@@ -105,6 +121,25 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
       }
     }
   }, [sites, study])
+
+  useEffect(() => {
+    if (targets.includes('add_custom_target')) {
+      setAddCustomTarget(true)
+      setValue(
+        'targets',
+        targets.filter((target) => target !== 'add_custom_target'),
+      )
+    }
+  }, [targets])
+
+  useEffect(() => {
+    if (!customTargets.length) {
+      const tmpCustomTargets = targets.filter(
+        (target) => !(Object.values(EngagementActionTargets) as string[]).includes(target),
+      )
+      setCustomTargets(tmpCustomTargets)
+    }
+  }, [customTargets, targets])
 
   return (
     <>
@@ -133,26 +168,40 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
             minRows={2}
           />
           <FormDatePicker control={control} name="date" label={`${t('date')} *`} />
-          <FormAutocomplete
-            data-testid="engagement-action-target"
+          <FormSelect
             control={control}
             translation={t}
-            options={Object.values(EngagementActionTargets).map((target) => ({
-              label: tTargets(`${target}`),
-              value: target,
-            }))}
-            inputValue={
-              Object.values(EngagementActionTargets).includes(target as EngagementActionTargets)
-                ? tTargets(target as string)
-                : target || ''
-            }
-            name="target"
+            name="targets"
             label={`${t('target')} *`}
-            freeSolo
-            onInputChange={(_, value) => {
-              setValue('target', value || '')
+            data-testid="engagement-action-targets"
+            fullWidth
+            multiple
+            renderValue={() => {
+              return targets
+                .map((value) =>
+                  Object.values(EngagementActionTargets).includes(value as EngagementActionTargets)
+                    ? tTargets(value as string)
+                    : value || '',
+                )
+                .join(', ')
             }}
-          />
+          >
+            {[...customTargets, ...Object.values(EngagementActionTargets)].map((target) => (
+              <MenuItem key={target} value={target}>
+                <Checkbox checked={targets?.includes(target)} />
+                <ListItemText
+                  primary={
+                    Object.values(EngagementActionTargets).includes(target as EngagementActionTargets)
+                      ? tTargets(target)
+                      : target
+                  }
+                />
+              </MenuItem>
+            ))}
+            <MenuItem value="add_custom_target">
+              <ListItemText primary={`+ ${t('addCustomTarget')}`} />
+            </MenuItem>
+          </FormSelect>
           <FormAutocomplete
             data-testid="engagement-action-steps"
             control={control}
@@ -173,17 +222,20 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
               setValue('steps', value || '')
             }}
           />
-          <FormAutocomplete
+          <FormSelect
             data-testid="engagement-action-phase"
             control={control}
             translation={t}
-            options={Object.values(EngagementPhase).map((phase) => ({
-              label: tPhases(`${phase}`),
-              value: phase,
-            }))}
             name="phase"
             label={`${t('phase')} *`}
-          />
+            fullWidth
+          >
+            {Object.values(EngagementPhase).map((phase) => (
+              <MenuItem key={phase} value={phase}>
+                {tPhases(phase)}
+              </MenuItem>
+            ))}
+          </FormSelect>
           <FormSelect
             control={control}
             translation={t}
@@ -194,7 +246,7 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
             multiple
             value={sites}
           >
-            <MenuItem value={'all'}>{t('allSites')}</MenuItem>
+            {study.sites.length > 1 && <MenuItem value={'all'}>{t('allSites')}</MenuItem>}
             {study.sites.map((site) => (
               <MenuItem key={site.id} value={site.id}>
                 {site.site.name}
@@ -222,6 +274,27 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
           open
         />
       )}
+      <Modal
+        open={addCustomTarget}
+        label={'custom target'}
+        title={t('addCustomTarget')}
+        onClose={handleCloseCustomTarget}
+        actions={[
+          {
+            actionType: 'submit',
+            onClick: handleAddCustomTarget,
+            loading: false,
+            disabled: !currentCustomTarget,
+            children: t('addCustomTarget'),
+          },
+        ]}
+      >
+        <TextField
+          value={currentCustomTarget}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setCurrentCustomTarget(e.target.value)}
+          required
+        />
+      </Modal>
     </>
   )
 }
