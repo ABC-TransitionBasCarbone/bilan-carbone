@@ -1,3 +1,4 @@
+import { EngagementActionTargets } from '@/constants/engagementActions'
 import { resultsExportHeadersBase, resultsExportHeadersCut } from '@/constants/exports'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy, getStudyById } from '@/db/study'
@@ -949,12 +950,16 @@ export const downloadEngagementActionsCSV = (
     t('table.sites'),
   ]
 
+  const engagementActionTargets = Object.values(EngagementActionTargets) as string[]
+
   const rows = actions.map((action) => {
     const targets =
       action.targets
         ?.map((target) => {
-          const targetKey = target
-          return tTargets(targetKey) || target
+          if (engagementActionTargets.includes(target)) {
+            return tTargets(target)
+          }
+          return target
         })
         .join(', ') || ''
 

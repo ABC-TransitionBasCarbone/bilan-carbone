@@ -104,7 +104,7 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
 
   const handleAddCustomTarget = () => {
     setCustomTargets((targets) => [...targets, currentCustomTarget])
-    setValue('targets', [...targets, currentCustomTarget])
+    setValue('targets', [...targets.filter((t) => t !== 'add_custom_target'), currentCustomTarget])
     setAddCustomTarget(false)
     setCurrentCustomTarget('')
   }
@@ -120,7 +120,7 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
         )
       }
     }
-  }, [sites, study])
+  }, [setValue, sites, study])
 
   useEffect(() => {
     if (targets.includes('add_custom_target')) {
@@ -130,12 +130,13 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
         targets.filter((target) => target !== 'add_custom_target'),
       )
     }
-  }, [targets])
+  }, [setValue, targets])
 
   useEffect(() => {
     if (!customTargets.length) {
       const tmpCustomTargets = targets.filter(
-        (target) => !(Object.values(EngagementActionTargets) as string[]).includes(target),
+        (target) =>
+          !(Object.values(EngagementActionTargets) as string[]).includes(target) && target !== 'add_custom_target',
       )
       setCustomTargets(tmpCustomTargets)
     }
