@@ -265,9 +265,7 @@ const ConsolatedGHGPDifference = ({
 
         return (
           hasFabricationPart(emissionSource.emissionFactor) &&
-          emissionSource.caracterisation === EmissionSourceCaracterisation.Operated &&
-          (!emissionSource.constructionYear ||
-            emissionSource.constructionYear?.getFullYear() !== study.startDate.getFullYear())
+          emissionSource.caracterisation === EmissionSourceCaracterisation.Operated
         )
       }),
     [emissionSourcesForSelectedSite, isEmissionSourceFiltered, study.startDate],

@@ -163,8 +163,7 @@ export const computeResult = (
           if (
             isGHGP &&
             part.type === EmissionFactorPartType.Fabrication &&
-            caracterisation === EmissionSourceCaracterisation.Operated &&
-            emissionSource.constructionYear?.getFullYear() !== study.startDate.getFullYear()
+            caracterisation === EmissionSourceCaracterisation.Operated
           ) {
             return
           }
