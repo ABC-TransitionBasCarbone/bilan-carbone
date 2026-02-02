@@ -1,6 +1,6 @@
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { updateStudySpecificExportFields } from '@/services/serverFunctions/study'
+import { adaptFeSourceWithExport, updateStudySpecificExportFields } from '@/services/serverFunctions/study'
 import { sortAlphabetically } from '@/services/utils'
 import { exportSpecificFields, getAllSpecificFieldsForExports } from '@/utils/study'
 import { ControlMode, EmissionFactorBase, EmissionSourceCaracterisation, Export } from '@prisma/client'
@@ -80,12 +80,20 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
       if (typeFields.some((field) => !currentStudySpecificFields.includes(field)) && hasValidatedSources) {
         setPendingExportCheck(type)
       } else {
-        onChange(values.exports.concat(type))
+        const newExports = values.exports.concat(type)
+        onChange(newExports)
+        if (study) {
+          adaptFeSourceWithExport(study?.id, newExports)
+        }
       }
     } else if (shouldShowExportDeactivationWarning(type)) {
       setPendingExportUncheck(type)
     } else {
-      onChange(values.exports.filter((exportType) => exportType !== type))
+      const newExports = values.exports.filter((exportType) => exportType !== type)
+      onChange(newExports)
+      if (study) {
+        adaptFeSourceWithExport(study?.id, newExports)
+      }
     }
   }
 
