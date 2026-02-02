@@ -797,7 +797,7 @@
         "otherEmissionsAmont": "Some emissions are not accounted for in the GHG Protocol format, especially if the activites concerned are not directly operated by the organization. This happens for instance with the transport and distribution losses for electricity, or the original emissions that stem from building the power capacities. In the regulatory GHG assessment format, these emissions are accounted for in subcategory 6.1, but GHG Protocol lacks a suitable subcategory for these emissions.",
         "otherGas1": "Only greenhouse gases that are part of the Kyoto Protocol agreement (CO2, CH4, N2O, HFC, PFC, SF6) are accounted for in the GHG Protocol. Other GHG emissions (contrails, NF3, other air conditioning or industrial gases) are accounted for in the Bilan Carbone®, but not in the GHG Protocol.",
         "marketBased": "Part of the differences between market-based GHG Protocol and Bilan Carbone® simply stems from the difference between the results of the <green>location-based method</green> and the <purple>market-based method</purple>.",
-        "fabrication": "à compléter - Gabriel",
+        "fabrication": "You used emission factors that depends on the distance travelled (passenger.km, ...) for operated vehicles. Manufacturing emissions of these vehicles will not be accounted for in GHG Protocol. You should use the Capital goods category for vehicles that were acquired inside the temporal boundary of the assessment.",
         "additionalMissing": "+ {count} other emission {count, plural,  =1 {source} other {sources}}",
         "unexplainedDifference": "Some differences can not be explained. Please, contact us at the <support>support</support>."
       },
