@@ -36,7 +36,7 @@ export const getEmissionSourceCompletion = (
   emissionFactor: (FullStudy | StudyWithoutDetail)['emissionSources'][number]['emissionFactor'],
   environment: Environment | undefined,
 ) => {
-  const mandatoryFields = ['name', 'type', 'value', 'emissionFactorId'] as (keyof typeof emissionSource)[]
+  const mandatoryFields = ['name', 'type', 'emissionFactorId'] as (keyof typeof emissionSource)[]
 
   const caracterisations = study.exports?.types.length
     ? getCaracterisationsBySubPost(
@@ -76,6 +76,10 @@ export const getEmissionSourceCompletion = (
   ) {
     mandatoryFields.push('hectare')
     mandatoryFields.push('duration')
+  }
+
+  if (!emissionSource.value && emissionSource.value !== 0) {
+    mandatoryFields.push('value')
   }
 
   return mandatoryFields.reduce((acc, field) => acc + (emissionSource[field] ? 1 : 0), 0) / mandatoryFields.length
