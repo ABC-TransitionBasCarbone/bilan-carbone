@@ -555,7 +555,7 @@ export const formatStudyExportResultsForExport = (
     sheetOptions['!merges'].push(...buildMerges(rulesSpans, 3 + i * length))
 
     dataForExport.push([site.name])
-    dataForExport.push([tSpecificExport('rule'), '', tSpecificExport('ges', { unit: tUnits(study.resultsUnit) })])
+    dataForExport.push(['', '', tSpecificExport('ges', { unit: tUnits(study.resultsUnit) })])
     dataForExport.push([
       tSpecificExport('category.title'),
       tSpecificExport('post.title'),
