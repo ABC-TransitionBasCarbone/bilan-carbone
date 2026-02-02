@@ -8,7 +8,7 @@
       "2": "Build a reduction trajectory"
     },
     "message": {
-      "core": "Welcome to COUNT, the first ecological impact calculator dedicated to movie theaters.\nThis tool was developed by the association CUT! Cinema United for Transition, in cooperation with the ABC, the association for low-carbon transition.\nThis initiative is supported by the French State as part of the 'Support Green Alternatives 2' program under France 2030, operated by the Banque des Territoires (Caisse des Dépôts).\nCUT is supported by the CNC.",
+      "core": "Welcome to COUNT, the first ecological impact calculator dedicated to movie theaters.\nThis tool was developed by the association CUT! Cinema United for Transition, in cooperation with the Association for Low Carbon Transition (ABC).\nThis initiative is supported by the French State as part of the 'Support Green Alternatives 2' program under France 2030, operated by the Banque des Territoires (Caisse des Dépôts).\nCUT is supported by the CNC.",
       "0": "Completing your impact assessment will allow you to:",
       "1": "Understand the impact assessment of your establishment",
       "2": "Identify priority actions",
@@ -45,7 +45,7 @@
     "NotOperated": "Not operated",
     "OperatedProcedeed": "Operated, procedeed",
     "OperatedFugitive": "Operated, fugitive",
-    "OperatedCAS": "Operated, LUC",
+    "OperatedCAS": "Operated, LUCF",
     "NotOperatedSupported": "Not operated, supported",
     "NotOperatedNotSupported": "Not operated, not supported",
     "Rented": "Rented",
@@ -88,8 +88,8 @@
       "3": {
         "1": "Upstream freight transport",
         "2": "Downstream freight transport",
-        "3": "Home-to-work travel",
-        "4": "Visitor and client transport",
+        "3": "Commuting",
+        "4": "Visitors' travel",
         "5": "Business travel"
       },
       "4": {
@@ -125,7 +125,7 @@
       "4": "Downstream Scope 3"
     },
     "post": {
-      "title": "Emission Post",
+      "title": "Subcategory",
       "1": {
         "1": "Stationary combustion",
         "2": "Mobile combustion",
@@ -133,17 +133,17 @@
         "4": "Fugitive emissions"
       },
       "2": {
-        "1": "Indirect emissions related to consumption",
-        "2": "Indirect emissions related to steam consumption"
+        "1": "Indirect emissions from the generation of purchased or acquired electricity",
+        "2": "Indirect emissions from the generation of purchased or acquired steam, heat or cooling"
       },
       "3": {
-        "1": "Purchased Goods and Services",
-        "2": "Capital Goods",
-        "3": "Fuel and Energy-Related Activities not included in Scope 1 or Scope 2",
+        "1": "Purchased goods and services",
+        "2": "Capital goods",
+        "3": "Fuel and energy-related activities not included in Scope 1 or Scope 2",
         "4": "Upstream transportation and distribution",
         "5": "Waste generated in operations",
         "6": "Business travel",
-        "7": "Employee Commuting",
+        "7": "Employee commuting",
         "8": "Upstream leased assets",
         "other": "Other upstream indirect emissions"
       },
@@ -294,7 +294,7 @@
     "transition": "BC+ transition",
     "logout": "Log out",
     "methodology": "Methodology",
-    "organizations": "My carbon footprints",
+    "organizations": "My Bilan Carbone®",
     "footprints": "Mes Empreintes",
     "settings": "Settings",
     "team": "My team",
@@ -396,7 +396,7 @@
       "title": "Information about the new study",
       "name": "Study name",
       "validator": "Validator email",
-      "studyDates": "Study dates",
+      "studyDates": "Temporal boundary of the study",
       "realizationDates": "Study completion date",
       "level": "Bilan Carbone® maturity",
       "exports": "Exports",
@@ -449,17 +449,17 @@
       "glossary": {
         "title": "Glossaire",
         "validatorEmail": "Validator email",
-        "validatorEmailDescription": "For each Bilan Carbone®, one or more validators can be defined. These validators are responsible for validating the sources of emissions once they have been entered by the study's contributors and editors. By default, only validated emissions appear in your results, but you can change this behaviour via the \"Parameters\" menu.",
-        "studyDates": "Study dates",
+        "validatorEmailDescription": "For each Bilan Carbone®, one or more validators can be defined. These validators are responsible for validating the emission sources once they have been entered by the study's contributors and editors. By default, only validated emissions appear in your results, but you can change this behaviour via the \"Parameters\" menu.",
+        "studyDates": "Temporal boundary of the study",
         "studyDatesDescription": "This is the period over which the study extends. In general, the beginning and end correspond to 1st January and 31st December of the same year.",
         "realizationDates": "Study completion date",
         "realizationDatesDescription": "This is the period during which you will be working on the study: filling in emission sources, exporting, etc. These dates are not compulsory and you can always access the study outside the indicated period.",
         "type": "Bilan Carbone® maturity",
-        "typeDescription": "The new version of the Bilan Carbone® method introduces three levels of maturity for organizations' Bilan Carbone®. For more details, please consult <link>this page</link>.",
+        "typeDescription": "The new version of the Bilan Carbone® method introduces three levels of maturity for the organizations. For more details, please consult <link>this page</link>.",
         "visibility": "Visibility of the study",
-        "visibilityDescription": "Choose whether your study should be public, i.e. accessible to all your colleagues entered on the My organization > my team page (link to the page), or private, i.e. only accessible to the people you add on the study framework page. Your organization's admins have access to all studies, whether public or private.",
+        "visibilityDescription": "Choose whether your study should be public, i.e. accessible to all your colleagues that are registered in your team, or private, i.e. only accessible to the people you specifically add in this study (from the framework page). The administrators of your organization have access to all studies, regardless of their visibility.",
         "exports": "Exports",
-        "exportsDescription": "By default, the results are returned in Bilan Carbone® format, but it is possible to obtain the results in the formats required by several other carbon accounting methods, such as the Bilan GES règlementaire, which is the French regulatory method.",
+        "exportsDescription": "By default, the results are returned in Bilan Carbone® format, but it is possible to obtain the results in the formats required by several other carbon accounting methods, such as the Regulatory GHG Assessment, which is the French regulation on GHG emissions, or the GHG Protocol.",
         "control": "Exports' Control mode",
         "controlDescription": "The control mode is a data item required by certain carbon accounting methods, such as the regulatory GHG Balance or the GHG Protocol. In order to obtain the results in the formats requested by these methods, you will need to characterise the different sources of emissions when you enter them, which will determine into which of the existing categories within these methods (the equivalent of the posts and sub-posts within the Bilan Carbone® method) the emissions will be broken down. The control mode applies to all the exports you have selected. Depending on the control mode selected, the characterizations available for the different sources of emissions vary. For more details on the control modes, please consult the methodological guides for the methods in question. We strongly recommend that you use the \"Operational Control\" control mode, which is by far the most common.",
         "duplicationOptions": "Duplication options",
@@ -615,7 +615,7 @@
         "title": "Are you sure you want to update the {name} source?",
         "unchanged": "The results of the study will remain unchanged",
         "updated": "The following emission factors have been updated",
-        "wastedUpdated": "The factors marked will only be different for BEGES exports. You can find an explanation on the \"Results\" page of your study.",
+        "wastedUpdated": "The factors marked will only be different for the Regulatory GHG Assessment exports. You can find an explanation on the \"Results\" page of your study.",
         "deleted": "The following emission factors have been deleted",
         "deletionDetails": "The associated emission sources will no longer have an emission factor and will be invalidated.",
         "confirm": "Confirm",
@@ -737,9 +737,9 @@
       "emissions": "Emissions",
       "uncertainty": "Uncertainty",
       "emissionSources": "Number of emission sources",
-      "bilanCarbone": "Bilan Carbone® Results",
-      "beges": "BEGES Results",
-      "ghgp": "GHG-P ",
+      "bilanCarbone": "Bilan Carbone®",
+      "beges": "Regulatory GHG Assessment",
+      "ghgp": "GHG Protocol",
       "withDependencies": "With dependencies",
       "withoutDependencies": "Without dependencies",
       "dependencyIntensity": "Carbon intensities in dependency",
@@ -780,16 +780,16 @@
         "fabricationTitle": "Vehicles manifacturing",
         "tableHeaders": {
           "emissionSource": "Emission source",
-          "post": "Post",
+          "post": "Subcategory",
           "bilanCarbone": "Bilan Carbone®",
-          "beges": "BEGES",
-          "ghgp": "GHG-P",
+          "beges": "Regulatory GHG Assessment",
+          "ghgp": "GHG Protocol",
           "difference": "Difference"
         },
         "dependance": "The regulatory GHG assessment does not include the subcategory \"Dependent use\", as the concept of dependence does not exist in this method.",
         "dependanceGHG": "The GHG Protocol does not include the subcategory \"Dependent use\", as the concept of dependence does not exist in this method.",
         "goToSubPost": "Go to subcategory",
-        "waste": "The regulatory Bilan GES includes all emissions due to waste recycling in the waste emitter's balance sheet, whereas the Bilan Carbone® only includes the weight of waste collection and transport in the waste emitter's balance sheet. Thus, the emission factors with a value of 41 kgCO₂e/t within the tool are those used for the Bilan Carbone®, while the values incorporating the regeneration of materials (the recycling process, for the emission factors \"Recycling\" or \"Average end of life\") are used for the BEGES-R. The emission factor displayed on the BC+ is only that used for the Bilan Carbone®, but the BEGES-R export calculations are made using the ADEME emission factors linked to recycling or average end-of-life. Here are the sources of emissions related to this topic: ",
+        "waste": "The Regulatory GHG Assessment includes all emissions due to waste recycling in the waste emitter's balance sheet, whereas the Bilan Carbone® only includes the weight of waste collection and transport in the waste emitter's balance sheet. Thus, the emission factors with a value of 41 kgCO₂e/t within the tool are those used for the Bilan Carbone®, while the values incorporating the regeneration of materials (the recycling process, for the emission factors \"Recycling\" or \"Average end of life\") are used for the Regulatory GHG Assessment. The emission factor displayed on the BC+ is only that used for the Bilan Carbone®, but the BEGES-R export calculations are made using the ADEME emission factors linked to recycling or average end-of-life. Here are the sources of emissions related to this topic: ",
         "missingCaract1": "Uncharacterized emission sources are not accounted for in the {type}, which leads to undue differences with the Bilan Carbone® if you have chosen to visualize unvalidated emission sources.",
         "missingCaract2": "You have not entered the characterizations for all the emission sources in your study. Please edit and add the characterization for the following emission sources:",
         "immobilisation1": "The difference shown here stems from the fact that, according to GHG Protocol, and unlike in the Bilan Carbone®, organizations should not depreciate, discount, or amortize the emissions from the production of capital goods over time. The cradle-to-gate emissions are therefore accounted for in the year of acquisition.",
@@ -1750,7 +1750,7 @@
   },
   "level": {
     "Initial": "Initial",
-    "Standard": "Standard",
+    "Standard": "Intermediate",
     "Advanced": "Advanced",
     "noLevel": "No formation"
   },
