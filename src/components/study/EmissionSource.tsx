@@ -327,9 +327,9 @@ const EmissionSource = ({
             )}
           </div>
         </div>
-        {emissionSource.contributor && (
+        {emissionSource.lastEditor && (
           <p data-testid="emission-source-contributor" className={styles.status}>
-            {emissionSource.contributor.user.email}
+            {emissionSource.lastEditor.user.email}
           </p>
         )}
       </button>

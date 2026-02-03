@@ -108,6 +108,7 @@ const fullStudyInclude = {
       depreciationPeriod: true,
       hectare: true,
       duration: true,
+      updatedAt: true,
       studySite: {
         select: {
           id: true,
@@ -155,13 +156,16 @@ const fullStudyInclude = {
           },
         },
       },
-      contributor: {
+      lastEditor: {
         select: {
           id: true,
+          role: true,
           user: {
             select: {
               id: true,
               email: true,
+              firstName: true,
+              lastName: true,
             },
           },
         },

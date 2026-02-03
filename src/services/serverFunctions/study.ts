@@ -1444,7 +1444,7 @@ const duplicateEmissionSources = async (
   const emissionSourcesDataWithSourceId = emissionSourcesWithSites.map(
     ({ sourceEmissionSource, targetStudySiteId, subPost }) => {
       const newId = uuidv4()
-      const contributorId = sourceEmissionSource.contributor?.id
+      const lastEditorId = sourceEmissionSource.lastEditor?.id
       return {
         sourceId: sourceEmissionSource.id,
         targetId: newId,
@@ -1475,7 +1475,7 @@ const duplicateEmissionSources = async (
           emissionFactorId: sourceEmissionSource.emissionFactor?.id ?? null,
           studySiteId: targetStudySiteId,
           validated: shouldClearValidations ? false : sourceEmissionSource.validated,
-          ...(contributorId ? { contributor: { connect: { id: contributorId } } } : {}),
+          ...(lastEditorId ? { lastEditor: { connect: { id: lastEditorId } } } : {}),
         },
       }
     },
@@ -1892,8 +1892,8 @@ export const duplicateStudyEmissionSource = async (
       study: { connect: { id: studyId } },
       emissionFactor: emissionSource.emissionFactor ? { connect: { id: emissionSource.emissionFactor.id } } : undefined,
       emissionFactorId: undefined,
-      contributor: emissionSource.contributor ? { connect: { id: emissionSource.contributor.id } } : undefined,
-      contributorId: undefined,
+      lastEditor: emissionSource.lastEditor ? { connect: { id: emissionSource.lastEditor.id } } : undefined,
+      lastEditorId: undefined,
       studySite: { connect: { id: studySite } },
       studySiteId: undefined,
       validated: false,

@@ -163,7 +163,7 @@ export const updateEmissionSource = async ({
 
     await updateEmissionSourceOnStudy(
       emissionSourceId,
-      isContributor ? { ...data, contributor: { connect: { id: account.id } } } : data,
+      isContributor ? { ...data, lastEditor: { connect: { id: account.id } } } : data,
     )
     addUserChecklistItem(UserChecklist.CreateFirstEmissionSource)
   })

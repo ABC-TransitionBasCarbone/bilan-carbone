@@ -30,7 +30,7 @@ export const mockedDbEmissionSource = {
   depreciationPeriod: null,
   duration: null,
   hectare: null,
-  contributorId: null,
+  lastEditorId: null,
   feReliability: null,
   feTechnicalRepresentativeness: null,
   feGeographicRepresentativeness: null,
@@ -83,6 +83,6 @@ export const getMockedFullStudyEmissionSource = (
     id: 'mocked-study-site-id',
     site: { name: 'Mocked Site', id: 'mocked-site-id' },
   },
-  contributor: null,
+  lastEditor: null,
   ...props,
 })

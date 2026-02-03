@@ -387,7 +387,7 @@ export const filterStudyDetail = (user: UserSession, study: FullStudy) => {
       .filter((emissionSource) => availableSubPosts.includes(emissionSource.subPost))
       .map((emissionSource) => ({
         id: emissionSource.id,
-        contributor: emissionSource.contributor,
+        lastEditor: emissionSource.lastEditor,
         name: emissionSource.name,
         validated: emissionSource.validated,
         subPost: emissionSource.subPost,
