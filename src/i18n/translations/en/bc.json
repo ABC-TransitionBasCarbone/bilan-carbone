@@ -672,7 +672,7 @@
       "exportActivationWarning": {
         "title": "{type} Export Activation",
         "description": "You are about to activate the regulatory {type} export. When this export is enabled, you must fill in additionals fields ({fields}) in certain emission sources. As a result, <warning>activating this export will invalidate the affected emission sources</warning>. Do you want to continue?",
-        "finalClientDescription": "If you have emission sources characterised as \"By the final client or an intermediary\", we invite you to verify them, as GHG-P exports require greater precision. By default, the characterisation used is \"By the final client\".",
+        "finalClientDescription": "The GHG Protocol distinguishes between the use of a product sold by the end customer and that of a third party. Both characterizations are now available within the Usage section. By default, all your emission sources have been assigned to end-customer use.",
         "continue": "Continue",
         "cancel": "Cancel"
       },
