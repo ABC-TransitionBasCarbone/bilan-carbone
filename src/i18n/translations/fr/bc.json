@@ -1375,7 +1375,7 @@
         "date": "Date",
         "validate": "Valider",
         "allSites": "Tous les sites",
-        "addCustomTarget": "Ajouter une cible personalisée"
+        "addCustomTarget": "Ajouter une cible personnalisée"
       },
       "targets": {
         "TEAM_PROJECT": "Équipe projet",
@@ -1567,8 +1567,8 @@
       "attribute": "Détails",
       "location": "Localisation",
       "unit": "Unité",
-      "customUnit": "Unité personalisée",
-      "customUnitPlaceholder": "Votre unité personalisée",
+      "customUnit": "Unité personnalisée",
+      "customUnitPlaceholder": "Votre unité personnalisée",
       "monetaryUnit": "Unité monétaire",
       "source": "Source",
       "detailedGES": "Décomposition des GES",
