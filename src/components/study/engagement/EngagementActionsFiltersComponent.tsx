@@ -16,12 +16,11 @@ import styles from './EngagementActionsFilters.module.css'
 interface Props {
   filters: EngagementActionsFilters
   setFilters: Dispatch<SetStateAction<EngagementActionsFilters>>
-  siteOptions: string[]
   openAddModal: () => void
   canEdit: boolean
 }
 
-const EngagementActionsFiltersComponent = ({ filters, setFilters, siteOptions, openAddModal, canEdit }: Props) => {
+const EngagementActionsFiltersComponent = ({ filters, setFilters, openAddModal, canEdit }: Props) => {
   const t = useTranslations('study.engagementActions.filters')
   const tTable = useTranslations('study.engagementActions.table')
   const tCommonAction = useTranslations('common.action')
@@ -98,19 +97,6 @@ const EngagementActionsFiltersComponent = ({ filters, setFilters, siteOptions, o
               }))
             }}
             getLabel={(phase) => tPhases(phase)}
-          />
-        </FormControl>
-
-        <FormControl className={'grow'}>
-          <FormLabel id="engagement-actions-sites-selector" component="legend">
-            {tCommonLabel('sites')}
-          </FormLabel>
-          <MultiSelectAll
-            id="engagement-actions-sites"
-            values={filters.sites}
-            allValues={siteOptions}
-            setValues={(values) => setFilters((prevFilters) => ({ ...prevFilters, sites: values }))}
-            getLabel={(site) => site}
           />
         </FormControl>
 

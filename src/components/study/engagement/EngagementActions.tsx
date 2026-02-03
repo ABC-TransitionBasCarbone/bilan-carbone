@@ -6,6 +6,7 @@ import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteEngagementAction, EngagementActionWithSites } from '@/services/serverFunctions/study'
 import { EngagementActionsFilters } from '@/types/filters'
+import { getTranslatedMapping } from '@/utils/array'
 import { EngagementPhase } from '@prisma/client'
 import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'
@@ -18,33 +19,16 @@ import EngagementActionsFiltersComponent from './EngagementActionsFiltersCompone
 interface Props {
   actions: EngagementActionWithSites[]
   study: FullStudy
+  studySite: string
 }
 
-const fuseOptions = {
-  keys: [
-    { name: 'name', weight: 3 },
-    { name: 'description', weight: 2 },
-    { name: 'steps', weight: 1 },
-    { name: 'targets', weight: 1 },
-    { name: 'phase', weight: 1 },
-    { name: 'sites.site.name', weight: 1 },
-  ],
-  threshold: 0.3,
-  isCaseSensitive: false,
-}
-
-const EngagementActions = ({ actions, study }: Props) => {
+const EngagementActions = ({ actions, study, studySite }: Props) => {
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
   const t = useTranslations('study.transitionPlan.actions')
-
-  const siteOptions = useMemo(() => {
-    const sites = new Set<string>()
-    actions.forEach((action) => {
-      action.sites?.forEach((site) => sites.add(site.site.name))
-    })
-    return Array.from(sites).sort()
-  }, [actions])
+  const tPhases = useTranslations('study.engagementActions.phases')
+  const tSteps = useTranslations('study.engagementActions.steps')
+  const tTargets = useTranslations('study.engagementActions.targets')
 
   const defaultFilters = useMemo<EngagementActionsFilters>(() => {
     const stepsValues = Object.values(EngagementActionSteps)
@@ -56,10 +40,9 @@ const EngagementActions = ({ actions, study }: Props) => {
       steps: [...stepsValues, 'all'],
       targets: [...targetsValues, 'all'],
       phases: [...phasesValues, 'all'],
-      sites: siteOptions.length > 0 ? [...siteOptions, 'all'] : ['all'],
       dateRange: { startDate: null, endDate: null },
     }
-  }, [siteOptions])
+  }, [])
 
   const [filters, setFilters] = useState<EngagementActionsFilters>(defaultFilters)
   const [editingAction, setEditingAction] = useState<EngagementActionWithSites | undefined>(undefined)
@@ -67,7 +50,51 @@ const EngagementActions = ({ actions, study }: Props) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [deletingAction, setDeletingAction] = useState<EngagementActionWithSites | undefined>(undefined)
 
-  const fuse = useMemo(() => new Fuse(actions, fuseOptions), [actions])
+  const stepTranslatedMapping = getTranslatedMapping(Object.values(EngagementActionSteps), tSteps)
+  const targetTranslatedMapping = getTranslatedMapping(Object.values(EngagementActionTargets), tTargets)
+  const phaseTranslatedMapping = getTranslatedMapping(Object.values(EngagementPhase), tPhases)
+
+  const fuseOptions = useMemo(
+    () => ({
+      keys: [
+        { name: 'name', weight: 3 },
+        { name: 'description', weight: 2 },
+        {
+          name: 'steps',
+          weight: 1,
+          getFn: (item: EngagementActionWithSites) => {
+            return stepTranslatedMapping[item.steps] || item.steps
+          },
+        },
+        {
+          name: 'targets',
+          weight: 1,
+          getFn: (item: EngagementActionWithSites) => {
+            return (
+              item.targets
+                .map((target) => {
+                  return targetTranslatedMapping[target] || target
+                })
+                .join(' ') || ''
+            )
+          },
+        },
+        {
+          name: 'phase',
+          weight: 1,
+          getFn: (item: EngagementActionWithSites) => {
+            return phaseTranslatedMapping[item.phase] || item.phase
+          },
+        },
+        { name: 'sites.site.name', weight: 1 },
+      ],
+      threshold: 0.3,
+      isCaseSensitive: false,
+    }),
+    [stepTranslatedMapping, targetTranslatedMapping, phaseTranslatedMapping],
+  )
+
+  const fuse = useMemo(() => new Fuse(actions, fuseOptions), [actions, fuseOptions])
 
   const filteredActions: EngagementActionWithSites[] = useMemo(() => {
     let results = actions
@@ -90,8 +117,8 @@ const EngagementActions = ({ actions, study }: Props) => {
       results = results.filter((action) => filters.phases.includes(action.phase))
     }
 
-    if (!filters.sites.includes('all')) {
-      results = results.filter((action) => action.sites?.some((site) => filters.sites.includes(site.site.name)))
+    if (studySite !== 'all') {
+      results = results.filter((action) => action.sites?.some((site) => site.id === studySite))
     }
 
     if (filters.dateRange.startDate || filters.dateRange.endDate) {
@@ -120,7 +147,7 @@ const EngagementActions = ({ actions, study }: Props) => {
     }
 
     return results
-  }, [actions, filters, fuse])
+  }, [actions, filters, fuse, studySite])
 
   const handleOpenAddModal = () => {
     setEditingAction(undefined)
@@ -165,12 +192,12 @@ const EngagementActions = ({ actions, study }: Props) => {
       <EngagementActionsFiltersComponent
         filters={filters}
         setFilters={setFilters}
-        siteOptions={siteOptions}
         openAddModal={handleOpenAddModal}
         canEdit
       />
       <EngagementActionTable
         actions={filteredActions}
+        studySites={study.sites}
         openEditModal={handleOpenEditModal}
         openDeleteModal={handleOpenDeleteModal}
       />

@@ -1,7 +1,13 @@
 import { EngagementActionSteps, EngagementActionTargets } from '@/constants/engagementActions'
 import { EmissionSourcesStatus } from '@/services/study'
 import { BCUnit } from '@/services/unit'
-import { EmissionFactorBase, EmissionSourceCaracterisation, EmissionSourceType, SubPost } from '@prisma/client'
+import {
+  EmissionFactorBase,
+  EmissionSourceCaracterisation,
+  EmissionSourceType,
+  EngagementPhase,
+  SubPost,
+} from '@prisma/client'
 
 export type FeFilters = {
   archived: boolean
@@ -32,7 +38,6 @@ export type EngagementActionsFilters = {
   steps: (EngagementActionSteps | 'all')[]
   targets: (EngagementActionTargets | 'all')[]
   phases: (EngagementPhase | 'all')[]
-  sites: (string | 'all')[]
   dateRange: {
     startDate: string | null
     endDate: string | null
