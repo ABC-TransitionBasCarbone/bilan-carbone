@@ -193,7 +193,7 @@ describe('Create study emission source', () => {
       cy.getByTestId('emission-source-status').invoke('text').should('contain', 'À vérifier')
       cy.getByTestId('emission-source-value').should('have.text', '1 008 tCO₂e')
       cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Mauvaise')
-      cy.getByTestId('emission-source-contributor').should('not.exist')
+      cy.getByTestId('emission-source-last-editor').should('not.exist')
     })
     cy.getByTestId('emission-source-My edited emission source name').click({ force: true })
     cy.getByTestId('emission-source-My edited emission source name').within(() => {
@@ -210,12 +210,12 @@ describe('Create study emission source', () => {
     cy.getByTestId('emission-source-value-da').type('789')
     cy.get('[data-testid="emission-source-value-da"] > .MuiInputBase-root > .MuiInputBase-input').blur()
     cy.getByTestId('emission-source-status').invoke('text').should('contain', 'Enregistré')
+    cy.getByTestId('emission-source-last-editor').should('contain.text', 'Dernière modification')
 
     cy.getByTestId('emission-source-My edited emission source name').within(() => {
       cy.getByTestId('emission-source-status').invoke('text').should('contain', 'À vérifier')
       cy.getByTestId('emission-source-value').should('have.text', '1 744 tCO₂e')
       cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Mauvaise')
-      cy.getByTestId('emission-source-contributor').should('have.text', 'bc-contributor@yopmail.com')
     })
   })
 })

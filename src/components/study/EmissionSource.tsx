@@ -383,7 +383,7 @@ const EmissionSource = ({
             )}
             {emissionSource.lastEditor && (
               <div className="mt1">
-                <p className="bold">
+                <p className="bold" data-testid="emission-source-last-editor">
                   {emissionSource.validated ? t('lastValidation') : t('lastEdition')} {tCommon('onDate')}
                   <span className="italic"> {formatDateFr(emissionSource.updatedAt)} </span>
                   {tCommon('by')} :
