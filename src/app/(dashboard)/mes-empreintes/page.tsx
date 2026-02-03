@@ -16,7 +16,7 @@ const MyFootprints = async ({ user }: UserSessionProps) => {
     return <NotFound />
   }
 
-  if (!user.level && isTilt(user.environment)) {
+  if (isTilt(user.environment)) {
     const isTiltSimplifiedActive = await isTiltSimplifiedFeatureActive(user.environment)
     if (!isTiltSimplifiedActive) {
       return <TiltSimplifiedComingSoon />
