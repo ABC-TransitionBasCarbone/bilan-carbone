@@ -50,12 +50,12 @@ model Account {
 
   role Role
 
-  createdStudies             Study[]
-  allowedStudies             UserOnStudy[]
-  contributors               Contributors[]
-  contributedEmissionSources StudyEmissionSource[]
-  flows                      Document[]
-  userApplicationSettings    UserApplicationSettings?
+  createdStudies          Study[]
+  allowedStudies          UserOnStudy[]
+  contributors            Contributors[]
+  editedEmissionSources   StudyEmissionSource[]
+  flows                   Document[]
+  userApplicationSettings UserApplicationSettings?
 
   studyCommentsValidated StudyComment[] @relation("study_comment_validator")
   studyComments          StudyComment[] @relation("study_comment_author")
