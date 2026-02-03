@@ -88,7 +88,7 @@ const EmissionSource = ({
   const t = useTranslations('emissionSource')
   const tResultstUnits = useTranslations('study.results.units')
   const tQuality = useTranslations('quality')
-  const tRole = useTranslations('study.role')
+  const tCommon = useTranslations('common')
   const getUnitLabel = useUnitLabel()
   const router = useRouter()
   const [display, setDisplay] = useState(false)
@@ -384,9 +384,9 @@ const EmissionSource = ({
             {emissionSource.lastEditor && (
               <div className="mt1">
                 <p className="bold">
-                  {emissionSource.validated ? 'Dernière validation' : 'Dernière modification'} le
+                  {emissionSource.validated ? t('lastValidation') : t('lastEdition')} {tCommon('onDate')}
                   <span className="italic"> {formatDateFr(emissionSource.updatedAt)} </span>
-                  par :
+                  {tCommon('by')} :
                 </p>
                 <div className="my1">
                   <EmissionSourceEditorChip

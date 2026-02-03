@@ -2126,6 +2126,8 @@
     "duplicate": "Dupliquer la source d'émission",
     "information": "Information",
     "oldVersion": "Facteur d'émission issue d'une version dépréciée",
+    "lastValidation": "Dernière validation",
+    "lastEdition": "Dernière modification",
     "glossary": {
       "title": "Glossaire",
       "type": "Type",

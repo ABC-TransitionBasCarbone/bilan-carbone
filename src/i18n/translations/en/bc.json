@@ -2126,6 +2126,8 @@
     "duplicate": "Duplicate the emission source",
     "information": "Information",
     "oldVersion": "Emission factor from deprecated version",
+    "lastValidation": "Last validation",
+    "lastEdition": "Last edition",
     "glossary": {
       "title": "Glossary",
       "type": "Type",

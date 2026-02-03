@@ -8,6 +8,8 @@
     "all": "Todos",
     "none": "Ninguno",
     "subPosts": "Sub-posts",
+    "onDate": "el",
+    "by": "por",
     "action": {
       "create": "Crear",
       "edit": "Editar",
