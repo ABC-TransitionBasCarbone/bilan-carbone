@@ -10,7 +10,7 @@ import { DatePicker } from '@mui/x-date-pickers'
 import { EngagementPhase } from '@prisma/client'
 import dayjs, { Dayjs } from 'dayjs'
 import { useTranslations } from 'next-intl'
-import { Dispatch, SetStateAction, useCallback, useMemo } from 'react'
+import { Dispatch, SetStateAction, useMemo } from 'react'
 import styles from './EngagementActionsFilters.module.css'
 
 interface Props {
@@ -24,7 +24,6 @@ interface Props {
 const EngagementActionsFiltersComponent = ({ filters, setFilters, siteOptions, openAddModal, canEdit }: Props) => {
   const t = useTranslations('study.engagementActions.filters')
   const tTable = useTranslations('study.engagementActions.table')
-  const tCommon = useTranslations('common')
   const tCommonAction = useTranslations('common.action')
   const tCommonLabel = useTranslations('common.label')
   const tSteps = useTranslations('study.engagementActions.steps')
@@ -34,55 +33,6 @@ const EngagementActionsFiltersComponent = ({ filters, setFilters, siteOptions, o
   const stepsValues = useMemo(() => Object.values(EngagementActionSteps) as string[], [])
   const targetsValues = useMemo(() => Object.values(EngagementActionTargets) as string[], [])
   const phasesValues = useMemo(() => Object.values(EngagementPhase) as string[], [])
-
-  const createRenderValue = useCallback(
-    (filterArray: string[], allSelected: boolean, translate?: (value: string) => string) => () => {
-      if (allSelected) {
-        return tCommon('all')
-      }
-      if (filterArray.length === 0) {
-        return tCommon('none')
-      }
-      const items = filterArray
-        .filter((item) => item !== 'all')
-        .map((item) => (translate ? translate(item) : item))
-        .filter(Boolean)
-      return items.join(', ')
-    },
-    [tCommon],
-  )
-
-  const allStepsSelected = useMemo(
-    () => (filters.steps as string[]).filter((step) => step !== 'all').length === stepsValues.length,
-    [filters.steps, stepsValues.length],
-  )
-  const stepsRenderValue = useMemo(
-    () =>
-      createRenderValue(filters.steps as string[], allStepsSelected, (step) => tSteps(step as EngagementActionSteps)),
-    [createRenderValue, filters.steps, allStepsSelected, tSteps],
-  )
-
-  const allTargetsSelected = useMemo(
-    () => (filters.targets as string[]).filter((target) => target !== 'all').length === targetsValues.length,
-    [filters.targets, targetsValues.length],
-  )
-  const targetsRenderValue = createRenderValue(filters.targets as string[], allTargetsSelected, (target) =>
-    tTargets(target as EngagementActionTargets),
-  )
-
-  const allPhasesSelected = useMemo(
-    () => (filters.phases as string[]).filter((phase) => phase !== 'all').length === phasesValues.length,
-    [filters.phases, phasesValues.length],
-  )
-  const phasesRenderValue = createRenderValue(filters.phases as string[], allPhasesSelected, (phase) =>
-    tPhases(phase as EngagementPhase),
-  )
-
-  const allSitesSelected = useMemo(
-    () => filters.sites.filter((site) => site !== 'all').length === siteOptions.length,
-    [filters.sites, siteOptions.length],
-  )
-  const sitesRenderValue = createRenderValue(filters.sites, allSitesSelected)
 
   return (
     <div className="flex-row gapped-2 justify-between align-end">
@@ -106,8 +56,7 @@ const EngagementActionsFiltersComponent = ({ filters, setFilters, siteOptions, o
           </FormLabel>
           <MultiSelectAll
             id="engagement-actions-steps"
-            renderValue={stepsRenderValue}
-            value={filters.steps as string[]}
+            values={filters.steps as string[]}
             allValues={stepsValues}
             setValues={(values) =>
               setFilters((prevFilters) => ({ ...prevFilters, steps: values as (EngagementActionSteps | 'all')[] }))
@@ -122,8 +71,7 @@ const EngagementActionsFiltersComponent = ({ filters, setFilters, siteOptions, o
           </FormLabel>
           <MultiSelectAll
             id="engagement-actions-targets"
-            renderValue={targetsRenderValue}
-            value={filters.targets as string[]}
+            values={filters.targets as string[]}
             allValues={targetsValues}
             setValues={(values) => {
               setFilters((prevFilters) => ({
@@ -141,8 +89,7 @@ const EngagementActionsFiltersComponent = ({ filters, setFilters, siteOptions, o
           </FormLabel>
           <MultiSelectAll
             id="engagement-actions-phases"
-            renderValue={phasesRenderValue}
-            value={filters.phases as string[]}
+            values={filters.phases as string[]}
             allValues={phasesValues}
             setValues={(values) => {
               setFilters((prevFilters) => ({
@@ -160,8 +107,7 @@ const EngagementActionsFiltersComponent = ({ filters, setFilters, siteOptions, o
           </FormLabel>
           <MultiSelectAll
             id="engagement-actions-sites"
-            renderValue={sitesRenderValue}
-            value={filters.sites}
+            values={filters.sites}
             allValues={siteOptions}
             setValues={(values) => setFilters((prevFilters) => ({ ...prevFilters, sites: values }))}
             getLabel={(site) => site}

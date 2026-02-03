@@ -12,7 +12,7 @@ interface Props<T> {
 
 const MultiSelectAll = <T extends string>({ id, values, allValues, setValues, getLabel }: Props<T>) => {
   const tCommon = useTranslations('common')
-  const allSelected = useMemo(
+  const allSelected = useMemo<boolean>(
     () => values.filter((item) => item !== 'all').length === allValues.length,
     [values, allValues],
   )
@@ -63,7 +63,7 @@ const MultiSelectAll = <T extends string>({ id, values, allValues, setValues, ge
     >
       <MenuItem key={`${id}-item-all`} value="all">
         <Checkbox checked={allSelected} />
-        <ListItemText primary={allSelected ? tCommon('unselectAll') : tCommon('selectAll')} />
+        <ListItemText primary={allSelected ? tCommon('action.unselectAll') : tCommon('action.selectAll')} />
       </MenuItem>
       {allValues
         .filter((option) => option !== '')
