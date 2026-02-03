@@ -1345,6 +1345,7 @@
     },
     "engagementActions": {
       "title": "Engagement actions summary",
+      "export": "Export to CSV",
       "table": {
         "name": "Name",
         "description": "Description",

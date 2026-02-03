@@ -1,3 +1,4 @@
+import { EngagementActionTargets } from '@/constants/engagementActions'
 import { resultsExportHeadersBase, resultsExportHeadersCut } from '@/constants/exports'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy, getStudyById } from '@/db/study'
@@ -13,6 +14,7 @@ import {
   isCAS,
   STUDY_UNIT_VALUES,
 } from '@/utils/study'
+import { formatDateFr } from '@/utils/time'
 import { EmissionFactorBase, Environment, Export, ExportRule, Level, StudyResultUnit, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import {
@@ -920,4 +922,57 @@ export const getTransEnvironmentSubPost = (source: Environment, target: Environm
   } else {
     return undefined
   }
+}
+
+export const downloadEngagementActionsCSV = (
+  actions: {
+    name: string
+    description: string
+    steps: string
+    targets: string[]
+    phase: string
+    date: Date
+    sites?: { site: { name: string } }[]
+  }[],
+  studyName: string,
+  t: Translations,
+  tTargets: Translations,
+  tSteps: Translations,
+  tPhases: Translations,
+) => {
+  const headers = [
+    t('table.name'),
+    t('table.description'),
+    t('table.steps'),
+    t('table.target'),
+    t('table.phase'),
+    t('table.date'),
+    t('table.sites'),
+  ]
+
+  const engagementActionTargets = Object.values(EngagementActionTargets) as string[]
+
+  const rows = actions.map((action) => {
+    const targets =
+      action.targets
+        ?.map((target) => {
+          if (engagementActionTargets.includes(target)) {
+            return tTargets(target)
+          }
+          return target
+        })
+        .join(', ') || ''
+
+    const sites = action.sites?.map((site) => site.site.name).join(', ') || ''
+    const step = tSteps(action.steps) || action.steps
+    const phase = tPhases(action.phase) || action.phase
+    const formattedDate = formatDateFr(action.date)
+
+    return [action.name, action.description, step, targets, phase, formattedDate, sites]
+  })
+
+  const csvContent = [headers.join(';'), ...rows.map((row) => row.map((cell) => `"${cell}"`).join(';'))].join('\n')
+
+  const fileName = `${studyName} - ${t('title')}.csv`
+  downloadCSV(csvContent, fileName)
 }
