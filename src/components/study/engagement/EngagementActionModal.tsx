@@ -165,7 +165,7 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
           <FormTextField
             control={control}
             name="description"
-            label={`${t('description')}`}
+            label={`${t('description')} *`}
             placeholder={t('descriptionPlaceholder')}
             data-testid="add-action-description"
             multiline
