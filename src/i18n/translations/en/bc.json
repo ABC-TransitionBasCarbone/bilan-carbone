@@ -649,6 +649,7 @@
       "emissionSourceTagFamily": "Family",
       "emissionSourceTags": "Tags",
       "emissionSourceTagLabel": "Label",
+      "preset": "Preset",
       "color": "Color",
       "emissionSourceTagsPlaceholder": "Your tag",
       "createEmissionSourceTag": "Create my tag",
