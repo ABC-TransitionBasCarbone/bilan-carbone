@@ -4,6 +4,7 @@ import Button from '@/components/base/Button'
 import DebouncedInput from '@/components/base/DebouncedInput'
 import MultiSelectAll from '@/components/base/MultiSelectAll'
 import { EngagementActionSteps, EngagementActionTargets } from '@/constants/engagementActions'
+import { EngagementActionWithSites } from '@/services/serverFunctions/study'
 import { EngagementActionsFilters } from '@/types/filters'
 import { FormControl, FormLabel } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
@@ -18,9 +19,10 @@ interface Props {
   setFilters: Dispatch<SetStateAction<EngagementActionsFilters>>
   openAddModal: () => void
   canEdit: boolean
+  actions: EngagementActionWithSites[]
 }
 
-const EngagementActionsFiltersComponent = ({ filters, setFilters, openAddModal, canEdit }: Props) => {
+const EngagementActionsFiltersComponent = ({ filters, setFilters, openAddModal, canEdit, actions }: Props) => {
   const t = useTranslations('study.engagementActions.filters')
   const tTable = useTranslations('study.engagementActions.table')
   const tCommonAction = useTranslations('common.action')
@@ -30,7 +32,17 @@ const EngagementActionsFiltersComponent = ({ filters, setFilters, openAddModal, 
   const tPhases = useTranslations('study.engagementActions.phases')
 
   const stepsValues = useMemo(() => Object.values(EngagementActionSteps) as string[], [])
-  const targetsValues = useMemo(() => Object.values(EngagementActionTargets) as string[], [])
+  const enumTargetsValues = useMemo(() => Object.values(EngagementActionTargets) as string[], [])
+  const targetsValues = useMemo(() => {
+    const customTargets = Array.from(
+      new Set(
+        actions
+          .flatMap((action) => action.targets || [])
+          .filter((target) => !enumTargetsValues.includes(target as EngagementActionTargets)),
+      ),
+    )
+    return [...enumTargetsValues, ...customTargets]
+  }, [actions, enumTargetsValues])
   const phasesValues = useMemo(() => Object.values(EngagementPhase) as string[], [])
 
   return (
@@ -58,7 +70,7 @@ const EngagementActionsFiltersComponent = ({ filters, setFilters, openAddModal, 
             values={filters.steps as string[]}
             allValues={stepsValues}
             setValues={(values) =>
-              setFilters((prevFilters) => ({ ...prevFilters, steps: values as (EngagementActionSteps | 'all')[] }))
+              setFilters((prevFilters) => ({ ...prevFilters, steps: values as EngagementActionSteps[] }))
             }
             getLabel={(step) => tSteps(step)}
           />
@@ -75,10 +87,12 @@ const EngagementActionsFiltersComponent = ({ filters, setFilters, openAddModal, 
             setValues={(values) => {
               setFilters((prevFilters) => ({
                 ...prevFilters,
-                targets: values as (EngagementActionTargets | 'all')[],
+                targets: values as EngagementActionTargets[],
               }))
             }}
-            getLabel={(target) => tTargets(target)}
+            getLabel={(target) =>
+              enumTargetsValues.includes(target as EngagementActionTargets) ? tTargets(target) : target
+            }
           />
         </FormControl>
 
@@ -93,7 +107,7 @@ const EngagementActionsFiltersComponent = ({ filters, setFilters, openAddModal, 
             setValues={(values) => {
               setFilters((prevFilters) => ({
                 ...prevFilters,
-                phases: values as (EngagementPhase | 'all')[],
+                phases: values as EngagementPhase[],
               }))
             }}
             getLabel={(phase) => tPhases(phase)}

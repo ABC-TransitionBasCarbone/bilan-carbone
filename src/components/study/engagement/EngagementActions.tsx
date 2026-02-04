@@ -32,17 +32,22 @@ const EngagementActions = ({ actions, study, studySite }: Props) => {
 
   const defaultFilters = useMemo<EngagementActionsFilters>(() => {
     const stepsValues = Object.values(EngagementActionSteps)
-    const targetsValues = Object.values(EngagementActionTargets)
     const phasesValues = Object.values(EngagementPhase)
+
+    const enumTargetsValues = Object.values(EngagementActionTargets)
+    const customTargets = actions
+      .flatMap((action) => action.targets || [])
+      .filter((target) => !enumTargetsValues.includes(target as EngagementActionTargets))
+    const targetsValues = [...enumTargetsValues, ...customTargets]
 
     return {
       search: '',
-      steps: [...stepsValues, 'all'],
-      targets: [...targetsValues, 'all'],
-      phases: [...phasesValues, 'all'],
+      steps: stepsValues,
+      targets: targetsValues,
+      phases: phasesValues,
       dateRange: { startDate: null, endDate: null },
     }
-  }, [])
+  }, [actions])
 
   const [filters, setFilters] = useState<EngagementActionsFilters>(defaultFilters)
   const [editingAction, setEditingAction] = useState<EngagementActionWithSites | undefined>(undefined)
@@ -103,19 +108,13 @@ const EngagementActions = ({ actions, study, studySite }: Props) => {
       results = fuse.search(filters.search).map(({ item }) => item)
     }
 
-    if (!filters.steps.includes('all')) {
-      results = results.filter((action) => filters.steps.includes(action.steps as EngagementActionSteps | 'all'))
-    }
+    results = results.filter((action) => filters.steps.includes(action.steps as EngagementActionSteps))
 
-    if (!filters.targets.includes('all')) {
-      results = results.filter((action) =>
-        action.targets?.some((target) => filters.targets.includes(target as EngagementActionTargets | 'all')),
-      )
-    }
+    results = results.filter((action) =>
+      action.targets?.some((target) => filters.targets.includes(target as EngagementActionTargets)),
+    )
 
-    if (!filters.phases.includes('all')) {
-      results = results.filter((action) => filters.phases.includes(action.phase))
-    }
+    results = results.filter((action) => filters.phases.includes(action.phase))
 
     if (studySite !== 'all') {
       results = results.filter((action) => action.sites?.some((site) => site.id === studySite))
@@ -194,6 +193,7 @@ const EngagementActions = ({ actions, study, studySite }: Props) => {
         setFilters={setFilters}
         openAddModal={handleOpenAddModal}
         canEdit
+        actions={actions}
       />
       <EngagementActionTable
         actions={filteredActions}
