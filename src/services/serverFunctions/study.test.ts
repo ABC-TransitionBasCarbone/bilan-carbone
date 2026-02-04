@@ -327,7 +327,7 @@ describe('study', () => {
         const sourceTagFamilies = [
           {
             id: 'family-0-id',
-            name: 'défaut',
+            name: 'Preset',
             tags: [],
           },
           {
@@ -351,7 +351,7 @@ describe('study', () => {
         const targetTagFamilies = [
           {
             id: 'target-family-0-id',
-            name: 'défaut',
+            name: 'Preset',
             tags: [],
           },
           {

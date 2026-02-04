@@ -1559,14 +1559,16 @@
       "update": "Mettre à jour",
       "cancel": "Annuler",
       "name": "Nom",
-      "namePlaceholder": "Donnez un nom à votre facteur d'émission",
+      "namePlaceholder": "Abricot, dénoyauté, cru",
       "attribute": "Détails",
+      "attributePlaceholder": "Le fret est considéré comme ayant lieu à température ambiante. Matériau utilisé pour les emballages : PEBD.",
       "location": "Localisation",
       "unit": "Unité",
       "customUnit": "Unité personalisée",
       "customUnitPlaceholder": "Votre unité personalisée",
       "monetaryUnit": "Unité monétaire",
       "source": "Source",
+      "sourcePlaceholder": "Agribalyse® 3.1",
       "detailedGES": "Décomposition des GES",
       "multiple": "Facteur d'émission désagrégé",
       "subPartsCount": "Nombre de composantes",
@@ -1739,7 +1741,7 @@
         "warning": "Attention, vos kWh en market-based ne sont pas égaux à ceux en location-based.",
         "explanation": "Explication",
         "title": "Attention - Le nombre de kWh pris en compte diffère entre la méthode <green>location-based</green> et la méthode <purple>market-based</purple>",
-        "description": "Le GHG Protocol exige que vous ayez une double comptabilisation de l'électricité consommée, <b>d'une part via la méthode <green>location-based (location-based method, LBM)</green> et d'autre part en <purple>market-based (market-based method, MBM)</purple></b>. Pour cela il vous suffit de comptabiliser deux fois vos kWh d'énergie consommés, une fois via des facteurs d'émission dédiés au <b><green>location-based</green></b>, et une seconde fois via des facteurs d'émission dédiés au <b><purple>market-based</purple></b>. Vous devez comptabiliser le même nombre de kWh dans les deux méthodes."
+        "description": "Le GHG Protocol exige que vous ayez une double comptabilisation de l'électricité consommée, <b>d'une part via la méthode <green>location-based (location-based method, LBM)</green> et d'autre part en <purple>market-based (market-based method, MBM)</purple></b>. Pour cela il vous suffit de comptabiliser deux fois vos kWh d'énergie consommés, une fois via des facteurs d'émission dédiés au <b><green>location-based</green></b>, et une seconde fois via des facteurs d'émission dédiés au <b><purple>market-based</purple></b>. Vous devez comptabiliser <b>le même nombre de kWh dans les deux méthodes</b>."
       }
     },
     "missingQualities": {

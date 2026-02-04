@@ -960,7 +960,7 @@ const users = async () => {
         tagFamilies: {
           create: [
             {
-              name: 'défaut',
+              name: 'Preset',
               tags: {
                 create: (DefaultStudyTags[Environment.TILT] ?? []).map((tag) => ({
                   name: tag.name,
@@ -1008,7 +1008,7 @@ const users = async () => {
         tagFamilies: {
           create: [
             {
-              name: 'défaut',
+              name: 'Preset',
               tags: {
                 create: (DefaultStudyTags[Environment.TILT] ?? []).map((tag) => ({
                   name: tag.name,

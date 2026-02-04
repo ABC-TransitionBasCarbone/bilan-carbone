@@ -79,9 +79,9 @@ export const createTagFamilyAndRelatedTags = async (
 ) => {
   const environmentTags = DefaultStudyTags[environment as keyof typeof DefaultStudyTags]
 
-  const familyTagsToCreate = data.filter((d) => d.familyName !== 'défaut')
+  const familyTagsToCreate = data.filter((d) => d.familyName !== 'Preset')
   const tagsToCreate = data.map((family) => {
-    if (family.familyName === 'défaut') {
+    if (family.familyName === 'Preset') {
       return {
         ...family,
         tags: family.tags.filter((tag) => !environmentTags?.some((envTag) => envTag.name === tag.name)),
