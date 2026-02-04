@@ -95,7 +95,12 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         label={`${t('name')} *`}
         placeholder={t('namePlaceholder')}
       />
-      <FormTextField control={control} name="attribute" label={t('attribute')} placeholder={t('attributePlaceholder')} />
+      <FormTextField
+        control={control}
+        name="attribute"
+        label={t('attribute')}
+        placeholder={t('attributePlaceholder')}
+      />
       <FormAutocomplete
         data-testid="fe-location"
         control={control}
@@ -111,7 +116,13 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         onInputChange={(_, value) => setValue('location', value?.trim() || '')}
         freeSolo
       />
-      <FormTextField data-testid="emission-factor-source" control={control} name="source" label={`${t('source')} *`} placeholder={t('sourcePlaceholder')} />
+      <FormTextField
+        data-testid="emission-factor-source"
+        control={control}
+        name="source"
+        label={`${t('source')} *`}
+        placeholder={t('sourcePlaceholder')}
+      />
       <div className="flex gapped">
         <div className="grow">
           <FormSelect
