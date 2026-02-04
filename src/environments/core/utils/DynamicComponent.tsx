@@ -1,44 +1,57 @@
-'use client'
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { EnvironmentMode } from '@/constants/environments'
 import { isAdvanced, isSimplified } from '@/services/permissions/environment'
-import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { Environment } from '@prisma/client'
-import { ReactNode } from 'react'
+import React from 'react'
 import EnvironmentLoader from './EnvironmentLoader'
 
-type EnvironmentMap = {
-  [key in Environment]?: ReactNode
-} & { [EnvironmentMode.SIMPLIFIED]?: ReactNode; [EnvironmentMode.ADVANCED]?: ReactNode }
+type AnyComponent = React.ComponentType<any>
+type ComponentAndProps<T extends AnyComponent = AnyComponent> = { component: T; props: React.ComponentProps<T> }
 
-interface Props {
-  defaultComponent?: ReactNode
-  environmentComponents?: EnvironmentMap
-  forceEnvironment?: Environment
+type EnvironmentMap = {
+  [key in Environment | EnvironmentMode]?: ComponentAndProps
 }
 
-const DynamicComponent = ({ defaultComponent, environmentComponents = {}, forceEnvironment }: Props) => {
-  const { environment } = useAppEnvironmentStore()
+interface Props {
+  defaultComponent?: ComponentAndProps
+  environmentComponents?: EnvironmentMap
+  environment: Environment
+}
 
-  const environmentToUse = forceEnvironment || environment
-
-  if (!environmentToUse) {
+const DynamicComponent = ({ defaultComponent, environmentComponents = {}, environment }: Props) => {
+  if (!environment) {
     return <EnvironmentLoader />
   }
 
-  if (environmentComponents[environmentToUse]) {
-    return environmentComponents[environmentToUse]
+  if (environmentComponents[environment]) {
+    const { component: Component, props } = environmentComponents[environment]!
+    if (Component && props) {
+      return <Component {...props} />
+    }
   }
 
-  if (isSimplified(environmentToUse) && environmentComponents[EnvironmentMode.SIMPLIFIED]) {
-    return environmentComponents[EnvironmentMode.SIMPLIFIED]
+  if (isSimplified(environment) && environmentComponents[EnvironmentMode.SIMPLIFIED]) {
+    const { component: Component, props } = environmentComponents[EnvironmentMode.SIMPLIFIED]!
+    if (Component && props) {
+      return <Component {...props} />
+    }
   }
 
-  if (isAdvanced(environmentToUse) && environmentComponents[EnvironmentMode.ADVANCED]) {
-    return environmentComponents[EnvironmentMode.ADVANCED]
+  if (isAdvanced(environment) && environmentComponents[EnvironmentMode.ADVANCED]) {
+    const { component: Component, props } = environmentComponents[EnvironmentMode.ADVANCED]!
+    if (Component && props) {
+      return <Component {...props} />
+    }
   }
 
-  return defaultComponent
+  if (defaultComponent) {
+    const { component: Component, props } = defaultComponent!
+    if (Component && props) {
+      return <Component {...props} />
+    }
+  }
+
+  return null
 }
 
 export default DynamicComponent

@@ -2,6 +2,7 @@
 
 import TopLeftNavBar from '@/components/navbar/TopLeftNavBar'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
+import { typeDynamicComponent } from '@/environments/core/utils/dynamicUtils'
 import CutTopLeftNavBar from '@/environments/cut/navbar/TopLeftNavBar'
 import { signOutEnv } from '@/services/auth'
 import { hasAccessToStudyComments, isClickson, isTilt } from '@/services/permissions/environment'
@@ -74,11 +75,13 @@ const Navbar = ({ children, user, environment, isFootprintsEnabled }: Props) => 
             </NavbarLink>
             <DynamicComponent
               environmentComponents={{
-                [Environment.CUT]: <CutTopLeftNavBar user={user} />,
+                [Environment.CUT]: typeDynamicComponent({ component: CutTopLeftNavBar, props: { user } }),
               }}
-              defaultComponent={
-                <TopLeftNavBar user={user} hasFormation={hasFormation} isFootprintsEnabled={isFootprintsEnabled} />
-              }
+              defaultComponent={typeDynamicComponent({
+                component: TopLeftNavBar,
+                props: { user, hasFormation, isFootprintsEnabled },
+              })}
+              environment={user.environment}
             />
           </Box>
           <div className="flex gapped1">
