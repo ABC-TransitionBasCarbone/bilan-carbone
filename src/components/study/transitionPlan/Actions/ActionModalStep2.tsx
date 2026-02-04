@@ -1,6 +1,7 @@
 import { FormSelect } from '@/components/form/Select'
 import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import { Locale } from '@/i18n/config'
+import { customRich } from '@/i18n/customRich'
 import { AddActionFormCommand } from '@/services/serverFunctions/transitionPlan.command'
 import { Translations } from '@/types/translation'
 import { getOrderedActionRelevances } from '@/utils/action'
@@ -22,12 +23,7 @@ const ActionModalStep2 = ({ control }: Props) => {
   const tNature = useTranslations('study.transitionPlan.actions.nature')
   const tCategory = useTranslations('study.transitionPlan.actions.category')
   const tRelevance = useTranslations('study.transitionPlan.actions.relevance')
-
-  const methodologyUrl = useMemo(() => {
-    return locale === Locale.FR
-      ? process.env.NEXT_PUBLIC_ACTION_RELEVANCE_DOC_URL_FR || ''
-      : process.env.NEXT_PUBLIC_ACTION_RELEVANCE_DOC_URL_EN || ''
-  }, [locale])
+  const tDocumentation = useTranslations('documentationUrl')
 
   const relevanceImageSrc = useMemo(() => {
     return locale === Locale.FR ? '/img/action-relevance-fr.png' : '/img/action-relevance-en.png'
@@ -63,9 +59,9 @@ const ActionModalStep2 = ({ control }: Props) => {
             style={{ width: '100%', height: 'auto' }}
           />
           <p>
-            {tRelevance.rich('learnMore', {
+            {customRich(tRelevance, 'learnMore', {
               link: (children) => (
-                <Link href={methodologyUrl} target="_blank" rel="noreferrer noopener">
+                <Link href={tDocumentation('actionRelevance')} target="_blank" rel="noreferrer noopener">
                   {children}
                 </Link>
               ),

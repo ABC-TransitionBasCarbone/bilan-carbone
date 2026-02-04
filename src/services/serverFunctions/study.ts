@@ -36,6 +36,7 @@ import {
 } from '@/db/organization'
 import { getAnswerByQuestionId, getQuestionByIdIntern, getQuestionsByIdIntern } from '@/db/question'
 import {
+  addSourceToStudy,
   clearEmissionSourceEmissionFactor,
   countOrganizationStudiesFromOtherUsers,
   createContributorOnStudy,
@@ -50,13 +51,13 @@ import {
   deleteContributor,
   deleteStudy,
   deleteStudyComment,
-  deleteStudyExport,
   downgradeStudyUserRoles,
   FullStudy,
   getEngagementActionById,
   getEngagementActions,
   getOrganizationStudiesBeforeDate,
   getPendingStudyCommentsCountFromAuthor,
+  getSourcesLatestImportVersionId,
   getStudiesSitesFromIds,
   getStudyById,
   getStudyCommentsCountFromOrganizationVersionId,
@@ -66,6 +67,7 @@ import {
   getStudySites,
   getStudyTemplate,
   getUsersOnStudy,
+  removeSourceToStudy,
   updateEmissionSourceEmissionFactor,
   updateEngagementAction,
   updateStudy,
@@ -79,7 +81,14 @@ import {
   upsertStudyTemplate,
 } from '@/db/study'
 import { getTransitionPlanByStudyId } from '@/db/transitionPlan'
-import { addUser, getUserApplicationSettings, getUserByEmail, getUserSourceById, UserWithAccounts } from '@/db/user'
+import {
+  addUser,
+  getUserApplicationSettings,
+  getUserByEmail,
+  getUserSourceById,
+  updateAccount,
+  UserWithAccounts,
+} from '@/db/user'
 import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
 import { getNestedValue, groupBy } from '@/utils/array'
@@ -87,11 +96,13 @@ import { mapCncToStudySite } from '@/utils/cnc'
 import { calculateDistanceFromParis } from '@/utils/distance'
 import { CA_UNIT_VALUES, defaultCAUnit, formatNumber } from '@/utils/number'
 import { canEditOrganizationVersion } from '@/utils/organization'
-import { withServerResponse } from '@/utils/serverResponse'
+import { IsSuccess, withServerResponse } from '@/utils/serverResponse'
 import {
   getAccountRoleOnStudy,
   getAllowedRolesFromDefaultRole,
+  getAllSpecificFieldsForExports,
   getUserRoleOnPublicStudy,
+  hasDeprecationPeriod,
   hasEditionRights,
 } from '@/utils/study'
 import { formatDateFr } from '@/utils/time'
@@ -153,6 +164,7 @@ import {
 } from '../permissions/study'
 import { deleteFileFromBucket, getFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
 import { getTransEnvironmentSubPost, hasSufficientLevel } from '../study'
+import { UpdateEmissionSourceCommand } from './emissionSource.command'
 import { saveAnswerForQuestion } from './question'
 import {
   AddEngagementActionCommand,
@@ -294,23 +306,21 @@ export const createStudyCommand = async (
       ],
     }
 
+    const { exports, controlMode, isPublic, ...studyCommand } = command
+
     const study = {
-      ...command,
+      ...studyCommand,
       createdBy: { connect: { id: session.user.accountId } },
       organizationVersion: { connect: { id: organizationVersionId } },
-      isPublic: command.isPublic === 'true',
+      isPublic: isPublic === 'true',
       resultsUnit: resultsUnit || StudyResultUnit.T,
       allowedUsers: {
         createMany: { data: rights },
       },
       exports: {
-        createMany: {
-          data: Object.entries(command.exports)
-            .filter(([, value]) => value)
-            .map(([key, value]) => ({
-              type: key as Export,
-              control: value as ControlMode,
-            })),
+        create: {
+          types: exports,
+          control: controlMode || ControlMode.Operational,
         },
       },
       sites: {
@@ -693,7 +703,7 @@ export const changeStudySites = async (studyId: string, { organizationId, ...com
     await updateStudySites(studyId, selectedSites, deletedSiteIds)
   })
 
-export const changeStudyExports = async (studyId: string, type: Export, control: ControlMode | false) =>
+export const changeStudyExports = async (studyId: string, types: Export[], control: ControlMode) =>
   withServerResponse('changeStudyExports', async () => {
     const [session, study] = await Promise.all([dbActualizedAuth(), getStudy(studyId)])
     if (!session || !session.user || !study.success || !study.data) {
@@ -702,14 +712,43 @@ export const changeStudyExports = async (studyId: string, type: Export, control:
     if (!hasEditionRights(getAccountRoleOnStudy(session.user, study.data))) {
       throw new Error(NOT_AUTHORIZED)
     }
-    if (control === false) {
-      return deleteStudyExport(studyId, type)
-    }
-    return upsertStudyExport(studyId, type, control)
+    return upsertStudyExport(studyId, types, control)
   })
 
-export const updateCaracterisationsForControlMode = async (studyId: string, newControlMode: ControlMode) =>
-  withServerResponse('updateCaracterisationsForControlMode', async () => {
+const clearedFieldsValues = (fields: (keyof UpdateEmissionSourceCommand)[]) => {
+  const result: Record<string, null> = {}
+  fields.forEach((field) => {
+    result[field] = null
+  })
+  return result
+}
+
+const filterSpecificFieldsPerSubpost = (fields: (keyof UpdateEmissionSourceCommand)[], subPost: SubPost) => {
+  let filtered = fields
+  if (!hasDeprecationPeriod(subPost)) {
+    filtered = filtered.filter((field) => field !== 'constructionYear')
+  }
+  return filtered
+}
+
+export const adaptFeSourceWithExport = async (studyId: string, types: Export[]) => {
+  const [session, study] = await Promise.all([dbActualizedAuth(), getStudy(studyId)])
+  if (!session || !session.user || !study.success || !study.data) {
+    throw new Error(NOT_AUTHORIZED)
+  }
+  if (!hasEditionRights(getAccountRoleOnStudy(session.user, study.data))) {
+    throw new Error(NOT_AUTHORIZED)
+  }
+
+  if (study.data.exports?.types.includes(Export.GHGP) && (!types || !types.includes(Export.GHGP))) {
+    await removeSourceToStudy(Import.AIB, studyId)
+  } else if (!study.data.exports?.types.includes(Export.GHGP) && types && types.includes(Export.GHGP)) {
+    await addSourceToStudy(Import.AIB, studyId)
+  }
+}
+
+export const updateStudySpecificExportFields = async (studyId: string, controlMode: ControlMode, types?: Export[]) =>
+  withServerResponse('updateStudySpecificExportFields', async () => {
     const [session, study] = await Promise.all([dbActualizedAuth(), getStudy(studyId)])
     if (!session || !session.user || !study.success || !study.data) {
       throw new Error(NOT_AUTHORIZED)
@@ -718,49 +757,60 @@ export const updateCaracterisationsForControlMode = async (studyId: string, newC
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const emissionSources = study.data.emissionSources
-    const exportsWithNewControlMode = study.data.exports.map((exp) => ({
-      ...exp,
-      control: newControlMode,
-    }))
+    await adaptFeSourceWithExport(studyId, types || [])
+
+    const specificFieldsForNewExportTypes = getAllSpecificFieldsForExports(types || [])
+    const specificFieldsForOldExportTypes = getAllSpecificFieldsForExports(study.data.exports?.types || [])
+    const newSpecificFields = specificFieldsForNewExportTypes.filter(
+      (field) => !specificFieldsForOldExportTypes.includes(field),
+    )
+
+    const nonSelectedExportsSpecificFields = getAllSpecificFieldsForExports(
+      Object.values(Export).filter((exportType) => !(types || []).includes(exportType)),
+    )
+    const fieldsToClear = nonSelectedExportsSpecificFields.filter(
+      (field) => !specificFieldsForNewExportTypes.includes(field),
+    )
 
     await Promise.all(
-      emissionSources
+      study.data.emissionSources
         .map((emissionSource) => {
-          if (!emissionSource.caracterisation && !emissionSource.validated) {
+          if (!emissionSource.validated && !fieldsToClear.length) {
             return null
           }
 
+          const filteredNewFields = filterSpecificFieldsPerSubpost(newSpecificFields, emissionSource.subPost)
+          const filteredClearedFields = filterSpecificFieldsPerSubpost(fieldsToClear, emissionSource.subPost)
+
           const validCaracterisations = getCaracterisationsBySubPost(
             emissionSource.subPost,
-            exportsWithNewControlMode || [],
             session.user.environment,
+            study.data?.exports?.types || [],
+            controlMode,
           )
 
-          const isValidForNewControlMode = validCaracterisations.includes(
+          const isCaracterisarionValidForNewControlMode = validCaracterisations.includes(
             emissionSource.caracterisation as EmissionSourceCaracterisation,
           )
 
-          if (!isValidForNewControlMode) {
-            if (validCaracterisations.length === 1) {
-              const newCaracterisation = validCaracterisations[0]
-              const shouldKeepValidation = emissionSource.caracterisation && emissionSource.validated
+          const shouldKeepValidation =
+            emissionSource.validated &&
+            filteredNewFields.every((field) => emissionSource[field as keyof typeof emissionSource]) &&
+            (isCaracterisarionValidForNewControlMode || validCaracterisations.length === 1)
 
-              return prismaClient.studyEmissionSource.update({
-                where: { id: emissionSource.id },
-                data: {
-                  caracterisation: newCaracterisation,
-                  validated: shouldKeepValidation,
-                },
-              })
-            } else {
-              return prismaClient.studyEmissionSource.update({
-                where: { id: emissionSource.id },
-                data: { caracterisation: null, validated: false },
-              })
-            }
+          const dataToUpdate: Prisma.StudyEmissionSourceUpdateInput = {
+            ...clearedFieldsValues(filteredClearedFields),
+            validated: shouldKeepValidation,
           }
-          return null
+
+          if (!isCaracterisarionValidForNewControlMode && validCaracterisations.length === 1) {
+            dataToUpdate.caracterisation = validCaracterisations[0]
+          }
+
+          return prismaClient.studyEmissionSource.update({
+            where: { id: emissionSource.id },
+            data: dataToUpdate,
+          })
         })
         .filter(Boolean),
     )
@@ -823,6 +873,13 @@ const getOrCreateUserAndSendStudyInvite = async (
         environment: organizationVersion.environment,
         status: UserStatus.VALIDATED,
       })) as AccountWithUser
+    } else if (account.status === UserStatus.IMPORTED) {
+      await updateAccount(account.id, {
+        organizationVersion: { disconnect: true },
+        status: UserStatus.VALIDATED,
+        role: Role.COLLABORATOR,
+      })
+      account = (await getAccountByEmailAndEnvironment(email, organizationVersion.environment)) as AccountWithUser
     }
 
     if (!skipInviteEmail) {
@@ -1413,6 +1470,7 @@ const duplicateEmissionSources = async (
           feTemporalRepresentativeness: sourceEmissionSource.feTemporalRepresentativeness,
           feCompleteness: sourceEmissionSource.feCompleteness,
           caracterisation: shouldClearCaracterisations ? null : sourceEmissionSource.caracterisation,
+          constructionYear: sourceEmissionSource.constructionYear,
           studyId: targetStudyId,
           emissionFactorId: sourceEmissionSource.emissionFactor?.id ?? null,
           studySiteId: targetStudySiteId,
@@ -1507,22 +1565,7 @@ export const duplicateStudyCommand = async (
         await updateStudyEmissionFactorVersion(createdStudyId, sourceVersion.source, sourceVersion.importVersionId, tx)
       }
 
-      // Check if control modes have changed to determine if we should clear characterizations
-      const sourceExportsByType = sourceStudy.exports.reduce(
-        (acc, exp) => {
-          acc[exp.type] = exp.control
-          return acc
-        },
-        {} as Record<Export, ControlMode>,
-      )
-
-      const hasControlModeChanged = (exportType: Export) => {
-        const sourceControl = sourceExportsByType[exportType]
-        const newControl = studyCommand.exports[exportType]
-        return sourceControl && newControl && sourceControl !== newControl
-      }
-
-      const shouldClearCaracterisations = Object.values(Export).some(hasControlModeChanged)
+      const shouldClearCaracterisations = studyCommand.controlMode !== sourceStudy.exports?.control
 
       await duplicateEmissionSources(
         tx,
@@ -1705,7 +1748,7 @@ const buildStudyForDuplication = (
     createMany: { data: contributors },
   },
   exports: {
-    createMany: { data: Object.values(study.exports) },
+    create: { types: study.exports?.types, control: study.exports?.control },
   },
   sites: {
     createMany: { data: sites },
@@ -2467,7 +2510,7 @@ export const editStudyComment = async (commentId: string, newComment: string, st
     })
   })
 
-export const addEngagementAction = async ({ studyId, ...command }: AddEngagementActionCommand) =>
+export const addEngagementAction = async ({ studyId, sites, ...command }: AddEngagementActionCommand) =>
   withServerResponse('addEngagementAction', async () => {
     const session = await dbActualizedAuth()
     if (!session || !session.user) {
@@ -2482,9 +2525,13 @@ export const addEngagementAction = async ({ studyId, ...command }: AddEngagement
     if (!hasAccessToEngagementActions(session.user.environment, study.simplified)) {
       throw new Error(NOT_AUTHORIZED)
     }
+    if (sites.length === 0) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
     await createEngagementAction({
       study: { connect: { id: studyId } },
+      sites: { connect: sites.map((siteId) => ({ id: siteId })) },
       ...command,
     })
   })
@@ -2508,7 +2555,9 @@ export const getEngagementActionsWithStudyId = async (studyId: string) =>
     return await getEngagementActions(studyId)
   })
 
-export const editEngagementAction = async (id: string, { studyId, ...command }: AddEngagementActionCommand) =>
+export type EngagementActionWithSites = IsSuccess<AsyncReturnType<typeof getEngagementActionsWithStudyId>>[number]
+
+export const editEngagementAction = async (id: string, { studyId, sites, ...command }: AddEngagementActionCommand) =>
   withServerResponse('editEngagementAction', async () => {
     const session = await dbActualizedAuth()
     if (!session || !session.user) {
@@ -2524,7 +2573,14 @@ export const editEngagementAction = async (id: string, { studyId, ...command }: 
       throw new Error(NOT_AUTHORIZED)
     }
 
-    await updateEngagementAction(id, command)
+    if (sites.length === 0) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await updateEngagementAction(id, {
+      sites: { set: sites.map((siteId) => ({ id: siteId })) },
+      ...command,
+    })
   })
 
 export const deleteEngagementAction = async (id: string, studyId: string) =>
@@ -2549,4 +2605,45 @@ export const deleteEngagementAction = async (id: string, studyId: string) =>
     }
 
     await dbDeleteEngagementAction(id)
+  })
+
+export const addMissingSourceToStudies = async (source: Import) => {
+  const version = (await getSourcesLatestImportVersionId([source]))[0]
+  if (!version) {
+    throw new Error('No imported emission factor version for this source : ' + source)
+  }
+  const studies = await prismaClient.study.findMany({ select: { id: true, emissionFactorVersions: true } })
+  const withMissingSources = studies.filter(
+    (study) =>
+      !study.emissionFactorVersions.some((studyEmissionFactorVersion) => studyEmissionFactorVersion.source === source),
+  )
+  return prismaClient.studyEmissionFactorVersion.createMany({
+    data: withMissingSources.map((study) => ({
+      source,
+      studyId: study.id,
+      importVersionId: version.id,
+    })),
+  })
+}
+
+export const getStudyExports = async (studyId: string | undefined) =>
+  withServerResponse('getStudyExports', async () => {
+    if (!studyId) {
+      return []
+    }
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!study || !getAccountRoleOnStudy(session.user, study)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return study.exports?.types || []
   })

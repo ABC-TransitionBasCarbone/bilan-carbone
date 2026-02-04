@@ -30,9 +30,10 @@ interface Props {
   children?: ReactNode
   user: UserSession
   environment: Environment
+  isFootprintsEnabled: boolean
 }
 
-const Navbar = ({ children, user, environment }: Props) => {
+const Navbar = ({ children, user, environment, isFootprintsEnabled }: Props) => {
   const t = useTranslations('navigation')
   const [hasFormation, setHasFormation] = useState(false)
   const [hasMultipleAccounts, setHasMultipleAccounts] = useState(false)
@@ -75,7 +76,9 @@ const Navbar = ({ children, user, environment }: Props) => {
               environmentComponents={{
                 [Environment.CUT]: <CutTopLeftNavBar user={user} />,
               }}
-              defaultComponent={<TopLeftNavBar user={user} hasFormation={hasFormation} />}
+              defaultComponent={
+                <TopLeftNavBar user={user} hasFormation={hasFormation} isFootprintsEnabled={isFootprintsEnabled} />
+              }
             />
           </Box>
           <div className="flex gapped1">
@@ -100,9 +103,14 @@ const Navbar = ({ children, user, environment }: Props) => {
                   <AccountCircleIcon />
                 </NavbarButton>
                 {hasAccessToMethodology(user.environment, user.level) && (
-                  <NavbarButton aria-label={t('methodology')} rel="noreferrer noopener" href={methodologyLink}>
+                  <NavbarLink
+                    aria-label={t('methodology')}
+                    rel="noreferrer noopener"
+                    target="_blank"
+                    href={methodologyLink}
+                  >
                     <MenuBookIcon />
-                  </NavbarButton>
+                  </NavbarLink>
                 )}
                 {hasAccessToStudyComments(user.environment) && user.organizationVersionId && (
                   <NavbarButton title={t('comments')} aria-label={t('comments')} href={'/gestion-commentaires'}>

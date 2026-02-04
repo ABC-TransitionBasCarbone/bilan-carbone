@@ -13,10 +13,10 @@ import {
   Switch,
   TextField,
 } from '@mui/material'
-import { EmissionFactorImportVersion, SubPost } from '@prisma/client'
+import { EmissionFactorBase, EmissionFactorImportVersion, SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import Button from '../base/Button'
 import DebouncedInput from '../base/DebouncedInput'
 import MultiSelectAll from '../base/MultiSelectAll'
@@ -45,9 +45,10 @@ export const EmissionFactorsFilters = ({
   setFilters,
 }: Props) => {
   const t = useTranslations('emissionFactors.table')
+  const tUnit = useUnitLabel()
+  const tBase = useTranslations('emissionFactors.base')
   const [displayFilters, setDisplayFilters] = useState(true)
   const [displayHideButton, setDisplayHideButton] = useState(false)
-  const getUnitLabel = useUnitLabel()
 
   const filtersRef = useRef<HTMLDivElement>(null)
 
@@ -80,18 +81,6 @@ export const EmissionFactorsFilters = ({
       : filters.sources
           .map((source) => getEmissionVersionLabel(importVersions.find((importVersion) => importVersion.id === source)))
           .join(', ')
-
-  const allUnitsSelected = useMemo(
-    () => filters.units.filter((unit) => unit !== 'all').length === initialSelectedUnits.length - 1,
-    [filters.units, initialSelectedUnits.length],
-  )
-
-  const unitsSelectorRenderValue = () =>
-    allUnitsSelected
-      ? t('all')
-      : filters.units.length === 0
-        ? t('none')
-        : filters.units.map((unit) => getUnitLabel(unit)).join(', ')
 
   return (
     <div ref={filtersRef} className={classNames(styles.filters, 'align-center wrap mt-2 mb1')}>
@@ -154,12 +143,26 @@ export const EmissionFactorsFilters = ({
             </FormLabel>
             <MultiSelectAll
               id="emissions-unit"
-              renderValue={unitsSelectorRenderValue}
-              value={filters.units}
+              values={filters.units}
               allValues={initialSelectedUnits.filter((unit) => unit != 'all')}
               setValues={(values) => setFilters((prevFilters) => ({ ...prevFilters, units: values }))}
+              t={tUnit}
             />
           </FormControl>
+          {filters.base && (
+            <FormControl className={styles.selector}>
+              <FormLabel id="emissions-unit-selector" component="legend">
+                {t('base')}
+              </FormLabel>
+              <MultiSelectAll
+                id="emissions-base"
+                values={filters.base}
+                allValues={Object.values(EmissionFactorBase)}
+                setValues={(values) => setFilters((prevFilters) => ({ ...prevFilters, base: values }))}
+                t={tBase}
+              />
+            </FormControl>
+          )}
           <PostSubPostFilter
             envPosts={envPosts}
             envSubPosts={envSubPosts}

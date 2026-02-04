@@ -43,7 +43,7 @@ export const createStudy = async (
   tx?: Prisma.TransactionClient,
 ) => {
   const client = tx ?? prismaClient
-  const dbStudy = await client.study.create({ data })
+  const dbStudy = await client.study.create({ data, select: { id: true, exports: { select: { types: true } } } })
 
   if (hasAccessToCreateStudyWithEmissionFactorVersions(environment) || shouldCreateFEVersions) {
     let studyEmissionFactorVersions: Prisma.StudyEmissionFactorVersionCreateManyInput[] = []
@@ -62,7 +62,10 @@ export const createStudy = async (
         }),
       )
     } else {
-      const sources = Object.values(Import).filter((source) => source !== Import.Manual && source !== Import.CUT)
+      const hasGHGP = dbStudy.exports?.types.includes(Export.GHGP)
+      const sources = Object.values(Import).filter(
+        (source) => source !== Import.Manual && source !== Import.CUT && (source !== Import.AIB || hasGHGP),
+      )
 
       const latestVersions = await getSourcesLatestImportVersionId(sources)
       if (latestVersions) {
@@ -86,6 +89,7 @@ const fullStudyInclude = {
       subPost: true,
       name: true,
       caracterisation: true,
+      constructionYear: true,
       value: true,
       reliability: true,
       technicalRepresentativeness: true,
@@ -127,7 +131,13 @@ const fullStudyInclude = {
           completeness: true,
           importedFrom: true,
           importedId: true,
+          base: true,
           location: true,
+          emissionFactorParts: {
+            select: {
+              type: true,
+            },
+          },
           metaData: {
             select: {
               language: true,
@@ -274,7 +284,7 @@ const fullStudyInclude = {
       },
     },
   },
-  exports: { select: { type: true, control: true } },
+  exports: { select: { types: true, control: true } },
   organizationVersion: {
     select: {
       id: true,
@@ -850,15 +860,12 @@ export const getSourceLatestImportVersionId = async (source: Import, transaction
     orderBy: { createdAt: 'desc' },
   })
 
-export const upsertStudyExport = async (studyId: string, type: Export, control: ControlMode) =>
+export const upsertStudyExport = async (studyId: string, types: Export[], control: ControlMode) =>
   prismaClient.studyExport.upsert({
-    where: { studyId_type: { studyId, type } },
-    update: { control },
-    create: { studyId, type, control },
+    where: { studyId },
+    update: { types, control },
+    create: { studyId, types, control },
   })
-
-export const deleteStudyExport = async (studyId: string, type: Export) =>
-  prismaClient.studyExport.delete({ where: { studyId_type: { studyId, type } } })
 
 export const countOrganizationStudiesFromOtherUsers = async (organizationVersionId: string, accountId: string) =>
   prismaClient.study.count({ where: { organizationVersionId, createdById: { not: accountId } } })
@@ -1044,6 +1051,7 @@ export const deleteStudyComment = async (id: string) =>
 export const getEngagementActions = (studyId: string) =>
   prismaClient.engagementAction.findMany({
     where: { studyId },
+    include: { sites: { include: { site: true } } },
   })
 
 export const getEngagementActionById = (id: string) =>
@@ -1058,3 +1066,37 @@ export const updateEngagementAction = async (id: string, data: Prisma.Engagement
   prismaClient.engagementAction.update({ where: { id }, data })
 
 export const deleteEngagementAction = async (id: string) => prismaClient.engagementAction.delete({ where: { id } })
+
+export const addSourceToStudy = async (source: Import, studyId: string) => {
+  const [study, importVersion] = await Promise.all([
+    prismaClient.study.findFirst({
+      where: { id: studyId },
+      select: {
+        id: true,
+        organizationVersion: {
+          select: { environment: true },
+        },
+      },
+    }),
+    getSourceLatestImportVersionId(source),
+  ])
+
+  if (study && !!importVersion && isSourceForEnv(study.organizationVersion.environment).includes(source)) {
+    await prismaClient.studyEmissionFactorVersion.createMany({
+      data: { studyId: study.id, source, importVersionId: importVersion.id },
+      skipDuplicates: true,
+    })
+  }
+}
+
+export const removeSourceToStudy = async (source: Import, studyId: string) => {
+  prismaClient.$transaction(async (tx) => {
+    await tx.studyEmissionSource.updateMany({
+      where: { studyId, emissionFactor: { importedFrom: source } },
+      data: { emissionFactorId: null, validated: false },
+    })
+    await tx.studyEmissionFactorVersion.delete({
+      where: { studyId_source: { studyId, source } },
+    })
+  })
+}

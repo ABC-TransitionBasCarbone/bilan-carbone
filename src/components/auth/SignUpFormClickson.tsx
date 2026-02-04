@@ -1,6 +1,7 @@
 'use client'
 
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { customRich } from '@/i18n/customRich'
 import { getEnvVar } from '@/lib/environment'
 import { getEnvRoute } from '@/services/email/utils'
 import { UNKNOWN_SCHOOL } from '@/services/permissions/check'
@@ -211,7 +212,7 @@ const SignUpFormClickson = () => {
         </LoadingButton>
         {message && (
           <p className={classNames(!success ? 'error' : '')} data-testid="activation-form-message">
-            {t.rich(message, {
+            {customRich(t, message, {
               support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
               link: (children) => (
                 <Link href={faq} target="_blank" rel="noreferrer noopener">

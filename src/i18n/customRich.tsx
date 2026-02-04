@@ -44,6 +44,12 @@ export const customRich = (
       </Link>
     ),
     br: () => <br />,
+    green: (children) => <span style={{ color: 'var(--mui-palette-ghgp-main)', fontSize: 'unset' }}>{children}</span>,
+    purple: (children) => (
+      <span style={{ color: 'var(--mui-palette-ghgp-complementary)', fontSize: 'unset' }}>{children}</span>
+    ),
+    ul: (children) => <ul>{children}</ul>,
+    li: (children) => <li>{children}</li>,
     ...params,
   })
 }

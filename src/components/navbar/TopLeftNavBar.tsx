@@ -14,9 +14,10 @@ import styles from './Navbar.module.css'
 interface Props {
   user: UserSession
   hasFormation: boolean
+  isFootprintsEnabled: boolean
 }
 
-const TopLeftNavBar = ({ user, hasFormation }: Props) => {
+const TopLeftNavBar = ({ user, hasFormation, isFootprintsEnabled }: Props) => {
   const t = useTranslations('navigation')
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
@@ -60,7 +61,7 @@ const TopLeftNavBar = ({ user, hasFormation }: Props) => {
                 {t('organizations')}
               </NavbarLink>
             </MenuItem>
-            {isTilt(user.environment) && (
+            {isTilt(user.environment) && isFootprintsEnabled && (
               <MenuItem onClick={handleClose}>
                 <NavbarLink data-testid="link-organization" href="/mes-empreintes" onClick={handleClose}>
                   {t('footprints')}

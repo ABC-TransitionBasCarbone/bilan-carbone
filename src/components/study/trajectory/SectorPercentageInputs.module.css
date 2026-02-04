@@ -1,0 +1,10 @@
+.sectorGrid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.remainingGeneral {
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  background-color: var(--background-100);
+}

@@ -17,8 +17,17 @@ import { getDefaultObjectivesForTrajectoryType } from '@/utils/trajectory'
 import { TrajectoryType } from '@prisma/client'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { hasEditAccessOnStudy, hasReadAccessOnStudy } from '../permissions/study'
+import { SectorPercentages } from './trajectory.command'
 
-const validateTrajectoryInput = async (referenceYear: number | null | undefined, studyId: string): Promise<void> => {
+type TrajectoryValidationInput = {
+  referenceYear?: number | null
+  sectorPercentages?: SectorPercentages | null
+  type?: TrajectoryType
+}
+
+const validateTrajectoryInput = async (input: TrajectoryValidationInput, studyId: string): Promise<void> => {
+  const { referenceYear, sectorPercentages, type } = input
+
   // Validate referenceYear is strictly less than study year
   if (referenceYear !== undefined && referenceYear !== null) {
     const studyStartDate = await getStudyStartDate(studyId)
@@ -29,6 +38,17 @@ const validateTrajectoryInput = async (referenceYear: number | null | undefined,
       }
     }
   }
+
+  if (type === TrajectoryType.SNBC_SECTORAL) {
+    if (!sectorPercentages) {
+      throw new Error('sectorPercentagesRequired')
+    }
+
+    const total = Object.values(sectorPercentages).reduce((sum, val) => sum + val, 0)
+    if (total > 100) {
+      throw new Error('sectorPercentagesTotalExceeds100')
+    }
+  }
 }
 
 export interface CreateTrajectoryInput {
@@ -37,10 +57,20 @@ export interface CreateTrajectoryInput {
   description?: string
   type: TrajectoryType
   referenceYear?: number | null
+  sectorPercentages?: SectorPercentages | null
   objectives?: {
     targetYear: number
     reductionRate: number
   }[]
+}
+
+export interface UpdateTrajectoryInput {
+  name?: string
+  description?: string
+  type?: TrajectoryType
+  referenceYear?: number | null
+  sectorPercentages?: SectorPercentages | null
+  objectives?: Array<{ id?: string; targetYear: number; reductionRate: number }>
 }
 
 export const createTrajectoryWithObjectives = async (input: CreateTrajectoryInput) =>
@@ -55,20 +85,21 @@ export const createTrajectoryWithObjectives = async (input: CreateTrajectoryInpu
       throw new Error(NOT_AUTHORIZED)
     }
 
-    await validateTrajectoryInput(input.referenceYear, transitionPlan.studyId)
+    await validateTrajectoryInput(input, transitionPlan.studyId)
 
     let objectives: { targetYear: number; reductionRate: number }[]
 
-    const defaultObjectives = getDefaultObjectivesForTrajectoryType(input.type)
-    if (defaultObjectives) {
-      objectives = defaultObjectives
-    } else if (input.type === TrajectoryType.CUSTOM) {
-      if (!input.objectives || input.objectives.length < 1) {
-        throw new Error('Custom trajectory must have at least 1 objective')
-      }
+    if (input.objectives && input.objectives.length > 0) {
+      // Use provided objectives, used for SNBC and CUSTOM trajectories where objectives are defined client side
       objectives = input.objectives
     } else {
-      throw new Error(`${input.type} mode is not yet supported`)
+      // Try to get default objectives for this trajectory type
+      const defaultObjectives = getDefaultObjectivesForTrajectoryType(input.type)
+      if (defaultObjectives) {
+        objectives = defaultObjectives
+      } else {
+        throw new Error(`${input.type} trajectory must have at least 1 objective`)
+      }
     }
 
     return dbCreateTrajectoryWithObjectives({
@@ -81,6 +112,7 @@ export const createTrajectoryWithObjectives = async (input: CreateTrajectoryInpu
       description: input.description,
       type: input.type,
       referenceYear: input.referenceYear,
+      sectorPercentages: input.sectorPercentages || undefined,
       objectives: {
         createMany: {
           data: objectives,
@@ -112,16 +144,7 @@ export const checkStudyHasObjectives = async (studyId: string): Promise<ApiRespo
     return studyHasObjectives(studyId)
   })
 
-export const updateTrajectory = async (
-  id: string,
-  data: {
-    name?: string
-    description?: string
-    type?: TrajectoryType
-    referenceYear?: number | null
-    objectives?: Array<{ id?: string; targetYear: number; reductionRate: number }>
-  },
-) =>
+export const updateTrajectory = async (id: string, data: UpdateTrajectoryInput) =>
   withServerResponse('updateTrajectory', async () => {
     const trajectory = await prismaClient.trajectory.findUnique({
       where: { id },
@@ -137,7 +160,7 @@ export const updateTrajectory = async (
       throw new Error(NOT_AUTHORIZED)
     }
 
-    await validateTrajectoryInput(data.referenceYear, trajectory.transitionPlan.studyId)
+    await validateTrajectoryInput(data, trajectory.transitionPlan.studyId)
 
     const typeChanged = data.type && data.type !== trajectory.type
 
@@ -162,6 +185,7 @@ export const updateTrajectory = async (
               name: data.name,
               description: data.description,
               referenceYear: data.referenceYear,
+              sectorPercentages: data.sectorPercentages || undefined,
             },
           })
         })
@@ -173,7 +197,7 @@ export const updateTrajectory = async (
       }
     }
 
-    if (data.objectives && trajectory.type === TrajectoryType.CUSTOM) {
+    if (data.objectives) {
       const existingObjectiveIds = trajectory.objectives.map((obj) => obj.id)
       const submittedObjectiveIds = data.objectives.filter((obj) => obj.id).map((obj) => obj.id!)
       const objectivesToDelete = existingObjectiveIds.filter((id) => !submittedObjectiveIds.includes(id))
@@ -216,6 +240,7 @@ export const updateTrajectory = async (
             description: data.description,
             type: data.type,
             referenceYear: data.referenceYear,
+            sectorPercentages: data.sectorPercentages || undefined,
           },
         })
       })
@@ -230,6 +255,7 @@ export const updateTrajectory = async (
       name: data.name,
       description: data.description,
       referenceYear: data.referenceYear,
+      sectorPercentages: data.sectorPercentages || undefined,
     })
   })
 

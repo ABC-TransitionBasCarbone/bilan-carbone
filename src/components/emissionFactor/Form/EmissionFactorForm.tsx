@@ -7,6 +7,7 @@ import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import QualitySelectGroup from '@/components/study/QualitySelectGroup'
+import { customRich } from '@/i18n/customRich'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { qualityKeys, specificFEQualityKeys } from '@/services/uncertainty'
 import { BCUnit, useUnitLabel } from '@/services/unit'
@@ -17,6 +18,7 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { Control, UseFormReturn, UseFormSetValue, useWatch } from 'react-hook-form'
+import Base from './Base'
 import DetailedGES from './DetailedGES'
 import MultiplePosts from './MultiplePosts'
 
@@ -48,6 +50,7 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
   const tAction = useTranslations('common.action')
   const t = useTranslations('emissionFactors.create')
   const tGlossary = useTranslations('emissionSource.glossary')
+  const tDocumentation = useTranslations('documentationUrl')
   const getUnitLabel = useUnitLabel()
   const units = useMemo(
     () => Object.values(ManualEmissionFactorUnitList).sort((a, b) => getUnitLabel(a).localeCompare(getUnitLabel(b))),
@@ -104,7 +107,7 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
           )
         }
         name="location"
-        label={t('location')}
+        label={customRich(t, 'location')}
         onInputChange={(_, value) => setValue('location', value?.trim() || '')}
         freeSolo
       />
@@ -183,6 +186,7 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         mandatory
       />
       <MultiplePosts form={form} context="emissionFactor" />
+      <Base form={form} />
       <FormTextField control={control} name="comment" label={t('comment')} multiline />
       <div className={classNames({ ['justify-between']: button === 'update' })}>
         {button === 'update' && (
@@ -199,13 +203,9 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
       {glossary && (
         <GlossaryModal glossary={glossary} onClose={() => setGlossary('')} label="emission-factor" t={tGlossary}>
           <p className="mb-2">
-            {tGlossary.rich(`${glossary}Description`, {
+            {customRich(tGlossary, `${glossary}Description`, {
               link: (children) => (
-                <Link
-                  href="https://www.bilancarbone-methode.com/4-comptabilisation/4.4-methode-destimation-des-incertitudes/4.4.2-comment-les-determiner#determination-qualitative"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
+                <Link href={tDocumentation('uncertainties')} target="_blank" rel="noreferrer noopener">
                   {children}
                 </Link>
               ),

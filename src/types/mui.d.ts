@@ -110,5 +110,13 @@ declare module '@mui/material/styles' {
       main?: string
       light?: string
     }
+    ghgp?: {
+      main?: string
+      light?: string
+      totalColumn?: string
+      complementary?: string
+      complementaryLight?: string
+      complementaryTotalColumn?: string
+    }
   }
 }

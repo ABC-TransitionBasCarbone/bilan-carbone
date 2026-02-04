@@ -10,6 +10,8 @@
 }
 
 .styledBoxInfo {
+  border-color: var(--mui-palette-primary-main);
+  background-color: var(--mui-palette-secondary-light);
   color: var(--mui-palette-primary-contrastText);
 
   > p {

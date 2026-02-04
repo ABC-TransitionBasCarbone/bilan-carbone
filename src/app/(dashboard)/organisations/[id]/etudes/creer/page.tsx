@@ -20,7 +20,7 @@ const NewStudyInOrganization = async (props: Props & UserSessionProps & StudyCre
   const id = params.id
   const { user, isSimplified } = props
 
-  if (!id || !canCreateAStudy(user, isSimplified)) {
+  if (!id || !(await canCreateAStudy(user, isSimplified))) {
     return <NotFound />
   }
 

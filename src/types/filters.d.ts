@@ -1,6 +1,6 @@
 import { EmissionSourcesStatus } from '@/services/study'
 import { BCUnit } from '@/services/unit'
-import { EmissionSourceCaracterisation, EmissionSourceType, SubPost } from '@prisma/client'
+import { EmissionFactorBase, EmissionSourceCaracterisation, EmissionSourceType, SubPost } from '@prisma/client'
 
 export type FeFilters = {
   archived: boolean
@@ -9,6 +9,7 @@ export type FeFilters = {
   sources: string[]
   units: (BCUnit | string)[]
   subPosts: (SubPost | 'all')[]
+  base?: EmissionFactorBase[]
 }
 
 export type EmissionSourcesFilters = {

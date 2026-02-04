@@ -2,6 +2,7 @@
 
 import { EmissionFactorList } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
+import { customRich } from '@/i18n/customRich'
 import { StudyWithoutDetail } from '@/services/permissions/study'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
@@ -9,14 +10,16 @@ import { qualityKeys } from '@/services/uncertainty'
 import { useUnitLabel } from '@/services/unit'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
-import { hasDeprecationPeriod } from '@/utils/study'
+import { hasDeprecationPeriod, hasFabricationPart } from '@/utils/study'
 import AddIcon from '@mui/icons-material/Add'
 import { TextField } from '@mui/material'
+import { DatePicker } from '@mui/x-date-pickers'
 import { Environment, StudyResultUnit, SubPost, Unit } from '@prisma/client'
 import classNames from 'classnames'
+import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Path } from 'react-hook-form'
 import LinkButton from '../base/LinkButton'
 import { ImportVersionForFilters } from '../emissionFactor/EmissionFactorsFilters'
@@ -39,7 +42,8 @@ interface Props {
   emissionFactorsForSubPost: EmissionFactorWithMetaData[]
   importVersions: ImportVersionForFilters[]
   studyId: string
-  update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null) => void
+  update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | Date | null) => void
+  hasGHGPExport: boolean
 }
 
 const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) =>
@@ -58,17 +62,34 @@ const EmissionSourceContributorForm = ({
   importVersions,
   studyId,
   update,
+  hasGHGPExport,
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tResultUnits = useTranslations('study.results.units')
   const tGlossary = useTranslations('emissionSource.glossary')
+  const tDocumentation = useTranslations('documentationUrl')
   const getUnitLabel = useUnitLabel()
   const [expandedQuality, setExpandedQuality] = useState(!!advanced)
   const [glossary, setGlossary] = useState('')
+  const [error, setError] = useState('')
 
   const qualities = qualityKeys.map((column) => emissionSource[column])
   const defaultQuality = qualities.find((quality) => quality)
   const canShrink = !defaultQuality || qualities.every((quality) => quality === defaultQuality)
+
+  const hasFabricationPartFE = useMemo(() => hasFabricationPart(selectedFactor), [selectedFactor])
+
+  const handleUpdate = (event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (Number(event.target.value) >= 0) {
+      setError('')
+      update('value', Number(event.target.value))
+      event.target.value = `${Number(event.target.value)}`
+    } else {
+      setError(`${t('form.sign')}`)
+      event.target.value = ''
+      update('value', null)
+    }
+  }
 
   return (
     <>
@@ -94,9 +115,11 @@ const EmissionSourceContributorForm = ({
               type="number"
               data-testid="emission-source-value-da"
               defaultValue={emissionSource.value}
-              onBlur={(event) => update('value', Number(event.target.value))}
+              onBlur={(event) => handleUpdate(event)}
               label={`${t('form.value')} *`}
               slotProps={{ input: { onWheel: (event) => (event.target as HTMLInputElement).blur() } }}
+              helperText={error}
+              error={!!error}
             />
             {selectedFactor && (
               <div className={styles.unit}>
@@ -122,6 +145,25 @@ const EmissionSourceContributorForm = ({
               />
               <div className={styles.unit}>{t('form.years')}</div>
             </div>
+          )}
+          {hasGHGPExport && hasDeprecationPeriod(emissionSource.subPost) && (
+            <DatePicker
+              label={`${t('form.constructionYear')} *`}
+              slotProps={{
+                textField: {
+                  className: styles.datePickerInput,
+                },
+              }}
+              maxDate={dayjs(new Date())}
+              views={['year']}
+              sx={{ backgroundColor: 'white', flex: '1' }}
+              onChange={(date) => {
+                if (date && date.isValid()) {
+                  update('constructionYear', date.toDate())
+                }
+              }}
+              value={emissionSource.constructionYear ? dayjs(emissionSource.constructionYear) : null}
+            />
           )}
         </div>
         <TextField
@@ -170,13 +212,9 @@ const EmissionSourceContributorForm = ({
       {glossary && (
         <GlossaryModal glossary={glossary} onClose={() => setGlossary('')} label="emission-source" t={tGlossary}>
           <p className="mb-2">
-            {tGlossary.rich(`${glossary}Description`, {
+            {customRich(tGlossary, `${glossary}Description`, {
               link: (children) => (
-                <Link
-                  href="https://www.bilancarbone-methode.com/4-comptabilisation/4.4-methode-destimation-des-incertitudes/4.4.2-comment-les-determiner#determination-qualitative"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
+                <Link href={tDocumentation('uncertainties')} target="_blank" rel="noreferrer noopener">
                   {children}
                 </Link>
               ),

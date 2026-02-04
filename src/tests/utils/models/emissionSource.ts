@@ -1,5 +1,5 @@
 import { FullStudy } from '@/db/study'
-import { Import, StudyEmissionSource, SubPost, Unit } from '@prisma/client'
+import { EmissionFactorBase, Import, StudyEmissionSource, SubPost, Unit } from '@prisma/client'
 
 export const mockedEmissionSource = {
   id: 'mocked-emission-source-id',
@@ -16,6 +16,7 @@ export const mockedDbEmissionSource = {
   createdAt: new Date('2025-01-01T00:00:00.000Z'),
   updatedAt: new Date('2025-01-01T00:00:00.000Z'),
   caracterisation: null,
+  constructionYear: null,
   value: null,
   reliability: null,
   technicalRepresentativeness: null,
@@ -58,6 +59,7 @@ export const getMockedFullStudyEmissionSource = (
     technicalRepresentativeness: 5,
     temporalRepresentativeness: 5,
     importedId: '4',
+    base: EmissionFactorBase.LocationBased,
     unit: Unit.GWH,
     isMonetary: false,
     location: '',
@@ -75,6 +77,7 @@ export const getMockedFullStudyEmissionSource = (
         comment: 'Mocked Comment',
       },
     ],
+    emissionFactorParts: [],
   },
   studySite: {
     id: 'mocked-study-site-id',

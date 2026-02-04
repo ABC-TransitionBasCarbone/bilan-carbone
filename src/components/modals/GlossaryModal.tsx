@@ -7,14 +7,15 @@ interface Props {
   t: Translations
   onClose: () => void
   children: React.ReactNode
+  titleParams?: Record<string, string>
 }
 
-const GlossaryModal = ({ glossary, onClose, label, t, children }: Props) =>
+const GlossaryModal = ({ glossary, onClose, label, t, children, titleParams }: Props) =>
   glossary && (
     <Modal
       open
       label={`${label}-glossary`}
-      title={t(glossary)}
+      title={titleParams ? t(glossary, titleParams) : t(glossary)}
       onClose={onClose}
       actions={[{ actionType: 'button', onClick: onClose, children: t('close') }]}
     >

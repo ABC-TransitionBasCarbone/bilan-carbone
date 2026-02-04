@@ -16,32 +16,47 @@ import { getConfidenceInterval, getSquaredStandardDeviationForEmissionSource } f
 
 type CaracterisationsBySubPost = Partial<Record<SubPost, EmissionSourceCaracterisation[]>>
 
+type EmissionSourceFormType = Pick<
+  StudyEmissionSource,
+  | 'name'
+  | 'type'
+  | 'value'
+  | 'emissionFactorId'
+  | 'caracterisation'
+  | 'constructionYear'
+  | 'subPost'
+  | 'depreciationPeriod'
+  | 'hectare'
+  | 'duration'
+>
+
 export const getEmissionSourceCompletion = (
-  emissionSource: Pick<
-    StudyEmissionSource,
-    | 'name'
-    | 'type'
-    | 'value'
-    | 'emissionFactorId'
-    | 'caracterisation'
-    | 'subPost'
-    | 'depreciationPeriod'
-    | 'hectare'
-    | 'duration'
-  >,
+  emissionSource: EmissionSourceFormType,
   study: FullStudy | StudyWithoutDetail,
   emissionFactor: (FullStudy | StudyWithoutDetail)['emissionSources'][number]['emissionFactor'],
   environment: Environment | undefined,
 ) => {
-  const mandatoryFields = ['name', 'type', 'value', 'emissionFactorId'] as (keyof typeof emissionSource)[]
+  const mandatoryFields = ['name', 'type', 'emissionFactorId'] as (keyof typeof emissionSource)[]
 
-  const caracterisations = getCaracterisationsBySubPost(emissionSource.subPost, study.exports, environment)
+  const caracterisations = study.exports?.types.length
+    ? getCaracterisationsBySubPost(
+        emissionSource.subPost,
+        environment,
+        study.exports?.types || [],
+        study.exports?.control || ControlMode.Operational,
+      )
+    : []
 
-  if (study.exports.length > 0 && caracterisations.length > 0) {
+  if (study.exports?.types && study.exports.types.length > 0 && caracterisations.length > 0) {
     mandatoryFields.push('caracterisation')
   }
+
   if (hasDeprecationPeriod(emissionSource.subPost)) {
     mandatoryFields.push('depreciationPeriod')
+
+    if (study.exports?.types.some((studyExport) => studyExport === Export.GHGP)) {
+      mandatoryFields.push('constructionYear')
+    }
   }
 
   if (
@@ -53,22 +68,15 @@ export const getEmissionSourceCompletion = (
     mandatoryFields.push('duration')
   }
 
+  if (!emissionSource.value && emissionSource.value !== 0) {
+    mandatoryFields.push('value')
+  }
+
   return mandatoryFields.reduce((acc, field) => acc + (emissionSource[field] ? 1 : 0), 0) / mandatoryFields.length
 }
 
 export const canBeValidated = (
-  emissionSource: Pick<
-    StudyEmissionSource,
-    | 'name'
-    | 'type'
-    | 'value'
-    | 'emissionFactorId'
-    | 'caracterisation'
-    | 'subPost'
-    | 'depreciationPeriod'
-    | 'hectare'
-    | 'duration'
-  >,
+  emissionSource: EmissionSourceFormType,
   study: FullStudy | StudyWithoutDetail,
   emissionFactor: (FullStudy | StudyWithoutDetail)['emissionSources'][number]['emissionFactor'],
   environment: Environment | undefined,
@@ -152,11 +160,11 @@ export const operationalCaracterisations: CaracterisationsBySubPost = {
   [SubPost.Agriculture]: [
     EmissionSourceCaracterisation.OperatedProcedeed,
     EmissionSourceCaracterisation.OperatedFugitive,
+    EmissionSourceCaracterisation.OperatedCAS,
     EmissionSourceCaracterisation.NotOperated,
   ],
   [SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas]: [
-    EmissionSourceCaracterisation.OperatedProcedeed,
-    EmissionSourceCaracterisation.OperatedFugitive,
+    EmissionSourceCaracterisation.Operated,
     EmissionSourceCaracterisation.NotOperated,
   ],
   [SubPost.EmissionsLieesALaProductionDeFroid]: [
@@ -170,6 +178,7 @@ export const operationalCaracterisations: CaracterisationsBySubPost = {
   [SubPost.AutresEmissionsNonEnergetiques]: [
     EmissionSourceCaracterisation.OperatedProcedeed,
     EmissionSourceCaracterisation.OperatedFugitive,
+    EmissionSourceCaracterisation.OperatedCAS,
     EmissionSourceCaracterisation.NotOperated,
   ],
   [SubPost.MetauxPlastiquesEtVerre]: [EmissionSourceCaracterisation.Operated],
@@ -222,6 +231,7 @@ export const operationalCaracterisations: CaracterisationsBySubPost = {
   [SubPost.UtilisationEnResponsabilite]: [
     EmissionSourceCaracterisation.Rented,
     EmissionSourceCaracterisation.FinalClient,
+    EmissionSourceCaracterisation.UsedByIntermediary,
   ],
   [SubPost.UtilisationEnDependance]: [],
   [SubPost.InvestissementsFinanciersRealises]: [EmissionSourceCaracterisation.Operated],
@@ -272,6 +282,7 @@ export const financialCaracterisations: CaracterisationsBySubPost = {
   [SubPost.Agriculture]: [
     EmissionSourceCaracterisation.HeldProcedeed,
     EmissionSourceCaracterisation.HeldFugitive,
+    EmissionSourceCaracterisation.HeldCAS,
     EmissionSourceCaracterisation.NotHeldSimpleRent,
     EmissionSourceCaracterisation.NotHeldOther,
   ],
@@ -293,6 +304,7 @@ export const financialCaracterisations: CaracterisationsBySubPost = {
   [SubPost.AutresEmissionsNonEnergetiques]: [
     EmissionSourceCaracterisation.HeldProcedeed,
     EmissionSourceCaracterisation.HeldFugitive,
+    EmissionSourceCaracterisation.HeldCAS,
     EmissionSourceCaracterisation.NotHeldSimpleRent,
     EmissionSourceCaracterisation.NotHeldOther,
   ],
@@ -352,6 +364,7 @@ export const financialCaracterisations: CaracterisationsBySubPost = {
   [SubPost.UtilisationEnResponsabilite]: [
     EmissionSourceCaracterisation.Rented,
     EmissionSourceCaracterisation.FinalClient,
+    EmissionSourceCaracterisation.UsedByIntermediary,
   ],
   [SubPost.UtilisationEnDependance]: [],
   [SubPost.InvestissementsFinanciersRealises]: [EmissionSourceCaracterisation.Held],
@@ -386,8 +399,9 @@ export const getAllCaracterisationsBySubPost = (controlMode: ControlMode): Carac
 
 export const getCaracterisationsBySubPost = (
   subPost: SubPost,
-  exports: FullStudy['exports'],
   environment: Environment | undefined,
+  exportTypes: Export[],
+  controlMode: ControlMode,
 ) => {
   let subPostToUse = subPost
   if (environment === Environment.TILT) {
@@ -395,12 +409,10 @@ export const getCaracterisationsBySubPost = (
     subPostToUse = bcSubpost
   }
 
-  const begesExport = exports.find((exp) => exp.type === Export.Beges)
-  if (!begesExport) {
+  if (!exportTypes) {
     return []
   }
 
-  const controlMode = begesExport.control || 'Operational'
   const caracterisationMap = getAllCaracterisationsBySubPost(controlMode)
   const caracterisations = caracterisationMap[subPostToUse]
 

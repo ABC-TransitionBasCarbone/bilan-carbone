@@ -2,6 +2,7 @@ import Box from '@/components/base/Box'
 import Title from '@/components/base/Title'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
+import { customRich } from '@/i18n/customRich'
 import { hasAccessToMonetaryRatio } from '@/services/permissions/environment'
 import { ResultsByTag } from '@/services/results/consolidated'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
@@ -27,7 +28,6 @@ interface Props {
   nonSpecificMonetaryRatio: number
   caUnit?: SiteCAUnit
   computedResultsByTag: ResultsByTag[]
-  exportType: string
 }
 
 const EmissionsAnalysis = ({
@@ -39,11 +39,11 @@ const EmissionsAnalysis = ({
   nonSpecificMonetaryRatio,
   caUnit = SiteCAUnit.K,
   computedResultsByTag,
-  exportType,
 }: Props) => {
   const t = useTranslations('study.results')
   const tGlossary = useTranslations('study')
   const tResultUnits = useTranslations('study.results.units')
+  const tDocumentation = useTranslations('documentationUrl')
   const [glossary, setGlossary] = useState('')
 
   const { environment } = useAppEnvironmentStore()
@@ -119,13 +119,9 @@ const EmissionsAnalysis = ({
       {glossary && (
         <GlossaryModal glossary={glossary} label="results-analysis" t={t} onClose={() => setGlossary('')}>
           <span>
-            {tGlossary.rich(`${glossary}Description`, {
+            {customRich(tGlossary, `${glossary}Description`, {
               link: (children) => (
-                <Link
-                  href="https://www.bilancarbone-methode.com/annexes/annexes/annexe-1-grands-principes-de-comptabilisation-du-bilan-carbone-r#zoom-sur-les-sous-postes-utilisation-en-responsabilite-et-utilisation-en-dependance"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
+                <Link href={tDocumentation('dependencyAndReponsability')} target="_blank" rel="noreferrer noopener">
                   {children}
                 </Link>
               ),

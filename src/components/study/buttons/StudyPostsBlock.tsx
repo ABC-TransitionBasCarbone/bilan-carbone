@@ -1,16 +1,20 @@
 'use client'
 import Block from '@/components/base/Block'
 import DebouncedInput from '@/components/base/DebouncedInput'
+import LinkButton from '@/components/base/LinkButton'
+import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
+import { hasAccessToPostTypeform } from '@/services/permissions/environment'
 import { Post } from '@/services/posts'
 import { downloadStudyPost } from '@/services/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { EmissionSourcesFilters, EmissionSourcesSort } from '@/types/filters'
 import DownloadIcon from '@mui/icons-material/Download'
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import { EmissionSourceCaracterisation } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { ReactNode, useState } from 'react'
+import { ReactNode, useMemo, useState } from 'react'
 import styles from '../SubPosts.module.css'
 import StudyPostFilters from './StudyPostFilters'
 import StudyPostSort from './StudyPostSort'
@@ -44,6 +48,7 @@ const StudyPostsBlock = ({
 }: Props) => {
   const { environment } = useAppEnvironmentStore()
   const [downloading, setDownloading] = useState(false)
+  const [glossaryTypeform, setGlossaryTypeform] = useState('')
   const tCaracterisations = useTranslations('categorisations')
   const tExport = useTranslations('study.export')
   const tPost = useTranslations('emissionFactors.post')
@@ -51,73 +56,116 @@ const StudyPostsBlock = ({
   const tStudyPost = useTranslations('study.post')
   const tUnit = useTranslations('units')
   const tResultUnits = useTranslations('study.results.units')
+  const tBase = useTranslations('emissionFactors.base')
+
+  const showTypeformLink = useMemo(() => {
+    if (!environment) {
+      return false
+    }
+    const typeformPosts: Post[] = [Post.DeplacementsDePersonne]
+    return (
+      process.env.NEXT_PUBLIC_TYPEFORM_DEPLACEMENTS_LINK &&
+      hasAccessToPostTypeform(environment) &&
+      typeformPosts.includes(post as Post)
+    )
+  }, [post, environment])
 
   if (!environment) {
     return null
   }
 
   return (
-    <Block
-      grow
-      title={
-        <div className="flex grow gapped">
-          <DebouncedInput
-            className={classNames(styles.searchInput, 'grow')}
-            debounce={500}
-            value={filters.search}
-            onChange={(newValue) => setFilters({ search: newValue })}
-            placeholder={tStudyPost('search')}
-            data-testid="emission-source-search-field"
-          />
-          <StudyPostFilters
-            filters={filters}
-            setFilters={setFilters}
-            study={study}
-            post={post}
-            caracterisationOptions={caracterisationOptions}
-          />
-          <StudyPostSort sort={sort} setSort={setSort} />
-        </div>
-      }
-      actions={[
-        {
-          actionType: 'loadingButton',
-          onClick: async () => {
-            setDownloading(true)
-            await downloadStudyPost(
-              study,
-              emissionSources,
-              post,
-              tExport,
-              tCaracterisations,
-              tPost,
-              tQuality,
-              tUnit,
-              tResultUnits,
-              environment,
-            )
-            setDownloading(false)
+    <>
+      {showTypeformLink && (
+        <Block>
+          <div className="justify-end align-center">
+            <LinkButton href={process.env.NEXT_PUBLIC_TYPEFORM_DEPLACEMENTS_LINK} rel="noreferrer noopener">
+              {tPost('seeTypeform')}
+            </LinkButton>
+            <HelpOutlineIcon
+              color="secondary"
+              className="pointer ml-2"
+              onClick={() => setGlossaryTypeform(tPost('seeTypeformDescription'))}
+              aria-label={tPost('seeTypeform')}
+              titleAccess={tPost('seeTypeform')}
+            />
+          </div>
+        </Block>
+      )}
+      <Block
+        withPadding={!showTypeformLink}
+        grow
+        title={
+          <div className="flex grow gapped">
+            <DebouncedInput
+              className={classNames(styles.searchInput, 'grow')}
+              debounce={500}
+              value={filters.search}
+              onChange={(newValue) => setFilters({ search: newValue })}
+              placeholder={tStudyPost('search')}
+              data-testid="emission-source-search-field"
+            />
+            <StudyPostFilters
+              filters={filters}
+              setFilters={setFilters}
+              study={study}
+              post={post}
+              caracterisationOptions={caracterisationOptions}
+            />
+            <StudyPostSort sort={sort} setSort={setSort} />
+          </div>
+        }
+        actions={[
+          {
+            actionType: 'loadingButton',
+            onClick: async () => {
+              setDownloading(true)
+              await downloadStudyPost(
+                study,
+                emissionSources,
+                post,
+                tExport,
+                tCaracterisations,
+                tPost,
+                tQuality,
+                tUnit,
+                tBase,
+                tResultUnits,
+                environment,
+              )
+              setDownloading(false)
+            },
+            disabled: emissionSources.length === 0,
+            loading: downloading,
+            children: (
+              <>
+                {tExport('download')}
+                {!downloading && <DownloadIcon />}
+              </>
+            ),
           },
-          disabled: emissionSources.length === 0,
-          loading: downloading,
-          children: (
-            <>
-              {tExport('download')}
-              {!downloading && <DownloadIcon />}
-            </>
-          ),
-        },
-        {
-          actionType: 'button',
-          onClick: () => setDisplay(!display),
-          'aria-expanded': display,
-          'aria-controls': 'study-post-infography',
-          children: tStudyPost(display ? 'hideInfography' : 'displayInfography'),
-        },
-      ]}
-    >
-      {children}
-    </Block>
+          {
+            actionType: 'button',
+            onClick: () => setDisplay(!display),
+            'aria-expanded': display,
+            'aria-controls': 'study-post-infography',
+            children: tStudyPost(display ? 'hideInfography' : 'displayInfography'),
+          },
+        ]}
+      >
+        {children}
+      </Block>
+      {glossaryTypeform && (
+        <GlossaryModal
+          glossary={'seeTypeform'}
+          label="typeform-glossary"
+          t={tPost}
+          onClose={() => setGlossaryTypeform('')}
+        >
+          {glossaryTypeform}
+        </GlossaryModal>
+      )}
+    </>
   )
 }
 

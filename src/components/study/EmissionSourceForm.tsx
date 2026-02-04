@@ -2,8 +2,8 @@
 
 import { EmissionFactorList } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
+import { customRich } from '@/i18n/customRich'
 import { getEmissionResults } from '@/services/emissionSource'
-import { subPostsByPost } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { getTagFamiliesByStudyId } from '@/services/serverFunctions/emissionSource'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
@@ -18,12 +18,19 @@ import {
 import { useUnitLabel } from '@/services/unit'
 import { emissionFactorDefautQualityStar, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
-import { hasDeprecationPeriod, hasEditionRights, isCAS, STUDY_UNIT_VALUES } from '@/utils/study'
+import {
+  formatEmissionFromNumber,
+  hasDeprecationPeriod,
+  hasEditionRights,
+  hasFabricationPart,
+  isCAS,
+} from '@/utils/study'
 import AddIcon from '@mui/icons-material/Add'
 import CopyIcon from '@mui/icons-material/ContentCopy'
 import EditIcon from '@mui/icons-material/Edit'
 import HideIcon from '@mui/icons-material/VisibilityOff'
 import { Autocomplete, FormControl, InputLabel, MenuItem, Popper, TextField } from '@mui/material'
+import { DatePicker } from '@mui/x-date-pickers'
 import {
   EmissionSourceCaracterisation,
   EmissionSourceType,
@@ -35,6 +42,7 @@ import {
   Unit,
 } from '@prisma/client'
 import classNames from 'classnames'
+import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -45,6 +53,7 @@ import HelpIcon from '../base/HelpIcon'
 import LinkButton from '../base/LinkButton'
 import { Select } from '../base/Select'
 import TagChip from '../base/TagChip'
+import BaseChip from '../emissionFactor/BaseChip'
 import { ImportVersionForFilters } from '../emissionFactor/EmissionFactorsFilters'
 import GlossaryModal from '../modals/GlossaryModal'
 import Modal from '../modals/Modal'
@@ -73,7 +82,8 @@ interface Props {
   }
   environment: Environment
   caracterisations: EmissionSourceCaracterisation[]
-  mandatoryCaracterisation: boolean
+  displayCaracterisation: boolean
+  hasGHGPExport: boolean
   status: EmissionSourcesStatus
   studySites: FullStudy['sites']
   isFromOldImport: boolean
@@ -82,7 +92,7 @@ interface Props {
   userOrganizationId?: string
   emissionFactorsForSubPost: EmissionFactorWithMetaData[]
   importVersions: ImportVersionForFilters[]
-  update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null | string[]) => void
+  update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | Date | null | string[]) => void
 }
 
 const EmissionSourceForm = ({
@@ -96,7 +106,8 @@ const EmissionSourceForm = ({
   subPost,
   selectedFactor,
   caracterisations,
-  mandatoryCaracterisation,
+  displayCaracterisation,
+  hasGHGPExport,
   status,
   studySites,
   isFromOldImport,
@@ -112,6 +123,7 @@ const EmissionSourceForm = ({
   const tCategorisations = useTranslations('categorisations')
   const tGlossary = useTranslations('emissionSource.glossary')
   const tResultUnits = useTranslations('study.results.units')
+  const tDocumentation = useTranslations('documentationUrl')
   const tQuality = useTranslations('quality')
   const getUnitLabel = useUnitLabel()
   const [glossary, setGlossary] = useState('')
@@ -143,21 +155,22 @@ const EmissionSourceForm = ({
     !specificFEDefaultQuality || specificFEQualities.every((quality) => quality === specificFEDefaultQuality)
 
   const handleUpdate = (event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    if (Number(event.target.value) > 0) {
+    if (Number(event.target.value) >= 0) {
       setError('')
       update('value', Number(event.target.value))
+      event.target.value = `${Number(event.target.value)}`
     } else {
       setError(`${t('form.sign')}`)
       event.target.value = ''
+      update('value', null)
     }
   }
 
   const isCas = isCAS(emissionSource)
 
-  const withDeprecationPeriod = useMemo(
-    () => hasDeprecationPeriod(emissionSource.subPost),
-    [subPostsByPost, emissionSource.subPost],
-  )
+  const hasFabricationPartFE = useMemo(() => hasFabricationPart(selectedFactor), [selectedFactor])
+
+  const withDeprecationPeriod = useMemo(() => hasDeprecationPeriod(emissionSource.subPost), [emissionSource.subPost])
 
   useEffect(() => {
     if (isCas) {
@@ -184,9 +197,9 @@ const EmissionSourceForm = ({
   const glossaryLink = useMemo(() => {
     switch (glossary) {
       case 'type':
-        return 'https://www.bilancarbone-methode.com/4-comptabilisation/4.2-methode-de-collecte-des-donnees-dactivite#les-differents-types-de-donnees-dactivite'
+        return 'dataType'
       case 'quality':
-        return 'https://www.bilancarbone-methode.com/4-comptabilisation/4.4-methode-destimation-des-incertitudes/4.4.2-comment-les-determiner#determination-qualitative'
+        return 'uncertainties'
       default:
         return ''
     }
@@ -303,6 +316,29 @@ const EmissionSourceForm = ({
                 <div className={styles.unit}>{t('form.years')}</div>
               </div>
             )}
+            {hasGHGPExport && withDeprecationPeriod && (
+              <FormControl className="grow">
+                <DatePicker
+                  label={`${t('form.constructionYear')} *`}
+                  disabled={!canEdit}
+                  slotProps={{
+                    textField: {
+                      error: !!error,
+                      className: styles.datePickerInput,
+                    },
+                  }}
+                  maxDate={dayjs(new Date())}
+                  views={['year']}
+                  sx={{ backgroundColor: 'white', flex: '1' }}
+                  onChange={(date) => {
+                    if (date && date.isValid()) {
+                      update('constructionYear', date.toDate())
+                    }
+                  }}
+                  value={emissionSource.constructionYear ? dayjs(emissionSource.constructionYear) : null}
+                />
+              </FormControl>
+            )}
           </>
         )}
         <FormControl>
@@ -330,7 +366,7 @@ const EmissionSourceForm = ({
             <HelpIcon className="ml1" onClick={() => setGlossary('type')} label={tGlossary('title')} />
           </div>
         </FormControl>
-        {caracterisations.length > 0 && mandatoryCaracterisation && (
+        {caracterisations.length > 0 && displayCaracterisation && (
           <FormControl className="grow">
             <InputLabel id="emission-source-caracterisation-label">{`${t('form.caracterisation')} *`}</InputLabel>
             <Select
@@ -384,6 +420,11 @@ const EmissionSourceForm = ({
                   />
                 )}
               </>
+            )}
+            {hasGHGPExport && !!selectedFactor.base && (
+              <div className="ml-2">
+                <BaseChip base={selectedFactor.base} />
+              </div>
             )}
           </p>
           {selectedFactor.metaData && (
@@ -510,8 +551,8 @@ const EmissionSourceForm = ({
             <div className="flex-col">
               <p>{t('results.confiance')}</p>
               <p>
-                [{formatNumber(emissionResults.confidenceInterval[0] / STUDY_UNIT_VALUES[studyUnit])};{' '}
-                {formatNumber(emissionResults.confidenceInterval[1] / STUDY_UNIT_VALUES[studyUnit])}] ({t('in')}
+                [{formatEmissionFromNumber(emissionResults.confidenceInterval[0], studyUnit)};{' '}
+                {formatEmissionFromNumber(emissionResults.confidenceInterval[1], studyUnit)}] ({t('in')}
                 {tResultUnits(studyUnit)})
               </p>
             </div>
@@ -540,9 +581,9 @@ const EmissionSourceForm = ({
       {glossary && (
         <GlossaryModal glossary={glossary} onClose={() => setGlossary('')} label="emission-source" t={tGlossary}>
           <p className="mb-2">
-            {tGlossary.rich(`${glossary}Description`, {
+            {customRich(tGlossary, `${glossary}Description`, {
               link: (children) => (
-                <Link href={glossaryLink} target="_blank" rel="noreferrer noopener">
+                <Link href={tDocumentation(glossaryLink)} target="_blank" rel="noreferrer noopener">
                   {children}
                 </Link>
               ),

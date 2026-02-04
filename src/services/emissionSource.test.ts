@@ -1,6 +1,6 @@
 import { FullStudy } from '@/db/study'
 import { expect } from '@jest/globals'
-import { Environment, SubPost, Unit } from '@prisma/client'
+import { EmissionFactorBase, Environment, SubPost, Unit } from '@prisma/client'
 import { getEmissionResults } from './emissionSource'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
@@ -11,6 +11,7 @@ jest.mock('./study', () => ({ hasSufficientLevel: jest.fn() }))
 const defaultEmissionSource = {
   id: 'random',
   caracterisation: null,
+  constructionYear: null,
   comment: null,
   emissionFactor: {
     id: 'random',
@@ -23,6 +24,7 @@ const defaultEmissionSource = {
     completeness: 5,
     importedFrom: 'BaseEmpreinte',
     importedId: '123',
+    base: EmissionFactorBase.LocationBased,
     isMonetary: false,
     location: '',
     customUnit: null,
@@ -39,6 +41,7 @@ const defaultEmissionSource = {
         comment: 'Mocked Comment',
       },
     ],
+    emissionFactorParts: [],
   },
   studySite: { id: 'siteId', site: { id: 'siteId', name: 'mocked-site' } },
   emissionFactorId: 'emissionFactor',

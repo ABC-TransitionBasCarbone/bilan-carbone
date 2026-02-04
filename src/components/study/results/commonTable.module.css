@@ -1,11 +1,3 @@
-.number {
-  text-align: right;
-}
-
-.headers th:last-child {
-  text-align: right !important;
-}
-
 .expandable {
   cursor: pointer;
   width: 100%;

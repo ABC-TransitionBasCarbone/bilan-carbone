@@ -1,5 +1,4 @@
 import { expect } from '@jest/globals'
-import { SectenInfo } from '@prisma/client'
 
 // TODO: ESM module issue with Jest. Remove these mocks when moving to Vitest
 jest.mock('../services/file', () => ({ download: jest.fn() }))
@@ -13,25 +12,18 @@ jest.mock('../components/pages/TrajectoryReductionPage', () => ({
 }))
 
 import { TrajectoryDataPoint } from '@/components/study/transitionPlan/TrajectoryGraph'
+import {
+  SNBC_SECTOR_TARGET_EMISSIONS,
+  TRAJECTORY_SNBC_ENERGY_ID,
+  TRAJECTORY_SNBC_GENERAL_ID,
+  TRAJECTORY_SNBC_TRANSPORTATION_ID,
+} from '@/constants/trajectories'
+import { createGeneralSectenData, createSectenDataWithSectors } from './secten.test-utils'
+import { calculateSNBCTrajectory } from './snbc'
 import { calculateTrajectoryIntegral, getSNBCData, PastStudy } from './trajectory'
 
 const STANDARD_STUDY_EMISSIONS = 1000
 const EXPECTED_2030_VALUE_FOR_STUDY_2025 = 907.86
-
-const createSectenInfo = (year: number, total: number): SectenInfo => ({
-  id: `secten-${year}`,
-  year,
-  total,
-  energy: 0,
-  industry: 0,
-  waste: 0,
-  buildings: 0,
-  agriculture: 0,
-  transportation: 0,
-  versionId: 'version-1',
-  createdAt: new Date(),
-  updatedAt: new Date(),
-})
 
 const createPastStudy = (year: number, totalCo2: number): PastStudy => ({
   id: `past-study-${year}`,
@@ -41,44 +33,6 @@ const createPastStudy = (year: number, totalCo2: number): PastStudy => ({
   totalCo2,
 })
 
-const createSectenData = (): SectenInfo[] => [
-  createSectenInfo(1990, 547),
-  createSectenInfo(1991, 572),
-  createSectenInfo(1992, 561),
-  createSectenInfo(1993, 540),
-  createSectenInfo(1994, 531),
-  createSectenInfo(1995, 537),
-  createSectenInfo(1996, 555),
-  createSectenInfo(1997, 547),
-  createSectenInfo(1998, 561),
-  createSectenInfo(1999, 556),
-  createSectenInfo(2000, 551),
-  createSectenInfo(2001, 556),
-  createSectenInfo(2002, 550),
-  createSectenInfo(2003, 554),
-  createSectenInfo(2004, 554),
-  createSectenInfo(2005, 555),
-  createSectenInfo(2006, 545),
-  createSectenInfo(2007, 535),
-  createSectenInfo(2008, 530),
-  createSectenInfo(2009, 509),
-  createSectenInfo(2010, 513),
-  createSectenInfo(2011, 488),
-  createSectenInfo(2012, 491),
-  createSectenInfo(2013, 490),
-  createSectenInfo(2014, 457),
-  createSectenInfo(2015, 460),
-  createSectenInfo(2016, 463),
-  createSectenInfo(2017, 465),
-  createSectenInfo(2018, 446),
-  createSectenInfo(2019, 436),
-  createSectenInfo(2020, 396),
-  createSectenInfo(2021, 420),
-  createSectenInfo(2022, 403),
-  createSectenInfo(2023, 376),
-  createSectenInfo(2024, 369),
-]
-
 const getValue = (trajectory: TrajectoryDataPoint[], year: number) => {
   return trajectory.find((p) => p.year === year)?.value
 }
@@ -86,12 +40,20 @@ const getValue = (trajectory: TrajectoryDataPoint[], year: number) => {
 describe('SNBC Trajectory', () => {
   describe('getSNBCData - without past studies', () => {
     test('study in 2020: rate based on Secten 2020 emissions, objectives reached', () => {
-      const sectenData = createSectenData()
+      const sectenData = createGeneralSectenData()
       const studyEmissions = 1000
       const studyStartYear = 2020
 
-      const result = getSNBCData(true, sectenData, null, [], studyStartYear, studyEmissions, 2050)
-      const trajectory = result!.currentTrajectory
+      const result = getSNBCData(
+        [TRAJECTORY_SNBC_GENERAL_ID],
+        sectenData,
+        null,
+        [],
+        studyStartYear,
+        studyEmissions,
+        2050,
+      )
+      const trajectory = result![TRAJECTORY_SNBC_GENERAL_ID]!.currentTrajectory
 
       // Expected values calculated based on previous secten data
       expect(getValue(trajectory, 1990)).toBeCloseTo(1381.31, 0)
@@ -106,13 +68,21 @@ describe('SNBC Trajectory', () => {
     })
 
     test('study in 2025 (after last Secten): rate based on Secten 2024, reconstruction uses rateTo2030', () => {
-      const sectenData = createSectenData()
+      const sectenData = createGeneralSectenData()
       const studyEmissions = STANDARD_STUDY_EMISSIONS
       const studyStartYear = 2025
 
-      const result = getSNBCData(true, sectenData, null, [], studyStartYear, studyEmissions, 2050)
+      const result = getSNBCData(
+        [TRAJECTORY_SNBC_GENERAL_ID],
+        sectenData,
+        null,
+        [],
+        studyStartYear,
+        studyEmissions,
+        2050,
+      )
 
-      const trajectory = result!.currentTrajectory
+      const trajectory = result![TRAJECTORY_SNBC_GENERAL_ID]!.currentTrajectory
 
       // Expected values for reconstruction and forward trajectory
       expect(trajectory.find((p) => p.year === 2025)?.value).toBe(studyEmissions)
@@ -121,17 +91,48 @@ describe('SNBC Trajectory', () => {
       expect(trajectory.find((p) => p.year === 2030)?.value).toBeCloseTo(EXPECTED_2030_VALUE_FOR_STUDY_2025, 0)
       expect(trajectory.find((p) => p.year === 2050)?.value).toBeCloseTo(252.18, 0)
     })
+
+    test('study in 2025 via calculateCustomTrajectory with SNBC_GENERAL type', () => {
+      const sectenData = createGeneralSectenData()
+      const studyEmissions = STANDARD_STUDY_EMISSIONS
+      const studyStartYear = 2025
+
+      const result = getSNBCData(
+        [TRAJECTORY_SNBC_GENERAL_ID],
+        sectenData,
+        null,
+        [],
+        studyStartYear,
+        studyEmissions,
+        2050,
+      )
+      const trajectory = result![TRAJECTORY_SNBC_GENERAL_ID]!.currentTrajectory
+
+      expect(getValue(trajectory, 2025)).toBe(studyEmissions)
+      expect(getValue(trajectory, 1990)).toBeCloseTo(1510.22, 0)
+      expect(getValue(trajectory, 2024)).toBeCloseTo(1018.77, 0)
+      expect(getValue(trajectory, 2030)).toBeCloseTo(EXPECTED_2030_VALUE_FOR_STUDY_2025, 0)
+      expect(getValue(trajectory, 2050)).toBeCloseTo(252.18, 0)
+    })
   })
 
   describe('getSNBCData - with past studies (no overshoot)', () => {
     test('past study in 2020, current study in 2024: linear interpolation, Secten reconstruction before 2020', () => {
-      const sectenData = createSectenData()
+      const sectenData = createGeneralSectenData()
       const studyEmissions = 900
       const studyStartYear = 2024
       const pastStudies = [createPastStudy(2020, STANDARD_STUDY_EMISSIONS)]
 
-      const result = getSNBCData(true, sectenData, null, pastStudies, studyStartYear, studyEmissions, 2050)
-      const trajectory = result!.currentTrajectory
+      const result = getSNBCData(
+        [TRAJECTORY_SNBC_GENERAL_ID],
+        sectenData,
+        null,
+        pastStudies,
+        studyStartYear,
+        studyEmissions,
+        2050,
+      )
+      const trajectory = result![TRAJECTORY_SNBC_GENERAL_ID]!.currentTrajectory
 
       expect(trajectory.find((p) => p.year === 1990)?.value).toBeCloseTo(1381.31, 0)
       expect(trajectory.find((p) => p.year === 2010)?.value).toBeCloseTo(1295.45, 0)
@@ -142,13 +143,21 @@ describe('SNBC Trajectory', () => {
     })
 
     test('past study in 2022, current study in 2025: linear interpolation, correct rate after 2025', () => {
-      const sectenData = createSectenData()
+      const sectenData = createGeneralSectenData()
       const studyEmissions = STANDARD_STUDY_EMISSIONS
       const studyStartYear = 2025
       const pastStudies = [createPastStudy(2022, STANDARD_STUDY_EMISSIONS + 60)]
 
-      const result = getSNBCData(true, sectenData, null, pastStudies, studyStartYear, studyEmissions, 2050)
-      const trajectory = result!.currentTrajectory
+      const result = getSNBCData(
+        [TRAJECTORY_SNBC_GENERAL_ID],
+        sectenData,
+        null,
+        pastStudies,
+        studyStartYear,
+        studyEmissions,
+        2050,
+      )
+      const trajectory = result![TRAJECTORY_SNBC_GENERAL_ID]!.currentTrajectory
 
       expect(trajectory.find((p) => p.year === 2022)?.value).toBe(STANDARD_STUDY_EMISSIONS + 60)
       expect(trajectory.find((p) => p.year === 2023)?.value).toBeCloseTo(STANDARD_STUDY_EMISSIONS + 40, 0)
@@ -158,14 +167,22 @@ describe('SNBC Trajectory', () => {
     })
 
     test('multiple past studies (2018, 2021), current study in 2024: interpolation between all points, Secten reconstruction before 2018', () => {
-      const sectenData = createSectenData()
+      const sectenData = createGeneralSectenData()
       const studyEmissions = 800
       const studyStartYear = 2024
       const pastStudies = [createPastStudy(2018, 1200), createPastStudy(2021, STANDARD_STUDY_EMISSIONS)]
 
-      const result = getSNBCData(true, sectenData, null, pastStudies, studyStartYear, studyEmissions, 2050)
+      const result = getSNBCData(
+        [TRAJECTORY_SNBC_GENERAL_ID],
+        sectenData,
+        null,
+        pastStudies,
+        studyStartYear,
+        studyEmissions,
+        2050,
+      )
 
-      const trajectory = result!.currentTrajectory
+      const trajectory = result![TRAJECTORY_SNBC_GENERAL_ID]!.currentTrajectory
 
       // Past study points
       expect(trajectory.find((p) => p.year === 2018)?.value).toBe(1200)
@@ -180,18 +197,26 @@ describe('SNBC Trajectory', () => {
 
   describe('SNBC - budget equality test with overshoot compensation', () => {
     test('overshoot compensation ensures equal total budget', () => {
-      const sectenData = createSectenData()
+      const sectenData = createGeneralSectenData()
       const referenceStudy = createPastStudy(2022, STANDARD_STUDY_EMISSIONS)
       const studyStartYear = 2025
       const studyEmissions = 1200
 
-      const result = getSNBCData(true, sectenData, referenceStudy, [], studyStartYear, studyEmissions, 2050)
+      const result = getSNBCData(
+        [TRAJECTORY_SNBC_GENERAL_ID],
+        sectenData,
+        referenceStudy,
+        [],
+        studyStartYear,
+        studyEmissions,
+        2050,
+      )
 
-      expect(result!.withinThreshold).toBe(false)
-      expect(result!.previousTrajectory).not.toBeNull()
+      expect(result![TRAJECTORY_SNBC_GENERAL_ID]!.withinThreshold).toBe(false)
+      expect(result![TRAJECTORY_SNBC_GENERAL_ID]!.previousTrajectory).not.toBeNull()
 
-      const referenceTrajectory = result!.previousTrajectory!
-      const currentTrajectory = result!.currentTrajectory
+      const referenceTrajectory = result![TRAJECTORY_SNBC_GENERAL_ID]!.previousTrajectory!
+      const currentTrajectory = result![TRAJECTORY_SNBC_GENERAL_ID]!.currentTrajectory
 
       const referenceBudget = calculateTrajectoryIntegral(referenceTrajectory, 2022, 2050)
       const currentBudget = calculateTrajectoryIntegral(currentTrajectory, 2022, 2050)
@@ -203,7 +228,7 @@ describe('SNBC Trajectory', () => {
     })
 
     test('multiple overshoot scenarios maintain budget equality', () => {
-      const sectenData = createSectenData()
+      const sectenData = createGeneralSectenData()
       const referenceStudy = createPastStudy(2022, STANDARD_STUDY_EMISSIONS)
 
       const testCases = [
@@ -213,14 +238,14 @@ describe('SNBC Trajectory', () => {
       ]
 
       testCases.forEach(({ year, emissions }) => {
-        const result = getSNBCData(true, sectenData, referenceStudy, [], year, emissions, 2050)
+        const result = getSNBCData([TRAJECTORY_SNBC_GENERAL_ID], sectenData, referenceStudy, [], year, emissions, 2050)
 
-        if (result!.withinThreshold) {
+        if (result![TRAJECTORY_SNBC_GENERAL_ID]!.withinThreshold) {
           return
         }
 
-        const referenceTrajectory = result!.previousTrajectory!
-        const currentTrajectory = result!.currentTrajectory
+        const referenceTrajectory = result![TRAJECTORY_SNBC_GENERAL_ID]!.previousTrajectory!
+        const currentTrajectory = result![TRAJECTORY_SNBC_GENERAL_ID]!.currentTrajectory
 
         const referenceBudget = calculateTrajectoryIntegral(referenceTrajectory, 2022, 2050)
         const currentBudget = calculateTrajectoryIntegral(currentTrajectory, 2022, 2050)
@@ -229,6 +254,101 @@ describe('SNBC Trajectory', () => {
 
         expect(relativeDifference).toBeLessThan(1)
       })
+    })
+  })
+
+  describe('SNBC Sectoral Trajectories', () => {
+    test('energy sector trajectory has 2015 as intermediate target year', () => {
+      const sectenData = createSectenDataWithSectors()
+      const studyEmissions = STANDARD_STUDY_EMISSIONS
+      const studyStartYear = 2010
+      const energyTargetEmissions = SNBC_SECTOR_TARGET_EMISSIONS[TRAJECTORY_SNBC_ENERGY_ID]
+
+      const secten2010 = sectenData.find((s) => s.year === 2010)
+      if (!secten2010) {
+        throw new Error('Secten 2010 not found')
+      }
+
+      const expectedEnergyReductionRates = {
+        rateTo2015: (secten2010.energy - energyTargetEmissions[2015]) / secten2010.energy / (2015 - 2010),
+        rateTo2030:
+          (energyTargetEmissions[2015] - energyTargetEmissions[2030]) / energyTargetEmissions[2015] / (2030 - 2015),
+        rateTo2050:
+          (energyTargetEmissions[2030] - energyTargetEmissions[2050]) / energyTargetEmissions[2030] / (2050 - 2030),
+      }
+
+      const yearlyReduction2015 = studyEmissions * expectedEnergyReductionRates.rateTo2015
+      const expectedValue2015 = studyEmissions - yearlyReduction2015 * (2015 - 2010)
+
+      const yearlyReduction2030 = expectedValue2015 * expectedEnergyReductionRates.rateTo2030
+      const expectedValue2030 = expectedValue2015 - yearlyReduction2030 * (2030 - 2015)
+
+      const yearlyReduction2050 = expectedValue2030 * expectedEnergyReductionRates.rateTo2050
+      const expectedValue2050 = expectedValue2030 - yearlyReduction2050 * (2050 - 2030)
+
+      const trajectory = calculateSNBCTrajectory(
+        {
+          studyEmissions,
+          studyStartYear,
+          sectenData,
+          pastStudies: [],
+          displayCurrentStudyValueOnTrajectory: true,
+        },
+        'energy',
+      )
+
+      expect(trajectory.length).toBeGreaterThan(0)
+      const value2015 = getValue(trajectory, 2015)
+      const value2030 = getValue(trajectory, 2030)
+      const value2050 = getValue(trajectory, 2050)
+
+      expect(value2015).toBeCloseTo(expectedValue2015, 0)
+      expect(value2030).toBeCloseTo(expectedValue2030, 0)
+      expect(value2050).toBeCloseTo(expectedValue2050, 0)
+    })
+
+    test('transportation sector after 2015 applies proper sector reduction rates', () => {
+      const sectenData = createSectenDataWithSectors()
+      const studyEmissions = STANDARD_STUDY_EMISSIONS
+      const studyStartYear = 2020
+      const transportationTargetEmissions = SNBC_SECTOR_TARGET_EMISSIONS[TRAJECTORY_SNBC_TRANSPORTATION_ID]
+
+      const expectedTransportationReductionRates = {
+        rateTo2030:
+          (transportationTargetEmissions[2015] - transportationTargetEmissions[2030]) /
+          transportationTargetEmissions[2015] /
+          (2030 - 2015),
+        rateTo2050:
+          (transportationTargetEmissions[2030] - transportationTargetEmissions[2050]) /
+          transportationTargetEmissions[2030] /
+          (2050 - 2030),
+      }
+
+      const yearlyReduction2030 = studyEmissions * expectedTransportationReductionRates.rateTo2030
+      const expectedValue2030 = studyEmissions - yearlyReduction2030 * (2030 - 2020)
+
+      const yearlyReduction2050 = expectedValue2030 * expectedTransportationReductionRates.rateTo2050
+      const expectedValue2050 = expectedValue2030 - yearlyReduction2050 * (2050 - 2030)
+
+      const trajectory = calculateSNBCTrajectory(
+        {
+          studyEmissions,
+          studyStartYear,
+          sectenData,
+          pastStudies: [],
+          displayCurrentStudyValueOnTrajectory: true,
+        },
+        'transportation',
+      )
+
+      expect(trajectory.length).toBeGreaterThan(0)
+      const value2020 = getValue(trajectory, 2020)
+      const value2030 = getValue(trajectory, 2030)
+      const value2050 = getValue(trajectory, 2050)
+
+      expect(value2020).toBe(studyEmissions)
+      expect(value2030).toBeCloseTo(expectedValue2030, 0)
+      expect(value2050).toBeCloseTo(expectedValue2050, 0)
     })
   })
 })

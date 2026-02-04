@@ -4,6 +4,7 @@ import {
   getAllowedStudiesByUserAndOrganization,
   getExternalAllowedStudiesByUser,
 } from '@/db/study'
+import { customRich } from '@/i18n/customRich'
 import { canCreateAStudy } from '@/services/permissions/study'
 import { hasActiveLicence } from '@/utils/organization'
 import AddIcon from '@mui/icons-material/Add'
@@ -70,7 +71,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
       {!!advancedStudies.length && (
         <Studies
           studies={advancedStudies}
-          canAddStudy={canCreateAStudy(user) && !isCR && activeLicence}
+          canAddStudy={(await canCreateAStudy(user)) && !isCR && activeLicence}
           creationUrl={creationUrl}
           user={user}
           collaborations={!organizationVersionId && isCR}
@@ -80,7 +81,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
       {!!simplifiedStudies.length && (
         <Studies
           studies={simplifiedStudies}
-          canAddStudy={canCreateAStudy(user, true) && !isCR && activeLicence}
+          canAddStudy={(await canCreateAStudy(user, true)) && !isCR && activeLicence}
           creationUrl={creationUrlSimplified}
           user={user}
           collaborations={!organizationVersionId && isCR}
@@ -89,7 +90,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
       )}
       {!!collaborations.length && <Studies studies={collaborations} canAddStudy={false} user={user} collaborations />}
     </>
-  ) : canCreateAStudy(user, simplified) ? (
+  ) : (await canCreateAStudy(user, simplified)) ? (
     !isCR && (
       <MUIBox component="section" className="mt1">
         <div className="justify-center">
@@ -113,12 +114,12 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
     <Block>
       <Alert className="p0" severity="info">
         <p>
-          {t.rich('cannotCreateStudy', {
+          {customRich(t, 'cannotCreateStudy', {
             link: (children) => <Link href="/ressources">{children}</Link>,
           })}
         </p>
         <p>
-          {t.rich('canCreateFootPrint', {
+          {customRich(t, 'canCreateFootPrint', {
             link: (children) => <Link href="/mes-empreintes">{children}</Link>,
           })}
         </p>

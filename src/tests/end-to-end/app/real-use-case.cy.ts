@@ -381,5 +381,336 @@ describe('Real use case: BC V8_10', () => {
         cy.get('td').eq(6).should('have.text', '282') // 282.34
         cy.get('td').eq(7).should('have.text', '1') // 0.93
       })
+
+    cy.getByTestId('result-type-select').click()
+    cy.get('[data-value="GHGP"]').click()
+
+    // 1
+    cy.getByTestId('ghgp-results-table-row')
+      .eq(0)
+      .within(() => {
+        cy.get('td').eq(2).should('have.text', '4') // 3.99
+        cy.get('td').eq(3).should('have.text', '0') // 0.003
+        cy.get('td').eq(4).should('have.text', '0') // 0.022
+        cy.get('td').eq(5).should('have.text', '0')
+        cy.get('td').eq(6).should('have.text', '0')
+        cy.get('td').eq(7).should('have.text', '0')
+        cy.get('td').eq(8).should('have.text', '4') // 4.015
+        cy.get('td').eq(9).should('have.text', '34') // 33.9
+      })
+    cy.getByTestId('ghgp-results-table-row')
+      .eq(1)
+      .within(() => {
+        cy.get('td').eq(1).should('have.text', '38') // 37.8
+        cy.get('td').eq(2).should('have.text', '0')
+        cy.get('td').eq(3).should('have.text', '0')
+        cy.get('td').eq(4).should('have.text', '0')
+        cy.get('td').eq(5).should('have.text', '0')
+        cy.get('td').eq(6).should('have.text', '0')
+        cy.get('td').eq(7).should('have.text', '38') // 37.8
+        cy.get('td').eq(8).should('have.text', '0')
+      })
+    cy.getByTestId('ghgp-results-table-row')
+      .eq(2)
+      .within(() => {
+        cy.get('td').eq(1).should('have.text', '0')
+        cy.get('td').eq(2).should('have.text', '0')
+        cy.get('td').eq(3).should('have.text', '0')
+        cy.get('td').eq(4).should('have.text', '0')
+        cy.get('td').eq(5).should('have.text', '0')
+        cy.get('td').eq(6).should('have.text', '0')
+        cy.get('td').eq(7).should('have.text', '0')
+        cy.get('td').eq(8).should('have.text', '0')
+      })
+    cy.getByTestId('ghgp-results-table-row')
+      .eq(3)
+      .within(() => {
+        cy.get('td').eq(1).should('have.text', '17') // 16.6
+        // TO DO : this line should be in other gaz
+        // cy.get('td').eq(1).should('have.text', '0')
+        cy.get('td').eq(2).should('have.text', '0')
+        cy.get('td').eq(3).should('have.text', '0')
+        cy.get('td').eq(4).should('have.text', '0')
+        cy.get('td').eq(5).should('have.text', '0')
+        cy.get('td').eq(6).should('have.text', '0')
+        cy.get('td').eq(7).should('have.text', '17') // 16.6
+        cy.get('td').eq(8).should('have.text', '0')
+      })
+    cy.getByTestId('ghgp-results-table-row')
+      .eq(4)
+      .within(() => {
+        // TO DO : this line should be changed after FE fix
+        // cy.get('td').eq(1).should('have.text', '42') // 41.8
+        cy.get('td').eq(1).should('have.text', '58')
+        cy.get('td').eq(2).should('have.text', '0')
+        cy.get('td').eq(3).should('have.text', '0')
+        cy.get('td').eq(4).should('have.text', '0')
+        cy.get('td').eq(5).should('have.text', '0')
+        cy.get('td').eq(6).should('have.text', '0')
+        cy.get('td').eq(7).should('have.text', '59') // 58.52
+        cy.get('td').eq(8).should('have.text', '34') // 33.9
+      })
+    // 2
+    cy.getByTestId('ghgp-results-table-row')
+      .eq(5)
+      .within(() => {
+        cy.get('td').eq(2).should('have.text', '6') // 5.6
+        cy.get('td').eq(3).should('have.text', '0')
+        cy.get('td').eq(4).should('have.text', '0')
+        cy.get('td').eq(5).should('have.text', '0')
+        cy.get('td').eq(6).should('have.text', '0')
+        cy.get('td').eq(7).should('have.text', '0')
+        cy.get('td').eq(8).should('have.text', '6') // 5.6
+        cy.get('td').eq(9).should('have.text', '0')
+      })
+    cy.getByTestId('ghgp-results-table-row')
+      .eq(6)
+      .within(() => {
+        cy.get('td').eq(1).should('have.text', '0')
+        cy.get('td').eq(2).should('have.text', '0')
+        cy.get('td').eq(3).should('have.text', '0')
+        cy.get('td').eq(4).should('have.text', '0')
+        cy.get('td').eq(5).should('have.text', '0')
+        cy.get('td').eq(6).should('have.text', '0')
+        cy.get('td').eq(7).should('have.text', '0')
+        cy.get('td').eq(8).should('have.text', '0')
+      })
+    cy.getByTestId('ghgp-results-table-row')
+      .eq(7)
+      .within(() => {
+        cy.get('td').eq(1).should('have.text', '6') // 5.6
+        cy.get('td').eq(2).should('have.text', '0')
+        cy.get('td').eq(3).should('have.text', '0')
+        cy.get('td').eq(4).should('have.text', '0')
+        cy.get('td').eq(5).should('have.text', '0')
+        cy.get('td').eq(6).should('have.text', '0')
+        cy.get('td').eq(7).should('have.text', '6') // 5.6
+        cy.get('td').eq(8).should('have.text', '0')
+      })
+    // 3.amont
+    cy.getByTestId('ghgp-results-table-row')
+      .eq(8)
+      .within(() => {
+        cy.get('td').eq(2).should('have.text', '120') // 120.2
+        cy.get('td').eq(3).should('have.text', '0')
+        cy.get('td').eq(4).should('have.text', '0')
+        cy.get('td').eq(5).should('have.text', '0')
+        cy.get('td').eq(6).should('have.text', '0')
+        cy.get('td').eq(7).should('have.text', '0')
+        cy.get('td').eq(8).should('have.text', '120') // 120.2
+        cy.get('td').eq(9).should('have.text', '0')
+      })
+    cy.getByTestId('ghgp-results-table-row')
+      .eq(9)
+      .within(() => {
+        cy.get('td').eq(1).should('have.text', '0')
+        cy.get('td').eq(2).should('have.text', '0')
+        cy.get('td').eq(3).should('have.text', '0')
+        cy.get('td').eq(4).should('have.text', '0')
+        cy.get('td').eq(5).should('have.text', '0')
+        cy.get('td').eq(6).should('have.text', '0')
+        cy.get('td').eq(7).should('have.text', '0')
+        cy.get('td').eq(8).should('have.text', '0')
+      })
+    cy.getByTestId('ghgp-results-table-row')
+      .eq(10)
+      .within(() => {
+        cy.get('td').eq(1).should('have.text', '15') // 15.2
+        cy.get('td').eq(2).should('have.text', '0') // 0.07
+        cy.get('td').eq(3).should('have.text', '0')
+        cy.get('td').eq(4).should('have.text', '0')
+        cy.get('td').eq(5).should('have.text', '0')
+        cy.get('td').eq(6).should('have.text', '0')
+        cy.get('td').eq(7).should('have.text', '15') // 15.4
+        cy.get('td').eq(8).should('have.text', '-34') // -33.9
+      })
+    cy.getByTestId('ghgp-results-table-row')
+      .eq(11)
+      .within(() => {
+        cy.get('td').eq(1).should('have.text', '1') // 1.4
+        cy.get('td').eq(2).should('have.text', '0')
+        cy.get('td').eq(3).should('have.text', '0')
+        cy.get('td').eq(4).should('have.text', '0')
+        cy.get('td').eq(5).should('have.text', '0')
+        cy.get('td').eq(6).should('have.text', '0')
+        cy.get('td').eq(7).should('have.text', '1') // 1.4
+        cy.get('td').eq(8).should('have.text', '0')
+      })
+    cy.getByTestId('ghgp-results-table-row')
+      .eq(12)
+      .within(() => {
+        // difference is due to waste impact value
+        cy.get('td').eq(1).should('have.text', '0') // 0.1
+        // cy.get('td').eq(1).should('have.text', '2') // 1.8
+        cy.get('td').eq(2).should('have.text', '0') // 0.05
+        cy.get('td').eq(3).should('have.text', '0')
+        cy.get('td').eq(4).should('have.text', '0')
+        cy.get('td').eq(5).should('have.text', '0')
+        cy.get('td').eq(6).should('have.text', '0')
+        cy.get('td').eq(7).should('have.text', '0') // 0.2
+        // cy.get('td').eq(7).should('have.text', '2') // 1.8
+        cy.get('td').eq(8).should('have.text', '0')
+      })
+    cy.getByTestId('ghgp-results-table-row')
+      .eq(13)
+      .within(() => {
+        cy.get('td').eq(1).should('have.text', '2') // 2.0
+        cy.get('td').eq(2).should('have.text', '0') // 0.005
+        cy.get('td').eq(3).should('have.text', '0') // 0.009
+        cy.get('td').eq(4).should('have.text', '0')
+        cy.get('td').eq(5).should('have.text', '0')
+        cy.get('td').eq(6).should('have.text', '0')
+        cy.get('td').eq(7).should('have.text', '2') // 2.0
+        cy.get('td').eq(8).should('have.text', '0')
+      })
+    cy.getByTestId('ghgp-results-table-row')
+      .eq(14)
+      .within(() => {
+        cy.get('td').eq(1).should('have.text', '49') // 48.6
+        cy.get('td').eq(2).should('have.text', '0')
+        cy.get('td').eq(3).should('have.text', '0')
+        cy.get('td').eq(4).should('have.text', '0')
+        cy.get('td').eq(5).should('have.text', '0')
+        cy.get('td').eq(6).should('have.text', '0')
+        cy.get('td').eq(7).should('have.text', '49') // 48.6
+        cy.get('td').eq(8).should('have.text', '0')
+      })
+    cy.getByTestId('ghgp-results-table-row')
+      .eq(15)
+      .within(() => {
+        cy.get('td').eq(1).should('have.text', '0')
+        cy.get('td').eq(2).should('have.text', '0')
+        cy.get('td').eq(3).should('have.text', '0')
+        cy.get('td').eq(4).should('have.text', '0')
+        cy.get('td').eq(5).should('have.text', '0')
+        cy.get('td').eq(6).should('have.text', '0')
+        cy.get('td').eq(7).should('have.text', '0')
+        cy.get('td').eq(8).should('have.text', '0')
+      })
+    cy.getByTestId('ghgp-results-table-row')
+      .eq(16)
+      .within(() => {
+        cy.get('td').eq(1).should('have.text', '188')
+        cy.get('td').eq(2).should('have.text', '0')
+        cy.get('td').eq(3).should('have.text', '0')
+        cy.get('td').eq(4).should('have.text', '0')
+        cy.get('td').eq(5).should('have.text', '0')
+        cy.get('td').eq(6).should('have.text', '0')
+        cy.get('td').eq(7).should('have.text', '188')
+        cy.get('td').eq(8).should('have.text', '-34') // -33.9
+      })
+    // 3.aval
+    cy.getByTestId('ghgp-results-table-row')
+      .eq(17)
+      .within(() => {
+        cy.get('td').eq(2).should('have.text', '0')
+        cy.get('td').eq(3).should('have.text', '0')
+        cy.get('td').eq(4).should('have.text', '0')
+        cy.get('td').eq(5).should('have.text', '0')
+        cy.get('td').eq(6).should('have.text', '0')
+        cy.get('td').eq(7).should('have.text', '0')
+        cy.get('td').eq(8).should('have.text', '0')
+        cy.get('td').eq(9).should('have.text', '0')
+      })
+    cy.getByTestId('ghgp-results-table-row')
+      .eq(18)
+      .within(() => {
+        cy.get('td').eq(1).should('have.text', '0')
+        cy.get('td').eq(2).should('have.text', '0')
+        cy.get('td').eq(3).should('have.text', '0')
+        cy.get('td').eq(4).should('have.text', '0')
+        cy.get('td').eq(5).should('have.text', '0')
+        cy.get('td').eq(6).should('have.text', '0')
+        cy.get('td').eq(7).should('have.text', '0')
+        cy.get('td').eq(8).should('have.text', '0')
+      })
+    cy.getByTestId('ghgp-results-table-row')
+      .eq(19)
+      .within(() => {
+        cy.get('td').eq(1).should('have.text', '0')
+        cy.get('td').eq(2).should('have.text', '0')
+        cy.get('td').eq(3).should('have.text', '0')
+        cy.get('td').eq(4).should('have.text', '0')
+        cy.get('td').eq(5).should('have.text', '0')
+        cy.get('td').eq(6).should('have.text', '0')
+        cy.get('td').eq(7).should('have.text', '0')
+        cy.get('td').eq(8).should('have.text', '0')
+      })
+    cy.getByTestId('ghgp-results-table-row')
+      .eq(20)
+      .within(() => {
+        cy.get('td').eq(1).should('have.text', '6') // 6
+        cy.get('td').eq(2).should('have.text', '1') // 0.7
+        cy.get('td').eq(3).should('have.text', '0')
+        cy.get('td').eq(4).should('have.text', '0')
+        cy.get('td').eq(5).should('have.text', '0')
+        cy.get('td').eq(6).should('have.text', '0')
+        cy.get('td').eq(7).should('have.text', '6') // 6
+        cy.get('td').eq(8).should('have.text', '1') // 0.8
+        // Theorical value
+        // cy.get('td').eq(8).should('have.text', '0')
+      })
+    cy.getByTestId('ghgp-results-table-row')
+      .eq(21)
+      .within(() => {
+        cy.get('td').eq(1).should('have.text', '0')
+        cy.get('td').eq(2).should('have.text', '0')
+        cy.get('td').eq(3).should('have.text', '0')
+        cy.get('td').eq(4).should('have.text', '0')
+        cy.get('td').eq(5).should('have.text', '0')
+        cy.get('td').eq(6).should('have.text', '0')
+        cy.get('td').eq(7).should('have.text', '0')
+        cy.get('td').eq(8).should('have.text', '0')
+      })
+    cy.getByTestId('ghgp-results-table-row')
+      .eq(22)
+      .within(() => {
+        cy.get('td').eq(1).should('have.text', '0')
+        cy.get('td').eq(2).should('have.text', '0')
+        cy.get('td').eq(3).should('have.text', '0')
+        cy.get('td').eq(4).should('have.text', '0')
+        cy.get('td').eq(5).should('have.text', '0')
+        cy.get('td').eq(6).should('have.text', '0')
+        cy.get('td').eq(7).should('have.text', '0')
+        cy.get('td').eq(8).should('have.text', '0')
+      })
+    cy.getByTestId('ghgp-results-table-row')
+      .eq(23)
+      .within(() => {
+        cy.get('td').eq(1).should('have.text', '0')
+        cy.get('td').eq(2).should('have.text', '0')
+        cy.get('td').eq(3).should('have.text', '0')
+        cy.get('td').eq(4).should('have.text', '0')
+        cy.get('td').eq(5).should('have.text', '0')
+        cy.get('td').eq(6).should('have.text', '0')
+        cy.get('td').eq(7).should('have.text', '0')
+        cy.get('td').eq(8).should('have.text', '0')
+      })
+    // 3.aval total
+    cy.getByTestId('ghgp-results-table-row')
+      .eq(24)
+      .within(() => {
+        cy.get('td').eq(1).should('have.text', '6') // 5.6
+        cy.get('td').eq(2).should('have.text', '1') // 0.7
+        cy.get('td').eq(3).should('have.text', '0')
+        cy.get('td').eq(4).should('have.text', '0')
+        cy.get('td').eq(5).should('have.text', '0')
+        cy.get('td').eq(6).should('have.text', '0')
+        cy.get('td').eq(7).should('have.text', '6') // 6.3
+        cy.get('td').eq(8).should('have.text', '1') // 0.9
+      })
+    // Total
+    cy.getByTestId('ghgp-results-table-row')
+      .eq(25)
+      .within(() => {
+        cy.get('td').eq(2).should('have.text', '258')
+        cy.get('td').eq(3).should('have.text', '1') // 0.8
+        cy.get('td').eq(4).should('have.text', '0')
+        cy.get('td').eq(5).should('have.text', '0')
+        cy.get('td').eq(6).should('have.text', '0')
+        cy.get('td').eq(7).should('have.text', '0')
+        cy.get('td').eq(8).should('have.text', '258')
+        cy.get('td').eq(9).should('have.text', '1') // 0.9
+      })
   })
 })

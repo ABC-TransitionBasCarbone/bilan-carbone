@@ -3,8 +3,9 @@
 import BaseTable from '@/components/base/Table'
 import { TableActionButton } from '@/components/base/TableActionButton'
 import { EngagementActionSteps, EngagementActionTargets } from '@/constants/engagementActions'
+import { EngagementActionWithSites } from '@/services/serverFunctions/study'
 import { formatDateFr } from '@/utils/time'
-import { EngagementAction, EngagementPhase } from '@prisma/client'
+import { EngagementPhase } from '@prisma/client'
 import {
   ColumnDef,
   getCoreRowModel,
@@ -16,9 +17,9 @@ import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
 
 interface Props {
-  actions: EngagementAction[]
-  openEditModal: (action: EngagementAction) => void
-  openDeleteModal: (action: EngagementAction) => void
+  actions: EngagementActionWithSites[]
+  openEditModal: (action: EngagementActionWithSites) => void
+  openDeleteModal: (action: EngagementActionWithSites) => void
 }
 
 const EngagementActionTable = ({ actions, openEditModal, openDeleteModal }: Props) => {
@@ -28,7 +29,7 @@ const EngagementActionTable = ({ actions, openEditModal, openDeleteModal }: Prop
   const tPhases = useTranslations('study.engagementActions.phases')
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 })
 
-  const [localActions, setLocalActions] = useState<EngagementAction[]>(actions)
+  const [localActions, setLocalActions] = useState<EngagementActionWithSites[]>(actions)
 
   useEffect(() => {
     setLocalActions(actions)
@@ -55,11 +56,15 @@ const EngagementActionTable = ({ actions, openEditModal, openDeleteModal }: Prop
         },
         {
           header: t('target'),
-          accessorKey: 'target',
+          accessorKey: 'targets',
           accessorFn: (row) =>
-            Object.values(EngagementActionTargets).includes(row.target as EngagementActionTargets)
-              ? tTargets(row.target)
-              : row.target,
+            row.targets
+              ?.map((target) =>
+                Object.values(EngagementActionTargets).includes(target as EngagementActionTargets)
+                  ? tTargets(target)
+                  : target,
+              )
+              .join(', '),
         },
         {
           header: t('phase'),
@@ -72,6 +77,10 @@ const EngagementActionTable = ({ actions, openEditModal, openDeleteModal }: Prop
           accessorFn: (row) => formatDateFr(row.date),
         },
         {
+          header: t('sites'),
+          accessorFn: (row) => row.sites?.map((site) => site.site.name).join(', '),
+        },
+        {
           id: 'actions',
           header: '',
           accessorFn: () => '',
@@ -82,7 +91,7 @@ const EngagementActionTable = ({ actions, openEditModal, openDeleteModal }: Prop
             </>
           ),
         },
-      ] as ColumnDef<EngagementAction>[],
+      ] as ColumnDef<EngagementActionWithSites>[],
     [t, tTargets, tSteps, openEditModal, openDeleteModal],
   )
 

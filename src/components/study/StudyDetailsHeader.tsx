@@ -106,9 +106,9 @@ const StudyDetailsHeader = ({
               {format.dateTime(study.startDate, { year: 'numeric', day: 'numeric', month: 'long' })} -{' '}
               {format.dateTime(study.endDate, { year: 'numeric', day: 'numeric', month: 'long' })}
             </p>
-            {study.exports.length > 0 && (
+            {study.exports && study.exports.types.length > 0 && (
               <p>
-                {tExport('title')} {study.exports.map((e) => e.type).join(', ')}
+                {tExport('title')} {study.exports.types.join(', ')}
               </p>
             )}
           </div>

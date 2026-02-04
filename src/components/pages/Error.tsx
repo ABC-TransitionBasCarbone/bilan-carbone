@@ -1,6 +1,7 @@
 'use client'
 
 import Block from '@/components/base/Block'
+import { customRich } from '@/i18n/customRich'
 import { getEnvVar } from '@/lib/environment'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { useTranslations } from 'next-intl'
@@ -13,7 +14,7 @@ const Error = () => {
   const t = useTranslations('error')
   return (
     <Block title={t('error')} as="h1">
-      {t.rich('contactSupport', {
+      {customRich(t, 'contactSupport', {
         p: (children) => <p>{children}</p>,
         link: (children) => <Link href="/">{children}</Link>,
         m: () => <Link href={`mailto:${support}`}>{support}</Link>,

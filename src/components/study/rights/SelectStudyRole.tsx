@@ -76,7 +76,7 @@ const SelectStudyRole = ({ user, rowUser, study, currentRole, userRole }: Props)
   return (
     <>
       <Select
-        className="w100"
+        className="fit-content"
         data-testid="select-study-role"
         value={role}
         onChange={selectNewRole}

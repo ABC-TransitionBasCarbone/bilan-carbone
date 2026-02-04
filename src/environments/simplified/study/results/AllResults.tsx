@@ -28,6 +28,7 @@ import styles from './AllResults.module.css'
 import CarbonIntensities from '@/components/study/results/consolidated/CarbonIntensities'
 import EmissionsAnalysisClickson from '@/environments/clickson/study/results/consolidated/EmissionsAnalysisClickson'
 import CarbonIntensitiesCut from '@/environments/cut/study/results/CarbonIntensitiesCut'
+import { customRich } from '@/i18n/customRich'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import {
   hasAccessToAdvancedEmissionAnalysis,
@@ -85,9 +86,11 @@ const AllResults = ({
   const tExport = useTranslations('exports')
   const tQuality = useTranslations('quality')
   const tBeges = useTranslations('beges')
+  const tGHGP = useTranslations('ghgp')
   const tUnits = useTranslations('study.results.units')
   const tExportButton = useTranslations('study.export')
   const tStudyNav = useTranslations('study.navigation')
+  const tBase = useTranslations('emissionFactors.base')
 
   const { callServerFunction } = useServerFunction()
 
@@ -150,6 +153,7 @@ const AllResults = ({
               downloadStudyResults(
                 study,
                 [],
+                [],
                 emissionFactorsWithParts,
                 tResults,
                 tExport,
@@ -157,7 +161,9 @@ const AllResults = ({
                 tOrga,
                 tQuality,
                 tBeges,
+                tGHGP,
                 tUnits,
+                tBase,
                 Environment.CUT,
               )
             }
@@ -182,7 +188,7 @@ const AllResults = ({
         <>
           <Box component="section" className="mb2">
             <Typography>
-              {tResults.rich('simplifiedFeedback', {
+              {customRich(tResults, 'simplifiedFeedback', {
                 questionnaire: (children) => (
                   <Link href={process.env.NEXT_PUBLIC_CUT_FEEDBACK_TYPEFORM_LINK ?? ''} target="_blank">
                     <strong>{children}</strong>
@@ -193,7 +199,7 @@ const AllResults = ({
           </Box>
           <Box component="section">
             <Typography className={classNames(styles.infoContainer)}>
-              {tResults.rich('infoWithLinks', {
+              {customRich(tResults, 'infoWithLinks', {
                 formation: (children) => (
                   <Link href={process.env.NEXT_PUBLIC_FORMATION_URL ?? ''} target="_blank">
                     <strong>{children}</strong>

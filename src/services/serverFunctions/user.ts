@@ -72,7 +72,6 @@ import { auth, dbActualizedAuth } from '../auth'
 import { getUserCheckList } from '../checklist'
 import {
   sendActivationEmail,
-  sendActivationInvitationEmail,
   sendActivationRequest,
   sendAddedActiveUserEmail,
   sendAddedUsersByFile,
@@ -145,38 +144,27 @@ export const sendInvitation = async (
   existingAccount?: AccountWithUser,
 ) =>
   withServerResponse('sendInvitation', async () => {
-    if (existingAccount) {
-      if (existingAccount.status === UserStatus.ACTIVE) {
-        return roleOnStudy
-          ? sendUserOnStudyInvitationEmail(
-              email,
-              study.name,
-              study.id,
-              organization.name,
-              `${creator.firstName} ${creator.lastName}`,
-              existingAccount.user.firstName,
-              roleOnStudy,
-              env,
-            )
-          : sendContributorInvitationEmail(
-              email,
-              study.name,
-              study.id,
-              organization.name,
-              `${creator.firstName} ${creator.lastName}`,
-              existingAccount.user.firstName,
-              env,
-            )
-      } else if (existingAccount.status === UserStatus.IMPORTED) {
-        return sendActivationInvitationEmail(
-          email,
-          `${creator.firstName} ${creator.lastName}`,
-          existingAccount.user.firstName,
-          !!roleOnStudy,
-          study.name,
-          env,
-        )
-      }
+    if (existingAccount && existingAccount.status === UserStatus.ACTIVE) {
+      return roleOnStudy
+        ? sendUserOnStudyInvitationEmail(
+            email,
+            study.name,
+            study.id,
+            organization.name,
+            `${creator.firstName} ${creator.lastName}`,
+            existingAccount.user.firstName,
+            roleOnStudy,
+            env,
+          )
+        : sendContributorInvitationEmail(
+            email,
+            study.name,
+            study.id,
+            organization.name,
+            `${creator.firstName} ${creator.lastName}`,
+            existingAccount.user.firstName,
+            env,
+          )
     }
 
     const token = await updateUserResetToken(email, 1 * DAY)

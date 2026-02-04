@@ -5,6 +5,7 @@ enum DeactivatableFeature {
   DownloadReport
   FormationStudy
   TransitionPlan
+  TiltSimplified
 }
 
 model DeactivatableFeatureStatus {

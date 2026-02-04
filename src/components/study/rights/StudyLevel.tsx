@@ -5,6 +5,7 @@ import { FormSelect } from '@/components/form/Select'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { customRich } from '@/i18n/customRich'
 import { changeStudyLevel } from '@/services/serverFunctions/study'
 import { ChangeStudyLevelCommand, ChangeStudyLevelCommandValidation } from '@/services/serverFunctions/study.command'
 import { getAllowedLevels } from '@/services/study'
@@ -29,6 +30,7 @@ const StudyLevel = ({ user, study, disabled }: Props) => {
   const t = useTranslations('study.new')
   const tGlossary = useTranslations('study.new.glossary')
   const tLevel = useTranslations('level')
+  const tDocumentation = useTranslations('documentationUrl')
   const [glossary, setGlossary] = useState('')
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
@@ -81,13 +83,9 @@ const StudyLevel = ({ user, study, disabled }: Props) => {
       </FormSelect>
       <GlossaryModal label="study-type" glossary={glossary} onClose={() => setGlossary('')} t={tGlossary}>
         <span>
-          {t.rich('glossary.typeDescription', {
+          {customRich(t, 'glossary.typeDescription', {
             link: (children) => (
-              <Link
-                href="https://www.bilancarbone-methode.com/1-cadrage-de-la-demarche/1.1-definir-son-niveau-de-maturite-bilan-carbone-r"
-                target="_blank"
-                rel="noreferrer noopener"
-              >
+              <Link href={tDocumentation('maturity')} target="_blank" rel="noreferrer noopener">
                 {children}
               </Link>
             ),

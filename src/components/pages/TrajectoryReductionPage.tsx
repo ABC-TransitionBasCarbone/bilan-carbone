@@ -6,12 +6,24 @@ import { MultiSelect } from '@/components/base/MultiSelect'
 import PersistentToast from '@/components/base/PersistentToast'
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import Image from '@/components/document/Image'
+import {
+  TRAJECTORY_15_ID,
+  TRAJECTORY_SNBC_AGRICULTURE_ID,
+  TRAJECTORY_SNBC_BUILDINGS_ID,
+  TRAJECTORY_SNBC_ENERGY_ID,
+  TRAJECTORY_SNBC_GENERAL_ID,
+  TRAJECTORY_SNBC_INDUSTRY_ID,
+  TRAJECTORY_SNBC_TRANSPORTATION_ID,
+  TRAJECTORY_SNBC_WASTE_ID,
+  TRAJECTORY_WB2C_ID,
+} from '@/constants/trajectories'
 import { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
 import { deleteTransitionPlan, initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
+import { getStudyTotalCo2Emissions } from '@/services/study'
 import { calculateTrajectoriesWithHistory, convertToPastStudies } from '@/utils/trajectory'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -36,11 +48,6 @@ const TransitionPlanSelectionModal = dynamic(
 
 const TrajectoryCreationModal = dynamic(() => import('@/components/study/trajectory/TrajectoryCreationModal'))
 const ConfirmDeleteModal = dynamic(() => import('@/components/modals/ConfirmDeleteModal'))
-
-export const TRAJECTORY_SNBC_GENERAL_ID = 'SNBC_GENERAL'
-export const TRAJECTORY_SNBC_SECTORAL_ID = 'SNBC_SECTORAL'
-export const TRAJECTORY_15_ID = '1,5'
-export const TRAJECTORY_WB2C_ID = 'WB2C'
 
 interface Props {
   study: FullStudy
@@ -160,6 +167,10 @@ const TrajectoryReductionPage = ({
     [linkedStudies, linkedExternalStudies, withDependencies, validatedOnly, study.resultsUnit],
   )
 
+  const studyTotalEmissions = useMemo(() => {
+    return getStudyTotalCo2Emissions(study, true, validatedOnly)
+  }, [study, validatedOnly])
+
   const unvalidatedSourcesInfo = useMemo(() => {
     let totalCount = 0
     const currentStudyUnvalidatedCount = study.emissionSources.filter((source) => !source.validated).length
@@ -194,7 +205,7 @@ const TrajectoryReductionPage = ({
       return {
         trajectory15Data: null,
         trajectoryWB2CData: null,
-        snbcData: null,
+        snbcData: {},
         customTrajectoriesData: [],
         actionBasedTrajectoryData: null,
         studyStartYear,
@@ -361,7 +372,12 @@ const TrajectoryReductionPage = ({
                   onChange={setSelectedSnbcTrajectories}
                   options={[
                     { label: t('trajectories.snbcCard.general'), value: TRAJECTORY_SNBC_GENERAL_ID },
-                    { label: t('trajectories.snbcCard.sectoral'), value: TRAJECTORY_SNBC_SECTORAL_ID },
+                    { label: t('trajectories.snbcCard.energy'), value: TRAJECTORY_SNBC_ENERGY_ID },
+                    { label: t('trajectories.snbcCard.industry'), value: TRAJECTORY_SNBC_INDUSTRY_ID },
+                    { label: t('trajectories.snbcCard.waste'), value: TRAJECTORY_SNBC_WASTE_ID },
+                    { label: t('trajectories.snbcCard.buildings'), value: TRAJECTORY_SNBC_BUILDINGS_ID },
+                    { label: t('trajectories.snbcCard.agriculture'), value: TRAJECTORY_SNBC_AGRICULTURE_ID },
+                    { label: t('trajectories.snbcCard.transportation'), value: TRAJECTORY_SNBC_TRANSPORTATION_ID },
                   ]}
                   placeholder={t('trajectories.sbtiCard.placeholder')}
                 />
@@ -450,6 +466,9 @@ const TrajectoryReductionPage = ({
               trajectory={null}
               isFirstCreation={trajectories.length === 0}
               studyYear={study.startDate.getFullYear()}
+              sectenData={sectenData}
+              studyEmissions={studyTotalEmissions}
+              pastStudies={pastStudies}
             />
           )}
 

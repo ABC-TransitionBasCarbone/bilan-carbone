@@ -1,5 +1,4 @@
 .objectiveCard {
-  min-width: 14rem;
   border-radius: 0.75rem;
   background-color: var(--mui-palette-primary-light);
 }
@@ -9,4 +8,8 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 0.5rem;
+}
+
+.correctedRateLabel {
+  font-size: 0.875rem;
 }

@@ -3,12 +3,13 @@ import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { expect } from '@jest/globals'
 import { Action, StudyResultUnit, TrajectoryType } from '@prisma/client'
 import {
+  BaseObjective,
   calculateActionBasedTrajectory,
   calculateCustomTrajectory,
   calculateSBTiTrajectory,
   calculateTrajectoryIntegral,
   calculateTrajectoryYearBounds,
-  getReductionRatePerType,
+  getDefaultSBTIReductionRate,
   getTrajectoryEmissionsAtYear,
   isWithinThreshold,
   PastStudy,
@@ -441,21 +442,56 @@ describe('calculateTrajectory', () => {
         expect(point2024?.value).toBeGreaterThan(0)
       })
     })
+
+    test('Custom trajectory with 4 objectives - continuous reductions', () => {
+      const currentYear = 2024
+      const currentEmissions = 850
+
+      const objectives = [
+        { targetYear: 2025, reductionRate: 0.03 },
+        { targetYear: 2030, reductionRate: 0.05 },
+        { targetYear: 2035, reductionRate: 0.07 },
+        { targetYear: 2040, reductionRate: 0.1 },
+      ]
+
+      const trajectory = calculateCustomTrajectory({
+        studyEmissions: currentEmissions,
+        studyStartYear: currentYear,
+        objectives,
+      })
+
+      const startPoint = trajectory.find((p) => p.year === currentYear)
+      expect(startPoint?.value).toBeCloseTo(currentEmissions, 1)
+
+      const point2025 = trajectory.find((p) => p.year === 2025)
+      expect(point2025?.value).toBeCloseTo(824.5, 1)
+
+      const point2026 = trajectory.find((p) => p.year === 2026)
+      expect(point2026?.value).toBeCloseTo(783.275, 1)
+
+      const point2030 = trajectory.find((p) => p.year === 2030)
+      expect(point2030?.value).toBeCloseTo(618.375, 1)
+    })
   })
 
   describe('getReductionRatePerType', () => {
     test('should return correct reduction rate for SBTI_15', () => {
-      const rate = getReductionRatePerType(TrajectoryType.SBTI_15)
+      const rate = getDefaultSBTIReductionRate(TrajectoryType.SBTI_15)
       expect(rate).toBe(SBTI_REDUCTION_RATE_15)
     })
 
     test('should return correct reduction rate for SBTI_WB2C', () => {
-      const rate = getReductionRatePerType(TrajectoryType.SBTI_WB2C)
+      const rate = getDefaultSBTIReductionRate(TrajectoryType.SBTI_WB2C)
       expect(rate).toBe(SBTI_REDUCTION_RATE_WB2C)
     })
 
     test('should return undefined for CUSTOM type', () => {
-      const rate = getReductionRatePerType(TrajectoryType.CUSTOM)
+      const rate = getDefaultSBTIReductionRate(TrajectoryType.CUSTOM)
+      expect(rate).toBeUndefined()
+    })
+
+    test('should return undefined for SNBC_GENERAL type', () => {
+      const rate = getDefaultSBTIReductionRate(TrajectoryType.SNBC_GENERAL)
       expect(rate).toBeUndefined()
     })
   })
@@ -1259,7 +1295,7 @@ describe('calculateTrajectory', () => {
       currentYear: number,
       referenceEmissions: number,
       currentEmissions: number,
-      objectives: Array<{ targetYear: number; reductionRate: number }>,
+      objectives: BaseObjective[],
       pastStudies: PastStudy[],
     ) => {
       const referenceTrajectory = calculateCustomTrajectory({

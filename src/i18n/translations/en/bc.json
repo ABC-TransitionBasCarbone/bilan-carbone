@@ -26,6 +26,17 @@
       "title": "Bilan Carbone® Equivalence",
       "category": "Bilan Carbone® Category",
       "emissions": "Emissions (tCO2e)"
+    },
+    "glossary": {
+      "GHGP": {
+        "title": "Export to GHG Protocol format",
+        "warning": "Please note that in order for your export to comply with the GHG Protocol, you will need to:",
+        "item1": "Take into account waste incineration in the emissions associated with the steam and heating networks.",
+        "item2": "Correctly indicate in the Capital goods category whether the assets were acquired in the year of the Bilan Carbone® or not.",
+        "item3": "Have a double-accounting for consumed electricity, once with the <b><green>location-based method (LBM)</green></b> and once with the <b><purple>market-based method (MBM)</purple></b>. To do this, account for your kWh of energy consumption twice, <green>once via <b>location-based</b> emission factors</green>, and <purple>a second time via <b>market-based</b> emission factors</purple>. Reminder :<ul><li>The <b><green>location-based method</green></b> reflects the average emissions intensity of grids on which energy consumption occurs (using mostly grid-average emission factor data). </li><li>The <b><purple>market-based method</purple></b> reflects emissions from electricity that companies have purposefully chosen (or their lack of choice). It derives emission factors from contractual instruments such as Guarantees of Origin (GO), Renewable Energy Certificates in the US, Power Purchase Agreements (PPAs, VPPAs), etc. All electricity not covered by the aforementioned contracts must then be taken into account using <b>residual mixes emission factors</b>, i.e. emission factors for electricity mixes from which all electricity covered by the aforementioned contracts has been removed.</li></ul>",
+        "item4": "The capital goods portion of vehicles construction is not included by default in the GHG Protocol for the Travel and Commute and Freight categories. You must therefore account for it in the Capital goods category, only if the vehicle was manufactured during the year of the Bilan Carbone®.",
+        "conclusion": "<b>Users should also be familiar with all the methodological specifics of the GHG Protocol in order to generate an export that meets the requirements of this method.</b>"
+      }
     }
   },
   "categorisations": {
@@ -34,15 +45,17 @@
     "NotOperated": "Not operated",
     "OperatedProcedeed": "Operated, procedeed",
     "OperatedFugitive": "Operated, fugitive",
+    "OperatedCAS": "Operated, LUC",
     "NotOperatedSupported": "Not operated, supported",
     "NotOperatedNotSupported": "Not operated, not supported",
     "Rented": "Rented",
-    "FinalClient": "By the final client or an intermediary",
+    "FinalClient": "Used by the final client",
     "Held": "Held",
     "NotHeldSimpleRent": "Not held, simple rent",
     "NotHeldOther": "Not held, other",
     "HeldProcedeed": "Held, procedeed",
     "HeldFugitive": "Held, fugitive",
+    "HeldCAS": "Held, LUC",
     "NotHeldSupported": "Not held, supported",
     "NotHeldNotSupported": "Not held, not supported",
     "UsedByIntermediary": "Used by an intermediary"
@@ -60,7 +73,7 @@
       "6": "Other indirect emissions"
     },
     "post": {
-      "title": "Emission post",
+      "title": "Emission category",
       "1": {
         "1": "Direct emissions from stationary combustion sources",
         "2": "Direct emissions from mobile combustion sources",
@@ -94,6 +107,55 @@
       },
       "6": {
         "1": "Other indirect emissions"
+      }
+    },
+    "other": "Other gases",
+    "total": "Total",
+    "uncertainty": "Uncertainty",
+    "ges": "GHG emissions ({unit})"
+  },
+  "ghgp": {
+    "rule": "Rule",
+    "subTotal": "Subtotal",
+    "category": {
+      "title": "Category",
+      "1": "Scope 1",
+      "2": "Scope 2",
+      "3": "Upstream Scope 3",
+      "4": "Downstream Scope 3"
+    },
+    "post": {
+      "title": "Emission Post",
+      "1": {
+        "1": "Stationary combustion",
+        "2": "Mobile combustion",
+        "3": "Process emissions",
+        "4": "Fugitive emissions"
+      },
+      "2": {
+        "1": "Indirect emissions related to consumption",
+        "2": "Indirect emissions related to steam consumption"
+      },
+      "3": {
+        "1": "Purchased Goods and Services",
+        "2": "Capital Goods",
+        "3": "Fuel and Energy-Related Activities not included in Scope 1 or Scope 2",
+        "4": "Upstream transportation and distribution",
+        "5": "Waste generated in operations",
+        "6": "Business travel",
+        "7": "Employee Commuting",
+        "8": "Upstream leased assets",
+        "other": "Other upstream indirect emissions"
+      },
+      "4": {
+        "09": "Downstream transportation and distribution",
+        "10": "Processing of sold products",
+        "11": "Use of sold products",
+        "12": "End-of-life treatment of sold products",
+        "13": "Downstream leased assets",
+        "14": "Franchises",
+        "15": "Investments",
+        "other": "Other downstream indirect emissions"
       }
     },
     "other": "Other gases",
@@ -338,7 +400,7 @@
       "realizationDates": "Study completion date",
       "level": "Bilan Carbone® maturity",
       "exports": "Exports",
-      "control": "Control mode",
+      "control": "Exports' Control mode",
       "CapitalShare": "Capital share",
       "Financial": "Financial",
       "Operational": "Operational",
@@ -398,8 +460,8 @@
         "visibilityDescription": "Choose whether your study should be public, i.e. accessible to all your colleagues entered on the My organization > my team page (link to the page), or private, i.e. only accessible to the people you add on the study framework page. Your organization's admins have access to all studies, whether public or private.",
         "exports": "Exports",
         "exportsDescription": "By default, the results are returned in Bilan Carbone® format, but it is possible to obtain the results in the formats required by several other carbon accounting methods, such as the Bilan GES règlementaire, which is the French regulatory method.",
-        "control": "Control mode",
-        "controlDescription": "The control mode is a data item required by certain carbon accounting methods, such as the regulatory GHG Balance or the GHG Protocol. In order to obtain the results in the formats requested by these methods, you will need to characterise the different sources of emissions when you enter them, which will determine into which of the existing categories within these methods (the equivalent of the posts and sub-posts within the Bilan Carbone® method) the emissions will be broken down. Depending on the control mode selected, the characterizations available for the different sources of emissions vary. For more details on the control modes, please consult the methodological guides for the methods in question. We strongly recommend that you use the \"Operational Control\" control mode, which is by far the most common.",
+        "control": "Exports' Control mode",
+        "controlDescription": "The control mode is a data item required by certain carbon accounting methods, such as the regulatory GHG Balance or the GHG Protocol. In order to obtain the results in the formats requested by these methods, you will need to characterise the different sources of emissions when you enter them, which will determine into which of the existing categories within these methods (the equivalent of the posts and sub-posts within the Bilan Carbone® method) the emissions will be broken down. The control mode applies to all the exports you have selected. Depending on the control mode selected, the characterizations available for the different sources of emissions vary. For more details on the control modes, please consult the methodological guides for the methods in question. We strongly recommend that you use the \"Operational Control\" control mode, which is by far the most common.",
         "duplicationOptions": "Duplication options",
         "duplicationOptionsDescription": "When duplicating a study, you can choose to invite the same team members and contributors from the original study to the new one. This helps maintain collaboration continuity.",
         "close": "Close"
@@ -583,7 +645,7 @@
         "proceed": "Confirm changes"
       },
       "exports": "Exports",
-      "control": "Control mode",
+      "control": "Exports' Control mode",
       "emissionSourceTagFamily": "Family",
       "emissionSourceTags": "Tags",
       "emissionSourceTagLabel": "Label",
@@ -607,17 +669,19 @@
         "continue": "Continue",
         "cancel": "Cancel"
       },
-      "begesActivationWarning": {
-        "title": "BEGES Export Activation",
-        "description": "You are about to activate the regulatory BEGES export. When this export is enabled, you must fill in an additional \"Characterization\" field in certain emission sources. As a result, <warning>activating this export will invalidate the affected emission sources</warning>. Do you want to continue?",
+      "exportActivationWarning": {
+        "title": "{type} Export Activation",
+        "description": "You are about to activate the regulatory {type} export. When this export is enabled, you must fill in additionals fields ({fields}) in certain emission sources. As a result, <warning>activating this export will invalidate the affected emission sources</warning>. Do you want to continue?",
+        "finalClientDescription": "The GHG Protocol distinguishes between the use of a product sold by the end customer and that of a third party. Both characterizations are now available within the Usage section. By default, all your emission sources have been assigned to end-customer use.",
         "continue": "Continue",
         "cancel": "Cancel"
       },
-      "begesDeactivationWarning": {
-        "title": "BEGES Export Deactivation",
-        "description": "You are about to deactivate the regulatory BEGES export. <warning>Deactivating this export will result in the loss of all characterizations entered in the emission sources</warning>. Do you want to continue?",
+      "exportDeactivationWarning": {
+        "title": "{type} Export Deactivation",
+        "description": "You are about to deactivate the regulatory {type} export. <warning>Deactivating this export will result in the loss of data entered in some emission sources fields ({fields}) {additionnalInfos}</warning>. Do you want to continue?",
         "continue": "Continue",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "ghgpDeactivationAdditionnalInfos": "and market based emission factor will be removed from emission sources"
       },
       "family": {
         "title": "Tags family",
@@ -657,7 +721,7 @@
           "replicate": "Change the overall organisation"
         }
       },
-      "information": "For more information on this section, you can refer to this documentation: "
+      "information": "For more information on this section, you can refer to this documentation: <link></link>"
     },
     "results": {
       "type": "Type",
@@ -670,12 +734,12 @@
       "downloadReport": "Download report",
       "downloadPDF": "Download the summary",
       "downloadingPDF": "Downloading (at least 15 seconds)...",
-      "value": "Emissions ({unit})",
       "emissions": "Emissions",
       "uncertainty": "Uncertainty",
       "emissionSources": "Number of emission sources",
-      "bilanCarbone": "Résultats Bilan Carbone®",
-      "beges": "Résultats BEGES",
+      "bilanCarbone": "Bilan Carbone® Results",
+      "beges": "BEGES Results",
+      "ghgp": "GHG-P ",
       "withDependencies": "With dependencies",
       "withoutDependencies": "Without dependencies",
       "dependencyIntensity": "Carbon intensities in dependency",
@@ -685,6 +749,9 @@
       "nonSpeMonetaryRatioEmissions": "resulting from unspecific monetary ratios",
       "ofWhich": "of which",
       "coming": "coming",
+      "confidenceIntervalTitle": "95% confidence interval",
+      "ges": "GHG emissions ({unit})",
+      "gesTag": "GHG emissions by tag ({unit})",
       "units": {
         "K": "kgCO₂e",
         "T": "tCO₂e"
@@ -699,30 +766,44 @@
       "tagGlossaryDescription": "Emission sources can have multiple tags, so these are counted in each tag on this graph. It is therefore normal that you have a larger total here than in your study.",
       "info": "",
       "difference": {
-        "button": "Explanation of the differences between Bilan Carbone® and Beges export",
+        "button": "Explanation of the differences between Bilan Carbone® and {type}",
         "modalTitle": "Explanation of the difference between the results",
         "dependanceTitle": "Dependent use",
+        "dependanceGHGTitle": "Dependent use",
         "wasteTitle": "Waste treatment",
         "missingCaractTitle": "Missing characterizations",
+        "immobilisationTitle": "Capital goods accounting",
+        "otherEmissionsAvalTitle": "Downstream emissions unaccounted for in GHG Protocol (visitors and clients travels)",
+        "otherEmissionsAmontTitle": "Upstream emissions unaccounted for in GHG Protocol",
+        "otherGasTitle": "Some greenhouse gases are not accounted for in GHG Protocol",
+        "marketBasedTitle": "The \"location-based\" emissions are not equal to the \"market-based\" emissions",
+        "fabricationTitle": "Vehicles manifacturing",
         "tableHeaders": {
           "emissionSource": "Emission source",
           "post": "Post",
           "bilanCarbone": "Bilan Carbone®",
           "beges": "BEGES",
+          "ghgp": "GHG-P",
           "difference": "Difference"
         },
-        "dependance": "The regulatory GHG balance does not include the sub-item \"Dependent use\", as the concept of dependence does not exist in the BEGES-R method",
-        "goToSubPost": "Go to sub-post",
+        "dependance": "The regulatory GHG assessment does not include the subcategory \"Dependent use\", as the concept of dependence does not exist in this method.",
+        "dependanceGHG": "The GHG Protocol does not include the subcategory \"Dependent use\", as the concept of dependence does not exist in this method.",
+        "goToSubPost": "Go to subcategory",
         "waste": "The regulatory Bilan GES includes all emissions due to waste recycling in the waste emitter's balance sheet, whereas the Bilan Carbone® only includes the weight of waste collection and transport in the waste emitter's balance sheet. Thus, the emission factors with a value of 41 kgCO₂e/t within the tool are those used for the Bilan Carbone®, while the values incorporating the regeneration of materials (the recycling process, for the emission factors \"Recycling\" or \"Average end of life\") are used for the BEGES-R. The emission factor displayed on the BC+ is only that used for the Bilan Carbone®, but the BEGES-R export calculations are made using the ADEME emission factors linked to recycling or average end-of-life. Here are the sources of emissions related to this topic: ",
-        "missingCaract1": "Uncharacterized emission sources are not accounted for in the BEGES-R, which leads to undue differences with the Bilan Carbone® if you have chosen to visualize unvalidated emission sources.",
+        "missingCaract1": "Uncharacterized emission sources are not accounted for in the {type}, which leads to undue differences with the Bilan Carbone® if you have chosen to visualize unvalidated emission sources.",
         "missingCaract2": "You have not entered the characterizations for all the emission sources in your study. Please edit and add the characterization for the following emission sources:",
+        "immobilisation1": "The difference shown here stems from the fact that, according to GHG Protocol, and unlike in the Bilan Carbone®, organizations should not depreciate, discount, or amortize the emissions from the production of capital goods over time. The cradle-to-gate emissions are therefore accounted for in the year of acquisition.",
+        "otherEmissionsAval": "Travels from visitors or clients may be accounted for according to GHG Protocol. If those emissions are calculated, not operated ones will not be accounted for in this format, due to the lack of a suitable subcategory.",
+        "otherEmissionsAmont": "Some emissions are not accounted for in the GHG Protocol format, especially if the activites concerned are not directly operated by the organization. This happens for instance with the transport and distribution losses for electricity, or the original emissions that stem from building the power capacities. In the regulatory GHG assessment format, these emissions are accounted for in subcategory 6.1, but GHG Protocol lacks a suitable subcategory for these emissions.",
+        "otherGas1": "Only greenhouse gases that are part of the Kyoto Protocol agreement (CO2, CH4, N2O, HFC, PFC, SF6) are accounted for in the GHG Protocol. Other GHG emissions (contrails, NF3, other air conditioning or industrial gases) are accounted for in the Bilan Carbone®, but not in the GHG Protocol.",
+        "marketBased": "Part of the differences between market-based GHG Protocol and Bilan Carbone® simply stems from the difference between the results of the <green>location-based method</green> and the <purple>market-based method</purple>.",
+        "fabrication": "You used emission factors that depends on the distance travelled (passenger.km, ...) for operated vehicles. Manufacturing emissions of these vehicles will not be accounted for in GHG Protocol. You should use the Capital goods category for vehicles that were acquired inside the temporal boundary of the assessment.",
         "additionalMissing": "+ {count} other emission {count, plural,  =1 {source} other {sources}}",
         "unexplainedDifference": "Some differences can not be explained. Please, contact us at the <support>support</support>."
       },
       "noData": "No data to display",
       "uncertainties": {
         "title": "Uncertainties analytics",
-        "confidenceIntervalTitle": "95% confidence interval",
         "gaugeTitle": "qualitative uncertainty gauge",
         "uncertainPostsTitle": "Posts with the greatest uncertainties within the Bilan Carbone®",
         "veryWeak": "Very weak",
@@ -798,6 +879,7 @@
       "emissionQuality": "EF quality",
       "emissionSource": "EF source",
       "emissionUnit": "EF unit",
+      "emissionBase": "EF base",
       "emissionValue": "EF value",
       "no": "No",
       "noFactor": "No emission factor",
@@ -808,6 +890,7 @@
       "sourceDeprecation": "Depreciation duration (years)",
       "sourceDuration": "Duration (years)",
       "sourceName": "Emission source name",
+      "sourceConstructionYear": "Acquisition year",
       "sourceQuality": "Emission source quality",
       "sourceSurface": "Surface (ha)",
       "sourceUnit": "Emission source unit",
@@ -911,7 +994,12 @@
           "description": "The National Low-Carbon Strategy (SNBC) is France's roadmap to fight climate change, defining a GHG reduction trajectory until 2030 and 2050 targets. Abroad, we advise relying on local strategies if they exist.",
           "methodLabel": "Methods",
           "general": "General",
-          "sectoral": "Sectoral",
+          "energy": "Energy",
+          "industry": "Industry",
+          "waste": "Waste",
+          "buildings": "Buildings",
+          "agriculture": "Agriculture",
+          "transportation": "Transportation",
           "placeholder": "No trajectory selected"
         },
         "sbtiCard": {
@@ -933,7 +1021,13 @@
           "actionBasedTrajectory": "Action-based trajectory",
           "unvalidatedSourcesWarning": "{count, plural, =1 {One emission source is not validated in the current study and is therefore not taken into account in the trajectory calculations.} other {{count} emission sources are not validated in the current study and are therefore not taken into account in the trajectory calculations.}}",
           "unvalidatedSourcesLinkedStudiesWarning": "{count, plural, =1 {One emission source is not validated in the following past study:} other {{count} emission sources are not validated in the following past studies:}}",
-          "unvalidatedSourcesLinkedStudyCount": " ({count, plural, =1 {1 unvalidated source} other {{count} unvalidated sources}})"
+          "unvalidatedSourcesLinkedStudyCount": " ({count, plural, =1 {1 unvalidated source} other {{count} unvalidated sources}})",
+          "yearRangeLabel": "Visualization period",
+          "sbtiSnbc": "SBTI/SNBC Trajectories",
+          "custom": "My custom Trajectories",
+          "previousTrajectories": "Reference trajectories",
+          "currentTrajectories": "Current trajectories",
+          "failedTrajectories": "The following trajectories cannot be displayed correctly in the future because you have already consumed the entire carbon budget provided by these:"
         },
         "linkedStudies": {
           "linked": "Linked studies",
@@ -1025,38 +1119,75 @@
           "15": "1.5°C aligned",
           "wb2c": "WB2C (Well below 2 degrees)"
         },
+        "snbcType": {
+          "title": "SNBC trajectory type",
+          "generale": "General",
+          "sectorielle": "Sectoral"
+        },
+        "sectorAllocation": {
+          "title": "Sector Allocation",
+          "description": "Define the emission percentage per sector. The rest will be allocated to the general SNBC trajectory."
+        },
+        "sectors": {
+          "energy": "Energy",
+          "industry": "Industry",
+          "waste": "Waste",
+          "buildings": "Buildings",
+          "agriculture": "Agriculture",
+          "transportation": "Transportation",
+          "remainingGeneral": "Remaining general emissions",
+          "errorOverLimit": "Total cannot exceed 100%",
+          "placeholder": "0-100"
+        },
         "selectedTrajectory": {
           "SBTI_15": "I follow the SBTi reference trajectory",
           "SBTI_WB2C": "I follow the SBTi reference trajectory",
+          "SNBC_GENERAL": "I follow the SNBC reference trajectory",
+          "SNBC_SECTORAL": "I follow the SNBC reference trajectory",
           "CUSTOM": "I follow my own trajectory"
         },
         "name": "My trajectory name",
         "namePlaceholder": "Give your trajectory a name",
         "description": "My trajectory description",
         "descriptionPlaceholder": "Describe your trajectory",
-        "referenceYear": {
-          "label": "Trajectory Start Year (optional)"
-        },
+        "referenceYear": "Reference year",
         "objectives": {
           "title": "Reduction objectives",
-          "sbtiDescription": "These reduction objectives are linked to the SBTi reference trajectory and are predefined. You can add intermediate objectives in the \"My reduction objectives\" section",
+          "sbtiDescription": "These reduction objectives are linked to the SBTi reference trajectory and are predefined. You can add intermediate objectives in the \"My reduction objectives\" section.",
+          "snbcDescription": "These reduction objectives are linked to the SNBC reference trajectory and are predefined. You can add intermediate objectives in the \"My reduction objectives\" section.",
           "global": "GLOBAL OBJECTIVE",
           "horizon2030": "2030 Horizon",
           "horizon2050": "2050 Horizon",
           "year": "Objective year",
           "yearPlaceholder": "Choose a year",
           "reductionRate": "Annual reduction percentage",
-          "reductionRatePlaceholder": "Give a reduction % (e.g., 2.5)"
+          "reductionRatePlaceholder": "Give a reduction % (e.g., 2.5)",
+          "referenceRate": "Reference rate",
+          "correctedRate": "Corrected rate",
+          "overshootInfo": "Rate adjusted to compensate for overshoot"
         },
         "validation": {
           "required": "Required field",
           "objectiveBothRequired": "Both year and reduction rate are required",
           "atLeastOneObjective": "At least one complete objective is required for custom trajectories"
+        },
+        "glossary": {
+          "title": "Glossary",
+          "close": "Close",
+          "referenceYear": "Reference Year",
+          "referenceYearDescription": "The reference year corresponds to the starting year of your reduction trajectory. This year serves as the starting point for calculating reduction objectives. For SBTi and SNBC trajectories, the reference year is predefined and cannot be modified. For custom trajectories, you can freely choose this year.",
+          "referenceYearMethod": "{method} Reference Year",
+          "referenceYearMethodDescription": "You cannot modify the reference date for a {method} trajectory as it is dictated by the method.",
+          "referenceYearMethodLink": "For more info, click here.",
+          "correctedRate": "Year N Rate Calculation",
+          "correctedRateDescription": "The Year N rate takes into account your desired rate as well as emissions between your reference year and your study year. If your emissions did not follow your desired rate, we calculate the excess emissions (overshoot) and apply a new rate to allow you to catch up on the excess emissions."
         }
       },
       "objectives": {
         "title": "Reduction objectives",
         "custom": "Custom",
+        "snbcGeneral": "SNBC General",
+        "snbcSectoral": "SNBC Sectoral",
         "objectiveNumber": "Objective {number}",
         "search": "Search for a trajectory",
         "add": "Add a trajectory",
@@ -1066,6 +1197,9 @@
           "startYear": "Start year",
           "targetYear": "Target year",
           "reductionRate": "Annual reduction",
+          "referenceYear": "Reference year",
+          "correctedRate": "Corrected annual reduction",
+          "referenceReduction": "Reference annual reduction",
           "actions": "Actions"
         },
         "cancel": "Cancel",
@@ -1081,6 +1215,12 @@
           "title": "Add a trajectory or reduction objectives",
           "description": "You have already created a reference trajectory but want to add others to test different hypotheses and ambition levels? You can create new trajectories, or add intermediate objectives for more detailed tracking without losing sight of the final goal!",
           "detailedInfo": "When you enter your first top-down trajectory, the associated objectives for 2030 and 2050 will be recorded in this table. You can then detail these objectives by adding additional intermediate targets, which can apply either to all categories and sites of the Carbon Assessment® (in which case the reductions will be calculated automatically to maintain consistency with the 2030 and 2050 objectives), or to specific categories and sites. You can also enter your projected revenue growth to obtain annual reductions that account for this growth. Finally, you can add other top-down trajectories, particularly to visualize different trajectories on the previous page before choosing the one you will follow."
+        },
+        "glossary": {
+          "label": "Glossary",
+          "title": "titre gabriel",
+          "description": "description gabriel",
+          "close": "Close"
         }
       },
       "actions": {
@@ -1204,14 +1344,16 @@
       }
     },
     "engagementActions": {
-      "title": "Carries Actions",
+      "title": "Engagement actions summary",
+      "export": "Export to CSV",
       "table": {
         "name": "Name",
         "description": "Description",
         "steps": "Steps",
         "target": "Target",
         "phase": "Phase",
-        "date": "Date"
+        "date": "Date",
+        "sites": "Sites"
       },
       "modal": {
         "add": "Add an action",
@@ -1226,7 +1368,10 @@
         "target": "Targets",
         "phase": "Mobilization phase",
         "date": "Date",
-        "validate": "Validate"
+        "sites": "Sites",
+        "validate": "Validate",
+        "allSites": "All Sites",
+        "addCustomTarget": "Add a custom target"
       },
       "targets": {
         "TEAM_PROJECT": "Project team",
@@ -1238,13 +1383,12 @@
         "OTHERS_EXTERNAL": "Others external partners"
       },
       "steps": {
-        "AT_LAUNCH_OF_APPROACH": "At the launch of the approach",
-        "AT_LAUNCH_OF_DATA_COLLECTION": "At the launch of data collection",
-        "DURING_DATA_COLLECTION": "During data collection",
-        "BEFORE_RESULTS_RESTITUTION": "Before results restitution",
-        "AT_LAUNCH_OF_TRANSITION_PLAN_CONSTRUCTION": "At the launch of transition plan construction",
-        "DURING_TRANSITION_PLAN_CONSTRUCTION": "During transition plan construction",
-        "IN_SUMMARY_OF_APPROACH": "In summary of the approach"
+        "AT_LAUNCH_OF_APPROACH": "At the launch of the approach of carbon footprint",
+        "AT_LAUNCH_OF_DATA_COLLECTION": "At the launch of data collection ",
+        "FOR_GES_PROFILE_CONSTRUCTION": "For GES profile construction",
+        "FOR_TRANSITION_PLAN_CONSTRUCTION": "For transition plan construction",
+        "IN_SUMMARY_OF_APPROACH": "In summary approach",
+        "FOR_APPROACH_EVALUATION": "For approach evaluation"
       },
       "phases": {
         "AwarnessAndOutreach": "Awareness and outreach",
@@ -1267,7 +1411,7 @@
       "IntrantsServices": "Service inputs",
       "DechetsDirects": "Direct waste",
       "Fret": "Freight",
-      "Deplacements": "Travel",
+      "Deplacements": "Travel & Commuting",
       "Immobilisations": "Fixed assets",
       "UtilisationEtDependance": "Use and dependence",
       "FinDeVie": "End of life",
@@ -1390,6 +1534,8 @@
         "DeplacementsDomicileTravail": "Commuting to and from work for employees working within the organization, including temporary staff, subcontractors and contractors.",
         "DeplacementsProfessionnels": "Business travel by employees in the course of their professional activity, whether or not the organization owns the means of transport, and whether or not the travel takes place during working hours.",
         "DeplacementsVisiteurs": "Customers, users, beneficiaries...",
+        "IntrantsServices": "This post covers all services and services provisions that the organization benefits from, aswell as its digital usages. Services are often accounted for either directly through the informations disclosed by the providers, either through spend-based emission factors.",
+        "Energies": "This post covers all energy consumptions from stationnary sources : facilities, machines, etc. Emissions arising from energy consumption in facilities or other goods <b>used</b> by the organization shall be included in a Bilan Carbone®, whether those are owned or loaned. Energy consumption from vehicles or other mobile sources (fossil or organic fuels, electricity, ...) should be accounted for in the posts Freight and Travels rather than Energy.",
         "CombustiblesFossiles": "For heating, industrial processes, electricity or steam production.",
         "CombustiblesOrganiques": "For heating, industrial processes, electricity or steam production.",
         "ReseauxDeChaleurEtDeVapeur": "For heating and industrial processes.",
@@ -1444,6 +1590,14 @@
       "partType": "Part type",
       "comment": "Comments",
       "clear": "Clear value",
+      "base": "Scope 2 approach (GHG Protocol)",
+      "baseModal": {
+        "title": "GHG-P exports information",
+        "description": "You must indicate whether your EF applies for the <b><green>location-based</b></green> method or the <b><purple>market-based method</b></purple>. This distinction will only apply if your EF is used within the Electricity subcategory (Energy category). As a reminder:",
+        "location": "The <b><green>location-based method</b></green> uses grid-average emission factor.",
+        "market": "The <b><purple>market-based method</b></purple> uses emission factors derived from contractual agreements such as Guarantees of Origin (GOs), Renewable Energy Certificates in the US, Power Purchase Agreements (PPAs, VPPAs, ...), and residual mixes emission factor for all the consumption which is not covered by the aforementioned contractual agreements.",
+        "conclusion": "It is mandatory to use the location-based method for Bilan Carbone® and the regulatory GHG assessment. ISO 14064-1 allows the use of both methods, while the GHG Protocol requires double counting of electricity consumption, once with each method."
+      },
       "glossary": {
         "title": "Glossary",
         "detailedGES": "Breakdown of GHG",
@@ -1490,6 +1644,7 @@
       "BaseEmpreinte": "Footprint Base",
       "NegaOctet": "NegaOctet",
       "Legifrance": "Légifrance",
+      "AIB": "AIB",
       "displayArchived": "Display archived factors",
       "goTo": "Go to page",
       "items": "Items per page",
@@ -1497,6 +1652,7 @@
       "location": "Location",
       "locationSearch": "Search by location",
       "locationSearchPlaceholder": "e.g. Europe",
+      "base": "Scope 2 approach",
       "Manual": "Manual",
       "edit": "Edit emission factor",
       "delete": "Delete emission factor",
@@ -1521,6 +1677,7 @@
         "baseEmpreinte": "Base Empreinte logo",
         "legifrance": "Légifrance logo",
         "negaOctet": "NegaOctet logo",
+        "aib": "Association of Issuing Bodies logo",
         "manual": "Manual"
       },
       "post": "Posts",
@@ -1575,6 +1732,16 @@
       "AutresEmissionsLieesALaConsommationDElectriciteBarrage": "Other emissions related to electricity consumption (dam?)",
       "Pertes": "Losses"
     },
+    "base": {
+      "LocationBased": "Location-based",
+      "MarketBased": "Market-based",
+      "difference": {
+        "warning": "The kWh accounted for through the location-based method and the market-based method are different.",
+        "explanation": "Explanation",
+        "title": "The kWh accounted for through the <green>location-based method</green> and the <purple>market-based method</purple> are different.",
+        "description": "According to GHG Protocol, organizations shall account for their Scope 2 emissions <b>once using the <green>location-based method (LBM)</green> and once using the <purple>market-based (market-based method, MBM)</purple></b>. To do this, you simply need to account for your kWh of energy consumed twice, once using <b><green>location-based</green></b> emission factors, and a second time using <b><purple>market-based</purple></b> emission factors. You must account for the same number of kWh in both methods."
+      }
+    },
     "missingQualities": {
       "title": "Add quality for manual emission factors",
       "body": "Hello, according to our information, you added emission factors manually when it was still impossible to enter their uncertainty. By default, for these emission factors, the qualities are considered to be \"Very good\", which corresponds to zero uncertainty on the emission factor. Now that this bug has been resolved, we strongly recommend that you update the emission factors concerned, which are as follows: ",
@@ -1610,7 +1777,8 @@
   "environment": {
     "BC": "BC+ 2.0",
     "CUT": "Count",
-    "TILT": "Tilt"
+    "TILT": "Tilt",
+    "CLICKSON": "ClicksOn"
   },
   "source": {
     "CRON": "Cron",
@@ -2004,6 +2172,7 @@
       "validate": "Validated",
       "name": "Name",
       "caracterisation": "Characterization",
+      "constructionYear": "Acquisition year",
       "emissionFactor": "Emission factor",
       "activity": "Activity",
       "value": "Activity value",
@@ -2155,10 +2324,17 @@
     "FormationStudy": "Formation study",
     "TransitionPlan": "Transition plan",
     "source": "Sources",
+    "TiltSimplified": "TILT Simplified",
     "environment": "Environments",
     "true": "Activated",
     "false": "Deactivated",
     "Not authorized": "You are not allowed to do this action"
+  },
+  "tiltSimplified": {
+    "comingSoon": {
+      "title": "Coming Soon",
+      "message": "The simplified footprint calculator for associations is currently under construction and will be available in a few months. Thank you for your patience!"
+    }
   },
   "feedback": {
     "title": "Give your opinion about BC+ !",
@@ -2215,6 +2391,18 @@
     "studyYearMustBeBeforeCurrent": "The study year must be before the current study year",
     "studyYearMustBeAfterLinkedStudies": "Cannot set a date earlier than your linked studies in your transition plan",
     "maxTwoDecimals": "The reduction rate must have at most 2 decimal places",
-    "referenceYearMustBeBeforeOrEqualToStudyYear": "Reference year must be less than or equal to the study year"
+    "referenceYearMustBeBeforeOrEqualToStudyYear": "Reference year must be less than or equal to the study year",
+    "sectorPercentagesTotalExceeds100": "Total sector percentages cannot exceed 100%",
+    "sectorPercentagesRequired": "Sector percentages are required"
+  },
+  "documentationUrl": {
+    "dependencyMatrix": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/2-scope-of-the-approach/2.5-identification-of-transition-risks-and-opportunities",
+    "flows": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/2-scope-of-the-approach/2.4-operational-boundary",
+    "actionRelevance": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/5-transition-plan/5.2-building-the-action-plan#characterise-the-relevance-of-the-action",
+    "dataType": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/4-accounting/4.2-method-for-collecting-activity-data",
+    "maturity": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/1-framing-the-approach/1.1-define-your-bilan-carbone-r-maturity-level",
+    "monetaryRatio": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/4-accounting/4.3-method-for-selecting-emission-factors#efs-in-monetary-ratios",
+    "dependencyAndResponsability": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/annexes/annexes/annex-1-key-accounting-principles-of-bilan-carbone-r#use-and-dependency",
+    "uncertainties": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/4-accounting/4.4-method-for-estimating-uncertainties/4.4.2-how-to-determine-them"
   }
 }

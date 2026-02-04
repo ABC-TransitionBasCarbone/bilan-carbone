@@ -2,21 +2,31 @@
 
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import { FullStudy } from '@/db/study'
-import { EngagementAction } from '@prisma/client'
+import { EngagementActionWithSites } from '@/services/serverFunctions/study'
+import { downloadEngagementActionsCSV } from '@/services/study'
+import DownloadIcon from '@mui/icons-material/Download'
 import { useTranslations } from 'next-intl'
 import Block from '../base/Block'
+import Button from '../base/Button'
 import EngagementActions from '../study/engagement/EngagementActions'
 import SelectStudySite from '../study/site/SelectStudySite'
 
 interface Props {
   study: FullStudy
-  actions: EngagementAction[]
+  actions: EngagementActionWithSites[]
 }
 
 const EngagementActionsPage = ({ study, actions }: Props) => {
   const t = useTranslations('study.engagementActions')
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
+  const tTargets = useTranslations('study.engagementActions.targets')
+  const tSteps = useTranslations('study.engagementActions.steps')
+  const tPhases = useTranslations('study.engagementActions.phases')
+
+  const handleExportCSV = () => {
+    downloadEngagementActionsCSV(actions, study.name, t, tTargets, tSteps, tPhases)
+  }
 
   return (
     <>
@@ -33,9 +43,20 @@ const EngagementActionsPage = ({ study, actions }: Props) => {
           { label: study.name, link: `/etudes/${study.id}` },
         ].filter((link) => link !== undefined)}
       />
-      <Block title={t('title')} as="h2" rightComponent={<SelectStudySite sites={study.sites} siteSelectionDisabled />}>
+      <Block
+        title={t('title')}
+        as="h2"
+        rightComponent={
+          <div className="flex gapped1 align-center">
+            <Button onClick={handleExportCSV} variant="outlined" isLarge>
+              <DownloadIcon className="mr-2" /> {t('export')}
+            </Button>
+            <SelectStudySite sites={study.sites} siteSelectionDisabled />
+          </div>
+        }
+      >
         <div className="flex-col gapped2">
-          <EngagementActions actions={actions} studyId={study.id} />
+          <EngagementActions actions={actions} study={study} />
         </div>
       </Block>
     </>

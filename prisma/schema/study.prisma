@@ -44,6 +44,8 @@ enum EmissionSourceCaracterisation {
   NotHeldSupported
   NotHeldNotSupported
   UsedByIntermediary
+  OperatedCAS
+  HeldCAS
 }
 
 enum DayOfWeek {
@@ -151,7 +153,7 @@ model Study {
   level                Level
   simplified           Boolean         @default(false)
   resultsUnit          StudyResultUnit @default(T) @map("results_unit")
-  exports              StudyExport[]
+  exports              StudyExport?
 
   organizationVersion   OrganizationVersion @relation(fields: [organizationVersionId], references: [id])
   organizationVersionId String              @map("organization_version_id")
@@ -180,15 +182,16 @@ model Study {
 }
 
 model StudyExport {
+  id      String      @id @default(uuid())
   study   Study       @relation(fields: [studyId], references: [id])
   studyId String      @map("study_id")
-  type    Export
-  control ControlMode
+  types   Export[]    @default([])
+  control ControlMode @default(Operational)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-  @@id([studyId, type])
+  @@unique([studyId])
   @@map("study_exports")
 }
 
@@ -235,9 +238,10 @@ model StudyEmissionSource {
   study   Study  @relation(fields: [studyId], references: [id])
   studyId String @map("study_id")
 
-  subPost         SubPost                        @map("sub_post")
-  name            String
-  caracterisation EmissionSourceCaracterisation?
+  subPost          SubPost                        @map("sub_post")
+  name             String
+  caracterisation  EmissionSourceCaracterisation?
+  constructionYear DateTime?                      @map("construction_year")
 
   emissionFactorId String?         @map("emission_factor_id")
   emissionFactor   EmissionFactor? @relation(fields: [emissionFactorId], references: [id])
@@ -304,6 +308,8 @@ model ExportRule {
   notHeldSupported        String? @map("not_held_supported")
   notHeldNotSupported     String? @map("not_held_not_supported")
   usedByIntermediary      String? @map("used_by_intermediary")
+  operatedCAS             String? @map("operated_cas")
+  heldCAS                 String? @map("held_cas")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -362,6 +368,8 @@ model StudySite {
 
   studyAnswers Answer[]
 
+  engagementActions EngagementAction[]
+
   @@unique([studyId, siteId])
   @@map("study_sites")
 }
@@ -407,15 +415,17 @@ model EngagementAction {
 
   name String
 
-  date   DateTime
-  target String
-  steps  String
-  phase  EngagementPhase
+  date    DateTime
+  targets String[]
+  steps   String
+  phase   EngagementPhase
 
   description String
 
   studyId String @map("study_id")
   study   Study  @relation(fields: [studyId], references: [id])
+
+  sites StudySite[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")

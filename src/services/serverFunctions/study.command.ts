@@ -39,11 +39,8 @@ export const SitesCommandValidation = z.object({
 export type SitesCommand = z.infer<typeof SitesCommandValidation>
 
 export const StudyExportsCommandValidation = z.object({
-  exports: z.object({
-    [Export.Beges]: z.enum(ControlMode).or(z.literal(false)),
-    [Export.GHGP]: z.enum(ControlMode).or(z.literal(false)),
-    [Export.ISO14069]: z.enum(ControlMode).or(z.literal(false)),
-  }),
+  exports: z.array(z.enum(Export)),
+  controlMode: z.enum(ControlMode).nullable().optional(),
 })
 
 export type StudyExportsCommand = z.infer<typeof StudyExportsCommandValidation>
@@ -211,10 +208,11 @@ export const AddEngagementActionCommandValidation = z.object({
   studyId: z.uuid(),
   name: z.string().min(1),
   date: dateValidation(),
-  target: z.string(),
+  targets: z.array(z.string()).min(1),
   steps: z.string(),
   phase: z.enum(EngagementPhase),
   description: z.string(),
+  sites: z.array(z.uuid()).min(1),
 })
 
 export type AddEngagementActionCommand = z.infer<typeof AddEngagementActionCommandValidation>
