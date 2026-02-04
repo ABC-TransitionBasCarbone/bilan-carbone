@@ -22,7 +22,6 @@ import {
   changeStudyDates,
   changeStudyExports,
   changeStudySites,
-  duplicateSiteAndEmissionSources,
   hasActivityData,
 } from '@/services/serverFunctions/study'
 import {
@@ -47,7 +46,6 @@ import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm, UseFormReturn, useWatch } from 'react-hook-form'
 import DeleteStudySiteModal from './DeleteStudySiteModal'
-import { DuplicateFormData } from './DuplicateSiteModal'
 import ReplicateSitesChangesModal from './ReplicateSitesChangesModal'
 import StudyExportsForm from './StudyExportsForm'
 import styles from './StudyPerimeter.module.css'
@@ -255,29 +253,29 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
     }
   }, [exportsForm, exportsWatch, controlWatch, updateStudyExport])
 
-  const handleDuplicateSite = async (data: DuplicateFormData) => {
-    if (!duplicatingSiteId) {
-      return
-    }
+  // const handleDuplicateSite = async (data: DuplicateFormData) => {
+  //   if (!duplicatingSiteId) {
+  //     return
+  //   }
 
-    await callServerFunction(
-      () =>
-        duplicateSiteAndEmissionSources({
-          sourceSiteId: duplicatingSiteId,
-          targetSiteIds: data.targetSiteIds,
-          newSitesCount: data.newSitesCount,
-          organizationId: organizationVersion.organization.id,
-          studyId: study.id,
-          fieldsToDuplicate: data.fieldsToDuplicate,
-        }),
-      {
-        onSuccess: () => {
-          setDuplicatingSiteId(null)
-          router.refresh()
-        },
-      },
-    )
-  }
+  //   await callServerFunction(
+  //     () =>
+  //       duplicateSiteAndEmissionSources({
+  //         sourceSiteId: duplicatingSiteId,
+  //         targetSiteIds: data.targetSiteIds,
+  //         newSitesCount: data.newSitesCount,
+  //         organizationId: organizationVersion.organization.id,
+  //         studyId: study.id,
+  //         fieldsToDuplicate: data.fieldsToDuplicate,
+  //       }),
+  //     {
+  //       onSuccess: () => {
+  //         setDuplicatingSiteId(null)
+  //         router.refresh()
+  //       },
+  //     },
+  //   )
+  // }
 
   const Help = (name: string) => (
     <HelpIcon className="ml-4" onClick={() => setGlossary(name)} label={tGlossary('title')} />
@@ -427,6 +425,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
         t={t}
         disabled={!hasEditionRole}
       />
+
       <DeleteStudySiteModal
         open={open}
         confirmDeletion={updateStudySites}
