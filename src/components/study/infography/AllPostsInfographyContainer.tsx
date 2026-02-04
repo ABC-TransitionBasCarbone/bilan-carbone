@@ -1,16 +1,22 @@
+'use client'
+
 import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import { typeDynamicComponent } from '@/environments/core/utils/dynamicUtils'
-import AllPostsInfographySimplified from '@/environments/simplified/study/infography/AllPostsInfography'
-import AllPostsInfographyTilt from '@/environments/tilt/study/infography/AllPostsInfography'
 import { ClicksonPost, CutPost, TiltPost } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { Environment } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
+import dynamic from 'next/dynamic'
 import { useEffect, useMemo, useState } from 'react'
-import AllPostsInfography from './AllPostsInfography'
+
+const AllPostsInfography = dynamic(() => import('./AllPostsInfography'))
+const AllPostsInfographySimplified = dynamic(
+  () => import('@/environments/simplified/study/infography/AllPostsInfography'),
+)
+const AllPostsInfographyTilt = dynamic(() => import('@/environments/tilt/study/infography/AllPostsInfography'))
 
 interface Props {
   study: FullStudy

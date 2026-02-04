@@ -1,14 +1,16 @@
 'use client'
 
-import SitesBC from '@/environments/base/organization/Sites'
-import SitesClickson from '@/environments/clickson/organization/Sites'
-import SitesCut from '@/environments/cut/organization/Sites'
-import SitesTilt from '@/environments/tilt/organization/Sites'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { Environment, SiteCAUnit } from '@prisma/client'
+import dynamic from 'next/dynamic'
 import { UseFormReturn } from 'react-hook-form'
 import DynamicComponent from '../utils/DynamicComponent'
 import { typeDynamicComponent } from '../utils/dynamicUtils'
+
+const SitesCut = dynamic(() => import('@/environments/cut/organization/Sites'))
+const SitesTilt = dynamic(() => import('@/environments/tilt/organization/Sites'))
+const SitesClickson = dynamic(() => import('@/environments/clickson/organization/Sites'))
+const SitesBC = dynamic(() => import('@/environments/base/organization/Sites'))
 
 interface Props<T extends SitesCommand> {
   form: UseFormReturn<T>

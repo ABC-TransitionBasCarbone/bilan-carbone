@@ -3,6 +3,7 @@
 import theme from '@/environments/base/theme/theme'
 import clicksonTheme from '@/environments/clickson/theme/theme'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
+import { typeDynamicComponent } from '@/environments/core/utils/dynamicUtils'
 import cutTheme from '@/environments/cut/theme/theme'
 import tiltTheme from '@/environments/tilt/theme/theme'
 import { ThemeProvider } from '@mui/material'
@@ -17,11 +18,14 @@ interface Props {
 const DynamicTheme = ({ children, environment }: Props) => {
   return (
     <DynamicComponent
-      defaultComponent={{ component: ThemeProvider, props: { theme, children } }}
+      defaultComponent={typeDynamicComponent({ component: ThemeProvider, props: { theme, children } })}
       environmentComponents={{
-        [Environment.CUT]: { component: ThemeProvider, props: { theme: cutTheme, children } },
-        [Environment.TILT]: { component: ThemeProvider, props: { theme: tiltTheme, children } },
-        [Environment.CLICKSON]: { component: ThemeProvider, props: { theme: clicksonTheme, children } },
+        [Environment.CUT]: typeDynamicComponent({ component: ThemeProvider, props: { theme: cutTheme, children } }),
+        [Environment.TILT]: typeDynamicComponent({ component: ThemeProvider, props: { theme: tiltTheme, children } }),
+        [Environment.CLICKSON]: typeDynamicComponent({
+          component: ThemeProvider,
+          props: { theme: clicksonTheme, children },
+        }),
       }}
       environment={environment}
     />

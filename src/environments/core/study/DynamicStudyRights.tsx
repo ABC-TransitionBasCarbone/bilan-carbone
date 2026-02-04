@@ -1,13 +1,15 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
-import StudyRights from '@/environments/base/study/StudyRights'
-import StudyRightsClickson from '@/environments/clickson/study/StudyRightsClickson'
-import StudyRightsCut from '@/environments/cut/study/StudyRightsCut'
 import { EmissionFactorImportVersion, Environment, StudyRole } from '@prisma/client'
 import { UserSession } from 'next-auth'
+import dynamic from 'next/dynamic'
 import DynamicComponent from '../utils/DynamicComponent'
 import { typeDynamicComponent } from '../utils/dynamicUtils'
+
+const StudyRightsClickson = dynamic(() => import('@/environments/clickson/study/StudyRightsClickson'))
+const StudyRightsCut = dynamic(() => import('@/environments/cut/study/StudyRightsCut'))
+const StudyRights = dynamic(() => import('@/environments/base/study/StudyRights'))
 
 interface Props {
   user: UserSession

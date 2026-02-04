@@ -3,8 +3,6 @@
 import Block from '@/components/base/Block'
 import { getOrganizationVersionStudiesOrderedByStartDate } from '@/db/study'
 import { getUserApplicationSettings } from '@/db/user'
-import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import { typeDynamicComponent } from '@/environments/core/utils/dynamicUtils'
 import { canReadStudy } from '@/services/permissions/study'
 import { Environment } from '@prisma/client'
 import { UserSession } from 'next-auth'
@@ -35,33 +33,15 @@ const ResultsContainerForUser = async ({ user, mainStudyOrganizationVersionId }:
     <Block>
       {environment === Environment.CUT && <h2 className="pb2">{t('lastStudyTitle')}</h2>}
 
-      {mainStudy ? (
-        <DynamicComponent
-          environment={environment}
-          environmentComponents={{
-            [Environment.CLICKSON]: typeDynamicComponent({
-              component: StudyResultsContainerSummary,
-              props: {
-                user,
-                study: mainStudy,
-                studySite: 'all',
-                showTitle: true,
-                validatedOnly: settings.validatedEmissionSourcesOnly,
-              },
-            }),
-          }}
-          defaultComponent={typeDynamicComponent({
-            component: StudyResultsContainerSummary,
-            props: {
-              user,
-              study: mainStudy,
-              studySite: 'all',
-              showTitle: true,
-              validatedOnly: settings.validatedEmissionSourcesOnly,
-            },
-          })}
+      {mainStudy && (
+        <StudyResultsContainerSummary
+          user={user}
+          study={mainStudy}
+          studySite="all"
+          showTitle={true}
+          validatedOnly={settings.validatedEmissionSourcesOnly}
         />
-      ) : null}
+      )}
     </Block>
   )
 }
