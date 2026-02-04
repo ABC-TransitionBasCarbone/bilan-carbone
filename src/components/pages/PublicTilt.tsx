@@ -1,6 +1,5 @@
 'use client'
 import { defaultLocale, Locale, LocaleType } from '@/i18n/config'
-import { customRich } from '@/i18n/customRich'
 import { switchEnvironment } from '@/i18n/environment'
 import { getLocale, switchLocale } from '@/i18n/locale'
 import CloseIcon from '@mui/icons-material/Close'
@@ -14,8 +13,9 @@ import styles from './Public.module.css'
 
 interface Props {
   children: ReactNode
+  question: ReactNode
 }
-const PublicTiltPage = ({ children }: Props) => {
+const PublicTiltPage = ({ children, question }: Props) => {
   const t = useTranslations('login')
   const tLocale = useTranslations('locale')
   const [locale, setLocale] = useState<LocaleType>(defaultLocale)
@@ -43,7 +43,7 @@ const PublicTiltPage = ({ children }: Props) => {
           <CloseIcon />
           <Image src="/logos/tilt/logo_tilt.svg" alt="TILT logo" fill className="w50 hauto" />
         </div>
-        <p>{customRich(t, 'question', {}, Environment.TILT, { faq: styles.link, support: styles.link })}</p>
+        <p>{question}</p>
       </div>
       <div className={classNames(styles.loginForm, 'grow flex-col')}>
         <div className={classNames(styles.header, 'justify-between')}>

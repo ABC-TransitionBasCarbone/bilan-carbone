@@ -1,6 +1,5 @@
 'use client'
 import { defaultLocale, Locale, LocaleType } from '@/i18n/config'
-import { customRich } from '@/i18n/customRich'
 import { switchEnvironment } from '@/i18n/environment'
 import { getLocale, switchLocale } from '@/i18n/locale'
 import { Environment } from '@prisma/client'
@@ -13,8 +12,9 @@ import styles from './Public.module.css'
 
 interface Props {
   children: ReactNode
+  question: ReactNode
 }
-const PublicClicksonPage = ({ children }: Props) => {
+const PublicClicksonPage = ({ children, question }: Props) => {
   const t = useTranslations('login')
   const tLocale = useTranslations('locale')
   const [locale, setLocale] = useState<LocaleType>(defaultLocale)
@@ -52,7 +52,7 @@ const PublicClicksonPage = ({ children }: Props) => {
             className={classNames(styles.image, 'w50')}
           />
         </div>
-        <p>{customRich(t, 'question', {}, Environment.CLICKSON, { faq: styles.link, support: styles.link })}</p>
+        <p>{question}</p>
       </div>
       <div className={classNames(styles.loginForm, 'grow flex-col')}>
         <div className={classNames(styles.header, 'justify-between')}>
