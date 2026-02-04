@@ -17,13 +17,13 @@ ALTER TABLE "public"."emission_source_tag_families" ADD CONSTRAINT "emission_sou
 
 -- add default families
 INSERT INTO emission_source_tag_families (id, name, study_id)
-SELECT gen_random_uuid(), 'Preset', s.id
+SELECT gen_random_uuid(), 'défaut', s.id
 FROM studies s
 WHERE NOT EXISTS (
     SELECT 1
     FROM emission_source_tag_families f
     WHERE f.study_id = s.id
-      AND f.name = 'Preset'
+      AND f.name = 'défaut'
 );
 
 -- 2. Créer la famille "personnalisés" pour chaque étude

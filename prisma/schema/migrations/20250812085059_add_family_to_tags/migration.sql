@@ -20,7 +20,7 @@ UPDATE emission_source_tag t
 SET family_id = f.id
 FROM emission_source_tag_families f
 WHERE t.study_id = f.study_id
-  AND f.name = 'Preset'
+  AND f.name = 'défaut'
   AND t.name IN (
     'Périmètre Interne',
     'Périmètre Bénévoles',

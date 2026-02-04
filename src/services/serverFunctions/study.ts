@@ -295,7 +295,7 @@ export const createStudyCommand = async (
             }))
           : [
               {
-                name: 'Preset',
+                name: 'défaut',
                 tags: environmentTags
                   ? {
                       create: environmentTags.map((tag) => ({ name: tag.name, color: tag.color })),
