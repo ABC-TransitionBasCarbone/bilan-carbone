@@ -194,7 +194,7 @@ const SelectOrganization = ({
         {organizationVersion &&
           (organizationVersion.organization.sites.length > 0 ? (
             <>
-              <DynamicSites sites={sites} form={form} caUnit={caUnit} withSelection />
+              <DynamicSites sites={sites} form={form} caUnit={caUnit} withSelection environment={user.environment} />
               <div className="mt2">
                 <Button
                   disabled={!sites.some((site) => site.selected)}

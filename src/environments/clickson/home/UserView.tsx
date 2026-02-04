@@ -1,3 +1,5 @@
+'use client'
+
 import StudiesContainer from '@/components/study/StudiesContainer'
 import { default as SimplifiedUserView } from '@/environments/simplified/home/UserView'
 import { UserSession } from 'next-auth'

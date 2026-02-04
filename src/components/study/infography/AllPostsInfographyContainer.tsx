@@ -1,5 +1,6 @@
 import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
+import { typeDynamicComponent } from '@/environments/core/utils/dynamicUtils'
 import AllPostsInfographySimplified from '@/environments/simplified/study/infography/AllPostsInfography'
 import AllPostsInfographyTilt from '@/environments/tilt/study/infography/AllPostsInfography'
 import { ClicksonPost, CutPost, TiltPost } from '@/services/posts'
@@ -51,21 +52,24 @@ const AllPostsInfographyContainer = ({ study, studySite, user }: Props) => {
 
   return (
     <DynamicComponent
-      defaultComponent={<AllPostsInfography study={study} data={data} />}
+      defaultComponent={typeDynamicComponent({ component: AllPostsInfography, props: { study, data } })}
+      environment={environment}
       environmentComponents={{
-        [Environment.CUT]: (
-          <AllPostsInfographySimplified study={study} data={data} studySiteId={studySite} user={user} />
-        ),
-        [Environment.TILT]: <AllPostsInfographyTilt study={study} data={data} />,
-        [Environment.CLICKSON]: (
-          <AllPostsInfographySimplified
-            posts={ClicksonPost}
-            study={study}
-            data={data}
-            studySiteId={studySite}
-            user={user}
-          />
-        ),
+        [Environment.CUT]: typeDynamicComponent({
+          component: AllPostsInfographySimplified,
+          props: { study, data, studySiteId: studySite, user },
+        }),
+        [Environment.TILT]: typeDynamicComponent({ component: AllPostsInfographyTilt, props: { study, data } }),
+        [Environment.CLICKSON]: typeDynamicComponent({
+          component: AllPostsInfographySimplified,
+          props: {
+            posts: ClicksonPost,
+            study,
+            data,
+            studySiteId: studySite,
+            user,
+          },
+        }),
       }}
     />
   )

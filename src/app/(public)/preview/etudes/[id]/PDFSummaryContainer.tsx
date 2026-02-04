@@ -2,6 +2,7 @@
 import { FullStudy } from '@/db/study'
 import PDFSummaryClickson from '@/environments/clickson/study/PDF/PDFSummary'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
+import { typeDynamicComponent } from '@/environments/core/utils/dynamicUtils'
 import PDFSummaryCut from '@/environments/cut/study/PDF/PDFSummary'
 import { LocaleType } from '@/i18n/config'
 import { switchEnvironment } from '@/i18n/environment'
@@ -32,9 +33,11 @@ const PDFSummaryContainer = ({ study, environment, locale }: Props) => {
   }
   return (
     <DynamicComponent
-      forceEnvironment={environment}
-      environmentComponents={{ [Environment.CLICKSON]: <PDFSummaryClickson study={study} /> }}
-      defaultComponent={<PDFSummaryCut study={study} environment={environment} />}
+      environment={environment}
+      environmentComponents={{
+        [Environment.CLICKSON]: typeDynamicComponent({ component: PDFSummaryClickson, props: { study } }),
+      }}
+      defaultComponent={typeDynamicComponent({ component: PDFSummaryCut, props: { study, environment } })}
     />
   )
 }

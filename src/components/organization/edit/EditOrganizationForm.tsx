@@ -102,7 +102,13 @@ const EditOrganizationForm = ({ organizationVersion, caUnit, isCut = false, disa
           label={t('name')}
         />
       )}
-      <DynamicSites disabled={disabled} sites={sites} form={form} caUnit={caUnit} />
+      <DynamicSites
+        disabled={disabled}
+        sites={sites}
+        form={form}
+        caUnit={caUnit}
+        environment={organizationVersion.environment}
+      />
       {!disabled && (
         <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="edit-organization-button">
           {t('edit')}

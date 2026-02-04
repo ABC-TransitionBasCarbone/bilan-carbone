@@ -8,7 +8,6 @@ import EnvironmentLoader from './utils/EnvironmentLoader'
 
 const EnvironmentInitializer = ({ user }: { user: UserSession }) => {
   const { setEnvironment, setIsLoading, isLoading } = useAppEnvironmentStore()
-
   useEffect(() => {
     if (!user || !user.environment) {
       return

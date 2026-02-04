@@ -7,6 +7,7 @@ import StudyRightsCut from '@/environments/cut/study/StudyRightsCut'
 import { EmissionFactorImportVersion, Environment, StudyRole } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import DynamicComponent from '../utils/DynamicComponent'
+import { typeDynamicComponent } from '../utils/dynamicUtils'
 
 interface Props {
   user: UserSession
@@ -19,25 +20,28 @@ interface Props {
 const DynamicStudyRights = ({ user, study, editionDisabled, userRoleOnStudy, emissionFactorSources }: Props) => {
   return (
     <DynamicComponent
-      defaultComponent={
-        <StudyRights
-          user={user}
-          study={study}
-          editionDisabled={editionDisabled}
-          userRoleOnStudy={userRoleOnStudy}
-          emissionFactorSources={emissionFactorSources}
-        />
-      }
+      environment={study.organizationVersion.environment}
+      defaultComponent={typeDynamicComponent({
+        component: StudyRights,
+        props: {
+          user,
+          study,
+          editionDisabled,
+          userRoleOnStudy,
+          emissionFactorSources,
+        },
+      })}
       environmentComponents={{
-        [Environment.CUT]: <StudyRightsCut study={study} />,
-        [Environment.CLICKSON]: (
-          <StudyRightsClickson
-            study={study}
-            editionDisabled={editionDisabled}
-            emissionFactorSources={emissionFactorSources}
-            user={user}
-          />
-        ),
+        [Environment.CUT]: typeDynamicComponent({ component: StudyRightsCut, props: { study } }),
+        [Environment.CLICKSON]: typeDynamicComponent({
+          component: StudyRightsClickson,
+          props: {
+            study,
+            editionDisabled,
+            emissionFactorSources,
+            user,
+          },
+        }),
       }}
     />
   )

@@ -5,6 +5,7 @@ import { getOrganizationVersionAccounts } from '@/db/organization'
 import NewStudyForm from '@/environments/base/study/new/Form'
 import NewStudyFormClickson from '@/environments/clickson/study/new/Form'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
+import { typeDynamicComponent } from '@/environments/core/utils/dynamicUtils'
 import NewStudyFormCut from '@/environments/cut/study/new/Form'
 import NewStudyFormTilt from '@/environments/tilt/study/new/Form'
 import { useDuplicateStudy } from '@/hooks/useDuplicateStudy'
@@ -123,28 +124,18 @@ const NewStudyPage = ({
       {organizationVersion ? (
         <DynamicComponent
           environmentComponents={{
-            [Environment.CUT]: <NewStudyFormCut form={form} />,
-            [Environment.CLICKSON]: <NewStudyFormClickson form={form} />,
-            [Environment.TILT]: (
-              <NewStudyFormTilt
-                user={user}
-                accounts={accounts}
-                form={form}
-                duplicateStudyId={duplicateStudyId}
-                sourceStudy={sourceStudy}
-                simplified={simplified}
-              />
-            ),
+            [Environment.CUT]: typeDynamicComponent({ component: NewStudyFormCut, props: { form } }),
+            [Environment.CLICKSON]: typeDynamicComponent({ component: NewStudyFormClickson, props: { form } }),
+            [Environment.TILT]: typeDynamicComponent({
+              component: NewStudyFormTilt,
+              props: { user, accounts, form, duplicateStudyId, sourceStudy, simplified },
+            }),
           }}
-          defaultComponent={
-            <NewStudyForm
-              user={user}
-              accounts={accounts}
-              form={form}
-              duplicateStudyId={duplicateStudyId}
-              sourceStudy={sourceStudy}
-            />
-          }
+          defaultComponent={typeDynamicComponent({
+            component: NewStudyForm,
+            props: { user, accounts, form, duplicateStudyId, sourceStudy },
+          })}
+          environment={user.environment}
         />
       ) : (
         <SelectOrganization

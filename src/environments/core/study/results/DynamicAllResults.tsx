@@ -7,6 +7,7 @@ import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import AllResultsSimplified from '@/environments/simplified/study/results/AllResults'
 import AllResultsTilt from '@/environments/tilt/study/results/AllResults'
 import { Environment, ExportRule, SiteCAUnit } from '@prisma/client'
+import { typeDynamicComponent } from '../../utils/dynamicUtils'
 
 interface Props {
   study: FullStudy
@@ -19,54 +20,59 @@ interface Props {
 const DynamicAllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caUnit }: Props) => {
   return (
     <DynamicComponent
+      environment={study.organizationVersion.environment}
       environmentComponents={{
-        [Environment.CUT]: (
-          <AllResultsSimplified
-            emissionFactorsWithParts={emissionFactorsWithParts}
-            study={study}
-            validatedOnly={validatedOnly}
-          />
-        ),
-        [Environment.CLICKSON]: (
-          <AllResultsSimplified
-            showSubLevel={true}
-            emissionFactorsWithParts={emissionFactorsWithParts}
-            study={study}
-            validatedOnly={validatedOnly}
-            caUnit={caUnit}
-            chartOrder={{
+        [Environment.CUT]: typeDynamicComponent({
+          component: AllResultsSimplified,
+          props: {
+            emissionFactorsWithParts,
+            study,
+            validatedOnly,
+          },
+        }),
+        [Environment.CLICKSON]: typeDynamicComponent({
+          component: AllResultsSimplified,
+          props: {
+            showSubLevel: true,
+            emissionFactorsWithParts,
+            study,
+            validatedOnly,
+            caUnit,
+            chartOrder: {
               bar: 0,
               pie: 1,
               table: 2,
               ratio: 3,
-            }}
-          />
-        ),
-        [Environment.TILT]: (
-          <AllResultsTilt
-            study={study}
-            rules={rules}
-            emissionFactorsWithParts={emissionFactorsWithParts}
-            validatedOnly={validatedOnly}
-            caUnit={caUnit}
-            chartOrder={{
+            },
+          },
+        }),
+        [Environment.TILT]: typeDynamicComponent({
+          component: AllResultsTilt,
+          props: {
+            study,
+            rules,
+            emissionFactorsWithParts,
+            validatedOnly,
+            caUnit,
+            chartOrder: {
               bar: 0,
               pie: 1,
               table: 2,
               ratio: 3,
-            }}
-          />
-        ),
+            },
+          },
+        }),
       }}
-      defaultComponent={
-        <AllResults
-          study={study}
-          rules={rules}
-          emissionFactorsWithParts={emissionFactorsWithParts}
-          validatedOnly={validatedOnly}
-          caUnit={caUnit}
-        />
-      }
+      defaultComponent={typeDynamicComponent({
+        component: AllResults,
+        props: {
+          study,
+          rules,
+          emissionFactorsWithParts,
+          validatedOnly,
+          caUnit,
+        },
+      })}
     />
   )
 }

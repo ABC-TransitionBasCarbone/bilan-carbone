@@ -17,13 +17,13 @@ interface Props {
 const DynamicTheme = ({ children, environment }: Props) => {
   return (
     <DynamicComponent
-      defaultComponent={<ThemeProvider theme={theme}>{children}</ThemeProvider>}
+      defaultComponent={{ component: ThemeProvider, props: { theme, children } }}
       environmentComponents={{
-        [Environment.CUT]: <ThemeProvider theme={cutTheme}>{children}</ThemeProvider>,
-        [Environment.TILT]: <ThemeProvider theme={tiltTheme}>{children}</ThemeProvider>,
-        [Environment.CLICKSON]: <ThemeProvider theme={clicksonTheme}>{children}</ThemeProvider>,
+        [Environment.CUT]: { component: ThemeProvider, props: { theme: cutTheme, children } },
+        [Environment.TILT]: { component: ThemeProvider, props: { theme: tiltTheme, children } },
+        [Environment.CLICKSON]: { component: ThemeProvider, props: { theme: clicksonTheme, children } },
       }}
-      forceEnvironment={environment}
+      environment={environment}
     />
   )
 }

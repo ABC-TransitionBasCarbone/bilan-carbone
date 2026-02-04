@@ -1,4 +1,5 @@
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
+import { typeDynamicComponent } from '@/environments/core/utils/dynamicUtils'
 import { customRich } from '@/i18n/customRich'
 import {
   hasHomeAlert,
@@ -73,7 +74,15 @@ const UserView = async ({ account }: Props) => {
         <Box className="flex gapped1 mt1">
           <LinkCard
             href={`/organisations/${account.organizationVersionId}/modifier`}
-            icon={<DynamicComponent defaultComponent={<CinemaOutlinedIcon className={styles.icon} />} />}
+            icon={
+              <DynamicComponent
+                defaultComponent={typeDynamicComponent({
+                  component: CinemaOutlinedIcon,
+                  props: { className: styles.icon },
+                })}
+                environment={account.environment}
+              />
+            }
             title={navigation('sites.title')}
             message={navigation('sites.message')}
           />

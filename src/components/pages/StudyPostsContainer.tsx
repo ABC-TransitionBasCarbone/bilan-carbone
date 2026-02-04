@@ -1,6 +1,7 @@
 'use client'
 import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
+import { typeDynamicComponent } from '@/environments/core/utils/dynamicUtils'
 import StudyPostsPageCut from '@/environments/cut/pages/StudyPostsPage'
 import { customRich } from '@/i18n/customRich'
 import { Post, subPostsByPost } from '@/services/posts'
@@ -86,20 +87,25 @@ const StudyPostsPageContainer = ({ post, study, userRole, user }: Props) => {
         />
       </Block>
       <DynamicComponent
-        defaultComponent={
-          <StudyPostsPage
-            post={post}
-            study={study}
-            userRole={userRole}
-            emissionSources={emissionSources}
-            studySite={studySite}
-            user={user}
-            setGlossary={setGlossary}
-          />
-        }
+        defaultComponent={typeDynamicComponent({
+          component: StudyPostsPage,
+          props: {
+            post,
+            study,
+            userRole,
+            emissionSources,
+            studySite,
+            user,
+            setGlossary,
+          },
+        })}
         environmentComponents={{
-          [Environment.CUT]: <StudyPostsPageCut post={post} study={study} studySiteId={studySite} />,
+          [Environment.CUT]: typeDynamicComponent({
+            component: StudyPostsPageCut,
+            props: { post, study, studySiteId: studySite },
+          }),
         }}
+        environment={study.organizationVersion.environment}
       />
 
       {glossary && (

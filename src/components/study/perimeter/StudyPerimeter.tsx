@@ -11,6 +11,7 @@ import { OrganizationWithSites } from '@/db/account'
 import { FullStudy } from '@/db/study'
 import Sites from '@/environments/base/organization/Sites'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
+import { typeDynamicComponent } from '@/environments/core/utils/dynamicUtils'
 import SitesCut from '@/environments/cut/organization/Sites'
 import SitesTilt from '@/environments/tilt/organization/Sites'
 import { useServerFunction } from '@/hooks/useServerFunction'
@@ -360,47 +361,49 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
         </p>
       )}
       <DynamicComponent
+        environment={study.organizationVersion.environment}
         environmentComponents={{
-          [Environment.CUT]: (
-            <SitesCut
-              sites={
-                isEditing
-                  ? sites
-                  : study.sites.map((site) => ({
-                      ...site,
-                      name: site.site.name,
-                      selected: false,
-                      postalCode: site.site.postalCode ?? '',
-                      city: site.site.city ?? '',
-                    }))
-              }
-              form={siteForm as unknown as UseFormReturn<SitesCommand>}
-              withSelection
-            />
-          ),
-          [Environment.TILT]: (
-            <SitesTilt
-              sites={
-                isEditing ? sites : study.sites.map((site) => ({ ...site, name: site.site.name, selected: false }))
-              }
-              form={isEditing ? (siteForm as unknown as UseFormReturn<SitesCommand>) : undefined}
-              caUnit={caUnit}
-              withSelection
-              onDuplicate={!isEditing && hasEditionRole ? setDuplicatingSiteId : undefined}
-              organizationId={isFromStudyOrganizationOrParent ? study.organizationVersion.id : undefined}
-            />
-          ),
+          [Environment.CUT]: typeDynamicComponent({
+            component: SitesCut,
+            props: {
+              sites: isEditing
+                ? sites
+                : study.sites.map((site) => ({
+                    ...site,
+                    name: site.site.name,
+                    selected: false,
+                    postalCode: site.site.postalCode ?? '',
+                    city: site.site.city ?? '',
+                  })),
+              form: siteForm as unknown as UseFormReturn<SitesCommand>,
+              withSelection: true,
+            },
+          }),
+          [Environment.TILT]: typeDynamicComponent({
+            component: SitesTilt,
+            props: {
+              sites: isEditing
+                ? sites
+                : study.sites.map((site) => ({ ...site, name: site.site.name, selected: false })),
+              form: isEditing ? (siteForm as unknown as UseFormReturn<SitesCommand>) : undefined,
+              caUnit: caUnit,
+              withSelection: true,
+              onDuplicate: !isEditing && hasEditionRole ? setDuplicatingSiteId : undefined,
+              organizationId: isFromStudyOrganizationOrParent ? study.organizationVersion.id : undefined,
+            },
+          }),
         }}
-        defaultComponent={
-          <Sites
-            sites={isEditing ? sites : study.sites.map((site) => ({ ...site, name: site.site.name, selected: false }))}
-            form={isEditing ? (siteForm as unknown as UseFormReturn<SitesCommand>) : undefined}
-            caUnit={caUnit}
-            withSelection
-            onDuplicate={!isEditing && hasEditionRole ? setDuplicatingSiteId : undefined}
-            organizationId={isFromStudyOrganizationOrParent ? study.organizationVersion.id : undefined}
-          />
-        }
+        defaultComponent={typeDynamicComponent({
+          component: Sites,
+          props: {
+            sites: isEditing ? sites : study.sites.map((site) => ({ ...site, name: site.site.name, selected: false })),
+            form: isEditing ? (siteForm as unknown as UseFormReturn<SitesCommand>) : undefined,
+            caUnit: caUnit,
+            withSelection: true,
+            onDuplicate: !isEditing && hasEditionRole ? setDuplicatingSiteId : undefined,
+            organizationId: isFromStudyOrganizationOrParent ? study.organizationVersion.id : undefined,
+          },
+        })}
       />
       {hasEditionRole && isFromStudyOrganizationOrParent && (
         <div className={classNames('mt1 gapped', isEditing ? 'justify-between' : 'justify-end')}>
