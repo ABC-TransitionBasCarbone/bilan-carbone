@@ -203,6 +203,7 @@ describe('Authentication', () => {
     cy.login('bc-admin-0@yopmail.com', 'password-0')
     cy.wait('@login')
     cy.visit('/equipe')
+    cy.wait('@equipe')
     cy.getByTestId('invitations-to-validate').should('be.visible')
     cy.getByTestId('invitations-to-validate').within(() => {
       cy.getByTestId('invitation')
@@ -210,6 +211,8 @@ describe('Authentication', () => {
         .getByTestId('validate-invitation')
         .click({ force: true })
     })
+
+    cy.wait('@equipe')
 
     cy.getByTestId('pending-invitation').contains('imported@yopmail.com').should('be.visible')
 
