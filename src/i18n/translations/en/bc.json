@@ -14,7 +14,7 @@
       "2": "Identify priority actions",
       "3": "Build a reduction trajectory"
     },
-        "navigation": {
+    "navigation": {
       "collaborators": {
         "title": "Mes Collaborateur·rices",
         "message": "Retrouvez ici la liste des personnes autorisées à intervenir sur vos différentes empreintes carbone"
@@ -27,7 +27,7 @@
         "title": "Mon Association",
         "message": "Retrouvez ici la liste des établissements rattachés à votre compte"
       }
-    },
+    }
   },
   "exports": {
     "title": "Exports:",
