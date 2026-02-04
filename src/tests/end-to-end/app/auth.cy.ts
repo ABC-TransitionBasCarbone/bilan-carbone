@@ -205,14 +205,9 @@ describe('Authentication', () => {
     cy.visit('/equipe')
     cy.wait('@equipe')
     cy.getByTestId('invitations-to-validate').should('be.visible')
-    cy.getByTestId('invitations-to-validate').within(() => {
-      cy.getByTestId('invitation')
-        .filter((_index, el) => Cypress.$(el).text().includes('imported@yopmail.com'))
-        .getByTestId('validate-invitation')
-        .click({ force: true })
-    })
-
-    cy.wait('@equipe')
+    cy.intercept('POST', '/equipe').as('validateMember')
+    cy.getByTestId('validate-invitation').should('be.visible').click()
+    cy.wait('@validateMember')
 
     cy.getByTestId('pending-invitation').contains('imported@yopmail.com').should('be.visible')
 
