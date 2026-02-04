@@ -1,13 +1,16 @@
 'use client'
+
 import { FullStudy } from '@/db/study'
-import PDFSummaryClickson from '@/environments/clickson/study/PDF/PDFSummary'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import PDFSummaryCut from '@/environments/cut/study/PDF/PDFSummary'
 import { LocaleType } from '@/i18n/config'
 import { switchEnvironment } from '@/i18n/environment'
 import { switchLocale } from '@/i18n/locale'
 import { Environment } from '@prisma/client'
+import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
+
+const PDFSummaryClickson = dynamic(() => import('@/environments/clickson/study/PDF/PDFSummary'))
+const PDFSummaryCut = dynamic(() => import('@/environments/cut/study/PDF/PDFSummary'))
 
 interface Props {
   study: FullStudy

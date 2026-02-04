@@ -1,12 +1,12 @@
 'use client'
 import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import SimplifiedStudyPostsPage from '@/environments/simplified/study/SimplifiedStudyPostsPage'
 import { customRich } from '@/i18n/customRich'
 import { Post, subPostsByPost } from '@/services/posts'
 import { Environment, StudyRole, SubPost } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import Block from '../base/Block'
@@ -14,8 +14,10 @@ import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import GlossaryModal from '../modals/GlossaryModal'
 import StudyPostsCard from '../study/card/StudyPostsCard'
 import useStudySite from '../study/site/useStudySite'
-import StudyPostsPage from './StudyPostsPage'
 import styles from './StudyPostsPage.module.css'
+
+const StudyPostsPage = dynamic(() => import('@/components/pages/StudyPostsPage'))
+const SimplifiedStudyPostsPage = dynamic(() => import('@/environments/simplified/study/SimplifiedStudyPostsPage'))
 
 interface Props {
   post: Post

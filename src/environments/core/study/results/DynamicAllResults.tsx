@@ -1,12 +1,14 @@
 'use client'
 
-import AllResults from '@/components/study/results/AllResults'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import AllResultsPublicodes from '@/environments/simplified/study/results/AllResultsPublicodes'
-import AllResultsTilt from '@/environments/tilt/study/results/AllResults'
 import { Environment, ExportRule, SiteCAUnit } from '@prisma/client'
+import dynamic from 'next/dynamic'
+
+const AllResults = dynamic(() => import('@/components/study/results/AllResults'))
+const AllResultsTilt = dynamic(() => import('@/environments/tilt/study/results/AllResults'))
 
 interface Props {
   study: FullStudy

@@ -1,12 +1,14 @@
 import Block from '@/components/base/Block'
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
-import UserView from '@/components/home/UserView'
-import { default as ClicksonUserView } from '@/environments/clickson/home/UserView'
-import FooterClickson from '@/environments/clickson/layout/Footer'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import FooterCut from '@/environments/cut/layout/Footer'
-import SimplifiedUserView from '@/environments/simplified/home/UserView'
 import { Environment } from '@prisma/client'
+import dynamic from 'next/dynamic'
+
+const UserView = dynamic(() => import('@/components/home/UserView'))
+const SimplifiedUserView = dynamic(() => import('@/environments/simplified/home/UserView'))
+const ClicksonUserView = dynamic(() => import('@/environments/clickson/home/UserView'))
+const FooterCut = dynamic(() => import('@/environments/cut/layout/Footer'))
+const FooterClickson = dynamic(() => import('@/environments/clickson/layout/Footer'))
 
 export const revalidate = 0
 

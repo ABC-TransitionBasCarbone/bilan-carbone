@@ -9,10 +9,7 @@ import GlossaryModal from '@/components/modals/GlossaryModal'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
 import { OrganizationWithSites } from '@/db/account'
 import { FullStudy } from '@/db/study'
-import Sites from '@/environments/base/organization/Sites'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import SitesCut from '@/environments/cut/organization/Sites'
-import SitesTilt from '@/environments/tilt/organization/Sites'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import {
   getUpdateOrganizationVersionPermission,
@@ -53,6 +50,9 @@ import StudyExportsForm from './StudyExportsForm'
 import styles from './StudyPerimeter.module.css'
 
 const DuplicateSiteModal = dynamic(() => import('./DuplicateSiteModal'), { ssr: false })
+const SitesCut = dynamic(() => import('@/environments/cut/organization/Sites'))
+const SitesTilt = dynamic(() => import('@/environments/tilt/organization/Sites'))
+const Sites = dynamic(() => import('@/environments/base/organization/Sites'))
 
 interface Props {
   study: FullStudy
