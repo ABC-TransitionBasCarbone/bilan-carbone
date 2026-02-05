@@ -1,15 +1,14 @@
 déchets . organiques:
-  titre : Déchets verts, compost et déchets organiques
-  unité : kgCO2e
-  formule : FE*poids
-  avec : 
-    FE : 
-      valeur : 140
-      unité : kgCO2e/tonne
-      meta : 
-        id : 34638
-        nom : Déchets de cuisine et déchets verts - Compostage industriel - Impacts
-    poids : 
-      question : Déchets verts, compost et déchets organiques ##Mettre dans le layout la question : "Quelles quantités des déchets suivants sont jetées chaque année ?"
-      unité : tonne 
-
+  titre: Déchets verts, compost et déchets organiques
+  unité: kgCO2e
+  formule: FE*poids
+  avec:
+    FE:
+      valeur: 140
+      unité: kgCO2e/tonne
+      meta:
+        id: 34638
+        nom: Déchets de cuisine et déchets verts - Compostage industriel - Impacts
+    poids:
+      question: Déchets verts, compost et déchets organiques ##Mettre dans le layout la question : "Quelles quantités des déchets suivants sont jetées chaque année ?"
+      unité: tonne

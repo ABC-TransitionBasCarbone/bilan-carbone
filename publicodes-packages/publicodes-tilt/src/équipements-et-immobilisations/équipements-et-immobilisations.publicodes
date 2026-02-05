@@ -1,6 +1,6 @@
 équipements-et-immobilisations:
   titre: Équipements et immobilisations
-  formule : 
-    somme : 
+  formule:
+    somme:
       - équipements et immobilisations . équipements des salariés
-    unité : kgCO2e
+    unité: kgCO2e
