@@ -1,0 +1,53 @@
+construction . bâtiment :
+  formule: 
+    variations: 
+      - si: 
+          toutes ces conditions:
+            - est défini : locaux
+        alors:
+          variations:
+            - si: locaux = 'locaux seuls'
+              alors: FE*locaux seuls . surface
+            - si: locaux = 'locaux partagés'
+              alors : FE*locaux partagés . surface*pourcentage
+            - si: locaux = 'pas de locaux'
+              alors : 0
+          sinon : 0
+  unité: kgCO2e
+
+construction . bâtiment . FE :
+  valeur : 825
+  unité : kgCO2e/m2 
+  méta : 
+    id : 20730
+    nom : Bâtiment industriel, structure en béton
+
+construction . bâtiment . locaux :
+  question : 
+    Concernant vos locaux, diriez-vous que :
+  une possibilité:
+    - locaux seuls
+    - locaux partagés
+    - pas de locaux
+  avec :
+    locaux seuls : 
+      titre : J'utilise des locaux qui sont entièrement dédiés à mon association
+    locaux partagés :
+      titre : Mes locaux sont partagés avec d'autres stuctures (co-working, open-space partagés, ...)
+    pas de locaux : 
+      titre : Mes activités associatives ne nécessitent pas de locaux (télétravail à 100%, extérieur, ...)
+
+construction . bâtiment . locaux . locaux seuls . surface :
+  applicable si: locaux = 'locaux seuls'
+  question : Quelle est la surface de ces locaux ? (On considère uniquement les locaux possédés ou loués depuis moins de 50 ans)
+  unité : m2
+
+construction . bâtiment . locaux . locaux partagés . surface :
+  applicable si: locaux = 'locaux partagés'
+  question : Quelle est la surface de ces locaux ? (On considère uniquement les locaux possédés ou loués depuis moins de 50 ans)
+  unité : m2
+
+construction . bâtiment . locaux . locaux partagés . pourcentage :
+  applicable si: locaux = 'locaux partagés'
+  question : Quel est la part de la surface de ces locaux attribuables à votre association ? 
+  unité : %
