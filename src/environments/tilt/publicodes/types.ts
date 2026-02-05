@@ -1,4 +1,4 @@
-import { Questions, RuleName } from '@abc-transitionbascarbone/publicodes-count'
+import { Questions, RuleName } from '@abc-transitionbascarbone/publicodes-tilt'
 import Engine, { Situation } from 'publicodes'
 
 export type TiltRuleName = RuleName
