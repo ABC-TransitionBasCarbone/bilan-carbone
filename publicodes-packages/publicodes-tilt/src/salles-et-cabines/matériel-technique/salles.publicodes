@@ -15,6 +15,10 @@ salles et cabines . matériel technique . salle:
       - système son
   unité: kgCO2e
 
+salles et cabines . matériel technique . salle . nom:
+  question: Nom de la salle
+  type: texte
+
 salles et cabines . matériel technique . salle . projecteur:
   titre: Projecteur
   formule:

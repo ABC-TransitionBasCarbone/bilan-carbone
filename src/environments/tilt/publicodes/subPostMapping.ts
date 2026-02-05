@@ -123,7 +123,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       'fonctionnement . activités de bureau . informatique . équipement',
       'fonctionnement . activités de bureau . informatique . appareil . année achat',
       'fonctionnement . activités de bureau . informatique . appareil . durée location',
-      'fonctionnement . activités de bureau . informatique . appareil . nombre',
+      'fonctionnement . activités de bureau . informatique . appareil . nb appareils',
     ]),
   ],
   MobiliteSpectateurs: [
