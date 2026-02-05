@@ -1,51 +1,76 @@
-# publicodes-cut
+# publicodes-tilt
 
-Règles de calculs de count!, le premier calculateur d'impact écologique dédié aux salles de cinéma.
+Règles de calculs du modèle TILT, dédié à l'évaluation de l'empreinte carbone des salles de cinéma selon la méthodologie TILT.
 
-## Publicodes
+## Présentation
 
-Publicodes est un langage de programmation conçu pour modéliser des règles métier complexes de manière simple et lisible et créer des formulaires interactifs basés sur ces calculs. L'objectif est de permettre aux expert·e·s métier de contribuer au développement du simulateur sans compétence technique approfondie.
+Ce package contient les règles Publicodes pour le modèle TILT, qui structure l'évaluation autour de postes et sous-postes métiers adaptés au secteur cinématographique. Les règles sont écrites en Publicodes (`.publicodes`/`.yaml`) et organisées par poste dans le dossier `src`.
 
-Les règles Publicodes sont écrites dans des fichiers au format `.yaml` (extenstion `.publicodes`) et éditables dans un éditeur de code comme VSCcode. L'extension Publicodes pour VSCcode offre des fonctionnalités telles que la coloration syntaxique, l'autocomplétion, la vérification des unités et la validation en temps réel, facilitant ainsi la rédaction et la maintenance des règles.
+## Architecture des Postes et Sous-Postes
 
-## Le modèle CUT
+Le modèle TILT s'appuie sur une organisation par **postes** (ex : Énergie, Déchets, Achats, etc.) et **sous-postes** (ex : Batiment, Equipe, Achats, Fret, etc.), chacun étant mappé à une règle Publicodes spécifique.
 
-Le modèle CUT permet d'estimer l'empreinte carbone de salles de cinéma. Il s'appuie sur les postes de la méthode Bilan Carbone® :
+La correspondance entre les sous-postes et les règles Publicodes est centralisée dans le fichier [`subPostMapping.ts`](../../src/environments/tilt/publicodes/subPostMapping.ts).  
+Exemple de mapping :
 
-- Fonctionnement
-- Mobilité spectateurs
-- Tournées avant-premières
-- Salles et cabines
-- Confiseries et boissons
-- Déchets
-- Billetterie et communication
+```ts
+const SUBPOST_TO_RULENAME: Partial<Record<SubPost, TiltRuleName>> = {
+  Batiment: "fonctionnement . bâtiment",
+  Equipe: "fonctionnement . équipe",
+  DeplacementsProfessionnels: "fonctionnement . déplacements pro",
+  Energie: "fonctionnement . énergie",
+  // ...
+};
+```
 
-Les règles sont écrites au sein du dossier `src`. Chaque dossier correspond à un poste du modèle CUT et chaque poste correspond à un fichier dont la règle parente est une somme de sous-postes. Par exemple, `déchets.publicodes` contient la règle `déchets`, qui est la somme des sous-postes `déchets . ordinaires` et `déchets . exceptionnels`.
+Chaque sous-poste dispose également d'une configuration de formulaire (layout) associée, permettant de générer dynamiquement les questions à poser à l'utilisateur selon la structure attendue par Publicodes.
 
-Sont ensuite définies, au sein de chaque sous-poste, les règles de calculs via les mécanismes `formule` et `valeur` (utilisé pour les constantes mmême si dans le moteur, il n'y a aucune différence de traitement) et les questions à poser à l'utilisateur·rice. L'utilisation du mécanisme `avec` permet d'alléger la rédaction des règles en évitant de réécrire l'ensemble des espace-noms pour chaque règle.
+## Exemple de Layout de Formulaire
 
-Un fichier `commun.publicodes` contient des règles et constantes partagées par plusieurs postes du modèle.
+Le mapping des sous-postes vers les layouts de formulaire est défini dans `SUBPOST_TO_FORM_LAYOUTS` :
 
-Enfin, le fichier `général.publicodes` contient les règles correspondantes aux questions générales relatives à la salle de cinéma.
+```ts
+export const SUBPOST_TO_FORM_LAYOUTS: Partial<
+  Record<SubPost, FormLayout<TiltRuleName>[]>
+> = {
+  Batiment: [
+    input("fonctionnement . bâtiment . construction . surface"),
+    input("fonctionnement . bâtiment . construction . année de construction"),
+    group("BatimentRenovation.question", [
+      "fonctionnement . bâtiment . rénovation . type . rénovation totale",
+      "fonctionnement . bâtiment . rénovation . type . extension",
+      // ...
+    ]),
+    // ...
+  ],
+  // ...
+};
+```
+
+Chaque entrée décrit les champs à afficher pour le sous-poste concerné, en s'appuyant sur les règles Publicodes correspondantes.
+
+## Développement
+
+```sh
+# Installer les dépendances
+yarn install
+
+# Compiler les règles Publicodes
+yarn compile
+
+# Lancer les tests unitaires
+yarn test
+
+# Démarrer le serveur de documentation
+yarn dev
+```
 
 ## Tests
 
-Des situations correspondantes à des jeux de réponses possibles pour des cinémas sont définies dans le dossier `situations`. Elle -s permettent de vérifier les calculs lors du développement ou bien faire l'objet de tests de non-régression.
+Des situations de test sont définies dans le dossier `situations` pour valider les calculs et garantir la non-régression. Des tests unitaires sont également présents dans le dossier `tests`.
 
-Des tests unitaires sont également définis dans le dossier `tests` pour vérifier le bon comportement des règles.
+## Pour aller plus loin
 
-## Development
-
-```sh
-// Install the dependencies (immutable by default)
-yarn install
-
-// Compile the Publicodes rules
-yarn compile
-
-// Run the tests
-yarn test
-
-// Run the documentation server
-yarn dev
-```
+- Voir [`subPostMapping.ts`](../../src/environments/tilt/publicodes/subPostMapping.ts) pour la logique de mapping complète.
+- Les règles Publicodes sont éditables dans un éditeur compatible (ex : VSCode avec l’extension Publicodes).
+- Pour toute modification de la structure des postes/sous-postes ou des layouts, adapter le mapping dans `subPostMapping.ts`.
