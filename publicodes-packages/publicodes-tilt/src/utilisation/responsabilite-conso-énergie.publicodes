@@ -1,0 +1,129 @@
+utilisation . responsabilite conso energie : 
+  formule : 
+    variations : 
+      si : 
+         toutes ces conditions : 
+          - élec présente = oui
+          - fossiles présents = oui
+      alors : 
+        somme : 
+          - élec
+          - fioul
+          - essence
+          - gazole
+          - gaz naturel
+      si : 
+         toutes ces conditions : 
+          - élec présente = oui 
+          - fossiles présents = non
+      alors : 
+        somme : 
+          - élec
+      si :
+         toutes ces conditions : 
+          - élec présente = non 
+          - fossiles présents = oui
+      alors : 
+        somme : 
+          - fioul
+          - essence
+          - gazole
+          - gaz naturel
+      sinon : 0
+  
+utilisation . responsabilite conso energie . élec présente : 
+  question : Fournissez-vous des produits ou services qui entraînent des consommations d'électricité chez vos usagers ? 
+
+utilisation . responsabilite conso energie . élec : 
+  formule : FE*conso
+    avec :
+      FE : 
+        valeur : 0.0519
+        unité : kgCO2e/kWh
+        meta : 
+          id : 43642
+          nom : Electricité mix moyen France, année de l'étude (année antérieure la plus proche si année indisponible)
+      conso : 
+        question : À combien de kWh estimez-vous ces consommations ? 
+        unité : kWh
+  unité : kgCO2e
+
+utilisation . responsabilite conso energie . fossiles présents : 
+  question : Fournissez-vous des produits ou services qui entraînent des consommations d'énergie fossiles chez vos usagers ? 
+
+# utilisation . responsabilite conso energie . quels fossiles : 
+#   applicable si : 
+#     toutes ces conditions : 
+#       - est défini : fossiles présents
+#       - fossiles présents = oui
+#   question : Parmi les énergies suivantes, lesquelles sont concernées ? 
+#   une possibilité : #Je ne sais pas si ça peut servir à multiselect ou pas, mais en tout cas il faut multiselect puis appliquer le code du dessous avec des conditions type, si le machin est sélectionné, on pose la question et on fait le calcul, sinon 0. 
+#     - fioul
+#     - essence
+#     - gazole
+#     - gaz naturel 
+#   avec : 
+#     fioul : 
+#       titre : Fioul
+#     essence : 
+#       titre : Essence
+#     gazole : 
+#       titre : Gazole
+#     gaz naturel : 
+#       titre : Gaz naturel
+
+utilisation . responsabilite conso energie . fioul : 
+  formule : FE*conso
+    avec :
+      FE : 
+        valeur : 3.19
+        unité : kgCO2e/litre
+        meta : 
+          id : 14086
+          nom : Fioul domestique
+      conso : 
+        question : Pour le fioul, à combien de litres estimez-vous ces consommations ? 
+        unité : litre
+  unité : kgCO2e
+
+utilisation . responsabilite conso energie . essence : 
+  formule : FE*conso
+    avec :
+      FE : 
+        valeur : 2.7
+        unité : kgCO2e/litre
+        meta : 
+          id : 13988
+          nom : Essence/E10
+      conso : 
+        question : Pour l'essence, à combien de litres estimez-vous ces consommations ?
+        unité : litre
+  unité : kgCO2e
+
+utilisation . responsabilite conso energie . gazole : 
+  formule : FE*conso
+    avec :
+      FE : 
+        valeur : 3.1
+        unité : kgCO2e/litre
+        meta : 
+          id : 25775
+          nom : Gazole routier (B7)
+      conso : 
+        question : Pour le gazole, à combien de litres estimez-vous ces consommations ?
+        unité : litre
+  unité : kgCO2e
+
+utilisation . responsabilite conso energie . gaz naturel : 
+  formule : FE*conso
+    avec :
+      FE : 
+        valeur : 2.32
+        unité : kgCO2e/m3
+        meta : 
+          id : 37138
+          nom : Gaz naturel consommation mix moyen 2022
+      conso : 
+        question : Pour le gaz naturel, à combien de m3 estimez-vous ces consommations ?
+        unité : m3
+  unité : kgCO2e
