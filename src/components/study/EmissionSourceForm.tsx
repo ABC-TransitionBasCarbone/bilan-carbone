@@ -18,13 +18,7 @@ import {
 import { useUnitLabel } from '@/services/unit'
 import { emissionFactorDefautQualityStar, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
-import {
-  formatEmissionFromNumber,
-  hasDeprecationPeriod,
-  hasEditionRights,
-  hasFabricationPart,
-  isCAS,
-} from '@/utils/study'
+import { formatEmissionFromNumber, hasDeprecationPeriod, hasEditionRights, isCAS } from '@/utils/study'
 import AddIcon from '@mui/icons-material/Add'
 import CopyIcon from '@mui/icons-material/ContentCopy'
 import EditIcon from '@mui/icons-material/Edit'
@@ -92,6 +86,7 @@ interface Props {
   userOrganizationId?: string
   emissionFactorsForSubPost: EmissionFactorWithMetaData[]
   importVersions: ImportVersionForFilters[]
+  isContributor: boolean
   update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | Date | null | string[]) => void
 }
 
@@ -117,6 +112,7 @@ const EmissionSourceForm = ({
   userOrganizationId,
   emissionFactorsForSubPost,
   importVersions,
+  isContributor,
   update,
 }: Props) => {
   const t = useTranslations('emissionSource')
@@ -167,8 +163,6 @@ const EmissionSourceForm = ({
   }
 
   const isCas = isCAS(emissionSource)
-
-  const hasFabricationPartFE = useMemo(() => hasFabricationPart(selectedFactor), [selectedFactor])
 
   const withDeprecationPeriod = useMemo(() => hasDeprecationPeriod(emissionSource.subPost), [emissionSource.subPost])
 
@@ -233,7 +227,7 @@ const EmissionSourceForm = ({
       </p>
       <div className={classNames(styles.row, 'flex')}>
         <EmissionSourceFactor
-          canEdit={canEdit}
+          canEdit={canEdit && !isContributor}
           update={update}
           subPost={subPost}
           selectedFactor={selectedFactor}
@@ -370,7 +364,9 @@ const EmissionSourceForm = ({
           <FormControl className="grow">
             <InputLabel id="emission-source-caracterisation-label">{`${t('form.caracterisation')} *`}</InputLabel>
             <Select
-              disabled={!canEdit || (caracterisations.length === 1 && !!emissionSource.caracterisation)}
+              disabled={
+                !canEdit || (caracterisations.length === 1 && !!emissionSource.caracterisation) || isContributor
+              }
               value={emissionSource.caracterisation || ''}
               data-testid="emission-source-caracterisation"
               onChange={(event) =>
@@ -456,10 +452,12 @@ const EmissionSourceForm = ({
           )}
         </div>
       ) : (
-        <LinkButton color="secondary" href="/facteurs-d-emission/creer" className="mt-2">
-          <AddIcon />
-          {t('createEmissionFactor')}
-        </LinkButton>
+        !isContributor && (
+          <LinkButton color="secondary" href="/facteurs-d-emission/creer" className="mt-2">
+            <AddIcon />
+            {t('createEmissionFactor')}
+          </LinkButton>
+        )
       )}
 
       <p className={classNames(styles.subTitle, 'mt1 mb-2')}>{t('optionalFields')}</p>

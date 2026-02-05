@@ -7,7 +7,6 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { Locale } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
 import { getEmissionResults } from '@/services/emissionSource'
-import { StudyWithoutDetail } from '@/services/permissions/study'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { updateEmissionSource } from '@/services/serverFunctions/emissionSource'
 import {
@@ -43,20 +42,13 @@ import Label from '../base/Label'
 import BaseChip from '../emissionFactor/BaseChip'
 import { ImportVersionForFilters } from '../emissionFactor/EmissionFactorsFilters'
 import styles from './EmissionSource.module.css'
-import EmissionSourceContributorForm from './EmissionSourceContributorForm'
 import EmissionSourceEditorChip from './EmissionSourceEditorChip'
 import EmissionSourceForm from './EmissionSourceForm'
 
 type StudyProps = {
   study: FullStudy
   emissionSource: FullStudy['emissionSources'][0]
-  withoutDetail: false
-}
-
-type StudyWithoutDetailProps = {
-  study: StudyWithoutDetail
-  emissionSource: StudyWithoutDetail['emissionSources'][0]
-  withoutDetail: true
+  withoutDetail: boolean
 }
 
 interface Props {
@@ -78,7 +70,7 @@ const EmissionSource = ({
   emissionFactorsForSubPost,
   importVersions,
   isContributor = false,
-}: Props & (StudyProps | StudyWithoutDetailProps)) => {
+}: Props & StudyProps) => {
   const { environment } = useAppEnvironmentStore()
   const ref = useRef<HTMLDivElement>(null)
   const [loading, setLoading] = useState(false)
@@ -340,47 +332,31 @@ const EmissionSource = ({
                 {tError(error)}
               </Alert>
             )}
-            {withoutDetail ? (
-              <EmissionSourceContributorForm
-                studyId={study.id}
-                emissionSource={emissionSource}
-                selectedFactor={selectedFactor}
-                subPost={subPost}
-                update={update}
-                isFromOldImport={isFromOldImport}
-                currentBEVersion={currentBEVersion}
-                advanced={study.level === Level.Advanced}
-                environment={environment}
-                emissionFactorsForSubPost={emissionFactorsForSubPost}
-                importVersions={importVersions}
-                hasGHGPExport={!!study.exports?.types.some((studyExport) => studyExport === Export.GHGP)}
-              />
-            ) : (
-              <EmissionSourceForm
-                studyId={study.id}
-                advanced={study.level === Level.Advanced}
-                canEdit={canEdit}
-                canDelete={canDelete}
-                userRoleOnStudy={userRoleOnStudy}
-                canValidate={canValidate}
-                emissionSource={emissionSource}
-                selectedFactor={selectedFactor}
-                subPost={subPost}
-                update={update}
-                environment={environment}
-                caracterisations={caracterisations}
-                displayCaracterisation={!!study.exports?.types.length}
-                hasGHGPExport={!!study.exports?.types.some((studyExport) => studyExport === Export.GHGP)}
-                status={status}
-                studySites={study.sites}
-                isFromOldImport={isFromOldImport}
-                currentBEVersion={currentBEVersion}
-                studyUnit={study.resultsUnit}
-                userOrganizationId={study.organizationVersion.organization.id}
-                emissionFactorsForSubPost={emissionFactorsForSubPost}
-                importVersions={importVersions}
-              />
-            )}
+            <EmissionSourceForm
+              studyId={study.id}
+              advanced={study.level === Level.Advanced}
+              canEdit={canEdit}
+              canDelete={canDelete}
+              userRoleOnStudy={userRoleOnStudy}
+              canValidate={canValidate}
+              emissionSource={emissionSource}
+              selectedFactor={selectedFactor}
+              subPost={subPost}
+              update={update}
+              environment={environment}
+              caracterisations={caracterisations}
+              displayCaracterisation={!!study.exports?.types.length}
+              hasGHGPExport={!!study.exports?.types.some((studyExport) => studyExport === Export.GHGP)}
+              status={status}
+              studySites={study.sites}
+              isFromOldImport={isFromOldImport}
+              currentBEVersion={currentBEVersion}
+              studyUnit={study.resultsUnit}
+              userOrganizationId={study.organizationVersion.organization.id}
+              emissionFactorsForSubPost={emissionFactorsForSubPost}
+              importVersions={importVersions}
+              isContributor={isContributor}
+            />
             {emissionSource.lastEditor && (
               <div className="mt1">
                 <p className="bold" data-testid="emission-source-last-editor">
