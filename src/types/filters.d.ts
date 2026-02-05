@@ -35,7 +35,7 @@ export type EmissionSourcesSort = {
 
 export type EngagementActionsFilters = {
   search: string
-  steps: EngagementActionSteps[]
+  steps: (EngagementActionSteps | string)[]
   targets: (EngagementActionTargets | string)[]
   phases: EngagementPhase[]
   dateRange: {

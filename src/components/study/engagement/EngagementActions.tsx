@@ -31,7 +31,7 @@ const EngagementActions = ({ actions, study, studySite }: Props) => {
   const tTargets = useTranslations('study.engagementActions.targets')
 
   const defaultFilters = useMemo<EngagementActionsFilters>(() => {
-    const stepsValues = Object.values(EngagementActionSteps)
+    const enumStepsValues = Object.values(EngagementActionSteps)
     const phasesValues = Object.values(EngagementPhase)
 
     const enumTargetsValues = Object.values(EngagementActionTargets)
@@ -39,6 +39,11 @@ const EngagementActions = ({ actions, study, studySite }: Props) => {
       .flatMap((action) => action.targets || [])
       .filter((target) => !enumTargetsValues.includes(target as EngagementActionTargets))
     const targetsValues = [...enumTargetsValues, ...customTargets]
+
+    const customStepsValues = actions
+      .map((action) => action.steps)
+      .filter((step) => !enumStepsValues.includes(step as EngagementActionSteps))
+    const stepsValues = [...enumStepsValues, ...customStepsValues]
 
     return {
       search: '',
