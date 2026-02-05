@@ -1,0 +1,8 @@
+déchets-directs:
+  titre: Déchets directs
+  formule:
+    somme:
+      - emballages-et-plastiques
+      - ordures-ménagères
+      - organiques
+  unité: kgCO2e

@@ -1,0 +1,10 @@
+énergie:
+  titre: Énergie
+  formule:
+    somme:
+      - combustibles-organiques
+      - électricité
+      - fossiles
+      - réseaux-de-chaleur
+      - réseaux-de-froid
+  unité: kgCO2e
