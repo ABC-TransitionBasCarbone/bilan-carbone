@@ -1,2 +1,6 @@
 fin-de-vie:
   titre: Fin de vie
+  formule : 
+    somme : 
+      - fin de vie . traitement des déchets en fin de vie
+    unité : kgCO2e
