@@ -1,0 +1,11 @@
+déplacements:
+  titre: Déplacements
+  formule:
+    somme:
+      - DM-bénévoles
+      - DM-salariés
+      - DT-bénéficiaires
+      - DT-bénévoles
+      - DT-salariés
+      - fabrication
+  unité: kgCO2e
