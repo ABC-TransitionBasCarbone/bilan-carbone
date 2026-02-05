@@ -31,7 +31,17 @@ const EngagementActionsFiltersComponent = ({ filters, setFilters, openAddModal, 
   const tTargets = useTranslations('study.engagementActions.targets')
   const tPhases = useTranslations('study.engagementActions.phases')
 
-  const stepsValues = useMemo(() => Object.values(EngagementActionSteps) as string[], [])
+  const enumStepsValues = useMemo(() => Object.values(EngagementActionSteps) as string[], [])
+  const stepsValues = useMemo(() => {
+    const customSteps = Array.from(
+      new Set(
+        actions
+          .flatMap((action) => action.steps || [])
+          .filter((step) => !enumStepsValues.includes(step as EngagementActionSteps)),
+      ),
+    )
+    return [...enumStepsValues, ...customSteps]
+  }, [actions, enumStepsValues])
   const enumTargetsValues = useMemo(() => Object.values(EngagementActionTargets) as string[], [])
   const targetsValues = useMemo(() => {
     const customTargets = Array.from(
@@ -67,12 +77,12 @@ const EngagementActionsFiltersComponent = ({ filters, setFilters, openAddModal, 
           </FormLabel>
           <MultiSelectAll
             id="engagement-actions-steps"
-            values={filters.steps as string[]}
+            values={Array.from(new Set(filters.steps as string[]))}
             allValues={stepsValues}
             setValues={(values) =>
               setFilters((prevFilters) => ({ ...prevFilters, steps: values as EngagementActionSteps[] }))
             }
-            getLabel={(step) => tSteps(step)}
+            getLabel={(step) => (enumStepsValues.includes(step as EngagementActionSteps) ? tSteps(step) : step)}
           />
         </FormControl>
 
@@ -82,7 +92,7 @@ const EngagementActionsFiltersComponent = ({ filters, setFilters, openAddModal, 
           </FormLabel>
           <MultiSelectAll
             id="engagement-actions-targets"
-            values={filters.targets as string[]}
+            values={Array.from(new Set(filters.targets as string[]))}
             allValues={targetsValues}
             setValues={(values) => {
               setFilters((prevFilters) => ({
