@@ -1,3 +1,5 @@
+import { Translations } from '@/types/translation'
+
 export const uniqueByKey = <T, K extends keyof T>(arr: T[], key: K) => {
   const filteredKeys = new Set<T[K]>()
   return arr.filter((item) => {
@@ -61,4 +63,14 @@ export function sortByCustomOrder<T>(items: T[], customOrder: string[], getKey: 
 
     return aIndex - bIndex
   })
+}
+
+export const getTranslatedMapping = <T extends string>(values: T[], translations: Translations) => {
+  return values.reduce(
+    (acc, value) => {
+      acc[value] = translations(value as string)
+      return acc
+    },
+    {} as Record<string, string>,
+  )
 }

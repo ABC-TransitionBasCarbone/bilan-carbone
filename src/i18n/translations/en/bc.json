@@ -1346,6 +1346,10 @@
     "engagementActions": {
       "title": "Engagement actions summary",
       "export": "Export to CSV",
+      "filters": {
+        "search": "Search",
+        "searchPlaceholder": "By name, description..."
+      },
       "table": {
         "name": "Name",
         "description": "Description",
