@@ -110,7 +110,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
     mode: 'onSubmit',
     reValidateMode: 'onChange',
     defaultValues: {
-      exports: study.exports?.types,
+      exports: study.exports?.types || [],
       controlMode: study.exports?.control,
     },
   })
