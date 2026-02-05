@@ -1,0 +1,15 @@
+bilan:
+  formule:
+    somme:
+      - alimentation
+      - construction
+      - déchets-directs
+      - déplacements
+      - énergie
+      - équipements-et-immobilisations
+      - fin-de-vie
+      - fret
+      - froid-et-clim
+      - intrants-biens-et-matières
+      - Intrants-services
+      - utilisation
