@@ -115,25 +115,22 @@ const StudyDetailsHeader = ({
         }
         rightComponent={<SelectStudySite sites={study.sites} defaultValue={studySite} setSite={setSite} />}
       />
-      {deleting && (
-        <DeletionModal
-          form={form}
-          type="study"
-          onDelete={onDelete}
-          onClose={() => setDeleting(false)}
-          t={tStudyDelete}
-        />
-      )}
-      {duplicating && (
-        <DuplicateStudyModal
-          studyId={study.id}
-          organizationVersionId={organizationVersionId}
-          sourceEnvironment={study.organizationVersion.environment}
-          environments={duplicableEnvironments}
-          onClose={() => setDuplicating(false)}
-          open
-        />
-      )}
+      <DeletionModal
+        open={deleting}
+        form={form}
+        type="study"
+        onDelete={onDelete}
+        onClose={() => setDeleting(false)}
+        t={tStudyDelete}
+      />
+      <DuplicateStudyModal
+        studyId={study.id}
+        organizationVersionId={organizationVersionId}
+        sourceEnvironment={study.organizationVersion.environment}
+        environments={duplicableEnvironments}
+        onClose={() => setDuplicating(false)}
+        open={duplicating}
+      />
     </>
   )
 }

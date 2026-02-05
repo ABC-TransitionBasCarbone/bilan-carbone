@@ -19,7 +19,7 @@ describe('Delete study', () => {
         cy.getByTestId('study-link').click()
       })
 
-    cy.getByTestId('delete-study').click()
+    cy.getByTestId('delete-study').should('be.visible').click()
     cy.get('#delete-study-modal-title').should('be.visible')
     cy.get('#delete-study-modal-content').should('be.visible')
 

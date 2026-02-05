@@ -61,6 +61,10 @@ const DuplicateStudyModal = ({
     }
   }
 
+  if (!targetEnvironment) {
+    return null
+  }
+
   return (
     <>
       <Modal

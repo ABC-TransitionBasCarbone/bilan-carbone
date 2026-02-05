@@ -115,6 +115,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
       controlMode: study.exports?.control,
     },
   })
+
   const exportsWatch = useWatch(exportsForm).exports
   const controlWatch = useWatch(exportsForm).controlMode
   const showControl = useMemo(() => !!(exportsWatch && exportsWatch.length), [exportsWatch])

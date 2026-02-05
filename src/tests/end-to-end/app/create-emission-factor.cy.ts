@@ -42,6 +42,8 @@ describe('Create emission factor', () => {
 
     cy.url().should('eq', `${Cypress.config().baseUrl}/facteurs-d-emission`)
 
+    cy.reload()
+
     cy.getByTestId('emission-factor-search-input').within(() => {
       cy.get('input').type('My new FE')
     })

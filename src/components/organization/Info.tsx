@@ -76,15 +76,14 @@ const OrganizationInfo = ({ organizationVersion, canDelete, canUpdate }: Props) 
           <span className={styles.info}>{t('name')}</span> {organizationVersion.organization.name}
         </p>
       </Block>
-      {deleting && (
-        <DeletionModal
-          form={form}
-          type="organization"
-          onDelete={onDelete}
-          onClose={() => setDeleting(false)}
-          t={tDelete}
-        />
-      )}
+      <DeletionModal
+        open={deleting}
+        form={form}
+        type="organization"
+        onDelete={onDelete}
+        onClose={() => setDeleting(false)}
+        t={tDelete}
+      />
     </>
   )
 }

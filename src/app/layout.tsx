@@ -1,17 +1,13 @@
-import { ZodConfigClientProvider } from '@/components/providers/zod.provider'
-import RouteChangeListener from '@/components/RouteChangeListener'
 import '@/css/index.css'
 import { Locale, LocaleType } from '@/i18n/config'
 import { getEnvironment } from '@/i18n/environment'
 import { configureZod } from '@/lib/zod.config'
-import Providers from '@/services/providers/Providers'
-import { CssBaseline } from '@mui/material'
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter'
 import { Environment } from '@prisma/client'
 import type { Metadata } from 'next'
-import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages, getTranslations, setRequestLocale } from 'next-intl/server'
 import { headers } from 'next/headers'
+import { WrapperNextIntlClientProvider } from './IntlProvider'
 
 export const metadata: Metadata = {
   title: 'Bilan Carbone +',
@@ -43,13 +39,9 @@ const RootLayout = async ({ children }: Readonly<Props>) => {
     <html lang={locale} className={environment}>
       <body>
         <AppRouterCacheProvider options={providerOptions}>
-          <NextIntlClientProvider messages={messages}>
-            <RouteChangeListener />
-            <Providers>
-              <CssBaseline />
-              <ZodConfigClientProvider>{children}</ZodConfigClientProvider>
-            </Providers>
-          </NextIntlClientProvider>
+          <WrapperNextIntlClientProvider locale={locale} environment={environment} messages={messages}>
+            {children}
+          </WrapperNextIntlClientProvider>
         </AppRouterCacheProvider>
       </body>
     </html>
