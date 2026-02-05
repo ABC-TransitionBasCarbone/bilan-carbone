@@ -2,7 +2,6 @@ import { StudyContributorDeleteParams } from '@/components/study/rights/StudyCon
 import { getEnvVar } from '@/lib/environment'
 import { isSourceForEnv } from '@/services/importEmissionFactor/import'
 import { hasAccessToCreateStudyWithEmissionFactorVersions } from '@/services/permissions/environment'
-import { filterAllowedStudies } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { ChangeStudyCinemaCommand } from '@/services/serverFunctions/study.command'
 import { getAllowedLevels, hasSufficientLevel } from '@/services/study'
@@ -28,7 +27,7 @@ import { UserSession } from 'next-auth'
 import { getAccountOrganizationVersions } from './account'
 import { AccountWithUserSelect } from './account.select'
 import { prismaClient } from './client'
-import { getOrganizationVersionById, OrganizationVersionWithOrganization } from './organization'
+import { getOrganizationVersionForRightsCheck } from './organization'
 
 export type StudyTagFamilyWithTags = Omit<StudyTagFamily, 'createdAt' | 'updatedAt'> & {
   tags: Omit<StudyTag, 'familyId' | 'createdAt' | 'updatedAt'>[]
@@ -360,7 +359,8 @@ export const getAllowedStudiesByAccount = async (user: UserSession) => {
 
   // Be carefull: study on this query is shown to a lot of user
   // Never display sensitive data here (like emission source)
-  const studies = await prismaClient.study.findMany({
+  return prismaClient.study.findMany({
+    select: { id: true },
     where: {
       OR: [
         {
@@ -378,12 +378,12 @@ export const getAllowedStudiesByAccount = async (user: UserSession) => {
       ],
     },
   })
-  return filterAllowedStudies(user, studies)
 }
 
 export const getExternalAllowedStudiesByUser = async (user: UserSession) => {
   const userOrganizationVersions = await getAccountOrganizationVersions(user.accountId)
-  const studies = await prismaClient.study.findMany({
+  return prismaClient.study.findMany({
+    select: { id: true },
     where: {
       AND: [
         {
@@ -400,7 +400,6 @@ export const getExternalAllowedStudiesByUser = async (user: UserSession) => {
       ],
     },
   })
-  return filterAllowedStudies(user, studies)
 }
 
 export const getAllowedStudiesByAccountIdAndOrganizationId = async (organizationVersionIds: string[]) => {
@@ -452,7 +451,10 @@ export const getAllowedStudiesByUserAndOrganization = async (
   organizationVersionId: string,
   simplified = false,
 ) => {
-  const organizationVersion = await getOrganizationVersionById(organizationVersionId)
+  const organizationVersion = await getOrganizationVersionForRightsCheck(organizationVersionId)
+  if (!organizationVersion) {
+    return []
+  }
 
   if (!user.organizationVersionId) {
     return []
@@ -462,11 +464,12 @@ export const getAllowedStudiesByUserAndOrganization = async (
     select: { id: true },
   })
 
-  const studies = await prismaClient.study.findMany({
+  return prismaClient.study.findMany({
+    select: { id: true },
     where: {
       organizationVersionId,
       simplified,
-      ...(isAdminOnOrga(user, organizationVersion as OrganizationVersionWithOrganization)
+      ...(isAdminOnOrga(user, organizationVersion)
         ? {}
         : {
             OR: [
@@ -483,7 +486,6 @@ export const getAllowedStudiesByUserAndOrganization = async (
           }),
     },
   })
-  return filterAllowedStudies(user, studies)
 }
 
 export const getStudyById = async (id: string, organizationVersionId: string | null, tx?: Prisma.TransactionClient) => {
@@ -496,6 +498,72 @@ export const getStudyById = async (id: string, organizationVersionId: string | n
     return null
   }
   return { ...study, allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level, organizationVersionId) }
+}
+
+export const getStudyOrganizationVersion = async (id: string) => {
+  const study = await prismaClient.study.findUnique({
+    where: { id },
+    select: { organizationVersion: { select: { id: true, parentId: true } } },
+  })
+  return study?.organizationVersion ?? null
+}
+
+export const getStudiesForCards = async (ids: string[]) => {
+  const studies = await prismaClient.study.findMany({
+    where: { id: { in: ids } },
+    select: {
+      id: true,
+      name: true,
+      simplified: true,
+      level: true,
+      isPublic: true,
+      contributors: {
+        select: { accountId: true },
+      },
+      allowedUsers: {
+        select: {
+          role: true,
+          account: { select: { id: true } },
+        },
+      },
+      organizationVersion: {
+        select: {
+          id: true,
+          parentId: true,
+          environment: true,
+          activatedLicence: true,
+          parent: { select: { activatedLicence: true } },
+        },
+      },
+    },
+  })
+  return Object.fromEntries(studies.map((study) => [study.id, study]))
+}
+
+export const getStudiesValidatedEmissionsSources = async (ids: string[]) => {
+  const groups = await prismaClient.studyEmissionSource.groupBy({
+    by: ['studyId', 'validated'],
+    where: { studyId: { in: ids } },
+    _count: true,
+  })
+
+  const result: Record<string, { total: number; validated: number }> = {}
+  for (const id of ids) {
+    result[id] = { total: 0, validated: 0 }
+  }
+  for (const group of groups) {
+    result[group.studyId].total += group._count
+    if (group.validated) {
+      result[group.studyId].validated += group._count
+    }
+  }
+  return result
+}
+
+type StudiesForCardsMap = AsyncReturnType<typeof getStudiesForCards>
+
+export type StudyCardItem = StudiesForCardsMap[string] & {
+  validatedSources: { total: number; validated: number }
 }
 
 export const getStudyByIds = async (ids: string[]) => {
@@ -796,21 +864,6 @@ export const getStudiesSitesFromIds = async (siteIds: string[]) =>
       },
     },
   })
-
-export const getStudyValidatedEmissionsSources = async (studyId: string) => {
-  const study = await prismaClient.study.findUnique({
-    where: { id: studyId },
-    select: { emissionSources: { select: { validated: true } } },
-  })
-
-  if (!study) {
-    return null
-  }
-  return {
-    total: study.emissionSources.length,
-    validated: study.emissionSources.filter((emissionSource) => emissionSource.validated).length,
-  }
-}
 
 export const getSourceCutImportVersionIds = async () => {
   const cutFeLegifrance = (await getEnvVar('FE_LEGIFRANCE_VERSION', Environment.CUT)) || ''

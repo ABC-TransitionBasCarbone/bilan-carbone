@@ -28,6 +28,7 @@ jest.mock('@/db/account', () => ({ getAccountById: jest.fn() }))
 jest.mock('@/db/organization', () => ({
   getOrganizationVersionsByOrganizationId: jest.fn(),
   getOrganizationVersionById: jest.fn(),
+  getOrganizationVersionForRightsCheck: jest.fn(),
 }))
 jest.mock('@/db/study', () => ({ getStudyById: jest.fn() }))
 jest.mock('@/db/user', () => ({ getUserByEmail: jest.fn() }))
@@ -58,6 +59,7 @@ const mockGetAccountById = dbAccountModule.getAccountById as jest.Mock
 const mockGetOrganizationVersionsByOrganizationId =
   dbOrganizationModule.getOrganizationVersionsByOrganizationId as jest.Mock
 const mockGetOrganizationVersionById = dbOrganizationModule.getOrganizationVersionById as jest.Mock
+const mockGetOrganizationVersionForRightsCheck = dbOrganizationModule.getOrganizationVersionForRightsCheck as jest.Mock
 
 const advancedStudy = getMockedStudyCreateInput({ level: Level.Advanced })
 const standardStudy = getMockedStudyCreateInput({ level: Level.Standard })
@@ -83,6 +85,7 @@ describe('Study permissions service', () => {
     beforeEach(() => {
       jest.clearAllMocks()
       mockIsInOrgaOrParentFromId.mockResolvedValue(true)
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({ id: mockedOrganizationVersionId })
     })
 
     describe('"Advanced" level user', () => {

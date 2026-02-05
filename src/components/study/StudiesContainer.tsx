@@ -1,8 +1,11 @@
-import { getOrganizationVersionById } from '@/db/organization'
+import { getOrganizationVersionForRightsCheck } from '@/db/organization'
 import {
+  StudyCardItem,
   getAllowedStudiesByAccount,
   getAllowedStudiesByUserAndOrganization,
   getExternalAllowedStudiesByUser,
+  getStudiesForCards,
+  getStudiesValidatedEmissionsSources,
 } from '@/db/study'
 import { customRich } from '@/i18n/customRich'
 import { isTilt, isTiltSimplifiedFeatureActive } from '@/services/permissions/environment'
@@ -10,17 +13,14 @@ import { canCreateAStudy } from '@/services/permissions/study'
 import { hasActiveLicence } from '@/utils/organization'
 import AddIcon from '@mui/icons-material/Add'
 import { Alert, Box as MUIBox } from '@mui/material'
-import { Study } from '@prisma/client'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
-import { Suspense } from 'react'
 import Block from '../base/Block'
 import Box from '../base/Box'
 import LinkButton from '../base/LinkButton'
 import Image from '../document/Image'
-import ResultsContainerForUser from './results/ResultsContainerForUser'
 import Studies from './Studies'
 import styles from './StudiesContainer.module.css'
 
@@ -34,32 +34,51 @@ interface Props {
 const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified = false }: Props) => {
   const t = await getTranslations('study')
 
-  const studies = organizationVersionId
+  const allowedStudies = organizationVersionId
     ? await getAllowedStudiesByUserAndOrganization(user, organizationVersionId, simplified)
     : isCR
       ? await getExternalAllowedStudiesByUser(user)
       : await getAllowedStudiesByAccount(user)
 
-  const [orgaStudies, otherStudies] = studies.reduce(
-    (res, study) => {
-      res[study.organizationVersionId === user.organizationVersionId ? 0 : 1].push(study)
-      return res
-    },
-    [[] as Study[], [] as Study[]],
-  )
+  const allowedStudyIds = allowedStudies.map((study) => study.id)
+
+  const mainStudyOrganizationVersionId = organizationVersionId ?? user.organizationVersionId
+
+  const [organizationVersion, studiesForCards, studiesValidatedSources] = await Promise.all([
+    getOrganizationVersionForRightsCheck(mainStudyOrganizationVersionId),
+    getStudiesForCards(allowedStudyIds),
+    getStudiesValidatedEmissionsSources(allowedStudyIds),
+  ])
+
+  const studies = allowedStudyIds
+    .map((studyId) => {
+      const card = studiesForCards[studyId]
+      if (!card) {
+        return null
+      }
+      return { ...card, validatedSources: studiesValidatedSources[studyId] }
+    })
+    .filter((c): c is StudyCardItem => c !== null)
 
   const isOrgaHomePage = !organizationVersionId && !isCR
+  const [orgaStudies, otherStudies] = isOrgaHomePage
+    ? studies.reduce(
+        (res, study) => {
+          res[study.organizationVersion.id === user.organizationVersionId ? 0 : 1].push(study)
+          return res
+        },
+        [[] as StudyCardItem[], [] as StudyCardItem[]],
+      )
+    : [studies, [] as StudyCardItem[]]
+
   const mainStudies = isOrgaHomePage ? orgaStudies : studies
-  const collaborations = isOrgaHomePage ? otherStudies : []
+  const collaborationStudies = isOrgaHomePage ? otherStudies : []
   const advancedStudies = mainStudies.filter((study) => !study.simplified)
   const simplifiedStudies = mainStudies.filter((study) => study.simplified)
 
   const creationUrl = organizationVersionId ? `/organisations/${organizationVersionId}/etudes/creer` : '/etudes/creer'
   const creationUrlSimplified = `${creationUrl}?simplified=true`
 
-  const mainStudyOrganizationVersionId = organizationVersionId ?? user.organizationVersionId
-
-  const organizationVersion = await getOrganizationVersionById(mainStudyOrganizationVersionId)
   const activeLicence = !!(organizationVersion && hasActiveLicence(organizationVersion))
 
   let displaySimplifiedStudies = false
@@ -75,15 +94,6 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
 
   return hasStudies ? (
     <>
-      {mainStudyOrganizationVersionId && !isCR && (
-        <Suspense>
-          <ResultsContainerForUser
-            user={user}
-            mainStudyOrganizationVersionId={mainStudyOrganizationVersionId}
-            displaySimplifiedStudies={displaySimplifiedStudies}
-          />
-        </Suspense>
-      )}
       {!!advancedStudies.length && (
         <Studies
           studies={advancedStudies}
@@ -104,7 +114,9 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
           simplified
         />
       )}
-      {!!collaborations.length && <Studies studies={collaborations} canAddStudy={false} user={user} collaborations />}
+      {!!collaborationStudies.length && (
+        <Studies studies={collaborationStudies} canAddStudy={false} user={user} collaborations />
+      )}
     </>
   ) : (await canCreateAStudy(user, simplified)) ? (
     !isCR && (

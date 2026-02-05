@@ -18,8 +18,8 @@ import {
   setEmissionFactorUnitAsCustom,
   updateEmissionFactor,
 } from '@/db/emissionFactors'
-import { getOrganizationVersionById, getOrganizationVersionByOrganizationIdAndEnvironment } from '@/db/organization'
-import { getStudyById } from '@/db/study'
+import { getOrganizationVersionByOrganizationIdAndEnvironment, getOrgIdByOrgVersionId } from '@/db/organization'
+import { getStudyOrganizationVersion } from '@/db/study'
 import { getLocale } from '@/i18n/locale'
 import { unitsMatrix } from '@/services/importEmissionFactor/historyUnits'
 import { FeFilters } from '@/types/filters'
@@ -80,35 +80,37 @@ export const getEmissionFactors = async (
         studyId,
         session.user.organizationVersionId,
       )
-      const organizationVersion = await getOrganizationVersionById(organizationVersionId)
-      if (!organizationVersion) {
+      const organizationId = await getOrgIdByOrgVersionId(organizationVersionId)
+      if (!organizationId) {
         return { emissionFactors: [], count: 0 }
       }
-      const emissionFactorOrganizationId = organizationVersion.organizationId
-      return getAllEmissionFactors(emissionFactorOrganizationId, skip, take, locale, filters, environment)
+      return getAllEmissionFactors(organizationId, skip, take, locale, filters, environment)
     } else {
-      const organizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
-      return getAllEmissionFactors(organizationVersion?.organizationId, skip, take, locale, filters, environment)
+      const organizationId = await getOrgIdByOrgVersionId(session.user.organizationVersionId)
+      if (!organizationId) {
+        return { emissionFactors: [], count: 0 }
+      }
+      return getAllEmissionFactors(organizationId, skip, take, locale, filters, environment)
     }
   })
+
 export type EmissionFactorWithMetaData = IsSuccess<
   AsyncReturnType<typeof getEmissionFactors>
 >['emissionFactors'][number]
 
-const getStudyOrganization = async (studyId: string, organizationVersionId: string) => {
-  const study = await getStudyById(studyId, organizationVersionId)
-  if (!study) {
-    throw Error("Study doesn't exist")
+const getStudyOrganizationId = async (studyId: string) => {
+  const organizationVersion = await getStudyOrganizationVersion(studyId)
+  if (!organizationVersion) {
+    throw Error("Organization version doesn't exist")
   }
 
-  const orgaVersion = study.organizationVersion.parentId || study.organizationVersion.id
+  const finalOrganizationVersionId = organizationVersion.parentId || organizationVersion.id
 
-  const organization = await getOrganizationVersionById(orgaVersion)
-  if (!organization) {
+  const organizationId = await getOrgIdByOrgVersionId(finalOrganizationVersionId)
+  if (!organizationId) {
     throw Error("Organization doesn't exist")
   }
-
-  return organization.organizationId
+  return organizationId
 }
 
 export const getEmissionFactorsByIds = async (ids: string[], studyId: string) =>
@@ -122,10 +124,7 @@ export const getEmissionFactorsByIds = async (ids: string[], studyId: string) =>
         return []
       }
 
-      const emissionFactorOrganization = (await getStudyOrganization(
-        studyId,
-        session.user.organizationVersionId,
-      )) as string
+      const emissionFactorOrganization = await getStudyOrganizationId(studyId)
 
       const emissionFactors = await getAllEmissionFactorsByIds(ids, emissionFactorOrganization)
 
@@ -149,9 +148,8 @@ export const getDetailedEmissionFactor = async (id: string) =>
       return null
     }
 
-    const organizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
-
-    if (!emissionFactor.organizationId || emissionFactor.organizationId !== organizationVersion?.organizationId) {
+    const organizationId = await getOrgIdByOrgVersionId(session.user.organizationVersionId)
+    if (!emissionFactor.organizationId || emissionFactor.organizationId !== organizationId) {
       return null
     }
 

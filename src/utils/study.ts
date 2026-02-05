@@ -40,7 +40,20 @@ export const getUserRoleOnPublicStudy = (
     : StudyRole.Reader
 }
 
-export const getAccountRoleOnStudy = (user: UserSession, study: FullStudy) => {
+export type StudyWithRoleFields = {
+  level: Level
+  isPublic: boolean
+  organizationVersion: {
+    id: string
+    parentId: string | null
+    environment: Environment
+    activatedLicence: number[]
+    parent: { activatedLicence: number[] } | null
+  }
+  allowedUsers: { role: StudyRole; account: { id: string } }[]
+}
+
+export const getAccountRoleOnStudy = (user: UserSession, study: StudyWithRoleFields) => {
   if (isAdminOnStudyOrga(user, study.organizationVersion)) {
     return hasSufficientLevel(user.level, study.level) && hasActiveLicence(study.organizationVersion)
       ? StudyRole.Validator
@@ -61,7 +74,10 @@ export const getAccountRoleOnStudy = (user: UserSession, study: FullStudy) => {
   return null
 }
 
-export const getDisplayedRoleOnStudy = (user: UserSession, study: FullStudy) => {
+export const getDisplayedRoleOnStudy = (
+  user: UserSession,
+  study: StudyWithRoleFields & { contributors: { accountId: string }[] },
+) => {
   return study.contributors.some((contributor) => contributor.accountId === user.accountId)
     ? 'Contributor'
     : getAccountRoleOnStudy(user, study)

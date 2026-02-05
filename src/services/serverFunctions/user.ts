@@ -15,9 +15,9 @@ import { findCncByCncCode } from '@/db/cnc'
 import { isFeatureActive } from '@/db/deactivableFeatures'
 import {
   createOrganizationWithVersion,
-  getOrganizationNameByOrganizationVersionId,
-  getOrganizationVersionById,
   getOrganizationVersionByOrganizationIdAndEnvironment,
+  getOrganizationVersionForRightsCheck,
+  getOrgNameByOrgVersionId,
   getRawOrganizationBySiret,
   getRawOrganizationBySiteCNC,
   getRawOrganizationBySiteEstablishmentId,
@@ -117,7 +117,7 @@ export const sendEmailToAddedUser = async (
   withServerResponse('sendEmailToAddedUser', async () => {
     const addedMember = await getUserByEmail(email)
     const activeAccounts = addedMember?.accounts.filter((account) => account.status === UserStatus.ACTIVE)
-    const orga = await getOrganizationNameByOrganizationVersionId(orgaVersionId)
+    const name = await getOrgNameByOrgVersionId(orgaVersionId)
 
     if (activeAccounts?.length && activeAccounts.length > 0) {
       return sendAddedActiveUserEmail(
@@ -126,7 +126,7 @@ export const sendEmailToAddedUser = async (
         newUserName,
         env,
         activeAccounts.map((account) => account.environment),
-        orga?.organization.name || '',
+        name || '',
       )
     }
 
@@ -355,7 +355,7 @@ export const activateEmail = async (email: string, userEnv: Environment | undefi
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const accountOrgaVersion = await getOrganizationVersionById(account.organizationVersionId)
+    const accountOrgaVersion = await getOrganizationVersionForRightsCheck(account.organizationVersionId)
     if (!accountOrgaVersion || (!accountOrgaVersion.activatedLicence && env === Environment.BC)) {
       throw new Error(NOT_AUTHORIZED)
     }
