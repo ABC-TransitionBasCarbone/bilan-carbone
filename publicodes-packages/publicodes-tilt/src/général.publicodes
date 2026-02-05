@@ -1,29 +1,2 @@
 général:
   note: Les questions de cette catégories ne devront pas faire partie des variables manquantes au sein d'une page de form.
-
-général . nombre séances:
-  question: Nombre de séances
-  unité: séance
-
-général . nombre entrées:
-  question: Nombre d'entrées
-  unité: entrée
-
-général . nombre de jours ouverture:
-  question: Nombre de jours d'ouverture
-  unité: jour
-
-général . nombre de films programmés:
-  question: Nombre de films programmés
-  unité: film
-
-# TODO: Set values for these questions from cinema database
-général . distance depuis paris:
-  question: Distance depuis Paris
-  unité: km
-  note: Donnée récupérée depuis les informations du CNC.
-
-général . nombre écrans:
-  question: Nombre d'écrans / salles
-  unité: écran
-  note: Donnée récupérée depuis les informations du CNC.
