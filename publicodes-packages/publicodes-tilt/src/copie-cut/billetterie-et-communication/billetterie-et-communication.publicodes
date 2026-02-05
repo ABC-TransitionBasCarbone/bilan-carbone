@@ -1,9 +1,0 @@
-billetterie et communication:
-  titre: Billetterie et communication
-  formule:
-    somme:
-      - matériel distributeurs
-      - matériel cinéma
-      - communication digitale
-      - caisses et bornes
-  unité: kgCO2e
