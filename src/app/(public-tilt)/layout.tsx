@@ -1,7 +1,10 @@
+import styles from '@/components/pages/Public.module.css'
 import PublicTiltPage from '@/components/pages/PublicTilt'
 import DynamicTheme from '@/environments/core/providers/DynamicTheme'
+import { customRich } from '@/i18n/customRich'
 import { Environment } from '@prisma/client'
 import { Metadata } from 'next'
+import { getTranslations } from 'next-intl/server'
 import { ReactNode } from 'react'
 
 interface Props {
@@ -13,11 +16,13 @@ export const metadata: Metadata = {
   description: 'Découvrez le logiciel Bilan Carbone + pour les associations',
 }
 
-const PublicLayout = ({ children }: Props) => {
+const PublicLayout = async ({ children }: Props) => {
+  const t = await getTranslations('login')
+  const question = customRich(t, 'question', {}, Environment.TILT, { faq: styles.link, support: styles.link })
   return (
     <DynamicTheme environment={Environment.TILT}>
       <main className="h100">
-        <PublicTiltPage>{children}</PublicTiltPage>
+        <PublicTiltPage question={question}>{children}</PublicTiltPage>
       </main>
     </DynamicTheme>
   )

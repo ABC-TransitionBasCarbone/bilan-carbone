@@ -12,10 +12,11 @@ import Image from '../document/Image'
 import styles from './Public.module.css'
 
 interface Props {
+  question: ReactNode
   children: ReactNode
 }
 
-const PublicPage = ({ children }: Props) => {
+const PublicPage = ({ question, children }: Props) => {
   const t = useTranslations('login')
   const tLocale = useTranslations('locale')
   const [locale, setLocale] = useState<LocaleType>(defaultLocale)
@@ -42,7 +43,7 @@ const PublicPage = ({ children }: Props) => {
           height={400}
           className={classNames(styles.image, 'w100')}
         />
-        <p>{customRich(t, 'question', {}, undefined, { faq: styles.link, support: styles.link })}</p>
+        <p>{question}</p>
       </div>
       <div className={classNames(styles.loginForm, 'grow flex-col')}>
         <div className={classNames(styles.header, 'justify-between')}>
