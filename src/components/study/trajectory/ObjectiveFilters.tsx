@@ -23,7 +23,7 @@ interface Props {
   pastStudies?: PastStudy[]
 }
 
-const ObjectivesFilters = ({
+const ObjectiveFilters = ({
   search,
   setSearch,
   transitionPlanId,
@@ -76,4 +76,4 @@ const ObjectivesFilters = ({
   )
 }
 
-export default ObjectivesFilters
+export default ObjectiveFilters

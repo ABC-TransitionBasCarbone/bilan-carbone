@@ -1198,6 +1198,23 @@
           "correctedRateDescription": "Le taux à l'année N prend en compte votre taux voulu ainsi que les émissions entre votre année de référence et l'année de votre étude. Si vos émissions n'ont pas suivi votre taux souhaité, nous calculons les émissions émises en trop (overshoot) et appliquons un nouveau taux pour vous permettre de rattraper les émissions émises en trop."
         }
       },
+      "objectiveModal": {
+        "title": "Ajouter un objectif spécifique au périmètre",
+        "editTitle": "Modifier l'objectif spécifique au périmètre",
+        "cancel": "Annuler",
+        "submit": "Ajouter l'objectif",
+        "update": "Mettre à jour l'objectif",
+        "scopeSelection": "Sélection du périmètre",
+        "objectives": "Objectifs"
+      },
+      "conversionWarning": {
+        "title": "Conversion du type de trajectoire",
+        "warningTitle": "Cette action convertira votre trajectoire en type PERSONNALISÉ",
+        "message": "L'ajout d'un objectif spécifique au périmètre à la trajectoire \"{trajectoryName}\" ({trajectoryType}) la convertira automatiquement en type de trajectoire PERSONNALISÉ.",
+        "explanation": "Une fois converti en PERSONNALISÉ, la trajectoire ne suivra plus les taux de réduction prédéfinis {trajectoryType}. Vous aurez un contrôle total sur tous les objectifs.",
+        "cancel": "Annuler",
+        "confirm": "Continuer"
+      },
       "objectives": {
         "title": "Objectifs de réduction",
         "custom": "Personnalisée",

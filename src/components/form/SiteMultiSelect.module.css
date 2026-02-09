@@ -1,0 +1,20 @@
+.formControl {
+  width: 100%;
+}
+
+.menuPaper {
+  max-height: 25rem;
+}
+
+.searchItem {
+  padding: 0.5rem;
+  cursor: default;
+}
+
+.searchItem:hover {
+  background-color: transparent;
+}
+
+.searchInput {
+  width: 100%;
+}

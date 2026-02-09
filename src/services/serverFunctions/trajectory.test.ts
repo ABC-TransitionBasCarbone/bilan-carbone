@@ -4,7 +4,7 @@ import * as authModule from '@/services/auth'
 import * as studyPermissionsModule from '@/services/permissions/study'
 import { expect } from '@jest/globals'
 import { TrajectoryType } from '@prisma/client'
-import { CreateTrajectoryInput, createTrajectoryWithObjectives } from './trajectory'
+import { CreateTrajectoryInput, createTrajectoryWithObjectives } from './trajectory.serverFunction'
 
 // TODO: ESM module issue with Jest. Remove these mocks when moving to Vitest
 jest.mock('../file', () => ({ download: jest.fn() }))

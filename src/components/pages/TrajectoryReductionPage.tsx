@@ -18,7 +18,7 @@ import {
   TRAJECTORY_WB2C_ID,
 } from '@/constants/trajectories'
 import { FullStudy } from '@/db/study'
-import { TrajectoryWithObjectives } from '@/db/transitionPlan'
+import { TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
@@ -53,7 +53,7 @@ interface Props {
   study: FullStudy
   canEdit: boolean
   transitionPlan: TransitionPlan | null
-  trajectories?: TrajectoryWithObjectives[]
+  trajectories?: TrajectoryWithObjectivesAndScope[]
   linkedStudies?: FullStudy[]
   linkedExternalStudies?: ExternalStudy[]
   actions?: Action[]

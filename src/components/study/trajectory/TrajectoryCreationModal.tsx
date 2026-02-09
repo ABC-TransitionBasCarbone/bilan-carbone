@@ -2,18 +2,18 @@
 
 import LoadingButton from '@/components/base/LoadingButton'
 import Modal from '@/components/modals/Modal'
-import { TrajectoryWithObjectives } from '@/db/transitionPlan'
+import { TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import {
-  CreateTrajectoryInput,
-  createTrajectoryWithObjectives,
-  updateTrajectory,
-} from '@/services/serverFunctions/trajectory'
 import {
   createTrajectorySchema,
   SectorPercentages,
   TrajectoryFormData,
 } from '@/services/serverFunctions/trajectory.command'
+import {
+  CreateTrajectoryInput,
+  createTrajectoryWithObjectives,
+  updateTrajectory,
+} from '@/services/serverFunctions/trajectory.serverFunction'
 import {
   calculateBaseSNBCReductionRates,
   calculateSectoralSNBCReductionRates,
@@ -46,7 +46,7 @@ interface Props {
   onClose: () => void
   transitionPlanId: string
   onSuccess: (trajectoryId: string) => void
-  trajectory: TrajectoryWithObjectives | null
+  trajectory: TrajectoryWithObjectivesAndScope | null
   isFirstCreation?: boolean
   studyYear: number
   sectenData: SectenInfo[]

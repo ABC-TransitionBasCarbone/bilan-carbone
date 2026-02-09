@@ -113,6 +113,7 @@ model StudyTag {
   family   StudyTagFamily @relation(fields: [familyId], references: [id])
 
   emissionSourceTags EmissionSourceTag[]
+  objectiveTags      ObjectiveTag[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -370,6 +371,7 @@ model StudySite {
   studyAnswers Answer[]
 
   engagementActions EngagementAction[]
+  objectiveSites    ObjectiveSite[]
 
   @@unique([studyId, siteId])
   @@map("study_sites")

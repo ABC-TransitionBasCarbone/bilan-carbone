@@ -181,8 +181,54 @@ model Objective {
   targetYear    Int   @map("target_year")
   reductionRate Float @map("reduction_rate")
 
+  sites    ObjectiveSite[]
+  tags     ObjectiveTag[]
+  subPosts ObjectiveSubPost[]
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("objectives")
 }
+
+model ObjectiveSite {
+  id          String    @id @default(uuid())
+  objectiveId String    @map("objective_id")
+  studySiteId String    @map("study_site_id")
+  objective   Objective @relation(fields: [objectiveId], references: [id], onDelete: Cascade)
+  studySite   StudySite @relation(fields: [studySiteId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@unique([objectiveId, studySiteId])
+  @@map("objective_sites")
+}
+
+model ObjectiveTag {
+  id          String    @id @default(uuid())
+  objectiveId String    @map("objective_id")
+  studyTagId  String    @map("study_tag_id")
+  objective   Objective @relation(fields: [objectiveId], references: [id], onDelete: Cascade)
+  studyTag    StudyTag  @relation(fields: [studyTagId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@unique([objectiveId, studyTagId])
+  @@map("objective_tags")
+}
+
+model ObjectiveSubPost {
+  id          String    @id @default(uuid())
+  objectiveId String    @map("objective_id")
+  subPost     SubPost
+  objective   Objective @relation(fields: [objectiveId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@unique([objectiveId, subPost])
+  @@map("objective_subposts")
+}
+

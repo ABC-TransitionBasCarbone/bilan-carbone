@@ -4,7 +4,6 @@ import { prismaClient } from '@/db/client'
 import { getStudyStartDate } from '@/db/study'
 import {
   createTrajectoryWithObjectives as dbCreateTrajectoryWithObjectives,
-  deleteObjective as dbDeleteObjective,
   deleteTrajectory as dbDeleteTrajectory,
   updateTrajectoryWithObjectives as dbUpdateTrajectoryWithObjectives,
   getTrajectoriesByTransitionPlanId,
@@ -193,7 +192,7 @@ export const updateTrajectory = async (id: string, data: UpdateTrajectoryInput) 
         return prismaClient.trajectory.findUnique({
           where: { id },
           include: { objectives: { orderBy: { targetYear: 'asc' } } },
-        }) as Promise<TrajectoryWithObjectives>
+        })
       }
     }
 
@@ -248,7 +247,7 @@ export const updateTrajectory = async (id: string, data: UpdateTrajectoryInput) 
       return prismaClient.trajectory.findUnique({
         where: { id },
         include: { objectives: { orderBy: { targetYear: 'asc' } } },
-      }) as Promise<TrajectoryWithObjectives>
+      })
     }
 
     return dbUpdateTrajectoryWithObjectives(id, {
@@ -275,26 +274,4 @@ export const deleteTrajectory = async (id: string) =>
     }
 
     await dbDeleteTrajectory(id)
-  })
-
-export const deleteObjective = async (id: string) =>
-  withServerResponse('deleteObjective', async () => {
-    const objective = await prismaClient.objective.findUnique({
-      where: { id },
-      include: {
-        trajectory: {
-          include: { transitionPlan: true },
-        },
-      },
-    })
-    if (!objective) {
-      throw new Error('Objective not found')
-    }
-
-    const hasEditAccess = await hasEditAccessOnStudy(objective.trajectory.transitionPlan.studyId)
-    if (!hasEditAccess) {
-      throw new Error(NOT_AUTHORIZED)
-    }
-
-    await dbDeleteObjective(id)
   })

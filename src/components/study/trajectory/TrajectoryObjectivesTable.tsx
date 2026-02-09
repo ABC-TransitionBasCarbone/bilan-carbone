@@ -2,11 +2,12 @@
 
 import BaseTable from '@/components/base/Table'
 import { TableActionButton } from '@/components/base/TableActionButton'
-import { TrajectoryWithObjectives } from '@/db/transitionPlan'
+import { ObjectiveWithScope, TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
-import { deleteObjective, deleteTrajectory } from '@/services/serverFunctions/trajectory'
+import { deleteObjective } from '@/services/serverFunctions/objective.serverFunction'
 import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
+import { deleteTrajectory } from '@/services/serverFunctions/trajectory.serverFunction'
 import { formatNumber } from '@/utils/number'
 import {
   getCorrectedObjectives,
@@ -29,6 +30,8 @@ import styles from './TrajectoryObjectivesTable.module.css'
 
 const ConfirmDeleteModal = dynamic(() => import('../../modals/ConfirmDeleteModal'), { ssr: false })
 const TrajectoryCreationModal = dynamic(() => import('./TrajectoryCreationModal'), { ssr: false })
+const ObjectiveModal = dynamic(() => import('./ObjectiveModal'), { ssr: false })
+const TrajectoryConversionWarningModal = dynamic(() => import('./TrajectoryConversionWarningModal'), { ssr: false })
 
 type TrajectoryRow = {
   id: string
@@ -39,7 +42,7 @@ type TrajectoryRow = {
   referenceYear?: number
   correctedRate?: number
   isTrajectory: true
-  trajectory: TrajectoryWithObjectives
+  trajectory: TrajectoryWithObjectivesAndScope
   children: ObjectiveRow[]
 }
 
@@ -58,7 +61,7 @@ type ObjectiveRow = {
 type TableDataType = TrajectoryRow | ObjectiveRow
 
 interface Props {
-  trajectories: TrajectoryWithObjectives[]
+  trajectories: TrajectoryWithObjectivesAndScope[]
   canEdit: boolean
   transitionPlanId: string
   studyId: string
@@ -97,7 +100,14 @@ const TrajectoryObjectivesTable = ({
     name: string
   } | null>(null)
   const [editModalOpen, setEditModalOpen] = useState(false)
-  const [editTrajectory, setEditTrajectory] = useState<TrajectoryWithObjectives | null>(null)
+  const [editTrajectory, setEditTrajectory] = useState<TrajectoryWithObjectivesAndScope | null>(null)
+  const [objectiveModalOpen, setObjectiveModalOpen] = useState(false)
+  const [objectiveModalTrajectory, setObjectiveModalTrajectory] = useState<TrajectoryWithObjectivesAndScope | null>(
+    null,
+  )
+  const [editObjective, setEditObjective] = useState<ObjectiveWithScope | null>(null)
+  const [conversionWarningOpen, setConversionWarningOpen] = useState(false)
+  const [pendingTrajectory, setPendingTrajectory] = useState<TrajectoryWithObjectivesAndScope | null>(null)
 
   const fuse = useMemo(() => new Fuse(trajectories, fuseOptions), [trajectories])
 
@@ -189,7 +199,7 @@ const TrajectoryObjectivesTable = ({
     }
   }
 
-  const handleEditClick = (trajectory: TrajectoryWithObjectives) => {
+  const handleEditClick = (trajectory: TrajectoryWithObjectivesAndScope) => {
     setEditTrajectory(trajectory)
     setEditModalOpen(true)
   }
@@ -198,6 +208,46 @@ const TrajectoryObjectivesTable = ({
     router.refresh()
     setEditModalOpen(false)
     setEditTrajectory(null)
+  }
+
+  const handleAddObjectiveClick = (trajectory: TrajectoryWithObjectivesAndScope) => {
+    const isSBTI = trajectory.type === TrajectoryType.SBTI_15 || trajectory.type === TrajectoryType.SBTI_WB2C
+    const isSNBC = trajectory.type === TrajectoryType.SNBC_GENERAL || trajectory.type === TrajectoryType.SNBC_SECTORAL
+
+    if (isSBTI || isSNBC) {
+      setPendingTrajectory(trajectory)
+      setConversionWarningOpen(true)
+    } else {
+      setObjectiveModalTrajectory(trajectory)
+      setObjectiveModalOpen(true)
+    }
+  }
+
+  const handleConversionConfirm = () => {
+    if (pendingTrajectory) {
+      setObjectiveModalTrajectory(pendingTrajectory)
+      setObjectiveModalOpen(true)
+    }
+    setConversionWarningOpen(false)
+    setPendingTrajectory(null)
+  }
+
+  const handleConversionCancel = () => {
+    setConversionWarningOpen(false)
+    setPendingTrajectory(null)
+  }
+
+  const handleObjectiveSuccess = () => {
+    router.refresh()
+    setObjectiveModalOpen(false)
+    setObjectiveModalTrajectory(null)
+    setEditObjective(null)
+  }
+
+  const handleEditObjectiveClick = (objective: ObjectiveWithScope, trajectory: TrajectoryWithObjectivesAndScope) => {
+    setEditObjective(objective)
+    setObjectiveModalTrajectory(trajectory)
+    setObjectiveModalOpen(true)
   }
 
   const columns = useMemo(() => {
@@ -321,6 +371,7 @@ const TrajectoryObjectivesTable = ({
           if (rowData.isTrajectory) {
             return (
               <div className="flex">
+                <TableActionButton type="add" onClick={() => handleAddObjectiveClick(rowData.trajectory)} />
                 <TableActionButton type="edit" onClick={() => handleEditClick(rowData.trajectory)} />
                 <TableActionButton
                   type="delete"
@@ -331,17 +382,30 @@ const TrajectoryObjectivesTable = ({
           }
 
           const parentTrajectory = trajectories.find((t) => t.id === rowData.trajectoryId)
+          const objective = parentTrajectory?.objectives.find((obj) => obj.id === rowData.id)
 
-          const canEditObjective = parentTrajectory && parentTrajectory.type === TrajectoryType.CUSTOM
+          if (!parentTrajectory || !objective) {
+            return null
+          }
+
+          const hasScopeData = objective.sites.length > 0 || objective.tags.length > 0 || objective.subPosts.length > 0
+
+          const canEditObjective = parentTrajectory.type === TrajectoryType.CUSTOM
 
           const canDeleteObjective =
-            parentTrajectory &&
-            parentTrajectory.type === TrajectoryType.CUSTOM &&
-            parentTrajectory.objectives.length > 1
+            parentTrajectory.type === TrajectoryType.CUSTOM && parentTrajectory.objectives.length > 1
+
+          const handleEdit = () => {
+            if (hasScopeData) {
+              handleEditObjectiveClick(objective, parentTrajectory)
+            } else {
+              handleEditClick(parentTrajectory)
+            }
+          }
 
           return (
             <div className="flex">
-              {canEditObjective && <TableActionButton type="edit" onClick={() => handleEditClick(parentTrajectory)} />}
+              {canEditObjective && <TableActionButton type="edit" onClick={handleEdit} />}
               {canDeleteObjective && (
                 <TableActionButton
                   type="delete"
@@ -445,6 +509,29 @@ const TrajectoryObjectivesTable = ({
           sectenData={sectenData}
           studyEmissions={studyEmissions}
           pastStudies={pastStudies}
+        />
+      )}
+      {objectiveModalOpen && objectiveModalTrajectory && (
+        <ObjectiveModal
+          open={objectiveModalOpen}
+          onClose={() => {
+            setObjectiveModalOpen(false)
+            setObjectiveModalTrajectory(null)
+            setEditObjective(null)
+          }}
+          trajectory={objectiveModalTrajectory}
+          studyId={studyId}
+          onSuccess={handleObjectiveSuccess}
+          objective={editObjective || undefined}
+        />
+      )}
+      {conversionWarningOpen && pendingTrajectory && (
+        <TrajectoryConversionWarningModal
+          open={conversionWarningOpen}
+          onConfirm={handleConversionConfirm}
+          onCancel={handleConversionCancel}
+          trajectoryName={pendingTrajectory.name}
+          trajectoryType={pendingTrajectory.type}
         />
       )}
     </>

@@ -11,20 +11,29 @@ import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
-import { Control } from 'react-hook-form'
+import { Control, FieldPath } from 'react-hook-form'
 import styles from './ObjectiveCard.module.css'
+import { ObjectiveModalFormData } from './ObjectiveModal'
 
-interface Props {
+interface Props<T extends TrajectoryFormData | ObjectiveModalFormData> {
   reductionRate?: number
   name?: string
   isEditable: boolean
-  control: Control<TrajectoryFormData>
+  control: Control<T>
   index: number
   onDelete?: () => void
   correctedObjective: BaseObjective | null
 }
 
-const ObjectiveCard = ({ reductionRate, name, isEditable, control, index, onDelete, correctedObjective }: Props) => {
+const ObjectiveCard = <T extends TrajectoryFormData | ObjectiveModalFormData>({
+  reductionRate,
+  name,
+  isEditable,
+  control,
+  index,
+  onDelete,
+  correctedObjective,
+}: Props<T>) => {
   const t = useTranslations('study.transitionPlan.trajectoryModal')
   const tGlossary = useTranslations('study.transitionPlan.trajectoryModal.glossary')
   const [showOvershootInfo, setShowOvershootInfo] = useState(false)
@@ -82,7 +91,7 @@ const ObjectiveCard = ({ reductionRate, name, isEditable, control, index, onDele
           ) : (
             <div className="flex-col gapped1">
               <FormDatePicker
-                name={`objectives.${index}.targetYear`}
+                name={`objectives.${index}.targetYear` as FieldPath<T>}
                 label={t('objectives.year')}
                 control={control}
                 className="w100"
@@ -92,7 +101,7 @@ const ObjectiveCard = ({ reductionRate, name, isEditable, control, index, onDele
                 clearable
               />
               <FormTextField
-                name={`objectives.${index}.reductionRate`}
+                name={`objectives.${index}.reductionRate` as FieldPath<T>}
                 label={t('objectives.reductionRate')}
                 control={control}
                 className="w100"

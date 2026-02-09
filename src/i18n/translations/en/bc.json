@@ -1198,6 +1198,23 @@
           "correctedRateDescription": "The Year N rate takes into account your desired rate as well as emissions between your reference year and your study year. If your emissions did not follow your desired rate, we calculate the excess emissions (overshoot) and apply a new rate to allow you to catch up on the excess emissions."
         }
       },
+      "objectiveModal": {
+        "title": "Add scope-specific objective",
+        "editTitle": "Edit scope-specific objective",
+        "cancel": "Cancel",
+        "submit": "Add objective",
+        "update": "Update objective",
+        "scopeSelection": "Scope Selection",
+        "objectives": "Objectives"
+      },
+      "conversionWarning": {
+        "title": "Trajectory Type Conversion",
+        "warningTitle": "This action will convert your trajectory to CUSTOM type",
+        "message": "Adding a scope-specific objective to the trajectory \"{trajectoryName}\" ({trajectoryType}) will automatically convert it to a CUSTOM trajectory type.",
+        "explanation": "Once converted to CUSTOM, the trajectory will no longer follow the predefined {trajectoryType} reduction rates. You will have full control over all objectives.",
+        "cancel": "Cancel",
+        "confirm": "Continue"
+      },
       "objectives": {
         "title": "Reduction objectives",
         "custom": "Custom",

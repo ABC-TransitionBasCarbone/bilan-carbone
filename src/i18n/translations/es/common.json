@@ -10,6 +10,11 @@
     "subPosts": "Sub-posts",
     "onDate": "el",
     "by": "por",
+    "scope": "Perímetro",
+    "sites": "Sites",
+    "tags": "Tags",
+    "posts": "Posts",
+    "selectedPlural": "seleccionados",
     "action": {
       "create": "Crear",
       "edit": "Editar",

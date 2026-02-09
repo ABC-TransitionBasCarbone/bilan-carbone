@@ -5,7 +5,7 @@ import withTransitionPlan, { TransitionPlanProps } from '@/components/hoc/withTr
 import TrajectoryReductionPage from '@/components/pages/TrajectoryReductionPage'
 import { getUserApplicationSettings } from '@/db/user'
 import { getSectenData } from '@/services/serverFunctions/secten'
-import { getTrajectories } from '@/services/serverFunctions/trajectory'
+import { getTrajectories } from '@/services/serverFunctions/trajectory.serverFunction'
 import {
   getLinkedAndExternalStudies,
   getStudyActions,

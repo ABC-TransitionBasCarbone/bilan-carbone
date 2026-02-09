@@ -3,7 +3,6 @@ import {
   ActionIndicatorType,
   ActionPotentialDeduction,
   ExternalStudy,
-  Objective,
   Trajectory,
   TrajectoryType,
   TransitionPlanStudy,
@@ -11,6 +10,7 @@ import {
 import {
   ActionWithRelations,
   duplicateTransitionPlanWithRelations,
+  ObjectiveWithScope,
   TransitionPlanWithRelations,
 } from './transitionPlan'
 
@@ -30,8 +30,8 @@ jest.mock('./client', () => ({
 }))
 
 const createMockTrajectory = (
-  overrides?: Partial<Trajectory & { objectives: Objective[] }>,
-): Trajectory & { objectives: Objective[] } => ({
+  overrides?: Partial<Trajectory & { objectives: ObjectiveWithScope[] }>,
+): Trajectory & { objectives: ObjectiveWithScope[] } => ({
   id: 'trajectory-1',
   transitionPlanId: 'plan-id',
   name: 'Test Trajectory',
@@ -49,6 +49,9 @@ const createMockTrajectory = (
       reductionRate: 0.05,
       createdAt: new Date('2024-01-01'),
       updatedAt: new Date('2024-01-01'),
+      sites: [],
+      tags: [],
+      subPosts: [],
     },
     {
       id: 'objective-2',
@@ -57,6 +60,9 @@ const createMockTrajectory = (
       reductionRate: 0.08,
       createdAt: new Date('2024-01-01'),
       updatedAt: new Date('2024-01-01'),
+      sites: [],
+      tags: [],
+      subPosts: [],
     },
   ],
   ...overrides,
