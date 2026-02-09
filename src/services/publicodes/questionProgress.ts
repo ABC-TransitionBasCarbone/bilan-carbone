@@ -87,7 +87,10 @@ function isGroupLayoutAnswered(layout: EvaluatedGroupLayout<string>): boolean {
 }
 
 function isListLayoutApplicable(layout: EvaluatedListLayout<string>): boolean {
-  return layout.evaluatedListRows.some((el) => el.elements.every((e) => e.applicable))
+  return (
+    layout.evaluatedListRows.length === 0 ||
+    layout.evaluatedListRows.some((el) => el.elements.every((e) => e.applicable))
+  )
 }
 
 function isListLayoutAnswered(layout: EvaluatedListLayout<string>): boolean {
