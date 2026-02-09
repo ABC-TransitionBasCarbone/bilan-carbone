@@ -2,7 +2,6 @@
   applicable si: énergie . électricité . présent
   titre: Électricité
   formule: consommation * FE
-  par défaut: 0
   unité: kgCO2e
   avec:
     consommation:
@@ -18,7 +17,6 @@
   applicable si: énergie . panneaux PV ou chauffe eau solaire . présent
   titre: Autoproduction d'électricité
   formule: autoproduction * FE
-  par défaut: 0
   unité: kgCO2e
   avec:
     autoproduction:

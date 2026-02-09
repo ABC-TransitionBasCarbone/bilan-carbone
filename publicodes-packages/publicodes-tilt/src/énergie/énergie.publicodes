@@ -1,5 +1,6 @@
 énergie:
   titre: Énergie
+  question: Qu'utilisez-vous pour le chauffage, l'éclairage et les autres consommations énergétiques de vos locaux ?
   mosaique:
     type: selection
     options:
@@ -19,7 +20,6 @@
         réseaux de chaleur . présent: non
         réseaux de froid . présent: non
         panneaux PV ou chauffe eau solaire . présent: non
-  Question: Qu'utilisez vous pour le chauffage, l'éclairage et les autres consommations énergétiques de vos locaux ?  
   formule:
     somme:
       - énergie . électricité

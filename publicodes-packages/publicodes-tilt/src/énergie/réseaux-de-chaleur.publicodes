@@ -2,7 +2,6 @@
   applicable si: énergie . réseaux de chaleur . présent
   titre: Réseau de chaleur
   formule: consommation * FE
-  par défaut: 0
   unité: kgCO2e
   avec:
     consommation:

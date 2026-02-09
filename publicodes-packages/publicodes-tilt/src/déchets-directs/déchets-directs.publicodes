@@ -1,8 +1,9 @@
-déchets-directs:
+déchets:
   titre: Déchets directs
+  question: Quelles quantités des déchets suivants sont jetées chaque année ?
   formule:
     somme:
-      - emballages-et-plastiques
-      - ordures-ménagères
+      - emballages et plastiques
+      - ordures ménagères
       - organiques
   unité: kgCO2e

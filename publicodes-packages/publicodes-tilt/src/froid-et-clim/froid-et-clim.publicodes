@@ -1,2 +1,22 @@
-froid-et-clim:
-  titre: Froid et clim
+froid et clim:
+  titre: Froid et climatisation
+  formule: nombre * FE / ammortissement
+  unité: kgCO2e
+  avec:
+    FE:
+      valeur: 239
+      unité: kgCO2e/unité
+      meta:
+        id: 28325
+        nom: Climatiseur mobile
+
+    ammortissement:
+      valeur: 6
+
+froid et clim . nombre:
+  question: Combien de climatiseurs sont utilisés dans vos locaux ?
+  unité: unité
+
+froid et clim . fuites:
+  titre: Fuites de fluides frigoriègnes
+  formule: puissance moyenne * nombre

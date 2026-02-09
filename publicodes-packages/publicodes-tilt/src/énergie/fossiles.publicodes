@@ -2,7 +2,6 @@
   applicable si: énergie . gaz . présent
   titre: Gaz
   formule: consommation * FE
-  par défaut: 0
   unité: kgCO2e
   avec:
     consommation:
@@ -18,7 +17,6 @@
   applicable si: énergie . fioul . présent
   titre: Fioul
   formule: consommation * FE
-  par défaut: 0
   unité: kgCO2e
   avec:
     consommation:

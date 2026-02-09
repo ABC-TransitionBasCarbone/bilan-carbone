@@ -7,12 +7,12 @@ construction . bâtiment:
         alors:
           variations:
             - si: locaux = 'locaux seuls'
-              alors: FE*locaux seuls . surface
+              alors: FE * locaux seuls . surface
             - si: locaux = 'locaux partagés'
-              alors: FE*locaux partagés . surface*pourcentage
+              alors: FE * locaux partagés . surface * pourcentage
             - si: locaux = 'pas de locaux'
               alors: 0
-          sinon: 0
+            - sinon: 0
   unité: kgCO2e
 
 construction . bâtiment . FE:
@@ -23,8 +23,8 @@ construction . bâtiment . FE:
     nom: Bâtiment industriel, structure en béton
 
 construction . bâtiment . locaux:
-  question:
-    Concernant vos locaux, diriez-vous que:
+  question: |
+    Concernant vos locaux, diriez-vous que :
   une possibilité:
     - locaux seuls
     - locaux partagés
@@ -49,5 +49,5 @@ construction . bâtiment . locaux . locaux partagés . surface:
 
 construction . bâtiment . locaux . locaux partagés . pourcentage:
   applicable si: locaux = 'locaux partagés'
-  question: Quel est la part de la surface de ces locaux attribuables à votre association ?
+  question: Quelle est la part de la surface de ces locaux attribuables à votre association ?
   unité: %
