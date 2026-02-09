@@ -1,30 +1,19 @@
 import BarChart from '@/components/study/charts/BarChart'
 import PieChart from '@/components/study/charts/PieChart'
-import { FullStudy } from '@/db/study'
-import { getDetailedEmissionResults } from '@/services/study'
+import { BaseResultsByPost } from '@/services/results/consolidated'
 import { Translations } from '@/types/translation'
-import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
+import { StudyResultUnit } from '@prisma/client'
 
 interface Props {
-  study: FullStudy
-  studySite: string
+  results: BaseResultsByPost[]
+  studyResultUnit: StudyResultUnit
   siteName: string
   tPdf: Translations
   isAll: boolean
   year?: string
 }
 
-export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll, year = '' }: Props) => {
-  const tPost = useTranslations('emissionFactors.post')
-  const tStudyResults = useTranslations('study.results')
-
-  const { computedResultsWithDep } = useMemo(
-    () =>
-      getDetailedEmissionResults(study, tPost, studySite, false, study.organizationVersion.environment, tStudyResults),
-    [study, studySite, tPost, tStudyResults],
-  )
-
+export const ChartsPage = ({ results, studyResultUnit, siteName, tPdf, isAll, year = '' }: Props) => {
   return (
     <div className="pdf-content page-break-before pdf-page-content">
       <div className="pdf-section">
@@ -33,8 +22,8 @@ export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll, year = '' 
         </h2>
 
         <BarChart
-          resultsUnit={study.resultsUnit}
-          results={computedResultsWithDep}
+          resultsUnit={studyResultUnit}
+          results={results}
           height={350}
           showTitle={true}
           title={isAll ? tPdf('charts.allEmissions') : tPdf('charts.siteEmissions', { site: siteName, year })}
@@ -45,13 +34,13 @@ export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll, year = '' 
         />
 
         <PieChart
-          resultsUnit={study.resultsUnit}
+          resultsUnit={studyResultUnit}
           height={400}
           showTitle={true}
           title={isAll ? tPdf('charts.allEmissions') : tPdf('charts.siteEmissions', { site: siteName, year })}
           showLabelsOnPie={true}
           skipAnimation={true}
-          results={computedResultsWithDep}
+          results={results}
           showSubLevel={false}
           type="post"
         />

@@ -1,6 +1,5 @@
 'use client'
 
-import { ChartsPage } from '@/app/(public)/preview/etudes/[id]/ChartsPage'
 import '@/app/(public)/preview/etudes/[id]/pdf-summary.css'
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import { FullStudy } from '@/db/study'
@@ -201,14 +200,17 @@ const PDFSummary = ({ study }: Props) => {
                 isCompact
               />
             </div>
-            <ChartsPage
-              study={study}
-              studySite={site.id}
-              siteName={site.fullName}
-              tPdf={tPdf}
-              isAll={false}
-              year={year}
-            />
+            {
+              // TODO: use publicodes results
+              //   <ChartsPage
+              //   study={study}
+              //   studySite={site.id}
+              //   siteName={site.fullName}
+              //   tPdf={tPdf}
+              //   isAll={false}
+              //   year={year}
+              // />
+            }
           </React.Fragment>
         ))}
         <div className="pdf-content page-break-before pdf-page-content">
