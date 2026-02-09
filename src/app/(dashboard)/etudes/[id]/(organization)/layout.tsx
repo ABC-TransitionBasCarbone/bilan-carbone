@@ -1,7 +1,7 @@
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
-import { StudyProps } from '@/components/hoc/withStudy'
-import WithStudyDetails from '@/components/hoc/withStudyDetails'
+import NotFound from '@/components/pages/NotFound'
 import StudyNavbar from '@/components/studyNavbar/StudyNavbar'
+import { getStudyForNavbar } from '@/db/study'
 import { hasRoleOnStudy } from '@/services/permissions/environment'
 import { isDeactivableFeatureActiveForEnvironment } from '@/services/serverFunctions/deactivableFeatures'
 import { checkStudyHasObjectives } from '@/services/serverFunctions/trajectory'
@@ -15,13 +15,19 @@ interface Props {
   params: Promise<{ id: UUID }>
 }
 
-const NavLayout = async ({ children, params, study, user }: Props & StudyProps & UserSessionProps) => {
+const NavLayout = async ({ children, params, user }: Props & UserSessionProps) => {
   const { id } = await params
+
+  const study = await getStudyForNavbar(id)
+  if (!study) {
+    return <NotFound />
+  }
+
   const environment = study.organizationVersion.environment
 
   const [transitionPlanFeature, objectivesResponse, userRole] = await Promise.all([
     isDeactivableFeatureActiveForEnvironment(DeactivatableFeature.TransitionPlan, environment),
-    checkStudyHasObjectives(study.id),
+    checkStudyHasObjectives(id),
     getAccountRoleOnStudy(user, study),
   ])
 
@@ -35,7 +41,8 @@ const NavLayout = async ({ children, params, study, user }: Props & StudyProps &
         <StudyNavbar
           environment={environment}
           studyId={id}
-          study={study}
+          studyName={study.name}
+          studySimplified={study.simplified}
           isTransitionPlanActive={isTransitionPlanActive}
           hasObjectives={hasObjectives}
           userRole={showRoleInChip ? userRole : null}
@@ -46,4 +53,4 @@ const NavLayout = async ({ children, params, study, user }: Props & StudyProps &
   )
 }
 
-export default withAuth(WithStudyDetails(NavLayout))
+export default withAuth(NavLayout)

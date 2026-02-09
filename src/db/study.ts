@@ -2,12 +2,13 @@ import { StudyContributorDeleteParams } from '@/components/study/rights/StudyCon
 import { getEnvVar } from '@/lib/environment'
 import { isSourceForEnv } from '@/services/importEmissionFactor/import'
 import { hasAccessToCreateStudyWithEmissionFactorVersions } from '@/services/permissions/environment'
+import { filterAllowedStudies } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { ChangeStudyCinemaCommand } from '@/services/serverFunctions/study.command'
 import { getAllowedLevels, hasSufficientLevel } from '@/services/study'
 import { mapCncToStudySite } from '@/utils/cnc'
 import { isAdminOnOrga } from '@/utils/organization'
-import { getUserRoleOnPublicStudy } from '@/utils/study'
+import { getUserRoleOnPublicStudy, StudyWithRoleFields } from '@/utils/study'
 import { isAdmin } from '@/utils/user'
 import {
   CommentStatus,
@@ -24,6 +25,7 @@ import {
   type Prisma,
 } from '@prisma/client'
 import { UserSession } from 'next-auth'
+import { cache } from 'react'
 import { getAccountOrganizationVersions } from './account'
 import { AccountWithUserSelect } from './account.select'
 import { prismaClient } from './client'
@@ -359,8 +361,7 @@ export const getAllowedStudiesByAccount = async (user: UserSession) => {
 
   // Be carefull: study on this query is shown to a lot of user
   // Never display sensitive data here (like emission source)
-  return prismaClient.study.findMany({
-    select: { id: true },
+  const studies = await prismaClient.study.findMany({
     where: {
       OR: [
         {
@@ -378,12 +379,12 @@ export const getAllowedStudiesByAccount = async (user: UserSession) => {
       ],
     },
   })
+  return filterAllowedStudies(user, studies)
 }
 
 export const getExternalAllowedStudiesByUser = async (user: UserSession) => {
   const userOrganizationVersions = await getAccountOrganizationVersions(user.accountId)
-  return prismaClient.study.findMany({
-    select: { id: true },
+  const studies = await prismaClient.study.findMany({
     where: {
       AND: [
         {
@@ -400,6 +401,7 @@ export const getExternalAllowedStudiesByUser = async (user: UserSession) => {
       ],
     },
   })
+  return filterAllowedStudies(user, studies)
 }
 
 export const getAllowedStudiesByAccountIdAndOrganizationId = async (organizationVersionIds: string[]) => {
@@ -464,8 +466,7 @@ export const getAllowedStudiesByUserAndOrganization = async (
     select: { id: true },
   })
 
-  return prismaClient.study.findMany({
-    select: { id: true },
+  const studies = await prismaClient.study.findMany({
     where: {
       organizationVersionId,
       simplified,
@@ -486,18 +487,55 @@ export const getAllowedStudiesByUserAndOrganization = async (
           }),
     },
   })
+  return filterAllowedStudies(user, studies)
 }
 
-export const getStudyById = async (id: string, organizationVersionId: string | null, tx?: Prisma.TransactionClient) => {
-  const client = tx ?? prismaClient
-  const study = await client.study.findUnique({
+const fetchStudyById = cache(async (id: string) => {
+  return prismaClient.study.findUnique({
     where: { id },
     include: fullStudyInclude,
   })
+})
+
+// IMPORTANT: Do not use unless you need the full study with all its fields and relations.
+export const getStudyById = async (id: string, organizationVersionId: string | null, tx?: Prisma.TransactionClient) => {
+  const study = tx ? await tx.study.findUnique({ where: { id }, include: fullStudyInclude }) : await fetchStudyById(id)
   if (!study) {
     return null
   }
   return { ...study, allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level, organizationVersionId) }
+}
+
+type StudyForNavbar = StudyWithRoleFields & {
+  name: string
+  simplified: boolean
+}
+
+export const getStudyForNavbar = async (id: string): Promise<StudyForNavbar | null> => {
+  return prismaClient.study.findUnique({
+    where: { id },
+    select: {
+      name: true,
+      simplified: true,
+      level: true,
+      isPublic: true,
+      organizationVersion: {
+        select: {
+          id: true,
+          parentId: true,
+          environment: true,
+          activatedLicence: true,
+          parent: { select: { activatedLicence: true } },
+        },
+      },
+      allowedUsers: {
+        select: {
+          role: true,
+          account: { select: { id: true } },
+        },
+      },
+    },
+  })
 }
 
 export const getStudyOrganizationVersion = async (id: string) => {

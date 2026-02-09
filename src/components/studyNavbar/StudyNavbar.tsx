@@ -2,7 +2,6 @@
 
 import StudyName from '@/components/study/card/StudyName'
 import { getStudyNavbarMenu } from '@/constants/navbar'
-import { FullStudy } from '@/db/study'
 import MenuIcon from '@mui/icons-material/Menu'
 import MenuOpenIcon from '@mui/icons-material/MenuOpen'
 import { Drawer, Fab } from '@mui/material'
@@ -18,13 +17,22 @@ import styles from './StudyNavbar.module.css'
 interface Props {
   environment: Environment
   studyId: UUID
-  study: FullStudy
+  studyName: string
+  studySimplified: boolean
   isTransitionPlanActive: boolean
   hasObjectives: boolean
   userRole: StudyRole | null
 }
 
-const StudyNavbar = ({ environment, studyId, study, isTransitionPlanActive, hasObjectives, userRole }: Props) => {
+const StudyNavbar = ({
+  environment,
+  studyId,
+  studyName,
+  studySimplified,
+  isTransitionPlanActive,
+  hasObjectives,
+  userRole,
+}: Props) => {
   const pathName = usePathname()
 
   const t = useTranslations('study.navigation')
@@ -34,10 +42,10 @@ const StudyNavbar = ({ environment, studyId, study, isTransitionPlanActive, hasO
     environment,
     t,
     studyId,
-    study.name,
+    studyName,
     isTransitionPlanActive,
     hasObjectives,
-    study.simplified,
+    studySimplified,
   )
   return (
     <>
