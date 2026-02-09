@@ -83,6 +83,7 @@ const StudyNavbar = ({ environment, studyId, study, isTransitionPlanActive, hasO
                     ) : (
                       <Link
                         key={linkIndex}
+                        target={link.external ? '_blank' : undefined}
                         className={classNames(styles.link, {
                           [styles.active]: pathName === link.href || pathName.startsWith(`${link.href}/`),
                         })}
