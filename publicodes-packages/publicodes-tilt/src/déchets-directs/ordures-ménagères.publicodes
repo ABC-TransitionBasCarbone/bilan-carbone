@@ -1,7 +1,7 @@
 déchets . ordures ménagères:
   titre: Poubelle noire (ordures ménagères, autres déchets, etc)
   unité: kgCO2e
-  formule: FE*poids
+  formule: FE * poids
   avec:
     FE:
       valeur: 374
@@ -9,6 +9,7 @@ déchets . ordures ménagères:
       meta:
         id: 34650
         nom: Ordures ménagères résiduelles - Incinération - Impacts
+        
     poids:
-      question: Poubelle noire (ordures ménagères, autres déchets, etc) ##Mettre dans le layout la question : "Quelles quantités des déchets suivants sont jetées chaque année ?"
+      question: Poubelle noire (ordures ménagères)
       unité: tonne

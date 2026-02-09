@@ -1,6 +1,90 @@
-fin-de-vie:
+fin de vie:
   titre: Fin de vie
-  formule : 
-    somme : 
-      - fin de vie . traitement des déchets en fin de vie
-    unité : kgCO2e
+  applicable si: fin de vie présente = oui
+  formule:
+    variations:
+      - si:
+          - est défini: poids
+        alors:
+          somme:
+            - poubelle noire
+            - poubelle jaune
+            - déchets verre
+            - déchets verts
+      - sinon: 0
+  unité: kgCO2e
+
+fin de vie . fin de vie présente:
+  question: Fournissez-vous des biens matériels à vos bénéficiaires ?
+
+fin de vie . poids:
+  applicable si:
+    toutes ces conditions:
+      - est défini: fin de vie présente
+      - fin de vie présente = oui
+  question: Quel est le poids total de ces biens délivrés sur une année ?
+  unité: tonne
+
+fin de vie . poubelle noire:
+  applicable si:
+    est défini: poids
+  formule: FE * pourcentage * poids
+  avec:
+    FE:
+      valeur: 374
+      unité: kgCO2e/tonne
+      meta:
+        id: 34650
+        nom: Ordures ménagères résiduelles - Incinération - Impacts
+
+    pourcentage:
+      valeur: 0.50
+      note: Répartition moyenne des déchets en France - source ADEME/CITEO - Ordures ménagères résiduelles représentent environ 50% des déchets en fin de vie
+
+fin de vie . poubelle jaune:
+  applicable si:
+    est défini: poids
+  formule: FE * pourcentage * poids
+  avec:
+    FE:
+      valeur: 41
+      unité: kgCO2e/tonne
+      meta:
+        id: 34565
+        nom: Plastique souple PP pétrosourcé - Fin de vie moyenne filière - Impacts
+
+    pourcentage:
+      valeur: 0.28
+      note: Répartition moyenne des déchets en France - source ADEME/CITEO - Emballages et plastiques représentent environ 28% des déchets en fin de vie
+
+fin de vie . déchets verre:
+  applicable si:
+    est défini: poids
+  formule: FE * pourcentage * poids
+  avec:
+    FE:
+      valeur: 41
+      unité: kgCO2e/tonne
+      meta:
+        id: 34478
+        nom: Emballages/Verre/Fin de vie moyenne filière - Impacts
+
+    pourcentage:
+      valeur: 0.12
+      note: Répartition moyenne des déchets en France - source ADEME/CITEO - Déchets verre représentent environ 12% des déchets en fin de vie
+
+fin de vie . déchets verts:
+  applicable si:
+    est défini: poids
+  formule: FE * pourcentage * poids
+  avec:
+    FE:
+      valeur: 140
+      unité: kgCO2e/tonne
+      meta:
+        id: 34638
+        nom: Déchets de cuisine et déchets verts - Compostage industriel - Impacts
+
+    pourcentage:
+      valeur: 0.10
+      note: Répartition moyenne des déchets en France - source ADEME/CITEO - Déchets organiques et verts représentent environ 10% des déchets en fin de vie
