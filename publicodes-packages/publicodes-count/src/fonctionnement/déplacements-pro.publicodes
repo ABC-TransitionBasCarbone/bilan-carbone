@@ -6,7 +6,6 @@ fonctionnement . déplacements pro:
   unité: kgCO2e
 
 fonctionnement . déplacements pro . déplacements:
-  # TODO: Should be a liste of types of collaborators
   titre: Déplacements
   question: Décrivez les déplacements professionnels de vos collaborateurs
   description: |
@@ -14,10 +13,6 @@ fonctionnement . déplacements pro . déplacements:
   formule: déplacement type
   par défaut: 0
   unité: kgCO2e
-
-fonctionnement . déplacements pro . déplacements . nom:
-  question: Déplacement
-  type: texte
 
 fonctionnement . déplacements pro . déplacement type:
   formule:
@@ -27,13 +22,20 @@ fonctionnement . déplacements pro . déplacement type:
       - nuitées
   unité: kgCO2e
 
+fonctionnement . déplacements pro . déplacement type . nom:
+  type: texte
+  question: Déplacement
+
 fonctionnement . déplacements pro . déplacement type . nombre participants:
+  type: nombre
   question: Nombre de participants
 
 fonctionnement . déplacements pro . déplacement type . nombre occurences:
+  type: nombre
   question: Nombre d'occurrences
 
 fonctionnement . déplacements pro . déplacement type . nombre de nuitées:
+  type: nombre
   question: Nombre de nuitées
   unité: nuitée
 

@@ -1,4 +1,10 @@
-import { FormLayout, groupLayout, inputLayout, tableLayout } from '@/components/publicodes-form/layouts/formLayout'
+import {
+  FormLayout,
+  groupLayout,
+  inputLayout,
+  listLayout,
+  tableLayout,
+} from '@/components/publicodes-form/layouts/formLayout'
 import { CutPost } from '@/services/posts.enums'
 import { SubPost } from '@prisma/client'
 import { CutRuleName } from './types'
@@ -32,6 +38,7 @@ const POST_TO_RULENAME: Record<CutPost, CutRuleName> = {
 const SUBPOST_TO_RULENAME: Partial<Record<SubPost, CutRuleName>> = {
   Batiment: 'fonctionnement . bâtiment',
   Equipe: 'fonctionnement . équipe',
+  DeplacementsProfessionnels: 'fonctionnement . déplacements pro',
   Energie: 'fonctionnement . énergie',
   ActivitesDeBureau: 'fonctionnement . activités de bureau',
   MobiliteSpectateurs: 'mobilité spectateurs . mobilité spectateurs',
@@ -53,6 +60,8 @@ const input = (rule: CutRuleName): FormLayout<CutRuleName> => inputLayout<CutRul
 const group = (title: string, rules: CutRuleName[]): FormLayout<CutRuleName> => groupLayout<CutRuleName>(title, rules)
 const table = (title: string, headers: string[], rows: CutRuleName[][]): FormLayout<CutRuleName> =>
   tableLayout<CutRuleName>(title, headers, rows)
+const list = (targetRule: CutRuleName, rules: CutRuleName[]): FormLayout<CutRuleName> =>
+  listLayout<CutRuleName>(targetRule, rules)
 
 export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRuleName>[]>> = {
   Batiment: [
@@ -71,8 +80,25 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRule
     input('fonctionnement . bâtiment . parking présent'),
     input('fonctionnement . bâtiment . parking . nombre de places'),
   ],
-  // TODO: support list layout
-  Equipe: [],
+  Equipe: [
+    list('fonctionnement . équipe . collaborateurs', [
+      'fonctionnement . équipe . collaborateur type . nom',
+      'fonctionnement . équipe . collaborateur type . nombre de jours par semaine',
+      'fonctionnement . équipe . collaborateur type . transport . moyen de transport',
+      'fonctionnement . équipe . collaborateur type . transport . distance',
+    ]),
+  ],
+  DeplacementsProfessionnels: [
+    list('fonctionnement . déplacements pro . déplacements', [
+      'fonctionnement . déplacements pro . déplacement type . nom',
+      'fonctionnement . déplacements pro . déplacement type . transport . distance',
+      'fonctionnement . déplacements pro . déplacement type . nombre participants',
+      'fonctionnement . déplacements pro . déplacement type . transport . moyen de transport',
+      'fonctionnement . déplacements pro . déplacement type . nombre occurences',
+      'fonctionnement . déplacements pro . déplacement type . type hébergement',
+      'fonctionnement . déplacements pro . déplacement type . nombre de nuitées',
+    ]),
+  ],
   Energie: [
     input('fonctionnement . énergie . électricité . consommation'),
     input('fonctionnement . énergie . gaz . consommation'),
@@ -81,13 +107,18 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRule
     input('fonctionnement . énergie . réseau de froid . consommation'),
     input('fonctionnement . énergie . granulés . consommation'),
     input('fonctionnement . énergie . est équipé climatisation'),
-    input('fonctionnement . énergie . groupes électrogènes'),
+    input('fonctionnement . énergie . équipement groupes électrogènes'),
     input('fonctionnement . énergie . groupes électrogènes . consommation'),
   ],
   ActivitesDeBureau: [
     input('fonctionnement . activités de bureau . petites fournitures . montant'),
     input('fonctionnement . activités de bureau . services . montant'),
-    // TODO: support list layout
+    list('fonctionnement . activités de bureau . informatique', [
+      'fonctionnement . activités de bureau . informatique . équipement',
+      'fonctionnement . activités de bureau . informatique . appareil . année achat',
+      'fonctionnement . activités de bureau . informatique . appareil . durée location',
+      'fonctionnement . activités de bureau . informatique . appareil . nombre',
+    ]),
   ],
   MobiliteSpectateurs: [
     input('mobilité spectateurs . précision'),
@@ -155,7 +186,19 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<CutRule
   ],
   EquipesRecues: [input('tournées avant premières . équipes reçues . nombre équipes')],
   MaterielTechnique: [
-    // TODO: support list layout
+    list('salles et cabines . matériel technique . salles', [
+      'salles et cabines . matériel technique . salle . nom',
+      'salles et cabines . matériel technique . salle . projecteur . type',
+      'salles et cabines . matériel technique . salle . projecteur . année achat',
+      'salles et cabines . matériel technique . salle . écran . type',
+      'salles et cabines . matériel technique . salle . écran . surface écran',
+      'salles et cabines . matériel technique . salle . écran . année achat',
+      'salles et cabines . matériel technique . salle . fauteuils . type',
+      'salles et cabines . matériel technique . salle . fauteuils . nombre',
+      'salles et cabines . matériel technique . salle . fauteuils . année achat',
+      'salles et cabines . matériel technique . salle . système son . type',
+      'salles et cabines . matériel technique . salle . système son . année achat',
+    ]),
     input('salles et cabines . matériel technique . films . nombre films dématérialisés'),
     input('salles et cabines . matériel technique . cloud . stockage'),
     input('salles et cabines . matériel technique . disques durs . nombre'),

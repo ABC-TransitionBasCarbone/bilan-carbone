@@ -2,6 +2,7 @@
 
 import { getSituationByStudySite, getSituationsByStudySites, upsertSituation } from '@/db/situation'
 import { getStudyById } from '@/db/study'
+import { ListLayoutSituations } from '@/lib/publicodes/context'
 import { withServerResponse } from '@/utils/serverResponse'
 import { InputJsonValue } from '@prisma/client/runtime/library'
 import { Situation } from 'publicodes'
@@ -33,6 +34,7 @@ export const saveSituation = async (
   studyId: string,
   studySiteId: string,
   situation: Situation<string>,
+  listLayoutSituations: ListLayoutSituations<string>,
   modelVersion: string,
 ) =>
   withServerResponse('saveSituation', async () => {
@@ -52,5 +54,10 @@ export const saveSituation = async (
       throw new Error(NOT_AUTHORIZED)
     }
 
-    return await upsertSituation(studySiteId, situation as InputJsonValue, modelVersion)
+    return await upsertSituation(
+      studySiteId,
+      situation as InputJsonValue,
+      listLayoutSituations as InputJsonValue,
+      modelVersion,
+    )
   })

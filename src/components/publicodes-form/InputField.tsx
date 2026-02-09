@@ -2,6 +2,7 @@ import { EvaluatedFormElement } from '@publicodes/forms'
 import NumberWithUnitInput from './inputFields/NumberWithUnitInput'
 import RadioGroupInput from './inputFields/RadioGroupInput'
 import SelectInput from './inputFields/SelectInput'
+import TextInput from './inputFields/TextInput'
 import YearPickerInput from './inputFields/YearPickerInput'
 import { OnFieldChange } from './utils'
 
@@ -28,7 +29,7 @@ export default function InputField<RuleName extends string>({
         case 'date':
           return <YearPickerInput formElement={formElement} onChange={onChange} />
         case 'text':
-          return formElement.defaultValue ? <p dangerouslySetInnerHTML={{ __html: formElement.defaultValue }} /> : null
+          return <TextInput formElement={formElement} onChange={onChange} />
         case 'checkbox':
         default:
           return <p>Unsupported input type: {formElement.type}</p>
@@ -38,7 +39,8 @@ export default function InputField<RuleName extends string>({
     case 'select':
       return <SelectInput formElement={formElement} onChange={onChange} />
     case 'textarea':
-    default:
-      return <p>Unsupported formElement type: {formElement.element}</p>
+      // NOTE: we assume textarea is only used for displaying static text as
+      // they have no utility in a publicodes form.
+      return formElement.defaultValue ? <p dangerouslySetInnerHTML={{ __html: formElement.defaultValue }} /> : null
   }
 }

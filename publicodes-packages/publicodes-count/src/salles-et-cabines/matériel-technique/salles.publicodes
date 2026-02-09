@@ -1,6 +1,6 @@
 salles et cabines . matériel technique . salles:
-  #TODO: Should be a list of salles
   titre: Salles
+  question: Décrivez les différentes salles du cinéma
   formule: salle
   par défaut: 0
   unité: kgCO2e
@@ -66,6 +66,8 @@ salles et cabines . matériel technique . salle . projecteur . type:
   une possibilité:
     - xénon
     - laser
+  form:
+    saisie: menu déroulant
   avec:
     xénon:
       titre: Projecteur xénon
@@ -138,6 +140,8 @@ salles et cabines . matériel technique . salle . écran . type:
   une possibilité:
     - écran 2D
     - écran 3D
+  form:
+    saisie: menu déroulant
   avec:
     écran 2D:
       titre: Écran 2D
@@ -211,6 +215,8 @@ salles et cabines . matériel technique . salle . fauteuils . type:
   une possibilité:
     - fauteuils classiques
     - fauteuils 4DX
+  form:
+    saisie: menu déroulant
   avec:
     fauteuils classiques:
       titre: Fauteuils classiques

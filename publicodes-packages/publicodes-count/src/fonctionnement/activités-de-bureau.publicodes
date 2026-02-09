@@ -56,7 +56,6 @@ fonctionnement . activités de bureau . informatique:
   description: |
     Si l'équipement concerné est acheté, merci de ne pas remplir le champ "Durée de location". Si l'équipement concerné est loué de manière ponctuelle, merci de ne pas remplir le champ "Date d'achat". Si vous louez un équipement pour de longues durées ou de manière continue, nous vous recommandons de le considérer comme acheté (à la date de la première année de location).
   note: La durée de location prévaut sur la date d'achat.
-  # TODO: Should be a list of appareil
   formule: appareil
   par défaut: 0
 
@@ -90,6 +89,7 @@ fonctionnement . activités de bureau . informatique . appareil:
       unité: an
 
     nombre:
+      type: nombre
       question: Nombre d'appareils
 
     année achat:

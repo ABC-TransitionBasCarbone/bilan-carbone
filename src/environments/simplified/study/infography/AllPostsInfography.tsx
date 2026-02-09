@@ -26,7 +26,7 @@ const StyledGrid = styled('div')({
 const AllPostsInfography = ({ study }: Props) => {
   const tUnits = useTranslations('study.results.units')
   const tPost = useTranslations('emissionFactors.post')
-  const { engine, situation, config, isLoading } = usePublicodesSituation()
+  const { engine, situation, listLayoutSituations, config, isLoading } = usePublicodesSituation()
 
   const { questionProgress, publicodesResults } = useMemo<{
     questionProgress: StatsResult
@@ -40,7 +40,12 @@ const AllPostsInfography = ({ study }: Props) => {
     }
 
     return {
-      questionProgress: getQuestionProgressBySubPost(engine, config.subPostsByPost, config.getFormLayout),
+      questionProgress: getQuestionProgressBySubPost(
+        engine,
+        listLayoutSituations,
+        config.subPostsByPost,
+        config.getFormLayout,
+      ),
       publicodesResults: computeBaseResultsByPostFromEngine(
         engine,
         config.posts,

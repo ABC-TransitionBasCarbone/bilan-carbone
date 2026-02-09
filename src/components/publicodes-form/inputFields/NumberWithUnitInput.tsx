@@ -1,8 +1,9 @@
-import { usePublicodesRuleTranslation } from '@/hooks/usePublicodesRuleTranslation'
+import { usePublicodesUnitTranslation } from '@/hooks/usePublicodesTranslation'
 import { NumberField } from '@base-ui-components/react/number-field'
 import { InputAdornment, OutlinedInput } from '@mui/material'
 import { EvaluatedNumberInput } from '@publicodes/forms'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { OnFieldChange } from '../utils'
+import { useSimpleInputState } from './hooks/useSimpleInputState'
 import styles from './NumberWithUnitInput.module.css'
 import { BaseInputProps } from './utils'
 
@@ -15,48 +16,18 @@ const NumberWithUnitInput = <RuleName extends string>({
   onChange,
   disabled,
 }: NumberWithUnitInputProps<RuleName>) => {
-  const { unit } = usePublicodesRuleTranslation(formElement.id)
-  const committedValue = formElement.value ?? formElement.defaultValue ?? null
+  const unit = usePublicodesUnitTranslation(formElement.unit)
   const isDisabled = disabled || !formElement.applicable
-
-  const [localValue, setLocalValue] = useState<number | null>(committedValue)
-  const previousCommittedValue = useRef(committedValue)
-  const uncommittedValue = useRef<number | null>(null)
-
-  // Sync local value when the committed value changes from outside (e.g., from DB sync)
-  useEffect(() => {
-    if (previousCommittedValue.current !== committedValue && committedValue !== localValue) {
-      setLocalValue(committedValue)
-    }
-    previousCommittedValue.current = committedValue
-  }, [committedValue, localValue])
-
-  // Flush uncommitted changes on unmount
-  useEffect(() => {
-    return () => {
-      if (uncommittedValue.current !== null) {
-        onChange(formElement.id, String(uncommittedValue.current ?? ''))
-      }
-    }
-  }, [onChange, formElement.id])
-
-  const handleValueChange = useCallback((newValue: number | null) => {
-    setLocalValue(newValue)
-    uncommittedValue.current = newValue
-  }, [])
-
-  const handleValueCommitted = useCallback(
-    (newValue: number | null) => {
-      uncommittedValue.current = null
-      onChange(formElement.id, String(newValue ?? ''))
-    },
-    [onChange, formElement.id],
+  const { localValue, handleValueChange, handleValueCommitted, handleFocus } = useSimpleInputState<number>(
+    formElement,
+    onChange as OnFieldChange,
   )
 
   return (
     <NumberField.Root
       className={styles.inputWrapper}
       value={localValue}
+      onFocus={handleFocus}
       onValueChange={handleValueChange}
       onValueCommitted={handleValueCommitted}
       disabled={isDisabled}

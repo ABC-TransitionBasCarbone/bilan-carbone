@@ -1,6 +1,7 @@
 model Situation {
-  id        String @id @default(uuid())
-  situation Json
+  id                   String @id @default(uuid())
+  situation            Json
+  listLayoutSituations Json   @map("list_layout_situations")
 
   studySiteId String    @unique @map("study_site_id")
   studySite   StudySite @relation(fields: [studySiteId], references: [id], onDelete: Cascade)

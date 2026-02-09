@@ -366,8 +366,8 @@ model StudySite {
   superficy     Float?
   studentNumber Int?   @map("student_number")
 
-  situation          Situation?
-  studyAnswers       Answer[]
+  situation    Situation?
+  studyAnswers Answer[]
 
   EngagementAction   EngagementAction? @relation(fields: [engagementActionId], references: [id])
   engagementActionId String?

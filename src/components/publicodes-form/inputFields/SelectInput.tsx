@@ -1,4 +1,4 @@
-import { usePublicodesRuleTranslation } from '@/hooks/usePublicodesRuleTranslation'
+import { usePublicodesRuleTranslation } from '@/hooks/usePublicodesTranslation'
 import { FormControl, FormHelperText, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { EvaluatedSelect } from '@publicodes/forms'
@@ -16,6 +16,7 @@ const StyledFormControl = styled(FormControl, {
   maxWidth: table ? '12.5rem' : '100%',
   width: '100%',
   boxSizing: 'border-box',
+  minWidth: '8rem',
 }))
 
 interface SelectInputProps<RuleName extends string> extends BaseInputProps<RuleName> {

@@ -15,8 +15,21 @@ export const TRANSLATIONS_DIR = path.join(__dirname, '../translations')
 export const TO_TRANSLATE_PREFIX = '[TO_TRANSLATE]'
 export const UPDATED_PREFIX = '[UPDATED]'
 
-export const AVAILABLE_LOCALES = ['en', 'es'] as const
-export type Locale = (typeof AVAILABLE_LOCALES)[number] | 'fr'
+import { Locale, LocaleType } from '../config'
+export { Locale }
+
+// For backward-compatibility, mapping LocaleType to string[] where needed
+export const AVAILABLE_LOCALES: LocaleType[] = [
+  Locale.EN,
+  Locale.FR,
+  Locale.ES,
+  Locale.IT,
+  Locale.RO,
+  Locale.HR,
+  Locale.HU,
+  Locale.EL,
+]
+// LocaleType already includes all supported locale codes as string values
 
 export const AVAILABLE_MODELS = ['cut', 'clickson'] as const
 export type Model = (typeof AVAILABLE_MODELS)[number]

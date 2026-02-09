@@ -6,12 +6,14 @@ import {
 import { loadSituation } from '@/services/serverFunctions/situation'
 import Engine, { Situation } from 'publicodes'
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { ListLayoutSituations } from './types'
 
 export interface PublicodesSituationContextValue<RuleName extends string = string> {
   engine: Engine<RuleName>
   situation: Situation<RuleName>
+  listLayoutSituations: ListLayoutSituations<RuleName>
   studySiteId: string
-  setSituation: (situation: Situation<RuleName>) => void
+  setSituation: (situation: Situation<RuleName>, listLayoutSituations?: ListLayoutSituations<RuleName>) => void
   isLoading: boolean
   error: string | null
   config: SimplifiedPublicodesConfig<RuleName>
@@ -34,14 +36,27 @@ export function PublicodesSituationProvider<RuleName extends string = string>({
 }: PublicodesSituationProviderProps) {
   const config = getSimplifiedPublicodesConfig(environment) as SimplifiedPublicodesConfig<RuleName>
   const [situation, setSituationState] = useState<Situation<RuleName>>({})
+  const [listLayoutSituations, setListLayoutSituationsState] = useState<ListLayoutSituations<RuleName>>({})
+
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const engine = useMemo(() => config.getEngine().shallowCopy() as Engine<RuleName>, [config])
 
   const setSituation = useCallback(
-    (newSituation: Situation<RuleName>) => {
+    (newSituation: Situation<RuleName>, listLayoutSituations?: ListLayoutSituations<RuleName>) => {
       engine.setSituation(newSituation)
-      setSituationState(newSituation)
+      setSituationState(
+        // NOTE: We get the filtered situation from the engine to ensure that only
+        // valid situation entries are stored.
+        engine.getSituation(),
+      )
+      if (listLayoutSituations) {
+        // NOTE: there is no sync with the main situation here, it's done by
+        // the [udpateListLayoutSituation] function of the
+        // [PublicodesFormProvider]. Therefore, this state setter should only
+        // be used in the [PublicodesFormProvider].
+        setListLayoutSituationsState(listLayoutSituations)
+      }
     },
     [engine],
   )
@@ -58,8 +73,9 @@ export function PublicodesSituationProvider<RuleName extends string = string>({
         }
 
         const loadedSituation = (result.data?.situation ?? {}) as Situation<RuleName>
+        const loadedListLayoutSituations = (result.data?.listLayoutSituations ?? {}) as ListLayoutSituations<RuleName>
         setIsLoading(false)
-        setSituation(loadedSituation)
+        setSituation(loadedSituation, loadedListLayoutSituations)
       } catch (err) {
         setIsLoading(false)
         console.error('Failed to load situation:', err)
@@ -74,13 +90,14 @@ export function PublicodesSituationProvider<RuleName extends string = string>({
     () => ({
       engine,
       situation,
+      listLayoutSituations,
       config,
       setSituation,
       studySiteId,
       isLoading,
       error,
     }),
-    [engine, situation, config, studySiteId, isLoading, error],
+    [engine, situation, listLayoutSituations, config, studySiteId, isLoading, error],
   )
 
   return <PublicodesSituationContext.Provider value={value}>{children}</PublicodesSituationContext.Provider>

@@ -14,7 +14,7 @@ export interface PublicodesSubPostFormProps {
 
 const PublicodesSubPostForm = ({ subPost }: PublicodesSubPostFormProps) => {
   const tQuestions = useTranslations('emissionFactors.post.questions')
-  const { engine, situation, updateField, isLoading, error, config } = usePublicodesForm()
+  const { situation, isLoading, error, config } = usePublicodesForm()
   const formLayouts = config.getFormLayout(subPost)
 
   if (error) {
@@ -46,7 +46,7 @@ const PublicodesSubPostForm = ({ subPost }: PublicodesSubPostFormProps) => {
     return null
   }
 
-  return <PublicodesForm engine={engine} formLayouts={formLayouts} situation={situation} onFieldChange={updateField} />
+  return <PublicodesForm formLayouts={formLayouts} />
 }
 
 export default PublicodesSubPostForm

@@ -18,6 +18,12 @@ export function getClicksonEngine(): ClicksonPublicodesEngine {
         // option required by @publicodes/forms.
         filterNotApplicablePossibilities: true,
       },
+      strict: {
+        // NOTE: for now, we disable strict mode to allow setting situations
+        // that not fit the current model. Howerver, if the model changes,
+        // migration for situations should be implemented.
+        situation: false,
+      },
     })
   })
 }

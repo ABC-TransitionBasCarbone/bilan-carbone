@@ -10,3 +10,5 @@ export {
   type PublicodesAutoSaveContextValue,
   type SaveStatus,
 } from './PublicodesFormProvider'
+
+export type { ListLayoutSituations } from './types'

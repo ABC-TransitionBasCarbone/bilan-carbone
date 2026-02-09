@@ -12,6 +12,7 @@ export type FormLayout<RuleName extends string = string> =
   | InputLayout<RuleName>
   | GroupLayout<RuleName>
   | TableLayout<RuleName>
+  | ListLayout<RuleName>
 
 export interface InputLayout<RuleName extends string> {
   type: 'input'
@@ -45,4 +46,22 @@ export interface GroupLayout<RuleName extends string> {
 
 export function groupLayout<RuleName extends string>(title: string, rules: RuleName[]): GroupLayout<RuleName> {
   return { type: 'group', title, rules }
+}
+
+export interface ListLayout<RuleName extends string> {
+  type: 'list'
+  targetRule: RuleName
+  rules: RuleName[]
+}
+
+/**
+ * Creates a ListLayout object.
+ *
+ * @template RuleName - The type representing the names of the rules in the form.
+ * @param targetRule - The rule corresonding to the sub-model used to compute values for each row in the list. It also defines the question and description displayed above the list.
+ * @param rules - An array of rule names that define the columns of the list. These rules define the individual fields for each item in the list and the corresponding question is displayed as a column header.
+ * @returns A ListLayout object.
+ */
+export function listLayout<RuleName extends string>(targetRule: RuleName, rules: RuleName[]): ListLayout<RuleName> {
+  return { type: 'list', targetRule, rules }
 }

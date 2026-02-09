@@ -3,11 +3,17 @@
 
 'use server'
 
+import { PUBLICODES_COUNT_VERSION } from '@/constants/versions'
 import { prismaClient } from '@/db/client'
+import { upsertSituation } from '@/db/situation'
 import { getCutEngine } from '@/environments/cut/publicodes/cut-engine'
-import { studySiteToSituation } from '@/environments/cut/publicodes/studySiteToSituation'
+import { studySiteToCutSituation } from '@/environments/cut/publicodes/studySiteToSituation'
 import { CutRuleName, CutSituation } from '@/environments/cut/publicodes/types'
+import { ListLayoutSituations } from '@/lib/publicodes/context/types'
+import { aggregateSituationValues } from '@/lib/publicodes/utils'
+import { CutStudySiteFields } from '@/services/studySiteToSituation'
 import { Answer, QuestionType, Unit } from '@prisma/client'
+import { InputJsonValue } from '@prisma/client/runtime/library'
 import { CutSituationKey, InternQuestionId, questionsPublicodesMapping } from './questionsPublicodesMapping'
 
 // Pour chaque answers:
@@ -17,7 +23,7 @@ import { CutSituationKey, InternQuestionId, questionsPublicodesMapping } from '.
 
 type stuationWithListLayout = {
   mainSituation: CutSituation
-  listLayoutSituations: Record<CutRuleName, CutSituation[]>
+  listLayoutSituations: ListLayoutSituations<CutRuleName>
 }
 
 const studySiteSituationMap: Record<string, stuationWithListLayout> = {}
@@ -29,16 +35,16 @@ function formatToPublicodesValue(
   type: QuestionType,
   unit: Unit | null,
   questionInternId: InternQuestionId,
-): { situationKey: string; situationValue: number | string } | {} | null {
+): Record<string, string | number> | null {
   if (!value) {
     return null
   }
-  let situationState: Record<string, string | number> = {}
+  const situationState: Record<string, string | number> = {}
   let situationKey = null
   let situationValue = null
 
   switch (type) {
-    case 'QCU':
+    case 'QCU': {
       situationKey = questionsPublicodesMapping.QCU?.[questionInternId] as CutSituationKey
       if (value === '11-Oui') {
         situationValue = 'oui'
@@ -47,18 +53,21 @@ function formatToPublicodesValue(
         situationValue = 'non'
       }
       break
-    case 'NUMBER':
+    }
+    case 'NUMBER': {
       situationKey = questionsPublicodesMapping.NUMBER?.[questionInternId] as CutSituationKey
       situationValue = parseFloat(value as string)
       break
-    case 'TEXT':
+    }
+    case 'TEXT': {
       situationKey = questionsPublicodesMapping.TEXT?.[questionInternId] as CutSituationKey
       if (value === 'Invalid Date') {
         return null
       }
-      situationValue = unit === 'YEAR' ? `'01/${value}'` : `'${value}'`
+      situationValue = unit === 'YEAR' ? `01/${value}` : `'${value}'`
       break
-    case 'SELECT':
+    }
+    case 'SELECT': {
       situationKey = questionsPublicodesMapping.SELECT?.[questionInternId]![0]
       const unformattedSituationValue =
         questionsPublicodesMapping.SELECT?.[questionInternId]![1][
@@ -66,7 +75,8 @@ function formatToPublicodesValue(
         ]
       situationValue = unformattedSituationValue ? `'${unformattedSituationValue}'` : null
       break
-    case 'QCM':
+    }
+    case 'QCM': {
       // convert value string like "[option1, option2]" to array
       const selectedOptions = JSON.parse(value as string)
       for (const option of selectedOptions) {
@@ -79,9 +89,11 @@ function formatToPublicodesValue(
         }
       }
       break
-    default:
+    }
+    default: {
       console.log(`Unsupported question type ${type} for question ID intern ${questionInternId}`)
       return null
+    }
   }
   if (Object.keys(situationState).length === 0) {
     if (!situationKey || !situationValue) {
@@ -95,17 +107,14 @@ function formatToPublicodesValue(
 
 async function processTableAnswer(answerCourante: Answer, questionCourante: { idIntern: string; type: QuestionType }) {
   const questionInternId = questionCourante.idIntern
-  const value = answerCourante.response
+  const value = answerCourante.response as { rows?: { data: Record<string, string> }[] } | null
 
-  // @ts-ignore: Ignore dynamic key access
   const rows = value?.rows?.map((row) => row.data)
   for (const row of rows ?? []) {
     const selectQuestionInternId = questionInternId.replace('10-', '11-') as InternQuestionId
-    const publicodesKey = // @ts-ignore: Ignore dynamic key access
-      questionsPublicodesMapping.SELECT?.[selectQuestionInternId]?.[1][row[selectQuestionInternId]]?.replaceAll(
-        ' ',
-        '_',
-      )
+    const publicodesKey = questionsPublicodesMapping.SELECT?.[selectQuestionInternId]?.[1][
+      row[selectQuestionInternId]
+    ]?.replaceAll(' ', '_')
 
     if (!publicodesKey) {
       console.warn(
@@ -135,9 +144,8 @@ async function processTableAnswer(answerCourante: Answer, questionCourante: { id
 }
 
 async function processListAnswer(answerCourante: Answer, listRule: string) {
-  const value = answerCourante.response
+  const value = answerCourante.response as { rows?: { id: string; data: Record<string, string> }[] } | null
 
-  // @ts-ignore: Ignore dynamic key access
   for (const row of value?.rows ?? []) {
     for (const questionId of Object.keys(row.data ?? {})) {
       await processAnswer({
@@ -192,7 +200,7 @@ async function processAnswer({
   if (!studySiteSituationMap[answerCourante.studySiteId]) {
     studySiteSituationMap[answerCourante.studySiteId] = {
       mainSituation: {},
-      listLayoutSituations: {} as Record<CutRuleName, CutSituation[]>,
+      listLayoutSituations: {},
     }
   }
 
@@ -231,15 +239,20 @@ async function processAnswer({
 
   if (isListItemFrom) {
     // we add the item to the correct list layout situation according to the isListItemFrom key
-    if (!studySiteSituationMap[answerCourante.studySiteId].listLayoutSituations[isListItemFrom as CutRuleName]) {
-      studySiteSituationMap[answerCourante.studySiteId].listLayoutSituations[isListItemFrom as CutRuleName] = []
+    const [ruleName, rowId] = isListItemFrom.split(' | ')
+    if (!studySiteSituationMap[answerCourante.studySiteId].listLayoutSituations[ruleName as CutRuleName]) {
+      studySiteSituationMap[answerCourante.studySiteId].listLayoutSituations[ruleName as CutRuleName] = []
     }
-    // we merge the new situation state into the last item of the list but we only keep one item per list entry
-    const list = studySiteSituationMap[answerCourante.studySiteId].listLayoutSituations[isListItemFrom as CutRuleName]
-    if (list.length === 0) {
-      list.push({})
+    // Find or create the item with the matching rowId
+    const list = studySiteSituationMap[answerCourante.studySiteId].listLayoutSituations[ruleName as CutRuleName]
+    if (list) {
+      let existingItem = list.find((item) => item.id === rowId)
+      if (!existingItem) {
+        existingItem = { id: rowId, situation: {} as CutSituation }
+        list.push(existingItem)
+      }
+      Object.assign(existingItem.situation, situationState)
     }
-    Object.assign(list[list.length - 1], situationState)
   } else {
     // Merge la situation formatée dans la situation principale du studySite
     Object.assign(studySiteSituationMap[answerCourante.studySiteId].mainSituation, situationState)
@@ -258,35 +271,31 @@ async function main() {
   })
 
   for (const site of studySiteInfo) {
-    const additionalSituation = studySiteToSituation(site)
+    const additionalSituation = studySiteToCutSituation(site as CutStudySiteFields)
     studySiteSituationMap[site.id].mainSituation = {
       ...studySiteSituationMap[site.id].mainSituation,
       ...additionalSituation,
     }
   }
 
-  // Group list layout situations by rule and drop row IDs
-
-  Object.entries(studySiteSituationMap).forEach(([, site]) => {
-    const formattedListLayout: Record<CutRuleName, CutSituation[]> = {} as Record<CutRuleName, CutSituation[]>
-    for (const [key, situationArray] of Object.entries(site.listLayoutSituations)) {
-      const [ruleName] = key.split(' | ')
-      if (!formattedListLayout[ruleName as CutRuleName]) {
-        formattedListLayout[ruleName as CutRuleName] = []
-      }
-      // Flatten per-row arrays (usually length 1) into the aggregated list
-      for (const item of situationArray as CutSituation[]) {
-        formattedListLayout[ruleName as CutRuleName].push(item)
-      }
-    }
-    site.listLayoutSituations = formattedListLayout
-  })
-
-  console.log('Mapped situation for study site:', studySiteSituationMap)
-
-  // Check dans l'engine avant de save la situation
+  // Calculate list evaluation parent value from list items situations
   const engine = getCutEngine()
 
+  Object.entries(studySiteSituationMap).forEach(([, site]) => {
+    // use aggregateSituationValues like in patchListLayoutSituations
+    for (const [listRule, listSituations] of Object.entries(site.listLayoutSituations)) {
+      const aggregatedValue = aggregateSituationValues(
+        engine,
+        listRule as CutRuleName,
+        listSituations as Array<{ id: string; situation: CutSituation }>,
+      )
+      site.mainSituation[listRule as CutRuleName] = aggregatedValue
+    }
+  })
+
+  console.log('Mapped situation for study site:', JSON.stringify(studySiteSituationMap))
+
+  // Check dans l'engine avant de save la situation
   for (const [studySiteId, situation] of Object.entries(studySiteSituationMap)) {
     try {
       engine.setSituation(situation.mainSituation)
@@ -304,12 +313,19 @@ async function main() {
   }
 
   // Sauvegader la situation
-  //   await Promise.all(Object.entries(studySiteSituationMap).map(([studySiteId, situation]) =>
-  //      upsertSituation(studySiteId, situation as InputJsonValue, PUBLICODES_COUNT_VERSION)
-  // ))
+  await Promise.all(
+    Object.entries(studySiteSituationMap).map(([studySiteId, situation]) =>
+      upsertSituation(
+        studySiteId,
+        situation.mainSituation as InputJsonValue,
+        situation.listLayoutSituations as InputJsonValue,
+        PUBLICODES_COUNT_VERSION,
+      ),
+    ),
+  )
 }
 
-console.log('Startig migration')
+console.log('Starting migration')
 const startTime = Date.now()
 main().then(() => {
   const duration = Date.now() - startTime

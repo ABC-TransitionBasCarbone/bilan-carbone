@@ -1,9 +1,11 @@
 import {
   EvaluatedGroupLayout,
+  EvaluatedListLayout,
   EvaluatedTableLayout,
   getEvaluatedFormLayout,
 } from '@/components/publicodes-form/layouts/evaluatedFormLayout'
 import { FormLayout } from '@/components/publicodes-form/layouts/formLayout'
+import { ListLayoutSituations } from '@/lib/publicodes/context'
 import { typedEntries } from '@/utils/object'
 import { SubPost } from '@prisma/client'
 import Engine from 'publicodes'
@@ -12,10 +14,11 @@ import { Post, SimplifiedPost } from '../posts'
 export type QuestionStats = { answered: number; total: number }
 export type StatsResult = Partial<Record<Post, Partial<Record<SubPost, QuestionStats>>>>
 
-export const getQuestionProgressBySubPost = (
-  engine: Engine,
+export const getQuestionProgressBySubPost = <RuleName extends string = string>(
+  engine: Engine<RuleName>,
+  listLayoutSituations: ListLayoutSituations<RuleName>,
   subPostsByPost: Record<SimplifiedPost, SubPost[]>,
-  getSubPostLayouts: (subPost: SubPost) => FormLayout<string>[] | undefined,
+  getSubPostLayouts: (subPost: SubPost) => FormLayout<RuleName>[] | undefined,
 ): StatsResult => {
   return typedEntries(subPostsByPost).reduce<StatsResult>((postAcc, [post, subPosts]) => {
     postAcc[post] = subPosts.reduce<Partial<Record<SubPost, QuestionStats>>>((subPostAcc, subPost) => {
@@ -26,7 +29,7 @@ export const getQuestionProgressBySubPost = (
         return subPostAcc
       }
 
-      const evaluatedFormLayouts = layouts.map((layout) => getEvaluatedFormLayout(engine, layout))
+      const evaluatedFormLayouts = layouts.map((layout) => getEvaluatedFormLayout(engine, layout, listLayoutSituations))
       const stats = evaluatedFormLayouts.reduce(
         (acc, evaluatedLayout) => {
           switch (evaluatedLayout.type) {
@@ -34,6 +37,14 @@ export const getQuestionProgressBySubPost = (
               if (evaluatedLayout.evaluatedElement.applicable) {
                 acc.total += 1
                 if (evaluatedLayout.evaluatedElement.answered) {
+                  acc.answered += 1
+                }
+              }
+              break
+            case 'list':
+              if (isListLayoutApplicable(evaluatedLayout)) {
+                acc.total += 1
+                if (isListLayoutAnswered(evaluatedLayout)) {
                   acc.answered += 1
                 }
               }
@@ -73,6 +84,17 @@ function isGroupLayoutApplicable(layout: EvaluatedGroupLayout<string>): boolean 
 
 function isGroupLayoutAnswered(layout: EvaluatedGroupLayout<string>): boolean {
   return layout.evaluatedElements.some((el) => el.applicable && el.answered)
+}
+
+function isListLayoutApplicable(layout: EvaluatedListLayout<string>): boolean {
+  return (
+    layout.evaluatedListRows.length === 0 ||
+    layout.evaluatedListRows.some((el) => el.elements.every((e) => e.applicable))
+  )
+}
+
+function isListLayoutAnswered(layout: EvaluatedListLayout<string>): boolean {
+  return layout.evaluatedListRows.some((el) => el.elements.every((e) => !e.applicable || e.answered))
 }
 
 function isTableLayoutApplicable(layout: EvaluatedTableLayout<string>): boolean {
