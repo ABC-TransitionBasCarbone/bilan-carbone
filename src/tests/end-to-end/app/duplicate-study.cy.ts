@@ -21,7 +21,10 @@ describe('Duplicate study', () => {
       .within(() => {
         cy.getByTestId('study-link').click()
       })
-
+    cy.url().should('include', '/etudes/')
+    cy.getByTestId('header-study').should('be.visible').should('contain.text', 'BC V8.10')
+    cy.getByTestId('duplicate-study').should('be.visible')
+    cy.getByTestId('duplicate-study').should('be.enabled')
     cy.getByTestId('duplicate-study').click()
     cy.get('#duplicate-study-modal-title').should('be.visible')
     cy.get('#duplicate-study-modal-description').should('be.visible')

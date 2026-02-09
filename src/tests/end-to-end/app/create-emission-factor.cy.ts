@@ -308,6 +308,7 @@ describe('Create emission factor', () => {
       cy.get('input').should('not.be.disabled')
     })
 
+    cy.getByTestId('emission-factor-multiple-switch').should('exist')
     cy.getByTestId('emission-factor-multiple-switch').should('not.be.checked')
     cy.getByTestId('emission-factor-multiple-switch').click()
     cy.getByTestId('emission-factor-totalCo2').within(() => {

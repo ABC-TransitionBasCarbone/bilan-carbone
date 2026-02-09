@@ -19,7 +19,11 @@ describe('Delete study', () => {
         cy.getByTestId('study-link').click()
       })
 
-    cy.getByTestId('delete-study').should('be.visible').click()
+    cy.url().should('include', '/etudes/')
+    cy.getByTestId('header-study').should('be.visible').should('contain.text', 'Study to delete')
+    cy.getByTestId('delete-study').should('be.visible')
+    cy.getByTestId('delete-study').should('be.enabled')
+    cy.getByTestId('delete-study').click()
     cy.get('#delete-study-modal-title').should('be.visible')
     cy.get('#delete-study-modal-content').should('be.visible')
 

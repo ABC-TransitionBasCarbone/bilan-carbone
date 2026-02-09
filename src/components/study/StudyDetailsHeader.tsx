@@ -100,6 +100,7 @@ const StudyDetailsHeader = ({
         as="h2"
         icon={study.isPublic ? <LockOpenIcon /> : <LockIcon />}
         actions={[...duplicateAction, ...deleteAction]}
+        data-testid="header-study"
         description={
           <div className={styles.studyInfo}>
             <p>
