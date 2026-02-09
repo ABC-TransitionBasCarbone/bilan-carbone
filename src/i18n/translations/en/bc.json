@@ -23,9 +23,15 @@
     "ISO14069": "ISO 14069",
     "env_specific_export": "Bilan Carbone®",
     "bc": {
-      "title": "Bilan Carbone® Equivalence",
-      "category": "Bilan Carbone® Category",
-      "emissions": "Emissions (tCO2e)"
+      "title": "Export in Carbon Footprint® format",
+      "category": "Carbon Footprint® Category",
+      "emissions": "Emissions (tCO2e)",
+      "disclaimerExcel1": "Attention, the results you obtain here are solely from the Count simplified carbon footprint, and should under no circumstances be used as official Carbon Footprint® results.",
+      "disclaimerExcel2": "The process you followed via the Count tool is NOT an official Carbon Footprint® assessment, even though the results obtained can already help you better understand how to reduce your impact by identifying your most emissive activities.",
+      "disclaimerExcel3": "However, this simplified carbon footprint is the first step towards a more comprehensive approach like the Carbon Footprint®!",
+      "disclaimerExcel4": "For the following years, you can either renew your simplified carbon footprint measurement with the Count tool, or carry out a full Carbon Footprint®.",
+      "disclaimerExcel5": "A Carbon Footprint® follows a very specific methodology and must meet a number of objective criteria. For example, during a Carbon Footprint®, management must be engaged, the organization's various stakeholders must be mobilized, uncertainties must be calculated and associated with emissions, and above all, a solid transition plan must be built to engage the organization in a low-carbon transition.",
+      "disclaimerExcel6": "If you wish to embark on a Carbon Footprint® in the coming years, it all starts with training in the methodology, or by contacting us at count@cut-collectif.fr, or by being supported by a Carbon Footprint® provider!"
     },
     "glossary": {
       "GHGP": {
