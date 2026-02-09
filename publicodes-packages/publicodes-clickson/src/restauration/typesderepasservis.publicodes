@@ -12,13 +12,13 @@ restauration . types de repas servis:
   avec:
     moyen:
       titre: Repas - Moyen
-      formule: nombre * FE
+      formule: nombre * FE * 1 an
       unité: kgCO2e
       avec:
         nombre:
           question: Nombre de repas moyens annuels
           par défaut: général . nombre étudiant * 1 repas/jour/étudiant * commun . nombre de jours dans une semaine scolaire * commun . nombre de semaines scolaire par an
-          unité: repas
+          unité: repas/an
         FE:
           question: Facteur d'émission par repas moyen
           valeur: 2.04

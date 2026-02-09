@@ -8,6 +8,17 @@ test alimentation:
     achats . produits chimiques . produit vaisselle liquide . consommation: 10
     immobilisations . équipements informatique audiovisuel . ordinateur de bureau . nombre: 1000
 
+test énergie:
+  contexte:
+    immobilisations . équipements informatique audiovisuel . ordinateur de bureau . nombre: 100
+    immobilisations . équipements informatique audiovisuel . ordinateur portable . nombre: 50
+    immobilisations . équipements informatique audiovisuel . tablette . nombre: 5
+    énergie . combustibles . fioul domestique . consommation: 100
+    énergie . combustibles . fioul lourd . consommation: 100
+    énergie . combustibles . gaz naturel . consommation: 1000
+    énergie . combustibles . granulés de bois . consommation: 100
+    énergie . électricité . consommation: 1000
+
 template:
   contexte:
     # Énergie
