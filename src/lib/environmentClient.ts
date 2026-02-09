@@ -1,5 +1,3 @@
-'use client'
-
 import { Environment } from '@prisma/client'
 
 type ClientEnvKey = 'SUPPORT_EMAIL' | 'FAQ_LINK' | 'ABC_SITE'
