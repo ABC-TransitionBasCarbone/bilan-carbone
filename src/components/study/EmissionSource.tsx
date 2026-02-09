@@ -1,5 +1,6 @@
 'use client'
 
+import { AccountWithUser } from '@/db/account'
 import { keepOnlyOneMetadata } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
@@ -20,6 +21,7 @@ import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { hasEditionRights, STUDY_UNIT_VALUES } from '@/utils/study'
+import { formatDateFr } from '@/utils/time'
 import SavedIcon from '@mui/icons-material/CloudUpload'
 import { Alert, CircularProgress, FormLabel, TextField } from '@mui/material'
 import {
@@ -42,6 +44,7 @@ import BaseChip from '../emissionFactor/BaseChip'
 import { ImportVersionForFilters } from '../emissionFactor/EmissionFactorsFilters'
 import styles from './EmissionSource.module.css'
 import EmissionSourceContributorForm from './EmissionSourceContributorForm'
+import EmissionSourceEditorChip from './EmissionSourceEditorChip'
 import EmissionSourceForm from './EmissionSourceForm'
 
 type StudyProps = {
@@ -85,6 +88,7 @@ const EmissionSource = ({
   const t = useTranslations('emissionSource')
   const tResultstUnits = useTranslations('study.results.units')
   const tQuality = useTranslations('quality')
+  const tCommon = useTranslations('common')
   const getUnitLabel = useUnitLabel()
   const router = useRouter()
   const [display, setDisplay] = useState(false)
@@ -327,11 +331,6 @@ const EmissionSource = ({
             )}
           </div>
         </div>
-        {emissionSource.contributor && (
-          <p data-testid="emission-source-contributor" className={styles.status}>
-            {emissionSource.contributor.user.email}
-          </p>
-        )}
       </button>
       <div id={detailId} className={classNames(styles.detail, { [styles.displayed]: display }, 'px1')} ref={ref}>
         {display && (
@@ -381,6 +380,21 @@ const EmissionSource = ({
                 emissionFactorsForSubPost={emissionFactorsForSubPost}
                 importVersions={importVersions}
               />
+            )}
+            {emissionSource.lastEditor && (
+              <div className="mt1">
+                <p className="bold" data-testid="emission-source-last-editor">
+                  {emissionSource.validated ? t('lastValidation') : t('lastEdition')} {tCommon('onDate')}
+                  <span className="italic"> {formatDateFr(emissionSource.updatedAt)} </span>
+                  {tCommon('by')} :
+                </p>
+                <div className="my1">
+                  <EmissionSourceEditorChip
+                    study={study as FullStudy}
+                    editor={emissionSource.lastEditor as AccountWithUser}
+                  />
+                </div>
+              </div>
             )}
           </div>
         )}

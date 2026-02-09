@@ -381,13 +381,14 @@ export const filterStudyDetail = (user: UserSession, study: FullStudy) => {
     id: study.id,
     name: study.name,
     level: study.level,
+    isPublic: study.isPublic,
     sites: study.sites,
     resultsUnit: study.resultsUnit,
     emissionSources: study.emissionSources
       .filter((emissionSource) => availableSubPosts.includes(emissionSource.subPost))
       .map((emissionSource) => ({
         id: emissionSource.id,
-        contributor: emissionSource.contributor,
+        lastEditor: emissionSource.lastEditor,
         name: emissionSource.name,
         validated: emissionSource.validated,
         subPost: emissionSource.subPost,
@@ -412,10 +413,12 @@ export const filterStudyDetail = (user: UserSession, study: FullStudy) => {
         depreciationPeriod: emissionSource.depreciationPeriod,
         hectare: emissionSource.hectare,
         duration: emissionSource.duration,
+        updatedAt: emissionSource.updatedAt,
       })),
     exports: study.exports,
-    contributors: undefined,
-    allowedUser: undefined,
+    contributors: study.contributors,
+    organizationVersion: study.organizationVersion,
+    allowedUsers: study.allowedUsers,
     emissionFactorVersions: study.emissionFactorVersions,
   }
 }

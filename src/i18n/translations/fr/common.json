@@ -8,6 +8,8 @@
     "all": "Tous",
     "none": "Aucun",
     "subPosts": "Sous postes",
+    "onDate": "le",
+    "by": "par",
     "action": {
       "create": "Créer",
       "edit": "Modifier",

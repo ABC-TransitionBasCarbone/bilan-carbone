@@ -265,8 +265,8 @@ model StudyEmissionSource {
   duration           Int? @default(20)
   hectare            Int?
 
-  contributorId String?  @map("contributor_account_id")
-  contributor   Account? @relation(fields: [contributorId], references: [id])
+  lastEditorId String?  @map("last_editor_account_id")
+  lastEditor   Account? @relation(fields: [lastEditorId], references: [id])
 
   feReliability                  Int? @map("fe_reliability")
   feTechnicalRepresentativeness  Int? @map("fe_technical_representativeness")

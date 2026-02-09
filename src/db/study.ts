@@ -26,6 +26,7 @@ import {
 } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { getAccountOrganizationVersions } from './account'
+import { AccountWithUserSelect } from './account.select'
 import { prismaClient } from './client'
 import { getOrganizationVersionById, OrganizationVersionWithOrganization } from './organization'
 
@@ -108,6 +109,7 @@ const fullStudyInclude = {
       depreciationPeriod: true,
       hectare: true,
       duration: true,
+      updatedAt: true,
       studySite: {
         select: {
           id: true,
@@ -155,16 +157,8 @@ const fullStudyInclude = {
           },
         },
       },
-      contributor: {
-        select: {
-          id: true,
-          user: {
-            select: {
-              id: true,
-              email: true,
-            },
-          },
-        },
+      lastEditor: {
+        select: AccountWithUserSelect,
       },
       emissionSourceTags: {
         select: {
