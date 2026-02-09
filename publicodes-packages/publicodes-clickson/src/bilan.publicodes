@@ -6,4 +6,4 @@ bilan:
       - déplacements
       - achats
       - immobilisations
-  unité: "kgCO2e"
+  unité: kgCO2e
