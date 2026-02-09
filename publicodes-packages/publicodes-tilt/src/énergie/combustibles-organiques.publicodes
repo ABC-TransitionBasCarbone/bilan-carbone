@@ -1,0 +1,61 @@
+énergie . combustibles organiques:
+  applicable si: énergie . bois ou granulés . présent
+  titre: Combustibles organiques
+  applicable si:
+    toutes ces conditions:
+      - est défini: choix
+      - choix != "aucun"
+  formule:
+    somme:
+      - granulés
+      - bois
+  par défaut: 0
+  unité: kgCO2e
+
+énergie . combustibles organiques . choix:
+  question: Utilisez vous-des bûches ou des granulés ? 
+  plusieurs possibilités:
+    -bûches
+    -granulés
+    -aucun
+  avec:
+    bûches:
+      titre: Bûches
+    granulés:
+      titre: Granulés
+    aucun:
+      titre: Aucun
+
+énergie . combustibles organiques . granulés:
+  titre: Bois granulés
+  formule: consommation * FE
+  par défaut: 0
+  unité: kgCO2e
+  avec:
+    consommation:
+      question: |
+        Combien de kWh issus de la combustion de granulés de bois ont étés consommés par le cinéma cette année ?
+      unité: kg
+    FE:
+      valeur: 0.5198
+      note: 0,0113 kgCO2e/kWh avec 4,6 kWh pour un kg (cf Empreinte Carbone Personnelle)
+      unité: kgCO2e/kg
+      meta:
+        id: 34942
+        
+énergie . combustibles organiques . bois:
+  titre: Bois bûches
+  formule: consommation * FE
+  par défaut: 0
+  unité: kgCO2e
+  avec:
+    consommation:
+      question: |
+        Quelle est votre consommation annuelle de bois ? 
+      unité: stères
+    FE:
+      valeur: 74.06
+      note: 0,046 kgCO2e/kWh avec 1610 kWh pour un stère (cf Empreinte Carbone Personnelle)
+      unité: kgCO2e/stère
+      meta:
+        id: 25834
