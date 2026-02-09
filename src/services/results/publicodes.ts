@@ -1,5 +1,6 @@
 import { TOTAL_RULE } from '@/constants/publicodes'
-import { SubPost } from '@prisma/client'
+import { STUDY_UNIT_VALUES } from '@/utils/study'
+import { StudyResultUnit, SubPost } from '@prisma/client'
 import Engine from 'publicodes'
 import { Post } from '../posts'
 import { BaseResultsByPost } from './consolidated'
@@ -93,4 +94,9 @@ export function aggregateBaseResultsByPost(resultsList: BaseResultsByPost[][]): 
       })),
     })),
   )
+}
+
+export function getTotalValueFromBaseResults(postResults: BaseResultsByPost[], studyUnit?: StudyResultUnit): number {
+  const total = postResults.find((r) => r.post === 'total')?.value ?? 0
+  return studyUnit ? total / STUDY_UNIT_VALUES[studyUnit] : total
 }
