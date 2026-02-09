@@ -1,12 +1,19 @@
+import { Locale } from '@/i18n/config'
 import { getEnvVar } from '@/lib/environment'
 import { Translations } from '@/types/translation'
 import { Environment } from '@prisma/client'
+import { getLocale } from 'next-intl/server'
 
 export const getEnvironnementRessources = async (env: Environment, t: Translations) => {
-  const methodUrl = await getEnvVar('METHOD_URL', env)
   const contactForm = await getEnvVar('CONTACT_FORM_URL', env)
   const faq = await getEnvVar('FAQ_LINK', env)
   const supportEmail = await getEnvVar('SUPPORT_EMAIL', env)
+
+  const locale = await getLocale()
+  const methodUrl =
+    locale === Locale.FR
+      ? 'https://www.bilancarbone-methode.com/'
+      : 'https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en'
 
   const commonRessources = [
     {
