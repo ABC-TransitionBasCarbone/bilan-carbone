@@ -2,11 +2,11 @@ import { getEnvVar } from '@/lib/environment'
 import { Translations } from '@/types/translation'
 import { Environment } from '@prisma/client'
 
-export const getEnvironnementRessources = (env: Environment, t: Translations) => {
-  const methodUrl = getEnvVar('METHOD_URL', env)
-  const contactForm = getEnvVar('CONTACT_FORM_URL', env)
-  const faq = getEnvVar('FAQ_LINK', env)
-  const supportEmail = getEnvVar('SUPPORT_EMAIL', env)
+export const getEnvironnementRessources = async (env: Environment, t: Translations) => {
+  const methodUrl = await getEnvVar('METHOD_URL', env)
+  const contactForm = await getEnvVar('CONTACT_FORM_URL', env)
+  const faq = await getEnvVar('FAQ_LINK', env)
+  const supportEmail = await getEnvVar('SUPPORT_EMAIL', env)
 
   const commonRessources = [
     {

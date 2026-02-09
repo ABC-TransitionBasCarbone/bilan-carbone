@@ -29,9 +29,6 @@ import { getAccountOrganizationVersions } from './account'
 import { prismaClient } from './client'
 import { getOrganizationVersionById, OrganizationVersionWithOrganization } from './organization'
 
-const cutFeLegifrance = getEnvVar('FE_LEGIFRANCE_VERSION', Environment.CUT) || ''
-const cutFeBaseEmpreinte = getEnvVar('FE_BASE_EMPREINTE_VERSION', Environment.CUT) || ''
-
 export type StudyTagFamilyWithTags = Omit<StudyTagFamily, 'createdAt' | 'updatedAt'> & {
   tags: Omit<StudyTag, 'familyId' | 'createdAt' | 'updatedAt'>[]
 }
@@ -817,8 +814,10 @@ export const getStudyValidatedEmissionsSources = async (studyId: string) => {
   }
 }
 
-export const getSourceCutImportVersionIds = async () =>
-  prismaClient.emissionFactorImportVersion.findMany({
+export const getSourceCutImportVersionIds = async () => {
+  const cutFeLegifrance = (await getEnvVar('FE_LEGIFRANCE_VERSION', Environment.CUT)) || ''
+  const cutFeBaseEmpreinte = (await getEnvVar('FE_BASE_EMPREINTE_VERSION', Environment.CUT)) || ''
+  return prismaClient.emissionFactorImportVersion.findMany({
     select: { id: true, source: true },
     where: {
       OR: [
@@ -830,11 +829,12 @@ export const getSourceCutImportVersionIds = async () =>
     orderBy: { createdAt: 'desc' },
     distinct: ['source'],
   })
+}
 
 export const getSourceEnvironmentImportVersionIds = async (
   environment: Environment,
 ): Promise<{ id: string; source: Import }[]> => {
-  const sources = isSourceForEnv(environment)
+  const sources = await isSourceForEnv(environment)
   return prismaClient.emissionFactorImportVersion.findMany({
     select: { id: true, source: true },
     where: {
@@ -1081,7 +1081,7 @@ export const addSourceToStudy = async (source: Import, studyId: string) => {
     getSourceLatestImportVersionId(source),
   ])
 
-  if (study && !!importVersion && isSourceForEnv(study.organizationVersion.environment).includes(source)) {
+  if (study && !!importVersion && (await isSourceForEnv(study.organizationVersion.environment)).includes(source)) {
     await prismaClient.studyEmissionFactorVersion.createMany({
       data: { studyId: study.id, source, importVersionId: importVersion.id },
       skipDuplicates: true,

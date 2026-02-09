@@ -2,7 +2,7 @@
 
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
-import { getEnvVar } from '@/lib/environment'
+import { getEnvVarClient } from '@/lib/environmentClient'
 import { getEnvRoute } from '@/services/email/utils'
 import { getAllCNCs } from '@/services/serverFunctions/cnc'
 import { signUpWithSiretOrCNC } from '@/services/serverFunctions/user'
@@ -23,8 +23,8 @@ import { FormTextField } from '../form/TextField'
 import authStyles from './Auth.module.css'
 
 const SignUpFormCut = () => {
-  const contactMail = getEnvVar('SUPPORT_EMAIL', Environment.CUT)
-  const faq = getEnvVar('FAQ_LINK', Environment.CUT)
+  const contactMail = getEnvVarClient('SUPPORT_EMAIL', Environment.CUT)
+  const faq = getEnvVarClient('FAQ_LINK', Environment.CUT)
 
   const t = useTranslations('signup')
   const tForm = useTranslations('login.form')

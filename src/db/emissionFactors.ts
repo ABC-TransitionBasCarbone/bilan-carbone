@@ -508,7 +508,7 @@ export const getEmissionFactorImportVersionsCUT = async () => {
 }
 
 export const getEmissionFactorImportVersionsClickson = async () => {
-  const sources = isSourceForEnv(Environment.CLICKSON)
+  const sources = await isSourceForEnv(Environment.CLICKSON)
   return prismaClient.emissionFactorImportVersion.findMany({
     where: {
       source: { in: sources },
