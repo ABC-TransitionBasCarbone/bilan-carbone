@@ -5,7 +5,7 @@ import '@/app/(public)/preview/etudes/[id]/pdf-summary.css'
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import { FullStudy } from '@/db/study'
 import cutTheme from '@/environments/cut/theme/theme'
-import { convertCountToBilanCarbone, CutPost } from '@/services/posts'
+import { convertSimplifiedEnvToBilanCarbone, CutPost } from '@/services/posts'
 import { computeResultsByPostFromEmissionSources, ResultsByPost } from '@/services/results/consolidated'
 import { getDetailedEmissionResults } from '@/services/study'
 import { formatNumber } from '@/utils/number'
@@ -76,7 +76,7 @@ const PDFSummary = ({ study, environment }: Props) => {
   )
 
   const bilanCarboneEquivalent = useMemo(() => {
-    return convertCountToBilanCarbone(computedResultsWithDep)
+    return convertSimplifiedEnvToBilanCarbone(computedResultsWithDep)
   }, [computedResultsWithDep])
 
   useEffect(() => {
@@ -346,7 +346,7 @@ const PDFSummary = ({ study, environment }: Props) => {
             environment,
             tStudy,
           )
-          const siteBilanCarboneEquivalent = convertCountToBilanCarbone(siteResults)
+          const siteBilanCarboneEquivalent = convertSimplifiedEnvToBilanCarbone(siteResults)
           return (
             <div key={`bilan-carbone-${site.id}`} className="pdf-content page-break-before pdf-page-content">
               <div className="pdf-section">
