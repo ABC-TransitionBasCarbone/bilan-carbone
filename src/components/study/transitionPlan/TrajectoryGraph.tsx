@@ -1,9 +1,11 @@
 'use client'
 
 import TagChip from '@/components/base/TagChip'
+import GlossaryModal from '@/components/modals/GlossaryModal'
 import { TRAJECTORY_15_ID, TRAJECTORY_SNBC_GENERAL_ID, TRAJECTORY_WB2C_ID } from '@/constants/trajectories'
 import { getYearsToDisplay, PastStudy, TrajectoryData } from '@/utils/trajectory'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import { Accordion, AccordionDetails, AccordionSummary, Alert, Slider, Typography } from '@mui/material'
 import {
   AreaPlot,
@@ -23,8 +25,10 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import DrawingAreaBox, { DrawingProps } from '../charts/DrawingArea'
 import DependenciesSwitch from '../results/DependenciesSwitch'
 import styles from './TrajectoryGraph.module.css'
+import { BottomLeftMultilineText } from './TrajectoryGraphDrawingArea'
 import TrajectoryLegendTable from './TrajectoryLegendTable'
 
 export interface TrajectoryDataPoint {
@@ -80,9 +84,11 @@ const TrajectoryGraph = ({
   const t = useTranslations('study.transitionPlan.trajectories.graph')
   const tUnit = useTranslations('study.results.units')
   const [yearRange, setYearRange] = useState<number[] | null>(null)
+  const [glossary, setGlossary] = useState(false)
   const [displayedYearRange, setDisplayedYearRange] = useState<number[] | null>(null)
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
   const tSnbc = useTranslations('study.transitionPlan.trajectories.snbcCard')
+  const tGlossary = useTranslations('study.transitionPlan.trajectories.graph.glossary')
 
   const trajectory15Enabled = selectedSbtiTrajectories.includes(TRAJECTORY_15_ID)
   const trajectoryWB2CEnabled = selectedSbtiTrajectories.includes(TRAJECTORY_WB2C_ID)
@@ -603,6 +609,18 @@ const TrajectoryGraph = ({
     color: 'var(--trajectory-gray-area)',
     showMark: false,
   }
+
+  const BottomLeftText = ({ onClick, ...props }: DrawingProps & { onClick: () => void }) => (
+    <>
+      <BottomLeftMultilineText {...props} className="bold text-center">
+        <Typography variant="body2" fontWeight={600}>
+          {t('estimatedPast')}
+          <HelpOutlineOutlinedIcon color="secondary" className="ml-4 pointer" onClick={onClick} />
+        </Typography>
+      </BottomLeftMultilineText>
+    </>
+  )
+
   return (
     <div className="w100 flex-col gapped1 mb2">
       <div className="flex align-center justify-between">
@@ -665,13 +683,14 @@ const TrajectoryGraph = ({
       >
         <AreaPlot />
         <LinePlot />
-
-        <ChartsReferenceLine x={studyStartYear} labelAlign="start" />
-
         <MarkPlot />
 
-        <ChartsAxisHighlight x="line" />
+        {yearRange && yearRange[0] < studyStartYear && (
+          <DrawingAreaBox Text={(props) => <BottomLeftText {...props} onClick={() => setGlossary(true)} />} />
+        )}
 
+        <ChartsAxisHighlight x="line" />
+        <ChartsReferenceLine x={studyStartYear} labelAlign="start" />
         <ChartsTooltip trigger="axis" />
         <ChartsXAxis />
         <ChartsYAxis />
@@ -768,6 +787,11 @@ const TrajectoryGraph = ({
           </div>
         </AccordionDetails>
       </Accordion>
+      {glossary && (
+        <GlossaryModal glossary="title" label="emission-factor-post" t={tGlossary} onClose={() => setGlossary(false)}>
+          {tGlossary('description')}
+        </GlossaryModal>
+      )}
     </div>
   )
 }
