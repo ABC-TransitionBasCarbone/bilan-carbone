@@ -61,7 +61,7 @@ const Sites = <T extends SitesCommand>({
     <div>
       <div>
         <div className="justify-between align-center">
-          <p className="title-h3">
+          <p className="title-h3" data-testid="sites-title">
             {environment !== Environment.CUT && (
               <span className="inputLabel bold align-center">
                 {t('title')}
@@ -84,7 +84,7 @@ const Sites = <T extends SitesCommand>({
       <GlossaryModal
         glossary={showGlossary ? 'title' : ''}
         onClose={() => setShowGlossary(false)}
-        label="create-emission-factor"
+        label="sites-info"
         t={tGlossary}
       >
         {' '}

@@ -51,7 +51,7 @@ const Sites = <T extends SitesCommand>({
       {
         id: 'name',
         header: () => (
-          <div className="align-center gapped">
+          <div className="align-center gapped" data-testid="organization-sites-name-header">
             {t('name')}
             {form && withSelection && organizationId && (
               <LinkButton href={`/organisations/${organizationId}/modifier`} target="_blank" rel="noreferrer noopener">

@@ -11,10 +11,9 @@ describe('Edit study', () => {
 
   it('Should be able to edit a study sites', () => {
     cy.intercept('POST', '/etudes/*/perimetre').as('update')
-    cy.login()
 
-    cy.visit('/etudes/creer')
-    cy.get('[data-testid="organization-sites-checkbox"] > input').eq(1).click({ force: true })
+    cy.initCreateStudyPage()
+
     cy.getByTestId('organization-sites-etp')
       .eq(1)
       .within(() => {
@@ -28,6 +27,7 @@ describe('Edit study', () => {
         cy.get('input').type('1')
       })
 
+    cy.get('[data-testid="organization-sites-checkbox"] > input').eq(1).click({ force: true })
     cy.getByTestId('new-study-organization-button').should('not.be.disabled')
     cy.getByTestId('new-study-organization-button').click()
 
