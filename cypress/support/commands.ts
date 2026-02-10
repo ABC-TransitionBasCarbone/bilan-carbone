@@ -38,3 +38,15 @@ Cypress.Commands.add('signupCut', (email = 'cut-cnc@yopmail.com', cncOrSiret = '
 Cypress.Commands.add('resetTestDatabase', () => {
   cy.exec('yarn db:test:reset')
 })
+
+Cypress.Commands.add('initFePage', () => {
+  cy.login()
+
+  cy.getByTestId('navbar-facteur-demission').click({ force: true })
+
+  cy.getByTestId('new-emission').click({ force: true })
+
+  cy.getByTestId('new-emission-factor-page').should('be.visible')
+  cy.getByTestId('new-emission-factor-page').should('contain.text', "Ajouter un facteur d'émission")
+  cy.getByTestId('emission-factor-name').should('be.visible')
+})

@@ -9,5 +9,6 @@ declare namespace Cypress {
     logout(): Chainable<void>
     signupCut(string?: string, string?: string): Chainable<void>
     resetTestDatabase(): Chainable<void>
+    initFePage(): Chainable<void>
   }
 }

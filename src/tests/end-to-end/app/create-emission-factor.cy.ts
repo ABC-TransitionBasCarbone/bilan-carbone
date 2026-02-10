@@ -8,11 +8,7 @@ describe('Create emission factor', () => {
   })
 
   it('should create an emission factor with total CO2 on your organization', () => {
-    cy.login()
-
-    cy.getByTestId('navbar-facteur-demission').click({ force: true })
-
-    cy.getByTestId('new-emission').click({ force: true })
+    cy.initFePage()
 
     cy.getByTestId('emission-factor-name').type('My new FE')
     cy.getByTestId('emission-factor-unit').click()
@@ -57,10 +53,7 @@ describe('Create emission factor', () => {
   })
 
   it('should create an emission factor with detailed CO2 on your organization', () => {
-    cy.login()
-    cy.getByTestId('navbar-facteur-demission').click()
-
-    cy.getByTestId('new-emission').click({ force: true })
+    cy.initFePage()
 
     cy.getByTestId('emission-factor-name').type('My new detailed FE')
 
@@ -80,20 +73,6 @@ describe('Create emission factor', () => {
 
     cy.getByTestId('emission-factor-detailed-switch').get('input').should('not.be.checked')
     cy.getByTestId('emission-factor-detailed-switch').click()
-    cy.getByTestId('emission-factor-part-0-totalCo2').within(() => {
-      cy.get('input').should('be.disabled')
-    })
-    cy.getByTestId('emission-factor-part-0-co2f').should('exist')
-
-    cy.getByTestId('emission-factor-part-1-totalCo2').within(() => {
-      cy.get('input').should('be.disabled')
-    })
-    cy.getByTestId('emission-factor-part-1-co2f').should('exist')
-
-    cy.getByTestId('emission-factor-part-2-totalCo2').within(() => {
-      cy.get('input').should('be.disabled')
-    })
-    cy.getByTestId('emission-factor-part-2-co2f').should('exist')
 
     cy.getByTestId('emission-factor-co2f').should('exist')
     cy.getByTestId('emission-factor-co2f').type('1')
@@ -141,10 +120,7 @@ describe('Create emission factor', () => {
   })
 
   it('should create an emission factor with total CO2 and multiple parts on your organization', () => {
-    cy.login()
-    cy.getByTestId('navbar-facteur-demission').click()
-
-    cy.getByTestId('new-emission').click({ force: true })
+    cy.initFePage()
 
     cy.getByTestId('emission-factor-name').type('My new multiple FE')
     cy.getByTestId('emission-factor-unit').click()
@@ -167,6 +143,9 @@ describe('Create emission factor', () => {
     cy.getByTestId('emission-factor-part-0-type').click()
     cy.get('[data-value="Amont"]').click()
     cy.getByTestId('emission-factor-part-0-totalCo2').should('be.visible')
+    cy.getByTestId('emission-factor-part-0-totalCo2').should('not.be.disabled')
+    cy.getByTestId('emission-factor-part-0-co2f').should('not.exist')
+
     cy.getByTestId('emission-factor-part-0-totalCo2').type('3')
 
     cy.getByTestId('emission-part-1-expand').click()
@@ -214,10 +193,7 @@ describe('Create emission factor', () => {
   })
 
   it('should create an emission factor with detailed CO2 and multiple parts on your organization', () => {
-    cy.login()
-    cy.getByTestId('navbar-facteur-demission').click()
-
-    cy.getByTestId('new-emission').click({ force: true })
+    cy.initFePage()
 
     cy.getByTestId('emission-factor-name').type('My new multiple detailed FE')
     cy.getByTestId('emission-factor-unit').click()
@@ -226,15 +202,24 @@ describe('Create emission factor', () => {
 
     cy.getByTestId('emission-factor-detailed-switch').click()
     cy.getByTestId('emission-factor-multiple-switch').click()
+
     cy.getByTestId('emission-factor-totalCo2').within(() => {
       cy.get('input').should('be.disabled')
     })
+
+    cy.getByTestId('emission-factor-part-0-co2f').should('exist')
+
     cy.getByTestId('emission-part-1-header').should('not.exist')
 
     cy.getByTestId('emission-factor-parts-count').within(() => {
       cy.get('input').clear()
       cy.get('input').type('2')
     })
+    cy.getByTestId('emission-factor-part-1-totalCo2').within(() => {
+      cy.get('input').should('be.disabled')
+    })
+    cy.getByTestId('emission-factor-part-1-co2f').should('exist')
+
     cy.getByTestId('emission-part-0-header').should('be.visible')
     cy.getByTestId('emission-part-0-header').should('have.text', 'Composante 1')
     cy.getByTestId('emission-part-1-header').should('be.visible')
@@ -243,8 +228,6 @@ describe('Create emission factor', () => {
 
     cy.getByTestId('emission-part-0-expand').click()
     cy.getByTestId('emission-factor-part-0-totalCo2').should('be.visible')
-    cy.getByTestId('emission-factor-part-0-totalCo2').should('not.be.disabled')
-    cy.getByTestId('emission-factor-part-0-co2f').should('not.exist')
 
     cy.getByTestId('emission-factor-part-0-name').type('My first part')
     cy.getByTestId('emission-factor-part-0-type').click()
@@ -269,9 +252,6 @@ describe('Create emission factor', () => {
     cy.getByTestId('emission-factor-part-0-otherGES').type('9')
 
     cy.getByTestId('emission-part-1-expand').click()
-    cy.getByTestId('emission-factor-part-1-totalCo2').should('be.visible')
-    cy.getByTestId('emission-factor-part-1-totalCo2').should('not.be.disabled')
-    cy.getByTestId('emission-factor-part-1-co2f').should('not.exist')
     cy.getByTestId('emission-factor-part-1-name').type('My second part')
     cy.getByTestId('emission-factor-part-1-type').click()
     cy.get('[data-value="Combustion"]').click()
@@ -322,10 +302,7 @@ describe('Create emission factor', () => {
   })
 
   it('should not delete parts from form when switch off detailed ges', () => {
-    cy.login()
-    cy.getByTestId('navbar-facteur-demission').click()
-
-    cy.getByTestId('new-emission').click({ force: true })
+    cy.initFePage()
 
     cy.getByTestId('emission-factor-name').type('My new FE without parts')
     cy.getByTestId('emission-factor-unit').click()
