@@ -13,7 +13,7 @@ describe('Authentication', () => {
     cy.visit('/')
     cy.url().should('include', '/login')
 
-    cy.login('bc-collaborator-1@yopmail.com', 'test1')
+    cy.loginWithWrongPassword('bc-collaborator-1@yopmail.com', 'test1')
 
     cy.visit('/')
     cy.url().should('include', '/login')
@@ -154,7 +154,7 @@ describe('Authentication', () => {
     cy.intercept('GET', '/equipe').as('equipe')
 
     cy.url().should('include', '/login')
-    cy.login('imported@yopmail.com', 'Password-0')
+    cy.loginWithWrongPassword('imported@yopmail.com', 'Password-0')
 
     cy.visit('/')
 

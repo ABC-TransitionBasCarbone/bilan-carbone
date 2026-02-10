@@ -9,7 +9,7 @@ describe('Duplicate study', () => {
   })
 
   it('Should be able to duplicate a study', () => {
-    cy.login('all-env-admin-0@yopmail.com', 'password-0')
+    cy.loginwithMultipleAccounts('all-env-admin-0@yopmail.com', 'password-0')
     cy.url({ timeout: 10000 }).should('eq', `${Cypress.config().baseUrl}/selection-du-compte`)
     cy.contains('li', 'BC+').click()
     cy.url({ timeout: 10000 }).should('eq', `${Cypress.config().baseUrl}/`)
