@@ -122,7 +122,7 @@ const PDFSummary = ({ study }: Props) => {
             <h1 className="pdf-title">{tPdf('title', { year })}</h1>
           </div>
 
-          <div className="pdf-cinemas-list page-break-avoid">
+          <div className="pdf-sites-list page-break-avoid">
             <span>
               <ul>
                 {sitesData.map((site) => (

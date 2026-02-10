@@ -148,9 +148,9 @@ const PDFSummary = ({ study }: Props) => {
             <h1 className="pdf-title">{tPdf('title', { year: study.startDate.getFullYear() })}</h1>
           </div>
 
-          <div className="pdf-cinemas-list page-break-avoid">
+          <div className="pdf-sites-list page-break-avoid">
             <span>
-              <h2 className="pdf-cinemas-title">{tPdf('cinemas.list')}:</h2>
+              <h2 className="pdf-sites-title">{tPdf('cinemas.list')}:</h2>
               <ul>
                 {sitesData.map((site) => (
                   <li key={site.id}>{site.fullName}</li>
@@ -223,7 +223,7 @@ const PDFSummary = ({ study }: Props) => {
             <React.Fragment key={site.id}>
               <div className="pdf-content page-break-before pdf-page-content">
                 <div className="pdf-section">
-                  <h2 className="pdf-cinema-header pdf-header-with-border">
+                  <h2 className="pdf-site-header pdf-header-with-border">
                     {tPdf('results.site', { site: site.fullName })}
                   </h2>
 
