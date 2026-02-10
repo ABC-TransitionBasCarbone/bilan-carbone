@@ -5,5 +5,7 @@ model Actuality {
   title     String
   text      String
 
+  language String @default("fr")
+
   @@map("actualities")
 }
