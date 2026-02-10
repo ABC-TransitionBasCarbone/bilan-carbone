@@ -5,7 +5,8 @@ const normalizeRuleName = (ruleName: string) => ruleName.replace(/\s+.\s+/g, '.'
 export function usePublicodesTranslation() {
   const tRules = useTranslations('publicodes-rules')
   return {
-    getQuestion: (ruleName: string): string => tRules(`${normalizeRuleName(ruleName)}.question`),
+    getQuestionTranslation: (ruleName: string): string => tRules(`${normalizeRuleName(ruleName)}.question`),
+    getTitleTranslation: (ruleName: string): string => tRules(`${normalizeRuleName(ruleName)}.titre`),
   }
 }
 
