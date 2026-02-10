@@ -65,12 +65,14 @@ const createObjectiveScopeRecords = async (
 
 const validateUniqueScopeCombination = async (
   trajectoryId: string,
-  input: { siteIds?: string[]; tagIds?: string[]; subPosts?: SubPost[] },
+  input: { targetYear: number; siteIds?: string[]; tagIds?: string[]; subPosts?: SubPost[] },
   excludeObjectiveId?: string,
 ) => {
   const existingObjectives = await prismaClient.objective.findMany({
     where: {
       trajectoryId,
+      targetYear: input.targetYear,
+      isDefault: false,
       ...(excludeObjectiveId && { id: { not: excludeObjectiveId } }),
     },
     include: {
@@ -103,18 +105,6 @@ const validateUniqueScopeCombination = async (
 
     if (sameSites && sameTags && sameSubPosts) {
       throw new Error('duplicateScopeCombination')
-    }
-
-    for (const subPost of newSubPosts) {
-      if (existingSubPosts.has(subPost) && existingSiteIds.size === 0 && existingTagIds.size === 0) {
-        throw new Error('subPostAlreadyAssigned')
-      }
-    }
-
-    for (const tagId of newTagIds) {
-      if (existingTagIds.has(tagId) && existingSiteIds.size === 0 && existingSubPosts.size === 0) {
-        throw new Error('tagAlreadyAssigned')
-      }
     }
   }
 }
@@ -162,6 +152,7 @@ export const createObjective = async (input: CreateObjectiveInput) =>
           trajectoryId: input.trajectoryId,
           targetYear: input.targetYear,
           reductionRate: input.reductionRate,
+          isDefault: false,
         },
       })
 
@@ -217,6 +208,19 @@ export const updateObjective = async (input: UpdateObjectiveInput) =>
 
       return tx.objective.findUnique({
         where: { id: input.id },
+        include: {
+          sites: {
+            include: {
+              studySite: true,
+            },
+          },
+          tags: {
+            include: {
+              studyTag: true,
+            },
+          },
+          subPosts: true,
+        },
       })
     })
   })

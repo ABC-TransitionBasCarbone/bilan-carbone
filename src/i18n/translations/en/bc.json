@@ -1199,13 +1199,16 @@
         }
       },
       "objectiveModal": {
-        "title": "Add scope-specific objective",
-        "editTitle": "Edit scope-specific objective",
+        "title": "Add sub-objectives",
+        "editTitle": "Edit sub-objective",
         "cancel": "Cancel",
-        "submit": "Add objective",
-        "update": "Update objective",
+        "submit": "Add sub-objectives",
+        "update": "Update sub-objective",
         "scopeSelection": "Scope Selection",
-        "objectives": "Objectives"
+        "objectives": "Sub-objectives",
+        "sites": "Sites",
+        "tags": "Tags",
+        "subPosts": "Sub-posts"
       },
       "conversionWarning": {
         "title": "Trajectory Type Conversion",
@@ -2265,7 +2268,8 @@
     "Server error": "A server error occurred, please contact support",
     "default": "Something went wrong ..., please try again. If the problem persists, please contact support",
     "error": "Something went wrong ...",
-    "contactSupport": "A problem has occurred. Try returning to the <link>home page</link>. <p>If this does not work, contact our support at <m></m> or try to <logout>reconnect</logout>.</p>"
+    "contactSupport": "A problem has occurred. Try returning to the <link>home page</link>. <p>If this does not work, contact our support at <m></m> or try to <logout>reconnect</logout>.</p>",
+    "duplicateScopeCombination": "An objective with the same scope (sites, tags, sub-posts) and target year already exists for this trajectory"
   },
   "upload": {
     "fileTooBig": "File too big (max size {size} MB)",

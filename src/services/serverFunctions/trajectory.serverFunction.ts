@@ -9,7 +9,7 @@ import {
   getTrajectoriesByTransitionPlanId,
   getTransitionPlanById,
   studyHasObjectives,
-  TrajectoryWithObjectives,
+  TrajectoryWithObjectivesAndScope,
 } from '@/db/transitionPlan'
 import { ApiResponse, withServerResponse } from '@/utils/serverResponse'
 import { getDefaultObjectivesForTrajectoryType } from '@/utils/trajectory'
@@ -114,7 +114,10 @@ export const createTrajectoryWithObjectives = async (input: CreateTrajectoryInpu
       sectorPercentages: input.sectorPercentages || undefined,
       objectives: {
         createMany: {
-          data: objectives,
+          data: objectives.map((obj) => ({
+            ...obj,
+            isDefault: true,
+          })),
         },
       },
     })
@@ -123,7 +126,7 @@ export const createTrajectoryWithObjectives = async (input: CreateTrajectoryInpu
 export const getTrajectories = async (
   studyId: string,
   transitionPlanId: string,
-): Promise<ApiResponse<TrajectoryWithObjectives[]>> =>
+): Promise<ApiResponse<TrajectoryWithObjectivesAndScope[]>> =>
   withServerResponse('getTrajectories', async () => {
     const hasReadAccess = await hasReadAccessOnStudy(studyId)
     if (!hasReadAccess) {
@@ -175,6 +178,7 @@ export const updateTrajectory = async (id: string, data: UpdateTrajectoryInput) 
               trajectoryId: id,
               targetYear: obj.targetYear,
               reductionRate: obj.reductionRate,
+              isDefault: true,
             })),
           })
           await tx.trajectory.update({
@@ -226,6 +230,7 @@ export const updateTrajectory = async (id: string, data: UpdateTrajectoryInput) 
                   trajectoryId: id,
                   targetYear: obj.targetYear,
                   reductionRate: obj.reductionRate,
+                  isDefault: true,
                 },
               })
             }

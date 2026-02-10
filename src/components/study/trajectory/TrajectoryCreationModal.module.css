@@ -42,13 +42,3 @@
   margin-right: 0.5rem;
   font-size: 1.125rem;
 }
-
-.addObjectiveButton {
-  border-radius: 0.75rem;
-  background-color: var(--mui-palette-primary-light);
-  min-width: 48.5%;
-  min-height: 16.5rem;
-  cursor: pointer;
-  text-align: center;
-  place-content: center;
-}

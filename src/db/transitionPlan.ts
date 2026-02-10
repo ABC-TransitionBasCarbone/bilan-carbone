@@ -161,6 +161,7 @@ export const duplicateTransitionPlanWithRelations = async (
               create: trajectory.objectives.map((objective) => ({
                 targetYear: objective.targetYear,
                 reductionRate: objective.reductionRate,
+                isDefault: objective.isDefault,
                 sites: {
                   create: objective.sites.map((s) => ({ studySiteId: s.studySiteId })),
                 },

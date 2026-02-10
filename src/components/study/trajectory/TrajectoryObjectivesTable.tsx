@@ -388,15 +388,19 @@ const TrajectoryObjectivesTable = ({
             return null
           }
 
-          const hasScopeData = objective.sites.length > 0 || objective.tags.length > 0 || objective.subPosts.length > 0
+          const canEditDefaultObjective = parentTrajectory.type === TrajectoryType.CUSTOM && objective.isDefault
+          const canEditSubObjective = !objective.isDefault
 
-          const canEditObjective = parentTrajectory.type === TrajectoryType.CUSTOM
+          const defaultObjectivesCount = parentTrajectory.objectives.filter((obj) => obj.isDefault).length
+          const canDeleteDefaultObjective =
+            parentTrajectory.type === TrajectoryType.CUSTOM && objective.isDefault && defaultObjectivesCount > 1
+          const canDeleteSubObjective = !objective.isDefault
 
-          const canDeleteObjective =
-            parentTrajectory.type === TrajectoryType.CUSTOM && parentTrajectory.objectives.length > 1
+          const canEditObjective = canEditDefaultObjective || canEditSubObjective
+          const canDeleteObjective = canDeleteDefaultObjective || canDeleteSubObjective
 
           const handleEdit = () => {
-            if (hasScopeData) {
+            if (!objective.isDefault) {
               handleEditObjectiveClick(objective, parentTrajectory)
             } else {
               handleEditClick(parentTrajectory)
@@ -423,7 +427,10 @@ const TrajectoryObjectivesTable = ({
     const filteredTrajectories = searchFilter ? fuse.search(searchFilter).map(({ item }) => item) : trajectories
 
     return filteredTrajectories.map((trajectory) => {
-      const sortedObjectives = [...trajectory.objectives].sort((a, b) => a.targetYear - b.targetYear)
+      const defaultObjectives = trajectory.objectives.filter((obj) => obj.isDefault)
+      const subObjectives = trajectory.objectives.filter((obj) => !obj.isDefault)
+      const allObjectives = [...defaultObjectives, ...subObjectives]
+      const sortedObjectives = [...allObjectives].sort((a, b) => a.targetYear - b.targetYear)
       const closestObjective = sortedObjectives[0]
 
       const refYear = trajectory.referenceYear || getDisplayedReferenceYearForTrajectoryType(trajectory.type, studyYear)

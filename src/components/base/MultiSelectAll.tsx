@@ -20,10 +20,10 @@ const MultiSelectAll = <T extends string>({ id, values, allValues, setValues, ge
   const valuesWithAllHandled = (allValues.length === values.length ? [...values, 'all'] : values) as (T | 'all')[]
 
   const renderValue = () => {
-    if (valuesWithAllHandled.includes('all')) {
-      return tCommon('all')
-    } else if (valuesWithAllHandled.length === 0) {
+    if (allValues.length === 0 || valuesWithAllHandled.length === 0) {
       return tCommon('none')
+    } else if (valuesWithAllHandled.includes('all')) {
+      return tCommon('all')
     }
 
     return valuesWithAllHandled.map((v) => getLabel(v)).join(', ')
