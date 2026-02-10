@@ -340,10 +340,14 @@ const normalizeAllowedUsers = (
         }
   })
 
-export const getOrganizationVersionStudiesOrderedByStartDate = async (organizationVersionId: string) => {
+export const getOrganizationVersionStudiesOrderedByStartDate = async (
+  organizationVersionId: string,
+  displaySimplifiedStudies: boolean,
+) => {
   const studies = await prismaClient.study.findMany({
     where: {
       organizationVersionId,
+      simplified: displaySimplifiedStudies ? undefined : false,
     },
     include: fullStudyInclude,
     orderBy: { startDate: 'desc' },

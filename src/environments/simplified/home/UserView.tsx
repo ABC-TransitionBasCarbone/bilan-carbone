@@ -34,7 +34,7 @@ const UserView = async ({ account }: Props) => {
   const hasAlert = hasHomeAlert(account.environment)
 
   let isFootprintsEnabled = false
-  if (!isTilt(account.environment) || account.level) {
+  if (!isTilt(account.environment)) {
     isFootprintsEnabled = true
   } else {
     isFootprintsEnabled = await isTiltSimplifiedFeatureActive(account.environment)
