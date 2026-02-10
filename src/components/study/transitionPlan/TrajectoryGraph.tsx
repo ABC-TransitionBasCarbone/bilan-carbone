@@ -589,6 +589,8 @@ const TrajectoryGraph = ({
     return seriesCreated.filter((serie) => serie.isFailed).map((serie) => serie.label as string)
   }, [seriesCreated])
 
+  const displayEstimatedPast = useMemo(() => yearRange && yearRange[0] < studyStartYear, [yearRange, studyStartYear])
+
   const onFilterSeries = useCallback((label: string) => {
     setFilteredSeriesLabels((prev) => {
       if (prev.includes(label)) {
@@ -685,12 +687,12 @@ const TrajectoryGraph = ({
         <LinePlot />
         <MarkPlot />
 
-        {yearRange && yearRange[0] < studyStartYear && (
+        {displayEstimatedPast && (
           <DrawingAreaBox Text={(props) => <BottomLeftText {...props} onClick={() => setGlossary(true)} />} />
         )}
 
         <ChartsAxisHighlight x="line" />
-        <ChartsReferenceLine x={studyStartYear} labelAlign="start" />
+        {displayEstimatedPast && <ChartsReferenceLine x={studyStartYear} labelAlign="start" />}
         <ChartsTooltip trigger="axis" />
         <ChartsXAxis />
         <ChartsYAxis />
