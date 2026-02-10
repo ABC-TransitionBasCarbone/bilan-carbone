@@ -61,3 +61,17 @@ Cypress.Commands.add('initCreateStudyPage', () => {
   cy.getByTestId('organization-sites-name-header').should('contain.text', 'Nom')
   cy.getByTestId('organization-sites-checkbox').should('be.visible')
 })
+
+Cypress.Commands.add('initRegisterClicksonPage', () => {
+  cy.visit('/clickson/register')
+  cy.getByTestId('welcome-text').should('be.visible')
+  cy.getByTestId('welcome-text').should('contain.text', 'Bienvenue sur Clickson PEBC')
+  cy.getByTestId('welcome-explanation').should('be.visible')
+  cy.getByTestId('welcome-explanation').should(
+    'contain.text',
+    'Mesurons les émissions de gaz à effet de serre de votre établissement',
+  )
+  cy.getByTestId('activation-email').should('be.visible')
+  cy.getByTestId('activation-school').should('be.visible')
+  cy.getByTestId('activation-button').should('be.visible')
+})

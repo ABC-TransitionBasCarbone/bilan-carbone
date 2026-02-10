@@ -4,11 +4,8 @@ describe('Register clickson', () => {
   })
 
   it('does create new clickson user and organization with school', () => {
-    cy.visit('/clickson/register')
+    cy.initRegisterClicksonPage()
 
-    cy.getByTestId('activation-email').should('be.visible')
-    cy.getByTestId('activation-school').should('be.visible')
-    cy.getByTestId('activation-button').should('be.visible')
     cy.getByTestId('activation-email').type('clickson-school@yopmail.com')
 
     cy.intercept('GET', '/api/schools/*').as('getSchools')
@@ -38,7 +35,7 @@ describe('Register clickson', () => {
   })
 
   it('does not create new clickson user with wrong postalCode and no selected school', () => {
-    cy.visit('/clickson/register')
+    cy.initRegisterClicksonPage()
 
     cy.getByTestId('activation-email').type('clickson-wrong-postal-code@yopmail.com')
     cy.getByTestId('activation-school').type('00000')
@@ -51,7 +48,8 @@ describe('Register clickson', () => {
   })
 
   it('does create new clickson user and ask for validation to already existing organization ', () => {
-    cy.visit('/clickson/register')
+    cy.initRegisterClicksonPage()
+
     cy.getByTestId('activation-email').type('clickson-school-pending@yopmail.com')
     cy.intercept('GET', '/api/schools/*').as('getSchools')
     cy.getByTestId('activation-school').type('92100', { delay: 200 })

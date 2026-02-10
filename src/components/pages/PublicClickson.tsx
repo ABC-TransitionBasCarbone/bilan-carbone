@@ -39,10 +39,12 @@ const PublicClicksonPage = ({ children, question }: Props) => {
     <PublicContainer>
       <div className={classNames(styles.info, 'flex-col grow p2 text-center gapped4')}>
         <div>
-          <p className="title-h4 mb1">{t('welcome')}</p>
+          <p className="title-h4 mb1" data-testId="welcome-text">
+            {t('welcome')}
+          </p>
           <p className="title-h6 bold">{t('subtext')}</p>
         </div>
-        <p>{t('explanation')}</p>
+        <p data-testId="welcome-explanation">{t('explanation')}</p>
         <div className="flex-cc gapped1 w100 p1">
           <Image
             src="/logos/clickson/logo_clickson.png"

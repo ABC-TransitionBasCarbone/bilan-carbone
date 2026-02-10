@@ -11,5 +11,6 @@ declare namespace Cypress {
     resetTestDatabase(): Chainable<void>
     initFePage(): Chainable<void>
     initCreateStudyPage(): Chainable<void>
+    initRegisterClicksonPage(): Chainable<void>
   }
 }

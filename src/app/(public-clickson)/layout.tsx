@@ -13,7 +13,7 @@ interface Props {
 
 export const metadata: Metadata = {
   title: 'Bienvenue sur Clickson PEBC',
-  description: 'Mesurons les émissions de gaz à effet de serre de votre établissement!',
+  description: 'Mesurons les émissions de gaz à effet de serre de votre établissement !',
 }
 
 const PublicLayout = async ({ children }: Props) => {
