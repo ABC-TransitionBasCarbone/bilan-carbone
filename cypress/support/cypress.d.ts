@@ -6,6 +6,7 @@ declare namespace Cypress {
     ): Chainable<JQuery<HTMLElement>>
 
     login(email?: string, password?: string): Chainable<void>
+    loginwithMultipleAccounts(email?: string, password?: string): Chainable<void>
     logout(): Chainable<void>
     signupCut(string?: string, string?: string): Chainable<void>
     resetTestDatabase(): Chainable<void>

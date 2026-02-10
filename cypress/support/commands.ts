@@ -18,6 +18,23 @@ Cypress.Commands.add('login', (email = 'bc-collaborator-0@yopmail.com', password
   cy.getByTestId('navbar-top-left').should('be.visible')
 })
 
+Cypress.Commands.add(
+  'loginwithMultipleAccounts',
+  (email = 'bc-collaborator-0@yopmail.com', password = 'password-0') => {
+    cy.visit('/login')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input')
+      .should('be.visible')
+      .should('not.be.disabled')
+      .type(email)
+    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type(password)
+    cy.getByTestId('login-button').click()
+    cy.getByTestId('login-button').should('be.disabled')
+    cy.wait(`@login`)
+    cy.getByTestId('select-account').should('exist')
+    cy.getByTestId('select-account').should('contain.text', 'Sélection du compte')
+  },
+)
+
 Cypress.Commands.add('logout', () => {
   cy.visit('/logout')
   cy.wait(`@logout`)
