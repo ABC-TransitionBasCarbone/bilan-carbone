@@ -10,8 +10,6 @@ program
   .version('1.0.0')
   .parse(process.argv)
 
-const params = program.opts()
-
 removeSourceToAllStudies(Import.AIB)
 
 console.log("Sources d'étude supprimées pour la source AIB n'ayant pas d'export GHG-P")
