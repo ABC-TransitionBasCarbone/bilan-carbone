@@ -7,40 +7,6 @@ import { Prisma, SubPost, TrajectoryType } from '@prisma/client'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { hasEditAccessOnStudy, hasReadAccessOnStudy } from '../permissions/study'
 
-type ObjectiveScopeInput = {
-  siteIds?: string[]
-  tagIds?: string[]
-}
-
-const validateObjectiveScopeOwnership = async (objectives: ObjectiveScopeInput[], studyId: string): Promise<void> => {
-  const allSiteIds = objectives.flatMap((obj) => obj.siteIds || [])
-  const allTagIds = objectives.flatMap((obj) => obj.tagIds || [])
-
-  if (allSiteIds.length > 0) {
-    const validSites = await prismaClient.studySite.findMany({
-      where: { studyId, id: { in: allSiteIds } },
-      select: { id: true },
-    })
-    const validSiteIds = new Set(validSites.map((s) => s.id))
-    const invalidSiteId = allSiteIds.find((id) => !validSiteIds.has(id))
-    if (invalidSiteId) {
-      throw new Error('invalidScopeId')
-    }
-  }
-
-  if (allTagIds.length > 0) {
-    const validTags = await prismaClient.studyTag.findMany({
-      where: { family: { studyId }, id: { in: allTagIds } },
-      select: { id: true },
-    })
-    const validTagIds = new Set(validTags.map((t) => t.id))
-    const invalidTagId = allTagIds.find((id) => !validTagIds.has(id))
-    if (invalidTagId) {
-      throw new Error('invalidScopeId')
-    }
-  }
-}
-
 const createObjectiveScopeRecords = async (
   tx: Prisma.TransactionClient,
   objectiveId: string,
@@ -86,15 +52,10 @@ const validateUniqueScopeCombination = async (
   const newTagIds = new Set(input.tagIds || [])
   const newSubPosts = new Set(input.subPosts || [])
 
-  for (const existingObjective of existingObjectives) {
-    const obj = existingObjective as typeof existingObjective & {
-      sites: Array<{ studySiteId: string }>
-      tags: Array<{ studyTagId: string }>
-      subPosts: Array<{ subPost: SubPost }>
-    }
-    const existingSiteIds = new Set(obj.sites?.map((s) => s.studySiteId) || [])
-    const existingTagIds = new Set(obj.tags?.map((t) => t.studyTagId) || [])
-    const existingSubPosts = new Set(obj.subPosts?.map((sp) => sp.subPost) || [])
+  for (const objective of existingObjectives) {
+    const existingSiteIds = new Set(objective.sites?.map((s) => s.studySiteId) || [])
+    const existingTagIds = new Set(objective.tags?.map((t) => t.studyTagId) || [])
+    const existingSubPosts = new Set(objective.subPosts?.map((sp) => sp.subPost) || [])
 
     const sameSites =
       existingSiteIds.size === newSiteIds.size && [...existingSiteIds].every((id) => newSiteIds.has(id as string))
@@ -143,7 +104,6 @@ export const createSubObjective = async (input: CreateObjectiveInput) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    await validateObjectiveScopeOwnership([input], trajectory.transitionPlan.studyId)
     await validateUniqueScopeCombination(input.trajectoryId, input)
 
     const shouldConvertToCustom = trajectory.type !== TrajectoryType.CUSTOM
@@ -193,7 +153,6 @@ export const updateObjective = async (input: UpdateObjectiveInput) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    await validateObjectiveScopeOwnership([input], objective.trajectory.transitionPlan.studyId)
     await validateUniqueScopeCombination(objective.trajectoryId, input, input.id)
 
     return prismaClient.$transaction(async (tx) => {
