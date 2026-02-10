@@ -3,11 +3,13 @@ import NotFound from '@/components/pages/NotFound'
 import StudyNavbar from '@/components/studyNavbar/StudyNavbar'
 import { getStudyForNavbar } from '@/db/study'
 import { hasRoleOnStudy } from '@/services/permissions/environment'
+import { canReadStudy, canReadStudyDetail } from '@/services/permissions/study'
 import { isDeactivableFeatureActiveForEnvironment } from '@/services/serverFunctions/deactivableFeatures'
 import { checkStudyHasObjectives } from '@/services/serverFunctions/trajectory'
 import { getAccountRoleOnStudy } from '@/utils/study'
 import { DeactivatableFeature } from '@prisma/client'
 import { UUID } from 'crypto'
+import { redirect } from 'next/navigation'
 import styles from './layout.module.css'
 
 interface Props {
@@ -21,6 +23,13 @@ const NavLayout = async ({ children, params, user }: Props & UserSessionProps) =
   const study = await getStudyForNavbar(id)
   if (!study) {
     return <NotFound />
+  }
+
+  if (!(await canReadStudyDetail(user, study))) {
+    if (!(await canReadStudy(user, id))) {
+      return <NotFound />
+    }
+    redirect(`/etudes/${id}/contributeur`)
   }
 
   const environment = study.organizationVersion.environment

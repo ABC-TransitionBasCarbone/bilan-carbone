@@ -41,6 +41,7 @@ export const getUserRoleOnPublicStudy = (
 }
 
 export type StudyWithRoleFields = {
+  id: string
   level: Level
   isPublic: boolean
   organizationVersion: {
@@ -50,7 +51,7 @@ export type StudyWithRoleFields = {
     activatedLicence: number[]
     parent: { activatedLicence: number[] } | null
   }
-  allowedUsers: { role: StudyRole; account: { id: string } }[]
+  allowedUsers: { role: StudyRole; account: { id: string; user: { email: string } } }[]
 }
 
 export const getAccountRoleOnStudy = (user: UserSession, study: StudyWithRoleFields) => {

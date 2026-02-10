@@ -515,6 +515,7 @@ export const getStudyForNavbar = async (id: string): Promise<StudyForNavbar | nu
   return prismaClient.study.findUnique({
     where: { id },
     select: {
+      id: true,
       name: true,
       simplified: true,
       level: true,
@@ -531,7 +532,7 @@ export const getStudyForNavbar = async (id: string): Promise<StudyForNavbar | nu
       allowedUsers: {
         select: {
           role: true,
-          account: { select: { id: true } },
+          account: { select: { id: true, user: { select: { email: true } } } },
         },
       },
     },
@@ -561,7 +562,7 @@ export const getStudiesForCards = async (ids: string[]) => {
       allowedUsers: {
         select: {
           role: true,
-          account: { select: { id: true } },
+          account: { select: { id: true, user: { select: { email: true } } } },
         },
       },
       organizationVersion: {
