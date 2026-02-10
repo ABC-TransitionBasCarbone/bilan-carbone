@@ -382,7 +382,7 @@ export const updateEmissionFactor = async (
     ...command,
     importedFrom: Import.Manual,
     status: EmissionFactorStatus.Valid,
-    organization: { connect: { id: organizationId ?? '' } },
+    organization: { connect: { id: organizationId } },
     unit: unit as Unit,
     isMonetary: isMonetaryEmissionFactor(command),
     subPosts: flattenSubposts(subPosts),
