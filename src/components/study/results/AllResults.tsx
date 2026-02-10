@@ -22,7 +22,7 @@ import {
   getDetailedEmissionResults,
   ResultType,
 } from '@/services/study'
-import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { sortAlphabetically } from '@/services/utils'
 import { getPost } from '@/utils/post'
 import { calculateMonetaryRatio, convertValue } from '@/utils/study'
 import DownloadIcon from '@mui/icons-material/Download'
@@ -78,14 +78,18 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
   const tCaracterisations = useTranslations('categorisations')
   const tStudyNav = useTranslations('study.navigation')
   const tBase = useTranslations('emissionFactors.base')
-  const { environment } = useAppEnvironmentStore()
+  const environment = study.organizationVersion.environment
+  const exports = study.exports
   const [type, setType] = useState<ResultType>(AdditionalResultTypes.CONSOLIDATED)
-  const exports = useMemo(() => study.exports, [study.exports])
   const [isDownloadReportActive, setIsDownloadReportActive] = useState(false)
   const [selectedSubposts, setSelectedSubposts] = useState<string[]>([])
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [selectedGHGPTable, setSelectedGHGPTable] = useState<EmissionFactorBase>(EmissionFactorBase.LocationBased)
   const router = useRouter()
+
+  const displayConsolidatedInfo =
+    (type === AdditionalResultTypes.CONSOLIDATED || type === AdditionalResultTypes.ENV_SPECIFIC_EXPORT) &&
+    (environment === Environment.BC || environment === Environment.TILT)
 
   useEffect(() => {
     if (environment && environment !== Environment.BC) {
@@ -413,7 +417,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
                 <MenuItem value={AdditionalResultTypes.ENV_SPECIFIC_EXPORT}>{tExport('env_specific_export')}</MenuItem>
               )}
               {exports &&
-                exports?.types.map((exportItem) => (
+                exports?.types.sort(sortAlphabetically).map((exportItem) => (
                   <MenuItem key={exportItem} value={exportItem} disabled={exports.control === ControlMode.CapitalShare}>
                     {tExport(exportItem)}
                     {exports.control === ControlMode.CapitalShare && <em> ({t('coming')})</em>}
@@ -455,20 +459,18 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
             </>
           )}
         </div>
-        {type !== Export.Beges &&
-          (type === AdditionalResultTypes.CONSOLIDATED || type === AdditionalResultTypes.ENV_SPECIFIC_EXPORT) &&
-          (environment === Environment.BC || environment === Environment.TILT) && (
-            <ResultFilters
-              study={study}
-              selectedPostIds={selectedSubposts}
-              selectedTagIds={selectedTags}
-              onPostFilterChange={setSelectedSubposts}
-              onTagFilterChange={setSelectedTags}
-              exportType={type}
-            />
-          )}
+        {type !== Export.Beges && displayConsolidatedInfo && (
+          <ResultFilters
+            study={study}
+            selectedPostIds={selectedSubposts}
+            selectedTagIds={selectedTags}
+            onPostFilterChange={setSelectedSubposts}
+            onTagFilterChange={setSelectedTags}
+            exportType={type}
+          />
+        )}
         <div className="mt1">
-          {type === AdditionalResultTypes.CONSOLIDATED && (
+          {displayConsolidatedInfo && (
             <>
               <EmissionsAnalysis
                 study={study}
@@ -495,11 +497,16 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
                   ))}
                 </Tabs>
               </div>
-              <GHGPResultsTable study={study} withDepValue={withDepValue} data={computedGHGPData} />
+              <GHGPResultsTable
+                study={study}
+                withDepValue={withDepValue}
+                data={computedGHGPData}
+                base={selectedGHGPTable}
+              />
             </Box>
           )}
         </div>
-        {type === AdditionalResultTypes.CONSOLIDATED && (
+        {displayConsolidatedInfo && (
           <UncertaintyAnalytics
             filteredResults={filteredResultsByPost}
             studyId={study.id}

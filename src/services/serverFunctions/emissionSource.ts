@@ -123,11 +123,6 @@ export const updateEmissionSource = async ({
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const isContributor = study.contributors.some(
-      (contributor) =>
-        contributor.account.user.email === account.user.email && contributor.subPost === emissionSource.subPost,
-    )
-
     let emissionSourceTags = undefined
     if (command.emissionSourceTags && Array.isArray(command.emissionSourceTags)) {
       const existingTagIds = emissionSource.emissionSourceTags.map((t) => t.tagId)
@@ -161,10 +156,7 @@ export const updateEmissionSource = async ({
         : {}),
     }
 
-    await updateEmissionSourceOnStudy(
-      emissionSourceId,
-      isContributor ? { ...data, contributor: { connect: { id: account.id } } } : data,
-    )
+    await updateEmissionSourceOnStudy(emissionSourceId, { ...data, lastEditor: { connect: { id: account.id } } })
     addUserChecklistItem(UserChecklist.CreateFirstEmissionSource)
   })
 

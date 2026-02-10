@@ -5,11 +5,13 @@ import { FullStudy } from '@/db/study'
 import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { customRich } from '@/i18n/customRich'
 import { hasAccessToReductionObjectivesGlossary } from '@/services/permissions/environment'
+import { getStudyTotalCo2Emissions } from '@/services/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
-import { SectenInfo } from '@prisma/client'
+import { convertToPastStudies } from '@/utils/trajectory'
+import { ExternalStudy, SectenInfo } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import Block from '../base/Block'
 import HelpIcon from '../base/HelpIcon'
 import GlossaryModal from '../modals/GlossaryModal'
@@ -24,9 +26,21 @@ interface Props {
   trajectories: TrajectoryWithObjectives[]
   transitionPlanId: string
   sectenData: SectenInfo[]
+  linkedStudies: FullStudy[]
+  linkedExternalStudies: ExternalStudy[]
+  validatedOnly: boolean
 }
 
-const ObjectivesPage = ({ study, canEdit, trajectories, transitionPlanId, sectenData }: Props) => {
+const ObjectivesPage = ({
+  study,
+  canEdit,
+  trajectories,
+  transitionPlanId,
+  sectenData,
+  linkedStudies,
+  linkedExternalStudies,
+  validatedOnly,
+}: Props) => {
   const t = useTranslations('study.transitionPlan.objectives')
   const tGlossary = useTranslations('study.transitionPlan.objectives.glossary')
   const tNav = useTranslations('nav')
@@ -35,6 +49,14 @@ const ObjectivesPage = ({ study, canEdit, trajectories, transitionPlanId, secten
   const [searchFilter, setSearchFilter] = useState('')
   const [displayGlossary, setDisplayGlossary] = useState(false)
   const { environment } = useAppEnvironmentStore()
+
+  const studyTotalEmissions = useMemo(() => {
+    return getStudyTotalCo2Emissions(study, true, validatedOnly)
+  }, [study, validatedOnly])
+
+  const pastStudiesData = useMemo(() => {
+    return convertToPastStudies(linkedStudies, linkedExternalStudies, false, validatedOnly, study.resultsUnit)
+  }, [linkedStudies, linkedExternalStudies, validatedOnly, study.resultsUnit])
 
   return (
     <>
@@ -81,6 +103,8 @@ const ObjectivesPage = ({ study, canEdit, trajectories, transitionPlanId, secten
               canEdit={canEdit}
               studyYear={study.startDate.getFullYear()}
               sectenData={sectenData}
+              studyEmissions={studyTotalEmissions}
+              pastStudies={pastStudiesData}
             />
 
             <TrajectoryObjectivesTable
@@ -91,6 +115,8 @@ const ObjectivesPage = ({ study, canEdit, trajectories, transitionPlanId, secten
               studyYear={study.startDate.getFullYear()}
               searchFilter={searchFilter}
               sectenData={sectenData}
+              studyEmissions={studyTotalEmissions}
+              pastStudies={pastStudiesData}
             />
           </div>
         </div>

@@ -1,5 +1,6 @@
 'use client'
 
+import { customRich } from '@/i18n/customRich'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import Modal from '../modals/Modal'
@@ -29,7 +30,7 @@ const EmissionFactorsWarning = ({ emissionFactors }: Props) => {
           { actionType: 'link', children: t('correct'), href: '/facteurs-d-emission', variant: 'contained' },
         ]}
       >
-        <p>{t.rich('body', { link: (children) => <a href="/facteurs-d-emission">{children}</a> })}</p>
+        <p>{customRich(t, 'body', { link: (children) => <a href="/facteurs-d-emission">{children}</a> })}</p>
         <ul className="mt-2">
           {emissionFactors.map((emissionFactor) => (
             <li key={emissionFactor}>{emissionFactor}</li>

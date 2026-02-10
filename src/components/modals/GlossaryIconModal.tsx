@@ -1,5 +1,6 @@
 'use client'
 
+import { customRich } from '@/i18n/customRich'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import HelpIcon from '../base/HelpIcon'
@@ -32,7 +33,7 @@ const GlossaryIconModal = ({ title, className, iconLabel, label, tModal, childre
       <Modal
         open={open}
         label={`${label}-glossary`}
-        title={t(title)}
+        title={customRich(t, title)}
         onClose={() => setOpen(false)}
         actions={[{ actionType: 'button', onClick: () => setOpen(false), children: tCommon('close') }]}
       >

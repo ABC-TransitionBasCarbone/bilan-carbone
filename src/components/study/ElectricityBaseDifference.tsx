@@ -1,4 +1,5 @@
 import { FullStudy } from '@/db/study'
+import { customRich } from '@/i18n/customRich'
 import { EmissionFactorBase, Export, Unit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -36,7 +37,7 @@ const ElectricityBaseDifference = ({ emissionSources, validatedOnly = false, exp
 
   return exports && exports.includes(Export.GHGP) && locationValue !== marketValue ? (
     <div className={classNames(className, 'flex error bold')}>
-      <span className="mr-2">{t('warning')}</span>
+      <span className="mr-2">{customRich(t, 'warning')}</span>
       <GlossaryIconModal
         title="title"
         iconLabel="explanation"
@@ -44,12 +45,7 @@ const ElectricityBaseDifference = ({ emissionSources, validatedOnly = false, exp
         tModal="emissionFactors.base.difference"
         className={styles.helpIcon}
       >
-        <p>
-          {t.rich('description', {
-            green: (children) => <span style={{ color: 'var(--mui-palette-ghgp-main)' }}>{children}</span>,
-            purple: (children) => <span style={{ color: 'var(--mui-palette-ghgp-complementary)' }}>{children}</span>,
-          })}
-        </p>
+        <p>{customRich(t, 'description')}</p>
       </GlossaryIconModal>
     </div>
   ) : null

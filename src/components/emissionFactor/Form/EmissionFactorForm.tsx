@@ -7,6 +7,7 @@ import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import QualitySelectGroup from '@/components/study/QualitySelectGroup'
+import { customRich } from '@/i18n/customRich'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { qualityKeys, specificFEQualityKeys } from '@/services/uncertainty'
 import { BCUnit, useUnitLabel } from '@/services/unit'
@@ -94,7 +95,12 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         label={`${t('name')} *`}
         placeholder={t('namePlaceholder')}
       />
-      <FormTextField control={control} name="attribute" label={t('attribute')} />
+      <FormTextField
+        control={control}
+        name="attribute"
+        label={t('attribute')}
+        placeholder={t('attributePlaceholder')}
+      />
       <FormAutocomplete
         data-testid="fe-location"
         control={control}
@@ -106,11 +112,17 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
           )
         }
         name="location"
-        label={t('location')}
+        label={customRich(t, 'location')}
         onInputChange={(_, value) => setValue('location', value?.trim() || '')}
         freeSolo
       />
-      <FormTextField data-testid="emission-factor-source" control={control} name="source" label={`${t('source')} *`} />
+      <FormTextField
+        data-testid="emission-factor-source"
+        control={control}
+        name="source"
+        label={`${t('source')} *`}
+        placeholder={t('sourcePlaceholder')}
+      />
       <div className="flex gapped">
         <div className="grow">
           <FormSelect
@@ -202,7 +214,7 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
       {glossary && (
         <GlossaryModal glossary={glossary} onClose={() => setGlossary('')} label="emission-factor" t={tGlossary}>
           <p className="mb-2">
-            {tGlossary.rich(`${glossary}Description`, {
+            {customRich(tGlossary, `${glossary}Description`, {
               link: (children) => (
                 <Link href={tDocumentation('uncertainties')} target="_blank" rel="noreferrer noopener">
                   {children}

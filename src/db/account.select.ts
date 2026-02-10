@@ -1,0 +1,38 @@
+export const AccountWithUserSelect = {
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  userId: true,
+  importedFileDate: true,
+  deactivatableFeatureStatus: true,
+  environment: true,
+  status: true,
+  feedbackDate: true,
+  organizationVersionId: true,
+  organizationVersion: {
+    select: {
+      id: true,
+      organizationId: true,
+      environment: true,
+    },
+  },
+  role: true,
+  formationName: true,
+  formationStartDate: true,
+  formationEndDate: true,
+  user: {
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      level: true,
+      email: true,
+      createdAt: true,
+      updatedAt: true,
+      password: true,
+      resetToken: true,
+      source: true,
+      formationFormStartTime: true,
+    },
+  },
+}

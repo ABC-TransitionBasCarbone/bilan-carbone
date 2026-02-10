@@ -7,7 +7,9 @@
     "close": "Close",
     "all": "All",
     "none": "None",
-    "subPosts": "Sub posts",
+    "subPosts": "Subcategories",
+    "onDate": "on",
+    "by": "by",
     "action": {
       "create": "Create",
       "edit": "Edit",
@@ -26,7 +28,9 @@
     },
     "label": {
       "start": "Start",
-      "end": "End"
+      "end": "End",
+      "sites": "Sites",
+      "date": "Date"
     },
     "notAuthorized": "Action not authorized",
     "Not authorized": "You are not allowed to do this action",

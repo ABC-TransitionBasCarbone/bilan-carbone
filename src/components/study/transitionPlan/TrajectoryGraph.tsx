@@ -1,16 +1,12 @@
 'use client'
 
 import TagChip from '@/components/base/TagChip'
-import {
-  TRAJECTORY_15_ID,
-  TRAJECTORY_SNBC_GENERAL_ID,
-  TRAJECTORY_WB2C_ID,
-} from '@/components/pages/TrajectoryReductionPage'
+import { TRAJECTORY_15_ID, TRAJECTORY_SNBC_GENERAL_ID, TRAJECTORY_WB2C_ID } from '@/constants/trajectories'
 import { getYearsToDisplay, PastStudy, TrajectoryData } from '@/utils/trajectory'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary, Alert, Slider, Typography } from '@mui/material'
 import { LineChart, LineSeries } from '@mui/x-charts/LineChart'
-import { TrajectoryType, type StudyResultUnit } from '@prisma/client'
+import { StudyResultUnit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -31,7 +27,7 @@ interface Props {
   studyUnit: StudyResultUnit
   trajectory15Data: TrajectoryData | null
   trajectoryWB2CData: TrajectoryData | null
-  snbcData: TrajectoryData | null
+  snbcData: { [sectorId: string]: TrajectoryData | null }
   customTrajectoriesData: Array<{
     trajectoryData: TrajectoryData | null
     label: string
@@ -74,10 +70,11 @@ const TrajectoryGraph = ({
   const [yearRange, setYearRange] = useState<number[] | null>(null)
   const [displayedYearRange, setDisplayedYearRange] = useState<number[] | null>(null)
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const tSnbc = useTranslations('study.transitionPlan.trajectories.snbcCard')
 
   const trajectory15Enabled = selectedSbtiTrajectories.includes(TRAJECTORY_15_ID)
   const trajectoryWB2CEnabled = selectedSbtiTrajectories.includes(TRAJECTORY_WB2C_ID)
-  const trajectorySnbcEnabled = selectedSnbcTrajectories.includes(TRAJECTORY_SNBC_GENERAL_ID)
+  const snbcTrajectoryDataArray = useMemo(() => Object.values(snbcData), [snbcData])
 
   const allYearsToDisplay = useMemo(
     () =>
@@ -85,12 +82,12 @@ const TrajectoryGraph = ({
         [
           trajectory15Data,
           trajectoryWB2CData,
-          snbcData,
+          ...snbcTrajectoryDataArray,
           ...customTrajectoriesData.map((values) => values.trajectoryData),
           actionBasedTrajectoryData,
         ].filter((traj) => traj !== null),
       ),
-    [trajectory15Data, trajectoryWB2CData, snbcData, customTrajectoriesData, actionBasedTrajectoryData],
+    [trajectory15Data, trajectoryWB2CData, snbcTrajectoryDataArray, customTrajectoriesData, actionBasedTrajectoryData],
   )
 
   const { minYear, maxYear } = useMemo(() => {
@@ -143,15 +140,19 @@ const TrajectoryGraph = ({
   const studyStartYearIndex = yearsToDisplay.indexOf(studyStartYear)
 
   const mapDataToYears = useCallback(
-    (dataPoints: TrajectoryDataPoint[], customTrajectory = false) => {
+    (dataPoints: TrajectoryDataPoint[], customTrajectory = false, isFailed = false) => {
       // usefull for customTrajectory only
-      const maxYear = customTrajectory
+      let maxYear = customTrajectory
         ? Math.min((Math.max(...yearsToDisplay), Math.max(...dataPoints.map((point) => point.year))))
         : Math.max(...yearsToDisplay)
 
+      if (isFailed && maxYear > studyStartYear) {
+        maxYear = studyStartYear
+      }
+
       const dataMap = new Map(dataPoints.map((d) => [d.year, d.value]))
       return yearsToDisplay.map((year) =>
-        year <= maxYear ? (dataMap.get(year) ?? null) : (dataMap.get(maxYear) ?? null),
+        year <= maxYear ? (dataMap.get(year) ?? null) : isFailed ? null : (dataMap.get(maxYear) ?? null),
       )
     },
     [yearsToDisplay],
@@ -178,19 +179,21 @@ const TrajectoryGraph = ({
   )
 
   const seriesCreated = useMemo(() => {
-    const series: (LineSeries & { trajectoryType?: TrajectoryType; dataType: DataType })[] = []
+    const series: (LineSeries & { dataType: DataType; isFailed?: boolean; isCustom?: boolean })[] = []
 
     if (trajectory15Enabled && trajectory15Data) {
-      const { previousTrajectory, previousTrajectoryStartYear, currentTrajectory, withinThreshold } = trajectory15Data
+      const { previousTrajectory, previousTrajectoryStartYear, currentTrajectory, withinThreshold, isFailed } =
+        trajectory15Data
 
       if (previousTrajectory) {
         if (withinThreshold) {
           series.push({
             dataType: 'previous',
-            trajectoryType: TrajectoryType.SBTI_15,
-            data: mapDataToYears(previousTrajectory),
+            isCustom: false,
+            isFailed,
+            data: mapDataToYears(previousTrajectory, false, isFailed),
             label: t('trajectory15'),
-            color: 'var(--trajectory-sbti-15)',
+            color: isFailed ? 'var(--error-50)' : 'var(--trajectory-sbti-15)',
             curve: 'linear' as const,
             connectNulls: false,
             showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
@@ -199,10 +202,11 @@ const TrajectoryGraph = ({
         } else {
           series.push({
             dataType: 'previous',
-            trajectoryType: TrajectoryType.SBTI_15,
-            data: mapDataToYears(previousTrajectory),
+            isCustom: false,
+            isFailed,
+            data: mapDataToYears(previousTrajectory, false, isFailed),
             label: t('trajectory15') + ` (${previousTrajectoryStartYear})`,
-            color: 'color-mix(in srgb, var(--trajectory-sbti-15) 50%, transparent)',
+            color: isFailed ? 'var(--error-50)' : 'color-mix(in srgb, var(--trajectory-sbti-15) 50%, transparent)',
             curve: 'linear' as const,
             connectNulls: false,
             showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
@@ -211,15 +215,16 @@ const TrajectoryGraph = ({
         }
       }
 
-      const currentData = mapDataToYears(currentTrajectory)
+      const currentData = mapDataToYears(currentTrajectory, false, isFailed)
       const showCurrentTrajectory = !previousTrajectory || !withinThreshold
       if (showCurrentTrajectory) {
         series.push({
           dataType: 'current',
-          trajectoryType: TrajectoryType.SBTI_15,
+          isCustom: false,
+          isFailed,
           data: currentData,
           label: trajectory15Data.previousTrajectory ? t('trajectory15') + ` (${studyStartYear})` : t('trajectory15'),
-          color: 'var(--trajectory-sbti-15)',
+          color: isFailed ? 'var(--error-100)' : 'var(--trajectory-sbti-15)',
           curve: 'linear' as const,
           connectNulls: false,
           showMark: ({ index }: { index: number }) => shouldShowMark(index),
@@ -228,10 +233,11 @@ const TrajectoryGraph = ({
       } else {
         series.push({
           dataType: 'current',
-          trajectoryType: TrajectoryType.SBTI_15,
+          isCustom: false,
+          isFailed,
           data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
           label: t('trajectory15') + ` (${studyStartYear})`,
-          color: 'var(--trajectory-sbti-15)',
+          color: isFailed ? 'var(--error-100)' : 'var(--trajectory-sbti-15)',
           curve: 'linear' as const,
           connectNulls: false,
           showMark: true,
@@ -241,16 +247,18 @@ const TrajectoryGraph = ({
     }
 
     if (trajectoryWB2CEnabled && trajectoryWB2CData) {
-      const { previousTrajectory, previousTrajectoryStartYear, currentTrajectory, withinThreshold } = trajectoryWB2CData
+      const { previousTrajectory, previousTrajectoryStartYear, currentTrajectory, withinThreshold, isFailed } =
+        trajectoryWB2CData
 
       if (previousTrajectory) {
         if (withinThreshold) {
           series.push({
             dataType: 'previous',
-            trajectoryType: TrajectoryType.SBTI_WB2C,
-            data: mapDataToYears(previousTrajectory),
+            isCustom: false,
+            isFailed,
+            data: mapDataToYears(previousTrajectory, false, isFailed),
             label: t('trajectoryWB2C'),
-            color: 'var(--trajectory-sbti-wb2c)',
+            color: isFailed ? 'var(--error-50)' : 'var(--trajectory-sbti-wb2c)',
             curve: 'linear' as const,
             connectNulls: false,
             showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
@@ -259,10 +267,11 @@ const TrajectoryGraph = ({
         } else {
           series.push({
             dataType: 'previous',
-            trajectoryType: TrajectoryType.SBTI_WB2C,
-            data: mapDataToYears(previousTrajectory),
+            isCustom: false,
+            isFailed,
+            data: mapDataToYears(previousTrajectory, false, isFailed),
             label: t('trajectoryWB2C') + ` (${previousTrajectoryStartYear})`,
-            color: 'color-mix(in srgb, var(--trajectory-sbti-wb2c) 50%, transparent)',
+            color: isFailed ? 'var(--error-50)' : 'color-mix(in srgb, var(--trajectory-sbti-wb2c) 50%, transparent)',
             curve: 'linear' as const,
             connectNulls: false,
             showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
@@ -271,17 +280,18 @@ const TrajectoryGraph = ({
         }
       }
 
-      const currentData = mapDataToYears(currentTrajectory)
+      const currentData = mapDataToYears(currentTrajectory, false, isFailed)
       const showCurrentTrajectory = !previousTrajectory || !withinThreshold
       if (showCurrentTrajectory) {
         series.push({
           dataType: 'current',
-          trajectoryType: TrajectoryType.SBTI_WB2C,
+          isCustom: false,
+          isFailed,
           data: currentData,
           label: trajectoryWB2CData.previousTrajectory
             ? t('trajectoryWB2C') + ` (${studyStartYear})`
             : t('trajectoryWB2C'),
-          color: 'var(--trajectory-sbti-wb2c)',
+          color: isFailed ? 'var(--error-100)' : 'var(--trajectory-sbti-wb2c)',
           curve: 'linear' as const,
           connectNulls: false,
           showMark: ({ index }: { index: number }) => shouldShowMark(index),
@@ -290,10 +300,11 @@ const TrajectoryGraph = ({
       } else {
         series.push({
           dataType: 'current',
-          trajectoryType: TrajectoryType.SBTI_WB2C,
+          isCustom: false,
+          isFailed,
           data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
           label: t('trajectoryWB2C') + ` (${studyStartYear})`,
-          color: 'var(--trajectory-sbti-wb2c)',
+          color: isFailed ? 'var(--error-100)' : 'var(--trajectory-sbti-wb2c)',
           curve: 'linear' as const,
           connectNulls: false,
           showMark: true,
@@ -302,69 +313,80 @@ const TrajectoryGraph = ({
       }
     }
 
-    if (trajectorySnbcEnabled && snbcData) {
-      const { previousTrajectory, previousTrajectoryStartYear, currentTrajectory, withinThreshold } = snbcData
+    Object.entries(snbcData).forEach(([trajectoryId, trajectoryData]) => {
+      if (selectedSnbcTrajectories.includes(trajectoryId) && trajectoryData) {
+        const { previousTrajectory, previousTrajectoryStartYear, currentTrajectory, withinThreshold, isFailed } =
+          trajectoryData
 
-      if (previousTrajectory) {
-        if (withinThreshold) {
+        const color = `var(--trajectory-snbc-${trajectoryId})`
+        const label =
+          trajectoryId === TRAJECTORY_SNBC_GENERAL_ID
+            ? t('trajectorySNBC')
+            : `${t('trajectorySNBC')} - ${tSnbc(trajectoryId.toLowerCase().replace('snbc_', ''))}`
+
+        if (previousTrajectory) {
+          if (withinThreshold) {
+            series.push({
+              dataType: 'previous',
+              isCustom: false,
+              data: mapDataToYears(previousTrajectory),
+              label,
+              color,
+              curve: 'linear' as const,
+              connectNulls: false,
+              showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
+              valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
+            })
+          } else {
+            series.push({
+              dataType: 'previous',
+              isCustom: false,
+              data: mapDataToYears(previousTrajectory),
+              label: label + ` (${previousTrajectoryStartYear})`,
+              color: `color-mix(in srgb, ${color} 50%, transparent)`,
+              curve: 'linear' as const,
+              connectNulls: false,
+              showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
+              valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
+            })
+          }
+        }
+
+        const currentData = mapDataToYears(currentTrajectory, false, isFailed)
+        const showCurrentTrajectory = !previousTrajectory || !withinThreshold
+        if (showCurrentTrajectory) {
           series.push({
-            dataType: 'previous',
-            trajectoryType: TrajectoryType.SNBC_GENERAL,
-            data: mapDataToYears(previousTrajectory),
-            label: t('trajectorySNBC'),
-            color: 'var(--trajectory-snbc)',
+            dataType: 'current',
+            isCustom: false,
+            label: trajectoryData.previousTrajectory ? label + ` (${studyStartYear})` : label,
+            isFailed,
+            data: currentData,
+            color: isFailed ? 'var(--error-50)' : color,
             curve: 'linear' as const,
             connectNulls: false,
-            showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
+            showMark: ({ index }: { index: number }) => shouldShowMark(index),
             valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
           })
         } else {
           series.push({
-            dataType: 'previous',
-            trajectoryType: TrajectoryType.SNBC_GENERAL,
-            data: mapDataToYears(previousTrajectory),
-            label: t('trajectorySNBC') + ` (${previousTrajectoryStartYear})`,
-            color: 'color-mix(in srgb, var(--trajectory-snbc) 50%, transparent)',
+            dataType: 'current',
+            isCustom: false,
+            data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
+            label: label + ` (${studyStartYear})`,
+            isFailed,
+            color: isFailed ? 'var(--error-50)' : color,
             curve: 'linear' as const,
             connectNulls: false,
-            showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
+            showMark: true,
             valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
           })
         }
       }
-
-      const currentData = mapDataToYears(currentTrajectory)
-      const showCurrentTrajectory = !previousTrajectory || !withinThreshold
-      if (showCurrentTrajectory) {
-        series.push({
-          dataType: 'current',
-          trajectoryType: TrajectoryType.SNBC_GENERAL,
-          data: currentData,
-          label: snbcData.previousTrajectory ? t('trajectorySNBC') + ` (${studyStartYear})` : t('trajectorySNBC'),
-          color: 'var(--trajectory-snbc)',
-          curve: 'linear' as const,
-          connectNulls: false,
-          showMark: ({ index }: { index: number }) => shouldShowMark(index),
-          valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
-        })
-      } else {
-        series.push({
-          dataType: 'current',
-          trajectoryType: TrajectoryType.SNBC_GENERAL,
-          data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
-          label: t('trajectorySNBC') + ` (${studyStartYear})`,
-          color: 'var(--trajectory-snbc)',
-          curve: 'linear' as const,
-          connectNulls: false,
-          showMark: true,
-          valueFormatter: (value: number | null) => (value !== null ? Math.round(value).toString() : ''),
-        })
-      }
-    }
+    })
 
     customTrajectoriesData.forEach((traj, index) => {
       if (traj.trajectoryData) {
-        const { previousTrajectory, previousTrajectoryStartYear, currentTrajectory, withinThreshold } =
+        const { previousTrajectory, previousTrajectoryStartYear, currentTrajectory, withinThreshold, isFailed } =
           traj.trajectoryData
 
         if (previousTrajectory) {
@@ -375,10 +397,11 @@ const TrajectoryGraph = ({
           if (withinThreshold) {
             series.push({
               dataType: 'previous',
-              trajectoryType: TrajectoryType.CUSTOM,
-              data: mapDataToYears(previousTrajectory, true),
+              isCustom: true,
+              isFailed,
+              data: mapDataToYears(previousTrajectory, true, isFailed),
               label: traj.label + ` (${previousTrajectoryStartYear})`,
-              color: traj.color || `var(--trajectory-custom-${index % 9})`,
+              color: isFailed ? 'var(--error-50)' : traj.color || `var(--trajectory-custom-${index % 9})`,
               curve: 'linear' as const,
               connectNulls: false,
               showMark: ({ index }: { index: number }) => index === previousTrajectoryStartYearIndex,
@@ -388,10 +411,11 @@ const TrajectoryGraph = ({
             const baseColor = traj.color || `var(--trajectory-custom-${index % 9})`
             series.push({
               dataType: 'previous',
-              trajectoryType: TrajectoryType.CUSTOM,
-              data: mapDataToYears(previousTrajectory, true),
+              isCustom: true,
+              isFailed,
+              data: mapDataToYears(previousTrajectory, true, isFailed),
               label: traj.label + ` (${previousTrajectoryStartYear})`,
-              color: `color-mix(in srgb, ${baseColor} 50%, transparent)`,
+              color: isFailed ? 'var(--error-50)' : `color-mix(in srgb, ${baseColor} 50%, transparent)`,
               curve: 'linear' as const,
               connectNulls: false,
               showMark: ({ index }: { index: number }) => index === previousTrajectoryStartYearIndex,
@@ -400,15 +424,16 @@ const TrajectoryGraph = ({
           }
         }
 
-        const currentData = mapDataToYears(currentTrajectory, true)
+        const currentData = mapDataToYears(currentTrajectory, true, isFailed)
         const showCurrentTrajectory = !previousTrajectory || !withinThreshold
         if (showCurrentTrajectory) {
           series.push({
             dataType: 'current',
-            trajectoryType: TrajectoryType.CUSTOM,
+            isCustom: true,
+            isFailed,
             data: currentData,
             label: previousTrajectory ? traj.label + ` (${studyStartYear})` : traj.label,
-            color: traj.color || `var(--trajectory-custom-${index % 9})`,
+            color: isFailed ? 'var(--error-100)' : traj.color || `var(--trajectory-custom-${index % 9})`,
             curve: 'linear' as const,
             connectNulls: false,
             showMark: ({ index }: { index: number }) => shouldShowMark(index),
@@ -417,10 +442,11 @@ const TrajectoryGraph = ({
         } else {
           series.push({
             dataType: 'current',
-            trajectoryType: TrajectoryType.CUSTOM,
+            isCustom: true,
+            isFailed,
             data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
             label: traj.label + ` (${studyStartYear})`,
-            color: traj.color || `var(--trajectory-custom-${index % 9})`,
+            color: isFailed ? 'var(--error-100)' : traj.color || `var(--trajectory-custom-${index % 9})`,
             curve: 'linear' as const,
             connectNulls: false,
             showMark: true,
@@ -438,7 +464,7 @@ const TrajectoryGraph = ({
         if (withinThreshold) {
           series.push({
             dataType: 'previous',
-            trajectoryType: TrajectoryType.CUSTOM,
+            isCustom: true,
             data: mapDataToYears(previousTrajectory),
             label: t('actionBasedTrajectory') + ` (${previousTrajectoryStartYear})`,
             color: 'var(--mui-palette-primary-main)',
@@ -450,7 +476,7 @@ const TrajectoryGraph = ({
         } else {
           series.push({
             dataType: 'previous',
-            trajectoryType: TrajectoryType.CUSTOM,
+            isCustom: true,
             data: mapDataToYears(previousTrajectory),
             label: t('actionBasedTrajectory') + ` (${previousTrajectoryStartYear})`,
             color: 'color-mix(in srgb, var(--mui-palette-primary-main) 50%, transparent)',
@@ -467,7 +493,7 @@ const TrajectoryGraph = ({
       if (showCurrentTrajectory) {
         series.push({
           dataType: 'current',
-          trajectoryType: TrajectoryType.CUSTOM,
+          isCustom: true,
           data: currentData,
           label: actionBasedTrajectoryData.previousTrajectory
             ? t('actionBasedTrajectory') + ` (${studyStartYear})`
@@ -481,7 +507,7 @@ const TrajectoryGraph = ({
       } else {
         series.push({
           dataType: 'current',
-          trajectoryType: TrajectoryType.CUSTOM,
+          isCustom: true,
           data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
           label: studyName + ` (${studyStartYear})`,
           color: 'var(--mui-palette-primary-main)',
@@ -499,12 +525,13 @@ const TrajectoryGraph = ({
     trajectory15Data,
     trajectoryWB2CEnabled,
     trajectoryWB2CData,
-    trajectorySnbcEnabled,
+    selectedSnbcTrajectories,
     snbcData,
     customTrajectoriesData,
     actionBasedTrajectoryData,
     mapDataToYears,
     t,
+    tSnbc,
     historicalStudyYearIndices,
     shouldShowMark,
     studyStartYear,
@@ -520,6 +547,10 @@ const TrajectoryGraph = ({
     [filteredSeriesLabels, seriesCreated],
   )
 
+  const failedTrajectories = useMemo(() => {
+    return seriesCreated.filter((serie) => serie.isFailed).map((serie) => serie.label as string)
+  }, [seriesCreated])
+
   const onFilterSeries = useCallback((label: string) => {
     setFilteredSeriesLabels((prev) => {
       if (prev.includes(label)) {
@@ -528,7 +559,7 @@ const TrajectoryGraph = ({
         return [...prev, label]
       }
     })
-  }, seriesCreated)
+  }, [])
 
   return (
     <div className="w100 flex-col gapped1 mb2">
@@ -558,6 +589,16 @@ const TrajectoryGraph = ({
               .
             </div>
           )}
+        </Alert>
+      )}
+      {!!failedTrajectories.length && (
+        <Alert severity="warning" className="mb1">
+          <Typography variant="body2">{t('failedTrajectories')}</Typography>
+          {failedTrajectories.map((trajectory) => (
+            <Typography key={trajectory} variant="body2">
+              - {trajectory}
+            </Typography>
+          ))}
         </Alert>
       )}
       <Typography variant="body2" color="text.secondary">
@@ -651,7 +692,7 @@ const TrajectoryGraph = ({
               studyStartYear={studyStartYear}
               title={t('sbtiSnbc')}
               data={seriesCreated
-                .filter((serie) => serie.trajectoryType !== TrajectoryType.CUSTOM)
+                .filter((serie) => !serie.isCustom)
                 .map((serie) => ({
                   label: serie.label as string,
                   dataType: serie.dataType,
@@ -665,7 +706,7 @@ const TrajectoryGraph = ({
               studyStartYear={studyStartYear}
               title={t('custom')}
               data={seriesCreated
-                .filter((serie) => serie.trajectoryType === TrajectoryType.CUSTOM)
+                .filter((serie) => serie.isCustom)
                 .map((serie) => ({
                   label: serie.label as string,
                   dataType: serie.dataType,

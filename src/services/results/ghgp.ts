@@ -53,7 +53,7 @@ const getEmissionFactorValue = (
   return (emissionFactor.totalCo2 || 0) - (emissionFactor.otherGES || 0)
 }
 
-const getLine = (
+export const getLine = (
   value: number,
   EFOrEFPart: ExportEmissionFactor,
 ): Omit<PostInfos, 'rule' | 'squaredStandardDeviation'> => {
@@ -127,4 +127,5 @@ export const computeGHGPResult = (
     getGHGPEmissionValue(study.startDate),
     getLine,
     base,
+    true,
   )

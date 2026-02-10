@@ -5,6 +5,7 @@ import { FormSelect } from '@/components/form/Select'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { customRich } from '@/i18n/customRich'
 import { changeStudyLevel } from '@/services/serverFunctions/study'
 import { ChangeStudyLevelCommand, ChangeStudyLevelCommandValidation } from '@/services/serverFunctions/study.command'
 import { getAllowedLevels } from '@/services/study'
@@ -82,7 +83,7 @@ const StudyLevel = ({ user, study, disabled }: Props) => {
       </FormSelect>
       <GlossaryModal label="study-type" glossary={glossary} onClose={() => setGlossary('')} t={tGlossary}>
         <span>
-          {t.rich('glossary.typeDescription', {
+          {customRich(t, 'glossary.typeDescription', {
             link: (children) => (
               <Link href={tDocumentation('maturity')} target="_blank" rel="noreferrer noopener">
                 {children}

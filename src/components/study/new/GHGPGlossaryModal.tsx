@@ -1,3 +1,4 @@
+import { customRich } from '@/i18n/customRich'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import styles from './ExportCheckbox.module.css'
@@ -9,19 +10,12 @@ const GHGPGlossaryModal = () => {
     <div className="flex-col">
       <span className="mb1">{t('warning')}</span>
       <ul className={classNames(styles.list, 'mb1')}>
-        <li>{t('item1')}</li>
-        <li>{t('item2')}</li>
-        <li className={styles.subList}>
-          {t.rich('item3', {
-            green: (children) => <span style={{ color: 'var(--mui-palette-ghgp-main)' }}>{children}</span>,
-            purple: (children) => <span style={{ color: 'var(--mui-palette-ghgp-complementary)' }}>{children}</span>,
-            ul: (children) => <ul>{children}</ul>,
-            li: (children) => <li>{children}</li>,
-          })}
-        </li>
+        <li>{customRich(t, 'item1')}</li>
+        <li>{customRich(t, 'item2')}</li>
+        <li className={styles.subList}>{customRich(t, 'item3')}</li>
+        <li>{customRich(t, 'item4')}</li>
       </ul>
-
-      <span>{t('conclusion')}</span>
+      <span>{customRich(t, 'conclusion')}</span>
     </div>
   )
 }

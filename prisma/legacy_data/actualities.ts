@@ -71,4 +71,34 @@ export const ACTUALITIES = [
     createdAt: new Date('2024-07-03 12:00:00.000'),
     updatedAt: new Date('2024-07-03 12:00:00.000'),
   },
+
+  {
+    title: 'BC+ Windows version currently being revamped',
+    text: 'The <b>Windows</b> version of BC+ is currently being revamped to match the look and feel of the Web version. During this work, the application will continue to function, but some windows may have a modified appearance.',
+    language: 'en',
+    createdAt: new Date('2023-10-28 12:00:00.000'),
+    updatedAt: new Date('2023-10-28 12:00:00.000'),
+  },
+  {
+    title: 'BC+ Summer Updates',
+    text: "BC+ updates will be rolled out throughout the summer. To achieve this, we need your help!\nFeel free to send us your feedback (and support requests at support@bilancarbone-plus.com).\nHere are the changes that have just gone live:\n- Help links now point to support@bilancarbone-plus.com\n- A FAQ is currently under construction and is now accessible in the 'Training' tab. It will be updated based on questions received via the support email.\n- The Training tab now also links to the IFC website, which offers BC+ usage training for users already trained at M1 or M2 level.\n- Fix for uncertainty calculations\n- Fix for units in monetary ratios\n- Fix for an error in emission factors when selecting sub-categories\nUpcoming changes in July:\n- Update of emission factors using ADEME and Légifrance data\n- Improvements to the Results tab\n",
+    language: 'en',
+    createdAt: new Date('2024-07-03 12:00:00.000'),
+    updatedAt: new Date('2024-07-03 12:00:00.000'),
+  },
+
+  {
+    title: 'Versión Windows de BC+ en proceso de renovación',
+    text: 'La versión <b>Windows</b> de BC+ se encuentra actualmente en proceso de renovación para tener un aspecto similar al de la versión web. Durante los trabajos, la aplicación seguirá funcionando, pero algunas ventanas pueden presentar un aspecto modificado.',
+    language: 'es',
+    createdAt: new Date('2023-10-28 12:00:00.000'),
+    updatedAt: new Date('2023-10-28 12:00:00.000'),
+  },
+  {
+    title: 'Actualizaciones de verano de BC+',
+    text: "Las actualizaciones de BC+ se realizarán a lo largo del verano. Para ello, ¡necesitamos su ayuda!\nNo duden en enviarnos sus comentarios (y solicitudes de ayuda a support@bilancarbone-plus.com).\nEstas son las modificaciones que acabamos de poner en línea:\n- Los enlaces de ayuda ahora apuntan a la dirección support@bilancarbone-plus.com\n- Una sección de Preguntas Frecuentes (FAQ) está en construcción y ya es accesible desde la pestaña 'Formación'. Se actualizará según las preguntas recibidas por correo.\n- La pestaña Formación ahora también redirige al sitio web del IFC, que ofrece una formación sobre el uso de BC+ para personas ya formadas a nivel M1 o M2.\n- Corrección del cálculo de las incertidumbres\n- Corrección de las unidades en los ratios monetarios\n- Corrección de un error en los factores de emisión al seleccionar subcategorías\nPróximas modificaciones en julio:\n- Actualización de los factores de emisión con datos de ADEME y Légifrance\n- Mejora de la pestaña de resultados\n",
+    language: 'es',
+    createdAt: new Date('2024-07-03 12:00:00.000'),
+    updatedAt: new Date('2024-07-03 12:00:00.000'),
+  },
 ]

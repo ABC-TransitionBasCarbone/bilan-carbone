@@ -1,6 +1,7 @@
 'use client'
 
 import Modal from '@/components/modals/Modal'
+import { customRich } from '@/i18n/customRich'
 import { useTranslations } from 'next-intl'
 
 interface Props {
@@ -29,7 +30,7 @@ const DeleteStudySiteModal = ({ open, confirmDeletion, cancelDeletion, deleting 
         },
       ]}
     >
-      {t.rich('description', {
+      {customRich(t, 'description', {
         count: deleting,
         warning: (children) => <span className="userWarning">{children}</span>,
       })}

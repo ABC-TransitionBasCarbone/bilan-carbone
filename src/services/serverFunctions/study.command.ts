@@ -208,7 +208,7 @@ export const AddEngagementActionCommandValidation = z.object({
   studyId: z.uuid(),
   name: z.string().min(1),
   date: dateValidation(),
-  target: z.string(),
+  targets: z.array(z.string()).min(1),
   steps: z.string(),
   phase: z.enum(EngagementPhase),
   description: z.string(),

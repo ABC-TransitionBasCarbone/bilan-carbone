@@ -1,6 +1,7 @@
 'use client'
 
 import Modal from '@/components/modals/Modal'
+import { customRich } from '@/i18n/customRich'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { exportSpecificFields } from '@/utils/study'
 import { Export } from '@prisma/client'
@@ -42,20 +43,20 @@ const ExportActivationWarningModal = ({
           actionType: 'button',
           onClick: () => onCancel(type),
           children: t('cancel'),
-          ['data-testid']: 'beges-activation-cancel',
+          ['data-testid']: 'export-activation-cancel',
         },
         {
           actionType: 'button',
           onClick: () => onConfirm(type),
           children: t('continue'),
-          ['data-testid']: 'beges-activation-confirm',
+          ['data-testid']: 'export-activation-confirm',
           color: 'error',
         },
       ]}
     >
       <div>
         <p>
-          {t.rich('description', {
+          {customRich(t, 'description', {
             type: tExport(type),
             fields: fields.map((field) => tFields(field)).join(', '),
             warning: (children) => <span className="userWarning">{children}</span>,

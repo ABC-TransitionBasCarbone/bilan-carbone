@@ -3,6 +3,7 @@
 import BaseTable from '@/components/base/Table'
 import { TableActionButton } from '@/components/base/TableActionButton'
 import { EngagementActionSteps, EngagementActionTargets } from '@/constants/engagementActions'
+import { FullStudy } from '@/db/study'
 import { EngagementActionWithSites } from '@/services/serverFunctions/study'
 import { formatDateFr } from '@/utils/time'
 import { EngagementPhase } from '@prisma/client'
@@ -18,12 +19,14 @@ import { useEffect, useMemo, useState } from 'react'
 
 interface Props {
   actions: EngagementActionWithSites[]
+  studySites: FullStudy['sites']
   openEditModal: (action: EngagementActionWithSites) => void
   openDeleteModal: (action: EngagementActionWithSites) => void
 }
 
-const EngagementActionTable = ({ actions, openEditModal, openDeleteModal }: Props) => {
+const EngagementActionTable = ({ actions, studySites, openEditModal, openDeleteModal }: Props) => {
   const t = useTranslations('study.engagementActions.table')
+  const tCommon = useTranslations('study.organization')
   const tTargets = useTranslations('study.engagementActions.targets')
   const tSteps = useTranslations('study.engagementActions.steps')
   const tPhases = useTranslations('study.engagementActions.phases')
@@ -56,11 +59,15 @@ const EngagementActionTable = ({ actions, openEditModal, openDeleteModal }: Prop
         },
         {
           header: t('target'),
-          accessorKey: 'target',
+          accessorKey: 'targets',
           accessorFn: (row) =>
-            Object.values(EngagementActionTargets).includes(row.target as EngagementActionTargets)
-              ? tTargets(row.target)
-              : row.target,
+            row.targets
+              ?.map((target) =>
+                Object.values(EngagementActionTargets).includes(target as EngagementActionTargets)
+                  ? tTargets(target)
+                  : target,
+              )
+              .join(', '),
         },
         {
           header: t('phase'),
@@ -75,6 +82,13 @@ const EngagementActionTable = ({ actions, openEditModal, openDeleteModal }: Prop
         {
           header: t('sites'),
           accessorFn: (row) => row.sites?.map((site) => site.site.name).join(', '),
+          cell: ({ row }) => {
+            const actionSites = row.original.sites || []
+            const allSitesCount = studySites.length
+            const isAllSites = actionSites.length === allSitesCount
+
+            return isAllSites ? tCommon('allSites') : actionSites.map((site) => site.site.name).join(', ')
+          },
         },
         {
           id: 'actions',
@@ -88,7 +102,7 @@ const EngagementActionTable = ({ actions, openEditModal, openDeleteModal }: Prop
           ),
         },
       ] as ColumnDef<EngagementActionWithSites>[],
-    [t, tTargets, tSteps, openEditModal, openDeleteModal],
+    [t, tCommon, tSteps, tTargets, tPhases, studySites, openEditModal, openDeleteModal],
   )
 
   const table = useReactTable({

@@ -2,6 +2,7 @@
 
 import { EmissionFactorList } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
+import { customRich } from '@/i18n/customRich'
 import { getEmissionResults } from '@/services/emissionSource'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { getTagFamiliesByStudyId } from '@/services/serverFunctions/emissionSource'
@@ -17,7 +18,13 @@ import {
 import { useUnitLabel } from '@/services/unit'
 import { emissionFactorDefautQualityStar, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
-import { hasDeprecationPeriod, hasEditionRights, isCAS, STUDY_UNIT_VALUES } from '@/utils/study'
+import {
+  formatEmissionFromNumber,
+  hasDeprecationPeriod,
+  hasEditionRights,
+  hasFabricationPart,
+  isCAS,
+} from '@/utils/study'
 import AddIcon from '@mui/icons-material/Add'
 import CopyIcon from '@mui/icons-material/ContentCopy'
 import EditIcon from '@mui/icons-material/Edit'
@@ -148,16 +155,20 @@ const EmissionSourceForm = ({
     !specificFEDefaultQuality || specificFEQualities.every((quality) => quality === specificFEDefaultQuality)
 
   const handleUpdate = (event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    if (Number(event.target.value) > 0) {
+    if (Number(event.target.value) >= 0) {
       setError('')
       update('value', Number(event.target.value))
+      event.target.value = `${Number(event.target.value)}`
     } else {
       setError(`${t('form.sign')}`)
       event.target.value = ''
+      update('value', null)
     }
   }
 
   const isCas = isCAS(emissionSource)
+
+  const hasFabricationPartFE = useMemo(() => hasFabricationPart(selectedFactor), [selectedFactor])
 
   const withDeprecationPeriod = useMemo(() => hasDeprecationPeriod(emissionSource.subPost), [emissionSource.subPost])
 
@@ -289,46 +300,44 @@ const EmissionSourceForm = ({
               )}
             </div>
             {withDeprecationPeriod && (
-              <>
-                <div className={classNames(styles.inputWithUnit, 'flex grow')}>
-                  <TextField
-                    className="grow"
-                    disabled={!canEdit}
-                    type="number"
-                    defaultValue={emissionSource.depreciationPeriod}
-                    onBlur={(event) => update('depreciationPeriod', Number(event.target.value))}
-                    label={`${t('form.depreciationPeriod')} *`}
-                    slotProps={{
-                      inputLabel: { shrink: true },
-                      input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
-                    }}
-                  />
-                  <div className={styles.unit}>{t('form.years')}</div>
-                </div>
-                {hasGHGPExport && (
-                  <FormControl className="grow">
-                    <DatePicker
-                      label={`${t('form.constructionYear')} *`}
-                      disabled={!canEdit}
-                      slotProps={{
-                        textField: {
-                          error: !!error,
-                          className: styles.datePickerInput,
-                        },
-                      }}
-                      maxDate={dayjs(new Date())}
-                      views={['year']}
-                      sx={{ backgroundColor: 'white', flex: '1' }}
-                      onChange={(date) => {
-                        if (date && date.isValid()) {
-                          update('constructionYear', date.toDate())
-                        }
-                      }}
-                      value={emissionSource.constructionYear ? dayjs(emissionSource.constructionYear) : null}
-                    />
-                  </FormControl>
-                )}
-              </>
+              <div className={classNames(styles.inputWithUnit, 'flex grow')}>
+                <TextField
+                  className="grow"
+                  disabled={!canEdit}
+                  type="number"
+                  defaultValue={emissionSource.depreciationPeriod}
+                  onBlur={(event) => update('depreciationPeriod', Number(event.target.value))}
+                  label={`${t('form.depreciationPeriod')} *`}
+                  slotProps={{
+                    inputLabel: { shrink: true },
+                    input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
+                  }}
+                />
+                <div className={styles.unit}>{t('form.years')}</div>
+              </div>
+            )}
+            {hasGHGPExport && withDeprecationPeriod && (
+              <FormControl className="grow">
+                <DatePicker
+                  label={`${t('form.constructionYear')} *`}
+                  disabled={!canEdit}
+                  slotProps={{
+                    textField: {
+                      error: !!error,
+                      className: styles.datePickerInput,
+                    },
+                  }}
+                  maxDate={dayjs(new Date())}
+                  views={['year']}
+                  sx={{ backgroundColor: 'white', flex: '1' }}
+                  onChange={(date) => {
+                    if (date && date.isValid()) {
+                      update('constructionYear', date.toDate())
+                    }
+                  }}
+                  value={emissionSource.constructionYear ? dayjs(emissionSource.constructionYear) : null}
+                />
+              </FormControl>
             )}
           </>
         )}
@@ -542,8 +551,8 @@ const EmissionSourceForm = ({
             <div className="flex-col">
               <p>{t('results.confiance')}</p>
               <p>
-                [{formatNumber(emissionResults.confidenceInterval[0] / STUDY_UNIT_VALUES[studyUnit])};{' '}
-                {formatNumber(emissionResults.confidenceInterval[1] / STUDY_UNIT_VALUES[studyUnit])}] ({t('in')}
+                [{formatEmissionFromNumber(emissionResults.confidenceInterval[0], studyUnit)};{' '}
+                {formatEmissionFromNumber(emissionResults.confidenceInterval[1], studyUnit)}] ({t('in')}
                 {tResultUnits(studyUnit)})
               </p>
             </div>
@@ -572,7 +581,7 @@ const EmissionSourceForm = ({
       {glossary && (
         <GlossaryModal glossary={glossary} onClose={() => setGlossary('')} label="emission-source" t={tGlossary}>
           <p className="mb-2">
-            {tGlossary.rich(`${glossary}Description`, {
+            {customRich(tGlossary, `${glossary}Description`, {
               link: (children) => (
                 <Link href={tDocumentation(glossaryLink)} target="_blank" rel="noreferrer noopener">
                   {children}

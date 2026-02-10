@@ -29,6 +29,7 @@ export interface Props {
   rightComponent?: ReactNode
   isMainContainer?: boolean
   grow?: boolean
+  withPadding?: boolean
 }
 
 const Block = ({
@@ -49,6 +50,7 @@ const Block = ({
   rightComponent,
   isMainContainer = true,
   grow = false,
+  withPadding = true,
   ...rest
 }: Props) => {
   const titleDiv = (
@@ -65,7 +67,15 @@ const Block = ({
   )
 
   return (
-    <div className={classNames(isMainContainer ? 'main-container' : '', styles.block, { grow: fullSize })} {...rest}>
+    <div
+      className={classNames(
+        isMainContainer ? 'main-container' : '',
+        styles.block,
+        { grow: fullSize },
+        withPadding ? '' : styles.noPadding,
+      )}
+      {...rest}
+    >
       <div className={classNames(styles.content, className)}>
         {actions || rightComponent ? (
           <div className={classNames(styles.header, 'align-center justify-between', bold && 'bold')}>

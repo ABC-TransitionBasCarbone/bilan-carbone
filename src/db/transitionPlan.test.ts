@@ -40,6 +40,7 @@ const createMockTrajectory = (
   referenceYear: null,
   createdAt: new Date('2024-01-01'),
   updatedAt: new Date('2024-01-01'),
+  sectorPercentages: {},
   objectives: [
     {
       id: 'objective-1',
@@ -163,6 +164,7 @@ describe('TransitionPlan DB', () => {
               description: trajectory.description,
               type: trajectory.type,
               referenceYear: trajectory.referenceYear,
+              sectorPercentages: trajectory.sectorPercentages,
               objectives: {
                 create: trajectory.objectives.map((objective) => ({
                   targetYear: objective.targetYear,

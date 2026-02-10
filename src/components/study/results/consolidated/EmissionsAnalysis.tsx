@@ -2,6 +2,7 @@ import Box from '@/components/base/Box'
 import Title from '@/components/base/Title'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
+import { customRich } from '@/i18n/customRich'
 import { hasAccessToMonetaryRatio } from '@/services/permissions/environment'
 import { ResultsByTag } from '@/services/results/consolidated'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
@@ -118,7 +119,7 @@ const EmissionsAnalysis = ({
       {glossary && (
         <GlossaryModal glossary={glossary} label="results-analysis" t={t} onClose={() => setGlossary('')}>
           <span>
-            {tGlossary.rich(`${glossary}Description`, {
+            {customRich(tGlossary, `${glossary}Description`, {
               link: (children) => (
                 <Link href={tDocumentation('dependencyAndReponsability')} target="_blank" rel="noreferrer noopener">
                   {children}

@@ -93,7 +93,7 @@ const ExportCheckbox = ({
         className={styles.field}
         control={
           <Checkbox
-            checked={!!values.exports.includes(exportType)}
+            checked={!!values.exports?.includes(exportType)}
             className={styles.checkbox}
             disabled={!isExportAvailable || disabled}
             data-testid={`export-checkbox-${exportType}`}
@@ -116,10 +116,10 @@ const ExportCheckbox = ({
             )}
           </span>
         }
-        value={!!values.exports.includes(exportType)}
+        value={!!values.exports?.includes(exportType)}
         onChange={(_, checked) => onChange(exportType, checked)}
       />
-      {index === 0 && !!values.exports.length && (
+      {index === 0 && !!values.exports?.length && (
         <div className={styles.field}>
           <FormControl fullWidth>
             <Select

@@ -7,6 +7,7 @@ import { TableActionButton } from '@/components/base/TableActionButton'
 import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { customRich } from '@/i18n/customRich'
 import { getEnvVar } from '@/lib/environment'
 import { environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
 import { deleteStudyContributor } from '@/services/serverFunctions/study'
@@ -412,7 +413,7 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
         actions={[{ actionType: 'button', onClick: () => setDisplayRoles(false), children: tCommon('action.close') }]}
       >
         <p className="mb-2">
-          {tRole.rich('description', {
+          {customRich(tRole, 'description', {
             link: (children) => (
               <Link href={faq} target="_blank" rel="noreferrer noopener">
                 {children}

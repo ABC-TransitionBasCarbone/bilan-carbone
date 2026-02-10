@@ -4,9 +4,10 @@ import BaseTable from '@/components/base/Table'
 import { FullStudy } from '@/db/study'
 import { PostInfos } from '@/services/results/exports'
 import { rulesSpans } from '@/services/results/ghgp'
+import { getConfidenceInterval } from '@/services/uncertainty'
 import { getGHGPRuleName } from '@/utils/ghgp'
-import { formatEmission, STUDY_UNIT_VALUES } from '@/utils/study'
-import { Export } from '@prisma/client'
+import { formatConfidenceInterval, formatEmission, STUDY_UNIT_VALUES } from '@/utils/study'
+import { EmissionFactorBase, Export } from '@prisma/client'
 import { Cell, ColumnDef, getCoreRowModel, Row, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -20,11 +21,13 @@ interface Props {
   study: FullStudy
   withDepValue: number
   data: PostInfos[]
+  base: EmissionFactorBase
 }
 
-const GHGPResultsTable = ({ study, withDepValue, data }: Props) => {
+const GHGPResultsTable = ({ study, withDepValue, data, base }: Props) => {
   const t = useTranslations('ghgp')
   const tUnits = useTranslations('study.results.units')
+  const tStudyResults = useTranslations('study.results')
 
   const columns = useMemo(
     () =>
@@ -48,12 +51,7 @@ const GHGPResultsTable = ({ study, withDepValue, data }: Props) => {
             return rule.includes('.total') ? t('subTotal') : `${prefix} ${t(`post.${rule}`)}`
           },
         },
-        {
-          header: t('ges', { unit: tUnits(study.resultsUnit) }),
-          columns: [
-            { header: 'CO2', accessorKey: 'co2', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
-          ],
-        },
+        { header: 'CO2', accessorKey: 'co2', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
         { header: 'CH4', accessorKey: 'ch4', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
         { header: 'N20', accessorKey: 'n2o', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
         { header: 'HFC', accessorKey: 'hfc', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
@@ -65,8 +63,16 @@ const GHGPResultsTable = ({ study, withDepValue, data }: Props) => {
           cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit),
         },
         { header: 'CO2b', accessorKey: 'co2b', cell: ({ getValue }) => formatEmission(getValue, study.resultsUnit) },
+        {
+          id: 'confidenceInterval',
+          header: tStudyResults('confidenceIntervalTitle'),
+          accessorFn: ({ total, squaredStandardDeviation }) => {
+            const confidenceInterval = getConfidenceInterval(total, squaredStandardDeviation)
+            return formatConfidenceInterval(confidenceInterval, study.resultsUnit)
+          },
+        },
       ] as ColumnDef<PostInfos>[],
-    [t, tUnits, study.resultsUnit],
+    [t, tStudyResults, study.resultsUnit],
   )
 
   const table = useReactTable({
@@ -109,10 +115,14 @@ const GHGPResultsTable = ({ study, withDepValue, data }: Props) => {
       />
       <BaseTable
         table={table}
-        className={classNames(commonStyles.Table, styles.ghgpTable)}
+        className={classNames(
+          commonStyles.Table,
+          base === EmissionFactorBase.LocationBased ? styles.ghgpTable : styles.ghgpTableComplementary,
+        )}
         customRow={(row: Row<PostInfos>) => TableRow(row, getCellClass, rulesSpans, 'ghgp')}
         testId="ghgp-results"
         size="small"
+        firstHeader={<div>{t('ges', { unit: tUnits(study.resultsUnit) })}</div>}
       />
     </>
   )

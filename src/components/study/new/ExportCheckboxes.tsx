@@ -1,8 +1,9 @@
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { updateStudySpecificExportFields } from '@/services/serverFunctions/study'
+import { adaptFeSourceWithExport, updateStudySpecificExportFields } from '@/services/serverFunctions/study'
+import { sortAlphabetically } from '@/services/utils'
 import { exportSpecificFields, getAllSpecificFieldsForExports } from '@/utils/study'
-import { ControlMode, EmissionSourceCaracterisation, Export } from '@prisma/client'
+import { ControlMode, EmissionFactorBase, EmissionSourceCaracterisation, Export } from '@prisma/client'
 import { useCallback, useMemo, useState } from 'react'
 import ExportActivationWarningModal from './ExportActivationWarningModal'
 import ExportCheckbox from './ExportCheckbox'
@@ -46,40 +47,53 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
   const currentStudySpecificFields = useMemo(() => getAllSpecificFieldsForExports(values.exports), [values])
 
   const hasSomeEmissionSourceWithSpecificFieldsFilled = useCallback(
-    (type: Export) =>
+    (type: Export, specificFields: string[]) =>
       !!study &&
-      study.emissionSources.some((source) =>
-        exportSpecificFields[type].some((field) => source[field as keyof typeof source] !== null),
-      ),
+      study.emissionSources.some((source) => {
+        const hasSomeSpecificFieldsFilled = specificFields.some(
+          (field) => source[field as keyof typeof source] !== null,
+        )
+        const isGHGPAndHasMarketBased =
+          type === Export.GHGP && source.emissionFactor?.base === EmissionFactorBase.MarketBased
+
+        return hasSomeSpecificFieldsFilled || isGHGPAndHasMarketBased
+      }),
     [study],
   )
 
   const shouldShowExportDeactivationWarning = (type: Export) => {
     const newExports = values.exports.filter((exportType) => exportType !== type)
     const newExportsSpecificFields = getAllSpecificFieldsForExports(newExports)
+
     return (
-      hasSomeEmissionSourceWithSpecificFieldsFilled(type) &&
-      exportSpecificFields[type].some((field) => !newExportsSpecificFields.includes(field)) &&
-      !isNewStudy
+      hasSomeEmissionSourceWithSpecificFieldsFilled(
+        type,
+        exportSpecificFields[type].filter((field) => !newExportsSpecificFields.includes(field)),
+      ) && !isNewStudy
     )
   }
 
-  const onValueChange = (type: Export, checked: boolean) => {
+  const onValueChange = async (type: Export, checked: boolean) => {
     const typeFields = exportSpecificFields[type]
     if (checked) {
       // Mandatoryfields added, show warning message
-      if (
-        (typeFields.some((field) => !currentStudySpecificFields.includes(field)) && hasValidatedSources) ||
-        (type === Export.GHGP && hasFinalClientCaracterisation)
-      ) {
+      if (typeFields.some((field) => !currentStudySpecificFields.includes(field)) && hasValidatedSources) {
         setPendingExportCheck(type)
       } else {
-        onChange(values.exports.concat(type))
+        const newExports = values.exports.concat(type)
+        onChange(newExports)
+        if (study) {
+          await adaptFeSourceWithExport(study?.id, newExports)
+        }
       }
     } else if (shouldShowExportDeactivationWarning(type)) {
       setPendingExportUncheck(type)
     } else {
-      onChange(values.exports.filter((exportType) => exportType !== type))
+      const newExports = values.exports.filter((exportType) => exportType !== type)
+      onChange(newExports)
+      if (study) {
+        await adaptFeSourceWithExport(study?.id, newExports)
+      }
     }
   }
 
@@ -116,19 +130,21 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
   return (
     <>
       <div className="flex-col">
-        {Object.keys(Export).map((exportType, i) => (
-          <ExportCheckbox
-            key={exportType}
-            exportType={exportType as Export}
-            index={i}
-            study={study}
-            values={values}
-            setControl={setControl}
-            onChange={onValueChange}
-            disabled={disabled}
-            duplicateStudyId={duplicateStudyId}
-          />
-        ))}
+        {Object.keys(Export)
+          .sort(sortAlphabetically)
+          .map((exportType, i) => (
+            <ExportCheckbox
+              key={exportType}
+              exportType={exportType as Export}
+              index={i}
+              study={study}
+              values={values}
+              setControl={setControl}
+              onChange={onValueChange}
+              disabled={disabled}
+              duplicateStudyId={duplicateStudyId}
+            />
+          ))}
       </div>
       {pendingExportCheck && (
         <ExportActivationWarningModal

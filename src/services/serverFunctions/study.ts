@@ -37,6 +37,7 @@ import {
 import { getAnswerByQuestionId, getQuestionByIdIntern, getQuestionsByIdIntern } from '@/db/question'
 import { updateSituationFields } from '@/db/situation'
 import {
+  addSourceToStudy,
   clearEmissionSourceEmissionFactor,
   countOrganizationStudiesFromOtherUsers,
   createContributorOnStudy,
@@ -67,6 +68,7 @@ import {
   getStudySites,
   getStudyTemplate,
   getUsersOnStudy,
+  removeSourceToStudy,
   updateEmissionSourceEmissionFactor,
   updateEngagementAction,
   updateStudy,
@@ -80,7 +82,14 @@ import {
   upsertStudyTemplate,
 } from '@/db/study'
 import { getTransitionPlanByStudyId } from '@/db/transitionPlan'
-import { addUser, getUserApplicationSettings, getUserByEmail, getUserSourceById, UserWithAccounts } from '@/db/user'
+import {
+  addUser,
+  getUserApplicationSettings,
+  getUserByEmail,
+  getUserSourceById,
+  updateAccount,
+  UserWithAccounts,
+} from '@/db/user'
 import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
 import { StudySiteFields, studySiteToSituation } from '@/services/studySiteToSituation'
@@ -289,7 +298,7 @@ export const createStudyCommand = async (
             }))
           : [
               {
-                name: 'défaut',
+                name: 'DEFAULT_FAMILY_TAG',
                 tags: environmentTags
                   ? {
                       create: environmentTags.map((tag) => ({ name: tag.name, color: tag.color })),
@@ -717,6 +726,22 @@ const filterSpecificFieldsPerSubpost = (fields: (keyof UpdateEmissionSourceComma
   return filtered
 }
 
+export const adaptFeSourceWithExport = async (studyId: string, types: Export[]) => {
+  const [session, study] = await Promise.all([dbActualizedAuth(), getStudy(studyId)])
+  if (!session || !session.user || !study.success || !study.data) {
+    throw new Error(NOT_AUTHORIZED)
+  }
+  if (!hasEditionRights(getAccountRoleOnStudy(session.user, study.data))) {
+    throw new Error(NOT_AUTHORIZED)
+  }
+
+  if (study.data.exports?.types.includes(Export.GHGP) && (!types || !types.includes(Export.GHGP))) {
+    await removeSourceToStudy(Import.AIB, studyId)
+  } else if (!study.data.exports?.types.includes(Export.GHGP) && types && types.includes(Export.GHGP)) {
+    await addSourceToStudy(Import.AIB, studyId)
+  }
+}
+
 export const updateStudySpecificExportFields = async (studyId: string, controlMode: ControlMode, types?: Export[]) =>
   withServerResponse('updateStudySpecificExportFields', async () => {
     const [session, study] = await Promise.all([dbActualizedAuth(), getStudy(studyId)])
@@ -726,6 +751,8 @@ export const updateStudySpecificExportFields = async (studyId: string, controlMo
     if (!hasEditionRights(getAccountRoleOnStudy(session.user, study.data))) {
       throw new Error(NOT_AUTHORIZED)
     }
+
+    await adaptFeSourceWithExport(studyId, types || [])
 
     const specificFieldsForNewExportTypes = getAllSpecificFieldsForExports(types || [])
     const specificFieldsForOldExportTypes = getAllSpecificFieldsForExports(study.data.exports?.types || [])
@@ -841,6 +868,13 @@ const getOrCreateUserAndSendStudyInvite = async (
         environment: organizationVersion.environment,
         status: UserStatus.VALIDATED,
       })) as AccountWithUser
+    } else if (account.status === UserStatus.IMPORTED) {
+      await updateAccount(account.id, {
+        organizationVersion: { disconnect: true },
+        status: UserStatus.VALIDATED,
+        role: Role.COLLABORATOR,
+      })
+      account = (await getAccountByEmailAndEnvironment(email, organizationVersion.environment)) as AccountWithUser
     }
 
     if (!skipInviteEmail) {
@@ -1405,7 +1439,7 @@ const duplicateEmissionSources = async (
   const emissionSourcesDataWithSourceId = emissionSourcesWithSites.map(
     ({ sourceEmissionSource, targetStudySiteId, subPost }) => {
       const newId = uuidv4()
-      const contributorId = sourceEmissionSource.contributor?.id
+      const lastEditorId = sourceEmissionSource.lastEditor?.id
       return {
         sourceId: sourceEmissionSource.id,
         targetId: newId,
@@ -1436,7 +1470,7 @@ const duplicateEmissionSources = async (
           emissionFactorId: sourceEmissionSource.emissionFactor?.id ?? null,
           studySiteId: targetStudySiteId,
           validated: shouldClearValidations ? false : sourceEmissionSource.validated,
-          ...(contributorId ? { contributor: { connect: { id: contributorId } } } : {}),
+          ...(lastEditorId ? { lastEditor: { connect: { id: lastEditorId } } } : {}),
         },
       }
     },
@@ -1853,8 +1887,8 @@ export const duplicateStudyEmissionSource = async (
       study: { connect: { id: studyId } },
       emissionFactor: emissionSource.emissionFactor ? { connect: { id: emissionSource.emissionFactor.id } } : undefined,
       emissionFactorId: undefined,
-      contributor: emissionSource.contributor ? { connect: { id: emissionSource.contributor.id } } : undefined,
-      contributorId: undefined,
+      lastEditor: emissionSource.lastEditor ? { connect: { id: emissionSource.lastEditor.id } } : undefined,
+      lastEditorId: undefined,
       studySite: { connect: { id: studySite } },
       studySiteId: undefined,
       validated: false,

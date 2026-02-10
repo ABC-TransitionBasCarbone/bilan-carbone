@@ -1,3 +1,4 @@
+import { EngagementActionTargets } from '@/constants/engagementActions'
 import { resultsExportHeadersBase, resultsExportHeadersCut } from '@/constants/exports'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy, getStudyById } from '@/db/study'
@@ -7,11 +8,13 @@ import { getGHGPRuleName } from '@/utils/ghgp'
 import { getPost } from '@/utils/post'
 import {
   calculateMonetaryRatio,
+  formatEmissionFromNumber,
   formatEmissionValueForExport,
   hasDeprecationPeriod,
   isCAS,
   STUDY_UNIT_VALUES,
 } from '@/utils/study'
+import { formatDateFr } from '@/utils/time'
 import { EmissionFactorBase, Environment, Export, ExportRule, Level, StudyResultUnit, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import {
@@ -45,6 +48,7 @@ import { EmissionFactorWithMetaData, getEmissionFactorsByIds } from './serverFun
 import { prepareExcel } from './serverFunctions/file'
 import { getUserSettings } from './serverFunctions/user'
 import {
+  getConfidenceInterval,
   getEmissionSourcesConfidenceInterval,
   getQualitativeUncertaintyForEmissionSources,
   getQualitativeUncertaintyFromQuality,
@@ -392,7 +396,7 @@ const handleLine = (
   headersForEnv: string[],
   result: ResultsByPost,
   tQuality: Translations,
-  resultsUnits: StudyResultUnit,
+  resultsUnit: StudyResultUnit,
 ) => {
   const resultLine = []
   if (headersForEnv.includes('uncertainty')) {
@@ -403,7 +407,17 @@ const handleLine = (
     )
   }
 
-  return [...resultLine, formatEmissionValueForExport(result.value ?? 0, resultsUnits)]
+  resultLine.push(formatEmissionValueForExport(result.value ?? 0, resultsUnit))
+
+  if (headersForEnv.includes('confidenceIntervalTitle')) {
+    const confidenceInterval = getConfidenceInterval(result.value, result.squaredStandardDeviation)
+
+    resultLine.push(
+      `[${formatEmissionFromNumber(confidenceInterval[0], resultsUnit)};${formatEmissionFromNumber(confidenceInterval[1], resultsUnit)}]`,
+    )
+  }
+
+  return resultLine
 }
 
 export const formatConsolidatedStudyResultsForExport = (
@@ -511,9 +525,15 @@ const buildMerges = (rulesSpans: Record<number, number>, startRow: number, colum
   return merges
 }
 
+const buildRowMerge = (row: number, startCol: number, span: number): Merge => ({
+  s: { r: row, c: startCol },
+  e: { r: row, c: startCol + span - 1 },
+})
+
 export const formatStudyExportResultsForExport = (
   study: FullStudy,
   siteList: { name: string; id: string }[],
+  tStudy: Translations,
   tQuality: Translations,
   tSpecificExport: Translations,
   tUnits: Translations,
@@ -543,12 +563,19 @@ export const formatStudyExportResultsForExport = (
   for (let i = 0; i < siteList.length; i++) {
     const site = siteList[i]
     const resultList = getResults(site.id)
+    const gasFields = data.gasFields
 
     // Merge cells
     sheetOptions['!merges'].push(...buildMerges(rulesSpans, 3 + i * length))
 
     dataForExport.push([site.name])
-    dataForExport.push([tSpecificExport('rule'), '', tSpecificExport('ges', { unit: tUnits(study.resultsUnit) })])
+
+    const rowIndex = dataForExport.length
+    const totalCols = gasFields.length + 2
+    dataForExport.push(Array(totalCols).fill(''))
+    dataForExport[rowIndex][2] = tSpecificExport('ges', { unit: tUnits(study.resultsUnit) })
+    sheetOptions['!merges'].push(buildRowMerge(rowIndex, 2, totalCols))
+
     dataForExport.push([
       tSpecificExport('category.title'),
       tSpecificExport('post.title'),
@@ -556,9 +583,8 @@ export const formatStudyExportResultsForExport = (
       tSpecificExport('total'),
       'CO2b',
       tSpecificExport('uncertainty'),
+      tStudy('confidenceIntervalTitle'),
     ])
-
-    const gasFields = data.gasFields
 
     for (const result of resultList) {
       const category = result.rule.split('.')[0]
@@ -576,6 +602,8 @@ export const formatStudyExportResultsForExport = (
         formatEmissionValueForExport((result[field] as number) || 0, study.resultsUnit),
       )
 
+      const confidenceInterval = getConfidenceInterval(result.total, result.squaredStandardDeviation)
+
       dataForExport.push([
         category === 'total' ? '' : data.getCategoryName(category, tSpecificExport),
         post,
@@ -583,6 +611,7 @@ export const formatStudyExportResultsForExport = (
         result.squaredStandardDeviation
           ? tQuality(getQualitativeUncertaintyFromSquaredStandardDeviation(result.squaredStandardDeviation).toString())
           : '',
+        `[${formatEmissionFromNumber(confidenceInterval[0], study.resultsUnit)};${formatEmissionFromNumber(confidenceInterval[1], study.resultsUnit)}]`,
       ])
     }
 
@@ -758,6 +787,7 @@ export const downloadStudyResults = async (
       formatStudyExportResultsForExport(
         study,
         siteList,
+        tStudy,
         tQuality,
         tBeges,
         tUnits,
@@ -774,6 +804,7 @@ export const downloadStudyResults = async (
       formatStudyExportResultsForExport(
         study,
         siteList,
+        tStudy,
         tQuality,
         tGHGP,
         tUnits,
@@ -795,6 +826,7 @@ export const downloadStudyResults = async (
       formatStudyExportResultsForExport(
         study,
         siteList,
+        tStudy,
         tQuality,
         tGHGP,
         tUnits,
@@ -949,4 +981,57 @@ export const getTransEnvironmentSubPost = (source: Environment, target: Environm
   } else {
     return undefined
   }
+}
+
+export const downloadEngagementActionsCSV = (
+  actions: {
+    name: string
+    description: string
+    steps: string
+    targets: string[]
+    phase: string
+    date: Date
+    sites?: { site: { name: string } }[]
+  }[],
+  studyName: string,
+  t: Translations,
+  tTargets: Translations,
+  tSteps: Translations,
+  tPhases: Translations,
+) => {
+  const headers = [
+    t('table.name'),
+    t('table.description'),
+    t('table.steps'),
+    t('table.target'),
+    t('table.phase'),
+    t('table.date'),
+    t('table.sites'),
+  ]
+
+  const engagementActionTargets = Object.values(EngagementActionTargets) as string[]
+
+  const rows = actions.map((action) => {
+    const targets =
+      action.targets
+        ?.map((target) => {
+          if (engagementActionTargets.includes(target)) {
+            return tTargets(target)
+          }
+          return target
+        })
+        .join(', ') || ''
+
+    const sites = action.sites?.map((site) => site.site.name).join(', ') || ''
+    const step = tSteps(action.steps) || action.steps
+    const phase = tPhases(action.phase) || action.phase
+    const formattedDate = formatDateFr(action.date)
+
+    return [action.name, action.description, step, targets, phase, formattedDate, sites]
+  })
+
+  const csvContent = [headers.join(';'), ...rows.map((row) => row.map((cell) => `"${cell}"`).join(';'))].join('\n')
+
+  const fileName = `${studyName} - ${t('title')}.csv`
+  downloadCSV(csvContent, fileName)
 }

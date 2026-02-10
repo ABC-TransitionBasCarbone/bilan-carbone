@@ -165,6 +165,7 @@ export const mockedEmissionSourceEmissionFactor = {
       comment: 'Mocked Comment',
     },
   ],
+  emissionFactorParts: [],
 }
 
 export const getMockedStudy = (
@@ -317,8 +318,9 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
       feGeographicRepresentativeness: null,
       feTemporalRepresentativeness: null,
       feCompleteness: null,
-      contributor: null,
+      lastEditor: null,
       createdAt: new Date(),
+      updatedAt: new Date(),
     },
   ],
   allowedUsers: [

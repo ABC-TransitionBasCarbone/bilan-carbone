@@ -3,12 +3,13 @@ import { TrajectoryWithObjectives } from '@/db/transitionPlan'
 import { expect } from '@jest/globals'
 import { Action, StudyResultUnit, TrajectoryType } from '@prisma/client'
 import {
+  BaseObjective,
   calculateActionBasedTrajectory,
   calculateCustomTrajectory,
   calculateSBTiTrajectory,
   calculateTrajectoryIntegral,
   calculateTrajectoryYearBounds,
-  getReductionRatePerType,
+  getDefaultSBTIReductionRate,
   getTrajectoryEmissionsAtYear,
   isWithinThreshold,
   PastStudy,
@@ -475,22 +476,22 @@ describe('calculateTrajectory', () => {
 
   describe('getReductionRatePerType', () => {
     test('should return correct reduction rate for SBTI_15', () => {
-      const rate = getReductionRatePerType(TrajectoryType.SBTI_15)
+      const rate = getDefaultSBTIReductionRate(TrajectoryType.SBTI_15)
       expect(rate).toBe(SBTI_REDUCTION_RATE_15)
     })
 
     test('should return correct reduction rate for SBTI_WB2C', () => {
-      const rate = getReductionRatePerType(TrajectoryType.SBTI_WB2C)
+      const rate = getDefaultSBTIReductionRate(TrajectoryType.SBTI_WB2C)
       expect(rate).toBe(SBTI_REDUCTION_RATE_WB2C)
     })
 
     test('should return undefined for CUSTOM type', () => {
-      const rate = getReductionRatePerType(TrajectoryType.CUSTOM)
+      const rate = getDefaultSBTIReductionRate(TrajectoryType.CUSTOM)
       expect(rate).toBeUndefined()
     })
 
     test('should return undefined for SNBC_GENERAL type', () => {
-      const rate = getReductionRatePerType(TrajectoryType.SNBC_GENERAL)
+      const rate = getDefaultSBTIReductionRate(TrajectoryType.SNBC_GENERAL)
       expect(rate).toBeUndefined()
     })
   })
@@ -1294,7 +1295,7 @@ describe('calculateTrajectory', () => {
       currentYear: number,
       referenceEmissions: number,
       currentEmissions: number,
-      objectives: Array<{ targetYear: number; reductionRate: number }>,
+      objectives: BaseObjective[],
       pastStudies: PastStudy[],
     ) => {
       const referenceTrajectory = calculateCustomTrajectory({

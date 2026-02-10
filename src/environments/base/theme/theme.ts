@@ -73,7 +73,9 @@ const base = createTheme({
       main: '#0a7e76',
       light: '#daeef3',
       totalColumn: '#00c6b9',
-      complementary: '#f58189',
+      complementary: '#913a97',
+      complementaryLight: '#d5b5d8',
+      complementaryTotalColumn: '#ac6cb1',
     },
   },
   typography: {

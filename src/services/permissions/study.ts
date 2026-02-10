@@ -11,7 +11,12 @@ import { dbActualizedAuth } from '../auth'
 import { isDeactivableFeatureActiveForEnvironment } from '../serverFunctions/deactivableFeatures'
 import { getUserActiveAccounts } from '../serverFunctions/user'
 import { hasSufficientLevel } from '../study'
-import { canCreateStudyWithoutSpecificRights, hasAccessToDuplicateStudy, isTilt } from './environment'
+import {
+  canCreateStudyWithoutSpecificRights,
+  hasAccessToDuplicateStudy,
+  isTilt,
+  isTiltSimplifiedFeatureActive,
+} from './environment'
 import { isInOrgaOrParentFromId } from './organization'
 
 export const isAdminOnStudyOrga = (
@@ -73,7 +78,14 @@ export const filterAllowedStudies = async (user: UserSession, studies: Study[]) 
   return allowedStudies.filter((study) => study !== null)
 }
 
-export const canCreateAStudy = (user: UserSession, simplified: boolean = false) => {
+export const canCreateAStudy = async (user: UserSession, simplified: boolean = false) => {
+  if (simplified && !user.level && isTilt(user.environment)) {
+    const isTiltSimplifiedActive = await isTiltSimplifiedFeatureActive(user.environment)
+    if (!isTiltSimplifiedActive) {
+      return false
+    }
+  }
+
   const studyIsSimplifiedAndCreationAuthorized = simplified && user.role !== Role.DEFAULT && isTilt(user.environment)
   const canCreateAdvancedStudy = !!user.level && user.role !== Role.DEFAULT
 
@@ -369,13 +381,14 @@ export const filterStudyDetail = (user: UserSession, study: FullStudy) => {
     id: study.id,
     name: study.name,
     level: study.level,
+    isPublic: study.isPublic,
     sites: study.sites,
     resultsUnit: study.resultsUnit,
     emissionSources: study.emissionSources
       .filter((emissionSource) => availableSubPosts.includes(emissionSource.subPost))
       .map((emissionSource) => ({
         id: emissionSource.id,
-        contributor: emissionSource.contributor,
+        lastEditor: emissionSource.lastEditor,
         name: emissionSource.name,
         validated: emissionSource.validated,
         subPost: emissionSource.subPost,
@@ -400,10 +413,12 @@ export const filterStudyDetail = (user: UserSession, study: FullStudy) => {
         depreciationPeriod: emissionSource.depreciationPeriod,
         hectare: emissionSource.hectare,
         duration: emissionSource.duration,
+        updatedAt: emissionSource.updatedAt,
       })),
     exports: study.exports,
-    contributors: undefined,
-    allowedUser: undefined,
+    contributors: study.contributors,
+    organizationVersion: study.organizationVersion,
+    allowedUsers: study.allowedUsers,
     emissionFactorVersions: study.emissionFactorVersions,
   }
 }

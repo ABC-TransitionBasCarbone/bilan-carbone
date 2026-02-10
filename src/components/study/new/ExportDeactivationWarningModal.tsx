@@ -1,6 +1,7 @@
 'use client'
 
 import Modal from '@/components/modals/Modal'
+import { customRich } from '@/i18n/customRich'
 import { exportSpecificFields, getAllSpecificFieldsForExports } from '@/utils/study'
 import { Export } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -33,22 +34,23 @@ const ExportDeactivationWarningModal = ({ type, remainingExports, onConfirm, onC
           actionType: 'button',
           onClick: () => onCancel(type),
           children: t('cancel'),
-          ['data-testid']: 'beges-deactivation-cancel',
+          ['data-testid']: 'export-deactivation-cancel',
         },
         {
           actionType: 'button',
           onClick: () => onConfirm(type),
           children: t('continue'),
-          ['data-testid']: 'beges-deactivation-confirm',
+          ['data-testid']: 'export-deactivation-confirm',
           color: 'error',
         },
       ]}
     >
       <div>
-        {t.rich('description', {
+        {customRich(t, 'description', {
           type: tExport(type),
           fields: fields.map((field) => tFields(field)).join(', '),
           warning: (children) => <span className="userWarning">{children}</span>,
+          additionnalInfos: type === Export.GHGP ? t('ghgpDeactivationAdditionnalInfos') : '',
         })}
       </div>
     </Modal>

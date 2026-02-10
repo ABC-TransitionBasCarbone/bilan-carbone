@@ -2,6 +2,7 @@
 import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import SimplifiedStudyPostsPage from '@/environments/simplified/study/SimplifiedStudyPostsPage'
+import { customRich } from '@/i18n/customRich'
 import { Post, subPostsByPost } from '@/services/posts'
 import { Environment, StudyRole, SubPost } from '@prisma/client'
 import { UserSession } from 'next-auth'
@@ -50,7 +51,7 @@ const StudyPostsPageContainer = ({ post, currentSubPost, study, userRole, user }
       ? `glossaryDescription.${glossary}${study.organizationVersion.environment.toLowerCase()}`
       : `glossaryDescription.${glossary}`
 
-    return tPost.rich(textForGlossary, {
+    return customRich(tPost, textForGlossary, {
       link: (children) => (
         <Link className={styles.link} href={tPost(`${textForGlossary}Link`)} target="_blank" rel="noreferrer noopener">
           {children}

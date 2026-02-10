@@ -1,4 +1,5 @@
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { customRich } from '@/i18n/customRich'
 import { getLink } from '@/services/checklist'
 import { addUserChecklistItem } from '@/services/serverFunctions/user'
 import ValidatedIcon from '@mui/icons-material/CheckCircle'
@@ -83,7 +84,7 @@ const ChecklistItem = ({
         </AccordionSummary>
         <AccordionDetails>
           <p>
-            {t.rich(`${step}Details`, {
+            {customRich(t, `${step}Details`, {
               orga: (children) => (
                 <Link href={`/organisations/${organizationVersionId}/modifier`} onClick={onClose}>
                   {children}

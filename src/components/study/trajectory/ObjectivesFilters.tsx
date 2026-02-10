@@ -2,6 +2,7 @@
 
 import Button from '@/components/base/Button'
 import DebouncedInput from '@/components/base/DebouncedInput'
+import { PastStudy } from '@/utils/trajectory'
 import { SectenInfo } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
@@ -18,6 +19,8 @@ interface Props {
   canEdit: boolean
   studyYear: number
   sectenData: SectenInfo[]
+  studyEmissions?: number
+  pastStudies?: PastStudy[]
 }
 
 const ObjectivesFilters = ({
@@ -28,6 +31,8 @@ const ObjectivesFilters = ({
   canEdit,
   studyYear,
   sectenData,
+  studyEmissions = 0,
+  pastStudies = [],
 }: Props) => {
   const t = useTranslations('study.transitionPlan.objectives')
   const [creationModalOpened, setCreationModalOpened] = useState(false)
@@ -63,6 +68,8 @@ const ObjectivesFilters = ({
           isFirstCreation={false}
           studyYear={studyYear}
           sectenData={sectenData}
+          studyEmissions={studyEmissions}
+          pastStudies={pastStudies}
         />
       )}
     </div>

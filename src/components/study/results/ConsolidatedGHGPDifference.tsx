@@ -4,16 +4,27 @@ import { getEmissionResults } from '@/services/emissionSource'
 import { Post } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { getDefaultRule, PostInfos } from '@/services/results/exports'
+import { getGHGPEmissionValue, getLine } from '@/services/results/ghgp'
 import { getAllSiteEmissionSources } from '@/services/results/utils'
 import { getEmissionFactor } from '@/utils/emissionSources'
+import { computeDifferenceForTableEmissions, formatDifferenceTableEmissions } from '@/utils/exports'
 import { formatNumber } from '@/utils/number'
-import { hasDeprecationPeriod, STUDY_UNIT_VALUES } from '@/utils/study'
+import { hasDeprecationPeriod, hasFabricationPart, STUDY_UNIT_VALUES } from '@/utils/study'
 import WarningAmberIcon from '@mui/icons-material/WarningAmberOutlined'
-import { EmissionFactorBase, Export, ExportRule, SubPost } from '@prisma/client'
+import {
+  EmissionFactorBase,
+  EmissionFactorPartType,
+  EmissionSourceCaracterisation,
+  Export,
+  ExportRule,
+  SubPost,
+} from '@prisma/client'
+import { useTranslations } from 'next-intl'
 import { useCallback, useMemo } from 'react'
 import { EnergiesIcon } from '../infography/icons/energies'
 import ConsolidatedExportDifference, { calculateEmissionSourcesDifference } from './ConsolidatedExportDifference'
 import ExportDifferenceItems from './ExportDifferenceItems'
+import { ExportDifferenceTable } from './ExportDifferenceTable'
 
 interface Props {
   study: FullStudy
@@ -39,7 +50,7 @@ const ConsolatedGHGPDifference = ({
   base,
 }: Props) => {
   const unitValue = STUDY_UNIT_VALUES[study.resultsUnit]
-
+  const tPost = useTranslations('emissionFactors.post')
   const environment = useMemo(() => study.organizationVersion.environment, [study])
 
   const emissionSourcesForSelectedSite = useMemo(
@@ -98,29 +109,38 @@ const ConsolatedGHGPDifference = ({
     [validatedOnly],
   )
 
-  const immobilisation = useMemo(
-    () =>
-      emissionSourcesForSelectedSite.filter((emissionSource) => {
-        if (isEmissionSourceFiltered(emissionSource)) {
-          return false
-        }
+  const immobilisation = useMemo(() => {
+    const filtered = emissionSourcesForSelectedSite.filter((emissionSource) => {
+      if (isEmissionSourceFiltered(emissionSource)) {
+        return false
+      }
 
-        return (
-          hasDeprecationPeriod(emissionSource.subPost) &&
-          (!emissionSource.constructionYear ||
-            emissionSource.constructionYear?.getFullYear() !== study.startDate.getFullYear())
-        )
-      }),
-    [emissionSourcesForSelectedSite, isEmissionSourceFiltered, study.startDate],
-  )
+      return hasDeprecationPeriod(emissionSource.subPost)
+    })
 
-  const immobilisationDifference = useMemo(
-    () => calculateEmissionSourcesDifference(immobilisation, emissionFactorsWithParts, environment, unitValue),
-    [immobilisation, emissionFactorsWithParts, unitValue, environment],
-  )
+    return formatDifferenceTableEmissions(
+      filtered,
+      emissionFactorsWithParts,
+      study.resultsUnit,
+      environment,
+      tPost,
+      Export.GHGP,
+      study.startDate,
+    )
+  }, [
+    emissionFactorsWithParts,
+    emissionSourcesForSelectedSite,
+    environment,
+    isEmissionSourceFiltered,
+    study.resultsUnit,
+    study.startDate,
+    tPost,
+  ])
 
-  const otherEmissions = useMemo(
-    () =>
+  const immobilisationDifference = useMemo(() => computeDifferenceForTableEmissions(immobilisation), [immobilisation])
+
+  const getOtherEmissions = useCallback(
+    (isAmont: boolean) =>
       emissionSourcesForSelectedSite.filter((emissionSource) => {
         if (isEmissionSourceFiltered(emissionSource)) {
           return false
@@ -131,14 +151,28 @@ const ConsolatedGHGPDifference = ({
           return false
         }
         const rule = getDefaultRule(subPostRules, emissionSource.caracterisation)
-        return rule && rule.includes('other')
+
+        if (isAmont) {
+          return rule === '3.other'
+        } else {
+          return rule === '4.other'
+        }
       }),
     [emissionSourcesForSelectedSite, ghgpRules, isEmissionSourceFiltered],
   )
 
-  const otherEmissionsDifference = useMemo(
-    () => calculateEmissionSourcesDifference(otherEmissions, emissionFactorsWithParts, environment, unitValue),
-    [otherEmissions, emissionFactorsWithParts, unitValue, environment],
+  const otherEmissionsAval = useMemo(() => getOtherEmissions(false), [getOtherEmissions])
+
+  const otherEmissionsAvalDifference = useMemo(
+    () => calculateEmissionSourcesDifference(otherEmissionsAval, emissionFactorsWithParts, environment, unitValue),
+    [otherEmissionsAval, emissionFactorsWithParts, unitValue, environment],
+  )
+
+  const otherEmissionsAmont = useMemo(() => getOtherEmissions(true), [getOtherEmissions])
+
+  const otherEmissionsAmontDifference = useMemo(
+    () => calculateEmissionSourcesDifference(otherEmissionsAmont, emissionFactorsWithParts, environment, unitValue),
+    [otherEmissionsAmont, emissionFactorsWithParts, unitValue, environment],
   )
 
   const otherGas = useMemo(
@@ -222,6 +256,44 @@ const ConsolatedGHGPDifference = ({
     environment,
   ])
 
+  const fabricationEmissionSources = useMemo(
+    () =>
+      emissionSourcesForSelectedSite.filter((emissionSource) => {
+        if (isEmissionSourceFiltered(emissionSource)) {
+          return false
+        }
+
+        return (
+          hasFabricationPart(emissionSource.emissionFactor) &&
+          emissionSource.caracterisation === EmissionSourceCaracterisation.Operated
+        )
+      }),
+    [emissionSourcesForSelectedSite, isEmissionSourceFiltered, study.startDate],
+  )
+
+  const fabricationEmissionSourcesDifference = useMemo(() => {
+    let value = 0
+    fabricationEmissionSources.forEach((emissionSource) => {
+      if (!emissionSource.emissionFactor || !emissionSource.value) {
+        return
+      }
+      const id = emissionSource.emissionFactor.id
+      const emissionFactor = emissionFactorsWithParts.find(
+        (emissionFactorsWithParts) => emissionFactorsWithParts.id === id,
+      )
+
+      if (!emissionFactor || emissionFactor.emissionFactorParts.length === 0) {
+        return
+      }
+      const parts = emissionFactor.emissionFactorParts.filter((p) => p.type === EmissionFactorPartType.Fabrication)
+      parts.forEach((part) => {
+        const emissionTotal = getGHGPEmissionValue(study.startDate)(emissionSource)
+        value = value - getLine(emissionTotal, part).total / unitValue
+      })
+    })
+    return value
+  }, [fabricationEmissionSources, emissionFactorsWithParts, study.startDate, unitValue])
+
   return (
     <ConsolidatedExportDifference
       study={study}
@@ -232,15 +304,17 @@ const ConsolatedGHGPDifference = ({
         utilisationEnDependanceValue +
         missingCaractDifference +
         immobilisationDifference +
-        otherEmissionsDifference +
+        otherEmissionsAvalDifference +
+        otherEmissionsAmontDifference +
         otherGasDifference +
-        marketBasedDifference
+        marketBasedDifference +
+        fabricationEmissionSourcesDifference
       }
     >
       {hasUtilisationEnDependance && (
         <ExportDifferenceItems
-          title="dependanceTitle"
-          descriptions={['dependance']}
+          title="dependanceGHGTitle"
+          descriptions={['dependanceGHG']}
           emissionSources={utilisationEnDependanceEmissionSources}
           exportType={Export.GHGP}
           studySite={studySite}
@@ -263,25 +337,37 @@ const ConsolatedGHGPDifference = ({
         />
       )}
       {!!immobilisation.length && (
-        <ExportDifferenceItems
-          title="immobilisationTitle"
-          descriptions={['immobilisation1']}
+        <ExportDifferenceTable
+          difference={immobilisationDifference}
+          resultsUnit={study.resultsUnit}
           emissionSources={immobilisation}
+          studySite={studySite}
+          navigateToEmissionSource={navigateToEmissionSource}
+          title="immobilisationTitle"
+          description="immobilisation1"
+          columnTitle="ghgp"
+        />
+      )}
+      {!!otherEmissionsAval.length && (
+        <ExportDifferenceItems
+          title="otherEmissionsAvalTitle"
+          descriptions={['otherEmissionsAval']}
+          emissionSources={otherEmissionsAval}
           exportType={Export.GHGP}
           studySite={studySite}
-          value={formatNumber(immobilisationDifference, 0)}
+          value={formatNumber(otherEmissionsAvalDifference, 0)}
           resultsUnit={study.resultsUnit}
           navigateToEmissionSource={navigateToEmissionSource}
         />
       )}
-      {!!otherEmissions.length && (
+      {!!otherEmissionsAmont.length && (
         <ExportDifferenceItems
-          title="otherEmissionsTitle"
-          descriptions={['otherEmissions1']}
-          emissionSources={otherEmissions}
+          title="otherEmissionsAmontTitle"
+          descriptions={['otherEmissionsAmont']}
+          emissionSources={otherEmissionsAmont}
           exportType={Export.GHGP}
           studySite={studySite}
-          value={formatNumber(otherEmissionsDifference, 0)}
+          value={formatNumber(otherEmissionsAmontDifference, 0)}
           resultsUnit={study.resultsUnit}
           navigateToEmissionSource={navigateToEmissionSource}
         />
@@ -309,6 +395,18 @@ const ConsolatedGHGPDifference = ({
           resultsUnit={study.resultsUnit}
           navigateToEmissionSource={navigateToEmissionSource}
           Icon={EnergiesIcon}
+        />
+      )}
+      {!!fabricationEmissionSources.length && (
+        <ExportDifferenceItems
+          title="fabricationTitle"
+          descriptions={['fabrication']}
+          emissionSources={fabricationEmissionSources}
+          exportType={Export.GHGP}
+          studySite={studySite}
+          value={formatNumber(fabricationEmissionSourcesDifference, 0)}
+          resultsUnit={study.resultsUnit}
+          navigateToEmissionSource={navigateToEmissionSource}
         />
       )}
     </ConsolidatedExportDifference>

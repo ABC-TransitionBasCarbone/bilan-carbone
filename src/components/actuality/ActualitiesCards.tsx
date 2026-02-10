@@ -1,6 +1,6 @@
 'use server'
 
-import { getMainActualities } from '@/db/actuality'
+import { getMainActualitiesLocale } from '@/db/actuality'
 import classNames from 'classnames'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
@@ -9,7 +9,7 @@ import NoActualities from './NoActualities'
 import styles from './styles.module.css'
 
 const ActualitiesCards = async () => {
-  const actualities = await getMainActualities()
+  const actualities = await getMainActualitiesLocale()
   const t = await getTranslations('actuality')
   return (
     <Block

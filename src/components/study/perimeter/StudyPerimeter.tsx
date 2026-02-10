@@ -22,7 +22,6 @@ import {
   changeStudyDates,
   changeStudyExports,
   changeStudySites,
-  duplicateSiteAndEmissionSources,
   hasActivityData,
 } from '@/services/serverFunctions/study'
 import {
@@ -35,7 +34,7 @@ import {
   StudyExportsCommandValidation,
 } from '@/services/serverFunctions/study.command'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
-import { canEditOrganizationVersion, isInOrgaOrParent } from '@/utils/organization'
+import { isInOrgaOrParent } from '@/utils/organization'
 import { hasEditionRights } from '@/utils/study'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ControlMode, Environment, Export, SiteCAUnit, StudyRole } from '@prisma/client'
@@ -47,7 +46,6 @@ import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm, UseFormReturn, useWatch } from 'react-hook-form'
 import DeleteStudySiteModal from './DeleteStudySiteModal'
-import { DuplicateFormData } from './DuplicateSiteModal'
 import ReplicateSitesChangesModal from './ReplicateSitesChangesModal'
 import StudyExportsForm from './StudyExportsForm'
 import styles from './StudyPerimeter.module.css'
@@ -85,14 +83,14 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
       }),
     [study.organizationVersion.parent?.id, study.organizationVersionId, user.organizationVersionId],
   )
-  const canEditOrga = useMemo(() => canEditOrganizationVersion(user, organizationVersion), [user, organizationVersion])
+  // const canEditOrga = useMemo(() => canEditOrganizationVersion(user, organizationVersion), [user, organizationVersion])
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
 
-  const duplicatingSite = useMemo(
-    () => (duplicatingSiteId ? study.sites.find((site) => site.id === duplicatingSiteId) : null),
-    [duplicatingSiteId, study.sites],
-  )
+  // const duplicatingSite = useMemo(
+  //   () => (duplicatingSiteId ? study.sites.find((site) => site.id === duplicatingSiteId) : null),
+  //   [duplicatingSiteId, study.sites],
+  // )
 
   const form = useForm<ChangeStudyDatesCommand>({
     resolver: zodResolver(ChangeStudyDatesCommandValidation),
@@ -112,7 +110,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
     mode: 'onSubmit',
     reValidateMode: 'onChange',
     defaultValues: {
-      exports: study.exports?.types,
+      exports: study.exports?.types || [],
       controlMode: study.exports?.control,
     },
   })
@@ -255,29 +253,29 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
     }
   }, [exportsForm, exportsWatch, controlWatch, updateStudyExport])
 
-  const handleDuplicateSite = async (data: DuplicateFormData) => {
-    if (!duplicatingSiteId) {
-      return
-    }
+  // const handleDuplicateSite = async (data: DuplicateFormData) => {
+  //   if (!duplicatingSiteId) {
+  //     return
+  //   }
 
-    await callServerFunction(
-      () =>
-        duplicateSiteAndEmissionSources({
-          sourceSiteId: duplicatingSiteId,
-          targetSiteIds: data.targetSiteIds,
-          newSitesCount: data.newSitesCount,
-          organizationId: organizationVersion.organization.id,
-          studyId: study.id,
-          fieldsToDuplicate: data.fieldsToDuplicate,
-        }),
-      {
-        onSuccess: () => {
-          setDuplicatingSiteId(null)
-          router.refresh()
-        },
-      },
-    )
-  }
+  //   await callServerFunction(
+  //     () =>
+  //       duplicateSiteAndEmissionSources({
+  //         sourceSiteId: duplicatingSiteId,
+  //         targetSiteIds: data.targetSiteIds,
+  //         newSitesCount: data.newSitesCount,
+  //         organizationId: organizationVersion.organization.id,
+  //         studyId: study.id,
+  //         fieldsToDuplicate: data.fieldsToDuplicate,
+  //       }),
+  //     {
+  //       onSuccess: () => {
+  //         setDuplicatingSiteId(null)
+  //         router.refresh()
+  //       },
+  //     },
+  //   )
+  // }
 
   const Help = (name: string) => (
     <HelpIcon className="ml-4" onClick={() => setGlossary(name)} label={tGlossary('title')} />
@@ -388,9 +386,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
               form={isEditing ? (siteForm as unknown as UseFormReturn<SitesCommand>) : undefined}
               caUnit={caUnit}
               withSelection
-              onDuplicate={
-                !isEditing && hasEditionRole && isFromStudyOrganizationOrParent ? setDuplicatingSiteId : undefined
-              }
+              onDuplicate={!isEditing && hasEditionRole ? setDuplicatingSiteId : undefined}
               organizationId={isFromStudyOrganizationOrParent ? study.organizationVersion.id : undefined}
             />
           ),
@@ -401,9 +397,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
             form={isEditing ? (siteForm as unknown as UseFormReturn<SitesCommand>) : undefined}
             caUnit={caUnit}
             withSelection
-            onDuplicate={
-              !isEditing && hasEditionRole && isFromStudyOrganizationOrParent ? setDuplicatingSiteId : undefined
-            }
+            onDuplicate={!isEditing && hasEditionRole ? setDuplicatingSiteId : undefined}
             organizationId={isFromStudyOrganizationOrParent ? study.organizationVersion.id : undefined}
           />
         }
@@ -431,13 +425,17 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
         t={t}
         disabled={!hasEditionRole}
       />
+
       <DeleteStudySiteModal
         open={open}
         confirmDeletion={updateStudySites}
         cancelDeletion={() => setOpen(false)}
         deleting={deleting}
       />
-      {duplicatingSite && (
+      {/*
+       TOFIX : this duplication feature break our database when duplicating a site with a lot of emission sources. 
+       We need to rethink this feature before re-enabling it.
+       {duplicatingSite && (
         <DuplicateSiteModal
           open={!!duplicatingSiteId}
           onClose={() => setDuplicatingSiteId(null)}
@@ -447,7 +445,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
           caUnit={caUnit}
           onDuplicate={handleDuplicateSite}
         />
-      )}
+      )} */}
       {replicateSitesChanges && <ReplicateSitesChangesModal replicate={onReplicateSitesChanges} />}
       {glossary && (
         <GlossaryModal glossary={glossary} onClose={() => setGlossary('')} label="emission-source" t={tGlossary}>

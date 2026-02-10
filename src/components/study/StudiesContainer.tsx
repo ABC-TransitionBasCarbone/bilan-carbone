@@ -4,6 +4,8 @@ import {
   getAllowedStudiesByUserAndOrganization,
   getExternalAllowedStudiesByUser,
 } from '@/db/study'
+import { customRich } from '@/i18n/customRich'
+import { isTilt, isTiltSimplifiedFeatureActive } from '@/services/permissions/environment'
 import { canCreateAStudy } from '@/services/permissions/study'
 import { hasActiveLicence } from '@/utils/organization'
 import AddIcon from '@mui/icons-material/Add'
@@ -60,27 +62,42 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
   const organizationVersion = await getOrganizationVersionById(mainStudyOrganizationVersionId)
   const activeLicence = !!(organizationVersion && hasActiveLicence(organizationVersion))
 
-  return studies.length ? (
+  let displaySimplifiedStudies = false
+  let hasStudies = studies.length > 0
+  if (!isTilt(user.environment)) {
+    displaySimplifiedStudies = true
+  } else {
+    displaySimplifiedStudies = await isTiltSimplifiedFeatureActive(user.environment)
+    if (!displaySimplifiedStudies) {
+      hasStudies = advancedStudies.length > 0
+    }
+  }
+
+  return hasStudies ? (
     <>
       {mainStudyOrganizationVersionId && !isCR && (
         <Suspense>
-          <ResultsContainerForUser user={user} mainStudyOrganizationVersionId={mainStudyOrganizationVersionId} />
+          <ResultsContainerForUser
+            user={user}
+            mainStudyOrganizationVersionId={mainStudyOrganizationVersionId}
+            displaySimplifiedStudies={displaySimplifiedStudies}
+          />
         </Suspense>
       )}
       {!!advancedStudies.length && (
         <Studies
           studies={advancedStudies}
-          canAddStudy={canCreateAStudy(user) && !isCR && activeLicence}
+          canAddStudy={(await canCreateAStudy(user)) && !isCR && activeLicence}
           creationUrl={creationUrl}
           user={user}
           collaborations={!organizationVersionId && isCR}
         />
       )}
 
-      {!!simplifiedStudies.length && (
+      {displaySimplifiedStudies && !!simplifiedStudies.length && (
         <Studies
           studies={simplifiedStudies}
-          canAddStudy={canCreateAStudy(user, true) && !isCR && activeLicence}
+          canAddStudy={(await canCreateAStudy(user, true)) && !isCR && activeLicence}
           creationUrl={creationUrlSimplified}
           user={user}
           collaborations={!organizationVersionId && isCR}
@@ -89,7 +106,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
       )}
       {!!collaborations.length && <Studies studies={collaborations} canAddStudy={false} user={user} collaborations />}
     </>
-  ) : canCreateAStudy(user, simplified) ? (
+  ) : (await canCreateAStudy(user, simplified)) ? (
     !isCR && (
       <MUIBox component="section" className="mt1">
         <div className="justify-center">
@@ -113,12 +130,12 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
     <Block>
       <Alert className="p0" severity="info">
         <p>
-          {t.rich('cannotCreateStudy', {
+          {customRich(t, 'cannotCreateStudy', {
             link: (children) => <Link href="/ressources">{children}</Link>,
           })}
         </p>
         <p>
-          {t.rich('canCreateFootPrint', {
+          {customRich(t, 'canCreateFootPrint', {
             link: (children) => <Link href="/mes-empreintes">{children}</Link>,
           })}
         </p>

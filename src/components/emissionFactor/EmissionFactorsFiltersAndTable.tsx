@@ -6,7 +6,7 @@ import { EmissionFactorWithMetaData, getEmissionFactors } from '@/services/serve
 import { getStudyExports } from '@/services/serverFunctions/study'
 import { BCUnit } from '@/services/unit'
 import { FeFilters } from '@/types/filters'
-import { Environment, Export, SubPost } from '@prisma/client'
+import { EmissionFactorBase, Environment, Export, SubPost } from '@prisma/client'
 import { PaginationState } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
@@ -26,7 +26,7 @@ interface Props {
   selectEmissionFactor?: (emissionFactor: EmissionFactorWithMetaData) => void
 }
 
-const initialSelectedUnits: (BCUnit | string)[] = [...['all'], ...Object.values(BCUnit)]
+const initialSelectedUnits: BCUnit[] = Object.values(BCUnit)
 const EmissionFactorsFiltersAndTable = ({
   userOrganizationId,
   environment,
@@ -62,6 +62,19 @@ const EmissionFactorsFiltersAndTable = ({
     units: initialSelectedUnits,
     subPosts: defaultSubPost ? [defaultSubPost] : ['all'],
   })
+
+  const shouldShowBase =
+    hasGHGPExport && (defaultSubPost?.includes(SubPost.Electricite) || filters.subPosts.includes(SubPost.Electricite))
+
+  useEffect(() => {
+    setFilters((prevFilters) => {
+      if (shouldShowBase) {
+        return { ...prevFilters, base: Object.values(EmissionFactorBase) }
+      }
+
+      return { ...prevFilters, base: undefined }
+    })
+  }, [shouldShowBase])
 
   useEffect(() => {
     if (filters.subPosts.length === 1 && filters.subPosts[0] === 'all') {
@@ -120,7 +133,16 @@ const EmissionFactorsFiltersAndTable = ({
     fetchEmissionFactors()
     // We don't want this effect to trigger when number of FE changes, because it is the use case of the other effect
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters.archived, filters.search, filters.location, filters.sources, filters.units, filters.subPosts, studyId])
+  }, [
+    filters.archived,
+    filters.search,
+    filters.location,
+    filters.sources,
+    filters.units,
+    filters.subPosts,
+    filters.base,
+    studyId,
+  ])
 
   useEffect(() => {
     const fetchStudyExports = async () => {

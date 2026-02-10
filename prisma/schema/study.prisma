@@ -265,8 +265,8 @@ model StudyEmissionSource {
   duration           Int? @default(20)
   hectare            Int?
 
-  contributorId String?  @map("contributor_account_id")
-  contributor   Account? @relation(fields: [contributorId], references: [id])
+  lastEditorId String?  @map("last_editor_account_id")
+  lastEditor   Account? @relation(fields: [lastEditorId], references: [id])
 
   feReliability                  Int? @map("fe_reliability")
   feTechnicalRepresentativeness  Int? @map("fe_technical_representativeness")
@@ -369,8 +369,7 @@ model StudySite {
   situation    Situation?
   studyAnswers Answer[]
 
-  EngagementAction   EngagementAction? @relation(fields: [engagementActionId], references: [id])
-  engagementActionId String?
+  engagementActions EngagementAction[]
 
   @@unique([studyId, siteId])
   @@map("study_sites")
@@ -417,10 +416,10 @@ model EngagementAction {
 
   name String
 
-  date   DateTime
-  target String
-  steps  String
-  phase  EngagementPhase
+  date    DateTime
+  targets String[]
+  steps   String
+  phase   EngagementPhase
 
   description String
 

@@ -41,6 +41,7 @@ const defaultEmissionSource = {
         comment: 'Mocked Comment',
       },
     ],
+    emissionFactorParts: [],
   },
   studySite: { id: 'siteId', site: { id: 'siteId', name: 'mocked-site' } },
   emissionFactorId: 'emissionFactor',
@@ -60,12 +61,13 @@ const defaultEmissionSource = {
   feTemporalRepresentativeness: 1,
   feGeographicRepresentativeness: null,
   feCompleteness: null,
-  contributor: null,
+  lastEditor: null,
   depreciationPeriod: null,
   duration: null,
   hectare: null,
   emissionSourceTags: [],
   createdAt: new Date(),
+  updatedAt: new Date(),
 } satisfies FullStudy['emissionSources'][0]
 
 describe('emissionSource Service', () => {

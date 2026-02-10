@@ -33,6 +33,8 @@ const StudyExportsForm = <T extends StudyExportsCommand>({
   const tGlossary = useTranslations('study.new.glossary')
   const control = form?.control as Control<StudyExportsCommand>
   const setValue = form?.setValue as UseFormSetValue<StudyExportsCommand>
+  const { exports } = form.getValues()
+
   return (
     <div className="mt2">
       <Controller
@@ -64,7 +66,12 @@ const StudyExportsForm = <T extends StudyExportsCommand>({
               <ExportCheckboxes
                 values={form.getValues()}
                 setControl={(value: ControlMode) => setValue('controlMode', value)}
-                onChange={(value: Export[]) => setValue('exports', value)}
+                onChange={(value: Export[]) => {
+                  setValue('exports', value)
+                  if (exports.length === 0 && value.length === 1) {
+                    setValue('controlMode', ControlMode.Operational)
+                  }
+                }}
                 study={study}
                 disabled={disabled}
                 duplicateStudyId={duplicateStudyId}

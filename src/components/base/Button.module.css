@@ -38,3 +38,7 @@
     border-color: var(--error-200) !important;
   }
 }
+
+.large {
+  height: 3.5rem;
+}

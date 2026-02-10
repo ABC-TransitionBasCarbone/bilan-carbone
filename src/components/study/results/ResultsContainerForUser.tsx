@@ -14,12 +14,13 @@ import StudyResultsContainerSummary from './StudyResultsContainerSummary'
 interface Props {
   user: UserSession
   mainStudyOrganizationVersionId: string
+  displaySimplifiedStudies: boolean
 }
 
-const ResultsContainerForUser = async ({ user, mainStudyOrganizationVersionId }: Props) => {
+const ResultsContainerForUser = async ({ user, mainStudyOrganizationVersionId, displaySimplifiedStudies }: Props) => {
   const t = await getTranslations('study')
   const [studies, settings] = await Promise.all([
-    getOrganizationVersionStudiesOrderedByStartDate(mainStudyOrganizationVersionId),
+    getOrganizationVersionStudiesOrderedByStartDate(mainStudyOrganizationVersionId, displaySimplifiedStudies),
     getUserApplicationSettings(user.accountId),
   ])
 

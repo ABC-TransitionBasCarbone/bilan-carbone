@@ -1,3 +1,4 @@
+import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
 import {
   ActionIndicatorCommand,
   ActionStepCommand,
@@ -127,6 +128,7 @@ export const duplicateTransitionPlanWithRelations = async (
             description: trajectory.description,
             type: trajectory.type,
             referenceYear: trajectory.referenceYear,
+            sectorPercentages: trajectory.sectorPercentages as SectorPercentages,
             objectives: {
               create: trajectory.objectives.map((objective) => ({
                 targetYear: objective.targetYear,
@@ -370,6 +372,7 @@ export const updateTrajectoryWithObjectives = async (
     name?: string
     description?: string
     referenceYear?: number | null
+    sectorPercentages?: SectorPercentages
     objectives?: Array<{ id: string; targetYear: number; reductionRate: number }>
   },
 ): Promise<TrajectoryWithObjectives> => {
@@ -398,6 +401,7 @@ export const updateTrajectoryWithObjectives = async (
       name: data.name,
       description: data.description,
       referenceYear: data.referenceYear,
+      sectorPercentages: data.sectorPercentages,
     },
     include: {
       objectives: {

@@ -8,6 +8,7 @@ import { FormTextField } from '@/components/form/TextField'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import StudyDuplicationForm, { InviteOptions } from '@/components/study/duplication/StudyDuplicationForm'
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { customRich } from '@/i18n/customRich'
 import { createStudyCommand, duplicateStudyCommand } from '@/services/serverFunctions/study'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { useTranslations } from 'next-intl'
@@ -68,7 +69,7 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudy
   const studyNamePlaceHolder = useMemo(
     () =>
       `${
-        tStudyNewSuggestion.rich('name', {
+        customRich(tStudyNewSuggestion, 'name', {
           studyStartDate: new Date().getFullYear(),
           orga: form.getValues('sites')[0]?.name || tStudyNewSuggestion('yourOrga'),
         }) || ''
@@ -120,7 +121,7 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudy
           t={tGlossary}
         >
           <p className="mb-2">
-            {tGlossary.rich(`${glossary}Description`, {
+            {customRich(tGlossary, `${glossary}Description`, {
               link: (children) => (
                 <Link href={tDocumentation('maturity')} target="_blank" rel="noreferrer noopener">
                   {children}
