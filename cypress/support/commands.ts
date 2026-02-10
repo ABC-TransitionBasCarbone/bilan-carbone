@@ -23,6 +23,13 @@ Cypress.Commands.add('logout', () => {
 Cypress.Commands.add('signupCut', (email = 'cut-cnc@yopmail.com', cncOrSiret = '321') => {
   cy.visit('/count/register')
 
+  cy.getByTestId('welcome-text').should('be.visible')
+  cy.getByTestId('welcome-text').should('contain.text', 'Bienvenue sur')
+  cy.getByTestId('welcome-explanation').should('be.visible')
+  cy.getByTestId('welcome-explanation').should(
+    'contain.text',
+    "Cet outil a été développé par l'association CUT ! Cinéma Uni pour la Transition, en coopération avec l'ABC, association pour la Transition bas carbone.",
+  )
   cy.getByTestId('activation-email').should('be.visible')
   cy.getByTestId('activation-siretOrCNC').should('be.visible')
   cy.getByTestId('activation-button').should('be.visible')

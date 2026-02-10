@@ -12,5 +12,6 @@ declare namespace Cypress {
     initFePage(): Chainable<void>
     initCreateStudyPage(): Chainable<void>
     initRegisterClicksonPage(): Chainable<void>
+    initRegisterCutPage(): Chainable<void>
   }
 }
