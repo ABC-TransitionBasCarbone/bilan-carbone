@@ -1,4 +1,5 @@
 import { createActualities } from '@/db/actuality'
+import { Locale } from '@/i18n/config'
 import { Prisma } from '@prisma/client'
 import { Command } from 'commander'
 import { parse } from 'csv-parse'
@@ -21,8 +22,14 @@ const addActualities = async (file: string) => {
           encoding: getEncoding(file),
         }),
       )
-      .on('data', (row: { Titre: string; Texte: string }) => {
-        actualities.push({ text: row.Texte, title: row.Titre, createdAt: new Date(), updatedAt: new Date() })
+      .on('data', (row: { Titre: string; Texte: string; Language?: string }) => {
+        actualities.push({
+          text: row.Texte,
+          title: row.Titre,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          language: row.Language || Locale.FR,
+        })
       })
       .on('end', async () => {
         console.log(`Ajout de ${actualities.length} actualités...`)
