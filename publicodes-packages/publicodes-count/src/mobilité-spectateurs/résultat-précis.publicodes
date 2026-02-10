@@ -26,6 +26,8 @@ mobilité spectateurs . résultat précis . empreinte:
     RER et transilien:
       titre: RER et transilien
       formule: distance * commun . FE . moyen de transport . RER et transilien
+      form:
+        à traduire: oui
       avec:
         distance:
           question: Distance (km)
@@ -35,6 +37,8 @@ mobilité spectateurs . résultat précis . empreinte:
     métro ou tram:
       titre: Métro, tramway
       formule: distance * commun . FE . moyen de transport . métro ou tram
+      form:
+        à traduire: oui
       avec:
         distance:
           question: Distance (km)
@@ -44,6 +48,8 @@ mobilité spectateurs . résultat précis . empreinte:
     bus:
       titre: Bus
       formule: distance * commun . FE . moyen de transport . bus
+      form:
+        à traduire: oui
       avec:
         distance:
           question: Distance (km)
@@ -53,6 +59,8 @@ mobilité spectateurs . résultat précis . empreinte:
     vélo électrique:
       titre: Vélo électrique
       formule: distance * commun . FE . moyen de transport . vélo électrique
+      form:
+        à traduire: oui
       avec:
         distance:
           question: Distance (km)
@@ -62,6 +70,8 @@ mobilité spectateurs . résultat précis . empreinte:
     vélo classique:
       titre: Vélo classique
       formule: distance * commun . FE . moyen de transport . vélo classique
+      form:
+        à traduire: oui
       avec:
         distance:
           question: Distance (km)
@@ -71,6 +81,8 @@ mobilité spectateurs . résultat précis . empreinte:
     marche:
       titre: Marche
       formule: distance * commun . FE . moyen de transport . marche
+      form:
+        à traduire: oui
       avec:
         distance:
           question: Distance (km)
@@ -80,6 +92,8 @@ mobilité spectateurs . résultat précis . empreinte:
     voiture diesel:
       titre: Voiture diesel
       formule: distance * commun . FE . moyen de transport . voiture diesel
+      form:
+        à traduire: oui
       avec:
         distance:
           question: Distance (km)
@@ -89,6 +103,8 @@ mobilité spectateurs . résultat précis . empreinte:
     voiture essence:
       titre: Voiture essence
       formule: distance * commun . FE . moyen de transport . voiture essence
+      form:
+        à traduire: oui
       avec:
         distance:
           question: Distance (km)
@@ -98,6 +114,8 @@ mobilité spectateurs . résultat précis . empreinte:
     voiture hybride:
       titre: Voiture hybride
       formule: distance * commun . FE . moyen de transport . voiture hybride
+      form:
+        à traduire: oui
       avec:
         distance:
           question: Distance (km)
@@ -107,6 +125,8 @@ mobilité spectateurs . résultat précis . empreinte:
     voiture électrique:
       titre: Voiture électrique
       formule: distance * commun . FE . moyen de transport . voiture électrique
+      form:
+        à traduire: oui
       avec:
         distance:
           question: Distance (km)
@@ -116,6 +136,8 @@ mobilité spectateurs . résultat précis . empreinte:
     moto:
       titre: Moto
       formule: distance * commun . FE . moyen de transport . moto
+      form:
+        à traduire: oui
       avec:
         distance:
           question: Distance (km)
@@ -125,6 +147,8 @@ mobilité spectateurs . résultat précis . empreinte:
     scooter:
       titre: Scooter
       formule: distance * commun . FE . moyen de transport . scooter
+      form:
+        à traduire: oui
       avec:
         distance:
           question: Distance (km)
@@ -134,6 +158,8 @@ mobilité spectateurs . résultat précis . empreinte:
     trottinette électrique:
       titre: Trottinette électrique
       formule: distance * commun . FE . moyen de transport . trottinette électrique
+      form:
+        à traduire: oui
       avec:
         distance:
           question: Distance (km)

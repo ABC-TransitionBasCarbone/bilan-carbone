@@ -28,6 +28,8 @@ déchets . ordinaires . ordures ménagères:
       - FE
       - commun . nombre de semaines par an
   par défaut: 0
+  form:
+    à traduire: oui
   avec:
     nombre bennes:
       question: Nombre de bennes
@@ -65,6 +67,8 @@ déchets . ordinaires . emballages et papier:
       - FE
       - commun . nombre de semaines par an
   par défaut: 0
+  form:
+    à traduire: oui
   avec:
     nombre bennes:
       question: Nombre de bennes
@@ -102,6 +106,8 @@ déchets . ordinaires . biodéchets:
       - FE
       - commun . nombre de semaines par an
   par défaut: 0
+  form:
+    à traduire: oui
   avec:
     nombre bennes:
       question: Nombre de bennes
@@ -139,6 +145,8 @@ déchets . ordinaires . verre:
       - FE
       - commun . nombre de semaines par an
   par défaut: 0
+  form:
+    à traduire: oui
   avec:
     nombre bennes:
       question: Nombre de bennes

@@ -130,66 +130,79 @@
       "résultat précis": {
         "empreinte": {
           "RER et transilien": {
+            "titre": "[TO_TRANSLATE] RER et transilien",
             "distance": {
               "question": "[TO_TRANSLATE] Distance (km)"
             }
           },
           "métro ou tram": {
+            "titre": "[TO_TRANSLATE] Métro, tramway",
             "distance": {
               "question": "[TO_TRANSLATE] Distance (km)"
             }
           },
           "bus": {
+            "titre": "[TO_TRANSLATE] Bus",
             "distance": {
               "question": "[TO_TRANSLATE] Distance (km)"
             }
           },
           "vélo électrique": {
+            "titre": "[TO_TRANSLATE] Vélo électrique",
             "distance": {
               "question": "[TO_TRANSLATE] Distance (km)"
             }
           },
           "vélo classique": {
+            "titre": "[TO_TRANSLATE] Vélo classique",
             "distance": {
               "question": "[TO_TRANSLATE] Distance (km)"
             }
           },
           "marche": {
+            "titre": "[TO_TRANSLATE] Marche",
             "distance": {
               "question": "[TO_TRANSLATE] Distance (km)"
             }
           },
           "voiture diesel": {
+            "titre": "[TO_TRANSLATE] Voiture diesel",
             "distance": {
               "question": "[TO_TRANSLATE] Distance (km)"
             }
           },
           "voiture essence": {
+            "titre": "[TO_TRANSLATE] Voiture essence",
             "distance": {
               "question": "[TO_TRANSLATE] Distance (km)"
             }
           },
           "voiture hybride": {
+            "titre": "[TO_TRANSLATE] Voiture hybride",
             "distance": {
               "question": "[TO_TRANSLATE] Distance (km)"
             }
           },
           "voiture électrique": {
+            "titre": "[TO_TRANSLATE] Voiture électrique",
             "distance": {
               "question": "[TO_TRANSLATE] Distance (km)"
             }
           },
           "moto": {
+            "titre": "[TO_TRANSLATE] Moto",
             "distance": {
               "question": "[TO_TRANSLATE] Distance (km)"
             }
           },
           "scooter": {
+            "titre": "[TO_TRANSLATE] Scooter",
             "distance": {
               "question": "[TO_TRANSLATE] Distance (km)"
             }
           },
           "trottinette électrique": {
+            "titre": "[TO_TRANSLATE] Trottinette électrique",
             "distance": {
               "question": "[TO_TRANSLATE] Distance (km)"
             }
@@ -469,6 +482,7 @@
     "déchets": {
       "ordinaires": {
         "ordures ménagères": {
+          "titre": "[TO_TRANSLATE] Ordures ménagères (déchets non triés / sans filière)",
           "nombre bennes": {
             "question": "[TO_TRANSLATE] Nombre de bennes"
           },
@@ -482,6 +496,7 @@
           }
         },
         "emballages et papier": {
+          "titre": "[TO_TRANSLATE] Emballages et papier (plastique, métal, papier et carton)",
           "nombre bennes": {
             "question": "[TO_TRANSLATE] Nombre de bennes"
           },
@@ -495,6 +510,7 @@
           }
         },
         "biodéchets": {
+          "titre": "[TO_TRANSLATE] Biodéchets (restes alimentaires)",
           "nombre bennes": {
             "question": "[TO_TRANSLATE] Nombre de bennes"
           },
@@ -508,6 +524,7 @@
           }
         },
         "verre": {
+          "titre": "[TO_TRANSLATE] Déchets verre",
           "nombre bennes": {
             "question": "[TO_TRANSLATE] Nombre de bennes"
           },
@@ -549,6 +566,7 @@
           }
         },
         "réfrigérateurs": {
+          "titre": "[TO_TRANSLATE] Réfrigérateurs",
           "nombre": {
             "question": "[TO_TRANSLATE] Nombre de réfrigérateurs"
           },
@@ -560,6 +578,7 @@
           }
         },
         "congélateurs": {
+          "titre": "[TO_TRANSLATE] Congélateurs",
           "nombre": {
             "question": "[TO_TRANSLATE] Nombre de congélateurs"
           },
@@ -571,6 +590,7 @@
           }
         },
         "warmers": {
+          "titre": "[TO_TRANSLATE] Warmers",
           "nombre": {
             "question": "[TO_TRANSLATE] Nombre de warmers"
           },
@@ -582,6 +602,7 @@
           }
         },
         "distributeurs": {
+          "titre": "[TO_TRANSLATE] Distributeurs snack et boissons",
           "nombre": {
             "question": "[TO_TRANSLATE] Nombre de distributeurs snack et boissons"
           },
@@ -617,11 +638,13 @@
       "matériel distributeurs": {
         "affiches": {
           "affiches 120x160": {
+            "titre": "[TO_TRANSLATE] Affiches 120x160",
             "nombre": {
               "question": "[TO_TRANSLATE] Quantité"
             }
           },
           "affiches 40x60": {
+            "titre": "[TO_TRANSLATE] Affiches 40x60",
             "nombre": {
               "question": "[TO_TRANSLATE] Quantité"
             }
@@ -629,11 +652,13 @@
         },
         "PLV": {
           "PLV comptoir": {
+            "titre": "[TO_TRANSLATE] PLV comptoir",
             "nombre": {
               "question": "[TO_TRANSLATE] Quantité"
             }
           },
           "PLV grand format": {
+            "titre": "[TO_TRANSLATE] PLV grand format",
             "nombre": {
               "question": "[TO_TRANSLATE] Quantité"
             }
@@ -643,16 +668,19 @@
       "matériel cinéma": {
         "production": {
           "programme": {
+            "titre": "[TO_TRANSLATE] Programme",
             "nombre": {
               "question": "[TO_TRANSLATE] Quantité"
             }
           },
           "affiches": {
+            "titre": "[TO_TRANSLATE] Affiches",
             "nombre": {
               "question": "[TO_TRANSLATE] Quantité"
             }
           },
           "flyers": {
+            "titre": "[TO_TRANSLATE] Flyers",
             "nombre": {
               "question": "[TO_TRANSLATE] Quantité"
             }

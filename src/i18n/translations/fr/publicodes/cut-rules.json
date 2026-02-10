@@ -130,66 +130,79 @@
       "résultat précis": {
         "empreinte": {
           "RER et transilien": {
+            "titre": "RER et transilien",
             "distance": {
               "question": "Distance (km)"
             }
           },
           "métro ou tram": {
+            "titre": "Métro, tramway",
             "distance": {
               "question": "Distance (km)"
             }
           },
           "bus": {
+            "titre": "Bus",
             "distance": {
               "question": "Distance (km)"
             }
           },
           "vélo électrique": {
+            "titre": "Vélo électrique",
             "distance": {
               "question": "Distance (km)"
             }
           },
           "vélo classique": {
+            "titre": "Vélo classique",
             "distance": {
               "question": "Distance (km)"
             }
           },
           "marche": {
+            "titre": "Marche",
             "distance": {
               "question": "Distance (km)"
             }
           },
           "voiture diesel": {
+            "titre": "Voiture diesel",
             "distance": {
               "question": "Distance (km)"
             }
           },
           "voiture essence": {
+            "titre": "Voiture essence",
             "distance": {
               "question": "Distance (km)"
             }
           },
           "voiture hybride": {
+            "titre": "Voiture hybride",
             "distance": {
               "question": "Distance (km)"
             }
           },
           "voiture électrique": {
+            "titre": "Voiture électrique",
             "distance": {
               "question": "Distance (km)"
             }
           },
           "moto": {
+            "titre": "Moto",
             "distance": {
               "question": "Distance (km)"
             }
           },
           "scooter": {
+            "titre": "Scooter",
             "distance": {
               "question": "Distance (km)"
             }
           },
           "trottinette électrique": {
+            "titre": "Trottinette électrique",
             "distance": {
               "question": "Distance (km)"
             }
@@ -469,6 +482,7 @@
     "déchets": {
       "ordinaires": {
         "ordures ménagères": {
+          "titre": "Ordures ménagères (déchets non triés / sans filière)",
           "nombre bennes": {
             "question": "Nombre de bennes"
           },
@@ -482,6 +496,7 @@
           }
         },
         "emballages et papier": {
+          "titre": "Emballages et papier (plastique, métal, papier et carton)",
           "nombre bennes": {
             "question": "Nombre de bennes"
           },
@@ -495,6 +510,7 @@
           }
         },
         "biodéchets": {
+          "titre": "Biodéchets (restes alimentaires)",
           "nombre bennes": {
             "question": "Nombre de bennes"
           },
@@ -508,6 +524,7 @@
           }
         },
         "verre": {
+          "titre": "Déchets verre",
           "nombre bennes": {
             "question": "Nombre de bennes"
           },
@@ -549,6 +566,7 @@
           }
         },
         "réfrigérateurs": {
+          "titre": "Réfrigérateurs",
           "nombre": {
             "question": "Nombre de réfrigérateurs"
           },
@@ -560,6 +578,7 @@
           }
         },
         "congélateurs": {
+          "titre": "Congélateurs",
           "nombre": {
             "question": "Nombre de congélateurs"
           },
@@ -571,6 +590,7 @@
           }
         },
         "warmers": {
+          "titre": "Warmers",
           "nombre": {
             "question": "Nombre de warmers"
           },
@@ -582,6 +602,7 @@
           }
         },
         "distributeurs": {
+          "titre": "Distributeurs snack et boissons",
           "nombre": {
             "question": "Nombre de distributeurs snack et boissons"
           },
@@ -617,11 +638,13 @@
       "matériel distributeurs": {
         "affiches": {
           "affiches 120x160": {
+            "titre": "Affiches 120x160",
             "nombre": {
               "question": "Quantité"
             }
           },
           "affiches 40x60": {
+            "titre": "Affiches 40x60",
             "nombre": {
               "question": "Quantité"
             }
@@ -629,11 +652,13 @@
         },
         "PLV": {
           "PLV comptoir": {
+            "titre": "PLV comptoir",
             "nombre": {
               "question": "Quantité"
             }
           },
           "PLV grand format": {
+            "titre": "PLV grand format",
             "nombre": {
               "question": "Quantité"
             }
@@ -643,16 +668,19 @@
       "matériel cinéma": {
         "production": {
           "programme": {
+            "titre": "Programme",
             "nombre": {
               "question": "Quantité"
             }
           },
           "affiches": {
+            "titre": "Affiches",
             "nombre": {
               "question": "Quantité"
             }
           },
           "flyers": {
+            "titre": "Flyers",
             "nombre": {
               "question": "Quantité"
             }
