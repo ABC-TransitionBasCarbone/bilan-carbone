@@ -1213,9 +1213,9 @@
       },
       "conversionWarning": {
         "title": "Conversion du type de trajectoire",
-        "warningTitle": "Cette action convertira votre trajectoire en type PERSONNALISÉ",
-        "message": "L'ajout d'un objectif spécifique au périmètre à la trajectoire \"{trajectoryName}\" ({trajectoryType}) la convertira automatiquement en type de trajectoire PERSONNALISÉ.",
-        "explanation": "Une fois converti en PERSONNALISÉ, la trajectoire ne suivra plus les taux de réduction prédéfinis {trajectoryType}. Vous aurez un contrôle total sur tous les objectifs.",
+        "warningTitle": "Cette action convertira votre trajectoire en type PERSONNALISÉ.",
+        "message": "L'ajout d'un objectif spécifique à la trajectoire \"{trajectoryName}\" de type {trajectoryType} la convertira automatiquement en trajectoire de type PERSONNALISÉ. Cette action est irréversible.",
+        "explanation": "Une fois convertie, la trajectoire conservera les objectifs par défaut déjà définis mais ne suivra plus les règles spécifiques aux trajectoires de type {trajectoryType}.",
         "cancel": "Annuler",
         "confirm": "Continuer"
       },

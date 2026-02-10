@@ -3,7 +3,7 @@
 import { prismaClient } from '@/db/client'
 import { deleteObjective as dbDeleteObjective } from '@/db/transitionPlan'
 import { withServerResponse } from '@/utils/serverResponse'
-import { Prisma, SubPost } from '@prisma/client'
+import { Prisma, SubPost, TrajectoryType } from '@prisma/client'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { hasEditAccessOnStudy, hasReadAccessOnStudy } from '../permissions/study'
 
@@ -127,8 +127,8 @@ export interface UpdateObjectiveInput {
   subPosts?: SubPost[]
 }
 
-export const createObjective = async (input: CreateObjectiveInput) =>
-  withServerResponse('createObjective', async () => {
+export const createSubObjective = async (input: CreateObjectiveInput) =>
+  withServerResponse('createSubObjective', async () => {
     const trajectory = await prismaClient.trajectory.findUnique({
       where: { id: input.trajectoryId },
       include: { transitionPlan: true },
@@ -146,6 +146,8 @@ export const createObjective = async (input: CreateObjectiveInput) =>
     await validateObjectiveScopeOwnership([input], trajectory.transitionPlan.studyId)
     await validateUniqueScopeCombination(input.trajectoryId, input)
 
+    const shouldConvertToCustom = trajectory.type !== TrajectoryType.CUSTOM
+
     return prismaClient.$transaction(async (tx) => {
       const objective = await tx.objective.create({
         data: {
@@ -157,6 +159,15 @@ export const createObjective = async (input: CreateObjectiveInput) =>
       })
 
       await createObjectiveScopeRecords(tx, objective.id, input)
+
+      if (shouldConvertToCustom) {
+        await tx.trajectory.update({
+          where: { id: input.trajectoryId },
+          data: {
+            type: 'CUSTOM',
+          },
+        })
+      }
 
       return objective
     })

@@ -7,7 +7,7 @@ import { ObjectiveWithScope, TrajectoryWithObjectivesAndScope } from '@/db/trans
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { environmentPostMapping, environmentSubPostsMapping, Post } from '@/services/posts'
 import {
-  createObjective,
+  createSubObjective,
   getStudySitesForTrajectory,
   getStudyTagsForTrajectory,
   updateObjective,
@@ -163,16 +163,12 @@ const ObjectiveModal = ({ open, onClose, trajectory, studyId, onSuccess, objecti
 
       let allSuccess = true
       for (const objectiveToCreate of objectivesToCreate) {
-        const result = await callServerFunction(() => createObjective(objectiveToCreate), {
+        await callServerFunction(() => createSubObjective(objectiveToCreate), {
           onError: () => {
             allSuccess = false
             setIsLoading(false)
           },
         })
-
-        if (!result.success) {
-          return
-        }
       }
 
       if (allSuccess) {

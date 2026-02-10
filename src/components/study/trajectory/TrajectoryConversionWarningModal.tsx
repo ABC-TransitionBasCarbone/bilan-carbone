@@ -1,8 +1,10 @@
 'use client'
 
 import Modal from '@/components/modals/Modal'
-import WarningIcon from '@mui/icons-material/Warning'
+import { getTrajectoryTypeLabel } from '@/utils/trajectory'
 import { Typography } from '@mui/material'
+import type { TrajectoryType } from '@prisma/client'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import styles from './TrajectoryConversionWarningModal.module.css'
 
@@ -16,7 +18,9 @@ interface Props {
 
 const TrajectoryConversionWarningModal = ({ open, onConfirm, onCancel, trajectoryName, trajectoryType }: Props) => {
   const t = useTranslations('study.transitionPlan.conversionWarning')
-  const tType = useTranslations('study.transitionPlan.trajectoryModal')
+  const tTypes = useTranslations('study.transitionPlan.objectives')
+
+  const trajectoryTypeLabel = getTrajectoryTypeLabel(trajectoryType as TrajectoryType, tTypes)
 
   return (
     <Modal
@@ -34,22 +38,19 @@ const TrajectoryConversionWarningModal = ({ open, onConfirm, onCancel, trajector
           children: t('confirm'),
           onClick: onConfirm,
           variant: 'contained',
-          color: 'warning',
+          color: 'primary',
         },
       ]}
     >
-      <div className={styles.container}>
-        <div className={styles.warningHeader}>
-          <WarningIcon className={styles.warningIcon} />
-          <Typography variant="h6">{t('warningTitle')}</Typography>
-        </div>
-
-        <Typography variant="body1" className={styles.message}>
-          {t('message', { trajectoryName, trajectoryType: tType(`type.${trajectoryType}`) })}
+      <div className={'flex-col gapped1'}>
+        <Typography variant="body1" color="error">
+          {t('warningTitle')}
         </Typography>
 
-        <Typography variant="body2" color="textSecondary" className={styles.explanation}>
-          {t('explanation')}
+        <Typography variant="body1">{t('message', { trajectoryName, trajectoryType: trajectoryTypeLabel })}</Typography>
+
+        <Typography variant="body1" color="textSecondary" className={classNames('p1', styles.explanation)}>
+          {t('explanation', { trajectoryType: trajectoryTypeLabel })}
         </Typography>
       </div>
     </Modal>

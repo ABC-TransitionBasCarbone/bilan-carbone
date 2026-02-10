@@ -1212,8 +1212,8 @@
       },
       "conversionWarning": {
         "title": "Trajectory Type Conversion",
-        "warningTitle": "This action will convert your trajectory to CUSTOM type",
-        "message": "Adding a scope-specific objective to the trajectory \"{trajectoryName}\" ({trajectoryType}) will automatically convert it to a CUSTOM trajectory type.",
+        "warningTitle": "This action will convert your trajectory to CUSTOM type.",
+        "message": "Adding a scope-specific objective to the trajectory \"{trajectoryName}\" ({trajectoryType}) will automatically convert it to a CUSTOM trajectory type. This action is irreversible.",
         "explanation": "Once converted to CUSTOM, the trajectory will no longer follow the predefined {trajectoryType} reduction rates. You will have full control over all objectives.",
         "cancel": "Cancel",
         "confirm": "Continue"
