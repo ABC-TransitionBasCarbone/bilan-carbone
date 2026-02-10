@@ -1060,7 +1060,7 @@
     "repas/an": "repas/an",
     "kgCO2e/repas": "kgCO2e/repas",
     "repas": "repas",
-    "t.km": "t.km",
+    "t/km": "t.km",
     "bouteille": "bouteille",
     "kgCO2e/bouteille": "kgCO2e/bouteille",
     "canette": "canette",

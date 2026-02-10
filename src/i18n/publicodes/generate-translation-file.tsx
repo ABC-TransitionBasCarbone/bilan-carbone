@@ -1,3 +1,4 @@
+import { getI18nUnitKey } from '@/lib/publicodes/utils'
 import Engine, { Rule } from 'publicodes'
 import {
   getArgs,
@@ -192,7 +193,7 @@ function buildUnitsFromTranslations(
   ) as Record<Locale, Record<string, string>>
 
   for (const unit of unitsSet) {
-    unitsByLocale.fr[unit] = unit
+    unitsByLocale.fr[getI18nUnitKey(unit)] = unit
   }
   for (const locale of LOCALES) {
     if (locale === 'fr') {
@@ -200,12 +201,13 @@ function buildUnitsFromTranslations(
     }
     for (const unit of unitsSet) {
       const prev = existingUnits[locale]?.[unit]
+      const i18nUnitKey = getI18nUnitKey(unit)
       if (!prev || typeof prev !== 'string') {
-        unitsByLocale[locale][unit] = `${TO_TRANSLATE_PREFIX} ${unit}`
+        unitsByLocale[locale][i18nUnitKey] = `${TO_TRANSLATE_PREFIX} ${unit}`
       } else if (prev.replace(/^\[.*?\]\s*/, '') !== unit) {
-        unitsByLocale[locale][unit] = `${UPDATED_PREFIX} ${unit}`
+        unitsByLocale[locale][i18nUnitKey] = `${UPDATED_PREFIX} ${unit}`
       } else {
-        unitsByLocale[locale][unit] = prev
+        unitsByLocale[locale][i18nUnitKey] = prev
       }
     }
   }
