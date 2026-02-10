@@ -386,6 +386,12 @@ export const getTrajectoryById = async (id: string): Promise<TrajectoryWithObjec
   })
 }
 
+export const getTrajectoryWithTransitionPlan = async (id: string) =>
+  prismaClient.trajectory.findUnique({
+    where: { id },
+    include: { transitionPlan: true },
+  })
+
 export const hasTrajectory = async (transitionPlanId: string): Promise<boolean> => {
   const count = await prismaClient.trajectory.count({
     where: { transitionPlanId },

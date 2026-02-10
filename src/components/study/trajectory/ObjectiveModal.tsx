@@ -6,12 +6,9 @@ import Modal from '@/components/modals/Modal'
 import { ObjectiveWithScope, TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { environmentPostMapping, environmentSubPostsMapping, Post } from '@/services/posts'
-import {
-  createSubObjective,
-  getStudySitesForTrajectory,
-  getStudyTagsForTrajectory,
-  updateObjective,
-} from '@/services/serverFunctions/objective.serverFunction'
+import { createSubObjective, updateObjective } from '@/services/serverFunctions/objective.serverFunction'
+import { getStudySitesByStudyId } from '@/services/serverFunctions/studySite.serverFunction'
+import { getStudyTagsByStudyId } from '@/services/serverFunctions/tag.serverFunction'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { getYearFromDateStr } from '@/utils/time'
 import { FormControl, FormLabel, Typography } from '@mui/material'
@@ -77,8 +74,8 @@ const ObjectiveModal = ({ open, onClose, trajectory, studyId, onSuccess, objecti
 
   const fetchScopeOptions = useCallback(async () => {
     const [sitesResponse, tagsResponse] = await Promise.all([
-      getStudySitesForTrajectory(studyId),
-      getStudyTagsForTrajectory(studyId),
+      getStudySitesByStudyId(studyId),
+      getStudyTagsByStudyId(studyId),
     ])
     if (sitesResponse.success && sitesResponse.data) {
       setSites(sitesResponse.data.map((s) => ({ id: s.id, name: s.site.name })))

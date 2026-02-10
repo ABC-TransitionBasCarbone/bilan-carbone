@@ -1,52 +1,41 @@
 'use server'
 
-import { prismaClient } from '@/db/client'
-import { deleteObjective as dbDeleteObjective } from '@/db/transitionPlan'
+import {
+  createSubObjective as dbCreateSubObjective,
+  updateSubObjective as dbUpdateSubObjective,
+  getExistingObjectives,
+  getObjectiveWithTransitionPlan,
+} from '@/db/objective.db'
+import { deleteObjective as dbDeleteObjective, getTrajectoryWithTransitionPlan } from '@/db/transitionPlan'
 import { withServerResponse } from '@/utils/serverResponse'
-import { Prisma, SubPost, TrajectoryType } from '@prisma/client'
+import { SubPost } from '@prisma/client'
 import { NOT_AUTHORIZED } from '../permissions/check'
-import { hasEditAccessOnStudy, hasReadAccessOnStudy } from '../permissions/study'
+import { hasEditAccessOnStudy } from '../permissions/study'
 
-const createObjectiveScopeRecords = async (
-  tx: Prisma.TransactionClient,
-  objectiveId: string,
-  scope: { siteIds?: string[]; tagIds?: string[]; subPosts?: SubPost[] },
-) => {
-  if (scope.siteIds && scope.siteIds.length > 0) {
-    await tx.objectiveSite.createMany({
-      data: scope.siteIds.map((siteId) => ({ objectiveId, studySiteId: siteId })),
-    })
-  }
-  if (scope.tagIds && scope.tagIds.length > 0) {
-    await tx.objectiveTag.createMany({
-      data: scope.tagIds.map((tagId) => ({ objectiveId, studyTagId: tagId })),
-    })
-  }
-  if (scope.subPosts && scope.subPosts.length > 0) {
-    await tx.objectiveSubPost.createMany({
-      data: scope.subPosts.map((subPost) => ({ objectiveId, subPost })),
-    })
-  }
+export interface CreateObjectiveInput {
+  trajectoryId: string
+  targetYear: number
+  reductionRate: number
+  siteIds?: string[]
+  tagIds?: string[]
+  subPosts?: SubPost[]
 }
 
-const validateUniqueScopeCombination = async (
+export interface UpdateObjectiveInput {
+  id: string
+  targetYear: number
+  reductionRate: number
+  siteIds?: string[]
+  tagIds?: string[]
+  subPosts?: SubPost[]
+}
+
+export const validateUniqueScopeCombination = async (
   trajectoryId: string,
   input: { targetYear: number; siteIds?: string[]; tagIds?: string[]; subPosts?: SubPost[] },
   excludeObjectiveId?: string,
-) => {
-  const existingObjectives = await prismaClient.objective.findMany({
-    where: {
-      trajectoryId,
-      targetYear: input.targetYear,
-      isDefault: false,
-      ...(excludeObjectiveId && { id: { not: excludeObjectiveId } }),
-    },
-    include: {
-      sites: true,
-      tags: true,
-      subPosts: true,
-    },
-  })
+): Promise<void> => {
+  const existingObjectives = await getExistingObjectives(trajectoryId, input.targetYear, excludeObjectiveId)
 
   const newSiteIds = new Set(input.siteIds || [])
   const newTagIds = new Set(input.tagIds || [])
@@ -70,31 +59,9 @@ const validateUniqueScopeCombination = async (
   }
 }
 
-export interface CreateObjectiveInput {
-  trajectoryId: string
-  targetYear: number
-  reductionRate: number
-  siteIds?: string[]
-  tagIds?: string[]
-  subPosts?: SubPost[]
-}
-
-export interface UpdateObjectiveInput {
-  id: string
-  targetYear: number
-  reductionRate: number
-  siteIds?: string[]
-  tagIds?: string[]
-  subPosts?: SubPost[]
-}
-
 export const createSubObjective = async (input: CreateObjectiveInput) =>
   withServerResponse('createSubObjective', async () => {
-    const trajectory = await prismaClient.trajectory.findUnique({
-      where: { id: input.trajectoryId },
-      include: { transitionPlan: true },
-    })
-
+    const trajectory = await getTrajectoryWithTransitionPlan(input.trajectoryId)
     if (!trajectory) {
       throw new Error('Trajectory not found')
     }
@@ -106,44 +73,12 @@ export const createSubObjective = async (input: CreateObjectiveInput) =>
 
     await validateUniqueScopeCombination(input.trajectoryId, input)
 
-    const shouldConvertToCustom = trajectory.type !== TrajectoryType.CUSTOM
-
-    return prismaClient.$transaction(async (tx) => {
-      const objective = await tx.objective.create({
-        data: {
-          trajectoryId: input.trajectoryId,
-          targetYear: input.targetYear,
-          reductionRate: input.reductionRate,
-          isDefault: false,
-        },
-      })
-
-      await createObjectiveScopeRecords(tx, objective.id, input)
-
-      if (shouldConvertToCustom) {
-        await tx.trajectory.update({
-          where: { id: input.trajectoryId },
-          data: {
-            type: 'CUSTOM',
-          },
-        })
-      }
-
-      return objective
-    })
+    return dbCreateSubObjective(input)
   })
 
 export const updateObjective = async (input: UpdateObjectiveInput) =>
   withServerResponse('updateObjective', async () => {
-    const objective = await prismaClient.objective.findUnique({
-      where: { id: input.id },
-      include: {
-        trajectory: {
-          include: { transitionPlan: true },
-        },
-      },
-    })
-
+    const objective = await getObjectiveWithTransitionPlan(input.id)
     if (!objective) {
       throw new Error('Objective not found')
     }
@@ -155,56 +90,12 @@ export const updateObjective = async (input: UpdateObjectiveInput) =>
 
     await validateUniqueScopeCombination(objective.trajectoryId, input, input.id)
 
-    return prismaClient.$transaction(async (tx) => {
-      await tx.objective.update({
-        where: { id: input.id },
-        data: {
-          targetYear: input.targetYear,
-          reductionRate: input.reductionRate,
-        },
-      })
-
-      const txWithScope = tx as typeof tx & {
-        objectiveSite: { deleteMany: (args: { where: { objectiveId: string } }) => Promise<unknown> }
-        objectiveTag: { deleteMany: (args: { where: { objectiveId: string } }) => Promise<unknown> }
-        objectiveSubPost: { deleteMany: (args: { where: { objectiveId: string } }) => Promise<unknown> }
-      }
-
-      await txWithScope.objectiveSite.deleteMany({ where: { objectiveId: input.id } })
-      await txWithScope.objectiveTag.deleteMany({ where: { objectiveId: input.id } })
-      await txWithScope.objectiveSubPost.deleteMany({ where: { objectiveId: input.id } })
-
-      await createObjectiveScopeRecords(tx, input.id, input)
-
-      return tx.objective.findUnique({
-        where: { id: input.id },
-        include: {
-          sites: {
-            include: {
-              studySite: true,
-            },
-          },
-          tags: {
-            include: {
-              studyTag: true,
-            },
-          },
-          subPosts: true,
-        },
-      })
-    })
+    return dbUpdateSubObjective(input)
   })
 
 export const deleteObjective = async (id: string) =>
   withServerResponse('deleteObjective', async () => {
-    const objective = await prismaClient.objective.findUnique({
-      where: { id },
-      include: {
-        trajectory: {
-          include: { transitionPlan: true },
-        },
-      },
-    })
+    const objective = await getObjectiveWithTransitionPlan(id)
     if (!objective) {
       throw new Error('Objective not found')
     }
@@ -215,57 +106,4 @@ export const deleteObjective = async (id: string) =>
     }
 
     await dbDeleteObjective(id)
-  })
-
-export const getStudySitesForTrajectory = async (studyId: string) =>
-  withServerResponse('getStudySitesForTrajectory', async () => {
-    const hasReadAccess = await hasReadAccessOnStudy(studyId)
-    if (!hasReadAccess) {
-      throw new Error(NOT_AUTHORIZED)
-    }
-
-    return prismaClient.studySite.findMany({
-      where: { studyId },
-      include: {
-        site: {
-          select: {
-            name: true,
-          },
-        },
-      },
-      orderBy: {
-        site: {
-          name: 'asc',
-        },
-      },
-    })
-  })
-
-export const getStudyTagsForTrajectory = async (studyId: string) =>
-  withServerResponse('getStudyTagsForTrajectory', async () => {
-    const hasReadAccess = await hasReadAccessOnStudy(studyId)
-    if (!hasReadAccess) {
-      throw new Error(NOT_AUTHORIZED)
-    }
-
-    return prismaClient.studyTag.findMany({
-      where: {
-        family: {
-          studyId,
-        },
-      },
-      include: {
-        family: true,
-      },
-      orderBy: [
-        {
-          family: {
-            name: 'asc',
-          },
-        },
-        {
-          name: 'asc',
-        },
-      ],
-    })
   })
