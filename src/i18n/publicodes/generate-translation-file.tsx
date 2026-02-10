@@ -1,3 +1,4 @@
+import { getI18nUnitKey } from '@/lib/publicodes/utils'
 import Engine, { Rule } from 'publicodes'
 import {
   getArgs,
@@ -31,15 +32,16 @@ const LOCALES = [model === 'clickson' ? LOCALES_CLICKSON : LOCALES_CUT, destLang
 
 function extractTranslationKeysFromRules(
   engine: Engine,
-  rulesMap: Record<string, Rule>,
+  rulesMap: Record<string, Rule & { form?: Record<string, string> }>,
   unitsSet: Set<string>,
 ): Record<string, Partial<TranslationRecord>> {
   const translations: Record<string, Partial<TranslationRecord>> = {}
 
   for (const [ruleName, rule] of Object.entries(rulesMap)) {
-    if (!rule?.question) {
+    if (!rule?.question && rule?.['form']?.['à traduire'] !== 'oui') {
       continue
     }
+
     const ruleTranslations: Partial<TranslationRecord> = {}
     for (const key of KEYS_TO_TRANSLATE) {
       if (key === 'unité') {
@@ -52,9 +54,11 @@ function extractTranslationKeysFromRules(
         ruleTranslations[key] = rule[key] as string
       }
     }
+
     if (Object.keys(ruleTranslations).length > 0) {
       translations[ruleName] = ruleTranslations
     }
+
     const possibilities = engine.getPossibilitiesFor(ruleName)
     if (possibilities !== null && possibilities.length > 0) {
       const options = {} as Record<string, string>
@@ -189,7 +193,7 @@ function buildUnitsFromTranslations(
   ) as Record<Locale, Record<string, string>>
 
   for (const unit of unitsSet) {
-    unitsByLocale.fr[unit] = unit
+    unitsByLocale.fr[getI18nUnitKey(unit)] = unit
   }
   for (const locale of LOCALES) {
     if (locale === 'fr') {
@@ -197,12 +201,13 @@ function buildUnitsFromTranslations(
     }
     for (const unit of unitsSet) {
       const prev = existingUnits[locale]?.[unit]
+      const i18nUnitKey = getI18nUnitKey(unit)
       if (!prev || typeof prev !== 'string') {
-        unitsByLocale[locale][unit] = `${TO_TRANSLATE_PREFIX} ${unit}`
+        unitsByLocale[locale][i18nUnitKey] = `${TO_TRANSLATE_PREFIX} ${unit}`
       } else if (prev.replace(/^\[.*?\]\s*/, '') !== unit) {
-        unitsByLocale[locale][unit] = `${UPDATED_PREFIX} ${unit}`
+        unitsByLocale[locale][i18nUnitKey] = `${UPDATED_PREFIX} ${unit}`
       } else {
-        unitsByLocale[locale][unit] = prev
+        unitsByLocale[locale][i18nUnitKey] = prev
       }
     }
   }

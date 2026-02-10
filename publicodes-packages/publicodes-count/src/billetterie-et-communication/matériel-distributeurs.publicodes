@@ -22,8 +22,10 @@ billetterie et communication . matériel distributeurs . affiches . affiches 120
       - FE
       - poids
       - commun . nombre de semaines par an
-  par défaut: 0
   unité: kgCO2e
+  par défaut: 0
+  form:
+    à traduire: oui
   avec:
     nombre:
       question: Quantité
@@ -47,8 +49,10 @@ billetterie et communication . matériel distributeurs . affiches . affiches 40x
       - FE
       - poids
       - commun . nombre de semaines par an
-  par défaut: 0
   unité: kgCO2e
+  par défaut: 0
+  form:
+    à traduire: oui
   avec:
     nombre:
       question: Quantité
@@ -80,8 +84,10 @@ billetterie et communication . matériel distributeurs . PLV . PLV comptoir:
       - FE
       - poids
       - commun . nombre de mois par an
-  par défaut: 0
   unité: kgCO2e
+  par défaut: 0
+  form:
+    à traduire: oui
   avec:
     nombre:
       question: Quantité
@@ -105,8 +111,10 @@ billetterie et communication . matériel distributeurs . PLV . PLV grand format:
       - FE
       - poids
       - commun . nombre de mois par an
-  par défaut: 0
   unité: kgCO2e
+  par défaut: 0
+  form:
+    à traduire: oui
   avec:
     nombre:
       question: Quantité

@@ -34,7 +34,7 @@ export default function ListQuestion<RuleName extends string>({
 }: ListLayoutProps<RuleName>) {
   const tAction = useTranslations('common.action')
   const tStudyQuestions = useTranslations('study.questions')
-  const { getQuestion } = usePublicodesTranslation()
+  const { getQuestionTranslation: getQuestion } = usePublicodesTranslation()
   const { updateListLayoutSituation, createNewListLayoutSituation, deleteListLayoutSituation } = usePublicodesForm()
 
   useEffect(() => {

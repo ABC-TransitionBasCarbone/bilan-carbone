@@ -64,6 +64,8 @@ confiseries et boissons . électroménager . appareil:
 confiseries et boissons . électroménager . réfrigérateurs:
   titre: Réfrigérateurs
   formule: appareil
+  form:
+    à traduire: oui
   contexte:
     appareil . nb appareils: nombre
     appareil . année achat: année achat
@@ -96,6 +98,8 @@ confiseries et boissons . électroménager . réfrigérateurs:
 confiseries et boissons . électroménager . congélateurs:
   titre: Congélateurs
   formule: appareil
+  form:
+    à traduire: oui
   contexte:
     appareil . nb appareils: nombre
     appareil . année achat: année achat
@@ -128,6 +132,8 @@ confiseries et boissons . électroménager . congélateurs:
 confiseries et boissons . électroménager . warmers:
   titre: Warmers
   formule: appareil
+  form:
+    à traduire: oui
   contexte:
     appareil . nb appareils: nombre
     appareil . année achat: année achat
@@ -160,6 +166,8 @@ confiseries et boissons . électroménager . warmers:
 confiseries et boissons . électroménager . distributeurs:
   titre: Distributeurs snack et boissons
   formule: appareil
+  form:
+    à traduire: oui
   contexte:
     appareil . nb appareils: nombre
     appareil . année achat: année achat

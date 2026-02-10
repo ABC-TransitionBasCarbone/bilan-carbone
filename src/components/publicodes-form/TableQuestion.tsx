@@ -1,4 +1,5 @@
 import BaseTable from '@/components/base/Table'
+import { usePublicodesTranslation } from '@/hooks/usePublicodesTranslation'
 import { Paper, TableContainer } from '@mui/material'
 import { EvaluatedFormElement } from '@publicodes/forms'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
@@ -27,6 +28,7 @@ export default function TableQuestion<RuleName extends string>({
   onChange,
 }: TableLayoutProps<RuleName>) {
   const tLayout = useTranslations('publicodes-layout.table')
+  const { getTitleTranslation } = usePublicodesTranslation()
   const tableData = useMemo<TableRowData<RuleName>[]>(() => {
     return evaluatedRows.map((row, rowIndex) => ({
       id: `row-${rowIndex}`,
@@ -47,7 +49,7 @@ export default function TableQuestion<RuleName extends string>({
         // TODO: could we have a cleaner way to distinguish between value and inputs ?
         // FIXME: the first column isn't translated for now
         return colIndex === 0 ? (
-          <p>{formElement.label}</p>
+          <p>{getTitleTranslation(formElement.id)}</p>
         ) : (
           <InputField formElement={formElement} onChange={onChange} />
         )

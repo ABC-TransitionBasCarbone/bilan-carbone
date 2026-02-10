@@ -77,3 +77,7 @@ export function getUpdatedSituationWithNewSituationList<RuleName extends string 
       : [{ id: situationId, situation: newSituationList }],
   }
 }
+
+export const getI18nKeyRuleName = (ruleName: string) => ruleName.replace(/\s+.\s+/g, '.')
+
+export const getI18nUnitKey = (unit: string) => unit.trim().replace(/\./g, '/')

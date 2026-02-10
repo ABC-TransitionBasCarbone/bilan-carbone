@@ -24,6 +24,8 @@ billetterie et communication . matériel cinéma . production . programme:
       - commun . nombre de mois par an
   par défaut: 0
   unité: kgCO2e
+  form:
+    à traduire: oui
   avec:
     nombre:
       question: Quantité
@@ -49,6 +51,8 @@ billetterie et communication . matériel cinéma . production . affiches:
       - commun . nombre de mois par an
   par défaut: 0
   unité: kgCO2e
+  form:
+    à traduire: oui
   avec:
     nombre:
       question: Quantité
@@ -74,6 +78,8 @@ billetterie et communication . matériel cinéma . production . flyers:
       - commun . nombre de mois par an
   par défaut: 0
   unité: kgCO2e
+  form:
+    à traduire: oui
   avec:
     nombre:
       question: Quantité

@@ -1,21 +1,22 @@
+import { getI18nKeyRuleName, getI18nUnitKey } from '@/lib/publicodes/utils'
 import { useTranslations } from 'next-intl'
-
-const normalizeRuleName = (ruleName: string) => ruleName.replace(/\s+.\s+/g, '.')
 
 export function usePublicodesTranslation() {
   const tRules = useTranslations('publicodes-rules')
   return {
-    getQuestion: (ruleName: string): string => tRules(`${normalizeRuleName(ruleName)}.question`),
+    getQuestionTranslation: (ruleName: string): string => tRules(`${getI18nKeyRuleName(ruleName)}.question`),
+    getTitleTranslation: (ruleName: string): string => tRules(`${getI18nKeyRuleName(ruleName)}.titre`),
   }
 }
 
 export function usePublicodesUnitTranslation(unit: string | undefined): string | undefined {
   const tUnits = useTranslations('publicodes-units')
-  return unit && tUnits.has(unit) ? tUnits(unit) : unit
+  const i18nUnitKey = unit ? getI18nUnitKey(unit) : unit
+  return i18nUnitKey && tUnits.has(i18nUnitKey) ? tUnits(i18nUnitKey) : unit
 }
 
 export function usePublicodesRuleTranslation(ruleName: string) {
-  const ruleKey = normalizeRuleName(ruleName)
+  const ruleKey = getI18nKeyRuleName(ruleName)
   const tCommon = useTranslations('common')
   const tRules = useTranslations('publicodes-rules')
   const tOptions = useTranslations(`publicodes-rules.${ruleKey}.options`)

@@ -22,6 +22,8 @@ déplacements . voyages scolaires:
     RER et transilien:
       titre: RER et transilien
       formule: distance * commun . FE . moyen de transport . RER et transilien
+      form:
+        à traduire: oui
       avec:
         distance:
           question: Distance (km)
@@ -31,6 +33,8 @@ déplacements . voyages scolaires:
     métro ou tram:
       titre: Métro, tramway
       formule: distance * commun . FE . moyen de transport . métro ou tram
+      form:
+        à traduire: oui
       avec:
         distance:
           question: Distance (km)
@@ -40,6 +44,8 @@ déplacements . voyages scolaires:
     vélo électrique:
       titre: Vélo électrique
       formule: distance * commun . FE . moyen de transport . vélo électrique
+      form:
+        à traduire: oui
       avec:
         distance:
           question: Distance (km)
@@ -49,6 +55,8 @@ déplacements . voyages scolaires:
     trottinette électrique:
       titre: Trottinette électrique
       formule: distance * commun . FE . moyen de transport . trottinette électrique
+      form:
+        à traduire: oui
       avec:
         distance:
           question: Distance (km)
@@ -58,6 +66,8 @@ déplacements . voyages scolaires:
     moto essence:
       titre: Moto essence
       formule: distance * commun . FE . moyen de transport . moto essence
+      form:
+        à traduire: oui
       avec:
         distance:
           question: Distance (km)
@@ -67,6 +77,8 @@ déplacements . voyages scolaires:
     véhicule compact électrique:
       titre: Véhicule compact électrique
       formule: distance * commun . FE . moyen de transport . véhicule compact électrique
+      form:
+        à traduire: oui
       avec:
         distance:
           question: Distance (km)
@@ -76,6 +88,8 @@ déplacements . voyages scolaires:
     voiture individuelle essence:
       titre: Voiture individuelle essence
       formule: distance * commun . FE . moyen de transport . voiture individuelle essence
+      form:
+        à traduire: oui
       avec:
         distance:
           question: Distance (km)
@@ -85,6 +99,8 @@ déplacements . voyages scolaires:
     voiture individuelle diesel:
       titre: Voiture individuelle diesel
       formule: distance * commun . FE . moyen de transport . voiture individuelle diesel
+      form:
+        à traduire: oui
       avec:
         distance:
           question: Distance (km)
@@ -94,6 +110,8 @@ déplacements . voyages scolaires:
     bus:
       titre: Autobus
       formule: distance * commun . FE . moyen de transport . autobus moyen
+      form:
+        à traduire: oui
       avec:
         distance:
           question: Distance (km)
@@ -103,6 +121,8 @@ déplacements . voyages scolaires:
     TER:
       titre: TER
       formule: distance * commun . FE . moyen de transport . TER
+      form:
+        à traduire: oui
       avec:
         distance:
           question: Distance (km)
@@ -112,6 +132,8 @@ déplacements . voyages scolaires:
     TGV:
       titre: TGV
       formule: distance * commun . FE . moyen de transport . TGV
+      form:
+        à traduire: oui
       avec:
         distance:
           question: Distance (km)
@@ -121,6 +143,8 @@ déplacements . voyages scolaires:
     avion court courrier:
       titre: Avion Court courrier
       formule: distance * commun . FE . moyen de transport . avion court courrier
+      form:
+        à traduire: oui
       avec:
         distance:
           question: Distance (km)
@@ -130,6 +154,8 @@ déplacements . voyages scolaires:
     avion moyen courrier:
       titre: Avion Moyen courrier
       formule: distance * commun . FE . moyen de transport . avion moyen courrier
+      form:
+        à traduire: oui
       avec:
         distance:
           question: Distance (km)
@@ -139,6 +165,8 @@ déplacements . voyages scolaires:
     avion long courrier:
       titre: Avion Long courrier
       formule: distance * commun . FE . moyen de transport . avion long courrier
+      form:
+        à traduire: oui
       avec:
         distance:
           question: Distance (km)

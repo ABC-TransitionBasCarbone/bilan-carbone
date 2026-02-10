@@ -276,6 +276,7 @@
       },
       "équipements informatique audiovisuel": {
         "ordinateur de bureau": {
+          "titre": "[TO_TRANSLATE] Ordinateur de bureau",
           "nombre": {
             "question": "[TO_TRANSLATE] Combien d'ordinateurs de bureau avez-vous achetés ?"
           },
@@ -284,6 +285,7 @@
           }
         },
         "ordinateur portable": {
+          "titre": "[TO_TRANSLATE] Ordinateur portable",
           "nombre": {
             "question": "[TO_TRANSLATE] Combien d'ordinateurs portables avez-vous achetés ?"
           },
@@ -292,6 +294,7 @@
           }
         },
         "tablette": {
+          "titre": "[TO_TRANSLATE] Tablette",
           "nombre": {
             "question": "[TO_TRANSLATE] Combien de tablettes avez-vous achetées ?"
           },
@@ -300,6 +303,7 @@
           }
         },
         "imprimante": {
+          "titre": "[TO_TRANSLATE] Imprimante",
           "nombre": {
             "question": "[TO_TRANSLATE] Combien d'imprimantes avez-vous achetées ?"
           },
@@ -308,6 +312,7 @@
           }
         },
         "photocopieur": {
+          "titre": "[TO_TRANSLATE] Photocopieur",
           "nombre": {
             "question": "[TO_TRANSLATE] Combien de photocopieurs avez-vous achetés ?"
           },
@@ -316,6 +321,7 @@
           }
         },
         "vidéoprojecteur": {
+          "titre": "[TO_TRANSLATE] Vidéoprojecteur",
           "nombre": {
             "question": "[TO_TRANSLATE] Combien de vidéoprojecteurs avez-vous achetés ?"
           },
@@ -324,6 +330,7 @@
           }
         },
         "serveur informatique": {
+          "titre": "[TO_TRANSLATE] Serveur informatique",
           "nombre": {
             "question": "[TO_TRANSLATE] Combien de serveurs informatiques avez-vous achetés ?"
           },
@@ -332,6 +339,7 @@
           }
         },
         "télévision 40-49 pouces": {
+          "titre": "[TO_TRANSLATE] Télévision 40-49 pouces",
           "nombre": {
             "question": "[TO_TRANSLATE] Combien de télévisions 40-49 pouces avez-vous achetées ?"
           },
@@ -340,6 +348,7 @@
           }
         },
         "rack de serveur": {
+          "titre": "[TO_TRANSLATE] Rack de serveur",
           "nombre": {
             "question": "[TO_TRANSLATE] Combien de racks de serveur avez-vous achetés ?"
           },
@@ -348,6 +357,7 @@
           }
         },
         "télécommande universelle sans piles 80g": {
+          "titre": "[TO_TRANSLATE] Télécommande universelle sans piles 80g",
           "nombre": {
             "question": "[TO_TRANSLATE] Combien de télécommandes universelles sans piles (80g) avez-vous achetées ?"
           },
@@ -356,6 +366,7 @@
           }
         },
         "stéréo classique": {
+          "titre": "[TO_TRANSLATE] Stéréo classique",
           "nombre": {
             "question": "[TO_TRANSLATE] Combien de stéréos classiques avez-vous achetées ?"
           },
@@ -364,6 +375,7 @@
           }
         },
         "enceinte Bluetooth": {
+          "titre": "[TO_TRANSLATE] Enceinte Bluetooth",
           "nombre": {
             "question": "[TO_TRANSLATE] Combien d'enceintes Bluetooth avez-vous achetées ?"
           },
@@ -372,6 +384,7 @@
           }
         },
         "smartphone 5 pouces": {
+          "titre": "[TO_TRANSLATE] Smartphone 5 pouces",
           "nombre": {
             "question": "[TO_TRANSLATE] Combien de smartphones 5 pouces avez-vous achetés ?"
           },
@@ -380,6 +393,7 @@
           }
         },
         "écran 23,8 pouces": {
+          "titre": "[TO_TRANSLATE] Écran 23,8 pouces",
           "nombre": {
             "question": "[TO_TRANSLATE] Combien d'écrans 23,8 pouces avez-vous achetés ?"
           },
@@ -484,71 +498,85 @@
     "déplacements": {
       "voyages scolaires": {
         "RER et transilien": {
+          "titre": "[TO_TRANSLATE] RER et transilien",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "métro ou tram": {
+          "titre": "[TO_TRANSLATE] Métro, tramway",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "vélo électrique": {
+          "titre": "[TO_TRANSLATE] Vélo électrique",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "trottinette électrique": {
+          "titre": "[TO_TRANSLATE] Trottinette électrique",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "moto essence": {
+          "titre": "[TO_TRANSLATE] Moto essence",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "véhicule compact électrique": {
+          "titre": "[TO_TRANSLATE] Véhicule compact électrique",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "voiture individuelle essence": {
+          "titre": "[TO_TRANSLATE] Voiture individuelle essence",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "voiture individuelle diesel": {
+          "titre": "[TO_TRANSLATE] Voiture individuelle diesel",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "bus": {
+          "titre": "[TO_TRANSLATE] Autobus",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "TER": {
+          "titre": "[TO_TRANSLATE] TER",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "TGV": {
+          "titre": "[TO_TRANSLATE] TGV",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "avion court courrier": {
+          "titre": "[TO_TRANSLATE] Avion Court courrier",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "avion moyen courrier": {
+          "titre": "[TO_TRANSLATE] Avion Moyen courrier",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "avion long courrier": {
+          "titre": "[TO_TRANSLATE] Avion Long courrier",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
@@ -556,71 +584,85 @@
       },
       "transport des élèves": {
         "RER et transilien": {
+          "titre": "[TO_TRANSLATE] RER et transilien",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "métro ou tram": {
+          "titre": "[TO_TRANSLATE] Métro, tramway",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "vélo électrique": {
+          "titre": "[TO_TRANSLATE] Vélo électrique",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "trottinette électrique": {
+          "titre": "[TO_TRANSLATE] Trottinette électrique",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "moto essence": {
+          "titre": "[TO_TRANSLATE] Moto essence",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "véhicule compact électrique": {
+          "titre": "[TO_TRANSLATE] Véhicule compact électrique",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "voiture individuelle essence": {
+          "titre": "[TO_TRANSLATE] Voiture individuelle essence",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "voiture individuelle diesel": {
+          "titre": "[TO_TRANSLATE] Voiture individuelle diesel",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "bus": {
+          "titre": "[TO_TRANSLATE] Autobus",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "TER": {
+          "titre": "[TO_TRANSLATE] TER",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "TGV": {
+          "titre": "[TO_TRANSLATE] TGV",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "avion court courrier": {
+          "titre": "[TO_TRANSLATE] Avion Court courrier",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "avion moyen courrier": {
+          "titre": "[TO_TRANSLATE] Avion Moyen courrier",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "avion long courrier": {
+          "titre": "[TO_TRANSLATE] Avion Long courrier",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
@@ -628,71 +670,85 @@
       },
       "transport du personnel": {
         "RER et transilien": {
+          "titre": "[TO_TRANSLATE] RER et transilien",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "métro ou tram": {
+          "titre": "[TO_TRANSLATE] Métro, tramway",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "vélo électrique": {
+          "titre": "[TO_TRANSLATE] Vélo électrique",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "trottinette électrique": {
+          "titre": "[TO_TRANSLATE] Trottinette électrique",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "moto essence": {
+          "titre": "[TO_TRANSLATE] Moto essence",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "véhicule compact électrique": {
+          "titre": "[TO_TRANSLATE] Véhicule compact électrique",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "voiture individuelle essence": {
+          "titre": "[TO_TRANSLATE] Voiture individuelle essence",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "voiture individuelle diesel": {
+          "titre": "[TO_TRANSLATE] Voiture individuelle diesel",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "bus": {
+          "titre": "[TO_TRANSLATE] Autobus",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "TER": {
+          "titre": "[TO_TRANSLATE] TER",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "TGV": {
+          "titre": "[TO_TRANSLATE] TGV",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "avion court courrier": {
+          "titre": "[TO_TRANSLATE] Avion Court courrier",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "avion moyen courrier": {
+          "titre": "[TO_TRANSLATE] Avion Moyen courrier",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
         },
         "avion long courrier": {
+          "titre": "[TO_TRANSLATE] Avion Long courrier",
           "distance": {
             "question": "[TO_TRANSLATE] Distance (km)"
           }
@@ -1001,9 +1057,10 @@
     "L": "[TO_TRANSLATE] L",
     "kg": "[TO_TRANSLATE] kg",
     "kgCO2e/kg": "[TO_TRANSLATE] kgCO2e/kg",
-    "repas": "[TO_TRANSLATE] repas",
+    "repas/an": "[TO_TRANSLATE] repas/an",
     "kgCO2e/repas": "[TO_TRANSLATE] kgCO2e/repas",
-    "t.km": "[TO_TRANSLATE] t.km",
+    "repas": "[TO_TRANSLATE] repas",
+    "t/km": "[TO_TRANSLATE] t.km",
     "bouteille": "[TO_TRANSLATE] bouteille",
     "kgCO2e/bouteille": "[TO_TRANSLATE] kgCO2e/bouteille",
     "canette": "[TO_TRANSLATE] canette",
@@ -1018,6 +1075,7 @@
     "kgCO2e/barre": "[TO_TRANSLATE] kgCO2e/barre",
     "m2": "[TO_TRANSLATE] m2",
     "kgCO2e/m2": "[TO_TRANSLATE] kgCO2e/m2",
+    "kgCO2e": "[TO_TRANSLATE] kgCO2e",
     "unité": "[TO_TRANSLATE] unité",
     "kgCO2e/unité": "[TO_TRANSLATE] kgCO2e/unité",
     "km": "[TO_TRANSLATE] km",

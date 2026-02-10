@@ -22,6 +22,8 @@ immobilisations . équipements informatique audiovisuel:
       titre: "Ordinateur de bureau"
       formule: nombre * FE
       unité: kgCO2e
+      form:
+        à traduire: oui
       avec:
         nombre:
           question: "Combien d'ordinateurs de bureau avez-vous achetés ?"
@@ -40,6 +42,8 @@ immobilisations . équipements informatique audiovisuel:
       titre: "Ordinateur portable"
       formule: nombre * FE
       unité: kgCO2e
+      form:
+        à traduire: oui
       avec:
         nombre:
           question: "Combien d'ordinateurs portables avez-vous achetés ?"
@@ -58,6 +62,8 @@ immobilisations . équipements informatique audiovisuel:
       titre: "Tablette"
       formule: nombre * FE
       unité: kgCO2e
+      form:
+        à traduire: oui
       avec:
         nombre:
           question: "Combien de tablettes avez-vous achetées ?"
@@ -76,6 +82,8 @@ immobilisations . équipements informatique audiovisuel:
       titre: "Imprimante"
       formule: nombre * FE
       unité: kgCO2e
+      form:
+        à traduire: oui
       avec:
         nombre:
           question: "Combien d'imprimantes avez-vous achetées ?"
@@ -94,6 +102,8 @@ immobilisations . équipements informatique audiovisuel:
       titre: "Photocopieur"
       formule: nombre * FE
       unité: kgCO2e
+      form:
+        à traduire: oui
       avec:
         nombre:
           question: "Combien de photocopieurs avez-vous achetés ?"
@@ -112,6 +122,8 @@ immobilisations . équipements informatique audiovisuel:
       titre: "Vidéoprojecteur"
       formule: nombre * FE
       unité: kgCO2e
+      form:
+        à traduire: oui
       avec:
         nombre:
           question: "Combien de vidéoprojecteurs avez-vous achetés ?"
@@ -130,6 +142,8 @@ immobilisations . équipements informatique audiovisuel:
       titre: "Serveur informatique"
       formule: nombre * FE
       unité: kgCO2e
+      form:
+        à traduire: oui
       avec:
         nombre:
           question: "Combien de serveurs informatiques avez-vous achetés ?"
@@ -148,6 +162,8 @@ immobilisations . équipements informatique audiovisuel:
       titre: "Télévision 40-49 pouces"
       formule: nombre * FE
       unité: kgCO2e
+      form:
+        à traduire: oui
       avec:
         nombre:
           question: "Combien de télévisions 40-49 pouces avez-vous achetées ?"
@@ -166,6 +182,8 @@ immobilisations . équipements informatique audiovisuel:
       titre: "Rack de serveur"
       formule: nombre * FE
       unité: kgCO2e
+      form:
+        à traduire: oui
       avec:
         nombre:
           question: "Combien de racks de serveur avez-vous achetés ?"
@@ -184,6 +202,8 @@ immobilisations . équipements informatique audiovisuel:
       titre: "Télécommande universelle sans piles 80g"
       formule: nombre * FE
       unité: kgCO2e
+      form:
+        à traduire: oui
       avec:
         nombre:
           question: "Combien de télécommandes universelles sans piles (80g) avez-vous achetées ?"
@@ -202,6 +222,8 @@ immobilisations . équipements informatique audiovisuel:
       titre: "Stéréo classique"
       formule: nombre * FE
       unité: kgCO2e
+      form:
+        à traduire: oui
       avec:
         nombre:
           question: "Combien de stéréos classiques avez-vous achetées ?"
@@ -220,6 +242,8 @@ immobilisations . équipements informatique audiovisuel:
       titre: "Enceinte Bluetooth"
       formule: nombre * FE
       unité: kgCO2e
+      form:
+        à traduire: oui
       avec:
         nombre:
           question: "Combien d'enceintes Bluetooth avez-vous achetées ?"
@@ -238,6 +262,8 @@ immobilisations . équipements informatique audiovisuel:
       titre: "Smartphone 5 pouces"
       formule: nombre * FE
       unité: kgCO2e
+      form:
+        à traduire: oui
       avec:
         nombre:
           question: "Combien de smartphones 5 pouces avez-vous achetés ?"
@@ -257,6 +283,8 @@ immobilisations . équipements informatique audiovisuel:
       titre: "Écran 23,8 pouces"
       formule: nombre * FE
       unité: kgCO2e
+      form:
+        à traduire: oui
       avec:
         nombre:
           question: "Combien d'écrans 23,8 pouces avez-vous achetés ?"
