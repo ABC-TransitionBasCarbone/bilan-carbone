@@ -1,7 +1,5 @@
 import CarbonIntensity from '@/components/study/results/consolidated/CarbonIntensity'
-import Data from '@/components/study/results/consolidated/Data'
 import { FullStudy } from '@/db/study'
-import { formatNumber } from '@/utils/number'
 import { SiteCAUnit, StudyResultUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
@@ -48,22 +46,28 @@ const CarbonIntensitiesCut = ({ study, studySite, withDepValue, caUnit = SiteCAU
 
   const intensities = [
     {
+      key: 'chairs',
+      divider: chairs,
+      unit: StudyResultUnit.T,
+      label: t('intensities.chair'),
+    },
+    {
       key: 'screens',
       divider: screens,
       unit: StudyResultUnit.T,
       label: t('intensities.screen'),
     },
     {
-      key: 'entries',
-      divider: entries,
-      unit: StudyResultUnit.T,
-      label: t('intensities.entrie'),
-    },
-    {
       key: 'superficy',
       divider: superficy,
       unit: StudyResultUnit.T,
       label: t('intensities.superficy'),
+    },
+    {
+      key: 'entries',
+      divider: entries,
+      unit: StudyResultUnit.T,
+      label: t('intensities.entrie'),
     },
     {
       key: 'sessions',
@@ -77,26 +81,11 @@ const CarbonIntensitiesCut = ({ study, studySite, withDepValue, caUnit = SiteCAU
       unit: StudyResultUnit.T,
       label: t('intensities.movie'),
     },
-    {
-      key: 'chairs',
-      divider: chairs,
-      unit: StudyResultUnit.T,
-      label: t('intensities.chair'),
-    },
   ]
 
   return (
     <div className={styles.resultsContainer}>
       <div className="flex grow gapped2 wrap justify-start">
-        <div className={styles.carbonIntensityContainer}>
-          <div className="flex grow mt1">
-            <Data
-              value={formatNumber(withDepValue)}
-              label={tResultUnits(StudyResultUnit.T)}
-              testId="withDep-total-result"
-            />
-          </div>
-        </div>
         {intensities.map(({ key, divider, unit, label }) => (
           <div key={key} className={styles.carbonIntensityContainer}>
             <CarbonIntensity
