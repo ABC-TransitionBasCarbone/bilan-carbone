@@ -51,6 +51,7 @@ export function usePublicodesResults(
   study: FullStudy,
   studySite: string | 'all',
   environment: Environment,
+  skipAuthCheck = false,
 ): UsePublicodesResultsReturn {
   const tPost = useTranslations('emissionFactors.post')
   const [situationBySiteId, setSituationsBySiteId] = useState<Record<string, Situation<string>>>({})
@@ -76,7 +77,7 @@ export function usePublicodesResults(
         setIsLoading(true)
         setError(null)
 
-        const result = await loadSituations(study.id, studySiteIds)
+        const result = await loadSituations(study.id, studySiteIds, skipAuthCheck)
         if (!result.success) {
           throw new Error(result.errorMessage || 'Failed to load situations')
         }

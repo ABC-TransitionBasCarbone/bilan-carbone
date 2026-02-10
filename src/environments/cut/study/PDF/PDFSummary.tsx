@@ -5,13 +5,12 @@ import '@/app/(public)/preview/etudes/[id]/pdf-summary.css'
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import { FullStudy } from '@/db/study'
 import cutTheme from '@/environments/cut/theme/theme'
-import { convertCountToBilanCarbone, CutPost } from '@/services/posts'
-import { computeResultsByPostFromEmissionSources, ResultsByPost } from '@/services/results/consolidated'
-import { getDetailedEmissionResults } from '@/services/study'
+import { usePublicodesResults } from '@/hooks/usePublicodesResults'
+import { convertSimplifiedEnvToBilanCarbone } from '@/services/posts'
+import { BaseResultsByPost } from '@/services/results/consolidated'
+import { getTotalValueFromBaseResults } from '@/services/results/publicodes'
 import { formatNumber } from '@/utils/number'
-import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { ThemeProvider } from '@mui/material/styles'
-import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -25,16 +24,14 @@ interface SiteData {
     entries: number
     sessions: number
   }
-  results: ResultsByPost[]
+  results: BaseResultsByPost[]
 }
 
 interface Props {
   study: FullStudy
-  environment: Environment
 }
 
-const PDFSummary = ({ study, environment }: Props) => {
-  const tPost = useTranslations('emissionFactors.post')
+const PDFSummary = ({ study }: Props) => {
   const tStudy = useTranslations('study.results')
   const tPdf = useTranslations('study.pdf')
   const tExports = useTranslations('exports')
@@ -69,46 +66,31 @@ const PDFSummary = ({ study, environment }: Props) => {
 
   const [sitesData, setSitesData] = useState<SiteData[]>([])
   const [isLoading, setIsLoading] = useState(true)
-
-  const { computedResultsWithDep, withDepValue } = useMemo(
-    () => getDetailedEmissionResults(study, tPost, 'all', false, study.organizationVersion.environment, tStudy),
-    [study, tPost, tStudy],
+  const results = usePublicodesResults(
+    study,
+    'all',
+    study.organizationVersion.environment,
+    // NOTE: we skip auth check here because authentification is already
+    // handled by withPdfAuth.
+    true,
   )
+  // NOTE: should it be in the usePublicodesResults hook instead?
+  const aggregatedTotalValue = useMemo(() => {
+    return getTotalValueFromBaseResults(results.aggregated, study.resultsUnit)
+  }, [results.aggregated, study.resultsUnit])
 
   const bilanCarboneEquivalent = useMemo(() => {
-    return convertCountToBilanCarbone(computedResultsWithDep)
-  }, [computedResultsWithDep])
+    return convertSimplifiedEnvToBilanCarbone(results.aggregated)
+  }, [results.aggregated])
 
   useEffect(() => {
     const loadData = async () => {
       try {
         setIsLoading(true)
 
-        const sitesData: SiteData[] = []
-
-        for (const studySite of study.sites) {
-          const siteComputedResults = computeResultsByPostFromEmissionSources(
-            study,
-            tPost,
-            studySite.id,
-            true,
-            false,
-            CutPost,
-            environment,
-          )
-
-          const siteResults = siteComputedResults.map((result) => ({
-            ...result,
-            value: result.value / STUDY_UNIT_VALUES[study.resultsUnit],
-            subPosts: result.children
-              .filter((subPost) => subPost.value > 0)
-              .map((subPost) => ({
-                ...subPost,
-                value: subPost.value / STUDY_UNIT_VALUES[study.resultsUnit],
-              })),
-          }))
-
-          sitesData.push({
+        const sitesData: SiteData[] = study.sites.map((studySite) => {
+          const siteResults = results.bySite[studySite.id] ?? []
+          return {
             id: studySite.id,
             fullName: `${studySite.site.name} - ${studySite.site.city || ''}`,
             generalData: {
@@ -117,8 +99,8 @@ const PDFSummary = ({ study, environment }: Props) => {
               sessions: studySite.numberOfSessions || 0,
             },
             results: siteResults,
-          })
-        }
+          }
+        })
 
         setSitesData(sitesData)
       } catch (error) {
@@ -129,7 +111,7 @@ const PDFSummary = ({ study, environment }: Props) => {
     }
 
     loadData()
-  }, [environment, study, tPost])
+  }, [study, results.bySite])
 
   if (isLoading) {
     return (
@@ -166,9 +148,9 @@ const PDFSummary = ({ study, environment }: Props) => {
             <h1 className="pdf-title">{tPdf('title', { year: study.startDate.getFullYear() })}</h1>
           </div>
 
-          <div className="pdf-cinemas-list page-break-avoid">
+          <div className="pdf-sites-list page-break-avoid">
             <span>
-              <h2 className="pdf-cinemas-title">{tPdf('cinemas.list')}:</h2>
+              <h2 className="pdf-sites-title">{tPdf('cinemas.list')}:</h2>
               <ul>
                 {sitesData.map((site) => (
                   <li key={site.id}>{site.fullName}</li>
@@ -207,18 +189,19 @@ const PDFSummary = ({ study, environment }: Props) => {
 
             <ConsolidatedResultsTable
               resultsUnit={study.resultsUnit}
-              data={computedResultsWithDep}
+              data={results.aggregated}
               hiddenUncertainty
               hideExpandIcons
             />
           </div>
         </div>
 
-        <ChartsPage study={study} studySite="all" siteName="" tPdf={tPdf} isAll />
+        <ChartsPage results={results.aggregated} studyResultUnit={study.resultsUnit} siteName="" tPdf={tPdf} isAll />
+
         <div className="pdf-content page-break-before pdf-page-content">
           <div className="pdf-section">
             <h2 className="pdf-totals-header pdf-header-with-border">{tPdf('ratios.all')}</h2>
-            <CarbonIntensitiesCut study={study} studySite="all" withDepValue={withDepValue} />
+            <CarbonIntensitiesCut study={study} studySite="all" withDepValue={aggregatedTotalValue} />
           </div>
         </div>
 
@@ -234,20 +217,13 @@ const PDFSummary = ({ study, environment }: Props) => {
         </div>
 
         {sitesData.map((site) => {
-          const { withDepValue: siteWithDepValue } = getDetailedEmissionResults(
-            study,
-            tPost,
-            site.id,
-            false,
-            environment,
-            tStudy,
-          )
+          const siteTotalValue = getTotalValueFromBaseResults(site.results, study.resultsUnit)
 
           return (
             <React.Fragment key={site.id}>
               <div className="pdf-content page-break-before pdf-page-content">
                 <div className="pdf-section">
-                  <h2 className="pdf-cinema-header pdf-header-with-border">
+                  <h2 className="pdf-site-header pdf-header-with-border">
                     {tPdf('results.site', { site: site.fullName })}
                   </h2>
 
@@ -276,13 +252,21 @@ const PDFSummary = ({ study, environment }: Props) => {
                   />
                 </div>
               </div>
-              <ChartsPage study={study} studySite={site.id} siteName={site.fullName} tPdf={tPdf} isAll={false} />
+
+              <ChartsPage
+                results={site.results}
+                studyResultUnit={study.resultsUnit}
+                siteName={site.fullName}
+                tPdf={tPdf}
+                isAll={false}
+              />
+
               <div className="pdf-content page-break-before pdf-page-content">
                 <div className="pdf-section">
                   <h2 className="pdf-totals-header pdf-header-with-border">
                     {tPdf('ratios.site', { site: site.fullName })}
                   </h2>
-                  <CarbonIntensitiesCut study={study} studySite={site.id} withDepValue={siteWithDepValue} />
+                  <CarbonIntensitiesCut study={study} studySite={site.id} withDepValue={siteTotalValue} />
                 </div>
               </div>
             </React.Fragment>
@@ -338,15 +322,8 @@ const PDFSummary = ({ study, environment }: Props) => {
         </div>
 
         {sitesData.map((site) => {
-          const { computedResultsWithDep: siteResults } = getDetailedEmissionResults(
-            study,
-            tPost,
-            site.id,
-            false,
-            environment,
-            tStudy,
-          )
-          const siteBilanCarboneEquivalent = convertCountToBilanCarbone(siteResults)
+          const siteBilanCarboneEquivalent = convertSimplifiedEnvToBilanCarbone(site.results)
+
           return (
             <div key={`bilan-carbone-${site.id}`} className="pdf-content page-break-before pdf-page-content">
               <div className="pdf-section">

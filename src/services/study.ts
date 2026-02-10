@@ -24,12 +24,13 @@ import { download } from './file'
 import { hasAccessToBcExport } from './permissions/environment'
 import { StudyWithoutDetail } from './permissions/study'
 import {
-  convertCountToBilanCarbone,
+  convertSimplifiedEnvToBilanCarbone,
   convertTiltSubPostToBCSubPost,
   environmentPostMapping,
   Post,
   subPostBCToSubPostTiltMapping,
 } from './posts'
+import { isSimplifiedEnvironment } from './publicodes/simplifiedPublicodesConfig'
 import { rulesSpans as begesRulesSpans, computeBegesResult } from './results/beges'
 import {
   BaseResultsBySite,
@@ -591,7 +592,7 @@ export const formatStudyExportResultsForExport = (
   return { name: exportName, data: dataForExport, options: sheetOptions }
 }
 
-const formatBCResultsForCutExport = (
+const formatBaseResultsToBCExport = (
   study: FullStudy,
   siteList: { name: string; id: string }[],
   computedResults: BaseResultsBySite,
@@ -610,7 +611,7 @@ const formatBCResultsForCutExport = (
   for (const site of siteList) {
     const results = site.id === 'all' ? computedResults.aggregated : computedResults.bySite[site.id]
     // TODO: use a more generic conversion function to be used by all simplified environments
-    const bilanCarboneEquivalent = convertCountToBilanCarbone(results ?? [])
+    const bilanCarboneEquivalent = convertSimplifiedEnvToBilanCarbone(results ?? [])
 
     data.push([site.name])
     data.push([tExport('bc.category'), tExport('bc.emissions')])
@@ -813,8 +814,8 @@ export const downloadStudyResults = async (
     )
   }
 
-  if (environment === Environment.CUT && computedResults) {
-    data.push(formatBCResultsForCutExport(study, siteList, computedResults, tExport, tPost))
+  if (isSimplifiedEnvironment(environment) && computedResults) {
+    data.push(formatBaseResultsToBCExport(study, siteList, computedResults, tExport, tPost))
   }
 
   const buffer = await prepareExcel(data)

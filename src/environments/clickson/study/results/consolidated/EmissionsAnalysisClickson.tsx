@@ -20,7 +20,6 @@ const EmissionsAnalysisClickson = ({ study, studySite, totalValue }: Props) => {
   const tCommon = useTranslations('common')
   const tResultUnits = useTranslations('study.results.units')
 
-  console.log({ totalValue })
   const studentAndEmployees = useMemo(() => {
     return study.sites.reduce((res, studySite) => res + (studySite.studentNumber || 0) + (studySite.etp || 0), 0) || 1
   }, [studySite])

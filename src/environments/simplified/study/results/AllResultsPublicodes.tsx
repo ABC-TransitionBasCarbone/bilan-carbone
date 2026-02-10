@@ -5,7 +5,7 @@ import Box from '@/components/base/Box'
 import useStudySite from '@/components/study/site/useStudySite'
 import { FullStudy } from '@/db/study'
 import { usePublicodesResults } from '@/hooks/usePublicodesResults'
-import { STUDY_UNIT_VALUES } from '@/utils/study'
+import { getTotalValueFromBaseResults } from '@/services/results/publicodes'
 import CircularProgress from '@mui/material/CircularProgress'
 import { SiteCAUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -41,10 +41,10 @@ const AllResultsPublicodes = ({ study, chartOrder = defaultChartOrder, caUnit, s
     return bySite[studySite] ?? []
   }, [aggregated, bySite, studySite])
 
-  const totalValue = useMemo(() => {
-    const total = selectedResults.find((r) => r.post === 'total')?.value ?? 0
-    return total / STUDY_UNIT_VALUES[study.resultsUnit]
-  }, [selectedResults, study.resultsUnit])
+  const totalValue = useMemo(
+    () => getTotalValueFromBaseResults(selectedResults, study.resultsUnit),
+    [selectedResults, study.resultsUnit],
+  )
 
   if (isLoading || error) {
     return (

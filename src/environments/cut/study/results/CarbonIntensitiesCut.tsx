@@ -20,17 +20,19 @@ const CarbonIntensitiesCut = ({ study, studySite, withDepValue }: Props) => {
 
   const [screens, entries, superficy, sessions, movies, chairs] = useMemo(() => {
     if (studySite === 'all') {
-      return study.sites.reduce(
-        (res, studySite) => [
-          res[0] + (studySite.site.cnc?.ecrans || 0),
-          res[1] + (studySite.numberOfTickets || 0),
-          res[2] + (studySite.superficy || 0),
-          res[3] + (studySite.numberOfSessions || 0),
-          res[4] + (studySite.site.cnc?.numberOfProgrammedFilms || 0),
-          res[5] + (studySite.site.cnc?.fauteuils || 0),
-        ],
-        [0, 0, 0, 0, 0, 0],
-      )
+      return study.sites
+        .reduce(
+          (res, studySite) => [
+            res[0] + (studySite.site.cnc?.ecrans || 0),
+            res[1] + (studySite.numberOfTickets || 0),
+            res[2] + (studySite.superficy || 0),
+            res[3] + (studySite.numberOfSessions || 0),
+            res[4] + (studySite.site.cnc?.numberOfProgrammedFilms || 0),
+            res[5] + (studySite.site.cnc?.fauteuils || 0),
+          ],
+          [0, 0, 0, 0, 0, 0],
+        )
+        .map((value) => (value === 0 ? 1 : value)) // to avoid division by zero
     }
     if (site) {
       return [
