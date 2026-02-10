@@ -5,7 +5,19 @@ import { TRAJECTORY_15_ID, TRAJECTORY_SNBC_GENERAL_ID, TRAJECTORY_WB2C_ID } from
 import { getYearsToDisplay, PastStudy, TrajectoryData } from '@/utils/trajectory'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary, Alert, Slider, Typography } from '@mui/material'
-import { LineChart, LineSeries } from '@mui/x-charts/LineChart'
+import {
+  AreaPlot,
+  ChartContainer,
+  ChartsAxisHighlight,
+  ChartsReferenceLine,
+  ChartsTooltip,
+  ChartsXAxis,
+  ChartsYAxis,
+  LinePlot,
+  LineSeriesType,
+  MarkPlot,
+} from '@mui/x-charts'
+import { LineSeries } from '@mui/x-charts/LineChart'
 import { StudyResultUnit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -179,7 +191,7 @@ const TrajectoryGraph = ({
   )
 
   const seriesCreated = useMemo(() => {
-    const series: (LineSeries & { dataType: DataType; isFailed?: boolean; isCustom?: boolean })[] = []
+    const series: (LineSeriesType & { dataType: DataType; isFailed?: boolean; isCustom?: boolean })[] = []
 
     if (trajectory15Enabled && trajectory15Data) {
       const { previousTrajectory, previousTrajectoryStartYear, currentTrajectory, withinThreshold, isFailed } =
@@ -188,6 +200,7 @@ const TrajectoryGraph = ({
       if (previousTrajectory) {
         if (withinThreshold) {
           series.push({
+            type: 'line',
             dataType: 'previous',
             isCustom: false,
             isFailed,
@@ -201,6 +214,7 @@ const TrajectoryGraph = ({
           })
         } else {
           series.push({
+            type: 'line',
             dataType: 'previous',
             isCustom: false,
             isFailed,
@@ -219,6 +233,7 @@ const TrajectoryGraph = ({
       const showCurrentTrajectory = !previousTrajectory || !withinThreshold
       if (showCurrentTrajectory) {
         series.push({
+          type: 'line',
           dataType: 'current',
           isCustom: false,
           isFailed,
@@ -232,6 +247,7 @@ const TrajectoryGraph = ({
         })
       } else {
         series.push({
+          type: 'line',
           dataType: 'current',
           isCustom: false,
           isFailed,
@@ -253,6 +269,7 @@ const TrajectoryGraph = ({
       if (previousTrajectory) {
         if (withinThreshold) {
           series.push({
+            type: 'line',
             dataType: 'previous',
             isCustom: false,
             isFailed,
@@ -266,6 +283,7 @@ const TrajectoryGraph = ({
           })
         } else {
           series.push({
+            type: 'line',
             dataType: 'previous',
             isCustom: false,
             isFailed,
@@ -284,6 +302,7 @@ const TrajectoryGraph = ({
       const showCurrentTrajectory = !previousTrajectory || !withinThreshold
       if (showCurrentTrajectory) {
         series.push({
+          type: 'line',
           dataType: 'current',
           isCustom: false,
           isFailed,
@@ -299,6 +318,7 @@ const TrajectoryGraph = ({
         })
       } else {
         series.push({
+          type: 'line',
           dataType: 'current',
           isCustom: false,
           isFailed,
@@ -327,6 +347,7 @@ const TrajectoryGraph = ({
         if (previousTrajectory) {
           if (withinThreshold) {
             series.push({
+              type: 'line',
               dataType: 'previous',
               isCustom: false,
               data: mapDataToYears(previousTrajectory),
@@ -339,6 +360,7 @@ const TrajectoryGraph = ({
             })
           } else {
             series.push({
+              type: 'line',
               dataType: 'previous',
               isCustom: false,
               data: mapDataToYears(previousTrajectory),
@@ -356,6 +378,7 @@ const TrajectoryGraph = ({
         const showCurrentTrajectory = !previousTrajectory || !withinThreshold
         if (showCurrentTrajectory) {
           series.push({
+            type: 'line',
             dataType: 'current',
             isCustom: false,
             label: trajectoryData.previousTrajectory ? label + ` (${studyStartYear})` : label,
@@ -369,6 +392,7 @@ const TrajectoryGraph = ({
           })
         } else {
           series.push({
+            type: 'line',
             dataType: 'current',
             isCustom: false,
             data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
@@ -396,6 +420,7 @@ const TrajectoryGraph = ({
 
           if (withinThreshold) {
             series.push({
+              type: 'line',
               dataType: 'previous',
               isCustom: true,
               isFailed,
@@ -410,6 +435,7 @@ const TrajectoryGraph = ({
           } else {
             const baseColor = traj.color || `var(--trajectory-custom-${index % 9})`
             series.push({
+              type: 'line',
               dataType: 'previous',
               isCustom: true,
               isFailed,
@@ -428,6 +454,7 @@ const TrajectoryGraph = ({
         const showCurrentTrajectory = !previousTrajectory || !withinThreshold
         if (showCurrentTrajectory) {
           series.push({
+            type: 'line',
             dataType: 'current',
             isCustom: true,
             isFailed,
@@ -441,6 +468,7 @@ const TrajectoryGraph = ({
           })
         } else {
           series.push({
+            type: 'line',
             dataType: 'current',
             isCustom: true,
             isFailed,
@@ -463,6 +491,7 @@ const TrajectoryGraph = ({
       if (previousTrajectory) {
         if (withinThreshold) {
           series.push({
+            type: 'line',
             dataType: 'previous',
             isCustom: true,
             data: mapDataToYears(previousTrajectory),
@@ -475,6 +504,7 @@ const TrajectoryGraph = ({
           })
         } else {
           series.push({
+            type: 'line',
             dataType: 'previous',
             isCustom: true,
             data: mapDataToYears(previousTrajectory),
@@ -492,6 +522,7 @@ const TrajectoryGraph = ({
       const showCurrentTrajectory = !previousTrajectory || !withinThreshold
       if (showCurrentTrajectory) {
         series.push({
+          type: 'line',
           dataType: 'current',
           isCustom: true,
           data: currentData,
@@ -506,6 +537,7 @@ const TrajectoryGraph = ({
         })
       } else {
         series.push({
+          type: 'line',
           dataType: 'current',
           isCustom: true,
           data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
@@ -561,6 +593,16 @@ const TrajectoryGraph = ({
     })
   }, [])
 
+  const maxY = Math.max(...filteredSeries.flatMap((s) => s?.data?.filter((v): v is number => v !== null) || 0))
+
+  const areaSeries: LineSeriesType = {
+    type: 'line',
+    id: 'background-area',
+    data: yearsToDisplay.map((year) => (year <= studyStartYear ? maxY : null)),
+    area: true,
+    color: 'var(--trajectory-gray-area)',
+    showMark: false,
+  }
   return (
     <div className="w100 flex-col gapped1 mb2">
       <div className="flex align-center justify-between">
@@ -604,8 +646,8 @@ const TrajectoryGraph = ({
       <Typography variant="body2" color="text.secondary">
         {t('subtitle')}
       </Typography>
-      <LineChart
-        hideLegend
+      <ChartContainer
+        series={[areaSeries, ...filteredSeries]}
         xAxis={[
           {
             data: yearsToDisplay,
@@ -618,14 +660,23 @@ const TrajectoryGraph = ({
             })(),
           },
         ]}
-        series={filteredSeries}
+        yAxis={[{ label: `${t('yAxisLabel')} (${tUnit(studyUnit)})` }]}
         height={400}
-        yAxis={[
-          {
-            label: `${t('yAxisLabel')} (${tUnit(studyUnit)})`,
-          },
-        ]}
-      />
+      >
+        <AreaPlot />
+        <LinePlot />
+
+        <ChartsReferenceLine x={studyStartYear} labelAlign="start" />
+
+        <MarkPlot />
+
+        <ChartsAxisHighlight x="line" />
+
+        <ChartsTooltip trigger="axis" />
+        <ChartsXAxis />
+        <ChartsYAxis />
+      </ChartContainer>
+
       <div className="flex justify-center w100">
         <Typography variant="body2" color="text.secondary" className={styles.rangeTitle}>
           {t('yearRangeLabel')}
