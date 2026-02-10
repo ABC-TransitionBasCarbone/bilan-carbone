@@ -6,7 +6,7 @@ import { hasAccessToStudyCardDetails, hasRoleOnStudy } from '@/services/permissi
 import { getDisplayedRoleOnStudy } from '@/utils/study'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 import Box from '../../base/Box'
 import GlossaryIconModal from '../../modals/GlossaryIconModal'
 import styles from './StudyCard.module.css'
@@ -18,8 +18,8 @@ interface Props {
   simplified?: boolean
 }
 
-const StudyCard = ({ study, user, simplified }: Props) => {
-  const t = useTranslations('study')
+const StudyCard = async ({ study, user, simplified }: Props) => {
+  const t = await getTranslations('study')
   const { id, name, validatedSources } = study
 
   const showRoleInChip = hasRoleOnStudy(user.environment)

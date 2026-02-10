@@ -6,7 +6,6 @@ import { hasAccessToEmissionFactors } from '@/services/permissions/environmentAd
 import { getEmissionFactorLocations } from '@/services/serverFunctions/emissionFactor'
 import { hasActiveLicence } from '@/utils/organization'
 import { UserSession } from 'next-auth'
-import { redirect } from 'next/navigation'
 
 interface Props {
   user: UserSession
@@ -19,7 +18,7 @@ const NewEmissionFactor = async ({ user }: Props) => {
 
   const userOrganization = await getOrganizationVersionForRightsCheck(user.organizationVersionId || '')
   if (!userOrganization || !hasActiveLicence(userOrganization)) {
-    redirect('/facteurs-d-emission')
+    return <NotFound />
   }
 
   const locations = await getEmissionFactorLocations()

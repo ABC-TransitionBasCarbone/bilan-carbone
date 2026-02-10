@@ -10,9 +10,15 @@ import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from '../base/Link'
 
+interface OrganizationVersionForCard {
+  id: string
+  parentId: string | null
+  organization: { name: string }
+}
+
 interface Props {
   account: UserSession
-  organizationVersions: { id: string; parentId: string | null; organization: { name: string } }[]
+  organizationVersions: OrganizationVersionForCard[]
   shouldDisplayOrgaData: boolean
   shouldRenewLicense: boolean
 }
@@ -36,9 +42,7 @@ const OrganizationCard = ({ account, organizationVersions, shouldDisplayOrgaData
   const defaultOrganizationVersion = organizationVersions.find(
     (organizationVersion) => organizationVersion.id === account.organizationVersionId,
   )
-  const [organizationVersion, setOrganizationVersion] = useState<
-    { id: string; parentId: string | null; organization: { name: string } } | undefined
-  >(undefined)
+  const [organizationVersion, setOrganizationVersion] = useState<OrganizationVersionForCard | undefined>(undefined)
 
   const { context, contextId } = useAppContextStore()
 
