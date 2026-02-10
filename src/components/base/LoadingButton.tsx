@@ -25,7 +25,11 @@ const LoadingButton = ({ children, loading, disabled, iconButton, fullWidth, ...
       {(!loading || !iconButton) && <>{children}</>}
       {loading && (
         <>
-          <CircularProgress className={classNames(styles.spinner, { 'ml-2': !iconButton })} size="1rem" />
+          <CircularProgress
+            className={classNames(styles.spinner, { 'ml-2': !iconButton })}
+            size="1rem"
+            data-testid="loading-circular"
+          />
           <p className={styles.hidden} role="status">
             {t('loading')}
           </p>

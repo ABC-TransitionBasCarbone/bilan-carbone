@@ -12,7 +12,10 @@ Cypress.Commands.add('login', (email = 'bc-collaborator-0@yopmail.com', password
     .type(email)
   cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type(password)
   cy.getByTestId('login-button').click()
+  cy.getByTestId('login-button').should('be.disabled')
   cy.wait(`@login`)
+  cy.getByTestId('navbar').should('be.visible')
+  cy.getByTestId('navbar-top-left').should('be.visible')
 })
 
 Cypress.Commands.add('logout', () => {
@@ -61,6 +64,16 @@ Cypress.Commands.add('initFePage', () => {
 Cypress.Commands.add('initCreateStudyPage', () => {
   cy.login()
   cy.visit('/etudes/creer')
+  cy.getByTestId('new-study-organization-title').should('be.visible')
+  cy.getByTestId('sites-title').should('be.visible')
+  cy.getByTestId('sites-title').should('contain.text', "Sites de l'organisation concernés par l'étude")
+  cy.getByTestId('organization-sites-name-header').should('be.visible')
+  cy.getByTestId('organization-sites-name-header').should('contain.text', 'Nom')
+  cy.getByTestId('organization-sites-checkbox').should('be.visible')
+})
+
+Cypress.Commands.add('initCreateStudyPageByClicking', () => {
+  cy.getByTestId('new-study').click()
   cy.getByTestId('new-study-organization-title').should('be.visible')
   cy.getByTestId('sites-title').should('be.visible')
   cy.getByTestId('sites-title').should('contain.text', "Sites de l'organisation concernés par l'étude")

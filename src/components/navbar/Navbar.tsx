@@ -68,10 +68,10 @@ const Navbar = ({ children, user, environment, isFootprintsEnabled }: Props) => 
   }, [user.environment])
 
   return (
-    <AppBar position="sticky" elevation={0}>
+    <AppBar position="sticky" elevation={0} data-testid="navbar">
       <Toolbar variant="dense">
         <Container maxWidth="lg" className="justify-between">
-          <Box className={classNames('flex-cc', 'gapped1')}>
+          <Box className={classNames('flex-cc', 'gapped1')} data-testid="navbar-top-left">
             <NavbarLink href="/" aria-label={t('home')} title={t('home')}>
               <Logo environment={environment} />
             </NavbarLink>

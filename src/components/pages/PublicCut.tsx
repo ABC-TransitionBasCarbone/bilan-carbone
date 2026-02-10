@@ -49,7 +49,7 @@ const PublicCutPage = ({ children, question }: Props) => {
       <StyledPublicCutPage className={classNames('grow text-center')}>
         <Box p="0.1rem" borderBottom="1px solid" borderColor="success.light">
           <Box className="justify-around flex-col gapped1" minHeight="400px" px="1rem" py="2rem">
-            <Typography className="title-h2" data-testId="welcome-text">
+            <Typography className="title-h2" data-testid="welcome-text">
               {t('welcome')}
             </Typography>
             <Image
@@ -63,7 +63,7 @@ const PublicCutPage = ({ children, question }: Props) => {
             <div className="justify-center">
               <Divider sx={{ borderColor: 'primary.contrastText' }} className={styles.divider} />
             </div>
-            <Typography className={styles.explanation} data-testId="welcome-explanation">
+            <Typography className={styles.explanation} data-testid="welcome-explanation">
               {customRich(t, 'explanation')}
             </Typography>
           </Box>

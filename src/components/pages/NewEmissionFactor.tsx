@@ -19,7 +19,7 @@ const NewEmissionFactorPage = ({ locations }: Props) => {
           { label: tNav('emissionFactors'), link: '/facteurs-d-emission' },
         ]}
       />
-      <Block title={t('title')} as="h1" data-testId="new-emission-factor-page">
+      <Block title={t('title')} as="h1" data-testid="new-emission-factor-page">
         <NewEmissionFactorForm locations={locations} />
       </Block>
     </>
