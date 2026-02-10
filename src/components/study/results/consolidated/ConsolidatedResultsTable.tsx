@@ -100,6 +100,11 @@ const ConsolidatedResultsTable = <T extends TableDataType>({
         id: 'confidenceInterval',
         header: t('confidenceIntervalTitle'),
         accessorFn: ({ value, squaredStandardDeviation }) => {
+          // NOTE: it's assumed that if the hiddenUncertainty flag is false,
+          // then the squaredStandardDeviation will be defined.
+          if (squaredStandardDeviation === undefined) {
+            return undefined
+          }
           const confidenceInterval = getConfidenceInterval(value, squaredStandardDeviation)
           return formatConfidenceInterval(confidenceInterval, resultsUnit)
         },
