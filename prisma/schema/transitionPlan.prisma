@@ -165,7 +165,7 @@ model ExternalStudy {
 
   name       String
   date       DateTime
-  totalCo2Kg Int      @map("total_co2_kg")
+  totalCo2Kg BigInt   @map("total_co2_kg")
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
 
