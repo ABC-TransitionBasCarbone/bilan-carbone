@@ -9,6 +9,7 @@ import {
   FormLabel,
   ListItemText,
   MenuItem,
+  Popper,
   Select,
   Switch,
   TextField,
@@ -16,7 +17,7 @@ import {
 import { EmissionFactorBase, EmissionFactorImportVersion, SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react'
 import Button from '../base/Button'
 import DebouncedInput from '../base/DebouncedInput'
 import MultiSelectAll from '../base/MultiSelectAll'
@@ -50,6 +51,13 @@ export const EmissionFactorsFilters = ({
   const [displayFilters, setDisplayFilters] = useState(true)
   const [displayHideButton, setDisplayHideButton] = useState(false)
 
+  const [unitsInputValue, setUnitsInputValue] = useState('')
+  const unitsOptions = ['all', ...initialSelectedUnits.filter((u) => u !== 'all')]
+  const unitsAllSelected = useMemo(
+    () =>
+      filters.units.filter((item) => item !== 'all').length === initialSelectedUnits.filter((u) => u !== 'all').length,
+    [filters.units, initialSelectedUnits],
+  )
   const filtersRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -141,12 +149,57 @@ export const EmissionFactorsFilters = ({
             <FormLabel id="emissions-unit-selector" component="legend">
               {t('units')}
             </FormLabel>
-            <MultiSelectAll
-              id="emissions-unit"
-              values={filters.units}
-              allValues={initialSelectedUnits.filter((unit) => unit != 'all')}
-              setValues={(values) => setFilters((prevFilters) => ({ ...prevFilters, units: values }))}
-              getLabel={(unit) => tUnit(unit)}
+
+            <Autocomplete
+              multiple
+              disableCloseOnSelect
+              value={filters.units}
+              options={unitsOptions}
+              inputValue={unitsInputValue}
+              clearOnBlur={false}
+              onInputChange={(_, newValue, reason) => {
+                if (reason === 'input') {
+                  setUnitsInputValue(newValue)
+                }
+              }}
+              getOptionLabel={(unit) => (unit === 'all' ? t('all') : tUnit(unit))}
+              getOptionKey={(unit) => unit}
+              filterSelectedOptions={false}
+              onChange={(_, newValue) => {
+                if (newValue.includes('all')) {
+                  setFilters((prev) => ({
+                    ...prev,
+                    units: unitsAllSelected ? [] : initialSelectedUnits.filter((unit) => unit !== 'all'),
+                  }))
+                  return
+                }
+                setFilters((prev) => ({
+                  ...prev,
+                  units: newValue.filter((value) => value !== 'all'),
+                }))
+              }}
+              renderValue={() => <></>}
+              renderOption={(props, option, { selected }) => {
+                const { key, ...restProps } = props
+                if (option === 'all') {
+                  return (
+                    <MenuItem key="all" {...restProps}>
+                      <Checkbox checked={unitsAllSelected} />
+                      <ListItemText primary={t('all')} />
+                    </MenuItem>
+                  )
+                }
+
+                return (
+                  <MenuItem key={option} {...restProps}>
+                    <Checkbox checked={selected} />
+                    <ListItemText primary={tUnit(option)} />
+                  </MenuItem>
+                )
+              }}
+              renderInput={(params) => <TextField {...params} placeholder={t('unitSearchPlaceholder')} />}
+              slots={{ popper: Popper }}
+              slotProps={{ popper: { style: { minWidth: 300 } } }}
             />
           </FormControl>
           {filters.base && (
