@@ -589,7 +589,17 @@ const TrajectoryGraph = ({
     return seriesCreated.filter((serie) => serie.isFailed).map((serie) => serie.label as string)
   }, [seriesCreated])
 
-  const displayEstimatedPast = useMemo(() => yearRange && yearRange[0] < studyStartYear, [yearRange, studyStartYear])
+  const oldestPastStudyYear = useMemo(() => {
+    if (pastStudies.length === 0) {
+      return 0
+    }
+    return Math.min(...pastStudies.map((study) => study.year))
+  }, [pastStudies])
+
+  const displayEstimatedPast = useMemo(
+    () => yearRange && yearRange[0] < oldestPastStudyYear,
+    [yearRange, oldestPastStudyYear],
+  )
 
   const onFilterSeries = useCallback((label: string) => {
     setFilteredSeriesLabels((prev) => {
@@ -601,12 +611,12 @@ const TrajectoryGraph = ({
     })
   }, [])
 
-  const maxY = Math.max(...filteredSeries.flatMap((s) => s?.data?.filter((v): v is number => v !== null) || 0))
+  const maxY = Math.max(...filteredSeries.flatMap((s) => s?.data?.filter((v) => v !== null) || 0))
 
-  const areaSeries: LineSeriesType = {
+  const backgroundForPastInfos: LineSeriesType = {
     type: 'line',
     id: 'background-area',
-    data: yearsToDisplay.map((year) => (year <= studyStartYear ? maxY : null)),
+    data: yearsToDisplay.map((year) => (year <= oldestPastStudyYear ? maxY : null)),
     area: true,
     color: 'var(--trajectory-gray-area)',
     showMark: false,
@@ -667,7 +677,7 @@ const TrajectoryGraph = ({
         {t('subtitle')}
       </Typography>
       <ChartContainer
-        series={[areaSeries, ...filteredSeries]}
+        series={[backgroundForPastInfos, ...filteredSeries]}
         xAxis={[
           {
             data: yearsToDisplay,
@@ -692,7 +702,7 @@ const TrajectoryGraph = ({
         )}
 
         <ChartsAxisHighlight x="line" />
-        {displayEstimatedPast && <ChartsReferenceLine x={studyStartYear} labelAlign="start" />}
+        {displayEstimatedPast && <ChartsReferenceLine x={oldestPastStudyYear} labelAlign="start" />}
         <ChartsTooltip trigger="axis" />
         <ChartsXAxis />
         <ChartsYAxis />
