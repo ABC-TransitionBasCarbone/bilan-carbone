@@ -1,18 +1,34 @@
 'use client'
 
 import TagChip from '@/components/base/TagChip'
+import GlossaryModal from '@/components/modals/GlossaryModal'
 import { TRAJECTORY_15_ID, TRAJECTORY_SNBC_GENERAL_ID, TRAJECTORY_WB2C_ID } from '@/constants/trajectories'
 import { getYearsToDisplay, PastStudy, TrajectoryData } from '@/utils/trajectory'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import { Accordion, AccordionDetails, AccordionSummary, Alert, Slider, Typography } from '@mui/material'
-import { LineChart, LineSeries } from '@mui/x-charts/LineChart'
+import {
+  AreaPlot,
+  ChartContainer,
+  ChartsAxisHighlight,
+  ChartsReferenceLine,
+  ChartsTooltip,
+  ChartsXAxis,
+  ChartsYAxis,
+  LinePlot,
+  LineSeriesType,
+  MarkPlot,
+} from '@mui/x-charts'
+import { LineSeries } from '@mui/x-charts/LineChart'
 import { StudyResultUnit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import DrawingAreaBox, { DrawingProps } from '../charts/DrawingArea'
 import DependenciesSwitch from '../results/DependenciesSwitch'
 import styles from './TrajectoryGraph.module.css'
+import { BottomLeftMultilineText } from './TrajectoryGraphDrawingArea'
 import TrajectoryLegendTable from './TrajectoryLegendTable'
 
 export interface TrajectoryDataPoint {
@@ -68,9 +84,11 @@ const TrajectoryGraph = ({
   const t = useTranslations('study.transitionPlan.trajectories.graph')
   const tUnit = useTranslations('study.results.units')
   const [yearRange, setYearRange] = useState<number[] | null>(null)
+  const [glossary, setGlossary] = useState(false)
   const [displayedYearRange, setDisplayedYearRange] = useState<number[] | null>(null)
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
   const tSnbc = useTranslations('study.transitionPlan.trajectories.snbcCard')
+  const tGlossary = useTranslations('study.transitionPlan.trajectories.graph.glossary')
 
   const trajectory15Enabled = selectedSbtiTrajectories.includes(TRAJECTORY_15_ID)
   const trajectoryWB2CEnabled = selectedSbtiTrajectories.includes(TRAJECTORY_WB2C_ID)
@@ -179,7 +197,7 @@ const TrajectoryGraph = ({
   )
 
   const seriesCreated = useMemo(() => {
-    const series: (LineSeries & { dataType: DataType; isFailed?: boolean; isCustom?: boolean })[] = []
+    const series: (LineSeriesType & { dataType: DataType; isFailed?: boolean; isCustom?: boolean })[] = []
 
     if (trajectory15Enabled && trajectory15Data) {
       const { previousTrajectory, previousTrajectoryStartYear, currentTrajectory, withinThreshold, isFailed } =
@@ -188,12 +206,12 @@ const TrajectoryGraph = ({
       if (previousTrajectory) {
         if (withinThreshold) {
           series.push({
+            type: 'line',
             dataType: 'previous',
             isCustom: false,
-            isFailed,
-            data: mapDataToYears(previousTrajectory, false, isFailed),
+            data: mapDataToYears(previousTrajectory),
             label: t('trajectory15'),
-            color: isFailed ? 'var(--error-50)' : 'var(--trajectory-sbti-15)',
+            color: 'var(--trajectory-sbti-15)',
             curve: 'linear' as const,
             connectNulls: false,
             showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
@@ -201,12 +219,12 @@ const TrajectoryGraph = ({
           })
         } else {
           series.push({
+            type: 'line',
             dataType: 'previous',
             isCustom: false,
-            isFailed,
-            data: mapDataToYears(previousTrajectory, false, isFailed),
+            data: mapDataToYears(previousTrajectory),
             label: t('trajectory15') + ` (${previousTrajectoryStartYear})`,
-            color: isFailed ? 'var(--error-50)' : 'color-mix(in srgb, var(--trajectory-sbti-15) 50%, transparent)',
+            color: 'color-mix(in srgb, var(--trajectory-sbti-15) 50%, transparent)',
             curve: 'linear' as const,
             connectNulls: false,
             showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
@@ -219,6 +237,7 @@ const TrajectoryGraph = ({
       const showCurrentTrajectory = !previousTrajectory || !withinThreshold
       if (showCurrentTrajectory) {
         series.push({
+          type: 'line',
           dataType: 'current',
           isCustom: false,
           isFailed,
@@ -232,6 +251,7 @@ const TrajectoryGraph = ({
         })
       } else {
         series.push({
+          type: 'line',
           dataType: 'current',
           isCustom: false,
           isFailed,
@@ -253,12 +273,12 @@ const TrajectoryGraph = ({
       if (previousTrajectory) {
         if (withinThreshold) {
           series.push({
+            type: 'line',
             dataType: 'previous',
             isCustom: false,
-            isFailed,
-            data: mapDataToYears(previousTrajectory, false, isFailed),
+            data: mapDataToYears(previousTrajectory),
             label: t('trajectoryWB2C'),
-            color: isFailed ? 'var(--error-50)' : 'var(--trajectory-sbti-wb2c)',
+            color: 'var(--trajectory-sbti-wb2c)',
             curve: 'linear' as const,
             connectNulls: false,
             showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
@@ -266,12 +286,12 @@ const TrajectoryGraph = ({
           })
         } else {
           series.push({
+            type: 'line',
             dataType: 'previous',
             isCustom: false,
-            isFailed,
-            data: mapDataToYears(previousTrajectory, false, isFailed),
+            data: mapDataToYears(previousTrajectory),
             label: t('trajectoryWB2C') + ` (${previousTrajectoryStartYear})`,
-            color: isFailed ? 'var(--error-50)' : 'color-mix(in srgb, var(--trajectory-sbti-wb2c) 50%, transparent)',
+            color: 'color-mix(in srgb, var(--trajectory-sbti-wb2c) 50%, transparent)',
             curve: 'linear' as const,
             connectNulls: false,
             showMark: ({ index }: { index: number }) => historicalStudyYearIndices.has(index),
@@ -284,6 +304,7 @@ const TrajectoryGraph = ({
       const showCurrentTrajectory = !previousTrajectory || !withinThreshold
       if (showCurrentTrajectory) {
         series.push({
+          type: 'line',
           dataType: 'current',
           isCustom: false,
           isFailed,
@@ -299,6 +320,7 @@ const TrajectoryGraph = ({
         })
       } else {
         series.push({
+          type: 'line',
           dataType: 'current',
           isCustom: false,
           isFailed,
@@ -327,6 +349,7 @@ const TrajectoryGraph = ({
         if (previousTrajectory) {
           if (withinThreshold) {
             series.push({
+              type: 'line',
               dataType: 'previous',
               isCustom: false,
               data: mapDataToYears(previousTrajectory),
@@ -339,6 +362,7 @@ const TrajectoryGraph = ({
             })
           } else {
             series.push({
+              type: 'line',
               dataType: 'previous',
               isCustom: false,
               data: mapDataToYears(previousTrajectory),
@@ -356,6 +380,7 @@ const TrajectoryGraph = ({
         const showCurrentTrajectory = !previousTrajectory || !withinThreshold
         if (showCurrentTrajectory) {
           series.push({
+            type: 'line',
             dataType: 'current',
             isCustom: false,
             label: trajectoryData.previousTrajectory ? label + ` (${studyStartYear})` : label,
@@ -369,6 +394,7 @@ const TrajectoryGraph = ({
           })
         } else {
           series.push({
+            type: 'line',
             dataType: 'current',
             isCustom: false,
             data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
@@ -396,12 +422,12 @@ const TrajectoryGraph = ({
 
           if (withinThreshold) {
             series.push({
+              type: 'line',
               dataType: 'previous',
               isCustom: true,
-              isFailed,
-              data: mapDataToYears(previousTrajectory, true, isFailed),
+              data: mapDataToYears(previousTrajectory, true),
               label: traj.label + ` (${previousTrajectoryStartYear})`,
-              color: isFailed ? 'var(--error-50)' : traj.color || `var(--trajectory-custom-${index % 9})`,
+              color: traj.color || `var(--trajectory-custom-${index % 9})`,
               curve: 'linear' as const,
               connectNulls: false,
               showMark: ({ index }: { index: number }) => index === previousTrajectoryStartYearIndex,
@@ -410,12 +436,12 @@ const TrajectoryGraph = ({
           } else {
             const baseColor = traj.color || `var(--trajectory-custom-${index % 9})`
             series.push({
+              type: 'line',
               dataType: 'previous',
               isCustom: true,
-              isFailed,
-              data: mapDataToYears(previousTrajectory, true, isFailed),
+              data: mapDataToYears(previousTrajectory, true),
               label: traj.label + ` (${previousTrajectoryStartYear})`,
-              color: isFailed ? 'var(--error-50)' : `color-mix(in srgb, ${baseColor} 50%, transparent)`,
+              color: `color-mix(in srgb, ${baseColor} 50%, transparent)`,
               curve: 'linear' as const,
               connectNulls: false,
               showMark: ({ index }: { index: number }) => index === previousTrajectoryStartYearIndex,
@@ -428,6 +454,7 @@ const TrajectoryGraph = ({
         const showCurrentTrajectory = !previousTrajectory || !withinThreshold
         if (showCurrentTrajectory) {
           series.push({
+            type: 'line',
             dataType: 'current',
             isCustom: true,
             isFailed,
@@ -441,6 +468,7 @@ const TrajectoryGraph = ({
           })
         } else {
           series.push({
+            type: 'line',
             dataType: 'current',
             isCustom: true,
             isFailed,
@@ -463,6 +491,7 @@ const TrajectoryGraph = ({
       if (previousTrajectory) {
         if (withinThreshold) {
           series.push({
+            type: 'line',
             dataType: 'previous',
             isCustom: true,
             data: mapDataToYears(previousTrajectory),
@@ -475,6 +504,7 @@ const TrajectoryGraph = ({
           })
         } else {
           series.push({
+            type: 'line',
             dataType: 'previous',
             isCustom: true,
             data: mapDataToYears(previousTrajectory),
@@ -492,6 +522,7 @@ const TrajectoryGraph = ({
       const showCurrentTrajectory = !previousTrajectory || !withinThreshold
       if (showCurrentTrajectory) {
         series.push({
+          type: 'line',
           dataType: 'current',
           isCustom: true,
           data: currentData,
@@ -506,6 +537,7 @@ const TrajectoryGraph = ({
         })
       } else {
         series.push({
+          type: 'line',
           dataType: 'current',
           isCustom: true,
           data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
@@ -551,6 +583,18 @@ const TrajectoryGraph = ({
     return seriesCreated.filter((serie) => serie.isFailed).map((serie) => serie.label as string)
   }, [seriesCreated])
 
+  const oldestPastStudyYear = useMemo(() => {
+    if (pastStudies.length === 0) {
+      return 0
+    }
+    return Math.min(...pastStudies.map((study) => study.year))
+  }, [pastStudies])
+
+  const displayEstimatedPast = useMemo(
+    () => yearRange && yearRange[0] < oldestPastStudyYear,
+    [yearRange, oldestPastStudyYear],
+  )
+
   const onFilterSeries = useCallback((label: string) => {
     setFilteredSeriesLabels((prev) => {
       if (prev.includes(label)) {
@@ -560,6 +604,28 @@ const TrajectoryGraph = ({
       }
     })
   }, [])
+
+  const maxY = Math.max(...filteredSeries.flatMap((s) => s?.data?.filter((v) => v !== null) || 0))
+
+  const backgroundForPastInfos: LineSeriesType = {
+    type: 'line',
+    id: 'background-area',
+    data: yearsToDisplay.map((year) => (year <= oldestPastStudyYear ? maxY : null)),
+    area: true,
+    color: 'var(--trajectory-gray-area)',
+    showMark: false,
+  }
+
+  const BottomLeftText = ({ onClick, ...props }: DrawingProps & { onClick: () => void }) => (
+    <>
+      <BottomLeftMultilineText {...props} className="bold text-center">
+        <Typography variant="body2" fontWeight={600}>
+          {t('estimatedPast')}
+          <HelpOutlineOutlinedIcon color="secondary" className="ml-4 pointer" onClick={onClick} />
+        </Typography>
+      </BottomLeftMultilineText>
+    </>
+  )
 
   return (
     <div className="w100 flex-col gapped1 mb2">
@@ -604,8 +670,8 @@ const TrajectoryGraph = ({
       <Typography variant="body2" color="text.secondary">
         {t('subtitle')}
       </Typography>
-      <LineChart
-        hideLegend
+      <ChartContainer
+        series={[backgroundForPastInfos, ...filteredSeries]}
         xAxis={[
           {
             data: yearsToDisplay,
@@ -618,14 +684,24 @@ const TrajectoryGraph = ({
             })(),
           },
         ]}
-        series={filteredSeries}
+        yAxis={[{ label: `${t('yAxisLabel')} (${tUnit(studyUnit)})` }]}
         height={400}
-        yAxis={[
-          {
-            label: `${t('yAxisLabel')} (${tUnit(studyUnit)})`,
-          },
-        ]}
-      />
+      >
+        <AreaPlot />
+        <LinePlot />
+        <MarkPlot />
+
+        {displayEstimatedPast && (
+          <DrawingAreaBox Text={(props) => <BottomLeftText {...props} onClick={() => setGlossary(true)} />} />
+        )}
+
+        <ChartsAxisHighlight x="line" />
+        {displayEstimatedPast && <ChartsReferenceLine x={oldestPastStudyYear} labelAlign="start" />}
+        <ChartsTooltip trigger="axis" />
+        <ChartsXAxis />
+        <ChartsYAxis />
+      </ChartContainer>
+
       <div className="flex justify-center w100">
         <Typography variant="body2" color="text.secondary" className={styles.rangeTitle}>
           {t('yearRangeLabel')}
@@ -717,6 +793,11 @@ const TrajectoryGraph = ({
           </div>
         </AccordionDetails>
       </Accordion>
+      {glossary && (
+        <GlossaryModal glossary="title" label="emission-factor-post" t={tGlossary} onClose={() => setGlossary(false)}>
+          {tGlossary('description')}
+        </GlossaryModal>
+      )}
     </div>
   )
 }
