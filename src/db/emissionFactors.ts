@@ -8,7 +8,7 @@ import { flattenSubposts } from '@/utils/post'
 import { EmissionFactorBase, EmissionFactorStatus, Environment, Import, Prisma, SubPost, Unit } from '@prisma/client'
 import { Session } from 'next-auth'
 import { prismaClient } from './client'
-import { getOrgIdByOrgVersionId } from './organization'
+import { getOrgVersionWithOrgId } from './organization'
 
 const otherSelectEmissionFactor = {
   id: true,
@@ -373,16 +373,13 @@ export const updateEmissionFactor = async (
   local: string,
   { id, name, unit, attribute, comment, parts, subPosts, ...command }: UpdateEmissionFactorCommand,
 ) => {
-  const organizationId = await getOrgIdByOrgVersionId(session.user.organizationVersionId)
-  if (!organizationId) {
-    throw new Error('Organization not found')
-  }
+  const accountOrganizationVersion = await getOrgVersionWithOrgId(session.user.organizationVersionId)
 
   const emissionFactor = {
     ...command,
     importedFrom: Import.Manual,
     status: EmissionFactorStatus.Valid,
-    organization: { connect: { id: organizationId } },
+    organization: { connect: { id: accountOrganizationVersion?.organizationId } },
     unit: unit as Unit,
     isMonetary: isMonetaryEmissionFactor(command),
     subPosts: flattenSubposts(subPosts),

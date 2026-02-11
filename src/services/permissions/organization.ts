@@ -2,7 +2,7 @@ import { getAccountById } from '@/db/account'
 import {
   getOrganizationVersionForRightsCheck,
   getOrganizationVersionIsCR,
-  getOrgIdByOrgVersionId,
+  getOrgVersionWithOrgId,
   organizationVersionExists,
 } from '@/db/organization'
 import { getUserByEmail } from '@/db/user'
@@ -34,8 +34,8 @@ export const isVersionInOrgaOrParent = async (
     return true
   }
 
-  const orgVersionOrgId = await getOrgIdByOrgVersionId(organizationVersionId.parentId)
-  return organizationId === orgVersionOrgId
+  const organizationVersion = await getOrgVersionWithOrgId(organizationVersionId.parentId)
+  return organizationId === organizationVersion?.organizationId
 }
 
 export const canCreateOrganization = async (account: UserSession) => {

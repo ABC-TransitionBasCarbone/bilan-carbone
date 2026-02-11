@@ -115,15 +115,14 @@ export const getOrgVersionWithNameById = async (id: string | null) => {
   })
 }
 
-export const getOrgIdByOrgVersionId = async (id: string | null) => {
+export const getOrgVersionWithOrgId = async (id: string | null) => {
   if (!id) {
     return null
   }
-  const organizationVersion = await prismaClient.organizationVersion.findUnique({
+  return prismaClient.organizationVersion.findUnique({
     where: { id },
     select: { organizationId: true },
   })
-  return organizationVersion?.organizationId
 }
 
 export const getOrganizationVersionForRightsCheck = (id: string | null) =>
@@ -272,8 +271,8 @@ export const updateOrganization = async (
   { organizationVersionId, sites, ...data }: UpdateOrganizationCommand,
   caUnit: number,
 ) => {
-  const organizationId = await getOrgIdByOrgVersionId(organizationVersionId)
-  if (!organizationId) {
+  const organizationVersion = await getOrgVersionWithOrgId(organizationVersionId)
+  if (!organizationVersion) {
     return
   }
 
@@ -283,7 +282,7 @@ export const updateOrganization = async (
         where: { id: site.id },
         create: {
           id: site.id,
-          organizationId,
+          organizationId: organizationVersion.organizationId,
           name: site.name,
           etp: site.etp,
           ca: (site?.ca || 0) * caUnit,
@@ -314,10 +313,10 @@ export const updateOrganization = async (
       }),
     ),
     prismaClient.site.deleteMany({
-      where: { organizationId, id: { notIn: sites.map((site) => site.id) } },
+      where: { organizationId: organizationVersion.organizationId, id: { notIn: sites.map((site) => site.id) } },
     }),
     prismaClient.organization.update({
-      where: { id: organizationId },
+      where: { id: organizationVersion.organizationId },
       data: data,
     }),
   ])
@@ -371,13 +370,13 @@ export const onboardOrganizationVersion = async (
   if (!dbUser) {
     return
   }
-  const organizationId = await getOrgIdByOrgVersionId(organizationVersionId)
-  if (!organizationId) {
+  const organizationVersion = await getOrgVersionWithOrgId(organizationVersionId)
+  if (!organizationVersion) {
     return
   }
 
   await transaction.organization.update({
-    where: { id: organizationId },
+    where: { id: organizationVersion.organizationId },
     data: { name: companyName },
   })
 
@@ -395,17 +394,17 @@ export const onboardOrganizationVersion = async (
 }
 
 export const deleteClient = async (id: string) => {
-  const organizationId = await getOrgIdByOrgVersionId(id)
-  if (!organizationId) {
+  const organizationVersion = await getOrgVersionWithOrgId(id)
+  if (!organizationVersion) {
     return
   }
 
-  const organization = await getOrganizationWithSitesById(organizationId)
+  const organization = await getOrganizationWithSitesById(organizationVersion.organizationId)
 
   const [clientUsers, clientChildren, clientEmissionFactors] = await Promise.all([
     prismaClient.account.findFirst({ where: { organizationVersionId: id } }),
     prismaClient.organizationVersion.findFirst({ where: { parentId: id } }),
-    prismaClient.emissionFactor.findFirst({ where: { organizationId } }),
+    prismaClient.emissionFactor.findFirst({ where: { organizationId: organizationVersion.organizationId } }),
   ])
   if (clientUsers || clientChildren || clientEmissionFactors) {
     return 'unexpectedAssociations'
@@ -421,7 +420,7 @@ export const deleteClient = async (id: string) => {
       return 'unexpectedAssociations'
     }
 
-    await transaction.site.deleteMany({ where: { organizationId } })
+    await transaction.site.deleteMany({ where: { organizationId: organizationVersion.organizationId } })
     await transaction.organization.delete({ where: { id } })
   })
 }
