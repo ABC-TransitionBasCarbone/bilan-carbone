@@ -34,9 +34,10 @@ interface Props {
   onClose: () => void
   transitionPlanId: string
   studyUnit: StudyResultUnit
+  studyRealizationStartDate: string
 }
 
-const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Props) => {
+const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit, studyRealizationStartDate }: Props) => {
   const [activeStep, setActiveStep] = useState(0)
   const [toast, setToast] = useState<{ text: string; color: ToastColors }>(emptyToast)
   const [organizationMembers, setOrganizationMembers] = useState<{ label: string; value: string }[]>([])
@@ -88,8 +89,10 @@ const ActionModal = ({ action, open, onClose, transitionPlanId, studyUnit }: Pro
               action.reductionValueKg ? convertValue(action.reductionValueKg, StudyResultUnit.K, studyUnit) : 0,
             ),
           }
-        : {},
-    [action, studyUnit],
+        : {
+            reductionStartYear: studyRealizationStartDate,
+          },
+    [action, studyUnit, studyRealizationStartDate],
   )
 
   const { control, formState, getValues, setValue, reset, handleSubmit, trigger, setError, clearErrors } =
