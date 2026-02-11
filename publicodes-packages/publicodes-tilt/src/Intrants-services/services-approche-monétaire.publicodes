@@ -1,194 +1,194 @@
-services-approche-monétaire:
+intrants-services . services:
   question: Quel montant avez-vous dépensé dans les services immatériels suivants 
-  formule: somme
-    - spectacles-musées
-    - assurance-reassurance
-    - telecom
-    - sante-humaine
-    - edition
-    - poste-courrier
-    - restauration
-    - formation
-    - reparation-installation
-    - juridique-comptable
-    - programmation-conseil
+  formule: 
+    somme:
+      - spectacles-musées
+      - assurance-reassurance
+      - telecom
+      - sante-humaine
+      - edition
+      - poste-courrier
+      - restauration
+      - formation
+      - reparation-installation
+      - juridique-comptable
+      - programmation-conseil
   unité: kgCO2e
   description: |
     La liste est non exhaustive : si vous n’avez pas comptabilisé l’ensemble de vos dépenses, c’est tout à fait normal. Il peut s’agir de dépenses très faiblement émissives ou dont les émissions sont déjà prises en compte dans d’autres postes ou via d’autres questions reposant sur des données plus précises.
 
-spectacles-musées:
-  question: Montant dépensé en services de spectacles, musées et autres services culturels (k€)
+intrants-services . services . spectacles-musées:
   formule: montant-dépensé * FE / 1000
   avec:
     montant-dépensé:
-      question: Montant en euros HT
+      question: Montant dépensé en services de spectacles, musées et autres services culturels 
       par défaut: 0
-      unité: €
+      unité: k€
+
     FE:
       valeur: 104
-      unité: kgCO2e/k€ HT
+      unité: kgCO2e/k€
       meta:
         id: 43460
         nom: Arts, spectacles, musées
         source: ADEME
   unité: kgCO2e
 
-assurance-reassurance:
-  question: Montant dépensé en services d'assurance et réassurance (k€)
+intrants-services . services . assurance-reassurance:
   formule: montant-dépensé * FE / 1000
   avec:
     montant-dépensé:
-      question: Montant en euros HT
+      question: Montant dépensé en services d'assurance et réassurance 
       par défaut: 0
-      unité: €
+      unité: k€
+
     FE:
       valeur: 77
-      unité: kgCO2e/k€ HT
+      unité: kgCO2e/k€
       meta:
         id: 43475
         nom: Assurance, réassurance
 
   unité: kgCO2e
 
-telecom:
-  question: Montant dépensé en services de télécommunications (k€)
+intrants-services . services . telecom:
   formule: montant-dépensé * FE / 1000
   avec:
     montant-dépensé:
-      question: Montant en euros HT
+      question: Montant dépensé en services de télécommunications 
       par défaut: 0
-      unité: €
+      unité: k€
+
     FE:
       valeur: 92
-      unité: kgCO2e/k€ HT
+      unité: kgCO2e/k€
       meta:
         id: 43535
         nom: Services de télécommunications
   unité: kgCO2e
 
-sante-humaine:
-  question: Montant dépensé en services de santé humaine (k€)
+intrants-services . services . sante-humaine:
   formule: montant-dépensé * FE / 1000
   avec:
     montant-dépensé:
-      question: Montant en euros HT
+      question: Montant dépensé en services de santé humaine 
       par défaut: 0
-      unité: €
+      unité: k€
+
     FE:
       valeur: 82
-      unité: kgCO2e/k€ HT
+      unité: kgCO2e/k€
       meta:
         id: 43505
         nom: Services de santé humaine
   unité: kgCO2e
 
-edition:
-  question: Montant dépensé en services d'édition (k€)
+intrants-services . services . edition:
   formule: montant-dépensé * FE / 1000
   avec:
     montant-dépensé:
-      question: Montant en euros HT
+      question: Montant dépensé en services d'édition 
       par défaut: 0
-      unité: €
+      unité: k€
+
     FE:
       valeur: 96
-      unité: kgCO2e/k€ HT
+      unité: kgCO2e/k€
       meta:
         id: 43345
         nom: Édition - 2023
   unité: kgCO2e
 
-poste-courrier:
-  question: Montant dépensé en services de poste et courrier (k€)
+intrants-services . services . poste-courrier:
   formule: montant-dépensé * FE / 1000
   avec:
     montant-dépensé:
-      question: Montant en euros HT
+      question: Montant dépensé en services de poste et courrier 
       par défaut: 0
-      unité: €
+      unité: k€
+
     FE:
       valeur: 112
-      unité: kgCO2e/k€ HT
+      unité: kgCO2e/k€
       meta:
         id: 43485
         nom: Services de poste et de courrier
   unité: kgCO2e
 
-restauration:
-  question: Montant dépensé en services de restauration et hébergement (k€)
+intrants-services . services . restauration:
   formule: montant-dépensé * FE / 1000
   avec:
     montant-dépensé:
-      question: Montant en euros HT
+      question: Montant dépensé en services de restauration et hébergement 
       par défaut: 0
-      unité: €
+      unité: k€
+
     FE:
       valeur: 250
-      unité: kgCO2e/k€ HT
+      unité: kgCO2e/k€
       meta:
         id: 43525
         nom: Services de restauration et d'hébergement
   unité: kgCO2e
 
-formation:
-  question: Montant dépensé en services de formation (k€)
+intrants-services . services . formation:
   formule: montant-dépensé * FE / 1000
   avec:
     montant-dépensé:
-      question: Montant en euros HT
+      question: Montant dépensé en services de formation 
       par défaut: 0
-      unité: €
+      unité: k€
+
     FE:
       valeur: 75
-      unité: kgCO2e/k€ HT
+      unité: kgCO2e/k€
       meta:
         id: 43445
         nom: Services de programmation ou de conseil informatique
   unité: kgCO2e
 
-reparation-installation:
-  question: Montant dépensé en services de réparation et installation (k€)
+intrants-services . services . reparation-installation:
   formule: montant-dépensé * FE / 1000
   avec:
     montant-dépensé:
-      question: Montant en euros HT
-      par défaut: 0
-      unité: €
+      question: Montant dépensé en services de réparation et installation 
+      unité: k€
+
     FE:
       valeur: 66
-      unité: kgCO2e/k€ HT
+      unité: kgCO2e/k€
       meta:
         id: 43480
         nom: Services de l'enseignement
   unité: kgCO2e
 
-juridique-comptable:
-  question: Montant dépensé en services juridiques, comptables et assurances (k€)
+intrants-services . services . juridique-comptable:
   formule: montant-dépensé * FE / 1000
   avec:
     montant-dépensé:
-      question: Montant en euros HT
+      question: Montant dépensé en services juridiques, comptables et assurances 
       par défaut: 0
-      unité: €
+      unité: k€
+
     FE:
       valeur: 136
-      unité: kgCO2e/k€ HT
+      unité: kgCO2e/k€
       meta:
         id: 43510
         nom: Services de télécommunications
   unité: kgCO2e
 
-programmation-conseil:
-  question: Montant dépensé en services de programmation et conseil informatique (k€)
+intrants-services . services . programmation-conseil:
   formule: montant-dépensé * FE / 1000
   avec:
     montant-dépensé:
-      question: Montant en euros HT
+      question: Montant dépensé en services de programmation et conseil informatique 
       par défaut: 0
-      unité: €
+      unité: k€
+
     FE:
       valeur: 195
-      unité: kgCO2e/k€ HT
+      unité: kgCO2e/k€
       meta:
         id: 43450
         nom: Services de réparation et installation de machines
