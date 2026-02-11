@@ -177,6 +177,16 @@ describe('TransitionPlan DB', () => {
                 create: trajectory.objectives.map((objective) => ({
                   targetYear: objective.targetYear,
                   reductionRate: objective.reductionRate,
+                  isDefault: objective.isDefault,
+                  sites: {
+                    create: objective.sites.map((s) => ({ studySiteId: s.studySiteId })),
+                  },
+                  tags: {
+                    create: objective.tags.map((t) => ({ studyTagId: t.studyTagId })),
+                  },
+                  subPosts: {
+                    create: objective.subPosts.map((sp) => ({ subPost: sp.subPost })),
+                  },
                 })),
               },
             })),
@@ -226,7 +236,13 @@ describe('TransitionPlan DB', () => {
         include: {
           trajectories: {
             include: {
-              objectives: true,
+              objectives: {
+                include: {
+                  sites: { include: { studySite: true } },
+                  tags: { include: { studyTag: true } },
+                  subPosts: true,
+                },
+              },
             },
           },
           transitionPlanStudies: true,

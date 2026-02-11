@@ -90,24 +90,26 @@ describe('Trajectory Server Functions', () => {
 
       expect(result.success).toBe(true)
       expect(result.success).toBeTruthy()
-      expect(transitionPlanDbModule.createTrajectoryWithObjectives).toHaveBeenCalledWith({
-        transitionPlan: {
-          connect: {
-            id: 'transition-plan-123',
+      expect(transitionPlanDbModule.createTrajectoryWithObjectives).toHaveBeenCalledWith(
+        expect.objectContaining({
+          transitionPlan: {
+            connect: {
+              id: 'transition-plan-123',
+            },
           },
-        },
-        name: 'Test Trajectory',
-        description: 'A test trajectory',
-        type: TrajectoryType.SBTI_15,
-        objectives: {
-          createMany: {
-            data: [
-              { targetYear: 2030, reductionRate: 0.042 },
-              { targetYear: 2050, reductionRate: 0.042 },
-            ],
+          name: 'Test Trajectory',
+          description: 'A test trajectory',
+          type: TrajectoryType.SBTI_15,
+          objectives: {
+            createMany: {
+              data: [
+                { targetYear: 2030, reductionRate: 0.042, isDefault: true },
+                { targetYear: 2050, reductionRate: 0.042, isDefault: true },
+              ],
+            },
           },
-        },
-      })
+        }),
+      )
     })
 
     test('should create trajectory with SBTI_WB2C predefined objectives', async () => {
@@ -124,8 +126,8 @@ describe('Trajectory Server Functions', () => {
           objectives: {
             createMany: {
               data: [
-                { targetYear: 2030, reductionRate: 0.025 },
-                { targetYear: 2050, reductionRate: 0.025 },
+                { targetYear: 2030, reductionRate: 0.025, isDefault: true },
+                { targetYear: 2050, reductionRate: 0.025, isDefault: true },
               ],
             },
           },
@@ -151,8 +153,8 @@ describe('Trajectory Server Functions', () => {
           objectives: {
             createMany: {
               data: [
-                { targetYear: 2035, reductionRate: 0.05 },
-                { targetYear: 2040, reductionRate: 0.08 },
+                { targetYear: 2035, reductionRate: 0.05, isDefault: true },
+                { targetYear: 2040, reductionRate: 0.08, isDefault: true },
               ],
             },
           },

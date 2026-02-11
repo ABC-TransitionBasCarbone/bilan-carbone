@@ -1208,8 +1208,7 @@
         "objectives": "Sous-objectifs",
         "sites": "Sites",
         "tags": "Tags",
-        "subPosts": "Sous-postes",
-        "trajectoryName": "Trajectoire {trajectoryName}"
+        "subPosts": "Sous-postes"
       },
       "conversionWarning": {
         "title": "Conversion du type de trajectoire",

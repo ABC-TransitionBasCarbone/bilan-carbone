@@ -1,12 +1,13 @@
 'use server'
 
 import {
-  createSubObjective as dbCreateSubObjective,
-  updateSubObjective as dbUpdateSubObjective,
+  createObjective,
+  deleteObjective as dbDeleteObjective,
   getExistingObjectives,
   getObjectiveWithTransitionPlan,
+  updateObjective,
 } from '@/db/objective.db'
-import { deleteObjective as dbDeleteObjective, getTrajectoryWithTransitionPlan } from '@/db/transitionPlan'
+import { getTrajectoryWithTransitionPlan } from '@/db/transitionPlan'
 import { withServerResponse } from '@/utils/serverResponse'
 import { SubPost } from '@prisma/client'
 import { NOT_AUTHORIZED } from '../permissions/check'
@@ -73,11 +74,11 @@ export const createSubObjective = async (input: CreateObjectiveInput) =>
 
     await validateUniqueScopeCombination(input.trajectoryId, input)
 
-    return dbCreateSubObjective(input)
+    return createObjective(input)
   })
 
-export const updateObjective = async (input: UpdateObjectiveInput) =>
-  withServerResponse('updateObjective', async () => {
+export const updateSubObjective = async (input: UpdateObjectiveInput) =>
+  withServerResponse('updateSubObjective', async () => {
     const objective = await getObjectiveWithTransitionPlan(input.id)
     if (!objective) {
       throw new Error('Objective not found')
@@ -90,7 +91,7 @@ export const updateObjective = async (input: UpdateObjectiveInput) =>
 
     await validateUniqueScopeCombination(objective.trajectoryId, input, input.id)
 
-    return dbUpdateSubObjective(input)
+    return updateObjective(input)
   })
 
 export const deleteObjective = async (id: string) =>

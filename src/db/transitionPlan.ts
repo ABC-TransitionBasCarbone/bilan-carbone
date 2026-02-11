@@ -405,22 +405,6 @@ export const deleteTrajectory = async (id: string): Promise<void> => {
   })
 }
 
-export const deleteObjective = async (id: string): Promise<Objective> => {
-  return prismaClient.objective.delete({
-    where: { id },
-  })
-}
-
-export const updateObjective = async (
-  id: string,
-  data: { targetYear?: number; reductionRate?: number },
-): Promise<Objective> => {
-  return prismaClient.objective.update({
-    where: { id },
-    data,
-  })
-}
-
 export const updateTrajectoryWithObjectives = async (
   trajectoryId: string,
   data: {

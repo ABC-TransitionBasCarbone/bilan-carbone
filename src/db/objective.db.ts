@@ -28,7 +28,7 @@ export const getObjectiveWithTransitionPlan = async (id: string) =>
     },
   })
 
-export const createSubObjective = async (input: {
+export const createObjective = async (input: {
   trajectoryId: string
   targetYear: number
   reductionRate: number
@@ -84,7 +84,7 @@ export const createSubObjective = async (input: {
   })
 }
 
-export const updateSubObjective = async (input: {
+export const updateObjective = async (input: {
   id: string
   targetYear: number
   reductionRate: number
@@ -137,5 +137,11 @@ export const updateSubObjective = async (input: {
         subPosts: true,
       },
     })
+  })
+}
+
+export const deleteObjective = async (id: string) => {
+  return prismaClient.objective.delete({
+    where: { id },
   })
 }

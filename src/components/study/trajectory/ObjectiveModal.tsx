@@ -6,7 +6,7 @@ import Modal from '@/components/modals/Modal'
 import { ObjectiveWithScope, TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { environmentPostMapping, environmentSubPostsMapping, Post } from '@/services/posts'
-import { createSubObjective, updateObjective } from '@/services/serverFunctions/objective.serverFunction'
+import { createSubObjective, updateSubObjective } from '@/services/serverFunctions/objective.serverFunction'
 import { getStudySitesByStudyId } from '@/services/serverFunctions/studySite.serverFunction'
 import { getStudyTagsByStudyId } from '@/services/serverFunctions/tag.serverFunction'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
@@ -121,7 +121,7 @@ const ObjectiveModal = ({ open, onClose, trajectory, studyId, onSuccess, objecti
 
       await callServerFunction(
         () =>
-          updateObjective({
+          updateSubObjective({
             id: objective.id,
             targetYear: getYearFromDateStr(obj.targetYear!),
             reductionRate: Number((obj.reductionRate! / 100).toFixed(4)),
