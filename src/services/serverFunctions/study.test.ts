@@ -436,6 +436,8 @@ describe('study', () => {
             },
           }),
           Environment.BC,
+          true,
+          mockTransaction,
         )
 
         expect(mockCreateEmissionSourcesWithReturn).toHaveBeenCalledWith(
