@@ -1,17 +1,16 @@
 'use server'
 
+import { StudyCardItem } from '@/db/study'
 import AddIcon from '@mui/icons-material/Add'
 import { Box } from '@mui/material'
-import { Study } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
-import { Suspense } from 'react'
 import Block from '../base/Block'
 import styles from './Studies.module.css'
 import StudyCard from './card/StudyCard'
 
 interface Props {
-  studies: Study[]
+  studies: StudyCardItem[]
   canAddStudy: boolean
   creationUrl?: string
   user: UserSession
@@ -59,9 +58,7 @@ const Studies = async ({ studies, canAddStudy, creationUrl, user, collaborations
         {studies.length && (
           <ul className={styles.grid}>
             {studies.map((study) => (
-              <Suspense key={study.id}>
-                <StudyCard study={study} user={user} simplified={simplified} />
-              </Suspense>
+              <StudyCard key={study.id} study={study} user={user} simplified={simplified} />
             ))}
           </ul>
         )}

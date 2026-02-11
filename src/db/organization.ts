@@ -92,14 +92,87 @@ export const OrganizationVersionWithOrganizationSelect = {
   },
 }
 
-export const getOrganizationNameByOrganizationVersionId = (id: string | null) =>
+export const getOrgNameByOrgVersionId = async (id: string | null) => {
+  if (!id) {
+    return null
+  }
+
+  const organizationVersion = await prismaClient.organizationVersion.findUnique({
+    where: { id },
+    select: { organization: { select: { name: true } } },
+  })
+
+  return organizationVersion?.organization?.name
+}
+
+export const getOrgVersionWithNameById = async (id: string | null) => {
+  if (!id) {
+    return null
+  }
+  return prismaClient.organizationVersion.findUnique({
+    where: { id },
+    select: { id: true, parentId: true, organization: { select: { id: true, name: true } } },
+  })
+}
+
+export const getOrgVersionWithOrgId = async (id: string | null) => {
+  if (!id) {
+    return null
+  }
+  return prismaClient.organizationVersion.findUnique({
+    where: { id },
+    select: { organizationId: true },
+  })
+}
+
+export const getOrganizationVersionForRightsCheck = (id: string | null) =>
   id
     ? prismaClient.organizationVersion.findUnique({
         where: { id },
-        select: { id: true, organization: { select: { id: true, name: true } } },
+        select: {
+          id: true,
+          environment: true,
+          activatedLicence: true,
+          parentId: true,
+          parent: { select: { activatedLicence: true } },
+        },
       })
     : null
 
+export const getOrganizationVersionIsCR = async (id: string | null) => {
+  if (!id) {
+    return false
+  }
+
+  const organizationVersion = await prismaClient.organizationVersion.findUnique({
+    where: { id },
+    select: { isCR: true },
+  })
+  return organizationVersion?.isCR ?? false
+}
+
+export const organizationVersionExists = async (id: string | null) => {
+  if (!id) {
+    return false
+  }
+  const organizationVersion = await prismaClient.organizationVersion.findUnique({ where: { id }, select: { id: true } })
+  return organizationVersion !== null
+}
+
+export const getOrgSitesWithCNCByOrgVersionId = async (id: string | null) => {
+  if (!id) {
+    return null
+  }
+
+  const organizationVersion = await prismaClient.organizationVersion.findUnique({
+    where: { id },
+    select: { organization: { select: { sites: { include: { cnc: true } } } } },
+  })
+
+  return organizationVersion?.organization.sites ?? null
+}
+
+// IMPORTANT: Do not use unless you need the full organization version with all its fields and relations.
 export const getOrganizationVersionById = (id: string | null) =>
   id
     ? prismaClient.organizationVersion.findUnique({ where: { id }, select: OrganizationVersionWithOrganizationSelect })
@@ -139,7 +212,13 @@ export const getOrganizationVersionByOrganizationIdAndEnvironment = (
         environment,
       },
     },
-    select: OrganizationVersionWithOrganizationSelect,
+    select: {
+      id: true,
+      environment: true,
+      activatedLicence: true,
+      isCR: true,
+      parent: { select: { activatedLicence: true } },
+    },
   })
 
 export const getOrganizationVersionsByOrganizationId = (organizationId: string) =>
@@ -192,7 +271,7 @@ export const updateOrganization = async (
   { organizationVersionId, sites, ...data }: UpdateOrganizationCommand,
   caUnit: number,
 ) => {
-  const organizationVersion = await getOrganizationVersionById(organizationVersionId)
+  const organizationVersion = await getOrgVersionWithOrgId(organizationVersionId)
   if (!organizationVersion) {
     return
   }
@@ -248,10 +327,10 @@ export const updateOrganizationSites = async (
   organizationVersionId: string,
   caUnit: number,
 ) => {
-  const organizationVersion = await getOrganizationVersionById(organizationVersionId)
-  if (!organizationVersion) {
+  if (!(await organizationVersionExists(organizationVersionId))) {
     return
   }
+
   return prismaClient.$transaction([
     ...sites.map((site) =>
       prismaClient.site.update({
@@ -291,9 +370,10 @@ export const onboardOrganizationVersion = async (
   if (!dbUser) {
     return
   }
-  const organizationVersion = (await getOrganizationVersionById(
-    organizationVersionId,
-  )) as OrganizationVersionWithOrganization
+  const organizationVersion = await getOrgVersionWithOrgId(organizationVersionId)
+  if (!organizationVersion) {
+    return
+  }
 
   await transaction.organization.update({
     where: { id: organizationVersion.organizationId },
@@ -314,7 +394,11 @@ export const onboardOrganizationVersion = async (
 }
 
 export const deleteClient = async (id: string) => {
-  const organizationVersion = (await getOrganizationVersionById(id)) as OrganizationVersionWithOrganization
+  const organizationVersion = await getOrgVersionWithOrgId(id)
+  if (!organizationVersion) {
+    return
+  }
+
   const organization = await getOrganizationWithSitesById(organizationVersion.organizationId)
 
   const [clientUsers, clientChildren, clientEmissionFactors] = await Promise.all([
@@ -327,7 +411,7 @@ export const deleteClient = async (id: string) => {
   }
   return prismaClient.$transaction(async (transaction) => {
     const studies = await transaction.study.findMany({
-      where: { organizationVersionId: organizationVersion.id },
+      where: { organizationVersionId: id },
     })
     await Promise.all(studies.map((study) => deleteStudy(study.id)))
     await transaction.organizationVersion.delete({ where: { id } })
@@ -337,7 +421,7 @@ export const deleteClient = async (id: string) => {
     }
 
     await transaction.site.deleteMany({ where: { organizationId: organizationVersion.organizationId } })
-    await transaction.organization.delete({ where: { id: organizationVersion.organizationId } })
+    await transaction.organization.delete({ where: { id } })
   })
 }
 export const getRawOrganizationVersionById = (id: string | null) =>

@@ -31,6 +31,7 @@ import {
   getOrganizationVersionById,
   getOrganizationVersionsByOrganizationId,
   getOrganizationWithSitesById,
+  getOrgSitesWithCNCByOrgVersionId,
   isOrganizationVersionCR,
   OrganizationVersionWithOrganization,
 } from '@/db/organization'
@@ -267,16 +268,12 @@ export const createStudyCommand = async (
     }
 
     const studySites = sites.filter((site) => site.selected)
-    const organizationVersion = await getOrganizationVersionById(organizationVersionId)
-    if (!organizationVersion) {
+    const organizationSites = await getOrgSitesWithCNCByOrgVersionId(organizationVersionId)
+    if (!organizationSites) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (
-      studySites.some((site) =>
-        organizationVersion.organization.sites.every((organizationSite) => organizationSite.id !== site.id),
-      )
-    ) {
+    if (studySites.some((site) => organizationSites.every((organizationSite) => organizationSite.id !== site.id))) {
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -327,9 +324,7 @@ export const createStudyCommand = async (
         createMany: {
           data: studySites
             .map((site) => {
-              const organizationSite = organizationVersion.organization.sites.find(
-                (organizationSite) => organizationSite.id === site.id,
-              )
+              const organizationSite = organizationSites.find((organizationSite) => organizationSite.id === site.id)
               if (!organizationSite) {
                 return undefined
               }

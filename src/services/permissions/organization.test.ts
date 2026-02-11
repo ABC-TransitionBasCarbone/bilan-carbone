@@ -19,7 +19,12 @@ import {
 } from './organization'
 
 jest.mock('@/db/account', () => ({ getAccountById: jest.fn() }))
-jest.mock('@/db/organization', () => ({ getOrganizationVersionById: jest.fn() }))
+jest.mock('@/db/organization', () => ({
+  getOrganizationVersionById: jest.fn(),
+  getOrganizationVersionForRightsCheck: jest.fn(),
+  getOrganizationVersionIsCR: jest.fn(),
+  organizationVersionExists: jest.fn(),
+}))
 jest.mock('@/db/user', () => ({ getUserByEmail: jest.fn() }))
 jest.mock('@/utils/user', () => ({
   canEditMemberRole: jest.fn(),
@@ -33,7 +38,9 @@ jest.mock('../serverFunctions/study', () => ({ getOrganizationStudiesFromOtherUs
 jest.mock('../auth', () => ({ dbActualizedAuth: jest.fn() }))
 
 const mockGetAccountById = dbAccount.getAccountById as jest.Mock
-const mockGetOrganizationVersionById = dbOrganization.getOrganizationVersionById as jest.Mock
+const mockGetOrganizationVersionForRightsCheck = dbOrganization.getOrganizationVersionForRightsCheck as jest.Mock
+const mockGetOrganizationVersionIsCR = dbOrganization.getOrganizationVersionIsCR as jest.Mock
+const mockOrganizationVersionExists = dbOrganization.organizationVersionExists as jest.Mock
 const mockGetUserByEmail = dbUser.getUserByEmail as jest.Mock
 const mockCanEditMemberRole = userUtils.canEditMemberRole as jest.Mock
 const mockCanEditOrganizationVersion = organizationUtils.canEditOrganizationVersion as jest.Mock
@@ -51,43 +58,45 @@ describe('Organization permissions', () => {
     it('returns true if organization IDs match', async () => {
       const result = await isInOrgaOrParentFromId('mocked-organization-id', 'mocked-organization-id')
       expect(result).toBe(true)
-      expect(mockGetOrganizationVersionById).toHaveBeenCalledTimes(0)
+      expect(mockGetOrganizationVersionForRightsCheck).toHaveBeenCalledTimes(0)
     })
 
     it('returns true if organization is in parent chain', async () => {
       const userOrganizationId = 'user-organization-id'
-      mockGetOrganizationVersionById.mockResolvedValue({ id: mockedOrganizationId, parentId: userOrganizationId })
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({
+        id: mockedOrganizationId,
+        parentId: userOrganizationId,
+      })
       mockIsInOrgaOrParent.mockReturnValue(true)
 
       const result = await isInOrgaOrParentFromId(userOrganizationId, mockedOrganizationId)
 
       expect(result).toBe(true)
-      expect(mockGetOrganizationVersionById).toHaveBeenCalledTimes(1)
-      expect(mockGetOrganizationVersionById).toHaveBeenCalledTimes(1)
+      expect(mockGetOrganizationVersionForRightsCheck).toHaveBeenCalledTimes(1)
     })
 
     it('returns false if organization is not related', async () => {
       const mockedOrganizationId = 'mocked-organization-id'
-      mockGetOrganizationVersionById.mockResolvedValue({ id: mockedOrganizationId })
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({ id: mockedOrganizationId })
       mockIsInOrgaOrParent.mockReturnValue(false)
 
       const result = await isInOrgaOrParentFromId('user-organization-id', mockedOrganizationId)
 
       expect(result).toBe(false)
-      expect(mockGetOrganizationVersionById).toHaveBeenCalledTimes(1)
+      expect(mockGetOrganizationVersionForRightsCheck).toHaveBeenCalledTimes(1)
     })
   })
 
   describe('canCreateOrganization', () => {
     it('returns true if user belongs to CR organization', async () => {
       mockGetAccountById.mockResolvedValue({ organizationVersionId: 'mocked-organization-version-id' })
-      mockGetOrganizationVersionById.mockResolvedValue({ isCR: true })
+      mockGetOrganizationVersionIsCR.mockResolvedValue(true)
 
       const result = await canCreateOrganization(getMockedAuthUser())
       expect(result).toBe(true)
 
       expect(mockGetAccountById).toHaveBeenCalledTimes(1)
-      expect(mockGetOrganizationVersionById).toHaveBeenCalledTimes(1)
+      expect(mockGetOrganizationVersionIsCR).toHaveBeenCalledTimes(1)
     })
 
     it('returns false if user not found', async () => {
@@ -97,29 +106,29 @@ describe('Organization permissions', () => {
       expect(result).toBe(false)
 
       expect(mockGetAccountById).toHaveBeenCalledTimes(1)
-      expect(mockGetOrganizationVersionById).toHaveBeenCalledTimes(0)
+      expect(mockGetOrganizationVersionIsCR).toHaveBeenCalledTimes(0)
     })
 
     it('returns false if organization is not found', async () => {
       mockGetAccountById.mockResolvedValue({ organizationVersionId: 'mocked-organization-version-id' })
-      mockGetOrganizationVersionById.mockResolvedValue(null)
+      mockGetOrganizationVersionIsCR.mockResolvedValue(false)
 
       const result = await canCreateOrganization(getMockedAuthUser())
       expect(result).toBe(false)
 
       expect(mockGetAccountById).toHaveBeenCalledTimes(1)
-      expect(mockGetOrganizationVersionById).toHaveBeenCalledTimes(1)
+      expect(mockGetOrganizationVersionIsCR).toHaveBeenCalledTimes(1)
     })
 
     it('returns false if organization is not CR', async () => {
       mockGetAccountById.mockResolvedValue({ organizationVersionId: 'mocked-organization-version-id' })
-      mockGetOrganizationVersionById.mockResolvedValue({ isCR: false })
+      mockGetOrganizationVersionIsCR.mockResolvedValue(false)
 
       const result = await canCreateOrganization(getMockedAuthUser())
       expect(result).toBe(false)
 
       expect(mockGetAccountById).toHaveBeenCalledTimes(1)
-      expect(mockGetOrganizationVersionById).toHaveBeenCalledTimes(1)
+      expect(mockGetOrganizationVersionIsCR).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -128,7 +137,7 @@ describe('Organization permissions', () => {
       const mockedOrganizationVersionId = 'mocked-organization-version-id'
       const user = { email: 'mocked@email.com', organizationVersionId: mockedOrganizationVersionId } as UserSession
       mockGetAccountById.mockResolvedValue({ organizationVersionId: mockedOrganizationVersionId })
-      mockGetOrganizationVersionById.mockResolvedValue({ id: mockedOrganizationVersionId })
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({ id: mockedOrganizationVersionId })
       mockIsInOrgaOrParent.mockResolvedValue(true)
       mockCanEditOrganizationVersion.mockReturnValue(true)
 
@@ -136,7 +145,7 @@ describe('Organization permissions', () => {
       expect(result).toBe(true)
 
       expect(mockGetAccountById).toHaveBeenCalledTimes(1)
-      expect(mockGetOrganizationVersionById).toHaveBeenCalledTimes(1)
+      expect(mockGetOrganizationVersionForRightsCheck).toHaveBeenCalledTimes(1)
       expect(mockIsInOrgaOrParent).toHaveBeenCalledTimes(0)
       expect(mockCanEditOrganizationVersion).toHaveBeenCalledTimes(1)
     })
@@ -151,7 +160,7 @@ describe('Organization permissions', () => {
       } as UserSession
 
       mockGetAccountById.mockResolvedValue({ organizationVersionId: parentOrganizationVersionId })
-      mockGetOrganizationVersionById.mockImplementation((id: string) => {
+      mockGetOrganizationVersionForRightsCheck.mockImplementation((id: string) => {
         if (id === childOrganizationVersionId) {
           return { id: childOrganizationVersionId, parentId: parentOrganizationVersionId }
         }
@@ -162,12 +171,13 @@ describe('Organization permissions', () => {
       })
       mockIsInOrgaOrParent.mockReturnValue(true)
       mockCanEditOrganizationVersion.mockReturnValue(true)
+      mockOrganizationVersionExists.mockResolvedValue(true)
 
       const result = await canUpdateOrganizationVersion(user, childOrganizationVersionId)
       expect(result).toBe(true)
 
       expect(mockGetAccountById).toHaveBeenCalledTimes(1)
-      expect(mockGetOrganizationVersionById).toHaveBeenCalledTimes(3)
+      expect(mockGetOrganizationVersionForRightsCheck).toHaveBeenCalledTimes(2)
       expect(mockCanEditOrganizationVersion).toHaveBeenCalledWith(user, {
         id: childOrganizationVersionId,
         parentId: parentOrganizationVersionId,
@@ -181,14 +191,14 @@ describe('Organization permissions', () => {
       expect(result).toBe(false)
 
       expect(mockGetAccountById).toHaveBeenCalledTimes(1)
-      expect(mockGetOrganizationVersionById).toHaveBeenCalledTimes(0)
+      expect(mockGetOrganizationVersionForRightsCheck).toHaveBeenCalledTimes(0)
       expect(mockIsInOrgaOrParent).toHaveBeenCalledTimes(0)
       expect(mockCanEditOrganizationVersion).toHaveBeenCalledTimes(0)
     })
 
     it('returns false if organization check fails', async () => {
       mockGetAccountById.mockResolvedValue({ organizationVersionId: 'user-organization-version-id' })
-      mockGetOrganizationVersionById.mockResolvedValue({ id: mockedOrganizationId })
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({ id: mockedOrganizationId })
       mockIsInOrgaOrParent.mockReturnValue(false)
 
       const result = await canUpdateOrganizationVersion(
@@ -198,7 +208,7 @@ describe('Organization permissions', () => {
       expect(result).toBe(false)
 
       expect(mockGetAccountById).toHaveBeenCalledTimes(1)
-      expect(mockGetOrganizationVersionById).toHaveBeenCalledTimes(1)
+      expect(mockGetOrganizationVersionForRightsCheck).toHaveBeenCalledTimes(1)
       expect(mockIsInOrgaOrParent).toHaveBeenCalledTimes(1)
       expect(mockCanEditOrganizationVersion).toHaveBeenCalledTimes(0)
     })
@@ -207,26 +217,27 @@ describe('Organization permissions', () => {
       const mockedOrganizationChildId = 'mocked-organization-child-id'
       mockGetAccountById.mockResolvedValue({ organizationId: mockedOrganizationId })
       mockIsInOrgaOrParent.mockResolvedValue(true)
-      mockGetOrganizationVersionById.mockImplementation((organizationId: string) => {
+      mockGetOrganizationVersionForRightsCheck.mockImplementation((organizationId: string) => {
         if (organizationId === mockedOrganizationChildId) {
           return { parentId: mockedOrganizationId }
         } else {
           return null
         }
       })
+      mockOrganizationVersionExists.mockResolvedValue(false)
 
       const result = await canUpdateOrganizationVersion(getMockedAuthUser(), mockedOrganizationChildId)
       expect(result).toBe(false)
 
       expect(mockGetAccountById).toHaveBeenCalledTimes(1)
-      expect(mockGetOrganizationVersionById).toHaveBeenCalledTimes(3)
+      expect(mockGetOrganizationVersionForRightsCheck).toHaveBeenCalledTimes(2)
       expect(mockIsInOrgaOrParent).toHaveBeenCalledTimes(1)
       expect(mockCanEditOrganizationVersion).toHaveBeenCalledTimes(0)
     })
 
     it('returns false if cannot edit organization', async () => {
       mockGetAccountById.mockResolvedValue({ organizationVersionId: 'mocked-organization-version-id' })
-      mockGetOrganizationVersionById.mockResolvedValue({ id: 'mocked-organization-version-id' })
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({ id: 'mocked-organization-version-id' })
       mockIsInOrgaOrParent.mockResolvedValue(true)
       mockCanEditOrganizationVersion.mockReturnValue(false)
 
@@ -234,7 +245,7 @@ describe('Organization permissions', () => {
       expect(result).toBe(false)
 
       expect(mockGetAccountById).toHaveBeenCalledTimes(1)
-      expect(mockGetOrganizationVersionById).toHaveBeenCalledTimes(1)
+      expect(mockGetOrganizationVersionForRightsCheck).toHaveBeenCalledTimes(1)
       expect(mockIsInOrgaOrParent).toHaveBeenCalledTimes(0)
       expect(mockCanEditOrganizationVersion).toHaveBeenCalledTimes(1)
     })
@@ -245,7 +256,7 @@ describe('Organization permissions', () => {
       mockDBActualizedAuth.mockResolvedValue({
         user: getMockedAuthUser({ organizationVersionId: 'mocked-organization-parent' }),
       })
-      mockGetOrganizationVersionById.mockResolvedValue({ parentId: 'mocked-organization-parent' })
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({ parentId: 'mocked-organization-parent' })
       mockHasEditionRole.mockReturnValue(true)
       mockGetOrganizationStudiesFromOtherUsers.mockResolvedValue({ success: true, data: 0 })
 
@@ -253,7 +264,7 @@ describe('Organization permissions', () => {
       expect(result).toBe(true)
 
       expect(mockDBActualizedAuth).toHaveBeenCalledTimes(1)
-      expect(mockGetOrganizationVersionById).toHaveBeenCalledTimes(1)
+      expect(mockGetOrganizationVersionForRightsCheck).toHaveBeenCalledTimes(1)
       expect(mockHasEditionRole).toHaveBeenCalledTimes(1)
       expect(mockGetOrganizationStudiesFromOtherUsers).toHaveBeenCalledTimes(1)
     })
@@ -264,19 +275,19 @@ describe('Organization permissions', () => {
       expect(result).toBe(false)
 
       expect(mockDBActualizedAuth).toHaveBeenCalledTimes(1)
-      expect(mockGetOrganizationVersionById).toHaveBeenCalledTimes(1)
+      expect(mockGetOrganizationVersionForRightsCheck).toHaveBeenCalledTimes(1)
       expect(mockHasEditionRole).toHaveBeenCalledTimes(0)
       expect(mockGetOrganizationStudiesFromOtherUsers).toHaveBeenCalledTimes(0)
     })
 
     it('returns false if no target', async () => {
       mockDBActualizedAuth.mockResolvedValue({ user: getMockedAuthUser() })
-      mockGetOrganizationVersionById.mockResolvedValue(null)
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue(null)
       const result = await canDeleteOrganizationVersion(mockedOrganizationVersionId)
       expect(result).toBe(false)
 
       expect(mockDBActualizedAuth).toHaveBeenCalledTimes(1)
-      expect(mockGetOrganizationVersionById).toHaveBeenCalledTimes(1)
+      expect(mockGetOrganizationVersionForRightsCheck).toHaveBeenCalledTimes(1)
       expect(mockHasEditionRole).toHaveBeenCalledTimes(0)
       expect(mockGetOrganizationStudiesFromOtherUsers).toHaveBeenCalledTimes(0)
     })
@@ -285,7 +296,7 @@ describe('Organization permissions', () => {
       mockDBActualizedAuth.mockResolvedValue({
         user: { id: 'mocked-user-id', organizationVersionId: 'mocked-organization-parent', role: Role.COLLABORATOR },
       })
-      mockGetOrganizationVersionById.mockResolvedValue({ parentId: 'mocked-organization-parent' })
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({ parentId: 'mocked-organization-parent' })
       mockHasEditionRole.mockReturnValue(false)
       mockGetOrganizationStudiesFromOtherUsers.mockResolvedValue({ success: true, data: 0 })
 
@@ -293,7 +304,7 @@ describe('Organization permissions', () => {
       expect(result).toBe(false)
 
       expect(mockDBActualizedAuth).toHaveBeenCalledTimes(1)
-      expect(mockGetOrganizationVersionById).toHaveBeenCalledTimes(1)
+      expect(mockGetOrganizationVersionForRightsCheck).toHaveBeenCalledTimes(1)
       expect(mockHasEditionRole).toHaveBeenCalledTimes(1)
       expect(mockGetOrganizationStudiesFromOtherUsers).toHaveBeenCalledTimes(1)
     })
@@ -302,14 +313,14 @@ describe('Organization permissions', () => {
       mockDBActualizedAuth.mockResolvedValue({
         user: { id: 'mocked-user-id', organizationVersionId: 'mocked-organization-parent', role: Role.COLLABORATOR },
       })
-      mockGetOrganizationVersionById.mockResolvedValue({ parentId: 'mocked-organization-parent' })
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({ parentId: 'mocked-organization-parent' })
       mockHasEditionRole.mockReturnValue(true)
       mockGetOrganizationStudiesFromOtherUsers.mockResolvedValue({ success: true, data: 1 })
 
       const result = await canDeleteOrganizationVersion('mocked-organization-child')
       expect(result).toBe(false)
       expect(mockDBActualizedAuth).toHaveBeenCalledTimes(1)
-      expect(mockGetOrganizationVersionById).toHaveBeenCalledTimes(1)
+      expect(mockGetOrganizationVersionForRightsCheck).toHaveBeenCalledTimes(1)
       expect(mockHasEditionRole).toHaveBeenCalledTimes(1)
       expect(mockGetOrganizationStudiesFromOtherUsers).toHaveBeenCalledTimes(1)
     })
@@ -318,7 +329,7 @@ describe('Organization permissions', () => {
       mockDBActualizedAuth.mockResolvedValue({
         user: { id: 'mocked-user-id', organizationVersionId: 'mocked-user-organization-version-id', role: Role.ADMIN },
       })
-      mockGetOrganizationVersionById.mockResolvedValue({ parentId: 'mocked-parent-organization-id' })
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({ parentId: 'mocked-parent-organization-id' })
       mockHasEditionRole.mockReturnValue(true)
       mockGetOrganizationStudiesFromOtherUsers.mockResolvedValue({ success: true, data: 0 })
 
@@ -326,7 +337,7 @@ describe('Organization permissions', () => {
       expect(result).toBe(false)
 
       expect(mockDBActualizedAuth).toHaveBeenCalledTimes(1)
-      expect(mockGetOrganizationVersionById).toHaveBeenCalledTimes(1)
+      expect(mockGetOrganizationVersionForRightsCheck).toHaveBeenCalledTimes(1)
       expect(mockHasEditionRole).toHaveBeenCalledTimes(1)
       expect(mockGetOrganizationStudiesFromOtherUsers).toHaveBeenCalledTimes(1)
     })

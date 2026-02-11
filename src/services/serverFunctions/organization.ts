@@ -6,9 +6,10 @@ import { getEmissionFactorWithoutQuality } from '@/db/emissionFactors'
 import {
   createOrganizationWithVersion,
   deleteClient,
-  getOrganizationNameByOrganizationVersionId,
+  getOrgNameByOrgVersionId,
+  getOrgVersionWithNameById,
   getOrganizationVersionAccounts,
-  getOrganizationVersionById,
+  getOrganizationVersionIsCR,
   getRawOrganizationVersionById,
   onboardOrganizationVersion,
   setOnboarded,
@@ -51,7 +52,7 @@ export const getStudyOrganizationVersion = async (studyId: string) =>
     if (!study.success || !study.data) {
       return null
     }
-    return getOrganizationNameByOrganizationVersionId(study.data.organizationVersionId)
+    return getOrgVersionWithNameById(study.data.organizationVersionId)
   })
 
 export const createOrganizationCommand = async (command: CreateOrganizationCommand) =>
@@ -99,8 +100,8 @@ export const updateOrganizationCommand = async (command: UpdateOrganizationComma
     const caUnit = CA_UNIT_VALUES[userCAUnit || defaultCAUnit]
 
     await updateOrganization(command, caUnit)
-    const organizationVersion = await getOrganizationVersionById(command.organizationVersionId)
-    addUserChecklistItem(organizationVersion?.isCR ? UserChecklist.AddSiteCR : UserChecklist.AddSiteOrga)
+    const isCR = await getOrganizationVersionIsCR(command.organizationVersionId)
+    addUserChecklistItem(isCR ? UserChecklist.AddSiteCR : UserChecklist.AddSiteOrga)
   })
 
 export const updateOrganizationSitesCommand = async (command: SitesCommand, organizationVersionId: string) =>
@@ -125,12 +126,12 @@ export const deleteOrganizationCommand = async ({ id, name }: DeleteCommand) =>
     if (!(await canDeleteOrganizationVersion(id))) {
       throw new Error(NOT_AUTHORIZED)
     }
-    const organizationVersion = await getOrganizationNameByOrganizationVersionId(id)
-    if (!organizationVersion) {
+    const orgName = await getOrgNameByOrgVersionId(id)
+    if (!orgName) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (organizationVersion.organization.name.toLowerCase() !== name.toLowerCase()) {
+    if (orgName.toLowerCase() !== name.toLowerCase()) {
       throw new Error('wrongName')
     }
 

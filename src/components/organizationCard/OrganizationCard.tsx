@@ -1,6 +1,5 @@
 'use client'
 
-import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { getStudyOrganizationVersion } from '@/services/serverFunctions/organization'
 import { ORGANIZATION, STUDY, useAppContextStore } from '@/store/AppContext'
 import { canEditOrganizationVersion, isInOrgaOrParent } from '@/utils/organization'
@@ -11,9 +10,15 @@ import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from '../base/Link'
 
+interface OrganizationVersionForCard {
+  id: string
+  parentId: string | null
+  organization: { name: string }
+}
+
 interface Props {
   account: UserSession
-  organizationVersions: OrganizationVersionWithOrganization[]
+  organizationVersions: OrganizationVersionForCard[]
   shouldDisplayOrgaData: boolean
   shouldRenewLicense: boolean
 }
@@ -36,10 +41,8 @@ const OrganizationCard = ({ account, organizationVersions, shouldDisplayOrgaData
 
   const defaultOrganizationVersion = organizationVersions.find(
     (organizationVersion) => organizationVersion.id === account.organizationVersionId,
-  ) as OrganizationVersionWithOrganization
-  const [organizationVersion, setOrganizationVersion] = useState<OrganizationVersionWithOrganization | undefined>(
-    undefined,
   )
+  const [organizationVersion, setOrganizationVersion] = useState<OrganizationVersionForCard | undefined>(undefined)
 
   const { context, contextId } = useAppContextStore()
 
@@ -47,7 +50,7 @@ const OrganizationCard = ({ account, organizationVersions, shouldDisplayOrgaData
     async (organizationVersionId: string) => {
       const organizationVersion = organizationVersions.find(
         (organizationVersion) => organizationVersion.id === organizationVersionId,
-      ) as OrganizationVersionWithOrganization
+      )
       setOrganizationVersion(organizationVersion)
     },
     [organizationVersions],
@@ -65,8 +68,8 @@ const OrganizationCard = ({ account, organizationVersions, shouldDisplayOrgaData
 
   const handleStudyContext = async (studyId: string) => {
     const organizationVersion = await getStudyOrganizationVersion(studyId)
-    if (organizationVersion.success) {
-      setOrganizationVersion((organizationVersion.data as OrganizationVersionWithOrganization) || undefined)
+    if (organizationVersion && organizationVersion.success) {
+      setOrganizationVersion(organizationVersion.data || undefined)
     }
   }
 
@@ -84,8 +87,8 @@ const OrganizationCard = ({ account, organizationVersions, shouldDisplayOrgaData
   const organizationVersionLink = useMemo(() => {
     const targetOrganizationVersion = organizationVersion || defaultOrganizationVersion
     return hasEditionRole
-      ? `/organisations/${targetOrganizationVersion.id}/modifier`
-      : `/organisations/${targetOrganizationVersion.id}`
+      ? `/organisations/${targetOrganizationVersion?.id}/modifier`
+      : `/organisations/${targetOrganizationVersion?.id}`
   }, [organizationVersion, defaultOrganizationVersion, hasEditionRole])
 
   if (!organizationVersion) {
@@ -93,10 +96,10 @@ const OrganizationCard = ({ account, organizationVersions, shouldDisplayOrgaData
   }
 
   const linkLabel = hasEditionRole
-    ? organizationVersion.id === defaultOrganizationVersion.id
+    ? organizationVersion.id === defaultOrganizationVersion?.id
       ? 'update'
       : 'updateClient'
-    : organizationVersion.id === defaultOrganizationVersion.id
+    : organizationVersion.id === defaultOrganizationVersion?.id
       ? 'myOrganization'
       : 'myClient'
 

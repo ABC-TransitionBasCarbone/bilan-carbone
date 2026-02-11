@@ -1,5 +1,5 @@
 import { AccountWithUser } from '@/db/account'
-import { getOrganizationVersionById } from '@/db/organization'
+import { getOrganizationVersionForRightsCheck } from '@/db/organization'
 import { hasActiveLicence } from '@/utils/organization'
 import { EmissionFactor, Import } from '@prisma/client'
 import { isFromEmissionFactorOrganization } from '../serverFunctions/emissionFactor'
@@ -16,7 +16,7 @@ export const canReadEmissionFactor = (
 }
 
 export const canCreateEmissionFactor = async (organizationVersionId: string) => {
-  const organizationVersion = await getOrganizationVersionById(organizationVersionId)
+  const organizationVersion = await getOrganizationVersionForRightsCheck(organizationVersionId)
   return organizationVersion && hasActiveLicence(organizationVersion)
 }
 

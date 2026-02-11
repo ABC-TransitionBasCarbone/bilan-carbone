@@ -2,7 +2,7 @@ import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import NotFound from '@/components/pages/NotFound'
 import SimplifiedStudies from '@/components/pages/SimplifiedStudies'
 import TiltSimplifiedComingSoon from '@/components/pages/TiltSimplifiedComingSoon'
-import { getOrganizationVersionById } from '@/db/organization'
+import { getOrgNameByOrgVersionId } from '@/db/organization'
 import { hasAccessToSimplifiedStudies, isTilt, isTiltSimplifiedFeatureActive } from '@/services/permissions/environment'
 
 const MyFootprints = async ({ user }: UserSessionProps) => {
@@ -10,9 +10,9 @@ const MyFootprints = async ({ user }: UserSessionProps) => {
     return <NotFound />
   }
 
-  const organizationVersion = await getOrganizationVersionById(user.organizationVersionId)
+  const organizationName = await getOrgNameByOrgVersionId(user.organizationVersionId)
 
-  if (!organizationVersion) {
+  if (!organizationName) {
     return <NotFound />
   }
 
@@ -23,7 +23,13 @@ const MyFootprints = async ({ user }: UserSessionProps) => {
     }
   }
 
-  return <SimplifiedStudies organizationVersion={organizationVersion} user={user} />
+  return (
+    <SimplifiedStudies
+      organizationVersionId={user.organizationVersionId}
+      organizationName={organizationName}
+      user={user}
+    />
+  )
 }
 
 export default withAuth(MyFootprints)

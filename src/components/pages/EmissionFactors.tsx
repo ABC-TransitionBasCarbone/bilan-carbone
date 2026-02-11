@@ -1,4 +1,4 @@
-import { getOrganizationVersionById } from '@/db/organization'
+import { getOrganizationVersionForRightsCheck } from '@/db/organization'
 import { hasActiveLicence } from '@/utils/organization'
 import { Environment } from '@prisma/client'
 import { getTranslations } from 'next-intl/server'
@@ -17,7 +17,7 @@ const EmissionFactorsPage = async ({ userOrganizationId, environment, user }: Pr
   const tNav = await getTranslations('nav')
   const t = await getTranslations('emissionFactors')
 
-  const userOrganization = await getOrganizationVersionById(user.organizationVersionId || '')
+  const userOrganization = await getOrganizationVersionForRightsCheck(user.organizationVersionId || '')
   const activeLicence = !!userOrganization && hasActiveLicence(userOrganization)
 
   return (

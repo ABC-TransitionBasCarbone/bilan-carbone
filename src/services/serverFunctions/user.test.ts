@@ -10,8 +10,8 @@ import {
 import { findCncByCncCode } from '@/db/cnc'
 import {
   createOrganizationWithVersion,
-  getOrganizationVersionById,
   getOrganizationVersionByOrganizationIdAndEnvironment,
+  getOrganizationVersionForRightsCheck,
   getRawOrganizationBySiret,
   getRawOrganizationBySiteCNC,
 } from '@/db/organization'
@@ -85,7 +85,7 @@ const mockGetRawOrganizationBySiret = getRawOrganizationBySiret as jest.Mock
 const mockGetValidAssociationNameBySiret = getValidAssociationNameBySiret as jest.Mock
 const mockGetCompanyName = getCompanyName as jest.Mock
 const mockSendActivationRequest = sendActivationRequest as jest.Mock
-const mockGetOrganizationVersionById = getOrganizationVersionById as jest.Mock
+const mockGetOrganizationVersionForRightsCheck = getOrganizationVersionForRightsCheck as jest.Mock
 const mockOrganizationVersionActiveAccountsCount = organizationVersionActiveAccountsCount as jest.Mock
 const mockActivateEmail = activateEmail as jest.Mock
 
@@ -178,7 +178,7 @@ describe('signUpWithSiretOrCNC', () => {
           lastName: 'User',
         },
       })
-      mockGetOrganizationVersionById.mockResolvedValue({
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({
         id: mockedOrganizationVersionId,
         activatedLicence: false,
       })

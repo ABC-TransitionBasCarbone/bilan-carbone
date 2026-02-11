@@ -4,7 +4,7 @@ import NewStudyPage from '@/components/pages/NewStudy'
 import NotFound from '@/components/pages/NotFound'
 import TiltSimplifiedComingSoon from '@/components/pages/TiltSimplifiedComingSoon'
 import { getAccountOrganizationVersions } from '@/db/account'
-import { getOrganizationVersionAccounts, getOrganizationVersionById } from '@/db/organization'
+import { getOrganizationVersionAccounts, getOrganizationVersionForRightsCheck } from '@/db/organization'
 import { isTilt, isTiltSimplifiedFeatureActive } from '@/services/permissions/environment'
 import { canCreateAStudy } from '@/services/permissions/study'
 import { getUserSettings } from '@/services/serverFunctions/user'
@@ -34,7 +34,7 @@ const NewStudy = async ({ user, duplicateStudyId, isSimplified }: UserSessionPro
   )?.id
 
   if (organizationVersionId) {
-    const organizationVersion = await getOrganizationVersionById(organizationVersionId)
+    const organizationVersion = await getOrganizationVersionForRightsCheck(organizationVersionId)
     if (!organizationVersion || !hasActiveLicence(organizationVersion)) {
       redirect('/')
     }

@@ -1,6 +1,6 @@
 'use server'
 
-import { getOrganizationVersionById } from '@/db/organization'
+import { getOrganizationVersionForRightsCheck } from '@/db/organization'
 import { hasActiveLicenceForFormation } from '@/utils/organization'
 import { DeactivatableFeature } from '@prisma/client'
 import { UserSession } from 'next-auth'
@@ -14,7 +14,7 @@ export const hasAccessToFormation = async (user: UserSession) => {
     isDeactivableFeatureActive(DeactivatableFeature.Formation),
     getUserSource(),
     getDeactivableFeatureRestrictions(DeactivatableFeature.Formation),
-    getOrganizationVersionById(user.organizationVersionId),
+    getOrganizationVersionForRightsCheck(user.organizationVersionId),
   ])
 
   if (!activeFeature) {

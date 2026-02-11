@@ -8,7 +8,7 @@ import { flattenSubposts } from '@/utils/post'
 import { EmissionFactorBase, EmissionFactorStatus, Environment, Import, Prisma, SubPost, Unit } from '@prisma/client'
 import { Session } from 'next-auth'
 import { prismaClient } from './client'
-import { getOrganizationVersionById } from './organization'
+import { getOrgVersionWithOrgId } from './organization'
 
 const otherSelectEmissionFactor = {
   id: true,
@@ -373,7 +373,7 @@ export const updateEmissionFactor = async (
   local: string,
   { id, name, unit, attribute, comment, parts, subPosts, ...command }: UpdateEmissionFactorCommand,
 ) => {
-  const accountOrganizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
+  const accountOrganizationVersion = await getOrgVersionWithOrgId(session.user.organizationVersionId)
 
   const emissionFactor = {
     ...command,
@@ -384,11 +384,13 @@ export const updateEmissionFactor = async (
     isMonetary: isMonetaryEmissionFactor(command),
     subPosts: flattenSubposts(subPosts),
   }
+
   await prismaClient.$transaction(async (transaction) => {
     await transaction.emissionFactor.update({
       where: { id },
       data: emissionFactor,
     })
+
     await transaction.emissionFactorMetaData.upsert({
       where: {
         emissionFactorId_language: { emissionFactorId: id, language: local },
@@ -396,15 +398,20 @@ export const updateEmissionFactor = async (
       create: { emissionFactorId: id, language: local, title: name, attribute, comment },
       update: { language: local, title: name, attribute, comment },
     })
+
     const emissionFactorParts = await transaction.emissionFactorPart.findMany({
       where: { emissionFactorId: id },
       select: { id: true },
     })
+
     const emissionFactorPartIds = emissionFactorParts.map((emissionFactorPart) => emissionFactorPart.id)
+
     await transaction.emissionFactorPartMetaData.deleteMany({
       where: { emissionFactorPartId: { in: emissionFactorPartIds } },
     })
+
     await transaction.emissionFactorPart.deleteMany({ where: { id: { in: emissionFactorPartIds } } })
+
     await Promise.all(
       parts.map(({ name, ...part }) =>
         prismaClient.emissionFactorPart.create({
