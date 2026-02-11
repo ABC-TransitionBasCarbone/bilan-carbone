@@ -1,6 +1,6 @@
 froid et clim:
   titre: Froid et climatisation
-  formule: nombre * FE / ammortissement
+  formule: nombre * FE / amortissement
   unité: kgCO2e
   avec:
     FE:
@@ -10,7 +10,7 @@ froid et clim:
         id: 28325
         nom: Climatiseur mobile
 
-    ammortissement:
+    amortissement:
       valeur: 6
 
 froid et clim . nombre:
@@ -19,4 +19,4 @@ froid et clim . nombre:
 
 froid et clim . fuites:
   titre: Fuites de fluides frigoriègnes
-  formule: puissance moyenne * nombre
+  formule: puissance moyenne * nombre  #A COMPLETER

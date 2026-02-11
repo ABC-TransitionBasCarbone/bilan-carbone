@@ -1,2 +1,6 @@
 intrants-services:
-  titre: Intrants et services
+  titre: Intrants services
+  formule:
+    somme:
+      - numérique
+      - services

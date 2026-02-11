@@ -1,2 +1,6 @@
 fret:
   titre: Fret
+  formule:
+    somme:
+      - fabrication
+      - transport
