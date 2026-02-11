@@ -6,9 +6,9 @@ ALTER TABLE "objectives" ADD COLUMN     "is_default" BOOLEAN NOT NULL DEFAULT fa
 UPDATE objectives
 SET is_default = true
 WHERE id NOT IN (
-  SELECT DISTINCT objective_id FROM objectives_sites
+  SELECT DISTINCT objective_id FROM objective_sites
   UNION
-  SELECT DISTINCT objective_id FROM objectives_tags
+  SELECT DISTINCT objective_id FROM objective_tags
   UNION
-  SELECT DISTINCT objective_id FROM objectives_sub_posts
+  SELECT DISTINCT objective_id FROM objective_subposts
 );
