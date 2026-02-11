@@ -15,15 +15,15 @@ jest.mock('next-intl/server', () => ({
 
 describe('import Service', () => {
   describe('isSourceForEnv', () => {
-    it('should retrieve sources for env', () => {
+    it('should retrieve sources for env', async () => {
       process.env.BC_FE_SOURCES_IMPORT = 'BaseEmpreinte,Legifrance,NegaOctet,Manual,ADEME,CUT'
-      const result = isSourceForEnv(Environment.BC)
+      const result = await isSourceForEnv(Environment.BC)
       expect(result).toEqual([Import.BaseEmpreinte, Import.Legifrance, Import.NegaOctet, Import.Manual, Import.CUT])
     })
 
-    it('should not retrieve sources when env has no import', () => {
+    it('should not retrieve sources when env has no import', async () => {
       process.env.BC_FE_SOURCES_IMPORT = ''
-      const result = isSourceForEnv(Environment.BC)
+      const result = await isSourceForEnv(Environment.BC)
       expect(result).toEqual([])
     })
   })

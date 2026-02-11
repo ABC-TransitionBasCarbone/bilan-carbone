@@ -1,7 +1,7 @@
 'use client'
 
 import { customRich } from '@/i18n/customRich'
-import { getEnvVar } from '@/lib/environment'
+import { getEnvVarClient } from '@/lib/environmentClient'
 import { activateEmail } from '@/services/serverFunctions/user'
 import { EmailCommand, EmailCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -23,8 +23,8 @@ interface Props {
 }
 
 const ActivationForm = ({ environment = Environment.BC }: Props) => {
-  const contactMail = getEnvVar('SUPPORT_EMAIL', environment)
-  const faq = getEnvVar('FAQ_LINK', environment)
+  const contactMail = getEnvVarClient('SUPPORT_EMAIL', environment)
+  const faq = getEnvVarClient('FAQ_LINK', environment)
 
   const t = useTranslations('activation')
   const [submitting, setSubmitting] = useState(false)

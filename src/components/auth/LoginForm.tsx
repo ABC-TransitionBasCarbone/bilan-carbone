@@ -1,7 +1,7 @@
 'use client'
 
 import { customRich } from '@/i18n/customRich'
-import { getEnvVar } from '@/lib/environment'
+import { getEnvVarClient } from '@/lib/environmentClient'
 import { getEnvRoute } from '@/services/email/utils'
 import { LoginCommand, LoginCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -27,7 +27,7 @@ interface Props {
 }
 
 const LoginForm = ({ environment = Environment.BC }: Props) => {
-  const support = getEnvVar('SUPPORT_EMAIL', environment)
+  const support = getEnvVarClient('SUPPORT_EMAIL', environment)
   const t = useTranslations('login.form')
   const router = useRouter()
   const [submitting, setSubmitting] = useState(false)
