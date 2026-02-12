@@ -182,7 +182,7 @@ export const sendNewContributorInvitationEmail = async (
 }
 
 export const sendAddedUsersByFile = async (results: Record<string, string>[], env: Environment) => {
-  const support = getEnvVar('SUPPORT_EMAIL', env)
+  const support = await getEnvVar('SUPPORT_EMAIL', env)
   return sendEmail(env, [support], await tSubject('addedUsersByFile'), 'authorization-import-users', {
     results,
   })

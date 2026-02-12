@@ -1,13 +1,13 @@
 import Block from '@/components/base/Block'
 import { getEnvVar } from '@/lib/environment'
 import { Environment } from '@prisma/client'
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 import styles from './styles.module.css'
 
-const LegalNotices = () => {
-  const contactMail = getEnvVar('CONTACT_EMAIL', Environment.BC)
-  const t = useTranslations('legalNotices')
+const LegalNotices = async () => {
+  const contactMail = await getEnvVar('CONTACT_EMAIL', Environment.BC)
+  const t = await getTranslations('legalNotices')
   return (
     <Block>
       <div className={styles.notices} data-testid="legal-notices">

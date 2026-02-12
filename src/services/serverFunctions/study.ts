@@ -31,6 +31,7 @@ import {
   getOrganizationVersionById,
   getOrganizationVersionsByOrganizationId,
   getOrganizationWithSitesById,
+  getOrgSitesWithCNCByOrgVersionId,
   isOrganizationVersionCR,
   OrganizationVersionWithOrganization,
 } from '@/db/organization'
@@ -224,6 +225,7 @@ export const createStudyCommand = async (
   { organizationVersionId, validator, sites, ...command }: CreateStudyCommand,
   resultsUnit?: StudyResultUnit,
   sourceTagFamilies?: FullStudy['tagFamilies'],
+  tx?: Prisma.TransactionClient,
 ) =>
   withServerResponse('createStudyCommand', async () => {
     const session = await dbActualizedAuth()
@@ -267,16 +269,12 @@ export const createStudyCommand = async (
     }
 
     const studySites = sites.filter((site) => site.selected)
-    const organizationVersion = await getOrganizationVersionById(organizationVersionId)
-    if (!organizationVersion) {
+    const organizationSites = await getOrgSitesWithCNCByOrgVersionId(organizationVersionId)
+    if (!organizationSites) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (
-      studySites.some((site) =>
-        organizationVersion.organization.sites.every((organizationSite) => organizationSite.id !== site.id),
-      )
-    ) {
+    if (studySites.some((site) => organizationSites.every((organizationSite) => organizationSite.id !== site.id))) {
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -295,7 +293,7 @@ export const createStudyCommand = async (
             }))
           : [
               {
-                name: 'défaut',
+                name: 'DEFAULT_FAMILY_TAG',
                 tags: environmentTags
                   ? {
                       create: environmentTags.map((tag) => ({ name: tag.name, color: tag.color })),
@@ -327,9 +325,7 @@ export const createStudyCommand = async (
         createMany: {
           data: studySites
             .map((site) => {
-              const organizationSite = organizationVersion.organization.sites.find(
-                (organizationSite) => organizationSite.id === site.id,
-              )
+              const organizationSite = organizationSites.find((organizationSite) => organizationSite.id === site.id)
               if (!organizationSite) {
                 return undefined
               }
@@ -361,8 +357,11 @@ export const createStudyCommand = async (
     }
 
     try {
-      const createdStudy = await createStudy(study, session.user.environment)
-      addUserChecklistItem(UserChecklist.CreateFirstStudy)
+      const createdStudy = await createStudy(study, session.user.environment, true, tx)
+      if (!tx) {
+        // This cannot be part of a transaction easily so it is done in the duplication flow after the transaction is committed
+        await addUserChecklistItem(UserChecklist.CreateFirstStudy)
+      }
       return { id: createdStudy.id }
     } catch (e) {
       console.error(e)
@@ -1444,7 +1443,7 @@ const duplicateEmissionSources = async (
   const emissionSourcesDataWithSourceId = emissionSourcesWithSites.map(
     ({ sourceEmissionSource, targetStudySiteId, subPost }) => {
       const newId = uuidv4()
-      const contributorId = sourceEmissionSource.contributor?.id
+      const lastEditorId = sourceEmissionSource.lastEditor?.id
       return {
         sourceId: sourceEmissionSource.id,
         targetId: newId,
@@ -1475,7 +1474,7 @@ const duplicateEmissionSources = async (
           emissionFactorId: sourceEmissionSource.emissionFactor?.id ?? null,
           studySiteId: targetStudySiteId,
           validated: shouldClearValidations ? false : sourceEmissionSource.validated,
-          ...(contributorId ? { contributor: { connect: { id: contributorId } } } : {}),
+          lastEditorId,
         },
       }
     },
@@ -1549,20 +1548,35 @@ export const duplicateStudyCommand = async (
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const createResult = await createStudyCommand(studyCommand, sourceStudy.resultsUnit, sourceStudy.tagFamilies)
-    if (!createResult.success) {
-      throw new Error(createResult.errorMessage || 'Failed to create study')
-    }
+    const { createdStudyId, createdStudy } = await prismaClient.$transaction(async (tx) => {
+      const createResult = await createStudyCommand(studyCommand, sourceStudy.resultsUnit, sourceStudy.tagFamilies, tx)
+      if (!createResult.success) {
+        throw new Error(createResult.errorMessage || 'Failed to create study')
+      }
 
-    const createdStudyId = createResult.data.id
-    const createdStudy = await getStudyById(createdStudyId, session.user.organizationVersionId)
-    if (!createdStudy) {
-      throw new Error('Failed to retrieve created study')
-    }
+      const id = createResult.data.id
+      const study = await getStudyById(id, session.user.organizationVersionId, tx)
+      if (!study) {
+        throw new Error('Failed to retrieve created study')
+      }
 
-    await prismaClient.$transaction(async (tx) => {
+      const allowedSourcesForNewStudy =
+        session.user.environment === Environment.BC
+          ? (() => {
+              const hasGHGP = studyCommand.exports?.includes(Export.GHGP)
+              return Object.values(Import).filter(
+                (source) => source !== Import.Manual && source !== Import.CUT && (source !== Import.AIB || hasGHGP),
+              )
+            })()
+          : undefined
+
       for (const sourceVersion of sourceStudy.emissionFactorVersions) {
-        await updateStudyEmissionFactorVersion(createdStudyId, sourceVersion.source, sourceVersion.importVersionId, tx)
+        if (
+          sourceVersion.importVersionId &&
+          (!allowedSourcesForNewStudy || allowedSourcesForNewStudy.includes(sourceVersion.source))
+        ) {
+          await updateStudyEmissionFactorVersion(id, sourceVersion.source, sourceVersion.importVersionId, tx)
+        }
       }
 
       const shouldClearCaracterisations = studyCommand.controlMode !== sourceStudy.exports?.control
@@ -1570,12 +1584,16 @@ export const duplicateStudyCommand = async (
       await duplicateEmissionSources(
         tx,
         sourceStudy.emissionSources,
-        createdStudy,
+        study,
         sourceStudy.id,
         shouldClearCaracterisations,
         true,
       )
+
+      return { createdStudyId: id, createdStudy: study }
     })
+
+    await addUserChecklistItem(UserChecklist.CreateFirstStudy)
 
     // This should not be part of the transaction because it contains third party requests which will get executed even if the transaction is rolled back
     if (inviteExistingTeam) {
@@ -1892,8 +1910,8 @@ export const duplicateStudyEmissionSource = async (
       study: { connect: { id: studyId } },
       emissionFactor: emissionSource.emissionFactor ? { connect: { id: emissionSource.emissionFactor.id } } : undefined,
       emissionFactorId: undefined,
-      contributor: emissionSource.contributor ? { connect: { id: emissionSource.contributor.id } } : undefined,
-      contributorId: undefined,
+      lastEditor: emissionSource.lastEditor ? { connect: { id: emissionSource.lastEditor.id } } : undefined,
+      lastEditorId: undefined,
       studySite: { connect: { id: studySite } },
       studySiteId: undefined,
       validated: false,

@@ -146,7 +146,7 @@ export const EmissionFactorsFilters = ({
               values={filters.units}
               allValues={initialSelectedUnits.filter((unit) => unit != 'all')}
               setValues={(values) => setFilters((prevFilters) => ({ ...prevFilters, units: values }))}
-              t={tUnit}
+              getLabel={(unit) => tUnit(unit)}
             />
           </FormControl>
           {filters.base && (
@@ -159,7 +159,7 @@ export const EmissionFactorsFilters = ({
                 values={filters.base}
                 allValues={Object.values(EmissionFactorBase)}
                 setValues={(values) => setFilters((prevFilters) => ({ ...prevFilters, base: values }))}
-                t={tBase}
+                getLabel={(base) => tBase(base)}
               />
             </FormControl>
           )}

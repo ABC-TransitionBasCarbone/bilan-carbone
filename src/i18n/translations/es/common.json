@@ -8,6 +8,8 @@
     "all": "Todos",
     "none": "Ninguno",
     "subPosts": "Sub-posts",
+    "onDate": "el",
+    "by": "por",
     "action": {
       "create": "Crear",
       "edit": "Editar",
@@ -26,7 +28,9 @@
     },
     "label": {
       "start": "Inicio",
-      "end": "Fin"
+      "end": "Fin",
+      "sites": "Sitios",
+      "date": "Fecha"
     },
     "notAuthorized": "Acción no autorizada",
     "Not authorized": "No tiene permisos para realizar esta acción",

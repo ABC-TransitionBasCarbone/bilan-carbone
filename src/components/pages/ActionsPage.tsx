@@ -55,6 +55,7 @@ const ActionsPage = ({ study, actions, transitionPlanId, canEdit }: Props) => {
             transitionPlanId={transitionPlanId}
             canEdit={canEdit}
             studyId={study.id}
+            studyRealizationStartDate={study.realizationStartDate?.toISOString() ?? ''}
           />
         </div>
       </Block>

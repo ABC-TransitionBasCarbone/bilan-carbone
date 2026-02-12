@@ -3,7 +3,7 @@ import withStudyCreation, { StudyCreationProps } from '@/components/hoc/withStud
 import NewStudyPage from '@/components/pages/NewStudy'
 import NotFound from '@/components/pages/NotFound'
 import { getAccountOrganizationVersions } from '@/db/account'
-import { getOrganizationVersionAccounts, getOrganizationVersionById } from '@/db/organization'
+import { getOrganizationVersionAccounts, getOrganizationVersionForRightsCheck } from '@/db/organization'
 import { canCreateAStudy } from '@/services/permissions/study'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { defaultCAUnit } from '@/utils/number'
@@ -33,7 +33,7 @@ const NewStudyInOrganization = async (props: Props & UserSessionProps & StudyCre
     (organizationVersion) => organizationVersion.id === user.organizationVersionId,
   )?.id
   if (organizationVersionId) {
-    const organizationVersion = await getOrganizationVersionById(organizationVersionId)
+    const organizationVersion = await getOrganizationVersionForRightsCheck(organizationVersionId)
     if (!organizationVersion || !hasActiveLicence(organizationVersion)) {
       redirect('/')
     }

@@ -1,12 +1,11 @@
 import withAuth from '@/components/hoc/withAuth'
 import NewEmissionFactorPage from '@/components/pages/NewEmissionFactor'
 import NotFound from '@/components/pages/NotFound'
-import { getOrganizationVersionById } from '@/db/organization'
+import { getOrganizationVersionForRightsCheck } from '@/db/organization'
 import { hasAccessToEmissionFactors } from '@/services/permissions/environmentAdvanced'
 import { getEmissionFactorLocations } from '@/services/serverFunctions/emissionFactor'
 import { hasActiveLicence } from '@/utils/organization'
 import { UserSession } from 'next-auth'
-import { redirect } from 'next/navigation'
 
 interface Props {
   user: UserSession
@@ -17,9 +16,9 @@ const NewEmissionFactor = async ({ user }: Props) => {
     return <NotFound />
   }
 
-  const userOrganization = await getOrganizationVersionById(user.organizationVersionId || '')
+  const userOrganization = await getOrganizationVersionForRightsCheck(user.organizationVersionId || '')
   if (!userOrganization || !hasActiveLicence(userOrganization)) {
-    redirect('/facteurs-d-emission')
+    return <NotFound />
   }
 
   const locations = await getEmissionFactorLocations()

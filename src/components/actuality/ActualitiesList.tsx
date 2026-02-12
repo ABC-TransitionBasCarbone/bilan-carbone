@@ -1,13 +1,13 @@
 'use server'
 
-import { getAllActualities } from '@/db/actuality'
+import { getAllActualitiesLocale } from '@/db/actuality'
 import classNames from 'classnames'
 import ActualityRow from './Actuality'
 import NoActualities from './NoActualities'
 import styles from './styles.module.css'
 
 const ActualitiesList = async () => {
-  const actualities = await getAllActualities()
+  const actualities = await getAllActualitiesLocale()
   return (
     <ul className={classNames(styles.actualities, 'flex-col')}>
       {actualities.length ? (

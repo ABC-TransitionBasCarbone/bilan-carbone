@@ -2,7 +2,7 @@
 
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
-import { getEnvVar } from '@/lib/environment'
+import { getEnvVarClient } from '@/lib/environmentClient'
 import { getEnvRoute } from '@/services/email/utils'
 import { UNKNOWN_SCHOOL } from '@/services/permissions/check'
 import { getSchoolsFromPostalCodeOrName, School } from '@/services/schoolApi'
@@ -26,8 +26,8 @@ import GlossaryModal from '../modals/GlossaryModal'
 import authStyles from './Auth.module.css'
 
 const SignUpFormClickson = () => {
-  const contactMail = getEnvVar('SUPPORT_EMAIL', Environment.CLICKSON)
-  const faq = getEnvVar('FAQ_LINK', Environment.CLICKSON)
+  const contactMail = getEnvVarClient('SUPPORT_EMAIL', Environment.CLICKSON)
+  const faq = getEnvVarClient('FAQ_LINK', Environment.CLICKSON)
 
   const t = useTranslations('signup')
   const tForm = useTranslations('login.form')

@@ -2,14 +2,14 @@
 
 import Block from '@/components/base/Block'
 import { customRich } from '@/i18n/customRich'
-import { getEnvVar } from '@/lib/environment'
+import { getEnvVarClient } from '@/lib/environmentClient'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 
 const Error = () => {
   const { environment } = useAppEnvironmentStore()
-  const support = getEnvVar('SUPPORT_EMAIL', environment)
+  const support = getEnvVarClient('SUPPORT_EMAIL', environment)
 
   const t = useTranslations('error')
   return (

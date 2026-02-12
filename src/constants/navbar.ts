@@ -7,6 +7,7 @@ interface MenuLink {
   label: string
   testId?: string
   disabled?: boolean
+  external?: boolean
 }
 
 interface MenuSection {
@@ -92,6 +93,7 @@ export const getStudyNavbarMenu = (
             {
               href: 'https://transition.clickson.eu',
               label: 'Clicks On Act',
+              external: true,
             },
           ],
         },

@@ -12,13 +12,13 @@ jest.mock('../serverFunctions/deactivableFeatures', () => ({
   getDeactivableFeatureRestrictions: jest.fn(),
 }))
 jest.mock('../serverFunctions/user', () => ({ getUserSource: jest.fn() }))
-jest.mock('@/db/organization', () => ({ getOrganizationVersionById: jest.fn() }))
+jest.mock('@/db/organization', () => ({ getOrganizationVersionForRightsCheck: jest.fn() }))
 jest.mock('@/utils/organization', () => ({ hasActiveLicenceForFormation: jest.fn() }))
 
 const mockIsFeatureActive = featuresModule.isDeactivableFeatureActive as jest.Mock
 const mockGetDeactivableFeatureRestrictions = featuresModule.getDeactivableFeatureRestrictions as jest.Mock
 const mockGetUserSource = userModule.getUserSource as jest.Mock
-const mockGetOrganizationVersionById = organizationDb.getOrganizationVersionById as jest.Mock
+const mockGetOrganizationVersionForRightsCheck = organizationDb.getOrganizationVersionForRightsCheck as jest.Mock
 const mockHasActiveLicenceForFormation = organizationUtils.hasActiveLicenceForFormation as jest.Mock
 
 describe('Formation permissions service', () => {
@@ -50,7 +50,7 @@ describe('Formation permissions service', () => {
         jest.clearAllMocks()
         mockIsFeatureActive.mockResolvedValue(false)
         mockGetUserSource.mockResolvedValue({ success: true, data: UserSource.CRON })
-        mockGetOrganizationVersionById.mockResolvedValue({ id: 'org-version-id' })
+        mockGetOrganizationVersionForRightsCheck.mockResolvedValue({ id: 'org-version-id' })
         mockHasActiveLicenceForFormation.mockReturnValue(true)
       })
 
@@ -87,7 +87,7 @@ describe('Formation permissions service', () => {
           deactivatedSources: [UserSource.TUNISIE],
           deactivatedEnvironments: [Environment.CUT],
         })
-        mockGetOrganizationVersionById.mockResolvedValue({ id: 'org-version-id' })
+        mockGetOrganizationVersionForRightsCheck.mockResolvedValue({ id: 'org-version-id' })
         mockHasActiveLicenceForFormation.mockReturnValue(true)
       })
 
@@ -142,7 +142,7 @@ describe('Formation permissions service', () => {
 
       it('should return false if organization version is not found', async () => {
         mockGetUserSource.mockResolvedValue({ success: true, data: UserSource.CRON })
-        mockGetOrganizationVersionById.mockResolvedValue(null)
+        mockGetOrganizationVersionForRightsCheck.mockResolvedValue(null)
         const user = getMockedAuthUser({ level: Level.Standard })
 
         const result = await hasAccessToFormation(user)

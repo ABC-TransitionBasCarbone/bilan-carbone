@@ -111,6 +111,7 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
         setValue(
           'sites',
           study.sites.map((site) => site.id),
+          { shouldValidate: true, shouldDirty: true },
         )
       }
     }
@@ -127,14 +128,12 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
   }, [setValue, targets])
 
   useEffect(() => {
-    if (!customTargets.length) {
-      const tmpCustomTargets = targets.filter(
-        (target) =>
-          !(Object.values(EngagementActionTargets) as string[]).includes(target) && target !== 'add_custom_target',
-      )
-      setCustomTargets(tmpCustomTargets)
-    }
-  }, [customTargets, targets])
+    const tmpCustomTargets = targets.filter(
+      (target) =>
+        !(Object.values(EngagementActionTargets) as string[]).includes(target) && target !== 'add_custom_target',
+    )
+    setCustomTargets((targets) => (targets.length ? targets : tmpCustomTargets))
+  }, [targets])
 
   return (
     <>
@@ -284,6 +283,7 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
         ]}
       >
         <TextField
+          className="mt1"
           value={currentCustomTarget}
           onChange={(e: ChangeEvent<HTMLInputElement>) => setCurrentCustomTarget(e.target.value)}
           required

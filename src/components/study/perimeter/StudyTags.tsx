@@ -117,7 +117,11 @@ const StudyTags = ({ studyId }: Props) => {
           <Box key={family.id} className="fit-content mr2 px1">
             <div className="flex-col">
               <div className="flex justify-between align-center">
-                <Title as="h6" className="flex mb0" title={family.name} />
+                <Title
+                  as="h6"
+                  className="flex mb0"
+                  title={family.name === 'DEFAULT_FAMILY_TAG' ? t('preset') : family.name}
+                />
                 <div className="flex">
                   <MuiButton
                     className={styles.familyNameButton}

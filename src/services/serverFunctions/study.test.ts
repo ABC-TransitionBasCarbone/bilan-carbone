@@ -78,6 +78,8 @@ jest.mock('../../utils/study', () => ({
 }))
 jest.mock('../../db/organization', () => ({
   getOrganizationVersionById: jest.fn(),
+  getOrgVersionWithNameById: jest.fn(),
+  getOrgSitesWithCNCByOrgVersionId: jest.fn(),
   isOrganizationVersionCR: jest.fn(),
 }))
 jest.mock('../../db/user', () => ({
@@ -178,6 +180,7 @@ const mockCreateContributorOnStudy = studyDbModule.createContributorOnStudy as j
 const mockCreateEmissionSourceTags = studyDbModule.createEmissionSourceTags as jest.Mock
 const mockAddUserChecklistItem = userModule.addUserChecklistItem as jest.Mock
 const mockGetOrganizationVersionById = organizationModule.getOrganizationVersionById as jest.Mock
+const mockGetOrgSitesWithCNCByOrgVersionId = organizationModule.getOrgSitesWithCNCByOrgVersionId as jest.Mock
 const mockGetUserByEmail = userDbModule.getUserByEmail as jest.Mock
 const mockGetUserApplicationSettings = userDbModule.getUserApplicationSettings as jest.Mock
 const mockGetUserSourceById = userDbModule.getUserSourceById as jest.Mock
@@ -220,6 +223,7 @@ describe('study', () => {
           environment: 'BC',
         }),
       )
+      mockGetOrgSitesWithCNCByOrgVersionId.mockResolvedValue([{ id: TEST_IDS.site, cnc: null }])
       mockGetUserApplicationSettings.mockResolvedValue({ caUnit: 'K' })
       mockCanCreateSpecificStudy.mockResolvedValue(true)
       mockGetEmissionFactorsImportActiveVersion.mockResolvedValue({ id: 'active-version-id' })
@@ -327,7 +331,7 @@ describe('study', () => {
         const sourceTagFamilies = [
           {
             id: 'family-0-id',
-            name: 'défaut',
+            name: 'DEFAULT_FAMILY_TAG',
             tags: [],
           },
           {
@@ -351,7 +355,7 @@ describe('study', () => {
         const targetTagFamilies = [
           {
             id: 'target-family-0-id',
-            name: 'défaut',
+            name: 'DEFAULT_FAMILY_TAG',
             tags: [],
           },
           {
@@ -432,6 +436,8 @@ describe('study', () => {
             },
           }),
           Environment.BC,
+          true,
+          mockTransaction,
         )
 
         expect(mockCreateEmissionSourcesWithReturn).toHaveBeenCalledWith(

@@ -35,8 +35,6 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
     isTiltSimplifiedFeatureActive(account.environment),
   ])
 
-  const isFootprintsEnabled = !!account.level || isTiltSimplifiedActive
-
   const accountOrganizationVersion = organizationVersions.find(
     (organizationVersion) => organizationVersion.id === account.organizationVersionId,
   ) as OrganizationVersionWithOrganization
@@ -57,11 +55,11 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
   return (
     <DynamicTheme environment={environment}>
       <Box className={classNames('flex-col h100', { [styles.withOrganizationCard]: withOrganizationCard })}>
-        <Navbar user={account} environment={environment} isFootprintsEnabled={isFootprintsEnabled} />
+        <Navbar user={account} environment={environment} isFootprintsEnabled={isTiltSimplifiedActive} />
         {withOrganizationCard && (
           <OrganizationCard
             account={account}
-            organizationVersions={organizationVersions as OrganizationVersionWithOrganization[]}
+            organizationVersions={organizationVersions}
             shouldDisplayOrgaData={shouldDisplayOrgaData}
             shouldRenewLicense={shouldRenewLicense}
           />
