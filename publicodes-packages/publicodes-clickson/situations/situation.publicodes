@@ -93,12 +93,9 @@ template:
 
     # Déplacements
     # inputs
-    déplacements . transport du personnel . distance: 10000
-    déplacements . transport du personnel . moyen de transport: "'Voiture individuelle essence'"
-    déplacements . transport des élèves . distance: 20000
-    déplacements . transport des élèves . moyen de transport: "'Autobus moyen'"
-    déplacements . voyages scolaires . distance: 5000
-    déplacements . voyages scolaires . moyen de transport: "'TGV'"
+    déplacements . transport du personnel . voiture individuelle diesel . distance: 10000
+    déplacements . transport des élèves . bus . distance: 20000
+    déplacements . voyages scolaires . TGV . distance: 5000
 
     # Achats
     # tables
