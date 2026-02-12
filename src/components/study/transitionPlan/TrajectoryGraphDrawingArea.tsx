@@ -16,7 +16,7 @@ export const BottomLeftMultilineText = (
       {...props}
       x={left + margin}
       y={top + height - boxHeight}
-      width={width * 0.1 + margin}
+      width={width * 0.12 + margin}
       height={boxHeight}
     />
   )
