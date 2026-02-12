@@ -250,7 +250,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
   )
 
   useEffect(() => {
-    if (exportsWatch) {
+    if (exportsWatch && hasEditionRole) {
       updateStudyExport(exportsForm.getValues().exports, controlWatch || ControlMode.Operational)
     }
   }, [exportsForm, exportsWatch, controlWatch, updateStudyExport])
