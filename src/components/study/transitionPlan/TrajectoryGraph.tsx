@@ -584,10 +584,7 @@ const TrajectoryGraph = ({
   }, [seriesCreated])
 
   const oldestPastStudyYear = useMemo(() => {
-    if (pastStudies.length === 0) {
-      return 0
-    }
-    return Math.min(...pastStudies.map((study) => study.year))
+    return Math.min(...pastStudies.map((study) => study.year), studyStartYear)
   }, [pastStudies])
 
   const displayEstimatedPast = useMemo(
