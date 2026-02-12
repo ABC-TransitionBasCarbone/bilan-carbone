@@ -1,6 +1,6 @@
 froid et clim:
   titre: Froid et climatisation
-  formule: nombre * FE / amortissement
+  formule: nombre * FE / amortissement + fuites
   unité: kgCO2e
   avec:
     FE:
@@ -15,8 +15,50 @@ froid et clim:
 
 froid et clim . nombre:
   question: Combien de climatiseurs sont utilisés dans vos locaux ?
+  par défaut: 0
   unité: unité
 
 froid et clim . fuites:
+formule:
+  somme:
+    - locaux partagés
+    - locaux seuls
+
+froid et clim . fuites . locaux partagés :
   titre: Fuites de fluides frigoriègnes
-  formule: puissance moyenne * nombre  #A COMPLETER
+  applicable si: nombre > 0
+  formule: 0.1 * 0.3 * 0.1 * construction . bâtiment . locaux . locaux partagés . surface * PRG R410A
+  note: méthode du PCG en fonction des m^2 renseignés plus haut 0.1 kW/m^2*0,3 kg de fluide par kW*10%*m^2*PRG R410a. 
+  avec:
+    PRG R410A:
+      valeur:
+      unité:
+      meta:
+        id: 28326
+        nom: R410A
+
+froid et clim . fuites . locaux partagés :
+  titre: Fuites de fluides frigoriègnes
+  applicable si: nombre > 0
+  formule: 0.1 * 0.3 * 0.1 * construction . bâtiment . locaux . locaux partagés . surface * PRG R410A
+  note: méthode du PCG en fonction des m^2 renseignés plus haut 0.1 kW/m^2*0,3 kg de fluide par kW*10%*m^2*PRG R410a. 
+  avec:
+    PRG R410A:
+      valeur: 2260
+      unité: kgCO2e/kg
+      meta:
+        id: 43632
+        nom: R410A
+
+froid et clim . fuites . locaux seuls :
+  titre: Fuites de fluides frigoriègnes
+  applicable si: nombre > 0
+  formule: 0.1 * 0.3 * 0.1 * construction . bâtiment . locaux . locaux seuls . surface * PRG R410A
+  note: méthode du PCG en fonction des m^2 renseignés plus haut 0.1 kW/m^2*0,3 kg de fluide par kW*10%*m^2*PRG R410a. 
+  avec:
+    PRG R410A:
+      valeur: 2260
+      unité: kgCO2e/kg
+      meta:
+        id: 43632
+        nom: R410A
