@@ -283,6 +283,7 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
         ]}
       >
         <TextField
+          className="mt1"
           value={currentCustomTarget}
           onChange={(e: ChangeEvent<HTMLInputElement>) => setCurrentCustomTarget(e.target.value)}
           required
