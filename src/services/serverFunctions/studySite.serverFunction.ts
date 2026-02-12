@@ -1,3 +1,5 @@
+'use server'
+
 import { getStudySitesByStudyId as dbGetStudySitesByStudyId } from '@/db/site'
 import { withServerResponse } from '@/utils/serverResponse'
 import { NOT_AUTHORIZED } from '../permissions/check'

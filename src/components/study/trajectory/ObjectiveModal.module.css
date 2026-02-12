@@ -6,6 +6,11 @@
   min-width: 0;
 }
 
+.tagFilter {
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+
 .postSubPostFilter {
   min-width: 0 !important;
   max-width: 100% !important;

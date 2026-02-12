@@ -11,10 +11,11 @@ export const getExistingObjectives = async (trajectoryId: string, targetYear: nu
       isDefault: false,
       ...(excludeObjectiveId && { id: { not: excludeObjectiveId } }),
     },
-    include: {
-      sites: true,
-      tags: true,
-      subPosts: true,
+    select: {
+      id: true,
+      sites: { select: { studySiteId: true } },
+      tags: { select: { studyTagId: true } },
+      subPosts: { select: { subPost: true } },
     },
   })
 

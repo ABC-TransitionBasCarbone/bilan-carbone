@@ -70,6 +70,13 @@ interface Props {
   sectenData: SectenInfo[]
   studyEmissions?: number
   pastStudies?: PastStudy[]
+  sites?: Array<{ id: string; name: string }>
+  tagFamilies?: Array<{
+    id: string
+    name: string
+    studyId: string
+    tags: Array<{ id: string; name: string; color: string | null }>
+  }>
 }
 
 const fuseOptions = {
@@ -88,6 +95,8 @@ const TrajectoryObjectivesTable = ({
   sectenData,
   studyEmissions = 0,
   pastStudies = [],
+  sites = [],
+  tagFamilies = [],
 }: Props) => {
   const tAction = useTranslations('common.action')
   const t = useTranslations('study.transitionPlan.objectives')
@@ -527,9 +536,10 @@ const TrajectoryObjectivesTable = ({
             setEditObjective(null)
           }}
           trajectory={objectiveModalTrajectory}
-          studyId={studyId}
           onSuccess={handleObjectiveSuccess}
           objective={editObjective || undefined}
+          sites={sites}
+          tagFamilies={tagFamilies}
         />
       )}
       {conversionWarningOpen && pendingTrajectory && (

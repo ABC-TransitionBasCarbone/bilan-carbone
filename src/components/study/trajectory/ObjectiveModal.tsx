@@ -2,20 +2,19 @@
 
 import MultiSelectAll from '@/components/base/MultiSelectAll'
 import { PostSubPostFilter } from '@/components/form/PostSubPostFilter'
+import { TagFilter } from '@/components/form/TagFilter'
 import Modal from '@/components/modals/Modal'
 import { ObjectiveWithScope, TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { environmentPostMapping, environmentSubPostsMapping, Post } from '@/services/posts'
 import { createSubObjective, updateSubObjective } from '@/services/serverFunctions/objective.serverFunction'
-import { getStudySitesByStudyId } from '@/services/serverFunctions/studySite.serverFunction'
-import { getStudyTagsByStudyId } from '@/services/serverFunctions/tag.serverFunction'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { getYearFromDateStr } from '@/utils/time'
 import { FormControl, FormLabel, Typography } from '@mui/material'
 import { SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useCallback, useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import AddObjectiveButton from './AddObjectiveButton'
 import ObjectiveCard from './ObjectiveCard'
@@ -37,29 +36,45 @@ interface Props {
   open: boolean
   onClose: () => void
   trajectory: TrajectoryWithObjectivesAndScope
-  studyId: string
   onSuccess: () => void
   objective?: ObjectiveWithScope
+  sites?: Array<{ id: string; name: string }>
+  tagFamilies?: Array<{
+    id: string
+    name: string
+    studyId: string
+    tags: Array<{ id: string; name: string; color: string | null }>
+  }>
 }
 
-const ObjectiveModal = ({ open, onClose, trajectory, studyId, onSuccess, objective }: Props) => {
+const ObjectiveModal = ({ open, onClose, trajectory, onSuccess, objective, sites = [], tagFamilies = [] }: Props) => {
   const t = useTranslations('study.transitionPlan.objectiveModal')
   const { environment } = useAppEnvironmentStore()
   const [isLoading, setIsLoading] = useState(false)
   const { callServerFunction } = useServerFunction()
-  const [sites, setSites] = useState<Array<{ id: string; name: string }>>([])
-  const [tags, setTags] = useState<
-    Array<{ id: string; name: string; color: string | null; family: { id: string; name: string } }>
-  >([])
   const isEditing = !!objective
 
+  const defaultValues = objective
+    ? {
+        siteIds: objective.sites.map((s) => s.studySiteId),
+        tagIds: objective.tags.map((t) => t.studyTagId),
+        subPosts: objective.subPosts.map((sp) => sp.subPost),
+        objectives: [
+          {
+            targetYear: objective.targetYear.toString(),
+            reductionRate: Number((objective.reductionRate * 100).toFixed(2)),
+          },
+        ],
+      }
+    : {
+        siteIds: [],
+        tagIds: [],
+        subPosts: [],
+        objectives: [{ targetYear: null, reductionRate: null }],
+      }
+
   const { control, handleSubmit, watch, reset, formState } = useForm<ObjectiveModalFormData>({
-    defaultValues: {
-      siteIds: [],
-      tagIds: [],
-      subPosts: [],
-      objectives: [{ targetYear: null, reductionRate: null }],
-    },
+    defaultValues,
     mode: 'onChange',
   })
 
@@ -71,43 +86,6 @@ const ObjectiveModal = ({ open, onClose, trajectory, studyId, onSuccess, objecti
     control,
     name: 'objectives',
   })
-
-  const fetchScopeOptions = useCallback(async () => {
-    const [sitesResponse, tagsResponse] = await Promise.all([
-      getStudySitesByStudyId(studyId),
-      getStudyTagsByStudyId(studyId),
-    ])
-    if (sitesResponse.success && sitesResponse.data) {
-      setSites(sitesResponse.data.map((s) => ({ id: s.id, name: s.site.name })))
-    }
-    if (tagsResponse.success && tagsResponse.data) {
-      setTags(tagsResponse.data)
-    }
-  }, [studyId])
-
-  useEffect(() => {
-    if (open) {
-      fetchScopeOptions()
-
-      if (objective) {
-        const siteIds = objective.sites.map((s) => s.studySiteId)
-        const tagIds = objective.tags.map((t) => t.studyTagId)
-        const subPosts = objective.subPosts.map((sp) => sp.subPost)
-
-        reset({
-          siteIds,
-          tagIds,
-          subPosts,
-          objectives: [
-            {
-              targetYear: objective.targetYear.toString(),
-              reductionRate: Number((objective.reductionRate * 100).toFixed(2)),
-            },
-          ],
-        })
-      }
-    }
-  }, [open, fetchScopeOptions, objective, reset])
 
   const onSubmit = async (data: ObjectiveModalFormData) => {
     setIsLoading(true)
@@ -239,16 +217,14 @@ const ObjectiveModal = ({ open, onClose, trajectory, studyId, onSuccess, objecti
             </div>
 
             <div className={'flex-col'}>
-              <FormLabel component="legend">{t('tags')}</FormLabel>
-              <FormControl fullWidth disabled={tags.length === 0}>
-                <MultiSelectAll
-                  id="tags"
-                  values={tagIds}
-                  allValues={tags.map((tag) => tag.id)}
-                  setValues={(value) => reset({ ...watch(), tagIds: value })}
-                  getLabel={(id) => tags.find((tag) => tag.id === id)?.name || id}
-                />
-              </FormControl>
+              <TagFilter
+                className={classNames('w100', styles.tagFilter)}
+                tagFamilies={tagFamilies}
+                selectedTagIds={tagIds}
+                onChange={(value) => reset({ ...watch(), tagIds: value })}
+                useTagId={true}
+                showSeparateLabel={true}
+              />
             </div>
 
             <div className={'flex-col'}>

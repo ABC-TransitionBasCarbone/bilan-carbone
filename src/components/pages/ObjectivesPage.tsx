@@ -58,6 +58,10 @@ const ObjectivesPage = ({
     return convertToPastStudies(linkedStudies, linkedExternalStudies, false, validatedOnly, study.resultsUnit)
   }, [linkedStudies, linkedExternalStudies, validatedOnly, study.resultsUnit])
 
+  const sites = useMemo(() => {
+    return study.sites.map((s) => ({ id: s.id, name: s.site.name }))
+  }, [study.sites])
+
   return (
     <>
       <Breadcrumbs
@@ -117,6 +121,8 @@ const ObjectivesPage = ({
               sectenData={sectenData}
               studyEmissions={studyTotalEmissions}
               pastStudies={pastStudiesData}
+              sites={sites}
+              tagFamilies={study.tagFamilies}
             />
           </div>
         </div>

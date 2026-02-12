@@ -1,5 +1,5 @@
 import { StudyTagFamilyWithTags } from '@/db/study'
-import { Checkbox, FormControl, FormControlLabel, InputLabel, Menu, Select } from '@mui/material'
+import { Checkbox, FormControl, FormControlLabel, FormLabel, InputLabel, Menu, Select } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
@@ -15,9 +15,18 @@ interface TagFilterProps {
   selectedTagIds: string[]
   onChange: (ids: string[]) => void
   className?: string
+  useTagId?: boolean
+  showSeparateLabel?: boolean
 }
 
-export const TagFilter = ({ tagFamilies, selectedTagIds, onChange, className }: TagFilterProps) => {
+export const TagFilter = ({
+  tagFamilies,
+  selectedTagIds,
+  onChange,
+  className,
+  useTagId = false,
+  showSeparateLabel = false,
+}: TagFilterProps) => {
   const t = useTranslations('study.results.pageFilters')
   const tOther = useTranslations('study.results')
   const tCommon = useTranslations('common')
@@ -27,7 +36,7 @@ export const TagFilter = ({ tagFamilies, selectedTagIds, onChange, className }: 
     () =>
       tagFamilies.reduce(
         (acc, tagFamily) => {
-          const tagInfos = tagFamily.tags.map((tag) => ({ id: tag.name, label: tag.name }))
+          const tagInfos = tagFamily.tags.map((tag) => ({ id: useTagId ? tag.id : tag.name, label: tag.name }))
 
           if (tagInfos.length > 0) {
             acc[tagFamily.id] = {
@@ -41,7 +50,7 @@ export const TagFilter = ({ tagFamilies, selectedTagIds, onChange, className }: 
         },
         {} as Record<string, { id: string; name: string; children: ChildrenType[] }>,
       ),
-    [tagFamilies],
+    [tagFamilies, useTagId],
   )
 
   const tagItemsWithOthers = useMemo<Record<string, { id: string; name: string; children: ChildrenType[] }>>(
@@ -95,10 +104,16 @@ export const TagFilter = ({ tagFamilies, selectedTagIds, onChange, className }: 
   return (
     <>
       <FormControl className={classNames(styles.formControl, className)}>
-        <InputLabel id="tag-filter-label">{t('tags')}</InputLabel>
+        {showSeparateLabel ? (
+          <FormLabel id="tag-filter-label" component="legend">
+            {t('tags')}
+          </FormLabel>
+        ) : (
+          <InputLabel id="tag-filter-label">{t('tags')}</InputLabel>
+        )}
         <Select
           labelId="tag-filter-label"
-          label={t('tags')}
+          label={!showSeparateLabel ? t('tags') : undefined}
           value="tags-filter-placeholder"
           open={false}
           onMouseDown={(event) => {

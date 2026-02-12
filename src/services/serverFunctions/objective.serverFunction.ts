@@ -31,30 +31,25 @@ export interface UpdateObjectiveInput {
   subPosts?: SubPost[]
 }
 
+const createScopeHash = (sites: string[], tags: string[], posts: SubPost[]) =>
+  `${sites.sort().join(',')}|${tags.sort().join(',')}|${posts.sort().join(',')}`
+
 export const validateUniqueScopeCombination = async (
   trajectoryId: string,
   input: { targetYear: number; siteIds?: string[]; tagIds?: string[]; subPosts?: SubPost[] },
   excludeObjectiveId?: string,
-): Promise<void> => {
+) => {
   const existingObjectives = await getExistingObjectives(trajectoryId, input.targetYear, excludeObjectiveId)
-
-  const newSiteIds = new Set(input.siteIds || [])
-  const newTagIds = new Set(input.tagIds || [])
-  const newSubPosts = new Set(input.subPosts || [])
+  const newHash = createScopeHash(input.siteIds || [], input.tagIds || [], input.subPosts || [])
 
   for (const objective of existingObjectives) {
-    const existingSiteIds = new Set(objective.sites?.map((s) => s.studySiteId) || [])
-    const existingTagIds = new Set(objective.tags?.map((t) => t.studyTagId) || [])
-    const existingSubPosts = new Set(objective.subPosts?.map((sp) => sp.subPost) || [])
+    const existingHash = createScopeHash(
+      objective.sites.map((s) => s.studySiteId),
+      objective.tags.map((t) => t.studyTagId),
+      objective.subPosts.map((sp) => sp.subPost),
+    )
 
-    const sameSites =
-      existingSiteIds.size === newSiteIds.size && [...existingSiteIds].every((id) => newSiteIds.has(id as string))
-    const sameTags =
-      existingTagIds.size === newTagIds.size && [...existingTagIds].every((id) => newTagIds.has(id as string))
-    const sameSubPosts =
-      existingSubPosts.size === newSubPosts.size && [...existingSubPosts].every((sp) => newSubPosts.has(sp as SubPost))
-
-    if (sameSites && sameTags && sameSubPosts) {
+    if (newHash === existingHash) {
       throw new Error('duplicateScopeCombination')
     }
   }
