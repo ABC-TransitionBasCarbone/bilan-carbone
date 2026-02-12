@@ -1,6 +1,8 @@
+'use server'
+
 import { Environment } from '@prisma/client'
 
-export const getEnvVar = (key: string, environment: Environment = Environment.BC) => {
+export const getEnvVar = async (key: string, environment: Environment = Environment.BC) => {
   const prefix = environment.toUpperCase()
   const possibleKeys = [`NEXT_PUBLIC_${prefix}_${key}`, `${prefix}_${key}`, `NEXT_PUBLIC_${key}`, key]
 

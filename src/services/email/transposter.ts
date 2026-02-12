@@ -5,15 +5,15 @@ import SMTPTransport from 'nodemailer/lib/smtp-transport'
 
 const transposters = new Map<Environment, nodemailer.Transporter>()
 
-export const getTransporter = (env: Environment) => {
+export const getTransporter = async (env: Environment) => {
   if (transposters.has(env)) {
     return transposters.get(env)!
   }
 
-  const host = getEnvVar('MAIL_HOST', env)
-  const port = getEnvVar('MAIL_PORT', env)
-  const user = getEnvVar('MAIL_USER', env)
-  const pass = getEnvVar('MAIL_PASSWORD', env)
+  const host = await getEnvVar('MAIL_HOST', env)
+  const port = await getEnvVar('MAIL_PORT', env)
+  const user = await getEnvVar('MAIL_USER', env)
+  const pass = await getEnvVar('MAIL_PASSWORD', env)
 
   const transporter = nodemailer.createTransport({
     host,

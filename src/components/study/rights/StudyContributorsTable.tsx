@@ -8,7 +8,7 @@ import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
-import { getEnvVar } from '@/lib/environment'
+import { getEnvVarClient } from '@/lib/environmentClient'
 import { environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
 import { deleteStudyContributor } from '@/services/serverFunctions/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
@@ -57,7 +57,7 @@ const PREVIEW_MAX_LINES = 2
 const SUBPOST_PREVIEW_LIMIT = 3
 
 const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
-  const faq = getEnvVar('FAQ_LINK', Environment.BC)
+  const faq = getEnvVarClient('FAQ_LINK', Environment.BC)
   const tCommon = useTranslations('common')
   const t = useTranslations('study.rights.contributorsTable')
   const tDeleting = useTranslations('study.rights.contributorsTable.deleting')

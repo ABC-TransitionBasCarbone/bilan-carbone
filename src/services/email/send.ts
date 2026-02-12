@@ -39,9 +39,9 @@ export const sendEmail = async (
   template: string,
   templateData: Record<string, unknown>,
 ) => {
-  const faq = getEnvVar('FAQ_LINK', env)
-  const support = getEnvVar('SUPPORT_EMAIL', env)
-  const from = getEnvVar('MAIL_USER', env)
+  const faq = await getEnvVar('FAQ_LINK', env)
+  const support = await getEnvVar('SUPPORT_EMAIL', env)
+  const from = await getEnvVar('MAIL_USER', env)
 
   const data = {
     ...templateData,
@@ -49,7 +49,7 @@ export const sendEmail = async (
     support,
   }
 
-  const transporter = getTransporter(env)
+  const transporter = await getTransporter(env)
   const html = await getHtml({ file: template, data, env })
   return transporter.sendMail({
     to: to.join(','),

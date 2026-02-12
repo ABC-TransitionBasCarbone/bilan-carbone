@@ -159,7 +159,7 @@ const Sites = <T extends SitesCommand>({
                 data-testid="delete-site-button"
               />
             )}
-            {/* {!form && onDuplicate && (
+            {!form && onDuplicate && (
               <TableActionButton
                 type="duplicate"
                 onClick={() => {
@@ -168,7 +168,7 @@ const Sites = <T extends SitesCommand>({
                 }}
                 data-testid="duplicate-site-button"
               />
-            )} */}
+            )}
           </>
         ),
       })

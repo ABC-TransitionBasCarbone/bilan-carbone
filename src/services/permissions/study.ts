@@ -1,10 +1,10 @@
 import { getAccountById } from '@/db/account'
 import { getDocumentById } from '@/db/document'
-import { getOrganizationVersionById, getOrganizationVersionsByOrganizationId } from '@/db/organization'
+import { getOrganizationVersionForRightsCheck, getOrganizationVersionsByOrganizationId } from '@/db/organization'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getAccountByIdWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
 import { canEditOrganizationVersion, hasActiveLicence, isAdminOnOrga, isInOrgaOrParent } from '@/utils/organization'
-import { getAccountRoleOnStudy, getDuplicableEnvironments, hasEditionRights } from '@/utils/study'
+import { getAccountRoleOnStudy, getDuplicableEnvironments, hasEditionRights, StudyWithRoleFields } from '@/utils/study'
 import { DeactivatableFeature, Environment, Level, Prisma, Role, Study, StudyRole, User } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { dbActualizedAuth } from '../auth'
@@ -108,7 +108,7 @@ const canCreateSpecificStudyCommon = async (accountId: string, organizationVersi
     return { allowed: false }
   }
 
-  const organizationVersion = await getOrganizationVersionById(organizationVersionId)
+  const organizationVersion = await getOrganizationVersionForRightsCheck(organizationVersionId)
   if (!organizationVersion || !hasActiveLicence(organizationVersion)) {
     return { allowed: false }
   }
@@ -168,7 +168,7 @@ export const canCreateSpecificStudy = async (
 }
 
 const canEditStudy = async (user: UserSession, study: FullStudy) => {
-  const organizationVersion = await getOrganizationVersionById(
+  const organizationVersion = await getOrganizationVersionForRightsCheck(
     study.organizationVersion.parentId ? study.organizationVersion.parentId : study.organizationVersionId,
   )
   if (!organizationVersion) {
@@ -424,7 +424,7 @@ export const filterStudyDetail = (user: UserSession, study: FullStudy) => {
 }
 export type StudyWithoutDetail = ReturnType<typeof filterStudyDetail>
 
-export const canReadStudyDetail = async (user: UserSession, study: FullStudy) => {
+export const canReadStudyDetail = async (user: UserSession, study: StudyWithRoleFields) => {
   const studyRight = await canReadStudy(user, study.id)
   if (!studyRight) {
     return false

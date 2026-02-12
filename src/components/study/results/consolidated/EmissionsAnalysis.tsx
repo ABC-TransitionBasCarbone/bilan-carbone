@@ -121,7 +121,7 @@ const EmissionsAnalysis = ({
           <span>
             {customRich(tGlossary, `${glossary}Description`, {
               link: (children) => (
-                <Link href={tDocumentation('dependencyAndReponsability')} target="_blank" rel="noreferrer noopener">
+                <Link href={tDocumentation('dependencyAndResponsability')} target="_blank" rel="noreferrer noopener">
                   {children}
                 </Link>
               ),

@@ -59,7 +59,7 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
         {withOrganizationCard && (
           <OrganizationCard
             account={account}
-            organizationVersions={organizationVersions as OrganizationVersionWithOrganization[]}
+            organizationVersions={organizationVersions}
             shouldDisplayOrgaData={shouldDisplayOrgaData}
             shouldRenewLicense={shouldRenewLicense}
           />

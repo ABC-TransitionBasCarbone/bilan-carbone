@@ -17,7 +17,7 @@ interface Props {
 const RessourcesPage = async ({ environment }: Props) => {
   const t = await getTranslations('ressources')
 
-  const ressources = getEnvironnementRessources(environment, t)
+  const ressources = await getEnvironnementRessources(environment, t)
 
   return (
     <Block title={t('title')} as="h1">

@@ -3,6 +3,7 @@
 import TopLeftNavBar from '@/components/navbar/TopLeftNavBar'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import CutTopLeftNavBar from '@/environments/cut/navbar/TopLeftNavBar'
+import { Locale } from '@/i18n/config'
 import { signOutEnv } from '@/services/auth'
 import { hasAccessToStudyComments, isClickson, isTilt } from '@/services/permissions/environment'
 import { hasAccessToMethodology, hasAccessToSettings } from '@/services/permissions/environmentAdvanced'
@@ -18,7 +19,7 @@ import { AppBar, Box, Container, Toolbar } from '@mui/material'
 import { Environment, Role } from '@prisma/client'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import Image from 'next/image'
 import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { Logo } from '../base/Logo'
@@ -37,6 +38,7 @@ const Navbar = ({ children, user, environment, isFootprintsEnabled }: Props) => 
   const t = useTranslations('navigation')
   const [hasFormation, setHasFormation] = useState(false)
   const [hasMultipleAccounts, setHasMultipleAccounts] = useState(false)
+  const locale = useLocale()
 
   useEffect(() => {
     const getFormationAccess = async () => {
@@ -60,7 +62,9 @@ const Navbar = ({ children, user, environment, isFootprintsEnabled }: Props) => 
       case Environment.TILT:
         return 'https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative'
       default:
-        return 'https://www.bilancarbone-methode.com/'
+        return locale === Locale.FR
+          ? 'https://www.bilancarbone-methode.com/'
+          : 'https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en'
     }
   }, [user.environment])
 

@@ -1,7 +1,7 @@
 'use client'
 
 import { customRich } from '@/i18n/customRich'
-import { getEnvVar } from '@/lib/environment'
+import { getEnvVarClient } from '@/lib/environmentClient'
 import { getEnvRoute } from '@/services/email/utils'
 import { signUpWithSiretOrCNC } from '@/services/serverFunctions/user'
 import { SignUpTiltCommand, SignUpTiltCommandValidation } from '@/services/serverFunctions/user.command'
@@ -20,8 +20,8 @@ import { FormTextField } from '../form/TextField'
 import authStyles from './Auth.module.css'
 
 const SignUpFormTilt = () => {
-  const contactMail = getEnvVar('SUPPORT_EMAIL', Environment.TILT)
-  const faq = getEnvVar('FAQ_LINK', Environment.TILT)
+  const contactMail = getEnvVarClient('SUPPORT_EMAIL', Environment.TILT)
+  const faq = getEnvVarClient('FAQ_LINK', Environment.TILT)
 
   const t = useTranslations('signup')
   const tForm = useTranslations('login.form')

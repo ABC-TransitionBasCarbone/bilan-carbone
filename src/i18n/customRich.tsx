@@ -1,4 +1,4 @@
-import { getEnvVar } from '@/lib/environment'
+import { getEnvVarClient } from '@/lib/environmentClient'
 import { Translations } from '@/types/translation'
 import { Environment } from '@prisma/client'
 import classNames from 'classnames'
@@ -20,9 +20,9 @@ export const customRich = (
   env: Environment = Environment.BC,
   styles: StylesParams = {},
 ) => {
-  const faq = getEnvVar('FAQ_LINK', env)
-  const support = getEnvVar('SUPPORT_EMAIL', Environment.BC)
-  const abc = getEnvVar('ABC_SITE', Environment.BC)
+  const faq = getEnvVarClient('FAQ_LINK', env)
+  const support = getEnvVarClient('SUPPORT_EMAIL', Environment.BC)
+  const abc = getEnvVarClient('ABC_SITE', Environment.BC)
 
   return t.rich(key, {
     error: (children: ReactNode) => <span className={classNames('error', styles.error)}>{children}</span>,

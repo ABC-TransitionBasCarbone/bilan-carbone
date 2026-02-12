@@ -424,10 +424,13 @@ export const addSourceToStudies = async (source: Import, transaction: Prisma.Tra
   ])
 
   if (studies.length && !!importVersion) {
-    const filteredStudies = studies.filter((study) => {
+    const filteredStudiesPromises = studies.map(async (study) => {
       const environment = study.createdBy.environment
-      return isSourceForEnv(environment).includes(source)
+      const sourcesForEnv = await isSourceForEnv(environment)
+      return sourcesForEnv.includes(source) ? study : null
     })
+    const filteredStudiesResults = await Promise.all(filteredStudiesPromises)
+    const filteredStudies = filteredStudiesResults.filter((study) => study !== null)
 
     if (filteredStudies.length > 0) {
       await transaction.studyEmissionFactorVersion.createMany({
@@ -438,8 +441,8 @@ export const addSourceToStudies = async (source: Import, transaction: Prisma.Tra
   }
 }
 
-export const isSourceForEnv = (env: Environment): Import[] => {
-  const envVar = getEnvVar('FE_SOURCES_IMPORT', env)
+export const isSourceForEnv = async (env: Environment): Promise<Import[]> => {
+  const envVar = await getEnvVar('FE_SOURCES_IMPORT', env)
 
   if (!envVar) {
     return []
