@@ -397,7 +397,7 @@
       "name": "Nom de l'étude",
       "validator": "Email du ou de la validateur·rice",
       "studyDates": "Périmètre temporel de l'étude",
-      "realizationDates": "Date de la réalisation de l'étude",
+      "realizationDates": "Dates de la réalisation de l'étude",
       "level": "Niveau de maturité du Bilan Carbone®",
       "exports": "Exports",
       "control": "Mode de contrôle des exports",
@@ -624,8 +624,8 @@
     },
     "perimeter": {
       "general": "Général",
-      "studyDates": "Date de l'étude",
-      "realizationDates": "Date de la réalisation de l'étude",
+      "studyDates": "Périmètre temporel de l'étude",
+      "realizationDates": "Dates de la réalisation de l'étude",
       "dates": "Du {startDate} au {endDate}",
       "realizationFrom": "Étude réalisée à partir du {date}",
       "realizationUntil": "Étude réalisée jusqu'au {date}",
@@ -697,7 +697,7 @@
         "confirm": "Confirmer",
         "glossary": "Famille de tags",
         "close": "Fermer",
-        "glossaryDescription": "Les tags et familles de tags servent à identifier vos sources d'émissions dans le but de visualiser certains résultats par la suite. <br></br>Une fois vos tags créés, vous pourrez les associer à des sources d'émissions au sein de la page \"Saisie des données\". Puis, dans la page \"Résultats\", vous pourrez visualiser les émissions dues à une famille de tags ou à un tag en particulier, mais vous ne pourrez pas visualiser les émissions de deux familles de tags en parallèle, car des double-comptes peuvent être faits entre ces deux familles de tags. <br></br>Pour donner un exemple concret, admettons qu'il existe deux familles de tags : \"Produits vendus\" et \"Publics ciblés\". Ces deux familles et les tags y appartenant vous permettrons de visualiser quelle est la répartition des émissions de votre organisation en fonction des produits vendus, et de même pour les publics ciblés",
+        "glossaryDescription": "Les tags et familles de tags servent à identifier vos sources d'émissions dans le but d'agréger vos résultats en fonction de ces tags par la suite. Les tags similaires devraient être renseignés dans une même famille. <br></br>Créer vos tags et familles de tags pour les associer à des sources d'émissions au sein de la page \"Saisie des données\", avant d'en visualiser les émissions dans la page \"Résultats\". Pour éviter les doubles-comptes, il n'est pas possible de visualiser les émissions de deux familles de tags simultanément. <br></br>Par exemple, prenons deux familles de tags : \"Produits vendus\" et \"Publics ciblés\". Ces deux familles et leurs tags respectifs vous permettrons de visualiser la répartition des émissions de votre organisation en fonction des produits vendus, et des publics ciblés.",
         "allTags": "Tous les tags"
       },
       "duplicate": {
@@ -2299,7 +2299,7 @@
     "AddSiteOrga": "Ajouter les sites",
     "AddSiteOrgaDetails": "Ajouter des sites à votre <orga>organisation</orga> pour que vous puissiez établir les émissions de chacun des sites. Si votre organisation n'a qu'un site, créer un site 'Tous sites'",
     "CreateFirstStudy": "Créer votre premier Bilan Carbone®",
-    "CreateFirstStudyDetails": "C'est parti pour votre premier Bilan Carbone® ! Remplissez les premières informations comme la date, le nom...",
+    "CreateFirstStudyDetails": "C'est parti pour votre premier Bilan Carbone® ! Remplissez les premières informations comme le titre du Bilan Carbone®, le périmètre temporel, ...",
     "CreateFirstEmissionSource": "Créer votre première source d'émissions",
     "CreateFirstEmissionSourceDetails": "Rendez-vous dans le premier poste/sous poste que vous souhaitez renseigner ! Choisissez votre facteur d'emission, rentrez votre donnée d'activité et faites vos premiers calculs",
     "ConsultResults": "Allez voir vos premiers résultats",
