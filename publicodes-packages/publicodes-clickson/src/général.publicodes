@@ -1,0 +1,19 @@
+général:
+
+général . nombre étudiant:
+  question: Nombre d'étudiants
+  unité: étudiant
+  par défaut: 0
+
+général . nombre personnel:
+  question: Nombre de personnel (enseignants et non enseignants)
+  unité: personne
+  par défaut: 0
+
+général . année de construction:
+  question: Année de construction du bâtiment principal
+  unité: année
+
+général . année de rénovation:
+  question: Année de rénovation du bâtiment principal
+  unité: année

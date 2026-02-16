@@ -97,12 +97,12 @@
   margin-bottom: 1.875rem;
 }
 
-.pdf-cinemas-list {
+.pdf-sites-list {
   text-align: left;
   margin-bottom: 1.875rem;
 }
 
-.pdf-cinemas-title {
+.pdf-sites-title {
   font-size: 1rem;
   font-weight: bold;
   margin-bottom: 0.625rem;
@@ -118,7 +118,7 @@
   padding-bottom: 0.625rem;
 }
 
-.pdf-cinema-header {
+.pdf-site-header {
   font-size: 1.25rem;
   font-weight: bold;
   color: var(--mui-palette-primary-main);

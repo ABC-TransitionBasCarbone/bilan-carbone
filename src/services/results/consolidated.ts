@@ -10,10 +10,19 @@ import { AdditionalResultTypes, ResultType } from '../study'
 import { getSquaredStandardDeviationForEmissionSourceArray } from '../uncertainty'
 import { filterWithDependencies, getSiteEmissionSourcesWithoutMarketBase } from './utils'
 
-export type ResultsByPost = {
+export type BaseResultsByPost = {
   post: Post | SubPost | 'total'
   label: string
   value: number
+  children: BaseResultsByPost[]
+}
+
+export interface BaseResultsBySite {
+  aggregated: BaseResultsByPost[]
+  bySite: Record<string, BaseResultsByPost[]>
+}
+
+export type ResultsByPost = Omit<BaseResultsByPost, 'children'> & {
   monetaryValue: number
   nonSpecificMonetaryValue: number
   numberOfEmissionSource: number
@@ -22,7 +31,7 @@ export type ResultsByPost = {
   children: ResultsByPost[]
 }
 
-export const computeResultsByPost = (
+export const computeResultsByPostFromEmissionSources = (
   study: FullStudy,
   tPost: (key: string) => string,
   studySite: string,

@@ -150,7 +150,7 @@ jest.mock('../../services/study', () => ({
   hasSufficientLevel: jest.fn(),
 }))
 jest.mock('../results/consolidated', () => ({
-  computeResultsByPost: jest.fn(),
+  computeResultsByPostFromEmissionSources: jest.fn(),
 }))
 jest.mock('./study', () => ({}))
 

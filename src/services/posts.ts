@@ -1,55 +1,13 @@
 import { Environment, SubPost } from '@prisma/client'
+import { BCPost, ClicksonPost, CutPost, TiltPost } from './posts.enums'
+import { BaseResultsByPost } from './results/consolidated'
 
-export enum BCPost {
-  Energies = 'Energies',
-  AutresEmissionsNonEnergetiques = 'AutresEmissionsNonEnergetiques',
-  IntrantsBiensEtMatieres = 'IntrantsBiensEtMatieres',
-  IntrantsServices = 'IntrantsServices',
-  DechetsDirects = 'DechetsDirects',
-  Fret = 'Fret',
-  Deplacements = 'Deplacements',
-  Immobilisations = 'Immobilisations',
-  UtilisationEtDependance = 'UtilisationEtDependance',
-  FinDeVie = 'FinDeVie',
-}
-
-export enum CutPost {
-  Fonctionnement = 'Fonctionnement',
-  MobiliteSpectateurs = 'MobiliteSpectateurs',
-  TourneesAvantPremieres = 'TourneesAvantPremieres',
-  SallesEtCabines = 'SallesEtCabines',
-  ConfiseriesEtBoissons = 'ConfiseriesEtBoissons',
-  Dechets = 'Dechets',
-  BilletterieEtCommunication = 'BilletterieEtCommunication',
-}
-
-export enum TiltPost {
-  ConstructionDesLocaux = 'ConstructionDesLocaux',
-  Energies = BCPost.Energies,
-  DechetsDirects = BCPost.DechetsDirects,
-  FroidEtClim = 'FroidEtClim',
-  AutresEmissions = 'AutresEmissions',
-  DeplacementsDePersonne = 'DeplacementsDePersonne',
-  TransportDeMarchandises = 'TransportDeMarchandises',
-  IntrantsBiensEtMatieresTilt = 'IntrantsBiensEtMatieresTilt',
-  Alimentation = 'Alimentation',
-  IntrantsServices = BCPost.IntrantsServices,
-  EquipementsEtImmobilisations = 'EquipementsEtImmobilisations',
-  Utilisation = 'Utilisation',
-  FinDeVie = BCPost.FinDeVie,
-  Teletravail = 'Teletravail',
-}
-
-export enum ClicksonPost {
-  EnergiesClickson = 'EnergiesClickson',
-  Restauration = 'Restauration',
-  DeplacementsClickson = 'DeplacementsClickson',
-  Achats = 'Achats',
-  ImmobilisationsClickson = 'ImmobilisationsClickson',
-}
+// Re-export enums for backward compatibility
+export { BCPost, ClicksonPost, CutPost, TiltPost }
 
 export const Post = { ...BCPost, ...CutPost, ...TiltPost, ...ClicksonPost }
-export type Post = BCPost | CutPost | TiltPost | ClicksonPost
+export type SimplifiedPost = CutPost | ClicksonPost
+export type Post = BCPost | TiltPost | SimplifiedPost
 
 export const subPostsByPostBC: Record<BCPost, SubPost[]> = {
   [BCPost.Energies]: [
@@ -289,10 +247,8 @@ const getSubPostBCToSubPostTiltMapping = (): Partial<Record<SubPost, SubPost[]>>
 
 export const subPostBCToSubPostTiltMapping = getSubPostBCToSubPostTiltMapping()
 
-export const convertCountToBilanCarbone = (
-  results: { post: string; children: { post: string; value: number }[] }[],
-): { [key: string]: number } => {
-  const allPossibleCategories = new Set(Object.values(cutSubPostToBCPostMapping))
+export const convertSimplifiedEnvToBilanCarbone = (results: BaseResultsByPost[]): { [key: string]: number } => {
+  const allPossibleCategories = new Set(Object.values(subPostToBCPostMapping))
   const aggregatedResults: { [key: string]: number } = {}
 
   allPossibleCategories.forEach((category) => {
@@ -305,7 +261,7 @@ export const convertCountToBilanCarbone = (
     }
 
     result.children.forEach((child) => {
-      const bilanCarbonePost = cutSubPostToBCPostMapping[child.post as keyof typeof cutSubPostToBCPostMapping]
+      const bilanCarbonePost = subPostToBCPostMapping[child.post as keyof typeof subPostToBCPostMapping]
       if (bilanCarbonePost) {
         aggregatedResults[bilanCarbonePost] = aggregatedResults[bilanCarbonePost] + child.value
       }
@@ -315,7 +271,8 @@ export const convertCountToBilanCarbone = (
   return aggregatedResults
 }
 
-export const cutSubPostToBCPostMapping: Partial<Record<SubPost, BCPost>> = {
+export const subPostToBCPostMapping: Partial<Record<SubPost, BCPost>> = {
+  // CUT sub-posts
   [SubPost.Batiment]: BCPost.Immobilisations,
   [SubPost.Equipe]: BCPost.Deplacements,
   [SubPost.DeplacementsProfessionnels]: BCPost.Deplacements,
@@ -327,11 +284,33 @@ export const cutSubPostToBCPostMapping: Partial<Record<SubPost, BCPost>> = {
   [SubPost.AutreMateriel]: BCPost.IntrantsBiensEtMatieres,
   [SubPost.Achats]: BCPost.IntrantsBiensEtMatieres,
   [SubPost.Electromenager]: BCPost.Immobilisations,
-  [SubPost.Fret]: BCPost.Fret,
   [SubPost.DechetsOrdinaires]: BCPost.DechetsDirects,
   [SubPost.DechetsExceptionnels]: BCPost.DechetsDirects,
   [SubPost.MaterielDistributeurs]: BCPost.IntrantsBiensEtMatieres,
   [SubPost.MaterielCinema]: BCPost.IntrantsBiensEtMatieres,
   [SubPost.CommunicationDigitale]: BCPost.Immobilisations,
   [SubPost.CaissesEtBornes]: BCPost.Immobilisations,
+
+  // Clickson sub-posts
+  [SubPost.Electricite]: BCPost.Energies,
+  [SubPost.Combustibles]: BCPost.Energies,
+  [SubPost.AutresGaz]: BCPost.Energies,
+  [SubPost.TypesDeRepasServis]: BCPost.IntrantsBiensEtMatieres,
+  [SubPost.DistributeursAutomatiques]: BCPost.IntrantsBiensEtMatieres,
+  [SubPost.DechetsOrganiques]: BCPost.DechetsDirects,
+  [SubPost.TransportDesEleves]: BCPost.Deplacements,
+  [SubPost.TransportDuPersonnel]: BCPost.Deplacements,
+  [SubPost.VoyagesScolaires]: BCPost.Deplacements,
+  [SubPost.Fournitures]: BCPost.IntrantsBiensEtMatieres,
+  [SubPost.ProduitsChimiques]: BCPost.IntrantsBiensEtMatieres,
+  [SubPost.EquipementsDeSport]: BCPost.IntrantsBiensEtMatieres,
+  [SubPost.DechetsRecyclables]: BCPost.DechetsDirects,
+  [SubPost.OrduresMenageresResiduelles]: BCPost.DechetsDirects,
+  [SubPost.Construction]: BCPost.Immobilisations,
+  [SubPost.Renovation]: BCPost.Immobilisations,
+  [SubPost.EquipementsInformatiqueAudiovisuel]: BCPost.Immobilisations,
+  [SubPost.EquipementsDivers]: BCPost.Immobilisations,
+
+  // Common sub-posts
+  [SubPost.Fret]: BCPost.Fret,
 }

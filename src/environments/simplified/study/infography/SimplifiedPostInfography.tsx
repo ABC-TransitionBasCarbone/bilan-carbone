@@ -1,6 +1,6 @@
 'use client'
 
-import { Post } from '@/services/posts'
+import { Post, SimplifiedPost } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { QuestionStats } from '@/services/serverFunctions/question'
 import CheckCircleOutlineSharp from '@mui/icons-material/CheckCircleOutlineSharp'
@@ -18,7 +18,7 @@ import {
 } from './SimplifiedPostInfography.styles'
 
 interface Props {
-  post: Post | SubPost
+  post: SimplifiedPost
   data?: ResultsByPost
   mainPost: Post
   subPosts: SubPost[] | null

@@ -244,5 +244,8 @@
   },
   "error": {
     "Too many comments": "Too many pending comments already exist."
+  },
+  "exports": {
+    "env_specific_export": "Simplified carbon footprint"
   }
 }

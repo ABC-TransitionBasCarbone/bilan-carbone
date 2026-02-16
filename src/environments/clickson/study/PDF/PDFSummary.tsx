@@ -4,15 +4,12 @@ import { ChartsPage } from '@/app/(public)/preview/etudes/[id]/ChartsPage'
 import '@/app/(public)/preview/etudes/[id]/pdf-summary.css'
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import { FullStudy } from '@/db/study'
-import { ClicksonPost } from '@/services/posts'
-import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
-import { getDetailedEmissionResults } from '@/services/study'
-import { STUDY_UNIT_VALUES } from '@/utils/study'
+import { usePublicodesResults } from '@/hooks/usePublicodesResults'
+import { BaseResultsByPost } from '@/services/results/consolidated'
 import { ThemeProvider } from '@mui/material/styles'
-import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import clicksonTheme from '../../theme/theme'
 
 interface SiteData {
@@ -24,24 +21,27 @@ interface SiteData {
     superficy: number
     establishmentYear: string
   }
-  results: ResultsByPost[]
+  results: BaseResultsByPost[]
 }
 
 interface Props {
   study: FullStudy
 }
 
+// NOTE: part of the code is duplicated between Clickson and Cut, but for now
+// the complexity of the components doesn't justify the effort of extracting
+// common components and having a more complex structure.
 const PDFSummary = ({ study }: Props) => {
-  const tPost = useTranslations('emissionFactors.post')
-  const tStudy = useTranslations('study.results')
   const tPdf = useTranslations('study.pdf')
-
   const [sitesData, setSitesData] = useState<SiteData[]>([])
   const [isLoading, setIsLoading] = useState(true)
-
-  const { computedResultsWithDep } = useMemo(
-    () => getDetailedEmissionResults(study, tPost, 'all', false, study.organizationVersion.environment, tStudy),
-    [study, tPost, tStudy],
+  const results = usePublicodesResults(
+    study,
+    'all',
+    study.organizationVersion.environment,
+    // NOTE: we skip auth check here because authentification is already
+    // handled by withPdfAuth.
+    true,
   )
 
   const questions = [
@@ -61,33 +61,11 @@ const PDFSummary = ({ study }: Props) => {
       try {
         setIsLoading(true)
 
-        const sitesData: SiteData[] = []
-
-        for (const studySite of study.sites) {
-          const siteComputedResults = computeResultsByPost(
-            study,
-            tPost,
-            studySite.id,
-            true,
-            false,
-            ClicksonPost,
-            Environment.CLICKSON,
-          )
-
-          const siteResults = siteComputedResults.map((result) => ({
-            ...result,
-            value: result.value / STUDY_UNIT_VALUES[study.resultsUnit],
-            subPosts: result.children
-              .filter((subPost) => subPost.value > 0)
-              .map((subPost) => ({
-                ...subPost,
-                value: subPost.value / STUDY_UNIT_VALUES[study.resultsUnit],
-              })),
-          }))
-
-          sitesData.push({
+        const sitesData: SiteData[] = study.sites.map((studySite) => {
+          const siteResults = results.bySite[studySite.id] ?? []
+          return {
             id: studySite.id,
-            fullName: `${studySite.site.name} - ${studySite.site.postalCode}`,
+            fullName: `${studySite.site.name} - ${studySite.site.city || ''}`,
             generalData: {
               etp: studySite?.etp ?? studySite?.site.etp ?? 0,
               studentNumber: studySite?.studentNumber ?? studySite?.site.studentNumber ?? 0,
@@ -95,8 +73,8 @@ const PDFSummary = ({ study }: Props) => {
               establishmentYear: studySite.site.establishmentYear || '',
             },
             results: siteResults,
-          })
-        }
+          }
+        })
 
         setSitesData(sitesData)
       } catch (error) {
@@ -107,7 +85,7 @@ const PDFSummary = ({ study }: Props) => {
     }
 
     loadData()
-  }, [study, tPost])
+  }, [study, results.bySite])
 
   const year = `${study.startDate.getFullYear()} - ${study.endDate.getFullYear()}`
 
@@ -144,7 +122,7 @@ const PDFSummary = ({ study }: Props) => {
             <h1 className="pdf-title">{tPdf('title', { year })}</h1>
           </div>
 
-          <div className="pdf-cinemas-list page-break-avoid">
+          <div className="pdf-sites-list page-break-avoid">
             <span>
               <ul>
                 {sitesData.map((site) => (
@@ -182,7 +160,7 @@ const PDFSummary = ({ study }: Props) => {
 
             <ConsolidatedResultsTable
               resultsUnit={study.resultsUnit}
-              data={computedResultsWithDep}
+              data={results.aggregated}
               hiddenUncertainty
               hideExpandIcons
             />
@@ -202,8 +180,8 @@ const PDFSummary = ({ study }: Props) => {
               />
             </div>
             <ChartsPage
-              study={study}
-              studySite={site.id}
+              results={site.results}
+              studyResultUnit={study.resultsUnit}
               siteName={site.fullName}
               tPdf={tPdf}
               isAll={false}

@@ -2,7 +2,7 @@
 
 import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import StudyResultsContainerSummaryCut from '@/environments/cut/study/results/StudyResultsContainerSummaryCut'
+import StudyResultsContainerSummaryPublicodes from '@/environments/simplified/study/results/StudyResultsContainerSummaryPublicodes'
 import { Environment } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import Block from '../base/Block'
@@ -45,7 +45,7 @@ const StudyDetails = ({
       <Block>
         <DynamicComponent
           environmentComponents={{
-            [Environment.CUT]: <StudyResultsContainerSummaryCut study={study} />,
+            [Environment.CUT]: <StudyResultsContainerSummaryPublicodes study={study} />,
           }}
           defaultComponent={
             <StudyResultsContainerSummary

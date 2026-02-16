@@ -16,10 +16,11 @@ interface Props {
   user: UserSession
 }
 
-const StudyContributionPage = ({ study, user }: Props) => {
+const StudyContributionPage = ({ study }: Props) => {
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
   const { studySite, setSite } = useStudySite(study)
+
   return (
     <>
       <Breadcrumbs
@@ -43,7 +44,7 @@ const StudyContributionPage = ({ study, user }: Props) => {
           <SelectStudySite sites={study.sites} defaultValue={studySite} setSite={setSite} showAllOption={false} />
         }
       >
-        <AllPostsInfographyContainer study={study} studySite={studySite} user={user} />
+        <AllPostsInfographyContainer study={study} studySite={studySite} />
       </Block>
     </>
   )

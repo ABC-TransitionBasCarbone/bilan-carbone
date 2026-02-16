@@ -1,6 +1,6 @@
 import CarbonIntensity from '@/components/study/results/consolidated/CarbonIntensity'
 import { FullStudy } from '@/db/study'
-import { SiteCAUnit, StudyResultUnit } from '@prisma/client'
+import { StudyResultUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import styles from './ResultsContainer.module.css'
@@ -9,27 +9,27 @@ interface Props {
   study: FullStudy
   studySite: string
   withDepValue: number
-  caUnit?: SiteCAUnit
 }
 
-const CarbonIntensitiesCut = ({ study, studySite, withDepValue, caUnit = SiteCAUnit.K }: Props) => {
+const CarbonIntensitiesCut = ({ study, studySite, withDepValue }: Props) => {
   const t = useTranslations('study.results')
-  const tResultUnits = useTranslations('study.results.units')
   const site = study.sites.find((site) => site.id === studySite)
 
   const [screens, entries, superficy, sessions, movies, chairs] = useMemo(() => {
     if (studySite === 'all') {
-      return study.sites.reduce(
-        (res, studySite) => [
-          res[0] + (studySite.site.cnc?.ecrans || 0),
-          res[1] + (studySite.numberOfTickets || 0),
-          res[2] + (studySite.superficy || 0),
-          res[3] + (studySite.numberOfSessions || 0),
-          res[4] + (studySite.site.cnc?.numberOfProgrammedFilms || 0),
-          res[5] + (studySite.site.cnc?.fauteuils || 0),
-        ],
-        [0, 0, 0, 0, 0, 0],
-      )
+      return study.sites
+        .reduce(
+          (res, studySite) => [
+            res[0] + (studySite.site.cnc?.ecrans || 0),
+            res[1] + (studySite.numberOfTickets || 0),
+            res[2] + (studySite.superficy || 0),
+            res[3] + (studySite.numberOfSessions || 0),
+            res[4] + (studySite.site.cnc?.numberOfProgrammedFilms || 0),
+            res[5] + (studySite.site.cnc?.fauteuils || 0),
+          ],
+          [0, 0, 0, 0, 0, 0],
+        )
+        .map((value) => (value === 0 ? 1 : value)) // to avoid division by zero
     }
     if (site) {
       return [
