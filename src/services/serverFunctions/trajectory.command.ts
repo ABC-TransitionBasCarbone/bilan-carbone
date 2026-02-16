@@ -22,6 +22,7 @@ export const createObjectiveSchema = () =>
   z
     .object({
       id: z.string().optional(),
+      startYear: z.string().optional().nullable(),
       targetYear: z.string().optional().nullable(),
       reductionRate: z
         .number()
@@ -45,6 +46,14 @@ export const createObjectiveSchema = () =>
       const isFull = hasTargetYear && hasReductionRate
       return isEmpty || isFull
     }, setCustomMessage('objectiveIncomplete'))
+    .refine((data) => {
+      if (!data.startYear || !data.targetYear) {
+        return true
+      }
+      const startYear = parseInt(data.startYear, 10)
+      const targetYear = parseInt(data.targetYear, 10)
+      return startYear < targetYear
+    }, setCustomMessage('startYearMustBeBeforeTargetYear'))
 
 export const createTrajectorySchema = () => {
   const objectiveSchema = createObjectiveSchema()

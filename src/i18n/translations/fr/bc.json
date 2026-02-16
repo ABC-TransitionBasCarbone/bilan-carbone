@@ -2436,9 +2436,12 @@
     "studyYearMustBeBeforeCurrent": "L'année de l'étude doit être antérieure à l'année de l'étude actuelle",
     "studyYearMustBeAfterLinkedStudies": "Impossible de renseigner une date antérieure à celles de vos études liées sur votre plan de transition",
     "maxTwoDecimals": "Le taux de réduction doit avoir au maximum 2 décimales",
+    "startYearMustBeBeforeTargetYear": "L'année de début doit être antérieure à l'année cible",
     "referenceYearMustBeBeforeOrEqualToStudyYear": "L'année de référence doit être inférieure ou égale à l'année de l'étude",
     "sectorPercentagesTotalExceeds100": "Le total des pourcentages ne peut pas dépasser 100%",
-    "sectorPercentagesRequired": "Les pourcentages des secteurs sont requis"
+    "sectorPercentagesRequired": "Les pourcentages des secteurs sont requis",
+    "scopeRequired": "Veuillez sélectionner au moins un site, tag ou sous-poste",
+    "atLeastOneValidObjective": "Veuillez ajouter au moins un objectif valide avec année de début, année cible et taux de réduction"
   },
   "documentationUrl": {
     "dependencyMatrix": "https://www.bilancarbone-methode.com/2-perimetre-de-la-demarche/2.5-identification-des-risques-et-opportunites-de-transition",

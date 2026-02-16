@@ -35,7 +35,9 @@
       "start": "Début",
       "end": "Fin",
       "sites": "Sites",
-      "date": "Date"
+      "date": "Date",
+      "startYear": "Année de début",
+      "targetYear": "Année cible"
     },
     "notAuthorized": "Action non authorisée",
     "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",

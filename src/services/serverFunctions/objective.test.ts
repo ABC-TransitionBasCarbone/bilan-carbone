@@ -1,10 +1,11 @@
 import * as objectiveDbModule from '@/db/objective.db'
+import * as trajectoryDbModule from '@/db/trajectory'
 import * as transitionPlanDbModule from '@/db/transitionPlan'
 import * as authModule from '@/services/auth'
 import * as studyPermissionsModule from '@/services/permissions/study'
 import { expect } from '@jest/globals'
 import { SubPost } from '@prisma/client'
-import { createSubObjective, updateSubObjective, validateUniqueScopeCombination } from './objective.serverFunction'
+import { createSubObjectives, updateSubObjective, validateUniqueScopeCombination } from './objective.serverFunction'
 
 jest.mock('../file', () => ({ download: jest.fn() }))
 jest.mock('uuid', () => ({ v4: jest.fn() }))
@@ -12,11 +13,27 @@ jest.mock('next-intl/server', () => ({
   getTranslations: jest.fn(() => (key: string) => key),
 }))
 
+jest.mock('../../db/client', () => ({
+  prismaClient: {
+    $transaction: jest.fn((callback) => callback({})),
+  },
+}))
+
 jest.mock('../../db/objective.db', () => ({
   getExistingObjectives: jest.fn(),
   getObjectiveWithTransitionPlan: jest.fn(),
-  createObjective: jest.fn(),
-  updateObjective: jest.fn(),
+  getTrajectoryType: jest.fn(),
+  createSingleObjective: jest.fn(),
+  createManyObjectivesAndReturn: jest.fn(),
+  createManyObjectiveSites: jest.fn(),
+  createManyObjectiveTags: jest.fn(),
+  createManyObjectiveSubPosts: jest.fn(),
+  updateSingleObjective: jest.fn(),
+  deleteObjectiveSites: jest.fn(),
+  deleteObjectiveTags: jest.fn(),
+  deleteObjectiveSubPosts: jest.fn(),
+  getObjectiveWithDetails: jest.fn(),
+  updateTrajectoryToCustom: jest.fn(),
   deleteObjective: jest.fn(),
 }))
 
@@ -38,10 +55,20 @@ jest.mock('../auth', () => ({
 
 const mockGetExistingObjectives = objectiveDbModule.getExistingObjectives as jest.Mock
 const mockGetObjectiveWithTransitionPlan = objectiveDbModule.getObjectiveWithTransitionPlan as jest.Mock
-const mockGetTrajectoryWithTransitionPlan = transitionPlanDbModule.getTrajectoryWithTransitionPlan as jest.Mock
-const mockCreateObjective = objectiveDbModule.createObjective as jest.Mock
-const mockUpdateObjective = objectiveDbModule.updateObjective as jest.Mock
+const mockGetTrajectoryType = trajectoryDbModule.getTrajectoryType as jest.Mock
+const mockCreateSingleObjective = objectiveDbModule.createObjective as jest.Mock
+const mockCreateManyObjectivesAndReturn = objectiveDbModule.createManyObjectivesAndReturn as jest.Mock
+const mockCreateManyObjectiveSites = objectiveDbModule.createManyObjectiveSites as jest.Mock
+const mockCreateManyObjectiveTags = objectiveDbModule.createManyObjectiveTags as jest.Mock
+const mockCreateManyObjectiveSubPosts = objectiveDbModule.createManyObjectiveSubPosts as jest.Mock
+const mockUpdateSingleObjective = objectiveDbModule.updateObjective as jest.Mock
+const mockDeleteObjectiveSites = objectiveDbModule.deleteObjectiveSites as jest.Mock
+const mockDeleteObjectiveTags = objectiveDbModule.deleteObjectiveTags as jest.Mock
+const mockDeleteObjectiveSubPosts = objectiveDbModule.deleteObjectiveSubPosts as jest.Mock
+const mockGetObjectiveWithDetails = objectiveDbModule.getObjectiveWithRelations as jest.Mock
+const mockUpdateTrajectoryToCustom = trajectoryDbModule.updateTrajectoryType as jest.Mock
 const mockDeleteObjective = objectiveDbModule.deleteObjective as jest.Mock
+const mockGetTrajectoryWithTransitionPlan = transitionPlanDbModule.getTrajectoryWithTransitionPlan as jest.Mock
 const mockHasEditAccessOnStudy = studyPermissionsModule.hasEditAccessOnStudy as jest.Mock
 const mockAuth = authModule.auth as jest.Mock
 
@@ -65,8 +92,18 @@ describe('Objective Server Functions', () => {
     mockGetTrajectoryWithTransitionPlan.mockResolvedValue(mockTrajectory)
     mockGetObjectiveWithTransitionPlan.mockResolvedValue(mockObjective)
     mockHasEditAccessOnStudy.mockResolvedValue(true)
-    mockCreateObjective.mockResolvedValue({ id: 'new-objective' })
-    mockUpdateObjective.mockResolvedValue({ id: 'objective-1' })
+    mockGetTrajectoryType.mockResolvedValue({ type: 'LINEAR' })
+    mockCreateSingleObjective.mockResolvedValue({ id: 'new-objective' })
+    mockCreateManyObjectivesAndReturn.mockResolvedValue([{ id: 'new-objective' }])
+    mockCreateManyObjectiveSites.mockResolvedValue(undefined)
+    mockCreateManyObjectiveTags.mockResolvedValue(undefined)
+    mockCreateManyObjectiveSubPosts.mockResolvedValue(undefined)
+    mockUpdateSingleObjective.mockResolvedValue(undefined)
+    mockDeleteObjectiveSites.mockResolvedValue(undefined)
+    mockDeleteObjectiveTags.mockResolvedValue(undefined)
+    mockDeleteObjectiveSubPosts.mockResolvedValue(undefined)
+    mockGetObjectiveWithDetails.mockResolvedValue({ id: 'objective-1' })
+    mockUpdateTrajectoryToCustom.mockResolvedValue(undefined)
     mockDeleteObjective.mockResolvedValue(undefined)
   })
 
@@ -170,10 +207,11 @@ describe('Objective Server Functions', () => {
     })
   })
 
-  describe('createSubObjective', () => {
+  describe('createSubObjectives', () => {
     const baseInput = {
       trajectoryId: 'trajectory-1',
       targetYear: 2030,
+      startYear: 2024,
       reductionRate: 0.05,
       siteIds: ['site-A', 'site-B'],
       tagIds: ['tag-1'],
@@ -183,11 +221,22 @@ describe('Objective Server Functions', () => {
     it('succeeds when trajectory exists', async () => {
       mockGetExistingObjectives.mockResolvedValue([])
 
-      const result = await createSubObjective(baseInput)
+      const result = await createSubObjectives([baseInput])
 
       expect(result.success).toBe(true)
       expect(result).toHaveProperty('data')
-      expect(mockCreateObjective).toHaveBeenCalledWith(baseInput)
+      expect(mockCreateManyObjectivesAndReturn).toHaveBeenCalled()
+    })
+
+    it('succeeds with multiple objectives', async () => {
+      mockGetExistingObjectives.mockResolvedValue([])
+      mockCreateManyObjectivesAndReturn.mockResolvedValue([{ id: 'obj-1' }, { id: 'obj-2' }])
+
+      const input2 = { ...baseInput, targetYear: 2035, startYear: 2030 }
+      const result = await createSubObjectives([baseInput, input2])
+
+      expect(result.success).toBe(true)
+      expect(mockCreateManyObjectivesAndReturn).toHaveBeenCalled()
     })
 
     it('returns error when duplicate scope combination', async () => {
@@ -200,16 +249,18 @@ describe('Objective Server Functions', () => {
         },
       ])
 
-      const result = await createSubObjective({
-        ...baseInput,
-        siteIds: ['site-A'],
-        tagIds: ['tag-1'],
-        subPosts: [...COMMON_SUBPOSTS],
-      })
+      const result = await createSubObjectives([
+        {
+          ...baseInput,
+          siteIds: ['site-A'],
+          tagIds: ['tag-1'],
+          subPosts: [...COMMON_SUBPOSTS],
+        },
+      ])
 
       expect(result.success).toBe(false)
       expect((result as { errorMessage: string }).errorMessage).toBe('duplicateScopeCombination')
-      expect(mockCreateObjective).not.toHaveBeenCalled()
+      expect(mockCreateManyObjectivesAndReturn).not.toHaveBeenCalled()
     })
   })
 
@@ -217,6 +268,7 @@ describe('Objective Server Functions', () => {
     const baseInput = {
       id: 'objective-1',
       targetYear: 2030,
+      startYear: 2024,
       reductionRate: 0.05,
       siteIds: ['site-A'],
       tagIds: ['tag-1', 'tag-2'],
@@ -230,7 +282,7 @@ describe('Objective Server Functions', () => {
 
       expect(result.success).toBe(true)
       expect(result).toHaveProperty('data')
-      expect(mockUpdateObjective).toHaveBeenCalledWith(baseInput)
+      expect(mockUpdateSingleObjective).toHaveBeenCalled()
     })
 
     it('returns error when duplicate scope combination', async () => {
@@ -252,7 +304,7 @@ describe('Objective Server Functions', () => {
 
       expect(result.success).toBe(false)
       expect((result as { errorMessage: string }).errorMessage).toBe('duplicateScopeCombination')
-      expect(mockUpdateObjective).not.toHaveBeenCalled()
+      expect(mockUpdateSingleObjective).not.toHaveBeenCalled()
     })
   })
 })

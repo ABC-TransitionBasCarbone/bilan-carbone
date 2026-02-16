@@ -27,6 +27,7 @@ jest.mock('../../db/transitionPlan', () => ({
 
 jest.mock('../../db/study', () => ({
   getStudyById: jest.fn(),
+  getStudyStartDate: jest.fn(),
 }))
 
 jest.mock('../permissions/check', () => ({
@@ -40,6 +41,7 @@ jest.mock('../permissions/study', () => ({
 const mockAuth = authModule.auth as jest.Mock
 const mockGetTransitionPlanById = transitionPlanDbModule.getTransitionPlanById as jest.Mock
 const mockGetStudyById = studyDbModule.getStudyById as jest.Mock
+const mockGetStudyStartDate = studyDbModule.getStudyStartDate as jest.Mock
 const mockHasEditAccessOnStudy = studyPermissionsModule.hasEditAccessOnStudy as jest.Mock
 const mockCreateTrajectoryWithObjectives = transitionPlanDbModule.createTrajectoryWithObjectives as jest.Mock
 
@@ -69,6 +71,7 @@ describe('Trajectory Server Functions', () => {
     mockAuth.mockResolvedValue(mockSession)
     mockGetTransitionPlanById.mockResolvedValue(mockTransitionPlan)
     mockGetStudyById.mockResolvedValue(mockStudy)
+    mockGetStudyStartDate.mockResolvedValue(new Date('2024-01-01'))
     mockHasEditAccessOnStudy.mockResolvedValue(true)
     mockCreateTrajectoryWithObjectives.mockResolvedValue({ id: 'trajectory-123', name: 'Test Trajectory' })
   })
@@ -103,8 +106,8 @@ describe('Trajectory Server Functions', () => {
           objectives: {
             createMany: {
               data: [
-                { targetYear: 2030, reductionRate: 0.042, isDefault: true },
-                { targetYear: 2050, reductionRate: 0.042, isDefault: true },
+                { targetYear: 2030, startYear: 2024, reductionRate: 0.042, isDefault: true },
+                { targetYear: 2050, startYear: 2030, reductionRate: 0.042, isDefault: true },
               ],
             },
           },
@@ -126,8 +129,8 @@ describe('Trajectory Server Functions', () => {
           objectives: {
             createMany: {
               data: [
-                { targetYear: 2030, reductionRate: 0.025, isDefault: true },
-                { targetYear: 2050, reductionRate: 0.025, isDefault: true },
+                { targetYear: 2030, startYear: 2024, reductionRate: 0.025, isDefault: true },
+                { targetYear: 2050, startYear: 2030, reductionRate: 0.025, isDefault: true },
               ],
             },
           },
@@ -153,8 +156,8 @@ describe('Trajectory Server Functions', () => {
           objectives: {
             createMany: {
               data: [
-                { targetYear: 2035, reductionRate: 0.05, isDefault: true },
-                { targetYear: 2040, reductionRate: 0.08, isDefault: true },
+                { targetYear: 2035, startYear: 2024, reductionRate: 0.05, isDefault: true },
+                { targetYear: 2040, startYear: 2035, reductionRate: 0.08, isDefault: true },
               ],
             },
           },

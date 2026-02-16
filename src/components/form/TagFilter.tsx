@@ -17,6 +17,7 @@ interface TagFilterProps {
   className?: string
   useTagId?: boolean
   showSeparateLabel?: boolean
+  hideOtherOption?: boolean
 }
 
 export const TagFilter = ({
@@ -26,6 +27,7 @@ export const TagFilter = ({
   className,
   useTagId = false,
   showSeparateLabel = false,
+  hideOtherOption = false,
 }: TagFilterProps) => {
   const t = useTranslations('study.results.pageFilters')
   const tOther = useTranslations('study.results')
@@ -53,17 +55,19 @@ export const TagFilter = ({
     [tagFamilies, useTagId],
   )
 
-  const tagItemsWithOthers = useMemo<Record<string, { id: string; name: string; children: ChildrenType[] }>>(
-    () => ({
+  const tagItemsWithOthers = useMemo<Record<string, { id: string; name: string; children: ChildrenType[] }>>(() => {
+    if (hideOtherOption) {
+      return tagItems
+    }
+    return {
       ...tagItems,
       [OTHER_FAMILY_ID]: {
         id: OTHER_FAMILY_ID,
         name: tOther('other'),
         children: [{ id: OTHER_TAG_ID, label: tOther('other') }],
       },
-    }),
-    [tagItems, tOther],
-  )
+    }
+  }, [tagItems, tOther, hideOtherOption])
 
   const allTagIds = useMemo(
     () => Object.values(tagItemsWithOthers).flatMap((family) => family.children.map((child) => child.id)),

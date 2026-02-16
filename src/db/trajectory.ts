@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client'
+import { Prisma, TrajectoryType } from '@prisma/client'
 import { prismaClient } from './client'
 import { TrajectoryWithObjectives } from './transitionPlan'
 
@@ -56,5 +56,23 @@ export const hasTrajectory = async (transitionPlanId: string): Promise<boolean> 
 export const deleteTrajectory = async (id: string): Promise<void> => {
   await prismaClient.trajectory.delete({
     where: { id },
+  })
+}
+
+export const updateTrajectoryType = async (
+  trajectoryId: string,
+  type: TrajectoryType,
+  tx: Prisma.TransactionClient,
+) => {
+  return tx.trajectory.update({
+    where: { id: trajectoryId },
+    data: { type },
+  })
+}
+
+export const getTrajectoryType = async (trajectoryId: string, tx: Prisma.TransactionClient) => {
+  return tx.trajectory.findUnique({
+    where: { id: trajectoryId },
+    select: { type: true },
   })
 }

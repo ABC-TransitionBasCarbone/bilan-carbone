@@ -45,6 +45,7 @@ const createMockTrajectory = (
     {
       id: 'objective-1',
       trajectoryId: 'trajectory-1',
+      startYear: 2024,
       targetYear: 2030,
       reductionRate: 0.05,
       isDefault: true,
@@ -57,6 +58,7 @@ const createMockTrajectory = (
     {
       id: 'objective-2',
       trajectoryId: 'trajectory-1',
+      startYear: 2030,
       targetYear: 2040,
       reductionRate: 0.08,
       isDefault: true,

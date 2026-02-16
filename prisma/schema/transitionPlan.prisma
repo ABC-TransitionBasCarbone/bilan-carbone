@@ -179,6 +179,7 @@ model Objective {
   trajectory   Trajectory @relation(fields: [trajectoryId], references: [id], onDelete: Cascade)
 
   targetYear    Int     @map("target_year")
+  startYear     Int?    @map("start_year")
   reductionRate Float   @map("reduction_rate")
   isDefault     Boolean @default(false) @map("is_default")
 

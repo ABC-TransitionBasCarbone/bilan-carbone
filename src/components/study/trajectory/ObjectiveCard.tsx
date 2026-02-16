@@ -2,6 +2,7 @@ import HelpIcon from '@/components/base/HelpIcon'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormTextField } from '@/components/form/TextField'
 import GlossaryModal from '@/components/modals/GlossaryModal'
+import { ObjectiveModalFormData } from '@/services/serverFunctions/objective.command'
 import { TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
 import { BaseObjective } from '@/utils/trajectory'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -13,7 +14,6 @@ import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import { Control, FieldPath } from 'react-hook-form'
 import styles from './ObjectiveCard.module.css'
-import { ObjectiveModalFormData } from './ObjectiveModal'
 
 interface Props<T extends TrajectoryFormData | ObjectiveModalFormData> {
   reductionRate?: number
@@ -23,6 +23,7 @@ interface Props<T extends TrajectoryFormData | ObjectiveModalFormData> {
   index: number
   onDelete?: () => void
   correctedObjective: BaseObjective | null
+  isDefault?: boolean
 }
 
 const ObjectiveCard = <T extends TrajectoryFormData | ObjectiveModalFormData>({
@@ -33,8 +34,10 @@ const ObjectiveCard = <T extends TrajectoryFormData | ObjectiveModalFormData>({
   index,
   onDelete,
   correctedObjective,
+  isDefault = true,
 }: Props<T>) => {
   const t = useTranslations('study.transitionPlan.trajectoryModal')
+  const tCommon = useTranslations('common')
   const tGlossary = useTranslations('study.transitionPlan.trajectoryModal.glossary')
   const [showOvershootInfo, setShowOvershootInfo] = useState(false)
 
@@ -90,9 +93,20 @@ const ObjectiveCard = <T extends TrajectoryFormData | ObjectiveModalFormData>({
             </div>
           ) : (
             <div className="flex-col gapped1">
+              {!isDefault && (
+                <FormDatePicker
+                  name={`objectives.${index}.startYear` as FieldPath<T>}
+                  label={tCommon('label.startYear')}
+                  control={control}
+                  className="w100"
+                  views={['year']}
+                  data-testid="objective-start-year-picker"
+                  clearable
+                />
+              )}
               <FormDatePicker
                 name={`objectives.${index}.targetYear` as FieldPath<T>}
-                label={t('objectives.year')}
+                label={tCommon('label.targetYear')}
                 control={control}
                 className="w100"
                 views={['year']}

@@ -7,11 +7,12 @@ import Modal from '@/components/modals/Modal'
 import { ObjectiveWithScope, TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { environmentPostMapping, environmentSubPostsMapping, Post } from '@/services/posts'
-import { createSubObjective, updateSubObjective } from '@/services/serverFunctions/objective.serverFunction'
+import { createObjectiveModalSchema, ObjectiveModalFormData } from '@/services/serverFunctions/objective.command'
+import { createSubObjectives, updateSubObjective } from '@/services/serverFunctions/objective.serverFunction'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { getYearFromDateStr } from '@/utils/time'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl, FormLabel, Typography } from '@mui/material'
-import { SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
@@ -19,18 +20,6 @@ import { useFieldArray, useForm } from 'react-hook-form'
 import AddObjectiveButton from './AddObjectiveButton'
 import ObjectiveCard from './ObjectiveCard'
 import styles from './ObjectiveModal.module.css'
-
-interface ObjectiveFormData {
-  targetYear: string | null
-  reductionRate: number | null
-}
-
-export interface ObjectiveModalFormData {
-  siteIds: string[]
-  tagIds: string[]
-  subPosts: SubPost[]
-  objectives: ObjectiveFormData[]
-}
 
 interface Props {
   open: boolean
@@ -61,6 +50,7 @@ const ObjectiveModal = ({ open, onClose, trajectory, onSuccess, objective, sites
         subPosts: objective.subPosts.map((sp) => sp.subPost),
         objectives: [
           {
+            startYear: objective.startYear?.toString(),
             targetYear: objective.targetYear.toString(),
             reductionRate: Number((objective.reductionRate * 100).toFixed(2)),
           },
@@ -70,12 +60,13 @@ const ObjectiveModal = ({ open, onClose, trajectory, onSuccess, objective, sites
         siteIds: [],
         tagIds: [],
         subPosts: [],
-        objectives: [{ targetYear: null, reductionRate: null }],
+        objectives: [{ startYear: '', targetYear: '', reductionRate: 0 }],
       }
 
   const { control, handleSubmit, watch, reset, formState } = useForm<ObjectiveModalFormData>({
     defaultValues,
     mode: 'onChange',
+    resolver: zodResolver(createObjectiveModalSchema()),
   })
 
   const {
@@ -102,6 +93,7 @@ const ObjectiveModal = ({ open, onClose, trajectory, onSuccess, objective, sites
           updateSubObjective({
             id: objective.id,
             targetYear: getYearFromDateStr(obj.targetYear!),
+            startYear: getYearFromDateStr(obj.startYear!),
             reductionRate: Number((obj.reductionRate! / 100).toFixed(4)),
             siteIds: data.siteIds,
             tagIds: data.tagIds,
@@ -119,38 +111,32 @@ const ObjectiveModal = ({ open, onClose, trajectory, onSuccess, objective, sites
       )
     } else {
       const validObjectives = data.objectives.filter(
-        (obj) => obj.targetYear && obj.reductionRate !== null && obj.reductionRate !== undefined,
+        (obj) => obj.targetYear && obj.startYear && obj.reductionRate !== null && obj.reductionRate !== undefined,
       )
 
       if (validObjectives.length === 0) {
         setIsLoading(false)
-        return
+        throw new Error('No valid objectives, this should not happen')
       }
 
       const objectivesToCreate = validObjectives.map((obj) => ({
         trajectoryId: trajectory.id,
         targetYear: getYearFromDateStr(obj.targetYear!),
+        startYear: getYearFromDateStr(obj.startYear!),
         reductionRate: Number((obj.reductionRate! / 100).toFixed(4)),
         siteIds: data.siteIds,
         tagIds: data.tagIds,
         subPosts: data.subPosts,
       }))
 
-      let allSuccess = true
-      for (const objectiveToCreate of objectivesToCreate) {
-        await callServerFunction(() => createSubObjective(objectiveToCreate), {
-          onError: () => {
-            allSuccess = false
-            setIsLoading(false)
-          },
-        })
-      }
-
-      if (allSuccess) {
-        setIsLoading(false)
-        onSuccess()
-        handleClose()
-      }
+      await callServerFunction(() => createSubObjectives(objectivesToCreate), {
+        onSuccess: () => {
+          setIsLoading(false)
+          onSuccess()
+          handleClose()
+        },
+        onError: () => setIsLoading(false),
+      })
     }
   }
 
@@ -162,13 +148,8 @@ const ObjectiveModal = ({ open, onClose, trajectory, onSuccess, objective, sites
   const siteIds = watch('siteIds')
   const tagIds = watch('tagIds')
   const subPosts = watch('subPosts')
-  const objectivesData = watch('objectives')
 
-  const hasScope = siteIds.length > 0 || tagIds.length > 0 || subPosts.length > 0
-  const hasValidObjective = objectivesData.some(
-    (obj) => obj.targetYear && obj.reductionRate !== null && obj.reductionRate !== undefined,
-  )
-  const isValid = formState.isValid && hasScope && hasValidObjective
+  const isValid = formState.isValid
 
   const envPosts = (environment ? Object.values(environmentPostMapping[environment]) : []) as Post[]
   const envSubPosts = environment
@@ -217,17 +198,6 @@ const ObjectiveModal = ({ open, onClose, trajectory, onSuccess, objective, sites
             </div>
 
             <div className={'flex-col'}>
-              <TagFilter
-                className={classNames('w100', styles.tagFilter)}
-                tagFamilies={tagFamilies}
-                selectedTagIds={tagIds}
-                onChange={(value) => reset({ ...watch(), tagIds: value })}
-                useTagId={true}
-                showSeparateLabel={true}
-              />
-            </div>
-
-            <div className={'flex-col'}>
               <FormControl fullWidth>
                 <PostSubPostFilter
                   className={classNames('w100', styles.postSubPostFilter)}
@@ -238,6 +208,18 @@ const ObjectiveModal = ({ open, onClose, trajectory, onSuccess, objective, sites
                   showSeparateLabel={true}
                 />
               </FormControl>
+            </div>
+
+            <div className={'flex-col'}>
+              <TagFilter
+                className={classNames('w100', styles.tagFilter)}
+                tagFamilies={tagFamilies}
+                selectedTagIds={tagIds}
+                onChange={(value) => reset({ ...watch(), tagIds: value })}
+                useTagId={true}
+                showSeparateLabel={true}
+                hideOtherOption={true}
+              />
             </div>
           </div>
         </div>
@@ -253,11 +235,13 @@ const ObjectiveModal = ({ open, onClose, trajectory, onSuccess, objective, sites
                 correctedObjective={null}
                 control={control}
                 index={index}
+                isDefault={false}
                 onDelete={!isEditing && objectives.length > 1 ? () => remove(index) : undefined}
               />
             ))}
-
-            {!isEditing && <AddObjectiveButton onClick={() => append({ targetYear: null, reductionRate: null })} />}
+            {!isEditing && (
+              <AddObjectiveButton onClick={() => append({ startYear: '', targetYear: '', reductionRate: 0 })} />
+            )}
           </div>
         </div>
       </div>

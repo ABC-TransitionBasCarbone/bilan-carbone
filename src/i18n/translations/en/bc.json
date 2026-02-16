@@ -2436,9 +2436,12 @@
     "studyYearMustBeBeforeCurrent": "The study year must be before the current study year",
     "studyYearMustBeAfterLinkedStudies": "Cannot set a date earlier than your linked studies in your transition plan",
     "maxTwoDecimals": "The reduction rate must have at most 2 decimal places",
+    "startYearMustBeBeforeTargetYear": "Start year must be before target year",
     "referenceYearMustBeBeforeOrEqualToStudyYear": "Reference year must be less than or equal to the study year",
     "sectorPercentagesTotalExceeds100": "Total sector percentages cannot exceed 100%",
-    "sectorPercentagesRequired": "Sector percentages are required"
+    "sectorPercentagesRequired": "Sector percentages are required",
+    "scopeRequired": "Please select at least one site, tag, or sub post",
+    "atLeastOneValidObjective": "Please add at least one valid objective with start year, target year, and reduction rate"
   },
   "documentationUrl": {
     "dependencyMatrix": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/2-scope-of-the-approach/2.5-identification-of-transition-risks-and-opportunities",
