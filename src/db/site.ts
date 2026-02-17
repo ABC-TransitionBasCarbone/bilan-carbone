@@ -1,4 +1,4 @@
-'use server'
+import 'server-only'
 
 import { Prisma } from '@prisma/client'
 import { prismaClient } from './client'

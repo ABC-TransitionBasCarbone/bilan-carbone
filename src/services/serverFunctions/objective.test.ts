@@ -5,7 +5,12 @@ import * as authModule from '@/services/auth'
 import * as studyPermissionsModule from '@/services/permissions/study'
 import { expect } from '@jest/globals'
 import { SubPost } from '@prisma/client'
-import { createSubObjectives, updateSubObjective, validateUniqueScopeCombination } from './objective.serverFunction'
+import {
+  createSubObjectives,
+  deleteObjective,
+  updateSubObjective,
+  validateUniqueScopeCombination,
+} from './objective.serverFunction'
 
 jest.mock('../file', () => ({ download: jest.fn() }))
 jest.mock('uuid', () => ({ v4: jest.fn() }))
@@ -265,6 +270,15 @@ describe('Objective Server Functions', () => {
       expect((result as { errorMessage: string }).errorMessage).toBe('duplicateScopeCombination')
       expect(mockCreateManyObjectivesAndReturn).not.toHaveBeenCalled()
     })
+
+    it('returns error when user has no edit access', async () => {
+      mockHasEditAccessOnStudy.mockResolvedValue(false)
+
+      const result = await createSubObjectives([baseInput])
+
+      expect(result.success).toBe(false)
+      expect(mockCreateManyObjectivesAndReturn).not.toHaveBeenCalled()
+    })
   })
 
   describe('updateSubObjective', () => {
@@ -288,6 +302,15 @@ describe('Objective Server Functions', () => {
       expect(mockUpdateSingleObjective).toHaveBeenCalled()
     })
 
+    it('returns error when user has no edit access', async () => {
+      mockHasEditAccessOnStudy.mockResolvedValue(false)
+
+      const result = await updateSubObjective(baseInput)
+
+      expect(result.success).toBe(false)
+      expect(mockUpdateSingleObjective).not.toHaveBeenCalled()
+    })
+
     it('returns error when duplicate scope combination', async () => {
       mockGetSubObjectives.mockResolvedValue([
         {
@@ -308,6 +331,33 @@ describe('Objective Server Functions', () => {
       expect(result.success).toBe(false)
       expect((result as { errorMessage: string }).errorMessage).toBe('duplicateScopeCombination')
       expect(mockUpdateSingleObjective).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('deleteObjective', () => {
+    it('succeeds when objective exists and user has edit access', async () => {
+      const result = await deleteObjective('objective-1')
+
+      expect(result.success).toBe(true)
+      expect(mockDeleteObjective).toHaveBeenCalledWith('objective-1')
+    })
+
+    it('returns error when user has no edit access', async () => {
+      mockHasEditAccessOnStudy.mockResolvedValue(false)
+
+      const result = await deleteObjective('objective-1')
+
+      expect(result.success).toBe(false)
+      expect(mockDeleteObjective).not.toHaveBeenCalled()
+    })
+
+    it('returns error when objective not found', async () => {
+      mockGetObjectiveWithTransitionPlan.mockResolvedValue(null)
+
+      const result = await deleteObjective('objective-1')
+
+      expect(result.success).toBe(false)
+      expect(mockDeleteObjective).not.toHaveBeenCalled()
     })
   })
 })
