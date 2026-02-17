@@ -101,6 +101,11 @@ export const createTrajectoryWithObjectives = async (input: CreateTrajectoryInpu
       }
     }
 
+    const startDate = await getStudyStartDate(transitionPlan.studyId)
+    const studyStartYear = startDate ? startDate.getFullYear() : new Date().getFullYear()
+
+    const sortedObjectives = [...objectives].sort((a, b) => a.targetYear - b.targetYear)
+
     return dbCreateTrajectoryWithObjectives({
       transitionPlan: {
         connect: {
@@ -114,8 +119,9 @@ export const createTrajectoryWithObjectives = async (input: CreateTrajectoryInpu
       sectorPercentages: input.sectorPercentages || undefined,
       objectives: {
         createMany: {
-          data: objectives.map((obj) => ({
+          data: sortedObjectives.map((obj, index) => ({
             ...obj,
+            startYear: index === 0 ? studyStartYear : sortedObjectives[index - 1].targetYear,
             isDefault: true,
           })),
         },

@@ -436,10 +436,7 @@ const TrajectoryObjectivesTable = ({
     const filteredTrajectories = searchFilter ? fuse.search(searchFilter).map(({ item }) => item) : trajectories
 
     return filteredTrajectories.map((trajectory) => {
-      const defaultObjectives = trajectory.objectives.filter((obj) => obj.isDefault)
-      const subObjectives = trajectory.objectives.filter((obj) => !obj.isDefault)
-      const allObjectives = [...defaultObjectives, ...subObjectives]
-      const sortedObjectives = [...allObjectives].sort((a, b) => a.targetYear - b.targetYear)
+      const sortedObjectives = [...trajectory.objectives].sort((a, b) => a.targetYear - b.targetYear)
       const closestObjective = sortedObjectives[0]
 
       const refYear = trajectory.referenceYear || getDisplayedReferenceYearForTrajectoryType(trajectory.type, studyYear)

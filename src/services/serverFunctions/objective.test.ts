@@ -20,7 +20,7 @@ jest.mock('../../db/client', () => ({
 }))
 
 jest.mock('../../db/objective.db', () => ({
-  getExistingObjectives: jest.fn(),
+  getSubObjectives: jest.fn(),
   getObjectiveWithTransitionPlan: jest.fn(),
   createObjective: jest.fn(),
   createManyObjectivesAndReturn: jest.fn(),
@@ -56,7 +56,7 @@ jest.mock('../auth', () => ({
   auth: jest.fn(),
 }))
 
-const mockGetExistingObjectives = objectiveDbModule.getExistingObjectives as jest.Mock
+const mockGetSubObjectives = objectiveDbModule.getSubObjectives as jest.Mock
 const mockGetObjectiveWithTransitionPlan = objectiveDbModule.getObjectiveWithTransitionPlan as jest.Mock
 const mockGetTrajectoryType = trajectoryDbModule.getTrajectoryType as jest.Mock
 const mockCreateSingleObjective = objectiveDbModule.createObjective as jest.Mock
@@ -112,7 +112,7 @@ describe('Objective Server Functions', () => {
 
   describe('validateUniqueScopeCombination', () => {
     it('does not throw with exact same tags and subposts and targetYear but different sites', async () => {
-      mockGetExistingObjectives.mockResolvedValue([
+      mockGetSubObjectives.mockResolvedValue([
         {
           id: 'obj-1',
           sites: [{ studySiteId: 'site-A' }],
@@ -132,7 +132,7 @@ describe('Objective Server Functions', () => {
     })
 
     it('does not throw with exact same sites and subposts and targetYear but different tags', async () => {
-      mockGetExistingObjectives.mockResolvedValue([
+      mockGetSubObjectives.mockResolvedValue([
         {
           id: 'obj-1',
           sites: [{ studySiteId: 'site-A' }],
@@ -155,7 +155,7 @@ describe('Objective Server Functions', () => {
       const existingSubPosts = [...COMMON_SUBPOSTS, SubPost.Equipements]
       const newSubPosts = [...COMMON_SUBPOSTS, SubPost.DeplacementsDomicileTravail]
 
-      mockGetExistingObjectives.mockResolvedValue([
+      mockGetSubObjectives.mockResolvedValue([
         {
           id: 'obj-1',
           sites: [{ studySiteId: 'site-A' }],
@@ -175,7 +175,7 @@ describe('Objective Server Functions', () => {
     })
 
     it('throws duplicateScopeCombination when same sites, tags, subposts and targetYear', async () => {
-      mockGetExistingObjectives.mockResolvedValue([
+      mockGetSubObjectives.mockResolvedValue([
         {
           id: 'obj-1',
           sites: [{ studySiteId: 'site-A' }],
@@ -195,7 +195,7 @@ describe('Objective Server Functions', () => {
     })
 
     it('does not throw when exact same scope but different targetYear', async () => {
-      mockGetExistingObjectives.mockResolvedValue([])
+      mockGetSubObjectives.mockResolvedValue([])
 
       await expect(
         validateUniqueScopeCombination('trajectory-1', {
@@ -206,7 +206,7 @@ describe('Objective Server Functions', () => {
         }),
       ).resolves.toBeUndefined()
 
-      expect(mockGetExistingObjectives).toHaveBeenCalledWith('trajectory-1', 2035, undefined)
+      expect(mockGetSubObjectives).toHaveBeenCalledWith('trajectory-1', 2035, undefined)
     })
   })
 
@@ -222,7 +222,7 @@ describe('Objective Server Functions', () => {
     }
 
     it('succeeds when trajectory exists', async () => {
-      mockGetExistingObjectives.mockResolvedValue([])
+      mockGetSubObjectives.mockResolvedValue([])
 
       const result = await createSubObjectives([baseInput])
 
@@ -232,7 +232,7 @@ describe('Objective Server Functions', () => {
     })
 
     it('succeeds with multiple objectives', async () => {
-      mockGetExistingObjectives.mockResolvedValue([])
+      mockGetSubObjectives.mockResolvedValue([])
       mockCreateManyObjectivesAndReturn.mockResolvedValue([{ id: 'obj-1' }, { id: 'obj-2' }])
 
       const input2 = { ...baseInput, targetYear: 2035, startYear: 2030 }
@@ -243,7 +243,7 @@ describe('Objective Server Functions', () => {
     })
 
     it('returns error when duplicate scope combination', async () => {
-      mockGetExistingObjectives.mockResolvedValue([
+      mockGetSubObjectives.mockResolvedValue([
         {
           id: 'obj-1',
           sites: [{ studySiteId: 'site-A' }],
@@ -279,7 +279,7 @@ describe('Objective Server Functions', () => {
     }
 
     it('succeeds when objective exists', async () => {
-      mockGetExistingObjectives.mockResolvedValue([])
+      mockGetSubObjectives.mockResolvedValue([])
 
       const result = await updateSubObjective(baseInput)
 
@@ -289,7 +289,7 @@ describe('Objective Server Functions', () => {
     })
 
     it('returns error when duplicate scope combination', async () => {
-      mockGetExistingObjectives.mockResolvedValue([
+      mockGetSubObjectives.mockResolvedValue([
         {
           id: 'obj-2',
           sites: [{ studySiteId: 'site-A' }],

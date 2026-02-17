@@ -11,9 +11,9 @@ import {
   deleteObjectiveSites,
   deleteObjectiveSubPosts,
   deleteObjectiveTags,
-  getExistingObjectives,
   getObjectiveWithRelations,
   getObjectiveWithTransitionPlan,
+  getSubObjectives,
   updateObjective,
 } from '@/db/objective.db'
 import { getTrajectoryType, updateTrajectoryType } from '@/db/trajectory'
@@ -51,7 +51,7 @@ export const validateUniqueScopeCombination = async (
   input: { targetYear: number; siteIds?: string[]; tagIds?: string[]; subPosts?: SubPost[] },
   excludeObjectiveId?: string,
 ) => {
-  const existingObjectives = await getExistingObjectives(trajectoryId, input.targetYear, excludeObjectiveId)
+  const existingObjectives = await getSubObjectives(trajectoryId, input.targetYear, excludeObjectiveId)
   const newHash = createScopeHash(input.siteIds || [], input.tagIds || [], input.subPosts || [])
 
   for (const objective of existingObjectives) {

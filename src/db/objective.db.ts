@@ -1,7 +1,7 @@
 import { Prisma, SubPost } from '@prisma/client'
 import { prismaClient } from './client'
 
-export const getExistingObjectives = async (trajectoryId: string, targetYear: number, excludeObjectiveId?: string) => {
+export const getSubObjectives = async (trajectoryId: string, targetYear: number, excludeObjectiveId?: string) => {
   return prismaClient.objective.findMany({
     where: {
       trajectoryId,
