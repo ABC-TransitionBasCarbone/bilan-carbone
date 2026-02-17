@@ -11,9 +11,9 @@
     "publicodes-build"
   ],
   "scripts": {
-    "compile": "npx publicodes compile",
-    "watch": "npx publicodes compile --watch",
-    "dev": "npx publicodes dev",
+    "compile": "./node_modules/.bin/publicodes compile",
+    "watch": "./node_modules/.bin/publicodes compile --watch",
+    "dev": "./node_modules/.bin/publicodes dev",
     "pretest": "yarn run compile",
     "test": "vitest run --reporter=tree"
   },
