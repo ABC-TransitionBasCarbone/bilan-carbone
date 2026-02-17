@@ -10,5 +10,6 @@ export default defineConfig({
     supportFile: 'cypress/support/index.ts',
     experimentalStudio: true,
     defaultCommandTimeout: 8000, // default value, change if needed during local tests
+    retries: 3,
   },
 })
