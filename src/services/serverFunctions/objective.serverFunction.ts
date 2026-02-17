@@ -6,12 +6,10 @@ import {
   createManyObjectiveSubPosts,
   createManyObjectiveTags,
   createManyObjectivesAndReturn,
-  createObjective,
   deleteObjective as dbDeleteObjective,
   deleteObjectiveSites,
   deleteObjectiveSubPosts,
   deleteObjectiveTags,
-  getObjectiveWithRelations,
   getObjectiveWithTransitionPlan,
   getSubObjectives,
   updateObjective,
@@ -66,58 +64,6 @@ export const validateUniqueScopeCombination = async (
     }
   }
 }
-
-export const createSubObjective = async (input: CreateObjectiveInput) =>
-  withServerResponse('createSubObjective', async () => {
-    const trajectory = await getTrajectoryWithTransitionPlan(input.trajectoryId)
-    if (!trajectory) {
-      throw new Error('Trajectory not found')
-    }
-
-    const hasEditAccess = await hasEditAccessOnStudy(trajectory.transitionPlan.studyId)
-    if (!hasEditAccess) {
-      throw new Error(NOT_AUTHORIZED)
-    }
-
-    await validateUniqueScopeCombination(input.trajectoryId, input)
-
-    return prismaClient.$transaction(async (tx) => {
-      const trajectoryData = await getTrajectoryType(input.trajectoryId, tx)
-      if (!trajectoryData) {
-        throw new Error('Trajectory not found')
-      }
-
-      const objective = await createObjective(
-        {
-          trajectoryId: input.trajectoryId,
-          targetYear: input.targetYear,
-          startYear: input.startYear,
-          reductionRate: input.reductionRate,
-          isDefault: false,
-        },
-        tx,
-      )
-
-      await createManyObjectiveSites(
-        (input.siteIds ?? []).map((siteId) => ({ objectiveId: objective.id, studySiteId: siteId })),
-        tx,
-      )
-      await createManyObjectiveTags(
-        (input.tagIds ?? []).map((tagId) => ({ objectiveId: objective.id, studyTagId: tagId })),
-        tx,
-      )
-      await createManyObjectiveSubPosts(
-        (input.subPosts ?? []).map((subPost) => ({ objectiveId: objective.id, subPost })),
-        tx,
-      )
-
-      if (trajectoryData.type !== 'CUSTOM') {
-        await updateTrajectoryType(input.trajectoryId, TrajectoryType.CUSTOM, tx)
-      }
-
-      return objective
-    })
-  })
 
 export const createSubObjectives = async (inputs: CreateObjectiveInput[]) =>
   withServerResponse('createSubObjectives', async () => {
@@ -219,8 +165,6 @@ export const updateSubObjective = async (input: UpdateObjectiveInput) =>
         (input.subPosts ?? []).map((subPost) => ({ objectiveId: input.id, subPost })),
         tx,
       )
-
-      return getObjectiveWithRelations(input.id, tx)
     })
   })
 

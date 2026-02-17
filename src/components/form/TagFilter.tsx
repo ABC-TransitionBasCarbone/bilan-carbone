@@ -15,7 +15,6 @@ interface TagFilterProps {
   selectedTagIds: string[]
   onChange: (ids: string[]) => void
   className?: string
-  useTagId?: boolean
   showSeparateLabel?: boolean
   hideOtherOption?: boolean
 }
@@ -25,7 +24,6 @@ export const TagFilter = ({
   selectedTagIds,
   onChange,
   className,
-  useTagId = false,
   showSeparateLabel = false,
   hideOtherOption = false,
 }: TagFilterProps) => {
@@ -38,7 +36,7 @@ export const TagFilter = ({
     () =>
       tagFamilies.reduce(
         (acc, tagFamily) => {
-          const tagInfos = tagFamily.tags.map((tag) => ({ id: useTagId ? tag.id : tag.name, label: tag.name }))
+          const tagInfos = tagFamily.tags.map((tag) => ({ id: tag.id, label: tag.name }))
 
           if (tagInfos.length > 0) {
             acc[tagFamily.id] = {
@@ -52,7 +50,7 @@ export const TagFilter = ({
         },
         {} as Record<string, { id: string; name: string; children: ChildrenType[] }>,
       ),
-    [tagFamilies, useTagId],
+    [tagFamilies],
   )
 
   const tagItemsWithOthers = useMemo<Record<string, { id: string; name: string; children: ChildrenType[] }>>(() => {
@@ -159,7 +157,7 @@ export const TagFilter = ({
                   label={familyInfo.name}
                   control={
                     <Checkbox
-                      checked={familyInfo.children.some((child) => selectedTagIds.includes(child.id))}
+                      checked={familyInfo.children.every((child) => selectedTagIds.includes(child.id))}
                       onChange={() => {
                         if (familyInfo.children.every((child) => selectedTagIds.includes(child.id))) {
                           onChange(selectedTagIds.filter((ci) => !familyInfo.children.some((child) => child.id === ci)))

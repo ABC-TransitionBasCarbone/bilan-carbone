@@ -27,7 +27,6 @@ jest.mock('../../db/client', () => ({
 jest.mock('../../db/objective.db', () => ({
   getSubObjectives: jest.fn(),
   getObjectiveWithTransitionPlan: jest.fn(),
-  createObjective: jest.fn(),
   createManyObjectivesAndReturn: jest.fn(),
   createManyObjectiveSites: jest.fn(),
   createManyObjectiveTags: jest.fn(),
@@ -64,7 +63,6 @@ jest.mock('../auth', () => ({
 const mockGetSubObjectives = objectiveDbModule.getSubObjectives as jest.Mock
 const mockGetObjectiveWithTransitionPlan = objectiveDbModule.getObjectiveWithTransitionPlan as jest.Mock
 const mockGetTrajectoryType = trajectoryDbModule.getTrajectoryType as jest.Mock
-const mockCreateSingleObjective = objectiveDbModule.createObjective as jest.Mock
 const mockCreateManyObjectivesAndReturn = objectiveDbModule.createManyObjectivesAndReturn as jest.Mock
 const mockCreateManyObjectiveSites = objectiveDbModule.createManyObjectiveSites as jest.Mock
 const mockCreateManyObjectiveTags = objectiveDbModule.createManyObjectiveTags as jest.Mock
@@ -73,7 +71,6 @@ const mockUpdateSingleObjective = objectiveDbModule.updateObjective as jest.Mock
 const mockDeleteObjectiveSites = objectiveDbModule.deleteObjectiveSites as jest.Mock
 const mockDeleteObjectiveTags = objectiveDbModule.deleteObjectiveTags as jest.Mock
 const mockDeleteObjectiveSubPosts = objectiveDbModule.deleteObjectiveSubPosts as jest.Mock
-const mockGetObjectiveWithDetails = objectiveDbModule.getObjectiveWithRelations as jest.Mock
 const mockUpdateTrajectoryToCustom = trajectoryDbModule.updateTrajectoryType as jest.Mock
 const mockDeleteObjective = objectiveDbModule.deleteObjective as jest.Mock
 const mockGetTrajectoryWithTransitionPlan = transitionPlanDbModule.getTrajectoryWithTransitionPlan as jest.Mock
@@ -101,7 +98,6 @@ describe('Objective Server Functions', () => {
     mockGetObjectiveWithTransitionPlan.mockResolvedValue(mockObjective)
     mockHasEditAccessOnStudy.mockResolvedValue(true)
     mockGetTrajectoryType.mockResolvedValue({ type: 'LINEAR' })
-    mockCreateSingleObjective.mockResolvedValue({ id: 'new-objective' })
     mockCreateManyObjectivesAndReturn.mockResolvedValue([{ id: 'new-objective' }])
     mockCreateManyObjectiveSites.mockResolvedValue(undefined)
     mockCreateManyObjectiveTags.mockResolvedValue(undefined)
@@ -110,7 +106,6 @@ describe('Objective Server Functions', () => {
     mockDeleteObjectiveSites.mockResolvedValue(undefined)
     mockDeleteObjectiveTags.mockResolvedValue(undefined)
     mockDeleteObjectiveSubPosts.mockResolvedValue(undefined)
-    mockGetObjectiveWithDetails.mockResolvedValue({ id: 'objective-1' })
     mockUpdateTrajectoryToCustom.mockResolvedValue(undefined)
     mockDeleteObjective.mockResolvedValue(undefined)
   })

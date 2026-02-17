@@ -29,19 +29,6 @@ export const getObjectiveWithTransitionPlan = async (id: string) => {
   })
 }
 
-export const createObjective = async (
-  data: {
-    trajectoryId: string
-    targetYear: number
-    startYear?: number
-    reductionRate: number
-    isDefault: boolean
-  },
-  tx: Prisma.TransactionClient,
-) => {
-  return tx.objective.create({ data })
-}
-
 export const createManyObjectivesAndReturn = async (
   objectives: Array<{
     trajectoryId: string
@@ -101,25 +88,6 @@ export const deleteObjectiveTags = async (objectiveId: string, tx: Prisma.Transa
 
 export const deleteObjectiveSubPosts = async (objectiveId: string, tx: Prisma.TransactionClient) => {
   return tx.objectiveSubPost.deleteMany({ where: { objectiveId } })
-}
-
-export const getObjectiveWithRelations = async (id: string, tx: Prisma.TransactionClient) => {
-  return tx.objective.findUnique({
-    where: { id },
-    include: {
-      sites: {
-        include: {
-          studySite: true,
-        },
-      },
-      tags: {
-        include: {
-          studyTag: true,
-        },
-      },
-      subPosts: true,
-    },
-  })
 }
 
 export const deleteObjective = async (id: string) => {

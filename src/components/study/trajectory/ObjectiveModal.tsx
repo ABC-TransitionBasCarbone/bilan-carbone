@@ -216,7 +216,6 @@ const ObjectiveModal = ({ open, onClose, trajectory, onSuccess, objective, sites
                 tagFamilies={tagFamilies}
                 selectedTagIds={tagIds}
                 onChange={(value) => reset({ ...watch(), tagIds: value })}
-                useTagId={true}
                 showSeparateLabel={true}
                 hideOtherOption={true}
               />

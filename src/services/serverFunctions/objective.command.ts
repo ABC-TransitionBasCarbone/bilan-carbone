@@ -11,6 +11,9 @@ export const createObjectiveFormSchema = () =>
     })
     .refine(
       (data) => {
+        if (!data.targetYear || !data.startYear) {
+          return true
+        }
         const startYear = parseInt(data.startYear, 10)
         const targetYear = parseInt(data.targetYear, 10)
         return startYear < targetYear
