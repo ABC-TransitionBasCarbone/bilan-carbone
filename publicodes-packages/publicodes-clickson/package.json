@@ -11,17 +11,17 @@
     "publicodes-build"
   ],
   "scripts": {
-    "compile": "publicodes compile",
-    "watch": "publicodes compile --watch",
-    "dev": "publicodes dev",
+    "compile": "npx publicodes compile",
+    "watch": "npx publicodes compile --watch",
+    "dev": "npx publicodes dev",
     "pretest": "yarn run compile",
     "test": "vitest run --reporter=tree"
   },
   "dependencies": {
-    "publicodes": "^1.9.1"
+    "publicodes": "^1.10.1"
   },
   "devDependencies": {
-    "@publicodes/tools": "^1.8.0",
+    "@publicodes/tools": "^1.8.1",
     "vitest": "^4.0.9"
   },
   "resolutions": {
