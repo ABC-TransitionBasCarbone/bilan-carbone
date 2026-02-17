@@ -13,3 +13,4 @@ bilan:
       - intrants-biens-et-matières
       - Intrants-services
       - utilisation
+  unité: kgCO2e

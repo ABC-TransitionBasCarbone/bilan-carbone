@@ -63,7 +63,8 @@ fret . transport . local . split:
       meta:
         id: 43735
         nom: VUL/< 3,5 tonnes/Diesel routier, incorporation 7 % de biodiesel
-
+  unité: kgCO2e/t.km
+  
 fret . transport . local . provenance:
   titre: livraisons locales
   question: Sur ces livraisons, combien sont en provenance de fournisseurs locaux (moins de 50 km) ?
@@ -101,7 +102,7 @@ fret . transport . national . split:
       meta:
         id:
         nom: Transport fluvial par pousseur 2300t (dont flotte, utilisation et infrastructure) [tkm], EU-27
-
+  unité: kgCO2e/t.km
 
 fret . transport . national . provenance:
   titre: livraisons nationales
@@ -140,7 +141,7 @@ fret . transport . europe . split:
       meta:
         id: 47724
         nom: Porte-conteneurs/> 20 000TEU/GNL
-
+  unité: kgCO2e/t.km
 
 fret . transport . europe . provenance:
   titre: livraisons européennes
@@ -171,6 +172,7 @@ fret . transport . international . split:
       meta:
         id: 47724
         nom: Porte-conteneurs/> 20 000TEU/GNL
+  unité: kgCO2e/t.km
 
 fret . transport . international . provenance: 
   titre: livraisons internationales
