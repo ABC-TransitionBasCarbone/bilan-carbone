@@ -611,6 +611,8 @@ const TrajectoryGraph = ({
     area: true,
     color: 'var(--trajectory-gray-area)',
     showMark: false,
+    disableHighlight: true,
+    valueFormatter: () => null,
   }
 
   const BottomLeftText = ({ onClick, ...props }: DrawingProps & { onClick: () => void }) => (
