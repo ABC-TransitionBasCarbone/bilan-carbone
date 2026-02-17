@@ -1,0 +1,198 @@
+déplacements . DT-salariés:
+  titre: Emissions des trajets domicile travail des salariés
+  formule:
+    somme:
+      - avec
+      - sans
+  unité: kgCO2e
+
+
+## Cette fonction permet de calculer les émissions des salariés qui n'ont pas répondu à MEP à partir des kms moyens parcourus par ceux qui ont répondu, on utilise le split moyen français par mode pour les DT comme FE pour extrapoler 
+
+déplacements . DT-salariés . avec:
+  applicable si: 
+    toutes ces conditions:
+      - est défini: MEP présent
+      - MEP présent = oui
+  titre: émissions des trajets domiciles travail des salariés (avec enquête MEP)
+  formule: 
+    somme:
+      - produit:
+        - distance
+        - répartition
+        - (5 - général . TT salariés)
+        - commun . nombre de semaines travaillées par an
+        - (général . salariés - MEP présent . nombre salariés) 
+        - 1 / sans . voiture . occupation
+      - réponse MEP
+  avec:
+    distance:
+      question: D'après les résultats de MEP, quelle est la distance moyenne parcourue par salarié par jour (A/R) pour des déplacements domicile-travail ?
+      unité: km
+
+    répartion:
+      formule: voiture * 0.76 + transports en commun * 0.16 + deux roues * 0.02 + actif * 0.09
+      note: Source de la répartition https://www.insee.fr/fr/statistiques/6454112
+        avec:
+          voiture:
+            valeur: déplacements . DT-salariés . sans . voiture . split 
+            unité: kgCO2e/km
+          
+          transports en commun:
+            valeur: déplacements . DT-salariés . sans . transports en commun . split
+            unité: kgCO2e/km
+          
+          deux roues:
+            valeur: 0.0851
+            unité: kgCO2e/km
+            meta:
+              id: 43775
+              nom: Cyclomoteur/Mixte/2023
+          
+          actif:
+            valeur: 0
+            unité: kgCO2e/km
+            note: On néglige l'impact des modes actifs (vélo, marche, trottinette...)
+        
+    réponse MEP:
+      question: D'après les résultats MEP, combien de kgCO2e représentent les déplacements liés à des missions des salariés ?
+      unité: kgCO2e
+  unité: kgCO2e
+
+
+## Ici on calcule les émissions dans le cas ou il n'y pas eu de campagne MEP
+
+
+déplacements . DT-salariés . sans:
+  titre: émissions des trajets domiciles travail des salariés (sans enquête MEP)
+  formule:
+    somme:
+      - voiture
+      - train
+      - deux roues
+      - transports en commun
+  unité: kgCO2e
+  
+déplacements . DT-salariés . sans . voiture:
+  applicable si: 
+    toutes ces conditions:
+      - est défini: MEP présent
+      - MEP présent = non
+  formule: distance * split / occupation * (5 - général . TT salariés) * commun . nombre de semaines travaillées par an
+  avec:
+    distance:
+      question: Combien de km sont parcourus en moyenne par vos salariés en voiture par jour (A/R) pour des déplacements domicile-travail ?
+      unite: km
+  description: On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales
+  unité: kgCO2e
+
+déplacements . DT-salariés . sans . voiture . split:
+  formule: hybride * 0.072 + électrique * 0.029 + gazole * 0.515 + essence * 0.384
+  note: source basée sur le parc automobile de voiture particulière en France en 2024 avec extrapolation pour ommettre les autres modes (GPL Hydrogène etc...) https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2024
+  avec:
+    hybride:
+      valeur: 0.18 
+      unité: kgCO2e/km
+      meta:
+        id: 28008
+        nom: Voiture particulière/Coeur de gamme - Véhicule compact/Hybride, full, P2
+    
+    électrique:
+      valeur: 0.1
+      unité: kgCO2e/km
+      meta:
+        id: 28007
+        nom: Voiture particulière/Coeur de gamme - Véhicule compact/Electrique
+
+    gazole:
+      valeur: 0.34
+      unité: kgCO2e/km
+      meta:
+        id: db39062e-4e05-44a7-9d71-9aca18929005
+        nom: Transport de passagers en voiture de taille moyenne - gazole - EURO 4
+        note: Données ECOINVENT
+
+    essence:
+      valeur: 0.37
+      unité: kgCO2e/km
+      meta:
+        id: fb623fc8-b55b-4d98-ae54-3a83ebed431e
+        nom: Transport de passagers en voiture de taille moyenne - essence - EURO 5
+        note: Données ECOINVENT
+  unité: kgCO2e/km
+
+déplacements . DT-salariés . sans . voiture . occupation:
+  formule: 1.08
+  note: source pour le taux d'occupation d'une voiture en France pour des trajets D-T https://www.citego.org/bdf_fiche-document-3431_fr.html
+  unité: unité
+
+
+déplacements . DT-salariés . sans . train:
+  applicable si: 
+    toutes ces conditions:
+      - est défini: MEP présent
+      - MEP présent = non
+  formule: distance * FE  * (5 - général . TT salariés) * commun . nombre de semaines travaillées par an
+  avec:
+    distance:
+      question: Combien de km sont parcourus en moyenne par vos salariés en train par jour (A/R) pour des déplacements domicile-travail ?
+      unite: km
+
+    FE:
+      valeur: 0.0277
+      unité: kgCO2e/km
+      meta:
+        id: 43255
+        nom: TER/2022/Traction moyenne
+        note: On considère que la majorité des déplacements en train pour du DT est en TER
+  unité: kgCO2e
+
+
+
+déplacements . DT-salariés . sans . transports en commun:
+  applicable si: 
+    toutes ces conditions:
+      - est défini: MEP présent
+      - MEP présent = non
+  formule: distance * split * (5 - général . TT salariés) * commun . nombre de semaines travaillées par an
+  avec:
+    distance:
+      question: Combien de km sont parcourus en moyenne par vos salariés en transports en commun par jour (A/R) pour des déplacements domicile-travail ?
+      unite: km
+  unité: kgCO2e
+
+
+déplacements . DT-salariés . sans . transports en commun . split:
+  formule: bus * 0.5 + rail * 0.5 ## à challenger
+  note: 
+  avec:
+    bus:
+      valeur: 0.15
+      unité: kgCO2e/km
+      meta:
+        id: 28000
+        nom: Autobus moyen/Agglomération de plus de 250 000 habitants
+    
+    rail:
+      valeur: 0.00356
+      unité: kgCO2e/km
+      note: source doc NGC https://nosgestesclimat.fr/documentation/transport/transports-commun/m%C3%A9tro-ou-tram
+
+déplacements . DT-salariés . sans . deux roues:
+  applicable si: 
+    toutes ces conditions:
+      - est défini: MEP présent
+      - MEP présent = non
+  formule: distance * FE  * (5 - général . TT salariés) * commun . nombre de semaines travaillées par an
+  avec:
+    distance:
+      question: Combien de km sont parcourus en moyenne par vos salariés en deux roues par jour (A/R) pour des déplacements domicile-travail ?
+      unite: km
+
+    FE:
+      valeur: 0.0851
+      unité: kgCO2e/km
+      meta:
+        id: 43775
+        nom: Cyclomoteur/Mixte/2023
+  unité: kgCO2e

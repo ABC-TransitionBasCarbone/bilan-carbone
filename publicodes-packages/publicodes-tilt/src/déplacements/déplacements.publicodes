@@ -7,5 +7,23 @@ déplacements:
       - DT-bénéficiaires
       - DT-bénévoles
       - DT-salariés
-      - fabrication
   unité: kgCO2e
+
+déplacements .  MEP présent:
+  question : Avez-vous réalisé une campagne de sensibilisation via MEP ?
+
+déplacements . MEP présent . nombre bénévoles:
+  applicable si: 
+    toutes ces conditions:
+      - est défini: MEP présent
+      - MEP présent = oui
+  question: Combien de bénévoles ont répondu à MEP ?
+  unité: unité
+
+déplacements . MEP présent . nombre salariés:
+  applicable si: 
+    toutes ces conditions:
+      - est défini: MEP présent
+      - MEP présent = oui
+  question: Combien de salariés ont répondu à MEP ?
+  unité: unité
