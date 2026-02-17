@@ -22,19 +22,22 @@ jest.mock('../../db/client', () => ({
 jest.mock('../../db/objective.db', () => ({
   getExistingObjectives: jest.fn(),
   getObjectiveWithTransitionPlan: jest.fn(),
-  getTrajectoryType: jest.fn(),
-  createSingleObjective: jest.fn(),
+  createObjective: jest.fn(),
   createManyObjectivesAndReturn: jest.fn(),
   createManyObjectiveSites: jest.fn(),
   createManyObjectiveTags: jest.fn(),
   createManyObjectiveSubPosts: jest.fn(),
-  updateSingleObjective: jest.fn(),
+  updateObjective: jest.fn(),
   deleteObjectiveSites: jest.fn(),
   deleteObjectiveTags: jest.fn(),
   deleteObjectiveSubPosts: jest.fn(),
-  getObjectiveWithDetails: jest.fn(),
-  updateTrajectoryToCustom: jest.fn(),
+  getObjectiveWithRelations: jest.fn(),
   deleteObjective: jest.fn(),
+}))
+
+jest.mock('../../db/trajectory', () => ({
+  getTrajectoryType: jest.fn(),
+  updateTrajectoryType: jest.fn(),
 }))
 
 jest.mock('../../db/transitionPlan', () => ({
