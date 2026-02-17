@@ -1673,6 +1673,7 @@
       "location": "Location",
       "locationSearch": "Search by location",
       "locationSearchPlaceholder": "e.g. Europe",
+      "unitSearchPlaceholder": "e.g. kg",
       "base": "Scope 2 approach",
       "Manual": "Manual",
       "edit": "Edit emission factor",

@@ -1673,6 +1673,7 @@
       "location": "Localisation",
       "locationSearch": "Rechercher par localisation",
       "locationSearchPlaceholder": "ex : Europe",
+      "unitSearchPlaceholder": "ex: kg",
       "base": "Approche scope 2",
       "Manual": "Manuelle",
       "edit": "Éditer le facteur d'émissions",
