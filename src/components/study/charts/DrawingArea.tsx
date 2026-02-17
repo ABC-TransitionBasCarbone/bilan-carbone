@@ -112,9 +112,10 @@ const Arrow = ({ x1, y1, x2, y2 }: { x1: number; y1: number; x2: number; y2: num
 interface Props {
   Rect?: (props: DrawingProps) => ReactNode
   Text?: (props: DrawingProps) => ReactNode
+  showCenterAxes?: boolean
 }
 
-const DrawingAreaBox = ({ Rect, Text }: Props) => {
+const DrawingAreaBox = ({ Rect, Text, showCenterAxes = true }: Props) => {
   const { left, top, width, height } = useDrawingArea()
   const margin = 0
 
@@ -122,8 +123,16 @@ const DrawingAreaBox = ({ Rect, Text }: Props) => {
     <Fragment>
       {Rect && <Rect left={left} top={top} width={width} height={height} />}
       {Text && <Text left={left} top={top} width={width} height={height} />}
-      <Path d={`M ${left + width / 2} ${top + height * (1 - margin)} L ${left + width / 2} ${top + height * margin}`} />
-      <Path d={`M ${left + width * margin} ${top + height / 2} L ${left + width * (1 - margin)} ${top + height / 2}`} />
+      {showCenterAxes && (
+        <>
+          <Path
+            d={`M ${left + width / 2} ${top + height * (1 - margin)} L ${left + width / 2} ${top + height * margin}`}
+          />
+          <Path
+            d={`M ${left + width * margin} ${top + height / 2} L ${left + width * (1 - margin)} ${top + height / 2}`}
+          />
+        </>
+      )}
       <Arrow x1={left} y1={top + height} x2={left + width} y2={top + height} />
       <Arrow x1={left} y1={top + height} x2={left} y2={top} />
     </Fragment>

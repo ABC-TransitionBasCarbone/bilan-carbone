@@ -689,7 +689,10 @@ const TrajectoryGraph = ({
         <MarkPlot />
 
         {displayEstimatedPast && (
-          <DrawingAreaBox Text={(props) => <BottomLeftText {...props} onClick={() => setGlossary(true)} />} />
+          <DrawingAreaBox
+            showCenterAxes={false}
+            Text={(props) => <BottomLeftText {...props} onClick={() => setGlossary(true)} />}
+          />
         )}
 
         <ChartsAxisHighlight x="line" />
