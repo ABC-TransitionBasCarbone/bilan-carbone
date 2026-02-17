@@ -27,7 +27,7 @@ import { getStudyTotalCo2Emissions } from '@/services/study'
 import { calculateTrajectoriesWithHistory, convertToPastStudies } from '@/utils/trajectory'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { Typography } from '@mui/material'
+import { Tooltip, Typography } from '@mui/material'
 import type { Action, ExternalStudy, SectenInfo, TransitionPlan } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -256,6 +256,8 @@ const TrajectoryReductionPage = ({
     sectenData,
   ])
 
+  const canCreateTrajectory = canEdit && studyTotalEmissions > 0
+
   if (!transitionPlan) {
     if (canEdit) {
       return (
@@ -407,24 +409,29 @@ const TrajectoryReductionPage = ({
             </Box>
 
             {trajectories.length === 0 ? (
-              <Box
-                className={classNames(
-                  'p125 flex-col gapped075',
-                  styles.trajectoryCard,
-                  canEdit ? styles.clickableCard : styles.disabledCard,
-                )}
-                onClick={canEdit ? () => setShowTrajectoryModal(true) : undefined}
-                role={canEdit ? 'button' : undefined}
-                tabIndex={canEdit ? 0 : undefined}
+              <Tooltip
+                title={studyTotalEmissions === 0 ? t('trajectories.graph.noEmissionSourcesDisabledButton') : ''}
+                placement="top"
               >
-                <div className="flex align-center gapped-2">
-                  <AddIcon color="inherit" />
-                  <Typography variant="h5" component="h2" fontWeight={600}>
-                    {t('trajectories.customButton')}
-                  </Typography>
-                </div>
-                <Typography variant="body1">{t('trajectories.customSubtitle')}</Typography>
-              </Box>
+                <Box
+                  className={classNames(
+                    'p125 flex-col gapped075',
+                    styles.trajectoryCard,
+                    canCreateTrajectory ? styles.clickableCard : styles.disabledCard,
+                  )}
+                  onClick={canCreateTrajectory ? () => setShowTrajectoryModal(true) : undefined}
+                  role={canCreateTrajectory ? 'button' : undefined}
+                  tabIndex={canCreateTrajectory ? 0 : undefined}
+                >
+                  <div className="flex align-center gapped-2">
+                    <AddIcon color="inherit" />
+                    <Typography variant="h5" component="h2" fontWeight={600}>
+                      {t('trajectories.customButton')}
+                    </Typography>
+                  </div>
+                  <Typography variant="body1">{t('trajectories.customSubtitle')}</Typography>
+                </Box>
+              </Tooltip>
             ) : (
               <MyTrajectoriesCard
                 trajectories={trajectories}
@@ -455,6 +462,7 @@ const TrajectoryReductionPage = ({
             pastStudies={pastStudies}
             validatedOnly={validatedOnly}
             unvalidatedSourcesInfo={unvalidatedSourcesInfo}
+            studyEmissions={studyTotalEmissions}
           />
 
           {transitionPlan && (
