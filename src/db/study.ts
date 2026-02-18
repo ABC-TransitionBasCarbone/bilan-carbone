@@ -1190,3 +1190,34 @@ export const removeSourceToStudy = async (source: Import, studyId: string) => {
     })
   })
 }
+
+export const removeSourceToAllStudies = async (source: Import) => {
+  await prismaClient.$transaction(async (tx) => {
+    await tx.studyEmissionSource.updateMany({
+      where: {
+        emissionFactor: { importedFrom: source },
+        study: {
+          exports: {
+            NOT: {
+              types: { has: Export.GHGP },
+            },
+          },
+        },
+      },
+      data: { emissionFactorId: null, validated: false },
+    })
+
+    await tx.studyEmissionFactorVersion.deleteMany({
+      where: {
+        source,
+        study: {
+          exports: {
+            NOT: {
+              types: { has: Export.GHGP },
+            },
+          },
+        },
+      },
+    })
+  })
+}
