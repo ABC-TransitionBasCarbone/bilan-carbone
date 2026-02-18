@@ -4,3 +4,5 @@
 /publicodes-packages/publicodes-count/node_modules/
 /publicodes-packages/publicodes-tilt/node_modules/
 /node_modules/
+!node_modules/@prisma/**
+!node_modules/.bin/prisma
