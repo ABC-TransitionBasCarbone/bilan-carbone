@@ -1,0 +1,14 @@
+.addObjectiveButton {
+  min-width: 48.5%;
+  min-height: 16.5rem;
+  border: 0.125rem dashed var(--mui-palette-primary-main);
+  border-radius: 0.5rem;
+  transition: all 0.2s ease-in-out;
+  color: var(--mui-palette-primary-main);
+}
+
+.addObjectiveButton:hover {
+  background-color: var(--mui-palette-action-hover);
+  border-color: var(--mui-palette-primary-dark);
+  color: var(--mui-palette-primary-dark);
+}

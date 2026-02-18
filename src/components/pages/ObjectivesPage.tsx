@@ -2,7 +2,7 @@
 
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import { FullStudy } from '@/db/study'
-import { TrajectoryWithObjectives } from '@/db/transitionPlan'
+import { TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { customRich } from '@/i18n/customRich'
 import { hasAccessToReductionObjectivesGlossary } from '@/services/permissions/environment'
 import { getStudyTotalCo2Emissions } from '@/services/study'
@@ -16,14 +16,14 @@ import Block from '../base/Block'
 import HelpIcon from '../base/HelpIcon'
 import GlossaryModal from '../modals/GlossaryModal'
 import SelectStudySite from '../study/site/SelectStudySite'
-import ObjectivesFilters from '../study/trajectory/ObjectivesFilters'
+import ObjectiveFilters from '../study/trajectory/ObjectiveFilters'
 import TrajectoryObjectivesTable from '../study/trajectory/TrajectoryObjectivesTable'
 import TransitionPlanOnboarding from '../study/transitionPlan/TransitionPlanOnboarding'
 
 interface Props {
   study: FullStudy
   canEdit: boolean
-  trajectories: TrajectoryWithObjectives[]
+  trajectories: TrajectoryWithObjectivesAndScope[]
   transitionPlanId: string
   sectenData: SectenInfo[]
   linkedStudies: FullStudy[]
@@ -57,6 +57,10 @@ const ObjectivesPage = ({
   const pastStudiesData = useMemo(() => {
     return convertToPastStudies(linkedStudies, linkedExternalStudies, false, validatedOnly, study.resultsUnit)
   }, [linkedStudies, linkedExternalStudies, validatedOnly, study.resultsUnit])
+
+  const sites = useMemo(() => {
+    return study.sites.map((s) => ({ id: s.id, name: s.site.name }))
+  }, [study.sites])
 
   return (
     <>
@@ -95,7 +99,7 @@ const ObjectivesPage = ({
           />
 
           <div className="flex-col gapped1">
-            <ObjectivesFilters
+            <ObjectiveFilters
               search={searchFilter}
               setSearch={setSearchFilter}
               transitionPlanId={transitionPlanId}
@@ -117,6 +121,8 @@ const ObjectivesPage = ({
               sectenData={sectenData}
               studyEmissions={studyTotalEmissions}
               pastStudies={pastStudiesData}
+              sites={sites}
+              tagFamilies={study.tagFamilies}
             />
           </div>
         </div>

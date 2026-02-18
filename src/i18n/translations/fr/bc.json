@@ -1198,6 +1198,26 @@
           "correctedRateDescription": "Le taux à l'année N prend en compte votre taux voulu ainsi que les émissions entre votre année de référence et l'année de votre étude. Si vos émissions n'ont pas suivi votre taux souhaité, nous calculons les émissions émises en trop (overshoot) et appliquons un nouveau taux pour vous permettre de rattraper les émissions émises en trop."
         }
       },
+      "objectiveModal": {
+        "title": "Ajouter des sous-objectifs à la trajectoire : ",
+        "editTitle": "Modifier le sous-objectif de la trajectoire : ",
+        "cancel": "Annuler",
+        "submit": "Ajouter les sous-objectifs",
+        "update": "Mettre à jour le sous-objectif",
+        "scopeSelection": "Sélection du périmètre",
+        "objectives": "Sous-objectifs",
+        "sites": "Sites",
+        "tags": "Tags",
+        "subPosts": "Sous-postes"
+      },
+      "conversionWarning": {
+        "title": "Conversion du type de trajectoire",
+        "warningTitle": "Cette action convertira votre trajectoire en type PERSONNALISÉ.",
+        "message": "L'ajout d'un objectif spécifique à la trajectoire \"{trajectoryName}\" de type {trajectoryType} la convertira automatiquement en trajectoire de type PERSONNALISÉ. Cette action est irréversible.",
+        "explanation": "Une fois convertie, la trajectoire conservera les objectifs par défaut déjà définis mais ne suivra plus les règles spécifiques aux trajectoires de type {trajectoryType}.",
+        "cancel": "Annuler",
+        "confirm": "Continuer"
+      },
       "objectives": {
         "title": "Objectifs de réduction",
         "custom": "Personnalisée",
@@ -2248,7 +2268,8 @@
     "Server error": "Une erreur serveur est survenue, veuillez contacter le support",
     "default": "Une erreur s'est produite, veuillez reessayer. Si le problème persiste, contactez le support.",
     "error": "Une erreur s'est produite...",
-    "contactSupport": "Un problème est survenu. Essayez de revenir sur <link>la page d'accueil</link>. <p>Si cela ne fonctionne pas, contactez notre support à <m></m> ou essayez de vous <logout>reconnecter</logout>.</p>"
+    "contactSupport": "Un problème est survenu. Essayez de revenir sur <link>la page d'accueil</link>. <p>Si cela ne fonctionne pas, contactez notre support à <m></m> ou essayez de vous <logout>reconnecter</logout>.</p>",
+    "duplicateScopeCombination": "Un objectif avec le même périmètre (sites, tags, sous-postes) et la même année cible existe déjà pour cette trajectoire"
   },
   "upload": {
     "fileTooBig": "Fichier trop gros (taille maximale {size} MB)",
@@ -2415,9 +2436,12 @@
     "studyYearMustBeBeforeCurrent": "L'année de l'étude doit être antérieure à l'année de l'étude actuelle",
     "studyYearMustBeAfterLinkedStudies": "Impossible de renseigner une date antérieure à celles de vos études liées sur votre plan de transition",
     "maxTwoDecimals": "Le taux de réduction doit avoir au maximum 2 décimales",
+    "startYearMustBeBeforeTargetYear": "L'année de début doit être antérieure à l'année cible",
     "referenceYearMustBeBeforeOrEqualToStudyYear": "L'année de référence doit être inférieure ou égale à l'année de l'étude",
     "sectorPercentagesTotalExceeds100": "Le total des pourcentages ne peut pas dépasser 100%",
-    "sectorPercentagesRequired": "Les pourcentages des secteurs sont requis"
+    "sectorPercentagesRequired": "Les pourcentages des secteurs sont requis",
+    "scopeRequired": "Veuillez sélectionner au moins un site, tag ou sous-poste",
+    "atLeastOneValidObjective": "Veuillez ajouter au moins un objectif valide avec année de début, année cible et taux de réduction"
   },
   "documentationUrl": {
     "dependencyMatrix": "https://www.bilancarbone-methode.com/2-perimetre-de-la-demarche/2.5-identification-des-risques-et-opportunites-de-transition",

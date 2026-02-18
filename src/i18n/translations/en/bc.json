@@ -1198,6 +1198,26 @@
           "correctedRateDescription": "The Year N rate takes into account your desired rate as well as emissions between your reference year and your study year. If your emissions did not follow your desired rate, we calculate the excess emissions (overshoot) and apply a new rate to allow you to catch up on the excess emissions."
         }
       },
+      "objectiveModal": {
+        "title": "Add sub-objectives",
+        "editTitle": "Edit sub-objective",
+        "cancel": "Cancel",
+        "submit": "Add sub-objectives",
+        "update": "Update sub-objective",
+        "scopeSelection": "Scope Selection",
+        "objectives": "Sub-objectives",
+        "sites": "Sites",
+        "tags": "Tags",
+        "subPosts": "Sub-posts"
+      },
+      "conversionWarning": {
+        "title": "Trajectory Type Conversion",
+        "warningTitle": "This action will convert your trajectory to CUSTOM type.",
+        "message": "Adding a scope-specific objective to the trajectory \"{trajectoryName}\" ({trajectoryType}) will automatically convert it to a CUSTOM trajectory type. This action is irreversible.",
+        "explanation": "Once converted to CUSTOM, the trajectory will no longer follow the predefined {trajectoryType} reduction rates. You will have full control over all objectives.",
+        "cancel": "Cancel",
+        "confirm": "Continue"
+      },
       "objectives": {
         "title": "Reduction objectives",
         "custom": "Custom",
@@ -2248,7 +2268,8 @@
     "Server error": "A server error occurred, please contact support",
     "default": "Something went wrong ..., please try again. If the problem persists, please contact support",
     "error": "Something went wrong ...",
-    "contactSupport": "A problem has occurred. Try returning to the <link>home page</link>. <p>If this does not work, contact our support at <m></m> or try to <logout>reconnect</logout>.</p>"
+    "contactSupport": "A problem has occurred. Try returning to the <link>home page</link>. <p>If this does not work, contact our support at <m></m> or try to <logout>reconnect</logout>.</p>",
+    "duplicateScopeCombination": "An objective with the same scope (sites, tags, sub-posts) and target year already exists for this trajectory"
   },
   "upload": {
     "fileTooBig": "File too big (max size {size} MB)",
@@ -2415,9 +2436,12 @@
     "studyYearMustBeBeforeCurrent": "The study year must be before the current study year",
     "studyYearMustBeAfterLinkedStudies": "Cannot set a date earlier than your linked studies in your transition plan",
     "maxTwoDecimals": "The reduction rate must have at most 2 decimal places",
+    "startYearMustBeBeforeTargetYear": "Start year must be before target year",
     "referenceYearMustBeBeforeOrEqualToStudyYear": "Reference year must be less than or equal to the study year",
     "sectorPercentagesTotalExceeds100": "Total sector percentages cannot exceed 100%",
-    "sectorPercentagesRequired": "Sector percentages are required"
+    "sectorPercentagesRequired": "Sector percentages are required",
+    "scopeRequired": "Please select at least one site, tag, or sub post",
+    "atLeastOneValidObjective": "Please add at least one valid objective with start year, target year, and reduction rate"
   },
   "documentationUrl": {
     "dependencyMatrix": "https://www.bilancarbone-methode.com/methode-bilan-carbone-r-en/2-scope-of-the-approach/2.5-identification-of-transition-risks-and-opportunities",

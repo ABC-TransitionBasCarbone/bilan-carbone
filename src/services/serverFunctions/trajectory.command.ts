@@ -1,5 +1,5 @@
 import { setCustomIssue, setCustomMessage } from '@/lib/zod.config'
-import { TrajectoryType } from '@prisma/client'
+import { SubPost, TrajectoryType } from '@prisma/client'
 import { z } from 'zod'
 
 export const sectorPercentagesSchema = z
@@ -22,6 +22,7 @@ export const createObjectiveSchema = () =>
   z
     .object({
       id: z.string().optional(),
+      startYear: z.string().optional().nullable(),
       targetYear: z.string().optional().nullable(),
       reductionRate: z
         .number()
@@ -31,10 +32,12 @@ export const createObjectiveSchema = () =>
           if (val === null || val === undefined) {
             return true
           }
-          // Check if the number has at most 2 decimal places
           const decimalPlaces = (val.toString().split('.')[1] || '').length
           return decimalPlaces <= 2
         }, setCustomMessage('maxTwoDecimals')),
+      siteIds: z.array(z.string()).optional(),
+      tagIds: z.array(z.string()).optional(),
+      subPosts: z.array(z.nativeEnum(SubPost)).optional(),
     })
     .refine((data) => {
       const hasTargetYear = data.targetYear !== undefined && data.targetYear !== null
@@ -43,6 +46,14 @@ export const createObjectiveSchema = () =>
       const isFull = hasTargetYear && hasReductionRate
       return isEmpty || isFull
     }, setCustomMessage('objectiveIncomplete'))
+    .refine((data) => {
+      if (!data.startYear || !data.targetYear) {
+        return true
+      }
+      const startYear = parseInt(data.startYear, 10)
+      const targetYear = parseInt(data.targetYear, 10)
+      return startYear < targetYear
+    }, setCustomMessage('startYearMustBeBeforeTargetYear'))
 
 export const createTrajectorySchema = () => {
   const objectiveSchema = createObjectiveSchema()

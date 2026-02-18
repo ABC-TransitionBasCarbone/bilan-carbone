@@ -79,11 +79,7 @@ export const PostSubPostFilter = ({
         value={selectedSubPosts}
         className={styles.select}
         displayEmpty
-        renderValue={() => (
-          <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
-            {subPostsSelectorRenderValue()}
-          </span>
-        )}
+        renderValue={subPostsSelectorRenderValue}
         label={!showSeparateLabel ? label : undefined}
         multiple
       >

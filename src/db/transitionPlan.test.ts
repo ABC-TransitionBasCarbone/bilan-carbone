@@ -3,7 +3,6 @@ import {
   ActionIndicatorType,
   ActionPotentialDeduction,
   ExternalStudy,
-  Objective,
   Trajectory,
   TrajectoryType,
   TransitionPlanStudy,
@@ -11,6 +10,7 @@ import {
 import {
   ActionWithRelations,
   duplicateTransitionPlanWithRelations,
+  ObjectiveWithScope,
   TransitionPlanWithRelations,
 } from './transitionPlan'
 
@@ -30,8 +30,8 @@ jest.mock('./client', () => ({
 }))
 
 const createMockTrajectory = (
-  overrides?: Partial<Trajectory & { objectives: Objective[] }>,
-): Trajectory & { objectives: Objective[] } => ({
+  overrides?: Partial<Trajectory & { objectives: ObjectiveWithScope[] }>,
+): Trajectory & { objectives: ObjectiveWithScope[] } => ({
   id: 'trajectory-1',
   transitionPlanId: 'plan-id',
   name: 'Test Trajectory',
@@ -45,18 +45,28 @@ const createMockTrajectory = (
     {
       id: 'objective-1',
       trajectoryId: 'trajectory-1',
+      startYear: 2024,
       targetYear: 2030,
       reductionRate: 0.05,
+      isDefault: true,
       createdAt: new Date('2024-01-01'),
       updatedAt: new Date('2024-01-01'),
+      sites: [],
+      tags: [],
+      subPosts: [],
     },
     {
       id: 'objective-2',
       trajectoryId: 'trajectory-1',
+      startYear: 2030,
       targetYear: 2040,
       reductionRate: 0.08,
+      isDefault: true,
       createdAt: new Date('2024-01-01'),
       updatedAt: new Date('2024-01-01'),
+      sites: [],
+      tags: [],
+      subPosts: [],
     },
   ],
   ...overrides,
@@ -169,6 +179,16 @@ describe('TransitionPlan DB', () => {
                 create: trajectory.objectives.map((objective) => ({
                   targetYear: objective.targetYear,
                   reductionRate: objective.reductionRate,
+                  isDefault: objective.isDefault,
+                  sites: {
+                    create: objective.sites.map((s) => ({ studySiteId: s.studySiteId })),
+                  },
+                  tags: {
+                    create: objective.tags.map((t) => ({ studyTagId: t.studyTagId })),
+                  },
+                  subPosts: {
+                    create: objective.subPosts.map((sp) => ({ subPost: sp.subPost })),
+                  },
                 })),
               },
             })),
@@ -218,7 +238,13 @@ describe('TransitionPlan DB', () => {
         include: {
           trajectories: {
             include: {
-              objectives: true,
+              objectives: {
+                include: {
+                  sites: { include: { studySite: true } },
+                  tags: { include: { studyTag: true } },
+                  subPosts: true,
+                },
+              },
             },
           },
           transitionPlanStudies: true,

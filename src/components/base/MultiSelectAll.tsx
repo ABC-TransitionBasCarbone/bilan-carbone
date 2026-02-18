@@ -17,13 +17,16 @@ const MultiSelectAll = <T extends string>({ id, values, allValues, setValues, ge
     [values, allValues],
   )
 
-  const valuesWithAllHandled = (allValues.length === values.length ? [...values, 'all'] : values) as (T | 'all')[]
+  // Only show the "all" option if there are at least 2 values to select from
+  const valuesWithAllHandled = (
+    allValues.length > 1 && allValues.length === values.length ? [...values, 'all'] : values
+  ) as (T | 'all')[]
 
   const renderValue = () => {
-    if (valuesWithAllHandled.includes('all')) {
-      return tCommon('all')
-    } else if (valuesWithAllHandled.length === 0) {
+    if (valuesWithAllHandled.length === 0) {
       return tCommon('none')
+    } else if (valuesWithAllHandled.includes('all')) {
+      return tCommon('all')
     }
 
     return valuesWithAllHandled.map((v) => getLabel(v)).join(', ')
@@ -61,10 +64,12 @@ const MultiSelectAll = <T extends string>({ id, values, allValues, setValues, ge
       multiple
       displayEmpty
     >
-      <MenuItem key={`${id}-item-all`} value="all">
-        <Checkbox checked={allSelected} />
-        <ListItemText primary={allSelected ? tCommon('action.unselectAll') : tCommon('action.selectAll')} />
-      </MenuItem>
+      {allValues.length > 1 && (
+        <MenuItem key={`${id}-item-all`} value="all">
+          <Checkbox checked={allSelected} />
+          <ListItemText primary={allSelected ? tCommon('action.unselectAll') : tCommon('action.selectAll')} />
+        </MenuItem>
+      )}
       {allValues
         .filter((option) => option !== '')
         .sort((a, b) => getLabel(a).localeCompare(getLabel(b)))

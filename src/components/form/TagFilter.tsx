@@ -1,5 +1,5 @@
 import { StudyTagFamilyWithTags } from '@/db/study'
-import { Checkbox, FormControl, FormControlLabel, InputLabel, Menu, Select } from '@mui/material'
+import { Checkbox, FormControl, FormControlLabel, FormLabel, InputLabel, Menu, Select } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
@@ -15,9 +15,18 @@ interface TagFilterProps {
   selectedTagIds: string[]
   onChange: (ids: string[]) => void
   className?: string
+  showSeparateLabel?: boolean
+  hideOtherOption?: boolean
 }
 
-export const TagFilter = ({ tagFamilies, selectedTagIds, onChange, className }: TagFilterProps) => {
+export const TagFilter = ({
+  tagFamilies,
+  selectedTagIds,
+  onChange,
+  className,
+  showSeparateLabel = false,
+  hideOtherOption = false,
+}: TagFilterProps) => {
   const t = useTranslations('study.results.pageFilters')
   const tOther = useTranslations('study.results')
   const tCommon = useTranslations('common')
@@ -27,7 +36,7 @@ export const TagFilter = ({ tagFamilies, selectedTagIds, onChange, className }: 
     () =>
       tagFamilies.reduce(
         (acc, tagFamily) => {
-          const tagInfos = tagFamily.tags.map((tag) => ({ id: tag.name, label: tag.name }))
+          const tagInfos = tagFamily.tags.map((tag) => ({ id: tag.id, label: tag.name }))
 
           if (tagInfos.length > 0) {
             acc[tagFamily.id] = {
@@ -44,17 +53,19 @@ export const TagFilter = ({ tagFamilies, selectedTagIds, onChange, className }: 
     [tagFamilies],
   )
 
-  const tagItemsWithOthers = useMemo<Record<string, { id: string; name: string; children: ChildrenType[] }>>(
-    () => ({
+  const tagItemsWithOthers = useMemo<Record<string, { id: string; name: string; children: ChildrenType[] }>>(() => {
+    if (hideOtherOption) {
+      return tagItems
+    }
+    return {
       ...tagItems,
       [OTHER_FAMILY_ID]: {
         id: OTHER_FAMILY_ID,
         name: tOther('other'),
         children: [{ id: OTHER_TAG_ID, label: tOther('other') }],
       },
-    }),
-    [tagItems, tOther],
-  )
+    }
+  }, [tagItems, tOther, hideOtherOption])
 
   const allTagIds = useMemo(
     () => Object.values(tagItemsWithOthers).flatMap((family) => family.children.map((child) => child.id)),
@@ -95,10 +106,16 @@ export const TagFilter = ({ tagFamilies, selectedTagIds, onChange, className }: 
   return (
     <>
       <FormControl className={classNames(styles.formControl, className)}>
-        <InputLabel id="tag-filter-label">{t('tags')}</InputLabel>
+        {showSeparateLabel ? (
+          <FormLabel id="tag-filter-label" component="legend">
+            {t('tags')}
+          </FormLabel>
+        ) : (
+          <InputLabel id="tag-filter-label">{t('tags')}</InputLabel>
+        )}
         <Select
           labelId="tag-filter-label"
-          label={t('tags')}
+          label={!showSeparateLabel ? t('tags') : undefined}
           value="tags-filter-placeholder"
           open={false}
           onMouseDown={(event) => {
@@ -140,7 +157,7 @@ export const TagFilter = ({ tagFamilies, selectedTagIds, onChange, className }: 
                   label={familyInfo.name}
                   control={
                     <Checkbox
-                      checked={familyInfo.children.some((child) => selectedTagIds.includes(child.id))}
+                      checked={familyInfo.children.every((child) => selectedTagIds.includes(child.id))}
                       onChange={() => {
                         if (familyInfo.children.every((child) => selectedTagIds.includes(child.id))) {
                           onChange(selectedTagIds.filter((ci) => !familyInfo.children.some((child) => child.id === ci)))

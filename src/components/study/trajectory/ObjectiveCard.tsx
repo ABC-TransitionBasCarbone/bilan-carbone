@@ -2,6 +2,7 @@ import HelpIcon from '@/components/base/HelpIcon'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormTextField } from '@/components/form/TextField'
 import GlossaryModal from '@/components/modals/GlossaryModal'
+import { ObjectiveModalFormData } from '@/services/serverFunctions/objective.command'
 import { TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
 import { BaseObjective } from '@/utils/trajectory'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -11,21 +12,32 @@ import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
-import { Control } from 'react-hook-form'
+import { Control, FieldPath } from 'react-hook-form'
 import styles from './ObjectiveCard.module.css'
 
-interface Props {
+interface Props<T extends TrajectoryFormData | ObjectiveModalFormData> {
   reductionRate?: number
   name?: string
   isEditable: boolean
-  control: Control<TrajectoryFormData>
+  control: Control<T>
   index: number
   onDelete?: () => void
   correctedObjective: BaseObjective | null
+  isDefault?: boolean
 }
 
-const ObjectiveCard = ({ reductionRate, name, isEditable, control, index, onDelete, correctedObjective }: Props) => {
+const ObjectiveCard = <T extends TrajectoryFormData | ObjectiveModalFormData>({
+  reductionRate,
+  name,
+  isEditable,
+  control,
+  index,
+  onDelete,
+  correctedObjective,
+  isDefault = true,
+}: Props<T>) => {
   const t = useTranslations('study.transitionPlan.trajectoryModal')
+  const tCommon = useTranslations('common')
   const tGlossary = useTranslations('study.transitionPlan.trajectoryModal.glossary')
   const [showOvershootInfo, setShowOvershootInfo] = useState(false)
 
@@ -81,9 +93,20 @@ const ObjectiveCard = ({ reductionRate, name, isEditable, control, index, onDele
             </div>
           ) : (
             <div className="flex-col gapped1">
+              {!isDefault && (
+                <FormDatePicker
+                  name={`objectives.${index}.startYear` as FieldPath<T>}
+                  label={tCommon('label.startYear')}
+                  control={control}
+                  className="w100"
+                  views={['year']}
+                  data-testid="objective-start-year-picker"
+                  clearable
+                />
+              )}
               <FormDatePicker
-                name={`objectives.${index}.targetYear`}
-                label={t('objectives.year')}
+                name={`objectives.${index}.targetYear` as FieldPath<T>}
+                label={tCommon('label.targetYear')}
                 control={control}
                 className="w100"
                 views={['year']}
@@ -92,7 +115,7 @@ const ObjectiveCard = ({ reductionRate, name, isEditable, control, index, onDele
                 clearable
               />
               <FormTextField
-                name={`objectives.${index}.reductionRate`}
+                name={`objectives.${index}.reductionRate` as FieldPath<T>}
                 label={t('objectives.reductionRate')}
                 control={control}
                 className="w100"

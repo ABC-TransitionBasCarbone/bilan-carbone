@@ -8,7 +8,6 @@ import { TrajectoryFormData } from '@/services/serverFunctions/trajectory.comman
 import { ReductionRates } from '@/utils/snbc'
 import { toTitleCase } from '@/utils/string'
 import { BaseObjective, getDefaultSBTIReductionRate } from '@/utils/trajectory'
-import AddIcon from '@mui/icons-material/Add'
 import { FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material'
 import { TrajectoryType } from '@prisma/client'
 import classNames from 'classnames'
@@ -17,6 +16,7 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useState } from 'react'
 import { Control, Controller, useFieldArray } from 'react-hook-form'
+import AddObjectiveButton from './AddObjectiveButton'
 import ObjectiveCard from './ObjectiveCard'
 import SectorPercentageInputs from './SectorPercentageInputs'
 import styles from './TrajectoryCreationModal.module.css'
@@ -273,12 +273,7 @@ const TrajectoryCreationStep2 = ({
                 />
               ))}
 
-              <div
-                onClick={() => append({ targetYear: null, reductionRate: null })}
-                className={styles.addObjectiveButton}
-              >
-                <AddIcon fontSize="large" />
-              </div>
+              <AddObjectiveButton onClick={() => append({ targetYear: null, reductionRate: null })} />
             </>
           )}
         </div>

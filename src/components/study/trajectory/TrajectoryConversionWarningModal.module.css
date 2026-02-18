@@ -1,0 +1,5 @@
+.explanation {
+  background-color: var(--mui-palette-primary-light);
+  border-radius: 0.5rem;
+  border-left: 0.25rem solid var(--mui-palette-primary-main);
+}

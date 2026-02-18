@@ -191,7 +191,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly, caU
       const matchesSubPost = selectedSubposts.length > 0 && selectedSubposts.includes(subPostStr)
 
       const hasNoTags = emissionSource.emissionSourceTags.length === 0
-      const hasSomeSelectedTag = emissionSource.emissionSourceTags.some((est) => selectedTags.includes(est.tag.name))
+      const hasSomeSelectedTag = emissionSource.emissionSourceTags.some((est) => selectedTags.includes(est.tag.id))
       const untaggedLabelSelected = selectedTags.includes('other')
       const matchesTag = (hasNoTags && untaggedLabelSelected) || hasSomeSelectedTag
 

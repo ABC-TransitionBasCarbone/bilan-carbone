@@ -10,7 +10,13 @@ import {
   ActionStep,
   ExternalStudy,
   Objective,
+  ObjectiveSite,
+  ObjectiveSubPost,
+  ObjectiveTag,
   Prisma,
+  StudySite,
+  StudyTag,
+  SubPost,
   Trajectory,
   TransitionPlan,
   TransitionPlanStudy,
@@ -29,7 +35,7 @@ export type TransitionPlanWithStudies = TransitionPlan & {
 export type TransitionPlanWithRelations = TransitionPlan & {
   trajectories: Array<
     Trajectory & {
-      objectives: Objective[]
+      objectives: ObjectiveWithScope[]
     }
   >
   transitionPlanStudies: TransitionPlanStudy[]
@@ -39,6 +45,22 @@ export type TransitionPlanWithRelations = TransitionPlan & {
 
 export type TrajectoryWithObjectives = Trajectory & {
   objectives: Objective[]
+}
+
+export type ObjectiveWithScope = Objective & {
+  sites: Array<ObjectiveSite & { studySite: StudySite }>
+  tags: Array<ObjectiveTag & { studyTag: StudyTag }>
+  subPosts: ObjectiveSubPost[]
+}
+
+export type TrajectoryWithObjectivesAndScope = Trajectory & {
+  objectives: ObjectiveWithScope[]
+}
+
+export type ObjectiveScopeFormData = {
+  siteIds: string[]
+  tagIds: string[]
+  subPosts: SubPost[]
 }
 
 export const getTransitionPlanById = async (id: string): Promise<TransitionPlan | null> => {
@@ -53,7 +75,13 @@ export const getTransitionPlanByIdWithRelations = async (id: string): Promise<Tr
     include: {
       trajectories: {
         include: {
-          objectives: true,
+          objectives: {
+            include: {
+              sites: { include: { studySite: true } },
+              tags: { include: { studyTag: true } },
+              subPosts: true,
+            },
+          },
         },
       },
       transitionPlanStudies: true,
@@ -133,6 +161,16 @@ export const duplicateTransitionPlanWithRelations = async (
               create: trajectory.objectives.map((objective) => ({
                 targetYear: objective.targetYear,
                 reductionRate: objective.reductionRate,
+                isDefault: objective.isDefault,
+                sites: {
+                  create: objective.sites.map((s) => ({ studySiteId: s.studySiteId })),
+                },
+                tags: {
+                  create: objective.tags.map((t) => ({ studyTagId: t.studyTagId })),
+                },
+                subPosts: {
+                  create: objective.subPosts.map((sp) => ({ subPost: sp.subPost })),
+                },
               })),
             },
           })),
@@ -167,7 +205,13 @@ export const duplicateTransitionPlanWithRelations = async (
       include: {
         trajectories: {
           include: {
-            objectives: true,
+            objectives: {
+              include: {
+                sites: { include: { studySite: true } },
+                tags: { include: { studyTag: true } },
+                subPosts: true,
+              },
+            },
           },
         },
         transitionPlanStudies: true,
@@ -295,13 +339,18 @@ export const createTrajectoryWithObjectives = async (data: Prisma.TrajectoryCrea
 
 export const getTrajectoriesByTransitionPlanId = async (
   transitionPlanId: string,
-): Promise<TrajectoryWithObjectives[]> => {
+): Promise<TrajectoryWithObjectivesAndScope[]> => {
   return prismaClient.trajectory.findMany({
     where: { transitionPlanId },
     include: {
       objectives: {
         orderBy: {
           targetYear: 'asc',
+        },
+        include: {
+          sites: { include: { studySite: true } },
+          tags: { include: { studyTag: true } },
+          subPosts: true,
         },
       },
     },
@@ -337,6 +386,12 @@ export const getTrajectoryById = async (id: string): Promise<TrajectoryWithObjec
   })
 }
 
+export const getTrajectoryWithTransitionPlan = async (id: string) =>
+  prismaClient.trajectory.findUnique({
+    where: { id },
+    include: { transitionPlan: true },
+  })
+
 export const hasTrajectory = async (transitionPlanId: string): Promise<boolean> => {
   const count = await prismaClient.trajectory.count({
     where: { transitionPlanId },
@@ -347,22 +402,6 @@ export const hasTrajectory = async (transitionPlanId: string): Promise<boolean> 
 export const deleteTrajectory = async (id: string): Promise<void> => {
   await prismaClient.trajectory.delete({
     where: { id },
-  })
-}
-
-export const deleteObjective = async (id: string): Promise<Objective> => {
-  return prismaClient.objective.delete({
-    where: { id },
-  })
-}
-
-export const updateObjective = async (
-  id: string,
-  data: { targetYear?: number; reductionRate?: number },
-): Promise<Objective> => {
-  return prismaClient.objective.update({
-    where: { id },
-    data,
   })
 }
 

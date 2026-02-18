@@ -4,13 +4,12 @@ import { prismaClient } from '@/db/client'
 import { getStudyStartDate } from '@/db/study'
 import {
   createTrajectoryWithObjectives as dbCreateTrajectoryWithObjectives,
-  deleteObjective as dbDeleteObjective,
   deleteTrajectory as dbDeleteTrajectory,
   updateTrajectoryWithObjectives as dbUpdateTrajectoryWithObjectives,
   getTrajectoriesByTransitionPlanId,
   getTransitionPlanById,
   studyHasObjectives,
-  TrajectoryWithObjectives,
+  TrajectoryWithObjectivesAndScope,
 } from '@/db/transitionPlan'
 import { ApiResponse, withServerResponse } from '@/utils/serverResponse'
 import { getDefaultObjectivesForTrajectoryType } from '@/utils/trajectory'
@@ -102,6 +101,11 @@ export const createTrajectoryWithObjectives = async (input: CreateTrajectoryInpu
       }
     }
 
+    const startDate = await getStudyStartDate(transitionPlan.studyId)
+    const studyStartYear = startDate ? startDate.getFullYear() : new Date().getFullYear()
+
+    const sortedObjectives = [...objectives].sort((a, b) => a.targetYear - b.targetYear)
+
     return dbCreateTrajectoryWithObjectives({
       transitionPlan: {
         connect: {
@@ -115,7 +119,11 @@ export const createTrajectoryWithObjectives = async (input: CreateTrajectoryInpu
       sectorPercentages: input.sectorPercentages || undefined,
       objectives: {
         createMany: {
-          data: objectives,
+          data: sortedObjectives.map((obj, index) => ({
+            ...obj,
+            startYear: index === 0 ? studyStartYear : sortedObjectives[index - 1].targetYear,
+            isDefault: true,
+          })),
         },
       },
     })
@@ -124,7 +132,7 @@ export const createTrajectoryWithObjectives = async (input: CreateTrajectoryInpu
 export const getTrajectories = async (
   studyId: string,
   transitionPlanId: string,
-): Promise<ApiResponse<TrajectoryWithObjectives[]>> =>
+): Promise<ApiResponse<TrajectoryWithObjectivesAndScope[]>> =>
   withServerResponse('getTrajectories', async () => {
     const hasReadAccess = await hasReadAccessOnStudy(studyId)
     if (!hasReadAccess) {
@@ -176,6 +184,7 @@ export const updateTrajectory = async (id: string, data: UpdateTrajectoryInput) 
               trajectoryId: id,
               targetYear: obj.targetYear,
               reductionRate: obj.reductionRate,
+              isDefault: true,
             })),
           })
           await tx.trajectory.update({
@@ -193,7 +202,7 @@ export const updateTrajectory = async (id: string, data: UpdateTrajectoryInput) 
         return prismaClient.trajectory.findUnique({
           where: { id },
           include: { objectives: { orderBy: { targetYear: 'asc' } } },
-        }) as Promise<TrajectoryWithObjectives>
+        })
       }
     }
 
@@ -227,6 +236,7 @@ export const updateTrajectory = async (id: string, data: UpdateTrajectoryInput) 
                   trajectoryId: id,
                   targetYear: obj.targetYear,
                   reductionRate: obj.reductionRate,
+                  isDefault: true,
                 },
               })
             }
@@ -248,7 +258,7 @@ export const updateTrajectory = async (id: string, data: UpdateTrajectoryInput) 
       return prismaClient.trajectory.findUnique({
         where: { id },
         include: { objectives: { orderBy: { targetYear: 'asc' } } },
-      }) as Promise<TrajectoryWithObjectives>
+      })
     }
 
     return dbUpdateTrajectoryWithObjectives(id, {
@@ -275,26 +285,4 @@ export const deleteTrajectory = async (id: string) =>
     }
 
     await dbDeleteTrajectory(id)
-  })
-
-export const deleteObjective = async (id: string) =>
-  withServerResponse('deleteObjective', async () => {
-    const objective = await prismaClient.objective.findUnique({
-      where: { id },
-      include: {
-        trajectory: {
-          include: { transitionPlan: true },
-        },
-      },
-    })
-    if (!objective) {
-      throw new Error('Objective not found')
-    }
-
-    const hasEditAccess = await hasEditAccessOnStudy(objective.trajectory.transitionPlan.studyId)
-    if (!hasEditAccess) {
-      throw new Error(NOT_AUTHORIZED)
-    }
-
-    await dbDeleteObjective(id)
   })

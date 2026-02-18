@@ -5,7 +5,7 @@ import withTransitionPlan, { TransitionPlanProps } from '@/components/hoc/withTr
 import ObjectivesPage from '@/components/pages/ObjectivesPage'
 import { getTransitionPlanByStudyId } from '@/db/transitionPlan'
 import { getSectenData } from '@/services/serverFunctions/secten'
-import { checkStudyHasObjectives, getTrajectories } from '@/services/serverFunctions/trajectory'
+import { checkStudyHasObjectives, getTrajectories } from '@/services/serverFunctions/trajectory.serverFunction'
 import { getLinkedAndExternalStudies } from '@/services/serverFunctions/transitionPlan'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { redirect } from 'next/navigation'

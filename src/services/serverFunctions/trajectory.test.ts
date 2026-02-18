@@ -4,7 +4,7 @@ import * as authModule from '@/services/auth'
 import * as studyPermissionsModule from '@/services/permissions/study'
 import { expect } from '@jest/globals'
 import { TrajectoryType } from '@prisma/client'
-import { CreateTrajectoryInput, createTrajectoryWithObjectives } from './trajectory'
+import { CreateTrajectoryInput, createTrajectoryWithObjectives } from './trajectory.serverFunction'
 
 // TODO: ESM module issue with Jest. Remove these mocks when moving to Vitest
 jest.mock('../file', () => ({ download: jest.fn() }))
@@ -27,6 +27,7 @@ jest.mock('../../db/transitionPlan', () => ({
 
 jest.mock('../../db/study', () => ({
   getStudyById: jest.fn(),
+  getStudyStartDate: jest.fn(),
 }))
 
 jest.mock('../permissions/check', () => ({
@@ -40,6 +41,7 @@ jest.mock('../permissions/study', () => ({
 const mockAuth = authModule.auth as jest.Mock
 const mockGetTransitionPlanById = transitionPlanDbModule.getTransitionPlanById as jest.Mock
 const mockGetStudyById = studyDbModule.getStudyById as jest.Mock
+const mockGetStudyStartDate = studyDbModule.getStudyStartDate as jest.Mock
 const mockHasEditAccessOnStudy = studyPermissionsModule.hasEditAccessOnStudy as jest.Mock
 const mockCreateTrajectoryWithObjectives = transitionPlanDbModule.createTrajectoryWithObjectives as jest.Mock
 
@@ -69,6 +71,7 @@ describe('Trajectory Server Functions', () => {
     mockAuth.mockResolvedValue(mockSession)
     mockGetTransitionPlanById.mockResolvedValue(mockTransitionPlan)
     mockGetStudyById.mockResolvedValue(mockStudy)
+    mockGetStudyStartDate.mockResolvedValue(new Date('2024-01-01'))
     mockHasEditAccessOnStudy.mockResolvedValue(true)
     mockCreateTrajectoryWithObjectives.mockResolvedValue({ id: 'trajectory-123', name: 'Test Trajectory' })
   })
@@ -90,24 +93,26 @@ describe('Trajectory Server Functions', () => {
 
       expect(result.success).toBe(true)
       expect(result.success).toBeTruthy()
-      expect(transitionPlanDbModule.createTrajectoryWithObjectives).toHaveBeenCalledWith({
-        transitionPlan: {
-          connect: {
-            id: 'transition-plan-123',
+      expect(transitionPlanDbModule.createTrajectoryWithObjectives).toHaveBeenCalledWith(
+        expect.objectContaining({
+          transitionPlan: {
+            connect: {
+              id: 'transition-plan-123',
+            },
           },
-        },
-        name: 'Test Trajectory',
-        description: 'A test trajectory',
-        type: TrajectoryType.SBTI_15,
-        objectives: {
-          createMany: {
-            data: [
-              { targetYear: 2030, reductionRate: 0.042 },
-              { targetYear: 2050, reductionRate: 0.042 },
-            ],
+          name: 'Test Trajectory',
+          description: 'A test trajectory',
+          type: TrajectoryType.SBTI_15,
+          objectives: {
+            createMany: {
+              data: [
+                { targetYear: 2030, startYear: 2024, reductionRate: 0.042, isDefault: true },
+                { targetYear: 2050, startYear: 2030, reductionRate: 0.042, isDefault: true },
+              ],
+            },
           },
-        },
-      })
+        }),
+      )
     })
 
     test('should create trajectory with SBTI_WB2C predefined objectives', async () => {
@@ -124,8 +129,8 @@ describe('Trajectory Server Functions', () => {
           objectives: {
             createMany: {
               data: [
-                { targetYear: 2030, reductionRate: 0.025 },
-                { targetYear: 2050, reductionRate: 0.025 },
+                { targetYear: 2030, startYear: 2024, reductionRate: 0.025, isDefault: true },
+                { targetYear: 2050, startYear: 2030, reductionRate: 0.025, isDefault: true },
               ],
             },
           },
@@ -151,8 +156,8 @@ describe('Trajectory Server Functions', () => {
           objectives: {
             createMany: {
               data: [
-                { targetYear: 2035, reductionRate: 0.05 },
-                { targetYear: 2040, reductionRate: 0.08 },
+                { targetYear: 2035, startYear: 2024, reductionRate: 0.05, isDefault: true },
+                { targetYear: 2040, startYear: 2035, reductionRate: 0.08, isDefault: true },
               ],
             },
           },

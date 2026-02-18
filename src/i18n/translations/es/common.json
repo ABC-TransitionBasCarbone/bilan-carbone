@@ -10,6 +10,11 @@
     "subPosts": "Sub-posts",
     "onDate": "el",
     "by": "por",
+    "scope": "Perímetro",
+    "sites": "Sites",
+    "tags": "Tags",
+    "posts": "Posts",
+    "selectedPlural": "seleccionados",
     "action": {
       "create": "Crear",
       "edit": "Editar",
@@ -30,7 +35,9 @@
       "start": "Inicio",
       "end": "Fin",
       "sites": "Sitios",
-      "date": "Fecha"
+      "date": "Fecha",
+      "startYear": "Año de inicio",
+      "targetYear": "Año de meta"
     },
     "notAuthorized": "Acción no autorizada",
     "Not authorized": "No tiene permisos para realizar esta acción",
