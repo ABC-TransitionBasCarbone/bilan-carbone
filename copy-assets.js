@@ -8,31 +8,39 @@ const publicSrcPath = path.join(__dirname, 'public')
 const publicDestPath = path.join(__dirname, '.next/standalone/public')
 
 function copyAssets(src, dest) {
-  return fs
-    .mkdir(dest, { recursive: true })
-    .then(() => fs.readdir(src, { withFileTypes: true }))
-    .then((items) => {
-      const promises = items.map((item) => {
-        const srcPath = path.join(src, item.name)
-        const destPath = path.join(dest, item.name)
+    return fs
+        .mkdir(dest, { recursive: true })
+        .then(() => fs.readdir(src, { withFileTypes: true }))
+        .then((items) => {
+            const promises = items.map((item) => {
+                const srcPath = path.join(src, item.name)
+                const destPath = path.join(dest, item.name)
 
-        if (item.isDirectory()) {
-          return copyAssets(srcPath, destPath)
-        } else {
-          return fs.copyFile(srcPath, destPath)
-        }
-      })
-      return Promise.all(promises)
-    })
-    .catch((err) => {
-      console.error(`Error: ${err}`)
-      throw err
-    })
+                if (item.isDirectory()) {
+                    return copyAssets(srcPath, destPath)
+                } else {
+                    return fs.copyFile(srcPath, destPath)
+                }
+            })
+            return Promise.all(promises)
+        })
+        .catch((err) => {
+            console.error(`Error: ${err}`)
+            throw err
+        })
 }
 
 const greenTick = `\x1b[32m\u2713\x1b[0m`
 const redCross = `\x1b[31m\u274C\x1b[0m`
-copyAssets(staticSrcPath, staticDestPath)
-  .then(() => copyAssets(publicSrcPath, publicDestPath))
-  .then(() => console.log(`${greenTick} Assets copied successfully`))
-  .catch((err) => console.error(`${redCross} Failed to copy assets: ${err}`))
+
+// Also copy i18n translation files for production i18n support
+const i18nSrcPath = path.join(__dirname, 'src', 'i18n', 'translations')
+const i18nDestPath = path.join(__dirname, '.next/standalone/src/i18n/translations')
+
+Promise.all([
+    copyAssets(staticSrcPath, staticDestPath),
+    copyAssets(publicSrcPath, publicDestPath),
+    copyAssets(i18nSrcPath, i18nDestPath)
+])
+    .then(() => console.log(`${greenTick} Assets copied successfully`))
+    .catch((err) => console.error(`${redCross} Failed to copy assets: ${err}`))
