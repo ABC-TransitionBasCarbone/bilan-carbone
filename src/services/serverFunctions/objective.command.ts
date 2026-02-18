@@ -5,21 +5,18 @@ import { z } from 'zod'
 export const createObjectiveFormSchema = () =>
   z
     .object({
-      startYear: z.string(),
-      targetYear: z.string(),
+      startYear: z.string().min(1),
+      targetYear: z.string().min(1),
       reductionRate: z.number(),
     })
-    .refine(
-      (data) => {
-        if (!data.targetYear || !data.startYear) {
-          return true
-        }
-        const startYear = parseInt(data.startYear, 10)
-        const targetYear = parseInt(data.targetYear, 10)
-        return startYear < targetYear
-      },
-      setCustomIssue(['startYear'], 'startYearMustBeBeforeTargetYear'),
-    )
+    .superRefine((data, ctx) => {
+      const startYear = parseInt(data.startYear, 10)
+      const targetYear = parseInt(data.targetYear, 10)
+      if (startYear >= targetYear) {
+        ctx.addIssue(setCustomIssue(['startYear'], 'startYearMustBeBeforeTargetYear'))
+        ctx.addIssue(setCustomIssue(['targetYear'], 'startYearMustBeBeforeTargetYear'))
+      }
+    })
 
 export const createObjectiveModalSchema = () => {
   const objectiveFormSchema = createObjectiveFormSchema()
