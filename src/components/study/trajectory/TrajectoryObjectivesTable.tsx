@@ -342,7 +342,7 @@ const TrajectoryObjectivesTable = ({
             return null
           }
 
-          return rate !== undefined ? `${formatNumber(rate * 100, 1)}%` : null
+          return rate !== undefined ? `-${formatNumber(rate * 100, 1)}%` : null
         },
       },
       {
@@ -363,7 +363,7 @@ const TrajectoryObjectivesTable = ({
             return null
           }
 
-          return <Typography color="warning.main">{formatNumber(data.correctedRate * 100, 1)}%</Typography>
+          return <Typography color="warning.main">{`-${formatNumber(data.correctedRate * 100, 1)}%`}</Typography>
         },
       },
       {

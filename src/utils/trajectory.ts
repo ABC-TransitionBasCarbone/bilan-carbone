@@ -506,6 +506,9 @@ const computeFutureValue = (
           earliestFuturePoint.emissions,
         )
       }
+    } else if (year <= thresholdYear) {
+      // Studies are before threshold: emissions are stable between studyStartYear and thresholdYear
+      return { year, value: studyEmissions }
     }
   }
 

@@ -27,8 +27,9 @@ type TrajectoryValidationInput = {
 const validateTrajectoryInput = async (input: TrajectoryValidationInput, studyId: string): Promise<void> => {
   const { referenceYear, sectorPercentages, type } = input
 
-  // Validate referenceYear is strictly less than study year
-  if (referenceYear !== undefined && referenceYear !== null) {
+  // Only validate referenceYear for custom trajectories (SBTi/SNBC have fixed reference years that can be higher than the study year)
+  const isCustom = type === TrajectoryType.CUSTOM
+  if (isCustom && referenceYear !== undefined && referenceYear !== null) {
     const studyStartDate = await getStudyStartDate(studyId)
     if (studyStartDate) {
       const studyYear = studyStartDate.getFullYear()

@@ -62,6 +62,7 @@ interface Props {
     linkedStudies: Array<{ id: string; name: string; unvalidatedCount: number }>
     totalCount: number
   }
+  studyEmissions: number
 }
 
 const TrajectoryGraph = ({
@@ -80,6 +81,7 @@ const TrajectoryGraph = ({
   pastStudies = [],
   validatedOnly,
   unvalidatedSourcesInfo,
+  studyEmissions,
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.graph')
   const tUnit = useTranslations('study.results.units')
@@ -657,6 +659,7 @@ const TrajectoryGraph = ({
           )}
         </Alert>
       )}
+      {studyEmissions === 0 && <Alert severity="warning">{t('noEmissionSourcesWarning')}</Alert>}
       {!!failedTrajectories.length && (
         <Alert severity="warning" className="mb1">
           <Typography variant="body2">{t('failedTrajectories')}</Typography>

@@ -55,7 +55,7 @@ const ObjectiveCard = <T extends TrajectoryFormData | ObjectiveModalFormData>({
           <HelpIcon color="warning" onClick={() => setShowOvershootInfo(true)} label={t('objectives.overshootInfo')} />
         </div>
         <Typography color="warning" fontWeight="bold">
-          {(correctedObjective.reductionRate * 100).toFixed(1)}%
+          {`-${(correctedObjective.reductionRate * 100).toFixed(1)}%`}
         </Typography>
       </div>
     )
