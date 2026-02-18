@@ -507,7 +507,7 @@ const computeFutureValue = (
         )
       }
     } else if (year <= thresholdYear) {
-      // No historical points after threshold: emissions are stable between studyStartYear and thresholdYear
+      // Studies are before threshold: emissions are stable between studyStartYear and thresholdYear
       return { year, value: studyEmissions }
     }
   }
