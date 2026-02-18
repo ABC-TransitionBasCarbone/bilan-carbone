@@ -32,16 +32,7 @@ function copyAssets(src, dest) {
 
 const greenTick = `\x1b[32m\u2713\x1b[0m`
 const redCross = `\x1b[31m\u274C\x1b[0m`
-const prismaSrcPath = path.join(__dirname, 'prisma')
-const prismaDestPath = path.join(__dirname, '.next/standalone/prisma')
-const prismaClientSrcPath = path.join(__dirname, 'node_modules/@prisma/client')
-const prismaClientDestPath = path.join(__dirname, '.next/standalone/node_modules/@prisma/client')
-
-Promise.all([
-  copyAssets(staticSrcPath, staticDestPath),
-  copyAssets(publicSrcPath, publicDestPath),
-  copyAssets(prismaSrcPath, prismaDestPath),
-  copyAssets(prismaClientSrcPath, prismaClientDestPath)
-])
+copyAssets(staticSrcPath, staticDestPath)
+  .then(() => copyAssets(publicSrcPath, publicDestPath))
   .then(() => console.log(`${greenTick} Assets copied successfully`))
   .catch((err) => console.error(`${redCross} Failed to copy assets: ${err}`))
