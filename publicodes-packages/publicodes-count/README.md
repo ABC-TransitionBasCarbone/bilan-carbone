@@ -12,7 +12,7 @@ Les règles Publicodes sont écrites dans des fichiers au format `.yaml` (extens
 
 Le modèle CUT permet d'estimer l'empreinte carbone de salles de cinéma. Il s'appuie sur les postes de la méthode Bilan Carbone® :
 
-- Fonctionnements
+- Fonctionnement
 - Mobilité spectateurs
 - Tournées avant-premières
 - Salles et cabines
