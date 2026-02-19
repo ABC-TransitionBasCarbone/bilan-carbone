@@ -51,6 +51,8 @@ jobs:
           cache: 'yarn'
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
+      - name: Prebuild application
+        run: yarn prebuild
       - name: Launch unit tests
         run: yarn run publicodes-count:test
 
