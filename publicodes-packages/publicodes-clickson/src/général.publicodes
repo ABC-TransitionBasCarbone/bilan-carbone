@@ -21,7 +21,7 @@ général . année de rénovation:
 général . pays:
   question: Pays de l'établissement
   unité: pays
-  par défaut: "FRANCE"
+  par défaut: "'FRANCE'"
   une possibilité:
     - FRANCE
     - HONGRIE
