@@ -89,6 +89,8 @@ jobs:
         run: npx prisma migrate deploy
       - name: Seed DB
         run: npx prisma db seed
+      - name: Prebuild application
+        run: yarn prebuild
       - name: Build application
         run: yarn build
       - name: Start server
@@ -141,6 +143,8 @@ jobs:
         run: npx prisma migrate deploy
       - name: Seed DB
         run: npx prisma db seed
+      - name: Prebuild application
+        run: yarn prebuild
       - name: Build application
         run: yarn build
       - name: Start server
