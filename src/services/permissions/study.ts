@@ -371,58 +371,19 @@ export const getEnvironmentsForDuplication = async (studyId: string) => {
     .map((eligibleEnvironment) => eligibleEnvironment.environment)
 }
 
-export const filterStudyDetail = (user: UserSession, study: FullStudy) => {
+export const filterStudyEmissionSources = (user: UserSession, study: FullStudy) => {
   const availableSubPosts = study.contributors
     .filter((contributor) => contributor.account.user.email === user.email)
     .map((contributor) => contributor.subPost)
 
   return {
-    withoutDetail: true as const,
-    id: study.id,
-    name: study.name,
-    level: study.level,
-    isPublic: study.isPublic,
-    sites: study.sites,
-    resultsUnit: study.resultsUnit,
-    emissionSources: study.emissionSources
-      .filter((emissionSource) => availableSubPosts.includes(emissionSource.subPost))
-      .map((emissionSource) => ({
-        id: emissionSource.id,
-        lastEditor: emissionSource.lastEditor,
-        name: emissionSource.name,
-        validated: emissionSource.validated,
-        subPost: emissionSource.subPost,
-        emissionFactorId: emissionSource.emissionFactorId,
-        emissionFactor: emissionSource.emissionFactor,
-        value: emissionSource.value,
-        reliability: emissionSource.reliability,
-        technicalRepresentativeness: emissionSource.technicalRepresentativeness,
-        geographicRepresentativeness: emissionSource.geographicRepresentativeness,
-        temporalRepresentativeness: emissionSource.temporalRepresentativeness,
-        completeness: emissionSource.completeness,
-        feReliability: emissionSource.feReliability,
-        feTechnicalRepresentativeness: emissionSource.feTechnicalRepresentativeness,
-        feGeographicRepresentativeness: emissionSource.feGeographicRepresentativeness,
-        feTemporalRepresentativeness: emissionSource.feTemporalRepresentativeness,
-        feCompleteness: emissionSource.feCompleteness,
-        source: emissionSource.source,
-        type: emissionSource.type,
-        caracterisation: emissionSource.caracterisation,
-        constructionYear: emissionSource.constructionYear,
-        studySite: emissionSource.studySite,
-        depreciationPeriod: emissionSource.depreciationPeriod,
-        hectare: emissionSource.hectare,
-        duration: emissionSource.duration,
-        updatedAt: emissionSource.updatedAt,
-      })),
-    exports: study.exports,
-    contributors: study.contributors,
-    organizationVersion: study.organizationVersion,
-    allowedUsers: study.allowedUsers,
-    emissionFactorVersions: study.emissionFactorVersions,
+    ...study,
+    emissionSources: study.emissionSources.filter((emissionSource) =>
+      availableSubPosts.includes(emissionSource.subPost),
+    ),
   }
 }
-export type StudyWithoutDetail = ReturnType<typeof filterStudyDetail>
+export type StudyWithoutDetail = ReturnType<typeof filterStudyEmissionSources>
 
 export const canReadStudyDetail = async (user: UserSession, study: StudyWithRoleFields) => {
   const studyRight = await canReadStudy(user, study.id)

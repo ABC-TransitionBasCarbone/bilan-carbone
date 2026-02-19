@@ -1,7 +1,6 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
-import { StudyWithoutDetail } from '@/services/permissions/study'
 import { environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { withInfobulle } from '@/utils/post'
@@ -18,7 +17,7 @@ import useStudySite from '../study/site/useStudySite'
 import SubPosts from '../study/SubPosts'
 
 interface Props {
-  study: StudyWithoutDetail
+  study: FullStudy
   userRole: StudyRole | null
 }
 
@@ -28,8 +27,6 @@ const StudyContributorPage = ({ study, userRole }: Props) => {
   const [glossary, setGlossary] = useState('')
   const { studySite, setSite } = useStudySite(study)
   const { environment } = useAppEnvironmentStore()
-
-  const subPosts = subPostsByPost[Post.ConstructionDesLocaux]
 
   const emissionSources = useMemo(
     () =>
@@ -69,11 +66,11 @@ const StudyContributorPage = ({ study, userRole }: Props) => {
                 post={post}
                 subPosts={subPostsByPost[post]}
                 study={study}
-                withoutDetail
                 emissionSources={emissionSources}
                 studySite={studySite}
                 userRole={userRole}
                 setGlossary={setGlossary}
+                withoutDetail={true}
               />
             </Block>
           ))}

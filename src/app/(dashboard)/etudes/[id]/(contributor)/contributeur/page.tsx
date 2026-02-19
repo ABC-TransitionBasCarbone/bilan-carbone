@@ -2,7 +2,7 @@ import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import withStudy, { StudyProps } from '@/components/hoc/withStudy'
 import NotFound from '@/components/pages/NotFound'
 import StudyContributorPage from '@/components/pages/StudyContributor'
-import { canReadStudy, canReadStudyDetail, filterStudyDetail } from '@/services/permissions/study'
+import { canReadStudy, canReadStudyDetail, filterStudyEmissionSources } from '@/services/permissions/study'
 import { getAccountRoleOnStudy } from '@/utils/study'
 import { redirect } from 'next/navigation'
 
@@ -17,7 +17,7 @@ const StudyView = async ({ user, study }: StudyProps & UserSessionProps) => {
 
   const userRole = getAccountRoleOnStudy(user, study)
 
-  const studyWithoutDetail = filterStudyDetail(user, study)
+  const studyWithoutDetail = filterStudyEmissionSources(user, study)
   return <StudyContributorPage study={studyWithoutDetail} userRole={userRole} />
 }
 

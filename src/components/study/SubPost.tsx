@@ -3,7 +3,6 @@
 import { FullStudy } from '@/db/study'
 import { customRich } from '@/i18n/customRich'
 import { getCaracterisationsBySubPost, getEmissionResults } from '@/services/emissionSource'
-import { StudyWithoutDetail } from '@/services/permissions/study'
 import { Post } from '@/services/posts'
 import { EmissionFactorWithMetaData, getEmissionFactors } from '@/services/serverFunctions/emissionFactor'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
@@ -25,13 +24,7 @@ import styles from './SubPosts.module.css'
 
 type StudyProps = {
   study: FullStudy
-  withoutDetail: false
-  hasFilter: boolean
-}
-
-type StudyWithoutDetailProps = {
-  study: StudyWithoutDetail
-  withoutDetail: true
+  withoutDetail: boolean
   hasFilter: boolean
 }
 
@@ -60,7 +53,7 @@ const SubPost = ({
   validated,
   hasFilter,
   defaultOpen,
-}: Props & (StudyProps | StudyWithoutDetailProps)) => {
+}: Props & StudyProps) => {
   const t = useTranslations('study.post')
   const tStudy = useTranslations('study')
   const tPost = useTranslations('emissionFactors.post')
@@ -125,12 +118,10 @@ const SubPost = ({
 
   const contributors = useMemo(
     () =>
-      withoutDetail
-        ? null
-        : study.contributors
-            .filter((contributor) => contributor.subPost === subPost)
-            .map((contributor) => contributor.account.user.email),
-    [study, subPost, withoutDetail],
+      study.contributors
+        .filter((contributor) => contributor.subPost === subPost)
+        .map((contributor) => contributor.account.user.email),
+    [study, subPost],
   )
 
   const caracterisations = useMemo(
@@ -210,7 +201,7 @@ const SubPost = ({
               <span className={classNames(styles.value, 'ml1')}>
                 {formatNumber(total / STUDY_UNIT_VALUES[study.resultsUnit])} {tUnits(study.resultsUnit)}
               </span>
-              {contributors && contributors.length > 0 && (
+              {!withoutDetail && contributors && contributors.length > 0 && (
                 <span className={classNames(styles.contributors, 'ml1')}>
                   {t('contributorsList', { count: contributors.length })} {contributors.join(', ')}
                 </span>
@@ -227,36 +218,20 @@ const SubPost = ({
             )}
           </AccordionSummary>
           <AccordionDetails id={`panel-${subPost}-content`} className={styles.subPostDetailsContainer}>
-            {emissionSources.map((emissionSource) =>
-              // Dirty hack to force type on EmissionSource
-              withoutDetail ? (
-                <EmissionSource
-                  study={study}
-                  emissionSource={emissionSource}
-                  key={emissionSource.id}
-                  subPost={subPost}
-                  userRoleOnStudy={userRoleOnStudy}
-                  withoutDetail
-                  caracterisations={caracterisations}
-                  emissionFactorsForSubPost={emissionFactorsForSubPost}
-                  importVersions={importVersions}
-                  isContributor={isContributor}
-                />
-              ) : (
-                <EmissionSource
-                  study={study}
-                  emissionSource={emissionSource}
-                  key={emissionSource.id}
-                  subPost={subPost}
-                  userRoleOnStudy={userRoleOnStudy}
-                  withoutDetail={false}
-                  caracterisations={caracterisations}
-                  emissionFactorsForSubPost={emissionFactorsForSubPost}
-                  importVersions={importVersions}
-                  isContributor={isContributor}
-                />
-              ),
-            )}
+            {emissionSources.map((emissionSource) => (
+              <EmissionSource
+                study={study}
+                emissionSource={emissionSource}
+                key={emissionSource.id}
+                subPost={subPost}
+                userRoleOnStudy={userRoleOnStudy}
+                withoutDetail={withoutDetail}
+                caracterisations={caracterisations}
+                emissionFactorsForSubPost={emissionFactorsForSubPost}
+                importVersions={importVersions}
+                isContributor={isContributor}
+              />
+            ))}
             {!withoutDetail && userRoleOnStudy && userRoleOnStudy !== StudyRole.Reader && (
               <div className="mt2">
                 <NewEmissionSource

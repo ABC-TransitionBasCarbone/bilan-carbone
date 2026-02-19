@@ -1,7 +1,6 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
-import { StudyWithoutDetail } from '@/services/permissions/study'
 import { Post } from '@/services/posts'
 import { StudyRole, SubPost } from '@prisma/client'
 import classNames from 'classnames'
@@ -13,12 +12,7 @@ import styles from './SubPosts.module.css'
 
 type StudyProps = {
   study: FullStudy
-  withoutDetail: false
-}
-
-type StudyWithoutDetailProps = {
-  study: StudyWithoutDetail
-  withoutDetail: true
+  withoutDetail: boolean
 }
 
 interface Props {
@@ -41,7 +35,7 @@ const SubPosts = ({
   studySite,
   setGlossary,
   hasFilter,
-}: Props & (StudyProps | StudyWithoutDetailProps)) => {
+}: Props & StudyProps) => {
   const searchParams = useSearchParams()
   const [scroll, setScroll] = useState<string | null>(null)
 
@@ -76,7 +70,8 @@ const SubPosts = ({
             key={subPost}
             userRoleOnStudy={userRole}
             studySite={studySite}
-            {...(withoutDetail ? { study, withoutDetail: true } : { study, withoutDetail: false })}
+            withoutDetail={withoutDetail}
+            study={study}
             setGlossary={setGlossary}
             count={emissionSources.filter((emissionSource) => emissionSource.subPost === subPost).length}
             validated={
