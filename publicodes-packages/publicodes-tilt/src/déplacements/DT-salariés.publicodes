@@ -1,9 +1,9 @@
 déplacements . DT-salariés:
   titre: Emissions des trajets domicile travail des salariés
-  formule:
-    somme:
-      - avec
-      - sans
+    formule:
+      somme:
+        - avec
+        - sans
   unité: kgCO2e
 
 
@@ -15,16 +15,16 @@ déplacements . DT-salariés . avec:
       - est défini: MEP présent
       - MEP présent = oui
   titre: émissions des trajets domiciles travail des salariés (avec enquête MEP)
-  formule: 
-    somme:
-      - produit:
-        - distance
-        - répartition
-        - (5 - général . TT salariés)
-        - commun . nombre de semaines travaillées par an
-        - (général . salariés - MEP présent . nombre salariés) 
-        - 1 / sans . voiture . occupation
-      - réponse MEP
+    formule:
+      somme:
+        - produit:
+          - distance
+          - répartition
+          - (5 - général . TT salariés)
+          - commun . nombre de semaines travaillées par an
+          - (général . salariés - MEP présent . nombre salariés) 
+          - 1 / sans . voiture . occupation
+        - réponse MEP
   avec:
     distance:
       question: D'après les résultats de MEP, quelle est la distance moyenne parcourue par salarié par jour (A/R) pour des déplacements domicile-travail ?
