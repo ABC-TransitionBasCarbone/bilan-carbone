@@ -86,6 +86,7 @@ export const unitsMatrix: Record<string, Unit> = {
   m: Unit.METER,
   'm² SHON': Unit.M2_SHON,
   'm³': Unit.M3,
+  m3: Unit.M3,
   'm³.km': Unit.M3_KM,
   'm³ (n)': Unit.M3_N,
   'm de route': Unit.METER_ROAD,

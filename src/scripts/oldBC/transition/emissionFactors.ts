@@ -99,14 +99,17 @@ export const uploadEmissionFactors = async (
     (acc, row) => {
       if (acc[row.EFV_GUID]) {
         acc[row.EFV_GUID].push(row)
+        // acc[row.EFV_GUID] += 1
       } else {
         acc[row.EFV_GUID] = [row]
+        // acc[row.EFV_GUID] = 1
       }
       return acc
     },
     {} as Record<string, EmissionFactorRow[]>,
   )
 
+  // console.log(JSON.stringify(groupedEmissionFactors))
   const createdEmissionFactor = await transaction.emissionFactor.createMany({
     data: Object.values(groupedEmissionFactors)
       .map((row) => {
@@ -122,6 +125,7 @@ export const uploadEmissionFactors = async (
         const subPosts = getSubPosts(row, postAndSubPostsOldNewMapping)
 
         if (!subPosts || subPosts?.length === 0) {
+          console.log('ignoré car sous poste non trouvé', ef.EF_VAL_LIB)
           return null
         }
 
