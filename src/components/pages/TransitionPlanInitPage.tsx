@@ -16,8 +16,11 @@ import { TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
+import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
+import { createTrajectoryWithObjectives, updateTrajectory } from '@/services/serverFunctions/trajectory.serverFunction'
 import { initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
 import { getStudyTotalCo2Emissions } from '@/services/study'
+import { calculateSectoralSNBCReductionRates } from '@/utils/snbc'
 import { convertToPastStudies } from '@/utils/trajectory'
 import type { ExternalStudy, SectenInfo, TransitionPlan } from '@prisma/client'
 import { TrajectoryType } from '@prisma/client'
@@ -58,6 +61,7 @@ const TransitionPlanInitPage = ({
   sectenData,
 }: Props) => {
   const t = useTranslations('study.transitionPlan')
+  const tBlock = useTranslations('study.transitionPlan.initialization.sectorBlock')
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
   const router = useRouter()
@@ -158,6 +162,72 @@ const TransitionPlanInitPage = ({
     return getStudyTotalCo2Emissions(study, true, validatedOnly)
   }, [study, validatedOnly])
 
+  const handleSaveTrajectory = useCallback(
+    async (sectorPercentages: SectorPercentages) => {
+      if (!transitionPlan) {
+        return
+      }
+
+      const rates = calculateSectoralSNBCReductionRates(
+        {
+          studyEmissions: studyTotalEmissions,
+          studyStartYear: study.startDate.getFullYear(),
+          sectenData,
+          pastStudies,
+        },
+        sectorPercentages,
+      )
+
+      const objectives: { targetYear: number; reductionRate: number }[] = []
+      if (rates) {
+        if (rates.rateTo2015 !== undefined) {
+          objectives.push({ targetYear: 2015, reductionRate: rates.rateTo2015 })
+        }
+        objectives.push({ targetYear: 2030, reductionRate: rates.rateTo2030 })
+        objectives.push({ targetYear: 2050, reductionRate: rates.rateTo2050 })
+      }
+
+      if (defaultSnbcSectoralTrajectory) {
+        const defaultObjectives = defaultSnbcSectoralTrajectory.objectives.filter((obj) => obj.isDefault)
+        await callServerFunction(
+          () =>
+            updateTrajectory(defaultSnbcSectoralTrajectory.id, {
+              sectorPercentages,
+              objectives: objectives.map((obj, index) => ({
+                id: defaultObjectives[index]?.id,
+                targetYear: obj.targetYear,
+                reductionRate: Number(obj.reductionRate.toFixed(4)),
+              })),
+            }),
+          { onSuccess: () => router.refresh() },
+        )
+      } else {
+        await callServerFunction(
+          () =>
+            createTrajectoryWithObjectives({
+              transitionPlanId: transitionPlan.id,
+              name: tBlock('snbcSectorialName'),
+              type: TrajectoryType.SNBC_SECTORAL,
+              sectorPercentages,
+              objectives,
+            }),
+          { onSuccess: () => router.refresh() },
+        )
+      }
+    },
+    [
+      transitionPlan,
+      defaultSnbcSectoralTrajectory,
+      studyTotalEmissions,
+      study.startDate,
+      sectenData,
+      pastStudies,
+      callServerFunction,
+      tBlock,
+      router,
+    ],
+  )
+
   if (!transitionPlan) {
     if (canEdit) {
       return (
@@ -235,7 +305,6 @@ const TransitionPlanInitPage = ({
 
           {/* Step 2 – Sector percentages */}
           <SectorAllocationBlock
-            transitionPlanId={transitionPlan.id}
             canEdit={canEdit}
             defaultSnbcSectoralTrajectory={defaultSnbcSectoralTrajectory}
             study={study}
@@ -245,6 +314,7 @@ const TransitionPlanInitPage = ({
             isVisible={isStepVisible(1)}
             isActive={isStepActive(1)}
             onClickNext={() => validateStep(1)}
+            onSaveTrajectory={handleSaveTrajectory}
           />
 
           {/* Step 3 – SNBC + SBTI selection */}
@@ -309,7 +379,17 @@ const TransitionPlanInitPage = ({
             <div className={'flex-cc'}>
               <Button
                 variant="text"
-                onClick={() => {
+                onClick={async () => {
+                  if (canEdit && !defaultSnbcSectoralTrajectory) {
+                    await handleSaveTrajectory({
+                      energy: 0,
+                      industry: 0,
+                      waste: 0,
+                      buildings: 0,
+                      agriculture: 0,
+                      transportation: 0,
+                    })
+                  }
                   localStorage.setItem(storageKey, 'complete')
                   setCurrentStep('complete')
                 }}
