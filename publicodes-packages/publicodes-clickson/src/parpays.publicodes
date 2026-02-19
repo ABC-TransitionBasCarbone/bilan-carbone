@@ -1,0 +1,22 @@
+par pays:
+  titre: Par pays
+
+par pays . FRANCE:
+  titre: FRANCE
+  valeur: 0.058
+  unité: kgCO2e/kWh
+
+par pays . HONGRIE:
+  titre: HONGRIE
+  valeur: 0.043
+  unité: kgCO2e/kWh
+
+par pays . ROUMANIE:
+  titre: ROUMANIE
+  valeur: 0.296
+  unité: kgCO2e/kWh
+
+par pays . CROATIE:
+  titre: CROATIE
+  valeur: 0.141
+  unité: kgCO2e/kWh

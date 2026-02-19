@@ -124,3 +124,14 @@ commun . FE . moyen de transport:
       unité: kgCO2e/km
       meta:
         incertitude: 5
+
+commun . FE . électricité:
+  valeur:
+    variations:
+      - si: général . pays = 'HONGRIE'
+        alors: par pays . HONGRIE
+      - si: général . pays = 'ROUMANIE'
+        alors: par pays . ROUMANIE
+      - si: général . pays = 'CROATIE'
+        alors: par pays . CROATIE
+      - sinon: par pays . FRANCE
