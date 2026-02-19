@@ -1,30 +1,29 @@
 déplacements . DT-salariés:
   titre: Emissions des trajets domicile travail des salariés
-    formule:
-      somme:
-        - avec
-        - sans
+  formule:
+    somme:
+      - avec
+      - sans
   unité: kgCO2e
 
-
-## Cette fonction permet de calculer les émissions des salariés qui n'ont pas répondu à MEP à partir des kms moyens parcourus par ceux qui ont répondu, on utilise le split moyen français par mode pour les DT comme FE pour extrapoler 
+## Cette fonction permet de calculer les émissions des salariés qui n'ont pas répondu à MEP à partir des kms moyens parcourus par ceux qui ont répondu, on utilise le split moyen français par mode pour les DT comme FE pour extrapoler
 
 déplacements . DT-salariés . avec:
-  applicable si: 
+  applicable si:
     toutes ces conditions:
       - est défini: MEP présent
       - MEP présent = oui
   titre: émissions des trajets domiciles travail des salariés (avec enquête MEP)
-    formule:
-      somme:
-        - produit:
+  formule:
+    somme:
+      - produit:
           - distance
           - répartition
           - (5 - général . TT salariés)
           - commun . nombre de semaines travaillées par an
-          - (général . salariés - MEP présent . nombre salariés) 
+          - (général . salariés - MEP présent . nombre salariés)
           - 1 / sans . voiture . occupation
-        - réponse MEP
+      - réponse MEP
   avec:
     distance:
       question: D'après les résultats de MEP, quelle est la distance moyenne parcourue par salarié par jour (A/R) pour des déplacements domicile-travail ?
@@ -50,15 +49,13 @@ déplacements . DT-salariés . avec:
           valeur: 0
           unité: kgCO2e/km
           note: On néglige l'impact des modes actifs (vélo, marche, trottinette...)
-        
+
     réponse MEP:
       question: D'après les résultats MEP, combien de kgCO2e représentent les déplacements liés à des missions des salariés ?
       unité: kgCO2e
   unité: kgCO2e
 
-
 ## Ici on calcule les émissions dans le cas ou il n'y pas eu de campagne MEP
-
 
 déplacements . DT-salariés . sans:
   titre: émissions des trajets domiciles travail des salariés (sans enquête MEP)
@@ -69,9 +66,9 @@ déplacements . DT-salariés . sans:
       - deux roues
       - transports en commun
   unité: kgCO2e
-  
+
 déplacements . DT-salariés . sans . voiture:
-  applicable si: 
+  applicable si:
     toutes ces conditions:
       - est défini: MEP présent
       - MEP présent = non
@@ -88,12 +85,12 @@ déplacements . DT-salariés . sans . voiture . split:
   note: source basée sur le parc automobile de voiture particulière en France en 2024 avec extrapolation pour ommettre les autres modes (GPL Hydrogène etc...) https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2024
   avec:
     hybride:
-      valeur: 0.18 
+      valeur: 0.18
       unité: kgCO2e/km
       meta:
         id: 28008
         nom: Voiture particulière/Coeur de gamme - Véhicule compact/Hybride, full, P2
-    
+
     électrique:
       valeur: 0.1
       unité: kgCO2e/km
@@ -123,9 +120,8 @@ déplacements . DT-salariés . sans . voiture . occupation:
   note: source pour le taux d'occupation d'une voiture en France pour des trajets D-T https://www.citego.org/bdf_fiche-document-3431_fr.html
   unité: unité
 
-
 déplacements . DT-salariés . sans . train:
-  applicable si: 
+  applicable si:
     toutes ces conditions:
       - est défini: MEP présent
       - MEP présent = non
@@ -144,10 +140,8 @@ déplacements . DT-salariés . sans . train:
         note: On considère que la majorité des déplacements en train pour du DT est en TER
   unité: kgCO2e
 
-
-
 déplacements . DT-salariés . sans . transports en commun:
-  applicable si: 
+  applicable si:
     toutes ces conditions:
       - est défini: MEP présent
       - MEP présent = non
@@ -158,10 +152,9 @@ déplacements . DT-salariés . sans . transports en commun:
       unite: km
   unité: kgCO2e
 
-
 déplacements . DT-salariés . sans . transports en commun . split:
   formule: bus * 0.5 + rail * 0.5 ## à challenger
-  note: 
+  note:
   avec:
     bus:
       valeur: 0.15
@@ -169,14 +162,14 @@ déplacements . DT-salariés . sans . transports en commun . split:
       meta:
         id: 28000
         nom: Autobus moyen/Agglomération de plus de 250 000 habitants
-    
+
     rail:
       valeur: 0.00356
       unité: kgCO2e/km
       note: source doc NGC https://nosgestesclimat.fr/documentation/transport/transports-commun/m%C3%A9tro-ou-tram
 
 déplacements . DT-salariés . sans . deux roues:
-  applicable si: 
+  applicable si:
     toutes ces conditions:
       - est défini: MEP présent
       - MEP présent = non
