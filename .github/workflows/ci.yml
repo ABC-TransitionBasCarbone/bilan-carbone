@@ -13,10 +13,6 @@ jobs:
           cache: 'yarn'
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
-      - name: Build publicodes packages
-        run: |
-          yarn workspace @abc-transitionbascarbone/publicodes-clickson run build
-          yarn workspace @abc-transitionbascarbone/publicodes-count run build
       - name: Generate prisma files
         run: npx prisma generate
       - name: Linter
@@ -37,10 +33,6 @@ jobs:
         run: cp .env.dist .env
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
-      - name: Build publicodes packages
-        run: |
-          yarn workspace @abc-transitionbascarbone/publicodes-clickson run build
-          yarn workspace @abc-transitionbascarbone/publicodes-count run build
       - name: Generate prisma files
         run: npx prisma generate
       - name: Launch unit tests
@@ -57,10 +49,6 @@ jobs:
           cache: 'yarn'
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
-      - name: Build publicodes packages
-        run: |
-          yarn workspace @abc-transitionbascarbone/publicodes-clickson run build
-          yarn workspace @abc-transitionbascarbone/publicodes-count run build
       - name: Launch unit tests
         run: yarn run publicodes-count:test
 

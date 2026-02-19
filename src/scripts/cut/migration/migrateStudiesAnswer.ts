@@ -301,13 +301,11 @@ async function main() {
       engine.setSituation(situation.mainSituation)
       engine.evaluate('bilan')
 
-      for (const [listRule, listSituationArr] of Object.entries(situation.listLayoutSituations)) {
-        for (const { situation: singleSituation } of listSituationArr ?? []) {
-          engine.setSituation({
-            [listRule]: singleSituation,
-          })
-          engine.evaluate(listRule)
-        }
+      for (const [listRule, listSituation] of Object.entries(situation.listLayoutSituations)) {
+        engine.setSituation({
+          [listRule]: listSituation,
+        })
+        engine.evaluate(listRule)
       }
     } catch (e) {
       console.error(`Error evaluating situation for study site ID ${studySiteId}:`, e)
