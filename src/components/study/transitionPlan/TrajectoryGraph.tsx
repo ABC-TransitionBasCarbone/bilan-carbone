@@ -586,10 +586,7 @@ const TrajectoryGraph = ({
   }, [seriesCreated])
 
   const oldestPastStudyYear = useMemo(() => {
-    if (pastStudies.length === 0) {
-      return 0
-    }
-    return Math.min(...pastStudies.map((study) => study.year))
+    return Math.min(...pastStudies.map((study) => study.year), studyStartYear)
   }, [pastStudies])
 
   const displayEstimatedPast = useMemo(
@@ -616,6 +613,8 @@ const TrajectoryGraph = ({
     area: true,
     color: 'var(--trajectory-gray-area)',
     showMark: false,
+    disableHighlight: true,
+    valueFormatter: () => null,
   }
 
   const BottomLeftText = ({ onClick, ...props }: DrawingProps & { onClick: () => void }) => (
@@ -695,7 +694,10 @@ const TrajectoryGraph = ({
         <MarkPlot />
 
         {displayEstimatedPast && (
-          <DrawingAreaBox Text={(props) => <BottomLeftText {...props} onClick={() => setGlossary(true)} />} />
+          <DrawingAreaBox
+            showCenterAxes={false}
+            Text={(props) => <BottomLeftText {...props} onClick={() => setGlossary(true)} />}
+          />
         )}
 
         <ChartsAxisHighlight x="line" />
