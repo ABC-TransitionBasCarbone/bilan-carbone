@@ -177,11 +177,11 @@ déplacements . DM-salariés . sans . deux roues:
   unité: kgCO2e
 
 déplacements . DM-salariés . sans . avion:
-formule:
-  somme:
-    - court courrier
-    - moyen courrier
-    - long courrier
+  formule:
+    somme:
+      - court courrier
+      - moyen courrier
+      - long courrier
 
 déplacements . DM-salariés . sans . avion . court courrier:
   applicable si:
