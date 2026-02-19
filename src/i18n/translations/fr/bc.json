@@ -992,6 +992,7 @@
           "detailedInfo": "Pour Grabriel"
         },
         "createButton": "Créer ma première trajectoire personnalisée",
+        "skipOnboarding": "Passer l'onboarding",
         "stepLinkStudy": {
           "title": "Études passées",
           "description": "Liez vos études BC+ passées pour reconstruire l'historique de vos émissions. Ces données alimenteront vos trajectoires de réduction.",

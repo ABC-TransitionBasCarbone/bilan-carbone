@@ -992,6 +992,7 @@
           "detailedInfo": "Pour Grabriel"
         },
         "createButton": "Create my first custom trajectory",
+        "skipOnboarding": "Skip onboarding",
         "stepLinkStudy": {
           "title": "Past studies",
           "description": "Link your past BC+ studies to reconstruct your emissions history. This data will feed into your reduction trajectories.",

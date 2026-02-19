@@ -305,6 +305,19 @@ const TransitionPlanInitPage = ({
               showTitle={false}
             />
           </OnboardingSectionStep>
+          {!isComplete && (
+            <div className={'flex-cc'}>
+              <Button
+                variant="text"
+                onClick={() => {
+                  localStorage.setItem(storageKey, 'complete')
+                  setCurrentStep('complete')
+                }}
+              >
+                {t('initialization.skipOnboarding')}
+              </Button>
+            </div>
+          )}
         </div>
       </Block>
     </>
