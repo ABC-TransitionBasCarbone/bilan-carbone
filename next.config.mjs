@@ -8,7 +8,7 @@ const scalewayUrl = `${bucketName}.s3.${region}.scw.cloud`
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone', // TODO: Uncomment this if we meed to reduce the app size and add heavy node_modules packages to .slugignore
+  output: 'standalone', // we use the standalone output to be able to reduce bundle size by copying only the necessary assets in the standalone folder (see copy-assets.js)
   turbopack: {
     resolveAlias: {
       underscore: 'lodash',
