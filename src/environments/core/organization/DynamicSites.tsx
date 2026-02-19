@@ -31,14 +31,31 @@ const DynamicSites = <T extends SitesCommand>({ sites, form, withSelection, caUn
         />
       ),
       [Environment.TILT]: (
-        <SitesTilt sites={sites} form={form} caUnit={caUnit} withSelection={withSelection} disabled={disabled} />
+        <SitesTilt
+          sites={sites}
+          form={form as UseFormReturn<SitesCommand>}
+          caUnit={caUnit}
+          withSelection={withSelection}
+          disabled={disabled}
+        />
       ),
       [Environment.CLICKSON]: (
-        <SitesClickson sites={sites} form={form} withSelection={withSelection} disabled={disabled} />
+        <SitesClickson
+          sites={sites}
+          form={form as UseFormReturn<SitesCommand>}
+          withSelection={withSelection}
+          disabled={disabled}
+        />
       ),
     }}
     defaultComponent={
-      <SitesBC sites={sites} form={form} caUnit={caUnit} withSelection={withSelection} disabled={disabled} />
+      <SitesBC
+        sites={sites}
+        form={form as UseFormReturn<SitesCommand>}
+        caUnit={caUnit}
+        withSelection={withSelection}
+        disabled={disabled}
+      />
     }
   />
 )
