@@ -11,6 +11,7 @@ import {
   isInOrgaOrParent,
   isLicenceActiveForDate,
   isLicenceActiveForFormation,
+  shouldRenewLicenceText,
 } from './organization'
 
 describe('organisation utils', () => {
@@ -323,6 +324,72 @@ describe('organisation utils', () => {
       jest.setSystemTime(new Date('2025-12-25'))
       expect(isLicenceActiveForFormation([2025])).toBe(true)
       expect(isLicenceActiveForFormation([2025, 2026])).toBe(true)
+    })
+  })
+
+  describe('shouldRenewLicenceText', () => {
+    afterEach(() => {
+      jest.useRealTimers()
+      delete process.env.NEXT_LICENSE_RENEWAL_MONTH_START
+      delete process.env.NEXT_LICENSE_RENEWAL_MONTH_END
+    })
+
+    it('should return empty if not BC environment', () => {
+      jest.useFakeTimers().setSystemTime(new Date('2026-01-15'))
+      Object.values(Environment)
+        .filter((env) => env !== Environment.BC)
+        .forEach((env) => {
+          expect(shouldRenewLicenceText({ activatedLicence: [], environment: env })).toBe('')
+        })
+    })
+
+    it('should return empty if has license for next year', () => {
+      jest.useFakeTimers().setSystemTime(new Date('2026-01-15'))
+      expect(
+        shouldRenewLicenceText({
+          activatedLicence: [2027],
+          environment: Environment.BC,
+        }),
+      ).toBe('')
+    })
+
+    it('should return renewUpcoming if has license for current year but not for next year and we are in renewal period', () => {
+      process.env.NEXT_LICENSE_RENEWAL_MONTH_START = '12'
+      process.env.NEXT_LICENSE_RENEWAL_MONTH_END = '2'
+      jest.useFakeTimers().setSystemTime(new Date('2025-12-15'))
+
+      expect(
+        shouldRenewLicenceText({
+          activatedLicence: [2025],
+          environment: Environment.BC,
+        }),
+      ).toBe('renewUpcoming')
+    })
+
+    it('should return renewUpcoming if has license for last year but not for current year and is before renwalMessageEndMonth', () => {
+      process.env.NEXT_LICENSE_RENEWAL_MONTH_START = '12'
+      process.env.NEXT_LICENSE_RENEWAL_MONTH_END = '2'
+      jest.useFakeTimers().setSystemTime(new Date('2026-01-15'))
+
+      expect(
+        shouldRenewLicenceText({
+          activatedLicence: [2025],
+          environment: Environment.BC,
+        }),
+      ).toBe('renewUpcoming')
+    })
+
+    it('should return renew if does not have license for current year and is after renwalMessageEndMonth', () => {
+      process.env.NEXT_LICENSE_RENEWAL_MONTH_START = '12'
+      process.env.NEXT_LICENSE_RENEWAL_MONTH_END = '2'
+      jest.useFakeTimers().setSystemTime(new Date('2026-02-15'))
+
+      expect(
+        shouldRenewLicenceText({
+          activatedLicence: [],
+          environment: Environment.BC,
+        }),
+      ).toBe('renew')
     })
   })
 })

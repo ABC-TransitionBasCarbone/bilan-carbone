@@ -2125,7 +2125,8 @@
       "myClient": "My client",
       "update": "Update my information",
       "updateClient": "Update my client",
-      "renew": "Your {year} licence is about to expire. Remember to renew it to continue using the services in {nextYear}. Without a renewed membership, only read access remains available for your studies on BC+.",
+      "renewUpcoming": "Your {currentYear} licence is about to expire. Remember to renew it to continue using the services in {nextYear}. Without a renewed membership, only read access remains available for your studies on BC+.",
+      "renew": "Your licence has expired. Remember to renew it to continue using the services in {currentYear}. Without a renewed membership, only read access remains available for your studies on BC+.",
       "renewLink": "Renew"
     },
     "delete": {

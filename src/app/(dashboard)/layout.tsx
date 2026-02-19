@@ -10,6 +10,7 @@ import EnvironmentInitializer from '@/environments/core/EnvironmentInitializer'
 import DynamicTheme from '@/environments/core/providers/DynamicTheme'
 import { getEnvironment } from '@/i18n/environment'
 import { isTiltSimplifiedFeatureActive } from '@/services/permissions/environment'
+import { shouldRenewLicenceText } from '@/utils/organization'
 import { Box } from '@mui/material'
 import { Environment } from '@prisma/client'
 import classNames from 'classnames'
@@ -19,15 +20,11 @@ interface Props {
   children: React.ReactNode
 }
 
-const renewalMessageStartMonth = Number(process.env.NEXT_LICENSE_RENEWAL_MONTH) || 13 // 13 is never to be displayed if variable is not defined
-
 const NavLayout = async ({ children, user: account }: Props & UserSessionProps) => {
   const environment = await getEnvironment()
   if (account.needsAccountSelection) {
     return <main className={styles.content}>{children}</main>
   }
-
-  const currentDate = new Date()
 
   const [organizationVersions, studyId, isTiltSimplifiedActive] = await Promise.all([
     getAccountOrganizationVersions(account.accountId),
@@ -44,13 +41,9 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
 
   const shouldDisplayOrgaData =
     !!organizationVersions.find((org) => org.isCR || org.parentId) && account.environment !== Environment.CUT
-  const shouldRenewLicense =
-    accountOrganizationVersion &&
-    accountOrganizationVersion.environment === Environment.BC &&
-    !accountOrganizationVersion.activatedLicence.includes(currentDate.getFullYear() + 1) &&
-    currentDate.getMonth() + 1 >= renewalMessageStartMonth // month + 1 is to use "human" month : january is 1, december is 12
+  const shouldRenewLicenseText = shouldRenewLicenceText(accountOrganizationVersion)
 
-  const withOrganizationCard = shouldDisplayOrgaData || shouldRenewLicense
+  const withOrganizationCard = shouldDisplayOrgaData || !!shouldRenewLicenseText
 
   return (
     <DynamicTheme environment={environment}>
@@ -61,7 +54,7 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
             account={account}
             organizationVersions={organizationVersions}
             shouldDisplayOrgaData={shouldDisplayOrgaData}
-            shouldRenewLicense={shouldRenewLicense}
+            shouldRenewLicenseText={shouldRenewLicenseText}
           />
         )}
         <Box component="main" className={styles.content}>
