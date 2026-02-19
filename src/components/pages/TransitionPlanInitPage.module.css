@@ -1,0 +1,18 @@
+.container {
+  min-height: calc(100vh - var(--total-header-height) - 2.75rem);
+}
+
+.emptyStateCard {
+  padding: 3rem 2.5rem;
+  text-align: center;
+  max-width: 600px;
+}
+
+.emptyStateCard h5 {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.ctaWrapper {
+  padding: 2rem 0;
+}

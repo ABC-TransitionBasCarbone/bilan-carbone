@@ -52,6 +52,7 @@ interface Props {
   sectenData: SectenInfo[]
   studyEmissions?: number
   pastStudies?: PastStudy[]
+  defaultSnbcSectoralPercentages?: SectorPercentages | null
 }
 
 const defaultValues: TrajectoryFormData = {
@@ -84,6 +85,7 @@ const TrajectoryCreationModal = ({
   sectenData,
   studyEmissions = 0,
   pastStudies = [],
+  defaultSnbcSectoralPercentages,
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectoryModal')
   const isEditMode = !!trajectory
@@ -386,7 +388,8 @@ const TrajectoryCreationModal = ({
         { targetYear: 2050, reductionRate: snbcRates.rateTo2050 },
       ]
     } else if (data.trajectoryType === TrajectoryType.SNBC_SECTORAL) {
-      if (!data.sectorPercentages) {
+      const sectorPercentages = data.sectorPercentages ?? defaultSnbcSectoralPercentages
+      if (!sectorPercentages) {
         setIsLoading(false)
         throw new Error('Sector percentages are required')
       }
@@ -396,7 +399,7 @@ const TrajectoryCreationModal = ({
         throw new Error('Unable to calculate SNBC reduction rates')
       }
 
-      input.sectorPercentages = data.sectorPercentages
+      input.sectorPercentages = sectorPercentages
 
       const objectives: { targetYear: number; reductionRate: number }[] = []
 
@@ -461,6 +464,7 @@ const TrajectoryCreationModal = ({
             studyYear={studyYear}
             snbcRates={snbcRates}
             correctedObjectives={correctedObjectives}
+            defaultSnbcSectoralPercentages={defaultSnbcSectoralPercentages}
           />
         )}
       </Modal>
@@ -505,6 +509,7 @@ const TrajectoryCreationModal = ({
           studyYear={studyYear}
           snbcRates={snbcRates}
           correctedObjectives={correctedObjectives}
+          defaultSnbcSectoralPercentages={defaultSnbcSectoralPercentages}
         />
       )}
     </ModalStepper>

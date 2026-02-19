@@ -15,6 +15,7 @@
     "tags": "Tags",
     "posts": "Posts",
     "selectedPlural": "selected",
+    "moreInfo": "More info",
     "action": {
       "create": "Create",
       "edit": "Edit",

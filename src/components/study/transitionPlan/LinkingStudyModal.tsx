@@ -17,14 +17,12 @@ import { PastStudy } from '@/utils/trajectory'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
 import { StudyResultUnit } from '@prisma/client'
-import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import textUnitStyles from '../../dynamic-form/inputFields/TextUnitInput.module.css'
-import styles from './LinkedStudies.module.css'
 
 type PastStudyType = PastStudy['type']
 
@@ -188,7 +186,7 @@ const LinkingStudyModal = ({
             </div>
           </>
         ) : (
-          <Form onSubmit={handleSubmit(linkExternalStudy)} className={classNames(styles.form, 'grow justify-center')}>
+          <Form onSubmit={handleSubmit(linkExternalStudy)} className={'grow justify-center gapped-2'}>
             <div className="flex-col gapped1">
               <FormTextField
                 control={control}

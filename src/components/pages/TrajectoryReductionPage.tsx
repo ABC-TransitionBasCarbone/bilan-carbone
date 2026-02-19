@@ -1,11 +1,9 @@
 'use client'
 
 import Box from '@/components/base/Box'
-import Button from '@/components/base/Button'
 import { MultiSelect } from '@/components/base/MultiSelect'
 import PersistentToast from '@/components/base/PersistentToast'
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
-import Image from '@/components/document/Image'
 import {
   TRAJECTORY_15_ID,
   TRAJECTORY_SNBC_AGRICULTURE_ID,
@@ -22,29 +20,26 @@ import { TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
-import { deleteTransitionPlan, initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
+import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
+import { deleteTransitionPlan } from '@/services/serverFunctions/transitionPlan'
 import { getStudyTotalCo2Emissions } from '@/services/study'
-import { calculateTrajectoriesWithHistory, convertToPastStudies } from '@/utils/trajectory'
+import { convertToPastStudies } from '@/utils/trajectory'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Tooltip, Typography } from '@mui/material'
 import type { Action, ExternalStudy, SectenInfo, TransitionPlan } from '@prisma/client'
+import { TrajectoryType } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import Block from '../base/Block'
 import SelectStudySite from '../study/site/SelectStudySite'
 import MyTrajectoriesCard from '../study/trajectory/MyTrajectoriesCard'
-import LinkedStudies from '../study/transitionPlan/LinkedStudies'
 import TrajectoryGraph from '../study/transitionPlan/TrajectoryGraph'
 import TransitionPlanOnboarding from '../study/transitionPlan/TransitionPlanOnboarding'
 import styles from './TrajectoryReductionPage.module.css'
-
-const TransitionPlanSelectionModal = dynamic(
-  () => import('@/components/study/transitionPlan/TransitionPlanSelectionModal'),
-)
 
 const TrajectoryCreationModal = dynamic(() => import('@/components/study/trajectory/TrajectoryCreationModal'))
 const ConfirmDeleteModal = dynamic(() => import('@/components/modals/ConfirmDeleteModal'))
@@ -75,17 +70,22 @@ const TrajectoryReductionPage = ({
   const t = useTranslations('study.transitionPlan')
   const tNav = useTranslations('nav')
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { callServerFunction } = useServerFunction()
   const tStudyNav = useTranslations('study.navigation')
-  const [showModal, setShowModal] = useState(false)
   const [showTrajectoryModal, setShowTrajectoryModal] = useState(false)
   const [showSuccessToast, setShowSuccessToast] = useState(false)
   const [selectedCustomTrajectories, setSelectedCustomTrajectories] = useState<string[]>([])
   const [selectedSnbcTrajectories, setSelectedSnbcTrajectories] = useState<string[]>([TRAJECTORY_SNBC_GENERAL_ID])
   const [selectedSbtiTrajectories, setSelectedSbtiTrajectories] = useState<string[]>([TRAJECTORY_15_ID])
-  const [withDependencies, setWithDependencies] = useState<boolean>(true)
   const [mounted, setMounted] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
+
+  useEffect(() => {
+    if (searchParams.get('openModal') === 'true') {
+      setShowTrajectoryModal(true)
+    }
+  }, [searchParams])
 
   useEffect(() => {
     setMounted(true)
@@ -103,16 +103,10 @@ const TrajectoryReductionPage = ({
     if (storedSbti) {
       setSelectedSbtiTrajectories(JSON.parse(storedSbti))
     }
-
-    const storedDependencies = localStorage.getItem(`trajectory-with-dependencies-${study.id}`)
-    if (storedDependencies) {
-      setWithDependencies(JSON.parse(storedDependencies))
-    }
   }, [study.id])
 
   useLocalStorageSync(`trajectory-sbti-selected-${study.id}`, selectedSbtiTrajectories, mounted)
   useLocalStorageSync(`trajectory-snbc-selected-${study.id}`, selectedSnbcTrajectories, mounted)
-  useLocalStorageSync(`trajectory-with-dependencies-${study.id}`, withDependencies, mounted)
   useLocalStorageSync(`trajectory-custom-selected-${study.id}`, selectedCustomTrajectories, mounted)
 
   // Local storage may keep leftover custom trajectory ids from previous transition plans
@@ -140,18 +134,6 @@ const TrajectoryReductionPage = ({
     [router, trajectories.length],
   )
 
-  const handleConfirmPlanSelection = useCallback(
-    async (selectedPlanId?: string) => {
-      await callServerFunction(() => initializeTransitionPlan(study.id, selectedPlanId), {
-        onSuccess: async () => {
-          setShowModal(false)
-          router.refresh()
-        },
-      })
-    },
-    [callServerFunction, study.id, router],
-  )
-
   const handleConfirmDelete = useCallback(async () => {
     await callServerFunction(() => deleteTransitionPlan(study.id), {
       onSuccess: async () => {
@@ -162,136 +144,23 @@ const TrajectoryReductionPage = ({
   }, [callServerFunction, study.id, router])
 
   const pastStudies = useMemo(
-    () =>
-      convertToPastStudies(linkedStudies, linkedExternalStudies, withDependencies, validatedOnly, study.resultsUnit),
-    [linkedStudies, linkedExternalStudies, withDependencies, validatedOnly, study.resultsUnit],
+    () => convertToPastStudies(linkedStudies, linkedExternalStudies, true, validatedOnly, study.resultsUnit),
+    [linkedStudies, linkedExternalStudies, validatedOnly, study.resultsUnit],
   )
 
   const studyTotalEmissions = useMemo(() => {
     return getStudyTotalCo2Emissions(study, true, validatedOnly)
   }, [study, validatedOnly])
 
-  const unvalidatedSourcesInfo = useMemo(() => {
-    let totalCount = 0
-    const currentStudyUnvalidatedCount = study.emissionSources.filter((source) => !source.validated).length
-
-    totalCount += currentStudyUnvalidatedCount
-
-    const linkedStudiesWithUnvalidatedSources = linkedStudies
-      .map((linkedStudy) => {
-        const unvalidatedCount = linkedStudy.emissionSources.filter((source) => !source.validated).length
-        totalCount += unvalidatedCount
-        return unvalidatedCount > 0
-          ? {
-              id: linkedStudy.id,
-              name: linkedStudy.name,
-              unvalidatedCount,
-            }
-          : null
-      })
-      .filter((study) => study !== null) as Array<{ id: string; name: string; unvalidatedCount: number }>
-
-    return {
-      currentStudyCount: currentStudyUnvalidatedCount,
-      linkedStudies: linkedStudiesWithUnvalidatedSources,
-      totalCount,
-    }
-  }, [study.emissionSources, linkedStudies])
-
-  const trajectoryData = useMemo(() => {
-    const studyStartYear = study.startDate.getFullYear()
-
-    if (!transitionPlan) {
-      return {
-        trajectory15Data: null,
-        trajectoryWB2CData: null,
-        snbcData: {},
-        customTrajectoriesData: [],
-        actionBasedTrajectoryData: null,
-        studyStartYear,
-      }
-    }
-
-    const trajectoryResult = calculateTrajectoriesWithHistory({
-      study,
-      withDependencies,
-      validatedOnly,
-      trajectories,
-      actions,
-      pastStudies,
-      selectedSnbcTrajectories,
-      selectedSbtiTrajectories,
-      selectedCustomTrajectoryIds: selectedCustomTrajectories,
-      sectenData,
-    })
-
-    const customTrajectoriesData = trajectoryResult.customTrajectories.map((trajData) => {
-      const traj = trajectories.find((t) => t.id === trajData.id)
-      return {
-        trajectoryData: trajData.data,
-        label: traj?.name || '',
-        color: undefined,
-      }
-    })
-
-    return {
-      trajectory15Data: trajectoryResult.sbti15,
-      trajectoryWB2CData: trajectoryResult.sbtiWB2C,
-      snbcData: trajectoryResult.snbc,
-      customTrajectoriesData,
-      actionBasedTrajectoryData: trajectoryResult.actionBased,
-      studyStartYear,
-    }
-  }, [
-    transitionPlan,
-    study,
-    withDependencies,
-    validatedOnly,
-    trajectories,
-    actions,
-    pastStudies,
-    selectedSnbcTrajectories,
-    selectedSbtiTrajectories,
-    selectedCustomTrajectories,
-    sectenData,
-  ])
+  const defaultSnbcSectoralPercentages = useMemo(() => {
+    const t = trajectories.find((t) => t.type === TrajectoryType.SNBC_SECTORAL)
+    return (t?.sectorPercentages as SectorPercentages) ?? null
+  }, [trajectories])
 
   const canCreateTrajectory = canEdit && studyTotalEmissions > 0
 
   if (!transitionPlan) {
-    if (canEdit) {
-      return (
-        <div className={classNames(styles.container, 'flex-cc w100')}>
-          <Box className={classNames(styles.emptyStateCard, 'flex-col align-center')}>
-            <Image src="/img/CR.png" alt="Transition Plan" width={177} height={119} />
-            <h5>{t('emptyState.title')}</h5>
-            <p>{customRich(t, 'emptyState.subtitle')}</p>
-            <Button onClick={() => setShowModal(true)} size="large" className={'mt-2'}>
-              {t('startButton')}
-            </Button>
-          </Box>
-
-          {showModal && (
-            <TransitionPlanSelectionModal
-              studyId={study.id}
-              open={showModal}
-              onClose={() => setShowModal(false)}
-              onConfirm={handleConfirmPlanSelection}
-            />
-          )}
-        </div>
-      )
-    } else {
-      return (
-        <div className={classNames(styles.container, 'flex-cc')}>
-          <Box className={classNames(styles.emptyStateCard, 'flex-col align-center')}>
-            <Image src="/img/CR.png" alt="Transition Plan not initialized" width={177} height={119} />
-            <h5>{t('notInitialized')}</h5>
-            <p>{t('validatorRequired')}</p>
-          </Box>
-        </div>
-      )
-    }
+    return null
   }
 
   return (
@@ -329,34 +198,23 @@ const TrajectoryReductionPage = ({
         }
       >
         <div className="flex-col gapped2">
-          <div className={classNames(styles.collapsibleBlocks, 'flex-col gapped0')}>
-            <TransitionPlanOnboarding
-              title={t('trajectories.onboarding.title')}
-              description={t('trajectories.onboarding.description')}
-              storageKey="trajectory-reduction"
-              detailedContent={customRich(t, 'trajectories.onboarding.detailedInfo', {
-                snbc: (chunks) => (
-                  <a href={process.env.NEXT_PUBLIC_SNBC_URL || '#'} target="_blank" rel="noopener noreferrer">
-                    {chunks}
-                  </a>
-                ),
-                sbti: (chunks) => (
-                  <a href={process.env.NEXT_PUBLIC_SBTI_URL || '#'} target="_blank" rel="noopener noreferrer">
-                    {chunks}
-                  </a>
-                ),
-              })}
-            />
-
-            <LinkedStudies
-              transitionPlanId={transitionPlan.id}
-              studyId={study.id}
-              studyYear={study.startDate}
-              pastStudies={pastStudies}
-              canEdit={canEdit}
-              studyUnit={study.resultsUnit}
-            />
-          </div>
+          <TransitionPlanOnboarding
+            title={t('trajectories.onboarding.title')}
+            description={t('trajectories.onboarding.description')}
+            storageKey="trajectory-reduction"
+            detailedContent={customRich(t, 'trajectories.onboarding.detailedInfo', {
+              snbc: (chunks) => (
+                <a href={process.env.NEXT_PUBLIC_SNBC_URL || '#'} target="_blank" rel="noopener noreferrer">
+                  {chunks}
+                </a>
+              ),
+              sbti: (chunks) => (
+                <a href={process.env.NEXT_PUBLIC_SBTI_URL || '#'} target="_blank" rel="noopener noreferrer">
+                  {chunks}
+                </a>
+              ),
+            })}
+          />
 
           <div className={styles.trajectoryCardsGrid}>
             <Box className={classNames('p125 flex-col justify-between gapped2', styles.trajectoryCard)}>
@@ -447,21 +305,16 @@ const TrajectoryReductionPage = ({
           </div>
 
           <TrajectoryGraph
-            studyName={study.name}
-            studyUnit={study.resultsUnit}
-            trajectory15Data={trajectoryData.trajectory15Data}
-            trajectoryWB2CData={trajectoryData.trajectoryWB2CData}
-            snbcData={trajectoryData.snbcData}
-            customTrajectoriesData={trajectoryData.customTrajectoriesData}
-            actionBasedTrajectoryData={trajectoryData.actionBasedTrajectoryData}
-            studyStartYear={trajectoryData.studyStartYear}
+            study={study}
+            trajectories={trajectories}
+            actions={actions}
+            linkedStudies={linkedStudies}
+            sectenData={sectenData}
             selectedSnbcTrajectories={selectedSnbcTrajectories}
             selectedSbtiTrajectories={selectedSbtiTrajectories}
-            withDependencies={withDependencies}
-            setWithDependencies={setWithDependencies}
+            selectedCustomTrajectories={selectedCustomTrajectories}
             pastStudies={pastStudies}
             validatedOnly={validatedOnly}
-            unvalidatedSourcesInfo={unvalidatedSourcesInfo}
             studyEmissions={studyTotalEmissions}
           />
 
@@ -472,11 +325,12 @@ const TrajectoryReductionPage = ({
               transitionPlanId={transitionPlan.id}
               onSuccess={handleCreateTrajectorySuccess}
               trajectory={null}
-              isFirstCreation={trajectories.length === 0}
+              isFirstCreation={trajectories.length <= 1} // There is one default SNBC trajectory created when saving sector percentages
               studyYear={study.startDate.getFullYear()}
               sectenData={sectenData}
               studyEmissions={studyTotalEmissions}
               pastStudies={pastStudies}
+              defaultSnbcSectoralPercentages={defaultSnbcSectoralPercentages}
             />
           )}
 
