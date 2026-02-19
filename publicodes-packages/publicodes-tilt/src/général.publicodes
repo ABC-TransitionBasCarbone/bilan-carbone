@@ -2,11 +2,11 @@ général:
   note: Les questions de cette catégories ne devront pas faire partie des variables manquantes au sein d'une page de form.
 
 général . nom:
-  question: Quel est le nom de l'association pour laquelle vous souhaitez réaliser une estimation d’impact carbone ? 
-  #Je sais pas si on peut faire une question avec un champ texte en réponse 
+  question: Quel est le nom de l'association pour laquelle vous souhaitez réaliser une estimation d’impact carbone ?
+  #Je sais pas si on peut faire une question avec un champ texte en réponse
 
 général. code postal:
-  question: Quel est le code postal de l'association ? 
+  question: Quel est le code postal de l'association ?
 
 général . année:
   question: Pour quelle année réalisez-vous cette estimation d’impact ?
@@ -21,11 +21,11 @@ général . bénévoles:
   unité: personne
 
 général . bénéficiaires:
-  question: Combien de bénéficiaires ont profité des services de l'association en  [Année] ? 
+  question: Combien de bénéficiaires ont profité des services de l'association en  [Année] ?
   unité: personne
 
 général. budget:
-  question: Quel est le budget de fonctionnement de l'association ? 
+  question: Quel est le budget de fonctionnement de l'association ?
   unité: k€
 
 général . type:

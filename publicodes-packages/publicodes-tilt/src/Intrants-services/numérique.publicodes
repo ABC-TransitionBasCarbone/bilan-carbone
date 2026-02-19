@@ -1,6 +1,6 @@
 intrants-services . numérique:
-  question: Veuillez indiquer vos usages numériques sur une année 
-  formule: 
+  question: Veuillez indiquer vos usages numériques sur une année
+  formule:
     somme:
       - streaming
       - visioconférence
@@ -63,7 +63,7 @@ intrants-services . numérique . stockage-cloud:
       question: Combien de Go de données stockées sur le cloud ?
       par défaut: 0
       unité: Go
-      
+
     FE:
       valeur: 0.0116
       unité: kgCO2e/Go
@@ -71,4 +71,3 @@ intrants-services . numérique . stockage-cloud:
         nom: Stocker 1Go de données sur le cloud
         source: Base Negaoctet
   unité: kgCO2e
-

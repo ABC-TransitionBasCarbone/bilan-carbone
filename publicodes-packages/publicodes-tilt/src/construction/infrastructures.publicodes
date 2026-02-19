@@ -1,7 +1,7 @@
 construction . infrastructure:
   formule:
     variations:
-      - si: 
+      - si:
           toutes ces conditions:
             - est défini: parking présent
             - parking présent = oui
@@ -13,12 +13,12 @@ construction . infrastructure:
       valeur: 50
       unité: an
       note: On amortit sur 50 ans dans tous les cas, sans demander de quand date le parking pour simplifier la saisie de l'utilisateur
-    
+
     surface place:
       valeur: 12
       unité: m2
       note: On considère qu'une place fait 12 m2
-    
+
     FE:
       valeur: 92
       unité: kgCO2e/m2

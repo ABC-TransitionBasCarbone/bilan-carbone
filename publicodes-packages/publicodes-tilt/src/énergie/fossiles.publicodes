@@ -12,7 +12,7 @@
       unité: kgCO2e/m3
       meta:
         id: 37138
-        
+
 énergie . fioul:
   applicable si: énergie . fioul . présent
   titre: Fioul
@@ -22,7 +22,7 @@
     consommation:
       question: Quelle est votre consommation annuelle de fioul (hors consommations par les véhicules)
       unité: litre
-      
+
     FE:
       valeur: 3.18586
       unité: kgCO2e/litre
