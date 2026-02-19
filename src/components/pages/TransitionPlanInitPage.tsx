@@ -17,6 +17,7 @@ import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
 import { initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
+import { getStudyTotalCo2Emissions } from '@/services/study'
 import { convertToPastStudies } from '@/utils/trajectory'
 import type { ExternalStudy, SectenInfo, TransitionPlan } from '@prisma/client'
 import { TrajectoryType } from '@prisma/client'
@@ -153,6 +154,10 @@ const TransitionPlanInitPage = ({
     [linkedStudies, linkedExternalStudies, validatedOnly, study.resultsUnit],
   )
 
+  const studyTotalEmissions = useMemo(() => {
+    return getStudyTotalCo2Emissions(study, true, validatedOnly)
+  }, [study, validatedOnly])
+
   if (!transitionPlan) {
     if (canEdit) {
       return (
@@ -281,6 +286,7 @@ const TransitionPlanInitPage = ({
           >
             <TrajectoryGraph
               study={study}
+              studyEmissions={studyTotalEmissions}
               linkedStudies={linkedStudies}
               sectenData={sectenData}
               trajectories={defaultSnbcSectoralTrajectory ? [defaultSnbcSectoralTrajectory] : []}
