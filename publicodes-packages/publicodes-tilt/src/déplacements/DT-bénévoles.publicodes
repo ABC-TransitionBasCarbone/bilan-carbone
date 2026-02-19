@@ -15,8 +15,7 @@ déplacements . DT-bénévoles . avec:
       - est défini: MEP présent
       - MEP présent = oui
   titre: émissions des trajets domicile-travail des bénévoles (avec enquête MEP)
-  formule: 
-  formule: 
+  formule:
     somme:
       - produit:
         - distance
