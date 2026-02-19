@@ -39,7 +39,7 @@
       unité: kgCO2e/kg
       meta:
         id: 34942
-        
+
 énergie . combustibles organiques . bois:
   titre: Bois bûches
   formule: consommation * FE

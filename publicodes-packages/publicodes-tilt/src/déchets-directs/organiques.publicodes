@@ -9,7 +9,7 @@ déchets . organiques:
       meta:
         id: 34638
         nom: Déchets de cuisine et déchets verts - Compostage industriel - Impacts
-        
+
     poids:
       question: Déchets verts, compost et déchets organiques
       unité: tonne

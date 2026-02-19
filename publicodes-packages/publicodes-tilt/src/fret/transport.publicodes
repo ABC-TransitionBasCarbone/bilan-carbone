@@ -1,12 +1,11 @@
 fret . transport:
   titre: Transport de marchandise
-  formule: 
+  formule:
     somme:
       - carburant
       - empreinte
 
-  
-fret . transport . présent: 
+fret . transport . présent:
   question: Est-ce que votre association possède ou loue des véhicules pour transporter des marchandises ?
 
 fret . transport . carburant:
@@ -16,9 +15,9 @@ fret . transport . carburant:
   unité: kgCO2e
   avec:
     litre:
-      question: Combien de litres de carburants ceux-ci consomment-ils ? 
+      question: Combien de litres de carburants ceux-ci consomment-ils ?
       unité: litre
-    
+
     FE:
       valeur: 3.1
       unité: kgCO2e/litre
@@ -28,8 +27,8 @@ fret . transport . carburant:
 
 fret . transport . empreinte:
   titre: Empreinte des livraisons par des modes non possédés
-  formule: 
-    somme: 
+  formule:
+    somme:
       - local
       - national
       - europe
@@ -43,7 +42,7 @@ fret . transport . livraisons:
 
 fret . transport . poids:
   titre: Poids moyen des livraisons
-  question: En moyenne, pour une livraison, quel est le poids transporté ?  
+  question: En moyenne, pour une livraison, quel est le poids transporté ?
   unité: kg
 
 ##### Fret local #####
@@ -52,10 +51,10 @@ fret . transport . local:
   titre: empreinte livraisons locales
   formule: poids * provenance * 50 * split
   unité: kgCO2e
-  note: Pour les livraisons locales on compte environ 50km 
+  note: Pour les livraisons locales on compte environ 50km
 
 fret . transport . local . split:
-  formule: routier * 1 
+  formule: routier * 1
   avec:
     routier:
       valeur: 0.84
@@ -64,7 +63,7 @@ fret . transport . local . split:
         id: 43735
         nom: VUL/< 3,5 tonnes/Diesel routier, incorporation 7 % de biodiesel
   unité: kgCO2e/t.km
-  
+
 fret . transport . local . provenance:
   titre: livraisons locales
   question: Sur ces livraisons, combien sont en provenance de fournisseurs locaux (moins de 50 km) ?
@@ -76,7 +75,7 @@ fret . transport . national:
   titre: empreinte livraisons nationales
   formule: poids * provenance * 500 * split
   unité: kgCO2e
-  note : Pour les livraisons nationales on compte environ 500km (~Paris-Marseille)
+  note: Pour les livraisons nationales on compte environ 500km (~Paris-Marseille)
 
 fret . transport . national . split:
   formule: routier * 0.87 + ferroviaire * 0.1 + fluvial * 0.03
@@ -88,14 +87,14 @@ fret . transport . national . split:
       meta:
         id: 43718
         nom: Rigide/20 à 26 tonnes/Diesel routier, incorporation 7 % de biodiesel
-    
+
     ferroviaire:
       valeur: 0.00604
       unité: kgCO2e/t.km
       meta:
         id: 47693
         nom: Train/Traction électrique/Chargement dense
-    
+
     fluvial:
       valeur: 0.0662
       unité: kgCO2e/t.km
@@ -107,7 +106,7 @@ fret . transport . national . split:
 fret . transport . national . provenance:
   titre: livraisons nationales
   question: Sur ces livraisons, combien sont en provenance de fournisseurs nationaux (entre 50 km et 500 km) ?
-  unité: unité  
+  unité: unité
 
 ##### Fret europe #####
 
@@ -115,7 +114,7 @@ fret . transport . europe:
   titre: empreinte livraisons européennes
   formule: poids * provenance * 1500 * split
   unité: kgCO2e
-  note : Pour les livraisons européeennes on compte environ 1500 km (~Paris-Stockholm/Paris-Varsovie, …)
+  note: Pour les livraisons européeennes on compte environ 1500 km (~Paris-Stockholm/Paris-Varsovie, …)
 
 fret . transport . europe . split:
   formule: routier * 0.26 + ferroviaire * 0.06 + maritime * 0.68
@@ -126,7 +125,7 @@ fret . transport . europe . split:
       meta:
         id: 43718
         nom: Rigide/20 à 26 tonnes/Diesel routier, incorporation 7 % de biodiesel
-    
+
     ferroviaire:
       valeur: 0.0367
       unité: kgCO2e/t.km
@@ -134,7 +133,7 @@ fret . transport . europe . split:
         id: 37412b82-a5ab-437a-8be1-14d4a15ef7aa
         nom: Transport de marchandises en train électrique
         note: FE ecoinvent,  https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Freight_transport_statistics_-_modal_split
-    
+
     maritime:
       valeur: 0.00539
       unité: kgCO2e/t.km
@@ -154,7 +153,7 @@ fret . transport . international:
   titre: empreinte livraisons internationales
   formule: poids * provenance * 10000 * split
   unité: kgCO2e
-  note : Pour les livraisons internationales on compte environ 10000 km (~Paris-Tokyo)
+  note: Pour les livraisons internationales on compte environ 10000 km (~Paris-Tokyo)
 
 fret . transport . international . split:
   formule: aérien * 0.2 + maritime * 0.8
@@ -165,7 +164,7 @@ fret . transport . international . split:
       meta:
         id: 43670
         nom: Avion cargo/Plus de 100 tonnes, >5000 kms, 2023/AVEC trainées
-    
+
     maritime:
       valeur: 0.00539
       unité: kgCO2e/t.km
@@ -174,7 +173,7 @@ fret . transport . international . split:
         nom: Porte-conteneurs/> 20 000TEU/GNL
   unité: kgCO2e/t.km
 
-fret . transport . international . provenance: 
+fret . transport . international . provenance:
   titre: livraisons internationales
   question: Sur ces livraisons, combien sont en provenance de fournisseurs internationaux (plus de 1500 km) ?
   unité: unité

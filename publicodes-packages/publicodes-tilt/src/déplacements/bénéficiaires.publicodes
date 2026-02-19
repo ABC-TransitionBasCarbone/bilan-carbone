@@ -6,7 +6,7 @@ déplacements . bénéficiaires:
             - est défini: se déplacent
             - se déplacent = oui
         alors:
-          somme: 
+          somme:
             - voiture * part voiture * déplacements . DT-bénévoles . sans . voiture . split ## on reprend car deja calculé
             - actif * part actif * 0 ## on néglige l'impact des modes actifs (vélo, marche, trottinette...)
             - deux roues * part deux roues * FE deux roues
@@ -30,13 +30,11 @@ déplacements . bénéficiaires:
       - sinon: 0
   unité: kgCO2e
 
-
 déplacements . bénéficiaires . se déplacent:
   question: Les bénéficiaires de vos produits ou services se déplacent-ils pour en profiter ?
 
-
 déplacements . bénéficiaires . voiture:
-  applicable si: 
+  applicable si:
     toutes ces conditions:
       - est défini: part voiture
       - part voiture > 0
@@ -48,10 +46,8 @@ déplacements . bénéficiaires . part voiture:
   unité: "%"
   valeurParDéfaut: 0
 
-
-
 déplacements . bénéficiaires . actif:
-  applicable si: 
+  applicable si:
     toutes ces conditions:
       - est défini: part actif
       - part actif > 0
@@ -63,10 +59,8 @@ déplacements . bénéficiaires . part actif:
   unité: "%"
   valeurParDéfaut: 0
 
-
-
 déplacements . bénéficiaires . deux roues:
-  applicable si: 
+  applicable si:
     toutes ces conditions:
       - est défini: part deux roues
       - part deux roues > 0
@@ -78,10 +72,8 @@ déplacements . bénéficiaires . part deux roues:
   unité: "%"
   valeurParDéfaut: 0
 
-
-
 déplacements . bénéficiaires . transport en commun:
-  applicable si: 
+  applicable si:
     toutes ces conditions:
       - est défini: part transport en commun
       - part transport en commun > 0
@@ -93,10 +85,8 @@ déplacements . bénéficiaires . part transport en commun:
   unité: "%"
   valeurParDéfaut: 0
 
-
-
 déplacements . bénéficiaires . train:
-  applicable si: 
+  applicable si:
     toutes ces conditions:
       - est défini: part train
       - part train > 0
@@ -108,10 +98,8 @@ déplacements . bénéficiaires . part train:
   unité: "%"
   valeurParDéfaut: 0
 
-
-
 déplacements . bénéficiaires . avion:
-  applicable si: 
+  applicable si:
     toutes ces conditions:
       - est défini: part avion
       - part avion > 0
@@ -122,4 +110,3 @@ déplacements . bénéficiaires . part avion:
   question: Quel pourcentage des trajets en avion ?
   unité: "%"
   valeurParDéfaut: 0
-

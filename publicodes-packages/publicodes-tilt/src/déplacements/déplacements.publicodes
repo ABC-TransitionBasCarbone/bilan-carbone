@@ -10,10 +10,10 @@ déplacements:
   unité: kgCO2e
 
 déplacements .  MEP présent:
-  question : Avez-vous réalisé une campagne de sensibilisation via MEP ?
+  question: Avez-vous réalisé une campagne de sensibilisation via MEP ?
 
 déplacements . MEP présent . nombre bénévoles:
-  applicable si: 
+  applicable si:
     toutes ces conditions:
       - est défini: MEP présent
       - MEP présent = oui
@@ -21,7 +21,7 @@ déplacements . MEP présent . nombre bénévoles:
   unité: unité
 
 déplacements . MEP présent . nombre salariés:
-  applicable si: 
+  applicable si:
     toutes ces conditions:
       - est défini: MEP présent
       - MEP présent = oui

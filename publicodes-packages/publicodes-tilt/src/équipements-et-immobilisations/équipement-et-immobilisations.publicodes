@@ -44,7 +44,7 @@
       - téléphones portables
       - vidéoprojecteurs
       - autres écrans
-  unité: kgCO2e 
+  unité: kgCO2e
 
 équipements et immobilisations . ordinateurs fixes:
   formule: FE * quantité
@@ -57,7 +57,7 @@
         nom: Ordinateurs fixes
     quantité:
       question: Ordinateurs fixes
-        
+
 équipements et immobilisations . ordinateurs portables:
   formule: FE * quantité
   avec:
@@ -69,7 +69,7 @@
         nom: Ordinateurs portables
     quantité:
       question: Ordinateurs portables
-      
+
 équipements et immobilisations . photocopieurs:
   formule: FE * quantité
   avec:

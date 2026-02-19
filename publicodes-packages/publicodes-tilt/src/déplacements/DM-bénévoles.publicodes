@@ -6,26 +6,25 @@ déplacements . DM-bénévoles:
       - sans
   unité: kgCO2e
 
-
 ## Cette fonction permet de calculer les émissions totales des bénévoles à partir des émissions moyennes par mode de ceux qui ont répondu.
 
 déplacements . DM-bénévoles . avec:
-  applicable si: 
+  applicable si:
     toutes ces conditions:
       - est défini: MEP présent
       - MEP présent = oui
   titre: émissions des trajets liés à des missions des bénévoles (avec enquête MEP)
   formule: émissions MEP * général . bénévoles / MEP présent . nombre bénévoles ## produit en croix pour extrapoler les émissions totales à partir des émissions de MEP
- 
+
   avec:
     émissions MEP:
       valeur:
         somme:
-        - voiture
-        - train
-        - avion
-        - transports en commun
-        - deux roues
+          - voiture
+          - train
+          - avion
+          - transports en commun
+          - deux roues
       avec:
         voiture:
           question: D'après MEP, quelle est la moyenne d'émissions par bénévole pour des déplacements en voiture liés à des missions ?
@@ -44,9 +43,7 @@ déplacements . DM-bénévoles . avec:
           unité: kgCO2e
     unité: kgCO2e
 
-
 ## Ici on calcule les émissions dans le cas ou il n'y pas eu de campagne MEP
-
 
 déplacements . DM-bénévoles . sans:
   titre: émissions des trajets liés à des missions des bénévoles (sans enquête MEP)
@@ -58,9 +55,9 @@ déplacements . DM-bénévoles . sans:
       - transports en commun
       - avion
   unité: kgCO2e
-  
+
 déplacements . DM-bénévoles . sans . voiture:
-  applicable si: 
+  applicable si:
     toutes ces conditions:
       - est défini: MEP présent
       - MEP présent = non
@@ -77,12 +74,12 @@ déplacements . DM-bénévoles . sans . voiture . split:
   note: source basée sur le parc automobile de voiture particulière en France en 2024 avec extrapolation pour ommettre les autres modes (GPL Hydrogène etc...) https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2024
   avec:
     hybride:
-      valeur: 0.18 
+      valeur: 0.18
       unité: kgCO2e/km
       meta:
         id: 28008
         nom: Voiture particulière/Coeur de gamme - Véhicule compact/Hybride, full, P2
-    
+
     électrique:
       valeur: 0.1
       unité: kgCO2e/km
@@ -112,9 +109,8 @@ déplacements . DM-bénévoles . sans . voiture . occupation:
   note: source pour le taux d'occupation d'une voiture en France pour des trajets D-T https://www.citego.org/bdf_fiche-document-3431_fr.html
   unité: unité
 
-
 déplacements . DM-bénévoles . sans . train:
-  applicable si: 
+  applicable si:
     toutes ces conditions:
       - est défini: MEP présent
       - MEP présent = non
@@ -133,10 +129,8 @@ déplacements . DM-bénévoles . sans . train:
         note: On considère que la majorité des déplacements en train pour du DM est en TER
   unité: kgCO2e
 
-
-
 déplacements . DM-bénévoles . sans . transports en commun:
-  applicable si: 
+  applicable si:
     toutes ces conditions:
       - est défini: MEP présent
       - MEP présent = non
@@ -147,10 +141,9 @@ déplacements . DM-bénévoles . sans . transports en commun:
       unite: km
   unité: kgCO2e
 
-
 déplacements . DM-bénévoles . sans . transports en commun . split:
   formule: bus * 0.5 + rail * 0.5 ## à challenger
-  note: 
+  note:
   avec:
     bus:
       valeur: 0.15
@@ -158,15 +151,14 @@ déplacements . DM-bénévoles . sans . transports en commun . split:
       meta:
         id: 28000
         nom: Autobus moyen/Agglomération de plus de 250 000 habitants
-    
+
     rail:
       valeur: 0.00356
       unité: kgCO2e/km
       note: source doc NGC https://nosgestesclimat.fr/documentation/transport/transports-commun/m%C3%A9tro-ou-tram
 
-
 déplacements . DM-bénévoles . sans . deux roues:
-  applicable si: 
+  applicable si:
     toutes ces conditions:
       - est défini: MEP présent
       - MEP présent = non
@@ -184,7 +176,6 @@ déplacements . DM-bénévoles . sans . deux roues:
         nom: Cyclomoteur/Mixte/2023
   unité: kgCO2e
 
-
 déplacements . DM-bénévoles . sans . avion:
 formule:
   somme:
@@ -193,11 +184,11 @@ formule:
     - long courrier
 
 déplacements . DM-bénévoles . sans . avion . court courrier:
-  applicable si: 
+  applicable si:
     toutes ces conditions:
       - est défini: MEP présent
       - MEP présent = non
-  formule: distance * FE 
+  formule: distance * FE
   avec:
     distance:
       question: Combien de km ont été parcourus cette année par vos bénévoles avion court courrier pour des déplacements liés à des missions ?
@@ -212,7 +203,7 @@ déplacements . DM-bénévoles . sans . avion . court courrier:
   unité: kgCO2e
 
 déplacements . DM-bénévoles . sans . avion . moyen courrier:
-  applicable si: 
+  applicable si:
     toutes ces conditions:
       - est défini: MEP présent
       - MEP présent = non
@@ -231,7 +222,7 @@ déplacements . DM-bénévoles . sans . avion . moyen courrier:
   unité: kgCO2e
 
 déplacements . DM-bénévoles . sans . avion . long courrier:
-  applicable si: 
+  applicable si:
     toutes ces conditions:
       - est défini: MEP présent
       - MEP présent = non
@@ -245,6 +236,6 @@ déplacements . DM-bénévoles . sans . avion . long courrier:
       valeur: 0.15
       unité: kgCO2e/km
       meta:
-        id: 43773 
+        id: 43773
         nom: Avion passagers/>220 sièges, >5000 kms, 2023/AVEC trainées
   unité: kgCO2e

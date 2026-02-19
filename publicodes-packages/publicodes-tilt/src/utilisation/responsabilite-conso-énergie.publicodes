@@ -31,9 +31,9 @@ utilisation . responsabilite conso energie:
             - gaz naturel
       - sinon: 0
   unité: kgCO2e
-  
+
 utilisation . responsabilite conso energie . élec présente:
-  question: Fournissez-vous des produits ou services qui entraînent des consommations d'électricité chez vos usagers ? 
+  question: Fournissez-vous des produits ou services qui entraînent des consommations d'électricité chez vos usagers ?
 
 utilisation . responsabilite conso energie . élec:
   applicable si: élec présente = oui
@@ -45,14 +45,14 @@ utilisation . responsabilite conso energie . élec:
       meta:
         id: 43642
         nom: Electricité mix moyen France, année de l'étude (année antérieure la plus proche si année indisponible)
-          
+
     conso:
       question: À combien de kWh estimez-vous ces consommations d'électricité ?
       unité: kWh
   unité: kgCO2e
 
 utilisation . responsabilite conso energie . fossiles présents:
-  question: Fournissez-vous des produits ou services qui entraînent des consommations d'énergie fossiles chez vos usagers ? 
+  question: Fournissez-vous des produits ou services qui entraînent des consommations d'énergie fossiles chez vos usagers ?
 
 # utilisation . responsabilite conso energie . quels fossiles:
 #   applicable si:
@@ -133,7 +133,7 @@ utilisation . responsabilite conso energie . gaz naturel:
       meta:
         id: 37138
         nom: Gaz naturel consommation mix moyen 2022
-        
+
     conso:
       question: Pour le gaz naturel, à combien de m3 estimez-vous ces consommations ?
       unité: m3

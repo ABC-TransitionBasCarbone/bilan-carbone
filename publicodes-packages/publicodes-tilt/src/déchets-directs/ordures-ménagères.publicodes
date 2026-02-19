@@ -9,7 +9,7 @@ déchets . ordures ménagères:
       meta:
         id: 34650
         nom: Ordures ménagères résiduelles - Incinération - Impacts
-        
+
     poids:
       question: Poubelle noire (ordures ménagères)
       unité: tonne

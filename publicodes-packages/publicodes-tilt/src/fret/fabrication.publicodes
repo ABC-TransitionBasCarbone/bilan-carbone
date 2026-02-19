@@ -1,6 +1,6 @@
 fret . fabrication:
   titre: Fabrication des véhicules
-  question: Combien de véhicules sont possédés ou loués depuis moins de 5 ans parmi les catégories suivantes ? 
+  question: Combien de véhicules sont possédés ou loués depuis moins de 5 ans parmi les catégories suivantes ?
   formule:
     somme:
       - voitures

@@ -1,6 +1,6 @@
 intrants-services . services:
-  question: Quel montant avez-vous dépensé dans les services immatériels suivants 
-  formule: 
+  question: Quel montant avez-vous dépensé dans les services immatériels suivants
+  formule:
     somme:
       - spectacles-musées
       - assurance-reassurance
@@ -21,7 +21,7 @@ intrants-services . services . spectacles-musées:
   formule: montant-dépensé * FE / 1000
   avec:
     montant-dépensé:
-      question: Montant dépensé en services de spectacles, musées et autres services culturels 
+      question: Montant dépensé en services de spectacles, musées et autres services culturels
       par défaut: 0
       unité: k€
 
@@ -38,7 +38,7 @@ intrants-services . services . assurance-reassurance:
   formule: montant-dépensé * FE / 1000
   avec:
     montant-dépensé:
-      question: Montant dépensé en services d'assurance et réassurance 
+      question: Montant dépensé en services d'assurance et réassurance
       par défaut: 0
       unité: k€
 
@@ -55,7 +55,7 @@ intrants-services . services . telecom:
   formule: montant-dépensé * FE / 1000
   avec:
     montant-dépensé:
-      question: Montant dépensé en services de télécommunications 
+      question: Montant dépensé en services de télécommunications
       par défaut: 0
       unité: k€
 
@@ -71,7 +71,7 @@ intrants-services . services . sante-humaine:
   formule: montant-dépensé * FE / 1000
   avec:
     montant-dépensé:
-      question: Montant dépensé en services de santé humaine 
+      question: Montant dépensé en services de santé humaine
       par défaut: 0
       unité: k€
 
@@ -87,7 +87,7 @@ intrants-services . services . edition:
   formule: montant-dépensé * FE / 1000
   avec:
     montant-dépensé:
-      question: Montant dépensé en services d'édition 
+      question: Montant dépensé en services d'édition
       par défaut: 0
       unité: k€
 
@@ -103,7 +103,7 @@ intrants-services . services . poste-courrier:
   formule: montant-dépensé * FE / 1000
   avec:
     montant-dépensé:
-      question: Montant dépensé en services de poste et courrier 
+      question: Montant dépensé en services de poste et courrier
       par défaut: 0
       unité: k€
 
@@ -119,7 +119,7 @@ intrants-services . services . restauration:
   formule: montant-dépensé * FE / 1000
   avec:
     montant-dépensé:
-      question: Montant dépensé en services de restauration et hébergement 
+      question: Montant dépensé en services de restauration et hébergement
       par défaut: 0
       unité: k€
 
@@ -135,7 +135,7 @@ intrants-services . services . formation:
   formule: montant-dépensé * FE / 1000
   avec:
     montant-dépensé:
-      question: Montant dépensé en services de formation 
+      question: Montant dépensé en services de formation
       par défaut: 0
       unité: k€
 
@@ -151,7 +151,7 @@ intrants-services . services . reparation-installation:
   formule: montant-dépensé * FE / 1000
   avec:
     montant-dépensé:
-      question: Montant dépensé en services de réparation et installation 
+      question: Montant dépensé en services de réparation et installation
       unité: k€
 
     FE:
@@ -166,7 +166,7 @@ intrants-services . services . juridique-comptable:
   formule: montant-dépensé * FE / 1000
   avec:
     montant-dépensé:
-      question: Montant dépensé en services juridiques, comptables et assurances 
+      question: Montant dépensé en services juridiques, comptables et assurances
       par défaut: 0
       unité: k€
 
@@ -182,7 +182,7 @@ intrants-services . services . programmation-conseil:
   formule: montant-dépensé * FE / 1000
   avec:
     montant-dépensé:
-      question: Montant dépensé en services de programmation et conseil informatique 
+      question: Montant dépensé en services de programmation et conseil informatique
       par défaut: 0
       unité: k€
 
@@ -193,4 +193,3 @@ intrants-services . services . programmation-conseil:
         id: 43450
         nom: Services de réparation et installation de machines
   unité: kgCO2e
-
