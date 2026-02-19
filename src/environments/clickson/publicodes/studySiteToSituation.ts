@@ -1,5 +1,13 @@
 import { StudySiteFields } from '@/services/studySiteToSituation'
+import { Country } from '@prisma/client'
 import { ClicksonSituation } from './types'
+
+const publicodesCountriesMapping: Partial<Record<Country, string>> = {
+  [Country.FRANCE]: "'FRANCE'",
+  [Country.ROMANIA]: "'ROUMANIE'",
+  [Country.CROATIA]: "'CROATIE'",
+  [Country.HUNGARY]: "'HONGRIE'",
+}
 
 /**
  * NOTE: if one of the study site fields are null or 0, some questions (which
@@ -18,6 +26,12 @@ export function studySiteToClicksonSituation(studySite: StudySiteFields | undefi
   }
   if (studySite.etp != null) {
     situation['général . nombre personnel'] = studySite.etp
+  }
+  if (studySite.country != null) {
+    const country = publicodesCountriesMapping?.[studySite.country] || "'FRANCE'"
+    if (country) {
+      situation['général . pays'] = country
+    }
   }
   // TODO: not available yet for Clickson
   // if (studySite.constructionYear != null) {

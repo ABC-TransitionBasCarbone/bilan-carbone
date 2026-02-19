@@ -1,6 +1,6 @@
 import { studySiteToClicksonSituation } from '@/environments/clickson/publicodes/studySiteToSituation'
 import { studySiteToCutSituation } from '@/environments/cut/publicodes/studySiteToSituation'
-import { Environment } from '@prisma/client'
+import { Country, Environment } from '@prisma/client'
 import { Situation } from 'publicodes'
 import { SimplifiedEnvironment } from './publicodes/simplifiedPublicodesConfig'
 
@@ -15,6 +15,7 @@ export interface ClicksonStudySiteFields {
   etp?: number | undefined
   studentNumber?: number | undefined
   superficy?: number | null | undefined
+  country?: Country | null | undefined
   // constructionYear?: number | null
   // renovationYear?: number | null
 }

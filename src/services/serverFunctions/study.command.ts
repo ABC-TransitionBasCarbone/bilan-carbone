@@ -1,6 +1,7 @@
 import { setCustomIssue, setCustomMessage } from '@/lib/zod.config'
 import {
   ControlMode,
+  Country,
   DayOfWeek,
   EngagementPhase,
   EstablishmentType,
@@ -165,6 +166,7 @@ export const ChangeStudyEstablishmentValidation = z.object({
   etp: z.int().min(0).optional(),
   studentNumber: z.int().min(0).optional(),
   superficy: z.number().optional().nullable(),
+  country: z.enum(Country).optional().nullable(),
 })
 
 export type ChangeStudyEstablishmentCommand = z.infer<typeof ChangeStudyEstablishmentValidation>

@@ -233,6 +233,7 @@ const fullStudyInclude = {
       beneficiaryNumber: true,
       superficy: true,
       studentNumber: true,
+      country: true,
       site: {
         select: {
           id: true,
@@ -244,6 +245,7 @@ const fullStudyInclude = {
           etp: true,
           studentNumber: true,
           superficy: true,
+          country: true,
           cnc: {
             select: {
               id: true,
