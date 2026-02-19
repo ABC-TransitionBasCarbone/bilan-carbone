@@ -66,7 +66,8 @@
       "etp": "Número de personal (docentes y personal no docente)",
       "studentNumber": "Número de estudiantes",
       "superficy": "Área del establecimiento",
-      "goToDataEntry": "Ir a la entrada de datos"
+      "goToDataEntry": "Ir a la entrada de datos",
+      "country": "País del establecimiento"
     },
     "newContributor": {
       "title": "Añadir un estudiante al estudio: {name}"
