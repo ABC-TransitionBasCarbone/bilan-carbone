@@ -2,7 +2,7 @@ alimentation:
   titre: Alimentation
   formule:
     somme:
-      - bénéficiares
+      - bénéficiaires
       - bénévoles
       - salariés
   unité: kgCO2e
