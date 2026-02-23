@@ -33,6 +33,7 @@ construction . infrastructure . nombre de places:
       - est défini: parking présent
       - parking présent = oui
   question: De combien de places dispose ce ou ces parkings ?
+  unité: place
 
 construction . infrastructure . parking présent:
   question: L'association dispose t'elle d'un (ou plusieurs) parkings artificialisés (béton, bitume, ...) ?
