@@ -1,11 +1,11 @@
 {
   "jobs": [
     {
-      "command": "*/10 * * * * yarn user:import",
+      "command": "*/10 * * * * node node_modules/tsx/dist/cli.mjs src/scripts/ftp/importUsers.ts",
       "description": "Import users from FTP server at midnight"
     },
     {
-      "command": "0 1 * * * npx tsx src/scripts/formationStudies/assignTrainingStudies.ts",
+      "command": "0 1 * * * node node_modules/tsx/dist/cli.mjs src/scripts/formationStudies/assignTrainingStudies.ts",
       "description": "Create training studies for users who started or ended a formation"
     }
   ]
