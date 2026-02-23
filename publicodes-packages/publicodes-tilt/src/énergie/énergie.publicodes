@@ -11,7 +11,7 @@
       - granulés . présent
       - réseaux de chaleur . présent
       - réseaux de froid . présent
-      - panneaux PV ou chauffe eau solaire . présent
+      # - panneaux PV ou chauffe eau solaire . présent
     suggestions:
       aucun:
         électricité . présent: non
@@ -21,7 +21,7 @@
         granulés . présent: non
         réseaux de chaleur . présent: non
         réseaux de froid . présent: non
-        panneaux PV ou chauffe eau solaire . présent: non
+        # panneaux PV ou chauffe eau solaire . présent: non
   formule:
     somme:
       - énergie . électricité
@@ -60,6 +60,6 @@
   question: Utilisez-vous des réseaux de froid pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?
   par défaut: non
 
-énergie . panneaux PV ou chauffe eau solaire . présent:
-  question: Utilisez-vous des panneaux photovoltaïques ou un chauffe-eau solaire pour le  chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?
-  par défaut: non
+# énergie . panneaux PV ou chauffe eau solaire . présent:
+#   question: Utilisez-vous des panneaux photovoltaïques ou un chauffe-eau solaire pour le  chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?
+#   par défaut: non
