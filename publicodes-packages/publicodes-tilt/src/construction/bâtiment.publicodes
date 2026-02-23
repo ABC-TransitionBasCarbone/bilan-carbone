@@ -7,9 +7,9 @@ construction . bâtiment:
         alors:
           variations:
             - si: locaux = 'locaux seuls'
-              alors: FE * locaux seuls . surface
+              alors: FE * locaux . locaux seuls . surface
             - si: locaux = 'locaux partagés'
-              alors: FE * locaux partagés . surface * pourcentage
+              alors: FE * locaux . locaux partagés . surface * locaux . locaux partagés . pourcentage
             - si: locaux = 'pas de locaux'
               alors: 0
             - sinon: 0
