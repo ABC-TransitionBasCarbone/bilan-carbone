@@ -1,5 +1,5 @@
 import { FormLayout } from '@/components/publicodes-form/layouts/formLayout'
-import { PUBLICODES_CLICKSON_VERSION, PUBLICODES_COUNT_VERSION } from '@/constants/versions'
+import { PUBLICODES_CLICKSON_VERSION, PUBLICODES_COUNT_VERSION, PUBLICODES_TILT_VERSION } from '@/constants/versions'
 import { getClicksonEngine } from '@/environments/clickson/publicodes/clickson-engine'
 import {
   getFormLayoutsForSubPostClickson,
@@ -14,10 +14,12 @@ import {
 } from '@/environments/cut/publicodes/subPostMapping'
 import { Environment, SubPost } from '@prisma/client'
 import Engine from 'publicodes'
-import { SimplifiedPost, subPostsByPostClickson, subPostsByPostCUT } from '../posts'
-import { ClicksonPost, CutPost } from '../posts.enums'
+import { SimplifiedPost, subPostsByPostClickson, subPostsByPostCUT, subPostsByPostTILT } from '../posts'
+import { ClicksonPost, CutPost, TiltPost } from '../posts.enums'
+import { getFormLayoutsForSubPostTILT, getPostRuleNameTilt, getSubPostRuleNameTilt } from '@/environments/tilt/publicodes/subPostMapping'
+import { getTiltEngine } from '@/environments/tilt/publicodes/tilt-engine'
 
-export type SimplifiedEnvironment = 'CUT' | 'CLICKSON'
+export type SimplifiedEnvironment = 'CUT' | 'CLICKSON' | 'TILT'
 
 export const isSimplifiedEnvironment = (env: Environment): env is SimplifiedEnvironment => {
   return env === Environment.CUT || env === Environment.CLICKSON
@@ -52,6 +54,15 @@ const SIMPLIFIED_PUBLICODES_CONFIGS = {
     getEngine: getClicksonEngine,
     modelVersion: PUBLICODES_CLICKSON_VERSION,
   } satisfies SimplifiedPublicodesConfig,
+  [Environment.TILT]: {
+    posts: Object.values(TiltPost),
+    subPostsByPost: subPostsByPostTILT as Record<SimplifiedPost, SubPost[]>,
+    getFormLayout: getFormLayoutsForSubPostTILT,
+    getPostRuleName: getPostRuleNameTilt as (post: SimplifiedPost) => string,
+    getSubPostRuleName: getSubPostRuleNameTilt,
+    getEngine: getTiltEngine,
+    modelVersion: PUBLICODES_TILT_VERSION,
+  } satisfies SimplifiedPublicodesConfig
 } satisfies Record<SimplifiedEnvironment, SimplifiedPublicodesConfig>
 
 export const getSimplifiedPublicodesConfig = (env: SimplifiedEnvironment): SimplifiedPublicodesConfig => {

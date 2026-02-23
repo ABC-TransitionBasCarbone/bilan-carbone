@@ -1,4 +1,9 @@
 équipements et immobilisations:
+  formule:
+    somme: 
+      - équipements et immobilisations . infos
+
+équipements et immobilisations . infos:
   titre: Équipements et immobilisations
   formule: total sans reconditionné * prise en compte reconditionné / amortissement
   unité: kgCO2e
@@ -18,7 +23,7 @@
 #       unité: an
 #       note: On considère les équipements amortis sur trois ans
 
-équipements et immobilisations . prise en compte reconditionné:
+équipements et immobilisations . infos . prise en compte reconditionné:
   question: Vos équipements sont-ils régulièrement reconditionné ou issu de seconde main ?
   une possibilité:
     - toujours
@@ -43,7 +48,7 @@
       valeur: 0
       note: Pas d'équipements reconditionnés
 
-équipements et immobilisations . total sans reconditionné:
+équipements et immobilisations . infos . total sans reconditionné:
   formule:
     somme:
       - ordinateurs fixes
@@ -56,7 +61,7 @@
       - autres écrans
   unité: kgCO2e
 
-équipements et immobilisations . ordinateurs fixes:
+équipements et immobilisations . infos . ordinateurs fixes:
   formule: FE * quantité
   avec:
     FE:
@@ -68,7 +73,7 @@
     quantité:
       question: Ordinateurs fixes
 
-équipements et immobilisations . ordinateurs portables:
+équipements et immobilisations . infos . ordinateurs portables:
   formule: FE * quantité
   avec:
     FE:
@@ -80,7 +85,7 @@
     quantité:
       question: Ordinateurs portables
 
-équipements et immobilisations . photocopieurs:
+équipements et immobilisations . infos . photocopieurs:
   formule: FE * quantité
   avec:
     FE:
@@ -92,7 +97,7 @@
     quantité:
       question: Photocopieurs
 
-équipements et immobilisations . imprimantes:
+équipements et immobilisations . infos . imprimantes:
   formule: FE * quantité
   avec:
     FE:
@@ -104,7 +109,7 @@
     quantité:
       question: Imprimante multi-fonction
 
-équipements et immobilisations . téléphones fixes:
+équipements et immobilisations . infos . téléphones fixes:
   formule: FE * quantité
   avec:
     FE:
@@ -116,7 +121,7 @@
     quantité:
       question: Téléphones fixes
 
-équipements et immobilisations . téléphones portables:
+équipements et immobilisations . infos . téléphones portables:
   formule: FE * quantité
   avec:
     FE:
@@ -128,7 +133,7 @@
     quantité:
       question: Téléphones portables
 
-équipements et immobilisations . vidéoprojecteurs:
+équipements et immobilisations . infos . vidéoprojecteurs:
   formule: FE * quantité
   avec:
     FE:
@@ -140,7 +145,7 @@
     quantité:
       question: Vidéoprojecteurs
 
-équipements et immobilisations . autres écrans:
+équipements et immobilisations . infos . autres écrans:
   formule: FE * quantité
   avec:
     FE:

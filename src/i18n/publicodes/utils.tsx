@@ -31,7 +31,7 @@ export const AVAILABLE_LOCALES: LocaleType[] = [
 ]
 // LocaleType already includes all supported locale codes as string values
 
-export const AVAILABLE_MODELS = ['cut', 'clickson'] as const
+export const AVAILABLE_MODELS = ['cut', 'clickson', 'tilt'] as const
 export type Model = (typeof AVAILABLE_MODELS)[number]
 
 const MODEL_PACKAGES: Record<Model, string> = {
@@ -48,6 +48,13 @@ const MODEL_PACKAGES: Record<Model, string> = {
       : path.join(
           __dirname,
           '../../../publicodes-packages/publicodes-clickson/publicodes-build/publicodes-clickson.model.json',
+        ),
+  tilt:
+    process.env.NODE_ENV === 'production'
+      ? '@abc-transitionbascarbone/publicodes-tilt/publicodes-build/publicodes-tilt.model.json'
+      : path.join(
+          __dirname,
+          '../../../publicodes-packages/publicodes-tilt/publicodes-build/publicodes-tilt.model.json',
         ),
 }
 

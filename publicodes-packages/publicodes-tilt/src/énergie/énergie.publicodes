@@ -5,8 +5,8 @@
     type: selection
     options:
       - électricité . présent
-      - gaz . présent
-      - fioul . présent
+      - fossiles . gaz . présent
+      - fossiles . fioul . présent
       - bois . présent
       - granulés . présent
       - réseaux de chaleur . présent
@@ -25,8 +25,7 @@
   formule:
     somme:
       - énergie . électricité
-      - énergie . gaz
-      - énergie . fioul
+      - énergie . fossiles
       - énergie . combustibles organiques
       - énergie . réseaux de chaleur
       - énergie . réseaux de froid
@@ -36,11 +35,11 @@
   question: Utilisez-vous de l'électricité pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?
   par défaut: non
 
-énergie . gaz . présent:
+énergie . fossiles . gaz . présent:
   question: Utilisez-vous du gaz pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?
   par défaut: non
 
-énergie . fioul . présent:
+énergie . fossiles . fioul . présent:
   question: Utilisez-vous du fioul pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?
   par défaut: non
 

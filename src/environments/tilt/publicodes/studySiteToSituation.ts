@@ -14,17 +14,9 @@ export function studySiteToTiltSituation(studySite: StudySiteFields | undefined)
   const situation: TiltSituation = {}
 
   if (studySite.distanceToParis != null) {
-    situation['général . distance depuis paris'] = studySite.distanceToParis
+    situation['général . code postal'] = studySite.distanceToParis
   }
-  if (studySite.numberOfTickets != null) {
-    situation['général . nombre entrées'] = studySite.numberOfTickets
-  }
-  if (studySite.numberOfSessions != null) {
-    situation['général . nombre séances'] = studySite.numberOfSessions
-  }
-  if (studySite.numberOfOpenDays != null) {
-    situation['général . nombre de jours ouverture'] = studySite.numberOfOpenDays
-  }
+
 
   return situation
 }
