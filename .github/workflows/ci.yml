@@ -17,6 +17,8 @@ jobs:
         run: npx prisma generate
       - name: Linter
         run: yarn lint
+      - name: Prebuild application
+        run: yarn prebuild
       - name: TypeScript check
         run: npx tsc --noEmit
 
@@ -33,6 +35,8 @@ jobs:
         run: cp .env.dist .env
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
+      - name: Prebuild application
+        run: yarn prebuild
       - name: Generate prisma files
         run: npx prisma generate
       - name: Launch unit tests
@@ -49,6 +53,8 @@ jobs:
           cache: 'yarn'
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
+      - name: Prebuild application
+        run: yarn prebuild
       - name: Launch unit tests
         run: yarn run publicodes-count:test
 
@@ -83,6 +89,8 @@ jobs:
         run: cp .env.dist .env.test
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
+      - name: Prebuild application
+        run: yarn prebuild
       - name: Generate prisma files
         run: npx prisma generate
       - name: Migrate DB
@@ -135,6 +143,8 @@ jobs:
         run: cp .env.dist .env
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
+      - name: Prebuild application
+        run: yarn prebuild
       - name: Generate prisma files
         run: npx prisma generate
       - name: Migrate DB
