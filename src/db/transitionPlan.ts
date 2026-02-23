@@ -14,6 +14,7 @@ import {
   ObjectiveSubPost,
   ObjectiveTag,
   Prisma,
+  Study,
   StudySite,
   StudyTag,
   SubPost,
@@ -38,7 +39,7 @@ export type TransitionPlanWithRelations = TransitionPlan & {
       objectives: ObjectiveWithScope[]
     }
   >
-  transitionPlanStudies: TransitionPlanStudy[]
+  transitionPlanStudies: Array<TransitionPlanStudy & { study: Pick<Study, 'startDate'> }>
   actions: Array<ActionWithRelations>
   externalStudies: ExternalStudy[]
 }
@@ -84,7 +85,7 @@ export const getTransitionPlanByIdWithRelations = async (id: string): Promise<Tr
           },
         },
       },
-      transitionPlanStudies: true,
+      transitionPlanStudies: { include: { study: { select: { startDate: true } } } },
       actions: {
         include: {
           indicators: true,
@@ -142,13 +143,16 @@ export const createTransitionPlan = async (studyId: string) => {
 export const duplicateTransitionPlanWithRelations = async (
   sourceTransitionPlan: TransitionPlanWithRelations,
   targetStudyId: string,
+  targetYear: number,
 ): Promise<TransitionPlanWithRelations> => {
   return prismaClient.$transaction(async (tx) => {
     return tx.transitionPlan.create({
       data: {
         studyId: targetStudyId,
         transitionPlanStudies: {
-          create: sourceTransitionPlan.transitionPlanStudies.map((tpStudy) => ({ studyId: tpStudy.studyId })),
+          create: sourceTransitionPlan.transitionPlanStudies
+            .filter((tpStudy) => tpStudy.study.startDate.getFullYear() < targetYear)
+            .map((tpStudy) => ({ studyId: tpStudy.studyId })),
         },
         trajectories: {
           create: sourceTransitionPlan.trajectories.map((trajectory) => ({
@@ -214,7 +218,7 @@ export const duplicateTransitionPlanWithRelations = async (
             },
           },
         },
-        transitionPlanStudies: true,
+        transitionPlanStudies: { include: { study: { select: { startDate: true } } } },
         actions: {
           include: {
             indicators: true,
@@ -317,6 +321,12 @@ export const getExternalStudiesForTransitionPlan = async (transitionPlanId: stri
 
 export const getLinkedStudiesForTransitionPlan = async (transitionPlanId: string) =>
   prismaClient.transitionPlanStudy.findMany({ where: { transitionPlanId } })
+
+export const getTransitionPlansWhereStudyIsLinked = async (studyId: string) =>
+  prismaClient.transitionPlanStudy.findMany({
+    where: { studyId },
+    include: { transitionPlan: { include: { study: { select: { startDate: true, name: true } } } } },
+  })
 
 export const deleteLinkedStudy = async (studyId: string, transitionPlanId: string) =>
   prismaClient.transitionPlanStudy.delete({ where: { transitionPlanId_studyId: { studyId, transitionPlanId } } })

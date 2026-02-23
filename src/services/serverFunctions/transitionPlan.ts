@@ -106,8 +106,6 @@ export const duplicateTransitionPlan = async (sourceTransitionPlanId: string, ta
     throw new Error('Source transition plan not found with id ' + sourceTransitionPlanId)
   }
 
-  const duplicated = await duplicateTransitionPlanWithRelations(sourceTransitionPlan, targetStudyId)
-
   const [sourceStudy, targetStudy] = await Promise.all([
     getStudyById(sourceTransitionPlan.studyId, null),
     getStudyById(targetStudyId, null),
@@ -120,7 +118,10 @@ export const duplicateTransitionPlan = async (sourceTransitionPlanId: string, ta
     return
   }
 
-  if (targetStudy.startDate.getFullYear() > sourceStudy.startDate.getFullYear()) {
+  const targetYear = targetStudy.startDate.getFullYear()
+  const duplicated = await duplicateTransitionPlanWithRelations(sourceTransitionPlan, targetStudyId, targetYear)
+
+  if (targetYear > sourceStudy.startDate.getFullYear()) {
     await linkOldStudy(duplicated.id, sourceStudy.id)
   }
 }

@@ -2437,6 +2437,7 @@
     "tooBig": "Veuillez saisir une valeur plus petite",
     "studyYearMustBeBeforeCurrent": "L'année de l'étude doit être antérieure à l'année de l'étude actuelle",
     "studyYearMustBeAfterLinkedStudies": "Impossible de renseigner une date antérieure à celles de vos études liées sur votre plan de transition",
+    "studyIsLinkedInTransitionPlan": "Cette étude est liée dans le plan de transition de l'étude « {studyName} ». La nouvelle date doit être antérieure à celle de cette étude.",
     "maxTwoDecimals": "Le taux de réduction doit avoir au maximum 2 décimales",
     "startYearMustBeBeforeTargetYear": "L'année de début doit être antérieure à l'année cible",
     "referenceYearMustBeBeforeOrEqualToStudyYear": "L'année de référence doit être inférieure ou égale à l'année de l'étude",

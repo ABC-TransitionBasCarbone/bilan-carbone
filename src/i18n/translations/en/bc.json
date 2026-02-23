@@ -2437,6 +2437,7 @@
     "tooBig": "Please enter a smaller value",
     "studyYearMustBeBeforeCurrent": "The study year must be before the current study year",
     "studyYearMustBeAfterLinkedStudies": "Cannot set a date earlier than your linked studies in your transition plan",
+    "studyIsLinkedInTransitionPlan": "This study is linked in the transition plan of study \"{studyName}\". The new date must be earlier than that study's date.",
     "maxTwoDecimals": "The reduction rate must have at most 2 decimal places",
     "startYearMustBeBeforeTargetYear": "Start year must be before target year",
     "referenceYearMustBeBeforeOrEqualToStudyYear": "Reference year must be less than or equal to the study year",

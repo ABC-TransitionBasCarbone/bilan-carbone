@@ -82,7 +82,7 @@ import {
   upsertStudyExport,
   upsertStudyTemplate,
 } from '@/db/study'
-import { getTransitionPlanByStudyId } from '@/db/transitionPlan'
+import { getTransitionPlanByStudyId, getTransitionPlansWhereStudyIsLinked } from '@/db/transitionPlan'
 import {
   addUser,
   getUserApplicationSettings,
@@ -449,7 +449,10 @@ export const changeStudyDates = async ({ studyId, ...command }: ChangeStudyDates
     const currentYear = informations.studyWithRights.startDate.getFullYear()
 
     if (newYear !== currentYear) {
-      const transitionPlan = await getTransitionPlanByStudyId(studyId)
+      const [transitionPlan, transitionPlanLinks] = await Promise.all([
+        getTransitionPlanByStudyId(studyId),
+        getTransitionPlansWhereStudyIsLinked(studyId),
+      ])
 
       if (transitionPlan) {
         const response = await getLinkedAndExternalStudies(transitionPlan.id)
@@ -466,6 +469,14 @@ export const changeStudyDates = async ({ studyId, ...command }: ChangeStudyDates
         if (hasLinkedOrExternalStudySameYearOrAfter) {
           throw new Error('studyYearMustBeAfterLinkedStudies')
         }
+      }
+
+      const blockingLink = transitionPlanLinks.find(
+        (link) => link.transitionPlan.study.startDate.getFullYear() <= newYear,
+      )
+
+      if (blockingLink) {
+        throw new Error(`studyIsLinkedInTransitionPlan:${blockingLink.transitionPlan.study.name}`)
       }
     }
 
