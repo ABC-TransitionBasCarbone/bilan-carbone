@@ -16,6 +16,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import PublicodesSubPostForm from '../study/PublicodesSubPostForm'
 import SaveStatusIndicator from '../study/SaveStatusIndicator'
+import { SUBPOSTS_PUBLICODE_FROM_ENV } from '@/environments/core/publicodes/subposts'
 
 interface Props {
   environment: SimplifiedEnvironment
@@ -31,7 +32,7 @@ const SimplifiedStudyPostsPage = ({ environment, post, currentSubPost, study, st
   const tInfography = useTranslations('study.infography')
   const router = useRouter()
   const searchParams = useSearchParams()
-  const subPosts = useMemo(() => subPostsByPost[post], [post])
+  const subPosts = useMemo(() => subPostsByPost[post].filter((subPost) => SUBPOSTS_PUBLICODE_FROM_ENV[environment]?.includes(subPost)), [post, environment])
 
   const initialStep = useMemo(() => {
     if (currentSubPost) {

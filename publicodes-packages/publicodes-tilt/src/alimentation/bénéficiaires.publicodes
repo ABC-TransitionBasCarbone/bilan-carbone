@@ -34,6 +34,7 @@ alimentation . bénéficiaires . viande rouge:
 
     nombre de repas:
       question: Combien de repas à base de viande rouge sont consommés par vos bénéficiaires chaque année ?
+      unité: repas
 
 alimentation . bénéficiaires . viande blanche:
   formule: FE * nombre de repas
@@ -45,6 +46,7 @@ alimentation . bénéficiaires . viande blanche:
 
     nombre de repas:
       question: Combien de repas à base de viande blanche sont consommés par vos bénéficiaires chaque année ?
+      unité: repas
 
 alimentation . bénéficiaires . poisson blanc:
   formule: FE * nombre de repas
@@ -56,6 +58,7 @@ alimentation . bénéficiaires . poisson blanc:
 
     nombre de repas:
       question: Combien de repas à base de poisson blanc sont consommés par vos bénéficiaires chaque année ?
+      unité: repas
 
 alimentation . bénéficiaires . poisson gras:
   formule: FE * nombre de repas
@@ -67,6 +70,7 @@ alimentation . bénéficiaires . poisson gras:
 
     nombre de repas:
       question: Combien de repas à base de poisson gras sont consommés par vos bénéficiaires chaque année ?
+      unité: repas
 
 alimentation . bénéficiaires . végétarien:
   formule: FE * nombre de repas
@@ -78,6 +82,7 @@ alimentation . bénéficiaires . végétarien:
 
     nombre de repas:
       question: Combien de repas végétariens sont consommés par vos bénéficiaires chaque année ?
+      unité: repas
 
 alimentation . bénéficiaires . végétalien:
   formule: FE * nombre de repas
@@ -89,3 +94,4 @@ alimentation . bénéficiaires . végétalien:
 
     nombre de repas:
       question: Combien de repas végétaliens sont consommés par vos bénéficiaires chaque année ?
+      unité: repas
