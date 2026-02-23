@@ -245,7 +245,7 @@ describe('study', () => {
       mockAddUserChecklistItem.mockResolvedValue(undefined)
       mockUpdateStudyEmissionFactorVersion.mockResolvedValue(undefined)
       mockCreateStudyEmissionSource.mockResolvedValue(undefined)
-      mockCreateStudy.mockResolvedValue({ id: TEST_IDS.newStudy })
+      mockCreateStudy.mockResolvedValue({ id: TEST_IDS.newStudy, sites: [] })
       mockCreateContributorOnStudy.mockResolvedValue(undefined)
     }
 
