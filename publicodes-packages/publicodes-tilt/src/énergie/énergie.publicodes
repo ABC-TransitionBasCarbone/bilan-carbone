@@ -7,7 +7,8 @@
       - électricité . présent
       - gaz . présent
       - fioul . présent
-      - bois ou granulés . présent
+      - bois . présent
+      - granulés . présent
       - réseaux de chaleur . présent
       - réseaux de froid . présent
       - panneaux PV ou chauffe eau solaire . présent
@@ -16,7 +17,8 @@
         électricité . présent: non
         gaz . présent: non
         fioul . présent: non
-        bois ou granulés . présent: non
+        bois . présent: non
+        granulés . présent: non
         réseaux de chaleur . présent: non
         réseaux de froid . présent: non
         panneaux PV ou chauffe eau solaire . présent: non
@@ -42,8 +44,12 @@
   question: Utilisez-vous du fioul pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?
   par défaut: non
 
-énergie . bois ou granulés . présent:
-  question: Utilisez-vous du bois ou des granulés pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?
+énergie . combustibles organiques . bois . présent:
+  question: Utilisez-vous du bois pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?
+  par défaut: non
+
+énergie . combustibles organiques . granulés . présent:
+  question: Utilisez-vous des granulés pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?
   par défaut: non
 
 énergie . réseaux de chaleur . présent:

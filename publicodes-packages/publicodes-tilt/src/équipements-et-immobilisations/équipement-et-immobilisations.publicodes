@@ -1,4 +1,4 @@
-équipements et immobilisations . équipements des salariés:
+équipements et immobilisations:
   titre: Équipements et immobilisations
   formule: total sans reconditionné * prise en compte reconditionné / amortissement
   unité: kgCO2e
@@ -7,6 +7,16 @@
       valeur: 3
       unité: an
       note: On considère les équipements amortis sur trois ans
+
+# équipements et immobilisations . équipements des salariés:
+#   titre: Équipements et immobilisations
+#   formule: total sans reconditionné * prise en compte reconditionné / amortissement
+#   unité: kgCO2e
+#   avec:
+#     amortissement:
+#       valeur: 3
+#       unité: an
+#       note: On considère les équipements amortis sur trois ans
 
 équipements et immobilisations . prise en compte reconditionné:
   question: Vos équipements sont-ils régulièrement reconditionné ou issu de seconde main ?

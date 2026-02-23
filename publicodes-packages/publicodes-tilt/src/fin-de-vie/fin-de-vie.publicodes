@@ -4,7 +4,7 @@ fin de vie:
   formule:
     variations:
       - si:
-          - est défini: poids
+          est défini: poids
         alors:
           somme:
             - poubelle noire

@@ -3,14 +3,14 @@ bilan:
     somme:
       - alimentation
       - construction
-      - déchets-directs
+      - déchets
       - déplacements
       - énergie
-      - équipements-et-immobilisations
-      - fin-de-vie
+      - équipements et immobilisations
+      - fin de vie
       - fret
-      - froid-et-clim
+      - froid et clim
       - intrants-biens-et-matières
-      - Intrants-services
+      - intrants-services
       - utilisation
   unité: kgCO2e

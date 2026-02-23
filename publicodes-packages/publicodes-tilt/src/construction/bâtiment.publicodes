@@ -50,4 +50,4 @@ construction . bâtiment . locaux . locaux partagés . surface:
 construction . bâtiment . locaux . locaux partagés . pourcentage:
   applicable si: locaux = 'locaux partagés'
   question: Quelle est la part de la surface de ces locaux attribuables à votre association ?
-  unité: %
+  unité: "%"
