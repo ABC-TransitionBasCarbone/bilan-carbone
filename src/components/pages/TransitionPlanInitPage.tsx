@@ -21,7 +21,7 @@ import { createTrajectoryWithObjectives, updateTrajectory } from '@/services/ser
 import { initializeTransitionPlan } from '@/services/serverFunctions/transitionPlan'
 import { getStudyTotalCo2Emissions } from '@/services/study'
 import { calculateSectoralSNBCReductionRates } from '@/utils/snbc'
-import { convertToPastStudies } from '@/utils/trajectory'
+import { convertToPastStudies, getDefaultSnbcSectoralTrajectory } from '@/utils/trajectory'
 import type { ExternalStudy, SectenInfo, TransitionPlan } from '@prisma/client'
 import { TrajectoryType } from '@prisma/client'
 import classNames from 'classnames'
@@ -148,10 +148,7 @@ const TransitionPlanInitPage = ({
     }
   }, [study.id])
 
-  const defaultSnbcSectoralTrajectory = useMemo(
-    () => trajectories.find((t) => t.type === TrajectoryType.SNBC_SECTORAL) ?? null,
-    [trajectories],
-  )
+  const defaultSnbcSectoralTrajectory = useMemo(() => getDefaultSnbcSectoralTrajectory(trajectories), [trajectories])
 
   const pastStudies = useMemo(
     () => convertToPastStudies(linkedStudies, linkedExternalStudies, validatedOnly, study.resultsUnit),

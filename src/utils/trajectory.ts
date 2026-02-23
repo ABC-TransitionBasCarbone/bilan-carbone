@@ -7,7 +7,7 @@ import {
   TRAJECTORY_WB2C_ID,
 } from '@/constants/trajectories'
 import { FullStudy } from '@/db/study'
-import { TrajectoryWithObjectives } from '@/db/transitionPlan'
+import { TrajectoryWithObjectives, TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
 import { getStudyTotalCo2Emissions } from '@/services/study'
 import { Translations } from '@/types/translation'
@@ -1823,11 +1823,17 @@ export const getCorrectedObjectives = (
   return null
 }
 
-export const getDefaultSnbcSectoralPercentages = (
+export const getDefaultSnbcSectoralTrajectory = (
   trajectories: { type: TrajectoryType; sectorPercentages: unknown; createdAt: Date }[],
-): SectorPercentages | null => {
+): TrajectoryWithObjectivesAndScope | null => {
   const trajectory = trajectories
     .filter((t) => t.type === TrajectoryType.SNBC_SECTORAL)
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0]
-  return (trajectory?.sectorPercentages as SectorPercentages) ?? null
+  return (trajectory as TrajectoryWithObjectivesAndScope) ?? null
+}
+
+export const getDefaultSnbcSectoralPercentages = (
+  trajectories: { type: TrajectoryType; sectorPercentages: unknown; createdAt: Date }[],
+): SectorPercentages | null => {
+  return (getDefaultSnbcSectoralTrajectory(trajectories)?.sectorPercentages as SectorPercentages) ?? null
 }
