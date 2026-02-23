@@ -62,14 +62,7 @@ export const shouldRenewLicenceText = (
   const isStartOfYear = currentDate.getMonth() + 1 < renewalMessageEndMonth
 
   const isLicenceActive = hasActiveLicence({ parent: null, ...accountOrganizationVersion })
-  console.log(
-    'isStartOfYear',
-    isStartOfYear,
-    currentDate,
-    currentDate.getMonth() + 1,
-    renewalMessageEndMonth,
-    isLicenceActive,
-  )
+
   if (
     (isLicenceActive &&
       isEndOfYear &&
