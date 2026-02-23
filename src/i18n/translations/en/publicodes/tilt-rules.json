@@ -9,15 +9,15 @@
     "litre": "[TO_TRANSLATE] litre",
     "stères": "[TO_TRANSLATE] stères",
     "kgCO2e": "[TO_TRANSLATE] kgCO2e",
+    "h": "[TO_TRANSLATE] h",
+    "mail": "[TO_TRANSLATE] mail",
+    "Go": "[TO_TRANSLATE] Go",
     "unité": "[TO_TRANSLATE] unité",
     "kg": "[TO_TRANSLATE] kg",
     "tonne": "[TO_TRANSLATE] tonne",
     "km": "[TO_TRANSLATE] km",
     "%": "[TO_TRANSLATE] %",
-    "m2": "[TO_TRANSLATE] m2",
-    "h": "[TO_TRANSLATE] h",
-    "mail": "[TO_TRANSLATE] mail",
-    "Go": "[TO_TRANSLATE] Go"
+    "m2": "[TO_TRANSLATE] m2"
   },
   "publicodes-rules": {
     "général": {
@@ -230,6 +230,90 @@
         }
       }
     },
+    "intrants-services": {
+      "services": {
+        "description": "[TO_TRANSLATE] La liste est non exhaustive : si vous n’avez pas comptabilisé l’ensemble de vos dépenses, c’est tout à fait normal. Il peut s’agir de dépenses très faiblement émissives ou dont les émissions sont déjà prises en compte dans d’autres postes ou via d’autres questions reposant sur des données plus précises.",
+        "question": "[TO_TRANSLATE] Quel montant avez-vous dépensé dans les services immatériels suivants",
+        "spectacles-musées": {
+          "montant-dépensé": {
+            "question": "[TO_TRANSLATE] Montant dépensé en services de spectacles, musées et autres services culturels"
+          }
+        },
+        "assurance-reassurance": {
+          "montant-dépensé": {
+            "question": "[TO_TRANSLATE] Montant dépensé en services d'assurance et réassurance"
+          }
+        },
+        "telecom": {
+          "montant-dépensé": {
+            "question": "[TO_TRANSLATE] Montant dépensé en services de télécommunications"
+          }
+        },
+        "sante-humaine": {
+          "montant-dépensé": {
+            "question": "[TO_TRANSLATE] Montant dépensé en services de santé humaine"
+          }
+        },
+        "edition": {
+          "montant-dépensé": {
+            "question": "[TO_TRANSLATE] Montant dépensé en services d'édition"
+          }
+        },
+        "poste-courrier": {
+          "montant-dépensé": {
+            "question": "[TO_TRANSLATE] Montant dépensé en services de poste et courrier"
+          }
+        },
+        "restauration": {
+          "montant-dépensé": {
+            "question": "[TO_TRANSLATE] Montant dépensé en services de restauration et hébergement"
+          }
+        },
+        "formation": {
+          "montant-dépensé": {
+            "question": "[TO_TRANSLATE] Montant dépensé en services de formation"
+          }
+        },
+        "reparation-installation": {
+          "montant-dépensé": {
+            "question": "[TO_TRANSLATE] Montant dépensé en services de réparation et installation"
+          }
+        },
+        "juridique-comptable": {
+          "montant-dépensé": {
+            "question": "[TO_TRANSLATE] Montant dépensé en services juridiques, comptables et assurances"
+          }
+        },
+        "programmation-conseil": {
+          "montant-dépensé": {
+            "question": "[TO_TRANSLATE] Montant dépensé en services de programmation et conseil informatique"
+          }
+        }
+      },
+      "numérique": {
+        "question": "[TO_TRANSLATE] Veuillez indiquer vos usages numériques sur une année",
+        "streaming": {
+          "heures": {
+            "question": "[TO_TRANSLATE] Combien d'heures de streaming vidéo regardées ?"
+          }
+        },
+        "visioconférence": {
+          "heures": {
+            "question": "[TO_TRANSLATE] Combien d'heures de visioconférence ?"
+          }
+        },
+        "mails": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Combien de mails envoyés ?"
+          }
+        },
+        "stockage-cloud": {
+          "volume": {
+            "question": "[TO_TRANSLATE] Combien de Go de données stockées sur le cloud ?"
+          }
+        }
+      }
+    },
     "intrants-biens-et-matières": {
       "titre": "[TO_TRANSLATE] Intrants biens et matières",
       "question": "[TO_TRANSLATE] Quels biens et matières avez-vous achetés en approche monétaire ?",
@@ -365,47 +449,6 @@
         },
         "nombre salariés": {
           "question": "[TO_TRANSLATE] Combien de salariés ont répondu à MEP ?"
-        }
-      },
-      "bénéficiaires": {
-        "se déplacent": {
-          "question": "[TO_TRANSLATE] Les bénéficiaires de vos produits ou services se déplacent-ils pour en profiter ?"
-        },
-        "voiture": {
-          "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par vos bénéficiaires en voiture pour se rendre à vos produits ou services ?"
-        },
-        "part voiture": {
-          "question": "[TO_TRANSLATE] Quel pourcentage des trajets en voiture ?"
-        },
-        "actif": {
-          "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par vos bénéficiaires via des modes actifs (à pied, vélo, trottinette) pour se rendre à vos produits ou services ?"
-        },
-        "part actif": {
-          "question": "[TO_TRANSLATE] Quel pourcentage des trajets via des modes actifs (à pied, vélo, trottinette) ?"
-        },
-        "deux roues": {
-          "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par vos bénéficiaires en deux roues (scooter, moto) pour se rendre à vos produits ou services ?"
-        },
-        "part deux roues": {
-          "question": "[TO_TRANSLATE] Quel pourcentage des trajets en deux roues (scooter, moto) ?"
-        },
-        "transport en commun": {
-          "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par vos bénéficiaires en transport en commun pour se rendre à vos produits ou services ?"
-        },
-        "part transport en commun": {
-          "question": "[TO_TRANSLATE] Quel pourcentage des trajets en transport en commun ?"
-        },
-        "train": {
-          "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par vos bénéficiaires en train pour se rendre à vos produits ou services ?"
-        },
-        "part train": {
-          "question": "[TO_TRANSLATE] Quel pourcentage des trajets en train ?"
-        },
-        "avion": {
-          "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par vos bénéficiaires en avion pour se rendre à vos produits ou services ?"
-        },
-        "part avion": {
-          "question": "[TO_TRANSLATE] Quel pourcentage des trajets en avion ?"
         }
       },
       "DT-salariés": {
@@ -591,6 +634,47 @@
             }
           }
         }
+      },
+      "bénéficiaires": {
+        "se déplacent": {
+          "question": "[TO_TRANSLATE] Les bénéficiaires de vos produits ou services se déplacent-ils pour en profiter ?"
+        },
+        "voiture": {
+          "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par vos bénéficiaires en voiture pour se rendre à vos produits ou services ?"
+        },
+        "part voiture": {
+          "question": "[TO_TRANSLATE] Quel pourcentage des trajets en voiture ?"
+        },
+        "actif": {
+          "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par vos bénéficiaires via des modes actifs (à pied, vélo, trottinette) pour se rendre à vos produits ou services ?"
+        },
+        "part actif": {
+          "question": "[TO_TRANSLATE] Quel pourcentage des trajets via des modes actifs (à pied, vélo, trottinette) ?"
+        },
+        "deux roues": {
+          "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par vos bénéficiaires en deux roues (scooter, moto) pour se rendre à vos produits ou services ?"
+        },
+        "part deux roues": {
+          "question": "[TO_TRANSLATE] Quel pourcentage des trajets en deux roues (scooter, moto) ?"
+        },
+        "transport en commun": {
+          "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par vos bénéficiaires en transport en commun pour se rendre à vos produits ou services ?"
+        },
+        "part transport en commun": {
+          "question": "[TO_TRANSLATE] Quel pourcentage des trajets en transport en commun ?"
+        },
+        "train": {
+          "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par vos bénéficiaires en train pour se rendre à vos produits ou services ?"
+        },
+        "part train": {
+          "question": "[TO_TRANSLATE] Quel pourcentage des trajets en train ?"
+        },
+        "avion": {
+          "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par vos bénéficiaires en avion pour se rendre à vos produits ou services ?"
+        },
+        "part avion": {
+          "question": "[TO_TRANSLATE] Quel pourcentage des trajets en avion ?"
+        }
       }
     },
     "déchets": {
@@ -727,90 +811,6 @@
         "végétalien": {
           "nombre de repas": {
             "question": "[TO_TRANSLATE] Combien de repas végétaliens sont consommés par vos bénéficiaires chaque année ?"
-          }
-        }
-      }
-    },
-    "intrants-services": {
-      "services": {
-        "description": "[TO_TRANSLATE] La liste est non exhaustive : si vous n’avez pas comptabilisé l’ensemble de vos dépenses, c’est tout à fait normal. Il peut s’agir de dépenses très faiblement émissives ou dont les émissions sont déjà prises en compte dans d’autres postes ou via d’autres questions reposant sur des données plus précises.",
-        "question": "[TO_TRANSLATE] Quel montant avez-vous dépensé dans les services immatériels suivants",
-        "spectacles-musées": {
-          "montant-dépensé": {
-            "question": "[TO_TRANSLATE] Montant dépensé en services de spectacles, musées et autres services culturels"
-          }
-        },
-        "assurance-reassurance": {
-          "montant-dépensé": {
-            "question": "[TO_TRANSLATE] Montant dépensé en services d'assurance et réassurance"
-          }
-        },
-        "telecom": {
-          "montant-dépensé": {
-            "question": "[TO_TRANSLATE] Montant dépensé en services de télécommunications"
-          }
-        },
-        "sante-humaine": {
-          "montant-dépensé": {
-            "question": "[TO_TRANSLATE] Montant dépensé en services de santé humaine"
-          }
-        },
-        "edition": {
-          "montant-dépensé": {
-            "question": "[TO_TRANSLATE] Montant dépensé en services d'édition"
-          }
-        },
-        "poste-courrier": {
-          "montant-dépensé": {
-            "question": "[TO_TRANSLATE] Montant dépensé en services de poste et courrier"
-          }
-        },
-        "restauration": {
-          "montant-dépensé": {
-            "question": "[TO_TRANSLATE] Montant dépensé en services de restauration et hébergement"
-          }
-        },
-        "formation": {
-          "montant-dépensé": {
-            "question": "[TO_TRANSLATE] Montant dépensé en services de formation"
-          }
-        },
-        "reparation-installation": {
-          "montant-dépensé": {
-            "question": "[TO_TRANSLATE] Montant dépensé en services de réparation et installation"
-          }
-        },
-        "juridique-comptable": {
-          "montant-dépensé": {
-            "question": "[TO_TRANSLATE] Montant dépensé en services juridiques, comptables et assurances"
-          }
-        },
-        "programmation-conseil": {
-          "montant-dépensé": {
-            "question": "[TO_TRANSLATE] Montant dépensé en services de programmation et conseil informatique"
-          }
-        }
-      },
-      "numérique": {
-        "question": "[TO_TRANSLATE] Veuillez indiquer vos usages numériques sur une année",
-        "streaming": {
-          "heures": {
-            "question": "[TO_TRANSLATE] Combien d'heures de streaming vidéo regardées ?"
-          }
-        },
-        "visioconférence": {
-          "heures": {
-            "question": "[TO_TRANSLATE] Combien d'heures de visioconférence ?"
-          }
-        },
-        "mails": {
-          "nombre": {
-            "question": "[TO_TRANSLATE] Combien de mails envoyés ?"
-          }
-        },
-        "stockage-cloud": {
-          "volume": {
-            "question": "[TO_TRANSLATE] Combien de Go de données stockées sur le cloud ?"
           }
         }
       }

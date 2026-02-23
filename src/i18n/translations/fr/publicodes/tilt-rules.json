@@ -9,15 +9,15 @@
     "litre": "litre",
     "stères": "stères",
     "kgCO2e": "kgCO2e",
+    "h": "h",
+    "mail": "mail",
+    "Go": "Go",
     "unité": "unité",
     "kg": "kg",
     "tonne": "tonne",
     "km": "km",
     "%": "%",
-    "m2": "m2",
-    "h": "h",
-    "mail": "mail",
-    "Go": "Go"
+    "m2": "m2"
   },
   "publicodes-rules": {
     "général": {
@@ -230,6 +230,90 @@
         }
       }
     },
+    "intrants-services": {
+      "services": {
+        "description": "La liste est non exhaustive : si vous n’avez pas comptabilisé l’ensemble de vos dépenses, c’est tout à fait normal. Il peut s’agir de dépenses très faiblement émissives ou dont les émissions sont déjà prises en compte dans d’autres postes ou via d’autres questions reposant sur des données plus précises.",
+        "question": "Quel montant avez-vous dépensé dans les services immatériels suivants",
+        "spectacles-musées": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de spectacles, musées et autres services culturels"
+          }
+        },
+        "assurance-reassurance": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services d'assurance et réassurance"
+          }
+        },
+        "telecom": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de télécommunications"
+          }
+        },
+        "sante-humaine": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de santé humaine"
+          }
+        },
+        "edition": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services d'édition"
+          }
+        },
+        "poste-courrier": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de poste et courrier"
+          }
+        },
+        "restauration": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de restauration et hébergement"
+          }
+        },
+        "formation": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de formation"
+          }
+        },
+        "reparation-installation": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de réparation et installation"
+          }
+        },
+        "juridique-comptable": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services juridiques, comptables et assurances"
+          }
+        },
+        "programmation-conseil": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de programmation et conseil informatique"
+          }
+        }
+      },
+      "numérique": {
+        "question": "Veuillez indiquer vos usages numériques sur une année",
+        "streaming": {
+          "heures": {
+            "question": "Combien d'heures de streaming vidéo regardées ?"
+          }
+        },
+        "visioconférence": {
+          "heures": {
+            "question": "Combien d'heures de visioconférence ?"
+          }
+        },
+        "mails": {
+          "nombre": {
+            "question": "Combien de mails envoyés ?"
+          }
+        },
+        "stockage-cloud": {
+          "volume": {
+            "question": "Combien de Go de données stockées sur le cloud ?"
+          }
+        }
+      }
+    },
     "intrants-biens-et-matières": {
       "titre": "Intrants biens et matières",
       "question": "Quels biens et matières avez-vous achetés en approche monétaire ?",
@@ -365,47 +449,6 @@
         },
         "nombre salariés": {
           "question": "Combien de salariés ont répondu à MEP ?"
-        }
-      },
-      "bénéficiaires": {
-        "se déplacent": {
-          "question": "Les bénéficiaires de vos produits ou services se déplacent-ils pour en profiter ?"
-        },
-        "voiture": {
-          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en voiture pour se rendre à vos produits ou services ?"
-        },
-        "part voiture": {
-          "question": "Quel pourcentage des trajets en voiture ?"
-        },
-        "actif": {
-          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires via des modes actifs (à pied, vélo, trottinette) pour se rendre à vos produits ou services ?"
-        },
-        "part actif": {
-          "question": "Quel pourcentage des trajets via des modes actifs (à pied, vélo, trottinette) ?"
-        },
-        "deux roues": {
-          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en deux roues (scooter, moto) pour se rendre à vos produits ou services ?"
-        },
-        "part deux roues": {
-          "question": "Quel pourcentage des trajets en deux roues (scooter, moto) ?"
-        },
-        "transport en commun": {
-          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en transport en commun pour se rendre à vos produits ou services ?"
-        },
-        "part transport en commun": {
-          "question": "Quel pourcentage des trajets en transport en commun ?"
-        },
-        "train": {
-          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en train pour se rendre à vos produits ou services ?"
-        },
-        "part train": {
-          "question": "Quel pourcentage des trajets en train ?"
-        },
-        "avion": {
-          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en avion pour se rendre à vos produits ou services ?"
-        },
-        "part avion": {
-          "question": "Quel pourcentage des trajets en avion ?"
         }
       },
       "DT-salariés": {
@@ -591,6 +634,47 @@
             }
           }
         }
+      },
+      "bénéficiaires": {
+        "se déplacent": {
+          "question": "Les bénéficiaires de vos produits ou services se déplacent-ils pour en profiter ?"
+        },
+        "voiture": {
+          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en voiture pour se rendre à vos produits ou services ?"
+        },
+        "part voiture": {
+          "question": "Quel pourcentage des trajets en voiture ?"
+        },
+        "actif": {
+          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires via des modes actifs (à pied, vélo, trottinette) pour se rendre à vos produits ou services ?"
+        },
+        "part actif": {
+          "question": "Quel pourcentage des trajets via des modes actifs (à pied, vélo, trottinette) ?"
+        },
+        "deux roues": {
+          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en deux roues (scooter, moto) pour se rendre à vos produits ou services ?"
+        },
+        "part deux roues": {
+          "question": "Quel pourcentage des trajets en deux roues (scooter, moto) ?"
+        },
+        "transport en commun": {
+          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en transport en commun pour se rendre à vos produits ou services ?"
+        },
+        "part transport en commun": {
+          "question": "Quel pourcentage des trajets en transport en commun ?"
+        },
+        "train": {
+          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en train pour se rendre à vos produits ou services ?"
+        },
+        "part train": {
+          "question": "Quel pourcentage des trajets en train ?"
+        },
+        "avion": {
+          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en avion pour se rendre à vos produits ou services ?"
+        },
+        "part avion": {
+          "question": "Quel pourcentage des trajets en avion ?"
+        }
       }
     },
     "déchets": {
@@ -727,90 +811,6 @@
         "végétalien": {
           "nombre de repas": {
             "question": "Combien de repas végétaliens sont consommés par vos bénéficiaires chaque année ?"
-          }
-        }
-      }
-    },
-    "intrants-services": {
-      "services": {
-        "description": "La liste est non exhaustive : si vous n’avez pas comptabilisé l’ensemble de vos dépenses, c’est tout à fait normal. Il peut s’agir de dépenses très faiblement émissives ou dont les émissions sont déjà prises en compte dans d’autres postes ou via d’autres questions reposant sur des données plus précises.",
-        "question": "Quel montant avez-vous dépensé dans les services immatériels suivants",
-        "spectacles-musées": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de spectacles, musées et autres services culturels"
-          }
-        },
-        "assurance-reassurance": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services d'assurance et réassurance"
-          }
-        },
-        "telecom": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de télécommunications"
-          }
-        },
-        "sante-humaine": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de santé humaine"
-          }
-        },
-        "edition": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services d'édition"
-          }
-        },
-        "poste-courrier": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de poste et courrier"
-          }
-        },
-        "restauration": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de restauration et hébergement"
-          }
-        },
-        "formation": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de formation"
-          }
-        },
-        "reparation-installation": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de réparation et installation"
-          }
-        },
-        "juridique-comptable": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services juridiques, comptables et assurances"
-          }
-        },
-        "programmation-conseil": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de programmation et conseil informatique"
-          }
-        }
-      },
-      "numérique": {
-        "question": "Veuillez indiquer vos usages numériques sur une année",
-        "streaming": {
-          "heures": {
-            "question": "Combien d'heures de streaming vidéo regardées ?"
-          }
-        },
-        "visioconférence": {
-          "heures": {
-            "question": "Combien d'heures de visioconférence ?"
-          }
-        },
-        "mails": {
-          "nombre": {
-            "question": "Combien de mails envoyés ?"
-          }
-        },
-        "stockage-cloud": {
-          "volume": {
-            "question": "Combien de Go de données stockées sur le cloud ?"
           }
         }
       }

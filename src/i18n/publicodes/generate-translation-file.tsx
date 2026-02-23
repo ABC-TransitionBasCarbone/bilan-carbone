@@ -1,5 +1,5 @@
-import { getI18nUnitKey } from '../../lib/publicodes/utils'
 import Engine, { Rule } from 'publicodes'
+import { getI18nUnitKey } from '../../lib/publicodes/utils'
 import {
   getArgs,
   KEYS_TO_TRANSLATE,
