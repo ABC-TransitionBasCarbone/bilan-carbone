@@ -2,6 +2,7 @@
 
 import Button from '@/components/base/Button'
 import DebouncedInput from '@/components/base/DebouncedInput'
+import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
 import { PastStudy } from '@/utils/trajectory'
 import { SectenInfo } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -21,6 +22,7 @@ interface Props {
   sectenData: SectenInfo[]
   studyEmissions?: number
   pastStudies?: PastStudy[]
+  defaultSnbcSectoralPercentages?: SectorPercentages | null
 }
 
 const ObjectiveFilters = ({
@@ -33,6 +35,7 @@ const ObjectiveFilters = ({
   sectenData,
   studyEmissions = 0,
   pastStudies = [],
+  defaultSnbcSectoralPercentages,
 }: Props) => {
   const t = useTranslations('study.transitionPlan.objectives')
   const [creationModalOpened, setCreationModalOpened] = useState(false)
@@ -70,6 +73,7 @@ const ObjectiveFilters = ({
           sectenData={sectenData}
           studyEmissions={studyEmissions}
           pastStudies={pastStudies}
+          defaultSnbcSectoralPercentages={defaultSnbcSectoralPercentages}
         />
       )}
     </div>

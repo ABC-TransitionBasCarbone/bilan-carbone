@@ -55,7 +55,7 @@ interface Props {
   defaultSnbcSectoralPercentages?: SectorPercentages | null
 }
 
-const defaultValues: TrajectoryFormData = {
+const getDefaultValues = (defaultSnbcSectoralPercentages?: SectorPercentages | null): TrajectoryFormData => ({
   trajectoryType: TrajectoryType.SBTI_15,
   name: '',
   description: '',
@@ -64,7 +64,7 @@ const defaultValues: TrajectoryFormData = {
     targetYear: null,
     reductionRate: null,
   })),
-  sectorPercentages: {
+  sectorPercentages: defaultSnbcSectoralPercentages ?? {
     energy: 0,
     industry: 0,
     waste: 0,
@@ -72,7 +72,7 @@ const defaultValues: TrajectoryFormData = {
     agriculture: 0,
     transportation: 0,
   },
-}
+})
 
 const TrajectoryCreationModal = ({
   open,
@@ -102,7 +102,7 @@ const TrajectoryCreationModal = ({
     reset,
     formState: { isValid },
   } = useForm<TrajectoryFormData>({
-    defaultValues,
+    defaultValues: getDefaultValues(defaultSnbcSectoralPercentages),
     resolver: zodResolver(trajectorySchema),
     mode: 'onChange',
   })
@@ -261,7 +261,7 @@ const TrajectoryCreationModal = ({
   }
 
   const handleBack = () => {
-    reset({ ...defaultValues, trajectoryType })
+    reset({ ...getDefaultValues(defaultSnbcSectoralPercentages), trajectoryType })
     setActiveStep((prev) => prev - 1)
   }
 
@@ -464,7 +464,6 @@ const TrajectoryCreationModal = ({
             studyYear={studyYear}
             snbcRates={snbcRates}
             correctedObjectives={correctedObjectives}
-            defaultSnbcSectoralPercentages={defaultSnbcSectoralPercentages}
           />
         )}
       </Modal>
@@ -509,7 +508,6 @@ const TrajectoryCreationModal = ({
           studyYear={studyYear}
           snbcRates={snbcRates}
           correctedObjectives={correctedObjectives}
-          defaultSnbcSectoralPercentages={defaultSnbcSectoralPercentages}
         />
       )}
     </ModalStepper>

@@ -120,14 +120,13 @@ export interface TrajectoryYearBounds {
 export const convertToPastStudies = (
   linkedStudies: FullStudy[],
   externalStudies: ExternalStudy[],
-  withDependencies: boolean,
   validatedOnly: boolean,
   studyUnit: StudyResultUnit,
 ): PastStudy[] => {
   const pastStudies: PastStudy[] = []
 
   linkedStudies.forEach((study) => {
-    const totalCo2InLinkedUnit = getStudyTotalCo2Emissions(study, withDependencies, validatedOnly)
+    const totalCo2InLinkedUnit = getStudyTotalCo2Emissions(study, true, validatedOnly)
     const totalCo2 = convertValue(totalCo2InLinkedUnit, study.resultsUnit, studyUnit)
 
     pastStudies.push({
@@ -1822,4 +1821,13 @@ export const getCorrectedObjectives = (
   }
 
   return null
+}
+
+export const getDefaultSnbcSectoralPercentages = (
+  trajectories: { type: TrajectoryType; sectorPercentages: unknown; createdAt: Date }[],
+): SectorPercentages | null => {
+  const trajectory = trajectories
+    .filter((t) => t.type === TrajectoryType.SNBC_SECTORAL)
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0]
+  return (trajectory?.sectorPercentages as SectorPercentages) ?? null
 }

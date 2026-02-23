@@ -52,6 +52,7 @@ interface Props {
   validatedOnly: boolean
   studyEmissions: number
   showTitle?: boolean
+  showActionTrajectory?: boolean
 }
 
 const TrajectoryGraph = ({
@@ -67,6 +68,7 @@ const TrajectoryGraph = ({
   validatedOnly,
   studyEmissions,
   showTitle = true,
+  showActionTrajectory = true,
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectories.graph')
   const tUnit = useTranslations('study.results.units')
@@ -107,7 +109,7 @@ const TrajectoryGraph = ({
       withDependencies: true,
       validatedOnly,
       trajectories,
-      actions,
+      actions: showActionTrajectory ? actions : [],
       pastStudies,
       selectedSnbcTrajectories,
       selectedSbtiTrajectories,
@@ -137,6 +139,7 @@ const TrajectoryGraph = ({
     validatedOnly,
     trajectories,
     actions,
+    showActionTrajectory,
     pastStudies,
     selectedSnbcTrajectories,
     selectedSbtiTrajectories,

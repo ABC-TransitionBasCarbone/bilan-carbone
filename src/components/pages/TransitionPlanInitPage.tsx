@@ -154,7 +154,7 @@ const TransitionPlanInitPage = ({
   )
 
   const pastStudies = useMemo(
-    () => convertToPastStudies(linkedStudies, linkedExternalStudies, true, validatedOnly, study.resultsUnit),
+    () => convertToPastStudies(linkedStudies, linkedExternalStudies, validatedOnly, study.resultsUnit),
     [linkedStudies, linkedExternalStudies, validatedOnly, study.resultsUnit],
   )
 
@@ -373,6 +373,7 @@ const TransitionPlanInitPage = ({
               pastStudies={pastStudies}
               validatedOnly={validatedOnly}
               showTitle={false}
+              showActionTrajectory={false}
             />
           </OnboardingSectionStep>
           {!isComplete && (

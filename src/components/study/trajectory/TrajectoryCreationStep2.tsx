@@ -4,7 +4,7 @@ import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormTextField } from '@/components/form/TextField'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { customRich } from '@/i18n/customRich'
-import { SectorPercentages, TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
+import { TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
 import { ReductionRates } from '@/utils/snbc'
 import { toTitleCase } from '@/utils/string'
 import { BaseObjective, getDefaultSBTIReductionRate } from '@/utils/trajectory'
@@ -18,7 +18,7 @@ import { useState } from 'react'
 import { Control, Controller, useFieldArray } from 'react-hook-form'
 import AddObjectiveButton from './AddObjectiveButton'
 import ObjectiveCard from './ObjectiveCard'
-import sectorStyles from './SectorPercentageInputs.module.css'
+import SectorPercentageInputs from './SectorPercentageInputs'
 import styles from './TrajectoryCreationModal.module.css'
 
 interface Props {
@@ -31,7 +31,6 @@ interface Props {
   studyYear: number
   snbcRates: ReductionRates | null
   correctedObjectives: (BaseObjective | null)[] | null
-  defaultSnbcSectoralPercentages?: SectorPercentages | null
 }
 
 const TrajectoryCreationStep2 = ({
@@ -44,10 +43,8 @@ const TrajectoryCreationStep2 = ({
   studyYear,
   snbcRates,
   correctedObjectives,
-  defaultSnbcSectoralPercentages,
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectoryModal')
-  const tSectors = useTranslations('study.transitionPlan.trajectoryModal.sectors')
   const tGlossary = useTranslations('study.transitionPlan.trajectoryModal.glossary')
   const [glossary, setGlossary] = useState('')
   const sbtiReductionRate = getDefaultSBTIReductionRate(trajectoryType)
@@ -204,7 +201,7 @@ const TrajectoryCreationStep2 = ({
         />
       )}
 
-      {trajectoryType === TrajectoryType.SNBC_SECTORAL && defaultSnbcSectoralPercentages && (
+      {trajectoryType === TrajectoryType.SNBC_SECTORAL && (
         <div>
           <Typography variant="body1" fontWeight="bold" className="mb1">
             {t('sectorAllocation.title')}
@@ -212,35 +209,7 @@ const TrajectoryCreationStep2 = ({
           <Typography variant="body2" color="textSecondary" className="mb1">
             {t('sectorAllocation.description')}
           </Typography>
-          <div className="flex-col gapped1">
-            <div className={classNames('grid gapped1', sectorStyles.sectorGrid)}>
-              {(Object.entries(defaultSnbcSectoralPercentages) as [keyof SectorPercentages, number][]).map(
-                ([sector, value]) => (
-                  <div
-                    key={sector}
-                    className={classNames('flex justify-between items-center', sectorStyles.remainingGeneral)}
-                  >
-                    <Typography variant="body2">{tSectors(sector)}</Typography>
-                    <Typography variant="body2" fontWeight={600}>
-                      {value}%
-                    </Typography>
-                  </div>
-                ),
-              )}
-            </div>
-            <div className={classNames('flex justify-between items-center', sectorStyles.remainingGeneral)}>
-              <Typography fontWeight={600} color="primary">
-                {tSectors('remainingGeneral')}
-              </Typography>
-              <Typography fontWeight={600} color="primary">
-                {Math.max(
-                  0,
-                  100 - Object.values(defaultSnbcSectoralPercentages).reduce((sum, val) => sum + (val || 0), 0),
-                ).toFixed(1)}
-                %
-              </Typography>
-            </div>
-          </div>
+          <SectorPercentageInputs canEdit control={control as Control<TrajectoryFormData>} />
         </div>
       )}
 

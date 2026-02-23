@@ -7,7 +7,7 @@ import { customRich } from '@/i18n/customRich'
 import { hasAccessToReductionObjectivesGlossary } from '@/services/permissions/environment'
 import { getStudyTotalCo2Emissions } from '@/services/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
-import { convertToPastStudies } from '@/utils/trajectory'
+import { convertToPastStudies, getDefaultSnbcSectoralPercentages } from '@/utils/trajectory'
 import { ExternalStudy, SectenInfo } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -55,8 +55,10 @@ const ObjectivesPage = ({
   }, [study, validatedOnly])
 
   const pastStudiesData = useMemo(() => {
-    return convertToPastStudies(linkedStudies, linkedExternalStudies, false, validatedOnly, study.resultsUnit)
+    return convertToPastStudies(linkedStudies, linkedExternalStudies, validatedOnly, study.resultsUnit)
   }, [linkedStudies, linkedExternalStudies, validatedOnly, study.resultsUnit])
+
+  const defaultSnbcSectoralPercentages = useMemo(() => getDefaultSnbcSectoralPercentages(trajectories), [trajectories])
 
   const sites = useMemo(() => {
     return study.sites.map((s) => ({ id: s.id, name: s.site.name }))
@@ -109,6 +111,7 @@ const ObjectivesPage = ({
               sectenData={sectenData}
               studyEmissions={studyTotalEmissions}
               pastStudies={pastStudiesData}
+              defaultSnbcSectoralPercentages={defaultSnbcSectoralPercentages}
             />
 
             <TrajectoryObjectivesTable

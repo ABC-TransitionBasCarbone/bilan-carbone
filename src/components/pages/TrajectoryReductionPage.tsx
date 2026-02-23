@@ -20,15 +20,13 @@ import { TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { customRich } from '@/i18n/customRich'
-import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
 import { deleteTransitionPlan } from '@/services/serverFunctions/transitionPlan'
 import { getStudyTotalCo2Emissions } from '@/services/study'
-import { convertToPastStudies } from '@/utils/trajectory'
+import { convertToPastStudies, getDefaultSnbcSectoralPercentages } from '@/utils/trajectory'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Tooltip, Typography } from '@mui/material'
 import type { Action, ExternalStudy, SectenInfo, TransitionPlan } from '@prisma/client'
-import { TrajectoryType } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
@@ -144,7 +142,7 @@ const TrajectoryReductionPage = ({
   }, [callServerFunction, study.id, router])
 
   const pastStudies = useMemo(
-    () => convertToPastStudies(linkedStudies, linkedExternalStudies, true, validatedOnly, study.resultsUnit),
+    () => convertToPastStudies(linkedStudies, linkedExternalStudies, validatedOnly, study.resultsUnit),
     [linkedStudies, linkedExternalStudies, validatedOnly, study.resultsUnit],
   )
 
@@ -152,10 +150,7 @@ const TrajectoryReductionPage = ({
     return getStudyTotalCo2Emissions(study, true, validatedOnly)
   }, [study, validatedOnly])
 
-  const defaultSnbcSectoralPercentages = useMemo(() => {
-    const t = trajectories.find((t) => t.type === TrajectoryType.SNBC_SECTORAL)
-    return (t?.sectorPercentages as SectorPercentages) ?? null
-  }, [trajectories])
+  const defaultSnbcSectoralPercentages = useMemo(() => getDefaultSnbcSectoralPercentages(trajectories), [trajectories])
 
   const canCreateTrajectory = canEdit && studyTotalEmissions > 0
 

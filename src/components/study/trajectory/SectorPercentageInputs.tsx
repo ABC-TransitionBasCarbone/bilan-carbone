@@ -1,5 +1,6 @@
 import { FormTextField } from '@/components/form/TextField'
 import { SECTEN_SECTORS } from '@/constants/trajectories'
+import { TrajectoryFormData } from '@/services/serverFunctions/trajectory.command'
 import { Typography } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -9,14 +10,14 @@ import styles from './SectorPercentageInputs.module.css'
 
 interface Props {
   canEdit: boolean
-  control: Control<SectorFormData>
+  control: Control<SectorFormData> | Control<TrajectoryFormData>
 }
 
 const SectorPercentageInputs = ({ canEdit, control }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectoryModal.sectors')
 
   const sectorPercentages = useWatch({
-    control,
+    control: control as Control<SectorFormData>,
     name: 'sectorPercentages',
   })
 
@@ -35,7 +36,7 @@ const SectorPercentageInputs = ({ canEdit, control }: Props) => {
             disabled={!canEdit}
             key={sector}
             name={`sectorPercentages.${sector}`}
-            control={control}
+            control={control as Control<SectorFormData>}
             label={t(sector)}
             type="number"
             placeholder={t('placeholder')}
