@@ -14,7 +14,7 @@
         id: 43642
 
 énergie . électricité . autoproduction:
-  applicable si: énergie . panneaux PV ou chauffe eau solaire . présent
+  # applicable si: énergie . panneaux PV ou chauffe eau solaire . présent
   titre: Autoproduction d'électricité
   formule: autoproduction * FE
   unité: kgCO2e
