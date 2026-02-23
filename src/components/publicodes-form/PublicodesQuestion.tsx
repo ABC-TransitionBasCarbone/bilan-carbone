@@ -54,6 +54,7 @@ export default function PublicodesQuestion<RuleName extends string>({
 }: PublicodesQuestionProps<RuleName>) {
   const tLayout = useTranslations('publicodes-layout')
 
+  console.log('formLayout', formLayout)
   switch (formLayout.type) {
     case 'input': {
       return <InputQuestion formElement={formLayout.evaluatedElement} onChange={onChange} />

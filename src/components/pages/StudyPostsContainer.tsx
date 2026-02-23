@@ -16,6 +16,8 @@ import StudyPostsCard from '../study/card/StudyPostsCard'
 import useStudySite from '../study/site/useStudySite'
 import StudyPostsPage from './StudyPostsPage'
 import styles from './StudyPostsPage.module.css'
+import { EnvironmentMode } from '@/constants/environments'
+import { SimplifiedEnvironment } from '@/services/publicodes/simplifiedPublicodesConfig'
 
 interface Props {
   post: Post
@@ -30,6 +32,7 @@ const StudyPostsPageContainer = ({ post, currentSubPost, study, userRole, user }
   const tPost = useTranslations('emissionFactors.post')
   const { studySite, setSite } = useStudySite(study)
   const [glossary, setGlossary] = useState('')
+  const environment = study.organizationVersion.environment
 
   const emissionSources = useMemo(
     () =>
@@ -88,7 +91,7 @@ const StudyPostsPageContainer = ({ post, currentSubPost, study, userRole, user }
       </Block>
       <DynamicComponent
         defaultComponent={
-          <StudyPostsPage
+          !study.simplified ? <StudyPostsPage
             post={post}
             study={study}
             userRole={userRole}
@@ -96,21 +99,17 @@ const StudyPostsPageContainer = ({ post, currentSubPost, study, userRole, user }
             studySite={studySite}
             user={user}
             setGlossary={setGlossary}
-          />
-        }
-        environmentComponents={{
-          [Environment.CUT]: (
-            <SimplifiedStudyPostsPage
-              environment={Environment.CUT}
+          />: <SimplifiedStudyPostsPage environment={environment as SimplifiedEnvironment}
               currentSubPost={currentSubPost}
               post={post}
               study={study}
               studySiteId={studySite}
             />
-          ),
-          [Environment.CLICKSON]: (
+        }
+        environmentComponents={{
+          [EnvironmentMode.SIMPLIFIED]: (
             <SimplifiedStudyPostsPage
-              environment={Environment.CLICKSON}
+              environment={environment as SimplifiedEnvironment}
               currentSubPost={currentSubPost}
               post={post}
               study={study}

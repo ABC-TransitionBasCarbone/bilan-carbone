@@ -1,5 +1,11 @@
-énergie . gaz:
-  applicable si: énergie . gaz . présent
+énergie . fossiles: 
+ formule:
+    somme:
+      - énergie . fossiles . gaz
+      - énergie . fossiles . fioul
+
+énergie . fossiles . gaz:
+  applicable si: énergie . fossiles . gaz . présent
   titre: Gaz
   formule: consommation * FE
   unité: kgCO2e
@@ -13,8 +19,8 @@
       meta:
         id: 37138
 
-énergie . fioul:
-  applicable si: énergie . fioul . présent
+énergie . fossiles . fioul:
+  applicable si: énergie . fossiles . fioul . présent
   titre: Fioul
   formule: consommation * FE
   unité: kgCO2e

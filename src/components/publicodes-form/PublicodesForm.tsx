@@ -13,6 +13,7 @@ export interface PublicodesFormProps<RuleName extends string> {
 
 export default function PublicodesForm<RuleName extends string>({ formLayouts }: PublicodesFormProps<RuleName>) {
   const { engine, situation, listLayoutSituations, updateField } = usePublicodesForm<RuleName>()
+  console.log('hEEEEre 3', formLayouts)
 
   const elementsWithRelation = useMemo(() => {
     // FIXME: should manage multiple questions linked to previous ones.
@@ -43,6 +44,8 @@ export default function PublicodesForm<RuleName extends string>({ formLayouts }:
     // NOTE: the situation needs to be a dependency to re-evaluate applicability when it changes
     situation,
   ])
+
+  console.log('elementsWithRelation', elementsWithRelation)
 
   return (
     <Box className="dynamic-form">

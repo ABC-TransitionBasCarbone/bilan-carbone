@@ -16,6 +16,7 @@ const PublicodesSubPostForm = ({ subPost }: PublicodesSubPostFormProps) => {
   const tQuestions = useTranslations('emissionFactors.post.questions')
   const { situation, isLoading, error, config } = usePublicodesForm()
   const formLayouts = config.getFormLayout(subPost)
+  console.log('hEEEEre', formLayouts, subPost)
 
   if (error) {
     return (
@@ -46,6 +47,7 @@ const PublicodesSubPostForm = ({ subPost }: PublicodesSubPostFormProps) => {
     return null
   }
 
+  console.log('hEEEEre 2', formLayouts, subPost)
   return <PublicodesForm formLayouts={formLayouts} />
 }
 

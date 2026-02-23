@@ -1,4 +1,9 @@
 fin de vie:
+  formule: 
+    somme : 
+      - fin de vie . déchets
+
+fin de vie . déchets:
   titre: Fin de vie
   applicable si: fin de vie présente = oui
   formule:
@@ -14,10 +19,10 @@ fin de vie:
       - sinon: 0
   unité: kgCO2e
 
-fin de vie . fin de vie présente:
+fin de vie . déchets . fin de vie présente:
   question: Fournissez-vous des biens matériels à vos bénéficiaires ?
 
-fin de vie . poids:
+fin de vie . déchets . poids:
   applicable si:
     toutes ces conditions:
       - est défini: fin de vie présente
@@ -25,7 +30,7 @@ fin de vie . poids:
   question: Quel est le poids total de ces biens délivrés sur une année ?
   unité: tonne
 
-fin de vie . poubelle noire:
+fin de vie . déchets . poubelle noire:
   applicable si:
     est défini: poids
   formule: FE * pourcentage * poids
@@ -41,7 +46,7 @@ fin de vie . poubelle noire:
       valeur: 0.50
       note: Répartition moyenne des déchets en France - source ADEME/CITEO - Ordures ménagères résiduelles représentent environ 50% des déchets en fin de vie
 
-fin de vie . poubelle jaune:
+fin de vie . déchets . poubelle jaune:
   applicable si:
     est défini: poids
   formule: FE * pourcentage * poids
@@ -57,7 +62,7 @@ fin de vie . poubelle jaune:
       valeur: 0.28
       note: Répartition moyenne des déchets en France - source ADEME/CITEO - Emballages et plastiques représentent environ 28% des déchets en fin de vie
 
-fin de vie . déchets verre:
+fin de vie . déchets . déchets verre:
   applicable si:
     est défini: poids
   formule: FE * pourcentage * poids
@@ -73,7 +78,7 @@ fin de vie . déchets verre:
       valeur: 0.12
       note: Répartition moyenne des déchets en France - source ADEME/CITEO - Déchets verre représentent environ 12% des déchets en fin de vie
 
-fin de vie . déchets verts:
+fin de vie . déchets . déchets verts:
   applicable si:
     est défini: poids
   formule: FE * pourcentage * poids
