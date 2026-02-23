@@ -19,10 +19,10 @@ froid et clim . nombre:
   unité: unité
 
 froid et clim . fuites:
-formule:
-  somme:
-    - locaux partagés
-    - locaux seuls
+  formule:
+    somme:
+      - locaux partagés
+      - locaux seuls
 
 froid et clim . fuites . locaux partagés:
   titre: Fuites de fluides frigoriègnes

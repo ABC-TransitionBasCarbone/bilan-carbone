@@ -9,7 +9,7 @@ déplacements:
       - DT-salariés
   unité: kgCO2e
 
-déplacements .  MEP présent:
+déplacements . MEP présent:
   question: Avez-vous réalisé une campagne de sensibilisation via MEP ?
 
 déplacements . MEP présent . nombre bénévoles:

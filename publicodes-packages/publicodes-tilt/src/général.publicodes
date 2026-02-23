@@ -5,7 +5,7 @@ général . nom:
   question: Quel est le nom de l'association pour laquelle vous souhaitez réaliser une estimation d’impact carbone ?
   #Je sais pas si on peut faire une question avec un champ texte en réponse
 
-général. code postal:
+général . code postal:
   question: Quel est le code postal de l'association ?
 
 général . année:
@@ -24,16 +24,16 @@ général . bénéficiaires:
   question: Combien de bénéficiaires ont profité des services de l'association en  [Année] ?
   unité: personne
 
-général. budget:
+général . budget:
   question: Quel est le budget de fonctionnement de l'association ?
   unité: k€
 
 général . type:
   question: de quel type de structure votre association se rapproche t'elle le plus ?
   une possibilité:
-    - Club de loisirs (sport, jeux, …)
+    - Club de loisirs
     - Association étudiante
-    - Association culturelle (théâtre, festivals, ...)
+    - Association culturelle
     - Association de voisinage
     - Hôpital
     - Maison de retraite
@@ -43,9 +43,9 @@ général . type:
     - Association de défense de l'environnement
     - Association d'enseignement ou de formation
   avec:
-    Club de loisirs (sport, jeux, …):
+    Club de loisirs:
     Association étudiante:
-    Association culturelle (théâtre, festivals, ...):
+    Association culturelle:
     Association de voisinage:
     Hôpital:
     Maison de retraite:
