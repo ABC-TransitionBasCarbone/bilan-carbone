@@ -108,15 +108,15 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('construction . infrastructure . parking présent'),
     input('construction . infrastructure . nombre de places'),
   ],
-  CombustiblesFossiles: [input('énergie . fossiles . gaz . présent'), input('énergie . fossiles . fioul . présent')],
+  CombustiblesFossiles: [input('énergie . fossiles . gaz'), input('énergie . fossiles . fioul')],
   CombustiblesOrganiques: [
-    input('énergie . combustibles organiques . bois . présent'),
-    input('énergie . combustibles organiques . granulés . présent'),
+    input('énergie . combustibles organiques . bois'),
+    input('énergie . combustibles organiques . granulés'),
   ],
 
-  ReseauxDeChaleurEtDeVapeur: [input('énergie . réseaux de chaleur . présent')],
-  ReseauxDeFroid: [input('énergie . réseaux de froid . présent')],
-  Electricite: [input('énergie . électricité . présent'), input('énergie . électricité . autoproduction')],
+  ReseauxDeChaleurEtDeVapeur: [input('énergie . réseaux de chaleur')],
+  ReseauxDeFroid: [input('énergie . réseaux de froid')],
+  Electricite: [input('énergie . électricité'), input('énergie . électricité . autoproduction')],
   DechetsOrganiques: [input('déchets . organiques . poids')],
   DechetsOrduresMenageres: [input('déchets . ordures ménagères . poids')],
   FroidEtClim: [
