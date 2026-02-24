@@ -93,8 +93,8 @@ export const subPostsByPostCUT: Record<CutPost, SubPost[]> = {
 
 export const subPostsByPostTILT: Record<TiltPost, SubPost[]> = {
   [TiltPost.ConstructionDesLocaux]: [SubPost.Batiments, SubPost.AutresInfrastructures],
-  // [TiltPost.Energies]: subPostsByPostBC[BCPost.Energies],
-  // [TiltPost.DechetsDirects]: subPostsByPostBC[BCPost.DechetsDirects],
+  [TiltPost.Energies]: subPostsByPostBC[BCPost.Energies],
+  [TiltPost.DechetsDirects]: subPostsByPostBC[BCPost.DechetsDirects],
   [TiltPost.FroidEtClim]: [SubPost.FroidEtClim],
   [TiltPost.AutresEmissions]: [
     SubPost.ActivitesAgricoles,
@@ -115,15 +115,15 @@ export const subPostsByPostTILT: Record<TiltPost, SubPost[]> = {
     SubPost.Sortant,
     SubPost.TransportFabricationDesVehicules,
   ],
-  // [TiltPost.IntrantsBiensEtMatieresTilt]: subPostsByPostBC[BCPost.IntrantsBiensEtMatieres].filter(
-  //   (sp) => sp !== SubPost.NourritureRepasBoissons,
-  // ),
+  [TiltPost.IntrantsBiensEtMatieresTilt]: subPostsByPostBC[BCPost.IntrantsBiensEtMatieres].filter(
+    (sp) => sp !== SubPost.NourritureRepasBoissons,
+  ),
   [TiltPost.Alimentation]: [
     SubPost.RepasPrisParLesSalaries,
     SubPost.RepasPrisParLesBenevoles,
     SubPost.RepasPrisParLesBeneficiaires,
   ],
-  // [TiltPost.IntrantsServices]: subPostsByPostBC[BCPost.IntrantsServices],
+  [TiltPost.IntrantsServices]: subPostsByPostBC[BCPost.IntrantsServices],
   [TiltPost.EquipementsEtImmobilisations]: [
     SubPost.EquipementsDesSalaries,
     SubPost.ParcInformatiqueDesSalaries,
@@ -141,7 +141,7 @@ export const subPostsByPostTILT: Record<TiltPost, SubPost[]> = {
     SubPost.UtilisationEnDependanceFuitesEtAutresConsommations,
     SubPost.InvestissementsFinanciersRealises,
   ],
-  // [TiltPost.FinDeVie]: subPostsByPostBC[BCPost.FinDeVie],
+  [TiltPost.FinDeVie]: subPostsByPostBC[BCPost.FinDeVie],
   [TiltPost.Teletravail]: [SubPost.TeletravailSalaries, SubPost.TeletravailBenevoles],
 }
 

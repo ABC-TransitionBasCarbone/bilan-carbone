@@ -27,18 +27,18 @@ export enum CutPost {
 
 export enum TiltPost {
   ConstructionDesLocaux = 'ConstructionDesLocaux',
-  // Energies = BCPost.Energies,
-  // DechetsDirects = BCPost.DechetsDirects,
+  Energies = BCPost.Energies,
+  DechetsDirects = BCPost.DechetsDirects,
   FroidEtClim = 'FroidEtClim',
   AutresEmissions = 'AutresEmissions',
   DeplacementsDePersonne = 'DeplacementsDePersonne',
   TransportDeMarchandises = 'TransportDeMarchandises',
   IntrantsBiensEtMatieresTilt = 'IntrantsBiensEtMatieresTilt',
   Alimentation = 'Alimentation',
-  // IntrantsServices = BCPost.IntrantsServices,
+  IntrantsServices = BCPost.IntrantsServices,
   EquipementsEtImmobilisations = 'EquipementsEtImmobilisations',
   Utilisation = 'Utilisation',
-  // FinDeVie = BCPost.FinDeVie,
+  FinDeVie = BCPost.FinDeVie,
   Teletravail = 'Teletravail',
 }
 
