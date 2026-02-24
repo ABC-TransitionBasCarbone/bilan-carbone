@@ -368,12 +368,14 @@ export const createStudyCommand = async (
         await addUserChecklistItem(UserChecklist.CreateFirstStudy)
       }
 
-      await Promise.all(
-        createdStudy.sites.map(async (site) => {
-          await saveSituationInDB(createdStudy.id, site.id, {}, {}, '')
-          await updateSituationWithStudySiteData(site.id, site, session.user.environment)
-        }),
-      )
+      if (isSimplifiedEnvironment(session.user.environment)) {
+        await Promise.all(
+          createdStudy.sites.map(async (site) => {
+            await saveSituationInDB(createdStudy.id, site.id, {}, {}, '')
+            await updateSituationWithStudySiteData(site.id, site, session.user.environment)
+          }),
+        )
+      }
       return { id: createdStudy.id }
     } catch (e) {
       console.error(e)
