@@ -58,6 +58,7 @@ export interface CreateTrajectoryInput {
   type: TrajectoryType
   referenceYear?: number | null
   sectorPercentages?: SectorPercentages | null
+  isDefault?: boolean
   objectives?: {
     targetYear: number
     reductionRate: number
@@ -118,6 +119,7 @@ export const createTrajectoryWithObjectives = async (input: CreateTrajectoryInpu
       type: input.type,
       referenceYear: input.referenceYear,
       sectorPercentages: input.sectorPercentages || undefined,
+      isDefault: input.isDefault ?? false,
       objectives: {
         createMany: {
           data: sortedObjectives.map((obj, index) => ({

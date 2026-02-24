@@ -15,11 +15,12 @@ import {
   getTrajectoryTypeLabel,
   PastStudy,
 } from '@/utils/trajectory'
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
-import { Chip, Typography } from '@mui/material'
+import { Chip, IconButton, TableCell, TableRow, Tooltip, Typography } from '@mui/material'
 import { SectenInfo, TrajectoryType } from '@prisma/client'
-import { ColumnDef, getCoreRowModel, getExpandedRowModel, useReactTable } from '@tanstack/react-table'
+import { ColumnDef, flexRender, getCoreRowModel, getExpandedRowModel, Row, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
 import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'
@@ -77,6 +78,7 @@ interface Props {
     studyId: string
     tags: Array<{ id: string; name: string; color: string | null }>
   }>
+  defaultSnbcSectoralTrajectoryId?: string | null
 }
 
 const fuseOptions = {
@@ -97,6 +99,7 @@ const TrajectoryObjectivesTable = ({
   pastStudies = [],
   sites = [],
   tagFamilies = [],
+  defaultSnbcSectoralTrajectoryId,
 }: Props) => {
   const tAction = useTranslations('common.action')
   const t = useTranslations('study.transitionPlan.objectives')
@@ -304,7 +307,12 @@ const TrajectoryObjectivesTable = ({
             return <p className="pl1">{data.name}</p>
           }
 
-          return <Chip label={getTrajectoryTypeLabel(data.type, t)} size="small" color="info" variant="outlined" />
+          const label =
+            data.id === defaultSnbcSectoralTrajectoryId
+              ? t('defaultSnbcSectoral')
+              : getTrajectoryTypeLabel(data.type, t)
+
+          return <Chip label={label} size="small" color="info" variant="outlined" />
         },
       },
       {
@@ -378,6 +386,16 @@ const TrajectoryObjectivesTable = ({
           const rowData = row.original
 
           if (rowData.isTrajectory) {
+            if (rowData.id === defaultSnbcSectoralTrajectoryId) {
+              return (
+                <Tooltip title={t('defaultSnbcTooltip')}>
+                  <IconButton size="medium" color="primary">
+                    <HelpOutlineIcon fontSize="medium" color="disabled" />
+                  </IconButton>
+                </Tooltip>
+              )
+            }
+
             return (
               <div className="flex">
                 <TableActionButton type="add" onClick={() => handleAddObjectiveClick(rowData.trajectory)} />
@@ -394,6 +412,10 @@ const TrajectoryObjectivesTable = ({
           const objective = parentTrajectory?.objectives.find((obj) => obj.id === rowData.id)
 
           if (!parentTrajectory || !objective) {
+            return null
+          }
+
+          if (rowData.trajectoryId === defaultSnbcSectoralTrajectoryId) {
             return null
           }
 
@@ -430,7 +452,7 @@ const TrajectoryObjectivesTable = ({
         },
       },
     ]
-  }, [t, canEdit, trajectories]) as ColumnDef<TableDataType>[]
+  }, [t, defaultSnbcSectoralTrajectoryId, canEdit, trajectories]) as ColumnDef<TableDataType>[]
 
   const tableData = useMemo((): TrajectoryRow[] => {
     const filteredTrajectories = searchFilter ? fuse.search(searchFilter).map(({ item }) => item) : trajectories
@@ -486,9 +508,28 @@ const TrajectoryObjectivesTable = ({
     getCoreRowModel: getCoreRowModel(),
   })
 
+  const renderRow = (row: Row<TableDataType>) => {
+    const rowData = row.original
+    const isDefaultSnbc =
+      (rowData.isTrajectory && rowData.id === defaultSnbcSectoralTrajectoryId) ||
+      (!rowData.isTrajectory && rowData.trajectoryId === defaultSnbcSectoralTrajectoryId)
+
+    return (
+      <TableRow
+        key={row.id}
+        className={classNames({ [styles.defaultSnbcRow]: isDefaultSnbc })}
+        data-testid="trajectory-objectives-table-row"
+      >
+        {row.getVisibleCells().map((cell) => (
+          <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+        ))}
+      </TableRow>
+    )
+  }
+
   return (
     <>
-      <BaseTable table={table} testId="trajectory-objectives" />
+      <BaseTable table={table} testId="trajectory-objectives" customRow={renderRow} />
       {deleteModalOpen && (
         <ConfirmDeleteModal
           open={deleteModalOpen}

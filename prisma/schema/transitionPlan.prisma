@@ -149,6 +149,7 @@ model Trajectory {
   type              TrajectoryType
   referenceYear     Int?           @map("reference_year")
   sectorPercentages Json?          @map("sector_percentages")
+  isDefault         Boolean        @default(false) @map("is_default")
 
   objectives Objective[]
   createdAt  DateTime    @default(now()) @map("created_at")

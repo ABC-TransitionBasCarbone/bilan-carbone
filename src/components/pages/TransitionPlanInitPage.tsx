@@ -206,6 +206,7 @@ const TransitionPlanInitPage = ({
               name: tBlock('snbcSectorialName'),
               type: TrajectoryType.SNBC_SECTORAL,
               sectorPercentages,
+              isDefault: true,
               objectives,
             }),
           { onSuccess: () => router.refresh() },

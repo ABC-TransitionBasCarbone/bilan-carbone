@@ -1021,7 +1021,7 @@
         "sectorBlock": {
           "title": "SNBC sector allocation",
           "description": "Enter the breakdown of your emissions by major activity sector according to the SNBC. This will create a customised sectoral SNBC trajectory as a reference point.",
-          "snbcSectorialName": "Sectoral SNBC",
+          "snbcSectorialName": "Reference SNBC trajectory",
           "update": "Save changes"
         }
       },
@@ -1268,6 +1268,8 @@
         "snbcGeneral": "SNBC General",
         "snbcSectoral": "SNBC Sectoral",
         "objectiveNumber": "Objective {number}",
+        "defaultSnbcTooltip": "This trajectory is linked to the data entered during the transition plan initialization and cannot be modified or deleted",
+        "defaultSnbcSectoral": "Reference trajectory",
         "search": "Search for a trajectory",
         "add": "Add a trajectory",
         "table": {

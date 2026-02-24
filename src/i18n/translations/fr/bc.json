@@ -1021,7 +1021,7 @@
         "sectorBlock": {
           "title": "Répartition sectorielle SNBC",
           "description": "Renseignez la répartition de vos émissions par grand secteur d'activité selon la SNBC. Cela permettra de créer une trajectoire SNBC sectorielle personnalisée comme point de référence.",
-          "snbcSectorialName": "SNBC sectorielle",
+          "snbcSectorialName": "Trajectoire SNBC de référence",
           "update": "Sauvegarder les modifications"
         }
       },
@@ -1267,7 +1267,9 @@
         "custom": "Personnalisée",
         "snbcGeneral": "SNBC Générale",
         "snbcSectoral": "SNBC Sectorielle",
+        "defaultSnbcSectoral": "Trajectoire de référence",
         "objectiveNumber": "Objectif {number}",
+        "defaultSnbcTooltip": "Cette trajectoire est liée aux données rentrées lors de l'initialisation du plan de transition et ne peut être modifiée ou supprimée",
         "search": "Cherchez une trajectoire",
         "add": "Ajouter une trajectoire",
         "table": {

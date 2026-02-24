@@ -1824,16 +1824,14 @@ export const getCorrectedObjectives = (
 }
 
 export const getDefaultSnbcSectoralTrajectory = (
-  trajectories: { type: TrajectoryType; sectorPercentages: unknown; createdAt: Date }[],
+  trajectories: { type: TrajectoryType; isDefault: boolean }[],
 ): TrajectoryWithObjectivesAndScope | null => {
-  const trajectory = trajectories
-    .filter((t) => t.type === TrajectoryType.SNBC_SECTORAL)
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0]
+  const trajectory = trajectories.find((t) => t.type === TrajectoryType.SNBC_SECTORAL && t.isDefault)
   return (trajectory as TrajectoryWithObjectivesAndScope) ?? null
 }
 
 export const getDefaultSnbcSectoralPercentages = (
-  trajectories: { type: TrajectoryType; sectorPercentages: unknown; createdAt: Date }[],
+  trajectories: { type: TrajectoryType; sectorPercentages: unknown; isDefault: boolean }[],
 ): SectorPercentages | null => {
   return (getDefaultSnbcSectoralTrajectory(trajectories)?.sectorPercentages as SectorPercentages) ?? null
 }
