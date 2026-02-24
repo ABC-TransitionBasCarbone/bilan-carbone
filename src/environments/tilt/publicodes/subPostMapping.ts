@@ -108,15 +108,21 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('construction . infrastructure . parking présent'),
     input('construction . infrastructure . nombre de places'),
   ],
-  CombustiblesFossiles: [input('énergie . fossiles . gaz'), input('énergie . fossiles . fioul')],
+  CombustiblesFossiles: [
+    input('énergie . fossiles . gaz . consommation'),
+    input('énergie . fossiles . fioul . consommation'),
+  ],
   CombustiblesOrganiques: [
-    input('énergie . combustibles organiques . bois'),
-    input('énergie . combustibles organiques . granulés'),
+    input('énergie . combustibles organiques . bois . consommation'),
+    input('énergie . combustibles organiques . granulés . consommation'),
   ],
 
-  ReseauxDeChaleurEtDeVapeur: [input('énergie . réseaux de chaleur')],
-  ReseauxDeFroid: [input('énergie . réseaux de froid')],
-  Electricite: [input('énergie . électricité'), input('énergie . électricité . autoproduction')],
+  ReseauxDeChaleurEtDeVapeur: [input('énergie . réseaux de chaleur . consommation')],
+  ReseauxDeFroid: [input('énergie . réseaux de froid . consommation')],
+  Electricite: [
+    input('énergie . électricité . consommation'),
+    input('énergie . électricité . autoproduction . autoproduction'),
+  ],
   DechetsOrganiques: [input('déchets . organiques . poids')],
   DechetsOrduresMenageres: [input('déchets . ordures ménagères . poids')],
   FroidEtClim: [
@@ -125,8 +131,8 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('froid et clim . fuites . locaux seuls'),
   ],
   DechetsDEmballagesEtPlastiques: [
-    input('déchets . emballages et plastiques . déchets verre . poids'),
-    input('déchets . emballages et plastiques . poubelle jaune . poids'),
+    input('déchets . emballages et plastiques . déchets verre . avec . poids'),
+    input('déchets . emballages et plastiques . poubelle jaune . avec . poids'),
   ],
   TraitementDesDechetsEnFinDeVie: [
     input('fin de vie . déchets . fin de vie présente'),
