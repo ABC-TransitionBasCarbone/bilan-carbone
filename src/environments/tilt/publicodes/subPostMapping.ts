@@ -131,8 +131,8 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('froid et clim . fuites . locaux seuls'),
   ],
   DechetsDEmballagesEtPlastiques: [
-    input('déchets . emballages et plastiques . déchets verre . avec . poids'),
-    input('déchets . emballages et plastiques . poubelle jaune . avec . poids'),
+    input('déchets . emballages et plastiques . déchets verre . poids'),
+    input('déchets . emballages et plastiques . poubelle jaune . poids'),
   ],
   TraitementDesDechetsEnFinDeVie: [
     input('fin de vie . déchets . fin de vie présente'),

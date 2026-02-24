@@ -575,8 +575,28 @@
       }
     },
     "déchets": {
-      "titre": "Déchets directs",
-      "question": "Quelles quantités des déchets suivants sont jetées chaque année ?"
+      "organiques": {
+        "poids": {
+          "question": "Déchets verts, compost et déchets organiques"
+        }
+      },
+      "ordures ménagères": {
+        "poids": {
+          "question": "Poubelle noire (ordures ménagères)"
+        }
+      },
+      "emballages et plastiques": {
+        "poubelle jaune": {
+          "poids": {
+            "question": "Poubelle jaune (emballages et plastiques)"
+          }
+        },
+        "déchets verre": {
+          "poids": {
+            "question": "Déchets verre"
+          }
+        }
+      }
     },
     "construction": {
       "infrastructure": {
