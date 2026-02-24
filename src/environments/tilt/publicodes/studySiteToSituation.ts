@@ -17,6 +17,5 @@ export function studySiteToTiltSituation(studySite: StudySiteFields | undefined)
     situation['général . code postal'] = studySite.distanceToParis
   }
 
-
   return situation
 }

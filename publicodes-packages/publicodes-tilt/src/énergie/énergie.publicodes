@@ -1,27 +1,27 @@
 énergie:
   titre: Énergie
   question: Qu'utilisez-vous pour le chauffage, l'éclairage et les autres consommations énergétiques de vos locaux ?
-#  mosaique:
-#    type: selection
-#    options:
-#      - électricité . présent
-#      - fossiles . gaz . présent
-#      - fossiles . fioul . présent
-#      - bois . présent
-#      - granulés . présent
-#      - réseaux de chaleur . présent
-#      - réseaux de froid . présent
-#      # - panneaux PV ou chauffe eau solaire . présent
-#    suggestions:
-#      aucun:
-#        électricité . présent: non
-#        gaz . présent: non
-#        fioul . présent: non
-#        bois . présent: non
-#        granulés . présent: non
-#        réseaux de chaleur . présent: non
-#        réseaux de froid . présent: non
-#        # panneaux PV ou chauffe eau solaire . présent: non
+  #  mosaique:
+  #    type: selection
+  #    options:
+  #      - électricité . présent
+  #      - fossiles . gaz . présent
+  #      - fossiles . fioul . présent
+  #      - bois . présent
+  #      - granulés . présent
+  #      - réseaux de chaleur . présent
+  #      - réseaux de froid . présent
+  #      # - panneaux PV ou chauffe eau solaire . présent
+  #    suggestions:
+  #      aucun:
+  #        électricité . présent: non
+  #        gaz . présent: non
+  #        fioul . présent: non
+  #        bois . présent: non
+  #        granulés . présent: non
+  #        réseaux de chaleur . présent: non
+  #        réseaux de froid . présent: non
+  #        # panneaux PV ou chauffe eau solaire . présent: non
   formule:
     somme:
       - énergie . électricité

@@ -1,6 +1,6 @@
 énergie . combustibles organiques:
-  formule: 
-    somme: 
+  formule:
+    somme:
       - empreinte
 
 énergie . combustibles organiques . empreinte:
