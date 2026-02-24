@@ -11,10 +11,10 @@ déplacements . DM-salariés:
 déplacements . DM-salariés . avec:
   applicable si:
     toutes ces conditions:
-      - est défini: MEP présent
-      - MEP présent = oui
+      - est défini: déplacements . DT-salariés . MEP présent
+      - déplacements . DT-salariés . MEP présent = oui
   titre: émissions des trajets liés à des missions des salariés (avec enquête MEP)
-  formule: émissions MEP * général . salariés / MEP présent . nombre salariés ## produit en croix pour extrapoler les émissions totales à partir des émissions de MEP
+  formule: émissions MEP * général . salariés / déplacements . DT-salariés . MEP présent . nombre salariés ## produit en croix pour extrapoler les émissions totales à partir des émissions de MEP
 
   avec:
     émissions MEP:
@@ -59,8 +59,8 @@ déplacements . DM-salariés . sans:
 déplacements . DM-salariés . sans . voiture:
   applicable si:
     toutes ces conditions:
-      - est défini: MEP présent
-      - MEP présent = non
+      - est défini: déplacements . DT-salariés . MEP présent
+      - déplacements . DT-salariés . MEP présent = non
   formule: distance * split * 12 / occupation
   avec:
     distance:
@@ -112,8 +112,8 @@ déplacements . DM-salariés . sans . voiture . occupation:
 déplacements . DM-salariés . sans . train:
   applicable si:
     toutes ces conditions:
-      - est défini: MEP présent
-      - MEP présent = non
+      - est défini: déplacements . DT-salariés . MEP présent
+      - déplacements . DT-salariés . MEP présent = non
   formule: distance * FE * 12
   avec:
     distance:
@@ -132,8 +132,8 @@ déplacements . DM-salariés . sans . train:
 déplacements . DM-salariés . sans . transports en commun:
   applicable si:
     toutes ces conditions:
-      - est défini: MEP présent
-      - MEP présent = non
+      - est défini: déplacements . DT-salariés . MEP présent
+      - déplacements . DT-salariés . MEP présent = non
   formule: distance * split * 12
   avec:
     distance:
@@ -160,8 +160,8 @@ déplacements . DM-salariés . sans . transports en commun . split:
 déplacements . DM-salariés . sans . deux roues:
   applicable si:
     toutes ces conditions:
-      - est défini: MEP présent
-      - MEP présent = non
+      - est défini: déplacements . DT-salariés . MEP présent
+      - déplacements . DT-salariés . MEP présent = non
   formule: distance * FE * 12
   avec:
     distance:
@@ -186,8 +186,8 @@ déplacements . DM-salariés . sans . avion:
 déplacements . DM-salariés . sans . avion . court courrier:
   applicable si:
     toutes ces conditions:
-      - est défini: MEP présent
-      - MEP présent = non
+      - est défini: déplacements . DT-salariés . MEP présent
+      - déplacements . DT-salariés . MEP présent = non
   formule: distance * FE
   avec:
     distance:
@@ -205,8 +205,8 @@ déplacements . DM-salariés . sans . avion . court courrier:
 déplacements . DM-salariés . sans . avion . moyen courrier:
   applicable si:
     toutes ces conditions:
-      - est défini: MEP présent
-      - MEP présent = non
+      - est défini: déplacements . DT-salariés . MEP présent
+      - déplacements . DT-salariés . MEP présent = non
   formule: distance * FE
   avec:
     distance:
@@ -224,8 +224,8 @@ déplacements . DM-salariés . sans . avion . moyen courrier:
 déplacements . DM-salariés . sans . avion . long courrier:
   applicable si:
     toutes ces conditions:
-      - est défini: MEP présent
-      - MEP présent = non
+      - est défini: déplacements . DT-salariés . MEP présent
+      - déplacements . DT-salariés . MEP présent = non
   formule: distance * FE * 12
   avec:
     distance:

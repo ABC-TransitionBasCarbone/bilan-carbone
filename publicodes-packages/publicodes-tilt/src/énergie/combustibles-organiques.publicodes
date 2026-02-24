@@ -1,4 +1,9 @@
 énergie . combustibles organiques:
+  formule: 
+    somme: 
+      - empreinte
+
+énergie . combustibles organiques . empreinte:
   applicable si:
     toutes ces conditions:
       - est défini: choix

@@ -9,15 +9,15 @@
     "litre": "litre",
     "stères": "stères",
     "kgCO2e": "kgCO2e",
+    "h": "h",
+    "mail": "mail",
+    "Go": "Go",
     "unité": "unité",
     "kg": "kg",
     "tonne": "tonne",
     "km": "km",
     "%": "%",
-    "m2": "m2",
-    "h": "h",
-    "mail": "mail",
-    "Go": "Go"
+    "m2": "m2"
   },
   "publicodes-rules": {
     "général": {
@@ -122,9 +122,6 @@
       "titre": "Énergie",
       "question": "Qu'utilisez-vous pour le chauffage, l'éclairage et les autres consommations énergétiques de vos locaux ?",
       "électricité": {
-        "présent": {
-          "question": "Utilisez-vous de l'électricité pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?"
-        },
         "consommation": {
           "question": "Quelle est votre consommation annuelle d'électricité ? (issue de votre facture et n'incluant pas votre autoconsommation, ni la consommation des véhicules électriques)"
         },
@@ -134,41 +131,29 @@
           }
         }
       },
+      "réseaux de froid": {
+        "consommation": {
+          "question": "Quelle est votre consommation annuelle de froid issue de réseaux ?"
+        }
+      },
+      "réseaux de chaleur": {
+        "consommation": {
+          "question": "Quelle est votre consommation annuelle de chaleur issue de réseaux ?"
+        }
+      },
       "fossiles": {
         "gaz": {
-          "présent": {
-            "question": "Utilisez-vous du gaz pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?"
-          },
           "consommation": {
             "question": "Quelle est votre consommation annuelle de gaz naturel ? (hors consommation par les véhicules)"
           }
         },
         "fioul": {
-          "présent": {
-            "question": "Utilisez-vous du fioul pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?"
-          },
           "consommation": {
             "question": "Quelle est votre consommation annuelle de fioul (hors consommations par les véhicules)"
           }
         }
       },
       "combustibles organiques": {
-        "bois": {
-          "présent": {
-            "question": "Utilisez-vous du bois pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?"
-          },
-          "consommation": {
-            "question": "Quelle est votre consommation annuelle de bois ?"
-          }
-        },
-        "granulés": {
-          "présent": {
-            "question": "Utilisez-vous des granulés pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?"
-          },
-          "consommation": {
-            "question": "Combien de kWh issus de la combustion de granulés de bois ont été consommés chaque année ?"
-          }
-        },
         "choix": {
           "question": "Utilisez-vous des bûches ou des granulés ?",
           "options": {
@@ -176,22 +161,16 @@
             "granulés": "Granulés",
             "aucun": "Aucun"
           }
-        }
-      },
-      "réseaux de chaleur": {
-        "présent": {
-          "question": "Utilisez-vous des réseaux de chaleur pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?"
         },
-        "consommation": {
-          "question": "Quelle est votre consommation annuelle de chaleur issue de réseaux ?"
-        }
-      },
-      "réseaux de froid": {
-        "présent": {
-          "question": "Utilisez-vous des réseaux de froid pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?"
+        "granulés": {
+          "consommation": {
+            "question": "Combien de kWh issus de la combustion de granulés de bois ont été consommés chaque année ?"
+          }
         },
-        "consommation": {
-          "question": "Quelle est votre consommation annuelle de froid issue de réseaux ?"
+        "bois": {
+          "consommation": {
+            "question": "Quelle est votre consommation annuelle de bois ?"
+          }
         }
       }
     },
@@ -226,6 +205,90 @@
         "gaz naturel": {
           "conso": {
             "question": "Pour le gaz naturel, à combien de m3 estimez-vous ces consommations ?"
+          }
+        }
+      }
+    },
+    "intrants-services": {
+      "services": {
+        "description": "La liste est non exhaustive : si vous n’avez pas comptabilisé l’ensemble de vos dépenses, c’est tout à fait normal. Il peut s’agir de dépenses très faiblement émissives ou dont les émissions sont déjà prises en compte dans d’autres postes ou via d’autres questions reposant sur des données plus précises.",
+        "question": "Quel montant avez-vous dépensé dans les services immatériels suivants",
+        "spectacles-musées": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de spectacles, musées et autres services culturels"
+          }
+        },
+        "assurance-reassurance": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services d'assurance et réassurance"
+          }
+        },
+        "telecom": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de télécommunications"
+          }
+        },
+        "sante-humaine": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de santé humaine"
+          }
+        },
+        "edition": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services d'édition"
+          }
+        },
+        "poste-courrier": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de poste et courrier"
+          }
+        },
+        "restauration": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de restauration et hébergement"
+          }
+        },
+        "formation": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de formation"
+          }
+        },
+        "reparation-installation": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de réparation et installation"
+          }
+        },
+        "juridique-comptable": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services juridiques, comptables et assurances"
+          }
+        },
+        "programmation-conseil": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de programmation et conseil informatique"
+          }
+        }
+      },
+      "numérique": {
+        "question": "Veuillez indiquer vos usages numériques sur une année",
+        "streaming": {
+          "heures": {
+            "question": "Combien d'heures de streaming vidéo regardées ?"
+          }
+        },
+        "visioconférence": {
+          "heures": {
+            "question": "Combien d'heures de visioconférence ?"
+          }
+        },
+        "mails": {
+          "nombre": {
+            "question": "Combien de mails envoyés ?"
+          }
+        },
+        "stockage-cloud": {
+          "volume": {
+            "question": "Combien de Go de données stockées sur le cloud ?"
           }
         }
       }
@@ -358,57 +421,16 @@
       }
     },
     "déplacements": {
-      "MEP présent": {
-        "question": "Avez-vous réalisé une campagne de sensibilisation via MEP ?",
-        "nombre bénévoles": {
-          "question": "Combien de bénévoles ont répondu à MEP ?"
-        },
-        "nombre salariés": {
-          "question": "Combien de salariés ont répondu à MEP ?"
-        }
-      },
-      "bénéficiaires": {
-        "se déplacent": {
-          "question": "Les bénéficiaires de vos produits ou services se déplacent-ils pour en profiter ?"
-        },
-        "voiture": {
-          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en voiture pour se rendre à vos produits ou services ?"
-        },
-        "part voiture": {
-          "question": "Quel pourcentage des trajets en voiture ?"
-        },
-        "actif": {
-          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires via des modes actifs (à pied, vélo, trottinette) pour se rendre à vos produits ou services ?"
-        },
-        "part actif": {
-          "question": "Quel pourcentage des trajets via des modes actifs (à pied, vélo, trottinette) ?"
-        },
-        "deux roues": {
-          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en deux roues (scooter, moto) pour se rendre à vos produits ou services ?"
-        },
-        "part deux roues": {
-          "question": "Quel pourcentage des trajets en deux roues (scooter, moto) ?"
-        },
-        "transport en commun": {
-          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en transport en commun pour se rendre à vos produits ou services ?"
-        },
-        "part transport en commun": {
-          "question": "Quel pourcentage des trajets en transport en commun ?"
-        },
-        "train": {
-          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en train pour se rendre à vos produits ou services ?"
-        },
-        "part train": {
-          "question": "Quel pourcentage des trajets en train ?"
-        },
-        "avion": {
-          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en avion pour se rendre à vos produits ou services ?"
-        },
-        "part avion": {
-          "question": "Quel pourcentage des trajets en avion ?"
-        }
-      },
       "DT-salariés": {
+        "MEP présent": {
+          "question": "Avez-vous réalisé une campagne de sensibilisation via MEP ?",
+          "nombre bénévoles": {
+            "question": "Combien de bénévoles ont répondu à MEP ?"
+          },
+          "nombre salariés": {
+            "question": "Combien de salariés ont répondu à MEP ?"
+          }
+        },
         "avec": {
           "distance": {
             "question": "D'après les résultats de MEP, quelle est la distance moyenne parcourue par salarié par jour (A/R) pour des déplacements domicile-travail ?"
@@ -591,6 +613,47 @@
             }
           }
         }
+      },
+      "bénéficiaires": {
+        "se déplacent": {
+          "question": "Les bénéficiaires de vos produits ou services se déplacent-ils pour en profiter ?"
+        },
+        "voiture": {
+          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en voiture pour se rendre à vos produits ou services ?"
+        },
+        "part voiture": {
+          "question": "Quel pourcentage des trajets en voiture ?"
+        },
+        "actif": {
+          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires via des modes actifs (à pied, vélo, trottinette) pour se rendre à vos produits ou services ?"
+        },
+        "part actif": {
+          "question": "Quel pourcentage des trajets via des modes actifs (à pied, vélo, trottinette) ?"
+        },
+        "deux roues": {
+          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en deux roues (scooter, moto) pour se rendre à vos produits ou services ?"
+        },
+        "part deux roues": {
+          "question": "Quel pourcentage des trajets en deux roues (scooter, moto) ?"
+        },
+        "transport en commun": {
+          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en transport en commun pour se rendre à vos produits ou services ?"
+        },
+        "part transport en commun": {
+          "question": "Quel pourcentage des trajets en transport en commun ?"
+        },
+        "train": {
+          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en train pour se rendre à vos produits ou services ?"
+        },
+        "part train": {
+          "question": "Quel pourcentage des trajets en train ?"
+        },
+        "avion": {
+          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en avion pour se rendre à vos produits ou services ?"
+        },
+        "part avion": {
+          "question": "Quel pourcentage des trajets en avion ?"
+        }
       }
     },
     "déchets": {
@@ -727,90 +790,6 @@
         "végétalien": {
           "nombre de repas": {
             "question": "Combien de repas végétaliens sont consommés par vos bénéficiaires chaque année ?"
-          }
-        }
-      }
-    },
-    "intrants-services": {
-      "services": {
-        "description": "La liste est non exhaustive : si vous n’avez pas comptabilisé l’ensemble de vos dépenses, c’est tout à fait normal. Il peut s’agir de dépenses très faiblement émissives ou dont les émissions sont déjà prises en compte dans d’autres postes ou via d’autres questions reposant sur des données plus précises.",
-        "question": "Quel montant avez-vous dépensé dans les services immatériels suivants",
-        "spectacles-musées": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de spectacles, musées et autres services culturels"
-          }
-        },
-        "assurance-reassurance": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services d'assurance et réassurance"
-          }
-        },
-        "telecom": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de télécommunications"
-          }
-        },
-        "sante-humaine": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de santé humaine"
-          }
-        },
-        "edition": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services d'édition"
-          }
-        },
-        "poste-courrier": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de poste et courrier"
-          }
-        },
-        "restauration": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de restauration et hébergement"
-          }
-        },
-        "formation": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de formation"
-          }
-        },
-        "reparation-installation": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de réparation et installation"
-          }
-        },
-        "juridique-comptable": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services juridiques, comptables et assurances"
-          }
-        },
-        "programmation-conseil": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de programmation et conseil informatique"
-          }
-        }
-      },
-      "numérique": {
-        "question": "Veuillez indiquer vos usages numériques sur une année",
-        "streaming": {
-          "heures": {
-            "question": "Combien d'heures de streaming vidéo regardées ?"
-          }
-        },
-        "visioconférence": {
-          "heures": {
-            "question": "Combien d'heures de visioconférence ?"
-          }
-        },
-        "mails": {
-          "nombre": {
-            "question": "Combien de mails envoyés ?"
-          }
-        },
-        "stockage-cloud": {
-          "volume": {
-            "question": "Combien de Go de données stockées sur le cloud ?"
           }
         }
       }

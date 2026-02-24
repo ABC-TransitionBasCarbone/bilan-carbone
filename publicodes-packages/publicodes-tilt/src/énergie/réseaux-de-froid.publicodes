@@ -1,5 +1,4 @@
 énergie . réseaux de froid:
-  applicable si: énergie . réseaux de froid . présent
   titre: Réseau de froid
   formule: consommation * FE
   unité: kgCO2e

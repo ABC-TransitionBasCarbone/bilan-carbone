@@ -11,8 +11,8 @@ déplacements . DT-bénévoles:
 déplacements . DT-bénévoles . avec:
   applicable si:
     toutes ces conditions:
-      - est défini: MEP présent
-      - MEP présent = oui
+      - est défini: déplacements . DT-salariés . MEP présent
+      - déplacements . DT-salariés . MEP présent = oui
   titre: émissions des trajets domicile-travail des bénévoles (avec enquête MEP)
   formule:
     somme:
@@ -21,7 +21,7 @@ déplacements . DT-bénévoles . avec:
           - répartition
           - (5 - général . TT bénévoles)
           - commun . nombre de semaines travaillées par an
-          - (général . bénévoles - MEP présent . nombre bénévoles)
+          - (général . bénévoles - déplacements . DT-salariés . MEP présent . nombre bénévoles)
           - 1 / sans . voiture . occupation
       - réponse MEP
   avec:
@@ -70,8 +70,8 @@ déplacements . DT-bénévoles . sans:
 déplacements . DT-bénévoles . sans . voiture:
   applicable si:
     toutes ces conditions:
-      - est défini: MEP présent
-      - MEP présent = non
+      - est défini: déplacements . DT-salariés . MEP présent
+      - déplacements . DT-salariés . MEP présent = non
   formule: distance * split / occupation * (5 - général . TT bénévoles) * commun . nombre de semaines travaillées par an
   avec:
     distance:
@@ -123,8 +123,8 @@ déplacements . DT-bénévoles . sans . voiture . occupation:
 déplacements . DT-bénévoles . sans . train:
   applicable si:
     toutes ces conditions:
-      - est défini: MEP présent
-      - MEP présent = non
+      - est défini: déplacements . DT-salariés . MEP présent
+      - déplacements . DT-salariés . MEP présent = non
   formule: distance * FE  * (5 - général . TT bénévoles) * commun . nombre de semaines travaillées par an
   avec:
     distance:
@@ -143,8 +143,8 @@ déplacements . DT-bénévoles . sans . train:
 déplacements . DT-bénévoles . sans . transports en commun:
   applicable si:
     toutes ces conditions:
-      - est défini: MEP présent
-      - MEP présent = non
+      - est défini: déplacements . DT-salariés . MEP présent
+      - déplacements . DT-salariés . MEP présent = non
   formule: distance * split * (5 - général . TT bénévoles) * commun . nombre de semaines travaillées par an
   avec:
     distance:
@@ -171,8 +171,8 @@ déplacements . DT-bénévoles . sans . transports en commun . split:
 déplacements . DT-bénévoles . sans . deux roues:
   applicable si:
     toutes ces conditions:
-      - est défini: MEP présent
-      - MEP présent = non
+      - est défini: déplacements . DT-salariés . MEP présent
+      - déplacements . DT-salariés . MEP présent = non
   formule: distance * FE * (5 - général . TT bénévoles) * commun . nombre de semaines travaillées par an
   avec:
     distance:
