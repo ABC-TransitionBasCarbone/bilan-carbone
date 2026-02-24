@@ -1,5 +1,6 @@
 import { studySiteToClicksonSituation } from '@/environments/clickson/publicodes/studySiteToSituation'
 import { studySiteToCutSituation } from '@/environments/cut/publicodes/studySiteToSituation'
+import { studySiteToTiltSituation } from '@/environments/tilt/publicodes/studySiteToSituation'
 import { Environment } from '@prisma/client'
 import { Situation } from 'publicodes'
 import { SimplifiedEnvironment } from './publicodes/simplifiedPublicodesConfig'
@@ -30,6 +31,7 @@ export type StudySiteToSituationFn = (studySite: StudySiteFields | undefined) =>
 const studySiteToSituationByEnvironment: Record<SimplifiedEnvironment, StudySiteToSituationFn> = {
   [Environment.CUT]: studySiteToCutSituation,
   [Environment.CLICKSON]: studySiteToClicksonSituation,
+  [Environment.TILT]: studySiteToTiltSituation,
 }
 
 export function getStudySiteToSituation(environment: SimplifiedEnvironment): StudySiteToSituationFn | undefined {
