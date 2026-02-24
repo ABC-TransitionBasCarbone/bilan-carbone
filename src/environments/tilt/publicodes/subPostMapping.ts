@@ -267,10 +267,6 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
           'intrants-biens-et-matières . ratios monétaires . petites-fournitures . nombre',
         ],
         [
-          'intrants-biens-et-matières . ratios monétaires . petites-fournitures',
-          'intrants-biens-et-matières . ratios monétaires . petites-fournitures . nombre',
-        ],
-        [
           'intrants-biens-et-matières . ratios monétaires . meubles',
           'intrants-biens-et-matières . ratios monétaires . meubles . nombre',
         ],
