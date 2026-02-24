@@ -159,11 +159,8 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
   ],
   ServicesEnApprocheMonetaire: [
     table(
-      'intrants-services.services',
-      [
-        'intrants-services.typeService',
-        'intrants-services.montant-dépensé',
-      ],
+      'IntrantsServices.question',
+      ['IntrantsServices.typeService', 'IntrantsServices.montantDepense'],
       [
         [
           'intrants-services . services . spectacles-musées',
@@ -173,18 +170,12 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
           'intrants-services . services . assurance-reassurance',
           'intrants-services . services . assurance-reassurance . montant-dépensé',
         ],
-        [
-          'intrants-services . services . telecom',
-          'intrants-services . services . telecom . montant-dépensé',
-        ],
+        ['intrants-services . services . telecom', 'intrants-services . services . telecom . montant-dépensé'],
         [
           'intrants-services . services . sante-humaine',
           'intrants-services . services . sante-humaine . montant-dépensé',
         ],
-        [
-          'intrants-services . services . edition',
-          'intrants-services . services . edition . montant-dépensé',
-        ],
+        ['intrants-services . services . edition', 'intrants-services . services . edition . montant-dépensé'],
         [
           'intrants-services . services . poste-courrier',
           'intrants-services . services . poste-courrier . montant-dépensé',
@@ -193,10 +184,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
           'intrants-services . services . restauration',
           'intrants-services . services . restauration . montant-dépensé',
         ],
-        [
-          'intrants-services . services . formation',
-          'intrants-services . services . formation . montant-dépensé',
-        ],
+        ['intrants-services . services . formation', 'intrants-services . services . formation . montant-dépensé'],
         [
           'intrants-services . services . reparation-installation',
           'intrants-services . services . reparation-installation . montant-dépensé',
@@ -208,7 +196,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
         [
           'intrants-services . services . programmation-conseil',
           'intrants-services . services . programmation-conseil . montant-dépensé',
-        ],    
+        ],
       ],
     ),
   ],
