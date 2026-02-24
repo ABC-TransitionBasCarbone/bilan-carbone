@@ -33,27 +33,14 @@ function copyAssets(src, dest) {
 const greenTick = `\x1b[32m\u2713\x1b[0m`
 const redCross = `\x1b[31m\u274C\x1b[0m`
 
-// Copy entire src/ and prisma/seed for one-off scripts run in the standalone container
-const srcPath = path.join(__dirname, 'src')
-const srcDestPath = path.join(__dirname, '.next/standalone/src')
-
-const prismaSeedSrcPath = path.join(__dirname, 'prisma', 'seed')
-const prismaSeedDestPath = path.join(__dirname, '.next/standalone/prisma/seed')
-
-// Copy tsx so it's available for running scripts in the standalone container
-const tsxSrcPath = path.join(__dirname, 'node_modules', 'tsx')
-const tsxDestPath = path.join(__dirname, '.next/standalone/node_modules/tsx')
-
-const tsconfigSrc = path.join(__dirname, 'tsconfig.json')
-const tsconfigDest = path.join(__dirname, '.next/standalone/tsconfig.json')
+// Also copy i18n translation files for production i18n support
+const i18nSrcPath = path.join(__dirname, 'src', 'i18n', 'translations')
+const i18nDestPath = path.join(__dirname, '.next/standalone/src/i18n/translations')
 
 Promise.all([
   copyAssets(staticSrcPath, staticDestPath),
   copyAssets(publicSrcPath, publicDestPath),
-  copyAssets(srcPath, srcDestPath),
-  copyAssets(prismaSeedSrcPath, prismaSeedDestPath),
-  copyAssets(tsxSrcPath, tsxDestPath),
-  fs.copyFile(tsconfigSrc, tsconfigDest),
+  copyAssets(i18nSrcPath, i18nDestPath),
 ])
   .then(() => console.log(`${greenTick} Assets copied successfully`))
   .catch((err) => console.error(`${redCross} Failed to copy assets: ${err}`))

@@ -22,7 +22,7 @@ const downloadFileFromFTP = async (client: Client, folderPath: string, fileName:
   return fs.promises.readFile(fileName, 'utf-8')
 }
 
-const getUsersFromFTP = async () => {
+export const getUsersFromFTP = async () => {
   try {
     const client = await getFTPClient()
     const folderPath = process.env.FTP_FILE_PATH || '/'
@@ -41,5 +41,8 @@ const getUsersFromFTP = async () => {
   }
 }
 
-dotenv.config()
-getUsersFromFTP()
+// Only auto-run when executed directly as a script
+if (process.argv[1] === import.meta.filename) {
+  dotenv.config()
+  getUsersFromFTP()
+}
