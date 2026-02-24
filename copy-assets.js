@@ -44,12 +44,16 @@ const prismaSeedDestPath = path.join(__dirname, '.next/standalone/prisma/seed')
 const tsxSrcPath = path.join(__dirname, 'node_modules', 'tsx')
 const tsxDestPath = path.join(__dirname, '.next/standalone/node_modules/tsx')
 
+const tsconfigSrc = path.join(__dirname, 'tsconfig.json')
+const tsconfigDest = path.join(__dirname, '.next/standalone/tsconfig.json')
+
 Promise.all([
   copyAssets(staticSrcPath, staticDestPath),
   copyAssets(publicSrcPath, publicDestPath),
   copyAssets(srcPath, srcDestPath),
   copyAssets(prismaSeedSrcPath, prismaSeedDestPath),
   copyAssets(tsxSrcPath, tsxDestPath),
+  fs.copyFile(tsconfigSrc, tsconfigDest),
 ])
   .then(() => console.log(`${greenTick} Assets copied successfully`))
   .catch((err) => console.error(`${redCross} Failed to copy assets: ${err}`))
