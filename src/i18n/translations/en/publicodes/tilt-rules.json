@@ -122,9 +122,6 @@
       "titre": "[TO_TRANSLATE] Énergie",
       "question": "[TO_TRANSLATE] Qu'utilisez-vous pour le chauffage, l'éclairage et les autres consommations énergétiques de vos locaux ?",
       "électricité": {
-        "présent": {
-          "question": "[TO_TRANSLATE] Utilisez-vous de l'électricité pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?"
-        },
         "consommation": {
           "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle d'électricité ? (issue de votre facture et n'incluant pas votre autoconsommation, ni la consommation des véhicules électriques)"
         },
@@ -134,41 +131,29 @@
           }
         }
       },
+      "réseaux de froid": {
+        "consommation": {
+          "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de froid issue de réseaux ?"
+        }
+      },
+      "réseaux de chaleur": {
+        "consommation": {
+          "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de chaleur issue de réseaux ?"
+        }
+      },
       "fossiles": {
         "gaz": {
-          "présent": {
-            "question": "[TO_TRANSLATE] Utilisez-vous du gaz pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?"
-          },
           "consommation": {
             "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de gaz naturel ? (hors consommation par les véhicules)"
           }
         },
         "fioul": {
-          "présent": {
-            "question": "[TO_TRANSLATE] Utilisez-vous du fioul pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?"
-          },
           "consommation": {
             "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de fioul (hors consommations par les véhicules)"
           }
         }
       },
       "combustibles organiques": {
-        "bois": {
-          "présent": {
-            "question": "[TO_TRANSLATE] Utilisez-vous du bois pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?"
-          },
-          "consommation": {
-            "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de bois ?"
-          }
-        },
-        "granulés": {
-          "présent": {
-            "question": "[TO_TRANSLATE] Utilisez-vous des granulés pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?"
-          },
-          "consommation": {
-            "question": "[TO_TRANSLATE] Combien de kWh issus de la combustion de granulés de bois ont été consommés chaque année ?"
-          }
-        },
         "choix": {
           "question": "[TO_TRANSLATE] Utilisez-vous des bûches ou des granulés ?",
           "options": {
@@ -176,22 +161,16 @@
             "granulés": "[TO_TRANSLATE] Granulés",
             "aucun": "[TO_TRANSLATE] Aucun"
           }
-        }
-      },
-      "réseaux de chaleur": {
-        "présent": {
-          "question": "[TO_TRANSLATE] Utilisez-vous des réseaux de chaleur pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?"
         },
-        "consommation": {
-          "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de chaleur issue de réseaux ?"
-        }
-      },
-      "réseaux de froid": {
-        "présent": {
-          "question": "[TO_TRANSLATE] Utilisez-vous des réseaux de froid pour le chauffage, l'éclairage ou les autres consommations énergétiques de vos locaux ?"
+        "granulés": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Combien de kWh issus de la combustion de granulés de bois ont été consommés chaque année ?"
+          }
         },
-        "consommation": {
-          "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de froid issue de réseaux ?"
+        "bois": {
+          "consommation": {
+            "question": "[TO_TRANSLATE] Quelle est votre consommation annuelle de bois ?"
+          }
         }
       }
     },

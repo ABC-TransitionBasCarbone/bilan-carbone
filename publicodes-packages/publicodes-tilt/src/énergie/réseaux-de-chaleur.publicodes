@@ -1,5 +1,4 @@
 énergie . réseaux de chaleur:
-  applicable si: énergie . réseaux de chaleur . présent
   titre: Réseau de chaleur
   formule: consommation * FE
   unité: kgCO2e
