@@ -1,22 +1,22 @@
-par pays:
-  titre: Par pays
+commun . FE . électricité . par pays:
+  titre: Par pays électricité
 
-par pays . FRANCE:
+commun . FE . électricité . par pays . FRANCE:
   titre: FRANCE
   valeur: 0.058
   unité: kgCO2e/kWh
 
-par pays . HONGRIE:
+commun . FE . électricité . par pays . HONGRIE:
   titre: HONGRIE
   valeur: 0.043
   unité: kgCO2e/kWh
 
-par pays . ROUMANIE:
+commun . FE . électricité . par pays . ROUMANIE:
   titre: ROUMANIE
   valeur: 0.296
   unité: kgCO2e/kWh
 
-par pays . CROATIE:
+commun . FE . électricité . par pays . CROATIE:
   titre: CROATIE
   valeur: 0.141
   unité: kgCO2e/kWh
