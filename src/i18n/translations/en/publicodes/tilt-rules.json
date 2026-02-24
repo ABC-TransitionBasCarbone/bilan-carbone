@@ -296,51 +296,53 @@
       }
     },
     "intrants-biens-et-matières": {
-      "titre": "[TO_TRANSLATE] Intrants biens et matières",
-      "question": "[TO_TRANSLATE] Quels biens et matières avez-vous achetés en approche monétaire ?",
-      "petites-fournitures": {
-        "nombre": {
-          "question": "[TO_TRANSLATE] Montant dépensé (k€) en petites fournitures"
-        }
-      },
-      "meubles": {
-        "nombre": {
-          "question": "[TO_TRANSLATE] Montant dépensé (k€) en meubles"
-        }
-      },
-      "machines-équipements": {
-        "nombre": {
-          "question": "[TO_TRANSLATE] Montant dépensé (k€) en machines et équipements"
-        }
-      },
-      "textiles": {
-        "nombre": {
-          "question": "[TO_TRANSLATE] Montant dépensé (k€) en textiles"
-        }
-      },
-      "produits-pharmaceutiques": {
-        "nombre": {
-          "question": "[TO_TRANSLATE] Montant dépensé (k€) en produits pharmaceutiques"
-        }
-      },
-      "produits-chimiques": {
-        "nombre": {
-          "question": "[TO_TRANSLATE] Montant dépensé (k€) en produits chimiques"
-        }
-      },
-      "papier-carton": {
-        "nombre": {
-          "question": "[TO_TRANSLATE] Montant dépensé (k€) en papier et carton"
-        }
-      },
-      "produits-métalliques": {
-        "nombre": {
-          "question": "[TO_TRANSLATE] Montant dépensé (k€) en produits métalliques"
-        }
-      },
-      "autres-produits-manufacturés": {
-        "nombre": {
-          "question": "[TO_TRANSLATE] Montant dépensé (k€) en autres produits manufacturés"
+      "ratios monétaires": {
+        "titre": "[TO_TRANSLATE] Intrants biens et matières",
+        "question": "[TO_TRANSLATE] Quels biens et matières avez-vous achetés en approche monétaire ?",
+        "petites-fournitures": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Montant dépensé (k€) en petites fournitures"
+          }
+        },
+        "meubles": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Montant dépensé (k€) en meubles"
+          }
+        },
+        "machines-équipements": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Montant dépensé (k€) en machines et équipements"
+          }
+        },
+        "textiles": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Montant dépensé (k€) en textiles"
+          }
+        },
+        "produits-pharmaceutiques": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Montant dépensé (k€) en produits pharmaceutiques"
+          }
+        },
+        "produits-chimiques": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Montant dépensé (k€) en produits chimiques"
+          }
+        },
+        "papier-carton": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Montant dépensé (k€) en papier et carton"
+          }
+        },
+        "produits-métalliques": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Montant dépensé (k€) en produits métalliques"
+          }
+        },
+        "autres-produits-manufacturés": {
+          "nombre": {
+            "question": "[TO_TRANSLATE] Montant dépensé (k€) en autres produits manufacturés"
+          }
         }
       }
     },
@@ -659,16 +661,6 @@
       }
     },
     "déchets": {
-      "organiques": {
-        "poids": {
-          "question": "[TO_TRANSLATE] Déchets verts, compost et déchets organiques"
-        }
-      },
-      "ordures ménagères": {
-        "poids": {
-          "question": "[TO_TRANSLATE] Poubelle noire (ordures ménagères)"
-        }
-      },
       "emballages et plastiques": {
         "poubelle jaune": {
           "poids": {
@@ -678,6 +670,16 @@
         "déchets verre": {
           "poids": {
             "question": "[TO_TRANSLATE] Déchets verre"
+          }
+        },
+        "poubelle noire": {
+          "poids": {
+            "question": "[TO_TRANSLATE] Poubelle noire (ordures ménagères)"
+          }
+        },
+        "déchets verts": {
+          "poids": {
+            "question": "[TO_TRANSLATE] Déchets verts, compost et déchets organiques"
           }
         }
       }

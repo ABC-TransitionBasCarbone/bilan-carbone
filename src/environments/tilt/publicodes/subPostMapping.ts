@@ -50,8 +50,8 @@ const SUBPOST_TO_RULENAME: Partial<Record<SubPost, TiltRuleName>> = {
   ReseauxDeFroid: 'énergie . réseaux de froid',
   Electricite: 'énergie . électricité',
   DechetsDEmballagesEtPlastiques: 'déchets . emballages et plastiques',
-  DechetsOrganiques: 'déchets . organiques',
-  DechetsOrduresMenageres: 'déchets . ordures ménagères',
+  // DechetsOrganiques: "",
+  // DechetsOrduresMenageres: "",
   FroidEtClim: 'froid et clim',
   // EmissionsLieesAuChangementDAffectationDesSolsCas,
   DeplacementsDomicileTravailSalaries: 'déplacements . DT-salariés',
@@ -63,12 +63,12 @@ const SUBPOST_TO_RULENAME: Partial<Record<SubPost, TiltRuleName>> = {
   // Interne: "fret . transport",
   // Sortant: "fret . transport",
   TransportFabricationDesVehicules: 'fret . fabrication',
-  // MetauxPlastiquesEtVerre: "",
-  PapiersCartons: 'intrants-biens-et-matières . papier-carton',
+  MetauxPlastiquesEtVerre: 'intrants-biens-et-matières . ratios monétaires',
+  // PapiersCartons: "",
   // MateriauxDeConstruction: "",
   // ProduitsChimiquesEtHydrogene: "",
   // MatiereDestineeAuxEmballages: "",
-  AutresIntrants: 'intrants-biens-et-matières . autres-produits-manufacturés',
+  // AutresIntrants: "",
   // BiensEtMatieresEnApprocheMonetaire,
   RepasPrisParLesSalaries: 'alimentation . salariés',
   RepasPrisParLesBenevoles: 'alimentation . bénévoles',
@@ -131,8 +131,31 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('froid et clim . fuites . locaux seuls'),
   ],
   DechetsDEmballagesEtPlastiques: [
-    input('déchets . emballages et plastiques . déchets verre . poids'),
-    input('déchets . emballages et plastiques . poubelle jaune . poids'),
+    table(
+      'DechetsDirects.question',
+      [
+        'DechetsDirects.typeDéchets',
+        'DechetsDirects.poids',
+      ],
+      [
+        [
+          'déchets . emballages et plastiques . poubelle noire',
+          'déchets . emballages et plastiques . poubelle noire . poids',
+        ],
+        [
+          'déchets . emballages et plastiques . poubelle jaune',
+          'déchets . emballages et plastiques . poubelle jaune . poids',
+        ],
+        [
+          'déchets . emballages et plastiques . déchets verre',
+          'déchets . emballages et plastiques . déchets verre . poids',
+        ],
+        [
+          'déchets . emballages et plastiques . déchets verts',
+          'déchets . emballages et plastiques . déchets verts . poids',
+        ],
+      ],
+    ),
   ],
   TraitementDesDechetsEnFinDeVie: [
     input('fin de vie . déchets . fin de vie présente'),
@@ -231,8 +254,58 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('alimentation . salariés . végétarien . nombre de repas'),
     input('alimentation . salariés . végétalien . nombre de repas'),
   ],
-  AutresIntrants: [input('intrants-biens-et-matières . autres-produits-manufacturés . nombre')],
-  PapiersCartons: [input('intrants-biens-et-matières . papier-carton . nombre')],
+  MetauxPlastiquesEtVerre: [
+    table(
+      'IntrantsBiensEtMatieresTilt.question',
+      [
+        'IntrantsBiensEtMatieresTilt.typeBien',
+        'IntrantsBiensEtMatieresTilt.montantDepense'
+      ],
+      [
+        [
+          'intrants-biens-et-matières . ratios monétaires . petites-fournitures',
+          'intrants-biens-et-matières . ratios monétaires . petites-fournitures . nombre',
+        ],
+        [
+          'intrants-biens-et-matières . ratios monétaires . petites-fournitures',
+          'intrants-biens-et-matières . ratios monétaires . petites-fournitures . nombre',
+        ],
+        [
+          'intrants-biens-et-matières . ratios monétaires . meubles',
+          'intrants-biens-et-matières . ratios monétaires . meubles . nombre',
+        ],
+        [
+          'intrants-biens-et-matières . ratios monétaires . machines-équipements',
+          'intrants-biens-et-matières . ratios monétaires . machines-équipements . nombre',
+        ],
+        [
+          'intrants-biens-et-matières . ratios monétaires . textiles',
+          'intrants-biens-et-matières . ratios monétaires . textiles . nombre',
+        ],
+        [
+          'intrants-biens-et-matières . ratios monétaires . produits-pharmaceutiques',
+          'intrants-biens-et-matières . ratios monétaires . produits-pharmaceutiques . nombre',
+        ],
+        [
+          'intrants-biens-et-matières . ratios monétaires . produits-chimiques',
+          'intrants-biens-et-matières . ratios monétaires . produits-chimiques . nombre',
+        ],
+        [
+          'intrants-biens-et-matières . ratios monétaires . papier-carton',
+          'intrants-biens-et-matières . ratios monétaires . papier-carton . nombre',
+        ],
+        [
+          'intrants-biens-et-matières . ratios monétaires . produits-métalliques',
+          'intrants-biens-et-matières . ratios monétaires . produits-métalliques . nombre',
+        ],
+        [
+          'intrants-biens-et-matières . ratios monétaires . autres-produits-manufacturés',
+          'intrants-biens-et-matières . ratios monétaires . autres-produits-manufacturés . nombre',
+        ],
+      ],
+    ),
+  ],
+  
   TransportFabricationDesVehicules: [
     input('fret . fabrication . voitures . nombre'),
     input('fret . fabrication . VUL . nombre'),
@@ -243,10 +316,31 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('fret . transport . carburant . litre'),
     input('fret . transport . livraisons'),
     input('fret . transport . poids'),
-    input('fret . transport . local . provenance'),
-    input('fret . transport . national . provenance'),
-    input('fret . transport . europe . provenance'),
-    input('fret . transport . international . provenance'),
+    table(
+      'TransportDeMarchandises.question',
+      [
+        'TransportDeMarchandises.typeProvenance',
+        'TransportDeMarchandises.pourcentageLivraisons',
+      ],
+      [
+        [
+          'fret . transport . local',
+          'fret . transport . local . provenance',
+        ],
+        [
+          'fret . transport . national',
+          'fret . transport . national . provenance',
+        ],
+        [
+          'fret . transport . europe',
+          'fret . transport . europe . provenance',
+        ],
+        [
+          'fret . transport . international',
+          'fret . transport . international . provenance',
+        ],
+      ],
+    ),
   ],
   DeplacementsDesBeneficiaires: [
     input('déplacements . bénéficiaires . se déplacent'),
