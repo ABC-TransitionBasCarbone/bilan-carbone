@@ -74,6 +74,13 @@ const MODEL_PACKAGES: Record<Model, string> = {
 // Helper to load publicodes rules from a given model
 export async function loadRulesForModel(model: Model): Promise<Record<string, Rule>> {
   const packageName = MODEL_PACKAGES[model]
+
+  if (packageName.startsWith('file://')) {
+    const filePath = url.fileURLToPath(packageName)
+    const data = fs.readFileSync(filePath, 'utf-8')
+    return JSON.parse(data)
+  }
+
   const packageModule = await import(packageName)
   return packageModule.default
 }
