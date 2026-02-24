@@ -5,6 +5,21 @@
         "question": "[TO_TRANSLATE] Quel montant avez-vous dépensé dans les services immatériels suivants ?",
         "typeService": "[TO_TRANSLATE] Type de service",
         "montantDepense": "[TO_TRANSLATE] Montant dépensé"
+      },
+      "IntrantsBiensEtMatieresTilt": {
+        "question": "[TO_TRANSLATE] Quel montant avez-vous dépensé dans les biens suivants ?",
+        "typeService": "[TO_TRANSLATE] Type de bien",
+        "montantDepense": "[TO_TRANSLATE] Montant dépensé"
+      },
+      "TransportDeMarchandises": {
+        "question": "[TO_TRANSLATE] D'où proviennent vos livraisons ?",
+        "typeProvenance": "[TO_TRANSLATE] Provenance",
+        "pourcentageLivraisons": "[TO_TRANSLATE] Pourcentage des livraisons"
+      },
+      "DechetsDirects": {
+        "question": "[TO_TRANSLATE] Quelles quantités des déchets suivants sont jetées chaque année ?",
+        "typeDéchets": "[TO_TRANSLATE] Type de déchet",
+        "poids": "[TO_TRANSLATE] Quantité jetée"
       }
     },
     "group": {},
