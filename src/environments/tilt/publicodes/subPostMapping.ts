@@ -148,7 +148,6 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('utilisation . responsabilite conso energie . gaz naturel . conso'),
   ],
   EquipementsDesSalaries: [
-    input('équipements et immobilisations . infos . prise en compte reconditionné'),
     input('équipements et immobilisations . infos . ordinateurs fixes . quantité'),
     input('équipements et immobilisations . infos . ordinateurs portables . quantité'),
     input('équipements et immobilisations . infos . photocopieurs . quantité'),
@@ -156,19 +155,62 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('équipements et immobilisations . infos . téléphones fixes . quantité'),
     input('équipements et immobilisations . infos . téléphones portables . quantité'),
     input('équipements et immobilisations . infos . autres écrans . quantité'),
+    input('équipements et immobilisations . infos . prise en compte reconditionné'),
   ],
   ServicesEnApprocheMonetaire: [
-    input('intrants-services . services . spectacles-musées . montant-dépensé'),
-    input('intrants-services . services . assurance-reassurance . montant-dépensé'),
-    input('intrants-services . services . telecom . montant-dépensé'),
-    input('intrants-services . services . sante-humaine . montant-dépensé'),
-    input('intrants-services . services . edition . montant-dépensé'),
-    input('intrants-services . services . poste-courrier . montant-dépensé'),
-    input('intrants-services . services . restauration . montant-dépensé'),
-    input('intrants-services . services . formation . montant-dépensé'),
-    input('intrants-services . services . reparation-installation . montant-dépensé'),
-    input('intrants-services . services . juridique-comptable . montant-dépensé'),
-    input('intrants-services . services . programmation-conseil . montant-dépensé'),
+    table(
+      'intrants-services.services',
+      [
+        'intrants-services.typeService',
+        'intrants-services.montant-dépensé',
+      ],
+      [
+        [
+          'intrants-services . services . spectacles-musées',
+          'intrants-services . services . spectacles-musées . montant-dépensé',
+        ],
+        [
+          'intrants-services . services . assurance-reassurance',
+          'intrants-services . services . assurance-reassurance . montant-dépensé',
+        ],
+        [
+          'intrants-services . services . telecom',
+          'intrants-services . services . telecom . montant-dépensé',
+        ],
+        [
+          'intrants-services . services . sante-humaine',
+          'intrants-services . services . sante-humaine . montant-dépensé',
+        ],
+        [
+          'intrants-services . services . edition',
+          'intrants-services . services . edition . montant-dépensé',
+        ],
+        [
+          'intrants-services . services . poste-courrier',
+          'intrants-services . services . poste-courrier . montant-dépensé',
+        ],
+        [
+          'intrants-services . services . restauration',
+          'intrants-services . services . restauration . montant-dépensé',
+        ],
+        [
+          'intrants-services . services . formation',
+          'intrants-services . services . formation . montant-dépensé',
+        ],
+        [
+          'intrants-services . services . reparation-installation',
+          'intrants-services . services . reparation-installation . montant-dépensé',
+        ],
+        [
+          'intrants-services . services . juridique-comptable',
+          'intrants-services . services . juridique-comptable . montant-dépensé',
+        ],
+        [
+          'intrants-services . services . programmation-conseil',
+          'intrants-services . services . programmation-conseil . montant-dépensé',
+        ],    
+      ],
+    ),
   ],
   UsagesNumeriques: [
     input('intrants-services . numérique . streaming . heures'),

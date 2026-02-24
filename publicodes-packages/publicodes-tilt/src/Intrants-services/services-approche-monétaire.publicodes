@@ -19,6 +19,7 @@ intrants-services . services:
 
 intrants-services . services . spectacles-musées:
   formule: montant-dépensé * FE / 1000
+  titre : Spectacles et musées
   avec:
     montant-dépensé:
       question: Montant dépensé en services de spectacles, musées et autres services culturels
