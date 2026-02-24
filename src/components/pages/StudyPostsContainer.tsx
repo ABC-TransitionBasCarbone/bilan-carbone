@@ -1,10 +1,12 @@
 'use client'
+import { EnvironmentMode } from '@/constants/environments'
 import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import SimplifiedStudyPostsPage from '@/environments/simplified/study/SimplifiedStudyPostsPage'
 import { customRich } from '@/i18n/customRich'
 import { Post, subPostsByPost } from '@/services/posts'
-import { Environment, StudyRole, SubPost } from '@prisma/client'
+import { SimplifiedEnvironment } from '@/services/publicodes/simplifiedPublicodesConfig'
+import { StudyRole, SubPost } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -16,8 +18,6 @@ import StudyPostsCard from '../study/card/StudyPostsCard'
 import useStudySite from '../study/site/useStudySite'
 import StudyPostsPage from './StudyPostsPage'
 import styles from './StudyPostsPage.module.css'
-import { EnvironmentMode } from '@/constants/environments'
-import { SimplifiedEnvironment } from '@/services/publicodes/simplifiedPublicodesConfig'
 
 interface Props {
   post: Post
@@ -91,20 +91,25 @@ const StudyPostsPageContainer = ({ post, currentSubPost, study, userRole, user }
       </Block>
       <DynamicComponent
         defaultComponent={
-          !study.simplified ? <StudyPostsPage
-            post={post}
-            study={study}
-            userRole={userRole}
-            emissionSources={emissionSources}
-            studySite={studySite}
-            user={user}
-            setGlossary={setGlossary}
-          />: <SimplifiedStudyPostsPage environment={environment as SimplifiedEnvironment}
+          !study.simplified ? (
+            <StudyPostsPage
+              post={post}
+              study={study}
+              userRole={userRole}
+              emissionSources={emissionSources}
+              studySite={studySite}
+              user={user}
+              setGlossary={setGlossary}
+            />
+          ) : (
+            <SimplifiedStudyPostsPage
+              environment={environment as SimplifiedEnvironment}
               currentSubPost={currentSubPost}
               post={post}
               study={study}
               studySiteId={studySite}
             />
+          )
         }
         environmentComponents={{
           [EnvironmentMode.SIMPLIFIED]: (

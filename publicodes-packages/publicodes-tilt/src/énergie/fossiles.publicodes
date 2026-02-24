@@ -1,5 +1,5 @@
-énergie . fossiles: 
- formule:
+énergie . fossiles:
+  formule:
     somme:
       - énergie . fossiles . gaz
       - énergie . fossiles . fioul

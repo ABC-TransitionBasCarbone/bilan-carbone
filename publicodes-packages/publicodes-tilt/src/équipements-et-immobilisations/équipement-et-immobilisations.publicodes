@@ -1,6 +1,6 @@
 équipements et immobilisations:
   formule:
-    somme: 
+    somme:
       - équipements et immobilisations . infos
 
 équipements et immobilisations . infos:

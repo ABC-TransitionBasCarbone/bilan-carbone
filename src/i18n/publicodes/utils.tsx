@@ -40,34 +40,40 @@ const MODEL_PACKAGES: Record<Model, string> = {
     process.env.NODE_ENV === 'production'
       ? '@abc-transitionbascarbone/publicodes-count/publicodes-build/publicodes-count.model.json'
       : url
-          .pathToFileURL(path.resolve(
-            path.join(
-              __dirname,
-              '../../../publicodes-packages/publicodes-count/publicodes-build/publicodes-count.model.json',
+          .pathToFileURL(
+            path.resolve(
+              path.join(
+                __dirname,
+                '../../../publicodes-packages/publicodes-count/publicodes-build/publicodes-count.model.json',
+              ),
             ),
-          ))
+          )
           .toString(),
   clickson:
     process.env.NODE_ENV === 'production'
       ? '@abc-transitionbascarbone/publicodes-clickson/publicodes-build/publicodes-clickson.model.json'
       : url
-          .pathToFileURL(path.resolve(
-            path.join(
-              __dirname,
-              '../../../publicodes-packages/publicodes-clickson/publicodes-build/publicodes-clickson.model.json',
+          .pathToFileURL(
+            path.resolve(
+              path.join(
+                __dirname,
+                '../../../publicodes-packages/publicodes-clickson/publicodes-build/publicodes-clickson.model.json',
+              ),
             ),
-          ))
+          )
           .toString(),
   tilt:
     process.env.NODE_ENV === 'production'
       ? '@abc-transitionbascarbone/publicodes-tilt/publicodes-build/publicodes-tilt.model.json'
       : url
-          .pathToFileURL(path.resolve(
-            path.join(
-              __dirname,
-              '../../../publicodes-packages/publicodes-tilt/publicodes-build/publicodes-tilt.model.json',
+          .pathToFileURL(
+            path.resolve(
+              path.join(
+                __dirname,
+                '../../../publicodes-packages/publicodes-tilt/publicodes-build/publicodes-tilt.model.json',
+              ),
             ),
-          ))
+          )
           .toString(),
 }
 
