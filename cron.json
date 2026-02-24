@@ -1,11 +1,11 @@
 {
   "jobs": [
     {
-      "command": "*/10 * * * * curl -X POST $APP_URL/api/cron/import-users -H \"Authorization: Bearer $CRON_SECRET\"",
+      "command": "*/10 * * * * curl -X POST $NEXT_API_URL/cron/import-users -H \"Authorization: Bearer $CRON_SECRET\"",
       "description": "Import users from FTP server every 10 minutes"
     },
     {
-      "command": "0 1 * * * curl -X POST $APP_URL/api/cron/assign-training-studies -H \"Authorization: Bearer $CRON_SECRET\"",
+      "command": "0 1 * * * curl -X POST $NEXT_API_URL/cron/assign-training-studies -H \"Authorization: Bearer $CRON_SECRET\"",
       "description": "Create training studies for users who started or ended a formation"
     }
   ]
