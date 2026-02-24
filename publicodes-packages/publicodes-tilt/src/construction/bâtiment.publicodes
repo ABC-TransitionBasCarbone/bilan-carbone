@@ -1,5 +1,10 @@
 construction . bâtiment:
   formule:
+    somme:
+      - construction . bâtiment . empreinte
+
+construction . bâtiment . empreinte:
+  formule:
     variations:
       - si:
           toutes ces conditions:
