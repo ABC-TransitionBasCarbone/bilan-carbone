@@ -65,7 +65,7 @@ déplacements . DM-bénévoles . sans . voiture:
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par mois par vos bénévoles en voiture pour des déplacements liés à des missions ?
-      unite: km
+      unité: km
   description: On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales
   unité: kgCO2e
 
@@ -118,7 +118,7 @@ déplacements . DM-bénévoles . sans . train:
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par mois par vos bénévoles en train pour des déplacements liés à des missions ?
-      unite: km
+      unité: km
 
     FE:
       valeur: 0.0277
@@ -138,7 +138,7 @@ déplacements . DM-bénévoles . sans . transports en commun:
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par mois par vos bénévoles en transports en commun pour des déplacements liés à des missions ?
-      unite: km
+      unité: km
   unité: kgCO2e
 
 déplacements . DM-bénévoles . sans . transports en commun . split:
@@ -166,7 +166,7 @@ déplacements . DM-bénévoles . sans . deux roues:
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par mois par vos bénévoles en deux roues pour des déplacements liés à des missions ?
-      unite: km
+      unité: km
 
     FE:
       valeur: 0.0851
@@ -192,7 +192,7 @@ déplacements . DM-bénévoles . sans . avion . court courrier:
   avec:
     distance:
       question: Combien de km ont été parcourus cette année par vos bénévoles avion court courrier pour des déplacements liés à des missions ?
-      unite: km
+      unité: km
 
     FE:
       valeur: 0.33
@@ -211,7 +211,7 @@ déplacements . DM-bénévoles . sans . avion . moyen courrier:
   avec:
     distance:
       question: Combien de km ont été parcourus cette année par vos bénévoles avion moyen courrier pour des déplacements liés à des missions ?
-      unite: km
+      unité: km
 
     FE:
       valeur: 0.24
@@ -230,7 +230,7 @@ déplacements . DM-bénévoles . sans . avion . long courrier:
   avec:
     distance:
       question: Combien de km ont été parcourus cette année par vos bénévoles avion long courrier pour des déplacements liés à des missions ?
-      unite: km
+      unité: km
 
     FE:
       valeur: 0.15

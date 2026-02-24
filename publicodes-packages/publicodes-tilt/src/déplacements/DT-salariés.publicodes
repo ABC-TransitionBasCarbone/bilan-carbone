@@ -76,7 +76,7 @@ déplacements . DT-salariés . sans . voiture:
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par vos salariés en voiture par jour (A/R) pour des déplacements domicile-travail ?
-      unite: km
+      unité: km
   description: On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales
   unité: kgCO2e
 
@@ -129,7 +129,7 @@ déplacements . DT-salariés . sans . train:
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par vos salariés en train par jour (A/R) pour des déplacements domicile-travail ?
-      unite: km
+      unité: km
 
     FE:
       valeur: 0.0277
@@ -149,7 +149,7 @@ déplacements . DT-salariés . sans . transports en commun:
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par vos salariés en transports en commun par jour (A/R) pour des déplacements domicile-travail ?
-      unite: km
+      unité: km
   unité: kgCO2e
 
 déplacements . DT-salariés . sans . transports en commun . split:
@@ -177,7 +177,7 @@ déplacements . DT-salariés . sans . deux roues:
   avec:
     distance:
       question: Combien de km sont parcourus en moyenne par vos salariés en deux roues par jour (A/R) pour des déplacements domicile-travail ?
-      unite: km
+      unité: km
 
     FE:
       valeur: 0.0851
