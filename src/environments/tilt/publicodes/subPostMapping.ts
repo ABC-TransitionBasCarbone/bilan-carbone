@@ -49,40 +49,40 @@ const SUBPOST_TO_RULENAME: Partial<Record<SubPost, TiltRuleName>> = {
   ReseauxDeChaleurEtDeVapeur: 'énergie . réseaux de chaleur',
   ReseauxDeFroid: 'énergie . réseaux de froid',
   Electricite: 'énergie . électricité',
-  DechetsDEmballagesEtPlastiques: "déchets . emballages et plastiques",
-  DechetsOrganiques: "déchets . organiques",
-  DechetsOrduresMenageres: "déchets . ordures ménagères",
+  DechetsDEmballagesEtPlastiques: 'déchets . emballages et plastiques',
+  DechetsOrganiques: 'déchets . organiques',
+  DechetsOrduresMenageres: 'déchets . ordures ménagères',
   FroidEtClim: 'froid et clim',
   // EmissionsLieesAuChangementDAffectationDesSolsCas,
-  DeplacementsDomicileTravailSalaries: "déplacements . DT-salariés",
-  DeplacementsDomicileTravailBenevoles: "déplacements . DT-bénévoles",
-  DeplacementsDansLeCadreDUneMissionAssociativeSalaries: "déplacements . DM-salariés",
-  DeplacementsDansLeCadreDUneMissionAssociativeBenevoles: "déplacements . DM-bénévoles",
-  DeplacementsDesBeneficiaires: "déplacements . bénéficiaires",
-  Entrant: "fret . transport",
+  DeplacementsDomicileTravailSalaries: 'déplacements . DT-salariés',
+  DeplacementsDomicileTravailBenevoles: 'déplacements . DT-bénévoles',
+  DeplacementsDansLeCadreDUneMissionAssociativeSalaries: 'déplacements . DM-salariés',
+  DeplacementsDansLeCadreDUneMissionAssociativeBenevoles: 'déplacements . DM-bénévoles',
+  DeplacementsDesBeneficiaires: 'déplacements . bénéficiaires',
+  Entrant: 'fret . transport',
   // Interne: "fret . transport",
   // Sortant: "fret . transport",
-  TransportFabricationDesVehicules: "fret . fabrication",
+  TransportFabricationDesVehicules: 'fret . fabrication',
   // MetauxPlastiquesEtVerre: "",
-  PapiersCartons: "intrants-biens-et-matières . papier-carton",
+  PapiersCartons: 'intrants-biens-et-matières . papier-carton',
   // MateriauxDeConstruction: "",
   // ProduitsChimiquesEtHydrogene: "",
   // MatiereDestineeAuxEmballages: "",
-  AutresIntrants: "intrants-biens-et-matières . autres-produits-manufacturés",
+  AutresIntrants: 'intrants-biens-et-matières . autres-produits-manufacturés',
   // BiensEtMatieresEnApprocheMonetaire,
   RepasPrisParLesSalaries: 'alimentation . salariés',
   RepasPrisParLesBenevoles: 'alimentation . bénévoles',
   RepasPrisParLesBeneficiaires: 'alimentation . bénéficiaires',
   UsagesNumeriques: 'intrants-services . numérique',
-  ServicesEnApprocheMonetaire: 'intrants-services . services', 
+  ServicesEnApprocheMonetaire: 'intrants-services . services',
   EquipementsDesSalaries: 'équipements et immobilisations . infos',
   // ParcInformatiqueDesSalaries,
   // EquipementsDesBenevoles,
   // ParcInformatiqueDesBenevoles,
   UtilisationEnResponsabiliteConsommationDEnergie: 'utilisation . responsabilite conso energie',
-    // InvestissementsFinanciersRealises,
+  // InvestissementsFinanciersRealises,
   // ConsommationDEnergieEnFinDeVie,
-  TraitementDesDechetsEnFinDeVie: 'fin de vie . déchets' ,
+  TraitementDesDechetsEnFinDeVie: 'fin de vie . déchets',
   // FuitesOuEmissionsNonEnergetiques,
   // TraitementDesEmballagesEnFinDeVie,
   // TeletravailSalaries,
@@ -101,47 +101,33 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
   Batiments: [
     input('construction . bâtiment . locaux'),
     input('construction . bâtiment . locaux . locaux seuls . surface'),
-    input("construction . bâtiment . locaux . locaux partagés . surface"),
-    input("construction . bâtiment . locaux . locaux partagés . pourcentage")
+    input('construction . bâtiment . locaux . locaux partagés . surface'),
+    input('construction . bâtiment . locaux . locaux partagés . pourcentage'),
   ],
   AutresInfrastructures: [
-    input("construction . infrastructure . parking présent"),
-    input("construction . infrastructure . nombre de places")
+    input('construction . infrastructure . parking présent'),
+    input('construction . infrastructure . nombre de places'),
   ],
-  CombustiblesFossiles: [
-    input("énergie . fossiles . gaz . présent"),
-    input("énergie . fossiles . fioul . présent")
-  ],
+  CombustiblesFossiles: [input('énergie . fossiles . gaz . présent'), input('énergie . fossiles . fioul . présent')],
   CombustiblesOrganiques: [
-    input("énergie . combustibles organiques . bois . présent"),
-    input("énergie . combustibles organiques . granulés . présent")
+    input('énergie . combustibles organiques . bois . présent'),
+    input('énergie . combustibles organiques . granulés . présent'),
   ],
-  
-  ReseauxDeChaleurEtDeVapeur: [
-    input('énergie . réseaux de chaleur . présent'),
-  ],
-  ReseauxDeFroid: [
-    input("énergie . réseaux de froid . présent")
-  ],
-  Electricite: [
-    input("énergie . électricité . présent"),
-    input("énergie . électricité . autoproduction"),
-  ],
-  DechetsOrganiques: [
-    input("déchets . organiques . poids")
-  ],
-  DechetsOrduresMenageres: [
-    input("déchets . ordures ménagères . poids")
-  ],
+
+  ReseauxDeChaleurEtDeVapeur: [input('énergie . réseaux de chaleur . présent')],
+  ReseauxDeFroid: [input('énergie . réseaux de froid . présent')],
+  Electricite: [input('énergie . électricité . présent'), input('énergie . électricité . autoproduction')],
+  DechetsOrganiques: [input('déchets . organiques . poids')],
+  DechetsOrduresMenageres: [input('déchets . ordures ménagères . poids')],
   FroidEtClim: [
-    input("froid et clim . nombre"),
-    input("froid et clim . fuites . locaux partagés"),
-    input("froid et clim . fuites . locaux seuls")
+    input('froid et clim . nombre'),
+    input('froid et clim . fuites . locaux partagés'),
+    input('froid et clim . fuites . locaux seuls'),
   ],
   DechetsDEmballagesEtPlastiques: [
     input('déchets . emballages et plastiques . déchets verre . poids'),
-    input('déchets . emballages et plastiques . poubelle jaune . poids')
-  ], 
+    input('déchets . emballages et plastiques . poubelle jaune . poids'),
+  ],
   TraitementDesDechetsEnFinDeVie: [
     input('fin de vie . déchets . fin de vie présente'),
     input('fin de vie . déchets . poids'),
@@ -209,12 +195,8 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('alimentation . salariés . végétarien . nombre de repas'),
     input('alimentation . salariés . végétalien . nombre de repas'),
   ],
-  AutresIntrants: [
-    input('intrants-biens-et-matières . autres-produits-manufacturés . nombre'),
-  ],
-  PapiersCartons: [
-    input('intrants-biens-et-matières . papier-carton . nombre'),
-  ],
+  AutresIntrants: [input('intrants-biens-et-matières . autres-produits-manufacturés . nombre')],
+  PapiersCartons: [input('intrants-biens-et-matières . papier-carton . nombre')],
   TransportFabricationDesVehicules: [
     input('fret . fabrication . voitures . nombre'),
     input('fret . fabrication . VUL . nombre'),
@@ -246,6 +228,9 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('déplacements . bénéficiaires . avion'),
   ],
   DeplacementsDomicileTravailSalaries: [
+    input('déplacements . DT-salariés . MEP présent'),
+    input('déplacements . DT-salariés . MEP présent . nombre bénévoles'),
+    input('déplacements . DT-salariés . MEP présent . nombre salariés'),
     input('déplacements . DT-salariés . avec . distance'),
     input('déplacements . DT-salariés . avec . réponse MEP'),
     input('déplacements . DT-salariés . sans . voiture . distance'),
@@ -268,7 +253,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('déplacements . DM-salariés . sans . deux roues . distance'),
     input('déplacements . DM-salariés . sans . avion . court courrier . distance'),
     input('déplacements . DM-salariés . sans . avion . moyen courrier . distance'),
-    input('déplacements . DM-salariés . sans . avion . long courrier . distance'),    
+    input('déplacements . DM-salariés . sans . avion . long courrier . distance'),
   ],
   DeplacementsDansLeCadreDUneMissionAssociativeBenevoles: [
     input('déplacements . DM-bénévoles . sans . voiture . distance'),
@@ -279,7 +264,6 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('déplacements . DM-bénévoles . sans . avion . moyen courrier . distance'),
     input('déplacements . DM-bénévoles . sans . avion . long courrier . distance'),
   ],
-
 
   // Batiment: [
   //   input('fonctionnement . bâtiment . construction . surface'),

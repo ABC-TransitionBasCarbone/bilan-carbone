@@ -442,16 +442,16 @@
       }
     },
     "déplacements": {
-      "MEP présent": {
-        "question": "[TO_TRANSLATE] Avez-vous réalisé une campagne de sensibilisation via MEP ?",
-        "nombre bénévoles": {
-          "question": "[TO_TRANSLATE] Combien de bénévoles ont répondu à MEP ?"
-        },
-        "nombre salariés": {
-          "question": "[TO_TRANSLATE] Combien de salariés ont répondu à MEP ?"
-        }
-      },
       "DT-salariés": {
+        "MEP présent": {
+          "question": "[TO_TRANSLATE] Avez-vous réalisé une campagne de sensibilisation via MEP ?",
+          "nombre bénévoles": {
+            "question": "[TO_TRANSLATE] Combien de bénévoles ont répondu à MEP ?"
+          },
+          "nombre salariés": {
+            "question": "[TO_TRANSLATE] Combien de salariés ont répondu à MEP ?"
+          }
+        },
         "avec": {
           "distance": {
             "question": "[TO_TRANSLATE] D'après les résultats de MEP, quelle est la distance moyenne parcourue par salarié par jour (A/R) pour des déplacements domicile-travail ?"

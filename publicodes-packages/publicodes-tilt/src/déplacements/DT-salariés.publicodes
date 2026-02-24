@@ -11,8 +11,8 @@ déplacements . DT-salariés:
 déplacements . DT-salariés . avec:
   applicable si:
     toutes ces conditions:
-      - est défini: MEP présent
-      - MEP présent = oui
+      - est défini: déplacements . DT-salariés . MEP présent
+      - déplacements . DT-salariés . MEP présent = oui
   titre: émissions des trajets domiciles travail des salariés (avec enquête MEP)
   formule:
     somme:
@@ -21,7 +21,7 @@ déplacements . DT-salariés . avec:
           - répartition
           - (5 - général . TT salariés)
           - commun . nombre de semaines travaillées par an
-          - (général . salariés - MEP présent . nombre salariés)
+          - (général . salariés - déplacements . DT-salariés . MEP présent . nombre salariés)
           - 1 / sans . voiture . occupation
       - réponse MEP
   avec:
@@ -70,8 +70,8 @@ déplacements . DT-salariés . sans:
 déplacements . DT-salariés . sans . voiture:
   applicable si:
     toutes ces conditions:
-      - est défini: MEP présent
-      - MEP présent = non
+      - est défini: déplacements . DT-salariés . MEP présent
+      - déplacements . DT-salariés . MEP présent = non
   formule: distance * split / occupation * (5 - général . TT salariés) * commun . nombre de semaines travaillées par an
   avec:
     distance:
@@ -123,8 +123,8 @@ déplacements . DT-salariés . sans . voiture . occupation:
 déplacements . DT-salariés . sans . train:
   applicable si:
     toutes ces conditions:
-      - est défini: MEP présent
-      - MEP présent = non
+      - est défini: déplacements . DT-salariés . MEP présent
+      - déplacements . DT-salariés . MEP présent = non
   formule: distance * FE  * (5 - général . TT salariés) * commun . nombre de semaines travaillées par an
   avec:
     distance:
@@ -143,8 +143,8 @@ déplacements . DT-salariés . sans . train:
 déplacements . DT-salariés . sans . transports en commun:
   applicable si:
     toutes ces conditions:
-      - est défini: MEP présent
-      - MEP présent = non
+      - est défini: déplacements . DT-salariés . MEP présent
+      - déplacements . DT-salariés . MEP présent = non
   formule: distance * split * (5 - général . TT salariés) * commun . nombre de semaines travaillées par an
   avec:
     distance:
@@ -171,8 +171,8 @@ déplacements . DT-salariés . sans . transports en commun . split:
 déplacements . DT-salariés . sans . deux roues:
   applicable si:
     toutes ces conditions:
-      - est défini: MEP présent
-      - MEP présent = non
+      - est défini: déplacements . DT-salariés . MEP présent
+      - déplacements . DT-salariés . MEP présent = non
   formule: distance * FE  * (5 - général . TT salariés) * commun . nombre de semaines travaillées par an
   avec:
     distance:
