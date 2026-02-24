@@ -19,7 +19,9 @@ intrants-services . services:
 
 intrants-services . services . spectacles-musées:
   formule: montant-dépensé * FE / 1000
-  titre : Spectacles et musées
+  form:
+    à traduire: oui
+  titre: Spectacles, musées et autres services culturels
   avec:
     montant-dépensé:
       question: Montant dépensé en services de spectacles, musées et autres services culturels
@@ -37,6 +39,9 @@ intrants-services . services . spectacles-musées:
 
 intrants-services . services . assurance-reassurance:
   formule: montant-dépensé * FE / 1000
+  form:
+    à traduire: oui
+  titre: Services d'assurance
   avec:
     montant-dépensé:
       question: Montant dépensé en services d'assurance et réassurance
@@ -54,6 +59,9 @@ intrants-services . services . assurance-reassurance:
 
 intrants-services . services . telecom:
   formule: montant-dépensé * FE / 1000
+  form:
+    à traduire: oui
+  titre: Services de télécommunications
   avec:
     montant-dépensé:
       question: Montant dépensé en services de télécommunications
@@ -70,6 +78,9 @@ intrants-services . services . telecom:
 
 intrants-services . services . sante-humaine:
   formule: montant-dépensé * FE / 1000
+  form:
+    à traduire: oui
+  titre: Services de santé humaine
   avec:
     montant-dépensé:
       question: Montant dépensé en services de santé humaine
@@ -86,6 +97,9 @@ intrants-services . services . sante-humaine:
 
 intrants-services . services . edition:
   formule: montant-dépensé * FE / 1000
+  form:
+    à traduire: oui
+  titre: Services d'édition
   avec:
     montant-dépensé:
       question: Montant dépensé en services d'édition
@@ -102,6 +116,9 @@ intrants-services . services . edition:
 
 intrants-services . services . poste-courrier:
   formule: montant-dépensé * FE / 1000
+  form:
+    à traduire: oui
+  titre: Services de poste et de courrier
   avec:
     montant-dépensé:
       question: Montant dépensé en services de poste et courrier
@@ -118,6 +135,9 @@ intrants-services . services . poste-courrier:
 
 intrants-services . services . restauration:
   formule: montant-dépensé * FE / 1000
+  form:
+    à traduire: oui
+  titre: Services de restauration et d'hébergement
   avec:
     montant-dépensé:
       question: Montant dépensé en services de restauration et hébergement
@@ -134,6 +154,9 @@ intrants-services . services . restauration:
 
 intrants-services . services . formation:
   formule: montant-dépensé * FE / 1000
+  form:
+    à traduire: oui
+  titre: Services de formation
   avec:
     montant-dépensé:
       question: Montant dépensé en services de formation
@@ -150,6 +173,9 @@ intrants-services . services . formation:
 
 intrants-services . services . reparation-installation:
   formule: montant-dépensé * FE / 1000
+  form:
+    à traduire: oui
+  titre: Services de réparation et d'installation
   avec:
     montant-dépensé:
       question: Montant dépensé en services de réparation et installation
@@ -165,6 +191,9 @@ intrants-services . services . reparation-installation:
 
 intrants-services . services . juridique-comptable:
   formule: montant-dépensé * FE / 1000
+  form:
+    à traduire: oui
+  titre: Services juridiques, comptables et d'assurance
   avec:
     montant-dépensé:
       question: Montant dépensé en services juridiques, comptables et assurances
@@ -181,6 +210,9 @@ intrants-services . services . juridique-comptable:
 
 intrants-services . services . programmation-conseil:
   formule: montant-dépensé * FE / 1000
+  form:
+    à traduire: oui
+  titre: Services de programmation et de conseil
   avec:
     montant-dépensé:
       question: Montant dépensé en services de programmation et conseil informatique

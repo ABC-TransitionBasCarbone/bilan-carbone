@@ -16,6 +16,9 @@ intrants-biens-et-matières . ratios monétaires:
 
 intrants-biens-et-matières . ratios monétaires . petites-fournitures:
   formule: nombre * FE
+  form:
+    à traduire: oui  
+  titre: Petites fournitures
   avec:
     nombre:
       question: Montant dépensé (k€) en petites fournitures
@@ -32,6 +35,9 @@ intrants-biens-et-matières . ratios monétaires . petites-fournitures:
 
 intrants-biens-et-matières . ratios monétaires . meubles:
   formule: nombre * FE
+  form:
+    à traduire: oui  
+  titre: Meubles
   avec:
     nombre:
       question: Montant dépensé (k€) en meubles
@@ -48,6 +54,9 @@ intrants-biens-et-matières . ratios monétaires . meubles:
 
 intrants-biens-et-matières . ratios monétaires . machines-équipements:
   formule: nombre * FE
+  form:
+    à traduire: oui
+  titre: Machines et équipements
   avec:
     nombre:
       question: Montant dépensé (k€) en machines et équipements
@@ -64,6 +73,9 @@ intrants-biens-et-matières . ratios monétaires . machines-équipements:
 
 intrants-biens-et-matières . ratios monétaires . textiles:
   formule: nombre * FE
+  form:
+    à traduire: oui
+  titre: Textiles
   avec:
     nombre:
       question: Montant dépensé (k€) en textiles
@@ -80,6 +92,9 @@ intrants-biens-et-matières . ratios monétaires . textiles:
 
 intrants-biens-et-matières . ratios monétaires . produits-pharmaceutiques:
   formule: nombre * FE
+  form:
+    à traduire: oui
+  titre: Produits pharmaceutiques
   avec:
     nombre:
       question: Montant dépensé (k€) en produits pharmaceutiques
@@ -96,6 +111,9 @@ intrants-biens-et-matières . ratios monétaires . produits-pharmaceutiques:
 
 intrants-biens-et-matières . ratios monétaires . produits-chimiques:
   formule: nombre * FE
+  form:
+    à traduire: oui
+  titre: Produits chimiques
   avec:
     nombre:
       question: Montant dépensé (k€) en produits chimiques
@@ -112,6 +130,9 @@ intrants-biens-et-matières . ratios monétaires . produits-chimiques:
 
 intrants-biens-et-matières . ratios monétaires . papier-carton:
   formule: nombre * FE
+  form:
+    à traduire: oui
+  titre: Papier et carton
   avec:
     nombre:
       question: Montant dépensé (k€) en papier et carton
@@ -128,6 +149,9 @@ intrants-biens-et-matières . ratios monétaires . papier-carton:
 
 intrants-biens-et-matières . ratios monétaires . produits-métalliques:
   formule: nombre * FE
+  form:
+    à traduire: oui
+  titre: Produits métalliques
   avec:
     nombre:
       question: Montant dépensé (k€) en produits métalliques
@@ -144,6 +168,9 @@ intrants-biens-et-matières . ratios monétaires . produits-métalliques:
 
 intrants-biens-et-matières . ratios monétaires . autres-produits-manufacturés:
   formule: nombre * FE
+  form:
+    à traduire: oui
+  titre: Autres produits manufacturés
   avec:
     nombre:
       question: Montant dépensé (k€) en autres produits manufacturés

@@ -216,56 +216,67 @@
         "description": "[TO_TRANSLATE] La liste est non exhaustive : si vous n’avez pas comptabilisé l’ensemble de vos dépenses, c’est tout à fait normal. Il peut s’agir de dépenses très faiblement émissives ou dont les émissions sont déjà prises en compte dans d’autres postes ou via d’autres questions reposant sur des données plus précises.",
         "question": "[TO_TRANSLATE] Quel montant avez-vous dépensé dans les services immatériels suivants",
         "spectacles-musées": {
+          "titre": "[UPDATED] Spectacles, musées et autres services culturels",
           "montant-dépensé": {
             "question": "[TO_TRANSLATE] Montant dépensé en services de spectacles, musées et autres services culturels"
           }
         },
         "assurance-reassurance": {
+          "titre": "[TO_TRANSLATE] Services d'assurance",
           "montant-dépensé": {
             "question": "[TO_TRANSLATE] Montant dépensé en services d'assurance et réassurance"
           }
         },
         "telecom": {
+          "titre": "[TO_TRANSLATE] Services de télécommunications",
           "montant-dépensé": {
             "question": "[TO_TRANSLATE] Montant dépensé en services de télécommunications"
           }
         },
         "sante-humaine": {
+          "titre": "[TO_TRANSLATE] Services de santé humaine",
           "montant-dépensé": {
             "question": "[TO_TRANSLATE] Montant dépensé en services de santé humaine"
           }
         },
         "edition": {
+          "titre": "[TO_TRANSLATE] Services d'édition",
           "montant-dépensé": {
             "question": "[TO_TRANSLATE] Montant dépensé en services d'édition"
           }
         },
         "poste-courrier": {
+          "titre": "[TO_TRANSLATE] Services de poste et de courrier",
           "montant-dépensé": {
             "question": "[TO_TRANSLATE] Montant dépensé en services de poste et courrier"
           }
         },
         "restauration": {
+          "titre": "[TO_TRANSLATE] Services de restauration et d'hébergement",
           "montant-dépensé": {
             "question": "[TO_TRANSLATE] Montant dépensé en services de restauration et hébergement"
           }
         },
         "formation": {
+          "titre": "[TO_TRANSLATE] Services de formation",
           "montant-dépensé": {
             "question": "[TO_TRANSLATE] Montant dépensé en services de formation"
           }
         },
         "reparation-installation": {
+          "titre": "[TO_TRANSLATE] Services de réparation et d'installation",
           "montant-dépensé": {
             "question": "[TO_TRANSLATE] Montant dépensé en services de réparation et installation"
           }
         },
         "juridique-comptable": {
+          "titre": "[TO_TRANSLATE] Services juridiques, comptables et d'assurance",
           "montant-dépensé": {
             "question": "[TO_TRANSLATE] Montant dépensé en services juridiques, comptables et assurances"
           }
         },
         "programmation-conseil": {
+          "titre": "[TO_TRANSLATE] Services de programmation et de conseil",
           "montant-dépensé": {
             "question": "[TO_TRANSLATE] Montant dépensé en services de programmation et conseil informatique"
           }
@@ -300,46 +311,55 @@
         "titre": "[TO_TRANSLATE] Intrants biens et matières",
         "question": "[TO_TRANSLATE] Quels biens et matières avez-vous achetés en approche monétaire ?",
         "petites-fournitures": {
+          "titre": "[TO_TRANSLATE] Petites fournitures",
           "nombre": {
             "question": "[TO_TRANSLATE] Montant dépensé (k€) en petites fournitures"
           }
         },
         "meubles": {
+          "titre": "[TO_TRANSLATE] Meubles",
           "nombre": {
             "question": "[TO_TRANSLATE] Montant dépensé (k€) en meubles"
           }
         },
         "machines-équipements": {
+          "titre": "[TO_TRANSLATE] Machines et équipements",
           "nombre": {
             "question": "[TO_TRANSLATE] Montant dépensé (k€) en machines et équipements"
           }
         },
         "textiles": {
+          "titre": "[TO_TRANSLATE] Textiles",
           "nombre": {
             "question": "[TO_TRANSLATE] Montant dépensé (k€) en textiles"
           }
         },
         "produits-pharmaceutiques": {
+          "titre": "[TO_TRANSLATE] Produits pharmaceutiques",
           "nombre": {
             "question": "[TO_TRANSLATE] Montant dépensé (k€) en produits pharmaceutiques"
           }
         },
         "produits-chimiques": {
+          "titre": "[TO_TRANSLATE] Produits chimiques",
           "nombre": {
             "question": "[TO_TRANSLATE] Montant dépensé (k€) en produits chimiques"
           }
         },
         "papier-carton": {
+          "titre": "[TO_TRANSLATE] Papier et carton",
           "nombre": {
             "question": "[TO_TRANSLATE] Montant dépensé (k€) en papier et carton"
           }
         },
         "produits-métalliques": {
+          "titre": "[TO_TRANSLATE] Produits métalliques",
           "nombre": {
             "question": "[TO_TRANSLATE] Montant dépensé (k€) en produits métalliques"
           }
         },
         "autres-produits-manufacturés": {
+          "titre": "[TO_TRANSLATE] Autres produits manufacturés",
           "nombre": {
             "question": "[TO_TRANSLATE] Montant dépensé (k€) en autres produits manufacturés"
           }
@@ -663,21 +683,25 @@
     "déchets": {
       "emballages et plastiques": {
         "poubelle jaune": {
+          "titre": "[TO_TRANSLATE] Poubelle jaune",
           "poids": {
             "question": "[TO_TRANSLATE] Poubelle jaune (emballages et plastiques)"
           }
         },
         "déchets verre": {
+          "titre": "[UPDATED] Verre",
           "poids": {
             "question": "[TO_TRANSLATE] Déchets verre"
           }
         },
         "poubelle noire": {
+          "titre": "[TO_TRANSLATE] Poubelle noire (ordures ménagères, autres déchets, etc)",
           "poids": {
             "question": "[TO_TRANSLATE] Poubelle noire (ordures ménagères)"
           }
         },
         "déchets verts": {
+          "titre": "[TO_TRANSLATE] Déchets verts, compost et déchets organiques",
           "poids": {
             "question": "[TO_TRANSLATE] Déchets verts, compost et déchets organiques"
           }
