@@ -1,0 +1,13 @@
+{
+  "publicodes-layout": {
+    "table": {
+      "IntrantsServices": {
+        "question": "[TO_TRANSLATE] Quel montant avez-vous dépensé dans les services immatériels suivants ?",
+        "typeService": "[TO_TRANSLATE] Type de service",
+        "montant-dépensé": "[TO_TRANSLATE] Montant dépensé"
+      }
+    },
+    "group": {},
+    "list": {}
+  }
+}
