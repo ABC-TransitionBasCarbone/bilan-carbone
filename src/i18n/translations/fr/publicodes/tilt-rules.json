@@ -9,6 +9,9 @@
     "litre": "litre",
     "stères": "stères",
     "kgCO2e": "kgCO2e",
+    "h": "h",
+    "mail": "mail",
+    "Go": "Go",
     "unité": "unité",
     "kg": "kg",
     "tonne": "tonne",
@@ -16,10 +19,7 @@
     "%": "%",
     "place": "place",
     "m2": "m2",
-    "repas": "repas",
-    "h": "h",
-    "mail": "mail",
-    "Go": "Go"
+    "repas": "repas"
   },
   "publicodes-rules": {
     "général": {
@@ -211,52 +211,158 @@
         }
       }
     },
+    "intrants-services": {
+      "services": {
+        "description": "La liste est non exhaustive : si vous n’avez pas comptabilisé l’ensemble de vos dépenses, c’est tout à fait normal. Il peut s’agir de dépenses très faiblement émissives ou dont les émissions sont déjà prises en compte dans d’autres postes ou via d’autres questions reposant sur des données plus précises.",
+        "question": "Quel montant avez-vous dépensé dans les services immatériels suivants",
+        "spectacles-musées": {
+          "titre": "Spectacles, musées et autres services culturels",
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de spectacles, musées et autres services culturels"
+          }
+        },
+        "assurance-reassurance": {
+          "titre": "Services d'assurance",
+          "montant-dépensé": {
+            "question": "Montant dépensé en services d'assurance et réassurance"
+          }
+        },
+        "telecom": {
+          "titre": "Services de télécommunications",
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de télécommunications"
+          }
+        },
+        "sante-humaine": {
+          "titre": "Services de santé humaine",
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de santé humaine"
+          }
+        },
+        "edition": {
+          "titre": "Services d'édition",
+          "montant-dépensé": {
+            "question": "Montant dépensé en services d'édition"
+          }
+        },
+        "poste-courrier": {
+          "titre": "Services de poste et de courrier",
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de poste et courrier"
+          }
+        },
+        "restauration": {
+          "titre": "Services de restauration et d'hébergement",
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de restauration et hébergement"
+          }
+        },
+        "formation": {
+          "titre": "Services de formation",
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de formation"
+          }
+        },
+        "reparation-installation": {
+          "titre": "Services de réparation et d'installation",
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de réparation et installation"
+          }
+        },
+        "juridique-comptable": {
+          "titre": "Services juridiques, comptables et d'assurance",
+          "montant-dépensé": {
+            "question": "Montant dépensé en services juridiques, comptables et assurances"
+          }
+        },
+        "programmation-conseil": {
+          "titre": "Services de programmation et de conseil",
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de programmation et conseil informatique"
+          }
+        }
+      },
+      "numérique": {
+        "question": "Veuillez indiquer vos usages numériques sur une année",
+        "streaming": {
+          "heures": {
+            "question": "Combien d'heures de streaming vidéo regardées ?"
+          }
+        },
+        "visioconférence": {
+          "heures": {
+            "question": "Combien d'heures de visioconférence ?"
+          }
+        },
+        "mails": {
+          "nombre": {
+            "question": "Combien de mails envoyés ?"
+          }
+        },
+        "stockage-cloud": {
+          "volume": {
+            "question": "Combien de Go de données stockées sur le cloud ?"
+          }
+        }
+      }
+    },
     "intrants-biens-et-matières": {
-      "titre": "Intrants biens et matières",
-      "question": "Quels biens et matières avez-vous achetés en approche monétaire ?",
-      "petites-fournitures": {
-        "nombre": {
-          "question": "Montant dépensé (k€) en petites fournitures"
-        }
-      },
-      "meubles": {
-        "nombre": {
-          "question": "Montant dépensé (k€) en meubles"
-        }
-      },
-      "machines-équipements": {
-        "nombre": {
-          "question": "Montant dépensé (k€) en machines et équipements"
-        }
-      },
-      "textiles": {
-        "nombre": {
-          "question": "Montant dépensé (k€) en textiles"
-        }
-      },
-      "produits-pharmaceutiques": {
-        "nombre": {
-          "question": "Montant dépensé (k€) en produits pharmaceutiques"
-        }
-      },
-      "produits-chimiques": {
-        "nombre": {
-          "question": "Montant dépensé (k€) en produits chimiques"
-        }
-      },
-      "papier-carton": {
-        "nombre": {
-          "question": "Montant dépensé (k€) en papier et carton"
-        }
-      },
-      "produits-métalliques": {
-        "nombre": {
-          "question": "Montant dépensé (k€) en produits métalliques"
-        }
-      },
-      "autres-produits-manufacturés": {
-        "nombre": {
-          "question": "Montant dépensé (k€) en autres produits manufacturés"
+      "ratios monétaires": {
+        "titre": "Intrants biens et matières",
+        "question": "Quels biens et matières avez-vous achetés en approche monétaire ?",
+        "petites-fournitures": {
+          "titre": "Petites fournitures",
+          "nombre": {
+            "question": "Montant dépensé (k€) en petites fournitures"
+          }
+        },
+        "meubles": {
+          "titre": "Meubles",
+          "nombre": {
+            "question": "Montant dépensé (k€) en meubles"
+          }
+        },
+        "machines-équipements": {
+          "titre": "Machines et équipements",
+          "nombre": {
+            "question": "Montant dépensé (k€) en machines et équipements"
+          }
+        },
+        "textiles": {
+          "titre": "Textiles",
+          "nombre": {
+            "question": "Montant dépensé (k€) en textiles"
+          }
+        },
+        "produits-pharmaceutiques": {
+          "titre": "Produits pharmaceutiques",
+          "nombre": {
+            "question": "Montant dépensé (k€) en produits pharmaceutiques"
+          }
+        },
+        "produits-chimiques": {
+          "titre": "Produits chimiques",
+          "nombre": {
+            "question": "Montant dépensé (k€) en produits chimiques"
+          }
+        },
+        "papier-carton": {
+          "titre": "Papier et carton",
+          "nombre": {
+            "question": "Montant dépensé (k€) en papier et carton"
+          }
+        },
+        "produits-métalliques": {
+          "titre": "Produits métalliques",
+          "nombre": {
+            "question": "Montant dépensé (k€) en produits métalliques"
+          }
+        },
+        "autres-produits-manufacturés": {
+          "titre": "Autres produits manufacturés",
+          "nombre": {
+            "question": "Montant dépensé (k€) en autres produits manufacturés"
+          }
         }
       }
     },
@@ -378,47 +484,6 @@
               "question": "Combien de km sont parcourus en moyenne par vos salariés en deux roues par jour (A/R) pour des déplacements domicile-travail ?"
             }
           }
-        }
-      },
-      "bénéficiaires": {
-        "se déplacent": {
-          "question": "Les bénéficiaires de vos produits ou services se déplacent-ils pour en profiter ?"
-        },
-        "voiture": {
-          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en voiture pour se rendre à vos produits ou services ?"
-        },
-        "part voiture": {
-          "question": "Quel pourcentage des trajets en voiture ?"
-        },
-        "actif": {
-          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires via des modes actifs (à pied, vélo, trottinette) pour se rendre à vos produits ou services ?"
-        },
-        "part actif": {
-          "question": "Quel pourcentage des trajets via des modes actifs (à pied, vélo, trottinette) ?"
-        },
-        "deux roues": {
-          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en deux roues (scooter, moto) pour se rendre à vos produits ou services ?"
-        },
-        "part deux roues": {
-          "question": "Quel pourcentage des trajets en deux roues (scooter, moto) ?"
-        },
-        "transport en commun": {
-          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en transport en commun pour se rendre à vos produits ou services ?"
-        },
-        "part transport en commun": {
-          "question": "Quel pourcentage des trajets en transport en commun ?"
-        },
-        "train": {
-          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en train pour se rendre à vos produits ou services ?"
-        },
-        "part train": {
-          "question": "Quel pourcentage des trajets en train ?"
-        },
-        "avion": {
-          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en avion pour se rendre à vos produits ou services ?"
-        },
-        "part avion": {
-          "question": "Quel pourcentage des trajets en avion ?"
         }
       },
       "DT-bénévoles": {
@@ -572,28 +637,73 @@
             }
           }
         }
+      },
+      "bénéficiaires": {
+        "se déplacent": {
+          "question": "Les bénéficiaires de vos produits ou services se déplacent-ils pour en profiter ?"
+        },
+        "voiture": {
+          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en voiture pour se rendre à vos produits ou services ?"
+        },
+        "part voiture": {
+          "question": "Quel pourcentage des trajets en voiture ?"
+        },
+        "actif": {
+          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires via des modes actifs (à pied, vélo, trottinette) pour se rendre à vos produits ou services ?"
+        },
+        "part actif": {
+          "question": "Quel pourcentage des trajets via des modes actifs (à pied, vélo, trottinette) ?"
+        },
+        "deux roues": {
+          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en deux roues (scooter, moto) pour se rendre à vos produits ou services ?"
+        },
+        "part deux roues": {
+          "question": "Quel pourcentage des trajets en deux roues (scooter, moto) ?"
+        },
+        "transport en commun": {
+          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en transport en commun pour se rendre à vos produits ou services ?"
+        },
+        "part transport en commun": {
+          "question": "Quel pourcentage des trajets en transport en commun ?"
+        },
+        "train": {
+          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en train pour se rendre à vos produits ou services ?"
+        },
+        "part train": {
+          "question": "Quel pourcentage des trajets en train ?"
+        },
+        "avion": {
+          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en avion pour se rendre à vos produits ou services ?"
+        },
+        "part avion": {
+          "question": "Quel pourcentage des trajets en avion ?"
+        }
       }
     },
     "déchets": {
-      "organiques": {
-        "poids": {
-          "question": "Déchets verts, compost et déchets organiques"
-        }
-      },
-      "ordures ménagères": {
-        "poids": {
-          "question": "Poubelle noire (ordures ménagères)"
-        }
-      },
       "emballages et plastiques": {
         "poubelle jaune": {
+          "titre": "Poubelle jaune",
           "poids": {
             "question": "Poubelle jaune (emballages et plastiques)"
           }
         },
         "déchets verre": {
+          "titre": "Verre",
           "poids": {
             "question": "Déchets verre"
+          }
+        },
+        "poubelle noire": {
+          "titre": "Poubelle noire (ordures ménagères, autres déchets, etc)",
+          "poids": {
+            "question": "Poubelle noire (ordures ménagères)"
+          }
+        },
+        "déchets verts": {
+          "titre": "Déchets verts, compost et déchets organiques",
+          "poids": {
+            "question": "Déchets verts, compost et déchets organiques"
           }
         }
       }
@@ -728,90 +838,6 @@
         "végétalien": {
           "nombre de repas": {
             "question": "Combien de repas végétaliens sont consommés par vos bénéficiaires chaque année ?"
-          }
-        }
-      }
-    },
-    "intrants-services": {
-      "services": {
-        "description": "La liste est non exhaustive : si vous n’avez pas comptabilisé l’ensemble de vos dépenses, c’est tout à fait normal. Il peut s’agir de dépenses très faiblement émissives ou dont les émissions sont déjà prises en compte dans d’autres postes ou via d’autres questions reposant sur des données plus précises.",
-        "question": "Quel montant avez-vous dépensé dans les services immatériels suivants",
-        "spectacles-musées": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de spectacles, musées et autres services culturels"
-          }
-        },
-        "assurance-reassurance": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services d'assurance et réassurance"
-          }
-        },
-        "telecom": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de télécommunications"
-          }
-        },
-        "sante-humaine": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de santé humaine"
-          }
-        },
-        "edition": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services d'édition"
-          }
-        },
-        "poste-courrier": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de poste et courrier"
-          }
-        },
-        "restauration": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de restauration et hébergement"
-          }
-        },
-        "formation": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de formation"
-          }
-        },
-        "reparation-installation": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de réparation et installation"
-          }
-        },
-        "juridique-comptable": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services juridiques, comptables et assurances"
-          }
-        },
-        "programmation-conseil": {
-          "montant-dépensé": {
-            "question": "Montant dépensé en services de programmation et conseil informatique"
-          }
-        }
-      },
-      "numérique": {
-        "question": "Veuillez indiquer vos usages numériques sur une année",
-        "streaming": {
-          "heures": {
-            "question": "Combien d'heures de streaming vidéo regardées ?"
-          }
-        },
-        "visioconférence": {
-          "heures": {
-            "question": "Combien d'heures de visioconférence ?"
-          }
-        },
-        "mails": {
-          "nombre": {
-            "question": "Combien de mails envoyés ?"
-          }
-        },
-        "stockage-cloud": {
-          "volume": {
-            "question": "Combien de Go de données stockées sur le cloud ?"
           }
         }
       }

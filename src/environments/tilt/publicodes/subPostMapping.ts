@@ -50,8 +50,8 @@ const SUBPOST_TO_RULENAME: Partial<Record<SubPost, TiltRuleName>> = {
   ReseauxDeFroid: 'énergie . réseaux de froid',
   Electricite: 'énergie . électricité',
   DechetsDEmballagesEtPlastiques: 'déchets . emballages et plastiques',
-  DechetsOrganiques: 'déchets . organiques',
-  DechetsOrduresMenageres: 'déchets . ordures ménagères',
+  // DechetsOrganiques: "",
+  // DechetsOrduresMenageres: "",
   FroidEtClim: 'froid et clim',
   // EmissionsLieesAuChangementDAffectationDesSolsCas,
   DeplacementsDomicileTravailSalaries: 'déplacements . DT-salariés',
@@ -63,12 +63,12 @@ const SUBPOST_TO_RULENAME: Partial<Record<SubPost, TiltRuleName>> = {
   // Interne: "fret . transport",
   // Sortant: "fret . transport",
   TransportFabricationDesVehicules: 'fret . fabrication',
-  // MetauxPlastiquesEtVerre: "",
-  PapiersCartons: 'intrants-biens-et-matières . papier-carton',
+  MetauxPlastiquesEtVerre: 'intrants-biens-et-matières . ratios monétaires',
+  // PapiersCartons: "",
   // MateriauxDeConstruction: "",
   // ProduitsChimiquesEtHydrogene: "",
   // MatiereDestineeAuxEmballages: "",
-  AutresIntrants: 'intrants-biens-et-matières . autres-produits-manufacturés',
+  // AutresIntrants: "",
   // BiensEtMatieresEnApprocheMonetaire,
   RepasPrisParLesSalaries: 'alimentation . salariés',
   RepasPrisParLesBenevoles: 'alimentation . bénévoles',
@@ -123,16 +123,34 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('énergie . électricité . consommation'),
     input('énergie . électricité . autoproduction . autoproduction'),
   ],
-  DechetsOrganiques: [input('déchets . organiques . poids')],
-  DechetsOrduresMenageres: [input('déchets . ordures ménagères . poids')],
   FroidEtClim: [
     input('froid et clim . nombre'),
     input('froid et clim . fuites . locaux partagés'),
     input('froid et clim . fuites . locaux seuls'),
   ],
   DechetsDEmballagesEtPlastiques: [
-    input('déchets . emballages et plastiques . déchets verre . poids'),
-    input('déchets . emballages et plastiques . poubelle jaune . poids'),
+    table(
+      'DechetsDirects.question',
+      ['DechetsDirects.typeDéchets', 'DechetsDirects.poids'],
+      [
+        [
+          'déchets . emballages et plastiques . poubelle noire',
+          'déchets . emballages et plastiques . poubelle noire . poids',
+        ],
+        [
+          'déchets . emballages et plastiques . poubelle jaune',
+          'déchets . emballages et plastiques . poubelle jaune . poids',
+        ],
+        [
+          'déchets . emballages et plastiques . déchets verre',
+          'déchets . emballages et plastiques . déchets verre . poids',
+        ],
+        [
+          'déchets . emballages et plastiques . déchets verts',
+          'déchets . emballages et plastiques . déchets verts . poids',
+        ],
+      ],
+    ),
   ],
   TraitementDesDechetsEnFinDeVie: [
     input('fin de vie . déchets . fin de vie présente'),
@@ -148,7 +166,6 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('utilisation . responsabilite conso energie . gaz naturel . conso'),
   ],
   EquipementsDesSalaries: [
-    input('équipements et immobilisations . infos . prise en compte reconditionné'),
     input('équipements et immobilisations . infos . ordinateurs fixes . quantité'),
     input('équipements et immobilisations . infos . ordinateurs portables . quantité'),
     input('équipements et immobilisations . infos . photocopieurs . quantité'),
@@ -156,19 +173,50 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('équipements et immobilisations . infos . téléphones fixes . quantité'),
     input('équipements et immobilisations . infos . téléphones portables . quantité'),
     input('équipements et immobilisations . infos . autres écrans . quantité'),
+    input('équipements et immobilisations . infos . prise en compte reconditionné'),
   ],
   ServicesEnApprocheMonetaire: [
-    input('intrants-services . services . spectacles-musées . montant-dépensé'),
-    input('intrants-services . services . assurance-reassurance . montant-dépensé'),
-    input('intrants-services . services . telecom . montant-dépensé'),
-    input('intrants-services . services . sante-humaine . montant-dépensé'),
-    input('intrants-services . services . edition . montant-dépensé'),
-    input('intrants-services . services . poste-courrier . montant-dépensé'),
-    input('intrants-services . services . restauration . montant-dépensé'),
-    input('intrants-services . services . formation . montant-dépensé'),
-    input('intrants-services . services . reparation-installation . montant-dépensé'),
-    input('intrants-services . services . juridique-comptable . montant-dépensé'),
-    input('intrants-services . services . programmation-conseil . montant-dépensé'),
+    table(
+      'IntrantsServices.question',
+      ['IntrantsServices.typeService', 'IntrantsServices.montantDepense'],
+      [
+        [
+          'intrants-services . services . spectacles-musées',
+          'intrants-services . services . spectacles-musées . montant-dépensé',
+        ],
+        [
+          'intrants-services . services . assurance-reassurance',
+          'intrants-services . services . assurance-reassurance . montant-dépensé',
+        ],
+        ['intrants-services . services . telecom', 'intrants-services . services . telecom . montant-dépensé'],
+        [
+          'intrants-services . services . sante-humaine',
+          'intrants-services . services . sante-humaine . montant-dépensé',
+        ],
+        ['intrants-services . services . edition', 'intrants-services . services . edition . montant-dépensé'],
+        [
+          'intrants-services . services . poste-courrier',
+          'intrants-services . services . poste-courrier . montant-dépensé',
+        ],
+        [
+          'intrants-services . services . restauration',
+          'intrants-services . services . restauration . montant-dépensé',
+        ],
+        ['intrants-services . services . formation', 'intrants-services . services . formation . montant-dépensé'],
+        [
+          'intrants-services . services . reparation-installation',
+          'intrants-services . services . reparation-installation . montant-dépensé',
+        ],
+        [
+          'intrants-services . services . juridique-comptable',
+          'intrants-services . services . juridique-comptable . montant-dépensé',
+        ],
+        [
+          'intrants-services . services . programmation-conseil',
+          'intrants-services . services . programmation-conseil . montant-dépensé',
+        ],
+      ],
+    ),
   ],
   UsagesNumeriques: [
     input('intrants-services . numérique . streaming . heures'),
@@ -201,8 +249,51 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('alimentation . salariés . végétarien . nombre de repas'),
     input('alimentation . salariés . végétalien . nombre de repas'),
   ],
-  AutresIntrants: [input('intrants-biens-et-matières . autres-produits-manufacturés . nombre')],
-  PapiersCartons: [input('intrants-biens-et-matières . papier-carton . nombre')],
+  MetauxPlastiquesEtVerre: [
+    table(
+      'IntrantsBiensEtMatieresTilt.question',
+      ['IntrantsBiensEtMatieresTilt.typeBien', 'IntrantsBiensEtMatieresTilt.montantDepense'],
+      [
+        [
+          'intrants-biens-et-matières . ratios monétaires . petites-fournitures',
+          'intrants-biens-et-matières . ratios monétaires . petites-fournitures . nombre',
+        ],
+        [
+          'intrants-biens-et-matières . ratios monétaires . meubles',
+          'intrants-biens-et-matières . ratios monétaires . meubles . nombre',
+        ],
+        [
+          'intrants-biens-et-matières . ratios monétaires . machines-équipements',
+          'intrants-biens-et-matières . ratios monétaires . machines-équipements . nombre',
+        ],
+        [
+          'intrants-biens-et-matières . ratios monétaires . textiles',
+          'intrants-biens-et-matières . ratios monétaires . textiles . nombre',
+        ],
+        [
+          'intrants-biens-et-matières . ratios monétaires . produits-pharmaceutiques',
+          'intrants-biens-et-matières . ratios monétaires . produits-pharmaceutiques . nombre',
+        ],
+        [
+          'intrants-biens-et-matières . ratios monétaires . produits-chimiques',
+          'intrants-biens-et-matières . ratios monétaires . produits-chimiques . nombre',
+        ],
+        [
+          'intrants-biens-et-matières . ratios monétaires . papier-carton',
+          'intrants-biens-et-matières . ratios monétaires . papier-carton . nombre',
+        ],
+        [
+          'intrants-biens-et-matières . ratios monétaires . produits-métalliques',
+          'intrants-biens-et-matières . ratios monétaires . produits-métalliques . nombre',
+        ],
+        [
+          'intrants-biens-et-matières . ratios monétaires . autres-produits-manufacturés',
+          'intrants-biens-et-matières . ratios monétaires . autres-produits-manufacturés . nombre',
+        ],
+      ],
+    ),
+  ],
+
   TransportFabricationDesVehicules: [
     input('fret . fabrication . voitures . nombre'),
     input('fret . fabrication . VUL . nombre'),
@@ -213,10 +304,16 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('fret . transport . carburant . litre'),
     input('fret . transport . livraisons'),
     input('fret . transport . poids'),
-    input('fret . transport . local . provenance'),
-    input('fret . transport . national . provenance'),
-    input('fret . transport . europe . provenance'),
-    input('fret . transport . international . provenance'),
+    table(
+      'TransportDeMarchandises.question',
+      ['TransportDeMarchandises.typeProvenance', 'TransportDeMarchandises.pourcentageLivraisons'],
+      [
+        ['fret . transport . local', 'fret . transport . local . provenance'],
+        ['fret . transport . national', 'fret . transport . national . provenance'],
+        ['fret . transport . europe', 'fret . transport . europe . provenance'],
+        ['fret . transport . international', 'fret . transport . international . provenance'],
+      ],
+    ),
   ],
   DeplacementsDesBeneficiaires: [
     input('déplacements . bénéficiaires . se déplacent'),
