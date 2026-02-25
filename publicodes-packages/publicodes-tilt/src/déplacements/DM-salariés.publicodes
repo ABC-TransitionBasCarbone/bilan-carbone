@@ -14,7 +14,7 @@ déplacements . DM-salariés . avec:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = oui
   titre: émissions des trajets liés à des missions des salariés (avec enquête MEP)
-  formule: 
+  formule:
     produit:
       - émissions MEP ##émissions unitaires par salarié
       - général . salariés ## pour compter les émissions totales

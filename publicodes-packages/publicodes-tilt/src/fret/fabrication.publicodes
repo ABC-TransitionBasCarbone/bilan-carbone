@@ -6,7 +6,6 @@ fret . fabrication:
       - VUL
       - PL
 
-
 fret . fabrication . VUL:
   titre: Véhicules utilitaires légers
   formule: nombre * FE * 3.5 / amortissement

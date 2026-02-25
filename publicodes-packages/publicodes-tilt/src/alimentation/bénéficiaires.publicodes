@@ -1,12 +1,12 @@
 alimentation . bénéficiaires:
   formule:
     somme:
-    - viande rouge
-    - viande blanche
-    - poisson blanc
-    - poisson gras
-    - végétarien
-    - végétalien
+      - viande rouge
+      - viande blanche
+      - poisson blanc
+      - poisson gras
+      - végétarien
+      - végétalien
   unité: kgCO2e
 
 alimentation . bénéficiaires . repas présent:

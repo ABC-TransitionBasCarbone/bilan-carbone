@@ -67,7 +67,7 @@ fret . transport . local . split:
 fret . transport . local . provenance:
   titre: livraisons locales
   question: Sur ces livraisons, quelle part provient de fournisseurs locaux (moins de 50 km) ?
-  unité: '%'
+  unité: "%"
 
 ##### Fret national #####
 
@@ -106,7 +106,7 @@ fret . transport . national . split:
 fret . transport . national . provenance:
   titre: livraisons nationales
   question: Sur ces livraisons, quelle part provient de fournisseurs nationaux (entre 50 km et 500 km) ?
-  unité: '%'
+  unité: "%"
 
 ##### Fret europe #####
 
@@ -145,7 +145,7 @@ fret . transport . europe . split:
 fret . transport . europe . provenance:
   titre: livraisons européennes
   question: Sur ces livraisons, quelle part provient de fournisseurs européens (entre 500 km et 1500 km) ?
-  unité: '%'
+  unité: "%"
 
 ##### Fret international #####
 
@@ -176,4 +176,4 @@ fret . transport . international . split:
 fret . transport . international . provenance:
   titre: livraisons internationales
   question: Sur ces livraisons, quelle part provient de fournisseurs internationaux (plus de 1500 km) ?
-  unité: '%'
+  unité: "%"

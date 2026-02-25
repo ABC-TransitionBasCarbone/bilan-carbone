@@ -14,7 +14,7 @@ déplacements . DM-bénévoles . avec:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = oui
   titre: émissions des trajets liés à des missions des bénévoles (avec enquête MEP)
-  formule: 
+  formule:
     produit:
       - émissions MEP ##émissions unitaires par bénévole
       - général . bénévoles ## pour compter les émissions totales

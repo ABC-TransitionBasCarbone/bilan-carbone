@@ -9,7 +9,7 @@ intrants-services . numérique:
   unité: kgCO2e
 
 intrants-services . numérique . streaming:
-  formule: heures * FE 
+  formule: heures * FE
   avec:
     heures:
       question: Combien d'heures de streaming vidéo regardées ?

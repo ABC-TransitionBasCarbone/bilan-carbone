@@ -23,11 +23,10 @@ télétravail . bénévoles . h:
 télétravail . bénévoles . j:
   formule: h / 7
   unité: j/semaine
-  type: nombre 
-
+  type: nombre
 
 télétravail . salariés:
-  titre: Télétravail - Salariés 
+  titre: Télétravail - Salariés
   formule: FE * j * général . salariés * commun . nombre de semaines travaillées par an
   unité: kgCO2e
 

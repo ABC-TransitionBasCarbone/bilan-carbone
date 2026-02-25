@@ -101,7 +101,7 @@
     quantité:
       question: Photocopieurs
       type: nombre
-      unité: quantité      
+      unité: quantité
 
 équipements et immobilisations . infos . imprimantes:
   formule: FE * quantité
@@ -115,7 +115,7 @@
     quantité:
       question: Imprimante multi-fonction
       type: nombre
-      unité: quantité     
+      unité: quantité
 
 équipements et immobilisations . infos . téléphones fixes:
   formule: FE * quantité

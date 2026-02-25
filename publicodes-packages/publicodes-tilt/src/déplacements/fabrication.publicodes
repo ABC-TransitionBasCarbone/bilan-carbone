@@ -5,7 +5,6 @@ déplacements . fabrication:
     somme:
       - voitures
 
-
 déplacements . fabrication . voitures:
   titre: Voitures
   formule: nombre * FE * 1.265 / amortissement
@@ -25,4 +24,3 @@ déplacements . fabrication . voitures:
     amortissement:
       valeur: 5
       unité: an
-
