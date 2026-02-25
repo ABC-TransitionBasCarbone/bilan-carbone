@@ -1,7 +1,10 @@
 import { TOTAL_RULE } from '@/constants/publicodes'
+import { customPostOrder } from '@/environments/clickson/utils/constant'
+import { sortByCustomOrder } from '@/utils/array'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
-import { StudyResultUnit, SubPost } from '@prisma/client'
+import { Environment, StudyResultUnit, SubPost } from '@prisma/client'
 import Engine from 'publicodes'
+import { hasCustomPostOrder } from '../permissions/environment'
 import { Post } from '../posts'
 import { BaseResultsByPost } from './consolidated'
 
@@ -32,8 +35,9 @@ export function computeBaseResultsByPostFromEngine<P extends Post>(
   tPost: (key: string) => string,
   getPostRuleName: (post: P) => string,
   getSubPostRuleName: (subPost: SubPost) => string | undefined,
+  environment?: Environment,
 ): BaseResultsByPost[] {
-  const postResults = posts
+  let postResults = posts
     .map((post) => {
       const postRuleName = getPostRuleName(post)
       const postValue = safeEvaluate(engine, postRuleName)
@@ -58,6 +62,12 @@ export function computeBaseResultsByPostFromEngine<P extends Post>(
       }
     })
     .sort((a, b) => a.label.localeCompare(b.label))
+
+  if (environment && hasCustomPostOrder(environment)) {
+    postResults = sortByCustomOrder(postResults, customPostOrder, (item) => item.post)
+  } else {
+    postResults.sort((a, b) => a.label.localeCompare(b.label))
+  }
 
   return [...postResults, computeTotalForBaseResults(engine, postResults, tPost)]
 }
