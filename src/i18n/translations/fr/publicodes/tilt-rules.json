@@ -1,0 +1,820 @@
+{
+  "publicodes-units": {
+    "année": "année",
+    "personne": "personne",
+    "k€": "k€",
+    "jours": "jours",
+    "kWh": "kWh",
+    "m3": "m3",
+    "litre": "litre",
+    "stères": "stères",
+    "kgCO2e": "kgCO2e",
+    "unité": "unité",
+    "kg": "kg",
+    "tonne": "tonne",
+    "km": "km",
+    "%": "%",
+    "place": "place",
+    "m2": "m2",
+    "repas": "repas",
+    "h": "h",
+    "mail": "mail",
+    "Go": "Go"
+  },
+  "publicodes-rules": {
+    "général": {
+      "nom": {
+        "question": "Quel est le nom de l'association pour laquelle vous souhaitez réaliser une estimation d’impact carbone ?"
+      },
+      "code postal": {
+        "question": "Quel est le code postal de l'association ?"
+      },
+      "année": {
+        "question": "Pour quelle année réalisez-vous cette estimation d’impact ?"
+      },
+      "salariés": {
+        "question": "Combien de salariés compte l'association en [Année] ?"
+      },
+      "bénévoles": {
+        "question": "Combien de bénévoles compte l'association en [Année] ?"
+      },
+      "bénéficiaires": {
+        "question": "Combien de bénéficiaires ont profité des services de l'association en  [Année] ?"
+      },
+      "budget": {
+        "question": "Quel est le budget de fonctionnement de l'association ?"
+      },
+      "type": {
+        "question": "de quel type de structure votre association se rapproche t'elle le plus ?",
+        "options": {
+          "Club de loisirs": "Club de loisirs",
+          "Association étudiante": "Association étudiante",
+          "Association culturelle": "Association culturelle",
+          "Association de voisinage": "Association de voisinage",
+          "Hôpital": "Hôpital",
+          "Maison de retraite": "Maison de retraite",
+          "Association d'aide à domicile": "Association d'aide à domicile",
+          "Association humanitaire": "Association humanitaire",
+          "Autres structures sociales et solidaires": "Autres structures sociales et solidaires",
+          "Association de défense de l'environnement": "Association de défense de l'environnement",
+          "Association d'enseignement ou de formation": "Association d'enseignement ou de formation"
+        }
+      },
+      "TT bénévoles": {
+        "question": "Combien de jours sont télétravaillées par semaine pour vos bénévoles ?"
+      },
+      "TT salariés": {
+        "question": "Combien de jours sont télétravaillées par semaine pour vos salariés ?"
+      }
+    },
+    "équipements et immobilisations": {
+      "infos": {
+        "prise en compte reconditionné": {
+          "question": "Vos équipements sont-ils régulièrement reconditionné ou issu de seconde main ?",
+          "options": {
+            "toujours": "Toujours",
+            "souvent": "Souvent",
+            "rarement": "Rarement",
+            "jamais": "Jamais"
+          }
+        },
+        "ordinateurs fixes": {
+          "quantité": {
+            "question": "Ordinateurs fixes"
+          }
+        },
+        "ordinateurs portables": {
+          "quantité": {
+            "question": "Ordinateurs portables"
+          }
+        },
+        "photocopieurs": {
+          "quantité": {
+            "question": "Photocopieurs"
+          }
+        },
+        "imprimantes": {
+          "quantité": {
+            "question": "Imprimante multi-fonction"
+          }
+        },
+        "téléphones fixes": {
+          "quantité": {
+            "question": "Téléphones fixes"
+          }
+        },
+        "téléphones portables": {
+          "quantité": {
+            "question": "Téléphones portables"
+          }
+        },
+        "vidéoprojecteurs": {
+          "quantité": {
+            "question": "Vidéoprojecteurs"
+          }
+        },
+        "autres écrans": {
+          "quantité": {
+            "question": "Autres écrans (TV, écran secondaire, tablette, ...)"
+          }
+        }
+      }
+    },
+    "énergie": {
+      "titre": "Énergie",
+      "question": "Qu'utilisez-vous pour le chauffage, l'éclairage et les autres consommations énergétiques de vos locaux ?",
+      "électricité": {
+        "consommation": {
+          "question": "Quelle est votre consommation annuelle d'électricité ? (issue de votre facture et n'incluant pas votre autoconsommation, ni la consommation des véhicules électriques)"
+        },
+        "autoproduction": {
+          "autoproduction": {
+            "question": "Quelle est votre autoproduction annuelle d'électricité ?"
+          }
+        }
+      },
+      "réseaux de froid": {
+        "consommation": {
+          "question": "Quelle est votre consommation annuelle de froid issue de réseaux ?"
+        }
+      },
+      "réseaux de chaleur": {
+        "consommation": {
+          "question": "Quelle est votre consommation annuelle de chaleur issue de réseaux ?"
+        }
+      },
+      "fossiles": {
+        "gaz": {
+          "consommation": {
+            "question": "Quelle est votre consommation annuelle de gaz naturel ? (hors consommation par les véhicules)"
+          }
+        },
+        "fioul": {
+          "consommation": {
+            "question": "Quelle est votre consommation annuelle de fioul (hors consommations par les véhicules)"
+          }
+        }
+      },
+      "combustibles organiques": {
+        "choix": {
+          "question": "Utilisez-vous des bûches ou des granulés ?",
+          "options": {
+            "bûches": "Bûches",
+            "granulés": "Granulés",
+            "aucun": "Aucun"
+          }
+        },
+        "granulés": {
+          "consommation": {
+            "question": "Combien de kWh issus de la combustion de granulés de bois ont été consommés chaque année ?"
+          }
+        },
+        "bois": {
+          "consommation": {
+            "question": "Quelle est votre consommation annuelle de bois ?"
+          }
+        }
+      }
+    },
+    "utilisation": {
+      "responsabilite conso energie": {
+        "élec présente": {
+          "question": "Fournissez-vous des produits ou services qui entraînent des consommations d'électricité chez vos usagers ?"
+        },
+        "élec": {
+          "conso": {
+            "question": "À combien de kWh estimez-vous ces consommations d'électricité ?"
+          }
+        },
+        "fossiles présents": {
+          "question": "Fournissez-vous des produits ou services qui entraînent des consommations d'énergie fossiles chez vos usagers ?"
+        },
+        "fioul": {
+          "conso": {
+            "question": "Pour le fioul, à combien de litres estimez-vous ces consommations ?"
+          }
+        },
+        "essence": {
+          "conso": {
+            "question": "Pour l'essence, à combien de litres estimez-vous ces consommations ?"
+          }
+        },
+        "gazole": {
+          "conso": {
+            "question": "Pour le gazole, à combien de litres estimez-vous ces consommations ?"
+          }
+        },
+        "gaz naturel": {
+          "conso": {
+            "question": "Pour le gaz naturel, à combien de m3 estimez-vous ces consommations ?"
+          }
+        }
+      }
+    },
+    "intrants-biens-et-matières": {
+      "titre": "Intrants biens et matières",
+      "question": "Quels biens et matières avez-vous achetés en approche monétaire ?",
+      "petites-fournitures": {
+        "nombre": {
+          "question": "Montant dépensé (k€) en petites fournitures"
+        }
+      },
+      "meubles": {
+        "nombre": {
+          "question": "Montant dépensé (k€) en meubles"
+        }
+      },
+      "machines-équipements": {
+        "nombre": {
+          "question": "Montant dépensé (k€) en machines et équipements"
+        }
+      },
+      "textiles": {
+        "nombre": {
+          "question": "Montant dépensé (k€) en textiles"
+        }
+      },
+      "produits-pharmaceutiques": {
+        "nombre": {
+          "question": "Montant dépensé (k€) en produits pharmaceutiques"
+        }
+      },
+      "produits-chimiques": {
+        "nombre": {
+          "question": "Montant dépensé (k€) en produits chimiques"
+        }
+      },
+      "papier-carton": {
+        "nombre": {
+          "question": "Montant dépensé (k€) en papier et carton"
+        }
+      },
+      "produits-métalliques": {
+        "nombre": {
+          "question": "Montant dépensé (k€) en produits métalliques"
+        }
+      },
+      "autres-produits-manufacturés": {
+        "nombre": {
+          "question": "Montant dépensé (k€) en autres produits manufacturés"
+        }
+      }
+    },
+    "froid et clim": {
+      "nombre": {
+        "question": "Combien de climatiseurs sont utilisés dans vos locaux ?"
+      }
+    },
+    "fret": {
+      "transport": {
+        "présent": {
+          "question": "Est-ce que votre association possède ou loue des véhicules pour transporter des marchandises ?"
+        },
+        "carburant": {
+          "litre": {
+            "question": "Combien de litres de carburants ceux-ci consomment-ils ?"
+          }
+        },
+        "livraisons": {
+          "titre": "Nombre de livraisons",
+          "question": "En moyenne, combien de livraisons ont lieu par an ?"
+        },
+        "poids": {
+          "titre": "Poids moyen des livraisons",
+          "question": "En moyenne, pour une livraison, quel est le poids transporté ?"
+        },
+        "local": {
+          "provenance": {
+            "titre": "livraisons locales",
+            "question": "Sur ces livraisons, combien sont en provenance de fournisseurs locaux (moins de 50 km) ?"
+          }
+        },
+        "national": {
+          "provenance": {
+            "titre": "livraisons nationales",
+            "question": "Sur ces livraisons, combien sont en provenance de fournisseurs nationaux (entre 50 km et 500 km) ?"
+          }
+        },
+        "europe": {
+          "provenance": {
+            "titre": "livraisons européennes",
+            "question": "Sur ces livraisons, combien sont en provenance de fournisseurs européens (entre 500 km et 1500 km) ?"
+          }
+        },
+        "international": {
+          "provenance": {
+            "titre": "livraisons internationales",
+            "question": "Sur ces livraisons, combien sont en provenance de fournisseurs internationaux (plus de 1500 km) ?"
+          }
+        }
+      },
+      "fabrication": {
+        "titre": "Fabrication des véhicules",
+        "question": "Combien de véhicules sont possédés ou loués depuis moins de 5 ans parmi les catégories suivantes ?",
+        "voitures": {
+          "nombre": {
+            "question": "Combien de voitures particulières possédez-vous ou louez-vous depuis moins de 5 ans ?"
+          }
+        },
+        "VUL": {
+          "nombre": {
+            "question": "Combien de véhicules utilitaires légers possédez-vous ou louez-vous depuis moins de 5 ans ?"
+          }
+        },
+        "PL": {
+          "nombre": {
+            "question": "Combien de véhicules poids lourds possédez-vous ou louez-vous depuis moins de 5 ans ?"
+          }
+        }
+      }
+    },
+    "fin de vie": {
+      "déchets": {
+        "fin de vie présente": {
+          "question": "Fournissez-vous des biens matériels à vos bénéficiaires ?"
+        },
+        "poids": {
+          "question": "Quel est le poids total de ces biens délivrés sur une année ?"
+        }
+      }
+    },
+    "déplacements": {
+      "DT-salariés": {
+        "MEP présent": {
+          "question": "Avez-vous réalisé une campagne de sensibilisation via MEP ?",
+          "nombre bénévoles": {
+            "question": "Combien de bénévoles ont répondu à MEP ?"
+          },
+          "nombre salariés": {
+            "question": "Combien de salariés ont répondu à MEP ?"
+          }
+        },
+        "avec": {
+          "distance": {
+            "question": "D'après les résultats de MEP, quelle est la distance moyenne parcourue par salarié par jour (A/R) pour des déplacements domicile-travail ?"
+          },
+          "réponse MEP": {
+            "question": "D'après les résultats MEP, combien de kgCO2e représentent les déplacements liés à des missions des salariés ?"
+          }
+        },
+        "sans": {
+          "voiture": {
+            "distance": {
+              "question": "Combien de km sont parcourus en moyenne par vos salariés en voiture par jour (A/R) pour des déplacements domicile-travail ?"
+            }
+          },
+          "train": {
+            "distance": {
+              "question": "Combien de km sont parcourus en moyenne par vos salariés en train par jour (A/R) pour des déplacements domicile-travail ?"
+            }
+          },
+          "transports en commun": {
+            "distance": {
+              "question": "Combien de km sont parcourus en moyenne par vos salariés en transports en commun par jour (A/R) pour des déplacements domicile-travail ?"
+            }
+          },
+          "deux roues": {
+            "distance": {
+              "question": "Combien de km sont parcourus en moyenne par vos salariés en deux roues par jour (A/R) pour des déplacements domicile-travail ?"
+            }
+          }
+        }
+      },
+      "bénéficiaires": {
+        "se déplacent": {
+          "question": "Les bénéficiaires de vos produits ou services se déplacent-ils pour en profiter ?"
+        },
+        "voiture": {
+          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en voiture pour se rendre à vos produits ou services ?"
+        },
+        "part voiture": {
+          "question": "Quel pourcentage des trajets en voiture ?"
+        },
+        "actif": {
+          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires via des modes actifs (à pied, vélo, trottinette) pour se rendre à vos produits ou services ?"
+        },
+        "part actif": {
+          "question": "Quel pourcentage des trajets via des modes actifs (à pied, vélo, trottinette) ?"
+        },
+        "deux roues": {
+          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en deux roues (scooter, moto) pour se rendre à vos produits ou services ?"
+        },
+        "part deux roues": {
+          "question": "Quel pourcentage des trajets en deux roues (scooter, moto) ?"
+        },
+        "transport en commun": {
+          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en transport en commun pour se rendre à vos produits ou services ?"
+        },
+        "part transport en commun": {
+          "question": "Quel pourcentage des trajets en transport en commun ?"
+        },
+        "train": {
+          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en train pour se rendre à vos produits ou services ?"
+        },
+        "part train": {
+          "question": "Quel pourcentage des trajets en train ?"
+        },
+        "avion": {
+          "question": "Combien de km sont parcourus en moyenne par vos bénéficiaires en avion pour se rendre à vos produits ou services ?"
+        },
+        "part avion": {
+          "question": "Quel pourcentage des trajets en avion ?"
+        }
+      },
+      "DT-bénévoles": {
+        "avec": {
+          "distance": {
+            "question": "D'après les résultats de MEP, quelle est la distance moyenne parcourue par jour (A/R) par bénévole pour des déplacements domicile-travail ?"
+          },
+          "réponse MEP": {
+            "question": "D'après les résultats MEP, combien de kgCO2e représentent les déplacements domicile-travail des bénévoles ?"
+          }
+        },
+        "sans": {
+          "voiture": {
+            "distance": {
+              "question": "Combien de km sont parcourus en moyenne par jour (A/R) par vos bénévoles en voiture pour des déplacements domicile-travail ?"
+            }
+          },
+          "train": {
+            "distance": {
+              "question": "Combien de km sont parcourus en moyenne par jour (A/R) par vos bénévoles en train pour des déplacements domicile-travail ?"
+            }
+          },
+          "transports en commun": {
+            "distance": {
+              "question": "Combien de km sont parcourus en moyenne par jour (A/R) par vos bénévoles en transports en commun pour des déplacements domicile-travail ?"
+            }
+          },
+          "deux roues": {
+            "distance": {
+              "question": "Combien de km sont parcourus en moyenne par jour (A/R) par vos bénévoles en deux roues pour des déplacements domicile-travail ?"
+            }
+          }
+        }
+      },
+      "DM-salariés": {
+        "avec": {
+          "émissions MEP": {
+            "voiture": {
+              "question": "D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en voiture liés à des missions ?"
+            },
+            "train": {
+              "question": "D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en train liés à des missions ?"
+            },
+            "avion": {
+              "question": "D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en avion liés à des missions ?"
+            },
+            "transports en commun": {
+              "question": "D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en transports en commun liés à des missions ?"
+            },
+            "deux roues": {
+              "question": "D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en deux roues liés à des missions ?"
+            }
+          }
+        },
+        "sans": {
+          "voiture": {
+            "distance": {
+              "question": "Combien de km sont parcourus en moyenne par mois par vos salariés en voiture pour des déplacements liés à des missions ?"
+            }
+          },
+          "train": {
+            "distance": {
+              "question": "Combien de km sont parcourus en moyenne par mois par vos salariés en train pour des déplacements liés à des missions ?"
+            }
+          },
+          "transports en commun": {
+            "distance": {
+              "question": "Combien de km sont parcourus en moyenne par mois par vos salariés en transports en commun pour des déplacements liés à des missions ?"
+            }
+          },
+          "deux roues": {
+            "distance": {
+              "question": "Combien de km sont parcourus en moyenne par mois par vos salariés en deux roues pour des déplacements liés à des missions ?"
+            }
+          },
+          "avion": {
+            "court courrier": {
+              "distance": {
+                "question": "Combien de km ont été parcourus cette année par vos salariés avion court courrier pour des déplacements liés à des missions ?"
+              }
+            },
+            "moyen courrier": {
+              "distance": {
+                "question": "Combien de km ont été parcourus cette année par vos salariés avion moyen courrier pour des déplacements liés à des missions ?"
+              }
+            },
+            "long courrier": {
+              "distance": {
+                "question": "Combien de km ont été parcourus cette année par vos salariés avion long courrier pour des déplacements liés à des missions ?"
+              }
+            }
+          }
+        }
+      },
+      "DM-bénévoles": {
+        "avec": {
+          "émissions MEP": {
+            "voiture": {
+              "question": "D'après MEP, quelle est la moyenne d'émissions par bénévole pour des déplacements en voiture liés à des missions ?"
+            },
+            "train": {
+              "question": "D'après MEP, quelle est la moyenne d'émissions par bénévole pour des déplacements en train liés à des missions ?"
+            },
+            "avion": {
+              "question": "D'après MEP, quelle est la moyenne d'émissions par bénévole pour des déplacements en avion liés à des missions ?"
+            },
+            "transports en commun": {
+              "question": "D'après MEP, quelle est la moyenne d'émissions par bénévole pour des déplacements en transports en commun liés à des missions ?"
+            },
+            "deux roues": {
+              "question": "D'après MEP, quelle est la moyenne d'émissions par bénévole pour des déplacements en deux roues liés à des missions ?"
+            }
+          }
+        },
+        "sans": {
+          "voiture": {
+            "distance": {
+              "question": "Combien de km sont parcourus en moyenne par mois par vos bénévoles en voiture pour des déplacements liés à des missions ?"
+            }
+          },
+          "train": {
+            "distance": {
+              "question": "Combien de km sont parcourus en moyenne par mois par vos bénévoles en train pour des déplacements liés à des missions ?"
+            }
+          },
+          "transports en commun": {
+            "distance": {
+              "question": "Combien de km sont parcourus en moyenne par mois par vos bénévoles en transports en commun pour des déplacements liés à des missions ?"
+            }
+          },
+          "deux roues": {
+            "distance": {
+              "question": "Combien de km sont parcourus en moyenne par mois par vos bénévoles en deux roues pour des déplacements liés à des missions ?"
+            }
+          },
+          "avion": {
+            "court courrier": {
+              "distance": {
+                "question": "Combien de km ont été parcourus cette année par vos bénévoles avion court courrier pour des déplacements liés à des missions ?"
+              }
+            },
+            "moyen courrier": {
+              "distance": {
+                "question": "Combien de km ont été parcourus cette année par vos bénévoles avion moyen courrier pour des déplacements liés à des missions ?"
+              }
+            },
+            "long courrier": {
+              "distance": {
+                "question": "Combien de km ont été parcourus cette année par vos bénévoles avion long courrier pour des déplacements liés à des missions ?"
+              }
+            }
+          }
+        }
+      }
+    },
+    "déchets": {
+      "organiques": {
+        "poids": {
+          "question": "Déchets verts, compost et déchets organiques"
+        }
+      },
+      "ordures ménagères": {
+        "poids": {
+          "question": "Poubelle noire (ordures ménagères)"
+        }
+      },
+      "emballages et plastiques": {
+        "poubelle jaune": {
+          "poids": {
+            "question": "Poubelle jaune (emballages et plastiques)"
+          }
+        },
+        "déchets verre": {
+          "poids": {
+            "question": "Déchets verre"
+          }
+        }
+      }
+    },
+    "construction": {
+      "infrastructure": {
+        "nombre de places": {
+          "question": "De combien de places dispose ce ou ces parkings ?"
+        },
+        "parking présent": {
+          "question": "L'association dispose t'elle d'un (ou plusieurs) parkings artificialisés (béton, bitume, ...) ?"
+        }
+      },
+      "bâtiment": {
+        "locaux": {
+          "question": "Concernant vos locaux, diriez-vous que :",
+          "options": {
+            "locaux seuls": "J'utilise des locaux qui sont entièrement dédiés à mon association",
+            "locaux partagés": "Mes locaux sont partagés avec d'autres stuctures (co-working, open-space partagés, ...)",
+            "pas de locaux": "Mes activités associatives ne nécessitent pas de locaux (télétravail à 100%, extérieur, ...)"
+          },
+          "locaux seuls": {
+            "surface": {
+              "question": "Quelle est la surface de ces locaux ? (On considère uniquement les locaux possédés ou loués depuis moins de 50 ans)"
+            }
+          },
+          "locaux partagés": {
+            "surface": {
+              "question": "Quelle est la surface de ces locaux ? (On considère uniquement les locaux possédés ou loués depuis moins de 50 ans)"
+            },
+            "pourcentage": {
+              "question": "Quelle est la part de la surface de ces locaux attribuables à votre association ?"
+            }
+          }
+        }
+      }
+    },
+    "alimentation": {
+      "salariés": {
+        "viande rouge": {
+          "nombre de repas": {
+            "question": "Combien de repas à base de viande rouge sont consommés par vos salariés chaque année ?"
+          }
+        },
+        "viande blanche": {
+          "nombre de repas": {
+            "question": "Combien de repas à base de viande blanche sont consommés par vos salariés chaque année ?"
+          }
+        },
+        "poisson blanc": {
+          "nombre de repas": {
+            "question": "Combien de repas à base de poisson blanc sont consommés par vos salariés chaque année ?"
+          }
+        },
+        "poisson gras": {
+          "nombre de repas": {
+            "question": "Combien de repas à base de poisson gras sont consommés par vos salariés chaque année ?"
+          }
+        },
+        "végétarien": {
+          "nombre de repas": {
+            "question": "Combien de repas végétariens sont consommés par vos salariés chaque année ?"
+          }
+        },
+        "végétalien": {
+          "nombre de repas": {
+            "question": "Combien de repas végétaliens sont consommés par vos salariés chaque année ?"
+          }
+        }
+      },
+      "bénévoles": {
+        "viande rouge": {
+          "nombre de repas": {
+            "question": "Combien de repas à base de viande rouge sont consommés par vos bénévoles chaque année ?"
+          }
+        },
+        "viande blanche": {
+          "nombre de repas": {
+            "question": "Combien de repas à base de viande blanche sont consommés par vos bénévoles chaque année ?"
+          }
+        },
+        "poisson blanc": {
+          "nombre de repas": {
+            "question": "Combien de repas à base de poisson blanc sont consommés par vos bénévoles chaque année ?"
+          }
+        },
+        "poisson gras": {
+          "nombre de repas": {
+            "question": "Combien de repas à base de poisson gras sont consommés par vos bénévoles chaque année ?"
+          }
+        },
+        "végétarien": {
+          "nombre de repas": {
+            "question": "Combien de repas végétariens sont consommés par vos bénévoles chaque année ?"
+          }
+        },
+        "végétalien": {
+          "nombre de repas": {
+            "question": "Combien de repas végétaliens sont consommés par vos bénévoles chaque année ?"
+          }
+        }
+      },
+      "bénéficiaires": {
+        "repas présent": {
+          "question": "Le service proposé par l’association implique t'il de proposer des repas à ses bénéficiaires ? (évènements, activités humanitaires, ...)"
+        },
+        "viande rouge": {
+          "nombre de repas": {
+            "question": "Combien de repas à base de viande rouge sont consommés par vos bénéficiaires chaque année ?"
+          }
+        },
+        "viande blanche": {
+          "nombre de repas": {
+            "question": "Combien de repas à base de viande blanche sont consommés par vos bénéficiaires chaque année ?"
+          }
+        },
+        "poisson blanc": {
+          "nombre de repas": {
+            "question": "Combien de repas à base de poisson blanc sont consommés par vos bénéficiaires chaque année ?"
+          }
+        },
+        "poisson gras": {
+          "nombre de repas": {
+            "question": "Combien de repas à base de poisson gras sont consommés par vos bénéficiaires chaque année ?"
+          }
+        },
+        "végétarien": {
+          "nombre de repas": {
+            "question": "Combien de repas végétariens sont consommés par vos bénéficiaires chaque année ?"
+          }
+        },
+        "végétalien": {
+          "nombre de repas": {
+            "question": "Combien de repas végétaliens sont consommés par vos bénéficiaires chaque année ?"
+          }
+        }
+      }
+    },
+    "intrants-services": {
+      "services": {
+        "description": "La liste est non exhaustive : si vous n’avez pas comptabilisé l’ensemble de vos dépenses, c’est tout à fait normal. Il peut s’agir de dépenses très faiblement émissives ou dont les émissions sont déjà prises en compte dans d’autres postes ou via d’autres questions reposant sur des données plus précises.",
+        "question": "Quel montant avez-vous dépensé dans les services immatériels suivants",
+        "spectacles-musées": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de spectacles, musées et autres services culturels"
+          }
+        },
+        "assurance-reassurance": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services d'assurance et réassurance"
+          }
+        },
+        "telecom": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de télécommunications"
+          }
+        },
+        "sante-humaine": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de santé humaine"
+          }
+        },
+        "edition": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services d'édition"
+          }
+        },
+        "poste-courrier": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de poste et courrier"
+          }
+        },
+        "restauration": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de restauration et hébergement"
+          }
+        },
+        "formation": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de formation"
+          }
+        },
+        "reparation-installation": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de réparation et installation"
+          }
+        },
+        "juridique-comptable": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services juridiques, comptables et assurances"
+          }
+        },
+        "programmation-conseil": {
+          "montant-dépensé": {
+            "question": "Montant dépensé en services de programmation et conseil informatique"
+          }
+        }
+      },
+      "numérique": {
+        "question": "Veuillez indiquer vos usages numériques sur une année",
+        "streaming": {
+          "heures": {
+            "question": "Combien d'heures de streaming vidéo regardées ?"
+          }
+        },
+        "visioconférence": {
+          "heures": {
+            "question": "Combien d'heures de visioconférence ?"
+          }
+        },
+        "mails": {
+          "nombre": {
+            "question": "Combien de mails envoyés ?"
+          }
+        },
+        "stockage-cloud": {
+          "volume": {
+            "question": "Combien de Go de données stockées sur le cloud ?"
+          }
+        }
+      }
+    }
+  }
+}

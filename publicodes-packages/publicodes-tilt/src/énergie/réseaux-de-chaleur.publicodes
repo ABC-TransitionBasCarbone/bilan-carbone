@@ -1,0 +1,14 @@
+énergie . réseaux de chaleur:
+  titre: Réseau de chaleur
+  formule: consommation * FE
+  unité: kgCO2e
+  avec:
+    consommation:
+      question: |
+        Quelle est votre consommation annuelle de chaleur issue de réseaux ?
+      unité: kWh
+    FE:
+      valeur: 0.385
+      unité: kgCO2e/kWh
+      meta:
+        id: 47684

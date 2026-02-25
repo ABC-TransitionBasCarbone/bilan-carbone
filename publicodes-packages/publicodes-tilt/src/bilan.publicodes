@@ -1,0 +1,16 @@
+bilan:
+  formule:
+    somme:
+      - alimentation
+      - construction
+      - déchets
+      - déplacements
+      - énergie
+      - équipements et immobilisations
+      - fin de vie
+      - fret
+      - froid et clim
+      - intrants-biens-et-matières
+      - intrants-services
+      - utilisation
+  unité: kgCO2e

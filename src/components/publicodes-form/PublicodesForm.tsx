@@ -13,7 +13,6 @@ export interface PublicodesFormProps<RuleName extends string> {
 
 export default function PublicodesForm<RuleName extends string>({ formLayouts }: PublicodesFormProps<RuleName>) {
   const { engine, situation, listLayoutSituations, updateField } = usePublicodesForm<RuleName>()
-
   const elementsWithRelation = useMemo(() => {
     // FIXME: should manage multiple questions linked to previous ones.
     return formLayouts.map((formLayout, index) => {

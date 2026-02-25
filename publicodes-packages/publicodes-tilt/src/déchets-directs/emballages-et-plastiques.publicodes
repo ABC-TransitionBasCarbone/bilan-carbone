@@ -1,0 +1,39 @@
+déchets . emballages et plastiques:
+  titre: Déchets emballages et plastiques
+  unité: kgCO2e
+  formule:
+    somme:
+      - poubelle jaune
+      - déchets verre
+
+déchets . emballages et plastiques . poubelle jaune:
+  titre: Poubelle jaune
+  formule: FE * poids
+  unité: kgCO2e
+  avec:
+    FE:
+      valeur: 41
+      unité: kgCO2e/tonne
+      meta:
+        id: 34565
+        nom: Plastique souple PP pétrosourcé - Fin de vie moyenne filière - Impacts
+
+    poids:
+      question: Poubelle jaune (emballages et plastiques)
+      unité: tonne
+
+déchets . emballages et plastiques . déchets verre:
+  titre: Déchets verre
+  formule: FE * poids
+  unité: kgCO2e
+  avec:
+    FE:
+      valeur: 41
+      unité: kgCO2e/tonne
+      meta:
+        id: 34478
+        nom: Emballages/Verre/Fin de vie moyenne filière - Impacts
+
+    poids:
+      question: Déchets verre
+      unité: tonne

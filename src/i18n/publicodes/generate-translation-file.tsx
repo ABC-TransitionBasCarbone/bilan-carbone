@@ -27,8 +27,21 @@ const LOCALES_CLICKSON = [
   Locale.HR,
   Locale.EL,
 ] as const
+const LOCALES_TILT = [Locale.FR, Locale.EN]
 const LOCALES_CUT = [Locale.FR, Locale.EN, Locale.ES] as const
-const LOCALES = [model === 'clickson' ? LOCALES_CLICKSON : LOCALES_CUT, destLang].flat()
+const getLocales = () => {
+  switch (model) {
+    case 'clickson':
+      return LOCALES_CLICKSON
+    case 'tilt':
+      return LOCALES_TILT
+    case 'cut':
+      return LOCALES_CUT
+    default:
+      throw new Error(`Unsupported model: ${model}`)
+  }
+}
+const LOCALES = getLocales()
 
 function extractTranslationKeysFromRules(
   engine: Engine,

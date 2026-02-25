@@ -1,0 +1,64 @@
+général:
+  note: Les questions de cette catégories ne devront pas faire partie des variables manquantes au sein d'une page de form.
+
+général . nom:
+  question: Quel est le nom de l'association pour laquelle vous souhaitez réaliser une estimation d’impact carbone ?
+  #Je sais pas si on peut faire une question avec un champ texte en réponse
+
+général . code postal:
+  question: Quel est le code postal de l'association ?
+
+général . année:
+  question: Pour quelle année réalisez-vous cette estimation d’impact ?
+  unité: année
+
+général . salariés:
+  question: Combien de salariés compte l'association en [Année] ?
+  unité: personne
+
+général . bénévoles:
+  question: Combien de bénévoles compte l'association en [Année] ?
+  unité: personne
+
+général . bénéficiaires:
+  question: Combien de bénéficiaires ont profité des services de l'association en  [Année] ?
+  unité: personne
+
+général . budget:
+  question: Quel est le budget de fonctionnement de l'association ?
+  unité: k€
+
+général . type:
+  question: de quel type de structure votre association se rapproche t'elle le plus ?
+  une possibilité:
+    - Club de loisirs
+    - Association étudiante
+    - Association culturelle
+    - Association de voisinage
+    - Hôpital
+    - Maison de retraite
+    - Association d'aide à domicile
+    - Association humanitaire
+    - Autres structures sociales et solidaires
+    - Association de défense de l'environnement
+    - Association d'enseignement ou de formation
+  avec:
+    Club de loisirs:
+    Association étudiante:
+    Association culturelle:
+    Association de voisinage:
+    Hôpital:
+    Maison de retraite:
+    Association d'aide à domicile:
+    Association humanitaire:
+    Autres structures sociales et solidaires:
+    Association de défense de l'environnement:
+    Association d'enseignement ou de formation:
+
+général . TT bénévoles:
+  question: Combien de jours sont télétravaillées par semaine pour vos bénévoles ?
+  unité: jours
+
+général . TT salariés:
+  question: Combien de jours sont télétravaillées par semaine pour vos salariés ?
+  unité: jours

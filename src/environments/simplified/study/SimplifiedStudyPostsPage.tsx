@@ -5,6 +5,7 @@ import Button from '@/components/base/Button'
 import Stepper from '@/components/base/Stepper'
 import TabsWithGreenStyling from '@/components/dynamic-form/TabsWithGreenStyling'
 import { FullStudy } from '@/db/study'
+import { SUBPOSTS_PUBLICODE_FROM_ENV } from '@/environments/core/publicodes/subposts'
 import { PublicodesFormProvider } from '@/lib/publicodes/context'
 import { Post, subPostsByPost } from '@/services/posts'
 import { SimplifiedEnvironment } from '@/services/publicodes/simplifiedPublicodesConfig'
@@ -31,7 +32,10 @@ const SimplifiedStudyPostsPage = ({ environment, post, currentSubPost, study, st
   const tInfography = useTranslations('study.infography')
   const router = useRouter()
   const searchParams = useSearchParams()
-  const subPosts = useMemo(() => subPostsByPost[post], [post])
+  const subPosts = useMemo(
+    () => subPostsByPost[post].filter((subPost) => SUBPOSTS_PUBLICODE_FROM_ENV[environment]?.includes(subPost)),
+    [post, environment],
+  )
 
   const initialStep = useMemo(() => {
     if (currentSubPost) {

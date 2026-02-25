@@ -6,8 +6,8 @@ import { BaseResultsByPost } from './results/consolidated'
 export { BCPost, ClicksonPost, CutPost, TiltPost }
 
 export const Post = { ...BCPost, ...CutPost, ...TiltPost, ...ClicksonPost }
-export type SimplifiedPost = CutPost | ClicksonPost
-export type Post = BCPost | TiltPost | SimplifiedPost
+export type SimplifiedPost = CutPost | ClicksonPost | TiltPost
+export type Post = BCPost | TiltPost | CutPost | ClicksonPost
 
 export const subPostsByPostBC: Record<BCPost, SubPost[]> = {
   [BCPost.Energies]: [

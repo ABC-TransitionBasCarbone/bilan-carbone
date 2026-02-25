@@ -9,10 +9,10 @@ import { ListLayoutSituations } from '@/lib/publicodes/context'
 import { typedEntries } from '@/utils/object'
 import { SubPost } from '@prisma/client'
 import Engine from 'publicodes'
-import { Post, SimplifiedPost } from '../posts'
+import { SimplifiedPost } from '../posts'
 
 export type QuestionStats = { answered: number; total: number }
-export type StatsResult = Partial<Record<Post, Partial<Record<SubPost, QuestionStats>>>>
+export type StatsResult = Partial<Record<SimplifiedPost, Partial<Record<SubPost, QuestionStats>>>>
 
 export const getQuestionProgressBySubPost = <RuleName extends string = string>(
   engine: Engine<RuleName>,

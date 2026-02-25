@@ -1,0 +1,34 @@
+énergie . fossiles:
+  formule:
+    somme:
+      - énergie . fossiles . gaz
+      - énergie . fossiles . fioul
+
+énergie . fossiles . gaz:
+  titre: Gaz
+  formule: consommation * FE
+  unité: kgCO2e
+  avec:
+    consommation:
+      question: Quelle est votre consommation annuelle de gaz naturel ? (hors consommation par les véhicules)
+      unité: m3
+    FE:
+      valeur: 2.32
+      unité: kgCO2e/m3
+      meta:
+        id: 37138
+
+énergie . fossiles . fioul:
+  titre: Fioul
+  formule: consommation * FE
+  unité: kgCO2e
+  avec:
+    consommation:
+      question: Quelle est votre consommation annuelle de fioul (hors consommations par les véhicules)
+      unité: litre
+
+    FE:
+      valeur: 3.18586
+      unité: kgCO2e/litre
+      meta:
+        id: 14086

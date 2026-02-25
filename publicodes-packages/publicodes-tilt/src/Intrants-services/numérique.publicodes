@@ -1,0 +1,73 @@
+intrants-services . numérique:
+  question: Veuillez indiquer vos usages numériques sur une année
+  formule:
+    somme:
+      - streaming
+      - visioconférence
+      - mails
+      - stockage-cloud
+  unité: kgCO2e
+
+intrants-services . numérique . streaming:
+  formule: heures * FE
+  avec:
+    heures:
+      question: Combien d'heures de streaming vidéo regardées ?
+      par défaut: 0
+      unité: h
+
+    FE:
+      valeur: 0.0622
+      unité: kgCO2e/h
+      meta:
+        nom: Regarder 1h de streaming
+        source: Base Negaoctet
+  unité: kgCO2e
+
+intrants-services . numérique . visioconférence:
+  formule: heures * FE
+  avec:
+    heures:
+      question: Combien d'heures de visioconférence ?
+      par défaut: 0
+      unité: h
+
+    FE:
+      valeur: 0.433
+      unité: kgCO2e/h
+      meta:
+        nom: Réaliser une audioconférence
+        source: Base Negaoctet
+  unité: kgCO2e
+
+intrants-services . numérique . mails:
+  formule: nombre * FE
+  avec:
+    nombre:
+      question: Combien de mails envoyés ?
+      par défaut: 0
+      unité: mail
+
+    FE:
+      valeur: 0.00488
+      unité: kgCO2e/mail
+      meta:
+        nom: Rédiger, envoyer et lire 1 mail
+        source: Base Negaoctet
+  unité: kgCO2e
+
+intrants-services . numérique . stockage-cloud:
+  formule: volume * FE
+  avec:
+    volume:
+      question: Combien de Go de données stockées sur le cloud ?
+      par défaut: 0
+      unité: Go
+
+    FE:
+      valeur: 0.0116
+      unité: kgCO2e/Go
+      meta:
+        nom: Stocker 1Go de données sur le cloud
+        source: Base Negaoctet
+  unité: kgCO2e
