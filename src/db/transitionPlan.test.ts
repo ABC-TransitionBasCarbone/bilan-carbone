@@ -72,11 +72,14 @@ const createMockTrajectory = (
   ...overrides,
 })
 
-const createMockTransitionPlanStudy = (overrides?: Partial<TransitionPlanStudy>): Omit<TransitionPlanStudy, 'id'> => ({
+const createMockTransitionPlanStudy = (
+  overrides?: Partial<TransitionPlanStudy & { study: { startDate: Date } }>,
+): Omit<TransitionPlanStudy, 'id'> & { study: { startDate: Date } } => ({
   transitionPlanId: 'plan-id',
   studyId: 'study-id',
   createdAt: new Date('2024-01-01'),
   updatedAt: new Date('2024-01-01'),
+  study: { startDate: new Date('2023-01-01') },
   ...overrides,
 })
 
@@ -160,7 +163,7 @@ describe('TransitionPlan DB', () => {
 
     test('should duplicate transition plan with all relations', async () => {
       const sourceTransitionPlan = createMockTransitionPlan()
-      await duplicateTransitionPlanWithRelations(sourceTransitionPlan, 'target-study-id')
+      await duplicateTransitionPlanWithRelations(sourceTransitionPlan, 'target-study-id', 2025)
 
       expect(mockTx.transitionPlan.create).toHaveBeenCalledWith({
         data: {
@@ -247,7 +250,7 @@ describe('TransitionPlan DB', () => {
               },
             },
           },
-          transitionPlanStudies: true,
+          transitionPlanStudies: { include: { study: { select: { startDate: true } } } },
           actions: {
             include: {
               indicators: true,
@@ -257,6 +260,21 @@ describe('TransitionPlan DB', () => {
           externalStudies: true,
         },
       })
+    })
+
+    test('should filter out linked studies with startDate >= targetYear', async () => {
+      const sourceTransitionPlan = createMockTransitionPlan({
+        transitionPlanStudies: [
+          createMockTransitionPlanStudy({ studyId: 'old-study', study: { startDate: new Date('2022-01-01') } }),
+          createMockTransitionPlanStudy({ studyId: 'same-year-study', study: { startDate: new Date('2024-01-01') } }),
+          createMockTransitionPlanStudy({ studyId: 'future-study', study: { startDate: new Date('2025-01-01') } }),
+        ],
+      })
+
+      await duplicateTransitionPlanWithRelations(sourceTransitionPlan, 'target-study-id', 2024)
+
+      const createCall = mockTx.transitionPlan.create.mock.calls[0][0]
+      expect(createCall.data.transitionPlanStudies.create).toEqual([{ studyId: 'old-study' }])
     })
   })
 })

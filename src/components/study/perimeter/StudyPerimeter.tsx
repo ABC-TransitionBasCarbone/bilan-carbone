@@ -237,7 +237,10 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit, u
             realizationEndDate: study.realizationEndDate?.toISOString() ?? null,
           })
         },
-        getErrorMessage: (errorMessage: string) => tValidation(errorMessage),
+        getErrorMessage: (errorMessage: string) => {
+          const [key, studyName] = errorMessage.split(':')
+          return tValidation(key, studyName ? { studyName } : undefined)
+        },
       })
     }
   }, [form, callServerFunction, router, tValidation, study])
