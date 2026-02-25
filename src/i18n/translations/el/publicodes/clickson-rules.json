@@ -12,6 +12,15 @@
       },
       "année de rénovation": {
         "question": "[TO_TRANSLATE] Année de rénovation du bâtiment principal"
+      },
+      "pays": {
+        "question": "[TO_TRANSLATE] Pays de l'établissement",
+        "options": {
+          "FRANCE": "[TO_TRANSLATE] FRANCE",
+          "HONGRIE": "[TO_TRANSLATE] HONGRIE",
+          "ROUMANIE": "[TO_TRANSLATE] ROUMANIE",
+          "CROATIE": "[TO_TRANSLATE] CROATIE"
+        }
       }
     },
     "énergie": {
@@ -1052,9 +1061,9 @@
     "étudiant": "[TO_TRANSLATE] étudiant",
     "personne": "[TO_TRANSLATE] personne",
     "année": "[TO_TRANSLATE] année",
+    "pays": "[TO_TRANSLATE] pays",
     "kWh": "[TO_TRANSLATE] kWh",
-    "kgCO2e/kWh": "[TO_TRANSLATE] kgCO2e/kWh",
-    "L": "[TO_TRANSLATE] L",
+    "litre": "[TO_TRANSLATE] litre",
     "kg": "[TO_TRANSLATE] kg",
     "kgCO2e/kg": "[TO_TRANSLATE] kgCO2e/kg",
     "repas/an": "[TO_TRANSLATE] repas/an",
@@ -1079,7 +1088,6 @@
     "unité": "[TO_TRANSLATE] unité",
     "kgCO2e/unité": "[TO_TRANSLATE] kgCO2e/unité",
     "km": "[TO_TRANSLATE] km",
-    "litre": "[TO_TRANSLATE] litre",
     "€": "[TO_TRANSLATE] €",
     "kgCO2e/€": "[TO_TRANSLATE] kgCO2e/€"
   }

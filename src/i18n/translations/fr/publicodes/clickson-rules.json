@@ -12,6 +12,15 @@
       },
       "année de rénovation": {
         "question": "Année de rénovation du bâtiment principal"
+      },
+      "pays": {
+        "question": "Pays de l'établissement",
+        "options": {
+          "FRANCE": "FRANCE",
+          "HONGRIE": "HONGRIE",
+          "ROUMANIE": "ROUMANIE",
+          "CROATIE": "CROATIE"
+        }
       }
     },
     "énergie": {
@@ -1052,9 +1061,9 @@
     "étudiant": "étudiant",
     "personne": "personne",
     "année": "année",
+    "pays": "pays",
     "kWh": "kWh",
-    "kgCO2e/kWh": "kgCO2e/kWh",
-    "L": "L",
+    "litre": "litre",
     "kg": "kg",
     "kgCO2e/kg": "kgCO2e/kg",
     "repas/an": "repas/an",
@@ -1079,7 +1088,6 @@
     "unité": "unité",
     "kgCO2e/unité": "kgCO2e/unité",
     "km": "km",
-    "litre": "litre",
     "€": "€",
     "kgCO2e/€": "kgCO2e/€"
   }

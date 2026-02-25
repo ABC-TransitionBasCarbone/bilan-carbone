@@ -66,7 +66,8 @@
       "etp": "Nombre de personnels (enseignants et non-éducatifs)",
       "studentNumber": "Nombre d'élèves",
       "superficy": "Superficie de l'établissement",
-      "goToDataEntry": "Passer à la saisie des données"
+      "goToDataEntry": "Passer à la saisie des données",
+      "country": "Pays de l'établissement"
     },
     "newContributor": {
       "title": "Ajouter un·e élève sur l'étude : {name}"

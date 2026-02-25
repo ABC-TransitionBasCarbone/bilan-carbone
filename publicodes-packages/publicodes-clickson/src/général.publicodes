@@ -17,3 +17,18 @@ général . année de construction:
 général . année de rénovation:
   question: Année de rénovation du bâtiment principal
   unité: année
+
+général . pays:
+  question: Pays de l'établissement
+  unité: pays
+  par défaut: "'FRANCE'"
+  une possibilité:
+    - FRANCE
+    - HONGRIE
+    - ROUMANIE
+    - CROATIE
+  avec:
+    FRANCE:
+    HONGRIE:
+    ROUMANIE:
+    CROATIE:

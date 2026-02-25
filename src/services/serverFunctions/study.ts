@@ -170,6 +170,7 @@ import { deleteFileFromBucket, getFileFromBucket, uploadFileToBucket } from '../
 import { getTransEnvironmentSubPost, hasSufficientLevel } from '../study'
 import { UpdateEmissionSourceCommand } from './emissionSource.command'
 import { saveAnswerForQuestion } from './question'
+import { saveSituation as saveSituationInDB } from './situation'
 import {
   AddEngagementActionCommand,
   ChangeStudyCinemaCommand,
@@ -340,6 +341,7 @@ export const createStudyCommand = async (
                 ca: site.ca ? site.ca * caUnit : organizationSite.ca,
                 volunteerNumber: site.volunteerNumber || organizationSite.volunteerNumber,
                 beneficiaryNumber: site.beneficiaryNumber || organizationSite.beneficiaryNumber,
+                country: organizationSite.country || undefined,
               }
 
               if (cncData) {
@@ -364,6 +366,15 @@ export const createStudyCommand = async (
       if (!tx) {
         // This cannot be part of a transaction easily so it is done in the duplication flow after the transaction is committed
         await addUserChecklistItem(UserChecklist.CreateFirstStudy)
+      }
+
+      if (isSimplifiedEnvironment(session.user.environment)) {
+        await Promise.all(
+          createdStudy.sites.map(async (site) => {
+            await saveSituationInDB(createdStudy.id, site.id, {}, {}, '')
+            await updateSituationWithStudySiteData(site.id, site, session.user.environment)
+          }),
+        )
       }
       return { id: createdStudy.id }
     } catch (e) {

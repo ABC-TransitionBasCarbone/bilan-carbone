@@ -17,7 +17,7 @@
         consommation:
           question: Consommation annuelle de fioul domestique
           par défaut: 0
-          unité: L
+          unité: litre
         FE:
           valeur: 3.24
           unité: kgCO2e/L
@@ -32,7 +32,7 @@
         consommation:
           question: Consommation annuelle de fioul lourd/commercial
           par défaut: 0
-          unité: L
+          unité: litre
         FE:
           valeur: 3.28
           unité: kgCO2e/L
@@ -94,7 +94,6 @@
           par défaut: 0
           unité: kWh
         FE:
-          valeur: 0.385
-          unité: kgCO2e/kWh
+          valeur: commun . FE . réseau de chaleur
           meta:
             incertitude: 2

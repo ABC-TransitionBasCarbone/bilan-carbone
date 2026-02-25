@@ -11,8 +11,7 @@
         Indiquez la consommation totale d'électricité de l'établissement sur une année.
     FE:
       question: Facteur d'émission de l'électricité
-      valeur: 0.058
-      unité: kgCO2e/kWh
+      valeur: commun . FE . électricité
       note: |
         Source: Base Carbone®
       meta:

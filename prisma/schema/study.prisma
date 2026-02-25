@@ -365,7 +365,8 @@ model StudySite {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   superficy     Float?
-  studentNumber Int?   @map("student_number")
+  studentNumber Int?     @map("student_number")
+  country       Country?
 
   situation    Situation?
   studyAnswers Answer[]
