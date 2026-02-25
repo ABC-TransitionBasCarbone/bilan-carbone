@@ -52,9 +52,10 @@ interface Props {
   sectenData: SectenInfo[]
   studyEmissions?: number
   pastStudies?: PastStudy[]
+  defaultSnbcSectoralPercentages?: SectorPercentages | null
 }
 
-const defaultValues: TrajectoryFormData = {
+const getDefaultValues = (defaultSnbcSectoralPercentages?: SectorPercentages | null): TrajectoryFormData => ({
   trajectoryType: TrajectoryType.SBTI_15,
   name: '',
   description: '',
@@ -63,7 +64,7 @@ const defaultValues: TrajectoryFormData = {
     targetYear: null,
     reductionRate: null,
   })),
-  sectorPercentages: {
+  sectorPercentages: defaultSnbcSectoralPercentages ?? {
     energy: 0,
     industry: 0,
     waste: 0,
@@ -71,7 +72,7 @@ const defaultValues: TrajectoryFormData = {
     agriculture: 0,
     transportation: 0,
   },
-}
+})
 
 const TrajectoryCreationModal = ({
   open,
@@ -84,6 +85,7 @@ const TrajectoryCreationModal = ({
   sectenData,
   studyEmissions = 0,
   pastStudies = [],
+  defaultSnbcSectoralPercentages,
 }: Props) => {
   const t = useTranslations('study.transitionPlan.trajectoryModal')
   const isEditMode = !!trajectory
@@ -100,7 +102,7 @@ const TrajectoryCreationModal = ({
     reset,
     formState: { isValid },
   } = useForm<TrajectoryFormData>({
-    defaultValues,
+    defaultValues: getDefaultValues(defaultSnbcSectoralPercentages),
     resolver: zodResolver(trajectorySchema),
     mode: 'onChange',
   })
@@ -259,7 +261,7 @@ const TrajectoryCreationModal = ({
   }
 
   const handleBack = () => {
-    reset({ ...defaultValues, trajectoryType })
+    reset({ ...getDefaultValues(defaultSnbcSectoralPercentages), trajectoryType })
     setActiveStep((prev) => prev - 1)
   }
 
@@ -386,7 +388,8 @@ const TrajectoryCreationModal = ({
         { targetYear: 2050, reductionRate: snbcRates.rateTo2050 },
       ]
     } else if (data.trajectoryType === TrajectoryType.SNBC_SECTORAL) {
-      if (!data.sectorPercentages) {
+      const sectorPercentages = data.sectorPercentages ?? defaultSnbcSectoralPercentages
+      if (!sectorPercentages) {
         setIsLoading(false)
         throw new Error('Sector percentages are required')
       }
@@ -396,7 +399,7 @@ const TrajectoryCreationModal = ({
         throw new Error('Unable to calculate SNBC reduction rates')
       }
 
-      input.sectorPercentages = data.sectorPercentages
+      input.sectorPercentages = sectorPercentages
 
       const objectives: { targetYear: number; reductionRate: number }[] = []
 

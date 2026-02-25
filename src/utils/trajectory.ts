@@ -7,7 +7,7 @@ import {
   TRAJECTORY_WB2C_ID,
 } from '@/constants/trajectories'
 import { FullStudy } from '@/db/study'
-import { TrajectoryWithObjectives } from '@/db/transitionPlan'
+import { TrajectoryWithObjectives, TrajectoryWithObjectivesAndScope } from '@/db/transitionPlan'
 import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
 import { getStudyTotalCo2Emissions } from '@/services/study'
 import { Translations } from '@/types/translation'
@@ -120,14 +120,13 @@ export interface TrajectoryYearBounds {
 export const convertToPastStudies = (
   linkedStudies: FullStudy[],
   externalStudies: ExternalStudy[],
-  withDependencies: boolean,
   validatedOnly: boolean,
   studyUnit: StudyResultUnit,
 ): PastStudy[] => {
   const pastStudies: PastStudy[] = []
 
   linkedStudies.forEach((study) => {
-    const totalCo2InLinkedUnit = getStudyTotalCo2Emissions(study, withDependencies, validatedOnly)
+    const totalCo2InLinkedUnit = getStudyTotalCo2Emissions(study, true, validatedOnly)
     const totalCo2 = convertValue(totalCo2InLinkedUnit, study.resultsUnit, studyUnit)
 
     pastStudies.push({
@@ -1822,4 +1821,17 @@ export const getCorrectedObjectives = (
   }
 
   return null
+}
+
+export const getDefaultSnbcSectoralTrajectory = (
+  trajectories: { type: TrajectoryType; isDefault: boolean }[],
+): TrajectoryWithObjectivesAndScope | null => {
+  const trajectory = trajectories.find((t) => t.type === TrajectoryType.SNBC_SECTORAL && t.isDefault)
+  return (trajectory as TrajectoryWithObjectivesAndScope) ?? null
+}
+
+export const getDefaultSnbcSectoralPercentages = (
+  trajectories: { type: TrajectoryType; sectorPercentages: unknown; isDefault: boolean }[],
+): SectorPercentages | null => {
+  return (getDefaultSnbcSectoralTrajectory(trajectories)?.sectorPercentages as SectorPercentages) ?? null
 }

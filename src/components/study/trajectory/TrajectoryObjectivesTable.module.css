@@ -19,3 +19,10 @@
   border-radius: 0.75rem;
   height: 2.5rem;
 }
+
+.defaultSnbcRow {
+  td {
+    background-color: var(--grayscale-100);
+    color: var(--grayscale-600);
+  }
+}

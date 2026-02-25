@@ -392,6 +392,7 @@
       "informationDefinition": "Définition des informations",
       "dataAccounting": "Comptabilisation des données",
       "trajectories": "Trajectoires de réduction",
+      "initialization": "Initialisation",
       "objectives": "Objectifs de réduction",
       "actionPlan": "Plan d'action",
       "commingSoon": "À venir",
@@ -983,6 +984,47 @@
         "learnMore": "En savoir plus",
         "hideDetails": "Masquer les détails"
       },
+      "initialization": {
+        "title": "Initialisation de votre plan de transition",
+        "onboarding": {
+          "title": "Préparer votre plan de transition",
+          "description": "Ajoutez des études liées et répartissez vos émissions par secteur d'activité, puis visualisez vos trajectoires de référence SBTi et SNBC.",
+          "detailedInfo": "Pour Grabriel"
+        },
+        "createButton": "Créer ma première trajectoire personnalisée",
+        "skipOnboarding": "Passer l'onboarding",
+        "stepLinkStudy": {
+          "title": "Études passées",
+          "description": "Liez vos études BC+ passées pour reconstruire l'historique de vos émissions. Ces données alimenteront vos trajectoires de réduction.",
+          "glossaryTitle": "Études passées",
+          "glossaryDescription": "Pour gabriel - description",
+          "linkStudyButton": "Lier une étude"
+        },
+        "stepSectorAllocation": {
+          "title": "Répartition sectorielle",
+          "description": "Indiquez la part de vos émissions relevant de chaque grand secteur SNBC. Cela permettra de générer automatiquement une trajectoire SNBC sectorielle adaptée à votre organisation.",
+          "glossaryTitle": "Répartition sectorielle SNBC",
+          "glossaryDescription": "La SNBC définit des objectifs de réduction différenciés par secteur (énergie, industrie, bâtiments, transports…). En renseignant la part de vos émissions dans chaque secteur, la plateforme calcule une trajectoire SNBC pondérée, représentative de votre mix d'activités."
+        },
+        "stepSelectReferenceTrajectories": {
+          "title": "Trajectoires de référence",
+          "description": "Choisissez les trajectoires de référence climatique à afficher sur votre graphique : SNBC (nationale) et/ou SBTi (science-based). Ces trajectoires servent de repères pour construire votre propre trajectoire de réduction.",
+          "glossaryTitle": "Trajectoires de référence",
+          "glossaryDescription": "La SNBC (Stratégie Nationale Bas-Carbone) est la trajectoire officielle française de réduction des émissions. Les trajectoires SBTi (Science Based Targets initiative) sont des standards internationaux alignés sur les objectifs de l'Accord de Paris."
+        },
+        "stepVisualization": {
+          "title": "Visualisation des trajectoires",
+          "description": "Visualisez les trajectoires de référence sélectionnées pour votre organisation. Ce graphique sera enrichi au fil du temps avec vos propres trajectoires de réduction.",
+          "glossaryTitle": "Graphique des trajectoires",
+          "glossaryDescription": "Ce graphique représente l'évolution des émissions de votre organisation dans le temps, en regard des trajectoires de référence. L'axe vertical indique les émissions totales, l'axe horizontal représente les années."
+        },
+        "sectorBlock": {
+          "title": "Répartition sectorielle SNBC",
+          "description": "Renseignez la répartition de vos émissions par grand secteur d'activité selon la SNBC. Cela permettra de créer une trajectoire SNBC sectorielle personnalisée comme point de référence.",
+          "snbcSectorialName": "Trajectoire SNBC de référence",
+          "update": "Sauvegarder les modifications"
+        }
+      },
       "trajectories": {
         "title": "Trajectoires de réduction",
         "snbcButton": "Trajectoire SNBC",
@@ -1143,7 +1185,7 @@
         },
         "sectorAllocation": {
           "title": "Allocation par secteur",
-          "description": "Définissez le pourcentage d'émissions à attribuer à chaque secteur. Le reste sera attribué à au secteur général."
+          "description": "Pourcentage d'émissions attribué à chaque secteur. Pour mettre à jour ces valeurs, veuillez vous rendre sur la page d'initialisation du plan de transition."
         },
         "sectors": {
           "energy": "Énergie",
@@ -1225,7 +1267,9 @@
         "custom": "Personnalisée",
         "snbcGeneral": "SNBC Générale",
         "snbcSectoral": "SNBC Sectorielle",
+        "defaultSnbcSectoral": "Trajectoire de référence",
         "objectiveNumber": "Objectif {number}",
+        "defaultSnbcTooltip": "Cette trajectoire est liée aux données rentrées lors de l'initialisation du plan de transition et ne peut être modifiée ou supprimée",
         "search": "Cherchez une trajectoire",
         "add": "Ajouter une trajectoire",
         "table": {

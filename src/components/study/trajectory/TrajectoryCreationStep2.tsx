@@ -209,8 +209,7 @@ const TrajectoryCreationStep2 = ({
           <Typography variant="body2" color="textSecondary" className="mb1">
             {t('sectorAllocation.description')}
           </Typography>
-
-          <SectorPercentageInputs control={control} />
+          <SectorPercentageInputs canEdit control={control as Control<TrajectoryFormData>} />
         </div>
       )}
 

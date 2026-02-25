@@ -392,6 +392,7 @@
       "informationDefinition": "Information definition",
       "dataAccounting": "Accounting of data",
       "trajectories": "Reduction trajectories",
+      "initialization": "Initialization",
       "objectives": "Reduction objectives",
       "actionPlan": "Action plan",
       "commingSoon": "Coming soon",
@@ -983,6 +984,47 @@
         "learnMore": "Learn more",
         "hideDetails": "Hide details"
       },
+      "initialization": {
+        "title": "Initialise your transition plan",
+        "onboarding": {
+          "title": "Prepare your transition plan",
+          "description": "Add linked studies and allocate your emissions by sector, then visualise your SBTi and SNBC reference trajectories.",
+          "detailedInfo": "Pour Grabriel"
+        },
+        "createButton": "Create my first custom trajectory",
+        "skipOnboarding": "Skip onboarding",
+        "stepLinkStudy": {
+          "title": "Past studies",
+          "description": "Link your past BC+ studies to reconstruct your emissions history. This data will feed into your reduction trajectories.",
+          "glossaryTitle": "Past studies",
+          "glossaryDescription": "Pour gabriel - description",
+          "linkStudyButton": "Link a study"
+        },
+        "stepSectorAllocation": {
+          "title": "Sector allocation",
+          "description": "Indicate the share of your emissions belonging to each major SNBC sector. This will automatically generate a sector-specific SNBC trajectory tailored to your organisation.",
+          "glossaryTitle": "SNBC sector allocation",
+          "glossaryDescription": "The SNBC sets differentiated reduction targets by sector (energy, industry, buildings, transport…). By entering the share of your emissions in each sector, the platform calculates a weighted SNBC trajectory representative of your activity mix."
+        },
+        "stepSelectReferenceTrajectories": {
+          "title": "Reference trajectories",
+          "description": "Choose the climate reference trajectories to display on your chart: SNBC (national) and/or SBTi (science-based). These trajectories serve as benchmarks for building your own reduction trajectory.",
+          "glossaryTitle": "Reference trajectories",
+          "glossaryDescription": "The SNBC (Stratégie Nationale Bas-Carbone) is France's official emissions reduction trajectory. SBTi (Science Based Targets initiative) trajectories are international standards aligned with the objectives of the Paris Agreement."
+        },
+        "stepVisualization": {
+          "title": "Trajectory visualisation",
+          "description": "Visualise the reference trajectories selected for your organisation. This chart will be enriched over time with your own reduction trajectories.",
+          "glossaryTitle": "Trajectory chart",
+          "glossaryDescription": "This chart shows the evolution of your organisation's emissions over time against the reference trajectories. The vertical axis shows total emissions, the horizontal axis represents years."
+        },
+        "sectorBlock": {
+          "title": "SNBC sector allocation",
+          "description": "Enter the breakdown of your emissions by major activity sector according to the SNBC. This will create a customised sectoral SNBC trajectory as a reference point.",
+          "snbcSectorialName": "Reference SNBC trajectory",
+          "update": "Save changes"
+        }
+      },
       "trajectories": {
         "title": "Reduction trajectories",
         "snbcButton": "SNBC Trajectory",
@@ -1143,7 +1185,7 @@
         },
         "sectorAllocation": {
           "title": "Sector Allocation",
-          "description": "Define the emission percentage per sector. The rest will be allocated to the general SNBC trajectory."
+          "description": "Percentage of emissions allocated to each sector. To update these values, please go to the initialization page of the transition plan."
         },
         "sectors": {
           "energy": "Energy",
@@ -1226,6 +1268,8 @@
         "snbcGeneral": "SNBC General",
         "snbcSectoral": "SNBC Sectoral",
         "objectiveNumber": "Objective {number}",
+        "defaultSnbcTooltip": "This trajectory is linked to the data entered during the transition plan initialization and cannot be modified or deleted",
+        "defaultSnbcSectoral": "Reference trajectory",
         "search": "Search for a trajectory",
         "add": "Add a trajectory",
         "table": {
