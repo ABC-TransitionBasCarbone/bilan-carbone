@@ -256,6 +256,7 @@ const StudyRightsClickson = ({ study, editionDisabled, emissionFactorSources, us
                 className={styles.formTextField}
                 onBlur={onStudyEstablishmentUpdate}
                 disabled={editionDisabled}
+                placeholder={t('superficyPlaceholder')}
               />
               <FormAutocomplete
                 control={form.control}

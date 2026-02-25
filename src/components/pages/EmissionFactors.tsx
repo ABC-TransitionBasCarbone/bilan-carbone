@@ -1,5 +1,7 @@
 import { getOrganizationVersionForRightsCheck } from '@/db/organization'
+import { isClickson } from '@/services/permissions/environment'
 import { hasActiveLicence } from '@/utils/organization'
+import { Typography } from '@mui/material'
 import { Environment } from '@prisma/client'
 import { getTranslations } from 'next-intl/server'
 import { Suspense } from 'react'
@@ -20,6 +22,8 @@ const EmissionFactorsPage = async ({ userOrganizationId, environment, user }: Pr
   const userOrganization = await getOrganizationVersionForRightsCheck(user.organizationVersionId || '')
   const activeLicence = !!userOrganization && hasActiveLicence(userOrganization)
 
+  const isUnderDevelopment = isClickson(environment)
+
   return (
     <>
       <Breadcrumbs current={tNav('emissionFactors')} links={[{ label: tNav('home'), link: '/' }]} />
@@ -39,13 +43,18 @@ const EmissionFactorsPage = async ({ userOrganizationId, environment, user }: Pr
             : undefined
         }
       >
-        <Suspense fallback={t('loading')}>
-          <EmissionFactors
-            userOrganizationId={userOrganizationId}
-            environment={environment}
-            hasActiveLicence={activeLicence}
-          />
-        </Suspense>
+        {' '}
+        {isUnderDevelopment ? (
+          <Typography variant="h5">{t('underDevelopment')}</Typography>
+        ) : (
+          <Suspense fallback={t('loading')}>
+            <EmissionFactors
+              userOrganizationId={userOrganizationId}
+              environment={environment}
+              hasActiveLicence={activeLicence}
+            />
+          </Suspense>
+        )}
       </Block>
     </>
   )

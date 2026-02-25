@@ -28,7 +28,12 @@ const TopLeftNavBar = ({ user, hasFormation, isFootprintsEnabled }: Props) => {
     <>
       {user.organizationVersionId && (
         <Box>
-          <NavbarButton data-testid="button-menu-my-organization" color="inherit" onMouseEnter={handleClickMenu}>
+          <NavbarButton
+            href="/"
+            data-testid="button-menu-my-organization"
+            color="inherit"
+            onMouseEnter={handleClickMenu}
+          >
             {t('organization')}
           </NavbarButton>
           <NavbarOrganizationMenu

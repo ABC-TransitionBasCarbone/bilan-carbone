@@ -16,7 +16,7 @@ export const hasAccessToSettings = (environment: Environment, userLevel: Level |
   ([BC] as Environment[]).includes(environment) || (environment === TILT && !!userLevel)
 
 export const hasAccessToMethodology = (environment: Environment, userLevel: Level | null) =>
-  ([BC, CLICKSON] as Environment[]).includes(environment) || (environment === TILT && !!userLevel)
+  ([BC] as Environment[]).includes(environment) || (environment === TILT && !!userLevel)
 
 export const hasAccessToCarbonResponsibilityIntensitiesAdvanced = (
   environment: Environment,

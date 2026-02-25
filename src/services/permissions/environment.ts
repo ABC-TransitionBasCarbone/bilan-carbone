@@ -105,3 +105,5 @@ export const isTiltSimplifiedFeatureActive = async (environment: Environment) =>
 
   return isFeatureActiveForEnvironment(DeactivatableFeature.TiltSimplified, environment)
 }
+
+export const hasAccessToHomeSubtitle = isClickson
