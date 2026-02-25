@@ -54,7 +54,6 @@ intrants-services . services . assurance-reassurance:
       meta:
         id: 43475
         nom: Assurance, réassurance
-
   unité: kgCO2e
 
 intrants-services . services . telecom:
@@ -67,14 +66,14 @@ intrants-services . services . telecom:
       question: Montant dépensé en services de télécommunications
       par défaut: 0
       unité: k€
-
     FE:
-      valeur: 92
+      valeur: 136
       unité: kgCO2e/k€
       meta:
-        id: 43535
+        id: 43510
         nom: Services de télécommunications
   unité: kgCO2e
+
 
 intrants-services . services . sante-humaine:
   formule: montant-dépensé * FE / 1000
@@ -164,11 +163,11 @@ intrants-services . services . formation:
       unité: k€
 
     FE:
-      valeur: 75
+      valeur: 66
       unité: kgCO2e/k€
       meta:
-        id: 43445
-        nom: Services de programmation ou de conseil informatique
+        id: 43480
+        nom: Services de l'enseignement
   unité: kgCO2e
 
 intrants-services . services . reparation-installation:
@@ -179,14 +178,15 @@ intrants-services . services . reparation-installation:
   avec:
     montant-dépensé:
       question: Montant dépensé en services de réparation et installation
+      par défaut: 0
       unité: k€
 
     FE:
-      valeur: 66
+      valeur: 195
       unité: kgCO2e/k€
       meta:
-        id: 43480
-        nom: Services de l'enseignement
+        id: 43450
+        nom: Services de réparation et installation de machines
   unité: kgCO2e
 
 intrants-services . services . juridique-comptable:
@@ -201,11 +201,11 @@ intrants-services . services . juridique-comptable:
       unité: k€
 
     FE:
-      valeur: 136
+      valeur: 67
       unité: kgCO2e/k€
       meta:
-        id: 43510
-        nom: Services de télécommunications
+        id: 43545
+        nom: Services juridiques et comptables/ services des sièges sociaux/ conseil de gestion - 2023
   unité: kgCO2e
 
 intrants-services . services . programmation-conseil:
@@ -220,9 +220,9 @@ intrants-services . services . programmation-conseil:
       unité: k€
 
     FE:
-      valeur: 195
+      valeur: 75
       unité: kgCO2e/k€
       meta:
-        id: 43450
-        nom: Services de réparation et installation de machines
+        id: 43445
+        nom: Services de programmation ou de conseil informatique
   unité: kgCO2e

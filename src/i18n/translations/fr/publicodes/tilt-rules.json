@@ -73,6 +73,7 @@
     "équipements et immobilisations": {
       "infos": {
         "prise en compte reconditionné": {
+          "description": "En fonction de votre réponse, une partie de vos équipements seront valorisés comme étant reconditionnés. Un équipement reconditionné sera considéré comme moitié moins émetteur qu'un équipement neuf. Autrement dit, la durée de première vie de l'équipement est considéré comme égale à la moitié de sa durée de vie totale.",
           "question": "Vos équipements sont-ils reconditionné ou issu de seconde main ?",
           "options": {
             "toujours": "Toujours",
