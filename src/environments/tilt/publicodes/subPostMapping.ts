@@ -123,8 +123,6 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('énergie . électricité . consommation'),
     input('énergie . électricité . autoproduction . autoproduction'),
   ],
-  DechetsOrganiques: [input('déchets . organiques . poids')],
-  DechetsOrduresMenageres: [input('déchets . ordures ménagères . poids')],
   FroidEtClim: [
     input('froid et clim . nombre'),
     input('froid et clim . fuites . locaux partagés'),
