@@ -51,11 +51,13 @@ export default function TableQuestion<RuleName extends string>({
         return colIndex === 0 ? (
           <p>{getTitleTranslation(formElement.id)}</p>
         ) : (
-          <InputField formElement={formElement} onChange={onChange} />
+          <div className="w100 justify-center">
+            <InputField formElement={formElement} onChange={onChange} />
+          </div>
         )
       },
     }))
-  }, [headers, onChange])
+  }, [getTitleTranslation, headers, onChange, tLayout])
 
   const table = useReactTable<TableRowData<RuleName>>({
     data: tableData,
