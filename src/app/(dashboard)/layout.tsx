@@ -4,7 +4,6 @@ import Navbar from '@/components/navbar/Navbar'
 import OrganizationCard from '@/components/organizationCard/OrganizationCard'
 import { environmentsWithChecklist } from '@/constants/environments'
 import { getAccountOrganizationVersions } from '@/db/account'
-import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { getAllowedStudyIdByAccount } from '@/db/study'
 import EnvironmentInitializer from '@/environments/core/EnvironmentInitializer'
 import DynamicTheme from '@/environments/core/providers/DynamicTheme'
@@ -34,14 +33,14 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
 
   const accountOrganizationVersion = organizationVersions.find(
     (organizationVersion) => organizationVersion.id === account.organizationVersionId,
-  ) as OrganizationVersionWithOrganization
+  )
   const clientId = organizationVersions.find(
     (organizationVersion) => organizationVersion.id !== account.organizationVersionId,
   )?.id
 
   const shouldDisplayOrgaData =
     !!organizationVersions.find((org) => org.isCR || org.parentId) && account.environment !== Environment.CUT
-  const shouldRenewLicenseText = shouldRenewLicenceText(accountOrganizationVersion)
+  const shouldRenewLicenseText = accountOrganizationVersion ? shouldRenewLicenceText(accountOrganizationVersion) : ''
 
   const withOrganizationCard = shouldDisplayOrgaData || !!shouldRenewLicenseText
 
