@@ -295,7 +295,6 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
   ],
 
   TransportFabricationDesVehicules: [
-    input('fret . fabrication . voitures . nombre'),
     input('fret . fabrication . VUL . nombre'),
     input('fret . fabrication . PL . nombre'),
   ],
