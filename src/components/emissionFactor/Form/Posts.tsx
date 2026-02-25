@@ -2,9 +2,12 @@
 
 import Button from '@/components/base/Button'
 import { Select } from '@/components/base/Select'
+import { customPostOrder } from '@/environments/clickson/utils/constant'
+import { hasCustomPostOrder } from '@/services/permissions/environment'
 import { environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
 import { SubPostsCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { sortByCustomOrder } from '@/utils/array'
 import { getPost } from '@/utils/post'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Box, FormControl, FormHelperText, MenuItem, SelectChangeEvent } from '@mui/material'
@@ -62,13 +65,16 @@ const Posts = <T extends SubPostsCommand>({
 
   const setValue = form.setValue as UseFormSetValue<SubPostsCommand>
 
-  const sortedPosts = useMemo(
-    () =>
-      Object.values(environmentPostMapping[environment || Environment.BC]).sort((a, b) =>
-        tPost(a).localeCompare(tPost(b)),
-      ),
-    [environment, tPost],
-  )
+  const sortedPosts: Post[] = useMemo(() => {
+    const posts = Object.values(environmentPostMapping[environment || Environment.BC]).sort((a, b) =>
+      tPost(a).localeCompare(tPost(b)),
+    )
+
+    if (environment && hasCustomPostOrder(environment)) {
+      return sortByCustomOrder(posts, customPostOrder, (item) => item)
+    }
+    return posts
+  }, [environment, tPost])
 
   // For regular posts, show sub-posts for that specific post
   // For "All Posts", show all sub-posts grouped by their parent posts

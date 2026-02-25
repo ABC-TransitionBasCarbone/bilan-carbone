@@ -1,9 +1,12 @@
 import HelpIcon from '@/components/base/HelpIcon'
 import { Select } from '@/components/base/Select'
 import GlossaryModal from '@/components/modals/GlossaryModal'
+import { customPostOrder } from '@/environments/clickson/utils/constant'
+import { hasCustomPostOrder } from '@/services/permissions/environment'
 import { environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
 import { SubPostsCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { sortByCustomOrder } from '@/utils/array'
 import { Box, FormControl, FormHelperText, MenuItem, SelectChangeEvent } from '@mui/material'
 import { Environment, SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -47,13 +50,16 @@ const MultiplePosts = <T extends SubPostsCommand>({ form, context, selectAll = f
     form.trigger('subPosts' as FieldPath<T>)
   }, [selectedPosts, form])
 
-  const availablePosts: Post[] = useMemo(
-    () =>
-      Object.values(environmentPostMapping[environment || Environment.BC])
-        .sort((a, b) => tPost(a).localeCompare(tPost(b)))
-        .filter((postKey) => !Object.keys(selectedPosts).includes(postKey)) as Post[],
-    [environment, selectedPosts, tPost],
-  )
+  const availablePosts: Post[] = useMemo(() => {
+    const posts = Object.values(environmentPostMapping[environment || Environment.BC])
+      .sort((a, b) => tPost(a).localeCompare(tPost(b)))
+      .filter((postKey) => !Object.keys(selectedPosts).includes(postKey)) as Post[]
+
+    if (environment && hasCustomPostOrder(environment)) {
+      return sortByCustomOrder(posts, customPostOrder, (item) => item)
+    }
+    return posts
+  }, [environment, selectedPosts, tPost])
 
   const handleSelectPost = (event: SelectChangeEvent<unknown>) => {
     const selectedPost = event.target.value as string
