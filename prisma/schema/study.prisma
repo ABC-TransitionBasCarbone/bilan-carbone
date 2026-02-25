@@ -114,6 +114,7 @@ model StudyTag {
 
   emissionSourceTags EmissionSourceTag[]
   objectiveTags      ObjectiveTag[]
+  actionTags         ActionTag[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -373,6 +374,7 @@ model StudySite {
 
   engagementActions EngagementAction[]
   objectiveSites    ObjectiveSite[]
+  actionSites       ActionSite[]
 
   @@unique([studyId, siteId])
   @@map("study_sites")

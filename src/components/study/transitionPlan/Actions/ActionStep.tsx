@@ -63,7 +63,6 @@ export const ActionStep = ({ step, index, control, onDelete }: Props) => {
             name={`steps.${index}.title`}
             fullWidth
             placeholder={t('stepTitlePlaceholder')}
-            defaultValue={step.title || ''}
             multiline
             expandable
             maxRows={2}

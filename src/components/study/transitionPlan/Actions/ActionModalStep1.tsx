@@ -1,11 +1,13 @@
+import { CustomFormLabel } from '@/components/form/CustomFormLabel'
 import { FormDatePicker } from '@/components/form/DatePicker'
+import ScopeSelectors, { TagFamily } from '@/components/form/ScopeSelectors'
 import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
-import { AddActionFormCommand } from '@/services/serverFunctions/transitionPlan.command'
+import { AddActionFormCommand } from '@/services/serverFunctions/action.command'
 import { getYearFromDateStr } from '@/utils/time'
-import { Checkbox, FormControlLabel, MenuItem } from '@mui/material'
+import { MenuItem } from '@mui/material'
 import type { StudyResultUnit } from '@prisma/client'
-import { ActionPotentialDeduction } from '@prisma/client'
+import { ActionPotentialDeduction, SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
@@ -21,16 +23,21 @@ interface Props {
   setValue: UseFormSetValue<AddActionFormCommand>
   getValues: UseFormGetValues<AddActionFormCommand>
   errors: FieldErrors<AddActionFormCommand>
+  sites: Array<{ id: string; name: string }>
+  tagFamilies: TagFamily[]
 }
 
-const ActionModalStep1 = ({ studyUnit, control, setValue, errors }: Props) => {
+const ActionModalStep1 = ({ studyUnit, control, setValue, errors, sites, tagFamilies }: Props) => {
   const t = useTranslations('study.transitionPlan.actions.addModal')
+  const tScope = useTranslations('study.transitionPlan.scope')
   const tUnit = useTranslations('study.results.units')
   const tDeduction = useTranslations('study.transitionPlan.actions.potentialDeduction')
   const potentialDeduction = useWatch({ control, name: 'potentialDeduction' })
   const reductionStartYear = useWatch({ control, name: 'reductionStartYear' })
   const reductionEndYear = useWatch({ control, name: 'reductionEndYear' })
-  const dependenciesOnly = useWatch({ control, name: 'dependenciesOnly' })
+  const siteIds = useWatch({ control, name: 'siteIds' })
+  const tagIds = useWatch({ control, name: 'tagIds' })
+  const subPosts = useWatch({ control, name: 'subPosts' })
 
   useEffect(() => {
     if (reductionStartYear && reductionEndYear) {
@@ -43,7 +50,7 @@ const ActionModalStep1 = ({ studyUnit, control, setValue, errors }: Props) => {
   }, [reductionStartYear, reductionEndYear, setValue])
 
   return (
-    <>
+    <div className="flex-col gapped1 pb2">
       <FormTextField
         control={control}
         name="title"
@@ -119,16 +126,24 @@ const ActionModalStep1 = ({ studyUnit, control, setValue, errors }: Props) => {
         data-testid="add-action-reductionDetails"
       />
 
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={dependenciesOnly ?? false}
-            onChange={(e) => setValue('dependenciesOnly', e.target.checked)}
-          />
-        }
-        label={t('dependenciesOnly')}
-      />
-    </>
+      <div className="flex-col">
+        <CustomFormLabel label={tScope('scopeSelection')} />
+        <ScopeSelectors
+          siteIds={siteIds ?? []}
+          tagIds={tagIds ?? []}
+          subPosts={(subPosts ?? []) as SubPost[]}
+          sites={sites}
+          tagFamilies={tagFamilies}
+          onSiteIdsChange={(value) => setValue('siteIds', value, { shouldValidate: true })}
+          onTagIdsChange={(value) => setValue('tagIds', value, { shouldValidate: true })}
+          onSubPostsChange={(value) => setValue('subPosts', value, { shouldValidate: true })}
+          isOtherDisabled={true}
+          siteIdsError={errors.siteIds?.message}
+          subPostsError={errors.subPosts?.message}
+          tagIdsError={errors.tagIds?.message}
+        />
+      </div>
+    </div>
   )
 }
 

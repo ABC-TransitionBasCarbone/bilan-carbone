@@ -96,7 +96,6 @@ interface CalculateActionBasedTrajectoryParams {
   pastStudies?: PastStudy[]
   minYear?: number
   maxYear?: number
-  withDependencies?: boolean
 }
 
 export interface CalculateTrajectoriesWithHistoryParams {
@@ -1356,7 +1355,6 @@ export const getActionBasedData = (
         studyStartYear,
         actions: enabledActions,
         pastStudies,
-        withDependencies,
         minYear,
         maxYear,
         studyUnit,
@@ -1372,7 +1370,6 @@ export const getActionBasedData = (
       studyStartYear: referenceYear,
       actions: enabledActions,
       pastStudies,
-      withDependencies,
       minYear,
       maxYear,
       studyUnit,
@@ -1386,7 +1383,6 @@ export const getActionBasedData = (
       studyStartYear,
       actions: enabledActions,
       pastStudies,
-      withDependencies,
       minYear,
       maxYear,
       studyUnit,
@@ -1492,19 +1488,11 @@ export const calculateActionBasedTrajectory = ({
   pastStudies = [],
   minYear,
   maxYear,
-  withDependencies = true,
 }: CalculateActionBasedTrajectoryParams): TrajectoryDataPoint[] => {
   const dataPoints: TrajectoryDataPoint[] = []
   addHistoricalDataAndStudyPoint(dataPoints, pastStudies, studyEmissions, studyStartYear, minYear)
 
-  const filteredActions = actions.filter((action) => {
-    if (action.dependenciesOnly && !withDependencies) {
-      return false
-    }
-    return true
-  })
-
-  const quantitativeActions = filteredActions.filter(
+  const quantitativeActions = actions.filter(
     (action) =>
       action.potentialDeduction === ActionPotentialDeduction.Quantity &&
       action.reductionValueKg !== null &&

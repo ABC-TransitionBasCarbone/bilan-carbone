@@ -765,12 +765,6 @@
         "K": "kgCO₂e",
         "T": "tCO₂e"
       },
-      "pageFilters": {
-        "title": "Filtres",
-        "posts": "Sous-postes",
-        "tags": "Tags",
-        "noFiltersSelected": "Aucun filtre sélectionné"
-      },
       "tagGlossary": "Double compte sur les graphiques par tags",
       "tagGlossaryDescription": "Les sources d'émission peuvent avoir plusieurs tags, celles ci sont donc sur ce graphique comptabilisé dans chacun des tags. Il est donc normal que vous ayez ici un total plus grand que sur votre étude",
       "info": "Cette empreinte carbone simplifiée vise à estimer les émissions de gaz à effet de serre de votre activité, et par conséquent votre contribution au dérèglement climatique ainsi que vos potentielles dépendance aux énergies fossiles qui sont des vulnérabilités. \n\nL'Union Européenne s'est engagée, en ratifiant l'Accord de Paris, à la neutralité carbone d'ici 2050. Pour contribuer à cet objectif, votre cinéma devrait réduire son impact de 5% par an. \n\nNous vous invitons donc à refaire cette empreinte carbone simplifiée l'année prochaine pour vérifier que vous êtes sur la bonne trajectoire !",
@@ -1246,6 +1240,9 @@
           "correctedRateDescription": "Le taux à l'année N prend en compte votre taux voulu ainsi que les émissions entre votre année de référence et l'année de votre étude. Si vos émissions n'ont pas suivi votre taux souhaité, nous calculons les émissions émises en trop (overshoot) et appliquons un nouveau taux pour vous permettre de rattraper les émissions émises en trop."
         }
       },
+      "scope": {
+        "scopeSelection": "Sélection du périmètre"
+      },
       "objectiveModal": {
         "title": "Ajouter des sous-objectifs à la trajectoire : ",
         "editTitle": "Modifier le sous-objectif de la trajectoire : ",
@@ -1326,7 +1323,8 @@
           "owner": "Responsable",
           "budget": "Budget",
           "errorChangingEnabled": "Erreur lors du changement de statut de l'action",
-          "relevance": "Niveaux de pertinence"
+          "relevance": "Niveaux de pertinence",
+          "scope": "Périmètre"
         },
         "addModal": {
           "add": "Ajouter une action",
@@ -1349,7 +1347,6 @@
           "reductionDetailsPlaceholder": "Décrivez les détails et hypothèses",
           "reductionStartYear": "Début de la mise en oeuvre de l'action",
           "reductionEndYear": "Fin de la mise en oeuvre de l'action",
-          "dependenciesOnly": "Mon action concerne uniquement le sous poste \"Utilisation en dépendance\"",
           "owner": "Responsable de l'action",
           "ownerPlaceholder": "Donnez le nom de la personne qui pilote l'action",
           "necessaryBudget": "Budget necessaire à sa mise en place (k€)",

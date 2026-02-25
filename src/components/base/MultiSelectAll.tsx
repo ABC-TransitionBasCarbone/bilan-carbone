@@ -8,9 +8,10 @@ interface Props<T> {
   allValues: T[]
   setValues: (allValues: T[]) => void
   getLabel: (value: string) => string
+  label?: string
 }
 
-const MultiSelectAll = <T extends string>({ id, values, allValues, setValues, getLabel }: Props<T>) => {
+const MultiSelectAll = <T extends string>({ id, values, allValues, setValues, getLabel, label }: Props<T>) => {
   const tCommon = useTranslations('common')
   const allSelected = useMemo<boolean>(
     () => values.filter((item) => item !== 'all').length === allValues.length,
@@ -63,6 +64,7 @@ const MultiSelectAll = <T extends string>({ id, values, allValues, setValues, ge
       renderValue={renderValue}
       multiple
       displayEmpty
+      label={label ?? undefined}
     >
       {allValues.length > 1 && (
         <MenuItem key={`${id}-item-all`} value="all">

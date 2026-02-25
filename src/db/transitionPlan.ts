@@ -1,13 +1,16 @@
-import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
 import {
   ActionIndicatorCommand,
   ActionStepCommand,
   AddActionInputCommand,
-} from '@/services/serverFunctions/transitionPlan.command'
+} from '@/services/serverFunctions/action.command'
+import { SectorPercentages } from '@/services/serverFunctions/trajectory.command'
 import {
   Action,
   ActionIndicator,
+  ActionSite,
   ActionStep,
+  ActionSubPost,
+  ActionTag,
   ExternalStudy,
   Objective,
   ObjectiveSite,
@@ -64,6 +67,14 @@ export type ObjectiveScopeFormData = {
   subPosts: SubPost[]
 }
 
+const actionInclude = {
+  indicators: true,
+  steps: true,
+  sites: { include: { studySite: true } },
+  tags: { include: { studyTag: true } },
+  subPosts: true,
+} as const
+
 export const getTransitionPlanById = async (id: string): Promise<TransitionPlan | null> => {
   return prismaClient.transitionPlan.findUnique({
     where: { id },
@@ -87,10 +98,7 @@ export const getTransitionPlanByIdWithRelations = async (id: string): Promise<Tr
       },
       transitionPlanStudies: { include: { study: { select: { startDate: true } } } },
       actions: {
-        include: {
-          indicators: true,
-          steps: true,
-        },
+        include: actionInclude,
       },
       externalStudies: true,
     },
@@ -182,7 +190,7 @@ export const duplicateTransitionPlanWithRelations = async (
         actions: {
           create: sourceTransitionPlan.actions.map(
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            ({ id, transitionPlanId, createdAt, updatedAt, indicators, steps, ...rest }) => ({
+            ({ id, transitionPlanId, createdAt, updatedAt, indicators, steps, sites, tags, subPosts, ...rest }) => ({
               ...rest,
               indicators: {
                 create: indicators.map((indicator) => ({
@@ -195,6 +203,15 @@ export const duplicateTransitionPlanWithRelations = async (
                   title: step.title,
                   order: step.order,
                 })),
+              },
+              sites: {
+                create: sites.map((s) => ({ studySiteId: s.studySiteId })),
+              },
+              tags: {
+                create: tags.map((t) => ({ studyTagId: t.studyTagId })),
+              },
+              subPosts: {
+                create: subPosts.map((sp) => ({ subPost: sp.subPost })),
               },
             }),
           ),
@@ -220,10 +237,7 @@ export const duplicateTransitionPlanWithRelations = async (
         },
         transitionPlanStudies: { include: { study: { select: { startDate: true } } } },
         actions: {
-          include: {
-            indicators: true,
-            steps: true,
-          },
+          include: actionInclude,
         },
         externalStudies: true,
       },
@@ -242,7 +256,9 @@ export const hasTransitionPlan = async (studyId: string): Promise<boolean> => {
 
 export const createAction = async (data: Prisma.ActionUncheckedCreateInput) => prismaClient.action.create({ data })
 
-export const createActionWithRelations = async (command: AddActionInputCommand) => {
+export const createActionWithRelations = async (
+  command: Omit<AddActionInputCommand, 'siteIds' | 'tagIds' | 'subPosts'>,
+) => {
   const { indicators, steps, ...actionData } = command
 
   return prismaClient.action.create({
@@ -269,19 +285,30 @@ export const deleteAction = async (id: string) => prismaClient.action.delete({ w
 export type ActionWithRelations = Action & {
   indicators: ActionIndicator[]
   steps: ActionStep[]
+  sites: Array<ActionSite & { studySite: StudySite }>
+  tags: Array<ActionTag & { studyTag: StudyTag }>
+  subPosts: ActionSubPost[]
 }
 
 export const getActionById = async (id: string): Promise<ActionWithRelations | null> =>
   prismaClient.action.findUnique({
     where: { id },
-    include: { indicators: { orderBy: { createdAt: 'asc' } }, steps: { orderBy: { order: 'asc' } } },
+    include: {
+      ...actionInclude,
+      indicators: { orderBy: { createdAt: 'asc' } },
+      steps: { orderBy: { order: 'asc' } },
+    },
   })
 
 export const getActions = async (transitionPlanId: string): Promise<ActionWithRelations[]> =>
   prismaClient.action.findMany({
     where: { transitionPlanId },
     orderBy: [{ priority: 'asc' }, { createdAt: 'desc' }],
-    include: { indicators: { orderBy: { createdAt: 'asc' } }, steps: { orderBy: { order: 'asc' } } },
+    include: {
+      ...actionInclude,
+      indicators: { orderBy: { createdAt: 'asc' } },
+      steps: { orderBy: { order: 'asc' } },
+    },
   })
 
 export const createTransitionPlanStudy = async (transitionPlanId: string, studyId: string) =>
@@ -531,5 +558,16 @@ export const saveStepsOnAction = async (
         })
       }
     }),
+  ])
+}
+
+export const saveActionScope = async (actionId: string, siteIds: string[], tagIds: string[], subPosts: SubPost[]) => {
+  await prismaClient.$transaction([
+    prismaClient.actionSite.deleteMany({ where: { actionId } }),
+    prismaClient.actionTag.deleteMany({ where: { actionId } }),
+    prismaClient.actionSubPost.deleteMany({ where: { actionId } }),
+    prismaClient.actionSite.createMany({ data: siteIds.map((studySiteId) => ({ actionId, studySiteId })) }),
+    prismaClient.actionTag.createMany({ data: tagIds.map((studyTagId) => ({ actionId, studyTagId })) }),
+    prismaClient.actionSubPost.createMany({ data: subPosts.map((subPost) => ({ actionId, subPost })) }),
   ])
 }

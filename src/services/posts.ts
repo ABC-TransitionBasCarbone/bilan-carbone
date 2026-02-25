@@ -231,6 +231,12 @@ export const convertTiltSubPostToBCSubPost = (subPost: SubPost): SubPost => {
   return subPostTiltToBcSubPostMapping[subPost] ?? subPost
 }
 
+export const getEnvPosts = (environment: Environment | null | undefined): Post[] =>
+  environment ? Object.values(environmentPostMapping[environment]) : []
+
+export const getEnvSubPosts = (environment: Environment | null | undefined): SubPost[] =>
+  environment ? Object.values(environmentSubPostsMapping[environment]).flat() : []
+
 const getSubPostBCToSubPostTiltMapping = (): Partial<Record<SubPost, SubPost[]>> => {
   const result = {} as Partial<Record<SubPost, SubPost[]>>
   const tiltSubPostList = Object.values(subPostsByPostTILT).flat()
