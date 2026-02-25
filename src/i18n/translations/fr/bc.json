@@ -566,6 +566,8 @@
         "titleEdit": "Modifier un·e contributeur·rice sur l'étude : {name}",
         "title": "Ajouter un·e contributeur·rice sur l'étude : {name}",
         "email": "Email",
+        "firstName": "Prénom",
+        "lastName": "Nom",
         "post": "Poste",
         "subPost": "Sous poste",
         "create": "Ajouter la personne",

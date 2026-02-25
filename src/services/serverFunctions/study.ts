@@ -842,6 +842,8 @@ const getOrCreateUserAndSendStudyInvite = async (
   existingUser: UserWithAccounts | null,
   newRoleOnStudy?: StudyRole,
   skipInviteEmail = false,
+  firstName?: string,
+  lastName?: string,
 ) => {
   let accountId = ''
   const t = await getTranslations('study.role')
@@ -850,8 +852,8 @@ const getOrCreateUserAndSendStudyInvite = async (
   if (!existingUser) {
     const newUser = await addUser({
       email: email,
-      firstName: '',
-      lastName: '',
+      firstName: firstName || '',
+      lastName: lastName || '',
       source: creatorDBUser?.source,
       accounts: {
         create: {
@@ -1053,7 +1055,7 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
   })
 
 export const newStudyContributor = async (
-  { email, subPosts, ...command }: NewStudyContributorCommand,
+  { email, firstName, lastName, subPosts, ...command }: NewStudyContributorCommand,
   toDeleteContributors?: StudyContributorDeleteParams[],
 ) =>
   withServerResponse('newStudyContributor', async () => {
@@ -1094,6 +1096,10 @@ export const newStudyContributor = async (
       organizationVersion as OrganizationVersionWithOrganization,
       session.user,
       existingUser,
+      undefined,
+      false,
+      firstName,
+      lastName,
     )
 
     if (
