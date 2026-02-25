@@ -181,12 +181,6 @@
     "contacterViaFormulaire": "Écrire directement à {supportEmail}",
     "enSavoirPlusBilan": "Pour aller plus loin que le calcul d'empreinte simplifiée proposé par Count :"
   },
-  "questions": {
-    "glossary": {
-      "title": "Informations supplémentaires sur la question",
-      "close": "Fermer"
-    }
-  },
   "emissionFactors": {
     "post": {
       "questions": {

@@ -19,6 +19,7 @@ export interface QuestionContainerProps {
 const QuestionContainer = ({ label, helperText, children }: QuestionContainerProps) => {
   const tGlossary = useTranslations('questions.glossary')
   const [glossary, setGlossary] = useState('')
+  const tCommon = useTranslations('common.questions.glossary')
 
   return (
     <StyledQuestionContainer>
@@ -31,7 +32,7 @@ const QuestionContainer = ({ label, helperText, children }: QuestionContainerPro
 
       <StyledQuestionContent>{children}</StyledQuestionContent>
       {glossary && (
-        <GlossaryModal glossary="title" label="emission-factor-post" t={tGlossary} onClose={() => setGlossary('')}>
+        <GlossaryModal glossary="title" label="emission-factor-post" t={tCommon} onClose={() => setGlossary('')}>
           {helperText}
         </GlossaryModal>
       )}
