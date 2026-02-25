@@ -1,5 +1,4 @@
 import { AccessOptions, Client } from 'basic-ftp'
-import dotenv from 'dotenv'
 import fs from 'fs'
 import { processUsers } from './userImport'
 
@@ -22,7 +21,7 @@ const downloadFileFromFTP = async (client: Client, folderPath: string, fileName:
   return fs.promises.readFile(fileName, 'utf-8')
 }
 
-const getUsersFromFTP = async () => {
+export const getUsersFromFTP = async () => {
   try {
     const client = await getFTPClient()
     const folderPath = process.env.FTP_FILE_PATH || '/'
@@ -40,6 +39,3 @@ const getUsersFromFTP = async () => {
     console.error('Error importing users:', error)
   }
 }
-
-dotenv.config()
-getUsersFromFTP()
