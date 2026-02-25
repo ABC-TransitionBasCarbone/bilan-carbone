@@ -32,6 +32,12 @@
       "selectAll": "Seleccionar todos",
       "unselectAll": "Deseleccionar todos"
     },
+    "questions": {
+      "glossary": {
+        "title": "Más información sobre el tema",
+        "close": "Cerca"
+      }
+    },
     "label": {
       "start": "Inicio",
       "end": "Fin",
