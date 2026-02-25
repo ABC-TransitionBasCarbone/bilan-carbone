@@ -133,10 +133,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
   DechetsDEmballagesEtPlastiques: [
     table(
       'DechetsDirects.question',
-      [
-        'DechetsDirects.typeDéchets',
-        'DechetsDirects.poids',
-      ],
+      ['DechetsDirects.typeDéchets', 'DechetsDirects.poids'],
       [
         [
           'déchets . emballages et plastiques . poubelle noire',
@@ -257,10 +254,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
   MetauxPlastiquesEtVerre: [
     table(
       'IntrantsBiensEtMatieresTilt.question',
-      [
-        'IntrantsBiensEtMatieresTilt.typeBien',
-        'IntrantsBiensEtMatieresTilt.montantDepense'
-      ],
+      ['IntrantsBiensEtMatieresTilt.typeBien', 'IntrantsBiensEtMatieresTilt.montantDepense'],
       [
         [
           'intrants-biens-et-matières . ratios monétaires . petites-fournitures',
@@ -301,7 +295,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       ],
     ),
   ],
-  
+
   TransportFabricationDesVehicules: [
     input('fret . fabrication . voitures . nombre'),
     input('fret . fabrication . VUL . nombre'),
@@ -314,27 +308,12 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('fret . transport . poids'),
     table(
       'TransportDeMarchandises.question',
+      ['TransportDeMarchandises.typeProvenance', 'TransportDeMarchandises.pourcentageLivraisons'],
       [
-        'TransportDeMarchandises.typeProvenance',
-        'TransportDeMarchandises.pourcentageLivraisons',
-      ],
-      [
-        [
-          'fret . transport . local',
-          'fret . transport . local . provenance',
-        ],
-        [
-          'fret . transport . national',
-          'fret . transport . national . provenance',
-        ],
-        [
-          'fret . transport . europe',
-          'fret . transport . europe . provenance',
-        ],
-        [
-          'fret . transport . international',
-          'fret . transport . international . provenance',
-        ],
+        ['fret . transport . local', 'fret . transport . local . provenance'],
+        ['fret . transport . national', 'fret . transport . national . provenance'],
+        ['fret . transport . europe', 'fret . transport . europe . provenance'],
+        ['fret . transport . international', 'fret . transport . international . provenance'],
       ],
     ),
   ],

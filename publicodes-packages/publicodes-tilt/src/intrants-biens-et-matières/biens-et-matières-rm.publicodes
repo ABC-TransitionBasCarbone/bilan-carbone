@@ -17,7 +17,7 @@ intrants-biens-et-matières . ratios monétaires:
 intrants-biens-et-matières . ratios monétaires . petites-fournitures:
   formule: nombre * FE
   form:
-    à traduire: oui  
+    à traduire: oui
   titre: Petites fournitures
   avec:
     nombre:
@@ -36,7 +36,7 @@ intrants-biens-et-matières . ratios monétaires . petites-fournitures:
 intrants-biens-et-matières . ratios monétaires . meubles:
   formule: nombre * FE
   form:
-    à traduire: oui  
+    à traduire: oui
   titre: Meubles
   avec:
     nombre:
