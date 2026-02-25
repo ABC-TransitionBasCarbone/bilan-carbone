@@ -24,7 +24,7 @@
 #       note: On considère les équipements amortis sur trois ans
 
 équipements et immobilisations . infos . prise en compte reconditionné:
-  question: Vos équipements sont-ils régulièrement reconditionné ou issu de seconde main ?
+  question: Vos équipements sont-ils reconditionné ou issu de seconde main ?
   une possibilité:
     - toujours
     - souvent
@@ -72,6 +72,8 @@
         nom: Ordinateurs fixes
     quantité:
       question: Ordinateurs fixes
+      type: nombre
+      unité: quantité
 
 équipements et immobilisations . infos . ordinateurs portables:
   formule: FE * quantité
@@ -84,6 +86,8 @@
         nom: Ordinateurs portables
     quantité:
       question: Ordinateurs portables
+      type: nombre
+      unité: quantité
 
 équipements et immobilisations . infos . photocopieurs:
   formule: FE * quantité
@@ -96,6 +100,8 @@
         nom: Photocopieurs
     quantité:
       question: Photocopieurs
+      type: nombre
+      unité: quantité
 
 équipements et immobilisations . infos . imprimantes:
   formule: FE * quantité
@@ -108,6 +114,8 @@
         nom: Imprimante multi-fonction
     quantité:
       question: Imprimante multi-fonction
+      type: nombre
+      unité: quantité
 
 équipements et immobilisations . infos . téléphones fixes:
   formule: FE * quantité
@@ -120,6 +128,8 @@
         nom: Téléphones fixes
     quantité:
       question: Téléphones fixes
+      type: nombre
+      unité: quantité
 
 équipements et immobilisations . infos . téléphones portables:
   formule: FE * quantité
@@ -132,6 +142,8 @@
         nom: Téléphones portables
     quantité:
       question: Téléphones portables
+      type: nombre
+      unité: quantité
 
 équipements et immobilisations . infos . vidéoprojecteurs:
   formule: FE * quantité
@@ -144,6 +156,8 @@
         nom: Vidéoprojecteurs
     quantité:
       question: Vidéoprojecteurs
+      type: nombre
+      unité: quantité
 
 équipements et immobilisations . infos . autres écrans:
   formule: FE * quantité
@@ -156,3 +170,5 @@
         nom: Tablettes
     quantité:
       question: Autres écrans (TV, écran secondaire, tablette, ...)
+      type: nombre
+      unité: quantité

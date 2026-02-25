@@ -14,8 +14,12 @@ déplacements . DM-salariés . avec:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = oui
   titre: émissions des trajets liés à des missions des salariés (avec enquête MEP)
-  formule: émissions MEP * général . salariés / déplacements . DT-salariés . MEP présent . nombre salariés ## produit en croix pour extrapoler les émissions totales à partir des émissions de MEP
-
+  formule:
+    produit:
+      - émissions MEP ##émissions unitaires par salarié
+      - général . salariés ## pour compter les émissions totales
+      - général . salariés ## partie 1 du produit en croix pour extrapoler les émissions totales à partir des émissions de MEP
+      - 1 / déplacements . DT-salariés . MEP présent . nombre salariés ## partie 2 du produit en croix pour extrapoler les émissions totales à partir des émissions de MEP
   avec:
     émissions MEP:
       valeur:
@@ -28,18 +32,23 @@ déplacements . DM-salariés . avec:
       avec:
         voiture:
           question: D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en voiture liés à des missions ?
+          type: nombre
           unité: kgCO2e
         train:
           question: D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en train liés à des missions ?
+          type: nombre
           unité: kgCO2e
         avion:
           question: D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en avion liés à des missions ?
+          type: nombre
           unité: kgCO2e
         transports en commun:
           question: D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en transports en commun liés à des missions ?
+          type: nombre
           unité: kgCO2e
         deux roues:
           question: D'après MEP, quelle est la moyenne d'émissions par salarié pour des déplacements en deux roues liés à des missions ?
+          type: nombre
           unité: kgCO2e
   unité: kgCO2e
 
@@ -61,10 +70,11 @@ déplacements . DM-salariés . sans . voiture:
     toutes ces conditions:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = non
-  formule: distance * split * 12 / occupation
+  formule: distance * split * 12 * général . salariés / occupation
   avec:
     distance:
-      question: Combien de km sont parcourus en moyenne par mois par vos salariés en voiture pour des déplacements liés à des missions ?
+      question: Combien de km sont parcourus en moyenne par mois par salarié en voiture pour des déplacements liés à des missions ?
+      type: nombre
       unité: km
   description: On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales
   unité: kgCO2e
@@ -114,10 +124,11 @@ déplacements . DM-salariés . sans . train:
     toutes ces conditions:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = non
-  formule: distance * FE * 12
+  formule: distance * FE * 12 * général . salariés
   avec:
     distance:
-      question: Combien de km sont parcourus en moyenne par mois par vos salariés en train pour des déplacements liés à des missions ?
+      question: Combien de km sont parcourus en moyenne par mois par salarié en train pour des déplacements liés à des missions ?
+      type: nombre
       unité: km
 
     FE:
@@ -134,10 +145,11 @@ déplacements . DM-salariés . sans . transports en commun:
     toutes ces conditions:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = non
-  formule: distance * split * 12
+  formule: distance * split * 12 * général . salariés
   avec:
     distance:
-      question: Combien de km sont parcourus en moyenne par mois par vos salariés en transports en commun pour des déplacements liés à des missions ?
+      question: Combien de km sont parcourus en moyenne par mois par salarié en transports en commun pour des déplacements liés à des missions ?
+      type: nombre
       unité: km
   unité: kgCO2e
 
@@ -162,10 +174,11 @@ déplacements . DM-salariés . sans . deux roues:
     toutes ces conditions:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = non
-  formule: distance * FE * 12
+  formule: distance * FE * 12 * général . salariés
   avec:
     distance:
-      question: Combien de km sont parcourus en moyenne par mois par vos salariés en deux roues pour des déplacements liés à des missions ?
+      question: Combien de km sont parcourus en moyenne par mois par salarié en deux roues pour des déplacements liés à des missions ?
+      type: nombre
       unité: km
 
     FE:
@@ -191,7 +204,8 @@ déplacements . DM-salariés . sans . avion . court courrier:
   formule: distance * FE
   avec:
     distance:
-      question: Combien de km ont été parcourus cette année par vos salariés avion court courrier pour des déplacements liés à des missions ?
+      question: Combien de km ont été parcourus cette année par salarié avion court courrier pour des déplacements liés à des missions ?
+      type: nombre
       unité: km
 
     FE:
@@ -210,7 +224,8 @@ déplacements . DM-salariés . sans . avion . moyen courrier:
   formule: distance * FE
   avec:
     distance:
-      question: Combien de km ont été parcourus cette année par vos salariés avion moyen courrier pour des déplacements liés à des missions ?
+      question: Combien de km ont été parcourus cette année par salarié avion moyen courrier pour des déplacements liés à des missions ?
+      type: nombre
       unité: km
 
     FE:
@@ -229,7 +244,8 @@ déplacements . DM-salariés . sans . avion . long courrier:
   formule: distance * FE * 12
   avec:
     distance:
-      question: Combien de km ont été parcourus cette année par vos salariés avion long courrier pour des déplacements liés à des missions ?
+      question: Combien de km ont été parcourus cette année par salarié avion long courrier pour des déplacements liés à des missions ?
+      type: nombre
       unité: km
 
     FE:

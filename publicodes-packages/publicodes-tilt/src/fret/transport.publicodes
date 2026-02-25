@@ -6,7 +6,7 @@ fret . transport:
       - empreinte
 
 fret . transport . présent:
-  question: Est-ce que votre association possède ou loue des véhicules pour transporter des marchandises ?
+  question: Est-ce que votre association possède ou loue des véhicules pour transporter des marchandises en [Année] ?
 
 fret . transport . carburant:
   titre: consommation de carburant pour le fret possédé
@@ -15,7 +15,7 @@ fret . transport . carburant:
   unité: kgCO2e
   avec:
     litre:
-      question: Combien de litres de carburants ceux-ci consomment-ils ?
+      question: Combien de litres de carburants ont ils consommé en [Année] ?
       unité: litre
 
     FE:
@@ -49,7 +49,7 @@ fret . transport . poids:
 
 fret . transport . local:
   titre: empreinte livraisons locales
-  formule: poids * provenance * 50 * split
+  formule: poids * provenance * 50 * split * livraisons
   unité: kgCO2e
   note: Pour les livraisons locales on compte environ 50km
 
@@ -66,14 +66,14 @@ fret . transport . local . split:
 
 fret . transport . local . provenance:
   titre: livraisons locales
-  question: Sur ces livraisons, combien sont en provenance de fournisseurs locaux (moins de 50 km) ?
-  unité: unité
+  question: Sur ces livraisons, quelle part provient de fournisseurs locaux (moins de 50 km) ?
+  unité: "%"
 
 ##### Fret national #####
 
 fret . transport . national:
   titre: empreinte livraisons nationales
-  formule: poids * provenance * 500 * split
+  formule: poids * provenance * 500 * split * livraisons
   unité: kgCO2e
   note: Pour les livraisons nationales on compte environ 500km (~Paris-Marseille)
 
@@ -105,14 +105,14 @@ fret . transport . national . split:
 
 fret . transport . national . provenance:
   titre: livraisons nationales
-  question: Sur ces livraisons, combien sont en provenance de fournisseurs nationaux (entre 50 km et 500 km) ?
-  unité: unité
+  question: Sur ces livraisons, quelle part provient de fournisseurs nationaux (entre 50 km et 500 km) ?
+  unité: "%"
 
 ##### Fret europe #####
 
 fret . transport . europe:
   titre: empreinte livraisons européennes
-  formule: poids * provenance * 1500 * split
+  formule: poids * provenance * 1500 * split * livraisons
   unité: kgCO2e
   note: Pour les livraisons européeennes on compte environ 1500 km (~Paris-Stockholm/Paris-Varsovie, …)
 
@@ -144,14 +144,14 @@ fret . transport . europe . split:
 
 fret . transport . europe . provenance:
   titre: livraisons européennes
-  question: Sur ces livraisons, combien sont en provenance de fournisseurs européens (entre 500 km et 1500 km) ?
-  unité: unité
+  question: Sur ces livraisons, quelle part provient de fournisseurs européens (entre 500 km et 1500 km) ?
+  unité: "%"
 
 ##### Fret international #####
 
 fret . transport . international:
   titre: empreinte livraisons internationales
-  formule: poids * provenance * 10000 * split
+  formule: poids * provenance * 10000 * split * livraisons
   unité: kgCO2e
   note: Pour les livraisons internationales on compte environ 10000 km (~Paris-Tokyo)
 
@@ -175,5 +175,5 @@ fret . transport . international . split:
 
 fret . transport . international . provenance:
   titre: livraisons internationales
-  question: Sur ces livraisons, combien sont en provenance de fournisseurs internationaux (plus de 1500 km) ?
-  unité: unité
+  question: Sur ces livraisons, quelle part provient de fournisseurs internationaux (plus de 1500 km) ?
+  unité: "%"

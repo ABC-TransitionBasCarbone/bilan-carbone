@@ -1,25 +1,22 @@
 alimentation . bénéficiaires:
   formule:
-    variations:
-      - si:
-          toutes ces conditions:
-            - est défini: repas présent
-            - repas présent = oui
-        alors:
-          somme:
-            - viande rouge
-            - viande blanche
-            - poisson blanc
-            - poisson gras
-            - végétarien
-            - végétalien
-      - sinon: 0
+    somme:
+      - viande rouge
+      - viande blanche
+      - poisson blanc
+      - poisson gras
+      - végétarien
+      - végétalien
   unité: kgCO2e
 
 alimentation . bénéficiaires . repas présent:
   question: Le service proposé par l’association implique t'il de proposer des repas à ses bénéficiaires ? (évènements, activités humanitaires, ...)
 
 alimentation . bénéficiaires . viande rouge:
+  applicable si:
+    toutes ces conditions:
+      - est défini: repas présent
+      - repas présent = oui
   formule: FE * nombre de repas
   avec:
     FE:
@@ -37,6 +34,10 @@ alimentation . bénéficiaires . viande rouge:
       unité: repas
 
 alimentation . bénéficiaires . viande blanche:
+  applicable si:
+    toutes ces conditions:
+      - est défini: repas présent
+      - repas présent = oui
   formule: FE * nombre de repas
   avec:
     FE:
@@ -49,6 +50,10 @@ alimentation . bénéficiaires . viande blanche:
       unité: repas
 
 alimentation . bénéficiaires . poisson blanc:
+  applicable si:
+    toutes ces conditions:
+      - est défini: repas présent
+      - repas présent = oui
   formule: FE * nombre de repas
   avec:
     FE:
@@ -61,6 +66,10 @@ alimentation . bénéficiaires . poisson blanc:
       unité: repas
 
 alimentation . bénéficiaires . poisson gras:
+  applicable si:
+    toutes ces conditions:
+      - est défini: repas présent
+      - repas présent = oui
   formule: FE * nombre de repas
   avec:
     FE:
@@ -73,6 +82,10 @@ alimentation . bénéficiaires . poisson gras:
       unité: repas
 
 alimentation . bénéficiaires . végétarien:
+  applicable si:
+    toutes ces conditions:
+      - est défini: repas présent
+      - repas présent = oui
   formule: FE * nombre de repas
   avec:
     FE:
@@ -85,6 +98,10 @@ alimentation . bénéficiaires . végétarien:
       unité: repas
 
 alimentation . bénéficiaires . végétalien:
+  applicable si:
+    toutes ces conditions:
+      - est défini: repas présent
+      - repas présent = oui
   formule: FE * nombre de repas
   avec:
     FE:

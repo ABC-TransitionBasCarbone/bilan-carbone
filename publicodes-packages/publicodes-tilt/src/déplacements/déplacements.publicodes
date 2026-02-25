@@ -7,6 +7,7 @@ déplacements:
       # - DT-bénéficiaires
       - DT-bénévoles
       - DT-salariés
+      - fabrication
   unité: kgCO2e
 
 déplacements . DT-salariés . MEP présent:

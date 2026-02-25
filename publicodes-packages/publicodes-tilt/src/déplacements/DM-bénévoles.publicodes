@@ -14,7 +14,12 @@ déplacements . DM-bénévoles . avec:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = oui
   titre: émissions des trajets liés à des missions des bénévoles (avec enquête MEP)
-  formule: émissions MEP * général . bénévoles / déplacements . DT-salariés . MEP présent . nombre bénévoles ## produit en croix pour extrapoler les émissions totales à partir des émissions de MEP
+  formule:
+    produit:
+      - émissions MEP ##émissions unitaires par bénévole
+      - général . bénévoles ## pour compter les émissions totales
+      - général . bénévoles ## partie 1 du produit en croix pour extrapoler les émissions totales à partir des émissions de MEP
+      - 1 / déplacements . DT-salariés . MEP présent . nombre bénévoles ## partie 2 du produit en croix pour extrapoler les émissions totales à partir des émissions de MEP
 
   avec:
     émissions MEP:
@@ -28,18 +33,23 @@ déplacements . DM-bénévoles . avec:
       avec:
         voiture:
           question: D'après MEP, quelle est la moyenne d'émissions par bénévole pour des déplacements en voiture liés à des missions ?
+          type: nombre
           unité: kgCO2e
         train:
           question: D'après MEP, quelle est la moyenne d'émissions par bénévole pour des déplacements en train liés à des missions ?
+          type: nombre
           unité: kgCO2e
         avion:
           question: D'après MEP, quelle est la moyenne d'émissions par bénévole pour des déplacements en avion liés à des missions ?
+          type: nombre
           unité: kgCO2e
         transports en commun:
           question: D'après MEP, quelle est la moyenne d'émissions par bénévole pour des déplacements en transports en commun liés à des missions ?
+          type: nombre
           unité: kgCO2e
         deux roues:
           question: D'après MEP, quelle est la moyenne d'émissions par bénévole pour des déplacements en deux roues liés à des missions ?
+          type: nombre
           unité: kgCO2e
   unité: kgCO2e
 
@@ -61,12 +71,13 @@ déplacements . DM-bénévoles . sans . voiture:
     toutes ces conditions:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = non
-  formule: distance * split / occupation * 12
+  formule: distance * split / occupation * 12 * général . bénévoles
   avec:
     distance:
-      question: Combien de km sont parcourus en moyenne par mois par vos bénévoles en voiture pour des déplacements liés à des missions ?
+      question: Combien de km sont parcourus en moyenne par mois par bénévole en voiture pour des déplacements liés à des missions ?
+      type: nombre
       unité: km
-  description: On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales
+      description: On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales
   unité: kgCO2e
 
 déplacements . DM-bénévoles . sans . voiture . split:
@@ -114,10 +125,11 @@ déplacements . DM-bénévoles . sans . train:
     toutes ces conditions:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = non
-  formule: distance * FE * 12
+  formule: distance * FE * 12 * général . bénévoles
   avec:
     distance:
-      question: Combien de km sont parcourus en moyenne par mois par vos bénévoles en train pour des déplacements liés à des missions ?
+      question: Combien de km sont parcourus en moyenne par mois par bénévole en train pour des déplacements liés à des missions ?
+      type: nombre
       unité: km
 
     FE:
@@ -134,10 +146,11 @@ déplacements . DM-bénévoles . sans . transports en commun:
     toutes ces conditions:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = non
-  formule: distance * split * 12
+  formule: distance * split * 12 * général . bénévoles
   avec:
     distance:
-      question: Combien de km sont parcourus en moyenne par mois par vos bénévoles en transports en commun pour des déplacements liés à des missions ?
+      question: Combien de km sont parcourus en moyenne par mois par bénévole en transports en commun pour des déplacements liés à des missions ?
+      type: nombre
       unité: km
   unité: kgCO2e
 
@@ -165,7 +178,8 @@ déplacements . DM-bénévoles . sans . deux roues:
   formule: distance * FE * 12
   avec:
     distance:
-      question: Combien de km sont parcourus en moyenne par mois par vos bénévoles en deux roues pour des déplacements liés à des missions ?
+      question: Combien de km sont parcourus en moyenne par mois par bénévole en deux roues pour des déplacements liés à des missions ?
+      type: nombre
       unité: km
 
     FE:
@@ -191,7 +205,8 @@ déplacements . DM-bénévoles . sans . avion . court courrier:
   formule: distance * FE
   avec:
     distance:
-      question: Combien de km ont été parcourus cette année par vos bénévoles avion court courrier pour des déplacements liés à des missions ?
+      question: Combien de km ont été parcourus cette année par bénévole avion court courrier pour des déplacements liés à des missions ?
+      type: nombre
       unité: km
 
     FE:
@@ -210,7 +225,8 @@ déplacements . DM-bénévoles . sans . avion . moyen courrier:
   formule: distance * FE
   avec:
     distance:
-      question: Combien de km ont été parcourus cette année par vos bénévoles avion moyen courrier pour des déplacements liés à des missions ?
+      question: Combien de km ont été parcourus cette année par bénévole avion moyen courrier pour des déplacements liés à des missions ?
+      type: nombre
       unité: km
 
     FE:
@@ -229,7 +245,8 @@ déplacements . DM-bénévoles . sans . avion . long courrier:
   formule: distance * FE
   avec:
     distance:
-      question: Combien de km ont été parcourus cette année par vos bénévoles avion long courrier pour des déplacements liés à des missions ?
+      question: Combien de km ont été parcourus cette année par bénévole avion long courrier pour des déplacements liés à des missions ?
+      type: nombre
       unité: km
 
     FE:

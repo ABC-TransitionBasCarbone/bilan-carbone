@@ -59,6 +59,7 @@ const SUBPOST_TO_RULENAME: Partial<Record<SubPost, TiltRuleName>> = {
   DeplacementsDansLeCadreDUneMissionAssociativeSalaries: 'déplacements . DM-salariés',
   DeplacementsDansLeCadreDUneMissionAssociativeBenevoles: 'déplacements . DM-bénévoles',
   DeplacementsDesBeneficiaires: 'déplacements . bénéficiaires',
+  DeplacementsFabricationDesVehicules: 'déplacements . fabrication',
   Entrant: 'fret . transport',
   // Interne: "fret . transport",
   // Sortant: "fret . transport",
@@ -293,9 +294,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       ],
     ),
   ],
-
   TransportFabricationDesVehicules: [
-    input('fret . fabrication . voitures . nombre'),
     input('fret . fabrication . VUL . nombre'),
     input('fret . fabrication . PL . nombre'),
   ],
@@ -367,4 +366,5 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('déplacements . DM-bénévoles . sans . avion . moyen courrier . distance'),
     input('déplacements . DM-bénévoles . sans . avion . long courrier . distance'),
   ],
+  DeplacementsFabricationDesVehicules: [input('déplacements . fabrication . voitures . nombre')],
 } as const

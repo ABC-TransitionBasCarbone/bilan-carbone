@@ -1,0 +1,26 @@
+déplacements . fabrication:
+  titre: Fabrication des véhicules
+  question: Combien de véhicules sont possédés ou loués depuis moins de 5 ans parmi les catégories suivantes ?
+  formule:
+    somme:
+      - voitures
+
+déplacements . fabrication . voitures:
+  titre: Voitures
+  formule: nombre * FE * 1.265 / amortissement
+  unité: kgCO2e
+  avec:
+    nombre:
+      question: Combien de voitures particulières possédez-vous ou louez-vous depuis moins de 5 ans ?
+      unité: unité
+
+    FE:
+      valeur: 5500
+      unité: kgCO2e/tonnes
+      meta:
+        id: 20905
+        nom: Véhicules, fabrication
+
+    amortissement:
+      valeur: 5
+      unité: an
