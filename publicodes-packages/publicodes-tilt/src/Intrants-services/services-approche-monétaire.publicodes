@@ -171,7 +171,7 @@ intrants-services . services . formation:
   unité: kgCO2e
 
 intrants-services . services . reparation-installation:
-  formule: montant-dépensé * FE 
+  formule: montant-dépensé * FE / 1000
   form:
     à traduire: oui
   titre: Services de réparation et d'installation
@@ -193,7 +193,7 @@ intrants-services . services . juridique-comptable:
   formule: montant-dépensé * FE 
   form:
     à traduire: oui
-  titre: Services juridiques, comptables et d'assurance
+  titre: Services de réparation et d'installation
   avec:
     montant-dépensé:
       question: Montant dépensé en services juridiques, comptables et assurances
@@ -209,7 +209,7 @@ intrants-services . services . juridique-comptable:
   unité: kgCO2e
 
 intrants-services . services . programmation-conseil:
-  formule: montant-dépensé * FE 
+  formule: montant-dépensé * FE / 1000
   form:
     à traduire: oui
   titre: Services de programmation et de conseil

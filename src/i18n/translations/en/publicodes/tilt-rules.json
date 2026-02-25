@@ -73,7 +73,7 @@
     "équipements et immobilisations": {
       "infos": {
         "prise en compte reconditionné": {
-          "description": "[UPDATED] En fonction de votre réponse, une partie de vos équipements seront valorisés comme étant reconditionnés. Un équipement reconditionné sera considéré comme moitié moins émetteur qu'un équipement neuf. Autrement dit, la durée de première vie de l'équipement est considéré comme égale à la moitié de sa durée de vie totale.",
+          "description": "[TO_TRANSLATE] En fonction de votre réponse, une partie de vos équipements seront valorisés comme étant reconditionnés. Un équipement reconditionné sera considéré comme moitié moins émetteur qu'un équipement neuf. Autrement dit, la durée de première vie de l'équipement est considéré comme égale à la moitié de sa durée de vie totale.",
           "question": "[TO_TRANSLATE] Vos équipements sont-ils reconditionné ou issu de seconde main ?",
           "options": {
             "toujours": "[TO_TRANSLATE] Toujours",
@@ -294,7 +294,7 @@
           }
         },
         "juridique-comptable": {
-          "titre": "[TO_TRANSLATE] Services juridiques, comptables et d'assurance",
+          "titre": "[UPDATED] Services de réparation et d'installation",
           "montant-dépensé": {
             "question": "[TO_TRANSLATE] Montant dépensé en services juridiques, comptables et assurances"
           }
@@ -310,22 +310,22 @@
         "question": "[TO_TRANSLATE] Veuillez indiquer les usages numériques en [Année] des salariés et bénévoles de votre association",
         "streaming": {
           "heures": {
-            "question": "[UPDATED] Sur une année, combien d'heures de streaming vidéo ont été regardées ?"
+            "question": "[TO_TRANSLATE] Sur une année, combien d'heures de streaming vidéo ont été regardées ?"
           }
         },
         "visioconférence": {
           "heures": {
-            "question": "[UPDATED] Sur une année, combien d'heures de visioconférence ont eu lieu ?"
+            "question": "[TO_TRANSLATE] Sur une année, combien d'heures de visioconférence ont eu lieu ?"
           }
         },
         "mails": {
           "nombre": {
-            "question": "[UPDATED] Sur une année, combien de mails ont été envoyés ?"
+            "question": "[TO_TRANSLATE] Sur une année, combien de mails ont été envoyés ?"
           }
         },
         "stockage-cloud": {
           "volume": {
-            "question": "[UPDATED] Sur une année, combien de Go de données ont été stockées sur un cloud ?"
+            "question": "[TO_TRANSLATE] Sur une année, combien de Go de données ont été stockées sur un cloud ?"
           }
         }
       }
@@ -392,18 +392,18 @@
     },
     "froid et clim": {
       "nombre": {
-        "description": "[UPDATED] La consommation d'électricité de vos climatisations est incluse dans vos factures d'électricité. Cette question sert donc uniquement à prendre en compte l'impact de la construction de l'équipement de climatisation, et des fuites de gaz frigorigènes.",
+        "description": "[TO_TRANSLATE] La consommation d'électricité de vos climatisations est incluse dans vos factures d'électricité. Cette question sert donc uniquement à prendre en compte l'impact de la construction de l'équipement de climatisation, et des fuites de gaz frigorigènes.",
         "question": "[TO_TRANSLATE] Combien de climatiseurs sont utilisés dans vos locaux ?"
       }
     },
     "fret": {
       "transport": {
         "présent": {
-          "question": "[UPDATED] Est-ce que votre association possède ou loue des véhicules pour transporter des marchandises ?"
+          "question": "[TO_TRANSLATE] Est-ce que votre association possède ou loue des véhicules pour transporter des marchandises ?"
         },
         "carburant": {
           "litre": {
-            "question": "[UPDATED] Combien de litres de carburants ces véhicules ont-ils consommé ?"
+            "question": "[TO_TRANSLATE] Combien de litres de carburants ces véhicules ont-ils consommé ?"
           }
         },
         "livraisons": {
@@ -415,28 +415,28 @@
           "question": "[TO_TRANSLATE] En moyenne, pour une livraison, quel est le poids transporté ?"
         },
         "local": {
-          "titre": "[UPDATED] Locale",
+          "titre": "[TO_TRANSLATE] Locale",
           "provenance": {
             "titre": "[TO_TRANSLATE] livraisons locales",
             "question": "[TO_TRANSLATE] Sur ces livraisons, quelle part provient de fournisseurs locaux (moins de 50 km) ?"
           }
         },
         "national": {
-          "titre": "[UPDATED] France",
+          "titre": "[TO_TRANSLATE] France",
           "provenance": {
             "titre": "[TO_TRANSLATE] livraisons nationales",
             "question": "[TO_TRANSLATE] Sur ces livraisons, quelle part provient de fournisseurs nationaux (entre 50 km et 500 km) ?"
           }
         },
         "europe": {
-          "titre": "[UPDATED] Europe",
+          "titre": "[TO_TRANSLATE] Europe",
           "provenance": {
             "titre": "[TO_TRANSLATE] livraisons européennes",
             "question": "[TO_TRANSLATE] Sur ces livraisons, quelle part provient de fournisseurs européens (entre 500 km et 1500 km) ?"
           }
         },
         "international": {
-          "titre": "[UPDATED] Monde",
+          "titre": "[TO_TRANSLATE] Monde",
           "provenance": {
             "titre": "[TO_TRANSLATE] livraisons internationales",
             "question": "[TO_TRANSLATE] Sur ces livraisons, quelle part provient de fournisseurs internationaux (plus de 1500 km) ?"
