@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server'
 
 const lastRunTimes = new Map<string, number>()
-const RATE_LIMIT_MS = 60_000
+const RATE_LIMIT_MS = 60000 * 8 // 8 minutes
 
 export const checkCronRequest = (req: NextRequest, cronName: string): Response | null => {
   const authHeader = req.headers.get('authorization')
