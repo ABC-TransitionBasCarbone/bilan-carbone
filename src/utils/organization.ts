@@ -1,7 +1,7 @@
 import { OrganizationVersionWithParentLicence } from '@/db/organization'
 import { needsLicenceToUseApp } from '@/services/permissions/environment'
 import { isAdmin } from '@/utils/user'
-import { Role } from '@prisma/client'
+import { Environment, Role } from '@prisma/client'
 import { UserSession } from 'next-auth'
 
 export const isAdminOnOrga = (
@@ -38,6 +38,45 @@ export const canEditOrganizationVersion = (
 
   const isCR = !!organizationVersion?.parentId && organizationVersion.parentId === account.organizationVersionId
   return hasEditionRole(isCR, account.role)
+}
+
+export const shouldRenewLicenceText = (
+  accountOrganizationVersion: Pick<
+    Exclude<OrganizationVersionWithParentLicence, null>,
+    'activatedLicence' | 'environment'
+  >,
+) => {
+  const renewalMessageStartMonth = Number(process.env.NEXT_LICENSE_RENEWAL_MONTH_START) || 13 // 13 is never to be displayed if variable is not defined
+  const renewalMessageEndMonth = Number(process.env.NEXT_LICENSE_RENEWAL_MONTH_END) || 1 // 1 is never to be displayed if variable is not defined
+
+  const currentDate = new Date()
+  if (accountOrganizationVersion.environment !== Environment.BC) {
+    return ''
+  }
+
+  if (accountOrganizationVersion.activatedLicence.includes(new Date().getFullYear() + 1)) {
+    return ''
+  }
+
+  const isEndOfYear = currentDate.getMonth() + 1 >= renewalMessageStartMonth
+  const isStartOfYear = currentDate.getMonth() + 1 < renewalMessageEndMonth
+
+  const isLicenceActive = hasActiveLicence({ parent: null, ...accountOrganizationVersion })
+
+  if (
+    (isLicenceActive &&
+      isEndOfYear &&
+      !accountOrganizationVersion.activatedLicence.includes(new Date().getFullYear() + 1)) ||
+    (isStartOfYear && !accountOrganizationVersion.activatedLicence.includes(new Date().getFullYear()))
+  ) {
+    return 'renewUpcoming'
+  }
+
+  if (!isLicenceActive) {
+    return 'renew'
+  }
+
+  return ''
 }
 
 export const hasActiveLicence = (

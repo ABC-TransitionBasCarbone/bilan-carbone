@@ -2171,7 +2171,8 @@
       "myClient": "Mon client",
       "update": "Modifier mes informations",
       "updateClient": "Modifier mon client",
-      "renew": "Votre adhésion {year} touche à sa fin, pensez à la renouveler pour continuer à utiliser les services en {nextYear}. Sans adhésion à jour, seul l'accès en lecture reste disponible pour vos études sur le BC+.",
+      "renewUpcoming": "Votre adhésion {currentYear} touche bientôt à sa fin, pensez à la renouveler pour continuer à utiliser les services en {nextYear}. Sans adhésion à jour, seul l'accès en lecture reste disponible pour vos études sur le BC+.",
+      "renew": "Votre adhésion a expiré, pensez à la renouveler pour continuer à utiliser les services en {currentYear}. Sans adhésion à jour, seul l'accès en lecture reste disponible pour vos études sur le BC+.",
       "renewLink": "Renouveler"
     },
     "delete": {
