@@ -1,5 +1,4 @@
 import { AccessOptions, Client } from 'basic-ftp'
-import dotenv from 'dotenv'
 import fs from 'fs'
 import { processUsers } from './userImport'
 
@@ -39,10 +38,4 @@ export const getUsersFromFTP = async () => {
   } catch (error) {
     console.error('Error importing users:', error)
   }
-}
-
-// Only auto-run when executed directly as a script
-if (process.argv[1] === import.meta.filename) {
-  dotenv.config()
-  getUsersFromFTP()
 }

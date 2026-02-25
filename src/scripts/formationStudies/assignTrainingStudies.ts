@@ -11,8 +11,3 @@ export const assignTrainingStudies = async () => {
   const correctionRes = await assignTrainingCorrectionExerciseStudy()
   console.log(`Correction studies created for the following formations : ${correctionRes.join(', ')}`)
 }
-
-// Only auto-run when executed directly as a script
-if (process.argv[1] === import.meta.filename) {
-  assignTrainingStudies()
-}

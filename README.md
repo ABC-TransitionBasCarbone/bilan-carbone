@@ -81,6 +81,12 @@ Importer les Donnée cartographie depuis un [CSV du CNC](https://www.cnc.fr/cine
 Supprimer les réponses d'une question :
 `npx tsx src/scripts/questions/deleteAnswersWithCleanup.ts -q "question-intern-id-here"`
 
+### Scripts lancés par CRON
+
+Importer les utilisateurs depuis le FTP : `curl -X POST $NEXT_API_URL/cron/import-users -H "Authorization: Bearer $CRON_SECRET"`
+
+Créer les études de formation pour les utilisateurs qui ont commencé ou terminé une formation : `curl -X POST $NEXT_API_URL/cron/assign-training-studies -H "Authorization: Bearer $CRON_SECRET"`
+
 ### Importer les données de Secten
 
 Importer les données de Secten en créant une nouvelle version ou en mettant à jour une version existante si le nom de la version est déjà utilisé :
