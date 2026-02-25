@@ -1,5 +1,5 @@
 intrants-services . services:
-  question: Quel montant avez-vous dépensé dans les services immatériels suivants
+  question: Quel montant avez-vous dépensé dans les services immatériels suivants en [Année] ?
   formule:
     somme:
       - spectacles-musées

@@ -1,6 +1,8 @@
 intrants-biens-et-matières:
+
+intrants-biens-et-matières . biens-et-matières ratio monétaire:
   titre: Intrants biens et matières
-  question: Quels biens et matières avez-vous achetés en approche monétaire ?
+  question: Quels biens et matières avez-vous achetés en approche monétaire en [Année] ?
   formule:
     somme:
       - petites-fournitures
@@ -14,7 +16,7 @@ intrants-biens-et-matières:
       - autres-produits-manufacturés
   unité: kgCO2e
 
-intrants-biens-et-matières . petites-fournitures:
+intrants-biens-et-matières . biens-et-matières ratio monétaire . petites-fournitures:
   formule: nombre * FE
   avec:
     nombre:
@@ -30,7 +32,7 @@ intrants-biens-et-matières . petites-fournitures:
         id: 20556
   unité: kgCO2e
 
-intrants-biens-et-matières . meubles:
+intrants-biens-et-matières . biens-et-matières ratio monétaire . meubles:
   formule: nombre * FE
   avec:
     nombre:
@@ -46,7 +48,7 @@ intrants-biens-et-matières . meubles:
         id: 43360
   unité: kgCO2e
 
-intrants-biens-et-matières . machines-équipements:
+intrants-biens-et-matières . biens-et-matières ratio monétaire . machines-équipements:
   formule: nombre * FE
   avec:
     nombre:
@@ -62,7 +64,7 @@ intrants-biens-et-matières . machines-équipements:
         id: 43355
   unité: kgCO2e
 
-intrants-biens-et-matières . textiles:
+intrants-biens-et-matières . biens-et-matières ratio monétaire . textiles:
   formule: nombre * FE
   avec:
     nombre:
@@ -78,7 +80,7 @@ intrants-biens-et-matières . textiles:
         id: 43405
   unité: kgCO2e
 
-intrants-biens-et-matières . produits-pharmaceutiques:
+intrants-biens-et-matières . biens-et-matières ratio monétaire . produits-pharmaceutiques:
   formule: nombre * FE
   avec:
     nombre:
@@ -94,7 +96,7 @@ intrants-biens-et-matières . produits-pharmaceutiques:
         id: 43435
   unité: kgCO2e
 
-intrants-biens-et-matières . produits-chimiques:
+intrants-biens-et-matières . biens-et-matières ratio monétaire . produits-chimiques:
   formule: nombre * FE
   avec:
     nombre:
@@ -110,7 +112,7 @@ intrants-biens-et-matières . produits-chimiques:
         id: 43380
   unité: kgCO2e
 
-intrants-biens-et-matières . papier-carton:
+intrants-biens-et-matières . biens-et-matières ratio monétaire . papier-carton:
   formule: nombre * FE
   avec:
     nombre:
@@ -126,7 +128,7 @@ intrants-biens-et-matières . papier-carton:
         id: 43370
   unité: kgCO2e
 
-intrants-biens-et-matières . produits-métalliques:
+intrants-biens-et-matières . biens-et-matières ratio monétaire . produits-métalliques:
   formule: nombre * FE
   avec:
     nombre:
@@ -142,7 +144,7 @@ intrants-biens-et-matières . produits-métalliques:
         id: 43425
   unité: kgCO2e
 
-intrants-biens-et-matières . autres-produits-manufacturés:
+intrants-biens-et-matières . biens-et-matières ratio monétaire . autres-produits-manufacturés:
   formule: nombre * FE
   avec:
     nombre:

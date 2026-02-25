@@ -19,7 +19,7 @@ déplacements . DT-salariés . avec:
       - produit:
           - distance
           - répartition
-          - (5 - général . TT salariés)
+          - (5 - télétravail . salariés . j)
           - commun . nombre de semaines travaillées par an
           - (général . salariés - déplacements . DT-salariés . MEP présent . nombre salariés)
           - 1 / sans . voiture . occupation
@@ -72,11 +72,12 @@ déplacements . DT-salariés . sans . voiture:
     toutes ces conditions:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = non
-  formule: distance * split / occupation * (5 - général . TT salariés) * commun . nombre de semaines travaillées par an
+  formule: distance * split / occupation * (5 - télétravail . salariés . j) * commun . nombre de semaines travaillées par an * général . salariés
   avec:
     distance:
-      question: Combien de km sont parcourus en moyenne par vos salariés en voiture par jour (A/R) pour des déplacements domicile-travail ?
-      unite: km
+      question: Combien de km sont parcourus en moyenne par salarié en voiture par jour (A/R) pour des déplacements domicile-travail ?
+      type: nombre
+      unité: km
   description: On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales
   unité: kgCO2e
 
@@ -125,11 +126,12 @@ déplacements . DT-salariés . sans . train:
     toutes ces conditions:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = non
-  formule: distance * FE  * (5 - général . TT salariés) * commun . nombre de semaines travaillées par an
+  formule: distance * FE  * (5 - télétravail . salariés . j) * commun . nombre de semaines travaillées par an * général . salariés
   avec:
     distance:
-      question: Combien de km sont parcourus en moyenne par vos salariés en train par jour (A/R) pour des déplacements domicile-travail ?
-      unite: km
+      question: Combien de km sont parcourus en moyenne par salarié en train par jour (A/R) pour des déplacements domicile-travail ?
+      type: nombre
+      unité: km
 
     FE:
       valeur: 0.0277
@@ -145,11 +147,12 @@ déplacements . DT-salariés . sans . transports en commun:
     toutes ces conditions:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = non
-  formule: distance * split * (5 - général . TT salariés) * commun . nombre de semaines travaillées par an
+  formule: distance * split * (5 - télétravail . salariés . j) * commun . nombre de semaines travaillées par an * général . salariés
   avec:
     distance:
-      question: Combien de km sont parcourus en moyenne par vos salariés en transports en commun par jour (A/R) pour des déplacements domicile-travail ?
-      unite: km
+      question: Combien de km sont parcourus en moyenne par salarié en transports en commun par jour (A/R) pour des déplacements domicile-travail ?
+      type: nombre
+      unité: km
   unité: kgCO2e
 
 déplacements . DT-salariés . sans . transports en commun . split:
@@ -173,11 +176,12 @@ déplacements . DT-salariés . sans . deux roues:
     toutes ces conditions:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = non
-  formule: distance * FE  * (5 - général . TT salariés) * commun . nombre de semaines travaillées par an
+  formule: distance * FE  * (5 - télétravail . salariés . j) * commun . nombre de semaines travaillées par an * général . salariés
   avec:
     distance:
-      question: Combien de km sont parcourus en moyenne par vos salariés en deux roues par jour (A/R) pour des déplacements domicile-travail ?
-      unite: km
+      question: Combien de km sont parcourus en moyenne par salarié en deux roues par jour (A/R) pour des déplacements domicile-travail ?
+      type: nombre
+      unité: km
 
     FE:
       valeur: 0.0851

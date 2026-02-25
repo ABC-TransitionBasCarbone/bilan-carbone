@@ -1,5 +1,5 @@
 intrants-services . numérique:
-  question: Veuillez indiquer vos usages numériques sur une année
+  question: Veuillez indiquer les usages numériques en [Année] des salariés et bénévoles de votre association
   formule:
     somme:
       - streaming
@@ -9,7 +9,7 @@ intrants-services . numérique:
   unité: kgCO2e
 
 intrants-services . numérique . streaming:
-  formule: heures * FE
+  formule: heures * FE 
   avec:
     heures:
       question: Combien d'heures de streaming vidéo regardées ?

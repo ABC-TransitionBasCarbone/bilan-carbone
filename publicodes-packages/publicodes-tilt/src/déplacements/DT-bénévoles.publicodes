@@ -19,7 +19,7 @@ déplacements . DT-bénévoles . avec:
       - produit:
           - distance
           - répartition
-          - (5 - général . TT bénévoles)
+          - (5 - télétravail . bénévoles . j)
           - commun . nombre de semaines travaillées par an
           - (général . bénévoles - déplacements . DT-salariés . MEP présent . nombre bénévoles)
           - 1 / sans . voiture . occupation
@@ -72,11 +72,12 @@ déplacements . DT-bénévoles . sans . voiture:
     toutes ces conditions:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = non
-  formule: distance * split / occupation * (5 - général . TT bénévoles) * commun . nombre de semaines travaillées par an
+  formule: distance * split / occupation * (5 - télétravail . bénévoles . j) * commun . nombre de semaines travaillées par an * général . bénévoles
   avec:
     distance:
-      question: Combien de km sont parcourus en moyenne par jour (A/R) par vos bénévoles en voiture pour des déplacements domicile-travail ?
-      unite: km
+      question: Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en voiture pour des déplacements domicile-travail ?
+      type: nombre
+      unité: km
   description: On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales
   unité: kgCO2e
 
@@ -125,11 +126,11 @@ déplacements . DT-bénévoles . sans . train:
     toutes ces conditions:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = non
-  formule: distance * FE  * (5 - général . TT bénévoles) * commun . nombre de semaines travaillées par an
+  formule: distance * FE  * (5 - télétravail . bénévoles . j) * commun . nombre de semaines travaillées par an * général . bénévoles
   avec:
     distance:
-      question: Combien de km sont parcourus en moyenne par jour (A/R) par vos bénévoles en train pour des déplacements domicile-travail ?
-      unite: km
+      question: Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en train pour des déplacements domicile-travail ?
+      unité: km
 
     FE:
       valeur: 0.0277
@@ -145,11 +146,12 @@ déplacements . DT-bénévoles . sans . transports en commun:
     toutes ces conditions:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = non
-  formule: distance * split * (5 - général . TT bénévoles) * commun . nombre de semaines travaillées par an
+  formule: distance * split * (5 - télétravail . bénévoles . j) * commun . nombre de semaines travaillées par an * général . bénévoles
   avec:
     distance:
-      question: Combien de km sont parcourus en moyenne par jour (A/R) par vos bénévoles en transports en commun pour des déplacements domicile-travail ?
-      unite: km
+      question: Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en transports en commun pour des déplacements domicile-travail ?
+      type: nombre
+      unité: km
   unité: kgCO2e
 
 déplacements . DT-bénévoles . sans . transports en commun . split:
@@ -173,11 +175,12 @@ déplacements . DT-bénévoles . sans . deux roues:
     toutes ces conditions:
       - est défini: déplacements . DT-salariés . MEP présent
       - déplacements . DT-salariés . MEP présent = non
-  formule: distance * FE * (5 - général . TT bénévoles) * commun . nombre de semaines travaillées par an
+  formule: distance * FE * (5 - télétravail . bénévoles . j) * commun . nombre de semaines travaillées par an * général . bénévoles
   avec:
     distance:
-      question: Combien de km sont parcourus en moyenne par jour (A/R) par vos bénévoles en deux roues pour des déplacements domicile-travail ?
-      unite: km
+      question: Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en deux roues pour des déplacements domicile-travail ?
+      type: nombre
+      unité: km
 
     FE:
       valeur: 0.0851
