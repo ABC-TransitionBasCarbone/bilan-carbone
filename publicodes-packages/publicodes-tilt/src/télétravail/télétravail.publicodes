@@ -1,0 +1,37 @@
+télétravail:
+  titre: Emissions liées au télétravail
+  formule:
+    somme:
+      - bénévoles
+      - salariés
+  unité: kgCO2e
+
+télétravail . FE:
+  valeur: 0.39
+  unité: kgCO2e/j
+
+télétravail . bénévoles:
+  titre: Télétravail - Bénévoles
+  formule: FE * j * général . bénévoles * commun . nombre de semaines travaillées par an
+  unité: kgCO2e
+
+télétravail . bénévoles . h:
+  question: Combien d'heures de télétravail sont effectuées par semaine pour vos bénévoles ?
+  unité: h/semaine
+  type: nombre
+
+télétravail . bénévoles . j:
+  formule: h / 7
+  unité: j/semaine
+  type: nombre 
+
+
+télétravail . salariés:
+  titre: Télétravail - Salariés 
+  formule: FE * j * général . salariés * commun . nombre de semaines travaillées par an
+  unité: kgCO2e
+
+télétravail . salariés . j:
+  question: Combien de jours télétravail sont effectuées par semaine pour vos salariés ?
+  unité: j/semaine
+  type: nombre

@@ -13,4 +13,5 @@ bilan:
       - intrants-biens-et-matières
       - intrants-services
       - utilisation
+      - télétravail
   unité: kgCO2e
