@@ -456,7 +456,7 @@
       "construction": {
         "bâtiment scolaire structure béton": {
           "surface": {
-            "question": "[TO_TRANSLATE] Quelle surface de bâtiment scolaire (structure béton) avez-vous construite ?"
+            "question": "[UPDATED] Quelle surface de bâtiment scolaire (structure béton) comporte votre enceinte scolaire ?"
           },
           "FE": {
             "question": "[TO_TRANSLATE] Facteur d'émission par m² de bâtiment scolaire (structure béton)"
@@ -464,7 +464,7 @@
         },
         "parking bâtiment structure béton": {
           "surface": {
-            "question": "[TO_TRANSLATE] Quelle surface de parking (bâtiment - structure béton) avez-vous construite ?"
+            "question": "[UPDATED] Quelle surface de parking (bâtiment - structure béton) comporte votre enceinte scolaire ?"
           },
           "FE": {
             "question": "[TO_TRANSLATE] Facteur d'émission par m² de parking (bâtiment - structure béton)"
@@ -472,7 +472,7 @@
         },
         "parking surface bitume": {
           "surface": {
-            "question": "[TO_TRANSLATE] Quelle surface de parking (surface bitume) avez-vous construite ?"
+            "question": "[UPDATED] Quelle surface de parking (surface bitume) comporte votre enceinte scolaire ?"
           },
           "FE": {
             "question": "[TO_TRANSLATE] Facteur d'émission par m² de parking (surface bitume)"
@@ -480,7 +480,7 @@
         },
         "parking surface semi-dure": {
           "surface": {
-            "question": "[TO_TRANSLATE] Quelle surface de parking (surface semi-dure) avez-vous construite ?"
+            "question": "[UPDATED] Quelle surface de parking (surface semi-dure) comporte votre enceinte scolaire ?"
           },
           "FE": {
             "question": "[TO_TRANSLATE] Facteur d'émission par m² de parking (surface semi-dure)"
@@ -488,7 +488,7 @@
         },
         "garage structure béton": {
           "surface": {
-            "question": "[TO_TRANSLATE] Quelle surface de garage (structure béton) avez-vous construite ?"
+            "question": "[UPDATED] Quelle surface de garage (structure béton) comporte votre enceinte scolaire ?"
           },
           "FE": {
             "question": "[TO_TRANSLATE] Facteur d'émission par m² de garage (structure béton)"
@@ -496,7 +496,7 @@
         },
         "garage structure métal": {
           "surface": {
-            "question": "[TO_TRANSLATE] Quelle surface de garage (structure métal) avez-vous construite ?"
+            "question": "[UPDATED] Quelle surface de garage (structure métal) comporte votre enceinte scolaire ?"
           },
           "FE": {
             "question": "[TO_TRANSLATE] Facteur d'émission par m² de garage (structure métal)"
@@ -1066,9 +1066,8 @@
     "litre": "[TO_TRANSLATE] litre",
     "kg": "[TO_TRANSLATE] kg",
     "kgCO2e/kg": "[TO_TRANSLATE] kgCO2e/kg",
-    "repas/an": "[TO_TRANSLATE] repas/an",
-    "kgCO2e/repas": "[TO_TRANSLATE] kgCO2e/repas",
     "repas": "[TO_TRANSLATE] repas",
+    "kgCO2e/repas": "[TO_TRANSLATE] kgCO2e/repas",
     "t/km": "[TO_TRANSLATE] t.km",
     "bouteille": "[TO_TRANSLATE] bouteille",
     "kgCO2e/bouteille": "[TO_TRANSLATE] kgCO2e/bouteille",

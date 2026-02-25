@@ -30,7 +30,7 @@ immobilisations . construction:
           valeur: 50
           note: Amortissement annuel sous-entendu.
         surface:
-          question: "Quelle surface de bâtiment scolaire (structure béton) avez-vous construite ?"
+          question: "Quelle surface de bâtiment scolaire (structure béton) comporte votre enceinte scolaire ?"
           unité: m2
         FE:
           question: "Facteur d'émission par m² de bâtiment scolaire (structure béton)"
@@ -48,7 +48,7 @@ immobilisations . construction:
       par défaut: 0
       avec:
         surface:
-          question: "Quelle surface de parking (bâtiment - structure béton) avez-vous construite ?"
+          question: "Quelle surface de parking (bâtiment - structure béton) comporte votre enceinte scolaire ?"
           unité: m2
         FE:
           question: "Facteur d'émission par m² de parking (bâtiment - structure béton)"
@@ -66,7 +66,7 @@ immobilisations . construction:
       par défaut: 0
       avec:
         surface:
-          question: "Quelle surface de parking (surface bitume) avez-vous construite ?"
+          question: "Quelle surface de parking (surface bitume) comporte votre enceinte scolaire ?"
           unité: m2
         FE:
           question: "Facteur d'émission par m² de parking (surface bitume)"
@@ -84,7 +84,7 @@ immobilisations . construction:
       par défaut: 0
       avec:
         surface:
-          question: "Quelle surface de parking (surface semi-dure) avez-vous construite ?"
+          question: "Quelle surface de parking (surface semi-dure) comporte votre enceinte scolaire ?"
           unité: m2
         FE:
           question: "Facteur d'émission par m² de parking (surface semi-dure)"
@@ -102,7 +102,7 @@ immobilisations . construction:
       par défaut: 0
       avec:
         surface:
-          question: "Quelle surface de garage (structure béton) avez-vous construite ?"
+          question: "Quelle surface de garage (structure béton) comporte votre enceinte scolaire ?"
           unité: m2
         FE:
           question: "Facteur d'émission par m² de garage (structure béton)"
@@ -120,7 +120,7 @@ immobilisations . construction:
       par défaut: 0
       avec:
         surface:
-          question: "Quelle surface de garage (structure métal) avez-vous construite ?"
+          question: "Quelle surface de garage (structure métal) comporte votre enceinte scolaire ?"
           unité: m2
         FE:
           question: "Facteur d'émission par m² de garage (structure métal)"

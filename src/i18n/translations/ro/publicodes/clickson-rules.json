@@ -456,7 +456,7 @@
       "construction": {
         "bâtiment scolaire structure béton": {
           "surface": {
-            "question": "[TO_TRANSLATE] Quelle surface de bâtiment scolaire (structure béton) avez-vous construite ?"
+            "question": "[UPDATED] Quelle surface de bâtiment scolaire (structure béton) comporte votre enceinte scolaire ?"
           },
           "FE": {
             "question": "[TO_TRANSLATE] Facteur d'émission par m² de bâtiment scolaire (structure béton)"
@@ -464,7 +464,7 @@
         },
         "parking bâtiment structure béton": {
           "surface": {
-            "question": "[TO_TRANSLATE] Quelle surface de parking (bâtiment - structure béton) avez-vous construite ?"
+            "question": "[UPDATED] Quelle surface de parking (bâtiment - structure béton) comporte votre enceinte scolaire ?"
           },
           "FE": {
             "question": "[TO_TRANSLATE] Facteur d'émission par m² de parking (bâtiment - structure béton)"
@@ -472,7 +472,7 @@
         },
         "parking surface bitume": {
           "surface": {
-            "question": "[TO_TRANSLATE] Quelle surface de parking (surface bitume) avez-vous construite ?"
+            "question": "[UPDATED] Quelle surface de parking (surface bitume) comporte votre enceinte scolaire ?"
           },
           "FE": {
             "question": "[TO_TRANSLATE] Facteur d'émission par m² de parking (surface bitume)"
@@ -480,7 +480,7 @@
         },
         "parking surface semi-dure": {
           "surface": {
-            "question": "[TO_TRANSLATE] Quelle surface de parking (surface semi-dure) avez-vous construite ?"
+            "question": "[UPDATED] Quelle surface de parking (surface semi-dure) comporte votre enceinte scolaire ?"
           },
           "FE": {
             "question": "[TO_TRANSLATE] Facteur d'émission par m² de parking (surface semi-dure)"
@@ -488,7 +488,7 @@
         },
         "garage structure béton": {
           "surface": {
-            "question": "[TO_TRANSLATE] Quelle surface de garage (structure béton) avez-vous construite ?"
+            "question": "[UPDATED] Quelle surface de garage (structure béton) comporte votre enceinte scolaire ?"
           },
           "FE": {
             "question": "[TO_TRANSLATE] Facteur d'émission par m² de garage (structure béton)"
@@ -496,7 +496,7 @@
         },
         "garage structure métal": {
           "surface": {
-            "question": "[TO_TRANSLATE] Quelle surface de garage (structure métal) avez-vous construite ?"
+            "question": "[UPDATED] Quelle surface de garage (structure métal) comporte votre enceinte scolaire ?"
           },
           "FE": {
             "question": "[TO_TRANSLATE] Facteur d'émission par m² de garage (structure métal)"
@@ -1063,19 +1063,18 @@
     "année": "[TO_TRANSLATE] année",
     "pays": "[TO_TRANSLATE] pays",
     "kWh": "[TO_TRANSLATE] kWh",
-    "litre": "litru",
+    "litre": "[UPDATED] litre",
     "kg": "[TO_TRANSLATE] kg",
     "kgCO2e/kg": "[TO_TRANSLATE] kgCO2e/kg",
-    "repas/an": "[TO_TRANSLATE] repas/an",
-    "kgCO2e/repas": "kgCO2e/masă",
-    "repas": "masă",
+    "repas": "[UPDATED] repas",
+    "kgCO2e/repas": "[UPDATED] kgCO2e/repas",
     "t/km": "[TO_TRANSLATE] t.km",
     "bouteille": "[TO_TRANSLATE] bouteille",
     "kgCO2e/bouteille": "[TO_TRANSLATE] kgCO2e/bouteille",
     "canette": "[TO_TRANSLATE] canette",
     "kgCO2e/canette": "[TO_TRANSLATE] kgCO2e/canette",
-    "paquet": "porție",
-    "kgCO2e/paquet": "kgCO2e/porție",
+    "paquet": "[UPDATED] paquet",
+    "kgCO2e/paquet": "[UPDATED] kgCO2e/paquet",
     "tasse": "[TO_TRANSLATE] tasse",
     "kgCO2e/tasse": "[TO_TRANSLATE] kgCO2e/tasse",
     "sandwich": "[TO_TRANSLATE] sandwich",
@@ -1085,8 +1084,8 @@
     "m2": "[TO_TRANSLATE] m2",
     "kgCO2e/m2": "[TO_TRANSLATE] kgCO2e/m2",
     "kgCO2e": "[TO_TRANSLATE] kgCO2e",
-    "unité": "unitate",
-    "kgCO2e/unité": "kgCO2e/unitate",
+    "unité": "[UPDATED] unité",
+    "kgCO2e/unité": "[UPDATED] kgCO2e/unité",
     "km": "[TO_TRANSLATE] km",
     "€": "[TO_TRANSLATE] €",
     "kgCO2e/€": "[TO_TRANSLATE] kgCO2e/€"
