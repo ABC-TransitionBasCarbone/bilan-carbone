@@ -7,3 +7,4 @@ immobilisations:
       - équipements informatique audiovisuel
       - équipements divers
   unité: kgCO2e
+  par défaut: 0

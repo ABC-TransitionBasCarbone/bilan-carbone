@@ -7,11 +7,13 @@ restauration . déchets organiques:
       - biodéchets incinérés
       - biodéchets enfouis
   unité: kgCO2e
+  par défaut: 0
   avec:
     biodéchets compostés:
       titre: Biodéchets compostés
       formule: quantité * FE
       unité: kgCO2e
+      par défaut: 0
       avec:
         quantité:
           question: Quantité de biodéchets compostés
@@ -20,6 +22,7 @@ restauration . déchets organiques:
         FE:
           valeur: 0.02
           unité: kgCO2e/kg
+          par défaut: 0
           meta:
             incertitude: 10
 
@@ -27,6 +30,7 @@ restauration . déchets organiques:
       titre: Biodéchets méthanisés
       formule: quantité * FE
       unité: kgCO2e
+      par défaut: 0
       avec:
         quantité:
           question: Quantité de biodéchets méthanisés
@@ -35,6 +39,7 @@ restauration . déchets organiques:
         FE:
           valeur: 0.03
           unité: kgCO2e/kg
+          par défaut: 0
           meta:
             incertitude: 10
 
@@ -42,6 +47,7 @@ restauration . déchets organiques:
       titre: Biodéchets incinérés
       formule: quantité * FE
       unité: kgCO2e
+      par défaut: 0
       avec:
         quantité:
           question: Quantité de biodéchets incinérés
@@ -50,6 +56,7 @@ restauration . déchets organiques:
         FE:
           valeur: 0.15
           unité: kgCO2e/kg
+          par défaut: 0
           meta:
             incertitude: 15
 
@@ -57,6 +64,7 @@ restauration . déchets organiques:
       titre: Biodéchets enfouis
       formule: quantité * FE
       unité: kgCO2e
+      par défaut: 0
       avec:
         quantité:
           question: Quantité de biodéchets enfouis
@@ -65,5 +73,6 @@ restauration . déchets organiques:
         FE:
           valeur: 0.25
           unité: kgCO2e/kg
+          par défaut: 0
           meta:
             incertitude: 20

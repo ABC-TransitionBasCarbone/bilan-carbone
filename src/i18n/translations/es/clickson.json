@@ -1,11 +1,12 @@
 {
   "nav": {
-    "newStudyContributor": "Añadir un estudiante"
+    "newStudyContributor": "Añadir un estudiante",
+    "team": "Equipo Piloto"
   },
   "navigation": {
     "organizations": "Mis Huellas de Carbono",
-    "organization": "Equipo Piloto",
-    "information": "Mi Establecimiento",
+    "organization": "Mi Establecimiento",
+    "information": "Datos Generales",
     "team": "Equipo Piloto"
   },
   "home": {
@@ -23,7 +24,8 @@
         "message": "Encuentre aquí el establecimiento vinculado a su cuenta"
       }
     },
-    "title": "Calcular su huella de carbono simplificada le permitirá:",
+    "title": "¡Bienvenido al calculador PEBC / Clicks On Act!",
+    "subtitle": "Calcular su huella de carbono simplificada le permitirá:",
     "alert": {
       "info": "La calculadora Clickson le permite estimar el impacto climático de su actividad. Es ante todo una herramienta de concienciación. No es un enfoque de transición baja en carbono sino una huella de carbono simplificada — en el sentido de la <link>Guía de comunicación sobre contabilidad de carbono</link> — enfocada en las principales fuentes de emisión relacionadas con la actividad del establecimiento."
     },
@@ -34,9 +36,20 @@
     }
   },
   "team": {
+    "delete": "Eliminar administrador / colaborador",
     "table": {
-      "title": "Equipo Piloto"
+      "title": "Equipo Piloto",
+      "newUser": "Invitar a un administrador / colaborador",
+      "userDeletion": "Eliminar a un administrador / colaborador",
+      "userDeletionDescription": "¿Está seguro de que desea eliminar este administrador / colaborador? Ya no tendrán acceso a la cuenta de su organización, pero seguirán teniendo acceso a los estudios a los que fueron invitados por otras organizaciones."
     }
+  },
+  "newMember": {
+    "title": "Invitar a un administrador / colaborador",
+    "create": "Invitar al administrador / colaborador",
+    "Not authorized": "No se puede invitar a este administrador / colaborador. Por favor, póngase en contacto con el <link>soporte</link> para obtener más información.",
+    "validation": {},
+    "addedMember": "El administrador / colaborador ha sido añadido con éxito a su organización"
   },
   "study": {
     "create": "Añadir una Huella",
@@ -44,6 +57,7 @@
     "createFirstStudy": "Crear Mi Primera Huella",
     "createFirstSimplifiedStudy": "Crear",
     "firstSimplifiedStudyMessage": "¡Es hora de empezar! Te invitamos a crear tu primera huella de carbono simplificada.",
+    "firstStudyMessage": "¡Es hora de empezar! Te invitamos a crear tu primera huella de carbono simplificada.",
     "see": "Ver Mi Huella",
     "selectSite": "Antes de completar datos, seleccione un establecimiento",
     "lastStudyTitle": "Última Huella",
@@ -55,27 +69,34 @@
     },
     "validatedOnlyDescription": "Como estudiante, tengo acceso como colaborador a uno o más puestos de emisión.",
     "new": {
+      "title": "Información sobre mi huella de carbono",
+      "studyDates": "Período de mi estudio",
       "suggestion": {
         "name": "Ejemplo: huella de carbono Colegio Simone Veil"
       },
+      "create": "Crear mi huella de carbono",
       "inviteContributors": "Invitar a los mismos estudiantes",
       "glossary": {
         "validatorEmailDescription": "Como estudiante, tengo acceso como colaborador a uno o más puestos de emisión.",
-        "duplicationOptionsDescription": "Al duplicar un estudio, puede optar por invitar a los mismos miembros del equipo y estudiantes del estudio original al nuevo. Esto ayuda a mantener la continuidad de la colaboración."
+        "duplicationOptionsDescription": "Al duplicar un estudio, puede optar por invitar a los mismos miembros del equipo y estudiantes del estudio original al nuevo. Esto ayuda a mantener la continuidad de la colaboración.",
+        "studyDates": "Período de mi estudio",
+        "studyDatesDescription": "Es el período sobre el que se recopilarán los datos de actividad. Por defecto, es el año escolar en curso. Es posible modificar las fechas de inicio y fin."
       },
       "etp": "Número de personal (docentes y personal no docente)",
       "studentNumber": "Número de estudiantes",
       "superficy": "Área del establecimiento",
+      "superficyPlaceholder": "área construida únicamente, en m²",
       "goToDataEntry": "Ir a la entrada de datos",
       "country": "País del establecimiento"
-    },
-    "newContributor": {
-      "title": "Añadir un estudiante al estudio: {name}"
     },
     "role": {
       "Contributor": "Estudiante"
     },
     "rights": {
+      "newContributor": {
+        "title": "Añadir un estudiante al estudio: {name}",
+        "edit": "Validar"
+      },
       "contributorsTable": {
         "delete": "Eliminar el estudiante",
         "title": "Estudiantes",
@@ -86,7 +107,13 @@
         "role": {
           "description": "Aquí puede gestionar los estudiantes de su estudio. Tendrán acceso a ciertos puestos y subpuestos (que puede definir) y podrán completar cierta información para fuentes de emisión que ya ha creado en el estudio. Para más información sobre la interfaz del colaborador, consulte nuestras <link>Preguntas Frecuentes</link>."
         }
+      },
+      "versions": {
+        "list": "Fuente de los factores de emisión:"
       }
+    },
+    "perimeter": {
+      "studyDates": "Período de mi estudio"
     },
     "export": {
       "export": "Exportar mi huella"
@@ -133,6 +160,7 @@
     }
   },
   "emissionFactors": {
+    "underDevelopment": "Esta función está en desarrollo",
     "post": {
       "EnergiesClickson": "Energías",
       "Combustibles": "Combustibles",
@@ -154,9 +182,20 @@
       "Renovation": "Renovación",
       "EquipementsInformatiqueAudiovisuel": "Equipos informáticos / audiovisuales",
       "EquipementsDivers": "Equipos diversos (electrodomésticos, equipos profesionales...)"
+    },
+    "create": {
+      "glossary": {
+        "post": "",
+        "post_studyContributorDescription": "Asigne aquí los puestos y subpuestos a sus estudiantes"
+      }
     }
   },
+  "role": {
+    "ADMIN_description": "Un administrador posee todos los derechos en la cuenta del establecimiento así como en todas las huellas de carbono. Un administrador no puede cambiar de rol. En caso de cambio, deberá comunicar los identificadores a la nueva persona.",
+    "COLLABORATOR_description": "El colaborador es cualquier persona autorizada a ingresar datos de actividad para el establecimiento en uno o varios puestos de emisión pero no posee ningún derecho de modificación de la cuenta del establecimiento."
+  },
   "organization": {
+    "myOrganization": "Mi Establecimiento",
     "card": {
       "myOrganization": "Mi Establecimiento"
     },

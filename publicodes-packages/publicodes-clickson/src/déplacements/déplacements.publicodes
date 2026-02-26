@@ -6,3 +6,4 @@ déplacements:
       - transport du personnel
       - voyages scolaires
   unité: kgCO2e
+  par défaut: 0

@@ -54,7 +54,7 @@ export const computeResultsByPostFromEmissionSources = (
     ...getEmissionResults(emissionSource, environment),
   }))
 
-  const postInfos = Object.values(convertToBc ? BCPost : postValues).map((post: Post) => {
+  let postInfos = Object.values(convertToBc ? BCPost : postValues).map((post: Post) => {
     const subPosts = subPostsByPost[post]
       .filter((subPost) => filterWithDependencies(subPost, withDependencies))
       .map((subPost) => {
@@ -106,7 +106,7 @@ export const computeResultsByPostFromEmissionSources = (
   })
 
   if (hasCustomPostOrder(environment)) {
-    return sortByCustomOrder(postInfos, customPostOrder, (item) => item.post)
+    postInfos = sortByCustomOrder(postInfos, customPostOrder, (item) => item.post)
   } else {
     postInfos.sort((a, b) => a.label.localeCompare(b.label))
   }

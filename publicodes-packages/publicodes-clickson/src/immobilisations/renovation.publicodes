@@ -9,6 +9,7 @@ immobilisations . rénovation:
       - garage structure béton rénové
       - garage structure métal rénové
   unité: kgCO2e
+  par défaut: 0
   avec:
     bâtiment scolaire structure béton rénové:
       titre: "Bâtiment scolaire rénové (structure béton)"
@@ -23,6 +24,7 @@ immobilisations . rénovation:
         age:
           durée:
             unité: an
+            par défaut: 0
             depuis: général . année de rénovation
             jusqu'à: commun . année actuelle
           arrondi: oui
@@ -32,10 +34,12 @@ immobilisations . rénovation:
         surface:
           question: "Quelle surface de bâtiment scolaire (structure béton) avez-vous rénovée ?"
           unité: m2
+          par défaut: 0
         FE:
           question: "Facteur d'émission par m² de bâtiment scolaire rénové (structure béton)"
           valeur: 220
           unité: kgCO2e/m2
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -50,10 +54,12 @@ immobilisations . rénovation:
         surface:
           question: "Quelle surface de parking (bâtiment - structure béton) avez-vous rénovée ?"
           unité: m2
+          par défaut: 0
         FE:
           question: "Facteur d'émission par m² de parking rénové (bâtiment - structure béton)"
           valeur: 160
           unité: kgCO2e/m2
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -68,10 +74,12 @@ immobilisations . rénovation:
         surface:
           question: "Quelle surface de parking (surface bitume) avez-vous rénovée ?"
           unité: m2
+          par défaut: 0
         FE:
           question: "Facteur d'émission par m² de parking rénové (surface bitume)"
           valeur: 36
           unité: kgCO2e/m2
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -86,10 +94,12 @@ immobilisations . rénovation:
         surface:
           question: "Quelle surface de parking (surface semi-dure) avez-vous rénovée ?"
           unité: m2
+          par défaut: 0
         FE:
           question: "Facteur d'émission par m² de parking rénové (surface semi-dure)"
           valeur: 83
           unité: kgCO2e/m2
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -104,10 +114,12 @@ immobilisations . rénovation:
         surface:
           question: "Quelle surface de garage (structure béton) avez-vous rénovée ?"
           unité: m2
+          par défaut: 0
         FE:
           question: "Facteur d'émission par m² de garage rénové (structure béton)"
           valeur: 328
           unité: kgCO2e/m2
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -122,10 +134,12 @@ immobilisations . rénovation:
         surface:
           question: "Quelle surface de garage (structure métal) avez-vous rénovée ?"
           unité: m2
+          par défaut: 0
         FE:
           question: "Facteur d'émission par m² de garage rénové (structure métal)"
           valeur: 110
           unité: kgCO2e/m2
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:

@@ -8,7 +8,10 @@ import { AccountWithUser } from '@/db/account'
 import { getOrganizationVersionAccounts } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { displayingStudyRightModalForAddingContributors } from '@/services/permissions/environment'
+import {
+  displayingStudyRightModalForAddingContributors,
+  hasAccessToNamingInAddContributor,
+} from '@/services/permissions/environment'
 import { environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
 import { newStudyContributor } from '@/services/serverFunctions/study'
 import {
@@ -20,7 +23,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import NewStudyRightModal from './NewStudyRightModal'
 import { StudyContributorDeleteParams } from './StudyContributorsTable'
@@ -42,8 +45,14 @@ const NewStudyContributorForm = ({ study, accounts, defaultAccount, defaultSubPo
 
   const { environment } = useAppEnvironmentStore()
 
+  const schema = useMemo(
+    () =>
+      NewStudyContributorCommandValidation((environment && hasAccessToNamingInAddContributor(environment)) || false),
+    [environment],
+  )
+
   const form = useForm<NewStudyContributorCommand>({
-    resolver: zodResolver(NewStudyContributorCommandValidation),
+    resolver: zodResolver(schema),
     mode: 'onBlur',
     reValidateMode: 'onChange',
     defaultValues: {
@@ -97,11 +106,31 @@ const NewStudyContributorForm = ({ study, accounts, defaultAccount, defaultSubPo
 
   return (
     <Form onSubmit={form.handleSubmit(onSubmit)}>
+      {environment && hasAccessToNamingInAddContributor(environment) && (
+        <>
+          <FormTextField
+            data-testid="study-contributor-firstName"
+            control={form.control}
+            name="firstName"
+            label={`${t('firstName')} *`}
+            trim
+            disabled={!!defaultAccount}
+          />
+          <FormTextField
+            data-testid="study-contributor-lastName"
+            control={form.control}
+            name="lastName"
+            label={t('lastName')}
+            trim
+            disabled={!!defaultAccount}
+          />
+        </>
+      )}
       <FormTextField
         data-testid="study-contributor-email"
         control={form.control}
         name="email"
-        label={t('email')}
+        label={`${t('email')} *`}
         trim
         disabled={!!defaultAccount}
       />

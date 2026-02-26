@@ -71,9 +71,9 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<Clickso
     input('restauration . types de repas servis . moyen . nombre'),
     input('restauration . types de repas servis . végétarien . nombre'),
     input('restauration . types de repas servis . végétalien . nombre'),
-    input('restauration . types de repas servis . viande rouge . nombre'),
     input('restauration . types de repas servis . viande blanche . nombre'),
     input('restauration . types de repas servis . poisson . nombre'),
+    input('restauration . types de repas servis . viande rouge . nombre'),
   ],
   DistributeursAutomatiques: [
     input("restauration . distributeur automatiques . bouteille d'eau . nombre"),

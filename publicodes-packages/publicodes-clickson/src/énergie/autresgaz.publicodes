@@ -4,11 +4,13 @@
     somme:
       - gaz hfc spécifique
   unité: kgCO2e
+  par défaut: 0
   avec:
     gaz hfc spécifique:
       titre: Gaz HFC spécifique
       formule: consommation * PRG
       unité: kgCO2e
+      par défaut: 0
       avec:
         consommation:
           question: Consommation annuelle de ce gaz HFC
@@ -18,6 +20,7 @@
           question: Pouvoir de Réchauffement Global (PRG) du gaz HFC
           valeur: 1430
           unité: kgCO2e/kg
+          par défaut: 0
           note: |
             À adapter selon le type de HFC (ex : HFC-134a = 1430, HFC-23 = 14800, etc.)
           meta:

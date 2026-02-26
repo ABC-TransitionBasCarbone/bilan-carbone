@@ -8,6 +8,7 @@ achats . fournitures:
       - piles aaa
       - piles aa
   unité: kgCO2e
+  par défaut: 0
   avec:
     petites fournitures:
       titre: "Petites fournitures (stylos...)"
@@ -23,6 +24,7 @@ achats . fournitures:
           question: "Facteur d'émission par euro de petites fournitures"
           valeur: 0.367
           unité: kgCO2e/€
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -42,6 +44,7 @@ achats . fournitures:
           question: "Facteur d'émission par livre"
           valeur: 1.1
           unité: kgCO2e/unité
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -61,6 +64,7 @@ achats . fournitures:
           question: "Facteur d'émission par ramette de papier"
           valeur: 2.29
           unité: kgCO2e/unité
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -80,6 +84,7 @@ achats . fournitures:
           question: "Facteur d'émission par euro de consommables"
           valeur: 0.917
           unité: kgCO2e/€
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -99,6 +104,7 @@ achats . fournitures:
           question: "Facteur d'émission par pile AAA"
           valeur: 0.065
           unité: kgCO2e/unité
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -118,6 +124,7 @@ achats . fournitures:
           question: "Facteur d'émission par pile AA"
           valeur: 0.137
           unité: kgCO2e/unité
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:

@@ -22,6 +22,7 @@ const computeResultsForAllSitesFromSituations = (
   situations: Record<string, Situation<string>>,
   config: SimplifiedPublicodesConfig,
   tPost: (key: string) => string,
+  environment: Environment,
 ): BaseResultsBySite => {
   const bySite = Object.entries(situations).reduce(
     (bySite, [siteId, situation]) => {
@@ -34,6 +35,7 @@ const computeResultsForAllSitesFromSituations = (
         tPost,
         config.getPostRuleName,
         config.getSubPostRuleName,
+        environment,
       )
 
       return bySite
@@ -106,7 +108,7 @@ export function usePublicodesResults(
     if (!config || Object.keys(situationBySiteId).length === 0) {
       return { aggregated: [], bySite: {} }
     }
-    return computeResultsForAllSitesFromSituations(situationBySiteId, config, tPost)
+    return computeResultsForAllSitesFromSituations(situationBySiteId, config, tPost, environment)
   }, [config, situationBySiteId, tPost])
 
   return { ...results, isLoading, error }

@@ -5,7 +5,7 @@ import { Select } from '@/components/base/Select'
 import { environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
 import { SubPostsCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
-import { getPost } from '@/utils/post'
+import { getPost, getSortedPosts } from '@/utils/post'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Box, FormControl, FormHelperText, MenuItem, SelectChangeEvent } from '@mui/material'
 import { Environment, SubPost } from '@prisma/client'
@@ -62,13 +62,10 @@ const Posts = <T extends SubPostsCommand>({
 
   const setValue = form.setValue as UseFormSetValue<SubPostsCommand>
 
-  const sortedPosts = useMemo(
-    () =>
-      Object.values(environmentPostMapping[environment || Environment.BC]).sort((a, b) =>
-        tPost(a).localeCompare(tPost(b)),
-      ),
-    [environment, tPost],
-  )
+  const sortedPosts: Post[] = useMemo(() => {
+    const posts = Object.values(environmentPostMapping[environment || Environment.BC])
+    return getSortedPosts(posts, tPost, environment)
+  }, [environment, tPost])
 
   // For regular posts, show sub-posts for that specific post
   // For "All Posts", show all sub-posts grouped by their parent posts

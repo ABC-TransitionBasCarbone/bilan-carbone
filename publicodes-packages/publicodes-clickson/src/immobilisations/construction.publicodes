@@ -9,6 +9,7 @@ immobilisations . construction:
       - garage structure béton
       - garage structure métal
   unité: kgCO2e
+  par défaut: 0
   avec:
     bâtiment scolaire structure béton:
       titre: "Bâtiment scolaire (structure béton)"
@@ -23,6 +24,7 @@ immobilisations . construction:
         age:
           durée:
             unité: an
+            par défaut: 0
             depuis: général . année de construction
             jusqu'à: commun . année actuelle
           arrondi: oui
@@ -30,12 +32,14 @@ immobilisations . construction:
           valeur: 50
           note: Amortissement annuel sous-entendu.
         surface:
-          question: "Quelle surface de bâtiment scolaire (structure béton) avez-vous construite ?"
+          question: "Quelle surface de bâtiment scolaire (structure béton) comporte votre enceinte scolaire ?"
           unité: m2
+          par défaut: 0
         FE:
           question: "Facteur d'émission par m² de bâtiment scolaire (structure béton)"
           valeur: 440
           unité: kgCO2e/m2
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -48,12 +52,14 @@ immobilisations . construction:
       par défaut: 0
       avec:
         surface:
-          question: "Quelle surface de parking (bâtiment - structure béton) avez-vous construite ?"
+          question: "Quelle surface de parking (bâtiment - structure béton) comporte votre enceinte scolaire ?"
           unité: m2
+          par défaut: 0
         FE:
           question: "Facteur d'émission par m² de parking (bâtiment - structure béton)"
           valeur: 319
           unité: kgCO2e/m2
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -66,12 +72,14 @@ immobilisations . construction:
       par défaut: 0
       avec:
         surface:
-          question: "Quelle surface de parking (surface bitume) avez-vous construite ?"
+          question: "Quelle surface de parking (surface bitume) comporte votre enceinte scolaire ?"
           unité: m2
+          par défaut: 0
         FE:
           question: "Facteur d'émission par m² de parking (surface bitume)"
           valeur: 73
           unité: kgCO2e/m2
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -84,12 +92,14 @@ immobilisations . construction:
       par défaut: 0
       avec:
         surface:
-          question: "Quelle surface de parking (surface semi-dure) avez-vous construite ?"
+          question: "Quelle surface de parking (surface semi-dure) comporte votre enceinte scolaire ?"
           unité: m2
+          par défaut: 0
         FE:
           question: "Facteur d'émission par m² de parking (surface semi-dure)"
           valeur: 165
           unité: kgCO2e/m2
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -102,12 +112,14 @@ immobilisations . construction:
       par défaut: 0
       avec:
         surface:
-          question: "Quelle surface de garage (structure béton) avez-vous construite ?"
+          question: "Quelle surface de garage (structure béton) comporte votre enceinte scolaire ?"
           unité: m2
+          par défaut: 0
         FE:
           question: "Facteur d'émission par m² de garage (structure béton)"
           valeur: 656
           unité: kgCO2e/m2
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -120,12 +132,14 @@ immobilisations . construction:
       par défaut: 0
       avec:
         surface:
-          question: "Quelle surface de garage (structure métal) avez-vous construite ?"
+          question: "Quelle surface de garage (structure métal) comporte votre enceinte scolaire ?"
           unité: m2
+          par défaut: 0
         FE:
           question: "Facteur d'émission par m² de garage (structure métal)"
           valeur: 220
           unité: kgCO2e/m2
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:

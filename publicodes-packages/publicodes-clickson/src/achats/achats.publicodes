@@ -8,3 +8,4 @@ achats:
       - déchets recyclables
       - ordures ménagères résiduelles
   unité: kgCO2e
+  par défaut: 0

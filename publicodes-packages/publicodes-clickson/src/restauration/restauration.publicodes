@@ -7,3 +7,4 @@ restauration:
       - fret
       - déchets organiques
   unité: kgCO2e
+  par défaut: 0
