@@ -1,5 +1,6 @@
 import { getOrganizationVersionAccounts } from '@/db/organization'
 import { FullStudy } from '@/db/study'
+import { Typography } from '@mui/material'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
@@ -11,6 +12,7 @@ interface Props {
 
 const NewStudyContributorPage = async ({ study }: Props) => {
   const tNav = await getTranslations('nav')
+  const tCommon = await getTranslations('common')
   const t = await getTranslations('study.rights.newContributor')
   const accounts = await getOrganizationVersionAccounts(study.organizationVersionId)
 
@@ -31,6 +33,9 @@ const NewStudyContributorPage = async ({ study }: Props) => {
         ].filter((link) => link !== undefined)}
       />
       <Block title={t('title', { name: study.name })} as="h1">
+        <Typography variant="body2" className="mb2">
+          {tCommon('mandatory')}
+        </Typography>
         <NewStudyContributorForm study={study} accounts={accounts} />
       </Block>
     </>

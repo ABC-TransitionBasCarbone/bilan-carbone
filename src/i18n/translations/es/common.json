@@ -16,6 +16,7 @@
     "posts": "Posts",
     "selectedPlural": "seleccionados",
     "moreInfo": "Más información",
+    "mandatory": "* obligatorio",
     "action": {
       "create": "Crear",
       "edit": "Editar",
