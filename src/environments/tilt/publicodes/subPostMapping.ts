@@ -330,6 +330,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('déplacements . bénéficiaires . avion'),
   ],
   DeplacementsDomicileTravailSalaries: [
+    input('général . salariés'),
     input('déplacements . DT-salariés . MEP présent'),
     input('déplacements . DT-salariés . MEP présent . nombre bénévoles'),
     input('déplacements . DT-salariés . MEP présent . nombre salariés'),
@@ -341,6 +342,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('déplacements . DT-salariés . sans . deux roues . distance'),
   ],
   DeplacementsDomicileTravailBenevoles: [
+    input('général . bénévoles'),
     input('déplacements . DT-bénévoles . avec . distance'),
     input('déplacements . DT-bénévoles . avec . réponse MEP'),
     input('déplacements . DT-bénévoles . sans . voiture . distance'),
