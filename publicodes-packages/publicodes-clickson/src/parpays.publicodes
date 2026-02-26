@@ -3,7 +3,7 @@ commun . FE . électricité . par pays:
 
 commun . FE . électricité . par pays . FRANCE:
   titre: FRANCE
-  valeur: 0.058
+  valeur: 0.0647
   unité: kgCO2e/kWh
   par défaut: 0
 
@@ -30,7 +30,7 @@ commun . FE . réseau de chaleur . par pays:
 
 commun . FE . réseau de chaleur . par pays . FRANCE:
   titre: FRANCE
-  valeur: 0.113
+  valeur: 0.132
   unité: kgCO2e/kWh
   par défaut: 0
 

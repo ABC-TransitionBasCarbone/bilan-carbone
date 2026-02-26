@@ -2,36 +2,59 @@ immobilisations . équipements divers:
   titre: "Équipements divers"
   formule:
     somme:
-      - chaise de bureau
-      - table de réunion
-      - armoire de rangement
+      - chaise bois
+      - chaise plastique
+      - table standard
+      - armoire standard
       - fauteuil d'accueil
       - étagère
   unité: kgCO2e
   par défaut: 0
   avec:
-    chaise de bureau:
-      titre: "Chaise de bureau"
+    chaise bois:
+      titre: "Chaise (bois)"
       formule: nombre * FE
       unité: kgCO2e
       par défaut: 0
       avec:
         nombre:
-          question: "Combien de chaises de bureau avez-vous achetées ?"
+          question: "Combien de chaises (bois) avez-vous achetées ?"
           unité: unité
           par défaut: 0
         FE:
-          question: "Facteur d'émission par chaise de bureau"
-          valeur: 35
+          question: "Facteur d'émission par chaise (bois)"
+          valeur: 18.6
           unité: kgCO2e/unité
           par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
+            id: 26958
             incertitude: 10
 
-    table de réunion:
-      titre: "Table de réunion"
+    chaise plastique:
+      titre: "Chaise (plastique)"
+      formule: nombre * FE
+      unité: kgCO2e
+      par défaut: 0
+      avec:
+        nombre:
+          question: "Combien de chaises (plastique) avez-vous achetées ?"
+          unité: unité
+          par défaut: 0
+        FE:
+          question: "Facteur d'émission par chaise (plastique)"
+          valeur: 34.4
+          unité: kgCO2e/unité
+          par défaut: 0
+          note: |
+            Source: Base Carbone®
+          meta:
+            id: 26959
+            incertitude: 10
+
+    table standard:
+      titre: "Table (standard)"
       formule: nombre * FE
       unité: kgCO2e
       par défaut: 0
@@ -41,33 +64,35 @@ immobilisations . équipements divers:
           unité: unité
           par défaut: 0
         FE:
-          question: "Facteur d'émission par table de réunion"
-          valeur: 90
+          question: "Facteur d'émission par table (standard)"
+          valeur: 60.1
           unité: kgCO2e/unité
           par défaut: 0
           note: |
             Source: Base Carbone® (exemple)
           meta:
+            id: 26962
             incertitude: 15
 
-    armoire de rangement:
-      titre: "Armoire de rangement"
+    armoire standard:
+      titre: "Armoire (standard)"
       formule: nombre * FE
       unité: kgCO2e
       par défaut: 0
       avec:
         nombre:
-          question: "Combien d'armoires de rangement avez-vous achetées ?"
+          question: "Combien d'armoires (standard) avez-vous achetées ?"
           unité: unité
           par défaut: 0
         FE:
-          question: "Facteur d'émission par armoire de rangement"
-          valeur: 120
+          question: "Facteur d'émission par armoire (standard)"
+          valeur: 907
           unité: kgCO2e/unité
           par défaut: 0
           note: |
             Source: Base Carbone® (exemple)
           meta:
+            id: 26963
             incertitude: 20
 
     fauteuil d'accueil:

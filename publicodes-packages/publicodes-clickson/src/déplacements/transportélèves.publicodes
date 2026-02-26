@@ -28,7 +28,7 @@ déplacements . transport des élèves:
         à traduire: oui
       avec:
         distance:
-          question: Distance (km)
+          question: Passagers (par km)
           unité: km
           par défaut: 0
 
@@ -116,7 +116,7 @@ déplacements . transport des élèves:
         à traduire: oui
       avec:
         distance:
-          question: Distance (km)
+          question: Passagers (par km)
           unité: km
           par défaut: 0
 
@@ -127,7 +127,7 @@ déplacements . transport des élèves:
         à traduire: oui
       avec:
         distance:
-          question: Distance (km)
+          question: Passagers (par km)
           unité: km
           par défaut: 0
 
@@ -138,7 +138,7 @@ déplacements . transport des élèves:
         à traduire: oui
       avec:
         distance:
-          question: Distance (km)
+          question: Passagers (par km)
           unité: km
           par défaut: 0
 
@@ -149,7 +149,7 @@ déplacements . transport des élèves:
         à traduire: oui
       avec:
         distance:
-          question: Distance (km)
+          question: Passagers (par km)
           unité: km
           par défaut: 0
 
@@ -160,7 +160,7 @@ déplacements . transport des élèves:
         à traduire: oui
       avec:
         distance:
-          question: Distance (km)
+          question: Passagers (par km)
           unité: km
           par défaut: 0
 
@@ -171,6 +171,6 @@ déplacements . transport des élèves:
         à traduire: oui
       avec:
         distance:
-          question: Distance (km)
+          question: Passagers (par km)
           unité: km
           par défaut: 0

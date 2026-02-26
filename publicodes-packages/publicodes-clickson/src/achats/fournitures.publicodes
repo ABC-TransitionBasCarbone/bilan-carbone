@@ -28,6 +28,7 @@ achats . fournitures:
           note: |
             Source: Base Carbone®
           meta:
+            id: 20556
             incertitude: 3
 
     livres:
@@ -48,6 +49,7 @@ achats . fournitures:
           note: |
             Source: Base Carbone®
           meta:
+            id: 20587
             incertitude: 4
 
     papier ramette:
@@ -68,6 +70,7 @@ achats . fournitures:
           note: |
             Source: Base Carbone®
           meta:
+            id: 24295
             incertitude: 2
 
     consommables:
@@ -88,6 +91,7 @@ achats . fournitures:
           note: |
             Source: Base Carbone®
           meta:
+            id: 20557
             incertitude: 1
 
     piles aaa:
@@ -108,6 +112,7 @@ achats . fournitures:
           note: |
             Source: Base Carbone®
           meta:
+            id: 24248
             incertitude: 4
 
     piles aa:
@@ -128,4 +133,5 @@ achats . fournitures:
           note: |
             Source: Base Carbone®
           meta:
+            id: 24247
             incertitude: 4

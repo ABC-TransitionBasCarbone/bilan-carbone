@@ -39,6 +39,7 @@ immobilisations . équipements informatique audiovisuel:
           note: |
             Source: Base Carbone®
           meta:
+            id: 27003
             incertitude: 4
 
     ordinateur portable:
@@ -61,6 +62,7 @@ immobilisations . équipements informatique audiovisuel:
           note: |
             Source: Base Carbone®
           meta:
+            id: 27002
             incertitude: 4
 
     tablette:
@@ -83,6 +85,7 @@ immobilisations . équipements informatique audiovisuel:
           note: |
             Source: Base Carbone®
           meta:
+            id: 27007
             incertitude: 4
 
     imprimante:
@@ -99,12 +102,13 @@ immobilisations . équipements informatique audiovisuel:
           par défaut: 0
         FE:
           question: "Facteur d'émission par imprimante"
-          valeur: 87.3
+          valeur: 87.9
           unité: kgCO2e/unité
           par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
+            id: 27027
             incertitude: 4
 
     photocopieur:
@@ -127,6 +131,7 @@ immobilisations . équipements informatique audiovisuel:
           note: |
             Source: Base Carbone®
           meta:
+            id: 20591
             incertitude: 4
 
     vidéoprojecteur:
@@ -149,6 +154,7 @@ immobilisations . équipements informatique audiovisuel:
           note: |
             Source: Base Carbone®
           meta:
+            id: 28313
             incertitude: 5
 
     serveur informatique:
@@ -171,6 +177,7 @@ immobilisations . équipements informatique audiovisuel:
           note: |
             Source: Base Carbone®
           meta:
+            id: 20894
             incertitude: 5
 
     télévision 40-49 pouces:
@@ -193,6 +200,7 @@ immobilisations . équipements informatique audiovisuel:
           note: |
             Source: Base Carbone®
           meta:
+            id: 27000
             incertitude: 4
 
     rack de serveur:
@@ -215,6 +223,7 @@ immobilisations . équipements informatique audiovisuel:
           note: |
             Source: Base Carbone®
           meta:
+            id: 20896
             incertitude: 2
 
     télécommande universelle sans piles 80g:
@@ -231,12 +240,13 @@ immobilisations . équipements informatique audiovisuel:
           par défaut: 0
         FE:
           question: "Facteur d'émission par télécommande universelle sans piles 80g"
-          valeur: 2.78
+          valeur: 2.79
           unité: kgCO2e/unité
           par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
+            id: 24246
             incertitude: 5
 
     stéréo classique:
@@ -259,6 +269,7 @@ immobilisations . équipements informatique audiovisuel:
           note: |
             Source: Base Carbone®
           meta:
+            id: 27016
             incertitude: 4
 
     enceinte Bluetooth:
@@ -281,6 +292,7 @@ immobilisations . équipements informatique audiovisuel:
           note: |
             Source: Base Carbone®
           meta:
+            id: 27017
             incertitude: 4
 
     smartphone 5 pouces:
@@ -304,6 +316,7 @@ immobilisations . équipements informatique audiovisuel:
           note: |
             Source: Base Carbone®
           meta:
+            id: 27013
             incertitude: 4
 
     écran 23,8 pouces:
@@ -326,4 +339,5 @@ immobilisations . équipements informatique audiovisuel:
           note: |
             Source: Base Carbone®
           meta:
+            id: 27006
             incertitude: 4

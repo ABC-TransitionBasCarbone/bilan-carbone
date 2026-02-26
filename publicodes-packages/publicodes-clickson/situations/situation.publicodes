@@ -61,9 +61,10 @@ template:
     immobilisations . équipements informatique audiovisuel . enceinte Bluetooth . nombre: 1
     immobilisations . équipements informatique audiovisuel . smartphone 5 pouces . nombre: 1
     immobilisations . équipements informatique audiovisuel . écran 23,8 pouces . nombre: 1
-    immobilisations . équipements divers . chaise de bureau . nombre: 5
-    immobilisations . équipements divers . table de réunion . nombre: 2
-    immobilisations . équipements divers . armoire de rangement . nombre: 1
+    immobilisations . équipements divers . chaise bois . nombre: 5
+    immobilisations . équipements divers . chaise plastique . nombre: 2
+    immobilisations . équipements divers . table standard . nombre: 2
+    immobilisations . équipements divers . armoire standard . nombre: 1
     immobilisations . équipements divers . fauteuil d'accueil . nombre: 1
     immobilisations . équipements divers . étagère . nombre: 1
 
@@ -127,7 +128,6 @@ template:
     achats . équipements de sport . shorts tous sports . nombre: 5
     achats . équipements de sport . maillots tous sports . nombre: 5
     achats . équipements de sport . t-shirt polyester . nombre: 5
-    achats . équipements de sport . ballon de rugby . nombre: 1
     achats . équipements de sport . ballon de basket . nombre: 1
     achats . équipements de sport . ballon de football . nombre: 1
     achats . déchets recyclables . papier . nombre: 10

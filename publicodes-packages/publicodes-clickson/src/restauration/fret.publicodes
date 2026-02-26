@@ -36,10 +36,11 @@ restauration . fret:
           par défaut: 0
           unité: t.km
         FE:
-          valeur: 0.01
+          valeur: 0.0226
           unité: kgCO2e/t.km
           par défaut: 0
           meta:
+            id: 28158
             incertitude: 15
 
     maritime:

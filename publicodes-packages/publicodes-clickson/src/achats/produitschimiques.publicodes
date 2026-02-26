@@ -166,12 +166,13 @@ achats . produits chimiques:
         consommation:
           question: Consommation annuelle de bicarbonate de soude
           par défaut: 0
-          unité: litre
+          unité: kg de poids net
         FE:
           valeur: 1.18
-          unité: kgCO2e/litre
+          unité: kgCO2e/kg de poids net
           par défaut: 0
           meta:
+            id: 44396
             incertitude: 5
 
     peinture revêtement mural intérieur:
@@ -234,12 +235,13 @@ achats . produits chimiques:
         consommation:
           question: Consommation annuelle de vinaigre blanc
           par défaut: 0
-          unité: litre
+          unité: kg de poids net
         FE:
-          valeur: 0.215
-          unité: kgCO2e/litre
+          valeur: 0.96
+          unité: kgCO2e/kg de poids net
           par défaut: 0
           meta:
+            id: 46691
             incertitude: 5
 
     soude solide:
@@ -251,12 +253,13 @@ achats . produits chimiques:
         consommation:
           question: Consommation annuelle de soude solide (poudre, granulés)
           par défaut: 0
-          unité: kg
+          unité: t
         FE:
           valeur: 458
-          unité: kgCO2e/kg
+          unité: kgCO2e/t
           par défaut: 0
           meta:
+            id: 20667
             incertitude: 5
 
     acide sulfurique:
@@ -268,12 +271,13 @@ achats . produits chimiques:
         consommation:
           question: Consommation annuelle d'acide sulfurique
           par défaut: 0
-          unité: litre
+          unité: t
         FE:
-          valeur: 2.2
-          unité: kgCO2e/litre
+          valeur: 148
+          unité: kgCO2e/t
           par défaut: 0
           meta:
+            id: 20850
             incertitude: 4
 
     acide chlorhydrique:
@@ -285,10 +289,11 @@ achats . produits chimiques:
         consommation:
           question: Consommation annuelle d'acide chlorhydrique
           par défaut: 0
-          unité: litre
+          unité: t
         FE:
-          valeur: 1.44
-          unité: kgCO2e/litre
+          valeur: 1199
+          unité: kgCO2e/t
           par défaut: 0
           meta:
+            id: 20851
             incertitude: 4
