@@ -1,6 +1,4 @@
 intrants-biens-et-matières:
-
-intrants-biens-et-matières . biens-et-matières ratio monétaire:
   titre: Intrants biens et matières
   formule:
     somme:
