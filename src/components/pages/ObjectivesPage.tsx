@@ -21,7 +21,7 @@ import HelpIcon from '../base/HelpIcon'
 import GlossaryModal from '../modals/GlossaryModal'
 import SelectStudySite from '../study/site/SelectStudySite'
 import ObjectiveFilters from '../study/trajectory/ObjectiveFilters'
-import TrajectoryObjectivesTable from '../study/trajectory/TrajectoryObjectivesTable'
+import ObjectivesTable from '../study/trajectory/ObjectivesTable'
 import TransitionPlanOnboarding from '../study/transitionPlan/TransitionPlanOnboarding'
 
 interface Props {
@@ -122,7 +122,7 @@ const ObjectivesPage = ({
               defaultSnbcSectoralPercentages={defaultSnbcSectoralPercentages}
             />
 
-            <TrajectoryObjectivesTable
+            <ObjectivesTable
               trajectories={trajectories}
               canEdit={canEdit}
               transitionPlanId={transitionPlanId}

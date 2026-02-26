@@ -87,7 +87,7 @@ const fuseOptions = {
   isCaseSensitive: false,
 }
 
-const TrajectoryObjectivesTable = ({
+const ObjectivesTable = ({
   trajectories,
   canEdit,
   transitionPlanId,
@@ -593,4 +593,4 @@ const TrajectoryObjectivesTable = ({
   )
 }
 
-export default TrajectoryObjectivesTable
+export default ObjectivesTable
