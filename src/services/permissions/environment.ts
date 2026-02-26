@@ -109,3 +109,5 @@ export const isTiltSimplifiedFeatureActive = async (environment: Environment) =>
 export const hasAccessToHomeSubtitle = isClickson
 
 export const hasAccessToNamingInAddContributor = isClickson
+
+export const hasHomeButtonHeader = isClickson

@@ -1,10 +1,8 @@
 'use client'
 
 import { Select } from '@/components/base/Select'
-import { customPostOrder } from '@/environments/clickson/utils/constant'
-import { hasCustomPostOrder } from '@/services/permissions/environment'
 import { environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
-import { sortByCustomOrder } from '@/utils/array'
+import { getSortedPosts } from '@/utils/post'
 import { Checkbox, ListItemText, ListSubheader, MenuItem, SelectChangeEvent } from '@mui/material'
 import { Environment, SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -38,14 +36,9 @@ const SubPostSelector = ({
   const tPost = useTranslations('emissionFactors.post')
 
   const sortedPosts: Post[] = useMemo(() => {
-    const posts = Object.values(environmentPostMapping[environment || Environment.BC]).sort((a, b) =>
-      tPost(a).localeCompare(tPost(b)),
-    )
+    const posts = Object.values(environmentPostMapping[environment || Environment.BC])
 
-    if (environment && hasCustomPostOrder(environment)) {
-      return sortByCustomOrder(posts, customPostOrder, (item) => item)
-    }
-    return posts
+    return getSortedPosts(posts, tPost, environment)
   }, [environment, tPost])
 
   const allSubPostsValues = isAllPosts

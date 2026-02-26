@@ -7,7 +7,7 @@ export const isTiltSimplified = (environment: Environment, simplified?: boolean 
   isTilt(environment) && simplified
 
 export const hasAccessToEmissionFactors = (environment: Environment, userLevel: Level | null) =>
-  ([BC, CLICKSON] as Environment[]).includes(environment) || (environment === TILT && !!userLevel)
+  ([BC] as Environment[]).includes(environment) || (environment === TILT && !!userLevel)
 
 export const hasAccessToStudies = (environment: Environment, userLevel: Level | null) =>
   ([BC, CUT, CLICKSON] as Environment[]).includes(environment) || (environment === TILT && !!userLevel)

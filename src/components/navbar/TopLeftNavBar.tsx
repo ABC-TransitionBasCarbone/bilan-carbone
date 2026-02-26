@@ -1,7 +1,7 @@
 import NavbarButton from '@/components/navbar/NavbarButton'
 import NavbarLink from '@/components/navbar/NavbarLink'
 import NavbarOrganizationMenu from '@/components/navbar/NavbarOrganizationMenu'
-import { hasAlwaysAccessToOrganizationVersion, isTilt } from '@/services/permissions/environment'
+import { hasAlwaysAccessToOrganizationVersion, hasHomeButtonHeader, isTilt } from '@/services/permissions/environment'
 import { hasAccessToEmissionFactors } from '@/services/permissions/environmentAdvanced'
 import { isAdmin } from '@/utils/user'
 import { Box, MenuItem } from '@mui/material'
@@ -28,12 +28,12 @@ const TopLeftNavBar = ({ user, hasFormation, isFootprintsEnabled }: Props) => {
     <>
       {user.organizationVersionId && (
         <Box>
-          <NavbarButton
-            href="/"
-            data-testid="button-menu-my-organization"
-            color="inherit"
-            onMouseEnter={handleClickMenu}
-          >
+          {hasHomeButtonHeader(user.environment) && (
+            <NavbarButton href="/" data-testid="button-menu-home" color="inherit">
+              {t('home')}
+            </NavbarButton>
+          )}
+          <NavbarButton data-testid="button-menu-my-organization" color="inherit" onMouseEnter={handleClickMenu}>
             {t('organization')}
           </NavbarButton>
           <NavbarOrganizationMenu
