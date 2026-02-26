@@ -13,6 +13,7 @@ export interface PublicodesFormProps<RuleName extends string> {
 
 export default function PublicodesForm<RuleName extends string>({ formLayouts }: PublicodesFormProps<RuleName>) {
   const { engine, situation, listLayoutSituations, updateField } = usePublicodesForm<RuleName>()
+
   const elementsWithRelation = useMemo(() => {
     // FIXME: should manage multiple questions linked to previous ones.
     return formLayouts.map((formLayout, index) => {
@@ -36,12 +37,9 @@ export default function PublicodesForm<RuleName extends string>({ formLayouts }:
       const isApplicable = evaluatedLayoutIsApplicable(evaluatedFormLayout)
       return { evaluatedFormLayout, isLinkedToPreviousQuestion, key, isApplicable }
     })
-  }, [
-    formLayouts,
-    engine,
     // NOTE: the situation needs to be a dependency to re-evaluate applicability when it changes
-    situation,
-  ])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formLayouts, engine, situation])
 
   return (
     <Box className="dynamic-form">

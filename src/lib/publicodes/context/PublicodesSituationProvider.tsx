@@ -84,7 +84,7 @@ export function PublicodesSituationProvider<RuleName extends string = string>({
     }
 
     loadInitialSituationFromDB()
-  }, [studyId, studySiteId])
+  }, [setSituation, studyId, studySiteId])
 
   const value = useMemo<PublicodesSituationContextValue<RuleName>>(
     () => ({

@@ -5,6 +5,7 @@ déplacements . DM-salariés:
       - avec
       - sans
   unité: kgCO2e
+  par defaut: 0
 
 ## Cette fonction permet de calculer les émissions totales des salariés à partir des émissions moyennes par mode de ceux qui ont répondu.
 
@@ -51,6 +52,7 @@ déplacements . DM-salariés . avec:
           type: nombre
           unité: kgCO2e
   unité: kgCO2e
+  par défaut: 0
 
 ## Ici on calcule les émissions dans le cas ou il n'y pas eu de campagne MEP
 

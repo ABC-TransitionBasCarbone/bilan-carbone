@@ -6,6 +6,7 @@ import SimplifiedStudyPostsPage from '@/environments/simplified/study/Simplified
 import { customRich } from '@/i18n/customRich'
 import { Post, subPostsByPost } from '@/services/posts'
 import { SimplifiedEnvironment } from '@/services/publicodes/simplifiedPublicodesConfig'
+import { CircularProgress } from '@mui/material'
 import { StudyRole, SubPost } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -62,6 +63,10 @@ const StudyPostsPageContainer = ({ post, currentSubPost, study, userRole, user }
       ),
     })
   }, [glossary, study.organizationVersion.environment, tPost])
+
+  if (!studySite) {
+    return <CircularProgress />
+  }
 
   return (
     <>

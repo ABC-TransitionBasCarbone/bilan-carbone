@@ -41,7 +41,6 @@ export async function upsertSituation(
   listLayoutSituations: InputJsonValue,
   modelVersion: string,
 ): Promise<SituationSchema> {
-  console.log('Upserting situation for studySiteId:', { studySiteId, situation, listLayoutSituations })
   return await prismaClient.situation.upsert({
     where: { studySiteId },
     create: {
