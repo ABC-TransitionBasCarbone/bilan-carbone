@@ -9,11 +9,13 @@ restauration . types de repas servis:
       - viande blanche
       - poisson
   unité: kgCO2e
+  par défaut: 0
   avec:
     moyen:
       titre: Repas - Moyen
       formule: nombre * FE * 1 an
       unité: kgCO2e
+      par défaut: 0
       avec:
         nombre:
           question: Nombre de repas moyens annuels
@@ -23,6 +25,7 @@ restauration . types de repas servis:
           question: Facteur d'émission par repas moyen
           valeur: 2.04
           unité: kgCO2e/repas
+          par défaut: 0
           note: |
             Source: Base Carbone®
 
@@ -30,6 +33,7 @@ restauration . types de repas servis:
       titre: Repas - Végétarien
       formule: nombre * FE
       unité: kgCO2e
+      par défaut: 0
       avec:
         nombre:
           question: Nombre de repas végétariens annuels
@@ -39,6 +43,7 @@ restauration . types de repas servis:
           question: Facteur d'émission par repas végétarien
           valeur: 0.51
           unité: kgCO2e/repas
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -48,6 +53,7 @@ restauration . types de repas servis:
       titre: Repas - Végétalien
       formule: nombre * FE
       unité: kgCO2e
+      par défaut: 0
       avec:
         nombre:
           question: Nombre de repas végétaliens annuels
@@ -57,6 +63,7 @@ restauration . types de repas servis:
           question: Facteur d'émission par repas végétalien
           valeur: 0.39
           unité: kgCO2e/repas
+          par défaut: 0
           note: |
             Source: Base Carbone®
 
@@ -64,6 +71,7 @@ restauration . types de repas servis:
       titre: Repas - Viande rouge
       formule: nombre * FE
       unité: kgCO2e
+      par défaut: 0
       avec:
         nombre:
           question: Nombre de repas à base de viande rouge annuels
@@ -73,6 +81,7 @@ restauration . types de repas servis:
           question: Facteur d'émission par repas à base de viande rouge
           valeur: 7.26
           unité: kgCO2e/repas
+          par défaut: 0
           note: |
             Source: Base Carbone®
 
@@ -80,6 +89,7 @@ restauration . types de repas servis:
       titre: Repas - Viande blanche
       formule: nombre * FE
       unité: kgCO2e
+      par défaut: 0
       avec:
         nombre:
           question: Nombre de repas à base de viande blanche annuels
@@ -89,6 +99,7 @@ restauration . types de repas servis:
           question: Facteur d'émission par repas à base de viande blanche
           valeur: 1.58
           unité: kgCO2e/repas
+          par défaut: 0
           note: |
             Source: Base Carbone®
 
@@ -96,6 +107,7 @@ restauration . types de repas servis:
       titre: Repas - Poisson
       formule: nombre * FE
       unité: kgCO2e
+      par défaut: 0
       avec:
         nombre:
           question: Nombre de repas à base de poisson blanc annuels
@@ -105,5 +117,6 @@ restauration . types de repas servis:
           question: Facteur d'émission par repas à base de poisson blanc
           valeur: 1.98
           unité: kgCO2e/repas
+          par défaut: 0
           note: |
             Source: Base Carbone®

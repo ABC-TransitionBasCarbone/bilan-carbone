@@ -17,11 +17,13 @@ immobilisations . équipements informatique audiovisuel:
       - smartphone 5 pouces
       - écran 23,8 pouces
   unité: kgCO2e
+  par défaut: 0
   avec:
     ordinateur de bureau:
       titre: "Ordinateur de bureau"
       formule: nombre * FE
       unité: kgCO2e
+      par défaut: 0
       form:
         à traduire: oui
       avec:
@@ -33,6 +35,7 @@ immobilisations . équipements informatique audiovisuel:
           question: "Facteur d'émission par ordinateur de bureau"
           valeur: 169
           unité: kgCO2e/unité
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -42,6 +45,7 @@ immobilisations . équipements informatique audiovisuel:
       titre: "Ordinateur portable"
       formule: nombre * FE
       unité: kgCO2e
+      par défaut: 0
       form:
         à traduire: oui
       avec:
@@ -53,6 +57,7 @@ immobilisations . équipements informatique audiovisuel:
           question: "Facteur d'émission par ordinateur portable"
           valeur: 156
           unité: kgCO2e/unité
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -62,6 +67,7 @@ immobilisations . équipements informatique audiovisuel:
       titre: "Tablette"
       formule: nombre * FE
       unité: kgCO2e
+      par défaut: 0
       form:
         à traduire: oui
       avec:
@@ -73,6 +79,7 @@ immobilisations . équipements informatique audiovisuel:
           question: "Facteur d'émission par tablette"
           valeur: 63.2
           unité: kgCO2e/unité
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -82,6 +89,7 @@ immobilisations . équipements informatique audiovisuel:
       titre: "Imprimante"
       formule: nombre * FE
       unité: kgCO2e
+      par défaut: 0
       form:
         à traduire: oui
       avec:
@@ -93,6 +101,7 @@ immobilisations . équipements informatique audiovisuel:
           question: "Facteur d'émission par imprimante"
           valeur: 87.3
           unité: kgCO2e/unité
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -102,6 +111,7 @@ immobilisations . équipements informatique audiovisuel:
       titre: "Photocopieur"
       formule: nombre * FE
       unité: kgCO2e
+      par défaut: 0
       form:
         à traduire: oui
       avec:
@@ -113,6 +123,7 @@ immobilisations . équipements informatique audiovisuel:
           question: "Facteur d'émission par photocopieur"
           valeur: 2935
           unité: kgCO2e/unité
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -122,6 +133,7 @@ immobilisations . équipements informatique audiovisuel:
       titre: "Vidéoprojecteur"
       formule: nombre * FE
       unité: kgCO2e
+      par défaut: 0
       form:
         à traduire: oui
       avec:
@@ -133,6 +145,7 @@ immobilisations . équipements informatique audiovisuel:
           question: "Facteur d'émission par vidéoprojecteur"
           valeur: 145
           unité: kgCO2e/unité
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -142,6 +155,7 @@ immobilisations . équipements informatique audiovisuel:
       titre: "Serveur informatique"
       formule: nombre * FE
       unité: kgCO2e
+      par défaut: 0
       form:
         à traduire: oui
       avec:
@@ -153,6 +167,7 @@ immobilisations . équipements informatique audiovisuel:
           question: "Facteur d'émission par serveur informatique"
           valeur: 600
           unité: kgCO2e/unité
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -162,6 +177,7 @@ immobilisations . équipements informatique audiovisuel:
       titre: "Télévision 40-49 pouces"
       formule: nombre * FE
       unité: kgCO2e
+      par défaut: 0
       form:
         à traduire: oui
       avec:
@@ -173,6 +189,7 @@ immobilisations . équipements informatique audiovisuel:
           question: "Facteur d'émission par télévision 40-49 pouces"
           valeur: 371
           unité: kgCO2e/unité
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -182,6 +199,7 @@ immobilisations . équipements informatique audiovisuel:
       titre: "Rack de serveur"
       formule: nombre * FE
       unité: kgCO2e
+      par défaut: 0
       form:
         à traduire: oui
       avec:
@@ -193,6 +211,7 @@ immobilisations . équipements informatique audiovisuel:
           question: "Facteur d'émission par rack de serveur"
           valeur: 500
           unité: kgCO2e/unité
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -202,6 +221,7 @@ immobilisations . équipements informatique audiovisuel:
       titre: "Télécommande universelle sans piles 80g"
       formule: nombre * FE
       unité: kgCO2e
+      par défaut: 0
       form:
         à traduire: oui
       avec:
@@ -213,6 +233,7 @@ immobilisations . équipements informatique audiovisuel:
           question: "Facteur d'émission par télécommande universelle sans piles 80g"
           valeur: 2.78
           unité: kgCO2e/unité
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -222,6 +243,7 @@ immobilisations . équipements informatique audiovisuel:
       titre: "Stéréo classique"
       formule: nombre * FE
       unité: kgCO2e
+      par défaut: 0
       form:
         à traduire: oui
       avec:
@@ -233,6 +255,7 @@ immobilisations . équipements informatique audiovisuel:
           question: "Facteur d'émission par stéréo classique"
           valeur: 123
           unité: kgCO2e/unité
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -242,6 +265,7 @@ immobilisations . équipements informatique audiovisuel:
       titre: "Enceinte Bluetooth"
       formule: nombre * FE
       unité: kgCO2e
+      par défaut: 0
       form:
         à traduire: oui
       avec:
@@ -253,6 +277,7 @@ immobilisations . équipements informatique audiovisuel:
           question: "Facteur d'émission par enceinte Bluetooth"
           valeur: 8.98
           unité: kgCO2e/unité
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -262,6 +287,7 @@ immobilisations . équipements informatique audiovisuel:
       titre: "Smartphone 5 pouces"
       formule: nombre * FE
       unité: kgCO2e
+      par défaut: 0
       form:
         à traduire: oui
       avec:
@@ -274,6 +300,7 @@ immobilisations . équipements informatique audiovisuel:
           question: "Facteur d'émission par smartphone 5 pouces"
           valeur: 33
           unité: kgCO2e/unité
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -283,6 +310,7 @@ immobilisations . équipements informatique audiovisuel:
       titre: "Écran 23,8 pouces"
       formule: nombre * FE
       unité: kgCO2e
+      par défaut: 0
       form:
         à traduire: oui
       avec:
@@ -294,6 +322,7 @@ immobilisations . équipements informatique audiovisuel:
           question: "Facteur d'émission par écran 23,8 pouces"
           valeur: 248
           unité: kgCO2e/unité
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:

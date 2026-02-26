@@ -6,11 +6,13 @@ restauration . fret:
       - ferroviaire
       - maritime
   unité: kgCO2e
+  par défaut: 0
   avec:
     routier:
       titre: Fret routier
       formule: consommation * FE
       unité: kgCO2e
+      par défaut: 0
       avec:
         consommation:
           question: Distance parcourue en fret routier
@@ -19,6 +21,7 @@ restauration . fret:
         FE:
           valeur: 0.12
           unité: kgCO2e/t.km
+          par défaut: 0
           meta:
             incertitude: 10
 
@@ -26,6 +29,7 @@ restauration . fret:
       titre: Fret ferroviaire
       formule: consommation * FE
       unité: kgCO2e
+      par défaut: 0
       avec:
         consommation:
           question: Distance parcourue en fret ferroviaire
@@ -34,6 +38,7 @@ restauration . fret:
         FE:
           valeur: 0.01
           unité: kgCO2e/t.km
+          par défaut: 0
           meta:
             incertitude: 15
 
@@ -41,6 +46,7 @@ restauration . fret:
       titre: Fret maritime
       formule: consommation * FE
       unité: kgCO2e
+      par défaut: 0
       avec:
         consommation:
           question: Distance parcourue en fret maritime
@@ -49,5 +55,6 @@ restauration . fret:
         FE:
           valeur: 0.02
           unité: kgCO2e/t.km
+          par défaut: 0
           meta:
             incertitude: 20

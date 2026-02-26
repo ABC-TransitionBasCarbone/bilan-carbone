@@ -13,10 +13,12 @@ général . nombre personnel:
 général . année de construction:
   question: Année de construction du bâtiment principal
   unité: année
+  par défaut: 0
 
 général . année de rénovation:
   question: Année de rénovation du bâtiment principal
   unité: année
+  par défaut: 0
 
 général . pays:
   question: Pays de l'établissement

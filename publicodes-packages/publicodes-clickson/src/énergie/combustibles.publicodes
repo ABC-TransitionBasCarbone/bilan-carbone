@@ -13,6 +13,7 @@
       titre: Fioul domestique
       formule: consommation * FE
       unité: kgCO2e
+      par défaut: 0
       avec:
         consommation:
           question: Consommation annuelle de fioul domestique
@@ -21,6 +22,7 @@
         FE:
           valeur: 3.24
           unité: kgCO2e/L
+          par défaut: 0
           meta:
             incertitude: 0
 
@@ -28,6 +30,7 @@
       titre: Fioul lourd/commercial
       formule: consommation * FE
       unité: kgCO2e
+      par défaut: 0
       avec:
         consommation:
           question: Consommation annuelle de fioul lourd/commercial
@@ -36,6 +39,7 @@
         FE:
           valeur: 3.28
           unité: kgCO2e/L
+          par défaut: 0
           meta:
             incertitude: 0
 
@@ -43,6 +47,7 @@
       titre: Gaz naturel
       formule: consommation * FE
       unité: kgCO2e
+      par défaut: 0
       avec:
         consommation:
           question: Consommation annuelle de gaz naturel
@@ -51,6 +56,7 @@
         FE:
           valeur: 2.32
           unité: kgCO2e/kWh
+          par défaut: 0
           meta:
             incertitude: 0
 
@@ -58,6 +64,7 @@
       titre: Granulés de bois (8% d'humidité)
       formule: consommation * FE
       unité: kgCO2e
+      par défaut: 0
       avec:
         consommation:
           question: Consommation annuelle de granulés de bois
@@ -66,6 +73,7 @@
         FE:
           valeur: 0.027
           unité: kgCO2e/kg
+          par défaut: 0
           meta:
             incertitude: 4
 
@@ -73,6 +81,7 @@
       titre: Biopropane
       formule: consommation * FE
       unité: kgCO2e
+      par défaut: 0
       avec:
         consommation:
           question: Consommation annuelle de biopropane
@@ -81,6 +90,7 @@
         FE:
           valeur: 0.944
           unité: kgCO2e/kg
+          par défaut: 0
           meta:
             incertitude: 1
 
@@ -88,6 +98,7 @@
       titre: Réseau de chaleur
       formule: consommation * FE
       unité: kgCO2e
+      par défaut: 0
       avec:
         consommation:
           question: Consommation annuelle de réseau de chaleur

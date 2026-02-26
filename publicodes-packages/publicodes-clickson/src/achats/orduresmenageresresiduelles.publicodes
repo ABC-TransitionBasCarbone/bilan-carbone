@@ -4,6 +4,7 @@ achats . ordures ménagères résiduelles:
     somme:
       - ordures ménagères résiduelles
   unité: kgCO2e
+  par défaut: 0
   avec:
     ordures ménagères résiduelles:
       titre: "Ordures ménagères résiduelles"
@@ -17,6 +18,7 @@ achats . ordures ménagères résiduelles:
           question: "Facteur d'émission des ordures ménagères résiduelles"
           valeur: 0.595
           unité: kgCO2e/kg
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:

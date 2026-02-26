@@ -12,6 +12,7 @@ achats . équipements de sport:
       - ballon de basket
       - ballon de football
   unité: kgCO2e
+  par défaut: 0
   avec:
     ballon de volley:
       titre: "Ballon de volley"
@@ -27,6 +28,7 @@ achats . équipements de sport:
           question: "Facteur d'émission par ballon de volley"
           valeur: 2.25
           unité: kgCO2e/unité
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -46,6 +48,7 @@ achats . équipements de sport:
           question: "Facteur d'émission par ballon de handball"
           valeur: 2.5
           unité: kgCO2e/unité
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -84,6 +87,7 @@ achats . équipements de sport:
           question: "Facteur d'émission par short tous sports"
           valeur: 0.8
           unité: kgCO2e/unité
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -103,6 +107,7 @@ achats . équipements de sport:
           question: "Facteur d'émission par maillot tous sports"
           valeur: 1
           unité: kgCO2e/unité
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -122,6 +127,7 @@ achats . équipements de sport:
           question: "Facteur d'émission par t-shirt en polyester"
           valeur: 5.5
           unité: kgCO2e/unité
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -141,6 +147,7 @@ achats . équipements de sport:
           question: "Facteur d'émission par ballon de rugby"
           valeur: 4.12
           unité: kgCO2e/unité
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -160,6 +167,7 @@ achats . équipements de sport:
           question: "Facteur d'émission par ballon de basket"
           valeur: 4.6
           unité: kgCO2e/unité
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
@@ -179,6 +187,7 @@ achats . équipements de sport:
           question: "Facteur d'émission par ballon de football"
           valeur: 4.12
           unité: kgCO2e/unité
+          par défaut: 0
           note: |
             Source: Base Carbone®
           meta:
