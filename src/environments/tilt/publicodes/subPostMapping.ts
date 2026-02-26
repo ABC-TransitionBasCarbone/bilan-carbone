@@ -167,13 +167,47 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('utilisation . responsabilite conso energie . gaz naturel . conso'),
   ],
   EquipementsDesSalaries: [
-    input('équipements et immobilisations . infos . ordinateurs fixes . quantité'),
-    input('équipements et immobilisations . infos . ordinateurs portables . quantité'),
-    input('équipements et immobilisations . infos . photocopieurs . quantité'),
-    input('équipements et immobilisations . infos . imprimantes . quantité'),
-    input('équipements et immobilisations . infos . téléphones fixes . quantité'),
-    input('équipements et immobilisations . infos . téléphones portables . quantité'),
-    input('équipements et immobilisations . infos . autres écrans . quantité'),
+    table(
+      'EquipementsEtImmobilisations.question',
+      [
+        'EquipementsEtImmobilisations.typeEquipement',
+        'EquipementsEtImmobilisations.nombreEquipement',
+      ],
+      [
+        [
+          'équipements et immobilisations . infos . ordinateurs fixes',
+          'équipements et immobilisations . infos . ordinateurs fixes . quantité',
+        ],
+        [
+          'équipements et immobilisations . infos . ordinateurs portables',
+          'équipements et immobilisations . infos . ordinateurs portables . quantité',
+        ],
+        [
+          'équipements et immobilisations . infos . photocopieurs',
+          'équipements et immobilisations . infos . photocopieurs . quantité',
+        ],
+        [
+          'équipements et immobilisations . infos . imprimantes',
+          'équipements et immobilisations . infos . imprimantes . quantité',
+        ],
+        [
+          'équipements et immobilisations . infos . téléphones fixes',
+          'équipements et immobilisations . infos . téléphones fixes . quantité',
+        ],
+        [
+          'équipements et immobilisations . infos . téléphones portables',
+          'équipements et immobilisations . infos . téléphones portables . quantité',
+        ],
+        [
+          'équipements et immobilisations . infos . vidéoprojecteurs',
+          'équipements et immobilisations . infos . vidéoprojecteurs . quantité',
+        ],
+        [
+          'équipements et immobilisations . infos . autres écrans',
+          'équipements et immobilisations . infos . autres écrans . quantité',
+        ],
+      ],
+    ),
     input('équipements et immobilisations . infos . prise en compte reconditionné'),
   ],
   ServicesEnApprocheMonetaire: [

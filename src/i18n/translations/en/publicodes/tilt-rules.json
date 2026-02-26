@@ -83,41 +83,49 @@
           }
         },
         "ordinateurs fixes": {
+          "titre": "[TO_TRANSLATE] Ordinateurs fixes",
           "quantité": {
             "question": "[TO_TRANSLATE] Ordinateurs fixes"
           }
         },
         "ordinateurs portables": {
+          "titre": "[TO_TRANSLATE] Ordinateurs portables",
           "quantité": {
             "question": "[TO_TRANSLATE] Ordinateurs portables"
           }
         },
         "photocopieurs": {
+          "titre": "[TO_TRANSLATE] Photocopieurs",
           "quantité": {
             "question": "[TO_TRANSLATE] Photocopieurs"
           }
         },
         "imprimantes": {
+          "titre": "[TO_TRANSLATE] Imprimantes",
           "quantité": {
             "question": "[TO_TRANSLATE] Imprimante multi-fonction"
           }
         },
         "téléphones fixes": {
+          "titre": "[TO_TRANSLATE] Téléphones fixes",
           "quantité": {
             "question": "[TO_TRANSLATE] Téléphones fixes"
           }
         },
         "téléphones portables": {
+          "titre": "[TO_TRANSLATE] Téléphones portables",
           "quantité": {
             "question": "[TO_TRANSLATE] Téléphones portables"
           }
         },
         "vidéoprojecteurs": {
+          "titre": "[TO_TRANSLATE] Vidéoprojecteurs",
           "quantité": {
             "question": "[TO_TRANSLATE] Vidéoprojecteurs"
           }
         },
         "autres écrans": {
+          "titre": "[TO_TRANSLATE] Autres écrans",
           "quantité": {
             "question": "[TO_TRANSLATE] Autres écrans (TV, écran secondaire, tablette, ...)"
           }
@@ -302,22 +310,22 @@
         "question": "[TO_TRANSLATE] Veuillez indiquer les usages numériques en [Année] des salariés et bénévoles de votre association",
         "streaming": {
           "heures": {
-            "question": "[TO_TRANSLATE] Combien d'heures de streaming vidéo regardées ?"
+            "question": "[UPDATED] Sur une année, combien d'heures de streaming vidéo ont été regardées ?"
           }
         },
         "visioconférence": {
           "heures": {
-            "question": "[TO_TRANSLATE] Combien d'heures de visioconférence ?"
+            "question": "[UPDATED] Sur une année, combien d'heures de visioconférence ont eu lieu ?"
           }
         },
         "mails": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de mails envoyés ?"
+            "question": "[UPDATED] Sur une année, combien de mails ont été envoyés ?"
           }
         },
         "stockage-cloud": {
           "volume": {
-            "question": "[TO_TRANSLATE] Combien de Go de données stockées sur le cloud ?"
+            "question": "[UPDATED] Sur une année, combien de Go de données ont été stockées sur un cloud ?"
           }
         }
       }
@@ -384,18 +392,18 @@
     },
     "froid et clim": {
       "nombre": {
-        "description": "[TO_TRANSLATE] TESTTTTT",
+        "description": "[UPDATED] La consommation d'électricité de vos climatisations est incluse dans vos factures d'électricité. Cette question sert donc uniquement à prendre en compte l'impact de la construction de l'équipement de climatisation, et des fuites de gaz frigorigènes.",
         "question": "[TO_TRANSLATE] Combien de climatiseurs sont utilisés dans vos locaux ?"
       }
     },
     "fret": {
       "transport": {
         "présent": {
-          "question": "[TO_TRANSLATE] Est-ce que votre association possède ou loue des véhicules pour transporter des marchandises en [Année] ?"
+          "question": "[UPDATED] Est-ce que votre association possède ou loue des véhicules pour transporter des marchandises ?"
         },
         "carburant": {
           "litre": {
-            "question": "[TO_TRANSLATE] Combien de litres de carburants ont ils consommé en [Année] ?"
+            "question": "[UPDATED] Combien de litres de carburants ces véhicules ont-ils consommé ?"
           }
         },
         "livraisons": {
@@ -407,24 +415,28 @@
           "question": "[TO_TRANSLATE] En moyenne, pour une livraison, quel est le poids transporté ?"
         },
         "local": {
+          "titre": "[UPDATED] Locale",
           "provenance": {
             "titre": "[TO_TRANSLATE] livraisons locales",
             "question": "[TO_TRANSLATE] Sur ces livraisons, quelle part provient de fournisseurs locaux (moins de 50 km) ?"
           }
         },
         "national": {
+          "titre": "[UPDATED] France",
           "provenance": {
             "titre": "[TO_TRANSLATE] livraisons nationales",
             "question": "[TO_TRANSLATE] Sur ces livraisons, quelle part provient de fournisseurs nationaux (entre 50 km et 500 km) ?"
           }
         },
         "europe": {
+          "titre": "[UPDATED] Europe",
           "provenance": {
             "titre": "[TO_TRANSLATE] livraisons européennes",
             "question": "[TO_TRANSLATE] Sur ces livraisons, quelle part provient de fournisseurs européens (entre 500 km et 1500 km) ?"
           }
         },
         "international": {
+          "titre": "[UPDATED] Monde",
           "provenance": {
             "titre": "[TO_TRANSLATE] livraisons internationales",
             "question": "[TO_TRANSLATE] Sur ces livraisons, quelle part provient de fournisseurs internationaux (plus de 1500 km) ?"
