@@ -351,6 +351,11 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('déplacements . DT-bénévoles . sans . deux roues . distance'),
   ],
   DeplacementsDansLeCadreDUneMissionAssociativeSalaries: [
+    input('déplacements . DM-salariés . avec . émissions MEP . voiture'),
+    input('déplacements . DM-salariés . avec . émissions MEP . train'),
+    input('déplacements . DM-salariés . avec . émissions MEP . avion'),
+    input('déplacements . DM-salariés . avec . émissions MEP . transports en commun'),
+    input('déplacements . DM-salariés . avec . émissions MEP . deux roues'),
     input('déplacements . DM-salariés . sans . voiture . distance'),
     input('déplacements . DM-salariés . sans . train . distance'),
     input('déplacements . DM-salariés . sans . transports en commun . distance'),
@@ -360,6 +365,11 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('déplacements . DM-salariés . sans . avion . long courrier . distance'),
   ],
   DeplacementsDansLeCadreDUneMissionAssociativeBenevoles: [
+    input('déplacements . DM-bénévoles . avec . émissions MEP . voiture'),
+    input('déplacements . DM-bénévoles . avec . émissions MEP . train'),
+    input('déplacements . DM-bénévoles . avec . émissions MEP . avion'),
+    input('déplacements . DM-bénévoles . avec . émissions MEP . transports en commun'),
+    input('déplacements . DM-bénévoles . avec . émissions MEP . deux roues'),
     input('déplacements . DM-bénévoles . sans . voiture . distance'),
     input('déplacements . DM-bénévoles . sans . train . distance'),
     input('déplacements . DM-bénévoles . sans . transports en commun . distance'),
