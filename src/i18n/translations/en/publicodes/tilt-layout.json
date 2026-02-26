@@ -20,6 +20,11 @@
         "question": "[TO_TRANSLATE] Quelles quantités des déchets suivants sont jetées chaque année ?",
         "typeDéchets": "[TO_TRANSLATE] Type de déchet",
         "poids": "[TO_TRANSLATE] Quantité jetée"
+      },
+      "EquipementsEtImmobilisations": {
+        "question": "[TO_TRANSLATE] Pour chacun de ces équipements informatiques, veuillez indiquer combien sont possédés ou loués depuis moins de 3 ans :",
+        "typeEquipement": "[TO_TRANSLATE] Type d'équipement",
+        "nombreEquipement": "[TO_TRANSLATE] Quantité"
       }
     },
     "group": {},

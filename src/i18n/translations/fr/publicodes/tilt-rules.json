@@ -73,6 +73,7 @@
     "équipements et immobilisations": {
       "infos": {
         "prise en compte reconditionné": {
+          "description": "En fonction de votre réponse, une partie de vos équipements seront valorisés comme étant reconditionnés. Un équipement reconditionné sera considéré comme moitié moins émetteur qu'un équipement neuf. Autrement dit, la durée de première vie de l'équipement est considéré comme égale à la moitié de sa durée de vie totale.",
           "question": "Vos équipements sont-ils reconditionné ou issu de seconde main ?",
           "options": {
             "toujours": "Toujours",
@@ -82,41 +83,49 @@
           }
         },
         "ordinateurs fixes": {
+          "titre": "Ordinateurs fixes",
           "quantité": {
             "question": "Ordinateurs fixes"
           }
         },
         "ordinateurs portables": {
+          "titre": "Ordinateurs portables",
           "quantité": {
             "question": "Ordinateurs portables"
           }
         },
         "photocopieurs": {
+          "titre": "Photocopieurs",
           "quantité": {
             "question": "Photocopieurs"
           }
         },
         "imprimantes": {
+          "titre": "Imprimantes",
           "quantité": {
             "question": "Imprimante multi-fonction"
           }
         },
         "téléphones fixes": {
+          "titre": "Téléphones fixes",
           "quantité": {
             "question": "Téléphones fixes"
           }
         },
         "téléphones portables": {
+          "titre": "Téléphones portables",
           "quantité": {
             "question": "Téléphones portables"
           }
         },
         "vidéoprojecteurs": {
+          "titre": "Vidéoprojecteurs",
           "quantité": {
             "question": "Vidéoprojecteurs"
           }
         },
         "autres écrans": {
+          "titre": "Autres écrans",
           "quantité": {
             "question": "Autres écrans (TV, écran secondaire, tablette, ...)"
           }
@@ -285,7 +294,7 @@
           }
         },
         "juridique-comptable": {
-          "titre": "Services juridiques, comptables et d'assurance",
+          "titre": "Services de réparation et d'installation",
           "montant-dépensé": {
             "question": "Montant dépensé en services juridiques, comptables et assurances"
           }
@@ -301,22 +310,22 @@
         "question": "Veuillez indiquer les usages numériques en [Année] des salariés et bénévoles de votre association",
         "streaming": {
           "heures": {
-            "question": "Combien d'heures de streaming vidéo regardées ?"
+            "question": "Sur une année, combien d'heures de streaming vidéo ont été regardées ?"
           }
         },
         "visioconférence": {
           "heures": {
-            "question": "Combien d'heures de visioconférence ?"
+            "question": "Sur une année, combien d'heures de visioconférence ont eu lieu ?"
           }
         },
         "mails": {
           "nombre": {
-            "question": "Combien de mails envoyés ?"
+            "question": "Sur une année, combien de mails ont été envoyés ?"
           }
         },
         "stockage-cloud": {
           "volume": {
-            "question": "Combien de Go de données stockées sur le cloud ?"
+            "question": "Sur une année, combien de Go de données ont été stockées sur un cloud ?"
           }
         }
       }
@@ -383,18 +392,18 @@
     },
     "froid et clim": {
       "nombre": {
-        "description": "TESTTTTT",
+        "description": "La consommation d'électricité de vos climatisations est incluse dans vos factures d'électricité. Cette question sert donc uniquement à prendre en compte l'impact de la construction de l'équipement de climatisation, et des fuites de gaz frigorigènes.",
         "question": "Combien de climatiseurs sont utilisés dans vos locaux ?"
       }
     },
     "fret": {
       "transport": {
         "présent": {
-          "question": "Est-ce que votre association possède ou loue des véhicules pour transporter des marchandises en [Année] ?"
+          "question": "Est-ce que votre association possède ou loue des véhicules pour transporter des marchandises ?"
         },
         "carburant": {
           "litre": {
-            "question": "Combien de litres de carburants ont ils consommé en [Année] ?"
+            "question": "Combien de litres de carburants ces véhicules ont-ils consommé ?"
           }
         },
         "livraisons": {
@@ -406,24 +415,28 @@
           "question": "En moyenne, pour une livraison, quel est le poids transporté ?"
         },
         "local": {
+          "titre": "Locale",
           "provenance": {
             "titre": "livraisons locales",
             "question": "Sur ces livraisons, quelle part provient de fournisseurs locaux (moins de 50 km) ?"
           }
         },
         "national": {
+          "titre": "France",
           "provenance": {
             "titre": "livraisons nationales",
             "question": "Sur ces livraisons, quelle part provient de fournisseurs nationaux (entre 50 km et 500 km) ?"
           }
         },
         "europe": {
+          "titre": "Europe",
           "provenance": {
             "titre": "livraisons européennes",
             "question": "Sur ces livraisons, quelle part provient de fournisseurs européens (entre 500 km et 1500 km) ?"
           }
         },
         "international": {
+          "titre": "Monde",
           "provenance": {
             "titre": "livraisons internationales",
             "question": "Sur ces livraisons, quelle part provient de fournisseurs internationaux (plus de 1500 km) ?"

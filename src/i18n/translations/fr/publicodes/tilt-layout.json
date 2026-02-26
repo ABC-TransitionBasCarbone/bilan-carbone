@@ -20,6 +20,11 @@
         "question": "Quelles quantités des déchets suivants sont jetées chaque année ?",
         "typeDéchets": "Type de déchet",
         "poids": "Quantité jetée"
+      },
+      "EquipementsEtImmobilisations": {
+        "question": "Pour chacun de ces équipements informatiques, veuillez indiquer combien sont possédés ou loués depuis moins de 3 ans :",
+        "typeEquipement": "Type d'équipement",
+        "nombreEquipement": "Quantité"
       }
     },
     "group": {},

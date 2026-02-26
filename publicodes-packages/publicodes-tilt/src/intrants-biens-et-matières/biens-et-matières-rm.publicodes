@@ -162,7 +162,7 @@ intrants-biens-et-matières . ratios monétaires . produits-métalliques:
       valeur: 317
       unité: kgCO2e/k€ HT
       meta:
-        nom: Produits métalliques, à être
+        nom: Produits métalliques, à l'exclusion des machines et équipements - 2023
         id: 43425
   unité: kgCO2e
 

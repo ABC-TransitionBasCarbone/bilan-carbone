@@ -15,7 +15,7 @@ froid et clim:
 
 froid et clim . nombre:
   question: Combien de climatiseurs sont utilisés dans vos locaux ?
-  description: TESTTTTT
+  description: La consommation d'électricité de vos climatisations est incluse dans vos factures d'électricité. Cette question sert donc uniquement à prendre en compte l'impact de la construction de l'équipement de climatisation, et des fuites de gaz frigorigènes.
   par défaut: 0
   unité: unité
 

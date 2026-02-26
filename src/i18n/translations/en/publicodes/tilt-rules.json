@@ -73,7 +73,8 @@
     "équipements et immobilisations": {
       "infos": {
         "prise en compte reconditionné": {
-          "question": "[UPDATED] Vos équipements sont-ils reconditionné ou issu de seconde main ?",
+          "description": "[TO_TRANSLATE] En fonction de votre réponse, une partie de vos équipements seront valorisés comme étant reconditionnés. Un équipement reconditionné sera considéré comme moitié moins émetteur qu'un équipement neuf. Autrement dit, la durée de première vie de l'équipement est considéré comme égale à la moitié de sa durée de vie totale.",
+          "question": "[TO_TRANSLATE] Vos équipements sont-ils reconditionné ou issu de seconde main ?",
           "options": {
             "toujours": "[TO_TRANSLATE] Toujours",
             "souvent": "[TO_TRANSLATE] Souvent",
@@ -82,41 +83,49 @@
           }
         },
         "ordinateurs fixes": {
+          "titre": "[TO_TRANSLATE] Ordinateurs fixes",
           "quantité": {
             "question": "[TO_TRANSLATE] Ordinateurs fixes"
           }
         },
         "ordinateurs portables": {
+          "titre": "[TO_TRANSLATE] Ordinateurs portables",
           "quantité": {
             "question": "[TO_TRANSLATE] Ordinateurs portables"
           }
         },
         "photocopieurs": {
+          "titre": "[TO_TRANSLATE] Photocopieurs",
           "quantité": {
             "question": "[TO_TRANSLATE] Photocopieurs"
           }
         },
         "imprimantes": {
+          "titre": "[TO_TRANSLATE] Imprimantes",
           "quantité": {
             "question": "[TO_TRANSLATE] Imprimante multi-fonction"
           }
         },
         "téléphones fixes": {
+          "titre": "[TO_TRANSLATE] Téléphones fixes",
           "quantité": {
             "question": "[TO_TRANSLATE] Téléphones fixes"
           }
         },
         "téléphones portables": {
+          "titre": "[TO_TRANSLATE] Téléphones portables",
           "quantité": {
             "question": "[TO_TRANSLATE] Téléphones portables"
           }
         },
         "vidéoprojecteurs": {
+          "titre": "[TO_TRANSLATE] Vidéoprojecteurs",
           "quantité": {
             "question": "[TO_TRANSLATE] Vidéoprojecteurs"
           }
         },
         "autres écrans": {
+          "titre": "[TO_TRANSLATE] Autres écrans",
           "quantité": {
             "question": "[TO_TRANSLATE] Autres écrans (TV, écran secondaire, tablette, ...)"
           }
@@ -229,9 +238,9 @@
     "intrants-services": {
       "services": {
         "description": "[TO_TRANSLATE] La liste est non exhaustive : si vous n’avez pas comptabilisé l’ensemble de vos dépenses, c’est tout à fait normal. Il peut s’agir de dépenses très faiblement émissives ou dont les émissions sont déjà prises en compte dans d’autres postes ou via d’autres questions reposant sur des données plus précises.",
-        "question": "[UPDATED] Quel montant avez-vous dépensé dans les services immatériels suivants en [Année] ?",
+        "question": "[TO_TRANSLATE] Quel montant avez-vous dépensé dans les services immatériels suivants en [Année] ?",
         "spectacles-musées": {
-          "titre": "[UPDATED] Spectacles, musées et autres services culturels",
+          "titre": "[TO_TRANSLATE] Spectacles, musées et autres services culturels",
           "montant-dépensé": {
             "question": "[TO_TRANSLATE] Montant dépensé en services de spectacles, musées et autres services culturels"
           }
@@ -285,7 +294,7 @@
           }
         },
         "juridique-comptable": {
-          "titre": "[TO_TRANSLATE] Services juridiques, comptables et d'assurance",
+          "titre": "[UPDATED] Services de réparation et d'installation",
           "montant-dépensé": {
             "question": "[TO_TRANSLATE] Montant dépensé en services juridiques, comptables et assurances"
           }
@@ -298,25 +307,25 @@
         }
       },
       "numérique": {
-        "question": "[UPDATED] Veuillez indiquer les usages numériques en [Année] des salariés et bénévoles de votre association",
+        "question": "[TO_TRANSLATE] Veuillez indiquer les usages numériques en [Année] des salariés et bénévoles de votre association",
         "streaming": {
           "heures": {
-            "question": "[TO_TRANSLATE] Combien d'heures de streaming vidéo regardées ?"
+            "question": "[TO_TRANSLATE] Sur une année, combien d'heures de streaming vidéo ont été regardées ?"
           }
         },
         "visioconférence": {
           "heures": {
-            "question": "[TO_TRANSLATE] Combien d'heures de visioconférence ?"
+            "question": "[TO_TRANSLATE] Sur une année, combien d'heures de visioconférence ont eu lieu ?"
           }
         },
         "mails": {
           "nombre": {
-            "question": "[TO_TRANSLATE] Combien de mails envoyés ?"
+            "question": "[TO_TRANSLATE] Sur une année, combien de mails ont été envoyés ?"
           }
         },
         "stockage-cloud": {
           "volume": {
-            "question": "[TO_TRANSLATE] Combien de Go de données stockées sur le cloud ?"
+            "question": "[TO_TRANSLATE] Sur une année, combien de Go de données ont été stockées sur un cloud ?"
           }
         }
       }
@@ -383,18 +392,18 @@
     },
     "froid et clim": {
       "nombre": {
-        "description": "[TO_TRANSLATE] TESTTTTT",
+        "description": "[TO_TRANSLATE] La consommation d'électricité de vos climatisations est incluse dans vos factures d'électricité. Cette question sert donc uniquement à prendre en compte l'impact de la construction de l'équipement de climatisation, et des fuites de gaz frigorigènes.",
         "question": "[TO_TRANSLATE] Combien de climatiseurs sont utilisés dans vos locaux ?"
       }
     },
     "fret": {
       "transport": {
         "présent": {
-          "question": "[UPDATED] Est-ce que votre association possède ou loue des véhicules pour transporter des marchandises en [Année] ?"
+          "question": "[TO_TRANSLATE] Est-ce que votre association possède ou loue des véhicules pour transporter des marchandises ?"
         },
         "carburant": {
           "litre": {
-            "question": "[UPDATED] Combien de litres de carburants ont ils consommé en [Année] ?"
+            "question": "[TO_TRANSLATE] Combien de litres de carburants ces véhicules ont-ils consommé ?"
           }
         },
         "livraisons": {
@@ -406,27 +415,31 @@
           "question": "[TO_TRANSLATE] En moyenne, pour une livraison, quel est le poids transporté ?"
         },
         "local": {
+          "titre": "[TO_TRANSLATE] Locale",
           "provenance": {
             "titre": "[TO_TRANSLATE] livraisons locales",
-            "question": "[UPDATED] Sur ces livraisons, quelle part provient de fournisseurs locaux (moins de 50 km) ?"
+            "question": "[TO_TRANSLATE] Sur ces livraisons, quelle part provient de fournisseurs locaux (moins de 50 km) ?"
           }
         },
         "national": {
+          "titre": "[TO_TRANSLATE] France",
           "provenance": {
             "titre": "[TO_TRANSLATE] livraisons nationales",
-            "question": "[UPDATED] Sur ces livraisons, quelle part provient de fournisseurs nationaux (entre 50 km et 500 km) ?"
+            "question": "[TO_TRANSLATE] Sur ces livraisons, quelle part provient de fournisseurs nationaux (entre 50 km et 500 km) ?"
           }
         },
         "europe": {
+          "titre": "[TO_TRANSLATE] Europe",
           "provenance": {
             "titre": "[TO_TRANSLATE] livraisons européennes",
-            "question": "[UPDATED] Sur ces livraisons, quelle part provient de fournisseurs européens (entre 500 km et 1500 km) ?"
+            "question": "[TO_TRANSLATE] Sur ces livraisons, quelle part provient de fournisseurs européens (entre 500 km et 1500 km) ?"
           }
         },
         "international": {
+          "titre": "[TO_TRANSLATE] Monde",
           "provenance": {
             "titre": "[TO_TRANSLATE] livraisons internationales",
-            "question": "[UPDATED] Sur ces livraisons, quelle part provient de fournisseurs internationaux (plus de 1500 km) ?"
+            "question": "[TO_TRANSLATE] Sur ces livraisons, quelle part provient de fournisseurs internationaux (plus de 1500 km) ?"
           }
         }
       },
@@ -486,22 +499,22 @@
         "sans": {
           "voiture": {
             "distance": {
-              "question": "[UPDATED] Combien de km sont parcourus en moyenne par salarié en voiture par jour (A/R) pour des déplacements domicile-travail ?"
+              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par salarié en voiture par jour (A/R) pour des déplacements domicile-travail ?"
             }
           },
           "train": {
             "distance": {
-              "question": "[UPDATED] Combien de km sont parcourus en moyenne par salarié en train par jour (A/R) pour des déplacements domicile-travail ?"
+              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par salarié en train par jour (A/R) pour des déplacements domicile-travail ?"
             }
           },
           "transports en commun": {
             "distance": {
-              "question": "[UPDATED] Combien de km sont parcourus en moyenne par salarié en transports en commun par jour (A/R) pour des déplacements domicile-travail ?"
+              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par salarié en transports en commun par jour (A/R) pour des déplacements domicile-travail ?"
             }
           },
           "deux roues": {
             "distance": {
-              "question": "[UPDATED] Combien de km sont parcourus en moyenne par salarié en deux roues par jour (A/R) pour des déplacements domicile-travail ?"
+              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par salarié en deux roues par jour (A/R) pour des déplacements domicile-travail ?"
             }
           }
         }
@@ -518,22 +531,22 @@
         "sans": {
           "voiture": {
             "distance": {
-              "question": "[UPDATED] Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en voiture pour des déplacements domicile-travail ?"
+              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en voiture pour des déplacements domicile-travail ?"
             }
           },
           "train": {
             "distance": {
-              "question": "[UPDATED] Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en train pour des déplacements domicile-travail ?"
+              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en train pour des déplacements domicile-travail ?"
             }
           },
           "transports en commun": {
             "distance": {
-              "question": "[UPDATED] Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en transports en commun pour des déplacements domicile-travail ?"
+              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en transports en commun pour des déplacements domicile-travail ?"
             }
           },
           "deux roues": {
             "distance": {
-              "question": "[UPDATED] Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en deux roues pour des déplacements domicile-travail ?"
+              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par jour (A/R) par bénévole en deux roues pour des déplacements domicile-travail ?"
             }
           }
         }
@@ -561,38 +574,38 @@
         "sans": {
           "voiture": {
             "distance": {
-              "question": "[UPDATED] Combien de km sont parcourus en moyenne par mois par salarié en voiture pour des déplacements liés à des missions ?"
+              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par salarié en voiture pour des déplacements liés à des missions ?"
             }
           },
           "train": {
             "distance": {
-              "question": "[UPDATED] Combien de km sont parcourus en moyenne par mois par salarié en train pour des déplacements liés à des missions ?"
+              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par salarié en train pour des déplacements liés à des missions ?"
             }
           },
           "transports en commun": {
             "distance": {
-              "question": "[UPDATED] Combien de km sont parcourus en moyenne par mois par salarié en transports en commun pour des déplacements liés à des missions ?"
+              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par salarié en transports en commun pour des déplacements liés à des missions ?"
             }
           },
           "deux roues": {
             "distance": {
-              "question": "[UPDATED] Combien de km sont parcourus en moyenne par mois par salarié en deux roues pour des déplacements liés à des missions ?"
+              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par salarié en deux roues pour des déplacements liés à des missions ?"
             }
           },
           "avion": {
             "court courrier": {
               "distance": {
-                "question": "[UPDATED] Combien de km ont été parcourus cette année par salarié avion court courrier pour des déplacements liés à des missions ?"
+                "question": "[TO_TRANSLATE] Combien de km ont été parcourus cette année par salarié avion court courrier pour des déplacements liés à des missions ?"
               }
             },
             "moyen courrier": {
               "distance": {
-                "question": "[UPDATED] Combien de km ont été parcourus cette année par salarié avion moyen courrier pour des déplacements liés à des missions ?"
+                "question": "[TO_TRANSLATE] Combien de km ont été parcourus cette année par salarié avion moyen courrier pour des déplacements liés à des missions ?"
               }
             },
             "long courrier": {
               "distance": {
-                "question": "[UPDATED] Combien de km ont été parcourus cette année par salarié avion long courrier pour des déplacements liés à des missions ?"
+                "question": "[TO_TRANSLATE] Combien de km ont été parcourus cette année par salarié avion long courrier pour des déplacements liés à des missions ?"
               }
             }
           }
@@ -622,38 +635,38 @@
           "voiture": {
             "distance": {
               "description": "[TO_TRANSLATE] On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales",
-              "question": "[UPDATED] Combien de km sont parcourus en moyenne par mois par bénévole en voiture pour des déplacements liés à des missions ?"
+              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par bénévole en voiture pour des déplacements liés à des missions ?"
             }
           },
           "train": {
             "distance": {
-              "question": "[UPDATED] Combien de km sont parcourus en moyenne par mois par bénévole en train pour des déplacements liés à des missions ?"
+              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par bénévole en train pour des déplacements liés à des missions ?"
             }
           },
           "transports en commun": {
             "distance": {
-              "question": "[UPDATED] Combien de km sont parcourus en moyenne par mois par bénévole en transports en commun pour des déplacements liés à des missions ?"
+              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par bénévole en transports en commun pour des déplacements liés à des missions ?"
             }
           },
           "deux roues": {
             "distance": {
-              "question": "[UPDATED] Combien de km sont parcourus en moyenne par mois par bénévole en deux roues pour des déplacements liés à des missions ?"
+              "question": "[TO_TRANSLATE] Combien de km sont parcourus en moyenne par mois par bénévole en deux roues pour des déplacements liés à des missions ?"
             }
           },
           "avion": {
             "court courrier": {
               "distance": {
-                "question": "[UPDATED] Combien de km ont été parcourus cette année par bénévole avion court courrier pour des déplacements liés à des missions ?"
+                "question": "[TO_TRANSLATE] Combien de km ont été parcourus cette année par bénévole avion court courrier pour des déplacements liés à des missions ?"
               }
             },
             "moyen courrier": {
               "distance": {
-                "question": "[UPDATED] Combien de km ont été parcourus cette année par bénévole avion moyen courrier pour des déplacements liés à des missions ?"
+                "question": "[TO_TRANSLATE] Combien de km ont été parcourus cette année par bénévole avion moyen courrier pour des déplacements liés à des missions ?"
               }
             },
             "long courrier": {
               "distance": {
-                "question": "[UPDATED] Combien de km ont été parcourus cette année par bénévole avion long courrier pour des déplacements liés à des missions ?"
+                "question": "[TO_TRANSLATE] Combien de km ont été parcourus cette année par bénévole avion long courrier pour des déplacements liés à des missions ?"
               }
             }
           }
@@ -710,7 +723,7 @@
           }
         },
         "déchets verre": {
-          "titre": "[UPDATED] Verre",
+          "titre": "[TO_TRANSLATE] Verre",
           "poids": {
             "question": "[TO_TRANSLATE] Déchets verre"
           }

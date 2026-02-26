@@ -25,6 +25,7 @@
 
 équipements et immobilisations . infos . prise en compte reconditionné:
   question: Vos équipements sont-ils reconditionné ou issu de seconde main ?
+  description: En fonction de votre réponse, une partie de vos équipements seront valorisés comme étant reconditionnés. Un équipement reconditionné sera considéré comme moitié moins émetteur qu'un équipement neuf. Autrement dit, la durée de première vie de l'équipement est considéré comme égale à la moitié de sa durée de vie totale.
   une possibilité:
     - toujours
     - souvent
@@ -63,6 +64,9 @@
 
 équipements et immobilisations . infos . ordinateurs fixes:
   formule: FE * quantité
+  titre: Ordinateurs fixes
+  form:
+    à traduire: oui
   avec:
     FE:
       valeur: 169
@@ -77,6 +81,9 @@
 
 équipements et immobilisations . infos . ordinateurs portables:
   formule: FE * quantité
+  titre: Ordinateurs portables
+  form:
+    à traduire: oui
   avec:
     FE:
       valeur: 156
@@ -91,6 +98,9 @@
 
 équipements et immobilisations . infos . photocopieurs:
   formule: FE * quantité
+  titre: Photocopieurs
+  form:
+    à traduire: oui
   avec:
     FE:
       valeur: 2935
@@ -105,6 +115,9 @@
 
 équipements et immobilisations . infos . imprimantes:
   formule: FE * quantité
+  titre: Imprimantes
+  form:
+    à traduire: oui
   avec:
     FE:
       valeur: 87.9
@@ -119,6 +132,9 @@
 
 équipements et immobilisations . infos . téléphones fixes:
   formule: FE * quantité
+  titre: Téléphones fixes
+  form:
+    à traduire: oui
   avec:
     FE:
       valeur: 17
@@ -133,6 +149,9 @@
 
 équipements et immobilisations . infos . téléphones portables:
   formule: FE * quantité
+  titre: Téléphones portables
+  form:
+    à traduire: oui
   avec:
     FE:
       valeur: 16.5
@@ -147,6 +166,9 @@
 
 équipements et immobilisations . infos . vidéoprojecteurs:
   formule: FE * quantité
+  titre: Vidéoprojecteurs
+  form:
+    à traduire: oui
   avec:
     FE:
       valeur: 145
@@ -161,6 +183,9 @@
 
 équipements et immobilisations . infos . autres écrans:
   formule: FE * quantité
+  titre: Autres écrans
+  form:
+    à traduire: oui
   avec:
     FE:
       valeur: 63.2

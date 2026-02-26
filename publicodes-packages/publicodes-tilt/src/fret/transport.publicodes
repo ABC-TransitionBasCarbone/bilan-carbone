@@ -6,7 +6,7 @@ fret . transport:
       - empreinte
 
 fret . transport . présent:
-  question: Est-ce que votre association possède ou loue des véhicules pour transporter des marchandises en [Année] ?
+  question: Est-ce que votre association possède ou loue des véhicules pour transporter des marchandises ?
 
 fret . transport . carburant:
   titre: consommation de carburant pour le fret possédé
@@ -15,7 +15,7 @@ fret . transport . carburant:
   unité: kgCO2e
   avec:
     litre:
-      question: Combien de litres de carburants ont ils consommé en [Année] ?
+      question: Combien de litres de carburants ces véhicules ont-ils consommé ?
       unité: litre
 
     FE:
@@ -48,7 +48,9 @@ fret . transport . poids:
 ##### Fret local #####
 
 fret . transport . local:
-  titre: empreinte livraisons locales
+  titre: Locale
+  form:
+    à traduire: oui
   formule: poids * provenance * 50 * split * livraisons
   unité: kgCO2e
   note: Pour les livraisons locales on compte environ 50km
@@ -72,7 +74,9 @@ fret . transport . local . provenance:
 ##### Fret national #####
 
 fret . transport . national:
-  titre: empreinte livraisons nationales
+  titre: France
+  form:
+    à traduire: oui
   formule: poids * provenance * 500 * split * livraisons
   unité: kgCO2e
   note: Pour les livraisons nationales on compte environ 500km (~Paris-Marseille)
@@ -111,7 +115,9 @@ fret . transport . national . provenance:
 ##### Fret europe #####
 
 fret . transport . europe:
-  titre: empreinte livraisons européennes
+  titre: Europe
+  form:
+    à traduire: oui
   formule: poids * provenance * 1500 * split * livraisons
   unité: kgCO2e
   note: Pour les livraisons européeennes on compte environ 1500 km (~Paris-Stockholm/Paris-Varsovie, …)
@@ -150,7 +156,9 @@ fret . transport . europe . provenance:
 ##### Fret international #####
 
 fret . transport . international:
-  titre: empreinte livraisons internationales
+  titre: Monde
+  form:
+    à traduire: oui
   formule: poids * provenance * 10000 * split * livraisons
   unité: kgCO2e
   note: Pour les livraisons internationales on compte environ 10000 km (~Paris-Tokyo)
