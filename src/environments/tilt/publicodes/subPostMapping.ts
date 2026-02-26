@@ -169,10 +169,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
   EquipementsDesSalaries: [
     table(
       'EquipementsEtImmobilisations.question',
-      [
-        'EquipementsEtImmobilisations.typeEquipement',
-        'EquipementsEtImmobilisations.nombreEquipement',
-      ],
+      ['EquipementsEtImmobilisations.typeEquipement', 'EquipementsEtImmobilisations.nombreEquipement'],
       [
         [
           'équipements et immobilisations . infos . ordinateurs fixes',

@@ -18,7 +18,7 @@ intrants-services . services:
     La liste est non exhaustive : si vous n’avez pas comptabilisé l’ensemble de vos dépenses, c’est tout à fait normal. Il peut s’agir de dépenses très faiblement émissives ou dont les émissions sont déjà prises en compte dans d’autres postes ou via d’autres questions reposant sur des données plus précises.
 
 intrants-services . services . spectacles-musées:
-  formule: montant-dépensé * FE 
+  formule: montant-dépensé * FE
   form:
     à traduire: oui
   titre: Spectacles, musées et autres services culturels
@@ -38,7 +38,7 @@ intrants-services . services . spectacles-musées:
   unité: kgCO2e
 
 intrants-services . services . assurance-reassurance:
-  formule: montant-dépensé * FE 
+  formule: montant-dépensé * FE
   form:
     à traduire: oui
   titre: Services d'assurance
@@ -74,7 +74,6 @@ intrants-services . services . telecom:
         nom: Services de télécommunications
   unité: kgCO2e
 
-
 intrants-services . services . sante-humaine:
   formule: montant-dépensé * FE
   form:
@@ -95,7 +94,7 @@ intrants-services . services . sante-humaine:
   unité: kgCO2e
 
 intrants-services . services . edition:
-  formule: montant-dépensé * FE 
+  formule: montant-dépensé * FE
   form:
     à traduire: oui
   titre: Services d'édition
@@ -114,7 +113,7 @@ intrants-services . services . edition:
   unité: kgCO2e
 
 intrants-services . services . poste-courrier:
-  formule: montant-dépensé * FE 
+  formule: montant-dépensé * FE
   form:
     à traduire: oui
   titre: Services de poste et de courrier
@@ -133,7 +132,7 @@ intrants-services . services . poste-courrier:
   unité: kgCO2e
 
 intrants-services . services . restauration:
-  formule: montant-dépensé * FE 
+  formule: montant-dépensé * FE
   form:
     à traduire: oui
   titre: Services de restauration et d'hébergement
@@ -152,7 +151,7 @@ intrants-services . services . restauration:
   unité: kgCO2e
 
 intrants-services . services . formation:
-  formule: montant-dépensé * FE 
+  formule: montant-dépensé * FE
   form:
     à traduire: oui
   titre: Services de formation
@@ -190,7 +189,7 @@ intrants-services . services . reparation-installation:
   unité: kgCO2e
 
 intrants-services . services . juridique-comptable:
-  formule: montant-dépensé * FE 
+  formule: montant-dépensé * FE
   form:
     à traduire: oui
   titre: Services de réparation et d'installation
