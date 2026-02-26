@@ -54,7 +54,7 @@ interface Props {
   sectenData?: SectenInfo[]
 }
 
-const TrajectoryReductionPage = ({
+const TrajectoryPage = ({
   study,
   canEdit,
   transitionPlan,
@@ -357,4 +357,4 @@ const TrajectoryReductionPage = ({
   )
 }
 
-export default TrajectoryReductionPage
+export default TrajectoryPage
