@@ -55,7 +55,6 @@ déplacements . DM-bénévoles . avec:
   unité: kgCO2e
   par défaut: 0
 
-
 ## Ici on calcule les émissions dans le cas ou il n'y pas eu de campagne MEP
 
 déplacements . DM-bénévoles . sans:
