@@ -36,12 +36,9 @@ export default function PublicodesForm<RuleName extends string>({ formLayouts }:
       const isApplicable = evaluatedLayoutIsApplicable(evaluatedFormLayout)
       return { evaluatedFormLayout, isLinkedToPreviousQuestion, key, isApplicable }
     })
-  }, [
-    formLayouts,
-    engine,
     // NOTE: the situation needs to be a dependency to re-evaluate applicability when it changes
-    situation,
-  ])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formLayouts, engine, situation])
 
   return (
     <Box className="dynamic-form">

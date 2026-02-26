@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 
 export default function useStudySite(study: FullStudy | StudyWithoutDetail, allowAll?: boolean) {
   const [ready, setReady] = useState(false)
-  const [studySite, setSite] = useState('all')
+  const [studySite, setSite] = useState('')
   const searchParams = useSearchParams()
   const router = useRouter()
 
@@ -33,7 +33,7 @@ export default function useStudySite(study: FullStudy | StudyWithoutDetail, allo
   }, [study, searchParams, allowAll, router])
 
   useEffect(() => {
-    if (ready) {
+    if (ready && studySite) {
       window.localStorage.setItem(`studySite-${study.id}`, studySite)
     }
   }, [studySite, ready, study.id])
