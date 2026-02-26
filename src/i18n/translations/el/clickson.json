@@ -68,13 +68,13 @@
       "studentNumber": "Nombre d'élèves",
       "superficy": "Superficie de l'établissement"
     },
-    "newContributor": {
-      "title": "Προσθήκη μαθητή στη μελέτη: {name}"
-    },
     "role": {
       "Contributor": "Μαθητής"
     },
     "rights": {
+      "newContributor": {
+        "title": "Προσθήκη μαθητή στη μελέτη: {name}"
+      },
       "contributorsTable": {
         "delete": "Αφαίρεση μαθητή",
         "title": "Μαθητές",

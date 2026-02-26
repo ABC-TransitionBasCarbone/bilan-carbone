@@ -68,13 +68,13 @@
       "studentNumber": "Nombre d'élèves",
       "superficy": "Superficie de l'établissement"
     },
-    "newContributor": {
-      "title": "Aggiungi uno studente allo studio: {name}"
-    },
     "role": {
       "Contributor": "Studente"
     },
     "rights": {
+      "newContributor": {
+        "title": "Aggiungi uno studente allo studio: {name}"
+      },
       "contributorsTable": {
         "delete": "Rimuovi lo studente",
         "title": "Studenti",

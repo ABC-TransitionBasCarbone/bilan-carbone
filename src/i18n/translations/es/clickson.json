@@ -24,7 +24,8 @@
         "message": "Encuentre aquí el establecimiento vinculado a su cuenta"
       }
     },
-    "title": "Calcular su huella de carbono simplificada le permitirá:",
+    "title": "¡Bienvenido al calculador PEBC / Clicks On Act!",
+    "subtitle": "Calcular su huella de carbono simplificada le permitirá:",
     "alert": {
       "info": "La calculadora Clickson le permite estimar el impacto climático de su actividad. Es ante todo una herramienta de concienciación. No es un enfoque de transición baja en carbono sino una huella de carbono simplificada — en el sentido de la <link>Guía de comunicación sobre contabilidad de carbono</link> — enfocada en las principales fuentes de emisión relacionadas con la actividad del establecimiento."
     },
