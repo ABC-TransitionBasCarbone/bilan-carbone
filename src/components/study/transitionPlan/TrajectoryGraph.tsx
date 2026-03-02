@@ -265,7 +265,6 @@ const TrajectoryGraph = ({
       dataType: DataType
       isFailed?: boolean
       isCustom?: boolean
-      trajectoryName?: string
       withinThreshold?: boolean
     })[] = []
 
@@ -279,7 +278,6 @@ const TrajectoryGraph = ({
             type: 'line',
             dataType: 'previous',
             isCustom: false,
-            trajectoryName: t('trajectory15'),
             withinThreshold: true,
             data: mapDataToYears(previousTrajectory),
             label: t('trajectory15'),
@@ -294,7 +292,6 @@ const TrajectoryGraph = ({
             type: 'line',
             dataType: 'previous',
             isCustom: false,
-            trajectoryName: t('trajectory15'),
             data: mapDataToYears(previousTrajectory),
             label: t('trajectory15') + ` (${previousTrajectoryStartYear})`,
             color: 'color-mix(in srgb, var(--trajectory-sbti-15) 50%, transparent)',
@@ -314,7 +311,6 @@ const TrajectoryGraph = ({
           dataType: 'current',
           isCustom: false,
           isFailed,
-          trajectoryName: t('trajectory15'),
           data: currentData,
           label: data.trajectory15Data.previousTrajectory
             ? t('trajectory15') + ` (${studyStartYear})`
@@ -331,7 +327,6 @@ const TrajectoryGraph = ({
           dataType: 'current',
           isCustom: false,
           isFailed,
-          trajectoryName: t('trajectory15'),
           data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
           label: t('trajectory15') + ` (${studyStartYear})`,
           color: isFailed ? 'var(--error-100)' : 'var(--trajectory-sbti-15)',
@@ -353,7 +348,6 @@ const TrajectoryGraph = ({
             type: 'line',
             dataType: 'previous',
             isCustom: false,
-            trajectoryName: t('trajectoryWB2C'),
             withinThreshold: true,
             data: mapDataToYears(previousTrajectory),
             label: t('trajectoryWB2C'),
@@ -368,7 +362,6 @@ const TrajectoryGraph = ({
             type: 'line',
             dataType: 'previous',
             isCustom: false,
-            trajectoryName: t('trajectoryWB2C'),
             data: mapDataToYears(previousTrajectory),
             label: t('trajectoryWB2C') + ` (${previousTrajectoryStartYear})`,
             color: 'color-mix(in srgb, var(--trajectory-sbti-wb2c) 50%, transparent)',
@@ -388,7 +381,6 @@ const TrajectoryGraph = ({
           dataType: 'current',
           isCustom: false,
           isFailed,
-          trajectoryName: t('trajectoryWB2C'),
           data: currentData,
           label: data.trajectoryWB2CData.previousTrajectory
             ? t('trajectoryWB2C') + ` (${studyStartYear})`
@@ -405,7 +397,6 @@ const TrajectoryGraph = ({
           dataType: 'current',
           isCustom: false,
           isFailed,
-          trajectoryName: t('trajectoryWB2C'),
           data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
           label: t('trajectoryWB2C') + ` (${studyStartYear})`,
           color: isFailed ? 'var(--error-100)' : 'var(--trajectory-sbti-wb2c)',
@@ -434,7 +425,6 @@ const TrajectoryGraph = ({
               type: 'line',
               dataType: 'previous',
               isCustom: false,
-              trajectoryName: label,
               withinThreshold: true,
               data: mapDataToYears(previousTrajectory),
               label,
@@ -449,7 +439,6 @@ const TrajectoryGraph = ({
               type: 'line',
               dataType: 'previous',
               isCustom: false,
-              trajectoryName: label,
               data: mapDataToYears(previousTrajectory),
               label: label + ` (${previousTrajectoryStartYear})`,
               color: `color-mix(in srgb, ${color} 50%, transparent)`,
@@ -468,7 +457,6 @@ const TrajectoryGraph = ({
             type: 'line',
             dataType: 'current',
             isCustom: false,
-            trajectoryName: label,
             label: trajectoryData.previousTrajectory ? label + ` (${studyStartYear})` : label,
             isFailed,
             data: currentData,
@@ -483,7 +471,6 @@ const TrajectoryGraph = ({
             type: 'line',
             dataType: 'current',
             isCustom: false,
-            trajectoryName: label,
             data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
             label: label + ` (${studyStartYear})`,
             isFailed,
@@ -512,7 +499,6 @@ const TrajectoryGraph = ({
               type: 'line',
               dataType: 'previous',
               isCustom: true,
-              trajectoryName: traj.label,
               withinThreshold: true,
               data: mapDataToYears(previousTrajectory, true),
               label: traj.label + ` (${previousTrajectoryStartYear})`,
@@ -528,7 +514,6 @@ const TrajectoryGraph = ({
               type: 'line',
               dataType: 'previous',
               isCustom: true,
-              trajectoryName: traj.label,
               data: mapDataToYears(previousTrajectory, true),
               label: traj.label + ` (${previousTrajectoryStartYear})`,
               color: `color-mix(in srgb, ${baseColor} 50%, transparent)`,
@@ -548,7 +533,6 @@ const TrajectoryGraph = ({
             dataType: 'current',
             isCustom: true,
             isFailed,
-            trajectoryName: traj.label,
             data: currentData,
             label: previousTrajectory ? traj.label + ` (${studyStartYear})` : traj.label,
             color: isFailed ? 'var(--error-100)' : traj.color || `var(--trajectory-custom-${index % 9})`,
@@ -563,7 +547,6 @@ const TrajectoryGraph = ({
             dataType: 'current',
             isCustom: true,
             isFailed,
-            trajectoryName: traj.label,
             data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
             label: traj.label + ` (${studyStartYear})`,
             color: isFailed ? 'var(--error-100)' : traj.color || `var(--trajectory-custom-${index % 9})`,
@@ -586,7 +569,6 @@ const TrajectoryGraph = ({
             type: 'line',
             dataType: 'previous',
             isCustom: true,
-            trajectoryName: t('actionBasedTrajectory'),
             withinThreshold: true,
             data: mapDataToYears(previousTrajectory),
             label: t('actionBasedTrajectory') + ` (${previousTrajectoryStartYear})`,
@@ -601,7 +583,6 @@ const TrajectoryGraph = ({
             type: 'line',
             dataType: 'previous',
             isCustom: true,
-            trajectoryName: t('actionBasedTrajectory'),
             data: mapDataToYears(previousTrajectory),
             label: t('actionBasedTrajectory') + ` (${previousTrajectoryStartYear})`,
             color: 'color-mix(in srgb, var(--trajectory-action) 50%, transparent)',
@@ -620,7 +601,6 @@ const TrajectoryGraph = ({
           type: 'line',
           dataType: 'current',
           isCustom: true,
-          trajectoryName: t('actionBasedTrajectory'),
           data: currentData,
           label: data.actionBasedTrajectoryData.previousTrajectory
             ? t('actionBasedTrajectory') + ` (${studyStartYear})`
@@ -636,7 +616,6 @@ const TrajectoryGraph = ({
           type: 'line',
           dataType: 'current',
           isCustom: true,
-          trajectoryName: t('actionBasedTrajectory'),
           data: currentData.map((val, idx) => (idx === studyStartYearIndex ? val : null)),
           label: name + ` (${studyStartYear})`,
           color: 'var(--trajectory-action)',
@@ -788,7 +767,6 @@ const TrajectoryGraph = ({
             series={seriesCreated.map((s) => ({
               label: s.label as string,
               color: s.color as string,
-              trajectoryName: s.trajectoryName,
               dataType: s.dataType,
               withinThreshold: s.withinThreshold,
             }))}

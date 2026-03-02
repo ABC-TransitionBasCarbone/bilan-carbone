@@ -9,7 +9,6 @@ import styles from './CustomTrajectoryLegend.module.css'
 export interface LegendSeries {
   label: string
   color: string
-  trajectoryName?: string
   dataType?: string
   withinThreshold?: boolean
 }
@@ -35,6 +34,8 @@ const extractYear = (label: string): number | null => {
   return match ? parseInt(match[1], 10) : null
 }
 
+const stripYear = (label: string): string => label.replace(/\s*\(\d{4}\)$/, '')
+
 const CustomTrajectoryLegend = ({ series, hiddenLabels, onToggle, previousLabel, currentLabel }: Props) => {
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null)
 
@@ -46,14 +47,14 @@ const CustomTrajectoryLegend = ({ series, hiddenLabels, onToggle, previousLabel,
   const groupsWithThreshold = new Set<string>()
 
   for (const s of series) {
-    const name = s.trajectoryName ?? s.label
+    const name = stripYear(s.label)
     if (s.dataType === 'previous' && s.withinThreshold) {
       groupsWithThreshold.add(name)
     }
   }
 
   for (const s of series) {
-    const name = s.trajectoryName ?? s.label
+    const name = stripYear(s.label)
     if (!groupMap.has(name)) {
       groupMap.set(name, { name, color: s.color })
     }
