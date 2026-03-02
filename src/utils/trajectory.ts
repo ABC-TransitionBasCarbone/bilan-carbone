@@ -1056,13 +1056,7 @@ export const getDefaultSBTiData = (
         maxYear,
       })
 
-      const isFailed = isFailedTrajectory(
-        maxYear,
-        SBTI_START_YEAR,
-        theoreticalSbti15Reference,
-        currentTrajectory,
-        false,
-      )
+      const isFailed = isFailedTrajectory(maxYear, SBTI_START_YEAR, theoreticalSbti15Reference, currentTrajectory)
 
       sbti15Data = {
         previousTrajectoryStartYear: SBTI_START_YEAR,
@@ -1084,13 +1078,7 @@ export const getDefaultSBTiData = (
         maxYear,
       })
 
-      const isFailed = isFailedTrajectory(
-        maxYear,
-        SBTI_START_YEAR,
-        theoreticalSbtiWB2CReference,
-        currentTrajectory,
-        false,
-      )
+      const isFailed = isFailedTrajectory(maxYear, SBTI_START_YEAR, theoreticalSbtiWB2CReference, currentTrajectory)
 
       sbtiWB2CData = {
         previousTrajectoryStartYear: SBTI_START_YEAR,
@@ -1680,7 +1668,7 @@ const isFailedTrajectory = (
   referenceTrajectoryStartYear: number,
   referenceTrajectory: TrajectoryDataPoint[] | null,
   currentTrajectory: TrajectoryDataPoint[],
-  isWithinThreshold: boolean,
+  isWithinThreshold?: boolean,
 ): boolean => {
   if (!referenceTrajectory || isWithinThreshold) {
     return false
