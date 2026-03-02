@@ -20,6 +20,11 @@
         "question": "Distanța parcursă în timpul excursiilor școlare",
         "moyenTransport": "Mijloc de transport",
         "distance": "Distanță (km)"
+      },
+      "EquipementsDivers": {
+        "question": "Acest câmp se folosește dacă școala dvs are centrală proprie sau boiler pentru încălzire. Pentru a funcționa, aceste dispozitive utiliza diverse tipuri de combustibili fosili (păcură, gaze naturale etc.). Emisiile de gaze cu efect de seră (GES) generate de aceste echipamente sunt eliberate în timpul arderii păcurii sau a gazului, de exemplu.",
+        "equipement": "Équipement",
+        "nombre": "Nombre"
       }
     }
   }

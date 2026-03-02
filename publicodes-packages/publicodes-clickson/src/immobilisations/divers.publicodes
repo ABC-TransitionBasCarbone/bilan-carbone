@@ -2,14 +2,14 @@ immobilisations . divers:
   titre: Divers
   formule:
     somme:
-      - tondeuse à gazon thermique
-      - tondeuse à gazon électrique
+      - tondeuse gazon thermique
+      - tondeuse gazon électrique
       - bouilloire
       - micro-onde
       - aspirateur professionnel
       - ballon chauffe-eau électrique
-      - machine à café filtre
-      - machine à café dosettes
+      - machine café filtre
+      - machine café dosettes
       - lave-vaiselle professionnel
       - four professionnel
       - lave-vaiselle standard
@@ -24,8 +24,9 @@ immobilisations . divers:
   unité: kgCO2e
   par défaut: 0
 
-immobilisations . divers . tondeuse à gazon thermique:
+immobilisations . divers . tondeuse gazon thermique:
   titre: "Tondeuse à gazon thermique"
+  question: "Combien de tondeuse à gazon thermique possédez-vous ?"  
   formule: nombre * FE / immo
   unité: kgCO2e
   par défaut: 0
@@ -49,8 +50,9 @@ immobilisations . divers . tondeuse à gazon thermique:
       valeur: 10
       par défaut: 0
 
-immobilisations . divers . tondeuse à gazon électrique:
+immobilisations . divers . tondeuse gazon électrique:
   titre: "Tondeuse à gazon électrique"
+  question: "Combien de tondeuse à gazon électrique possédez-vous ?"  
   formule: nombre * FE / immo
   unité: kgCO2e
   par défaut: 0
@@ -76,6 +78,7 @@ immobilisations . divers . tondeuse à gazon électrique:
 
 immobilisations . divers . bouilloire:
   titre: "Bouilloire"
+  question: "Combien de bouilloire possédez-vous ?"  
   formule: nombre * FE / immo
   unité: kgCO2e
   par défaut: 0
@@ -101,6 +104,7 @@ immobilisations . divers . bouilloire:
 
 immobilisations . divers . micro-onde:
   titre: "Micro-onde"
+  question: "Combien de micro-onde possédez-vous ?"  
   formule: nombre * FE / immo
   unité: kgCO2e
   par défaut: 0
@@ -126,6 +130,7 @@ immobilisations . divers . micro-onde:
 
 immobilisations . divers . aspirateur professionnel:
   titre: "Aspirateur professionnel"
+  question: "Combien de aspirateur professionnel possédez-vous ?"  
   formule: nombre * FE / immo
   unité: kgCO2e
   par défaut: 0
@@ -151,6 +156,7 @@ immobilisations . divers . aspirateur professionnel:
 
 immobilisations . divers . ballon chauffe-eau électrique:
   titre: "Ballon chauffe-eau électrique - 200l"
+  question: "Combien de ballon chauffe-eau électrique - 200l possédez-vous ?"  
   formule: nombre * FE / immo
   unité: kgCO2e
   par défaut: 0
@@ -174,8 +180,9 @@ immobilisations . divers . ballon chauffe-eau électrique:
       valeur: 10
       par défaut: 0
 
-immobilisations . divers . machine à café filtre:
+immobilisations . divers . machine café filtre:
   titre: "Machine à café - filtre"
+  question: "Combien de machine à café - filtre possédez-vous ?"  
   formule: nombre * FE / immo
   unité: kgCO2e
   par défaut: 0
@@ -199,8 +206,9 @@ immobilisations . divers . machine à café filtre:
       valeur: 5
       par défaut: 0
 
-immobilisations . divers . machine à café dosettes:
+immobilisations . divers . machine café dosettes:
   titre: "Machine à café - dosettes"
+  question: "Combien de machine à café - dosettes possédez-vous ?"  
   formule: nombre * FE / immo
   unité: kgCO2e
   par défaut: 0
@@ -226,6 +234,7 @@ immobilisations . divers . machine à café dosettes:
 
 immobilisations . divers . lave-vaiselle professionnel:
   titre: "Lave-vaisselle professionnel"
+  question: "Combien de lave-vaiselle professionnel possédez-vous ?"  
   formule: nombre * FE / immo
   unité: kgCO2e
   par défaut: 0
@@ -251,6 +260,7 @@ immobilisations . divers . lave-vaiselle professionnel:
 
 immobilisations . divers . four professionnel:
   titre: "Four professionnel"
+  question: "Combien de four professionnel possédez-vous ?"  
   formule: nombre * FE / immo
   unité: kgCO2e
   par défaut: 0
@@ -276,6 +286,7 @@ immobilisations . divers . four professionnel:
 
 immobilisations . divers . lave-vaiselle standard:
   titre: "Lave-vaiselle standard"
+  question: "Combien de lave-vaiselle standard possédez-vous ?"  
   formule: nombre * FE / immo
   unité: kgCO2e
   par défaut: 0
@@ -301,6 +312,7 @@ immobilisations . divers . lave-vaiselle standard:
 
 immobilisations . divers . lave-linge:
   titre: "Lave-linge (capacité 7kg)"
+  question: "Combien de lave-linge (capacité 7kg) possédez-vous ?"  
   formule: nombre * FE / immo
   unité: kgCO2e
   par défaut: 0
@@ -326,6 +338,7 @@ immobilisations . divers . lave-linge:
 
 immobilisations . divers . congélateur coffre:
   titre: "Congélateur (coffre) - 261l"
+  question: "Combien de congélateur (coffre) - 261l possédez-vous ?"  
   formule: nombre * FE / immo
   unité: kgCO2e
   par défaut: 0
@@ -351,6 +364,7 @@ immobilisations . divers . congélateur coffre:
 
 immobilisations . divers . congélateur armoire:
   titre: "Congélateur - armoire - 205l"
+  question: "Combien de congélateur - armoire - 205l possédez-vous ?"  
   formule: nombre * FE / immo
   unité: kgCO2e
   par défaut: 0
@@ -376,6 +390,7 @@ immobilisations . divers . congélateur armoire:
 
 immobilisations . divers . réfrigérateur:
   titre: "Réfrigérateur - 250l"
+  question: "Combien de réfrigérateur - 250l possédez-vous ?"  
   formule: nombre * FE / immo
   unité: kgCO2e
   par défaut: 0
@@ -401,6 +416,7 @@ immobilisations . divers . réfrigérateur:
 
 immobilisations . divers . plaques de cuisson au gaz:
   titre: "Plaques de cuisson/au gaz 9000W"
+  question: "Combien de plaques de cuisson/au gaz 9000W possédez-vous ?"  
   formule: nombre * FE / immo
   unité: kgCO2e
   par défaut: 0
@@ -426,6 +442,7 @@ immobilisations . divers . plaques de cuisson au gaz:
 
 immobilisations . divers . tatami:
   titre: "Tatami"
+  question: "Combien de tatami possédez-vous ?"  
   formule: nombre * FE / immo
   unité: kgCO2e
   par défaut: 0
@@ -451,6 +468,7 @@ immobilisations . divers . tatami:
 
 immobilisations . divers . gymnastique agré barre fixe:
   titre: "Gymnastique, agrès barre fixe"
+  question: "Combien de gymnastique, agrès barre fixe possédez-vous ?"  
   formule: nombre * FE / immo
   unité: kgCO2e
   par défaut: 0
@@ -476,6 +494,7 @@ immobilisations . divers . gymnastique agré barre fixe:
 
 immobilisations . divers . gymnastique agré barres parallèles:
   titre: "Gymnastique, agrès barres parallèles"
+  question: "Combien de gymnastique, agrès barres parallèles possédez-vous ?"  
   formule: nombre * FE / immo
   unité: kgCO2e
   par défaut: 0

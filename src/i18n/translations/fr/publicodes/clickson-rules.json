@@ -454,7 +454,9 @@
         }
       },
       "divers": {
-        "tondeuse à gazon thermique": {
+        "tondeuse gazon thermique": {
+          "titre": "Tondeuse à gazon thermique",
+          "question": "Combien de tondeuse à gazon thermique possédez-vous ?",
           "nombre": {
             "question": "Combien de tondeuse à gazon thermique possédez-vous ?"
           },
@@ -465,7 +467,9 @@
             "question": "Immobilisation de tondeuse à gazon"
           }
         },
-        "tondeuse à gazon électrique": {
+        "tondeuse gazon électrique": {
+          "titre": "Tondeuse à gazon électrique",
+          "question": "Combien de tondeuse à gazon électrique possédez-vous ?",
           "nombre": {
             "question": "Combien de tondeuse à gazon électrique possédez-vous ?"
           },
@@ -477,6 +481,8 @@
           }
         },
         "bouilloire": {
+          "titre": "Bouilloire",
+          "question": "Combien de bouilloire possédez-vous ?",
           "nombre": {
             "question": "Combien de bouilloire possédez-vous ?"
           },
@@ -488,6 +494,8 @@
           }
         },
         "micro-onde": {
+          "titre": "Micro-onde",
+          "question": "Combien de micro-onde possédez-vous ?",
           "nombre": {
             "question": "Combien de micro-onde possédez-vous ?"
           },
@@ -499,6 +507,8 @@
           }
         },
         "aspirateur professionnel": {
+          "titre": "Aspirateur professionnel",
+          "question": "Combien de aspirateur professionnel possédez-vous ?",
           "nombre": {
             "question": "Combien de aspirateur professionnel possédez-vous ?"
           },
@@ -510,6 +520,8 @@
           }
         },
         "ballon chauffe-eau électrique": {
+          "titre": "Ballon chauffe-eau électrique - 200l",
+          "question": "Combien de ballon chauffe-eau électrique - 200l possédez-vous ?",
           "nombre": {
             "question": "Combien de ballon chauffe-eau électrique - 200l possédez-vous ?"
           },
@@ -520,7 +532,9 @@
             "question": "Immobilisation de ballon chaffe-eau electrique - 200l"
           }
         },
-        "machine à café filtre": {
+        "machine café filtre": {
+          "titre": "Machine à café - filtre",
+          "question": "Combien de machine à café - filtre possédez-vous ?",
           "nombre": {
             "question": "Combien de machine à café - filtre possédez-vous ?"
           },
@@ -531,7 +545,9 @@
             "question": "Immobilisation de machine à café - filtre"
           }
         },
-        "machine à café dosettes": {
+        "machine café dosettes": {
+          "titre": "Machine à café - dosettes",
+          "question": "Combien de machine à café - dosettes possédez-vous ?",
           "nombre": {
             "question": "Combien de machine à café - dosettes possédez-vous ?"
           },
@@ -543,6 +559,8 @@
           }
         },
         "lave-vaiselle professionnel": {
+          "titre": "Lave-vaisselle professionnel",
+          "question": "Combien de lave-vaiselle professionnel possédez-vous ?",
           "nombre": {
             "question": "Combien de lave-vaiselle professionnel possédez-vous ?"
           },
@@ -554,6 +572,8 @@
           }
         },
         "four professionnel": {
+          "titre": "Four professionnel",
+          "question": "Combien de four professionnel possédez-vous ?",
           "nombre": {
             "question": "Combien de four professionnel possédez-vous ?"
           },
@@ -565,6 +585,8 @@
           }
         },
         "lave-vaiselle standard": {
+          "titre": "Lave-vaiselle standard",
+          "question": "Combien de lave-vaiselle standard possédez-vous ?",
           "nombre": {
             "question": "Combien de lave-vaiselle standard possédez-vous ?"
           },
@@ -576,6 +598,8 @@
           }
         },
         "lave-linge": {
+          "titre": "Lave-linge (capacité 7kg)",
+          "question": "Combien de lave-linge (capacité 7kg) possédez-vous ?",
           "nombre": {
             "question": "Combien de lave-linge (capacité 7kg) possédez-vous ?"
           },
@@ -587,6 +611,8 @@
           }
         },
         "congélateur coffre": {
+          "titre": "Congélateur (coffre) - 261l",
+          "question": "Combien de congélateur (coffre) - 261l possédez-vous ?",
           "nombre": {
             "question": "Combien de congélateur (coffre) - 261l possédez-vous ?"
           },
@@ -598,6 +624,8 @@
           }
         },
         "congélateur armoire": {
+          "titre": "Congélateur - armoire - 205l",
+          "question": "Combien de congélateur - armoire - 205l possédez-vous ?",
           "nombre": {
             "question": "Combien de congélateur - armoire - 205l possédez-vous ?"
           },
@@ -609,6 +637,8 @@
           }
         },
         "réfrigérateur": {
+          "titre": "Réfrigérateur - 250l",
+          "question": "Combien de réfrigérateur - 250l possédez-vous ?",
           "nombre": {
             "question": "Combien de réfrigérateur - 250l possédez-vous ?"
           },
@@ -620,6 +650,8 @@
           }
         },
         "plaques de cuisson au gaz": {
+          "titre": "Plaques de cuisson/au gaz 9000W",
+          "question": "Combien de plaques de cuisson/au gaz 9000W possédez-vous ?",
           "nombre": {
             "question": "Combien de plaques de cuisson/au gaz 9000W possédez-vous ?"
           },
@@ -631,6 +663,8 @@
           }
         },
         "tatami": {
+          "titre": "Tatami",
+          "question": "Combien de tatami possédez-vous ?",
           "nombre": {
             "question": "Combien de tatami possédez-vous ?"
           },
@@ -642,6 +676,8 @@
           }
         },
         "gymnastique agré barre fixe": {
+          "titre": "Gymnastique, agrès barre fixe",
+          "question": "Combien de gymnastique, agrès barre fixe possédez-vous ?",
           "nombre": {
             "question": "Combien de gymnastique, agrès barre fixe possédez-vous ?"
           },
@@ -653,6 +689,8 @@
           }
         },
         "gymnastique agré barres parallèles": {
+          "titre": "Gymnastique, agrès barres parallèles",
+          "question": "Combien de gymnastique, agrès barres parallèles possédez-vous ?",
           "nombre": {
             "question": "Combien de gymnastique, agrès barres parallèles possédez-vous ?"
           },
