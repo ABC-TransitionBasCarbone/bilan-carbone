@@ -1,7 +1,6 @@
 'use client'
 
-import Button from '@/components/base/Button'
-import TuneIcon from '@mui/icons-material/Tune'
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
 import { Badge, Checkbox, FormControlLabel, Menu, SvgIcon, Typography } from '@mui/material'
 import classNames from 'classnames'
 import { useState } from 'react'
@@ -19,7 +18,6 @@ interface Props {
   series: LegendSeries[]
   hiddenLabels: string[]
   onToggle: (label: string) => void
-  filterLabel: string
   previousLabel: (year: number) => string
   currentLabel: (year: number) => string
 }
@@ -37,15 +35,8 @@ const extractYear = (label: string): number | null => {
   return match ? parseInt(match[1], 10) : null
 }
 
-const CustomTrajectoryLegend = ({
-  series,
-  hiddenLabels,
-  onToggle,
-  filterLabel,
-  previousLabel,
-  currentLabel,
-}: Props) => {
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
+const CustomTrajectoryLegend = ({ series, hiddenLabels, onToggle, previousLabel, currentLabel }: Props) => {
+  const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null)
 
   if (series.length === 0) {
     return null
@@ -108,13 +99,10 @@ const CustomTrajectoryLegend = ({
 
   return (
     <>
-      <Badge color="primary" badgeContent={displayedCount || undefined}>
-        <Button color="secondary" variant="outlined" onClick={(e) => setAnchorEl(e.currentTarget)}>
-          <div className="flex align-center gapped025">
-            <TuneIcon fontSize="small" />
-            <Typography variant="body2">{filterLabel}</Typography>
-          </div>
-        </Button>
+      <Badge color="primary" variant="dot" invisible={displayedCount === series.length}>
+        <div onClick={(e) => setAnchorEl(e.currentTarget)} className="pointer ml-2">
+          <SettingsOutlinedIcon className="flex-end" color="primary" />
+        </div>
       </Badge>
 
       <Menu
@@ -124,7 +112,7 @@ const CustomTrajectoryLegend = ({
         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
         transformOrigin={{ vertical: 'top', horizontal: 'left' }}
       >
-        <div className={classNames('flex-col gapped025', styles.menu)}>
+        <div className={classNames('flex-col gapped025 pr1', styles.menu)}>
           {groups.map((group) => (
             <div key={group.name} className="flex-col gapped025">
               <FormControlLabel

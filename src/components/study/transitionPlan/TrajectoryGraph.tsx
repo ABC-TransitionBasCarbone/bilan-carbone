@@ -794,7 +794,6 @@ const TrajectoryGraph = ({
             }))}
             hiddenLabels={hiddenTrajectoryLabels}
             onToggle={onToggleFilter}
-            filterLabel={t('legendFilter')}
             previousLabel={(year: number) => t('previousTrajectories', { year })}
             currentLabel={(year: number) => t('currentTrajectories', { year })}
           />
