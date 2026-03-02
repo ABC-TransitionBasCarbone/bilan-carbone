@@ -1,4 +1,3 @@
-import { environmentWithOnboarding } from '@/constants/environments'
 import { getAccountOrganizationVersions } from '@/db/account'
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { hasAccountToValidateInOrganization } from '@/db/user'
@@ -9,7 +8,6 @@ import { displayFeedBackForm } from '@/services/serverFunctions/user'
 import { canEditMemberRole } from '@/utils/user'
 import { UserSession } from 'next-auth'
 import ActualitiesCards from '../actuality/ActualitiesCards'
-import Onboarding from '../onboarding/Onboarding'
 import StudiesContainer from '../study/StudiesContainer'
 import CRClientsList from './CRClientsList'
 import EmissionFactorsWarning from './EmissionFactorsWarning'
@@ -54,11 +52,6 @@ const UserView = async ({ account }: Props) => {
 
       {hasAccessToActualityCards(account.environment) && <ActualitiesCards />}
       <CUTLogosHome user={account} />
-      {userOrganizationVersion &&
-        !userOrganizationVersion.onboarded &&
-        environmentWithOnboarding.includes(userOrganizationVersion.environment) && (
-          <Onboarding user={account} organizationVersion={userOrganizationVersion} />
-        )}
       {displayFeedback.success && displayFeedback.data && <UserFeedback environment={account.environment} />}
       {emissionFactorWarning.success && !!emissionFactorWarning.data.length && (
         <EmissionFactorsWarning emissionFactors={emissionFactorWarning.data} />
